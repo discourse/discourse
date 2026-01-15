@@ -90,7 +90,7 @@ export default class TagInfo extends Component {
     }
     this.set("loading", true);
     const findArgs = this.tag.id
-      ? `${this.tag.slug || this.tag.name}/${this.tag.id}`
+      ? `${this.tag.slug}/${this.tag.id}`
       : this.tag.name;
     return this.store
       .find("tag-info", findArgs)
@@ -122,13 +122,14 @@ export default class TagInfo extends Component {
   }
 
   @action
-  unlinkSynonym(tag, event) {
+  unlinkSynonym(synonym, event) {
     event?.preventDefault();
-    const slug = this.tagInfo.slug || this.tagInfo.name;
-    ajax(`/tag/${slug}/${this.tagInfo.id}/synonyms/${tag.name}.json`, {
+    const slug = this.tagInfo.slug;
+    const id = this.tagInfo.id;
+    ajax(`/tag/${slug}/${id}/synonyms/${synonym.id}.json`, {
       type: "DELETE",
     })
-      .then(() => removeValueFromArray(this.tagInfo.synonyms, tag))
+      .then(() => removeValueFromArray(this.tagInfo.synonyms, synonym))
       .catch(popupAjaxError);
   }
 
@@ -165,6 +166,7 @@ export default class TagInfo extends Component {
     this.newTagDescription = this.newTagDescription?.replaceAll("\n", "<br>");
     this.tag
       .update({
+        slug: this.tag.slug,
         name: this.newTagName,
         description: this.newTagDescription,
       })
@@ -227,8 +229,9 @@ export default class TagInfo extends Component {
         })
       ),
       didConfirm: () => {
-        const slug = this.tagInfo.slug || this.tagInfo.name;
-        return ajax(`/tag/${slug}/${this.tagInfo.id}/synonyms.json`, {
+        const slug = this.tagInfo.slug;
+        const id = this.tagInfo.id;
+        return ajax(`/tag/${slug}/${id}/synonyms.json`, {
           type: "POST",
           data: {
             tags: this.newSynonyms.map((t) =>
