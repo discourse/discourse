@@ -90,14 +90,6 @@
       "@ember/render-modifiers": "github:jrjohnson/ember-render-modifiers#v2-addon&path:/ember-render-modifiers",
       "broccoli-babel-transpiler@8.0.0": "^8.0.2",
       "@ember/test-waiters": "4.1.1"
-    },
-    "ignoredBuiltDependencies": [
-      "@swc/core",
-      "core-js",
-      "esbuild"
-    ],
-    "onlyBuiltDependencies": [
-      "lefthook"
-    ]
+    }
   }
 }

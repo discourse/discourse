@@ -289,14 +289,8 @@ importers:
         specifier: ^1.6.0
         version: 1.6.0
       '@jsquash/resize':
-        specifier: ^2.1.1
+        specifier: ^2.1.0
         version: 2.1.1
-      '@messageformat/core':
-        specifier: ^3.4.0
-        version: 3.4.0
-      '@messageformat/runtime':
-        specifier: ^3.0.2
-        version: 3.0.2
       ace-builds:
         specifier: ^1.43.5
         version: 1.43.5
@@ -676,6 +670,9 @@ importers:
       '@embroider/addon-shim':
         specifier: ^1.9.0
         version: 1.10.2
+      '@messageformat/runtime':
+        specifier: ^3.0.2
+        version: 3.0.2
       make-plural:
         specifier: ^8.1.0
         version: 8.1.0
@@ -2568,18 +2565,6 @@ packages:
   '@lint-todo/utils@13.1.1':
     resolution: {integrity: sha512-F5z53uvRIF4dYfFfJP3a2Cqg+4P1dgJchJsFnsZE0eZp0LK8X7g2J0CsJHRgns+skpXOlM7n5vFGwkWCWj8qJg==}
     engines: {node: 12.* || >= 14}
-
-  '@messageformat/core@3.4.0':
-    resolution: {integrity: sha512-NgCFubFFIdMWJGN5WuQhHCNmzk7QgiVfrViFxcS99j7F5dDS5EP6raR54I+2ydhe4+5/XTn/YIEppFaqqVWHsw==}
-
-  '@messageformat/date-skeleton@1.0.1':
-    resolution: {integrity: sha512-jPXy8fg+WMPIgmGjxSlnGJn68h/2InfT0TNSkVx0IGXgp4ynnvYkbZ51dGWmGySEK+pBiYUttbQdu5XEqX5CRg==}
-
-  '@messageformat/number-skeleton@1.2.0':
-    resolution: {integrity: sha512-xsgwcL7J7WhlHJ3RNbaVgssaIwcEyFkBqxHdcdaiJzwTZAWEOD8BuUFxnxV9k5S0qHN3v/KzUpq0IUpjH1seRg==}
-
-  '@messageformat/parser@5.1.0':
-    resolution: {integrity: sha512-jKlkls3Gewgw6qMjKZ9SFfHUpdzEVdovKFtW1qRhJ3WI4FW5R/NnGDqr8SDGz+krWDO3ki94boMmQvGke1HwUQ==}
 
   '@messageformat/runtime@3.0.2':
     resolution: {integrity: sha512-dkIPDCjXcfhSHgNE1/qV6TeczQZR59Yx0xXeafVKgK3QVWoxc38ljwpksUpnzCGvN151KUbCJTDZVmahtf1YZw==}
@@ -7292,9 +7277,6 @@ packages:
   moment@2.30.1:
     resolution: {integrity: sha512-uEmtNhbDOrWPFS+hdjFCBfy9f2YoyzRpwcl+DqpC6taX21FzsTLQVbMV/W7PzNSX6x/bhC1zA3c2UQ5NzH6how==}
 
-  moo@0.5.2:
-    resolution: {integrity: sha512-iSAJLHYKnX41mKcJKjqvnAN9sf0LMDTXDEvFv+ffuRR9a1MIuXLjMNL6EsnDHSkKLTWNqQQ5uo61P4EbU4NU+Q==}
-
   morgan@1.10.1:
     resolution: {integrity: sha512-223dMRJtI/l25dJKWpgij2cMtywuG/WiUKXdvwfbhGKBhy1puASqXwFzmWZ7+K73vUPoR7SS2Qz2cI/g9MKw0A==}
     engines: {node: '>= 0.8.0'}
@@ -8433,9 +8415,6 @@ packages:
 
   safe-buffer@5.2.1:
     resolution: {integrity: sha512-rp3So07KcdmmKbGvgaNxQSJr7bGVSVk5S9Eq1F+ppbRo70+YeaDxkw5Dd8NPN+GD6bjnYm2VuPuCXmpuYvmCXQ==}
-
-  safe-identifier@0.4.2:
-    resolution: {integrity: sha512-6pNbSMW6OhAi9j+N8V+U715yBQsaWJ7eyEUaOrawX+isg5ZxhUlV1NipNtgaKHmFGiABwt+ZF04Ii+3Xjkg+8w==}
 
   safe-json-parse@1.0.1:
     resolution: {integrity: sha512-o0JmTu17WGUaUOHa1l0FPGXKBfijbxK6qoHzlkihsDXxzBHvJcA7zgviKR92Xs841rX9pK16unfphLq0/KqX7A==}
@@ -11704,23 +11683,6 @@ snapshots:
       slash: 3.0.0
       tslib: 2.8.1
       upath: 2.0.1
-
-  '@messageformat/core@3.4.0':
-    dependencies:
-      '@messageformat/date-skeleton': 1.0.1
-      '@messageformat/number-skeleton': 1.2.0
-      '@messageformat/parser': 5.1.0
-      '@messageformat/runtime': 3.0.2
-      make-plural: 7.5.0
-      safe-identifier: 0.4.2
-
-  '@messageformat/date-skeleton@1.0.1': {}
-
-  '@messageformat/number-skeleton@1.2.0': {}
-
-  '@messageformat/parser@5.1.0':
-    dependencies:
-      moo: 0.5.2
 
   '@messageformat/runtime@3.0.2':
     dependencies:
@@ -17436,8 +17398,6 @@ snapshots:
 
   moment@2.30.1: {}
 
-  moo@0.5.2: {}
-
   morgan@1.10.1:
     dependencies:
       basic-auth: 2.0.1
@@ -18693,8 +18653,6 @@ snapshots:
   safe-buffer@5.1.2: {}
 
   safe-buffer@5.2.1: {}
-
-  safe-identifier@0.4.2: {}
 
   safe-json-parse@1.0.1: {}
 
