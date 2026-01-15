@@ -588,7 +588,7 @@ export function block(name, options = {}) {
           entries: rawChildren,
           cache: this.#childComponentCache,
           owner: getOwner(this),
-          baseHierarchy: this.args._hierarchy,
+          baseHierarchy: this.args.__hierarchy,
           outletName: this.args.outletName,
           outletArgs: this.args.outletArgs,
           showGhosts,
@@ -804,7 +804,7 @@ function processBlockEntries({
  *    These are spread directly onto the block args object.
  * 2. **Context args** (`contextArgs`) - Framework-provided values that describe the
  *    rendering context: where the block is rendered (`outletName`), what data is
- *    available (`outletArgs`), and structural info (`children`, `_hierarchy`).
+ *    available (`outletArgs`), and structural info (`children`, `__hierarchy`).
  *
  * Context args are defined as getters rather than direct properties. This allows
  * `curryComponent` to maintain a stable component identity while enabling reactive
@@ -816,7 +816,7 @@ function processBlockEntries({
  *   key becomes an enumerable getter property on the returned args object. Common
  *   context args include:
  *   - `children` - Nested children block configs (for container blocks)
- *   - `_hierarchy` - Debug hierarchy path for developer tools
+ *   - `__hierarchy` - Debug hierarchy path for developer tools
  *   - `outletArgs` - Args passed from the parent outlet
  *   - `outletName` - The outlet identifier where this block is rendered
  * @returns {Object} The merged args object ready for `curryComponent`.
@@ -877,7 +877,7 @@ function resolveContainerClassNames(metadata, args) {
  * @param {import("@ember/owner").default} owner - The application owner
  * @param {Object} [debugContext] - Debug context for visual overlay
  * @param {string} [debugContext.displayHierarchy] - Where the block is rendered (for tooltip display)
- * @param {string} [debugContext.containerPath] - Container's full path (for children's _hierarchy)
+ * @param {string} [debugContext.containerPath] - Container's full path (for children's __hierarchy)
  * @param {Object} [debugContext.conditions] - The block's conditions
  * @param {Object} [debugContext.outletArgs] - Outlet args for debug display
  * @param {string} [debugContext.key] - Stable unique key for this block
@@ -904,11 +904,11 @@ function createChildBlock(entry, owner, debugContext = {}) {
   // Pass containerPath so nested containers know their full path for debug logging.
   const blockArgs = createBlockArgsWithReactiveGetters(argsWithDefaults, {
     children: nestedChildren,
-    _hierarchy: isContainer
-      ? debugContext.containerPath
-      : debugContext.displayHierarchy,
     outletArgs: debugContext.outletArgs,
     outletName: debugContext.outletName,
+    __hierarchy: isContainer
+      ? debugContext.containerPath
+      : debugContext.displayHierarchy,
   });
 
   // Curry the component with pre-bound args so it can be rendered
