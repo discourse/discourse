@@ -752,7 +752,7 @@ class PostRevisor
   def advance_draft_sequence
     @post.advance_draft_sequence
     # Hard delete the draft to ensure cleanup regardless of sequence state
-    Draft.where(user_id: @editor.id, draft_key: @post.topic&.draft_key).destroy_all if @post.topic
+    Draft.where(user_id: @editor.id, draft_key: @post.topic.draft_key).destroy_all if @post.topic
   end
 
   def post_process_post
