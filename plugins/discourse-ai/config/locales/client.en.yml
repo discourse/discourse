@@ -110,14 +110,14 @@ en:
               label: "Persona"
               description: "AI Persona to use for report generation"
 
-        llm_tool_triage:
+        ai_tool_action:
           fields:
-            model:
-              label: "Model"
-              description: "The default language model used for triage"
             tool:
-              label: "Tool"
-              description: "Tool to use for triage (tool must have no parameters defined)"
+              label: "AI Tool"
+              description: "The AI tool to execute when the automation triggers"
+            llm_model:
+              label: "LLM Model"
+              description: "Language model for tools that use llm.generate() (optional)"
 
         llm_persona_triage:
           fields:

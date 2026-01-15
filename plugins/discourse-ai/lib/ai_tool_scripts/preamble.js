@@ -177,17 +177,88 @@
  *        username (string): The username of the user performing the action.
  *    Returns: { success: boolean, post_id: number }
  *
+ *    discourse.getCustomField(type, id, key): Reads a custom field value from a post, topic, or user.
+ *    Parameters:
+ *      type (string): The model type - "post", "topic", or "user".
+ *      id (number): The ID of the post, topic, or user.
+ *      key (string): The custom field key to read.
+ *    Returns: string | null (the custom field value, or null if not set)
+ *    Use case: Check if a post has already been processed by the tool.
+ *    Example:
+ *      const processed = discourse.getCustomField("post", context.post_id, "ai_processed");
+ *      if (processed) return { skipped: true };
+ *
+ *    discourse.setCustomField(type, id, key, value): Sets a custom field value on a post, topic, or user.
+ *    Parameters:
+ *      type (string): The model type - "post", "topic", or "user".
+ *      id (number): The ID of the post, topic, or user.
+ *      key (string): The custom field key (max 256 characters).
+ *      value (string): The value to set (max 1024 characters).
+ *    Returns: { success: boolean, key: string, value: string }
+ *    Throws: Error if type is invalid, key/value too long, or model not found.
+ *    Use case: Mark a post as processed to prevent duplicate processing.
+ *    Example:
+ *      discourse.setCustomField("post", context.post_id, "ai_processed", Date.now().toString());
+ *
  * 7. context
  *    An object containing information about the environment where the tool is being run.
- *    Available properties depend on the invocation context, but may include:
- *      post_id (number): ID of the post triggering the tool (if in a Post context).
- *      topic_id (number): ID of the topic (if in a Post context).
- *      private_message (boolean): Whether the context is a private message (in Post context).
- *      message_id (number): ID of the chat message triggering the tool (if in Chat context).
- *      channel_id (number): ID of the chat channel (if in Chat context).
- *      user (Object): Details of the user invoking the tool/persona (structure may vary, often null or SystemUser details unless explicitly passed).
- *      participants (string): Comma-separated list of usernames in a PM (if applicable).
- *      // ... other potential context-specific properties added by the calling environment.
+ *    Tools can be invoked from multiple contexts - understanding where your tool is running
+ *    helps you access the right data and take appropriate actions.
+ *
+ *    Invocation Contexts:
+ *
+ *    A) AI Bot Conversation (Post context):
+ *       When a user mentions an AI persona in a topic or PM, tools run with:
+ *         context.post_id (number): The post that triggered the persona.
+ *         context.topic_id (number): The topic containing the post.
+ *         context.private_message (boolean): Whether this is a PM.
+ *         context.participants (string): Comma-separated usernames (in PMs).
+ *         context.username (string): The user who triggered the tool.
+ *         context.user_id (number): The user's ID.
+ *
+ *    B) Chat Context:
+ *       When a user mentions an AI persona in a chat channel:
+ *         context.message_id (number): The chat message that triggered the tool.
+ *         context.channel_id (number): The chat channel ID.
+ *         context.username (string): The user who sent the message.
+ *
+ *    C) Automation Context (ai_tool_action):
+ *       When a tool runs via Discourse Automation (e.g., on post_created_edited trigger):
+ *         context.post_id (number): The post that triggered the automation.
+ *         context.topic_id (number): The topic containing the post.
+ *         context.username (string): The post author's username.
+ *         context.user_id (number): The post author's ID.
+ *         context.feature_name (string): "ai_tool_action" - identifies automation context.
+ *         context.feature_context (Object): { automation_id, automation_name } - the automation details.
+ *
+ *    Common Properties (available in most contexts):
+ *      context.site_url (string): The base URL of the Discourse site.
+ *      context.site_title (string): The site's title.
+ *      context.site_description (string): The site's description.
+ *
+ *    Accessing Full Data:
+ *    The context provides IDs - use the discourse API to fetch full objects:
+ *      const post = discourse.getPost(context.post_id);    // Full post with raw content
+ *      const topic = discourse.getTopic(context.topic_id); // Full topic with tags, category
+ *      const user = discourse.getUser(context.username);   // Full user profile
+ *
+ *    Example - Automation Tool Pattern:
+ *      function invoke(params) {
+ *        // Skip if not first post or already processed
+ *        const post = discourse.getPost(context.post_id);
+ *        if (post.post_number !== 1) return { skipped: "not first post" };
+ *
+ *        const processed = discourse.getCustomField("post", context.post_id, "ai_processed");
+ *        if (processed) return { skipped: "already processed" };
+ *
+ *        // Do work (e.g., auto-tag, summarize, moderate)
+ *        const topic = discourse.getTopic(context.topic_id);
+ *        // ... your logic here ...
+ *
+ *        // Mark as processed to prevent re-running
+ *        discourse.setCustomField("post", context.post_id, "ai_processed", Date.now().toString());
+ *        return { success: true };
+ *      }
  *
  * Constraints
  *

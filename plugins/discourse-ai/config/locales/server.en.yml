@@ -21,9 +21,9 @@ en:
         spam: "Flag as spam and hide post"
         spam_silence: "Flag as spam, hide post and silence user"
     scriptables:
-      llm_tool_triage:
-        title: Triage posts using AI Tool
-        description: "Triage posts using custom logic in an AI tool"
+      ai_tool_action:
+        title: AI Tool Action
+        description: Execute an AI tool when the automation triggers
       llm_persona_triage:
         title: Triage posts using AI Persona
         description: "Respond to posts using a specific AI persona"

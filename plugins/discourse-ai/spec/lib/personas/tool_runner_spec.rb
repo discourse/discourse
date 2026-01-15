@@ -126,6 +126,34 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       expect(topic.reload.tags.pluck(:name)).to contain_exactly("tag1")
     end
 
+    it "publishes to MessageBus when setting tags" do
+      topic = Fabricate(:topic)
+      Fabricate(:post, topic: topic)
+      Fabricate(:tag, name: "msgbus_tag")
+      tool.update!(
+        script:
+          "function invoke(params) { return discourse.setTags(params.topic_id, ['msgbus_tag']); }",
+      )
+
+      messages =
+        MessageBus.track_publish("/topic/#{topic.id}") do
+          runner =
+            described_class.new(
+              parameters: {
+                topic_id: topic.id,
+              },
+              llm: llm,
+              bot_user: bot_user,
+              tool: tool,
+            )
+          result = runner.invoke
+          expect(result["success"]).to eq(true)
+        end
+
+      expect(messages).not_to be_empty
+      expect(messages.first.data[:type]).to eq(:revised)
+    end
+
     it "can edit a post" do
       post = Fabricate(:post)
       tool.update!(
@@ -463,6 +491,143 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       result = runner.invoke
       expect(result["success"]).to eq(true)
       expect(topic.reload.tags.pluck(:name)).to contain_exactly("tag1", "tag2")
+    end
+
+    describe "custom fields" do
+      it "can get a custom field from a post" do
+        post = Fabricate(:post)
+        post.custom_fields["test_key"] = "test_value"
+        post.save_custom_fields
+
+        tool.update!(
+          script:
+            "function invoke(params) { return discourse.getCustomField('post', params.post_id, 'test_key'); }",
+        )
+        runner =
+          described_class.new(
+            parameters: {
+              post_id: post.id,
+            },
+            llm: llm,
+            bot_user: bot_user,
+            tool: tool,
+          )
+        result = runner.invoke
+        expect(result).to eq("test_value")
+      end
+
+      it "can set a custom field on a post" do
+        post = Fabricate(:post)
+
+        tool.update!(
+          script:
+            "function invoke(params) { return discourse.setCustomField('post', params.post_id, 'ai_processed', 'yes'); }",
+        )
+        runner =
+          described_class.new(
+            parameters: {
+              post_id: post.id,
+            },
+            llm: llm,
+            bot_user: bot_user,
+            tool: tool,
+          )
+        result = runner.invoke
+
+        expect(result["success"]).to eq(true)
+        expect(post.reload.custom_fields["ai_processed"]).to eq("yes")
+      end
+
+      it "returns null for non-existent custom field" do
+        post = Fabricate(:post)
+
+        tool.update!(
+          script:
+            "function invoke(params) { return discourse.getCustomField('post', params.post_id, 'nonexistent'); }",
+        )
+        runner =
+          described_class.new(
+            parameters: {
+              post_id: post.id,
+            },
+            llm: llm,
+            bot_user: bot_user,
+            tool: tool,
+          )
+        result = runner.invoke
+        expect(result).to be_nil
+      end
+
+      it "works with topic custom fields" do
+        topic = Fabricate(:topic)
+
+        tool.update!(
+          script:
+            "function invoke(params) { discourse.setCustomField('topic', params.topic_id, 'processed', 'true'); return discourse.getCustomField('topic', params.topic_id, 'processed'); }",
+        )
+        runner =
+          described_class.new(
+            parameters: {
+              topic_id: topic.id,
+            },
+            llm: llm,
+            bot_user: bot_user,
+            tool: tool,
+          )
+        result = runner.invoke
+        expect(result).to eq("true")
+      end
+
+      it "throws error for invalid type" do
+        tool.update!(
+          script:
+            "function invoke(params) { return discourse.setCustomField('invalid', 1, 'key', 'val'); }",
+        )
+        runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+        expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Invalid type/)
+      end
+
+      it "throws error for key too long" do
+        post = Fabricate(:post)
+        long_key = "k" * (described_class::MAX_CUSTOM_FIELD_KEY_LENGTH + 1)
+
+        tool.update!(
+          script:
+            "function invoke(params) { return discourse.setCustomField('post', params.post_id, params.key, 'val'); }",
+        )
+        runner =
+          described_class.new(
+            parameters: {
+              post_id: post.id,
+              key: long_key,
+            },
+            llm: llm,
+            bot_user: bot_user,
+            tool: tool,
+          )
+        expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Key too long/)
+      end
+
+      it "throws error for value too long" do
+        post = Fabricate(:post)
+        long_value = "v" * (described_class::MAX_CUSTOM_FIELD_VALUE_LENGTH + 1)
+
+        tool.update!(
+          script:
+            "function invoke(params) { return discourse.setCustomField('post', params.post_id, 'key', params.value); }",
+        )
+        runner =
+          described_class.new(
+            parameters: {
+              post_id: post.id,
+              value: long_value,
+            },
+            llm: llm,
+            bot_user: bot_user,
+            tool: tool,
+          )
+        expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Value too long/)
+      end
     end
   end
 end
