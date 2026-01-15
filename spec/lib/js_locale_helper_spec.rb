@@ -12,7 +12,7 @@ RSpec.describe JsLocaleHelper do
       "@messageformat/runtime/messages": "#{mf_runtime}/esm/messages.js",
       "@messageformat/runtime": "#{mf_runtime}/esm/runtime.js",
       "@messageformat/runtime/lib/cardinals": "#{mf_runtime}/esm/cardinals.js",
-      "make-plural/cardinals": "#{discourse_node_modules}/make-plural/cardinals.mjs",
+      "make-plural/cardinals": "#{discourse_node_modules}/make-plural/cardinals.js",
       "discourse-i18n": "#{Rails.root}/frontend/discourse-i18n/src/index.js",
     }.each do |module_name, path|
       ctx.eval(processor.perform(File.read(path), "", module_name.to_s))
