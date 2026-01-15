@@ -202,7 +202,12 @@ describe "StalledWiki" do
 
       context "when retriggered_after is not set" do
         before do
-          automation.upsert_field!("retriggered_after", "choices", { value: nil }, target: "trigger")
+          automation.upsert_field!(
+            "retriggered_after",
+            "choices",
+            { value: nil },
+            target: "trigger",
+          )
         end
 
         it "doesn't trigger again for previously triggered posts" do
