@@ -129,9 +129,10 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
     it "publishes to MessageBus when setting tags" do
       topic = Fabricate(:topic)
       Fabricate(:post, topic: topic)
-      Fabricate(:tag, name: "tag1")
+      Fabricate(:tag, name: "msgbus_tag")
       tool.update!(
-        script: "function invoke(params) { return discourse.setTags(params.topic_id, ['tag1']); }",
+        script:
+          "function invoke(params) { return discourse.setTags(params.topic_id, ['msgbus_tag']); }",
       )
 
       messages =

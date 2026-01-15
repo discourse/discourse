@@ -19,6 +19,8 @@ module DiscourseAi
       MAX_CUSTOM_FIELD_KEY_LENGTH = 256
       MAX_CUSTOM_FIELD_VALUE_LENGTH = 1024
 
+      CUSTOM_FIELD_MODELS = { "post" => Post, "topic" => Topic, "user" => User }.freeze
+
       def initialize(parameters:, llm:, bot_user:, context: nil, tool:, timeout: nil)
         if context && !context.is_a?(DiscourseAi::Personas::BotContext)
           raise ArgumentError, "context must be a BotContext object"
@@ -931,11 +933,9 @@ module DiscourseAi
                 end
 
                 visibility_reason =
-                  if updates["visible"]
-                    Topic.visibility_reasons[:manually_relisted]
-                  else
-                    Topic.visibility_reasons[:manually_unlisted]
-                  end
+                  Topic.visibility_reasons[
+                    updates["visible"] ? :manually_relisted : :manually_unlisted
+                  ]
 
                 topic.update_status(
                   "visible",
@@ -955,6 +955,7 @@ module DiscourseAi
                        )
                   return { error: "Failed to apply tags", details: topic.errors.full_messages }
                 end
+                topic.first_post&.publish_change_to_clients!(:revised)
               end
 
               {
@@ -988,7 +989,7 @@ module DiscourseAi
           "_discourse_set_custom_field",
           ->(type, id, key, value) do
             in_attached_function do
-              return { error: "Invalid type: #{type}" } if %w[post topic user].exclude?(type)
+              return { error: "Invalid type: #{type}" } unless CUSTOM_FIELD_MODELS.key?(type)
               return { error: "Key is required" } if key.blank?
               if key.to_s.length > MAX_CUSTOM_FIELD_KEY_LENGTH
                 return { error: "Key too long (max #{MAX_CUSTOM_FIELD_KEY_LENGTH} characters)" }
@@ -1180,14 +1181,7 @@ module DiscourseAi
       end
 
       def find_model_by_type(type, id)
-        case type
-        when "post"
-          Post.find_by(id: id)
-        when "topic"
-          Topic.find_by(id: id)
-        when "user"
-          User.find_by(id: id)
-        end
+        CUSTOM_FIELD_MODELS[type]&.find_by(id: id)
       end
 
       def in_attached_function

@@ -23,28 +23,20 @@ if defined?(DiscourseAutomation)
           }
 
     script do |context, fields, automation|
-      tool_id = fields.dig("tool", "value")
       post = context["post"]
-      next if post&.user&.bot?
+      next if post.blank? || post.user&.bot?
 
       begin
-        RateLimiter.new(
-          Discourse.system_user,
-          "ai_tool_action_#{post.id}",
-          SiteSetting.ai_automation_max_triage_per_post_per_minute,
-          1.minute,
-        ).performed!
-
-        RateLimiter.new(
-          Discourse.system_user,
-          "ai_tool_action",
-          SiteSetting.ai_automation_max_triage_per_minute,
-          1.minute,
-        ).performed!
+        [
+          ["ai_tool_action_#{post.id}", SiteSetting.ai_automation_max_triage_per_post_per_minute],
+          ["ai_tool_action", SiteSetting.ai_automation_max_triage_per_minute],
+        ].each do |key, limit|
+          RateLimiter.new(Discourse.system_user, key, limit, 1.minute).performed!
+        end
 
         DiscourseAi::Automation::AiToolAction.handle(
           post: post,
-          tool_id: tool_id,
+          tool_id: fields.dig("tool", "value"),
           llm_model_id: fields.dig("llm_model", "value"),
           automation: automation,
         )
