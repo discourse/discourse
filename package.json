@@ -81,6 +81,14 @@
     },
     "overrides": {
       "@ember/test-waiters": "4.1.1"
-    }
+    },
+    "ignoredBuiltDependencies": [
+      "@swc/core",
+      "core-js",
+      "esbuild"
+    ],
+    "onlyBuiltDependencies": [
+      "lefthook"
+    ]
   }
 }
