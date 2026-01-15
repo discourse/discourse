@@ -15,6 +15,12 @@ ur:
       actions:
         no_action_comment:
           title: "کوئی کارروائی نہیں"
+        agree_and_suspend:
+          description: "فلَیگ کے ساتھ اتفاق کریں اور صارف معطل کریں۔"
+        agree_and_silence:
+          description: "فلَیگ کے ساتھ اتفاق کریں اور صارف خاموش کریں۔"
+        ignore:
+          title: "فلَیگ نظر انداز کریں"
   post_action_types:
     vote:
       title: "ووٹ"
@@ -28,8 +34,8 @@ ur:
           agree_and_silence:
             title: "صارف خاموش کریں"
             description: "فلَیگ کے ساتھ اتفاق کریں اور صارف خاموش کریں۔"
-          disagree:
-            title: "اختلاف کریں"
+          ignore:
+            title: "فلَیگ نظر انداز کریں"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

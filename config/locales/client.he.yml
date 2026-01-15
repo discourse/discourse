@@ -984,6 +984,10 @@ he:
         reviewable_post:
           title: "פוסט"
           noun: "פוסט"
+        reviewable_ai_chat_message:
+          noun: "הודעת הצ׳אט"
+        reviewable_ai_post:
+          noun: "פרסום"
       flagged_as: "מסומן בתור"
       post_flagged_as: "הפוסט סומן בתור"
       chat_flagged_as: "השיחה סומנה בתור"
@@ -3903,8 +3907,6 @@ he:
           12_hours: "12 שעות"
           24_hours: "24 שעות"
           custom: "משך מותאם אישית"
-      slow_mode_notice:
-        duration: "נא להמתין %{duration} בין פוסטים בנושא הזה"
       topic_status_update:
         title: "שעון עצר לנושא"
         save: "קביעת שעון עצר"
@@ -5598,6 +5600,7 @@ he:
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_text: "קטגוריות"
           header_action_title: "לערוך את קטגוריות סרגל הצד שלך"
+          header_action_new: "קטגוריה חדשה"
           configure_defaults: "הגדרת ברירות מחדל"
         community:
           edit_section:

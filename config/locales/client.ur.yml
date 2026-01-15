@@ -852,6 +852,10 @@ ur:
         reviewable_post:
           title: "دھاگہ"
           noun: "پوسٹ"
+        reviewable_ai_chat_message:
+          noun: "گپ شپ کا پیغام"
+        reviewable_ai_post:
+          noun: "دھاگہ"
       flagged_as: "کے طور پرفلَیگ"
       user_label: "رکن"
       moderator_actions: "ناظم کی کاروائیاں"
@@ -3461,8 +3465,6 @@ ur:
           12_hours: "12 گھنٹے"
           24_hours: "24 گھنٹے"
           custom: "اپنی مرضی کے مطابق مدت"
-      slow_mode_notice:
-        duration: "براہ کرم اس عنوان میں پوسٹ کے درمیان %{duration}"
       topic_status_update:
         title: "موضوع ٹائمر"
         save: "ٹائمر مقرر کریں"

@@ -24,10 +24,7 @@ module PageObjects
       end
 
       def click_categories_header_button
-        page.click_button(
-          I18n.t("js.sidebar.sections.categories.header_action_title"),
-          class: "sidebar-section-header-button",
-        )
+        page.find("[data-section-name='categories'] .sidebar-section-header-button").click
       end
 
       def click_topics_link

@@ -31,14 +31,9 @@
   font-size: var(--font-down-2);
 }
 
-.sidebar-section-link .user-status-message {
-  margin-left: var(--space-2);
-}
-
 .sidebar-section-link-content-badge.icon {
   display: inline-flex;
   align-items: center;
-  margin-left: 0.5em;
   flex-shrink: 0;
 
   svg {

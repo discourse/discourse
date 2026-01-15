@@ -759,6 +759,10 @@ zh_TW:
         reviewable_post:
           title: "貼文"
           noun: "貼文"
+        reviewable_ai_chat_message:
+          noun: "聊天訊息"
+        reviewable_ai_post:
+          noun: "貼文"
       user_label: "使用者"
       notes:
         delete: "刪除"
@@ -3088,8 +3092,6 @@ zh_TW:
           12_hours: "12 小時"
           24_hours: "24 小時"
           custom: "自訂持續時間"
-      slow_mode_notice:
-        duration: "在此話題下，請在兩次發帖之間等待 %{duration}"
       topic_status_update:
         title: "話題計時器"
         save: "設定計時器"

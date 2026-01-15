@@ -32,8 +32,6 @@ zh_TW:
           description: "同意檢舉並禁止使用者發文"
         agree_and_delete:
           title: "刪除訊息"
-        disagree:
-          title: "不同意"
     channel:
       dm_title:
         single_user: "%{username}"

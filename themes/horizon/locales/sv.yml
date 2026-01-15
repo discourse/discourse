@@ -5,3 +5,15 @@
 # https://translate.discourse.org/
 
 sv:
+  solved: "Löst"
+  posted: "publicerade"
+  by_username: "av @%{username}"
+  vote_count:
+    one: "%{count} röst"
+    other: "%{count} röster"
+  like_count:
+    one: "%{count} gillning"
+    other: "%{count} gillningar"
+  reply_count:
+    one: "%{count} svar"
+    other: "%{count} svar"

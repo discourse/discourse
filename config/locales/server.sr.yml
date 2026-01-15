@@ -554,30 +554,45 @@ sr:
         complete: "Post izbrisan."
       delete_and_agree:
         complete: "Post izbrisan."
-      disagree:
+      disagree_bundle:
         title: "Ne"
+      disagree:
         complete: "Markiranje ignorisano."
       ignore:
         complete: "Markiranje ignorisano."
       ignore_and_do_nothing:
         complete: "Markiranje ignorisano."
       approve:
-        title: "Odobri"
+        title: "Da"
         complete: "Post odobren."
       approve_post:
+        title: "Da"
         complete: "Post odobren."
       approve_post_closed:
+        title: "Da"
         complete: "Post odobren."
+      reject_post_bundle:
+        title: "Ne"
       reject_post:
         complete: "Post odbijen."
       approve_user:
+        title: "Da"
         complete: "Korisnik odobrio."
       reject_user:
+        title: "Ne"
         delete:
           title: "Obriši Korisnika"
           complete: "Korisnik izbrisan."
+      confirm_spam:
+        title: "Da"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Odbij"
+      approve_and_restore:
+        title: "Da"
+      approve_and_unhide:
+        title: "Da"
       delete_post:
         complete: "Post izbrisan"
       delete_user:

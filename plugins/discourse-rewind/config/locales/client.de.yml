@@ -74,6 +74,7 @@ de:
         assignments:
           title: Zuordnungen
           total_assigned: Mir zugeordnet
+          total_assigned_others: "%{username} Zugeordnet"
           completed: Abgeschlossene Zuordnungen
           pending: Ausstehende Zuordnungen
           assigned_by_user: Erhaltene Zuordnungen
@@ -88,7 +89,6 @@ de:
           status_online: "● online"
           reply_2: "cOo0oL :D"
           message_5: "Deine Lieblingskanäle:"
-          message_5_others: "Die Lieblingskanäle:"
           dancing_baby_alt: "Tanzendes Baby"
         favorite_gifs:
           title:
@@ -107,7 +107,6 @@ de:
           redemption_rate: Annahmequote
           avg_trust_level: Ø Vertrauensstufe
           invitee_impact: Auswirkungen deiner Einladungen
-          invitee_impact_others: Auswirkungen der Einladungen
           invitee_posts: Erstellte Beiträge
           invitee_topics: Erstellte Themen
           invitee_likes: Abgegebene „Gefällt mir“
@@ -141,11 +140,9 @@ de:
           mentions: Erwähnungen
           topics_with_new_users: Themen mit neuen Benutzern
           contributions_helped: Deine Beiträge haben
-          contributions_helped_others: Die Beiträge haben
         time_of_day_activity:
           title: Täglicher Aktivitätsrhythmus
           play_button: Spiele deine Aktivität als Ton ab
-          play_button_others: Spielt die Aktivität als Ton ab
           stop_button: Audiowiedergabe stoppen
         writing_analysis:
           title: Textanalyse

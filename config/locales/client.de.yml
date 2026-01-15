@@ -853,6 +853,10 @@ de:
         reviewable_post:
           title: "Beitrag"
           noun: "Beitrag"
+        reviewable_ai_chat_message:
+          noun: "Chat-Nachricht"
+        reviewable_ai_post:
+          noun: "Beitrag"
       flagged_as: "Gemeldet als"
       post_flagged_as: "Beitrag gemeldet als"
       chat_flagged_as: "Chat gemeldet als"
@@ -3518,8 +3522,6 @@ de:
           12_hours: "12 Stunden"
           24_hours: "24 Stunden"
           custom: "Benutzerdefinierte Dauer"
-      slow_mode_notice:
-        duration: "Bitte warte zwischen dem Verfassen von Beiträgen in diesem Thema %{duration}."
       topic_status_update:
         title: "Zeitschaltuhr"
         save: "Zeitschaltuhr aktivieren"
@@ -5063,6 +5065,7 @@ de:
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Kategorien"
           header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
+          header_action_new: "Neue Kategorie"
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           edit_section:

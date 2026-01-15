@@ -2301,32 +2301,40 @@ be:
         confirm: "Вы ўпэўненыя, што жадаеце выдаліць адказы на пост, а?"
       delete_and_agree_replies:
         confirm: "Вы ўпэўненыя, што жадаеце выдаліць адказы на пост, а?"
-      disagree_and_restore:
-        description: "Аднаўленне паста так, што можа бачыць усе карыстальнікі."
-      disagree:
-        title: "няма"
+      disagree_bundle:
+        title: "Не"
       ignore:
         title: "ігнараваць"
       approve:
-        title: "ўхваляць"
+        title: "Так"
       approve_post:
-        title: "зацвердзіць паведамленне"
+        title: "Так"
       approve_post_closed:
-        title: "зацвердзіць паведамленне"
+        title: "Так"
+      reject_post_bundle:
+        title: "Не"
       reject_post:
         title: "адхіліць паведамленне"
         complete: "Публікацыя адхілена."
       approve_user:
-        title: "зацвердзіць карыстальніка"
+        title: "Так"
       reject_user:
+        title: "Не"
         delete:
           title: "выдаліць карыстальніка"
-          description: "Карыстальнік будзе выдалены з форуму."
         block:
           title: "Выдаліць і Заблакаваць карыстальніка"
           description: "Карыстальнік будзе выдалены, і мы будзем блакаваць іх IP і адрас электроннай пошты."
+      confirm_spam:
+        title: "Так"
+      not_spam:
+        title: "Не"
       reject:
         title: "адхіляць"
+      approve_and_restore:
+        title: "Так"
+      approve_and_unhide:
+        title: "Так"
       no_action_post:
         title: "Ніякіх дзеянняў"
       no_action_user:

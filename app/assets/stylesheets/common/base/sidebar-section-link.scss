@@ -95,12 +95,17 @@
     }
 
     .sidebar-section-link-content-badge {
-      padding-inline: var(--space-1);
       color: var(--d-sidebar-link-badge-color);
       font-size: var(--font-down-2);
       width: auto;
+      min-width: var(--font-down-1);
+      padding-inline: var(--space-1);
       font-weight: normal;
       flex-shrink: 0;
+      text-align: center;
+      max-width: 15ch;
+
+      @include ellipsis;
 
       &:not(.icon) {
         margin-left: auto;
@@ -108,7 +113,6 @@
     }
 
     .sidebar-section-link-suffix {
-      margin-left: 1em;
       font-size: var(--font-down-4);
       flex-shrink: 0;
 

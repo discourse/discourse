@@ -49,9 +49,21 @@ it:
         agree_and_delete:
           title: "Elimina il commento"
           description: "Elimina il commento in modo che gli utenti non possano vederlo."
+        agree_and_suspend:
+          title: "Sospendi utente"
+          description: "Accetta segnalazione e sospendi l'utente."
+        agree_and_silence:
+          title: "Silenzia utente"
+          description: "Accetta segnalazione e silenzia l'utente."
         disagree_and_restore:
           title: "Esprimi disaccordo e ripristina il commento"
           description: "Ripristina il commento in modo che tutti gli utenti possano vederlo."
+        disagree:
+          title: "Mantieni il commento"
+        ignore:
+          title: "Ignore flag"
+        delete_and_agree:
+          description: "Ignora la segnalazione rimuovendola dalla coda ed eliminando il commento."
   post_action_types:
     vote:
       title: "Vota"
@@ -99,16 +111,14 @@ it:
             title: "Elimina il commento"
             description: "Elimina il commento in modo che gli utenti non possano vederlo."
           delete_and_agree:
-            title: "Ignora segnalazione ed elimina commento"
             description: "Ignora la segnalazione rimuovendola dalla coda ed eliminando il commento."
           disagree_and_restore:
             title: "Esprimi disaccordo e ripristina il commento"
             description: "Ripristina il commento in modo che tutti gli utenti possano vederlo."
           disagree:
-            title: "Rifiuta"
+            title: "Mantieni il commento"
           ignore:
-            title: "Non fare nulla"
-            description: "Ignora la segnalazione rimuovendola dalla coda senza intraprendere alcuna azione."
+            title: "Ignore flag"
         transcript:
           view: "Visualizza la trascrizione dei commenti precedenti"
       reviewable_score_types:

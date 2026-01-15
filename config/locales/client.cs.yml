@@ -990,6 +990,10 @@ cs:
         reviewable_post:
           title: "Příspěvek"
           noun: "příspěvek"
+        reviewable_ai_chat_message:
+          noun: "zpráva chatu"
+        reviewable_ai_post:
+          noun: "příspěvek"
       flagged_as: "Nahlášeno jako"
       post_flagged_as: "Příspěvek nahlášen jako"
       chat_flagged_as: "Chat nahlášen jako"
@@ -3937,8 +3941,6 @@ cs:
           12_hours: "12 hodin"
           24_hours: "24 hodin"
           custom: "Vlastní doba trvání"
-      slow_mode_notice:
-        duration: "Mezi příspěvky v tomto tématu prosím vyčkejte %{duration}"
       topic_status_update:
         title: "Časovač tématu"
         save: "Nastavit časovač "
@@ -5649,6 +5651,7 @@ cs:
           click_to_get_started: "Začněte kliknutím sem."
           header_link_text: "Kategorie"
           header_action_title: "Upravit kategorie v postranním panelu"
+          header_action_new: "Přidat kategorii"
           configure_defaults: "Nastavit výchozí"
         community:
           edit_section:

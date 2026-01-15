@@ -849,6 +849,10 @@ hu:
         reviewable_post:
           title: "Bejegyzés"
           noun: "bejegyzéssel"
+        reviewable_ai_chat_message:
+          noun: "csevegőüzenet"
+        reviewable_ai_post:
+          noun: "bejegyzéssel"
       flagged_as: "Megjelölt"
       post_flagged_as: "Bejegyzés megjelölve mint"
       chat_flagged_as: "Csevegés megjelölve mint"
@@ -3489,8 +3493,6 @@ hu:
           12_hours: "12 óráig"
           24_hours: "24 óráig"
           custom: "Egyéni időtartam"
-      slow_mode_notice:
-        duration: "Várjon ennyit a bejegyzések között ennél a témánál: %{duration}"
       topic_status_update:
         title: "Téma időzítése"
         save: "Időzítő beállítása"

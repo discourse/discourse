@@ -900,6 +900,8 @@ hr:
         reviewable_post:
           title: "Objava"
           noun: "Objava"
+        reviewable_ai_post:
+          noun: "Objava"
       flagged_as: "Označeno kao"
       user_label: "Korisnik"
       moderator_actions: "Radnje moderatora"
@@ -3622,8 +3624,6 @@ hr:
           12_hours: "12 sati"
           24_hours: "24 sata"
           custom: "Prilagođeno trajanje"
-      slow_mode_notice:
-        duration: "Molimo pričekajte %{duration} između postova u ovoj temi"
       topic_status_update:
         title: "Timer teme"
         save: "Postavi tajmer"

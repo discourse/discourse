@@ -754,6 +754,8 @@ fa_IR:
         reviewable_post:
           title: "نوشته"
           noun: "نوشته"
+        reviewable_ai_post:
+          noun: "نوشته"
       user_label: "کاربر"
       notes:
         delete: "حذف"
@@ -3204,8 +3206,6 @@ fa_IR:
           12_hours: "۱۲ ساعت"
           24_hours: "۲۴ ساعت"
           custom: "مدت زمان سفارشی"
-      slow_mode_notice:
-        duration: "لطفا بین پست‌های این موضوع %{duration} صبر کنید"
       topic_status_update:
         title: "زمانسنج مبحث"
         save: "تنظیم زمان‌سنج"
@@ -4639,6 +4639,7 @@ fa_IR:
           click_to_get_started: "برای شروع اینجا را کلیک کنید."
           header_link_text: "دسته‌بندی‌ها"
           header_action_title: "ويرايش دسته‌بندی‌های نوار کناری خود"
+          header_action_new: "دسته‌بندی جدید"
           configure_defaults: "تنظیمات پیش‌فرض"
         community:
           edit_section:

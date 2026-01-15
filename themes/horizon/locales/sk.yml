@@ -5,5 +5,23 @@
 # https://translate.discourse.org/
 
 sk:
+  solved: "Vyriešené"
+  posted: "zverejnené"
+  by_username: "od @%{username}"
+  vote_count:
+    one: "%{count} hlas"
+    few: "%{count} hlasy"
+    many: "%{count} hlasy"
+    other: "%{count} hlasy"
+  like_count:
+    one: "%{count} lajk"
+    few: "%{count} lajkov"
+    many: "%{count} lajky"
+    other: "%{count} lajky"
+  reply_count:
+    one: "%{count} odpoveď"
+    few: "%{count} odpovede"
+    many: "%{count} odpovedí"
+    other: "%{count} odpovedí"
   theme_metadata:
     description: "Jednoduchá a krásna téma, ktorá zlepšuje používateľské prostredie stránok Discourse."

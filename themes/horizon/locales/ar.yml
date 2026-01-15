@@ -5,5 +5,29 @@
 # https://translate.discourse.org/
 
 ar:
+  solved: "تم الحل"
+  posted: "تم النشر"
+  by_username: "من قِبل @%{username}"
+  vote_count:
+    zero: "%{count} من الأصوات"
+    one: "صوت واحد %{count}"
+    two: "صوتان %{count}"
+    few: "%{count} أصوات"
+    many: "%{count} صوتًا"
+    other: "%{count} من الأصوات"
+  like_count:
+    zero: "%{count} إعجابًا"
+    one: "إعجاب واحد (%{count})"
+    two: "إعجابان (%{count})"
+    few: "%{count} إعجابات"
+    many: "%{count} إعجابًا"
+    other: "%{count} إعجابًا"
+  reply_count:
+    zero: "%{count} ردود"
+    one: "رد واحد (%{count})"
+    two: "%{count} ردًا"
+    few: "%{count} ردًا"
+    many: "%{count} ردود"
+    other: "%{count} ردود"
   theme_metadata:
     description: "سمة سهلة وجذابة تسهم في تحسين تجربة التشغيل الافتراضية لمواقع Discourse."

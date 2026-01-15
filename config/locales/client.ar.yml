@@ -1097,6 +1097,10 @@ ar:
         reviewable_post:
           title: "المنشور"
           noun: "منشور"
+        reviewable_ai_chat_message:
+          noun: "رسالة الدردشة"
+        reviewable_ai_post:
+          noun: "منشور"
       flagged_as: "صفة الإبلاغ"
       post_flagged_as: "عُلّم على المنشور على أنه"
       chat_flagged_as: "عُلّم على الدردشة على أنها"
@@ -4179,8 +4183,6 @@ ar:
           12_hours: "12 ساعة"
           24_hours: "24 ساعة"
           custom: "المدة المخصَّصة"
-      slow_mode_notice:
-        duration: "يُرجى الانتظار لمدة %{duration} بين المنشورات في هذا الموضوع"
       topic_status_update:
         title: "مؤقِّت الموضوع"
         save: "تعيين المؤقِّت"
@@ -5972,6 +5974,7 @@ ar:
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الفئات"
           header_action_title: "تعديل فئات الشريط الجانبي"
+          header_action_new: "فئة جديدة"
           configure_defaults: "إعداد الإعدادات الافتراضية"
         community:
           edit_section:

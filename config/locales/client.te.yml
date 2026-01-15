@@ -624,6 +624,8 @@ te:
         reviewable_post:
           title: "పోస్ట్"
           noun: "పోస్ట్"
+        reviewable_ai_post:
+          noun: "పోస్ట్"
       user_label: "సభ్యుడు"
       notes:
         delete: "తొలగించు"
@@ -2825,8 +2827,6 @@ te:
           12_hours: "12 గంటలు"
           24_hours: "24 గంటలు"
           custom: "అనుకూల వ్యవధి"
-      slow_mode_notice:
-        duration: "దయచేసి ఈ విషయంలోని పోస్ట్‌ల మధ్య %{duration} వేచి ఉండండి"
       topic_status_update:
         title: "టాపిక్ టైమర్"
         save: "టైమర్‌ని సెట్ చేయండి"

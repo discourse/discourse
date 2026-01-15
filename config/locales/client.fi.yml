@@ -832,6 +832,10 @@ fi:
         reviewable_post:
           title: "Viesti"
           noun: "viesti"
+        reviewable_ai_chat_message:
+          noun: "chat-viesti"
+        reviewable_ai_post:
+          noun: "viesti"
       flagged_as: "Liputettu merkinnällä"
       user_label: "Käyttäjä"
       moderator_actions: "Valvojan toiminnot"
@@ -3422,8 +3426,6 @@ fi:
           12_hours: "12 tuntia"
           24_hours: "24 tuntia"
           custom: "Valitse kesto"
-      slow_mode_notice:
-        duration: "Tässä ketjussa on odotettava %{duration} viestien välillä."
       topic_status_update:
         title: "Ketjun ajastin"
         save: "Aseta ajastin"

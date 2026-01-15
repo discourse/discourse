@@ -2220,6 +2220,7 @@ en:
         redeemed_tab_with_count: "Redeemed (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} redeemed)"
+        generating_link: "Generating link..."
         groups: "Groups"
         topic: "Topic"
         sent: "Created/Last Sent"
@@ -3654,6 +3655,7 @@ en:
           unread: "Nothing left unread... impressive!"
           new_new: "Nothing new at the moment... check back soon!"
           new: "Nothing new at the moment... check back soon!"
+          generic: "Nothing to see here...check back soon!"
 
     topic_bulk_actions:
       dismiss:
@@ -3825,7 +3827,7 @@ en:
           24_hours: "24 Hours"
           custom: "Custom Duration"
       slow_mode_notice:
-        duration: "Please wait %{duration} between posts in this topic"
+        duration: "Please wait %{duration} between your posts in this topic"
       topic_status_update:
         title: "Topic Timer"
         save: "Set Timer"
@@ -5481,6 +5483,9 @@ en:
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
           header_action_title: "Edit your sidebar categories"
+          header_action_new: "New category"
+          header_action_edit_sidebar: "Edit sidebar categories"
+          header_action_edit_header_dropdown: "Edit nav categories"
           configure_defaults: "Configure defaults"
         community:
           edit_section:
@@ -6307,7 +6312,7 @@ en:
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
-          previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
+          no_new_features_found: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
           learn_more: "Learn more..."
           experimental: "Experimental"
           only_experiments: "Only show experimental features"

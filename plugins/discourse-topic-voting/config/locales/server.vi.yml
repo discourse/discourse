@@ -20,3 +20,9 @@ vi:
       other: "%{count} phiếu bình chọn đã được chuyển."
     duplicated_votes:
       other: "Không thể chuyển %{count} phiếu bình chọn vì họ đã bỏ phiếu trong chủ đề khác."
+    filter:
+      description:
+        topic_votes_min: "Số bình chọn tối thiểu cho chủ đề"
+        topic_votes_max: "Số bình chọn tối đa cho chủ đề"
+        order_topic_votes: "Sắp xếp chủ đề theo số lượng bình chọn cao nhất"
+        order_topic_votes_asc: "Sắp xếp chủ đề theo số lượng bình chọn thấp nhất"

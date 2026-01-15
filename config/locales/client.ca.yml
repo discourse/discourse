@@ -585,6 +585,8 @@ ca:
         reviewable_post:
           title: "Publicació"
           noun: "publicació"
+        reviewable_ai_post:
+          noun: "publicació"
       user_label: "Usuari"
       notes:
         delete: "Suprimeix"

@@ -2099,7 +2099,6 @@ he:
     invite_link_max_redemptions_limit_users: "כמות הניצולים המרבית שמורשית לקישורי הזמנה שנוצרו על ידי משתמשים רגילים לא יכולה לעבור את הערך הזה."
     alert_admins_if_errors_per_minute: "מספר השגיאות בדקה לפני שליחת התראה למנהל. 0 משבית אפשרות זו. לתשומת לבך: דורש הפעלה מחדש."
     alert_admins_if_errors_per_hour: "מספר השגיאות בשעה לפני שליחת התראה למנהל. 0 משבית אפשרות זו. לתשומת לבך: דורש הפעלה מחדש."
-    categories_topics: "מספר הנושאים להציג בעמוד ה־‎/categories (קטגוריות). אם הוגדר ל־0, יתבצע ניסיון למצוא ערך שישאיר את שתי העמודות סימטריות (קטגוריות ונושאים)."
     suggested_topics: "מספר הנושאים המוצעים שיופיעו בתחתית הנושא המוצג."
     limit_suggested_to_category: "להציג רק נושאים מהקטגוריה הנוכחית ברשימת הנושאים המומלצים."
     suggested_topics_max_days_old: "נושאים מוצעים לא אמורים להיות בני יותר מ־n ימים."
@@ -5375,19 +5374,15 @@ he:
         description: "הסכמה עם הסימון והסתרת הפוסט הזה + שליחת הודעה אוטומטית למשתמש שמפצירה בו לערוך אותו."
         complete: "הפוסט הוסתר, המשתמש קיבל הודעה."
       agree_and_edit:
-        title: "להסכים ולערוך את הפוסט"
+        title: "עריכת פוסט"
         description: "להסכים עם הסימון ולפתוח חלון עריכת הודעה כדי לערוך את הפוסט."
         complete: "הדגל אושר, עכשיו אפשר לערוך את הפוסט"
       delete:
         title: "מחיקה"
         complete: "פוסט נמחק."
       delete_and_ignore:
-        title: "התעלמות מהדגל ומחיקת הפוסט"
-        description: "התעלמות מהסימון על ידי הסרתו מהתור ומחיקת הפוסט, אם זה הפוסט הראשון, למחוק גם את הנושא. "
         complete: "פוסט נמחק."
       delete_and_ignore_replies:
-        title: "התעלמות מהסימון, למחוק את הפוסט והתגובות"
-        description: "התעלמות מהסימון על ידי הסרתו מהתור, מחיקת הפוסט וכל התגובות שלו, אם זה הפוסט הראשון, למחוק גם את הנושא"
         confirm: "למחוק גם את התגובות לפוסט?"
         complete: "הפוסט והתגובות נמחקו."
       delete_and_agree:
@@ -5400,11 +5395,12 @@ he:
         confirm: "למחוק גם את התגובות לפוסט?"
         complete: "הפוסט והתגובות נמחקו."
       disagree_and_restore:
-        title: "לא, לשחזר את הפוסט"
-        description: "לשחזר את הפוסט כדי שכל המשתמשים יוכלו לצפות בו."
+        title: "שחזור פוסט"
         complete: "הפוסט שוחזר."
-      disagree:
+      disagree_bundle:
         title: "לא"
+      disagree:
+        title: "להשאיר את הפוסט"
         complete: "הסימון זכה להתעלמות."
       discard_post:
         title: "השלכת פוסט"
@@ -5420,31 +5416,36 @@ he:
         description: "התעלמות מהסימון על ידי הסרתו מהתור מבלי לנקוט בעמדה. פוסטים מוסתרים נשארים מוסתרים ויטופלו על ידי הכלים האוטומטיים."
         complete: "הסימון זכה להתעלמות."
       approve:
-        title: "אישור"
+        title: "כן"
         complete: "הפרסום אושר."
       approve_post:
-        title: "לאשר פוסט"
+        title: "כן"
         complete: "הפרסום אושר."
       approve_post_closed:
-        title: "לאשר פוסט"
+        title: "כן"
         confirm: "נושא זה סגור. ליצור את הפוסט בכל אופן?"
         complete: "הפרסום אושר."
+      reject_post_bundle:
+        title: "לא"
       reject_post:
         title: "לדחות פוסט"
         complete: "הפרסום נדחה."
       approve_user:
-        title: "אישור משתמש"
+        title: "כן"
         complete: "המשתמש אישר."
       reject_user:
-        title: "מחיקת משתמש…"
+        title: "לא"
         delete:
           title: "מחיקת משתמש"
-          description: "המשתמש יימחק מהפורום."
           complete: "משתמש נמחק."
         block:
           title: "מחיקה וחסימת המשתמש"
           description: "המשתמש יימחק ואנו נחסום את כתובת ה־IP והדוא״ל שלו."
           complete: "המשתמש נמחק ונחסם."
+      confirm_spam:
+        title: "כן"
+      not_spam:
+        title: "לא"
       reject:
         title: "לדחות"
         bundle_title: "דחייה…"
@@ -5461,10 +5462,10 @@ he:
         title: "להשאיר את הפוסט מחוק"
         complete: "הפוסט נדחה ונשאר מחוק."
       approve_and_restore:
-        title: "אישור ושחזור הפוסט"
+        title: "כן"
         complete: "הפוסט אושר ושוחזר."
       approve_and_unhide:
-        title: "אישור והצגת הפוסט"
+        title: "כן"
         complete: "הפוסט אושר והוצג מחדש"
       post_actions:
         bundle_title: "מה לעשות עם הפוסט?"

@@ -601,6 +601,10 @@ ko:
         reviewable_post:
           title: "게시물"
           noun: "글"
+        reviewable_ai_chat_message:
+          noun: "채팅 메시지"
+        reviewable_ai_post:
+          noun: "글"
       user_label: "사용자"
       notes:
         delete: "삭제하기"
@@ -2491,8 +2495,6 @@ ko:
           12_hours: "12시간"
           24_hours: "24시간"
           custom: "사용자 지정 기간"
-      slow_mode_notice:
-        duration: "%{duration} 후 이 글에 추가로 게시할 수 있습니다."
       topic_status_update:
         title: "글 타이머"
         save: "타이머 설정"
@@ -3633,6 +3635,7 @@ ko:
         categories:
           click_to_get_started: "시작하려면 여기를 클릭하십시오."
           header_link_text: "카테고리"
+          header_action_new: "새로운 카테고리"
           configure_defaults: "기본값 구성"
         community:
           edit_section:

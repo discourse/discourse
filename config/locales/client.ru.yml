@@ -970,6 +970,10 @@ ru:
         reviewable_post:
           title: "Сообщение"
           noun: "публикация"
+        reviewable_ai_chat_message:
+          noun: "сообщение чата"
+        reviewable_ai_post:
+          noun: "публикация"
       flagged_as: "Помечено как"
       user_label: "Пользователь"
       moderator_actions: "Действия модератора"
@@ -3829,8 +3833,6 @@ ru:
           12_hours: "12 часов"
           24_hours: "24 часа"
           custom: "Настраиваемый интервал"
-      slow_mode_notice:
-        duration: "Подождите %{duration} между публикацией сообщений в этой теме"
       topic_status_update:
         title: "Таймер темы"
         save: "Установить таймер"

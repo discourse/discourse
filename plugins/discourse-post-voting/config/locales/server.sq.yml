@@ -5,6 +5,13 @@
 # https://translate.discourse.org/
 
 sq:
+  discourse_post_voting:
+    reviewables:
+      actions:
+        agree_and_suspend:
+          description: "Kliko tek shënimi dhe bllokoni përdoruesin."
+        agree_and_silence:
+          description: "Kliko tek shënimi dhe blloko përdoruesin."
   post_action_types:
     vote:
       title: "Voto"
@@ -18,11 +25,6 @@ sq:
           agree_and_silence:
             title: "Bllokimi i përdoruesit"
             description: "Kliko tek shënimi dhe blloko përdoruesin."
-          disagree:
-            title: "Jo dakord"
-          ignore:
-            title: "Mos bëni asnjë veprim"
-            description: "Injoro shënimin duke e hequr atë nga radha pa ndërmarrë asnjë veprim."
       reviewable_score_types:
         needs_review:
           title: "Nevojë për Rishikim"

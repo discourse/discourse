@@ -53,9 +53,19 @@ ar:
         agree_and_delete:
           title: "حذف التعليق"
           description: "حذف التعليق حتى لا يتمكن المستخدمون من رؤيته."
+        agree_and_suspend:
+          title: "تعليق المستخدم"
+          description: "الموافقة على البلاغ وتعليق المستخدم"
+        agree_and_silence:
+          title: "كتم المستخدم"
+          description: "الموافقة على البلاغ وكتم المستخدم"
         disagree_and_restore:
           title: "عدم الموافقة واستعادة التعليق"
           description: "استعادة التعليق حتى يتمكن جميع المستخدمين من رؤيته."
+        disagree:
+          title: "إبقاء التعليق"
+        delete_and_agree:
+          description: "تجاهل البلاغ بإزالته من قائمة الانتظار وحذف التعليق."
   post_action_types:
     vote:
       title: "تصويت"
@@ -107,16 +117,12 @@ ar:
             title: "حذف التعليق"
             description: "حذف التعليق حتى لا يتمكن المستخدمون من رؤيته."
           delete_and_agree:
-            title: "تجاهل البلاغ وحذف التعليق"
             description: "تجاهل البلاغ بإزالته من قائمة الانتظار وحذف التعليق."
           disagree_and_restore:
             title: "عدم الموافقة واستعادة التعليق"
             description: "استعادة التعليق حتى يتمكن جميع المستخدمين من رؤيته."
           disagree:
-            title: "عدم الموافقة"
-          ignore:
-            title: "عدم اتخاذ أي إجراء"
-            description: "تجاهل البلاغ بإزالته من قائمة الانتظار دون اتخاذ أي إجراء."
+            title: "إبقاء التعليق"
         transcript:
           view: "عرض نص التعليقات السابقة"
       reviewable_score_types:

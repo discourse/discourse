@@ -1879,7 +1879,6 @@ zh_CN:
     invite_link_max_redemptions_limit_users: "普通用户生成的邀请链接允许的最大确认次数不能超过此值。"
     alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误数量。值为 0 会禁用此功能。注意：需要重启。"
     alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误数量。值为 0 会禁用此功能。注意：需要重启。"
-    categories_topics: "要在 /categories 页面中显示的话题数量。如果设置为 0，它将自动尝试寻找一个值来保持两列对称（类别和话题）。"
     suggested_topics: "在话题底部显示的推荐话题的数量。"
     limit_suggested_to_category: "仅在推荐话题中显示当前类别中的话题"
     suggested_topics_max_days_old: "推荐话题的存在时间不应超过 n 天。"
@@ -5103,19 +5102,15 @@ zh_CN:
         description: "同意举报并隐藏此帖子 + 自动向用户发送信息，敦促他们进行编辑。"
         complete: "帖子已隐藏，用户已被通知。"
       agree_and_edit:
-        title: "同意并编辑帖子"
+        title: "编辑帖子"
         description: "同意举报并打开编辑器窗口以编辑帖子。"
         complete: "举报已确认，您现在可以编辑该帖子。"
       delete:
         title: "删除"
         complete: "帖子已被删除。"
       delete_and_ignore:
-        title: "忽略举报并删除帖子"
-        description: "忽略举报，将举报从队列中移除，并删除该帖子；如果是第一个帖子，同时删除该话题。 "
         complete: "帖子已被删除。"
       delete_and_ignore_replies:
-        title: "忽略举报，删除帖子和回复"
-        description: "忽略举报，将举报从队列中移除，并删除该帖子及所有回复；如果是第一个帖子，同时删除该话题"
         confirm: "确定要同时删除对帖子的回复吗？"
         complete: "帖子和回复已被删除。"
       delete_and_agree:
@@ -5128,11 +5123,12 @@ zh_CN:
         confirm: "确定要同时删除对帖子的回复吗？"
         complete: "帖子和回复已被删除。"
       disagree_and_restore:
-        title: "否，恢复帖子"
-        description: "恢复帖子，以便所有用户都可以看到它。"
+        title: "恢复帖子"
         complete: "帖子已恢复。"
-      disagree:
+      disagree_bundle:
         title: "否"
+      disagree:
+        title: "保留帖子"
         complete: "举报已被忽略。"
       discard_post:
         title: "舍弃帖子"
@@ -5148,31 +5144,36 @@ zh_CN:
         description: "忽略举报，将举报从队列中移除并且不采取任何操作。隐藏的帖子会保持隐藏并且由自动工具处理。"
         complete: "举报已被忽略。"
       approve:
-        title: "批准"
+        title: "是"
         complete: "帖子已被批准。"
       approve_post:
-        title: "批准帖子"
+        title: "是"
         complete: "帖子已被批准。"
       approve_post_closed:
-        title: "批准帖子"
+        title: "是"
         confirm: "此话题已被关闭。仍要创建帖子吗？"
         complete: "帖子已被批准。"
+      reject_post_bundle:
+        title: "否"
       reject_post:
         title: "拒绝帖子"
         complete: "帖子被拒绝。"
       approve_user:
-        title: "批准用户"
+        title: "是"
         complete: "用户已被批准。"
       reject_user:
-        title: "删除用户…"
+        title: "否"
         delete:
           title: "删除用户"
-          description: "该用户将被从论坛中删除。"
           complete: "用户已被删除。"
         block:
           title: "删除并阻止用户"
           description: "该用户将被删除，我们将屏蔽他们的 IP 和电子邮件地址。"
           complete: "用户已被删除并被屏蔽。"
+      confirm_spam:
+        title: "是"
+      not_spam:
+        title: "否"
       reject:
         title: "拒绝"
         bundle_title: "拒绝…"
@@ -5191,10 +5192,10 @@ zh_CN:
       scrub:
         title: 清除记录
       approve_and_restore:
-        title: "批准并恢复帖子"
+        title: "是"
         complete: "帖子被批准并恢复。"
       approve_and_unhide:
-        title: "批准并取消隐藏帖子"
+        title: "是"
         complete: "帖子已获批准并取消隐藏"
       post_actions:
         bundle_title: "您想对这篇帖子做什么？"

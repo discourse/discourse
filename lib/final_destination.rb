@@ -2,7 +2,6 @@
 
 require "socket"
 require "ipaddr"
-require "excon"
 require "rate_limiter"
 require "url_helper"
 

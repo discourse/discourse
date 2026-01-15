@@ -832,6 +832,10 @@ it:
         reviewable_post:
           title: "Messaggio"
           noun: "messaggio"
+        reviewable_ai_chat_message:
+          noun: "messaggio di chat"
+        reviewable_ai_post:
+          noun: "messaggio"
       flagged_as: "Contrassegnato come"
       user_label: "Utente"
       moderator_actions: "Azioni del moderatore"
@@ -3419,8 +3423,6 @@ it:
           12_hours: "12 Ore"
           24_hours: "24 Ore"
           custom: "Durata personalizzata"
-      slow_mode_notice:
-        duration: "Devi aspettare %{duration} tra ciascun messaggio inserito in questo argomento"
       topic_status_update:
         title: "Timer Argomento"
         save: "Imposta Timer"
