@@ -782,10 +782,12 @@ function processBlockEntries({
       continue;
     }
 
-    // @ts-ignore - resolvedBlock is BlockClass after previous checks
-    const blockName = resolvedBlock.blockName || "unknown";
-    // @ts-ignore - resolvedBlock is BlockClass after previous checks
-    const isContainer = isContainerBlock(resolvedBlock);
+    const blockClass =
+      /** @type {import("discourse/lib/blocks/registration").BlockClass} */ (
+        resolvedBlock
+      );
+    const blockName = blockClass.blockName || "unknown";
+    const isContainer = isContainerBlock(blockClass);
 
     // Use the stable key assigned at registration time. This key survives
     // shallow cloning and ensures DOM identity is maintained when blocks
@@ -799,11 +801,6 @@ function processBlockEntries({
 
     // Render visible blocks
     if (entry.__visible) {
-      // @ts-ignore - resolvedBlock is BlockClass after __visible check
-      const blockClass =
-        /** @type {import("discourse/lib/blocks/registration").BlockClass} */ (
-          resolvedBlock
-        );
       result.push(
         getOrCreateLeafBlockComponent(
           cache,
@@ -875,6 +872,7 @@ function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
   };
 
   // Dynamically define reactive getters for each context arg
+  /** @type {PropertyDescriptorMap} */
   const propertyDescriptors = {};
   for (const [key, value] of Object.entries(contextArgs)) {
     propertyDescriptors[key] = {
@@ -884,7 +882,6 @@ function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
       enumerable: true,
     };
   }
-  // @ts-ignore - propertyDescriptors is populated dynamically
   Object.defineProperties(blockArgs, propertyDescriptors);
 
   return blockArgs;
@@ -1347,12 +1344,14 @@ export default class BlockOutlet extends Component {
    * @returns {Error|null}
    */
   get validationError() {
-    // @ts-ignore - children is TrackedAsyncData with isRejected/error properties
-    if (!this.children?.isRejected) {
+    const asyncData =
+      /** @type {{isRejected?: boolean, error?: Error}|undefined} */ (
+        this.children
+      );
+    if (!asyncData?.isRejected) {
       return null;
     }
-    // @ts-ignore - children.error exists when isRejected is true
-    return this.children.error;
+    return asyncData.error ?? null;
   }
 
   /**
@@ -1567,10 +1566,12 @@ class BlockOutletRootContainer extends Component {
         continue;
       }
 
-      // @ts-ignore - resolvedBlock is BlockClass after previous checks
-      const blockName = resolvedBlock.blockName || "unknown";
-      // @ts-ignore - resolvedBlock is BlockClass after previous checks
-      const isContainer = isContainerBlock(resolvedBlock);
+      const blockClass =
+        /** @type {import("discourse/lib/blocks/registration").BlockClass} */ (
+          resolvedBlock
+        );
+      const blockName = blockClass.blockName || "unknown";
+      const isContainer = isContainerBlock(blockClass);
 
       // Evaluate this block's own conditions.
       // The withDebugGroup wrapper ensures START_GROUP/END_GROUP are always paired.

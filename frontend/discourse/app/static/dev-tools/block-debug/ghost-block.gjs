@@ -23,6 +23,21 @@ function getHintMessage(optionalMissing, failureReason) {
 }
 
 /**
+ * Component signature for GhostBlock.
+ *
+ * @typedef {Object} GhostBlockSignature
+ * @property {Object} Args
+ * @property {string} Args.blockName - The name of the hidden block.
+ * @property {string} Args.debugLocation - The hierarchy path where the block would render.
+ * @property {Object} [Args.blockArgs] - Arguments that would have been passed to the block.
+ * @property {Object} [Args.containerArgs] - Container arguments from parent container's childArgs.
+ * @property {Object} [Args.conditions] - Conditions that failed evaluation.
+ * @property {boolean} [Args.optionalMissing] - True if block uses `?` suffix but isn't registered.
+ * @property {string} [Args.failureReason] - Why the block is hidden ("condition-failed" or "no-visible-children").
+ * @property {Array<{Component: import("ember-curry-component").CurriedComponent}>} [Args.children] - Nested ghost children for containers.
+ */
+
+/**
  * Ghost placeholder for blocks that are hidden.
  * Shows a dashed outline indicating where the block would render.
  *
@@ -34,12 +49,6 @@ function getHintMessage(optionalMissing, failureReason) {
  * For container blocks hidden due to no visible children, nested ghost children
  * are rendered inside to show the full block tree structure.
  *
- * @component GhostBlock
- * @param {string} blockName - The name of the hidden block.
- * @param {string} debugLocation - The hierarchy path where the block would render.
- * @param {Object} [blockArgs] - Arguments that would have been passed to the block.
- * @param {Object} [containerArgs] - Container arguments from parent container's childArgs.
- * @param {Object} [conditions] - Conditions that failed evaluation (not present for optional missing).
  * @extends {Component<GhostBlockSignature>}
  */
 // eslint-disable-next-line ember/no-empty-glimmer-component-classes -- Class required for TypeScript signature
