@@ -23,7 +23,7 @@ import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { TrackedAsyncData } from "ember-async-data";
 import curryComponent from "ember-curry-component";
-/** @return {import("discourse/blocks/block-layout-wrapper.gjs")} - prevents ember-tsc error importing .gjs files */
+/** @type {import("discourse/blocks/block-layout-wrapper.gjs")} */
 import { wrapBlockLayout } from "discourse/blocks/block-layout-wrapper";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
