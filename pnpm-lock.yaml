@@ -1018,6 +1018,12 @@ importers:
         specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
+  themes/horizon:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@*
+        version: link:../../frontend/discourse-types
+
 packages:
 
   '@asamuzakjp/css-color@3.1.1':
