@@ -70,15 +70,21 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   PARENT_CATEGORY = (ENV["PARENT_CATEGORY"] || "").strip
   REWRITE_LINKS = (ENV["REWRITE_LINKS"] || "").strip.casecmp?("true")
   UPLOADS_DIR = (ENV["UPLOADS_DIR"] || "").strip
-  REPAIR_UPLOAD_LINKS = (ENV["REPAIR_UPLOAD_LINKS"] || "").strip.casecmp?("true")
-  LOOSEN_UPLOAD_CONSTRAINTS = (ENV["LOOSEN_UPLOAD_CONSTRAINTS"] || "").strip.casecmp?("true")
+  REPAIR_UPLOAD_LINKS =
+    (ENV["REPAIR_UPLOAD_LINKS"] || "").strip.casecmp?("true")
+  LOOSEN_UPLOAD_CONSTRAINTS =
+    (ENV["LOOSEN_UPLOAD_CONSTRAINTS"] || "").strip.casecmp?("true")
 
   BATCH_SIZE = 1000
   CONVERT_HTML = true
   QUIET = nil || ENV["VERBOSE"] == "TRUE"
   FORCE_HOSTNAME = nil || ENV["FORCE_HOSTNAME"]
-  STAGE_IMPORTED_USERS = (ENV["STAGE_IMPORTED_USERS"] || "").strip.upcase == "TRUE"
-  ONLY_WRITE_POST_SUBJECTS_WHEN_DIFFERENT = (ENV["ONLY_WRITE_POST_SUBJECTS_WHEN_DIFFERENT"] || "true").strip.casecmp?("true")
+  STAGE_IMPORTED_USERS =
+    (ENV["STAGE_IMPORTED_USERS"] || "").strip.upcase == "TRUE"
+  ONLY_WRITE_POST_SUBJECTS_WHEN_DIFFERENT =
+    (ENV["ONLY_WRITE_POST_SUBJECTS_WHEN_DIFFERENT"] || "true").strip.casecmp?(
+      "true"
+    )
 
   QUIET = true
 
@@ -92,8 +98,14 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     return settings unless LOOSEN_UPLOAD_CONSTRAINTS
 
     max_file_size_kb = 102_400
-    settings[:max_image_size_kb] = [max_file_size_kb, SiteSetting.max_image_size_kb].max
-    settings[:max_attachment_size_kb] = [max_file_size_kb, SiteSetting.max_attachment_size_kb].max
+    settings[:max_image_size_kb] = [
+      max_file_size_kb,
+      SiteSetting.max_image_size_kb
+    ].max
+    settings[:max_attachment_size_kb] = [
+      max_file_size_kb,
+      SiteSetting.max_attachment_size_kb
+    ].max
     settings[:authorized_extensions] = "*"
     settings[:authorized_extensions_for_staff] = "*"
 
@@ -101,11 +113,11 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     begin
       SiteSetting.type_supervisor.load_setting(
         :max_image_size_kb,
-        max: settings[:max_image_size_kb],
+        max: settings[:max_image_size_kb]
       )
       SiteSetting.type_supervisor.load_setting(
         :max_attachment_size_kb,
-        max: settings[:max_attachment_size_kb],
+        max: settings[:max_attachment_size_kb]
       )
     rescue => e
       print_warning("Could not widen validation caps: #{e.message}")
@@ -125,7 +137,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     unless parent
       print_warning(
         "Note: PARENT_CATEGORY='#{PARENT_CATEGORY}' not found. " \
-          "Import will create top-level categories.",
+          "Import will create top-level categories."
       )
       return nil
     end
@@ -134,13 +146,20 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   end
 
   def initialize
-    print_warning("Importing data after #{IMPORT_AFTER}") if IMPORT_AFTER > "1970-01-01"
+    if IMPORT_AFTER > "1970-01-01"
+      print_warning("Importing data after #{IMPORT_AFTER}")
+    end
 
     super
     @htmlentities = HTMLEntities.new
     begin
       @client =
-        Mysql2::Client.new(host: DB_HOST, username: DB_USER, password: DB_PW, database: DB_NAME)
+        Mysql2::Client.new(
+          host: DB_HOST,
+          username: DB_USER,
+          password: DB_PW,
+          database: DB_NAME
+        )
     rescue Exception => e
       puts "=" * 50
       puts e.message
@@ -204,7 +223,9 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
     # MLF 1.x used 'user_place', MLF 2.x uses 'user_location'
     location_col =
-      if mysql_query("SHOW COLUMNS FROM #{TABLE_PREFIX}userdata LIKE 'user_place'").any?
+      if mysql_query(
+           "SHOW COLUMNS FROM #{TABLE_PREFIX}userdata LIKE 'user_place'"
+         ).any?
         "user_place"
       else
         "user_location"
@@ -212,7 +233,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
     total_count =
       mysql_query(
-        "SELECT count(*) count FROM #{TABLE_PREFIX}userdata WHERE last_login > '#{IMPORT_AFTER}';",
+        "SELECT count(*) count FROM #{TABLE_PREFIX}userdata WHERE last_login > '#{IMPORT_AFTER}';"
       ).first[
         "count"
       ]
@@ -238,7 +259,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 		 WHERE last_login > '#{IMPORT_AFTER}'
                  order by UserID ASC
                  LIMIT #{BATCH_SIZE}
-                 OFFSET #{offset};",
+                 OFFSET #{offset};"
         )
 
       break if results.size < 1
@@ -262,15 +283,29 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           username: user["username"],
           name: user["Name"],
           staged: STAGE_IMPORTED_USERS,
-          created_at: user["DateInserted"] == nil ? 0 : Time.zone.at(user["DateInserted"]),
+          created_at:
+            (
+              if user["DateInserted"] == nil
+                0
+              else
+                Time.zone.at(user["DateInserted"])
+              end
+            ),
           bio_raw: user["bio_raw"],
           registration_ip_address: user["InsertIPAddress"],
           website: user["user_hp"],
           password: user["password"],
-          last_seen_at: user["DateLastActive"] == nil ? 0 : Time.zone.at(user["DateLastActive"]),
+          last_seen_at:
+            (
+              if user["DateLastActive"] == nil
+                0
+              else
+                Time.zone.at(user["DateLastActive"])
+              end
+            ),
           location: user["Location"],
           admin: user["user_type"] == "admin",
-          moderator: user["user_type"] == "mod",
+          moderator: user["user_type"] == "mod"
         }
       end
     end
@@ -302,7 +337,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                               description as Description
                               FROM #{TABLE_PREFIX}categories
                               ORDER BY CategoryID ASC
-                            ",
+                            "
       ).to_a
 
     parent_id = @parent_category_id
@@ -313,7 +348,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         name: CGI.unescapeHTML(category["Name"]),
         description: CGI.unescapeHTML(category["Description"]),
         # When parent_id is nil, Discourse creates a top-level category (default behavior).
-        parent_category_id: parent_id,
+        parent_category_id: parent_id
       }
     end
   end
@@ -325,15 +360,18 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       mysql_query(
         "SELECT count(*) count FROM #{TABLE_PREFIX}entries
                                WHERE time > '#{IMPORT_AFTER}'
-                               AND pid = 0;",
+                               AND pid = 0;"
       ).first[
         "count"
       ]
 
     # Optional youtube_link column (not present in standard MLF 2.x)
     youtube_available =
-      mysql_query("SHOW COLUMNS FROM #{TABLE_PREFIX}entries LIKE 'youtube_link'").any?
-    optional_youtube_column = youtube_available ? ", youtube_link as youtube" : ""
+      mysql_query(
+        "SHOW COLUMNS FROM #{TABLE_PREFIX}entries LIKE 'youtube_link'"
+      ).any?
+    optional_youtube_column =
+      youtube_available ? ", youtube_link as youtube" : ""
 
     batches(BATCH_SIZE) do |offset|
       discussions =
@@ -350,15 +388,22 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 	 AND time > '#{IMPORT_AFTER}'
          ORDER BY time ASC
          LIMIT #{BATCH_SIZE}
-         OFFSET #{offset};",
+         OFFSET #{offset};"
         )
 
       break if discussions.size < 1
-      if all_records_exist? :posts, discussions.map { |t| "discussion#" + t["DiscussionID"].to_s }
+      if all_records_exist? :posts,
+                            discussions.map { |t|
+                              "discussion#" + t["DiscussionID"].to_s
+                            }
         next
       end
 
-      create_posts(discussions, total: total_count, offset: offset) do |discussion|
+      create_posts(
+        discussions,
+        total: total_count,
+        offset: offset
+      ) do |discussion|
         raw = clean_up(discussion["Body"])
 
         youtube = nil
@@ -374,11 +419,13 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         {
           id: "discussion#" + discussion["DiscussionID"].to_s,
           user_id:
-            user_id_from_imported_user_id(discussion["InsertUserID"]) || Discourse::SYSTEM_USER_ID,
+            user_id_from_imported_user_id(discussion["InsertUserID"]) ||
+              Discourse::SYSTEM_USER_ID,
           title: discussion["Name"].gsub('\\"', '"'),
-          category: category_id_from_imported_category_id(discussion["CategoryID"]),
+          category:
+            category_id_from_imported_category_id(discussion["CategoryID"]),
           raw: raw,
-          created_at: Time.zone.at(discussion["DateInserted"]),
+          created_at: Time.zone.at(discussion["DateInserted"])
         }
       end
     end
@@ -392,19 +439,21 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         "SELECT count(*) count
        FROM #{TABLE_PREFIX}entries
        WHERE pid > 0
-       AND time > '#{IMPORT_AFTER}';",
+       AND time > '#{IMPORT_AFTER}';"
       ).first[
         "count"
       ]
 
     # Optional youtube_link column (not present in standard MLF 2.x)
     youtube_available =
-      mysql_query("SHOW COLUMNS FROM #{TABLE_PREFIX}entries LIKE 'youtube_link'").any?
-    optional_youtube_column = youtube_available ? ", youtube_link as youtube" : ""
+      mysql_query(
+        "SHOW COLUMNS FROM #{TABLE_PREFIX}entries LIKE 'youtube_link'"
+      ).any?
+    optional_youtube_column =
+      youtube_available ? ", youtube_link as youtube" : ""
 
     batches(BATCH_SIZE) do |offset|
-
-		sql =
+      sql =
         if ONLY_WRITE_POST_SUBJECTS_WHEN_DIFFERENT
           "
           SELECT p.id      as CommentID,
@@ -441,17 +490,22 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           OFFSET #{offset};
           "
         end
-	
-    comments = mysql_query(sql)
+
+      comments = mysql_query(sql)
 
       break if comments.size < 1
       if all_records_exist? :posts,
-                            comments.map { |comment| "comment#" + comment["CommentID"].to_s }
+                            comments.map { |comment|
+                              "comment#" + comment["CommentID"].to_s
+                            }
         next
       end
 
       create_posts(comments, total: total_count, offset: offset) do |comment|
-        unless t = topic_lookup_from_imported_post_id("discussion#" + comment["DiscussionID"].to_s)
+        unless t =
+                 topic_lookup_from_imported_post_id(
+                   "discussion#" + comment["DiscussionID"].to_s
+                 )
           next
         end
         next if comment["Body"].blank?
@@ -468,16 +522,19 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         if comment["Subject"].present?
           subject = comment["Subject"].to_s
           first_line = raw.lines.find { |l| !l.strip.empty? }&.strip || ""
-          raw = "**#{subject}**\n\n#{raw}" unless first_line.start_with?(subject)
+          raw = "**#{subject}**\n\n#{raw}" unless first_line.start_with?(
+            subject
+          )
         end
 
         {
           id: "comment#" + comment["CommentID"].to_s,
           user_id:
-            user_id_from_imported_user_id(comment["InsertUserID"]) || Discourse::SYSTEM_USER_ID,
+            user_id_from_imported_user_id(comment["InsertUserID"]) ||
+              Discourse::SYSTEM_USER_ID,
           topic_id: t[:topic_id],
           raw: clean_up(raw),
-          created_at: Time.zone.at(comment["DateInserted"]),
+          created_at: Time.zone.at(comment["DateInserted"])
         }
       end
     end
@@ -499,7 +556,11 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         youtube_cooked = "https://www.youtube.com/watch?v=" + youtube_cooked
       end
     end
-    print_warning("#{"-" * 40}\nBefore: #{youtube_raw}\nAfter: #{youtube_cooked}") unless QUIET
+    unless QUIET
+      print_warning(
+        "#{"-" * 40}\nBefore: #{youtube_raw}\nAfter: #{youtube_cooked}"
+      )
+    end
 
     youtube_cooked
   end
@@ -527,21 +588,36 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     raw = raw.gsub(%r{\[link\](\S+)\[/link\]}im) { "#{$1}" }
 
     # URL & LINK with text
-    raw = raw.gsub(%r{\[url=(\S+?)\](.*?)\[/url\]}im) { "<a href=\"#{$1}\">#{$2}</a>" }
-    raw = raw.gsub(%r{\[link=(\S+?)\](.*?)\[/link\]}im) { "<a href=\"#{$1}\">#{$2}</a>" }
+    raw =
+      raw.gsub(%r{\[url=(\S+?)\](.*?)\[/url\]}im) do
+        "<a href=\"#{$1}\">#{$2}</a>"
+      end
+    raw =
+      raw.gsub(%r{\[link=(\S+?)\](.*?)\[/link\]}im) do
+        "<a href=\"#{$1}\">#{$2}</a>"
+      end
 
     # remote images
     raw = raw.gsub(%r{\[img\](https?:.+?)\[/img\]}im) { "<img src=\"#{$1}\">" }
-    raw = raw.gsub(%r{\[img=(https?.+?)\](.+?)\[/img\]}im) { "<img src=\"#{$1}\" alt=\"#{$2}\">" }
+    raw =
+      raw.gsub(%r{\[img=(https?.+?)\](.+?)\[/img\]}im) do
+        "<img src=\"#{$1}\" alt=\"#{$2}\">"
+      end
     # local images
-    raw = raw.gsub(%r{\[img\](.+?)\[/img\]}i) { "<img src=\"#{IMAGE_BASE}/#{$1}\">" }
+    raw =
+      raw.gsub(%r{\[img\](.+?)\[/img\]}i) do
+        "<img src=\"#{IMAGE_BASE}/#{$1}\">"
+      end
     raw =
       raw.gsub(%r{\[img=(.+?)\](https?.+?)\[/img\]}im) do
         "<img src=\"#{IMAGE_BASE}/#{$1}\" alt=\"#{$2}\">"
       end
 
     # Convert image bbcode
-    raw.gsub!(%r{\[img=(\d+),(\d+)\]([^\]]*)\[/img\]}im, '<img width="\1" height="\2" src="\3">')
+    raw.gsub!(
+      %r{\[img=(\d+),(\d+)\]([^\]]*)\[/img\]}im,
+      '<img width="\1" height="\2" src="\3">'
+    )
 
     # [div]s are really [quote]s
     raw.gsub!(/\[div\]/mix, "[quote]")
@@ -553,7 +629,9 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     raw.gsub!(/\[\*\]\s*/i, "* ")
 
     # [postedby] -> link to @user
-    raw.gsub(%r{\[postedby\](.+?)\[b\](.+?)\[/b\]\[/postedby\]}i) { "#{$1}@#{$2}" }
+    raw.gsub(%r{\[postedby\](.+?)\[b\](.+?)\[/b\]\[/postedby\]}i) do
+      "#{$1}@#{$2}"
+    end
 
     # CODE (not tested)
     raw = raw.gsub(%r{\[code\](\S+)\[/code\]}im) { "```\n#{$1}\n```" }
@@ -626,7 +704,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         begin
           Permalink.create(
             url: "#{BASE}/user-id-#{ucf["import_id"]}.html",
-            external_url: "/u/#{u.username}",
+            external_url: "/u/#{u.username}"
           )
         rescue StandardError
           nil
@@ -643,22 +721,30 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
         id = pcf["import_id"].split("#").last
         if post.post_number == 1
           begin
-            Permalink.create(url: "#{BASE}/forum_entry-id-#{id}.html", topic_id: topic.id)
-          rescue StandardError
-            nil
-          end
-          unless QUIET
-            print_warning("forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}")
-          end
-        else
-          begin
-            Permalink.create(url: "#{BASE}/forum_entry-id-#{id}.html", post_id: post.id)
+            Permalink.create(
+              url: "#{BASE}/forum_entry-id-#{id}.html",
+              topic_id: topic.id
+            )
           rescue StandardError
             nil
           end
           unless QUIET
             print_warning(
-              "forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}/#{post.id}",
+              "forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}"
+            )
+          end
+        else
+          begin
+            Permalink.create(
+              url: "#{BASE}/forum_entry-id-#{id}.html",
+              post_id: post.id
+            )
+          rescue StandardError
+            nil
+          end
+          unless QUIET
+            print_warning(
+              "forum_entry-id-#{id}.html --> http://localhost:3000/t/#{topic.id}/#{post.id}"
             )
           end
         end
@@ -672,7 +758,10 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       next unless id = ccf["import_id"]
       print_warning("forum-category-#{id}.html --> /t/#{cat.id}") unless QUIET
       begin
-        Permalink.create(url: "#{BASE}/forum-category-#{id}.html", category_id: cat.id)
+        Permalink.create(
+          url: "#{BASE}/forum-category-#{id}.html",
+          category_id: cat.id
+        )
       rescue StandardError
         nil
       end
@@ -741,7 +830,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       @rewrite_links_enabled = true
     rescue => e
       print_warning(
-        "Note: REWRITE_LINKS enabled but IMAGE_BASE invalid (#{e.message}). Skipping link rewrite.",
+        "Note: REWRITE_LINKS enabled but IMAGE_BASE invalid (#{e.message}). Skipping link rewrite."
       )
       @rewrite_links_enabled = false
     end
@@ -797,7 +886,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       @rewrite_uploads_enabled = true
     rescue => e
       print_warning(
-        "Note: IMAGE_BASE invalid for upload rewrite (#{e.message}). Skipping upload link rewrite.",
+        "Note: IMAGE_BASE invalid for upload rewrite (#{e.message}). Skipping upload link rewrite."
       )
       @rewrite_uploads_enabled = false
     end
@@ -809,11 +898,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
   end
 
   def load_upload_map(path)
-    if File.exist?(path)
-      JSON.parse(File.read(path))
-    else
-      {}
-    end
+    File.exist?(path) ? JSON.parse(File.read(path)) : {}
   rescue => e
     print_warning("Could not read upload map at #{path}: #{e.message}")
     {}
@@ -830,14 +915,18 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       File.open(@missing_uploads_path, "a") { |f| f.puts(filename) }
     rescue => e
       print_warning(
-        "Could not append to missing uploads list #{@missing_uploads_path}: #{e.message}",
+        "Could not append to missing uploads list #{@missing_uploads_path}: #{e.message}"
       )
     end
   end
 
   def find_uploads_table_name
     # try common variants
-    candidates = ["#{TABLE_PREFIX}uploads", "mlf_uploads", "#{TABLE_PREFIX}mlf_uploads"]
+    candidates = [
+      "#{TABLE_PREFIX}uploads",
+      "mlf_uploads",
+      "#{TABLE_PREFIX}mlf_uploads"
+    ]
     names = @client.query("SHOW TABLES").map { |r| r.values.first.to_s }
     candidates.find { |t| names.include?(t) }
   end
@@ -848,7 +937,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
     table = find_uploads_table_name
     unless table
       print_warning(
-        "No uploads table found (tried '#{TABLE_PREFIX}uploads', 'mlf_uploads'). Skipping uploads import.",
+        "No uploads table found (tried '#{TABLE_PREFIX}uploads', 'mlf_uploads'). Skipping uploads import."
       )
       return
     end
@@ -860,7 +949,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
       mysql_query(
         "SELECT count(*) AS c
        FROM #{table}
-       WHERE tstamp > '#{IMPORT_AFTER}'",
+       WHERE tstamp > '#{IMPORT_AFTER}'"
       ).first[
         "c"
       ]
@@ -878,7 +967,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
          WHERE tstamp > '#{IMPORT_AFTER}'
          ORDER BY id ASC
          LIMIT #{BATCH_SIZE}
-         OFFSET #{offset}",
+         OFFSET #{offset}"
         ).to_a
       break if rows.empty?
 
@@ -908,7 +997,9 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                 skipped += 1
                 next
               end
-              print_warning("Resolved extensionless '#{base_fn}' to '#{actual_fn}'")
+              print_warning(
+                "Resolved extensionless '#{base_fn}' to '#{actual_fn}'"
+              )
             end
           end
         end
@@ -919,16 +1010,20 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
           next
         end
 
-        uploader_id = user_id_from_imported_user_id(row["uploader"]) || Discourse::SYSTEM_USER_ID
+        uploader_id =
+          user_id_from_imported_user_id(row["uploader"]) ||
+            Discourse::SYSTEM_USER_ID
 
         begin
           File.open(path, "rb") do |file|
             # create an Upload in Discourse; Discourse deduplicates identical files internally
             # note: the uploader context is determined by the argument to `create_for`
             upload =
-              UploadCreator.new(file, File.basename(path), type: "attachment").create_for(
-                uploader_id,
-              )
+              UploadCreator.new(
+                file,
+                File.basename(path),
+                type: "attachment"
+              ).create_for(uploader_id)
 
             if upload && upload.url
               url = relative_upload_url(upload.url)
@@ -941,7 +1036,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
               append_missing_upload(fn)
               begin
                 print_warning(
-                  "Upload returned no URL for #{actual_fn} (ext='#{File.extname(actual_fn).delete(".")}', size=#{File.size(path)} bytes)",
+                  "Upload returned no URL for #{actual_fn} (ext='#{File.extname(actual_fn).delete(".")}', size=#{File.size(path)} bytes)"
                 )
               rescue StandardError
                 nil
@@ -949,8 +1044,11 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
             end
           end
         rescue => e
-          bt = (e.backtrace && e.backtrace.first) ? " @ #{e.backtrace.first}" : ""
-          print_warning("Upload failed for #{actual_fn}: #{e.class}: #{e.message}#{bt}")
+          bt =
+            (e.backtrace && e.backtrace.first) ? " @ #{e.backtrace.first}" : ""
+          print_warning(
+            "Upload failed for #{actual_fn}: #{e.class}: #{e.message}#{bt}"
+          )
           missing += 1
           append_missing_upload(base_fn)
         end
@@ -979,7 +1077,9 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
     # 0b) <img ... src="LEGACY" ...> -> src="NEW"
     raw =
-      raw.gsub(/(<img[^>]*\bsrc\s*=\s*["'])(#{@legacy_upload_regex})(["'][^>]*>)/i) do
+      raw.gsub(
+        /(<img[^>]*\bsrc\s*=\s*["'])(#{@legacy_upload_regex})(["'][^>]*>)/i
+      ) do
         pre = $1
         filename = $3 # 1=pre, 2=full legacy URL, 3=filename, 4=post
         post = $4
@@ -998,7 +1098,9 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
 
     # 2) rewrite naked legacy upload URLs in plain text (groups: 1=prefix, 2=filename)
     raw =
-      raw.gsub(/(^|[\s\(\[\{>"'])#{@legacy_upload_regex}(?=$|[\s\)\]\}',\.\!\?:;])/i) do
+      raw.gsub(
+        /(^|[\s\(\[\{>"'])#{@legacy_upload_regex}(?=$|[\s\)\]\}',\.\!\?:;])/i
+      ) do
         prefix = $1
         filename = $2
         new_url = @upload_map[filename]
@@ -1033,7 +1135,7 @@ class ImportScripts::MylittleforumSQL < ImportScripts::Base
                   .count { |m| @upload_map[m.is_a?(Array) ? m.last : m] }
               if total_legacy > 0
                 print_warning(
-                  "Repair post #{post.id}: legacy=#{total_legacy}, mapped=#{mapped_legacy}",
+                  "Repair post #{post.id}: legacy=#{total_legacy}, mapped=#{mapped_legacy}"
                 )
               end
             rescue StandardError
