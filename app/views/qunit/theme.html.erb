@@ -8,6 +8,7 @@
     <%- if @has_test_bundle && !@suggested_themes %>
       <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
+      <%= theme_translations_lookup %>
 
       <%= preload_script "vendor" %>
       <%= preload_script "test-support" %>
@@ -17,7 +18,6 @@
         <%= preload_script file %>
       <%- end %>
       <%= preload_script_url "/bootstrap/site-settings-for-tests.js", type_module: true %>
-      <%= theme_translations_lookup %>
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
 
