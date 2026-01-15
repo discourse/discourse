@@ -153,6 +153,10 @@ class ProblemCheck
     targets.call.each(&)
   end
 
+  def self.cleanup_trackers
+    ProblemCheckTracker.where(identifier:).where.not(target: targets.call).destroy_all
+  end
+
   def initialize(target = NO_TARGET)
     @target = target
   end

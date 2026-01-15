@@ -56,17 +56,17 @@ module(
     const testCases = {
       hashtag: [
         "#product",
-        '<p><a class="hashtag-cooked" data-name="product" data-processed="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-square hashtag-color--category-2\"></span>product</a></p>',
+        '<p><a class="hashtag-cooked" data-name="product" data-processed="true" contenteditable="false" draggable="true"><span class="hashtag-category-square hashtag-color--category-2"></span>product</a></p>',
         "#product",
       ],
       "text with hashtag": [
         "Hello #product",
-        '<p>Hello <a class="hashtag-cooked" data-name="product" data-processed="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-square hashtag-color--category-2\"></span>product</a></p>',
+        '<p>Hello <a class="hashtag-cooked" data-name="product" data-processed="true" contenteditable="false" draggable="true"><span class="hashtag-category-square hashtag-color--category-2"></span>product</a></p>',
         "Hello #product",
       ],
       "hashtag after heading": [
         "## Hello\n\n#product",
-        '<h2>Hello</h2><p><a class="hashtag-cooked" data-name="product" data-processed="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-square hashtag-color--category-2\"></span>product</a></p>',
+        '<h2>Hello</h2><p><a class="hashtag-cooked" data-name="product" data-processed="true" contenteditable="false" draggable="true"><span class="hashtag-category-square hashtag-color--category-2"></span>product</a></p>',
         "## Hello\n\n#product",
       ],
       "invalid hashtag": [
@@ -76,7 +76,7 @@ module(
       ],
       "with regular tags": [
         "Hello #dev",
-        '<p>Hello <a class="hashtag-cooked" data-name="dev" data-processed="true" contenteditable="false" draggable="true"><svg class=\"fa d-icon d-icon-tag svg-icon hashtag-color--tag-1 svg-string\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><use href=\"#tag\"></use></svg>dev</a></p>',
+        '<p>Hello <a class="hashtag-cooked" data-name="dev" data-processed="true" contenteditable="false" draggable="true"><svg class="fa d-icon d-icon-tag svg-icon fa-width-auto hashtag-color--tag-1 svg-string" width="1em" height="1em" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#tag"></use></svg>dev</a></p>',
         "Hello #dev",
       ],
       "hashtag with emoji": [
@@ -86,7 +86,7 @@ module(
       ],
       "hashtag with icon": [
         "Lets #discuss",
-        '<p>Lets <a class="hashtag-cooked" data-name="discuss" data-processed="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-icon hashtag-color--category-4\"><svg class=\"fa d-icon d-icon-comment svg-icon svg-string\" aria-hidden=\"true\" xmlns=\"http://www.w3.org/2000/svg\"><use href=\"#comment\"></use></svg></span>discuss</a></p>',
+        '<p>Lets <a class="hashtag-cooked" data-name="discuss" data-processed="true" contenteditable="false" draggable="true"><span class="hashtag-category-icon hashtag-color--category-4"><svg class="fa d-icon d-icon-comment svg-icon fa-width-auto svg-string" width="1em" height="1em" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><use href="#comment"></use></svg></span>discuss</a></p>',
         "Lets #discuss",
       ],
       "hashtag with emoji in text": [

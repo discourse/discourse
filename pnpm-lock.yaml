@@ -41,8 +41,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0
       '@fortawesome/fontawesome-free':
-        specifier: 6.7.2
-        version: 6.7.2
+        specifier: 7.1.0
+        version: 7.1.0
       '@glint/ember-tsc':
         specifier: ^1.0.8
         version: 1.0.8(typescript@5.9.3)
@@ -317,8 +317,8 @@ importers:
         specifier: ^11.1.3
         version: 11.1.3
       jspreadsheet-ce:
-        specifier: ^4.15.0
-        version: 4.15.0
+        specifier: ^5.0.4
+        version: 5.0.4
       moment:
         specifier: 2.30.1
         version: 2.30.1
@@ -2221,8 +2221,8 @@ packages:
   '@floating-ui/utils@0.2.10':
     resolution: {integrity: sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==}
 
-  '@fortawesome/fontawesome-free@6.7.2':
-    resolution: {integrity: sha512-JUOtgFW6k9u4Y+xeIaEiLr3+cjoUPiAuLXoyKOJSia6Duzb7pq+A76P9ZdPDoAoxHdHzq6gE9/jKBGXlZT8FbA==}
+  '@fortawesome/fontawesome-free@7.1.0':
+    resolution: {integrity: sha512-+WxNld5ZCJHvPQCr/GnzCTVREyStrAJjisUPtUxG5ngDA8TMlPnKp6dddlTpai4+1GNmltAeuk1hJEkBohwZYA==}
     engines: {node: '>=6'}
 
   '@fullcalendar/core@6.1.20':
@@ -6362,8 +6362,8 @@ packages:
     resolution: {integrity: sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==}
     engines: {'0': node >= 0.2.0}
 
-  jspreadsheet-ce@4.15.0:
-    resolution: {integrity: sha512-1A1q7uxICxzXRiql3ZhXldFPjdt5VcFcoHSEvfvBFw9DcU7bq/gAEaqyKMJPeG+6zibpO4r+b8Dk88nIR7NKng==}
+  jspreadsheet-ce@5.0.4:
+    resolution: {integrity: sha512-ra1JI1n+tEGgRMzTzNkPZjG0HZz8W6bFGAiTiHl+eYarXdRmS5qDc/ua3l2ev7oZ6Og9kjfrXYHVLUWiVc308w==}
 
   jsuites@5.13.3:
     resolution: {integrity: sha512-je27Vu9Sl+jBnUQmyX+WWenK6ThSBP4NufDgOZhlZ7eRAHn6SdiB9dg5eMqCRkzhw2N4MywemYkx1B0aze8eSA==}
@@ -10845,7 +10845,7 @@ snapshots:
 
   '@floating-ui/utils@0.2.10': {}
 
-  '@fortawesome/fontawesome-free@6.7.2': {}
+  '@fortawesome/fontawesome-free@7.1.0': {}
 
   '@fullcalendar/core@6.1.20':
     dependencies:
@@ -16185,7 +16185,7 @@ snapshots:
 
   jsonparse@1.3.1: {}
 
-  jspreadsheet-ce@4.15.0:
+  jspreadsheet-ce@5.0.4:
     dependencies:
       '@jspreadsheet/formula': 2.0.2
       jsuites: 5.13.3
