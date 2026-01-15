@@ -20,11 +20,14 @@ const packageNames = [
   "@glimmer/syntax",
   "@glint/ember-tsc",
   "@glint/template",
+  "@types/jquery",
   "@types/qunit",
   "@types/rsvp",
+  "@types/sinon",
   "ember-modifier",
   "ember-qunit",
   "ember-source",
+  "pretender",
 ];
 
 try {
