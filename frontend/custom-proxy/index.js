@@ -1,12 +1,12 @@
 import { HTMLRewriter } from "html-rewriter-wasm";
 
 function updateScriptReferences({
-  chunkInfos,
+  // chunkInfos,
   rewriter,
   selector,
   attribute,
-  baseURL,
-  distAssets,
+  // baseURL,
+  // distAssets,
   bundledDev,
 }) {
   const handledEntrypoints = new Set();
@@ -121,7 +121,7 @@ export default function customProxy({
     headers: {
       "X-Discourse-Ember-CLI": "true",
     },
-    configure: (proxy, options) => {
+    configure: (proxy) => {
       proxy.on("proxyRes", function (proxyRes, req, res) {
         if (proxyRes.statusMessage) {
           res.statusCode = proxyRes.statusCode;
@@ -206,4 +206,5 @@ const RAILS_ROOTS = [
   "/highlight-js/",
   "/images/", // doesn't work?
   "/uploads/", // doesn't work?
+  "/bootstrap/",
 ];

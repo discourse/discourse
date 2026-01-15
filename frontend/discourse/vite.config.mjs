@@ -83,9 +83,12 @@ export default defineConfig(({ mode, command }) => {
       // visualizer({ emitFile: true }),
 
       {
-        name: "resolve-external-locales",
+        name: "resolve-externals",
         resolveId(source) {
-          if (source.startsWith("/extra-locales/")) {
+          if (
+            source.startsWith("/extra-locales/") ||
+            source.startsWith("/bootstrap/")
+          ) {
             return { external: true, id: source };
           }
         },
