@@ -142,7 +142,7 @@
     "js-yaml": "^4.1.1",
     "jsuites": "^5.13.3",
     "loader.js": "^4.7.0",
-    "make-plural": "^7.4.0",
+    "make-plural": "^8.1.0",
     "message-bus-client": "^4.4.1",
     "pretender": "^3.4.7",
     "qunit": "^2.25.0",
