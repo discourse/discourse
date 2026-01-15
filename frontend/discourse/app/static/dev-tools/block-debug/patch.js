@@ -1,12 +1,17 @@
+// @ts-check
 import curryComponent from "ember-curry-component";
+/** @type {import("discourse/blocks/block-outlet.gjs")} */
 import { isContainerBlock } from "discourse/blocks/block-outlet";
 import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import devToolsState from "../state";
+/** @type {import("./block-info.gjs").default} */
 import BlockInfo from "./block-info";
 import { blockDebugLogger } from "./debug-logger";
+/** @type {import("./ghost-block.gjs").default} */
 import GhostBlock from "./ghost-block";
+/** @type {import("./outlet-info.gjs").default} */
 import OutletInfo from "./outlet-info";
 
 /**

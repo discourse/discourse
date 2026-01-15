@@ -1,9 +1,12 @@
+// @ts-check
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+/** @type {import("discourse/float-kit/components/d-menu.gjs").default} */
 import DMenu from "discourse/float-kit/components/d-menu";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+/** @type {import("discourse/helpers/element.gjs").default} */
 import element from "discourse/helpers/element";
 import { i18n } from "discourse-i18n";
 import devToolsState from "../state";

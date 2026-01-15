@@ -1,3 +1,4 @@
+// @ts-check
 /**
  * Block debug logger with styled console output.
  *
