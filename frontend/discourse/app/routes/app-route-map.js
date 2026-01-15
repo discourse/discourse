@@ -229,6 +229,16 @@ export default function () {
   });
 
   this.route("tags", function () {
+    // untagged routes (no tag selected) - must come BEFORE showCategory routes
+    // these handle URLs like /tags/c/feature/2/none meaning "category with no tag"
+    this.route("untaggedCategory", {
+      path: "/c/*category_slug_path_with_id/none",
+    });
+    this.route("untaggedCategoryAll", {
+      path: "/c/*category_slug_path_with_id/all/none",
+    });
+
+    // category + tag routes (with tag_slug/tag_id)
     this.route("showCategory", {
       path: "/c/*category_slug_path_with_id/:tag_slug/:tag_id",
     });
@@ -240,6 +250,15 @@ export default function () {
     });
 
     Site.currentProp("filters").forEach((filter) => {
+      // untagged with filter
+      this.route("untaggedCategory" + capitalize(filter), {
+        path: "/c/*category_slug_path_with_id/none/l/" + filter,
+      });
+      this.route("untaggedCategoryAll" + capitalize(filter), {
+        path: "/c/*category_slug_path_with_id/all/none/l/" + filter,
+      });
+
+      // category + tag with filter
       this.route("showCategory" + capitalize(filter), {
         path: "/c/*category_slug_path_with_id/:tag_slug/:tag_id/l/" + filter,
       });

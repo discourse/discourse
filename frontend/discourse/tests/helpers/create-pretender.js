@@ -107,7 +107,7 @@ export function applyDefaultHandlers(pretender) {
     return response(json);
   });
 
-  pretender.get("/tags", () => {
+  pretender.get("/tags.json", () => {
     return response({
       tags: [
         { id: 123, name: "eviltrout", text: "eviltrout", count: 1 },

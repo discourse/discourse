@@ -21,27 +21,22 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     watched_tags: [2, 3],
     watching_first_post_tags: [],
     sidebar_tags: [
-      { id: 2, name: "tag2", pm_only: false },
-      { id: 1, name: "tag1", pm_only: false },
-      {
-        id: 4,
-        name: "tag4",
-        pm_only: true,
-      },
-      {
-        id: 3,
-        name: "tag3",
-        pm_only: false,
-      },
+      { id: 2, name: "tag2", slug: "tag2", pm_only: false },
+      { id: 1, name: "tag1", slug: "tag1", pm_only: false },
+      { id: 4, name: "tag4", slug: "tag4", pm_only: true },
+      { id: 3, name: "tag3", slug: "tag3", pm_only: false },
     ],
     display_sidebar_tags: true,
     admin: false,
   });
 
   needs.pretender((server, helper) => {
-    server.get("/tag/:tagId/notifications", (request) => {
+    server.get("/tag/:tagSlug/:tagId/notifications.json", (request) => {
       return helper.response({
-        tag_notification: { id: 1, name: request.params.tagId },
+        tag_notification: {
+          id: request.params.tagId,
+          name: request.params.tagSlug,
+        },
       });
     });
 
@@ -60,7 +55,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     });
 
     ["latest", "top", "new", "unread", "hot"].forEach((type) => {
-      server.get(`/tag/:tagId/l/${type}.json`, () => {
+      server.get(`/tag/:tagSlug/:tagId/l/${type}.json`, () => {
         return helper.response(
           cloneJSON(discoveryFixture["/tag/important/l/latest.json"])
         );
@@ -93,7 +88,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/tag/tag1",
+      "/tag/tag1/1",
       "it should transition to tag1's topics discovery page"
     );
 
@@ -111,7 +106,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/tag/tag2",
+      "/tag/tag2/2",
       "it should transition to tag2's topics discovery page"
     );
 
@@ -138,7 +133,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/tag/tag1",
+      "/tag/tag1/1",
       "it should transition to tag1's topics discovery page"
     );
 
@@ -179,7 +174,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/tag/tag1/l/new",
+      "/tag/tag1/1/l/new",
       "it should transition to tag1's topics new page"
     );
 
@@ -220,7 +215,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
 
     assert.strictEqual(
       currentURL(),
-      "/tag/tag1/l/unread",
+      "/tag/tag1/1/l/unread",
       "it should transition to tag1's topics unread page"
     );
 
@@ -258,7 +253,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   });
 
   test("visiting tag discovery top route", async function (assert) {
-    await visit(`/tag/tag1/l/top`);
+    await visit(`/tag/tag1/1/l/top`);
 
     assert
       .dom(
@@ -272,7 +267,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   });
 
   test("visiting tag discovery new route", async function (assert) {
-    await visit(`/tag/tag1/l/new`);
+    await visit(`/tag/tag1/1/l/new`);
 
     assert
       .dom(
@@ -286,7 +281,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   });
 
   test("visiting tag discovery unread route", async function (assert) {
-    await visit(`/tag/tag1/l/unread`);
+    await visit(`/tag/tag1/1/l/unread`);
 
     assert
       .dom(
@@ -300,7 +295,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   });
 
   test("visiting tag discovery hot route", async function (assert) {
-    await visit(`/tag/tag1/l/hot`);
+    await visit(`/tag/tag1/1/l/hot`);
 
     assert
       .dom(
@@ -581,9 +576,9 @@ acceptance(
       new_new_view_enabled: true,
       display_sidebar_tags: true,
       sidebar_tags: [
-        { id: 2, name: "tag2", pm_only: false },
-        { id: 1, name: "tag1", pm_only: false },
-        { id: 3, name: "tag3", pm_only: false },
+        { id: 2, name: "tag2", slug: "tag2", pm_only: false },
+        { id: 1, name: "tag1", slug: "tag1", pm_only: false },
+        { id: 3, name: "tag3", slug: "tag3", pm_only: false },
       ],
     });
 
@@ -762,7 +757,7 @@ acceptance(
         .dom('.sidebar-section-link-wrapper[data-tag-name="tag1"] a')
         .hasAttribute(
           "href",
-          "/tag/tag1/l/new",
+          "/tag/tag1/1/l/new",
           "links to the new topics list for the tag because there's 1 new topic"
         );
 
@@ -770,7 +765,7 @@ acceptance(
         .dom('.sidebar-section-link-wrapper[data-tag-name="tag2"] a')
         .hasAttribute(
           "href",
-          "/tag/tag2/l/new",
+          "/tag/tag2/2/l/new",
           "links to the new topics list for the tag because there's 1 unread topic"
         );
 
@@ -778,7 +773,7 @@ acceptance(
         .dom('.sidebar-section-link-wrapper[data-tag-name="tag3"] a')
         .hasAttribute(
           "href",
-          "/tag/tag3",
+          "/tag/tag3/3",
           "links to the latest topics list for the tag because there are no unread or new topics"
         );
     });
@@ -821,7 +816,7 @@ acceptance(
         .dom('.sidebar-section-link-wrapper[data-tag-name="tag1"] a')
         .hasAttribute(
           "href",
-          "/tag/tag1",
+          "/tag/tag1/1",
           "tag1 links to the latest topics list for the tag"
         );
 
@@ -829,7 +824,7 @@ acceptance(
         .dom('.sidebar-section-link-wrapper[data-tag-name="tag2"] a')
         .hasAttribute(
           "href",
-          "/tag/tag2",
+          "/tag/tag2/2",
           "tag2 links to the latest topics list for the tag"
         );
 
@@ -837,7 +832,7 @@ acceptance(
         .dom('.sidebar-section-link-wrapper[data-tag-name="tag3"] a')
         .hasAttribute(
           "href",
-          "/tag/tag3",
+          "/tag/tag3/3",
           "tag3 links to the latest topics list for the tag"
         );
     });

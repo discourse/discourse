@@ -1660,7 +1660,13 @@ Discourse::Application.routes.draw do
     get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
-    # canonical slug/id format (takes precedence)
+    # Tag Routes - Canonical vs Legacy
+    #
+    # Canonical: /tag/:slug/:id - stable URLs using numeric IDs
+    # Legacy: /tag/:name - for backward compat, redirects browsers to canonical
+    #
+    # The legacy routes can be removed once all external links have migrated.
+    # API consumers can use either format (legacy returns data without redirect).
     scope "/tag/:tag_slug/:tag_id", constraints: { tag_id: /\d+/ } do
       constraints format: :json do
         get "/" => "tags#show", :as => "tag_show"
@@ -1682,7 +1688,6 @@ Discourse::Application.routes.draw do
       end
     end
 
-    # legacy name-based format (redirects browser, serves API)
     scope "/tag/:tag_name" do
       constraints format: :json do
         get "/" => "tags#show", :as => "tag_show_by_name"
@@ -1713,6 +1718,9 @@ Discourse::Application.routes.draw do
       end
     end
 
+    # Tag listings & category+tag combinations:
+    #   /tags - index, search, management endpoints
+    #   /tags/c/:category/:slug/:id - topics filtered by category AND tag
     scope "/tags" do
       get "/" => "tags#index"
       get "/filter/list" => "tags#index"

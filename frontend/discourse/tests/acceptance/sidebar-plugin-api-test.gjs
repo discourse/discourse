@@ -565,9 +565,9 @@ acceptance("Sidebar - Plugin API", function (needs) {
         updateCurrentUser({
           display_sidebar_tags: true,
           sidebar_tags: [
-            { name: "tag2", pm_only: false },
-            { name: "tag1", pm_only: false },
-            { name: "tag3", pm_only: false },
+            { id: 2, name: "tag2", slug: "tag2", pm_only: false },
+            { id: 1, name: "tag1", slug: "tag1", pm_only: false },
+            { id: 3, name: "tag3", slug: "tag3", pm_only: false },
           ],
         });
 
