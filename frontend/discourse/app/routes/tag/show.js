@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
+import { ajax } from "discourse/lib/ajax";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
@@ -40,8 +41,31 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   async model(params, transition) {
-    const slug = params.tag_slug;
-    const id = params.tag_id;
+    let slug = params.tag_slug;
+    let id = params.tag_id;
+
+    if (!slug) {
+      slug = NONE;
+      id = null;
+    }
+
+    // handle legacy URLs without tag_id - fetch tag info to get the ID
+    // e.g., /tags/c/category/1/my-tag -> need to lookup my-tag to get its ID
+    if (slug && slug !== NONE && !id) {
+      try {
+        const result = await ajax(`/tag/${slug}/info.json`);
+        if (result.tag_info) {
+          id = result.tag_info.id;
+          // redirect to canonical URL with ID
+          const routeName = transition.to.name;
+          const newParams = { ...params, tag_slug: slug, tag_id: id };
+          return this.router.replaceWith(routeName, newParams);
+        }
+      } catch {
+        // tag not found, continue with slug only
+      }
+    }
+
     // use slug as initial name until API returns actual name
     const tag = this.store.createRecord("tag", {
       id,
@@ -78,7 +102,7 @@ export default class TagShowRoute extends DiscourseRoute {
       {}
     );
     const topicFilter = this.navMode;
-    const tagPath = `${slug}/${id}`;
+    const tagPath = id ? `${slug}/${id}` : slug;
     let filter;
 
     if (category) {

@@ -519,7 +519,7 @@ class TagsController < ::ApplicationController
   end
 
   def destroy_synonym
-    synonym = Tag.where_name(params[:synonym_id]).first
+    synonym = Tag.find_by(id: params[:synonym_id])
     raise Discourse::NotFound unless synonym
 
     guardian.ensure_can_edit_tag!(synonym)
