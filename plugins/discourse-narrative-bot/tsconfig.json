@@ -1,13 +1,20 @@
 {
   "extends": "discourse/tsconfig-plugin",
   "include": [
-    "./package.json",
-    "./assets/javascripts/**/*",
-    "./test/javascripts/**/*"
+    "admin/assets/javascripts/**/*",
+    "assets/javascripts/**/*",
+    "test/javascripts/**/*",
+    "node_modules/discourse/declarations/**/*"
   ],
   "compilerOptions": {
+    "types": ["discourse/external-types"],
     "paths": {
-      "discourse/plugins/discourse-narrative-bot/*": ["./assets/javascripts/*"]
+      "discourse/plugins/discourse-narrative-bot/*": [
+        "./assets/javascripts/*"
+      ],
+      "discourse/plugins/discourse-narrative-bot/admin/*": [
+        "./admin/assets/javascripts/admin/*"
+      ]
     }
   }
 }
