@@ -1561,7 +1561,6 @@ ur:
     invite_link_max_redemptions_limit_users: "ریگولر اراکین کی طرف سے تیار کردہ مدعو لنکس کے لیے زیادہ سے زیادہ چھٹکارے کی اجازت اس قدر سے زیادہ نہیں ہو سکتی۔"
     alert_admins_if_errors_per_minute: "اِیڈمن الرٹ کو متحرک کرنے کیلئے فی منٹ خرابیوں کی تعداد۔ 0 کی وَیلِیو اِس خصوصیت کو غیر فعال کردیتی ہے۔ نوٹ: رِیسٹارٹ ضروری ہے۔"
     alert_admins_if_errors_per_hour: "اِیڈمن الرٹ کو متحرک کرنے کیلئے فی گھنٹہ خرابیوں کی تعداد۔ 0 کی وَیلِیو اِس خصوصیت کو غیر فعال کردیتی ہے۔ نوٹ: رِیسٹارٹ ضروری ہے۔"
-    categories_topics: "/ زمرہ جات کے صفحہ میں دکھانے کے لیے موضوعات کی تعداد۔ اگر 0 پر سیٹ کیا جاتا ہے، تو یہ خود بخود دو کالموں کو ہم آہنگ رکھنے کے لیے ایک قدر تلاش کرنے کی کوشش کرے گا (زمرے اور موضوعات)۔"
     suggested_topics: "ٹاپک کے نچلے حصے پر دکھائے گئے تجویز کردہ ٹاپکس کی تعداد۔"
     limit_suggested_to_category: "تجویز کردہ ٹاپکس میں صرف موجودہ زُمرہ سے ٹاپکس دکھائیں۔"
     suggested_topics_max_days_old: "تجویز کردہ ٹاپکس ن دنوں سے زیادہ پرانے نہیں ہونے چاہئیں۔"
@@ -3661,38 +3660,46 @@ ur:
         complete: "پوسٹ مٹادی گئی."
       delete_and_agree_replies:
         confirm: "کیا آپ واقعی اِس پوسٹ پر جوابات بھی حذف کرنا چاہتے ہیں؟"
-      disagree_and_restore:
-        description: "پوسٹ کو بحال کریں تاکہ تمام صارفین اِسے دیکھ سکیں۔"
-      disagree:
-        title: "نہیں"
+      disagree_bundle:
+        title: "نہیں "
       ignore:
         title: "نظر انداز کریں"
       ignore_and_do_nothing:
         title: "کچھ نہ کریں"
       approve:
-        title: "منظور"
+        title: "جی ہاں"
       approve_post:
-        title: "پوسٹ منظور کریں"
+        title: "جی ہاں"
       approve_post_closed:
-        title: "پوسٹ منظور کریں"
+        title: "جی ہاں"
         confirm: "یہ ٹاپک بند ہے۔ کیا آپ پھر بھی پوسٹ بنانا چاہتے ہیں؟"
         complete: "پوسٹ منظور."
+      reject_post_bundle:
+        title: "نہیں "
       reject_post:
         title: "پوسٹ مسترد کریں"
       approve_user:
-        title: "صارف منظور کریں"
+        title: "جی ہاں"
       reject_user:
+        title: "نہیں "
         delete:
           title: "صارف حذف کریں"
-          description: "اِس صارف کو فورم سے حذف کردیا جائے گا۔"
           complete: "صارف مٹادیا گیا."
         block:
           title: "صارف کو حذف اور بلاک کریں"
           description: "اِس صارف کو حذف کر دیا جائے گا، اور ہم اِس کے IP اور ایمَیل ایڈریسوں کو بلاک کردیں گے۔"
+      confirm_spam:
+        title: "جی ہاں"
+      not_spam:
+        title: "نہیں "
       reject:
         title: "مسترد کریں"
       scrub:
         title: ریکارڈ صاف
+      approve_and_restore:
+        title: "جی ہاں"
+      approve_and_unhide:
+        title: "جی ہاں"
       no_action_post:
         title: "کوئی کارروائی نہیں"
       delete_post:

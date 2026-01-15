@@ -145,16 +145,12 @@ he:
           title: "מחיקת ההודעה"
           description: "למחוק את ההודעה כדי שמשתמשים לא יוכלו לראות אותה."
         delete_and_agree:
-          title: "התעלמות מהדגל ומחיקת ההודעה"
           description: "התעלמות מהדגל על ידי הסרתו מהתור ומחיקת ההודעה."
         disagree_and_restore:
           title: "חוסר הסכמה ושחזור ההודעה"
           description: "לשחזר את ההודעה כדי שכל המשתמשים יוכלו לראות אותה."
-        disagree:
-          title: "אי קבלה"
         ignore:
-          title: "לא לעשות דבר"
-          description: "התעלמות מהדגל על ידי הסרתו מהתור מבלי לנקוט בשום פעולה."
+          title: "התעלמות מדגל"
       direct_messages:
         transcript_title: "תמלול הודעות קודמות בערוץ %{channel_name}"
         transcript_body: "כדי לתת לך יותר הקשר, הוספנו תמליל של (עד עשר) ההודעות הקודמות בשיחה זו:\n\n%{transcript}"

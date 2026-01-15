@@ -21,8 +21,8 @@ ca:
         agree_and_silence:
           title: "Silencia l'usuari"
           description: "D'acord amb la bandera i silencia l'usuari. "
-        disagree:
-          title: "En desacord"
+        ignore:
+          title: "Ignora la bandera"
     channel:
       dm_title:
         single_user: "%{username}"

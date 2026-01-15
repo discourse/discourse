@@ -38,7 +38,6 @@ const extension = {
       content: "block*",
       defining: true,
       isolating: true,
-      draggable: true,
       parseDOM: [
         {
           tag: "div.discourse-post-event",

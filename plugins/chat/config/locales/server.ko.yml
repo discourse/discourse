@@ -31,8 +31,6 @@ ko:
           title: "메시지 복원"
         agree_and_delete:
           title: "메시지 삭제"
-        disagree:
-          title: "동의하지 않음"
     channel:
       dm_title:
         single_user: "%{username}"

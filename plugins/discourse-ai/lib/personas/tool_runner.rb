@@ -47,6 +47,18 @@ module DiscourseAi
         end
       end
 
+      def resolve_category(category_id_or_name)
+        if category_id_or_name.is_a?(Integer) ||
+             category_id_or_name.to_i.to_s == category_id_or_name.to_s
+          Category.find_by(id: category_id_or_name.to_i)
+        else
+          Category
+            .where(name: category_id_or_name)
+            .or(Category.where(slug: category_id_or_name))
+            .first
+        end
+      end
+
       def mini_racer_context
         @mini_racer_context ||=
           begin
@@ -177,19 +189,23 @@ module DiscourseAi
             }
             return result;
           },
-          setTags: function(topic_id, tags, options) {
-            const result = _discourse_set_tags(topic_id, tags, options);
-            if (result.error) {
-              return result;
-            }
-            return result;
-          },
           editPost: function(post_id, raw, options) {
             const result = _discourse_edit_post(post_id, raw, options);
             if (result.error) {
               throw new Error(result.error);
             }
             return result;
+          },
+          editTopic: function(topic_id, updates, options) {
+            const result = _discourse_edit_topic(topic_id, updates, options);
+            if (result.error) {
+              throw new Error(result.error);
+            }
+            return result;
+          },
+          // Backwards compatibility alias (undocumented)
+          setTags: function(topic_id, tags, options) {
+            return this.editTopic(topic_id, { tags: tags }, options);
           },
         };
 
@@ -462,6 +478,9 @@ module DiscourseAi
                 )
               data["tags"] = topic.tags.pluck(:name)
               data["first_post_id"] = topic.first_post&.id
+              data["category_id"] = topic.category_id
+              data["category_name"] = topic.category&.name
+              data["category_slug"] = topic.category&.slug
               data
             end
           end,
@@ -643,12 +662,7 @@ module DiscourseAi
               user = resolve_user(username)
               return { error: "User not found: #{username}" } if user.nil?
 
-              category =
-                if category_id.present?
-                  Category.find_by(id: category_id)
-                else
-                  Category.find_by(name: category_name) || Category.find_by(slug: category_name)
-                end
+              category = resolve_category(category_id.presence || category_name)
 
               return { error: "Category not found" } if category.nil?
 
@@ -842,34 +856,6 @@ module DiscourseAi
         )
 
         mini_racer_context.attach(
-          "_discourse_set_tags",
-          ->(topic_id, tags, options) do
-            in_attached_function do
-              topic = Topic.find_by(id: topic_id)
-              return { error: "Topic not found" } if topic.nil?
-
-              options ||= {}
-              append = !!options["append"]
-              username = options["username"]
-
-              user = resolve_user(username)
-              return { error: "User not found: #{username}" } if user.nil?
-
-              if DiscourseTagging.tag_topic_by_names(
-                   topic,
-                   Guardian.new(user),
-                   tags,
-                   append: append,
-                 )
-                { success: true, tags: topic.tags.pluck(:name) }
-              else
-                { error: "Failed to apply tags", details: topic.errors.full_messages }
-              end
-            end
-          end,
-        )
-
-        mini_racer_context.attach(
           "_discourse_edit_post",
           ->(post_id, raw, options) do
             in_attached_function do
@@ -889,6 +875,87 @@ module DiscourseAi
               else
                 { error: post.errors.full_messages.join(", ") }
               end
+            end
+          end,
+        )
+
+        mini_racer_context.attach(
+          "_discourse_edit_topic",
+          ->(topic_id, updates, options) do
+            in_attached_function do
+              topic = Topic.find_by(id: topic_id)
+              return { error: "Topic not found" } if topic.nil?
+
+              updates ||= {}
+              options ||= {}
+              user = resolve_user(options["username"])
+              return { error: "User not found: #{options["username"]}" } if user.nil?
+
+              guardian = Guardian.new(user)
+
+              # Handle category change
+              if updates.key?("category")
+                if topic.private_message?
+                  return { error: "Cannot change category of private messages" }
+                end
+
+                category = resolve_category(updates["category"])
+                return { error: "Category not found" } if category.nil?
+
+                unless guardian.can_move_topic_to_category?(category.id)
+                  return { error: "Permission denied" }
+                end
+
+                unless topic.change_category_to_id(category.id, silent: !!options["silent"])
+                  return { error: "Failed to change category", details: topic.errors.full_messages }
+                end
+              end
+
+              # Handle visibility change
+              if updates.key?("visible")
+                unless guardian.can_toggle_topic_visibility?(topic)
+                  return { error: "Permission denied" }
+                end
+
+                visibility_reason =
+                  if updates["visible"]
+                    Topic.visibility_reasons[:manually_relisted]
+                  else
+                    Topic.visibility_reasons[:manually_unlisted]
+                  end
+
+                topic.update_status(
+                  "visible",
+                  updates["visible"],
+                  user,
+                  { visibility_reason_id: visibility_reason },
+                )
+              end
+
+              # Handle tags change
+              if updates.key?("tags")
+                unless DiscourseTagging.tag_topic_by_names(
+                         topic,
+                         guardian,
+                         updates["tags"],
+                         append: !!options["append"],
+                       )
+                  return { error: "Failed to apply tags", details: topic.errors.full_messages }
+                end
+              end
+
+              {
+                success: true,
+                topic: {
+                  id: topic.id,
+                  category_id: topic.category_id,
+                  category_name: topic.category&.name,
+                  category_slug: topic.category&.slug,
+                  tags: topic.tags.pluck(:name),
+                  visible: topic.visible,
+                  visibility_reason_id: topic.visibility_reason_id,
+                },
+              }
             end
           end,
         )

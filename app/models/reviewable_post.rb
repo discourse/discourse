@@ -49,18 +49,34 @@ class ReviewablePost < Reviewable
 
     reject =
       actions.add_bundle(
-        "#{id}-reject",
+        "#{id}-reject-post",
         icon: "xmark",
-        label: "reviewables.actions.reject.bundle_title",
+        label: "reviewables.actions.reject_post_bundle.title",
       )
 
+    can_penalize = guardian.can_suspend?(target_created_by)
+
     if post.trashed?
-      build_action(actions, :reject_and_keep_deleted, icon: "trash-can", bundle: reject)
+      if can_penalize
+        build_action(actions, :reject_and_keep_deleted, icon: "trash-can", bundle: reject)
+      else
+        actions.add(:reject_and_keep_deleted, bundle: reject) do |a|
+          a.icon = "trash-can"
+          a.label = "reviewables.actions.reject_and_keep_deleted_standalone.title"
+        end
+      end
     elsif guardian.can_delete_post_or_topic?(post)
-      build_action(actions, :reject_and_delete, icon: "trash-can", bundle: reject)
+      if can_penalize
+        build_action(actions, :reject_and_delete, icon: "trash-can", bundle: reject)
+      else
+        actions.add(:reject_and_delete, bundle: reject) do |a|
+          a.icon = "trash-can"
+          a.label = "reviewables.actions.reject_and_delete_standalone.title"
+        end
+      end
     end
 
-    if guardian.can_suspend?(target_created_by)
+    if can_penalize
       build_action(
         actions,
         :reject_and_suspend,

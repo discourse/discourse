@@ -14,7 +14,7 @@ vi:
     poll_groupable_user_fields: "Một tập hợp các tên người dùng có thể được sử dụng để nhóm và lọc các kết quả bình chọn."
     poll_export_data_explorer_query_id: "ID của truy vấn trình khám phá dữ liệu được sử dụng để xuất kết quả thăm dò ý kiến (0 để vô hiệu hóa)."
     poll_export_ranked_choice_data_explorer_query_id: "ID của truy vấn Data Explorer được sử dụng để xuất kết quả bầu cử theo phương pháp bầu cử trực tiếp."
-    poll_default_public: "Khi tạo cuộc bình chọn mới, bật tùy chọn 'hiển thị người đã vốt' theo mặc định."
+    poll_default_public: "Khi tạo cuộc bình chọn mới, bật tùy chọn 'hiện người đã bình chọn' theo mặc định."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
@@ -43,16 +43,16 @@ vi:
       enabled_hint: "Có thể thêm hoặc xóa các lựa chọn."
     no_poll_with_this_name: "Không có cuộc bình chọn có tên <strong>%{name}</strong> liên kết với tút này."
     post_is_deleted: "Không thể thực hiện trên một tút đã xóa."
-    user_cant_post_in_topic: "Bạn không thể vốt vì bạn không thể đăng tút trong chủ đề này."
-    topic_must_be_open_to_vote: "Chủ đề phải được mở để vốt."
-    poll_must_be_open_to_vote: "Bình chọn ​​phải được mở để tiến hành vốt."
-    one_vote_per_user: "Mỗi người chỉ được vốt 1 lần cho cuộc bình chọn này."
+    user_cant_post_in_topic: "Bạn không thể bình chọn vì bạn không thể đăng tút trong chủ đề này."
+    topic_must_be_open_to_vote: "Chủ đề phải được mở để bình chọn."
+    poll_must_be_open_to_vote: "Bình chọn ​​phải được mở để tiến hành bình chọn."
+    one_vote_per_user: "Mỗi người chỉ được bình chọn 1 lần cho cuộc bình chọn này."
     max_vote_per_user:
-      other: Tối đa %{count} vốt được cho phép cho cuộc bình chọn này.
+      other: Tối đa %{count} bình chọn được cho phép cho cuộc bình chọn này.
     min_vote_per_user:
-      other: Cuộc bình chọn này cần tối thiểu %{count} vốt.
+      other: Cuộc bình chọn này cần tối thiểu %{count} lượt bình chọn.
     ranked_choice:
-      vote_options_mismatch: "Đối với bình chọn vòng loại trực tiếp, số lượng lựa chọn trong một vốt phải khớp với số lượng tùy chọn.  Số lượng lựa chọn là %{count} và số lượng lựa chọn đã tạo là %{provided}."
+      vote_options_mismatch: "Đối với bình chọn vòng loại trực tiếp, số lượng lựa chọn trong một bình chọn phải khớp với số lượng tùy chọn. Số lượng lựa chọn là %{count} và số lượng lựa chọn đã tạo là %{provided}."
       no_group_results_support: "Loại bình chọn không hợp lệ, ranked_choice không hỗ trợ kết quả được nhóm lại."
     topic_must_be_open_to_toggle_status: "Chủ đề phải được mở để chuyển trạng thái."
     only_staff_or_op_can_toggle_status: "Chỉ có BQT hoặc người đăng tút gốc mới có quyền chuyển trạng thái của một cuộc bình chọn."

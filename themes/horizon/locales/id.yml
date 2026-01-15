@@ -5,3 +5,9 @@
 # https://translate.discourse.org/
 
 id:
+  vote_count:
+    other: "%{count} suara"
+  like_count:
+    other: "%{count} suka"
+  reply_count:
+    other: "%{count} balasan"

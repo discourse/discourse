@@ -350,6 +350,7 @@ zh_CN:
       bulk_invite: "批量邀请"
       close_event: "关闭活动"
       open_event: "开放活动"
+      destroy_event: "移除事件"
       invitees_modal:
         title_invited: "活动参与"
         title_participated: "参与用户列表"
@@ -422,6 +423,12 @@ zh_CN:
             private:
               title: "不公开"
               description: "只有受邀用户可以加入不公开活动。"
+      composer:
+        name_placeholder: "事件"
+        end_date_placeholder: "设置结束日期"
+        location_placeholder: "添加位置或网址"
+        max_attendees_placeholder: "设置最大参与人数"
+        description_placeholder: "添加事件描述"
       builder_modal:
         custom_fields:
           label: "自定义字段"
@@ -491,6 +498,7 @@ zh_CN:
           label: "受邀群组"
         status:
           label: "状态"
+        delete_confirmation_message: "删除此事件？"
       invite_user_or_group:
         title: "通知用户或群组"
         invite: "发送"

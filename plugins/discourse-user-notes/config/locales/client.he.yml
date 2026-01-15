@@ -15,4 +15,3 @@ he:
       delete_confirm: "למחוק את הערת המשתמש הזאת"
       show_post: "הצגת פוסט"
       show_flag: "הצגת סימון"
-      copy_reviewable_note: "להעתיק את ההערה לפרופיל של %{username}?"

@@ -49,9 +49,19 @@ hu:
         agree_and_delete:
           title: "Hozzászólás törlése"
           description: "Hozzászólás törlése, hogy a felhasználók ne láthassák."
+        agree_and_suspend:
+          title: "Felhasználó felfüggesztése"
+          description: "Egyetértés a megjelöléssel, és a felhasználó felfüggesztése"
+        agree_and_silence:
+          title: "Felhasználó némítása"
+          description: "Egyetértés a megjelöléssel, és a felhasználó némítása"
         disagree_and_restore:
           title: "Nem értek egyet, és visszaállítom a hozzászólást"
           description: "Állítsa vissza a megjegyzést, hogy minden felhasználó láthassa."
+        disagree:
+          title: "Hozzászólás megtartása"
+        delete_and_agree:
+          description: "A jelző figyelmen kívül hagyásához távolítsa el a sorból, és törölje a megjegyzést."
   post_action_types:
     vote:
       title: "Szavazás"
@@ -99,16 +109,12 @@ hu:
             title: "Hozzászólás törlése"
             description: "Hozzászólás törlése, hogy a felhasználók ne láthassák."
           delete_and_agree:
-            title: "Jelzés figyelmen kívül hagyása és megjegyzés törlése"
             description: "A jelző figyelmen kívül hagyásához távolítsa el a sorból, és törölje a megjegyzést."
           disagree_and_restore:
             title: "Nem értek egyet, és visszaállítom a hozzászólást"
             description: "Állítsa vissza a megjegyzést, hogy minden felhasználó láthassa."
           disagree:
-            title: "Elutasítás"
-          ignore:
-            title: "Ne csináljon semmit"
-            description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne."
+            title: "Hozzászólás megtartása"
         transcript:
           view: "Korábbi hozzászólások átiratának megtekintése"
       reviewable_score_types:

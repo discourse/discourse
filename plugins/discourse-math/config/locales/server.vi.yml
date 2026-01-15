@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 vi:
+  site_settings:
+    discourse_math_enabled: "Kích hoạt plugin Discourse Math (sẽ thêm chức năng xử lý đặc biệt cho các khối $ và $$)"
+    discourse_math_provider: "Nhà cung cấp hiển thị toán học mặc định"
+    discourse_math_enable_latex_delimiters: "Bật các dấu phân cách theo phong cách LaTeX: \\(...\\) cho toán học trong dòng và \\[...\\] cho toán học khối."
+    discourse_math_mathjax_output: "Định dạng đầu ra MathJax (chỉ MathJax)"
+    discourse_math_enable_menu: "Bật menu ngữ cảnh (chỉ áp dụng cho MathJax)"
+    discourse_math_enable_accessibility: "Kích hoạt các tính năng trợ năng (chỉ MathJax với menu)"
+    discourse_math_zoom_on_click: "Phóng to 175% khi nhấn giữ phím Alt và nhấn chuột (chỉ áp dụng với MathJax khi có menu)"
+    discourse_math_enable_asciimath: "Bật asciimath (sẽ thêm xử lý đặc biệt cho đầu vào được phân tách bằng dấu %; chỉ được hỗ trợ với MathJax)"

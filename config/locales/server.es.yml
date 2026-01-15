@@ -1927,7 +1927,6 @@ es:
     invite_link_max_redemptions_limit_users: "El número máximo de usuarios que pueden registrarse desde un enlace de invitación generado por usuarios habituales no puede sobrepasar este valor."
     alert_admins_if_errors_per_minute: "Número de errores por minuto que activa la alerta a los administradores. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar."
     alert_admins_if_errors_per_hour: "Número de errores por hora que activa la alerta a los administradores. Un valor de 0 desactiva esta funcionalidad. NOTA: requiere reiniciar."
-    categories_topics: "Número de temas que se muestran en la página de /categories. Si estableces el valor en 0, automáticamente intentará conseguir un valor para mantener las dos columnas simétricas (categorías y temas)."
     suggested_topics: "Número de temas sugeridos que se muestran en la parte inferior del tema."
     limit_suggested_to_category: "Solo mostrar temas de la categoría actual en los temas sugeridos."
     suggested_topics_max_days_old: "Los temas sugeridos no deben ser más antiguos de n días."
@@ -5099,19 +5098,15 @@ es:
         description: "Aceptar la denuncia y ocultar esta entrada + enviar automáticamente al usuario un mensaje instándole a editarla."
         complete: "Publicación oculta, se ha notificado al usuario."
       agree_and_edit:
-        title: "Aceptar y editar la publicación"
+        title: "Editar publicación"
         description: "Acepta la bandera y abre una ventana de editor para editar la publicación."
         complete: "Denuncia reconocida, ahora puedes editar la publicación."
       delete:
         title: "Eliminar"
         complete: "Publicación eliminada."
       delete_and_ignore:
-        title: "Ignorar la denuncia y eliminar la publicación"
-        description: "Ignorar la denuncia quitándola de la cola y eliminar la publicación; si es la primera publicación, eliminar también el tema. "
         complete: "Publicación eliminada."
       delete_and_ignore_replies:
-        title: "Ignorar la denuncia, eliminar la publicación y las respuestas"
-        description: "Ignorar la denuncia quitándola de la cola, eliminar la publicación y todas sus respuestas; si es la primera publicación, eliminar también el tema"
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
         complete: "Publicación y respuestas eliminadas."
       delete_and_agree:
@@ -5124,11 +5119,12 @@ es:
         confirm: "¿Seguro que quieres eliminar las respuestas de la publicación también?"
         complete: "Publicación y respuestas eliminadas."
       disagree_and_restore:
-        title: "No, restaurar publicación"
-        description: "Restaurar la publicación para que los usuarios puedan verla."
+        title: "Restaurar publicación"
         complete: "Publicación restaurada."
-      disagree:
+      disagree_bundle:
         title: "No"
+      disagree:
+        title: "Mantener publicación"
         complete: "Denuncia ignorada."
       discard_post:
         title: "Descartar publicación"
@@ -5144,31 +5140,36 @@ es:
         description: "Ignorar la denuncia quitándola de la cola sin realizar ninguna acción. Las publicaciones ocultas permanecerán ocultas y las gestionarán las herramientas automáticas."
         complete: "Denuncia ignorada."
       approve:
-        title: "Aprobar"
+        title: "Sí"
         complete: "Publicación aprobada."
       approve_post:
-        title: "Aprobar publicación"
+        title: "Sí"
         complete: "Publicación aprobada."
       approve_post_closed:
-        title: "Aprobar publicación"
+        title: "Sí"
         confirm: "Este tema está cerrado. ¿Quieres crear una publicación de todas maneras?"
         complete: "Publicación aprobada."
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Rechazar publicación"
         complete: "Publicación rechazada."
       approve_user:
-        title: "Aprobar usuario"
+        title: "Sí"
         complete: "Usuario aprobado."
       reject_user:
-        title: "Eliminar usuario…"
+        title: "No"
         delete:
           title: "Eliminar usuario"
-          description: "El usuario será eliminado del foro."
           complete: "Usuario eliminado."
         block:
           title: "Eliminar y bloquear usuario"
           description: "El usuario será eliminado y bloquearemos su IP y su dirección de correo electrónico."
           complete: "Usuario eliminado y bloqueado."
+      confirm_spam:
+        title: "Sí"
+      not_spam:
+        title: "No"
       reject:
         title: "Rechazar"
         bundle_title: "Rechazar…"
@@ -5187,10 +5188,10 @@ es:
       scrub:
         title: Borrar registro
       approve_and_restore:
-        title: "Aprobar y restaurar publicación"
+        title: "Sí"
         complete: "Publicación aprobada y restaurada."
       approve_and_unhide:
-        title: "Aprobar y dejar de ocultar publicación"
+        title: "Sí"
         complete: "Se ha aprobado la publicación y se ha dejado de ocultar"
       post_actions:
         bundle_title: "¿Qué quieres hacer con la publicación?"

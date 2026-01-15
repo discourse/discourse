@@ -13,10 +13,9 @@ const CLIENT_SETTING_TEST_OVERRIDES = {
   anon_polling_interval: 30000,
 };
 
-import CLIENT_SITE_SETTINGS_WITH_DEFAULTS from "virtual:discourse-test-site-settings";
-
+// window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS is injected by `/bootstrap/site-settings-for-tests.js`
 const ORIGINAL_CLIENT_SITE_SETTINGS = {
-  ...CLIENT_SITE_SETTINGS_WITH_DEFAULTS,
+  ...window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS,
   ...CLIENT_SETTING_TEST_OVERRIDES,
 };
 

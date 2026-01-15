@@ -1939,7 +1939,6 @@ hu:
     invite_link_max_redemptions_limit_users: "A normál felhasználók által generált meghívólinkek maximális beváltása nem haladhatja meg ezt az értéket."
     alert_admins_if_errors_per_minute: "A percenkénti hibák száma a rendszergazdai riasztás indításához. A 0 érték letiltja ezt a funkciót. MEGJEGYZÉS: újraindítás szükséges."
     alert_admins_if_errors_per_hour: "Az óránkénti hibák száma adminisztrátori riasztás indításához. A 0 érték letiltja ezt a funkciót. MEGJEGYZÉS: újraindítás szükséges."
-    categories_topics: "A /kategóriák oldalon megjelenítendő témák száma. Ha 0-ra van állítva, akkor automatikusan megpróbál egy olyan értéket találni, amely szimmetrikusan tartja a két oszlopot (kategóriák és témák)."
     suggested_topics: "A javasolt témák száma a téma alján láthatók."
     limit_suggested_to_category: "Csak a javasolt kategóriákból származó témakörök jelenhetnek meg a javasolt témakörökben."
     suggested_topics_max_days_old: "A javasolt olvasatlan témák nem lehetnek több, mint n naposak."
@@ -5070,19 +5069,15 @@ hu:
         description: "Egyetértek a jelöléssel, és elrejtem ezt a bejegyzést + automatikusan üzenetet küldök a felhasználónak, hogy szerkessze azt."
         complete: "A bejegyzés elrejtve, a felhasználó értesítést kapott."
       agree_and_edit:
-        title: "Elfogadás és bejegyzés szerkesztése"
+        title: "Bejegyzés szerkesztése"
         description: "Egyetértek a jelöléssel és szerkesztő megnyitása a bejegyzés szerkesztéséhez."
         complete: "Megjelölés tudomásul véve, most már szerkesztheti a bejegyzést."
       delete:
         title: "Törlés"
         complete: "Bejegyzés törölve."
       delete_and_ignore:
-        title: "Megjelölés figyelmen kívül hagyása, és a bejegyzés törlése"
-        description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, és a bejegyzés törlésével; ha ez az első hozzászólás, akkor a témát is törli. "
         complete: "Bejegyzés törölve."
       delete_and_ignore_replies:
-        title: "Megjelölés figyelmen kívül hagyása, a bejegyzés és a válaszok törlése"
-        description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, a bejegyzés és az összes válasz törlésével; ha ez az első hozzászólás, akkor a témát is törli"
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
         complete: "A bejegyzés és a válaszok törölve."
       delete_and_agree:
@@ -5095,11 +5090,12 @@ hu:
         confirm: "Biztos vagy benne, hogy törölni szeretnéd a hozzászólásra adott válaszokat is?"
         complete: "A bejegyzés és a válaszok törölve."
       disagree_and_restore:
-        title: "Nem, bejegyzés visszaállítása"
-        description: "A bejegyzés visszaállítása, hogy minden felhasználó láthassa."
+        title: "Bejegyzés visszaállítása"
         complete: "A bejegyzés visszaállítva."
-      disagree:
+      disagree_bundle:
         title: "Nem"
+      disagree:
+        title: "Bejegyzés megtartása"
         complete: "Megjelölés figyelmen kívül hagyva."
       discard_post:
         title: "Bejegyzés elvetése"
@@ -5114,31 +5110,36 @@ hu:
         description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne. A rejtett bejegyzések rejtve maradnak, és az automatikus eszközök kezelik őket."
         complete: "Megjelölés figyelmen kívül hagyva."
       approve:
-        title: "Jóváhagyás"
+        title: "Igen"
         complete: "Bejegyzés jóváhagyva."
       approve_post:
-        title: "Bejegyzés jóváhagyása"
+        title: "Igen"
         complete: "Bejegyzés jóváhagyva."
       approve_post_closed:
-        title: "Bejegyzés jóváhagyása"
+        title: "Igen"
         confirm: "Ez a téma lezárva. Ennek ellenére szeretné létrehozni a bejegyzést?"
         complete: "Bejegyzés jóváhagyva."
+      reject_post_bundle:
+        title: "Nem"
       reject_post:
         title: "Bejegyzés elutasítása"
         complete: "Bejegyzés elutasítva."
       approve_user:
-        title: "Felhasználó jóváhagyása"
+        title: "Igen"
         complete: "Felhasználó jóváhagyva."
       reject_user:
-        title: "Felhasználó törlése"
+        title: "Nem"
         delete:
           title: "Felhasználó törlése"
-          description: "A felhasználó törlésre kerül a fórumról."
           complete: "Felhasználó törölve."
         block:
           title: "Felhasználó törlése és blokkolása"
           description: "A felhasználót töröljük, IP-címét és e-mail címét pedig blokkoljuk."
           complete: "Felhasználó törölve és letiltva."
+      confirm_spam:
+        title: "Igen"
+      not_spam:
+        title: "Nem"
       reject:
         title: "Elutasítás"
         bundle_title: "Elutasítás..."
@@ -5155,10 +5156,10 @@ hu:
         title: "A bejegyzés maradjon törölve"
         complete: "A bejegyzést elutasították és törölték."
       approve_and_restore:
-        title: "Bejegyzés jóváhagyása és visszaállítása"
+        title: "Igen"
         complete: "A bejegyzés jóváhagyva és visszaállítva."
       approve_and_unhide:
-        title: "Bejegyzés jóváhagyása és felfedése"
+        title: "Igen"
         complete: "Bejegyzés jóváhagyva és felfedve"
       post_actions:
         bundle_title: "Mit akarsz csinálni a bejegyzéssel?"

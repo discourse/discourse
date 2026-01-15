@@ -1658,7 +1658,6 @@ sv:
     invite_link_max_redemptions_limit_users: "Maximalt antal inlösningar som tillåts för inbjudningslänkar som genererats av vanliga användare kan inte vara större än detta värde."
     alert_admins_if_errors_per_minute: "Antal felindikeringar per minut för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
     alert_admins_if_errors_per_hour: "Antal felindikeringar per timme för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
-    categories_topics: "Antal ämnen som ska visas i /kategorisida. Om detta ställs in till 0 kommer systemet automatiskt att försöka hitta ett värde så att de två kolumnerna hålls symmetriskt (kategorier och ämnen.)"
     suggested_topics: "Antal föreslagna ämnen som visas nederst i ett ämne."
     limit_suggested_to_category: "Visa bara ämnen från den aktuella kategorin bland föreslagna ämnen."
     suggested_topics_max_days_old: "Föreslagna ämnen bör inte vara mer än n dagar gamla."
@@ -4198,12 +4197,8 @@ sv:
         title: "Radera"
         complete: "Inlägg raderat."
       delete_and_ignore:
-        title: "Ignorera flaggning och radera inlägget"
-        description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget. Om det är det första inlägget, radera ämnet också. "
         complete: "Inlägg raderat."
       delete_and_ignore_replies:
-        title: "Ignorera flaggning, radera inlägg och svar"
-        description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget och alla dess svar. Om det är det första inlägget, radera ämnet också"
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       delete_and_agree:
         title: "Radera inlägg"
@@ -4214,10 +4209,11 @@ sv:
         description: "Godkänn flaggning och radera detta inlägg och alla dess svar. Om det är det första inlägget, radera ämnet också."
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       disagree_and_restore:
-        title: "Nej, återställ inlägget"
-        description: "Återställ inlägget så att alla användare kan se det."
-      disagree:
+        title: "Återställ inlägg"
+      disagree_bundle:
         title: "Nej"
+      disagree:
+        title: "Behåll inlägg"
         complete: "Flaggning ignoreras."
       discard_post:
         title: "Kasta inlägg"
@@ -4229,30 +4225,35 @@ sv:
         description: "Ignorera flaggningen genom att ta bort den från kön utan att vidta några åtgärder. Dolda inlägg kommer att förbli dolda och hanteras av de automatiska verktygen."
         complete: "Flaggning ignoreras."
       approve:
-        title: "Godkänn"
+        title: "Ja"
         complete: "Inlägget godkändes."
       approve_post:
-        title: "Godkänn inlägg"
+        title: "Ja"
         complete: "Inlägget godkändes."
       approve_post_closed:
-        title: "Godkänn inlägg"
+        title: "Ja"
         confirm: "Detta ämne är stängt. Vill du skapa inlägget ändå?"
         complete: "Inlägget godkändes."
+      reject_post_bundle:
+        title: "Nej"
       reject_post:
         title: "Avvisa inlägg"
         complete: "Inlägget avvisades."
       approve_user:
-        title: "Godkänn användare"
+        title: "Ja"
         complete: "Användaren godkändes."
       reject_user:
-        title: "Radera användare…"
+        title: "Nej"
         delete:
           title: "Ta bort användare"
-          description: "Användaren kommer att raderas från forumet."
           complete: "Användare raderad."
         block:
           title: "Radera och blockera användare"
           description: "Användaren kommer att raderas, och vi blockerar också hens IP och e-postadress."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nej"
       reject:
         title: "Avvisa"
         bundle_title: "Avvisa…"
@@ -4265,7 +4266,9 @@ sv:
       reject_and_keep_deleted:
         title: "Behåll inlägg raderat"
       approve_and_restore:
-        title: "Godkänn och återställ inlägg"
+        title: "Ja"
+      approve_and_unhide:
+        title: "Ja"
       no_action_post:
         title: "Ingen åtgärd"
       delete_post:

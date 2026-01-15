@@ -761,6 +761,7 @@ uk:
       show_more: "Показати більше"
       show_less: "Показати менше"
       back_to_queue: "Повернутися до черги"
+      editing_post: "Редагування допису…"
       order_by: "Сортувати за"
       date_filter: "Опубліковано між"
       in_reply_to: "у відповідь на"
@@ -973,6 +974,10 @@ uk:
         is_this_post: "Це %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "або"
         something_else_wrong: "Щось не так з цим %{reviewable_type}?"
+        approve_user: "Схвалити цього користувача?"
+        suspect_user: "Чи цей користувач спамер?"
+        approve_post: "Схвалити цю публікацію?"
+        approve_topic: "Схвалити цю тему?"
       types:
         reviewable_flagged_post:
           title: "Позначений допис"
@@ -990,6 +995,15 @@ uk:
         reviewable_post:
           title: "Допис"
           noun: "допис"
+        reviewable_ai_chat_message:
+          title: "Повідомлення чату, позначене ШІ"
+          noun: "повідомлення чату"
+        reviewable_ai_post:
+          title: "Публікація, позначена ШІ"
+          noun: "допис"
+        reviewable_post_voting_comment:
+          title: "Позначений коментар"
+          noun: "коментар"
       flagged_as: "Позначено як"
       post_flagged_as: "Публікацію позначено як"
       chat_flagged_as: "Чат позначено як"
@@ -1241,6 +1255,7 @@ uk:
           smtp_title: "SMTP"
           smtp_instructions: "Коли ви ввімкнете SMTP для групи, всі вихідні повідомлення електронної пошти, надіслані з групи, буде надіслано через вказані тут параметри SMTP, замість стандартного поштового сервера, налаштованого для інших листів."
           additional_settings: "Додаткові налаштування"
+          smtp_disable_confirm: "Якщо вимкнути SMTP, усі налаштування SMTP будуть скинуті, а пов’язані з ними функції будуть вимкнені. Ви впевнені, що хочете продовжити?"
           prefill:
             title: "Заповніть початкові налаштування для:"
             gmail: "Gmail"
@@ -2268,6 +2283,7 @@ uk:
         redeemed_tab_with_count: "Прийняті (%{count})"
         invited_via: "Запрошення"
         invited_via_link: "посилання %{key} (прийнято %{count} з %{max})"
+        generating_link: "Створюємо посилання..."
         groups: "Групи"
         topic: "Тема"
         sent: "Створено/Востаннє надіслано"
@@ -3752,6 +3768,7 @@ uk:
           unread: "Не залишилося нічого непрочитаного... вражаюче!"
           new_new: "Наразі нічого нового... заходьте пізніше!"
           new: "Наразі нічого нового... заходьте пізніше!"
+          generic: "Тут нічого немає... заходьте пізніше!"
     topic_bulk_actions:
       dismiss:
         name: "Відкласти"
@@ -3931,7 +3948,7 @@ uk:
           24_hours: "24 години"
           custom: "Встановити тривалість"
       slow_mode_notice:
-        duration: "Будь ласка, зачекайте %{duration} між дописами в цій темі"
+        duration: "Будь ласка, зачекайте %{duration} між вашими публікаціями в цій темі"
       topic_status_update:
         title: "Таймер Теми"
         save: "Встановити Таймер"
@@ -3961,6 +3978,8 @@ uk:
         title: "Автоматичне закриття теми після останнього дописа"
       auto_delete:
         title: "Автоматичне видалення теми"
+      auto_delete_after_last_post:
+        title: "Автоматичне видалення теми після останнього допису"
       auto_bump:
         title: "Само-підняття теми"
       reminder:
@@ -3972,6 +3991,7 @@ uk:
         auto_close: "Ця тема автоматично закриється %{timeLeft}."
         auto_publish_to_category: "Ця тема буде опублікована в розділі <a href=%{categoryUrl}>#%{categoryName}</a> через %{timeLeft}."
         auto_close_after_last_post: "Ця тема буде закрита через %{duration} після останньої відповіді."
+        auto_delete_after_last_post: "Цю тему буде видалено %{duration} після останньої відповіді."
         auto_delete: "Ця тема буде автоматично видалена через %{timeLeft}."
         auto_bump: "Ця тема буде автоматично піднята %{timeLeft}."
         auto_reminder: "Вам прийде нагадування про цю тему через %{timeLeft}."
@@ -5136,6 +5156,7 @@ uk:
         latest: "%{shortcut} Останні"
         new: "%{shortcut} Нові"
         unread: "%{shortcut} Непрочитані"
+        unseen: "%{shortcut} Невидимий"
         categories: "%{shortcut} Розділи"
         top: "%{shortcut} Обговорювані"
         bookmarks: "%{shortcut} Закладки"
@@ -5628,6 +5649,9 @@ uk:
           click_to_get_started: "Натисніть тут, щоб почати."
           header_link_text: "Розділи"
           header_action_title: "Редагувати розділи бічної панелі"
+          header_action_new: "Нова категорія"
+          header_action_edit_sidebar: "Редагувати категорії бічної панелі"
+          header_action_edit_header_dropdown: "Редагувати категорії навігації"
           configure_defaults: "Налаштувати типові значення"
         community:
           edit_section:
@@ -8261,6 +8285,21 @@ uk:
         penalty_post_actions: "Що б ви хотіли зробити з повʼязаним дописом?"
         penalty_post_delete: "Видалити допис"
         penalty_post_delete_replies: "Видалити допис + будь-які відповіді"
+        penalty_post_delete_all: "Видалити всі теми користувачем + будь-які відповіді"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>Це видалить
+          { TOPICS, plural,
+              one {# тема}
+              few {# теми}
+              many {# тем}
+            other {# теми}
+          } і
+          { REPLIES, plural,
+              one {# відповідь}
+              few {# відповіді}
+              many {# відповіді}
+            other {# відповіді}
+          }. <b>Це не можна скасувати!</b> Ви впевнені, що хочете це зробити?</span>
         penalty_post_edit: "Редагувати допис"
         penalty_post_none: "Нічого не робити"
         penalty_count: "Кількість порушень"
@@ -8349,6 +8388,11 @@ uk:
           button: "Видалити всі дописи"
           progress:
             title: "Хід видалення дописів"
+            description:
+              one: "Видалення %{count} публікацію від @%{username}..."
+              few: "Видалення %{count} публікації від @%{username}..."
+              many: "Видалення %{count} публікацій від @%{username}..."
+              other: "Видалення %{count} публікації від @%{username}..."
           confirmation:
             title: "Видалити всі дописи від @%{username}"
             description: |
@@ -8360,6 +8404,7 @@ uk:
             text: "видалити дописи від @%{username}"
             delete: "Видалити дописи від @%{username}"
             cancel: "Скасувати"
+          all_enqueued: "Усі публікації @%{username} поставлено в чергу на видалення"
         merge:
           button: "Об' єднати"
           prompt:

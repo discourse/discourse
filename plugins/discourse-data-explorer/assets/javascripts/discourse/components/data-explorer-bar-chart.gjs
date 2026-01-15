@@ -45,35 +45,31 @@ export default class DataExplorerBarChart extends Component {
 
   get options() {
     return {
-      scales: {
+      plugins: {
         legend: {
           labels: {
-            fontColor: this.labelsColor,
+            color: this.labelsColor,
           },
         },
-        xAxes: [
-          {
-            gridLines: {
-              color: this.gridColor,
-              zeroLineColor: this.gridColor,
-            },
-            ticks: {
-              fontColor: this.labelsColor,
-            },
+      },
+      scales: {
+        x: {
+          grid: {
+            color: this.gridColor,
           },
-        ],
-        yAxes: [
-          {
-            gridLines: {
-              color: this.gridColor,
-              zeroLineColor: this.gridColor,
-            },
-            ticks: {
-              beginAtZero: true,
-              fontColor: this.labelsColor,
-            },
+          ticks: {
+            color: this.labelsColor,
           },
-        ],
+        },
+        y: {
+          grid: {
+            color: this.gridColor,
+          },
+          ticks: {
+            beginAtZero: true,
+            color: this.labelsColor,
+          },
+        },
       },
     };
   }

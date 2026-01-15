@@ -477,7 +477,7 @@ RSpec.describe PostSerializer do
     fab!(:user)
 
     let(:username) { "joffrey" }
-    let(:user1) { Fabricate(:user, user_status: user_status, username: username) }
+    let(:user1) { Fabricate(:user, user_status:, username:) }
     let(:post) { Fabricate(:post, user: user, raw: "Hey @#{user1.username}") }
     let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
 
@@ -516,35 +516,39 @@ RSpec.describe PostSerializer do
 
   describe "#user_status" do
     fab!(:user_status)
-    fab!(:user) { Fabricate(:user, user_status: user_status) }
-    fab!(:post) { Fabricate(:post, user: user) }
-    let(:serializer) { described_class.new(post, scope: Guardian.new(user), root: false) }
+    fab!(:user) { Fabricate(:user, user_status:) }
+    fab!(:post) { Fabricate(:post, user:) }
 
-    it "adds user status when enabled" do
-      SiteSetting.enable_user_status = true
+    def serialize_user_status(scope: Guardian.new(user))
+      described_class.new(post, scope:, root: false).as_json[:user_status]
+    end
 
-      json = serializer.as_json
+    context "when user status is disabled" do
+      before { SiteSetting.enable_user_status = false }
 
-      expect(json[:user_status]).to_not be_nil do |status|
-        expect(status.description).to eq(user_status.description)
-        expect(status.emoji).to eq(user_status.emoji)
+      it "doesn't include status" do
+        expect(serialize_user_status).to be_nil
       end
     end
 
-    it "doesn't add user status when disabled" do
-      SiteSetting.enable_user_status = false
-      json = serializer.as_json
-      expect(json.keys).not_to include :user_status
-    end
+    context "when user status is enabled" do
+      before { SiteSetting.enable_user_status = true }
 
-    it "doesn't add status if user doesn't have it" do
-      SiteSetting.enable_user_status = true
+      it "includes status" do
+        expect(serialize_user_status).to be_present
+      end
 
-      user.clear_status!
-      user.reload
-      json = serializer.as_json
+      it "doesn't include status if user doesn't have it set" do
+        user.clear_status!
+        user.reload
+        expect(serialize_user_status).to be_nil
+      end
 
-      expect(json.keys).not_to include :user_status
+      it "respects guardian's can_see_user_status?" do
+        user.update!(silenced_till: 1.year.from_now)
+        scope = Guardian.new(Fabricate(:user))
+        expect(serialize_user_status(scope:)).to be_nil
+      end
     end
   end
 

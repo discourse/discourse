@@ -436,6 +436,8 @@ th:
         reviewable_post:
           title: "โพสต์"
           noun: "โพส"
+        reviewable_ai_post:
+          noun: "โพส"
       user_label: "ผู้ใช้"
       notes:
         delete: "ลบ"

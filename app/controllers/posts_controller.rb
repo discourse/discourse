@@ -279,6 +279,14 @@ class PostsController < ApplicationController
       opts[:skip_validations] = true
     end
 
+    if params.key?(:bypass_bump) || params[:post]&.key?(:bypass_bump)
+      if guardian.can_update_bumped_at?
+        opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(
+          params[:bypass_bump].presence || params.dig(:post, :bypass_bump),
+        )
+      end
+    end
+
     topic = post.topic
     topic = Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
 

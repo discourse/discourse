@@ -48,6 +48,7 @@ class TopicLink < ActiveRecord::Base
       FROM topic_links AS ftl
       LEFT JOIN topics AS ft ON ftl.link_topic_id = ft.id
       LEFT JOIN categories AS c ON c.id = ft.category_id
+      LEFT JOIN posts AS target_posts ON ftl.link_post_id = target_posts.id
       /*where*/
       GROUP BY ftl.url, ft.title, ftl.title, ftl.link_topic_id, ftl.reflection, ftl.internal, ftl.domain
       ORDER BY clicks DESC, count(*) DESC
@@ -55,7 +56,12 @@ class TopicLink < ActiveRecord::Base
     SQL
 
     builder.where("ftl.topic_id = :topic_id", topic_id: topic_id)
-    builder.where("ft.deleted_at IS NULL")
+    apply_link_visibility_filters(
+      builder,
+      link: "ftl",
+      target_topic: "ft",
+      target_posts: "target_posts",
+    )
     builder.where("ftl.extension IS NULL OR ftl.extension NOT IN ('png','jpg','gif')")
     builder.where(
       "COALESCE(ft.archetype, 'regular') <> :archetype",
@@ -86,12 +92,18 @@ class TopicLink < ActiveRecord::Base
               FROM topic_links l
               LEFT JOIN topics t ON t.id = l.link_topic_id
               LEFT JOIN categories AS c ON c.id = t.category_id
+              LEFT JOIN posts AS target_posts ON l.link_post_id = target_posts.id
               /*left_join*/
               /*where*/
               ORDER BY reflection ASC, clicks DESC",
       )
 
-    builder.where("t.deleted_at IS NULL")
+    apply_link_visibility_filters(
+      builder,
+      link: "l",
+      target_topic: "t",
+      target_posts: "target_posts",
+    )
     builder.where(
       "COALESCE(t.archetype, 'regular') <> :archetype",
       archetype: Archetype.private_message,
@@ -188,6 +200,14 @@ class TopicLink < ActiveRecord::Base
   end
 
   private
+
+  def self.apply_link_visibility_filters(builder, link:, target_topic:, target_posts:)
+    builder.where(<<~SQL)
+      #{target_topic}.deleted_at IS NULL
+      AND (#{link}.internal = false OR #{target_topic}.id IS NOT NULL)
+      AND (#{link}.link_post_id IS NULL OR (#{target_posts}.id IS NOT NULL AND #{target_posts}.deleted_at IS NULL))
+    SQL
+  end
 
   # This pattern is used to create topic links very efficiently with minimal
   # errors under heavy concurrent use

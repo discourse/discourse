@@ -38,8 +38,8 @@ el:
           title: "Αποβολή Χρήστη"
         agree_and_silence:
           title: "Σίγαση Χρήστη"
-        disagree:
-          title: "Διαφωνώ"
+        ignore:
+          title: "Αγνόηση επισήμανσης"
     channel:
       dm_title:
         single_user: "%{username}"

@@ -765,6 +765,8 @@ sr:
         reviewable_post:
           title: "Post"
           noun: "post"
+        reviewable_ai_post:
+          noun: "post"
       user_label: "Korisnik"
       notes:
         delete: "Obriši"

@@ -302,6 +302,20 @@ describe "Viewing reviewable item", type: :system do
         expect(page).to have_text("Hello world from system spec!")
         expect(page).not_to have_text("hello world post contents.")
       end
+
+      it "shows context question for rejected queued post" do
+        reviewable_queued_post.update!(status: Reviewable.statuses[:rejected])
+
+        refreshed_review_page.visit_reviewable(reviewable_queued_post)
+
+        expect(refreshed_review_page).to have_reviewable_with_rejected_status(
+          reviewable_queued_post,
+        )
+        expect(refreshed_review_page).to have_context_question(
+          reviewable_queued_post,
+          I18n.t("js.review.context_question.approve_post"),
+        )
+      end
     end
 
     describe "when the reviewable item is a user" do
@@ -364,7 +378,11 @@ describe "Viewing reviewable item", type: :system do
         reviewable = ReviewableUser.find_by_target_id(user.id)
 
         refreshed_review_page.visit_reviewable(reviewable)
-        refreshed_review_page.select_bundled_action(reviewable, "user-approve_user")
+        refreshed_review_page.select_bundled_action(
+          reviewable,
+          "user-approve_user",
+          "user-approve_user",
+        )
 
         expect(refreshed_review_page).to have_reviewable_with_approved_status(reviewable)
         expect(refreshed_review_page).to have_approved_item_in_timeline(reviewable)

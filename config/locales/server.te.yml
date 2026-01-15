@@ -1243,7 +1243,6 @@ te:
     invite_link_max_redemptions_limit_users: "సాధారణ వినియోగదారుల ద్వారా రూపొందించబడిన ఆహ్వాన లింక్‌ల కోసం అనుమతించబడిన గరిష్ట రీడీమ్‌లు ఈ విలువ కంటే ఎక్కువగా ఉండకూడదు."
     alert_admins_if_errors_per_minute: "నిర్వాహకుల హెచ్చరికను ట్రిగ్గర్ చేయడానికి నిమిషానికి ఎర్రర్‌ల సంఖ్య. 0 విలువ ఈ లక్షణాన్ని నిలిపివేస్తుంది. గమనిక: పునఃప్రారంభం అవసరం."
     alert_admins_if_errors_per_hour: "నిర్వాహకుల హెచ్చరికను ట్రిగ్గర్ చేయడానికి గంటకు ఎర్రర్‌ల సంఖ్య. 0 విలువ ఈ లక్షణాన్ని నిలిపివేస్తుంది. గమనిక: పునఃప్రారంభం అవసరం."
-    categories_topics: "/కేటగిరీల పేజీలో చూపాల్సిన అంశాల సంఖ్య. 0కి సెట్ చేస్తే, రెండు నిలువు వరుసలను (కేటగిరీలు మరియు టాపిక్‌లు) సుష్టంగా ఉంచడానికి ఇది స్వయంచాలకంగా విలువను కనుగొనడానికి ప్రయత్నిస్తుంది."
     suggested_topics: "విషయం దిగువన చూపే సూచనల సంఖ్య"
     limit_suggested_to_category: "సూచించిన అంశాలలో ప్రస్తుత వర్గంలోని అంశాలను మాత్రమే చూపండి."
     suggested_topics_max_days_old: "సూచించబడిన అంశాలు n రోజుల కంటే పాతవి కాకూడదు."
@@ -2521,9 +2520,11 @@ te:
       delete_and_agree_replies:
         title: "పోస్ట్ మరియు ప్రత్యుత్తరాలను తొలగించండి"
       disagree_and_restore:
-        title: "లేదు, పోస్ట్‌ని పునరుద్ధరించండి"
-      disagree:
+        title: "పోస్ట్‌ని పునరుద్ధరించండి"
+      disagree_bundle:
         title: "లేదు"
+      disagree:
+        title: "పోస్ట్ ఉంచండి"
       discard_post:
         title: "పోస్ట్‌ని విస్మరించండి"
       ignore:
@@ -2531,19 +2532,25 @@ te:
       ignore_and_do_nothing:
         title: "ఏమీ చేయవద్దు"
       approve:
-        title: "అంగీకరించు"
+        title: "అవును"
       approve_post:
-        title: "పోస్ట్‌ని ఆమోదించండి"
+        title: "అవును"
       approve_post_closed:
-        title: "పోస్ట్‌ని ఆమోదించండి"
+        title: "అవును"
+      reject_post_bundle:
+        title: "లేదు"
       reject_post:
         title: "పోస్ట్‌ను తిరస్కరించండి"
       approve_user:
-        title: "సభ్యుని ఆమోదించండి"
+        title: "అవును"
       reject_user:
-        title: "సభ్యుని తొలగించండి"
+        title: "లేదు"
         delete:
           title: "సభ్యుడిని తొలగించు"
+      confirm_spam:
+        title: "అవును"
+      not_spam:
+        title: "లేదు"
       reject:
         title: "తిరస్కరించు"
         bundle_title: "తిరస్కరించండి…"
@@ -2552,7 +2559,9 @@ te:
       reject_and_keep_deleted:
         title: "పోస్ట్‌ను తొలగించి ఉంచండి"
       approve_and_restore:
-        title: "పోస్ట్‌ను ఆమోదించండి మరియు పునరుద్ధరించండి"
+        title: "అవును"
+      approve_and_unhide:
+        title: "అవును"
       no_action_post:
         title: "చర్య తీసుకోలేదు"
       delete_post:

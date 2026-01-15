@@ -708,6 +708,7 @@ en:
       show_more: "Show more"
       show_less: "Show less"
       back_to_queue: "Back to queue"
+      editing_post: "Editing post…"
       order_by: "Order by"
       date_filter: "Posted between"
       in_reply_to: "in reply to"
@@ -912,6 +913,10 @@ en:
         is_this_post: "Is this %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "or"
         something_else_wrong: "Is there something wrong with this %{reviewable_type}?"
+        approve_user: "Approve this user?"
+        suspect_user: "Is this user spam?"
+        approve_post: "Approve this post?"
+        approve_topic: "Approve this topic?"
 
       types:
         reviewable_flagged_post:
@@ -930,6 +935,15 @@ en:
         reviewable_post:
           title: "Post"
           noun: "post"
+        reviewable_ai_chat_message:
+          title: "AI-Flagged Chat Message"
+          noun: "chat message"
+        reviewable_ai_post:
+          title: "AI-Flagged Post"
+          noun: "post"
+        reviewable_post_voting_comment:
+          title: "Flagged Comment"
+          noun: "comment"
       flagged_as: "Flagged as"
       post_flagged_as: "Post flagged as"
       chat_flagged_as: "Chat flagged as"
@@ -2192,6 +2206,7 @@ en:
         redeemed_tab_with_count: "Redeemed (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} redeemed)"
+        generating_link: "Generating link..."
         groups: "Groups"
         topic: "Topic"
         sent: "Created/Last Sent"
@@ -3626,6 +3641,7 @@ en:
           unread: "Nothing left unread... impressive!"
           new_new: "Nothing new at the moment... check back soon!"
           new: "Nothing new at the moment... check back soon!"
+          generic: "Nothing to see here...check back soon!"
 
     topic_bulk_actions:
       dismiss:
@@ -3797,7 +3813,7 @@ en:
           24_hours: "24 Hours"
           custom: "Custom Duration"
       slow_mode_notice:
-        duration: "Please wait %{duration} between posts in this topic"
+        duration: "Please wait %{duration} between your posts in this topic"
       topic_status_update:
         title: "Topic Timer"
         save: "Set Timer"
@@ -5453,6 +5469,9 @@ en:
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
           header_action_title: "Edit your sidebar categories"
+          header_action_new: "New category"
+          header_action_edit_sidebar: "Edit sidebar categories"
+          header_action_edit_header_dropdown: "Edit nav categories"
           configure_defaults: "Configure defaults"
         community:
           edit_section:

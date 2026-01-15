@@ -28,15 +28,15 @@ vi:
         join: "Tham gia"
         leave: "Rời nhóm"
       close: "Đóng"
-      remove: "Xoá"
+      remove: "Xóa"
       delete: "Xóa"
       edited: "đã chỉnh sửa"
       muted: "im lặng"
       joined: "đã tham gia"
       email_frequency:
-        description: "Sẽ chỉ gửi email nếu bạn vắng mặt trong 15 phút."
+        description: "Sẽ chỉ gửi email nếu bạn vắng mặt 15 phút."
         never: "Không bao giờ"
-        title: "Email khi tôi nhận được tin nhắn trực tiếp hoặc nhóm chat."
+        title: "Gửi email khi tôi nhận được tin nhắn trò chuyện trực tiếp hoặc nhóm"
         when_away: "Khi vắng mặt"
       header_indicator_preference:
         never: "Không bao giờ"
@@ -53,8 +53,8 @@ vi:
       reply: "Trả lời"
       edit: "Sửa"
       rebake_message: "Tạo lại HTML"
-      bookmark_message: "Đánh dấu chỉ mục"
-      bookmark_message_edit: "Chỉnh sửa Dấu trang"
+      bookmark_message: "Đánh dấu"
+      bookmark_message_edit: "Chỉnh sửa đánh dấu"
       save: "Lưu lại"
       select: "Chọn"
       sounds:
@@ -79,10 +79,10 @@ vi:
       channel_info:
         back_to_channel: "Quay lại"
         tabs:
-          members: Các thành viên
+          members: Thành viên kênh
           settings: Cài đặt
           search: Tìm kiếm
-        remove_member: "Xoá"
+        remove_member: "Xóa"
       new_message_modal:
         title: Gửi tin nhắn
         no_items: "Không có mẫu nào"
@@ -129,7 +129,7 @@ vi:
       incoming_webhooks:
         back: "Quay lại"
         description: "Mô tả"
-        delete: "Xoá"
+        delete: "Xóa"
         emoji: "Emoji"
         name: "T"
         save: "Lưu lại"
@@ -152,10 +152,18 @@ vi:
       flags:
         notify_moderators: "Thông báo này yêu cầu sự chú ý của nhân viên vì một lý do khác không được liệt kê ở trên."
       emoji_picker:
+        favorites: "Được sử dụng gần đây"
+        smileys_&_emotion: "Mặt cười và cảm xúc"
         objects: "Vật thể"
+        people_&_body: "Con người và cơ thể"
+        travel_&_places: "Du lịch và địa điểm"
+        animals_&_nature: "Động vật và thiên nhiên"
+        food_&_drink: "Đồ ăn và thức uống"
         activities: "Hoạt động"
-        flags: "Dấu cờ - Flags"
+        flags: "Lá cờ"
         symbols: "Ký hiệu"
+        search_placeholder: "Tìm theo tên emoji và viết tắt..."
+        no_results: "Không có kết quả"
       thread:
         title: "Tiêu đề"
         replies:
@@ -166,9 +174,10 @@ vi:
           regular:
             title: "Bình thường"
           tracking:
-            title: "Đang theo dõi"
+            title: "Theo dõi"
           watching:
             title: "Theo dõi"
+            description: "Nhận thông báo về tất cả các phản hồi trong chủ đề này và xem số lượng phản hồi mới trong danh sách chủ đề."
         participants_other_count:
           other: "+%{count}"
       draft_channel_screen:
@@ -178,6 +187,10 @@ vi:
       chat_quoted: "<span>%{username}</span> %{description}"
       chat_watched_thread_label:
         other: "%{username} và %{count} người khác"
+    action_codes:
+      chat:
+        enabled: '%{who} đã bật <button class="btn-link open-chat">chat</button> %{when}'
+        disabled: "%{who} đã đóng chat %{when}"
     discourse_automation:
       scriptables:
         send_chat_message:

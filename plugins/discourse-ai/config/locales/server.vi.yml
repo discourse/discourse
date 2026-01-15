@@ -13,6 +13,12 @@ vi:
       presets:
         image_generation_custom:
           name: "Tùy biến"
+    ai_helper:
+      prompts:
+        translate: Dịch sang %{language}
+        proofread: Hiệu chỉnh văn bản
+        markdown_table: Tạo bảng Markdown
+        explain: "Giải thích"
     spam_detection:
       logging_subject: "Phát hiện rác rưởi"
     ai_bot:

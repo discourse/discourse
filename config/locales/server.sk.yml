@@ -2068,7 +2068,6 @@ sk:
     invite_link_max_redemptions_limit_users: "Maximálny povolený počet uplatnení pre odkazy s pozvánkou vygenerované bežnými používateľmi nemôže presiahnuť túto hodnotu."
     alert_admins_if_errors_per_minute: "Počet chýb za minútu na spustenie upozornenia správcu. Hodnota 0 túto funkciu vypína. POZNÁMKA: vyžaduje reštart."
     alert_admins_if_errors_per_hour: "Počet chýb za hodinu, aby sa spustilo upozornenie administrátora. Hodnota 0 túto funkciu vypína. POZNÁMKA: vyžaduje reštart."
-    categories_topics: "Počet tém, ktoré sa majú zobraziť na stránke /kategórie. Ak je nastavená na 0, automaticky sa pokúsi nájsť hodnotu, aby boli oba stĺpce (kategórie a témy) symetrické."
     suggested_topics: "Zobrazovaný počet navrhovaných tém na konci témy."
     limit_suggested_to_category: "V navrhovaných témach zobraziť iba témy z aktuálnej kategórie."
     suggested_topics_max_days_old: "Navrhované témy by nemali byť staršie ako n dní."
@@ -5313,19 +5312,14 @@ sk:
         description: "Súhlasiť s označením a skryť tento príspevok + automaticky odoslať používateľovi správu, ktorá ho vyzve, aby ho upravil."
         complete: "Príspevok skrytý, používateľ bol upozornený."
       agree_and_edit:
-        title: "Súhlasím a upraviť príspevok"
         description: "Súhlasím s príznakom a otvorte okno kompozície na úpravu príspevku."
         complete: "Príznak bol potvrdený, teraz môžete príspevok upraviť."
       delete:
         title: "Odstrániť"
         complete: "Príspevok zmazaný."
       delete_and_ignore:
-        title: "Ignorovať príznak a vymazať príspevok"
-        description: "Ignorujte označenie odstránením z fronty a zmažte príspevok; ak je to prvý príspevok, zmažte aj tému. "
         complete: "Príspevok zmazaný."
       delete_and_ignore_replies:
-        title: "Ignorujte príznak, odstráňte príspevok a odpovede"
-        description: "Ignorovať príznak odstránením z frontu, vymazať príspevok a všetky jeho odpovede; ak ide o prvý príspevok, vymazať aj tému"
         confirm: "Ste si istí, že chcete vymazať aj odpovede na príspevok?"
         complete: "Príspevok a odpovede vymazané."
       delete_and_agree:
@@ -5338,11 +5332,12 @@ sk:
         confirm: "Naozaj chcete odstrániť aj odpovede na príspevok?"
         complete: "Príspevok a odpovede vymazané."
       disagree_and_restore:
-        title: "Nie, obnoviť príspevok"
-        description: "Obnovte príspevok tak, aby ho mohli vidieť všetci používatelia."
+        title: "Obnoviť príspevok"
         complete: "Príspevok bol obnovený."
-      disagree:
+      disagree_bundle:
         title: "Nie"
+      disagree:
+        title: "Ponechať príspevok"
         complete: "Vlajka ignorovaná."
       discard_post:
         title: "Zahodiť príspevok"
@@ -5357,31 +5352,36 @@ sk:
         description: "Ignorujte označenie odstránením z fronty bez prijatia akýchkoľvek opatrení. Skryté príspevky zostanú skryté a budú spracované automatickými nástrojmi."
         complete: "Vlajka ignorovaná."
       approve:
-        title: "Schváliť"
+        title: "Áno"
         complete: "Príspevok schválený."
       approve_post:
-        title: "Schváliť príspevok"
+        title: "Áno"
         complete: "Príspevok schválený."
       approve_post_closed:
-        title: "Schváliť príspevok"
+        title: "Áno"
         confirm: "Táto téma je uzavretá. Chcete aj tak vytvoriť príspevok?"
         complete: "Príspevok schválený."
+      reject_post_bundle:
+        title: "Nie"
       reject_post:
         title: "Odmietnuť príspevok"
         complete: "Príspevok zamietnutý."
       approve_user:
-        title: "Schváliť používateľa"
+        title: "Áno"
         complete: "Používateľ schválený."
       reject_user:
-        title: "Odstrániť používateľa…"
+        title: "Nie"
         delete:
           title: "Odstrániť používateľa"
-          description: "Používateľ bude z fóra vymazaný."
           complete: "Používateľ odstránený."
         block:
           title: "Odstránenie a blokovanie používateľa"
           description: "Používateľ bude vymazaný a my zablokujeme jeho IP a e-mailovú adresu."
           complete: "Používateľ vymazaný a zablokovaný."
+      confirm_spam:
+        title: "Áno"
+      not_spam:
+        title: "Nie"
       reject:
         title: "Zamietnuť"
         bundle_title: "Odmietnuť…"
@@ -5400,10 +5400,10 @@ sk:
       scrub:
         title: Záznam o čistení
       approve_and_restore:
-        title: "Schváliť a obnoviť príspevok"
+        title: "Áno"
         complete: "Príspevok schválený a obnovený."
       approve_and_unhide:
-        title: "Schváliť a Odkryť príspevok"
+        title: "Áno"
         complete: "Príspevok schválený a odkrytý"
       no_action_post:
         title: "Žiadna akcia"

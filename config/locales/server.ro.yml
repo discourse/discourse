@@ -2315,10 +2315,10 @@ ro:
       delete_and_agree_replies:
         complete: "Postarea și răspunsurile au fost șterse."
       disagree_and_restore:
-        description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
         complete: "Postarea a fost restaurată."
-      disagree:
+      disagree_bundle:
         title: "Nu"
+      disagree:
         complete: "Semnalarea a fost ignorată."
       revise_and_reject_post:
         title: "Cere revizuire..."
@@ -2329,24 +2329,33 @@ ro:
         title: "Nu face nimic"
         complete: "Semnalarea a fost ignorată."
       approve:
-        title: "Aprobare"
+        title: "Da"
         complete: "Postarea a fost aprobată."
       approve_post:
+        title: "Da"
         complete: "Postarea a fost aprobată."
       approve_post_closed:
-        title: "Aprobă postarea"
+        title: "Da"
         confirm: "Acest subiect este închis. Vrei să creezi postarea oricum?"
         complete: "Postarea a fost aprobată."
+      reject_post_bundle:
+        title: "Nu"
       reject_post:
         complete: "Postarea a fost respinsă."
       approve_user:
+        title: "Da"
         complete: "Utilizatorul a fost aprobat."
       reject_user:
+        title: "Nu"
         delete:
           title: "Şterge utilizatorul"
           complete: "Utilizatorul a fost șters."
         block:
           complete: "Utilizatorul a fost șters și blocat."
+      confirm_spam:
+        title: "Da"
+      not_spam:
+        title: "Nu"
       reject:
         title: "Respingere"
       reject_and_suspend:
@@ -2358,9 +2367,10 @@ ro:
       reject_and_keep_deleted:
         complete: "Postarea a fost respinsă și păstrată ștearsă."
       approve_and_restore:
+        title: "Da"
         complete: "Postare a fost aprobată și restaurată."
       approve_and_unhide:
-        title: "Aprobă și reafișează postarea"
+        title: "Da"
         complete: "Postare aprobată și afișată"
       no_action_post:
         title: "Nicio acțiune"

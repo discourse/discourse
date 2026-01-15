@@ -63,7 +63,9 @@ describe "Reviewables", type: :system do
       it "should show a toast when disagreeing with a flag flag" do
         visit("/review")
 
-        find(".post-disagree").click
+        select_kit = PageObjects::Components::SelectKit.new(".dropdown-select-box.post-disagree")
+        select_kit.expand
+        select_kit.select_row_by_value("post-disagree")
 
         expect(toasts).to have_success(I18n.t("reviewables.actions.disagree.complete"))
       end
@@ -109,7 +111,11 @@ describe "Reviewables", type: :system do
       user_email = user.email
 
       refreshed_review_page.visit_reviewable(reviewable)
-      refreshed_review_page.select_bundled_action(reviewable, "user-delete_user")
+      refreshed_review_page.select_bundled_action(
+        reviewable,
+        "user-delete_user",
+        "user-delete-user",
+      )
       rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
       rejection_reason_modal.select_send_rejection_email_checkbox
       rejection_reason_modal.delete_user
@@ -128,7 +134,11 @@ describe "Reviewables", type: :system do
       reviewable = ReviewableUser.find_by_target_id(user.id)
 
       refreshed_review_page.visit_reviewable(reviewable)
-      refreshed_review_page.select_bundled_action(reviewable, "user-delete_user")
+      refreshed_review_page.select_bundled_action(
+        reviewable,
+        "user-delete_user",
+        "user-delete-user",
+      )
       rejection_reason_modal.fill_in_rejection_reason(rejection_reason)
       rejection_reason_modal.delete_user
 
@@ -172,7 +182,11 @@ describe "Reviewables", type: :system do
         expect(queued_post_reviewable.target_created_by).to be_present
         expect(refreshed_review_page).to have_reviewable_with_pending_status(queued_post_reviewable)
 
-        refreshed_review_page.select_bundled_action(queued_post_reviewable, "delete_user")
+        refreshed_review_page.select_bundled_action(
+          queued_post_reviewable,
+          "delete_user",
+          "reject-post",
+        )
 
         expect(review_page).to have_no_error_dialog_visible
         expect(refreshed_review_page).to have_reviewable_with_rejected_status(
@@ -191,7 +205,11 @@ describe "Reviewables", type: :system do
         expect(queued_post_reviewable).to be_pending
         expect(queued_post_reviewable.target_created_by).to be_present
 
-        refreshed_review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+        refreshed_review_page.select_bundled_action(
+          queued_post_reviewable,
+          "revise_and_reject_post",
+          "reject-post",
+        )
 
         expect(revise_modal).to be_open
 
@@ -225,7 +243,11 @@ describe "Reviewables", type: :system do
         expect(queued_post_reviewable).to be_pending
         expect(queued_post_reviewable.target_created_by).to be_present
 
-        refreshed_review_page.select_action(queued_post_reviewable, "revise_and_reject_post")
+        refreshed_review_page.select_bundled_action(
+          queued_post_reviewable,
+          "revise_and_reject_post",
+          "reject-post",
+        )
         expect(revise_modal).to be_open
 
         reason_dropdown =

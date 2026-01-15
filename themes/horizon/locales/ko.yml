@@ -5,3 +5,11 @@
 # https://translate.discourse.org/
 
 ko:
+  solved: "해결됨"
+  posted: "게시"
+  vote_count:
+    other: "%{count} 투표"
+  like_count:
+    other: "좋아요 %{count}"
+  reply_count:
+    other: "%{count} 댓글"

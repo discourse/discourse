@@ -49,9 +49,21 @@ tr_TR:
         agree_and_delete:
           title: "Yorumu sil"
           description: "Kullanıcıların görememesi için yorumu silin."
+        agree_and_suspend:
+          title: "Kullanıcıyı askıya al"
+          description: "Bayrağı kabul edin ve kullanıcıyı askıya alın."
+        agree_and_silence:
+          title: "Kullanıcıyı sustur"
+          description: "Bayrağı kabul edin ve kullanıcıyı susturun."
         disagree_and_restore:
           title: "Katılma ve yorumu Geri Yükle"
           description: "Tüm kullanıcıların görebilmesi için yorumu geri yükleyin."
+        disagree:
+          title: "Yorumu tut"
+        ignore:
+          title: "Bildirimi yoksay"
+        delete_and_agree:
+          description: "Kuyruktan kaldırarak bayrağı yok sayın ve yorumu silin."
   post_action_types:
     vote:
       title: "Oy ver"
@@ -99,16 +111,14 @@ tr_TR:
             title: "Yorumu sil"
             description: "Kullanıcıların görememesi için yorumu silin."
           delete_and_agree:
-            title: "Bayrağı yok say ve yorumu Sil"
             description: "Kuyruktan kaldırarak bayrağı yok sayın ve yorumu silin."
           disagree_and_restore:
             title: "Katılma ve yorumu Geri Yükle"
             description: "Tüm kullanıcıların görebilmesi için yorumu geri yükleyin."
           disagree:
-            title: "Katılma"
+            title: "Yorumu tut"
           ignore:
-            title: "Hiçbir şey yapma"
-            description: "Herhangi bir işlem yapmadan bayrağı kuyruktan kaldırarak yok say."
+            title: "Bildirimi yoksay"
         transcript:
           view: "Önceki yorumların dökümünü görüntüle"
       reviewable_score_types:

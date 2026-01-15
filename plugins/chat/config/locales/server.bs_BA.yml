@@ -15,8 +15,8 @@ bs_BA:
         agree_and_silence:
           title: "Stišaj korisnika"
           description: "Složij se sa prijavom i utišaj prijavljenog korisnika (silence)"
-        disagree:
-          title: "Disagree"
+        ignore:
+          title: "Ignoriši prijavu"
     channel:
       dm_title:
         single_user: "%{username}"
