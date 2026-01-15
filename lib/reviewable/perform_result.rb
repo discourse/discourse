@@ -17,7 +17,7 @@ class Reviewable < ActiveRecord::Base
     def initialize(reviewable, status)
       @status = status
       @reviewable = reviewable
-      @remove_reviewable_ids = [reviewable.id] if success?
+      @remove_reviewable_ids = success? ? [reviewable.id] : []
     end
 
     def created_post=(created_post)
