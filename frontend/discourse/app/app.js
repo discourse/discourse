@@ -8,6 +8,7 @@ import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader"; // todo, loader.js from npm?
 import "./loader-shims";
+import "./module-shims";
 import "./discourse-common-loader-shims";
 import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
