@@ -1,6 +1,9 @@
 .admin-area .sidebar-wrapper .admin-panel {
   background-color: var(--d-sidebar-admin-background);
 
+  --d-sidebar-highlight-background: var(--primary-200);
+  --d-sidebar-link-icon-color: var(--primary-600);
+
   .sidebar-section-header-text {
     font-weight: bold;
     color: var(--primary-very-high);

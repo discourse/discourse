@@ -19,6 +19,8 @@
     .btn.dropdown-select-box-header,
     .sidebar-section-header-button {
       background: transparent;
+      padding-inline: var(--space-1);
+      padding-block: 0;
 
       .discourse-no-touch & {
         transition:
