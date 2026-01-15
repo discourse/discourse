@@ -392,7 +392,6 @@
   &__shortcut-hint {
     background-color: rgb(var(--tertiary-rgb) / 10%);
     padding: 0.25em 0.5em;
-    margin-right: 0.5em;
     font-size: var(--font-down-3);
     color: var(--primary-medium);
   }
@@ -440,13 +439,17 @@
     margin-bottom: 0.5em;
     border-radius: var(--d-input-border-radius);
     overflow: hidden;
+    padding-inline: var(--d-sidebar-row-horizontal-padding);
+    gap: var(--d-sidebar-section-link-prefix-margin-right);
   }
 
   &__icon.btn.btn-transparent {
+    flex-shrink: 0;
+    font-size: var(--d-sidebar-section-link-icon-size);
     border: 0;
     background: var(--d-input-bg-color);
-    padding-left: var(--d-sidebar-row-horizontal-padding);
-    padding-right: var(--d-sidebar-row-horizontal-padding);
+    width: var(--d-sidebar-section-link-prefix-width);
+    padding: 0;
 
     &:hover {
       background: var(--d-input-bg-color) !important;
@@ -474,7 +477,6 @@
     background-color: rgb(var(--tertiary-rgb), 0.1);
     min-width: 26px;
     padding: 0.25em 0.5em;
-    margin-right: 0.5em;
     font-size: var(--font-down-3);
     color: var(--primary-medium);
   }
