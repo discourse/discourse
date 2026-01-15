@@ -201,11 +201,7 @@ class PostCreator
         delete_owned_bookmarks
         ensure_in_allowed_users if guardian.is_staff?
         unarchive_message if !@opts[:import_mode]
-        if !@opts[:import_mode] && @opts[:advance_draft]
-          DraftSequence.next!(@user, draft_key)
-          # Hard delete the draft to ensure cleanup regardless of sequence state
-          Draft.where(user_id: @user.id, draft_key: draft_key).destroy_all
-        end
+        DraftSequence.next!(@user, draft_key) if !@opts[:import_mode] && @opts[:advance_draft]
         @post.save_reply_relationships
       end
     end
