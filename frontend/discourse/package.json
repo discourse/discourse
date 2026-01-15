@@ -100,6 +100,7 @@
     "@types/jquery": "^3.5.33",
     "@types/qunit": "^2.19.13",
     "@types/rsvp": "^4.0.9",
+    "@types/sinon": "^21.0.0",
     "@uppy/aws-s3": "^4.1.0",
     "@uppy/core": "^4.2.2",
     "@uppy/drop-target": "3.0.1",
