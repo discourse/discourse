@@ -51,7 +51,7 @@ after_initialize do
     Jobs.enqueue_in(time, :notify_chats, post_id: post.id)
   end
 
-  add_admin_route "chat_integration.menu_title", "chat-integration"
+  add_admin_route "chat_integration.menu_title", "discourse-chat-integration", use_new_show_route: true
 
   DiscourseChatIntegration::Provider.mount_engines
 

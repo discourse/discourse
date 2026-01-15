@@ -1,13 +1,9 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DiscourseRoute from "discourse/routes/discourse";
+import Controller from "@ember/controller";
 
-export default class AdminPluginsChatIntegration extends DiscourseRoute {
+export default class DiscourseChatIntegrationProviders extends Controller {
   @service router;
-
-  model() {
-    return this.store.findAll("provider");
-  }
 
   @action
   showSettings() {

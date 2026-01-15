@@ -11,7 +11,7 @@ export default <template>
         <ul class="nav nav-pills">
           {{#each @controller.model.content as |provider|}}
             <NavItem
-              @route="adminPlugins.chat-integration.provider"
+              @route="adminPlugins.show.discourse-chat-integration-providers.show"
               @routeParam={{provider.name}}
               @label={{concat
                 "chat_integration.provider."

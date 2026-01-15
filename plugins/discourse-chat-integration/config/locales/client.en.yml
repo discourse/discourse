@@ -8,6 +8,9 @@ en:
     chat_integration:
       menu_title: "Chat Integrations"
       settings: "Settings"
+      nav:
+        providers: "Providers"
+        providers_description: "Configure chat provider integrations"
       no_providers: "You need to enable some providers in the plugin settings"
       channels_with_errors: "Some channels for this provider failed last time messages were sent. Click the error icon(s) to learn more."
       channel_exception: "An unknown error occured when a message was last sent to this channel."

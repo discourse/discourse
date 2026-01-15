@@ -1,12 +1,12 @@
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import ChannelErrorModal from "../../../components/modal/channel-error";
-import EditChannelModal from "../../../components/modal/edit-channel";
-import EditRuleModal from "../../../components/modal/edit-rule";
-import TestModal from "../../../components/modal/test-integration";
+import ChannelErrorModal from "../../../../components/modal/channel-error";
+import EditChannelModal from "../../../../components/modal/edit-channel";
+import EditRuleModal from "../../../../components/modal/edit-rule";
+import TestModal from "../../../../components/modal/test-integration";
 
-export default class AdminPluginsChatIntegrationProvider extends Controller {
+export default class DiscourseChatIntegrationProvidersShow extends Controller {
   @service modal;
   @service store;
 

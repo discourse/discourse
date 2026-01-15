@@ -3,15 +3,20 @@ import { getOwner } from "@ember/owner";
 import Group from "discourse/models/group";
 import DiscourseRoute from "discourse/routes/discourse";
 
-export default class AdminPluginsChatIntegrationProvider extends DiscourseRoute {
+export default class DiscourseChatIntegrationProvidersShow extends DiscourseRoute {
   async model(params) {
-    const [channels, provider, groups] = await Promise.all([
+    const providers = this.modelFor(
+      "adminPlugins.show.discourse-chat-integration-providers"
+    );
+
+    const [channels, groups] = await Promise.all([
       this.store.findAll("channel", { provider: params.provider }),
-      this.modelFor("admin-plugins.chat-integration").content.find(
-        (item) => item.id === params.provider
-      ),
       Group.findAll(),
     ]);
+
+    const provider = providers.content.find(
+      (item) => item.id === params.provider
+    );
 
     const enabledFilters =
       getOwner(this).lookup("model:rule").possible_filters_id;
@@ -32,6 +37,7 @@ export default class AdminPluginsChatIntegrationProvider extends DiscourseRoute 
     return {
       channels,
       provider,
+      providers,
       groups,
     };
   }

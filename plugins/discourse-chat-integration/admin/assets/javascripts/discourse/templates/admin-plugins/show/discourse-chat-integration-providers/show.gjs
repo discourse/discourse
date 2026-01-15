@@ -2,7 +2,7 @@ import { fn } from "@ember/helper";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
-import ChannelDetails from "../../../components/channel-details";
+import ChannelDetails from "../../../../components/channel-details";
 
 export default <template>
   {{#if @controller.anyErrors}}
