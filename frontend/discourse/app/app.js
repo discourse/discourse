@@ -2,13 +2,13 @@ performance.mark("discourse-init");
 const initEvent = new CustomEvent("discourse-init");
 document.dispatchEvent(initEvent);
 
+import "./global-compat";
 import "./setup-deprecation-workflow";
 import "./array-shim";
 import "decorator-transforms/globals";
 import "./loader"; // todo, loader.js from npm?
 import "./loader-shims";
 import "./discourse-common-loader-shims";
-import "./global-compat";
 import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
 

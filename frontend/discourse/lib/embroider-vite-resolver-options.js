@@ -12,7 +12,7 @@ export default function writeResolverConfig(config, extra) {
   const embroiderDir = path.resolve("./node_modules/.embroider");
 
   if (fs.existsSync(embroiderDir)) {
-    fs.rmdirSync(embroiderDir, {
+    fs.rmSync(embroiderDir, {
       recursive: true,
       force: true,
     });
