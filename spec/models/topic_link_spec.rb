@@ -474,6 +474,11 @@ RSpec.describe TopicLink do
         expect(TopicLink.topic_map(Guardian.new, source_post.topic_id)).to be_empty
       end
 
+      it "excludes hard-deleted target topics" do
+        target_topic.destroy!
+        expect(TopicLink.topic_map(Guardian.new, source_post.topic_id)).to be_empty
+      end
+
       it "excludes deleted target posts" do
         target_post = Fabricate(:post)
         topic_link.update!(link_post: target_post)
@@ -500,6 +505,13 @@ RSpec.describe TopicLink do
 
       it "excludes deleted target topics" do
         target_topic.trash!
+        expect(
+          TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id],
+        ).to be_blank
+      end
+
+      it "excludes hard-deleted target topics" do
+        target_topic.destroy!
         expect(
           TopicLink.counts_for(Guardian.new, source_post.topic, [source_post])[source_post.id],
         ).to be_blank
