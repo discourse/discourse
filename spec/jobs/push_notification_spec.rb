@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "excon"
-
 RSpec.describe Jobs::PushNotification do
   fab!(:user)
   fab!(:user2, :user)
