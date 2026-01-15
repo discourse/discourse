@@ -467,8 +467,6 @@ export class I18n {
     this.locale = localeData.locale;
     this.fallbackLocale = localeData.fallbackLocale;
 
-    localeData.configureMoment();
-
     this.#loadMessageFormatData(localeData.messageFormatData);
 
     if (localeData.overrides) {
