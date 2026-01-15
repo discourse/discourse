@@ -947,6 +947,21 @@ describe PostRevisor do
         end
       end
 
+      context "when passing skip_publish as true" do
+        it "does not publish changes to MessageBus" do
+          messages =
+            MessageBus.track_publish("/topic/#{topic.id}") do
+              post_revisor.revise!(
+                changed_by,
+                { raw: "updated body without publish" },
+                skip_publish: true,
+              )
+            end
+
+          expect(messages).to be_empty
+        end
+      end
+
       context "when editing the before_edit_post event signature" do
         it "contains post and params" do
           params = { raw: "body (edited)" }

@@ -1,3 +1,5 @@
 en:
   site_settings:
     checklist_enabled: "Enable checklist plugin?"
+  checklist:
+    invalid_checkbox: "Invalid checkbox"

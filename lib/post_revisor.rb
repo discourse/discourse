@@ -225,6 +225,7 @@ class PostRevisor
   # @option opts [Boolean] :skip_validations Ask ActiveRecord to skip validations
   # @option opts [Boolean] :skip_revision Do not create a new PostRevision record
   # @option opts [Boolean] :skip_staff_log Skip creating an entry in the staff action log
+  # @option opts [Boolean] :skip_publish Skip publishing changes to MessageBus
   # @option opts [Boolean] :silent Don't send notifications to user
   # @return [Boolean] Returns true if the revision was successful, false otherwise
   def revise!(editor, fields, opts = {})
@@ -765,6 +766,8 @@ class PostRevisor
   end
 
   def publish_changes
+    return if @opts[:skip_publish]
+
     options =
       if !topic_diff.empty? && !@topic_changes.errored?
         { reload_topic: true }
