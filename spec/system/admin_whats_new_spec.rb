@@ -14,6 +14,12 @@ describe "Admin What's New Page", type: :system do
     Discourse.redis.set("new_features", MultiJson.dump(payload))
   end
 
+  it "shows an error message when the backend returns an empty list" do
+    set_new_features_payload(nil)
+    whats_new_page.visit
+    expect(whats_new_page).to have_content("There was an error loading the feed.")
+  end
+
   it "displays a new feature indicator on the sidebar and clears it when navigating to what's new" do
     DiscourseUpdates.stubs(:has_unseen_features?).returns(true)
     set_new_features_payload(
