@@ -3817,6 +3817,14 @@ uncategorized:
     default: "top_menu_pages"
     area: "interface"
 
+  experimental_foundation_changes:
+    default: false
+    client: true
+    area: "experimental"
+    upcoming_change:
+      impact: "feature,all_members"
+      status: "experimental"
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
