@@ -132,23 +132,22 @@ RSpec.describe UpcomingChanges::List do
       end
 
       it "updates the user's last_visited_upcoming_changes_at custom field" do
-        expect(admin.custom_fields["last_visited_upcoming_changes_at"]).to be_nil
-
-        result
-
-        admin.reload
-        expect(admin.custom_fields["last_visited_upcoming_changes_at"]).to be_present
+        expect { result }.to change {
+          admin.reload.custom_fields["last_visited_upcoming_changes_at"]
+        }.to be_present
         expect(
           Time.zone.parse(admin.custom_fields["last_visited_upcoming_changes_at"]),
         ).to be_within(1.minute).of(Time.current)
       end
 
-      it "does not update the custom field for system user" do
-        system_guardian = Discourse.system_user.guardian
-        described_class.call(params: {}, guardian: system_guardian)
+      context "when guardian is the system user" do
+        let(:guardian) { Discourse.system_user.guardian }
 
-        Discourse.system_user.reload
-        expect(Discourse.system_user.custom_fields["last_visited_upcoming_changes_at"]).to be_nil
+        it "does not update the custom field" do
+          expect { result }.not_to change {
+            Discourse.system_user.reload.custom_fields["last_visited_upcoming_changes_at"]
+          }
+        end
       end
     end
   end

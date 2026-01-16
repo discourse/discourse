@@ -6,7 +6,7 @@ RSpec.describe UpcomingChanges::Toggle do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:, **dependencies, options: options) }
+    subject(:result) { described_class.call(params:, **dependencies, options:) }
 
     fab!(:admin)
     let(:params) { { setting_name:, enabled: } }

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class UpcomingChangeEvent < ActiveRecord::Base
-  belongs_to :acting_user, class_name: "User", foreign_key: "acting_user_id"
+  belongs_to :acting_user, class_name: "User"
 
   validates :event_type, presence: true
   validates :upcoming_change_name, presence: true

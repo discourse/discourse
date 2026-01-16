@@ -33,7 +33,7 @@ RSpec.describe UpcomingChanges::Track do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:, **dependencies, options: options) }
+    subject(:result) { described_class.call(params:, **dependencies, options:) }
 
     let(:params) { {} }
     let(:guardian) { Discourse.system_user.guardian }

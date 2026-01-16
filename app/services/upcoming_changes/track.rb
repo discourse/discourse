@@ -11,7 +11,7 @@ class UpcomingChanges::Track
   private
 
   def fetch_all_admins
-    User.human_users.where(admin: true)
+    User.human_users.admins
   end
 
   # Look at UpcomingChangeEvent to get all event_type: added (0) events
@@ -98,7 +98,7 @@ class UpcomingChanges::Track
         next
       end
 
-      # We only want to tell admins when a status changes for an exisiting UC,
+      # We only want to tell admins when a status changes for an existing UC,
       # telling them just after one is added is redundant.
       next if added_changes.include?(change_name)
 
