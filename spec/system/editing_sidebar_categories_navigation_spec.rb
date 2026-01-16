@@ -184,6 +184,33 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     )
   end
 
+  describe "hashtag decoration in category descriptions" do
+    fab!(:tag) { Fabricate(:tag, name: "test-tag") }
+    fab!(:icon_category) { Fabricate(:category, name: "icon category", icon: "wrench") }
+    fab!(:emoji_category) { Fabricate(:category, name: "emoji category", emoji: "rocket") }
+
+    fab!(:category_with_hashtags) do
+      Fabricate(:category, name: "category with hashtags", description: <<~HTML)
+          Discussion about
+          and <a class="hashtag-cooked" href="/tag/#{tag.name}" data-type="tag" data-slug="#{tag.name}" data-id="#{tag.id}"><span class="hashtag-icon-placeholder"></span><span>#{tag.name}</span></a>
+          and <a class="hashtag-cooked" href="/c/#{icon_category.slug}/#{icon_category.id}" data-type="category" data-slug="#{icon_category.slug}" data-id="#{icon_category.id}" data-style-type="icon" data-icon="wrench"><span class="hashtag-icon-placeholder"></span><span>#{icon_category.name}</span></a>
+          and <a class="hashtag-cooked" href="/c/#{emoji_category.slug}/#{emoji_category.id}" data-type="category" data-slug="#{emoji_category.slug}" data-id="#{emoji_category.id}" data-style-type="emoji" data-emoji="rocket"><span class="hashtag-icon-placeholder"></span><span>#{emoji_category.name}</span></a>
+        HTML
+    end
+
+    it "decorates hashtags for tags, icons and emojis in the description" do
+      visit "/latest"
+
+      expect(sidebar).to have_categories_section
+
+      modal = sidebar.click_edit_categories_button
+
+      expect(modal).to have_tag_in_description(category_with_hashtags)
+      expect(modal).to have_icon_in_description(category_with_hashtags)
+      expect(modal).to have_emoji_in_description(category_with_hashtags)
+    end
+  end
+
   describe "when max_category_nesting has been set to 3" do
     before_all { SiteSetting.max_category_nesting = 3 }
 

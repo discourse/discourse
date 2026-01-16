@@ -82,6 +82,24 @@ module PageObjects
         ).click
         self
       end
+
+      def has_tag_in_description?(category)
+        has_css?(
+          ".sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__category-description a.hashtag-cooked[data-type='tag']",
+        )
+      end
+
+      def has_icon_in_description?(category)
+        has_css?(
+          ".sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__category-description a.hashtag-cooked .hashtag-category-icon",
+        )
+      end
+
+      def has_emoji_in_description?(category)
+        has_css?(
+          ".sidebar-categories-form__category-row[data-category-id='#{category.id}'] .sidebar-categories-form__category-description a.hashtag-cooked .hashtag-category-emoji",
+        )
+      end
     end
   end
 end
