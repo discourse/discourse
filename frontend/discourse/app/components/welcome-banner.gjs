@@ -93,22 +93,30 @@ export default class WelcomeBanner extends Component {
   }
 
   get headerText() {
+    const site_name = this.siteSettings.title || "";
+
+    let key, args;
+
     if (!this.currentUser) {
-      return i18n("welcome_banner.header.anonymous_members", {
-        site_name: this.siteSettings.title,
-      });
+      key = "welcome_banner.header.anonymous_members";
+      args = { site_name };
+    } else {
+      const isNewUser = !this.currentUser.previous_visit_at;
+      key = isNewUser
+        ? "welcome_banner.header.new_members"
+        : "welcome_banner.header.logged_in_members";
+      args = {
+        site_name,
+        preferred_display_name: sanitize(
+          prioritizeNameFallback(
+            this.currentUser.name,
+            this.currentUser.username
+          )
+        ),
+      };
     }
 
-    const isNewUser = !this.currentUser.previous_visit_at;
-    const key = isNewUser
-      ? "welcome_banner.header.new_members"
-      : "welcome_banner.header.logged_in_members";
-
-    return i18n(key, {
-      preferred_display_name: sanitize(
-        prioritizeNameFallback(this.currentUser.name, this.currentUser.username)
-      ),
-    });
+    return i18n(key, args);
   }
 
   get subheaderText() {

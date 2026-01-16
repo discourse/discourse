@@ -6026,11 +6026,11 @@ en:
               locale_label: "Language"
             header_new_members:
               label: "Header for new members"
-              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
+              description: "Available variables: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Welcome, %{preferred_display_name}!"
             header_logged_in:
               label: "Header for logged-in members"
-              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
+              description: "Available variables: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Welcome back, %{preferred_display_name}!"
             header_anonymous:
               label: "Header for anonymous visitors"
