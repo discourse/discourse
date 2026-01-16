@@ -188,8 +188,14 @@ RSpec.describe SiteSerializer do
 
       expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(
         [
-          { name: "dev", description: "some description", pm_only: false },
-          { name: "random", description: tag2.description, pm_only: false },
+          { id: tag.id, name: "dev", slug: "dev", description: "some description", pm_only: false },
+          {
+            id: tag2.id,
+            name: "random",
+            slug: "random",
+            description: tag2.description,
+            pm_only: false,
+          },
         ],
       )
     end
@@ -344,9 +350,27 @@ RSpec.describe SiteSerializer do
 
       expect(serialized[:navigation_menu_site_top_tags]).to eq(
         [
-          { name: tag3.name, description: tag2.description, pm_only: false },
-          { name: tag1.name, description: tag1.description, pm_only: false },
-          { name: tag2.name, description: tag3.description, pm_only: false },
+          {
+            id: tag3.id,
+            name: tag3.name,
+            slug: tag3.slug,
+            description: tag2.description,
+            pm_only: false,
+          },
+          {
+            id: tag1.id,
+            name: tag1.name,
+            slug: tag1.slug,
+            description: tag1.description,
+            pm_only: false,
+          },
+          {
+            id: tag2.id,
+            name: tag2.name,
+            slug: tag2.slug,
+            description: tag3.description,
+            pm_only: false,
+          },
         ],
       )
     end
