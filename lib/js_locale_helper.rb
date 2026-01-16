@@ -216,8 +216,8 @@ module JsLocaleHelper
     end
 
     result << <<~JS
-      localeData.configureMoment = function() {
-        if(!globalThis.moment){
+      localeData.configureMoment = function () {
+        if (!globalThis.moment) {
           throw new Error("globalThis.moment not defined. Failed to initialize locales.")
         }
         #{moment_locale(locale_str)}
