@@ -7,6 +7,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { TrackedSet } from "@ember-compat/tracked-built-ins";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
+import DecoratedHtml from "discourse/components/decorated-html";
 import EditNavigationMenuModal from "discourse/components/sidebar/edit-navigation-menu/modal";
 import borderColor from "discourse/helpers/border-color";
 import categoryBadge from "discourse/helpers/category-badge";
@@ -299,10 +300,12 @@ export default class SidebarEditNavigationMenuCategoriesModal extends Component 
                         <div
                           class="sidebar-categories-form__category-description"
                         >
-                          {{dirSpan
-                            category.description_excerpt
-                            htmlSafe="true"
-                          }}
+                          <DecoratedHtml
+                            @html={{dirSpan
+                              category.description_excerpt
+                              htmlSafe="true"
+                            }}
+                          />
                         </div>
                       {{/unless}}
                     </div>
