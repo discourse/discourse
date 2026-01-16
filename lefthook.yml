@@ -154,4 +154,4 @@ lints:
       glob: "**/{client,server}.en.yml"
       run: bundle exec ruby script/i18n_lint.rb {all_files}
     glint:
-      run: pnpm lint:glint
+      run: pnpm lint:types

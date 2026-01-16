@@ -97,6 +97,6 @@ jobs:
         if: ${{ !cancelled() }}
         run: bundle exec ruby script/i18n_lint.rb "plugins/**/locales/{client,server}.en.yml"
 
-      - name: Glint
+      - name: Types
         if: ${{ !cancelled() }}
-        run: pnpm lint:glint
+        run: pnpm lint:types
