@@ -35,10 +35,6 @@ export default class ChatChannelSidebarContextMenu extends Component {
       : "chat.channel_settings.star_channel";
   }
 
-  get isGroupChannel() {
-    return !!this.channel?.chatable?.group;
-  }
-
   @action
   async toggleStarred() {
     if (!this.currentUserMembership || this.isTogglingStarred) {
@@ -67,10 +63,10 @@ export default class ChatChannelSidebarContextMenu extends Component {
   @action
   async leaveChannel() {
     try {
-      if (this.isGroupChannel) {
-        await this.chatApi.leaveChannel(this.channel.id);
-      } else {
+      if (this.channel.isDirectMessageChannel) {
         await this.chat.unfollowChannel(this.channel);
+      } else {
+        await this.chatApi.leaveChannel(this.channel.id);
       }
       this.currentUser.custom_fields.last_chat_channel_id = null;
 
