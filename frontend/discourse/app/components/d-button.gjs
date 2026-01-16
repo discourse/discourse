@@ -42,6 +42,7 @@ import { i18n } from "discourse-i18n";
  * // Display / icon
  * @property {string} Args.icon
  * @property {boolean} Args.ellipsis
+ * @property {string} Args.suffixIcon
  *
  * // Accessibility
  * @property {string} Args.ariaLabel
