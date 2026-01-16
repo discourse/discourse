@@ -328,12 +328,13 @@ en:
 
     welcome_banner:
       header:
-        new_members: "Welcome, %{preferred_display_name}!"
-        logged_in_members: "Welcome back, %{preferred_display_name}!"
-        anonymous_members: "Welcome to %{site_name}!"
+        new_member: "Welcome, %{preferred_display_name}!"
+        logged_in_member: "Welcome back, %{preferred_display_name}!"
+        anonymous_member: "Welcome to %{site_name}!"
       subheader:
-        logged_in_members: ""
-        anonymous_members: ""
+        new_member: ""
+        logged_in_member: ""
+        anonymous_member: ""
       search_placeholder: "Search"
 
     impersonation:

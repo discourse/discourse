@@ -8,8 +8,8 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import SearchMenu from "discourse/components/search-menu";
 import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
+import userPrioritizedName from "discourse/helpers/user-prioritized-name";
 import isElementInViewport from "discourse/lib/is-element-in-viewport";
-import { prioritizeNameFallback } from "discourse/lib/settings";
 import { sanitize } from "discourse/lib/text";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
@@ -92,30 +92,28 @@ export default class WelcomeBanner extends Component {
     }
   }
 
-  get headerText() {
+  get memberType() {
     if (!this.currentUser) {
-      return i18n("welcome_banner.header.anonymous_members", {
-        site_name: this.siteSettings.title,
-      });
+      return "anonymous_member";
+    }
+    const isNewUser = !this.currentUser.previous_visit_at;
+    return isNewUser ? "new_member" : "logged_in_member";
+  }
+
+  get headerText() {
+    const args = { site_name: this.siteSettings.title || "" };
+
+    if (this.currentUser) {
+      args.preferred_display_name = sanitize(
+        userPrioritizedName(this.currentUser)
+      );
     }
 
-    const isNewUser = !this.currentUser.previous_visit_at;
-    const key = isNewUser
-      ? "welcome_banner.header.new_members"
-      : "welcome_banner.header.logged_in_members";
-
-    return i18n(key, {
-      preferred_display_name: sanitize(
-        prioritizeNameFallback(this.currentUser.name, this.currentUser.username)
-      ),
-    });
+    return i18n(`welcome_banner.header.${this.memberType}`, args);
   }
 
   get subheaderText() {
-    const memberKey = this.currentUser
-      ? "logged_in_members"
-      : "anonymous_members";
-    return I18n.lookup(`welcome_banner.subheader.${memberKey}`);
+    return I18n.lookup(`welcome_banner.subheader.${this.memberType}`);
   }
 
   get shouldDisplay() {

@@ -41,6 +41,7 @@ class TranslationOverride < ActiveRecord::Base
       optional_tags
     ],
     %w[system_messages.welcome_user] => %w[username name name_or_username],
+    %w[welcome_banner.header.] => %w[site_name],
   }
 
   include HasSanitizableFields
