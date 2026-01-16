@@ -7,6 +7,7 @@ import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import userPrioritizedName from "discourse/helpers/user-prioritized-name";
+import { i18n } from "discourse-i18n";
 
 export default class PostMetaDataReplyToTab extends Component {
   static shouldRender(args, context, owner) {
@@ -34,7 +35,7 @@ export default class PostMetaDataReplyToTab extends Component {
       disabled={{@repliesAbove.isPending}}
       role={{if this.site.desktopView "button"}}
       aria-expanded={{if this.site.desktopView @hasRepliesAbove}}
-      title="post.in_reply_to"
+      title={{i18n "post.in_reply_to"}}
       {{on "click" this.handleClick}}
     >
       {{#if @repliesAbove.isPending}}
