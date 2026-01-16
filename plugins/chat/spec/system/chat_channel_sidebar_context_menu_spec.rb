@@ -86,6 +86,24 @@ RSpec.describe "Chat channel sidebar context menu", type: :system do
         expect(page).to have_current_path(chat.channel_path(channel_1.slug, channel_1.id))
       end
     end
+
+    context "when removing a group dm channel" do
+      fab!(:group_dm_channel) do
+        Fabricate(
+          :direct_message_channel,
+          users: [current_user, Fabricate(:user), Fabricate(:user)],
+        )
+      end
+
+      it "removes the channel from sidebar but membership remains" do
+        chat_page.visit_channel(group_dm_channel)
+        chat_sidebar_page.remove_channel(group_dm_channel)
+
+        expect(chat_sidebar_page).to have_no_channel(group_dm_channel)
+        expect(group_dm_channel.membership_for(current_user)).to be_present
+        expect(group_dm_channel.membership_for(current_user).following).to be_falsy
+      end
+    end
   end
 
   context "when changing notification settings" do
