@@ -2225,4 +2225,43 @@ RSpec.describe PostCreator do
       expect { reviewable.perform(admin, :approve_post) }.not_to change(ReviewablePost, :count)
     end
   end
+
+  describe "draft cleanup" do
+    it "deletes the draft after successful post creation" do
+      topic = Fabricate(:topic)
+      draft_key = topic.draft_key
+      Draft.set(user, draft_key, 0, '{"reply":"test draft"}')
+
+      expect(Draft.find_by(user_id: user.id, draft_key: draft_key)).to be_present
+
+      PostCreator.create(
+        user,
+        topic_id: topic.id,
+        raw: "reply content for testing",
+        advance_draft: true,
+      )
+
+      expect(Draft.find_by(user_id: user.id, draft_key: draft_key)).to be_nil
+    end
+
+    it "deletes the draft even when draft sequence exceeds DraftSequence" do
+      topic = Fabricate(:topic)
+      draft_key = topic.draft_key
+
+      # Simulate edge case: draft sequence is higher than DraftSequence
+      Draft.create!(user: user, draft_key: draft_key, data: '{"reply":"test"}', sequence: 6)
+      DraftSequence.create!(user_id: user.id, draft_key: draft_key, sequence: 5)
+
+      expect(Draft.find_by(user_id: user.id, draft_key: draft_key)).to be_present
+
+      PostCreator.create(
+        user,
+        topic_id: topic.id,
+        raw: "reply content for testing",
+        advance_draft: true,
+      )
+
+      expect(Draft.find_by(user_id: user.id, draft_key: draft_key)).to be_nil
+    end
+  end
 end

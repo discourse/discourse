@@ -1850,4 +1850,34 @@ describe PostRevisor do
       end
     end
   end
+
+  describe "draft cleanup" do
+    fab!(:post)
+
+    it "deletes the draft after successful revision" do
+      draft_key = post.topic.draft_key
+      Draft.set(post.user, draft_key, 0, '{"reply":"test draft"}')
+
+      expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_present
+
+      post.revise(post.user, raw: "updated content here for the test")
+
+      expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_nil
+    end
+
+    it "deletes the draft even when draft sequence exceeds DraftSequence" do
+      draft_key = post.topic.draft_key
+
+      # Simulate edge case: draft sequence is higher than DraftSequence
+      # When DraftSequence.next! runs, it increments to 6, but sequence < 6 doesn't catch sequence 6
+      Draft.create!(user: post.user, draft_key: draft_key, data: '{"reply":"test"}', sequence: 6)
+      DraftSequence.create!(user_id: post.user.id, draft_key: draft_key, sequence: 5)
+
+      expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_present
+
+      post.revise(post.user, raw: "updated content here for the test")
+
+      expect(Draft.find_by(user_id: post.user.id, draft_key: draft_key)).to be_nil
+    end
+  end
 end
