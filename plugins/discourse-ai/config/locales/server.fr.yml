@@ -17,9 +17,6 @@ fr:
         spam: "Signaler comme contenu indésirable et masquer la publication"
         spam_silence: "Signaler comme contenu indésirable, masquer la publication et désactiver l'utilisateur"
     scriptables:
-      llm_tool_triage:
-        title: Triez les publications à l'aide de l'outil d'IA
-        description: "Triez les publications à l'aide d'une logique personnalisée dans un outil d'IA"
       llm_persona_triage:
         title: Triez les publications à l'aide d'un personnage IA
         description: "Répondez aux publications à l'aide d'un personnage IA spécifique"

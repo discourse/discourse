@@ -1233,7 +1233,7 @@ vi:
       "15": "Nháp"
       "17": "Liên kết"
     categories:
-      categories_label: "chuyên mục"
+      categories_label: "Chuyên mục"
       subcategories_label: "chuyên mục phụ"
       no_subcategories: "không có chuyên mục phụ"
       remove_filter: "bỏ điều kiện lọc"
@@ -1250,7 +1250,7 @@ vi:
         position: "Vị trí"
       posts: "Tút"
       topics: "Chủ đề"
-      latest: "Mới nhất"
+      latest: "Gần đây"
       subcategories: "Chuyên mục phụ"
       muted: "Các chuyên mục đã ẩn"
       topic_sentence:
@@ -1279,7 +1279,7 @@ vi:
       other_accounts_with_ip:
         other: "%{count} tài khoản khác có địa chỉ IP này"
       delete_other_accounts:
-        other: "Xoá %{count}"
+        other: "Xóa %{count}"
       username: "tên đăng nhập"
       trust_level: "độ tin cậy"
       read_time: "thời gian đọc"
@@ -2143,7 +2143,7 @@ vi:
       flair:
         title: "Tư cách"
         none: "(không có gì)"
-        instructions: "Biểu tượng hiện bên cạnh ảnh đại diện"
+        instructions: "Biểu tượng hiện kế bên ảnh đại diện"
       status:
         title: "Trạng thái tùy chỉnh"
         not_set: "Chưa đặt"
@@ -2739,8 +2739,8 @@ vi:
       paste_code_text: "nhập hoặc dán mã vào đây"
       upload_title: "Tải lên"
       upload_description: "Nhập mô tả tải lên ở đây"
-      olist_title: "Danh sách đánh số"
-      ulist_title: "Danh sách gạch đầu dòng"
+      olist_title: "Danh sách có thứ tự"
+      ulist_title: "Danh sách không thứ tự"
       list_item: "Danh sách các mục"
       toggle_direction: "Đổi lề"
       apply_wrap_title: "Áp dụng bọc"
@@ -2924,34 +2924,34 @@ vi:
         confirm_body: "Sự thành công! Thông báo đã được kích hoạt."
         custom: "Thông báo từ %{username} trên %{site_title}"
       titles:
-        mentioned: "đề cập"
-        replied: "câu trả lời mới"
-        quoted: "trích dẫn"
-        edited: "đã chỉnh sửa"
-        liked: "lượt thích mới"
+        mentioned: "Được nhắc đến"
+        replied: "Phản hồi mới"
+        quoted: "Được trích dẫn"
+        edited: "Đã sửa"
+        liked: "Lượt thích mới"
         private_message: "Tin nhắn cá nhân mới"
-        invited_to_private_message: "được mời gửi tin nhắn cá nhân"
-        invitee_accepted: "lời mời được chấp nhận"
-        posted: "tút mới"
-        watching_category_or_tag: "tút mới"
-        moved_post: "bài đã chuyển"
-        linked: "liên kết"
-        bookmark_reminder: "lời nhắc đánh dấu"
-        bookmark_reminder_with_name: "lời nhắc đánh dấu - %{name}"
-        granted_badge: "cấp huy hiệu"
-        invited_to_topic: "được mời vào chủ đề"
-        group_mentioned: "nhóm đã đề cập"
-        group_message_summary: "tin nhắn nhóm mới"
-        watching_first_post: "chủ đề mới"
-        topic_reminder: "nhắc nhở chủ đề"
-        liked_consolidated: "lượt thích mới"
-        linked_consolidated: "các link mới"
-        post_approved: "tút được chấp thuận"
-        membership_request_consolidated: "yêu cầu thành viên mới"
-        reaction: "phản ứng mới"
-        votes_released: "Đã đủ lượt bình chọn"
-        new_features: "Các tính năng mới của Discourse đã được phát hành!"
-        admin_problems: "lời khuyên mới trên bảng điều khiển trang web của bạn"
+        invited_to_private_message: "Được mời gửi tin nhắn cá nhân"
+        invitee_accepted: "Được chấp nhận lời mời"
+        posted: "Tút mới"
+        watching_category_or_tag: "Tút mới"
+        moved_post: "Đã di chuyển tút"
+        linked: "Đã liên kết"
+        bookmark_reminder: "Lời nhắc đánh dấu"
+        bookmark_reminder_with_name: "Lời nhắc đánh dấu - %{name}"
+        granted_badge: "Được trao huy hiệu"
+        invited_to_topic: "Được mời vào chủ đề"
+        group_mentioned: "Được nhắc trong nhóm"
+        group_message_summary: "Tin nhắn nhóm mới"
+        watching_first_post: "Chủ đề mới"
+        topic_reminder: "Lời nhắc chủ đề"
+        liked_consolidated: "Lượt thích mới"
+        linked_consolidated: "Các liên kết mới"
+        post_approved: "Được duyệt tút"
+        membership_request_consolidated: "Yêu cầu đăng ký thành viên mới"
+        reaction: "Phản ứng mới"
+        votes_released: "Đã trả lượt bình chọn"
+        new_features: "Tính năng mới của Discourse!"
+        admin_problems: "Lời khuyên mới trên bảng điều khiển"
     upload_selector:
       change: "Thay đổi"
       delete: "Xóa"
@@ -3082,10 +3082,10 @@ vi:
         views:
           label: Lượt xem
         min_views:
-          placeholder: tối thiểu
+          placeholder: Tối thiểu
           aria_label: lọc theo lượt xem tối thiểu
         max_views:
-          placeholder: tối đa
+          placeholder: Tối đa
           aria_label: lọc theo lượt xem tối đa
         additional_options:
           label: "Lọc số lượng tút và lượt xem chủ đề"
@@ -3802,7 +3802,7 @@ vi:
         attachment_upload_not_allowed_for_new_user: "Xin lỗi, tài khoản mới không thể tải lên đính kèm."
         attachment_download_requires_login: "Xin lỗi, bạn cần đăng nhập để tải về đính kèm."
       cancel_composer:
-        confirm: "Bạn có muốn xóa tút của mình không?"
+        confirm: "Bạn có chắc muốn hủy bỏ tút này?"
         discard: "Hủy bỏ"
       via_email: "Tút này đăng bằng email"
       via_auto_generated_email: "tút này đến qua một email được tạo tự động"
@@ -3949,10 +3949,10 @@ vi:
         actions:
           delete_bookmark:
             name: "Xóa đánh dấu"
-            description: "Xóa đánh dấu khỏi hồ sơ của bạn và dừng tất cả lời nhắc"
+            description: "Xóa khỏi hồ sơ của bạn và dừng mọi lời nhắc."
           edit_bookmark:
             name: "Chỉnh sửa đánh dấu"
-            description: "Đổi tên hoặc cập nhật ngày giờ nhắc nhở"
+            description: "Đổi tên hoặc cập nhật ngày giờ nhắc nhở."
           clear_bookmark_reminder:
             name: "Xóa lời nhắc"
             description: "Xóa ngày giờ nhắc nhở"
@@ -4478,7 +4478,7 @@ vi:
         heading_4: "%{shortcut} Tiêu đề 4"
         toggle_direction: "%{shortcut} Đổi lề"
         ordered_list: "%{shortcut} Danh sách có thứ tự"
-        unordered_list: "%{shortcut} Danh sách không có thứ tự"
+        unordered_list: "%{shortcut} Danh sách không thứ tự"
         blockquote: "%{shortcut} Trích dẫn"
       bookmarks:
         title: "Đánh dấu"
@@ -4574,7 +4574,7 @@ vi:
     tagging:
       all_tags: "Tất cả thẻ"
       other_tags: "Các thẻ khác"
-      selector_tags: "thẻ"
+      selector_tags: "Thẻ"
       selector_no_tags: "không có thẻ"
       selector_remove_filter: "bỏ điều kiện lọc"
       tags: "Thẻ"
@@ -5201,6 +5201,11 @@ vi:
           status_beta: "Beta"
           status_stable: "Ổn định"
           status_permanent: "Vĩnh viễn"
+          impact_role_admins: "Quản trị"
+          impact_role_moderators: "Điều hành viên"
+          impact_role_staff: "Nhân viên"
+          impact_role_all_members: "Tất cả thành viên"
+          impact_role_developers: "Nhà phát triển"
       config:
         about:
           title: "Về trang web của bạn"
@@ -5644,7 +5649,6 @@ vi:
         new_features:
           title: "Có gì mới?"
           subtitle: "Chúng tôi liên tục phát hành các tính năng và cải tiến mới. Trang này nêu bật những điểm chính, nhưng bạn có thể nhấn vào 'Tìm hiểu thêm' để xem ghi chú phát hành chi tiết."
-          previous_announcements: "Bạn có thể xem các thông báo tính năng mới trước đó trên <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Tìm hiểu thêm..."
           experimental: "Thí nghiệm"
           only_experiments: "Chỉ hiển thị các tính năng thử nghiệm"
@@ -7237,11 +7241,11 @@ vi:
               type: "boolean"
               description: "Yêu cầu trường này phải được điền đầy đủ để gửi biểu mẫu."
             minimum:
-              key: "tối thiểu"
+              key: "Tối thiểu"
               type: "integer"
               description: "Đối với các trường văn bản, chỉ định số ký tự tối thiểu được phép."
             maximum:
-              key: "tối đa"
+              key: "Tối đa"
               type: "integer"
               description: "Đối với các trường văn bản, tham số này chỉ định số ký tự tối đa được phép."
             pattern:

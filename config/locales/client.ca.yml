@@ -3076,6 +3076,9 @@ ca:
           enabled: "Activat"
           disabled: "Desactivat"
           impact_type_other: "Altres"
+          impact_role_admins: "Administradors"
+          impact_role_moderators: "Moderadors"
+          impact_role_staff: "Equip responsable"
       config:
         developer:
           title: "Desenvolupador"

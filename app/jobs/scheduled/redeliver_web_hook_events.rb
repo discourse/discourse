@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "excon"
-
 module Jobs
   class RedeliverWebHookEvents < ::Jobs::Scheduled
     every 1.minute

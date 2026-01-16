@@ -470,7 +470,7 @@ export default class ComposerService extends Service {
         })
       );
 
-      options.push(
+      const secondaryOptions = [
         this._setupPopupMenuOption({
           name: "toggle-wrap",
           action: this.toggleWrap,
@@ -478,14 +478,16 @@ export default class ComposerService extends Service {
           label: "composer.apply_wrap_title",
           showActiveIcon: true,
           active: ({ state }) => state?.inWrap,
-        })
-      );
+        }),
+      ];
 
-      return options.concat(
-        customPopupMenuOptions
-          .map((option) => this._setupPopupMenuOption({ ...option }))
-          .filter((o) => o)
-      );
+      return options
+        .concat(
+          customPopupMenuOptions
+            .map((option) => this._setupPopupMenuOption({ ...option }))
+            .filter((o) => o)
+        )
+        .concat(secondaryOptions);
     }
   }
 

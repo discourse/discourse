@@ -54,6 +54,7 @@ vi:
         ai_helper:
           proofread: Hiệu chỉnh văn bản
           explain: "Giải thích"
+          smart_dates: "Ngày thông minh"
           markdown_tables: "Tạo bảng Markdown"
         spam:
           name: "Rác"
@@ -152,9 +153,13 @@ vi:
         pill: "Liên quan"
       ai_helper:
         context_menu:
+          trigger: "Hỏi AI"
+          loading: "AI đang tạo ra"
           cancel: "Hủy"
+          regen: "Thử lại"
           confirm: "Xác nhận"
           discard: "Hủy bỏ"
+          changes: "Đề xuất chỉnh sửa"
           custom_prompt:
             placeholder: "Nhập prompt tùy chỉnh..."
           translate_prompt: "Dịch sang %{language}"
@@ -191,9 +196,13 @@ vi:
           toggle_hidden: "Đang ẩn %{count} kết quả tìm thấy bằng AI"
           none: "Rất tiếc, tìm kiếm AI của chúng tôi không tìm thấy chủ đề phù hợp"
           new: "Nhấn 'Tìm' để bắt đầu tìm kiếm kết quả mới bằng AI."
+          unavailable: "Kết quả AI không khả dụng"
         semantic_search_tooltips:
           results_explanation: "Khi được bật, các kết quả tìm kiếm AI bổ sung sẽ được thêm vào bên dưới."
+          invalid_sort: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
+        semantic_search_unavailable_tooltip: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
       ai_bot:
+        try_again: "Thử lại"
         debug_ai_modal:
           request: "Yêu cầu"
           response: "Đáp ứng"

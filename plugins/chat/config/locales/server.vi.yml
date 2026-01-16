@@ -41,7 +41,7 @@ vi:
     notify_user:
       chat_pm_body: "%{link}\n\n%{message}"
     notify_moderators:
-      chat_pm_title: 'Tin nhắn trò chuyện trong "%{channel_name}" yêu cầu sự chú ý của nhân viên'
+      chat_pm_title: 'Tin nhắn trò chuyện trong "%{channel_name}" yêu cầu BQT chú ý'
       chat_pm_body: "%{link}\n\n%{message}"
   user_notifications:
     chat_summary:

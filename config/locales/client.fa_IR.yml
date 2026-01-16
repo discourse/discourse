@@ -4871,6 +4871,9 @@ fa_IR:
           disabled: "غیرفعال"
           impact_type_other: "دیگر"
           status_experimental: "آزمایشی"
+          impact_role_admins: "مدیران ارشد"
+          impact_role_moderators: "ناظران"
+          impact_role_staff: "همکاران"
       config:
         about:
           title: "درباره سایت شما"
@@ -5095,7 +5098,6 @@ fa_IR:
         new_features:
           title: "چه چیزی جدید شده؟"
           subtitle: "ما همیشه در حال انتشار ویژگی ها و بهبودهای جدید هستیم. این صفحه نکات برجسته را پوشش می‌دهد، اما می‌توانید روی «بیشتر بدانید» کلیک کنید تا یادداشت‌های انتشار گسترده را ببینید."
-          previous_announcements: "می‌توانید اعلامیه‌ ویژگی‌های جدید قبلی را در <a href='%{url}' target='_blank'>Discourse Meta</a> مشاهده کنید"
           learn_more: "بیشتر بدانید..."
           experimental: "آزمایشی"
           experiment_enabled: "شما ویژگی آزمایشی را فعال کرده‌اید."

@@ -4285,6 +4285,7 @@ en:
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
         success: "Translations have been updated successfully"
         post_language_selector:
+          title: "Post Language"
           none: "None"
         edit_warning:
           message: "This is a translated post.<br><br>Do you want to edit the original post in %{language} or edit this specific translation?"
@@ -5842,6 +5843,12 @@ en:
           status_beta: "Beta"
           status_stable: "Stable"
           status_permanent: "Permanent"
+          impact_role_all: "All impact roles"
+          impact_role_admins: "Admins"
+          impact_role_moderators: "Moderators"
+          impact_role_staff: "Staff"
+          impact_role_all_members: "All members"
+          impact_role_developers: "Developers"
 
       config:
         about:

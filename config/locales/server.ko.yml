@@ -1816,6 +1816,16 @@ ko:
     results_page: "&#39;%{term}&#39;에 대한 검색 결과"
     audio: "[오디오]"
     video: "[비디오]"
+  filter:
+    description:
+      status: "글의 상태별 필터링"
+      order: "특정 필드를 기준으로 글 정렬"
+      category: "특정 카테고리의 글 보기"
+      tag: "특정 태그가 있는 글 보기"
+      tag_group: "특정 태그 그룹의 태그가 있는 글 보기"
+      created_after: "특정 날짜 이후에 작성된 글 보기 (YYYY-MM-DD 또는 일 전)"
+      users: "참가자별로 글 필터링"
+      group: "그룹별로 글 보기"
   discourse_connect:
     login_error: "로그인 오류"
     not_found: "계정을 찾을 수 없습니다. 사이트 관리자에게 문의하세요."
