@@ -1131,6 +1131,7 @@ pt_BR:
       every_month: "a cada mês"
       every_six_months: "a cada seis meses"
   user_api_key:
+    title: 'Autorizar "%{application_name}"'
     authorize: "Autorizar"
     deny: "Cancelar"
     read: "ler"
@@ -1919,7 +1920,6 @@ pt_BR:
     invite_link_max_redemptions_limit_users: "A quantidade máxima de resgates de links de convite gerados por usuário(a) não pode exceder este valor."
     alert_admins_if_errors_per_minute: "Quantidade de erros por minuto para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
     alert_admins_if_errors_per_hour: "Quantidade de erros por hora para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
-    categories_topics: "Quantidade de tópicos para exibir na página /categorias. Se definido como 0, será realizada uma tentativa de encontrar um valor para manter as duas colunas simétricas (tópicos e categorias)."
     suggested_topics: "Quantidade de tópicos sugeridos exibidos no final de um tópico."
     limit_suggested_to_category: "Exiba apenas tópicos da categoria atual nos tópicos sugeridos."
     suggested_topics_max_days_old: "Tópicos sugeridos não devem ter mais de n dia(s)."

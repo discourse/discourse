@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 sw:
+  solved: "Imetatuliwa"
+  posted: "ameandika"
+  reply_count:
+    one: "%{count} jibu"
+    other: "%{count} majibu"

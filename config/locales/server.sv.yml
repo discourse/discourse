@@ -1658,7 +1658,6 @@ sv:
     invite_link_max_redemptions_limit_users: "Maximalt antal inlösningar som tillåts för inbjudningslänkar som genererats av vanliga användare kan inte vara större än detta värde."
     alert_admins_if_errors_per_minute: "Antal felindikeringar per minut för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
     alert_admins_if_errors_per_hour: "Antal felindikeringar per timme för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
-    categories_topics: "Antal ämnen som ska visas i /kategorisida. Om detta ställs in till 0 kommer systemet automatiskt att försöka hitta ett värde så att de två kolumnerna hålls symmetriskt (kategorier och ämnen.)"
     suggested_topics: "Antal föreslagna ämnen som visas nederst i ett ämne."
     limit_suggested_to_category: "Visa bara ämnen från den aktuella kategorin bland föreslagna ämnen."
     suggested_topics_max_days_old: "Föreslagna ämnen bör inte vara mer än n dagar gamla."

@@ -28,13 +28,13 @@ vi:
         join: "Tham gia"
         leave: "Rời nhóm"
       close: "Đóng"
-      remove: "Xoá"
+      remove: "Xóa"
       delete: "Xóa"
       edited: "đã chỉnh sửa"
       muted: "im lặng"
       joined: "đã tham gia"
       email_frequency:
-        description: "Sẽ chỉ gửi email nếu bạn vắng mặt trong 15 phút."
+        description: "Sẽ chỉ gửi email nếu bạn vắng mặt 15 phút."
         never: "Không bao giờ"
         title: "Gửi email khi tôi nhận được tin nhắn trò chuyện trực tiếp hoặc nhóm"
         when_away: "Khi vắng mặt"
@@ -82,7 +82,7 @@ vi:
           members: Thành viên kênh
           settings: Cài đặt
           search: Tìm kiếm
-        remove_member: "Xoá"
+        remove_member: "Xóa"
       new_message_modal:
         title: Gửi tin nhắn
         no_items: "Không có mẫu nào"
@@ -129,7 +129,7 @@ vi:
       incoming_webhooks:
         back: "Quay lại"
         description: "Mô tả"
-        delete: "Xoá"
+        delete: "Xóa"
         emoji: "Emoji"
         name: "T"
         save: "Lưu lại"
@@ -174,7 +174,7 @@ vi:
           regular:
             title: "Bình thường"
           tracking:
-            title: "Đang theo dõi"
+            title: "Theo dõi"
           watching:
             title: "Theo dõi"
             description: "Nhận thông báo về tất cả các phản hồi trong chủ đề này và xem số lượng phản hồi mới trong danh sách chủ đề."
@@ -187,6 +187,10 @@ vi:
       chat_quoted: "<span>%{username}</span> %{description}"
       chat_watched_thread_label:
         other: "%{username} và %{count} người khác"
+    action_codes:
+      chat:
+        enabled: '%{who} đã bật <button class="btn-link open-chat">chat</button> %{when}'
+        disabled: "%{who} đã đóng chat %{when}"
     discourse_automation:
       scriptables:
         send_chat_message:

@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 sr:
+  posted: "pisao"
+  reply_count:
+    one: "%{count} odgovor"
+    few: "%{count} odgovora"
+    other: "%{count} odgovora"

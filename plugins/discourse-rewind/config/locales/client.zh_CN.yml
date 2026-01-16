@@ -97,7 +97,7 @@ zh_CN:
         assignments:
           title: 指定
           total_assigned: 指定给我
-          total_assigned_others: 分配给他们
+          total_assigned_others: "已被分配至%{username}"
           completed: 指定已完成
           pending: 待指定的任务
           assigned_by_user: 已指定的任务
@@ -117,18 +117,13 @@ zh_CN:
           channel_title: "#聊天活动"
           status_online: "● 在线"
           message_1: "今年你发送了 <strong>%{count}</strong> 条消息！"
-          message_1_others: "%{username} 今年发送了 <strong>%{count}</strong> 条消息！"
           reply_1: "lol 超棒的 B-)"
           message_2: "你与 <strong>%{channel_count}</strong> 位不同的人进行过 <strong>%{dm_count}</strong> 次 DM 对话"
-          message_2_others: "%{username} 与 <strong>%{channel_count}</strong> 个不同的人或群组进行了 <strong>%{dm_count}</strong> 次 DM 对话"
           reply_2: "酷毙了 :D"
           message_3: "大家都很喜欢你的留言！你收到了 <strong>%{count}</strong> 个回应 ❤️"
-          message_3_others: "大家都很喜欢这些消息！他们获得了 <strong>%{count}</strong> 个回应 ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "你的平均消息长度为 <strong>%{length}</strong> 个字符"
-          message_4_others: "他们的平均消息长度为 <strong>%{length}</strong> 个字符"
           message_5: "你最喜欢的频道："
-          message_5_others: "他们最喜欢的频道："
           dancing_baby_alt: "跳舞宝宝（Dancing Baby）"
         favorite_gifs:
           title:
@@ -144,7 +139,6 @@ zh_CN:
           redemption_rate: 接受率
           avg_trust_level: 平均信任级别
           invitee_impact: 你的受邀者带来的影响
-          invitee_impact_others: 受邀者的影响
           invitee_posts: 创建的帖子
           invitee_topics: 发起的话题数
           invitee_likes: 点赞
@@ -175,11 +169,9 @@ zh_CN:
           mentions: 提及
           topics_with_new_users: 有新用户的话题
           contributions_helped: 你的贡献很有帮助
-          contributions_helped_others: 他们的贡献很有帮助
         time_of_day_activity:
           title: 每日活动节奏
           play_button: 以声音播放你的活动
-          play_button_others: 播放他们的活动声音
           stop_button: 停止音频播放
         writing_analysis:
           title: 写作分析

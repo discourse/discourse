@@ -1,0 +1,36 @@
+Return-Path: <bilbo@proton.me>
+Received: from mail-24430.protonmail.ch (mail-24430.protonmail.ch. [109.224.244.30])
+        by mx.google.com with ESMTPS id 00721157ae682-7864ba682b8si14738347b3.39.2025.10.31.08.53.17
+        for <frodo@discourse.org>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 Oct 2025 08:53:17 -0700 (PDT)
+Received-SPF: pass (google.com: domain of bilbo@proton.me designates 109.224.244.30 as permitted sender) client-ip=109.224.244.30;
+Authentication-Results: mx.google.com;
+       dkim=pass header.i=@proton.me header.s=l3nkficqdbcgzpt3sm74fowyba.protonmail header.b=NCXT0FzU;
+       spf=pass (google.com: domain of bilbo@proton.me designates 109.224.244.30 as permitted sender) smtp.mailfrom=bilbo@proton.me;
+       dmarc=pass (p=QUARANTINE sp=QUARANTINE dis=NONE) header.from=proton.me
+Date: Fri, 31 Oct 2025 15:53:13 +0000
+To: frodo@discourse.org
+From: bilbo <bilbo@proton.me>
+Subject: Ceci n'est pas un email
+Message-ID: <JGnmBVSOxt_Xn4dcgO9BCUcI5lVspt6aSL_FXd6lIYApVO7-IFUP2v5fRp9GN1-1cSWgrc37npStneeB6ZhA5W4wnfWrSiTfBRMKbTuPNkY=@proton.me>
+Feedback-ID: 125571894:user:proton
+X-Pm-Message-ID: 4f3ea7c8155ec5a74f83a5f65274dc3f5269b7a4
+MIME-Version: 1.0
+Content-Type: multipart/alternative; boundary="b1=_WSpo40vhsD8KyQGJNYap4ALwcgqbhrVWd51oUYgyI"
+
+--b1=_WSpo40vhsD8KyQGJNYap4ALwcgqbhrVWd51oUYgyI
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+
+U2VudCBmcm9tIFtQcm90b24gTWFpbF0oaHR0cHM6Ly9wcm90b24ubWUvbWFpbC9ob21lKSBmb3Ig
+QW5kcm9pZC4=
+--b1=_WSpo40vhsD8KyQGJNYap4ALwcgqbhrVWd51oUYgyI
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: base64
+
+PGh0bWw+PGhlYWQ+PC9oZWFkPjxib2R5Pjxicj48YnI+PGRpdiBjbGFzcz0icHJvdG9ubWFpbF9z
+aWduYXR1cmVfYmxvY2stdXNlciI+PC9kaXY+PGJyPjxicj5TZW50IGZyb20gPGEgdGFyZ2V0PSJf
+YmxhbmsiIGhyZWY9Imh0dHBzOi8vcHJvdG9uLm1lL21haWwvaG9tZSIgcmVsPSJub3JlZmVycmVy
+Ij5Qcm90b24gTWFpbDwvYT4gZm9yIEFuZHJvaWQuPC9ib2R5PjwvaHRtbD4=
+--b1=_WSpo40vhsD8KyQGJNYap4ALwcgqbhrVWd51oUYgyI--
