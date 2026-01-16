@@ -29,6 +29,7 @@ import { and, gt } from "discourse/truth-helpers";
 export default class DNavigation extends Component {
   @service router;
   @service site;
+  @service siteSettings;
 
   @tracked filterMode;
 
@@ -198,6 +199,23 @@ export default class DNavigation extends Component {
     this.createTopic();
   }
 
+  @action
+  clickTagInfo() {
+    if (
+      this.siteSettings.experimental_tag_settings_page &&
+      this.currentUser?.canEditTags
+    ) {
+      this.router.transitionTo(
+        "tag.edit.tab",
+        this.tag.slug,
+        this.tag.id,
+        "general"
+      );
+    } else {
+      this.toggleInfo();
+    }
+  }
+
   <template>
     <BreadCrumbs
       @categories={{this.categories}}
@@ -286,7 +304,7 @@ export default class DNavigation extends Component {
               "tagging.edit"
               "tagging.info"
             }}
-            @action={{this.toggleInfo}}
+            @action={{this.clickTagInfo}}
             id="show-tag-info"
             class="btn-default"
           />

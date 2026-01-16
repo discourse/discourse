@@ -4,7 +4,7 @@ module PageObjects
   module Pages
     class Tag < PageObjects::Pages::Base
       def visit_tag(tag)
-        page.visit "/tag/#{tag.name}"
+        page.visit "/tag/#{tag.slug}/#{tag.id}"
         self
       end
 
