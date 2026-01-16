@@ -849,7 +849,13 @@ module DiscourseTagging
       now = Time.current
       rows =
         names_to_create.map do |n|
-          { name: n, target_tag_id: target_tag.id, created_at: now, updated_at: now }
+          {
+            name: n,
+            slug: Slug.for(n, ""),
+            target_tag_id: target_tag.id,
+            created_at: now,
+            updated_at: now,
+          }
         end
       valid_ids += Tag.insert_all(rows, returning: :id).pluck("id")
     end

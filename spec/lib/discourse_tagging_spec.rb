@@ -1836,6 +1836,12 @@ RSpec.describe DiscourseTagging do
       expect(s.target_tag).to eq(tag1)
     end
 
+    it "generates slug for new tags" do
+      DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: ["synonym1"])
+      s = Tag.where_name("synonym1").first
+      expect(s.slug).to eq("synonym1")
+    end
+
     it "can add existing and new tags" do
       expect {
         expect(

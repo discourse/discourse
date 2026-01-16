@@ -1,6 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import {
   acceptance,
   queryAll,
@@ -916,5 +917,263 @@ acceptance("Tag separator customization", function (needs) {
         ".topic-list .topic-list-item:first-child .discourse-tags__tag-separator"
       )
       .hasText(" | ", "custom separator is displayed between tags");
+  });
+});
+
+acceptance("Tag settings page", function (needs) {
+  needs.user();
+  needs.settings({
+    experimental_tag_settings_page: true,
+  });
+  needs.pretender((server, helper) => {
+    server.get("/tag/test-tag/100/notifications.json", () =>
+      helper.response({
+        tag_notification: {
+          id: 100,
+          name: "test-tag",
+          notification_level: 1,
+        },
+      })
+    );
+
+    server.get("/tag/test-tag/100/l/latest.json", () =>
+      helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 100,
+              name: "test-tag",
+              slug: "test-tag",
+              topic_count: 5,
+            },
+          ],
+          topics: [],
+        },
+      })
+    );
+
+    server.get("/tag/test-tag/100/info.json", () =>
+      helper.response({
+        tag_info: {
+          id: 100,
+          name: "test-tag",
+          slug: "test-tag",
+          description: "test description",
+          topic_count: 5,
+          staff: false,
+          synonyms: [{ id: 101, name: "test-synonym", text: "test-synonym" }],
+          tag_group_names: [],
+          category_ids: [],
+        },
+        categories: [],
+      })
+    );
+
+    server.get("/tag/test-tag/100/settings.json", () =>
+      helper.response({
+        tag_settings: {
+          id: 100,
+          name: "test-tag",
+          slug: "test-tag",
+          description: "test description",
+          synonyms: [{ id: 101, name: "test-synonym", text: "test-synonym" }],
+          tag_group_names: [],
+          category_restricted: false,
+          can_edit: true,
+          can_admin: true,
+        },
+        categories: [],
+      })
+    );
+
+    server.put("/tag/test-tag/100/settings.json", (request) => {
+      const data = helper.parsePostData(request.requestBody);
+      return helper.response({
+        tag_settings: {
+          id: 100,
+          name: data["tag_settings[name]"] || "test-tag",
+          slug: data["tag_settings[slug]"] || "test-tag",
+          description: data["tag_settings[description]"] || "",
+          synonyms: [],
+          tag_group_names: [],
+          category_restricted: false,
+          can_edit: true,
+          can_admin: true,
+        },
+        categories: [],
+      });
+    });
+
+    server.get("/tag/updated-tag/100/notifications.json", () =>
+      helper.response({
+        tag_notification: {
+          id: 100,
+          name: "updated-tag",
+          notification_level: 1,
+        },
+      })
+    );
+
+    server.get("/tag/updated-tag/100/l/latest.json", () =>
+      helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          topics: [],
+          tags: [{ id: 100, name: "updated-tag", slug: "updated-tag" }],
+        },
+      })
+    );
+
+    server.get("/tags/filter/search", () =>
+      helper.response({
+        results: [{ id: 200, name: "another-tag", count: 1 }],
+      })
+    );
+  });
+
+  test("clicking tag info button navigates to settings page", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
+
+    await visit("/tag/test-tag/100");
+    await click("#show-tag-info");
+
+    assert.strictEqual(
+      currentURL(),
+      "/tag/test-tag/100/edit/general",
+      "navigates to tag settings page"
+    );
+  });
+
+  test("can navigate to tag settings page", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
+
+    await visit("/tag/test-tag/100/edit/general");
+
+    assert.dom(".tag-settings").exists("tag settings page is rendered");
+    assert.dom(".tag-settings__header h2").exists("shows header");
+    assert
+      .dom(".tag-settings__nav .nav-stacked")
+      .exists("shows navigation tabs");
+  });
+
+  test("tag settings form displays tag data", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
+
+    await visit("/tag/test-tag/100/edit/general");
+
+    assert.dom(".tag-settings").exists("tag settings page is rendered");
+    assert.form().field("name").hasValue("test-tag", "displays tag name");
+    assert.form().field("slug").hasValue("test-tag", "displays tag slug");
+  });
+
+  test("can update tag settings", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
+
+    await visit("/tag/test-tag/100/edit/general");
+
+    await formKit().field("name").fillIn("updated-tag");
+    await formKit().submit();
+
+    assert.dom(".tag-settings").exists("stays on settings page after save");
+  });
+
+  test("shows synonyms section", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
+
+    await visit("/tag/test-tag/100/edit/general");
+
+    assert.dom(".tag-settings-synonyms").exists("synonyms section is rendered");
+    assert
+      .dom(".tag-settings-synonyms__item")
+      .exists({ count: 1 }, "shows existing synonym");
+  });
+});
+
+acceptance("Tag settings page - disabled", function (needs) {
+  needs.user();
+  needs.settings({
+    experimental_tag_settings_page: false,
+  });
+  needs.pretender((server, helper) => {
+    server.get("/tag/test-tag/100/notifications.json", () =>
+      helper.response({
+        tag_notification: {
+          id: 100,
+          name: "test-tag",
+          notification_level: 1,
+        },
+      })
+    );
+
+    server.get("/tag/test-tag/100/l/latest.json", () =>
+      helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 100,
+              name: "test-tag",
+              slug: "test-tag",
+              topic_count: 5,
+            },
+          ],
+          topics: [],
+        },
+      })
+    );
+
+    server.get("/tag/test-tag/100/info.json", () =>
+      helper.response({
+        tag_info: {
+          id: 100,
+          name: "test-tag",
+          slug: "test-tag",
+          description: "test description",
+          topic_count: 5,
+          staff: false,
+          synonyms: [],
+          tag_group_names: [],
+          category_ids: [],
+        },
+        categories: [],
+      })
+    );
+  });
+
+  test("shows pencil icon for inline editing when setting disabled", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
+
+    await visit("/tag/test-tag/100");
+    await click("#show-tag-info");
+
+    assert
+      .dom(".tag-info .tag-name-wrapper .edit-tag")
+      .exists("edit icon exists");
+    assert
+      .dom(".tag-info .tag-name-wrapper .edit-tag .d-icon-pencil")
+      .exists("shows pencil icon for inline editing");
+  });
+
+  test("shows edit synonyms button when setting disabled", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
+
+    await visit("/tag/test-tag/100");
+    await click("#show-tag-info");
+
+    assert.dom("#edit-synonyms").exists("edit synonyms button exists");
   });
 });

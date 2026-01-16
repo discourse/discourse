@@ -232,6 +232,11 @@ export default function () {
         path: "/:tag_slug/:tag_id/l/" + filter,
       });
     });
+
+    this.route("edit", { path: "/:tag_slug/:tag_id/edit" }, function () {
+      this.route("index", { path: "/" });
+      this.route("tab", { path: "/:tab" });
+    });
   });
 
   this.route("tags", function () {

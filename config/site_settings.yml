@@ -4137,6 +4137,10 @@ dashboard:
     client: true
 
 experimental:
+  experimental_tag_settings_page:
+    default: false
+    client: true
+    area: "experimental"
   experimental_auto_grid_images:
     default: false
     client: true

@@ -4,6 +4,7 @@ import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { and, reads } from "@ember/object/computed";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
@@ -29,6 +30,7 @@ import { i18n } from "discourse-i18n";
 export default class TagInfo extends Component {
   @service dialog;
   @service router;
+  @service siteSettings;
 
   loading = false;
   tagInfo = null;
@@ -41,6 +43,10 @@ export default class TagInfo extends Component {
   @reads("currentUser.canEditTags") canEditTags;
   @reads("currentUser.staff") canAdminTag;
   @and("canEditTags", "showEditControls") editSynonymsMode;
+
+  get useSettingsPage() {
+    return this.siteSettings.experimental_tag_settings_page;
+  }
 
   @discourseComputed("tagInfo.tag_group_names")
   tagGroupsInfo(tagGroupNames) {
@@ -222,12 +228,10 @@ export default class TagInfo extends Component {
   @action
   addSynonyms() {
     this.dialog.confirm({
-      message: htmlSafe(
-        i18n("tagging.add_synonyms_explanation", {
-          count: this.newSynonyms.length,
-          tag_name: this.tagInfo.name,
-        })
-      ),
+      message: i18n("tagging.add_synonyms_explanation", {
+        count: this.newSynonyms.length,
+        tag_name: this.tagInfo.name,
+      }),
       didConfirm: () => {
         const slug = this.tagInfo.slug;
         const id = this.tagInfo.id;
@@ -307,12 +311,25 @@ export default class TagInfo extends Component {
             <div class="tag-name-wrapper">
               {{discourseTag this.tagInfo.name tagName="div"}}
               {{#if this.canEditTags}}
-                <a
-                  href
-                  {{on "click" this.edit}}
-                  class="edit-tag"
-                  title={{i18n "tagging.edit_tag"}}
-                >{{icon "pencil"}}</a>
+                {{#if this.useSettingsPage}}
+                  <LinkTo
+                    @route="tag.edit.tab"
+                    @models={{array
+                      this.tagInfo.slug
+                      this.tagInfo.id
+                      "general"
+                    }}
+                    class="edit-tag"
+                    title={{i18n "tagging.edit_tag"}}
+                  >{{icon "gear"}}</LinkTo>
+                {{else}}
+                  <a
+                    href
+                    {{on "click" this.edit}}
+                    class="edit-tag"
+                    title={{i18n "tagging.edit_tag"}}
+                  >{{icon "pencil"}}</a>
+                {{/if}}
               {{/if}}
             </div>
             {{#if this.tagInfo.description}}
@@ -414,13 +431,24 @@ export default class TagInfo extends Component {
           />
 
           <div class="tag-actions">
-            <DButton
-              @action={{this.toggleEditControls}}
-              @icon="gear"
-              @label="tagging.edit_synonyms"
-              id="edit-synonyms"
-              class="btn-default"
-            />
+            {{#if this.useSettingsPage}}
+              <LinkTo
+                @route="tag.edit.tab"
+                @models={{array this.tagInfo.slug this.tagInfo.id "general"}}
+                class="btn btn-default"
+              >
+                {{icon "gear"}}
+                {{i18n "tagging.settings"}}
+              </LinkTo>
+            {{else}}
+              <DButton
+                @action={{this.toggleEditControls}}
+                @icon="gear"
+                @label="tagging.edit_synonyms"
+                id="edit-synonyms"
+                class="btn-default"
+              />
+            {{/if}}
             {{#if this.canAdminTag}}
               <DButton
                 @action={{this.deleteTag}}
