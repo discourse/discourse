@@ -1,25 +1,26 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import ChooseTopic from "discourse/components/choose-topic";
-import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
-import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import Form from "discourse/components/form";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class TestIntegration extends Component {
-  @tracked loading = false;
   @tracked flash;
-  @tracked topicId;
+  @tracked flashType = "success";
+  @tracked topicId = null;
+
+  @action
+  newTopicSelected(topic) {
+    this.topicId = topic?.id;
+  }
 
   @action
   async send() {
-    this.loading = true;
-
     try {
       await ajax("/admin/plugins/chat-integration/test", {
         data: {
@@ -29,65 +30,57 @@ export default class TestIntegration extends Component {
         type: "POST",
       });
 
-      this.loading = false;
       this.flash = i18n("chat_integration.test_modal.success");
+      this.flashType = "success";
     } catch (e) {
       popupAjaxError(e);
     }
   }
 
-  @action
-  newTopicSelected(topic) {
-    this.topicId = topic?.id;
+  get canSend() {
+    return this.topicId !== null;
   }
 
   <template>
     <DModal
-      {{on "submit" this.send}}
       @title={{i18n "chat_integration.test_modal.title"}}
       @closeModal={{@closeModal}}
       @flash={{this.flash}}
-      @flashType="success"
-      @tagName="form"
-      id="chat_integration_test_modal"
+      @flashType={{this.flashType}}
+      id="chat-integration-test-modal"
+      class="chat-integration-modal"
     >
       <:body>
-        <table>
-          <tbody>
-            <tr class="input">
-              <td class="label">
-                <label for="channel">
-                  {{i18n "chat_integration.test_modal.topic"}}
-                </label>
-              </td>
-              <td>
-                <ChooseTopic
-                  @topicChangedCallback={{this.newTopicSelected}}
-                  @selectedTopicId={{this.topicId}}
-                />
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </:body>
+        <Form as |form|>
+          <form.Field
+            @name="topicId"
+            @title={{i18n "chat_integration.test_modal.topic"}}
+            as |field|
+          >
+            <field.Custom>
+              <ChooseTopic
+                @topicChangedCallback={{this.newTopicSelected}}
+                @selectedTopicId={{this.topicId}}
+              />
+            </field.Custom>
+          </form.Field>
 
-      <:footer>
-        <ConditionalLoadingSpinner @condition={{this.loading}}>
-          <DButton
-            @action={{this.send}}
-            @label="chat_integration.test_modal.send"
-            @disabled={{not this.topicId}}
-            type="submit"
-            id="send-test"
-            class="btn-primary btn-large"
-          />
-          <DButton
-            @action={{@closeModal}}
-            @label="chat_integration.test_modal.close"
-            class="btn-default btn-large"
-          />
-        </ConditionalLoadingSpinner>
-      </:footer>
+          <form.Actions>
+            <form.Button
+              @label="chat_integration.test_modal.send"
+              @action={{this.send}}
+              @disabled={{not this.canSend}}
+              class="btn-primary"
+              id="send-test"
+            />
+            <form.Button
+              @label="chat_integration.test_modal.close"
+              @action={{@closeModal}}
+              class="btn-default"
+            />
+          </form.Actions>
+        </Form>
+      </:body>
     </DModal>
   </template>
 }

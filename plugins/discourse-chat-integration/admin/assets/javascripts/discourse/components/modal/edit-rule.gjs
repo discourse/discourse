@@ -1,23 +1,66 @@
 import Component from "@glimmer/component";
-import { concat, fn, hash } from "@ember/helper";
-import { on } from "@ember/modifier";
+import { tracked } from "@glimmer/tracking";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
-import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChannelData from "../channel-data";
 
 export default class EditRule extends Component {
   @service siteSettings;
 
+  @tracked type = this.args.model.rule.type || "normal";
+  @tracked filter = this.args.model.rule.filter || "watch";
+  @tracked category_id = this.args.model.rule.category_id;
+  @tracked group_id = this.args.model.rule.group_id;
+  @tracked tags = this.args.model.rule.tags || [];
+
+  get isNormalType() {
+    return this.type === "normal";
+  }
+
   @action
-  async save(rule) {
+  onTypeChange(type) {
+    this.type = type;
+  }
+
+  @action
+  onFilterChange(filter) {
+    this.filter = filter;
+  }
+
+  @action
+  onCategoryChange(categoryId) {
+    this.category_id = categoryId;
+  }
+
+  @action
+  onGroupChange(groupId) {
+    this.group_id = groupId;
+  }
+
+  @action
+  onTagsChange(tags) {
+    this.tags = tags;
+  }
+
+  @action
+  async save() {
+    const rule = this.args.model.rule;
+    rule.setProperties({
+      type: this.type,
+      filter: this.filter,
+      category_id: this.type === "normal" ? this.category_id : null,
+      group_id: this.type !== "normal" ? this.group_id : null,
+      tags: this.tags,
+    });
+
     try {
       await rule.save();
       this.args.closeModal();
@@ -28,22 +71,20 @@ export default class EditRule extends Component {
 
   <template>
     <DModal
-      {{on "submit" this.save}}
       @title={{i18n "chat_integration.edit_rule_modal.title"}}
       @closeModal={{@closeModal}}
-      @tagName="form"
-      id="chat-integration-edit-rule_modal"
+      id="chat-integration-edit-rule-modal"
+      class="chat-integration-modal"
     >
       <:body>
-        <table>
-          <tbody>
-            <tr class="input">
-              <td class="label">
-                <label for="provider">
-                  {{i18n "chat_integration.edit_rule_modal.provider"}}
-                </label>
-              </td>
-              <td>
+        <Form as |form|>
+          <form.Field
+            @name="provider"
+            @title={{i18n "chat_integration.edit_rule_modal.provider"}}
+            as |field|
+          >
+            <field.Custom>
+              <span class="provider-name">
                 {{i18n
                   (concat
                     "chat_integration.provider."
@@ -51,190 +92,130 @@ export default class EditRule extends Component {
                     ".title"
                   )
                 }}
-              </td>
-            </tr>
+              </span>
+            </field.Custom>
+          </form.Field>
 
-            <tr class="chat-instructions">
-              <td></td>
-              <td></td>
-            </tr>
+          <form.Field
+            @name="channel"
+            @title={{i18n "chat_integration.edit_rule_modal.channel"}}
+            as |field|
+          >
+            <field.Custom>
+              <ChannelData
+                @provider={{@model.provider}}
+                @channel={{@model.channel}}
+              />
+            </field.Custom>
+          </form.Field>
 
-            <tr class="input">
-              <td class="label">
-                <label for="channel">
-                  {{i18n "chat_integration.edit_rule_modal.channel"}}
-                </label>
-              </td>
-              <td>
-                <ChannelData
-                  @provider={{@model.provider}}
-                  @channel={{@model.channel}}
+          <form.Field
+            @name="type"
+            @title={{i18n "chat_integration.edit_rule_modal.type"}}
+            @description={{i18n
+              "chat_integration.edit_rule_modal.instructions.type"
+            }}
+            as |field|
+          >
+            <field.Custom>
+              <ComboBox
+                @content={{@model.rule.available_types}}
+                @value={{this.type}}
+                @onChange={{this.onTypeChange}}
+              />
+            </field.Custom>
+          </form.Field>
+
+          <form.Field
+            @name="filter"
+            @title={{i18n "chat_integration.edit_rule_modal.filter"}}
+            @description={{i18n
+              "chat_integration.edit_rule_modal.instructions.filter"
+            }}
+            as |field|
+          >
+            <field.Custom>
+              <ComboBox
+                @content={{@model.rule.available_filters}}
+                @value={{this.filter}}
+                @onChange={{this.onFilterChange}}
+              />
+            </field.Custom>
+          </form.Field>
+
+          {{#if this.isNormalType}}
+            <form.Field
+              @name="category_id"
+              @title={{i18n "chat_integration.edit_rule_modal.category"}}
+              @description={{i18n
+                "chat_integration.edit_rule_modal.instructions.category"
+              }}
+              as |field|
+            >
+              <field.Custom>
+                <CategoryChooser
+                  @value={{this.category_id}}
+                  @onChange={{this.onCategoryChange}}
+                  @options={{hash none="chat_integration.all_categories"}}
                 />
-              </td>
-            </tr>
-
-            <tr class="chat-instructions">
-              <td></td>
-              <td></td>
-            </tr>
-
-            <tr class="input">
-              <td class="label">
-                <label for="filter">
-                  {{i18n "chat_integration.edit_rule_modal.type"}}
-                </label>
-              </td>
-              <td>
+              </field.Custom>
+            </form.Field>
+          {{else}}
+            <form.Field
+              @name="group_id"
+              @title={{i18n "chat_integration.edit_rule_modal.group"}}
+              @description={{i18n
+                "chat_integration.edit_rule_modal.instructions.group"
+              }}
+              as |field|
+            >
+              <field.Custom>
                 <ComboBox
-                  @name="type"
-                  @content={{@model.rule.available_types}}
-                  @value={{@model.rule.type}}
-                  @onChange={{fn (mut @model.rule.type)}}
+                  @content={{@model.groups}}
+                  @valueProperty="id"
+                  @value={{this.group_id}}
+                  @onChange={{this.onGroupChange}}
+                  @options={{hash none="chat_integration.choose_group"}}
                 />
-              </td>
-            </tr>
+              </field.Custom>
+            </form.Field>
+          {{/if}}
 
-            <tr class="chat-instructions">
-              <td></td>
-              <td>
-                <label>
-                  {{i18n "chat_integration.edit_rule_modal.instructions.type"}}
-                </label>
-              </td>
-            </tr>
-
-            <tr class="input">
-              <td class="label">
-                <label for="filter">
-                  {{i18n "chat_integration.edit_rule_modal.filter"}}
-                </label>
-              </td>
-              <td>
-                <ComboBox
-                  @name="filter"
-                  @content={{@model.rule.available_filters}}
-                  @value={{@model.rule.filter}}
-                  @onChange={{fn (mut @model.rule.filter)}}
+          {{#if this.siteSettings.tagging_enabled}}
+            <form.Field
+              @name="tags"
+              @title={{i18n "chat_integration.edit_rule_modal.tags"}}
+              @description={{i18n
+                "chat_integration.edit_rule_modal.instructions.tags"
+              }}
+              as |field|
+            >
+              <field.Custom>
+                <TagChooser
+                  @tags={{this.tags}}
+                  @everyTag="true"
+                  @onChange={{this.onTagsChange}}
+                  @options={{hash placeholderKey="chat_integration.all_tags"}}
                 />
-              </td>
-            </tr>
+              </field.Custom>
+            </form.Field>
+          {{/if}}
 
-            <tr class="chat-instructions">
-              <td></td>
-              <td>
-                <label>
-                  {{i18n
-                    "chat_integration.edit_rule_modal.instructions.filter"
-                  }}
-                </label>
-              </td>
-            </tr>
-
-            {{#if (eq @model.rule.type "normal")}}
-              <tr class="input">
-                <td class="label">
-                  <label for="category">
-                    {{i18n "chat_integration.edit_rule_modal.category"}}
-                  </label>
-                </td>
-                <td>
-                  <CategoryChooser
-                    @name="category"
-                    @options={{hash none="chat_integration.all_categories"}}
-                    @value={{@model.rule.category_id}}
-                    @onChange={{fn (mut @model.rule.category_id)}}
-                  />
-                </td>
-              </tr>
-
-              <tr class="chat-instructions">
-                <td></td>
-                <td>
-                  <label>
-                    {{i18n
-                      "chat_integration.edit_rule_modal.instructions.category"
-                    }}
-                  </label>
-                </td>
-              </tr>
-            {{else}}
-              <tr class="input">
-                <td class="label">
-                  <label for="group">
-                    {{i18n "chat_integration.edit_rule_modal.group"}}
-                  </label>
-                </td>
-                <td>
-                  <ComboBox
-                    @content={{@model.groups}}
-                    @valueProperty="id"
-                    @value={{@model.rule.group_id}}
-                    @onChange={{fn (mut @model.rule.group_id)}}
-                    @options={{hash none="chat_integration.choose_group"}}
-                  />
-                </td>
-              </tr>
-
-              <tr class="chat-instructions">
-                <td></td>
-                <td>
-                  <label>
-                    {{i18n
-                      "chat_integration.edit_rule_modal.instructions.group"
-                    }}
-                  </label>
-                </td>
-              </tr>
-            {{/if}}
-
-            {{#if this.siteSettings.tagging_enabled}}
-              <tr class="input">
-                <td class="label">
-                  <label for="tags">
-                    {{i18n "chat_integration.edit_rule_modal.tags"}}
-                  </label>
-                </td>
-                <td>
-                  <TagChooser
-                    @placeholderKey="chat_integration.all_tags"
-                    @name="tags"
-                    @tags={{@model.rule.tags}}
-                    @everyTag="true"
-                    @onChange={{fn (mut @model.rule.tags)}}
-                  />
-                </td>
-              </tr>
-
-              <tr class="chat-instructions">
-                <td></td>
-                <td>
-                  <label>
-                    {{i18n
-                      "chat_integration.edit_rule_modal.instructions.tags"
-                    }}
-                  </label>
-                </td>
-              </tr>
-            {{/if}}
-          </tbody>
-        </table>
+          <form.Actions>
+            <form.Button
+              @label="chat_integration.edit_rule_modal.save"
+              @action={{this.save}}
+              class="btn-primary"
+              id="save-rule"
+            />
+            <form.Button
+              @label="chat_integration.edit_rule_modal.cancel"
+              @action={{@closeModal}}
+              class="btn-default"
+            />
+          </form.Actions>
+        </Form>
       </:body>
-
-      <:footer>
-        <DButton
-          @action={{fn this.save @model.rule}}
-          @label="chat_integration.edit_rule_modal.save"
-          type="submit"
-          id="save-rule"
-          class="btn-primary btn-large"
-        />
-
-        <DButton
-          @label="chat_integration.edit_rule_modal.cancel"
-          @action={{@closeModal}}
-          class="btn-default btn-large"
-        />
-      </:footer>
     </DModal>
   </template>
 }

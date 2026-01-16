@@ -9,6 +9,7 @@ import { i18n } from "discourse-i18n";
 
 export default class RuleRow extends Component {
   @service siteSettings;
+  @service dialog;
 
   get isCategory() {
     return this.args.rule.type === "normal";
@@ -24,19 +25,30 @@ export default class RuleRow extends Component {
 
   @action
   delete(rule) {
-    rule
-      .destroyRecord()
-      .then(() => this.args.refresh())
-      .catch(popupAjaxError);
+    this.dialog.deleteConfirm({
+      message: i18n("chat_integration.channel_delete_confirm"),
+      didConfirm: () => {
+        return rule
+          .destroyRecord()
+          .then(() => this.args.refresh())
+          .catch(popupAjaxError);
+      },
+    });
   }
 
   <template>
-    <tr>
-      <td>
+    <tr class="d-admin-row__content">
+      <td class="d-admin-row__detail rule-filter">
+        <div class="d-admin-row__mobile-label">
+          {{i18n "chat_integration.rule_table.filter"}}
+        </div>
         {{@rule.filterName}}
       </td>
 
-      <td>
+      <td class="d-admin-row__detail rule-category">
+        <div class="d-admin-row__mobile-label">
+          {{i18n "chat_integration.rule_table.category"}}
+        </div>
         {{#if this.isCategory}}
           {{#if @rule.category}}
             {{categoryLink
@@ -60,29 +72,31 @@ export default class RuleRow extends Component {
         {{/if}}
       </td>
 
-      <td>
-        {{#if this.siteSettings.tagging_enabled}}
+      {{#if this.siteSettings.tagging_enabled}}
+        <td class="d-admin-row__detail rule-tags">
+          <div class="d-admin-row__mobile-label">
+            {{i18n "chat_integration.rule_table.tags"}}
+          </div>
           {{#if @rule.tags}}
             {{@rule.tags}}
           {{else}}
             {{i18n "chat_integration.all_tags"}}
           {{/if}}
-        {{/if}}
-      </td>
+        </td>
+      {{/if}}
 
-      <td>
+      <td class="d-admin-row__controls">
         <DButton
           @icon="pencil"
           @title="chat_integration.rule_table.edit_rule"
           @action={{fn @edit @rule}}
-          class="edit"
+          class="btn-default btn-small edit"
         />
-
         <DButton
-          @icon="far-trash-can"
+          @icon="trash-can"
           @title="chat_integration.rule_table.delete_rule"
           @action={{fn this.delete @rule}}
-          class="delete"
+          class="btn-danger btn-small delete"
         />
       </td>
     </tr>
