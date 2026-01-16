@@ -5842,6 +5842,12 @@ en:
           status_beta: "Beta"
           status_stable: "Stable"
           status_permanent: "Permanent"
+          impact_role_all: "All impact roles"
+          impact_role_admins: "Admins"
+          impact_role_moderators: "Moderators"
+          impact_role_staff: "Staff"
+          impact_role_all_members: "All members"
+          impact_role_developers: "Developers"
 
       config:
         about:
