@@ -1054,10 +1054,7 @@ acceptance("Tag settings page", function (needs) {
     await visit("/tag/test-tag/100/edit/general");
 
     assert.dom(".tag-settings").exists("tag settings page is rendered");
-    assert.dom(".tag-settings__header h2").exists("shows header");
-    assert
-      .dom(".tag-settings__nav .nav-stacked")
-      .exists("shows navigation tabs");
+    assert.dom(".d-page-header__title").exists("shows header");
   });
 
   test("tag settings form displays tag data", async function (assert) {
@@ -1086,10 +1083,12 @@ acceptance("Tag settings page", function (needs) {
 
     await visit("/tag/test-tag/100/edit/general");
 
-    assert.dom(".tag-settings-synonyms").exists("synonyms section is rendered");
     assert
-      .dom(".tag-settings-synonyms__item")
-      .exists({ count: 1 }, "shows existing synonym");
+      .dom(".form-kit__field[data-name='synonyms']")
+      .exists("synonyms field is rendered");
+    assert
+      .dom(".form-kit__field[data-name='synonyms'] .formatted-selection")
+      .hasText("test-synonym", "shows existing synonym");
   });
 });
 
