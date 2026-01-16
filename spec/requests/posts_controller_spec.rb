@@ -360,22 +360,22 @@ RSpec.describe PostsController do
   end
 
   describe "#destroy_many" do
-    include_examples "action requires login",
-                     :delete,
-                     "/posts/destroy_many.json",
-                     params: {
-                       post_ids: [123, 345],
-                     }
+    it_behaves_like "action requires login",
+                    :delete,
+                    "/posts/destroy_many.json",
+                    params: {
+                      post_ids: [123, 345],
+                    }
 
-    describe "when logged in" do
+    context "when logged in" do
       fab!(:poster, :moderator)
-      fab!(:post1) { Fabricate(:post, user: poster, post_number: 2) }
+      fab!(:post1) { Fabricate(:post, user: poster, post_number: 1) }
       fab!(:post2) do
         Fabricate(
           :post,
           topic: post1.topic,
           user: poster,
-          post_number: 3,
+          post_number: 2,
           reply_to_post_number: post1.post_number,
         )
       end
@@ -405,6 +405,7 @@ RSpec.describe PostsController do
         delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
         expect(response.status).to eq(200)
       end
+
       # bookmark
       it "triggers DiscourseEvent with :posts_destroyed and correct params" do
         sign_in(poster)
@@ -424,17 +425,19 @@ RSpec.describe PostsController do
         delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
       end
 
-      describe "can delete replies" do
-        before { PostReply.create(post_id: post1.id, reply_post_id: post2.id) }
+      context "with replies" do
+        fab!(:post_reply) { PostReply.create(post: post1, reply: post2) }
+
+        before { sign_in(poster) }
 
         it "deletes the post and the reply to it" do
-          sign_in(poster)
-          PostDestroyer.any_instance.expects(:destroy).twice
-          delete "/posts/destroy_many.json",
-                 params: {
-                   post_ids: [post1.id],
-                   reply_post_ids: [post1.id],
-                 }
+          expect do
+            delete "/posts/destroy_many.json",
+                   params: {
+                     post_ids: [post1.id],
+                     reply_post_ids: [post1.id],
+                   }
+          end.to change { Post.count }.by(-2).and change { Topic.count }.by(-1)
         end
       end
 
