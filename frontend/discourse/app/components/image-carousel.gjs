@@ -63,13 +63,13 @@ export default class ImageCarousel extends Component {
 
     element.addEventListener("scroll", onScroll, { passive: true });
 
-    if (supportsScrollEnd) {
+    if (supportsScrollEnd && !isTesting()) {
       element.addEventListener("scrollend", updateIndex);
     }
 
     return () => {
       element.removeEventListener("scroll", onScroll);
-      if (supportsScrollEnd) {
+      if (supportsScrollEnd && !isTesting()) {
         element.removeEventListener("scrollend", updateIndex);
       }
       clearTimeout(scrollStopTimer);
