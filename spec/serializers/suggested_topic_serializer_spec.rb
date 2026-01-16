@@ -64,4 +64,15 @@ RSpec.describe SuggestedTopicSerializer do
       expect(json[:tags]).to eq([])
     end
   end
+
+  describe "#op_like_count" do
+    it "returns the first post's like count" do
+      topic = Fabricate(:topic)
+      post = Fabricate(:post, topic: topic, like_count: 5)
+      topic.update!(first_post: post)
+
+      json = SuggestedTopicSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+      expect(json[:op_like_count]).to eq(5)
+    end
+  end
 end
