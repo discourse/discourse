@@ -11,7 +11,7 @@ class ReviewableUser < Reviewable
     { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
   end
 
-  def build_legacy_combined_actions(actions, guardian, args)
+  def build_combined_actions(actions, guardian, args)
     if status == "rejected" && !payload["scrubbed_by"]
       build_action(actions, :scrub, client_action: "scrub")
     end

@@ -50,8 +50,7 @@ class ReviewableFlaggedPost < Reviewable
     super
   end
 
-  # TODO (reviewable-refresh): Remove legacy method once new UI fully deployed
-  def build_legacy_combined_actions(actions, guardian, args)
+  def build_combined_actions(actions, guardian, args)
     # existing combined logic
     agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
