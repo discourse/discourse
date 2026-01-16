@@ -1,5 +1,9 @@
 .uc-experimental-foundation-changes {
   --shrink-ratio: 0.85;
+  --cta-font-size: var(--font-0);
+  --btn-small-font-size: var(--font-down-1);
+  --cta-height: var(--space-9);
+  --nav-space: var(--space-8);
   --d-button-default-bg-color: transparent;
   --d-button-default-border: 1px solid var(--primary-200);
   --d-button-default-border--hover: 1px solid var(--primary-200);
@@ -21,7 +25,6 @@
   --d-nav-underline-height: 0px;
   --d-nav-color--hover: var(--primary);
   --d-nav-bg-color--hover: var(--primary-100);
-  --nav-space: var(--space-4);
   --d-nav-border-color--active: var(--primary);
   --topic-title-font-weight: 500;
   --d-sidebar-active-background: var(--primary-100);
@@ -32,14 +35,14 @@
   .btn-icon,
   .btn-danger,
   .btn-primary {
-    height: var(--space-8);
-    font-size: var(--font-down-1);
+    height: var(--cta-height);
+    font-size: var(--cta-font-size);
     font-weight: 500;
   }
 
   .topic-replies-toggle-wrapper .topics-replies-toggle {
     border-radius: var(--d-border-radius);
-    height: var(--space-8);
+    height: var(--cta-height);
     padding: 0.5em 0.65em;
   }
 
@@ -50,28 +53,29 @@
 
   .btn-small,
   .json-editor-btn-collapse {
-    font-size: var(--font-down-2);
+    font-size: var(--btn-small-font-size);
   }
 
   // Nav Pills -- START
   .nav-pills > li > a,
   .nav-pills > li button {
-    font-size: var(--font-down-1);
+    font-size: var(--cta-font-size);
   }
 
   .nav-pills li a {
     padding: 0.5em 0.65em;
-    height: var(--space-8);
+    height: var(--cta-height);
   }
 
   .horizontal-overflow-nav {
     --d-nav-bg-color--active: var(--primary-200);
     --d-nav-color--active: var(--primary);
-    margin-bottom: var(--space-1);
+    margin-bottom: var(--space-2);
 
     .nav-pills {
       gap: 0;
       border: 1px solid var(--primary-200);
+      box-shadow: 0 2px 1px 0 var(--primary-100);
       border-radius: var(--d-border-radius);
     }
 
@@ -91,6 +95,11 @@
   .new-user-wrapper .user-navigation,
   .user-main .about.collapsed-info .details {
     border-bottom: 0;
+  }
+
+  .new-user-wrapper .user-navigation-secondary .navigation-controls,
+  .new-user-wrapper .user-navigation-secondary .category-breadcrumb {
+    margin: 0;
   }
 
   // Topic List
@@ -120,12 +129,12 @@
 
   // Select Kit
   .select-kit .select-kit-header .selected-name .name {
-    font-size: var(--font-down-1);
+    font-size: var(--cta-font-size);
   }
 
   .list-controls .combo-box .combo-box-header {
     border: var(--d-button-default-border);
-    height: var(--space-8);
+    height: var(--cta-height);
 
     &:hover {
       background-color: var(--primary-100);
