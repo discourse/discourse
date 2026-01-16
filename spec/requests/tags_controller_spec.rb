@@ -686,6 +686,257 @@ RSpec.describe TagsController do
     end
   end
 
+  describe "#settings" do
+    fab!(:tag) { Fabricate(:tag, name: "test-tag", description: "test description") }
+    fab!(:synonym) { Fabricate(:tag, name: "test-synonym", target_tag: tag) }
+
+    it "returns 404 if tag not found" do
+      sign_in(admin)
+      get "/tag/test-tag/9999999/settings.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 if user cannot edit tags" do
+      sign_in(user)
+      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns tag settings for admin" do
+      sign_in(admin)
+      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      expect(response.status).to eq(200)
+
+      settings = response.parsed_body["tag_settings"]
+      expect(settings["id"]).to eq(tag.id)
+      expect(settings["name"]).to eq(tag.name)
+      expect(settings["slug"]).to eq(tag.slug)
+      expect(settings["description"]).to eq(tag.description)
+      expect(settings["can_edit"]).to eq(true)
+      expect(settings["can_admin"]).to eq(true)
+    end
+
+    it "includes synonyms in the response" do
+      sign_in(admin)
+      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      expect(response.status).to eq(200)
+
+      settings = response.parsed_body["tag_settings"]
+      expect(settings["synonyms"].map { |s| s["name"] }).to contain_exactly(synonym.name)
+    end
+
+    it "includes category restrictions when present" do
+      category.update!(tags: [tag])
+      sign_in(admin)
+      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      expect(response.status).to eq(200)
+
+      settings = response.parsed_body["tag_settings"]
+      expect(settings["category_restricted"]).to eq(true)
+      # categories are at top level, not nested inside tag_settings
+      expect(response.parsed_body["categories"].map { |c| c["id"] }).to contain_exactly(category.id)
+    end
+
+    it "includes tag group names for admin" do
+      SiteSetting.tags_listed_by_group = true
+      tag_group = Fabricate(:tag_group, tags: [tag])
+      sign_in(admin)
+      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      expect(response.status).to eq(200)
+
+      settings = response.parsed_body["tag_settings"]
+      expect(settings["tag_group_names"]).to contain_exactly(tag_group.name)
+    end
+
+    context "with content localization enabled" do
+      before { SiteSetting.content_localization_enabled = true }
+
+      it "includes localizations in the response" do
+        Fabricate(:tag_localization, tag: tag, locale: "zh_CN", name: "测试标签")
+        sign_in(admin)
+        get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+        expect(response.status).to eq(200)
+
+        settings = response.parsed_body["tag_settings"]
+        expect(settings["localizations"]).to be_present
+        expect(settings["localizations"].first["locale"]).to eq("zh_CN")
+        expect(settings["localizations"].first["name"]).to eq("测试标签")
+      end
+    end
+
+    context "when user in edit_tags_allowed_groups" do
+      before { SiteSetting.edit_tags_allowed_groups = "1|2|13" }
+
+      it "allows access for users in allowed groups" do
+        sign_in(regular_user)
+        get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+        expect(response.status).to eq(200)
+
+        settings = response.parsed_body["tag_settings"]
+        expect(settings["can_edit"]).to eq(true)
+        expect(settings["can_admin"]).to eq(false)
+      end
+    end
+  end
+
+  describe "#update_settings" do
+    fab!(:tag) { Fabricate(:tag, name: "original-name", description: "original description") }
+
+    it "returns 404 if tag not found" do
+      sign_in(admin)
+      put "/tag/test-tag/9999999/settings.json", params: { tag_settings: { name: "new-name" } }
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 if user cannot edit tags" do
+      sign_in(user)
+      put "/tag/#{tag.slug}/#{tag.id}/settings.json", params: { tag_settings: { name: "new-name" } }
+      expect(response.status).to eq(404)
+    end
+
+    context "when signed in as admin" do
+      before { sign_in(admin) }
+
+      it "updates the tag name" do
+        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
+            params: {
+              tag_settings: {
+                name: "updated-name",
+              },
+            }
+        expect(response.status).to eq(200)
+
+        settings = response.parsed_body["tag_settings"]
+        expect(settings["name"]).to eq("updated-name")
+        expect(tag.reload.name).to eq("updated-name")
+      end
+
+      it "updates the tag slug" do
+        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
+            params: {
+              tag_settings: {
+                slug: "custom-slug",
+              },
+            }
+        expect(response.status).to eq(200)
+
+        settings = response.parsed_body["tag_settings"]
+        expect(settings["slug"]).to eq("custom-slug")
+        expect(tag.reload.slug).to eq("custom-slug")
+      end
+
+      it "updates the tag description" do
+        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
+            params: {
+              tag_settings: {
+                description: "new description",
+              },
+            }
+        expect(response.status).to eq(200)
+
+        settings = response.parsed_body["tag_settings"]
+        expect(settings["description"]).to eq("new description")
+        expect(tag.reload.description).to eq("new description")
+      end
+
+      it "can clear the description" do
+        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
+            params: {
+              tag_settings: {
+                description: "",
+              },
+            }
+        expect(response.status).to eq(200)
+
+        settings = response.parsed_body["tag_settings"]
+        expect(settings["description"]).to be_blank
+        expect(tag.reload.description).to be_blank
+      end
+
+      it "logs staff action when renaming a tag" do
+        expect {
+          put "/tag/#{tag.slug}/#{tag.id}/settings.json",
+              params: {
+                tag_settings: {
+                  name: "renamed-tag",
+                },
+              }
+        }.to change { UserHistory.where(action: UserHistory.actions[:custom_staff]).count }.by(1)
+
+        log = UserHistory.last
+        expect(log.custom_type).to eq("renamed_tag")
+        expect(log.previous_value).to eq("original-name")
+        expect(log.new_value).to eq("renamed-tag")
+      end
+
+      it "does not log staff action when not changing name" do
+        expect {
+          put "/tag/#{tag.slug}/#{tag.id}/settings.json",
+              params: {
+                tag_settings: {
+                  description: "just updating description",
+                },
+              }
+        }.not_to change { UserHistory.where(action: UserHistory.actions[:custom_staff]).count }
+      end
+
+      it "cleans the tag name" do
+        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
+            params: {
+              tag_settings: {
+                name: "New Tag Name",
+              },
+            }
+        expect(response.status).to eq(200)
+
+        settings = response.parsed_body["tag_settings"]
+        expect(settings["name"]).to eq("new-tag-name")
+      end
+
+      it "ignores empty name param" do
+        original_name = tag.name
+        put "/tag/#{tag.slug}/#{tag.id}/settings.json", params: { tag_settings: { name: "" } }
+        expect(response.status).to eq(200)
+        expect(tag.reload.name).to eq(original_name)
+      end
+
+      it "returns errors for duplicate tag name" do
+        other_tag = Fabricate(:tag, name: "existing-tag")
+        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
+            params: {
+              tag_settings: {
+                name: other_tag.name,
+              },
+            }
+        expect(response.status).to eq(422)
+      end
+
+      it "supports unicode tag names" do
+        put "/tag/#{tag.slug}/#{tag.id}/settings.json", params: { tag_settings: { name: "日本語タグ" } }
+        expect(response.status).to eq(200)
+
+        settings = response.parsed_body["tag_settings"]
+        expect(settings["name"]).to eq("日本語タグ")
+      end
+    end
+
+    context "when user in edit_tags_allowed_groups" do
+      before { SiteSetting.edit_tags_allowed_groups = "1|2|13" }
+
+      it "allows updating for users in allowed groups" do
+        sign_in(regular_user)
+        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
+            params: {
+              tag_settings: {
+                name: "user-updated",
+              },
+            }
+        expect(response.status).to eq(200)
+        expect(tag.reload.name).to eq("user-updated")
+      end
+    end
+  end
+
   describe "#update" do
     fab!(:tag)
 
