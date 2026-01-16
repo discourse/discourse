@@ -25,10 +25,6 @@ class UpcomingChanges::Toggle
 
   private
 
-  def should_log_change(options:)
-    options.log_change
-  end
-
   def current_user_is_admin(guardian:)
     guardian.is_admin?
   end
@@ -50,6 +46,10 @@ class UpcomingChanges::Toggle
     end
   end
 
+  def should_log_change(options:)
+    options.log_change
+  end
+
   def log_change(params:, guardian:, options:)
     if SiteSetting.enable_upcoming_changes
       StaffActionLogger.new(guardian.user).log_upcoming_change_toggle(
@@ -64,12 +64,12 @@ class UpcomingChanges::Toggle
   end
 
   def log_event(params:, guardian:, options:)
-    if SiteSetting.enable_upcoming_changes
-      UpcomingChangeEvent.create!(
-        event_type: params.enabled ? :manual_opt_in : :manual_opt_out,
-        upcoming_change_name: params.setting_name,
-        acting_user: guardian.user,
-      )
-    end
+    return unless SiteSetting.enable_upcoming_changes
+
+    UpcomingChangeEvent.create!(
+      event_type: params.enabled ? :manual_opt_in : :manual_opt_out,
+      upcoming_change_name: params.setting_name,
+      acting_user: guardian.user,
+    )
   end
 end

@@ -22,7 +22,7 @@ class UpcomingChanges::Track
     context[:added_changes] = []
     context[:notified_admins_for_added_changes] = []
     context[:previously_added_changes] = UpcomingChangeEvent
-      .added_changes
+      .added
       .pluck(:upcoming_change_name)
       .uniq
       .map(&:to_sym)
@@ -53,7 +53,7 @@ class UpcomingChanges::Track
   def track_removed_changes(previously_added_changes:)
     context[:removed_changes] = []
     context[:previously_removed_changes] = UpcomingChangeEvent
-      .removed_changes
+      .removed
       .pluck(:upcoming_change_name)
       .uniq
       .map(&:to_sym)
@@ -76,7 +76,7 @@ class UpcomingChanges::Track
   #     -> If the change was not added, send a notification about the status change if  it's the correct
   #     status (promotion_status - 1) to indicate it's available to admins
   def track_status_changes(added_changes:, removed_changes:, all_admins:)
-    status_changes = UpcomingChangeEvent.status_changes.to_a
+    status_changes = UpcomingChangeEvent.status_changed.to_a
     context[:status_changes] = {}
 
     SiteSetting.upcoming_change_site_settings.each do |change_name|

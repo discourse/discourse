@@ -21,7 +21,7 @@
 # setting value in the site_settings table will be deleted
 # in a cleanup job.
 
-require_relative "../../lib/upcoming_changes"
+require "upcoming_changes"
 
 Rails.application.config.after_initialize { UpcomingChanges::TrackingInitializer.call }
 

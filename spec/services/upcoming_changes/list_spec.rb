@@ -149,6 +149,17 @@ RSpec.describe UpcomingChanges::List do
           }
         end
       end
+
+      context "when guardian is a bot" do
+        fab!(:bot)
+        let(:guardian) { bot.guardian }
+
+        it "does not update the custom field" do
+          expect { result }.not_to change {
+            bot.reload.custom_fields["last_visited_upcoming_changes_at"]
+          }
+        end
+      end
     end
   end
 end

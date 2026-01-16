@@ -79,7 +79,7 @@ class UpcomingChanges::List
   end
 
   def update_last_visited(guardian:)
-    return if guardian.user.is_system_user?
+    return if guardian.user.is_system_user? || guardian.user.bot?
 
     guardian.user.custom_fields["last_visited_upcoming_changes_at"] = Time.current.iso8601
     guardian.user.save_custom_fields

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UpcomingChanges::Promote do
-  describe described_class::Contract, type: :model do
+  describe UpcomingChanges::Promote::Contract, type: :model do
     subject(:contract) { described_class.new }
 
     it { is_expected.to validate_presence_of(:setting_name) }
@@ -128,7 +128,8 @@ RSpec.describe UpcomingChanges::Promote do
       end
 
       it "notifies admins about the upcoming change" do
-        admin_2 = Fabricate(:admin)
+        fab!(:admin_2, :admin)
+
         expect { result }.to change {
           Notification.where(
             notification_type: Notification.types[:upcoming_change_automatically_promoted],
@@ -142,6 +143,15 @@ RSpec.describe UpcomingChanges::Promote do
             upcoming_change_humanized_name: "Enable upload debug mode",
           }.to_json,
         )
+      end
+
+      it "creates an admins_notified_automatic_promotion event" do
+        expect { result }.to change {
+          UpcomingChangeEvent.where(
+            event_type: :admins_notified_automatic_promotion,
+            upcoming_change_name: :enable_upload_debug_mode,
+          ).count
+        }.by(1)
       end
     end
   end

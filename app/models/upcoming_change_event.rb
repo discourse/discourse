@@ -18,9 +18,7 @@ class UpcomingChangeEvent < ActiveRecord::Base
          admins_notified_automatic_promotion: 7,
        }
 
-  scope :added_changes, -> { where(event_type: :added).order(created_at: :asc) }
-  scope :removed_changes, -> { where(event_type: :removed).order(created_at: :asc) }
-  scope :status_changes, -> { where(event_type: :status_changed).order(created_at: :asc) }
+  default_scope { order(:created_at) }
 end
 
 # == Schema Information
