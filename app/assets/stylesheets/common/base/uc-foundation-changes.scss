@@ -22,6 +22,9 @@
   --d-nav-color--hover: var(--primary);
   --d-nav-bg-color--hover: var(--primary-100);
   --nav-space: var(--space-4);
+  --d-nav-border-color--active: var(--primary);
+  --topic-title-font-weight: 500;
+  --d-sidebar-active-background: var(--primary-100);
 
   .btn-default,
   .btn-icon-text,
@@ -36,6 +39,35 @@
   .nav-pills li a {
     padding: 0.5em 0.65em;
     height: var(--space-8);
+  }
+
+  .horizontal-overflow-nav {
+    --d-nav-bg-color--active: var(--primary-200);
+    --d-nav-color--active: var(--primary);
+    margin-bottom: var(--space-1);
+
+    .nav-pills {
+      gap: 0;
+      border: 1px solid var(--primary-200);
+      border-radius: var(--d-border-radius);
+    }
+
+    .nav-pills li {
+      border-right: 1px solid var(--primary-200);
+
+      &:last-of-type {
+        border-right: 0;
+      }
+
+      a {
+        height: unset;
+      }
+    }
+  }
+
+  .new-user-wrapper .user-navigation,
+  .user-main .about.collapsed-info .details {
+    border-bottom: 0;
   }
 
   .topic-replies-toggle-wrapper .topics-replies-toggle {
@@ -146,5 +178,21 @@
 
   div.edit-category .edit-category-title-bar {
     background-color: transparent;
+  }
+
+  .fc .fc-button-primary {
+    --fc-button-bg-color: var(--secondary);
+    --fc-button-border-color: var(--primary-200);
+    --fc-button-active-bg-color: var(--primary-200);
+    --fc-button-hover-bg-color: var(--primary-100);
+  }
+
+  .fc-button-active {
+    color: var(--primary) !important;
+
+    &:focus {
+      background-color: var(--primary-200) !important;
+      color: var(--primary) !important;
+    }
   }
 }
