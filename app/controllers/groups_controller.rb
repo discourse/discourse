@@ -165,7 +165,9 @@ class GroupsController < ApplicationController
             render status: :unprocessable_entity,
                    json: {
                      user_count: user_count,
-                     errors: [I18n.t("invalid_params", message: :update_existing_users)],
+                     errors: [
+                       I18n.t("groups.errors.update_existing_users_required", count: user_count),
+                     ],
                    }
           )
         end
