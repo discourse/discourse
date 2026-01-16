@@ -113,14 +113,6 @@ de:
             persona_id:
               label: "Persona"
               description: "KI Persona zur Berichtserstellung"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Modell"
-              description: "Das für die Sichtung verwendete Standard-Sprachmodell"
-            tool:
-              label: "Tool"
-              description: "Tool für die Sichtung (das Tool darf keine Parameter definiert haben)"
         llm_persona_triage:
           fields:
             persona:

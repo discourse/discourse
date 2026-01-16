@@ -6008,6 +6008,12 @@ pl_PL:
           status_beta: "Beta"
           status_stable: "Stabilna"
           status_permanent: "Stała"
+          impact_role_all: "Wszystkie role wpływu"
+          impact_role_admins: "Administratorzy"
+          impact_role_moderators: "Moderatorzy"
+          impact_role_staff: "Zespół"
+          impact_role_all_members: "Wszyscy członkowie"
+          impact_role_developers: "Deweloperzy"
       config:
         about:
           title: "O Twojej witrynie"
@@ -6472,7 +6478,7 @@ pl_PL:
         new_features:
           title: "Co nowego?"
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
-          previous_announcements: "Możesz zobaczyć poprzednie ogłoszenia o nowych funkcjach na <a href='%{url}' target='_blank'>Discourse Meta</a>"
+          no_new_features_found: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w społeczności Discourse Meta <a href='%{url}' target='_blank'></a>."
           learn_more: "Dowiedz się więcej..."
           experimental: "Eksperymentalne"
           only_experiments: "Pokaż tylko funkcje eksperymentalne"

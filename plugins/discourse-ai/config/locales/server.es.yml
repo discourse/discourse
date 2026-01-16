@@ -17,9 +17,6 @@ es:
         spam: "Marcar como spam y ocultar publicación"
         spam_silence: "Marcar como spam, ocultar publicación y silenciar al usuario"
     scriptables:
-      llm_tool_triage:
-        title: Triaje de publicaciones usando herramientas de IA
-        description: "Triaje de publicaciones usando la lógica personalizada en una herramienta de IA"
       llm_persona_triage:
         title: Triaje de publicaciones usando una persona de IA
         description: "Responde a publicaciones usando una persona de IA específica"

@@ -5413,6 +5413,11 @@ ug:
           status_beta: "سىناق"
           status_stable: "مۇقىم"
           status_permanent: "مەڭگۈلۈك"
+          impact_role_admins: "باشقۇرغۇچى"
+          impact_role_moderators: "رىياسەتچى"
+          impact_role_staff: "باشقۇرغۇچى خادىم"
+          impact_role_all_members: "بارلىق ئەزا"
+          impact_role_developers: "ئىجادكار"
       config:
         about:
           title: "تور بېكىتىڭىز ھەققىدە"
@@ -5826,7 +5831,6 @@ ug:
         new_features:
           title: "يېڭىلىق?"
           subtitle: "بىز ھەمىشە يېڭى ئىقتىدار ۋە ياخشىلاشنى تارقىتىمىز. بۇ بەتتە مۇھىم مەزمۇن يورۇتۇلغان ئەمما سىز «مول بىلىم» نى چېكىپ تەپسىلىي تارقىتىش چۈشەندۈرۈشىنى كۆرەلەيسىز."
-          previous_announcements: "سىز <a href='%{url}' target='_blank'>Discourse Meta</a> دىن ئىلگىرىكى يېڭى ئىقتىدار ئۇقتۇرۇشىنى كۆرەلەيسىز"
           learn_more: "مول بىلىم…"
           experimental: "تەجرىبە"
           only_experiments: "پەقەت تەجرىبە ئىقتىدارلىرىنىلا كۆرسىتىدۇ"
