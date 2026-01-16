@@ -87,19 +87,16 @@ class UpcomingChanges::Promote
   end
 
   def notify_admins(params:)
-    User
-      .human_users
-      .admins
-      .each do |admin|
-        Notification.create!(
-          notification_type: Notification.types[:upcoming_change_automatically_promoted],
-          user: admin,
-          data: {
-            upcoming_change_name: params.setting_name,
-            upcoming_change_humanized_name: SiteSetting.humanized_name(params.setting_name),
-          }.to_json,
-        )
-      end
+    User.human_users.admins.each do |admin|
+      Notification.create!(
+        notification_type: Notification.types[:upcoming_change_automatically_promoted],
+        user: admin,
+        data: {
+          upcoming_change_name: params.setting_name,
+          upcoming_change_humanized_name: SiteSetting.humanized_name(params.setting_name),
+        }.to_json,
+      )
+    end
 
     UpcomingChangeEvent.create!(
       event_type: :admins_notified_automatic_promotion,
