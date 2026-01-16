@@ -27,6 +27,7 @@ acceptance("Discourse Assign | User Private Messages", function (needs) {
     updateCurrentUser({ redesigned_user_page_nav_enabled: true });
 
     await visit("/u/eviltrout/messages");
+
     await click(".messages-dropdown-trigger");
     assert
       .dom(".dropdown-menu li:nth-child(3)")
