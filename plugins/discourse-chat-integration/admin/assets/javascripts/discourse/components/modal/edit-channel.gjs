@@ -1,33 +1,45 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { concat } from "@ember/helper";
-import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
+import Form from "discourse/components/form";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ChannelParamRow from "../channel-param-row";
 
 export default class EditChannel extends Component {
-  get validParams() {
-    return this.args.model.provider.channel_parameters.every((param) => {
-      const value = this.args.model.channel.get(`data.${param.key}`);
+  @tracked formData = this.buildFormData();
 
-      if (!value?.trim()) {
-        return false;
-      }
-
-      if (!param.regex) {
-        return true;
-      }
-
-      return new RegExp(param.regex).test(value);
+  buildFormData() {
+    const data = {};
+    this.args.model.provider.channel_parameters.forEach((param) => {
+      data[param.key] = this.args.model.channel.get(`data.${param.key}`) || "";
     });
+    return data;
+  }
+
+  validateParam(value, param) {
+    if (!value?.trim()) {
+      return i18n(
+        "chat_integration.edit_channel_modal.channel_validation.fail"
+      );
+    }
+
+    if (param.regex && !new RegExp(param.regex).test(value)) {
+      return i18n(
+        "chat_integration.edit_channel_modal.channel_validation.fail"
+      );
+    }
+
+    return null;
   }
 
   @action
-  async save() {
+  async onSubmit(data) {
+    this.args.model.provider.channel_parameters.forEach((param) => {
+      this.args.model.channel.set(`data.${param.key}`, data[param.key]);
+    });
+
     try {
       await this.args.model.channel.save();
       this.args.closeModal();
@@ -38,22 +50,21 @@ export default class EditChannel extends Component {
 
   <template>
     <DModal
-      {{on "submit" this.save}}
       @title={{i18n "chat_integration.edit_channel_modal.title"}}
       @closeModal={{@closeModal}}
-      @tagName="form"
       id="chat-integration-edit-channel-modal"
+      class="chat-integration-modal"
     >
       <:body>
-        <table>
-          <tbody>
-            <tr class="input">
-              <td class="label">
-                <label for="provider">
-                  {{i18n "chat_integration.edit_channel_modal.provider"}}
-                </label>
-              </td>
-              <td>
+        <Form @data={{this.formData}} @onSubmit={{this.onSubmit}} as |form|>
+          <form.Field
+            @name="provider"
+            @title={{i18n "chat_integration.edit_channel_modal.provider"}}
+            @disabled={{true}}
+            as |field|
+          >
+            <field.Custom>
+              <span class="provider-name">
                 {{i18n
                   (concat
                     "chat_integration.provider."
@@ -61,37 +72,52 @@ export default class EditChannel extends Component {
                     ".title"
                   )
                 }}
-              </td>
-            </tr>
+              </span>
+            </field.Custom>
+          </form.Field>
 
-            <tr class="chat-instructions">
-              <td></td>
-              <td></td>
-            </tr>
+          {{#each @model.provider.channel_parameters as |param|}}
+            <form.Field
+              @name={{param.key}}
+              @title={{i18n
+                (concat
+                  "chat_integration.provider."
+                  @model.channel.provider
+                  ".param."
+                  param.key
+                  ".title"
+                )
+              }}
+              @description={{i18n
+                (concat
+                  "chat_integration.provider."
+                  @model.channel.provider
+                  ".param."
+                  param.key
+                  ".help"
+                )
+              }}
+              @validation="required"
+              as |field|
+            >
+              <field.Input />
+            </form.Field>
+          {{/each}}
 
-            {{#each @model.provider.channel_parameters as |param|}}
-              <ChannelParamRow @param={{param}} @channel={{@model.channel}} />
-            {{/each}}
-          </tbody>
-        </table>
+          <form.Actions>
+            <form.Submit
+              @label="chat_integration.edit_channel_modal.save"
+              class="btn-primary"
+              id="save-channel"
+            />
+            <form.Button
+              @label="chat_integration.edit_channel_modal.cancel"
+              @action={{@closeModal}}
+              class="btn-default"
+            />
+          </form.Actions>
+        </Form>
       </:body>
-
-      <:footer>
-        <DButton
-          @action={{this.save}}
-          @label="chat_integration.edit_channel_modal.save"
-          @disabled={{not this.validParams}}
-          type="submit"
-          id="save-channel"
-          class="btn-primary btn-large"
-        />
-
-        <DButton
-          @action={{@closeModal}}
-          @label="chat_integration.edit_channel_modal.cancel"
-          class="btn-default btn-large"
-        />
-      </:footer>
     </DModal>
   </template>
 }

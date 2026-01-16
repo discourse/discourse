@@ -33,13 +33,13 @@ RSpec.describe "Chat Controller", type: :request do
   end
 
   describe "listing providers" do
-    include_examples "admin constraints", "get", "/admin/plugins/chat-integration/providers.json"
+    include_examples "admin constraints", "get", "/admin/plugins/discourse-chat-integration/providers.json"
 
     context "when signed in as an admin" do
       before { sign_in(admin) }
 
       it "should return the right response" do
-        get "/admin/plugins/chat-integration/providers.json"
+        get "/admin/plugins/discourse-chat-integration/providers.json"
 
         expect(response.status).to eq(200)
 
@@ -57,13 +57,13 @@ RSpec.describe "Chat Controller", type: :request do
   end
 
   describe "testing channels" do
-    include_examples "admin constraints", "get", "/admin/plugins/chat-integration/test.json"
+    include_examples "admin constraints", "get", "/admin/plugins/discourse-chat-integration/test.json"
 
     context "when signed in as an admin" do
       before { sign_in(admin) }
 
       it "should return the right response" do
-        post "/admin/plugins/chat-integration/test.json",
+        post "/admin/plugins/discourse-chat-integration/test.json",
              params: {
                channel_id: channel.id,
                topic_id: topic.id,
@@ -73,7 +73,7 @@ RSpec.describe "Chat Controller", type: :request do
       end
 
       it "should fail for invalid channel" do
-        post "/admin/plugins/chat-integration/test.json",
+        post "/admin/plugins/discourse-chat-integration/test.json",
              params: {
                channel_id: 999,
                topic_id: topic.id,
@@ -85,7 +85,7 @@ RSpec.describe "Chat Controller", type: :request do
   end
 
   describe "viewing channels" do
-    include_examples "admin constraints", "get", "/admin/plugins/chat-integration/channels.json"
+    include_examples "admin constraints", "get", "/admin/plugins/discourse-chat-integration/channels.json"
 
     context "when signed in as an admin" do
       before { sign_in(admin) }
@@ -99,7 +99,7 @@ RSpec.describe "Chat Controller", type: :request do
             tags: [tag.name],
           )
 
-        get "/admin/plugins/chat-integration/channels.json", params: { provider: "dummy" }
+        get "/admin/plugins/discourse-chat-integration/channels.json", params: { provider: "dummy" }
 
         expect(response.status).to eq(200)
 
@@ -130,20 +130,20 @@ RSpec.describe "Chat Controller", type: :request do
       end
 
       it "should fail for invalid provider" do
-        get "/admin/plugins/chat-integration/channels.json", params: { provider: "someprovider" }
+        get "/admin/plugins/discourse-chat-integration/channels.json", params: { provider: "someprovider" }
         expect(response.status).to eq(400)
       end
     end
   end
 
   describe "adding a channel" do
-    include_examples "admin constraints", "post", "/admin/plugins/chat-integration/channels.json"
+    include_examples "admin constraints", "post", "/admin/plugins/discourse-chat-integration/channels.json"
 
     context "as an admin" do
       before { sign_in(admin) }
 
       it "should be able to add a new channel" do
-        post "/admin/plugins/chat-integration/channels.json",
+        post "/admin/plugins/discourse-chat-integration/channels.json",
              params: {
                channel: {
                  provider: "dummy",
@@ -160,7 +160,7 @@ RSpec.describe "Chat Controller", type: :request do
       end
 
       it "should fail for invalid params" do
-        post "/admin/plugins/chat-integration/channels.json",
+        post "/admin/plugins/discourse-chat-integration/channels.json",
              params: {
                channel: {
                  provider: "dummy2",
@@ -180,13 +180,13 @@ RSpec.describe "Chat Controller", type: :request do
       DiscourseChatIntegration::Channel.create(provider: "dummy2", data: { val: "something" })
     end
 
-    include_examples "admin constraints", "put", "/admin/plugins/chat-integration/channels/1.json"
+    include_examples "admin constraints", "put", "/admin/plugins/discourse-chat-integration/channels/1.json"
 
     context "as an admin" do
       before { sign_in(admin) }
 
       it "should be able update a channel" do
-        put "/admin/plugins/chat-integration/channels/#{channel.id}.json",
+        put "/admin/plugins/discourse-chat-integration/channels/#{channel.id}.json",
             params: {
               channel: {
                 data: {
@@ -202,7 +202,7 @@ RSpec.describe "Chat Controller", type: :request do
       end
 
       it "should fail for invalid params" do
-        put "/admin/plugins/chat-integration/channels/#{channel.id}.json",
+        put "/admin/plugins/discourse-chat-integration/channels/#{channel.id}.json",
             params: {
               channel: {
                 data: {
@@ -221,13 +221,13 @@ RSpec.describe "Chat Controller", type: :request do
 
     include_examples "admin constraints",
                      "delete",
-                     "/admin/plugins/chat-integration/channels/1.json"
+                     "/admin/plugins/discourse-chat-integration/channels/1.json"
 
     context "as an admin" do
       before { sign_in(admin) }
 
       it "should be able delete a channel" do
-        delete "/admin/plugins/chat-integration/channels/#{channel.id}.json"
+        delete "/admin/plugins/discourse-chat-integration/channels/#{channel.id}.json"
 
         expect(response.status).to eq(200)
         expect(DiscourseChatIntegration::Channel.all.size).to eq(0)
@@ -236,13 +236,13 @@ RSpec.describe "Chat Controller", type: :request do
   end
 
   describe "adding a rule" do
-    include_examples "admin constraints", "put", "/admin/plugins/chat-integration/rules.json"
+    include_examples "admin constraints", "put", "/admin/plugins/discourse-chat-integration/rules.json"
 
     context "as an admin" do
       before { sign_in(admin) }
 
       it "should be able to add a new rule" do
-        post "/admin/plugins/chat-integration/rules.json",
+        post "/admin/plugins/discourse-chat-integration/rules.json",
              params: {
                rule: {
                  channel_id: channel.id,
@@ -263,7 +263,7 @@ RSpec.describe "Chat Controller", type: :request do
       end
 
       it "should fail for invalid params" do
-        post "/admin/plugins/chat-integration/rules.json",
+        post "/admin/plugins/discourse-chat-integration/rules.json",
              params: {
                rule: {
                  channel_id: channel.id,
@@ -288,13 +288,13 @@ RSpec.describe "Chat Controller", type: :request do
       )
     end
 
-    include_examples "admin constraints", "put", "/admin/plugins/chat-integration/rules/1.json"
+    include_examples "admin constraints", "put", "/admin/plugins/discourse-chat-integration/rules/1.json"
 
     context "as an admin" do
       before { sign_in(admin) }
 
       it "should be able update a rule" do
-        put "/admin/plugins/chat-integration/rules/#{rule.id}.json",
+        put "/admin/plugins/discourse-chat-integration/rules/#{rule.id}.json",
             params: {
               rule: {
                 channel_id: channel.id,
@@ -311,7 +311,7 @@ RSpec.describe "Chat Controller", type: :request do
       end
 
       it "should fail for invalid params" do
-        put "/admin/plugins/chat-integration/rules/#{rule.id}.json",
+        put "/admin/plugins/discourse-chat-integration/rules/#{rule.id}.json",
             params: {
               rule: {
                 channel_id: channel.id,
@@ -336,13 +336,13 @@ RSpec.describe "Chat Controller", type: :request do
       )
     end
 
-    include_examples "admin constraints", "delete", "/admin/plugins/chat-integration/rules/1.json"
+    include_examples "admin constraints", "delete", "/admin/plugins/discourse-chat-integration/rules/1.json"
 
     context "as an admin" do
       before { sign_in(admin) }
 
       it "should be able delete a rule" do
-        delete "/admin/plugins/chat-integration/rules/#{rule.id}.json"
+        delete "/admin/plugins/discourse-chat-integration/rules/#{rule.id}.json"
 
         expect(response.status).to eq(200)
         expect(DiscourseChatIntegration::Rule.all.size).to eq(0)
