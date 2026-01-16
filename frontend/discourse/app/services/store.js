@@ -30,20 +30,23 @@ function storeMap(type, id, obj) {
   }
 
   const byType = _identityMap[type];
+  // Convert id to string for consistent Map key lookup
+  const key = String(id);
   // Delete and re-add to move to end (most recently used)
-  byType.delete(id);
-  byType.set(id, obj);
+  byType.delete(key);
+  byType.set(key, obj);
 
   pruneMap(type);
 }
 
 function fromMap(type, id) {
   const byType = _identityMap[type];
-  if (byType && byType.has(id)) {
-    const obj = byType.get(id);
+  const key = String(id);
+  if (byType && byType.has(key)) {
+    const obj = byType.get(key);
     // Move to end (most recently used)
-    byType.delete(id);
-    byType.set(id, obj);
+    byType.delete(key);
+    byType.set(key, obj);
     return obj;
   }
 }
@@ -51,15 +54,16 @@ function fromMap(type, id) {
 function removeMap(type, id) {
   const byType = _identityMap[type];
   if (byType) {
-    byType.delete(id);
+    byType.delete(String(id));
   }
 }
 
 function findAndRemoveMap(type, id) {
   const byType = _identityMap[type];
-  if (byType && byType.has(id)) {
-    const result = byType.get(id);
-    byType.delete(id);
+  const key = String(id);
+  if (byType && byType.has(key)) {
+    const result = byType.get(key);
+    byType.delete(key);
     return result;
   }
 }
