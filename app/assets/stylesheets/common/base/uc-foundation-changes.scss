@@ -26,6 +26,7 @@
   --topic-title-font-weight: 500;
   --d-sidebar-active-background: var(--primary-100);
 
+  // Buttons & Actions
   .btn-default,
   .btn-icon-text,
   .btn-icon,
@@ -34,6 +35,28 @@
     height: var(--space-8);
     font-size: var(--font-down-1);
     font-weight: 500;
+  }
+
+  .topic-replies-toggle-wrapper .topics-replies-toggle {
+    border-radius: var(--d-border-radius);
+    height: var(--space-8);
+    padding: 0.5em 0.65em;
+  }
+
+  .topic-replies-toggle-wrapper .topics-replies-toggle.active:hover {
+    background-color: var(--d-nav-bg-color--active);
+    color: var(--d-nav-color--active);
+  }
+
+  .btn-small,
+  .json-editor-btn-collapse {
+    font-size: var(--font-down-2);
+  }
+
+  // Nav Pills -- START
+  .nav-pills > li > a,
+  .nav-pills > li button {
+    font-size: var(--font-down-1);
   }
 
   .nav-pills li a {
@@ -70,17 +93,7 @@
     border-bottom: 0;
   }
 
-  .topic-replies-toggle-wrapper .topics-replies-toggle {
-    border-radius: var(--d-border-radius);
-    height: var(--space-8);
-    padding: 0.5em 0.65em;
-  }
-
-  .topic-replies-toggle-wrapper .topics-replies-toggle.active:hover {
-    background-color: var(--d-nav-bg-color--active);
-    color: var(--d-nav-color--active);
-  }
-
+  // Topic List
   .topic-list button.bulk-select .d-icon {
     color: var(--d-topic-list-header-text-color);
   }
@@ -94,11 +107,6 @@
     font-size: var(--d-topic-list-data-font-size);
   }
 
-  .btn-small,
-  .json-editor-btn-collapse {
-    font-size: var(--font-down-2);
-  }
-
   #create-topic {
     --d-button-default-border: 1px solid var(--primary);
     --d-button-default-bg-color: var(--primary);
@@ -110,11 +118,7 @@
     --d-button-default-border--hover: 1px solid var(--primary);
   }
 
-  .nav-pills > li > a,
-  .nav-pills > li button {
-    font-size: var(--font-down-1);
-  }
-
+  // Select Kit
   .select-kit .select-kit-header .selected-name .name {
     font-size: var(--font-down-1);
   }
@@ -144,16 +148,10 @@
     color: var(--primary);
   }
 
-  .badge-card .badge-contents .badge-icon {
-    --badge-icon-size: var(--font-up-3);
-  }
-
-  .badge-card .badge-contents .badge-info h3 {
-    font-size: var(--font-up-3);
-  }
-
+  // Header
   .d-header {
     height: calc(4em * var(--shrink-ratio));
+    background-color: var(--d-sidebar-background);
   }
 
   .header-sidebar-toggle button,
@@ -176,10 +174,12 @@
     transform: scale(var(--shrink-ratio));
   }
 
+  // Edit Category
   div.edit-category .edit-category-title-bar {
     background-color: transparent;
   }
 
+  // Full Calendar
   .fc .fc-button-primary {
     --fc-button-bg-color: var(--secondary);
     --fc-button-border-color: var(--primary-200);
