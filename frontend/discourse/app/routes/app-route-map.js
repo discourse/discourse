@@ -219,8 +219,14 @@ export default function () {
   this.route("full-page-search", { path: "/search" });
 
   this.route("tag", function () {
-    this.route("show", { path: "/:tag_slug/:tag_id" });
+    // untagged route (special case for "none")
+    this.route("none");
+    Site.currentProp("filters").forEach((filter) => {
+      this.route("none" + capitalize(filter), { path: "/none/l/" + filter });
+    });
 
+    // canonical tag route with slug/id
+    this.route("show", { path: "/:tag_slug/:tag_id" });
     Site.currentProp("filters").forEach((filter) => {
       this.route("show" + capitalize(filter), {
         path: "/:tag_slug/:tag_id/l/" + filter,

@@ -41,7 +41,8 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   async model(params, transition) {
-    let slug = params.tag_slug;
+    // support both canonical (tag_slug/tag_id) and legacy (tag_name) params
+    let slug = params.tag_slug || params.tag_name;
     let id = params.tag_id;
 
     if (!slug) {
@@ -51,7 +52,9 @@ export default class TagShowRoute extends DiscourseRoute {
 
     // handle legacy URLs without tag_id - fetch tag info to get the ID
     // e.g., /tags/c/category/1/my-tag -> need to lookup my-tag to get its ID
-    if (slug && slug !== NONE && !id) {
+    // skip redirect for intersection routes (they use tag_name, not tag_slug/tag_id)
+    const isIntersectionRoute = params.additional_tags !== undefined;
+    if (slug && slug !== NONE && !id && !isIntersectionRoute) {
       try {
         const result = await ajax(`/tag/${slug}/info.json`);
         if (result.tag_info) {
