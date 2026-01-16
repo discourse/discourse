@@ -130,8 +130,7 @@ export default class DNavigation extends Component {
     "filterType",
     "category",
     "noSubcategories",
-    "tag.name",
-    "tag.id",
+    "tag",
     "router.currentRoute.queryParams",
     "skipCategoriesNavItem"
   )
@@ -139,8 +138,7 @@ export default class DNavigation extends Component {
     filterType,
     category,
     noSubcategories,
-    filterTagName,
-    tagId,
+    tag,
     currentRouteQueryParams,
     skipCategoriesNavItem
   ) {
@@ -148,8 +146,7 @@ export default class DNavigation extends Component {
       filterType,
       noSubcategories,
       currentRouteQueryParams,
-      tagName: filterTagName,
-      tagId,
+      tag,
       siteSettings: this.siteSettings,
       skipCategoriesNavItem,
     });

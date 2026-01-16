@@ -25,10 +25,18 @@ module("Unit | Model | nav-item", function (hooks) {
 
     href("latest", {}, "/latest", "latest");
     href("categories", {}, "/categories", "categories");
-    href("latest", { tagName: "bar" }, "/tag/bar/l/latest", "latest with tag");
     href(
       "latest",
-      { tagName: "bar", category: Category.findBySlugPath(["foo"]) },
+      { tag: { id: 1, name: "bar", slug: "bar" } },
+      "/tag/bar/l/latest",
+      "latest with tag"
+    );
+    href(
+      "latest",
+      {
+        tag: { id: 1, name: "bar", slug: "bar" },
+        category: Category.findBySlugPath(["foo"]),
+      },
       "/tags/c/foo/123/bar/l/latest",
       "latest with tag and category"
     );
