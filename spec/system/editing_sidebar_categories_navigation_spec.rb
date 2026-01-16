@@ -190,14 +190,12 @@ RSpec.describe "Editing sidebar categories navigation", type: :system do
     fab!(:emoji_category) { Fabricate(:category, name: "emoji category", emoji: "rocket") }
 
     fab!(:category_with_hashtags) do
-      cat = Fabricate(:category, name: "category with hashtags")
-      cat.update_column(:description, <<~HTML)
+      Fabricate(:category, name: "category with hashtags", description: <<~HTML)
           Discussion about
           and <a class="hashtag-cooked" href="/tag/#{tag.name}" data-type="tag" data-slug="#{tag.name}" data-id="#{tag.id}"><span class="hashtag-icon-placeholder"></span><span>#{tag.name}</span></a>
           and <a class="hashtag-cooked" href="/c/#{icon_category.slug}/#{icon_category.id}" data-type="category" data-slug="#{icon_category.slug}" data-id="#{icon_category.id}" data-style-type="icon" data-icon="wrench"><span class="hashtag-icon-placeholder"></span><span>#{icon_category.name}</span></a>
           and <a class="hashtag-cooked" href="/c/#{emoji_category.slug}/#{emoji_category.id}" data-type="category" data-slug="#{emoji_category.slug}" data-id="#{emoji_category.id}" data-style-type="emoji" data-emoji="rocket"><span class="hashtag-icon-placeholder"></span><span>#{emoji_category.name}</span></a>
         HTML
-      cat
     end
 
     it "decorates hashtags for tags, icons and emojis in the description" do
