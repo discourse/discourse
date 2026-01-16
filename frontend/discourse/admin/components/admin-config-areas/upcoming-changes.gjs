@@ -67,6 +67,41 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           filterFn: (change) => change.upcoming_change.impact_type === "other",
         },
       ],
+      impactRole: [
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_all"),
+          value: "all",
+          filterFn: () => true,
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_admins"),
+          value: "admins",
+          filterFn: (change) => change.upcoming_change.impact_role === "admins",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_moderators"),
+          value: "moderators",
+          filterFn: (change) =>
+            change.upcoming_change.impact_role === "moderators",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_staff"),
+          value: "staff",
+          filterFn: (change) => change.upcoming_change.impact_role === "staff",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_all_members"),
+          value: "all_members",
+          filterFn: (change) =>
+            change.upcoming_change.impact_role === "all_members",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_developers"),
+          value: "developers",
+          filterFn: (change) =>
+            change.upcoming_change.impact_role === "developers",
+        },
+      ],
       enabled: [
         {
           label: i18n("admin.upcoming_changes.filter.enabled_all"),
