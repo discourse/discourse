@@ -31,18 +31,18 @@ export default class TagSettingsLocalizations extends Component {
     {{/if}}
 
     <@form.Collection @name="localizations" as |collection index|>
-      <div class="tag-settings-localization">
-        <collection.Field
-          @name="tag_id"
-          @title="tag_id"
-          @showTitle={{false}}
-          @disabled={{true}}
-          as |field|
-        >
-          <field.Input @value={{@tagId}} @type="hidden" />
-        </collection.Field>
+      <collection.Field
+        @name="tag_id"
+        @title="tag_id"
+        @showTitle={{false}}
+        @disabled={{true}}
+        as |field|
+      >
+        <field.Input @value={{@tagId}} @type="hidden" />
+      </collection.Field>
 
-        <div class="tag-settings-localization__row">
+      <@form.Row as |row|>
+        <row.Col @size={{2}}>
           <collection.Field
             @name="locale"
             @title={{i18n "tagging.localization.locale"}}
@@ -57,7 +57,9 @@ export default class TagSettingsLocalizations extends Component {
               {{/each}}
             </field.Select>
           </collection.Field>
+        </row.Col>
 
+        <row.Col @size={{3}}>
           <collection.Field
             @name="name"
             @title={{i18n "tagging.localization.name"}}
@@ -67,30 +69,33 @@ export default class TagSettingsLocalizations extends Component {
             <field.Input
               placeholder={{i18n "tagging.settings.name_placeholder"}}
               @maxlength="50"
-              class="tag-name"
             />
           </collection.Field>
+        </row.Col>
 
+        <row.Col @size={{6}}>
+          <collection.Field
+            @name="description"
+            @title={{i18n "tagging.localization.description"}}
+            @validation="length:0,1000"
+            as |field|
+          >
+            <field.Textarea @height={{80}} />
+          </collection.Field>
+        </row.Col>
+
+        <row.Col @size={{1}}>
           <@form.Button
-            class="btn-danger tag-settings-localization__remove"
+            class="btn-danger"
             @icon="trash-can"
             @title="tagging.localization.remove"
             @action={{fn collection.remove index}}
           />
-        </div>
-
-        <collection.Field
-          @name="description"
-          @title={{i18n "tagging.localization.description"}}
-          as |field|
-        >
-          <field.Textarea @height={{80}} />
-        </collection.Field>
-      </div>
+        </row.Col>
+      </@form.Row>
     </@form.Collection>
-
     <@form.Button
-      class="add-localization"
+      class="btn-default"
       @icon="plus"
       @label="tagging.localization.add"
       @action={{fn

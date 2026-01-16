@@ -12,6 +12,10 @@ module PageObjects
         find("#show-tag-info")
       end
 
+      def has_tag_info_btn?
+        has_css?("#show-tag-info")
+      end
+
       def edit_synonyms_btn
         find("#edit-synonyms")
       end
