@@ -257,7 +257,7 @@ namespace :release do
 
       current_version = ReleaseUtils.parse_current_version
 
-      target_version_number = "#{Time.now.strftime("%Y.%m")}.0-latest"
+      target_version_number = "#{Time.now.strftime("%Y.%-m")}.0-latest"
 
       if Gem::Version.new(target_version_number) <= Gem::Version.new(current_version)
         puts "Target version #{current_version} is already >= #{target_version_number}. Incrementing instead."
