@@ -12,6 +12,14 @@ class Permalink < ActiveRecord::Base
   validates :url, uniqueness: true
   validate :exactly_one_association
 
+  def internal?
+    external_url.blank?
+  end
+
+  def external?
+    external_url.present?
+  end
+
   class Normalizer
     attr_reader :source
 
