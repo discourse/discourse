@@ -108,19 +108,29 @@ export default class EditCategorySecurity extends buildCategoryPanel(
           {{/unless}}
 
           {{#if this.category.availableGroups}}
-            <div class="add-group">
-              <span class="group-name">
-                <ComboBox
-                  @content={{this.category.availableGroups}}
-                  @onChange={{this.onSelectGroup}}
-                  @value={{null}}
-                  @valueProperty={{null}}
-                  @nameProperty={{null}}
-                  @options={{hash none="category.security_add_group"}}
-                  class="available-groups"
-                />
-              </span>
-            </div>
+            <PluginOutlet
+              @name="category-security-permissions-add-group"
+              @outletArgs={{lazyHash
+                category=this.category
+                availableGroups=this.category.availableGroups
+                onSelectGroup=this.onSelectGroup
+              }}
+              @defaultGlimmer={{true}}
+            >
+              <div class="add-group">
+                <span class="group-name">
+                  <ComboBox
+                    @content={{this.category.availableGroups}}
+                    @onChange={{this.onSelectGroup}}
+                    @value={{null}}
+                    @valueProperty={{null}}
+                    @nameProperty={{null}}
+                    @options={{hash none="category.security_add_group"}}
+                    class="available-groups"
+                  />
+                </span>
+              </div>
+            </PluginOutlet>
           {{/if}}
         </div>
 
