@@ -121,6 +121,11 @@ import { block } from "discourse/blocks/block-outlet";
   // (A) Container mode - can this block contain child blocks?
   container: false,
 
+  // (A.1) Custom CSS classes for container wrapper (container blocks only)
+  // containerClassNames: "my-custom-class",                   // String form
+  // containerClassNames: ["class-one", "class-two"],          // Array form
+  // containerClassNames: (args) => `hero-${args.variant}`,    // Function form
+
   // (B) Human-readable description for documentation and dev tools
   description: "A hero banner with customizable title, subtitle, and call-to-action",
 
@@ -233,16 +238,67 @@ Container blocks can hold child blocks. Non-container blocks cannot. This is enf
 **Why this distinction?** Container blocks have different responsibilities:
 - They receive `children` as a processed array of renderable components
 - They're responsible for iterating and rendering their children in their template
-- They define their own wrapper markup (the system doesn't wrap them)
-- They receive `classNames` directly in args to apply to their wrapper
+- They can define custom wrapper classes via `containerClassNames`
 - They inherit an implicit condition: "only render if I have visible children"
 
 Non-container blocks, by contrast:
-- Are automatically wrapped by the system with consistent layout markup
-- Don't control their wrapper element
-- Have `classNames` applied to the system-generated wrapper
+- Cannot hold child blocks
+- Cannot use `containerClassNames`
+
+Both container and non-container blocks are wrapped by the system with a `<div>` for consistent BEM-style class naming:
+
+| Block Type | Generated Classes |
+|------------|-------------------|
+| Non-container | `{outletName}__block`, `block-{name}` |
+| Container | `block__{name}`, `{outletName}__{name}` |
 
 **Default:** `false` (non-container)
+
+#### (B.1) Container Class Names
+
+```javascript
+containerClassNames: (args) => `block__group-${args.name}`,
+```
+
+The `containerClassNames` option allows container blocks to define custom CSS classes for their wrapper element. This is **only valid for container blocks** (`container: true`).
+
+**Three supported formats:**
+
+1. **String** - A single CSS class:
+   ```javascript
+   containerClassNames: "my-container-class"
+   ```
+
+2. **Array** - Multiple CSS classes:
+   ```javascript
+   containerClassNames: ["container-primary", "container-bordered"]
+   ```
+
+3. **Function** - Dynamic classes based on block args:
+   ```javascript
+   containerClassNames: (args) => `container-${args.variant}`
+   ```
+
+**When to use:** Use `containerClassNames` when your container block needs custom styling beyond the standard BEM classes provided by the system. The function form is particularly useful when the class should depend on the block's configuration.
+
+**Real example (based on the built-in `group` block, simplified):**
+
+```javascript
+@block("group", {
+  container: true,
+  args: {
+    name: { type: "string", required: true },
+  },
+  containerClassNames: (args) => `block__group-${args.name}`,
+})
+```
+
+This generates a dynamic class like `block__group-sidebar` when `name: "sidebar"` is passed.
+
+**Error handling:** If you specify `containerClassNames` on a non-container block, you get an error:
+```
+Block "my-block": "containerClassNames" is only valid for container blocks (container: true).
+```
 
 #### (C) Args Schema
 
@@ -817,6 +873,31 @@ Pass data from the parent template to blocks via `@outletArgs`. Given a BlockOut
 ```
 
 Conditions can reference outlet args with the `outletArg` condition type or `source` parameters on other conditions.
+
+**System Args**
+
+In addition to outlet args, the block system automatically provides a system arg to all blocks:
+
+| Arg | Type | Description |
+|-----|------|-------------|
+| `@outletName` | `string` | The outlet identifier this block is rendered in (e.g., `"homepage-blocks"`) |
+
+Access it in your block template just like any other arg:
+
+```javascript
+<template>
+  {{! Access the outlet name for conditional styling or logic }}
+  <div class="my-block my-block--in-{{@outletName}}">
+    {{@title}}
+  </div>
+</template>
+```
+
+The system uses `@outletName` internally for:
+- **CSS class generation:** Wrapper classes like `{outletName}__block` and `{outletName}__{name}` for BEM-style scoping
+- **Debug context:** Identifying which outlet a block belongs to in error messages and dev tools
+
+You typically don't need to access `@outletName` directly—the system handles CSS class generation automatically. However, it's available if your block needs outlet-specific behavior or styling.
 
 #### The `renderBlocks()` Function
 
@@ -3040,6 +3121,7 @@ api.registerBlockConditionType(ConditionClass)
 // Options:
 {
   container: boolean,           // Can contain child blocks
+  containerClassNames: string | string[] | ((args) => string),  // Custom CSS classes for container wrapper (container blocks only)
   description: string,          // Human-readable description
   args: { [key]: ArgSchema },   // Argument definitions
   childArgs: { [key]: ChildArgSchema },  // Schema for child-provided metadata (container blocks only)
@@ -3335,7 +3417,6 @@ Test blocks with conditions using the test helpers from the registration module:
 
 ```javascript
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BlockOutlet, { block, renderBlocks } from "discourse/blocks/block-outlet";
@@ -3362,16 +3443,13 @@ module("Integration | Block | my-banner", function (hooks) {
     withTestBlockRegistration(() => _registerBlock(TestBanner));
 
     // Configure the layout (top-level function, not a service method)
-    renderBlocks(
-      "test-outlet",
-      [
-        {
-          block: TestBanner,
-          args: { message: "Hello World" },
-        },
-      ],
-      getOwner(this)
-    );
+    // Note: owner parameter is optional in tests (used for dev tools integration)
+    renderBlocks("test-outlet", [
+      {
+        block: TestBanner,
+        args: { message: "Hello World" },
+      },
+    ]);
 
     await render(<template><BlockOutlet @name="test-outlet" /></template>);
 
@@ -3388,17 +3466,13 @@ module("Integration | Block | my-banner", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(ConditionalBanner));
-    renderBlocks(
-      "conditional-outlet",
-      [
-        {
-          block: ConditionalBanner,
-          // This condition will fail for anonymous users
-          conditions: { type: "user", admin: true },
-        },
-      ],
-      getOwner(this)
-    );
+    renderBlocks("conditional-outlet", [
+      {
+        block: ConditionalBanner,
+        // This condition will fail for anonymous users
+        conditions: { type: "user", admin: true },
+      },
+    ]);
 
     await render(<template><BlockOutlet @name="conditional-outlet" /></template>);
 
@@ -3413,7 +3487,6 @@ For complex condition testing, register custom test conditions:
 
 ```javascript
 import Component from "@glimmer/component";
-import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
@@ -3461,16 +3534,12 @@ module("Integration | Block | conditional rendering", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(CustomConditionBlock));
-    renderBlocks(
-      "custom-outlet",
-      [
-        {
-          block: CustomConditionBlock,
-          conditions: { type: "always-true" },
-        },
-      ],
-      getOwner(this)
-    );
+    renderBlocks("custom-outlet", [
+      {
+        block: CustomConditionBlock,
+        conditions: { type: "always-true" },
+      },
+    ]);
 
     await render(<template><BlockOutlet @name="custom-outlet" /></template>);
 
@@ -3486,16 +3555,12 @@ module("Integration | Block | conditional rendering", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(HiddenBlock));
-    renderBlocks(
-      "hidden-outlet",
-      [
-        {
-          block: HiddenBlock,
-          conditions: { type: "always-false" },
-        },
-      ],
-      getOwner(this)
-    );
+    renderBlocks("hidden-outlet", [
+      {
+        block: HiddenBlock,
+        conditions: { type: "always-false" },
+      },
+    ]);
 
     await render(<template><BlockOutlet @name="hidden-outlet" /></template>);
 
@@ -3518,16 +3583,12 @@ test("uses outlet args in conditions", async function (assert) {
   }
 
   withTestBlockRegistration(() => _registerBlock(OutletArgsBlock));
-  renderBlocks(
-    "topic-outlet",
-    [
-      {
-        block: OutletArgsBlock,
-        conditions: { type: "outletArg", path: "topic.closed", value: false },
-      },
-    ],
-    getOwner(this)
-  );
+  renderBlocks("topic-outlet", [
+    {
+      block: OutletArgsBlock,
+      conditions: { type: "outletArg", path: "topic.closed", value: false },
+    },
+  ]);
 
   // Mock outlet args with an open topic
   this.set("mockTopic", { id: 123, title: "Test Topic", closed: false });
@@ -3554,16 +3615,12 @@ test("hides when outlet arg condition fails", async function (assert) {
   }
 
   withTestBlockRegistration(() => _registerBlock(ClosedTopicBlock));
-  renderBlocks(
-    "closed-topic-outlet",
-    [
-      {
-        block: ClosedTopicBlock,
-        conditions: { type: "outletArg", path: "topic.closed", value: false },
-      },
-    ],
-    getOwner(this)
-  );
+  renderBlocks("closed-topic-outlet", [
+    {
+      block: ClosedTopicBlock,
+      conditions: { type: "outletArg", path: "topic.closed", value: false },
+    },
+  ]);
 
   // Mock outlet args with a closed topic
   this.set("closedTopic", { id: 456, title: "Closed Topic", closed: true });
@@ -3587,7 +3644,7 @@ test("hides when outlet arg condition fails", async function (assert) {
 |---------|--------|-------|
 | Register block | `_registerBlock` from `discourse/lib/blocks/registration` | `withTestBlockRegistration(() => _registerBlock(MyBlock))` |
 | Register condition | `_registerConditionType` from `discourse/lib/blocks/registration` | `withTestConditionRegistration(() => _registerConditionType(MyCondition))` |
-| Configure layout | `renderBlocks` from `discourse/blocks/block-outlet` | `renderBlocks("outlet-name", [...], getOwner(this))` |
+| Configure layout | `renderBlocks` from `discourse/blocks/block-outlet` | `renderBlocks("outlet-name", [...])` |
 | Test condition validate | Direct instantiation | `new MyCondition()` then `condition.validate(args)` |
 | Test condition evaluate | Direct instantiation with owner | `setOwner(condition, getOwner(this))` then `condition.evaluate(args, context)` |
 
