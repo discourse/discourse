@@ -113,14 +113,14 @@ pl_PL:
             persona_id:
               label: "Osobowość"
               description: "Osobowość AI do wykorzystania w generowaniu raportów"
-        llm_tool_triage:
+        ai_tool_action:
           fields:
-            model:
-              label: "Model"
-              description: "Domyślny model językowy używany do selekcji"
             tool:
-              label: "Narzędzie"
-              description: "Narzędzie do triażu (narzędzie nie może mieć zdefiniowanych żadnych parametrów)"
+              label: "Narzędzie AI"
+              description: "Narzędzie AI do wykonywania działań po uruchomieniu automatyzacji"
+            llm_model:
+              label: "Model LLM"
+              description: "Model języka dla narzędzi korzystających z llm.generate() (opcjonalnie)"
         llm_persona_triage:
           fields:
             persona:

@@ -5477,6 +5477,9 @@ hr:
           disabled: "Onemogućeno"
           impact_type_other: "Ostalo"
           status_experimental: "Eksperimentalno"
+          impact_role_admins: "Admini"
+          impact_role_moderators: "Moderatori"
+          impact_role_staff: "Osoblje"
       config:
         about:
           title: "O vašoj web stranici"
@@ -5786,7 +5789,6 @@ hr:
         new_features:
           title: "Što je novo?"
           subtitle: "Neprestano objavljujemo nove značajke i poboljšanja. Ova stranica pokriva najvažnije, ali možete kliknuti na 'Saznajte više' da biste vidjeli opsežne bilješke o izdanju."
-          previous_announcements: "Prethodne najave novih značajki možete vidjeti na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Saznajte više..."
           experimental: "Eksperimentalno"
           only_experiments: "Prikaži samo eksperimentalne značajke"

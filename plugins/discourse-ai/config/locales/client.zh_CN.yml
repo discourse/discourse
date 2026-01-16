@@ -113,14 +113,6 @@ zh_CN:
             persona_id:
               label: "角色"
               description: "用于生成报告的 AI 角色"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "模型"
-              description: "用于分类的默认语言模型"
-            tool:
-              label: "工具"
-              description: "用于分类的工具（工具不得包含已定义的参数）"
         llm_persona_triage:
           fields:
             persona:

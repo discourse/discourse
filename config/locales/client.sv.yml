@@ -4384,6 +4384,9 @@ sv:
           enabled: "Aktiverad"
           disabled: "Inaktiverad"
           impact_type_other: "Övrigt"
+          impact_role_admins: "Administratörer"
+          impact_role_moderators: "Moderatorer"
+          impact_role_staff: "Personal"
       config:
         about:
           title: "Om din webbplats"
@@ -4524,7 +4527,6 @@ sv:
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         dismiss_notice: "Avfärda"
         new_features:
-          previous_announcements: "Du kan se tidigare meddelanden om nya funktioner på <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Läs mer..."
         last_checked: "Senast kollad"
         refresh_problems: "Uppdatera"

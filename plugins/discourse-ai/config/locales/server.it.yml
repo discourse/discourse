@@ -17,9 +17,6 @@ it:
         spam: "Segnala come spam e nascondi il messaggio"
         spam_silence: "Segnala come spam, nascondi il messaggio e silenzia l'utente"
     scriptables:
-      llm_tool_triage:
-        title: Triage dei messaggi con strumento IA
-        description: "Esegui il triage dei messaggi utilizzando la logica personalizzata di uno strumento di IA"
       llm_persona_triage:
         title: Triage dei messaggi con personaggio IA
         description: "Rispondi ai messaggi utilizzando uno specifico personaggio IA"

@@ -2734,6 +2734,9 @@ et:
           enabled: "Sisse lülitatud"
           disabled: "Välja lülitatud"
           impact_type_other: "Muu"
+          impact_role_admins: "Adminnid"
+          impact_role_moderators: "Moderaatorid"
+          impact_role_staff: "Meeskond"
       config:
         developer:
           title: "Arendaja"

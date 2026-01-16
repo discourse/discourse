@@ -3815,6 +3815,8 @@ hy:
           all: "Բոլոր"
           disabled: "Անջատված"
           impact_type_other: "Այլ"
+          impact_role_moderators: "Մոդերատորներ"
+          impact_role_staff: "Անձնակազմ"
       config:
         developer:
           title: "Ծրագրավորող"

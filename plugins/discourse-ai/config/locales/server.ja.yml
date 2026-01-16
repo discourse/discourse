@@ -17,9 +17,6 @@ ja:
         spam: "迷惑として通報して投稿を非表示にする"
         spam_silence: "迷惑として通報し、投稿を非表示にしてユーザーを投稿禁止にする"
     scriptables:
-      llm_tool_triage:
-        title: AI ツールを使った投稿のトリアージ
-        description: "AI ツールのカスタムロジックを使って投稿をトリアージします"
       llm_persona_triage:
         title: AI ペルソナを使った投稿のトリアージ
         description: "特定の AI ペルソナを使って投稿に返信します"

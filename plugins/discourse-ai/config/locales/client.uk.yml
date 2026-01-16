@@ -113,14 +113,6 @@ uk:
             persona_id:
               label: "Персона"
               description: "Персона AI для створення звітів"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Модель"
-              description: "Мовна модель за замовчуванням, що використовується для сортування"
-            tool:
-              label: "Інструмент"
-              description: "Інструмент для сортування (інструмент не повинен мати визначених параметрів)"
         llm_persona_triage:
           fields:
             persona:

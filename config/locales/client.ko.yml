@@ -3649,6 +3649,7 @@ ko:
               content: "배지"
             filter:
               content: "필터"
+              title: "카테고리, 태그 또는 기타 기준으로 글을 필터링하세요."
             topics:
               content: "글"
               title: "모든 글"
@@ -3758,6 +3759,9 @@ ko:
           enabled: "활성화"
           disabled: "비활성"
           impact_type_other: "기타"
+          impact_role_admins: "관리자"
+          impact_role_moderators: "관리자"
+          impact_role_staff: "스태프"
       config:
         developer:
           title: "개발자"

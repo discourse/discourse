@@ -4546,6 +4546,9 @@ pt:
           impact_type_feature: "Funcionalidade"
           impact_type_other: "Outro"
           status_experimental: "Experimental"
+          impact_role_admins: "Administradores"
+          impact_role_moderators: "Moderadores"
+          impact_role_staff: "Pessoal"
       config:
         about:
           title: "Sobre o seu ''site''"

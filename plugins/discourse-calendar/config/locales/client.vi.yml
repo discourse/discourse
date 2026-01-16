@@ -6,6 +6,10 @@
 
 vi:
   js:
+    notifications:
+      titles:
+        event_reminder: "Lời nhắc sự kiện"
+        event_invitation: "Lời mời sự kiện"
     discourse_automation:
       triggerables:
         event_started:
@@ -43,6 +47,8 @@ vi:
         group_selector_placeholder: "Chọn một nhóm..."
       upcoming_events:
         status: "Trạng thái"
+      upcoming_events_list:
+        try_again: "Thử lại"
       models:
         event:
           expired: "Hết hạn"

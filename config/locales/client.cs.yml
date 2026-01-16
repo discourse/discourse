@@ -6015,6 +6015,11 @@ cs:
           status_beta: "Beta"
           status_stable: "Stabilní"
           status_permanent: "Trvalá"
+          impact_role_admins: "Administrátoři"
+          impact_role_moderators: "Moderátoři"
+          impact_role_staff: "Redakce"
+          impact_role_all_members: "Všichni členové"
+          impact_role_developers: "Vývojáři"
       config:
         about:
           title: "O vašem webu"
@@ -6479,7 +6484,6 @@ cs:
         new_features:
           title: "Co je nového?"
           subtitle: "Neustále vydáváme nové funkce a vylepšení. Tato stránka obsahuje hlavní body, ale kliknutím na „Další informace“ zobrazíte rozsáhlé poznámky k verzi."
-          previous_announcements: "Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Více informací..."
           experimental: "Experimentální"
           only_experiments: "Zobrazit pouze experimentální funkce"

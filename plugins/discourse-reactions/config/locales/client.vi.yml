@@ -33,4 +33,4 @@ vi:
       reaction_multiple_users:
         other: "%{username} và %{count} người khác"
       titles:
-        reaction: "biểu cảm mới"
+        reaction: "Phản ứng mới"

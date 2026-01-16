@@ -35,8 +35,11 @@ pt_BR:
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "O que você deseja fazer com o comentário?"
         no_action_comment:
           title: "Sem ação"
+          description: "Manter o comentário como está."
         agree_and_keep_comment:
           title: "Manter comentário"
           description: "Concorde com o sinalizador e mantenha o comentário inalterado."
@@ -60,9 +63,12 @@ pt_BR:
           description: "Restaure o comentário para que todos(as) usuários(as) possam ver."
         disagree:
           title: "Manter comentário"
+          description: "Discordar da sinalização e manter o comentário inalterado."
         ignore:
           title: "Ignorar sinalizações"
+          description: "Remover da fila sem tomar nenhuma ação."
         delete_and_agree:
+          title: "Ignorar a sinalização e excluir o comentário."
           description: "Ignore o sinalizador ao removê-lo da fila e exclua o comentário."
   post_action_types:
     vote:
@@ -111,14 +117,17 @@ pt_BR:
             title: "Excluir comentário"
             description: "Exclua o comentário para que os(as) usuários(as) não possam ver."
           delete_and_agree:
+            title: "Ignorar a sinalização e excluir o comentário."
             description: "Ignore o sinalizador ao removê-lo da fila e exclua o comentário."
           disagree_and_restore:
             title: "Discordar e restaurar comentário"
             description: "Restaure o comentário para que todos(as) usuários(as) possam ver."
           disagree:
             title: "Manter comentário"
+            description: "Discordar da sinalização e manter o comentário inalterado."
           ignore:
             title: "Ignorar sinalizações"
+            description: "Remover da fila sem tomar nenhuma ação."
         transcript:
           view: "Ver transcrição de comentários anteriores"
       reviewable_score_types:

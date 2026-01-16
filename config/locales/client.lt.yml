@@ -4098,6 +4098,9 @@ lt:
           enabled: "Galimas"
           disabled: "Uždrausta"
           impact_type_other: "Kiti"
+          impact_role_admins: "Administratoriai"
+          impact_role_moderators: "Moderatoriai"
+          impact_role_staff: "Personalas"
       config:
         developer:
           title: "Programuotojams"

@@ -46,12 +46,6 @@ fa_IR:
               label: "توقف آگاه‌سازی‌ها"
             debug_mode:
               label: "حالت اشکال زدایی"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "مدل"
-            tool:
-              label: "ابزار"
         llm_triage:
           fields:
             search_for_text:

@@ -5203,6 +5203,9 @@ tr_TR:
           impact_type_feature: "Özellik"
           impact_type_other: "Diğer"
           status_experimental: "Deneysel"
+          impact_role_admins: "Yöneticiler"
+          impact_role_moderators: "Moderatörler"
+          impact_role_staff: "Personel"
       config:
         about:
           title: "Siteniz hakkında"
@@ -5598,7 +5601,6 @@ tr_TR:
         new_features:
           title: "Yenilikler"
           subtitle: "Sürekli olarak yeni özellikler ve geliştirmeler yayınlıyoruz. Bu sayfa önemli noktaları kapsıyor, ancak kapsamlı sürüm notlarını görmek için \"Daha fazla bilgi edinin\" seçeneğine tıklayabilirsiniz."
-          previous_announcements: "Önceki yeni özellik duyurularını <a href='%{url}' target='_blank'>Discourse Meta'da</a> görebilirsiniz"
           learn_more: "Daha fazla bilgi edinin..."
           experimental: "Deneysel"
           only_experiments: "Yalnızca deneysel özellikleri göster"

@@ -2556,6 +2556,9 @@ th:
           all: "ทั้งหมด"
           disabled: "ปิดใช้งานแล้ว"
           impact_type_other: "อื่นๆ"
+          impact_role_admins: "แอดมิน"
+          impact_role_moderators: "ผู้ดูแลระบบ"
+          impact_role_staff: "ทีมงาน"
       config:
         developer:
           title: "นักพัฒนา"

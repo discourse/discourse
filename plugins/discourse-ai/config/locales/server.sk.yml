@@ -17,9 +17,6 @@ sk:
         spam: "Nahlásiť ako spam a skryť príspevok"
         spam_silence: "Nahlásiť ako spam, skryť príspevok a umlčať používateľa"
     scriptables:
-      llm_tool_triage:
-        title: Triážne príspevky pomocou nástroja AI
-        description: "Triedenie príspevkov pomocou vlastnej logiky v nástroji s AI"
       llm_persona_triage:
         title: Triedenie príspevkov pomocou AI Persona
         description: "Reagujte na príspevky pomocou špecifickej AI persona"

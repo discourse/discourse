@@ -2856,6 +2856,9 @@ lv:
           enabled: "Ieslēgts"
           disabled: "Atslēgt"
           impact_type_other: "Citi"
+          impact_role_admins: "Administratori"
+          impact_role_moderators: "Moderātori"
+          impact_role_staff: "Personāls"
       config:
         developer:
           title: "Izstrādātājs"

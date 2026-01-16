@@ -5245,6 +5245,9 @@ ur:
           disabled: "غیر فعال"
           impact_type_other: "دیگر"
           status_experimental: "تجرباتی"
+          impact_role_admins: "منتظمین"
+          impact_role_moderators: "نگران"
+          impact_role_staff: "عملہ"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"
@@ -5645,7 +5648,6 @@ ur:
         new_features:
           title: "نیا کیا ہے؟"
           subtitle: "ہم وقتاً فوقتاً نئی خصوصیات اور بہتریاں جاری کر رہے ہیں۔ یہ صفحہ نمایاں نکات کا احاطہ کرتا ہے، لیکن آپ 'مزید جانیں' پر کلک کر کے اجرا کی تفصیلات دیکھ سکتے ہیں"
-          previous_announcements: "آپ پچھلی نئی خصوصیات کے اعلانات <a href='%{url}' target='_blank'>Discourse Meta</a> پر دیکھ سکتے ہیں"
           learn_more: "مزید جانیں..."
           experimental: "تجرباتی"
           only_experiments: "صرف تجرباتی خصوصیات دکھائیں"

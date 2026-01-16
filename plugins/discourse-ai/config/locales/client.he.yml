@@ -113,14 +113,6 @@ he:
             persona_id:
               label: "דמות"
               description: "דמות בינה מלאכותית לשימוש להפקת דוחות"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "מודל"
-              description: "מודל שפה כברירת מחדל שישמש למיון ראשוני"
-            tool:
-              label: "כלי"
-              description: "כלי לשימוש למיון ראשוני (אסור שלכלי יהיו מוגדרים משתנים)"
         llm_persona_triage:
           fields:
             persona:

@@ -112,14 +112,6 @@ lt:
               description: "Viršutinė P, naudojama LLM, padidinkite, kad padidėtų atsitiktinumas (palikite tuščią, jei norite naudoti numatytuosius modelio parametrus)"
             persona_id:
               label: "Persona"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Modelis"
-              description: "Numatytasis kalbos modelis, naudojamas triažui"
-            tool:
-              label: "Įrankis"
-              description: "Įrankis, naudojamas triažui (įrankis negali turėti apibrėžtų parametrų)"
         llm_persona_triage:
           fields:
             persona:

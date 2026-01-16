@@ -113,14 +113,6 @@ sk:
             persona_id:
               label: "Persona"
               description: "AI Persona na použitie pri generovaní prehľadov"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Model"
-              description: "Predvolený jazykový model používaný na triedenie"
-            tool:
-              label: "Nástroj"
-              description: "Nástroj na triedenie (nástroj nesmie mať definované žiadne parametre)"
         llm_persona_triage:
           fields:
             persona:

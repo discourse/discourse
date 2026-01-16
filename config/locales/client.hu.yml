@@ -5344,6 +5344,9 @@ hu:
           disabled: "Kikapcsolva"
           impact_type_other: "Egyéb"
           status_experimental: "Kísérleti"
+          impact_role_admins: "Adminisztrátorok"
+          impact_role_moderators: "Moderátorok"
+          impact_role_staff: "Stáb"
       config:
         about:
           title: "Az Ön webhelyéről"
@@ -5766,7 +5769,6 @@ hu:
         new_features:
           title: "Újdonságok?"
           subtitle: "Folyamatosan új funkciókat és fejlesztéseket adunk ki. Ez az oldal a legfontosabbakat tartalmazza, de a 'Tudjon meg többet' gombra kattintva részletes kiadási jegyzeteket is megtekinthet."
-          previous_announcements: "A korábbi új funkciók bejelentéseit a <a href='%{url}' target='_blank'>Discourse Meta</a> oldalon tekintheted meg"
           learn_more: "Tudjon meg többet..."
           experimental: "Kísérleti"
           only_experiments: "Csak kísérleti funkciók megjelenítése"

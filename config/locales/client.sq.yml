@@ -3967,6 +3967,9 @@ sq:
           enabled: "Aktivizuar"
           disabled: "E çaktivizuar"
           impact_type_other: "Të tjerë"
+          impact_role_admins: "Administratorët"
+          impact_role_moderators: "Moderatorë"
+          impact_role_staff: "Stafi"
       config:
         developer:
           title: "Developer"

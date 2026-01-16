@@ -3420,6 +3420,9 @@ gl:
           enabled: "Activado"
           disabled: "Desactivado"
           impact_type_other: "Outro"
+          impact_role_admins: "Administradores"
+          impact_role_moderators: "Moderadores"
+          impact_role_staff: "Equipo"
       config:
         developer:
           title: "Desenvolvedor"

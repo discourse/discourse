@@ -6315,6 +6315,11 @@ ar:
           impact_type_feature: "الميزة"
           impact_type_other: "أخرى"
           status_experimental: "تجريبي"
+          impact_role_admins: "المسؤولون"
+          impact_role_moderators: "المشرفون"
+          impact_role_staff: "فريق العمل"
+          impact_role_all_members: "جميع الأعضاء"
+          impact_role_developers: "المطوّرون"
       config:
         about:
           title: "نبذة عن موقعك"
@@ -6741,7 +6746,6 @@ ar:
         new_features:
           title: "ما الجديد؟"
           subtitle: "نحن نصدر ميزات وتحسينات جديدة طوال الوقت. تغطي هذه الصفحة أبرز النقاط، ولكن يمكنك النقر على \"معرفة المزيد\" للاطلاع على ملاحظات الإصدار الشاملة."
-          previous_announcements: "يمكنك رؤية إعلانات الميزات الجديدة السابقة على <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "معرفة المزيد..."
           experimental: "تجريبي"
           only_experiments: "عرض الميزات التجريبية فقط"

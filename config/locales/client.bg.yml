@@ -3440,6 +3440,9 @@ bg:
           enabled: "Да е включен"
           disabled: "Деактивирани"
           impact_type_other: "Други"
+          impact_role_admins: "Админи"
+          impact_role_moderators: "Модератори"
+          impact_role_staff: "Персонал"
       config:
         developer:
           title: "Разработчик"

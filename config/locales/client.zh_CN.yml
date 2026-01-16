@@ -5160,6 +5160,11 @@ zh_CN:
           status_beta: "Beta"
           status_stable: "稳定"
           status_permanent: "永久"
+          impact_role_admins: "管理员"
+          impact_role_moderators: "版主"
+          impact_role_staff: "管理人员"
+          impact_role_all_members: "所有成员"
+          impact_role_developers: "开发者"
       config:
         about:
           title: "关于您的站点"
@@ -5603,7 +5608,6 @@ zh_CN:
         new_features:
           title: "最新变化"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
-          previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a> 上查看以前的新功能公告。"
           learn_more: "了解详情…"
           experimental: "实验性"
           only_experiments: "只显示实验性功能"

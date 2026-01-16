@@ -4355,6 +4355,9 @@ nb_NO:
           enabled: "Aktivert"
           disabled: "Deaktivert"
           impact_type_other: "Annet"
+          impact_role_admins: "Adminer"
+          impact_role_moderators: "Moderatorer"
+          impact_role_staff: "Stab"
       config:
         developer:
           title: "Utvikler"

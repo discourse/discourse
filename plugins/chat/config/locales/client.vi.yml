@@ -34,7 +34,7 @@ vi:
       muted: "im lặng"
       joined: "đã tham gia"
       email_frequency:
-        description: "Sẽ chỉ gửi email nếu bạn vắng mặt 15 phút."
+        description: "Sẽ chỉ gửi email nếu bạn vắng mặt 15 phút"
         never: "Không bao giờ"
         title: "Gửi email khi tôi nhận được tin nhắn trò chuyện trực tiếp hoặc nhóm"
         when_away: "Khi vắng mặt"
@@ -150,7 +150,7 @@ vi:
         short:
           other: "%{count} ngày"
       flags:
-        notify_moderators: "Thông báo này yêu cầu sự chú ý của nhân viên vì một lý do khác không được liệt kê ở trên."
+        notify_moderators: "Thông báo này yêu cầu BQT chú ý vì một lý do khác không được liệt kê ở trên."
       emoji_picker:
         favorites: "Được sử dụng gần đây"
         smileys_&_emotion: "Mặt cười và cảm xúc"
@@ -187,6 +187,11 @@ vi:
       chat_quoted: "<span>%{username}</span> %{description}"
       chat_watched_thread_label:
         other: "%{username} và %{count} người khác"
+      titles:
+        chat_mention: "Được nhắc đến trong cuộc trò chuyện"
+        chat_invitation: "Được mời vào kênh chat"
+        chat_quoted: "Được trích dẫn tin nhắn trò chuyện"
+        chat_watched_thread: "Đã giám sát chuỗi trò chuyện"
     action_codes:
       chat:
         enabled: '%{who} đã bật <button class="btn-link open-chat">chat</button> %{when}'

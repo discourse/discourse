@@ -3918,6 +3918,9 @@ ro:
           disabled: "Dezactivate"
           impact_type_other: "Altele"
           status_experimental: "Experimental"
+          impact_role_admins: "Admini"
+          impact_role_moderators: "Moderatori"
+          impact_role_staff: "Echipa"
       config:
         about:
           title: "Despre site-ul tău"
@@ -4225,7 +4228,6 @@ ro:
         new_features:
           title: "Ce este nou?"
           subtitle: "Lansăm noi funcții și îmbunătățiri tot timpul. Această pagină le acoperă pe cele mai importante, dar poți da clic pe „Află mai multe” pentru a vedea notele extinse de lansare."
-          previous_announcements: "Poți vedea anunțurile anterioare privind noile caracteristici pe <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Află mai multe..."
           experimental: "Experimental"
           only_experiments: "Afișează doar caracteristici experimentale"

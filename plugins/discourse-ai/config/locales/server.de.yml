@@ -19,9 +19,6 @@ de:
         spam: "Als Spam markieren und Beitrag verbergen"
         spam_silence: "Als Spam melden, Beitrag ausblenden und Benutzer stummschalten"
     scriptables:
-      llm_tool_triage:
-        title: Sichtung von Beiträgen mit dem KI-Tool
-        description: "Sichtung von Beiträgen mit benutzerdefinierter Logik in einem KI-Tool"
       llm_persona_triage:
         title: Sichtung von Beiträgen mit KI-Persona
         description: "Reagiere auf Beiträge mit einer bestimmten KI-Persona"

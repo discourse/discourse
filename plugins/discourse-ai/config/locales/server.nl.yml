@@ -17,9 +17,6 @@ nl:
         spam: "Als spam markeren en bericht verbergen"
         spam_silence: "Als spam markeren, bericht verbergen en gebruiker dempen"
     scriptables:
-      llm_tool_triage:
-        title: Berichten triageren met AI-tool
-        description: "Triageer berichten met behulp van aangepaste logica in een AI-tool"
       llm_persona_triage:
         title: Berichten triageren met AI-persona
         description: "Reageer op berichten met een specifieke AI-persona"

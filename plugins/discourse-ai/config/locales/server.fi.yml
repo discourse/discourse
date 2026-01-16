@@ -17,9 +17,6 @@ fi:
         spam: "Liputa roskapostiksi ja piilota viesti"
         spam_silence: "Liputa roskapostiksi, piilota viesti ja hiljennä käyttäjä"
     scriptables:
-      llm_tool_triage:
-        title: Luokittele viestit tekoälytyökalulla
-        description: "Luokittele viestit käyttämällä mukautettua logiikkaa tekoälytyökalussa"
       llm_persona_triage:
         title: Luokittele viestit tekoäypersoonalla
         description: "Vastaa viesteihin käyttämällä tiettyä tekoälypersoonaa"

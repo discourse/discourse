@@ -71,10 +71,6 @@ id:
               label: "Temperatur"
             top_p:
               label: "Top P"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Model"
         llm_triage:
           fields:
             search_for_text:

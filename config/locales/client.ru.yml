@@ -5776,6 +5776,9 @@ ru:
           impact_type_feature: "Функция"
           impact_type_other: "Разное"
           status_experimental: "Экспериментальная функция"
+          impact_role_admins: "Администраторы"
+          impact_role_moderators: "Модераторы"
+          impact_role_staff: "Персонал"
       config:
         about:
           title: "О вашем сайте"
@@ -6186,7 +6189,6 @@ ru:
         new_features:
           title: "Что нового?"
           subtitle: "Мы регулярно выпускаем обновления с новыми функциями и улучшениями. На этой странице перечислены ключевые моменты, а полный список доступен по ссылке «Подробнее»."
-          previous_announcements: "Вы можете увидеть предыдущие анонсы новых функций на <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Подробнее…"
           experimental: "Экспериментальная функция"
           only_experiments: "Показывать только экспериментальные функции"

@@ -5244,6 +5244,8 @@ pt_BR:
           impact_type_feature: "Recurso"
           impact_type_other: "Outras"
           status_experimental: "Experimental"
+          impact_role_moderators: "Moderadores(as)"
+          impact_role_staff: "Equipe"
       config:
         about:
           title: "Sobre seu site"
@@ -5639,7 +5641,6 @@ pt_BR:
         new_features:
           title: "Novidades?"
           subtitle: "Estamos lançando recursos e melhorias inéditas o tempo todo. Esta página contém os principais. Clique em \"Saiba mais\" se quiser ver as notas da versão completas."
-          previous_announcements: "Confira os anúncios de recursos novos no <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Saiba mais..."
           experimental: "Experimental"
           only_experiments: "Exibir apenas recursos experimentais"
