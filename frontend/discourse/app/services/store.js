@@ -25,31 +25,41 @@ function storeMap(type, id, obj) {
     return;
   }
 
-  _identityMap[type] = _identityMap[type] || {};
-  _identityMap[type][id] = obj;
+  if (!_identityMap[type]) {
+    _identityMap[type] = new Map();
+  }
+
+  const byType = _identityMap[type];
+  // Delete and re-add to move to end (most recently used)
+  byType.delete(id);
+  byType.set(id, obj);
 
   pruneMap(type);
 }
 
 function fromMap(type, id) {
   const byType = _identityMap[type];
-  if (byType && byType.hasOwnProperty(id)) {
-    return byType[id];
+  if (byType && byType.has(id)) {
+    const obj = byType.get(id);
+    // Move to end (most recently used)
+    byType.delete(id);
+    byType.set(id, obj);
+    return obj;
   }
 }
 
 function removeMap(type, id) {
   const byType = _identityMap[type];
-  if (byType && byType.hasOwnProperty(id)) {
-    delete byType[id];
+  if (byType) {
+    byType.delete(id);
   }
 }
 
 function findAndRemoveMap(type, id) {
   const byType = _identityMap[type];
-  if (byType && byType.hasOwnProperty(id)) {
-    const result = byType[id];
-    delete byType[id];
+  if (byType && byType.has(id)) {
+    const result = byType.get(id);
+    byType.delete(id);
     return result;
   }
 }
@@ -60,13 +70,12 @@ function pruneMap(type) {
     return;
   }
 
-  const keys = Object.keys(byType);
-
-  // Only cleanup if we exceed the threshold
-  if (keys.length > MAX_ITEMS_PER_TYPE) {
-    const toRemove = Math.floor(keys.length / 2);
+  // Only cleanup if we exceed the threshold: remove the excess part
+  if (byType.size > MAX_ITEMS_PER_TYPE) {
+    const toRemove = byType.size - MAX_ITEMS_PER_TYPE;
+    const iterator = byType.keys();
     for (let i = 0; i < toRemove; i++) {
-      delete byType[keys[i]];
+      byType.delete(iterator.next().value);
     }
   }
 }
