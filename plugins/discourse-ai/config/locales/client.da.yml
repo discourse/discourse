@@ -33,6 +33,10 @@ da:
               label: "Tags"
             exclude_tags:
               label: "Udeluk tags"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "Model"
         llm_triage:
           fields:
             category:

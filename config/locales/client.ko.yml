@@ -3701,6 +3701,7 @@ ko:
               content: "배지"
             filter:
               content: "필터"
+              title: "카테고리, 태그 또는 기타 기준으로 글을 필터링하세요."
             topics:
               content: "글"
               title: "모든 글"
