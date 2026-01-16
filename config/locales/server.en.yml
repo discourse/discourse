@@ -2757,6 +2757,7 @@ en:
     experimental_rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     enable_custom_splash_screen: "Allows customizing the loading splash screen with your own SVG image. Upload an image via the 'splash screen image' setting. Warning: This may negatively impact LCP scores and Google indexing."
+    experimental_foundation_changes: "This change introduces design modifcations to the Foundation theme in Discourse. This feature is experimental and may be changed or removed in the future."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."

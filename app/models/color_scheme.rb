@@ -20,14 +20,14 @@ class ColorScheme < ActiveRecord::Base
   BUILT_IN_SCHEMES = {
     Dark: {
       "primary" => "dddddd",
-      "secondary" => "222222",
+      "secondary" => "191919",
       "tertiary" => "099dd7",
       "quaternary" => "c14924",
-      "header_background" => "111111",
+      "header_background" => "0d0d0d",
       "header_primary" => "dddddd",
       "highlight" => "a87137",
       "selected" => "052e3d",
-      "hover" => "313131",
+      "hover" => "282828",
       "danger" => "e45735",
       "success" => "1ca551",
       "love" => "fa6c8d",
