@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+/** @type {import("discourse/helpers/element.gjs").default} */
 import element from "discourse/helpers/element";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
