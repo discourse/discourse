@@ -35,10 +35,10 @@ describe "Tag Settings", type: :system do
 
       sign_in(user)
       tags_page.visit_tag(tag_1)
-      tags_page.tag_info_btn.click
-      expect(tags_page.tag_info).to have_no_css(".edit-tag")
+
+      expect(tags_page).to have_tag_info_btn
       visit("/tag/#{tag_1.slug}/#{tag_1.id}/edit/general")
-      expect(page).to have_content(I18n.t("page_not_found.title"))
+      expect(page).to have_current_path("/tag/#{tag_1.slug}/#{tag_1.id}")
     end
 
     it "allows privileged users to edit tag, admin to delete tag" do
@@ -46,7 +46,7 @@ describe "Tag Settings", type: :system do
       tags_page.visit_tag(tag_1)
       tags_page.tag_info_btn.click
 
-      expect(page).to have_no_css(".tag-settings__footer .btn-danger")
+      expect(page).to have_no_css(".d-page-header__actions .btn-danger")
       expect(tag_settings_page).to have_name_value(tag_1.name)
       expect(tag_settings_page).to have_slug_value(tag_1.slug)
       expect(tag_settings_page).to have_description_value(tag_1.description)
@@ -70,7 +70,7 @@ describe "Tag Settings", type: :system do
       sign_in(admin)
       tags_page.visit_tag(tag_2)
       tags_page.tag_info_btn.click
-      expect(page).to have_css(".tag-settings__footer .btn-danger")
+      expect(page).to have_css(".d-page-header__actions .btn-danger")
       tag_settings_page.click_delete
       dialog.click_danger
       expect(page).to have_current_path("/tags")

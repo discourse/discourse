@@ -748,6 +748,20 @@ RSpec.describe TagsController do
       expect(settings["tag_group_names"]).to contain_exactly(tag_group.name)
     end
 
+    it "includes tag groups with id and name for admin" do
+      SiteSetting.tags_listed_by_group = true
+      tag_group = Fabricate(:tag_group, tags: [tag])
+      sign_in(admin)
+      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      expect(response.status).to eq(200)
+
+      settings = response.parsed_body["tag_settings"]
+      expect(settings["tag_groups"]).to be_present
+      expect(settings["tag_groups"].length).to eq(1)
+      expect(settings["tag_groups"][0]["id"]).to eq(tag_group.id)
+      expect(settings["tag_groups"][0]["name"]).to eq(tag_group.name)
+    end
+
     context "with content localization enabled" do
       before { SiteSetting.content_localization_enabled = true }
 

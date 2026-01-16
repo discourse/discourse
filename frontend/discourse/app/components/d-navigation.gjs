@@ -13,6 +13,7 @@ import CreateTopicButton from "discourse/components/create-topic-button";
 import DButton from "discourse/components/d-button";
 import NavigationBar from "discourse/components/navigation-bar";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import TagInfoButton from "discourse/components/tag-info-button";
 import TagNotificationsTracking from "discourse/components/tag-notifications-tracking";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -30,10 +31,15 @@ export default class DNavigation extends Component {
   @service router;
   @service site;
   @service siteSettings;
+  @service currentUser;
 
   @tracked filterMode;
 
   @setting("fixed_category_positions") fixedCategoryPositions;
+
+  get canEditTags() {
+    return this.currentUser?.canEditTags;
+  }
 
   get createTopicLabel() {
     const defaultKey = "topic.create";
@@ -124,6 +130,9 @@ export default class DNavigation extends Component {
 
   @discourseComputed("additionalTags", "category", "tag.name")
   showToggleInfo(additionalTags, category, tagId) {
+    if (this.siteSettings.experimental_tag_settings_page) {
+      return this.currentUser;
+    }
     return !additionalTags && !category && tagId !== "none";
   }
 
@@ -201,19 +210,7 @@ export default class DNavigation extends Component {
 
   @action
   clickTagInfo() {
-    if (
-      this.siteSettings.experimental_tag_settings_page &&
-      this.currentUser?.canEditTags
-    ) {
-      this.router.transitionTo(
-        "tag.edit.tab",
-        this.tag.slug,
-        this.tag.id,
-        "general"
-      );
-    } else {
-      this.toggleInfo();
-    }
+    this.toggleInfo();
   }
 
   <template>
@@ -292,22 +289,21 @@ export default class DNavigation extends Component {
 
       {{#if this.tag}}
         {{#if this.showToggleInfo}}
-          <DButton
-            @icon={{if this.currentUser.canEditTags "wrench" "circle-info"}}
-            @ariaLabel={{if
-              this.currentUser.canEditTags
-              "tagging.edit"
-              "tagging.info"
-            }}
-            @title={{if
-              this.currentUser.canEditTags
-              "tagging.edit"
-              "tagging.info"
-            }}
-            @action={{this.clickTagInfo}}
-            id="show-tag-info"
-            class="btn-default"
-          />
+          {{#if this.siteSettings.experimental_tag_settings_page}}
+            <TagInfoButton
+              @tag={{this.tag}}
+              @currentUser={{this.currentUser}}
+            />
+          {{else}}
+            <DButton
+              @icon={{if this.canEditTags "wrench" "circle-info"}}
+              @ariaLabel={{if this.canEditTags "tagging.edit" "tagging.info"}}
+              @title={{if this.canEditTags "tagging.edit" "tagging.info"}}
+              @action={{this.clickTagInfo}}
+              id="show-tag-info"
+              class="btn-default"
+            />
+          {{/if}}
         {{/if}}
       {{/if}}
 

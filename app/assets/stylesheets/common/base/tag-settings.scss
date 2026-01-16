@@ -1,197 +1,34 @@
-@use "lib/viewport";
-@use "sass:string";
-
 .tag-settings {
-  display: grid;
-  grid-template-columns: 1fr 5fr;
-  grid-template-rows: auto auto auto;
-  row-gap: 1em;
-  column-gap: 1.5em;
-  grid-template-areas: "header header" "sidebar content" "sidebar footer";
-
-  @include viewport.until(sm) {
-    display: block;
-  }
-
-  &__header {
-    grid-area: header;
-    grid-column: 1 / span 2;
-    display: flex;
-    gap: 1em;
-    justify-content: space-between;
-    align-self: start;
-    background-color: var(--primary-very-low);
-    padding: 20px;
-
-    @include viewport.until(sm) {
-      justify-content: start;
-      align-items: center;
-      padding-bottom: 1em;
-    }
-
-    h2 {
-      @include ellipsis;
-
-      @include viewport.until(sm) {
-        order: 2;
-        margin-bottom: 0;
-      }
-    }
-  }
-
-  &__back-btn {
-    height: 2em;
-    align-self: flex-end;
-    flex: 0 0 auto;
-  }
-
-  &__nav {
-    grid-area: sidebar;
-    grid-row: 2 / span 2;
-
-    @include viewport.until(sm) {
-      width: 100%;
-      background-color: var(--secondary);
-      position: relative;
-      border-top: 1px solid var(--content-border-color);
-      border-bottom: 1px solid var(--content-border-color);
-      margin: 0.5em 0;
-      overflow: hidden;
-
-      &::after {
-        background: linear-gradient(
-          to right,
-          rgb(var(--secondary-rgb), 0),
-          rgb(var(--secondary-rgb), 1)
-        );
-        content: "";
-        position: absolute;
-        right: 0;
-        height: 100%;
-        width: 30px;
-      }
-    }
-
-    .nav-stacked {
-      background-color: var(--secondary);
-
-      @include viewport.until(sm) {
-        white-space: nowrap;
-        flex-wrap: nowrap;
-        overflow-x: scroll;
-        display: inline-flex;
-        width: 100%;
-        margin-bottom: 0;
-
-        li {
-          font-size: var(--font-down-1);
-          border-bottom: none;
-        }
-      }
-
-      li {
-        border-bottom: 1px solid var(--content-border-color);
-
-        &.active a {
-          font-weight: bold;
-          color: var(--primary);
-        }
-      }
-
-      a {
-        display: block;
-        padding: 0.5em 1em;
-        color: var(--primary-high);
-
-        &:hover {
-          background-color: var(--primary-very-low);
-        }
-      }
-    }
-  }
-
   &__form {
-    display: contents;
+    margin-top: var(--space-4);
   }
 
-  &__content {
-    grid-area: content;
-  }
-
-  &__footer {
-    grid-area: footer;
+  .d-nav-submenu {
     display: flex;
-    gap: 0.5em;
+    gap: var(--space-4);
+    border-bottom: 1px solid var(--content-border-color);
   }
 
-  &__delete-btn {
-    margin-left: auto;
-  }
-}
-
-.tag-settings-synonyms {
-  &__list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5em;
-    margin-bottom: 1em;
+  .d-breadcrumbs {
+    text-transform: capitalize;
   }
 
-  &__item {
-    display: flex;
-    align-items: center;
-    gap: 0.25em;
-    padding: 0.25em 0.5em;
-    background-color: var(--primary-very-low);
-    border-radius: 3px;
+  .d-page-header__title {
+    .tag-dropdown {
+      font-size: var(--font-down-4);
+    }
 
-    .synonym-tag {
-      display: flex;
-      align-items: center;
+    .select-kit-body {
+      font-size: var(--font-down-1);
+      font-weight: normal;
+    }
+
+    &-row {
+      margin-bottom: var(--space-4);
     }
   }
 
-  &__empty {
-    color: var(--primary-medium);
-    font-style: italic;
-    margin-bottom: 1em;
+  .select-kit.multi-select .multi-select-header .formatted-selection {
+    white-space: normal;
   }
-
-  &__chooser {
-    margin-bottom: 0.5em;
-  }
-
-  &__hint {
-    color: var(--primary-medium);
-    font-size: var(--font-down-1);
-  }
-}
-
-.tag-settings-localization {
-  padding: 1em;
-  margin-bottom: 1em;
-  background-color: var(--primary-very-low);
-  border-radius: 4px;
-
-  &__row {
-    display: flex;
-    gap: 1em;
-    align-items: flex-start;
-
-    .form-kit__field {
-      flex: 0 1 12em;
-    }
-  }
-
-  &__remove {
-    margin-left: auto;
-  }
-
-  > .form-kit__field {
-    max-width: 30em;
-  }
-}
-
-.add-localization {
-  margin-bottom: 1em;
 }

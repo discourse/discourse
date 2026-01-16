@@ -6,9 +6,19 @@ export default class TagEditRoute extends DiscourseRoute {
   @service router;
   @service siteSettings;
   @service store;
+  @service currentUser;
 
   beforeModel() {
     if (!this.siteSettings.experimental_tag_settings_page) {
+      const params = this.paramsFor("tag.edit");
+      return this.router.replaceWith(
+        "tag.show",
+        params.tag_slug,
+        params.tag_id
+      );
+    }
+
+    if (!this.currentUser?.canEditTags) {
       const params = this.paramsFor("tag.edit");
       return this.router.replaceWith(
         "tag.show",

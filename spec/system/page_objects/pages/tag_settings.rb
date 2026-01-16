@@ -22,23 +22,23 @@ module PageObjects
       end
 
       def header
-        find(".tag-settings__header h2")
+        find(".d-page-header__title")
       end
 
       def back_button
-        find(".tag-settings__back-btn")
+        all(".d-breadcrumbs a")[1]
       end
 
       def nav_tabs
-        find(".tag-settings__nav .nav-stacked")
+        find(".d-nav-submenu__tabs")
       end
 
       def general_tab
-        nav_tabs.find("li", text: I18n.t("js.tagging.general"))
+        nav_tabs.find("li", text: I18n.t("js.tagging.settings.general"))
       end
 
       def localizations_tab
-        nav_tabs.find("li", text: I18n.t("js.tagging.localizations"))
+        nav_tabs.find("li", text: I18n.t("js.tagging.settings.localizations"))
       end
 
       def click_general_tab
@@ -79,11 +79,11 @@ module PageObjects
       end
 
       def save_button
-        find(".tag-settings__footer button.btn-primary")
+        find(".form-kit__actions button[type='submit']")
       end
 
       def delete_button
-        find(".tag-settings__footer .btn-danger")
+        find(".d-page-header__actions .btn-danger")
       end
 
       def click_save
@@ -114,41 +114,48 @@ module PageObjects
       end
 
       # synonyms section
-      def synonyms_section
-        find(".tag-settings-synonyms")
+      def synonyms_field
+        find(".form-kit__field[data-name='synonyms']")
       end
 
       def has_synonyms_section?
-        has_css?(".tag-settings-synonyms")
+        has_css?(".form-kit__field[data-name='synonyms']")
+      end
+
+      def formatted_synonyms
+        synonyms_field.find(".formatted-selection").text
       end
 
       def synonym_items
-        all(".tag-settings-synonyms__item")
+        formatted_synonyms.split(", ")
       end
 
       def has_synonym?(name)
-        synonyms_section.has_css?(".tag-settings-synonyms__item", text: name)
+        synonym_items.include?(name)
       end
 
       def has_no_synonyms?
-        has_css?(".tag-settings-synonyms__empty")
+        header = synonyms_field.find(".multi-select-header")
+        header["data-name"].to_s.strip.empty?
       end
 
       def synonyms_chooser
-        PageObjects::Components::SelectKit.new(".tag-settings-synonyms__chooser .tag-chooser")
+        PageObjects::Components::SelectKit.new(
+          ".form-kit__field[data-name='synonyms'] .mini-tag-chooser",
+        )
       end
 
       def add_synonym(name)
         synonyms_chooser.expand
         synonyms_chooser.search(name)
         synonyms_chooser.select_row_by_value(name)
-        find(".tag-settings-synonyms__add .btn-primary").click
         self
       end
 
       def remove_synonym(name)
-        item = synonyms_section.find(".tag-settings-synonyms__item", text: name)
-        item.find(".btn-flat").click
+        synonyms_chooser.expand
+        find(".select-kit-body .selected-content button[data-name='#{name}']").click
+        synonyms_chooser.collapse
         self
       end
     end

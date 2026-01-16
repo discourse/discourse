@@ -1,16 +1,19 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { array } from "@ember/helper";
+import { array, concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
+import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
+import DPageHeader from "discourse/components/d-page-header";
 import Form from "discourse/components/form";
+import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import AddSynonymsConfirmation from "discourse/components/tag-settings/add-synonyms-confirmation";
 import TagSettingsLocalizations from "discourse/components/tag-settings/localizations";
-import TagSettingsSynonyms from "discourse/components/tag-settings/synonyms";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
+import TagDropdown from "discourse/select-kit/components/tag-dropdown";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -19,8 +22,29 @@ export default class TagSettings extends Component {
   @service dialog;
   @service toasts;
   @service siteSettings;
+  @service store;
 
   @tracked form = null;
+  @tracked tags = [];
+
+  constructor() {
+    super(...arguments);
+    this.loadTags();
+  }
+
+  async loadTags() {
+    try {
+      const tags = await this.store.findAll("tag");
+      this.tags = tags.content.map((tag) => ({
+        id: tag.id,
+        name: tag.name,
+      }));
+    } catch {}
+  }
+
+  get tagNames() {
+    return this.tags.map((t) => t.name);
+  }
 
   get formData() {
     return {
@@ -36,6 +60,59 @@ export default class TagSettings extends Component {
 
   get showLocalizationsTab() {
     return this.siteSettings.content_localization_enabled;
+  }
+
+  get hasTagGroups() {
+    return this.args.tag.tag_group_names?.length > 0;
+  }
+
+  get tagGroupsInfoPrefix() {
+    const count = this.args.tag.tag_group_names?.length || 0;
+    if (count === 1) {
+      return i18n("tagging.tag_groups_info_prefix.one");
+    }
+    return i18n("tagging.tag_groups_info_prefix.other");
+  }
+
+  get tagGroupNames() {
+    return this.args.tag.tag_group_names?.join(", ");
+  }
+
+  get hasCategories() {
+    return this.args.tag.categories?.length > 0;
+  }
+
+  get isCategoryRestricted() {
+    return this.args.tag.category_restricted;
+  }
+
+  get descriptionHtml() {
+    const parts = [];
+
+    if (this.hasTagGroups) {
+      const prefix =
+        this.args.tag.tag_group_names.length === 1
+          ? i18n("tagging.tag_groups_info_prefix.one")
+          : i18n("tagging.tag_groups_info_prefix.other");
+      const groups = (this.args.tag.tag_groups || [])
+        .map((tg) => `<a href="/tag_groups/${tg.id}">${tg.name}</a>`)
+        .join(", ");
+      parts.push(`${prefix}${groups}.`);
+    }
+
+    if (this.hasCategories) {
+      const categoriesHtml = this.args.tag.categories
+        .map(
+          (cat) =>
+            `<a href="/c/${cat.slug}/${cat.id}" class="badge-category">${cat.name}</a>`
+        )
+        .join(" ");
+      parts.push(`${i18n("tagging.restricted_to")} ${categoriesHtml}.`);
+    } else if (this.isCategoryRestricted) {
+      parts.push(i18n("tagging.category_restricted"));
+    }
+
+    return parts.join(" ");
   }
 
   @action
@@ -116,35 +193,88 @@ export default class TagSettings extends Component {
     });
   }
 
+  @action
+  handleSynonymChange(selectedTags) {
+    const originalSynonyms = this.args.tag.synonyms || [];
+    const originalIds = originalSynonyms.map((s) => s.id);
+    const selectedIds = selectedTags.map((t) => t.id);
+
+    const removed = originalSynonyms.filter((s) => !selectedIds.includes(s.id));
+    const removedIds = removed.map((s) => s.id);
+
+    const newSynonyms = selectedTags.filter((t) => !originalIds.includes(t.id));
+
+    this.form?.set("synonyms", selectedTags);
+    this.form?.set("removed_synonym_ids", removedIds);
+    this.form?.set("new_synonyms", newSynonyms);
+  }
+
+  get blockedTags() {
+    return [this.args.tag?.name].filter(Boolean);
+  }
+
   <template>
     <div class="tag-settings">
-      <div class="tag-settings__header">
-        <h2>{{i18n "tagging.settings.edit_title" name=@tag.name}}</h2>
-        <DButton
-          @route="tag.show"
-          @routeModels={{array @tag.slug @tag.id}}
-          @label="tagging.settings.back"
-          @icon="caret-left"
-          class="tag-settings__back-btn"
-        />
-      </div>
-
-      <div class="tag-settings__nav">
-        <ul class="nav nav-stacked">
-          <li class={{if (eq @selectedTab "general") "active"}}>
-            <LinkTo
-              @route="tag.edit.tab"
-              @models={{array
-                @parentParams.tag_slug
-                @parentParams.tag_id
-                "general"
-              }}
-            >
-              {{i18n "tagging.settings.general"}}
-            </LinkTo>
-          </li>
+      <DPageHeader
+        @descriptionLabel={{this.descriptionHtml}}
+        @hideTabs={{true}}
+      >
+        <:breadcrumbs>
+          <DBreadcrumbsItem @path="/tags" @label={{i18n "tagging.tags"}} />
+          <DBreadcrumbsItem
+            @path="/tag/{{@tag.slug}}/{{@tag.id}}"
+            @label={{@tag.name}}
+          />
+          <DBreadcrumbsItem
+            @path="/tag/{{@tag.slug}}/{{@tag.id}}/edit/general"
+            @label={{i18n "edit"}}
+          />
           {{#if this.showLocalizationsTab}}
-            <li class={{if (eq @selectedTab "localizations") "active"}}>
+            <DBreadcrumbsItem
+              @path="/tag/{{@tag.slug}}/{{@tag.id}}/edit/{{@selectedTab}}"
+              @label={{i18n (concat "tagging.settings." @selectedTab)}}
+            />
+          {{/if}}
+        </:breadcrumbs>
+        <:title>
+          <span class="tag-settings-title__label">{{i18n
+              "tagging.settings.edit_tag_prefix"
+            }}</span>
+          <span class="tag-settings-title__dropdown">
+            <TagDropdown
+              @tags={{this.tags}}
+              @value={{@tag.name}}
+              aria-label={{i18n "tagging.settings.select_tag"}}
+            />
+          </span>
+        </:title>
+        <:actions as |actions|>
+          {{#if @tag.can_admin}}
+            <actions.Danger
+              @action={{this.deleteTag}}
+              @icon="trash-can"
+              @label="tagging.settings.delete"
+            />
+          {{/if}}
+        </:actions>
+      </DPageHeader>
+
+      {{#if this.showLocalizationsTab}}
+        <div class="d-nav-submenu">
+          <HorizontalOverflowNav class="d-nav-submenu__tabs">
+            <li>
+              <LinkTo
+                @route="tag.edit.tab"
+                @models={{array
+                  @parentParams.tag_slug
+                  @parentParams.tag_id
+                  "general"
+                }}
+              >
+                {{i18n "tagging.settings.general"}}
+              </LinkTo>
+            </li>
+            <li>
               <LinkTo
                 @route="tag.edit.tab"
                 @models={{array
@@ -156,9 +286,9 @@ export default class TagSettings extends Component {
                 {{i18n "tagging.settings.localizations"}}
               </LinkTo>
             </li>
-          {{/if}}
-        </ul>
-      </div>
+          </HorizontalOverflowNav>
+        </div>
+      {{/if}}
 
       <Form
         @data={{this.formData}}
@@ -167,71 +297,75 @@ export default class TagSettings extends Component {
         class="tag-settings__form"
         as |form transientData|
       >
-        <form.Section class="tag-settings__content">
-          {{#if (eq @selectedTab "general")}}
-            <form.Field
-              @name="name"
-              @title={{i18n "tagging.settings.name"}}
-              @format="large"
-              @validation="required"
-              as |field|
-            >
-              <field.Input
-                placeholder={{i18n "tagging.settings.name_placeholder"}}
-                @maxlength={{this.siteSettings.max_tag_length}}
-                class="tag-name-input"
-              />
-            </form.Field>
-
-            <form.Field
-              @name="slug"
-              @title={{i18n "tagging.settings.slug"}}
-              @format="large"
-              as |field|
-            >
-              <field.Input
-                placeholder={{i18n "tagging.settings.slug_placeholder"}}
-              />
-            </form.Field>
-
-            <form.Field
-              @name="description"
-              @title={{i18n "tagging.description"}}
-              @format="large"
-              as |field|
-            >
-              <field.Textarea @height={{80}} />
-            </form.Field>
-
-            <form.Section @title={{i18n "tagging.synonyms"}}>
-              <TagSettingsSynonyms
-                @synonyms={{transientData.synonyms}}
-                @newSynonyms={{transientData.new_synonyms}}
-                @removedSynonymIds={{transientData.removed_synonym_ids}}
-                @tag={{@tag}}
-                @form={{form}}
-              />
-            </form.Section>
-          {{else if (eq @selectedTab "localizations")}}
-            <TagSettingsLocalizations
-              @localizations={{transientData.localizations}}
-              @tagId={{@tag.id}}
-              @form={{form}}
+        {{#if (eq @selectedTab "general")}}
+          <form.Field
+            @name="name"
+            @title={{i18n "tagging.settings.name"}}
+            @format="large"
+            @validation="required"
+            as |field|
+          >
+            <field.Input
+              placeholder={{i18n "tagging.settings.name_placeholder"}}
+              @maxlength={{this.siteSettings.max_tag_length}}
+              class="tag-name-input"
             />
-          {{/if}}
-        </form.Section>
+          </form.Field>
 
-        <form.Actions class="tag-settings__footer">
+          <form.Field
+            @name="slug"
+            @title={{i18n "tagging.settings.slug"}}
+            @format="large"
+            as |field|
+          >
+            <field.Input
+              placeholder={{i18n "tagging.settings.slug_placeholder"}}
+            />
+          </form.Field>
+
+          <form.Field
+            @name="description"
+            @title={{i18n "tagging.description"}}
+            @format="large"
+            @validation="length:0,1000"
+            as |field|
+          >
+            <field.Textarea @height={{80}} />
+          </form.Field>
+
+          <form.Field
+            @name="synonyms"
+            @title={{i18n "tagging.synonyms"}}
+            @description={{i18n
+              "tagging.settings.synonyms_subtitle"
+              name=@tag.name
+            }}
+            @format="large"
+            as |field|
+          >
+            <field.Custom>
+              <MiniTagChooser
+                @value={{transientData.synonyms}}
+                @onChange={{this.handleSynonymChange}}
+                @options={{hash
+                  everyTag=true
+                  blockedTags=this.blockedTags
+                  filterPlaceholder="tagging.settings.add_synonym_placeholder"
+                  maximum=200
+                }}
+              />
+            </field.Custom>
+          </form.Field>
+        {{else if (eq @selectedTab "localizations")}}
+          <TagSettingsLocalizations
+            @localizations={{transientData.localizations}}
+            @tagId={{@tag.id}}
+            @form={{form}}
+          />
+        {{/if}}
+
+        <form.Actions>
           <form.Submit @label="tagging.settings.save" id="save-tag" />
-
-          {{#if @tag.can_admin}}
-            <form.Button
-              @action={{this.deleteTag}}
-              @icon="trash-can"
-              @label="tagging.settings.delete"
-              class="btn-danger tag-settings__delete-btn"
-            />
-          {{/if}}
         </form.Actions>
       </Form>
     </div>

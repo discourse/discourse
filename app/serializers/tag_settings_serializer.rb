@@ -7,6 +7,7 @@ class TagSettingsSerializer < ApplicationSerializer
              :description,
              :synonyms,
              :tag_group_names,
+             :tag_groups,
              :category_restricted,
              :can_edit,
              :can_admin
@@ -39,6 +40,10 @@ class TagSettingsSerializer < ApplicationSerializer
     object.tag_groups.map(&:name)
   end
 
+  def tag_groups
+    object.tag_groups.map { |tg| { id: tg.id, name: tg.name } }
+  end
+
   def can_edit
     scope.can_edit_tag?(object)
   end
@@ -48,6 +53,10 @@ class TagSettingsSerializer < ApplicationSerializer
   end
 
   def include_tag_group_names?
+    scope.is_admin? || SiteSetting.tags_listed_by_group == true
+  end
+
+  def include_tag_groups?
     scope.is_admin? || SiteSetting.tags_listed_by_group == true
   end
 
