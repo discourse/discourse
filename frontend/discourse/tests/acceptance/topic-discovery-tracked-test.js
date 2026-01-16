@@ -22,7 +22,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
       return helper.response(cloneJSON(topicFixtures["/latest.json"]));
     });
 
-    server.get("/tag/:tag_name/notifications", () => {
+    server.get("/tag/:tag_slug/:tag_id/notifications.json", () => {
       return helper.response({
         tag_notification: {
           id: "test",
@@ -31,10 +31,16 @@ acceptance("Topic Discovery Tracked", function (needs) {
       });
     });
 
-    server.get("/tag/:tag_name/l/latest.json", (request) => {
+    server.get("/tag/:tag_slug/:tag_id/l/latest.json", (request) => {
       const response = cloneJSON(topicFixtures["/latest.json"]);
       // add tag with id to response so tracking state gets the tag id
-      response.topic_list.tags = [{ id: 99, name: request.params.tag_name }];
+      response.topic_list.tags = [
+        {
+          id: parseInt(request.params.tag_id, 10),
+          name: request.params.tag_slug,
+          slug: request.params.tag_slug,
+        },
+      ];
       return helper.response(response);
     });
   });
@@ -265,7 +271,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
       },
     ]);
 
-    await visit("/tag/some-other-tag");
+    await visit("/tag/some-other-tag/99");
 
     assert
       .dom("#navigation-bar li.unread")
@@ -281,7 +287,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
         "displays the right content on new link"
       );
 
-    await visit("/tag/some-other-tag?f=tracked");
+    await visit("/tag/some-other-tag/99?f=tracked");
 
     assert
       .dom("#navigation-bar li.unread")

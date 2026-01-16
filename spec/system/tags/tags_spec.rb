@@ -66,18 +66,20 @@ describe "Tags", type: :system do
       expect(discovery.topic_list).to have_no_topic_tags(topic_with_no_tags)
       expect(discovery.tag_drop).to have_selected_name("tags") # unselected
 
-      # /latest -> /tag/tag-one (by clicking tag on topic)
+      # /latest -> /tag/tag-one/id (by clicking tag on topic)
       discovery.topic_list.click_topic_tag(topic_with_one_tag, "tag-one")
-      expect(page).to have_current_path("/tag/tag-one")
+      expect(page).to have_current_path("/tag/tag-one/#{tag_one.id}")
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
 
       # /c/category
       category_page.visit(category)
       expect(discovery.topic_list).to have_topic_tag(topic_in_category_with_tag, "tag-three")
 
-      # /c/category -> /tags/c/category-slug/category-id/tag-name
+      # /c/category -> /tags/c/category-slug/category-id/tag-slug/tag-id
       discovery.tag_drop.select_row_by_name("tag-three")
-      expect(page).to have_current_path("/tags/c/#{category.slug}/#{category.id}/tag-three")
+      expect(page).to have_current_path(
+        "/tags/c/#{category.slug}/#{category.id}/tag-three/#{tag_three.id}",
+      )
       expect(discovery.tag_drop).to have_selected_name("tag-three")
       expect(discovery.topic_list).to have_topic(topic_in_category_with_tag)
 
@@ -88,9 +90,9 @@ describe "Tags", type: :system do
       expect(discovery.topic_list).to have_no_topic(topic_with_no_tags)
       expect(discovery.topic_list).to have_topic_tag(topic_with_one_tag, "tag-one")
 
-      # -> /tag/tag-one to /tag/tag-two
+      # -> /tag/tag-one to /tag/tag-two/id
       discovery.topic_list.click_topic_tag(topic_with_two_tags, "tag-two")
-      expect(page).to have_current_path("/tag/tag-two")
+      expect(page).to have_current_path("/tag/tag-two/#{tag_two.id}")
       expect(discovery.topic_list).to have_topic(topic_with_two_tags)
       expect(discovery.topic_list).to have_no_topic(topic_with_one_tag)
 
@@ -114,7 +116,7 @@ describe "Tags", type: :system do
       ## Sidebar
       expect(sidebar).to have_tag_section_links([tag_one, tag_three, tag_two])
       sidebar.click_section_link(tag_one.name)
-      expect(page).to have_current_path("/tag/tag-one")
+      expect(page).to have_current_path("/tag/tag-one/#{tag_one.id}")
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
     end
   end

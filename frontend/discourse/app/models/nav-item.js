@@ -33,8 +33,8 @@ export default class NavItem extends EmberObject {
       return path;
     }
 
-    const tagName = context.tag?.name;
-    if (tagName && Site.currentProp("filters").includes(filterType)) {
+    const tag = context.tag;
+    if (tag?.slug && Site.currentProp("filters").includes(filterType)) {
       includesTagContext = true;
 
       if (context.category) {
@@ -54,7 +54,8 @@ export default class NavItem extends EmberObject {
     }
 
     if (includesTagContext) {
-      path += `/${tagName}`;
+      // use canonical URL format with slug/id when id is available
+      path += tag.id ? `/${tag.slug}/${tag.id}` : `/${tag.slug}`;
     }
 
     if (includesTagContext || includesCategoryContext) {

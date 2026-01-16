@@ -39,8 +39,9 @@ describe "Tags intersection", type: :system do
     visit("/tags/intersection/sour/tangy/sour/sour")
     expect(page).to have_current_path("/tags/intersection/sour/tangy")
 
+    # when intersection reduces to single tag, redirect to canonical tag URL
     visit("/tags/intersection/sour/sour")
-    expect(page).to have_current_path("/tag/sour")
+    expect(page).to have_current_path("/tag/#{tag.slug}/#{tag.id}")
   end
 
   it "removes duplicates from the additional tags list" do

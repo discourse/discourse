@@ -571,6 +571,8 @@ class TagsController < ::ApplicationController
 
   def should_redirect_tag?(tag)
     return false if request.format.json?
+    # intersection routes use tag_name, not tag_slug/tag_id - don't redirect
+    return false if params[:additional_tag_names].present?
 
     if params[:tag_id].present?
       # new format - redirect if slug doesn't match
