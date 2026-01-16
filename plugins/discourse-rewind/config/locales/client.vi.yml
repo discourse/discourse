@@ -10,6 +10,7 @@ vi:
       preferences:
         enable_rewind: "Bật Discourse Rewind. Tính năng này sẽ hiển thị bản tóm tắt hoạt động cuối năm trên hồ sơ và ảnh đại diện của bạn."
         share_publicly: "Chia sẻ Discourse Rewind với các thành viên khác trên diễn đàn. Bất kỳ thành viên nào cũng có thể xem bản tóm tắt Discourse Rewind của bạn."
+      profile_link: "Xem Discourse Rewind %{rewindYear}"
       share:
         toggle_label:
           private: "Riêng tư"

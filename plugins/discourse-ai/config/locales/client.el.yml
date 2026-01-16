@@ -60,10 +60,6 @@ el:
               label: "Κατηγορίες"
             tags:
               label: "Ετικέτες"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Μοντέλο"
         llm_triage:
           fields:
             category:

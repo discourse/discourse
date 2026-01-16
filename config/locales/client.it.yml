@@ -5200,6 +5200,9 @@ it:
           impact_type_feature: "Funzionalità"
           impact_type_other: "Altri"
           status_experimental: "Sperimentale"
+          impact_role_admins: "Amministratori"
+          impact_role_moderators: "Moderatori"
+          impact_role_staff: "Staff"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -5595,7 +5598,6 @@ it:
         new_features:
           title: "Cosa c'è di nuovo?"
           subtitle: "Stiamo rilasciando nuove funzionalità e miglioramenti in continuazione. Questa pagina mostra i punti salienti, ma puoi cliccare su \"Scopri di più\" per vedere le note di rilascio approfondite."
-          previous_announcements: "Puoi vedere i precedenti annunci di nuove funzionalità su <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Scopri di più..."
           experimental: "Sperimentale"
           only_experiments: "Mostra solo le funzionalità sperimentali"

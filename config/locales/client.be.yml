@@ -1990,6 +1990,9 @@ be:
           all: "Усе"
           disabled: "Адключана"
           impact_type_other: "Іншае"
+          impact_role_admins: "адміністратары"
+          impact_role_moderators: "Мадэратары"
+          impact_role_staff: "персанал"
       config:
         developer:
           title: "для распрацоўшчыкаў"

@@ -113,14 +113,6 @@ nl:
             persona_id:
               label: "Persona"
               description: "Te gebruiken AI-persona voor rapportgeneratie"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Model"
-              description: "Het standaard taalmodel dat voor triage wordt gebruikt"
-            tool:
-              label: "Tool"
-              description: "Tool om te gebruiken voor triage (er mogen geen parameters zijn gedefinieerd voor de tool)"
         llm_persona_triage:
           fields:
             persona:

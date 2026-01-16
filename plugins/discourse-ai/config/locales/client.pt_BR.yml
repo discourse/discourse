@@ -113,14 +113,6 @@ pt_BR:
             persona_id:
               label: "Persona"
               description: "A persona de IA para usar na geração de relatórios"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Modelo"
-              description: "O modelo de linguagem padrão usado para triagem"
-            tool:
-              label: "Ferramenta"
-              description: "A ferramenta a ser usada para triagem (a ferramenta não pode ter parâmetros definidos)"
         llm_persona_triage:
           fields:
             persona:

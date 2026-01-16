@@ -5203,6 +5203,9 @@ fi:
           impact_type_feature: "Ominaisuus"
           impact_type_other: "Muut"
           status_experimental: "Kokeellinen"
+          impact_role_admins: "Ylläpitäjät"
+          impact_role_moderators: "Valvojat"
+          impact_role_staff: "Henkilökunta"
       config:
         about:
           title: "Tietoa sivustostasi"
@@ -5598,7 +5601,6 @@ fi:
         new_features:
           title: "Mitä uutta?"
           subtitle: "Julkaisemme jatkuvasti uusia ominaisuuksia ja parannuksia. Tämä sivu kattaa kohokohdat, mutta voit katsoa kattavat julkaisutiedot napsauttamalla Lisätietoja."
-          previous_announcements: "Voit nähdä aiemmat ilmoitukset uusista ominaisuuksista <a href='%{url}' target='_blank'>Discourse Metassa</a>"
           learn_more: "Lisätietoja..."
           experimental: "Kokeellinen"
           only_experiments: "Näytä vain kokeelliset ominaisuudet"
