@@ -32,7 +32,7 @@
     "@fullcalendar/moment": "^6.1.20",
     "@fullcalendar/moment-timezone": "^6.1.20",
     "@fullcalendar/timegrid": "^6.1.20",
-    "@glimmer/syntax": "0.93.1",
+    "@glimmer/syntax": "0.95.0",
     "@glint/ember-tsc": "^1.0.8",
     "@glint/template": "^1.7.3",
     "@highlightjs/cdn-assets": "11.11.1",
