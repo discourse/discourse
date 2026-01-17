@@ -257,14 +257,11 @@ html {
     color: dark-light-choose($primary, $secondary);
   }
 
-  .uploaded-image-preview
-    .image-upload-controls
-    .image-uploader-lightbox-btn
-    .d-icon {
+  .uploaded-file-preview .expand-overlay .file-uploader-lightbox-btn .d-icon {
     color: var(--primary);
   }
 
-  .settings .setting .setting-value .uploaded-image-preview {
+  .settings .setting .setting-value .uploaded-file-preview {
     background-color: var(--primary-very-low);
   }
 
