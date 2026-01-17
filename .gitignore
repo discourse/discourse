@@ -137,3 +137,5 @@ frontend/discourse-types/declarations
 /.cursor
 /frontend/discourse-types/external-types
 /frontend/discourse-types/external-types.d.ts
+/frontend/discourse-i18n/src/index.d.ts
+/frontend/discourse-i18n/src/index.d.ts.map

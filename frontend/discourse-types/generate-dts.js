@@ -24,6 +24,7 @@ const packageNames = [
   "@types/qunit",
   "@types/rsvp",
   "@types/sinon",
+  "discourse-i18n",
   "ember-modifier",
   "ember-qunit",
   "ember-source",
