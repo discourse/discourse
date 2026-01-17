@@ -25,6 +25,18 @@
     "./admin/*": {
       "types": "./declarations/admin/*.d.ts"
     },
+    "./dialog-holder/*": {
+      "types": "./declarations/dialog-holder/*.d.ts"
+    },
+    "./float-kit/*": {
+      "types": "./declarations/float-kit/*.d.ts"
+    },
+    "./select-kit/*": {
+      "types": "./declarations/select-kit/*.d.ts"
+    },
+    "./truth-helpers/*": {
+      "types": "./declarations/truth-helpers/*.d.ts"
+    },
     "./*": {
       "types": "./declarations/app/*.d.ts"
     }
