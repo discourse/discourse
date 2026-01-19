@@ -51,6 +51,18 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
         null
       );
     });
+
+    test("returns error when mobile is not a boolean", function (assert) {
+      const error = this.condition.validate({ mobile: "true" });
+      assert.true(error?.message.includes("must be a boolean"));
+      assert.strictEqual(error.path, "mobile");
+    });
+
+    test("returns error when touch is not a boolean", function (assert) {
+      const error = this.condition.validate({ touch: 1 });
+      assert.true(error?.message.includes("must be a boolean"));
+      assert.strictEqual(error.path, "touch");
+    });
   });
 
   module("evaluate", function (nestedHooks) {

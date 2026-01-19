@@ -71,8 +71,9 @@ export default class BlockViewportCondition extends BlockCondition {
    * @param {Object} args - The condition arguments.
    * @param {string} [args.min] - Minimum breakpoint (viewport must be at least this size).
    * @param {string} [args.max] - Maximum breakpoint (viewport must be at most this size).
+   * @param {boolean} [args.mobile] - Whether to check for mobile device.
    * @param {boolean} [args.touch] - Whether to check for touch capability.
-   * @throws {BlockError} If validation fails.
+   * @returns {Object|null} Error object with message and optional path, or null if valid.
    */
   validate(args) {
     // Check base class validation (source parameter)
@@ -81,7 +82,7 @@ export default class BlockViewportCondition extends BlockCondition {
       return baseError;
     }
 
-    const { min, max } = args;
+    const { min, max, mobile, touch } = args;
 
     if (min && !BREAKPOINTS.includes(min)) {
       const suggestion = formatWithSuggestion(min, BREAKPOINTS);
@@ -114,6 +115,20 @@ export default class BlockViewportCondition extends BlockCondition {
             `\`max\` breakpoint "${max}". No viewport can satisfy this condition.`,
         };
       }
+    }
+
+    if (mobile !== undefined && typeof mobile !== "boolean") {
+      return {
+        message: "`mobile` must be a boolean value (true or false).",
+        path: "mobile",
+      };
+    }
+
+    if (touch !== undefined && typeof touch !== "boolean") {
+      return {
+        message: "`touch` must be a boolean value (true or false).",
+        path: "touch",
+      };
     }
 
     return null;
