@@ -113,14 +113,6 @@ ar:
             persona_id:
               label: "الشخصية"
               description: "شخصية الذكاء الاصطناعي المستخدمة لإنشاء التقرير"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "النموذج"
-              description: "نموذج اللغة الافتراضي المستخدم لعمليات الفرز"
-            tool:
-              label: "أداة"
-              description: "الأداة المستخدمة في عمليات الفرز (يجب ألّا تحتوي الأداة على أي معلمات محددة)"
         llm_persona_triage:
           fields:
             persona:

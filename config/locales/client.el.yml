@@ -4818,6 +4818,9 @@ el:
           disabled: "Απενεργοποιημένο"
           impact_type_other: "Άλλα"
           status_experimental: "Πειραματικό"
+          impact_role_admins: "Διαχειριστές"
+          impact_role_moderators: "Συντονιστές"
+          impact_role_staff: "Συνεργάτες"
       config:
         developer:
           title: "Developer"

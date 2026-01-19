@@ -4355,6 +4355,9 @@ da:
           disabled: "Deaktiveret"
           impact_type_other: "Andre"
           status_experimental: "Eksperimentel"
+          impact_role_admins: "Admins"
+          impact_role_moderators: "Moderatorer"
+          impact_role_staff: "Personale"
       config:
         about:
           title: "Om dit websted"

@@ -6,17 +6,18 @@
     <meta name="color-scheme" content="light dark">
 
     <%- if @has_test_bundle && !@suggested_themes %>
+      <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
+      <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
+      <%= theme_translations_lookup %>
+
       <%= preload_script "vendor" %>
       <%= preload_script "test-support" %>
       <%= preload_script "discourse" %>
       <%= preload_script "test" %>
-      <%= preload_script_url ExtraLocalesController.url("main") %>
-      <%= preload_script_url ExtraLocalesController.url("mf") %>
       <%- Discourse.find_plugin_js_assets(include_disabled: true, include_admin_asset: true, only: @required_plugins).each do |file| %>
         <%= preload_script file %>
       <%- end %>
       <%= preload_script_url "/bootstrap/site-settings-for-tests.js", type_module: true %>
-      <%= theme_translations_lookup %>
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
 

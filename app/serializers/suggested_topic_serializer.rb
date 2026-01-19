@@ -15,8 +15,13 @@ class SuggestedTopicSerializer < ListableTopicSerializer
              :views,
              :category_id,
              :featured_link,
-             :featured_link_root_domain
+             :featured_link_root_domain,
+             :op_like_count
   has_many :posters, serializer: SuggestedPosterSerializer, embed: :objects
+
+  def op_like_count
+    object.first_post && object.first_post.like_count
+  end
 
   def posters
     object.posters || []

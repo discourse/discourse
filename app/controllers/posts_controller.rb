@@ -424,8 +424,7 @@ class PostsController < ApplicationController
     posts = Post.where(id: post_ids_including_replies).order(:id)
     raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
 
-    # Make sure we can delete the posts
-    posts.each { |p| guardian.ensure_can_delete!(p) }
+    posts.each { |p| guardian.ensure_can_delete_post_or_topic!(p) }
 
     Post.transaction do
       posts.each_with_index do |p, i|

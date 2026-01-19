@@ -1,4 +1,7 @@
+import { registerDeprecationHandler as emberRegisterDeprecationHandler } from "@ember/debug";
 import DeprecationWorkflow from "../deprecation-workflow";
+import { isRailsTesting } from "./environment";
+import { consolePrefix } from "./source-identifier";
 
 const handlers = [];
 const disabledDeprecations = [];
@@ -36,17 +39,17 @@ export default function deprecated(msg, options = {}) {
     );
 
   const formattedMessage = buildDeprecationMessage(msg, options, raiseError);
-  const consolePrefix = getConsolePrefix(source);
+  const resolvedConsolePrefix = getConsolePrefix(source);
 
   // Execute all registered deprecation handlers
   handlers.forEach((h) => h(formattedMessage, options));
 
   if (!DeprecationWorkflow.shouldSilence(id)) {
     if (raiseError) {
-      raiseDeprecationError(consolePrefix, formattedMessage);
+      raiseDeprecationError(resolvedConsolePrefix, formattedMessage);
     }
 
-    console.warn(...[consolePrefix, formattedMessage].filter(Boolean)); //eslint-disable-line no-console
+    console.warn(...[resolvedConsolePrefix, formattedMessage].filter(Boolean)); //eslint-disable-line no-console
   }
 }
 /**
@@ -133,24 +136,7 @@ function ensureEmberDeprecationSilencer() {
     }
   };
 
-  if (require.has("@ember/debug")) {
-    require("@ember/debug").registerDeprecationHandler(
-      emberDeprecationSilencer
-    );
-  }
-}
-
-/**
- * Conditionally requires a module if it's available in the require registry.
- *
- * This is a simplified version of the optionalRequire function from discourse/lib/utilities,
- * designed to work in code paths where the full utilities module is not available (e.g., pretty-text).
- *
- * @param {string} path - The module path to require
- * @returns {any|undefined} The required module if available, undefined otherwise
- */
-function requireIfAvailable(path) {
-  return require.has(path) ? require(path) : undefined;
+  emberRegisterDeprecationHandler(emberDeprecationSilencer);
 }
 
 /**
@@ -191,24 +177,21 @@ function buildDeprecationMessage(msg, options, raiseError) {
  * @returns {String} The console prefix
  */
 function getConsolePrefix(source) {
-  return (
-    requireIfAvailable("discourse/lib/source-identifier", "*")?.consolePrefix(
-      null,
-      source
-    ) || ""
-  );
+  consolePrefix(null, source) || "";
 }
 
 /**
  * Raises a deprecation error with additional context for Rails testing
  *
- * @param {String} consolePrefix The console prefix
+ * @param {String} resolvedConsolePrefix The console prefix
  * @param {String} message The full deprecation message
  */
-function raiseDeprecationError(consolePrefix, message) {
-  const error = new Error([consolePrefix, message].filter(Boolean).join(" "));
+function raiseDeprecationError(resolvedConsolePrefix, message) {
+  const error = new Error(
+    [resolvedConsolePrefix, message].filter(Boolean).join(" ")
+  );
 
-  if (requireIfAvailable("discourse/lib/environment", "*")?.isRailsTesting()) {
+  if (isRailsTesting()) {
     // eslint-disable-next-line no-console
     console.trace(`fatal_deprecation:${JSON.stringify(error.stack)}`);
   }
