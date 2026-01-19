@@ -102,6 +102,8 @@ RSpec.describe UpcomingChanges::Promote do
     end
 
     context "when everything is ok" do
+      fab!(:admin_2, :admin)
+
       let(:promotion_status_threshold) { :beta }
 
       it { is_expected.to run_successfully }
@@ -128,8 +130,6 @@ RSpec.describe UpcomingChanges::Promote do
       end
 
       it "notifies admins about the upcoming change" do
-        fab!(:admin_2, :admin)
-
         expect { result }.to change {
           Notification.where(
             notification_type: Notification.types[:upcoming_change_automatically_promoted],

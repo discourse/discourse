@@ -96,14 +96,20 @@ class UpcomingChanges::Promote
       upcoming_change_humanized_name: SiteSetting.humanized_name(params.setting_name),
     }.to_json
 
-    # TODO (martin) Do this in bulk, there could be > 100 admins.
-    User.human_users.admins.each do |admin|
-      Notification.create!(
-        notification_type: Notification.types[:upcoming_change_automatically_promoted],
-        user: admin,
-        data:,
-      )
-    end
+    records =
+      User
+        .human_users
+        .admins
+        .pluck(:id)
+        .map do |admin_id|
+          {
+            user_id: admin_id,
+            notification_type: Notification.types[:upcoming_change_automatically_promoted],
+            data:,
+          }
+        end
+
+    Notification::Action::BulkCreate.call(records:)
   end
 
   def create_event(params:)

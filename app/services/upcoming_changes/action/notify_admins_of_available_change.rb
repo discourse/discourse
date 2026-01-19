@@ -30,14 +30,16 @@ class UpcomingChanges::Action::NotifyAdminsOfAvailableChange < Service::ActionBa
       upcoming_change_humanized_name: SiteSetting.humanized_name(change_name),
     }.to_json
 
-    # TODO (martin) Do this in bulk, there could be > 100 admins.
-    all_admins.each do |admin|
-      Notification.create!(
-        notification_type: Notification.types[:upcoming_change_available],
-        user: admin,
-        data:,
-      )
-    end
+    records =
+      all_admins.map do |admin|
+        {
+          user_id: admin.id,
+          notification_type: Notification.types[:upcoming_change_available],
+          data:,
+        }
+      end
+
+    Notification::Action::BulkCreate.call(records:)
   end
 
   def create_event
