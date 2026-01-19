@@ -280,7 +280,7 @@ export default class HighContextTopicCard extends Component {
               aria-label={{this.voteCountLabel}}
               title={{this.voteCountLabel}}
             >
-              {{icon "stamp" skipTitle=true}}
+              {{icon "check-to-slot" skipTitle=true}}
               <span class="hc-topic-card__votes-count">{{number
                   @topic.vote_count
                 }}</span>
