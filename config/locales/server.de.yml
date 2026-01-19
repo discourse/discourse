@@ -2091,6 +2091,7 @@ de:
     auto_silence_fast_typers_on_first_post: "Automatisches Stummschalten von Benutzern, die `fast typing threshold` nicht erreichen"
     auto_silence_fast_typers_max_trust_level: "Maximale Vertrauensstufe, um „Schnelltipper“ stummzuschalten."
     auto_silence_first_post_regex: "Regex ohne Berücksichtigung der Groß-/Kleinschreibung, die bei Erfolg dazu führt, dass der erste Beitrag des Benutzers stummgeschaltet und an die Genehmigungswarteschlange gesendet wird. Beispiel: wüten|a[bc]a wird dazu führen, dass alle Beiträge, die „wüten“ oder „aba“ oder „aca“ enthalten, stummgeschaltet werden. Gilt nur für den ersten Beitrag. VERALTET: Verwende stattdessen „Beobachtete Wörter stummschalten“."
+    moderator_guide_topic: "Das Thema, das beschreibt, wie ihr eure Community moderiert. Der Link wird in der Warteschlange für Moderatoren und Administratoren angezeigt."
     reviewable_claiming: "Muss überprüfbarer Inhalt reserviert werden, bevor er bearbeitet werden kann?"
     reviewable_default_topics: "Zeige überprüfbaren Inhalt standardmäßig nach Themen gruppiert."
     reviewable_default_visibility: "Zeige überprüfbare Elemente nicht, solange sie diese Priorität nicht haben"
@@ -2099,6 +2100,7 @@ de:
     allow_all_users_to_flag_illegal_content: "Anonyme Benutzer sehen die Information, dass sie den Administratoren eine E-Mail schicken müssen, um illegale Inhalte zu melden. Diese Einstellung hat Vorrang vor „flag post allowed groups“."
     email_address_to_report_illegal_content: "Wenn dieses Feld leer gelassen wird, wird die Standard-E-Mail-Adresse des Website-Administrators verwendet."
     cooldown_hours_until_reflag: "Wie lange Benutzer warten müssen, bevor sie einen Beitrag erneut melden können"
+    slow_mode_prevents_editing: "Verhindert der langsame Modus Bearbeitungen, nachdem die Zeit, die in „editing grace period“ konfiguriert wurde, verstrichen ist?"
     reply_by_email_enabled: "Aktiviere die Funktion, die es Benutzern ermöglicht, direkt per E-Mail auf Themen zu antworten, anstatt sich auf der Website anmelden zu müssen. Weitere Informationen findest du im <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Leitfaden auf Meta</a> ."
     reply_by_email_address: "Vorlage für Antwort per E-Mail (eingehende E-Mail-Adresse), zum Beispiel: %%{reply_key}@reply.example.com oder replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste der alternativen Vorlagen für die Beantwortung per E-Mail (eingehende E-Mail-Adressen). Beispiel: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2164,6 +2166,7 @@ de:
     relative_date_duration: "Anzahl der Tage nach Veröffentlichung, nach der das Veröffentlichungsdatum relativ (7 Tage) statt absolut (20. Februar) dargestellt wird."
     delete_user_max_post_age: "Verhindere das Löschen von Benutzerkonten, deren erster Beitrag mehr als (x) Tage alt ist."
     delete_all_posts_max: "Die maximale Anzahl von Beiträgen, welche auf einmal gelöscht werden kann. Hat ein Benutzer mehr Beiträge, so können die Beiträge nicht auf einmal und der Benutzer nicht gelöscht werden."
+    delete_all_posts_background_threshold: "Die maximale Anzahl von Beiträgen, welche mit „Alle Beiträge löschen“ auf einmal gelöscht werden kann, bevor die Löschung im Hintergrund bearbeitet wird."
     delete_user_self_max_post_count: "Die maximale Anzahl an Beiträgen, die ein Benutzer haben darf, um sein Konto eigenständig löschen zu können. Setze den Wert auf -1, um das eigenständige Löschen von Konten zu deaktivieren."
     username_change_period: "Die maximale Anzahl von Tagen nach der Registrierung, nach der Konten ihren Benutzernamen ändern können (0 verbietet die Änderung des Benutzernamen)."
     email_editable: "Erlaube Benutzern, ihre E-Mail-Adresse nach der Registrierung zu ändern."
@@ -4739,12 +4742,18 @@ de:
     nice_share:
       name: Schön geteilt
       description: Hat einen Beitrag mit 25 Besuchern geteilt
+      long_description: |
+        Dieses Abzeichen wird verliehen, wenn du einen Link teilst, der von 25 Besuchern angeklickt wurde. Danke, dass du dazu beigetragen hast, unsere Diskussionen und diese Community bekannt zu machen!
     good_share:
       name: Gut geteilt
       description: Hat einen Beitrag mit 300 Besuchern geteilt
+      long_description: |
+        Dieses Abzeichen wird verliehen, wenn du einen Link teilst, der von 300 Besuchern angeklickt wurde. Gute Arbeit! Du hast eine großartige Diskussion einer ganzen Reihe neuer Leute zur Schau gestellt und dieser Community geholfen zu wachsen.
     great_share:
       name: Großartig geteilt
       description: Hat einen Beitrag mit 1000 Besuchern geteilt
+      long_description: |
+        Dieses Abzeichen wird verliehen, wenn du einen Link teilst, der von 1000 Besuchern angeklickt wurde. Wow! Du hast eine interessante Diskussion einer riesigen Leserschaft nähergebracht und unserer Community sehr geholfen zu wachsen!
     first_like:
       name: Erstes „Gefällt mir“
       description: Hat einen Beitrag mit „Gefällt mir“ markiert
@@ -4912,6 +4921,9 @@ de:
       one: "Du muss mindestens %{count} Schlagwort auswählen."
       other: "Du musst mindestens %{count} Schlagwörter auswählen."
     upload_row_too_long: "Die CSV-Datei sollte ein Schlagwort pro Zeile haben. Optional kann das Schlagwort von einem Komma und dem Namen einer Schlagwortgruppe gefolgt sein."
+    bulk_create:
+      invalid_params: "Ungültige Parameter. Bitte gib ein Array bestehend aus Schlagwort-Namen an."
+      invalid_name: "Ungültiger Schlagwort-Name"
     forbidden:
       invalid:
         one: "Das ausgewählte Schlagwort kann nicht genutzt werden."

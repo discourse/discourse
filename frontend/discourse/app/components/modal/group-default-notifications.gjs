@@ -7,14 +7,12 @@ import { i18n } from "discourse-i18n";
 export default class GroupDefaultNotifications extends Component {
   @action
   updateExistingUsers() {
-    this.args.model.setUpdateExistingUsers(true);
-    this.args.closeModal();
+    this.args.closeModal(true);
   }
 
   @action
   cancel() {
-    this.args.model.setUpdateExistingUsers(false);
-    this.args.closeModal();
+    this.args.closeModal(false);
   }
 
   <template>

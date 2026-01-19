@@ -25,7 +25,7 @@ vi:
           status_online: "● trực tuyến"
         invites:
           title: Lời mời
-          invitee_posts: Bài đăng đã được tạo
+          invitee_posts: Tút đã được tạo
           invitee_likes: Lượt Likes
         new_user_interactions:
           likes_given: Lượt Likes
