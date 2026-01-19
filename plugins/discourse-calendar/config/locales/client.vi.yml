@@ -52,7 +52,7 @@ vi:
       models:
         event:
           expired: "Hết hạn"
-          closed: "Đã "
+          closed: "Đã đóng"
           status:
             public:
               title: "Công khai"
