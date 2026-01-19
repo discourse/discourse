@@ -59,7 +59,7 @@ vi:
         topic_notifications:
           title: "Thông báo chủ đề"
         post:
-          title: "Bài đăng"
+          title: "Tút"
         topic_map:
           title: "Bản đồ chủ đề"
         site_header:
@@ -67,7 +67,7 @@ vi:
         more_topics:
           title: "Thêm chủ đề"
         post_menu:
-          title: "Menu Bài Đăng"
+          title: "Menu tút"
         modal:
           title: "Cửa sổ bật lên"
           header: "Phương thức Tiêu đề"

@@ -176,6 +176,7 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
+        semantic_search_loading: "Tìm kiếm thêm kết quả bằng AI"
         semantic_search_results:
           toggle: "Xem %{count} kết quả tìm thấy bằng AI"
           toggle_hidden: "Đang ẩn %{count} kết quả tìm thấy bằng AI"
@@ -186,6 +187,7 @@ vi:
           results_explanation: "Khi được bật, các kết quả tìm kiếm AI bổ sung sẽ được thêm vào bên dưới."
           invalid_sort: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
         semantic_search_unavailable_tooltip: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
+        ai_generated_result: "Kết quả tìm kiếm được tìm thấy bằng AI"
       ai_bot:
         debug_ai_modal:
           request: "Yêu cầu"

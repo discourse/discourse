@@ -14,7 +14,7 @@ vi:
         vote_archived_topic: "Bạn không thể bình chọn cho các chủ đề đã được lưu trữ."
         vote_closed_topic: "Bạn không thể bỏ phiếu cho các chủ đề đã đóng."
   site_settings:
-    post_voting_undo_vote_action_window: "Số phút tối đa người dùng được phép hủy bỏ bình chọn trong các chủ đề Bỏ phiếu sau bài đăng (nhập 0 để không giới hạn)."
+    post_voting_undo_vote_action_window: "Số phút tối đa người dùng được phép hủy bỏ bình chọn trong các chủ đề Bỏ phiếu sau tút (nhập 0 để không giới hạn)."
   post_action_types:
     vote:
       title: "Bình chọn"

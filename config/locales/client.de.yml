@@ -2597,6 +2597,7 @@ de:
     welcome_banner_page_visibility:
       top_menu_pages: "Obere Menüseiten"
       homepage: "Homepage"
+      discovery: "Discovery"
       all_pages: "Alle Seiten"
     composition_mode:
       markdown: "Markdown"
