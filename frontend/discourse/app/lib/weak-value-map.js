@@ -1,5 +1,3 @@
-/* global WeakRef, FinalizationRegistry */
-
 /**
  * A Map that holds weak references to its values, allowing them to be
  * garbage collected when no other references exist.
