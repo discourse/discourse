@@ -21,12 +21,15 @@ import { blockCondition } from "./decorator";
  *
  * ## Value Matching Rules
  *
- * Uses the shared `matchValue` utility from `value-matcher.js`:
+ * When `value` is omitted, passes if the property is truthy.
  *
- * - **undefined**: Passes if `targetValue` is truthy
- * - **Array**: Passes if `targetValue` matches ANY array element (OR logic)
- * - **Object with `not`**: Passes if `targetValue` does NOT match `not` value
- * - **Other**: Passes if `targetValue === value`
+ * When `value` is provided, uses the shared `matchValue` utility:
+ *
+ * - **Primitive**: Passes if `actual === value` (strict equality)
+ * - **RegExp**: Passes if `actual` (coerced to string) matches the pattern
+ * - **[...values]**: Passes if `actual` matches ANY element (OR logic)
+ * - **`{ not: value }`**: Passes if `actual` does NOT match `value`
+ * - **`{ any: [...] }`**: Passes if `actual` matches ANY spec in array (OR logic)
  *
  * @example
  * // Check if topic is closed
@@ -47,6 +50,14 @@ import { blockCondition } from "./decorator";
  * @example
  * // Check topic is NOT closed
  * { type: "outletArg", path: "topic.closed", value: { not: true } }
+ *
+ * @example
+ * // Check category slug matches pattern
+ * { type: "outletArg", path: "category.slug", value: /^support/ }
+ *
+ * @example
+ * // Check topic is closed OR archived (using any)
+ * { type: "outletArg", path: "topic.closed", value: { any: [true, { not: false }] } }
  */
 @blockCondition({
   type: "outletArg",
@@ -84,6 +95,12 @@ export default class BlockOutletArgCondition extends BlockCondition {
           `Use dot-notation with alphanumeric characters (e.g., "user.trust_level").`,
         path: "path",
       };
+    }
+
+    // Validate parameter types
+    const typeError = this.validateTypes(args, { exists: "boolean" });
+    if (typeError) {
+      return typeError;
     }
 
     // Check for conflicting conditions

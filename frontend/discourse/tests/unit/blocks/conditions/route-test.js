@@ -1088,6 +1088,12 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.true(error?.message.includes("Must provide `urls` or `pages`"));
     });
 
+    test("returns error when urls contains non-string values", function (assert) {
+      const error = this.validateCondition({ urls: ["/path", 123, "/other"] });
+      assert.true(error?.message.includes("must contain only string"));
+      assert.strictEqual(error.path, "urls[1]");
+    });
+
     test("returns error for unknown page type", function (assert) {
       const error = this.validateCondition({ pages: ["INVALID_PAGE"] });
       assert.true(error?.message.includes("Unknown page type 'INVALID_PAGE'"));

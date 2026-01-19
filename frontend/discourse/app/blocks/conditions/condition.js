@@ -174,6 +174,89 @@ export class BlockCondition {
   }
 
   /**
+   * Validates argument types against a type specification map.
+   * Skips validation for undefined values.
+   *
+   * @param {Object} args - The condition arguments.
+   * @param {Object<string, string>} typeMap - Map of argument names to expected types.
+   *   Supported types: "boolean", "string", "number", "array", "string[]", "number[]"
+   * @returns {{ message: string, path: string } | null} Error or null if valid.
+   *
+   * @example
+   * const error = this.validateTypes(args, {
+   *   loggedIn: "boolean",
+   *   admin: "boolean",
+   *   groups: "string[]",
+   * });
+   * if (error) return error;
+   */
+  validateTypes(args, typeMap) {
+    for (const [name, expectedType] of Object.entries(typeMap)) {
+      const value = args[name];
+      if (value === undefined) {
+        continue;
+      }
+
+      const error = this.#validateType(value, name, expectedType);
+      if (error) {
+        return error;
+      }
+    }
+    return null;
+  }
+
+  #validateType(value, name, expectedType) {
+    switch (expectedType) {
+      case "boolean":
+        if (typeof value !== "boolean") {
+          return {
+            message: `\`${name}\` must be a boolean value.`,
+            path: name,
+          };
+        }
+        break;
+      case "string":
+        if (typeof value !== "string") {
+          return { message: `\`${name}\` must be a string.`, path: name };
+        }
+        break;
+      case "number":
+        if (typeof value !== "number") {
+          return { message: `\`${name}\` must be a number.`, path: name };
+        }
+        break;
+      case "array":
+        if (!Array.isArray(value)) {
+          return { message: `\`${name}\` must be an array.`, path: name };
+        }
+        break;
+      case "string[]":
+        if (!Array.isArray(value)) {
+          return { message: `\`${name}\` must be an array.`, path: name };
+        }
+        if (value.some((v) => typeof v !== "string")) {
+          return {
+            message: `\`${name}\` must contain only string values.`,
+            path: name,
+          };
+        }
+        break;
+      case "number[]":
+        if (!Array.isArray(value)) {
+          return { message: `\`${name}\` must be an array.`, path: name };
+        }
+        if (value.some((v) => typeof v !== "number")) {
+          return {
+            message: `\`${name}\` must contain only number values.`,
+            path: name,
+          };
+        }
+        break;
+    }
+    return null;
+  }
+
+  /**
    * Resolves the `source` parameter value based on the condition's `sourceType`.
    *
    * - `sourceType: "outletArgs"`: Extracts the property path from `@outletArgs.path.to.value`

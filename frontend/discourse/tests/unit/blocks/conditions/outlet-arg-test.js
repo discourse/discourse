@@ -59,6 +59,12 @@ module("Unit | Blocks | Condition | outletArg", function (hooks) {
         null
       );
     });
+
+    test("returns error when exists is not a boolean", function (assert) {
+      const error = this.condition.validate({ path: "user", exists: "true" });
+      assert.true(error?.message.includes("must be a boolean"));
+      assert.strictEqual(error.path, "exists");
+    });
   });
 
   module("evaluate", function () {

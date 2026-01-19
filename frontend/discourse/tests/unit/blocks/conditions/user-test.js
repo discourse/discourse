@@ -107,6 +107,42 @@ module("Unit | Blocks | Condition | user", function (hooks) {
       );
     });
 
+    test("returns error when loggedIn is not a boolean", function (assert) {
+      const error = this.condition.validate({ loggedIn: "true" });
+      assert.true(error?.message.includes("must be a boolean"));
+      assert.strictEqual(error.path, "loggedIn");
+    });
+
+    test("returns error when admin is not a boolean", function (assert) {
+      const error = this.condition.validate({ admin: 1 });
+      assert.true(error?.message.includes("must be a boolean"));
+      assert.strictEqual(error.path, "admin");
+    });
+
+    test("returns error when moderator is not a boolean", function (assert) {
+      const error = this.condition.validate({ moderator: "yes" });
+      assert.true(error?.message.includes("must be a boolean"));
+      assert.strictEqual(error.path, "moderator");
+    });
+
+    test("returns error when staff is not a boolean", function (assert) {
+      const error = this.condition.validate({ staff: 0 });
+      assert.true(error?.message.includes("must be a boolean"));
+      assert.strictEqual(error.path, "staff");
+    });
+
+    test("returns error when groups is not an array", function (assert) {
+      const error = this.condition.validate({ groups: "beta-testers" });
+      assert.true(error?.message.includes("must be an array"));
+      assert.strictEqual(error.path, "groups");
+    });
+
+    test("returns error when groups contains non-string values", function (assert) {
+      const error = this.condition.validate({ groups: ["valid", 123] });
+      assert.true(error?.message.includes("must contain only string"));
+      assert.strictEqual(error.path, "groups");
+    });
+
     test("passes valid configurations", function (assert) {
       assert.strictEqual(this.condition.validate({ loggedIn: true }), null);
       assert.strictEqual(this.condition.validate({ loggedIn: false }), null);

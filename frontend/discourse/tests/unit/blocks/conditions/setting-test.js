@@ -433,6 +433,33 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
         null
       );
     });
+
+    test("returns error when enabled is not a boolean", function (assert) {
+      const error = this.validateCondition({
+        name: "enable_badges",
+        enabled: "true",
+      });
+      assert.true(error?.message.includes("must be a boolean"));
+      assert.strictEqual(error.path, "enabled");
+    });
+
+    test("returns error when includes is not an array", function (assert) {
+      const error = this.validateCondition({
+        name: "desktop_category_page_style",
+        includes: "categories_only",
+      });
+      assert.true(error?.message.includes("must be an array"));
+      assert.strictEqual(error.path, "includes");
+    });
+
+    test("returns error when containsAny is not an array", function (assert) {
+      const error = this.validateCondition({
+        name: "top_menu",
+        containsAny: "latest",
+      });
+      assert.true(error?.message.includes("must be an array"));
+      assert.strictEqual(error.path, "containsAny");
+    });
   });
 
   module("type coercion", function () {

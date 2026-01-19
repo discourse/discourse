@@ -70,7 +70,7 @@ import { blockCondition } from "./decorator";
  *
  * @example
  * // Match specific category by ID
- * { type: "route", pages: ["CATEGORY_PAGES"], params: { id: 5 } }
+ * { type: "route", pages: ["CATEGORY_PAGES"], params: { categoryId: 5 } }
  *
  * @example
  * // Match with query params
@@ -133,8 +133,16 @@ export default class BlockRouteCondition extends BlockCondition {
       for (let i = 0; i < urls.length; i++) {
         const pattern = urls[i];
 
+        // Validate each element is a string
+        if (typeof pattern !== "string") {
+          return {
+            message: "`urls` must contain only string values.",
+            path: `urls[${i}]`,
+          };
+        }
+
         // Check for page type names mistakenly used in urls
-        if (typeof pattern === "string" && isValidPageType(pattern)) {
+        if (isValidPageType(pattern)) {
           return {
             message:
               `Page shortcuts like '${pattern}' are not supported in \`urls\`.\n` +

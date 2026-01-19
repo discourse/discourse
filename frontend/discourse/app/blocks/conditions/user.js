@@ -96,6 +96,18 @@ export default class BlockUserCondition extends BlockCondition {
       groups,
     } = args;
 
+    // Validate parameter types
+    const typeError = this.validateTypes(args, {
+      loggedIn: "boolean",
+      admin: "boolean",
+      moderator: "boolean",
+      staff: "boolean",
+      groups: "string[]",
+    });
+    if (typeError) {
+      return typeError;
+    }
+
     // Check for loggedIn: false with user-specific conditions
     if (loggedIn === false) {
       const hasUserConditions =

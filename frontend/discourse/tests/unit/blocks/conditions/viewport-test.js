@@ -52,6 +52,18 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
       );
     });
 
+    test("returns error when min is not a string", function (assert) {
+      const error = this.condition.validate({ min: 123 });
+      assert.true(error?.message.includes("must be a string"));
+      assert.strictEqual(error.path, "min");
+    });
+
+    test("returns error when max is not a string", function (assert) {
+      const error = this.condition.validate({ max: true });
+      assert.true(error?.message.includes("must be a string"));
+      assert.strictEqual(error.path, "max");
+    });
+
     test("returns error when mobile is not a boolean", function (assert) {
       const error = this.condition.validate({ mobile: "true" });
       assert.true(error?.message.includes("must be a boolean"));

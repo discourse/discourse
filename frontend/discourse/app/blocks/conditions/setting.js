@@ -116,6 +116,16 @@ export default class BlockSettingCondition extends BlockCondition {
       };
     }
 
+    // Validate parameter types
+    const typeError = this.validateTypes(args, {
+      enabled: "boolean",
+      includes: "array",
+      containsAny: "array",
+    });
+    if (typeError) {
+      return typeError;
+    }
+
     // Check for conflicting conditions
     const conditionCount = [
       enabled !== undefined,
