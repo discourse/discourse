@@ -647,6 +647,7 @@ class UploadCreator
     @upload.for_theme = true if @opts[:for_theme]
     @upload.for_export = true if @opts[:for_export]
     @upload.for_site_setting = true if @opts[:for_site_setting]
+    @upload.site_setting_name = @opts[:site_setting_name] if @opts[:site_setting_name]
     @upload.for_gravatar = true if @opts[:for_gravatar]
   end
 

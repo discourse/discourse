@@ -49,7 +49,7 @@ module PageObjects
         form.choose_conditional("upload-image")
 
         attach_file(File.absolute_path(file_from_fixtures(name))) do
-          form.field("image_url").find(".image-upload-controls .btn").click
+          form.field("image_url").find(".file-uploader__controls .btn").click
         end
 
         expect(form.field("image_url")).to have_css(".btn-danger")
