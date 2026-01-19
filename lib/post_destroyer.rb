@@ -121,10 +121,9 @@ class PostDestroyer
 
     @topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !@topic.user_id
     @topic.recover!(@user) if @post.is_first_post?
-    @topic.update_statistics
+    @topic.update_statistics!
     Topic.publish_stats_to_clients!(@topic.id, :recovered)
 
-    @topic.reload
     @topic.reset_bumped_at(@post) if @post.is_last_reply? && !@post.whisper?
 
     UserActionManager.post_created(@post)

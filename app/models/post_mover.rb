@@ -637,8 +637,8 @@ class PostMover
   end
 
   def update_statistics
-    destination_topic.update_statistics
-    original_topic.update_statistics
+    destination_topic.update_statistics!
+    original_topic.update_statistics!
     TopicUser.update_post_action_cache(
       topic_id: [original_topic.id, destination_topic.id],
       post_id: @post_ids,

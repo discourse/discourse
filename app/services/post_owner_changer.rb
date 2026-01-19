@@ -43,7 +43,7 @@ class PostOwnerChanger
         @topic.last_poster = @new_owner
       end
 
-      @topic.update_statistics
+      @topic.update_statistics!
 
       @new_owner.user_stat.update(
         first_post_created_at: @new_owner.reload.posts.order("created_at ASC").first&.created_at,
