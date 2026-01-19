@@ -8487,6 +8487,10 @@ en:
           upload:
             label: "Upload"
             title: "Upload images"
+        download_file: "Download"
+        upload_restrictions:
+          extensions: "Accepted: %{extensions}"
+          max_size: "Max: %{size}"
         selectable_avatars:
           title: "List of avatars users can choose from"
         table_column_heading:
