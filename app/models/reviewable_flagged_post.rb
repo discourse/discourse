@@ -339,7 +339,12 @@ class ReviewableFlaggedPost < Reviewable
       user_ids.uniq!
     end
 
-    data = { topic_id: topic.id, automatic: false }
+    data = {
+      topic_id: topic.id,
+      user: BasicUserSerializer.new(performed_by, root: false).as_json,
+      automatic: false,
+      claimed: false,
+    }
 
     MessageBus.publish("/reviewable_claimed", data, user_ids: user_ids)
   end
