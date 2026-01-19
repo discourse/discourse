@@ -245,7 +245,7 @@ module DiscourseAi
                       post.user,
                       Discourse.system_user,
                       message: :silenced_by_staff,
-                      post_id: @post&.id,
+                      post_id: post.id,
                     )
                   end
                 end

@@ -13,6 +13,7 @@ pt_BR:
     discourse_reactions_desaturated_reaction_panel: "Reduz a poluição visual das reações exibindo-as sem saturação até pairar."
     discourse_reactions_excluded_from_like: "Reações que não são consideradas Curtidas. As reações que não estiverem nesta lista serão consideradas Curtidas para emblemas, denúncias e outras finalidades."
     discourse_reactions_like_sync_enabled: "Ao ativar esta funcionalidade, serão criados registros de Curtidas para as reações de histórico, exceto as que forem definidas em \"discourse_reactions_excluded_from_like\". A sincronização acontecerá regularmente em segundo plano e também ao alterar \"discourse_reactions_excluded_from_like\"."
+    discourse_reactions_allow_any_emoji: "Se esta opção estiver ativada, será adicionado um botão que permite aos usuários selecionar qualquer emoji no seletor de reações, incluindo emojis personalizados. Para limitar as reações disponíveis, use a configuração \"emoji_deny_list\"."
     errors:
       invalid_excluded_emoji: "Não é possível excluir emojis que não estiverem em \"reações ativadas por reações do Discourse\" nem excluir o emoji usado para \"reação a reações do Discourse para curtidas\"."
   badges:

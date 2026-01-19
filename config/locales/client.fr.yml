@@ -5225,6 +5225,9 @@ fr:
           impact_type_feature: "Fonctionnalité"
           impact_type_other: "Autre"
           status_experimental: "Expérimental"
+          impact_role_admins: "Administrateurs "
+          impact_role_moderators: "Modérateurs"
+          impact_role_staff: "Responsable"
       config:
         about:
           title: "À propos de votre site"
@@ -5620,7 +5623,6 @@ fr:
         new_features:
           title: "Quoi de neuf ?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
-          previous_announcements: "Vous pouvez voir les annonces précédentes de nouvelles fonctionnalités sur <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "En savoir plus…"
           experimental: "Expérimental"
           only_experiments: "Afficher uniquement les fonctionnalités expérimentales"

@@ -4671,6 +4671,8 @@ zh_TW:
           disabled: "停用"
           impact_type_other: "其他"
           status_experimental: "實驗性"
+          impact_role_moderators: "板主"
+          impact_role_staff: "管理員"
       config:
         about:
           title: "關於您的網站"
@@ -4970,7 +4972,6 @@ zh_TW:
         new_features:
           title: "有什麼最新消息？"
           subtitle: "我們一直在發布新功能和改進。此頁面涵蓋了重點，但您可以單擊「了解更多」以查看詳細的版本說明。"
-          previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a>上查看先前的新功能公告"
           learn_more: "了解更多..."
           experimental: "實驗性"
           only_experiments: "僅顯示實驗性功能"

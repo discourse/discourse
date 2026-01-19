@@ -113,14 +113,6 @@ ru:
             persona_id:
               label: "Персона"
               description: "AI-персона для генерации отчетов"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Модель"
-              description: "Языковая модель по умолчанию, используемая для сортировки"
-            tool:
-              label: "Инструмент"
-              description: "Инструмент для сортировки (у него не должно быть заданных параметров)"
         llm_persona_triage:
           fields:
             persona:

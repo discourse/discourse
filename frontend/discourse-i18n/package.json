@@ -18,6 +18,7 @@
   ],
   "dependencies": {
     "@embroider/addon-shim": "^1.9.0",
+    "@messageformat/runtime": "^3.0.2",
     "make-plural": "^8.1.0"
   },
   "engines": {

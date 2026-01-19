@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import DMenu from "discourse/float-kit/components/d-menu";
+import { i18n } from "discourse-i18n";
 
 export default class PostLanguageSelector extends Component {
   @service siteSettings;
@@ -41,7 +42,7 @@ export default class PostLanguageSelector extends Component {
   <template>
     <DMenu
       @identifier="post-language-selector"
-      @title="Post Language"
+      @title={{i18n "post.localizations.post_language_selector.title"}}
       @icon="globe"
       @label={{this.selectedLanguage}}
       @modalForMobile={{true}}

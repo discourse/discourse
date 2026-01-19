@@ -5307,6 +5307,11 @@ es:
           status_beta: "Beta"
           status_stable: "Estable"
           status_permanent: "Permanente"
+          impact_role_admins: "Administradores"
+          impact_role_moderators: "Moderadores"
+          impact_role_staff: "Personal"
+          impact_role_all_members: "Todos los miembros"
+          impact_role_developers: "Desarrolladores"
       config:
         about:
           title: "Acerca de tu sitio"
@@ -5735,7 +5740,6 @@ es:
         new_features:
           title: "Novedades"
           subtitle: "Lanzamos nuevas funciones y mejoras continuamente. Esta página cubre los aspectos más destacados, pero puedes hacer clic en «Más información» para ver las notas de la versión completa."
-          previous_announcements: "Puedes ver anuncios anteriores de nuevas funciones en <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Más información..."
           experimental: "Experimental"
           only_experiments: "Mostrar solo características experimentales"

@@ -7,49 +7,43 @@ import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
 import { getRegister } from "discourse/lib/get-owner";
 import { cleanNullQueryParams } from "discourse/lib/utilities";
+import WeakValueMap from "discourse/lib/weak-value-map";
 import RestModel from "discourse/models/rest";
 import ResultSet from "discourse/models/result-set";
 
-let _identityMap;
+let _identityMap = new Map();
+
+function getTypeMap(type) {
+  let typeMap = _identityMap.get(type);
+  if (!typeMap) {
+    typeMap = new WeakValueMap();
+    _identityMap.set(type, typeMap);
+  }
+  return typeMap;
+}
 
 // You should only call this if you're a test scaffold
 function flushMap() {
-  _identityMap = {};
+  for (const typeMap of _identityMap.values()) {
+    typeMap.clear();
+  }
+  _identityMap.clear();
 }
 
 function storeMap(type, id, obj) {
   if (!id) {
     return;
   }
-
-  _identityMap[type] = _identityMap[type] || {};
-  _identityMap[type][id] = obj;
+  getTypeMap(type).set(id, obj);
 }
 
 function fromMap(type, id) {
-  const byType = _identityMap[type];
-  if (byType && byType.hasOwnProperty(id)) {
-    return byType[id];
-  }
+  return _identityMap.get(type)?.get(id);
 }
 
 function removeMap(type, id) {
-  const byType = _identityMap[type];
-  if (byType && byType.hasOwnProperty(id)) {
-    delete byType[id];
-  }
+  _identityMap.get(type)?.delete(id);
 }
-
-function findAndRemoveMap(type, id) {
-  const byType = _identityMap[type];
-  if (byType && byType.hasOwnProperty(id)) {
-    const result = byType[id];
-    delete byType[id];
-    return result;
-  }
-}
-
-flushMap();
 
 export default class StoreService extends Service {
   _plurals = {
@@ -222,7 +216,8 @@ export default class StoreService extends Service {
     const adapter = this.adapterFor(type);
     return adapter.update(this, type, id, attrs, function (result) {
       if (result && result[type] && result[type][adapter.primaryKey]) {
-        const oldRecord = findAndRemoveMap(type, id);
+        const oldRecord = fromMap(type, id);
+        removeMap(type, id);
         storeMap(type, result[type][adapter.primaryKey], oldRecord);
       }
       return result;

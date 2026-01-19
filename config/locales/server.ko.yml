@@ -232,7 +232,7 @@ ko:
     email_taken: "이 이메일은 이미 사용 중입니다. 이미 계정이 있는 경우 로그인하거나 비밀번호를 리셋하세요."
     max_redemptions_limit: "2 ~ %{max_limit} 사이여야 합니다."
   topic_invite:
-    failed_to_invite: "%{group_names} 그룹 중 하나에 그룹 구성원이 없으면 이 주제에 사용자를 초대할 수 없습니다."
+    failed_to_invite: "%{group_names} 그룹 중 하나에 그룹 구성원이 없으면 이 글에 사용자를 초대할 수 없습니다."
     user_exists: "이 사용자는 이미 초대를 받았습니다. 주제 초대는 한 번만 할 수 있습니다."
     muted_topic: "이 사용자는 이 주제를 뮤트했습니다."
     user_cannot_see_topic: "%{username} 님은 주제를 볼 수 없습니다."
@@ -1816,6 +1816,16 @@ ko:
     results_page: "&#39;%{term}&#39;에 대한 검색 결과"
     audio: "[오디오]"
     video: "[비디오]"
+  filter:
+    description:
+      status: "글의 상태별 필터링"
+      order: "특정 필드를 기준으로 글 정렬"
+      category: "특정 카테고리의 글 보기"
+      tag: "특정 태그가 있는 글 보기"
+      tag_group: "특정 태그 그룹의 태그가 있는 글 보기"
+      created_after: "특정 날짜 이후에 작성된 글 보기 (YYYY-MM-DD 또는 일 전)"
+      users: "참가자별로 글 필터링"
+      group: "그룹별로 글 보기"
   discourse_connect:
     login_error: "로그인 오류"
     not_found: "계정을 찾을 수 없습니다. 사이트 관리자에게 문의하세요."

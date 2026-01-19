@@ -205,6 +205,22 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
             .size,
         ).to eq(0)
       end
+
+      it "publishes reviewable_claimed message with user data when claim is removed" do
+        messages =
+          MessageBus.track_publish("/reviewable_claimed") do
+            reviewable.perform(moderator, :agree_and_keep)
+          end
+
+        expect(messages.size).to eq(1)
+        message = messages.first
+
+        expect(message.data[:topic_id]).to eq(post.topic.id)
+        expect(message.data[:claimed]).to eq(false)
+        expect(message.data[:user]).to be_present
+        expect(message.data[:user][:id]).to eq(moderator.id)
+        expect(message.data[:user][:username]).to eq(moderator.username)
+      end
     end
 
     it "agree_and_suspend agrees with the flags and keeps the post" do

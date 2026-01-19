@@ -3163,6 +3163,9 @@ bs_BA:
           enabled: "Omogućen"
           disabled: "Neomogućen"
           impact_type_other: "Other"
+          impact_role_admins: "Admins"
+          impact_role_moderators: "Moderators"
+          impact_role_staff: "Staff"
       config:
         developer:
           title: "Developer"

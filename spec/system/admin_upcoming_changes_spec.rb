@@ -176,6 +176,17 @@ describe "Admin upcoming changes", type: :system do
 
     upcoming_changes_page.filter_controls.select_all_dropdown_option(dropdown_id: "type")
 
+    # Filter by impact role
+    upcoming_changes_page.filter_controls.select_dropdown_option(
+      "Developers",
+      dropdown_id: "impactRole",
+    )
+
+    expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
+    expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+
+    upcoming_changes_page.filter_controls.select_all_dropdown_option(dropdown_id: "impactRole")
+
     # Filter by enabled/disabled
     upcoming_changes_page.filter_controls.select_dropdown_option("Enabled", dropdown_id: "enabled")
 

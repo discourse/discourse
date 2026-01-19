@@ -61,15 +61,6 @@ loaderShim("@ember/utils", () => importSync("@ember/utils"));
 loaderShim("@floating-ui/dom", () => importSync("@floating-ui/dom"));
 loaderShim("@glimmer/component", () => importSync("@glimmer/component"));
 loaderShim("@glimmer/tracking", () => importSync("@glimmer/tracking"));
-loaderShim("@messageformat/runtime", () =>
-  importSync("@messageformat/runtime")
-);
-loaderShim("@messageformat/runtime/lib/cardinals", () =>
-  importSync("@messageformat/runtime/lib/cardinals")
-);
-loaderShim("@messageformat/runtime/messages", () =>
-  importSync("@messageformat/runtime/messages")
-);
 loaderShim("@uppy/aws-s3", () => importSync("@uppy/aws-s3"));
 loaderShim("@uppy/core", () => importSync("@uppy/core"));
 loaderShim("@uppy/drop-target", () => importSync("@uppy/drop-target"));
