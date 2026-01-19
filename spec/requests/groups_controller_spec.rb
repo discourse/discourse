@@ -1175,7 +1175,9 @@ RSpec.describe GroupsController do
 
           expect(response.status).to eq(422)
           expect(response.parsed_body["user_count"]).to eq(group.group_users.count)
-          expect(response.parsed_body["errors"].first).to include("update_existing_users")
+          expect(response.parsed_body["errors"].first).to eq(
+            I18n.t("groups.errors.update_existing_users_required", count: group.group_users.count),
+          )
           expect(group_user1.reload.notification_level).to eq(NotificationLevels.all[:watching])
           expect(group_user2.reload.notification_level).to eq(NotificationLevels.all[:watching])
 

@@ -21,16 +21,10 @@ export default class GroupManageSaveButton extends Component {
 
   saving = null;
   disabled = false;
-  updateExistingUsers = null;
 
   @discourseComputed("saving")
   savingText(saving) {
     return saving ? i18n("saving") : i18n("save");
-  }
-
-  @action
-  setUpdateExistingUsers(value) {
-    this.updateExistingUsers = value;
   }
 
   _wouldLoseAccess() {
@@ -51,7 +45,7 @@ export default class GroupManageSaveButton extends Component {
   }
 
   @action
-  async save() {
+  async save(updateExistingUsers = null) {
     if (this.beforeSave) {
       this.beforeSave();
     }
@@ -82,8 +76,8 @@ export default class GroupManageSaveButton extends Component {
     this.set("saving", true);
 
     const opts = {};
-    if (this.updateExistingUsers !== null) {
-      opts.update_existing_users = this.updateExistingUsers;
+    if (updateExistingUsers !== null) {
+      opts.update_existing_users = updateExistingUsers;
     }
 
     try {
@@ -94,10 +88,7 @@ export default class GroupManageSaveButton extends Component {
         return;
       }
 
-      this.setProperties({
-        saved: true,
-        updateExistingUsers: null,
-      });
+      this.set("saved", true);
 
       if (this.afterSave) {
         this.afterSave();
@@ -105,7 +96,7 @@ export default class GroupManageSaveButton extends Component {
     } catch (error) {
       const json = error.jqXHR?.responseJSON;
       if (error.jqXHR?.status === 422 && json?.user_count) {
-        this.editGroupNotifications(json);
+        this.editGroupNotifications(json.user_count);
       } else {
         popupAjaxError(error);
       }
@@ -115,14 +106,12 @@ export default class GroupManageSaveButton extends Component {
   }
 
   @action
-  async editGroupNotifications(json) {
-    await this.modal.show(GroupDefaultNotificationsModal, {
-      model: {
-        count: json.user_count,
-        setUpdateExistingUsers: this.setUpdateExistingUsers,
-      },
-    });
-    this.save();
+  async editGroupNotifications(count) {
+    const updateExistingUsers = await this.modal.show(
+      GroupDefaultNotificationsModal,
+      { model: { count } }
+    );
+    this.save(updateExistingUsers);
   }
 
   <template>
