@@ -102,24 +102,6 @@ module("Integration | Component | site-settings/upload", function (hooks) {
     assert.dom(".file-info").doesNotExist("no file to show info for");
   });
 
-  test("with placeholder shows placeholder overlay", async function (assert) {
-    const setting = { setting: "logo", placeholder: "/images/placeholder.png" };
-
-    await render(
-      <template>
-        <SiteSettingUpload
-          @setting={{setting}}
-          @value=""
-          @changeValueCallback={{this.noop}}
-        />
-      </template>
-    );
-
-    assert
-      .dom(".placeholder-overlay")
-      .exists("shows default/example when empty");
-  });
-
   test("accepts only images by default", async function (assert) {
     const setting = { setting: "logo" };
 

@@ -52,7 +52,7 @@ export default class UppyImageUploader extends Component {
 
   applyLightbox = modifier(() =>
     lightbox(
-      document.querySelector(`#${this.args.id}.image-uploader`),
+      document.querySelector(`#${this.args.id}.file-uploader`),
       this.siteSettings
     )
   );
