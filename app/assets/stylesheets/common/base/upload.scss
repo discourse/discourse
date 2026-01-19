@@ -43,6 +43,10 @@
     border: 1px dashed var(--primary-medium);
     background-color: var(--primary-very-low);
 
+    &:hover {
+      background-color: var(--tertiary-very-low);
+    }
+
     &:focus,
     &:focus-within {
       outline: 2px dashed var(--tertiary);
@@ -207,6 +211,17 @@
     display: flex;
     font-weight: normal;
     box-sizing: border-box;
+    color: var(--primary-very-high);
     border-radius: var(--d-button-border-radius);
+    cursor: pointer;
+
+    .no-image &,
+    .no-file & {
+      height: 100%;
+      width: 100%;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-1);
+    }
   }
 }

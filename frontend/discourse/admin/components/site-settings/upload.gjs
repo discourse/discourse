@@ -62,7 +62,7 @@ const FilePreview = <template>
       download={{@fileName}}
       target="_blank"
       rel="nofollow ugc noopener noreferrer"
-      class="btn btn-default btn-small btn-text download-btn"
+      class="btn btn-default btn-small no-text download-btn"
       title={{i18n "admin.site_settings.download_file"}}
     >
       {{icon "download"}}
