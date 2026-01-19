@@ -31,7 +31,12 @@ class UpcomingChanges::Track
   end
 
   def fetch_status_changes(added_changes:, removed_changes:, all_admins:)
-    UpcomingChanges::Action::TrackStatusChanges.call(all_admins:, added_changes:, removed_changes:)
+    result =
+      UpcomingChanges::Action::TrackStatusChanges.call(
+        all_admins:,
+        added_changes:,
+        removed_changes:,
+      )
     context[:notified_admins_for_added_changes] += result[:notified_changes]
     result[:status_changes]
   end
