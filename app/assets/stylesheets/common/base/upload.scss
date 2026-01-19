@@ -115,21 +115,6 @@
       display: none;
     }
 
-    // not sure of function?
-    .placeholder-overlay {
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: left center;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.2;
-      pointer-events: none;
-      box-shadow: inset 0 0 0 var(--space-1) var(--secondary);
-    }
-
     .expand-overlay {
       position: absolute;
       top: 10px;

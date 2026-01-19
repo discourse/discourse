@@ -220,16 +220,6 @@ export default class SiteSettingUpload extends Component {
     return htmlSafe(`width: ${progress}%`);
   }
 
-  get showPlaceholder() {
-    return !this.args.value && this.args.setting.placeholder;
-  }
-
-  get placeholderStyle() {
-    return this.args.setting.placeholder
-      ? htmlSafe(`background-image: url(${this.args.setting.placeholder})`)
-      : htmlSafe("");
-  }
-
   get restrictionsInfo() {
     const parts = [];
 
@@ -292,13 +282,6 @@ export default class SiteSettingUpload extends Component {
         }}
         style={{this.backgroundStyle}}
       >
-        {{#if this.showPlaceholder}}
-          <div
-            class="placeholder-overlay"
-            style={{this.placeholderStyle}}
-          ></div>
-        {{/if}}
-
         {{#if @value}}
           {{#if this.isImageFile}}
             <ImagePreview
