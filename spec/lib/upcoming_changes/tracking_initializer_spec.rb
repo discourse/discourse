@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Track upcoming changes initializer" do
+RSpec.describe UpcomingChanges::TrackingInitializer do
   context "when enable_upcoming_changes is disabled" do
     before do
       SiteSetting.enable_upcoming_changes = false

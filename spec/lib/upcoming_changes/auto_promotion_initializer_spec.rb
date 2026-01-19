@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Promote upcoming changes initializer" do
+RSpec.describe UpcomingChanges::AutoPromotionInitializer do
   context "when enable_upcoming_changes is disabled" do
     before do
       SiteSetting.enable_upcoming_changes = false
