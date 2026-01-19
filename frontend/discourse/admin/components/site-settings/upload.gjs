@@ -85,7 +85,9 @@ export default class SiteSettingUpload extends Component {
     }),
     validateUploadedFilesOptions: this.validationOptions,
     uploadDropTargetOptions: () => ({
-      target: document.querySelector(`#${this.settingId} .uploaded-preview`),
+      target: document.querySelector(
+        `#${this.settingId} .file-uploader__preview`
+      ),
     }),
     uploadDone: (upload) => {
       this.uploadedFile = upload;
@@ -285,7 +287,7 @@ export default class SiteSettingUpload extends Component {
     >
       <div
         class={{concatClass
-          "uploaded-preview input-xxlarge"
+          "file-uploader__preview input-xxlarge"
           this.previewSizeClass
         }}
         style={{this.backgroundStyle}}
@@ -316,7 +318,7 @@ export default class SiteSettingUpload extends Component {
             />
           {{/if}}
         {{else}}
-          <div class="upload-controls">
+          <div class="file-uploader__controls">
             <label
               class="btn btn-transparent
                 {{if this.disabled 'disabled'}}
@@ -337,7 +339,7 @@ export default class SiteSettingUpload extends Component {
             </label>
 
             <div
-              class="upload__progress-status
+              class="file-uploader__progress-status
                 {{unless this.isUploading 'hidden'}}"
             >
               <div
@@ -361,7 +363,7 @@ export default class SiteSettingUpload extends Component {
       {{/if}}
 
       {{#if @value}}
-        <div class="upload-controls">
+        <div class="file-uploader__controls">
           <label
             class="btn btn-default btn-small {{if this.disabled 'disabled'}}"
             title={{this.disabledReason}}
