@@ -71,7 +71,7 @@ vi:
             other: "%{count} ngày"
         progress_chart:
           bar_done:
-            other: "%{count} bài đăng"
+            other: "%{count} tút"
       spam:
         short_title: "Rác"
         last_seven_days: "7 ngày qua"
@@ -191,16 +191,19 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
+        semantic_search_loading: "Tìm kiếm thêm kết quả bằng AI"
         semantic_search_results:
           toggle: "Xem %{count} kết quả tìm thấy bằng AI"
           toggle_hidden: "Đang ẩn %{count} kết quả tìm thấy bằng AI"
           none: "Rất tiếc, tìm kiếm AI của chúng tôi không tìm thấy chủ đề phù hợp"
           new: "Nhấn 'Tìm' để bắt đầu tìm kiếm kết quả mới bằng AI."
           unavailable: "Kết quả AI không khả dụng"
+          zero_results_expanded: "Không tìm thấy kết quả, hiển thị %{count} kết quả AI"
         semantic_search_tooltips:
           results_explanation: "Khi được bật, các kết quả tìm kiếm AI bổ sung sẽ được thêm vào bên dưới."
           invalid_sort: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
         semantic_search_unavailable_tooltip: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
+        ai_generated_result: "Kết quả tìm kiếm được tìm thấy bằng AI"
       ai_bot:
         try_again: "Thử lại"
         debug_ai_modal:
