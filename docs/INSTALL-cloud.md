@@ -7,7 +7,7 @@
 > If you prefer to self-host but need help setting it up we have partners who can help.
 > [Click here to explore self-hosting set-up options](https://discourse.org/partners).
 
-**Set up Discourse in under 30 minutes** with zero knowledge of Rails or Linux shell. Works on any Docker-compatible cloud provider or local server.
+**Set up Discourse in about 10 minutes** with zero knowledge of Rails or Linux shell. Works on any Docker-compatible cloud provider or local server.
 
 ## Contents
 
