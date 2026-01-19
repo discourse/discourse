@@ -21,8 +21,12 @@ class UpcomingChanges::Promote
   policy :setting_not_modified
   policy :setting_not_already_enabled
   step :toggle_upcoming_change
-  step :log_promotion
-  step :notify_admins
+
+  transaction do
+    step :log_promotion
+    step :notify_admins
+    step :create_event
+  end
 
   private
 
@@ -92,6 +96,7 @@ class UpcomingChanges::Promote
       upcoming_change_humanized_name: SiteSetting.humanized_name(params.setting_name),
     }.to_json
 
+    # TODO (martin) Do this in bulk, there could be > 100 admins.
     User.human_users.admins.each do |admin|
       Notification.create!(
         notification_type: Notification.types[:upcoming_change_automatically_promoted],
@@ -99,7 +104,9 @@ class UpcomingChanges::Promote
         data:,
       )
     end
+  end
 
+  def create_event(params:)
     UpcomingChangeEvent.create!(
       event_type: :admins_notified_automatic_promotion,
       upcoming_change_name: params.setting_name,
