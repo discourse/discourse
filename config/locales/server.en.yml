@@ -654,6 +654,7 @@ en:
         other: "Maximum %{count} email domains can be counted at once"
       no_invites_with_discourse_connect: "You can invite only registered users when DiscourseConnect is enabled"
       no_invites_without_local_logins: "You can invite only registered users when local logins are disabled"
+      update_existing_users_required: "This change affects %{count} existing group members. You must specify the 'update_existing_users' parameter (true or false) to indicate whether to apply the new notification defaults to existing members."
     default_names:
       everyone: "everyone"
       admins: "admins"
