@@ -62,7 +62,7 @@ const FilePreview = <template>
       download={{@fileName}}
       target="_blank"
       rel="nofollow ugc noopener noreferrer"
-      class="btn btn-default btn-small download-btn"
+      class="btn btn-default btn-small btn-text download-btn"
       title={{i18n "admin.site_settings.download_file"}}
     >
       {{icon "download"}}
@@ -85,9 +85,7 @@ export default class SiteSettingUpload extends Component {
     }),
     validateUploadedFilesOptions: this.validationOptions,
     uploadDropTargetOptions: () => ({
-      target: document.querySelector(
-        `#${this.settingId} .uploaded-file-preview`
-      ),
+      target: document.querySelector(`#${this.settingId} .uploaded-preview`),
     }),
     uploadDone: (upload) => {
       this.uploadedFile = upload;
@@ -287,7 +285,7 @@ export default class SiteSettingUpload extends Component {
     >
       <div
         class={{concatClass
-          "uploaded-file-preview input-xxlarge"
+          "uploaded-preview input-xxlarge"
           this.previewSizeClass
         }}
         style={{this.backgroundStyle}}
@@ -318,7 +316,7 @@ export default class SiteSettingUpload extends Component {
             />
           {{/if}}
         {{else}}
-          <div class="file-upload-controls">
+          <div class="upload-controls">
             <label
               class="btn btn-transparent
                 {{if this.disabled 'disabled'}}
@@ -338,7 +336,10 @@ export default class SiteSettingUpload extends Component {
               {{i18n "upload_selector.select_file"}}
             </label>
 
-            <div class="progress-status {{unless this.isUploading 'hidden'}}">
+            <div
+              class="upload__progress-status
+                {{unless this.isUploading 'hidden'}}"
+            >
               <div
                 aria-label={{this.uploadStatusLabel}}
                 role="progressbar"
@@ -360,7 +361,7 @@ export default class SiteSettingUpload extends Component {
       {{/if}}
 
       {{#if @value}}
-        <div class="file-upload-controls">
+        <div class="upload-controls">
           <label
             class="btn btn-default btn-small {{if this.disabled 'disabled'}}"
             title={{this.disabledReason}}

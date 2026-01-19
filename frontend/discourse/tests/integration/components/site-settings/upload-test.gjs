@@ -240,7 +240,7 @@ module("Integration | Component | site-settings/upload", function (hooks) {
     );
 
     assert
-      .dom(".uploaded-file-preview")
+      .dom(".uploaded-preview")
       .hasClass("--bg-size-cover", "banner images use cover sizing");
   });
 });
