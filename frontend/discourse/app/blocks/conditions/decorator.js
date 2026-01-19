@@ -1,5 +1,6 @@
 // @ts-check
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
+import { BlockCondition } from "./condition";
 
 /**
  * Valid sourceType values for the decorator config.
@@ -21,7 +22,7 @@ const decoratedConditions = new WeakSet();
 
 /**
  * Checks if a class was decorated with @blockCondition.
- * Used by the Blocks service to reject non-decorated classes.
+ * Used by the block registration system to reject non-decorated classes.
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
@@ -38,6 +39,7 @@ export function isDecoratedCondition(ConditionClass) {
  *
  * The class must extend BlockCondition. The decorator adds static getters
  * for type, sourceType, and validArgKeys based on the provided config.
+ * Unknown config keys are rejected with helpful suggestions.
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
@@ -46,6 +48,7 @@ export function isDecoratedCondition(ConditionClass) {
  * @param {string} config.type - Unique condition type identifier.
  * @param {"none"|"outletArgs"|"object"} [config.sourceType="none"] - How source parameter is handled.
  * @param {string[]} config.validArgKeys - Valid argument keys (do NOT include "source").
+ * @throws {Error} If config is invalid or class doesn't extend BlockCondition.
  *
  * @example
  * import { blockCondition, BlockCondition } from "discourse/blocks/conditions";
@@ -110,6 +113,13 @@ export function blockCondition(config) {
       : frozenKeys;
 
   return function decorator(TargetClass) {
+    // Validate that the class extends BlockCondition
+    if (!(TargetClass.prototype instanceof BlockCondition)) {
+      throw new Error(
+        `blockCondition: ${TargetClass.name} must extend BlockCondition.`
+      );
+    }
+
     // Define static getters (non-configurable to prevent reassignment)
     Object.defineProperty(TargetClass, "type", {
       get: () => type,

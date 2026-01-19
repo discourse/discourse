@@ -11,14 +11,13 @@ const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
  * Base class for all block conditions.
  *
  * Subclasses must:
- * - Define a static `type` property (unique string identifier)
- * - Implement the `evaluate(args)` method
+ * - Use the `@blockCondition` decorator with `type` and `validArgKeys` config
+ * - Implement the `evaluate(args, context)` method
  * - Optionally implement the `validate(args)` method for registration-time validation
- * - Optionally define a static `sourceType` property to enable `source` parameter support
+ * - Optionally pass `sourceType` to the decorator to enable `source` parameter support
  *
  * Condition classes can inject services using `@service` decorator.
- * The BlockConditionEvaluator service sets the owner on condition instances,
- * enabling dependency injection.
+ * The Blocks service sets the owner on condition instances, enabling dependency injection.
  *
  * ## Source Parameter Support
  *
@@ -38,12 +37,14 @@ const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
  *
  * @example
  * ```javascript
- * import { BlockCondition } from "discourse/blocks/conditions";
+ * import { blockCondition, BlockCondition } from "discourse/blocks/conditions";
  *
+ * @blockCondition({
+ *   type: "my-condition",
+ *   sourceType: "outletArgs",
+ *   validArgKeys: ["requiredArg"],
+ * })
  * export default class BlockMyCondition extends BlockCondition {
- *   static type = "my-condition";
- *   static sourceType = "outletArgs"; // Enable source parameter
- *
  *   @service myService;
  *
  *   validate(args) {
@@ -66,6 +67,9 @@ export class BlockCondition {
    * Unique identifier for this condition type.
    * Used in condition specs: `{ type: "route", ... }`
    *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be set directly. Pass the `type` option to the decorator instead.
+   *
    * @type {string}
    */
   static type;
@@ -76,6 +80,9 @@ export class BlockCondition {
    * - `"none"` (default): `source` parameter is disallowed
    * - `"outletArgs"`: `source` must be `@outletArgs.property`; base class resolves it
    * - `"object"`: `source` is passed directly as an object (e.g., settings object)
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be set directly. Pass the `sourceType` option to the decorator instead.
    *
    * @type {"none" | "outletArgs" | "object"}
    */
@@ -167,10 +174,11 @@ export class BlockCondition {
   }
 
   /**
-   * Resolves the `source` parameter value for conditions with `sourceType: "outletArgs"`.
+   * Resolves the `source` parameter value based on the condition's `sourceType`.
    *
-   * Extracts the property path from `@outletArgs.path.to.value` and retrieves
-   * the corresponding value from `context.outletArgs`.
+   * - `sourceType: "outletArgs"`: Extracts the property path from `@outletArgs.path.to.value`
+   *   and retrieves the corresponding value from `context.outletArgs`.
+   * - `sourceType: "object"`: Returns the `source` value directly.
    *
    * @param {Object} args - The condition arguments containing `source`.
    * @param {Object} context - Evaluation context containing `outletArgs`.

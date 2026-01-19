@@ -179,6 +179,33 @@ module("Unit | Blocks | Conditions | decorator", function () {
     });
   });
 
+  module("class validation", function () {
+    test("throws when class does not extend BlockCondition", function (assert) {
+      class NotACondition {}
+
+      assert.throws(() => {
+        blockCondition({
+          type: "invalid-class",
+          validArgKeys: [],
+        })(NotACondition);
+      }, /NotACondition must extend BlockCondition/);
+    });
+
+    test("accepts class that extends BlockCondition", function (assert) {
+      @blockCondition({
+        type: "valid-class",
+        validArgKeys: [],
+      })
+      class ValidCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.strictEqual(ValidCondition.type, "valid-class");
+    });
+  });
+
   module("static property assignment", function () {
     test("assigns type as static getter", function (assert) {
       @blockCondition({
