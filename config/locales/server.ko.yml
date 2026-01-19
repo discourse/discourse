@@ -232,7 +232,7 @@ ko:
     email_taken: "이 이메일은 이미 사용 중입니다. 이미 계정이 있는 경우 로그인하거나 비밀번호를 리셋하세요."
     max_redemptions_limit: "2 ~ %{max_limit} 사이여야 합니다."
   topic_invite:
-    failed_to_invite: "%{group_names} 그룹 중 하나에 그룹 구성원이 없으면 이 주제에 사용자를 초대할 수 없습니다."
+    failed_to_invite: "%{group_names} 그룹 중 하나에 그룹 구성원이 없으면 이 글에 사용자를 초대할 수 없습니다."
     user_exists: "이 사용자는 이미 초대를 받았습니다. 주제 초대는 한 번만 할 수 있습니다."
     muted_topic: "이 사용자는 이 주제를 뮤트했습니다."
     user_cannot_see_topic: "%{username} 님은 주제를 볼 수 없습니다."
@@ -3591,6 +3591,8 @@ ko:
                 label: "공개"
               private:
                 label: "비공개"
+          invite_only:
+            description: "회원들은 어떻게 이 커뮤니티에 가입할 수 있나요?"
           chat_enabled:
             placeholder: "채팅 활성화"
       styling:

@@ -256,10 +256,10 @@ cs:
       no_public_channels_cta: "Procházet kanály"
       kicked_from_channel: "K tomuto kanálu již nemáte přístup."
       only_chat_push_notifications:
-        title: "Odesílání pouze push notifikací chatu"
+        title: "Odesílat pouze push notifikace chatu"
         description: "Zablokovat odesílání všech push notifikací mimo chat"
       ignore_channel_wide_mention:
-        title: "Ignorování zmínek v rámci celého kanálu"
+        title: "Ignorovat zmínky v rámci celého kanálu"
         description: "Neposílat upozornění pro zmínky v rámci celého kanálu (@here a @all)."
       show_thread_title_prompts:
         title: "Zobrazit výzvy k zadání názvu vlákna"

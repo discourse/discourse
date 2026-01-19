@@ -7,6 +7,9 @@
 cs:
   discourse_automation:
     scriptables:
+      llm_tool_triage:
+        title: Třídění příspěvků pomocí nástroje umělé inteligence
+        description: "Třídění příspěvků pomocí vlastní logiky v nástroji s umělou inteligencí"
       llm_triage:
         flagged_post: |
           <div>Odpověď od modelu:</div>

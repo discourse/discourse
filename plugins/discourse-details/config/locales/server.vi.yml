@@ -6,6 +6,6 @@
 
 vi:
   site_settings:
-    details_enabled: 'Thêm khả năng thêm chi tiết mở rộng vào bài viết. Tính năng này có thể được tìm thấy trong menu bật lên trên thanh công cụ của trình soạn thảo. Bạn phải biên dịch lại tất cả bài viết bằng lệnh "rake posts:rebake" nếu thay đổi cài đặt này.'
+    details_enabled: 'Thêm khả năng thêm chi tiết mở rộng vào tút. Tính năng này có thể được tìm thấy trong menu bật lên trên thanh công cụ của trình soạn thảo. Bạn phải biên dịch lại tất cả tút bằng lệnh "rake posts:rebake" nếu thay đổi cài đặt này.'
   details:
     excerpt_details: "(nhấn để biết thêm chi tiết)"
