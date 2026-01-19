@@ -100,7 +100,15 @@ class TagGroupsController < ApplicationController
         ),
       )
 
-    render json: { results: matches.map { |x| { name: x.name } } }
+    render json: {
+             results:
+               matches.map do |x|
+                 {
+                   name: x.name,
+                   tags: x.tags.base_tags.pluck(:id, :name).map { |id, name| { id:, name: } },
+                 }
+               end,
+           }
   end
 
   private

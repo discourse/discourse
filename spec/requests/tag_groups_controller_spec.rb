@@ -66,7 +66,7 @@ RSpec.describe TagGroupsController do
     end
 
     context "for anons" do
-      it "returns the tag group with the associated tag names" do
+      it "returns the tag group with the associated tags" do
         tag_group = tag_group_with_permission(everyone, readonly)
         tag_group2 = tag_group_with_permission(everyone, readonly)
 
@@ -75,7 +75,10 @@ RSpec.describe TagGroupsController do
 
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
 
-        expect(results).to contain_exactly({ name: tag_group.name }, { name: tag_group2.name })
+        expect(results).to contain_exactly(
+          { name: tag_group.name, tags: [{ id: tag.id, name: tag.name }] },
+          { name: tag_group2.name, tags: [{ id: tag.id, name: tag.name }] },
+        )
       end
 
       it "returns an empty array if the tag group is private" do
