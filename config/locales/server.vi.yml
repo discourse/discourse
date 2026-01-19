@@ -624,7 +624,7 @@ vi:
     illegal:
       title: "Bất hợp pháp"
       description: "Tút này cần được BQT xem xét vì tôi cho rằng nó chứa nội dung bất hợp pháp."
-      short_description: "Điều này là vi phạm pháp luật"
+      short_description: "Đây là phạm pháp"
       email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
     notify_user:
@@ -634,9 +634,9 @@ vi:
       email_title: 'Bài đăng của bạn trong "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: "Một thứ khác"
+      title: "Khác"
       description: "Tút này cần được BQT chú ý vì một lý do chưa được liệt kê trong danh sách."
-      short_description: "Yêu cầu sự chú ý của nhân viên vì một lý do khác"
+      short_description: "Yêu cầu BQT chú ý vì một lý do khác"
       email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n %{message}"
     bookmark:
@@ -666,14 +666,14 @@ vi:
       short_description: 'Vi phạm <a href="%{base_path}/guidelines">quy định cộng đồng của chúng ta</a>'
     notify_moderators:
       title: "Một điều gì đó khác"
-      description: 'Chủ đề này yêu cầu sự chú ý của nhân viên nói chung dựa trên <a href="%{base_path}/guidelines">nguyên tắc</a>, <a href="%{tos_url}">TOS</a>hoặc vì lý do khác không được liệt kê ở trên.'
+      description: 'Chủ đề này yêu cầu BQT chú ý dựa trên <a href="%{base_path}/guidelines">quy định</a>, <a href="%{tos_url}">TOS</a>hoặc vì lý do khác không được liệt kê ở trên.'
       long_form: "đã đánh dấu cho điều hành viên xem xét"
-      short_description: "Yêu cầu sự chú ý của nhân viên vì một lý do khác"
+      short_description: "Yêu cầu BQT chú ý vì một lý do khác"
       email_title: 'Chủ đề "%{title}" cần được ban điều hành quan tâm'
       email_body: "%{link}\n\n%{message}"
     illegal:
       title: "Bất hợp pháp"
-      short_description: "Điều này là vi phạm pháp luật"
+      short_description: "Đây là phạm pháp"
       email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
   flagging:

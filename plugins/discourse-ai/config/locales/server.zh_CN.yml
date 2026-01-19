@@ -26,9 +26,6 @@ zh_CN:
         spam: "标记为垃圾信息并隐藏帖子"
         spam_silence: "标记为垃圾信息，隐藏帖子并将用户禁言"
     scriptables:
-      llm_tool_triage:
-        title: 使用 AI 工具对帖子进行分类
-        description: "使用 AI 工具中的自定义逻辑对帖子进行分类"
       llm_persona_triage:
         title: 使用 AI 角色对帖子进行分类
         description: "使用特定的 AI 角色回复帖子"

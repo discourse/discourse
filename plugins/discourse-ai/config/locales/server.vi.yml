@@ -19,9 +19,14 @@ vi:
         proofread: Hiệu chỉnh văn bản
         markdown_table: Tạo bảng Markdown
         explain: "Giải thích"
+        replace_dates: "Ngày thông minh"
     spam_detection:
       logging_subject: "Phát hiện rác rưởi"
     ai_bot:
+      personas:
+        smart_dates:
+          name: "Ngày thông minh"
+          description: "Cấu hình mặc định hỗ trợ tính năng hẹn hò thông minh của Trợ lý."
       tool_summary:
         search: "Tìm kiếm"
         time: "Thời gian"

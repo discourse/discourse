@@ -29,9 +29,9 @@ pl_PL:
         spam: "Oznacz jako spam i ukryj post"
         spam_silence: "Oznacz jako spam, ukryj post i wycisz użytkownika"
     scriptables:
-      llm_tool_triage:
-        title: Sortuj posty za pomocą narzędzia AI
-        description: "Sortuj posty, korzystając z niestandardowej logiki w narzędziu AI"
+      ai_tool_action:
+        title: Działanie narzędzia AI
+        description: Uruchom narzędzie AI, gdy zostanie wyzwolona automatyzacja
       llm_persona_triage:
         title: Sortuj posty za pomocą AI Persona
         description: "Odpowiadaj na posty, używając konkretnej osobowości AI"

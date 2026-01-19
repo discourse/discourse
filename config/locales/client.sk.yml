@@ -5613,6 +5613,9 @@ sk:
           impact_type_feature: "Funkcia"
           impact_type_other: "Ostatné"
           status_experimental: "Experimentálne"
+          impact_role_admins: "Administrátori"
+          impact_role_moderators: "Moderátori"
+          impact_role_staff: "Personál"
       config:
         about:
           title: "O vašej stránke"
@@ -6018,7 +6021,6 @@ sk:
         new_features:
           title: "Čo je nové?"
           subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
-          previous_announcements: "Oznámenia o nových funkciách si môžete pozrieť na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Zistiť viac..."
           experimental: "Experimentálne"
           only_experiments: "Zobraziť len experimentálne funkcie"

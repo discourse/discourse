@@ -113,14 +113,6 @@ ja:
             persona_id:
               label: "ペルソナ"
               description: "レポートの生成に使用する AI ペルソナ"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "モデル"
-              description: "トリアージに使用されるデフォルトの言語モデル"
-            tool:
-              label: "ツール"
-              description: "トリアージに使用するツール (ツールにはパラメーターが定義されていない必要があります)"
         llm_persona_triage:
           fields:
             persona:

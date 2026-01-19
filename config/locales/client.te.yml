@@ -4367,6 +4367,8 @@ te:
           enabled: "ప్రారంభించబడింది"
           disabled: "నిలిపివేయబడింది"
           impact_type_other: "ఇతర"
+          impact_role_moderators: "నిర్వాహకులు"
+          impact_role_staff: "సిబ్బంది"
       config:
         about:
           title: "మీ సైట్ గురించి"
@@ -4499,7 +4501,6 @@ te:
         problems_found: "మీ ప్రస్తుత సైట్ సెట్టింగ్‌ల ఆధారంగా కొన్ని సలహాలు"
         dismiss_notice: "రద్దుచేయండి"
         new_features:
-          previous_announcements: "మీరు మునుపటి కొత్త ఫీచర్ ప్రకటనలను <a href='%{url}' target='_blank'>డిస్కోర్స్ మెటా</a>లో చూడవచ్చు"
           learn_more: "మరింత తెలుసుకోండి..."
         last_checked: "చివరగా సరిచూసినది"
         refresh_problems: "రిఫ్రెష్ చేయండి"
