@@ -29,8 +29,13 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::POST) do
     creator = User.find_by(username: creator_username)
     topic = Topic.find_by(id: topic_id)
 
-    if !topic || topic.closed? || topic.archived?
-      Rails.logger.warn "[discourse-automation] topic with id: `#{topic_id}` was not found"
+    if !topic
+      DiscourseAutomation::Logger.warn("topic with id: `#{topic_id}` was not found")
+      next
+    end
+
+    if topic.closed? || topic.archived?
+      DiscourseAutomation::Logger.warn("topic with id: `#{topic_id}` is closed or archived")
       next
     end
 
@@ -53,11 +58,18 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::POST) do
     post_raw = utils.apply_placeholders(post_raw, placeholders)
 
     if !creator
-      Rails.logger.warn "[discourse-automation] creator with username: `#{creator_username}` was not found"
+      DiscourseAutomation::Logger.warn("creator with username: `#{creator_username}` was not found")
       next
     end
 
-    new_post = PostCreator.new(creator, topic_id: topic_id, raw: post_raw).create!
+    post_creator = PostCreator.new(creator, topic_id:, raw: post_raw)
+    new_post = post_creator.create
+    if new_post.blank? || post_creator.errors.present?
+      DiscourseAutomation::Logger.error(
+        "Failed to create post in topic #{topic_id}: #{post_creator.errors.full_messages.join(", ")}",
+      )
+      next
+    end
 
     if context["kind"] == DiscourseAutomation::Triggers::USER_UPDATED && new_post.persisted?
       user.user_custom_fields.create(name: automation.name, value: "true")

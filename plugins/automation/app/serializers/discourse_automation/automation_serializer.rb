@@ -89,6 +89,7 @@ module DiscourseAutomation
     EMPTY_STATS = {
       total_runs: 0,
       total_time: 0,
+      total_errors: 0,
       average_run_time: 0,
       min_run_time: 0,
       max_run_time: 0,

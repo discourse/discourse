@@ -72,12 +72,19 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::AUTO_RESPONDER
 
     automation.add_id_to_custom_field(post.topic, key)
 
-    PostCreator.create!(
-      answering_user,
-      topic_id: post.topic.id,
-      reply_to_post_number: post.post_number,
-      raw: answers,
-      skip_validations: true,
-    )
+    creator =
+      PostCreator.new(
+        answering_user,
+        topic_id: post.topic.id,
+        reply_to_post_number: post.post_number,
+        raw: answers,
+        skip_validations: true,
+      )
+    result = creator.create
+    if result.blank? || creator.errors.present?
+      DiscourseAutomation::Logger.error(
+        "Failed to create auto-response in topic #{post.topic.id}: #{creator.errors.full_messages.join(", ")}",
+      )
+    end
   end
 end
