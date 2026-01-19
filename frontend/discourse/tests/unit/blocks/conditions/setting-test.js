@@ -407,7 +407,17 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.strictEqual(error.path, "name");
     });
 
-    test("does not return error for unknown setting when custom source provided", function (assert) {
+    test("returns error for unknown setting in custom source", function (assert) {
+      const error = this.validateCondition({
+        source: { existing_key: true },
+        name: "nonexistent_key",
+      });
+      assert.true(error?.message.includes("Unknown setting"));
+      assert.true(error?.message.includes("nonexistent_key"));
+      assert.strictEqual(error.path, "name");
+    });
+
+    test("accepts valid setting in custom source", function (assert) {
       assert.strictEqual(
         this.validateCondition({
           source: { custom_key: true },

@@ -99,9 +99,15 @@ export default class BlockSettingCondition extends BlockCondition {
       };
     }
 
-    // Skip site settings check if custom settings object is provided via source
-    // (e.g., theme settings from "virtual:theme")
-    if (!source && !(name in this.siteSettings)) {
+    // Validate setting exists in the appropriate settings object
+    if (source) {
+      if (!(name in source)) {
+        return {
+          message: `Unknown setting "${name}" in provided settings object.`,
+          path: "name",
+        };
+      }
+    } else if (!(name in this.siteSettings)) {
       return {
         message:
           `Unknown site setting "${name}". ` +
