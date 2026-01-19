@@ -1,9 +1,10 @@
 .uc-experimental-foundation-changes {
   --shrink-ratio: 0.85;
-  --cta-font-size: var(--font-0);
+  --cta-font-size: var(--font-down-1);
   --btn-small-font-size: var(--font-down-1);
-  --cta-height: var(--space-9);
+  --cta-height: var(--space-8);
   --nav-space: var(--space-8);
+  --d-nav-underline-height: var(--space-half);
   --d-button-default-bg-color: transparent;
   --d-button-default-border: 1px solid var(--primary-200);
   --d-button-default-border--hover: 1px solid var(--primary-200);
@@ -31,9 +32,19 @@
   .btn-icon,
   .btn-danger,
   .btn-primary {
+    &:not(.sidebar-footer-actions-button) {
+      height: var(--cta-height);
+      font-size: var(--cta-font-size);
+    }
+  }
+
+  .menu-tabs-container {
+    --cta-height: min-content;
+  }
+
+  .nav-pills > li > a {
+    padding: 0.5em 0.65em;
     height: var(--cta-height);
-    font-size: var(--cta-font-size);
-    font-weight: 500;
   }
 
   .topic-replies-toggle-wrapper .topics-replies-toggle {
