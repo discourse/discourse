@@ -204,7 +204,8 @@ CREATE TABLE tags
     created_at  DATETIME,
     description TEXT,
     locale      TEXT,
-    name        TEXT     NOT NULL
+    name        TEXT     NOT NULL,
+    slug        TEXT     NOT NULL
 );
 
 CREATE TABLE topic_allowed_groups
@@ -362,6 +363,9 @@ CREATE TABLE user_options
     dark_scheme_id                       NUMERIC,
     default_calendar                     INTEGER,
     digest_after_minutes                 INTEGER,
+    discourse_rewind_dismissed_at        DATETIME,
+    discourse_rewind_enabled             BOOLEAN,
+    discourse_rewind_share_publicly      BOOLEAN,
     dismissed_channel_retention_reminder BOOLEAN,
     dismissed_dm_retention_reminder      BOOLEAN,
     dynamic_favicon                      BOOLEAN,
