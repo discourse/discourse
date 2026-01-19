@@ -33,16 +33,10 @@ RSpec.describe UpcomingChanges::Action::TrackStatusChanges do
   fab!(:admin_2, :admin)
   let(:added_changes) { [] }
   let(:removed_changes) { [] }
-  let(:already_notified_changes) { [] }
 
   describe ".call" do
     subject(:result) do
-      described_class.call(
-        all_admins: [admin_1, admin_2],
-        added_changes:,
-        removed_changes:,
-        already_notified_changes:,
-      )
+      described_class.call(all_admins: [admin_1, admin_2], added_changes:, removed_changes:)
     end
 
     before do
@@ -318,61 +312,6 @@ RSpec.describe UpcomingChanges::Action::TrackStatusChanges do
         it "does not include the change in notified_changes" do
           expect(result[:notified_changes]).not_to include(:show_user_menu_avatars)
         end
-      end
-
-      context "when change was already notified in the same run" do
-        let(:already_notified_changes) { [:show_user_menu_avatars] }
-
-        it "does not notify admins again" do
-          expect { result }.not_to change {
-            Notification
-              .where(notification_type: Notification.types[:upcoming_change_available])
-              .where("data::text LIKE ?", "%show_user_menu_avatars%")
-              .count
-          }
-        end
-
-        it "does not include the change in notified_changes" do
-          expect(result[:notified_changes]).not_to include(:show_user_menu_avatars)
-        end
-      end
-    end
-
-    context "when status change brings change to exactly promotion status threshold" do
-      let(:show_user_menu_avatars_status) { :stable }
-
-      before do
-        SiteSetting.promote_upcoming_changes_on_status = "stable"
-        UpcomingChangeEvent.create!(
-          event_type: :status_changed,
-          upcoming_change_name: :show_user_menu_avatars,
-          event_data: {
-            "previous_value" => nil,
-            "new_value" => "beta",
-          },
-        )
-        UpcomingChangeEvent.create!(
-          event_type: :status_changed,
-          upcoming_change_name: :enable_upload_debug_mode,
-          event_data: {
-            "previous_value" => nil,
-            "new_value" => "experimental",
-          },
-        )
-      end
-
-      it "does not notify admins (Promote service will handle it)" do
-        result
-        expect(
-          Notification
-            .where(notification_type: Notification.types[:upcoming_change_available])
-            .where("data::text LIKE ?", "%show_user_menu_avatars%")
-            .count,
-        ).to eq(0)
-      end
-
-      it "does not include the change in notified_changes" do
-        expect(result[:notified_changes]).not_to include(:show_user_menu_avatars)
       end
     end
   end
