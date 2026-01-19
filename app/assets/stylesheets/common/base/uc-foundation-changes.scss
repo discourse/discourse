@@ -3,7 +3,6 @@
   --cta-font-size: var(--font-down-1);
   --btn-small-font-size: var(--font-down-1);
   --cta-height: var(--space-8);
-  --nav-space: var(--d-main-content-gap);
   --d-nav-underline-height: var(--space-half);
   --d-button-default-bg-color: transparent;
   --d-button-default-border: 1px solid var(--primary-200);
@@ -26,6 +25,10 @@
   --topic-title-font-weight: 500;
   --d-sidebar-active-background: var(--primary-100);
   --d-content-background: var(--secondary);
+  --category-badge-border-radius: 50%;
+  --category-badge-size: var(--space-2);
+  --d-category-border-box-width: 1px;
+  --d-category-border-accent-width: 0px;
 
   // Buttons & Actions
   .btn-default,
@@ -48,6 +51,10 @@
     padding: 0.5em 0.65em;
     height: var(--cta-height);
     font-size: var(--cta-font-size);
+  }
+
+  .navigation-container {
+    margin-bottom: var(--d-main-content-gap);
   }
 
   .topic-replies-toggle-wrapper .topics-replies-toggle {
@@ -191,9 +198,20 @@
     transform: scale(var(--shrink-ratio));
   }
 
-  // Edit Category
+  // Category
   div.edit-category .edit-category-title-bar {
     background-color: transparent;
+  }
+
+  .category-boxes .category-box,
+  .category-boxes-with-topics .category-box {
+    --category-badge-color: var(--content-border-color) !important;
+  }
+
+  .category-boxes .category-box-inner,
+  .category-boxes-with-topics .category-box-inner {
+    border: var(--d-category-border-box-width) solid var(--content-border-color);
+    border-radius: var(--d-border-radius);
   }
 
   // Full Calendar
