@@ -27,7 +27,7 @@ import { blockCondition } from "./decorator";
  * | Property        | Type       | Description                                                           |
  * |-----------------|------------|-----------------------------------------------------------------------|
  * | `source`        | `string`   | Optional. Path to user object in outlet args (e.g., `@outletArgs.user`)|
- * | `loggedIn`      | `boolean`  | If true, passes only for logged-in users; if false, only for anon     |
+ * | `loggedIn`      | `boolean`  | If true, passes for logged-in users (or if source matches currentUser)|
  * | `admin`         | `boolean`  | If true, passes only for admin users                                  |
  * | `moderator`     | `boolean`  | If true, passes only for moderators (includes admins)                 |
  * | `staff`         | `boolean`  | If true, passes only for staff members                                |
@@ -54,6 +54,14 @@ import { blockCondition } from "./decorator";
  * @example
  * // Check a user from outlet args instead of currentUser
  * { type: "user", source: "@outletArgs.topicAuthor", admin: true }
+ *
+ * @example
+ * // Check if source user IS the current logged-in user
+ * { type: "user", source: "@outletArgs.post.user", loggedIn: true }
+ *
+ * @example
+ * // Check if source user is NOT the current user (e.g., for "follow" button)
+ * { type: "user", source: "@outletArgs.user", loggedIn: false }
  */
 @blockCondition({
   type: "user",
@@ -176,12 +184,26 @@ export default class BlockUserCondition extends BlockCondition {
         ? this.resolveSource(args, context)
         : this.currentUser;
 
-    // Check login state (only meaningful for currentUser, not source users)
-    if (loggedIn === true && !user) {
-      return false;
-    }
-    if (loggedIn === false && user) {
-      return false;
+    // Check login state or current user match (when source is provided)
+    if (loggedIn !== undefined) {
+      if (args.source !== undefined) {
+        // When source is provided, check if source user IS the current user
+        const isCurrentUser = this.#isSameUser(user, this.currentUser);
+        if (loggedIn === true && !isCurrentUser) {
+          return false;
+        }
+        if (loggedIn === false && isCurrentUser) {
+          return false;
+        }
+      } else {
+        // Check if there is a logged-in user
+        if (loggedIn === true && !user) {
+          return false;
+        }
+        if (loggedIn === false && user) {
+          return false;
+        }
+      }
     }
 
     // All other checks require a user
@@ -237,6 +259,25 @@ export default class BlockUserCondition extends BlockCondition {
     }
 
     return true;
+  }
+
+  /**
+   * Checks if two user objects represent the same user by comparing their ids.
+   * Used when `source` is provided with `loggedIn` to check if the source user
+   * is the current logged-in user.
+   *
+   * @param {Object} user1 - First user object.
+   * @param {Object} user2 - Second user object.
+   * @returns {boolean} True if both users exist and have the same id.
+   */
+  #isSameUser(user1, user2) {
+    if (!user1 || !user2) {
+      return false;
+    }
+    if (user1.id != null && user2.id != null) {
+      return user1.id === user2.id;
+    }
+    return user1 === user2;
   }
 
   /**

@@ -561,6 +561,122 @@ module("Unit | Blocks | Condition | user", function (hooks) {
         assert.false(result);
       });
     });
+
+    module("loggedIn comparison with currentUser", function (nestedHooks) {
+      nestedHooks.beforeEach(function () {
+        this.condition.currentUser = {
+          id: 42,
+          admin: false,
+          trust_level: 2,
+        };
+      });
+
+      test("loggedIn: true passes when source user IS currentUser", function (assert) {
+        const context = { outletArgs: { postUser: { id: 42 } } };
+        assert.true(
+          this.condition.evaluate(
+            { source: "@outletArgs.postUser", loggedIn: true },
+            context
+          )
+        );
+      });
+
+      test("loggedIn: true fails when source user is NOT currentUser", function (assert) {
+        const context = { outletArgs: { postUser: { id: 99 } } };
+        assert.false(
+          this.condition.evaluate(
+            { source: "@outletArgs.postUser", loggedIn: true },
+            context
+          )
+        );
+      });
+
+      test("loggedIn: true fails when source user is undefined", function (assert) {
+        const context = { outletArgs: {} };
+        assert.false(
+          this.condition.evaluate(
+            { source: "@outletArgs.postUser", loggedIn: true },
+            context
+          )
+        );
+      });
+
+      test("loggedIn: false fails when source user IS currentUser", function (assert) {
+        const context = { outletArgs: { postUser: { id: 42 } } };
+        assert.false(
+          this.condition.evaluate(
+            { source: "@outletArgs.postUser", loggedIn: false },
+            context
+          )
+        );
+      });
+
+      test("loggedIn: false passes when source user is NOT currentUser", function (assert) {
+        const context = { outletArgs: { postUser: { id: 99 } } };
+        assert.true(
+          this.condition.evaluate(
+            { source: "@outletArgs.postUser", loggedIn: false },
+            context
+          )
+        );
+      });
+
+      test("loggedIn: false passes when source user is undefined", function (assert) {
+        const context = { outletArgs: {} };
+        assert.true(
+          this.condition.evaluate(
+            { source: "@outletArgs.postUser", loggedIn: false },
+            context
+          )
+        );
+      });
+
+      test("loggedIn: true fails when currentUser is null (anon)", function (assert) {
+        this.condition.currentUser = null;
+        const context = { outletArgs: { postUser: { id: 99 } } };
+        assert.false(
+          this.condition.evaluate(
+            { source: "@outletArgs.postUser", loggedIn: true },
+            context
+          )
+        );
+      });
+
+      test("loggedIn: false passes when currentUser is null (anon)", function (assert) {
+        this.condition.currentUser = null;
+        const context = { outletArgs: { postUser: { id: 99 } } };
+        assert.true(
+          this.condition.evaluate(
+            { source: "@outletArgs.postUser", loggedIn: false },
+            context
+          )
+        );
+      });
+
+      test("compares by reference when users have no id", function (assert) {
+        const sharedUser = { username: "test" };
+        this.condition.currentUser = sharedUser;
+        const context = { outletArgs: { postUser: sharedUser } };
+
+        assert.true(
+          this.condition.evaluate(
+            { source: "@outletArgs.postUser", loggedIn: true },
+            context
+          ),
+          "same reference passes"
+        );
+
+        const differentUser = { username: "test" };
+        const context2 = { outletArgs: { postUser: differentUser } };
+        assert.false(
+          this.condition.evaluate(
+            { source: "@outletArgs.postUser", loggedIn: true },
+            context2
+          ),
+          "different reference fails even with same properties"
+        );
+      });
+    });
   });
 
   module("static type", function () {
