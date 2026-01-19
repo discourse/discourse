@@ -54,13 +54,14 @@
   background-size: cover;
   position: unset !important;
   margin: 0 !important;
-  border-radius: 0 !important;
+  border-radius: var(--d-border-radius) !important;
   box-shadow: unset !important;
   z-index: unset !important;
 
   .card-content {
     padding: 10px;
     background: rgb(var(--secondary-rgb), 0.85);
+    border-radius: var(--d-border-radius);
 
     &::after {
       content: "";
