@@ -4213,3 +4213,10 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+  enable_simplified_category_creation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
