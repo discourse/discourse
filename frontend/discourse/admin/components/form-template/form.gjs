@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import FormTemplateValidationOptionsModal from "discourse/admin/components/modal/form-template-validation-options";
-import { templateFormFields } from "discourse/admin/lib/template-form-fields";
+import { getTemplateFormFields } from "discourse/admin/lib/template-form-fields";
 import FormTemplate from "discourse/admin/models/form-template";
 import AceEditor from "discourse/components/ace-editor";
 import DButton from "discourse/components/d-button";
@@ -114,7 +114,9 @@ export default class FormTemplateForm extends Component {
 
   @action
   onInsertField(type) {
-    const structure = templateFormFields.find((v) => v.type === type).structure;
+    const structure = getTemplateFormFields().find(
+      (v) => v.type === type
+    ).structure;
 
     if (this.templateContent.length === 0) {
       this.templateContent += structure;

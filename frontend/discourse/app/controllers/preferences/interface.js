@@ -50,12 +50,15 @@ export default class InterfaceController extends Controller {
 
   @propertyEqual("model.id", "currentUser.id") canPreviewColorScheme;
   @propertyEqual("model.id", "currentUser.id") isViewingOwnProfile;
-  subpageTitle = i18n("user.preferences_nav.interface");
 
   init() {
     super.init(...arguments);
     this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
     this.set("selectedColorSchemeId", this.getSelectedColorSchemeId());
+  }
+
+  get subpageTitle() {
+    return i18n("user.preferences_nav.interface");
   }
 
   @discourseComputed("makeThemeDefault")

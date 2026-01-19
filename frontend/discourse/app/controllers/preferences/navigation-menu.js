@@ -8,7 +8,9 @@ import { i18n } from "discourse-i18n";
 export default class extends Controller {
   @tracked saved = false;
 
-  subpageTitle = i18n("user.preferences_nav.navigation_menu");
+  get subpageTitle() {
+    return i18n("user.preferences_nav.navigation_menu");
+  }
 
   get saveAttrNames() {
     return applyValueTransformer(

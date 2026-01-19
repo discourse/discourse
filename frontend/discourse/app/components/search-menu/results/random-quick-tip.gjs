@@ -8,31 +8,32 @@ import { i18n } from "discourse-i18n";
 const DEFAULT_QUICK_TIPS = [
   {
     label: "#",
-    description: i18n("search.tips.category_tag"),
+    descriptionKey: "search.tips.category_tag",
     clickable: true,
   },
   {
     label: "@",
-    description: i18n("search.tips.author"),
+    descriptionKey: "search.tips.author",
     clickable: true,
   },
   {
     label: "in:",
-    description: i18n("search.tips.in"),
+    descriptionKey: "search.tips.in",
     clickable: true,
   },
   {
     label: "status:",
-    description: i18n("search.tips.status"),
+    descriptionKey: "search.tips.status",
     clickable: true,
   },
   {
-    label: i18n("search.tips.full_search_key", { modifier: "Ctrl" }),
-    description: i18n("search.tips.full_search"),
+    labelKey: "search.tips.full_search_key",
+    labelOptions: { modifier: "Ctrl" },
+    descriptionKey: "search.tips.full_search",
   },
   {
     label: "@me",
-    description: i18n("search.tips.me"),
+    descriptionKey: "search.tips.me",
   },
 ];
 
@@ -62,10 +63,26 @@ export default class RandomQuickTip extends Component {
     this.randomTip = QUICK_TIPS[Math.floor(Math.random() * QUICK_TIPS.length)];
   }
 
+  get tipLabel() {
+    const tip = this.randomTip;
+    if (tip.labelKey) {
+      return i18n(tip.labelKey, tip.labelOptions || {});
+    }
+    return tip.label;
+  }
+
+  get tipDescription() {
+    const tip = this.randomTip;
+    if (tip.descriptionKey) {
+      return i18n(tip.descriptionKey);
+    }
+    return tip.description;
+  }
+
   @action
   tipSelected(e) {
     if (e.target.classList.contains("tip-clickable")) {
-      this.args.searchTermChanged(this.randomTip.label);
+      this.args.searchTermChanged(this.tipLabel);
       this.search.focusSearchInput();
 
       e.stopPropagation();
@@ -83,11 +100,11 @@ export default class RandomQuickTip extends Component {
         {{on "click" this.tipSelected}}
         aria-describedby="tip-description"
       >
-        {{this.randomTip.label}}
+        {{this.tipLabel}}
       </button>
 
       <span id="tip-description">
-        {{this.randomTip.description}}
+        {{this.tipDescription}}
       </span>
     </li>
   </template>

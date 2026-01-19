@@ -13,8 +13,6 @@ const EMAIL_LEVELS = {
 };
 
 export default class EmailsController extends Controller {
-  subpageTitle = i18n("user.preferences_nav.emails");
-
   @equal("model.user_option.email_messages_level", EMAIL_LEVELS.ONLY_WHEN_AWAY)
   emailMessagesLevelAway;
 
@@ -44,6 +42,10 @@ export default class EmailsController extends Controller {
     { name: i18n("user.email_digests.every_month"), value: 43200 },
     { name: i18n("user.email_digests.every_six_months"), value: 259200 },
   ];
+
+  get subpageTitle() {
+    return i18n("user.preferences_nav.emails");
+  }
 
   get saveAttrNames() {
     return applyValueTransformer(

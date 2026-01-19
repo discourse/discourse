@@ -1,30 +1,19 @@
 import { i18n } from "discourse-i18n";
 
-export const templateFormFields = [
-  {
-    type: "checkbox",
-    structure: `- type: checkbox
+export function getTemplateFormFields() {
+  return [
+    {
+      type: "checkbox",
+      structure: `- type: checkbox
   id: ${i18n("admin.form_templates.field_placeholders.id")}
   attributes:
     label: "${i18n("admin.form_templates.field_placeholders.label")}"
   validations:
     # ${i18n("admin.form_templates.field_placeholders.validations")}`,
-  },
-  {
-    type: "input",
-    structure: `- type: input
-  id: ${i18n("admin.form_templates.field_placeholders.id")}
-  attributes:
-    label: "${i18n("admin.form_templates.field_placeholders.label")}"
-    placeholder: "${i18n(
-      "admin.form_templates.field_placeholders.placeholder"
-    )}"
-  validations:
-    # ${i18n("admin.form_templates.field_placeholders.validations")}`,
-  },
-  {
-    type: "textarea",
-    structure: `- type: textarea
+    },
+    {
+      type: "input",
+      structure: `- type: input
   id: ${i18n("admin.form_templates.field_placeholders.id")}
   attributes:
     label: "${i18n("admin.form_templates.field_placeholders.label")}"
@@ -33,10 +22,22 @@ export const templateFormFields = [
     )}"
   validations:
     # ${i18n("admin.form_templates.field_placeholders.validations")}`,
-  },
-  {
-    type: "dropdown",
-    structure: `- type: dropdown
+    },
+    {
+      type: "textarea",
+      structure: `- type: textarea
+  id: ${i18n("admin.form_templates.field_placeholders.id")}
+  attributes:
+    label: "${i18n("admin.form_templates.field_placeholders.label")}"
+    placeholder: "${i18n(
+      "admin.form_templates.field_placeholders.placeholder"
+    )}"
+  validations:
+    # ${i18n("admin.form_templates.field_placeholders.validations")}`,
+    },
+    {
+      type: "dropdown",
+      structure: `- type: dropdown
   id: ${i18n("admin.form_templates.field_placeholders.id")}
   choices:
     - "${i18n("admin.form_templates.field_placeholders.choices.first")}"
@@ -47,10 +48,10 @@ export const templateFormFields = [
     label: "${i18n("admin.form_templates.field_placeholders.label")}"
   validations:
     # ${i18n("admin.form_templates.field_placeholders.validations")}`,
-  },
-  {
-    type: "upload",
-    structure: `- type: upload
+    },
+    {
+      type: "upload",
+      structure: `- type: upload
   id: ${i18n("admin.form_templates.field_placeholders.id")}
   attributes:
     file_types: ".jpg, .png, .gif"
@@ -58,10 +59,10 @@ export const templateFormFields = [
     label: "${i18n("admin.form_templates.field_placeholders.label")}"
   validations:
     # ${i18n("admin.form_templates.field_placeholders.validations")}`,
-  },
-  {
-    type: "multiselect",
-    structure: `- type: multi-select
+    },
+    {
+      type: "multiselect",
+      structure: `- type: multi-select
   id: ${i18n("admin.form_templates.field_placeholders.id")}
   choices:
     - "${i18n("admin.form_templates.field_placeholders.choices.first")}"
@@ -72,10 +73,10 @@ export const templateFormFields = [
     label: "${i18n("admin.form_templates.field_placeholders.label")}"
   validations:
     # ${i18n("admin.form_templates.field_placeholders.validations")}`,
-  },
-  {
-    type: "tagchooser",
-    structure: `- type: tag-chooser
+    },
+    {
+      type: "tagchooser",
+      structure: `- type: tag-chooser
   id: ${i18n("admin.form_templates.field_placeholders.id")}
   tag_group: ""
   attributes:
@@ -84,5 +85,6 @@ export const templateFormFields = [
     multiple: true
   validations:
     # ${i18n("admin.form_templates.field_placeholders.validations")}`,
-  },
-];
+    },
+  ];
+}

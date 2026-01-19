@@ -11,22 +11,30 @@ import { extraKeyboardShortcutsHelp } from "discourse/services/keyboard-shortcut
 import { i18n } from "discourse-i18n";
 
 const KEY = "keyboard_shortcuts_help";
-const SHIFT = i18n("shortcut_modifier_key.shift");
-const ALT = translateModKey("Alt");
-const META = translateModKey("Meta");
-const CTRL = i18n("shortcut_modifier_key.ctrl");
-const ENTER = i18n("shortcut_modifier_key.enter");
-const ESC = i18n("shortcut_modifier_key.esc");
-const COMMA = i18n(`${KEY}.shortcut_key_delimiter_comma`);
 
-const translationForExtraShortcuts = {
-  shift: SHIFT,
-  alt: ALT,
-  meta: META,
-  ctrl: CTRL,
-  enter: ENTER,
-  comma: COMMA,
-};
+function getModifierKeys() {
+  return {
+    SHIFT: i18n("shortcut_modifier_key.shift"),
+    ALT: translateModKey("Alt"),
+    META: translateModKey("Meta"),
+    CTRL: i18n("shortcut_modifier_key.ctrl"),
+    ENTER: i18n("shortcut_modifier_key.enter"),
+    ESC: i18n("shortcut_modifier_key.esc"),
+    COMMA: i18n(`${KEY}.shortcut_key_delimiter_comma`),
+  };
+}
+
+function getTranslationForExtraShortcuts() {
+  const { SHIFT, ALT, META, CTRL, ENTER, COMMA } = getModifierKeys();
+  return {
+    shift: SHIFT,
+    alt: ALT,
+    meta: META,
+    ctrl: CTRL,
+    enter: ENTER,
+    comma: COMMA,
+  };
+}
 
 function buildHTML(keys1, keys2, shortcutsDelimiter) {
   const allKeys = [keys1, keys2]
@@ -90,6 +98,8 @@ export default class KeyboardShortcutsHelp extends Component {
   @tracked searchTerm = "";
 
   get shortcuts() {
+    const { SHIFT, ALT, META, CTRL, ENTER, ESC } = getModifierKeys();
+
     let shortcuts = {
       jump_to: { shortcuts: this._buildJumpToSection() },
       application: {
@@ -417,7 +427,7 @@ export default class KeyboardShortcutsHelp extends Component {
 
   _translateKeys(string) {
     for (const [matcher, replacement] of Object.entries(
-      translationForExtraShortcuts
+      getTranslationForExtraShortcuts()
     )) {
       string = string.replace(matcher, replacement);
     }
