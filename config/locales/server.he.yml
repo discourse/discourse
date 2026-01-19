@@ -683,6 +683,7 @@ he:
       usernames_or_emails_required: "שמות משתמשים או כתובות דוא״ל חייבים להיות נוכחים"
       no_invites_with_discourse_connect: "ניתן להזמין רק משתמשים רשומים כאשר DiscourseConnect מופעל"
       no_invites_without_local_logins: "ניתן להזמין רק משתמשים רשומים כאשר כניסות מקומיות מושבת"
+      update_existing_users_required: "השינוי הזה משפיע על %{count} חברים בקבוצות קיימות. חובה לציין את המשתנה ‚update_existing_users‘ (חיובי או שלילי, true או false) כדי לציין האם להחיל את ברירות מחדל להתראות על חברים קיימים."
     default_names:
       everyone: "כולם"
       admins: "מנהלים"

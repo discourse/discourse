@@ -163,7 +163,7 @@ ko:
     emails_are_disabled_non_staff: "운영진이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
       message: "사이트가 업데이트되었습니다. 원활한 작동을 위해 <span>새로고침해 주세요</span>."
-      dismiss: "무시"
+      dismiss: "읽음 처리..."
     back_button: "뒤로"
     welcome_banner:
       header:
@@ -1560,6 +1560,7 @@ ko:
         user: "초대된 사용자"
         none:
           title: "표시 할 초대가 없습니다."
+          cta: "초대 링크 만들기"
         truncated:
           other: "첫 %{count}개의 초대를 표시합니다."
         redeemed: "사용된 초대"
@@ -1588,10 +1589,20 @@ ko:
           success: "초대 링크가 성공적으로 생성되었습니다!"
           error: "초대 링크를 생성하는 중에 오류가 발생했습니다"
         invite:
+          new_title: "회원 초대"
           expires_in_time: "%{time} 후에 만료"
           expired_at_time: "%{time}에 만료됨"
+          create_link_to_invite: "이 사이트에 접속할 수 있는 공유 링크를 만듭니다."
           copy_link: "링크 복사"
           share_link: "공유 링크"
+          link_validity_MF: |
+            이 링크는 최대 { user_count, plural,
+                one {# 명}
+              other {# 명}
+            }의 사용자를 초대 할 수 있으며, { duration_days, plural,
+                one {# 일}
+              other {# 일}
+            }간 유효합니다.
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
           description: "내용"
@@ -1605,6 +1616,8 @@ ko:
           send_invite_email: "저장 및 이메일 전송"
           update_invite: "업데이트"
           cancel: "취소"
+          create_link: "링크 만들기"
+          create_link_and_send_email: "링크를 만들고 이메일 보내기"
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
@@ -2158,7 +2171,7 @@ ko:
             other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
           messages:
             other: "확실한가요? 읽지 않은 개인 메시지가 %{count}개 있습니다."
-        dismiss: "무시"
+        dismiss: "읽음 처리..."
         cancel: "취소"
       group_message_summary:
         other: " %{group_name} 받은 편지함에 %{count}개의 메시지가 있습니다"
@@ -2366,17 +2379,17 @@ ko:
         delete_topics_count:
           other: "글 삭제"
         dismiss: "무시"
-        dismiss_read: "읽지 않은 항목 모두 무시"
+        dismiss_read: "읽지 않은 항목 모두 읽음으로 표시"
         dismiss_read_with_selected:
-          other: "%{count}개의 읽지 않은 항목 무시"
-        dismiss_button: "무시..."
+          other: "읽지 않은 %{count}개 읽음 처리"
+        dismiss_button: "읽음 처리..."
         dismiss_button_with_selected:
           other: "무시(%{count})..."
         dismiss_tooltip: "새 글만 무시하거나 글 팔로우 중지"
         also_dismiss_topics: "이 글을 더 이상 추적하지 않고 읽지 않은 글에서 표시하지 않음"
-        dismiss_new: "새 항목 무시"
+        dismiss_new: "새 글 읽음으로 표시"
         dismiss_new_with_selected:
-          other: "새 항목 무시(%{count})"
+          other: "읽음 처리 (%{count}개)"
         toggle: "글 일괄 선택 전환"
         actions: "일괄 작업"
         close_topics: "글 닫기"
@@ -2406,9 +2419,12 @@ ko:
         bookmarks: "아직 북마크된 글이 없습니다."
         category: "%{category}에 글이 없습니다."
         top: "주요 글이 없습니다."
+        education:
+          topic_tracking_preferences: '<a href="%{basePath}/my/preferences/tracking">환경설정</a>에서 새로운 글 추적 설정을 확인하고 변경할 수 있습니다.'
+          unread: "읽지 않은 글이 하나도 없네요... 정말 놀랍습니다!"
     topic_bulk_actions:
       dismiss:
-        name: "무시"
+        name: "읽음 처리..."
       close_topics:
         name: "닫기"
         optional: (선택 사항)
@@ -2471,6 +2487,7 @@ ko:
       read_more_in_category: "더 읽을거리가 필요하신가요? %{categoryLink}에서 다른 글을 찾아 보거나 <a href='%{latestLink}'>최근 글</a>을 살펴보세요."
       unread_indicator: "아직 이 글의 마지막 게시물을 읽은 회원이 없습니다."
       bumped_at: "최근: %{date}"
+      browse_latest_topics: "최근 글 보기"
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
       deleted: "글이 삭제되었습니다."
       slow_mode_update:
@@ -3553,7 +3570,7 @@ ko:
       back: "뒤로 가기"
       forward: "앞으로 가기"
       share: "공유"
-      dismiss: "무시"
+      dismiss: "읽음 처리"
     safe_mode:
       enabled: "안전 모드가 활성화되었습니다. 안전 모드를 종료하려면 이 브라우저 창을 닫으세요."
     image_removed: "(이미지 제거됨)"
@@ -3671,9 +3688,10 @@ ko:
               content: "검토"
             invite:
               content: "초대"
-              title: "새로운 멤버 초대"
+              title: "새로운 회원 초대"
             my_messages:
               content: " 메시지"
+      back_to_forum: "포럼으로 돌아가기"
       no_results:
         title: "결과 없음"
       search: "검색"
@@ -3908,7 +3926,7 @@ ko:
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
-        dismiss_notice: "무시"
+        dismiss_notice: "읽음 처리"
         new_features:
           learn_more: "더 보기..."
         last_checked: "마지막으로 확인함"

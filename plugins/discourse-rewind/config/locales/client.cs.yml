@@ -60,8 +60,8 @@ cs:
           title: Tvůj FBFF (nejlepší kámoš/ka na fóru)
         most_viewed_categories:
           title:
-            one: Tvoje nejsledovanější kategorie
-            few: Tvoje %{count} nejsledovanější kategorie
+            one: Tvá nejsledovanější kategorie
+            few: Tvé %{count} nejsledovanější kategorie
             many: Tvých %{count} nejsledovanějších kategorií
             other: Tvých %{count} nejsledovanějších kategorií
         most_viewed_tags:

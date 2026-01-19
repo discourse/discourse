@@ -836,6 +836,10 @@ de:
         is_this_post: "Ist diese(r/s) %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "oder"
         something_else_wrong: "Stimmt etwas nicht mit diesem/dieser %{reviewable_type}?"
+        approve_user: "Diesen Benutzer genehmigen?"
+        suspect_user: "Ist dieser Benutzer ein Spammer?"
+        approve_post: "Diesen Beitrag genehmigen?"
+        approve_topic: "Dieses Thema genehmigen?"
       types:
         reviewable_flagged_post:
           title: "Gemeldeter Beitrag"
@@ -857,6 +861,9 @@ de:
           noun: "Chat-Nachricht"
         reviewable_ai_post:
           noun: "Beitrag"
+        reviewable_post_voting_comment:
+          title: "Gemeldeter Kommentar"
+          noun: "Kommentar"
       flagged_as: "Gemeldet als"
       post_flagged_as: "Beitrag gemeldet als"
       chat_flagged_as: "Chat gemeldet als"
@@ -2637,6 +2644,7 @@ de:
     welcome_banner_page_visibility:
       top_menu_pages: "Obere Menüseiten"
       homepage: "Homepage"
+      discovery: "Discovery"
       all_pages: "Alle Seiten"
     composition_mode:
       markdown: "Markdown"
@@ -2860,6 +2868,7 @@ de:
       toggle_direction: "Schreibrichtung wechseln"
       wrap_modal:
         apply: "Anwenden"
+        no_attributes: "Noch keine Attribute hinzugefügt."
       help: "Hilfe zur Markdown-Formatierung"
       collapse: "Editor minimieren"
       open: "Editor öffnen"
@@ -3522,6 +3531,8 @@ de:
           12_hours: "12 Stunden"
           24_hours: "24 Stunden"
           custom: "Benutzerdefinierte Dauer"
+      slow_mode_notice:
+        duration: "Bitte warte zwischen dem Verfassen von Beiträgen in diesem Thema %{duration}."
       topic_status_update:
         title: "Zeitschaltuhr"
         save: "Zeitschaltuhr aktivieren"
@@ -3951,6 +3962,7 @@ de:
           confirm_delete: "Bist du sicher, dass du die Übersetzungen für '%{languageCode}' löschen willst?"
         success: "Die Übersetzungen wurden erfolgreich aktualisiert"
         post_language_selector:
+          title: "Sprache des Beitrags"
           none: "Keine"
         edit_warning:
           message: "Dies ist ein übersetzter Beitrag.<br><br>Willst du den Originalbeitrag auf %{language} bearbeiten oder diese spezielle Übersetzung bearbeiten?"
@@ -4620,6 +4632,7 @@ de:
         latest: "%{shortcut} Neueste Beiträge"
         new: "%{shortcut} Neue Beiträge"
         unread: "%{shortcut} Ungelesene Beiträge"
+        unseen: "%{shortcut} Ungesehen"
         categories: "%{shortcut} Kategorien"
         top: "%{shortcut} Top-Beiträge"
         bookmarks: "%{shortcut} Lesezeichen"
@@ -4874,6 +4887,7 @@ de:
         parent_tag_label: "Übergeordnetes Schlagwort"
         parent_tag_description: "Schlagwörter aus dieser Gruppe können nur verwendet werden, wenn das übergeordnete Schlagwort vorhanden ist."
         one_per_topic_label: "Beschränke diese Gruppe auf ein Schlagwort pro Thema"
+        new_name: "Neue Schlagwortgruppe"
         name_placeholder: "Name"
         save: "Speichern"
         delete: "Löschen"
@@ -5066,6 +5080,7 @@ de:
           header_link_text: "Kategorien"
           header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
           header_action_new: "Neue Kategorie"
+          header_action_edit_sidebar: "Angezeigte Kategorien ändern"
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           edit_section:
@@ -5318,6 +5333,8 @@ de:
       toggle_localized:
         translated: "Die Seite wurde maschinell übersetzt. Klicke, um das Original zu sehen."
         not_translated: "Die Seite ist nicht übersetzt. Klicke zum Übersetzen."
+    language_switcher:
+      title: "Sprache der Website ändern"
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
@@ -5541,6 +5558,10 @@ de:
         welcome_banner:
           title: "Willkommensbanner"
           form:
+            enabled_themes:
+              label: "In Themes aktiviert..."
+              description: "Wähle aus, welche Themes das Banner anzeigen sollen. Nur aktive Themes werden angezeigt."
+              select_label: "Themes auswählen"
             background_image:
               label: "Hintergrundbild"
               description: "Dieses Bild wird hinter dem Text des Banners angezeigt."
@@ -5548,8 +5569,11 @@ de:
               label: "Textfarbe"
               description: "Wenn du oben ein Hintergrundbild hochgeladen hast, kannst du mit dieser Einstellung die Textfarbe des Banners ändern, um sicherzustellen, dass er lesbar bleibt. Wenn du kein Hintergrundbild hochlädst, wird die Farbe vom aktiven Theme bestimmt."
             page_visibility:
+              label: "Sichtbarkeit auf folgenden Seiten"
               options:
                 top_menu_pages: "Obere Menüseiten"
+                homepage: "Nur auf der Startseite"
+                discovery: "Discovery-Seiten"
                 all_pages: "Alle Seiten"
             location:
               label: "Ort"
@@ -5557,13 +5581,32 @@ de:
                 above_topic_content: "Über dem Themeninhalt"
                 below_site_header: "Unter der Kopfzeile"
             text_section:
+              title: "Anpassbare Texte"
               locale_label: "Sprache"
             header_new_members:
+              label: "Kopfzeile für neue Mitglieder"
+              description: "Verfügbare Variable: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Willkommen, %{preferred_display_name}!"
             header_logged_in:
+              label: "Kopfzeile für eingeloggte Mitglieder"
+              description: "Verfügbare Variable: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Willkommen zurück, %{preferred_display_name}!"
             header_anonymous:
+              label: "Kopfzeile für anonyme Besucher"
+              description: "Verfügbare Variable: <code>&percnt;{site_name}</code>"
               placeholder: "Willkommen bei %{site_name}!"
+            subheader_logged_in:
+              label: "Unterüberschrift für eingeloggte Mitglieder"
+              description: "Sekundärer Text, der unter der Kopfzeile für eingeloggte Benutzer angezeigt wird."
+              placeholder: "Schau dir an, was es in der Community Neues gibt"
+            subheader_anonymous:
+              label: "Unterüberschrift für anonyme Besucher"
+              description: "Sekundärer Text, der unter der Kopfzeile für anonyme Besucher angezeigt wird."
+              placeholder: "Tritt unserer Community bei und nimm an Diskussionen teil"
+            search_placeholder:
+              label: "Platzhalter für die Suche"
+              description: "Platzhaltertext für das Suchfeld im Willkommensbanner."
+              placeholder: "Themen suchen..."
         navigation:
           title: "Navigation"
           header_description: "Konfiguriere die Navigationslinks und Menüpunkte für deine Website. Dazu gehören die Position und das Verhalten des Hauptnavigationsmenüs, die Quicklinks oben auf der Homepage und die Administrator-Seitenleiste."
@@ -6079,6 +6122,7 @@ de:
               recover: Ein Thema wiederherstellen.
               read_lists: Lies Themenlisten wie „Angesagt“, „Neu“, „Aktuell“ usw. RSS wird ebenfalls unterstützt.
               status: "Den Status eines Themas aktualisieren. Status: geschlossen, archiviert, sichtbar, angeheftet. Aktiviert: wahr, falsch. Hier und im Anfrage-Payload eine category_id angeben, um Statusänderungen nur für Themen dieser Kategorie zuzulassen."
+              change_owner: Ändere den Eigentümer von Beiträgen in einem Thema.
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
               delete: Einen Beitrag löschen.
@@ -6706,6 +6750,8 @@ de:
           create_name: "Name"
           save: "Speichern"
           long_title: "Farben, CSS und HTML-Inhalte deiner Website erweitern"
+          dark_mode: "%{themeName} dunkler Modus"
+          light_mode: "%{themeName} heller Modus"
           edit: "Bearbeiten"
           edit_confirm: "Dies ist ein Remote-Theme, wenn du CSS/HTML bearbeitest, werden deine Änderungen zurückgesetzt, wenn du das Theme das nächste Mal aktualisierst."
           update_confirm: "Diese lokalen Änderungen werden durch das Update gelöscht. Bist du sicher, dass du fortfahren möchtest?"
@@ -7622,6 +7668,8 @@ de:
         approve_bulk_success: "Erfolgreich! Alle ausgewählten Benutzer wurden genehmigt und benachrichtigt."
         time_read: "Lesezeit"
         post_edits_count: "Beitragsbearbeitungen"
+        upcoming_changes:
+          filter_no_results: "Keine bevorstehenden Änderungen gefunden"
         exports:
           title: Benutzerexporte
           download:
@@ -7646,6 +7694,9 @@ de:
           button: "Alle Beiträge löschen"
           progress:
             title: "Fortschritt beim Löschen von Beiträgen"
+            description:
+              one: "Lösche %{count} Beitrag von @%{username}..."
+              other: "Lösche %{count} Beiträge von @%{username}..."
           confirmation:
             title: "Alle Beiträge von @%{username} löschen"
             description: |
@@ -7684,6 +7735,7 @@ de:
         merging_user: "Benutzer wird zusammengeführt …"
         merge_failed: "Beim Zusammenführen der Benutzer ist ein Fehler aufgetreten."
         delete_forbidden_because_admin: "Administratoren können nicht gelöscht werden."
+        delete_posts_forbidden_because_admin: "Löschen aller Beiträge von Administratoren ist nicht möglich."
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
           other: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tage sind, können nicht gelöscht werden.)"
@@ -7945,6 +7997,7 @@ de:
           experimental: "Experimentell"
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
+          already_exists: "Der Eintrag für %{key} ist bereits vorhanden."
         default_categories:
           modal_description:
             one: "Soll diese Änderung rückwirkend gelten? Das ändert die Einstellungen für %{count} bestehenden Benutzer."
@@ -7980,6 +8033,8 @@ de:
           block_common_passwords:
             prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
+          clean_up_inactive_users_after_days:
+            confirm: "Ja, ich verstehe, dass inaktive Benutzer dauerhaft gelöscht werden, wenn ich diesen Wert nicht auf 0 setze."
         job_status:
           completed: "Update abgeschlossen"
           enqueued: "Update läuft"

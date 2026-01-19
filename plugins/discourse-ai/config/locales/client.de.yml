@@ -216,6 +216,7 @@ de:
         short_title: "Funktionen"
         description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Personas und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
         back: "Zurück"
+        settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
         disabled: "(deaktiviert)"
         persona:
           one: "Persona:"
@@ -236,6 +237,11 @@ de:
           bot: "Chatbot"
           name: "Bot"
           description: "Ein Chatbot, der Fragen beantworten und Benutzern in persönlichen Nachrichten, im Forum und im Chat helfen kann"
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
+            access_control: "Zugriffskontrolle"
+            ui_settings: "Oberflächen-Einstellungen"
+            integrations: "Integrationen"
         nav:
           configured: "Konfiguriert"
           unconfigured: "Nicht konfiguriert"
@@ -250,21 +256,28 @@ de:
           description: "Stellt eine Schaltfläche für Zusammenfassungen zur Verfügung, mit der Besucher Themen zusammenfassen können"
           topic_summaries: "Themenzusammenfassungen"
           gists: "Kurze Zusammenfassungen der Themenliste"
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
         search:
           name: "Suche"
           description: "Verbessert das Sucherlebnis durch KI-generierte Antworten auf Suchanfragen"
           discoveries: "Entdeckungen"
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
         embeddings:
           name: "Einbettungen"
           description: "Ermöglicht Funktionen wie „Verwandte Themen“ und „KI-Suche“ durch die Erstellung semantischer Textdarstellungen"
           hyde: "HyDE"
           setting_groups:
+            model_settings: "Modelleinstellungen"
             related_topics: "Verwandte Themen"
             semantic_search: "Semantische Suche"
         discord:
           name: "Discord-Integration"
           description: "Fügt die Möglichkeit hinzu, Discord-Kanäle zu durchsuchen"
           search: "Discord-Suche"
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
         inference:
           name: "Abgeleitete Konzepte"
           description: "Ordnet Themen und Beiträge in Interessensgebiete/Labels."
@@ -272,6 +285,7 @@ de:
           match_concepts: "Passende Konzepte"
           deduplicate_concepts: "Deduplizierung von Konzepten"
           setting_groups:
+            settings: "Grundlegende Einstellungen"
             personas: "Personas"
         ai_helper:
           name: "Helfer"
@@ -298,6 +312,7 @@ de:
           topic_title_translator: "Thementitel-Übersetzer"
           short_text_translator: "Kurztext-Übersetzer"
           setting_groups:
+            settings: "Grundlegende Einstellungen"
             personas: "Personas"
         spam:
           name: "Spam"
@@ -593,6 +608,8 @@ de:
         url: "URL des Dienstes, der das Modell hostet"
         api_key: "API-Schlüssel des Dienstes, der das Modell hostet"
         vision_enabled: "Sehen aktiviert"
+        allowed_attachment_types: "Zulässige Anhänge"
+        attachment_types_placeholder: "Erweiterungen auswählen oder eingeben (z. B. pdf, txt, docx)"
         ai_bot_user: "KI-Bot-Benutzer"
         cost_input: "Eingabekosten"
         cost_cached_input: "Eingabekosten für Zwischengespeichertes"

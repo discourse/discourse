@@ -31,7 +31,7 @@ vi:
       filter:
         mute: 'Im lặng'
         follow: 'Chỉ chủ đề đầu tiên'
-        watch: 'Tất cả bài viết và trả lời'
+        watch: 'Tất cả tút và trả lời'
       rule_table:
         filter: "Lọc"
         category: "Chuyên mục"

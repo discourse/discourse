@@ -68,6 +68,8 @@ vi:
               label: Thẻ
             restricted_categories:
               label: Chuyên mục
+            exclude_subcategories:
+              label: Loại trừ các chuyên mục phụ
           created: Tạo bởi
           with_images: Hình ảnh
           with_links: Liên kết
@@ -76,7 +78,7 @@ vi:
         category_created_edited:
           fields:
             restricted_category:
-              label: Danh mục cha
+              label: Chuyên mục chính
         pm_created:
           fields:
             restricted_user:

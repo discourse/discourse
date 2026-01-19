@@ -4428,6 +4428,7 @@ pl_PL:
           confirm_delete: "Czy na pewno chcesz usunąć tłumaczenia dla '%{languageCode}'?"
         success: "Tłumaczenia zostały pomyślnie zaktualizowane"
         post_language_selector:
+          title: "Język wpisu"
           none: "Brak"
         edit_warning:
           message: "To jest przetłumaczony wpis.<br><br>Czy chcesz edytować oryginalny wpis w języku %{language} czy edytować to konkretne tłumaczenie?"
@@ -6008,7 +6009,7 @@ pl_PL:
           status_beta: "Beta"
           status_stable: "Stabilna"
           status_permanent: "Stała"
-          impact_role_all: "Wszystkie role wpływu"
+          impact_role_all: "Wszystkie role wpływowe"
           impact_role_admins: "Administratorzy"
           impact_role_moderators: "Moderatorzy"
           impact_role_staff: "Zespół"

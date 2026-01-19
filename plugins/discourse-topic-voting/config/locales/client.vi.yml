@@ -18,7 +18,7 @@ vi:
       vote_title: "Bình chọn"
       vote_title_plural: "Bình chọn"
       voted_title: "Đã bình chọn"
-      voting_closed_title: "Đã "
+      voting_closed_title: "Đã đóng"
       voting_limit: "Giới h"
       see_votes: "Bạn còn %{count}/%{max} lượt bình chọn"
       locked_description: "Tăng độ tin cậy của bạn để bình chọn"

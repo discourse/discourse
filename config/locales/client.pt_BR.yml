@@ -830,6 +830,7 @@ pt_BR:
         is_this_post: "Este(a) %{reviewable_type} é %{reviewable_human_score_types}?"
         delimiter: "ou"
         something_else_wrong: "Há algo errado em %{reviewable_type}?"
+        approve_user: "Aprovar este usuário?"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"

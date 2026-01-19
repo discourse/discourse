@@ -120,10 +120,10 @@ vi:
       edit:
         bot_created_post_raw: "@%{discobot_username} cho đến nay là bot thú vị nhất mà tôi biết :wink:"
       recover:
-        deleted_post_raw: "Tại sao @%{discobot_username} xóa bài đăng của tôi? :anguished:"
+        deleted_post_raw: "Tại sao @%{discobot_username} xóa tút của tôi? :anguished:"
       category_hashtag:
         reply: |-
-          Xuất sắc! Hãy nhớ điều này hoạt động cho cả hai loại danh mục và  thẻ, nếu thẻ được bật.
+          Xuất sắc! Hãy nhớ điều này áp dụng cho cả hai loại chuyên mục và thẻ, nếu thẻ được bật.
       change_topic_notification_level:
         instructions: |-
           Mỗi chủ đề đều có một mức độ thông báo. Mức độ mặc định là 'bình thường', nghĩa là bạn sẽ chỉ nhận được thông báo khi ai đó đang nói chuyện trực tiếp với bạn.

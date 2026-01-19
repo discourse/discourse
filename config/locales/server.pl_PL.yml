@@ -691,6 +691,7 @@ pl_PL:
         other: "Maksymalnie %{count} domen e-mail może być liczone jednocześnie"
       no_invites_with_discourse_connect: "Gdy włączona jest opcja DiscourseConnect, możesz zapraszać tylko zarejestrowanych użytkowników"
       no_invites_without_local_logins: "Możesz zaprosić tylko zarejestrowanych użytkowników, gdy logowanie lokalne jest wyłączone"
+      update_existing_users_required: "Ta zmiana dotyczy %{count} istniejących członków grupy. Należy określić parametr „update_existing_users” (prawda lub fałsz), aby wskazać, czy nowe domyślne ustawienia powiadomień mają zostać zastosowane do istniejących członków."
     default_names:
       everyone: "wszyscy"
       admins: "administratorzy"

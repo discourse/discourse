@@ -65,4 +65,4 @@ vi:
           other: "Danh sách chỉ định - %{count} chưa đọc"
     edit_assignments_modal:
       topic: "Chủ đề"
-      post: "Bài đăng"
+      post: "Tút"
