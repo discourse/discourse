@@ -757,6 +757,7 @@ pl_PL:
       show_more: "Pokaż więcej"
       show_less: "Pokaż mniej"
       back_to_queue: "Powrót do kolejki"
+      editing_post: "Edycja wpisu…"
       order_by: "Segreguj według:"
       date_filter: "Opublikowane między"
       in_reply_to: "w odpowiedzi na"
@@ -969,6 +970,10 @@ pl_PL:
         is_this_post: "Czy to jest %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "lub"
         something_else_wrong: "Czy jest coś nie tak z tym %{reviewable_type}?"
+        approve_user: "Zatwierdzić tego użytkownika?"
+        suspect_user: "Czy to spam użytkownika?"
+        approve_post: "Zatwierdzić ten wpis?"
+        approve_topic: "Zatwierdzić ten temat?"
       types:
         reviewable_flagged_post:
           title: "Oflagowany wpis"
@@ -986,6 +991,15 @@ pl_PL:
         reviewable_post:
           title: "Wpis"
           noun: "wpis"
+        reviewable_ai_chat_message:
+          title: "Wiadomość czatu oflagowana AI"
+          noun: "wiadomość na czacie"
+        reviewable_ai_post:
+          title: "Wpis oflagowany AI"
+          noun: "wpis"
+        reviewable_post_voting_comment:
+          title: "Oflagowany komentarz"
+          noun: "komentarz"
       flagged_as: "Oflagowany jako"
       post_flagged_as: "Wpis oflagowano jako"
       chat_flagged_as: "Czat oflagowano jako"
@@ -2264,6 +2278,7 @@ pl_PL:
         redeemed_tab_with_count: "Zrealizowane (%{count})"
         invited_via: "Zaproszenie"
         invited_via_link: "link %{key} (użyto %{count} z %{max})"
+        generating_link: "Generowanie linku..."
         groups: "Grupy"
         topic: "Temat"
         sent: "Utworzone/Ostatnio wysłane"
@@ -3748,6 +3763,7 @@ pl_PL:
           unread: "Nic nie zostało do przeczytania. Imponujące!"
           new_new: "Na razie nic nowego. Sprawdź wkrótce!"
           new: "Na razie nic nowego. Sprawdź wkrótce!"
+          generic: "Nic tu nie ma...sprawdź wkrótce!"
     topic_bulk_actions:
       dismiss:
         name: "Odrzuć"
@@ -3927,7 +3943,7 @@ pl_PL:
           24_hours: "24 godziny"
           custom: "Niestandardowy czas trwania"
       slow_mode_notice:
-        duration: "Poczekaj %{duration} między postami w tym wątku"
+        duration: "Proszę odczekać %{duration} pomiędzy wpisami w tym temacie"
       topic_status_update:
         title: "Timer tematów"
         save: "Ustaw czas"
@@ -5626,6 +5642,9 @@ pl_PL:
           click_to_get_started: "Kliknij tutaj, aby rozpocząć."
           header_link_text: "Kategorie"
           header_action_title: "Edytuj kategorie paska bocznego"
+          header_action_new: "Nowa kategoria"
+          header_action_edit_sidebar: "Edytuj kategorie paska bocznego"
+          header_action_edit_header_dropdown: "Edytuj kategorie nawigacji"
           configure_defaults: "Skonfiguruj ustawienia domyślne"
         community:
           edit_section:
@@ -5989,6 +6008,12 @@ pl_PL:
           status_beta: "Beta"
           status_stable: "Stabilna"
           status_permanent: "Stała"
+          impact_role_all: "Wszystkie role wpływu"
+          impact_role_admins: "Administratorzy"
+          impact_role_moderators: "Moderatorzy"
+          impact_role_staff: "Zespół"
+          impact_role_all_members: "Wszyscy członkowie"
+          impact_role_developers: "Deweloperzy"
       config:
         about:
           title: "O Twojej witrynie"
@@ -6453,7 +6478,7 @@ pl_PL:
         new_features:
           title: "Co nowego?"
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
-          previous_announcements: "Możesz zobaczyć poprzednie ogłoszenia o nowych funkcjach na <a href='%{url}' target='_blank'>Discourse Meta</a>"
+          no_new_features_found: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w społeczności Discourse Meta <a href='%{url}' target='_blank'></a>."
           learn_more: "Dowiedz się więcej..."
           experimental: "Eksperymentalne"
           only_experiments: "Pokaż tylko funkcje eksperymentalne"

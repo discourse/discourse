@@ -9,8 +9,8 @@ describe PrettyText do
       MD
 
       html = <<~HTML
-        <p><span class="chcklst-box fa fa-square-o fa-fw"></span>,<span class="chcklst-box fa fa-square-o fa-fw"></span>,<span class="chcklst-box checked fa fa-square-check-o fa-fw"></span>,<span class="chcklst-box checked permanent fa fa-square-check fa-fw"></span> are all checkboxes<br>
-        <code>[ ]</code> <a>x</a> <em>[ ]</em> <strong>[ ]</strong> <em>[ ]</em> <strong>[ ]</strong> <s>[ ]</s> are not checkboxes</p>
+      <p><span class="chcklst-box fa fa-square-o"></span>,<span class="chcklst-box fa fa-square-o"></span>,<span class="chcklst-box checked fa fa-square-check-o"></span>,<span class="chcklst-box checked permanent fa fa-square-check"></span> are all checkboxes<br>
+      <code>[ ]</code> <a>x</a> <em>[ ]</em> <strong>[ ]</strong> <em>[ ]</em> <strong>[ ]</strong> <s>[ ]</s> are not checkboxes</p>
       HTML
       cooked = PrettyText.cook(md)
       expect(cooked).to eq(html.strip)
@@ -33,7 +33,7 @@ describe PrettyText do
       expect(cooked).to include("[x] both brackets escaped")
       expect(cooked).to include("[ ] escaped empty checkbox")
       expect(cooked).to include(
-        '<span class="chcklst-box checked fa fa-square-check-o fa-fw"></span> real checkbox',
+        '<span class="chcklst-box checked fa fa-square-check-o"></span> real checkbox',
       )
     end
 
@@ -47,7 +47,7 @@ describe PrettyText do
       expect(cooked.scan("chcklst-box").count).to eq(1)
       expect(cooked).to include("[x] hello")
       expect(cooked).to include(
-        '<span class="chcklst-box checked fa fa-square-check-o fa-fw"></span> world',
+        '<span class="chcklst-box checked fa fa-square-check-o"></span> world',
       )
     end
   end

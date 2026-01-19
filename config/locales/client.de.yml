@@ -853,6 +853,10 @@ de:
         reviewable_post:
           title: "Beitrag"
           noun: "Beitrag"
+        reviewable_ai_chat_message:
+          noun: "Chat-Nachricht"
+        reviewable_ai_post:
+          noun: "Beitrag"
       flagged_as: "Gemeldet als"
       post_flagged_as: "Beitrag gemeldet als"
       chat_flagged_as: "Chat gemeldet als"
@@ -3518,8 +3522,6 @@ de:
           12_hours: "12 Stunden"
           24_hours: "24 Stunden"
           custom: "Benutzerdefinierte Dauer"
-      slow_mode_notice:
-        duration: "Bitte warte zwischen dem Verfassen von Beiträgen in diesem Thema %{duration}."
       topic_status_update:
         title: "Zeitschaltuhr"
         save: "Zeitschaltuhr aktivieren"
@@ -5063,6 +5065,7 @@ de:
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Kategorien"
           header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
+          header_action_new: "Neue Kategorie"
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           edit_section:
@@ -5392,6 +5395,11 @@ de:
           status_beta: "Beta"
           status_stable: "Dauerhaft"
           status_permanent: "Dauerhaft"
+          impact_role_admins: "Administratoren"
+          impact_role_moderators: "Moderatoren"
+          impact_role_staff: "Team"
+          impact_role_all_members: "Alle Mitglieder"
+          impact_role_developers: "Entwickler"
       config:
         about:
           title: "Über deine Website"
@@ -5807,7 +5815,6 @@ de:
         new_features:
           title: "Was ist neu?"
           subtitle: "Wir veröffentlichen laufend neue Funktionen und Verbesserungen. Auf dieser Seite findest du die wichtigsten Neuerungen, aber du kannst auch auf „Mehr erfahren“ klicken, um ausführliche Versionshinweise zu lesen."
-          previous_announcements: "Du kannst frühere Ankündigungen neuer Funktionen bei <a href='%{url}' target='_blank'>Discourse Meta</a> sehen."
           learn_more: "Mehr erfahren …"
           experimental: "Experimentell"
           only_experiments: "Nur experimentelle Funktionen anzeigen"

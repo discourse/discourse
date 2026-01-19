@@ -5,5 +5,17 @@
 # https://translate.discourse.org/
 
 tr_TR:
+  solved: "Çözüldü"
+  posted: "gönderildi"
+  by_username: "@%{username} tarafından"
+  vote_count:
+    one: "%{count} oy"
+    other: "%{count} oy"
+  like_count:
+    one: "%{count} beğeni"
+    other: "%{count} beğeni"
+  reply_count:
+    one: "%{count} yanıt"
+    other: "%{count} yanıt"
   theme_metadata:
     description: "Discourse siteleri için kullanıma hazır deneyimi geliştiren basit ve güzel bir tema."

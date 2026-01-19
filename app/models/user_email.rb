@@ -75,14 +75,18 @@ class UserEmail < ActiveRecord::Base
   end
 
   def unique_email
+    scope = self.class
+    scope = scope.where.not(id: id) if persisted?
+
     email_exists =
       if self.normalize_emails?
-        self
-          .class
-          .where("lower(email) = ? OR lower(normalized_email) = ?", email, normalized_email)
-          .exists?
+        scope.where(
+          "lower(email) = ? OR lower(normalized_email) = ?",
+          email,
+          normalized_email,
+        ).exists?
       else
-        self.class.where("lower(email) = ?", email).exists?
+        scope.where("lower(email) = ?", email).exists?
       end
 
     self.errors.add(:email, :taken) if email_exists

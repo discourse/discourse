@@ -860,6 +860,10 @@ sk:
         reviewable_post:
           title: "Príspevok"
           noun: "príspevok"
+        reviewable_ai_chat_message:
+          noun: "správa v chate"
+        reviewable_ai_post:
+          noun: "príspevok"
       flagged_as: "Označené ako"
       user_label: "Používateľ"
       moderator_actions: "Akcie moderátora"
@@ -3677,8 +3681,6 @@ sk:
           12_hours: "12 Hodín"
           24_hours: "24 Hodín"
           custom: "Vlastné trvanie"
-      slow_mode_notice:
-        duration: "Prosím, počkajte %{duration} medzi príspevkami v tejto téme"
       topic_status_update:
         title: "Časovač tém"
         save: "Nastaviť časovač"
@@ -5611,6 +5613,9 @@ sk:
           impact_type_feature: "Funkcia"
           impact_type_other: "Ostatné"
           status_experimental: "Experimentálne"
+          impact_role_admins: "Administrátori"
+          impact_role_moderators: "Moderátori"
+          impact_role_staff: "Personál"
       config:
         about:
           title: "O vašej stránke"
@@ -6016,7 +6021,6 @@ sk:
         new_features:
           title: "Čo je nové?"
           subtitle: "Neustále vydávame nové funkcie a vylepšenia. Táto stránka obsahuje najdôležitejšie informácie, ale kliknutím na \"Ďalšie informácie\" si môžete pozrieť rozsiahle poznámky k vydaniu."
-          previous_announcements: "Oznámenia o nových funkciách si môžete pozrieť na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Zistiť viac..."
           experimental: "Experimentálne"
           only_experiments: "Zobraziť len experimentálne funkcie"

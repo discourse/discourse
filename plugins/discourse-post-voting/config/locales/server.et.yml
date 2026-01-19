@@ -21,8 +21,6 @@ et:
             title: "Peata kasutaja"
           agree_and_silence:
             title: "Vaigista kasutaja"
-          disagree:
-            title: "Ei nõustu"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

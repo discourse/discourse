@@ -47,8 +47,8 @@ fa_IR:
         disagree_and_restore:
           title: "مخالفت و بازگرداندن پیام"
           description: "پیام را بازیابی کنید تا همه کاربران بتوانند آن را ببینند."
-        disagree:
-          title: "مخالف"
+        ignore:
+          title: "چشم‌پوشی از پرچم"
       direct_messages:
         transcript_title: "رونوشت پیام‌های قبلی در %{channel_name}"
         transcript_body: "برای ارائه متن بیشتر به شما، رونوشتی از پیام‌های قبلی را در این گفتگو (حداکثر ده مورد) قرار دادیم:\n\n%{transcript}"

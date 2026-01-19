@@ -990,6 +990,10 @@ cs:
         reviewable_post:
           title: "Příspěvek"
           noun: "příspěvek"
+        reviewable_ai_chat_message:
+          noun: "zpráva chatu"
+        reviewable_ai_post:
+          noun: "příspěvek"
       flagged_as: "Nahlášeno jako"
       post_flagged_as: "Příspěvek nahlášen jako"
       chat_flagged_as: "Chat nahlášen jako"
@@ -3937,8 +3941,6 @@ cs:
           12_hours: "12 hodin"
           24_hours: "24 hodin"
           custom: "Vlastní doba trvání"
-      slow_mode_notice:
-        duration: "Mezi příspěvky v tomto tématu prosím vyčkejte %{duration}"
       topic_status_update:
         title: "Časovač tématu"
         save: "Nastavit časovač "
@@ -5649,6 +5651,7 @@ cs:
           click_to_get_started: "Začněte kliknutím sem."
           header_link_text: "Kategorie"
           header_action_title: "Upravit kategorie v postranním panelu"
+          header_action_new: "Přidat kategorii"
           configure_defaults: "Nastavit výchozí"
         community:
           edit_section:
@@ -6012,6 +6015,11 @@ cs:
           status_beta: "Beta"
           status_stable: "Stabilní"
           status_permanent: "Trvalá"
+          impact_role_admins: "Administrátoři"
+          impact_role_moderators: "Moderátoři"
+          impact_role_staff: "Redakce"
+          impact_role_all_members: "Všichni členové"
+          impact_role_developers: "Vývojáři"
       config:
         about:
           title: "O vašem webu"
@@ -6476,7 +6484,6 @@ cs:
         new_features:
           title: "Co je nového?"
           subtitle: "Neustále vydáváme nové funkce a vylepšení. Tato stránka obsahuje hlavní body, ale kliknutím na „Další informace“ zobrazíte rozsáhlé poznámky k verzi."
-          previous_announcements: "Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Více informací..."
           experimental: "Experimentální"
           only_experiments: "Zobrazit pouze experimentální funkce"

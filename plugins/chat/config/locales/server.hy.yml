@@ -19,8 +19,8 @@ hy:
         agree_and_silence:
           title: "Լռեցնել Օգտատիրոջը"
           description: "Ընդունել դրոշակը և սառեցնել օգտատիրոջը:"
-        disagree:
-          title: "Չընդունել"
+        ignore:
+          title: "Անտեսել դրոշակը"
     channel:
       dm_title:
         single_user: "%{username}"

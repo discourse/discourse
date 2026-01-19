@@ -5,5 +5,14 @@
 # https://translate.discourse.org/
 
 ja:
+  solved: "解決済み"
+  posted: "投稿しました"
+  by_username: "作成者: @%{username}"
+  vote_count:
+    other: "%{count} 票"
+  like_count:
+    other: "「いいね！」 %{count}"
+  reply_count:
+    other: "返信: %{count} 件"
   theme_metadata:
     description: "Discourse サイトのすぐに使用できるエクスペリエンスを向上させる、シンプルで美しいテーマ"

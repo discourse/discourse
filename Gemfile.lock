@@ -122,7 +122,7 @@ GEM
       cbor (~> 0.5.9)
       openssl-signature_algorithm (~> 1.0)
     cppjieba_rb (0.4.4)
-    crack (1.0.0)
+    crack (1.0.1)
       bigdecimal
       rexml
     crass (1.0.6)
@@ -143,10 +143,10 @@ GEM
     discourse-seed-fu (2.3.12)
       activerecord (>= 3.1)
       activesupport (>= 3.1)
-    discourse_ai-tokenizers (0.3.2)
+    discourse_ai-tokenizers (0.4)
       activesupport (>= 6.0)
-      tiktoken_ruby (~> 0.0.11.1)
-      tokenizers (~> 0.5.4)
+      tiktoken_ruby (~> 0.0.15)
+      tokenizers (~> 0.6.3)
     discourse_dev_assets (0.0.6)
       faker (~> 3.5.1)
       literate_randomizer
@@ -158,7 +158,7 @@ GEM
     email_reply_trimmer (0.2.0)
     erb (6.0.0)
     erubi (1.13.1)
-    excon (1.2.5)
+    excon (1.3.2)
       logger
     exifr (1.4.1)
     extralite-bundle (2.13)
@@ -506,10 +506,10 @@ GEM
       io-console (~> 0.5)
     request_store (1.7.0)
       rack (>= 1.4)
-    rexml (3.4.2)
+    rexml (3.4.4)
     rinku (2.0.6)
     rotp (6.3.0)
-    rouge (4.6.1)
+    rouge (4.7.0)
     rqrcode (3.1.1)
       chunky_png (~> 1.0)
       rqrcode_core (~> 2.0)
@@ -609,7 +609,7 @@ GEM
       guess_html_encoding (>= 0.0.4)
       nokogiri (>= 1.6.0)
     ruby2_keywords (0.0.5)
-    rubyzip (2.4.1)
+    rubyzip (3.2.2)
     sanitize (7.0.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.16.8)
@@ -669,21 +669,22 @@ GEM
       prettier_print (>= 1.2.0)
     test-prof (1.5.0)
     thor (1.4.0)
-    tiktoken_ruby (0.0.11.1-aarch64-linux)
-    tiktoken_ruby (0.0.11.1-arm-linux)
-    tiktoken_ruby (0.0.11.1-arm64-darwin)
-    tiktoken_ruby (0.0.11.1-x86_64-darwin)
-    tiktoken_ruby (0.0.11.1-x86_64-linux)
-    tiktoken_ruby (0.0.11.1-x86_64-linux-musl)
+    tiktoken_ruby (0.0.15.1-aarch64-linux)
+    tiktoken_ruby (0.0.15.1-aarch64-linux-musl)
+    tiktoken_ruby (0.0.15.1-arm-linux)
+    tiktoken_ruby (0.0.15.1-arm64-darwin)
+    tiktoken_ruby (0.0.15.1-x86_64-darwin)
+    tiktoken_ruby (0.0.15.1-x86_64-linux)
+    tiktoken_ruby (0.0.15.1-x86_64-linux-musl)
     timeout (0.5.0)
-    tokenizers (0.5.5)
+    tokenizers (0.6.3)
       rb_sys
-    tokenizers (0.5.5-aarch64-linux)
-    tokenizers (0.5.5-aarch64-linux-musl)
-    tokenizers (0.5.5-arm64-darwin)
-    tokenizers (0.5.5-x86_64-darwin)
-    tokenizers (0.5.5-x86_64-linux)
-    tokenizers (0.5.5-x86_64-linux-musl)
+    tokenizers (0.6.3-aarch64-linux)
+    tokenizers (0.6.3-aarch64-linux-musl)
+    tokenizers (0.6.3-arm64-darwin)
+    tokenizers (0.6.3-x86_64-darwin)
+    tokenizers (0.6.3-x86_64-linux)
+    tokenizers (0.6.3-x86_64-linux-musl)
     trilogy (2.9.0)
     tsort (0.2.0)
     ttfunk (1.8.0)
@@ -948,7 +949,7 @@ CHECKSUMS
   connection_pool (2.5.5) sha256=e54ff92855753df1fd7c59fa04a398833355f27dd14c074f8c83a05f72a716ad
   cose (1.3.1) sha256=d5d4dbcd6b035d513edc4e1ab9bc10e9ce13b4011c96e3d1b8fe5e6413fd6de5
   cppjieba_rb (0.4.4) sha256=319a7ab57b6ec28a8d1b223487ecd114432f1930d7740db2f99c1991e6c8faaf
-  crack (1.0.0) sha256=c83aefdb428cdc7b66c7f287e488c796f055c0839e6e545fec2c7047743c4a49
+  crack (1.0.1) sha256=ff4a10390cd31d66440b7524eb1841874db86201d5b70032028553130b6d4c7e
   crass (1.0.6) sha256=dc516022a56e7b3b156099abc81b6d2b08ea1ed12676ac7a5657617f012bd45d
   css_parser (1.21.1) sha256=6cfd3ffc0a97333b39d2b1b49c95397b05e0e3b684d68f77ec471ba4ec2ef7c7
   csv (3.3.5) sha256=6e5134ac3383ef728b7f02725d9872934f523cb40b961479f69cf3afa6c8e73f
@@ -962,7 +963,7 @@ CHECKSUMS
   discourse-emojis (1.0.44) sha256=63425a32379fb471d58f5eac9a1e931fc5a94efb7d327f71f1580af4dfe4edb3
   discourse-fonts (0.0.19) sha256=78d4ddd671615908303a675427039d8d787c935e6deae184c6e143c18c6e0033
   discourse-seed-fu (2.3.12) sha256=4f61d95c11ed54609046cd04eb3a51b531c5fa863fa86d1bea7d74264e5c75e4
-  discourse_ai-tokenizers (0.3.2) sha256=eba14edf6ac94c5ebe68866bd6eaf1a119bc8019e150e5c4c767b8907e907b21
+  discourse_ai-tokenizers (0.4) sha256=54d7ddcc5479f3bb3057b90f4a85106b4602a07336b51d372c1a1dd8f08104c5
   discourse_dev_assets (0.0.6) sha256=4dfe7946927aa3d61a4ba89b5aef39d6daaeb70e35d7125dc481806a5c0aea4e
   discourse_math_bundle (1.0.1) sha256=c7d82fa65c9680cab2f77daeba32c1b89e500faccd2269e050ab27d5e1bc8337
   docile (1.4.1) sha256=96159be799bfa73cdb721b840e9802126e4e03dfc26863db73647204c727f21e
@@ -972,7 +973,7 @@ CHECKSUMS
   email_reply_trimmer (0.2.0) sha256=05843fa5ee1a2037235f1f3c876e922f613e2b4406fea5bb14212d1708d6c525
   erb (6.0.0) sha256=2730893f9d8c9733f16cab315a4e4b71c1afa9cabc1a1e7ad1403feba8f52579
   erubi (1.13.1) sha256=a082103b0885dbc5ecf1172fede897f9ebdb745a4b97a5e8dc63953db1ee4ad9
-  excon (1.2.5) sha256=ca040bb61bc0059968f34a17115a00d2db8562e3c0c5c5c7432072b551c85a9d
+  excon (1.3.2) sha256=a089babe98638e58042a7d542b2bbd183304527e33d612b6dde22fa491a544a5
   exifr (1.4.1) sha256=768374cc6b6ff3743acba57c1c35229bdd8c6b9fbc1285952047fc1215c4b894
   extralite-bundle (2.13) sha256=0d00338dd3b348f44a02bb9e93db3714231e7240a48320f1ee3a1db5197db3cc
   fabrication (3.0.0) sha256=a6a0bfad9071348ad3cb1701df788524b888c0cdd044b988893e7509f7463be3
@@ -1147,10 +1148,10 @@ CHECKSUMS
   regexp_parser (2.11.3) sha256=ca13f381a173b7a93450e53459075c9b76a10433caadcb2f1180f2c741fc55a4
   reline (0.6.3) sha256=1198b04973565b36ec0f11542ab3f5cfeeec34823f4e54cebde90968092b1835
   request_store (1.7.0) sha256=e1b75d5346a315f452242a68c937ef8e48b215b9453a77a6c0acdca2934c88cb
-  rexml (3.4.2) sha256=1384268554a37af5da5279431ca3f2f37d46f09ffdd6c95e17cc84c83ea7c417
+  rexml (3.4.4) sha256=19e0a2c3425dfbf2d4fc1189747bdb2f849b6c5e74180401b15734bc97b5d142
   rinku (2.0.6) sha256=8b60670e3143f3db2b37efa262971ce3619ec23092045498ef9f077d82828d7d
   rotp (6.3.0) sha256=75d40087e65ed0d8022c33055a6306c1c400d1c12261932533b5d6cbcd868854
-  rouge (4.6.1) sha256=5075346d5797d6864be93f7adc75a16047a7dbfa572c63c502419ffa582c77de
+  rouge (4.7.0) sha256=dba5896715c0325c362e895460a6d350803dbf6427454f49a47500f3193ea739
   rqrcode (3.1.1) sha256=4c2e1e36dab80720062388cfc827986ab622dc652437214a5fb6382985b6f00f
   rqrcode_core (2.0.1) sha256=52f76d97ec837fa91b15a15a95c5c2740b22d722db5d6b071f76d4b40a3ba98a
   rrule (0.7.0) sha256=816b6ac33c5705addfe25de3c3de05003ae68ae2ca02cf5c0e805ee387851f87
@@ -1181,7 +1182,7 @@ CHECKSUMS
   ruby-rc4 (0.1.5) sha256=00cc40a39d20b53f5459e7ea006a92cf584e9bc275e2a6f7aa1515510e896c03
   ruby-readability (0.7.2) sha256=7351ddc89ac62ecdd35336acb1313ac29dc1dad9745d59f25109ec2215c6580c
   ruby2_keywords (0.0.5) sha256=ffd13740c573b7301cf7a2e61fc857b2a8e3d3aff32545d6f8300d8bae10e3ef
-  rubyzip (2.4.1) sha256=8577c88edc1fde8935eb91064c5cb1aef9ad5494b940cf19c775ee833e075615
+  rubyzip (3.2.2) sha256=c0ed99385f0625415c8f05bcae33fe649ed2952894a95ff8b08f26ca57ea5b3c
   sanitize (7.0.0) sha256=269d1b9d7326e69307723af5643ec032ff86ad616e72a3b36d301ac75a273984
   sass-embedded (1.91.0-aarch64-linux-gnu) sha256=932bf7223ffbbdeefc91cd364de6bf9dbfdc7d80201911eb4dae8d9a7f5bee50
   sass-embedded (1.91.0-aarch64-linux-musl) sha256=08449fac861094055a1afe7da376f887f8192b3dba6658db1de7be17d32355c4
@@ -1216,20 +1217,21 @@ CHECKSUMS
   syntax_tree (6.3.0) sha256=56e25a9692c798ec94c5442fe94c5e94af76bef91edc8bb02052cbdecf35f13d
   test-prof (1.5.0) sha256=da487be26216fdd2cf3a4901c9a3e63c8af87964aa28740757f9c26a4cd4eae8
   thor (1.4.0) sha256=8763e822ccb0f1d7bee88cde131b19a65606657b847cc7b7b4b82e772bcd8a3d
-  tiktoken_ruby (0.0.11.1-aarch64-linux) sha256=1ffcfcf1a7ac561e2e08996a60b3ee4213923b02184d29da2eb76c3be0c54001
-  tiktoken_ruby (0.0.11.1-arm-linux) sha256=2f1b79eadf62c2ea2691821f1d1c008b402e0e48d9baef2fc52d648b0744b7a5
-  tiktoken_ruby (0.0.11.1-arm64-darwin) sha256=9b0f2a863bf6dbad2c78f95d8566e39fbb2293be552a7cc16a93e638a0b823e1
-  tiktoken_ruby (0.0.11.1-x86_64-darwin) sha256=554c84d14e66a7cef277b00ec26ce6c201d6b94d223f8d71397b1287cda11d78
-  tiktoken_ruby (0.0.11.1-x86_64-linux) sha256=ab56c936876c2ccba41fd8dc6588097e6555345ad0bdf5f4204be771a3637618
-  tiktoken_ruby (0.0.11.1-x86_64-linux-musl) sha256=fd52104cbeb14471136f8519a07eef457ca84d01693bfb9b92b150a1fb3f42f6
+  tiktoken_ruby (0.0.15.1-aarch64-linux) sha256=e2c5d00b20c10bd220a103a271011bfa828e159cfba3b99d2c4029069bbb9198
+  tiktoken_ruby (0.0.15.1-aarch64-linux-musl) sha256=2b58d9f2b0615d876a767b756c117b1438e68354513aff3d540b665b8eb6559c
+  tiktoken_ruby (0.0.15.1-arm-linux) sha256=078faa950c93ec0929d6f70acc7f7374b044cb2561ee74fccf8ffbaf71068ed9
+  tiktoken_ruby (0.0.15.1-arm64-darwin) sha256=942d15acdaa6de172e9c72644c8acb115f601152b81dc765957e10c526204a48
+  tiktoken_ruby (0.0.15.1-x86_64-darwin) sha256=e7978a186e548c7c81ac5183f5ed2b57c69924aeec5d0a1ce2222892628fdab1
+  tiktoken_ruby (0.0.15.1-x86_64-linux) sha256=cc53f9c43e8a4d434831b5a5b10d94d4eb07ad15d0582d568e0e9c8293447dfc
+  tiktoken_ruby (0.0.15.1-x86_64-linux-musl) sha256=84c8fe1a94732cb241a3f353d2c191df56c6242614237d2433e510d8fab3ee26
   timeout (0.5.0) sha256=852aefd13f41d84c2d0d83099b275034c6517395884b58e635acc8847c9190cb
-  tokenizers (0.5.5) sha256=7bf1600567a3f253ec3f24da51af338437ecd1c638874122a9c57ea1724f4d92
-  tokenizers (0.5.5-aarch64-linux) sha256=55ac300cdcefcb4dccbe5b1577920d3ab47dab404c4e70a442aa5c97f084790d
-  tokenizers (0.5.5-aarch64-linux-musl) sha256=ddd23414ef60e15860a1ec804496ff053aa817956036594923a086c2897c492a
-  tokenizers (0.5.5-arm64-darwin) sha256=3a1606ce6aa918d89eea816b2de4cba9a7b5ad76ba1b42ad3ff44f6ff6208a85
-  tokenizers (0.5.5-x86_64-darwin) sha256=892594b0406c9890d45b4a2fbf16d75e7075472029a48fd84b776d5ee9863e17
-  tokenizers (0.5.5-x86_64-linux) sha256=e9681afe50dc74beed880bed08d385ebb1d22d51831d9169e285f3836306730c
-  tokenizers (0.5.5-x86_64-linux-musl) sha256=f5ccc321a58b58b45ee85042ea384fb0f99600361ecd1260f77bfd020b8bdb0a
+  tokenizers (0.6.3) sha256=cb76b8e86893695f6cfe661861cb24680755bf1fb42dca1ddd3cdfef9f657994
+  tokenizers (0.6.3-aarch64-linux) sha256=9d54a23f2e2246cc942d183af4549e3972b937d9b01f7a387cb146bf698eee84
+  tokenizers (0.6.3-aarch64-linux-musl) sha256=c178d8556769256857d77fb396f8ab004b29d058f59c620a2cfc56b01b501e27
+  tokenizers (0.6.3-arm64-darwin) sha256=29a6a5582dce106d846a906ee9e4254c12db45a3855c3ff6881d4be8be03e6b6
+  tokenizers (0.6.3-x86_64-darwin) sha256=4b71386cc08ceff5f86b448c74b2b297c00a280a1d502399b6cda23ef94e01fd
+  tokenizers (0.6.3-x86_64-linux) sha256=77a45cbde59daac33bdda1a74d45c18080478992a00ee7d898e7b8d15d0b3149
+  tokenizers (0.6.3-x86_64-linux-musl) sha256=a4b08c53bf0c8f7674c3abd03e013f0bb7c0c2457174b116c2872a37c64f0297
   trilogy (2.9.0) sha256=a2d63b663ba68a4758e15d1f9afb228f5d16efc7fe7cea68699e1c106ef6067f
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   ttfunk (1.8.0) sha256=a7cbc7e489cc46e979dde04d34b5b9e4f5c8f1ee5fc6b1a7be39b829919d20ca

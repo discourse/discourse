@@ -846,6 +846,10 @@ es:
         reviewable_post:
           title: "Publicación"
           noun: "publicación"
+        reviewable_ai_chat_message:
+          noun: "mensaje de chat"
+        reviewable_ai_post:
+          noun: "publicación"
       flagged_as: "Marcado como"
       post_flagged_as: "Publicación denunciada: "
       chat_flagged_as: "Mensaje de chat denunciado: "
@@ -3465,8 +3469,6 @@ es:
           12_hours: "12 Horas"
           24_hours: "24 Horas"
           custom: "Otra duración"
-      slow_mode_notice:
-        duration: "Espera %{duration} entre respuesta y respuesta a este tema."
       topic_status_update:
         title: "Temporizador de temas"
         save: "Configurar temporizador"
@@ -4989,6 +4991,7 @@ es:
           click_to_get_started: "Haz clic aquí para empezar."
           header_link_text: "Categorías"
           header_action_title: "Editar las categorías de tu barra lateral"
+          header_action_new: "Crear categoría"
           configure_defaults: "Configurar valores predeterminados"
         community:
           edit_section:
@@ -5304,6 +5307,11 @@ es:
           status_beta: "Beta"
           status_stable: "Estable"
           status_permanent: "Permanente"
+          impact_role_admins: "Administradores"
+          impact_role_moderators: "Moderadores"
+          impact_role_staff: "Personal"
+          impact_role_all_members: "Todos los miembros"
+          impact_role_developers: "Desarrolladores"
       config:
         about:
           title: "Acerca de tu sitio"
@@ -5732,7 +5740,6 @@ es:
         new_features:
           title: "Novedades"
           subtitle: "Lanzamos nuevas funciones y mejoras continuamente. Esta página cubre los aspectos más destacados, pero puedes hacer clic en «Más información» para ver las notas de la versión completa."
-          previous_announcements: "Puedes ver anuncios anteriores de nuevas funciones en <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Más información..."
           experimental: "Experimental"
           only_experiments: "Mostrar solo características experimentales"

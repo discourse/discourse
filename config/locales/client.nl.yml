@@ -832,6 +832,10 @@ nl:
         reviewable_post:
           title: "Bericht"
           noun: "bericht"
+        reviewable_ai_chat_message:
+          noun: "chatbericht"
+        reviewable_ai_post:
+          noun: "bericht"
       flagged_as: "Gemarkeerd als"
       user_label: "Gebruiker"
       moderator_actions: "Moderatoracties"
@@ -3422,8 +3426,6 @@ nl:
           12_hours: "12 uur"
           24_hours: "24 uur"
           custom: "Aangepaste duur"
-      slow_mode_notice:
-        duration: "Wacht %{duration} tussen berichten in dit topic"
       topic_status_update:
         title: "Topictimer"
         save: "Timer instellen"
@@ -5201,6 +5203,9 @@ nl:
           impact_type_feature: "Functie"
           impact_type_other: "Anders"
           status_experimental: "Experimenteel"
+          impact_role_admins: "Beheerders"
+          impact_role_moderators: "Moderators"
+          impact_role_staff: "Medewerker"
       config:
         about:
           title: "Over je site"
@@ -5596,7 +5601,6 @@ nl:
         new_features:
           title: "Wat is er nieuw?"
           subtitle: "We brengen voortdurend nieuwe functies en verbeteringen uit. Deze pagina behandelt de belangrijkste punten, maar je kunt op 'Meer informatie' klikken om uitgebreide releaseopmerkingen te bekijken."
-          previous_announcements: "Je kunt eerdere aankondigingen van nieuwe functies bekijken op <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Meer informatie..."
           experimental: "Experimenteel"
           only_experiments: "Alleen experimentele functies weergeven"

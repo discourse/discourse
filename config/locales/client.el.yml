@@ -847,6 +847,10 @@ el:
         reviewable_post:
           title: "Ανάρτηση"
           noun: "ανάρτηση"
+        reviewable_ai_chat_message:
+          noun: "μήνυμα συνομιλίας"
+        reviewable_ai_post:
+          noun: "ανάρτηση"
       flagged_as: "Αναφορά ως"
       post_flagged_as: "Η ανάρτηση αναφέρθηκε ως"
       chat_flagged_as: "Η συνομιλία αναφέρθηκε ως"
@@ -3260,8 +3264,6 @@ el:
           12_hours: "12 ώρες"
           24_hours: "24 ώρες"
           custom: "Προσαρμοσμένη Διάρκεια"
-      slow_mode_notice:
-        duration: "Παρακαλώ περιμένετε %{duration} μεταξύ δημοσιεύσεων σε αυτό το θέμα"
       topic_status_update:
         title: "Χρονόμετρο Θέματος"
         save: "Ρύθμιση Χρονοδιακόπτη"
@@ -4816,6 +4818,9 @@ el:
           disabled: "Απενεργοποιημένο"
           impact_type_other: "Άλλα"
           status_experimental: "Πειραματικό"
+          impact_role_admins: "Διαχειριστές"
+          impact_role_moderators: "Συντονιστές"
+          impact_role_staff: "Συνεργάτες"
       config:
         developer:
           title: "Developer"

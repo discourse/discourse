@@ -636,6 +636,10 @@ sv:
         reviewable_post:
           title: "Inlägg"
           noun: "inlägg"
+        reviewable_ai_chat_message:
+          noun: "chattmeddelande"
+        reviewable_ai_post:
+          noun: "inlägg"
       user_label: "Användare"
       notes:
         delete: "Radera"
@@ -2840,8 +2844,6 @@ sv:
           12_hours: "12 timmar"
           24_hours: "24 timmar"
           custom: "Anpassad varaktighet"
-      slow_mode_notice:
-        duration: "Vi ber dig vänta %{duration} mellan inläggen i det här ämnet"
       topic_status_update:
         title: "Ämnestidtagning"
         save: "Ställ in timer"
@@ -4382,6 +4384,9 @@ sv:
           enabled: "Aktiverad"
           disabled: "Inaktiverad"
           impact_type_other: "Övrigt"
+          impact_role_admins: "Administratörer"
+          impact_role_moderators: "Moderatorer"
+          impact_role_staff: "Personal"
       config:
         about:
           title: "Om din webbplats"
@@ -4522,7 +4527,6 @@ sv:
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         dismiss_notice: "Avfärda"
         new_features:
-          previous_announcements: "Du kan se tidigare meddelanden om nya funktioner på <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Läs mer..."
         last_checked: "Senast kollad"
         refresh_problems: "Uppdatera"

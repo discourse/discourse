@@ -2,6 +2,16 @@ import { buildEmojiUrl, isCustomEmoji } from "pretty-text/emoji";
 import { translations } from "pretty-text/emoji/data";
 
 const MAX_NAME_LENGTH = 60;
+const ZERO_WIDTH_SPACE = 0x200b;
+
+function isValidEmojiPrecedingChar(charCode, state) {
+  // Check common cases first (space/punct), then rare zero-width space
+  return (
+    state.md.utils.isSpace(charCode) ||
+    state.md.utils.isPunctChar(String.fromCharCode(charCode)) ||
+    charCode === ZERO_WIDTH_SPACE
+  );
+}
 
 let translationTree = null;
 
@@ -70,11 +80,7 @@ function getEmojiName(content, pos, state, inlineEmoji) {
 
   if (pos > 0) {
     let prev = content.charCodeAt(pos - 1);
-    if (
-      !inlineEmoji &&
-      !state.md.utils.isSpace(prev) &&
-      !state.md.utils.isPunctChar(String.fromCharCode(prev))
-    ) {
+    if (!inlineEmoji && !isValidEmojiPrecedingChar(prev, state)) {
       return;
     }
   }
@@ -167,10 +173,7 @@ function getEmojiTokenByTranslation(
   // quick boundary check
   if (start > 0) {
     let leading = content.charAt(start - 1);
-    if (
-      !state.md.utils.isSpace(leading.charCodeAt(0)) &&
-      !state.md.utils.isPunctChar(leading)
-    ) {
+    if (!isValidEmojiPrecedingChar(leading.charCodeAt(0), state)) {
       return;
     }
   }

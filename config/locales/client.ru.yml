@@ -970,6 +970,10 @@ ru:
         reviewable_post:
           title: "Сообщение"
           noun: "публикация"
+        reviewable_ai_chat_message:
+          noun: "сообщение чата"
+        reviewable_ai_post:
+          noun: "публикация"
       flagged_as: "Помечено как"
       user_label: "Пользователь"
       moderator_actions: "Действия модератора"
@@ -3829,8 +3833,6 @@ ru:
           12_hours: "12 часов"
           24_hours: "24 часа"
           custom: "Настраиваемый интервал"
-      slow_mode_notice:
-        duration: "Подождите %{duration} между публикацией сообщений в этой теме"
       topic_status_update:
         title: "Таймер темы"
         save: "Установить таймер"
@@ -5774,6 +5776,9 @@ ru:
           impact_type_feature: "Функция"
           impact_type_other: "Разное"
           status_experimental: "Экспериментальная функция"
+          impact_role_admins: "Администраторы"
+          impact_role_moderators: "Модераторы"
+          impact_role_staff: "Персонал"
       config:
         about:
           title: "О вашем сайте"
@@ -6184,7 +6189,6 @@ ru:
         new_features:
           title: "Что нового?"
           subtitle: "Мы регулярно выпускаем обновления с новыми функциями и улучшениями. На этой странице перечислены ключевые моменты, а полный список доступен по ссылке «Подробнее»."
-          previous_announcements: "Вы можете увидеть предыдущие анонсы новых функций на <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Подробнее…"
           experimental: "Экспериментальная функция"
           only_experiments: "Показывать только экспериментальные функции"

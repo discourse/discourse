@@ -571,6 +571,10 @@ id:
         reviewable_post:
           title: "Postingan"
           noun: "postingan"
+        reviewable_ai_chat_message:
+          noun: "pesan obrolan"
+        reviewable_ai_post:
+          noun: "post"
       user_label: "Pengguna"
       notes:
         delete: "Hapus"
@@ -2319,6 +2323,8 @@ id:
           enabled: "Diaktifkan"
           disabled: "Dinonaktifkan"
           impact_type_other: "Lainnya"
+          impact_role_moderators: "Moderator"
+          impact_role_staff: "Staf"
       config:
         login:
           sub_pages:

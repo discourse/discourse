@@ -847,6 +847,8 @@ pt:
         reviewable_post:
           title: "Mensagem"
           noun: "publicação"
+        reviewable_ai_post:
+          noun: "publicação"
       flagged_as: "Sinalizado como"
       post_flagged_as: "Artigo sinalizado como"
       chat_flagged_as: "Conversação sinalizada como"
@@ -3283,8 +3285,6 @@ pt:
           12_hours: "12 Horas"
           24_hours: "24 Horas"
           custom: "Duração Personalizada"
-      slow_mode_notice:
-        duration: "Por favor, aguarde %{duration} entre as publicações neste tópico"
       topic_status_update:
         title: "Temporizador do Tópico"
         save: "Definir Temporizador"
@@ -4546,6 +4546,9 @@ pt:
           impact_type_feature: "Funcionalidade"
           impact_type_other: "Outro"
           status_experimental: "Experimental"
+          impact_role_admins: "Administradores"
+          impact_role_moderators: "Moderadores"
+          impact_role_staff: "Pessoal"
       config:
         about:
           title: "Sobre o seu ''site''"

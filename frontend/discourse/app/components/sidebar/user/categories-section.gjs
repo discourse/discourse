@@ -1,6 +1,5 @@
 import { cached } from "@glimmer/tracking";
-import { array, hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { hash } from "@ember/helper";
 import { service } from "@ember/service";
 import { debounce } from "discourse/lib/decorators";
 import { hasDefaultSidebarCategories } from "discourse/lib/sidebar/helpers";
@@ -19,6 +18,7 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
   @service appEvents;
   @service currentUser;
   @service modal;
+  @service navigationMenu;
   @service router;
 
   constructor() {
@@ -67,36 +67,39 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
     return hasDefaultSidebarCategories(this.siteSettings);
   }
 
-  @action
-  showModal() {
-    Category.clearAsyncHierarchicalSearchCache();
-    this.modal.show(EditNavigationMenuCategoriesModal);
+  @cached
+  get headerActions() {
+    const actions = [];
+
+    if (this.currentUser.admin) {
+      actions.push({
+        id: "new-category",
+        action: () => this.router.transitionTo("newCategory"),
+        title: i18n("sidebar.sections.categories.header_action_new"),
+      });
+    }
+
+    actions.push({
+      id: "edit-categories",
+      action: () => this.modal.show(EditNavigationMenuCategoriesModal),
+      title: i18n(
+        `sidebar.sections.categories.header_action_edit_${this.navigationMenu.displayMode}`
+      ),
+    });
+
+    return actions;
   }
 
-  @action
-  newCategory() {
-    this.router.transitionTo("newCategory");
+  get headerActionsIcon() {
+    return this.headerActions.length > 1 ? "ellipsis-vertical" : "pencil";
   }
 
   <template>
     <Section
       @sectionName="categories"
       @headerLinkText={{i18n "sidebar.sections.categories.header_link_text"}}
-      @headerActions={{array
-        (hash
-          id="new-category"
-          action=this.newCategory
-          title="New Category"
-          icon="plus"
-        )
-        (hash
-          id="edit-categories"
-          action=this.showModal
-          title="Edit sidebar categories"
-          icon="pencil"
-        )
-      }}
-      @headerActionsIcon="ellipsis-vertical"
+      @headerActions={{this.headerActions}}
+      @headerActionsIcon={{this.headerActionsIcon}}
       @collapsable={{@collapsable}}
     >
 

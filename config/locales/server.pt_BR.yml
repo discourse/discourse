@@ -1131,6 +1131,7 @@ pt_BR:
       every_month: "a cada mês"
       every_six_months: "a cada seis meses"
   user_api_key:
+    title: 'Autorizar "%{application_name}"'
     authorize: "Autorizar"
     deny: "Cancelar"
     read: "ler"
@@ -1919,7 +1920,6 @@ pt_BR:
     invite_link_max_redemptions_limit_users: "A quantidade máxima de resgates de links de convite gerados por usuário(a) não pode exceder este valor."
     alert_admins_if_errors_per_minute: "Quantidade de erros por minuto para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
     alert_admins_if_errors_per_hour: "Quantidade de erros por hora para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
-    categories_topics: "Quantidade de tópicos para exibir na página /categorias. Se definido como 0, será realizada uma tentativa de encontrar um valor para manter as duas colunas simétricas (tópicos e categorias)."
     suggested_topics: "Quantidade de tópicos sugeridos exibidos no final de um tópico."
     limit_suggested_to_category: "Exiba apenas tópicos da categoria atual nos tópicos sugeridos."
     suggested_topics_max_days_old: "Tópicos sugeridos não devem ter mais de n dia(s)."
@@ -5069,19 +5069,14 @@ pt_BR:
         description: "Aceite a sinalização, oculte esta publicação e envie automaticamente ao(à) usuário(a) uma mensagem solicitando edição."
         complete: "Postagem oculta, o(a) usuário(a) recebeu uma notificação."
       agree_and_edit:
-        title: "Concordar e editar postagem"
         description: "Concorde com o sinalizador e abra uma janela do compositor para editar a postagem."
         complete: "Sinalizador reconhecido, você pode editar a postagem."
       delete:
         title: "Excluir"
         complete: "Postagem excluída."
       delete_and_ignore:
-        title: "Ignorar sinalizador e excluir postagem"
-        description: "Ignore o sinalizador removendo da fila e exclua a postagem. Se for a primeira postagem, exclua o tópico também. "
         complete: "Postagem excluída."
       delete_and_ignore_replies:
-        title: "Ignorar sinalizadores, excluir postagem e respostas"
-        description: "Ignore o sinalizador removendo da fila e exclua a postagem e todas as suas respostas. Se for a primeira postagem, exclua o tópico também"
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
         complete: "Postagem e respostas excluídas."
       delete_and_agree:
@@ -5094,11 +5089,12 @@ pt_BR:
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
         complete: "Postagem e respostas excluídas."
       disagree_and_restore:
-        title: "Não, restaurar postagem"
-        description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
+        title: "Restaurar postagem"
         complete: "Postagem restaurada."
-      disagree:
+      disagree_bundle:
         title: "Não"
+      disagree:
+        title: "Manter postagem"
         complete: "Sinalizador ignorado."
       discard_post:
         title: "Descartar postagem"
@@ -5113,31 +5109,36 @@ pt_BR:
         description: "Ignore o sinalizador removendo da fila sem realizar nenhuma ação. Postagens ocultas permanecerão ocultas e serão manipuladas por ferramentas automáticas."
         complete: "Sinalizador ignorado."
       approve:
-        title: "Aprovar"
+        title: "Sim"
         complete: "Postagem aprovada."
       approve_post:
-        title: "Aprovar postagem"
+        title: "Sim"
         complete: "Postagem aprovada."
       approve_post_closed:
-        title: "Aprovar postagem"
+        title: "Sim"
         confirm: "Este tópico está fechado. Gostaria de criar a postagem mesmo assim?"
         complete: "Postagem aprovada."
+      reject_post_bundle:
+        title: "Não"
       reject_post:
         title: "Rejeitar postagem"
         complete: "Postagem recusada."
       approve_user:
-        title: "Aprovar usuário(a)"
+        title: "Sim"
         complete: "Usuário(a) aprovado(a)."
       reject_user:
-        title: "Excluir usuário(a)…"
+        title: "Não"
         delete:
           title: "Excluir usuário(a)"
-          description: "O(a) usuário(a) será excluído(a) do fórum."
           complete: "Usuário(a) excluído(a)."
         block:
           title: "Excluir e bloquear usuário(a)"
           description: "O(a) usuário(a) será excluído(a) e bloquearemos seu endereço IP e de e-mail."
           complete: "Usuário(a) excluído(a) e bloqueado(a)."
+      confirm_spam:
+        title: "Sim"
+      not_spam:
+        title: "Não"
       reject:
         title: "Rejeitar"
         bundle_title: "Rejeitar…"
@@ -5156,10 +5157,10 @@ pt_BR:
       scrub:
         title: Registro removido
       approve_and_restore:
-        title: "Aprovar e restaurar postagem"
+        title: "Sim"
         complete: "Postagem aprovada e restaurada."
       approve_and_unhide:
-        title: "Aprovar e revelar postagem."
+        title: "Sim"
         complete: "Postagem aprovada e revelada"
       no_action_post:
         title: "Sem ação"

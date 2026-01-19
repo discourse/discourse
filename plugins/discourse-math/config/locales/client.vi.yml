@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+vi:
+  js:
+    discourse_math:
+      edit_math: "Sửa biểu thức"
+      edit_modal:
+        title: "Sửa biểu thức"
+        label: "Toán học"
+        apply: "Áp dụng"
+      composer:
+        insert_math: "Chèn biểu thức"
+      insert_modal:
+        title_inline: "Chèn biểu thức nội tuyến"
+        title_block: "Chèn Khối biểu thức"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
+        insert: "Chèn"
+        block_mode: "Chế độ Khối (hiển thị phương trình)"

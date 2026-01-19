@@ -1097,6 +1097,10 @@ ar:
         reviewable_post:
           title: "المنشور"
           noun: "منشور"
+        reviewable_ai_chat_message:
+          noun: "رسالة الدردشة"
+        reviewable_ai_post:
+          noun: "منشور"
       flagged_as: "صفة الإبلاغ"
       post_flagged_as: "عُلّم على المنشور على أنه"
       chat_flagged_as: "عُلّم على الدردشة على أنها"
@@ -4179,8 +4183,6 @@ ar:
           12_hours: "12 ساعة"
           24_hours: "24 ساعة"
           custom: "المدة المخصَّصة"
-      slow_mode_notice:
-        duration: "يُرجى الانتظار لمدة %{duration} بين المنشورات في هذا الموضوع"
       topic_status_update:
         title: "مؤقِّت الموضوع"
         save: "تعيين المؤقِّت"
@@ -5972,6 +5974,7 @@ ar:
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الفئات"
           header_action_title: "تعديل فئات الشريط الجانبي"
+          header_action_new: "فئة جديدة"
           configure_defaults: "إعداد الإعدادات الافتراضية"
         community:
           edit_section:
@@ -6312,6 +6315,11 @@ ar:
           impact_type_feature: "الميزة"
           impact_type_other: "أخرى"
           status_experimental: "تجريبي"
+          impact_role_admins: "المسؤولون"
+          impact_role_moderators: "المشرفون"
+          impact_role_staff: "فريق العمل"
+          impact_role_all_members: "جميع الأعضاء"
+          impact_role_developers: "المطوّرون"
       config:
         about:
           title: "نبذة عن موقعك"
@@ -6738,7 +6746,6 @@ ar:
         new_features:
           title: "ما الجديد؟"
           subtitle: "نحن نصدر ميزات وتحسينات جديدة طوال الوقت. تغطي هذه الصفحة أبرز النقاط، ولكن يمكنك النقر على \"معرفة المزيد\" للاطلاع على ملاحظات الإصدار الشاملة."
-          previous_announcements: "يمكنك رؤية إعلانات الميزات الجديدة السابقة على <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "معرفة المزيد..."
           experimental: "تجريبي"
           only_experiments: "عرض الميزات التجريبية فقط"

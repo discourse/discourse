@@ -113,14 +113,6 @@ it:
             persona_id:
               label: "Personaggio"
               description: "Personaggio IA da usare per la generazione del report"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Modello"
-              description: "Il modello linguistico predefinito utilizzato per il triage"
-            tool:
-              label: "Strumento"
-              description: "Strumento da utilizzare per il triage (lo strumento non deve avere parametri definiti)"
         llm_persona_triage:
           fields:
             persona:

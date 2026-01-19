@@ -689,6 +689,8 @@ hy:
         reviewable_post:
           title: "Գրառում"
           noun: "գրառում"
+        reviewable_ai_post:
+          noun: "գրառում"
       user_label: "Օգտատեր"
       notes:
         delete: "Ջնջել"
@@ -3813,6 +3815,8 @@ hy:
           all: "Բոլոր"
           disabled: "Անջատված"
           impact_type_other: "Այլ"
+          impact_role_moderators: "Մոդերատորներ"
+          impact_role_staff: "Անձնակազմ"
       config:
         developer:
           title: "Ծրագրավորող"

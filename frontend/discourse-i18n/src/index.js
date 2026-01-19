@@ -4,6 +4,10 @@ if (window.I18n) {
   );
 }
 
+import * as MessageFormatRuntime from "@messageformat/runtime";
+import * as MessageFormatRuntimeCardinals from "@messageformat/runtime/lib/cardinals";
+import * as MessageFormatRuntimeMessages from "@messageformat/runtime/messages";
+import Messages from "@messageformat/runtime/messages";
 import * as Cardinals from "make-plural/cardinals";
 
 // The placeholder format. Accepts `{{placeholder}}` and `%{placeholder}`.
@@ -18,7 +22,7 @@ export class I18n {
   locale = null;
   fallbackLocale = null;
   translations = null;
-  extras = null;
+  extras = {};
   noFallbacks = false;
   testing = false;
   verbose = false;
@@ -455,6 +459,62 @@ export class I18n {
     console.info(message);
     return `${result} (#${i})`;
   }
+
+  loadData() {
+    const localeData = window._discourse_locale_data;
+
+    this.translations = localeData.translations;
+    this.locale = localeData.locale;
+    this.fallbackLocale = localeData.fallbackLocale;
+
+    this.#loadMessageFormatData(localeData.messageFormatData);
+
+    if (localeData.overrides) {
+      this._overrides = localeData.overrides;
+    }
+
+    if (localeData.extra?.admin_js) {
+      this.#loadExtra(localeData.extra.admin_js);
+    }
+
+    if (localeData.extra?.wizard_js) {
+      this.#loadExtra(localeData.extra.wizard_js);
+    }
+
+    if (localeData.theme) {
+      this.#loadTheme(localeData.theme);
+    }
+  }
+
+  #loadMessageFormatData(callback) {
+    const msgData = callback({
+      "@messageformat/runtime/lib/cardinals": MessageFormatRuntimeCardinals,
+      "@messageformat/runtime/messages": MessageFormatRuntimeMessages,
+      "@messageformat/runtime": MessageFormatRuntime,
+    });
+
+    const messages = new Messages(msgData, this.locale);
+    messages.defaultLocale = "en";
+    this._mfMessages = messages;
+  }
+
+  #loadExtra(extras) {
+    for (const [locale, data] of Object.entries(extras)) {
+      this.extras[locale] ??= {};
+      Object.assign(this.extras[locale], data);
+    }
+  }
+
+  #loadTheme(themeTranslations) {
+    for (const [themeId, data] of Object.entries(themeTranslations)) {
+      for (const [lang, langData] of Object.entries(data)) {
+        this.translations[lang] ??= {};
+        this.translations[lang].js ??= {};
+        this.translations[lang].js.theme_translations ??= {};
+        this.translations[lang].js.theme_translations[themeId] = langData;
+      }
+    }
+  }
 }
 
 export class I18nMissingInterpolationArgument extends Error {
@@ -465,6 +525,10 @@ export class I18nMissingInterpolationArgument extends Error {
 }
 
 // Export a default/global instance
-export default globalThis.I18n = new I18n();
 
-export const i18n = globalThis.I18n.t;
+const I18nInstance = (globalThis.I18n = new I18n());
+I18nInstance.loadData();
+
+export default I18nInstance;
+
+export const i18n = I18nInstance.t;

@@ -765,6 +765,8 @@ sr:
         reviewable_post:
           title: "Post"
           noun: "post"
+        reviewable_ai_post:
+          noun: "post"
       user_label: "Korisnik"
       notes:
         delete: "Obriši"
@@ -2613,6 +2615,9 @@ sr:
           enabled: "Omogućeno"
           disabled: "Isključeno"
           impact_type_other: "Ostalo"
+          impact_role_admins: "Admini"
+          impact_role_moderators: "Moderatori"
+          impact_role_staff: "Osoblje"
       config:
         developer:
           title: "Programer"

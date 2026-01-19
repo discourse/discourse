@@ -3185,10 +3185,9 @@ da:
         complete: "Indlæg slettet."
       delete_and_agree_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
-      disagree_and_restore:
-        description: "Gendan indlægget, så alle brugere kan se det."
-      disagree:
+      disagree_bundle:
         title: "Nej"
+      disagree:
         complete: "Rapportering ignoreret."
       ignore:
         title: "Ignorér"
@@ -3197,32 +3196,41 @@ da:
         title: "Gøre ingenting"
         complete: "Rapportering ignoreret."
       approve:
-        title: "Godkend"
+        title: "Ja"
         complete: "Indlæg godkendt."
       approve_post:
-        title: "Godkend Indlæg"
+        title: "Ja"
         complete: "Indlæg godkendt."
       approve_post_closed:
-        title: "Godkend Indlæg"
+        title: "Ja"
         complete: "Indlæg godkendt."
+      reject_post_bundle:
+        title: "Nej"
       reject_post:
         title: "Afvis Indlæg"
         complete: "Indlæg afvist."
       approve_user:
-        title: "Godkend Bruger"
+        title: "Ja"
         complete: "Bruger godkendt."
       reject_user:
-        title: "Slet Bruger…"
+        title: "Nej"
         delete:
           title: "Slet Bruger"
-          description: "Brugeren vil blive slettet fra forummet."
           complete: "Bruger slettet."
         block:
           title: "Slet og Blokér Bruger"
           description: "Brugeren vil blive slettet, og vi vil blokere deres IP og e-mail-adresse."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nej"
       reject:
         title: "Afvis"
         bundle_title: "Afvis…"
+      approve_and_restore:
+        title: "Ja"
+      approve_and_unhide:
+        title: "Ja"
       no_action_post:
         title: "Ingen handling"
       delete_post:

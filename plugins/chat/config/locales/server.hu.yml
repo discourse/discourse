@@ -131,16 +131,10 @@ hu:
           title: "Üzenet törlése"
           description: "Üzenet törlése, hogy a felhasználók ne láthassák."
         delete_and_agree:
-          title: "Megjelölés figyelmen kívül hagyása, és az üzenet törlése"
           description: "Megjelölés figyelmen kívül hagyása a sorból való eltávolítással, és az üzenet törlésével."
         disagree_and_restore:
           title: "Nem ért egyet, és az üzenet helyreállítása"
           description: "Üzenet helyreállítása, hogy az összes felhasználó láthassa."
-        disagree:
-          title: "Elutasítás"
-        ignore:
-          title: "Ne csináljon semmit"
-          description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne."
       direct_messages:
         transcript_title: "A korábbi üzenetek leirata a(z) %{channel_name} csatornában"
         transcript_body: "A pontosabb kontextus érdekében hozzáadtuk a beszélgetés korábbi üzeneteinek leiratát (legfeljebb tíz):\n\n%{transcript}"

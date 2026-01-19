@@ -1067,22 +1067,37 @@ et:
         complete: "Postitus kustutatud."
       delete_and_agree:
         complete: "Postitus kustutatud."
-      disagree:
+      disagree_bundle:
         title: "Ei"
       ignore:
         title: "Ignoreeri"
       ignore_and_do_nothing:
         title: "Ära tee midagi"
       approve:
-        title: "Kinnita"
+        title: "Jah"
+      approve_post:
+        title: "Jah"
+      approve_post_closed:
+        title: "Jah"
+      reject_post_bundle:
+        title: "Ei"
       approve_user:
-        title: "Kiida kasutaja heaks"
+        title: "Jah"
       reject_user:
+        title: "Ei"
         delete:
           title: "Kustuta kasutaja"
           complete: "Kasutaja kustutatud."
+      confirm_spam:
+        title: "Jah"
+      not_spam:
+        title: "Ei"
       reject:
         title: "Lükka tagasi"
+      approve_and_restore:
+        title: "Jah"
+      approve_and_unhide:
+        title: "Jah"
       no_action_post:
         title: "Tegevust pole"
       delete_post:

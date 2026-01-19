@@ -36,6 +36,7 @@ vi:
         "2": "Nó được quyết định như vậy"
         "9": "Đồng ý"
         "11": "Trả lời không rõ ràng, hãy thử lại"
+        "12": "Hỏi lại sau"
         "15": "Tập trung và hỏi lại lần nữa"
         "20": "Rất đáng ngờ"
     track_selector:
@@ -123,3 +124,12 @@ vi:
       category_hashtag:
         reply: |-
           Xuất sắc! Hãy nhớ điều này hoạt động cho cả hai loại danh mục và  thẻ, nếu thẻ được bật.
+      change_topic_notification_level:
+        instructions: |-
+          Mỗi chủ đề đều có một mức độ thông báo. Mức độ mặc định là 'bình thường', nghĩa là bạn sẽ chỉ nhận được thông báo khi ai đó đang nói chuyện trực tiếp với bạn.
+
+          Theo mặc định, mức độ thông báo cho tin nhắn cá nhân được đặt ở mức cao nhất là 'giám sát', nghĩa là bạn sẽ nhận được thông báo về mọi phản hồi mới. Nhưng bạn có thể thay đổi mức độ thông báo cho _bất kỳ_ chủ đề nào thành 'giám sát', 'theo dõi' hoặc 'phớt lờ'.
+
+          Hãy thử thay đổi mức độ thông báo cho chủ đề này. Ở cuối chủ đề, bạn sẽ thấy một nút cho biết bạn đang **giám sát** chủ đề này. Bạn có thể thay đổi mức độ thông báo thành **theo dõi** không?
+        not_found: |-
+          Có vẻ như bạn vẫn đang giám sát :eyes: chủ đề này! Nếu bạn gặp khó khăn trong việc tìm kiếm, nút cấp độ thông báo nằm ở cuối chủ đề.

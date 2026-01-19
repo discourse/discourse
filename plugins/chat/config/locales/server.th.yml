@@ -7,10 +7,6 @@
 th:
   chat:
     deleted_chat_username: ลบ
-    reviewables:
-      actions:
-        disagree:
-          title: "ไม่เห็นด้วย"
     channel:
       dm_title:
         single_user: "%{username}"

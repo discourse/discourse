@@ -2206,6 +2206,7 @@ en:
         redeemed_tab_with_count: "Redeemed (%{count})"
         invited_via: "Invitation"
         invited_via_link: "link %{key} (%{count} / %{max} redeemed)"
+        generating_link: "Generating link..."
         groups: "Groups"
         topic: "Topic"
         sent: "Created/Last Sent"
@@ -3812,7 +3813,7 @@ en:
           24_hours: "24 Hours"
           custom: "Custom Duration"
       slow_mode_notice:
-        duration: "Please wait %{duration} between posts in this topic"
+        duration: "Please wait %{duration} between your posts in this topic"
       topic_status_update:
         title: "Topic Timer"
         save: "Set Timer"
@@ -4284,6 +4285,7 @@ en:
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
         success: "Translations have been updated successfully"
         post_language_selector:
+          title: "Post Language"
           none: "None"
         edit_warning:
           message: "This is a translated post.<br><br>Do you want to edit the original post in %{language} or edit this specific translation?"
@@ -5484,6 +5486,9 @@ en:
           click_to_get_started: "Click here to get started."
           header_link_text: "Categories"
           header_action_title: "Edit your sidebar categories"
+          header_action_new: "New category"
+          header_action_edit_sidebar: "Edit sidebar categories"
+          header_action_edit_header_dropdown: "Edit nav categories"
           configure_defaults: "Configure defaults"
         community:
           edit_section:
@@ -5854,6 +5859,12 @@ en:
           status_beta: "Beta"
           status_stable: "Stable"
           status_permanent: "Permanent"
+          impact_role_all: "All impact roles"
+          impact_role_admins: "Admins"
+          impact_role_moderators: "Moderators"
+          impact_role_staff: "Staff"
+          impact_role_all_members: "All members"
+          impact_role_developers: "Developers"
 
       config:
         about:
@@ -6310,7 +6321,7 @@ en:
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
-          previous_announcements: "You can see previous new feature announcements on <a href='%{url}' target='_blank'>Discourse Meta</a>"
+          no_new_features_found: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
           learn_more: "Learn more..."
           experimental: "Experimental"
           only_experiments: "Only show experimental features"
