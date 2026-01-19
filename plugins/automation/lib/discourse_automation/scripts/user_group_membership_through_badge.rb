@@ -29,13 +29,13 @@ DiscourseAutomation::Scriptable.add(
 
     badge = Badge.find_by(id: badge_id)
     unless badge
-      Rails.logger.warn("[discourse-automation] Couldn’t find badge with id #{badge_id}")
+      DiscourseAutomation::Logger.warn("Couldn't find badge with id #{badge_id}")
       next
     end
 
     group = Group.find_by(id: group_id)
     unless group
-      Rails.logger.warn("[discourse-automation] Couldn’t find group with id #{group_id}")
+      DiscourseAutomation::Logger.warn("Couldn't find group with id #{group_id}")
       next
     end
 

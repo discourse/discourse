@@ -11,6 +11,7 @@ import avatar from "discourse/helpers/avatar";
 import formatDate from "discourse/helpers/format-date";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
+import getURL from "discourse/lib/get-url";
 import { escapeExpression } from "discourse/lib/utilities";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -76,6 +77,10 @@ export default class AutomationList extends Component {
     return i18n("discourse_automation.models.automation.runs_this_month", {
       count: stats.last_month.total_runs,
     });
+  }
+
+  get logsUrl() {
+    return getURL("/logs?search=discourse-automation");
   }
 
   <template>
@@ -181,6 +186,18 @@ export default class AutomationList extends Component {
                     <span class="automations__stats">
                       {{this.statsText automation.stats}}
                     </span>
+                    {{#if automation.stats.last_day.total_errors}}
+                      <a
+                        href={{this.logsUrl}}
+                        class="automations__errors"
+                        data-auto-route="true"
+                      >
+                        {{i18n
+                          "discourse_automation.models.automation.recent_errors"
+                          count=automation.stats.last_day.total_errors
+                        }}
+                      </a>
+                    {{/if}}
                   </td>
                   <td class="d-admin-row__detail automations__last-run">
                     <div class="d-admin-row__mobile-label">
