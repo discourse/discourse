@@ -3,7 +3,7 @@
   --cta-font-size: var(--font-down-1);
   --btn-small-font-size: var(--font-down-1);
   --cta-height: var(--space-8);
-  --nav-space: var(--space-8);
+  --nav-space: var(--d-main-content-gap);
   --d-nav-underline-height: var(--space-half);
   --d-button-default-bg-color: transparent;
   --d-button-default-border: 1px solid var(--primary-200);
@@ -25,13 +25,15 @@
   --d-nav-color--hover: var(--primary);
   --topic-title-font-weight: 500;
   --d-sidebar-active-background: var(--primary-100);
+  --d-content-background: var(--secondary);
 
   // Buttons & Actions
   .btn-default,
   .btn-icon-text,
   .btn-icon,
   .btn-danger,
-  .btn-primary {
+  .btn-primary,
+  .view-all-drafts {
     &:not(.sidebar-footer-actions-button) {
       height: var(--cta-height);
       font-size: var(--cta-font-size);
@@ -45,6 +47,7 @@
   .nav-pills > li > a {
     padding: 0.5em 0.65em;
     height: var(--cta-height);
+    font-size: var(--cta-font-size);
   }
 
   .topic-replies-toggle-wrapper .topics-replies-toggle {
@@ -61,6 +64,38 @@
   .btn-small,
   .json-editor-btn-collapse {
     font-size: var(--btn-small-font-size);
+  }
+
+  // welcome banner
+  #main-outlet:has(.welcome-banner) {
+    --main-outlet-padding-top: 0;
+  }
+
+  .welcome-banner__wrap {
+    padding-block: var(--d-main-content-gap);
+  }
+
+  .welcome-banner__wrap .search-menu {
+    align-items: center;
+  }
+
+  .welcome-banner__subheader {
+    font-size: var(--font-0-rem);
+  }
+
+  .welcome-banner__title {
+    font-size: var(--font-up-5);
+    font-weight: 500;
+    text-align: left;
+  }
+
+  .welcome-banner__wrap .search-menu {
+    margin-inline: 0;
+  }
+
+  .search-menu .search-input,
+  .search-menu-container .search-input {
+    height: var(--cta-height);
   }
 
   // Nav pill
@@ -101,7 +136,7 @@
   }
 
   // Select Kit
-  .select-kit .select-kit-header .selected-name .name {
+  .select-kit .select-kit-header {
     font-size: var(--cta-font-size);
   }
 
