@@ -65,6 +65,17 @@ export default class ReviewableTimeline extends Component {
       });
     }
 
+    // Add target post deletion event (when the post was deleted)
+    if (this.args.reviewable.target_deleted_at) {
+      events.push({
+        type: "target_deleted",
+        date: this.args.reviewable.target_deleted_at,
+        user: this.args.reviewable.target_deleted_by,
+        icon: "trash-can",
+        titleKey: "review.timeline.target_deleted_by",
+      });
+    }
+
     // Add flagging events from reviewable scores
     if (this.args.reviewable.reviewable_scores) {
       this.args.reviewable.reviewable_scores.forEach((score) => {
