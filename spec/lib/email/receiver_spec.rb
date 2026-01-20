@@ -957,6 +957,56 @@ RSpec.describe Email::Receiver do
     end
   end
 
+  describe "reply to a category email address" do
+    fab!(:category) { Fabricate(:category, email_in: "category@example.com") }
+    fab!(:user1) do
+      Fabricate(
+        :user,
+        email: "discourse@foo.com",
+        refresh_auto_groups: true,
+        trust_level: TrustLevel[2],
+      )
+    end
+    fab!(:user2) do
+      Fabricate(
+        :user,
+        email: "discourse@bar.com",
+        refresh_auto_groups: true,
+        trust_level: TrustLevel[2],
+      )
+    end
+    fab!(:topic) { create_topic(category: category, user: user1) }
+    let(:post) { create_post(topic: topic, user: user1) }
+    let(:reply_email) do
+      email(:reply_to_category_address)
+        .gsub("SUBJECT", "Re: #{topic.title}")
+        .gsub("REFERENCE", "<discourse/post/#{post.id}@#{Discourse.current_hostname}>")
+        .gsub("DATE", Time.now.to_s)
+    end
+
+    it "works when reply_by_email is enabled" do
+      configure_reply_by_email
+      expect { Email::Receiver.new(reply_email).process! }.to change { topic.posts.count }
+    end
+
+    it "works when reply_by_email is enabled and the category mirrors a mailing list" do
+      configure_reply_by_email
+      category.update!(mailinglist_mirror: true)
+      expect { Email::Receiver.new(reply_email).process! }.to change { topic.posts.count }
+    end
+
+    it "works when the category mirrors a mailing list" do
+      category.update!(mailinglist_mirror: true)
+      expect { Email::Receiver.new(reply_email).process! }.to change { topic.posts.count }
+    end
+
+    it "does not create a reply" do
+      expect { Email::Receiver.new(reply_email).process! }.to raise_error(
+        Email::Receiver::ReplyNotAllowedError,
+      )
+    end
+  end
+
   describe "new topic in a category that allows strangers" do
     fab!(:category) do
       Fabricate(
@@ -1048,24 +1098,10 @@ RSpec.describe Email::Receiver do
     context "when address is associated with a category" do
       fab!(:category) { Fabricate(:category, email_in: "category@bar.com") }
 
-      context "when replying by email is enabled" do
-        before { configure_reply_by_email }
+      it "returns the destination category" do
+        dest = described_class.check_address("category@bar.com")
 
-        it "returns the destination category" do
-          SiteSetting.reply_by_email_enabled = true
-
-          dest = described_class.check_address("category@bar.com")
-
-          expect(dest).to eq(category)
-        end
-      end
-
-      context "when replying by email is disabled" do
-        it "returns nil" do
-          dest = described_class.check_address("category@bar.com")
-
-          expect(dest).to be_nil
-        end
+        expect(dest).to eq(category)
       end
     end
   end
