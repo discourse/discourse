@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "DiscourseRewind | dismiss", type: :system do
-  fab!(:user)
+  fab!(:user) { Fabricate(:user, created_at: DateTime.parse("2020-01-01")) }
   let(:rewind_page) { PageObjects::Pages::Rewind.new }
 
   before do
