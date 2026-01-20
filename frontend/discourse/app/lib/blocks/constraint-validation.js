@@ -10,6 +10,7 @@
  * - exactlyOne: Exactly one of the specified args must be provided
  * - allOrNone: Either all or none of the specified args must be provided
  * - atMostOne: At most one of the specified args may be provided (0 or 1)
+ * - requires: If a dependent arg is provided, its required arg must also be provided
  *
  * @module discourse/lib/blocks/constraint-validation
  */
@@ -25,6 +26,7 @@ export const VALID_CONSTRAINT_TYPES = Object.freeze([
   "exactlyOne",
   "allOrNone",
   "atMostOne",
+  "requires",
 ]);
 
 /**
@@ -70,6 +72,45 @@ export function validateConstraintsSchema(constraints, argsSchema, blockName) {
           `Valid constraint types are: ${VALID_CONSTRAINT_TYPES.join(", ")}.`
       );
       continue;
+    }
+
+    // Handle requires constraint (object format instead of array)
+    if (constraintType === "requires") {
+      if (
+        typeof argNames !== "object" ||
+        Array.isArray(argNames) ||
+        argNames == null
+      ) {
+        raiseBlockError(
+          `Block "${blockName}": constraint "requires" must be an object mapping dependent args to required args.`
+        );
+        continue;
+      }
+
+      for (const [dependentArg, requiredArg] of Object.entries(argNames)) {
+        // Validate dependent arg exists
+        if (!declaredArgs.includes(dependentArg)) {
+          const suggestion = formatWithSuggestion(dependentArg, declaredArgs);
+          raiseBlockError(
+            `Block "${blockName}": constraint "requires" references unknown arg ${suggestion}.`
+          );
+        }
+        // Validate required arg is a string
+        if (typeof requiredArg !== "string") {
+          raiseBlockError(
+            `Block "${blockName}": constraint "requires" value for "${dependentArg}" must be a string arg name.`
+          );
+          continue;
+        }
+        // Validate required arg exists
+        if (!declaredArgs.includes(requiredArg)) {
+          const suggestion = formatWithSuggestion(requiredArg, declaredArgs);
+          raiseBlockError(
+            `Block "${blockName}": constraint "requires" references unknown arg ${suggestion}.`
+          );
+        }
+      }
+      continue; // Skip array-based validation for requires
     }
 
     // Constraint value must be an array
@@ -269,24 +310,29 @@ export function validateConstraints(constraints, args, blockName) {
   }
 
   for (const [constraintType, argNames] of Object.entries(constraints)) {
-    if (!Array.isArray(argNames)) {
-      continue;
-    }
-
     let error = null;
-    switch (constraintType) {
-      case "atLeastOne":
-        error = validateAtLeastOne(argNames, args, blockName);
-        break;
-      case "exactlyOne":
-        error = validateExactlyOne(argNames, args, blockName);
-        break;
-      case "allOrNone":
-        error = validateAllOrNone(argNames, args, blockName);
-        break;
-      case "atMostOne":
-        error = validateAtMostOne(argNames, args, blockName);
-        break;
+
+    // Handle requires constraint (object format)
+    if (constraintType === "requires") {
+      if (typeof argNames === "object" && !Array.isArray(argNames)) {
+        error = validateRequires(argNames, args, blockName);
+      }
+    } else if (Array.isArray(argNames)) {
+      // Handle array-based constraints
+      switch (constraintType) {
+        case "atLeastOne":
+          error = validateAtLeastOne(argNames, args, blockName);
+          break;
+        case "exactlyOne":
+          error = validateExactlyOne(argNames, args, blockName);
+          break;
+        case "allOrNone":
+          error = validateAllOrNone(argNames, args, blockName);
+          break;
+        case "atMostOne":
+          error = validateAtMostOne(argNames, args, blockName);
+          break;
+      }
     }
 
     if (error) {
@@ -388,6 +434,23 @@ function validateAtMostOne(argNames, args, blockName) {
     return `Block "${blockName}": at most one of ${argList} may be provided, but got ${providedArgs.length}: ${providedList}.`;
   }
 
+  return null;
+}
+
+/**
+ * Validates that if a dependent arg is provided, its required arg must also be provided.
+ *
+ * @param {Object} requiresMap - Object mapping dependent args to required args.
+ * @param {Object} args - The resolved args.
+ * @param {string} blockName - The block name for error messages.
+ * @returns {string|null} Error message if validation fails, null otherwise.
+ */
+function validateRequires(requiresMap, args, blockName) {
+  for (const [dependentArg, requiredArg] of Object.entries(requiresMap)) {
+    if (args[dependentArg] !== undefined && args[requiredArg] === undefined) {
+      return `Block "${blockName}": "${dependentArg}" requires "${requiredArg}" to be specified.`;
+    }
+  }
   return null;
 }
 

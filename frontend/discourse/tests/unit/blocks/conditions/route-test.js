@@ -1129,7 +1129,7 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
         params: { id: 5 },
       });
       assert.true(
-        error?.message.includes("`params` requires `pages` to be specified")
+        error?.message.includes('"params" requires "pages" to be specified')
       );
     });
 
@@ -1140,7 +1140,9 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
         params: { id: 5 },
       });
       assert.true(
-        error?.message.includes("`params` cannot be used with `urls`")
+        error?.message.includes(
+          'at most one of "params", "urls" may be provided'
+        )
       );
     });
 

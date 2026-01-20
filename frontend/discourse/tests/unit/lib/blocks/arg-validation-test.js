@@ -1567,6 +1567,151 @@ module("Unit | Lib | blocks/arg-validation", function () {
       });
     });
 
+    module("requires constraint schema validation", function () {
+      test("accepts valid requires constraint", function (assert) {
+        const constraints = {
+          requires: { dependent: "required" },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+
+      test("accepts requires with multiple dependencies", function (assert) {
+        const constraints = {
+          requires: { params: "pages", config: "enabled" },
+        };
+        const argsSchema = {
+          params: {},
+          pages: { type: "array" },
+          config: {},
+          enabled: { type: "boolean" },
+        };
+
+        assert.strictEqual(
+          validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          undefined
+        );
+      });
+
+      test("throws for requires that is not an object", function (assert) {
+        const constraints = {
+          requires: ["dependent", "required"],
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /must be an object mapping dependent args to required args/
+        );
+      });
+
+      test("throws for requires that is null", function (assert) {
+        const constraints = {
+          requires: null,
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /must be an object mapping dependent args to required args/
+        );
+      });
+
+      test("throws for requires referencing unknown dependent arg", function (assert) {
+        const constraints = {
+          requires: { unknownArg: "required" },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /references unknown arg "unknownArg"/
+        );
+      });
+
+      test("suggests similar arg name for typo in dependent arg", function (assert) {
+        const constraints = {
+          requires: { dependant: "required" },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /did you mean "dependent"/
+        );
+      });
+
+      test("throws for requires referencing unknown required arg", function (assert) {
+        const constraints = {
+          requires: { dependent: "unknownRequired" },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /references unknown arg "unknownRequired"/
+        );
+      });
+
+      test("suggests similar arg name for typo in required arg", function (assert) {
+        const constraints = {
+          requires: { dependent: "reqiured" },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /did you mean "required"/
+        );
+      });
+
+      test("throws for requires with non-string value", function (assert) {
+        const constraints = {
+          requires: { dependent: 123 },
+        };
+        const argsSchema = {
+          dependent: { type: "string" },
+          required: { type: "string" },
+        };
+
+        assert.throws(
+          () =>
+            validateConstraintsSchema(constraints, argsSchema, "test-block"),
+          /value for "dependent" must be a string arg name/
+        );
+      });
+    });
+
     module("incompatible constraint detection", function () {
       test("exactlyOne + allOrNone on same args is an error", function (assert) {
         const constraints = {
@@ -1713,6 +1858,73 @@ module("Unit | Lib | blocks/arg-validation", function () {
         assert.true(error.includes('"width", "height"'));
         assert.true(error.includes("must be provided together or not at all"));
         assert.true(error.includes('missing "height"'));
+      });
+    });
+
+    module("requires", function () {
+      test("passes when dependent arg not provided", function (assert) {
+        const constraints = { requires: { params: "pages" } };
+        const args = {};
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("passes when both dependent and required args provided", function (assert) {
+        const constraints = { requires: { params: "pages" } };
+        const args = { params: { categoryId: 5 }, pages: ["CATEGORY_PAGES"] };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("passes when only required arg provided without dependent", function (assert) {
+        const constraints = { requires: { params: "pages" } };
+        const args = { pages: ["CATEGORY_PAGES"] };
+
+        assert.strictEqual(
+          validateConstraints(constraints, args, "test-block"),
+          null
+        );
+      });
+
+      test("fails when dependent provided but required missing", function (assert) {
+        const constraints = { requires: { params: "pages" } };
+        const args = { params: { categoryId: 5 } };
+
+        const error = validateConstraints(constraints, args, "test-block");
+        assert.true(error.includes('"params" requires "pages"'));
+        assert.true(error.includes("to be specified"));
+      });
+
+      test("validates multiple requires dependencies", function (assert) {
+        const constraints = {
+          requires: { params: "pages", config: "enabled" },
+        };
+
+        assert.strictEqual(
+          validateConstraints(
+            constraints,
+            { params: {}, pages: [], config: {}, enabled: true },
+            "test-block"
+          ),
+          null,
+          "all dependencies satisfied"
+        );
+
+        const error = validateConstraints(
+          constraints,
+          { params: {}, pages: [], config: {} },
+          "test-block"
+        );
+        assert.true(
+          error.includes('"config" requires "enabled"'),
+          "fails when one dependency unsatisfied"
+        );
       });
     });
 

@@ -88,8 +88,9 @@ import { blockCondition } from "./decorator";
     queryParams: {}, // object type with complex validation
   },
   constraints: {
-    // Must provide either urls or pages
     atLeastOne: ["urls", "pages"],
+    requires: { params: "pages" },
+    atMostOne: ["params", "urls"],
   },
   validate(args) {
     const { urls, pages, params, queryParams } = args;
@@ -120,22 +121,6 @@ import { blockCondition } from "./decorator";
 
     // Validate params
     if (params) {
-      // params requires pages
-      if (!pages?.length) {
-        return (
-          `\`params\` requires \`pages\` to be specified.\n` +
-          `Use \`pages\` to specify which page types to match, then \`params\` to filter by parameters.`
-        );
-      }
-
-      // params cannot be used with urls
-      if (urls?.length) {
-        return (
-          `\`params\` cannot be used with \`urls\`.\n` +
-          `Use \`pages\` with typed parameters instead.`
-        );
-      }
-
       // Handle any/not operators in params
       const paramsError = validateParamsWithOperators(params, pages, "params");
       if (paramsError) {
