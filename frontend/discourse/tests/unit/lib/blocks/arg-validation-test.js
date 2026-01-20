@@ -1341,6 +1341,37 @@ module("Unit | Lib | blocks/arg-validation", function () {
         assert.strictEqual(error.path, "args.shoDescription");
       }
     });
+
+    test("typo in required arg produces unknown arg error with suggestion, not missing required error", function (assert) {
+      @block("typo-required-args-block", {
+        args: {
+          name: { type: "string", required: true },
+        },
+      })
+      class TypoRequiredArgsBlock extends Component {}
+
+      try {
+        // Typo: "nam" instead of "name"
+        validateBlockArgs({ args: { nam: "test" } }, TypoRequiredArgsBlock);
+        assert.true(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockError);
+        // Should say "unknown" not "missing required"
+        assert.true(
+          error.message.includes("unknown"),
+          "error should mention unknown arg"
+        );
+        assert.false(
+          error.message.includes("missing required"),
+          "error should NOT mention missing required"
+        );
+        assert.true(
+          error.message.includes('did you mean "name"'),
+          "error should suggest the correct arg name"
+        );
+        assert.strictEqual(error.path, "args.nam");
+      }
+    });
   });
 
   module("validateConstraintsSchema", function () {

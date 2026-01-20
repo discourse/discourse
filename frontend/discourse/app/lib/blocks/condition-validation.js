@@ -210,9 +210,10 @@ function validateNotCombinator(conditionSpec, conditionTypes, path) {
  * Validates a single condition with a type property.
  *
  * Validation order:
- * 1. Validate arg values against schema (type, min/max, pattern, etc.)
- * 2. Validate constraints (atLeastOne, exactlyOne, allOrNone, atMostOne)
- * 3. Validate unknown args (typo detection)
+ * 1. Validate unknown args (typo detection) - checked FIRST so typos like "nam"
+ *    produce "unknown arg 'nam' (did you mean 'name'?)" instead of "missing required arg 'name'"
+ * 2. Validate arg values against schema (type, min/max, pattern, etc.)
+ * 3. Validate constraints (atLeastOne, exactlyOne, allOrNone, atMostOne)
  * 4. Validate source parameter (based on sourceType)
  * 5. Run custom validate function from decorator config
  *
@@ -249,12 +250,17 @@ function validateSingleCondition(conditionSpec, conditionTypes, path) {
   // @ts-ignore - Static properties defined on condition classes
   const validateFn = conditionInstance.constructor.validateFn;
 
-  // 1. Validate arg values against schema (type, min/max, pattern, etc.)
+  // 1. Validate unknown args (catches typos like "nam" instead of "name")
+  // This is checked FIRST so typos produce helpful suggestions rather than
+  // confusing "missing required arg" errors
+  validateConditionArgKeys(conditionInstance, type, args, path);
+
+  // 2. Validate arg values against schema (type, min/max, pattern, etc.)
   if (argsSchema && Object.keys(argsSchema).length > 0) {
     validateConditionArgValues(args, argsSchema, type, path);
   }
 
-  // 2. Validate constraints (atLeastOne, exactlyOne, allOrNone, atMostOne)
+  // 3. Validate constraints (atLeastOne, exactlyOne, allOrNone, atMostOne)
   if (constraints) {
     const constraintError = validateConstraints(
       constraints,
@@ -265,9 +271,6 @@ function validateSingleCondition(conditionSpec, conditionTypes, path) {
       throw new BlockError(constraintError, { path });
     }
   }
-
-  // 3. Validate unknown args (catches typos like "querParams" instead of "queryParams")
-  validateConditionArgKeys(conditionInstance, type, args, path);
 
   // 4. Validate source parameter (based on sourceType)
   // @ts-ignore - Static property defined on condition classes

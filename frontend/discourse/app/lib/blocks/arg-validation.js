@@ -707,32 +707,21 @@ export function validateArrayItemType(
  * Validates provided arguments against a schema.
  * This is the core validation logic used by both block args and container args validation.
  *
+ * Validation order:
+ * 1. Check for unknown args (catches typos before missing required)
+ * 2. Check required args
+ * 3. Validate type if value is provided
+ *
+ * The unknown args check is done FIRST so that typos like "nam" produce
+ * "unknown arg 'nam' (did you mean 'name'?)" instead of "missing required arg 'name'".
+ *
  * @param {Object} providedArgs - The arguments to validate.
  * @param {Object} schema - The schema to validate against.
  * @param {string} pathPrefix - Prefix for error paths (e.g., "args" or "containerArgs").
  * @throws {BlockError} If validation fails.
  */
 export function validateArgsAgainstSchema(providedArgs, schema, pathPrefix) {
-  for (const [argName, argDef] of Object.entries(schema)) {
-    const value = providedArgs[argName];
-
-    // Check required args
-    if (argDef.required && value === undefined) {
-      throw new BlockError(`missing required ${pathPrefix}.${argName}.`, {
-        path: `${pathPrefix}.${argName}`,
-      });
-    }
-
-    // Validate type if value is provided
-    if (value !== undefined) {
-      const typeError = validateArgValue(value, argDef, argName);
-      if (typeError) {
-        throw new BlockError(typeError, { path: `${pathPrefix}.${argName}` });
-      }
-    }
-  }
-
-  // Check for unknown args (args provided but not in schema)
+  // 1. Check for unknown args FIRST (catches typos before missing required)
   const declaredArgs = Object.keys(schema);
   for (const argName of Object.keys(providedArgs)) {
     if (!Object.hasOwn(schema, argName)) {
@@ -741,6 +730,25 @@ export function validateArgsAgainstSchema(providedArgs, schema, pathPrefix) {
         `unknown ${pathPrefix} ${suggestion}. Declared args are: ${declaredArgs.join(", ") || "none"}.`,
         { path: `${pathPrefix}.${argName}` }
       );
+    }
+  }
+
+  for (const [argName, argDef] of Object.entries(schema)) {
+    const value = providedArgs[argName];
+
+    // 2. Check required args
+    if (argDef.required && value === undefined) {
+      throw new BlockError(`missing required ${pathPrefix}.${argName}.`, {
+        path: `${pathPrefix}.${argName}`,
+      });
+    }
+
+    // 3. Validate type if value is provided
+    if (value !== undefined) {
+      const typeError = validateArgValue(value, argDef, argName);
+      if (typeError) {
+        throw new BlockError(typeError, { path: `${pathPrefix}.${argName}` });
+      }
     }
   }
 }

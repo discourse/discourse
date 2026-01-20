@@ -388,6 +388,25 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(error?.message.includes("missing required arg"));
     });
 
+    test("typo in required arg produces unknown arg error with suggestion, not missing required error", function (assert) {
+      // Typo: "nam" instead of "name"
+      const error = this.validateCondition({ nam: "enable_badges" });
+
+      // Should say "unknown" not "missing required"
+      assert.true(
+        error?.message.includes("unknown arg"),
+        "error should mention unknown arg"
+      );
+      assert.false(
+        error?.message.includes("missing required"),
+        "error should NOT mention missing required"
+      );
+      assert.true(
+        error?.message.includes('did you mean "name"'),
+        "error should suggest the correct arg name"
+      );
+    });
+
     test("returns error when multiple condition types are provided (atMostOne constraint)", function (assert) {
       const error = this.validateCondition({
         name: "enable_badges",
