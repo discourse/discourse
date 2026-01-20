@@ -52,6 +52,8 @@ lt:
   remove_posts_deleted_by_author: "Pašalinta autoriaus"
   redirect_warning: "Negalėjome patvirtinti, kad jūsų pasirinkta nuoroda buvo faktiškai paskelbta forume. Jei vis tiek norite tęsti, pasirinkite žemiau esančią nuorodą."
   on_another_topic: "Kitoje temoje"
+  topic_tag_changed:
+    added: "Pridėta %{added}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} nuo %{username}"
@@ -289,6 +291,7 @@ lt:
   read_full_topic: "Skaityti pilną temą"
   private_message_abbrev: "Žinutė"
   rss_description:
+    hot: "Karštos temos"
     latest: "Naujausios temos"
     top: "Top temos"
     top_all: "Visų laikų Top temos"

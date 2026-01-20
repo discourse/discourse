@@ -137,6 +137,11 @@ sv:
       placeholder: datum
       from_placeholder: "från-datum"
       to_placeholder: "till-datum"
+    languages:
+      ur:
+        name: Urdu
+      vi:
+        name: Vietnamesiska
     share:
       topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
       post: "inlägg #%{postNumber} av %{username}"
@@ -315,6 +320,9 @@ sv:
         posts:
           one: "%{formatted_number} inlägg"
           other: "%{formatted_number} inlägg"
+        sign_ups:
+          one: "%{formatted_number} registrering"
+          other: "%{formatted_number} registreringar"
         likes:
           one: "%{formatted_number} gillning"
           other: "%{formatted_number} gillningar"
@@ -334,6 +342,7 @@ sv:
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne"
     bookmarks:
       bookmarked_success: "Bokmärkt!"
+      deleted_bookmark_success: "Bokmärke borttaget!"
       created: "Du har bokmärkt detta inlägg. %{name}"
       created_generic: "Du har bokmärkt detta. %{name}"
       create: "Skapa bokmärke"

@@ -51,6 +51,9 @@ pt:
   remove_posts_deleted_by_author: "Eliminado pelo autor"
   redirect_warning: "Nós não conseguimos verificar se a hiperligação que selecionou foi publicada no fórum. Se desejar continuar de qualquer maneira, selecione a hiperligação abaixo."
   on_another_topic: "Noutro tópico"
+  topic_tag_changed:
+    added: "Adicionado em %{added}"
+    removed: "Removeu %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} por %{username}"

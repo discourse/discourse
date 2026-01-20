@@ -27,7 +27,9 @@ vi:
       query_groups: "Nhóm"
       query_description: "Mô tả"
       query_user: "Tạo bởi"
+      column: "Cột %{number}"
       reset_params: "Cài lại"
       search_placeholder: "Tìm kiếm..."
+      no_search_results: "Rất tiếc, chúng tôi không thể tìm thấy kết quả nào phù hợp với văn bản của bạn."
     group:
       reports: "Báo cáo"

@@ -5,6 +5,8 @@
 # https://translate.discourse.org/
 
 el:
+  site_settings:
+    assigns_by_staff_mention: "Εάν ένα μέλος του προσωπικού επισημάνει ένα άλλο μέλος του προσωπικού, το θέμα ανατίθεται αυτόματα"
   discourse_assign:
     reminders_frequency:
       never: "ποτέ"

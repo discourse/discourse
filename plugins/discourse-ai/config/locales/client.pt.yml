@@ -57,6 +57,10 @@ pt:
               label: "Etiquetas"
             debug_mode:
               label: "Modo de Depuração"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "Modelo"
         llm_triage:
           fields:
             category:

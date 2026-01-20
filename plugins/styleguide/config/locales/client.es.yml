@@ -38,6 +38,8 @@ es:
           title: "Sistema de fuentes"
         colors:
           title: "Colores"
+        dialog:
+          title: "Diálogo"
         icons:
           title: "Iconos"
           full_list: "Ver la lista completa de iconos de Font Awesome"
@@ -59,6 +61,8 @@ es:
           title: "Navegación apilada"
         categories_list:
           title: "Lista de categorías"
+        topic_link:
+          title: "Enlace y estado de tema"
         topic_list_item:
           title: "Elemento de la lista de temas"
         topic_statuses:
@@ -101,6 +105,8 @@ es:
           title: "Iconos de encabezado"
         spinners:
           title: "Indicadores de carga"
+        otp:
+          title: "OTP"
         empty_state:
           title: "Estado vacío"
         tooltips:

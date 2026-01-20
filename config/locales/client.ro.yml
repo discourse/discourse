@@ -4483,6 +4483,7 @@ ro:
       community:
         title: "Comunitate"
         sidebar_link:
+          about_your_site: "Despre site-ul tău"
           badges: "Insigne"
           notifications: "Notificări"
           permalinks: "Legături permanente"
@@ -4493,6 +4494,8 @@ ro:
           user_fields: "Câmpuri utilizator"
           watched_words: "Cuvinte urmărite"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderare"
       appearance:
         title: "Aspect"
         sidebar_link:

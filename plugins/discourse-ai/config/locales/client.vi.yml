@@ -22,13 +22,13 @@ vi:
             title:
               label: "Tiêu đề"
             categories:
-              label: "Danh mục"
+              label: "Chuyên mục"
             tags:
               label: "Thẻ"
         llm_triage:
           fields:
             category:
-              label: "Danh mục"
+              label: "Chuyên mục"
             tags:
               label: "Thẻ"
             canned_reply:
@@ -48,6 +48,11 @@ vi:
           reset: "Cài lại"
         search:
           name: "Tìm kiếm"
+        ai_helper:
+          proofread: Hiệu chỉnh văn bản
+          explain: "Giải thích"
+          smart_dates: "Ngày thông minh"
+          markdown_tables: "Tạo bảng Markdown"
         spam:
           name: "Rác"
       modals:
@@ -63,7 +68,7 @@ vi:
             other: "%{count} ngày"
         progress_chart:
           bar_done:
-            other: "%{count} bài đăng"
+            other: "%{count} tút"
       spam:
         short_title: "Rác"
         last_seven_days: "7 ngày qua"
@@ -85,7 +90,7 @@ vi:
         export: "Xuất"
         import: "Nhập"
         description: "Mô tả"
-        user: Người dùng
+        user: Thành viên
         save: "Lưu lại"
         enabled: "Kích hoạt"
         delete: "Xóa"
@@ -93,12 +98,14 @@ vi:
           open_modal: "Sửa"
           modal:
             key_title: "Phím"
+        examples:
+          collapsable_title: "Ví dụ #%{number}"
         filters:
           reset: "Cài lại"
       rag:
         uploads:
           title: "Tải lên"
-          uploading: "Đang đăng "
+          uploading: "Đang tải lên..."
       tools:
         back: "Quay lại"
         export: "Xuất"
@@ -107,7 +114,7 @@ vi:
         description: "Mô tả"
         summary: "Tóm tắt"
         save: "Lưu lại"
-        remove_parameter: "Xoá"
+        remove_parameter: "Xóa"
         parameter_required: "Bắt buộc"
         edit: "Sửa"
         delete: "Xóa"
@@ -138,21 +145,38 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
+      related_topics:
+        title: "Các chủ đề liên quan"
+        pill: "Liên quan"
       ai_helper:
         context_menu:
+          trigger: "Hỏi AI"
+          loading: "AI đang tạo ra"
           cancel: "Hủy"
+          regen: "Thử lại"
           confirm: "Xác nhận"
           discard: "Hủy bỏ"
+          changes: "Đề xuất chỉnh sửa"
+          custom_prompt:
+            placeholder: "Nhập prompt tùy chỉnh..."
+          translate_prompt: "Dịch sang %{language}"
         post_options_menu:
+          trigger: "Hỏi AI"
+          title: "Hỏi AI"
+          loading: "AI đang tạo ra"
           close: "Đóng lại"
           copy: "Sao chép"
           copied: "Đã sao chép!"
           cancel: "Hủy"
+          insert_footnote: "Thêm chú thích"
+          footnote_disabled: "Chức năng chèn tự động đã bị vô hiệu hóa, hãy nhấn vào nút sao chép và chỉnh sửa thủ công"
+          footnote_credits: "Giải thích bởi AI"
         thumbnail_suggestions:
           select: "Chọn"
           try_again: "Thử lại"
         image_caption:
           save_caption: "Lưu lại"
+        no_content_error: "Thêm nội dung trước để thực hiện các hành động AI trên đó"
       embeddings:
         back: "Quay lại"
         save: "Lưu lại"
@@ -164,7 +188,21 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
+        semantic_search_loading: "Tìm kiếm thêm kết quả bằng AI"
+        semantic_search_results:
+          toggle: "Xem %{count} kết quả tìm thấy bằng AI"
+          toggle_hidden: "Đang ẩn %{count} kết quả tìm thấy bằng AI"
+          none: "Rất tiếc, tìm kiếm AI của chúng tôi không tìm thấy chủ đề phù hợp"
+          new: "Nhấn 'Tìm' để bắt đầu tìm kiếm kết quả mới bằng AI."
+          unavailable: "Kết quả AI không khả dụng"
+          zero_results_expanded: "Không tìm thấy kết quả, hiển thị %{count} kết quả AI"
+        semantic_search_tooltips:
+          results_explanation: "Khi được bật, các kết quả tìm kiếm AI bổ sung sẽ được thêm vào bên dưới."
+          invalid_sort: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
+        semantic_search_unavailable_tooltip: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
+        ai_generated_result: "Kết quả tìm kiếm được tìm thấy bằng AI"
       ai_bot:
+        try_again: "Thử lại"
         debug_ai_modal:
           request: "Yêu cầu"
           response: "Đáp ứng"
@@ -183,15 +221,23 @@ vi:
           filter_types:
             all: "Tất cả"
           group_types:
-            category: "Danh mục"
+            category: "Chuyên mục"
           table:
             total_count: "Tổng số"
       summarization:
         chat:
           summarize: "Tóm tắt"
+        topic:
+          title: "Tóm tắt chủ đề"
+        topic_list_layout:
+          button:
+            compact: "Gọn gàng"
+            expanded: "Mở rộng"
+            expanded_description: "Với tóm tắt AI"
       discobot_discoveries:
         regular_results: "Các chủ đề"
         collapse: "Thu gọn"
+        user_setting: "Bật tính năng tìm kiếm bằng AI"
         tooltip:
           actions:
             disable: "Tắt"

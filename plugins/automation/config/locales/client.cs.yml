@@ -24,6 +24,8 @@ cs:
             label: Název
           raw:
             label: Tělo
+          prefers_encrypt:
+            label: Šifruje soukromé zprávy, je-li k dispozici
         group:
           label: Skupina
         text:

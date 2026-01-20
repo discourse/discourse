@@ -591,6 +591,8 @@ de:
         url: "URL des Dienstes, der das Modell hostet"
         api_key: "API-Schlüssel des Dienstes, der das Modell hostet"
         vision_enabled: "Sehen aktiviert"
+        allowed_attachment_types: "Zulässige Anhänge"
+        attachment_types_placeholder: "Erweiterungen auswählen oder eingeben (z. B. pdf, txt, docx)"
         ai_bot_user: "KI-Bot-Benutzer"
         cost_input: "Eingabekosten"
         cost_cached_input: "Eingabekosten für Zwischengespeichertes"

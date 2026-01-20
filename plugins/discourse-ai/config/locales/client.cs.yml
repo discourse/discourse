@@ -29,6 +29,14 @@ cs:
               label: "Kategorie"
             tags:
               label: "Štítky"
+        llm_tool_triage:
+          fields:
+            model:
+              label: "Model"
+              description: "Výchozí jazykový model používaný pro třídění"
+            tool:
+              label: "Nástroj"
+              description: "Nástroj pro třídění (nástroj nesmí mít definované žádné parametry)"
         llm_triage:
           fields:
             category:
