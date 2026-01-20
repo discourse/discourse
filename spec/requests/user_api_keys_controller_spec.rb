@@ -56,6 +56,20 @@ RSpec.describe UserApiKeysController do
       get "/user-api-key/new", params: args.merge(padding: "invalid")
       expect(response.status).to eq(400)
     end
+
+    it "does not show redirect warning when auth_redirect is discourse://auth_redirect" do
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      get "/user-api-key/new", params: args.merge(auth_redirect: "discourse://auth_redirect")
+      expect(response.body).not_to include(I18n.t("user_api_key.redirect_warning"))
+    end
+
+    it "shows redirect warning when auth_redirect is not discourse://auth_redirect" do
+      sign_in(Fabricate(:user, refresh_auto_groups: true))
+
+      get "/user-api-key/new", params: args
+      expect(response.body).to include(I18n.t("user_api_key.redirect_warning"))
+    end
   end
 
   describe "#create" do
