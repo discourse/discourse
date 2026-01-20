@@ -2,7 +2,7 @@
  * Built-in blocks registry.
  *
  * This module lists all built-in block components provided by Discourse.
- * These blocks are registered at runtime by the `register-builtin-blocks`
+ * These blocks are registered at runtime by the `initialize-blocks`
  * initializer, which imports from this file and calls `api.registerBlock()`
  * for each exported block.
  *

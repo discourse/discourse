@@ -67,7 +67,6 @@ import { blockCondition } from "./decorator";
     exists: { type: "boolean" },
   },
   constraints: {
-    // Cannot use both value and exists together
     exactlyOne: ["value", "exists"],
   },
   validate(args) {
