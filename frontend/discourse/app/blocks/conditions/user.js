@@ -206,7 +206,10 @@ export default class BlockUserCondition extends BlockCondition {
         return false;
       }
 
-      // No user-specific conditions, pass if loggedIn wasn't explicitly required
+      // This line is effectively unreachable: the `atLeastOne` constraint requires
+      // at least one arg, and all possible args are handled above (loggedIn, user-specific
+      // conditions). It's added just for defensive safety in case any of the constraints are
+      // altered in the future.
       return loggedIn === undefined;
     }
 
