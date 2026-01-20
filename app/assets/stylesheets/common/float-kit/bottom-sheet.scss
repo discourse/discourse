@@ -1,0 +1,26 @@
+.bottom-sheet {
+  :where(&__content) {
+    box-sizing: border-box;
+    height: auto;
+    max-width: 700px;
+    padding-inline: var(--size-10);
+    padding-bottom: max(
+      calc(env(safe-area-inset-bottom, 0px) + 12px),
+      var(--size-10)
+    );
+    display: grid;
+    justify-items: center;
+  }
+
+  :where(&__bleeding-background) {
+    border-radius: 24px;
+    background-color: var(--secondary);
+    box-shadow:
+      0 10px 15px -3px rgb(0 0 0 / 10%),
+      0 4px 6px -4px rgb(0 0 0 / 10%);
+  }
+
+  :where(&__handle) {
+    margin: 12px auto;
+  }
+}

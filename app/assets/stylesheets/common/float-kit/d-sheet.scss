@@ -1191,49 +1191,6 @@
   height: calc(max(100dvh, 100lvh) + 60px);
 }
 
-.ExampleBottomSheet-content {
-  max-width: 700px;
-  min-width: 500px;
-  padding-inline: var(--size-10);
-  padding-bottom: max(
-    calc(env(safe-area-inset-bottom, 0px) + 12px),
-    var(--size-10)
-  );
-  display: grid;
-  justify-items: center;
-}
-
-// Like Silk: Content has NO background when using BleedingBackground
-.BottomSheet-content {
-  box-sizing: border-box;
-  height: auto;
-  min-height: 500px;
-}
-
-// Like Silk (BottomSheet.css lines 15-20): BleedingBackground has the visual styling
-.BottomSheet-bleedingBackground {
-  border-radius: 24px;
-  background-color: var(--secondary);
-  box-shadow:
-    0 10px 15px -3px rgb(0 0 0 / 10%),
-    0 4px 6px -4px rgb(0 0 0 / 10%);
-}
-
-.BottomSheet-handle {
-  width: 50px;
-  height: 6px;
-  border: 0;
-  border-radius: var(--d-border-radius-full, 9999px);
-  background-color: var(--primary-low-mid);
-  cursor: pointer;
-}
-
-.ExampleBottomSheet-handle {
-  grid-area: 1 / -1;
-  justify-self: center;
-  align-self: start;
-  margin-top: 1rem;
-}
 
 // ============================================================================
 // SheetWithDetent styles

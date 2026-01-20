@@ -4,6 +4,7 @@ import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import BottomSheet from "discourse/components/bottom-sheet";
 import DButton from "discourse/components/d-button";
 import DCard from "discourse/float-kit/components/d-card";
 import DSheet from "discourse/float-kit/components/d-sheet";
@@ -72,13 +73,16 @@ export default class Sheets extends Component {
 
   <template>
     <StyleguideExample @title="Sheets">
-      {{! <StyleguideComponent @tag="bottom">
+      <StyleguideComponent @tag="bottom">
         <:sample>
-          <DSheetBottom>
-            test
-          </DSheetBottom>
+          <BottomSheet as |bs|>
+            <bs.Trigger>Open Bottom Sheet</bs.Trigger>
+            <bs.Content>
+              Bottom sheet content here
+            </bs.Content>
+          </BottomSheet>
         </:sample>
-      </StyleguideComponent>}}
+      </StyleguideComponent>
 
       <StyleguideComponent @tag="with-detent">
         <:sample>
