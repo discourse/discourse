@@ -5711,7 +5711,7 @@ RSpec.describe TopicsController do
       fab!(:page2_time) { 2.months.ago }
       fab!(:page3_time) { 1.month.ago }
 
-      fab!(:page_1_topics) do
+      fab!(:page_1_posts) do
         Fabricate.times(
           20,
           :post,
@@ -5722,7 +5722,7 @@ RSpec.describe TopicsController do
         )
       end
 
-      fab!(:page_2_topics) do
+      fab!(:page_2_posts) do
         Fabricate.times(
           20,
           :post,
@@ -5733,7 +5733,7 @@ RSpec.describe TopicsController do
         )
       end
 
-      fab!(:page_3_topics) do
+      fab!(:page_3_posts) do
         Fabricate.times(
           2,
           :post,
@@ -5776,7 +5776,7 @@ RSpec.describe TopicsController do
         get topic.relative_url + "?page=3", env: { "HTTP_USER_AGENT" => bot_user_agent }
         body = response.body
 
-        page_3_topics.each { |post| expect(body).to include(post.cooked) }
+        page_3_posts.each { |post| expect(body).to include(post.cooked) }
 
         expect(response.headers["Last-Modified"]).to eq(page3_time.httpdate)
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
