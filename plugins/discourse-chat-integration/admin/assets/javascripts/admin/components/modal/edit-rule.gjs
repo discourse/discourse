@@ -12,6 +12,7 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import getTagName from "../../lib/get-tag-name";
 import ChannelData from "../channel-data";
 
 export default class EditRule extends Component {
@@ -19,11 +20,7 @@ export default class EditRule extends Component {
 
   @bind
   onTagsChanged(tags) {
-    // TODO(https://github.com/discourse/discourse/pull/36678): The string check can be
-    // removed using .discourse-compatibility once the PR is merged.
-    this.args.model.rule.tags = (tags || []).map((t) =>
-      typeof t === "string" ? t : t.name
-    );
+    this.args.model.rule.tags = (tags || []).map((tag) => getTagName(tag));
   }
 
   @action

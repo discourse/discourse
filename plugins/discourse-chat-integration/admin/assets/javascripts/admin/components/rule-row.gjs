@@ -6,6 +6,7 @@ import DButton from "discourse/components/d-button";
 import categoryLink from "discourse/helpers/category-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import getTagName from "../lib/get-tag-name";
 
 export default class RuleRow extends Component {
   @service siteSettings;
@@ -27,9 +28,7 @@ export default class RuleRow extends Component {
     if (!tags) {
       return null;
     }
-    // TODO(https://github.com/discourse/discourse/pull/36678): The string check can be
-    // removed using .discourse-compatibility once the PR is merged.
-    return tags.map((t) => (typeof t === "string" ? t : t.name)).join(", ");
+    return tags.map((tag) => getTagName(tag)).join(", ");
   }
 
   @action
