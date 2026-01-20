@@ -36,17 +36,24 @@ module("Unit | Blocks | Condition | outletArg", function (hooks) {
     });
 
     test("returns error when path contains invalid characters (custom validation)", function (assert) {
-      const error = this.validateCondition({ path: "user-name" });
+      const error = this.validateCondition({ path: "user-name", value: true });
       assert.true(error?.message.includes("is invalid"));
     });
 
-    test("returns error when both value and exists are specified (atMostOne constraint)", function (assert) {
+    test("returns error when both value and exists are specified (exactlyOne constraint)", function (assert) {
       const error = this.validateCondition({
         path: "user",
         value: true,
         exists: true,
       });
-      assert.true(error?.message.includes("at most one of"));
+      assert.true(error?.message.includes("exactly one of"));
+    });
+
+    test("returns error when neither value nor exists is specified (exactlyOne constraint)", function (assert) {
+      const error = this.validateCondition({
+        path: "user",
+      });
+      assert.true(error?.message.includes("exactly one of"));
     });
 
     test("accepts valid path with value", function (assert) {
@@ -95,15 +102,21 @@ module("Unit | Blocks | Condition | outletArg", function (hooks) {
       assert.false(result);
     });
 
-    test("returns true when value is truthy with no value specified", function (assert) {
+    test("returns true when value matches exactly", function (assert) {
       const context = { outletArgs: { topic: { closed: true } } };
-      const result = this.condition.evaluate({ path: "topic.closed" }, context);
+      const result = this.condition.evaluate(
+        { path: "topic.closed", value: true },
+        context
+      );
       assert.true(result);
     });
 
-    test("returns false when value is falsy with no value specified", function (assert) {
+    test("returns false when value does not match exactly", function (assert) {
       const context = { outletArgs: { topic: { closed: false } } };
-      const result = this.condition.evaluate({ path: "topic.closed" }, context);
+      const result = this.condition.evaluate(
+        { path: "topic.closed", value: true },
+        context
+      );
       assert.false(result);
     });
 
@@ -171,13 +184,16 @@ module("Unit | Blocks | Condition | outletArg", function (hooks) {
     });
 
     test("handles missing outletArgs gracefully", function (assert) {
-      const result = this.condition.evaluate({ path: "user.admin" }, {});
+      const result = this.condition.evaluate(
+        { path: "user.admin", value: true },
+        {}
+      );
       assert.false(result);
     });
 
     test("handles null outletArgs gracefully", function (assert) {
       const result = this.condition.evaluate(
-        { path: "user.admin" },
+        { path: "user.admin", value: true },
         { outletArgs: null }
       );
       assert.false(result);
@@ -272,10 +288,10 @@ module("Unit | Blocks | Condition | outletArg", function (hooks) {
         assert.true(result);
       });
 
-      test("handles truthiness check with missing nested path", function (assert) {
+      test("handles value check with missing nested path", function (assert) {
         const context = { outletArgs: { topic: null } };
         const result = this.condition.evaluate(
-          { path: "topic.closed" },
+          { path: "topic.closed", value: true },
           context
         );
         assert.false(result);

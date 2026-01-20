@@ -68,7 +68,7 @@ import { blockCondition } from "./decorator";
   },
   constraints: {
     // Cannot use both value and exists together
-    atMostOne: ["value", "exists"],
+    exactlyOne: ["value", "exists"],
   },
   validate(args) {
     const { path: argPath } = args;
@@ -105,11 +105,7 @@ export default class BlockOutletArgCondition extends BlockCondition {
       return exists ? doesExist : !doesExist;
     }
 
-    // When no value is specified, check truthiness
-    if (value === undefined) {
-      return !!targetValue;
-    }
-
+    // The exactlyOne constraint ensures value or exists is always specified
     // Use shared value matching with named parameters
     return matchValue({
       actual: targetValue,

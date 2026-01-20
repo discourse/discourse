@@ -62,6 +62,9 @@ const BREAKPOINTS = Object.freeze(["sm", "md", "lg", "xl", "2xl"]);
     mobile: { type: "boolean" },
     touch: { type: "boolean" },
   },
+  constraints: {
+    atLeastOne: ["min", "max", "mobile", "touch"],
+  },
   validate(args) {
     const { min, max } = args;
 

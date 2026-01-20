@@ -220,9 +220,16 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
         );
       });
     });
+  });
 
-    test("passes with no conditions", function (assert) {
-      assert.true(this.condition.evaluate({}));
+  module("validate (constraints)", function () {
+    test("returns error when no args specified (atLeastOne constraint)", function (assert) {
+      const error = this.validateCondition({});
+      assert.notStrictEqual(error, null, "returns an error");
+      assert.true(
+        error.message.includes("at least one of"),
+        "error message mentions atLeastOne"
+      );
     });
   });
 

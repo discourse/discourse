@@ -181,10 +181,6 @@ module("Unit | Blocks | Condition | user", function (hooks) {
 
   module("evaluate", function () {
     module("anonymous users", function () {
-      test("passes with no conditions", function (assert) {
-        assert.true(this.condition.evaluate({}));
-      });
-
       test("fails with loggedIn: true", function (assert) {
         assert.false(this.condition.evaluate({ loggedIn: true }));
       });
@@ -227,10 +223,6 @@ module("Unit | Blocks | Condition | user", function (hooks) {
           trust_level: 2,
           groups: [{ name: "trust_level_2" }, { name: "beta-testers" }],
         };
-      });
-
-      test("passes with no conditions", function (assert) {
-        assert.true(this.condition.evaluate({}));
       });
 
       test("passes with loggedIn: true", function (assert) {
@@ -425,17 +417,26 @@ module("Unit | Blocks | Condition | user", function (hooks) {
 
     test("validate passes with valid source format", function (assert) {
       assert.strictEqual(
-        this.validateCondition({ source: "@outletArgs.user" }),
+        this.validateCondition({ source: "@outletArgs.user", admin: true }),
         null
       );
     });
 
     test("validate returns error with invalid source format", function (assert) {
-      const error = this.validateCondition({ source: "user" });
+      const error = this.validateCondition({ source: "user", admin: true });
       assert.notStrictEqual(error, null, "returns an error");
       assert.true(
         error.message.includes("must be in format"),
         "error message mentions format"
+      );
+    });
+
+    test("validate returns error when no args specified (atLeastOne constraint)", function (assert) {
+      const error = this.validateCondition({});
+      assert.notStrictEqual(error, null, "returns an error");
+      assert.true(
+        error.message.includes("at least one of"),
+        "error message mentions atLeastOne"
       );
     });
 

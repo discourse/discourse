@@ -77,8 +77,8 @@ import { blockCondition } from "./decorator";
     containsAny: { type: "array" },
   },
   constraints: {
-    // At most one condition type allowed (0 is fine - defaults to truthy check)
-    atMostOne: ["enabled", "equals", "includes", "contains", "containsAny"],
+    // Exactly one condition type required
+    exactlyOne: ["enabled", "equals", "includes", "contains", "containsAny"],
   },
   // No custom validate - setting name existence checked at evaluate time
   // (since it requires service access to siteSettings)
@@ -144,8 +144,7 @@ export default class BlockSettingCondition extends BlockCondition {
       return containsAny.some((item) => this.#settingContains(value, item));
     }
 
-    // No condition specified, check if setting exists and is truthy
-    return !!value;
+    return false;
   }
 
   /**

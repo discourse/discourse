@@ -75,6 +75,17 @@ import { blockCondition } from "./decorator";
     maxTrustLevel: { type: "number", min: 0, max: 4, integer: true },
     groups: { type: "array", itemType: "string" },
   },
+  constraints: {
+    atLeastOne: [
+      "loggedIn",
+      "admin",
+      "moderator",
+      "staff",
+      "minTrustLevel",
+      "maxTrustLevel",
+      "groups",
+    ],
+  },
   validate(args) {
     const {
       loggedIn,

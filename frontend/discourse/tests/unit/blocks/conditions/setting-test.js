@@ -346,6 +346,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
         this.evaluateCondition({
           source: themeSettings,
           name: "undefined_setting",
+          enabled: true,
         }),
         "undefined setting returns false (setting doesn't exist)"
       );
@@ -360,7 +361,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       );
     });
 
-    test("evaluates truthy by default when no condition type specified", function (assert) {
+    test("evaluates truthy using enabled: true", function (assert) {
       const themeSettings = {
         some_setting: "has-value",
         empty_setting: "",
@@ -370,6 +371,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
         this.evaluateCondition({
           source: themeSettings,
           name: "some_setting",
+          enabled: true,
         })
       );
 
@@ -377,6 +379,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
         this.evaluateCondition({
           source: themeSettings,
           name: "empty_setting",
+          enabled: true,
         })
       );
     });
@@ -407,13 +410,13 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       );
     });
 
-    test("returns error when multiple condition types are provided (atMostOne constraint)", function (assert) {
+    test("returns error when multiple condition types are provided (exactlyOne constraint)", function (assert) {
       const error = this.validateCondition({
         name: "enable_badges",
         enabled: true,
         equals: "some-value",
       });
-      assert.true(error?.message.includes("at most one of"));
+      assert.true(error?.message.includes("exactly one of"));
     });
 
     test("returns error when enabled and includes are both provided", function (assert) {
@@ -422,7 +425,14 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
         enabled: true,
         includes: ["value1", "value2"],
       });
-      assert.true(error?.message.includes("at most one of"));
+      assert.true(error?.message.includes("exactly one of"));
+    });
+
+    test("returns error when no condition type is provided (exactlyOne constraint)", function (assert) {
+      const error = this.validateCondition({
+        name: "enable_badges",
+      });
+      assert.true(error?.message.includes("exactly one of"));
     });
 
     test("accepts valid site setting", function (assert) {
