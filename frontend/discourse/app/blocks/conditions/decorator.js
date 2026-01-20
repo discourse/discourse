@@ -195,7 +195,7 @@ export function blockCondition(config) {
       get: () => validateFn,
       configurable: false,
     });
-    // validArgKeys is derived from args schema for backward compatibility
+    // validArgKeys combines argsSchema keys with "source" when sourceType !== "none"
     Object.defineProperty(TargetClass, "validArgKeys", {
       get: () => allKeys,
       configurable: false,

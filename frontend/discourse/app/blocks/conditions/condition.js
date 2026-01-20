@@ -16,9 +16,9 @@ import { getByPath } from "discourse/lib/blocks/utils";
  * ## Validation Flow
  *
  * Validation happens at block registration time in this order:
- * 1. Arg values are validated against the `args` schema (type, min, max, pattern, etc.)
- * 2. Constraints are validated (atLeastOne, exactlyOne, allOrNone, atMostOne)
- * 3. Unknown args are detected (typo detection with suggestions)
+ * 1. Unknown args are detected (typo detection with suggestions)
+ * 2. Arg values are validated against the `args` schema (type, min, max, pattern, etc.)
+ * 3. Constraints are validated (atLeastOne, exactlyOne, allOrNone, atMostOne)
  * 4. Source parameter is validated (based on sourceType)
  * 5. Custom `validate` function from decorator config is called (if provided)
  *
@@ -84,7 +84,7 @@ export class BlockCondition {
    * Declares how this condition handles the `source` parameter.
    *
    * - `"none"` (default): `source` parameter is disallowed
-   * - `"outletArgs"`: `source` must be `@outletArgs.property`; base class resolves it
+   * - `"outletArgs"`: `source` must be `@outletArgs.propertyPath`; base class resolves it
    * - `"object"`: `source` is passed directly as an object (e.g., settings object)
    *
    * This property is defined by the `@blockCondition` decorator and should not
