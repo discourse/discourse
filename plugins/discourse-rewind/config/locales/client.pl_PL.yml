@@ -49,7 +49,7 @@ pl_PL:
             visited_with_posts_others:
               one: "%{username} dodał(a) %{count} wpis w dniu %{date}."
               few: "%{username} dodał(a) %{count} wpisy w dniu %{date}."
-              many: "%{username} dodał(a) %{count} wpisów w dniu %{date}."
+              many: "%{username} dodał(a) %{count} wpisy w dniu %{date}."
               other: "%{username} dodał(a) %{count} wpisów w dniu %{date}."
             no_activity: "Nie było Cię dnia %{date}."
             no_activity_others: "%{username} nie było w dniu %{date}."

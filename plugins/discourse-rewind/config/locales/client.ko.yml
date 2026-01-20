@@ -24,6 +24,6 @@ ko:
           invitee_likes: '''좋아요'' 선물한 횟수'
         new_user_interactions:
           likes_given: '''좋아요'' 선물한 횟수'
-          mentions: 멘션
+          mentions: 언급
         writing_analysis:
           menu_other: 기타

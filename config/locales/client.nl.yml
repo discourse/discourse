@@ -843,6 +843,7 @@ nl:
       timeline:
         target_created: "Bericht gemaakt"
         target_created_by: "Bericht gemaakt door %{username} · %{relativeDate}"
+        target_deleted: "Bericht verwijderd"
         flagged: "Gemarkeerd"
         flagged_as_by: "Gemarkeerd als %{flagReason} door %{username} · %{relativeDate}"
         claimed: "Geclaimd"
@@ -7652,6 +7653,7 @@ nl:
           upload:
             label: "Uploaden"
             title: "Afbeeldingen uploaden"
+        download_file: "Downloaden"
         selectable_avatars:
           title: "Lijst van avatars waaruit gebruikers kunnen kiezen"
         table_column_heading:

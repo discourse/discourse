@@ -458,6 +458,8 @@ et:
         reviewable_ai_post:
           noun: "postitus"
       user_label: "Kasutaja"
+      timeline:
+        target_deleted: "Postitus kustutatud"
       notes:
         delete: "Kustuta"
       topic_label: "Teema"
@@ -3737,6 +3739,7 @@ et:
         uploaded_image_list:
           upload:
             label: "Laadi üles"
+        download_file: "Laadi alla"
         table_column_heading:
           status: "Staatus"
         categories:

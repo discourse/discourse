@@ -10,7 +10,7 @@ pt:
     assigns_public: "Permitir que o público geral veja atribuições de tópico"
     assigns_user_url_path: "Caminho para os tópicos atribuídos dos(as) usuários(as) (usar: {username} para substuir o nome do(a) usuário(a))"
     assigns_by_staff_mention: "Se um membro da equipe mencionar o tópico de outro membro da equipe, o tópico será atribuído automaticamente"
-    unassign_creates_tracking_post: "Se você cancelar a atribuição de um tópico, um sussurro ou pequena ação será criada para acompanhar a alteração"
+    unassign_creates_tracking_post: "Se cancelar a atribuição de um tópico, será criado um sussurro ou uma pequena ação para acompanhar a alteração"
     assign_self_regex: "Regex que é preciso passar para autoatribuição. Por exemplo: \"minha lista\""
     assign_other_regex: "Regex que é preciso passar para atribuir tópicos aos(às) outros(as) através de menção. Por exemplo: \"sua lista\"."
     unassign_on_group_archive: "Quando uma mensagem for arquivada por grupo, cancelar atribuição da mensagem (reatribuir se for movida de volta para a caixa de entrada)"

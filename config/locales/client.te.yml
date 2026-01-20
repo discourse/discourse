@@ -6072,6 +6072,7 @@ te:
           empty: "ఇంకా చిత్రాలు లేవు. దయచేసి ఒకదాన్ని అప్‌లోడ్ చేయండి."
           upload:
             label: "అప్‌లోడ్ చేయండి"
+        download_file: "దిగుమతి"
         selectable_avatars:
           title: "సభ్యులు ఎంచుకోగల అవతార్ల జాబితా"
         table_column_heading:

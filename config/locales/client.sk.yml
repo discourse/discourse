@@ -871,6 +871,7 @@ sk:
       timeline:
         target_created: "Príspevok vytvorený"
         target_created_by: "Príspevok vytvoril/a %{username} · %{relativeDate}"
+        target_deleted: "Príspevok zmazaný"
         flagged: "Označené"
         flagged_as_by: "Označené ako %{flagReason} od %{username} - %{relativeDate}"
         claimed: "Nárokované"
@@ -8134,6 +8135,7 @@ sk:
           upload:
             label: "Upload"
             title: "Nahrávanie obrázkov"
+        download_file: "Stiahnuť"
         selectable_avatars:
           title: "Zoznam avatarov, z ktorých si používatelia môžu vybrať"
         table_column_heading:

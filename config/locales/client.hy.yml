@@ -692,6 +692,8 @@ hy:
         reviewable_ai_post:
           noun: "գրառում"
       user_label: "Օգտատեր"
+      timeline:
+        target_deleted: "Գրառումը ջնջված է"
       notes:
         delete: "Ջնջել"
       topic_label: "Թեմա"
@@ -5101,6 +5103,7 @@ hy:
           empty: "Նկարներ դեռևս չկան: Խնդրում ենք վերբեռնել:"
           upload:
             label: "Վերբեռնել"
+        download_file: "Ներբեռնել"
         selectable_avatars:
           title: "Անձնապատկերների ցանկը, որոնցից օգտատերերը կարող են ընտրություն կատարել"
         table_column_heading:

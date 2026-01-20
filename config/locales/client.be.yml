@@ -2733,6 +2733,7 @@ be:
         uploaded_image_list:
           upload:
             label: "Загрузіць"
+        download_file: "спампаваць"
         selectable_avatars:
           title: "Спіс аватараў карыстальнікі могуць выбраць"
         table_column_heading:

@@ -821,6 +821,8 @@ zh_CN:
       timeline:
         target_created: "帖子已创建"
         target_created_by: "帖子由 %{username} 创建 · %{relativeDate}"
+        target_deleted: "帖子已删除"
+        target_deleted_by: "帖子已被 %{username} · %{relativeDate} 删除"
         flagged: "被举报"
         flagged_as_by: "被 %{username} 举报为%{flagReason} · %{relativeDate}"
         claimed: "已申领"
@@ -5361,7 +5363,7 @@ zh_CN:
               locale_label: "语言"
             header_new_members:
               label: "新成员标题"
-              description: "可用变量：<code>&percnt;{preferred_display_name}</code>"
+              description: "可用变量： <code>&percnt;{preferred_display_name}</code>"
               placeholder: "欢迎， %{preferred_display_name}！"
             header_logged_in:
               label: "已登录成员的标题"
@@ -7718,6 +7720,10 @@ zh_CN:
           upload:
             label: "上传"
             title: "上传图片"
+        download_file: "下载"
+        upload_restrictions:
+          extensions: "已接受：%{extensions}"
+          max_size: "最大： %{size}"
         selectable_avatars:
           title: "用户可以选择的头像列表"
         table_column_heading:

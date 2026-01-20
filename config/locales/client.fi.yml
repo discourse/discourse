@@ -843,6 +843,7 @@ fi:
       timeline:
         target_created: "Viesti luotu"
         target_created_by: "Viestin loi %{username} · %{relativeDate}"
+        target_deleted: "Viesti poistettu"
         flagged: "Liputettu"
         flagged_as_by: "%{username} liputti merkinnällä %{flagReason} · %{relativeDate}"
         claimed: "Omittu"
@@ -7667,6 +7668,7 @@ fi:
           upload:
             label: "Lataa"
             title: "Lataa kuvia"
+        download_file: "Lataa"
         selectable_avatars:
           title: "Avatarit, joista käyttäjä voi valita"
         table_column_heading:

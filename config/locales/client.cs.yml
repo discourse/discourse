@@ -1016,6 +1016,7 @@ cs:
       timeline:
         target_created: "Příspěvek vytvořen"
         target_created_by: "Příspěvek vytvořil/a %{username} - %{relativeDate}"
+        target_deleted: "Příspěvek smazán"
         flagged: "Nahlášeno"
         flagged_as_by: "Nahlášeno jako %{flagReason} uživatelem %{username} · %{relativeDate}"
         claimed: "Nárokováno"
@@ -8706,6 +8707,7 @@ cs:
           upload:
             label: "Nahrát"
             title: "Nahrát obrázky"
+        download_file: "Stáhnout"
         selectable_avatars:
           title: "Seznam avatarů, ze kterých si uživatelé mohou vybrat"
         table_column_heading:

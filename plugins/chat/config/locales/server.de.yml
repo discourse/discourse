@@ -107,9 +107,16 @@ de:
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:
+        message_actions:
+          bundle_title: "Was willst du mit der Nachricht machen?"
         no_action_message:
           title: "Keine Aktion"
+          description: "Nachricht unverändert lassen."
+        delete_message:
+          title: "Nachricht löschen"
+          description: "Nachricht endgültig löschen."
         restore_message:
+          title: "Nachricht wiederherstellen"
           description: "Nachricht wiederherstellen, damit Benutzer sie sehen können."
         agree:
           title: "Zustimmen …"
@@ -132,12 +139,17 @@ de:
           title: "Nachricht löschen"
           description: "Nachricht löschen, damit Benutzer sie nicht sehen können."
         delete_and_agree:
+          title: "Meldung ignorieren und Nachricht löschen"
           description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und die Nachricht löschst."
         disagree_and_restore:
           title: "Ablehnen und Nachricht wiederherstellen"
           description: "Nachricht wiederherstellen, damit alle Benutzer sie sehen können."
+        disagree:
+          title: "Nachricht behalten"
+          description: "Lehne die Meldung ab und lasse die Nachricht unverändert."
         ignore:
           title: "Meldung ignorieren"
+          description: "Entferne es aus der Warteschlange, ohne weitere Maßnahmen zu ergreifen."
       direct_messages:
         transcript_title: "Transkript früherer Nachrichten in %{channel_name}"
         transcript_body: "Um dir mehr Kontext zu geben, haben wir ein Transkript der vorherigen Nachrichten in dieser Unterhaltung beigefügt (bis zu zehn):\n\n%{transcript}"
@@ -186,6 +198,7 @@ de:
         is_already_in_use: "wird bereits verwendet"
     bookmarkable:
       notification_title_channel: "Nachricht in %{channel_name}"
+      notification_title_direct_message: "Nachricht mit %{channel_name}"
     personal_chat: "persönlicher Chat"
     onebox:
       inline_to_message: "Nachricht #%{message_id} von %{username} – #%{chat_channel}"
@@ -265,6 +278,7 @@ de:
       view_more:
         one: "%{count} weitere Nachricht anzeigen"
         other: "%{count} weitere Nachrichten anzeigen"
+      your_chat_settings: "Chat-E-Mail-Einstellung"
   unsubscribe:
     chat_summary:
       never: Niemals

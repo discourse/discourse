@@ -909,6 +909,7 @@ hr:
       timeline:
         target_created: "Objava je kreirana"
         target_created_by: "Objavu kreirao/la %{username} · %{relativeDate}"
+        target_deleted: "Post izbrisan"
         flagged: "Označeno"
         flagged_as_by: " %{username} označio/la kao %{flagReason} · %{relativeDate}"
         claimed: "Preuzeto"
@@ -5229,6 +5230,7 @@ hr:
       back_to_forum: "Povratak na forum"
       filter_links: "Filtriraj poveznice..."
       no_results:
+        title: "Nema rezultata"
         description_admin_search: "Nismo mogli pronaći ništa što odgovara '%{filter}'."
       collapse_all_sections: "Sažmite sve odjeljke"
       expand_all_sections: "Proširite sve odjeljke"
@@ -6165,25 +6167,34 @@ hr:
       community:
         title: "Zajednica"
         sidebar_link:
+          about_your_site: "O vašoj web stranici"
           badges: "Značke"
+          login_and_authentication: "Prijava i autentifikacija"
           notifications: "Obavijesti"
           permalinks: "Poveznice"
+          group_permissions: "Dozvole grupe"
           users: "Korisnika"
           groups: "Grupe"
+          watched_words: "Praćene riječi"
           legal: "Legalno"
           moderation_flags:
             title: "Moderiranje"
       appearance:
         title: "Izgled"
         sidebar_link:
+          color_schemes: "Palete boja"
           emoji: "Emoji"
           navigation: "Navigacija"
+          site_texts: "Tekstovi web-mjesta"
       email_settings:
         title: "E-mail postavke"
         sidebar_link:
           appearance: "Izgled"
       security:
         title: "Sigurnost"
+        sidebar_link:
+          staff_action_logs:
+            title: "Dnevnici i pregled"
       section_landing_pages:
         account:
           title: "Račun"
@@ -7358,6 +7369,7 @@ hr:
           empty: "Još nema slika. Prenesite jednu."
           upload:
             label: "Učitaj"
+        download_file: "Preuzmi"
         selectable_avatars:
           title: "Popis avatara koji korisnici mogu birati"
         table_column_heading:

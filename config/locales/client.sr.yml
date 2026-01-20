@@ -768,6 +768,8 @@ sr:
         reviewable_ai_post:
           noun: "post"
       user_label: "Korisnik"
+      timeline:
+        target_deleted: "Post izbrisan"
       notes:
         delete: "Obriši"
       topic_label: "Tema"
@@ -3337,6 +3339,7 @@ sr:
         uploaded_image_list:
           upload:
             label: "Učitaj"
+        download_file: "Preuzmi"
         categories:
           all_results: "Sve"
           required: "Potrebno"

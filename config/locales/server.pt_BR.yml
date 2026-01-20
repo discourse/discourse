@@ -5103,6 +5103,7 @@ pt_BR:
         complete: "Postagem recusada aguardando revisão."
       ignore:
         title: "Ignorar"
+        description: "Remover da fila sem tomar nenhuma ação."
         complete: "Sinalizador ignorado."
       ignore_and_do_nothing:
         title: "Não fazer nada"

@@ -19,7 +19,7 @@ pl_PL:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    -
+    - null
     - Styczeń
     - Luty
     - Marzec
@@ -1954,6 +1954,7 @@ pl_PL:
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
     slow_down_crawler_user_agents: 'User-Agent''y robotów indeksujących, którym należy ograniczyć prędkość, zgodnie z ustawieniami "spowolnij szybkość indeksowania". Każda wartość musi mieć co najmniej 3 znaki.'
     slow_down_crawler_rate: "Jeśli określono parametr slow_down_crawler_user_agents, ta stawka będzie obowiązywać dla wszystkich robotów (liczba sekund opóźnienia między żądaniami)"
+    llms_txt: "Prześlij plik tekstowy, który będzie udostępniany w katalogu /llms.txt robotom LLM. Więcej informacji znajdziesz na stronie <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> ."
     content_security_policy: "Włącz ochronę Content-Security-Policy (CSP). CSP to dodatkowa warstwa bezpieczeństwa, która pomaga zapobiegać niektórym rodzajom ataków, takim jak Cross Site Scripting (XSS) i wstrzykiwanie danych."
     content_security_policy_report_only: "Włącz Content-Security-Policy-Report-Only (CSP)."
     content_security_policy_collect_reports: "Włącz zbieranie raportów o naruszeniach CSP na / csp_reports"
@@ -4507,6 +4508,7 @@ pl_PL:
   upload:
     edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
+    images_only: "Przepraszamy, ale przy tym ustawieniu możesz przesyłać tylko obrazy."
     pasted_image_filename: "Wklejone zdjęcie"
     store_failure: "Błąd zapisu załączników #%{upload_id} dla użytkownika #%{user_id}."
     file_missing: "Przepraszamy, należy podać plik do przesłania."
@@ -5425,7 +5427,6 @@ pl_PL:
   reviewables:
     already_handled: "Dziękujemy, ale już przejrzeliśmy ten post i ustaliliśmy, że nie trzeba go ponownie oznaczać."
     already_handled_and_user_not_exist: "Dzięki, ale ktoś już to przejrzał i ten użytkownik już nie istnieje."
-    post_deleted_by_author: "Wpis został usunięty przez autora"
     post_restored_by_author: "Wpis został przywrócony przez autora"
     priorities:
       low: "Niski"

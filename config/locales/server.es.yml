@@ -5031,7 +5031,6 @@ es:
   reviewables:
     already_handled: "Gracias, pero ya revisamos esta publicación y determinamos que no necesita denunciarse de nuevo."
     already_handled_and_user_not_exist: "Gracias, pero otra persona ya lo ha revisado, y ese usuario ha dejado de existir."
-    post_deleted_by_author: "La publicación fue eliminada por su autor/a"
     post_restored_by_author: "La publicación fue restaurada por su autor/a"
     priorities:
       low: "Bajo"

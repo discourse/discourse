@@ -48,6 +48,8 @@ et:
   disable_remote_images_download_reason: "Väliste piltide allalaadimine keelati, kuna polnud polnud piisavalt vaba ruumi."
   anonymous: "Anonüümne"
   remove_posts_deleted_by_author: "Autori poolt kustutatud"
+  topic_tag_changed:
+    removed: "Eemaldatud %{removed}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "postituse nr%{post_number} tegi %{username}"
   components:

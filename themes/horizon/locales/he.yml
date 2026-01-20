@@ -11,8 +11,8 @@ he:
   vote_count:
     one: "הצבעה"
     two: "שתי הצבעות"
-    many: "שתי הצבעות"
-    other: "שתי הצבעות"
+    many: "%{count} הצבעות"
+    other: "%{count} הצבעות"
   like_count:
     one: "לייק %{count}"
     two: "%{count} לייקים"
@@ -21,7 +21,7 @@ he:
   reply_count:
     one: "תגובה"
     two: "שתי תגובות"
-    many: "שתי תגובות"
-    other: "שתי תגובות"
+    many: "%{count} תגובות"
+    other: "%{count} תגובות"
   theme_metadata:
     description: "ערכת נושא פשוטה ויפה שמשפרת את חוויית השימוש באתרי Discourse."

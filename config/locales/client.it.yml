@@ -843,6 +843,7 @@ it:
       timeline:
         target_created: "Messaggio creato"
         target_created_by: "Messaggio creato da %{username} - %{relativeDate}"
+        target_deleted: "Messaggio eliminato"
         flagged: "Contrassegnato"
         flagged_as_by: "Contrassegnato come %{flagReason} da %{username} · %{relativeDate}"
         claimed: "Rivendicato"
@@ -7649,6 +7650,7 @@ it:
           upload:
             label: "Carica"
             title: "Carica immagini"
+        download_file: "Scarica"
         selectable_avatars:
           title: "Elenco degli Avatar tra cui l'utente può scegliere"
         table_column_heading:

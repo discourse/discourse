@@ -52,6 +52,7 @@ sq:
   topic_category_changed: "Nga %{from} në %{to}"
   topic_tag_changed:
     added_and_removed: "U shtua %{added} dhe u hoq %{removed}"
+    added: "Shtuar %{added}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} nga %{username}"
   components:

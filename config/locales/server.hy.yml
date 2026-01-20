@@ -51,6 +51,8 @@ hy:
   remove_posts_deleted_by_author: "Ջնջված է հեղինակի կողմից"
   redirect_warning: "Մենք չկարողացանք հաստատել, որ Ձեր ընտրած հղումը իրականում հրապարակվել է ֆորումում: Եթե ամեն դեպքում ցանկանում եք շարունակել, ընտրեք ներքևի հղումը:"
   on_another_topic: "Մեկ այլ թեմայում"
+  topic_tag_changed:
+    added: "Ավելացվել է %{added}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} %{username}-ի կողմից"
   components:

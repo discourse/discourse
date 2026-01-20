@@ -5377,7 +5377,6 @@ uk:
   reviewables:
     already_handled: "Дякуємо, але ми вже переглянули цей допис і вирішили, що його не потрібно знову позначати."
     already_handled_and_user_not_exist: "Дякую, але хтось вже переглянув, і цього користувача більше не існує."
-    post_deleted_by_author: "Допис був видалений автором"
     post_restored_by_author: "Автор відновив публікацію"
     priorities:
       low: "Низький"

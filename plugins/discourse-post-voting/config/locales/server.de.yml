@@ -62,6 +62,7 @@ de:
           title: "Kommentar behalten"
         ignore:
           title: "Meldung ignorieren"
+          description: "Entferne es aus der Warteschlange, ohne weitere Maßnahmen zu ergreifen."
         delete_and_agree:
           description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Kommentar löschst."
   post_action_types:
@@ -119,6 +120,7 @@ de:
             title: "Kommentar behalten"
           ignore:
             title: "Meldung ignorieren"
+            description: "Entferne es aus der Warteschlange, ohne weitere Maßnahmen zu ergreifen."
         transcript:
           view: "Transkript früherer Kommentare anzeigen"
       reviewable_score_types:

@@ -52,6 +52,8 @@ ur:
   remove_posts_deleted_by_author: "مصنف کی طرف سے حذف کر دیا گیا"
   redirect_warning: "ہم تصدیق نہ کر سکے کہ آپ کا منتخب کردہ لِنک اصل میں فورم پر شائع کیا گیا تھا کہ نہیں۔ اگر آپ پھر بھی آگے بڑھنا چاہتے ہیں، تو نیچے دیئے گئے لِنک کو منتخب کریں۔"
   on_another_topic: "دوسرے ٹاپک پر"
+  topic_tag_changed:
+    added: "شامل کیا گیا %{added}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} کی طرف سے #%{post_number}"

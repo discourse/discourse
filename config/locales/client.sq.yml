@@ -697,6 +697,8 @@ sq:
         reviewable_ai_post:
           noun: "postim"
       user_label: "User"
+      timeline:
+        target_deleted: "Postimi u fshi"
       notes:
         delete: "Fshij"
       topic_label: "Topic"
@@ -4802,6 +4804,7 @@ sq:
         uploaded_image_list:
           upload:
             label: "Ngarko"
+        download_file: "Shkarko"
         categories:
           all_results: "Të gjitha"
           required: "E nevojshme"

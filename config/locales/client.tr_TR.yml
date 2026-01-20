@@ -843,6 +843,7 @@ tr_TR:
       timeline:
         target_created: "Gönderi oluşturuldu"
         target_created_by: "Gönderi %{username} tarafından oluşturuldu · %{relativeDate}"
+        target_deleted: "Gönderi silindi"
         flagged: "Bayrak eklendi"
         flagged_as_by: "%{username} tarafından %{flagReason} nedeniyle bayrak eklendi · %{relativeDate}"
         claimed: "Alındı"
@@ -7652,6 +7653,7 @@ tr_TR:
           upload:
             label: "Yükle"
             title: "Görüntü yükle"
+        download_file: "İndir"
         selectable_avatars:
           title: "Kullanıcıların seçebileceği avatarların listesi"
         table_column_heading:
