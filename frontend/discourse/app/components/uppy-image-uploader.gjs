@@ -37,7 +37,7 @@ export default class UppyImageUploader extends Component {
       : { imagesOnly: true },
     uploadDropTargetOptions: () => ({
       target: document.querySelector(
-        `#${this.args.id} .uploaded-image-preview`
+        `#${this.args.id} .file-uploader__preview`
       ),
     }),
     uploadDone: (upload) => {
@@ -52,7 +52,7 @@ export default class UppyImageUploader extends Component {
 
   applyLightbox = modifier(() =>
     lightbox(
-      document.querySelector(`#${this.args.id}.image-uploader`),
+      document.querySelector(`#${this.args.id}.file-uploader`),
       this.siteSettings
     )
   );
@@ -169,12 +169,12 @@ export default class UppyImageUploader extends Component {
   <template>
     <div
       id={{@id}}
-      class="image-uploader {{if @imageUrl 'has-image' 'no-image'}}"
+      class="file-uploader {{if @imageUrl 'has-image' 'no-image'}}"
       ...attributes
     >
       <div
         class={{concatClass
-          "uploaded-image-preview input-xxlarge"
+          "file-uploader__preview input-xxlarge"
           this.previewSizeClass
         }}
         style={{this.backgroundStyle}}
@@ -230,7 +230,7 @@ export default class UppyImageUploader extends Component {
             </div>
           {{/if}}
         {{else}}
-          <div class="image-upload-controls">
+          <div class="file-uploader__controls">
             <label
               class="btn btn-transparent
                 {{if this.disabled 'disabled'}}
@@ -251,7 +251,7 @@ export default class UppyImageUploader extends Component {
             </label>
 
             <div
-              class="progress-status
+              class="file-uploader__progress-status
                 {{unless this.uppyUpload.uploading 'hidden'}}"
             >
               <div
@@ -273,7 +273,7 @@ export default class UppyImageUploader extends Component {
       </div>
 
       {{#if @imageUrl}}
-        <div class="image-upload-controls">
+        <div class="file-uploader__controls">
           <label
             class="btn btn-default btn-small {{if this.disabled 'disabled'}}"
             title={{this.disabledReason}}

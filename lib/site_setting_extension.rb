@@ -392,6 +392,18 @@ module SiteSettingExtension
           default = default_uploads[default.to_i]
         end
 
+        # For upload type settings, include the upload metadata
+        # public_send returns the Upload object directly (not a URL string)
+        upload_metadata = nil
+        if type_hash[:type].to_s == "upload" && value.is_a?(Upload)
+          upload_metadata = {
+            original_filename: value.original_filename,
+            human_filesize: value.human_filesize,
+            width: value.width,
+            height: value.height,
+          }
+        end
+
         # For uploads nested in objects type, hydrate upload IDs to URLs
         if type_hash[:type].to_s == "objects" && type_hash[:schema]
           parsed_value = JSON.parse(value)
@@ -431,6 +443,7 @@ module SiteSettingExtension
         end
 
         opts[:plugin] = plugins[s] if plugins[s]
+        opts[:upload] = upload_metadata if upload_metadata
 
         opts
       end
