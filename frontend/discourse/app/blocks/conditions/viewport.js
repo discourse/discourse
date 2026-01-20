@@ -97,23 +97,13 @@ export default class BlockViewportCondition extends BlockCondition {
     const { min, max, mobile, touch } = args;
 
     // Check mobile device
-    if (mobile !== undefined) {
-      if (mobile && !this.capabilities.isMobileDevice) {
-        return false;
-      }
-      if (!mobile && this.capabilities.isMobileDevice) {
-        return false;
-      }
+    if (mobile !== undefined && mobile !== this.capabilities.isMobileDevice) {
+      return false;
     }
 
     // Check touch capability
-    if (touch !== undefined) {
-      if (touch && !this.capabilities.touch) {
-        return false;
-      }
-      if (!touch && this.capabilities.touch) {
-        return false;
-      }
+    if (touch !== undefined && touch !== this.capabilities.touch) {
+      return false;
     }
 
     // Check minimum breakpoint (viewport must be at least this size)
