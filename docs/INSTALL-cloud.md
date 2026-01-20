@@ -51,7 +51,7 @@ That's it! The installer will:
 | RAM | 1 GB (with swap) | 2 GB+ |
 | CPU | 1 core | 2+ cores |
 | Disk | 10 GB | 20 GB+ |
-| OS | 64-bit Linux | Ubuntu 22.04+ LTS |
+| OS | 64-bit Linux | Ubuntu LTS |
 
 > **Auto-scaling:** The installer automatically tunes `UNICORN_WORKERS` and `db_shared_buffers` based on your server's RAM and CPU.
 
@@ -122,10 +122,10 @@ The wizard will guide you through:
    - Select **No** for free subdomain → enter your subdomain and verification code
    - Select **Yes** for your own domain → enter your hostname (e.g., `forum.example.com`)
 3. **SMTP configuration** — Skip to use Discourse ID login, or configure your email provider
-4. **Let's Encrypt** — Confirm email for SSL certificate notifications
-5. **MaxMind** (optional) — For IP geolocation features
 
 After confirming your settings, the installer builds your Discourse (~5-10 minutes).
+
+> **Note:** SSL certificates via Let's Encrypt are provisioned automatically — no additional configuration required.
 
 ---
 
@@ -218,6 +218,15 @@ For advanced users, edit the configuration file directly:
 nano /var/discourse/containers/app.yml
 cd /var/discourse
 ./launcher rebuild app
+```
+
+### MaxMind Geolocation
+
+For IP-based geolocation features (country detection, etc.), register for a free [MaxMind GeoLite2 license key](https://www.maxmind.com/en/geolite2/signup) and add it to your `app.yml`:
+
+```yaml
+env:
+  DISCOURSE_MAXMIND_LICENSE_KEY: "your_license_key_here"
 ```
 
 ### Launcher Commands
