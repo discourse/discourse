@@ -23,6 +23,8 @@ cs:
           agree_and_silence:
             title: "Ztišení uživatele"
             description: "Schválit nahlášení a ztišit uživatele."
+          delete_and_agree:
+            title: "Ignorovat nahlášení a odstranit komentář"
           disagree:
             title: "Neschvaluji"
           ignore:

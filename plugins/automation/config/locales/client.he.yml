@@ -289,6 +289,7 @@ he:
           fields:
             email_template:
               label: תבנית דוא״ל
+              description: תומך בממלאי מקום לאוטומציה
             recipients:
               label: נמענים
               description: משתמשים או כתובת דוא״ל לשליחת התראות

@@ -285,6 +285,7 @@ pt_BR:
       forwarded: "Encaminhou o e-mail acima"
     topic_admin_menu: "ações de tópico"
     skip_to_main_content: "Ir para o conteúdo principal"
+    skip_to_post: "Ir para o post %{post_number}"
     skip_user_nav: "Pular para o conteúdo do perfil"
     emails_are_disabled: "Todos os envios de e-mail foram desabilitados globalmente por um administrador. Nenhuma notificação por e-mail de qualquer tipo será enviada."
     emails_are_disabled_non_staff: "O e-mail de saída foi desabilitado para usuários(as) que não são da equipe."
@@ -294,6 +295,7 @@ pt_BR:
     back_button: "Voltar"
     welcome_banner:
       header:
+        new_members: "Bem-vindo(a), %{preferred_display_name}"
         logged_in_members: "Boas-vindas novamente, %{preferred_display_name}!"
         anonymous_members: "Boas-vindas ao %{site_name}!"
       search_placeholder: "Pesquisar"
@@ -559,6 +561,11 @@ pt_BR:
       resume: "Retomar"
       remove: "Remover"
       remove_confirmation: "Tem certeza de que deseja excluir este rascunho?"
+      bulk_delete: "Excluir selecionados"
+      bulk_delete_confirmation: "Excluir rascunhos"
+      bulk_delete_message:
+        one: "Tem certeza de que deseja excluir este rascunho?"
+        other: "Tem certeza de que deseja excluir estes %{count} rascunhos?"
       new_topic: "Rascunho de novo tópico"
       new_private_message: "Novo rascunho de mensagem"
       edit_topic: "Editar rascunho do tópico"
@@ -677,6 +684,10 @@ pt_BR:
         claimed_by_you: "Você reivindicou este item e pode revisá-lo."
         claimed_by_other: "Este item só pode ser revisado por <b>%{username}</b>."
         automatically_claimed_by: "Este item está sendo revisado por <b>%{username}</b>."
+      claim:
+        title: "Reivindicar este tópico"
+      unclaim:
+        help: "Remover esta reivindicação"
       awaiting_approval: "Aguardando aprovação"
       delete: "Excluir"
       settings:
@@ -698,6 +709,7 @@ pt_BR:
       filtered_topic: "Você filtrou para conteúdo revisável em um único tópico."
       filtered_user: "Usuário(a) sinalizado(a)"
       filtered_reviewed_by: "Revisado por"
+      filtered_claimed_by: "Sinalização reivindicada por"
       show_all_topics: "exibir todos os tópicos"
       deleted_post: "(postagem excluída)"
       deleted_user: "(usuário(a) excluído(a))"
@@ -769,10 +781,13 @@ pt_BR:
           created_at: "Criado em"
           created_at_asc: "Criado em (reverso)"
         priority:
+          title: "Prioridade mínima"
           any: "(qualquer um)"
           low: "Baixa"
           medium: "Média"
           high: "Alta"
+        active_filters: "Filtros ativos:"
+        clear_filter: "Remover %{filter}"
       conversation:
         view_full: "visualizar conversa completa"
       scores:
@@ -833,7 +848,11 @@ pt_BR:
           title: "Postagem"
           noun: "postagem"
       flagged_as: "Sinalizado como"
+      post_flagged_as: "Resposta sinalizada como"
+      queued_post_label: "Resposta citada"
+      queued_topic_label: "Tópico citado"
       user_label: "Usuário(a)"
+      assigned_to: "Postagem atribuída a"
       moderator_actions: "Ações da moderação"
       timeline_and_notes: "Cronograma e observações"
       timeline:
@@ -843,7 +862,11 @@ pt_BR:
         flagged_as_by: "Marcado(a) como %{flagReason} por %{username} - %{relativeDate}"
         claimed: "Reivindicado(a)"
         claimed_by: "Reivindicado(a) por %{username} - %{relativeDate}"
+        unclaimed_by: "Reivindicação removida por %{username} · %{relativeDate}"
         reviewed: "Revisado(a)"
+        approved_by: "Aprovado por %{username} · %{relativeDate}"
+        rejected_by: "Rejeitado por%{username} · %{relativeDate}"
+        ignored_by: "Ignorado por %{username} · %{relativeDate}"
         view_conversation: "visualizar MP"
         note_added: "Observação da moderação"
         note_added_by: "Observação da moderação por %{username} - %{relativeDate}"
@@ -870,13 +893,20 @@ pt_BR:
           one: "Marcado por %{count} usuário(a)"
           other: "Marcado por %{count} usuários(as)"
         activities:
+          joined_on: "Ingressou: %{joinDate}"
           trust_level: "nível de confiança: %{trustLevelName}"
           posts:
             one: "%{count} postagem"
             other: "%{count} postagens"
+        moderation_history:
+          label: "Histórico de moderação"
+          silenced: "Silenciado: %{count}"
+          suspended: "Suspenso: %{count}"
+          rejected_posts: "Postagens rejeitadas: %{count}"
         solution_marked: "Solução marcada"
         topic_has_solution: "Este tópico tem uma solução"
         visibility: "Visibilidade"
+        topic_unlisted: "Este tópico não está listado e só poderá ser acessado por link direto"
       help:
         moderation_guide: "Guia de moderação do Discourse"
         flag_priorities: "Gerenciar a reputação do(a) usuário(a) e sinalizar prioridades"
@@ -1026,6 +1056,7 @@ pt_BR:
           title: Interação
           posting: Postando
           notification: Notificação
+          self_lockout: "Você está prestes a alterar a visibilidade do grupo de uma forma que removerá o seu próprio acesso. Tem certeza de que deseja continuar?"
         email:
           title: "E-mail"
           status: "Sincronizado(s) %{old_emails}/%{total_emails} e-mail(s) via IMAP."
@@ -1150,7 +1181,7 @@ pt_BR:
         automatic_groups: "Grupos automáticos"
         automatic: "Automático"
         closed: "Fechado"
-        public: "Público(a)"
+        public: "Público"
         private: "Privado(a)"
         public_groups: "Grupos públicos"
         my_groups: "Meus grupos"
@@ -1299,12 +1330,16 @@ pt_BR:
         one: "Categorias (mais %{count})…"
         other: "Categorias (mais %{count})…"
     ip_lookup:
+      title: Endereço IP
       hostname: Nome do host
       location: Local
       location_not_found: (desconhecido)
       organisation: Organização
       phone: Telefone
       other_accounts: "Outras contas com este endereço IP:"
+      other_accounts_with_ip:
+        one: "%{count} outra conta com este endereço IP"
+        other: "%{count} outras contas com este endereço IP"
       delete_other_accounts:
         one: "Excluir %{count}"
         other: "Excluir %{count}"
@@ -1939,6 +1974,7 @@ pt_BR:
         first_time_and_daily: "Primeira vez que uma postagem é curtida diariamente"
         first_time: "Primeira vez que uma postagem é curtida"
         never: "Nunca"
+      notify_on_linked_posts: "Notificar quando alguém compartilhar o link de uma das minhas postagens"
       email_previous_replies:
         title: "Incluir respostas anteriores ao final dos e-mails"
         unless_emailed: "exceto enviados anteriormente"
@@ -2688,6 +2724,9 @@ pt_BR:
         title: "Traduzindo postagem"
         select: "Selecione a tradução"
         save: "Salvar tradução"
+        original_content: "Postagem original"
+        translation_preview: "Prévia da tradução"
+        original: "Original"
         translation: "Tradução"
         placeholder: "Digite a tradução da postagem aqui..."
       group_mentioned_limit:
@@ -2744,7 +2783,9 @@ pt_BR:
       create_shared_draft: "Criar rascunho compartilhado"
       edit_shared_draft: "Editar rascunho compartilhado"
       title: "Ou aperte %{modifier}Enter"
+      save_and_close: "Salvar e fechar"
       discard: "Descartar"
+      draft_saved: "Rascunho salvo!"
       users_placeholder: "Adicionar usuários(as) ou grupos"
       title_placeholder: "Em algumas palavras, sobre o que é esta discussão?"
       title_or_link_placeholder: "Digite um título, ou cole um link aqui"

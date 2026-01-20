@@ -126,6 +126,11 @@ lt:
           few: "%{count} dienos"
           many: "%{count} dienų"
           other: "%{count} dienų"
+        x_months:
+          one: "%{count} mėnuo"
+          few: "%{count} mėnesiai"
+          many: "%{count} mėnesį"
+          other: "%{count} mėnesių"
         date_year: "MMM D, YYYY"
       medium_with_ago:
         x_minutes:
@@ -3571,6 +3576,8 @@ lt:
       pinned:
         title: "Prisegta"
         help: "Ši tema yra Pažymėta tik tau. Ji bus rodoma sąrašo kategorijos sąrašo viršuje."
+      hot:
+        title: "Karšta"
       personal_message:
         title: "Ši tema yra asmeninė žinutė"
         help: "Ši tema yra asmeninė žinutė"
@@ -3649,6 +3656,10 @@ lt:
       unseen:
         title: "Nematytas"
         lower_title: "nematytas"
+      hot:
+        title: "Karšta"
+        lower_title: "karšta"
+        help: "populiariausios naujausios temos"
       new:
         lower_title_with_count:
           one: "%{count} nauja"
@@ -4072,8 +4083,21 @@ lt:
         yesterday: "Vakar"
     discovery:
       headings:
+        all:
+          hot: "Visos aktualios temos"
+        category:
+          hot: "Karštos temos %{category}"
+        single_tag:
+          hot: "Karštos temos su žyme %{tag}"
         multi_tag:
           default: "Temos pažymėtos %{tags}"
+        category_tag:
+          hot: "Karštos temos %{category} pažymėtos žyme %{tag}"
+        no_tags:
+          all:
+            hot: "Karštos temos be etikečių"
+          category:
+            hot: "Karštos temos %{category} be žymų"
         categories: "Visos kategorijos"
   admin_js:
     type_to_filter: "Įveskite filtrą…"
@@ -4143,6 +4167,8 @@ lt:
           form:
             mobile: "Mobilus"
             email: "El. paštas"
+            manifest_screenshots:
+              title: "Manifesto ekrano kopijos"
         fonts:
           form:
             heading_font:

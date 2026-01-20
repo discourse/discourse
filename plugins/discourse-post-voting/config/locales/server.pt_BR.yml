@@ -35,8 +35,11 @@ pt_BR:
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "O que você deseja fazer com o comentário?"
         no_action_comment:
           title: "Sem ação"
+          description: "Manter o comentário como está."
         agree_and_keep_comment:
           title: "Manter comentário"
           description: "Concorde com o sinalizador e mantenha o comentário inalterado."

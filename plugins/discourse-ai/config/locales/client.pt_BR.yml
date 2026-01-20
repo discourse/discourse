@@ -167,6 +167,11 @@ pt_BR:
             flag_post:
               label: "Sinalizar postagem"
               description: "Sinaliza a postagem (como spam ou para revisão)"
+            notify_author_pm:
+              label: "Notificar o autor via PM"
+              description: "Enviar uma mensagem pessoal ao autor da postagem quando os posts forem citados e deletados"
+            notify_author_pm_message:
+              label: "Conteúdo da mensagem pessoal"
             include_personal_messages:
               label: "Incluir mensagens pessoais"
               description: "Também verificar e fazer triagem de mensagens pessoais"
@@ -179,6 +184,10 @@ pt_BR:
             max_output_tokens:
               label: "Máximo de tokens de saída"
               description: "Quando especificado, define um limite superior para o número máximo de tokens que o modelo pode gerar. Respeita o limite máximo de tokens de saída do LLM"
+        llm_tagger:
+          fields:
+            available_tags:
+              label: "Tags disponíveis"
     discourse_ai:
       title: "IA"
       default_llm:
@@ -261,6 +270,11 @@ pt_BR:
           post_raw_translator: "Tradutor sem processamento de postagens"
           topic_title_translator: "Tradutor de título de tópico"
           short_text_translator: "Tradutor de textos curtos"
+          schedule_untranslated: "Agendar traduções"
+          schedule_topic_success:
+            one: "Tradução agendada para %{count} postagem não traduzida"
+            other: "Tradução agendada para %{count} postagens não traduzidas"
+          schedule_topic_error: "Erro ao agendar traduções. Por favor tente novamente."
         spam:
           name: "Spam"
           description: "Identifica possíveis spams usando o LLM selecionado e os sinaliza para inspeção pela moderação do site na fila de revisão"
@@ -278,6 +292,7 @@ pt_BR:
         card: "Cartão"
       translations:
         title: "Traduções"
+        description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
         stats:
           eta_minutes:
             one: "%{count} minuto"

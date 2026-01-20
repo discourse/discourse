@@ -5442,14 +5442,23 @@ zh_TW:
         title: "帳號"
         sidebar_link:
           backups: "備份"
+          whats_new:
+            title: "有什麼最新消息？"
+            keywords: "更新紀錄|功能|發布"
       community:
         title: "社群"
         sidebar_link:
+          about_your_site: "關於您的網站"
           badges: "徽章"
+          login_and_authentication: "登入與驗證"
           notifications: "通知"
           permalinks: "固定連結"
+          trust_levels: "信任等級"
+          group_permissions: "群組權限"
           users: "使用者"
           groups: "群組"
+          user_fields: "使用者欄位"
+          watched_words: "監察字詞"
           legal: "法律"
           moderation_flags:
             title: "管理"
@@ -5457,21 +5466,34 @@ zh_TW:
       appearance:
         title: "外觀"
         sidebar_link:
+          font_style: "字體樣式"
+          site_logo: "網站標誌"
+          color_schemes: "調色盤"
           emoji: "Emoji"
           navigation: "導覽"
           themes_and_components:
             title: "主題與組件"
             keywords: "延伸插件"
+          site_texts: "網站文字"
       email_settings:
         sidebar_link:
           appearance: "外觀"
+          server_setup:
+            title: "伺服器設定和記錄檔"
+            keywords: "電子郵件|smtp|mailgun|sendgrid|已發送|已跳過|已退回|已收到|已拒絕|電子郵件日誌|預覽摘要"
       security:
         title: "安全性"
+        sidebar_link:
+          staff_action_logs:
+            title: "日誌和篩選"
+            keywords: "錯誤日誌 | 員工操作 | 篩選的電子郵件 | 篩選的 ip | 篩選網址 | 搜索日誌"
       section_landing_pages:
         account:
           title: "帳號"
           backups:
             title: "備份"
+          whats_new:
+            title: "有什麼最新消息？"
       config_areas:
         about:
           general_settings: "一般設定"

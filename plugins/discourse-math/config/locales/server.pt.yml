@@ -7,3 +7,4 @@
 pt:
   site_settings:
     discourse_math_enabled: "Ativar extensão \"Discourse Math\" (irá adicionar um processamento especial para $ e $$ blocos)"
+    discourse_math_enable_accessibility: "Ativar funcionalidades de acessibilidade (apenas MathJax)"

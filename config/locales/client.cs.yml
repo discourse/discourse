@@ -5859,7 +5859,7 @@ cs:
           top: "Všechna nejlepší témata"
           new: "Všechna nová témata"
           unread: "Všechna nepřečtená témata"
-          unseen: "Všechna nezobrazená témata"
+          unseen: "Všechna neshlédnutá témata"
           hot: "Všechna žhavá témata"
           posted: "Všechna témata, do kterých jste přispěli"
           bookmarks: "Všechna témata, která jste si přidali do záložek"
@@ -5869,7 +5869,7 @@ cs:
           top: "Nejlepší témata v %{category}"
           new: "Nová témata v %{category}"
           unread: "Nepřečtená témata v %{category}"
-          unseen: "Nezobrazená témata v %{category}"
+          unseen: "Neshlédnutá témata v %{category}"
           hot: "Žhavá témata v %{category}"
           posted: "Témata v %{category}, do kterých jste přispěli."
           bookmarks: "Témata v %{category}, která jste si uložili do záložek"
@@ -5879,7 +5879,7 @@ cs:
           top: "Nejlepší témata se štítkem %{tag}"
           new: "Nová témata se štítkem %{tag}"
           unread: "Nepřečtená témata se štítkem %{tag}"
-          unseen: "Nezobrazená témata se štítkem %{tag}"
+          unseen: "Neshlédnutá témata se štítkem %{tag}"
           hot: "Žhavá témata se štítkem %{tag}"
           posted: "Témata se štítkem %{tag}, do kterých jste přispěli"
           bookmarks: "Témata se štítkem %{tag}, která jste si uložili do záložek"
@@ -5891,7 +5891,7 @@ cs:
           top: "Nejlepší témata v %{category} se štítkem %{tag}"
           new: "Nová témata v %{category} se štítkem %{tag}"
           unread: "Nepřečtená témata v %{category} se štítkem %{tag}"
-          unseen: "Nezobrazená témata v %{category} se štítkem %{tag}"
+          unseen: "Neshlédnutá témata v %{category} se štítkem %{tag}"
           hot: "Žhavá témata v %{category} se štítkem %{tag}"
           posted: "Témata v %{category} se štítkem %{tag}, do kterých jste přispěli"
           bookmarks: "Témata v kategorii %{category} se štítkem %{tag}, která jste si uložili do záložek"
@@ -5902,7 +5902,7 @@ cs:
             top: "Nejlepší témata bez štítků"
             new: "Nová témata bez štítků"
             unread: "Nepřečtená témata bez štítků"
-            unseen: "Nezobrazená témata bez štítků"
+            unseen: "Neshlédnutá témata bez štítků"
             hot: "Žhavá témata bez štítků"
             posted: "Témata bez štítků, do kterých jste přispěli"
             bookmarks: "Témata bez štítků, která jste si uložili do záložek"
@@ -5912,7 +5912,7 @@ cs:
             top: "Nejlepší témata v %{category} bez štítků"
             new: "Nová témata v %{category} bez štítků"
             unread: "Nepřečtená témata v %{category} bez štítků"
-            unseen: "Nezobrazená témata v %{category} bez štítků"
+            unseen: "Neshlédnutá témata v %{category} bez štítků"
             hot: "Žhavá témata v %{category} bez štítků"
             posted: "Témata v %{category} bez štítků, do kterých jste přispěli"
             bookmarks: "Témata v %{category} bez štítků, která jste si uložili do záložek"
@@ -6382,7 +6382,7 @@ cs:
           title: "Vzhled"
           header_description: "Přizpůsobte šablonu, ve které se vykreslují všechny e-maily ve formátu HTML, a upravte styl pomocí CSS"
         staff_action_logs:
-          title: "Protokoly a minitoring"
+          title: "Protokoly a monitoring"
           header_description: "Protokoly a monitoring vám umožňují monitorovat a spravovat vaši komunitu a zajistit, že zůstane bezpečná a respektující. Můžete zobrazit protokoly všech akcí provedených redaktory, protokoly vyhledávání a konfiguraci monitorování uživatelů"
           keywords: "error logs|staff action|screened emails|screened ips|screened urls|search logs|protokoly chyb|akce redaktorů|filtrované e-maily|filtrované IP adresy|filtrované URL|protokoly vyhledávání"
           sub_pages:
@@ -8727,13 +8727,20 @@ cs:
             prompt: "Změna tohoto nastavení může mít pro váš web dalekosáhlé nebo nezamýšlené důsledky. Opravdu chcete pokračovat?"
             confirm: "Ano, jsem si jistý/á"
           min_password_length:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           min_admin_password_length:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech správců, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           password_unique_charactes:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
           block_common_passwords:
+            prompt: "Chystáte se změnit zásady používání hesel. To se od nynějška dotkne všech uživatelů, kteří si mění svá hesla. Jste si jisti, že chcete pokračovat?"
             confirm: "Ano, aktualizovat zásady hesel"
+          clean_up_inactive_users_after_days:
+            prompt: "Nastavení této hodnoty na jinou hodnotu než 0 způsobí, že uživatelé, kteří již nejsou aktivní po tento počet dní, budou trvale odstraněni. Jste si jisti, že chcete pokračovat?"
+            confirm: "Ano, rozumím, že pokud tuto hodnotu nenastavím na 0, budou neaktivní uživatelé trvale smazáni."
         job_status:
           completed: "Aktualizace dokončena"
           enqueued: "Probíhá aktualizace"

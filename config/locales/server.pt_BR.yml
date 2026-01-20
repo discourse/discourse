@@ -1134,6 +1134,7 @@ pt_BR:
       every_month: "a cada mês"
       every_six_months: "a cada seis meses"
   user_api_key:
+    title: 'Autorizar "%{application_name}"'
     authorize: "Autorizar"
     deny: "Cancelar"
     read: "ler"
@@ -4685,12 +4686,18 @@ pt_BR:
     nice_share:
       name: Compartilhamento interessante
       description: Compartilhou uma postagem com 25 visitantes exclusivos
+      long_description: |
+        Este emblema é concedido quando um link compartilhado recebe 25 cliques. Obrigado por divulgar nossas discussões e esta comunidade.
     good_share:
       name: Compartilhamento bom
       description: Compartilhou uma postagem com 300 visitantes exclusivos
+      long_description: |
+        Este emblema é concedido quando um link compartilhado recebe 300 cliques. Bom trabalho! Você apresentou uma ótima discussão e ajudou esta comunidade a crescer.
     great_share:
       name: Compartilhamento excelente
       description: Compartilhou uma postagem com 1.000 visitantes exclusivos
+      long_description: |
+        Este emblema é concedido quando um link compartilhado recebe 1000 cliques. Uau! Você promoveu uma discussão interessante para um grande público e ajudou a expandir significativamente a nossa comunidade.
     first_like:
       name: Primeira curtida
       description: Curtiu uma postagem
