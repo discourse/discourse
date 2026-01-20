@@ -1007,6 +1007,12 @@ users:
     default: 200
     min: 1
     area: "users"
+  delete_all_posts_from_suspend_trust_level:
+    client: true
+    default: 2
+    min: 0
+    max: 4
+    area: "users"
   delete_user_self_max_post_count:
     default: 1
     min: -1

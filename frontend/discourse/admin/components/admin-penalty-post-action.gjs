@@ -23,9 +23,19 @@ export default class AdminPenaltyPostAction extends Component {
 
   @discourseComputed
   penaltyActions() {
-    return ACTIONS.map((id) => {
-      return { id, name: i18n(`admin.user.penalty_post_${id}`) };
-    });
+    const allActions = ACTIONS.map((id) => ({
+      id,
+      name: i18n(`admin.user.penalty_post_${id}`),
+    }));
+
+    if (
+      this.user.trust_level >=
+      this.siteSettings.delete_all_posts_from_suspend_trust_level
+    ) {
+      return allActions.filter((act) => act.id !== "delete_all");
+    }
+
+    return allActions;
   }
 
   get topicsCount() {
@@ -44,7 +54,7 @@ export default class AdminPenaltyPostAction extends Component {
     return this.canSubmitDeleteAll();
   }
 
-  get postTotalMessage() {
+  get deleteAllMessage() {
     return I18n.messageFormat(
       "admin.user.penalty_post_delete_all_confirmation_MF",
       {
@@ -106,7 +116,7 @@ export default class AdminPenaltyPostAction extends Component {
           @checked={{this.confirmDeleteAll}}
           {{on "click" this.toggleConfirmDeleteAll}}
         />
-        {{htmlSafe this.postTotalMessage}}
+        {{htmlSafe this.deleteAllMessage}}
       </label>
     {{/if}}
   </template>
