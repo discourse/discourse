@@ -23,7 +23,10 @@
 
   <% if @redirect_uri %>
   <div class='authorize-api-key__redirect'>
-    <p class="authorize-api-key__redirect-url"><%= t("user_api_key.redirect_warning") %> <strong><%= @redirect_uri.host %><%= ":#{@redirect_uri.port}" if @redirect_uri.port && ![80, 443].include?(@redirect_uri.port) %></strong></p>
+    <p class="authorize-api-key__redirect-url">
+      <%= t("user_api_key.redirect_warning") %>
+      <strong><%= @redirect_uri %></strong>
+    </p>
   </div>
   <% end %>
 
