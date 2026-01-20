@@ -1105,12 +1105,22 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
 
     test("returns error for unknown page type", function (assert) {
       const error = this.validateCondition({ pages: ["INVALID_PAGE"] });
-      assert.true(error?.message.includes("Unknown page type 'INVALID_PAGE'"));
+      assert.true(
+        error?.message.includes("must be one of"),
+        "error message lists valid page types"
+      );
+      assert.true(
+        error?.message.includes("INVALID_PAGE"),
+        "error message includes the invalid page type"
+      );
     });
 
     test("suggests correction for typo in page type", function (assert) {
       const error = this.validateCondition({ pages: ["CATEGORY_PAGE"] });
-      assert.true(error?.message.includes("Did you mean 'CATEGORY_PAGES'"));
+      assert.true(
+        error?.message.includes('did you mean "CATEGORY_PAGES"'),
+        "error message suggests the correct page type"
+      );
     });
 
     test("returns error when params used without pages", function (assert) {

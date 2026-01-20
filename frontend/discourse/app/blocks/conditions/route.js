@@ -5,7 +5,6 @@ import {
   getPageContext,
   getParamsForPageType,
   isValidPageType,
-  suggestPageType,
   VALID_PAGE_TYPES,
   validateParamsAgainstPages,
   validateParamType,
@@ -84,7 +83,7 @@ import { blockCondition } from "./decorator";
   type: "route",
   args: {
     urls: { type: "array", itemType: "string" },
-    pages: { type: "array", itemType: "string" },
+    pages: { type: "array", itemType: "string", itemEnum: VALID_PAGE_TYPES },
     params: {}, // object type with complex validation
     queryParams: {}, // object type with complex validation
   },
@@ -115,21 +114,6 @@ import { blockCondition } from "./decorator";
             `Invalid glob pattern "${pattern}". ` +
             `Check for unbalanced brackets or braces.`
           );
-        }
-      }
-    }
-
-    // Validate pages
-    if (pages?.length) {
-      for (const pageType of pages) {
-        if (!isValidPageType(pageType)) {
-          const suggestion = suggestPageType(pageType);
-          let errorMsg = `Unknown page type '${pageType}'.`;
-          if (suggestion) {
-            errorMsg += `\nDid you mean '${suggestion}'?`;
-          }
-          errorMsg += `\nValid page types: ${VALID_PAGE_TYPES.join(", ")}`;
-          return errorMsg;
         }
       }
     }
