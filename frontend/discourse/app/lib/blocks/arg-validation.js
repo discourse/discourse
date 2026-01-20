@@ -165,6 +165,44 @@ export function validateRangePair(
 }
 
 /**
+ * Validates an enum-like array property (enum or itemEnum).
+ * Checks that the value is a non-empty array and all items match the expected type.
+ *
+ * @param {Object} options - Validation options.
+ * @param {*} options.enumValue - The enum array value to validate.
+ * @param {string} options.propName - Property name ("enum" or "itemEnum").
+ * @param {string|undefined} options.expectedType - Expected type for values, or undefined to skip type check.
+ * @param {string} options.argName - The argument name for error messages.
+ * @param {string} options.entityName - The entity name (block or condition name).
+ * @param {string} [options.entityType="Block"] - The entity type.
+ */
+function validateEnumArray({
+  enumValue,
+  propName,
+  expectedType,
+  argName,
+  entityName,
+  entityType = "Block",
+}) {
+  if (!Array.isArray(enumValue) || enumValue.length === 0) {
+    raiseBlockError(
+      `${entityType} "${entityName}": arg "${argName}" has invalid "${propName}" value. Must be an array with at least one element.`
+    );
+    return;
+  }
+
+  if (expectedType !== undefined) {
+    for (const value of enumValue) {
+      if (typeof value !== expectedType) {
+        raiseBlockError(
+          `${entityType} "${entityName}": arg "${argName}" ${propName} contains invalid value "${value}". All values must be ${expectedType}s.`
+        );
+      }
+    }
+  }
+}
+
+/**
  * Validates the common schema properties that are shared between blocks and conditions.
  * This includes itemType, schema property rules, range pairs, enum, itemEnum, and required.
  *
@@ -234,23 +272,17 @@ export function validateCommonSchemaProperties(
     );
   }
 
-  // Validate enum is an array with at least one element
+  // Validate enum is an array with valid values
   if (argDef.enum !== undefined) {
-    if (!Array.isArray(argDef.enum) || argDef.enum.length === 0) {
-      raiseBlockError(
-        `${entityType} "${entityName}": arg "${argName}" has invalid "enum" value. Must be an array with at least one element.`
-      );
-    } else {
-      // Validate all enum values match the arg type
-      const expectedType = argDef.type === "string" ? "string" : "number";
-      for (const enumValue of argDef.enum) {
-        if (typeof enumValue !== expectedType) {
-          raiseBlockError(
-            `${entityType} "${entityName}": arg "${argName}" enum contains invalid value "${enumValue}". All values must be ${expectedType}s.`
-          );
-        }
-      }
-    }
+    const expectedType = argDef.type === "string" ? "string" : "number";
+    validateEnumArray({
+      enumValue: argDef.enum,
+      propName: "enum",
+      expectedType,
+      argName,
+      entityName,
+      entityType,
+    });
   }
 
   // itemEnum is only valid for array type
@@ -261,22 +293,16 @@ export function validateCommonSchemaProperties(
     );
   }
 
-  // Validate itemEnum is an array with at least one element
+  // Validate itemEnum is an array with valid values
   if (argDef.itemEnum !== undefined) {
-    if (!Array.isArray(argDef.itemEnum) || argDef.itemEnum.length === 0) {
-      raiseBlockError(
-        `${entityType} "${entityName}": arg "${argName}" has invalid "itemEnum" value. Must be an array with at least one element.`
-      );
-    } else if (argDef.itemType !== undefined) {
-      // Validate all itemEnum values match the itemType
-      for (const enumValue of argDef.itemEnum) {
-        if (typeof enumValue !== argDef.itemType) {
-          raiseBlockError(
-            `${entityType} "${entityName}": arg "${argName}" itemEnum contains invalid value "${enumValue}". All values must be ${argDef.itemType}s.`
-          );
-        }
-      }
-    }
+    validateEnumArray({
+      enumValue: argDef.itemEnum,
+      propName: "itemEnum",
+      expectedType: argDef.itemType, // undefined skips type check
+      argName,
+      entityName,
+      entityType,
+    });
   }
 
   // Validate required is boolean
