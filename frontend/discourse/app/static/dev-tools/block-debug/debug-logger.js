@@ -69,7 +69,7 @@ class BlockDebugLogger {
    * @param {Object} [options.args] - Condition arguments
    * @param {boolean} options.result - Whether condition passed
    * @param {number} [options.depth=0] - Nesting depth for indentation
-   * @param {{ value: *, hasValue: true }|undefined} [options.resolvedValue] - Resolved value object
+   * @param {{ value: *, hasValue: true, note?: string }|undefined} [options.resolvedValue] - Resolved value object
    * @param {Object} [options.conditionSpec] - The condition spec object, used to track
    *   pending results for combinators/conditions that log before evaluation completes.
    */
@@ -297,7 +297,7 @@ class BlockDebugLogger {
    * @param {number} log.depth - Indentation depth.
    * @param {string} [log.label] - Label for param groups.
    * @param {Array} [log.matches] - Match results for param groups.
-   * @param {{ value: *, hasValue: true, formatted?: Object }|undefined} [log.resolvedValue] - Resolved value object.
+   * @param {{ value: *, hasValue: true, formatted?: Object, note?: string }|undefined} [log.resolvedValue] - Resolved value object.
    * @param {string} [log.currentPath] - Current URL path (for route-state type).
    * @param {Array<string>} [log.expectedUrls] - Expected URL patterns (for route-state type).
    * @param {Array<string>} [log.excludeUrls] - Excluded URL patterns (for route-state type).
@@ -425,7 +425,20 @@ class BlockDebugLogger {
       } else {
         loggedArgs = args && Object.keys(args).length > 0 ? args : "";
       }
-      logFn.call(console, `%c${icon}%c ${type}`, iconStyle, "", loggedArgs);
+
+      // Display warning note if present (e.g., unknown setting names)
+      if (resolvedValue?.note) {
+        logFn.call(
+          console,
+          `%c${icon}%c ${type} %c⚠ ${resolvedValue.note}`,
+          iconStyle,
+          "",
+          STYLES.hint,
+          loggedArgs
+        );
+      } else {
+        logFn.call(console, `%c${icon}%c ${type}`, iconStyle, "", loggedArgs);
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 // @ts-check
 import { service } from "@ember/service";
+import { findClosestMatch } from "discourse/lib/string-similarity";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
 
@@ -169,5 +170,53 @@ export default class BlockSettingCondition extends BlockCondition {
     }
 
     return false;
+  }
+
+  /**
+   * Returns the resolved setting value for debug logging.
+   * Includes a warning note with "did you mean" suggestion if the setting doesn't exist.
+   *
+   * @param {Object} args - The condition arguments.
+   * @param {Object} [context] - Evaluation context.
+   * @returns {{ value: *, hasValue: true, note?: string }}
+   */
+  getResolvedValueForLogging(args, context) {
+    const { name } = args;
+
+    // Determine settings source (same logic as evaluate)
+    const settingsSource =
+      args.source !== undefined
+        ? this.resolveSource(args, context)
+        : this.siteSettings;
+
+    // Handle null/undefined settings source
+    if (settingsSource == null) {
+      return {
+        value: undefined,
+        hasValue: true,
+        note: "settings source is null/undefined",
+      };
+    }
+
+    // Check if setting exists
+    if (!(name in settingsSource)) {
+      const availableSettings = Object.keys(settingsSource);
+      const suggestion = findClosestMatch(name, availableSettings);
+      const noteText = suggestion
+        ? `"${name}" does not exist (did you mean "${suggestion}"?)`
+        : `"${name}" does not exist`;
+
+      return {
+        value: undefined,
+        hasValue: true,
+        note: noteText,
+      };
+    }
+
+    // Return the actual value
+    return {
+      value: settingsSource[name],
+      hasValue: true,
+    };
   }
 }

@@ -438,6 +438,97 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     });
   });
 
+  module("getResolvedValueForLogging", function () {
+    test("returns setting value when setting exists", function (assert) {
+      const condition = new BlockSettingCondition();
+      setOwner(condition, this.testOwner);
+
+      const result = condition.getResolvedValueForLogging({
+        name: "enable_badges",
+      });
+
+      assert.deepEqual(result, { value: true, hasValue: true });
+    });
+
+    test("returns note when setting does not exist", function (assert) {
+      const condition = new BlockSettingCondition();
+      setOwner(condition, this.testOwner);
+
+      // Use a custom source with enumerable properties
+      const settings = { existing_setting: true };
+      const result = condition.getResolvedValueForLogging({
+        source: settings,
+        name: "nonexistent_setting",
+      });
+
+      assert.strictEqual(result.value, undefined);
+      assert.true(result.hasValue);
+      assert.true(
+        result.note.includes('setting "nonexistent_setting" does not exist')
+      );
+    });
+
+    test("suggests similar setting name in note", function (assert) {
+      const condition = new BlockSettingCondition();
+      setOwner(condition, this.testOwner);
+
+      // Use a custom source with enumerable properties
+      const settings = { enable_badges: true, enable_whispers: false };
+      const result = condition.getResolvedValueForLogging({
+        source: settings,
+        name: "enable_badgez", // typo - similar to "enable_badges"
+      });
+
+      assert.strictEqual(result.value, undefined);
+      assert.true(result.hasValue);
+      assert.true(result.note.includes('did you mean "enable_badges"'));
+    });
+
+    test("returns note when settings source is null", function (assert) {
+      const condition = new BlockSettingCondition();
+      setOwner(condition, this.testOwner);
+
+      const result = condition.getResolvedValueForLogging({
+        source: null,
+        name: "any_setting",
+      });
+
+      assert.deepEqual(result, {
+        value: undefined,
+        hasValue: true,
+        note: "settings source is null/undefined",
+      });
+    });
+
+    test("returns value from custom source when setting exists", function (assert) {
+      const condition = new BlockSettingCondition();
+      setOwner(condition, this.testOwner);
+
+      const themeSettings = { my_setting: "custom_value" };
+      const result = condition.getResolvedValueForLogging({
+        source: themeSettings,
+        name: "my_setting",
+      });
+
+      assert.deepEqual(result, { value: "custom_value", hasValue: true });
+    });
+
+    test("returns note with suggestion from custom source", function (assert) {
+      const condition = new BlockSettingCondition();
+      setOwner(condition, this.testOwner);
+
+      const themeSettings = { my_setting: "value" };
+      const result = condition.getResolvedValueForLogging({
+        source: themeSettings,
+        name: "my_settin", // typo
+      });
+
+      assert.strictEqual(result.value, undefined);
+      assert.true(result.hasValue);
+      assert.true(result.note.includes('did you mean "my_setting"'));
+    });
+  });
+
   module("type coercion", function () {
     test("contains matches number searchValue against string list", function (assert) {
       const themeSettings = {
