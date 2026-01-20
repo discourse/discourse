@@ -174,31 +174,15 @@ export function blockCondition(config) {
       );
     }
 
-    // Define static getters (non-configurable to prevent reassignment)
-    Object.defineProperty(TargetClass, "type", {
-      get: () => type,
-      configurable: false,
-    });
-    Object.defineProperty(TargetClass, "sourceType", {
-      get: () => sourceType,
-      configurable: false,
-    });
-    Object.defineProperty(TargetClass, "argsSchema", {
-      get: () => frozenSchema,
-      configurable: false,
-    });
-    Object.defineProperty(TargetClass, "constraints", {
-      get: () => frozenConstraints,
-      configurable: false,
-    });
-    Object.defineProperty(TargetClass, "validateFn", {
-      get: () => validateFn,
-      configurable: false,
-    });
-    // validArgKeys combines argsSchema keys with "source" when sourceType !== "none"
-    Object.defineProperty(TargetClass, "validArgKeys", {
-      get: () => allKeys,
-      configurable: false,
+    // Define static getters (non-configurable to prevent reassignment).
+    Object.defineProperties(TargetClass, {
+      type: { get: () => type, configurable: false },
+      sourceType: { get: () => sourceType, configurable: false },
+      argsSchema: { get: () => frozenSchema, configurable: false },
+      constraints: { get: () => frozenConstraints, configurable: false },
+      validateFn: { get: () => validateFn, configurable: false },
+      // validArgKeys combines argsSchema keys with "source" when sourceType !== "none".
+      validArgKeys: { get: () => allKeys, configurable: false },
     });
 
     // Track as decorated so Blocks service can verify
