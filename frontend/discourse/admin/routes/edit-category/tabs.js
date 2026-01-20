@@ -13,10 +13,10 @@ export default class EditCategoryTabs extends DiscourseRoute {
 
     controller.setProperties({
       parentParams,
-      selectedTab,
       showTooltip: false,
-      showAdvancedTabs: selectedTab !== "general",
     });
+
+    controller.setSelectedTab(selectedTab);
 
     controller.resetPreview();
   }

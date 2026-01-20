@@ -221,6 +221,12 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
+  setSelectedTab(tab) {
+    this.selectedTab = tab;
+    this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
+  }
+
+  @action
   registerValidator(validator) {
     this.validators.push(validator);
   }
