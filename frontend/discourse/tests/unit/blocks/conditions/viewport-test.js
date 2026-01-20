@@ -2,6 +2,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import BlockViewportCondition from "discourse/blocks/conditions/viewport";
+import { validateConditions } from "discourse/lib/blocks/condition-validation";
 
 module("Unit | Blocks | Condition | viewport", function (hooks) {
   setupTest(hooks);
@@ -9,71 +10,80 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
   hooks.beforeEach(function () {
     this.condition = new BlockViewportCondition();
     setOwner(this.condition, getOwner(this));
+
+    // Helper to validate via infrastructure
+    this.validateCondition = (args) => {
+      const conditionTypes = new Map([["viewport", this.condition]]);
+
+      try {
+        validateConditions({ type: "viewport", ...args }, conditionTypes);
+        return null;
+      } catch (error) {
+        return error;
+      }
+    };
   });
 
-  module("validate", function () {
-    test("returns error for invalid min breakpoint", function (assert) {
-      const error = this.condition.validate({ min: "xxl" });
-      assert.true(error?.message.includes("Invalid"), "returns error");
-      assert.strictEqual(error.path, "min");
+  module("validate (through infrastructure)", function () {
+    test("returns error for invalid min breakpoint (enum validation)", function (assert) {
+      const error = this.validateCondition({ min: "xxl" });
+      assert.true(
+        error?.message.includes("must be one of"),
+        "returns error for invalid enum"
+      );
     });
 
-    test("returns error for invalid max breakpoint", function (assert) {
-      const error = this.condition.validate({ max: "invalid" });
-      assert.true(error?.message.includes("Invalid"), "returns error");
-      assert.strictEqual(error.path, "max");
+    test("returns error for invalid max breakpoint (enum validation)", function (assert) {
+      const error = this.validateCondition({ max: "invalid" });
+      assert.true(error?.message.includes("must be one of"), "returns error");
     });
 
-    test("returns error when min > max", function (assert) {
-      const error = this.condition.validate({ min: "xl", max: "sm" });
+    test("returns error when min > max (custom validation)", function (assert) {
+      const error = this.validateCondition({ min: "xl", max: "sm" });
       assert.true(error?.message.includes("larger than"), "returns error");
     });
 
     test("passes valid breakpoint configurations", function (assert) {
-      assert.strictEqual(this.condition.validate({ min: "sm" }), null);
-      assert.strictEqual(this.condition.validate({ max: "lg" }), null);
+      assert.strictEqual(this.validateCondition({ min: "sm" }), null);
+      assert.strictEqual(this.validateCondition({ max: "lg" }), null);
       assert.strictEqual(
-        this.condition.validate({ min: "md", max: "xl" }),
+        this.validateCondition({ min: "md", max: "xl" }),
         null
       );
-      assert.strictEqual(this.condition.validate({ min: "2xl" }), null);
-      assert.strictEqual(this.condition.validate({ mobile: true }), null);
-      assert.strictEqual(this.condition.validate({ touch: true }), null);
+      assert.strictEqual(this.validateCondition({ min: "2xl" }), null);
+      assert.strictEqual(this.validateCondition({ mobile: true }), null);
+      assert.strictEqual(this.validateCondition({ touch: true }), null);
       assert.strictEqual(
-        this.condition.validate({ mobile: false, touch: false }),
+        this.validateCondition({ mobile: false, touch: false }),
         null
       );
     });
 
     test("passes when min equals max", function (assert) {
       assert.strictEqual(
-        this.condition.validate({ min: "md", max: "md" }),
+        this.validateCondition({ min: "md", max: "md" }),
         null
       );
     });
 
-    test("returns error when min is not a string", function (assert) {
-      const error = this.condition.validate({ min: 123 });
+    test("returns error when min is not a string (schema type validation)", function (assert) {
+      const error = this.validateCondition({ min: 123 });
       assert.true(error?.message.includes("must be a string"));
-      assert.strictEqual(error.path, "min");
     });
 
-    test("returns error when max is not a string", function (assert) {
-      const error = this.condition.validate({ max: true });
+    test("returns error when max is not a string (schema type validation)", function (assert) {
+      const error = this.validateCondition({ max: true });
       assert.true(error?.message.includes("must be a string"));
-      assert.strictEqual(error.path, "max");
     });
 
-    test("returns error when mobile is not a boolean", function (assert) {
-      const error = this.condition.validate({ mobile: "true" });
+    test("returns error when mobile is not a boolean (schema type validation)", function (assert) {
+      const error = this.validateCondition({ mobile: "true" });
       assert.true(error?.message.includes("must be a boolean"));
-      assert.strictEqual(error.path, "mobile");
     });
 
-    test("returns error when touch is not a boolean", function (assert) {
-      const error = this.condition.validate({ touch: 1 });
+    test("returns error when touch is not a boolean (schema type validation)", function (assert) {
+      const error = this.validateCondition({ touch: 1 });
       assert.true(error?.message.includes("must be a boolean"));
-      assert.strictEqual(error.path, "touch");
     });
   });
 

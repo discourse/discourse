@@ -3,6 +3,7 @@ import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import BlockRouteCondition from "discourse/blocks/conditions/route";
+import { validateConditions } from "discourse/lib/blocks/condition-validation";
 import { setPrefix } from "discourse/lib/get-url";
 
 module("Unit | Blocks | Conditions | route", function (hooks) {
@@ -79,11 +80,20 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       return condition.evaluate(args);
     };
 
-    // Helper to validate route condition (returns error or null)
+    // Create condition instance for validation
+    this.condition = new BlockRouteCondition();
+    setOwner(this.condition, testOwner);
+
+    // Helper to validate route condition (returns error or null) via infrastructure
     this.validateCondition = (args) => {
-      const condition = new BlockRouteCondition();
-      setOwner(condition, testOwner);
-      return condition.validate(args);
+      const conditionTypes = new Map([["route", this.condition]]);
+
+      try {
+        validateConditions({ type: "route", ...args }, conditionTypes);
+        return null;
+      } catch (error) {
+        return error;
+      }
     };
   });
 
@@ -1082,22 +1092,20 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
     });
   });
 
-  module("validate", function () {
+  module("validate (through infrastructure)", function () {
     test("returns error when neither urls nor pages provided", function (assert) {
       const error = this.validateCondition({});
-      assert.true(error?.message.includes("Must provide `urls` or `pages`"));
+      assert.true(error?.message.includes("at least one of"));
     });
 
     test("returns error when urls contains non-string values", function (assert) {
       const error = this.validateCondition({ urls: ["/path", 123, "/other"] });
-      assert.true(error?.message.includes("must contain only string"));
-      assert.strictEqual(error.path, "urls[1]");
+      assert.true(error?.message.includes("must be a string"));
     });
 
     test("returns error for unknown page type", function (assert) {
       const error = this.validateCondition({ pages: ["INVALID_PAGE"] });
       assert.true(error?.message.includes("Unknown page type 'INVALID_PAGE'"));
-      assert.strictEqual(error.path, "pages[0]");
     });
 
     test("suggests correction for typo in page type", function (assert) {
@@ -1113,7 +1121,6 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.true(
         error?.message.includes("`params` requires `pages` to be specified")
       );
-      assert.strictEqual(error.path, "params");
     });
 
     test("returns error when params used with urls", function (assert) {
@@ -1125,7 +1132,6 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
       assert.true(
         error?.message.includes("`params` cannot be used with `urls`")
       );
-      assert.strictEqual(error.path, "params");
     });
 
     test("returns error for invalid param for page type", function (assert) {
@@ -1138,7 +1144,6 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
           "Parameter 'filter' is not valid for any of the listed page types"
         )
       );
-      assert.strictEqual(error.path, "params");
     });
 
     test("returns error for param type mismatch (number expected, string given)", function (assert) {
@@ -1151,7 +1156,6 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
           "Parameter 'categoryId' must be a number, got string '5'"
         )
       );
-      assert.strictEqual(error.path, "params.categoryId");
     });
 
     test("returns error for param type mismatch (string expected, number given)", function (assert) {
@@ -1164,7 +1168,6 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
           "Parameter 'tagId' must be a string, got number '123'"
         )
       );
-      assert.strictEqual(error.path, "params.tagId");
     });
 
     test("returns error when param not valid for all listed page types", function (assert) {
@@ -1206,7 +1209,6 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
           "Page shortcuts like 'CATEGORY_PAGES' are not supported in `urls`"
         )
       );
-      assert.strictEqual(error.path, "urls[0]");
     });
 
     test("accepts valid page types", function (assert) {
@@ -1250,21 +1252,16 @@ module("Unit | Blocks | Conditions | route", function (hooks) {
     test("returns error for invalid glob pattern in urls", function (assert) {
       const error = this.validateCondition({ urls: ["[unclosed"] });
       assert.true(error?.message.includes('Invalid glob pattern "[unclosed"'));
-      assert.strictEqual(error.path, "urls[0]");
     });
 
     test("pages must be an array", function (assert) {
       const error = this.validateCondition({ pages: "CATEGORY_PAGES" });
-      assert.true(
-        error?.message.includes("`pages` must be an array of page type strings")
-      );
-      assert.strictEqual(error.path, "pages");
+      assert.true(error?.message.includes("must be an array"));
     });
 
     test("each page type must be a string", function (assert) {
       const error = this.validateCondition({ pages: [123] });
-      assert.true(error?.message.includes("Each page type must be a string"));
-      assert.strictEqual(error.path, "pages[0]");
+      assert.true(error?.message.includes("must be a string"));
     });
   });
 

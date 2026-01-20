@@ -1,6 +1,5 @@
 // @ts-check
 import { service } from "@ember/service";
-import { formatWithSuggestion } from "discourse/lib/string-similarity";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
 
@@ -57,79 +56,33 @@ const BREAKPOINTS = Object.freeze(["sm", "md", "lg", "xl", "2xl"]);
  */
 @blockCondition({
   type: "viewport",
-  validArgKeys: ["min", "max", "mobile", "touch"],
-})
-export default class BlockViewportCondition extends BlockCondition {
-  @service capabilities;
-
-  /**
-   * Validates viewport condition arguments at block registration time.
-   *
-   * Checks that min/max breakpoints are valid values from the BREAKPOINTS array
-   * and that min is not larger than max when both are specified.
-   *
-   * @param {Object} args - The condition arguments.
-   * @param {string} [args.min] - Minimum breakpoint (viewport must be at least this size).
-   * @param {string} [args.max] - Maximum breakpoint (viewport must be at most this size).
-   * @param {boolean} [args.mobile] - Whether to check for mobile device.
-   * @param {boolean} [args.touch] - Whether to check for touch capability.
-   * @returns {Object|null} Error object with message and optional path, or null if valid.
-   */
+  args: {
+    min: { type: "string", enum: BREAKPOINTS },
+    max: { type: "string", enum: BREAKPOINTS },
+    mobile: { type: "boolean" },
+    touch: { type: "boolean" },
+  },
   validate(args) {
-    // Check base class validation (source parameter)
-    const baseError = super.validate(args);
-    if (baseError) {
-      return baseError;
-    }
-
     const { min, max } = args;
 
-    // Validate parameter types
-    const typeError = this.validateTypes(args, {
-      min: "string",
-      max: "string",
-      mobile: "boolean",
-      touch: "boolean",
-    });
-    if (typeError) {
-      return typeError;
-    }
-
-    if (min && !BREAKPOINTS.includes(min)) {
-      const suggestion = formatWithSuggestion(min, BREAKPOINTS);
-      return {
-        message:
-          `Invalid \`min\` breakpoint ${suggestion}. ` +
-          `Valid breakpoints are: ${BREAKPOINTS.join(", ")}.`,
-        path: "min",
-      };
-    }
-
-    if (max && !BREAKPOINTS.includes(max)) {
-      const suggestion = formatWithSuggestion(max, BREAKPOINTS);
-      return {
-        message:
-          `Invalid \`max\` breakpoint ${suggestion}. ` +
-          `Valid breakpoints are: ${BREAKPOINTS.join(", ")}.`,
-        path: "max",
-      };
-    }
-
+    // Check that min <= max when both are specified
     if (min && max) {
       const minIndex = BREAKPOINTS.indexOf(min);
       const maxIndex = BREAKPOINTS.indexOf(max);
 
       if (minIndex > maxIndex) {
-        return {
-          message:
-            `\`min\` breakpoint "${min}" is larger than ` +
-            `\`max\` breakpoint "${max}". No viewport can satisfy this condition.`,
-        };
+        return (
+          `\`min\` breakpoint "${min}" is larger than ` +
+          `\`max\` breakpoint "${max}". No viewport can satisfy this condition.`
+        );
       }
     }
 
     return null;
-  }
+  },
+})
+export default class BlockViewportCondition extends BlockCondition {
+  @service capabilities;
 
   /**
    * Evaluates whether the viewport condition passes.

@@ -35,7 +35,7 @@
  * block-outlet.gjs → registration.js (NO import of builtin/index.js)
  * block-group.gjs → block-outlet.gjs
  * builtin/index.js → block-group.gjs
- * register-builtin-blocks.js (initializer) → builtin/index.js
+ * initialize-blocks.js (initializer) → builtin/index.js
  * ```
  *
  * The initializer runs after all modules are loaded, safely importing

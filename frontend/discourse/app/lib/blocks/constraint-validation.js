@@ -9,6 +9,7 @@
  * - atLeastOne: At least one of the specified args must be provided
  * - exactlyOne: Exactly one of the specified args must be provided
  * - allOrNone: Either all or none of the specified args must be provided
+ * - atMostOne: At most one of the specified args may be provided (0 or 1)
  *
  * @module discourse/lib/blocks/constraint-validation
  */
@@ -23,6 +24,7 @@ export const VALID_CONSTRAINT_TYPES = Object.freeze([
   "atLeastOne",
   "exactlyOne",
   "allOrNone",
+  "atMostOne",
 ]);
 
 /**
@@ -181,6 +183,16 @@ function checkVacuousConstraint(
       }
       // If all have defaults or none have defaults, constraint is not vacuous
       break;
+
+    case "atMostOne":
+      // Always false if 2+ args have defaults (both will always be provided)
+      if (argsWithDefaults.length >= 2) {
+        raiseBlockError(
+          `Block "${blockName}": constraint atMostOne([${formatArgList(argNames)}]) ` +
+            `is always false because multiple args have default values: ${formatArgList(argsWithDefaults)}.`
+        );
+      }
+      break;
   }
 }
 
@@ -218,6 +230,28 @@ function checkIncompatibleConstraints(constraintTypes, argSet, blockName) {
         `"exactlyOne" already implies at least one must be provided.`
     );
   }
+
+  // atMostOne + atLeastOne = redundant (equivalent to exactlyOne)
+  if (
+    constraintTypes.includes("atMostOne") &&
+    constraintTypes.includes("atLeastOne")
+  ) {
+    raiseBlockError(
+      `Block "${blockName}": constraints "atMostOne" and "atLeastOne" together for args [${argList}] ` +
+        `are equivalent to "exactlyOne". Use "exactlyOne" instead.`
+    );
+  }
+
+  // atMostOne + exactlyOne = redundant (exactlyOne implies atMostOne)
+  if (
+    constraintTypes.includes("atMostOne") &&
+    constraintTypes.includes("exactlyOne")
+  ) {
+    raiseBlockError(
+      `Block "${blockName}": constraint "atMostOne" is redundant with "exactlyOne" for args [${argList}]. ` +
+        `"exactlyOne" already implies at most one may be provided.`
+    );
+  }
 }
 
 /**
@@ -249,6 +283,9 @@ export function validateConstraints(constraints, args, blockName) {
         break;
       case "allOrNone":
         error = validateAllOrNone(argNames, args, blockName);
+        break;
+      case "atMostOne":
+        error = validateAtMostOne(argNames, args, blockName);
         break;
     }
 
@@ -332,6 +369,26 @@ function validateAllOrNone(argNames, args, blockName) {
     `Block "${blockName}": args ${argList} must be provided together or not at all. ` +
     `Got ${formatArgList(providedArgs)} but missing ${formatArgList(missingArgs)}.`
   );
+}
+
+/**
+ * Validates that at most one of the specified args is provided (0 or 1).
+ *
+ * @param {string[]} argNames - The arg names to check.
+ * @param {Object} args - The resolved args.
+ * @param {string} blockName - The block name for error messages.
+ * @returns {string|null} Error message if validation fails, null otherwise.
+ */
+function validateAtMostOne(argNames, args, blockName) {
+  const providedArgs = argNames.filter((name) => args[name] !== undefined);
+
+  if (providedArgs.length > 1) {
+    const providedList = formatArgList(providedArgs);
+    const argList = formatArgList(argNames);
+    return `Block "${blockName}": at most one of ${argList} may be provided, but got ${providedArgs.length}: ${providedList}.`;
+  }
+
+  return null;
 }
 
 /**

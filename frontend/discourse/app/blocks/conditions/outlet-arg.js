@@ -61,58 +61,37 @@ import { blockCondition } from "./decorator";
  */
 @blockCondition({
   type: "outletArg",
-  validArgKeys: ["path", "value", "exists"],
-})
-export default class BlockOutletArgCondition extends BlockCondition {
+  args: {
+    path: { type: "string", required: true },
+    value: {}, // any type allowed
+    exists: { type: "boolean" },
+  },
+  constraints: {
+    // Cannot use both value and exists together
+    atMostOne: ["value", "exists"],
+  },
   validate(args) {
-    // Check base class validation (source parameter)
-    const baseError = super.validate(args);
-    if (baseError) {
-      return baseError;
-    }
-
-    const { path: argPath, value, exists } = args;
-
-    if (!argPath) {
-      return {
-        message: "`path` argument is required.",
-        path: "path",
-      };
-    }
-
-    if (typeof argPath !== "string") {
-      return {
-        message: "`path` must be a string.",
-        path: "path",
-      };
-    }
+    const { path: argPath } = args;
 
     // Validate path format (alphanumeric, underscores, dots)
     if (!/^[\w.]+$/.test(argPath)) {
-      return {
-        message:
-          `\`path\` "${argPath}" is invalid. ` +
-          `Use dot-notation with alphanumeric characters (e.g., "user.trust_level").`,
-        path: "path",
-      };
-    }
-
-    // Validate parameter types
-    const typeError = this.validateTypes(args, { exists: "boolean" });
-    if (typeError) {
-      return typeError;
-    }
-
-    // Check for conflicting conditions
-    if (value !== undefined && exists !== undefined) {
-      return {
-        message: "Cannot use both `value` and `exists` together.",
-      };
+      return (
+        `\`path\` "${argPath}" is invalid. ` +
+        `Use dot-notation with alphanumeric characters (e.g., "user.trust_level").`
+      );
     }
 
     return null;
-  }
-
+  },
+})
+export default class BlockOutletArgCondition extends BlockCondition {
+  /**
+   * Evaluates whether the outlet arg condition passes.
+   *
+   * @param {Object} args - The condition arguments.
+   * @param {Object} [context] - Evaluation context.
+   * @returns {boolean} True if the condition passes.
+   */
   evaluate(args, context) {
     const { path, value, exists } = args;
     const outletArgs = context?.outletArgs;

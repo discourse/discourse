@@ -7,7 +7,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
       assert.throws(
         () =>
           blockCondition({
-            validArgKeys: [],
+            args: {},
           }),
         /`type` is required and must be a string/
       );
@@ -18,42 +18,24 @@ module("Unit | Blocks | Conditions | decorator", function () {
         () =>
           blockCondition({
             type: 123,
-            validArgKeys: [],
+            args: {},
           }),
         /`type` is required and must be a string/
       );
     });
 
-    test("throws for missing validArgKeys", function (assert) {
-      assert.throws(
-        () =>
-          blockCondition({
-            type: "test",
-          }),
-        /`validArgKeys` must be an array/
-      );
-    });
+    test("defaults to empty args object when not provided", function (assert) {
+      @blockCondition({
+        type: "test-no-args",
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
 
-    test("throws for non-array validArgKeys", function (assert) {
-      assert.throws(
-        () =>
-          blockCondition({
-            type: "test",
-            validArgKeys: "not-an-array",
-          }),
-        /`validArgKeys` must be an array/
-      );
-    });
-
-    test("throws when source is included in validArgKeys", function (assert) {
-      assert.throws(
-        () =>
-          blockCondition({
-            type: "test",
-            validArgKeys: ["foo", "source", "bar"],
-          }),
-        /Do not include 'source' in validArgKeys/
-      );
+      assert.deepEqual(TestCondition.argsSchema, {});
+      assert.deepEqual(TestCondition.validArgKeys, []);
     });
   });
 
@@ -65,7 +47,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
         const decorator = blockCondition({
           type: `test-${sourceType}`,
           sourceType,
-          validArgKeys: [],
+          args: {},
         });
 
         @decorator
@@ -89,7 +71,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
           blockCondition({
             type: "test",
             sourceType: "outletarg",
-            validArgKeys: [],
+            args: {},
           }),
         /Invalid `sourceType`.*"outletarg".*did you mean.*"outletArgs"/
       );
@@ -101,7 +83,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
           blockCondition({
             type: "test",
             sourceType: "invalid",
-            validArgKeys: [],
+            args: {},
           }),
         /Invalid `sourceType`.*Valid values are: none, outletArgs, object/
       );
@@ -110,7 +92,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
     test("defaults to 'none' when sourceType is not provided", function (assert) {
       @blockCondition({
         type: "test-default-source",
-        validArgKeys: [],
+        args: {},
       })
       class TestCondition extends BlockCondition {
         evaluate() {
@@ -128,11 +110,11 @@ module("Unit | Blocks | Conditions | decorator", function () {
         () =>
           blockCondition({
             type: "test",
-            validArgKeys: [],
+            args: {},
             sourceType: "none",
-            validArgKey: [],
+            arg: {},
           }),
-        /unknown config key.*"validArgKey".*did you mean.*"validArgKeys"/
+        /unknown config key.*"arg".*did you mean.*"args"/
       );
     });
 
@@ -141,11 +123,11 @@ module("Unit | Blocks | Conditions | decorator", function () {
         () =>
           blockCondition({
             type: "test",
-            validArgKeys: [],
+            args: {},
             sourceTyp: "none",
             typo: true,
           }),
-        /unknown config key.*"sourceTyp".*"typo".*Valid keys are: type, sourceType, validArgKeys/
+        /unknown config key.*"sourceTyp".*"typo"/
       );
     });
 
@@ -154,7 +136,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
         () =>
           blockCondition({
             type: "test",
-            validArgKeys: [],
+            args: {},
             sourcetype: "outletArgs",
           }),
         /unknown config key.*"sourcetype".*did you mean.*"sourceType"/
@@ -165,7 +147,10 @@ module("Unit | Blocks | Conditions | decorator", function () {
       @blockCondition({
         type: "test-valid-keys",
         sourceType: "outletArgs",
-        validArgKeys: ["foo", "bar"],
+        args: {
+          foo: { type: "string" },
+          bar: { type: "number" },
+        },
       })
       class TestCondition extends BlockCondition {
         evaluate() {
@@ -179,6 +164,213 @@ module("Unit | Blocks | Conditions | decorator", function () {
     });
   });
 
+  module("args schema validation", function () {
+    test("validates arg type is valid", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "test",
+            args: {
+              myArg: { type: "invalid" },
+            },
+          }),
+        /arg "myArg" has invalid type/
+      );
+    });
+
+    test("validates arg name format", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "test",
+            args: {
+              "invalid-name": { type: "string" },
+            },
+          }),
+        /arg name "invalid-name" is invalid/
+      );
+    });
+
+    test("rejects default property for conditions", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "test",
+            args: {
+              myArg: { type: "string", default: "value" },
+            },
+          }),
+        /disallowed property "default"/
+      );
+    });
+
+    test("allows empty object schema for any type", function (assert) {
+      @blockCondition({
+        type: "test-any-type",
+        args: {
+          anyValue: {},
+        },
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.deepEqual(TestCondition.argsSchema, { anyValue: {} });
+    });
+
+    test("validates enum values match declared type", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "test",
+            args: {
+              myArg: { type: "string", enum: [1, 2, 3] },
+            },
+          }),
+        /enum contains invalid value/
+      );
+    });
+
+    test("validates min/max/integer only for number type", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "test",
+            args: {
+              myArg: { type: "string", min: 0 },
+            },
+          }),
+        /"min" is only valid for number type/
+      );
+    });
+
+    test("validates minLength/maxLength for string and array types", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "test",
+            args: {
+              myArg: { type: "number", minLength: 0 },
+            },
+          }),
+        /"minLength" is only valid for string or array/
+      );
+    });
+  });
+
+  module("constraints validation", function () {
+    test("validates constraint types are known", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "test",
+            args: {
+              a: { type: "string" },
+              b: { type: "string" },
+            },
+            constraints: {
+              unknownConstraint: ["a", "b"],
+            },
+          }),
+        /unknown constraint type.*"unknownConstraint"/i
+      );
+    });
+
+    test("validates constraint args exist in schema", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "test",
+            args: {
+              a: { type: "string" },
+            },
+            constraints: {
+              atLeastOne: ["a", "nonexistent"],
+            },
+          }),
+        /references unknown arg.*"nonexistent"/
+      );
+    });
+
+    test("accepts valid constraints", function (assert) {
+      @blockCondition({
+        type: "test-constraints",
+        args: {
+          a: { type: "string" },
+          b: { type: "string" },
+        },
+        constraints: {
+          atLeastOne: ["a", "b"],
+        },
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.deepEqual(TestCondition.constraints, { atLeastOne: ["a", "b"] });
+    });
+
+    test("accepts atMostOne constraint", function (assert) {
+      @blockCondition({
+        type: "test-at-most-one",
+        args: {
+          optionA: { type: "string" },
+          optionB: { type: "string" },
+          optionC: { type: "string" },
+        },
+        constraints: {
+          atMostOne: ["optionA", "optionB", "optionC"],
+        },
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.deepEqual(TestCondition.constraints, {
+        atMostOne: ["optionA", "optionB", "optionC"],
+      });
+    });
+  });
+
+  module("validate function", function () {
+    test("throws when validate is not a function", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "test",
+            args: {},
+            validate: "not a function",
+          }),
+        /"validate" must be a function/
+      );
+    });
+
+    test("accepts validate function", function (assert) {
+      const validateFn = () => null;
+
+      @blockCondition({
+        type: "test-validate-fn",
+        args: {
+          foo: { type: "string" },
+        },
+        validate: validateFn,
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.strictEqual(TestCondition.validateFn, validateFn);
+    });
+  });
+
   module("class validation", function () {
     test("throws when class does not extend BlockCondition", function (assert) {
       class NotACondition {}
@@ -186,7 +378,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
       assert.throws(() => {
         blockCondition({
           type: "invalid-class",
-          validArgKeys: [],
+          args: {},
         })(NotACondition);
       }, /NotACondition must extend BlockCondition/);
     });
@@ -194,7 +386,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
     test("accepts class that extends BlockCondition", function (assert) {
       @blockCondition({
         type: "valid-class",
-        validArgKeys: [],
+        args: {},
       })
       class ValidCondition extends BlockCondition {
         evaluate() {
@@ -210,7 +402,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
     test("assigns type as static getter", function (assert) {
       @blockCondition({
         type: "static-type-test",
-        validArgKeys: [],
+        args: {},
       })
       class TestCondition extends BlockCondition {
         evaluate() {
@@ -225,7 +417,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
       @blockCondition({
         type: "static-source-test",
         sourceType: "object",
-        validArgKeys: [],
+        args: {},
       })
       class TestCondition extends BlockCondition {
         evaluate() {
@@ -236,11 +428,15 @@ module("Unit | Blocks | Conditions | decorator", function () {
       assert.strictEqual(TestCondition.sourceType, "object");
     });
 
-    test("adds source to validArgKeys when sourceType is not none", function (assert) {
+    test("assigns argsSchema as static getter", function (assert) {
+      const schema = {
+        foo: { type: "string", required: true },
+        bar: { type: "number", min: 0 },
+      };
+
       @blockCondition({
-        type: "source-key-test",
-        sourceType: "outletArgs",
-        validArgKeys: ["foo"],
+        type: "static-schema-test",
+        args: schema,
       })
       class TestCondition extends BlockCondition {
         evaluate() {
@@ -248,14 +444,34 @@ module("Unit | Blocks | Conditions | decorator", function () {
         }
       }
 
-      assert.deepEqual(TestCondition.validArgKeys, ["foo", "source"]);
+      assert.deepEqual(TestCondition.argsSchema, schema);
+    });
+
+    test("derives validArgKeys from args schema", function (assert) {
+      @blockCondition({
+        type: "derived-keys-test",
+        sourceType: "outletArgs",
+        args: {
+          foo: { type: "string" },
+          bar: { type: "number" },
+        },
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.deepEqual(TestCondition.validArgKeys, ["foo", "bar", "source"]);
     });
 
     test("does not add source to validArgKeys when sourceType is none", function (assert) {
       @blockCondition({
         type: "no-source-key-test",
         sourceType: "none",
-        validArgKeys: ["foo"],
+        args: {
+          foo: { type: "string" },
+        },
       })
       class TestCondition extends BlockCondition {
         evaluate() {
@@ -269,7 +485,9 @@ module("Unit | Blocks | Conditions | decorator", function () {
     test("freezes validArgKeys array", function (assert) {
       @blockCondition({
         type: "frozen-keys-test",
-        validArgKeys: ["foo"],
+        args: {
+          foo: { type: "string" },
+        },
       })
       class TestCondition extends BlockCondition {
         evaluate() {
@@ -278,6 +496,22 @@ module("Unit | Blocks | Conditions | decorator", function () {
       }
 
       assert.true(Object.isFrozen(TestCondition.validArgKeys));
+    });
+
+    test("freezes argsSchema object", function (assert) {
+      @blockCondition({
+        type: "frozen-schema-test",
+        args: {
+          foo: { type: "string" },
+        },
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.true(Object.isFrozen(TestCondition.argsSchema));
     });
   });
 });

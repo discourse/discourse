@@ -22,7 +22,7 @@ import { blockCondition } from "./decorator";
  *
  * ## Condition Configuration Properties
  *
- * These properties are passed as an args object to `validate()` and `evaluate()`:
+ * These properties are passed as an args object to `evaluate()`:
  *
  * | Property        | Type       | Description                                                           |
  * |-----------------|------------|-----------------------------------------------------------------------|
@@ -66,26 +66,16 @@ import { blockCondition } from "./decorator";
 @blockCondition({
   type: "user",
   sourceType: "outletArgs",
-  validArgKeys: [
-    "loggedIn",
-    "admin",
-    "moderator",
-    "staff",
-    "minTrustLevel",
-    "maxTrustLevel",
-    "groups",
-  ],
-})
-export default class BlockUserCondition extends BlockCondition {
-  @service currentUser;
-
+  args: {
+    loggedIn: { type: "boolean" },
+    admin: { type: "boolean" },
+    moderator: { type: "boolean" },
+    staff: { type: "boolean" },
+    minTrustLevel: { type: "number", min: 0, max: 4, integer: true },
+    maxTrustLevel: { type: "number", min: 0, max: 4, integer: true },
+    groups: { type: "array", itemType: "string" },
+  },
   validate(args) {
-    // Check base class validation (source parameter)
-    const baseError = super.validate(args);
-    if (baseError) {
-      return baseError;
-    }
-
     const {
       loggedIn,
       admin,
@@ -95,18 +85,6 @@ export default class BlockUserCondition extends BlockCondition {
       maxTrustLevel,
       groups,
     } = args;
-
-    // Validate parameter types
-    const typeError = this.validateTypes(args, {
-      loggedIn: "boolean",
-      admin: "boolean",
-      moderator: "boolean",
-      staff: "boolean",
-      groups: "string[]",
-    });
-    if (typeError) {
-      return typeError;
-    }
 
     // Check for loggedIn: false with user-specific conditions
     if (loggedIn === false) {
@@ -119,38 +97,11 @@ export default class BlockUserCondition extends BlockCondition {
         groups?.length;
 
       if (hasUserConditions) {
-        return {
-          message:
-            "Cannot use `loggedIn: false` with user-specific conditions " +
-            "(admin, moderator, staff, minTrustLevel, maxTrustLevel, groups). " +
-            "Anonymous users cannot have these properties.",
-        };
-      }
-    }
-
-    // Validate trust level values are numbers in valid range (0-4)
-    if (minTrustLevel !== undefined) {
-      if (
-        typeof minTrustLevel !== "number" ||
-        minTrustLevel < 0 ||
-        minTrustLevel > 4
-      ) {
-        return {
-          message: "`minTrustLevel` must be a number between 0 and 4.",
-          path: "minTrustLevel",
-        };
-      }
-    }
-    if (maxTrustLevel !== undefined) {
-      if (
-        typeof maxTrustLevel !== "number" ||
-        maxTrustLevel < 0 ||
-        maxTrustLevel > 4
-      ) {
-        return {
-          message: "`maxTrustLevel` must be a number between 0 and 4.",
-          path: "maxTrustLevel",
-        };
+        return (
+          "Cannot use `loggedIn: false` with user-specific conditions " +
+          "(admin, moderator, staff, minTrustLevel, maxTrustLevel, groups). " +
+          "Anonymous users cannot have these properties."
+        );
       }
     }
 
@@ -160,15 +111,17 @@ export default class BlockUserCondition extends BlockCondition {
       maxTrustLevel !== undefined &&
       minTrustLevel > maxTrustLevel
     ) {
-      return {
-        message:
-          `\`minTrustLevel\` (${minTrustLevel}) cannot be greater than ` +
-          `\`maxTrustLevel\` (${maxTrustLevel}). No user can satisfy this condition.`,
-      };
+      return (
+        `\`minTrustLevel\` (${minTrustLevel}) cannot be greater than ` +
+        `\`maxTrustLevel\` (${maxTrustLevel}). No user can satisfy this condition.`
+      );
     }
 
     return null;
-  }
+  },
+})
+export default class BlockUserCondition extends BlockCondition {
+  @service currentUser;
 
   /**
    * Evaluates whether the user condition passes.

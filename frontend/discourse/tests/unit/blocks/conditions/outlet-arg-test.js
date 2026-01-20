@@ -2,6 +2,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import BlockOutletArgCondition from "discourse/blocks/conditions/outlet-arg";
+import { validateConditions } from "discourse/lib/blocks/condition-validation";
 
 module("Unit | Blocks | Condition | outletArg", function (hooks) {
   setupTest(hooks);
@@ -9,61 +10,69 @@ module("Unit | Blocks | Condition | outletArg", function (hooks) {
   hooks.beforeEach(function () {
     this.condition = new BlockOutletArgCondition();
     setOwner(this.condition, getOwner(this));
+
+    // Helper to validate via infrastructure
+    this.validateCondition = (args) => {
+      const conditionTypes = new Map([["outletArg", this.condition]]);
+
+      try {
+        validateConditions({ type: "outletArg", ...args }, conditionTypes);
+        return null;
+      } catch (error) {
+        return error;
+      }
+    };
   });
 
-  module("validate", function () {
+  module("validate (through infrastructure)", function () {
     test("returns error when path is missing", function (assert) {
-      const error = this.condition.validate({});
-      assert.true(error?.message.includes("`path` argument is required"));
-      assert.strictEqual(error.path, "path");
+      const error = this.validateCondition({});
+      assert.true(error?.message.includes("missing required arg"));
     });
 
-    test("returns error when path is not a string", function (assert) {
-      const error = this.condition.validate({ path: 123 });
-      assert.true(error?.message.includes("`path` must be a string"));
-      assert.strictEqual(error.path, "path");
+    test("returns error when path is not a string (schema type validation)", function (assert) {
+      const error = this.validateCondition({ path: 123 });
+      assert.true(error?.message.includes("must be a string"));
     });
 
-    test("returns error when path contains invalid characters", function (assert) {
-      const error = this.condition.validate({ path: "user-name" });
+    test("returns error when path contains invalid characters (custom validation)", function (assert) {
+      const error = this.validateCondition({ path: "user-name" });
       assert.true(error?.message.includes("is invalid"));
-      assert.strictEqual(error.path, "path");
     });
 
-    test("returns error when both value and exists are specified", function (assert) {
-      const error = this.condition.validate({
+    test("returns error when both value and exists are specified (atMostOne constraint)", function (assert) {
+      const error = this.validateCondition({
         path: "user",
         value: true,
         exists: true,
       });
-      assert.true(error?.message.includes("Cannot use both"));
+      assert.true(error?.message.includes("at most one of"));
     });
 
     test("accepts valid path with value", function (assert) {
       assert.strictEqual(
-        this.condition.validate({ path: "user.admin", value: true }),
+        this.validateCondition({ path: "user.admin", value: true }),
         null
       );
     });
 
     test("accepts valid path with exists", function (assert) {
       assert.strictEqual(
-        this.condition.validate({ path: "topic", exists: true }),
+        this.validateCondition({ path: "topic", exists: true }),
         null
       );
     });
 
     test("accepts dot-notation paths", function (assert) {
       assert.strictEqual(
-        this.condition.validate({ path: "user.trust_level", value: 2 }),
+        this.validateCondition({ path: "user.trust_level", value: 2 }),
         null
       );
     });
 
-    test("returns error when exists is not a boolean", function (assert) {
-      const error = this.condition.validate({ path: "user", exists: "true" });
+    test("returns error when exists is not a boolean (schema type validation)", function (assert) {
+      const error = this.validateCondition({ path: "user", exists: "true" });
       assert.true(error?.message.includes("must be a boolean"));
-      assert.strictEqual(error.path, "exists");
     });
   });
 

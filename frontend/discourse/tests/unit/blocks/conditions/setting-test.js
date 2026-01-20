@@ -3,6 +3,7 @@ import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import BlockSettingCondition from "discourse/blocks/conditions/setting";
+import { validateConditions } from "discourse/lib/blocks/condition-validation";
 
 module("Unit | Blocks | Conditions | setting", function (hooks) {
   setupTest(hooks);
@@ -55,11 +56,20 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       return condition.evaluate(args);
     };
 
-    // Helper to validate setting condition (returns error or null)
+    // Helper to validate via infrastructure
     this.validateCondition = (args) => {
       const condition = new BlockSettingCondition();
       setOwner(condition, testOwner);
-      return condition.validate(args);
+
+      // Create a map with the condition instance
+      const conditionTypes = new Map([["setting", condition]]);
+
+      try {
+        validateConditions({ type: "setting", ...args }, conditionTypes);
+        return null;
+      } catch (error) {
+        return error;
+      }
     };
   });
 
@@ -316,16 +326,16 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
           name: "any_setting",
           enabled: true,
         }),
-        "enabled: true fails with null source"
+        "enabled: true returns false with null source"
       );
 
-      assert.true(
+      assert.false(
         this.evaluateCondition({
           source: null,
           name: "any_setting",
           enabled: false,
         }),
-        "enabled: false passes with null source (setting is undefined/falsy)"
+        "enabled: false returns false with null source (source is invalid)"
       );
     });
 
@@ -337,16 +347,16 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
           source: themeSettings,
           name: "undefined_setting",
         }),
-        "undefined setting value is falsy"
+        "undefined setting returns false (setting doesn't exist)"
       );
 
-      assert.true(
+      assert.false(
         this.evaluateCondition({
           source: themeSettings,
           name: "undefined_setting",
           enabled: false,
         }),
-        "enabled: false passes for undefined setting"
+        "enabled: false returns false for non-existent setting"
       );
     });
 
@@ -372,22 +382,19 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
     });
   });
 
-  module("validate", function () {
+  module("validate (through infrastructure)", function () {
     test("returns error when name argument is missing", function (assert) {
       const error = this.validateCondition({});
-      assert.true(error?.message.includes("`name` argument is required"));
-      assert.strictEqual(error.path, "name");
+      assert.true(error?.message.includes("missing required arg"));
     });
 
-    test("returns error when multiple condition types are provided", function (assert) {
+    test("returns error when multiple condition types are provided (atMostOne constraint)", function (assert) {
       const error = this.validateCondition({
         name: "enable_badges",
         enabled: true,
         equals: "some-value",
       });
-      assert.true(
-        error?.message.includes("Cannot use multiple condition types")
-      );
+      assert.true(error?.message.includes("at most one of"));
     });
 
     test("returns error when enabled and includes are both provided", function (assert) {
@@ -396,35 +403,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
         enabled: true,
         includes: ["value1", "value2"],
       });
-      assert.true(
-        error?.message.includes("Cannot use multiple condition types")
-      );
-    });
-
-    test("returns error for unknown site setting", function (assert) {
-      const error = this.validateCondition({ name: "nonexistent_setting" });
-      assert.true(error?.message.includes("Unknown site setting"));
-      assert.strictEqual(error.path, "name");
-    });
-
-    test("returns error for unknown setting in custom source", function (assert) {
-      const error = this.validateCondition({
-        source: { existing_key: true },
-        name: "nonexistent_key",
-      });
-      assert.true(error?.message.includes("Unknown setting"));
-      assert.true(error?.message.includes("nonexistent_key"));
-      assert.strictEqual(error.path, "name");
-    });
-
-    test("accepts valid setting in custom source", function (assert) {
-      assert.strictEqual(
-        this.validateCondition({
-          source: { custom_key: true },
-          name: "custom_key",
-        }),
-        null
-      );
+      assert.true(error?.message.includes("at most one of"));
     });
 
     test("accepts valid site setting", function (assert) {
@@ -440,7 +419,6 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
         enabled: "true",
       });
       assert.true(error?.message.includes("must be a boolean"));
-      assert.strictEqual(error.path, "enabled");
     });
 
     test("returns error when includes is not an array", function (assert) {
@@ -449,7 +427,6 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
         includes: "categories_only",
       });
       assert.true(error?.message.includes("must be an array"));
-      assert.strictEqual(error.path, "includes");
     });
 
     test("returns error when containsAny is not an array", function (assert) {
@@ -458,7 +435,6 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
         containsAny: "latest",
       });
       assert.true(error?.message.includes("must be an array"));
-      assert.strictEqual(error.path, "containsAny");
     });
   });
 

@@ -24,6 +24,10 @@ import { blockCondition } from "./decorator";
  * Pass a custom settings object via `source` (e.g., from `import { settings } from "virtual:theme"`)
  * to check theme-specific settings instead of site settings.
  *
+ * **Note:** Setting name validation is deferred to evaluate time since it requires
+ * access to the siteSettings service. Unknown settings will cause the condition to
+ * return false rather than throw an error at registration time.
+ *
  * @class BlockSettingCondition
  * @extends BlockCondition
  *
@@ -63,89 +67,31 @@ import { blockCondition } from "./decorator";
 @blockCondition({
   type: "setting",
   sourceType: "object",
-  validArgKeys: [
-    "name",
-    "enabled",
-    "equals",
-    "includes",
-    "contains",
-    "containsAny",
-  ],
+  args: {
+    name: { type: "string", required: true },
+    enabled: { type: "boolean" },
+    equals: {}, // any type allowed
+    includes: { type: "array" },
+    contains: { type: "string" },
+    containsAny: { type: "array" },
+  },
+  constraints: {
+    // At most one condition type allowed (0 is fine - defaults to truthy check)
+    atMostOne: ["enabled", "equals", "includes", "contains", "containsAny"],
+  },
+  // No custom validate - setting name existence checked at evaluate time
+  // (since it requires service access to siteSettings)
 })
 export default class BlockSettingCondition extends BlockCondition {
   @service siteSettings;
 
-  validate(args) {
-    // Check base class validation (source parameter)
-    const baseError = super.validate(args);
-    if (baseError) {
-      return baseError;
-    }
-
-    const { name, source, enabled, equals, includes, contains, containsAny } =
-      args;
-
-    if (!name) {
-      return {
-        message: "`name` argument is required.",
-        path: "name",
-      };
-    }
-
-    if (typeof name !== "string") {
-      return {
-        message: "`name` argument must be a string.",
-        path: "name",
-      };
-    }
-
-    // Validate setting exists in the appropriate settings object
-    if (source) {
-      if (!(name in source)) {
-        return {
-          message: `Unknown setting "${name}" in provided settings object.`,
-          path: "name",
-        };
-      }
-    } else if (!(name in this.siteSettings)) {
-      return {
-        message:
-          `Unknown site setting "${name}". ` +
-          `Ensure the setting name is correct and has \`client: true\` in site_settings.yml.`,
-        path: "name",
-      };
-    }
-
-    // Validate parameter types
-    const typeError = this.validateTypes(args, {
-      enabled: "boolean",
-      includes: "array",
-      containsAny: "array",
-    });
-    if (typeError) {
-      return typeError;
-    }
-
-    // Check for conflicting conditions
-    const conditionCount = [
-      enabled !== undefined,
-      equals !== undefined,
-      includes?.length > 0,
-      contains !== undefined,
-      containsAny?.length > 0,
-    ].filter(Boolean).length;
-
-    if (conditionCount > 1) {
-      return {
-        message:
-          "Cannot use multiple condition types together. " +
-          "Use only one of: `enabled`, `equals`, `includes`, `contains`, or `containsAny`.",
-      };
-    }
-
-    return null;
-  }
-
+  /**
+   * Evaluates whether the setting condition passes.
+   *
+   * @param {Object} args - The condition arguments.
+   * @param {Object} [context] - Evaluation context.
+   * @returns {boolean} True if the condition passes.
+   */
   evaluate(args, context) {
     const { name, enabled, equals, includes, contains, containsAny } = args;
 
@@ -156,6 +102,17 @@ export default class BlockSettingCondition extends BlockCondition {
       args.source !== undefined
         ? this.resolveSource(args, context)
         : this.siteSettings;
+
+    // Handle null/undefined settings source gracefully
+    if (settingsSource == null) {
+      return false;
+    }
+
+    // Return false for unknown settings (deferred validation)
+    if (!(name in settingsSource)) {
+      return false;
+    }
+
     const value = settingsSource?.[name];
 
     // Check enabled/disabled (boolean check)

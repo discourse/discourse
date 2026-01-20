@@ -2,6 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { BlockCondition } from "discourse/blocks/conditions";
+import { validateConditionSource } from "discourse/lib/blocks/condition-validation";
 
 module("Unit | Blocks | Conditions | condition", function (hooks) {
   setupTest(hooks);
@@ -10,57 +11,17 @@ module("Unit | Blocks | Conditions | condition", function (hooks) {
     this.blocks = getOwner(this).lookup("service:blocks");
   });
 
-  module("validateSource", function () {
+  module("validateConditionSource", function () {
     test("allows source to be undefined for all sourceTypes", function (assert) {
-      class NoSourceCondition extends BlockCondition {
-        static type = "no-source-test";
-        static sourceType = "none";
-
-        evaluate() {
-          return true;
-        }
-      }
-
-      class OutletArgsCondition extends BlockCondition {
-        static type = "outlet-args-test";
-        static sourceType = "outletArgs";
-
-        evaluate() {
-          return true;
-        }
-      }
-
-      class ObjectCondition extends BlockCondition {
-        static type = "object-test";
-        static sourceType = "object";
-
-        evaluate() {
-          return true;
-        }
-      }
-
-      const noSource = new NoSourceCondition();
-      const outletArgs = new OutletArgsCondition();
-      const objectSource = new ObjectCondition();
-
-      // None of these should return an error when source is undefined
-      assert.strictEqual(noSource.validate({}), null);
-      assert.strictEqual(outletArgs.validate({}), null);
-      assert.strictEqual(objectSource.validate({}), null);
+      assert.strictEqual(validateConditionSource("none", {}), null);
+      assert.strictEqual(validateConditionSource("outletArgs", {}), null);
+      assert.strictEqual(validateConditionSource("object", {}), null);
     });
 
     test("returns error when source is provided for sourceType 'none'", function (assert) {
-      class NoSourceCondition extends BlockCondition {
-        static type = "no-source-throw-test";
-        static sourceType = "none";
-
-        evaluate() {
-          return true;
-        }
-      }
-
-      const condition = new NoSourceCondition();
-      const error = condition.validate({ source: "@outletArgs.foo" });
+      const error = validateConditionSource("none", {
+        source: "@outletArgs.foo",
+      });
 
       assert.true(error?.message.includes("source"));
       assert.true(error?.message.includes("not supported"));
@@ -68,81 +29,71 @@ module("Unit | Blocks | Conditions | condition", function (hooks) {
     });
 
     test("validates source format for sourceType 'outletArgs'", function (assert) {
-      class OutletArgsCondition extends BlockCondition {
-        static type = "outlet-args-format-test";
-        static sourceType = "outletArgs";
-
-        evaluate() {
-          return true;
-        }
-      }
-
-      const condition = new OutletArgsCondition();
-
       // Valid formats should return null
       assert.strictEqual(
-        condition.validate({ source: "@outletArgs.foo" }),
+        validateConditionSource("outletArgs", { source: "@outletArgs.foo" }),
         null
       );
       assert.strictEqual(
-        condition.validate({ source: "@outletArgs.nested.path" }),
+        validateConditionSource("outletArgs", {
+          source: "@outletArgs.nested.path",
+        }),
         null
       );
       assert.strictEqual(
-        condition.validate({ source: "@outletArgs.deep.nested.value" }),
+        validateConditionSource("outletArgs", {
+          source: "@outletArgs.deep.nested.value",
+        }),
         null
       );
 
       // Invalid formats should return errors with path
-      let error = condition.validate({ source: "foo" });
+      let error = validateConditionSource("outletArgs", { source: "foo" });
       assert.true(
         error?.message.includes('must be in format "@outletArgs.propertyName"')
       );
       assert.strictEqual(error.path, "source");
 
-      error = condition.validate({ source: "outletArgs.foo" });
+      error = validateConditionSource("outletArgs", {
+        source: "outletArgs.foo",
+      });
       assert.true(
         error?.message.includes('must be in format "@outletArgs.propertyName"')
       );
 
-      error = condition.validate({ source: "@outletArgs" });
+      error = validateConditionSource("outletArgs", { source: "@outletArgs" });
       assert.true(
         error?.message.includes('must be in format "@outletArgs.propertyName"')
       );
 
-      error = condition.validate({ source: 123 });
+      error = validateConditionSource("outletArgs", { source: 123 });
       assert.true(error?.message.includes("must be a string"));
     });
 
     test("validates source is object for sourceType 'object'", function (assert) {
-      class ObjectCondition extends BlockCondition {
-        static type = "object-format-test";
-        static sourceType = "object";
-
-        evaluate() {
-          return true;
-        }
-      }
-
-      const condition = new ObjectCondition();
-
       // Valid objects should return null
       assert.strictEqual(
-        condition.validate({ source: { key: "value" } }),
+        validateConditionSource("object", { source: { key: "value" } }),
         null
       );
-      assert.strictEqual(condition.validate({ source: {} }), null);
-      assert.strictEqual(condition.validate({ source: null }), null);
+      assert.strictEqual(
+        validateConditionSource("object", { source: {} }),
+        null
+      );
+      assert.strictEqual(
+        validateConditionSource("object", { source: null }),
+        null
+      );
 
       // Invalid types should return errors
-      let error = condition.validate({ source: "string" });
+      let error = validateConditionSource("object", { source: "string" });
       assert.true(error?.message.includes("must be an object"));
       assert.strictEqual(error.path, "source");
 
-      error = condition.validate({ source: 123 });
+      error = validateConditionSource("object", { source: 123 });
       assert.true(error?.message.includes("must be an object"));
 
-      error = condition.validate({ source: true });
+      error = validateConditionSource("object", { source: true });
       assert.true(error?.message.includes("must be an object"));
     });
   });

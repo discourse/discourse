@@ -2,22 +2,25 @@
 import { getByPath } from "discourse/lib/blocks/utils";
 
 /**
- * Regex for validating source path format: `@outletArgs.propertyName` or
- * `@outletArgs.nested.path`.
- */
-const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
-
-/**
  * Base class for all block conditions.
  *
  * Subclasses must:
- * - Use the `@blockCondition` decorator with `type` and `validArgKeys` config
+ * - Use the `@blockCondition` decorator with `type` and `args` schema config
  * - Implement the `evaluate(args, context)` method
- * - Optionally implement the `validate(args)` method for registration-time validation
+ * - Optionally provide a `validate` function in the decorator config for custom validation
  * - Optionally pass `sourceType` to the decorator to enable `source` parameter support
  *
  * Condition classes can inject services using `@service` decorator.
  * The Blocks service sets the owner on condition instances, enabling dependency injection.
+ *
+ * ## Validation Flow
+ *
+ * Validation happens at block registration time in this order:
+ * 1. Arg values are validated against the `args` schema (type, min, max, pattern, etc.)
+ * 2. Constraints are validated (atLeastOne, exactlyOne, allOrNone, atMostOne)
+ * 3. Unknown args are detected (typo detection with suggestions)
+ * 4. Source parameter is validated (based on sourceType)
+ * 5. Custom `validate` function from decorator config is called (if provided)
  *
  * ## Source Parameter Support
  *
@@ -42,17 +45,20 @@ const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
  * @blockCondition({
  *   type: "my-condition",
  *   sourceType: "outletArgs",
- *   validArgKeys: ["requiredArg"],
+ *   args: {
+ *     requiredArg: { type: "string", required: true },
+ *     optionalCount: { type: "number", min: 0, max: 10 },
+ *   },
+ *   validate(args) {
+ *     // Custom validation that can't be expressed in schema
+ *     if (args.requiredArg === "forbidden") {
+ *       return "requiredArg cannot be 'forbidden'";
+ *     }
+ *     return null;
+ *   }
  * })
  * export default class BlockMyCondition extends BlockCondition {
  *   @service myService;
- *
- *   validate(args) {
- *     if (!args.requiredArg) {
- *       return { message: "requiredArg is required" };
- *     }
- *     return null;  // No error
- *   }
  *
  *   evaluate(args, context) {
  *     // Get value from source (outlet args) or fall back to service
@@ -89,11 +95,43 @@ export class BlockCondition {
   static sourceType = "none";
 
   /**
-   * Valid argument keys for this condition.
+   * Arg schema definitions for this condition.
    *
    * This property is defined by the `@blockCondition` decorator and should not
    * be overridden directly. The decorator creates a non-configurable getter
-   * that returns a frozen array.
+   * that returns a frozen object.
+   *
+   * @type {Object}
+   */
+  static argsSchema;
+
+  /**
+   * Cross-arg constraint definitions for this condition.
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be overridden directly. The decorator creates a non-configurable getter
+   * that returns a frozen object or undefined.
+   *
+   * @type {Object|undefined}
+   */
+  static constraints;
+
+  /**
+   * Custom validation function for this condition.
+   *
+   * This property is defined by the `@blockCondition` decorator and should not
+   * be overridden directly. The decorator creates a non-configurable getter
+   * that returns the validate function or undefined.
+   *
+   * @type {Function|undefined}
+   */
+  static validateFn;
+
+  /**
+   * Valid argument keys for this condition.
+   *
+   * This property is derived from the `args` schema by the `@blockCondition`
+   * decorator and should not be overridden directly.
    *
    * The `source` key is automatically added by the decorator when
    * `sourceType !== "none"`.
@@ -101,160 +139,6 @@ export class BlockCondition {
    * @type {readonly string[]}
    */
   static validArgKeys;
-
-  /**
-   * Validates condition arguments at block registration time.
-   * Override this method to check for required args, conflicting args,
-   * or invalid values.
-   *
-   * Returns error info if validation fails, or `null` if validation passes.
-   * Subclasses should call `super.validate(args)` first and return early if
-   * it returns an error.
-   *
-   * @param {Object} args - The condition arguments from the layout entry.
-   * @returns {{ message: string, path?: string } | null} Error info or null if valid.
-   */
-  validate(args) {
-    // Validate source parameter based on sourceType
-    return this.validateSource(args);
-  }
-
-  /**
-   * Validates the `source` parameter based on the condition's `sourceType`.
-   *
-   * - `sourceType: "none"`: Returns error if `source` is provided
-   * - `sourceType: "outletArgs"`: Validates format is `@outletArgs.propertyPath`
-   * - `sourceType: "object"`: Validates `source` is an object if provided
-   *
-   * @param {Object} args - The condition arguments from the layout entry.
-   * @returns {{ message: string, path?: string } | null} Error info or null if valid.
-   */
-  validateSource(args) {
-    const { source } = args;
-    // @ts-ignore - Static property defined on subclasses
-    const sourceType = this.constructor.sourceType;
-
-    if (source === undefined) {
-      return null; // source is always optional
-    }
-
-    switch (sourceType) {
-      case "none":
-        return {
-          message: `\`source\` parameter is not supported for this condition type.`,
-          path: "source",
-        };
-
-      case "outletArgs":
-        if (typeof source !== "string") {
-          return {
-            message: `\`source\` must be a string in format "@outletArgs.propertyName".`,
-            path: "source",
-          };
-        }
-        if (!OUTLET_ARGS_SOURCE_PATTERN.test(source)) {
-          return {
-            message: `\`source\` must be in format "@outletArgs.propertyName", got "${source}".`,
-            path: "source",
-          };
-        }
-        break;
-
-      case "object":
-        if (source !== null && typeof source !== "object") {
-          return {
-            message: `\`source\` must be an object.`,
-            path: "source",
-          };
-        }
-        break;
-    }
-
-    return null;
-  }
-
-  /**
-   * Validates argument types against a type specification map.
-   * Skips validation for undefined values.
-   *
-   * @param {Object} args - The condition arguments.
-   * @param {Object<string, string>} typeMap - Map of argument names to expected types.
-   *   Supported types: "boolean", "string", "number", "array", "string[]", "number[]"
-   * @returns {{ message: string, path: string } | null} Error or null if valid.
-   *
-   * @example
-   * const error = this.validateTypes(args, {
-   *   loggedIn: "boolean",
-   *   admin: "boolean",
-   *   groups: "string[]",
-   * });
-   * if (error) return error;
-   */
-  validateTypes(args, typeMap) {
-    for (const [name, expectedType] of Object.entries(typeMap)) {
-      const value = args[name];
-      if (value === undefined) {
-        continue;
-      }
-
-      const error = this.#validateType(value, name, expectedType);
-      if (error) {
-        return error;
-      }
-    }
-    return null;
-  }
-
-  #validateType(value, name, expectedType) {
-    switch (expectedType) {
-      case "boolean":
-        if (typeof value !== "boolean") {
-          return {
-            message: `\`${name}\` must be a boolean value.`,
-            path: name,
-          };
-        }
-        break;
-      case "string":
-        if (typeof value !== "string") {
-          return { message: `\`${name}\` must be a string.`, path: name };
-        }
-        break;
-      case "number":
-        if (typeof value !== "number") {
-          return { message: `\`${name}\` must be a number.`, path: name };
-        }
-        break;
-      case "array":
-        if (!Array.isArray(value)) {
-          return { message: `\`${name}\` must be an array.`, path: name };
-        }
-        break;
-      case "string[]":
-        if (!Array.isArray(value)) {
-          return { message: `\`${name}\` must be an array.`, path: name };
-        }
-        if (value.some((v) => typeof v !== "string")) {
-          return {
-            message: `\`${name}\` must contain only string values.`,
-            path: name,
-          };
-        }
-        break;
-      case "number[]":
-        if (!Array.isArray(value)) {
-          return { message: `\`${name}\` must be an array.`, path: name };
-        }
-        if (value.some((v) => typeof v !== "number")) {
-          return {
-            message: `\`${name}\` must contain only number values.`,
-            path: name,
-          };
-        }
-        break;
-    }
-    return null;
-  }
 
   /**
    * Resolves the `source` parameter value based on the condition's `sourceType`.

@@ -1,6 +1,70 @@
 // @ts-check
+import { validateConditionArgValues } from "discourse/lib/blocks/condition-arg-validation";
+import {
+  runCustomValidation,
+  validateConstraints,
+} from "discourse/lib/blocks/constraint-validation";
 import { BlockError } from "discourse/lib/blocks/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
+
+/**
+ * Regex for validating source path format: `@outletArgs.propertyName` or
+ * `@outletArgs.nested.path`.
+ */
+const OUTLET_ARGS_SOURCE_PATTERN = /^@outletArgs\.[\w.]+$/;
+
+/**
+ * Validates the `source` parameter based on the condition's `sourceType`.
+ *
+ * - `sourceType: "none"`: Returns error if `source` is provided
+ * - `sourceType: "outletArgs"`: Validates format is `@outletArgs.propertyPath`
+ * - `sourceType: "object"`: Validates `source` is an object if provided
+ *
+ * @param {"none"|"outletArgs"|"object"} sourceType - The condition's source type.
+ * @param {Object} args - The condition arguments from the layout entry.
+ * @returns {{ message: string, path?: string } | null} Error info or null if valid.
+ */
+export function validateConditionSource(sourceType, args) {
+  const { source } = args;
+
+  if (source === undefined) {
+    return null; // source is always optional
+  }
+
+  switch (sourceType) {
+    case "none":
+      return {
+        message: `\`source\` parameter is not supported for this condition type.`,
+        path: "source",
+      };
+
+    case "outletArgs":
+      if (typeof source !== "string") {
+        return {
+          message: `\`source\` must be a string in format "@outletArgs.propertyName".`,
+          path: "source",
+        };
+      }
+      if (!OUTLET_ARGS_SOURCE_PATTERN.test(source)) {
+        return {
+          message: `\`source\` must be in format "@outletArgs.propertyName", got "${source}".`,
+          path: "source",
+        };
+      }
+      break;
+
+    case "object":
+      if (source !== null && typeof source !== "object") {
+        return {
+          message: `\`source\` must be an object.`,
+          path: "source",
+        };
+      }
+      break;
+  }
+
+  return null;
+}
 
 /**
  * Validates that all provided args are recognized by a condition.
@@ -145,6 +209,13 @@ function validateNotCombinator(conditionSpec, conditionTypes, path) {
 /**
  * Validates a single condition with a type property.
  *
+ * Validation order:
+ * 1. Validate arg values against schema (type, min/max, pattern, etc.)
+ * 2. Validate constraints (atLeastOne, exactlyOne, allOrNone, atMostOne)
+ * 3. Validate unknown args (typo detection)
+ * 4. Validate source parameter (based on sourceType)
+ * 5. Run custom validate function from decorator config
+ *
  * @param {Object} conditionSpec - The condition spec with a type property.
  * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
  * @param {string} path - The path to this condition in the block tree.
@@ -171,19 +242,50 @@ function validateSingleCondition(conditionSpec, conditionTypes, path) {
     );
   }
 
-  // Validate arg keys (catches typos like "querParams" instead of "queryParams")
+  // @ts-ignore - Static properties defined on condition classes
+  const argsSchema = conditionInstance.constructor.argsSchema;
+  // @ts-ignore - Static properties defined on condition classes
+  const constraints = conditionInstance.constructor.constraints;
+  // @ts-ignore - Static properties defined on condition classes
+  const validateFn = conditionInstance.constructor.validateFn;
+
+  // 1. Validate arg values against schema (type, min/max, pattern, etc.)
+  if (argsSchema && Object.keys(argsSchema).length > 0) {
+    validateConditionArgValues(args, argsSchema, type, path);
+  }
+
+  // 2. Validate constraints (atLeastOne, exactlyOne, allOrNone, atMostOne)
+  if (constraints) {
+    const constraintError = validateConstraints(
+      constraints,
+      args,
+      `Condition "${type}"`
+    );
+    if (constraintError) {
+      throw new BlockError(constraintError, { path });
+    }
+  }
+
+  // 3. Validate unknown args (catches typos like "querParams" instead of "queryParams")
   validateConditionArgKeys(conditionInstance, type, args, path);
 
-  // Run the condition's own validation - returns error info or null
-  const error = conditionInstance.validate(args);
-  if (error) {
-    // Build full path: combine condition path with error's relative path
-    let fullPath;
-    if (error.path) {
-      fullPath = path ? `${path}.${error.path}` : error.path;
-    } else {
-      fullPath = path || undefined;
+  // 4. Validate source parameter (based on sourceType)
+  // @ts-ignore - Static property defined on condition classes
+  const sourceType = conditionInstance.constructor.sourceType;
+  const sourceError = validateConditionSource(sourceType, args);
+  if (sourceError) {
+    throw new BlockError(sourceError.message, {
+      path: sourceError.path ? `${path}.${sourceError.path}` : path,
+    });
+  }
+
+  // 5. Run custom validate function from decorator config
+  if (validateFn) {
+    const customErrors = runCustomValidation(validateFn, args);
+    if (customErrors?.length > 0) {
+      throw new BlockError(`Condition "${type}": ${customErrors.join("; ")}`, {
+        path,
+      });
     }
-    throw new BlockError(error.message, { path: fullPath });
   }
 }

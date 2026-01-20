@@ -82,7 +82,96 @@ import { blockCondition } from "./decorator";
  */
 @blockCondition({
   type: "route",
-  validArgKeys: ["urls", "pages", "params", "queryParams"],
+  args: {
+    urls: { type: "array", itemType: "string" },
+    pages: { type: "array", itemType: "string" },
+    params: {}, // object type with complex validation
+    queryParams: {}, // object type with complex validation
+  },
+  constraints: {
+    // Must provide either urls or pages
+    atLeastOne: ["urls", "pages"],
+  },
+  validate(args) {
+    const { urls, pages, params, queryParams } = args;
+
+    // Validate urls
+    if (urls?.length) {
+      for (let i = 0; i < urls.length; i++) {
+        const pattern = urls[i];
+
+        // Check for page type names mistakenly used in urls
+        if (isValidPageType(pattern)) {
+          return (
+            `Page shortcuts like '${pattern}' are not supported in \`urls\`.\n` +
+            `Use the \`pages\` option instead:\n` +
+            `  { type: "route", pages: ["${pattern}"] }`
+          );
+        }
+
+        // Validate glob pattern syntax
+        if (!isValidUrlPattern(pattern)) {
+          return (
+            `Invalid glob pattern "${pattern}". ` +
+            `Check for unbalanced brackets or braces.`
+          );
+        }
+      }
+    }
+
+    // Validate pages
+    if (pages?.length) {
+      for (const pageType of pages) {
+        if (!isValidPageType(pageType)) {
+          const suggestion = suggestPageType(pageType);
+          let errorMsg = `Unknown page type '${pageType}'.`;
+          if (suggestion) {
+            errorMsg += `\nDid you mean '${suggestion}'?`;
+          }
+          errorMsg += `\nValid page types: ${VALID_PAGE_TYPES.join(", ")}`;
+          return errorMsg;
+        }
+      }
+    }
+
+    // Validate params
+    if (params) {
+      // params requires pages
+      if (!pages?.length) {
+        return (
+          `\`params\` requires \`pages\` to be specified.\n` +
+          `Use \`pages\` to specify which page types to match, then \`params\` to filter by parameters.`
+        );
+      }
+
+      // params cannot be used with urls
+      if (urls?.length) {
+        return (
+          `\`params\` cannot be used with \`urls\`.\n` +
+          `Use \`pages\` with typed parameters instead.`
+        );
+      }
+
+      // Handle any/not operators in params
+      const paramsError = validateParamsWithOperators(params, pages, "params");
+      if (paramsError) {
+        return paramsError;
+      }
+    }
+
+    // Validate queryParams for operator typos (e.g., "an" vs "any")
+    if (queryParams) {
+      let queryParamsError = null;
+      validateParamSpec(queryParams, "queryParams", (msg) => {
+        queryParamsError = msg;
+      });
+      if (queryParamsError) {
+        return queryParamsError;
+      }
+    }
+
+    return null;
+  },
 })
 export default class BlockRouteCondition extends BlockCondition {
   @service router;
@@ -99,145 +188,6 @@ export default class BlockRouteCondition extends BlockCondition {
    */
   get currentPath() {
     return normalizePath(this.router.currentURL);
-  }
-
-  /**
-   * Validates the route condition arguments.
-   *
-   * @param {Object} args - The condition arguments.
-   * @returns {{ message: string, path?: string } | null} Error info or null if valid.
-   */
-  validate(args) {
-    // Check base class validation (source parameter)
-    const baseError = super.validate(args);
-    if (baseError) {
-      return baseError;
-    }
-
-    const { urls, pages, params, queryParams } = args;
-
-    // Must provide either urls or pages
-    if (!urls?.length && !pages?.length) {
-      return { message: "Must provide `urls` or `pages`." };
-    }
-
-    // Validate urls
-    if (urls?.length) {
-      if (!Array.isArray(urls)) {
-        return {
-          message: "`urls` must be an array of URL patterns.",
-          path: "urls",
-        };
-      }
-
-      for (let i = 0; i < urls.length; i++) {
-        const pattern = urls[i];
-
-        // Validate each element is a string
-        if (typeof pattern !== "string") {
-          return {
-            message: "`urls` must contain only string values.",
-            path: `urls[${i}]`,
-          };
-        }
-
-        // Check for page type names mistakenly used in urls
-        if (isValidPageType(pattern)) {
-          return {
-            message:
-              `Page shortcuts like '${pattern}' are not supported in \`urls\`.\n` +
-              `Use the \`pages\` option instead:\n` +
-              `  { type: "route", pages: ["${pattern}"] }`,
-            path: `urls[${i}]`,
-          };
-        }
-
-        // Validate glob pattern syntax
-        if (!isValidUrlPattern(pattern)) {
-          return {
-            message:
-              `Invalid glob pattern "${pattern}". ` +
-              `Check for unbalanced brackets or braces.`,
-            path: `urls[${i}]`,
-          };
-        }
-      }
-    }
-
-    // Validate pages
-    if (pages?.length) {
-      if (!Array.isArray(pages)) {
-        return {
-          message:
-            `\`pages\` must be an array of page type strings.\n` +
-            `Example: { pages: ["CATEGORY_PAGES", "TAG_PAGES"] }`,
-          path: "pages",
-        };
-      }
-
-      for (let i = 0; i < pages.length; i++) {
-        const pageType = pages[i];
-
-        if (typeof pageType !== "string") {
-          return {
-            message: `Each page type must be a string, got ${typeof pageType}.`,
-            path: `pages[${i}]`,
-          };
-        }
-
-        if (!isValidPageType(pageType)) {
-          const suggestion = suggestPageType(pageType);
-          let errorMsg = `Unknown page type '${pageType}'.`;
-          if (suggestion) {
-            errorMsg += `\nDid you mean '${suggestion}'?`;
-          }
-          errorMsg += `\nValid page types: ${VALID_PAGE_TYPES.join(", ")}`;
-          return { message: errorMsg, path: `pages[${i}]` };
-        }
-      }
-    }
-
-    // Validate params
-    if (params) {
-      // params requires pages
-      if (!pages?.length) {
-        return {
-          message:
-            `\`params\` requires \`pages\` to be specified.\n` +
-            `Use \`pages\` to specify which page types to match, then \`params\` to filter by parameters.`,
-          path: "params",
-        };
-      }
-
-      // params cannot be used with urls
-      if (urls?.length) {
-        return {
-          message:
-            `\`params\` cannot be used with \`urls\`.\n` +
-            `Use \`pages\` with typed parameters instead.`,
-          path: "params",
-        };
-      }
-
-      // Handle any/not operators in params
-      const paramsError = this.#validateParamsWithOperators(params, pages);
-      if (paramsError) {
-        return paramsError;
-      }
-    }
-
-    // Validate queryParams for operator typos (e.g., "an" vs "any")
-    if (queryParams) {
-      let queryParamsError = null;
-      validateParamSpec(queryParams, "queryParams", (msg) => {
-        queryParamsError = { message: msg, path: "queryParams" };
-      });
-      if (queryParamsError) {
-        return queryParamsError;
-      }
-    }
-
-    return null;
   }
 
   /**
@@ -394,73 +344,6 @@ export default class BlockRouteCondition extends BlockCondition {
   }
 
   /**
-   * Validates params with support for any/not operators.
-   *
-   * @param {Object} params - The params to validate.
-   * @param {Array<string>} pages - The page types to validate against.
-   * @param {string} [path="params"] - Path for error messages.
-   * @returns {{ message: string, path: string } | null} Error or null if valid.
-   */
-  #validateParamsWithOperators(params, pages, path = "params") {
-    // Handle any operator: { any: [{ categoryId: 1 }, { categoryId: 2 }] }
-    if (params.any !== undefined) {
-      if (!Array.isArray(params.any)) {
-        return {
-          message: `\`any\` in params must be an array of param objects.`,
-          path,
-        };
-      }
-      for (let i = 0; i < params.any.length; i++) {
-        const nestedError = this.#validateParamsWithOperators(
-          params.any[i],
-          pages,
-          `${path}.any[${i}]`
-        );
-        if (nestedError) {
-          return nestedError;
-        }
-      }
-      return null;
-    }
-
-    // Handle not operator: { not: { categoryId: 3 } }
-    if (params.not !== undefined) {
-      return this.#validateParamsWithOperators(
-        params.not,
-        pages,
-        `${path}.not`
-      );
-    }
-
-    // Simple params object - validate against page types
-    const { valid, errors } = validateParamsAgainstPages(params, pages);
-    if (!valid) {
-      return { message: errors.join("\n"), path };
-    }
-
-    // Validate param types
-    for (const [paramName, value] of Object.entries(params)) {
-      const pageType = pages.find((p) => {
-        const pageParams = getParamsForPageType(p);
-        return pageParams && paramName in pageParams;
-      });
-
-      if (pageType) {
-        const { valid: typeValid, error } = validateParamType(
-          paramName,
-          value,
-          pageType
-        );
-        if (!typeValid) {
-          return { message: error, path: `${path}.${paramName}` };
-        }
-      }
-    }
-
-    return null;
-  }
-
-  /**
    * Matches page parameters against the current context.
    * Supports any/not operators for complex matching.
    *
@@ -588,4 +471,65 @@ export default class BlockRouteCondition extends BlockCondition {
     }
     return result;
   }
+}
+
+/**
+ * Validates params with support for any/not operators.
+ * This is a standalone function to keep decorator config clean.
+ *
+ * @param {Object} params - The params to validate.
+ * @param {Array<string>} pages - The page types to validate against.
+ * @param {string} [path="params"] - Path for error messages.
+ * @returns {string|null} Error or null if valid.
+ */
+function validateParamsWithOperators(params, pages, path = "params") {
+  // Handle any operator: { any: [{ categoryId: 1 }, { categoryId: 2 }] }
+  if (params.any !== undefined) {
+    if (!Array.isArray(params.any)) {
+      return `\`any\` in params must be an array of param objects.`;
+    }
+    for (let i = 0; i < params.any.length; i++) {
+      const nestedError = validateParamsWithOperators(
+        params.any[i],
+        pages,
+        `${path}.any[${i}]`
+      );
+      if (nestedError) {
+        return nestedError;
+      }
+    }
+    return null;
+  }
+
+  // Handle not operator: { not: { categoryId: 3 } }
+  if (params.not !== undefined) {
+    return validateParamsWithOperators(params.not, pages, `${path}.not`);
+  }
+
+  // Simple params object - validate against page types
+  const { valid, errors } = validateParamsAgainstPages(params, pages);
+  if (!valid) {
+    return errors.join("\n");
+  }
+
+  // Validate param types
+  for (const [paramName, value] of Object.entries(params)) {
+    const pageType = pages.find((p) => {
+      const pageParams = getParamsForPageType(p);
+      return pageParams && paramName in pageParams;
+    });
+
+    if (pageType) {
+      const { valid: typeValid, error } = validateParamType(
+        paramName,
+        value,
+        pageType
+      );
+      if (!typeValid) {
+        return error;
+      }
+    }
+  }
+
+  return null;
 }

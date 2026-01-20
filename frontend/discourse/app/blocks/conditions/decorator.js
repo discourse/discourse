@@ -1,4 +1,6 @@
 // @ts-check
+import { validateConditionArgsSchema } from "discourse/lib/blocks/condition-arg-validation";
+import { validateConstraintsSchema } from "discourse/lib/blocks/constraint-validation";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 import { BlockCondition } from "./condition";
 
@@ -12,7 +14,13 @@ const VALID_SOURCE_TYPES = Object.freeze(["none", "outletArgs", "object"]);
  * Valid config keys for the decorator.
  * @constant {ReadonlyArray<string>}
  */
-const VALID_CONFIG_KEYS = Object.freeze(["type", "sourceType", "validArgKeys"]);
+const VALID_CONFIG_KEYS = Object.freeze([
+  "type",
+  "sourceType",
+  "args",
+  "constraints",
+  "validate",
+]);
 
 /**
  * WeakSet tracking decorated classes.
@@ -35,11 +43,11 @@ export function isDecoratedCondition(ConditionClass) {
 }
 
 /**
- * Decorator to define a block condition.
+ * Decorator to define a block condition with declarative arg validation.
  *
  * The class must extend BlockCondition. The decorator adds static getters
- * for type, sourceType, and validArgKeys based on the provided config.
- * Unknown config keys are rejected with helpful suggestions.
+ * for type, sourceType, argsSchema, constraints, validateFn, and validArgKeys
+ * based on the provided config. Unknown config keys are rejected with helpful suggestions.
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
@@ -47,39 +55,65 @@ export function isDecoratedCondition(ConditionClass) {
  * @param {Object} config - Condition configuration.
  * @param {string} config.type - Unique condition type identifier.
  * @param {"none"|"outletArgs"|"object"} [config.sourceType="none"] - How source parameter is handled.
- * @param {string[]} config.validArgKeys - Valid argument keys (do NOT include "source").
+ * @param {Object} [config.args={}] - Arg schema definitions (type, required, min, max, pattern, etc.).
+ *   An empty object `{}` for an arg means any type is allowed.
+ * @param {Object} [config.constraints] - Cross-arg constraints (atLeastOne, exactlyOne, allOrNone, atMostOne).
+ * @param {Function} [config.validate] - Custom validation function called at registration time.
+ *   Receives args object, returns error string/array or null.
  * @throws {Error} If config is invalid or class doesn't extend BlockCondition.
  *
  * @example
  * import { blockCondition, BlockCondition } from "discourse/blocks/conditions";
  *
  * @blockCondition({
- *   type: "myCondition",
- *   sourceType: "none",
- *   validArgKeys: ["enabled", "value"],
+ *   type: "user",
+ *   sourceType: "outletArgs",
+ *   args: {
+ *     loggedIn: { type: "boolean" },
+ *     admin: { type: "boolean" },
+ *     minTrustLevel: { type: "number", min: 0, max: 4, integer: true },
+ *     groups: { type: "array", itemType: "string" },
+ *   },
+ *   validate(args) {
+ *     if (args.loggedIn === false && args.admin) {
+ *       return "Cannot use loggedIn: false with admin condition.";
+ *     }
+ *     return null;
+ *   }
  * })
- * export default class MyCondition extends BlockCondition {
- *   validate(args) { ... }
+ * export default class BlockUserCondition extends BlockCondition {
+ *   @service currentUser;
  *   evaluate(args, context) { ... }
  * }
+ *
+ * @example
+ * // With constraints
+ * @blockCondition({
+ *   type: "setting",
+ *   sourceType: "object",
+ *   args: {
+ *     name: { type: "string", required: true },
+ *     enabled: { type: "boolean" },
+ *     equals: {},  // any type
+ *     includes: { type: "array" },
+ *   },
+ *   constraints: {
+ *     atMostOne: ["enabled", "equals", "includes"],
+ *   },
+ * })
  */
 export function blockCondition(config) {
-  const { type, sourceType = "none", validArgKeys } = config;
+  const {
+    type,
+    sourceType = "none",
+    args: argsSchema = {},
+    constraints,
+    validate: validateFn,
+  } = config;
 
   // Validate config at decoration time
   if (!type || typeof type !== "string") {
     throw new Error("blockCondition: `type` is required and must be a string.");
-  }
-
-  if (!Array.isArray(validArgKeys)) {
-    throw new Error("blockCondition: `validArgKeys` must be an array.");
-  }
-
-  if (validArgKeys.includes("source")) {
-    throw new Error(
-      "blockCondition: Do not include 'source' in validArgKeys. " +
-        "It is added automatically when sourceType !== 'none'."
-    );
   }
 
   // Validate sourceType is one of the allowed values
@@ -91,7 +125,7 @@ export function blockCondition(config) {
     );
   }
 
-  // Validate no unknown config keys (catches typos like "validArgKey" or "sourcetype")
+  // Validate no unknown config keys (catches typos)
   const unknownKeys = Object.keys(config).filter(
     (key) => !VALID_CONFIG_KEYS.includes(key)
   );
@@ -105,12 +139,32 @@ export function blockCondition(config) {
     );
   }
 
-  // Freeze keys and compute final list with source if applicable
-  const frozenKeys = Object.freeze([...validArgKeys]);
+  // Validate args schema at decoration time (catches schema definition errors)
+  if (argsSchema && typeof argsSchema === "object") {
+    validateConditionArgsSchema(argsSchema, type);
+  }
+
+  // Validate constraints schema at decoration time
+  if (constraints) {
+    // Constraints reference args schema - validate they're compatible
+    validateConstraintsSchema(constraints, argsSchema, `Condition "${type}"`);
+  }
+
+  // Validate that validate is a function if provided
+  if (validateFn !== undefined && typeof validateFn !== "function") {
+    throw new Error(
+      `blockCondition: "validate" must be a function, got ${typeof validateFn}.`
+    );
+  }
+
+  // Freeze schema and compute derived validArgKeys
+  const frozenSchema = Object.freeze({ ...argsSchema });
+  const frozenConstraints = constraints
+    ? Object.freeze({ ...constraints })
+    : undefined;
+  const argKeys = Object.freeze(Object.keys(argsSchema));
   const allKeys =
-    sourceType !== "none"
-      ? Object.freeze([...frozenKeys, "source"])
-      : frozenKeys;
+    sourceType !== "none" ? Object.freeze([...argKeys, "source"]) : argKeys;
 
   return function decorator(TargetClass) {
     // Validate that the class extends BlockCondition
@@ -129,6 +183,19 @@ export function blockCondition(config) {
       get: () => sourceType,
       configurable: false,
     });
+    Object.defineProperty(TargetClass, "argsSchema", {
+      get: () => frozenSchema,
+      configurable: false,
+    });
+    Object.defineProperty(TargetClass, "constraints", {
+      get: () => frozenConstraints,
+      configurable: false,
+    });
+    Object.defineProperty(TargetClass, "validateFn", {
+      get: () => validateFn,
+      configurable: false,
+    });
+    // validArgKeys is derived from args schema for backward compatibility
     Object.defineProperty(TargetClass, "validArgKeys", {
       get: () => allKeys,
       configurable: false,
