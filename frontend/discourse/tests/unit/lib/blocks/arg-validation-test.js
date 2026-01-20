@@ -719,6 +719,17 @@ module("Unit | Lib | blocks/arg-validation", function () {
       );
     });
 
+    test("suggests closest match for invalid enum string value", function (assert) {
+      const schema = { type: "string", enum: ["sm", "md", "lg", "xl", "2xl"] };
+
+      const result = validateArgValue("small", schema, "min", "test-block");
+
+      assert.true(
+        result?.includes('did you mean "sm"'),
+        "suggests closest match for typo"
+      );
+    });
+
     test("validates number type", function (assert) {
       assert.strictEqual(
         validateArgValue(42, { type: "number" }, "count", "test-block"),

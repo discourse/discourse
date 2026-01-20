@@ -381,9 +381,10 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
         );
       }
       if (enumValues !== undefined && !enumValues.includes(value)) {
+        const suggestion = formatWithSuggestion(value, enumValues);
         return formatArgError(
           argName,
-          `must be one of: ${enumValues.map((v) => `"${v}"`).join(", ")}. Got "${value}".`,
+          `must be one of: ${enumValues.map((v) => `"${v}"`).join(", ")}. Got ${suggestion}.`,
           blockName
         );
       }
