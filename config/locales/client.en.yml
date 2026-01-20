@@ -2278,7 +2278,7 @@ en:
               other {# days}
             }.
           edit_link_options: "Edit link options or send by email."
-          edit_link_options_only: "Edit link options."
+          edit_link_options_only: "Edit link options"
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
