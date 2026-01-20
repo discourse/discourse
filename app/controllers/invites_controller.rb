@@ -93,7 +93,7 @@ class InvitesController < ApplicationController
             email: email,
             description: params[:description],
             domain: params[:domain],
-            skip_email: params[:skip_email],
+            skip_email: skip_email_param,
             invited_by: current_user,
             custom_message: params["custom_message"],
             max_redemptions_allowed: params[:max_redemptions_allowed],
@@ -149,7 +149,7 @@ class InvitesController < ApplicationController
           email: params[:email],
           description: params[:description],
           domain: params[:domain],
-          skip_email: params[:skip_email],
+          skip_email: skip_email_param,
           invited_by: current_user,
           custom_message: params[:custom_message],
           max_redemptions_allowed: params[:max_redemptions_allowed],
@@ -275,6 +275,10 @@ class InvitesController < ApplicationController
       end
 
       if params[:send_email]
+        if !SiteSetting.allow_email_invites
+          return render_json_error(I18n.t("invite.email_invites_disabled"))
+        end
+
         if invite.emailed_status != Invite.emailed_status_types[:pending]
           begin
             RateLimiter.new(current_user, "resend-invite-per-hour", 10, 1.hour).performed!
@@ -436,6 +440,10 @@ class InvitesController < ApplicationController
   end
 
   def resend_invite
+    if !SiteSetting.allow_email_invites
+      return render_json_error(I18n.t("invite.email_invites_disabled"))
+    end
+
     params.require(:email)
     RateLimiter.new(current_user, "resend-invite-per-hour", 10, 1.hour).performed!
 
@@ -448,6 +456,10 @@ class InvitesController < ApplicationController
   end
 
   def resend_all_invites
+    if !SiteSetting.allow_email_invites
+      return render_json_error(I18n.t("invite.email_invites_disabled"))
+    end
+
     guardian.ensure_can_resend_all_invites!
 
     begin
@@ -528,6 +540,10 @@ class InvitesController < ApplicationController
   end
 
   private
+
+  def skip_email_param
+    !SiteSetting.allow_email_invites || params[:skip_email]
+  end
 
   def show_invite(invite)
     email = Email.obfuscate(invite.email)

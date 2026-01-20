@@ -483,6 +483,16 @@ RSpec.describe InvitesController do
         end
       end
 
+      context "when allow_email_invites is disabled" do
+        before { SiteSetting.allow_email_invites = false }
+
+        it "does not send invite email even without skip_email param" do
+          create_invite
+          expect(response).to have_http_status :ok
+          expect(Jobs::InviteEmail.jobs.size).to eq(0)
+        end
+      end
+
       context "when validations fail" do
         let(:email) { "test@mailinator.com" }
 
@@ -743,6 +753,16 @@ RSpec.describe InvitesController do
           expect(Jobs::InviteEmail.jobs.size).to eq(0)
         end
       end
+
+      context "when allow_email_invites is disabled" do
+        before { SiteSetting.allow_email_invites = false }
+
+        it "does not send invite emails even without skip_email param" do
+          create_multiple_invites
+          expect(response).to have_http_status :ok
+          expect(Jobs::InviteEmail.jobs.size).to eq(0)
+        end
+      end
     end
 
     it "fails if asked to generate too many invites at once" do
@@ -848,6 +868,16 @@ RSpec.describe InvitesController do
           }.by(-1)
           expect(response.status).to eq(200)
           expect(Jobs::InviteEmail.jobs.size).to eq(1)
+        end
+      end
+
+      context "when allow_email_invites is disabled" do
+        before { SiteSetting.allow_email_invites = false }
+
+        it "returns an error when trying to send email" do
+          put "/invites/#{invite.id}", params: { send_email: true }
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(I18n.t("invite.email_invites_disabled"))
         end
       end
 
@@ -1683,6 +1713,13 @@ RSpec.describe InvitesController do
         expect(response.status).to eq(200)
         expect(Jobs::InviteEmail.jobs.size).to eq(1)
       end
+
+      it "returns an error when allow_email_invites is disabled" do
+        SiteSetting.allow_email_invites = false
+        post "/invites/reinvite.json", params: { email: invite.email }
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to include(I18n.t("invite.email_invites_disabled"))
+      end
     end
   end
 
@@ -1724,6 +1761,14 @@ RSpec.describe InvitesController do
       freeze_time(start + 10.minutes)
       post "/invites/reinvite-all"
       expect(response.parsed_body["errors"][0]).to eq(I18n.t("rate_limiter.slow_down"))
+    end
+
+    it "returns an error when allow_email_invites is disabled" do
+      SiteSetting.allow_email_invites = false
+      sign_in(admin)
+      post "/invites/reinvite-all"
+      expect(response.status).to eq(422)
+      expect(response.parsed_body["errors"]).to include(I18n.t("invite.email_invites_disabled"))
     end
   end
 
