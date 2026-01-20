@@ -130,8 +130,18 @@ module ApplicationHelper
     path
   end
 
-  def preload_script(script, type_module: false)
+  def preload_script(script, type_module: false, from_vite: false)
     scripts = []
+
+    if from_vite && ENV["USE_VITE_ASSETS"]
+      return(
+        preload_script_url(
+          "http://localhost:4200/#{script}.js",
+          type_module: true,
+          entrypoint: script,
+        )
+      )
+    end
 
     if chunks = EmberCli.script_chunks[script]
       scripts.push(*chunks)

@@ -44,8 +44,8 @@
       <%= theme_translations_lookup %>
     <%- end %>
 
-    <%= preload_script "vendor", type_module: true %>
-    <%= preload_script "discourse", type_module: true %>
+    <%= preload_script "vendor", type_module: true, from_vite: true %>
+    <%= preload_script "discourse", type_module: true, from_vite: true %>
 
     <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request, include_admin_asset: staff?).each do |file| %>
       <%= preload_script file %>
@@ -141,7 +141,7 @@
       </form>
     <% end %>
 
-    <script type="module" src="<%= script_asset_path EmberCli.script_chunks["start-discourse"]&.first || "start-discourse" %>" nonce="<%= csp_nonce_placeholder %>" data-discourse-entrypoint="start-discourse"></script>
+    <%= preload_script "start-discourse", type_module: true, from_vite: true %>
 
     <%= yield :data %>
 
