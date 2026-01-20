@@ -431,6 +431,7 @@ en:
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
     existing_user_success: "Invite redeemed successfully"
+    email_invites_disabled: "Sending invite emails is disabled."
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -2318,7 +2319,7 @@ en:
     strip_incoming_email_lines: "Remove leading and trailing whitespaces from each line of incoming emails."
 
     disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable emails for all users. Select 'non-staff' to disable emails for non-staff users only."
-
+    allow_email_invites: "When disabled, users won't be able to send invite emails via Discourse."
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Define the maximum length, in bytes, for an email to be classified as 'short' for image suppression. If an email's size does not exceed this setting, any images (such as avatars and emojis) within the email will be stripped out."
     display_name_on_email_from: "Display full names on email from fields"

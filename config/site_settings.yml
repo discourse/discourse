@@ -2078,6 +2078,10 @@ email:
   require_change_email_confirmation:
     default: false
     area: "email"
+  allow_email_invites:
+    default: true
+    client: true
+    area: "email"
   view_raw_email_allowed_groups:
     type: group_list
     list_type: compact
