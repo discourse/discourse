@@ -5776,6 +5776,8 @@ RSpec.describe TopicsController do
         get topic.relative_url + "?page=3", env: { "HTTP_USER_AGENT" => bot_user_agent }
         body = response.body
 
+        page_3_topics.each { |post| expect(body).to include(post.cooked) }
+
         expect(response.headers["Last-Modified"]).to eq(page3_time.httpdate)
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")
       end
