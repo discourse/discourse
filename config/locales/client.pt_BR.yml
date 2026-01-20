@@ -851,7 +851,7 @@ pt_BR:
         reviewable_ai_chat_message:
           noun: "mensagem de chat"
         reviewable_ai_post:
-          noun: "postar"
+          noun: "postagem"
       flagged_as: "Sinalizado como"
       post_flagged_as: "Resposta sinalizada como"
       queued_post_label: "Resposta citada"
@@ -863,6 +863,7 @@ pt_BR:
       timeline:
         target_created: "Postagem criada"
         target_created_by: "Postagem criada por %{username} · %{relativeDate}"
+        target_deleted: "Postagem excluída"
         flagged: "Sinalizado(a)"
         flagged_as_by: "Marcado(a) como %{flagReason} por %{username} - %{relativeDate}"
         claimed: "Reivindicado(a)"
@@ -5389,6 +5390,8 @@ pt_BR:
                 below_site_header: "Abaixo do cabeçalho do site"
             text_section:
               locale_label: "Idioma"
+            header_new_members:
+              placeholder: "Bem-vindo(a), %{preferred_display_name}"
             header_logged_in:
               placeholder: "Boas-vindas novamente, %{preferred_display_name}!"
             header_anonymous:
@@ -7693,6 +7696,7 @@ pt_BR:
           upload:
             label: "Enviar"
             title: "Enviar imagens"
+        download_file: "Download"
         selectable_avatars:
           title: "Lista de avatares que os usuários podem escolher"
         table_column_heading:

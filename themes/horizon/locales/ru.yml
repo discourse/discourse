@@ -11,8 +11,8 @@ ru:
   vote_count:
     one: "%{count} голос"
     few: "%{count} голоса"
-    many: "%{count} голоса"
-    other: "%{count} голоса"
+    many: "%{count} голосов"
+    other: "%{count} голосов"
   like_count:
     one: "%{count} лайк"
     few: "%{count} лайка"
@@ -22,6 +22,6 @@ ru:
     one: "%{count} ответ"
     few: "%{count} ответа"
     many: "%{count} ответов"
-    other: "%{count} ответ"
+    other: "%{count} ответа"
   theme_metadata:
     description: "Простая и красивая тема, которая улучшает работу сайтов с Discourse сразу после установки."

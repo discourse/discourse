@@ -987,7 +987,7 @@ he:
         reviewable_ai_chat_message:
           noun: "הודעת הצ׳אט"
         reviewable_ai_post:
-          noun: "פרסום"
+          noun: "פוסט"
       flagged_as: "מסומן בתור"
       post_flagged_as: "הפוסט סומן בתור"
       chat_flagged_as: "השיחה סומנה בתור"
@@ -1000,6 +1000,7 @@ he:
       timeline:
         target_created: "פוסט נוצר"
         target_created_by: "הפוסט נוצר על ידי %{username} · %{relativeDate}"
+        target_deleted: "פוסט נמחק"
         flagged: "מסומן"
         flagged_as_by: "מסומן בתור %{flagReason} על ידי %{username} · %{relativeDate}"
         claimed: "נדרש"
@@ -8582,6 +8583,7 @@ he:
           upload:
             label: "העלאה"
             title: "העלאת תמונות"
+        download_file: "הורדה"
         selectable_avatars:
           title: "רשימת תמונות ייצוגיות מהן המשתמשים יכולים לבחור"
         table_column_heading:
