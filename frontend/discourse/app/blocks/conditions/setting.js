@@ -87,6 +87,15 @@ export default class BlockSettingCondition extends BlockCondition {
   @service siteSettings;
 
   /**
+   * Returns the siteSettings service as the default source.
+   *
+   * @returns {Object} The siteSettings service.
+   */
+  get defaultSource() {
+    return this.siteSettings;
+  }
+
+  /**
    * Evaluates whether the setting condition passes.
    *
    * @param {Object} args - The condition arguments.
@@ -96,13 +105,7 @@ export default class BlockSettingCondition extends BlockCondition {
   evaluate(args, context) {
     const { name, enabled, equals, includes, contains, containsAny } = args;
 
-    // Determine settings source:
-    // 1. If source is provided, use it (even if it resolves to null/undefined - no fallback)
-    // 2. If source is NOT provided, use siteSettings
-    const settingsSource =
-      args.source !== undefined
-        ? this.resolveSource(args, context)
-        : this.siteSettings;
+    const settingsSource = this.getSourceValue(args, context);
 
     // Handle null/undefined settings source gracefully
     if (settingsSource == null) {
@@ -183,11 +186,7 @@ export default class BlockSettingCondition extends BlockCondition {
   getResolvedValueForLogging(args, context) {
     const { name } = args;
 
-    // Determine settings source (same logic as evaluate)
-    const settingsSource =
-      args.source !== undefined
-        ? this.resolveSource(args, context)
-        : this.siteSettings;
+    const settingsSource = this.getSourceValue(args, context);
 
     // Handle null/undefined settings source
     if (settingsSource == null) {

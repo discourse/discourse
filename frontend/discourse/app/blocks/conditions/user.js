@@ -124,6 +124,15 @@ export default class BlockUserCondition extends BlockCondition {
   @service currentUser;
 
   /**
+   * Returns the currentUser service as the default source.
+   *
+   * @returns {Object|null} The currentUser service.
+   */
+  get defaultSource() {
+    return this.currentUser;
+  }
+
+  /**
    * Evaluates whether the user condition passes.
    *
    * @param {Object} args - The condition arguments.
@@ -142,12 +151,7 @@ export default class BlockUserCondition extends BlockCondition {
       groups,
     } = args;
 
-    // Get user from source (outlet args) if provided, otherwise use currentUser.
-    // Important: If source is provided but resolves to undefined, we use undefined (don't fall back)
-    const user =
-      args.source !== undefined
-        ? this.resolveSource(args, context)
-        : this.currentUser;
+    const user = this.getSourceValue(args, context);
 
     // Check login state or current user match (when source is provided)
     if (loggedIn !== undefined) {

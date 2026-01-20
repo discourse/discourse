@@ -176,6 +176,29 @@ export class BlockCondition {
   }
 
   /**
+   * Default source value when `source` parameter is not provided.
+   * Override in subclasses to provide a fallback (e.g., currentUser, siteSettings).
+   *
+   * @type {*}
+   */
+  get defaultSource() {
+    return undefined;
+  }
+
+  /**
+   * Resolves the source value, falling back to defaultSource when not provided.
+   *
+   * @param {Object} args - The condition arguments.
+   * @param {Object} [context] - Evaluation context.
+   * @returns {*} The resolved source or defaultSource.
+   */
+  getSourceValue(args, context) {
+    return args.source !== undefined
+      ? this.resolveSource(args, context)
+      : this.defaultSource;
+  }
+
+  /**
    * Evaluates whether the condition passes.
    * Called at render time to determine if a block should be shown.
    *

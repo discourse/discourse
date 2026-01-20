@@ -463,9 +463,7 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
 
       assert.strictEqual(result.value, undefined);
       assert.true(result.hasValue);
-      assert.true(
-        result.note.includes('setting "nonexistent_setting" does not exist')
-      );
+      assert.true(result.note.includes('"nonexistent_setting" does not exist'));
     });
 
     test("suggests similar setting name in note", function (assert) {
