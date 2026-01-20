@@ -171,6 +171,29 @@ describe "Admin User Page", type: :system do
           end
         end
       end
+
+      it "does not show conceptual upcoming changes" do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "feature,all_members",
+              status: :beta,
+              impact_type: "feature",
+              impact_role: "all_members",
+            },
+            conceptual_feature: {
+              impact: "feature,all_members",
+              status: :conceptual,
+              impact_type: "feature",
+              impact_role: "all_members",
+            },
+          },
+        )
+
+        admin_user_page.visit(user)
+        expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
+        expect(admin_user_page).to have_no_upcoming_change("conceptual_feature")
+      end
     end
 
     describe "the suspend user modal" do
