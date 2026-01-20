@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
@@ -15,6 +16,15 @@ import ChannelData from "../channel-data";
 
 export default class EditRule extends Component {
   @service siteSettings;
+
+  @bind
+  onTagsChanged(tags) {
+    // TODO(https://github.com/discourse/discourse/pull/36678): The string check can be
+    // removed using .discourse-compatibility once the PR is merged.
+    this.args.model.rule.tags = (tags || []).map((t) =>
+      typeof t === "string" ? t : t.name
+    );
+  }
 
   @action
   async save(rule) {
@@ -200,7 +210,7 @@ export default class EditRule extends Component {
                     @name="tags"
                     @tags={{@model.rule.tags}}
                     @everyTag="true"
-                    @onChange={{fn (mut @model.rule.tags)}}
+                    @onChange={{this.onTagsChanged}}
                   />
                 </td>
               </tr>

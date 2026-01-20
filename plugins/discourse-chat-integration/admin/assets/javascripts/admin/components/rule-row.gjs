@@ -22,6 +22,16 @@ export default class RuleRow extends Component {
     return this.args.rule.type === "group_mention";
   }
 
+  get displayTags() {
+    const tags = this.args.rule.tags;
+    if (!tags) {
+      return null;
+    }
+    // TODO(https://github.com/discourse/discourse/pull/36678): The string check can be
+    // removed using .discourse-compatibility once the PR is merged.
+    return tags.map((t) => (typeof t === "string" ? t : t.name)).join(", ");
+  }
+
   @action
   delete(rule) {
     rule
@@ -62,8 +72,8 @@ export default class RuleRow extends Component {
 
       <td>
         {{#if this.siteSettings.tagging_enabled}}
-          {{#if @rule.tags}}
-            {{@rule.tags}}
+          {{#if this.displayTags}}
+            {{this.displayTags}}
           {{else}}
             {{i18n "chat_integration.all_tags"}}
           {{/if}}
