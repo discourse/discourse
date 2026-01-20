@@ -1187,7 +1187,7 @@ blockquote .post__contents-cooked-quote {
   .small-action-desc {
     box-sizing: border-box;
     display: flex;
-    flex-wrap: wrap;
+    align-items: start;
     color: var(--primary-700);
     padding: 1em 0 1em var(--topic-body-width-padding);
     width: calc(
@@ -1211,6 +1211,7 @@ blockquote .post__contents-cooked-quote {
   }
 
   .small-action-buttons {
+    display: flex;
     margin-left: auto;
   }
 
