@@ -5,7 +5,10 @@ import { i18n } from "discourse-i18n";
 
 export default class RewindPreferencesNav extends Component {
   static shouldRender(args, context) {
-    return context.siteSettings.discourse_rewind_enabled;
+    return (
+      context.siteSettings.discourse_rewind_enabled &&
+      context.currentUser?.is_rewind_active
+    );
   }
 
   <template>
