@@ -126,6 +126,11 @@ describe "Composer Form Templates", type: :system do
           attributes:
             none_label: "Select an item"
             label: "multi-select"
+        - type: composer
+          id: 7
+          attributes:
+            label: "composer"
+            placeholder: "Enter rich text here"
           ),
     )
   end
@@ -538,12 +543,17 @@ describe "Composer Form Templates", type: :system do
     expect(page).to have_css(".d-editor-preview", text: "Option 4")
 
     message = "This is a test message!"
-    find("textarea").fill_in(with: message)
+    composer.fill_form_template_field("textarea", message)
 
     expect(page).to have_css(".d-editor-preview", text: message)
 
     attach_file("5-uploader", "#{Rails.root}/spec/fixtures/images/logo.png", make_visible: true)
     expect(page).to have_css(".d-editor-preview img")
+
+    composer_message = "This is **bold** composer content"
+    composer.fill_form_template_field("composer", composer_message)
+
+    expect(page).to have_css(".d-editor-preview", text: "This is bold composer content")
   end
 
   context "when using tagchooser" do

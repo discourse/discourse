@@ -161,7 +161,7 @@ export default class PostTranslationEditor extends Component {
       class="translation-editor"
       @value={{readonly this.composer.model.reply}}
       @change={{this.handleInput}}
-      @placeholder="composer.translations.placeholder"
+      @placeholder={{i18n "composer.translations.placeholder"}}
       @extraButtons={{@extraButtons}}
       @forcePreview={{true}}
       @processPreview={{false}}
