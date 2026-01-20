@@ -106,39 +106,39 @@ export default class EditCategorySecurity extends buildCategoryPanel(
               {{i18n "category.permissions.no_groups_selected"}}
             </div>
           {{/unless}}
-
-          {{#if this.category.availableGroups}}
-            <PluginOutlet
-              @name="category-security-permissions-add-group"
-              @outletArgs={{lazyHash
-                category=this.category
-                availableGroups=this.category.availableGroups
-                onSelectGroup=this.onSelectGroup
-              }}
-              @defaultGlimmer={{true}}
-            >
-              <div class="add-group">
-                <span class="group-name">
-                  <ComboBox
-                    @content={{this.category.availableGroups}}
-                    @onChange={{this.onSelectGroup}}
-                    @value={{null}}
-                    @valueProperty={{null}}
-                    @nameProperty={{null}}
-                    @options={{hash none="category.security_add_group"}}
-                    class="available-groups"
-                  />
-                </span>
-              </div>
-            </PluginOutlet>
-          {{/if}}
         </div>
 
-        {{#if this.everyoneGrantedFull}}
-          <p class="warning">{{i18n
-              "category.permissions.everyone_has_access"
-            }}</p>
-        {{/if}}
+        <PluginOutlet
+          @name="category-security-permissions-add-group"
+          @outletArgs={{lazyHash
+            category=this.category
+            availableGroups=this.category.availableGroups
+            onSelectGroup=this.onSelectGroup
+          }}
+          @defaultGlimmer={{true}}
+        >
+          {{#if this.category.availableGroups}}
+            <div class="add-group">
+              <span class="group-name">
+                <ComboBox
+                  @content={{this.category.availableGroups}}
+                  @onChange={{this.onSelectGroup}}
+                  @value={{null}}
+                  @valueProperty={{null}}
+                  @nameProperty={{null}}
+                  @options={{hash none="category.security_add_group"}}
+                  class="available-groups"
+                />
+              </span>
+            </div>
+          {{/if}}
+
+          {{#if this.everyoneGrantedFull}}
+            <p class="warning everyone-has-access-warning">{{i18n
+                "category.permissions.everyone_has_access"
+              }}</p>
+          {{/if}}
+        </PluginOutlet>
       {{/unless}}
     </section>
 

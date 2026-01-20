@@ -284,7 +284,7 @@ div.edit-category {
 
 .category-permissions-table {
   max-width: 450px;
-  margin-bottom: 2em;
+  margin-bottom: 0;
 
   .permission-row {
     border-bottom: 1px solid var(--content-border-color);
@@ -348,12 +348,16 @@ div.edit-category {
     padding: 0.5em 0;
     color: var(--primary-medium);
   }
+}
 
-  .add-group {
-    margin: 1em 0;
+.edit-category .add-group {
+  margin: 1em 0 2em;
 
-    .group-name {
-      width: 100%;
-    }
+  .group-name {
+    width: 100%;
   }
+}
+
+.edit-category .everyone-has-access-warning {
+  margin-top: 2em;
 }
