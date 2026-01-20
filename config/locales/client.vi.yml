@@ -821,6 +821,7 @@ vi:
       timeline:
         target_created: "Tút đã được tạo"
         target_created_by: "Tút được tạo bởi %{username} · %{relativeDate}"
+        target_deleted: "Tút đã bị xóa"
         flagged: "Đã báo cáo"
         flagged_as_by: "Đã báo cáo là %{flagReason} bởi %{username} · %{relativeDate}"
         claimed: "Đã tiếp nhận"
@@ -4340,7 +4341,7 @@ vi:
         help: "Những chủ đề hàng đầu gần đây"
       new:
         lower_title_with_count:
-          other: "%{count} chủ đề mới"
+          other: "%{count} mới đăng"
         lower_title: "mới"
         title: "Chủ đề mới"
         title_with_count:
@@ -7742,6 +7743,7 @@ vi:
           upload:
             label: "Tải lên"
             title: "Tải lên hình ảnh"
+        download_file: "Tải xuống"
         selectable_avatars:
           title: "Danh sách ảnh đại diện mà người dùng có thể chọn"
         table_column_heading:

@@ -886,6 +886,7 @@ ug:
       timeline:
         target_created: "يازما قۇرۇلدى"
         target_created_by: "يازما قۇرغۇچى %{username} · %{relativeDate}"
+        target_deleted: "يازما ئۆچۈرۈلدى"
         flagged: "پاش قىلىندى"
         flagged_as_by: "%{username} · %{relativeDate} دە %{flagReason} دەپ پاش قىلغان"
         claimed: "تەلەپ قىلىندى"
@@ -7927,6 +7928,7 @@ ug:
           upload:
             label: "يۈكلە"
             title: "سۈرەت يۈكلە"
+        download_file: "چۈشۈر"
         selectable_avatars:
           title: "ئىشلەتكۈچى تاللىيالايدىغان سىما تىزىمى"
         table_column_heading:
