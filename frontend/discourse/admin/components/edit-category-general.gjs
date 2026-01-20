@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import DecoratedHtml from "discourse/components/decorated-html";
 import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
