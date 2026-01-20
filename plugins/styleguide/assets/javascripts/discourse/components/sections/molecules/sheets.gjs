@@ -1,14 +1,12 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import BottomSheet from "discourse/components/bottom-sheet";
 import DButton from "discourse/components/d-button";
 import DCard from "discourse/float-kit/components/d-card";
-import DSheet from "discourse/float-kit/components/d-sheet";
-import DSheetWithDetent from "discourse/float-kit/components/d-sheet-with-detent";
 import DSheetWithStacking from "discourse/float-kit/components/d-sheet-with-stacking";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
@@ -30,6 +28,7 @@ export default class Sheets extends Component {
   @tracked
   catDescription =
     "A gentle, affectionate companion who loves sunny windowsills and quiet evenings curled up on the couch.";
+  scrollItems = Array.from({ length: 100 }, (_, i) => i + 1);
 
   @action
   updateFormField(field, event) {
@@ -84,99 +83,25 @@ export default class Sheets extends Component {
         </:sample>
       </StyleguideComponent>
 
-      <StyleguideComponent @tag="with-detent">
+      <StyleguideComponent @tag="expandable">
         <:sample>
-          <DSheetWithDetent>
-            <:root as |sheet|>
-              <sheet.Trigger @action="present">
-                Present
-              </sheet.Trigger>
-            </:root>
-            <:content as |sheet|>
-              <input />
-
-              <DSheet.Scroll.Root as |controller|>
-                <DSheet.Scroll.View
-                  class="SheetWithDetent-scrollView"
-                  @scrollGesture={{if sheet.reachedLastDetent "auto" false}}
-                  @scrollGestureTrap={{hash yEnd=true}}
-                  @safeArea="layout-viewport"
-                  @onScrollStart={{hash dismissKeyboard=true}}
-                  @controller={{controller}}
-                >
-                  <DSheet.Scroll.Content
-                    class="SheetWithDetent-scrollContent"
-                    @controller={{controller}}
-                  >
-                    <ul>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                      <li>Foo</li>
-                    </ul>
-                  </DSheet.Scroll.Content>
-                </DSheet.Scroll.View>
-              </DSheet.Scroll.Root>
-
-              {{! <sheet.Trigger @action="step">
-                Step
-              </sheet.Trigger>
-              <sheet.Trigger @action="dismiss">
-                Dismiss
-              </sheet.Trigger> }}
-
-            </:content>
-          </DSheetWithDetent>
+          <BottomSheet @expandable={{true}} as |bs|>
+            <bs.Trigger>Open Expandable Bottom Sheet</bs.Trigger>
+            <bs.Content as |content|>
+              <input
+                class="bottom-sheet__input"
+                placeholder="Focus to expand..."
+                {{on "focus" content.expand}}
+              />
+              <content.ScrollArea>
+                <ul>
+                  {{#each this.scrollItems as |item|}}
+                    <li>Item {{item}}</li>
+                  {{/each}}
+                </ul>
+              </content.ScrollArea>
+            </bs.Content>
+          </BottomSheet>
         </:sample>
       </StyleguideComponent>
 

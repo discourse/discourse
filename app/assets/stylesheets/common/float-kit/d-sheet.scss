@@ -1158,7 +1158,7 @@
 [data-d-sheet~="handle"] {
   width: 50px;
   height: 6px;
-  margin: 12px auto;
+  margin: var(--space-2) auto;
   padding: 0;
   border: 0;
   border-radius: 9999px;
@@ -1190,7 +1190,6 @@
   z-index: 2000;
   height: calc(max(100dvh, 100lvh) + 60px);
 }
-
 
 // ============================================================================
 // SheetWithDetent styles

@@ -3,24 +3,45 @@
     box-sizing: border-box;
     height: auto;
     max-width: 700px;
-    padding-inline: var(--size-10);
     padding-bottom: max(
       calc(env(safe-area-inset-bottom, 0px) + 12px),
-      var(--size-10)
+      var(--space-5)
     );
     display: grid;
     justify-items: center;
   }
 
   :where(&__bleeding-background) {
-    border-radius: 24px;
+    border-radius: var(--d-border-radius-large);
     background-color: var(--secondary);
     box-shadow:
       0 10px 15px -3px rgb(0 0 0 / 10%),
       0 4px 6px -4px rgb(0 0 0 / 10%);
   }
 
-  :where(&__handle) {
-    margin: 12px auto;
+  :where(&__view) {
+    z-index: 9999;
+    top: 0;
+    bottom: initial;
+    height: calc(max(100dvh, 100lvh) + 60px);
+  }
+
+  :where(&__content).--expandable {
+    height: calc(100% - max(env(safe-area-inset-top), var(--space-1)));
+    overflow: hidden;
+    grid-template-rows: auto 1fr;
+  }
+
+  :where(&__scroll-view) {
+    width: 100%;
+    min-height: 0;
+  }
+
+  :where(&__input) {
+    box-sizing: border-box;
+    width: 100%;
+    height: 35px;
+    padding-inline: var(--space-4);
+    margin-bottom: var(--space-4);
   }
 }
