@@ -1,4 +1,16 @@
 // @ts-check
+/**
+ * Shared arg validation utilities.
+ *
+ * This module provides generic validation functions for argument schemas
+ * used by both blocks and conditions. Entity-specific validation logic
+ * lives in separate modules:
+ * - block-arg-validation.js - block-specific validation
+ * - condition-arg-validation.js - condition-specific validation
+ *
+ * @module discourse/lib/blocks/arg-validation
+ */
+
 import { BlockError, raiseBlockError } from "discourse/lib/blocks/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
@@ -10,7 +22,7 @@ import { formatWithSuggestion } from "discourse/lib/string-similarity";
 export const VALID_ARG_NAME_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]*$/;
 
 /**
- * Valid arg types for block metadata schema.
+ * Valid arg types for schema definitions.
  */
 export const VALID_ARG_TYPES = Object.freeze([
   "string",
@@ -41,15 +53,6 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
   "max",
   "integer",
   "enum",
-]);
-
-/**
- * Valid properties for childArgs schema definitions.
- * Includes all standard arg properties plus "unique" for sibling uniqueness validation.
- */
-export const VALID_CHILD_ARG_SCHEMA_PROPERTIES = Object.freeze([
-  ...VALID_ARG_SCHEMA_PROPERTIES,
-  "unique",
 ]);
 
 /**
@@ -120,15 +123,15 @@ export const SCHEMA_PROPERTY_RULES = Object.freeze({
  * @param {string} prop - The property name.
  * @param {Object} argDef - The argument definition.
  * @param {string} argName - The argument name.
- * @param {string} entityName - The entity name (block or condition name).
- * @param {string} [entityType="Block"] - The entity type ("Block" or "Condition").
+ * @param {string} entityName - The entity name for error messages.
+ * @param {string} entityType - The entity type for error messages (e.g., "Block", "Condition").
  */
 export function validateSchemaProperty(
   prop,
   argDef,
   argName,
   entityName,
-  entityType = "Block"
+  entityType
 ) {
   const rule = SCHEMA_PROPERTY_RULES[prop];
   if (!rule || argDef[prop] === undefined) {
@@ -156,10 +159,10 @@ export function validateSchemaProperty(
  *
  * @param {Object} argDef - The argument definition.
  * @param {string} argName - The argument name.
- * @param {string} entityName - The entity name (block or condition name).
+ * @param {string} entityName - The entity name for error messages.
  * @param {string} minProp - The min property name.
  * @param {string} maxProp - The max property name.
- * @param {string} [entityType="Block"] - The entity type ("Block" or "Condition").
+ * @param {string} entityType - The entity type for error messages (e.g., "Block", "Condition").
  */
 export function validateRangePair(
   argDef,
@@ -167,7 +170,7 @@ export function validateRangePair(
   entityName,
   minProp,
   maxProp,
-  entityType = "Block"
+  entityType
 ) {
   if (
     argDef[minProp] !== undefined &&
@@ -189,8 +192,8 @@ export function validateRangePair(
  * @param {string} options.propName - Property name ("enum" or "itemEnum").
  * @param {string|undefined} options.expectedType - Expected type for values, or undefined to skip type check.
  * @param {string} options.argName - The argument name for error messages.
- * @param {string} options.entityName - The entity name (block or condition name).
- * @param {string} [options.entityType="Block"] - The entity type.
+ * @param {string} options.entityName - The entity name for error messages.
+ * @param {string} options.entityType - The entity type.
  */
 function validateEnumArray({
   enumValue,
@@ -198,7 +201,7 @@ function validateEnumArray({
   expectedType,
   argName,
   entityName,
-  entityType = "Block",
+  entityType,
 }) {
   if (!Array.isArray(enumValue) || enumValue.length === 0) {
     raiseBlockError(
@@ -229,14 +232,14 @@ function validateEnumArray({
  *
  * @param {Object} argDef - The argument definition.
  * @param {string} argName - The argument name.
- * @param {string} entityName - The entity name (block or condition name).
- * @param {string} [entityType="Block"] - The entity type ("Block" or "Condition").
+ * @param {string} entityName - The entity name for error messages.
+ * @param {string} entityType - The entity type for error messages (e.g., "Block", "Condition").
  */
 export function validateCommonSchemaProperties(
   argDef,
   argName,
   entityName,
-  entityType = "Block"
+  entityType
 ) {
   // Validate schema properties using declarative rules (type restrictions + value checks)
   for (const prop of Object.keys(SCHEMA_PROPERTY_RULES)) {
@@ -304,56 +307,18 @@ export function validateCommonSchemaProperties(
 /* Arg Schema Entry Validation Helpers */
 
 /**
- * Validates block-specific default value rules:
- * - "required + default" is contradictory (an arg with a default is never missing)
- * - Default value must match the arg's type schema
- *
- * @param {Object} argDef - The argument definition.
- * @param {string} argName - The argument name.
- * @param {string} blockName - Block name for error messages.
- * @param {string} [argLabel="arg"] - Label for error messages (e.g., "childArgs arg").
- */
-function validateBlockDefaultValue(
-  argDef,
-  argName,
-  blockName,
-  argLabel = "arg"
-) {
-  if (argDef.required === true && argDef.default !== undefined) {
-    raiseBlockError(
-      `Block "${blockName}": ${argLabel} "${argName}" has both "required: true" and "default". ` +
-        `These options are contradictory - an arg with a default value is never missing.`
-    );
-  }
-
-  if (argDef.default !== undefined) {
-    const defaultError = validateArgValue(
-      argDef.default,
-      argDef,
-      argName,
-      blockName
-    );
-    if (defaultError) {
-      raiseBlockError(
-        `Block "${blockName}": ${argLabel} "${argName}" has invalid default value. ${defaultError}`
-      );
-    }
-  }
-}
-
-/**
  * Validates an argument name format.
  *
  * @param {string} argName - The argument name to validate.
- * @param {string} entityName - The entity name (block or condition name).
- * @param {string} [entityType="Block"] - The entity type ("Block" or "Condition").
+ * @param {string} entityName - The entity name for error messages.
+ * @param {string} entityType - The entity type for error messages (e.g., "Block", "Condition").
  * @param {string} [argLabel="arg"] - Label for error messages (e.g., "childArgs arg").
  * @returns {boolean} True if valid, false if invalid (and error raised).
  */
 export function validateArgName(
   argName,
   entityName,
-  entityType = "Block",
+  entityType,
   argLabel = "arg"
 ) {
   if (!VALID_ARG_NAME_PATTERN.test(argName)) {
@@ -372,9 +337,9 @@ export function validateArgName(
  *
  * @param {Object} argDef - The argument definition.
  * @param {string} argName - The argument name.
- * @param {string} entityName - The entity name (block or condition name).
+ * @param {string} entityName - The entity name for error messages.
  * @param {Object} options - Configuration options.
- * @param {string} [options.entityType="Block"] - "Block" or "Condition".
+ * @param {string} options.entityType - The entity type for error messages (e.g., "Block", "Condition").
  * @param {readonly string[]} options.validProperties - List of valid schema properties.
  * @param {Object<string, string>} [options.disallowedProperties={}] - Map of property names to their
  *   specific error messages. Properties in this map trigger a "disallowed" error instead of "unknown".
@@ -385,7 +350,7 @@ export function validateArgName(
  */
 export function validateArgSchemaEntry(argDef, argName, entityName, options) {
   const {
-    entityType = "Block",
+    entityType,
     validProperties,
     disallowedProperties = {},
     allowAnyType = false,
@@ -395,7 +360,7 @@ export function validateArgSchemaEntry(argDef, argName, entityName, options) {
   // Check argDef is object
   if (!argDef || typeof argDef !== "object") {
     raiseBlockError(
-      `${entityType} "${entityName}": ${argLabel} "${argName}" must be an object${entityType === "Block" ? ' with a "type" property' : ""}.`
+      `${entityType} "${entityName}": ${argLabel} "${argName}" must be an object with a "type" property.`
     );
     return false;
   }
@@ -462,50 +427,21 @@ export function validateArgSchemaEntry(argDef, argName, entityName, options) {
 /* Formatting Helpers */
 
 /**
- * Formats an error message with optional block name prefix.
+ * Formats an error message with optional context prefix.
  * Used to generate consistent error messages that vary based on context:
- * - Schema validation (at decoration time): includes block name
- * - Runtime validation (in renderBlocks): no block name prefix
+ * - Schema validation (at decoration time): includes entity context
+ * - Runtime validation (in renderBlocks): no context prefix
  *
  * @param {string} argName - The argument name.
  * @param {string} message - The error message (without arg prefix).
- * @param {string|null} blockName - Optional block name for context.
+ * @param {string|null} contextName - Optional entity name for context (e.g., block name).
+ * @param {string} contextType - The entity type for the prefix (e.g., "Block", "Condition").
  * @returns {string} Formatted error message.
  */
-function formatArgError(argName, message, blockName) {
-  return blockName
-    ? `Block "${blockName}": arg "${argName}" ${message}`
+export function formatArgError(argName, message, contextName, contextType) {
+  return contextName
+    ? `${contextType} "${contextName}": arg "${argName}" ${message}`
     : `Arg "${argName}" ${message}`;
-}
-
-/**
- * Validates the arg schema definition passed to the @block decorator.
- * Enforces strict schema format - unknown properties are not allowed.
- *
- * @param {Object} argsSchema - The args schema object from decorator options
- * @param {string} blockName - Block name for error messages
- * @throws {Error} If schema is invalid
- */
-export function validateArgsSchema(argsSchema, blockName) {
-  if (!argsSchema || typeof argsSchema !== "object") {
-    return;
-  }
-
-  for (const [argName, argDef] of Object.entries(argsSchema)) {
-    if (!validateArgName(argName, blockName)) {
-      continue;
-    }
-
-    const shouldContinue = validateArgSchemaEntry(argDef, argName, blockName, {
-      validProperties: VALID_ARG_SCHEMA_PROPERTIES,
-    });
-
-    if (!shouldContinue) {
-      continue;
-    }
-
-    validateBlockDefaultValue(argDef, argName, blockName);
-  }
 }
 
 /**
@@ -514,11 +450,18 @@ export function validateArgsSchema(argsSchema, blockName) {
  * @param {*} value - The argument value.
  * @param {Object} argSchema - The schema definition for this arg.
  * @param {string} argName - The argument name for error messages.
- * @param {string|null} [blockName=null] - Optional block name for context.
- *   When provided, errors include block name prefix.
+ * @param {string|null} [contextName=null] - Optional entity name for context.
+ *   When provided, errors include context prefix.
+ * @param {string|null} [contextType=null] - The entity type for error prefix (e.g., "Block", "Condition").
  * @returns {string|null} Error message if validation fails, null otherwise.
  */
-export function validateArgValue(value, argSchema, argName, blockName = null) {
+export function validateArgValue(
+  value,
+  argSchema,
+  argName,
+  contextName = null,
+  contextType = null
+) {
   const {
     type,
     itemType,
@@ -543,28 +486,32 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
         return formatArgError(
           argName,
           `must be a string, got ${typeof value}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       if (pattern && !pattern.test(value)) {
         return formatArgError(
           argName,
           `value "${value}" does not match required pattern ${pattern}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       if (minLength !== undefined && value.length < minLength) {
         return formatArgError(
           argName,
           `must be at least ${minLength} characters, got ${value.length}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       if (maxLength !== undefined && value.length > maxLength) {
         return formatArgError(
           argName,
           `must be at most ${maxLength} characters, got ${value.length}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       if (enumValues !== undefined && !enumValues.includes(value)) {
@@ -572,7 +519,8 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
         return formatArgError(
           argName,
           `must be one of: ${enumValues.map((v) => `"${v}"`).join(", ")}. Got ${suggestion}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       break;
@@ -582,35 +530,40 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
         return formatArgError(
           argName,
           `must be a number, got ${typeof value}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       if (integer && !Number.isInteger(value)) {
         return formatArgError(
           argName,
           `must be an integer, got ${value}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       if (min !== undefined && value < min) {
         return formatArgError(
           argName,
           `must be at least ${min}, got ${value}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       if (max !== undefined && value > max) {
         return formatArgError(
           argName,
           `must be at most ${max}, got ${value}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       if (enumValues !== undefined && !enumValues.includes(value)) {
         return formatArgError(
           argName,
           `must be one of: ${enumValues.join(", ")}. Got ${value}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       break;
@@ -620,7 +573,8 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
         return formatArgError(
           argName,
           `must be a boolean, got ${typeof value}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       break;
@@ -630,21 +584,24 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
         return formatArgError(
           argName,
           `must be an array, got ${typeof value}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       if (minLength !== undefined && value.length < minLength) {
         return formatArgError(
           argName,
           `must have at least ${minLength} items, got ${value.length}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       if (maxLength !== undefined && value.length > maxLength) {
         return formatArgError(
           argName,
           `must have at most ${maxLength} items, got ${value.length}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       if (itemType) {
@@ -655,7 +612,8 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
             itemType,
             argName,
             i,
-            blockName
+            contextName,
+            contextType
           );
           if (itemError) {
             return itemError;
@@ -674,7 +632,8 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
             return formatArgError(
               indexedArgName,
               `must be one of: ${itemEnum.map((v) => `"${v}"`).join(", ")}. Got ${suggestion}.`,
-              blockName
+              contextName,
+              contextType
             );
           }
         }
@@ -696,7 +655,8 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
  * @param {string} itemType - The expected type ("string", "number", "boolean").
  * @param {string} argName - The argument name for error messages.
  * @param {number} index - The array index for error messages.
- * @param {string|null} [blockName=null] - Optional block name for context.
+ * @param {string|null} [contextName=null] - Optional entity name for context.
+ * @param {string|null} [contextType=null] - The entity type for error prefix (e.g., "Block", "Condition").
  * @returns {string|null} Error message if validation fails, null otherwise.
  */
 export function validateArrayItemType(
@@ -704,7 +664,8 @@ export function validateArrayItemType(
   itemType,
   argName,
   index,
-  blockName = null
+  contextName = null,
+  contextType = null
 ) {
   const indexedArgName = `${argName}[${index}]`;
 
@@ -714,7 +675,8 @@ export function validateArrayItemType(
         return formatArgError(
           indexedArgName,
           `must be a string, got ${typeof item}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       break;
@@ -724,7 +686,8 @@ export function validateArrayItemType(
         return formatArgError(
           indexedArgName,
           `must be a number, got ${typeof item}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       break;
@@ -734,7 +697,8 @@ export function validateArrayItemType(
         return formatArgError(
           indexedArgName,
           `must be a boolean, got ${typeof item}.`,
-          blockName
+          contextName,
+          contextType
         );
       }
       break;
@@ -790,84 +754,5 @@ export function validateArgsAgainstSchema(providedArgs, schema, pathPrefix) {
         throw new BlockError(typeError, { path: `${pathPrefix}.${argName}` });
       }
     }
-  }
-}
-
-/**
- * Validates block arguments against the block's metadata arg schema.
- * Checks for required args and validates types.
- *
- * @param {Object} entry - The block entry.
- * @param {Object} blockClass - The resolved block class (must be a class, not a string reference).
- * @throws {BlockError} If args are invalid.
- */
-export function validateBlockArgs(entry, blockClass) {
-  const metadata = blockClass?.blockMetadata;
-  const providedArgs = entry.args || {};
-  const hasProvidedArgs = Object.keys(providedArgs).length > 0;
-  const argsSchema = metadata?.args;
-
-  // If args are provided but no schema exists, reject them
-  if (hasProvidedArgs && !argsSchema) {
-    const argNames = Object.keys(providedArgs).join(", ");
-    throw new BlockError(
-      `args were provided (${argNames}) but this block does not declare an args schema. ` +
-        `Add an args schema to the @block decorator or remove the args.`,
-      { path: "args" }
-    );
-  }
-
-  // No schema and no args - nothing to validate
-  if (!argsSchema) {
-    return;
-  }
-
-  validateArgsAgainstSchema(providedArgs, argsSchema, "args");
-}
-
-/**
- * Validates the childArgs schema definition passed to the @block decorator.
- * Similar to validateArgsSchema but supports the additional "unique" property
- * for enforcing uniqueness across sibling children.
- *
- * @param {Object} childArgsSchema - The childArgs schema object from decorator options.
- * @param {string} blockName - Block name for error messages.
- * @throws {Error} If schema is invalid.
- */
-export function validateChildArgsSchema(childArgsSchema, blockName) {
-  if (!childArgsSchema || typeof childArgsSchema !== "object") {
-    return;
-  }
-
-  for (const [argName, argDef] of Object.entries(childArgsSchema)) {
-    if (!validateArgName(argName, blockName, "Block", "childArgs arg")) {
-      continue;
-    }
-
-    const shouldContinue = validateArgSchemaEntry(argDef, argName, blockName, {
-      validProperties: VALID_CHILD_ARG_SCHEMA_PROPERTIES,
-      argLabel: "childArgs arg",
-    });
-
-    if (!shouldContinue) {
-      continue;
-    }
-
-    // childArgs-specific: validate "unique" is a boolean if provided
-    if (argDef.unique !== undefined && typeof argDef.unique !== "boolean") {
-      raiseBlockError(
-        `Block "${blockName}": childArgs arg "${argName}" has invalid "unique" value. Must be a boolean.`
-      );
-    }
-
-    // childArgs-specific: validate "unique" is only used with primitive types
-    if (argDef.unique === true && argDef.type === "array") {
-      raiseBlockError(
-        `Block "${blockName}": childArgs arg "${argName}" has "unique: true" but type is "array". ` +
-          `Uniqueness validation is only supported for primitive types (string, number, boolean).`
-      );
-    }
-
-    validateBlockDefaultValue(argDef, argName, blockName, "childArgs arg");
   }
 }

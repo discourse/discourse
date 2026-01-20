@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import {
   VALID_CHILD_ARG_SCHEMA_PROPERTIES,
   validateChildArgsSchema,
-} from "discourse/lib/blocks/arg-validation";
+} from "discourse/lib/blocks/block-arg-validation";
 
 module("Unit | Blocks | arg-validation", function (hooks) {
   setupTest(hooks);

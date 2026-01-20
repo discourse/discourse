@@ -30,7 +30,7 @@ import icon from "discourse/helpers/d-icon";
 import {
   validateArgsSchema,
   validateChildArgsSchema,
-} from "discourse/lib/blocks/arg-validation";
+} from "discourse/lib/blocks/block-arg-validation";
 import {
   buildContainerPath,
   createGhostBlock,

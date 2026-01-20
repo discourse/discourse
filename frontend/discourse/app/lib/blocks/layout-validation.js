@@ -14,10 +14,8 @@
  */
 
 import { DEBUG } from "@glimmer/env";
-import {
-  validateArgsAgainstSchema,
-  validateBlockArgs,
-} from "discourse/lib/blocks/arg-validation";
+import { validateArgsAgainstSchema } from "discourse/lib/blocks/arg-validation";
+import { validateBlockArgs } from "discourse/lib/blocks/block-arg-validation";
 import {
   runCustomValidation,
   validateConstraints,
