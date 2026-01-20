@@ -599,6 +599,94 @@ module("Unit | Lib | blocks/arg-validation", function () {
         /invalid default value.*must have at most 2 items/
       );
     });
+
+    test("throws for itemEnum on non-array type", function (assert) {
+      const schema = {
+        size: { type: "string", itemEnum: ["sm", "md", "lg"] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "itemEnum" but type is "string".*only valid for array type/
+      );
+    });
+
+    test("throws for itemEnum that is not an array", function (assert) {
+      const schema = {
+        sizes: { type: "array", itemEnum: "small" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "itemEnum" value.*Must be an array with at least one element/
+      );
+    });
+
+    test("throws for empty itemEnum array", function (assert) {
+      const schema = {
+        sizes: { type: "array", itemEnum: [] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "itemEnum" value.*Must be an array with at least one element/
+      );
+    });
+
+    test("throws for itemEnum with wrong value types when itemType specified", function (assert) {
+      const schema = {
+        sizes: { type: "array", itemType: "string", itemEnum: ["sm", 123] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /itemEnum contains invalid value.*All values must be strings/
+      );
+    });
+
+    test("accepts valid string itemEnum", function (assert) {
+      const schema = {
+        sizes: {
+          type: "array",
+          itemType: "string",
+          itemEnum: ["sm", "md", "lg"],
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts valid number itemEnum", function (assert) {
+      const schema = {
+        priorities: { type: "array", itemType: "number", itemEnum: [1, 2, 3] },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for default array with value not in itemEnum", function (assert) {
+      const schema = {
+        sizes: {
+          type: "array",
+          itemType: "string",
+          itemEnum: ["sm", "md", "lg"],
+          default: ["sm", "xl"],
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be one of/
+      );
+    });
   });
 
   module("validateArgValue", function () {
@@ -1025,6 +1113,70 @@ module("Unit | Lib | blocks/arg-validation", function () {
           "test-block"
         )?.includes("must be a string"),
         "wrong item type fails"
+      );
+    });
+
+    test("validates array with itemEnum constraint - valid values", function (assert) {
+      const schema = {
+        type: "array",
+        itemType: "string",
+        itemEnum: ["home", "topic", "category", "user"],
+      };
+
+      assert.strictEqual(
+        validateArgValue(["home", "topic"], schema, "pages", "test-block"),
+        null,
+        "valid itemEnum values pass"
+      );
+
+      assert.strictEqual(
+        validateArgValue([], schema, "pages", "test-block"),
+        null,
+        "empty array passes"
+      );
+    });
+
+    test("validates array with itemEnum constraint - invalid value", function (assert) {
+      const schema = {
+        type: "array",
+        itemType: "string",
+        itemEnum: ["home", "topic", "category", "user"],
+      };
+
+      const result = validateArgValue(
+        ["home", "invalid", "topic"],
+        schema,
+        "pages",
+        "test-block"
+      );
+
+      assert.true(
+        result?.includes('pages[1]" must be one of'),
+        "error includes indexed arg name"
+      );
+      assert.true(
+        result?.includes('"home", "topic", "category", "user"'),
+        "error lists valid values"
+      );
+    });
+
+    test("suggests closest match for invalid itemEnum value", function (assert) {
+      const schema = {
+        type: "array",
+        itemType: "string",
+        itemEnum: ["home", "topic", "category", "user"],
+      };
+
+      const result = validateArgValue(
+        ["homepage"],
+        schema,
+        "pages",
+        "test-block"
+      );
+
+      assert.true(
+        result?.includes('did you mean "home"'),
+        "suggests closest match for typo"
       );
     });
   });

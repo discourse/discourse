@@ -32,6 +32,7 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
   "required",
   "default",
   "itemType",
+  "itemEnum",
   "pattern",
   "minLength",
   "maxLength",
@@ -290,6 +291,32 @@ export function validateArgsSchema(argsSchema, blockName) {
       }
     }
 
+    // itemEnum is only valid for array type
+    if (argDef.itemEnum !== undefined && argDef.type !== "array") {
+      raiseBlockError(
+        `Block "${blockName}": arg "${argName}" has "itemEnum" but type is "${argDef.type}". ` +
+          `"itemEnum" is only valid for array type.`
+      );
+    }
+
+    // Validate itemEnum is an array with at least one element
+    if (argDef.itemEnum !== undefined) {
+      if (!Array.isArray(argDef.itemEnum) || argDef.itemEnum.length === 0) {
+        raiseBlockError(
+          `Block "${blockName}": arg "${argName}" has invalid "itemEnum" value. Must be an array with at least one element.`
+        );
+      } else if (argDef.itemType !== undefined) {
+        // Validate all itemEnum values match the itemType
+        for (const enumValue of argDef.itemEnum) {
+          if (typeof enumValue !== argDef.itemType) {
+            raiseBlockError(
+              `Block "${blockName}": arg "${argName}" itemEnum contains invalid value "${enumValue}". All values must be ${argDef.itemType}s.`
+            );
+          }
+        }
+      }
+    }
+
     // Validate required is boolean
     if (argDef.required !== undefined && typeof argDef.required !== "boolean") {
       raiseBlockError(
@@ -336,6 +363,7 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
   const {
     type,
     itemType,
+    itemEnum,
     pattern,
     minLength,
     maxLength,
@@ -472,6 +500,23 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
           );
           if (itemError) {
             return itemError;
+          }
+        }
+      }
+      if (itemEnum !== undefined) {
+        for (let i = 0; i < value.length; i++) {
+          const item = value[i];
+          if (!itemEnum.includes(item)) {
+            const suggestion = formatWithSuggestion(
+              String(item),
+              itemEnum.map(String)
+            );
+            const indexedArgName = `${argName}[${i}]`;
+            return formatArgError(
+              indexedArgName,
+              `must be one of: ${itemEnum.map((v) => `"${v}"`).join(", ")}. Got ${suggestion}.`,
+              blockName
+            );
           }
         }
       }
@@ -742,6 +787,32 @@ export function validateChildArgsSchema(childArgsSchema, blockName) {
           if (typeof enumValue !== expectedType) {
             raiseBlockError(
               `Block "${blockName}": childArgs arg "${argName}" enum contains invalid value "${enumValue}". All values must be ${expectedType}s.`
+            );
+          }
+        }
+      }
+    }
+
+    // itemEnum is only valid for array type
+    if (argDef.itemEnum !== undefined && argDef.type !== "array") {
+      raiseBlockError(
+        `Block "${blockName}": childArgs arg "${argName}" has "itemEnum" but type is "${argDef.type}". ` +
+          `"itemEnum" is only valid for array type.`
+      );
+    }
+
+    // Validate itemEnum is an array with at least one element
+    if (argDef.itemEnum !== undefined) {
+      if (!Array.isArray(argDef.itemEnum) || argDef.itemEnum.length === 0) {
+        raiseBlockError(
+          `Block "${blockName}": childArgs arg "${argName}" has invalid "itemEnum" value. Must be an array with at least one element.`
+        );
+      } else if (argDef.itemType !== undefined) {
+        // Validate all itemEnum values match the itemType
+        for (const enumValue of argDef.itemEnum) {
+          if (typeof enumValue !== argDef.itemType) {
+            raiseBlockError(
+              `Block "${blockName}": childArgs arg "${argName}" itemEnum contains invalid value "${enumValue}". All values must be ${argDef.itemType}s.`
             );
           }
         }
