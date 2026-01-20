@@ -2722,7 +2722,6 @@ security:
     type: upload
     authorized_extensions: "txt|md"
     max_file_size_kb: 512
-    hidden: true
   content_security_policy:
     default: true
   content_security_policy_report_only:
