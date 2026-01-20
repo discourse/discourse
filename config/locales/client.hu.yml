@@ -864,6 +864,7 @@ hu:
       timeline:
         target_created: "Bejegyzés létrehozva"
         target_created_by: "Bejegyzést készítette: %{username} · %{relativeDate}"
+        target_deleted: "Bejegyzés törölve"
         flagged: "Megjelölt"
         flagged_as_by: "%{flagReason} indokkal megjelölve %{username} felhasználó által · %{relativeDate}"
         claimed: "Igényelt"
@@ -5344,6 +5345,9 @@ hu:
           disabled: "Kikapcsolva"
           impact_type_other: "Egyéb"
           status_experimental: "Kísérleti"
+          impact_role_admins: "Adminisztrátorok"
+          impact_role_moderators: "Moderátorok"
+          impact_role_staff: "Stáb"
       config:
         about:
           title: "Az Ön webhelyéről"
@@ -5766,7 +5770,6 @@ hu:
         new_features:
           title: "Újdonságok?"
           subtitle: "Folyamatosan új funkciókat és fejlesztéseket adunk ki. Ez az oldal a legfontosabbakat tartalmazza, de a 'Tudjon meg többet' gombra kattintva részletes kiadási jegyzeteket is megtekinthet."
-          previous_announcements: "A korábbi új funkciók bejelentéseit a <a href='%{url}' target='_blank'>Discourse Meta</a> oldalon tekintheted meg"
           learn_more: "Tudjon meg többet..."
           experimental: "Kísérleti"
           only_experiments: "Csak kísérleti funkciók megjelenítése"
@@ -7865,6 +7868,7 @@ hu:
           upload:
             label: "Feltöltés"
             title: "Kép(ek) feltöltése"
+        download_file: "Letöltés"
         selectable_avatars:
           title: "A felhasználó által választható profilképek listája"
         table_column_heading:

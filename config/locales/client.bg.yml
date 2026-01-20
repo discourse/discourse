@@ -600,6 +600,8 @@ bg:
         reviewable_ai_post:
           noun: "публикация"
       user_label: "Потребител"
+      timeline:
+        target_deleted: "Публикацията е изтрита"
       notes:
         delete: "Изтрий"
       topic_label: "Тема"
@@ -3440,6 +3442,9 @@ bg:
           enabled: "Да е включен"
           disabled: "Деактивирани"
           impact_type_other: "Други"
+          impact_role_admins: "Админи"
+          impact_role_moderators: "Модератори"
+          impact_role_staff: "Персонал"
       config:
         developer:
           title: "Разработчик"
@@ -4341,6 +4346,7 @@ bg:
         uploaded_image_list:
           upload:
             label: "Качване"
+        download_file: "Изтегли"
         table_column_heading:
           status: "Статус"
         categories:

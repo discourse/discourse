@@ -576,6 +576,8 @@ id:
         reviewable_ai_post:
           noun: "post"
       user_label: "Pengguna"
+      timeline:
+        target_deleted: "Pos dihapus"
       notes:
         delete: "Hapus"
       topic_label: "Topik"
@@ -2323,6 +2325,8 @@ id:
           enabled: "Diaktifkan"
           disabled: "Dinonaktifkan"
           impact_type_other: "Lainnya"
+          impact_role_moderators: "Moderator"
+          impact_role_staff: "Staf"
       config:
         login:
           sub_pages:

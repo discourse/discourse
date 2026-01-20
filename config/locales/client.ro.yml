@@ -841,6 +841,7 @@ ro:
       timeline:
         target_created: "A fost creată postarea"
         target_created_by: "Postare creată de %{username} · %{relativeDate}"
+        target_deleted: "Postarea a fost ștearsă"
         flagged: "Semnalat"
         flagged_as_by: "Semnalat ca %{flagReason} de %{username} · %{relativeDate}"
         claimed: "Revendicat"
@@ -3918,6 +3919,9 @@ ro:
           disabled: "Dezactivate"
           impact_type_other: "Altele"
           status_experimental: "Experimental"
+          impact_role_admins: "Admini"
+          impact_role_moderators: "Moderatori"
+          impact_role_staff: "Echipa"
       config:
         about:
           title: "Despre site-ul tău"
@@ -4225,7 +4229,6 @@ ro:
         new_features:
           title: "Ce este nou?"
           subtitle: "Lansăm noi funcții și îmbunătățiri tot timpul. Această pagină le acoperă pe cele mai importante, dar poți da clic pe „Află mai multe” pentru a vedea notele extinse de lansare."
-          previous_announcements: "Poți vedea anunțurile anterioare privind noile caracteristici pe <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Află mai multe..."
           experimental: "Experimental"
           only_experiments: "Afișează doar caracteristici experimentale"
@@ -4463,6 +4466,7 @@ ro:
       community:
         title: "Comunitate"
         sidebar_link:
+          about_your_site: "Despre site-ul tău"
           badges: "Insigne"
           notifications: "Notificări"
           permalinks: "Legături permanente"
@@ -4473,6 +4477,8 @@ ro:
           user_fields: "Câmpuri utilizator"
           watched_words: "Cuvinte urmărite"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderare"
       appearance:
         title: "Aspect"
         sidebar_link:
@@ -5486,6 +5492,7 @@ ro:
         uploaded_image_list:
           upload:
             label: "Încarcă"
+        download_file: "Descărcare"
         table_column_heading:
           status: "Stare"
         categories:

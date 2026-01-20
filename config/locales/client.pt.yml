@@ -861,6 +861,7 @@ pt:
       timeline:
         target_created: "Criada publicação"
         target_created_by: "Publicação criada por %{username} · %{relativeDate}"
+        target_deleted: "Publicação eliminada"
         flagged: "Sinalizado"
         flagged_as_by: "Sinalizado como %{flagReason} por %{username} · %{relativeDate}"
         reviewed: "Revisto"
@@ -3413,6 +3414,7 @@ pt:
         pin: "Afixar Tópico"
         unpin: "Desafixar Tópico"
         pin_globally: "Afixar Tópico Globalmente"
+        make_banner: "Criar Tópico da Faixa"
         remove_banner: "Remover Tópico da Faixa"
       reply:
         title: "Responder"
@@ -3455,9 +3457,9 @@ pt:
         already_pinned_globally:
           one: "Tópicos atualmente afixados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Tópicos atualmente afixados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
-        make_banner: "Colocar este tópico numa faixa que apareça no topo de todas as páginas."
+        make_banner: "Colocar este tópico numa faixa que aparece no topo de todas as páginas."
         remove_banner: "Remover a faixa que aparece no topo de todas as páginas."
-        banner_note: "Os utilizadores podem ignorar a faixa, fechando-a. Apenas um tópico pode ser colocado como faixa em qualquer momento."
+        banner_note: "Os utilizadores podem ignorar a faixa, fechando-a. Apenas um tópico pode ser colocado na faixa em qualquer momento."
         no_banner_exists: "Não existe tópico de faixa."
         banner_exists: "<strong class='badge badge-notification unread'>Existe</strong> atualmente um tópico de faixa."
       inviting: "Convidando…"
@@ -4461,6 +4463,8 @@ pt:
               content: "Revisão"
             invite:
               content: "Convidar"
+      no_results:
+        title: "Sem resultados"
       search: "Pesquisar"
     until: "Até:"
     form_templates:
@@ -4546,6 +4550,9 @@ pt:
           impact_type_feature: "Funcionalidade"
           impact_type_other: "Outro"
           status_experimental: "Experimental"
+          impact_role_admins: "Administradores"
+          impact_role_moderators: "Moderadores"
+          impact_role_staff: "Pessoal"
       config:
         about:
           title: "Sobre o seu ''site''"
@@ -4735,7 +4742,7 @@ pt:
             title_enabled: "Desativar a funcionalidade experimental"
           feature_tooltip:
             title_disabled: "Teste esta funcionalidade"
-            title_enabled: "Desativar a funcionalidade"
+            title_enabled: "Desativar funcionalidade"
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema encontrado."
@@ -4914,7 +4921,7 @@ pt:
             topics:
               read: Ler um tópico ou uma publicação específica nele. RSS também é suportado.
               write: Criar um novo tópico ou publique num já existente.
-              update: Atualize um tópico. Altere o título, categoria, etiquetas, estado, arquétipo, hiperligação em destaque, etc.
+              update: Atualize um tópico. Altere o título, a categoria, as etiquetas, o estado, o arquétipo, a hiperligação em destaque, etc.
             users:
               suspend: Suspender contas de utilizador.
             invites:
@@ -4984,11 +4991,14 @@ pt:
         sidebar_link:
           backups: "Fazer Cópias de Segurança"
           whats_new:
+            title: "O que é novo?"
             keywords: "registo de alterações|funcionalidade|lançamento"
       community:
         title: "Comunidade"
         sidebar_link:
+          about_your_site: "Sobre o seu ''site''"
           badges: "Crachás"
+          login_and_authentication: "Início de sessão e autenticação"
           notifications: "Notificações"
           permalinks: "Hiperligações Permanentes"
           users: "Utilizadores"
@@ -5011,6 +5021,8 @@ pt:
           title: "Conta"
           backups:
             title: "Fazer Cópias de Segurança"
+          whats_new:
+            title: "O que é novo?"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -5802,6 +5814,7 @@ pt:
         uploaded_image_list:
           upload:
             label: "Carregar"
+        download_file: "Transferir"
         table_column_heading:
           status: "Estado"
         categories:

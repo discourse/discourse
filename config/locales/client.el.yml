@@ -863,6 +863,7 @@ el:
       timeline:
         target_created: "Ανάρτηση δημιουργήθηκε"
         target_created_by: "Ανάρτηση δημιουργήθηκε από %{username} · %{relativeDate}"
+        target_deleted: "Η ανάρτΗσΗ διαγράφΗκε"
         flagged: "Αναφέρθηκε"
         flagged_as_by: "Αναφέρθηκε ως %{flagReason} από %{username} · %{relativeDate}"
         claimed: "Διεκδικήθηκε"
@@ -4818,6 +4819,9 @@ el:
           disabled: "Απενεργοποιημένο"
           impact_type_other: "Άλλα"
           status_experimental: "Πειραματικό"
+          impact_role_admins: "Διαχειριστές"
+          impact_role_moderators: "Συντονιστές"
+          impact_role_staff: "Συνεργάτες"
       config:
         developer:
           title: "Developer"
@@ -6318,6 +6322,7 @@ el:
           empty: "Δεν υπάρχουν ακόμα εικόνες. Παρακαλώ επιφορτώστε μία."
           upload:
             label: "Μεταφόρτωση"
+        download_file: "Κατέβασμα"
         selectable_avatars:
           title: "Λίστα των avatars που μπορούν να επιλέξουν οι χρήστες"
         table_column_heading:

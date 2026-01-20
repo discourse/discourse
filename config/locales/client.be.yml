@@ -1990,6 +1990,9 @@ be:
           all: "Усе"
           disabled: "Адключана"
           impact_type_other: "Іншае"
+          impact_role_admins: "адміністратары"
+          impact_role_moderators: "Мадэратары"
+          impact_role_staff: "персанал"
       config:
         developer:
           title: "для распрацоўшчыкаў"
@@ -2730,6 +2733,7 @@ be:
         uploaded_image_list:
           upload:
             label: "Загрузіць"
+        download_file: "спампаваць"
         selectable_avatars:
           title: "Спіс аватараў карыстальнікі могуць выбраць"
         table_column_heading:

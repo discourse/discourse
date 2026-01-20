@@ -16,6 +16,11 @@ module DiscourseAi
       MAX_SLEEP_CALLS = 30
       MAX_SLEEP_DURATION_MS = 60_000
 
+      MAX_CUSTOM_FIELD_KEY_LENGTH = 256
+      MAX_CUSTOM_FIELD_VALUE_LENGTH = 1024
+
+      CUSTOM_FIELD_MODELS = { "post" => Post, "topic" => Topic, "user" => User }.freeze
+
       def initialize(parameters:, llm:, bot_user:, context: nil, tool:, timeout: nil)
         if context && !context.is_a?(DiscourseAi::Personas::BotContext)
           raise ArgumentError, "context must be a BotContext object"
@@ -206,6 +211,16 @@ module DiscourseAi
           // Backwards compatibility alias (undocumented)
           setTags: function(topic_id, tags, options) {
             return this.editTopic(topic_id, { tags: tags }, options);
+          },
+          getCustomField: function(type, id, key) {
+            return _discourse_get_custom_field(type, id, key);
+          },
+          setCustomField: function(type, id, key, value) {
+            const result = _discourse_set_custom_field(type, id, key, value);
+            if (result.error) {
+              throw new Error(result.error);
+            }
+            return result;
           },
         };
 
@@ -918,11 +933,9 @@ module DiscourseAi
                 end
 
                 visibility_reason =
-                  if updates["visible"]
-                    Topic.visibility_reasons[:manually_relisted]
-                  else
-                    Topic.visibility_reasons[:manually_unlisted]
-                  end
+                  Topic.visibility_reasons[
+                    updates["visible"] ? :manually_relisted : :manually_unlisted
+                  ]
 
                 topic.update_status(
                   "visible",
@@ -942,6 +955,7 @@ module DiscourseAi
                        )
                   return { error: "Failed to apply tags", details: topic.errors.full_messages }
                 end
+                topic.first_post&.publish_change_to_clients!(:revised)
               end
 
               {
@@ -956,6 +970,41 @@ module DiscourseAi
                   visibility_reason_id: topic.visibility_reason_id,
                 },
               }
+            end
+          end,
+        )
+
+        mini_racer_context.attach(
+          "_discourse_get_custom_field",
+          ->(type, id, key) do
+            in_attached_function do
+              model = find_model_by_type(type, id)
+              return nil if model.nil?
+              model.custom_fields[key]
+            end
+          end,
+        )
+
+        mini_racer_context.attach(
+          "_discourse_set_custom_field",
+          ->(type, id, key, value) do
+            in_attached_function do
+              return { error: "Invalid type: #{type}" } unless CUSTOM_FIELD_MODELS.key?(type)
+              return { error: "Key is required" } if key.blank?
+              if key.to_s.length > MAX_CUSTOM_FIELD_KEY_LENGTH
+                return { error: "Key too long (max #{MAX_CUSTOM_FIELD_KEY_LENGTH} characters)" }
+              end
+              if value.to_s.length > MAX_CUSTOM_FIELD_VALUE_LENGTH
+                return { error: "Value too long (max #{MAX_CUSTOM_FIELD_VALUE_LENGTH} characters)" }
+              end
+
+              model = find_model_by_type(type, id)
+              return { error: "#{type.capitalize} not found: #{id}" } if model.nil?
+
+              model.custom_fields[key] = value
+              model.save_custom_fields
+
+              { success: true, key: key, value: model.custom_fields[key] }
             end
           end,
         )
@@ -1129,6 +1178,10 @@ module DiscourseAi
             end,
           )
         end
+      end
+
+      def find_model_by_type(type, id)
+        CUSTOM_FIELD_MODELS[type]&.find_by(id: id)
       end
 
       def in_attached_function

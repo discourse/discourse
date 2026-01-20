@@ -843,6 +843,7 @@ it:
       timeline:
         target_created: "Messaggio creato"
         target_created_by: "Messaggio creato da %{username} - %{relativeDate}"
+        target_deleted: "Messaggio eliminato"
         flagged: "Contrassegnato"
         flagged_as_by: "Contrassegnato come %{flagReason} da %{username} · %{relativeDate}"
         claimed: "Rivendicato"
@@ -5200,6 +5201,9 @@ it:
           impact_type_feature: "Funzionalità"
           impact_type_other: "Altri"
           status_experimental: "Sperimentale"
+          impact_role_admins: "Amministratori"
+          impact_role_moderators: "Moderatori"
+          impact_role_staff: "Staff"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -5595,7 +5599,6 @@ it:
         new_features:
           title: "Cosa c'è di nuovo?"
           subtitle: "Stiamo rilasciando nuove funzionalità e miglioramenti in continuazione. Questa pagina mostra i punti salienti, ma puoi cliccare su \"Scopri di più\" per vedere le note di rilascio approfondite."
-          previous_announcements: "Puoi vedere i precedenti annunci di nuove funzionalità su <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Scopri di più..."
           experimental: "Sperimentale"
           only_experiments: "Mostra solo le funzionalità sperimentali"
@@ -7647,6 +7650,7 @@ it:
           upload:
             label: "Carica"
             title: "Carica immagini"
+        download_file: "Scarica"
         selectable_avatars:
           title: "Elenco degli Avatar tra cui l'utente può scegliere"
         table_column_heading:

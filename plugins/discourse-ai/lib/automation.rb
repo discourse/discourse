@@ -30,11 +30,20 @@ module DiscourseAi
     end
 
     def self.available_custom_tools
-      AiTool
-        .where(enabled: true)
-        .where("parameters = '[]'::jsonb")
-        .pluck(:id, :name, :description)
-        .map { |id, name, description| { id: id, translated_name: name, description: description } }
+      available_tools(
+        scope: AiTool.where(enabled: true).where("parameters = '[]'::jsonb"),
+        description_field: :description,
+      )
+    end
+
+    def self.available_tools_all
+      available_tools(description_field: :summary)
+    end
+
+    def self.available_tools(scope: AiTool.where(enabled: true), description_field: :description)
+      scope
+        .pluck(:id, :name, description_field)
+        .map { |id, name, desc| { id: id, translated_name: name, description: desc } }
     end
 
     def self.available_models

@@ -439,6 +439,8 @@ th:
         reviewable_ai_post:
           noun: "โพส"
       user_label: "ผู้ใช้"
+      timeline:
+        target_deleted: "โพสต์ถูกลบ"
       notes:
         delete: "ลบ"
       topic_label: "หัวข้อ"
@@ -2556,6 +2558,9 @@ th:
           all: "ทั้งหมด"
           disabled: "ปิดใช้งานแล้ว"
           impact_type_other: "อื่นๆ"
+          impact_role_admins: "แอดมิน"
+          impact_role_moderators: "ผู้ดูแลระบบ"
+          impact_role_staff: "ทีมงาน"
       config:
         developer:
           title: "นักพัฒนา"
@@ -3312,6 +3317,7 @@ th:
         uploaded_image_list:
           upload:
             label: "อัปโหลด"
+        download_file: "ดาวน์โหลด"
         table_column_heading:
           status: "สถานะ"
         categories:

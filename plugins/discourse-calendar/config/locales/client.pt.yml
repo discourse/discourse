@@ -40,10 +40,10 @@ pt:
         invite_user_notification: "%{username}%{description}"
       show_all: "Mostrar tudo"
       add_to_calendar: "Adicionar ao calendário"
-      bulk_invite: "Convite em massa"
+      bulk_invite: "Convite em Série"
       bulk_invite_modal:
         confirm: "confirmar"
-        title: "Convite em massa"
+        title: "Convite em Série"
         success: "Ficheiro enviado corretamente, será notificado via mensagem quando o processo estiver concluído."
         error: "Desculpe, o ficheiro deverá estar no formato CSV."
         group_selector_placeholder: "Escolher um grupo..."

@@ -540,6 +540,8 @@ bs_BA:
         reviewable_ai_post:
           noun: "objava"
       user_label: "User"
+      timeline:
+        target_deleted: "Post izbrisan"
       notes:
         delete: "Delete"
       topic_label: "Topic"
@@ -3163,6 +3165,9 @@ bs_BA:
           enabled: "Omogućen"
           disabled: "Neomogućen"
           impact_type_other: "Other"
+          impact_role_admins: "Admins"
+          impact_role_moderators: "Moderators"
+          impact_role_staff: "Staff"
       config:
         developer:
           title: "Developer"
@@ -4372,6 +4377,7 @@ bs_BA:
           empty: "Još nema slika. Molimo, učitajte jedan."
           upload:
             label: "Učitavanje"
+        download_file: "Skinuti"
         selectable_avatars:
           title: "Popis avatara koje korisnici mogu izabrati"
         table_column_heading:

@@ -590,6 +590,7 @@ zh_CN:
       show_more: "展开"
       show_less: "收起"
       back_to_queue: "返回队列"
+      editing_post: "正在编辑帖子…"
       order_by: "排序依据"
       date_filter: "发布时间介于"
       in_reply_to: "回复给"
@@ -778,6 +779,10 @@ zh_CN:
         is_this_post: "此%{reviewable_type}是否%{reviewable_human_score_types}？"
         delimiter: "或者"
         something_else_wrong: "此%{reviewable_type}有什么问题吗？"
+        approve_user: "批准该用户？"
+        suspect_user: "这个用户是垃圾用户吗？"
+        approve_post: "批准该帖子？"
+        approve_topic: "批准该话题？"
       types:
         reviewable_flagged_post:
           title: "被举报的帖子"
@@ -796,9 +801,14 @@ zh_CN:
           title: "帖子"
           noun: "帖子"
         reviewable_ai_chat_message:
+          title: "被 AI 举报的聊天消息"
           noun: "聊天消息"
         reviewable_ai_post:
+          title: "被 AI 举报的帖子"
           noun: "帖子"
+        reviewable_post_voting_comment:
+          title: "被举报的评论"
+          noun: "评论"
       flagged_as: "被标记为"
       post_flagged_as: "帖子被标记为"
       chat_flagged_as: "对话被标记为"
@@ -811,6 +821,8 @@ zh_CN:
       timeline:
         target_created: "帖子已创建"
         target_created_by: "帖子由 %{username} 创建 · %{relativeDate}"
+        target_deleted: "帖子已删除"
+        target_deleted_by: "帖子已被 %{username} · %{relativeDate} 删除"
         flagged: "被举报"
         flagged_as_by: "被 %{username} 举报为%{flagReason} · %{relativeDate}"
         claimed: "已申领"
@@ -1955,6 +1967,7 @@ zh_CN:
         redeemed_tab_with_count: "已确认 (%{count})"
         invited_via: "邀请"
         invited_via_link: "链接 %{key}（已确认 %{count}/%{max}）"
+        generating_link: "正在生成链接..."
         groups: "群组"
         topic: "话题"
         sent: "创建/上次发送日期"
@@ -3194,6 +3207,7 @@ zh_CN:
           unread: "没有未读内容… 太棒了！"
           new_new: "目前没有新内容… 稍后再查看！"
           new: "目前没有新内容… 稍后再查看！"
+          generic: "这没什么好看的......一会再回来看看！"
     topic_bulk_actions:
       dismiss:
         name: "忽略"
@@ -3342,6 +3356,8 @@ zh_CN:
           12_hours: "12 小时"
           24_hours: "24 小时"
           custom: "自定义持续时间"
+      slow_mode_notice:
+        duration: "请在本话题的两次发帖之间等待 %{duration}"
       topic_status_update:
         title: "话题计时器"
         save: "设置计时器"
@@ -3371,6 +3387,8 @@ zh_CN:
         title: "在最后一个帖子后自动关闭话题"
       auto_delete:
         title: "自动删除话题"
+      auto_delete_after_last_post:
+        title: "最后回复后自动删除主题"
       auto_bump:
         title: "自动顶帖话题"
       reminder:
@@ -3382,6 +3400,7 @@ zh_CN:
         auto_close: "此话题将在 %{timeLeft}后自动关闭。"
         auto_publish_to_category: "此话题将在 %{timeLeft}后发布到<a href=%{categoryUrl}>#%{categoryName}</a>。"
         auto_close_after_last_post: "此话题将在最后一个回复的%{duration}后关闭。"
+        auto_delete_after_last_post: "本主题将在最后一次回复后删除 %{duration}。"
         auto_delete: "此话题将在 %{timeLeft}后自动删除。"
         auto_bump: "此话题将在 %{timeLeft}后被自动顶帖。"
         auto_reminder: "您将在 %{timeLeft}后收到此话题的提醒。"
@@ -3745,6 +3764,7 @@ zh_CN:
           confirm_delete: "确定要删除 '%{languageCode}' 的翻译吗？"
         success: "翻译已成功更新"
         post_language_selector:
+          title: "帖子语言"
           none: "无"
         edit_warning:
           message: "这是一篇翻译的帖子。<br><br>您想编辑 %{language} 原帖还是编辑此特定翻译？"
@@ -4818,6 +4838,8 @@ zh_CN:
           header_link_text: "类别"
           header_action_title: "编辑边栏类别"
           header_action_new: "新建类别"
+          header_action_edit_sidebar: "编辑侧边栏类别"
+          header_action_edit_header_dropdown: "编辑导航类别"
           configure_defaults: "配置默认值"
         community:
           edit_section:
@@ -5160,6 +5182,12 @@ zh_CN:
           status_beta: "Beta"
           status_stable: "稳定"
           status_permanent: "永久"
+          impact_role_all: "所有影响的角色"
+          impact_role_admins: "管理员"
+          impact_role_moderators: "版主"
+          impact_role_staff: "管理人员"
+          impact_role_all_members: "所有成员"
+          impact_role_developers: "开发者"
       config:
         about:
           title: "关于您的站点"
@@ -5335,7 +5363,7 @@ zh_CN:
               locale_label: "语言"
             header_new_members:
               label: "新成员标题"
-              description: "可用变量：<code>&percnt;{preferred_display_name}</code>"
+              description: "可用变量： <code>&percnt;{preferred_display_name}</code>"
               placeholder: "欢迎， %{preferred_display_name}！"
             header_logged_in:
               label: "已登录成员的标题"
@@ -5603,7 +5631,7 @@ zh_CN:
         new_features:
           title: "最新变化"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
-          previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a> 上查看以前的新功能公告。"
+          no_new_features_found: "加载最新功能列表时出现错误。您可以在<a href='%{url}' target='_blank'>Discourse Meta 社区</a>查看以前的新功能公告。"
           learn_more: "了解详情…"
           experimental: "实验性"
           only_experiments: "只显示实验性功能"
@@ -7340,6 +7368,17 @@ zh_CN:
         penalty_post_actions: "您想对关联帖子做什么？"
         penalty_post_delete: "删除帖子"
         penalty_post_delete_replies: "删除帖子 + 任何回复"
+        penalty_post_delete_all: "删除用户发布的所有话题和回复"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>这将删除
+          { TOPICS, plural,
+              one {# 个主题}
+              other {# 个主题}
+          } 和
+          { REPLIES, plural,
+              one {# 个回复}
+              other {# 个回复}
+          }。<b>该操作无法撤销！</b>您确定要这样做吗？</span>
         penalty_post_edit: "编辑帖子"
         penalty_post_none: "无操作"
         penalty_count: "处罚计数"
@@ -7425,6 +7464,8 @@ zh_CN:
           button: "删除所有帖子"
           progress:
             title: "删除帖子的进度"
+            description:
+              other: "正在删除 @%{username} 的 %{count} 个帖子"
           confirmation:
             title: "删除 @%{username} 发布的所有帖子"
             description: |
@@ -7436,6 +7477,7 @@ zh_CN:
             text: "删除 @%{username} 发布的帖子"
             delete: "删除 @%{username} 发布的帖子"
             cancel: "取消"
+          all_enqueued: "@%{username} 的所有帖子已加入删除队列"
         merge:
           button: "合并"
           prompt:
@@ -7678,6 +7720,10 @@ zh_CN:
           upload:
             label: "上传"
             title: "上传图片"
+        download_file: "下载"
+        upload_restrictions:
+          extensions: "已接受：%{extensions}"
+          max_size: "最大： %{size}"
         selectable_avatars:
           title: "用户可以选择的头像列表"
         table_column_heading:

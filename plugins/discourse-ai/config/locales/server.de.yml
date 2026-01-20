@@ -19,9 +19,6 @@ de:
         spam: "Als Spam markieren und Beitrag verbergen"
         spam_silence: "Als Spam melden, Beitrag ausblenden und Benutzer stummschalten"
     scriptables:
-      llm_tool_triage:
-        title: Sichtung von Beiträgen mit dem KI-Tool
-        description: "Sichtung von Beiträgen mit benutzerdefinierter Logik in einem KI-Tool"
       llm_persona_triage:
         title: Sichtung von Beiträgen mit KI-Persona
         description: "Reagiere auf Beiträge mit einer bestimmten KI-Persona"
@@ -254,6 +251,12 @@ de:
           name: "Benutzerdefiniert"
         image_generation_openai:
           name: "OpenAI"
+        image_generation_gemini:
+          name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Von vorne beginnen …"
       name:
@@ -493,6 +496,7 @@ de:
         github_file_content: "Inhalt von Dateien aus einem GitHub-Repository abrufen"
         random_picker: "Zufallszahl oder zufälliges Element aus einer Liste auswählen"
         categories: "Alle öffentlich sichtbaren Kategorien im Forum auflisten"
+        flag_post: "Melde den aktuellen Beitrag zur Überprüfung durch das Team"
         search: "Alle öffentlichen Themen im Forum durchsuchen"
         tags: "Alle Schlagwörter im Forum auflisten"
         time: "Zeit in verschiedenen Zeitzonen finden"
@@ -556,6 +560,15 @@ de:
         continue_conversation:
           title: "Entdeckungsunterhaltung: Suche nach %{query}"
           raw: "Bei meiner Suche nach %{query} hast du mir die folgenden Informationen gezeigt:\n\n%{context}\n\nLass uns die Unterhaltung fortsetzen."
+      flag_post:
+        errors:
+          no_context: "Kein Kontext für den Beitrag verfügbar, um ihn zu melden."
+          no_reason: "Um einen Beitrag zu melden, muss ein Grund angegeben werden."
+          invalid_flag_type: "Ungültiger Meldungs-Typ."
+        skipped: "Das Ergebnis war falsch; es wurde keine Meldung erstellt."
+        already_flagged: "Der Beitrag wurde bereits zur Überprüfung markiert."
+        flagged: "Der Beitrag wurde zur Überprüfung markiert."
+        reason: "Der KI-Bot hat diesen Beitrag gemeldet.\n\nGrund: %{reason}"
     summarization:
       configuration_hint:
         one: "Konfiguriere zunächst die Einstellung `%{setting}`."
@@ -614,6 +627,10 @@ de:
     translation:
       errors:
         disabled: "Die KI-Übersetzungsfunktion ist nicht vollständig konfiguriert."
+        all_posts_translated: "Alle Beiträge in diesem Thema sind bereits übersetzt."
+    llm_credit_allocation:
+      limit_exceeded_user: "Diese Community hat ihr KI-Kreditlimit für heute erreicht. Bitte versuche es erneut nach %{reset_time} oder kontaktiere deinen Website-Administrator für weitere Informationen."
+      limit_exceeded_admin: "Du hast dein KI-Kreditlimit erreicht. Bitte versuche es erneut nach %{reset_time}."
     errors:
       quota_exceeded: "Du hast das Kontingent für dieses Modell überschritten. Bitte versuche es erneut in %{relative_time}."
       quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"

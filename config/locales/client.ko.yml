@@ -163,7 +163,7 @@ ko:
     emails_are_disabled_non_staff: "운영진이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
       message: "사이트가 업데이트되었습니다. 원활한 작동을 위해 <span>새로고침해 주세요</span>."
-      dismiss: "무시"
+      dismiss: "읽음 처리..."
     back_button: "뒤로"
     welcome_banner:
       header:
@@ -606,6 +606,8 @@ ko:
         reviewable_ai_post:
           noun: "글"
       user_label: "사용자"
+      timeline:
+        target_deleted: "게시물 삭제됨"
       notes:
         delete: "삭제하기"
       topic_label: "글"
@@ -674,9 +676,9 @@ ko:
       you_replied_to_post: "<a href='%{userUrl}'>내가</a> <a href='%{postUrl}'>%{post_number}</a>에 댓글을 남김"
       user_replied_to_topic: "<a href='%{userUrl}'>%{user}</a> 님이 <a href='%{topicUrl}'>글</a>을 작성함"
       you_replied_to_topic: "<a href='%{userUrl}'>내가</a> <a href='%{topicUrl}'>글</a>에 댓글을 남김"
-      user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> 님이 <a href='%{user2Url}'>%{another_user}</a> 님을 멘션함"
-      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> 님이 <a href='%{user2Url}'>나</a>를 멘션함"
-      you_mentioned_user: "<a href='%{user1Url}'>내가</a> <a href='%{user2Url}'>%{another_user}</a> 님을 멘션함"
+      user_mentioned_user: "<a href='%{user1Url}'>%{user}</a> 님이 <a href='%{user2Url}'>%{another_user}</a> 님을 언급함"
+      user_mentioned_you: "<a href='%{user1Url}'>%{user}</a> 님이 <a href='%{user2Url}'>나</a>를 언급함"
+      you_mentioned_user: "<a href='%{user1Url}'>내가</a> <a href='%{user2Url}'>%{another_user}</a> 님을 언급함"
       posted_by_user: "<a href='%{userUrl}'>%{user}</a> 님이 게시함"
       posted_by_you: "<a href='%{userUrl}'>내가</a> 게시함"
       sent_by_user: "<a href='%{userUrl}'>%{user}</a> 님이 전송함"
@@ -897,7 +899,7 @@ ko:
       messages: "메시지"
       notification_level: "그룹 메시지에 대한 기본 알림 수준"
       alias_levels:
-        mentionable: "누가 이 그룹을 @멘션 할 수 있나요?"
+        mentionable: "누가 이 그룹을 @언급 할 수 있나요?"
         messageable: "누가 이 그룹에 메시지를 보낼 수 있습니까?"
         nobody: "모두 불가"
         only_admins: "관리자 전용"
@@ -914,10 +916,10 @@ ko:
           description: "이 그룹의 새 메시지에 대한 알림을 받지만 메시지 답장은 제외합니다."
         tracking:
           title: "추적"
-          description: "누군가 나를 @이름 형식으로 멘션하거나 나에게 댓글을 보내면 알림을 받으며 새 댓글 수가 표시됩니다."
+          description: "누군가 나를 @이름 형식으로 언급 하거나 나에게 댓글을 보내면 알림을 받으며 새 댓글 수가 표시됩니다."
         regular:
           title: "일반"
-          description: "누군가 나를 @이름 형식으로 멘션하거나 나에게 댓글을 달면 알림을 받습니다."
+          description: "누군가 나를 @이름 형식으로 언급 하거나 나에게 댓글을 달면 알림을 받습니다."
         muted:
           title: "뮤트"
           description: "이 그룹의 메시지에 대한 어떤 알림도 받지 않습니다."
@@ -1040,7 +1042,7 @@ ko:
         ignore_option: "무시됨"
         mute_option: "뮤트"
         normal_option: "일반"
-        normal_option_title: "이 사용자가 나에게 댓글을 작성하거나, 인용하거나, 멘션하면 알림이 전송됩니다."
+        normal_option_title: "이 사용자가 나에게 댓글을 작성하거나, 인용하거나, 언급 하면 알림이 전송됩니다."
       notification_schedule:
         title: "알림 일정"
         label: "사용자 지정 알림 일정 활성화"
@@ -1103,11 +1105,11 @@ ko:
       no_bookmarks_search: "검색어와 일치하는 북마크가 없습니다."
       no_notifications_title: "아직 알림이 없습니다"
       no_notifications_body: >
-        이 패널에서는 내 글 및 댓글에 대한 답글, 다른 사용자가 나를 <b>@멘션</b>하거나 인용할 때, 그리고 내가 관심 있는 글에 대한 답글 등 나와 직접적으로 관련된 활동에 대한 알림을 받게 됩니다. 또한, 일정 시간 동안 로그인하지 않으면 이메일로 알림이 전송됩니다. <br><br> %{icon}을 찾아 알림을 받고 싶은 특정 주제, 카테고리 및 태그를 선택하세요. 자세한 내용은 <a href='%{preferencesUrl}'>알림 설정</a>을 참조하세요.
+        이 패널에서는 나와 직접적으로 관련된 활동에 대한 알림을 받습니다. 예를 들면 내 글 및 게시물에 대한 댓글, 누군가 나를 <b>@언급</b> 또는 인용할 때, 내가 구독하는 글에 댓글을 달 때입니다. 한동안 로그인하지 않은 경우에도 이메일로 알림이 전송됩니다. <br><br>%{icon} 아이콘으로 알림을 받을 특정 글, 카테고리 및 태그를 살펴보세요. 자세한 내용은 <a href='%{preferencesUrl}'>알림 환경설정</a>을 참조하세요.
       no_other_notifications_title: "아직 다른 알림이 없습니다."
       no_notifications_page_title: "아직 알림이 없습니다"
       no_notifications_page_body: >
-        글 및 댓글에 대한 답글을 포함하여 직접적으로 관련된 활동에 대한 알림을 받게됩니다. 누군가 사용자님을 <b>@멘션</b> 또는 인용하고 사용자님이 팔로우중인 글에 댓글을 올릴 때. 한동안 로그인하지 않은 경우에도 알림이 이메일로 전송됩니다. <br><br> 알림을받을 특정 글, 카테고리 및 태그를 살펴보세요 %{icon}. 자세한 내용은 <a href='%{preferencesUrl}'>알림 기본 설정</a>을 참조하십시오.
+        글 및 댓글에 대한 답글을 포함하여 직접적으로 관련된 활동에 대한 알림을 받게됩니다. 누군가 사용자님을 <b>@언급</b> 또는 인용하고 사용자님이 팔로우중인 글에 댓글을 올릴 때. 한동안 로그인하지 않은 경우에도 알림이 이메일로 전송됩니다. <br><br> 알림을받을 특정 글, 카테고리 및 태그를 살펴보세요 %{icon}. 자세한 내용은 <a href='%{preferencesUrl}'>알림 기본 설정</a>을 참조하십시오.
       dynamic_favicon: "브라우저 아이콘에 개수 표시"
       skip_new_user_tips:
         description: "새 사용자 온보딩 팁 및 배지 건너뛰기"
@@ -1431,7 +1433,7 @@ ko:
         ok: "올바른 이름입니다"
       username:
         title: "아이디"
-        short_instructions: "다른 사용자가 나를 @%{username} 형식으로 멘션할 수 있습니다"
+        short_instructions: "다른 사용자가 나를 @%{username} 형식으로 언급 할 수 있습니다."
         available: "아이디로 사용할 수 있습니다"
         not_available: "사용할 수 없습니다. %{suggestion} 아이디는 어떠세요?"
         not_available_no_suggestion: "사용할 수 없음"
@@ -1560,6 +1562,7 @@ ko:
         user: "초대된 사용자"
         none:
           title: "표시 할 초대가 없습니다."
+          cta: "초대 링크 만들기"
         truncated:
           other: "첫 %{count}개의 초대를 표시합니다."
         redeemed: "사용된 초대"
@@ -1588,10 +1591,20 @@ ko:
           success: "초대 링크가 성공적으로 생성되었습니다!"
           error: "초대 링크를 생성하는 중에 오류가 발생했습니다"
         invite:
+          new_title: "회원 초대"
           expires_in_time: "%{time} 후에 만료"
           expired_at_time: "%{time}에 만료됨"
+          create_link_to_invite: "이 사이트에 접속할 수 있는 공유 링크를 만듭니다."
           copy_link: "링크 복사"
           share_link: "공유 링크"
+          link_validity_MF: |
+            이 링크는 최대 { user_count, plural,
+                one {# 명}
+              other {# 명}
+            }의 사용자를 초대 할 수 있으며, { duration_days, plural,
+                one {# 일}
+              other {# 일}
+            }간 유효합니다.
           show_advanced: "고급 옵션 표시"
           hide_advanced: "고급 옵션 숨기기"
           description: "내용"
@@ -1605,6 +1618,8 @@ ko:
           send_invite_email: "저장 및 이메일 전송"
           update_invite: "업데이트"
           cancel: "취소"
+          create_link: "링크 만들기"
+          create_link_and_send_email: "링크를 만들고 이메일 보내기"
         bulk_invite:
           none: "이 페이지에 표시할 초대장이 없습니다."
           text: "일괄 초대"
@@ -1991,7 +2006,7 @@ ko:
       edit_conflict: "충돌 편집"
       ok_proceed: "알겠습니다. 계속 진행하세요."
       group_mentioned_limit:
-        other: "<b>경고!</b> <a href='%{group_link}'>%{group}</a> 그룹을 멘션했지만 이 그룹에는 관리자가 구성한 멘션 제한인 %{count}명의 사용자보다 많은 회원이 있습니다. 아무도 알림을 받지 않습니다."
+        other: "<b>경고!</b> <a href='%{group_link}'>%{group}</a> 그룹을 언급 했지만 이 그룹에는 관리자가 구성한 언급 제한인 %{count}명의 사용자보다 많은 회원이 있습니다. 아무도 알림을 받지 않습니다."
       duplicate_link: "이 글에는 이미<b>%{domain}</b>의 링크가 <b>@%{username}</b>님이 <a href='%{post_url}'>%{ago}</a>에 쓴 게시글에 포함되어 있습니다. 그래도 다시 작성하시겠습니까?"
       reference_topic_title: "RE : %{title}"
       error:
@@ -2115,7 +2130,7 @@ ko:
           other: "%{count}개의 읽지 않은 메시지가 있습니다"
         high_priority:
           other: "%{count}개의 읽지 않은 높은 우선순위 알림이 있습니다"
-      title: "@이름 멘션, 글 및 글에 대한 댓글, 메시지 등에 대한 알림"
+      title: "@이름 언급, 내 글 및 글의 댓글, 메시지 등에 대한 알림"
       none: "현재 알림을 로드할 수 없습니다."
       empty: "알림이 없습니다."
       post_approved: "게시물이 승인되었습니다"
@@ -2158,13 +2173,13 @@ ko:
             other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
           messages:
             other: "확실한가요? 읽지 않은 개인 메시지가 %{count}개 있습니다."
-        dismiss: "무시"
+        dismiss: "읽음 처리..."
         cancel: "취소"
       group_message_summary:
         other: " %{group_name} 받은 편지함에 %{count}개의 메시지가 있습니다"
       popup:
-        mentioned: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 멘션했습니다'
-        group_mentioned: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 멘션했습니다'
+        mentioned: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 언급 했습니다.'
+        group_mentioned: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 언급 했습니다.'
         quoted: '''%{topic}'' - %{site_title}에서 %{username} 님이 나를 인용했습니다'
         replied: '''%{topic}'' - %{site_title}에서 %{username} 님이 나에게 댓글을 달았습니다'
         posted: '''%{topic}'' - %{site_title}에서 %{username} 님이 게시했습니다'
@@ -2176,7 +2191,7 @@ ko:
         confirm_body: "알림이 활성화되었습니다."
         custom: "%{site_title}의 %{username} 님의 알림"
       titles:
-        mentioned: "멘션됨"
+        mentioned: "언급됨"
         replied: "새 댓글"
         quoted: "인용됨"
         edited: "편집됨"
@@ -2190,7 +2205,7 @@ ko:
         bookmark_reminder_with_name: "북마크 미리 알림 - %{name}"
         granted_badge: "배지 부여됨"
         invited_to_topic: "글에 초대됨"
-        group_mentioned: "멘션된 그룹"
+        group_mentioned: "언급된 그룹"
         group_message_summary: "새 그룹 메시지"
         watching_first_post: "새 글"
         topic_reminder: "글 알림"
@@ -2338,7 +2353,7 @@ ko:
       tabs:
         all_notifications: "모든 알림"
         replies: "댓글"
-        mentions: "멘션"
+        mentions: "언급"
         likes: "좋아요 수"
         messages: "개인 메시지"
         bookmarks: "북마크"
@@ -2366,17 +2381,17 @@ ko:
         delete_topics_count:
           other: "글 삭제"
         dismiss: "무시"
-        dismiss_read: "읽지 않은 항목 모두 무시"
+        dismiss_read: "읽지 않은 항목 모두 읽음으로 표시"
         dismiss_read_with_selected:
-          other: "%{count}개의 읽지 않은 항목 무시"
-        dismiss_button: "무시..."
+          other: "읽지 않은 %{count}개 읽음 처리"
+        dismiss_button: "읽음 처리..."
         dismiss_button_with_selected:
           other: "무시(%{count})..."
         dismiss_tooltip: "새 글만 무시하거나 글 팔로우 중지"
         also_dismiss_topics: "이 글을 더 이상 추적하지 않고 읽지 않은 글에서 표시하지 않음"
-        dismiss_new: "새 항목 무시"
+        dismiss_new: "새 글 읽음으로 표시"
         dismiss_new_with_selected:
-          other: "새 항목 무시(%{count})"
+          other: "읽음 처리 (%{count}개)"
         toggle: "글 일괄 선택 전환"
         actions: "일괄 작업"
         close_topics: "글 닫기"
@@ -2406,9 +2421,12 @@ ko:
         bookmarks: "아직 북마크된 글이 없습니다."
         category: "%{category}에 글이 없습니다."
         top: "주요 글이 없습니다."
+        education:
+          topic_tracking_preferences: '<a href="%{basePath}/my/preferences/tracking">환경설정</a>에서 새로운 글 추적 설정을 확인하고 변경할 수 있습니다.'
+          unread: "읽지 않은 글이 하나도 없네요... 정말 놀랍습니다!"
     topic_bulk_actions:
       dismiss:
-        name: "무시"
+        name: "읽음 처리..."
       close_topics:
         name: "닫기"
         optional: (선택 사항)
@@ -2471,6 +2489,7 @@ ko:
       read_more_in_category: "더 읽을거리가 필요하신가요? %{categoryLink}에서 다른 글을 찾아 보거나 <a href='%{latestLink}'>최근 글</a>을 살펴보세요."
       unread_indicator: "아직 이 글의 마지막 게시물을 읽은 회원이 없습니다."
       bumped_at: "최근: %{date}"
+      browse_latest_topics: "최근 글 보기"
       suggest_create_topic: <a href>새 대화를 시작</a>할 준비가 되었나요?
       deleted: "글이 삭제되었습니다."
       slow_mode_update:
@@ -2517,11 +2536,11 @@ ko:
         title: "임시로 종료"
       auto_close:
         title: "글 자동 잠금"
-        label: "자동으로 글 닫기 시간:"
+        label: "글 자동 잠금:"
         error: "유효한 값을 입력하세요."
         based_on_last_post: "글의 마지막 게시물이 이 기간보다 오래될 때까지 닫지 마세요."
       auto_close_after_last_post:
-        title: "마지막 댓글 이후 글 자동 닫기"
+        title: "마지막 게시물 후 글 자동 잠금"
       auto_delete:
         title: "글 자동 삭제"
       auto_bump:
@@ -2532,7 +2551,7 @@ ko:
         title: "댓글 자동 삭제"
       status_update_notice:
         auto_open: "이 글은 %{timeLeft}후 자동으로 열립니다."
-        auto_close: "이 글은 %{timeLeft}후 자동으로 닫힙니다."
+        auto_close: "이 글은 %{timeLeft}후 자동으로 잠금 처리됩니다."
         auto_publish_to_category: "이 글은 <a href=%{categoryUrl}>#%{categoryName}</a>에 %{timeLeft} 후 게시됩니다."
         auto_close_after_last_post: "이 글은 마지막 댓글이 달리고 %{duration} 후 닫힙니다."
         auto_delete: "이 글은 %{timeLeft}후 자동으로 삭제됩니다."
@@ -2603,7 +2622,7 @@ ko:
         recover: "주제 삭제 취소"
         delete: "글 삭제"
         open: "글 열기"
-        close: "주제 종료"
+        close: "글 잠금"
         multi_select: "게시물 선택…"
         pin: "글 고정..."
         unpin: "주제 고정 해제..."
@@ -3184,11 +3203,11 @@ ko:
       bookmarked:
         help: "이 주제를 북마크했습니다"
       locked:
-        help: "이 주제는 종료되었습니다. 더 이상 새 댓글을 받지 않습니다"
+        help: "이 글은 잠금 처리되었습니다. 더 이상 새 댓글을 올릴 수 없습니다."
       archived:
         help: "이 주제는 보관 중입니다. 고정되어 변경이 불가합니다"
       locked_and_archived:
-        help: "이 주제는 종료되어 보관 중 입니다. 더 이상 새 댓글을 받지 않으며 변경이 불가합니다"
+        help: "이 글은 잠금 처리되어 보관 중 입니다. 더 이상 새 댓글을 작성하거나 변경이 불가합니다."
       unpinned:
         title: "고정 해제"
         help: "이 주제가 고정 해제되었습니다. 일반적인 순서로 표시됩니다"
@@ -3553,7 +3572,7 @@ ko:
       back: "뒤로 가기"
       forward: "앞으로 가기"
       share: "공유"
-      dismiss: "무시"
+      dismiss: "읽음 처리"
     safe_mode:
       enabled: "안전 모드가 활성화되었습니다. 안전 모드를 종료하려면 이 브라우저 창을 닫으세요."
     image_removed: "(이미지 제거됨)"
@@ -3649,6 +3668,7 @@ ko:
               content: "배지"
             filter:
               content: "필터"
+              title: "카테고리, 태그 또는 기타 기준으로 글을 필터링하세요."
             topics:
               content: "글"
               title: "모든 글"
@@ -3670,9 +3690,10 @@ ko:
               content: "검토"
             invite:
               content: "초대"
-              title: "새로운 멤버 초대"
+              title: "새로운 회원 초대"
             my_messages:
               content: " 메시지"
+      back_to_forum: "포럼으로 돌아가기"
       no_results:
         title: "결과 없음"
       search: "검색"
@@ -3758,6 +3779,9 @@ ko:
           enabled: "활성화"
           disabled: "비활성"
           impact_type_other: "기타"
+          impact_role_admins: "관리자"
+          impact_role_moderators: "관리자"
+          impact_role_staff: "스태프"
       config:
         developer:
           title: "개발자"
@@ -3904,7 +3928,7 @@ ko:
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
-        dismiss_notice: "무시"
+        dismiss_notice: "읽음 처리"
         new_features:
           learn_more: "더 보기..."
         last_checked: "마지막으로 확인함"
@@ -4778,7 +4802,7 @@ ko:
             add_email: "이메일 추가"
             update_email: "이메일 업데이트"
             destroy_email: "이메일 제거"
-            topic_closed: "주제 종료됨"
+            topic_closed: "글 잠김"
             topic_opened: "주제 열림"
             topic_archived: "주제 보관됨"
             topic_unarchived: "주제 보관 취소됨"
@@ -5222,6 +5246,7 @@ ko:
           empty: "아직 사진이 없습니다. 업로드하세요."
           upload:
             label: "업로드"
+        download_file: "다운로드"
         selectable_avatars:
           title: "사용자가 선택할 수있는 아바타 목록"
         table_column_heading:

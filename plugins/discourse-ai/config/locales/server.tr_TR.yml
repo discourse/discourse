@@ -17,9 +17,6 @@ tr_TR:
         spam: "Spam olarak işaretleyin ve gönderiyi gizleyin"
         spam_silence: "Spam olarak işaretleyin, gönderiyi gizleyin ve kullanıcıyı susturun"
     scriptables:
-      llm_tool_triage:
-        title: YZ Aracını kullanarak gönderileri sınıflandırın
-        description: "YZ aracında özel mantık kullanarak gönderileri sınıflandırın"
       llm_persona_triage:
         title: YZ Kişiliğini kullanarak gönderileri sınıflandırın
         description: "Gönderilere belirli bir YZ kişiliği kullanarak yanıt verin"

@@ -10,7 +10,7 @@
         border: 1px solid var(--content-border-color);
         background-clip: padding-box;
         box-shadow: var(--shadow-dropdown);
-        border-radius: var(--d-button-border-radius);
+        border-radius: var(--d-border-radius);
       }
 
       .select-kit-row {
@@ -68,7 +68,7 @@
         align-items: center;
         justify-content: space-between;
         flex-direction: row;
-        border-radius: var(--d-border-radius);
+        border-radius: var(--d-button-border-radius);
 
         .d-icon + .d-icon {
           margin-left: 0.25em;

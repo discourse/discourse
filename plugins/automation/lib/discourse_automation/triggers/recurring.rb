@@ -117,9 +117,9 @@ module DiscourseAutomation
 
       def self.log_debugging_info(context)
         return if !SiteSetting.discourse_automation_enable_recurring_debug
-        str = "[automation] scheduling recurring automation debug: "
+        str = "scheduling recurring automation debug: "
         str += context.map { |k, v| "#{k}=#{v.inspect}" }.join(", ")
-        Rails.logger.warn(str)
+        DiscourseAutomation::Logger.warn(str)
       end
     end
   end

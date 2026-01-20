@@ -588,6 +588,8 @@ ca:
         reviewable_ai_post:
           noun: "publicació"
       user_label: "Usuari"
+      timeline:
+        target_deleted: "Publicació suprimida"
       notes:
         delete: "Suprimeix"
       topic_label: "Tema"
@@ -3076,6 +3078,9 @@ ca:
           enabled: "Activat"
           disabled: "Desactivat"
           impact_type_other: "Altres"
+          impact_role_admins: "Administradors"
+          impact_role_moderators: "Moderadors"
+          impact_role_staff: "Equip responsable"
       config:
         developer:
           title: "Desenvolupador"
@@ -4299,6 +4304,7 @@ ca:
           empty: "Encara no hi ha imatges. Carregueu-ne una."
           upload:
             label: "Carrega"
+        download_file: "Descarrega"
         selectable_avatars:
           title: "Llista d'avatars que els usuaris poden triar"
         table_column_heading:

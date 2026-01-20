@@ -458,6 +458,8 @@ et:
         reviewable_ai_post:
           noun: "postitus"
       user_label: "Kasutaja"
+      timeline:
+        target_deleted: "Postitus kustutatud"
       notes:
         delete: "Kustuta"
       topic_label: "Teema"
@@ -2734,6 +2736,9 @@ et:
           enabled: "Sisse lülitatud"
           disabled: "Välja lülitatud"
           impact_type_other: "Muu"
+          impact_role_admins: "Adminnid"
+          impact_role_moderators: "Moderaatorid"
+          impact_role_staff: "Meeskond"
       config:
         developer:
           title: "Arendaja"
@@ -3734,6 +3739,7 @@ et:
         uploaded_image_list:
           upload:
             label: "Laadi üles"
+        download_file: "Laadi alla"
         table_column_heading:
           status: "Staatus"
         categories:

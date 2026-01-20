@@ -5,6 +5,11 @@
 # https://translate.discourse.org/
 
 lt:
+  discourse_automation:
+    scriptables:
+      ai_tool_action:
+        title: DI įrankio veiksmas
+        description: Vykdyti dirbtinio intelekto įrankį, kai suveikia automatizavimas
   site_settings:
     ai_helper_image_caption_model: "Pasirinkite modelį, kurį naudosite vaizdų antraštėms generuoti"
   reports:
@@ -37,10 +42,32 @@ lt:
           name: "Temos pavadinimo vertėjas"
         short_text_translator:
           name: "Trumpų tekstų vertėjas"
+      tool_options:
+        flag_post:
+          flag_type:
+            name: "Vėliavos tipas"
+            description: "Valdo, ar įrašas peržiūrimas, slepiamas, ištrinamas ar laikomas šlamštu."
       tool_summary:
+        github_diff: "GitHub skirtumas"
+        flag_post: "Vėliavų stulpas"
         search: "Paieška"
         time: "Laikas"
         summarize: "Apibendrinti"
+      tool_help:
+        github_diff: "Gauti „GitHub“ užklausą arba pakeisti skirtumą"
+        flag_post: "Pažymėti dabartinį įrašą darbuotojų peržiūrai"
+      tool_description:
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
+        flag_post: "Įrašo žymėjimas %{post_id} (flag_post: %{flag_post})"
+      flag_post:
+        errors:
+          no_context: "Nėra įrašo konteksto, kurį būtų galima pažymėti."
+          no_reason: "Norint pažymėti įrašą, reikia nurodyti priežastį."
+          invalid_flag_type: "Neteisingas vėliavos tipas."
+        skipped: "Verdiktas buvo klaidingas; vėliava nebuvo sukurta."
+        already_flagged: "Įrašas jau pažymėtas peržiūrai."
+        flagged: "Įrašas pažymėtas peržiūrai."
+        reason: "Dirbtinio intelekto robotas pažymėjo šį įrašą.\n\nPriežastis: %{reason}"
     sentiment:
       reports:
         post_emotion:

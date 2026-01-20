@@ -779,6 +779,7 @@ ja:
       timeline:
         target_created: "投稿を作成"
         target_created_by: "%{username} が投稿を作成 · %{relativeDate}"
+        target_deleted: "削除された投稿"
         flagged: "通報"
         flagged_as_by: "%{username} が%{flagReason}として通報 · %{relativeDate}"
         claimed: "引き受け"
@@ -4938,6 +4939,9 @@ ja:
           impact_type_feature: "機能"
           impact_type_other: "その他"
           status_experimental: "実験的"
+          impact_role_admins: "管理者"
+          impact_role_moderators: "モデレーター"
+          impact_role_staff: "スタッフ"
       config:
         about:
           title: "サイトについて"
@@ -5326,7 +5330,6 @@ ja:
         new_features:
           title: "新機能"
           subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
-          previous_announcements: "以前の新機能の発表は <a href='%{url}' target='_blank'>Discourse Meta</a> をご覧ください"
           learn_more: "もっと詳しく..."
           experimental: "実験的"
           only_experiments: "実験的機能のみを表示"
@@ -7360,6 +7363,7 @@ ja:
           upload:
             label: "アップロード"
             title: "画像のアップロード"
+        download_file: "ダウンロード"
         selectable_avatars:
           title: "ユーザーが選択できるアバターのリスト"
         table_column_heading:

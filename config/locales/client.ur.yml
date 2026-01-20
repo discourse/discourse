@@ -863,6 +863,7 @@ ur:
       timeline:
         target_created: "دھاگہ بنایا گیا"
         target_created_by: "%{relativeDate}پر %{username}نےدھاگہ بنایا"
+        target_deleted: "دھاگہ مٹا دیا"
         flagged: "نشان دہی کی"
         flagged_as_by: "%{username} نے%{relativeDate}پر %{flagReason} کے طور پر فلیگ کیا گیا"
         claimed: "دعویٰ کیا"
@@ -5001,6 +5002,7 @@ ur:
       back_to_forum: "واپس فورم پر"
       filter_links: "روابط کو چھاننا۔۔۔"
       no_results:
+        title: "کوئی نتائج نہیں"
         description_admin_search: "ہمیں '%{filter}' سے مماثل کوئی چیز نہیں ملی۔"
       collapse_all_sections: "تمام شعبوں کو سکیڑیں"
       expand_all_sections: "تمام شعبوں کو پھیلائیں"
@@ -5245,6 +5247,9 @@ ur:
           disabled: "غیر فعال"
           impact_type_other: "دیگر"
           status_experimental: "تجرباتی"
+          impact_role_admins: "منتظمین"
+          impact_role_moderators: "نگران"
+          impact_role_staff: "عملہ"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"
@@ -5645,7 +5650,6 @@ ur:
         new_features:
           title: "نیا کیا ہے؟"
           subtitle: "ہم وقتاً فوقتاً نئی خصوصیات اور بہتریاں جاری کر رہے ہیں۔ یہ صفحہ نمایاں نکات کا احاطہ کرتا ہے، لیکن آپ 'مزید جانیں' پر کلک کر کے اجرا کی تفصیلات دیکھ سکتے ہیں"
-          previous_announcements: "آپ پچھلی نئی خصوصیات کے اعلانات <a href='%{url}' target='_blank'>Discourse Meta</a> پر دیکھ سکتے ہیں"
           learn_more: "مزید جانیں..."
           experimental: "تجرباتی"
           only_experiments: "صرف تجرباتی خصوصیات دکھائیں"
@@ -6114,27 +6118,39 @@ ur:
       community:
         title: "کمیونٹی"
         sidebar_link:
+          about_your_site: "آپ کی سائٹ کے بارے میں"
           badges: "تمغات"
+          login_and_authentication: "لاگ ان اور تصدیق"
           notifications: "اطلاعات"
           permalinks: "دائمی لِنکس"
+          trust_levels: "فعالیت کے درجات"
+          group_permissions: "گروپ کی اجازتیں"
           users: "اراکین"
           groups: "گروپس"
+          user_fields: "یوزر فیلڈز"
+          watched_words: "دیکھے ہوئے موضوعات"
           legal: "قانونی"
           moderation_flags:
             title: "ماڈریٹر کا کام"
       appearance:
         title: "ظاہری شکل"
         sidebar_link:
+          color_schemes: "رنگ تختی"
           emoji: "اِیمَوجی"
           navigation: "نیویگیشن"
           themes_and_components:
             title: "تھیمز اور اجزاء"
             keywords: "ایکسٹینشن"
+          site_texts: "سائٹ کے متون"
       email_settings:
         sidebar_link:
           appearance: "ظاہری شکل"
       security:
         title: "سیکورٹی"
+        sidebar_link:
+          staff_action_logs:
+            title: "اندراجات اور جانچ پڑتال"
+            keywords: "خرابی کے نوشتہ جات | عملے کی کارروائی | اسکرین شدہ ای میلز"
       section_landing_pages:
         account:
           title: "اکاؤنٹ"
@@ -6173,6 +6189,7 @@ ur:
           site_contact_group: "سائٹ پر رابطے کے لیے گروپ"
           site_contact_group_help: |
             وہ گروپ جو خود بخود بھیجے گئے تمام ذاتی پیغامات میں مدعو کیا جاتا ہے۔
+          your_organization: "آپ کی تنظیم"
           your_organization_description: "ہم اس معلومات کو سروس کی شرائط اور پردہ داری کے نوٹس میں استعمال کریں گے تاکہ یہ ظاہر کیا جا سکے کہ سائٹ کون چلاتا ہے اور کس کے دائرہ اختیار میں ہے۔"
           company_name: "نام"
           company_name_placeholder: "ایکمی آرگنائزیشن"
@@ -6517,6 +6534,7 @@ ur:
           convert_theme_tooltip: "اِس تِھیم کو کمپنَینٹ میں تبدیل کریں"
           inactive_themes: "غیر فعال تِھیمز:"
           set_default_theme: "بطور ڈیفالٹ سیٹ کریں"
+          default_theme: "ڈیفالٹ تھیم"
           setting_was_saved: "تھیم کی سیٹنگ محفوظ ہو گئی"
           inactive_components: "غیر استعمال شدہ کمپنَینٹ:"
           cancel: "منسوخ"
@@ -7349,6 +7367,7 @@ ur:
           empty: "ابھی تک کوئی تصویریں نہیں ہیں۔ براہ مہربانی ایک اَپ لوڈ کریں۔"
           upload:
             label: "اَپ لوڈ"
+        download_file: "ڈاؤن لوڈ"
         selectable_avatars:
           title: "اوتار کی فہرست جس میں سے صارفین منتخب کر سکتے ہیں"
         table_column_heading:

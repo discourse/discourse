@@ -605,6 +605,8 @@ sl:
         reviewable_ai_post:
           noun: "prispevek"
       user_label: "Uporabnik"
+      timeline:
+        target_deleted: "Prispevek izbrisan"
       notes:
         delete: "Izbriši"
       topic_label: "Tema"
@@ -3736,6 +3738,9 @@ sl:
           enabled: "Vključeno"
           disabled: "Onemogočeno"
           impact_type_other: "Drugo"
+          impact_role_admins: "Administratorji"
+          impact_role_moderators: "Moderatorji"
+          impact_role_staff: "Osebje"
       config:
         developer:
           title: "Razvijalci"
@@ -4714,6 +4719,7 @@ sl:
         uploaded_image_list:
           upload:
             label: "Naloži"
+        download_file: "Naloži"
         table_column_heading:
           status: "Stanje"
         categories:

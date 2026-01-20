@@ -1016,6 +1016,7 @@ uk:
       timeline:
         target_created: "Пост створено"
         target_created_by: "Створено %{username} · %{relativeDate}"
+        target_deleted: "Допис вилучено"
         flagged: "Позначено"
         flagged_as_by: "Позначено як %{flagReason} від %{username} · %{relativeDate}"
         claimed: "Заявлено претензію"
@@ -6015,6 +6016,12 @@ uk:
           status_beta: "Бета"
           status_stable: "Стабільна"
           status_permanent: "Постійна"
+          impact_role_all: "Усі впливові ролі"
+          impact_role_admins: "Адміни"
+          impact_role_moderators: "Модератори"
+          impact_role_staff: "Команда обслуговування"
+          impact_role_all_members: "Всі учасники"
+          impact_role_developers: "Розробники"
       config:
         about:
           title: "Про ваш сайт"
@@ -6479,7 +6486,6 @@ uk:
         new_features:
           title: "Що нового?"
           subtitle: "Ми постійно випускаємо нові функції та вдосконалення. На цій сторінці ви знайдете найголовніші з них, але ви можете натиснути \"Дізнатися більше\", щоб переглянути докладнішу інформацію про випуск."
-          previous_announcements: "Ви можете побачити анонси про нові функції на <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Дізнатися більше…"
           experimental: "Експериментальний"
           only_experiments: "Показувати лише експериментальні функції"
@@ -8392,7 +8398,7 @@ uk:
               one: "Видалення %{count} публікацію від @%{username}..."
               few: "Видалення %{count} публікації від @%{username}..."
               many: "Видалення %{count} публікацій від @%{username}..."
-              other: "Видалення %{count} публікації від @%{username}..."
+              other: "Видалення %{count} публікацій від @%{username}..."
           confirmation:
             title: "Видалити всі дописи від @%{username}"
             description: |
@@ -8674,6 +8680,7 @@ uk:
           upload:
             label: "Завантажити"
             title: "Завантажити зображення"
+        download_file: "Завантажити"
         selectable_avatars:
           title: "Список аватарів, які користувачі можуть вибрати"
         table_column_heading:

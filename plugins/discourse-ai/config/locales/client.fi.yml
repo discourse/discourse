@@ -113,14 +113,6 @@ fi:
             persona_id:
               label: "Persoona"
               description: "Raporttien luomiseen käytettävä tekoälypersoona"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Malli"
-              description: "Luokitteluun käytetty oletuskielimalli"
-            tool:
-              label: "Työkalu"
-              description: "Luokitteluun käytettävä työkalu (työkalulla ei saa olla määriteltyjä parametreja)"
         llm_persona_triage:
           fields:
             persona:

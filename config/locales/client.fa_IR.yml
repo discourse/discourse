@@ -757,6 +757,8 @@ fa_IR:
         reviewable_ai_post:
           noun: "نوشته"
       user_label: "کاربر"
+      timeline:
+        target_deleted: "نوشته حذف شده"
       notes:
         delete: "حذف"
       topic_label: "موضوع"
@@ -4871,6 +4873,9 @@ fa_IR:
           disabled: "غیرفعال"
           impact_type_other: "دیگر"
           status_experimental: "آزمایشی"
+          impact_role_admins: "مدیران ارشد"
+          impact_role_moderators: "ناظران"
+          impact_role_staff: "همکاران"
       config:
         about:
           title: "درباره سایت شما"
@@ -5095,7 +5100,6 @@ fa_IR:
         new_features:
           title: "چه چیزی جدید شده؟"
           subtitle: "ما همیشه در حال انتشار ویژگی ها و بهبودهای جدید هستیم. این صفحه نکات برجسته را پوشش می‌دهد، اما می‌توانید روی «بیشتر بدانید» کلیک کنید تا یادداشت‌های انتشار گسترده را ببینید."
-          previous_announcements: "می‌توانید اعلامیه‌ ویژگی‌های جدید قبلی را در <a href='%{url}' target='_blank'>Discourse Meta</a> مشاهده کنید"
           learn_more: "بیشتر بدانید..."
           experimental: "آزمایشی"
           experiment_enabled: "شما ویژگی آزمایشی را فعال کرده‌اید."
@@ -6926,6 +6930,7 @@ fa_IR:
           upload:
             label: "بارگذاری"
             title: "بارگذاری تصاویر"
+        download_file: "دانلود"
         selectable_avatars:
           title: "فهرست آواتارهایی که کاربران می توانند از بین آنها انتخاب کنند"
         table_column_heading:

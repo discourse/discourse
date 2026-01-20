@@ -81,7 +81,7 @@ after_initialize do
   # do not autoload this cause we may have no namespace
   require_relative "discourse_automation/llm_triage"
   require_relative "discourse_automation/llm_report"
-  require_relative "discourse_automation/llm_tool_triage"
+  require_relative "discourse_automation/ai_tool_action"
   require_relative "discourse_automation/llm_persona_triage"
   require_relative "discourse_automation/llm_tagger"
 

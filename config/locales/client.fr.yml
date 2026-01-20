@@ -839,7 +839,7 @@ fr:
         reviewable_ai_chat_message:
           noun: "message de discussion"
         reviewable_ai_post:
-          noun: "publication"
+          noun: "message"
       flagged_as: "Signalé comme"
       user_label: "Utilisateur"
       moderator_actions: "Actions du modérateur"
@@ -847,6 +847,7 @@ fr:
       timeline:
         target_created: "Publication créée"
         target_created_by: "Publication créée par %{username} · %{relativeDate}"
+        target_deleted: "Publication supprimée"
         flagged: "Signalé"
         flagged_as_by: "Signalé comme %{flagReason} par %{username} · %{relativeDate}"
         claimed: "Réclamé"
@@ -5225,6 +5226,9 @@ fr:
           impact_type_feature: "Fonctionnalité"
           impact_type_other: "Autre"
           status_experimental: "Expérimental"
+          impact_role_admins: "Administrateurs "
+          impact_role_moderators: "Modérateurs"
+          impact_role_staff: "Responsable"
       config:
         about:
           title: "À propos de votre site"
@@ -5620,7 +5624,6 @@ fr:
         new_features:
           title: "Quoi de neuf ?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
-          previous_announcements: "Vous pouvez voir les annonces précédentes de nouvelles fonctionnalités sur <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "En savoir plus…"
           experimental: "Expérimental"
           only_experiments: "Afficher uniquement les fonctionnalités expérimentales"
@@ -7672,6 +7675,7 @@ fr:
           upload:
             label: "Envoyer"
             title: "Téléverser des images"
+        download_file: "Télécharger"
         selectable_avatars:
           title: "Liste d'avatars que les utilisateurs peuvent choisir"
         table_column_heading:
