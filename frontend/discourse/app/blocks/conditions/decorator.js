@@ -56,7 +56,7 @@ export function isDecoratedCondition(ConditionClass) {
  * @param {string} config.type - Unique condition type identifier.
  * @param {"none"|"outletArgs"|"object"} [config.sourceType="none"] - How source parameter is handled.
  * @param {Object} [config.args={}] - Arg schema definitions (type, required, min, max, pattern, etc.).
- *   An empty object `{}` for an arg means any type is allowed.
+ *   Use `{ type: "any" }` to allow any type.
  * @param {Object} [config.constraints] - Cross-arg constraints (atLeastOne, exactlyOne, allOrNone, atMostOne).
  * @param {Function} [config.validate] - Custom validation function called at registration time.
  *   Receives args object, returns error string/array or null.
@@ -94,7 +94,7 @@ export function isDecoratedCondition(ConditionClass) {
  *   args: {
  *     name: { type: "string", required: true },
  *     enabled: { type: "boolean" },
- *     equals: {},  // any type
+ *     equals: { type: "any" },
  *     includes: { type: "array" },
  *   },
  *   constraints: {

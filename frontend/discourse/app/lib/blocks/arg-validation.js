@@ -17,6 +17,7 @@ export const VALID_ARG_TYPES = Object.freeze([
   "number",
   "boolean",
   "array",
+  "any",
 ]);
 
 /**
@@ -352,17 +353,17 @@ export function validateArgName(
  * @param {readonly string[]} options.validProperties - List of valid schema properties.
  * @param {Object<string, string>} [options.disallowedProperties={}] - Map of property names to their
  *   specific error messages. Properties in this map trigger a "disallowed" error instead of "unknown".
- * @param {boolean} [options.allowEmptySchema=false] - If true, skip validation for empty {}.
+ * @param {boolean} [options.allowAnyType=false] - If true, allow type: "any" (for conditions only).
  * @param {string} [options.argLabel="arg"] - Label for error messages (e.g., "childArgs arg").
  * @returns {boolean} True if validation should continue with caller-specific logic, false if
- *   validation should stop (e.g., missing type, empty schema with allowEmptySchema).
+ *   validation should stop (e.g., missing type, type: "any" with allowAnyType).
  */
 export function validateArgSchemaEntry(argDef, argName, entityName, options) {
   const {
     entityType = "Block",
     validProperties,
     disallowedProperties = {},
-    allowEmptySchema = false,
+    allowAnyType = false,
     argLabel = "arg",
   } = options;
 
@@ -400,11 +401,6 @@ export function validateArgSchemaEntry(argDef, argName, entityName, options) {
     }
   }
 
-  // Empty schema handling (for conditions: allows "any type")
-  if (allowEmptySchema && Object.keys(argDef).length === 0) {
-    return false;
-  }
-
   // Type is required
   if (!argDef.type) {
     raiseBlockError(
@@ -413,13 +409,23 @@ export function validateArgSchemaEntry(argDef, argName, entityName, options) {
     return false;
   }
 
+  // Build valid types list based on whether "any" is allowed
+  const validTypes = allowAnyType
+    ? VALID_ARG_TYPES
+    : VALID_ARG_TYPES.filter((t) => t !== "any");
+
   // Validate type
-  if (!VALID_ARG_TYPES.includes(argDef.type)) {
-    const suggestion = formatWithSuggestion(argDef.type, VALID_ARG_TYPES);
+  if (!validTypes.includes(argDef.type)) {
+    const suggestion = formatWithSuggestion(argDef.type, validTypes);
     raiseBlockError(
       `${entityType} "${entityName}": ${argLabel} "${argName}" has invalid type ${suggestion}. ` +
-        `Valid types are: ${VALID_ARG_TYPES.join(", ")}.`
+        `Valid types are: ${validTypes.join(", ")}.`
     );
+  }
+
+  // "any" type skips further validation (enum, itemType checks don't apply)
+  if (argDef.type === "any") {
+    return false;
   }
 
   // Validate common schema properties
@@ -669,6 +675,10 @@ export function validateArgValue(value, argSchema, argName, blockName = null) {
           }
         }
       }
+      break;
+
+    case "any":
+      // Any value is valid, no type checking needed
       break;
   }
 

@@ -63,7 +63,7 @@ export function validateConditionArgsSchema(argsSchema, conditionType) {
       entityType: "Condition",
       validProperties: VALID_CONDITION_ARG_PROPERTIES,
       disallowedProperties: DISALLOWED_CONDITION_PROPERTIES,
-      allowEmptySchema: true,
+      allowAnyType: true,
     });
   }
 }
@@ -107,13 +107,8 @@ export function validateConditionArgValues(
       );
     }
 
-    // Skip validation for undefined values or "any type" schemas
-    if (value === undefined || Object.keys(argDef).length === 0) {
-      continue;
-    }
-
-    // Skip validation if no type specified (any type allowed)
-    if (!argDef.type) {
+    // Skip validation for undefined values or "any" type
+    if (value === undefined || argDef.type === "any") {
       continue;
     }
 

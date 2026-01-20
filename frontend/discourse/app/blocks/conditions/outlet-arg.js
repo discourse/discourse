@@ -63,7 +63,7 @@ import { blockCondition } from "./decorator";
   type: "outletArg",
   args: {
     path: { type: "string", required: true },
-    value: {}, // any type allowed
+    value: { type: "any" },
     exists: { type: "boolean" },
   },
   constraints: {

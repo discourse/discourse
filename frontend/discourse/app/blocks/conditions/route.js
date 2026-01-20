@@ -84,8 +84,8 @@ import { blockCondition } from "./decorator";
   args: {
     urls: { type: "array", itemType: "string" },
     pages: { type: "array", itemType: "string", itemEnum: VALID_PAGE_TYPES },
-    params: {}, // object type with complex validation
-    queryParams: {}, // object type with complex validation
+    params: { type: "any" },
+    queryParams: { type: "any" },
   },
   constraints: {
     atLeastOne: ["urls", "pages"],

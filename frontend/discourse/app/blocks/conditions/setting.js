@@ -71,7 +71,7 @@ import { blockCondition } from "./decorator";
   args: {
     name: { type: "string", required: true },
     enabled: { type: "boolean" },
-    equals: {}, // any type allowed
+    equals: { type: "any" },
     includes: { type: "array" },
     contains: { type: "string" },
     containsAny: { type: "array" },
