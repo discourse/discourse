@@ -12,7 +12,7 @@
 import Component from "@glimmer/component";
 import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
-import cssName from "discourse/helpers/css-name";
+import cssIdentifier from "discourse/helpers/css-identifier";
 
 /**
  * @typedef {import("ember-curry-component").CurriedComponent} CurriedComponent
@@ -59,8 +59,8 @@ export function wrapBlockLayout(blockData, owner) {
  * @returns {string[]} An array of CSS class names.
  */
 function blockClass(outletName, name, isContainer) {
-  const safeName = cssName(name);
-  const safeOutlet = cssName(outletName);
+  const safeName = cssIdentifier(name);
+  const safeOutlet = cssIdentifier(outletName);
 
   if (isContainer) {
     return [`block__${safeName}`, `${safeOutlet}__${safeName}`];
