@@ -25,7 +25,8 @@ class EmberCli < ActiveSupport::CurrentAttributes
         value["file"].delete_prefix("assets/").delete_suffix(".js"),
       ]
     end
-    p entrypoints
+
+    entrypoints["@embroider/virtual/test-support"] = ["test-support"]
 
     cache[:script_chunks] = entrypoints
   rescue Errno::ENOENT
@@ -67,7 +68,8 @@ class EmberCli < ActiveSupport::CurrentAttributes
   end
 
   def self.is_ember_cli_asset?(name)
-    assets.include?(name) || script_chunks.values.flatten.include?(name.delete_suffix(".js"))
+    name === "@embroider/virtual/test-support" || assets.include?(name) ||
+      script_chunks.values.flatten.include?(name.delete_suffix(".js"))
   end
 
   def self.has_tests?

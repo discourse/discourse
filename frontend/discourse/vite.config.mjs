@@ -130,7 +130,10 @@ export default defineConfig(({ mode, command }) => {
           "start-discourse": "start-discourse.js",
           "media-optimization-bundle": "media-optimization-bundle.js",
           ...(shouldBuildTests(mode)
-            ? { tests: "tests/index.html" }
+            ? {
+                tests: "tests/index.html",
+                "tests/test-entrypoint": "tests/test-entrypoint.js",
+              }
             : undefined),
         },
         output: {
