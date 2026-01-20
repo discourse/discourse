@@ -1207,6 +1207,8 @@ blockquote .post__contents-cooked-quote {
   }
 
   .small-action-contents {
+    min-width: 0;
+    overflow-wrap: break-word;
     flex: 1 1 auto;
   }
 
