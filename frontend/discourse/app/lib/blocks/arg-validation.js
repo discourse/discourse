@@ -97,6 +97,21 @@ export const SCHEMA_PROPERTY_RULES = Object.freeze({
     valueError: "Must be a RegExp.",
     typeErrorSuffix: "string",
   },
+  itemType: {
+    allowedTypes: ["array"],
+    // valueCheck handled separately (uses formatWithSuggestion for better error message)
+    typeErrorSuffix: "array",
+  },
+  enum: {
+    allowedTypes: ["string", "number"],
+    // valueCheck handled separately (uses validateEnumArray)
+    typeErrorSuffix: "string or number",
+  },
+  itemEnum: {
+    allowedTypes: ["array"],
+    // valueCheck handled separately (uses validateEnumArray)
+    typeErrorSuffix: "array",
+  },
 });
 
 /**
@@ -128,8 +143,8 @@ export function validateSchemaProperty(
     );
   }
 
-  // Check value validity
-  if (!rule.valueCheck(argDef[prop])) {
+  // Check value validity (if valueCheck is defined)
+  if (rule.valueCheck && !rule.valueCheck(argDef[prop])) {
     raiseBlockError(
       `${entityType} "${entityName}": arg "${argName}" has invalid "${prop}" value. ${rule.valueError}`
     );
@@ -223,29 +238,7 @@ export function validateCommonSchemaProperties(
   entityName,
   entityType = "Block"
 ) {
-  // itemType is only valid for array type
-  if (argDef.itemType !== undefined && argDef.type !== "array") {
-    raiseBlockError(
-      `${entityType} "${entityName}": arg "${argName}" has "itemType" but type is "${argDef.type}". ` +
-        `"itemType" is only valid for array type.`
-    );
-  }
-
-  // Validate itemType for arrays
-  if (argDef.type === "array" && argDef.itemType !== undefined) {
-    if (!VALID_ITEM_TYPES.includes(argDef.itemType)) {
-      const suggestion = formatWithSuggestion(
-        argDef.itemType,
-        VALID_ITEM_TYPES
-      );
-      raiseBlockError(
-        `${entityType} "${entityName}": arg "${argName}" has invalid itemType ${suggestion}. ` +
-          `Valid item types are: ${VALID_ITEM_TYPES.join(", ")}.`
-      );
-    }
-  }
-
-  // Validate schema properties using declarative rules
+  // Validate schema properties using declarative rules (type restrictions + value checks)
   for (const prop of Object.keys(SCHEMA_PROPERTY_RULES)) {
     validateSchemaProperty(prop, argDef, argName, entityName, entityType);
   }
@@ -261,19 +254,21 @@ export function validateCommonSchemaProperties(
     entityType
   );
 
-  // enum is only valid for string or number type
-  if (
-    argDef.enum !== undefined &&
-    argDef.type !== "string" &&
-    argDef.type !== "number"
-  ) {
-    raiseBlockError(
-      `${entityType} "${entityName}": arg "${argName}" has "enum" but type is "${argDef.type}". ` +
-        `"enum" is only valid for string or number type.`
-    );
+  // Validate itemType value (uses formatWithSuggestion for better error messages)
+  if (argDef.type === "array" && argDef.itemType !== undefined) {
+    if (!VALID_ITEM_TYPES.includes(argDef.itemType)) {
+      const suggestion = formatWithSuggestion(
+        argDef.itemType,
+        VALID_ITEM_TYPES
+      );
+      raiseBlockError(
+        `${entityType} "${entityName}": arg "${argName}" has invalid itemType ${suggestion}. ` +
+          `Valid item types are: ${VALID_ITEM_TYPES.join(", ")}.`
+      );
+    }
   }
 
-  // Validate enum is an array with valid values
+  // Validate enum array contents
   if (argDef.enum !== undefined) {
     const expectedType = argDef.type === "string" ? "string" : "number";
     validateEnumArray({
@@ -286,15 +281,7 @@ export function validateCommonSchemaProperties(
     });
   }
 
-  // itemEnum is only valid for array type
-  if (argDef.itemEnum !== undefined && argDef.type !== "array") {
-    raiseBlockError(
-      `${entityType} "${entityName}": arg "${argName}" has "itemEnum" but type is "${argDef.type}". ` +
-        `"itemEnum" is only valid for array type.`
-    );
-  }
-
-  // Validate itemEnum is an array with valid values
+  // Validate itemEnum array contents
   if (argDef.itemEnum !== undefined) {
     validateEnumArray({
       enumValue: argDef.itemEnum,
@@ -315,6 +302,44 @@ export function validateCommonSchemaProperties(
 }
 
 /* Arg Schema Entry Validation Helpers */
+
+/**
+ * Validates block-specific default value rules:
+ * - "required + default" is contradictory (an arg with a default is never missing)
+ * - Default value must match the arg's type schema
+ *
+ * @param {Object} argDef - The argument definition.
+ * @param {string} argName - The argument name.
+ * @param {string} blockName - Block name for error messages.
+ * @param {string} [argLabel="arg"] - Label for error messages (e.g., "childArgs arg").
+ */
+function validateBlockDefaultValue(
+  argDef,
+  argName,
+  blockName,
+  argLabel = "arg"
+) {
+  if (argDef.required === true && argDef.default !== undefined) {
+    raiseBlockError(
+      `Block "${blockName}": ${argLabel} "${argName}" has both "required: true" and "default". ` +
+        `These options are contradictory - an arg with a default value is never missing.`
+    );
+  }
+
+  if (argDef.default !== undefined) {
+    const defaultError = validateArgValue(
+      argDef.default,
+      argDef,
+      argName,
+      blockName
+    );
+    if (defaultError) {
+      raiseBlockError(
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid default value. ${defaultError}`
+      );
+    }
+  }
+}
 
 /**
  * Validates an argument name format.
@@ -479,28 +504,7 @@ export function validateArgsSchema(argsSchema, blockName) {
       continue;
     }
 
-    // Block-specific: required + default is contradictory
-    if (argDef.required === true && argDef.default !== undefined) {
-      raiseBlockError(
-        `Block "${blockName}": arg "${argName}" has both "required: true" and "default". ` +
-          `These options are contradictory - an arg with a default value is never missing.`
-      );
-    }
-
-    // Block-specific: validate default value matches type
-    if (argDef.default !== undefined) {
-      const defaultError = validateArgValue(
-        argDef.default,
-        argDef,
-        argName,
-        blockName
-      );
-      if (defaultError) {
-        raiseBlockError(
-          `Block "${blockName}": arg "${argName}" has invalid default value. ${defaultError}`
-        );
-      }
-    }
+    validateBlockDefaultValue(argDef, argName, blockName);
   }
 }
 
@@ -864,27 +868,6 @@ export function validateChildArgsSchema(childArgsSchema, blockName) {
       );
     }
 
-    // Block-specific: required + default contradiction
-    if (argDef.required === true && argDef.default !== undefined) {
-      raiseBlockError(
-        `Block "${blockName}": childArgs arg "${argName}" has both "required: true" and "default". ` +
-          `These options are contradictory - an arg with a default value is never missing.`
-      );
-    }
-
-    // Block-specific: validate default value matches type
-    if (argDef.default !== undefined) {
-      const defaultError = validateArgValue(
-        argDef.default,
-        argDef,
-        argName,
-        blockName
-      );
-      if (defaultError) {
-        raiseBlockError(
-          `Block "${blockName}": childArgs arg "${argName}" has invalid default value. ${defaultError}`
-        );
-      }
-    }
+    validateBlockDefaultValue(argDef, argName, blockName, "childArgs arg");
   }
 }
