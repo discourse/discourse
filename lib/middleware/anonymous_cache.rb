@@ -85,12 +85,16 @@ module Middleware
       end
 
       def blocked_crawler?
-        @request.get? && !@request.xhr? && !@request.path.ends_with?("robots.txt") &&
-          !@request.path.ends_with?("srv/status") &&
-          @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
-          @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
-          @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
-          CrawlerDetection.is_blocked_crawler?(crawler_identifier)
+        return false if !@request.get?
+        return false if @request.xhr?
+        return false if @request.path.ends_with?("robots.txt")
+        return false if @request.path.ends_with?("llms.txt")
+        return false if @request.path.ends_with?("srv/status")
+        return false if @request[Auth::DefaultCurrentUserProvider::API_KEY]
+        return false if @env[Auth::DefaultCurrentUserProvider::USER_API_KEY]
+        return false if @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY]
+
+        CrawlerDetection.is_blocked_crawler?(crawler_identifier)
       end
 
       # rubocop:disable Lint/BooleanSymbol
