@@ -85,8 +85,6 @@ gem "omniauth-oauth2", require: false
 
 gem "omniauth-google-oauth2"
 
-gem "oj"
-
 gem "pg"
 gem "mini_sql"
 gem "pry-rails", require: false
