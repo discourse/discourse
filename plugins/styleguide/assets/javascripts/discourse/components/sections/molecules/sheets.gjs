@@ -76,8 +76,9 @@ export default class Sheets extends Component {
         <:sample>
           <DBottomSheet as |bs|>
             <bs.Trigger>Open Bottom Sheet</bs.Trigger>
-            <bs.Content>
-              Bottom sheet content here
+            <bs.Content as |content|>
+              <p>Bottom sheet content here</p>
+              <content.Trigger @action="dismiss">Close</content.Trigger>
             </bs.Content>
           </DBottomSheet>
         </:sample>
@@ -107,15 +108,12 @@ export default class Sheets extends Component {
 
       <StyleguideComponent @tag="card">
         <:sample>
-          <DCard>
-            <:root as |sheet|>
-              <sheet.Trigger @action="present">
-                Present
-              </sheet.Trigger>
-            </:root>
-            <:content as |sheet|>
-
-            </:content>
+          <DCard as |card|>
+            <card.Trigger>Open Card</card.Trigger>
+            <card.Content as |content|>
+              <p>Card content here</p>
+              <content.Trigger @action="dismiss">Close</content.Trigger>
+            </card.Content>
           </DCard>
         </:sample>
       </StyleguideComponent>

@@ -101,8 +101,10 @@ const BottomSheetContent = <template>
                 BottomSheetScrollArea
                 reachedLastDetent=@reachedLastDetent
               )
+              Trigger=(component DSheet.Trigger sheet=@sheet)
               expand=(fn @sheet.stepToDetent 2)
               isExpanded=@reachedLastDetent
+              dismiss=@sheet.close
             )
           }}
         </DSheet.Content>
@@ -123,6 +125,8 @@ const BottomSheetContent = <template>
           {{yield
             (hash
               ScrollArea=(component BottomSheetScrollArea reachedLastDetent=false)
+              Trigger=(component DSheet.Trigger sheet=@sheet)
+              dismiss=@sheet.close
             )
           }}
         </DSheet.Content>
