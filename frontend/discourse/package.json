@@ -92,7 +92,7 @@
     "@ember-decorators/object": "^6.1.1",
     "@ember-decorators/utils": "^6.1.1",
     "@ember/optional-features": "^2.3.0",
-    "@ember/render-modifiers": "link:jrjohnson/ember-render-modifiers@v2-addon",
+    "@ember/render-modifiers": "^3.0.0",
     "@ember/string": "^4.0.1",
     "@ember/test-helpers": "^5.4.1",
     "@ember/test-waiters": "^4.1.1",
