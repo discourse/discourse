@@ -47,8 +47,6 @@
     <script type="module" src="/extra-locales/0000000000000000000000000000000000000000/en/wizard.js" vite-ignore></script>
     <script type="module" src="/bootstrap/site-settings-for-tests.js" vite-ignore></script>
 
-    <script src="/@embroider/virtual/vendor.js"></script>
-
     <script src="/@embroider/virtual/test-support.js"></script>
 
     <script>
@@ -57,40 +55,10 @@
       };
     </script>
 
-    <script type="module">
-      import "ember-testing";
-      import { setEnvironment } from "discourse/lib/environment";
-      setEnvironment("qunit-testing");
-
-      import "discourse/loader";
-      import "/bootstrap/site-settings-for-tests.js";
-
-      import "discourse/discourse-common-loader-shims";
-
-      import "./set-test-env";
-      import { startTests } from "./test-boot-ember-cli";
-
-      startTests();
-    </script>
+    <script src="/tests/test-entrypoint.js" type="module"></script>
   </head>
   <body>
     <discourse-assets-icons></discourse-assets-icons>
-
-    <!-- {{content-for "body"}} {{content-for "test-body"}} -->
-
-    <!-- <template id="dynamic-test-js">
-      {{content-for "test-plugin-css"}}
-      {{content-for "test-plugin-js"}}
-      {{content-for "test-plugin-tests-js"}}
-
-      {{content-for "body-footer"}} {{content-for "test-body-footer"}}
-    </template> -->
-
-    <!-- <discourse-dynamic-test-js>
-    </discourse-dynamic-test-js>-->
-
-    <!-- This script takes the <template>, filters plugin assets as required, then appends to discourse-dynamic-test-js -->
-    <!-- <sassets/scripts/discourse-test-load-dynamic-js.js" vite-ignore></script> -->
 
     <link rel="stylesheet" href="/stylesheets/qunit-custom.css" vite-ignore />
   </body>

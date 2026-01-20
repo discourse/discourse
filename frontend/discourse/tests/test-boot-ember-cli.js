@@ -57,7 +57,10 @@ export async function startTests() {
     QUnit.config.reorder = false;
   }
 
-  const availableModules = import.meta.glob("./**/*-test.{gjs,js}");
+  let availableModules;
+  if (!hasThemeJs) {
+    availableModules = import.meta.glob("./**/*-test.{gjs,js}");
+  }
 
   startEmberExam({
     setupTestContainer: false,
