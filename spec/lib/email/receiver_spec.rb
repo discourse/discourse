@@ -7,7 +7,6 @@ RSpec.describe Email::Receiver do
 
   def configure_reply_by_email
     SiteSetting.reply_by_email_address = "reply+%{reply_key}@bar.com"
-    SiteSetting.alternative_reply_by_email_addresses = "alt+%{reply_key}@bar.com"
     SiteSetting.manual_polling_enabled = true
     SiteSetting.reply_by_email_enabled = true
   end
@@ -1925,6 +1924,16 @@ RSpec.describe Email::Receiver do
         expect { process(:reply_user_not_matching_but_known) }.to raise_error(
           Email::Receiver::ReplyNotAllowedError,
         )
+      end
+      it "works" do
+        expect { process(:reply_user_matching) }.to change { topic.posts.count }
+      end
+
+      it "works when sent to an alternative reply address" do
+        SiteSetting.alternative_reply_by_email_addresses = "alt+%{reply_key}@bar.com"
+        expect { process(:reply_user_matching_alternativereplyaddr) }.to change {
+          topic.posts.count
+        }
       end
 
       it "raises a TopicNotFoundError when the topic was deleted" do
