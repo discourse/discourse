@@ -77,21 +77,17 @@ export function validateConditionSource(sourceType, args) {
  * @throws {BlockError} If an unrecognized arg key is found.
  */
 export function validateConditionArgKeys(instance, type, args, path) {
+  // validArgKeys already includes "source" when sourceType !== "none"
+  // (computed by the @blockCondition decorator)
   // @ts-ignore - Static property defined on condition classes
   const validKeys = instance.constructor.validArgKeys;
 
-  // source is always valid if sourceType allows it
-  // @ts-ignore - Static property defined on condition classes
-  const sourceType = instance.constructor.sourceType;
-  const allValidKeys =
-    sourceType !== "none" ? [...validKeys, "source"] : validKeys;
-
   for (const key of Object.keys(args)) {
-    if (!allValidKeys.includes(key)) {
-      const suggestion = formatWithSuggestion(key, allValidKeys);
+    if (!validKeys.includes(key)) {
+      const suggestion = formatWithSuggestion(key, validKeys);
       throw new BlockError(
         `Condition type "${type}": unknown arg ${suggestion}. ` +
-          `Valid args: ${allValidKeys.join(", ")}`,
+          `Valid args: ${validKeys.join(", ")}`,
         { path: path ? `${path}.${key}` : key }
       );
     }
