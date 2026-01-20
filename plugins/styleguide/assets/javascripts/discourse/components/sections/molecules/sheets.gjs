@@ -4,7 +4,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import BottomSheet from "discourse/components/bottom-sheet";
+import DBottomSheet from "discourse/float-kit/components/d-bottom-sheet";
 import DButton from "discourse/components/d-button";
 import DCard from "discourse/float-kit/components/d-card";
 import DSheetWithStacking from "discourse/float-kit/components/d-sheet-with-stacking";
@@ -74,18 +74,18 @@ export default class Sheets extends Component {
     <StyleguideExample @title="Sheets">
       <StyleguideComponent @tag="bottom">
         <:sample>
-          <BottomSheet as |bs|>
+          <DBottomSheet as |bs|>
             <bs.Trigger>Open Bottom Sheet</bs.Trigger>
             <bs.Content>
               Bottom sheet content here
             </bs.Content>
-          </BottomSheet>
+          </DBottomSheet>
         </:sample>
       </StyleguideComponent>
 
       <StyleguideComponent @tag="expandable">
         <:sample>
-          <BottomSheet @expandable={{true}} as |bs|>
+          <DBottomSheet @expandable={{true}} as |bs|>
             <bs.Trigger>Open Expandable Bottom Sheet</bs.Trigger>
             <bs.Content as |content|>
               <input
@@ -101,7 +101,7 @@ export default class Sheets extends Component {
                 </ul>
               </content.ScrollArea>
             </bs.Content>
-          </BottomSheet>
+          </DBottomSheet>
         </:sample>
       </StyleguideComponent>
 

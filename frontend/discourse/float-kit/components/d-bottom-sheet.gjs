@@ -131,7 +131,7 @@ const BottomSheetContent = <template>
   </DSheet.Portal>
 </template>;
 
-export default class BottomSheet extends Component {
+export default class DBottomSheet extends Component {
   @tracked reachedLastDetent = false;
 
   get componentId() {
