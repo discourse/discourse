@@ -249,30 +249,33 @@ export default class EditCategoryImages extends buildCategoryPanel("images") {
       />
     </@form.Container>
 
-    <@form.Field
-      @name="text_color"
-      @title={{i18n "category.foreground_color"}}
-      @format="large"
-      as |field|
-    >
-      <field.Custom>
-        <div class="category-color-editor">
-          <div class="colorpicker-wrapper">
-            <ColorInput
-              @hexValue={{readonly field.value}}
-              @ariaLabelledby="text-color-label"
-              @onChangeColor={{field.set}}
-              @skipNormalize={{true}}
-            />
-            <ColorPicker
-              @value={{readonly field.value}}
-              @ariaLabel={{i18n "category.predefined_colors"}}
-              @onSelectColor={{field.set}}
-            />
+    {{! This field is removed from edit-category-general when the UC is active }}
+    {{#if this.siteSettings.enable_simplified_category_creation}}
+      <@form.Field
+        @name="text_color"
+        @title={{i18n "category.foreground_color"}}
+        @format="large"
+        as |field|
+      >
+        <field.Custom>
+          <div class="category-color-editor">
+            <div class="colorpicker-wrapper">
+              <ColorInput
+                @hexValue={{readonly field.value}}
+                @ariaLabelledby="text-color-label"
+                @onChangeColor={{field.set}}
+                @skipNormalize={{true}}
+              />
+              <ColorPicker
+                @value={{readonly field.value}}
+                @ariaLabel={{i18n "category.predefined_colors"}}
+                @onSelectColor={{field.set}}
+              />
+            </div>
           </div>
-        </div>
-      </field.Custom>
-    </@form.Field>
+        </field.Custom>
+      </@form.Field>
+    {{/if}}
 
     <@form.Field
       @name="default_view"

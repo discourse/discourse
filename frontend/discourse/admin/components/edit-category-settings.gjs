@@ -169,17 +169,20 @@ export default class EditCategorySettings extends buildCategoryPanel(
   }
 
   <template>
-    <@form.Field
-      @name="slug"
-      @title={{i18n "category.slug"}}
-      @format="large"
-      as |field|
-    >
-      <field.Input
-        placeholder={{i18n "category.slug_placeholder"}}
-        @maxlength="255"
-      />
-    </@form.Field>
+    {{! This field is removed from edit-category-general when the UC is active }}
+    {{#if this.siteSettings.enable_simplified_category_creation}}
+      <@form.Field
+        @name="slug"
+        @title={{i18n "category.slug"}}
+        @format="large"
+        as |field|
+      >
+        <field.Input
+          placeholder={{i18n "category.slug_placeholder"}}
+          @maxlength="255"
+        />
+      </@form.Field>
+    {{/if}}
 
     {{#if this.showPositionInput}}
       <@form.Field

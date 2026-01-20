@@ -137,6 +137,12 @@ export default class DPageHeader extends Component {
           </p>
         {{/if}}
 
+        {{#if @showDrawer}}
+          <div class="d-page-header__drawer">
+            {{yield to="drawer"}}
+          </div>
+        {{/if}}
+
         {{#unless @hideTabs}}
           <div class="d-nav-submenu">
             <HorizontalOverflowNav class="d-nav-submenu__tabs">

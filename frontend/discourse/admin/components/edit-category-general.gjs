@@ -520,6 +520,7 @@ export default class EditCategoryGeneral extends Component {
       </@form.Field>
 
       <@form.Container @title={{i18n "category.style"}}>
+        {{! TODO (martin) This doesn't actually update the style_type field, so the change doesn't persist }}
         <@form.ConditionalContent
           @activeName={{or @category.styleType "square"}}
           @onChange={{this.onStyleTypeChange}}

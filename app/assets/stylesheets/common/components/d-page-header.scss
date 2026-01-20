@@ -74,6 +74,12 @@ $mobile-breakpoint: 700px;
       }
     }
   }
+
+  &__drawer {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-2);
+  }
 }
 
 .d-page-subheader {
