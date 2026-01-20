@@ -7930,6 +7930,7 @@ en:
           upload: "Upload a file"
           multiselect: "Multiple choice"
           tagchooser: "Tag Group selector"
+          composer: "Markdown answer"
         validations_modal:
           button_title: "Validations"
           modal_title: "Validation Options"
