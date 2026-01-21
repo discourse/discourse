@@ -288,13 +288,14 @@ body.wizard {
   }
 
   &__text-input {
-    border-radius: var(--wizard-input-radius) !important;
+    --accent-color: var(--wizard-primary);
+    --d-input-border-radius: var(--wizard-input-radius);
+    --d-input-border: 1px solid var(--primary-300);
     width: 100%;
     font-size: var(--font-up-1);
     margin: 0 !important;
     padding: 0.75em !important;
     background-color: var(--secondary);
-    border: 1px solid var(--primary-300) !important;
   }
 
   &__dropdown {
@@ -302,6 +303,7 @@ body.wizard {
   }
 
   &__dropdown .select-kit-header:not(.btn) {
+    --d-input-focused-color: var(--wizard-primary);
     border-radius: var(--wizard-input-radius);
     padding: 0.75em !important;
     height: auto;
@@ -331,6 +333,7 @@ body.wizard {
     flex-basis: 0;
     flex-grow: 1;
     display: flex;
+    position: relative;
 
     &.--selected {
       .wizard-container__label {
@@ -340,6 +343,28 @@ body.wizard {
         margin: 0;
         color: var(--wizard-primary);
         font-weight: bold;
+      }
+
+      .wizard-container__radio-checkmark {
+        position: absolute;
+        top: 0;
+        left: 0;
+        background-color: var(--wizard-primary);
+        border-top-left-radius: var(--wizard-input-radius);
+        border-bottom-right-radius: var(--wizard-input-radius);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.5em;
+        height: 1.5em;
+        z-index: 2;
+        color: var(--secondary);
+
+        .svg-icon {
+          width: 0.875em;
+          height: 0.875em;
+          margin: 0;
+        }
       }
     }
 
@@ -366,6 +391,7 @@ body.wizard {
       font-weight: normal;
       padding: 1em;
       text-align: center;
+      position: relative;
 
       .svg-icon {
         margin-bottom: 0.5em;
