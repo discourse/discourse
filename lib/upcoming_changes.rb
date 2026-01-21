@@ -26,12 +26,12 @@ module UpcomingChanges
 
   def self.previous_status_value(status)
     status_value = self.statuses[status.to_sym]
-    self.statuses.values.select { |value| value < status_value }.max || 0
+    self.statuses.values.select { |value| value < status_value }.max || -100
   end
 
   def self.previous_status(status)
     self.statuses.keys.select { |key| self.statuses[key] < self.statuses[status.to_sym] }.last ||
-      :experimental
+      :conceptual
   end
 
   def self.image_exists?(change_setting_name)

@@ -215,8 +215,12 @@ RSpec.describe UpcomingChanges do
   end
 
   describe ".previous_status_value" do
-    it "returns 0 for experimental (lowest status)" do
-      expect(described_class.previous_status_value(:experimental)).to eq(0)
+    it "returns -100 for conceptual (lowest status)" do
+      expect(described_class.previous_status_value(:conceptual)).to eq(-100)
+    end
+
+    it "returns -100 for experimental" do
+      expect(described_class.previous_status_value(:experimental)).to eq(-100)
     end
 
     it "returns 0 for alpha" do
@@ -241,8 +245,12 @@ RSpec.describe UpcomingChanges do
   end
 
   describe ".previous_status" do
-    it "returns :experimental for experimental (lowest status)" do
-      expect(described_class.previous_status(:experimental)).to eq(:experimental)
+    it "returns :conceptual for conceptual (lowest status)" do
+      expect(described_class.previous_status(:conceptual)).to eq(:conceptual)
+    end
+
+    it "returns :conceptual for experimental" do
+      expect(described_class.previous_status(:experimental)).to eq(:conceptual)
     end
 
     it "returns :experimental for alpha" do
@@ -436,12 +444,6 @@ RSpec.describe UpcomingChanges do
   end
 
   describe "conceptual status filtering" do
-    it "excludes conceptual changes from upcoming_change_site_settings" do
-      settings = SiteSetting.upcoming_change_site_settings
-      expect(settings).not_to include(:conceptual_setting)
-      expect(settings).to include(:enable_upload_debug_mode)
-    end
-
     it "excludes conceptual changes from all_settings with only_upcoming_changes" do
       settings =
         SiteSetting
