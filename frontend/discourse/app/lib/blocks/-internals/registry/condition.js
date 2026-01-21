@@ -86,9 +86,7 @@ export function _freezeConditionTypeRegistry() {
  * Registers a condition type class in the registry.
  * Must be called before the registry is frozen by the "freeze-block-registry" initializer.
  *
- * The condition class must be decorated with `@blockCondition` and have:
- * - `type` static property (set by the decorator)
- * - `validArgKeys` static property (set by the decorator)
+ * The condition class must be decorated with `@blockCondition`
  *
  * @param {typeof import("discourse/blocks/conditions").BlockCondition} ConditionClass - The condition class to register.
  *
@@ -99,7 +97,7 @@ export function _freezeConditionTypeRegistry() {
  *
  * export default {
  *   initialize() {
- *     withPluginApi("1.0", (api) => {
+ *     withPluginApi((api) => {
  *       api.registerBlockConditionType(MyCondition);
  *     });
  *   },
