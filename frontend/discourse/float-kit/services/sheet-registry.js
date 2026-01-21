@@ -1,7 +1,7 @@
 import { cancel, schedule } from "@ember/runloop";
 import Service from "@ember/service";
 
-const ariaHiddenRefCounts = new WeakMap();
+const inertRefCounts = new WeakMap();
 
 /**
  * Service for managing sheet instances, click-outside handling,
@@ -38,7 +38,7 @@ export default class SheetRegistry extends Service {
   inertCleanup = null;
 
   /** @type {Set<Element>} */
-  hiddenElements = new Set();
+  inertElements = new Set();
 
   /** @type {Set<Element>} */
   rootElements = new Set();
@@ -152,7 +152,7 @@ export default class SheetRegistry extends Service {
   }
 
   /**
-   * Recalculates which elements should have aria-hidden.
+   * Recalculates which elements should be inert.
    * Collects all sheet views from topmost down to first inertOutside sheet.
    */
   recalculateInertOutside() {
@@ -189,7 +189,7 @@ export default class SheetRegistry extends Service {
 
       this.rootElements = rootElements;
       this.moveFocusIfNecessary(rootElements);
-      this.applyAriaHidden(rootElements);
+      this.applyInert(rootElements);
     });
   }
 
@@ -217,12 +217,12 @@ export default class SheetRegistry extends Service {
   }
 
   /**
-   * Applies aria-hidden to elements outside the root elements.
+   * Applies inert attribute to elements outside the root elements.
    *
    * @param {Set<Element>} rootElements
    */
-  applyAriaHidden(rootElements) {
-    const hiddenElements = new Set();
+  applyInert(rootElements) {
+    const inertElements = new Set();
 
     const treeWalker = document.createTreeWalker(
       document,
@@ -240,7 +240,7 @@ export default class SheetRegistry extends Service {
             node.tagName === "HEAD" ||
             node.tagName === "SCRIPT" ||
             rootElements.has(node) ||
-            (node.parentElement && hiddenElements.has(node.parentElement))
+            (node.parentElement && inertElements.has(node.parentElement))
           ) {
             return NodeFilter.FILTER_REJECT;
           }
@@ -260,34 +260,34 @@ export default class SheetRegistry extends Service {
 
     let node = treeWalker.nextNode();
     while (node) {
-      this.hideElement(node, hiddenElements);
+      this.makeElementInert(node, inertElements);
       node = treeWalker.nextNode();
     }
 
-    this.hiddenElements = hiddenElements;
+    this.inertElements = inertElements;
     this.setupMutationObserver(rootElements);
   }
 
   /**
-   * Hides an element with aria-hidden using reference counting.
+   * Makes an element inert using reference counting.
    *
    * @param {Element} element
-   * @param {Set<Element>} hiddenElements
+   * @param {Set<Element>} inertElements
    */
-  hideElement(element, hiddenElements) {
-    const count = ariaHiddenRefCounts.get(element) ?? 0;
+  makeElementInert(element, inertElements) {
+    const count = inertRefCounts.get(element) ?? 0;
 
-    if (element.getAttribute("aria-hidden") !== "true" || count > 0) {
+    if (!element.hasAttribute("inert") || count > 0) {
       if (count === 0) {
-        element.setAttribute("aria-hidden", "true");
+        element.inert = true;
       }
-      hiddenElements.add(element);
-      ariaHiddenRefCounts.set(element, count + 1);
+      inertElements.add(element);
+      inertRefCounts.set(element, count + 1);
     }
   }
 
   /**
-   * Sets up MutationObserver to apply aria-hidden to dynamically added content.
+   * Sets up MutationObserver to apply inert to dynamically added content.
    *
    * @param {Set<Element>} rootElements
    */
@@ -298,7 +298,7 @@ export default class SheetRegistry extends Service {
           continue;
         }
 
-        const allProtected = [...rootElements, ...this.hiddenElements];
+        const allProtected = [...rootElements, ...this.inertElements];
         if (allProtected.some((el) => el.contains(mutation.target))) {
           continue;
         }
@@ -311,7 +311,7 @@ export default class SheetRegistry extends Service {
           if (addedNode.dataset.liveAnnouncer === "true") {
             rootElements.add(addedNode);
           } else {
-            this.hideElement(addedNode, this.hiddenElements);
+            this.makeElementInert(addedNode, this.inertElements);
           }
         }
       }
@@ -324,7 +324,7 @@ export default class SheetRegistry extends Service {
   }
 
   /**
-   * Cleans up inert state - removes aria-hidden from hidden elements.
+   * Cleans up inert state - removes inert from elements.
    */
   cleanupInert() {
     if (this.mutationObserver) {
@@ -332,17 +332,17 @@ export default class SheetRegistry extends Service {
       this.mutationObserver = null;
     }
 
-    for (const element of this.hiddenElements) {
-      const count = ariaHiddenRefCounts.get(element);
+    for (const element of this.inertElements) {
+      const count = inertRefCounts.get(element);
       if (count === 1) {
-        element.removeAttribute("aria-hidden");
-        ariaHiddenRefCounts.delete(element);
+        element.inert = false;
+        inertRefCounts.delete(element);
       } else if (count !== undefined) {
-        ariaHiddenRefCounts.set(element, count - 1);
+        inertRefCounts.set(element, count - 1);
       }
     }
 
-    this.hiddenElements = new Set();
+    this.inertElements = new Set();
     this.rootElements = new Set();
   }
 
