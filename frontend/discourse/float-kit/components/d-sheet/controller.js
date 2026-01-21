@@ -916,6 +916,15 @@ export default class Controller {
   }
 
   /**
+   * Get the staging attribute for CSS.
+   *
+   * @type {string|null}
+   */
+  get stagingAttribute() {
+    return this.staging === "none" ? "staging-none" : null;
+  }
+
+  /**
    * Update travel status and notify callback.
    *
    * @param {string} status - "idleOutside", "idleInside", "travellingIn", "travellingOut", "stepping"

@@ -284,6 +284,16 @@
   height: 100% !important;
 }
 
+[data-d-sheet~="bleeding-background"]:not([data-d-sheet~="staging-none"])[data-d-sheet~="start"],
+[data-d-sheet~="bleeding-background"]:not([data-d-sheet~="staging-none"])[data-d-sheet~="end"] {
+  height: calc(100% + 50px) !important;
+}
+
+[data-d-sheet~="bleeding-background"]:not([data-d-sheet~="staging-none"])[data-d-sheet~="left"],
+[data-d-sheet~="bleeding-background"]:not([data-d-sheet~="staging-none"])[data-d-sheet~="right"] {
+  width: calc(100% + 50px) !important;
+}
+
 :where([data-d-sheet~="special-wrapper-root"]) {
   --d-sheet-defaults: initial;
   width: var(--d-sheet-defaults, 100%);

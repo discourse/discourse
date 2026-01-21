@@ -12,6 +12,7 @@ const BleedingBackground = <template>
       "bleeding-background"
       @sheet.contentPlacementCssClass
       @sheet.tracks
+      @sheet.stagingAttribute
     }}
     ...attributes
   ></div>
