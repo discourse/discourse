@@ -1,6 +1,8 @@
 import { Input } from "@ember/component";
 import { hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { LinkTo } from "@ember/routing";
+import AdminInterpolationKeys from "discourse/admin/components/admin-interpolation-keys";
 import DButton from "discourse/components/d-button";
 import DEditor from "discourse/components/d-editor";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -31,6 +33,8 @@ export default <template>
         <Input
           @value={{@controller.buffered.subject}}
           class="email-template__subject"
+          {{on "focusin" @controller.trackTextarea}}
+          {{on "focusout" @controller.saveCursorPos}}
         />
       {{/if}}
       <br />
@@ -50,8 +54,15 @@ export default <template>
           @value={{@controller.buffered.body}}
           @forceEditorMode={{USER_OPTION_COMPOSITION_MODES.markdown}}
           class="email-template__body"
+          {{on "focusin" @controller.trackTextarea}}
+          {{on "focusout" @controller.saveCursorPos}}
         />
       {{/if}}
+
+      <AdminInterpolationKeys
+        @keys={{@controller.interpolationKeysWithStatus}}
+        @onInsertKey={{@controller.insertInterpolationKey}}
+      />
 
       <SaveControls
         @model={{@controller.emailTemplate}}

@@ -51,4 +51,16 @@ describe "Admin Email Templates", type: :system do
       "#{Discourse.base_url}/admin/customize/site_texts?q=system_messages.reviewables_reminder",
     )
   end
+
+  it "shows interpolation keys for templates that have them" do
+    email_templates_page.visit_template("user_notifications.admin_login")
+    expect(email_templates_page).to have_interpolation_keys(
+      %w[base_url email_prefix email_token site_name],
+    )
+  end
+
+  it "does not show interpolation keys for templates without any" do
+    email_templates_page.visit_template("system_messages.download_remote_images_disabled")
+    expect(email_templates_page).to have_no_interpolation_keys
+  end
 end
