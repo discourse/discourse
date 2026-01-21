@@ -272,6 +272,31 @@ RSpec.describe TopicTrackingState do
         expect(messages).to eq([])
       end
     end
+
+    it "allows plugins to modify the scope via topic_tracking_state_publish_unread_scope modifier" do
+      user_to_exclude = Fabricate(:user)
+      Fabricate(:topic_user_watching, topic: topic, user: user_to_exclude)
+
+      messages = MessageBus.track_publish("/unread") { TopicTrackingState.publish_unread(post) }
+      expect(messages.first.user_ids).to include(user_to_exclude.id)
+
+      plugin = Plugin::Instance.new
+      modifier_block = Proc.new { |scope, _post| scope.where.not(user_id: user_to_exclude.id) }
+      DiscoursePluginRegistry.register_modifier(
+        plugin,
+        :topic_tracking_state_publish_unread_scope,
+        &modifier_block
+      )
+
+      messages = MessageBus.track_publish("/unread") { TopicTrackingState.publish_unread(post) }
+      expect(messages.first.user_ids).not_to include(user_to_exclude.id)
+    ensure
+      DiscoursePluginRegistry.unregister_modifier(
+        plugin,
+        :topic_tracking_state_publish_unread_scope,
+        &modifier_block
+      )
+    end
   end
 
   describe "#publish_muted" do

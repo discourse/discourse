@@ -149,6 +149,12 @@ class TopicTrackingState
     # this is why they are excluded from the initial scope.
     scope =
       TopicUser.tracking(post.topic_id).includes(user: :user_stat).where.not(user_id: post.user_id)
+    scope =
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_tracking_state_publish_unread_scope,
+        scope,
+        post,
+      )
 
     group_ids =
       if post.post_type == Post.types[:whisper]
