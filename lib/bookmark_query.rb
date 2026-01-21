@@ -91,10 +91,12 @@ class BookmarkQuery
 
   def unread_notifications(limit: 20)
     reminder_notifications =
-      Notification
-        .for_user_menu(@user.id, limit: [limit, 100].min)
-        .unread
-        .where(notification_type: Notification.types[:bookmark_reminder])
+      NotificationQuery.new(user: @user, guardian: @guardian).list(
+        limit: [limit, 100].min,
+        filter: :unread,
+        types: [Notification.types[:bookmark_reminder]],
+        prioritized: true,
+      )
 
     reminder_bookmark_ids = reminder_notifications.map { |n| n.data_hash[:bookmark_id] }.compact
 

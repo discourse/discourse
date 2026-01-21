@@ -34,13 +34,11 @@ class UserNotificationTotalSerializer < ApplicationSerializer
 
   def group_inboxes
     group_inbox_data =
-      Notification
-        .unread
-        .where(
-          user_id: scope.user.id,
-          notification_type: Notification.types[:group_message_summary],
-        )
-        .pluck(:data)
+      Notification.where(
+        user_id: scope.user.id,
+        notification_type: Notification.types[:group_message_summary],
+        read: false,
+      ).pluck(:data)
 
     results = []
 
