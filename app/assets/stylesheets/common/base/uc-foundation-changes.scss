@@ -31,6 +31,9 @@
   --d-sidebar-active-font-weight: 600;
   -webkit-font-smoothing: antialiased;
 
+  --welcome-banner-text-align: center;
+  --welcome-banner-search-menu-margin-inline: auto;
+
   // Buttons & Actions
   .btn-default,
   .btn-icon-text,
@@ -94,10 +97,11 @@
   .welcome-banner__title {
     font-size: var(--font-up-5);
     font-weight: 500;
+    text-align: var(--welcome-banner-text-align);
   }
 
   .welcome-banner__wrap .search-menu {
-    margin-inline: 0;
+    margin-inline: var(--welcome-banner-search-menu-margin-inline);
   }
 
   .search-menu .search-input,
