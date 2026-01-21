@@ -639,7 +639,7 @@ vi:
         title: "Xác nhận chủ đề này"
       unclaim:
         help: "Xóa yêu cầu này"
-      awaiting_approval: "Đang đợi Phê duyệt"
+      awaiting_approval: "Đang chờ duyệt"
       delete: "Xóa"
       settings:
         saved: "Lưu trữ"
