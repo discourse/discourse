@@ -2828,6 +2828,11 @@ el:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - ολοκληρώθηκε"
       new_features: "Νέες δυνατότητες διαθέσιμες!"
+      upcoming_changes:
+        available:
+          title: "Επερχόμενες αλλαγές"
+        automatically_promoted:
+          title: "Επερχόμενες αλλαγές"
       dismiss_confirmation:
         dismiss: "Απόρριψη"
         cancel: "Άκυρο"

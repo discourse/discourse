@@ -2056,6 +2056,7 @@ tr_TR:
               other {# günlüğüne}
             } geçerlidir.
           edit_link_options: "Bağlantı seçeneklerini düzenleyin veya e-posta ile gönderin."
+          edit_link_options_only: "Bağlantı seçeneklerini düzenleyin"
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
           description: "Açıklama"

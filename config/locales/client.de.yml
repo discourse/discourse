@@ -2123,6 +2123,7 @@ de:
               other {# Tagen}
             } ab.
           edit_link_options: "Link-Optionen bearbeiten oder per E-Mail versenden."
+          edit_link_options_only: "Link-Optionen bearbeiten"
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
           description: "Beschreibung"
@@ -3026,6 +3027,11 @@ de:
       votes_released: "%{description} – abgeschlossen"
       new_features: "Neue Funktionen verfügbar!"
       admin_problems: "Neue Ratschläge auf deinem Website-Dashboard"
+      upcoming_changes:
+        available:
+          title: "Bevorstehende Änderungen"
+        automatically_promoted:
+          title: "Bevorstehende Änderungen"
       dismiss_confirmation:
         body:
           default:
@@ -5608,11 +5614,9 @@ de:
               locale_label: "Sprache"
             header_new_members:
               label: "Kopfzeile für neue Mitglieder"
-              description: "Verfügbare Variable: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Willkommen, %{preferred_display_name}!"
             header_logged_in:
               label: "Kopfzeile für eingeloggte Mitglieder"
-              description: "Verfügbare Variable: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Willkommen zurück, %{preferred_display_name}!"
             header_anonymous:
               label: "Kopfzeile für anonyme Besucher"

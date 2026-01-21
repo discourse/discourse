@@ -2063,6 +2063,7 @@ fr:
               other {# jours}
             }.
           edit_link_options: "Modifiez les options du lien ou envoyez-le par e-mail."
+          edit_link_options_only: "Modifier les options de lien"
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
           description: "Description"

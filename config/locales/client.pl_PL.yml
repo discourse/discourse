@@ -2353,6 +2353,7 @@ pl_PL:
               other {# dni}
             }.
           edit_link_options: "Edytuj opcje linku lub wyślij e-mailem."
+          edit_link_options_only: "Edytuj opcje łącza"
           show_advanced: "Pokaż ustawienia zaawansowane"
           hide_advanced: "Ukryj ustawienia zaawansowane"
           description: "Opis"
@@ -3362,6 +3363,13 @@ pl_PL:
       votes_released: "%{description} - zakończone"
       new_features: "Dostępne są nowe funkcje!"
       admin_problems: "Nowe porady w panelu administratora"
+      upcoming_changes:
+        available:
+          title: "Nadchodzące zmiany"
+          description: "„%{changeName}” jest dostępny do podglądu"
+        automatically_promoted:
+          title: "Nadchodzące zmiany"
+          description: "Opcja „%{changeName}” została automatycznie włączona"
       dismiss_confirmation:
         body:
           default:
@@ -6195,11 +6203,11 @@ pl_PL:
               locale_label: "Język"
             header_new_members:
               label: "Nagłówek dla nowych członków"
-              description: "Dostępna zmienna: <code>&percnt;{preferred_display_name}</code>"
+              description: "Dostępne zmienne: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Witaj, %{preferred_display_name}!"
             header_logged_in:
               label: "Nagłówek dla zalogowanych członków"
-              description: "Dostępna zmienna: <code>&percnt;{preferred_display_name}</code>"
+              description: "Dostępne zmienne: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Witaj z powrotem, %{preferred_display_name}!"
             header_anonymous:
               label: "Nagłówek dla anonimowych gości"
@@ -7976,6 +7984,7 @@ pl_PL:
             change_theme_site_setting: "zmień ustawienia motywu witryny"
             stop_impersonating: "przestań się podszywać"
             upcoming_change_toggled: "nadchodząca zmiana przełączona"
+            upcoming_change_available: "nadchodząca zmiana dostępna"
             change_site_setting_groups: "zmień grupy ustawień witryny"
             discourse_id_regenerate_credentials: "wygeneruj ponownie dane uwierzytelniające Discourse ID"
         screened_emails:
@@ -8118,6 +8127,7 @@ pl_PL:
           upload: "Prześlij plik"
           multiselect: "Wielokrotny wybór"
           tagchooser: "Selektor grupy tagów"
+          composer: "Odpowiedź Markdown"
         validations_modal:
           button_title: "Walidacje"
           modal_title: "Opcje walidacji"

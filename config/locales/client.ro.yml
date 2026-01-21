@@ -1793,6 +1793,7 @@ ro:
               other {în # de zile}
             }.
           edit_link_options: "Editează opțiunile de legătură sau trimite prin email."
+          edit_link_options_only: "Editează opțiuni legătură"
           show_advanced: "Afișați opțiunile avansate"
           hide_advanced: "Ascundeți opțiunile avansate"
           description: "Descriere"
