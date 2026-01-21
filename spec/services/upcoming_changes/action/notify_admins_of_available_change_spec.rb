@@ -23,6 +23,13 @@ RSpec.describe UpcomingChanges::Action::NotifyAdminsOfAvailableChange do
   let(:change_name) { :test_upcoming_change }
 
   describe ".call" do
+    let(:notification) do
+      Notification.find_by(
+        notification_type: Notification.types[:upcoming_change_available],
+        user_id: admin_1.id,
+      )
+    end
+
     it "returns true" do
       expect(result).to eq(true)
     end
@@ -35,16 +42,10 @@ RSpec.describe UpcomingChanges::Action::NotifyAdminsOfAvailableChange do
 
     it "creates notifications with correct data" do
       result
-      notification =
-        Notification.find_by(
-          notification_type: Notification.types[:upcoming_change_available],
-          user_id: admin_1.id,
-        )
 
-      data = JSON.parse(notification.data)
-      expect(data["upcoming_change_name"]).to eq("test_upcoming_change")
-      expect(data["upcoming_change_humanized_name"]).to eq(
-        SiteSetting.humanized_name(:test_upcoming_change),
+      expect(JSON.parse(notification.data)).to include(
+        "upcoming_change_name" => "test_upcoming_change",
+        "upcoming_change_humanized_name" => SiteSetting.humanized_name(:test_upcoming_change),
       )
     end
 

@@ -39,25 +39,26 @@ RSpec.describe Notification::Action::BulkCreate do
           },
         ]
       end
+      let(:notification) { Notification.find(action.first) }
 
       it "creates the notification" do
         expect { action }.to change { Notification.count }.by(1)
       end
 
       it "returns the notification ids" do
-        notification_ids = action
-        expect(notification_ids.length).to eq(1)
-        expect(Notification.find(notification_ids.first)).to be_present
+        expect(action.length).to eq(1)
+        expect(notification).to be_present
       end
 
       it "sets the correct notification attributes" do
-        notification_ids = action
-        notification = Notification.find(notification_ids.first)
-
-        expect(notification.user_id).to eq(user1.id)
-        expect(notification.notification_type).to eq(Notification.types[:custom])
-        expect(notification.data_hash).to eq({ "message" => "test" })
-        expect(notification.read).to eq(false)
+        expect(notification).to have_attributes(
+          user: user1,
+          notification_type: Notification.types[:custom],
+          read: false,
+          data_hash: {
+            "message" => "test",
+          },
+        )
       end
 
       it "publishes notification state to the user" do

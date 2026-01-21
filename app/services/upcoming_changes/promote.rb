@@ -21,12 +21,9 @@ class UpcomingChanges::Promote
   policy :setting_not_modified
   policy :setting_not_already_enabled
   step :toggle_upcoming_change
-
-  transaction do
-    step :log_promotion
-    step :notify_admins
-    step :create_event
-  end
+  step :log_promotion
+  step :notify_admins
+  step :create_event
 
   private
 

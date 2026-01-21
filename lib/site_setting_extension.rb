@@ -812,8 +812,8 @@ module SiteSettingExtension
   end
 
   def log(name, value, prev_value, user = Discourse.system_user, detailed_message = nil)
-    value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
     return if hidden_settings.include?(name.to_sym)
+    value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
     StaffActionLogger.new(user).log_site_setting_change(
       name,
       prev_value,
