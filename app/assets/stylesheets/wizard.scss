@@ -1,7 +1,12 @@
 @use "lib/viewport";
 
-$blob-bg: absolute-image-url("/branded-background.svg");
-$blob-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
+:root {
+  --wizard-primary: #7b5fe2;
+  --wizard-primary-100: #f4f2fc;
+  --wizard-bg-color: #f9f8fc;
+  --wizard-bg-color-2: #e1d5ff;
+  --wizard-input-radius: 8px;
+}
 
 @keyframes bump {
   0% {
@@ -24,23 +29,16 @@ $blob-mobile-bg: absolute-image-url("/branded-background-mobile.svg");
   }
 }
 
+html:has(body.wizard) {
+  background-color: var(--wizard-bg-color);
+}
+
 body.wizard {
-  background-color: var(--secondary);
-  background-image: $blob-bg;
-  background-size: 110vw 110vh; // crops better than cover at various viewport sizes
-  background-repeat: no-repeat;
-  background-position: bottom;
   color: var(--primary-very-high);
+  position: relative;
 
   .wrap {
     max-width: 100%;
-  }
-
-  @include viewport.until(sm) {
-    background: $blob-mobile-bg;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: bottom;
   }
 
   #wizard-main {
@@ -57,20 +55,41 @@ body.wizard {
     }
   }
 
-  .discourse-logo svg {
-    position: relative;
-    height: 50px;
-    width: auto;
+  .discourse-logo {
+    z-index: z("header");
 
-    @include viewport.until(sm) {
-      height: 50px;
-    }
+    svg {
+      position: relative;
+      height: 40px;
+      width: auto;
 
-    @media screen and (height <= 900px) {
-      .desktop-view & {
-        display: none;
+      @include viewport.until(sm) {
+        height: 40px;
+      }
+
+      @media screen and (height <= 900px) {
+        .desktop-view & {
+          display: none;
+        }
       }
     }
+  }
+
+  &::before {
+    content: "";
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 600px;
+    background: linear-gradient(
+      to bottom,
+      var(--wizard-bg-color-2) 0%,
+      var(--wizard-bg-color) 100%
+    );
+    z-index: z("base");
+    pointer-events: none;
   }
 }
 
@@ -79,12 +98,11 @@ body.wizard {
   position: relative;
   z-index: 11;
   background-color: var(--secondary);
-  box-shadow: 0 4px 19px 6px rgb(0, 0, 0, 0.05);
+  box-shadow: 0 10px 30px rgb(123, 95, 226, 0.15);
   box-sizing: border-box;
   margin: 1em auto;
-  border: 1px solid var(--content-border-color);
-  border-radius: 8px;
-  padding: 2em;
+  border-radius: 16px;
+  padding: 3em;
 
   @include viewport.until(lg) {
     padding: 2em 1.5em;
@@ -112,7 +130,7 @@ body.wizard {
   }
 
   &__field {
-    margin-bottom: 1em;
+    margin-bottom: 32px;
   }
 
   &__field.invalid input {
@@ -127,6 +145,7 @@ body.wizard {
 
   &__field label {
     display: block;
+    margin-bottom: 0.5em;
   }
 
   &__step-form {
@@ -141,23 +160,14 @@ body.wizard {
   &__step-header {
     text-align: center;
     margin-bottom: 3em;
-
-    &--emoji img {
-      width: 40px;
-      height: 40px;
-      margin-bottom: 1em;
-    }
   }
 
   &__step-title {
-    font-size: 2.5em;
+    font-size: 2em;
     color: var(--primary);
     line-height: var(--line-height-medium);
     margin: 0 0 0.5em 0;
-
-    @include viewport.until(lg) {
-      font-size: var(--font-up-5);
-    }
+    font-weight: 900;
   }
 
   &__step-container {
@@ -169,7 +179,6 @@ body.wizard {
 
   &__step-contents {
     min-height: 37em;
-    margin-bottom: 2em;
 
     @include viewport.until(sm) {
       min-height: 30em;
@@ -205,7 +214,11 @@ body.wizard {
   }
 
   &__button {
-    font-size: var(--font-up-1);
+    display: block;
+    width: 100%;
+    padding: 0.75em 2em;
+    font-weight: bold;
+    background-color: var(--wizard-primary) !important;
   }
 
   &__button.small {
@@ -241,7 +254,7 @@ body.wizard {
 
   &__label {
     font-weight: bold;
-    font-size: var(--font-up-1);
+    color: var(--primary);
   }
 
   &__label.required {
@@ -253,7 +266,7 @@ body.wizard {
     color: var(--primary-high);
     font-size: var(--font-0);
     font-weight: normal;
-    margin: 0.25em 0 0.5em 0;
+    margin: 0.25em 0 1em;
 
     a {
       margin: 0;
@@ -275,22 +288,24 @@ body.wizard {
   }
 
   &__text-input {
-    border-radius: 4px !important;
+    border-radius: var(--wizard-input-radius) !important;
     width: 100%;
     font-size: var(--font-up-1);
-    margin: 0;
-    padding: 10px;
+    margin: 0 !important;
+    padding: 0.75em !important;
     background-color: var(--secondary);
-    border: 1px solid var(--primary-low-mid);
+    border: 1px solid var(--primary-300) !important;
   }
 
   &__dropdown {
     width: 100%;
-    height: 38px;
   }
 
   &__dropdown .select-kit-header:not(.btn) {
-    border-radius: 4px;
+    border-radius: var(--wizard-input-radius);
+    padding: 0.75em !important;
+    height: auto;
+    border-color: var(--primary-300);
   }
 
   &__radio {
@@ -319,10 +334,12 @@ body.wizard {
 
     &.--selected {
       .wizard-container__label {
-        background-color: var(--tertiary-very-low);
-        border-color: var(--tertiary-high);
+        background-color: var(--wizard-primary-100);
+        border-color: var(--wizard-primary);
         border-width: 2px;
         margin: 0;
+        color: var(--wizard-primary);
+        font-weight: bold;
       }
     }
 
@@ -334,8 +351,8 @@ body.wizard {
     }
 
     .wizard-container__label {
-      border-radius: 4px;
-      border: 1px solid var(--primary-low-mid);
+      border-radius: var(--wizard-input-radius);
+      border: 1px solid var(--primary-300);
       flex-grow: 1;
       margin: 1px 0;
     }
