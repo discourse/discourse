@@ -147,7 +147,7 @@ class ListController < ApplicationController
   def category_default
     canonical_url "#{Discourse.base_url_no_prefix}#{@category.url}"
     view_method = @category.default_view
-    view_method = "latest" if %w[latest top].exclude?(view_method)
+    view_method = "latest" if %w[hot latest top].exclude?(view_method)
 
     self.public_send(view_method, category: @category.id)
   end
