@@ -17,7 +17,30 @@ import {
 /**
  * A block class decorated with `@block`.
  *
- * @typedef {typeof import("@glimmer/component").default & { blockName: string, blockMetadata: Object }} BlockClass
+ * @typedef {typeof import("@glimmer/component").default & {
+ *   blockName: string,
+ *   blockShortName: string,
+ *   blockNamespace: string|null,
+ *   blockType: "core"|"plugin"|"theme",
+ *   blockMetadata: BlockMetadata
+ * }} BlockClass
+ */
+
+/**
+ * Metadata object containing block configuration set by the `@block` decorator.
+ * Includes args schema, container settings, validation, and outlet restrictions.
+ *
+ * @typedef {{
+ *   description: string,
+ *   container: boolean,
+ *   containerClassNames: string|Array<string>|Function|null,
+ *   args: Object|null,
+ *   childArgs: Object|null,
+ *   constraints: Object|null,
+ *   validate: Function|null,
+ *   allowedOutlets: ReadonlyArray<string>|null,
+ *   deniedOutlets: ReadonlyArray<string>|null
+ * }} BlockMetadata
  */
 
 /**
@@ -37,7 +60,7 @@ import {
  */
 
 /**
- * Registry of block components registered via `@block` decorator and `api.registerBlock()`.
+ * Registry of block components registered via `api.registerBlock()`.
  * Maps block names to their component classes or factory functions.
  *
  * @type {Map<string, BlockRegistryEntry>}
@@ -162,8 +185,8 @@ export function isBlockFactory(entry) {
  * - Caches resolved factories to avoid re-resolving.
  *
  * @param {string | BlockClass} nameOrClass - Block name string or BlockClass.
- * @returns {Promise<BlockClass>} The resolved block class.
- * @throws {Error} If block not found or factory resolution fails.
+ * @returns {Promise<BlockClass|undefined>} The resolved block class, or undefined if resolution previously failed.
+ * @throws {Error} If block not registered or factory resolution fails on first attempt.
  *
  * @example
  * ```javascript
@@ -280,9 +303,8 @@ export function _freezeBlockRegistry() {
  * Registers a block component in the registry.
  * Must be called before any renderBlocks() configuration is registered.
  *
- * The block component must be decorated with `@block` and have:
- * - `blockName` static property (set by the decorator)
- * - `blockMetadata` static property (set by the decorator)
+ * The block component must be decorated with `@block` and have a
+ * `blockName` static property (set by the decorator).
  *
  * @param {BlockClass} BlockClass - The block component class
  * @throws {Error} If called after registry is locked, or if block is invalid
