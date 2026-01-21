@@ -4,70 +4,6 @@
 $category-settings-width: string.unquote("min(600px, 90%)");
 $number-input-width: 75px;
 
-/* TODO (martin) How best to split this kind of work up? */
-.uc-enable-simplified-category-creation {
-  div.edit-category {
-    display: block;
-
-    .add-required-tag-group {
-      align-self: start;
-    }
-
-    .form-kit__control-icon {
-      .select-kit-row .d-icon,
-      .select-kit-header .d-icon,
-      .select-kit-header-wrapper .d-icon:first-of-type {
-        color: var(--icon-color, currentColor);
-      }
-
-      .select-kit-header-wrapper {
-        gap: var(--space-2);
-      }
-    }
-
-    .form-kit__control-icon .formatted-selection {
-      display: flex !important; // overrides another important
-      flex: 0 1 auto;
-    }
-
-    #control-emoji {
-      &.form-kit__field .form-kit__container-content {
-        width: auto;
-      }
-    }
-
-    .edit-category-title-bar {
-      min-height: 6.5rem; // avoid layout shift on category preview
-      box-sizing: border-box;
-      width: 100%;
-      flex-wrap: wrap;
-    }
-
-    .edit-category-title {
-      flex: 1 1 auto;
-
-      h2 {
-        margin-top: 0;
-      }
-
-      .btn-back {
-        margin-top: -0.5em;
-        margin-left: -0.5em;
-        margin-bottom: 0.5em;
-      }
-    }
-
-    .edit-category-nav {
-      border-bottom: 1px solid var(--content-border-color);
-    }
-
-    .edit-category-content {
-      margin-top: 2em;
-      grid-area: unset;
-    }
-  }
-}
-
 div.edit-category {
   display: grid;
   grid-template-columns: 1fr 5fr;
@@ -213,10 +149,6 @@ div.edit-category {
   }
 
   .edit-category-tab-security {
-    .form-kit__container-content {
-      width: 100%;
-    }
-
     .permission-selector {
       margin-right: 0.25em;
     }
@@ -342,38 +274,6 @@ div.edit-category {
     }
   }
 
-  .edit-category-title-text {
-    display: flex;
-    flex-direction: column;
-    margin: 0;
-
-    .edit-category-static-title {
-      transition: font-size 0.2s ease-in-out;
-    }
-
-    .edit-category-preview-badge {
-      opacity: 0;
-      transition: opacity 0.2s ease-in-out;
-    }
-
-    &:has(.badge-category__wrapper) {
-      .edit-category-static-title {
-        position: absolute;
-        font-size: var(--font-down-3);
-      }
-
-      .edit-category-preview-badge {
-        opacity: 1;
-      }
-    }
-
-    .badge-category__wrapper {
-      font-weight: normal;
-      font-size: var(--font-up-2);
-      margin-top: var(--space-5);
-    }
-  }
-
   .edit-category-tab-topic-template {
     .select-category-template__info {
       margin-block: 0.25rem;
@@ -383,7 +283,6 @@ div.edit-category {
 }
 
 .category-permissions-table {
-  width: 100%;
   max-width: 450px;
   margin-bottom: 0;
 
