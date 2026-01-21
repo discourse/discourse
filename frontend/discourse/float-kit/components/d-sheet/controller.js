@@ -13,7 +13,6 @@ import DetentManager from "./detent-manager";
 import DimensionCalculator from "./dimensions-calculator";
 import DOMAttributes from "./dom-attributes";
 import FocusManagement from "./focus-management";
-import InertManagement from "./inert-management";
 import ObserverManager from "./observer-manager";
 import ScrollProgressCalculator from "./scroll-progress-calculator";
 import StackingAdapter from "./stacking-adapter";
@@ -335,9 +334,6 @@ export default class Controller {
   /** @type {FocusManagement|null} */
   focusManagement = null;
 
-  /** @type {InertManagement|null} */
-  inertManagement = null;
-
   /**
    * Subscription definitions for state machines.
    */
@@ -614,7 +610,6 @@ export default class Controller {
   constructor() {
     this.touchHandler = new TouchHandler(this);
     this.focusManagement = new FocusManagement(this);
-    this.inertManagement = new InertManagement(this);
     this.timeoutManager = new TimeoutManager();
     this.detentManager = new DetentManager(this);
     this.domAttributes = new DOMAttributes(this);
@@ -1567,7 +1562,6 @@ export default class Controller {
     this.observerManager.cleanup();
     this.themeColorAdapter.cleanup();
     this.domAttributes.cleanup();
-    this.inertManagement.cleanup();
     this.focusManagement.cleanup();
     this.stateMachine.cleanup();
     this.animationStateMachine.cleanup();
@@ -1611,7 +1605,6 @@ export default class Controller {
    * Apply inert attribute to elements outside the sheet.
    */
   applyInertOutside() {
-    this.inertManagement.applyInertOutside();
     this.sheetRegistry?.updateInertOutside(this, this.inertOutside);
   }
 
@@ -1619,7 +1612,6 @@ export default class Controller {
    * Remove inert attribute from elements outside the sheet.
    */
   removeInertOutside() {
-    this.inertManagement.removeInertOutside();
     this.sheetRegistry?.updateInertOutside(this, false);
   }
 
