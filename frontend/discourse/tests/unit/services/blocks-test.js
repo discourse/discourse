@@ -6,10 +6,12 @@ import { block } from "discourse/blocks/block-outlet";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import {
   _registerBlock,
-  _registerConditionType,
   withTestBlockRegistration,
+} from "discourse/lib/blocks/registry/block";
+import {
+  _registerConditionType,
   withTestConditionRegistration,
-} from "discourse/lib/blocks/core/registration";
+} from "discourse/lib/blocks/registry/condition";
 
 module("Unit | Service | blocks", function (hooks) {
   setupTest(hooks);

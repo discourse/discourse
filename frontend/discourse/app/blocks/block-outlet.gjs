@@ -36,10 +36,6 @@ import {
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/core/patterns";
 import {
-  isBlockRegistryFrozen,
-  resolveBlockSync,
-} from "discourse/lib/blocks/core/registration";
-import {
   applyArgDefaults,
   shallowArgsEqual,
 } from "discourse/lib/blocks/core/utils";
@@ -56,6 +52,10 @@ import {
   validateOutletPatterns,
   warnUnknownOutletPatterns,
 } from "discourse/lib/blocks/matching/outlet-matcher";
+import {
+  isBlockRegistryFrozen,
+  resolveBlockSync,
+} from "discourse/lib/blocks/registry/block";
 import {
   validateArgsSchema,
   validateChildArgsSchema,
@@ -790,7 +790,7 @@ function processBlockEntries({
     }
 
     const blockClass =
-      /** @type {import("discourse/lib/blocks/core/registration").BlockClass} */ (
+      /** @type {import("discourse/lib/blocks/registry/block").BlockClass} */ (
         resolvedBlock
       );
     const blockName = blockClass.blockName || "unknown";
@@ -922,7 +922,7 @@ function resolveContainerClassNames(metadata, args) {
  * in a layout wrapper for consistent styling.
  *
  * @param {Object} entry - The block entry
- * @param {import("discourse/lib/blocks/core/registration").BlockClass} entry.block - The block component class
+ * @param {import("discourse/lib/blocks/registry/block").BlockClass} entry.block - The block component class
  * @param {Object} [entry.args] - Args to pass to the block
  * @param {Object} [entry.containerArgs] - Container args for parent's childArgs schema
  * @param {string} [entry.classNames] - Additional CSS classes
@@ -1574,7 +1574,7 @@ class BlockOutletRootContainer extends Component {
       }
 
       const blockClass =
-        /** @type {import("discourse/lib/blocks/core/registration").BlockClass} */ (
+        /** @type {import("discourse/lib/blocks/registry/block").BlockClass} */ (
           resolvedBlock
         );
       const blockName = blockClass.blockName || "unknown";

@@ -8,7 +8,7 @@ import {
   _registerBlock,
   hasBlock,
   withTestBlockRegistration,
-} from "discourse/lib/blocks/core/registration";
+} from "discourse/lib/blocks/registry/block";
 
 module("Unit | Lib | block-outlet", function (hooks) {
   setupTest(hooks);

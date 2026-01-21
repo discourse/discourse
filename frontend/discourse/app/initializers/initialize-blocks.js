@@ -1,11 +1,11 @@
 import * as BuiltinBlocks from "discourse/blocks/builtin";
 import * as conditions from "discourse/blocks/conditions";
+import { _freezeBlockRegistry } from "discourse/lib/blocks/registry/block";
 import {
-  _freezeBlockRegistry,
   _freezeConditionTypeRegistry,
-  _freezeOutletRegistry,
   _registerConditionType,
-} from "discourse/lib/blocks/core/registration";
+} from "discourse/lib/blocks/registry/condition";
+import { _freezeOutletRegistry } from "discourse/lib/blocks/registry/outlet";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 /**

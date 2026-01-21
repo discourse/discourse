@@ -10,14 +10,14 @@ import BlockOutlet, {
 } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import {
-  _registerBlock,
-  _registerBlockFactory,
-  withTestBlockRegistration,
-} from "discourse/lib/blocks/core/registration";
-import {
   DEBUG_CALLBACK,
   debugHooks,
 } from "discourse/lib/blocks/debug/block-processing";
+import {
+  _registerBlock,
+  _registerBlockFactory,
+  withTestBlockRegistration,
+} from "discourse/lib/blocks/registry/block";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Blocks | BlockOutlet", function (hooks) {

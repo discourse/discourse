@@ -5,16 +5,13 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks/block-outlet";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
-import {
-  getBlockEntry,
-  hasBlock,
-  hasConditionType,
-  isValidOutlet,
-  resetBlockRegistryForTesting,
-} from "discourse/lib/blocks/core/registration";
+import { getBlockEntry, hasBlock } from "discourse/lib/blocks/registry/block";
+import { hasConditionType } from "discourse/lib/blocks/registry/condition";
+import { isValidOutlet } from "discourse/lib/blocks/registry/outlet";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import discourseComputed from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
+import { resetBlockRegistryForTesting } from "discourse/tests/helpers/block-registry-testing";
 
 module("Unit | Utility | plugin-api", function (hooks) {
   setupTest(hooks);

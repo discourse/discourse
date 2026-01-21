@@ -20,18 +20,20 @@ import {
   parseBlockReference,
 } from "discourse/lib/blocks/core/patterns";
 import {
-  getAllOutlets,
-  hasBlock,
-  isBlockResolved,
-  isValidOutlet,
-  resolveBlock,
-} from "discourse/lib/blocks/core/registration";
-import {
   applyArgDefaults,
   buildErrorPath,
   createValidationContext,
 } from "discourse/lib/blocks/core/utils";
 import { isBlockPermittedInOutlet } from "discourse/lib/blocks/matching/outlet-matcher";
+import {
+  hasBlock,
+  isBlockResolved,
+  resolveBlock,
+} from "discourse/lib/blocks/registry/block";
+import {
+  getAllOutlets,
+  isValidOutlet,
+} from "discourse/lib/blocks/registry/outlet";
 import { validateArgsAgainstSchema } from "discourse/lib/blocks/validation/args";
 import { validateBlockArgs } from "discourse/lib/blocks/validation/block-args";
 import {

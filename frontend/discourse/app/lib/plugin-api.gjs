@@ -59,9 +59,9 @@ import { captureCallSite } from "discourse/lib/blocks/core/error";
 import {
   _registerBlock,
   _registerBlockFactory,
-  _registerConditionType,
-  _registerOutlet,
-} from "discourse/lib/blocks/core/registration";
+} from "discourse/lib/blocks/registry/block";
+import { _registerConditionType } from "discourse/lib/blocks/registry/condition";
+import { _registerOutlet } from "discourse/lib/blocks/registry/outlet";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";

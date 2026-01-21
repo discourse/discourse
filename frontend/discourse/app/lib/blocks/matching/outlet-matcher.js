@@ -1,7 +1,7 @@
 // @ts-check
 import picomatch from "picomatch";
 import { raiseBlockError } from "discourse/lib/blocks/core/error";
-import { getAllOutlets } from "discourse/lib/blocks/core/registration";
+import { getAllOutlets } from "discourse/lib/blocks/registry/outlet";
 
 /**
  * Checks if a pattern targets a namespaced outlet.

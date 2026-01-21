@@ -5,25 +5,29 @@ import { block } from "discourse/blocks/block-outlet";
 import { OPTIONAL_MISSING } from "discourse/lib/blocks/core/patterns";
 import {
   _freezeBlockRegistry,
-  _freezeOutletRegistry,
   _registerBlock,
   _registerBlockFactory,
-  _registerOutlet,
-  _setTestSourceIdentifier,
-  getAllOutlets,
   getBlockEntry,
-  getCustomOutlet,
   hasBlock,
   isBlockFactory,
   isBlockRegistryFrozen,
   isBlockResolved,
-  isOutletRegistryFrozen,
-  isValidOutlet,
-  resetBlockRegistryForTesting,
   resolveBlock,
   resolveBlockSync,
-} from "discourse/lib/blocks/core/registration";
+} from "discourse/lib/blocks/registry/block";
+import {
+  _freezeOutletRegistry,
+  _registerOutlet,
+  getAllOutlets,
+  getCustomOutlet,
+  isOutletRegistryFrozen,
+  isValidOutlet,
+} from "discourse/lib/blocks/registry/outlet";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
+import {
+  _setTestSourceIdentifier,
+  resetBlockRegistryForTesting,
+} from "discourse/tests/helpers/block-registry-testing";
 
 module("Unit | Lib | blocks/core/registration", function (hooks) {
   setupTest(hooks);
