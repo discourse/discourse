@@ -12,10 +12,10 @@
  * - atMostOne: At most one of the specified args may be provided (0 or 1)
  * - requires: If a dependent arg is provided, its required arg must also be provided
  *
- * @module discourse/lib/blocks/validation/constraints
+ * @module discourse/lib/blocks/-internals/validation/constraints
  */
 
-import { raiseBlockError } from "discourse/lib/blocks/core/error";
+import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**

@@ -5,7 +5,7 @@ import {
   VALID_ENTRY_KEYS,
   validateEntryKeys,
   validateEntryTypes,
-} from "discourse/lib/blocks/validation/layout";
+} from "discourse/lib/blocks/-internals/validation/layout";
 
 module("Unit | Lib | blocks/validation/layout", function () {
   module("RESERVED_ARG_NAMES", function () {

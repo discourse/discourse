@@ -1,5 +1,5 @@
 import { module, test } from "qunit";
-import { raiseBlockError } from "discourse/lib/blocks/core/error";
+import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 
 module("Unit | Blocks | error", function () {
   module("raiseBlockError", function () {

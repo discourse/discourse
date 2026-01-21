@@ -1,11 +1,11 @@
 // @ts-check
-import { _resetBlockRegistryState } from "discourse/lib/blocks/registry/block";
-import { _resetConditionRegistryState } from "discourse/lib/blocks/registry/condition";
+import { _resetBlockRegistryState } from "discourse/lib/blocks/-internals/registry/block";
+import { _resetConditionRegistryState } from "discourse/lib/blocks/-internals/registry/condition";
 import {
   _resetSourceNamespaceState,
   _setTestSourceIdentifierInternal,
-} from "discourse/lib/blocks/registry/helpers";
-import { _resetOutletRegistryState } from "discourse/lib/blocks/registry/outlet";
+} from "discourse/lib/blocks/-internals/registry/helpers";
+import { _resetOutletRegistryState } from "discourse/lib/blocks/-internals/registry/outlet";
 import { isTesting } from "discourse/lib/environment";
 
 /**

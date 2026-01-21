@@ -3,7 +3,7 @@ import { module, test } from "qunit";
 import {
   raiseBlockError,
   truncateForDisplay,
-} from "discourse/lib/blocks/core/error";
+} from "discourse/lib/blocks/-internals/error";
 
 module("Unit | Lib | blocks/core/error", function (hooks) {
   setupTest(hooks);

@@ -11,11 +11,11 @@ import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import {
   _registerBlock,
   withTestBlockRegistration,
-} from "discourse/lib/blocks/registry/block";
+} from "discourse/lib/blocks/-internals/registry/block";
 import {
   _registerConditionType,
   withTestConditionRegistration,
-} from "discourse/lib/blocks/registry/condition";
+} from "discourse/lib/blocks/-internals/registry/condition";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 let testOwner;

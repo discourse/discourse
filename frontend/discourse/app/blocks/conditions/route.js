@@ -8,15 +8,15 @@ import {
   VALID_PAGE_TYPES,
   validateParamsAgainstPages,
   validateParamType,
-} from "discourse/lib/blocks/matching/page-definitions";
+} from "discourse/lib/blocks/-internals/matching/page-definitions";
 import {
   matchesAnyPattern,
   normalizePath,
-} from "discourse/lib/blocks/matching/url-matcher";
+} from "discourse/lib/blocks/-internals/matching/url-matcher";
 import {
   matchParams,
   validateParamSpec,
-} from "discourse/lib/blocks/matching/value-matcher";
+} from "discourse/lib/blocks/-internals/matching/value-matcher";
 import { isValidGlobPattern } from "discourse/lib/glob-utils";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";

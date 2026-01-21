@@ -55,13 +55,13 @@ import { addBeforeAuthCompleteCallback } from "discourse/instance-initializers/a
 import { registerAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { registerPluginHeaderActionComponent } from "discourse/lib/admin-plugin-header-actions";
 import { registerReportModeComponent } from "discourse/lib/admin-report-additional-modes";
-import { captureCallSite } from "discourse/lib/blocks/core/error";
+import { captureCallSite } from "discourse/lib/blocks/-internals/error";
 import {
   _registerBlock,
   _registerBlockFactory,
-} from "discourse/lib/blocks/registry/block";
-import { _registerConditionType } from "discourse/lib/blocks/registry/condition";
-import { _registerOutlet } from "discourse/lib/blocks/registry/outlet";
+} from "discourse/lib/blocks/-internals/registry/block";
+import { _registerConditionType } from "discourse/lib/blocks/-internals/registry/condition";
+import { _registerOutlet } from "discourse/lib/blocks/-internals/registry/outlet";
 import classPrepend, {
   withPrependsRolledBack,
 } from "discourse/lib/class-prepend";

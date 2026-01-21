@@ -10,36 +10,39 @@
  * - **Block Entry**: An object in a layout that specifies how to use a block.
  * - **Outlet Layout**: An array of block entries defining which blocks appear in an outlet.
  *
- * @module discourse/lib/blocks/validation/layout
+ * @module discourse/lib/blocks/-internals/validation/layout
  */
 
 import { DEBUG } from "@glimmer/env";
-import { BlockError, raiseBlockError } from "discourse/lib/blocks/core/error";
+import {
+  BlockError,
+  raiseBlockError,
+} from "discourse/lib/blocks/-internals/error";
+import { isBlockPermittedInOutlet } from "discourse/lib/blocks/-internals/matching/outlet-matcher";
 import {
   OPTIONAL_MISSING,
   parseBlockReference,
-} from "discourse/lib/blocks/core/patterns";
-import {
-  applyArgDefaults,
-  buildErrorPath,
-  createValidationContext,
-} from "discourse/lib/blocks/core/utils";
-import { isBlockPermittedInOutlet } from "discourse/lib/blocks/matching/outlet-matcher";
+} from "discourse/lib/blocks/-internals/patterns";
 import {
   hasBlock,
   isBlockResolved,
   resolveBlock,
-} from "discourse/lib/blocks/registry/block";
+} from "discourse/lib/blocks/-internals/registry/block";
 import {
   getAllOutlets,
   isValidOutlet,
-} from "discourse/lib/blocks/registry/outlet";
-import { validateArgsAgainstSchema } from "discourse/lib/blocks/validation/args";
-import { validateBlockArgs } from "discourse/lib/blocks/validation/block-args";
+} from "discourse/lib/blocks/-internals/registry/outlet";
+import {
+  applyArgDefaults,
+  buildErrorPath,
+  createValidationContext,
+} from "discourse/lib/blocks/-internals/utils";
+import { validateArgsAgainstSchema } from "discourse/lib/blocks/-internals/validation/args";
+import { validateBlockArgs } from "discourse/lib/blocks/-internals/validation/block-args";
 import {
   runCustomValidation,
   validateConstraints,
-} from "discourse/lib/blocks/validation/constraints";
+} from "discourse/lib/blocks/-internals/validation/constraints";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**

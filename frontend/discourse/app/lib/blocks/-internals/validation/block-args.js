@@ -8,17 +8,20 @@
  * - Validates "required + default" contradiction
  * - Supports childArgs with "unique" property
  *
- * @module discourse/lib/blocks/validation/block-args
+ * @module discourse/lib/blocks/-internals/validation/block-args
  */
 
-import { BlockError, raiseBlockError } from "discourse/lib/blocks/core/error";
+import {
+  BlockError,
+  raiseBlockError,
+} from "discourse/lib/blocks/-internals/error";
 import {
   VALID_ARG_SCHEMA_PROPERTIES,
   validateArgName,
   validateArgsAgainstSchema,
   validateArgSchemaEntry,
   validateArgValue,
-} from "discourse/lib/blocks/validation/args";
+} from "discourse/lib/blocks/-internals/validation/args";
 
 /**
  * Valid properties for childArgs schema definitions.

@@ -12,12 +12,12 @@ import BlockGroup from "discourse/blocks/builtin/block-group";
 import {
   DEBUG_CALLBACK,
   debugHooks,
-} from "discourse/lib/blocks/debug/block-processing";
+} from "discourse/lib/blocks/-internals/debug/block-processing";
 import {
   _registerBlock,
   _registerBlockFactory,
   withTestBlockRegistration,
-} from "discourse/lib/blocks/registry/block";
+} from "discourse/lib/blocks/-internals/registry/block";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Blocks | BlockOutlet", function (hooks) {

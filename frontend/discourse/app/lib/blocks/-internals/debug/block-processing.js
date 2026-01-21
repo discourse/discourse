@@ -9,11 +9,11 @@
  * The debug hooks use TrackedMap for reactivity, enabling Ember's reactivity system
  * to trigger re-renders when callbacks are set/cleared.
  *
- * @module discourse/lib/blocks/debug/block-processing
+ * @module discourse/lib/blocks/-internals/debug/block-processing
  */
 
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
-import { OPTIONAL_MISSING } from "discourse/lib/blocks/core/patterns";
+import { OPTIONAL_MISSING } from "discourse/lib/blocks/-internals/patterns";
 
 /* Debug Hooks */
 

@@ -5,7 +5,7 @@
  * This module provides error classes, formatting utilities for error display,
  * and helpers for human-readable console output during block validation.
  *
- * @module discourse/lib/blocks/core/error
+ * @module discourse/lib/blocks/-internals/error
  */
 import { DEBUG } from "@glimmer/env";
 

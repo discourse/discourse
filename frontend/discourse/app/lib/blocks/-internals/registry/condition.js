@@ -1,7 +1,7 @@
 // @ts-check
 import { DEBUG } from "@glimmer/env";
 import { isDecoratedCondition } from "discourse/blocks/conditions/decorator";
-import { raiseBlockError } from "discourse/lib/blocks/core/error";
+import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import { isTesting } from "discourse/lib/environment";
 import {
   assertRegistryNotFrozen,

@@ -1,6 +1,6 @@
 // @ts-check
-import { validateConditionArgsSchema } from "discourse/lib/blocks/validation/condition-args";
-import { validateConstraintsSchema } from "discourse/lib/blocks/validation/constraints";
+import { validateConditionArgsSchema } from "discourse/lib/blocks/-internals/validation/condition-args";
+import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/validation/constraints";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 import { BlockCondition } from "./condition";
 

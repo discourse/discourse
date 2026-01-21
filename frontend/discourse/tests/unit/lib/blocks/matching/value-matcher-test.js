@@ -6,7 +6,7 @@ import {
   matchParams,
   matchValue,
   validateParamSpec,
-} from "discourse/lib/blocks/matching/value-matcher";
+} from "discourse/lib/blocks/-internals/matching/value-matcher";
 import { blockDebugLogger } from "discourse/static/dev-tools/block-debug/debug-logger";
 
 module("Unit | Lib | Blocks | value-matcher", function (hooks) {

@@ -1,10 +1,10 @@
 // @ts-check
 import { DEBUG } from "@glimmer/env";
-import { raiseBlockError } from "discourse/lib/blocks/core/error";
+import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import {
   parseBlockName,
   VALID_NAMESPACED_BLOCK_PATTERN,
-} from "discourse/lib/blocks/core/patterns";
+} from "discourse/lib/blocks/-internals/patterns";
 import { isTesting } from "discourse/lib/environment";
 import identifySource from "discourse/lib/source-identifier";
 

@@ -1,5 +1,5 @@
 import { module, test } from "qunit";
-import { applyArgDefaults } from "discourse/lib/blocks/core/utils";
+import { applyArgDefaults } from "discourse/lib/blocks/-internals/utils";
 
 module("Unit | Lib | blocks/core/utils", function () {
   module("applyArgDefaults", function () {

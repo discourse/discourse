@@ -1,20 +1,20 @@
 import Component from "@glimmer/component";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks/block-outlet";
-import { BlockError } from "discourse/lib/blocks/core/error";
+import { BlockError } from "discourse/lib/blocks/-internals/error";
 import {
   validateArgValue,
   validateArrayItemType,
-} from "discourse/lib/blocks/validation/args";
+} from "discourse/lib/blocks/-internals/validation/args";
 import {
   validateArgsSchema,
   validateBlockArgs,
-} from "discourse/lib/blocks/validation/block-args";
+} from "discourse/lib/blocks/-internals/validation/block-args";
 import {
   runCustomValidation,
   validateConstraints,
   validateConstraintsSchema,
-} from "discourse/lib/blocks/validation/constraints";
+} from "discourse/lib/blocks/-internals/validation/constraints";
 
 module("Unit | Lib | blocks/validation/args", function () {
   module("validateArgsSchema", function () {

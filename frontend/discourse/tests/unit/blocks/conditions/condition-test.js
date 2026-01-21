@@ -2,7 +2,7 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { BlockCondition } from "discourse/blocks/conditions";
-import { validateConditionSource } from "discourse/lib/blocks/validation/conditions";
+import { validateConditionSource } from "discourse/lib/blocks/-internals/validation/conditions";
 
 module("Unit | Blocks | Conditions | condition", function (hooks) {
   setupTest(hooks);

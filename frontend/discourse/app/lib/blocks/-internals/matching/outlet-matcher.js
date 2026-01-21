@@ -1,8 +1,8 @@
 // @ts-check
 import { DEBUG } from "@glimmer/env";
 import picomatch from "picomatch";
-import { raiseBlockError } from "discourse/lib/blocks/core/error";
-import { getAllOutlets } from "discourse/lib/blocks/registry/outlet";
+import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
+import { getAllOutlets } from "discourse/lib/blocks/-internals/registry/outlet";
 import { isValidGlobPattern } from "discourse/lib/glob-utils";
 
 /**

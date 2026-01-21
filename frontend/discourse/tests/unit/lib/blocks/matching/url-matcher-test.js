@@ -3,7 +3,7 @@ import {
   matchesAnyPattern,
   matchUrlPattern,
   normalizePath,
-} from "discourse/lib/blocks/matching/url-matcher";
+} from "discourse/lib/blocks/-internals/matching/url-matcher";
 import { setPrefix } from "discourse/lib/get-url";
 import { isValidGlobPattern } from "discourse/lib/glob-utils";
 

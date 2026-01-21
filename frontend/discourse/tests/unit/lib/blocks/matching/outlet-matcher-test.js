@@ -7,7 +7,7 @@ import {
   matchOutletPattern,
   validateOutletPatterns,
   warnUnknownOutletPatterns,
-} from "discourse/lib/blocks/matching/outlet-matcher";
+} from "discourse/lib/blocks/-internals/matching/outlet-matcher";
 
 module("Unit | Lib | Blocks | outlet-matcher", function () {
   module("isNamespacedPattern", function () {

@@ -2,7 +2,7 @@
 /**
  * Pattern constants for block name validation.
  *
- * @module discourse/lib/blocks/core/patterns
+ * @module discourse/lib/blocks/-internals/patterns
  */
 
 /**

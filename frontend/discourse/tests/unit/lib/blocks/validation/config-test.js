@@ -5,7 +5,7 @@ import {
   VALID_ENTRY_KEYS,
   validateEntryKeys,
   validateEntryTypes,
-} from "discourse/lib/blocks/validation/layout";
+} from "discourse/lib/blocks/-internals/validation/layout";
 
 module("Unit | Blocks | validation/layout", function (hooks) {
   setupTest(hooks);

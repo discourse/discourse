@@ -5,9 +5,12 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks/block-outlet";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
-import { getBlockEntry, hasBlock } from "discourse/lib/blocks/registry/block";
-import { hasConditionType } from "discourse/lib/blocks/registry/condition";
-import { isValidOutlet } from "discourse/lib/blocks/registry/outlet";
+import {
+  getBlockEntry,
+  hasBlock,
+} from "discourse/lib/blocks/-internals/registry/block";
+import { hasConditionType } from "discourse/lib/blocks/-internals/registry/condition";
+import { isValidOutlet } from "discourse/lib/blocks/-internals/registry/outlet";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import discourseComputed from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";

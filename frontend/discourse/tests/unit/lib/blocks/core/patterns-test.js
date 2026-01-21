@@ -4,7 +4,7 @@ import {
   parseBlockReference,
   VALID_BLOCK_NAME_PATTERN,
   VALID_NAMESPACED_BLOCK_PATTERN,
-} from "discourse/lib/blocks/core/patterns";
+} from "discourse/lib/blocks/-internals/patterns";
 
 module("Unit | Lib | blocks/core/patterns", function () {
   module("VALID_BLOCK_NAME_PATTERN", function () {

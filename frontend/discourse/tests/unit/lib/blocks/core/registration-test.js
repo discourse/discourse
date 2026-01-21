@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks/block-outlet";
-import { OPTIONAL_MISSING } from "discourse/lib/blocks/core/patterns";
+import { OPTIONAL_MISSING } from "discourse/lib/blocks/-internals/patterns";
 import {
   _freezeBlockRegistry,
   _registerBlock,
@@ -14,7 +14,7 @@ import {
   isBlockResolved,
   resolveBlock,
   resolveBlockSync,
-} from "discourse/lib/blocks/registry/block";
+} from "discourse/lib/blocks/-internals/registry/block";
 import {
   _freezeOutletRegistry,
   _registerOutlet,
@@ -22,7 +22,7 @@ import {
   getCustomOutlet,
   isOutletRegistryFrozen,
   isValidOutlet,
-} from "discourse/lib/blocks/registry/outlet";
+} from "discourse/lib/blocks/-internals/registry/outlet";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import {
   _setTestSourceIdentifier,

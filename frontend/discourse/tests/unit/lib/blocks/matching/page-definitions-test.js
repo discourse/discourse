@@ -10,7 +10,7 @@ import {
   VALID_PAGE_TYPES,
   validateParamsAgainstPages,
   validateParamType,
-} from "discourse/lib/blocks/matching/page-definitions";
+} from "discourse/lib/blocks/-internals/matching/page-definitions";
 
 module("Unit | Lib | blocks/matching/page-definitions", function () {
   module("PAGE_DEFINITIONS", function () {

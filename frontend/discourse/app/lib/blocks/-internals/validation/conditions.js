@@ -1,10 +1,10 @@
 // @ts-check
-import { BlockError } from "discourse/lib/blocks/core/error";
-import { validateConditionArgValues } from "discourse/lib/blocks/validation/condition-args";
+import { BlockError } from "discourse/lib/blocks/-internals/error";
+import { validateConditionArgValues } from "discourse/lib/blocks/-internals/validation/condition-args";
 import {
   runCustomValidation,
   validateConstraints,
-} from "discourse/lib/blocks/validation/constraints";
+} from "discourse/lib/blocks/-internals/validation/constraints";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**

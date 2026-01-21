@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { block } from "discourse/blocks/block-outlet";
-import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/core/patterns";
+import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks";
 
 /**
  * A container block that groups multiple children blocks together.

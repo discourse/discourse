@@ -8,10 +8,13 @@
  * - block-args.js - block-specific validation
  * - condition-args.js - condition-specific validation
  *
- * @module discourse/lib/blocks/validation/args
+ * @module discourse/lib/blocks/-internals/validation/args
  */
 
-import { BlockError, raiseBlockError } from "discourse/lib/blocks/core/error";
+import {
+  BlockError,
+  raiseBlockError,
+} from "discourse/lib/blocks/-internals/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**

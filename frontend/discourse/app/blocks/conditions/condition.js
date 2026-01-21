@@ -1,5 +1,5 @@
 // @ts-check
-import { getByPath } from "discourse/lib/blocks/core/utils";
+import { getByPath } from "discourse/lib/blocks";
 
 /**
  * Base class for all block conditions.

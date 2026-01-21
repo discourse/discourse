@@ -1,6 +1,6 @@
 // @ts-check
 import { DEBUG } from "@glimmer/env";
-import { raiseBlockError } from "discourse/lib/blocks/core/error";
+import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import { isTesting } from "discourse/lib/environment";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import {
