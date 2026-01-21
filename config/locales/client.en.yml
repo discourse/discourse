@@ -5864,6 +5864,7 @@ en:
           impact_type_feature: "Feature"
           impact_type_other: "Other"
           status_all: "All statuses"
+          status_conceptual: "Conceptual"
           status_experimental: "Experimental"
           status_alpha: "Alpha"
           status_beta: "Beta"

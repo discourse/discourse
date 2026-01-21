@@ -13,17 +13,25 @@ module UpcomingChanges
 
   def self.statuses
     @statuses ||=
-      ::Enum.new(experimental: 0, alpha: 100, beta: 200, stable: 300, permanent: 500, never: 9999)
+      ::Enum.new(
+        conceptual: -100,
+        experimental: 0,
+        alpha: 100,
+        beta: 200,
+        stable: 300,
+        permanent: 500,
+        never: 9999,
+      )
   end
 
   def self.previous_status_value(status)
     status_value = self.statuses[status.to_sym]
-    self.statuses.values.select { |value| value < status_value }.max || 0
+    self.statuses.values.select { |value| value < status_value }.max || -100
   end
 
   def self.previous_status(status)
     self.statuses.keys.select { |key| self.statuses[key] < self.statuses[status.to_sym] }.last ||
-      :experimental
+      :conceptual
   end
 
   def self.image_exists?(change_setting_name)
@@ -109,15 +117,16 @@ module UpcomingChanges
     guardian_visible_group_ids = Group.visible_groups(acting_guardian.user).pluck(:id)
     user_belonging_to_group_ids = user.belonging_to_group_ids
 
-    SiteSetting.upcoming_change_site_settings.map do |upcoming_change|
-      enabled = user.upcoming_change_enabled?(upcoming_change)
-      has_groups = UpcomingChanges.has_groups?(upcoming_change)
+    SiteSetting.upcoming_change_site_settings.filter_map do |name|
+      next if UpcomingChanges.change_status(name) == :conceptual
+      enabled = user.upcoming_change_enabled?(name)
+      has_groups = UpcomingChanges.has_groups?(name)
 
       specific_groups = []
       reason =
         if has_groups
           visible_group_ids =
-            UpcomingChanges.group_ids_for(upcoming_change) & guardian_visible_group_ids &
+            UpcomingChanges.group_ids_for(name) & guardian_visible_group_ids &
               user_belonging_to_group_ids
 
           specific_groups = Group.where(id: visible_group_ids).pluck(:name)
@@ -126,21 +135,19 @@ module UpcomingChanges
           else
             UpcomingChanges.user_enabled_reasons[:not_in_specific_groups]
           end
+        elsif enabled
+          UpcomingChanges.user_enabled_reasons[:enabled_for_everyone]
         else
-          if enabled
-            UpcomingChanges.user_enabled_reasons[:enabled_for_everyone]
-          else
-            UpcomingChanges.user_enabled_reasons[:enabled_for_no_one]
-          end
+          UpcomingChanges.user_enabled_reasons[:enabled_for_no_one]
         end
 
       {
-        name: upcoming_change,
-        humanized_name: SiteSetting.humanized_name(upcoming_change),
-        description: SiteSetting.description(upcoming_change),
-        enabled: enabled,
-        specific_groups: specific_groups,
-        reason: reason,
+        name:,
+        humanized_name: SiteSetting.humanized_name(name),
+        description: SiteSetting.description(name),
+        enabled:,
+        specific_groups:,
+        reason:,
       }
     end
   end
