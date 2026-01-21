@@ -9,7 +9,59 @@
  */
 import { DEBUG } from "@glimmer/env";
 
-/* Entry Formatter Utilities */
+/* Value Display Helpers */
+
+/**
+ * Formats a simple value (primitive, function, or block reference) for display.
+ * Returns null if the value is a complex type (array/object) that needs special handling.
+ *
+ * @param {*} obj - The value to format.
+ * @returns {string|null} String representation, or null if complex type.
+ */
+function formatSimpleValue(obj) {
+  if (obj === undefined) {
+    return "undefined";
+  }
+  if (obj === null) {
+    return "null";
+  }
+  if (typeof obj === "function") {
+    return `<${obj.blockName || obj.name || "Function"}>`;
+  }
+  if (typeof obj !== "object") {
+    return JSON.stringify(obj);
+  }
+  if (obj.blockName) {
+    return `<${obj.blockName}>`;
+  }
+  return null;
+}
+
+/**
+ * Formats a value as a truncated string for console display.
+ * Returns shallow representations like "{ ... }" or "[ 3 items ]".
+ *
+ * Note: This returns STRINGS for console output. For JSON-serializable
+ * truncation, use truncateForDisplay() instead.
+ *
+ * @param {*} obj - The value to format.
+ * @returns {string} Truncated string representation.
+ */
+function formatTruncatedValue(obj) {
+  const simple = formatSimpleValue(obj);
+  if (simple !== null) {
+    return simple;
+  }
+
+  if (Array.isArray(obj)) {
+    return obj.length === 0 ? "[]" : `[ ${obj.length} items ]`;
+  }
+
+  const keys = Object.keys(obj);
+  return keys.length === 0 ? "{}" : "{ ... }";
+}
+
+/* Path Parsing */
 
 /**
  * Parses a condition path string into path segments.
@@ -59,6 +111,357 @@ export function parseConditionPath(path) {
   return segments;
 }
 
+/* Path-Aware Entry Rendering */
+
+/**
+ * Renders block entries with error path highlighting.
+ * Displays the structure with proper indentation and marks where errors occurred.
+ */
+class PathHighlightRenderer {
+  /** @type {Array<string|number>} */
+  #errorSegments;
+
+  /** @type {string|number} */
+  #errorKey;
+
+  /** @type {string|undefined} */
+  #label;
+
+  /**
+   * @param {string} errorPath - Path to the error (e.g., "conditions.any[0].type").
+   * @param {Object} [options] - Formatting options.
+   * @param {string} [options.prefix] - Prefix to skip in the path.
+   * @param {string} [options.label] - Label to show before the entry.
+   */
+  constructor(errorPath, options = {}) {
+    const { prefix, label } = options;
+    const pathSegments = parseConditionPath(errorPath);
+
+    const startIndex = prefix && pathSegments[0] === prefix ? 1 : 0;
+    this.#errorSegments = pathSegments.slice(startIndex);
+    this.#errorKey = this.#errorSegments.at(-1);
+    this.#label = label;
+  }
+
+  /**
+   * Renders the entry with the error path highlighted.
+   *
+   * @param {Object|Array} entry - The block entry object to render.
+   * @returns {string} Formatted string with error location highlighted.
+   */
+  render(entry) {
+    const rendered = this.#renderValue(entry, 0, []);
+    return this.#label ? `${this.#label} ${rendered}` : rendered;
+  }
+
+  /**
+   * Checks if the current path is on the error path.
+   *
+   * @param {Array<string|number>} currentPath - Current path segments.
+   * @returns {boolean} True if on error path.
+   */
+  #isOnErrorPath(currentPath) {
+    return currentPath.every(
+      (seg, i) =>
+        i >= this.#errorSegments.length || seg === this.#errorSegments[i]
+    );
+  }
+
+  /**
+   * Checks if we've passed the error location in the tree.
+   *
+   * @param {Array<string|number>} currentPath - Current path segments.
+   * @returns {boolean} True if past error location.
+   */
+  #isPastErrorLocation(currentPath) {
+    return currentPath.length > this.#errorSegments.length;
+  }
+
+  /**
+   * Renders any value, dispatching to the appropriate handler.
+   *
+   * @param {*} obj - The value to render.
+   * @param {number} depth - Current indentation depth.
+   * @param {Array<string|number>} currentPath - Path segments to current location.
+   * @returns {string} Rendered string.
+   */
+  #renderValue(obj, depth, currentPath) {
+    if (this.#isPastErrorLocation(currentPath)) {
+      return formatTruncatedValue(obj);
+    }
+
+    const simple = formatSimpleValue(obj);
+    if (simple !== null) {
+      return simple;
+    }
+
+    if (Array.isArray(obj)) {
+      return this.#renderArray(obj, depth, currentPath);
+    }
+
+    return this.#renderObject(obj, depth, currentPath);
+  }
+
+  /**
+   * Renders an array with path highlighting.
+   *
+   * @param {Array} arr - The array to render.
+   * @param {number} depth - Current indentation depth.
+   * @param {Array<string|number>} currentPath - Path segments to current location.
+   * @returns {string} Rendered string.
+   */
+  #renderArray(arr, depth, currentPath) {
+    if (arr.length === 0) {
+      return "[]";
+    }
+
+    const indent = "  ".repeat(depth);
+    const itemOnPathIndex = this.#findItemOnPath(arr, currentPath);
+    const lines = ["["];
+
+    if (itemOnPathIndex >= 0) {
+      this.#renderArrayWithHighlightedItem(
+        arr,
+        itemOnPathIndex,
+        depth,
+        currentPath,
+        indent,
+        lines
+      );
+    } else {
+      this.#renderArrayAllTruncated(arr, indent, lines);
+    }
+
+    lines.push(`${indent}]`);
+    return lines.join("\n");
+  }
+
+  /**
+   * Finds which array item (if any) is on the error path.
+   *
+   * @param {Array} arr - The array to search.
+   * @param {Array<string|number>} currentPath - Current path segments.
+   * @returns {number} Index of item on path, or -1 if none.
+   */
+  #findItemOnPath(arr, currentPath) {
+    for (let i = 0; i < arr.length; i++) {
+      const itemPath = [...currentPath, i];
+      if (this.#isOnErrorPath(itemPath)) {
+        return i;
+      }
+    }
+    return -1;
+  }
+
+  /**
+   * Renders an array with a highlighted item on the error path.
+   *
+   * @param {Array} arr - The array to render.
+   * @param {number} itemIndex - Index of the highlighted item.
+   * @param {number} depth - Current indentation depth.
+   * @param {Array<string|number>} currentPath - Current path segments.
+   * @param {string} indent - Current indentation string.
+   * @param {Array<string>} lines - Output lines array.
+   */
+  #renderArrayWithHighlightedItem(
+    arr,
+    itemIndex,
+    depth,
+    currentPath,
+    indent,
+    lines
+  ) {
+    if (itemIndex > 0) {
+      lines.push(`${indent}  ...`);
+    }
+
+    const itemPath = [...currentPath, itemIndex];
+    const value = this.#renderValue(arr[itemIndex], depth + 1, itemPath);
+    const comma = itemIndex < arr.length - 1 ? "," : "";
+    const errorMarker = this.#isExactErrorLocation(itemPath)
+      ? " // <-- error here"
+      : "";
+
+    lines.push(`${indent}  ${value}${comma}${errorMarker}`);
+
+    if (itemIndex < arr.length - 1) {
+      lines.push(`${indent}  ...`);
+    }
+  }
+
+  /**
+   * Renders all array items as truncated values.
+   *
+   * @param {Array} arr - The array to render.
+   * @param {string} indent - Current indentation string.
+   * @param {Array<string>} lines - Output lines array.
+   */
+  #renderArrayAllTruncated(arr, indent, lines) {
+    for (let i = 0; i < arr.length; i++) {
+      const value = formatTruncatedValue(arr[i]);
+      const comma = i < arr.length - 1 ? "," : "";
+      lines.push(`${indent}  ${value}${comma}`);
+    }
+  }
+
+  /**
+   * Checks if a path is the exact error location.
+   *
+   * @param {Array<string|number>} path - Path to check.
+   * @returns {boolean} True if this is the exact error location.
+   */
+  #isExactErrorLocation(path) {
+    return (
+      path.length === this.#errorSegments.length &&
+      path.every((seg, j) => seg === this.#errorSegments[j])
+    );
+  }
+
+  /**
+   * Renders an object with path highlighting.
+   *
+   * @param {Object} obj - The object to render.
+   * @param {number} depth - Current indentation depth.
+   * @param {Array<string|number>} currentPath - Path segments to current location.
+   * @returns {string} Rendered string.
+   */
+  #renderObject(obj, depth, currentPath) {
+    const indent = "  ".repeat(depth);
+    const keys = Object.keys(obj).filter((k) => !k.startsWith("_"));
+    const isOnPath = this.#isOnErrorPath(currentPath);
+    const nextErrorSegment = this.#errorSegments[currentPath.length];
+    const needsSyntheticEntry =
+      isOnPath &&
+      typeof nextErrorSegment === "string" &&
+      !keys.includes(nextErrorSegment);
+
+    if (keys.length === 0 && !needsSyntheticEntry) {
+      return "{}";
+    }
+
+    const lines = ["{"];
+    this.#renderObjectKeys(
+      obj,
+      keys,
+      depth,
+      currentPath,
+      isOnPath,
+      indent,
+      lines
+    );
+
+    if (needsSyntheticEntry) {
+      this.#renderSyntheticEntry(currentPath, indent, lines);
+    }
+
+    lines.push(`${indent}}`);
+    return lines.join("\n");
+  }
+
+  /**
+   * Renders all keys of an object.
+   *
+   * @param {Object} obj - The object being rendered.
+   * @param {Array<string>} keys - Keys to render.
+   * @param {number} depth - Current indentation depth.
+   * @param {Array<string|number>} currentPath - Current path segments.
+   * @param {boolean} isOnPath - Whether current location is on error path.
+   * @param {string} indent - Current indentation string.
+   * @param {Array<string>} lines - Output lines array.
+   */
+  #renderObjectKeys(obj, keys, depth, currentPath, isOnPath, indent, lines) {
+    for (const key of keys) {
+      const keyPath = [...currentPath, key];
+      const isKeyOnPath = this.#isOnErrorPath(keyPath);
+      const isKeyTheError =
+        isOnPath &&
+        currentPath.length === this.#errorSegments.length - 1 &&
+        key === this.#errorKey;
+
+      const value =
+        isKeyOnPath || isKeyTheError
+          ? this.#renderValue(obj[key], depth + 1, keyPath)
+          : formatTruncatedValue(obj[key]);
+      const errorMarker = isKeyTheError ? " // <-- error here" : "";
+
+      this.#appendKeyValueLine(key, value, errorMarker, indent, lines);
+    }
+  }
+
+  /**
+   * Appends a key-value line to the output, handling multiline values.
+   *
+   * @param {string} key - The object key.
+   * @param {string} value - The rendered value.
+   * @param {string} errorMarker - Error marker string (or empty).
+   * @param {string} indent - Current indentation string.
+   * @param {Array<string>} lines - Output lines array.
+   */
+  #appendKeyValueLine(key, value, errorMarker, indent, lines) {
+    if (value.includes("\n")) {
+      const [firstLine, ...restLines] = value.split("\n");
+      lines.push(`${indent}  ${key}: ${firstLine}${errorMarker}`);
+      lines.push(`${restLines.join("\n")},`);
+    } else {
+      lines.push(`${indent}  ${key}: ${value},${errorMarker}`);
+    }
+  }
+
+  /**
+   * Renders a synthetic entry for missing keys on the error path.
+   *
+   * @param {Array<string|number>} currentPath - Current path segments.
+   * @param {string} indent - Current indentation string.
+   * @param {Array<string>} lines - Output lines array.
+   */
+  #renderSyntheticEntry(currentPath, indent, lines) {
+    const remainingPath = this.#errorSegments.slice(currentPath.length);
+    const nextSegment = remainingPath[0];
+    const isAtFinalKey = remainingPath.length === 1;
+
+    if (isAtFinalKey) {
+      lines.push(`${indent}  ${nextSegment}: <missing>, // <-- error here`);
+    } else {
+      lines.push(`${indent}  ${nextSegment}: { // <-- missing`);
+      lines.push(
+        ...this.#renderMissingPath(
+          remainingPath.slice(1),
+          currentPath.length + 1
+        )
+      );
+      lines.push(`${indent}  },`);
+    }
+  }
+
+  /**
+   * Renders the remaining path segments for a missing key.
+   *
+   * @param {Array<string|number>} segments - Remaining path segments.
+   * @param {number} depth - Current indentation depth.
+   * @returns {Array<string>} Array of formatted lines.
+   */
+  #renderMissingPath(segments, depth) {
+    const indent = "  ".repeat(depth);
+    const lines = [];
+
+    if (segments.length === 0) {
+      return lines;
+    }
+
+    const [seg, ...rest] = segments;
+
+    if (rest.length === 0) {
+      lines.push(`${indent}  ${seg}: <missing>, // <-- error here`);
+    } else {
+      lines.push(`${indent}  ${seg}: { // <-- missing`);
+      lines.push(...this.#renderMissingPath(rest, depth + 1));
+      lines.push(`${indent}  },`);
+    }
+
+    return lines;
+  }
+}
+
 /**
  * Renders a block entry object with the error path highlighted.
  * Shows the structure with proper indentation and adds a comment marker
@@ -72,255 +475,16 @@ export function parseConditionPath(path) {
  * @returns {string} Formatted string with the error location highlighted.
  */
 export function formatEntryWithErrorPath(entry, errorPath, options = {}) {
-  const { prefix, label } = options;
-  const pathSegments = parseConditionPath(errorPath);
-
-  // Skip prefix if present (it's implicit in the label)
-  const startIndex = prefix && pathSegments[0] === prefix ? 1 : 0;
-  const errorSegments = pathSegments.slice(startIndex);
-  const errorKey = errorSegments[errorSegments.length - 1];
-
-  /**
-   * Renders a truncated (shallow) representation of a value.
-   * Used for keys/items not on the error path to provide context without deep nesting.
-   *
-   * @param {*} obj - The value to render.
-   * @returns {string} Truncated string representation.
-   */
-  function renderTruncated(obj) {
-    if (obj === undefined) {
-      return "undefined";
-    }
-    if (obj === null) {
-      return "null";
-    }
-    // Handle functions/classes (including block components) before primitive check
-    if (typeof obj === "function") {
-      return `<${obj.blockName || obj.name || "Function"}>`;
-    }
-    if (typeof obj !== "object") {
-      return JSON.stringify(obj);
-    }
-    // Handle block component references on objects with blockName
-    if (obj.blockName) {
-      return `<${obj.blockName}>`;
-    }
-    if (Array.isArray(obj)) {
-      return obj.length === 0 ? "[]" : `[ ${obj.length} items ]`;
-    }
-    const keys = Object.keys(obj);
-    return keys.length === 0 ? "{}" : "{ ... }";
-  }
-
-  /**
-   * Renders the remaining path segments for a missing key.
-   * Returns an array of lines to be joined.
-   *
-   * @param {Array<string|number>} segments - Remaining path segments.
-   * @param {number} depth - Current indentation depth.
-   * @returns {Array<string>} Array of formatted lines.
-   */
-  function renderMissingPath(segments, depth) {
-    const indent = "  ".repeat(depth);
-    const lines = [];
-
-    if (segments.length === 0) {
-      return lines;
-    }
-
-    const [seg, ...rest] = segments;
-
-    if (rest.length === 0) {
-      // Final segment - show as missing with error marker
-      lines.push(`${indent}  ${seg}: <missing>, // <-- error here`);
-    } else {
-      // Intermediate segment - open nested object
-      lines.push(`${indent}  ${seg}: { // <-- missing`);
-      lines.push(...renderMissingPath(rest, depth + 1));
-      lines.push(`${indent}  },`);
-    }
-
-    return lines;
-  }
-
-  /**
-   * Recursively renders the entry object with highlighting.
-   * Shows all keys at each level, but truncates values not on the error path.
-   *
-   * @param {*} obj - The object to render.
-   * @param {number} depth - Current indentation depth.
-   * @param {Array<string|number>} currentPath - Path segments to current location.
-   * @returns {string} Rendered string.
-   */
-  function render(obj, depth, currentPath) {
-    const indent = "  ".repeat(depth);
-    const isOnErrorPath = currentPath.every(
-      (seg, i) => i >= errorSegments.length || seg === errorSegments[i]
-    );
-    const isPastErrorLocation = currentPath.length > errorSegments.length;
-
-    // Values past the error location get truncated representation
-    if (isPastErrorLocation) {
-      return renderTruncated(obj);
-    }
-
-    if (obj === undefined) {
-      return "undefined";
-    }
-
-    if (obj === null) {
-      return "null";
-    }
-
-    // Handle functions/classes (including block components) before primitive check
-    if (typeof obj === "function") {
-      return `<${obj.blockName || obj.name || "Function"}>`;
-    }
-
-    if (typeof obj !== "object") {
-      return JSON.stringify(obj);
-    }
-
-    // Handle block component references on objects with blockName
-    if (obj.blockName) {
-      return `<${obj.blockName}>`;
-    }
-
-    if (Array.isArray(obj)) {
-      if (obj.length === 0) {
-        return "[]";
-      }
-
-      // Find which item (if any) is on the error path
-      let itemOnPathIndex = -1;
-      for (let i = 0; i < obj.length; i++) {
-        const itemPath = [...currentPath, i];
-        const isItemOnPath = itemPath.every(
-          (seg, j) => j >= errorSegments.length || seg === errorSegments[j]
-        );
-        if (isItemOnPath) {
-          itemOnPathIndex = i;
-          break;
-        }
-      }
-
-      const lines = ["["];
-
-      // Show "..." for items before the one on path
-      if (itemOnPathIndex > 0) {
-        lines.push(`${indent}  ...`);
-      }
-
-      // Show the item on path (or all items if none is on path)
-      if (itemOnPathIndex >= 0) {
-        const itemPath = [...currentPath, itemOnPathIndex];
-        const value = render(obj[itemOnPathIndex], depth + 1, itemPath);
-        const comma = itemOnPathIndex < obj.length - 1 ? "," : "";
-
-        // Check if this array item is the exact error location
-        const isItemTheError =
-          itemPath.length === errorSegments.length &&
-          itemPath.every((seg, j) => seg === errorSegments[j]);
-        const errorMarker = isItemTheError ? " // <-- error here" : "";
-
-        lines.push(`${indent}  ${value}${comma}${errorMarker}`);
-
-        // Show "..." for items after the one on path
-        if (itemOnPathIndex < obj.length - 1) {
-          lines.push(`${indent}  ...`);
-        }
-      } else {
-        // No item on path - show all truncated
-        for (let i = 0; i < obj.length; i++) {
-          const value = renderTruncated(obj[i]);
-          const comma = i < obj.length - 1 ? "," : "";
-          lines.push(`${indent}  ${value}${comma}`);
-        }
-      }
-
-      lines.push(`${indent}]`);
-      return lines.join("\n");
-    }
-
-    // Object - filter out private keys (starting with _)
-    const keys = Object.keys(obj).filter((k) => !k.startsWith("_"));
-
-    // Check if we need to render a synthetic entry for a missing key on the error path.
-    // This handles both:
-    // 1. Final missing key (e.g., "nme" typo when "name" exists)
-    // 2. Intermediate missing key (e.g., "args" missing entirely when error is "args.name")
-    const nextErrorSegment = errorSegments[currentPath.length];
-    const needsSyntheticEntry =
-      isOnErrorPath &&
-      typeof nextErrorSegment === "string" &&
-      !keys.includes(nextErrorSegment);
-
-    if (keys.length === 0 && !needsSyntheticEntry) {
-      return "{}";
-    }
-
-    const lines = ["{"];
-
-    // Render all keys to provide context, but truncate values not on the error path
-    for (const key of keys) {
-      const keyPath = [...currentPath, key];
-      const isKeyOnPath = keyPath.every(
-        (seg, j) => j >= errorSegments.length || seg === errorSegments[j]
-      );
-      const isKeyTheError =
-        isOnErrorPath &&
-        currentPath.length === errorSegments.length - 1 &&
-        key === errorKey;
-
-      // Use full rendering for keys on path, truncated for others
-      const value =
-        isKeyOnPath || isKeyTheError
-          ? render(obj[key], depth + 1, keyPath)
-          : renderTruncated(obj[key]);
-      const errorMarker = isKeyTheError ? " // <-- error here" : "";
-
-      // Handle multiline values - put error marker on the key line, not after the value
-      if (value.includes("\n")) {
-        const firstLine = value.split("\n")[0];
-        const restLines = value.split("\n").slice(1).join("\n");
-        lines.push(`${indent}  ${key}: ${firstLine}${errorMarker}`);
-        lines.push(`${restLines},`);
-      } else {
-        lines.push(`${indent}  ${key}: ${value},${errorMarker}`);
-      }
-    }
-
-    // Handle missing keys on the error path - render synthetic entry showing the path
-    // This covers both intermediate missing keys (e.g., "args" when error is "args.name")
-    // and final missing keys (e.g., typo "nme" when "name" exists)
-    if (needsSyntheticEntry) {
-      const remainingPath = errorSegments.slice(currentPath.length);
-      const isAtFinalKey = remainingPath.length === 1;
-
-      if (isAtFinalKey) {
-        // Final key is missing - show as missing
-        lines.push(
-          `${indent}  ${nextErrorSegment}: <missing>, // <-- error here`
-        );
-      } else {
-        // Intermediate key is missing - show the path through it
-        // Put the missing comment on the opening brace line
-        lines.push(`${indent}  ${nextErrorSegment}: { // <-- missing`);
-        lines.push(...renderMissingPath(remainingPath.slice(1), depth + 1));
-        lines.push(`${indent}  },`);
-      }
-    }
-
-    lines.push(`${indent}}`);
-    return lines.join("\n");
-  }
-
-  const rendered = render(entry, 0, []);
-  return label ? `${label} ${rendered}` : rendered;
+  return new PathHighlightRenderer(errorPath, options).render(entry);
 }
 
 /**
- * Truncates an object for display in error messages.
+ * Truncates an object for JSON serialization in error messages.
+ * Returns actual objects/arrays with truncated content, not strings.
+ *
+ * Note: This returns OBJECTS for JSON.stringify(). For string representations
+ * in console output, use formatTruncatedValue() instead.
+ *
  * Handles special cases like block classes, children arrays, and circular references.
  *
  * @param {*} obj - The object to truncate.
