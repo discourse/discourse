@@ -99,7 +99,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
     get text() {
       if (this.isDM) {
         if (this.channel.chatable.group) {
-          return this.channel.title;
+          return this.channel.displayTitle;
         } else {
           const username = this.channel.escapedTitle.replaceAll("@", "");
           return htmlSafe(
@@ -785,7 +785,7 @@ export default {
 
               get text() {
                 if (this.channel.chatable.group) {
-                  return this.channel.title;
+                  return this.channel.displayTitle;
                 } else {
                   const username = this.channel.escapedTitle.replaceAll(
                     "@",
