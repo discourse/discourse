@@ -528,13 +528,4 @@ export default class StateHelper {
   getPositionValue() {
     return this.positionMachine.current;
   }
-
-  /**
-   * Check if position is "out".
-   *
-   * @returns {boolean}
-   */
-  isPositionOut() {
-    return this.positionMachine.matches("out");
-  }
 }

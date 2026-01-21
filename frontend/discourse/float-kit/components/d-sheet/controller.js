@@ -286,6 +286,9 @@ export default class Controller {
   /** @type {number} */
   stackPosition = 0;
 
+  /** @type {number} Counter tracking how many times this sheet has been covered by sheets above. */
+  coveredCount = 0;
+
   /** @type {Object|null} */
   sheetStackRegistry = null;
 
@@ -433,7 +436,11 @@ export default class Controller {
     {
       machine: "positionMachine",
       state: "covered.status:going-down",
-      callback: () => this.stateHelper.goDown(),
+      callback: () => {
+        this.coveredCount++;
+        this.stackingAdapter?.updateStackingIndexWithPositionValue();
+        this.stateHelper.goDown();
+      },
     },
     {
       machine: "positionMachine",
@@ -456,15 +463,26 @@ export default class Controller {
       machine: "positionMachine",
       state: "covered.status:indeterminate",
       callback: () => {
+        this.coveredCount--;
+        this.stackingAdapter?.updateStackingIndexWithPositionValue();
+
         if (this.stateHelper.isInAnimationState("going-up")) {
           this.stateHelper.advanceAnimation();
         }
 
-        if (this.stateHelper.isPositionOut()) {
+        if (this.coveredCount === 0) {
           this.stateHelper.goToFrontIdle();
         } else {
           this.stateHelper.goToCoveredIdle();
         }
+      },
+    },
+    {
+      machine: "positionMachine",
+      state: "covered.status:come-back",
+      timing: "immediate",
+      callback: () => {
+        this.positionMachine.send("");
       },
     },
     {
