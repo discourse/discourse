@@ -47,7 +47,7 @@ export function matchValue({ actual, expected }) {
 /**
  * Checks if an array is a simple value array (for OR matching) vs a condition
  * array (for AND matching). Simple value arrays contain only primitives (strings,
- * numbers, booleans, null) or RegExp objects.
+ * numbers, booleans, null, undefined) or RegExp objects.
  *
  * @param {Array} arr - The array to check.
  * @returns {boolean} True if all items are primitives or RegExp.
@@ -67,7 +67,7 @@ function isSimpleValueArray(arr) {
  * (because 123 is converted to "123").
  *
  * @param {*} actual - The actual value.
- * @param {*} expected - The expected value (primitive, array of primitives, or RegExp).
+ * @param {*} expected - The expected value (primitive, array of primitives/RegExp, or RegExp).
  * @returns {boolean} True if matches.
  */
 function matchSimpleValue(actual, expected) {
@@ -306,7 +306,6 @@ export function validateParamSpec(spec, path, raiseError) {
     // Check if this key looks like a typo of a valid operator
     // Skip if it's a valid operator or an escaped key (starts with \)
     if (!VALID_OPERATOR_KEYS.includes(key) && !key.startsWith("\\")) {
-      // Use Jaro-Winkler to check if it's similar to an operator
       const suggestion = findClosestMatch(key, VALID_OPERATOR_KEYS, {
         minSimilarity: 0.7,
       });
