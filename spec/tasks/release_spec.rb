@@ -15,6 +15,16 @@ RSpec.describe "tasks/version_bump" do
   let(:origin_path) { "#{tmpdir}/origin-repo" }
   let(:local_path) { "#{tmpdir}/local-repo" }
 
+  def update_versions_json(overrides)
+    Dir.chdir(origin_path) do
+      run "git", "checkout", "main"
+      current = JSON.parse(File.read("versions.json"))
+      File.write("versions.json", JSON.pretty_generate(current.merge(overrides)))
+      run "git", "add", "versions.json"
+      run "git", "commit", "-m", "Update versions.json"
+    end
+  end
+
   before do
     ENV["RUNNING_RELEASE_IN_RSPEC_TESTS"] = "1"
 
@@ -27,6 +37,61 @@ RSpec.describe "tasks/version_bump" do
 
       File.write(".gitignore", "tmp\n")
       File.write("lib/version.rb", fake_version_rb("3.2.0.beta1-latest"))
+      File.write(
+        "versions.json",
+        JSON.pretty_generate(
+          {
+            "2025.1" => {
+              "released" => true,
+              "esr" => true,
+            },
+            "2025.2" => {
+              "released" => true,
+              "esr" => false,
+            },
+            "2025.3" => {
+              "released" => true,
+              "esr" => false,
+            },
+            "2025.4" => {
+              "released" => true,
+              "esr" => false,
+            },
+            "2025.5" => {
+              "released" => true,
+              "esr" => false,
+            },
+            "2025.6" => {
+              "released" => true,
+              "esr" => false,
+            },
+            "2025.7" => {
+              "released" => false,
+              "esr" => true,
+            },
+            "2025.8" => {
+              "released" => false,
+              "esr" => false,
+            },
+            "2025.9" => {
+              "released" => false,
+              "esr" => false,
+            },
+            "2025.10" => {
+              "released" => false,
+              "esr" => false,
+            },
+            "2025.11" => {
+              "released" => false,
+              "esr" => false,
+            },
+            "2025.12" => {
+              "released" => false,
+              "esr" => false,
+            },
+          },
+        ),
+      )
 
       run "git", "init"
       run "git", "checkout", "-b", "main"
@@ -106,13 +171,11 @@ RSpec.describe "tasks/version_bump" do
   end
 
   describe "release:update_release_tags" do
-    it "creates release alias tags when version >= latest release" do
+    it "creates release alias tags when version matches latest release" do
       Dir.chdir(local_path) do
-        run "git", "tag", "-a", "v2025.01.0", "-m", "version 2025.01.0"
-
-        File.write("lib/version.rb", fake_version_rb("2025.06.0"))
+        File.write("lib/version.rb", fake_version_rb("2025.6.0"))
         run "git", "add", "."
-        run "git", "commit", "-m", "release 2025.06.0"
+        run "git", "commit", "-m", "release 2025.6.0"
         commit_hash = run("git", "rev-parse", "HEAD").strip
 
         capture_stdout { invoke_rake_task("release:update_release_tags", commit_hash) }
@@ -122,27 +185,9 @@ RSpec.describe "tasks/version_bump" do
       end
     end
 
-    it "creates release alias tags when version equals latest release" do
+    it "skips release tags when version is older than latest release" do
       Dir.chdir(local_path) do
-        run "git", "tag", "-a", "v2025.06.0", "-m", "version 2025.06.0"
-
-        File.write("lib/version.rb", fake_version_rb("2025.06.0"))
-        run "git", "add", "."
-        run "git", "commit", "-m", "another commit on 2025.06.0"
-        commit_hash = run("git", "rev-parse", "HEAD").strip
-
-        capture_stdout { invoke_rake_task("release:update_release_tags", commit_hash) }
-
-        tags = run("git", "tag").lines.map(&:strip)
-        ReleaseUtils::RELEASE_TAGS.each { |tag| expect(tags).to include(tag) }
-      end
-    end
-
-    it "skips when version is older than latest release" do
-      Dir.chdir(local_path) do
-        run "git", "tag", "-a", "v2025.06.0", "-m", "version 2025.06.0"
-
-        File.write("lib/version.rb", fake_version_rb("2025.01.0"))
+        File.write("lib/version.rb", fake_version_rb("2025.1.0"))
         run "git", "add", "."
         run "git", "commit", "-m", "old release"
         commit_hash = run("git", "rev-parse", "HEAD").strip
@@ -155,20 +200,76 @@ RSpec.describe "tasks/version_bump" do
       end
     end
 
-    it "ignores -latest prereleases when determining latest release" do
+    it "ignores unreleased versions when determining latest release" do
       Dir.chdir(local_path) do
-        run "git", "tag", "-a", "v2025.01.0", "-m", "version 2025.01.0"
-        run "git", "tag", "-a", "v2025.12.0-latest", "-m", "prerelease"
-
-        File.write("lib/version.rb", fake_version_rb("2025.06.0"))
+        File.write("lib/version.rb", fake_version_rb("2025.6.0"))
         run "git", "add", "."
-        run "git", "commit", "-m", "release 2025.06.0"
+        run "git", "commit", "-m", "release 2025.6.0"
         commit_hash = run("git", "rev-parse", "HEAD").strip
 
         capture_stdout { invoke_rake_task("release:update_release_tags", commit_hash) }
 
         tags = run("git", "tag").lines.map(&:strip)
         ReleaseUtils::RELEASE_TAGS.each { |tag| expect(tags).to include(tag) }
+      end
+    end
+
+    it "does not create ESR tags for non-ESR releases" do
+      Dir.chdir(local_path) do
+        File.write("lib/version.rb", fake_version_rb("2025.6.0"))
+        run "git", "add", "."
+        run "git", "commit", "-m", "release 2025.6.0"
+        commit_hash = run("git", "rev-parse", "HEAD").strip
+
+        capture_stdout { invoke_rake_task("release:update_release_tags", commit_hash) }
+
+        tags = run("git", "tag").lines.map(&:strip)
+        ReleaseUtils::ESR_TAGS.each { |tag| expect(tags).not_to include(tag) }
+      end
+    end
+
+    it "creates ESR alias tags when version is in the latest released ESR series" do
+      Dir.chdir(local_path) do
+        update_versions_json({ "2025.7" => { "released" => true, "esr" => true } })
+
+        File.write("lib/version.rb", fake_version_rb("2025.7.1"))
+        run "git", "add", "."
+        run "git", "commit", "-m", "release 2025.7.1"
+        commit_hash = run("git", "rev-parse", "HEAD").strip
+
+        capture_stdout { invoke_rake_task("release:update_release_tags", commit_hash) }
+
+        tags = run("git", "tag").lines.map(&:strip)
+        ReleaseUtils::RELEASE_TAGS.each { |tag| expect(tags).to include(tag) }
+        ReleaseUtils::ESR_TAGS.each { |tag| expect(tags).to include(tag) }
+      end
+    end
+
+    it "does not add ESR tags to non-ESR releases newer than the latest ESR" do
+      Dir.chdir(local_path) do
+        update_versions_json(
+          {
+            "2025.7" => {
+              "released" => true,
+              "esr" => true,
+            },
+            "2025.8" => {
+              "released" => true,
+              "esr" => false,
+            },
+          },
+        )
+
+        File.write("lib/version.rb", fake_version_rb("2025.8.0"))
+        run "git", "add", "."
+        run "git", "commit", "-m", "release 2025.8.0"
+        commit_hash = run("git", "rev-parse", "HEAD").strip
+
+        capture_stdout { invoke_rake_task("release:update_release_tags", commit_hash) }
+
+        tags = run("git", "tag").lines.map(&:strip)
+        ReleaseUtils::RELEASE_TAGS.each { |tag| expect(tags).to include(tag) }
+        ReleaseUtils::ESR_TAGS.each { |tag| expect(tags).not_to include(tag) }
       end
     end
   end
