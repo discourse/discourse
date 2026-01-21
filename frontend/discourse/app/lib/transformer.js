@@ -28,7 +28,7 @@ let skipApplyExceptionOnTests = false;
  *
  * Some checks are performed to ensure there are no repeated names between the multiple transformer types.
  *
- * The list can be edited in `discourse/lib/transformer/registry`
+ * The list can be edited in `discourse/lib/registry/transformers`
  */
 let validTransformerNames = new Map();
 
