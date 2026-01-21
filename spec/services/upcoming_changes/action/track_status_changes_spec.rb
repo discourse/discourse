@@ -192,13 +192,13 @@ RSpec.describe UpcomingChanges::Action::TrackStatusChanges do
 
       it "records the previous and new status values" do
         result
-        event =
+        result
+        expect(
           scoped_events
             .where(event_type: :status_changed, upcoming_change_name: :show_user_menu_avatars)
             .order(:created_at)
-            .last
-        expect(event.event_data["previous_value"]).to eq("beta")
-        expect(event.event_data["new_value"]).to eq("stable")
+            .last,
+        ).to have_attributes(event_data: { "previous_value" => "beta", "new_value" => "stable" })
       end
 
       it "returns the status change in the result" do

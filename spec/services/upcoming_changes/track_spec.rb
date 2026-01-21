@@ -55,10 +55,14 @@ RSpec.describe UpcomingChanges::Track do
     end
 
     it "populates the context with results from actions" do
-      expect(result[:added_changes]).to eq([:added_change])
-      expect(result[:removed_changes]).to eq([:removed_change])
-      expect(result[:status_changes]).to eq({ status_change: :data })
-      expect(result[:notified_admins_for_added_changes]).to eq(%i[notified_added notified_status])
+      expect(result).to have_attributes(
+        added_changes: [:added_change],
+        removed_changes: [:removed_change],
+        status_changes: {
+          status_change: :data,
+        },
+        notified_admins_for_added_changes: %i[notified_added notified_status],
+      )
     end
   end
 end

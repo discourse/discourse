@@ -112,24 +112,11 @@ RSpec.describe UpcomingChanges::Action::TrackAddedChanges do
       before { SiteSetting.promote_upcoming_changes_on_status = "stable" }
 
       it "does not notify admins for the scoped alpha changes" do
-        result
-        expect(
-          Notification
-            .where(notification_type: Notification.types[:upcoming_change_available])
-            .where("data::text LIKE ?", "%enable_upload_debug_mode%")
-            .count,
-        ).to eq(0)
-        expect(
-          Notification
-            .where(notification_type: Notification.types[:upcoming_change_available])
-            .where("data::text LIKE ?", "%show_user_menu_avatars%")
-            .count,
-        ).to eq(0)
+        expect { result }.not_to change { Notification.count }
       end
 
       it "does not include the scoped changes in notified_changes" do
-        expect(result[:notified_changes]).not_to include(:enable_upload_debug_mode)
-        expect(result[:notified_changes]).not_to include(:show_user_menu_avatars)
+        expect(result[:notified_changes]).to be_empty
       end
     end
 
