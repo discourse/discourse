@@ -2165,6 +2165,7 @@ sk:
               other {# dní}
             }.
           edit_link_options: "Upravte možnosti prepojenia alebo pošlite e-mailom."
+          edit_link_options_only: "Možnosti úpravy odkazu"
           show_advanced: "Zobraziť rozšírené možnosti"
           hide_advanced: "Skryť rozšírené možnosti"
           description: "Popis"

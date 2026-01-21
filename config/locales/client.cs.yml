@@ -2353,6 +2353,7 @@ cs:
               other {# dnů}
             }.
           edit_link_options: "Upravte možnosti odkazu nebo odešlete e-mail."
+          edit_link_options_only: "Upravit možnosti odkazu"
           show_advanced: "Zobrazit pokročilé možnosti"
           hide_advanced: "Skrýt pokročilé možnosti"
           description: "Popis"
@@ -3372,6 +3373,11 @@ cs:
       votes_released: "%{description} - dokončeno"
       new_features: "Jsou k dispozici nové funkce!"
       admin_problems: "Na administrační nástěnce vašeho webu jsou nová doporučení"
+      upcoming_changes:
+        available:
+          title: "Nadcházející změny"
+        automatically_promoted:
+          title: "Nadcházející změny"
       dismiss_confirmation:
         body:
           default:
@@ -6216,11 +6222,9 @@ cs:
               locale_label: "Jazyk"
             header_new_members:
               label: "Záhlaví pro nové členy"
-              description: "Dostupná proměnná: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Vítejte, %{preferred_display_name}!"
             header_logged_in:
               label: "Záhlaví pro přihlášené členy"
-              description: "Dostupná proměnná: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Vítejte zpět, %{preferred_display_name}!"
             header_anonymous:
               label: "Záhlaví pro anonymní návštěvníky"

@@ -2056,6 +2056,7 @@ fi:
               other {# päivän kuluttua}
             }.
           edit_link_options: "Muokkaa linkin asetuksia tai lähetä sähköpostitse."
+          edit_link_options_only: "Muokkaa linkin asetuksia"
           show_advanced: "Näytä lisäasetukset"
           hide_advanced: "Piilota lisäasetukset"
           description: "Kuvaus"
