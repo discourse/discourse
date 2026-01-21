@@ -17,8 +17,10 @@ RSpec.describe "User threads", type: :system do
   end
 
   context "when in sidebar" do
-    context "when user is a member of at least one channel with threads" do
-      before { channel_1.add(current_user) }
+    context "when user has viewable threads" do
+      before do
+        chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
+      end
 
       it "shows a link to user threads" do
         visit("/")
@@ -27,11 +29,8 @@ RSpec.describe "User threads", type: :system do
       end
     end
 
-    context "when user is not a member of any channel with threads" do
-      before do
-        channel_1.update!(threading_enabled: false)
-        channel_1.add(current_user)
-      end
+    context "when user has no viewable threads" do
+      before { channel_1.add(current_user) }
 
       it "does not show a link to user threads" do
         visit("/")
@@ -135,8 +134,10 @@ RSpec.describe "User threads", type: :system do
   context "when in drawer" do
     before { SiteSetting.chat_threads_enabled = true }
 
-    context "when user is a member of at least one channel with threads" do
-      before { channel_1.add(current_user) }
+    context "when user has viewable threads" do
+      before do
+        chat_thread_chain_bootstrap(channel: channel_1, users: [current_user, Fabricate(:user)])
+      end
 
       it "shows the user threads tab" do
         visit("/")
@@ -145,11 +146,8 @@ RSpec.describe "User threads", type: :system do
       end
     end
 
-    context "when user is not a member of any channel with threads" do
-      before do
-        channel_1.update!(threading_enabled: false)
-        channel_1.add(current_user)
-      end
+    context "when user has no viewable threads" do
+      before { channel_1.add(current_user) }
 
       it "does not show a link to user threads" do
         visit("/")
