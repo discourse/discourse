@@ -2,7 +2,7 @@
 /**
  * Block-specific arg validation.
  *
- * This module adapts the shared arg validation utilities from arg-validation.js
+ * This module adapts the shared arg validation utilities from args.js
  * for use with blocks. Key differences from condition arg validation:
  * - Supports "default" values (conditions don't use defaults)
  * - Validates "required + default" contradiction
