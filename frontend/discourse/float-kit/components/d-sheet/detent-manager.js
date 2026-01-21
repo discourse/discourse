@@ -106,10 +106,9 @@ export default class DetentManager {
    * @returns {{ backStuck: boolean, frontStuck: boolean, shouldStep: string|null }}
    */
   determineStuckPosition(segment, prevSegment) {
-    const { controller } = this;
     const [start, end] = segment;
     const [prevStart, prevEnd] = prevSegment || [];
-    const detentCount = controller.dimensions?.detentMarkers?.length ?? 1;
+    const detentCount = this.maxDetent;
 
     let backStuck = false;
     let frontStuck = false;
