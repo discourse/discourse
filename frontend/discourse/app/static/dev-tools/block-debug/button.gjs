@@ -14,8 +14,6 @@ import devToolsState from "../state";
 /**
  * Block debug button with dropdown menu.
  * Provides separate toggles for console logging, visual overlay, and outlet boundaries.
- *
- * @component BlockDebugButton
  */
 export default class BlockDebugButton extends Component {
   /**

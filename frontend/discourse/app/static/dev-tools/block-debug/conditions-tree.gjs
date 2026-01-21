@@ -7,7 +7,6 @@ import { formatValue } from "../lib/value-formatter";
 /**
  * Displays condition hierarchy with pass/fail indicators.
  *
- * @component ConditionsTree
  * @param {Object|Array} conditions - The conditions to display
  * @param {boolean} passed - Whether the conditions passed overall
  */
