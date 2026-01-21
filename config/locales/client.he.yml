@@ -987,7 +987,7 @@ he:
         reviewable_ai_chat_message:
           noun: "הודעת הצ׳אט"
         reviewable_ai_post:
-          noun: "פרסום"
+          noun: "פוסט"
       flagged_as: "מסומן בתור"
       post_flagged_as: "הפוסט סומן בתור"
       chat_flagged_as: "השיחה סומנה בתור"
@@ -1000,6 +1000,7 @@ he:
       timeline:
         target_created: "פוסט נוצר"
         target_created_by: "הפוסט נוצר על ידי %{username} · %{relativeDate}"
+        target_deleted: "פוסט נמחק"
         flagged: "מסומן"
         flagged_as_by: "מסומן בתור %{flagReason} על ידי %{username} · %{relativeDate}"
         claimed: "נדרש"
@@ -6420,6 +6421,7 @@ he:
         new_features:
           title: "מה חדש?"
           subtitle: "אנו מוציאים לאור יכולות ושיפורים חדשים כל הזמן. העמוד הזה מסקר את הנקודות החשובות אבל ניתן ללחוץ על ‚מידע נוסף’ כדי לצפות בהערות ההוצאה לאור המפורטות."
+          no_new_features_found: "אירעה שגיאה בטעינת ערוץ העדכונים. ניתן לראות הכרזות קודמות על יכולות חדשות ב<a href='%{url}' target='_blank'>קהילת Discourse Meta</a>."
           learn_more: "מידע נוסף…"
           experimental: "ניסיוני"
           only_experiments: "להציג יכולות ניסיוניות בלבד"
@@ -8581,6 +8583,7 @@ he:
           upload:
             label: "העלאה"
             title: "העלאת תמונות"
+        download_file: "הורדה"
         selectable_avatars:
           title: "רשימת תמונות ייצוגיות מהן המשתמשים יכולים לבחור"
         table_column_heading:

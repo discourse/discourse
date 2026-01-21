@@ -756,7 +756,7 @@
       .item-description {
         color: var(--primary);
 
-        @include line-clamp(2);
+        @include line-clamp(3);
       }
 
       .icon-avatar {

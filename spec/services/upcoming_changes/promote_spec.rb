@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe UpcomingChanges::Promote do
-  describe described_class::Contract, type: :model do
+  describe UpcomingChanges::Promote::Contract, type: :model do
     subject(:contract) { described_class.new }
 
     it { is_expected.to validate_presence_of(:setting_name) }
@@ -102,6 +102,8 @@ RSpec.describe UpcomingChanges::Promote do
     end
 
     context "when everything is ok" do
+      fab!(:admin_2, :admin)
+
       let(:promotion_status_threshold) { :beta }
 
       it { is_expected.to run_successfully }
@@ -125,6 +127,31 @@ RSpec.describe UpcomingChanges::Promote do
             base_path: Discourse.base_path,
           ),
         )
+      end
+
+      it "notifies admins about the upcoming change" do
+        expect { result }.to change {
+          Notification.where(
+            notification_type: Notification.types[:upcoming_change_automatically_promoted],
+            user_id: [admin.id, admin_2.id],
+          ).count
+        }.by(2)
+
+        expect(Notification.last.data).to eq(
+          {
+            upcoming_change_name: :enable_upload_debug_mode,
+            upcoming_change_humanized_name: "Enable upload debug mode",
+          }.to_json,
+        )
+      end
+
+      it "creates an admins_notified_automatic_promotion event" do
+        expect { result }.to change {
+          UpcomingChangeEvent.where(
+            event_type: :admins_notified_automatic_promotion,
+            upcoming_change_name: :enable_upload_debug_mode,
+          ).count
+        }.by(1)
       end
     end
   end

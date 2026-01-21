@@ -63,6 +63,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
   @discourseComputed("category.id", "category.custom_fields")
   availableViews(categoryId, customFields) {
     const views = [
+      { name: i18n("filters.hot.title"), value: "hot" },
       { name: i18n("filters.latest.title"), value: "latest" },
       { name: i18n("filters.top.title"), value: "top" },
     ];

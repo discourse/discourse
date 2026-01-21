@@ -275,6 +275,17 @@ class StaffActionLogger
     )
   end
 
+  def log_upcoming_change_available(setting_name, opts = {})
+    raise Discourse::InvalidParameters.new(:setting_name) if setting_name.blank?
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:upcoming_change_available],
+        subject: setting_name,
+        details: SiteSetting.humanized_name(setting_name),
+      ),
+    )
+  end
+
   def log_site_setting_groups_change(setting_name, previous_value, new_value, opts = {})
     unless setting_name.present? && SiteSetting.respond_to?(setting_name)
       raise Discourse::InvalidParameters.new(:setting_name)

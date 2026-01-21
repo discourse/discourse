@@ -3407,6 +3407,7 @@ sw:
           empty: "Hakuna picha ,Tafadhali pakia moja."
           upload:
             label: "Pakia"
+        download_file: "Pakua"
         categories:
           all_results: "Zote"
           required: "Muhimu na Inahitajika"

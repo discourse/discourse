@@ -576,6 +576,8 @@ id:
         reviewable_ai_post:
           noun: "post"
       user_label: "Pengguna"
+      timeline:
+        target_deleted: "Pos dihapus"
       notes:
         delete: "Hapus"
       topic_label: "Topik"

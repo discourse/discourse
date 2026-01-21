@@ -6,6 +6,7 @@ import DButton from "discourse/components/d-button";
 import categoryLink from "discourse/helpers/category-link";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
+import getTagName from "../lib/get-tag-name";
 
 export default class RuleRow extends Component {
   @service siteSettings;
@@ -20,6 +21,14 @@ export default class RuleRow extends Component {
 
   get isMention() {
     return this.args.rule.type === "group_mention";
+  }
+
+  get displayTags() {
+    const tags = this.args.rule.tags;
+    if (!tags) {
+      return null;
+    }
+    return tags.map((tag) => getTagName(tag)).join(", ");
   }
 
   @action
@@ -62,8 +71,8 @@ export default class RuleRow extends Component {
 
       <td>
         {{#if this.siteSettings.tagging_enabled}}
-          {{#if @rule.tags}}
-            {{@rule.tags}}
+          {{#if this.displayTags}}
+            {{this.displayTags}}
           {{else}}
             {{i18n "chat_integration.all_tags"}}
           {{/if}}

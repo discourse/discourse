@@ -647,6 +647,7 @@ ug:
       show_more: "تېخىمۇ كۆپ كۆرسەت"
       show_less: "ئازراق كۆرسەت"
       back_to_queue: "ئۆچرەتكە قايت"
+      editing_post: "يازما تەھرىرلىنىۋاتىدۇ…"
       order_by: "تەرتىپى"
       date_filter: "يوللانغان ۋاقتى"
       in_reply_to: "جاۋاب"
@@ -843,6 +844,10 @@ ug:
         is_this_post: "بۇ %{reviewable_type} %{reviewable_human_score_types} مۇ؟"
         delimiter: "ياكى"
         something_else_wrong: "بۇ %{reviewable_type} دا خاتالىق بارمۇ؟"
+        approve_user: "بۇ ئىشلەتكۈچىنى تەستىقلامدۇ؟"
+        suspect_user: "بۇ ئەخلەت ئىشلەتكۈچىمۇ؟"
+        approve_post: "بۇ يازمىنى تەستىقلامدۇ؟"
+        approve_topic: "بۇ تېمىنى تەستىقلامدۇ؟"
       types:
         reviewable_flagged_post:
           title: "پاش قىلىنغان يازما"
@@ -861,9 +866,14 @@ ug:
           title: "يازما"
           noun: "يازما"
         reviewable_ai_chat_message:
+          title: "سۈنئىي ئەقىل پاش قىلغان سۆھبەت ئۇچۇرى"
           noun: "سۆھبەت ئۇچۇرى"
         reviewable_ai_post:
+          title: "سۈنئىي ئەقىل پاش قىلغان يازما"
           noun: "يازما"
+        reviewable_post_voting_comment:
+          title: "پاش قىلىنغان ئىنكاس"
+          noun: "ئىنكاس"
       flagged_as: "پاش قىلىنغان"
       post_flagged_as: "يازمىغا سېلىنغان بەلگە"
       chat_flagged_as: "سۆھبەتكە سېلىنغان بەلگە"
@@ -876,6 +886,7 @@ ug:
       timeline:
         target_created: "يازما قۇرۇلدى"
         target_created_by: "يازما قۇرغۇچى %{username} · %{relativeDate}"
+        target_deleted: "يازما ئۆچۈرۈلدى"
         flagged: "پاش قىلىندى"
         flagged_as_by: "%{username} · %{relativeDate} دە %{flagReason} دەپ پاش قىلغان"
         claimed: "تەلەپ قىلىندى"
@@ -7917,6 +7928,7 @@ ug:
           upload:
             label: "يۈكلە"
             title: "سۈرەت يۈكلە"
+        download_file: "چۈشۈر"
         selectable_avatars:
           title: "ئىشلەتكۈچى تاللىيالايدىغان سىما تىزىمى"
         table_column_heading:

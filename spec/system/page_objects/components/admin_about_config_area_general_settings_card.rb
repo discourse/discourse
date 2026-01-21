@@ -20,7 +20,7 @@ module PageObjects
       end
 
       def banner_image_uploader
-        PageObjects::Components::UppyImageUploader.new(card.find(".image-uploader"))
+        PageObjects::Components::UppyImageUploader.new(card.find(".file-uploader"))
       end
 
       def submit

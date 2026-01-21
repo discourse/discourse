@@ -431,6 +431,7 @@ en:
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
     existing_user_success: "Invite redeemed successfully"
+    email_invites_disabled: "Sending invite emails is disabled"
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -1913,6 +1914,7 @@ en:
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
+    llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."
     content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection."
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
@@ -2317,7 +2319,7 @@ en:
     strip_incoming_email_lines: "Remove leading and trailing whitespaces from each line of incoming emails."
 
     disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable emails for all users. Select 'non-staff' to disable emails for non-staff users only."
-
+    allow_email_invites: "When disabled, users won't be able to send invite emails via Discourse"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Define the maximum length, in bytes, for an email to be classified as 'short' for image suppression. If an email's size does not exceed this setting, any images (such as avatars and emojis) within the email will be stripped out."
     display_name_on_email_from: "Display full names on email from fields"
@@ -4747,6 +4749,7 @@ en:
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
+    images_only: "Sorry, you can only upload images for this setting."
     pasted_image_filename: "Pasted image"
     store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
     file_missing: "Sorry, you must provide a file to upload."
@@ -5670,7 +5673,6 @@ en:
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
     already_handled_and_user_not_exist: "Thanks, but someone already reviewed and that user no longer exists."
-    post_deleted_by_author: "Post was deleted by the author"
     post_restored_by_author: "Post was restored by the author"
     priorities:
       low: "Low"

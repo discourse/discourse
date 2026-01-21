@@ -956,6 +956,8 @@ en:
       timeline:
         target_created: "Post created"
         target_created_by: "Post created by %{username} · %{relativeDate}"
+        target_deleted: "Post deleted"
+        target_deleted_by: "Post deleted by %{username} · %{relativeDate}"
         flagged: "Flagged"
         flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
         claimed: "Claimed"
@@ -2276,6 +2278,7 @@ en:
               other {# days}
             }.
           edit_link_options: "Edit link options or send by email."
+          edit_link_options_only: "Edit link options"
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
@@ -3277,6 +3280,13 @@ en:
       votes_released: "%{description} - completed"
       new_features: "New features available!"
       admin_problems: "New advice on your site dashboard"
+      upcoming_changes:
+        available:
+          title: "Upcoming changes"
+          description: "'%{changeName}' is available for preview"
+        automatically_promoted:
+          title: "Upcoming changes"
+          description: "'%{changeName}' has been automatically enabled"
       dismiss_confirmation:
         body:
           default:
@@ -6043,11 +6053,11 @@ en:
               locale_label: "Language"
             header_new_members:
               label: "Header for new members"
-              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
+              description: "Available variables: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Welcome, %{preferred_display_name}!"
             header_logged_in:
               label: "Header for logged-in members"
-              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
+              description: "Available variables: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Welcome back, %{preferred_display_name}!"
             header_anonymous:
               label: "Header for anonymous visitors"
@@ -7802,6 +7812,7 @@ en:
             change_theme_site_setting: "change theme site setting"
             stop_impersonating: "stop impersonating"
             upcoming_change_toggled: "upcoming change toggled"
+            upcoming_change_available: "upcoming change available"
             change_site_setting_groups: "change site setting groups"
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
         screened_emails:
@@ -7944,6 +7955,7 @@ en:
           upload: "Upload a file"
           multiselect: "Multiple choice"
           tagchooser: "Tag Group selector"
+          composer: "Markdown answer"
         validations_modal:
           button_title: "Validations"
           modal_title: "Validation Options"
@@ -8501,6 +8513,10 @@ en:
           upload:
             label: "Upload"
             title: "Upload images"
+        download_file: "Download"
+        upload_restrictions:
+          extensions: "Accepted: %{extensions}"
+          max_size: "Max: %{size}"
         selectable_avatars:
           title: "List of avatars users can choose from"
         table_column_heading:

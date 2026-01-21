@@ -862,6 +862,7 @@ es:
       timeline:
         target_created: "Publicación creada"
         target_created_by: "Publicación creada por %{username} · %{relativeDate}"
+        target_deleted: "Publicación eliminada"
         flagged: "Marcado"
         flagged_as_by: "Marcado como %{flagReason} por %{username} · %{relativeDate}"
         claimed: "Reclamado"
@@ -7809,6 +7810,7 @@ es:
           upload:
             label: "Subir"
             title: "Subir imágenes"
+        download_file: "Descargar"
         selectable_avatars:
           title: "Lista de avatares que los usuarios pueden escoger"
         table_column_heading:

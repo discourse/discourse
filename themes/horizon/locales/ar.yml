@@ -23,11 +23,11 @@ ar:
     many: "%{count} إعجابًا"
     other: "%{count} إعجابًا"
   reply_count:
-    zero: "%{count} ردود"
+    zero: "%{count} ردًا"
     one: "رد واحد (%{count})"
-    two: "%{count} ردًا"
-    few: "%{count} ردًا"
-    many: "%{count} ردود"
-    other: "%{count} ردود"
+    two: "ردَّان (%{count})"
+    few: "%{count} ردود"
+    many: "%{count} ردًا"
+    other: "%{count} ردًا"
   theme_metadata:
     description: "سمة سهلة وجذابة تسهم في تحسين تجربة التشغيل الافتراضية لمواقع Discourse."
