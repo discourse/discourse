@@ -1,16 +1,6 @@
 .category-list {
   table-layout: fixed;
 
-  tbody {
-    .category {
-      &.no-category-style {
-        border-color: transparent;
-        border-left: 0;
-        padding-left: 0;
-      }
-    }
-  }
-
   .category-text-title {
     display: flex;
     align-items: baseline;
@@ -19,18 +9,10 @@
   .category-name {
     display: inline-block;
     max-width: 100%;
-
-    @include ellipsis;
     vertical-align: text-top;
     line-height: var(--line-height-medium);
-  }
 
-  &.with-topics {
-    .subcategories-with-subcategories {
-      .category-description {
-        display: none;
-      }
-    }
+    @include ellipsis;
   }
 
   &.hidden {
@@ -38,326 +20,16 @@
   }
 }
 
-.navigation-categories .category-list.subcategory-list {
-  margin-bottom: 1em;
+.category-list tbody .category.no-category-style {
+  border-color: transparent;
+  border-left: 0;
+  padding-left: 0;
 }
 
-.subcategory-list {
-  .parent-category {
-    h3 {
-      display: inline;
-    }
-
-    .category-text-title {
-      display: inline-flex;
-    }
-
-    .stat {
-      margin-left: 0.5em;
-    }
-  }
-}
-
-.category-boxes,
-.category-boxes-with-topics {
-  display: grid;
-  gap: var(--d-category-boxes-gap);
-  margin-top: var(--d-category-boxes-margin-top);
-  margin-bottom: 1em;
-  width: 100%;
-
-  .category-box {
-    position: relative;
-    display: flex;
-    flex-direction: row;
-    align-content: flex-start;
-    box-sizing: border-box;
-    border-width: 0;
-    border-radius: var(--d-border-radius);
-    background-color: var(--d-category-box-background-color);
-    border-left-width: var(--d-category-border-accent-width);
-    border-style: solid;
-    border-color: var(--category-badge-color, var(--primary-low));
-
-    .mobile-view & {
-      width: 100%;
-    }
-
-    .category-box-heading {
-      margin-bottom: 0.5em;
-
-      a[href] {
-        width: 100%;
-        color: var(--primary);
-      }
-    }
-
-    h3 .d-icon {
-      margin-right: 0;
-    }
-
-    .parent-box-link {
-      // This avoids an issue with nested links by layering links instead
-      &::before {
-        content: "";
-        position: absolute;
-        z-index: 0;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
-    }
-
-    .category-logo.aspect-image img {
-      --height: 40px;
-      display: block;
-      margin: 0 auto 1em auto;
-      height: var(--height);
-      width: calc(var(--height) * var(--aspect-ratio));
-      max-width: 100%;
-    }
-  }
-
-  .category-box-inner {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 1em;
-    display: flex;
-    flex-direction: column;
-    border-width: var(--d-category-border-box-width);
-    border-left-width: 0;
-    border-style: solid;
-    border-color: var(--primary-low);
-    border-top-right-radius: var(--d-border-radius);
-    border-bottom-right-radius: var(--d-border-radius);
-  }
-
-  &.no-logos {
-    .category-logo {
-      display: none;
-    }
-  }
-
-  .badge-category__wrapper {
-    max-width: 100%;
-  }
-}
-
-.category-boxes {
-  grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
-
-  .category-box {
-    > a {
-      width: 100%;
-      padding: 0;
-    }
-
-    .category-box-inner {
-      padding: var(--space-4);
-
-      .category-logo {
-        float: none;
-        margin: 0;
-      }
-    }
-  }
-
-  &.no-logos {
-    .category-box .category-box-inner > a {
-      padding: var(--space-12) var(--space-4);
-    }
-  }
-
-  .description {
-    margin-bottom: var(--space-4);
-    text-align: var(--category-boxes-text-alignment);
-    font-size: var(--font-0);
-    color: var(--category-boxes-description-text-color);
-    position: relative;
-
-    @include line-clamp(4);
-
-    //  allow clicks to fall through the description text to the category below...
-    pointer-events: none;
-
-    .overflow {
-      max-height: 6em;
-
-      div a {
-        //  ...but links in description should still be clickable
-        pointer-events: auto;
-      }
-    }
-  }
-
-  h3 {
-    font-size: var(--category-boxes-title-font-size);
-    line-height: var(--line-height-medium);
-    text-align: var(--category-boxes-text-alignment);
-    color: var(--primary);
-    overflow: hidden;
-  }
-
-  h4 a {
-    color: var(--primary);
-  }
-
-  .subcategory.with-subcategories {
-    position: relative;
-    border: none;
-    border-left-width: 4px;
-    border-left-style: solid;
-    margin-bottom: 0.25em;
-
-    .category-title-link {
-      display: flex;
-
-      .category-logo {
-        flex: 1 0 auto;
-        margin: 0.25em 0.5em 0.5em 0;
-
-        --max-height: 40px;
-      }
-
-      .category-text-title {
-        order: 2;
-        line-height: var(--line-height-medium);
-        overflow: hidden;
-        margin-bottom: 0.25em;
-        overflow-wrap: break-word;
-      }
-
-      &::before {
-        // This avoids an issue with nested links by layering links instead
-        content: "";
-        position: absolute;
-        z-index: 0;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-      }
-    }
-
-    .subcategory-box-inner {
-      border: 1px solid var(--content-border-color);
-      border-left: none;
-      padding: 0.5em 0.5em 0.4em 0.5em;
-    }
-
-    &:not(:last-of-type) {
-      margin-bottom: 0.75em;
-    }
-
-    .subcategory {
-      margin-bottom: 0.25em;
-    }
-  }
-
-  .subcategories {
-    display: flex;
-    flex-flow: wrap;
-    gap: var(--space-2);
-
-    .subcategory {
-      display: flex;
-      align-items: center;
-
-      @include ellipsis;
-
-      .badge-category__wrapper {
-        overflow: hidden;
-      }
-
-      .subcategory-image-placeholder {
-        display: inline-block;
-        flex: 1 0 auto;
-
-        .category-logo.aspect-image {
-          margin-top: 0;
-          margin-right: var(--space-1);
-        }
-      }
-
-      .subcategory-link {
-        min-width: 0;
-
-        @include ellipsis;
-      }
-
-      .category-logo img {
-        display: inline-block;
-
-        --height: 20px;
-        height: var(--height);
-        width: calc(var(--height) * var(--aspect-ratio));
-        margin: 0;
-      }
-    }
-  }
-}
-
-.category-boxes-with-topics {
-  grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
-
-  .category-box {
-    padding: 0;
-  }
-
-  h3 {
-    font-size: var(--font-up-2);
-    text-align: center;
-    overflow: hidden;
-  }
-
-  .featured-topics {
-    margin-bottom: 1em;
-
-    // we absolutely position the parent category's link so the whole box is clickable
-    // to prevent this covering topic links, we need to raise the z-index
-    z-index: 1;
-
-    ul {
-      color: var(--primary-medium);
-      list-style: none;
-      padding: 0;
-      margin: 0;
-    }
-
-    li {
-      padding: 4px 0;
-      display: flex;
-      align-items: baseline;
-
-      a {
-        @include line-clamp(2);
-      }
-
-      .d-icon {
-        margin-right: 0.15em;
-        width: 0.76em;
-        height: 0.76em;
-      }
-    }
-  }
-}
-
-.categories-list .category {
-  h3,
-  h4 {
-    margin-bottom: var(--d-categories-list-title-margin-bottom);
-  }
-
+.category-list.with-topics
+  .subcategories-with-subcategories
   .category-description {
-    margin-top: 0.5em;
-    overflow: hidden;
-    color: var(--primary-high);
-  }
-
-  .category-logo.aspect-image {
-    margin-top: 0.5em;
-  }
+  display: none;
 }
 
 .category-list.subcategories-with-subcategories {
@@ -384,6 +56,330 @@
   > .category-description,
   tr.category-description {
     display: none;
+  }
+}
+
+.subcategory-list .parent-category {
+  h3 {
+    display: inline;
+  }
+
+  .category-text-title {
+    display: inline-flex;
+  }
+
+  .stat {
+    margin-left: 0.5em;
+  }
+}
+
+.category-boxes,
+.category-boxes-with-topics {
+  display: grid;
+  gap: var(--d-category-boxes-gap);
+  margin-top: var(--d-category-boxes-margin-top);
+  margin-bottom: 1em;
+  width: 100%;
+
+  .category-box {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-content: flex-start;
+    box-sizing: border-box;
+    border-width: 0;
+    border-radius: var(--d-border-radius);
+    background-color: var(--d-category-box-background-color);
+    border-left-width: var(--d-category-border-accent-width);
+    border-style: solid;
+    border-color: var(--category-badge-color, var(--primary-low));
+  }
+
+  .category-box-inner {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    border-width: var(--d-category-border-box-width);
+    border-left-width: 0;
+    border-style: solid;
+    border-color: var(--primary-low);
+    border-top-right-radius: var(--d-border-radius);
+    border-bottom-right-radius: var(--d-border-radius);
+  }
+
+  &.no-logos .category-logo {
+    display: none;
+  }
+
+  .badge-category__wrapper {
+    max-width: 100%;
+  }
+}
+
+.mobile-view .category-boxes .category-box,
+.mobile-view .category-boxes-with-topics .category-box {
+  width: 100%;
+}
+
+.category-boxes .category-box .category-box-heading,
+.category-boxes-with-topics .category-box .category-box-heading {
+  margin-bottom: 0.5em;
+}
+
+.category-boxes .category-box .category-box-heading a[href],
+.category-boxes-with-topics .category-box .category-box-heading a[href] {
+  width: 100%;
+  color: var(--primary);
+}
+
+.category-boxes .category-box h3 .d-icon,
+.category-boxes-with-topics .category-box h3 .d-icon {
+  margin-right: 0;
+}
+
+// This avoids an issue with nested links by layering links instead
+.category-boxes .category-box .parent-box-link::before,
+.category-boxes-with-topics .category-box .parent-box-link::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.category-boxes .category-box .category-logo.aspect-image img,
+.category-boxes-with-topics .category-box .category-logo.aspect-image img {
+  --height: 40px;
+  display: block;
+  margin: 0 auto 1em auto;
+  height: var(--height);
+  width: calc(var(--height) * var(--aspect-ratio));
+  max-width: 100%;
+}
+
+.category-boxes {
+  grid-template-columns: repeat(auto-fit, minmax(15em, 1fr));
+
+  .category-box > a {
+    width: 100%;
+    padding: 0;
+  }
+
+  .category-box .category-box-inner {
+    padding: var(--space-4);
+  }
+
+  h3 {
+    font-size: var(--category-boxes-title-font-size);
+    line-height: var(--line-height-medium);
+    text-align: var(--category-boxes-text-alignment);
+    color: var(--primary);
+    overflow: hidden;
+  }
+
+  h4 a {
+    color: var(--primary);
+  }
+
+  .description {
+    margin-bottom: var(--space-4);
+    text-align: var(--category-boxes-text-alignment);
+    font-size: var(--font-0);
+    color: var(--category-boxes-description-text-color);
+    position: relative;
+
+    // allow clicks to fall through the description text to the category below...
+    pointer-events: none;
+
+    @include line-clamp(4);
+  }
+
+  .description .overflow {
+    max-height: 6em;
+  }
+
+  // ...but links in description should still be clickable
+  .description .overflow div a {
+    pointer-events: auto;
+  }
+
+  .subcategories {
+    display: flex;
+    flex-flow: wrap;
+    gap: var(--space-2);
+  }
+}
+
+.category-boxes .category-box .category-box-inner .category-logo {
+  float: none;
+  margin: 0;
+}
+
+.category-boxes.no-logos .category-box .category-box-inner > a {
+  padding: var(--space-12) var(--space-4);
+}
+
+.category-boxes .subcategory.with-subcategories {
+  position: relative;
+  border: none;
+  border-left-width: 4px;
+  border-left-style: solid;
+  margin-bottom: 0.25em;
+
+  &:not(:last-of-type) {
+    margin-bottom: 0.75em;
+  }
+
+  .subcategory {
+    margin-bottom: 0.25em;
+  }
+
+  .subcategory-box-inner {
+    border: 1px solid var(--content-border-color);
+    border-left: none;
+    padding: 0.5em 0.5em 0.4em 0.5em;
+  }
+}
+
+.category-boxes .subcategory.with-subcategories .category-title-link {
+  display: flex;
+
+  // This avoids an issue with nested links by layering links instead
+  &::before {
+    content: "";
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
+.category-boxes
+  .subcategory.with-subcategories
+  .category-title-link
+  .category-logo {
+  flex: 1 0 auto;
+  margin: 0.25em 0.5em 0.5em 0;
+
+  --max-height: 40px;
+}
+
+.category-boxes
+  .subcategory.with-subcategories
+  .category-title-link
+  .category-text-title {
+  order: 2;
+  line-height: var(--line-height-medium);
+  overflow: hidden;
+  margin-bottom: 0.25em;
+  overflow-wrap: break-word;
+}
+
+.category-boxes .subcategories .subcategory {
+  display: flex;
+  align-items: center;
+
+  @include ellipsis;
+}
+
+.category-boxes .subcategories .subcategory .badge-category__wrapper {
+  overflow: hidden;
+}
+
+.category-boxes .subcategories .subcategory .subcategory-image-placeholder {
+  display: inline-block;
+  flex: 1 0 auto;
+}
+
+.category-boxes
+  .subcategories
+  .subcategory
+  .subcategory-image-placeholder
+  .category-logo.aspect-image {
+  margin-top: 0;
+  margin-right: var(--space-1);
+}
+
+.category-boxes .subcategories .subcategory .subcategory-link {
+  min-width: 0;
+
+  @include ellipsis;
+}
+
+.category-boxes .subcategories .subcategory .category-logo img {
+  display: inline-block;
+
+  --height: 20px;
+  height: var(--height);
+  width: calc(var(--height) * var(--aspect-ratio));
+  margin: 0;
+}
+
+.category-boxes-with-topics {
+  grid-template-columns: repeat(auto-fit, minmax(18em, 1fr));
+
+  .category-box {
+    padding: 0;
+  }
+
+  h3 {
+    font-size: var(--font-up-2);
+    text-align: center;
+    overflow: hidden;
+  }
+}
+
+.category-boxes-with-topics .featured-topics {
+  margin-bottom: 1em;
+
+  // we absolutely position the parent category's link so the whole box is clickable
+  // to prevent this covering topic links, we need to raise the z-index
+  z-index: 1;
+
+  ul {
+    color: var(--primary-medium);
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    padding: 4px 0;
+    display: flex;
+    align-items: baseline;
+  }
+}
+
+.category-boxes-with-topics .featured-topics li a {
+  @include line-clamp(2);
+}
+
+.category-boxes-with-topics .featured-topics li .d-icon {
+  margin-right: 0.15em;
+  width: 0.76em;
+  height: 0.76em;
+}
+
+.categories-list .category {
+  h3,
+  h4 {
+    margin-bottom: var(--d-categories-list-title-margin-bottom);
+  }
+
+  .category-description {
+    margin-top: 0.5em;
+    overflow: hidden;
+    color: var(--primary-high);
+  }
+
+  .category-logo.aspect-image {
+    margin-top: 0.5em;
   }
 }
 
@@ -420,5 +416,9 @@
 
   .category-list {
     margin-bottom: 0;
+  }
+
+  &.subcategory-list {
+    margin-bottom: 1em;
   }
 }
