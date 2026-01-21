@@ -5,9 +5,9 @@ import {
   VALID_ENTRY_KEYS,
   validateEntryKeys,
   validateEntryTypes,
-} from "discourse/lib/blocks/layout-validation";
+} from "discourse/lib/blocks/validation/layout";
 
-module("Unit | Blocks | layout-validation", function (hooks) {
+module("Unit | Blocks | validation/layout", function (hooks) {
   setupTest(hooks);
 
   module("containerArgs in entry", function () {

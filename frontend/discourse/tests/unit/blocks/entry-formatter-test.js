@@ -2,7 +2,7 @@ import { module, test } from "qunit";
 import {
   formatEntryWithErrorPath,
   parseConditionPath,
-} from "discourse/lib/blocks/entry-formatter";
+} from "discourse/lib/blocks/core/error";
 
 module("Unit | Blocks | entry-formatter", function () {
   module("parseConditionPath", function () {

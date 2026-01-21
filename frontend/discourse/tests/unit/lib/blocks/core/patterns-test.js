@@ -4,9 +4,9 @@ import {
   parseBlockReference,
   VALID_BLOCK_NAME_PATTERN,
   VALID_NAMESPACED_BLOCK_PATTERN,
-} from "discourse/lib/blocks/patterns";
+} from "discourse/lib/blocks/core/patterns";
 
-module("Unit | Lib | blocks/patterns", function () {
+module("Unit | Lib | blocks/core/patterns", function () {
   module("VALID_BLOCK_NAME_PATTERN", function () {
     test("matches valid simple block names", function (assert) {
       assert.true(VALID_BLOCK_NAME_PATTERN.test("group"));

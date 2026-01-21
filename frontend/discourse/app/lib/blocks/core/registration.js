@@ -1,14 +1,14 @@
 // @ts-check
 import { DEBUG } from "@glimmer/env";
 import { isDecoratedCondition } from "discourse/blocks/conditions/decorator";
-import { raiseBlockError } from "discourse/lib/blocks/error";
+import { raiseBlockError } from "discourse/lib/blocks/core/error";
 import {
   OPTIONAL_MISSING,
   parseBlockName,
   parseBlockReference,
   VALID_BLOCK_NAME_PATTERN,
   VALID_NAMESPACED_BLOCK_PATTERN,
-} from "discourse/lib/blocks/patterns";
+} from "discourse/lib/blocks/core/patterns";
 import { isTesting } from "discourse/lib/environment";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import identifySource from "discourse/lib/source-identifier";

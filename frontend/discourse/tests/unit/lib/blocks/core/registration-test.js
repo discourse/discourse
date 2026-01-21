@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks/block-outlet";
-import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
+import { OPTIONAL_MISSING } from "discourse/lib/blocks/core/patterns";
 import {
   _freezeBlockRegistry,
   _freezeOutletRegistry,
@@ -22,10 +22,10 @@ import {
   resetBlockRegistryForTesting,
   resolveBlock,
   resolveBlockSync,
-} from "discourse/lib/blocks/registration";
+} from "discourse/lib/blocks/core/registration";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 
-module("Unit | Lib | blocks/registration", function (hooks) {
+module("Unit | Lib | blocks/core/registration", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {

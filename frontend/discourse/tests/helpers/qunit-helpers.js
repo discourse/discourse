@@ -40,7 +40,7 @@ import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializer
 import { resetAdminPluginConfigNav } from "discourse/lib/admin-plugin-config-nav";
 import { clearPluginHeaderActionComponents } from "discourse/lib/admin-plugin-header-actions";
 import { resetAdditionalReportModes } from "discourse/lib/admin-report-additional-modes";
-import { resetBlockRegistryForTesting } from "discourse/lib/blocks/registration";
+import { resetBlockRegistryForTesting } from "discourse/lib/blocks/core/registration";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import deprecated from "discourse/lib/deprecated";

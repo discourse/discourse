@@ -1,7 +1,7 @@
 import { module, test } from "qunit";
-import { applyArgDefaults } from "discourse/lib/blocks/utils";
+import { applyArgDefaults } from "discourse/lib/blocks/core/utils";
 
-module("Unit | Lib | blocks/utils", function () {
+module("Unit | Lib | blocks/core/utils", function () {
   module("applyArgDefaults", function () {
     test("returns original args when no schema", function (assert) {
       const ComponentClass = {

@@ -1,7 +1,45 @@
+import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { truncateForDisplay } from "discourse/lib/blocks/entry-formatter";
+import {
+  raiseBlockError,
+  truncateForDisplay,
+} from "discourse/lib/blocks/core/error";
 
-module("Unit | Lib | blocks/entry-formatter", function () {
+module("Unit | Lib | blocks/core/error", function (hooks) {
+  setupTest(hooks);
+
+  module("raiseBlockError", function () {
+    test("throws error in DEBUG mode", function (assert) {
+      assert.throws(
+        () => raiseBlockError("Test error message"),
+        /\[Blocks\] Test error message/
+      );
+    });
+
+    test("error message includes [Blocks] prefix", function (assert) {
+      try {
+        raiseBlockError("Custom error");
+        assert.false(true, "Should have thrown");
+      } catch (error) {
+        assert.true(error.message.startsWith("[Blocks]"));
+        assert.true(error.message.includes("Custom error"));
+      }
+    });
+
+    test("preserves original message in error", function (assert) {
+      const originalMessage = "Something went wrong with block registration";
+
+      try {
+        raiseBlockError(originalMessage);
+        assert.false(true, "Should have thrown");
+      } catch (error) {
+        assert.true(error.message.includes(originalMessage));
+      }
+    });
+  });
+});
+
+module("Unit | Lib | blocks/core/error > entry-formatter", function () {
   module("truncateForDisplay", function () {
     test("returns primitives unchanged", function (assert) {
       assert.strictEqual(truncateForDisplay(null), null);

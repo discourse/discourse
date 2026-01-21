@@ -5,9 +5,9 @@ import {
   VALID_ENTRY_KEYS,
   validateEntryKeys,
   validateEntryTypes,
-} from "discourse/lib/blocks/layout-validation";
+} from "discourse/lib/blocks/validation/layout";
 
-module("Unit | Lib | blocks/layout-validation", function () {
+module("Unit | Lib | blocks/validation/layout", function () {
   module("RESERVED_ARG_NAMES", function () {
     test("includes expected reserved names", function (assert) {
       assert.true(RESERVED_ARG_NAMES.includes("args"));

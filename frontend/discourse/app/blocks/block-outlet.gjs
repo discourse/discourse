@@ -28,33 +28,40 @@ import { wrapBlockLayout } from "discourse/blocks/block-layout-wrapper";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import {
-  validateArgsSchema,
-  validateChildArgsSchema,
-} from "discourse/lib/blocks/block-arg-validation";
+  captureCallSite,
+  raiseBlockError,
+} from "discourse/lib/blocks/core/error";
+import {
+  parseBlockName,
+  VALID_NAMESPACED_BLOCK_PATTERN,
+} from "discourse/lib/blocks/core/patterns";
+import {
+  isBlockRegistryFrozen,
+  resolveBlockSync,
+} from "discourse/lib/blocks/core/registration";
+import {
+  applyArgDefaults,
+  shallowArgsEqual,
+} from "discourse/lib/blocks/core/utils";
 import {
   buildContainerPath,
   createGhostBlock,
+  DEBUG_CALLBACK,
+  debugHooks,
   handleOptionalMissingBlock,
   isOptionalMissing,
-} from "discourse/lib/blocks/block-processing";
-import { validateConstraintsSchema } from "discourse/lib/blocks/constraint-validation";
-import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
-import { captureCallSite, raiseBlockError } from "discourse/lib/blocks/error";
-import { validateLayout } from "discourse/lib/blocks/layout-validation";
+} from "discourse/lib/blocks/debug/block-processing";
 import {
   detectPatternConflicts,
   validateOutletPatterns,
   warnUnknownOutletPatterns,
-} from "discourse/lib/blocks/outlet-matcher";
+} from "discourse/lib/blocks/matching/outlet-matcher";
 import {
-  parseBlockName,
-  VALID_NAMESPACED_BLOCK_PATTERN,
-} from "discourse/lib/blocks/patterns";
-import {
-  isBlockRegistryFrozen,
-  resolveBlockSync,
-} from "discourse/lib/blocks/registration";
-import { applyArgDefaults, shallowArgsEqual } from "discourse/lib/blocks/utils";
+  validateArgsSchema,
+  validateChildArgsSchema,
+} from "discourse/lib/blocks/validation/block-args";
+import { validateConstraintsSchema } from "discourse/lib/blocks/validation/constraints";
+import { validateLayout } from "discourse/lib/blocks/validation/layout";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
@@ -783,7 +790,7 @@ function processBlockEntries({
     }
 
     const blockClass =
-      /** @type {import("discourse/lib/blocks/registration").BlockClass} */ (
+      /** @type {import("discourse/lib/blocks/core/registration").BlockClass} */ (
         resolvedBlock
       );
     const blockName = blockClass.blockName || "unknown";
@@ -915,7 +922,7 @@ function resolveContainerClassNames(metadata, args) {
  * in a layout wrapper for consistent styling.
  *
  * @param {Object} entry - The block entry
- * @param {import("discourse/lib/blocks/registration").BlockClass} entry.block - The block component class
+ * @param {import("discourse/lib/blocks/core/registration").BlockClass} entry.block - The block component class
  * @param {Object} [entry.args] - Args to pass to the block
  * @param {Object} [entry.containerArgs] - Container args for parent's childArgs schema
  * @param {string} [entry.classNames] - Additional CSS classes
@@ -1567,7 +1574,7 @@ class BlockOutletRootContainer extends Component {
       }
 
       const blockClass =
-        /** @type {import("discourse/lib/blocks/registration").BlockClass} */ (
+        /** @type {import("discourse/lib/blocks/core/registration").BlockClass} */ (
           resolvedBlock
         );
       const blockName = blockClass.blockName || "unknown";

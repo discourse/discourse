@@ -8,16 +8,16 @@ import {
   VALID_PAGE_TYPES,
   validateParamsAgainstPages,
   validateParamType,
-} from "discourse/lib/blocks/page-definitions";
+} from "discourse/lib/blocks/matching/page-definitions";
 import {
   isValidUrlPattern,
   matchesAnyPattern,
   normalizePath,
-} from "discourse/lib/blocks/url-matcher";
+} from "discourse/lib/blocks/matching/url-matcher";
 import {
   matchParams,
   validateParamSpec,
-} from "discourse/lib/blocks/value-matcher";
+} from "discourse/lib/blocks/matching/value-matcher";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
 

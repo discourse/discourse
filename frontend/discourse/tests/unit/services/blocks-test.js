@@ -9,7 +9,7 @@ import {
   _registerConditionType,
   withTestBlockRegistration,
   withTestConditionRegistration,
-} from "discourse/lib/blocks/registration";
+} from "discourse/lib/blocks/core/registration";
 
 module("Unit | Service | blocks", function (hooks) {
   setupTest(hooks);

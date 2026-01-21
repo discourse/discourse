@@ -1,8 +1,6 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
-import { evaluateConditions } from "discourse/lib/blocks/condition-evaluator";
-import { validateConditions } from "discourse/lib/blocks/condition-validation";
 import {
   getAllBlockEntries,
   getAllConditionTypeEntries,
@@ -10,7 +8,9 @@ import {
   hasBlock,
   isBlockFactory,
   resolveBlock,
-} from "discourse/lib/blocks/registration";
+} from "discourse/lib/blocks/core/registration";
+import { evaluateConditions } from "discourse/lib/blocks/matching/condition-evaluator";
+import { validateConditions } from "discourse/lib/blocks/validation/conditions";
 
 /**
  * Unified service for block registry and condition evaluation.
@@ -78,7 +78,7 @@ export default class Blocks extends Service {
    * Gets a registered block by name.
    *
    * @param {string} name - The block name (e.g., "hero-banner")
-   * @returns {import("discourse/lib/blocks/registration").BlockRegistryEntry|undefined} The block entry, or undefined if not found
+   * @returns {import("discourse/lib/blocks/core/registration").BlockRegistryEntry|undefined} The block entry, or undefined if not found
    *
    * @example
    * ```javascript
@@ -109,7 +109,7 @@ export default class Blocks extends Service {
   /**
    * Returns all registered block entries.
    *
-   * @returns {Array<import("discourse/lib/blocks/registration").BlockRegistryEntry>}
+   * @returns {Array<import("discourse/lib/blocks/core/registration").BlockRegistryEntry>}
    *
    * @example
    * ```javascript
@@ -124,7 +124,7 @@ export default class Blocks extends Service {
    * Returns all registered blocks with their metadata.
    * Useful for admin UIs and documentation generation.
    *
-   * @returns {Array<{name: string, component: import("discourse/lib/blocks/registration").BlockRegistryEntry, metadata: Object}>}
+   * @returns {Array<{name: string, component: import("discourse/lib/blocks/core/registration").BlockRegistryEntry, metadata: Object}>}
    *
    * @example
    * ```javascript
@@ -150,7 +150,7 @@ export default class Blocks extends Service {
    * this method ensures the returned value is always a resolved BlockClass.
    *
    * @param {string} name - The block name (e.g., "hero-banner").
-   * @returns {Promise<import("discourse/lib/blocks/registration").BlockClass|undefined>}
+   * @returns {Promise<import("discourse/lib/blocks/core/registration").BlockClass|undefined>}
    *   The resolved block class, or undefined if not found.
    *
    * @example

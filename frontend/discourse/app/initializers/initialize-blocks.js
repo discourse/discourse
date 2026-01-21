@@ -5,7 +5,7 @@ import {
   _freezeConditionTypeRegistry,
   _freezeOutletRegistry,
   _registerConditionType,
-} from "discourse/lib/blocks/registration";
+} from "discourse/lib/blocks/core/registration";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 /**

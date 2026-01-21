@@ -1,5 +1,5 @@
 import { DEBUG } from "@glimmer/env";
-import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/patterns";
+import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks/core/patterns";
 
 /**
  * Registry of CORE block outlet names in the application.

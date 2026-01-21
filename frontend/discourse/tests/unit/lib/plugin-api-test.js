@@ -11,7 +11,7 @@ import {
   hasConditionType,
   isValidOutlet,
   resetBlockRegistryForTesting,
-} from "discourse/lib/blocks/registration";
+} from "discourse/lib/blocks/core/registration";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import discourseComputed from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";

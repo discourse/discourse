@@ -3,7 +3,7 @@ import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import BlockRouteCondition from "discourse/blocks/conditions/route";
-import { validateConditions } from "discourse/lib/blocks/condition-validation";
+import { validateConditions } from "discourse/lib/blocks/validation/conditions";
 import { setPrefix } from "discourse/lib/get-url";
 
 module("Unit | Blocks | Conditions | route", function (hooks) {

@@ -1,5 +1,8 @@
 // @ts-check
-import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
+import {
+  DEBUG_CALLBACK,
+  debugHooks,
+} from "discourse/lib/blocks/debug/block-processing";
 
 /**
  * Evaluates condition specs at render time.

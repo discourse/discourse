@@ -5,13 +5,13 @@
  * This module provides generic validation functions for argument schemas
  * used by both blocks and conditions. Entity-specific validation logic
  * lives in separate modules:
- * - block-arg-validation.js - block-specific validation
- * - condition-arg-validation.js - condition-specific validation
+ * - block-args.js - block-specific validation
+ * - condition-args.js - condition-specific validation
  *
- * @module discourse/lib/blocks/arg-validation
+ * @module discourse/lib/blocks/validation/args
  */
 
-import { BlockError, raiseBlockError } from "discourse/lib/blocks/error";
+import { BlockError, raiseBlockError } from "discourse/lib/blocks/core/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**

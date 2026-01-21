@@ -4,7 +4,7 @@ import {
   matchesAnyPattern,
   matchUrlPattern,
   normalizePath,
-} from "discourse/lib/blocks/url-matcher";
+} from "discourse/lib/blocks/matching/url-matcher";
 import { setPrefix } from "discourse/lib/get-url";
 
 module("Unit | Lib | Blocks | url-matcher", function (hooks) {

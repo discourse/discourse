@@ -9,12 +9,15 @@ import BlockOutlet, {
   renderBlocks,
 } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
-import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
 import {
   _registerBlock,
   _registerBlockFactory,
   withTestBlockRegistration,
-} from "discourse/lib/blocks/registration";
+} from "discourse/lib/blocks/core/registration";
+import {
+  DEBUG_CALLBACK,
+  debugHooks,
+} from "discourse/lib/blocks/debug/block-processing";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Blocks | BlockOutlet", function (hooks) {

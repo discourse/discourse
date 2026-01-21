@@ -2,8 +2,11 @@
 import curryComponent from "ember-curry-component";
 /** @type {import("discourse/blocks/block-outlet.gjs")} */
 import { isContainerBlock } from "discourse/blocks/block-outlet";
-import { DEBUG_CALLBACK, debugHooks } from "discourse/lib/blocks/debug-hooks";
-import { OPTIONAL_MISSING } from "discourse/lib/blocks/patterns";
+import { OPTIONAL_MISSING } from "discourse/lib/blocks/core/patterns";
+import {
+  DEBUG_CALLBACK,
+  debugHooks,
+} from "discourse/lib/blocks/debug/block-processing";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import devToolsState from "../state";
 /** @type {import("./block-info.gjs").default} */

@@ -13,7 +13,7 @@ import {
   _registerConditionType,
   withTestBlockRegistration,
   withTestConditionRegistration,
-} from "discourse/lib/blocks/registration";
+} from "discourse/lib/blocks/core/registration";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 let testOwner;

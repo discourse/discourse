@@ -10,34 +10,34 @@
  * - **Block Entry**: An object in a layout that specifies how to use a block.
  * - **Outlet Layout**: An array of block entries defining which blocks appear in an outlet.
  *
- * @module discourse/lib/blocks/layout-validation
+ * @module discourse/lib/blocks/validation/layout
  */
 
 import { DEBUG } from "@glimmer/env";
-import { validateArgsAgainstSchema } from "discourse/lib/blocks/arg-validation";
-import { validateBlockArgs } from "discourse/lib/blocks/block-arg-validation";
-import {
-  runCustomValidation,
-  validateConstraints,
-} from "discourse/lib/blocks/constraint-validation";
-import { BlockError, raiseBlockError } from "discourse/lib/blocks/error";
-import { isBlockPermittedInOutlet } from "discourse/lib/blocks/outlet-matcher";
+import { BlockError, raiseBlockError } from "discourse/lib/blocks/core/error";
 import {
   OPTIONAL_MISSING,
   parseBlockReference,
-} from "discourse/lib/blocks/patterns";
+} from "discourse/lib/blocks/core/patterns";
 import {
   getAllOutlets,
   hasBlock,
   isBlockResolved,
   isValidOutlet,
   resolveBlock,
-} from "discourse/lib/blocks/registration";
+} from "discourse/lib/blocks/core/registration";
 import {
   applyArgDefaults,
   buildErrorPath,
   createValidationContext,
-} from "discourse/lib/blocks/utils";
+} from "discourse/lib/blocks/core/utils";
+import { isBlockPermittedInOutlet } from "discourse/lib/blocks/matching/outlet-matcher";
+import { validateArgsAgainstSchema } from "discourse/lib/blocks/validation/args";
+import { validateBlockArgs } from "discourse/lib/blocks/validation/block-args";
+import {
+  runCustomValidation,
+  validateConstraints,
+} from "discourse/lib/blocks/validation/constraints";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**

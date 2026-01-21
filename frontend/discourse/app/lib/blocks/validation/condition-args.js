@@ -8,16 +8,16 @@
  * - The "default" property is not allowed (conditions don't use defaults)
  * - Type validation happens at registration time
  *
- * @module discourse/lib/blocks/condition-arg-validation
+ * @module discourse/lib/blocks/validation/condition-args
  */
 
+import { BlockError } from "discourse/lib/blocks/core/error";
 import {
   VALID_ARG_SCHEMA_PROPERTIES,
   validateArgName,
   validateArgSchemaEntry,
   validateArgValue,
-} from "discourse/lib/blocks/arg-validation";
-import { BlockError } from "discourse/lib/blocks/error";
+} from "discourse/lib/blocks/validation/args";
 
 /**
  * Disallowed properties for condition arg schemas.

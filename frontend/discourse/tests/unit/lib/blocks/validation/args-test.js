@@ -1,22 +1,22 @@
 import Component from "@glimmer/component";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks/block-outlet";
+import { BlockError } from "discourse/lib/blocks/core/error";
 import {
   validateArgValue,
   validateArrayItemType,
-} from "discourse/lib/blocks/arg-validation";
+} from "discourse/lib/blocks/validation/args";
 import {
   validateArgsSchema,
   validateBlockArgs,
-} from "discourse/lib/blocks/block-arg-validation";
+} from "discourse/lib/blocks/validation/block-args";
 import {
   runCustomValidation,
   validateConstraints,
   validateConstraintsSchema,
-} from "discourse/lib/blocks/constraint-validation";
-import { BlockError } from "discourse/lib/blocks/error";
+} from "discourse/lib/blocks/validation/constraints";
 
-module("Unit | Lib | blocks/arg-validation", function () {
+module("Unit | Lib | blocks/validation/args", function () {
   module("validateArgsSchema", function () {
     test("accepts valid schema with all types", function (assert) {
       const schema = {

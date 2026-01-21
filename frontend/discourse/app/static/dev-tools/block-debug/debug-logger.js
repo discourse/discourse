@@ -11,7 +11,7 @@
  * @module discourse/static/dev-tools/block-debug/debug-logger
  */
 
-import { isTypeMismatch } from "discourse/lib/blocks/value-matcher";
+import { isTypeMismatch } from "discourse/lib/blocks/matching/value-matcher";
 
 // Console output styles
 const STYLES = {

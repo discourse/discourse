@@ -10,9 +10,9 @@ import {
   VALID_PAGE_TYPES,
   validateParamsAgainstPages,
   validateParamType,
-} from "discourse/lib/blocks/page-definitions";
+} from "discourse/lib/blocks/matching/page-definitions";
 
-module("Unit | Lib | blocks/page-definitions", function () {
+module("Unit | Lib | blocks/matching/page-definitions", function () {
   module("PAGE_DEFINITIONS", function () {
     test("contains expected page types", function (assert) {
       const expectedTypes = [

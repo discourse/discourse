@@ -2,7 +2,7 @@
 /**
  * Utility functions for the block system.
  *
- * @module discourse/lib/blocks/utils
+ * @module discourse/lib/blocks/core/utils
  */
 
 /**
@@ -75,7 +75,7 @@ export function buildErrorPath(basePath, segment) {
  * args with default values from the block's metadata schema. Default values
  * are only applied when the arg is undefined in the provided args.
  *
- * @param {import("discourse/lib/blocks/registration").BlockClass} ComponentClass - The block component class.
+ * @param {import("discourse/lib/blocks/core/registration").BlockClass} ComponentClass - The block component class.
  * @param {Object} providedArgs - The args provided in the layout entry.
  * @returns {Object} A new object with defaults applied for missing args.
  *

@@ -1,6 +1,6 @@
 // @ts-check
-import { getByPath } from "discourse/lib/blocks/utils";
-import { matchValue } from "discourse/lib/blocks/value-matcher";
+import { getByPath } from "discourse/lib/blocks/core/utils";
+import { matchValue } from "discourse/lib/blocks/matching/value-matcher";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
 
