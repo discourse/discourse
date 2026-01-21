@@ -3,6 +3,8 @@
 module ReleaseUtils
   PRIMARY_RELEASE_TAG = "release"
   RELEASE_TAGS = [PRIMARY_RELEASE_TAG, "beta", "latest-release"].freeze
+  PRIMARY_ESR_TAG = "esr"
+  ESR_TAGS = [PRIMARY_ESR_TAG, "stable"].freeze
   PR_LABEL = "release"
 
   def self.dry_run?
@@ -11,6 +13,24 @@ module ReleaseUtils
 
   def self.test_mode?
     ENV["RUNNING_RELEASE_IN_RSPEC_TESTS"] == "1"
+  end
+
+  def self.read_versions_json
+    ReleaseUtils.with_clean_worktree("main") { JSON.parse(File.read("versions.json")) }
+  end
+
+  def self.released_versions
+    read_versions_json
+      .select { |_version, info| info["released"] }
+      .keys
+      .sort_by { |v| Gem::Version.new(v) }
+  end
+
+  def self.released_esrs
+    read_versions_json
+      .select { |_version, info| info["released"] && info["esr"] }
+      .keys
+      .sort_by { |v| Gem::Version.new(v) }
   end
 
   def self.read_version_rb
@@ -175,16 +195,11 @@ namespace :release do
         ReleaseUtils.parse_current_version
       end
 
-    existing_releases =
-      ReleaseUtils
-        .git("tag", "-l", "v*")
-        .lines
-        .map { |tag| tag.strip.delete_prefix("v") }
-        .map { |v| Gem::Version.new(v) }
-        .reject(&:prerelease?)
-        .sort
+    released_versions = ReleaseUtils.released_versions
+    current_minor = current_version.split(".").first(2).join(".") + ".0"
+    current_minor_version = Gem::Version.new(current_minor)
 
-    if existing_releases.empty? || Gem::Version.new(current_version) >= existing_releases.last
+    if released_versions.empty? || current_minor_version >= released_versions.last
       ReleaseUtils::RELEASE_TAGS.each do |synonym_tag|
         message =
           if synonym_tag == ReleaseUtils::PRIMARY_RELEASE_TAG
@@ -203,7 +218,29 @@ namespace :release do
                          *ReleaseUtils::RELEASE_TAGS.map { |tag| "refs/tags/#{tag}" }
       end
     else
-      puts "Current version #{current_version} is older than latest release #{existing_releases.last}. Skipping."
+      puts "Current version #{current_version} is older than latest release #{released_versions.last}. Skipping."
+    end
+
+    # Update ESR tags if this version is in the latest released ESR series
+    released_esrs = ReleaseUtils.released_esrs
+    if released_esrs.any? && current_minor_version == released_esrs.last
+      ReleaseUtils::ESR_TAGS.each do |synonym_tag|
+        message =
+          if synonym_tag == ReleaseUtils::PRIMARY_ESR_TAG
+            "latest ESR release"
+          else
+            "backwards-compatibility alias for `#{ReleaseUtils::PRIMARY_ESR_TAG}` tag"
+          end
+        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f"
+      end
+      if ReleaseUtils.dry_run?
+        puts "[DRY RUN] Skipping pushing #{ReleaseUtils::ESR_TAGS.inspect} tags to origin"
+      else
+        ReleaseUtils.git "push",
+                         "origin",
+                         "-f",
+                         *ReleaseUtils::ESR_TAGS.map { |tag| "refs/tags/#{tag}" }
+      end
     end
 
     puts "Done!"
