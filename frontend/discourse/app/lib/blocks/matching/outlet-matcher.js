@@ -1,4 +1,5 @@
 // @ts-check
+import { DEBUG } from "@glimmer/env";
 import picomatch from "picomatch";
 import { raiseBlockError } from "discourse/lib/blocks/core/error";
 import { getAllOutlets } from "discourse/lib/blocks/registry/outlet";
@@ -323,6 +324,9 @@ export function isBlockPermittedInOutlet(
  * configuration mistakes. It checks patterns against all registered outlets
  * (both core and custom).
  *
+ * Warnings are only printed in development builds (when DEBUG is true).
+ * This prevents noise in production.
+ *
  * @param {string[]|null} patterns - The patterns to check.
  * @param {string} blockName - Block name for warning messages.
  * @param {string} propertyName - Property name ("allowedOutlets" or "deniedOutlets").
@@ -334,6 +338,11 @@ export function isBlockPermittedInOutlet(
  */
 export function warnUnknownOutletPatterns(patterns, blockName, propertyName) {
   if (!patterns?.length) {
+    return;
+  }
+
+  // Do not show the warnings in production builds
+  if (!DEBUG) {
     return;
   }
 
