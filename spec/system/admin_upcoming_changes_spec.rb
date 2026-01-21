@@ -49,7 +49,7 @@ describe "Admin upcoming changes", type: :system do
           impact_type: "other",
           impact_role: "developers",
         },
-        conceptual_feature: {
+        about_page_extra_groups_show_description: {
           impact: "feature,all_members",
           status: :conceptual,
           impact_type: "feature",
@@ -60,7 +60,7 @@ describe "Admin upcoming changes", type: :system do
 
     upcoming_changes_page.visit
     expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
-    expect(upcoming_changes_page).to have_no_change(:conceptual_feature)
+    expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
   end
 
   # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the

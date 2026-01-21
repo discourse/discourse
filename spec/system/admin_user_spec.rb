@@ -181,7 +181,7 @@ describe "Admin User Page", type: :system do
               impact_type: "feature",
               impact_role: "all_members",
             },
-            conceptual_feature: {
+            about_page_extra_groups_show_description: {
               impact: "feature,all_members",
               status: :conceptual,
               impact_type: "feature",
@@ -192,7 +192,9 @@ describe "Admin User Page", type: :system do
 
         admin_user_page.visit(user)
         expect(admin_user_page).to have_upcoming_change("enable_upload_debug_mode")
-        expect(admin_user_page).to have_no_upcoming_change("conceptual_feature")
+        expect(admin_user_page).to have_no_upcoming_change(
+          "about_page_extra_groups_show_description",
+        )
       end
     end
 
