@@ -698,12 +698,8 @@
   --d-sheet-default-height: 50%;
 }
 
-[data-d-sheet~="content"][data-d-sheet~="start"][data-d-sheet~="left"],
-[data-d-sheet~="content"][data-d-sheet~="start"][data-d-sheet~="right"],
-[data-d-sheet~="content"][data-d-sheet~="end"][data-d-sheet~="left"],
-[data-d-sheet~="content"][data-d-sheet~="end"][data-d-sheet~="right"],
-[data-d-sheet~="content"][data-d-sheet~="center"][data-d-sheet~="left"],
-[data-d-sheet~="content"][data-d-sheet~="center"][data-d-sheet~="right"] {
+[data-d-sheet~="content"][data-d-sheet~="left"],
+[data-d-sheet~="content"][data-d-sheet~="right"] {
   --d-sheet-default-width: 50%;
   --d-sheet-default-height: 100%;
 }

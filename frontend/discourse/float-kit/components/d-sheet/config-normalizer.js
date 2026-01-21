@@ -36,19 +36,21 @@ export function normalizeTrack(track) {
 
 /**
  * Convert API placement value to CSS class.
- * The CSS uses "start", "end", "center" internally.
+ * Uses "start"/"end" for vertical, "left"/"right" for horizontal, "center" for centered.
  *
  * @param {string} placement - Placement value ("top" | "bottom" | "left" | "right" | "center")
- * @returns {string} CSS class value ("start" | "end" | "center")
+ * @returns {string} CSS class value ("start" | "end" | "left" | "right" | "center")
  */
 export function placementToCssClass(placement) {
   switch (placement) {
     case "top":
-    case "left":
       return "start";
     case "bottom":
-    case "right":
       return "end";
+    case "left":
+      return "left";
+    case "right":
+      return "right";
     case "center":
       return "center";
     default:
