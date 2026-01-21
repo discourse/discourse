@@ -229,10 +229,7 @@ module SiteSettingExtension
   end
 
   def upcoming_change_site_settings
-    upcoming_change_metadata
-      .keys
-      .reject { |setting_name| UpcomingChanges.change_status(setting_name) == :conceptual }
-      .sort
+    upcoming_change_metadata.keys.sort
   end
 
   def client_settings_json
