@@ -581,6 +581,11 @@ textarea {
   margin-left: 0.67em;
 }
 
+.dropdown,
+.multiselect {
+  position: relative;
+}
+
 .container {
   @extend .clearfix;
 }
