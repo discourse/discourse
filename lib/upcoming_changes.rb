@@ -16,6 +16,16 @@ module UpcomingChanges
       ::Enum.new(experimental: 0, alpha: 100, beta: 200, stable: 300, permanent: 500, never: 9999)
   end
 
+  def self.previous_status_value(status)
+    status_value = self.statuses[status.to_sym]
+    self.statuses.values.select { |value| value < status_value }.max || 0
+  end
+
+  def self.previous_status(status)
+    self.statuses.keys.select { |key| self.statuses[key] < self.statuses[status.to_sym] }.last ||
+      :experimental
+  end
+
   def self.image_exists?(change_setting_name)
     File.exist?(File.join(Rails.public_path, self.image_path(change_setting_name)))
   end
