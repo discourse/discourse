@@ -1,0 +1,133 @@
+@use "lib/viewport";
+
+.form-kit__control-color {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+  width: 100%;
+}
+
+.form-kit__control-color-input {
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+
+.form-kit__control-color-input-prefix {
+  border: 1px solid var(--primary-low-mid);
+  padding-inline: 0.5em;
+  height: 2em;
+  box-sizing: border-box;
+  background: var(--primary-low);
+  display: flex;
+  align-items: center;
+  margin-right: -0.25em;
+  border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
+
+  @include viewport.until(sm) {
+    height: 2.25em;
+  }
+}
+
+.form-kit__control-color-input-hex {
+  @include default-input;
+  width: 5.5em;
+  min-width: auto !important;
+
+  .form-kit__control-color-input-prefix + & {
+    border-radius: 0 var(--d-input-border-radius) var(--d-input-border-radius) 0;
+    border-left: none;
+  }
+
+  // Wider when no prefix (named colors mode) to accommodate longer values
+  &:first-child {
+    width: 8em;
+  }
+
+  .form-kit__field.has-error & {
+    border-color: var(--danger);
+  }
+}
+
+.form-kit__control-color-input-picker {
+  width: 2em;
+  height: 2em;
+  padding: 0;
+  border: 1px solid var(--primary-low-mid);
+  border-radius: var(--d-input-border-radius);
+  cursor: pointer;
+
+  @include viewport.until(sm) {
+    height: 2.25em;
+  }
+
+  &::-webkit-color-swatch-wrapper {
+    padding: 2px;
+  }
+
+  &::-webkit-color-swatch {
+    border: none;
+    border-radius: calc(var(--d-input-border-radius) - 2px);
+  }
+
+  &::-moz-color-swatch {
+    border: none;
+    border-radius: calc(var(--d-input-border-radius) - 2px);
+  }
+
+  &:focus,
+  &:focus-visible {
+    &:not(:disabled) {
+      border-color: var(--tertiary);
+      outline: 2px solid var(--tertiary);
+      outline-offset: -2px;
+    }
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+.form-kit__control-color-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25em;
+}
+
+.form-kit__control-color-swatch {
+  width: 1.25em;
+  height: 1.25em;
+  padding: 0;
+  border: 1px solid var(--primary-medium);
+  border-radius: 2px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+
+  .d-icon {
+    display: none;
+    font-size: var(--font-down-2);
+  }
+
+  &.is-used .d-icon {
+    display: inline-flex;
+    opacity: 0.8;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+
+    &:hover {
+      transform: none;
+    }
+  }
+}
