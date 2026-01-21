@@ -516,6 +516,8 @@ gl:
         reviewable_ai_post:
           noun: "publicación"
       user_label: "Usuario"
+      timeline:
+        target_deleted: "Publicación eliminada"
       notes:
         delete: "Eliminar"
       topic_label: "Tema"
@@ -4802,6 +4804,7 @@ gl:
           empty: "Aínda non hai imaxes. Cargue unha."
           upload:
             label: "Cargar"
+        download_file: "Descargar"
         selectable_avatars:
           title: "Listaxe de avatares que os usuarios poden elixir"
         table_column_heading:

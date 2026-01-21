@@ -57,6 +57,28 @@ module("Integration | Component | CreateInvite", function (hooks) {
       );
   });
 
+  test("when allow_email_invites is disabled", async function (assert) {
+    const model = {};
+    this.siteSettings.allow_email_invites = false;
+
+    await render(
+      <template><CreateInvite @inline={{true}} @model={{model}} /></template>
+    );
+
+    await click(".edit-link-options");
+    await formKit().field("restrictTo").fillIn("discourse@example.com");
+
+    assert.false(
+      formKit().hasField("customMessage"),
+      "customMessage field is not shown when allow_email_invites is disabled"
+    );
+    assert
+      .dom(".save-invite-and-send-email")
+      .doesNotExist(
+        "'Create invite and send email' button is not shown when allow_email_invites is disabled"
+      );
+  });
+
   test("the inviteToTopic field", async function (assert) {
     const model = {};
     this.currentUser.admin = true;

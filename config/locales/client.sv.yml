@@ -641,6 +641,8 @@ sv:
         reviewable_ai_post:
           noun: "inlägg"
       user_label: "Användare"
+      timeline:
+        target_deleted: "Inlägg raderat"
       notes:
         delete: "Radera"
       topic_label: "Ämne"
@@ -6097,6 +6099,7 @@ sv:
           empty: "Det finns inga bilder ännu. Ladda upp en."
           upload:
             label: "Ladda upp"
+        download_file: "Ladda ner"
         selectable_avatars:
           title: "Lista på avatarer som användare kan välja från"
         table_column_heading:

@@ -2278,6 +2278,7 @@ en:
               other {# days}
             }.
           edit_link_options: "Edit link options or send by email."
+          edit_link_options_only: "Edit link options"
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
@@ -6036,11 +6037,11 @@ en:
               locale_label: "Language"
             header_new_members:
               label: "Header for new members"
-              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
+              description: "Available variables: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Welcome, %{preferred_display_name}!"
             header_logged_in:
               label: "Header for logged-in members"
-              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
+              description: "Available variables: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Welcome back, %{preferred_display_name}!"
             header_anonymous:
               label: "Header for anonymous visitors"
@@ -7938,6 +7939,7 @@ en:
           upload: "Upload a file"
           multiselect: "Multiple choice"
           tagchooser: "Tag Group selector"
+          composer: "Markdown answer"
         validations_modal:
           button_title: "Validations"
           modal_title: "Validation Options"

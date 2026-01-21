@@ -54,6 +54,10 @@ export default class FormTemplateForm extends Component {
       type: "tagchooser",
       icon: "bullseye",
     },
+    {
+      type: "composer",
+      icon: "fab-markdown",
+    },
   ];
 
   get disablePreviewButton() {

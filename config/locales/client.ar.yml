@@ -1110,6 +1110,7 @@ ar:
       timeline:
         target_created: "تم إنشاء المنشور"
         target_created_by: "أُنشئ المنشور من طرف %{username} · %{relativeDate}"
+        target_deleted: "تم حذف المنشور"
         flagged: "تم الإبلاغ"
         flagged_as_by: "تم الإبلاغ عنه بسبب %{flagReason} من قِبل %{username} · %{relativeDate}"
         claimed: "تمت المطالبة به"
@@ -8948,6 +8949,7 @@ ar:
           upload:
             label: "تحميل"
             title: "تحميل الصور"
+        download_file: "تنزيل"
         selectable_avatars:
           title: "قائمة الصور الرمزية التي يمكن للمستخدمين الاختيار منها"
         table_column_heading:

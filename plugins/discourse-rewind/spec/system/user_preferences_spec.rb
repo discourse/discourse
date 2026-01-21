@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 describe "DiscourseRewind | user preferences", type: :system do
-  fab!(:current_user, :user)
+  fab!(:current_user) { Fabricate(:user, created_at: DateTime.parse("2020-01-01")) }
   let(:rewind_page) { PageObjects::Pages::Rewind.new }
 
   before do
@@ -24,6 +24,11 @@ describe "DiscourseRewind | user preferences", type: :system do
         rewind_page.click_profile_tab
         expect(rewind_page).to have_rewind_profile_link
       end
+
+      it "shows the rewind preferences nav link" do
+        rewind_page.visit_my_preferences
+        expect(rewind_page).to have_rewind_preferences_nav
+      end
     end
 
     context "when discourse_rewind_enabled is false" do
@@ -39,6 +44,15 @@ describe "DiscourseRewind | user preferences", type: :system do
         rewind_page.open_user_menu
         rewind_page.click_profile_tab
         expect(rewind_page).to have_no_rewind_profile_link
+      end
+    end
+
+    context "when user account is less than one month old" do
+      before { current_user.update!(created_at: DateTime.parse("2022-11-20")) }
+
+      it "does not show the rewind preferences nav link" do
+        rewind_page.visit_my_preferences
+        expect(rewind_page).to have_no_rewind_preferences_nav
       end
     end
   end

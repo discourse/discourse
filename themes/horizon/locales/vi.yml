@@ -5,7 +5,7 @@
 # https://translate.discourse.org/
 
 vi:
-  solved: "Đã xử lý"
+  solved: "Giải pháp"
   posted: "ngày đăng"
   vote_count:
     other: "%{count} lượt bình chọn"

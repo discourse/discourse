@@ -661,6 +661,8 @@ nb_NO:
         reviewable_ai_post:
           noun: "innlegg"
       user_label: "Bruker"
+      timeline:
+        target_deleted: "Post slettet"
       notes:
         delete: "Slett"
       topic_label: "Emne"
@@ -5578,6 +5580,7 @@ nb_NO:
           empty: "Det finnes ingen bilder enda. Vennligst last opp ett."
           upload:
             label: "Last opp"
+        download_file: "Last ned"
         selectable_avatars:
           title: "Liste over avatarer brukere kan velge mellom"
         table_column_heading:

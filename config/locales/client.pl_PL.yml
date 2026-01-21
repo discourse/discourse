@@ -1012,6 +1012,8 @@ pl_PL:
       timeline:
         target_created: "Wpis utworzony"
         target_created_by: "Wpis utworzony przez %{username} · %{relativeDate}"
+        target_deleted: "Wpis usunięty"
+        target_deleted_by: "Wpis usunięty przez %{username} · %{relativeDate}"
         flagged: "Oflagowany"
         flagged_as_by: "Oflagowany jako %{flagReason} przez %{username} · %{relativeDate}"
         claimed: "Przejęto"
@@ -8674,6 +8676,10 @@ pl_PL:
           upload:
             label: "Prześlij"
             title: "Prześlij obrazy"
+        download_file: "Pobierz"
+        upload_restrictions:
+          extensions: "Zaakceptowano: %{extensions}"
+          max_size: "Maks.: %{size}"
         selectable_avatars:
           title: "Lista awatarów, z których użytkownicy mogą wybierać"
         table_column_heading:
