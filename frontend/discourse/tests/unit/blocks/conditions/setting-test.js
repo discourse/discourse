@@ -435,6 +435,48 @@ module("Unit | Blocks | Conditions | setting", function (hooks) {
       assert.true(error?.message.includes("exactly one of"));
     });
 
+    test("constraint error path points to condition type for better error location", function (assert) {
+      const error = this.validateCondition({
+        name: "enable_badges",
+        // Missing required arg: enabled, equals, includes, contains, or containsAny
+      });
+
+      // The error path should include "type" so the error location indicator
+      // points to the condition (identified by its type) rather than the block
+      assert.strictEqual(
+        error?.path,
+        "type",
+        "constraint error path should point to the condition's type property"
+      );
+    });
+
+    test("constraint error path includes array index when condition is in an array", function (assert) {
+      const condition = new BlockSettingCondition();
+      setOwner(condition, this.testOwner);
+      const conditionTypes = new Map([["setting", condition]]);
+
+      let error;
+      try {
+        // Array of conditions - the second one has a constraint error
+        validateConditions(
+          [
+            { type: "setting", name: "enable_badges", enabled: true },
+            { type: "setting", name: "enable_whispers" }, // Missing condition type arg
+          ],
+          conditionTypes
+        );
+      } catch (e) {
+        error = e;
+      }
+
+      // Path should include the array index and point to the type
+      assert.strictEqual(
+        error?.path,
+        "[1].type",
+        "constraint error path should include array index and type"
+      );
+    });
+
     test("accepts valid site setting", function (assert) {
       assert.strictEqual(
         this.validateCondition({ name: "enable_badges", enabled: true }),
