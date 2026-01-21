@@ -22,15 +22,12 @@ export default modifier((element, [handler, isScrollOngoing]) => {
 
   let rafId;
 
-  /**
-   * Internal loop function that executes the handler and schedules the next frame.
-   */
   function loop() {
     handler();
     rafId = requestAnimationFrame(loop);
   }
 
-  rafId = requestAnimationFrame(loop);
+  loop();
 
   return () => {
     if (rafId) {
