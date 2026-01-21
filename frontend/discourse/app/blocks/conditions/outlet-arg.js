@@ -104,12 +104,7 @@ export default class BlockOutletArgCondition extends BlockCondition {
     }
 
     // The exactlyOne constraint ensures value or exists is always specified
-    // Use shared value matching with named parameters
-    return matchValue({
-      actual: targetValue,
-      expected: value,
-      paramName: path,
-    });
+    return matchValue({ actual: targetValue, expected: value });
   }
 
   /**

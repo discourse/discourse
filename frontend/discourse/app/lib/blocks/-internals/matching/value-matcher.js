@@ -7,7 +7,8 @@ import { findClosestMatch } from "discourse/lib/string-similarity";
  *
  * Supports:
  * - Exact match: `123`, `"foo"`
- * - Array of values (OR): `[123, 456]` matches if actual is any of these
+ * - Array of simple values (OR): `[123, 456]` matches if actual is any of these
+ * - Array of complex specs (AND): `[{ not: "a" }, { not: "b" }]` all specs must match
  * - RegExp: `/^foo/` matches if actual matches the pattern
  * - NOT: `{ not: value }` matches if actual does NOT match value
  * - ANY (OR): `{ any: [...] }` matches if actual matches any spec in array
@@ -15,18 +16,15 @@ import { findClosestMatch } from "discourse/lib/string-similarity";
  * @param {Object} options - Options object.
  * @param {*} options.actual - The actual value to test.
  * @param {*} options.expected - The expected value spec (exact, array, regex, or AND/OR/NOT spec).
- * @param {string} [options.paramName] - Name of param being matched (for debug output).
  * @returns {boolean} True if the actual value matches the expected spec.
  */
-export function matchValue({ actual, expected, paramName = "" }) {
+export function matchValue({ actual, expected }) {
   // Handle arrays first (before checking for `any`/`not` properties)
   // because Ember prototype extensions add `any()` method to arrays
   if (Array.isArray(expected)) {
     if (expected.length > 0 && !isSimpleValueArray(expected)) {
       // AND logic: Array of non-primitive conditions, all must pass
-      return expected.every((exp) =>
-        matchValue({ actual, expected: exp, paramName })
-      );
+      return expected.every((exp) => matchValue({ actual, expected: exp }));
     }
     // Simple array of values (OR - match any)
     return matchSimpleValue(actual, expected);
@@ -34,14 +32,12 @@ export function matchValue({ actual, expected, paramName = "" }) {
 
   // OR logic: { any: [...] }
   if (expected?.any !== undefined) {
-    return expected.any.some((exp) =>
-      matchValue({ actual, expected: exp, paramName })
-    );
+    return expected.any.some((exp) => matchValue({ actual, expected: exp }));
   }
 
   // NOT logic: { not: ... }
   if (expected?.not !== undefined) {
-    return !matchValue({ actual, expected: expected.not, paramName });
+    return !matchValue({ actual, expected: expected.not });
   }
 
   // Simple value matching (leaf node)
@@ -252,7 +248,7 @@ export function matchParams({
     const actualKey = key.startsWith("\\") ? key.slice(1) : key;
     const expected = expectedParams[key];
     const actual = actualParams?.[actualKey];
-    const result = matchValue({ actual, expected, paramName: actualKey });
+    const result = matchValue({ actual, expected });
     matches.push({ key: actualKey, expected, actual, result });
   }
 
