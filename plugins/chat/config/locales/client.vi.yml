@@ -255,6 +255,15 @@ vi:
               label: Tin nhắn
             sender:
               label: Người gửi
+    review:
+      transcript:
+        view: "Xem bản ghi các tin nhắn trước đó"
+      types:
+        chat_reviewable_message:
+          title: "Tin nhắn trò chuyện bị báo cáo"
+        reviewable_chat_message:
+          title: "Tin nhắn trò chuyện bị báo cáo"
+          noun: "tin nhắn trò chuyện"
     keyboard_shortcuts_help:
       chat:
         title: "Chat"

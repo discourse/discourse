@@ -1666,6 +1666,7 @@ vi:
   system_messages:
     queued_by_staff:
       title: "Tút cần phê duyệt"
+      subject_template: "Tút đã bị BQT ẩn, đang chờ duyệt"
     flags_disagreed:
       title: "BQT đã khôi phục tút bị báo cáo"
       subject_template: "BQT đã khôi phục tút bị báo cáo"

@@ -41,3 +41,9 @@ vi:
         activity: "Hoạt động"
         voters_count_diff:
           other: "và %{count} người khác..."
+    review:
+      transcript:
+        view: "Xem bản ghi các tin nhắn trước đó"
+      types:
+        reviewable_post_voting_comment:
+          title: "Bình luận về tút bị báo cáo"
