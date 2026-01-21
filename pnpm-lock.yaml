@@ -681,6 +681,18 @@ importers:
 
   frontend/discourse-types:
     devDependencies:
+      '@babel/parser':
+        specifier: ^7.28.6
+        version: 7.28.6
+      '@babel/traverse':
+        specifier: ^7.28.6
+        version: 7.28.6(supports-color@8.1.1)
+      '@glimmer/interfaces':
+        specifier: ^0.94.6
+        version: 0.94.6
+      '@glimmer/validator':
+        specifier: ^0.95.0
+        version: 0.95.0
       compare-versions:
         specifier: ^6.1.1
         version: 6.1.1
@@ -2353,6 +2365,9 @@ packages:
 
   '@glimmer/validator@0.94.8':
     resolution: {integrity: sha512-vTP6hAcrxE5/0dG2w+tHSteXxgWmkBwMzu5ZTxMg+EkqthWl8B5r5skLiviQ6SdKAOBJGhzf6tF4ltHo5y83hQ==}
+
+  '@glimmer/validator@0.95.0':
+    resolution: {integrity: sha512-xF3K5voKeRqhONztfMHDd2wHDYD6UUI9pFPd+RMGtW6DXYv31G0zUm2pGsOwQ9dyNeE6khaXy7e3FtNjDrSmvQ==}
 
   '@glimmer/vm-babel-plugins@0.93.4':
     resolution: {integrity: sha512-+MjT+U/MsP7O32rXTYlvcmuiKtwI/PflokpVIW0M9wrkfFrsqgdhLQKvA+tNNxFW9LQ55zbhOtJweFNblHOvxg==}
@@ -11074,6 +11089,11 @@ snapshots:
       '@glimmer/interfaces': 0.94.6
 
   '@glimmer/validator@0.94.8':
+    dependencies:
+      '@glimmer/global-context': 0.93.4
+      '@glimmer/interfaces': 0.94.6
+
+  '@glimmer/validator@0.95.0':
     dependencies:
       '@glimmer/global-context': 0.93.4
       '@glimmer/interfaces': 0.94.6
