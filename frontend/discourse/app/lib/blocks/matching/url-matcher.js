@@ -56,29 +56,6 @@ export function normalizePath(url) {
 }
 
 /**
- * Validates that a URL pattern can be compiled by picomatch.
- *
- * Uses strictBrackets to throw on imbalanced brackets/braces/parens.
- * Without this option, picomatch treats malformed patterns as literals.
- *
- * @param {string} pattern - The pattern to validate.
- * @returns {boolean} True if the pattern is valid picomatch syntax.
- *
- * @example
- * isValidUrlPattern("/c/**");       // true
- * isValidUrlPattern("/{a,b}");      // true
- * isValidUrlPattern("[unclosed");   // false
- */
-export function isValidUrlPattern(pattern) {
-  try {
-    picomatch(pattern, { strictBrackets: true });
-    return true;
-  } catch {
-    return false;
-  }
-}
-
-/**
  * Matches a URL path against a glob pattern using picomatch.
  *
  * Supports full picomatch glob syntax:

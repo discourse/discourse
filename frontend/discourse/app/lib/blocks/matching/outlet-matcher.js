@@ -3,6 +3,7 @@ import { DEBUG } from "@glimmer/env";
 import picomatch from "picomatch";
 import { raiseBlockError } from "discourse/lib/blocks/core/error";
 import { getAllOutlets } from "discourse/lib/blocks/registry/outlet";
+import { isValidGlobPattern } from "discourse/lib/glob-utils";
 
 /**
  * Checks if a pattern targets a namespaced outlet.
@@ -23,33 +24,6 @@ import { getAllOutlets } from "discourse/lib/blocks/registry/outlet";
  */
 export function isNamespacedPattern(pattern) {
   return pattern.includes(":");
-}
-
-/**
- * Validates that a glob pattern can be compiled by picomatch.
- *
- * Instead of using a restrictive regex, this function attempts to compile
- * the pattern with picomatch using strict mode. This allows full picomatch
- * syntax including advanced features like brace expansion, character classes,
- * and negation, while catching syntax errors like unbalanced brackets.
- *
- * @param {string} pattern - The pattern to validate.
- * @returns {boolean} True if the pattern is valid picomatch syntax.
- *
- * @example
- * isValidGlobPattern("sidebar-*");         // true
- * isValidGlobPattern("{a,b}-blocks");      // true
- * isValidGlobPattern("[unclosed");         // false (unbalanced bracket)
- */
-function isValidGlobPattern(pattern) {
-  try {
-    // Compile with strictBrackets to throw on imbalanced brackets/braces/parens.
-    // Without this option, picomatch treats malformed patterns as literals.
-    picomatch(pattern, { strictBrackets: true });
-    return true;
-  } catch {
-    return false;
-  }
 }
 
 /**

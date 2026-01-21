@@ -1,11 +1,11 @@
 import { module, test } from "qunit";
 import {
-  isValidUrlPattern,
   matchesAnyPattern,
   matchUrlPattern,
   normalizePath,
 } from "discourse/lib/blocks/matching/url-matcher";
 import { setPrefix } from "discourse/lib/get-url";
+import { isValidGlobPattern } from "discourse/lib/glob-utils";
 
 module("Unit | Lib | Blocks | url-matcher", function (hooks) {
   hooks.beforeEach(function () {
@@ -13,28 +13,28 @@ module("Unit | Lib | Blocks | url-matcher", function (hooks) {
     setPrefix("");
   });
 
-  module("isValidUrlPattern", function () {
+  module("isValidGlobPattern", function () {
     test("returns true for valid patterns", function (assert) {
-      assert.true(isValidUrlPattern("/c/**"));
-      assert.true(isValidUrlPattern("/{latest,top}"));
-      assert.true(isValidUrlPattern("/c/[0-9]*"));
-      assert.true(isValidUrlPattern("/t/*/123"));
-      assert.true(isValidUrlPattern("/**"));
+      assert.true(isValidGlobPattern("/c/**"));
+      assert.true(isValidGlobPattern("/{latest,top}"));
+      assert.true(isValidGlobPattern("/c/[0-9]*"));
+      assert.true(isValidGlobPattern("/t/*/123"));
+      assert.true(isValidGlobPattern("/**"));
     });
 
     test("returns false for unbalanced brackets", function (assert) {
-      assert.false(isValidUrlPattern("[unclosed"));
-      assert.false(isValidUrlPattern("/c/[unclosed"));
+      assert.false(isValidGlobPattern("[unclosed"));
+      assert.false(isValidGlobPattern("/c/[unclosed"));
     });
 
     test("returns false for unbalanced braces", function (assert) {
-      assert.false(isValidUrlPattern("{unclosed"));
-      assert.false(isValidUrlPattern("/{latest,top"));
+      assert.false(isValidGlobPattern("{unclosed"));
+      assert.false(isValidGlobPattern("/{latest,top"));
     });
 
     test("returns false for unbalanced parentheses", function (assert) {
-      assert.false(isValidUrlPattern("!(unclosed"));
-      assert.false(isValidUrlPattern("/!(admin"));
+      assert.false(isValidGlobPattern("!(unclosed"));
+      assert.false(isValidGlobPattern("/!(admin"));
     });
   });
 

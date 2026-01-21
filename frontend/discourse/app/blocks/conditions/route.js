@@ -10,7 +10,6 @@ import {
   validateParamType,
 } from "discourse/lib/blocks/matching/page-definitions";
 import {
-  isValidUrlPattern,
   matchesAnyPattern,
   normalizePath,
 } from "discourse/lib/blocks/matching/url-matcher";
@@ -18,6 +17,7 @@ import {
   matchParams,
   validateParamSpec,
 } from "discourse/lib/blocks/matching/value-matcher";
+import { isValidGlobPattern } from "discourse/lib/glob-utils";
 import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
 
@@ -110,7 +110,7 @@ import { blockCondition } from "./decorator";
         }
 
         // Validate glob pattern syntax
-        if (!isValidUrlPattern(pattern)) {
+        if (!isValidGlobPattern(pattern)) {
           return (
             `Invalid glob pattern "${pattern}". ` +
             `Check for unbalanced brackets or braces.`
