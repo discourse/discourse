@@ -38,7 +38,7 @@ export function linkSeenHashtagsInContext(
     return [];
   }
   const slugs = [
-    ...hashtagSpans.map((span) => span.innerText.replace("#", "")),
+    ...hashtagSpans.map((span) => span.innerText.replace(/^#/, "")),
   ];
 
   hashtagSpans.forEach((hashtagSpan, index) => {

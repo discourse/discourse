@@ -8,6 +8,7 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
@@ -22,13 +23,13 @@ const Picker = class extends Component {
 
   @action
   onInput(event) {
-    const color = event.target.value.replace("#", "");
+    const color = event.target.value.replace(/^#/, "");
     this.args.onChange(color);
   }
 
   @action
   onChange(event) {
-    const color = event.target.value.replace("#", "");
+    const color = event.target.value.replace(/^#/, "");
     this.args.onChange(color);
   }
 
@@ -36,7 +37,7 @@ const Picker = class extends Component {
   onTextChange(event) {
     let color = event.target.value;
 
-    if (!this.isValidHex(color)) {
+    if (!isValidHex(color)) {
       event.preventDefault();
       this.invalid = true;
       this.toasts.error({
@@ -50,7 +51,7 @@ const Picker = class extends Component {
     }
     this.invalid = false;
 
-    color = this.ensureSixDigitsHex(color);
+    color = normalizeHex(color);
     this.args.onChange(color);
   }
 
@@ -117,8 +118,8 @@ const Picker = class extends Component {
       .trim()
       .replace(/^#/, "");
 
-    if (this.isValidHex(content)) {
-      this.args.onChange(this.ensureSixDigitsHex(content));
+    if (isValidHex(content)) {
+      this.args.onChange(normalizeHex(content));
     } else {
       this.toasts.error({
         data: {
@@ -132,14 +133,14 @@ const Picker = class extends Component {
 
   get displayedColor() {
     const color = this.args.color.hex;
-    return this.ensureSixDigitsHex(color);
+    return normalizeHex(color);
   }
 
   get activeValue() {
     const color = this.args.color.hex;
 
     if (color) {
-      return `#${this.ensureSixDigitsHex(color)}`;
+      return `#${normalizeHex(color)}`;
     }
   }
 
@@ -148,20 +149,6 @@ const Picker = class extends Component {
       return null;
     }
     return i18n("admin.config_areas.color_palettes.blocked_edit_for_system");
-  }
-
-  ensureSixDigitsHex(hex) {
-    if (hex.length === 3) {
-      return hex
-        .split("")
-        .map((digit) => `${digit}${digit}`)
-        .join("");
-    }
-    return hex;
-  }
-
-  isValidHex(hex) {
-    return !!hex?.match(/^([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/);
   }
 
   <template>

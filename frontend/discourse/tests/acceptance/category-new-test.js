@@ -5,6 +5,7 @@ import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
+import formKit from "discourse/tests/helpers/form-kit-helper";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
@@ -136,16 +137,20 @@ acceptance("Category text color", function (needs) {
   test("Category text color is set based on contrast", async function (assert) {
     await visit("/new-category");
 
-    assert
-      .dom(".edit-text-color .hex-input")
-      .hasValue(CATEGORY_TEXT_COLORS[0], "has the default text color");
+    assert.strictEqual(
+      formKit().field("text_color").value(),
+      CATEGORY_TEXT_COLORS[0],
+      "has the default text color"
+    );
 
     await fillIn("input.category-name", "testing");
-    await fillIn(".category-color-editor .hex-input", "EEEEEE");
+    await formKit().field("color").fillIn("EEEEEE");
 
-    assert
-      .dom(".edit-text-color .hex-input")
-      .hasValue(CATEGORY_TEXT_COLORS[1], "sets the contrast text color");
+    assert.strictEqual(
+      formKit().field("text_color").value(),
+      CATEGORY_TEXT_COLORS[1],
+      "sets the contrast text color"
+    );
   });
 });
 
@@ -162,7 +167,7 @@ acceptance("New category preview", function (needs) {
 
     assert.strictEqual(previewBadgeColor, "#0088CC");
 
-    await fillIn(".hex-input", "FF00FF");
+    await formKit().field("color").fillIn("FF00FF");
 
     previewBadgeColor = document
       .querySelector(".category-style .badge-category")

@@ -33,6 +33,8 @@ module PageObjects
         case control_type
         when /input-/, "password"
           component.find("input").value
+        when "color"
+          component.find("input[type='text']").value
         when "icon", "multi-select"
           picker = PageObjects::Components::SelectKit.new(component)
           picker.value
@@ -114,6 +116,8 @@ module PageObjects
         case control_type
         when "input-text", "password", "input-date", "input-number"
           component.find("input").fill_in(with: value)
+        when "color"
+          component.find("input[type='text']").fill_in(with: value)
         when "textarea", "composer"
           component.find("textarea").fill_in(with: value, visible: :all)
         when "code"

@@ -380,7 +380,7 @@ export default class CreateInvite extends Component {
                 as |field|
               >
                 <field.Input
-                  type="number"
+                  @type="number"
                   min="1"
                   max={{this.maxRedemptionsAllowedLimit}}
                 />
