@@ -13,6 +13,8 @@
  * @property {Object|null} [entry=null] - The block entry object being validated.
  * @property {Error|null} [callSiteError=null] - Error captured at the call site for stack traces.
  * @property {Array|null} [rootLayout=null] - The root layout array for error display.
+ *
+ * The following properties are added by validation code after initial context creation:
  * @property {string} [errorPath] - Full path to the error (e.g., "layout[0].conditions.params.categoryId").
  * @property {string} [conditionsPath] - Path within conditions (e.g., "params.categoryId").
  * @property {Object} [conditions] - The conditions object for error display.
