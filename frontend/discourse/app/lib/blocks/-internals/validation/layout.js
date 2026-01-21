@@ -219,14 +219,13 @@ function validateContainerArgs(
     );
   } catch (error) {
     // Enhance error message with parent context
-    const enhancedMessage = error.path?.startsWith("containerArgs.")
-      ? `Child block at ${context.path} ${error.message} (required by parent "${parentName}").`
-      : `Child block at ${context.path}: ${error.message} (required by parent "${parentName}").`;
-
-    raiseBlockError(enhancedMessage, {
-      ...context,
-      errorPath: error.path ? `${context.path}.${error.path}` : context.path,
-    });
+    raiseBlockError(
+      `Child block at ${context.path} ${error.message} (required by parent "${parentName}").`,
+      {
+        ...context,
+        errorPath: buildErrorPath(context.path, error.path),
+      }
+    );
   }
 }
 

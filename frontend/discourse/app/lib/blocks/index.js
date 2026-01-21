@@ -127,7 +127,8 @@ export { getByPath } from "discourse/lib/blocks/-internals/utils";
  *
  * Supports:
  * - Exact match: `123`, `"foo"`
- * - Array of values (OR): `[123, 456]` matches if actual is any of these
+ * - Array of simple values (OR): `[123, 456]` matches if actual is any of these
+ * - Array of complex specs (AND): `[{ not: "a" }, { not: "b" }]` all specs must match
  * - RegExp: `/^foo/` matches if actual matches the pattern
  * - NOT: `{ not: value }` matches if actual does NOT match value
  * - ANY (OR): `{ any: [...] }` matches if actual matches any spec in array
