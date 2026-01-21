@@ -281,9 +281,11 @@ module ExternalUploadHelpers
   private
 
   def complete_external_upload_via_manager(external_upload_stub)
+    for_site_setting = params[:for_site_setting]&.to_s == "true"
     opts = {
       for_private_message: params[:for_private_message]&.to_s == "true",
-      for_site_setting: params[:for_site_setting]&.to_s == "true",
+      for_site_setting:,
+      site_setting_name: for_site_setting ? params[:site_setting_name] : nil,
       pasted: params[:pasted]&.to_s == "true",
     }
 

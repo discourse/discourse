@@ -69,4 +69,14 @@
     font-size: var(--font-down-1);
     color: var(--primary-medium);
   }
+
+  &__composer {
+    // same default effective height (150px) than a text control
+    height: 189px;
+    width: 100%;
+
+    .d-editor-preview-wrapper {
+      display: none;
+    }
+  }
 }

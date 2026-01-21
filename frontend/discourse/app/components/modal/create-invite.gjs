@@ -184,6 +184,16 @@ export default class CreateInvite extends Component {
     return this.currentUser.staff && !this.siteSettings.must_approve_users;
   }
 
+  get canSendEmailInvite() {
+    return this.isEmailInvite && this.siteSettings.allow_email_invites;
+  }
+
+  get linkOptionsLabel() {
+    return this.siteSettings.allow_email_invites
+      ? i18n("user.invited.invite.edit_link_options")
+      : i18n("user.invited.invite.edit_link_options_only");
+  }
+
   get simpleMode() {
     return !this.args.model.editing && !this.displayAdvancedOptions;
   }
@@ -328,7 +338,7 @@ export default class CreateInvite extends Component {
               tabindex="0"
               {{on "click" this.showAdvancedMode}}
               {{on "keydown" this.showAdvancedMode}}
-            >{{i18n "user.invited.invite.edit_link_options"}}</a>
+            >{{this.linkOptionsLabel}}</a>
           </p>
         {{else}}
           <Form
@@ -448,7 +458,7 @@ export default class CreateInvite extends Component {
               </form.Field>
             {{/if}}
 
-            {{#if this.isEmailInvite}}
+            {{#if this.canSendEmailInvite}}
               <form.Field
                 @name="customMessage"
                 @title={{i18n "user.invited.invite.custom_message"}}
@@ -486,7 +496,7 @@ export default class CreateInvite extends Component {
             @disabled={{this.saving}}
             class="btn-primary save-invite"
           />
-          {{#if this.isEmailInvite}}
+          {{#if this.canSendEmailInvite}}
             <DButton
               @label={{if
                 this.inviteCreated
