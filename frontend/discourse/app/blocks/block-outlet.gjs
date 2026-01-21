@@ -190,7 +190,7 @@ function validateBlockOptions(name, options) {
  * Ensures the name follows the required format for core, plugin, or theme blocks.
  *
  * @param {string} name - The block name to validate.
- * @returns {{type: string, namespace: string|null, name: string}} Parsed name components.
+ * @returns {import("discourse/lib/blocks/-internals/patterns").ParsedBlockName} Parsed name components.
  */
 function validateAndParseBlockName(name) {
   if (!VALID_NAMESPACED_BLOCK_PATTERN.test(name)) {
@@ -494,47 +494,7 @@ export function block(name, options = {}) {
       return target; // Return original in production to avoid crash
     }
 
-    return class extends target {
-      /** Full namespaced block name (e.g., "theme:tactile:hero-banner") */
-      static get blockName() {
-        return name;
-      }
-
-      /** Short block name without namespace (e.g., "hero-banner") */
-      static get blockShortName() {
-        return parsed.name;
-      }
-
-      /** Namespace portion of the name, or null for core blocks */
-      static get blockNamespace() {
-        return parsed.namespace;
-      }
-
-      /** Block type: "core", "plugin", or "theme" */
-      static get blockType() {
-        return parsed.type;
-      }
-
-      /**
-       * Block metadata including description, container status, args schema,
-       * childArgs schema, constraints, validate function, and outlet restrictions.
-       * Used for introspection, documentation, and runtime validation.
-       *
-       * @type {{
-       *   description: string,
-       *   container: boolean,
-       *   args: Object|null,
-       *   childArgs: Object|null,
-       *   constraints: Object|null,
-       *   validate: Function|null,
-       *   allowedOutlets: ReadonlyArray<string>|null,
-       *   deniedOutlets: ReadonlyArray<string>|null
-       * }}
-       */
-      static get blockMetadata() {
-        return metadata;
-      }
-
+    const DecoratedBlock = class extends target {
       /**
        * Cache for curried child components in nested containers.
        *
@@ -651,6 +611,58 @@ export function block(name, options = {}) {
         return name;
       }
     };
+
+    // Define static getters (non-configurable to prevent reassignment).
+    Object.defineProperties(DecoratedBlock, {
+      blockName: {
+        /**
+         * The full namespaced block name (e.g., "theme:tactile:hero-banner").
+         *
+         * @type {() => string}
+         */
+        get: () => name,
+        configurable: false,
+      },
+      blockShortName: {
+        /**
+         * The short block name without namespace (e.g., "hero-banner").
+         *
+         * @type {() => string}
+         */
+        get: () => parsed.name,
+        configurable: false,
+      },
+      blockNamespace: {
+        /**
+         * The namespace portion of the name, or null for core blocks.
+         *
+         * @type {() => string|null}
+         */
+        get: () => parsed.namespace,
+        configurable: false,
+      },
+      blockType: {
+        /**
+         * The block type indicating its source: "core", "plugin", or "theme".
+         *
+         * @type {() => "core"|"plugin"|"theme"}
+         */
+        get: () => parsed.type,
+        configurable: false,
+      },
+      blockMetadata: {
+        /**
+         * Block configuration including description, container status, args schema,
+         * childArgs schema, constraints, validate function, and outlet restrictions.
+         *
+         * @type {() => import("discourse/lib/blocks/-internals/registry/block").BlockMetadata}
+         */
+        get: () => metadata,
+        configurable: false,
+      },
+    });
+
+    return DecoratedBlock;
   };
 }
 

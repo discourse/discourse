@@ -50,10 +50,20 @@ export const VALID_NAMESPACED_BLOCK_PATTERN =
   /^(?:theme:[a-z][a-z0-9-]*:[a-z][a-z0-9-]*|(?!theme:)[a-z][a-z0-9-]*:[a-z][a-z0-9-]*|[a-z][a-z0-9-]*)$/;
 
 /**
+ * The parsed components of a block name.
+ *
+ * @typedef {{
+ *   type: "core"|"plugin"|"theme",
+ *   namespace: string|null,
+ *   name: string
+ * }} ParsedBlockName
+ */
+
+/**
  * Parses a full block name into its components.
  *
  * @param {string} fullName - The full block name.
- * @returns {{ type: "core"|"plugin"|"theme", namespace: string|null, name: string }|null}
+ * @returns {ParsedBlockName|null}
  *   An object with the parsed components, or `null` if the name is invalid.
  *
  * @example
