@@ -1776,7 +1776,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       await assert.rejects(
         layoutData.validatedLayout,
-        /`path` argument is required/,
+        /missing required arg "path"/,
         "validation error thrown for missing required path argument"
       );
     });

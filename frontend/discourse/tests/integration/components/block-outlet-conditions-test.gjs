@@ -20,14 +20,14 @@ let testOwner;
 
 /* Test condition classes - defined at module scope to use with decorator */
 
-@blockCondition({ type: "always-true", validArgKeys: [] })
+@blockCondition({ type: "always-true", args: {} })
 class BlockAlwaysTrueCondition extends BlockCondition {
   evaluate() {
     return true;
   }
 }
 
-@blockCondition({ type: "always-false", validArgKeys: [] })
+@blockCondition({ type: "always-false", args: {} })
 class BlockAlwaysFalseCondition extends BlockCondition {
   evaluate() {
     return false;

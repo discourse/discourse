@@ -119,7 +119,7 @@ module("Unit | Service | blocks", function (hooks) {
     test("registers a custom condition type", function (assert) {
       @blockCondition({
         type: "test-custom",
-        validArgKeys: [],
+        args: {},
       })
       class BlockTestCondition extends BlockCondition {
         evaluate() {
@@ -154,7 +154,7 @@ module("Unit | Service | blocks", function (hooks) {
     test("throws if type is already registered", function (assert) {
       @blockCondition({
         type: "route",
-        validArgKeys: [],
+        args: {},
       })
       class BlockDuplicateCondition extends BlockCondition {
         evaluate() {
@@ -212,7 +212,7 @@ module("Unit | Service | blocks", function (hooks) {
       assert.throws(
         () =>
           this.blocks.validate({
-            any: [{ type: "user" }, { type: "unknown" }],
+            any: [{ type: "user", loggedIn: true }, { type: "unknown" }],
           }),
         /Unknown condition type/
       );
@@ -285,7 +285,7 @@ module("Unit | Service | blocks", function (hooks) {
     test("evaluates array of conditions with AND logic", function (assert) {
       @blockCondition({
         type: "always-true",
-        validArgKeys: [],
+        args: {},
       })
       class BlockAlwaysTrueCondition extends BlockCondition {
         evaluate() {
@@ -295,7 +295,7 @@ module("Unit | Service | blocks", function (hooks) {
 
       @blockCondition({
         type: "always-false",
-        validArgKeys: [],
+        args: {},
       })
       class BlockAlwaysFalseCondition extends BlockCondition {
         evaluate() {
@@ -323,7 +323,7 @@ module("Unit | Service | blocks", function (hooks) {
     test("evaluates 'any' combinator with OR logic", function (assert) {
       @blockCondition({
         type: "always-true-2",
-        validArgKeys: [],
+        args: {},
       })
       class BlockAlwaysTrueCondition2 extends BlockCondition {
         evaluate() {
@@ -333,7 +333,7 @@ module("Unit | Service | blocks", function (hooks) {
 
       @blockCondition({
         type: "always-false-2",
-        validArgKeys: [],
+        args: {},
       })
       class BlockAlwaysFalseCondition2 extends BlockCondition {
         evaluate() {
@@ -362,7 +362,7 @@ module("Unit | Service | blocks", function (hooks) {
     test("evaluates 'not' combinator", function (assert) {
       @blockCondition({
         type: "always-true-3",
-        validArgKeys: [],
+        args: {},
       })
       class BlockAlwaysTrueCondition3 extends BlockCondition {
         evaluate() {
@@ -372,7 +372,7 @@ module("Unit | Service | blocks", function (hooks) {
 
       @blockCondition({
         type: "always-false-3",
-        validArgKeys: [],
+        args: {},
       })
       class BlockAlwaysFalseCondition3 extends BlockCondition {
         evaluate() {
@@ -394,7 +394,10 @@ module("Unit | Service | blocks", function (hooks) {
 
       @blockCondition({
         type: "arg-capturing",
-        validArgKeys: ["foo", "baz"],
+        args: {
+          foo: { type: "any" },
+          baz: { type: "any" },
+        },
       })
       class BlockArgCapturingCondition extends BlockCondition {
         evaluate(args) {
@@ -422,7 +425,7 @@ module("Unit | Service | blocks", function (hooks) {
     test("evaluates nested combinators (NOT within OR within AND)", function (assert) {
       @blockCondition({
         type: "nested-true",
-        validArgKeys: [],
+        args: {},
       })
       class BlockNestedTrue extends BlockCondition {
         evaluate() {
@@ -432,7 +435,7 @@ module("Unit | Service | blocks", function (hooks) {
 
       @blockCondition({
         type: "nested-false",
-        validArgKeys: [],
+        args: {},
       })
       class BlockNestedFalse extends BlockCondition {
         evaluate() {
@@ -479,7 +482,7 @@ module("Unit | Service | blocks", function (hooks) {
 
       @blockCondition({
         type: "context-capturing",
-        validArgKeys: [],
+        args: {},
       })
       class BlockContextCapturing extends BlockCondition {
         evaluate(args, context) {
@@ -503,7 +506,7 @@ module("Unit | Service | blocks", function (hooks) {
 
       @blockCondition({
         type: "not-outlet-args",
-        validArgKeys: [],
+        args: {},
       })
       class BlockNotOutletArgs extends BlockCondition {
         evaluate(args, context) {
@@ -535,7 +538,7 @@ module("Unit | Service | blocks", function (hooks) {
 
       @blockCondition({
         type: "deep-outlet-args",
-        validArgKeys: [],
+        args: {},
       })
       class BlockDeepOutletArgs extends BlockCondition {
         evaluate(args, context) {
@@ -576,7 +579,7 @@ module("Unit | Service | blocks", function (hooks) {
 
       @blockCondition({
         type: "service-injection-test",
-        validArgKeys: [],
+        args: {},
       })
       class BlockServiceInjectionCondition extends BlockCondition {
         evaluate() {

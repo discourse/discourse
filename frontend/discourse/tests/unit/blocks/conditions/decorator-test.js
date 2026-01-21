@@ -204,11 +204,11 @@ module("Unit | Blocks | Conditions | decorator", function () {
       );
     });
 
-    test("allows empty object schema for any type", function (assert) {
+    test("allows type: 'any' for accepting any value type", function (assert) {
       @blockCondition({
         type: "test-any-type",
         args: {
-          anyValue: {},
+          anyValue: { type: "any" },
         },
       })
       class TestCondition extends BlockCondition {
@@ -217,7 +217,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
         }
       }
 
-      assert.deepEqual(TestCondition.argsSchema, { anyValue: {} });
+      assert.deepEqual(TestCondition.argsSchema, { anyValue: { type: "any" } });
     });
 
     test("validates enum values match declared type", function (assert) {

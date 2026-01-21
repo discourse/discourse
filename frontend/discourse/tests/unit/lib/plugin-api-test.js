@@ -326,7 +326,9 @@ module("Unit | Utility | plugin-api", function (hooks) {
       test("registers a custom condition type", function (assert) {
         @blockCondition({
           type: "api-test-condition",
-          validArgKeys: ["enabled"],
+          args: {
+            enabled: { type: "boolean" },
+          },
         })
         class ApiTestCondition extends BlockCondition {
           evaluate(args) {
