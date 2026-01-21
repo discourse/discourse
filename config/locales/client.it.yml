@@ -2056,6 +2056,7 @@ it:
               other {# giorni}
             }.
           edit_link_options: "Modifica le opzioni del link o invialo per e-mail."
+          edit_link_options_only: "Modifica le opzioni del link"
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
           description: "Descrizione"
