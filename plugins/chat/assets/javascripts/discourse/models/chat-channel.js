@@ -165,6 +165,10 @@ export default class ChatChannel {
     return escapeExpression(this.title);
   }
 
+  get displayTitle() {
+    return this.unicodeTitle ?? this.title;
+  }
+
   get escapedDescription() {
     return escapeExpression(this.description?.trim());
   }

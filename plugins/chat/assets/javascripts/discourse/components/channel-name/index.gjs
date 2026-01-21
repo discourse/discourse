@@ -52,10 +52,10 @@ export default class ChatChannelName extends Component {
 
   get channelTitle() {
     if (this.args.channel.isDirectMessageChannel) {
-      return this.args.channel.title ?? this.directMessageTitle;
+      return this.args.channel.displayTitle ?? this.directMessageTitle;
     }
 
-    return this.args.channel.title;
+    return this.args.channel.displayTitle;
   }
 
   get showPluginOutlet() {
