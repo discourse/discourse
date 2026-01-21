@@ -1,3 +1,5 @@
+import { createTweenFunction } from "./animation";
+
 /**
  * Adapter for managing sheet stacking within a registry.
  * Encapsulates stack bookkeeping and parent-child sheet notifications.
@@ -146,19 +148,24 @@ export default class StackingAdapter {
    * Notify sheets below this one in the stack with stacking progress.
    * Calls each below sheet's aggregatedStackingCallback to animate their covered state.
    *
-   * This method accesses belowSheetsInStack directly from the controller
-   * and does not require isStackEnabled check since it operates on
-   * cached sheet references.
-   *
    * @param {number} progress - Stacking progress value between 0 and 1
-   * @param {Function} tween - Tween function for value interpolation
    */
-  notifyBelowSheets(progress, tween) {
+  notifyBelowSheets(progress) {
     const belowSheets = this.controller.belowSheetsInStack;
-    if (belowSheets) {
-      for (const belowSheet of belowSheets) {
-        belowSheet.aggregatedStackingCallback(progress, tween);
-      }
+    if (!belowSheets || belowSheets.length === 0) {
+      return;
+    }
+
+    const belowSheetsLength = belowSheets.length;
+
+    for (const belowSheet of belowSheets) {
+      const sumIndex = belowSheetsLength - 1;
+      const progressSum =
+        belowSheet.selfAndAboveTravelProgressSum?.[sumIndex] ?? 0;
+      const accumulatedProgress = progressSum + progress;
+      const accumulatedTween = createTweenFunction(accumulatedProgress);
+
+      belowSheet.aggregatedStackingCallback(accumulatedProgress, accumulatedTween);
     }
   }
 

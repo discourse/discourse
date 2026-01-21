@@ -133,8 +133,6 @@ export default class SheetStackRegistry extends Service {
 
   /**
    * Update belowSheetsInStack for all sheets in a stack.
-   * belowSheetsInStack contains sheets that are visually below the current sheet
-   * (sheets with lower stackingIndex that opened before this one).
    *
    * @param {string} stackId
    */
@@ -144,9 +142,21 @@ export default class SheetStackRegistry extends Service {
       return;
     }
 
+    const stack = this.stacks.get(stackId);
+    const sheetsCount = sheets.length;
+
     sheets.forEach((sheet, index) => {
-      sheet.stackingIndex = index;
-      const sheetsBelow = sheets.filter((s) => s.stackingIndex < index);
+      sheet.stackingIndex = sheetsCount - 1 - index;
+
+      const sheetsBelow = sheets.filter(
+        (s) => s.stackingIndex > sheet.stackingIndex
+      );
+
+      if (stack) {
+        sheetsBelow.unshift(stack);
+        stack.stackingIndex = sheetsCount - 1;
+      }
+
       sheet.belowSheetsInStack = sheetsBelow;
     });
 
@@ -167,6 +177,11 @@ export default class SheetStackRegistry extends Service {
     const sortedSheets = [...sheets].sort(
       (a, b) => b.stackingIndex - a.stackingIndex
     );
+
+    const stack = this.stacks.get(stackId);
+    if (stack) {
+      sortedSheets.unshift(stack);
+    }
 
     const totalCount = sortedSheets.length;
 

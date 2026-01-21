@@ -1277,10 +1277,7 @@ export default class Controller {
   handleClosingWithoutAnimation() {
     this.closingWithoutAnimation = false;
 
-    const tween = createTweenFunction(0);
-    this.belowSheetsInStack.forEach((belowSheet) => {
-      belowSheet.aggregatedStackingCallback(0, tween);
-    });
+    this.stackingAdapter.notifyBelowSheets(0);
 
     requestAnimationFrame(() => {
       this.handleStateTransition({ type: "NEXT" });
@@ -1312,8 +1309,7 @@ export default class Controller {
     this.stateHelper.goOut();
     this.stackingAdapter.notifyParentOfClosingImmediate();
 
-    const tween = createTweenFunction(0);
-    this.stackingAdapter.notifyBelowSheets(0, tween);
+    this.stackingAdapter.notifyBelowSheets(0);
   }
 
   /**
@@ -1837,8 +1833,7 @@ export default class Controller {
     this.travelProgress = stackingProgress;
     this.onTravelProgressChange?.(stackingProgress);
 
-    const tween = createTweenFunction(stackingProgress);
-    this.stackingAdapter.notifyBelowSheets(stackingProgress, tween);
+    this.stackingAdapter.notifyBelowSheets(stackingProgress);
 
     this.notifyTravel(smoothedProgress);
 

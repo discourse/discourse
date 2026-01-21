@@ -133,7 +133,14 @@ export default class Sheets extends Component {
               <content.Stack as |nested|>
                 <nested.Trigger>Open Nested</nested.Trigger>
                 <nested.Content as |nestedContent|>
-                  <p>Nested content</p>
+                  <p>Second level content</p>
+                  <nestedContent.Stack as |deepNested|>
+                    <deepNested.Trigger>Open Deep Nested</deepNested.Trigger>
+                    <deepNested.Content as |deepNestedContent|>
+                      <p>Third level content</p>
+                      <deepNestedContent.Trigger @action="dismiss">Close Deep Nested</deepNestedContent.Trigger>
+                    </deepNested.Content>
+                  </nestedContent.Stack>
                   <nestedContent.Trigger @action="dismiss">Close Nested</nestedContent.Trigger>
                 </nested.Content>
               </content.Stack>
