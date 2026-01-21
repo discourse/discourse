@@ -4,10 +4,10 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import DBottomSheet from "discourse/float-kit/components/d-bottom-sheet";
 import DButton from "discourse/components/d-button";
+import DBottomSheet from "discourse/float-kit/components/d-bottom-sheet";
 import DCard from "discourse/float-kit/components/d-card";
-import DSheetWithStacking from "discourse/float-kit/components/d-sheet-with-stacking";
+import DStack from "discourse/float-kit/components/d-stack";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
@@ -120,19 +120,26 @@ export default class Sheets extends Component {
 
       <StyleguideComponent @tag="toast">
         <:sample>
-          <DButton @action={{this.showToast}}>Show toast</DButton>
+          <DButton @action={{this.showToast}} class="btn-default">Show toast</DButton>
         </:sample>
       </StyleguideComponent>
 
       <StyleguideComponent @tag="stacks">
         <:sample>
-          <DSheetWithStacking>
-            <:root as |Trigger|>
-              <Trigger>Present</Trigger>
-            </:root>
-            <:content>FIRST</:content>
-            <:nestedContent>SECOND</:nestedContent>
-          </DSheetWithStacking>
+          <DStack as |stack|>
+            <stack.Trigger>Open Stack</stack.Trigger>
+            <stack.Content as |content|>
+              <p>First level content</p>
+              <content.Stack as |nested|>
+                <nested.Trigger>Open Nested</nested.Trigger>
+                <nested.Content as |nestedContent|>
+                  <p>Nested content</p>
+                  <nestedContent.Trigger @action="dismiss">Close Nested</nestedContent.Trigger>
+                </nested.Content>
+              </content.Stack>
+              <content.Trigger @action="dismiss">Close</content.Trigger>
+            </stack.Content>
+          </DStack>
         </:sample>
       </StyleguideComponent>
 

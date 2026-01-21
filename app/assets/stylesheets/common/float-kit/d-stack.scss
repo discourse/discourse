@@ -1,0 +1,29 @@
+.d-stack {
+  &__view {
+    z-index: z("max");
+  }
+
+  &__content {
+    box-sizing: border-box;
+    background-color: transparent;
+    padding: var(--space-2);
+    display: grid;
+
+    &[data-d-sheet~="right"] {
+      width: min(80%, 700px);
+      height: 100%;
+    }
+  }
+
+  &__inner-content {
+    box-sizing: border-box;
+    background-color: var(--secondary);
+    border-radius: var(--d-border-radius-large);
+    padding: var(--space-2);
+    overflow: hidden;
+  }
+
+  &__backdrop {
+    background-color: rgb(0 0 0 / 50%);
+  }
+}

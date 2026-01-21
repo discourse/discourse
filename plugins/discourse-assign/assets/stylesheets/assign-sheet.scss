@@ -1,27 +1,3 @@
-.assign-sheet__inner-content {
-  height: 100%;
-  min-height: 0;
-  box-shadow: var(--shadow-dropdown);
-  border-radius: var(--d-border-radius-large);
-  background-color: var(--secondary);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-
-  > .form-kit {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    overflow: hidden;
-  }
-
-  &--nested {
-    display: flex;
-    flex-direction: column;
-  }
-}
-
 .assign-sheet__nested-form {
   display: flex;
   flex-direction: column;
@@ -47,39 +23,6 @@
 
 .assign-sheet__note-field {
   width: 100%;
-}
-
-.assign-sheet__content {
-  box-sizing: border-box;
-  height: calc(min(500px, 90svh) + env(safe-area-inset-bottom, 0px));
-  background-color: transparent;
-  display: grid;
-
-  &[data-d-sheet~="bottom"] {
-    height: 45vh;
-    width: 100vw;
-  }
-
-  &[data-d-sheet~="right"] {
-    height: 100%;
-    width: min(80%, 375px);
-    padding: var(--space-2);
-    padding-inline: 0.5rem;
-    padding-block: 0.5rem max(env(safe-area-inset-bottom, 0px), 0.5rem);
-  }
-}
-
-.assign-sheet__view {
-  z-index: z("max");
-  height: calc(max(100dvh, 100lvh) + 60px);
-
-  &[data-d-sheet~="right"] {
-    height: 100%;
-  }
-}
-
-.assign-sheet__backdrop {
-  background-color: #000;
 }
 
 .assign-sheet__assignees {

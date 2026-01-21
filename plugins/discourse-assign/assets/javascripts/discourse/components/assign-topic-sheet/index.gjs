@@ -2,13 +2,10 @@ import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
-// import { guidFor } from "@ember/object/internals";
-import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import DButton from "discourse/components/d-button";
 import Form from "discourse/components/form";
 import DSheet from "discourse/float-kit/components/d-sheet";
-import TrackedMediaQuery from "discourse/lib/tracked-media-query";
+import DStack from "discourse/float-kit/components/d-stack";
 import AssigneesList from "./assignees-list";
 import AssignmentForm from "./assignment-form";
 import AssignmentsList from "./assignments-list";
@@ -16,20 +13,7 @@ import AssignmentsList from "./assignments-list";
 export default class AssignTopicSheet extends Component {
   @service taskActions;
 
-  @tracked sheetPresented = false;
-  @tracked nestedSheetPresented = false;
-  @tracked assigneesListPresented = false;
-
   @tracked assignment = this.assignments[0];
-
-  largeViewport = new TrackedMediaQuery("(min-width: 700px)");
-
-  componentId = "test"; //guidFor(this);
-
-  willDestroy() {
-    super.willDestroy(...arguments);
-    this.largeViewport.teardown();
-  }
 
   @cached
   get formData() {
@@ -56,71 +40,13 @@ export default class AssignTopicSheet extends Component {
     return data;
   }
 
-  get tracks() {
-    return this.largeViewport.matches ? "right" : "bottom";
-  }
-
   get assignments() {
     return this.args.topic.assignments();
   }
 
   @action
-  async assign() {
-    await this.taskActions.putAssignment(this.assignment);
-  }
-
-  @action
   async unassign(assignment) {
     await this.taskActions.unassign(assignment.targetId, assignment.targetType);
-  }
-
-  get stackingAnimation() {
-    return this.tracks === "right"
-      ? {
-          translateX: ({ progress }) =>
-            progress <= 1
-              ? progress * -10 + "px"
-              : `calc(-12.5px + 2.5px * ${progress})`,
-          scale: [1, 0.933],
-          transformOrigin: "0 50%",
-        }
-      : {
-          translateY: ({ progress }) =>
-            progress <= 1
-              ? progress * -10 + "px"
-              : `calc(-12.5px + 2.5px * ${progress})`,
-          scale: [1, 0.933],
-          transformOrigin: "50% 0",
-        };
-  }
-
-  @action
-  async onSelectAssignee(assignee) {
-    if (!assignee) {
-      await this.unassign();
-      this.sheetPresented = false;
-      return;
-    }
-
-    let name;
-    if (assignee.isGroup) {
-      name = assignee.name;
-    } else {
-      name = assignee.username;
-    }
-
-    if (this.taskActions.allowedGroupsForAssignment.includes(name)) {
-      this.assignment.username = null;
-      this.assignment.avatar_template = null;
-      this.assignment.group_name = name;
-    } else {
-      this.assignment.username = name;
-      this.assignment.avatar_template = assignee.avatar_template;
-      this.assignment.group_name = null;
-    }
-    this.assignment.isEdited = true;
-
-    this.nestedSheetPresented = false;
   }
 
   @action
@@ -144,209 +70,96 @@ export default class AssignTopicSheet extends Component {
     }
 
     await this.taskActions.putAssignment(payload);
-
-    this.nestedSheetPresented = false;
   }
 
   @action
-  onEditAssignment(assignment) {
+  async saveAndDismiss(form, dismiss) {
+    await form.submit();
+    dismiss?.();
+  }
+
+  @action
+  onEditAssignment(presentEditSheet, assignment) {
     this.assignment = assignment;
-    this.nestedSheetPresented = true;
-  }
-
-  @action
-  onSheetPresentedChange(presented) {
-    this.sheetPresented = presented;
-
-    if (!presented) {
-      this.assignment = null;
-    }
-  }
-
-  get selectedAssigneeName() {
-    if (!this.selectedAssignee) {
-      return "";
-    }
-    return this.selectedAssignee.isUser
-      ? this.selectedAssignee.username
-      : this.selectedAssignee.name;
+    presentEditSheet?.();
   }
 
   <template>
-    <DSheet.Stack.Root as |stack|>
-      <DSheet.Root
-        @presented={{this.sheetPresented}}
-        @onPresentedChange={{this.onSheetPresentedChange}}
-        @componentId={{this.componentId}}
-        @forComponent={{stack.stackId}}
-        as |sheet|
-      >
-        <DButton
-          class="btn-default"
-          @action={{fn (mut this.sheetPresented) true}}
-          @icon="user-plus"
-          @translatedLabel="Assign"
-        />
+    <DStack as |stack|>
+      <stack.Trigger class="btn-default" @icon="user-plus">
+        Assign
+      </stack.Trigger>
 
-        <DSheet.Portal @sheet={{sheet}}>
-          <DSheet.View
-            class="assign-sheet__view"
-            @swipeOvershoot={{false}}
-            @sheet={{sheet}}
-            @tracks={{this.tracks}}
-            @inertOutside={{false}}
-            ...attributes
-          >
-            <DSheet.Content
-              @stackingAnimation={{this.stackingAnimation}}
-              class="assign-sheet__content"
-              @sheet={{sheet}}
-            >
-              <div class="assign-sheet__inner-content">
-                <Form
-                  @data={{this.formData}}
-                  @onSubmit={{this.handleSubmit}}
-                  @noLayout={{true}}
-                  as |form data|
-                >
-                  <DSheet.Header @sheet={{sheet}}>
+      <stack.Content as |content|>
+        <Form
+          @data={{this.formData}}
+          @onSubmit={{this.handleSubmit}}
+          @noLayout={{true}}
+          as |form data|
+        >
+          <DSheet.Header @sheet={{content.sheet}}>
+            <:left as |Button|>
+              <Button.Close />
+            </:left>
+            <:title>
+              Assignments
+            </:title>
+          </DSheet.Header>
+
+          <content.Stack as |editStack|>
+            <AssignmentsList
+              @assignments={{this.assignments}}
+              @topic={{@topic}}
+              @onEditAssignment={{fn this.onEditAssignment editStack.present}}
+              @onRemoveAssignment={{this.unassign}}
+            />
+
+            <editStack.Content as |editContent|>
+              <DSheet.Header @sheet={{editContent.sheet}}>
+                <:left as |Button|>
+                  <Button.Cancel />
+                </:left>
+                <:title>
+                  Edit Assignment
+                </:title>
+                <:right as |Button|>
+                  <Button @action={{fn this.saveAndDismiss form editContent.dismiss}}>
+                    Save
+                  </Button>
+                </:right>
+              </DSheet.Header>
+
+              <editContent.Stack as |assigneesStack|>
+                <AssignmentForm
+                  @assignment={{this.assignment}}
+                  @sheet={{editContent.sheet}}
+                  @form={{form}}
+                  @data={{data}}
+                  @onShowAssigneesList={{assigneesStack.present}}
+                />
+
+                <assigneesStack.Content as |assigneesContent|>
+                  <DSheet.Header @sheet={{assigneesContent.sheet}}>
                     <:left as |Button|>
-                      <Button.Close />
+                      <Button.Cancel />
                     </:left>
                     <:title>
-                      Assignments
+                      Select Assignee
                     </:title>
                   </DSheet.Header>
 
-                  {{!-- <AssigneesList
+                  <AssigneesList
                     @assignment={{this.assignment}}
+                    @sheet={{assigneesContent.sheet}}
                     @form={{form}}
                     @data={{data}}
-                  /> --}}
-
-                  {{!-- {{#if this.assignment}}
-                    <AssignmentForm
-                      @sheet={{sheet}}
-                      @form={{form}}
-                      @data={{data}}
-                      @onShowAssigneesList={{fn
-                        (mut this.nestedSheetPresented)
-                        true
-                      }}
-                      @onSelectAssignee={{this.onSelectAssignee}}
-                    />
-                  {{else}}
-
-                  {{/if}} --}}
-
-                  <AssignmentsList
-                    @assignments={{this.assignments}}
-                    @topic={{@topic}}
-                    @onEditAssignment={{this.onEditAssignment}}
-                    @onRemoveAssignment={{this.unassign}}
                   />
-
-                  <DSheet.Root
-                    @presented={{this.nestedSheetPresented}}
-                    @onPresentedChange={{fn (mut this.nestedSheetPresented)}}
-                    @forComponent={{stack.stackId}}
-                    as |nestedSheet|
-                  >
-                    <DSheet.Portal @sheet={{nestedSheet}}>
-                      <DSheet.View
-                        class="assign-sheet__view"
-                        @sheet={{nestedSheet}}
-                        @tracks={{this.tracks}}
-                        @inertOutside={{false}}
-                      >
-                        <DSheet.Content
-                          @sheet={{nestedSheet}}
-                          @stackingAnimation={{this.stackingAnimation}}
-                          class="assign-sheet__content"
-                        >
-                          <div
-                            class="assign-sheet__inner-content assign-sheet__inner-content--nested"
-                          >
-                            <DSheet.Header @sheet={{nestedSheet}}>
-                              <:left as |Button|>
-                                <Button.Cancel />
-                              </:left>
-                              <:title>
-                                Edit Assignment
-                              </:title>
-                              <:right as |Button|>
-                                <Button @action={{form.submit}}>
-                                  Save
-                                </Button>
-                              </:right>
-                            </DSheet.Header>
-
-                            <AssignmentForm
-                              @assignment={{this.assignment}}
-                              @sheet={{nestedSheet}}
-                              @form={{form}}
-                              @data={{data}}
-                              @onShowAssigneesList={{fn
-                                (mut this.assigneesListPresented)
-                                true
-                              }}
-                            />
-
-                            <DSheet.Root
-                              @presented={{this.assigneesListPresented}}
-                              @onPresentedChange={{fn
-                                (mut this.assigneesListPresented)
-                              }}
-                              @forComponent={{stack.stackId}}
-                              as |assigneesSheet|
-                            >
-                              <DSheet.Portal @sheet={{assigneesSheet}}>
-                                <DSheet.View
-                                  class="assign-sheet__view"
-                                  @sheet={{assigneesSheet}}
-                                  @tracks={{this.tracks}}
-                                  @inertOutside={{false}}
-                                >
-                                  <DSheet.Content
-                                    @sheet={{assigneesSheet}}
-                                    @stackingAnimation={{this.stackingAnimation}}
-                                    class="assign-sheet__content"
-                                  >
-                                    <div
-                                      class="assign-sheet__inner-content assign-sheet__inner-content--nested"
-                                    >
-                                      <DSheet.Header @sheet={{assigneesSheet}}>
-                                        <:left as |Button|>
-                                          <Button.Cancel />
-                                        </:left>
-                                        <:title>
-                                          Select Assignee
-                                        </:title>
-                                      </DSheet.Header>
-
-                                      <AssigneesList
-                                        @assignment={{this.assignment}}
-                                        @sheet={{assigneesSheet}}
-                                        @form={{form}}
-                                        @data={{data}}
-                                      />
-                                    </div>
-                                  </DSheet.Content>
-                                </DSheet.View>
-                              </DSheet.Portal>
-                            </DSheet.Root>
-                          </div>
-                        </DSheet.Content>
-                      </DSheet.View>
-                    </DSheet.Portal>
-                  </DSheet.Root>
-                </Form>
-              </div>
-
-            </DSheet.Content>
-          </DSheet.View>
-        </DSheet.Portal>
-      </DSheet.Root>
-    </DSheet.Stack.Root>
+                </assigneesStack.Content>
+              </editContent.Stack>
+            </editStack.Content>
+          </content.Stack>
+        </Form>
+      </stack.Content>
+    </DStack>
   </template>
 }
