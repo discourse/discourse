@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe "Promote upcoming changes initializer" do
+RSpec.describe UpcomingChanges::AutoPromotionInitializer do
   context "when enable_upcoming_changes is disabled" do
     before do
       SiteSetting.enable_upcoming_changes = false
@@ -40,6 +40,11 @@ RSpec.describe "Promote upcoming changes initializer" do
           },
         },
       )
+    end
+
+    it "synchronizes execution using DistributedMutex" do
+      DistributedMutex.expects(:synchronize).with("promote_upcoming_changes_default").yields
+      UpcomingChanges::AutoPromotionInitializer.call
     end
 
     context "when the change does not meet the promotion criteria" do

@@ -161,6 +161,8 @@ class Notification < ActiveRecord::Base
         admin_problems: 38,
         linked_consolidated: 39,
         chat_watched_thread: 40,
+        upcoming_change_available: 41,
+        upcoming_change_automatically_promoted: 42,
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow

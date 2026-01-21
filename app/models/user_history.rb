@@ -160,6 +160,7 @@ class UserHistory < ActiveRecord::Base
         stop_impersonating: 121,
         upcoming_change_toggled: 122,
         change_site_setting_groups: 123,
+        upcoming_change_available: 124,
       )
   end
 
@@ -286,6 +287,7 @@ class UserHistory < ActiveRecord::Base
       stop_impersonating
       upcoming_change_toggled
       change_site_setting_groups
+      upcoming_change_available
     ]
   end
 
