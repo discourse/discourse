@@ -13,12 +13,11 @@ import ConditionsTree from "./conditions-tree";
  * Visual overlay component for rendered blocks.
  * Wraps a block with debug information including name badge and tooltip.
  *
- * @component BlockInfo
  * @param {string} blockName - The name of the block
  * @param {string} debugLocation - The hierarchy path where the block is rendered
- * @param {Object} blockArgs - Arguments passed to the block
+ * @param {Object} [blockArgs] - Arguments passed to the block
  * @param {Object} [containerArgs] - Container arguments passed from parent container's childArgs
- * @param {Object} conditions - Conditions that were evaluated
+ * @param {Object} [conditions] - Conditions that were evaluated
  * @param {Object} [outletArgs] - Outlet arguments available to the block
  * @param {Component} WrappedComponent - The actual block component to render
  */
@@ -73,7 +72,8 @@ export default class BlockInfo extends Component {
 
   /**
    * Checks whether the tooltip has no content to display.
-   * Used to show an "empty" message when there are no conditions, args, or outlet args.
+   * Used to show an "empty" message when there are no conditions, args,
+   * container args, or outlet args.
    *
    * @returns {boolean} True if there is nothing to display in the tooltip.
    */
