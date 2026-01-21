@@ -290,7 +290,7 @@ export default class ChatDrawerRouter extends Service {
       return false;
     }
 
-    return this.chatChannelsManager.hasThreadedChannels;
+    return this.chatChannelsManager.shouldShowMyThreads;
   }
 
   get hasDirectMessages() {

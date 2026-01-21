@@ -106,6 +106,18 @@ module Chat
       )
     end
 
+    def self.user_has_threads_message_bus_channel(user_id)
+      "/chat/user-has-threads/#{user_id}"
+    end
+
+    def self.publish_user_has_threads!(user)
+      MessageBus.publish(
+        user_has_threads_message_bus_channel(user.id),
+        { has_threads: true },
+        user_ids: [user.id],
+      )
+    end
+
     def self.publish_processed!(chat_message)
       chat_channel = chat_message.chat_channel
       message_bus_targets = calculate_publish_targets(chat_channel, chat_message)

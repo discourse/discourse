@@ -125,6 +125,9 @@ export default class Chat extends Service {
           channelsView.meta.message_bus_last_ids
         );
 
+        this.chatChannelsManager.userHasThreads =
+          channelsView.has_threads ?? false;
+
         [
           ...channelsView.public_channels,
           ...channelsView.direct_message_channels,
@@ -214,6 +217,8 @@ export default class Chat extends Service {
       channelsView.meta.message_bus_last_ids
     );
     this.presenceChannel.subscribe(channelsView.global_presence_channel_state);
+
+    this.chatChannelsManager.userHasThreads = channelsView.has_threads ?? false;
 
     [
       ...channelsView.public_channels,

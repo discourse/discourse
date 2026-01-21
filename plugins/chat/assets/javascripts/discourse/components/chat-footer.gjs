@@ -27,7 +27,7 @@ export default class ChatFooter extends Component {
     if (!this.siteSettings.chat_threads_enabled) {
       return false;
     }
-    return this.chatChannelsManager.hasThreadedChannels;
+    return this.chatChannelsManager.shouldShowMyThreads;
   }
 
   get directMessagesEnabled() {

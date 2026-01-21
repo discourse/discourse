@@ -235,16 +235,37 @@ RSpec.describe "List channels | mobile", type: :system, mobile: true do
       SiteSetting.chat_preferred_index = "my_threads"
     end
 
-    it "redirects to threads" do
-      channel = Fabricate(:chat_channel, threading_enabled: true)
-      channel.add(current_user)
+    context "when user has viewable threads" do
+      it "redirects to threads" do
+        channel = Fabricate(:chat_channel, threading_enabled: true)
+        channel.add(current_user)
+        other_user = Fabricate(:user)
+        channel.add(other_user)
 
-      visit("/chat")
+        message = Fabricate(:chat_message, chat_channel: channel, user: current_user)
+        thread = Fabricate(:chat_thread, channel: channel, original_message: message)
+        thread.add(current_user)
+        Fabricate(:chat_message, chat_channel: channel, thread: thread, user: other_user)
+        thread.set_replies_count_cache(1, update_db: true)
 
-      expect(page).to have_current_path("/chat/threads")
+        visit("/chat")
+
+        expect(page).to have_current_path("/chat/threads")
+      end
     end
 
-    context "when no threads" do
+    context "when user has no viewable threads" do
+      it "redirects to browse" do
+        channel = Fabricate(:chat_channel, threading_enabled: true)
+        channel.add(current_user)
+
+        visit("/chat")
+
+        expect(page).to have_current_path("/chat/browse/open")
+      end
+    end
+
+    context "when threads feature is disabled" do
       before { SiteSetting.chat_threads_enabled = false }
 
       it "redirects to browse" do

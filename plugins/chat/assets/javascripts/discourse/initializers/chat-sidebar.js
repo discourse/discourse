@@ -355,7 +355,7 @@ export default {
             }
 
             get displaySection() {
-              return this.chatChannelsManager.hasThreadedChannels;
+              return this.chatChannelsManager.shouldShowMyThreads;
             }
           };
 
