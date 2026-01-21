@@ -11,7 +11,7 @@ import { isDeprecatedOutletArgument } from "discourse/helpers/deprecated-outlet-
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 
 /**
- * Symbol used to store the raw deprecatedArgs object as a non-enumerable
+ * Key used to store the raw deprecatedArgs object as a non-enumerable
  * property on the combined args object. This is used by dev-tools to display
  * deprecation info without triggering the deprecation warnings.
  */
