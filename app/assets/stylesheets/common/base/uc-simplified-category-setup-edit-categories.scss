@@ -101,4 +101,10 @@
   .category-permissions-table {
     width: 100%;
   }
+
+  .d-page-header__drawer {
+    .edit-category-preview-badge:has(.badge-category__wrapper) {
+      margin-right: var(--space-4);
+    }
+  }
 }

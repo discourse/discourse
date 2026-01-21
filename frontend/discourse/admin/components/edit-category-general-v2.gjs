@@ -193,10 +193,6 @@ export default class EditCategoryGeneralV2 extends Component {
       : "category.visibility.public";
   }
 
-  get isParentCategoryRestricted() {
-    return this.parentIsRestricted;
-  }
-
   @action
   onVisibilityChange(value) {
     this.categoryVisibilityState = value;
@@ -374,6 +370,8 @@ export default class EditCategoryGeneralV2 extends Component {
 
   @action
   onStyleTypeChange(value) {
+    this.args.form.setProperties({ style_type: value });
+
     if (this.args.updatePreview) {
       const updateData = { style_type: value };
 
@@ -393,7 +391,6 @@ export default class EditCategoryGeneralV2 extends Component {
     }
   }
 
-  @action
   colorDifference(color1, color2) {
     const r1 = parseInt(color1.substr(0, 2), 16);
     const g1 = parseInt(color1.substr(2, 2), 16);
@@ -520,7 +517,6 @@ export default class EditCategoryGeneralV2 extends Component {
       </@form.Field>
 
       <@form.Container @title={{i18n "category.style"}}>
-        {{! TODO (martin) This doesn't actually update the style_type field, so the change doesn't persist }}
         <@form.ConditionalContent
           @activeName={{or @category.styleType "square"}}
           @onChange={{this.onStyleTypeChange}}

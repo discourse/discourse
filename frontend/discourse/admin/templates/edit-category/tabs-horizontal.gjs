@@ -1,5 +1,6 @@
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
+import CategoryBadgePreview from "discourse/admin/components/category-badge-preview";
 import EditCategoryTab from "discourse/admin/components/edit-category-tab";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
@@ -71,9 +72,16 @@ const EditCategoryTabsHorizontalTemplate = <template>
     </:tabs>
     <:drawer>
       <span class="edit-category-preview-badge">
-        {{#if @controller.showPreviewBadge}}
-          {{@controller.previewBadge}}
-        {{/if}}
+        <CategoryBadgePreview
+          @category={{@controller.model}}
+          @previewName={{@controller.previewName}}
+          @previewColor={{@controller.previewColor}}
+          @previewTextColor={{@controller.previewTextColor}}
+          @previewStyleType={{@controller.previewStyleType}}
+          @previewEmoji={{@controller.previewEmoji}}
+          @previewIcon={{@controller.previewIcon}}
+          @previewParentCategoryId={{@controller.previewParentCategoryId}}
+        />
       </span>
 
       {{#if @controller.model.id}}
