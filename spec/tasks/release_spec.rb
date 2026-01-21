@@ -119,53 +119,53 @@ RSpec.describe "tasks/version_bump" do
     it "does not tag if commit is not on a release/* branch" do
       Dir.chdir(local_path) do
         run "git", "switch", "-c", "some-other-branch"
-        File.write("lib/version.rb", fake_version_rb("2025.06.0"))
+        File.write("lib/version.rb", fake_version_rb("2025.6.0"))
         run "git", "add", "."
-        run "git", "commit", "-m", "release 2025.06.0"
+        run "git", "commit", "-m", "release 2025.6.0"
         commit_hash = run("git", "rev-parse", "HEAD").strip
         # Not on a release/* branch, should not tag
         capture_stdout { invoke_rake_task("release:maybe_tag_release", commit_hash) }
-        # Should not tag, so v2025.06.0 should not exist
-        expect(run("git", "tag").lines.map(&:strip)).not_to include("v2025.06.0")
+        # Should not tag, so v2025.6.0 should not exist
+        expect(run("git", "tag").lines.map(&:strip)).not_to include("v2025.6.0")
       end
     end
 
     it "tags a release if tag does not exist" do
       Dir.chdir(local_path) do
-        File.write("lib/version.rb", fake_version_rb("2025.03.0"))
+        File.write("lib/version.rb", fake_version_rb("2025.3.0"))
         run "git", "add", "."
-        run "git", "commit", "-m", "release 2025.03.0"
+        run "git", "commit", "-m", "release 2025.3.0"
         commit_hash = run("git", "rev-parse", "HEAD").strip
-        run "git", "branch", "release/2025.03"
+        run "git", "branch", "release/2025.3"
         output = capture_stdout { invoke_rake_task("release:maybe_tag_release", commit_hash) }
-        expect(output).to include("Tagging release v2025.03.0")
-        expect(run("git", "tag").lines.map(&:strip)).to include("v2025.03.0")
+        expect(output).to include("Tagging release v2025.3.0")
+        expect(run("git", "tag").lines.map(&:strip)).to include("v2025.3.0")
       end
     end
 
     it "tags first commit of a pre-release cycle" do
       Dir.chdir(local_path) do
-        File.write("lib/version.rb", fake_version_rb("2025.04.0-latest"))
+        File.write("lib/version.rb", fake_version_rb("2025.4.0-latest"))
         run "git", "add", "."
-        run "git", "commit", "-m", "bump to 2025.04.0-latest"
+        run "git", "commit", "-m", "bump to 2025.4.0-latest"
         commit_hash = run("git", "rev-parse", "HEAD").strip
         output = capture_stdout { invoke_rake_task("release:maybe_tag_release", commit_hash) }
-        expect(output).to include("Tagging release v2025.04.0-latest")
-        expect(run("git", "tag").lines.map(&:strip)).to include("v2025.04.0-latest")
+        expect(output).to include("Tagging release v2025.4.0-latest")
+        expect(run("git", "tag").lines.map(&:strip)).to include("v2025.4.0-latest")
       end
     end
 
     it "skips tagging if tag already exists" do
       Dir.chdir(local_path) do
-        File.write("lib/version.rb", fake_version_rb("2025.05.0"))
+        File.write("lib/version.rb", fake_version_rb("2025.5.0"))
         run "git", "add", "."
-        run "git", "commit", "-m", "release 2025.05.0"
+        run "git", "commit", "-m", "release 2025.5.0"
         commit_hash = run("git", "rev-parse", "HEAD").strip
-        run "git", "branch", "release/2025.05"
+        run "git", "branch", "release/2025.5"
         # Create tag manually
-        run "git", "tag", "-a", "v2025.05.0", "-m", "version 2025.05.0"
+        run "git", "tag", "-a", "v2025.5.0", "-m", "version 2025.5.0"
         output = capture_stdout { invoke_rake_task("release:maybe_tag_release", commit_hash) }
-        expect(output).to include("Tag v2025.05.0 already exists, skipping")
+        expect(output).to include("Tag v2025.5.0 already exists, skipping")
       end
     end
   end
@@ -278,15 +278,15 @@ RSpec.describe "tasks/version_bump" do
     latest_hash, previous_hash = nil
 
     Dir.chdir(local_path) do
-      File.write("lib/version.rb", fake_version_rb("2025.01.0-latest"))
+      File.write("lib/version.rb", fake_version_rb("2025.1.0-latest"))
       run "git", "add", "."
-      run "git", "commit", "-m", "developing 2025.01"
+      run "git", "commit", "-m", "developing 2025.1"
 
       previous_hash = run("git", "rev-parse", "HEAD").strip
 
-      File.write("lib/version.rb", fake_version_rb("2025.02.0-latest"))
+      File.write("lib/version.rb", fake_version_rb("2025.2.0-latest"))
       run "git", "add", "."
-      run "git", "commit", "-m", "begin development of 2025.02-latest"
+      run "git", "commit", "-m", "begin development of 2025.2-latest"
 
       latest_hash = run("git", "rev-parse", "HEAD").strip
 
@@ -295,7 +295,7 @@ RSpec.describe "tasks/version_bump" do
     end
 
     Dir.chdir(origin_path) do
-      run "git", "checkout", "release/2025.01"
+      run "git", "checkout", "release/2025.1"
       branch_tip = run("git", "rev-parse", "HEAD").strip
       expect(branch_tip).to eq(previous_hash)
     end
@@ -304,7 +304,7 @@ RSpec.describe "tasks/version_bump" do
   describe "release:prepare_next_version" do
     it "bumps version to current month format when current version is older" do
       Dir.chdir(local_path) do
-        File.write("lib/version.rb", fake_version_rb("2024.01.0-latest"))
+        File.write("lib/version.rb", fake_version_rb("2024.1.0-latest"))
         run "git", "add", "."
         run "git", "commit", "-m", "old version"
         run "git", "push", "origin", "main"
@@ -318,7 +318,7 @@ RSpec.describe "tasks/version_bump" do
         run "git", "reset", "--hard"
         run "git", "checkout", "version-bump/main"
         version_rb_content = File.read("lib/version.rb")
-        expect(version_rb_content).to include('STRING = "2025.09.0-latest"')
+        expect(version_rb_content).to include('STRING = "2025.9.0-latest"')
       end
     end
 
@@ -367,7 +367,7 @@ RSpec.describe "tasks/version_bump" do
       allow(ReleaseUtils).to receive(:gh).with("pr", "create", any_args).and_return(true)
 
       Dir.chdir(local_path) do
-        File.write("lib/version.rb", fake_version_rb("2025.05.0-latest"))
+        File.write("lib/version.rb", fake_version_rb("2025.5.0-latest"))
         run "git", "add", "."
         run "git", "commit", "-m", "previous version"
         run "git", "push", "origin", "main"
@@ -386,7 +386,7 @@ RSpec.describe "tasks/version_bump" do
         commit_message = run("git", "log", "-1", "--pretty=%B").strip
         expect(commit_message).to include("Begin development of v2025.10.0-latest")
         expect(commit_message).to include(
-          "Merging this will trigger the creation of a `release/2025.05` branch on the preceding commit.",
+          "Merging this will trigger the creation of a `release/2025.5` branch on the preceding commit.",
         )
       end
 
@@ -400,7 +400,7 @@ RSpec.describe "tasks/version_bump" do
         "--title",
         "DEV: Begin development of v2025.10.0-latest",
         "--body",
-        a_string_including("Merging this will trigger the creation of a `release/2025.05` branch"),
+        a_string_including("Merging this will trigger the creation of a `release/2025.5` branch"),
         "--label",
         ReleaseUtils::PR_LABEL,
       )
@@ -411,7 +411,7 @@ RSpec.describe "tasks/version_bump" do
       allow(ReleaseUtils).to receive(:gh).with("pr", "edit", any_args).and_return(true)
 
       Dir.chdir(local_path) do
-        File.write("lib/version.rb", fake_version_rb("2025.05.0-latest"))
+        File.write("lib/version.rb", fake_version_rb("2025.5.0-latest"))
         run "git", "add", "."
         run "git", "commit", "-m", "previous version"
         run "git", "push", "origin", "main"
@@ -428,7 +428,7 @@ RSpec.describe "tasks/version_bump" do
         "--title",
         "DEV: Begin development of v2025.10.0-latest",
         "--body",
-        a_string_including("Merging this will trigger the creation of a `release/2025.05` branch"),
+        a_string_including("Merging this will trigger the creation of a `release/2025.5` branch"),
         "--add-label",
         ReleaseUtils::PR_LABEL,
       )
