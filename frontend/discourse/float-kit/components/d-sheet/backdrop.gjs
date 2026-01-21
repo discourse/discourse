@@ -82,7 +82,7 @@ export default class Backdrop extends Component {
         @stackingAnimation={{@stackingAnimation}}
         data-d-sheet={{concatClass
           "backdrop"
-          (unless this.swipeable "no-pointer-events")
+          (if @sheet.scrollContainerShouldBePassThrough "no-pointer-events")
         }}
         {{didInsert this.registerBackdropElement}}
         ...attributes
