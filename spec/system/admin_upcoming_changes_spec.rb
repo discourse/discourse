@@ -40,6 +40,29 @@ describe "Admin upcoming changes", type: :system do
     ).to have_impact_role(:all_members)
   end
 
+  it "does not show conceptual upcoming changes" do
+    mock_upcoming_change_metadata(
+      {
+        enable_upload_debug_mode: {
+          impact: "other,developers",
+          status: :experimental,
+          impact_type: "other",
+          impact_role: "developers",
+        },
+        about_page_extra_groups_show_description: {
+          impact: "feature,all_members",
+          status: :conceptual,
+          impact_type: "feature",
+          impact_role: "all_members",
+        },
+      },
+    )
+
+    upcoming_changes_page.visit
+    expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
+    expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+  end
+
   # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
   # sample plugin settings loaded in the SiteSetting model.
   xit "shows upcoming changes from plugins" do

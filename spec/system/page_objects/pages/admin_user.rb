@@ -101,6 +101,12 @@ module PageObjects
         )
       end
 
+      def has_no_upcoming_change?(change_name)
+        has_no_css?(
+          ".user-upcoming-changes-table .d-table__row[data-upcoming-change-name='#{change_name}']",
+        )
+      end
+
       def upcoming_change(change_name)
         row =
           find(

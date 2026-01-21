@@ -300,7 +300,6 @@ module SiteSettingExtension
     end
   end
 
-  # Retrieve all settings
   def all_settings(
     include_hidden: false,
     include_locale_setting: true,
@@ -371,7 +370,8 @@ module SiteSettingExtension
       end
       .select do |setting_name, _|
         if only_upcoming_changes
-          upcoming_change_metadata.key?(setting_name)
+          upcoming_change_metadata.key?(setting_name) &&
+            UpcomingChanges.change_status(setting_name) != :conceptual
         else
           true
         end
