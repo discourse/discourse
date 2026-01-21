@@ -107,7 +107,7 @@ module UpcomingChanges
     guardian_visible_group_ids = Group.visible_groups(acting_guardian.user).pluck(:id)
     user_belonging_to_group_ids = user.belonging_to_group_ids
 
-    SiteSetting.upcoming_change_site_settings.flat_map do |name|
+    SiteSetting.upcoming_change_site_settings.filter_map do |name|
       next if UpcomingChanges.change_status(name) == :conceptual
       enabled = user.upcoming_change_enabled?(name)
       has_groups = UpcomingChanges.has_groups?(name)
