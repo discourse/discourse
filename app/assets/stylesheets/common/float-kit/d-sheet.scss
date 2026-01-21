@@ -617,7 +617,17 @@
   position: absolute;
   top: 0;
   bottom: 0;
-  left: -2px;
+}
+
+[data-d-sheet~="left-edge"][data-d-sheet~="left"] {
+  right: -2px;
+}
+
+[data-d-sheet~="left-edge"][data-d-sheet~="right"] {
+  left: calc(
+    var(--d-sheet-snap-accelerator) + var(--d-sheet-edge-padding) +
+      var(--d-sheet-content-travel-axis) - 2px
+  );
 }
 
 [data-d-sheet~="left-edge"][data-d-sheet~="top"],
