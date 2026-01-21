@@ -233,7 +233,7 @@ export function patchBlockRendering() {
   // These bridge the main bundle to the debug logger in dev-tools.
   // All use makeDebugCallback to centralize the devToolsState.blockDebug check.
 
-  // Callback for logging condition evaluations (before result is known)
+  // Callback for logging condition evaluations
   debugHooks.setCallback(
     DEBUG_CALLBACK.CONDITION_LOG,
     makeDebugCallback((opts) => {
@@ -304,8 +304,8 @@ export function patchBlockRendering() {
     }
     return {
       logCondition: (opts) => blockDebugLogger.logCondition(opts),
-      updateCombinatorResult: (result, depth) =>
-        blockDebugLogger.updateCombinatorResult(result, depth),
+      updateCombinatorResult: (conditionSpec, result) =>
+        blockDebugLogger.updateCombinatorResult(conditionSpec, result),
       updateConditionResult: (conditionSpec, result) =>
         blockDebugLogger.updateConditionResult(conditionSpec, result),
       logParamGroup: (opts) => blockDebugLogger.logParamGroup(opts),

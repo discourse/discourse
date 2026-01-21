@@ -4,7 +4,7 @@
  * Provides consistent argument logging to console with a persistent counter
  * that increments across all dev tools components during the session.
  *
- * @module dev-tools/lib/console-logger
+ * @module discourse/static/dev-tools/lib/console-logger
  */
 
 /**
@@ -19,8 +19,8 @@ let globalArgCounter = 1;
  * Console output styles for dev tools logging.
  */
 const STYLES = {
-  varName: "color: #9c27b0; font-weight: bold",
-  keyName: "color: #2196f3",
+  varName: "color: #ce6edf; font-weight: bold",
+  keyName: "color: #46a7f5",
   reset: "",
 };
 

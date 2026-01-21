@@ -108,7 +108,8 @@ class DevToolsState {
   }
 
   /**
-   * Show block outlet boundaries even when empty.
+   * Show block outlet debug boundaries around outlets, even when no blocks
+   * are rendered. This helps visualize outlet locations during development.
    *
    * @type {boolean}
    */

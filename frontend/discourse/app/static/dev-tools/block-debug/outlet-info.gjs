@@ -19,6 +19,11 @@ import ArgsTable from "../shared/args-table";
  * @param {Error} [error] - Validation error if config failed validation.
  */
 export default class OutletInfo extends Component {
+  /**
+   * Returns a human-readable label for the block count.
+   *
+   * @returns {string} "1 block" for singular, "{n} blocks" for plural.
+   */
   get blockLabel() {
     const count = this.args.blockCount;
     return count === 1 ? "1 block" : `${count} blocks`;

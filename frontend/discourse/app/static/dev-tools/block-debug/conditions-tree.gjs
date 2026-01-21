@@ -12,8 +12,9 @@ import { formatValue } from "../lib/value-formatter";
  */
 export default class ConditionsTree extends Component {
   /**
-   * Transforms the raw conditions object/array into a flat array of formatted
-   * nodes for rendering. This is the entry point for the recursive formatting.
+   * Transforms the raw conditions object/array into a hierarchical array of
+   * formatted nodes for rendering. This is the entry point for the recursive
+   * formatting. Each node may contain a `children` array for nested conditions.
    *
    * @returns {Array<Object>} An array of condition nodes ready for rendering.
    */
@@ -22,7 +23,8 @@ export default class ConditionsTree extends Component {
   }
 
   /**
-   * Recursively transforms a condition structure into a flat array of renderable nodes.
+   * Recursively transforms a condition structure into a hierarchical array of nodes.
+   * Each combinator node (AND/OR/NOT) contains a `children` array with nested nodes.
    * Handles four types of input:
    * - Array: Treated as AND logic, wraps children in an AND combinator node.
    * - Object with `any`: OR combinator, children are the `any` array items.

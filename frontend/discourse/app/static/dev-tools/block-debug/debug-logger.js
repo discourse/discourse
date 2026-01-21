@@ -67,9 +67,9 @@ class BlockDebugLogger {
    * @param {Object} options - Log options
    * @param {string} options.type - Condition type or combinator (AND/OR/NOT)
    * @param {Object} [options.args] - Condition arguments
-   * @param {boolean} options.result - Whether condition passed
+   * @param {boolean|null} options.result - Whether condition passed, or null for pending combinators
    * @param {number} [options.depth=0] - Nesting depth for indentation
-   * @param {{ value: *, hasValue: true, note?: string }|undefined} [options.resolvedValue] - Resolved value object
+   * @param {{ value: *, hasValue: true, formatted?: Object, note?: string }|undefined} [options.resolvedValue] - Resolved value object
    * @param {Object} [options.conditionSpec] - The condition spec object, used to track
    *   pending results for combinators/conditions that log before evaluation completes.
    */
@@ -102,7 +102,7 @@ class BlockDebugLogger {
    * Used for params/queryParams matching in route conditions.
    *
    * @param {Object} options - Log options.
-   * @param {string} options.label - Group label ("params" or "queryParams").
+   * @param {string} options.label - Group label (e.g., "params", "queryParams", "params[0]").
    * @param {Array<{key: string, expected: *, actual: *, result: boolean}>} options.matches - Match results.
    * @param {boolean} options.result - Overall result (all passed).
    * @param {number} options.depth - Nesting depth for indentation.
@@ -130,7 +130,6 @@ class BlockDebugLogger {
    * @param {Array} [options.expectedUrls] - URL patterns to match (if using urls).
    * @param {Array} [options.excludeUrls] - URL patterns to exclude (if using excludeUrls).
    * @param {Array} [options.pages] - Page types to match (e.g., ["CATEGORY_PAGES"]).
-   * @param {string} [options.matchedPageType] - The page type that matched (if pages used).
    * @param {string} [options.actualPageType] - The actual page type (when expected doesn't match).
    * @param {Object} [options.actualPageContext] - Actual page context (for determining page type match).
    * @param {number} options.depth - Nesting depth for indentation.
@@ -141,7 +140,6 @@ class BlockDebugLogger {
     expectedUrls,
     excludeUrls,
     pages,
-    matchedPageType,
     actualPageType,
     actualPageContext,
     depth,
@@ -156,7 +154,6 @@ class BlockDebugLogger {
       expectedUrls,
       excludeUrls,
       pages,
-      matchedPageType,
       actualPageType,
       actualPageContext,
       depth,

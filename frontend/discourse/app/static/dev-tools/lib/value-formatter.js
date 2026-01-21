@@ -24,9 +24,9 @@ const MAX_STRING_LENGTH = 50;
  * @param {boolean} [options.expandArrays=false] - If true, shows array contents
  *   instead of just "Array(n)". Useful for condition trees where values matter.
  * @param {boolean} [options.handleSymbols=false] - If true, formats Symbols with
- *   their description. Useful for condition trees using Symbol route shortcuts.
+ *   their description. Useful for condition trees where Symbol values may appear.
  * @param {boolean} [options.handleRegExp=false] - If true, formats RegExp instances
- *   as their string pattern. Useful for condition trees with regex routes.
+ *   as their string pattern. Useful for condition trees with regex value matchers.
  * @returns {string} A human-readable string representation of the value.
  *
  * @example
