@@ -6,15 +6,11 @@ import {
   OPTIONAL_MISSING,
   parseBlockName,
   parseBlockReference,
-  VALID_BLOCK_NAME_PATTERN,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/core/patterns";
 import { isTesting } from "discourse/lib/environment";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import identifySource from "discourse/lib/source-identifier";
-
-// Re-export for backwards compatibility
-export { VALID_BLOCK_NAME_PATTERN };
 
 /**
  * A block class decorated with `@block`.
