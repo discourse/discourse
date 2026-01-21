@@ -3348,7 +3348,6 @@ class _PluginApi {
    * @example
    * ```javascript
    * import { block } from "discourse/blocks";
-   * import { RouteShortcuts } from "discourse/blocks/conditions";
    *
    * @block("my-banner")
    * class MyBanner extends Component {
@@ -3368,7 +3367,7 @@ class _PluginApi {
    *     block: MyBanner,
    *     args: { title: "Admin Banner" },
    *     conditions: [
-   *       { type: "route", routes: [RouteShortcuts.DISCOVERY] },
+   *       { type: "route", pages: ["DISCOVERY_PAGES"] },
    *       { type: "user", admin: true }
    *     ],
    *   },
@@ -3496,16 +3495,12 @@ class _PluginApi {
    *
    * @blockCondition({
    *   type: "feature-flag",
-   *   validArgKeys: ["flag"],
+   *   args: {
+   *     flag: { type: "string", required: true },
+   *   },
    * })
    * class BlockFeatureFlagCondition extends BlockCondition {
    *   @service currentUser;
-   *
-   *   validate(args) {
-   *     if (!args.flag) {
-   *       throw new Error("feature-flag condition requires 'flag' argument");
-   *     }
-   *   }
    *
    *   evaluate(args) {
    *     return this.currentUser?.feature_flags?.[args.flag] === true;
