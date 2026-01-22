@@ -2,6 +2,7 @@
 import { DEBUG } from "@glimmer/env";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import {
+  MAX_BLOCK_NAME_LENGTH,
   parseBlockName,
   VALID_NAMESPACED_BLOCK_PATTERN,
 } from "discourse/lib/blocks/-internals/patterns";
@@ -59,11 +60,23 @@ export function assertRegistryNotFrozen({
 /**
  * Validates that a name follows the namespaced block/outlet name pattern.
  *
+ * Checks both the pattern format and maximum length to prevent memory and
+ * performance issues from extremely long names.
+ *
  * @param {string} name - The name to validate.
  * @param {string} entityType - Type of entity for error messages (e.g., "Block", "Outlet").
  * @returns {boolean} True if valid, false if invalid (error was raised).
  */
 export function validateNamePattern(name, entityType) {
+  // Check length first to avoid regex issues with extremely long strings.
+  if (name.length > MAX_BLOCK_NAME_LENGTH) {
+    raiseBlockError(
+      `${entityType} name exceeds maximum length of ${MAX_BLOCK_NAME_LENGTH} characters. ` +
+        `Name length: ${name.length}.`
+    );
+    return false;
+  }
+
   if (!VALID_NAMESPACED_BLOCK_PATTERN.test(name)) {
     const entityLower = entityType.toLowerCase();
     raiseBlockError(

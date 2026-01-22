@@ -20,6 +20,19 @@
 export const MAX_LAYOUT_DEPTH = 20;
 
 /**
+ * Maximum allowed length for block names.
+ *
+ * Prevents potential memory and performance issues from extremely long names.
+ * A limit of 100 characters is generous for real-world use cases while
+ * protecting against malicious or buggy configurations.
+ *
+ * This applies to the full namespaced name (e.g., "theme:my-theme:my-block").
+ *
+ * @type {number}
+ */
+export const MAX_BLOCK_NAME_LENGTH = 100;
+
+/**
  * Symbol used to mark a block reference as optional and missing from the registry.
  * When this marker is returned from resolution functions, it signals that the block
  * should be silently skipped rather than throwing an error.
