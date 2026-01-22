@@ -1,33 +1,40 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import ValueList from "discourse/admin/components/value-list";
 import ListSetting from "discourse/select-kit/components/list-setting";
 import { eq } from "discourse/truth-helpers";
 
 export default class AiFeatureSettingField extends Component {
   @service site;
 
-  parseGroupList = (value) => {
-    if (!value) {
-      return [];
-    }
-    return value
-      .toString()
-      .split("|")
-      .filter((id) => id !== "");
+  parseList = (value) => {
+    return value?.toString().split("|").filter(Boolean) || [];
   };
 
-  serializeListValue = (callback) => {
+  serializeList = (callback) => {
     return (values) => {
-      const serialized = Array.isArray(values) ? values.join("|") : values;
-      callback(serialized);
+      callback(Array.isArray(values) ? values.join("|") : values);
     };
   };
 
   get groupChoices() {
-    return (this.site.groups || []).map((g) => {
-      return { name: g.name, id: g.id.toString() };
-    });
+    return (this.site.groups || []).map((g) => ({
+      name: g.name,
+      id: g.id.toString(),
+    }));
+  }
+
+  get hasEnumChoices() {
+    return this.args.setting.valid_values?.length > 0;
+  }
+
+  get compactListChoices() {
+    if (this.hasEnumChoices) {
+      return this.args.setting.valid_values.map((v) => ({
+        name: v.name,
+        value: String(v.value),
+      }));
+    }
+    return this.args.setting.choices;
   }
 
   get controlType() {
@@ -57,21 +64,23 @@ export default class AiFeatureSettingField extends Component {
     {{else if (eq this.controlType "group_list")}}
       <@field.Custom>
         <ListSetting
-          @value={{this.parseGroupList @field.value}}
+          @value={{this.parseList @field.value}}
           @choices={{this.groupChoices}}
           @settingName={{@setting.setting}}
           @nameProperty="name"
           @valueProperty="id"
-          @onChange={{this.serializeListValue @field.set}}
+          @onChange={{this.serializeList @field.set}}
         />
       </@field.Custom>
     {{else if (eq this.controlType "compact_list")}}
       <@field.Custom>
-        <ValueList
-          @values={{@field.value}}
-          @choices={{@setting.choices}}
-          @inputDelimiter="|"
-          @onChange={{this.serializeListValue @field.set}}
+        <ListSetting
+          @value={{this.parseList @field.value}}
+          @choices={{this.compactListChoices}}
+          @settingName={{@setting.setting}}
+          @nameProperty={{if this.hasEnumChoices "name"}}
+          @valueProperty={{if this.hasEnumChoices "value"}}
+          @onChange={{this.serializeList @field.set}}
         />
       </@field.Custom>
     {{else}}
