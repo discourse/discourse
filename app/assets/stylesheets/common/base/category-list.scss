@@ -85,6 +85,15 @@
       width: 100%;
     }
 
+    .category-box-heading {
+      margin-bottom: 0.5em;
+
+      a[href] {
+        width: 100%;
+        color: var(--primary);
+      }
+    }
+
     h3 .d-icon {
       margin-right: 0;
     }
@@ -306,15 +315,6 @@
     font-size: var(--font-up-2);
     text-align: center;
     overflow: hidden;
-  }
-
-  .category-box-heading {
-    margin-bottom: 0.5em;
-
-    a[href] {
-      width: 100%;
-      color: var(--primary);
-    }
   }
 
   .featured-topics {
