@@ -76,13 +76,10 @@ import { isTesting } from "discourse/lib/environment";
  **/
 
 /**
- * Temporarily unfreezes the block registry to allow registration during tests.
- * Takes a callback that performs registration, then re-freezes the registry.
- *
- * @example
- * withTestBlockRegistration(() => registerBlock(MyBlock));
+ * Freezes the block registry, preventing further registrations.
+ * Useful for testing frozen state behavior.
  */
-export { withTestBlockRegistration };
+export { _freezeBlockRegistry as freezeBlockRegistry };
 
 /**
  * Registers a block class with the block registry.
@@ -105,14 +102,22 @@ export { _registerBlock as registerBlock };
 export { _registerBlockFactory as registerBlockFactory };
 
 /**
- * Freezes the block registry, preventing further registrations.
- * Useful for testing frozen state behavior.
+ * Temporarily unfreezes the block registry to allow registration during tests.
+ * Takes a callback that performs registration, then re-freezes the registry.
+ *
+ * @example
+ * withTestBlockRegistration(() => registerBlock(MyBlock));
  */
-export { _freezeBlockRegistry as freezeBlockRegistry };
+export { withTestBlockRegistration };
 
 /*
  * Block Registry Queries
  **/
+
+/**
+ * Returns the registry entry for a block (class or factory).
+ */
+export { getBlockEntry };
 
 /**
  * Checks if a block is registered (by name or class reference).
@@ -123,24 +128,19 @@ export { _freezeBlockRegistry as freezeBlockRegistry };
 export { hasBlock };
 
 /**
- * Returns the registry entry for a block (class or factory).
- */
-export { getBlockEntry };
-
-/**
  * Checks if a registry entry is a factory function (not a resolved class).
  */
 export { isBlockFactory };
 
 /**
- * Checks if a block is registered and fully resolved (not a pending factory).
- */
-export { isBlockResolved };
-
-/**
  * Returns whether the block registry is frozen.
  */
 export { isBlockRegistryFrozen };
+
+/**
+ * Checks if a block is registered and fully resolved (not a pending factory).
+ */
+export { isBlockResolved };
 
 /**
  * Resolves a block reference (string name or class) to a BlockClass.
@@ -159,6 +159,12 @@ export { tryResolveBlock };
  **/
 
 /**
+ * Freezes the outlet registry, preventing further registrations.
+ * Useful for testing frozen state behavior.
+ */
+export { _freezeOutletRegistry as freezeOutletRegistry };
+
+/**
  * Registers a custom outlet for testing.
  * Use inside withTestBlockRegistration callback.
  *
@@ -169,23 +175,9 @@ export { tryResolveBlock };
  */
 export { _registerOutlet as registerOutlet };
 
-/**
- * Freezes the outlet registry, preventing further registrations.
- * Useful for testing frozen state behavior.
- */
-export { _freezeOutletRegistry as freezeOutletRegistry };
-
 /*
  * Outlet Registry Queries
  **/
-
-/**
- * Checks if an outlet name is valid (registered as core or custom outlet).
- *
- * @example
- * assert.true(isValidOutlet("sidebar-blocks"));
- */
-export { isValidOutlet };
 
 /**
  * Returns all registered outlets (core + custom).
@@ -202,18 +194,23 @@ export { getCustomOutlet };
  */
 export { isOutletRegistryFrozen };
 
+/**
+ * Checks if an outlet name is valid (registered as core or custom outlet).
+ *
+ * @example
+ * assert.true(isValidOutlet("sidebar-blocks"));
+ */
+export { isValidOutlet };
+
 /*
  * Condition Registration
  **/
 
 /**
- * Temporarily unfreezes the condition registry to allow registration during tests.
- * Takes a callback that performs registration, then re-freezes the registry.
- *
- * @example
- * withTestConditionRegistration(() => registerConditionType(MyCondition));
+ * Freezes the condition type registry, preventing further registrations.
+ * Useful for testing frozen state behavior.
  */
-export { withTestConditionRegistration };
+export { _freezeConditionTypeRegistry as freezeConditionTypeRegistry };
 
 /**
  * Registers a condition class with the condition registry.
@@ -225,10 +222,13 @@ export { withTestConditionRegistration };
 export { _registerConditionType as registerConditionType };
 
 /**
- * Freezes the condition type registry, preventing further registrations.
- * Useful for testing frozen state behavior.
+ * Temporarily unfreezes the condition registry to allow registration during tests.
+ * Takes a callback that performs registration, then re-freezes the registry.
+ *
+ * @example
+ * withTestConditionRegistration(() => registerConditionType(MyCondition));
  */
-export { _freezeConditionTypeRegistry as freezeConditionTypeRegistry };
+export { withTestConditionRegistration };
 
 /*
  * Condition Registry Queries
