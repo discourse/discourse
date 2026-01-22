@@ -4,6 +4,12 @@ import { BlockCondition } from "./condition";
 import { blockCondition } from "./decorator";
 
 /**
+ * Maximum allowed length for outlet arg paths.
+ * Prevents potential memory and performance issues from extremely long paths.
+ */
+const MAX_PATH_LENGTH = 255;
+
+/**
  * A condition that evaluates based on outlet arg values.
  *
  * Checks properties passed via `@outletArgs` on the BlockOutlet. Supports
@@ -70,6 +76,14 @@ import { blockCondition } from "./decorator";
   },
   validate(args) {
     const { path: argPath } = args;
+
+    // Check length first to prevent regex DoS with extremely long strings.
+    if (argPath.length > MAX_PATH_LENGTH) {
+      return (
+        `\`path\` exceeds maximum length of ${MAX_PATH_LENGTH} characters. ` +
+        `Path length: ${argPath.length}.`
+      );
+    }
 
     // Validate path format (alphanumeric, underscores, dots)
     if (!/^[\w.]+$/.test(argPath)) {

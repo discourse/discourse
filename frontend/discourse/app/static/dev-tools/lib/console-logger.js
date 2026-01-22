@@ -11,6 +11,12 @@
  * Counter for generating unique global variable names.
  * Persists across all dev-tools components for the session.
  *
+ * Note: This counter never automatically resets, so global variables (`arg1`,
+ * `arg2`, etc.) accumulate in `window` during long debugging sessions. This is
+ * intentional - it prevents variable name collisions and allows developers to
+ * reference previously logged values. Use `resetArgCounter()` to manually reset
+ * if namespace pollution becomes a concern.
+ *
  * @type {number}
  */
 let globalArgCounter = 1;

@@ -40,7 +40,13 @@ class DevToolsState {
         DevToolsState.#SESSION_STORAGE_KEY
       );
       return stored ? JSON.parse(stored) : {};
-    } catch {
+    } catch (e) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "[DevTools] Failed to parse persisted state from sessionStorage. " +
+          "Using defaults.",
+        e
+      );
       return {};
     }
   }

@@ -111,13 +111,15 @@ export default class BlockViewportCondition extends BlockCondition {
       return false;
     }
 
-    // Check maximum breakpoint (viewport must be at most this size)
-    // For max, we check that the NEXT breakpoint is NOT matched
+    // Check maximum breakpoint (viewport must be at most this size).
+    // For max, we check that the NEXT breakpoint is NOT matched. This works
+    // because BREAKPOINTS is ordered from smallest to largest (sm < md < lg...),
+    // and capabilities.viewport[breakpoint] returns true if the viewport is AT
+    // LEAST that size. So if the next larger breakpoint matches, we're too big.
     if (max) {
       const maxIndex = BREAKPOINTS.indexOf(max);
       const nextBreakpoint = BREAKPOINTS[maxIndex + 1];
 
-      // If there's a larger breakpoint and it matches, we're too big
       if (nextBreakpoint && this.capabilities.viewport[nextBreakpoint]) {
         return false;
       }

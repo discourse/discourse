@@ -102,6 +102,12 @@ export function validateConditionArgKeys(instance, type, args, path) {
  * conditions the error occurred. Callers can use this path combined with
  * their context path to build full error location.
  *
+ * Note: Paths are constructed via simple string concatenation (e.g.,
+ * `${path}.${key}`, `${path}[${i}]`). Keys are not escaped, so special
+ * characters in user-provided keys may cause confusing path displays.
+ * This is acceptable since condition keys come from theme/plugin layouts
+ * where unusual characters are rare.
+ *
  * @param {Object|Array<Object>} conditionSpec - Condition spec(s) to validate.
  * @param {Map<string, import("discourse/blocks/conditions").BlockCondition>} conditionTypes - Map of registered condition types.
  * @param {string} [path=""] - The path to this condition relative to conditions root
