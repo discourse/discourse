@@ -123,7 +123,7 @@ describe "Category calendar", type: :system do
 
         category_page.visit(category)
 
-        expect(category_page).to have_css(".fc-daygrid-event-harness")
+        expect(category_page).to have_css(".fc-daygrid-event-dot")
         expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq(
           "rgb(231, 76, 60)",
         )
@@ -149,7 +149,7 @@ describe "Category calendar", type: :system do
 
         category_page.visit(category_for_color)
 
-        expect(category_page).to have_css(".fc-daygrid-event-harness")
+        expect(category_page).to have_css(".fc-daygrid-event-dot")
         expect(get_rgb_color(find(".fc-daygrid-event-dot"), "borderColor")).to eq(
           "rgb(46, 204, 113)",
         )
