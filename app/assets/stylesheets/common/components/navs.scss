@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 // --------------------------------------------------
 // Navigation menus
 // --------------------------------------------------
@@ -41,6 +43,11 @@
       background-color: var(--d-nav-bg-color);
       transition: var(--d-button-transition);
       white-space: nowrap;
+
+      @include viewport.between(sm, lg) {
+        font-size: var(--font-0);
+        padding: var(--space-2) var(--space-3);
+      }
 
       .d-icon {
         margin-right: 5px;

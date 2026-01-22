@@ -93,6 +93,14 @@
     margin-right: 0.5em;
     margin-bottom: 0;
   }
+
+  @include viewport.from(sm) {
+    // only target the top-level li, not dropdowns
+    .select-kit {
+      align-self: stretch;
+      height: 100%;
+    }
+  }
 }
 
 .mobile-view {
