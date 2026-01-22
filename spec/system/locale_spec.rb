@@ -9,6 +9,7 @@ RSpec.describe "Locale choice", type: :system do
       text: I18n.t("js.filters.categories.title", locale: :en),
     )
     expect(page.evaluate_script("moment.locale()")).to eq("en")
+    expect(page.evaluate_script("I18n._mfMessages.locale")).to eq("en")
   end
 
   it "loads french locale successfully" do
@@ -20,6 +21,19 @@ RSpec.describe "Locale choice", type: :system do
       text: I18n.t("js.filters.categories.title", locale: :fr),
     )
     expect(page.evaluate_script("moment.locale()")).to eq("fr")
+    expect(page.evaluate_script("I18n._mfMessages.locale")).to eq("en")
+  end
+
+  it "loads polish locale successfully" do
+    SiteSetting.default_locale = "pl_PL"
+    visit "/"
+    expect(page).to have_css("html[lang='pl-PL']")
+    expect(page).to have_css(
+      "#navigation-bar .categories",
+      text: I18n.t("js.filters.categories.title", locale: :pl_PL),
+    )
+    expect(page.evaluate_script("moment.locale()")).to eq("pl")
+    expect(page.evaluate_script("I18n._mfMessages.locale")).to eq("pl-PL")
   end
 
   context "with test locales" do
