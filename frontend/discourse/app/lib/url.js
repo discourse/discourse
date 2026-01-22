@@ -330,18 +330,15 @@ class DiscourseURL extends EmberObject {
     same topic, use replaceState and instruct our controller to load more posts.
   **/
   navigatedToPost(oldPath, path, routeOpts) {
-    console.log("navigated", oldPath);
     const newMatches = TOPIC_URL_REGEXP.exec(path);
     const newTopicId = newMatches ? newMatches[2] : null;
 
-    console.log(newTopicId);
     if (newTopicId) {
       const oldMatches = TOPIC_URL_REGEXP.exec(oldPath);
       const oldTopicId = oldMatches ? oldMatches[2] : null;
 
       // If the topic_id is the same
       if (oldTopicId === newTopicId) {
-        console.log("a");
         this.replaceState(path);
 
         const topicController = this.container.lookup("controller:topic");
@@ -366,7 +363,6 @@ class DiscourseURL extends EmberObject {
             enteredAt: Date.now().toString(),
           });
 
-          console.log("b", opts, closest);
           this.appEvents.trigger("post:highlight", closest);
           const jumpOpts = {
             skipIfOnScreen: routeOpts.skipIfOnScreen,
