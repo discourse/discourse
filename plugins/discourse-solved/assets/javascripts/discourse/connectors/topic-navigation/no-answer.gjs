@@ -24,6 +24,11 @@ export default class NoAnswer extends Component {
       oneWeek: ONE_WEEK,
       show: false,
     });
+
+    this.appEvents.on("discourse-solved:solution-toggled", () => {
+      this.set("show", false);
+    });
+
     later(() => {
       if (!this.element || this.isDestroying || this.isDestroyed) {
         return;
