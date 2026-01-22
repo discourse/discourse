@@ -81,6 +81,7 @@ class ProblemCheck
     ProblemCheck::OutOfDateThemes,
     ProblemCheck::PollPop3Timeout,
     ProblemCheck::PollPop3AuthError,
+    ProblemCheck::QqMailSmtp,
     ProblemCheck::RailsEnv,
     ProblemCheck::Ram,
     ProblemCheck::S3BackupConfig,
