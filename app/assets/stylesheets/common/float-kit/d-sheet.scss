@@ -478,12 +478,12 @@
 }
 
 [data-d-sheet~="front-spacer"][data-d-sheet~="vertical"] {
-  height: 0;
+  height: var(--d-sheet-front-spacer);
   width: 1px;
 }
 
 [data-d-sheet~="front-spacer"][data-d-sheet~="horizontal"] {
-  width: 0;
+  width: var(--d-sheet-front-spacer);
   height: 1px;
 }
 
