@@ -2983,8 +2983,7 @@ it:
         post_approved: "messaggio approvato"
         membership_request_consolidated: "nuove richieste di iscrizione"
         reaction: "nuova reazione"
-        votes_released: "Il voto è stato sbloccato"
-        new_features: "Sono state rilasciate nuove funzionalità di Discourse!"
+        votes_released: "il voto è stato sbloccato"
         admin_problems: "nuovo avviso sulla dashboard del tuo sito"
     upload_selector:
       change: "Cambia"

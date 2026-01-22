@@ -2997,8 +2997,7 @@ fr:
         post_approved: "message approuvé"
         membership_request_consolidated: "nouvelles demandes d'adhésion"
         reaction: "nouvelle réaction"
-        votes_released: "Le vote a été publié"
-        new_features: "De nouvelles fonctionnalités de Discourse ont été publiées !"
+        votes_released: "le vote a été publié"
         admin_problems: "de nouveaux conseils sur votre tableau de bord"
     upload_selector:
       change: "Modifier"

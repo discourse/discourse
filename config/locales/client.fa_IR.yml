@@ -2785,7 +2785,6 @@ fa_IR:
         membership_request_consolidated: "درخواست های عضویت جدید"
         reaction: "واکنش جدید"
         votes_released: "رأی آزاد شد"
-        new_features: "ویژگی‌های جدید دیسکورس منتشر شده است!"
         admin_problems: "توصیه‌های جدید در پیشخوان سایت شما"
     upload_selector:
       change: "تغییر"

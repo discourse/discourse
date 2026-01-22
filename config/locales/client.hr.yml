@@ -3153,8 +3153,7 @@ hr:
         post_approved: "post odobren"
         membership_request_consolidated: "novi zahtjevi za članstvo"
         reaction: "nova reakcija"
-        votes_released: "Glasanje je objavljeno"
-        new_features: "Objavljene su nove značajke za platformu Discourse!"
+        votes_released: "glasanje je objavljeno"
         admin_problems: "novi savjeti na vašoj nadzornoj ploči"
     upload_selector:
       change: "Promijeniti"

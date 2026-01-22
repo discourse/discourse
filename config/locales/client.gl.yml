@@ -1986,7 +1986,7 @@ gl:
         post_approved: "publicación aprobada"
         membership_request_consolidated: "novas solicitudes de incorporación"
         reaction: "nova reacción"
-        votes_released: "O voto foi liberado"
+        votes_released: "o voto foi liberado"
         admin_problems: "novo consello no seu panel de sitio"
     upload_selector:
       delete: "Eliminar"

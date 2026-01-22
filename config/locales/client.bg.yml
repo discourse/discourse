@@ -2238,7 +2238,7 @@ bg:
         post_approved: "публикацията е одобрена"
         membership_request_consolidated: "нови заявки за членство"
         reaction: "нова реакция"
-        votes_released: "Гласуването беше публикувано"
+        votes_released: "гласуването беше публикувано"
     upload_selector:
       delete: "Изтрий"
       uploading: "Качване "
