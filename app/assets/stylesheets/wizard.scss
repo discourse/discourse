@@ -3,6 +3,8 @@
 :root {
   --wizard-primary: #7b5fe2;
   --wizard-primary-100: #f4f2fc;
+  --wizard-primary-300: #b8a4ff;
+  --wizard-primary-400: #8b6df8;
   --wizard-bg-color: #f9f8fc;
   --wizard-bg-color-2: #e1d5ff;
   --wizard-input-radius: 8px;
@@ -130,7 +132,7 @@ body.wizard {
   }
 
   &__field {
-    margin-bottom: 32px;
+    margin-bottom: 2em;
   }
 
   &__field.invalid input {
@@ -214,11 +216,11 @@ body.wizard {
   }
 
   &__button {
+    --accent-color: var(--wizard-primary);
     display: block;
     width: 100%;
     padding: 0.75em 2em;
     font-weight: bold;
-    background-color: var(--wizard-primary) !important;
   }
 
   &__button.small {
@@ -226,13 +228,17 @@ body.wizard {
     font-size: var(--font-down-1);
   }
 
-  &__button:hover,
+  &__button:hover {
+    --accent-color: var(--wizard-primary-400);
+    --button-box-shadow: none;
+  }
+
   &__button:focus {
-    background-color: var(--primary-low);
+    --button-box-shadow: var(--wizard-primary-300);
   }
 
   &__button:active {
-    background-color: var(--primary-low-mid);
+    --accent-color: var(--wizard-primary);
   }
 
   &__button:disabled,
@@ -287,15 +293,14 @@ body.wizard {
     }
   }
 
-  &__text-input {
+  &__text-input,
+  input[type="text"] {
     --accent-color: var(--wizard-primary);
     --d-input-border-radius: var(--wizard-input-radius);
     --d-input-border: 1px solid var(--primary-300);
     width: 100%;
-    font-size: var(--font-up-1);
-    margin: 0 !important;
-    padding: 0.75em !important;
-    background-color: var(--secondary);
+    margin: 0;
+    padding: 0.75em;
   }
 
   &__dropdown {
@@ -305,7 +310,7 @@ body.wizard {
   &__dropdown .select-kit-header:not(.btn) {
     --d-input-focused-color: var(--wizard-primary);
     border-radius: var(--wizard-input-radius);
-    padding: 0.75em !important;
+    padding: 0.75em;
     height: auto;
     border-color: var(--primary-300);
 
@@ -374,7 +379,6 @@ body.wizard {
       font-weight: normal;
       padding: 1em;
       text-align: center;
-      position: relative;
 
       .svg-icon {
         margin-bottom: 0.5em;
