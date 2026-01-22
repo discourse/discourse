@@ -308,6 +308,11 @@ body.wizard {
     padding: 0.75em !important;
     height: auto;
     border-color: var(--primary-300);
+
+    .name {
+      font-weight: 400;
+      color: var(--d-input-text-color);
+    }
   }
 
   &__radio {
@@ -348,7 +353,7 @@ body.wizard {
 
     &:focus-within {
       .wizard-container__label {
-        outline: 2px solid var(--d-input-focused-color);
+        outline: 2px solid var(--wizard-primary);
         outline-offset: 2px;
       }
     }
