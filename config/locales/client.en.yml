@@ -2278,6 +2278,7 @@ en:
               other {# days}
             }.
           edit_link_options: "Edit link options or send by email."
+          edit_link_options_only: "Edit link options"
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
@@ -3279,6 +3280,13 @@ en:
       votes_released: "%{description} - completed"
       new_features: "New features available!"
       admin_problems: "New advice on your site dashboard"
+      upcoming_changes:
+        available:
+          title: "Upcoming changes"
+          description: "'%{changeName}' is available for preview"
+        automatically_promoted:
+          title: "Upcoming changes"
+          description: "'%{changeName}' has been automatically enabled"
       dismiss_confirmation:
         body:
           default:
@@ -3337,9 +3345,10 @@ en:
         post_approved: "post approved"
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
-        votes_released: "Vote was released"
-        new_features: "New Discourse features have been released!"
+        votes_released: "vote was released"
+        new_features: "new discourse features have been released"
         admin_problems: "new advice on your site dashboard"
+        upcoming_change_available: "new upcoming change is available"
 
     upload_selector:
       change: "Change"
@@ -5840,6 +5849,7 @@ en:
           impact_type_feature: "Feature"
           impact_type_other: "Other"
           status_all: "All statuses"
+          status_conceptual: "Conceptual"
           status_experimental: "Experimental"
           status_alpha: "Alpha"
           status_beta: "Beta"
@@ -6029,11 +6039,11 @@ en:
               locale_label: "Language"
             header_new_members:
               label: "Header for new members"
-              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
+              description: "Available variables: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Welcome, %{preferred_display_name}!"
             header_logged_in:
               label: "Header for logged-in members"
-              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
+              description: "Available variables: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Welcome back, %{preferred_display_name}!"
             header_anonymous:
               label: "Header for anonymous visitors"
@@ -7788,6 +7798,7 @@ en:
             change_theme_site_setting: "change theme site setting"
             stop_impersonating: "stop impersonating"
             upcoming_change_toggled: "upcoming change toggled"
+            upcoming_change_available: "upcoming change available"
             change_site_setting_groups: "change site setting groups"
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
         screened_emails:
@@ -7930,6 +7941,7 @@ en:
           upload: "Upload a file"
           multiselect: "Multiple choice"
           tagchooser: "Tag Group selector"
+          composer: "Markdown answer"
         validations_modal:
           button_title: "Validations"
           modal_title: "Validation Options"

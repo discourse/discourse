@@ -300,7 +300,6 @@ module SiteSettingExtension
     end
   end
 
-  # Retrieve all settings
   def all_settings(
     include_hidden: false,
     include_locale_setting: true,
@@ -371,7 +370,8 @@ module SiteSettingExtension
       end
       .select do |setting_name, _|
         if only_upcoming_changes
-          upcoming_change_metadata.key?(setting_name)
+          upcoming_change_metadata.key?(setting_name) &&
+            UpcomingChanges.change_status(setting_name) != :conceptual
         else
           true
         end
@@ -811,6 +811,17 @@ module SiteSettingExtension
     end
   end
 
+  def log(name, value, prev_value, user = Discourse.system_user, detailed_message = nil)
+    return if hidden_settings.include?(name.to_sym)
+    value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
+    StaffActionLogger.new(user).log_site_setting_change(
+      name,
+      prev_value,
+      value,
+      { details: detailed_message }.compact_blank,
+    )
+  end
+
   def get(name, scoped_to = nil)
     if has_setting?(name)
       if themeable[name]
@@ -1116,17 +1127,6 @@ module SiteSettingExtension
         setup_methods(name)
       end
     end
-  end
-
-  def log(name, value, prev_value, user = Discourse.system_user, detailed_message = nil)
-    value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
-    return if hidden_settings.include?(name.to_sym)
-    StaffActionLogger.new(user).log_site_setting_change(
-      name,
-      prev_value,
-      value,
-      { details: detailed_message }.compact_blank,
-    )
   end
 
   def default_uploads

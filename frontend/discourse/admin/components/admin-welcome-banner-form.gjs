@@ -4,7 +4,6 @@ import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import ColorInput from "discourse/admin/components/color-input";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DMultiSelect from "discourse/components/d-multi-select";
 import Form from "discourse/components/form";
@@ -413,14 +412,7 @@ export default class AdminWelcomeBannerForm extends Component {
           @format="large"
           as |field|
         >
-          <field.Custom>
-            <ColorInput
-              @hexValue={{readonly field.value}}
-              @onlyHex={{false}}
-              @styleSelection={{false}}
-              @onChangeColor={{field.set}}
-            />
-          </field.Custom>
+          <field.Color @allowNamedColors={{true}} />
         </form.Field>
 
         <form.Field
@@ -533,6 +525,7 @@ export default class AdminWelcomeBannerForm extends Component {
             <field.Input
               placeholder={{i18n
                 "admin.config.welcome_banner.form.header_logged_in.placeholder"
+                site_name="%{site_name}"
                 preferred_display_name="%{preferred_display_name}"
               }}
             />

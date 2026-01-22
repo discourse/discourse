@@ -14,6 +14,8 @@ import MembershipRequestAccepted from "discourse/lib/notification-types/membersh
 import MembershipRequestConsolidated from "discourse/lib/notification-types/membership-request-consolidated";
 import MovedPost from "discourse/lib/notification-types/moved-post";
 import NewFeatures from "discourse/lib/notification-types/new-features";
+import UpcomingChangeAutomaticallyPromoted from "discourse/lib/notification-types/upcoming-change-automatically-promoted";
+import UpcomingChangeAvailable from "discourse/lib/notification-types/upcoming-change-available";
 import WatchingFirstPost from "discourse/lib/notification-types/watching-first-post";
 
 const CLASS_FOR_TYPE = {
@@ -32,6 +34,8 @@ const CLASS_FOR_TYPE = {
   moved_post: MovedPost,
   new_features: NewFeatures,
   admin_problems: AdminProblems,
+  upcoming_change_available: UpcomingChangeAvailable,
+  upcoming_change_automatically_promoted: UpcomingChangeAutomaticallyPromoted,
   watching_first_post: WatchingFirstPost,
 };
 

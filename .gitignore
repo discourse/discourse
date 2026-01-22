@@ -137,3 +137,4 @@ frontend/discourse-types/declarations
 # AI customization
 /.claude
 /.cursor
+.playwright-mcp

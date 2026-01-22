@@ -244,3 +244,9 @@ vi:
         tooltip:
           actions:
             disable: "Tắt"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Tút bị gắn nhãn AI"
+        reviewable_ai_chat_message:
+          title: "Tin nhắn trò chuyện bị gắn nhãn AI"

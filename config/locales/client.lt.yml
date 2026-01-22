@@ -2539,6 +2539,11 @@ lt:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - baigtas"
       admin_problems: "Nauji patarimai jūsų svetainės informacijos suvestinėje"
+      upcoming_changes:
+        available:
+          title: "Būsimi pakeitimai"
+        automatically_promoted:
+          title: "Būsimi pakeitimai"
       dismiss_confirmation:
         body:
           default:

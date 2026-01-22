@@ -200,6 +200,50 @@ export default class Forms extends Component {
 </template>`;
   }
 
+  get colorCode() {
+    return `import Form from "discourse/components/form";
+
+<template>
+  <Form as |form|>
+    <form.Field @title="Color" @name="color" as |field|>
+      <field.Color placeholder="RRGGBB" />
+    </form.Field>
+  </Form>
+</template>`;
+  }
+
+  get colorWithSwatchesCode() {
+    return `import { array } from "@ember/helper";
+import Form from "discourse/components/form";
+
+const COLORS = ["FF0000", "00FF00", "0000FF", "FFFF00", "FF00FF", "00FFFF"];
+const USED_COLORS = ["00FF00"];
+
+<template>
+  <Form as |form|>
+    <form.Field @title="Color" @name="color" as |field|>
+      <field.Color
+        @colors={{COLORS}}
+        @usedColors={{USED_COLORS}}
+        placeholder="RRGGBB"
+      />
+    </form.Field>
+  </Form>
+</template>`;
+  }
+
+  get colorNamedCode() {
+    return `import Form from "discourse/components/form";
+
+<template>
+  <Form as |form|>
+    <form.Field @title="Color" @name="color" as |field|>
+      <field.Color @allowNamedColors={{true}} placeholder="red, FF0000" />
+    </form.Field>
+  </Form>
+</template>`;
+  }
+
   get sectionCode() {
     return `import Form from "discourse/components/form";
 
@@ -512,6 +556,47 @@ import Form from "discourse/components/form";
               </radio.Description>
             </radioGroup.Radio>
           </field.RadioGroup>
+        </form.Field>
+      </Form>
+    </StyleguideExample>
+
+    <StyleguideExample @title="Color" @code={{this.colorCode}}>
+      <Form as |form|>
+        <form.Field @title="Color" @name="color" as |field|>
+          <field.Color placeholder="RRGGBB" />
+        </form.Field>
+      </Form>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title="Color with swatches"
+      @code={{this.colorWithSwatchesCode}}
+    >
+      <Form as |form|>
+        <form.Field @title="Color" @name="color" as |field|>
+          <field.Color
+            @colors={{array
+              "FF0000"
+              "00FF00"
+              "0000FF"
+              "FFFF00"
+              "FF00FF"
+              "00FFFF"
+            }}
+            @usedColors={{array "00FF00"}}
+            placeholder="RRGGBB"
+          />
+        </form.Field>
+      </Form>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title="Color with named colors"
+      @code={{this.colorNamedCode}}
+    >
+      <Form as |form|>
+        <form.Field @title="Color" @name="color" as |field|>
+          <field.Color @allowNamedColors={{true}} placeholder="red, FF0000" />
         </form.Field>
       </Form>
     </StyleguideExample>

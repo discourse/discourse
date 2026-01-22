@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { waitForPromise } from "@ember/test-waiters";
 import FormTemplate from "discourse/models/form-template";
 import CheckboxField from "./checkbox";
+import ComposerField from "./composer";
 import DropdownField from "./dropdown";
 import InputField from "./input";
 import MultiSelectField from "./multi-select";
@@ -42,6 +43,7 @@ export default class FormTemplateFieldWrapper extends Component {
     textarea: TextareaField,
     "tag-chooser": TagChooserField,
     upload: UploadField,
+    composer: ComposerField,
   };
 
   constructor() {
