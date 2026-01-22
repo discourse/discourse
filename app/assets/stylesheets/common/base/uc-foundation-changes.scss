@@ -1,8 +1,6 @@
 .uc-experimental-foundation-changes {
   --shrink-ratio: 0.85;
-  --button-font-size: var(--font-down-1);
   --btn-small-font-size: var(--font-down-1);
-  --button-height: var(--space-8);
   --d-nav-underline-height: var(--space-half);
   --d-button-default-bg-color: transparent;
   --d-button-default-border: 1px solid var(--primary-200);
@@ -15,12 +13,12 @@
   --d-badge-card-background-color: var(--secondary);
   --d-table-border-top-height: 0px;
   --d-topic-list-data-font-size: var(--font-down-1);
-  --d-topic-list-header-text-color: var(--primary-500);
-  --metadata-color: var(--primary-500);
+  --d-topic-list-header-text-color: var(--primary-900);
+  --metadata-color: var(--primary-900);
   --d-nav-color--active: var(--primary);
   --d-nav-color--hover: var(--primary);
   --title-color--read: var(--primary-700);
-  --topic-title-font-weight: 700;
+  --topic-title-font-weight: 600;
   --topic-title-font-weight--visited: 500;
   --d-sidebar-active-background: var(--primary-100);
   --d-content-background: var(--secondary);
@@ -34,8 +32,11 @@
   --d-sidebar-active-font-weight: 600;
   -webkit-font-smoothing: antialiased;
 
+  // new variables
   --welcome-banner-text-align: center;
   --welcome-banner-search-menu-margin-inline: auto;
+  --button-height: var(--space-8);
+  --button-font-size: var(--font-down-1);
 
   // Buttons & Actions
   .btn-default,
@@ -50,11 +51,16 @@
     }
   }
 
+  .btn-text,
+  .btn-icon-text {
+    padding-inline: var(--space-3);
+  }
+
   .menu-tabs-container {
     --button-height: min-content;
   }
 
-  .nav-pills > li > a {
+  .navigation-container .nav-pills > li > a {
     padding: 0.5em 0.65em;
     height: var(--button-height);
     font-size: var(--button-font-size);
