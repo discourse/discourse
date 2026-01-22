@@ -37,11 +37,6 @@ html:has(body.wizard) {
 
 body.wizard {
   color: var(--primary-very-high);
-  position: relative;
-
-  .wrap {
-    max-width: 100%;
-  }
 
   #wizard-main {
     display: flex;
@@ -342,7 +337,6 @@ body.wizard {
     flex-basis: 0;
     flex-grow: 1;
     display: flex;
-    position: relative;
 
     &.--selected {
       .wizard-container__label {
