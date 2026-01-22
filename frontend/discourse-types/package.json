@@ -46,7 +46,8 @@
     "@babel/traverse": "^7.28.6",
     "@glimmer/interfaces": "^0.94.6",
     "@glimmer/validator": "^0.95.0",
-    "compare-versions": "^6.1.1"
+    "compare-versions": "^6.1.1",
+    "dts-generator": "^3.0.0"
   },
   "engines": {
     "node": ">= 18",

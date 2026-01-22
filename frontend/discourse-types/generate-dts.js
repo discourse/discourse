@@ -19,10 +19,10 @@ const packageNames = [
   "@floating-ui/dom",
   "@glimmer/component",
   "@glimmer/syntax",
-  "@glint/ember-tsc",
+  // "@glint/ember-tsc", in plugin/theme devDeps
   "@glint/template",
   "@types/jquery",
-  "@types/qunit",
+  "@types/qunit", // todo: move @types/* one dir up? (saves a tsconfig entry)
   "@types/rsvp",
   "@types/sinon",
   "discourse-i18n",
@@ -30,11 +30,11 @@ const packageNames = [
   "ember-qunit",
   "ember-source",
   "pretender",
-  "make-plural",
-  {
-    packageName: "@messageformat/runtime",
-    packagePath: "../discourse-i18n/node_modules/@messageformat/runtime",
-  },
+  // "make-plural",
+  // {
+  //   packageName: "@messageformat/runtime",
+  //   packagePath: "../discourse-i18n/node_modules/@messageformat/runtime",
+  // },
   // {
   //   packageName: "@glimmer/validator",
   //   packagePath: "./node_modules/@glimmer/validator",
@@ -69,8 +69,7 @@ for (const entry of packageNames) {
   //   throw new Error(`Package '${packageName}' not found`);
   // }
 
-  // .replace("/", "__")
-  const targetPackagePath = `./external-types/${packageName}`;
+  const targetPackagePath = `./external-types/${packageName.replace("@types/", "").replace("@", "").replace("/", "__")}`;
 
   mkdirSync(targetPackagePath, { recursive: true });
 
