@@ -1169,11 +1169,14 @@ Some APIs are internal (prefixed with `_`) but available for specific use cases:
 
 **Testing helpers:**
 ```javascript
-import { withTestBlockRegistration } from "discourse/lib/blocks/-internals/registry/block";
 import {
-  _setTestSourceIdentifier,
+  registerBlock,
+  registerConditionType,
   resetBlockRegistryForTesting,
-} from "discourse/tests/helpers/block-registry-testing";
+  setTestSourceIdentifier,
+  withTestBlockRegistration,
+  withTestConditionRegistration,
+} from "discourse/tests/helpers/block-testing";
 ```
 
 **Debug hooks:**
@@ -3435,11 +3438,12 @@ Test blocks with conditions using the test helpers from the registration module:
 import Component from "@glimmer/component";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import BlockOutlet, { _renderBlocks, block } from "discourse/blocks/block-outlet";
+import BlockOutlet, { block } from "discourse/blocks/block-outlet";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
-  _registerBlock,
+  registerBlock,
   withTestBlockRegistration,
-} from "discourse/lib/blocks/-internals/registry/block";
+} from "discourse/tests/helpers/block-testing";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Block | my-banner", function (hooks) {
@@ -3456,16 +3460,17 @@ module("Integration | Block | my-banner", function (hooks) {
     }
 
     // Register the block (synchronous, single callback parameter)
-    withTestBlockRegistration(() => _registerBlock(TestBanner));
+    withTestBlockRegistration(() => registerBlock(TestBanner));
 
-    // Configure the layout (top-level function, not a service method)
-    // Note: owner parameter is optional in tests (used for dev tools integration)
-    _renderBlocks("test-outlet", [
-      {
-        block: TestBanner,
-        args: { message: "Hello World" },
-      },
-    ]);
+    // Configure the layout using the plugin API
+    withPluginApi((api) =>
+      api.renderBlocks("test-outlet", [
+        {
+          block: TestBanner,
+          args: { message: "Hello World" },
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="test-outlet" /></template>);
 
@@ -3481,14 +3486,16 @@ module("Integration | Block | my-banner", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => _registerBlock(ConditionalBanner));
-    _renderBlocks("conditional-outlet", [
-      {
-        block: ConditionalBanner,
-        // This condition will fail for anonymous users
-        conditions: { type: "user", admin: true },
-      },
-    ]);
+    withTestBlockRegistration(() => registerBlock(ConditionalBanner));
+    withPluginApi((api) =>
+      api.renderBlocks("conditional-outlet", [
+        {
+          block: ConditionalBanner,
+          // This condition will fail for anonymous users
+          conditions: { type: "user", admin: true },
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="conditional-outlet" /></template>);
 
@@ -3506,15 +3513,14 @@ import Component from "@glimmer/component";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
-import BlockOutlet, { _renderBlocks, block } from "discourse/blocks/block-outlet";
+import BlockOutlet, { block } from "discourse/blocks/block-outlet";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
-  _registerBlock,
+  registerBlock,
+  registerConditionType,
   withTestBlockRegistration,
-} from "discourse/lib/blocks/-internals/registry/block";
-import {
-  _registerConditionType,
   withTestConditionRegistration,
-} from "discourse/lib/blocks/-internals/registry/condition";
+} from "discourse/tests/helpers/block-testing";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 // Define test conditions at module scope (required for decorators)
@@ -3538,8 +3544,8 @@ module("Integration | Block | conditional rendering", function (hooks) {
   hooks.beforeEach(function () {
     // Register test conditions before each test
     withTestConditionRegistration(() => {
-      _registerConditionType(AlwaysTrueCondition);
-      _registerConditionType(AlwaysFalseCondition);
+      registerConditionType(AlwaysTrueCondition);
+      registerConditionType(AlwaysFalseCondition);
     });
   });
 
@@ -3551,13 +3557,15 @@ module("Integration | Block | conditional rendering", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => _registerBlock(CustomConditionBlock));
-    _renderBlocks("custom-outlet", [
-      {
-        block: CustomConditionBlock,
-        conditions: { type: "always-true" },
-      },
-    ]);
+    withTestBlockRegistration(() => registerBlock(CustomConditionBlock));
+    withPluginApi((api) =>
+      api.renderBlocks("custom-outlet", [
+        {
+          block: CustomConditionBlock,
+          conditions: { type: "always-true" },
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="custom-outlet" /></template>);
 
@@ -3572,13 +3580,15 @@ module("Integration | Block | conditional rendering", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => _registerBlock(HiddenBlock));
-    _renderBlocks("hidden-outlet", [
-      {
-        block: HiddenBlock,
-        conditions: { type: "always-false" },
-      },
-    ]);
+    withTestBlockRegistration(() => registerBlock(HiddenBlock));
+    withPluginApi((api) =>
+      api.renderBlocks("hidden-outlet", [
+        {
+          block: HiddenBlock,
+          conditions: { type: "always-false" },
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="hidden-outlet" /></template>);
 
@@ -3600,13 +3610,15 @@ test("uses outlet args in conditions", async function (assert) {
     </template>
   }
 
-  withTestBlockRegistration(() => _registerBlock(OutletArgsBlock));
-  _renderBlocks("topic-outlet", [
-    {
-      block: OutletArgsBlock,
-      conditions: { type: "outletArg", path: "topic.closed", value: false },
-    },
-  ]);
+  withTestBlockRegistration(() => registerBlock(OutletArgsBlock));
+  withPluginApi((api) =>
+    api.renderBlocks("topic-outlet", [
+      {
+        block: OutletArgsBlock,
+        conditions: { type: "outletArg", path: "topic.closed", value: false },
+      },
+    ])
+  );
 
   // Mock outlet args with an open topic
   this.set("mockTopic", { id: 123, title: "Test Topic", closed: false });
@@ -3632,13 +3644,15 @@ test("hides when outlet arg condition fails", async function (assert) {
     </template>
   }
 
-  withTestBlockRegistration(() => _registerBlock(ClosedTopicBlock));
-  _renderBlocks("closed-topic-outlet", [
-    {
-      block: ClosedTopicBlock,
-      conditions: { type: "outletArg", path: "topic.closed", value: false },
-    },
-  ]);
+  withTestBlockRegistration(() => registerBlock(ClosedTopicBlock));
+  withPluginApi((api) =>
+    api.renderBlocks("closed-topic-outlet", [
+      {
+        block: ClosedTopicBlock,
+        conditions: { type: "outletArg", path: "topic.closed", value: false },
+      },
+    ])
+  );
 
   // Mock outlet args with a closed topic
   this.set("closedTopic", { id: 456, title: "Closed Topic", closed: true });
@@ -3660,9 +3674,9 @@ test("hides when outlet arg condition fails", async function (assert) {
 
 | Pattern | Import | Usage |
 |---------|--------|-------|
-| Register block | `_registerBlock` from `discourse/lib/blocks/-internals/registry/block` | `withTestBlockRegistration(() => _registerBlock(MyBlock))` |
-| Register condition | `_registerConditionType` from `discourse/lib/blocks/-internals/registry/condition` | `withTestConditionRegistration(() => _registerConditionType(MyCondition))` |
-| Configure layout | `_renderBlocks` from `discourse/blocks/block-outlet` | `_renderBlocks("outlet-name", [...])` |
+| Register block | `registerBlock` from `discourse/tests/helpers/block-testing` | `withTestBlockRegistration(() => registerBlock(MyBlock))` |
+| Register condition | `registerConditionType` from `discourse/tests/helpers/block-testing` | `withTestConditionRegistration(() => registerConditionType(MyCondition))` |
+| Configure layout | `withPluginApi` from `discourse/lib/plugin-api` | `withPluginApi((api) => api.renderBlocks("outlet-name", [...]))` |
 | Test condition validate | `validateConditions` helper | Use `validateConditions()` from `discourse/lib/blocks/-internals/validation/conditions` |
 | Test condition evaluate | Direct instantiation with owner | `setOwner(condition, getOwner(this))` then `condition.evaluate(args, context)` |
 

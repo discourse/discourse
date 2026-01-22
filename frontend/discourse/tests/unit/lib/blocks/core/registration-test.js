@@ -25,9 +25,9 @@ import {
 } from "discourse/lib/blocks/-internals/registry/outlet";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
 import {
-  _setTestSourceIdentifier,
   resetBlockRegistryForTesting,
-} from "discourse/tests/helpers/block-registry-testing";
+  setTestSourceIdentifier,
+} from "discourse/tests/helpers/block-testing";
 
 module("Unit | Lib | blocks/core/registration", function (hooks) {
   setupTest(hooks);
@@ -416,11 +416,11 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
 
   module("namespace enforcement", function (nestedHooks) {
     nestedHooks.afterEach(function () {
-      _setTestSourceIdentifier(undefined);
+      setTestSourceIdentifier(undefined);
     });
 
     test("theme source must use theme:namespace:name format", function (assert) {
-      _setTestSourceIdentifier("theme:My Theme");
+      setTestSourceIdentifier("theme:My Theme");
 
       @block("unnamespaced-block")
       class UnamespacedBlock extends Component {}
@@ -432,7 +432,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("theme source allows properly namespaced blocks", function (assert) {
-      _setTestSourceIdentifier("theme:My Theme");
+      setTestSourceIdentifier("theme:My Theme");
 
       @block("theme:mytheme:my-block")
       class NamespacedBlock extends Component {}
@@ -443,7 +443,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("plugin source must use namespace:name format", function (assert) {
-      _setTestSourceIdentifier("plugin:my-plugin");
+      setTestSourceIdentifier("plugin:my-plugin");
 
       @block("unnamespaced-plugin-block")
       class UnamespacedPluginBlock extends Component {}
@@ -455,7 +455,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("plugin source allows properly namespaced blocks", function (assert) {
-      _setTestSourceIdentifier("plugin:chat");
+      setTestSourceIdentifier("plugin:chat");
 
       @block("chat:message-widget")
       class ChatWidget extends Component {}
@@ -466,7 +466,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("factory registration enforces theme namespace", function (assert) {
-      _setTestSourceIdentifier("theme:My Theme");
+      setTestSourceIdentifier("theme:My Theme");
 
       assert.throws(
         () => _registerBlockFactory("my-factory-block", async () => ({})),
@@ -475,7 +475,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("factory registration enforces plugin namespace", function (assert) {
-      _setTestSourceIdentifier("plugin:my-plugin");
+      setTestSourceIdentifier("plugin:my-plugin");
 
       assert.throws(
         () => _registerBlockFactory("my-factory-block", async () => ({})),
@@ -484,7 +484,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("core source (null) allows unnamespaced blocks", function (assert) {
-      _setTestSourceIdentifier(null);
+      setTestSourceIdentifier(null);
 
       @block("core-block")
       class CoreBlock extends Component {}
@@ -730,7 +730,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("registers plugin outlet (namespace:name)", function (assert) {
-      _setTestSourceIdentifier("plugin:chat");
+      setTestSourceIdentifier("plugin:chat");
 
       _registerOutlet("chat:message-actions");
 
@@ -740,7 +740,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("registers theme outlet (theme:namespace:name)", function (assert) {
-      _setTestSourceIdentifier("theme:My Theme");
+      setTestSourceIdentifier("theme:My Theme");
 
       _registerOutlet("theme:mytheme:hero-section");
 
@@ -783,11 +783,11 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
 
   module("outlet namespace enforcement", function (nestedHooks) {
     nestedHooks.afterEach(function () {
-      _setTestSourceIdentifier(undefined);
+      setTestSourceIdentifier(undefined);
     });
 
     test("theme source must use theme:namespace:name format", function (assert) {
-      _setTestSourceIdentifier("theme:My Theme");
+      setTestSourceIdentifier("theme:My Theme");
 
       assert.throws(
         () => _registerOutlet("unnamespaced-outlet"),
@@ -796,7 +796,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("theme source allows properly namespaced outlets", function (assert) {
-      _setTestSourceIdentifier("theme:My Theme");
+      setTestSourceIdentifier("theme:My Theme");
 
       _registerOutlet("theme:mytheme:custom-outlet");
 
@@ -804,7 +804,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("plugin source must use namespace:name format", function (assert) {
-      _setTestSourceIdentifier("plugin:my-plugin");
+      setTestSourceIdentifier("plugin:my-plugin");
 
       assert.throws(
         () => _registerOutlet("unnamespaced-plugin-outlet"),
@@ -813,7 +813,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("plugin source allows properly namespaced outlets", function (assert) {
-      _setTestSourceIdentifier("plugin:chat");
+      setTestSourceIdentifier("plugin:chat");
 
       _registerOutlet("chat:sidebar-outlet");
 
@@ -821,7 +821,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
 
     test("core source (null) allows unnamespaced outlets", function (assert) {
-      _setTestSourceIdentifier(null);
+      setTestSourceIdentifier(null);
 
       _registerOutlet("core-outlet");
 

@@ -4,11 +4,12 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { _isBlock, _renderBlocks, block } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
-  _registerBlock,
   hasBlock,
+  registerBlock,
   withTestBlockRegistration,
-} from "discourse/lib/blocks/-internals/registry/block";
+} from "discourse/tests/helpers/block-testing";
 
 module("Unit | Lib | block-outlet", function (hooks) {
   setupTest(hooks);
@@ -364,10 +365,13 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("valid-block")
       class ValidBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ValidBlock));
+      withTestBlockRegistration(() => registerBlock(ValidBlock));
 
       assert.throws(
-        () => _renderBlocks("unknown-outlet", [{ block: ValidBlock }]),
+        () =>
+          withPluginApi((api) =>
+            api.renderBlocks("unknown-outlet", [{ block: ValidBlock }])
+          ),
         /Unknown block outlet/
       );
     });
@@ -397,8 +401,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
       class ChildBlock extends Component {}
 
       withTestBlockRegistration(() => {
-        _registerBlock(LeafBlock);
-        _registerBlock(ChildBlock);
+        registerBlock(LeafBlock);
+        registerBlock(ChildBlock);
       });
 
       await assert.rejects(
@@ -425,7 +429,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("reserved-test")
       class ReservedTestBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ReservedTestBlock));
+      withTestBlockRegistration(() => registerBlock(ReservedTestBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [
@@ -442,7 +446,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("reserved-outlet")
       class ReservedOutletBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ReservedOutletBlock));
+      withTestBlockRegistration(() => registerBlock(ReservedOutletBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [
@@ -459,7 +463,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("reserved-children")
       class ReservedChildrenBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ReservedChildrenBlock));
+      withTestBlockRegistration(() => registerBlock(ReservedChildrenBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [
@@ -476,7 +480,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("reserved-conditions")
       class ReservedConditionsBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ReservedConditionsBlock));
+      withTestBlockRegistration(() => registerBlock(ReservedConditionsBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [
@@ -493,7 +497,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("reserved-block-symbol")
       class ReservedBlockSymbolBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ReservedBlockSymbolBlock));
+      withTestBlockRegistration(() => registerBlock(ReservedBlockSymbolBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [
@@ -511,7 +515,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       class UnderscoreArgReservedBlock extends Component {}
 
       withTestBlockRegistration(() =>
-        _registerBlock(UnderscoreArgReservedBlock)
+        registerBlock(UnderscoreArgReservedBlock)
       );
 
       await assert.rejects(
@@ -532,7 +536,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       // eslint-disable-next-line ember/no-empty-glimmer-component-classes
       class NotABlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(NestedChildBlock));
+      withTestBlockRegistration(() => registerBlock(NestedChildBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [
@@ -550,7 +554,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("condition-validation")
       class ConditionValidationBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ConditionValidationBlock));
+      withTestBlockRegistration(() => registerBlock(ConditionValidationBlock));
 
       const owner = getOwner(this);
 
@@ -573,11 +577,13 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("valid-config", { args: { title: { type: "string" } } })
       class ValidConfigBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ValidConfigBlock));
+      withTestBlockRegistration(() => registerBlock(ValidConfigBlock));
 
-      _renderBlocks("sidebar-blocks", [
-        { block: ValidConfigBlock, args: { title: "Test" } },
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [
+          { block: ValidConfigBlock, args: { title: "Test" } },
+        ])
+      );
 
       assert.true(true, "no error thrown for valid configuration");
     });
@@ -586,15 +592,17 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("container-child")
       class ContainerChildBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ContainerChildBlock));
+      withTestBlockRegistration(() => registerBlock(ContainerChildBlock));
 
-      _renderBlocks("main-outlet-blocks", [
-        {
-          block: BlockGroup,
-          args: { name: "test" },
-          children: [{ block: ContainerChildBlock }],
-        },
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("main-outlet-blocks", [
+          {
+            block: BlockGroup,
+            args: { name: "test" },
+            children: [{ block: ContainerChildBlock }],
+          },
+        ])
+      );
 
       assert.true(true, "no error thrown for container with children");
     });
@@ -603,19 +611,15 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("valid-conditions")
       class ValidConditionsBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ValidConditionsBlock));
+      withTestBlockRegistration(() => registerBlock(ValidConditionsBlock));
 
-      const owner = getOwner(this);
-
-      _renderBlocks(
-        "header-blocks",
-        [
+      withPluginApi((api) =>
+        api.renderBlocks("header-blocks", [
           {
             block: ValidConditionsBlock,
             conditions: { type: "user", loggedIn: true },
           },
-        ],
-        owner
+        ])
       );
 
       assert.true(true, "no error thrown for valid conditions");
@@ -629,7 +633,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class RequiredArgBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(RequiredArgBlock));
+      withTestBlockRegistration(() => registerBlock(RequiredArgBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [{ block: RequiredArgBlock, args: {} }]),
@@ -645,7 +649,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class StringArgBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(StringArgBlock));
+      withTestBlockRegistration(() => registerBlock(StringArgBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [
@@ -663,7 +667,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class NumberArgBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(NumberArgBlock));
+      withTestBlockRegistration(() => registerBlock(NumberArgBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [
@@ -681,7 +685,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class BooleanArgBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(BooleanArgBlock));
+      withTestBlockRegistration(() => registerBlock(BooleanArgBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [
@@ -699,7 +703,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class ArrayArgBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ArrayArgBlock));
+      withTestBlockRegistration(() => registerBlock(ArrayArgBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [
@@ -717,7 +721,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class ArrayItemTypeBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ArrayItemTypeBlock));
+      withTestBlockRegistration(() => registerBlock(ArrayItemTypeBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [
@@ -741,19 +745,21 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class ValidSchemaArgsBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ValidSchemaArgsBlock));
+      withTestBlockRegistration(() => registerBlock(ValidSchemaArgsBlock));
 
-      _renderBlocks("hero-blocks", [
-        {
-          block: ValidSchemaArgsBlock,
-          args: {
-            title: "Hello",
-            count: 5,
-            enabled: true,
-            tags: ["a", "b", "c"],
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
+          {
+            block: ValidSchemaArgsBlock,
+            args: {
+              title: "Hello",
+              count: 5,
+              enabled: true,
+              tags: ["a", "b", "c"],
+            },
           },
-        },
-      ]);
+        ])
+      );
 
       assert.true(true, "no error thrown for valid args");
     });
@@ -767,14 +773,16 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class OptionalArgsBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(OptionalArgsBlock));
+      withTestBlockRegistration(() => registerBlock(OptionalArgsBlock));
 
-      _renderBlocks("hero-blocks", [
-        {
-          block: OptionalArgsBlock,
-          args: { title: "Required Only" },
-        },
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
+          {
+            block: OptionalArgsBlock,
+            args: { title: "Required Only" },
+          },
+        ])
+      );
 
       assert.true(true, "no error thrown when optional args missing");
     });
@@ -785,7 +793,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class DeniedOutletBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(DeniedOutletBlock));
+      withTestBlockRegistration(() => registerBlock(DeniedOutletBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [{ block: DeniedOutletBlock }]),
@@ -799,7 +807,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class NotAllowedOutletBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(NotAllowedOutletBlock));
+      withTestBlockRegistration(() => registerBlock(NotAllowedOutletBlock));
 
       await assert.rejects(
         _renderBlocks("hero-blocks", [{ block: NotAllowedOutletBlock }]),
@@ -813,9 +821,11 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class AllowedOutletBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(AllowedOutletBlock));
+      withTestBlockRegistration(() => registerBlock(AllowedOutletBlock));
 
-      _renderBlocks("sidebar-blocks", [{ block: AllowedOutletBlock }]);
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [{ block: AllowedOutletBlock }])
+      );
 
       assert.true(true, "no error thrown for block in allowed outlet");
     });
@@ -824,10 +834,14 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("unrestricted-outlet-block")
       class UnrestrictedOutletBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(UnrestrictedOutletBlock));
+      withTestBlockRegistration(() => registerBlock(UnrestrictedOutletBlock));
 
-      _renderBlocks("hero-blocks", [{ block: UnrestrictedOutletBlock }]);
-      _renderBlocks("sidebar-blocks", [{ block: UnrestrictedOutletBlock }]);
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [{ block: UnrestrictedOutletBlock }])
+      );
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [{ block: UnrestrictedOutletBlock }])
+      );
 
       assert.true(true, "unrestricted block renders in any outlet");
     });
@@ -839,7 +853,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
         @block("Invalid_Name")
         class InvalidNameBlock extends Component {}
 
-        withTestBlockRegistration(() => _registerBlock(InvalidNameBlock));
+        withTestBlockRegistration(() => registerBlock(InvalidNameBlock));
       }, /Block name .* is invalid/);
     });
 
@@ -848,7 +862,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
         @block("123-block")
         class NumericStartBlock extends Component {}
 
-        withTestBlockRegistration(() => _registerBlock(NumericStartBlock));
+        withTestBlockRegistration(() => registerBlock(NumericStartBlock));
       }, /Block name .* is invalid/);
     });
 
@@ -857,7 +871,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
         @block("MyBlock")
         class UppercaseBlock extends Component {}
 
-        withTestBlockRegistration(() => _registerBlock(UppercaseBlock));
+        withTestBlockRegistration(() => registerBlock(UppercaseBlock));
       }, /Block name .* is invalid/);
     });
 
@@ -865,7 +879,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("my-block-1")
       class ValidBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(ValidBlock));
+      withTestBlockRegistration(() => registerBlock(ValidBlock));
 
       assert.true(hasBlock("my-block-1"));
     });
@@ -878,17 +892,15 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class UnicodeArgsBlock extends Component {}
 
-      withTestBlockRegistration(() => _registerBlock(UnicodeArgsBlock));
+      withTestBlockRegistration(() => registerBlock(UnicodeArgsBlock));
 
-      _renderBlocks(
-        "hero-blocks",
-        [
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
           {
             block: UnicodeArgsBlock,
             args: { title: "日本語テスト 🎉 émoji" },
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       assert.true(true, "unicode args accepted without error");

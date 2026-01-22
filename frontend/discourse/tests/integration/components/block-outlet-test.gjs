@@ -5,19 +5,17 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import BlockOutlet, {
   _getOutletLayouts,
-  _renderBlocks,
   block,
 } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   DEBUG_CALLBACK,
   debugHooks,
-} from "discourse/lib/blocks/-internals/debug/block-processing";
-import {
-  _registerBlock,
-  _registerBlockFactory,
+  registerBlock,
+  registerBlockFactory,
   withTestBlockRegistration,
-} from "discourse/lib/blocks/-internals/registry/block";
+} from "discourse/tests/helpers/block-testing";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Blocks | BlockOutlet", function (hooks) {
@@ -47,8 +45,10 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(RenderTestBlock));
-      _renderBlocks("homepage-blocks", [{ block: RenderTestBlock }]);
+      withTestBlockRegistration(() => registerBlock(RenderTestBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [{ block: RenderTestBlock }])
+      );
 
       await render(
         <template><BlockOutlet @name="homepage-blocks" /></template>
@@ -66,8 +66,10 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(BemTestBlock));
-      _renderBlocks("sidebar-blocks", [{ block: BemTestBlock }]);
+      withTestBlockRegistration(() => registerBlock(BemTestBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [{ block: BemTestBlock }])
+      );
 
       await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
@@ -84,10 +86,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(WrappedBlock));
-      _renderBlocks("main-outlet-blocks", [
-        { block: WrappedBlock, classNames: "custom-class" },
-      ]);
+      withTestBlockRegistration(() => registerBlock(WrappedBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("main-outlet-blocks", [
+          { block: WrappedBlock, classNames: "custom-class" },
+        ])
+      );
 
       await render(
         <template><BlockOutlet @name="main-outlet-blocks" /></template>
@@ -111,10 +115,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(ArgsTestBlock));
-      _renderBlocks("header-blocks", [
-        { block: ArgsTestBlock, args: { title: "Hello", count: 42 } },
-      ]);
+      withTestBlockRegistration(() => registerBlock(ArgsTestBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("header-blocks", [
+          { block: ArgsTestBlock, args: { title: "Hello", count: 42 } },
+        ])
+      );
 
       await render(<template><BlockOutlet @name="header-blocks" /></template>);
 
@@ -140,8 +146,10 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(DefaultsTestBlock));
-      _renderBlocks("main-outlet-blocks", [{ block: DefaultsTestBlock }]);
+      withTestBlockRegistration(() => registerBlock(DefaultsTestBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("main-outlet-blocks", [{ block: DefaultsTestBlock }])
+      );
 
       await render(
         <template><BlockOutlet @name="main-outlet-blocks" /></template>
@@ -168,13 +176,15 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(OverrideDefaultsBlock));
-      _renderBlocks("hero-blocks", [
-        {
-          block: OverrideDefaultsBlock,
-          args: { title: "Custom Title", count: 99 },
-        },
-      ]);
+      withTestBlockRegistration(() => registerBlock(OverrideDefaultsBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
+          {
+            block: OverrideDefaultsBlock,
+            args: { title: "Custom Title", count: 99 },
+          },
+        ])
+      );
 
       await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
@@ -198,13 +208,15 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(PartialDefaultsBlock));
-      _renderBlocks("sidebar-blocks", [
-        {
-          block: PartialDefaultsBlock,
-          args: { title: "Custom Title" },
-        },
-      ]);
+      withTestBlockRegistration(() => registerBlock(PartialDefaultsBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [
+          {
+            block: PartialDefaultsBlock,
+            args: { title: "Custom Title" },
+          },
+        ])
+      );
 
       await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
@@ -300,11 +312,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         return { Component: blockData.Component };
       });
 
-      withTestBlockRegistration(() => _registerBlock(DebugWrapBlock));
-      _renderBlocks(
-        "homepage-blocks",
-        [{ block: DebugWrapBlock }],
-        getOwner(this)
+      withTestBlockRegistration(() => registerBlock(DebugWrapBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [{ block: DebugWrapBlock }])
       );
 
       await render(
@@ -347,17 +357,15 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         return { Component: blockData.Component };
       });
 
-      withTestBlockRegistration(() => _registerBlock(GhostTestBlock));
-      _renderBlocks(
-        "sidebar-blocks",
-        [
+      withTestBlockRegistration(() => registerBlock(GhostTestBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [
           {
             block: GhostTestBlock,
             // loggedIn: false means "only for anonymous users" - fails when logged in
             conditions: { type: "user", loggedIn: false },
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
@@ -385,11 +393,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
 
-      withTestBlockRegistration(() => _registerBlock(ClearCallbackBlock));
-      _renderBlocks(
-        "hero-blocks",
-        [{ block: ClearCallbackBlock }],
-        getOwner(this)
+      withTestBlockRegistration(() => registerBlock(ClearCallbackBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [{ block: ClearCallbackBlock }])
       );
 
       await render(<template><BlockOutlet @name="hero-blocks" /></template>);
@@ -419,11 +425,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => _registerBlock(DirectChildBlock));
-      _renderBlocks(
-        "homepage-blocks",
-        [{ block: DirectChildBlock }],
-        getOwner(this)
+      withTestBlockRegistration(() => registerBlock(DirectChildBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [{ block: DirectChildBlock }])
       );
 
       await render(
@@ -464,17 +468,15 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => _registerBlock(NestedChildBlock));
-      _renderBlocks(
-        "sidebar-blocks",
-        [
+      withTestBlockRegistration(() => registerBlock(NestedChildBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [
           {
             block: BlockGroup,
             args: { name: "test-group" },
             children: [{ block: NestedChildBlock }],
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
@@ -518,10 +520,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => _registerBlock(DeepNestedBlock));
-      _renderBlocks(
-        "hero-blocks",
-        [
+      withTestBlockRegistration(() => registerBlock(DeepNestedBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
           {
             block: BlockGroup,
             args: { name: "outer" },
@@ -533,8 +534,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
               },
             ],
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       await render(<template><BlockOutlet @name="hero-blocks" /></template>);
@@ -588,10 +588,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => _registerBlock(MultiContainerChild));
-      _renderBlocks(
-        "main-outlet-blocks",
-        [
+      withTestBlockRegistration(() => registerBlock(MultiContainerChild));
+      withPluginApi((api) =>
+        api.renderBlocks("main-outlet-blocks", [
           {
             block: BlockGroup,
             args: { name: "first" },
@@ -602,8 +601,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
             args: { name: "second" },
             children: [{ block: MultiContainerChild }],
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       await render(
@@ -658,17 +656,15 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => _registerBlock(HierarchyDisplayBlock));
-      _renderBlocks(
-        "header-blocks",
-        [
+      withTestBlockRegistration(() => registerBlock(HierarchyDisplayBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("header-blocks", [
           {
             block: BlockGroup,
             args: { name: "test" },
             children: [{ block: HierarchyDisplayBlock }],
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       await render(<template><BlockOutlet @name="header-blocks" /></template>);
@@ -713,16 +709,14 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         () => (consoleCalled = true)
       );
 
-      withTestBlockRegistration(() => _registerBlock(LoggingTestBlock));
-      _renderBlocks(
-        "main-outlet-blocks",
-        [
+      withTestBlockRegistration(() => registerBlock(LoggingTestBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("main-outlet-blocks", [
           {
             block: LoggingTestBlock,
             conditions: { type: "user", loggedIn: false },
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       await render(
@@ -744,16 +738,14 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, () => false);
 
-      withTestBlockRegistration(() => _registerBlock(NoLoggingBlock));
-      _renderBlocks(
-        "header-blocks",
-        [
+      withTestBlockRegistration(() => registerBlock(NoLoggingBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("header-blocks", [
           {
             block: NoLoggingBlock,
             conditions: { type: "user", loggedIn: false },
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       await render(<template><BlockOutlet @name="header-blocks" /></template>);
@@ -774,11 +766,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => true);
 
-      withTestBlockRegistration(() => _registerBlock(BoundaryTestBlock));
-      _renderBlocks(
-        "homepage-blocks",
-        [{ block: BoundaryTestBlock }],
-        getOwner(this)
+      withTestBlockRegistration(() => registerBlock(BoundaryTestBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [{ block: BoundaryTestBlock }])
       );
 
       await render(
@@ -800,11 +790,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => false);
 
-      withTestBlockRegistration(() => _registerBlock(NoBoundaryBlock));
-      _renderBlocks(
-        "sidebar-blocks",
-        [{ block: NoBoundaryBlock }],
-        getOwner(this)
+      withTestBlockRegistration(() => registerBlock(NoBoundaryBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [{ block: NoBoundaryBlock }])
       );
 
       await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
@@ -826,11 +814,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => true);
       debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, null);
 
-      withTestBlockRegistration(() => _registerBlock(BoundaryClearBlock));
-      _renderBlocks(
-        "hero-blocks",
-        [{ block: BoundaryClearBlock }],
-        getOwner(this)
+      withTestBlockRegistration(() => registerBlock(BoundaryClearBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [{ block: BoundaryClearBlock }])
       );
 
       await render(<template><BlockOutlet @name="hero-blocks" /></template>);
@@ -854,7 +840,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       }
 
       withTestBlockRegistration(() => {
-        _registerBlock(LeafBlock);
+        registerBlock(LeafBlock);
       });
 
       const buildNestedConfig = (depth, maxDepth) => {
@@ -879,7 +865,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         ];
       };
 
-      _renderBlocks("homepage-blocks", buildNestedConfig(0, 5));
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", buildNestedConfig(0, 5))
+      );
 
       await render(
         <template><BlockOutlet @name="homepage-blocks" /></template>
@@ -919,7 +907,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       }
 
       withTestBlockRegistration(() => {
-        _registerBlock(DeepLeafBlock);
+        registerBlock(DeepLeafBlock);
       });
 
       const buildDeeplyNestedConfig = (depth) => {
@@ -936,7 +924,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         ];
       };
 
-      _renderBlocks("sidebar-blocks", buildDeeplyNestedConfig(10));
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", buildDeeplyNestedConfig(10))
+      );
 
       await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
@@ -959,38 +949,40 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       }
 
       withTestBlockRegistration(() => {
-        _registerBlock(ConditionalLeaf);
+        registerBlock(ConditionalLeaf);
       });
 
-      _renderBlocks("main-outlet-blocks", [
-        {
-          block: BlockGroup,
-          args: { name: "outer" },
-          children: [
-            {
-              block: BlockGroup,
-              args: { name: "middle-1" },
-              children: [
-                {
-                  block: ConditionalLeaf,
-                  args: { level: "3a" },
-                  conditions: { type: "user", loggedIn: false },
-                },
-                {
-                  block: ConditionalLeaf,
-                  args: { level: "3b" },
-                },
-              ],
-            },
-            {
-              block: BlockGroup,
-              args: { name: "middle-2" },
-              conditions: { type: "user", loggedIn: false },
-              children: [{ block: ConditionalLeaf, args: { level: "3c" } }],
-            },
-          ],
-        },
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("main-outlet-blocks", [
+          {
+            block: BlockGroup,
+            args: { name: "outer" },
+            children: [
+              {
+                block: BlockGroup,
+                args: { name: "middle-1" },
+                children: [
+                  {
+                    block: ConditionalLeaf,
+                    args: { level: "3a" },
+                    conditions: { type: "user", loggedIn: false },
+                  },
+                  {
+                    block: ConditionalLeaf,
+                    args: { level: "3b" },
+                  },
+                ],
+              },
+              {
+                block: BlockGroup,
+                args: { name: "middle-2" },
+                conditions: { type: "user", loggedIn: false },
+                children: [{ block: ConditionalLeaf, args: { level: "3c" } }],
+              },
+            ],
+          },
+        ])
+      );
 
       await render(
         <template><BlockOutlet @name="main-outlet-blocks" /></template>
@@ -1022,8 +1014,10 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(StringRefBlock));
-      _renderBlocks("homepage-blocks", [{ block: "string-ref-block" }]);
+      withTestBlockRegistration(() => registerBlock(StringRefBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [{ block: "string-ref-block" }])
+      );
 
       await render(
         <template><BlockOutlet @name="homepage-blocks" /></template>
@@ -1051,10 +1045,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(StringArgsBlock));
-      _renderBlocks("header-blocks", [
-        { block: "string-args-block", args: { title: "Hello", count: 42 } },
-      ]);
+      withTestBlockRegistration(() => registerBlock(StringArgsBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("header-blocks", [
+          { block: "string-args-block", args: { title: "Hello", count: 42 } },
+        ])
+      );
 
       await render(<template><BlockOutlet @name="header-blocks" /></template>);
 
@@ -1078,14 +1074,16 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       }
 
       withTestBlockRegistration(() => {
-        _registerBlock(ClassRefBlock);
-        _registerBlock(StringMixedBlock);
+        registerBlock(ClassRefBlock);
+        registerBlock(StringMixedBlock);
       });
 
-      _renderBlocks("hero-blocks", [
-        { block: ClassRefBlock },
-        { block: "string-mixed-block" },
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
+          { block: ClassRefBlock },
+          { block: "string-mixed-block" },
+        ])
+      );
 
       await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
@@ -1106,15 +1104,17 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(NestedStringBlock));
+      withTestBlockRegistration(() => registerBlock(NestedStringBlock));
 
-      _renderBlocks("main-outlet-blocks", [
-        {
-          block: BlockGroup,
-          args: { name: "container" },
-          children: [{ block: "nested-string-block" }],
-        },
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("main-outlet-blocks", [
+          {
+            block: BlockGroup,
+            args: { name: "container" },
+            children: [{ block: "nested-string-block" }],
+          },
+        ])
+      );
 
       await render(
         <template><BlockOutlet @name="main-outlet-blocks" /></template>
@@ -1138,12 +1138,14 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       }
 
       withTestBlockRegistration(() =>
-        _registerBlockFactory(
+        registerBlockFactory(
           "factory-render-block",
           async () => FactoryRenderBlock
         )
       );
-      _renderBlocks("sidebar-blocks", [{ block: "factory-render-block" }]);
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [{ block: "factory-render-block" }])
+      );
 
       await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
@@ -1162,11 +1164,13 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       }
 
       withTestBlockRegistration(() =>
-        _registerBlockFactory("default-export-block", async () => ({
+        registerBlockFactory("default-export-block", async () => ({
           default: DefaultExportBlock,
         }))
       );
-      _renderBlocks("hero-blocks", [{ block: "default-export-block" }]);
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [{ block: "default-export-block" }])
+      );
 
       await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
@@ -1186,13 +1190,15 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(RequiredBlock));
+      withTestBlockRegistration(() => registerBlock(RequiredBlock));
 
       // Configure with one required block and one optional missing block
-      _renderBlocks("hero-blocks", [
-        { block: RequiredBlock },
-        { block: "non-existent-block?" }, // Optional - should silently skip
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
+          { block: RequiredBlock },
+          { block: "non-existent-block?" }, // Optional - should silently skip
+        ])
+      );
 
       // Should not throw error
       await render(<template><BlockOutlet @name="hero-blocks" /></template>);
@@ -1209,11 +1215,13 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(PresentOptionalBlock));
+      withTestBlockRegistration(() => registerBlock(PresentOptionalBlock));
 
-      _renderBlocks("sidebar-blocks", [
-        { block: "present-optional-block?" }, // Optional but present
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [
+          { block: "present-optional-block?" }, // Optional but present
+        ])
+      );
 
       await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
@@ -1239,15 +1247,17 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       }
 
       withTestBlockRegistration(() => {
-        _registerBlock(MixRequiredBlock);
-        _registerBlock(MixOptionalPresent);
+        registerBlock(MixRequiredBlock);
+        registerBlock(MixOptionalPresent);
       });
 
-      _renderBlocks("main-outlet-blocks", [
-        { block: MixRequiredBlock },
-        { block: "missing-optional-block?" }, // Optional missing - skipped
-        { block: "mix-optional-present?" }, // Optional present - rendered
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("main-outlet-blocks", [
+          { block: MixRequiredBlock },
+          { block: "missing-optional-block?" }, // Optional missing - skipped
+          { block: "mix-optional-present?" }, // Optional present - rendered
+        ])
+      );
 
       await render(
         <template><BlockOutlet @name="main-outlet-blocks" /></template>
@@ -1268,14 +1278,16 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(SingleRequired));
+      withTestBlockRegistration(() => registerBlock(SingleRequired));
 
-      _renderBlocks("homepage-blocks", [
-        { block: "missing-1?" },
-        { block: "missing-2?" },
-        { block: SingleRequired },
-        { block: "missing-3?" },
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [
+          { block: "missing-1?" },
+          { block: "missing-2?" },
+          { block: SingleRequired },
+          { block: "missing-3?" },
+        ])
+      );
 
       await render(
         <template><BlockOutlet @name="homepage-blocks" /></template>
@@ -1298,12 +1310,14 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(OptionalWidget));
+      withTestBlockRegistration(() => registerBlock(OptionalWidget));
 
-      _renderBlocks("header-blocks", [
-        { block: "chat:optional-widget?" }, // Present namespaced optional
-        { block: "chat:missing-widget?" }, // Missing namespaced optional
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("header-blocks", [
+          { block: "chat:optional-widget?" }, // Present namespaced optional
+          { block: "chat:missing-widget?" }, // Missing namespaced optional
+        ])
+      );
 
       await render(<template><BlockOutlet @name="header-blocks" /></template>);
 
@@ -1342,12 +1356,14 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => _registerBlock(GhostTestBlock));
+      withTestBlockRegistration(() => registerBlock(GhostTestBlock));
 
-      _renderBlocks("sidebar-blocks", [
-        { block: GhostTestBlock },
-        { block: "missing-optional-block?", args: { foo: "bar" } },
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [
+          { block: GhostTestBlock },
+          { block: "missing-optional-block?", args: { foo: "bar" } },
+        ])
+      );
 
       await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
@@ -1397,10 +1413,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(OutletArgsTestBlock));
-      _renderBlocks("homepage-blocks", [
-        { block: OutletArgsTestBlock, args: { title: "Hello", count: 42 } },
-      ]);
+      withTestBlockRegistration(() => registerBlock(OutletArgsTestBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [
+          { block: OutletArgsTestBlock, args: { title: "Hello", count: 42 } },
+        ])
+      );
 
       const outletArgs = {
         topic: { title: "Test Topic" },
@@ -1446,17 +1464,15 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(GroupChildBlock));
-      _renderBlocks(
-        "sidebar-blocks",
-        [
+      withTestBlockRegistration(() => registerBlock(GroupChildBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [
           {
             block: BlockGroup,
             args: { name: "test" },
             children: [{ block: GroupChildBlock }],
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       const outletArgs = { topic: { title: "Forwarded Topic" } };
@@ -1492,10 +1508,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(DeepNestedBlock));
-      _renderBlocks(
-        "hero-blocks",
-        [
+      withTestBlockRegistration(() => registerBlock(DeepNestedBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
           {
             block: BlockGroup,
             args: { name: "outer" },
@@ -1507,8 +1522,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
               },
             ],
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       const outletArgs = { user: { name: "Deep User" } };
@@ -1535,10 +1549,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(ConditionalBlock));
-      _renderBlocks(
-        "main-outlet-blocks",
-        [
+      withTestBlockRegistration(() => registerBlock(ConditionalBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("main-outlet-blocks", [
           {
             block: ConditionalBlock,
             conditions: {
@@ -1547,8 +1560,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
               value: true,
             },
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       // Condition should pass - topic is closed
@@ -1575,10 +1587,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(FailingConditionBlock));
-      _renderBlocks(
-        "header-blocks",
-        [
+      withTestBlockRegistration(() => registerBlock(FailingConditionBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("header-blocks", [
           {
             block: FailingConditionBlock,
             conditions: {
@@ -1587,8 +1598,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
               value: true,
             },
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       // Condition should fail - topic is not closed
@@ -1622,8 +1632,10 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(DebugOutletArgsBlock));
-      _renderBlocks("sidebar-blocks", [{ block: DebugOutletArgsBlock }]);
+      withTestBlockRegistration(() => registerBlock(DebugOutletArgsBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [{ block: DebugOutletArgsBlock }])
+      );
 
       const outletArgs = { topic: { id: 123 }, user: { name: "Test" } };
 
@@ -1668,13 +1680,15 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       }
 
       withTestBlockRegistration(() => {
-        _registerBlock(ThrowingBlock);
-        _registerBlock(SafeBlock);
+        registerBlock(ThrowingBlock);
+        registerBlock(SafeBlock);
       });
-      _renderBlocks("homepage-blocks", [
-        { block: SafeBlock },
-        { block: ThrowingBlock },
-      ]);
+      withPluginApi((api) =>
+        api.renderBlocks("homepage-blocks", [
+          { block: SafeBlock },
+          { block: ThrowingBlock },
+        ])
+      );
 
       await render(
         <template><BlockOutlet @name="homepage-blocks" /></template>
@@ -1695,7 +1709,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(InvalidConditionBlock));
+      withTestBlockRegistration(() => registerBlock(InvalidConditionBlock));
 
       const blocks = getOwner(this).lookup("service:blocks");
 
@@ -1715,10 +1729,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(NullConditionsBlock));
-      _renderBlocks("sidebar-blocks", [
-        { block: NullConditionsBlock, conditions: null },
-      ]);
+      withTestBlockRegistration(() => registerBlock(NullConditionsBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [
+          { block: NullConditionsBlock, conditions: null },
+        ])
+      );
 
       await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
@@ -1735,10 +1751,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(UndefinedConditionsBlock));
-      _renderBlocks("hero-blocks", [
-        { block: UndefinedConditionsBlock, conditions: undefined },
-      ]);
+      withTestBlockRegistration(() => registerBlock(UndefinedConditionsBlock));
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
+          { block: UndefinedConditionsBlock, conditions: undefined },
+        ])
+      );
 
       await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
@@ -1755,20 +1773,18 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => _registerBlock(ValidationErrorBlock));
+      withTestBlockRegistration(() => registerBlock(ValidationErrorBlock));
 
       // The validation promise rejects when conditions are invalid.
       // In tests, unhandled promise rejections cause test failures.
       // We can access the validation promise via the internal outletLayouts.
-      _renderBlocks(
-        "main-outlet-blocks",
-        [
+      withPluginApi((api) =>
+        api.renderBlocks("main-outlet-blocks", [
           {
             block: ValidationErrorBlock,
             conditions: { type: "outletArg" }, // missing required "path"
           },
-        ],
-        getOwner(this)
+        ])
       );
 
       // Access the validation promise to catch the expected error

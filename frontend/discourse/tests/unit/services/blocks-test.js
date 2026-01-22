@@ -5,13 +5,11 @@ import { module, test } from "qunit";
 import { block } from "discourse/blocks/block-outlet";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import {
-  _registerBlock,
+  registerBlock,
+  registerConditionType,
   withTestBlockRegistration,
-} from "discourse/lib/blocks/-internals/registry/block";
-import {
-  _registerConditionType,
   withTestConditionRegistration,
-} from "discourse/lib/blocks/-internals/registry/condition";
+} from "discourse/tests/helpers/block-testing";
 
 module("Unit | Service | blocks", function (hooks) {
   setupTest(hooks);
@@ -26,7 +24,7 @@ module("Unit | Service | blocks", function (hooks) {
       class RegistryTestBlock extends Component {}
 
       withTestBlockRegistration(() => {
-        _registerBlock(RegistryTestBlock);
+        registerBlock(RegistryTestBlock);
       });
 
       assert.true(this.blocks.hasBlock("registry-test-block"));
@@ -41,7 +39,7 @@ module("Unit | Service | blocks", function (hooks) {
       class GetBlockTest extends Component {}
 
       withTestBlockRegistration(() => {
-        _registerBlock(GetBlockTest);
+        registerBlock(GetBlockTest);
       });
 
       const result = this.blocks.getBlock("get-block-test");
@@ -60,8 +58,8 @@ module("Unit | Service | blocks", function (hooks) {
       class ListBlockB extends Component {}
 
       withTestBlockRegistration(() => {
-        _registerBlock(ListBlockA);
-        _registerBlock(ListBlockB);
+        registerBlock(ListBlockA);
+        registerBlock(ListBlockB);
       });
 
       const blocks = this.blocks.listBlocks();
@@ -81,7 +79,7 @@ module("Unit | Service | blocks", function (hooks) {
       class MetadataListBlock extends Component {}
 
       withTestBlockRegistration(() => {
-        _registerBlock(MetadataListBlock);
+        registerBlock(MetadataListBlock);
       });
 
       const blocksWithMeta = this.blocks.listBlocksWithMetadata();
@@ -130,7 +128,7 @@ module("Unit | Service | blocks", function (hooks) {
       }
 
       withTestConditionRegistration(() => {
-        _registerConditionType(BlockTestCondition);
+        registerConditionType(BlockTestCondition);
       });
       assert.true(this.blocks.hasConditionType("test-custom"));
     });
@@ -147,7 +145,7 @@ module("Unit | Service | blocks", function (hooks) {
       assert.throws(
         () =>
           withTestConditionRegistration(() => {
-            _registerConditionType(NotDecoratedCondition);
+            registerConditionType(NotDecoratedCondition);
           }),
         /must use the @blockCondition decorator/
       );
@@ -167,7 +165,7 @@ module("Unit | Service | blocks", function (hooks) {
       assert.throws(
         () =>
           withTestConditionRegistration(() => {
-            _registerConditionType(BlockDuplicateCondition);
+            registerConditionType(BlockDuplicateCondition);
           }),
         /already registered/
       );
@@ -306,8 +304,8 @@ module("Unit | Service | blocks", function (hooks) {
       }
 
       withTestConditionRegistration(() => {
-        _registerConditionType(BlockAlwaysTrueCondition);
-        _registerConditionType(BlockAlwaysFalseCondition);
+        registerConditionType(BlockAlwaysTrueCondition);
+        registerConditionType(BlockAlwaysFalseCondition);
       });
 
       assert.true(
@@ -344,8 +342,8 @@ module("Unit | Service | blocks", function (hooks) {
       }
 
       withTestConditionRegistration(() => {
-        _registerConditionType(BlockAlwaysTrueCondition2);
-        _registerConditionType(BlockAlwaysFalseCondition2);
+        registerConditionType(BlockAlwaysTrueCondition2);
+        registerConditionType(BlockAlwaysFalseCondition2);
       });
 
       assert.true(
@@ -383,8 +381,8 @@ module("Unit | Service | blocks", function (hooks) {
       }
 
       withTestConditionRegistration(() => {
-        _registerConditionType(BlockAlwaysTrueCondition3);
-        _registerConditionType(BlockAlwaysFalseCondition3);
+        registerConditionType(BlockAlwaysTrueCondition3);
+        registerConditionType(BlockAlwaysFalseCondition3);
       });
 
       assert.false(this.blocks.evaluate({ not: { type: "always-true-3" } }));
@@ -409,7 +407,7 @@ module("Unit | Service | blocks", function (hooks) {
       }
 
       withTestConditionRegistration(() => {
-        _registerConditionType(BlockArgCapturingCondition);
+        registerConditionType(BlockArgCapturingCondition);
       });
       this.blocks.evaluate({ type: "arg-capturing", foo: "bar", baz: 123 });
 
@@ -446,8 +444,8 @@ module("Unit | Service | blocks", function (hooks) {
       }
 
       withTestConditionRegistration(() => {
-        _registerConditionType(BlockNestedTrue);
-        _registerConditionType(BlockNestedFalse);
+        registerConditionType(BlockNestedTrue);
+        registerConditionType(BlockNestedFalse);
       });
 
       // AND with OR inside: [{ any: [false, true] }] => true
@@ -494,7 +492,7 @@ module("Unit | Service | blocks", function (hooks) {
       }
 
       withTestConditionRegistration(() => {
-        _registerConditionType(BlockContextCapturing);
+        registerConditionType(BlockContextCapturing);
       });
 
       const outletArgs = { topic: { id: 123 }, user: { admin: true } };
@@ -518,7 +516,7 @@ module("Unit | Service | blocks", function (hooks) {
       }
 
       withTestConditionRegistration(() => {
-        _registerConditionType(BlockNotOutletArgs);
+        registerConditionType(BlockNotOutletArgs);
       });
 
       const outletArgs = { topic: { closed: true } };
@@ -551,7 +549,7 @@ module("Unit | Service | blocks", function (hooks) {
       }
 
       withTestConditionRegistration(() => {
-        _registerConditionType(BlockDeepOutletArgs);
+        registerConditionType(BlockDeepOutletArgs);
       });
 
       const outletArgs = { data: "test-value" };
@@ -602,7 +600,7 @@ module("Unit | Service | blocks", function (hooks) {
       );
 
       withTestConditionRegistration(() => {
-        _registerConditionType(BlockServiceInjectionCondition);
+        registerConditionType(BlockServiceInjectionCondition);
       });
       this.blocks.evaluate({ type: "service-injection-test" });
 

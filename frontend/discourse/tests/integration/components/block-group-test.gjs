@@ -1,19 +1,15 @@
 import Component from "@glimmer/component";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import BlockOutlet, {
-  _renderBlocks,
-  block,
-} from "discourse/blocks/block-outlet";
+import BlockOutlet, { block } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   DEBUG_CALLBACK,
   debugHooks,
-} from "discourse/lib/blocks/-internals/debug/block-processing";
-import {
-  _registerBlock,
+  registerBlock,
   withTestBlockRegistration,
-} from "discourse/lib/blocks/-internals/registry/block";
+} from "discourse/tests/helpers/block-testing";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Blocks | BlockGroup", function (hooks) {
@@ -39,17 +35,19 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     }
 
     withTestBlockRegistration(() => {
-      _registerBlock(GroupChild1);
-      _registerBlock(GroupChild2);
+      registerBlock(GroupChild1);
+      registerBlock(GroupChild2);
     });
-    _renderBlocks("hero-blocks", [
-      {
-        block: BlockGroup,
-        args: { name: "features" },
-        classNames: "custom-group-class",
-        children: [{ block: GroupChild1 }, { block: GroupChild2 }],
-      },
-    ]);
+    withPluginApi((api) =>
+      api.renderBlocks("hero-blocks", [
+        {
+          block: BlockGroup,
+          args: { name: "features" },
+          classNames: "custom-group-class",
+          children: [{ block: GroupChild1 }, { block: GroupChild2 }],
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
@@ -81,21 +79,23 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     }
 
     withTestBlockRegistration(() => {
-      _registerBlock(MultiChildA);
-      _registerBlock(MultiChildB);
-      _registerBlock(MultiChildC);
+      registerBlock(MultiChildA);
+      registerBlock(MultiChildB);
+      registerBlock(MultiChildC);
     });
-    _renderBlocks("homepage-blocks", [
-      {
-        block: BlockGroup,
-        args: { name: "multi-children" },
-        children: [
-          { block: MultiChildA },
-          { block: MultiChildB },
-          { block: MultiChildC },
-        ],
-      },
-    ]);
+    withPluginApi((api) =>
+      api.renderBlocks("homepage-blocks", [
+        {
+          block: BlockGroup,
+          args: { name: "multi-children" },
+          children: [
+            { block: MultiChildA },
+            { block: MultiChildB },
+            { block: MultiChildC },
+          ],
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="homepage-blocks" /></template>);
 
@@ -112,17 +112,19 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => _registerBlock(ArgsChild));
-    _renderBlocks("sidebar-blocks", [
-      {
-        block: BlockGroup,
-        args: { name: "args-children" },
-        children: [
-          { block: ArgsChild, args: { title: "First" } },
-          { block: ArgsChild, args: { title: "Second" } },
-        ],
-      },
-    ]);
+    withTestBlockRegistration(() => registerBlock(ArgsChild));
+    withPluginApi((api) =>
+      api.renderBlocks("sidebar-blocks", [
+        {
+          block: BlockGroup,
+          args: { name: "args-children" },
+          children: [
+            { block: ArgsChild, args: { title: "First" } },
+            { block: ArgsChild, args: { title: "Second" } },
+          ],
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
@@ -140,20 +142,22 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => _registerBlock(NestedLeaf));
-    _renderBlocks("main-outlet-blocks", [
-      {
-        block: BlockGroup,
-        args: { name: "outer" },
-        children: [
-          {
-            block: BlockGroup,
-            args: { name: "inner" },
-            children: [{ block: NestedLeaf }],
-          },
-        ],
-      },
-    ]);
+    withTestBlockRegistration(() => registerBlock(NestedLeaf));
+    withPluginApi((api) =>
+      api.renderBlocks("main-outlet-blocks", [
+        {
+          block: BlockGroup,
+          args: { name: "outer" },
+          children: [
+            {
+              block: BlockGroup,
+              args: { name: "inner" },
+              children: [{ block: NestedLeaf }],
+            },
+          ],
+        },
+      ])
+    );
 
     await render(
       <template><BlockOutlet @name="main-outlet-blocks" /></template>
@@ -172,14 +176,16 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => _registerBlock(WrapperTestChild));
-    _renderBlocks("sidebar-blocks", [
-      {
-        block: BlockGroup,
-        args: { name: "wrapper-test" },
-        children: [{ block: WrapperTestChild }],
-      },
-    ]);
+    withTestBlockRegistration(() => registerBlock(WrapperTestChild));
+    withPluginApi((api) =>
+      api.renderBlocks("sidebar-blocks", [
+        {
+          block: BlockGroup,
+          args: { name: "wrapper-test" },
+          children: [{ block: WrapperTestChild }],
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
@@ -206,26 +212,28 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => _registerBlock(DeepLeaf));
-    _renderBlocks("header-blocks", [
-      {
-        block: BlockGroup,
-        args: { name: "level-1" },
-        children: [
-          {
-            block: BlockGroup,
-            args: { name: "level-2" },
-            children: [
-              {
-                block: BlockGroup,
-                args: { name: "level-3" },
-                children: [{ block: DeepLeaf }],
-              },
-            ],
-          },
-        ],
-      },
-    ]);
+    withTestBlockRegistration(() => registerBlock(DeepLeaf));
+    withPluginApi((api) =>
+      api.renderBlocks("header-blocks", [
+        {
+          block: BlockGroup,
+          args: { name: "level-1" },
+          children: [
+            {
+              block: BlockGroup,
+              args: { name: "level-2" },
+              children: [
+                {
+                  block: BlockGroup,
+                  args: { name: "level-3" },
+                  children: [{ block: DeepLeaf }],
+                },
+              ],
+            },
+          ],
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="header-blocks" /></template>);
 
@@ -251,14 +259,16 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => _registerBlock(OutletNameTest));
-    _renderBlocks("homepage-blocks", [
-      {
-        block: BlockGroup,
-        args: { name: "parent" },
-        children: [{ block: OutletNameTest }],
-      },
-    ]);
+    withTestBlockRegistration(() => registerBlock(OutletNameTest));
+    withPluginApi((api) =>
+      api.renderBlocks("homepage-blocks", [
+        {
+          block: BlockGroup,
+          args: { name: "parent" },
+          children: [{ block: OutletNameTest }],
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="homepage-blocks" /></template>);
 
@@ -290,14 +300,16 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       return { Component: blockData.Component };
     });
 
-    withTestBlockRegistration(() => _registerBlock(OverlayTestChild));
-    _renderBlocks("sidebar-blocks", [
-      {
-        block: BlockGroup,
-        args: { name: "overlay-test" },
-        children: [{ block: OverlayTestChild }],
-      },
-    ]);
+    withTestBlockRegistration(() => registerBlock(OverlayTestChild));
+    withPluginApi((api) =>
+      api.renderBlocks("sidebar-blocks", [
+        {
+          block: BlockGroup,
+          args: { name: "overlay-test" },
+          children: [{ block: OverlayTestChild }],
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
@@ -335,20 +347,22 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       return { Component: blockData.Component };
     });
 
-    withTestBlockRegistration(() => _registerBlock(DeepOverlayLeaf));
-    _renderBlocks("header-blocks", [
-      {
-        block: BlockGroup,
-        args: { name: "level-1" },
-        children: [
-          {
-            block: BlockGroup,
-            args: { name: "level-2" },
-            children: [{ block: DeepOverlayLeaf }],
-          },
-        ],
-      },
-    ]);
+    withTestBlockRegistration(() => registerBlock(DeepOverlayLeaf));
+    withPluginApi((api) =>
+      api.renderBlocks("header-blocks", [
+        {
+          block: BlockGroup,
+          args: { name: "level-1" },
+          children: [
+            {
+              block: BlockGroup,
+              args: { name: "level-2" },
+              children: [{ block: DeepOverlayLeaf }],
+            },
+          ],
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="header-blocks" /></template>);
 
@@ -406,19 +420,21 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     }
 
     withTestBlockRegistration(() => {
-      _registerBlock(TabsContainer);
-      _registerBlock(TabContent);
+      registerBlock(TabsContainer);
+      registerBlock(TabContent);
     });
-    _renderBlocks("header-blocks", [
-      {
-        block: TabsContainer,
-        children: [
-          { block: TabContent, containerArgs: { tabName: "settings" } },
-          { block: TabContent, containerArgs: { tabName: "profile" } },
-          { block: TabContent, containerArgs: { tabName: "security" } },
-        ],
-      },
-    ]);
+    withPluginApi((api) =>
+      api.renderBlocks("header-blocks", [
+        {
+          block: TabsContainer,
+          children: [
+            { block: TabContent, containerArgs: { tabName: "settings" } },
+            { block: TabContent, containerArgs: { tabName: "profile" } },
+            { block: TabContent, containerArgs: { tabName: "security" } },
+          ],
+        },
+      ])
+    );
 
     await render(<template><BlockOutlet @name="header-blocks" /></template>);
 

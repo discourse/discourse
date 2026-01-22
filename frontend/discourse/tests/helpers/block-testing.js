@@ -1,0 +1,299 @@
+// @ts-check
+/**
+ * Testing utilities for the Discourse Block system.
+ *
+ * This module provides helpers for plugin and theme developers to test
+ * their custom blocks and conditions. These utilities temporarily unfreeze
+ * registries to allow registration during tests.
+ *
+ * @module discourse/tests/helpers/block-testing
+ *
+ * @example
+ * import {
+ *   withTestBlockRegistration,
+ *   registerBlock,
+ *   withTestConditionRegistration,
+ *   registerConditionType,
+ *   resetBlockRegistryForTesting,
+ *   hasBlock,
+ *   isValidOutlet,
+ * } from "discourse/tests/helpers/block-testing";
+ *
+ * // Register a block for testing
+ * withTestBlockRegistration(() => registerBlock(MyCustomBlock));
+ *
+ * // Register a condition for testing
+ * withTestConditionRegistration(() => registerConditionType(MyCondition));
+ *
+ * // Assert block was registered
+ * assert.true(hasBlock("my-block"));
+ */
+
+import {
+  DEBUG_CALLBACK,
+  debugHooks,
+} from "discourse/lib/blocks/-internals/debug/block-processing";
+import {
+  _freezeBlockRegistry,
+  _registerBlock,
+  _registerBlockFactory,
+  _resetBlockRegistryState,
+  getBlockEntry,
+  hasBlock,
+  isBlockFactory,
+  isBlockRegistryFrozen,
+  isBlockResolved,
+  resolveBlock,
+  tryResolveBlock,
+  withTestBlockRegistration,
+} from "discourse/lib/blocks/-internals/registry/block";
+import {
+  _freezeConditionTypeRegistry,
+  _registerConditionType,
+  _resetConditionRegistryState,
+  hasConditionType,
+  isConditionTypeRegistryFrozen,
+  withTestConditionRegistration,
+} from "discourse/lib/blocks/-internals/registry/condition";
+import {
+  _resetSourceNamespaceState,
+  _setTestSourceIdentifierInternal,
+} from "discourse/lib/blocks/-internals/registry/helpers";
+import {
+  _freezeOutletRegistry,
+  _registerOutlet,
+  _resetOutletRegistryState,
+  getAllOutlets,
+  getCustomOutlet,
+  isOutletRegistryFrozen,
+  isValidOutlet,
+} from "discourse/lib/blocks/-internals/registry/outlet";
+import { isTesting } from "discourse/lib/environment";
+
+/*
+ * Block Registration
+ **/
+
+/**
+ * Temporarily unfreezes the block registry to allow registration during tests.
+ * Takes a callback that performs registration, then re-freezes the registry.
+ *
+ * @example
+ * withTestBlockRegistration(() => registerBlock(MyBlock));
+ */
+export { withTestBlockRegistration };
+
+/**
+ * Registers a block class with the block registry.
+ * Use inside withTestBlockRegistration callback.
+ *
+ * @example
+ * withTestBlockRegistration(() => registerBlock(MyBlock));
+ */
+export { _registerBlock as registerBlock };
+
+/**
+ * Registers a factory function for lazy loading a block.
+ * Use inside withTestBlockRegistration callback.
+ *
+ * @example
+ * withTestBlockRegistration(() => {
+ *   registerBlockFactory("lazy-block", async () => LazyBlock);
+ * });
+ */
+export { _registerBlockFactory as registerBlockFactory };
+
+/**
+ * Freezes the block registry, preventing further registrations.
+ * Useful for testing frozen state behavior.
+ */
+export { _freezeBlockRegistry as freezeBlockRegistry };
+
+/*
+ * Block Registry Queries
+ **/
+
+/**
+ * Checks if a block is registered (by name or class reference).
+ *
+ * @example
+ * assert.true(hasBlock("my-block"));
+ */
+export { hasBlock };
+
+/**
+ * Returns the registry entry for a block (class or factory).
+ */
+export { getBlockEntry };
+
+/**
+ * Checks if a registry entry is a factory function (not a resolved class).
+ */
+export { isBlockFactory };
+
+/**
+ * Checks if a block is registered and fully resolved (not a pending factory).
+ */
+export { isBlockResolved };
+
+/**
+ * Returns whether the block registry is frozen.
+ */
+export { isBlockRegistryFrozen };
+
+/**
+ * Resolves a block reference (string name or class) to a BlockClass.
+ * Async - use for testing factory resolution.
+ */
+export { resolveBlock };
+
+/**
+ * Attempts to resolve a block reference synchronously.
+ * Returns the BlockClass if found and resolved, null if pending or not found.
+ */
+export { tryResolveBlock };
+
+/*
+ * Outlet Registration
+ **/
+
+/**
+ * Registers a custom outlet for testing.
+ * Use inside withTestBlockRegistration callback.
+ *
+ * @example
+ * withTestBlockRegistration(() => {
+ *   registerOutlet("test-outlet", { description: "For testing" });
+ * });
+ */
+export { _registerOutlet as registerOutlet };
+
+/**
+ * Freezes the outlet registry, preventing further registrations.
+ * Useful for testing frozen state behavior.
+ */
+export { _freezeOutletRegistry as freezeOutletRegistry };
+
+/*
+ * Outlet Registry Queries
+ **/
+
+/**
+ * Checks if an outlet name is valid (registered as core or custom outlet).
+ *
+ * @example
+ * assert.true(isValidOutlet("sidebar-blocks"));
+ */
+export { isValidOutlet };
+
+/**
+ * Returns all registered outlets (core + custom).
+ */
+export { getAllOutlets };
+
+/**
+ * Returns custom outlet data for a registered custom outlet.
+ */
+export { getCustomOutlet };
+
+/**
+ * Returns whether the outlet registry is frozen.
+ */
+export { isOutletRegistryFrozen };
+
+/*
+ * Condition Registration
+ **/
+
+/**
+ * Temporarily unfreezes the condition registry to allow registration during tests.
+ * Takes a callback that performs registration, then re-freezes the registry.
+ *
+ * @example
+ * withTestConditionRegistration(() => registerConditionType(MyCondition));
+ */
+export { withTestConditionRegistration };
+
+/**
+ * Registers a condition class with the condition registry.
+ * Use inside withTestConditionRegistration callback.
+ *
+ * @example
+ * withTestConditionRegistration(() => registerConditionType(MyCondition));
+ */
+export { _registerConditionType as registerConditionType };
+
+/**
+ * Freezes the condition type registry, preventing further registrations.
+ * Useful for testing frozen state behavior.
+ */
+export { _freezeConditionTypeRegistry as freezeConditionTypeRegistry };
+
+/*
+ * Condition Registry Queries
+ **/
+
+/**
+ * Checks if a condition type is registered.
+ *
+ * @example
+ * assert.true(hasConditionType("user"));
+ */
+export { hasConditionType };
+
+/**
+ * Returns whether the condition type registry is frozen.
+ */
+export { isConditionTypeRegistryFrozen };
+
+/*
+ * Debug Utilities
+ **/
+
+/**
+ * Debug callback type constants.
+ * Used with debugHooks.setCallback() for testing debug behavior.
+ */
+export { DEBUG_CALLBACK };
+
+/**
+ * Debug hook interface for testing debug mode behavior.
+ * Provides reactive getters and callback management.
+ */
+export { debugHooks };
+
+/*
+ * Reset Utilities
+ **/
+
+/**
+ * Resets all registries (blocks, outlets, conditions) for testing.
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ *
+ * Clears all registered entities and restores the original frozen state.
+ */
+export function resetBlockRegistryForTesting() {
+  if (!isTesting()) {
+    throw new Error("resetBlockRegistryForTesting can only be used in tests.");
+  }
+
+  _resetBlockRegistryState();
+  _resetOutletRegistryState();
+  _resetConditionRegistryState();
+  _resetSourceNamespaceState();
+}
+
+/**
+ * Sets a test override for the source identifier.
+ *
+ * USE ONLY FOR TESTING PURPOSES.
+ *
+ * @param {string|null} sourceId - Source identifier to use, or null to clear.
+ */
+export function setTestSourceIdentifier(sourceId) {
+  if (!isTesting()) {
+    throw new Error("setTestSourceIdentifier can only be used in tests.");
+  }
+  _setTestSourceIdentifierInternal(sourceId);
+}

@@ -274,7 +274,7 @@ function getNamespacePrefix(blockName) {
  * USE ONLY FOR TESTING PURPOSES.
  *
  * @param {string|null} sourceId - Source identifier to use, or null to clear.
- * @internal Called by `_setTestSourceIdentifier` in block-registry-testing.js.
+ * @internal Called by `setTestSourceIdentifier` in block-testing.js.
  */
 export function _setTestSourceIdentifierInternal(sourceId) {
   // allows tree-shaking in production builds

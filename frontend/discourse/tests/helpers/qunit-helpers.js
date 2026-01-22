@@ -99,7 +99,7 @@ import {
 } from "discourse/services/keyboard-shortcuts";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
-import { resetBlockRegistryForTesting } from "discourse/tests/helpers/block-registry-testing";
+import { resetBlockRegistryForTesting } from "discourse/tests/helpers/block-testing";
 import {
   currentSettings,
   mergeSettings,
