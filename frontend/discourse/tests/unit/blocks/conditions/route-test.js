@@ -3,8 +3,8 @@ import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import BlockRouteCondition from "discourse/blocks/conditions/route";
-import { validateConditions } from "discourse/lib/blocks/-internals/validation/conditions";
 import { setPrefix } from "discourse/lib/get-url";
+import { validateConditions } from "discourse/tests/helpers/block-testing";
 
 module("Unit | Blocks | Conditions | route", function (hooks) {
   setupTest(hooks);

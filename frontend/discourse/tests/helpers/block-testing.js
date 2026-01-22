@@ -68,6 +68,7 @@ import {
   isOutletRegistryFrozen,
   isValidOutlet,
 } from "discourse/lib/blocks/-internals/registry/outlet";
+import { validateConditions } from "discourse/lib/blocks/-internals/validation/conditions";
 import { isTesting } from "discourse/lib/environment";
 
 /*
@@ -245,6 +246,12 @@ export { hasConditionType };
  * Returns whether the condition type registry is frozen.
  */
 export { isConditionTypeRegistryFrozen };
+
+/**
+ * Validates a condition specification against the registered condition types.
+ * Throws detailed errors if the specification is invalid.
+ */
+export { validateConditions };
 
 /*
  * Debug Utilities

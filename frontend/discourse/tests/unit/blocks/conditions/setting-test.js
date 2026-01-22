@@ -3,7 +3,7 @@ import Service from "@ember/service";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import BlockSettingCondition from "discourse/blocks/conditions/setting";
-import { validateConditions } from "discourse/lib/blocks/-internals/validation/conditions";
+import { validateConditions } from "discourse/tests/helpers/block-testing";
 
 module("Unit | Blocks | Conditions | setting", function (hooks) {
   setupTest(hooks);

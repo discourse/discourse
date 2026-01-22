@@ -1161,27 +1161,63 @@ The only way a block can render is as a child of a container block that passes t
 
 > **Trivia:** `<BlockOutlet>` is itself a block. Look at its definition and you'll see `@block("block-outlet", { container: true })`. It's a special container block that serves as the root of the block tree. It has a `__ROOT_BLOCK` static property set to the container symbol, which allows it to bypass the normal authorization check and start the chain of trust.
 
-Finally, for those building dev tools or writing tests, there are some internal APIs worth knowing about.
+Finally, for writing tests, there's a dedicated API.
 
-### Private APIs and Extension Points
+### Testing API
 
-Some APIs are internal (prefixed with `_`) but available for specific use cases:
+The `block-testing` module provides utilities for test infrastructure:
 
-**Testing helpers:**
 ```javascript
-import {
-  registerBlock,
-  registerConditionType,
-  resetBlockRegistryForTesting,
-  setTestSourceIdentifier,
-  withTestBlockRegistration,
-  withTestConditionRegistration,
-} from "discourse/tests/helpers/block-testing";
+import { ... } from "discourse/tests/helpers/block-testing";
 ```
 
-**Debug hooks:**
+**Block Registration:**
+- `withTestBlockRegistration(callback)` - Temporarily unfreeze registry for registration
+- `registerBlock(BlockClass)` - Register a block class
+- `registerBlockFactory(name, asyncFn)` - Register a lazy-loading factory
+- `freezeBlockRegistry()` - Manually freeze the registry
+
+**Block Queries:**
+- `hasBlock(name)` - Check if block is registered
+- `getBlockEntry(name)` - Get registry entry
+- `isBlockFactory(name)` - Check if entry is a factory
+- `isBlockResolved(name)` - Check if block is resolved
+- `isBlockRegistryFrozen()` - Check frozen state
+- `resolveBlock(ref)` - Async resolve block reference
+- `tryResolveBlock(ref)` - Sync resolve attempt
+
+**Outlet Registration:**
+- `registerOutlet(name, options)` - Register custom outlet
+- `freezeOutletRegistry()` - Freeze outlet registry
+
+**Outlet Queries:**
+- `isValidOutlet(name)` - Check if outlet is valid
+- `getAllOutlets()` - Get all registered outlets
+- `getCustomOutlet(name)` - Get custom outlet data
+- `isOutletRegistryFrozen()` - Check frozen state
+
+**Condition Registration:**
+- `withTestConditionRegistration(callback)` - Temporarily unfreeze for registration
+- `registerConditionType(ConditionClass)` - Register a condition type
+- `freezeConditionTypeRegistry()` - Freeze condition registry
+
+**Condition Queries:**
+- `hasConditionType(type)` - Check if condition type is registered
+- `isConditionTypeRegistryFrozen()` - Check frozen state
+- `validateConditions(spec, types)` - Validate condition specification
+
+**Debug Utilities:**
+- `debugHooks` - Reactive debug interface for testing debug mode behavior
+- `DEBUG_CALLBACK` - Debug callback type constants
+
+**Reset Utilities:**
+- `resetBlockRegistryForTesting()` - Reset all registries to initial state
+- `setTestSourceIdentifier(id)` - Override source identifier for testing
+
+**Debug Hooks Example:**
+
 ```javascript
-import { debugHooks } from "discourse/lib/blocks/-internals/debug/block-processing";
+import { debugHooks, DEBUG_CALLBACK } from "discourse/tests/helpers/block-testing";
 
 // Reactive getters for checking debug state
 debugHooks.isBlockLoggingEnabled   // boolean
@@ -1195,25 +1231,6 @@ debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, () => true)
 ```
 
 The `debugHooks` singleton provides reactive getters that automatically track dependencies. This means UI components using these values will re-render when debug settings change.
-
-**Condition type registration (internal):**
-```javascript
-import {
-  _registerConditionType,
-  _freezeConditionTypeRegistry,
-  isConditionTypeRegistryFrozen,
-  hasConditionType,
-  getAllConditionTypeEntries,
-} from "discourse/lib/blocks/-internals/registry/condition";
-```
-
-> :exclamation: **Important:** Condition types must be registered before the `"freeze-block-registry"` initializer runs. Use `api.registerBlockConditionType()` in a pre-initializer for custom conditions.
-
-These are used by dev tools and test infrastructure. They're not part of the public API and may change without notice.
-
-**Performance: Leaf Block Caching**
-
-Leaf blocks (blocks without children) are cached to prevent unnecessary recreation during navigation. When a user navigates between pages, previously rendered leaf blocks are reused if their component class and args haven't changed. This optimization is transparent to developers—blocks behave the same, just render faster.
 
 ---
 
@@ -3370,7 +3387,7 @@ import { getOwner, setOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import FeatureFlagCondition from "my-plugin/blocks/conditions/feature-flag";
-import { validateConditions } from "discourse/lib/blocks/-internals/validation/conditions";
+import { validateConditions } from "discourse/tests/helpers/block-testing";
 
 module("Unit | Condition | feature-flag", function (hooks) {
   setupTest(hooks);
@@ -3677,7 +3694,7 @@ test("hides when outlet arg condition fails", async function (assert) {
 | Register block | `registerBlock` from `discourse/tests/helpers/block-testing` | `withTestBlockRegistration(() => registerBlock(MyBlock))` |
 | Register condition | `registerConditionType` from `discourse/tests/helpers/block-testing` | `withTestConditionRegistration(() => registerConditionType(MyCondition))` |
 | Configure layout | `withPluginApi` from `discourse/lib/plugin-api` | `withPluginApi((api) => api.renderBlocks("outlet-name", [...]))` |
-| Test condition validate | `validateConditions` helper | Use `validateConditions()` from `discourse/lib/blocks/-internals/validation/conditions` |
+| Test condition validate | `validateConditions` from `discourse/tests/helpers/block-testing` | `validateConditions({ type: "my-type", ...args }, conditionTypes)` |
 | Test condition evaluate | Direct instantiation with owner | `setOwner(condition, getOwner(this))` then `condition.evaluate(args, context)` |
 
 > :exclamation: **Important:** The test helpers `withTestBlockRegistration` and `withTestConditionRegistration` take a **single callback parameter** (synchronous). They temporarily unfreeze the registries to allow registration during tests.
