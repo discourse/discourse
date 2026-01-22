@@ -1758,7 +1758,7 @@ lv:
         topic_reminder: "atgādinājums par tēmu"
         liked_consolidated: "jauns \"patīk\""
         post_approved: "ziņa apstiprināta"
-        votes_released: "Balsojums tika izveidots"
+        votes_released: "balsojums tika izveidots"
     upload_selector:
       delete: "Dzēst"
       uploading: "Augšuplādē"

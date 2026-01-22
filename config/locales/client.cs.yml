@@ -3441,8 +3441,7 @@ cs:
         post_approved: "příspěvek schválen"
         membership_request_consolidated: "nové žádosti o členství"
         reaction: "nová reakce"
-        votes_released: "Hlas byly uvolněn"
-        new_features: "Byly vydány nové funkce Discourse!"
+        votes_released: "hlas byly uvolněn"
         admin_problems: "na administrační nástěnce vašeho webu jsou nová doporučení"
     upload_selector:
       change: "Změnit"

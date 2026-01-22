@@ -2450,8 +2450,7 @@ sv:
         post_approved: "inlägg godkänt"
         membership_request_consolidated: "ny begäran om medlemskap"
         reaction: "ny reaktion"
-        votes_released: "Röstningen släpptes"
-        new_features: "Nya Discourse-funktioner har släppts!"
+        votes_released: "röstningen släpptes"
         admin_problems: "nytt råd på din webbplats översiktspanel"
     upload_selector:
       delete: "Radera"

@@ -2621,8 +2621,7 @@ nb_NO:
         post_approved: "innlegg godkjent"
         membership_request_consolidated: "ny forespørsel om medlemskap"
         reaction: "ny reaksjon"
-        votes_released: "Stemmen ble utgitt"
-        new_features: "Nye Discourse-funksjoner har blitt lansert!"
+        votes_released: "stemmen ble utgitt"
         admin_problems: "nye råd på dashbordet på nettstedet ditt"
     upload_selector:
       delete: "Slett"

@@ -3625,7 +3625,6 @@ ar:
         membership_request_consolidated: "طلبات العضوية الجديدة"
         reaction: "تفاعل جديد"
         votes_released: "تم تحرير التصويت"
-        new_features: "تم إطلاق ميزات جديدة في Discourse!"
         admin_problems: "نصيحة جديدة بشأن لوحة معلومات موقعك"
     upload_selector:
       change: "تغيير"

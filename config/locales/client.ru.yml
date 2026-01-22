@@ -3328,8 +3328,7 @@ ru:
         post_approved: "сообщение одобрено"
         membership_request_consolidated: "новые запросы на членство"
         reaction: "Новая реакция"
-        votes_released: "Голосование опубликовано"
-        new_features: "Появились новые функции Discourse!"
+        votes_released: "голосование опубликовано"
         admin_problems: "новый совет в панели управления сайта"
     upload_selector:
       change: "Изменить"

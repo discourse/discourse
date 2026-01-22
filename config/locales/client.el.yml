@@ -2878,8 +2878,7 @@ el:
         post_approved: "η ανάρτηση εγκρίθηκε"
         membership_request_consolidated: "νέα αιτήματα συμμετοχής"
         reaction: "νέα αντίδραση"
-        votes_released: "Η ψηφοφορία κυκλοφόρησε"
-        new_features: "Νέα χαρακτηριστικά του Discourse έχουν κυκλοφορήσει!"
+        votes_released: "η ψηφοφορία κυκλοφόρησε"
     upload_selector:
       change: "Αλλαγή"
       delete: "Σβήσιμο"

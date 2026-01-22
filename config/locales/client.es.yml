@@ -3030,8 +3030,7 @@ es:
         post_approved: "publicación aprobada"
         membership_request_consolidated: "nuevas solicitudes de membresía"
         reaction: "nueva reacción"
-        votes_released: "Voto liberado"
-        new_features: "¡Se han lanzado nuevas características de Discourse!"
+        votes_released: "voto liberado"
         admin_problems: "nuevos consejos en tu panel de control del sitio"
     upload_selector:
       change: "Cambiar"

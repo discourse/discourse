@@ -2692,7 +2692,6 @@ zh_TW:
         membership_request_consolidated: "新會員申請"
         reaction: "新反應"
         votes_released: "投票結果已公佈"
-        new_features: "新的 Discourse 功能已發佈！"
         admin_problems: "有新的建議出現在後台儀表板"
     upload_selector:
       change: "修改"

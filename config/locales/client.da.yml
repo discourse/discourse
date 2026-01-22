@@ -2589,7 +2589,7 @@ da:
         post_approved: "indlæg godkendt"
         membership_request_consolidated: "nye anmodninger om medlemskab"
         reaction: "ny reaktion"
-        votes_released: "Afstemningen blev frigivet"
+        votes_released: "afstemningen blev frigivet"
     upload_selector:
       change: "Skift"
       delete: "Slet"

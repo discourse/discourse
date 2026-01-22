@@ -2956,8 +2956,7 @@ vi:
         post_approved: "Được duyệt tút"
         membership_request_consolidated: "Yêu cầu đăng ký thành viên mới"
         reaction: "Phản ứng mới"
-        votes_released: "Đã trả lượt bình chọn"
-        new_features: "Tính năng mới của Discourse!"
+        votes_released: "đã trả lượt bình chọn"
         admin_problems: "Lời khuyên mới trên bảng điều khiển"
     upload_selector:
       change: "Thay đổi"
