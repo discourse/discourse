@@ -74,9 +74,8 @@ class DiscourseLogstashLogger < Logger
     # Only log backtrace and env for Logger::WARN and above.
     # Backtrace is just noise for anything below that.
     if severity >= Logger::WARN
-      if (backtrace = opts&.dig(:backtrace)).present?
-        event["backtrace"] = backtrace
-      end
+      backtrace = opts&.dig(:backtrace)
+      event["backtrace"] = backtrace if backtrace && !backtrace.empty?
 
       # `web-exception` is a log message triggered by logster.
       # The exception class and message are extracted from the message based on the format logged by logster in
