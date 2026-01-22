@@ -1,5 +1,6 @@
 // @ts-check
 import { DEBUG } from "@glimmer/env";
+import { TrackedMap } from "@ember-compat/tracked-built-ins";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import {
   OPTIONAL_MISSING,
@@ -71,9 +72,14 @@ const blockRegistry = new Map();
  * Cache for resolved factory functions.
  * Once a factory is resolved, the result is stored here to avoid re-resolving.
  *
- * @type {Map<string, BlockClass>}
+ * This is a TrackedMap so that components calling `tryResolveBlock()` will
+ * automatically re-render when a factory they depend on finishes resolving.
+ * TrackedMap tracks per-key, so only components waiting on specific blocks
+ * are invalidated.
+ *
+ * @type {TrackedMap<string, BlockClass>}
  */
-const resolvedFactoryCache = new Map();
+const resolvedFactoryCache = new TrackedMap();
 
 /**
  * Tracks in-flight resolution promises to prevent duplicate concurrent attempts.
@@ -238,12 +244,12 @@ export async function resolveBlock(nameOrClass) {
 }
 
 /**
- * Synchronously resolves a block reference to a BlockClass.
+ * Attempts to resolve a block reference to a BlockClass synchronously.
  *
- * Unlike `resolveBlock`, this function is synchronous and handles the case
- * where a factory function hasn't been resolved yet. If a factory is
- * encountered, it triggers async resolution but returns null for the current
- * render cycle (the component will re-render when the factory resolves).
+ * If the block is already resolved, returns the BlockClass immediately.
+ * If the block is a factory that hasn't resolved yet, triggers async resolution
+ * and returns null. The calling component will automatically re-render when the
+ * factory resolves.
  *
  * @param {string | BlockClass} blockRef - Block reference (string name or class).
  *   String names may include a trailing "?" to mark the block as optional.
@@ -252,12 +258,20 @@ export async function resolveBlock(nameOrClass) {
  *   - An object with `optionalMissing` marker if the block is optional and not registered
  *   - null if the block is not registered (non-optional) or is a pending factory
  */
-export function resolveBlockSync(blockRef) {
+export function tryResolveBlock(blockRef) {
   if (typeof blockRef !== "string") {
     return blockRef;
   }
 
   const { name: blockName, optional } = parseBlockReference(blockRef);
+
+  // Check cache first - ALWAYS call .get() to establish tracking dependency.
+  // TrackedMap establishes tracking even when key doesn't exist (returns undefined).
+  // This ensures component re-renders when factory resolves and calls .set().
+  const cachedClass = resolvedFactoryCache.get(blockName);
+  if (cachedClass) {
+    return cachedClass;
+  }
 
   if (!blockRegistry.has(blockName)) {
     if (optional) {
@@ -274,20 +288,17 @@ export function resolveBlockSync(blockRef) {
     return entry;
   }
 
-  // Trigger async resolution but return null for this render cycle
-  if (!DEBUG) {
-    resolveBlock(blockName).catch((error) => {
-      // TODO (blocks-api) Consider returning an error marker and rendering an error placeholder
-      //  component for admin visibility, rather than silently returning null.
-
-      // surface error to admins in the UI / log in the console
-      document.dispatchEvent(
-        new CustomEvent("discourse-error", {
-          detail: { messageKey: "broken_block_factory_alert", error },
-        })
-      );
-    });
-  }
+  // Trigger async resolution. Returns null for this render cycle - the component
+  // will re-render automatically when the factory resolves (tracked via TrackedMap).
+  resolveBlock(blockName).catch((error) => {
+    // TODO (blocks-api) Consider returning an error marker and rendering an error
+    // placeholder component for admin visibility, rather than silently returning null.
+    document.dispatchEvent(
+      new CustomEvent("discourse-error", {
+        detail: { messageKey: "broken_block_factory_alert", error },
+      })
+    );
+  });
 
   return null;
 }

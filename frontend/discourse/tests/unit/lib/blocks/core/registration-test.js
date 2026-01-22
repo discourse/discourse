@@ -13,7 +13,7 @@ import {
   isBlockRegistryFrozen,
   isBlockResolved,
   resolveBlock,
-  resolveBlockSync,
+  tryResolveBlock,
 } from "discourse/lib/blocks/-internals/registry/block";
 import {
   _freezeOutletRegistry,
@@ -625,14 +625,14 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
     });
   });
 
-  module("resolveBlockSync", function () {
+  module("tryResolveBlock", function () {
     test("returns class directly for class references", function (assert) {
       @block("sync-class-ref")
       class SyncClassRef extends Component {}
 
       _registerBlock(SyncClassRef);
 
-      const result = resolveBlockSync(SyncClassRef);
+      const result = tryResolveBlock(SyncClassRef);
       assert.strictEqual(result, SyncClassRef);
     });
 
@@ -642,12 +642,12 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
 
       _registerBlock(SyncStringLookup);
 
-      const result = resolveBlockSync("sync-string-lookup");
+      const result = tryResolveBlock("sync-string-lookup");
       assert.strictEqual(result, SyncStringLookup);
     });
 
     test("returns optional missing marker for optional block not registered", function (assert) {
-      const result = resolveBlockSync("nonexistent-block?");
+      const result = tryResolveBlock("nonexistent-block?");
 
       assert.strictEqual(result.optionalMissing, OPTIONAL_MISSING);
       assert.strictEqual(result.name, "nonexistent-block");
@@ -661,7 +661,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
       console.error = () => (errorLogged = true);
 
       try {
-        const result = resolveBlockSync("nonexistent-required");
+        const result = tryResolveBlock("nonexistent-required");
 
         assert.strictEqual(result, null);
         assert.true(errorLogged, "Should log an error");
@@ -678,7 +678,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
         return UnresolvedFactory;
       });
 
-      const result = resolveBlockSync("sync-unresolved-factory");
+      const result = tryResolveBlock("sync-unresolved-factory");
 
       assert.strictEqual(
         result,
@@ -702,7 +702,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
 
       await resolveBlock("sync-resolved-factory");
 
-      const result = resolveBlockSync("sync-resolved-factory");
+      const result = tryResolveBlock("sync-resolved-factory");
       assert.strictEqual(result, ResolvedFactory);
     });
   });

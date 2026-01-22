@@ -188,7 +188,7 @@ export function handleOptionalMissingBlock({
 /**
  * Checks if a resolved block is an optional missing block marker.
  *
- * @param {*} resolvedBlock - The result from resolveBlockSync.
+ * @param {*} resolvedBlock - The result from tryResolveBlock.
  * @returns {boolean} True if the block is an optional missing marker.
  */
 export function isOptionalMissing(resolvedBlock) {

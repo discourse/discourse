@@ -50,7 +50,7 @@ import {
 } from "discourse/lib/blocks/-internals/patterns";
 import {
   isBlockRegistryFrozen,
-  resolveBlockSync,
+  tryResolveBlock,
 } from "discourse/lib/blocks/-internals/registry/block";
 import {
   applyArgDefaults,
@@ -781,7 +781,7 @@ function processBlockEntries({
 
   for (const entry of entries) {
     // @ts-ignore - entry.block can be string or BlockClass
-    const resolvedBlock = resolveBlockSync(entry.block);
+    const resolvedBlock = tryResolveBlock(entry.block);
 
     // Handle optional missing block (block ref ended with `?` but not registered)
     if (isOptionalMissing(resolvedBlock)) {
@@ -800,9 +800,9 @@ function processBlockEntries({
       continue;
     }
 
-    // Skip blocks that haven't resolved yet. This is intentional - block factories
-    // may be resolving asynchronously (e.g., lazy-loaded plugins). The block will
-    // render on the next pass once its factory resolves.
+    // Skip blocks that haven't resolved yet. Block factories may be resolving
+    // asynchronously (e.g., lazy-loaded plugins). The component will automatically
+    // re-render when the factory resolves (via TrackedMap reactivity).
     if (!resolvedBlock) {
       continue;
     }
@@ -853,7 +853,7 @@ function processBlockEntries({
         owner,
         outletArgs,
         isLoggingEnabled,
-        resolveBlockFn: resolveBlockSync,
+        resolveBlockFn: tryResolveBlock,
         key,
       });
       if (ghostData) {
@@ -1585,7 +1585,7 @@ class BlockOutletRootContainer extends Component {
       const entryClone = { ...entry };
 
       // Resolve block reference
-      const resolvedBlock = resolveBlockSync(entryClone.block);
+      const resolvedBlock = tryResolveBlock(entryClone.block);
 
       // Skip unresolved blocks (optional missing or pending factory resolution)
       if (!resolvedBlock || isOptionalMissing(resolvedBlock)) {
