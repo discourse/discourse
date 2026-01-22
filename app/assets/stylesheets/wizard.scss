@@ -36,6 +36,7 @@ html:has(body.wizard) {
 }
 
 body.wizard {
+  background-color: var(--wizard-bg-color);
   color: var(--primary-very-high);
 
   #wizard-main {
@@ -52,11 +53,17 @@ body.wizard {
     }
   }
 
+  #main-outlet-wrapper {
+    @include viewport.until(md) {
+      gap: 0;
+      padding-inline: 0.5em;
+    }
+  }
+
   .discourse-logo {
     z-index: z("header");
 
     svg {
-      position: relative;
       height: 40px;
       width: auto;
 
@@ -75,7 +82,7 @@ body.wizard {
   &::before {
     content: "";
     display: block;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -101,7 +108,7 @@ body.wizard {
   border-radius: 16px;
   padding: 3em;
 
-  @include viewport.until(lg) {
+  @include viewport.until(md) {
     padding: 2em 1.5em;
   }
 
@@ -109,10 +116,6 @@ body.wizard {
     margin-top: 1em;
     max-width: 700px;
     width: 100%;
-
-    @include viewport.until(lg) {
-      max-width: 95%;
-    }
 
     .wizard-container__button:not(.wizard-container__button-upload) {
       @include viewport.until(sm) {
