@@ -9,6 +9,7 @@ import * as MessageFormatRuntimeCardinals from "@messageformat/runtime/lib/cardi
 import * as MessageFormatRuntimeMessages from "@messageformat/runtime/messages";
 import Messages from "@messageformat/runtime/messages";
 import * as Cardinals from "make-plural/cardinals";
+import dasherize from "discourse/helpers/dasherize";
 
 // The placeholder format. Accepts `{{placeholder}}` and `%{placeholder}`.
 const PLACEHOLDER = /(?:\{\{|%\{)(.*?)(?:\}\}?)/gm;
@@ -493,7 +494,7 @@ export class I18n {
       "@messageformat/runtime": MessageFormatRuntime,
     });
 
-    const messages = new Messages(msgData, this.locale);
+    const messages = new Messages(msgData, dasherize(this.locale));
     messages.defaultLocale = "en";
     this._mfMessages = messages;
   }
