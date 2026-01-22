@@ -28,10 +28,9 @@ export default class AdminPenaltyPostAction extends Component {
       name: i18n(`admin.user.penalty_post_${id}`),
     }));
 
-    if (
-      this.user.trust_level >=
-      this.siteSettings.delete_all_posts_from_suspend_trust_level
-    ) {
+    // Remove "delete all" option for users at or above the configured trust level
+    // For now the trust level is static, add a site setting later if we want users to be able to modify this
+    if (this.user.trust_level >= 2) {
       return allActions.filter((act) => act.id !== "delete_all");
     }
 

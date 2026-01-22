@@ -2391,7 +2391,6 @@ en:
     delete_user_max_post_age: "Don't allow deleting users whose first post is older than (x) days."
     delete_all_posts_max: "The maximum number of posts that can be deleted at once with the Delete All Posts button. If a user has more than this many posts, the posts cannot all be deleted at once and the user can't be deleted."
     delete_all_posts_background_threshold: "The maximum number of posts that can be deleted at once with the Delete All Posts button before the deletion is processed in the background."
-    delete_all_posts_from_suspend_trust_level: "Users with a trust level below this value will have the 'delete all posts' option available in the suspend modal. Users at or above this trust level will not see the option."
     delete_user_self_max_post_count: "The maximum number of posts a user can have while allowing self-service account deletion. Set to -1 to disable self-service account deletion."
     username_change_period: "The maximum number of days after registration that accounts can change their username (0 to disallow username change)."
     email_editable: "Allow users to change their e-mail address after registration."
