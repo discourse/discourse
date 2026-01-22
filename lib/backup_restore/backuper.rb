@@ -300,6 +300,9 @@ module BackupRestore
       end
     end
 
+    # Lightweight struct to avoid holding full ActiveRecord objects in memory
+    UploadData = Struct.new(:id, :url, :sha1, keyword_init: true)
+
     def add_remote_uploads_to_archive(tar_filename)
       if !SiteSetting.include_s3_uploads_in_backups
         log "Skipping uploads stored on S3."
@@ -308,24 +311,17 @@ module BackupRestore
 
       log "Downloading uploads from S3. This may take a while..."
 
-      store = FileStore::S3Store.new
-      upload_directory = Discourse.store.upload_path
-      count = 0
+      @s3_store = FileStore::S3Store.new
+      @upload_directory = Discourse.store.upload_path
+      @download_stats = { downloaded: 0, hardlinked: 0 }
 
-      Upload.find_each do |upload|
-        next if upload.local?
-        filename = File.join(@tmp_directory, upload_directory, store.get_path_for_upload(upload))
+      uploads_by_sha1 = group_remote_uploads_by_sha1
+      total_uploads = uploads_by_sha1.values.sum(&:size)
+      log "Found #{uploads_by_sha1.size} unique files from #{total_uploads} total uploads"
 
-        begin
-          FileUtils.mkdir_p(File.dirname(filename))
-          store.download_file(upload, filename)
-        rescue StandardError => ex
-          log "Failed to download file with upload ID #{upload.id} from S3", ex
-        end
+      uploads_by_sha1.each_value { |upload_group| process_upload_group(upload_group) }
 
-        count += 1
-        log "#{count} files have already been downloaded. Still downloading..." if count % 500 == 0
-      end
+      log "Finished processing uploads: #{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} deduplicated via hardlinks"
 
       log "Appending uploads to archive..."
       Discourse::Utils.execute_command(
@@ -333,13 +329,80 @@ module BackupRestore
         "--append",
         "--file",
         tar_filename,
-        upload_directory,
+        @upload_directory,
         failure_message: "Failed to append uploads to archive.",
         success_status_codes: [0, 1],
         chdir: @tmp_directory,
       )
 
-      log "No uploads found on S3. Skipping archiving of uploads stored on S3..." if count == 0
+      if @download_stats[:downloaded] == 0 && @download_stats[:hardlinked] == 0
+        log "No uploads found on S3. Skipping archiving of uploads stored on S3..."
+      end
+    end
+
+    def group_remote_uploads_by_sha1
+      # Filter remote uploads at DB level and pluck only needed fields
+      # Local uploads have URLs like "/uploads/..." but NOT protocol-relative "//"
+      upload_tuples =
+        Upload.where("url NOT LIKE '/%' OR url LIKE '//%'").pluck(
+          Arel.sql("COALESCE(NULLIF(original_sha1, ''), sha1)"),
+          :id,
+          :url,
+          :sha1,
+        )
+
+      uploads_by_sha1 = {}
+      upload_tuples.each do |sha1_key, id, url, sha1|
+        uploads_by_sha1[sha1_key] ||= []
+        uploads_by_sha1[sha1_key] << UploadData.new(id: id, url: url, sha1: sha1)
+      end
+      uploads_by_sha1
+    end
+
+    def process_upload_group(upload_group)
+      primary = upload_group.first
+      primary_filename = upload_path_in_archive(primary)
+
+      return if !download_upload_to_file(primary, primary_filename)
+
+      upload_group
+        .drop(1)
+        .each do |duplicate|
+          duplicate_filename = upload_path_in_archive(duplicate)
+          hardlink_or_download(primary_filename, duplicate, duplicate_filename)
+        end
+    end
+
+    def upload_path_in_archive(upload_data)
+      path = @s3_store.get_path_for_upload(upload_data)
+      File.join(@tmp_directory, @upload_directory, path)
+    end
+
+    def download_upload_to_file(upload_data, filename)
+      FileUtils.mkdir_p(File.dirname(filename))
+      @s3_store.download_file(upload_data, filename)
+      increment_and_log_progress(:downloaded)
+      true
+    rescue StandardError => ex
+      log "Failed to download file with upload ID #{upload_data.id} from S3", ex
+      false
+    end
+
+    def hardlink_or_download(source_filename, upload_data, target_filename)
+      FileUtils.mkdir_p(File.dirname(target_filename))
+      FileUtils.ln(source_filename, target_filename)
+      increment_and_log_progress(:hardlinked)
+    rescue StandardError => ex
+      log "Failed to create hardlink for upload ID #{upload_data.id}, downloading instead", ex
+      download_upload_to_file(upload_data, target_filename)
+    end
+
+    def increment_and_log_progress(type)
+      @download_stats[type] += 1
+      total = @download_stats[:downloaded] + @download_stats[:hardlinked]
+      return if total % 1000 != 0
+
+      log "#{total} files processed (#{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked). Still processing..."
     end
 
     def upload_archive
