@@ -529,4 +529,7 @@ module BackupRestore
       end
     end
   end
+
+  # Backwards compatibility alias for plugins referencing the old name
+  Backuper = Creator
 end
