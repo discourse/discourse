@@ -407,8 +407,16 @@
   user-select: none;
 }
 
+[data-d-sheet~="scroll-container"][data-d-sheet~="overscroll-contain-x"] {
+  overscroll-behavior-x: contain;
+}
+
 [data-d-sheet~="scroll-container"][data-d-sheet~="overscroll-contain"] {
   overscroll-behavior-y: contain;
+}
+
+[data-d-sheet~="scroll-container"][data-d-sheet~="overscroll-contain-both"] {
+  overscroll-behavior: contain;
 }
 
 [data-d-sheet~="scroll-container"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="top"],
