@@ -1,5 +1,4 @@
 // TODO: rename to generate-external-types or similar
-// import findModuleInsertionPoint from "./find-module-insertion-point.js";
 import generateDtsBundle from "dts-generator";
 import {
   cpSync,
@@ -13,7 +12,6 @@ import {
 import { basename, dirname, normalize, relative, resolve } from "node:path";
 import processPackageJson from "./process-package-json.js";
 
-// const fileName = "external-types.d.ts";
 const packageNames = [
   "@ember-compat/tracked-built-ins",
   "@ember/render-modifiers",
@@ -22,7 +20,7 @@ const packageNames = [
   "@floating-ui/dom",
   "@glimmer/component",
   "@glimmer/syntax",
-  // "@glint/ember-tsc", in plugin/theme devDeps
+  // "@glint/ember-tsc", is already a plugin/theme devDependency
   "@glint/template",
   "@types/jquery",
   "@types/qunit",
@@ -33,15 +31,6 @@ const packageNames = [
   "ember-qunit",
   "ember-source",
   "pretender",
-  // "make-plural",
-  // {
-  //   packageName: "@messageformat/runtime",
-  //   packagePath: "../discourse-i18n/node_modules/@messageformat/runtime",
-  // },
-  // {
-  //   packageName: "@glimmer/validator",
-  //   packagePath: "./node_modules/@glimmer/validator",
-  // },
 ];
 
 (async function () {
@@ -49,8 +38,6 @@ const packageNames = [
     rmSync("./external-types", { recursive: true });
   } catch {}
   mkdirSync("./external-types");
-
-  // let output = "";
 
   for (const entry of packageNames) {
     let packageName;
@@ -80,9 +67,6 @@ const packageNames = [
     // Get all the exported .d.ts paths
     const exportedDtsPaths = processPackageJson(packageJson, packagePath);
 
-    console.log(targetPackagePath);
-    console.log(exportedDtsPaths);
-
     // Copy the license and package.json
     const licenses = globSync(`${packagePath}/LICENSE*`);
     if (licenses.length > 0) {
@@ -100,20 +84,17 @@ const packageNames = [
       packageJson["types"] = "index.d.ts";
     }
 
-    // cpSync(`${packagePath}/package.json`, `${targetPackagePath}/package.json`);
     writeFileSync(
       `${targetPackagePath}/package.json`,
       JSON.stringify(packageJson, null, "  ")
     );
 
-    // this one is ready to go, thanks to `declare module` used everywhere
+    // This one needs no changes thanks to `declare module` that's used extensively
     if (packageName === "ember-source") {
       // Copy **all** .d.ts files, and wrap those present in `exportedDtsPaths`
       // in a `declare module ...` block
       const dtsPaths = globSync(`${packagePath}/**/*.d.{ts,mts,cts}`);
       for (const path of dtsPaths) {
-        // let dts = readFileSync(path, "utf-8");
-
         const relativePath = relative(packagePath, path);
         mkdirSync(`${targetPackagePath}/${dirname(relativePath)}`, {
           recursive: true,
@@ -143,26 +124,13 @@ const packageNames = [
           modulePath = [packageName.replace(/@types\//, ""), modulePath]
             .filter(Boolean)
             .join("/");
-          // if (
-          //   !/^declare module ['"].+['"] {/.test(dts) &&
-          //   !dts.includes("/// <reference")
-          // ) {
-          //   const position = findModuleInsertionPoint(dts);
-          //   dts =
-          //     dts.slice(0, position) +
-          //     `\ndeclare module '${modulePath}' {\n` +
-          //     dts.slice(position) +
-          //     "\n}";
-          //   // dts = `declare module '${modulePath}' {\n${dts}\n}`;
-          // }
           return modulePath.replace(/\/index$/, "");
         }
-        // writeFileSync(`${targetPackagePath}/${relativePath}`, dts);
       }
 
       const hasTsconfig = globSync(`${packagePath}/tsconfig.json`).length > 0;
 
-      // dts-generator needs a tsconfig
+      // dts-generator needs a tsconfig file
       if (hasTsconfig) {
         renameSync(
           `${packagePath}/tsconfig.json`,
@@ -173,23 +141,18 @@ const packageNames = [
 
       try {
         await generateDtsBundle.default({
-          // name: "package-name",
           project: resolve(packagePath) + "/",
           out: `${targetPackagePath}/index.d.ts`,
           resolveModuleId({ currentModuleId }) {
-            // console.log(`resolveModuleId: ${currentModuleId}`);
             const path = transformPath(currentModuleId);
 
             if (path) {
               return path;
             } else {
-              // TODO: somehow remove the whole module declaration
+              // TODO: Somehow remove the whole module declaration
             }
           },
           resolveModuleImport({ importedModuleId, currentModuleId }) {
-            // console.log(
-            //   `resolveModuleImport: ${importedModuleId} (in ${currentModuleId})`
-            // );
             if (importedModuleId.startsWith(".")) {
               return transformPath(
                 normalize(`${dirname(currentModuleId)}/${importedModuleId}`)
@@ -209,43 +172,9 @@ const packageNames = [
           );
         }
       }
-
-      // Add <reference /> entries to external-types.d.ts
-      // for (const path of exportedDtsPaths.keys()) {
-      //   if (
-      //     // Don't reference private types...
-      //     !/(^|\/)-private/.test(path) ||
-      //     // ...except those:
-      //     (packageName === "@glint/template" &&
-      //       path === "-private/integration.d.ts") ||
-      //     (packageName === "@glint/ember-tsc" &&
-      //       path === "types/-private/dsl/index.d.ts")
-      //   ) {
-      //     output += `/// <reference path="${targetPackagePath}/${path}" />\n`;
-      //   }
-      // }
     }
-
-    // // Special handling for @glimmer/validator
-    // const packagePath = "../discourse/node_modules/ember-source";
-    // const packageName = "@glimmer/validator";
-    // let packageJson;
-    // try {
-    //   packageJson = JSON.parse(
-    //     readFileSync(`${packagePath}/package.json`, "utf-8")
-    //   );
-    // } catch {
-    //   throw new Error(`Package '${packageName}' not found`);
-    // }
-
-    // const targetPackagePath = `./external-types/${packageName.replace("/", "__")}`;
-    // mkdirSync(targetPackagePath);
-    // cpSync(`${packagePath}/package.json`, `${targetPackagePath}/package.json`);
-
-    // writeFileSync(`./${fileName}`, output);
-
-    // console.log(`Done, written to: ${fileName}`);
   }
 })().then(() => {
+  // eslint-disable-next-line no-console
   console.log("Done");
 });
