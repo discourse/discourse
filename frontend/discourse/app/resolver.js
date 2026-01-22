@@ -5,7 +5,7 @@ import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
 import { findHelper } from "discourse/lib/helpers";
 import SuffixTrie from "discourse/lib/suffix-trie";
 import resolverShims from "./resolver-shims";
-import { defineModules } from "./app";
+import { defineModules } from "./lib/loader-shim";
 
 let _options = {};
 let moduleSuffixTrie = null;

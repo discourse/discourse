@@ -48,6 +48,9 @@ loaderShim("@ember/render-modifiers/modifiers/did-insert", () =>
 loaderShim("@ember/render-modifiers/modifiers/did-update", () =>
   importSync("@ember/render-modifiers/modifiers/did-update")
 );
+loaderShim("@ember/render-modifiers/modifiers/will-destroy", () =>
+  importSync("@ember/render-modifiers/modifiers/will-destroy")
+);
 loaderShim("@ember/routing", () => importSync("@ember/routing"));
 loaderShim("@ember/routing/route", () => importSync("@ember/routing/route"));
 loaderShim("@ember/runloop", () => importSync("@ember/runloop"));
@@ -83,6 +86,9 @@ loaderShim("js-yaml", () => importSync("js-yaml"));
 loaderShim("message-bus-client", () => importSync("message-bus-client"));
 loaderShim("moment", () => importSync("moment"));
 loaderShim("rsvp", () => importSync("rsvp"));
+loaderShim("discourse/truth-helpers", () =>
+  importSync("discourse/truth-helpers")
+);
 loaderShim("truth-helpers", () => importSync("discourse/truth-helpers"));
 loaderShim("truth-helpers/helpers/and", () =>
   importSync("discourse/truth-helpers/helpers/and")
@@ -120,3 +126,6 @@ loaderShim("ember-this-fallback/deprecations-helper", () =>
   importSync("./lib/ember-this-fallback-deprecation-helper")
 );
 loaderShim("pretty-text/sanitizer", () => importSync("pretty-text/sanitizer"));
+loaderShim("@ember-decorators/component", () =>
+  importSync("@ember-decorators/component")
+);

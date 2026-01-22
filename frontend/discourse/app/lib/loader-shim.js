@@ -56,3 +56,12 @@ export default function loaderShim(pkg, callback) {
     __define__(pkg, callback);
   }
 }
+
+export function defineModules(name, compatModules) {
+  for (let [key, mod] of Object.entries(compatModules)) {
+    if (key.startsWith("./")) {
+      key = key.slice(2);
+    }
+    define(`${name ? `${name}/` : ""}${key}`, () => mod);
+  }
+}

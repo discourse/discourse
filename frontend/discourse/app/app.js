@@ -26,6 +26,7 @@ import { isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
 import { buildResolver } from "discourse/resolver";
+import { defineModules } from "./lib/loader-shim";
 
 function populatePreloadStore() {
   let setupData;
@@ -61,15 +62,15 @@ defineModules(null, embroiderCompatModules);
 
 import dialogHolderCompatModules from "discourse/dialog-holder/compat-modules";
 
-defineModules("discourse", dialogHolderCompatModules);
+defineModules("discourse/dialog-holder", dialogHolderCompatModules);
 
 import floatKitCompatModules from "discourse/float-kit/compat-modules";
 
-defineModules("discourse", floatKitCompatModules);
+defineModules("discourse/float-kit", floatKitCompatModules);
 
 import selectKitCompatModules from "discourse/select-kit/compat-modules";
 
-defineModules("discourse", selectKitCompatModules);
+defineModules("discourse/select-kit", selectKitCompatModules);
 
 const _pluginCallbacks = [];
 let _unhandledThemeErrors = [];
@@ -102,15 +103,6 @@ export async function loadThemes() {
     ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
   ].map(loadThemeFromModulePreload);
   await Promise.all(promises);
-}
-
-export function defineModules(name, compatModules) {
-  for (let [key, mod] of Object.entries(compatModules)) {
-    if (key.startsWith("./")) {
-      key = key.slice(2);
-    }
-    define(`${name ? `${name}/` : ""}${key}`, () => mod);
-  }
 }
 
 export async function loadAdmin() {
