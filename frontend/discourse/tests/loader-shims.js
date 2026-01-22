@@ -9,7 +9,9 @@ loaderShim("ember-qunit", () => importSync("ember-qunit"));
 loaderShim("@faker-js/faker", () => importSync("@faker-js/faker"));
 loaderShim("@ember/test-helpers", () => importSync("@ember/test-helpers"));
 
-const rawModules = import.meta.glob("./helpers/**/*.{gjs,js}", { eager: true });
+const rawModules = import.meta.glob("./{fixtures,helpers}/**/*.{gjs,js}", {
+  eager: true,
+});
 
 const compatModules = {};
 for (let [key, mod] of Object.entries(rawModules)) {
