@@ -344,28 +344,6 @@ body.wizard {
         color: var(--wizard-primary);
         font-weight: bold;
       }
-
-      .wizard-container__radio-checkmark {
-        position: absolute;
-        top: 0;
-        left: 0;
-        background-color: var(--wizard-primary);
-        border-top-left-radius: var(--wizard-input-radius);
-        border-bottom-right-radius: var(--wizard-input-radius);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 1.5em;
-        height: 1.5em;
-        z-index: 2;
-        color: var(--secondary);
-
-        .svg-icon {
-          width: 0.875em;
-          height: 0.875em;
-          margin: 0;
-        }
-      }
     }
 
     &:focus-within {

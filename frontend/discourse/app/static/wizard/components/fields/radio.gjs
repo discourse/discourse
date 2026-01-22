@@ -3,7 +3,6 @@ import { on } from "@ember/modifier";
 import { action, set } from "@ember/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 
@@ -40,11 +39,6 @@ export default class Radio extends Component {
           }}
           data-choice-id={{choice.id}}
         >
-          {{#if choice.selected}}
-            <span class="wizard-container__radio-checkmark">
-              {{icon "check"}}
-            </span>
-          {{/if}}
           <label class="wizard-container__label">
             <PluginOutlet
               @name="wizard-radio"
