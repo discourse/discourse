@@ -3,8 +3,8 @@
 $padding-pills-small: var(--space-half) var(--space-2);
 
 .topic-list-body:has(.--high-context) {
-  --title-color--read: var(--primary-high);
-  --topic-title-font-weight--visited: 700;
+  --title-color--read: var(--primary-700);
+  --topic-title-font-weight--visited: 600;
 
   @include viewport.from(sm) {
     gap: var(--space-4);
