@@ -80,7 +80,7 @@ function createGhostChildren(
 
     // Handle optional missing block
     if (resolvedBlock?.optionalMissing === OPTIONAL_MISSING) {
-      const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
+      const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)?.(
         {
           name: resolvedBlock.name,
           Component: null,
@@ -132,7 +132,7 @@ function createGhostChildren(
       );
     }
 
-    const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
+    const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)?.(
       {
         name: blockName,
         Component: null,

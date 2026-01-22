@@ -168,7 +168,7 @@ export function handleOptionalMissingBlock({
 
   // Show ghost if visual overlay is enabled
   if (showGhosts) {
-    const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
+    const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)?.(
       {
         name: blockName,
         Component: null,
@@ -266,7 +266,7 @@ export function createGhostBlock({
     );
   }
 
-  const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)(
+  const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)?.(
     {
       name: blockName,
       Component: null,

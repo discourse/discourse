@@ -845,6 +845,15 @@ export async function validateEntry(
   if (typeof resolvedBlock === "string") {
     const blockName = resolvedBlock;
 
+    // Validate reserved args even for unresolved factories.
+    // Reserved arg names (args, block, children, __visible, etc.) are deterministic
+    // and don't depend on the block class, so we can validate immediately.
+    wrapValidationError(
+      () => validateReservedArgs(entry),
+      `Invalid block "${blockName}" at ${path} for outlet "${outletName}"`,
+      earlyContext
+    );
+
     // Still validate conditions since they don't depend on the block class
     validateBlockConditions(
       blocksService,
