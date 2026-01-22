@@ -59,4 +59,20 @@ RSpec.describe "Admin AI features configuration", type: :system do
     expect(page).to have_css(".form-kit__section")
     expect(page).to have_css(".form-kit__field")
   end
+
+  it "displays LLM names in compact_list settings" do
+    llm1 = Fabricate(:llm_model, display_name: "Test LLM Alpha")
+    llm2 = Fabricate(:llm_model, display_name: "Test LLM Beta")
+
+    SiteSetting.ai_bot_enabled = true
+    SiteSetting.ai_bot_enabled_llms = "#{llm1.id}|#{llm2.id}"
+
+    page.visit("/admin/plugins/discourse-ai/ai-features/7/edit")
+
+    expect(page).to have_css(".ai-feature-editor")
+
+    field = form.field("ai_bot_enabled_llms")
+    expect(field.component).to have_content("Test LLM Alpha")
+    expect(field.component).to have_content("Test LLM Beta")
+  end
 end
