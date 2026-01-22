@@ -176,9 +176,9 @@ def clean_up_uploads
 
   if STDIN.gets.chomp.downcase == "y"
     puts "Starting backup..."
-    backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
-    backuper.run
-    exit 1 unless backuper.success
+    creator = BackupRestore::Creator.new(Discourse.system_user.id)
+    creator.run
+    exit 1 unless creator.success
   end
 
   public_directory = Rails.public_path.to_s

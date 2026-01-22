@@ -4,7 +4,7 @@ require "mini_mime"
 require "file_store/s3_store"
 
 module BackupRestore
-  class Backuper
+  class Creator
     attr_reader :success, :store
 
     def initialize(user_id, opts = {})

@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe BackupRestore::Backuper do
+RSpec.describe BackupRestore::Creator do
   describe "#add_remote_uploads_to_archive" do
     fab!(:user)
 
-    let(:backuper) { described_class.new(user.id) }
+    let(:creator) { described_class.new(user.id) }
     let(:tar_filename) { "/tmp/test_backup.tar" }
 
     before do
@@ -14,12 +14,12 @@ RSpec.describe BackupRestore::Backuper do
       SiteSetting.s3_upload_bucket = "bucket"
       SiteSetting.include_s3_uploads_in_backups = true
 
-      # Initialize the backuper's tmp directory
-      backuper.instance_variable_set(:@tmp_directory, Dir.mktmpdir)
-      backuper.instance_variable_set(:@logs, [])
+      # Initialize the creator's tmp directory
+      creator.instance_variable_set(:@tmp_directory, Dir.mktmpdir)
+      creator.instance_variable_set(:@logs, [])
     end
 
-    after { FileUtils.rm_rf(backuper.instance_variable_get(:@tmp_directory)) }
+    after { FileUtils.rm_rf(creator.instance_variable_get(:@tmp_directory)) }
 
     it "deduplicates uploads with the same original_sha1 using hardlinks" do
       shared_sha1 = SecureRandom.hex(20)
@@ -91,13 +91,13 @@ RSpec.describe BackupRestore::Backuper do
 
       Discourse::Utils.stubs(:execute_command)
 
-      silence_stdout { backuper.send(:add_remote_uploads_to_archive, tar_filename) }
+      silence_stdout { creator.send(:add_remote_uploads_to_archive, tar_filename) }
 
       # Should only download 2 files: 1 for the duplicates group + 1 for the unique upload
       expect(download_count).to eq(2)
 
       # All 4 file paths should exist in the tmp directory
-      tmp_dir = backuper.instance_variable_get(:@tmp_directory)
+      tmp_dir = creator.instance_variable_get(:@tmp_directory)
       upload_dir = Discourse.store.upload_path
       expect(File.exist?(File.join(tmp_dir, upload_dir, "original/1X/file1.png"))).to eq(true)
       expect(File.exist?(File.join(tmp_dir, upload_dir, "original/2X/file2.png"))).to eq(true)
@@ -117,23 +117,23 @@ RSpec.describe BackupRestore::Backuper do
   describe "#get_parameterized_title" do
     it "returns a non-empty parameterized title when site title contains unicode" do
       SiteSetting.title = "Ɣ"
-      backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+      creator = BackupRestore::Creator.new(Discourse.system_user.id)
 
-      expect(backuper.send(:get_parameterized_title)).to eq("discourse")
+      expect(creator.send(:get_parameterized_title)).to eq("discourse")
     end
 
     it "truncates the title to 64 chars" do
       SiteSetting.title = "This is th title of a very long site that is going to be truncated"
-      backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+      creator = BackupRestore::Creator.new(Discourse.system_user.id)
 
-      expect(backuper.send(:get_parameterized_title).length).to eq(64)
+      expect(creator.send(:get_parameterized_title).length).to eq(64)
     end
 
     it "returns a valid parameterized site title" do
       SiteSetting.title = "Coding Horror"
-      backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+      creator = BackupRestore::Creator.new(Discourse.system_user.id)
 
-      expect(backuper.send(:get_parameterized_title)).to eq("coding-horror")
+      expect(creator.send(:get_parameterized_title)).to eq("coding-horror")
     end
   end
 
@@ -145,9 +145,9 @@ RSpec.describe BackupRestore::Backuper do
       SiteSetting.export_authorized_extensions = "tar.gz"
 
       silence_stdout do
-        backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+        creator = BackupRestore::Creator.new(Discourse.system_user.id)
 
-        expect { backuper.send(:notify_user) }.to change { Topic.private_messages.count }.by(
+        expect { creator.send(:notify_user) }.to change { Topic.private_messages.count }.by(
           1,
         ).and not_change { Upload.count }
       end
@@ -161,9 +161,9 @@ RSpec.describe BackupRestore::Backuper do
       SiteSetting.max_post_length = 250
 
       silence_stdout do
-        backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+        creator = BackupRestore::Creator.new(Discourse.system_user.id)
 
-        expect { backuper.send(:notify_user) }.to change { Topic.private_messages.count }.by(
+        expect { creator.send(:notify_user) }.to change { Topic.private_messages.count }.by(
           1,
         ).and change { Upload.where(original_filename: "log.txt.zip").count }.by(1)
       end
@@ -177,11 +177,11 @@ RSpec.describe BackupRestore::Backuper do
       SiteSetting.export_authorized_extensions = "tar.gz"
 
       silence_stdout do
-        backuper = BackupRestore::Backuper.new(Discourse.system_user.id)
+        creator = BackupRestore::Creator.new(Discourse.system_user.id)
 
-        1.upto(10).each { |i| backuper.send(:log, "Line #{i}") }
+        1.upto(10).each { |i| creator.send(:log, "Line #{i}") }
 
-        expect { backuper.send(:notify_user) }.to change { Topic.private_messages.count }.by(
+        expect { creator.send(:notify_user) }.to change { Topic.private_messages.count }.by(
           1,
         ).and not_change { Upload.count }
       end
