@@ -1,28 +1,61 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { next } from "@ember/runloop";
+import { next, schedule } from "@ember/runloop";
+import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import PickFilesButton from "discourse/components/pick-files-button";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
-import { trackedArray } from "discourse/lib/tracked-tools";
 import { isAudio, isImage, isVideo } from "discourse/lib/uploads";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 
 export default class FormTemplateFieldUpload extends Component {
-  @tracked uploadValue;
+  @service appEvents;
+
+  @tracked uploadValue = this.args.value || "";
   @tracked fileInputSelector = `#${this.fileUploadElementId}`;
   @tracked
   fileUploadElementId = `${dasherize(this.args.id.toString())}-uploader`;
-  @trackedArray uploadedFiles = [];
+  @tracked uploadedFiles = [];
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: this.args.id,
     type: "composer",
     uploadDone: this.uploadDone,
   });
+
+  constructor() {
+    super(...arguments);
+    this.appEvents.on("composer:replace-text", this, this.handleReplaceText);
+  }
+
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off("composer:replace-text", this, this.handleReplaceText);
+  }
+
+  @action
+  handleReplaceText(oldVal, newVal) {
+    if (this.uploadValue?.includes(oldVal)) {
+      const escapedOldVal = oldVal.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      const regex = new RegExp(escapedOldVal, "g");
+      this.uploadValue = this.uploadValue.replace(regex, newVal ?? "");
+
+      // If it was a deletion, try to find and remove the file from uploadedFiles list
+      if (!newVal) {
+        this.uploadedFiles = this.uploadedFiles.filter((file) => {
+          return !oldVal.includes(file.short_url);
+        });
+      }
+
+      schedule("afterRender", () => {
+        this.args.onChange?.();
+      });
+    }
+  }
 
   get uploadStatusLabel() {
     return this.uppyUpload.uploading || this.uppyUpload.processing
