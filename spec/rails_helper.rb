@@ -361,7 +361,7 @@ RSpec.configure do |config|
       SiteSetting.defaults.set_regardless_of_locale(k, v) if SiteSetting.respond_to? k
     end
 
-    SiteSetting.provider = TestLocalProcessProvider.new
+    SiteSetting.provider = SiteSettings::LocalProcessProvider.new
 
     # Used for S3 system specs, see also setup_s3_system_test.
     MinioRunner.config do |minio_runner_config|
@@ -644,15 +644,6 @@ RSpec.configure do |config|
 
     # Prevents 500 errors for site setting URLs pointing to test.localhost in system specs.
     SiteIconManager.clear_cache!
-  end
-
-  class TestLocalProcessProvider < SiteSettings::LocalProcessProvider
-    attr_accessor :current_site
-
-    def initialize
-      super
-      self.current_site = "test"
-    end
   end
 
   config.after(:suite) do
