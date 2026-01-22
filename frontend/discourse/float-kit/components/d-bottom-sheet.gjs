@@ -48,7 +48,9 @@ class ExpandableView extends Component {
   @action
   handleTravel(event) {
     if (event.progress < 0.999 && this.view) {
-      this.view.focus();
+      if (!this.view.contains(document.activeElement)) {
+        this.view.focus();
+      }
     }
   }
 

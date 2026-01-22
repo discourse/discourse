@@ -1217,7 +1217,10 @@ export default class Controller {
     this.updateTravelStatus("idleInside");
     this.applyInertOutside();
     this.setupFocusScrollPrevention();
-    this.executeAutoFocusOnPresent();
+
+    if (message?.type !== "STEP") {
+      this.executeAutoFocusOnPresent();
+    }
 
     if (this.stateHelper.isInAnimationState("opening")) {
       this.stateHelper.advanceAnimation();
