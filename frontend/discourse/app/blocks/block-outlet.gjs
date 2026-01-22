@@ -502,6 +502,11 @@ export function block(name, options = {}) {
        * Similar to BlockOutletRootContainer's cache, this prevents
        * unnecessary recreation of leaf block children during navigation.
        *
+       * Memory note: This cache is bounded, not unbounded:
+       * - Keys use stable `__stableKey` values assigned once at registration time
+       * - The same keys are reused on every render/navigation
+       * - This cache instance is garbage collected when the owning component is destroyed
+       *
        * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>}
        */
       #childComponentCache = new Map();
@@ -1481,6 +1486,11 @@ class BlockOutletRootContainer extends Component {
    *
    * This cache prevents unnecessary component recreation during navigation.
    * Components are reused when their class and args haven't changed.
+   *
+   * Memory note: This cache is bounded, not unbounded:
+   * - Keys use stable `__stableKey` values assigned once at registration time
+   * - The same keys are reused on every render/navigation
+   * - This cache instance is garbage collected when the owning component is destroyed
    *
    * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>}
    */
