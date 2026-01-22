@@ -552,6 +552,16 @@
   align-items: center;
 }
 
+[data-d-sheet~="content-wrapper"][data-d-sheet~="top"][data-d-sheet~="center"],
+[data-d-sheet~="content-wrapper"][data-d-sheet~="bottom"][data-d-sheet~="center"],
+[data-d-sheet~="content-wrapper"][data-d-sheet~="left"][data-d-sheet~="center"],
+[data-d-sheet~="content-wrapper"][data-d-sheet~="right"][data-d-sheet~="center"] {
+  --d-sheet-content-wrapper-offset: calc(
+    (var(--d-sheet-travel-size) - var(--d-sheet-content-travel-axis)) / 2 -
+      var(--d-sheet-minimum-snap-distance)
+  );
+}
+
 [data-d-sheet~="content-wrapper"][data-d-sheet~="horizontal"],
 [data-d-sheet~="content-wrapper"][data-d-sheet~="vertical"] {
   --d-sheet-content-wrapper-centered-offset: calc(
