@@ -316,44 +316,40 @@ RSpec.describe "Managing Posts solved status" do
     end
 
     describe "when muting solution accepter" do
-      it "does not send notification to post author" do
-        solution_accepter = Fabricate(:user, trust_level: 4)
-        post_author = Fabricate(:user)
-        topic = Fabricate(:topic, user: Fabricate(:user))
-        post = Fabricate(:post, post_number: 2, topic: topic, user: post_author)
+      fab!(:solution_accepter) { Fabricate(:user, trust_level: 4) }
+      fab!(:author, :user)
 
-        MutedUser.create!(user_id: post_author.id, muted_user_id: solution_accepter.id)
+      before do
+        SiteSetting.notify_on_staff_accept_solved = true
+        MutedUser.create!(user_id: author.id, muted_user_id: solution_accepter.id)
+      end
+
+      it "does not send notification to post author" do
+        topic = Fabricate(:topic, user: Fabricate(:user))
+        post = Fabricate(:post, post_number: 2, topic: topic, user: author)
 
         expect { DiscourseSolved.accept_answer!(post, solution_accepter) }.not_to change {
-          post_author.notifications.count
+          author.notifications.count
         }
       end
 
       it "does not send notification to topic author" do
-        SiteSetting.notify_on_staff_accept_solved = true
-        solution_accepter = Fabricate(:user, trust_level: 4)
-        topic_author = Fabricate(:user)
-        topic = Fabricate(:topic, user: topic_author)
+        topic = Fabricate(:topic, user: author)
         post = Fabricate(:post, post_number: 2, topic: topic, user: Fabricate(:user))
 
-        MutedUser.create!(user_id: topic_author.id, muted_user_id: solution_accepter.id)
-
         expect { DiscourseSolved.accept_answer!(post, solution_accepter) }.not_to change {
-          topic_author.notifications.count
+          author.notifications.count
         }
       end
 
       it "does send notification to staff" do
-        SiteSetting.notify_on_staff_accept_solved = true
-        solution_accepter = Fabricate(:user, trust_level: 4)
-        staff_user = Fabricate(:admin)
-        topic = Fabricate(:topic, user: staff_user)
+        author.update(admin: true)
+
+        topic = Fabricate(:topic, user: author)
         post = Fabricate(:post, post_number: 2, topic: topic, user: Fabricate(:user))
 
-        MutedUser.create!(user_id: staff_user.id, muted_user_id: solution_accepter.id)
-
         expect { DiscourseSolved.accept_answer!(post, solution_accepter) }.to change {
-          staff_user.notifications.count
+          author.notifications.count
         }.by(1)
       end
     end
