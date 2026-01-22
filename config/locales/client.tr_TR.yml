@@ -2986,8 +2986,7 @@ tr_TR:
         post_approved: "gönderi onaylandı"
         membership_request_consolidated: "yeni üyelik talepleri"
         reaction: "yeni tepki"
-        votes_released: "Oy verildi"
-        new_features: "Yeni Discourse özellikleri çıktı!"
+        votes_released: "oy verildi"
         admin_problems: "sitenizin panonuzda yeni öneriler mevcut"
     upload_selector:
       change: "Değiştir"

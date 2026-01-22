@@ -2594,7 +2594,7 @@ lt:
         post_approved: "įrašas patvirtintas"
         membership_request_consolidated: "nauji narystės prašymai"
         reaction: "nauja reakcija"
-        votes_released: "Balsavimas buvo išleistas"
+        votes_released: "balsavimas buvo išleistas"
         admin_problems: "nauji patarimai jūsų svetainės informacijos suvestinėje"
     upload_selector:
       delete: "Pašalinti"

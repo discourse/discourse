@@ -3402,7 +3402,6 @@ he:
         membership_request_consolidated: "בקשות חברות חדשות"
         reaction: "תגובת אמוג׳י חדשה"
         votes_released: "ההצבעה שוחררה"
-        new_features: "יכולות חדשות של Discourse יצאו לאור!"
         admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
     upload_selector:
       change: "החלפה"
