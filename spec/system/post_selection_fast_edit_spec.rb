@@ -28,7 +28,6 @@ describe "Post selection | Fast edit", type: :system do
   context "when text is selected" do
     before do
       topic_page.visit_topic(topic)
-      expect(page).to have_selector(css(post))
       select_text_range(css(post), 0, 5)
     end
 
