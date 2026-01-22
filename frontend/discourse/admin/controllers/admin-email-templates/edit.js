@@ -79,4 +79,20 @@ export default class AdminEmailTemplatesEditController extends Controller {
       },
     });
   }
+
+  @discourseComputed(
+    "buffered.subject",
+    "buffered.body",
+    "emailTemplate.interpolation_keys"
+  )
+  interpolationKeysWithStatus(subject, body, keys) {
+    if (!keys) {
+      return [];
+    }
+    const usedKeys = new Set();
+    const content = `${subject || ""} ${body || ""}`;
+    const matches = content.match(/%\{(\w+)\}/g) || [];
+    matches.forEach((m) => usedKeys.add(m.slice(2, -1)));
+    return keys.map((key) => ({ key, isUsed: usedKeys.has(key) }));
+  }
 }

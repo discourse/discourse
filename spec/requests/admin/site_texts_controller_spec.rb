@@ -246,7 +246,6 @@ RSpec.describe Admin::SiteTextsController do
                   can_revert: overridden,
                   overridden:,
                   interpolation_keys:,
-                  has_interpolation_keys: interpolation_keys.present?,
                 }
               end
 
@@ -479,11 +478,7 @@ RSpec.describe Admin::SiteTextsController do
         expect(response.status).to eq(200)
         json = response.parsed_body
 
-        expect(json["site_text"]["interpolation_keys"]).to include(
-          "username",
-          "name",
-          "name_or_username",
-        )
+        expect(json["site_text"]["interpolation_keys"]).to eq(%w[name name_or_username username])
       end
 
       context "with plural keys" do

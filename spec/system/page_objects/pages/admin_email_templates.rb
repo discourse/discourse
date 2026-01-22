@@ -58,6 +58,17 @@ module PageObjects
         expect(link[:href]).to eq(href)
         expect(link.text).to eq(I18n.t("admin_js.admin.customize.email_templates.multiple_bodies"))
       end
+
+      def has_interpolation_keys?(keys)
+        container = find(".email-template .interpolation-keys")
+        expect(container).to have_text(I18n.t("admin_js.admin.site_text.interpolation_keys"))
+        keys.each { |key| expect(container).to have_css("span", text: key) }
+        true
+      end
+
+      def has_no_interpolation_keys?
+        has_no_css?(".email-template .interpolation-keys")
+      end
     end
   end
 end

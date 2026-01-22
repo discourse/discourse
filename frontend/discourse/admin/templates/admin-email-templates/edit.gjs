@@ -51,6 +51,15 @@ export default <template>
       />
     {{/if}}
 
+    {{#if @controller.interpolationKeysWithStatus.length}}
+      <div class="interpolation-keys">
+        {{i18n "admin.site_text.interpolation_keys"}}
+        {{#each @controller.interpolationKeysWithStatus as |item|}}
+          <span class={{if item.isUsed "used"}}>{{item.key}}</span>
+        {{/each}}
+      </div>
+    {{/if}}
+
     <SaveControls
       @model={{@controller.emailTemplate}}
       @action={{@controller.saveChanges}}

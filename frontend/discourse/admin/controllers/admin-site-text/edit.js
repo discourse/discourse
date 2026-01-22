@@ -77,7 +77,16 @@ export default class AdminSiteTextEdit extends Controller {
       .catch(popupAjaxError);
   }
 
-  get interpolationKeys() {
-    return this.siteText.interpolation_keys.join(", ");
+  @discourseComputed("buffered.value", "siteText.interpolation_keys")
+  interpolationKeysWithStatus(value, keys) {
+    if (!keys) {
+      return [];
+    }
+    const usedKeys = new Set();
+    if (value) {
+      const matches = value.match(/%\{(\w+)\}/g) || [];
+      matches.forEach((m) => usedKeys.add(m.slice(2, -1)));
+    }
+    return keys.map((key) => ({ key, isUsed: usedKeys.has(key) }));
   }
 }

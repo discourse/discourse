@@ -352,13 +352,6 @@ $mobile-breakpoint: 700px;
       margin-top: 1em;
     }
 
-    .desc {
-      padding-top: 3px;
-      font-size: var(--font-down-1);
-      line-height: var(--line-height-large);
-      color: var(--primary-medium);
-    }
-
     .outdated {
       border: 1px solid var(--content-border-color);
       box-sizing: border-box;
@@ -375,6 +368,35 @@ $mobile-breakpoint: 700px;
 
   p.warning {
     color: var(--danger);
+  }
+}
+
+.edit-site-text,
+.email-template {
+  .desc {
+    padding-top: 0.5em;
+    font-size: var(--font-down-1);
+    line-height: var(--line-height-large);
+    color: var(--primary-medium);
+  }
+
+  .interpolation-keys {
+    padding-top: 0.5em;
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+
+    span {
+      &:not(:last-of-type)::after {
+        content: " - ";
+        font-weight: normal;
+        color: var(--primary-low-mid);
+      }
+
+      &.used {
+        font-weight: bold;
+        color: var(--primary);
+      }
+    }
   }
 }
 

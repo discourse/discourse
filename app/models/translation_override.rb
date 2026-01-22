@@ -156,18 +156,17 @@ class TranslationOverride < ActiveRecord::Base
   end
 
   def invalid_interpolation_keys
-    return [] if current_default.blank?
+    return [] if current_default.blank? || value.blank?
 
     original_interpolation_keys = I18nInterpolationKeysFinder.find(current_default)
-    new_interpolation_keys = I18nInterpolationKeysFinder.find(value)
-    custom_interpolation_keys = []
+    custom_keys = self.class.custom_interpolation_keys(transformed_key)
+    allowed_keys = original_interpolation_keys + custom_keys
 
-    ALLOWED_CUSTOM_INTERPOLATION_KEYS.select do |keys, value|
-      custom_interpolation_keys = value if keys.any? { |key| transformed_key.start_with?(key) }
-    end
+    # Find all patterns that look like interpolation attempts: %{...}
+    attempted_keys = value.scan(/%\{([^{}]+?)\}/).flatten.uniq
 
-    (original_interpolation_keys | new_interpolation_keys) - original_interpolation_keys -
-      custom_interpolation_keys
+    # Return keys that aren't in the allowed list
+    attempted_keys - allowed_keys
   end
 
   def current_default

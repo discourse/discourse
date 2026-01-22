@@ -186,7 +186,7 @@ class Admin::SiteTextsController < Admin::AdminController
     interpolation_keys =
       I18nInterpolationKeysFinder.find(I18n.overrides_disabled { I18n.t(en_key, locale: :en) })
     custom_keys = TranslationOverride.custom_interpolation_keys(en_key)
-    { id: key, value: value, locale: locale, interpolation_keys: interpolation_keys + custom_keys }
+    { id: key, value:, locale:, interpolation_keys: (interpolation_keys + custom_keys).sort }
   end
 
   PLURALIZED_REGEX = /(.*)\.(zero|one|two|few|many|other)\z/

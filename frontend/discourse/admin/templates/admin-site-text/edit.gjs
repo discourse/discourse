@@ -42,9 +42,12 @@ export default <template>
       class="site-text-value"
     />
 
-    {{#if @controller.siteText.has_interpolation_keys}}
-      <div class="desc">{{i18n "admin.site_text.interpolation_keys"}}
-        {{@controller.interpolationKeys}}
+    {{#if @controller.interpolationKeysWithStatus.length}}
+      <div class="interpolation-keys">
+        {{i18n "admin.site_text.interpolation_keys"}}
+        {{#each @controller.interpolationKeysWithStatus as |item|}}
+          <span class={{if item.isUsed "used"}}>{{item.key}}</span>
+        {{/each}}
       </div>
     {{/if}}
 
