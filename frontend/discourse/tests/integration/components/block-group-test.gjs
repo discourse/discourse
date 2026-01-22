@@ -2,8 +2,8 @@ import Component from "@glimmer/component";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BlockOutlet, {
+  _renderBlocks,
   block,
-  renderBlocks,
 } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import {
@@ -42,7 +42,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       _registerBlock(GroupChild1);
       _registerBlock(GroupChild2);
     });
-    renderBlocks("hero-blocks", [
+    _renderBlocks("hero-blocks", [
       {
         block: BlockGroup,
         args: { name: "features" },
@@ -85,7 +85,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       _registerBlock(MultiChildB);
       _registerBlock(MultiChildC);
     });
-    renderBlocks("homepage-blocks", [
+    _renderBlocks("homepage-blocks", [
       {
         block: BlockGroup,
         args: { name: "multi-children" },
@@ -113,7 +113,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(ArgsChild));
-    renderBlocks("sidebar-blocks", [
+    _renderBlocks("sidebar-blocks", [
       {
         block: BlockGroup,
         args: { name: "args-children" },
@@ -141,7 +141,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(NestedLeaf));
-    renderBlocks("main-outlet-blocks", [
+    _renderBlocks("main-outlet-blocks", [
       {
         block: BlockGroup,
         args: { name: "outer" },
@@ -173,7 +173,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(WrapperTestChild));
-    renderBlocks("sidebar-blocks", [
+    _renderBlocks("sidebar-blocks", [
       {
         block: BlockGroup,
         args: { name: "wrapper-test" },
@@ -207,7 +207,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(DeepLeaf));
-    renderBlocks("header-blocks", [
+    _renderBlocks("header-blocks", [
       {
         block: BlockGroup,
         args: { name: "level-1" },
@@ -252,7 +252,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(OutletNameTest));
-    renderBlocks("homepage-blocks", [
+    _renderBlocks("homepage-blocks", [
       {
         block: BlockGroup,
         args: { name: "parent" },
@@ -291,7 +291,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     });
 
     withTestBlockRegistration(() => _registerBlock(OverlayTestChild));
-    renderBlocks("sidebar-blocks", [
+    _renderBlocks("sidebar-blocks", [
       {
         block: BlockGroup,
         args: { name: "overlay-test" },
@@ -336,7 +336,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     });
 
     withTestBlockRegistration(() => _registerBlock(DeepOverlayLeaf));
-    renderBlocks("header-blocks", [
+    _renderBlocks("header-blocks", [
       {
         block: BlockGroup,
         args: { name: "level-1" },
@@ -409,7 +409,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       _registerBlock(TabsContainer);
       _registerBlock(TabContent);
     });
-    renderBlocks("header-blocks", [
+    _renderBlocks("header-blocks", [
       {
         block: TabsContainer,
         children: [

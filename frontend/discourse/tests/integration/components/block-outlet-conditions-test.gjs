@@ -3,8 +3,8 @@ import { getOwner } from "@ember/owner";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import BlockOutlet, {
+  _renderBlocks,
   block,
-  renderBlocks,
 } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
@@ -58,7 +58,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(NoConditionBlock));
-    renderBlocks("hero-blocks", [{ block: NoConditionBlock }], testOwner);
+    _renderBlocks("hero-blocks", [{ block: NoConditionBlock }], testOwner);
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
@@ -74,7 +74,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(PassingConditionBlock));
-    renderBlocks(
+    _renderBlocks(
       "homepage-blocks",
       [
         {
@@ -99,7 +99,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(FailingConditionBlock));
-    renderBlocks(
+    _renderBlocks(
       "sidebar-blocks",
       [
         {
@@ -124,7 +124,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(AndLogicBlock));
-    renderBlocks(
+    _renderBlocks(
       "main-outlet-blocks",
       [
         {
@@ -151,7 +151,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(AllPassBlock));
-    renderBlocks(
+    _renderBlocks(
       "header-blocks",
       [
         {
@@ -176,7 +176,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(OrLogicPassBlock));
-    renderBlocks(
+    _renderBlocks(
       "hero-blocks",
       [
         {
@@ -203,7 +203,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(OrLogicFailBlock));
-    renderBlocks(
+    _renderBlocks(
       "homepage-blocks",
       [
         {
@@ -230,7 +230,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(NotTrueBlock));
-    renderBlocks(
+    _renderBlocks(
       "sidebar-blocks",
       [
         {
@@ -255,7 +255,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(NotFalseBlock));
-    renderBlocks(
+    _renderBlocks(
       "main-outlet-blocks",
       [
         {
@@ -292,7 +292,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       _registerBlock(NestedVisibleBlock);
       _registerBlock(NestedHiddenBlock);
     });
-    renderBlocks(
+    _renderBlocks(
       "header-blocks",
       [
         {
@@ -346,7 +346,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       _registerBlock(MixedVisible2);
       _registerBlock(MixedHidden);
     });
-    renderBlocks(
+    _renderBlocks(
       "hero-blocks",
       [
         { block: MixedVisible1, conditions: { type: "always-true" } },
@@ -372,7 +372,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(NotWithinOrBlock));
-    renderBlocks(
+    _renderBlocks(
       "sidebar-blocks",
       [
         {
@@ -399,7 +399,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(OrWithinAndBlock));
-    renderBlocks(
+    _renderBlocks(
       "main-outlet-blocks",
       [
         {
@@ -429,7 +429,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(OrWithinAndPassBlock));
-    renderBlocks(
+    _renderBlocks(
       "header-blocks",
       [
         {
@@ -457,7 +457,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(DeepNestedBlock));
-    renderBlocks(
+    _renderBlocks(
       "homepage-blocks",
       [
         {
@@ -500,7 +500,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       _registerBlock(ChildHidden1);
       _registerBlock(ChildHidden2);
     });
-    renderBlocks(
+    _renderBlocks(
       "hero-blocks",
       [
         {
@@ -549,7 +549,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       _registerBlock(ChildVisibleContainer);
       _registerBlock(ChildHiddenContainer);
     });
-    renderBlocks(
+    _renderBlocks(
       "sidebar-blocks",
       [
         {
@@ -590,7 +590,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     withTestBlockRegistration(() => {
       _registerBlock(DeeplyHiddenChild);
     });
-    renderBlocks(
+    _renderBlocks(
       "main-outlet-blocks",
       [
         {
@@ -636,7 +636,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     withTestBlockRegistration(() => {
       _registerBlock(DeeplyVisibleChild);
     });
-    renderBlocks(
+    _renderBlocks(
       "header-blocks",
       [
         {
@@ -680,7 +680,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
     withTestBlockRegistration(() => {
       _registerBlock(ChildWouldBeVisible);
     });
-    renderBlocks(
+    _renderBlocks(
       "homepage-blocks",
       [
         {

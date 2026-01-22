@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { renderBlocks } from "discourse/blocks/block-outlet";
+import { _renderBlocks } from "discourse/blocks/block-outlet";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";
 import { addCardClickListenerSelector } from "discourse/components/card-contents-base";
@@ -3389,7 +3389,7 @@ class _PluginApi {
     // Capture call site here, excluding this method, so the stack trace
     // points directly to the user's code that called api.renderBlocks().
     const callSiteError = captureCallSite(this.renderBlocks);
-    renderBlocks(outletName, blocks, this.container, callSiteError);
+    _renderBlocks(outletName, blocks, this.container, callSiteError);
   }
 
   /**

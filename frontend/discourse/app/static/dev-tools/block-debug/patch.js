@@ -1,7 +1,7 @@
 // @ts-check
 import curryComponent from "ember-curry-component";
 /** @type {import("discourse/blocks/block-outlet.gjs")} */
-import { isContainerBlock } from "discourse/blocks/block-outlet";
+import { _isContainerBlock } from "discourse/blocks/block-outlet";
 import {
   DEBUG_CALLBACK,
   debugHooks,
@@ -89,7 +89,7 @@ function createGhostChildren(
     }
 
     const blockName = resolvedBlock.blockName || "unknown";
-    const isChildContainer = isContainerBlock(resolvedBlock);
+    const isChildContainer = _isContainerBlock(resolvedBlock);
 
     // Build container path for nested containers
     let nestedContainerPath;

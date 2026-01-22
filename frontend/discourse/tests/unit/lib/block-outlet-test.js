@@ -2,7 +2,7 @@ import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { block, isBlock, renderBlocks } from "discourse/blocks/block-outlet";
+import { _isBlock, _renderBlocks, block } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import {
   _registerBlock,
@@ -18,25 +18,25 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("test-decorated")
       class DecoratedBlock extends Component {}
 
-      assert.true(isBlock(DecoratedBlock));
+      assert.true(_isBlock(DecoratedBlock));
     });
 
     test("returns false for plain Glimmer components", function (assert) {
       // eslint-disable-next-line ember/no-empty-glimmer-component-classes
       class PlainComponent extends Component {}
 
-      assert.false(isBlock(PlainComponent));
+      assert.false(_isBlock(PlainComponent));
     });
 
     test("returns false for non-component classes", function (assert) {
       class NotAComponent {}
 
-      assert.false(isBlock(NotAComponent));
+      assert.false(_isBlock(NotAComponent));
     });
 
     test("returns false for null/undefined", function (assert) {
-      assert.false(isBlock(null));
-      assert.false(isBlock(undefined));
+      assert.false(_isBlock(null));
+      assert.false(_isBlock(undefined));
     });
   });
 
@@ -61,7 +61,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("check-block")
       class CheckBlock extends Component {}
 
-      assert.true(isBlock(CheckBlock));
+      assert.true(_isBlock(CheckBlock));
     });
 
     test("sets blockMetadata with default values", function (assert) {
@@ -367,14 +367,14 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(ValidBlock));
 
       assert.throws(
-        () => renderBlocks("unknown-outlet", [{ block: ValidBlock }]),
+        () => _renderBlocks("unknown-outlet", [{ block: ValidBlock }]),
         /Unknown block outlet/
       );
     });
 
     test("throws for missing block component", async function (assert) {
       await assert.rejects(
-        renderBlocks("hero-blocks", [{ args: { title: "test" } }]),
+        _renderBlocks("hero-blocks", [{ args: { title: "test" } }]),
         /missing required "block" property/
       );
     });
@@ -384,7 +384,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       class PlainComponent extends Component {}
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [{ block: PlainComponent }]),
+        _renderBlocks("hero-blocks", [{ block: PlainComponent }]),
         /not a valid @block-decorated component/
       );
     });
@@ -402,7 +402,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       });
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           {
             block: LeafBlock,
             children: [{ block: ChildBlock }],
@@ -414,7 +414,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
     test("throws for container block without children", async function (assert) {
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           { block: BlockGroup, args: { name: "test" } },
         ]),
         /must have children/
@@ -428,7 +428,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(ReservedTestBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           {
             block: ReservedTestBlock,
             args: { classNames: "custom" },
@@ -445,7 +445,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(ReservedOutletBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           {
             block: ReservedOutletBlock,
             args: { outletName: "test" },
@@ -462,7 +462,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(ReservedChildrenBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           {
             block: ReservedChildrenBlock,
             args: { children: [] },
@@ -479,7 +479,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(ReservedConditionsBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           {
             block: ReservedConditionsBlock,
             args: { conditions: {} },
@@ -496,7 +496,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(ReservedBlockSymbolBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           {
             block: ReservedBlockSymbolBlock,
             args: { $block$: "test" },
@@ -515,7 +515,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       );
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           {
             block: UnderscoreArgReservedBlock,
             args: { _privateArg: "value" },
@@ -535,7 +535,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(NestedChildBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           {
             block: BlockGroup,
             args: { name: "test" },
@@ -555,7 +555,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       const owner = getOwner(this);
 
       await assert.rejects(
-        renderBlocks(
+        _renderBlocks(
           "hero-blocks",
           [
             {
@@ -575,7 +575,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(ValidConfigBlock));
 
-      renderBlocks("sidebar-blocks", [
+      _renderBlocks("sidebar-blocks", [
         { block: ValidConfigBlock, args: { title: "Test" } },
       ]);
 
@@ -588,7 +588,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(ContainerChildBlock));
 
-      renderBlocks("main-outlet-blocks", [
+      _renderBlocks("main-outlet-blocks", [
         {
           block: BlockGroup,
           args: { name: "test" },
@@ -607,7 +607,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       const owner = getOwner(this);
 
-      renderBlocks(
+      _renderBlocks(
         "header-blocks",
         [
           {
@@ -632,7 +632,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(RequiredArgBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [{ block: RequiredArgBlock, args: {} }]),
+        _renderBlocks("hero-blocks", [{ block: RequiredArgBlock, args: {} }]),
         /missing required args\.title/
       );
     });
@@ -648,7 +648,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(StringArgBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           { block: StringArgBlock, args: { title: 123 } },
         ]),
         /must be a string/
@@ -666,7 +666,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(NumberArgBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           { block: NumberArgBlock, args: { count: "five" } },
         ]),
         /must be a number/
@@ -684,7 +684,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(BooleanArgBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           { block: BooleanArgBlock, args: { enabled: "yes" } },
         ]),
         /must be a boolean/
@@ -702,7 +702,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(ArrayArgBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           { block: ArrayArgBlock, args: { tags: "tag1,tag2" } },
         ]),
         /must be an array/
@@ -720,7 +720,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(ArrayItemTypeBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [
+        _renderBlocks("hero-blocks", [
           {
             block: ArrayItemTypeBlock,
             args: { tags: ["valid", 123, "also-valid"] },
@@ -743,7 +743,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(ValidSchemaArgsBlock));
 
-      renderBlocks("hero-blocks", [
+      _renderBlocks("hero-blocks", [
         {
           block: ValidSchemaArgsBlock,
           args: {
@@ -769,7 +769,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(OptionalArgsBlock));
 
-      renderBlocks("hero-blocks", [
+      _renderBlocks("hero-blocks", [
         {
           block: OptionalArgsBlock,
           args: { title: "Required Only" },
@@ -788,7 +788,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(DeniedOutletBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [{ block: DeniedOutletBlock }]),
+        _renderBlocks("hero-blocks", [{ block: DeniedOutletBlock }]),
         /cannot be rendered in outlet.*matches deniedOutlets pattern/
       );
     });
@@ -802,7 +802,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => _registerBlock(NotAllowedOutletBlock));
 
       await assert.rejects(
-        renderBlocks("hero-blocks", [{ block: NotAllowedOutletBlock }]),
+        _renderBlocks("hero-blocks", [{ block: NotAllowedOutletBlock }]),
         /cannot be rendered in outlet.*does not match any allowedOutlets/
       );
     });
@@ -815,7 +815,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(AllowedOutletBlock));
 
-      renderBlocks("sidebar-blocks", [{ block: AllowedOutletBlock }]);
+      _renderBlocks("sidebar-blocks", [{ block: AllowedOutletBlock }]);
 
       assert.true(true, "no error thrown for block in allowed outlet");
     });
@@ -826,8 +826,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(UnrestrictedOutletBlock));
 
-      renderBlocks("hero-blocks", [{ block: UnrestrictedOutletBlock }]);
-      renderBlocks("sidebar-blocks", [{ block: UnrestrictedOutletBlock }]);
+      _renderBlocks("hero-blocks", [{ block: UnrestrictedOutletBlock }]);
+      _renderBlocks("sidebar-blocks", [{ block: UnrestrictedOutletBlock }]);
 
       assert.true(true, "unrestricted block renders in any outlet");
     });
@@ -880,7 +880,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
       withTestBlockRegistration(() => _registerBlock(UnicodeArgsBlock));
 
-      renderBlocks(
+      _renderBlocks(
         "hero-blocks",
         [
           {

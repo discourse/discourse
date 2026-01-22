@@ -73,7 +73,7 @@ import { formatWithSuggestion } from "discourse/lib/string-similarity";
  * @typedef {Object} LayoutEntry
  * @property {typeof Component} block - The block component class (must use @block decorator).
  * @property {Object} [args] - Args to pass to the block component.
- * @property {string} [classNames] - Additional CSS classes for the block wrapper.
+ * @property {string|string[]} [classNames] - Additional CSS classes for the block wrapper.
  * @property {Array<LayoutEntry>} [children] - Nested block entries (only for container blocks).
  * @property {Array<Object>|Object} [conditions] - Conditions that must pass for block to render.
  * @property {Object} [containerArgs] - Args passed from parent container's childArgs.
@@ -123,7 +123,7 @@ function assignStableKeys(entries) {
  *
  * USE ONLY FOR TESTING PURPOSES.
  */
-export function resetOutletLayoutsForTesting() {
+export function _resetOutletLayoutsForTesting() {
   if (DEBUG) {
     outletLayouts.clear();
     nextEntryKey = 0;
@@ -339,7 +339,7 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * @returns {function(typeof Component): typeof Component} Decorator function
  *
  * @typedef {Object} ArgSchema
- * @property {"string"|"number"|"boolean"|"array"} type - The argument type (required)
+ * @property {"string"|"number"|"boolean"|"array"|"any"} type - The argument type (required)
  * @property {boolean} [required=false] - Whether the argument is required
  * @property {*} [default] - Default value for the argument
  * @property {"string"|"number"|"boolean"} [itemType] - Item type for array arguments (no nested arrays)
@@ -350,6 +350,7 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * @property {number} [max] - Maximum value for number
  * @property {boolean} [integer] - Whether number must be an integer
  * @property {Array} [enum] - Allowed values for the argument
+ * @property {Array} [itemEnum] - Allowed values for array items
  *
  * @example
  * // Simple block with no restrictions
@@ -806,7 +807,7 @@ function processBlockEntries({
         resolvedBlock
       );
     const blockName = blockClass.blockName || "unknown";
-    const isContainer = isContainerBlock(blockClass);
+    const isContainer = _isContainerBlock(blockClass);
 
     // Use the stable key assigned at registration time. This key survives
     // shallow cloning and ensures DOM identity is maintained when blocks
@@ -961,7 +962,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
     classNames,
     children: nestedChildren,
   } = entry;
-  const isContainer = isContainerBlock(ComponentClass);
+  const isContainer = _isContainerBlock(ComponentClass);
 
   // Apply default values from metadata before building args
   const argsWithDefaults = applyArgDefaults(ComponentClass, args);
@@ -1033,7 +1034,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
  * @param {Function} component - The component to check
  * @returns {boolean} True if the component is registered as a block, false otherwise
  */
-export function isBlock(component) {
+export function _isBlock(component) {
   return !!component?.[__BLOCK_FLAG];
 }
 
@@ -1048,7 +1049,7 @@ export function isBlock(component) {
  * @param {Function} component - The component to check
  * @returns {boolean} True if the component is registered as a container block, false otherwise
  */
-export function isContainerBlock(component) {
+export function _isContainerBlock(component) {
   return !!component?.[__BLOCK_CONTAINER_FLAG];
 }
 
@@ -1073,9 +1074,9 @@ export function isContainerBlock(component) {
  *
  * @example
  * ```js
- * import { renderBlocks } from "discourse/blocks/block-outlet";
+ * import { _renderBlocks } from "discourse/blocks/block-outlet";
  *
- * renderBlocks("homepage-blocks", [
+ * _renderBlocks("homepage-blocks", [
  *   { block: HeroBanner, args: { title: "Welcome" } },
  *   {
  *     block: BlockGroup,
@@ -1094,12 +1095,12 @@ export function isContainerBlock(component) {
  * ]);
  * ```
  */
-export function renderBlocks(outletName, layout, owner, callSiteError = null) {
+export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
   // Use provided call site error, or capture one here as fallback.
   // When called via api.renderBlocks(), the call site is captured there
   // to exclude the PluginApi wrapper from the stack trace.
   if (!callSiteError) {
-    callSiteError = captureCallSite(renderBlocks);
+    callSiteError = captureCallSite(_renderBlocks);
   }
 
   // === Synchronous validation for outlet-level checks ===
@@ -1140,17 +1141,17 @@ export function renderBlocks(outletName, layout, owner, callSiteError = null) {
   // In dev mode, this eagerly resolves all factories for early error detection.
   // In prod, it defers factory resolution to render time.
   //
-  // Validation errors are reported via raiseBlockError() which:
-  // - In DEBUG: throws (surfacing as unhandled rejection in console)
-  // - In prod: dispatches a 'block-error' event
+  // Validation errors are reported via raiseBlockError() which always throws.
+  // In catch handlers (e.g., BlockOutlet.children), errors are dispatched as
+  // 'discourse-error' events and surfaced to admins.
   //
   // The promise is returned so tests can await and catch errors.
   const validatedLayout = validateLayout(
     layout,
     outletName,
     blocksService,
-    isBlock,
-    isContainerBlock,
+    _isBlock,
+    _isContainerBlock,
     "", // parentPath - empty so paths start with array index like [0]
     callSiteError // Error object for source-mapped call site
   ).then(() => layout);
@@ -1590,7 +1591,7 @@ class BlockOutletRootContainer extends Component {
           resolvedBlock
         );
       const blockName = blockClass.blockName || "unknown";
-      const isContainer = isContainerBlock(blockClass);
+      const isContainer = _isContainerBlock(blockClass);
 
       // Evaluate this block's own conditions.
       // The withDebugGroup wrapper ensures START_GROUP/END_GROUP are always paired.
