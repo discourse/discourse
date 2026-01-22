@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FlaggedTopicSummarySerializer < ActiveModel::Serializer
+class FlaggedTopicSummarySerializer < ApplicationSerializer
   attributes(:id, :flag_counts, :user_ids, :last_flag_at)
 
   has_one :topic, serializer: FlaggedTopicSerializer

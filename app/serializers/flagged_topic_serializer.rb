@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class FlaggedTopicSerializer < ActiveModel::Serializer
+class FlaggedTopicSerializer < ApplicationSerializer
   attributes :id,
              :title,
              :fancy_title,
