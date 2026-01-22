@@ -277,8 +277,15 @@ export function resolveBlockSync(blockRef) {
   // Trigger async resolution but return null for this render cycle
   if (!DEBUG) {
     resolveBlock(blockName).catch((error) => {
-      // eslint-disable-next-line no-console
-      console.error(`[Blocks] Failed to resolve block "${blockName}":`, error);
+      // TODO (blocks-api) Consider returning an error marker and rendering an error placeholder
+      //  component for admin visibility, rather than silently returning null.
+
+      // surface error to admins in the UI / log in the console
+      document.dispatchEvent(
+        new CustomEvent("discourse-error", {
+          detail: { messageKey: "broken_block_factory_alert", error },
+        })
+      );
     });
   }
 
