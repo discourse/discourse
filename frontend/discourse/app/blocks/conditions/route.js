@@ -53,7 +53,9 @@ import { blockCondition } from "./decorator";
  * @param {string[]} [urls] - URL patterns to match (passes if ANY match).
  * @param {string[]} [pages] - Page types to match (passes if ANY match).
  * @param {Object} [params] - Page parameters to match (only valid with `pages`).
- * @param {Object} [queryParams] - Query parameters to match.
+ * @param {Object} [queryParams] - Query parameters to match. Note: queryParams alone
+ *   is not sufficient - the condition requires `urls` or `pages` to match first.
+ *   This creates implicit AND behavior between route and query params.
  *
  * @example
  * // Match category pages using page type
@@ -167,6 +169,11 @@ export default class BlockRouteCondition extends BlockCondition {
    * - With `pages`: passes if ANY page type matches
    * - With `params`: additionally requires all params to match (only with `pages`)
    * - With `queryParams`: additionally requires all query params to match
+   *
+   * **Important:** `queryParams` alone is not sufficient to match. The condition
+   * will only pass if BOTH the route (via `urls` or `pages`) AND the queryParams
+   * match. This is implicit AND behavior. To match only based on query parameters,
+   * use `urls: ["**"]` to match all routes first.
    *
    * @param {Object} args - The condition arguments.
    * @param {Object} [context={}] - Evaluation context (for debugging).
