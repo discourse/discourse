@@ -56,6 +56,10 @@ Before diving in, understand what the Block API *doesn't* do:
 
 - **No partial re-evaluation.** When conditions depend on reactive state, the entire block tree re-evaluates. For outlets with many blocks or complex conditions, this can impact performance.
 
+- **Name length limit.** Block and outlet names cannot exceed 100 characters. This applies to the full namespaced name (e.g., `"theme:my-theme:my-block"`).
+
+- **Nesting depth limit.** Block layouts cannot nest deeper than 20 levels. This prevents stack overflow from deeply nested configurations and typically indicates a design issue if reached.
+
 These constraints are intentional trade-offs for simplicity and predictability. For truly bespoke customizations that don't fit the block model—complex interactive components, entirely custom layouts, or cases requiring multiple independent contributors—plugin outlets remain available.
 
 ### The Core Abstraction: LEGO for UI
@@ -336,6 +340,7 @@ The args schema serves three purposes:
 | Property | Types | Description |
 |----------|-------|-------------|
 | `itemType` | `array` | Type of items (`"string"`, `"number"`, `"boolean"`) |
+| `itemEnum` | `array` | Restrict array items to specific values |
 | `pattern` | `string` | Regex pattern for validation |
 | `minLength` | `string`, `array` | Minimum length (characters or items) |
 | `maxLength` | `string`, `array` | Maximum length (characters or items) |
@@ -361,6 +366,9 @@ args: {
 
   // Array with length constraints
   tags: { type: "array", itemType: "string", minLength: 1, maxLength: 10 },
+
+  // Array with itemEnum (restrict items to specific values)
+  categories: { type: "array", itemType: "string", itemEnum: ["news", "blog", "docs"] },
 }
 ```
 
@@ -383,6 +391,8 @@ Constraints define validation rules across multiple arguments. They're checked a
 | `atLeastOne` | At least one arg must be provided | `atLeastOne: ["id", "tag"]` |
 | `exactlyOne` | Exactly one arg must be provided (mutual exclusion + required) | `exactlyOne: ["id", "tag"]` |
 | `allOrNone` | Either all are provided or none | `allOrNone: ["width", "height"]` |
+| `atMostOne` | At most one arg may be provided (0 or 1, mutual exclusion) | `atMostOne: ["id", "tag"]` |
+| `requires` | If dependent arg is provided, required arg must also be provided | `requires: { params: "pages" }` |
 
 **Error messages:**
 
@@ -391,6 +401,8 @@ Block "featured-list": at least one of "id", "tag" must be provided.
 Block "featured-list": exactly one of "id", "tag" must be provided, but got both.
 Block "featured-list": exactly one of "id", "tag" must be provided, but got none.
 Block "featured-list": args "width", "height" must be provided together or not at all.
+Block "featured-list": at most one of "id", "tag" may be provided, but got both.
+Block "featured-list": arg "params" requires "pages" to also be provided.
 ```
 
 **Vacuous constraint detection:** The system detects constraints that are always true or always false due to default values. For example:
@@ -1157,16 +1169,16 @@ Some APIs are internal (prefixed with `_`) but available for specific use cases:
 
 **Testing helpers:**
 ```javascript
+import { withTestBlockRegistration } from "discourse/lib/blocks/-internals/registry/block";
 import {
+  _setTestSourceIdentifier,
   resetBlockRegistryForTesting,
-  withTestBlockRegistration,
-  _setTestSourceIdentifier
-} from "discourse/lib/blocks/registration";
+} from "discourse/tests/helpers/block-registry-testing";
 ```
 
 **Debug hooks:**
 ```javascript
-import { debugHooks } from "discourse/lib/blocks/debug-hooks";
+import { debugHooks } from "discourse/lib/blocks/-internals/debug/block-processing";
 
 // Reactive getters for checking debug state
 debugHooks.isBlockLoggingEnabled   // boolean
@@ -1188,8 +1200,8 @@ import {
   _freezeConditionTypeRegistry,
   isConditionTypeRegistryFrozen,
   hasConditionType,
-  getConditionTypeRegistry,
-} from "discourse/lib/blocks/registration";
+  getAllConditionTypeEntries,
+} from "discourse/lib/blocks/-internals/registry/condition";
 ```
 
 > :exclamation: **Important:** Condition types must be registered before the `"freeze-block-registry"` initializer runs. Use `api.registerBlockConditionType()` in a pre-initializer for custom conditions.
@@ -1327,9 +1339,10 @@ Each entry receives two internal properties after evaluation:
 - `__failureReason` (`string | null`) - Why it's hidden (for debug tools)
 
 Failure reasons include:
-- `"conditions_failed"` - Block's own conditions returned false
-- `"no_visible_children"` - Container has no visible children
-- `"not_registered"` - Optional block not found in registry
+- `"condition-failed"` - Block's own conditions returned false
+- `"no-visible-children"` - Container has no visible children
+
+> :bulb: Optional blocks that are not registered are handled separately via a marker object, not a failure reason. They simply don't appear in the rendered output.
 
 **Container Visibility Logic:**
 
@@ -1350,9 +1363,9 @@ The Block API caches leaf blocks to optimize navigation performance.
 
 Leaf blocks (blocks without children) are cached based on:
 - Component class reference
-- Serialized args object
+- Args object (compared using shallow equality)
 
-When a user navigates between pages, if a leaf block's class and args match a cached entry, the cached component is reused instead of creating a new one.
+When a user navigates between pages, if a leaf block's class and args match a cached entry (same class, shallow-equal args), the cached component is reused instead of creating a new one.
 
 **What Doesn't Get Cached:**
 
@@ -1548,7 +1561,7 @@ When an error occurs, the stack trace points to your code, not internal block ma
 // Error shows:
 at renderBlocks (your-theme/api-initializers/configure-blocks.js:15:3)
 // Not:
-at validateConfig (discourse/lib/blocks/config-validation.js:400:1)
+at validateConfig (discourse/lib/blocks/-internals/validation/layout-validation.js:400:1)
 ```
 
 This is achieved via `captureCallSite()` which excludes internal frames. Note that this API isn't available in all browsers—we provide cleaner stack traces when we can, but you'll still get useful error messages regardless.
@@ -2568,36 +2581,27 @@ The built-in conditions cover most cases. But if you need something specific to 
 You can create custom condition types:
 
 ```javascript
-import { BlockCondition } from "discourse/blocks/conditions";
-import { blockCondition } from "discourse/blocks/conditions/decorator";
+import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import { service } from "@ember/service";
 
 @blockCondition({
   type: "feature-flag",
-  validArgKeys: ["flag", "enabled"],
+  args: {
+    flag: { type: "string", required: true },
+    enabled: { type: "boolean" },
+  },
+  // Custom validation runs after schema validation (types, required).
+  // Use this for logic that can't be expressed declaratively.
+  // Returns error string or null if valid.
+  validate(args) {
+    if (args.flag && !args.flag.match(/^[a-z][a-z0-9_]*$/)) {
+      return "FeatureFlagCondition: `flag` must be lowercase with underscores.";
+    }
+    return null;
+  },
 })
 export default class FeatureFlagCondition extends BlockCondition {
   @service featureFlags;
-
-  /**
-   * Validates condition arguments. Returns an error object if invalid, null if valid.
-   *
-   * @param {Object} args - The condition arguments.
-   * @returns {{ message: string, path?: string } | null} Error info or null if valid.
-   */
-  validate(args) {
-    // Always check base class validation first
-    const baseError = super.validate(args);
-    if (baseError) {
-      return baseError;
-    }
-
-    if (!args.flag) {
-      return { message: "FeatureFlagCondition: `flag` argument is required.", path: "flag" };
-    }
-
-    return null;  // Valid
-  }
 
   evaluate(args) {
     const { flag, enabled = true } = args;
@@ -3133,11 +3137,12 @@ api.registerBlockConditionType(ConditionClass)
 
 // ArgSchema:
 {
-  type: "string" | "number" | "boolean" | "array",
+  type: "string" | "number" | "boolean" | "array" | "any",
   required?: boolean,
   default?: any,
   // For arrays:
   itemType?: "string" | "number" | "boolean",
+  itemEnum?: string[] | number[] | boolean[],  // Restrict array items to specific values
   // For strings:
   pattern?: RegExp,
   minLength?: number,                           // Also for arrays
@@ -3155,6 +3160,8 @@ api.registerBlockConditionType(ConditionClass)
   atLeastOne?: string[],   // At least one must be provided
   exactlyOne?: string[],   // Exactly one must be provided
   allOrNone?: string[],    // All or none must be provided
+  atMostOne?: string[],    // At most one may be provided (0 or 1)
+  requires?: { [dependent: string]: string },  // Dependent arg requires another arg
 }
 
 // ChildArgSchema (extends ArgSchema):
@@ -3360,51 +3367,60 @@ import { getOwner, setOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import FeatureFlagCondition from "my-plugin/blocks/conditions/feature-flag";
+import { validateConditions } from "discourse/lib/blocks/-internals/validation/conditions";
 
 module("Unit | Condition | feature-flag", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
-    // Instantiate the condition directly
     this.condition = new FeatureFlagCondition();
-    // Set the owner to enable service injection (@service decorators)
     setOwner(this.condition, getOwner(this));
+
+    // Helper to validate through the infrastructure (handles schema + custom validation)
+    this.validateCondition = (args) => {
+      const conditionTypes = new Map([["feature-flag", this.condition]]);
+      try {
+        validateConditions({ type: "feature-flag", ...args }, conditionTypes);
+        return null;
+      } catch (error) {
+        return error;
+      }
+    };
   });
 
-  module("validate", function () {
-    test("returns error for missing flag argument", function (assert) {
-      const error = this.condition.validate({});
+  module("validate (through infrastructure)", function () {
+    test("returns error for invalid flag format", function (assert) {
+      const error = this.validateCondition({ flag: "INVALID-FLAG" });
 
       assert.notStrictEqual(error, null, "returns an error");
-      assert.true(error.message.includes("flag"), "error mentions flag");
+      assert.true(error?.message.includes("flag"), "error mentions flag");
     });
 
     test("passes valid configuration", function (assert) {
-      const error = this.condition.validate({ flag: "my-feature" });
+      const error = this.validateCondition({ flag: "my_feature" });
       assert.strictEqual(error, null);
     });
   });
 
   module("evaluate", function () {
     test("returns true when feature flag is enabled", function (assert) {
-      // Mock the service the condition depends on
       this.condition.featureFlags = { isEnabled: () => true };
 
-      const result = this.condition.evaluate({ flag: "my-feature", enabled: true });
+      const result = this.condition.evaluate({ flag: "my_feature", enabled: true });
       assert.true(result);
     });
 
     test("returns false when feature flag is disabled", function (assert) {
       this.condition.featureFlags = { isEnabled: () => false };
 
-      const result = this.condition.evaluate({ flag: "my-feature", enabled: true });
+      const result = this.condition.evaluate({ flag: "my_feature", enabled: true });
       assert.false(result);
     });
 
     test("returns true when checking for disabled flag that is disabled", function (assert) {
       this.condition.featureFlags = { isEnabled: () => false };
 
-      const result = this.condition.evaluate({ flag: "my-feature", enabled: false });
+      const result = this.condition.evaluate({ flag: "my_feature", enabled: false });
       assert.true(result);
     });
   });
@@ -3419,11 +3435,11 @@ Test blocks with conditions using the test helpers from the registration module:
 import Component from "@glimmer/component";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import BlockOutlet, { block, renderBlocks } from "discourse/blocks/block-outlet";
+import BlockOutlet, { _renderBlocks, block } from "discourse/blocks/block-outlet";
 import {
   _registerBlock,
   withTestBlockRegistration,
-} from "discourse/lib/blocks/registration";
+} from "discourse/lib/blocks/-internals/registry/block";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Block | my-banner", function (hooks) {
@@ -3444,7 +3460,7 @@ module("Integration | Block | my-banner", function (hooks) {
 
     // Configure the layout (top-level function, not a service method)
     // Note: owner parameter is optional in tests (used for dev tools integration)
-    renderBlocks("test-outlet", [
+    _renderBlocks("test-outlet", [
       {
         block: TestBanner,
         args: { message: "Hello World" },
@@ -3466,7 +3482,7 @@ module("Integration | Block | my-banner", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(ConditionalBanner));
-    renderBlocks("conditional-outlet", [
+    _renderBlocks("conditional-outlet", [
       {
         block: ConditionalBanner,
         // This condition will fail for anonymous users
@@ -3490,24 +3506,26 @@ import Component from "@glimmer/component";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
-import BlockOutlet, { block, renderBlocks } from "discourse/blocks/block-outlet";
+import BlockOutlet, { _renderBlocks, block } from "discourse/blocks/block-outlet";
 import {
   _registerBlock,
-  _registerConditionType,
   withTestBlockRegistration,
+} from "discourse/lib/blocks/-internals/registry/block";
+import {
+  _registerConditionType,
   withTestConditionRegistration,
-} from "discourse/lib/blocks/registration";
+} from "discourse/lib/blocks/-internals/registry/condition";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 // Define test conditions at module scope (required for decorators)
-@blockCondition({ type: "always-true", validArgKeys: [] })
+@blockCondition({ type: "always-true", args: {} })
 class AlwaysTrueCondition extends BlockCondition {
   evaluate() {
     return true;
   }
 }
 
-@blockCondition({ type: "always-false", validArgKeys: [] })
+@blockCondition({ type: "always-false", args: {} })
 class AlwaysFalseCondition extends BlockCondition {
   evaluate() {
     return false;
@@ -3534,7 +3552,7 @@ module("Integration | Block | conditional rendering", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(CustomConditionBlock));
-    renderBlocks("custom-outlet", [
+    _renderBlocks("custom-outlet", [
       {
         block: CustomConditionBlock,
         conditions: { type: "always-true" },
@@ -3555,7 +3573,7 @@ module("Integration | Block | conditional rendering", function (hooks) {
     }
 
     withTestBlockRegistration(() => _registerBlock(HiddenBlock));
-    renderBlocks("hidden-outlet", [
+    _renderBlocks("hidden-outlet", [
       {
         block: HiddenBlock,
         conditions: { type: "always-false" },
@@ -3583,7 +3601,7 @@ test("uses outlet args in conditions", async function (assert) {
   }
 
   withTestBlockRegistration(() => _registerBlock(OutletArgsBlock));
-  renderBlocks("topic-outlet", [
+  _renderBlocks("topic-outlet", [
     {
       block: OutletArgsBlock,
       conditions: { type: "outletArg", path: "topic.closed", value: false },
@@ -3615,7 +3633,7 @@ test("hides when outlet arg condition fails", async function (assert) {
   }
 
   withTestBlockRegistration(() => _registerBlock(ClosedTopicBlock));
-  renderBlocks("closed-topic-outlet", [
+  _renderBlocks("closed-topic-outlet", [
     {
       block: ClosedTopicBlock,
       conditions: { type: "outletArg", path: "topic.closed", value: false },
@@ -3642,10 +3660,10 @@ test("hides when outlet arg condition fails", async function (assert) {
 
 | Pattern | Import | Usage |
 |---------|--------|-------|
-| Register block | `_registerBlock` from `discourse/lib/blocks/registration` | `withTestBlockRegistration(() => _registerBlock(MyBlock))` |
-| Register condition | `_registerConditionType` from `discourse/lib/blocks/registration` | `withTestConditionRegistration(() => _registerConditionType(MyCondition))` |
-| Configure layout | `renderBlocks` from `discourse/blocks/block-outlet` | `renderBlocks("outlet-name", [...])` |
-| Test condition validate | Direct instantiation | `new MyCondition()` then `condition.validate(args)` |
+| Register block | `_registerBlock` from `discourse/lib/blocks/-internals/registry/block` | `withTestBlockRegistration(() => _registerBlock(MyBlock))` |
+| Register condition | `_registerConditionType` from `discourse/lib/blocks/-internals/registry/condition` | `withTestConditionRegistration(() => _registerConditionType(MyCondition))` |
+| Configure layout | `_renderBlocks` from `discourse/blocks/block-outlet` | `_renderBlocks("outlet-name", [...])` |
+| Test condition validate | `validateConditions` helper | Use `validateConditions()` from `discourse/lib/blocks/-internals/validation/conditions` |
 | Test condition evaluate | Direct instantiation with owner | `setOwner(condition, getOwner(this))` then `condition.evaluate(args, context)` |
 
 > :exclamation: **Important:** The test helpers `withTestBlockRegistration` and `withTestConditionRegistration` take a **single callback parameter** (synchronous). They temporarily unfreeze the registries to allow registration during tests.
