@@ -6,6 +6,20 @@
  */
 
 /**
+ * Maximum allowed nesting depth for block layouts.
+ *
+ * Prevents stack overflow from deeply nested configurations. This limit is
+ * enforced at layout validation time with a clear error message, and as a
+ * defense-in-depth measure during ghost component rendering.
+ *
+ * A depth of 20 is generous for real-world use cases while protecting against
+ * malicious or buggy configurations that could cause infinite recursion.
+ *
+ * @type {number}
+ */
+export const MAX_LAYOUT_DEPTH = 20;
+
+/**
  * Symbol used to mark a block reference as optional and missing from the registry.
  * When this marker is returned from resolution functions, it signals that the block
  * should be silently skipped rather than throwing an error.

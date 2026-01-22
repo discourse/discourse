@@ -20,6 +20,7 @@ import {
 } from "discourse/lib/blocks/-internals/error";
 import { isBlockPermittedInOutlet } from "discourse/lib/blocks/-internals/matching/outlet-matcher";
 import {
+  MAX_LAYOUT_DEPTH,
   OPTIONAL_MISSING,
   parseBlockReference,
 } from "discourse/lib/blocks/-internals/patterns";
@@ -621,8 +622,9 @@ export function validateReservedArgs(entry) {
  * @param {Array<Object>} [rootLayout] - The root layout array for error context display.
  * @param {Object|null} [parentChildArgsSchema=null] - The parent container's childArgs schema, if any.
  * @param {string|null} [parentBlockName=null] - The parent container's block name for error messages.
+ * @param {number} [depth=0] - Current nesting depth for recursion limit checking.
  * @returns {Promise<void>} Resolves when validation completes.
- * @throws {Error} If any block entry is invalid.
+ * @throws {Error} If any block entry is invalid or nesting depth exceeds MAX_LAYOUT_DEPTH.
  */
 export async function validateLayout(
   layout,
@@ -634,10 +636,25 @@ export async function validateLayout(
   callSiteError = null,
   rootLayout = null,
   parentChildArgsSchema = null,
-  parentBlockName = null
+  parentBlockName = null,
+  depth = 0
 ) {
   // On first call, capture the root layout for error display
   const effectiveRootLayout = rootLayout ?? layout;
+
+  // Check recursion depth limit to prevent stack overflow from deeply nested layouts
+  if (depth >= MAX_LAYOUT_DEPTH) {
+    raiseBlockError(
+      `Layout exceeds maximum nesting depth of ${MAX_LAYOUT_DEPTH}. ` +
+        `Deeply nested layouts may indicate a configuration issue.`,
+      createValidationContext({
+        outletName,
+        path: parentPath,
+        callSiteError,
+        rootLayout: effectiveRootLayout,
+      })
+    );
+  }
 
   // Validate containerArgs uniqueness across siblings if parent has childArgs with unique constraints
   if (parentChildArgsSchema) {
@@ -710,7 +727,8 @@ export async function validateLayout(
         callSiteError,
         effectiveRootLayout,
         childArgsSchema,
-        blockName
+        blockName,
+        depth + 1
       );
     }
   });

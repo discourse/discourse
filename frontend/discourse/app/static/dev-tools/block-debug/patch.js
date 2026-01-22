@@ -6,7 +6,10 @@ import {
   DEBUG_CALLBACK,
   debugHooks,
 } from "discourse/lib/blocks/-internals/debug/block-processing";
-import { OPTIONAL_MISSING } from "discourse/lib/blocks/-internals/patterns";
+import {
+  MAX_LAYOUT_DEPTH,
+  OPTIONAL_MISSING,
+} from "discourse/lib/blocks/-internals/patterns";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import devToolsState from "../state";
 /** @type {import("./block-info.gjs").default} */
@@ -41,12 +44,17 @@ function makeDebugCallback(fn) {
  * this function recursively processes its children to create ghost components
  * so they appear nested inside the container ghost in the debug overlay.
  *
+ * Includes a depth limit as defense-in-depth against stack overflow. The primary
+ * protection is validation-time depth checking in `validateLayout`, but this
+ * provides additional safety during ghost rendering.
+ *
  * @param {Array<Object>} childEntries - Child layout entries (already preprocessed with __visible)
  * @param {import("@ember/owner").default} owner - The application owner
  * @param {string} containerPath - The container's hierarchy path (e.g., "outlet/group[0]")
  * @param {Object} outletArgs - Outlet arguments for context
  * @param {boolean} isLoggingEnabled - Whether logging is enabled (unused, kept for API compatibility)
  * @param {Function} resolveBlockFn - Function to resolve block references to classes
+ * @param {number} [depth=0] - Current nesting depth for recursion limit checking.
  * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>} Array of ghost components
  */
 function createGhostChildren(
@@ -55,8 +63,15 @@ function createGhostChildren(
   containerPath,
   outletArgs,
   isLoggingEnabled,
-  resolveBlockFn
+  resolveBlockFn,
+  depth = 0
 ) {
+  // Defense-in-depth: silently stop recursion if depth exceeds limit.
+  // Primary validation happens at layout validation time in validateLayout().
+  if (depth >= MAX_LAYOUT_DEPTH) {
+    return [];
+  }
+
   const result = [];
   const containerCounts = new Map();
 
@@ -112,7 +127,8 @@ function createGhostChildren(
         nestedContainerPath,
         outletArgs,
         isLoggingEnabled,
-        resolveBlockFn
+        resolveBlockFn,
+        depth + 1
       );
     }
 
