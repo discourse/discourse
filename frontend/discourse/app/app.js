@@ -6,7 +6,7 @@ import "./global-compat";
 import "./setup-deprecation-workflow";
 import "./array-shim";
 import "decorator-transforms/globals";
-import "./loader"; // todo, loader.js from npm?
+import { defineModules } from "./lib/loader-shim";
 import "./loader-shims";
 import "./module-shims";
 import "./discourse-common-loader-shims";
@@ -26,7 +26,6 @@ import { isTesting } from "discourse/lib/environment";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import PreloadStore from "discourse/lib/preload-store";
 import { buildResolver } from "discourse/resolver";
-import { defineModules } from "./lib/loader-shim";
 
 function populatePreloadStore() {
   let setupData;

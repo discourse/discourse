@@ -1,3 +1,5 @@
+import "../loader"; // todo, loader.js from npm?
+
 // Webpack has bugs, using globalThis is the safest
 // https://github.com/embroider-build/embroider/issues/1545
 let { define: __define__, require: __require__ } = globalThis;
