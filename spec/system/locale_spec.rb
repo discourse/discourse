@@ -21,7 +21,7 @@ RSpec.describe "Locale choice", type: :system do
       text: I18n.t("js.filters.categories.title", locale: :fr),
     )
     expect(page.evaluate_script("moment.locale()")).to eq("fr")
-    expect(page.evaluate_script("I18n._mfMessages.locale")).to eq("en")
+    expect(page.evaluate_script("I18n._mfMessages.locale")).to eq("fr")
   end
 
   it "loads polish locale successfully" do
