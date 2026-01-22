@@ -11,6 +11,6 @@
     "declaration": true,
     "outDir": "declarations",
     "composite": true,
-    // "types": ["discourse/external-types"]
+    "typeRoots": ["./external-types"]
   }
 }

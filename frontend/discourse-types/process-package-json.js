@@ -69,7 +69,10 @@ export default function processPackageJson(packageJson, packagePath) {
     let prefix = importPathPrefixes.get(path);
 
     path = path.replace(/^\.\/?/, "");
-    const modulePrefix = path.replace(/\/?\*$/, "").replace(/\*.*$/, "");
+    const modulePrefix = path
+      .replace(/\/?\*$/, "")
+      .replace(/\*.*$/, "")
+      .replace(/\.d\.ts$/, "");
 
     if (path.includes("*")) {
       const entries = globSync(
@@ -79,7 +82,8 @@ export default function processPackageJson(packageJson, packagePath) {
         }
       );
 
-      for (const entry of entries) {
+      for (let entry of entries) {
+        entry = entry.replace(/\.d\.ts$/, "");
         if (!expandedPaths.has(entry)) {
           expandedPaths.set(entry, {
             remove: modulePrefix,
@@ -88,7 +92,7 @@ export default function processPackageJson(packageJson, packagePath) {
         }
       }
     } else if (existsSync(`${packagePath}/${path}`)) {
-      const entry = path.replace(/^\.\//, "");
+      const entry = path.replace(/^\.\//, "").replace(/\.d\.ts$/, "");
 
       if (!expandedPaths.has(entry)) {
         expandedPaths.set(entry, {
