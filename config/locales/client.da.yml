@@ -789,6 +789,7 @@ da:
       timeline:
         target_created: "Indlæg oprettet"
         target_created_by: "Indlæg oprettet af %{username} · %{relativeDate}"
+        target_deleted: "Indlæg slettet"
         flagged: "Anmeldt"
         flagged_as_by: "Anmeldt som %{flagReason} af %{username} · %{relativeDate}"
         claimed: "Påstået"
@@ -2588,7 +2589,7 @@ da:
         post_approved: "indlæg godkendt"
         membership_request_consolidated: "nye anmodninger om medlemskab"
         reaction: "ny reaktion"
-        votes_released: "Afstemningen blev frigivet"
+        votes_released: "afstemningen blev frigivet"
     upload_selector:
       change: "Skift"
       delete: "Slet"
@@ -6104,6 +6105,7 @@ da:
           upload:
             label: "Overfør"
             title: "Overfør billeder"
+        download_file: "Download"
         selectable_avatars:
           title: "Liste over avatarer, som brugere kan vælge imellem"
         table_column_heading:

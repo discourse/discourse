@@ -697,6 +697,8 @@ sq:
         reviewable_ai_post:
           noun: "postim"
       user_label: "User"
+      timeline:
+        target_deleted: "Postimi u fshi"
       notes:
         delete: "Fshij"
       topic_label: "Topic"
@@ -2698,8 +2700,7 @@ sq:
         post_approved: "postimi u miratua"
         membership_request_consolidated: "kërkesa të reja për anëtarësim"
         reaction: "reagim i ri"
-        votes_released: "Votimi u hap"
-        new_features: "Veçoritë e reja të Diskursit janë lëshuar!"
+        votes_released: "votimi u hap"
         admin_problems: "këshilla të reja në panelin e faqes suaj"
     upload_selector:
       delete: "Fshij"
@@ -4802,6 +4803,7 @@ sq:
         uploaded_image_list:
           upload:
             label: "Ngarko"
+        download_file: "Shkarko"
         categories:
           all_results: "Të gjitha"
           required: "E nevojshme"

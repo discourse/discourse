@@ -779,6 +779,7 @@ ja:
       timeline:
         target_created: "投稿を作成"
         target_created_by: "%{username} が投稿を作成 · %{relativeDate}"
+        target_deleted: "削除された投稿"
         flagged: "通報"
         flagged_as_by: "%{username} が%{flagReason}として通報 · %{relativeDate}"
         claimed: "引き受け"
@@ -2827,7 +2828,6 @@ ja:
         membership_request_consolidated: "新しいメンバーシップリクエスト"
         reaction: "新しいリアクション"
         votes_released: "投票がリリースされました"
-        new_features: "新しい Discourse 機能がリリースされました！"
         admin_problems: "サイトダッシュボードに関する新しいアドバイス"
     upload_selector:
       change: "変更"
@@ -7362,6 +7362,7 @@ ja:
           upload:
             label: "アップロード"
             title: "画像のアップロード"
+        download_file: "ダウンロード"
         selectable_avatars:
           title: "ユーザーが選択できるアバターのリスト"
         table_column_heading:

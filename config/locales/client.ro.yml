@@ -841,6 +841,7 @@ ro:
       timeline:
         target_created: "A fost creată postarea"
         target_created_by: "Postare creată de %{username} · %{relativeDate}"
+        target_deleted: "Postarea a fost ștearsă"
         flagged: "Semnalat"
         flagged_as_by: "Semnalat ca %{flagReason} de %{username} · %{relativeDate}"
         claimed: "Revendicat"
@@ -1792,6 +1793,7 @@ ro:
               other {în # de zile}
             }.
           edit_link_options: "Editează opțiunile de legătură sau trimite prin email."
+          edit_link_options_only: "Editează opțiuni legătură"
           show_advanced: "Afișați opțiunile avansate"
           hide_advanced: "Ascundeți opțiunile avansate"
           description: "Descriere"
@@ -2394,7 +2396,6 @@ ro:
         bookmark_reminder_with_name: "memento semn de carte - %{name}"
         watching_first_post: "subiect nou"
         post_approved: "articol aprobat"
-        new_features: "Au fost lansate funcționalități Discourse noi!"
         admin_problems: "sfaturi noi în panoul de control al site-ului tău"
     upload_selector:
       change: "Schimbă"
@@ -4465,6 +4466,7 @@ ro:
       community:
         title: "Comunitate"
         sidebar_link:
+          about_your_site: "Despre site-ul tău"
           badges: "Insigne"
           notifications: "Notificări"
           permalinks: "Legături permanente"
@@ -4475,6 +4477,8 @@ ro:
           user_fields: "Câmpuri utilizator"
           watched_words: "Cuvinte urmărite"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderare"
       appearance:
         title: "Aspect"
         sidebar_link:
@@ -5488,6 +5492,7 @@ ro:
         uploaded_image_list:
           upload:
             label: "Încarcă"
+        download_file: "Descărcare"
         table_column_heading:
           status: "Stare"
         categories:

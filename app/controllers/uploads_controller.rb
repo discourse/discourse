@@ -61,6 +61,7 @@ class UploadsController < ApplicationController
     pasted = params[:pasted] == "true"
     for_private_message = params[:for_private_message] == "true"
     for_site_setting = params[:for_site_setting] == "true"
+    site_setting_name = for_site_setting ? params[:site_setting_name] : nil
     is_api = is_api?
     retain_hours = params[:retain_hours].to_i
 
@@ -71,14 +72,15 @@ class UploadsController < ApplicationController
         info =
           UploadsController.create_upload(
             current_user: me,
-            file: file,
-            url: url,
-            type: type,
-            for_private_message: for_private_message,
-            for_site_setting: for_site_setting,
-            pasted: pasted,
-            is_api: is_api,
-            retain_hours: retain_hours,
+            file:,
+            url:,
+            type:,
+            for_private_message:,
+            for_site_setting:,
+            site_setting_name:,
+            pasted:,
+            is_api:,
+            retain_hours:,
           )
       rescue => e
         render json: failed_json.merge(message: e.message&.split("\n")&.first),
@@ -280,6 +282,7 @@ class UploadsController < ApplicationController
     type:,
     for_private_message:,
     for_site_setting:,
+    site_setting_name: nil,
     pasted:,
     is_api:,
     retain_hours:
@@ -310,12 +313,7 @@ class UploadsController < ApplicationController
 
     return { errors: [I18n.t("upload.file_missing")] } if tempfile.nil?
 
-    opts = {
-      type: type,
-      for_private_message: for_private_message,
-      for_site_setting: for_site_setting,
-      pasted: pasted,
-    }
+    opts = { type:, for_private_message:, for_site_setting:, site_setting_name:, pasted: }
 
     upload = UploadCreator.new(tempfile, filename, opts).create_for(current_user.id)
 

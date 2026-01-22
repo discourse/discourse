@@ -22,6 +22,8 @@ class UpcomingChanges::Promote
   policy :setting_not_already_enabled
   step :toggle_upcoming_change
   step :log_promotion
+  step :notify_admins
+  step :create_event
 
   private
 
@@ -82,6 +84,36 @@ class UpcomingChanges::Promote
       false,
       true,
       { context: },
+    )
+  end
+
+  def notify_admins(params:)
+    data = {
+      upcoming_change_name: params.setting_name,
+      upcoming_change_humanized_name: SiteSetting.humanized_name(params.setting_name),
+    }.to_json
+
+    records =
+      User
+        .human_users
+        .admins
+        .pluck(:id)
+        .map do |admin_id|
+          {
+            user_id: admin_id,
+            notification_type: Notification.types[:upcoming_change_automatically_promoted],
+            data:,
+          }
+        end
+
+    Notification::Action::BulkCreate.call(records:)
+  end
+
+  def create_event(params:)
+    UpcomingChangeEvent.create!(
+      event_type: :admins_notified_automatic_promotion,
+      upcoming_change_name: params.setting_name,
+      acting_user: Discourse.system_user,
     )
   end
 end

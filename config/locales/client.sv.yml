@@ -641,6 +641,8 @@ sv:
         reviewable_ai_post:
           noun: "inlägg"
       user_label: "Användare"
+      timeline:
+        target_deleted: "Inlägg raderat"
       notes:
         delete: "Radera"
       topic_label: "Ämne"
@@ -2448,8 +2450,7 @@ sv:
         post_approved: "inlägg godkänt"
         membership_request_consolidated: "ny begäran om medlemskap"
         reaction: "ny reaktion"
-        votes_released: "Röstningen släpptes"
-        new_features: "Nya Discourse-funktioner har släppts!"
+        votes_released: "röstningen släpptes"
         admin_problems: "nytt råd på din webbplats översiktspanel"
     upload_selector:
       delete: "Radera"
@@ -6097,6 +6098,7 @@ sv:
           empty: "Det finns inga bilder ännu. Ladda upp en."
           upload:
             label: "Ladda upp"
+        download_file: "Ladda ner"
         selectable_avatars:
           title: "Lista på avatarer som användare kan välja från"
         table_column_heading:

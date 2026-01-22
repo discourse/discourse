@@ -53,6 +53,9 @@ vi:
   redirect_warning: "Chúng tôi không thể xác minh rằng liên kết bạn chọn đã thực sự được đăng lên diễn đàn. Nếu bạn vẫn muốn tiếp tục, hãy chọn liên kết bên dưới."
   on_another_topic: "Về chủ đề khác"
   topic_category_changed: "Từ %{from} đến %{to}"
+  topic_tag_changed:
+    added: "Đã thêm %{added}"
+    removed: "Đã xóa %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} bởi %{username}"
@@ -1657,6 +1660,7 @@ vi:
   system_messages:
     queued_by_staff:
       title: "Tút cần phê duyệt"
+      subject_template: "Tút đã bị BQT ẩn, đang chờ duyệt"
     flags_disagreed:
       title: "BQT đã khôi phục tút bị báo cáo"
       subject_template: "BQT đã khôi phục tút bị báo cáo"

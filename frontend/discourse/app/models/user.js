@@ -317,6 +317,11 @@ export default class User extends RestModel.extend(Evented) {
     return this.staff && this.get("has_unseen_features");
   }
 
+  @computed("has_new_upcoming_changes")
+  get hasNewUpcomingChanges() {
+    return this.staff && this.get("has_new_upcoming_changes");
+  }
+
   destroySession() {
     return ajax(`/session/${this.username}`, { type: "DELETE" });
   }

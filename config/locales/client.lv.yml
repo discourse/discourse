@@ -491,6 +491,8 @@ lv:
         reviewable_ai_post:
           noun: "ieraksts"
       user_label: "Lietotājs"
+      timeline:
+        target_deleted: "Ieraksts dzēsts"
       notes:
         delete: "Dzēst"
       topic_label: "Tēmas"
@@ -1756,7 +1758,7 @@ lv:
         topic_reminder: "atgādinājums par tēmu"
         liked_consolidated: "jauns \"patīk\""
         post_approved: "ziņa apstiprināta"
-        votes_released: "Balsojums tika izveidots"
+        votes_released: "balsojums tika izveidots"
     upload_selector:
       delete: "Dzēst"
       uploading: "Augšuplādē"
@@ -3754,6 +3756,7 @@ lv:
         uploaded_image_list:
           upload:
             label: "Augšupielādēt"
+        download_file: "Lejuplādēt"
         table_column_heading:
           status: "Statuss"
         categories:

@@ -33,6 +33,8 @@ module PageObjects
         case control_type
         when /input-/, "password"
           component.find("input").value
+        when "color"
+          component.find("input[type='text']").value
         when "icon", "multi-select"
           picker = PageObjects::Components::SelectKit.new(component)
           picker.value
@@ -45,7 +47,7 @@ module PageObjects
         when "composer", "textarea"
           component.find("textarea").value
         when "image"
-          url = component.find(".uploaded-image-preview a.lightbox", wait: 10)[:href]
+          url = component.find(".file-uploader__preview a.lightbox", wait: 10)[:href]
           sha1 = url.match(/(\h{40})/).captures.first
           Upload.find_by(sha1:)
         when "toggle"
@@ -114,6 +116,8 @@ module PageObjects
         case control_type
         when "input-text", "password", "input-date", "input-number"
           component.find("input").fill_in(with: value)
+        when "color"
+          component.find("input[type='text']").fill_in(with: value)
         when "textarea", "composer"
           component.find("textarea").fill_in(with: value, visible: :all)
         when "code"
@@ -180,7 +184,7 @@ module PageObjects
       def upload_image(image_path)
         if control_type == "image"
           attach_file(image_path) do
-            component.find(".image-upload-controls .btn.btn-default").click
+            component.find(".file-uploader__controls .btn.btn-default").click
           end
         else
           raise "'upload_image' is not supported for control type: #{control_type}"

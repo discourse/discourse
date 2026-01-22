@@ -1016,6 +1016,7 @@ cs:
       timeline:
         target_created: "Příspěvek vytvořen"
         target_created_by: "Příspěvek vytvořil/a %{username} - %{relativeDate}"
+        target_deleted: "Příspěvek smazán"
         flagged: "Nahlášeno"
         flagged_as_by: "Nahlášeno jako %{flagReason} uživatelem %{username} · %{relativeDate}"
         claimed: "Nárokováno"
@@ -2352,6 +2353,7 @@ cs:
               other {# dnů}
             }.
           edit_link_options: "Upravte možnosti odkazu nebo odešlete e-mail."
+          edit_link_options_only: "Upravit možnosti odkazu"
           show_advanced: "Zobrazit pokročilé možnosti"
           hide_advanced: "Skrýt pokročilé možnosti"
           description: "Popis"
@@ -3371,6 +3373,11 @@ cs:
       votes_released: "%{description} - dokončeno"
       new_features: "Jsou k dispozici nové funkce!"
       admin_problems: "Na administrační nástěnce vašeho webu jsou nová doporučení"
+      upcoming_changes:
+        available:
+          title: "Nadcházející změny"
+        automatically_promoted:
+          title: "Nadcházející změny"
       dismiss_confirmation:
         body:
           default:
@@ -3434,8 +3441,7 @@ cs:
         post_approved: "příspěvek schválen"
         membership_request_consolidated: "nové žádosti o členství"
         reaction: "nová reakce"
-        votes_released: "Hlas byly uvolněn"
-        new_features: "Byly vydány nové funkce Discourse!"
+        votes_released: "hlas byly uvolněn"
         admin_problems: "na administrační nástěnce vašeho webu jsou nová doporučení"
     upload_selector:
       change: "Změnit"
@@ -6215,11 +6221,9 @@ cs:
               locale_label: "Jazyk"
             header_new_members:
               label: "Záhlaví pro nové členy"
-              description: "Dostupná proměnná: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Vítejte, %{preferred_display_name}!"
             header_logged_in:
               label: "Záhlaví pro přihlášené členy"
-              description: "Dostupná proměnná: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Vítejte zpět, %{preferred_display_name}!"
             header_anonymous:
               label: "Záhlaví pro anonymní návštěvníky"
@@ -8706,6 +8710,7 @@ cs:
           upload:
             label: "Nahrát"
             title: "Nahrát obrázky"
+        download_file: "Stáhnout"
         selectable_avatars:
           title: "Seznam avatarů, ze kterých si uživatelé mohou vybrat"
         table_column_heading:

@@ -4620,6 +4620,7 @@ cs:
         complete: "Příspěvek zamítnut a čeká na revizi."
       ignore:
         title: "ignorovat"
+        description: "Odstranit z fronty a neprovádět žádnou akci."
         complete: "Nahlášení ignorováno."
       ignore_and_do_nothing:
         title: "Nic nedělat"

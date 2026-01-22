@@ -644,7 +644,7 @@ vi:
         title: "Xác nhận chủ đề này"
       unclaim:
         help: "Xóa yêu cầu này"
-      awaiting_approval: "Đang đợi Phê duyệt"
+      awaiting_approval: "Đang chờ duyệt"
       delete: "Xóa"
       settings:
         saved: "Lưu trữ"
@@ -821,6 +821,8 @@ vi:
       timeline:
         target_created: "Tút đã được tạo"
         target_created_by: "Tút được tạo bởi %{username} · %{relativeDate}"
+        target_deleted: "Tút đã bị xóa"
+        target_deleted_by: "Tút đã bị xóa bởi %{username} · %{relativeDate}"
         flagged: "Đã báo cáo"
         flagged_as_by: "Đã báo cáo là %{flagReason} bởi %{username} · %{relativeDate}"
         claimed: "Đã tiếp nhận"
@@ -2898,6 +2900,11 @@ vi:
       votes_released: "%{description} - hoàn thành"
       new_features: "Các tính năng mới đã có sẵn!"
       admin_problems: "Lời khuyên mới trên bảng điều khiển trang web của bạn"
+      upcoming_changes:
+        available:
+          title: "Các thay đổi sắp tới"
+        automatically_promoted:
+          title: "Các thay đổi sắp tới"
       dismiss_confirmation:
         body:
           default:
@@ -2949,8 +2956,7 @@ vi:
         post_approved: "Được duyệt tút"
         membership_request_consolidated: "Yêu cầu đăng ký thành viên mới"
         reaction: "Phản ứng mới"
-        votes_released: "Đã trả lượt bình chọn"
-        new_features: "Tính năng mới của Discourse!"
+        votes_released: "đã trả lượt bình chọn"
         admin_problems: "Lời khuyên mới trên bảng điều khiển"
     upload_selector:
       change: "Thay đổi"
@@ -4340,7 +4346,7 @@ vi:
         help: "Những chủ đề hàng đầu gần đây"
       new:
         lower_title_with_count:
-          other: "%{count} chủ đề mới"
+          other: "%{count} mới đăng"
         lower_title: "mới"
         title: "Chủ đề mới"
         title_with_count:
@@ -5383,11 +5389,9 @@ vi:
               locale_label: "Ngôn ngữ"
             header_new_members:
               label: "Thông báo dành cho thành viên mới"
-              description: "Biến khả dụng: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Chào mừng, %{preferred_display_name}!"
             header_logged_in:
               label: "Thông báo dành cho thành viên đã đăng nhập"
-              description: "Biến khả dụng: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Chào mừng %{preferred_display_name} trở lại!"
             header_anonymous:
               label: "Thông báo dành cho khách ghé thăm ẩn danh"
@@ -7742,6 +7746,7 @@ vi:
           upload:
             label: "Tải lên"
             title: "Tải lên hình ảnh"
+        download_file: "Tải xuống"
         selectable_avatars:
           title: "Danh sách ảnh đại diện mà người dùng có thể chọn"
         table_column_heading:

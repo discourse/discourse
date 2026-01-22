@@ -843,6 +843,7 @@ nl:
       timeline:
         target_created: "Bericht gemaakt"
         target_created_by: "Bericht gemaakt door %{username} · %{relativeDate}"
+        target_deleted: "Bericht verwijderd"
         flagged: "Gemarkeerd"
         flagged_as_by: "Gemarkeerd als %{flagReason} door %{username} · %{relativeDate}"
         claimed: "Geclaimd"
@@ -2984,8 +2985,7 @@ nl:
         post_approved: "bericht goedgekeurd"
         membership_request_consolidated: "nieuwe lidmaatschapsverzoeken"
         reaction: "nieuwe reactie"
-        votes_released: "Stem is vrijgegeven"
-        new_features: "Er zijn nieuwe Discourse-functies uitgebracht!"
+        votes_released: "stem is vrijgegeven"
         admin_problems: "nieuw advies op je websitedashboard"
     upload_selector:
       change: "Wijzigen"
@@ -7652,6 +7652,7 @@ nl:
           upload:
             label: "Uploaden"
             title: "Afbeeldingen uploaden"
+        download_file: "Downloaden"
         selectable_avatars:
           title: "Lijst van avatars waaruit gebruikers kunnen kiezen"
         table_column_heading:
