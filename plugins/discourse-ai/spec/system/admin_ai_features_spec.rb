@@ -67,7 +67,8 @@ RSpec.describe "Admin AI features configuration", type: :system do
     SiteSetting.ai_bot_enabled = true
     SiteSetting.ai_bot_enabled_llms = "#{llm1.id}|#{llm2.id}"
 
-    page.visit("/admin/plugins/discourse-ai/ai-features/7/edit")
+    page.visit("/admin/plugins/discourse-ai/ai-features/#{
+  DiscourseAi::Configuration::Module::BOT_ID}/edit")
 
     expect(page).to have_css(".ai-feature-editor")
 
