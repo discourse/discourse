@@ -1,6 +1,5 @@
 .uc-experimental-foundation-changes {
   --shrink-ratio: 0.85;
-  --btn-small-font-size: var(--font-down-1);
   --d-nav-underline-height: var(--space-half);
   --d-button-default-bg-color: transparent;
   --d-button-default-border: 1px solid var(--primary-200);
@@ -30,13 +29,15 @@
   --d-sidebar-link-color: var(--primary-800);
   --d-sidebar-link-icon-color: var(--primary-800);
   --d-sidebar-active-font-weight: 600;
-  -webkit-font-smoothing: antialiased;
 
   // new variables
+  --webkit-font-smoothing: antialiased;
   --welcome-banner-text-align: center;
   --welcome-banner-search-menu-margin-inline: auto;
   --button-height: var(--space-8);
   --button-font-size: var(--font-down-1);
+  --btn-small-font-size: var(--font-down-1);
+  -webkit-font-smoothing: var(--webkit-font-smoothing);
 
   // Buttons & Actions
   .btn-default,
