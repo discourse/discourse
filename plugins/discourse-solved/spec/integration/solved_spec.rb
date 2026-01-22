@@ -341,17 +341,6 @@ RSpec.describe "Managing Posts solved status" do
           author.notifications.count
         }
       end
-
-      it "does send notification to staff" do
-        author.update(admin: true)
-
-        topic = Fabricate(:topic, user: author)
-        post = Fabricate(:post, post_number: 2, topic: topic, user: Fabricate(:user))
-
-        expect { DiscourseSolved.accept_answer!(post, solution_accepter) }.to change {
-          author.notifications.count
-        }.by(1)
-      end
     end
 
     it "does not set a timer when the topic is closed" do

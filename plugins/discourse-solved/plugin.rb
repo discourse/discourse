@@ -161,11 +161,10 @@ after_initialize do
     end
 
     def self.notify_solved?(recipient:, acting_user:)
-      recipient.staff? ||
-        !UserCommScreener.new(
-          acting_user_id: acting_user.id,
-          target_user_ids: recipient.id,
-        ).ignoring_or_muting_actor?(recipient.id)
+      !UserCommScreener.new(
+        acting_user_id: acting_user.id,
+        target_user_ids: recipient.id,
+      ).ignoring_or_muting_actor?(recipient.id)
     end
 
     def self.skip_db?
