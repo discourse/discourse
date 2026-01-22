@@ -374,6 +374,48 @@ RSpec.describe PostDestroyer do
       expect(post.like_count).to eq(2)
       expect(post.custom_fields["deleted_public_actions"]).to be_nil
     end
+
+    it "restores PostReply when the reply is recovered" do
+      reply =
+        create_post(topic: post.topic, user: codinghorror, reply_to_post_number: post.post_number)
+      expect(post.post_replies.count).to eq(1)
+
+      PostDestroyer.new(moderator, reply).destroy
+      expect(post.post_replies.count).to eq(0)
+
+      PostDestroyer.new(moderator, reply.reload).recover
+      expect(post.post_replies.reload.count).to eq(1)
+    end
+
+    it "restores reply_count when the reply is recovered" do
+      reply =
+        create_post(topic: post.topic, user: codinghorror, reply_to_post_number: post.post_number)
+      expect(post.reload.reply_count).to eq(1)
+
+      PostDestroyer.new(moderator, reply).destroy
+      expect(post.reload.reply_count).to eq(0)
+
+      PostDestroyer.new(moderator, reply.reload).recover
+      expect(post.reload.reply_count).to eq(1)
+    end
+
+    it "restores PostReply for quoted posts when recovered" do
+      reply =
+        create_post(
+          topic: post.topic,
+          user: codinghorror,
+          raw:
+            "[quote=\"#{post.user.username}, post:#{post.post_number}, topic:#{post.topic_id}\"]\nquoted\n[/quote]\nmy reply",
+        )
+      expect(post.post_replies.count).to eq(1)
+      expect(reply.reply_to_post_number).to be_nil
+
+      PostDestroyer.new(moderator, reply).destroy
+      expect(post.post_replies.count).to eq(0)
+
+      PostDestroyer.new(moderator, reply.reload).recover
+      expect(post.post_replies.reload.count).to eq(1)
+    end
   end
 
   describe "basic destroying" do
