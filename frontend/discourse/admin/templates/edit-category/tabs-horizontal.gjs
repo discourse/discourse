@@ -74,13 +74,7 @@ const EditCategoryTabsHorizontalTemplate = <template>
       <span class="edit-category-preview-badge">
         <CategoryBadgePreview
           @category={{@controller.model}}
-          @previewName={{@controller.previewName}}
-          @previewColor={{@controller.previewColor}}
-          @previewTextColor={{@controller.previewTextColor}}
-          @previewStyleType={{@controller.previewStyleType}}
-          @previewEmoji={{@controller.previewEmoji}}
-          @previewIcon={{@controller.previewIcon}}
-          @previewParentCategoryId={{@controller.previewParentCategoryId}}
+          @previewData={{@controller.previewData}}
         />
       </span>
 

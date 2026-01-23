@@ -127,10 +127,7 @@ export default class EditCategoryGeneralV2 extends Component {
 
     this.userModifiedPermissions = true;
     this.args.category.set("permissions", newPermissions);
-
-    if (this.args.updatePreview) {
-      this.args.updatePreview({});
-    }
+    this.args.updatePreview?.({});
   }
 
   @action
@@ -163,10 +160,7 @@ export default class EditCategoryGeneralV2 extends Component {
 
     this.userModifiedPermissions = true;
     this.args.category.set("permissions", newPermissions);
-
-    if (this.args.updatePreview) {
-      this.args.updatePreview({});
-    }
+    this.args.updatePreview?.({});
   }
 
   get allowSubCategoriesAsParent() {
@@ -232,9 +226,7 @@ export default class EditCategoryGeneralV2 extends Component {
     }
 
     // Trigger preview update to show restricted status
-    if (this.args.updatePreview) {
-      this.args.updatePreview({});
-    }
+    this.args.updatePreview?.({});
   }
 
   @action
@@ -296,9 +288,7 @@ export default class EditCategoryGeneralV2 extends Component {
     await set(name, value, { index });
     await this.onParentCategoryChange(value);
 
-    if (this.args.updatePreview) {
-      this.args.updatePreview({ parent_category_id: value });
-    }
+    this.args.updatePreview?.({ parent_category_id: value });
   }
 
   @action
@@ -345,65 +335,53 @@ export default class EditCategoryGeneralV2 extends Component {
 
     this.args.form.set("text_color", CATEGORY_TEXT_COLORS[colorIndex]);
 
-    if (this.args.updatePreview) {
-      this.args.updatePreview({
-        color,
-        text_color: CATEGORY_TEXT_COLORS[colorIndex],
-      });
-    }
+    this.args.updatePreview?.({
+      color,
+      text_color: CATEGORY_TEXT_COLORS[colorIndex],
+    });
   }
 
   @action
   async onNameChange(value, { set, name, index }) {
     await set(name, value, { index });
-    if (this.args.updatePreview) {
-      discourseDebounce(this, this._updateNamePreview, value, INPUT_DELAY);
-    }
+    discourseDebounce(this, this._updateNamePreview, value, INPUT_DELAY);
   }
 
   _updateNamePreview(value) {
-    if (this.args.updatePreview) {
-      this.args.updatePreview({ name: value });
-    }
+    this.args.updatePreview?.({ name: value });
   }
 
   @action
   async onIconSet(value, { set, name, index }) {
     await set(name, value, { index });
-    if (this.args.updatePreview) {
-      this.args.updatePreview({ icon: value, style_type: "icon" });
-    }
+    this.args.updatePreview?.({ icon: value, style_type: "icon" });
   }
 
   @action
   async onEmojiSet(value, { set, name, index }) {
     await set(name, value, { index });
-    if (this.args.updatePreview) {
-      this.args.updatePreview({ emoji: value, style_type: "emoji" });
-    }
+    this.args.updatePreview?.({ emoji: value, style_type: "emoji" });
   }
 
   @action
   onStyleTypeChange(value) {
     this.args.form.setProperties({ style_type: value });
 
-    if (this.args.updatePreview) {
-      const updateData = { style_type: value };
+    const updateData = { style_type: value };
 
-      // Use transientData (current form values) if available, otherwise fall back to category model
-      const currentIcon =
-        this.args.transientData?.icon ?? this.args.category.icon ?? null;
-      const currentEmoji =
-        this.args.transientData?.emoji ?? this.args.category.emoji ?? null;
+    // Use transientData (current form values) if available, otherwise fall back to category model
+    const currentIcon =
+      this.args.transientData?.icon ?? this.args.category.icon ?? null;
+    const currentEmoji =
+      this.args.transientData?.emoji ?? this.args.category.emoji ?? null;
 
-      if (value === "icon" && currentIcon) {
-        updateData.icon = currentIcon;
-      } else if (value === "emoji" && currentEmoji) {
-        updateData.emoji = currentEmoji;
-      }
-
-      this.args.updatePreview(updateData);
+    if (value === "icon" && currentIcon) {
+      updateData.icon = currentIcon;
+    } else if (value === "emoji" && currentEmoji) {
+      updateData.emoji = currentEmoji;
     }
+
+    this.args.updatePreview?.(updateData);
   }
 
   colorDifference(color1, color2) {

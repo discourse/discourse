@@ -10,7 +10,8 @@ export default class CategoryBadgePreview extends Component {
       return false;
     }
 
-    const name = this.args.previewName || this.args.category.name || "";
+    const name =
+      this.args.previewData?.previewName || this.args.category.name || "";
     return name.trim().length > 0;
   }
 
@@ -35,15 +36,20 @@ export default class CategoryBadgePreview extends Component {
     }
 
     const parentId =
-      this.args.previewParentCategoryId ?? category.parent_category_id;
+      this.args.previewData?.previewParentCategoryId ??
+      category.parent_category_id;
 
     const previewCategory = {
-      name: this.args.previewName || category.name,
-      color: this.args.previewColor || category.color,
-      text_color: this.args.previewTextColor || category.text_color,
-      style_type: this.args.previewStyleType || category.style_type || "icon",
-      emoji: this.args.previewEmoji || category.emoji,
-      icon: this.args.previewIcon || category.icon,
+      name: this.args.previewData?.previewName || category.name,
+      color: this.args.previewData?.previewColor || category.color,
+      text_color:
+        this.args.previewData?.previewTextColor || category.text_color,
+      style_type:
+        this.args.previewData?.previewStyleType ||
+        category.style_type ||
+        "icon",
+      emoji: this.args.previewData?.previewEmoji || category.emoji,
+      icon: this.args.previewData?.previewIcon || category.icon,
       read_restricted: isRestricted,
       parent_category_id: parentId,
     };
