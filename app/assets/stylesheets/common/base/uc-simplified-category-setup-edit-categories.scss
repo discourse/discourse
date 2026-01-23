@@ -30,7 +30,6 @@
     }
 
     .edit-category-title-bar {
-      min-height: 6.5rem; // avoid layout shift on category preview
       box-sizing: border-box;
       width: 100%;
       flex-wrap: wrap;
@@ -75,19 +74,10 @@
       transition: font-size 0.2s ease-in-out;
     }
 
-    .edit-category-preview-badge {
-      opacity: 0;
-      transition: opacity 0.2s ease-in-out;
-    }
-
     &:has(.badge-category__wrapper) {
       .edit-category-static-title {
         position: absolute;
         font-size: var(--font-down-3);
-      }
-
-      .edit-category-preview-badge {
-        opacity: 1;
       }
     }
 
@@ -100,11 +90,5 @@
 
   .category-permissions-table {
     width: 100%;
-  }
-
-  .d-page-header__drawer {
-    .edit-category-preview-badge:has(.badge-category__wrapper) {
-      margin-right: var(--space-4);
-    }
   }
 }

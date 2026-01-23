@@ -494,6 +494,8 @@ export default class EditCategoryGeneralV2 extends Component {
         <field.Color
           @colors={{this.backgroundColors}}
           @usedColors={{this.usedBackgroundColors}}
+          @collapseSwatches={{true}}
+          @collapseSwatchesLabel={{i18n "category.color_palette"}}
         />
       </@form.Field>
 
@@ -560,7 +562,7 @@ export default class EditCategoryGeneralV2 extends Component {
                     @emoji={{field.value}}
                     @didSelectEmoji={{field.set}}
                     @modalForMobile={{false}}
-                    @btnClass="btn-emoji"
+                    @btnClass="btn-default btn-emoji"
                     @label={{unless field.value (i18n "category.select_emoji")}}
                   />
                 </field.Custom>

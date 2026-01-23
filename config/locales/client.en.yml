@@ -4603,6 +4603,7 @@ en:
       no_description: "Please add a description for this category."
       change_in_category_topic: "Edit description"
       already_used: "This color has been used by another category"
+      color_palette: "Color palette"
       security: "Security"
       security_add_group: "Add a group"
       permissions:
@@ -4649,7 +4650,7 @@ en:
       minimum_required_tags: "Minimum number of tags required in a topic:"
       default_slow_mode: 'Enable "Slow mode" for new topics in this category.'
       subcategory_of: "Subcategory of..."
-      none_subcategory_text: "None (top-level category)"
+      none_subcategory_text: "None"
       subcategory_permissions_warning: "A subcategory cannot be more permissive than its parent category"
       visibility:
         title: "Access"

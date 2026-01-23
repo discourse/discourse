@@ -4,6 +4,7 @@ $mobile-breakpoint: 700px;
 .d-page-subheader {
   &__title-row {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: stretch;
     margin-bottom: var(--space-2);

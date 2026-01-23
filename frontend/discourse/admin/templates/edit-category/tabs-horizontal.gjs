@@ -1,6 +1,5 @@
 import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
-import CategoryBadgePreview from "discourse/admin/components/category-badge-preview";
 import EditCategoryTab from "discourse/admin/components/edit-category-tab";
 import BreadCrumbs from "discourse/components/bread-crumbs";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
@@ -10,7 +9,11 @@ import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const EditCategoryTabsHorizontalTemplate = <template>
-  <DPageHeader @titleLabel={{@controller.baseTitle}} @showDrawer={{true}}>
+  <DPageHeader
+    @titleLabel={{@controller.baseTitle}}
+    @showDrawer={{true}}
+    @collapseActionsOnMobile={{false}}
+  >
     <:breadcrumbs>
       {{#if (and @controller.site.desktopView @controller.model.id)}}
         <DBreadcrumbsItem
@@ -19,6 +22,13 @@ const EditCategoryTabsHorizontalTemplate = <template>
         />
       {{/if}}
     </:breadcrumbs>
+    <:actions>
+      <DToggleSwitch
+        @label="category.show_advanced"
+        @state={{@controller.showAdvancedTabs}}
+        {{on "click" @controller.toggleAdvancedTabs}}
+      />
+    </:actions>
     <:tabs>
       {{#if @controller.showAdvancedTabs}}
         <EditCategoryTab
@@ -71,13 +81,6 @@ const EditCategoryTabsHorizontalTemplate = <template>
       {{/if}}
     </:tabs>
     <:drawer>
-      <span class="edit-category-preview-badge">
-        <CategoryBadgePreview
-          @category={{@controller.model}}
-          @previewData={{@controller.previewData}}
-        />
-      </span>
-
       {{#if @controller.model.id}}
         <BreadCrumbs
           @categories={{@controller.breadcrumbCategories}}
@@ -87,12 +90,6 @@ const EditCategoryTabsHorizontalTemplate = <template>
           @editingCategoryTab={{@controller.selectedTab}}
         />
       {{/if}}
-
-      <DToggleSwitch
-        @label="category.show_advanced"
-        @state={{@controller.showAdvancedTabs}}
-        {{on "click" @controller.toggleAdvancedTabs}}
-      />
     </:drawer>
   </DPageHeader>
 </template>;
