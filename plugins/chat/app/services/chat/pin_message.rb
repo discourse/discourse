@@ -19,7 +19,6 @@ module Chat
 
     transaction { step :create_pin }
 
-    step :post_system_message
     step :publish_pin_event
 
     private
@@ -48,22 +47,6 @@ module Chat
         chat_message: message,
         chat_channel: message.chat_channel,
         pinned_by_id: guardian.user.id,
-      )
-    end
-
-    def post_system_message(message:, guardian:)
-      Chat::CreateMessage.call(
-        guardian: Discourse.system_user.guardian,
-        params: {
-          chat_channel_id: message.chat_channel_id,
-          message:
-            I18n.t(
-              "chat.channel.message_pinned",
-              username: guardian.user.username,
-              message_url: message.url,
-              count: 1,
-            ),
-        },
       )
     end
 
