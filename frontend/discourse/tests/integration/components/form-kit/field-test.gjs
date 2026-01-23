@@ -1,4 +1,5 @@
 import { fn, hash } from "@ember/helper";
+import { htmlSafe } from "@ember/template";
 import {
   click,
   fillIn,
@@ -124,6 +125,25 @@ module("Integration | Component | FormKit | Field", function (hooks) {
     );
 
     resetOnerror();
+  });
+
+  test("@title with htmlSafe", async function (assert) {
+    const htmlTitle = htmlSafe('Title with <a href="#">link</a>');
+
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field @name="foo" @title={{htmlTitle}} as |field|>
+            <field.Input />
+          </form.Field>
+        </Form>
+      </template>
+    );
+
+    assert
+      .dom(".form-kit__container-title a")
+      .exists("it renders HTML in the title");
+    assert.dom(".form-kit__container-title a").hasAttribute("href", "#");
   });
 
   test("@validation", async function (assert) {
