@@ -79,7 +79,7 @@ export function buildErrorPath(basePath, segment) {
  *
  * @param {import("discourse/lib/blocks/-internals/registry/block").BlockClass} ComponentClass - The block component class.
  * @param {Object} providedArgs - The args provided in the layout entry.
- * @returns {Object} A new object with defaults applied for missing args.
+ * @returns {Readonly<Object>} A new object with defaults applied for missing args.
  *
  * @example
  * ```javascript
@@ -90,17 +90,19 @@ export function buildErrorPath(basePath, segment) {
  */
 export function applyArgDefaults(ComponentClass, providedArgs) {
   const schema = ComponentClass.blockMetadata?.args;
-  if (!schema) {
-    return providedArgs;
-  }
 
   const result = { ...providedArgs };
-  for (const [argName, argDef] of Object.entries(schema)) {
-    if (result[argName] === undefined && argDef.default !== undefined) {
-      result[argName] = argDef.default;
+
+  // apply default values
+  if (schema) {
+    for (const [argName, argDef] of Object.entries(schema)) {
+      if (result[argName] === undefined && argDef.default !== undefined) {
+        result[argName] = argDef.default;
+      }
     }
   }
-  return result;
+
+  return Object.freeze(result);
 }
 
 /**
