@@ -10,6 +10,7 @@ function initializeWithApi(api) {
   customizePost(api);
   customizePostMenu(api);
   handleMessages(api);
+  preventMovingSolutionPost(api);
 
   if (api.addDiscoveryQueryParam) {
     api.addDiscoveryQueryParam("solved", { replace: true, refreshModel: true });
@@ -128,6 +129,21 @@ function handleMessages(api) {
 
   api.registerCustomPostMessageCallback("accepted_solution", callback);
   api.registerCustomPostMessageCallback("unaccepted_solution", callback);
+}
+
+function preventMovingSolutionPost(api) {
+  api.modifyClass(
+    "controller:topic",
+    (Superclass) =>
+      class extends Superclass {
+        get canMergeTopic() {
+          if (this.selectedPosts?.some((post) => post.accepted_answer)) {
+            return false;
+          }
+          return super.canMergeTopic;
+        }
+      }
+  );
 }
 
 export default {
