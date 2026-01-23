@@ -982,9 +982,36 @@ module SiteSettingExtension
 
         value = current[name]
 
+        if upcoming_change_metadata[name]
+          value =
+            # An admin has modified the setting and a value is stored
+            # in the database.
+            #
+            # TODO (martin) Maybe we can make this a bit more robust...
+            # since admins can set the value to false in the DB I think?
+            # Can't remember if you set a setting to the default if it
+            # saves it still.
+            if value != defaults[name]
+              value
+
+              # The change has reached the promotion status and is forcibly
+              # enabled, admins can still disable it.
+            elsif UpcomingChanges.meets_or_exceeds_status?(
+                  name,
+                  SiteSetting.promote_upcoming_changes_on_status.to_sym,
+                )
+              true
+            else
+              # Otherwise use the default value, which for upcoming changes
+              # is false.
+              defaults[name]
+            end
+        end
+
         if mandatory_values[name]
           return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
         end
+
         value
       end
     end
