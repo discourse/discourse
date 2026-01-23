@@ -54,4 +54,42 @@ RSpec.describe "Chat pinned messages", type: :system do
     # Indicator should be gone after viewing
     expect(page).to have_no_css(".c-navbar__pinned-messages-btn__unread-indicator")
   end
+
+  context "when viewing pinned messages attribution" do
+    it "shows 'Pinned by you' when current user pinned the message" do
+      chat_page.visit_channel(channel)
+      channel_page.messages.find(id: message.id).secondary_action("pin")
+      find(".c-navbar__pinned-messages-btn").click
+
+      expect(page).to have_css(".c-routes.--channel-pins")
+      expect(page).to have_css(
+        ".chat-pinned-message__pinned-by",
+        text: I18n.t("js.chat.pinned_messages.pinned_by_you"),
+      )
+    end
+
+    context "when another user pinned the message" do
+      fab!(:other_user, :user)
+
+      before do
+        channel.add(other_user)
+        Chat::PinnedMessage.create!(
+          chat_message: message,
+          chat_channel: channel,
+          pinned_by_id: other_user.id,
+        )
+      end
+
+      it "shows 'Pinned by [username]'" do
+        chat_page.visit_channel(channel)
+        find(".c-navbar__pinned-messages-btn").click
+
+        expect(page).to have_css(".c-routes.--channel-pins")
+        expect(page).to have_css(
+          ".chat-pinned-message__pinned-by",
+          text: I18n.t("js.chat.pinned_messages.pinned_by_user", username: other_user.username),
+        )
+      end
+    end
+  end
 end
