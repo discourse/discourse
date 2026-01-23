@@ -185,6 +185,26 @@ RSpec.describe DiscourseAi::AiModeration::SpamScanner do
       SiteSetting.ai_spam_detection_enabled = false
       expect { described_class.new_post(post) }.not_to change(Jobs::AiSpamScan.jobs, :size)
     end
+
+    it "doesn't flag posts that were approved from the review queue" do
+      reviewable =
+        ReviewableQueuedPost.create!(
+          created_by: Discourse.system_user,
+          target_created_by: user,
+          topic_id: topic.id,
+          payload: {
+            raw: "This is a test post from the queue",
+          },
+        )
+
+      result = reviewable.perform(moderator, :approve_post)
+      approved_post = result.created_post
+
+      expect {
+        described_class.new_post(approved_post)
+        described_class.after_cooked_post(approved_post)
+      }.not_to change(Jobs::AiSpamScan.jobs, :size)
+    end
   end
 
   describe ".edited_post" do

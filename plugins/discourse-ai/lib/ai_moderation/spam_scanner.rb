@@ -13,8 +13,13 @@ module DiscourseAi
       def self.new_post(post)
         return if !enabled?
         return if !should_scan_post?(post)
+        return if approved_from_review_queue?(post)
 
         flag_post_for_scanning(post)
+      end
+
+      def self.approved_from_review_queue?(post)
+        ReviewableQueuedPost.approved.exists?(target: post)
       end
 
       def self.ensure_flagging_user!
