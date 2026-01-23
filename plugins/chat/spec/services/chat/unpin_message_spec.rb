@@ -51,13 +51,8 @@ RSpec.describe Chat::UnpinMessage do
         expect(Chat::PinnedMessage.find_by(id: pin_id)).to be_nil
       end
 
-      it "posts a system message" do
-        expect { result }.to change { Chat::Message.count }.by(1)
-
-        system_message = Chat::Message.last
-        expect(system_message.user_id).to eq(Discourse.system_user.id)
-        expect(system_message.message).to include(current_user.username)
-        expect(system_message.message).to include("unpinned")
+      it "does not post a system message" do
+        expect { result }.not_to change { Chat::Message.where(user: Discourse.system_user).count }
       end
 
       it "publishes a MessageBus event" do

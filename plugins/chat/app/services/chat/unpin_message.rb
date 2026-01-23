@@ -18,7 +18,6 @@ module Chat
 
     transaction { step :destroy_pin }
 
-    step :post_system_message
     step :publish_unpin_event
 
     private
@@ -40,22 +39,6 @@ module Chat
 
     def destroy_pin(pin:)
       pin.destroy!
-    end
-
-    def post_system_message(message:, guardian:)
-      Chat::CreateMessage.call(
-        guardian: Discourse.system_user.guardian,
-        params: {
-          chat_channel_id: message.chat_channel_id,
-          message:
-            I18n.t(
-              "chat.channel.message_unpinned",
-              username: guardian.user.username,
-              message_url: message.url,
-              count: 1,
-            ),
-        },
-      )
     end
 
     def publish_unpin_event(message:)
