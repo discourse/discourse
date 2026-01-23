@@ -17,7 +17,7 @@ concurrency:
 jobs:
   publish-assets:
     if: github.repository == 'discourse/discourse'
-    runs-on: 'debian-12-8core'
+    runs-on: 'cdck-linux-8-core'
     container: discourse/discourse_test:release
     timeout-minutes: 30
   
