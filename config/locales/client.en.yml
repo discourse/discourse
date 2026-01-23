@@ -4560,6 +4560,7 @@ en:
       create_long: "Create a new category"
       save: "Save category"
       slug: "Category slug"
+      parent: "Parent category"
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.

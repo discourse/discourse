@@ -1,12 +1,11 @@
 import { fn, hash } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { and, empty } from "@ember/object/computed";
-import ColorInput from "discourse/admin/components/color-input";
 import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
-import ColorPicker from "discourse/components/color-picker";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
@@ -257,23 +256,7 @@ export default class EditCategoryImagesV2 extends buildCategoryPanel("images") {
         @format="large"
         as |field|
       >
-        <field.Custom>
-          <div class="category-color-editor">
-            <div class="colorpicker-wrapper">
-              <ColorInput
-                @hexValue={{readonly field.value}}
-                @ariaLabelledby="text-color-label"
-                @onChangeColor={{field.set}}
-                @skipNormalize={{true}}
-              />
-              <ColorPicker
-                @value={{readonly field.value}}
-                @ariaLabel={{i18n "category.predefined_colors"}}
-                @onSelectColor={{field.set}}
-              />
-            </div>
-          </div>
-        </field.Custom>
+        <field.Color @colors={{CATEGORY_TEXT_COLORS}} />
       </@form.Field>
     {{/if}}
 

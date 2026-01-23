@@ -1,14 +1,13 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
-import { concat, fn, hash } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import ColorInput from "discourse/admin/components/color-input";
-import ColorPicker from "discourse/components/color-picker";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
+import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import discourseDebounce from "discourse/lib/debounce";
 import { INPUT_DELAY } from "discourse/lib/environment";
@@ -22,6 +21,7 @@ import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class EditCategoryGeneralV2 extends Component {
+  @service site;
   @service siteSettings;
 
   @tracked categoryVisibilityState = null;
@@ -175,6 +175,34 @@ export default class EditCategoryGeneralV2 extends Component {
     return this.siteSettings.max_category_nesting > 2;
   }
 
+  @cached
+  get backgroundColors() {
+    const categories = this.site.get("categoriesList");
+    return uniqueItemsFromArray(
+      this.siteSettings.category_colors
+        .split("|")
+        .filter(Boolean)
+        .map((i) => i.toUpperCase())
+        .concat(categories.map((c) => c.color.toUpperCase()))
+    );
+  }
+
+  @cached
+  get usedBackgroundColors() {
+    const categories = this.site.get("categoriesList");
+    const categoryId = this.args.category.id;
+    const categoryColor = this.args.category.color;
+
+    return categories
+      .map((c) => {
+        return categoryId &&
+          categoryColor?.toUpperCase() === c.color.toUpperCase()
+          ? null
+          : c.color.toUpperCase();
+      })
+      .filter((item) => item != null);
+  }
+
   get categoryVisibility() {
     if (this.categoryVisibilityState) {
       return this.categoryVisibilityState;
@@ -306,35 +334,22 @@ export default class EditCategoryGeneralV2 extends Component {
   }
 
   @action
-  updateColor(field, newColor) {
-    const color = newColor.replace("#", "");
+  async onBackgroundColorSet(value, { set }) {
+    const color = value?.replace(/^#/, "") ?? "";
 
-    if (color === field.value) {
-      return;
-    }
+    await set("color", color);
 
-    if (field.name === "color") {
-      const whiteDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[0]);
-      const blackDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[1]);
-      const colorIndex = whiteDiff > blackDiff ? 0 : 1;
+    const whiteDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[0]);
+    const blackDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[1]);
+    const colorIndex = whiteDiff > blackDiff ? 0 : 1;
 
-      this.args.form.setProperties({
+    this.args.form.set("text_color", CATEGORY_TEXT_COLORS[colorIndex]);
+
+    if (this.args.updatePreview) {
+      this.args.updatePreview({
         color,
         text_color: CATEGORY_TEXT_COLORS[colorIndex],
       });
-
-      if (this.args.updatePreview) {
-        this.args.updatePreview({
-          color,
-          text_color: CATEGORY_TEXT_COLORS[colorIndex],
-        });
-      }
-    } else {
-      field.set(color);
-
-      if (this.args.updatePreview) {
-        this.args.updatePreview({ text_color: color });
-      }
     }
   }
 
@@ -495,25 +510,13 @@ export default class EditCategoryGeneralV2 extends Component {
         @title={{i18n "category.background_color"}}
         @format="large"
         @validation="required"
+        @onSet={{this.onBackgroundColorSet}}
         as |field|
       >
-        <field.Custom>
-          <div class="category-color-editor">
-            <div class="colorpicker-wrapper edit-background-color">
-              <ColorInput
-                @hexValue={{readonly field.value}}
-                @ariaLabelledby="background-color-label"
-                @onChangeColor={{fn this.updateColor field}}
-                @skipNormalize={{true}}
-              />
-              <ColorPicker
-                @value={{readonly field.value}}
-                @ariaLabel={{i18n "category.predefined_colors"}}
-                @onSelectColor={{fn this.updateColor field}}
-              />
-            </div>
-          </div>
-        </field.Custom>
+        <field.Color
+          @colors={{this.backgroundColors}}
+          @usedColors={{this.usedBackgroundColors}}
+        />
       </@form.Field>
 
       <@form.Container @title={{i18n "category.style"}}>
