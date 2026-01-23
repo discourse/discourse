@@ -59,7 +59,7 @@ module Chat
           message:
             I18n.t(
               "chat.channel.message_pinned",
-              username: "@#{guardian.user.username}",
+              username: guardian.user.username,
               message_url: message.url,
               count: 1,
             ),
