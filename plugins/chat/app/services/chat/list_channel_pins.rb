@@ -32,7 +32,26 @@ module Chat
     end
 
     def fetch_pins(channel:)
-      Chat::PinnedMessage.for_channel(channel).includes(chat_message: :user)
+      user_includes =
+        if SiteSetting.enable_user_status
+          %i[user_status user_option primary_group]
+        else
+          %i[user_option primary_group]
+        end
+
+      Chat::PinnedMessage.for_channel(channel).includes(
+        chat_message: [
+          :revisions,
+          :bookmarks,
+          { uploads: { optimized_videos: :optimized_upload } },
+          { chat_channel: :chatable },
+          :thread,
+          { user: user_includes },
+          { user_mentions: { user: user_includes } },
+          { reactions: :user },
+          { in_reply_to: [:user] },
+        ],
+      )
     end
 
     def mark_pins_as_read(membership:)

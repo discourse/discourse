@@ -275,16 +275,26 @@ module Chat
       return false unless can_chat?
 
       channel = message.chat_channel
+      return false unless can_preview_chat_channel?(channel)
 
       if channel.direct_message_channel?
-        channel.chatable.user_ids.include?(@user.id)
+        true
       else
         @user.in_any_groups?(SiteSetting.chat_pinning_messages_allowed_groups_map)
       end
     end
 
     def can_unpin_chat_message?(message)
-      can_pin_chat_message?(message)
+      return false unless can_chat?
+
+      channel = message.chat_channel
+      return false unless can_preview_chat_channel?(channel)
+
+      if channel.direct_message_channel?
+        true
+      else
+        @user.in_any_groups?(SiteSetting.chat_pinning_messages_allowed_groups_map)
+      end
     end
   end
 end
