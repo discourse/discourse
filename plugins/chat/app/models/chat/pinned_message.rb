@@ -15,3 +15,20 @@ module Chat
     scope :for_channel, ->(channel) { where(chat_channel: channel).order(created_at: :desc) }
   end
 end
+
+# == Schema Information
+#
+# Table name: chat_pinned_messages
+#
+#  id              :bigint           not null, primary key
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  chat_channel_id :bigint           not null
+#  chat_message_id :bigint           not null
+#  pinned_by_id    :bigint           not null
+#
+# Indexes
+#
+#  idx_chat_pinned_messages_channel_created       (chat_channel_id,created_at DESC)
+#  index_chat_pinned_messages_on_chat_message_id  (chat_message_id) UNIQUE
+#

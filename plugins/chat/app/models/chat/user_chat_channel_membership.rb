@@ -35,6 +35,7 @@ end
 #  following                           :boolean          default(FALSE), not null
 #  join_mode                           :integer          default("manual"), not null
 #  last_viewed_at                      :datetime         not null
+#  last_viewed_pins_at                 :datetime
 #  muted                               :boolean          default(FALSE), not null
 #  notification_level                  :integer          default("mention"), not null
 #  starred                             :boolean          default(FALSE), not null
