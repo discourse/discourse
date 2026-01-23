@@ -134,16 +134,16 @@ module("Integration | Component | FormKit | Field", function (hooks) {
       <template>
         <Form as |form|>
           <form.Field @name="foo" @title={{htmlTitle}} as |field|>
-            <field.Input />
+            <field.Checkbox />
           </form.Field>
         </Form>
       </template>
     );
 
     assert
-      .dom(".form-kit__container-title a")
+      .dom(".form-kit__control-checkbox-title a")
       .exists("it renders HTML in the title");
-    assert.dom(".form-kit__container-title a").hasAttribute("href", "#");
+    assert.dom(".form-kit__control-checkbox-title a").hasAttribute("href", "#");
   });
 
   test("@validation", async function (assert) {
