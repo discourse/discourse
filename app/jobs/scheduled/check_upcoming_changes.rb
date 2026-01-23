@@ -68,10 +68,13 @@ module Jobs
 
     def notify_promotions(site)
       changes_already_notified_about_promotion =
-        UpcomingChangeEvent.exists?(
-          upcoming_change_name: SiteSetting.upcoming_change_site_settings,
-          event_type: :admins_notified_automatic_promotion,
-        ).pluck(:upcoming_change_name)
+        UpcomingChangeEvent
+          .where(
+            upcoming_change_name: SiteSetting.upcoming_change_site_settings,
+            event_type: :admins_notified_automatic_promotion,
+          )
+          .pluck(:upcoming_change_name)
+          .map(&:to_sym)
 
       SiteSetting.upcoming_change_site_settings.each do |setting_name|
         unless UpcomingChanges.meets_or_exceeds_status?(
