@@ -269,6 +269,9 @@ function registerTopicFooterButtons(api) {
   });
 }
 
+// Cache topic assignment data instead of serializing to HTML
+const topicAssignmentsCache = new Map();
+
 function setupGroupedAssignClickHandler(api) {
   const menuService = api.container.lookup("service:menu");
 
@@ -281,14 +284,15 @@ function setupGroupedAssignClickHandler(api) {
     event.preventDefault();
     event.stopPropagation();
 
-    const topicId = button.dataset.topicId;
+    const topicId = parseInt(button.dataset.topicId, 10);
     const assigneeId = button.dataset.assigneeId;
-    const assignmentsData = button.dataset.assignments;
 
-    let assignments;
-    try {
-      assignments = JSON.parse(decodeURIComponent(assignmentsData));
-    } catch {
+    const cacheKey = `${topicId}-${assigneeId}`;
+    const cached = topicAssignmentsCache.get(cacheKey);
+
+    if (!cached) {
+      // eslint-disable-next-line no-console
+      console.warn("Assignment data not found in cache for topic", topicId);
       return;
     }
 
@@ -297,7 +301,7 @@ function setupGroupedAssignClickHandler(api) {
       component: GroupedAssignsDropdown,
       autofocus: true,
       data: {
-        assignments,
+        assignments: cached.assignments,
         assigneeName: assigneeId,
         topicId,
       },
@@ -307,6 +311,15 @@ function setupGroupedAssignClickHandler(api) {
   api.onPageChange(() => {
     document.removeEventListener("click", handleGroupedAssignClick);
     document.addEventListener("click", handleGroupedAssignClick);
+
+    // Limit cache size
+    if (topicAssignmentsCache.size > 200) {
+      const keysToDelete = Array.from(topicAssignmentsCache.keys()).slice(
+        0,
+        100
+      );
+      keysToDelete.forEach((key) => topicAssignmentsCache.delete(key));
+    }
   });
 }
 
@@ -474,16 +487,18 @@ function initialize(api) {
 
       if (count > 1) {
         if (tagName === "a") {
-          const assignmentsData = encodeURIComponent(
-            JSON.stringify(
-              assignments.map((a) => ({
-                postId: a.assignee.assignedToPostId,
-                postNumber: a.postNumber,
-                isTopicLevel: a.isTopicLevel,
-              }))
-            )
-          );
-          return `<button type="button" class="assigned-to discourse-tag simple grouped-assign-tag" data-topic-id="${topic.id}" data-assignee-id="${escapeExpression(assignee.username || assignee.name)}" data-assignments="${assignmentsData}" data-is-group="${!assignee.username}" aria-haspopup="true">${icon}<span>${name}</span><span class="assign-count">×${count}</span></button>`;
+          const assigneeKey = assignee.username || assignee.name;
+          const cacheKey = `${topic.id}-${assigneeKey}`;
+
+          topicAssignmentsCache.set(cacheKey, {
+            assignments: assignments.map((a) => ({
+              postId: a.assignee.assignedToPostId,
+              postNumber: a.postNumber,
+              isTopicLevel: a.isTopicLevel,
+            })),
+          });
+
+          return `<button type="button" class="assigned-to discourse-tag simple grouped-assign-tag" data-topic-id="${topic.id}" data-assignee-id="${escapeExpression(assigneeKey)}" data-is-group="${!assignee.username}" aria-haspopup="true">${icon}<span>${name}</span><span class="assign-count">×${count}</span></button>`;
         }
         // In search dropdown show count without menu
         return `<${tagName} class="assigned-to discourse-tag simple">${icon}<span>${name}</span><span class="assign-count">×${count}</span></${tagName}>`;
