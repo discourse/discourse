@@ -13,13 +13,13 @@ Plugin outlets have served Discourse well for years, but they have limitations:
 - **Template-only extension.** Outlets are places to inject markup, but there's no registry of what's injected or metadata about it.
 - **No validation.** Typos in outlet names fail silently. Invalid arguments aren't caught until runtime (if at all).
 
-The Block API is a structured alternative for UI extension points that need:
+The Blocks API is a structured alternative for UI extension points that need:
 - Declarative, validated conditions that determine when content appears
 - A registry of what's been registered and where
 - Coordinated rendering with predictable ordering
 - Rich developer tooling for debugging visibility issues
 
-The Block API is designed to handle the common cases—adding content to designated areas with conditional visibility, validation, and debugging tools. Plugin outlets remain available for complex scenarios requiring completely custom, bespoke components that don't fit the block model.
+It's designed to handle the common cases—adding content to designated areas with conditional visibility, validation, and debugging tools. Plugin outlets remain available for complex scenarios requiring completely custom, bespoke components that don't fit the block model.
 
 ### What Blocks Are For
 
@@ -30,6 +30,11 @@ Blocks are designed for **structured layout areas**—regions where you want to 
 - Dashboard panels
 - Category page customizations
 - Discovery page sections
+
+**Blocks might not be the best fit for:**
+
+- Components that need to bypass the block layout constraints or condition system
+- Complex bespoke solutions that require complete control over rendering
 
 **Blocks are NOT intended for:**
 
@@ -42,13 +47,11 @@ For smaller customizations, plugin outlets remain the right choice. Blocks and p
 
 ### Limitations
 
-Before diving in, understand what the Block API *doesn't* do:
+Before diving in, understand what the Blocks API *doesn't* do:
 
-- **One layout per outlet.** If you call `renderBlocks("homepage-blocks", [...])` twice, the second call raises an error. There's no merging or appending—the first caller owns the outlet. This means two plugins targeting the same outlet will conflict, and the load order determines which one succeeds.
+- **One layout per outlet.** Unlike plugin outlets where multiple connectors coexist, a block outlet has a single owner. If you call `renderBlocks("homepage-blocks", [...])` twice, the second call raises an error—there's no merging or appending. This means two plugins targeting the same outlet will conflict based on load order. The intended pattern: plugins register blocks, themes call `renderBlocks()` to compose the layout. This separates content (plugins) from presentation (themes).
 
 - **No runtime reconfiguration.** Outlet layouts are set at boot time during initializers. You can't add or remove blocks after the application starts. Conditions handle dynamic visibility, but the set of *possible* blocks is fixed.
-
-- **All-or-nothing outlet ownership.** Unlike plugin outlets where multiple connectors coexist, a block outlet has a single owner that defines its entire layout. The intended pattern: plugins register blocks, themes call `renderBlocks()` to compose the layout. This separates content (plugins) from presentation (themes).
 
 - **Conditions are synchronous.** The `evaluate()` method must return a boolean immediately. You can't await an API call to determine visibility. If you need async data, fetch it elsewhere and pass it via outlet args.
 
@@ -60,37 +63,41 @@ Before diving in, understand what the Block API *doesn't* do:
 
 These constraints are intentional trade-offs for simplicity and predictability. For truly bespoke customizations that don't fit the block model—complex interactive components, entirely custom layouts, or cases requiring multiple independent contributors—plugin outlets remain available.
 
+So how does all this fit together? What are these blocks all about?
+
 ### Think of It Like Furniture
 
-Think of the Block API like an interior design system with modular furniture.
+Think of the Blocks API like an interior design system with modular furniture.
 
 **Outlets are rooms.** You can't place a bookshelf floating in mid-air—it needs a room with walls and floor space. Similarly, blocks can only render in outlets, not arbitrary template locations. Each outlet (`homepage-blocks`, `sidebar-blocks`) is a designated space positioned somewhere in the UI, with its own purpose and constraints.
 
-**Blocks are furniture modules.** Think KALLAX shelves, BILLY bookcases, MALM dressers—standardized units with defined dimensions, product numbers, and assembly specs. Each block has a name (its product number), a component (its design), and an arg schema (its specifications). You order from the catalog, not invent furniture on the fly.
+**Blocks are furniture modules.** Think cube shelves, bookcases, dressers—standardized units with defined dimensions, product numbers, and assembly specs. Each block has a name (its product number), a component (its design), and an arg schema (its specifications). You order from the catalog, not invent furniture on the fly.
 
 **The registry is your product catalog.** Before you start designing a room, you need to know what's available. The catalog lists every piece that *could* be used. If you try to specify a product that doesn't exist, you'll know immediately—there's no "close enough" when ordering furniture.
 
 **Conditions are assembly requirements.** "Mount this shelf only if the wall is load-bearing" becomes "render only if user is admin." Requirements are checked when you're actually placing the furniture, not when it was manufactured.
 
-**Container blocks are units with compartments.** A KALLAX shelf holds drawer inserts, doors, or storage boxes—it's furniture that contains other furniture. Container blocks work the same way: they're blocks that hold other blocks in a structured arrangement.
+**Container blocks are units with compartments.** A cube shelf holds drawer inserts, doors, or storage boxes—it's furniture that contains other furniture. Container blocks work the same way: they're blocks that hold other blocks in a structured arrangement.
 
-**Plugins are third-party manufacturers.** IKEA, West Elm, CB2—they all make compatible modular furniture following common standards. They don't conflict with each other; they just provide options. Plugins work the same way: they register blocks without knowing where they'll be used, trusting that someone else will compose the final layout.
+**Plugins are third-party manufacturers.** Different furniture companies make compatible modular pieces following common standards. They don't conflict with each other; they just provide options. Plugins work the same way: they register blocks without knowing where they'll be used, trusting that someone else will compose the final layout.
 
-**The theme is your interior designer.** The designer looks at the catalog, considers each room's purpose, and creates a layout: "KALLAX in the living room, BILLY in the office, skip the MALM entirely." This is `renderBlocks()`. Only one designer controls each room—you don't have two people fighting over the living room layout.
+**The theme is your interior designer.** The designer looks at the catalog, considers each room's purpose, and creates a layout: "cube shelf in the living room, bookcase in the office, skip the dresser entirely." This is `renderBlocks()`. Only one designer controls each room—you don't have two people fighting over the living room layout.
 
 This mental model helps explain the API's design decisions:
 
 - **Why must blocks be registered before `renderBlocks()`?** The catalog must exist before the designer starts shopping.
 - **Why can't blocks render outside outlets?** Furniture needs a room—you can't place it in thin air.
 - **Why are conditions evaluated at render time?** Assembly requirements are checked when placing furniture, not when it was manufactured.
-- **Why don't multiple plugins conflict?** Manufacturers don't fight over shelf space—they just make products. The designer decides what goes where.
+- **Why can multiple plugins provide blocks without conflict?** Manufacturers don't fight over shelf space—they just make products. The designer decides what goes where.
 - **Why can only one caller configure an outlet?** One designer per room. Two designers with different visions for the same space creates chaos.
 - **Why are conditions declarative?** Assembly instructions are printed rules, not decisions made up on the spot.
 - **Why do blocks appear and disappear based on state?** Just like seasonal furniture displays—what's shown depends on context.
 
+Enough with the furniture—let's look at actual code.
+
 ### What's Inside a Block
 
-Here's a complete block registration that uses every available option. We'll walk through each part:
+Here's a block definition that uses every available option. We'll walk through each part:
 
 ```javascript
 import Component from "@glimmer/component";
@@ -300,30 +307,30 @@ The args schema serves three purposes:
 
 > **Important:** If your block accepts args, you must declare them in the schema. Undeclared args will be rejected.
 
+**Schema properties:**
+- `type` (required) - The argument type
+- `required` (optional) - Whether the argument must be provided
+- `default` (optional) - Default value if not provided
+
 **Supported types:**
 - `"string"` - Text values
 - `"number"` - Numeric values
 - `"boolean"` - True/false
 - `"array"` - Arrays (with optional `itemType` for validation)
 
-**Schema properties:**
-- `type` (required) - The argument type
-- `required` (optional) - Whether the argument must be provided
-- `default` (optional) - Default value if not provided
-
 **Type-specific properties:**
 
 | Property | Types | Description |
 |----------|-------|-------------|
-| `itemType` | `array` | Type of items (`"string"`, `"number"`, `"boolean"`) |
-| `itemEnum` | `array` | Restrict array items to specific values |
-| `pattern` | `string` | Regex pattern for validation |
 | `minLength` | `string`, `array` | Minimum length (characters or items) |
 | `maxLength` | `string`, `array` | Maximum length (characters or items) |
+| `pattern` | `string` | Regex pattern for validation |
 | `min` | `number` | Minimum value (inclusive) |
 | `max` | `number` | Maximum value (inclusive) |
 | `integer` | `number` | Must be a whole number |
 | `enum` | `string`, `number` | Restrict to specific values |
+| `itemType` | `array` | Type of items (`"string"`, `"number"`, `"boolean"`) |
+| `itemEnum` | `array` | Restrict array items to specific values |
 
 **Examples:**
 ```javascript
@@ -707,7 +714,7 @@ Blocks and plugin outlets serve different purposes:
 - You're wrapping or modifying existing content
 - The "composed layout" model doesn't fit your use case
 
-### Using the Block API
+### Using the Blocks API
 
 What you need to know to build with blocks.
 
@@ -900,7 +907,7 @@ api.renderBlocks("homepage-blocks", [
 
 #### Plugins, Theme Components, and Themes
 
-The Block API separates **providing blocks** from **composing layouts**:
+The Blocks API separates **providing blocks** from **composing layouts**:
 
 **Plugins** register blocks:
 ```javascript
@@ -990,7 +997,7 @@ Themes often want to compose blocks from multiple plugins, but those plugins may
 
 ### Under the Hood
 
-Now that you know how to use blocks, let's look at what's happening behind the scenes. This section is for those working on the Block API itself, or anyone curious about how the pieces fit together.
+Now that you know how to use blocks, let's look at what's happening behind the scenes. This section is for those working on the Blocks API itself, or anyone curious about how the pieces fit together.
 
 #### The Blocks Service
 
@@ -1056,7 +1063,7 @@ That pipeline assumes everything is configured correctly. But what catches mista
 
 ### Keeping Things in Check
 
-The Block API provides multiple layers of validation:
+The Blocks API provides multiple layers of validation:
 
 **Entry Key Validation:**
 ```javascript
@@ -1353,7 +1360,7 @@ entry.__visible = ownConditionsPassed && (isContainer ? hasVisibleChildren : tru
 
 ### Caching Behavior
 
-The Block API caches leaf blocks to optimize navigation performance.
+The Blocks API caches leaf blocks to optimize navigation performance.
 
 **What Gets Cached:**
 
@@ -1477,11 +1484,11 @@ That covers how the evaluation engine works. But what happens when you make a mi
 
 ## 4. When Things Go Wrong
 
-A powerful API is only useful if you can debug it when things go wrong. The Block API invests heavily in developer experience—not just catching errors, but explaining them in a way that points you toward the solution.
+A powerful API is only useful if you can debug it when things go wrong. The Blocks API invests heavily in developer experience—not just catching errors, but explaining them in a way that points you toward the solution.
 
 ### Helpful Error Messages
 
-The Block API is designed to guide you toward the fix, not just tell you something is wrong.
+The Blocks API is designed to guide you toward the fix, not just tell you something is wrong.
 
 **Unknown keys with suggestions:**
 ```javascript
@@ -1737,7 +1744,7 @@ The "name" field is marked as unique and must have distinct values.
 
 ### Development vs Production Behavior
 
-The Block API behaves differently in development and production environments:
+The Blocks API behaves differently in development and production environments:
 
 | Aspect | Development | Production |
 |--------|-------------|------------|
@@ -1766,7 +1773,7 @@ Error messages help when something is wrong. But sometimes you need to understan
 
 ### What's in the Toolkit
 
-The Block API includes comprehensive debugging tools accessible via the dev tools toolbar:
+The Blocks API includes comprehensive debugging tools accessible via the dev tools toolbar:
 
 | Tool | What it does | How to enable |
 |------|--------------|---------------|
@@ -2128,7 +2135,7 @@ This is particularly useful for inspecting complex objects like topics, users, o
 
 ### Integration with Browser DevTools
 
-The Block API debug tools complement browser DevTools:
+The Blocks API debug tools complement browser DevTools:
 
 **Using with Elements panel:**
 1. Enable Visual Overlay
@@ -2904,7 +2911,7 @@ You can also use outlet args to access the current category directly:
 - Mixed route conditions with user conditions (staff-only, logged-out)
 - Accessed category data via outlet args for dynamic content
 
-So far we've been working within a single theme or plugin. The real power of the Block API emerges when multiple plugins provide blocks and a theme composes them into a unified layout.
+So far we've been working within a single theme or plugin. The real power of the Blocks API emerges when multiple plugins provide blocks and a theme composes them into a unified layout.
 
 ### Tutorial 3: Theme Dashboard from Plugin Blocks
 
@@ -3093,7 +3100,7 @@ export default apiInitializer((api) => {
 - Plugins don't need to know about each other
 - Adding a new plugin's block to the dashboard is just one more entry in `renderBlocks()`
 
-That's the Block API in practice. What follows is the complete reference for when you need to look something up.
+That's the Blocks API in practice. What follows is the complete reference for when you need to look something up.
 
 ---
 
