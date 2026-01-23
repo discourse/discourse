@@ -103,22 +103,27 @@ describe "Admin Customize Themes Config Area Page", type: :system do
   describe "screenshot toggle" do
     fab!(:light_upload, :image_upload)
     fab!(:dark_upload, :image_upload)
-    fab!(:theme_with_screenshots) { Fabricate(:theme, name: "Theme with screenshots") }
-
-    before do
-      theme_with_screenshots.set_field(
-        target: :common,
-        name: "screenshot_light",
-        type: :theme_screenshot_upload_var,
-        upload_id: light_upload.id,
+    fab!(:theme_with_screenshots) do
+      Fabricate(
+        :theme,
+        name: "Theme with screenshots",
+        theme_fields: [
+          ThemeField.new(
+            target_id: Theme.targets[:common],
+            name: "screenshot_light",
+            type_id: ThemeField.types[:theme_screenshot_upload_var],
+            upload_id: light_upload.id,
+            value: "",
+          ),
+          ThemeField.new(
+            target_id: Theme.targets[:common],
+            name: "screenshot_dark",
+            type_id: ThemeField.types[:theme_screenshot_upload_var],
+            upload_id: dark_upload.id,
+            value: "",
+          ),
+        ],
       )
-      theme_with_screenshots.set_field(
-        target: :common,
-        name: "screenshot_dark",
-        type: :theme_screenshot_upload_var,
-        upload_id: dark_upload.id,
-      )
-      theme_with_screenshots.save!
     end
 
     it "allows toggling between light and dark screenshots" do
@@ -139,9 +144,7 @@ describe "Admin Customize Themes Config Area Page", type: :system do
       config_area.click_screenshot_toggle(theme_with_screenshots)
 
       expect(config_area.screenshot_image(theme_with_screenshots)[:src]).to include(light_src)
-    end
 
-    it "does not show toggle button for themes without both screenshots" do
       config_area.visit
 
       expect(config_area).to have_no_screenshot_toggle_button(theme)

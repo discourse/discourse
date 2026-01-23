@@ -281,8 +281,7 @@ export default class ThemeCard extends Component {
               >
                 <:content>
                   <DropdownMenu as |dropdown|>
-                    {{! TODO: Jordan
-                  solutions for broken, disabled states }}
+                    {{! TODO: Jordan solutions for broken, disabled states }}
                     <dropdown.item>
                       <DButton
                         @action={{this.setDefault}}
