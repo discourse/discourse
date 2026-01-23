@@ -23,9 +23,11 @@ module DiscourseAi
               SiteSetting.ai_translation_backfill_max_age_days.days.ago,
             )
             .where(deleted_at: nil)
-            .where("posts.user_id > 0")
             .where.not(raw: [nil, ""])
             .where("LENGTH(posts.raw) <= ?", SiteSetting.ai_translation_max_post_length)
+
+        posts =
+          posts.where("posts.user_id > 0") unless SiteSetting.ai_translation_include_bot_content
 
         posts = posts.joins(:topic)
         if SiteSetting.ai_translation_backfill_limit_to_public_content
