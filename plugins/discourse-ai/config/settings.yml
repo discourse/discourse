@@ -522,6 +522,10 @@ discourse_ai:
     default: true
     client: false
     area: "ai-features/translation"
+  ai_translation_include_bot_content:
+    default: false
+    client: false
+    area: "ai-features/translation"
   ai_translation_max_post_length:
     default: 10000
     client: false
