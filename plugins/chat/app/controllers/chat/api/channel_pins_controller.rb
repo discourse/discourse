@@ -4,30 +4,41 @@ class Chat::Api::ChannelPinsController < Chat::ApiController
   def index
     raise Discourse::NotFound unless SiteSetting.chat_pinned_messages
 
-    channel = Chat::Channel.find(params[:channel_id])
-    raise Discourse::InvalidAccess unless guardian.can_preview_chat_channel?(channel)
-
-    pins = Chat::PinnedMessage.for_channel(channel).includes(chat_message: :user)
-    membership = channel.membership_for(guardian.user)
-
-    # Capture old timestamp before marking as read
-    old_last_viewed_pins_at = membership.last_viewed_pins_at
-
-    # Mark as read in database for persistence
-    Chat::MarkPinsAsRead.call(params: { channel_id: channel.id }, guardian: guardian)
-
-    # Reload membership to get updated has_unseen_pins
-    membership.reload
-
-    # Override last_viewed_pins_at with old value for serialization
-    # This keeps indicators visible on frontend while viewing
-    membership.last_viewed_pins_at = old_last_viewed_pins_at
-
-    render json: {
-             pinned_messages: serialize_pins(pins),
-             membership:
-               Chat::UserChannelMembershipSerializer.new(membership, scope: guardian, root: false),
-           }
+    Chat::ListChannelPins.call(service_params) do
+      on_success do |pins:, membership:|
+        render json: {
+                 pinned_messages:
+                   ActiveModel::ArraySerializer.new(
+                     pins,
+                     each_serializer: Chat::PinnedMessageSerializer,
+                     scope: guardian,
+                   ),
+                 membership:
+                   Chat::UserChannelMembershipSerializer.new(
+                     membership,
+                     scope: guardian,
+                     root: false,
+                   ),
+               }
+      end
+      on_model_not_found(:channel) { raise Discourse::NotFound }
+      on_model_not_found(:membership) do |pins:|
+        render json: {
+                 pinned_messages:
+                   ActiveModel::ArraySerializer.new(
+                     pins,
+                     each_serializer: Chat::PinnedMessageSerializer,
+                     scope: guardian,
+                   ),
+                 membership: nil,
+               }
+      end
+      on_failed_policy(:can_view_channel) { raise Discourse::InvalidAccess }
+      on_failed_contract do |contract|
+        render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
+      end
+      on_failure { render(json: failed_json, status: :unprocessable_entity) }
+    end
   end
 
   def mark_read
@@ -95,20 +106,6 @@ class Chat::Api::ChannelPinsController < Chat::ApiController
       on_failed_contract do |contract|
         render(json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request)
       end
-    end
-  end
-
-  private
-
-  def serialize_pins(pins)
-    pins.map do |pin|
-      {
-        id: pin.id,
-        chat_message_id: pin.chat_message_id,
-        pinned_at: pin.created_at,
-        pinned_by_id: pin.pinned_by_id,
-        message: Chat::MessageSerializer.new(pin.chat_message, scope: guardian, root: false),
-      }
     end
   end
 end

@@ -8,6 +8,7 @@ RSpec.describe Chat::Api::ChannelPinsController do
 
   before do
     SiteSetting.chat_enabled = true
+    SiteSetting.chat_pinned_messages = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
     sign_in(admin)
   end
