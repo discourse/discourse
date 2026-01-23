@@ -926,4 +926,61 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
   end
+
+  describe "#can_pin_chat_message?" do
+    fab!(:pin_channel, :chat_channel)
+    fab!(:message) { Fabricate(:chat_message, chat_channel: pin_channel) }
+    fab!(:pin_dm_channel) { Fabricate(:direct_message_channel, users: [user, Fabricate(:user)]) }
+    fab!(:dm_message) { Fabricate(:chat_message, chat_channel: pin_dm_channel) }
+
+    context "when user cannot chat" do
+      before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:admins] }
+
+      it "returns false" do
+        expect(guardian.can_pin_chat_message?(message)).to eq(false)
+      end
+    end
+
+    context "for category channels" do
+      context "when user is not staff" do
+        it "returns false" do
+          expect(guardian.can_pin_chat_message?(message)).to eq(false)
+        end
+      end
+
+      context "when user is staff" do
+        it "returns true" do
+          expect(staff_guardian.can_pin_chat_message?(message)).to eq(true)
+        end
+      end
+    end
+
+    context "for direct message channels" do
+      context "when user is a member" do
+        it "returns true" do
+          expect(guardian.can_pin_chat_message?(dm_message)).to eq(true)
+        end
+      end
+
+      context "when user is not a member" do
+        fab!(:other_user) { Fabricate(:user, group_ids: [chatters.id], refresh_auto_groups: true) }
+        let(:other_guardian) { Guardian.new(other_user) }
+
+        it "returns false" do
+          expect(other_guardian.can_pin_chat_message?(dm_message)).to eq(false)
+        end
+      end
+    end
+  end
+
+  describe "#can_unpin_chat_message?" do
+    fab!(:unpin_channel, :chat_channel)
+    fab!(:message) { Fabricate(:chat_message, chat_channel: unpin_channel) }
+
+    it "uses the same logic as can_pin_chat_message?" do
+      expect(guardian.can_unpin_chat_message?(message)).to eq(
+        guardian.can_pin_chat_message?(message),
+      )
+    end
+  end
 end

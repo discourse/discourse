@@ -2,6 +2,13 @@ chat:
   chat_enabled:
     default: true
     client: true
+  chat_pinned_messages:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
   enable_public_channels:
     default: true
     client: true
@@ -101,6 +108,14 @@ chat:
     allow_any: false
     refresh: true
     validator: "Chat::DirectMessageEnabledGroupsValidator"
+    area: "group_permissions"
+  chat_pinning_messages_allowed_groups:
+    default: "1|2" # @admins, @moderators
+    mandatory_values: "1|2" # @admins, @moderators
+    type: group_list
+    list_type: compact
+    allow_any: false
+    refresh: true
     area: "group_permissions"
   chat_message_flag_allowed_groups:
     default: "1|2|11" # @admins, @moderators, @trust_level_1

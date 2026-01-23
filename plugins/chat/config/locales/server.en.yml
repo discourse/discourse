@@ -2,6 +2,7 @@ en:
   site_settings:
     chat_separate_sidebar_mode: "Show separate sidebar modes for forum and chat."
     chat_enabled: "Enable chat."
+    chat_pinned_messages: "Enable pinned messages in chat channels."
     enable_public_channels: "Enable public channels based on categories."
     chat_allowed_groups: "Users in these groups can chat. Note that admins and moderators can always access chat."
     chat_channel_retention_days: "Chat messages in regular channels will be retained for this many days. Set to '0' to retain messages forever."
@@ -99,6 +100,9 @@ en:
       thread_invalid_for_channel: "Thread is not part of the provided channel."
       thread_does_not_match_parent: "Thread does not match parent message."
       invalid_direct_message: "You are not allowed to create this direct message."
+      pin_limit_reached: "This channel has reached the maximum number of pinned messages (%{limit})."
+      message_already_pinned: "This message is already pinned."
+      message_not_pinned: "This message is not pinned."
     reviewables:
       message_already_handled: "Thanks, but we've already reviewed this message and determined it does not need to be flagged again."
       actions:
@@ -157,6 +161,12 @@ en:
       messages_moved:
         one: "@%{acting_username} moved a message to the [%{channel_name}](%{first_moved_message_url}) channel."
         other: "@%{acting_username} moved %{count} messages to the [%{channel_name}](%{first_moved_message_url}) channel."
+      message_pinned:
+        one: "%{username} pinned a [message](%{message_url})."
+        other: "%{username} pinned a [message](%{message_url})."
+      message_unpinned:
+        one: "%{username} unpinned a [message](%{message_url})."
+        other: "%{username} unpinned a [message](%{message_url})."
       dm_title:
         single_user: "%{username}"
         multi_user: "%{comma_separated_usernames}"

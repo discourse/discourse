@@ -90,6 +90,26 @@ describe Jobs::Chat::DeleteOldMessages do
   end
 
   describe "public channels" do
+    context "when a message is pinned" do
+      fab!(:old_pinned_message) do
+        Fabricate(:chat_message, chat_channel: public_channel, created_at: base_date - 400.days)
+      end
+      fab!(:pin) do
+        Fabricate(
+          :chat_pinned_message,
+          chat_message: old_pinned_message,
+          chat_channel: public_channel,
+        )
+      end
+
+      it "does not delete the pinned message" do
+        SiteSetting.chat_channel_retention_days = 20
+        described_class.new.execute
+
+        expect(Chat::Message.exists?(old_pinned_message.id)).to eq(true)
+      end
+    end
+
     it "deletes public messages correctly" do
       SiteSetting.chat_channel_retention_days = 20
       described_class.new.execute
@@ -123,6 +143,26 @@ describe Jobs::Chat::DeleteOldMessages do
   end
 
   describe "dm channels" do
+    context "when a message is pinned" do
+      fab!(:old_pinned_dm_message) do
+        Fabricate(:chat_message, chat_channel: dm_channel, created_at: base_date - 400.days)
+      end
+      fab!(:dm_pin) do
+        Fabricate(
+          :chat_pinned_message,
+          chat_message: old_pinned_dm_message,
+          chat_channel: dm_channel,
+        )
+      end
+
+      it "does not delete the pinned message" do
+        SiteSetting.chat_dm_retention_days = 20
+        described_class.new.execute
+
+        expect(Chat::Message.exists?(old_pinned_dm_message.id)).to eq(true)
+      end
+    end
+
     it "deletes public messages correctly" do
       SiteSetting.chat_dm_retention_days = 20
       described_class.new.execute

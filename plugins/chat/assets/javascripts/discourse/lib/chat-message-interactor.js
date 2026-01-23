@@ -158,6 +158,16 @@ export default class ChatemojiReactions {
     );
   }
 
+  get canPinMessage() {
+    if (!this.siteSettings.chat_pinned_messages) {
+      return false;
+    }
+    if (this.message.channel?.isDirectMessageChannel) {
+      return this.message.channel?.isFollowing;
+    }
+    return this.currentUser.staff;
+  }
+
   get canRebakeMessage() {
     return (
       this.currentUser.staff &&
@@ -215,6 +225,22 @@ export default class ChatemojiReactions {
         id: "select",
         name: i18n("chat.select"),
         icon: "list-check",
+      });
+    }
+
+    if (this.canPinMessage && !this.message.pinned) {
+      buttons.push({
+        id: "pin",
+        name: i18n("chat.pin_message"),
+        icon: "thumbtack",
+      });
+    }
+
+    if (this.canPinMessage && this.message.pinned) {
+      buttons.push({
+        id: "unpin",
+        name: i18n("chat.unpin_message"),
+        icon: "thumbtack",
       });
     }
 
@@ -420,6 +446,37 @@ export default class ChatemojiReactions {
     return this.chatApi
       .rebakeMessage(this.message.channel.id, this.message.id)
       .catch(popupAjaxError);
+  }
+
+  @action
+  pin() {
+    this.message.pinned = true;
+    this.message.channel.pinnedMessagesCount++;
+
+    return this.chatApi
+      .pinMessage(this.message.channel.id, this.message.id)
+      .catch((error) => {
+        this.message.pinned = false;
+        this.message.channel.pinnedMessagesCount--;
+        popupAjaxError(error);
+      });
+  }
+
+  @action
+  unpin() {
+    this.message.pinned = false;
+    this.message.channel.pinnedMessagesCount = Math.max(
+      0,
+      this.message.channel.pinnedMessagesCount - 1
+    );
+
+    return this.chatApi
+      .unpinMessage(this.message.channel.id, this.message.id)
+      .catch((error) => {
+        this.message.pinned = true;
+        this.message.channel.pinnedMessagesCount++;
+        popupAjaxError(error);
+      });
   }
 
   @action

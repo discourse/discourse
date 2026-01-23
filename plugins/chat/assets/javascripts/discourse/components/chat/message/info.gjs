@@ -10,7 +10,7 @@ import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { bind } from "discourse/lib/decorators";
 import { prioritizeNameInUx } from "discourse/lib/settings";
-import { and } from "discourse/truth-helpers";
+import { and, eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 import formatChatDate from "../../../helpers/format-chat-date";
@@ -153,6 +153,26 @@ export default class ChatMessageInfo extends Component {
           <span class="chat-message-info__bookmark">
             <BookmarkIcon @bookmark={{@message.bookmark}} />
           </span>
+        {{/if}}
+
+        {{#if this.siteSettings.chat_pinned_messages}}
+          {{#if (and @message.pinned (not (eq @context "pinned")))}}
+            <span
+              class="chat-message-info__pinned"
+              title={{i18n "chat.pinned"}}
+            >
+              {{icon "thumbtack"}}
+            </span>
+          {{else if
+            (and @message.pinned (eq @context "pinned") @message.isUnseen)
+          }}
+            <span
+              class="chat-message-info__pinned chat-message-info__pinned--unseen"
+              title={{i18n "chat.pinned"}}
+            >
+              {{icon "thumbtack"}}
+            </span>
+          {{/if}}
         {{/if}}
 
         {{#if this.isFlagged}}

@@ -430,6 +430,10 @@ export default class ChatMessage extends Component {
   get hideUserInfo() {
     const message = this.args.message;
 
+    if (message.pinned) {
+      return false;
+    }
+
     const previousMessage = message.previousMessage;
 
     if (!previousMessage) {
@@ -627,6 +631,7 @@ export default class ChatMessage extends Component {
                 <ChatMessageInfo
                   @message={{@message}}
                   @show={{not this.hideUserInfo}}
+                  @context={{@context}}
                   @threadContext={{this.threadContext}}
                   @dateMode={{@dateMode}}
                 />

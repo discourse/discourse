@@ -30,6 +30,7 @@ module Chat
             blocks
             channel
             thread_title
+            pinned
           ]
       ),
     )
@@ -214,6 +215,14 @@ module Chat
 
     def thread_title
       object.thread&.title
+    end
+
+    def pinned
+      object.pinned_message.present?
+    end
+
+    def include_pinned?
+      true
     end
 
     def thread

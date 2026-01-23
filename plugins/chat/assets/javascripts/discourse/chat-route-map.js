@@ -11,6 +11,7 @@ export default function () {
       this.route("thread", { path: "/t/:threadId" }, function () {
         this.route("near-message", { path: "/:messageId" });
       });
+      this.route("pins");
     });
 
     this.route("direct-messages");

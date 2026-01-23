@@ -80,6 +80,12 @@ export default class ChatChannelSubscriptionManager {
       case "notice":
         this.handleNotice(busData);
         break;
+      case "pin":
+        this.handlePinMessage(busData);
+        break;
+      case "unpin":
+        this.handleUnpinMessage(busData);
+        break;
     }
 
     this.channel.channelMessageBusLastId = lastMessageBusId;
@@ -245,5 +251,29 @@ export default class ChatChannelSubscriptionManager {
         message.thread.preview = ChatThreadPreview.create(data.preview);
       }
     }
+  }
+
+  handlePinMessage(data) {
+    const message = this.messagesManager.findMessage(data.chat_message_id);
+    if (message) {
+      message.pinned = true;
+    }
+    this.channel.pinnedMessagesCount++;
+
+    // Mark as unseen since a new pin was added
+    if (this.channel.currentUserMembership) {
+      this.channel.currentUserMembership.hasUnseenPins = true;
+    }
+  }
+
+  handleUnpinMessage(data) {
+    const message = this.messagesManager.findMessage(data.chat_message_id);
+    if (message) {
+      message.pinned = false;
+    }
+    this.channel.pinnedMessagesCount = Math.max(
+      0,
+      this.channel.pinnedMessagesCount - 1
+    );
   }
 }
