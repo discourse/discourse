@@ -456,4 +456,34 @@ RSpec.describe SiteSetting do
       end
     end
   end
+
+  describe ".content_localization_locales" do
+    it "returns configured supported locales" do
+      SiteSetting.content_localization_supported_locales = "es|fr|de"
+      SiteSetting.default_locale = "es"
+
+      expect(SiteSetting.content_localization_locales).to contain_exactly("es", "fr", "de")
+    end
+
+    it "includes default locale when not in supported locales" do
+      SiteSetting.content_localization_supported_locales = "es|fr"
+      SiteSetting.default_locale = "en"
+
+      expect(SiteSetting.content_localization_locales).to contain_exactly("es", "fr", "en")
+    end
+
+    it "does not duplicate default locale when already in supported locales" do
+      SiteSetting.content_localization_supported_locales = "en|es|fr"
+      SiteSetting.default_locale = "en"
+
+      expect(SiteSetting.content_localization_locales).to contain_exactly("en", "es", "fr")
+    end
+
+    it "returns only default locale when no supported locales configured" do
+      SiteSetting.content_localization_supported_locales = ""
+      SiteSetting.default_locale = "en"
+
+      expect(SiteSetting.content_localization_locales).to eq(["en"])
+    end
+  end
 end
