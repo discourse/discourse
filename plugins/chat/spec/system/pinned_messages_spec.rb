@@ -10,6 +10,7 @@ RSpec.describe "Chat pinned messages", type: :system do
 
   before do
     chat_system_bootstrap
+    SiteSetting.chat_pinned_messages = true
     channel.add(admin)
     sign_in(admin)
   end
