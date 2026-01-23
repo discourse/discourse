@@ -4,8 +4,11 @@ import FlashMessage from "discourse/components/flash-message";
 import { extractErrorInfo } from "discourse/lib/ajax-error";
 
 /**
- * Displays a validation error inline within a block outlet.
+ * Displays an error inline within a block outlet.
  * Uses FlashMessage to render the error in a consistent format.
+ *
+ * @param {Error|string|Object} error - The error to display. Can be an Error object,
+ *   a string, an HTTP response object with responseJSON/responseText, or a jqXHR object.
  */
 export default class BlockOutletInlineError extends Component {
   get errorMessage() {

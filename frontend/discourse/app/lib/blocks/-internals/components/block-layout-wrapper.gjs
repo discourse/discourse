@@ -7,7 +7,7 @@
  * `BlockOutlet` use these wrappers to ensure consistent BEM-style class
  * naming and layout structure.
  *
- * @module discourse/blocks/block-layout-wrapper
+ * @module discourse/lib/blocks/-internals/components/block-layout-wrapper
  */
 import Component from "@glimmer/component";
 import curryComponent from "ember-curry-component";

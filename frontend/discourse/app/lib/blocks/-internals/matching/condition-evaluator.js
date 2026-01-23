@@ -2,7 +2,7 @@
 import {
   DEBUG_CALLBACK,
   debugHooks,
-} from "discourse/lib/blocks/-internals/debug/block-processing";
+} from "discourse/lib/blocks/-internals/debug-hooks";
 
 /**
  * Evaluates condition specs at render time.

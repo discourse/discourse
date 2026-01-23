@@ -1012,7 +1012,7 @@ The service is a thin wrapper around the block registry—let's look at what tha
 
 #### The Block Registry
 
-The registry (`registration.js`) is a Map storing block name → block class (or factory). Internal tracking includes:
+The registry (`registry/block.js`) is a Map storing block name → block class (or factory). Internal tracking includes:
 
 - **Resolved factory cache** - Stores resolved classes for lazy-loaded blocks
 - **Pending resolutions** - Prevents duplicate concurrent async loads
@@ -1557,7 +1557,7 @@ When an error occurs, the stack trace points to your code, not internal block ma
 // Error shows:
 at renderBlocks (your-theme/api-initializers/configure-blocks.js:15:3)
 // Not:
-at validateConfig (discourse/lib/blocks/-internals/validation/layout-validation.js:400:1)
+at validateBlockConditions (discourse/lib/blocks/-internals/validation/layout.js:400:1)
 ```
 
 This is achieved via `captureCallSite()` which excludes internal frames. Note that this API isn't available in all browsers—we provide cleaner stack traces when we can, but you'll still get useful error messages regardless.

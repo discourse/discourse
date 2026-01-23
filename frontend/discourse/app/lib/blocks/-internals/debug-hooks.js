@@ -1,21 +1,19 @@
 // @ts-check
 /**
- * Block processing utilities and debug hooks.
+ * Debug hooks for block dev-tools integration.
  *
  * This module provides:
  * - Debug callback hooks for dev-tools integration (visual overlays, logging, outlet boundaries)
- * - Block processing utilities (optional missing blocks, container paths, ghost components)
+ * - Ghost component creation for visualizing hidden blocks
+ * - Debug console grouping utilities
  *
  * The debug hooks use TrackedMap for reactivity, enabling Ember's reactivity system
  * to trigger re-renders when callbacks are set/cleared.
  *
- * @module discourse/lib/blocks/-internals/debug/block-processing
+ * @module discourse/lib/blocks/-internals/debug-hooks
  */
 
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
-import { OPTIONAL_MISSING } from "discourse/lib/blocks/-internals/patterns";
-
-/* Debug Hooks */
 
 /**
  * Callback key constants for the debug hooks registry.
@@ -127,7 +125,7 @@ class DebugHooks {
    * Convenience getter that invokes the loggerInterface callback.
    *
    * The interface has methods: logCondition, updateCombinatorResult,
-   * logParamGroup, logRouteState.
+   * updateConditionResult, logParamGroup, logRouteState.
    *
    * @returns {Object|null} The logger interface, or null if not available.
    */
@@ -141,8 +139,6 @@ class DebugHooks {
  * Import this to access debug callbacks with tracked reactivity.
  */
 export const debugHooks = new DebugHooks();
-
-/* Block Processing */
 
 /**
  * Handles an optional missing block by logging and optionally creating a ghost.
@@ -193,16 +189,6 @@ export function handleOptionalMissingBlock({
   }
 
   return null;
-}
-
-/**
- * Checks if a resolved block is an optional missing block marker.
- *
- * @param {*} resolvedBlock - The result from tryResolveBlock.
- * @returns {boolean} True if the block is an optional missing marker.
- */
-export function isOptionalMissing(resolvedBlock) {
-  return resolvedBlock?.optionalMissing === OPTIONAL_MISSING;
 }
 
 /**
@@ -291,4 +277,25 @@ export function createGhostBlock({
   );
 
   return ghostData?.Component ? { ...ghostData, key } : null;
+}
+
+/**
+ * Executes a function within a debug console group.
+ * Ensures START_GROUP and END_GROUP callbacks are always paired.
+ *
+ * @param {string} blockName - The block name for the group label.
+ * @param {string} hierarchy - The hierarchy path for context.
+ * @param {boolean} isLoggingEnabled - Whether debug logging is active.
+ * @param {() => boolean} fn - Function to execute that returns the condition result.
+ * @returns {boolean} The result of the function execution.
+ */
+export function withDebugGroup(blockName, hierarchy, isLoggingEnabled, fn) {
+  if (!isLoggingEnabled) {
+    return fn();
+  }
+
+  debugHooks.getCallback(DEBUG_CALLBACK.START_GROUP)?.(blockName, hierarchy);
+  const result = fn();
+  debugHooks.getCallback(DEBUG_CALLBACK.END_GROUP)?.(result);
+  return result;
 }

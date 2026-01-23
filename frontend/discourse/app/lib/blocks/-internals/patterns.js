@@ -45,6 +45,16 @@ export const MAX_BLOCK_NAME_LENGTH = 100;
 export const OPTIONAL_MISSING = Symbol("optional-missing");
 
 /**
+ * Checks if a resolved block is an optional missing block marker.
+ *
+ * @param {*} resolvedBlock - The result from tryResolveBlock.
+ * @returns {boolean} True if the block is an optional missing marker.
+ */
+export function isOptionalMissing(resolvedBlock) {
+  return resolvedBlock?.optionalMissing === OPTIONAL_MISSING;
+}
+
+/**
  * Valid block name pattern: lowercase letters, numbers, and hyphens.
  * Must start with a letter. Examples: "hero-banner", "sidebar-blocks", "my-block-1"
  *

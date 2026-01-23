@@ -11,7 +11,7 @@
  * - Block: A component decorated with @block that can only render inside BlockOutlets
  * - Container Block: A block that can contain nested child blocks
  *
- * Security model:
+ * Authorization model:
  * - Blocks use secret symbols to verify they're being rendered in authorized contexts
  * - Direct template usage of blocks (outside BlockOutlets) throws an error
  * - This prevents plugins from bypassing the block system's validation
@@ -20,51 +20,37 @@ import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
 import curryComponent from "ember-curry-component";
-/** @type {import("discourse/blocks/block-layout-wrapper.gjs")} */
-import { wrapBlockLayout } from "discourse/blocks/block-layout-wrapper";
-import BlockOutletInlineError from "discourse/blocks/block-outlet-inline-error";
 import AsyncContent from "discourse/components/async-content";
+/** @type {import("discourse/lib/blocks/-internals/components/block-layout-wrapper.gjs")} */
+import { wrapBlockLayout } from "discourse/lib/blocks/-internals/components/block-layout-wrapper";
+import BlockOutletInlineError from "discourse/lib/blocks/-internals/components/block-outlet-inline-error";
+import BlockOutletRootContainer from "discourse/lib/blocks/-internals/components/block-outlet-root-container";
 import {
-  buildContainerPath,
-  createGhostBlock,
   DEBUG_CALLBACK,
   debugHooks,
-  handleOptionalMissingBlock,
-  isOptionalMissing,
-} from "discourse/lib/blocks/-internals/debug/block-processing";
+} from "discourse/lib/blocks/-internals/debug-hooks";
+import { processBlockEntries } from "discourse/lib/blocks/-internals/entry-processing";
 import {
   captureCallSite,
   raiseBlockError,
 } from "discourse/lib/blocks/-internals/error";
-import {
-  detectPatternConflicts,
-  validateOutletPatterns,
-  warnUnknownOutletPatterns,
-} from "discourse/lib/blocks/-internals/matching/outlet-matcher";
-import {
-  parseBlockName,
-  VALID_NAMESPACED_BLOCK_PATTERN,
-} from "discourse/lib/blocks/-internals/patterns";
-import {
-  isBlockRegistryFrozen,
-  tryResolveBlock,
-} from "discourse/lib/blocks/-internals/registry/block";
-import {
-  applyArgDefaults,
-  shallowArgsEqual,
-} from "discourse/lib/blocks/-internals/utils";
+import { isBlockRegistryFrozen } from "discourse/lib/blocks/-internals/registry/block";
+import { applyArgDefaults } from "discourse/lib/blocks/-internals/utils";
 import {
   validateArgsSchema,
   validateChildArgsSchema,
 } from "discourse/lib/blocks/-internals/validation/block-args";
+import {
+  validateAndParseBlockName,
+  validateBlockOptions,
+  validateOutletRestrictions,
+} from "discourse/lib/blocks/-internals/validation/block-decorator";
 import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/validation/constraints";
 import { validateLayout } from "discourse/lib/blocks/-internals/validation/layout";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
 import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
-import { formatWithSuggestion } from "discourse/lib/string-similarity";
 
 /**
  * A block entry in a layout configuration.
@@ -81,6 +67,8 @@ import { formatWithSuggestion } from "discourse/lib/string-similarity";
 /**
  * Maps outlet names to their registered outlet layouts.
  * Each outlet can have exactly one layout registered.
+ *
+ * DO NOT EXPORT THIS MAP to prevent layouts bypassing the validation steps
  *
  * @type {Map<string, {validatedLayout: Promise<Array<Object>>}>}
  */
@@ -135,7 +123,7 @@ export function _resetOutletLayoutsForTesting() {
  *
  * USE ONLY FOR TESTING PURPOSES.
  *
- * @returns {Map<string, {validatedLayout: Promise}>} The outlet layouts map.
+ * @returns {Map<string, {validatedLayout: Promise<Array<Object>>}>} The outlet layouts map.
  */
 export function _getOutletLayouts() {
   if (DEBUG) {
@@ -144,131 +132,13 @@ export function _getOutletLayouts() {
   return new Map();
 }
 
-/**
- * Valid keys for the @block decorator options (block schema).
- * @constant {ReadonlyArray<string>}
- */
-const VALID_BLOCK_OPTIONS = Object.freeze([
-  "container",
-  "containerClassNames",
-  "description",
-  "args",
-  "childArgs",
-  "constraints",
-  "validate",
-  "allowedOutlets",
-  "deniedOutlets",
-]);
-
-/**
- * Validates the options object passed to the @block decorator.
- * Checks for unknown keys and provides suggestions for typos.
- *
- * @param {string} name - The block name (for error messages).
- * @param {Object} options - The options object to validate.
- */
-function validateBlockOptions(name, options) {
-  if (options && typeof options === "object") {
-    const unknownKeys = Object.keys(options).filter(
-      (key) => !VALID_BLOCK_OPTIONS.includes(key)
-    );
-    if (unknownKeys.length > 0) {
-      const suggestions = unknownKeys
-        .map((key) => formatWithSuggestion(key, VALID_BLOCK_OPTIONS))
-        .join(", ");
-      raiseBlockError(
-        `@block("${name}"): unknown option(s): ${suggestions}. ` +
-          `Valid options are: ${VALID_BLOCK_OPTIONS.join(", ")}.`
-      );
-    }
-  }
-}
-
-/**
- * Validates and parses the block name.
- * Ensures the name follows the required format for core, plugin, or theme blocks.
- *
- * @param {string} name - The block name to validate.
- * @returns {import("discourse/lib/blocks/-internals/patterns").ParsedBlockName} Parsed name components.
- */
-function validateAndParseBlockName(name) {
-  if (!VALID_NAMESPACED_BLOCK_PATTERN.test(name)) {
-    raiseBlockError(
-      `Block name "${name}" is invalid. ` +
-        `Valid formats: "block-name" (core), "plugin:block-name" (plugin), ` +
-        `"theme:namespace:block-name" (theme).`
-    );
-  }
-
-  const parsed = parseBlockName(name);
-  if (!parsed) {
-    // This shouldn't happen if VALID_NAMESPACED_BLOCK_PATTERN passed, but be defensive
-    raiseBlockError(`Block name "${name}" could not be parsed.`);
-  }
-
-  return parsed;
-}
-
-/**
- * Validates outlet restriction patterns (allowedOutlets and deniedOutlets).
- * Checks for valid picomatch syntax and detects conflicts between patterns.
- *
- * @param {string} name - The block name (for error messages).
- * @param {string[]|null} allowedOutlets - Allowed outlet patterns.
- * @param {string[]|null} deniedOutlets - Denied outlet patterns.
- */
-function validateOutletRestrictions(name, allowedOutlets, deniedOutlets) {
-  // Validate outlet patterns are valid picomatch syntax (arrays of strings)
-  validateOutletPatterns(allowedOutlets, name, "allowedOutlets");
-  validateOutletPatterns(deniedOutlets, name, "deniedOutlets");
-
-  // Detect conflicts between allowed and denied patterns.
-  // This prevents configurations where a block is both allowed AND denied
-  // in the same outlet, which would be confusing and likely a mistake.
-  const conflict = detectPatternConflicts(allowedOutlets, deniedOutlets);
-  if (conflict.conflict) {
-    raiseBlockError(
-      `Block "${name}": outlet "${conflict.details.outlet}" matches both ` +
-        `allowedOutlets pattern "${conflict.details.allowed}" and ` +
-        `deniedOutlets pattern "${conflict.details.denied}".`
-    );
-  }
-
-  // Warn if patterns don't match any known outlet (possible typos).
-  // Namespaced patterns (containing `:`) are skipped since they target
-  // plugin/theme-defined outlets not in the core registry.
-  warnUnknownOutletPatterns(allowedOutlets, name, "allowedOutlets");
-  warnUnknownOutletPatterns(deniedOutlets, name, "deniedOutlets");
-}
-
-/**
- * Executes a function within a debug console group.
- * Ensures START_GROUP and END_GROUP callbacks are always paired.
- *
- * @param {string} blockName - The block name for the group label.
- * @param {string} hierarchy - The hierarchy path for context.
- * @param {boolean} isLoggingEnabled - Whether debug logging is active.
- * @param {() => boolean} fn - Function to execute that returns the condition result.
- * @returns {boolean} The result of the function execution.
- */
-function withDebugGroup(blockName, hierarchy, isLoggingEnabled, fn) {
-  if (!isLoggingEnabled) {
-    return fn();
-  }
-
-  debugHooks.getCallback(DEBUG_CALLBACK.START_GROUP)?.(blockName, hierarchy);
-  const result = fn();
-  debugHooks.getCallback(DEBUG_CALLBACK.END_GROUP)?.(result);
-  return result;
-}
-
 /*
- * Security Symbols
+ * Authorization Symbols
  *
  * IMPORTANT: These symbols MUST NOT be exported.
  * DO NOT REFACTOR TO EXTRACT THESE SYMBOLS INTO ANOTHER FILE
  *
- * These secret symbols form the core of the block security model. They allow
+ * These secret symbols form the core of the block authorization model. They allow
  * the system to verify that:
  * 1. A component was decorated with @block (has __BLOCK_FLAG)
  * 2. A component is authorized to contain children (has __BLOCK_CONTAINER_FLAG)
@@ -283,7 +153,7 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
 /**
  * Decorator that transforms a Glimmer component into a block component.
  *
- * Block components have special security constraints:
+ * Block components have special authorization constraints:
  * - They can only be rendered inside BlockOutlets or container blocks
  * - They cannot be used directly in templates
  * - They receive special args for authorization and hierarchy management
@@ -310,7 +180,7 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * @param {Object.<string, ArgSchema>} [options.childArgs] - Schema for args passed to children
  *   of this container block. Only valid when container: true.
  *
- * @param {Object} [options.constraints] - Cross-arg validation constraints (atLeastOne, exactlyOne, allOrNone).
+ * @param {Object} [options.constraints] - Cross-arg validation constraints (atLeastOne, exactlyOne, allOrNone, atMostOne, requires).
  *
  * @param {Function} [options.validate] - Custom validation function called after schema validation.
  *
@@ -509,7 +379,7 @@ export function block(name, options = {}) {
        * - The same keys are reused on every render/navigation
        * - This cache instance is garbage collected when the owning component is destroyed
        *
-       * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: ChildBlockResult}>}
+       * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult}>}
        */
       #childComponentCache = new Map();
 
@@ -607,6 +477,8 @@ export function block(name, options = {}) {
           outletArgs: this.args.outletArgs,
           showGhosts,
           isLoggingEnabled: false,
+          createChildBlockFn: createChildBlock,
+          isContainerBlockFn: _isContainerBlock,
         });
       }
 
@@ -672,199 +544,6 @@ export function block(name, options = {}) {
 
     return DecoratedBlock;
   };
-}
-
-/**
- * Gets or creates a curried component for a leaf block, using cache when possible.
- *
- * Only leaf blocks (blocks without children) are cached. Container blocks are
- * always recreated because their children's visibility may change between
- * renders, and caching would result in stale children being displayed.
- *
- * Cache hit conditions:
- * 1. The component class must be the same reference
- * 2. The args object must be shallowly equal
- *
- * @param {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>} cache - The component cache keyed by stable block keys.
- * @param {Object} entry - The block entry with __stableKey and optional children.
- * @param {typeof Component} resolvedBlock - The resolved block component class.
- * @param {Object} debugContext - Debug context containing key, hierarchy, conditions, and outletArgs.
- * @param {import("@ember/owner").default} owner - The application owner for service lookup.
- * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
- *   The cached or newly created component data with stable key for list rendering.
- */
-function getOrCreateLeafBlockComponent(
-  cache,
-  entry,
-  resolvedBlock,
-  debugContext,
-  owner
-) {
-  const { key } = debugContext;
-  const cachedEntry = cache.get(key);
-  const hasChildren = entry.children?.length > 0;
-
-  // Only cache leaf blocks (no children). Container blocks are always recreated
-  // to ensure their children reflect current visibility state.
-  if (
-    !hasChildren &&
-    cachedEntry &&
-    cachedEntry.ComponentClass === resolvedBlock &&
-    shallowArgsEqual(cachedEntry.args, entry.args)
-  ) {
-    return cachedEntry.result;
-  }
-
-  // Create new curried component
-  const result = createChildBlock(
-    { ...entry, block: resolvedBlock },
-    owner,
-    debugContext
-  );
-
-  // Cache leaf blocks for future reuse
-  if (!hasChildren) {
-    cache.set(key, {
-      ComponentClass: resolvedBlock,
-      args: entry.args,
-      result,
-    });
-  }
-
-  return result;
-}
-
-/**
- * Processes block entries and creates renderable child components.
- *
- * This function iterates through a list of pre-processed block entries and
- * transforms them into renderable components, handling ghost blocks for
- * debug mode and optional missing blocks.
- *
- * @typedef {Object} BlockEntry
- * @property {string|typeof Component} block - Block reference (string name or class).
- * @property {Object} [args] - Arguments to pass to the block.
- * @property {Object} [containerArgs] - Values for parent container's childArgs schema.
- * @property {Array<BlockEntry>} [children] - Nested block entries for containers.
- * @property {Object|Array<Object>} [conditions] - Conditions that must pass for block to render.
- * @property {string} [classNames] - Additional CSS classes for the block wrapper.
- * @property {boolean} __visible - Whether the block passed condition evaluation.
- * @property {number} __stableKey - Stable key assigned at registration time.
- * @property {string} [__failureReason] - Why the block is hidden (debug mode only).
- *
- * @typedef {Object} ChildBlockResult
- * @property {import("ember-curry-component").CurriedComponent} Component - Curried component ready to render.
- * @property {Object} [containerArgs] - Values for parent container's childArgs schema.
- * @property {string} key - Stable unique key for list rendering.
- *
- * @param {Object} options - Rendering options.
- * @param {Array<BlockEntry>} options.entries - Pre-processed block entries with visibility metadata.
- * @param {Map<string, {ComponentClass: typeof Component, args: Object, result: ChildBlockResult}>} options.cache - Component cache keyed by stable block keys.
- * @param {import("@ember/owner").default} options.owner - Application owner for service lookup.
- * @param {string} options.baseHierarchy - Current hierarchy path (e.g., "homepage-blocks/section-1").
- * @param {string} options.outletName - The outlet name for CSS class generation.
- * @param {Object} options.outletArgs - Arguments passed from the outlet to blocks.
- * @param {boolean} options.showGhosts - Whether to render ghost blocks for invisible entries.
- * @param {boolean} options.isLoggingEnabled - Whether debug logging is active.
- * @returns {Array<ChildBlockResult>} Array of renderable child objects with Component and containerArgs.
- */
-function processBlockEntries({
-  entries,
-  cache,
-  owner,
-  baseHierarchy,
-  outletName,
-  outletArgs,
-  showGhosts,
-  isLoggingEnabled,
-}) {
-  const result = [];
-  const containerCounts = new Map();
-
-  for (const entry of entries) {
-    // @ts-ignore - entry.block can be string or BlockClass
-    const resolvedBlock = tryResolveBlock(entry.block);
-
-    // Handle optional missing block (block ref ended with `?` but not registered)
-    if (isOptionalMissing(resolvedBlock)) {
-      const key = `optional-missing:${resolvedBlock.name}:${entry.__stableKey}`;
-      const ghostData = handleOptionalMissingBlock({
-        blockName: resolvedBlock.name,
-        entry,
-        hierarchy: baseHierarchy,
-        isLoggingEnabled,
-        showGhosts,
-        key,
-      });
-      if (ghostData) {
-        result.push(ghostData);
-      }
-      continue;
-    }
-
-    // Skip blocks that haven't resolved yet. Block factories may be resolving
-    // asynchronously (e.g., lazy-loaded plugins). The component will automatically
-    // re-render when the factory resolves (via TrackedMap reactivity).
-    if (!resolvedBlock) {
-      continue;
-    }
-
-    const blockClass =
-      /** @type {import("discourse/lib/blocks/-internals/registry/block").BlockClass} */ (
-        resolvedBlock
-      );
-    const blockName = blockClass.blockName || "unknown";
-    const isContainer = _isContainerBlock(blockClass);
-
-    // Use the stable key assigned at registration time. This key survives
-    // shallow cloning and ensures DOM identity is maintained when blocks
-    // are hidden/shown by conditions.
-    const key = `${blockName}:${entry.__stableKey}`;
-
-    // For containers, build their full path for children's hierarchy
-    const containerPath = isContainer
-      ? buildContainerPath(blockName, baseHierarchy, containerCounts)
-      : undefined;
-
-    // Render visible blocks
-    if (entry.__visible) {
-      result.push(
-        getOrCreateLeafBlockComponent(
-          cache,
-          entry,
-          blockClass,
-          {
-            displayHierarchy: baseHierarchy,
-            outletName,
-            containerPath,
-            conditions: entry.conditions,
-            outletArgs,
-            key,
-          },
-          owner
-        )
-      );
-    } else if (showGhosts) {
-      // Show ghost for invisible blocks in debug mode
-      const ghostData = createGhostBlock({
-        blockName,
-        entry,
-        hierarchy: baseHierarchy,
-        containerPath,
-        isContainer,
-        owner,
-        outletArgs,
-        isLoggingEnabled,
-        resolveBlockFn: tryResolveBlock,
-        key,
-      });
-      if (ghostData) {
-        result.push(ghostData);
-      }
-    }
-  }
-
-  return result;
 }
 
 /**
@@ -1385,6 +1064,8 @@ export default class BlockOutlet extends Component {
             rawChildren=layout.rawChildren
             showGhosts=layout.showGhosts
             isLoggingEnabled=layout.isLoggingEnabled
+            createChildBlockFn=createChildBlock
+            isContainerBlockFn=_isContainerBlock
           )
           as |ChildrenContainer|
         }}
@@ -1437,212 +1118,5 @@ export default class BlockOutlet extends Component {
         the presence of a registered layout if necessary }}
     {{! @glint-expect-error - yield signature not typed }}
     {{yield (hasLayout this.outletName) to="after"}}
-  </template>
-}
-
-/**
- * Internal container component that processes and renders block children.
- *
- * This component handles condition evaluation and component creation in a
- * tracked getter context. By evaluating conditions synchronously in
- * `processedChildren`, Ember's autotracking establishes dependencies on
- * services like `router` and `discovery`. Route changes trigger re-evaluation.
- *
- * If condition evaluation happened in the async promise chain (as it did
- * previously), service reads would not be tracked and route navigation
- * would not trigger re-evaluation.
- *
- * @private
- */
-class BlockOutletRootContainer extends Component {
-  @service blocks;
-
-  /**
-   * Cache for curried components, keyed by their stable block key.
-   *
-   * This cache prevents unnecessary component recreation during navigation.
-   * Components are reused when their class and args haven't changed.
-   *
-   * Memory note: This cache is bounded, not unbounded:
-   * - Keys use stable `__stableKey` values assigned once at registration time
-   * - The same keys are reused on every render/navigation
-   * - This cache instance is garbage collected when the owning component is destroyed
-   *
-   * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>}
-   */
-  #componentCache = new Map();
-
-  /**
-   * Processes raw block entries and creates renderable child components.
-   *
-   * This getter is the key to reactive condition evaluation. By accessing
-   * services like `router` and `discovery` during condition evaluation here
-   * (synchronously in a tracked getter), Ember establishes tracking
-   * dependencies. Route changes trigger this getter to re-run.
-   *
-   * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>}
-   */
-  @cached
-  get processedChildren() {
-    const {
-      rawChildren,
-      showGhosts,
-      isLoggingEnabled,
-      outletName,
-      outletArgs,
-    } = this.args;
-
-    if (!rawChildren?.length) {
-      return [];
-    }
-
-    const owner = getOwner(this);
-    const baseHierarchy = outletName;
-
-    // Step 1: Evaluate conditions - THIS IS NOW TRACKED!
-    // When blocksService.evaluate() reads router.currentURL or discovery.category,
-    // Ember establishes a dependency. Route changes trigger re-evaluation.
-    const processedEntries = this.#preprocessEntries(
-      rawChildren,
-      outletArgs,
-      this.blocks,
-      showGhosts,
-      isLoggingEnabled,
-      baseHierarchy
-    );
-
-    // Step 2: Create components from processed entries
-    // @ts-ignore - TS2322: ChildBlockResult type compatible with return type
-    return processBlockEntries({
-      entries: processedEntries,
-      cache: this.#componentCache,
-      owner,
-      baseHierarchy,
-      outletName,
-      outletArgs,
-      showGhosts,
-      isLoggingEnabled,
-    });
-  }
-
-  /**
-   * Pre-processes block entries to compute visibility for all blocks.
-   *
-   * This method evaluates conditions for all blocks in the tree and adds
-   * visibility metadata to each entry:
-   * - `__visible`: Whether the block should be rendered
-   * - `__failureReason`: Why the block is hidden (debug mode only)
-   *
-   * Container blocks have an implicit condition: they must have at least
-   * one visible child. This is evaluated bottom-up (children first).
-   *
-   * @param {Array<Object>} entries - Array of block entries to process.
-   * @param {Object} outletArgs - Outlet arguments for condition evaluation.
-   * @param {Object} blocksService - Blocks service for condition evaluation.
-   * @param {boolean} showGhosts - If true, keep all blocks for ghost rendering.
-   * @param {boolean} isLoggingEnabled - If true, log condition evaluation.
-   * @param {string} baseHierarchy - Base hierarchy path for logging.
-   * @returns {Array<Object>} Processed entries with visibility metadata.
-   */
-  #preprocessEntries(
-    entries,
-    outletArgs,
-    blocksService,
-    showGhosts,
-    isLoggingEnabled,
-    baseHierarchy
-  ) {
-    const result = [];
-
-    for (const entry of entries) {
-      // Shallow clone to add visibility metadata without mutating the original
-      // layout entry. The layout is immutable after registration, so we create
-      // a copy to attach __visible and __failureReason properties.
-      const entryClone = { ...entry };
-
-      // Resolve block reference
-      const resolvedBlock = tryResolveBlock(entryClone.block);
-
-      // Skip unresolved blocks (optional missing or pending factory resolution)
-      if (!resolvedBlock || isOptionalMissing(resolvedBlock)) {
-        // Keep the entry for ghost handling in the main loop
-        if (showGhosts || isOptionalMissing(resolvedBlock)) {
-          result.push(entryClone);
-        }
-        continue;
-      }
-
-      const blockClass =
-        /** @type {import("discourse/lib/blocks/-internals/registry/block").BlockClass} */ (
-          resolvedBlock
-        );
-      const blockName = blockClass.blockName || "unknown";
-      const isContainer = _isContainerBlock(blockClass);
-
-      // Evaluate this block's own conditions.
-      // The withDebugGroup wrapper ensures START_GROUP/END_GROUP are always paired.
-      // This is the key reactive line - blocksService.evaluate() reads from router/discovery
-      // services, and since we're in a tracked getter, Ember tracks these reads.
-      const conditionsPassed = entryClone.conditions
-        ? withDebugGroup(blockName, baseHierarchy, isLoggingEnabled, () =>
-            blocksService.evaluate(entryClone.conditions, {
-              debug: isLoggingEnabled,
-              outletArgs,
-            })
-          )
-        : true;
-
-      // For containers: recursively process children first (bottom-up evaluation)
-      // This determines which children are visible before we check if container has any
-      let hasVisibleChildren = true; // Non-containers always "have" visible children
-      if (isContainer && entryClone.children?.length) {
-        // Recursively preprocess children - this computes their visibility
-        const processedChildren = this.#preprocessEntries(
-          entryClone.children,
-          outletArgs,
-          blocksService,
-          showGhosts,
-          isLoggingEnabled,
-          `${baseHierarchy}/${blockName}`
-        );
-
-        hasVisibleChildren = processedChildren.some((child) => child.__visible);
-
-        // Update the cloned entry's children with the processed result
-        entryClone.children = processedChildren;
-      }
-
-      // Final visibility: own conditions must pass AND (not container OR has visible children)
-      // This implements the implicit "container must have visible children" condition
-      const visible = conditionsPassed && hasVisibleChildren;
-      entryClone.__visible = visible;
-
-      // In debug mode, record why the block is hidden for the ghost tooltip
-      if (showGhosts && !visible) {
-        entryClone.__failureReason = !conditionsPassed
-          ? "condition-failed"
-          : "no-visible-children";
-      }
-
-      // In production mode, filter out invisible blocks
-      // In debug mode, keep all blocks for ghost rendering
-      if (visible || showGhosts) {
-        result.push(entryClone);
-      }
-    }
-
-    return result;
-  }
-
-  <template>
-    <div class={{@outletName}}>
-      <div class="{{@outletName}}__container">
-        <div class="{{@outletName}}__layout">
-          {{#each this.processedChildren key="key" as |child|}}
-            <child.Component />
-          {{/each}}
-        </div>
-      </div>
-    </div>
   </template>
 }
