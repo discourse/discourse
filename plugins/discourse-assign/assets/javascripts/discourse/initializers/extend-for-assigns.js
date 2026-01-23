@@ -11,6 +11,7 @@ import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import AssignButton from "../components/assign-button";
 import BulkActionsAssignUser from "../components/bulk-actions/bulk-assign-user";
+import GroupedAssignsDropdown from "../components/grouped-assigns-dropdown";
 import EditTopicAssignments from "../components/modal/edit-topic-assignments";
 import PostAssignmentsDisplay from "../components/post-assignments-display";
 import TopicLevelAssignMenu from "../components/topic-level-assign-menu";
@@ -268,6 +269,47 @@ function registerTopicFooterButtons(api) {
   });
 }
 
+function setupGroupedAssignClickHandler(api) {
+  const menuService = api.container.lookup("service:menu");
+
+  const handleGroupedAssignClick = async (event) => {
+    const button = event.target.closest(".grouped-assign-tag");
+    if (!button) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const topicId = button.dataset.topicId;
+    const assigneeId = button.dataset.assigneeId;
+    const assignmentsData = button.dataset.assignments;
+
+    let assignments;
+    try {
+      assignments = JSON.parse(decodeURIComponent(assignmentsData));
+    } catch {
+      return;
+    }
+
+    await menuService.show(button, {
+      identifier: `grouped-assigns-${topicId}-${assigneeId}`,
+      component: GroupedAssignsDropdown,
+      autofocus: true,
+      data: {
+        assignments,
+        assigneeName: assigneeId,
+        topicId,
+      },
+    });
+  };
+
+  api.onPageChange(() => {
+    document.removeEventListener("click", handleGroupedAssignClick);
+    document.addEventListener("click", handleGroupedAssignClick);
+  });
+}
+
 function initialize(api) {
   const siteSettings = api.container.lookup("service:site-settings");
   const currentUser = api.getCurrentUser();
@@ -367,6 +409,7 @@ function initialize(api) {
     const topicAssignee = {
       assignee: assignedToUser || assignedToGroup,
       note: topicNote,
+      isTopicLevel: true,
     };
 
     let assignedToIndirectly;
@@ -386,6 +429,7 @@ function initialize(api) {
         assignedToIndirectly.map((assigned) => ({
           assignee: assigned.assigned_to,
           note: assigned.assignment_note,
+          postNumber: assigned.post_number,
         }))
       )
       .filter(({ assignee }) => assignee)
@@ -395,7 +439,21 @@ function initialize(api) {
       return "";
     }
 
-    const createTagHtml = ({ assignee, note }) => {
+    // Group assignments by user or group
+    const groupedAssignments = new Map();
+    assignedTo.forEach((assignment) => {
+      const key =
+        assignment.assignee.username || assignment.assignee.name || "unknown";
+      if (!groupedAssignments.has(key)) {
+        groupedAssignments.set(key, {
+          assignee: assignment.assignee,
+          assignments: [],
+        });
+      }
+      groupedAssignments.get(key).assignments.push(assignment);
+    });
+
+    const createTagHtml = ({ assignee, note }, count = 1, assignments = []) => {
       let assignedPath;
       if (assignee.assignedToPostId) {
         assignedPath = assignedToPostPath(assignee.assignedToPostId);
@@ -413,36 +471,60 @@ function initialize(api) {
           : assignee.username;
 
       const tagName = params.tagName || "a";
+
+      if (count > 1) {
+        if (tagName === "a") {
+          const assignmentsData = encodeURIComponent(
+            JSON.stringify(
+              assignments.map((a) => ({
+                postId: a.assignee.assignedToPostId,
+                postNumber: a.postNumber,
+                isTopicLevel: a.isTopicLevel,
+              }))
+            )
+          );
+          return `<button type="button" class="assigned-to discourse-tag simple grouped-assign-tag" data-topic-id="${topic.id}" data-assignee-id="${escapeExpression(assignee.username || assignee.name)}" data-assignments="${assignmentsData}" data-is-group="${!assignee.username}" aria-haspopup="true">${icon}<span>${name}</span><span class="assign-count">×${count}</span></button>`;
+        }
+        // In search dropdown show count without menu
+        return `<${tagName} class="assigned-to discourse-tag simple">${icon}<span>${name}</span><span class="assign-count">×${count}</span></${tagName}>`;
+      }
+
       const href =
         tagName === "a" ? `href="${assignedPath}" data-auto-route="true"` : "";
 
       return `<${tagName} class="assigned-to discourse-tag simple" ${href}>${icon}<span title="${escapeExpression(
-        note
+        note || ""
       )}">${name}</span></${tagName}>`;
     };
 
-    // is there's one assignment just return the tag
-    if (assignedTo.length === 1) {
-      return createTagHtml(assignedTo[0]);
-    }
-
-    // join multiple assignments with a separator
     let result = "";
-    assignedTo.forEach((assignment, index) => {
-      result += createTagHtml(assignment);
+    let index = 0;
+    groupedAssignments.forEach(({ assignments }) => {
+      if (assignments.length === 1) {
+        result += createTagHtml(assignments[0]);
+      } else {
+        result += createTagHtml(
+          assignments[0],
+          assignments.length,
+          assignments
+        );
+      }
 
       // add separator if not the last tag
-      if (index < assignedTo.length - 1) {
+      if (index < groupedAssignments.size - 1) {
         const separator = applyValueTransformer("tag-separator", ",", {
           topic,
           index,
         });
         result += `<span class="discourse-tags__tag-separator">${separator}</span>`;
       }
+      index++;
     });
 
     return result;
   });
+
+  setupGroupedAssignClickHandler(api);
 
   api.modifyClass(
     "model:group",
