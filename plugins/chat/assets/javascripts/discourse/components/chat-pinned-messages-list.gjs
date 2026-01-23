@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
+import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 import ChatMessage from "discourse/plugins/chat/discourse/components/chat-message";
 import ChatMessageModel from "discourse/plugins/chat/discourse/models/chat-message";
@@ -62,6 +63,15 @@ export default class ChatPinnedMessagesList extends Component {
     return pin.message;
   };
 
+  pinnedByText = (pin) => {
+    if (pin.pinned_by?.id === this.currentUser?.id) {
+      return i18n("chat.pinned_messages.pinned_by_you");
+    }
+    return i18n("chat.pinned_messages.pinned_by_user", {
+      username: pin.pinned_by?.username,
+    });
+  };
+
   get lastViewedPinsAt() {
     return this.args.channel.currentUserMembership?.lastViewedPinsAt;
   }
@@ -105,11 +115,17 @@ export default class ChatPinnedMessagesList extends Component {
     >
       <div class="chat-pinned-messages-list__items">
         {{#each this.pinnedMessages as |pin|}}
-          <ChatMessage
-            @message={{this.decorateMessage pin}}
-            @context="pinned"
-            @includeSeparator={{false}}
-          />
+          <div class="chat-pinned-message">
+            <div class="chat-pinned-message__pinned-by">
+              {{icon "thumbtack"}}
+              <span>{{this.pinnedByText pin}}</span>
+            </div>
+            <ChatMessage
+              @message={{this.decorateMessage pin}}
+              @context="pinned"
+              @includeSeparator={{false}}
+            />
+          </div>
         {{else}}
           <div class="chat-pinned-messages-list__empty">
             {{i18n "chat.no_pinned_messages"}}
