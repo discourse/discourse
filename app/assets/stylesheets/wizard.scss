@@ -8,6 +8,7 @@
   --wizard-bg-color: #f9f8fc;
   --wizard-bg-color-2: #e1d5ff;
   --wizard-input-radius: 8px;
+  --wizard-button-radius: 6.25em;
 }
 
 @keyframes bump {
@@ -397,17 +398,22 @@ body.wizard {
       }
     }
 
-    .row:not(.finish-installation-image) {
-      margin-right: auto;
+    h1 {
+      margin: 0 auto 0.5em 0;
+      font-weight: 900;
     }
 
-    h1 {
-      margin: 0 auto 1em 0;
+    p {
+      margin-bottom: 1.5em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
 
     .tada {
-      height: 15vw;
-      max-height: 9em;
+      max-height: 3em;
+      margin-bottom: 1em;
     }
 
     .help-text {
@@ -420,7 +426,19 @@ body.wizard {
 // /finish-installation and /finish-installation/register
 .wizard-container-contents.finish-installation {
   font-family: var(--font-family);
-  max-width: min(800px, 90vh);
+  max-width: 500px;
+
+  a {
+    color: var(--wizard-primary);
+
+    &:hover {
+      color: var(--wizard-primary-400);
+    }
+  }
+
+  form {
+    margin-bottom: 0;
+  }
 
   .wizard-container__combobox {
     background: var(--secondary);
@@ -451,19 +469,26 @@ body.wizard {
     cursor: pointer;
 
     &.btn-primary {
-      background-color: var(--tertiary);
+      background-color: var(--wizard-primary);
       color: var(--secondary);
       display: inline-block;
+      padding: 0.75em 2em;
+      border-radius: var(--wizard-button-radius);
+      box-sizing: border-box;
+      width: auto;
+      font-size: 1rem;
 
-      @include viewport.until(sm) {
-        order: 1;
-        margin-left: 0;
+      &:hover {
+        background-color: var(--wizard-primary-400);
       }
-    }
 
-    &:hover,
-    &:focus {
-      background-color: var(--tertiary-hover);
+      &:focus {
+        background-color: var(--wizard-primary-300);
+      }
+
+      &:active {
+        background-color: var(--wizard-primary);
+      }
     }
 
     &primary:active {
