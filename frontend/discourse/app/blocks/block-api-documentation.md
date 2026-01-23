@@ -1,16 +1,14 @@
-# Block API Documentation
+# Building with Blocks
 
-> **Note:** This documentation is a work in progress. We'll iterate on it together.
+----------------------
 
----
-
-## 1. Philosophy and Mental Model
+## 1. How It All Works
 
 ### The Problem Being Solved
 
 Plugin outlets have served Discourse well for years, but they have limitations:
 
-- **No conditional rendering.** You handle visibility logic inside your connector component, often duplicating checks across multiple connectors.
+- **Duplicated logic:** You handle visibility logic inside connector components, often duplicating checks across multiple connectors.
 - **No coordination.** Multiple plugins extending the same outlet have no structured way to order themselves or share context.
 - **Template-only extension.** Outlets are places to inject markup, but there's no registry of what's injected or metadata about it.
 - **No validation.** Typos in outlet names fail silently. Invalid arguments aren't caught until runtime (if at all).
@@ -62,57 +60,35 @@ Before diving in, understand what the Block API *doesn't* do:
 
 These constraints are intentional trade-offs for simplicity and predictability. For truly bespoke customizations that don't fit the block model—complex interactive components, entirely custom layouts, or cases requiring multiple independent contributors—plugin outlets remain available.
 
-### The Core Abstraction: LEGO for UI
+### Think of It Like Furniture
 
-Think of the Block API like a LEGO system:
+Think of the Block API like an interior design system with modular furniture.
 
-**Outlets are baseplates.** They're the foundation pieces with designated connection points where you can attach things. You can't stick LEGO pieces to the table—they need a baseplate. Similarly, blocks can only render in outlets, not arbitrary template locations. Each outlet (`homepage-blocks`, `sidebar-blocks`) is a baseplate positioned somewhere in the UI.
+**Outlets are rooms.** You can't place a bookshelf floating in mid-air—it needs a room with walls and floor space. Similarly, blocks can only render in outlets, not arbitrary template locations. Each outlet (`homepage-blocks`, `sidebar-blocks`) is a designated space positioned somewhere in the UI, with its own purpose and constraints.
 
-**Blocks are LEGO pieces.** They're self-contained components with standard connection points. Each piece has a part number (its name), a shape (its component), and specifications (its arg schema). You can't just invent pieces on the fly—they come from the set.
+**Blocks are furniture modules.** Think KALLAX shelves, BILLY bookcases, MALM dressers—standardized units with defined dimensions, product numbers, and assembly specs. Each block has a name (its product number), a component (its design), and an arg schema (its specifications). You order from the catalog, not invent furniture on the fly.
 
-**The registry is your parts bin.** Before you start building, all available pieces are sorted into the bin. The registry knows every block that *could* be used. If you try to use a piece that isn't in the bin, you'll know immediately.
+**The registry is your product catalog.** Before you start designing a room, you need to know what's available. The catalog lists every piece that *could* be used. If you try to specify a product that doesn't exist, you'll know immediately—there's no "close enough" when ordering furniture.
 
-**Conditions are building instructions.** "Attach this piece only if the base is red" becomes "render only if user is admin." The builder (condition evaluator) checks the instructions at build time and decides whether to attach each piece.
+**Conditions are assembly requirements.** "Mount this shelf only if the wall is load-bearing" becomes "render only if user is admin." Requirements are checked when you're actually placing the furniture, not when it was manufactured.
 
-**Container blocks are assemblies.** Some LEGO pieces are themselves assemblies—a pre-built car chassis that accepts wheels, or a house frame that accepts windows. Container blocks work the same way: they're blocks that hold other blocks.
+**Container blocks are units with compartments.** A KALLAX shelf holds drawer inserts, doors, or storage boxes—it's furniture that contains other furniture. Container blocks work the same way: they're blocks that hold other blocks in a structured arrangement.
+
+**Plugins are third-party manufacturers.** IKEA, West Elm, CB2—they all make compatible modular furniture following common standards. They don't conflict with each other; they just provide options. Plugins work the same way: they register blocks without knowing where they'll be used, trusting that someone else will compose the final layout.
+
+**The theme is your interior designer.** The designer looks at the catalog, considers each room's purpose, and creates a layout: "KALLAX in the living room, BILLY in the office, skip the MALM entirely." This is `renderBlocks()`. Only one designer controls each room—you don't have two people fighting over the living room layout.
 
 This mental model helps explain the API's design decisions:
 
-- **Why must blocks be registered before `renderBlocks()`?** You need all your pieces in the bin before you start building.
-- **Why can't blocks render outside outlets?** LEGO pieces need baseplates—you can't attach them to thin air.
-- **Why are conditions evaluated at render time?** Building instructions are followed when you're actually assembling, not when the pieces were manufactured.
+- **Why must blocks be registered before `renderBlocks()`?** The catalog must exist before the designer starts shopping.
+- **Why can't blocks render outside outlets?** Furniture needs a room—you can't place it in thin air.
+- **Why are conditions evaluated at render time?** Assembly requirements are checked when placing furniture, not when it was manufactured.
+- **Why don't multiple plugins conflict?** Manufacturers don't fight over shelf space—they just make products. The designer decides what goes where.
+- **Why can only one caller configure an outlet?** One designer per room. Two designers with different visions for the same space creates chaos.
+- **Why are conditions declarative?** Assembly instructions are printed rules, not decisions made up on the spot.
+- **Why do blocks appear and disappear based on state?** Just like seasonal furniture displays—what's shown depends on context.
 
-### Beyond LEGO: The Publication Model
-
-The LEGO metaphor helps with structure but doesn't explain ownership, conditions, or coordination. For these, think of the Block API like a **publication system**:
-
-| Publication | Block API |
-|-------------|-----------|
-| Sections (Front Page, Features, Sidebar) | Outlets |
-| Content pieces (articles, ads, panels) | Blocks |
-| Content providers (wire services, columnists) | Plugins registering blocks |
-| In-house writers | Theme components registering blocks |
-| Editor-in-chief | Theme calling `renderBlocks()` |
-| Publishing rules ("subscribers only") | Conditions |
-| Content library | Block registry |
-
-**Why this model works:**
-
-**Editorial Control:** Just like a publication has one editor deciding layout, each outlet has a single owner (the theme) that composes the layout. Plugins submit content to the library, but the editor decides what gets published where.
-
-**Conditional Publishing:** "Only show this to logged-in users" is like "subscribers only." "Only on category pages" is like "only in the Sports section." Conditions are publishing rules.
-
-**Content Providers:** Plugins are like wire services (AP, Reuters)—they provide content but don't control placement. Theme components are like in-house writers—also providing content, but part of the publication's own team.
-
-**The Editor Composes:** The theme is the editor-in-chief. It looks at available content (registered blocks) and decides: "Put the analytics panel here, the tasks panel there, skip the gamification panel entirely." This is `renderBlocks()`.
-
-This model explains why:
-- Multiple plugins can provide blocks without conflict (content providers don't fight)
-- Only one caller can configure an outlet (one editor per section)
-- Conditions are declarative (publishing rules are set, not coded inline)
-- Blocks appear/disappear based on state (just like time-sensitive content)
-
-### Complete Block Anatomy
+### What's Inside a Block
 
 Here's a complete block registration that uses every available option. We'll walk through each part:
 
@@ -534,7 +510,7 @@ Found at children[0] and children[2].
 - If a child provides `containerArgs` but the parent has no `childArgs` schema, you get an error
 - Schema validation (types, required fields, uniqueness) happens at boot time
 
-### The Lifecycle: From Registration to Render
+### From Code to Screen
 
 Understanding when things happen helps debug issues.
 
@@ -703,7 +679,7 @@ Now that you understand the concepts and have seen a complete example, let's loo
 
 ---
 
-## 2. Core Architecture
+## 2. The Moving Parts
 
 ### Blocks and Plugin Outlets
 
@@ -1078,7 +1054,7 @@ When `<BlockOutlet>` renders:
 
 That pipeline assumes everything is configured correctly. But what catches mistakes before they make it that far?
 
-### The Contract: Schema Validation and Type Safety
+### Keeping Things in Check
 
 The Block API provides multiple layers of validation:
 
@@ -1127,7 +1103,7 @@ conditions: [{ type: "usr", admin: true }]  // typo: "usr"
 
 Validation catches configuration mistakes. But what about intentional misuse—someone trying to render blocks outside the system?
 
-### The Security Model
+### Keeping Blocks in Their Place
 
 Blocks use a secret symbol system to prevent unauthorized rendering:
 
@@ -1234,7 +1210,7 @@ The `debugHooks` singleton provides reactive getters that automatically track de
 
 ---
 
-## 3. The Evaluation Engine
+## 3. When Blocks Appear
 
 We've covered registration, configuration, and the internal machinery. Now let's look at the heart of the system: how does a block decide whether to show itself?
 
@@ -1268,7 +1244,7 @@ for each entry in layout:
   5. If not visible, set __failureReason for debug display
 ```
 
-### The Resolution Phase
+### Figuring Out What to Show
 
 Before conditions can be evaluated, block references must be resolved. The resolution phase handles three types of references:
 
@@ -1333,7 +1309,7 @@ api.renderBlocks("outlet", [
 
 The resolution cache (`factoryCache` Map) stores resolved classes to avoid repeated async loads. Once resolved, a factory never executes again—the cached class is returned directly.
 
-### Condition Evaluation Details
+### How Conditions Work
 
 After resolution, conditions are evaluated. The evaluation process has several important characteristics:
 
@@ -1403,7 +1379,7 @@ The cache invalidates when:
 
 This caching is transparent—your block code doesn't need to account for it.
 
-### Reactive Re-evaluation Triggers
+### What Makes Blocks Update
 
 Conditions can depend on reactive state. When that state changes, the block tree re-evaluates.
 
@@ -1499,7 +1475,7 @@ That covers how the evaluation engine works. But what happens when you make a mi
 
 ---
 
-## 4. Developer Experience & Error Handling
+## 4. When Things Go Wrong
 
 A powerful API is only useful if you can debug it when things go wrong. The Block API invests heavily in developer experience—not just catching errors, but explaining them in a way that points you toward the solution.
 
@@ -1615,7 +1591,7 @@ conditions: {
 
 Good errors help you fix problems. But the best experience is not needing to learn everything upfront.
 
-### Progressive Disclosure
+### Simple by Default
 
 The API balances simplicity for common cases with power for advanced use:
 
@@ -1784,11 +1760,11 @@ So far we've focused on what happens when things go wrong. But what about when t
 
 ---
 
-## 5. Developer Tools & Diagnostics
+## 5. Your Debugging Toolkit
 
 Error messages help when something is wrong. But sometimes you need to understand what's happening when everything appears to work—just not the way you expected. That's where the debugging tools come in.
 
-### Complete Tools Overview
+### What's in the Toolkit
 
 The Block API includes comprehensive debugging tools accessible via the dev tools toolbar:
 
@@ -2175,7 +2151,7 @@ You've got the tools to see what's happening. Now you need to know what all thos
 
 ---
 
-## 6. Conditions & Logic
+## 6. Show This, Hide That
 
 We've mentioned conditions throughout this document. Now let's cover each one in detail—what it checks, what options it accepts, and when to use it.
 
@@ -2518,7 +2494,7 @@ Evaluates based on outlet arg values.
 { type: "outletArg", path: "topic", exists: true }
 ```
 
-### Context Awareness
+### What Conditions Can See
 
 Conditions receive a context object with access to several data sources:
 
@@ -2596,7 +2572,7 @@ conditions: [
 
 The built-in conditions cover most cases. But if you need something specific to your domain, you can create your own.
 
-### Custom Conditions
+### Rolling Your Own
 
 You can create custom condition types:
 
@@ -2664,7 +2640,7 @@ You've seen the individual pieces. Time to watch them work together.
 
 ---
 
-## 7. Practical Patterns
+## 7. Putting It Together
 
 Enough theory—let's build some blocks. This section covers common architectural patterns and tutorials that progress from simple to complex.
 
@@ -3121,11 +3097,11 @@ That's the Block API in practice. What follows is the complete reference for whe
 
 ---
 
-## 8. Reference
+## 8. Quick Reference
 
 When you know what you're looking for, start here.
 
-### API Surface
+### The Full API
 
 #### Plugin API Methods
 
@@ -3754,7 +3730,7 @@ If you're adding a `<BlockOutlet>` to replace or complement a plugin outlet, her
 
 ---
 
-## 9. Glossary
+## 9. Terms to Know
 
 Key terminology used throughout this documentation:
 
@@ -3768,7 +3744,3 @@ Key terminology used throughout this documentation:
 | **Outlet** | A designated location in the UI where blocks can render. Defined by `<BlockOutlet @name="...">` in templates. |
 | **Outlet Args** | Data passed from the template context to blocks via `@outletArgs` on the BlockOutlet component. |
 | **Ghost Block** | A debug-mode placeholder that appears where a hidden block would render, showing why it's not visible. |
-
----
-
-*This documentation is generated from source code analysis and may be updated as the API evolves.*
