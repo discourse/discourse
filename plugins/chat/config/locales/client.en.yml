@@ -59,6 +59,8 @@ en:
       pinned_messages:
         title: "Pinned messages"
         close: "Close pinned messages"
+        pinned_by_you: "Pinned by you"
+        pinned_by_user: "Pinned by %{username}"
       no_pinned_messages: "No pinned messages in this channel."
       pin_message: "Pin message"
       unpin_message: "Unpin message"
