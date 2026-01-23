@@ -232,18 +232,15 @@ export function patchBlockRendering() {
     DEBUG_CALLBACK.BLOCK_LOGGING,
     () => devToolsState.blockDebug
   );
-  // Callback for outlet boundaries
-  debugHooks.setCallback(
-    DEBUG_CALLBACK.OUTLET_BOUNDARY,
-    () => devToolsState.blockOutletBoundaries
-  );
   // Callback for visual overlay
   debugHooks.setCallback(
     DEBUG_CALLBACK.VISUAL_OVERLAY,
     () => devToolsState.blockVisualOverlay
   );
-  // Component for outlet info tooltip
-  debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, OutletInfo);
+  // Callback for outlet info component - returns the component when enabled, null otherwise.
+  debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, () =>
+    devToolsState.blockOutletBoundaries ? OutletInfo : null
+  );
 
   // === Logging Callbacks ===
   // These bridge the main bundle to the debug logger in dev-tools.

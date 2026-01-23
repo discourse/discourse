@@ -26,7 +26,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
     debugHooks.setCallback(DEBUG_CALLBACK.VISUAL_OVERLAY, null);
     debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
     debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, null);
-    debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, null);
+    debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, null);
     debugHooks.setCallback(DEBUG_CALLBACK.START_GROUP, null);
   });
 
@@ -756,7 +756,16 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
   });
 
   module("outlet boundary callbacks", function () {
-    test("debugHooks.setCallback(OUTLET_BOUNDARY) shows boundary when returns true", async function (assert) {
+    // Mock outlet info component for testing debug boundaries.
+    // Must wrap content in .block-outlet-debug and yield children like the real OutletInfo.
+    const MockOutletInfo = <template>
+      <div class="block-outlet-debug">
+        <span class="mock-outlet-info">{{@outletName}}</span>
+        {{yield}}
+      </div>
+    </template>;
+
+    test("debugHooks.setCallback(OUTLET_INFO_COMPONENT) shows boundary when returns component", async function (assert) {
       @block("boundary-test-block")
       class BoundaryTestBlock extends Component {
         <template>
@@ -764,7 +773,10 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => true);
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.OUTLET_INFO_COMPONENT,
+        () => MockOutletInfo
+      );
 
       withTestBlockRegistration(() => registerBlock(BoundaryTestBlock));
       withPluginApi((api) =>
@@ -776,11 +788,11 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       );
 
       assert.dom(".block-outlet-debug").exists("debug boundary shown");
-      assert.dom(".block-outlet-debug__badge").exists("badge shown");
+      assert.dom(".mock-outlet-info").exists("outlet info component rendered");
       assert.dom(".boundary-content").exists("content still renders");
     });
 
-    test("debugHooks.setCallback(OUTLET_BOUNDARY) hides boundary when returns false", async function (assert) {
+    test("debugHooks.setCallback(OUTLET_INFO_COMPONENT) hides boundary when returns null", async function (assert) {
       @block("no-boundary-block")
       class NoBoundaryBlock extends Component {
         <template>
@@ -788,7 +800,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => false);
+      debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, () => null);
 
       withTestBlockRegistration(() => registerBlock(NoBoundaryBlock));
       withPluginApi((api) =>
@@ -803,7 +815,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       assert.dom(".no-boundary-content").exists("content renders normally");
     });
 
-    test("debugHooks.setCallback(OUTLET_BOUNDARY) can be cleared by setting to null", async function (assert) {
+    test("debugHooks.setCallback(OUTLET_INFO_COMPONENT) can be cleared by setting to null", async function (assert) {
       @block("boundary-clear-block")
       class BoundaryClearBlock extends Component {
         <template>
@@ -811,8 +823,11 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, () => true);
-      debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_BOUNDARY, null);
+      debugHooks.setCallback(
+        DEBUG_CALLBACK.OUTLET_INFO_COMPONENT,
+        () => MockOutletInfo
+      );
+      debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, null);
 
       withTestBlockRegistration(() => registerBlock(BoundaryClearBlock));
       withPluginApi((api) =>

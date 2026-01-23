@@ -21,12 +21,11 @@ import { DEBUG } from "@glimmer/env";
 import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
-import { TrackedAsyncData } from "ember-async-data";
 import curryComponent from "ember-curry-component";
 /** @type {import("discourse/blocks/block-layout-wrapper.gjs")} */
 import { wrapBlockLayout } from "discourse/blocks/block-layout-wrapper";
-import concatClass from "discourse/helpers/concat-class";
-import icon from "discourse/helpers/d-icon";
+import BlockOutletInlineError from "discourse/blocks/block-outlet-inline-error";
+import AsyncContent from "discourse/components/async-content";
 import {
   buildContainerPath,
   createGhostBlock,
@@ -292,8 +291,11 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
  *
- * @param {string} name - Unique identifier for the block (e.g., "hero-banner", "sidebar-panel").
- *   Must match pattern: lowercase letters, numbers, hyphens.
+ * @param {string} name - Unique identifier for the block. Supports three namespacing formats:
+ *   - Core blocks: `"block-name"` (e.g., "hero-banner", "sidebar-panel")
+ *   - Plugin blocks: `"plugin-name:block-name"` (e.g., "my-plugin:custom-card")
+ *   - Theme blocks: `"theme:theme-name:block-name"` (e.g., "theme:tactile:hero-section")
+ *   Names must use lowercase letters, numbers, and hyphens only.
  *
  * @param {Object} [options] - Configuration options for the block.
  *
@@ -507,7 +509,7 @@ export function block(name, options = {}) {
        * - The same keys are reused on every render/navigation
        * - This cache instance is garbage collected when the owning component is destroyed
        *
-       * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>}
+       * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: ChildBlockResult}>}
        */
       #childComponentCache = new Map();
 
@@ -1259,9 +1261,9 @@ export default class BlockOutlet extends Component {
    * - `containerArgs`: Values provided by the child entry for the parent's
    *   `childArgs` schema (accessible to parent, not the child block itself)
    *
-   * @returns {TrackedAsyncData<{rawChildren: Array<Object>, showGhosts: boolean, isLoggingEnabled: boolean}|undefined>|undefined}
-   *   TrackedAsyncData wrapper containing the raw children and debug state once the
-   *   layout is validated. Use .isResolved, .value, .isRejected, .error to access state.
+   * @returns {Promise<{rawChildren: Array<Object>, showGhosts: boolean, isLoggingEnabled: boolean}>|undefined}
+   *   A promise that resolves with the raw children and debug state once the
+   *   layout is validated, or undefined if no layout exists.
    */
   @cached
   get children() {
@@ -1316,7 +1318,7 @@ export default class BlockOutlet extends Component {
         throw error;
       });
 
-    return new TrackedAsyncData(promiseWithLogging);
+    return promiseWithLogging;
   }
 
   /**
@@ -1329,54 +1331,13 @@ export default class BlockOutlet extends Component {
   }
 
   /**
-   * Whether to show outlet boundary debug overlay.
-   * Checked via callback to dev-tools state.
-   *
-   * @returns {boolean}
-   */
-  get showOutletBoundary() {
-    return debugHooks.isOutletBoundaryEnabled;
-  }
-
-  /**
    * The component to render for outlet boundary debug info.
-   * Set by dev-tools via _setBlockOutletInfoComponent.
+   * Returns the OutletInfo component when debug mode is enabled, null otherwise.
    *
    * @returns {typeof Component|null}
    */
   get OutletInfoComponent() {
-    // @ts-ignore - callback is typed as Function but is actually a Component
-    return debugHooks.getCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT);
-  }
-
-  /**
-   * Number of blocks registered for this outlet.
-   * Used in debug overlay to show block count.
-   *
-   * @returns {number}
-   */
-  get blockCount() {
-    if (!this.children?.isResolved) {
-      return 0;
-    }
-    return this.children.value?.rawChildren?.length ?? 0;
-  }
-
-  /**
-   * Validation error if the outlet layout failed validation.
-   * Only accessible when the validation promise has rejected.
-   *
-   * @returns {Error|null}
-   */
-  get validationError() {
-    const asyncData =
-      /** @type {{isRejected?: boolean, error?: Error}|undefined} */ (
-        this.children
-      );
-    if (!asyncData?.isRejected) {
-      return null;
-    }
-    return asyncData.error ?? null;
+    return debugHooks.outletInfoComponent;
   }
 
   /**
@@ -1410,51 +1371,66 @@ export default class BlockOutlet extends Component {
     {{! @glint-expect-error - yield signature not typed }}
     {{yield (hasLayout this.outletName) to="before"}}
 
-    {{#if this.showOutletBoundary}}
-      <div
-        class={{concatClass
-          "block-outlet-debug"
-          (if this.children.isRejected "--validation-failed")
+    <AsyncContent @asyncData={{this.children}}>
+      <:loading>
+        {{! Resolving async blocks should not display a loading UI }}
+      </:loading>
+
+      <:content as |layout|>
+        {{#let
+          (component
+            BlockOutletRootContainer
+            outletName=this.outletName
+            outletArgs=this.outletArgsWithDeprecations
+            rawChildren=layout.rawChildren
+            showGhosts=layout.showGhosts
+            isLoggingEnabled=layout.isLoggingEnabled
+          )
+          as |ChildrenContainer|
         }}
-        data-outlet-name={{this.outletName}}
-      >
+          {{#if this.OutletInfoComponent}}
+            {{! @glint-expect-error - dynamic component invocation }}
+            <this.OutletInfoComponent
+              @outletName={{this.outletName}}
+              @blockCount={{layout.rawChildren.length}}
+              @outletArgs={{this.outletArgsWithDeprecations}}
+            >
+              <ChildrenContainer />
+            </this.OutletInfoComponent>
+          {{else}}
+            <ChildrenContainer />
+          {{/if}}
+        {{/let}}
+      </:content>
+
+      <:error as |error|>
         {{#if this.OutletInfoComponent}}
           {{! @glint-expect-error - dynamic component invocation }}
           <this.OutletInfoComponent
             @outletName={{this.outletName}}
-            @hasBlocks={{this.blockCount}}
-            @blockCount={{this.blockCount}}
+            @blockCount={{0}}
             @outletArgs={{this.outletArgsWithDeprecations}}
-            @error={{this.validationError}}
-          />
+            @error={{error}}
+          >
+            {{#if (has-block "error")}}
+              {{! @glint-expect-error - yield signature not typed }}
+              {{yield error to="error"}}
+            {{else}}
+              <BlockOutletInlineError @error={{error}} />
+            {{/if}}
+          </this.OutletInfoComponent>
+        {{else if (has-block "error")}}
+          {{! @glint-expect-error - yield signature not typed }}
+          {{yield error to="error"}}
         {{else}}
-          <span class="block-outlet-debug__badge">{{icon "cubes"}}
-            {{this.outletName}}
-          </span>
+          <BlockOutletInlineError @error={{error}} />
         {{/if}}
-        {{#if this.children}}
-          {{#if this.children.isResolved}}
-            <BlockOutletRootContainer
-              @outletName={{this.outletName}}
-              @outletArgs={{this.outletArgsWithDeprecations}}
-              @rawChildren={{this.children.value.rawChildren}}
-              @showGhosts={{this.children.value.showGhosts}}
-              @isLoggingEnabled={{this.children.value.isLoggingEnabled}}
-            />
-          {{/if}}
-        {{/if}}
-      </div>
-    {{else if this.children}}
-      {{#if this.children.isResolved}}
-        <BlockOutletRootContainer
-          @outletName={{this.outletName}}
-          @outletArgs={{this.outletArgsWithDeprecations}}
-          @rawChildren={{this.children.value.rawChildren}}
-          @showGhosts={{this.children.value.showGhosts}}
-          @isLoggingEnabled={{this.children.value.isLoggingEnabled}}
-        />
-      {{/if}}
-    {{/if}}
+      </:error>
+
+      <:empty>
+        {{! render nothing if all blocks are hidden }}
+      </:empty>
+    </AsyncContent>
 
     {{! yield to :after block with hasLayout boolean for conditional rendering
         This allows block outlets to wrap other elements and conditionally render them based on

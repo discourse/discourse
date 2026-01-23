@@ -24,7 +24,6 @@ import { OPTIONAL_MISSING } from "discourse/lib/blocks/-internals/patterns";
 export const DEBUG_CALLBACK = Object.freeze({
   BLOCK_DEBUG: "blockDebug",
   BLOCK_LOGGING: "blockLogging",
-  OUTLET_BOUNDARY: "outletBoundary",
   VISUAL_OVERLAY: "visualOverlay",
   OUTLET_INFO_COMPONENT: "outletInfoComponent",
   CONDITION_LOG: "conditionLog",
@@ -94,13 +93,24 @@ class DebugHooks {
   }
 
   /**
+   * Returns the outlet info component if outlet boundaries are enabled.
+   * Invokes the OUTLET_INFO_COMPONENT callback which returns the component
+   * when enabled, or null when disabled.
+   *
+   * @returns {typeof import("@glimmer/component").default|null} The outlet info component, or null.
+   */
+  get outletInfoComponent() {
+    return this.#callbacks.get(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT)?.();
+  }
+
+  /**
    * Returns whether outlet boundaries should be shown.
-   * Convenience getter that invokes the outletBoundary callback.
+   * Derived from whether the outlet info component is available.
    *
    * @returns {boolean} True if boundaries should be shown.
    */
   get isOutletBoundaryEnabled() {
-    return this.#callbacks.get(DEBUG_CALLBACK.OUTLET_BOUNDARY)?.() ?? false;
+    return !!this.outletInfoComponent;
   }
 
   /**
