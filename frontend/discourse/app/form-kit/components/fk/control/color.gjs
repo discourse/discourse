@@ -116,7 +116,9 @@ export default class FKControlColor extends Component {
   @action
   selectColor(color, closeMenu) {
     this.args.field.set(color);
-    closeMenu?.();
+    if (typeof closeMenu === "function") {
+      closeMenu();
+    }
   }
 
   <template>
