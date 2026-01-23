@@ -5164,8 +5164,12 @@ de:
         title: "Löschen"
         complete: "Beitrag gelöscht."
       delete_and_ignore:
+        title: "Beitrag löschen und Meldung ignorieren"
+        description: "Lösche den Beitrag, ignoriere die Meldung und entferne sie aus der Warteschlange; falls dies der erste Beitrag im Thema ist, lösche auch das Thema. "
         complete: "Beitrag gelöscht."
       delete_and_ignore_replies:
+        title: "Beitrag und Antworten löschen, Meldung ignorieren"
+        description: "Lösche den Beitrag und alle Antworten; dann ignoriere die Meldung und entferne sie aus der Warteschlange; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
         complete: "Beitrag und Antworten gelöscht."
       delete_and_agree:
@@ -5179,11 +5183,13 @@ de:
         complete: "Beitrag und Antworten gelöscht."
       disagree_and_restore:
         title: "Beitrag wiederherstellen"
+        description: "Der Meldung widersprechen und den Beitrag wiederherstellen"
         complete: "Beitrag wiederhergestellt."
       disagree_bundle:
         title: "Nein"
       disagree:
         title: "Beitrag behalten"
+        description: "Der Meldung widersprechen"
         complete: "Meldung ignoriert."
       discard_post:
         title: "Beitrag verwerfen"
@@ -5220,6 +5226,7 @@ de:
         title: "Nein"
         delete:
           title: "Benutzer löschen"
+          description: "Benutzer löschen, ohne ihn zu blockieren"
           complete: "Benutzer gelöscht."
         block:
           title: "Benutzer löschen und blockieren"
@@ -5229,6 +5236,7 @@ de:
         title: "Ja"
       not_spam:
         title: "Nein"
+        description: "Kein Spam, Benutzer genehmigen"
       reject:
         title: "Ablehnen"
         bundle_title: "Ablehnen …"
@@ -5241,9 +5249,13 @@ de:
       reject_and_delete:
         title: "Den Beitrag ablehnen und löschen"
         complete: "Beitrag abgelehnt und gelöscht."
+      reject_and_delete_standalone:
+        title: "Nein, Beitrag löschen"
       reject_and_keep_deleted:
         title: "Beitrag gelöscht lassen"
         complete: "Beitrag abgelehnt und gelöscht belassen."
+      reject_and_keep_deleted_standalone:
+        title: "Nein, Beitrag gelöscht lassen"
       scrub:
         title: Datensatz bereinigen
       approve_and_restore:

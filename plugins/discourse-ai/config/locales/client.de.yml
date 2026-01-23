@@ -113,6 +113,10 @@ de:
             persona_id:
               label: "Persona"
               description: "KI Persona zur Berichtserstellung"
+        ai_tool_action:
+          fields:
+            llm_model:
+              label: "LLM-Modell"
         llm_persona_triage:
           fields:
             persona:

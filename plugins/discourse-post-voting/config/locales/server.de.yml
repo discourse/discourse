@@ -60,10 +60,12 @@ de:
           description: "Kommentar wiederherstellen, damit alle Benutzer ihn sehen können."
         disagree:
           title: "Kommentar behalten"
+          description: "Lehne die Meldung ab und lasse den Kommentar unverändert."
         ignore:
           title: "Meldung ignorieren"
           description: "Entferne es aus der Warteschlange, ohne weitere Maßnahmen zu ergreifen."
         delete_and_agree:
+          title: "Meldung ignorieren und Kommentar löschen"
           description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Kommentar löschst."
   post_action_types:
     vote:
@@ -112,12 +114,14 @@ de:
             title: "Kommentar löschen"
             description: "Kommentar löschen, damit Benutzer ihn nicht sehen können."
           delete_and_agree:
+            title: "Meldung ignorieren und Kommentar löschen"
             description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Kommentar löschst."
           disagree_and_restore:
             title: "Ablehnen und Kommentar wiederherstellen"
             description: "Kommentar wiederherstellen, damit alle Benutzer ihn sehen können."
           disagree:
             title: "Kommentar behalten"
+            description: "Lehne die Meldung ab und lasse den Kommentar unverändert."
           ignore:
             title: "Meldung ignorieren"
             description: "Entferne es aus der Warteschlange, ohne weitere Maßnahmen zu ergreifen."

@@ -5,6 +5,27 @@
 # https://translate.discourse.org/
 
 de:
+  reports:
+    ad_plugin_house_ads_performance:
+      title: 'Anzeigen-Plug-in: Impressionen der Eigenanzeigen'
+      description: "Bericht zu Impressionen der Eigenanzeigen"
+    ad_plugin_ad_impressions:
+      title: 'Anzeigen-Plug-in: Impressionen der Anzeigen'
+      description: "Bericht zu Impressionen der Anzeigen"
+    ad_plugin_impressions_by_user:
+      title: 'Anzeigen-Plug-in: Impressionen nach Beutzer'
+      description: "Anzeigenimpressionen nach Benutzer gruppiert"
+    ad_plugin_click_through_rate:
+      title: 'Anzeigen-Plug-in: Conversion-Performance'
+      description: "Performancebericht nach Anzeige und Platzierung"
+    ad_plugin_click_through_rate_by_placement:
+      title: 'Anzeigen-Plug-in: Performance nach Platzierung'
+      description: "Anzeigenperformance nach Platzierung"
+    ad_plugin_click_through_rate_by_ad_type:
+      title: 'Anzeigen-Plug-in: Performance nach Anzeigentyp'
+      description: "Anzeigenperformance nach Anzeigentyp"
+  errors:
+    already_clicked: "Klick bereits registriert"
   site_settings:
     discourse_adplugin_enabled: Aktiviere das discourse-adplugin.
     no_ads_for_personal_messages: "Keine Werbung beim Lesen persönlicher Nachrichten zeigen"
