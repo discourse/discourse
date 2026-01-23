@@ -81,7 +81,7 @@ module DiscourseAi
       end
 
       def find_untranslated_posts(topic)
-        supported_locales = SiteSetting.content_localization_supported_locales.split("|")
+        supported_locales = DiscourseAi::Translation.locales
         base_locales = supported_locales.map { |locale| locale.split("_").first }
 
         # Find posts that:
