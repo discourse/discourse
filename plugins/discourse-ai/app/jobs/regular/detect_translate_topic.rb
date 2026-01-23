@@ -45,7 +45,7 @@ module Jobs
       end
 
       return if detected_locale.blank?
-      locales = SiteSetting.content_localization_supported_locales.split("|")
+      locales = DiscourseAi::Translation.locales
       return if locales.blank?
 
       locales.each do |locale|

@@ -34,7 +34,7 @@ module Jobs
       return if categories.empty?
 
       remaining_limit = limit
-      locales = SiteSetting.content_localization_supported_locales.split("|")
+      locales = DiscourseAi::Translation.locales
       categories.each do |category|
         break if remaining_limit <= 0
 

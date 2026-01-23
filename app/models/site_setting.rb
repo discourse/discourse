@@ -145,18 +145,20 @@ class SiteSetting < ActiveRecord::Base
     LocaleSiteSetting.values.to_json
   end
 
+  def self.content_localization_locales
+    locales = SiteSetting.content_localization_supported_locales.split("|")
+    default_locale = SiteSetting.default_locale
+    locales << default_locale if default_locale.present? && !locales.include?(default_locale)
+    locales
+  end
+
   client_settings << :available_content_localization_locales
 
   def self.available_content_localization_locales
     return [] if !SiteSetting.content_localization_enabled?
 
-    supported_locales = SiteSetting.content_localization_supported_locales.split("|")
-    default_locale = SiteSetting.default_locale
-    if default_locale.present? && !supported_locales.include?(default_locale)
-      supported_locales << default_locale
-    end
-
-    LocaleSiteSetting.values.select { |locale| supported_locales.include?(locale[:value]) }
+    locales = content_localization_locales
+    LocaleSiteSetting.values.select { |locale| locales.include?(locale[:value]) }
   end
 
   def self.topic_title_length

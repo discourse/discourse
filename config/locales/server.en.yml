@@ -2742,7 +2742,7 @@ en:
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
     viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
-    content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
+    content_localization_supported_locales: "List of supported locales that user content can be translated to. The site's default locale is always included. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
     content_localization_crawler_param: "Serve localized content to web crawlers when 'content localization enabled' and 'set locale from param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
