@@ -11,7 +11,6 @@ import icon from "discourse/helpers/d-icon";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import getURL from "discourse/lib/get-url";
-import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import ThemesGridPlaceholder from "./themes-grid-placeholder";
 
@@ -25,8 +24,11 @@ export default class ThemeCard extends Component {
   @service toasts;
   @service dialog;
   @service router;
+  @service interfaceColor;
+  @service session;
 
   @tracked isUpdating = false;
+  @tracked showingDarkScreenshot = this.#shouldShowDarkByDefault();
 
   get themeCardClasses() {
     return [
@@ -47,6 +49,31 @@ export default class ThemeCard extends Component {
 
   get destroyDisabled() {
     return this.args.theme.default || this.args.theme.system;
+  }
+
+  get currentScreenshotUrl() {
+    return this.showingDarkScreenshot
+      ? this.args.theme.screenshot_dark_url
+      : this.args.theme.screenshot_light_url;
+  }
+
+  get screenshotToggleIcon() {
+    return this.showingDarkScreenshot ? "sun" : "moon";
+  }
+
+  get hasBothScreenshots() {
+    return (
+      this.args.theme.screenshot_light_url &&
+      this.args.theme.screenshot_dark_url
+    );
+  }
+
+  #shouldShowDarkByDefault() {
+    return (
+      this.interfaceColor.colorModeIsDark ||
+      window.matchMedia("(prefers-color-scheme: dark)").matches ||
+      this.session.defaultColorSchemeIsDark
+    );
   }
 
   get editUrl() {
@@ -146,6 +173,11 @@ export default class ThemeCard extends Component {
   }
 
   @action
+  toggleScreenshot() {
+    this.showingDarkScreenshot = !this.showingDarkScreenshot;
+  }
+
+  @action
   destroyTheme() {
     return this.dialog.deleteConfirm({
       title: i18n("admin.customize.delete_confirm", {
@@ -177,31 +209,23 @@ export default class ThemeCard extends Component {
     >
       <:content>
         <div class="theme-card__image-wrapper">
-          {{#if @theme.screenshot_light_url}}
+          {{#if this.currentScreenshotUrl}}
             <img
               class="theme-card__image"
-              src={{@theme.screenshot_light_url}}
-              alt={{i18n
-                "admin.customize.theme.light_mode"
-                themeName=@theme.name
-              }}
+              src={{this.currentScreenshotUrl}}
+              alt={{@theme.name}}
             />
-          {{/if}}
-          {{#if @theme.screenshot_dark_url}}
-            <img
-              class="theme-card__image"
-              src={{@theme.screenshot_dark_url}}
-              alt={{i18n
-                "admin.customize.theme.dark_mode"
-                themeName=@theme.name
-              }}
-            />
-          {{/if}}
-          {{#unless
-            (and @theme.screenshot_dark_url @theme.screenshot_light_url)
-          }}
+            {{#if this.hasBothScreenshots}}
+              <DButton
+                @action={{this.toggleScreenshot}}
+                @icon={{this.screenshotToggleIcon}}
+                @preventFocus={{true}}
+                class="btn-flat theme-card__screenshot-toggle"
+              />
+            {{/if}}
+          {{else}}
             <ThemesGridPlaceholder @theme={{@theme}} />
-          {{/unless}}
+          {{/if}}
         </div>
         <div class="theme-card__content">
           <a class="theme-card__title" href={{this.editUrl}}>{{@theme.name}}</a>
@@ -257,8 +281,7 @@ export default class ThemeCard extends Component {
               >
                 <:content>
                   <DropdownMenu as |dropdown|>
-                    {{! TODO: Jordan
-                      solutions for broken, disabled states }}
+                    {{! TODO: Jordan solutions for broken, disabled states }}
                     <dropdown.item>
                       <DButton
                         @action={{this.setDefault}}

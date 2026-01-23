@@ -99,4 +99,55 @@ describe "Admin Customize Themes Config Area Page", type: :system do
       I18n.t("admin_js.admin.config_areas.themes_and_components.themes.title"),
     )
   end
+
+  describe "screenshot toggle" do
+    fab!(:light_upload, :image_upload)
+    fab!(:dark_upload, :image_upload)
+    fab!(:theme_with_screenshots) do
+      Fabricate(
+        :theme,
+        name: "Theme with screenshots",
+        theme_fields: [
+          ThemeField.new(
+            target_id: Theme.targets[:common],
+            name: "screenshot_light",
+            type_id: ThemeField.types[:theme_screenshot_upload_var],
+            upload_id: light_upload.id,
+            value: "",
+          ),
+          ThemeField.new(
+            target_id: Theme.targets[:common],
+            name: "screenshot_dark",
+            type_id: ThemeField.types[:theme_screenshot_upload_var],
+            upload_id: dark_upload.id,
+            value: "",
+          ),
+        ],
+      )
+    end
+
+    it "allows toggling between light and dark screenshots" do
+      config_area.visit
+
+      light_src = config_area.screenshot_image(theme_with_screenshots)[:src]
+      expect(light_src).to include(light_upload.url)
+
+      expect(config_area).to have_screenshot_with_icon(theme_with_screenshots, "moon")
+
+      config_area.click_screenshot_toggle(theme_with_screenshots)
+
+      expect(config_area.screenshot_image(theme_with_screenshots)[:src]).to include(dark_upload.url)
+      expect(config_area.screenshot_image(theme_with_screenshots)[:src]).not_to eq(light_src)
+
+      expect(config_area).to have_screenshot_with_icon(theme_with_screenshots, "sun")
+
+      config_area.click_screenshot_toggle(theme_with_screenshots)
+
+      expect(config_area.screenshot_image(theme_with_screenshots)[:src]).to include(light_src)
+
+      config_area.visit
+
+      expect(config_area).to have_no_screenshot_toggle_button(theme)
+    end
+  end
 end
