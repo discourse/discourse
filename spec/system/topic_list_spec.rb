@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-describe "Topic list focus", type: :system do
+describe "Topic list", type: :system do
   fab!(:topics) { Fabricate.times(10, :post).map(&:topic) }
 
   before_all do
@@ -106,5 +106,15 @@ describe "Topic list focus", type: :system do
     page.go_back
     expect(page).to have_css("body.navigation-topics")
     expect(focussed_topic_id).to eq(oldest_topic.id)
+  end
+
+  it "opens topic in new window when pressing meta+Enter" do
+    visit("/latest")
+    expect(discovery.topic_list).to have_topics
+
+    new_window =
+      window_opened_by { discovery.topic_list.send_keys_to_topic(topics[5], %i[meta return]) }
+
+    within_window(new_window) { expect(topic).to have_topic_title(topics[5].title) }
   end
 end
