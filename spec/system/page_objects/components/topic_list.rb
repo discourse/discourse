@@ -82,6 +82,10 @@ module PageObjects
         find("#{topic_list_item_class(topic)} a.badge-posts").send_keys(:return)
       end
 
+      def send_keys_to_topic(topic, *keys)
+        find("#{topic_list_item_class(topic)} a.raw-topic-link").send_keys(*keys)
+      end
+
       def topic_list_item_class(topic)
         "#{TOPIC_LIST_ITEM_SELECTOR}[data-topic-id='#{topic.id}']"
       end

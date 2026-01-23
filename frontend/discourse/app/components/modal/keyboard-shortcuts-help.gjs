@@ -196,6 +196,9 @@ export default class KeyboardShortcutsHelp extends Component {
             keys1: ["o"],
             keys2: [ENTER],
           }),
+          open_new_window: buildShortcut("navigation.open_new_window", {
+            keys1: [META, ENTER],
+          }),
           next_prev: buildShortcut("navigation.next_prev", {
             keys1: [SHIFT, "j"],
             keys2: [SHIFT, "k"],
