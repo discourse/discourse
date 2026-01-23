@@ -1017,6 +1017,7 @@ uk:
         target_created: "Пост створено"
         target_created_by: "Створено %{username} · %{relativeDate}"
         target_deleted: "Допис вилучено"
+        target_deleted_by: "Публікацію видалено користувачем %{username} · %{relativeDate}"
         flagged: "Позначено"
         flagged_as_by: "Позначено як %{flagReason} від %{username} · %{relativeDate}"
         claimed: "Заявлено претензію"
@@ -2357,6 +2358,7 @@ uk:
               other {# днів}
             }.
           edit_link_options: "Редагувати параметри посилання або надіслати електронною поштою."
+          edit_link_options_only: "Редагувати параметри посилання"
           show_advanced: "Показати додаткові параметри"
           hide_advanced: "Сховати додаткові параметри"
           description: "Опис"
@@ -3366,6 +3368,11 @@ uk:
       votes_released: "%{description} - завершено"
       new_features: "Доступні нові функції!"
       admin_problems: "Нова порада на інформаційній панелі вашого сайту"
+      upcoming_changes:
+        available:
+          title: "Майбутні зміни"
+        automatically_promoted:
+          title: "Майбутні зміни"
       dismiss_confirmation:
         body:
           default:
@@ -3429,8 +3436,7 @@ uk:
         post_approved: "допис затверджено"
         membership_request_consolidated: "нові запити на членство"
         reaction: "нова реакція"
-        votes_released: "Голосування опубліковано"
-        new_features: "З’явилися нові функції Discourse!"
+        votes_released: "голосування опубліковано"
         admin_problems: "нова порада на інформаційній панелі вашого сайту"
     upload_selector:
       change: "Змінити"
@@ -4434,6 +4440,7 @@ uk:
           confirm_delete: "Ви впевнені, що хочете видалити переклади для '%{languageCode}'?"
         success: "Переклади були успішно оновлені"
         post_language_selector:
+          title: "Мова публікації"
           none: "Немає"
         edit_warning:
           message: "Це перекладена публікація.<br><br> Ви хочете відредагувати оригінальний допис на %{language} або відредагувати цей конкретний переклад?"
@@ -6200,11 +6207,11 @@ uk:
               locale_label: "Мова"
             header_new_members:
               label: "Заголовок для нових учасників"
-              description: "Доступна змінна: <code>&percnt;{preferred_display_name}</code>"
+              description: "Доступні змінні: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Ласкаво просимо, %{preferred_display_name}!"
             header_logged_in:
               label: "Заголовок для зареєстрованих учасників"
-              description: "Доступна змінна: <code>&percnt;{preferred_display_name}</code>"
+              description: "Доступні змінні: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "З поверненням, %{preferred_display_name}!"
             header_anonymous:
               label: "Заголовок для анонімних відвідувачів"
@@ -6486,6 +6493,7 @@ uk:
         new_features:
           title: "Що нового?"
           subtitle: "Ми постійно випускаємо нові функції та вдосконалення. На цій сторінці ви знайдете найголовніші з них, але ви можете натиснути \"Дізнатися більше\", щоб переглянути докладнішу інформацію про випуск."
+          no_new_features_found: "Сталася помилка під час завантаження стрічки. Ви можете переглянути попередні анонси нових функцій у <a href='%{url}' target='_blank'>спільноті Discourse Meta</a>."
           learn_more: "Дізнатися більше…"
           experimental: "Експериментальний"
           only_experiments: "Показувати лише експериментальні функції"
@@ -8681,6 +8689,8 @@ uk:
             label: "Завантажити"
             title: "Завантажити зображення"
         download_file: "Завантажити"
+        upload_restrictions:
+          extensions: "Прийнято: %{extensions}"
         selectable_avatars:
           title: "Список аватарів, які користувачі можуть вибрати"
         table_column_heading:

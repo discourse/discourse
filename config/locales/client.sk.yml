@@ -2165,6 +2165,7 @@ sk:
               other {# dní}
             }.
           edit_link_options: "Upravte možnosti prepojenia alebo pošlite e-mailom."
+          edit_link_options_only: "Možnosti úpravy odkazu"
           show_advanced: "Zobraziť rozšírené možnosti"
           hide_advanced: "Skryť rozšírené možnosti"
           description: "Popis"
@@ -3188,8 +3189,7 @@ sk:
         post_approved: "príspevok schválený"
         membership_request_consolidated: "nové žiadosti o členstvo"
         reaction: "nová reakcia"
-        votes_released: "Hlasovanie bolo zverejnené"
-        new_features: "Boli vydané nové funkcie Discourse!"
+        votes_released: "hlasovanie bolo zverejnené"
         admin_problems: "nové rady na informačnom paneli vášho webu"
     upload_selector:
       change: "Zmena"

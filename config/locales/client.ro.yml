@@ -1793,6 +1793,7 @@ ro:
               other {în # de zile}
             }.
           edit_link_options: "Editează opțiunile de legătură sau trimite prin email."
+          edit_link_options_only: "Editează opțiuni legătură"
           show_advanced: "Afișați opțiunile avansate"
           hide_advanced: "Ascundeți opțiunile avansate"
           description: "Descriere"
@@ -2395,7 +2396,6 @@ ro:
         bookmark_reminder_with_name: "memento semn de carte - %{name}"
         watching_first_post: "subiect nou"
         post_approved: "articol aprobat"
-        new_features: "Au fost lansate funcționalități Discourse noi!"
         admin_problems: "sfaturi noi în panoul de control al site-ului tău"
     upload_selector:
       change: "Schimbă"

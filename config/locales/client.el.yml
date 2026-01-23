@@ -2828,6 +2828,11 @@ el:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - ολοκληρώθηκε"
       new_features: "Νέες δυνατότητες διαθέσιμες!"
+      upcoming_changes:
+        available:
+          title: "Επερχόμενες αλλαγές"
+        automatically_promoted:
+          title: "Επερχόμενες αλλαγές"
       dismiss_confirmation:
         dismiss: "Απόρριψη"
         cancel: "Άκυρο"
@@ -2873,8 +2878,7 @@ el:
         post_approved: "η ανάρτηση εγκρίθηκε"
         membership_request_consolidated: "νέα αιτήματα συμμετοχής"
         reaction: "νέα αντίδραση"
-        votes_released: "Η ψηφοφορία κυκλοφόρησε"
-        new_features: "Νέα χαρακτηριστικά του Discourse έχουν κυκλοφορήσει!"
+        votes_released: "η ψηφοφορία κυκλοφόρησε"
     upload_selector:
       change: "Αλλαγή"
       delete: "Σβήσιμο"

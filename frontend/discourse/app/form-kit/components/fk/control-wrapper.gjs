@@ -108,6 +108,9 @@ export default class FKControlWrapper extends Component {
           @expandedDatePickerOnDesktop={{@expandedDatePickerOnDesktop}}
           @selection={{@selection}}
           @includeNone={{@includeNone}}
+          @colors={{@colors}}
+          @usedColors={{@usedColors}}
+          @allowNamedColors={{@allowNamedColors}}
           @onControlWidthChange={{fn (mut this.controlWidth)}}
           id={{@field.id}}
           name={{@field.name}}

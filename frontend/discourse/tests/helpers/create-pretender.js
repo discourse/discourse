@@ -561,6 +561,11 @@ export function applyDefaultHandlers(pretender) {
       });
     }
 
+    // The request sends `permissions` as an object (e.g. {everyone: 1})
+    // but the real server never echoes it back. Remove it because the
+    // Category model expects `permissions` to be an array (@trackedArray).
+    delete category.permissions;
+
     return response({ category });
   });
 

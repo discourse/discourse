@@ -28,3 +28,31 @@ acceptance("User invites", function (needs) {
       .doesNotExist();
   });
 });
+
+acceptance(
+  "User invites - bulk invite button (admin with setting)",
+  function (needs) {
+    needs.user({ admin: true });
+    needs.settings({ allow_bulk_invite: true });
+
+    test("shows bulk invite button when admin and setting enabled", async function (assert) {
+      await visit("/u/eviltrout/invited");
+
+      assert.dom(".user-invite-buttons .btn .d-icon-upload").exists();
+    });
+  }
+);
+
+acceptance(
+  "User invites - bulk invite button (admin without setting)",
+  function (needs) {
+    needs.user({ admin: true });
+    needs.settings({ allow_bulk_invite: false });
+
+    test("hides bulk invite button when setting disabled", async function (assert) {
+      await visit("/u/eviltrout/invited");
+
+      assert.dom(".user-invite-buttons .btn .d-icon-upload").doesNotExist();
+    });
+  }
+);

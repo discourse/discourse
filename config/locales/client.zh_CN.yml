@@ -2031,6 +2031,7 @@ zh_CN:
                 other {# 天}
             }后到期。
           edit_link_options: "编辑链接选项或通过电子邮件发送。"
+          edit_link_options_only: "编辑链接选项"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
           description: "描述"
@@ -2882,6 +2883,13 @@ zh_CN:
       votes_released: "%{description} - 已完成"
       new_features: "有新功能可用！"
       admin_problems: "网站信息中心有新建议"
+      upcoming_changes:
+        available:
+          title: "即将推出的更改"
+          description: "'%{changeName}' 可供预览"
+        automatically_promoted:
+          title: "即将推出的更改"
+          description: "'%{changeName}' 已自动启用"
       dismiss_confirmation:
         body:
           default:
@@ -2934,7 +2942,6 @@ zh_CN:
         membership_request_consolidated: "新成员资格请求"
         reaction: "新回应"
         votes_released: "投票额度已释放"
-        new_features: "已发布新的 Discourse 功能！"
         admin_problems: "网站信息中心有新建议"
     upload_selector:
       change: "更改"
@@ -5363,11 +5370,11 @@ zh_CN:
               locale_label: "语言"
             header_new_members:
               label: "新成员标题"
-              description: "可用变量： <code>&percnt;{preferred_display_name}</code>"
+              description: "可用变量： <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "欢迎， %{preferred_display_name}！"
             header_logged_in:
               label: "已登录成员的标题"
-              description: "可用变量： <code>&percnt;{preferred_display_name}</code>"
+              description: "可用变量： <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "欢迎回来，%{preferred_display_name}！"
             header_anonymous:
               label: "匿名访客标题"
@@ -7072,6 +7079,7 @@ zh_CN:
             change_theme_site_setting: "更改主题站点设置"
             stop_impersonating: "停止模拟"
             upcoming_change_toggled: "切换即将到来的更新"
+            upcoming_change_available: "即将推出的更改已可用"
             change_site_setting_groups: "更改站点设置组"
             discourse_id_regenerate_credentials: "重新生成 Discourse ID 凭证"
         screened_emails:
@@ -7211,6 +7219,7 @@ zh_CN:
           upload: "上传文件"
           multiselect: "多选"
           tagchooser: "标签群组选择器"
+          composer: "Markdown 答案"
         validations_modal:
           button_title: "验证"
           modal_title: "验证选项"

@@ -2095,6 +2095,7 @@ es:
             other {# días} }
             }.
           edit_link_options: "Edita las opciones del enlace o envíalo por correo electrónico."
+          edit_link_options_only: "Editar opciones de enlace"
           show_advanced: "Mostrar opciones avanzadas"
           hide_advanced: "Ocultar opciones avanzadas"
           description: "Descripción"
@@ -2969,6 +2970,11 @@ es:
       votes_released: "%{description} - completado"
       new_features: "¡Nuevas características disponibles!"
       admin_problems: "Nuevos consejos en tu panel de control del sitio"
+      upcoming_changes:
+        available:
+          title: "Próximos cambios"
+        automatically_promoted:
+          title: "Próximos cambios"
       dismiss_confirmation:
         body:
           default:
@@ -3024,8 +3030,7 @@ es:
         post_approved: "publicación aprobada"
         membership_request_consolidated: "nuevas solicitudes de membresía"
         reaction: "nueva reacción"
-        votes_released: "Voto liberado"
-        new_features: "¡Se han lanzado nuevas características de Discourse!"
+        votes_released: "voto liberado"
         admin_problems: "nuevos consejos en tu panel de control del sitio"
     upload_selector:
       change: "Cambiar"

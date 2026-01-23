@@ -2056,6 +2056,7 @@ fi:
               other {# päivän kuluttua}
             }.
           edit_link_options: "Muokkaa linkin asetuksia tai lähetä sähköpostitse."
+          edit_link_options_only: "Muokkaa linkin asetuksia"
           show_advanced: "Näytä lisäasetukset"
           hide_advanced: "Piilota lisäasetukset"
           description: "Kuvaus"
@@ -2985,8 +2986,7 @@ fi:
         post_approved: "viesti hyväksytty"
         membership_request_consolidated: "uusia jäsenhakemuksia"
         reaction: "uusi reaktio"
-        votes_released: "Ääni vapautui"
-        new_features: "Uusia Discoursen ominaisuuksia on julkaistu!"
+        votes_released: "ääni vapautui"
         admin_problems: "uusia suosituksia sivustosi hallintapaneelissa"
     upload_selector:
       change: "Vaihda"

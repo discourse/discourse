@@ -2094,6 +2094,7 @@ pt_BR:
               other {# dias}
             }.
           edit_link_options: "Editar opções de link ou enviar por e-mail"
+          edit_link_options_only: "Edite as opções do link"
           show_advanced: "Exibir opções avançadas"
           hide_advanced: "Ocultar opções avançadas"
           description: "Descrição"
@@ -3028,8 +3029,7 @@ pt_BR:
         post_approved: "postagem aprovada"
         membership_request_consolidated: "novos pedidos de associação"
         reaction: "nova reação"
-        votes_released: "Voto emitido"
-        new_features: "Novos recursos do Discourse foram lançados!"
+        votes_released: "voto emitido"
         admin_problems: "nova recomendação no painel de controle do seu site"
     upload_selector:
       change: "Mudança"

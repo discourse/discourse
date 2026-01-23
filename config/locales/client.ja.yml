@@ -2828,7 +2828,6 @@ ja:
         membership_request_consolidated: "新しいメンバーシップリクエスト"
         reaction: "新しいリアクション"
         votes_released: "投票がリリースされました"
-        new_features: "新しい Discourse 機能がリリースされました！"
         admin_problems: "サイトダッシュボードに関する新しいアドバイス"
     upload_selector:
       change: "変更"

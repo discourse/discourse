@@ -2128,6 +2128,7 @@ ug:
               other {# كۈن}
             } دە ۋاقتى ئۆتىدۇ.
           edit_link_options: "ئۇلانما تاللانمىسىنى تەھرىرلەيدۇ ياكى ئېلخەت ئارقىلىق يوللايدۇ."
+          edit_link_options_only: "ئۇلانما تاللانمىسىنى تەھرىرلەيدۇ"
           show_advanced: "ئالىي تاللانمىنى كۆرسەت"
           hide_advanced: "ئالىي تاللانمىنى يوشۇر"
           description: "چۈشەندۈرۈش"
@@ -3034,6 +3035,11 @@ ug:
       votes_released: "%{description} - تاماملاندى"
       new_features: "يېڭى ئىقتىدار مەۋجۇت!"
       admin_problems: "يېڭى تەۋسىيە بېكىتىڭىزنىڭ باشقۇرۇش تاختىسىدا كۆرۈنىدۇ"
+      upcoming_changes:
+        available:
+          title: "كەلگۈسى ئۆزگىرىش"
+        automatically_promoted:
+          title: "كەلگۈسى ئۆزگىرىش"
       dismiss_confirmation:
         body:
           default:
@@ -3090,7 +3096,6 @@ ug:
         membership_request_consolidated: "يېڭى ئەزالىق ئىلتىماسى"
         reaction: "يېڭى ئىنكاس"
         votes_released: "بېلەت تاشلاش ئېلان قىلىندى"
-        new_features: "يېڭى Discourse ئىقتىدارى ئېلان قىلىندى!"
         admin_problems: "تور بېكىتىڭىزنىڭ باشقۇرۇش تاختىسىدا يېڭى تەكلىپ بار"
     upload_selector:
       change: "ئۆزگەرت"

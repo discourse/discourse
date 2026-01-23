@@ -2056,6 +2056,7 @@ tr_TR:
               other {# günlüğüne}
             } geçerlidir.
           edit_link_options: "Bağlantı seçeneklerini düzenleyin veya e-posta ile gönderin."
+          edit_link_options_only: "Bağlantı seçeneklerini düzenleyin"
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
           description: "Açıklama"
@@ -2985,8 +2986,7 @@ tr_TR:
         post_approved: "gönderi onaylandı"
         membership_request_consolidated: "yeni üyelik talepleri"
         reaction: "yeni tepki"
-        votes_released: "Oy verildi"
-        new_features: "Yeni Discourse özellikleri çıktı!"
+        votes_released: "oy verildi"
         admin_problems: "sitenizin panonuzda yeni öneriler mevcut"
     upload_selector:
       change: "Değiştir"

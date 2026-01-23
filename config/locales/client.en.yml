@@ -3345,9 +3345,10 @@ en:
         post_approved: "post approved"
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
-        votes_released: "Vote was released"
-        new_features: "New Discourse features have been released!"
+        votes_released: "vote was released"
+        new_features: "new discourse features have been released"
         admin_problems: "new advice on your site dashboard"
+        upcoming_change_available: "new upcoming change is available"
 
     upload_selector:
       change: "Change"
