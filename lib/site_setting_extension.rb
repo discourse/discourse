@@ -1014,7 +1014,10 @@ module SiteSettingExtension
             # An admin has modified the setting and a value is stored
             # in the database, since the default for upcoming changes
             # is false.
-            if modified.key?(name)
+            #
+            # If the change is permanent though, the admin has no choice
+            # in the matter.
+            if modified.key?(name) && UpcomingChanges.change_status(name) != :permanent
               value
 
               # The change has reached the promotion status and is forcibly
@@ -1022,7 +1025,7 @@ module SiteSettingExtension
             elsif UpcomingChanges.meets_or_exceeds_status?(
                   name,
                   SiteSetting.promote_upcoming_changes_on_status.to_sym,
-                )
+                ) || UpcomingChanges.change_status(name) == :permanent
               true
             else
               # Otherwise use the default value, which for upcoming changes

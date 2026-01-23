@@ -1287,6 +1287,30 @@ RSpec.describe SiteSettingExtension do
         SiteSetting.promote_upcoming_changes_on_status = :stable
         expect(SiteSetting.public_send(setting_name)).to eq(default_value)
       end
+
+      context "when the upcoming change is permanent" do
+        before do
+          mock_upcoming_change_metadata(
+            {
+              enable_upload_debug_mode: {
+                impact: "other,developers",
+                status: :permanent,
+                impact_type: "other",
+                impact_role: "developers",
+              },
+            },
+          )
+        end
+
+        it "returns true" do
+          expect(SiteSetting.public_send(setting_name)).to eq(true)
+        end
+
+        it "return true even if the setting value is false in the database" do
+          SiteSetting.public_send("#{setting_name}=", false)
+          expect(SiteSetting.public_send(setting_name)).to eq(true)
+        end
+      end
     end
   end
 
