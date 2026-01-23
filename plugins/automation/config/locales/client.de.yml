@@ -10,6 +10,7 @@ de:
       logs:
         staff_actions:
           actions:
+            create_automation: Automatisierung erstellen
             update_automation: automatisierung aktualisieren
             delete_automation: Automatisierung löschen
     discourse_automation:
