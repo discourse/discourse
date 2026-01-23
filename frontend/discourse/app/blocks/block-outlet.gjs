@@ -1050,68 +1050,73 @@ export default class BlockOutlet extends Component {
     {{! @glint-expect-error - yield signature not typed }}
     {{yield (hasLayout this.outletName) to="before"}}
 
-    <AsyncContent @asyncData={{this.children}}>
-      <:loading>
-        {{! Resolving async blocks should not display a loading UI }}
-      </:loading>
+    {{#let
+      (if
+        this.OutletInfoComponent
+        (component
+          this.OutletInfoComponent
+          outletName=this.outletName
+          outletArgs=this.outletArgsWithDeprecations
+          blockCount=0
+          error=null
+        )
+      )
+      as |OutletInfo|
+    }}
+      <AsyncContent @asyncData={{this.children}}>
+        <:loading>
+          {{! Resolving async blocks should not display a loading UI }}
+        </:loading>
 
-      <:content as |layout|>
-        {{#let
-          (component
-            BlockOutletRootContainer
-            outletName=this.outletName
-            outletArgs=this.outletArgsWithDeprecations
-            rawChildren=layout.rawChildren
-            showGhosts=layout.showGhosts
-            isLoggingEnabled=layout.isLoggingEnabled
-            createChildBlockFn=createChildBlock
-            isContainerBlockFn=_isContainerBlock
-          )
-          as |ChildrenContainer|
-        }}
-          {{#if this.OutletInfoComponent}}
-            {{! @glint-expect-error - dynamic component invocation }}
-            <this.OutletInfoComponent
-              @outletName={{this.outletName}}
-              @blockCount={{layout.rawChildren.length}}
-              @outletArgs={{this.outletArgsWithDeprecations}}
-            >
-              <ChildrenContainer />
-            </this.OutletInfoComponent>
-          {{else}}
-            <ChildrenContainer />
-          {{/if}}
-        {{/let}}
-      </:content>
-
-      <:error as |error|>
-        {{#if this.OutletInfoComponent}}
-          {{! @glint-expect-error - dynamic component invocation }}
-          <this.OutletInfoComponent
-            @outletName={{this.outletName}}
-            @blockCount={{0}}
-            @outletArgs={{this.outletArgsWithDeprecations}}
-            @error={{error}}
-          >
-            {{#if (has-block "error")}}
-              {{! @glint-expect-error - yield signature not typed }}
-              {{yield error to="error"}}
+        <:content as |layout|>
+          {{#let
+            (component
+              BlockOutletRootContainer
+              outletName=this.outletName
+              outletArgs=this.outletArgsWithDeprecations
+              rawChildren=layout.rawChildren
+              showGhosts=layout.showGhosts
+              isLoggingEnabled=layout.isLoggingEnabled
+              createChildBlockFn=createChildBlock
+              isContainerBlockFn=_isContainerBlock
+            )
+            as |ChildrenContainer|
+          }}
+            {{#if OutletInfo}}
+              <OutletInfo @blockCount={{layout.rawChildren.length}}>
+                <ChildrenContainer />
+              </OutletInfo>
             {{else}}
-              <BlockOutletInlineError @error={{error}} />
+              <ChildrenContainer />
             {{/if}}
-          </this.OutletInfoComponent>
-        {{else if (has-block "error")}}
-          {{! @glint-expect-error - yield signature not typed }}
-          {{yield error to="error"}}
-        {{else}}
-          <BlockOutletInlineError @error={{error}} />
-        {{/if}}
-      </:error>
+          {{/let}}
+        </:content>
 
-      <:empty>
-        {{! render nothing if all blocks are hidden }}
-      </:empty>
-    </AsyncContent>
+        <:error as |error|>
+          {{#if OutletInfo}}
+            <OutletInfo @error={{error}}>
+              {{#if (has-block "error")}}
+                {{! @glint-expect-error - yield signature not typed }}
+                {{yield error to="error"}}
+              {{else}}
+                <BlockOutletInlineError @error={{error}} />
+              {{/if}}
+            </OutletInfo>
+          {{else if (has-block "error")}}
+            {{! @glint-expect-error - yield signature not typed }}
+            {{yield error to="error"}}
+          {{else}}
+            <BlockOutletInlineError @error={{error}} />
+          {{/if}}
+        </:error>
+
+        <:empty>
+          {{#if OutletInfo}}
+            <OutletInfo />
+          {{/if}}
+        </:empty>
+      </AsyncContent>
+    {{/let}}
 
     {{! yield to :after block with hasLayout boolean for conditional rendering
         This allows block outlets to wrap other elements and conditionally render them based on
