@@ -220,6 +220,10 @@
     background-color: transparent;
   }
 
+  .badge-category__wrapper .badge-category {
+    align-items: center;
+  }
+
   .category-boxes .category-box,
   .category-boxes-with-topics .category-box {
     --category-badge-color: var(--content-border-color) !important;
