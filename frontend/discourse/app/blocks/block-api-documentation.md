@@ -375,7 +375,7 @@ Constraints define validation rules across multiple arguments. They're checked a
 | `exactlyOne` | Exactly one arg must be provided (mutual exclusion + required) | `exactlyOne: ["id", "tag"]` |
 | `allOrNone` | Either all are provided or none | `allOrNone: ["width", "height"]` |
 | `atMostOne` | At most one arg may be provided (0 or 1, mutual exclusion) | `atMostOne: ["id", "tag"]` |
-| `requires` | If dependent arg is provided, required arg must also be provided | `requires: { params: "pages" }` |
+| `requires` | If dependent arg is provided, required arg must also be provided | `requires: { endDate: "startDate" }` |
 
 **Error messages:**
 
@@ -385,7 +385,7 @@ Block "featured-list": exactly one of "id", "tag" must be provided, but got both
 Block "featured-list": exactly one of "id", "tag" must be provided, but got none.
 Block "featured-list": args "width", "height" must be provided together or not at all.
 Block "featured-list": at most one of "id", "tag" may be provided, but got both.
-Block "featured-list": arg "params" requires "pages" to also be provided.
+Block "featured-list": arg "endDate" requires "startDate" to also be provided.
 ```
 
 **Vacuous constraint detection:** The system detects constraints that are always true or always false due to default values. For example:
@@ -430,7 +430,7 @@ Restricts where this block can render. Uses [picomatch](https://github.com/micro
 
 **What happens if you omit it?** The block can render in any outlet.
 
-**What if someone tries to use this block in `sidebar-blocks`?** They get a validation error: `Block "theme:my-theme:hero-banner" cannot be rendered in outlet "sidebar-blocks": denied by deniedOutlets pattern "sidebar-*".`
+**What if someone tries to use this block in `sidebar-blocks`?** They get a validation error: `Block "theme:my-theme:hero-banner" cannot be rendered in outlet "sidebar-blocks": outlet "sidebar-blocks" does not match any allowedOutlets pattern.`
 
 #### (G) Denied Outlets
 
@@ -528,40 +528,37 @@ Understanding when things happen helps debug issues.
 **1. Pre-initializers run**
 - `api.registerBlock(HeroBanner)`
   - Validates block name, namespace, decoration
-  - Stores in `blockRegistry` Map
-- `api.registerBlockOutlet("my-plugin:custom-outlet")`
+  - Adds block to the registry
+- `api.registerBlockOutlet("my-plugin:custom-outlet")` (for custom outlets only; core outlets are pre-defined)
 
-**2. Registry freezes** (`freeze-block-registry` initializer)
-- `registryFrozen = true`
-- No more block registrations allowed
+**2. Built-ins register, then registries freeze** (`freeze-block-registry` initializer)
+- Registers built-in blocks (`group`, etc.)
+- Registers core condition types (`user`, `route`, `setting`, `viewport`, `outletArg`)
+- Freezes block, outlet, and condition type registries
+- No more registrations allowed after this point
 
 **3. API-initializers run**
 - `api.renderBlocks("homepage-blocks", [...])`
   - Validates: outlet exists, blocks registered, schemas match
   - Validates: conditions syntax, arg names
-  - Stores layout in `outletLayouts` Map
+  - Stores the layout configuration for the outlet
 
 ---
 
 #### :art: Render Time
 
 **4. BlockOutlet renders** (`<BlockOutlet @name="homepage-blocks" />`)
-- Retrieves layout from `outletLayouts`
+- Retrieves the layout configuration for this outlet
 - Preprocesses: evaluates conditions, computes visibility
 
 **5. Condition evaluation** (bottom-up for containers)
-- For each block entry:
-  - If has conditions → evaluate via Blocks service
-  - If container → recurse to children first
-  - Set `__visible` = conditions passed && has visible children
-- Result: each entry now has `__visible` flag
+- Conditions are evaluated for each block
+- Containers check children first—a container is hidden if all children are hidden
+- Result: each block is marked visible or hidden
 
-**6. Component creation**
-- Visible blocks → `curryComponent()` → wrapped with layout
-- Hidden blocks (debug mode) → `GhostBlock` placeholder
-
-**7. Template renders**
-- `{{#each this.children as |child|}}` → `<child.Component />`
+**6. Component rendering**
+- Visible blocks render their component
+- Hidden blocks disappear (or show as ghost placeholders in debug mode)
 
 ---
 
@@ -570,6 +567,8 @@ Understanding when things happen helps debug issues.
 - Invalid arg names? Error at boot.
 - Block not registered? Error at boot.
 - Condition fails at runtime? Block silently doesn't render (or shows ghost in debug).
+
+> :bulb: When lazy-loaded blocks are involved, schema and constraint validations are deferred to when the layout is rendered for the first time.
 
 ### Your First Block
 
@@ -616,7 +615,7 @@ export default apiInitializer((api) => {
 });
 ```
 
-That's it. Three files: the block, registration, and layout configuration.
+That's it. The block, registration, and layout configuration. Each object in the layout array is a **block entry**—it tells the system which block to render and how to configure it.
 
 **Adding args:**
 
@@ -671,16 +670,16 @@ conditions: [
 ]
 ```
 
-**Entry options reference:**
+**Block entry properties:**
 
-| Property | Required | Default | Notes |
-|----------|----------|---------|-------|
-| `block` | Yes | — | Component class or string name |
-| `args` | No | `{}` | Passed to component as `@args` |
-| `conditions` | No | — | If omitted, always renders |
-| `classNames` | No | — | Added to wrapper element |
-| `children` | No | — | Only for container blocks |
-| `containerArgs` | No | — | Metadata for parent container (when used as child) |
+| Property | Required | Notes |
+|----------|----------|-------|
+| `block` | Yes | Component class or string name |
+| `args` | No | Passed to component as `@args` |
+| `conditions` | No | If omitted, always renders |
+| `classNames` | No | Added to wrapper element |
+| `children` | No | Only for container blocks |
+| `containerArgs` | No | Metadata for parent container (when used as child) |
 
 Now that you understand the concepts and have seen a complete example, let's look at the building blocks in more detail.
 
