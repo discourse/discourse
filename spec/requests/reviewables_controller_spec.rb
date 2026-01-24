@@ -791,6 +791,34 @@ RSpec.describe ReviewablesController do
         expect(json_topic["stats"]["count"]).to eq(2)
         expect(json_topic["stats"]["unique_users"]).to eq(2)
       end
+
+      it "does not result in N+1 queries when loading reviewable scores" do
+        PostActionCreator.spam(user0, post0)
+        PostActionCreator.spam(user1, post0)
+
+        # warmup
+        get "/review/topics.json"
+        expect(response.status).to eq(200)
+
+        initial_sql_queries_count =
+          track_sql_queries do
+            get "/review/topics.json"
+            expect(response.status).to eq(200)
+          end.count
+
+        # add more scores to the same reviewable
+        PostActionCreator.off_topic(user0, post0)
+        PostActionCreator.off_topic(user1, post0)
+
+        new_sql_queries_count =
+          track_sql_queries do
+            get "/review/topics.json"
+            expect(response.status).to eq(200)
+          end.count
+
+        # query count should not increase when adding more scores to existing reviewables
+        expect(new_sql_queries_count).to eq(initial_sql_queries_count)
+      end
     end
 
     describe "#settings" do

@@ -117,7 +117,7 @@ class ReviewablesController < ApplicationController
 
     # topics isn't indexed on `reviewable_score` and doesn't know what the current user can see,
     # so let's query from the inside out.
-    pending = Reviewable.viewable_by(current_user).pending
+    pending = Reviewable.viewable_by(current_user).pending.includes(:reviewable_scores)
     pending = pending.where("score >= ?", Reviewable.min_score_for_priority)
 
     pending.each do |r|
