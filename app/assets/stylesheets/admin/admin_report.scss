@@ -96,11 +96,11 @@
     border: 1px solid transparent;
 
     a {
-      color: var(--primary-medium);
+      color: var(--primary-high);
     }
 
     .d-icon {
-      color: currentcolor;
+      color: var(--primary-medium);
       font-size: var(--font-up-5);
       display: block;
       margin: 0.25em auto;
