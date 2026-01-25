@@ -2,9 +2,9 @@
   &.two-columns {
     .table .admin-report-table-cell:first-child,
     .table .admin-report-table-header:first-child {
-      @include ellipsis;
       text-align: left;
       width: 80%;
+      overflow-wrap: break-word;
     }
 
     .table .admin-report-table-cell:last-child,
