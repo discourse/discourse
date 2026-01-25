@@ -27,9 +27,9 @@
 
   .table .admin-report-table-header {
     .sort-btn {
-      outline: none;
-      background: none;
-      padding: 3px 8px;
+      padding: 0;
+      flex-direction: row-reverse;
+      gap: var(--space-1);
 
       @include ellipsis;
     }
@@ -38,23 +38,11 @@
       .d-icon {
         color: var(--tertiary);
       }
-
-      .sort-btn:hover {
-        color: var(--primary-medium);
-        background: var(--primary-low);
-      }
     }
 
     &:not(.is-current-sort) .sort-btn {
-      background: none;
-
-      &:hover {
-        color: var(--primary-medium);
-        background: var(--primary-low);
-
-        .d-icon {
-          color: var(--primary-medium);
-        }
+      .d-icon {
+        visibility: hidden;
       }
     }
   }
