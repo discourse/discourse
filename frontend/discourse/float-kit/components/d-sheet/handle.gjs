@@ -6,6 +6,7 @@ import {
   getStepDetent,
   getStepDirection,
 } from "discourse/float-kit/lib/action-utils";
+import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
 
 /**
  * Interactive handle for d-sheet; supports dismiss and step actions.
@@ -31,25 +32,11 @@ export default class Handle extends Component {
    * @param {MouseEvent} event
    */
   handleClick = (event) => {
-    const defaultBehavior = { forceFocus: true, runAction: true };
-    let behavior = { ...defaultBehavior };
-
-    const onPress = this.args.onPress;
-    if (onPress) {
-      if (typeof onPress === "function") {
-        const customEvent = {
-          nativeEvent: event,
-          ...behavior,
-          changeDefault(changes) {
-            behavior = { ...behavior, ...changes };
-            Object.assign(this, changes);
-          },
-        };
-        onPress(customEvent);
-      } else {
-        behavior = { ...defaultBehavior, ...onPress };
-      }
-    }
+    const behavior = processBehavior({
+      nativeEvent: event,
+      defaultBehavior: { forceFocus: true, runAction: true },
+      handler: this.args.onPress,
+    });
 
     if (behavior.forceFocus) {
       event.currentTarget?.focus({ preventScroll: true });
