@@ -479,6 +479,7 @@ export default class EditCategoryGeneralV2 extends Component {
             placeholder={{i18n "category.name_placeholder"}}
             @maxlength="50"
             class="category-name"
+            data-1p-ignore
           />
         </@form.Field>
       {{/unless}}
