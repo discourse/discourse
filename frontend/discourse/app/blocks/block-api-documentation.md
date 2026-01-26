@@ -693,33 +693,137 @@ Blocks and plugin outlets serve different purposes:
 
 | Aspect | Blocks | Plugin Outlets |
 |--------|--------|----------------|
-| **Intended for** | Structured layout areas (panel grids, panels) | Injections and small additions |
-| **Model** | Composed layout (theme orchestrates) | Content injection or wrapping |
+| **Best for** | Structured layout regions | Small additions or bespoke customizations |
+| **Reusability** | High—define once, use in many layouts | Lower—typically outlet-specific connectors |
+| **Markup** | Standardized wrapper with consistent styling hooks | You control all markup |
 | **Conditions** | Declarative, validated at boot | Custom logic in your component |
-| **Dev tools** | Ghost blocks, condition logging, outlet boundaries, visual overlays | Outlet decorators, Ember inspector |
-| **Typical use** | Homepage sections, sidebars, dashboards | Badges, buttons, small UI tweaks |
+| **Composition** | Theme orchestrates layout from registered blocks | Connectors coexist independently |
+| **Typical use** | Homepage sections, sidebars, dashboards | Badges, buttons, complex interactive features |
 
 **They're complementary, not competing.** A category page might use:
-- Blocks for its main content area (grid of panels)
-- Plugin outlets for small additions (extra buttons, badges)
+- Blocks for its main content area (grid of panels, reusable across pages)
+- Plugin outlets for small additions or highly custom interactive features
 
 **Use blocks when:**
-- You have a region that should display composed content (panels, cards, sections)
+- You have a layout region that should display composed content (panels, cards, sections)
+- You want reusable components that work across multiple outlets
 - You want themes to control what appears and in what order
-- You need boot-time validation and condition debugging
+- You benefit from standardized wrapper markup and boot-time validation
 
 **Use plugin outlets when:**
-- You're making small additions to existing UI
-- You're wrapping or modifying existing content
-- The "composed layout" model doesn't fit your use case
+- You're making small additions to existing UI (badges, buttons)
+- You need full control over markup and behavior
+- You're building complex, bespoke features that don't fit the composed layout model
 
 ### Using the Blocks API
 
 What you need to know to build with blocks.
 
-#### The `@block` Decorator
+#### Registering and Composing
 
-The decorator transforms a Glimmer component into a block. It adds:
+Ideally, the Blocks API separates **registering blocks** from **composing layouts**. This separation of concerns makes it easier to reason about what belongs where—but real-world usage is flexible. Plugins sometimes need to compose layouts, and themes sometimes provide blocks. Here's the mental model:
+
+**Core** provides built-in blocks:
+- Container blocks like `group` for layout structure
+- Always available—no registration needed in your code
+
+**Plugins** register blocks:
+```javascript
+// plugins/discourse-analytics/pre-initializers/register-blocks.js
+api.registerBlock(StatsPanel);  // Adds to registry
+```
+
+**Theme components** can also register blocks:
+```javascript
+// themes/my-theme/theme-component/pre-initializers/register-blocks.js
+api.registerBlock(CustomPanel);  // Also adds to registry
+```
+
+**Themes** compose the layout:
+```javascript
+// themes/my-theme/api-initializers/configure-blocks.js
+api.renderBlocks("homepage-blocks", [
+  { block: "discourse-analytics:stats-panel?" },  // From plugin
+  { block: "theme:my-theme:custom-panel" },       // From theme component
+]);
+```
+
+This separation means:
+- Plugins provide functionality without controlling layout
+- Theme components extend the theme's own capabilities
+- The theme decides what appears where
+
+#### Composing Layouts
+
+Now that you understand who should do what, let's look at how layouts are composed. The `renderBlocks()` function configures which blocks appear in an outlet:
+
+```javascript
+api.renderBlocks("homepage-blocks", [
+  { block: Banner, args: { title: "Welcome" } },
+  { block: "analytics:stats-panel?" },  // Optional block from plugin
+  { block: Sidebar, conditions: { type: "user", loggedIn: true } },
+]);
+```
+
+Each object in the array is a **block entry** specifying which block to render and how to configure it. Blocks can be referenced two ways:
+
+- **By class** - Import and pass directly: `{ block: Banner }`
+- **By name** - Use the registered string name: `{ block: "analytics:stats-panel" }`
+
+String names enable cross-plugin references where you can't import the class directly. See the "Block entry properties" table in section 1 for all available options.
+
+**Optional Blocks**
+
+When using string names, you can append `?` to make the block **optional**:
+
+```javascript
+api.renderBlocks("dashboard", [
+  { block: "analytics:stats-panel?" },  // Optional - won't error if missing
+  { block: "chat:recent-messages?" },   // Optional
+  { block: CoreBanner },                // Required - will error if not registered
+]);
+```
+
+**Why optional blocks?**
+
+Themes often want to compose blocks from multiple plugins, but those plugins may not be installed or could be disabled by the admin. Without optional blocks, the theme would crash if any referenced plugin is missing.
+
+| Scenario | Required Block | Optional Block (`?`) |
+|----------|----------------|----------------------|
+| Block registered | ✓ Renders | ✓ Renders |
+| Block not registered | ✗ Error thrown | ✓ Silently skipped |
+| Plugin disabled | ✗ Error thrown | ✓ Silently skipped |
+
+**When to use optional blocks:**
+
+- **Theme referencing plugin blocks** - Plugins may not be installed
+- **Cross-plugin integration** - Plugin A wants to use Plugin B's block if available
+- **Graceful degradation** - Dashboard that works with any subset of plugins
+
+**When NOT to use optional blocks:**
+
+- **Block you own** - If you register and render the same block, it should always exist
+- **Core blocks** - Core blocks are always available
+- **Required dependencies** - If the block is essential, fail loudly
+
+> :bulb: In debug mode, optional missing blocks appear as ghost placeholders with the message "This optional block is not rendered because it's not registered." This helps you see what *would* render if the plugin were active.
+
+**Outlet Ownership**
+
+Each outlet can only have one `renderBlocks()` configuration—the first caller owns it, and subsequent calls raise an error. While themes typically compose layouts, plugins and theme components *can* call `renderBlocks()` when they need full control of an outlet.
+
+**Good use cases:**
+- Self-contained plugins that own specific UI areas
+- Turnkey solutions providing a complete experience
+- Heavily customized instances with coordinated extensions
+
+**Avoid when:**
+- Building reusable components meant for multiple themes
+- Multiple extensions might customize the same outlet
+
+#### Creating Blocks
+
+Once you're composing layouts, you may want to create your own blocks. The `@block` decorator transforms a Glimmer component into a block. It adds:
 
 - **Static properties** for introspection: `blockName`, `blockShortName`, `blockNamespace`, `blockType`, `blockMetadata`
 - **Validation** at decoration time: name format, args schema, outlet patterns
@@ -733,9 +837,11 @@ The decorator transforms a Glimmer component into a block. It adds:
 class Banner extends Component { ... }
 ```
 
-#### The `<BlockOutlet>` Component
+See section 1 "What's Inside a Block" for the complete decorator options including args schemas, constraints, and outlet restrictions.
 
-Place this in templates where blocks should render:
+#### Adding Block Outlets
+
+The `<BlockOutlet>` component defines where blocks render in templates. Core and plugins use this to create outlet locations that themes can then populate.
 
 ```handlebars
 <BlockOutlet @name="homepage-blocks" />
@@ -761,7 +867,7 @@ BlockOutlet supports Ember's named blocks pattern to render content around your 
 </BlockOutlet>
 ```
 
-Both named blocks receive a boolean parameter indicating whether **any blocks are configured** for this outlet (i.e., whether `renderBlocks()` was called for it). This is configuration presence, not visibility—if all configured blocks have failing conditions, the boolean is still `true`.
+Both named blocks receive a boolean parameter indicating whether **any blocks are configured** for this outlet (i.e., whether `renderBlocks()` was called for it).
 
 **When to use each:**
 
@@ -775,8 +881,8 @@ Both named blocks receive a boolean parameter indicating whether **any blocks ar
 ```handlebars
 {{! Add a header only when blocks exist }}
 <BlockOutlet @name="sidebar-panels">
-  <:before as |hasPanels|>
-    {{#if hasPanels}}
+  <:before as |isConfigured|>
+    {{#if isConfigured}}
       <h3 class="sidebar-panels__header">Panels</h3>
     {{/if}}
   </:before>
@@ -784,8 +890,8 @@ Both named blocks receive a boolean parameter indicating whether **any blocks ar
 
 {{! Always show a header, but style differently }}
 <BlockOutlet @name="announcements">
-  <:before as |hasAnnouncements|>
-    <h2 class={{if hasAnnouncements "has-content"}}>Announcements</h2>
+  <:before as |isConfigured|>
+    <h2 class={{if isConfigured "has-content"}}>Announcements</h2>
   </:before>
 </BlockOutlet>
 ```
@@ -806,8 +912,8 @@ Both named blocks receive a boolean parameter indicating whether **any blocks ar
 
 {{! Show "view all" link when blocks exist }}
 <BlockOutlet @name="recent-activity">
-  <:after as |hasActivity|>
-    {{#if hasActivity}}
+  <:after as |isConfigured|>
+    {{#if isConfigured}}
       <a href="/activity" class="view-all">View all activity →</a>
     {{/if}}
   </:after>
@@ -818,16 +924,16 @@ Both named blocks receive a boolean parameter indicating whether **any blocks ar
 
 ```handlebars
 <BlockOutlet @name="topic-sidebar">
-  <:before as |hasSidebarContent|>
-    {{#if hasSidebarContent}}
+  <:before as |isConfigured|>
+    {{#if isConfigured}}
       <div class="sidebar-header">
         <h3>Related</h3>
       </div>
     {{/if}}
   </:before>
 
-  <:after as |hasSidebarContent|>
-    {{#if hasSidebarContent}}
+  <:after as |isConfigured|>
+    {{#if isConfigured}}
       <div class="sidebar-footer">
         <button class="collapse-sidebar">Collapse</button>
       </div>
@@ -893,107 +999,6 @@ The system uses `@outletName` internally for:
 
 You typically don't need to access `@outletName` directly—the system handles CSS class generation automatically. However, it's available if your block needs outlet-specific behavior or styling.
 
-#### The `renderBlocks()` Function
-
-Configure which blocks render in an outlet:
-
-```javascript
-api.renderBlocks("homepage-blocks", [
-  { block: Banner, args: { title: "Welcome" } },
-  { block: Sidebar, conditions: { type: "user", loggedIn: true } },
-]);
-```
-
-#### Plugins, Theme Components, and Themes
-
-The Blocks API separates **providing blocks** from **composing layouts**:
-
-**Plugins** register blocks:
-```javascript
-// plugins/discourse-analytics/pre-initializers/register-blocks.js
-api.registerBlock(StatsPanel);  // Adds to registry
-```
-
-**Theme components** can also register blocks:
-```javascript
-// themes/my-theme/theme-component/pre-initializers/register-blocks.js
-api.registerBlock(CustomPanel);  // Also adds to registry
-```
-
-**Themes** compose the layout:
-```javascript
-// themes/my-theme/api-initializers/configure-blocks.js
-api.renderBlocks("homepage-blocks", [
-  { block: "discourse-analytics:stats-panel?" },  // From plugin
-  { block: "theme:my-theme:custom-panel" },       // From theme component
-]);
-```
-
-This separation means:
-- Plugins provide functionality without controlling layout
-- Theme components extend the theme's own capabilities
-- The theme (editor) decides what appears where
-- Optional blocks (`?`) handle missing plugins gracefully
-
-**Can plugins or theme components call `renderBlocks()`?**
-
-Yes. When a plugin or theme component calls `renderBlocks()`, it **claims ownership** of that outlet. This works, but adds constraints to the Discourse instance:
-
-- No other extension can configure that outlet (they'll get an error)
-- The theme must be written knowing this constraint exists
-- You can't simply add a theme component that renders blocks to any arbitrary theme
-- All compatible extensions must be coordinated to prevent conflicts
-
-**When this makes sense:**
-
-- **Self-contained plugins** that own specific outlets no one else needs
-- **Heavily customized instances** where a plugin also manages the layout/theme
-- **Turnkey solutions** where the plugin provides a complete experience
-
-**When to avoid:**
-
-- Reusable theme components meant to work across different themes
-- Plugins that should compose nicely with other extensions
-- Outlets that multiple contributors might want to customize
-
-The recommended pattern for maximum flexibility is: **plugins and theme components register blocks; themes compose layouts.** But for controlled environments or self-contained solutions, having an extension own the layout is valid.
-
-#### Optional Blocks
-
-When referencing blocks by string name, you can append `?` to make the block **optional**:
-
-```javascript
-api.renderBlocks("dashboard", [
-  { block: "analytics:stats-panel?" },  // Optional - won't error if missing
-  { block: "chat:recent-messages?" },   // Optional
-  { block: CoreBanner },                // Required - will error if not registered
-]);
-```
-
-**Why optional blocks?**
-
-Themes often want to compose blocks from multiple plugins, but those plugins may not be installed or could be disabled by the admin. Without optional blocks, the theme would crash if any referenced plugin is missing.
-
-| Scenario | Required Block | Optional Block (`?`) |
-|----------|----------------|----------------------|
-| Block registered | ✓ Renders | ✓ Renders |
-| Block not registered | ✗ Error thrown | ✓ Silently skipped |
-| Plugin disabled | ✗ Error thrown | ✓ Silently skipped |
-
-**When to use optional blocks:**
-
-- **Theme referencing plugin blocks** - Plugins may not be installed
-- **Cross-plugin integration** - Plugin A wants to use Plugin B's block if available
-- **Graceful degradation** - Dashboard that works with any subset of plugins
-
-**When NOT to use optional blocks:**
-
-- **Block you own** - If you register and render the same block, it should always exist
-- **Core blocks** - Core blocks are always available
-- **Required dependencies** - If the block is essential, fail loudly
-
-> :bulb: In debug mode, optional missing blocks appear as ghost placeholders with the message "This optional block is not rendered because it's not registered." This helps you see what *would* render if the plugin were active.
-
 ### Under the Hood
 
 Now that you know how to use blocks, let's look at what's happening behind the scenes. This section is for those working on the Blocks API itself, or anyone curious about how the pieces fit together.
@@ -1031,25 +1036,9 @@ The registry has two states:
 
 This two-phase design ensures all blocks are registered before any `renderBlocks()` calls.
 
-With blocks registered, the next question is: how do we prevent someone from bypassing the system entirely?
-
-#### The Security Symbol System
-
-Blocks use private symbols to prevent unauthorized rendering:
-
-```javascript
-const __BLOCK_FLAG = Symbol("block");
-const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
-```
-
-These symbols:
-1. Verify a component was decorated with `@block`
-2. Authorize container blocks to render children
-3. Prevent blocks from being used directly in templates (must go through `BlockOutlet`)
-
-So we have blocks in a registry, protected by symbols. What happens when it's time to actually render them?
-
 #### The Preprocessing Pipeline
+
+With blocks registered and layouts configured, what happens when `<BlockOutlet>` renders?
 
 When `<BlockOutlet>` renders:
 1. Retrieves layout from the registry
@@ -1109,7 +1098,7 @@ conditions: [{ type: "usr", admin: true }]  // typo: "usr"
 
 Validation catches configuration mistakes. But what about intentional misuse—someone trying to render blocks outside the system?
 
-### Keeping Blocks in Their Place
+### The Authorization Symbol System
 
 Blocks use a secret symbol system to prevent unauthorized rendering:
 
@@ -1137,7 +1126,7 @@ These symbols are:
 This prevents:
 - Plugins bypassing condition evaluation
 - Themes rendering blocks outside designated areas
-- Security holes from arbitrary block placement
+- Unauthorized block placement
 
 The only way a block can render is as a child of a container block that passes the `$block$` symbol in args. But wait—what authorizes the first block in the chain?
 
