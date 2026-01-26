@@ -595,6 +595,8 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import WelcomeBanner from "../blocks/welcome-banner";
 
 export default {
+  before: "freeze-block-registry",
+
   initialize() {
     withPluginApi((api) => {
       api.registerBlock(WelcomeBanner);
@@ -999,215 +1001,497 @@ The system uses `@outletName` internally for:
 
 You typically don't need to access `@outletName` directly—the system handles CSS class generation automatically. However, it's available if your block needs outlet-specific behavior or styling.
 
-### Under the Hood
-
-Now that you know how to use blocks, let's look at what's happening behind the scenes. This section is for those working on the Blocks API itself, or anyone curious about how the pieces fit together.
-
-#### The Blocks Service
-
-For runtime introspection, inject the service:
-
-```javascript
-@service blocks;
-
-// Check if a block is registered
-this.blocks.hasBlock("my-block")
-
-// Get all registered blocks with metadata
-this.blocks.listBlocksWithMetadata()
-```
-
-This is primarily useful for debugging, dev tools, and advanced scenarios where you need to query the registry programmatically.
-
-The service is a thin wrapper around the block registry—let's look at what that registry actually does.
-
-#### The Block Registry
-
-The registry (`registry/block.js`) is a Map storing block name → block class (or factory). Internal tracking includes:
-
-- **Resolved factory cache** - Stores resolved classes for lazy-loaded blocks
-- **Pending resolutions** - Prevents duplicate concurrent async loads
-- **Failed resolutions** - Prevents infinite retry loops
-- **Source namespace map** - Enforces consistent namespacing per theme/plugin
-
-The registry has two states:
-- **Unfrozen** (during pre-initializers) - Registrations allowed
-- **Frozen** (after `freeze-block-registry` initializer) - No more registrations
-
-This two-phase design ensures all blocks are registered before any `renderBlocks()` calls.
-
-#### The Preprocessing Pipeline
-
-With blocks registered and layouts configured, what happens when `<BlockOutlet>` renders?
-
-When `<BlockOutlet>` renders:
-1. Retrieves layout from the registry
-2. Resolves block references (string names → classes, factories → resolved classes)
-3. Evaluates conditions bottom-up (children before parents for container visibility)
-4. Creates curried components for visible blocks
-5. Creates ghost placeholders for hidden blocks (in debug mode)
-
-That pipeline assumes everything is configured correctly. But what catches mistakes before they make it that far?
-
-### Keeping Things in Check
-
-The Blocks API provides multiple layers of validation:
-
-**Entry Key Validation:**
-```javascript
-// If you write:
-{ block: MyBlock, conditon: [...] }  // typo: "conditon"
-
-// You get:
-// Error: Unknown entry key: "conditon" (did you mean "conditions"?)
-```
-
-**Args Schema Validation:**
-```javascript
-@block("my-block", {
-  args: {
-    count: { type: "number", required: true },
-  }
-})
-
-// If you write:
-{ block: MyBlock, args: { count: "42" } }  // string, not number
-
-// You get:
-// Error: Arg "count" expects type "number", got "string"
-```
-
-**Condition Type Validation:**
-```javascript
-// If you write:
-conditions: [{ type: "usr", admin: true }]  // typo: "usr"
-
-// You get:
-// Error: Unknown condition type: "usr" (did you mean "user"?)
-```
-
-**Reserved Args Protection:**
-```javascript
-// If you write:
-{ block: MyBlock, args: { children: [...], args: {...}, block: "name", containerArgs: {...} } }
-
-// You get:
-// Error: Reserved arg names: args, block, children, containerArgs. Names starting with
-// underscore are reserved for internal use.
-```
-
-Validation catches configuration mistakes. But what about intentional misuse—someone trying to render blocks outside the system?
-
-### The Authorization Symbol System
-
-Blocks use a secret symbol system to prevent unauthorized rendering:
-
-```javascript
-// Private symbols (not exported)
-const __BLOCK_FLAG = Symbol("block");
-const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
-```
-
-These symbols are:
-1. **Not exported** - External code can't access them
-2. **Used for authorization** - Child blocks receive `$block$` arg with the container symbol
-3. **Verified in constructor** - If the symbol doesn't match, throws an error
-
-**Why this matters:**
-
-```handlebars
-{{! This will throw an error: }}
-<MyBlock @title="Direct usage" />
-
-{{! Blocks can ONLY be rendered through BlockOutlet: }}
-<BlockOutlet @name="homepage-blocks" />
-```
-
-This prevents:
-- Plugins bypassing condition evaluation
-- Themes rendering blocks outside designated areas
-- Unauthorized block placement
-
-The only way a block can render is as a child of a container block that passes the `$block$` symbol in args. But wait—what authorizes the first block in the chain?
-
-> **Trivia:** `<BlockOutlet>` is itself a block. Look at its definition and you'll see `@block("block-outlet", { container: true })`. It's a special container block that serves as the root of the block tree. It has a `__ROOT_BLOCK` static property set to the container symbol, which allows it to bypass the normal authorization check and start the chain of trust.
-
-Finally, for writing tests, there's a dedicated API.
-
-### Testing API
-
-The `block-testing` module provides utilities for test infrastructure:
-
-```javascript
-import { ... } from "discourse/tests/helpers/block-testing";
-```
-
-**Block Registration:**
-- `withTestBlockRegistration(callback)` - Temporarily unfreeze registry for registration
-- `registerBlock(BlockClass)` - Register a block class
-- `registerBlockFactory(name, asyncFn)` - Register a lazy-loading factory
-- `freezeBlockRegistry()` - Manually freeze the registry
-
-**Block Queries:**
-- `hasBlock(name)` - Check if block is registered
-- `getBlockEntry(name)` - Get registry entry
-- `isBlockFactory(name)` - Check if entry is a factory
-- `isBlockResolved(name)` - Check if block is resolved
-- `isBlockRegistryFrozen()` - Check frozen state
-- `resolveBlock(ref)` - Async resolve block reference
-- `tryResolveBlock(ref)` - Sync resolve attempt
-
-**Outlet Registration:**
-- `registerOutlet(name, options)` - Register custom outlet
-- `freezeOutletRegistry()` - Freeze outlet registry
-
-**Outlet Queries:**
-- `isValidOutlet(name)` - Check if outlet is valid
-- `getAllOutlets()` - Get all registered outlets
-- `getCustomOutlet(name)` - Get custom outlet data
-- `isOutletRegistryFrozen()` - Check frozen state
-
-**Condition Registration:**
-- `withTestConditionRegistration(callback)` - Temporarily unfreeze for registration
-- `registerConditionType(ConditionClass)` - Register a condition type
-- `freezeConditionTypeRegistry()` - Freeze condition registry
-
-**Condition Queries:**
-- `hasConditionType(type)` - Check if condition type is registered
-- `isConditionTypeRegistryFrozen()` - Check frozen state
-- `validateConditions(spec, types)` - Validate condition specification
-
-**Debug Utilities:**
-- `debugHooks` - Reactive debug interface for testing debug mode behavior
-- `DEBUG_CALLBACK` - Debug callback type constants
-
-**Reset Utilities:**
-- `resetBlockRegistryForTesting()` - Reset all registries to initial state
-- `setTestSourceIdentifier(id)` - Override source identifier for testing
-
-**Debug Hooks Example:**
-
-```javascript
-import { debugHooks, DEBUG_CALLBACK } from "discourse/tests/helpers/block-testing";
-
-// Reactive getters for checking debug state
-debugHooks.isBlockLoggingEnabled   // boolean
-debugHooks.isOutletBoundaryEnabled // boolean
-debugHooks.isVisualOverlayEnabled  // boolean
-debugHooks.loggerInterface         // logger object or null
-
-// Set/get callbacks by key
-debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)
-debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, () => true)
-```
-
-The `debugHooks` singleton provides reactive getters that automatically track dependencies. This means UI components using these values will re-render when debug settings change.
+Now that you know how to register, compose, and create blocks, the next question is: how do you control when they appear? That's where conditions come in.
 
 ---
 
-## 3. When Blocks Appear
+## 3. Show This, Hide That
 
-We've covered registration, configuration, and the internal machinery. Now let's look at the heart of the system: how does a block decide whether to show itself?
+Conditions control when blocks appear. They're declarative rules that the system evaluates at render time—no imperative code, just data describing what should be true for a block to show.
+
+Every condition is an object with a `type` and options specific to that type:
+
+```javascript
+{ type: "user", loggedIn: true }           // Check user state
+{ type: "route", pages: ["TOPIC_PAGES"] }  // Check current page
+{ type: "setting", name: "dark_mode" }     // Check a setting
+```
+
+Conditions can see several things:
+- **Outlet args** passed from the template via `@outletArgs`
+- **Services** like `currentUser`, `siteSettings`, `router` (in custom conditions)
+- **Debug context** when logging is enabled
+
+You'll use conditions constantly, so let's start with how to combine them—then cover each built-in type.
+
+### Combining Conditions
+
+Some blocks need more than one check. The Block API uses familiar boolean logic:
+
+**AND logic (array):**
+```javascript
+conditions: [
+  { type: "user", loggedIn: true },
+  { type: "route", pages: ["DISCOVERY_PAGES"] }
+]
+```
+
+**OR logic (any wrapper):**
+```javascript
+conditions: {
+  any: [
+    { type: "user", admin: true },
+    { type: "user", moderator: true }
+  ]
+}
+```
+
+**NOT logic (not wrapper):**
+```javascript
+conditions: { not: { type: "route", pages: ["ADMIN_PAGES"] } }
+```
+
+**Single condition (no array needed):**
+```javascript
+conditions: { type: "user", loggedIn: true }
+```
+
+**Complex combinations:**
+```javascript
+// Show for: logged in users who are either admins OR (TL2+ and not on admin pages)
+conditions: [
+  { type: "user", loggedIn: true },
+  {
+    any: [
+      { type: "user", admin: true },
+      [
+        { type: "user", minTrustLevel: 2 },
+        { not: { type: "route", pages: ["ADMIN_PAGES"] } }
+      ]
+    ]
+  }
+]
+```
+
+With the combination syntax covered, let's look at each built-in condition type—starting with the simplest.
+
+### Built-in Conditions
+
+#### User Condition
+
+Evaluates based on user state. By default, checks the **current user** (the person viewing the page). Use `source` to check a different user from outlet args.
+
+```javascript
+{ type: "user", loggedIn: true, admin: true, moderator: true, staff: true,
+  minTrustLevel: 0, maxTrustLevel: 4, groups: ["beta-testers"] }
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `loggedIn` | `boolean` | true = must be logged in, false = must be anonymous |
+| `admin` | `boolean` | true = must be admin |
+| `moderator` | `boolean` | true = must be moderator (admins also pass) |
+| `staff` | `boolean` | true = must be staff member |
+| `minTrustLevel` | `number` (0-4) | Minimum trust level required |
+| `maxTrustLevel` | `number` (0-4) | Maximum trust level allowed |
+| `groups` | `string[]` | Must be in at least one of these groups (OR logic) |
+| `source` | `string` | Check a different user object from outlet args |
+
+**Multiple conditions use AND logic:**
+```javascript
+// User must be logged in AND trust level 2+ AND in beta-testers group
+{ type: "user", loggedIn: true, minTrustLevel: 2, groups: ["beta-testers"] }
+```
+
+**Check outlet arg user:**
+```javascript
+// Check the topic author instead of current user
+{ type: "user", source: "@outletArgs.topicAuthor", admin: true }
+```
+
+#### Setting Condition
+
+Evaluates based on site settings or custom settings objects.
+
+```javascript
+{ type: "setting", name: "setting_name", enabled: true, equals: "value",
+  includes: [...], contains: "value", containsAny: [...], source: {...} }
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `name` | `string` | Setting key (required) |
+| `enabled` | `boolean` | true = setting truthy, false = setting falsy |
+| `equals` | `any` | Exact value match |
+| `includes` | `array` | Setting value is in this array (for enum settings) |
+| `contains` | `string` | List setting contains this value |
+| `containsAny` | `array` | List setting contains any of these values |
+| `source` | `object` | Custom settings object (e.g., theme settings) |
+
+**Only one condition type per setting:**
+```javascript
+// WRONG - multiple condition types
+{ type: "setting", name: "foo", enabled: true, equals: "bar" }
+
+// RIGHT - one condition type
+{ type: "setting", name: "foo", enabled: true }
+// OR
+{ type: "setting", name: "foo", equals: "bar" }
+```
+
+**Theme settings:**
+```javascript
+import { settings } from "virtual:theme";
+
+// Check theme setting instead of site setting
+{ type: "setting", source: settings, name: "show_sidebar", enabled: true }
+```
+
+#### Viewport Condition
+
+Evaluates based on viewport size and device capabilities.
+
+```javascript
+{ type: "viewport", min: "lg", max: "xl", mobile: true, touch: true }
+```
+
+**Breakpoints:**
+- `sm` - ≥640px
+- `md` - ≥768px
+- `lg` - ≥1024px
+- `xl` - ≥1280px
+- `2xl` - ≥1536px
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `min` | `string` | Viewport must be at least this size |
+| `max` | `string` | Viewport must be at most this size |
+| `mobile` | `boolean` | true = mobile device only, false = non-mobile only |
+| `touch` | `boolean` | true = touch device only, false = non-touch only |
+
+```javascript
+// Large screens only
+{ type: "viewport", min: "lg" }
+
+// Small screens only (mobile)
+{ type: "viewport", max: "sm" }
+
+// Medium to large screens
+{ type: "viewport", min: "md", max: "xl" }
+
+// Touch devices only
+{ type: "viewport", touch: true }
+```
+
+> **Note:** For simple show/hide based on viewport, CSS media queries are often more performant. Use this condition when you need to prevent a component from rendering entirely—for example, to avoid unnecessary data fetching on mobile, or to show completely different blocks based on screen size.
+
+#### OutletArg Condition
+
+Evaluates based on outlet arg values.
+
+```javascript
+{ type: "outletArg", path: "topic.closed", value: true }
+```
+
+| Property | Type | Description |
+|----------|------|-------------|
+| `path` | `string` | Dot-notation path to property (required) |
+| `value` | `any` | Value to match (see matching rules) |
+| `exists` | `boolean` | true = property exists, false = property undefined |
+
+> :warning: You cannot use both `value` and `exists` together—they are mutually exclusive. Use `value` to check what something equals, use `exists` to check whether it's defined at all.
+
+**Value matching rules:**
+- `[a, b, c]` → passes if target matches ANY element (OR logic)
+- `{ not: x }` → passes if target does NOT match x
+- Other → passes if target === value
+
+```javascript
+// Check if topic is closed
+{ type: "outletArg", path: "topic.closed", value: true }
+
+// Check trust level is 2, 3, or 4
+{ type: "outletArg", path: "user.trust_level", value: [2, 3, 4] }
+
+// Check topic is NOT closed
+{ type: "outletArg", path: "topic.closed", value: { not: true } }
+
+// Check if topic property exists
+{ type: "outletArg", path: "topic", exists: true }
+```
+
+#### Route Condition
+
+The most flexible condition—and the most complex. It evaluates based on the current URL path, semantic page types, route parameters, and query parameters.
+
+```javascript
+{ type: "route", urls: [...], pages: [...], params: {...}, queryParams: {...} }
+```
+
+> **Why URLs instead of Ember route names?** Using internal route names like `discovery.latest` would make them part of the public API—any rename would break plugins and themes. URLs are already effectively public: changing them breaks bookmarks, external links, and SEO. By matching URLs, we avoid coupling blocks to Discourse's internal routing structure.
+
+**Two approaches:** The route condition supports two complementary approaches:
+- **`urls`**: Match URL patterns using glob syntax
+- **`pages`**: Match semantic page types with typed parameters
+
+**URL Patterns (`urls` option):**
+
+Uses [picomatch](https://github.com/micromatch/picomatch) glob syntax:
+- `"/latest"` - Exact path match
+- `"/c/*"` - Single segment wildcard (`/c/foo` but not `/c/foo/bar`)
+- `"/c/**"` - Multi-segment wildcard (`/c/foo`, `/c/foo/bar`, `/c/foo/bar/baz`)
+- `"/t/*/**"` - Combined (`/t/123/slug`, `/t/123/slug/4`)
+- `"/{latest,top}"` - Brace expansion (matches either)
+
+**Semantic Page Types (`pages` option):**
+
+| Page Type | Description | Parameters |
+|-----------|-------------|------------|
+| `CATEGORY_PAGES` | Category listing pages | `categoryId` (number), `categorySlug` (string), `parentCategoryId` (number) |
+| `TAG_PAGES` | Tag listing pages | `tagId` (string), `categoryId` (number), `categorySlug` (string), `parentCategoryId` (number) |
+| `DISCOVERY_PAGES` | Discovery routes (latest, top, etc.) | `filter` (string) |
+| `HOMEPAGE` | Custom homepage only | (none) |
+| `TOP_MENU` | Top nav discovery routes | `filter` (string) |
+| `TOPIC_PAGES` | Individual topic pages | `id` (number), `slug` (string) |
+| `USER_PAGES` | User profile pages | `username` (string) |
+| `ADMIN_PAGES` | Admin section pages | (none) |
+| `GROUP_PAGES` | Group pages | `name` (string) |
+
+**URLs vs Pages:**
+
+Pages are preferred when you want to match page types regardless of URL structure. URLs are preferred when you need specific path patterns.
+
+```javascript
+// Page type: matches category pages regardless of URL structure
+{ type: "route", pages: ["CATEGORY_PAGES"] }
+
+// URL pattern: matches specific path structure
+{ type: "route", urls: ["/c/**"] }
+
+// The URL pattern might miss category pages with custom routes
+// The page type checks the actual page context
+```
+
+**Page Parameters (`params` option):**
+
+The `params` option works only with `pages` (not `urls`) and validates parameters against the page type definitions:
+
+```javascript
+// Match specific category by ID
+{ type: "route", pages: ["CATEGORY_PAGES"], params: { categoryId: 5 } }
+
+// Match category by slug
+{ type: "route", pages: ["CATEGORY_PAGES"], params: { categorySlug: "general" } }
+
+// Match subcategory by parent category ID
+{ type: "route", pages: ["CATEGORY_PAGES"], params: { parentCategoryId: 5 } }
+
+// Match discovery pages with specific filter
+{ type: "route", pages: ["DISCOVERY_PAGES"], params: { filter: "latest" } }
+
+// Match specific tag
+{ type: "route", pages: ["TAG_PAGES"], params: { tagId: "javascript" } }
+
+// Match tag filtered by category
+{ type: "route", pages: ["TAG_PAGES"], params: { tagId: "javascript", categoryId: 5 } }
+
+// Match specific topic
+{ type: "route", pages: ["TOPIC_PAGES"], params: { id: 123 } }
+
+// Match specific user profile
+{ type: "route", pages: ["USER_PAGES"], params: { username: "admin" } }
+```
+
+**Multiple Page Types (OR logic):**
+
+```javascript
+// Match category OR tag pages
+{ type: "route", pages: ["CATEGORY_PAGES", "TAG_PAGES"] }
+
+// With params: params must be valid for ALL listed page types
+// This works because both CATEGORY_PAGES and TAG_PAGES support 'categoryId'
+{ type: "route", pages: ["CATEGORY_PAGES", "TAG_PAGES"], params: { categoryId: 5 } }
+
+// This works because both DISCOVERY_PAGES and TOP_MENU support 'filter'
+{ type: "route", pages: ["DISCOVERY_PAGES", "TOP_MENU"], params: { filter: "latest" } }
+```
+
+**Params with `any` and `not` Operators:**
+
+The `params` object supports `any` (OR) and `not` (NOT) operators for complex matching:
+
+```javascript
+// Match if category ID is 1, 2, or 3 (OR logic)
+{
+  type: "route",
+  pages: ["CATEGORY_PAGES"],
+  params: { any: [{ categoryId: 1 }, { categoryId: 2 }, { categoryId: 3 }] }
+}
+
+// Match if category ID is NOT 10 (negation)
+{
+  type: "route",
+  pages: ["CATEGORY_PAGES"],
+  params: { not: { categoryId: 10 } }
+}
+
+// Combined: Match if NOT in categories 1, 2, or 3
+{
+  type: "route",
+  pages: ["CATEGORY_PAGES"],
+  params: { not: { any: [{ categoryId: 1 }, { categoryId: 2 }, { categoryId: 3 }] } }
+}
+
+// Nested: Match if category 1 OR NOT category 2
+{
+  type: "route",
+  pages: ["CATEGORY_PAGES"],
+  params: { any: [{ categoryId: 1 }, { not: { categoryId: 2 } }] }
+}
+```
+
+> :bulb: **Tip:** Use `any` in params when you want to match one of several specific values. Use `not` to exclude specific values while matching others.
+
+**Query Parameters (`queryParams` option):**
+
+Works with both `urls` and `pages`. Query params support the same `any` (OR) and `not` (NOT) operators as `params`:
+
+```javascript
+// Simple query param match
+{
+  type: "route",
+  urls: ["/latest"],
+  queryParams: { filter: "solved" }
+}
+
+// Multiple query params (AND - all must match)
+{
+  type: "route",
+  pages: ["DISCOVERY_PAGES"],
+  queryParams: { filter: "solved", order: "activity" }
+}
+
+// OR logic: match if filter is "solved" OR "open"
+{
+  type: "route",
+  pages: ["DISCOVERY_PAGES"],
+  queryParams: {
+    any: [{ filter: "solved" }, { filter: "open" }]
+  }
+}
+
+// NOT logic: match if filter is NOT "closed"
+{
+  type: "route",
+  pages: ["DISCOVERY_PAGES"],
+  queryParams: { not: { filter: "closed" } }
+}
+
+// Combined: match if NOT (filter is "solved" OR "open")
+{
+  type: "route",
+  pages: ["DISCOVERY_PAGES"],
+  queryParams: { not: { any: [{ filter: "solved" }, { filter: "open" }] } }
+}
+```
+
+**Excluding Pages:**
+
+Use the NOT combinator to exclude pages instead of a dedicated exclude option:
+
+```javascript
+// Show on all pages EXCEPT admin pages
+{ not: { type: "route", pages: ["ADMIN_PAGES"] } }
+
+// Show on all pages EXCEPT specific URLs
+{ not: { type: "route", urls: ["/admin/**", "/wizard/**"] } }
+
+// Show on discovery pages EXCEPT the homepage
+[
+  { type: "route", pages: ["DISCOVERY_PAGES"] },
+  { not: { type: "route", pages: ["HOMEPAGE"] } }
+]
+```
+
+The built-in conditions cover most cases. But if you need something specific to your domain, you can create your own.
+
+### Rolling Your Own
+
+Need something the built-ins don't cover? Maybe you have a feature flag service, a custom subscription system, or domain-specific logic that doesn't fit the standard conditions. You can create your own.
+
+Custom conditions have two parts: the `@blockCondition` decorator and a class that extends `BlockCondition`. The decorator defines metadata—the type name (what you'll use in `{ type: "..." }`), the args schema, and optional validation. The class implements the actual logic in an `evaluate()` method that returns true or false.
+
+Here's a feature flag condition:
+
+```javascript
+import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
+import { service } from "@ember/service";
+
+@blockCondition({
+  type: "feature-flag",
+  args: {
+    flag: { type: "string", required: true },
+    enabled: { type: "boolean" },
+  },
+  // Custom validation runs after schema validation (types, required).
+  // Use this for logic that can't be expressed declaratively.
+  // Returns error string or null if valid.
+  validate(args) {
+    if (args.flag && !args.flag.match(/^[a-z][a-z0-9_]*$/)) {
+      return "FeatureFlagCondition: `flag` must be lowercase with underscores.";
+    }
+    return null;
+  },
+})
+export default class FeatureFlagCondition extends BlockCondition {
+  @service featureFlags;
+
+  evaluate(args) {
+    const { flag, enabled = true } = args;
+    const isEnabled = this.featureFlags.isEnabled(flag);
+    return enabled ? isEnabled : !isEnabled;
+  }
+}
+```
+
+**Registering custom conditions:**
+
+Custom conditions must be registered before the registry freezes. Use `api.registerBlockConditionType()` in a pre-initializer:
+
+```javascript
+// plugins/my-plugin/assets/javascripts/discourse/pre-initializers/register-conditions.js
+import { withPluginApi } from "discourse/lib/plugin-api";
+import FeatureFlagCondition from "../blocks/conditions/feature-flag";
+
+export default {
+  before: "freeze-block-registry",
+
+  initialize() {
+    withPluginApi((api) => {
+      api.registerBlockConditionType(FeatureFlagCondition);
+    });
+  },
+};
+```
+
+> :exclamation: **Important:** Registration must happen in a pre-initializer that runs before `"freeze-block-registry"`. If you register too late, you'll get an error: `api.registerBlockConditionType() was called after the condition type registry was frozen.`
+
+**Using the custom condition:**
+
+```javascript
+{
+  block: MyBlock,
+  conditions: [{ type: "feature-flag", flag: "new_feature", enabled: true }]
+}
+```
+
+Now that you understand conditions, let's see how the system actually evaluates them to decide what appears on screen.
+
+---
+
+## 4. When Blocks Appear
+
+With conditions in hand, let's look at how the system decides which blocks to show. This is the heart of the rendering pipeline.
 
 ### How Decisions Are Made
 
@@ -1464,13 +1748,13 @@ Result: Block renders (admin bypass)
 
 In debug mode, you'd see the full evaluation logged even though the `any` short-circuited in production.
 
-> :bulb: This example uses condition combinators (`any`, `not`, nested arrays) to build complex logic. See **Section 6: Conditions & Logic** for the complete syntax reference on combining conditions.
+> :bulb: This example uses condition combinators (`any`, `not`, nested arrays) to build complex logic. See **Section 3: Show This, Hide That** for the complete syntax reference on combining conditions.
 
 That covers how the evaluation engine works. But what happens when you make a mistake configuring blocks?
 
 ---
 
-## 4. When Things Go Wrong
+## 5. When Things Go Wrong
 
 A powerful API is only useful if you can debug it when things go wrong. The Blocks API invests heavily in developer experience—not just catching errors, but explaining them in a way that points you toward the solution.
 
@@ -1631,7 +1915,7 @@ The API balances simplicity for common cases with power for advanced use:
 }
 ```
 
-Start simple, add complexity only when you need it. You don't have to master conditions to render a block, and you don't have to master combinators to use a single condition. For complete condition syntax, see **Section 6: Conditions & Logic**.
+Start simple, add complexity only when you need it. You don't have to master conditions to render a block, and you don't have to master combinators to use a single condition. For complete condition syntax, see **Section 3: Show This, Hide That**.
 
 ### More Error Message Examples
 
@@ -1755,7 +2039,7 @@ So far we've focused on what happens when things go wrong. But what about when t
 
 ---
 
-## 5. Your Debugging Toolkit
+## 6. Your Debugging Toolkit
 
 Error messages help when something is wrong. But sometimes you need to understand what's happening when everything appears to work—just not the way you expected. That's where the debugging tools come in.
 
@@ -2142,500 +2426,147 @@ The Blocks API debug tools complement browser DevTools:
 - Check if factory functions trigger network requests
 - Verify block chunks load correctly
 
-You've got the tools to see what's happening. Now you need to know what all those condition types actually do.
+For most day-to-day work, the tools and techniques above are all you need. But if you're curious about what's happening beneath the surface—or you're working on the Blocks API itself—the next section dives into the internals.
 
 ---
 
-## 6. Show This, Hide That
+## 7. Under the Hood
 
-We've mentioned conditions throughout this document. Now let's cover each one in detail—what it checks, what options it accepts, and when to use it.
+This section is for those working on the Blocks API itself, or anyone curious about how the pieces fit together. You don't need this for everyday block development—but it's here when you want to understand the machinery.
 
-### Available Conditions
+### The Blocks Service
 
-#### Route Condition
-
-Evaluates based on the current URL path, semantic page types, route parameters, and query parameters.
+For runtime introspection, inject the service:
 
 ```javascript
-{ type: "route", urls: [...], pages: [...], params: {...}, queryParams: {...} }
+@service blocks;
+
+// Check if a block is registered
+this.blocks.hasBlock("my-block")
+
+// Get all registered blocks with metadata
+this.blocks.listBlocksWithMetadata()
 ```
 
-> **Why URLs instead of Ember route names?** Using internal route names like `discovery.latest` would make them part of the public API—any rename would break plugins and themes. URLs are already effectively public: changing them breaks bookmarks, external links, and SEO. By matching URLs, we avoid coupling blocks to Discourse's internal routing structure.
+This is primarily useful for debugging, dev tools, and advanced scenarios where you need to query the registry programmatically.
 
-**Two approaches:** The route condition supports two complementary approaches:
-- **`urls`**: Match URL patterns using glob syntax
-- **`pages`**: Match semantic page types with typed parameters
+The service is a thin wrapper around the block registry—let's look at what that registry actually does.
 
-**URL Patterns (`urls` option):**
+### The Block Registry
 
-Uses [picomatch](https://github.com/micromatch/picomatch) glob syntax:
-- `"/latest"` - Exact path match
-- `"/c/*"` - Single segment wildcard (`/c/foo` but not `/c/foo/bar`)
-- `"/c/**"` - Multi-segment wildcard (`/c/foo`, `/c/foo/bar`, `/c/foo/bar/baz`)
-- `"/t/*/**"` - Combined (`/t/123/slug`, `/t/123/slug/4`)
-- `"/{latest,top}"` - Brace expansion (matches either)
+The registry (`registry/block.js`) is a Map storing block name → block class (or factory). Internal tracking includes:
 
-**Semantic Page Types (`pages` option):**
+- **Resolved factory cache** - Stores resolved classes for lazy-loaded blocks
+- **Pending resolutions** - Prevents duplicate concurrent async loads
+- **Failed resolutions** - Prevents infinite retry loops
+- **Source namespace map** - Enforces consistent namespacing per theme/plugin
 
-| Page Type | Description | Parameters |
-|-----------|-------------|------------|
-| `CATEGORY_PAGES` | Category listing pages | `categoryId` (number), `categorySlug` (string), `parentCategoryId` (number) |
-| `TAG_PAGES` | Tag listing pages | `tagId` (string), `categoryId` (number), `categorySlug` (string), `parentCategoryId` (number) |
-| `DISCOVERY_PAGES` | Discovery routes (latest, top, etc.) | `filter` (string) |
-| `HOMEPAGE` | Custom homepage only | (none) |
-| `TOP_MENU` | Top nav discovery routes | `filter` (string) |
-| `TOPIC_PAGES` | Individual topic pages | `id` (number), `slug` (string) |
-| `USER_PAGES` | User profile pages | `username` (string) |
-| `ADMIN_PAGES` | Admin section pages | (none) |
-| `GROUP_PAGES` | Group pages | `name` (string) |
+The registry has two states:
+- **Unfrozen** (during pre-initializers) - Registrations allowed
+- **Frozen** (after `freeze-block-registry` initializer) - No more registrations
 
-**URLs vs Pages:**
+This two-phase design ensures all blocks are registered before any `renderBlocks()` calls.
 
-Pages are preferred when you want to match page types regardless of URL structure. URLs are preferred when you need specific path patterns.
+### The Preprocessing Pipeline
 
+With blocks registered and layouts configured, what happens when `<BlockOutlet>` renders?
+
+1. Retrieves layout from the registry
+2. Resolves block references (string names → classes, factories → resolved classes)
+3. Evaluates conditions bottom-up (children before parents for container visibility)
+4. Creates curried components for visible blocks
+5. Creates ghost placeholders for hidden blocks (in debug mode)
+
+That pipeline assumes everything is configured correctly. But what catches mistakes before they make it that far?
+
+### Keeping Things in Check
+
+The Blocks API provides multiple layers of validation:
+
+**Entry Key Validation:**
 ```javascript
-// Page type: matches category pages regardless of URL structure
-{ type: "route", pages: ["CATEGORY_PAGES"] }
+// If you write:
+{ block: MyBlock, conditon: [...] }  // typo: "conditon"
 
-// URL pattern: matches specific path structure
-{ type: "route", urls: ["/c/**"] }
-
-// The URL pattern might miss category pages with custom routes
-// The page type checks the actual page context
+// You get:
+// Error: Unknown entry key: "conditon" (did you mean "conditions"?)
 ```
 
-**Page Parameters (`params` option):**
-
-The `params` option works only with `pages` (not `urls`) and validates parameters against the page type definitions:
-
+**Args Schema Validation:**
 ```javascript
-// Match specific category by ID
-{ type: "route", pages: ["CATEGORY_PAGES"], params: { categoryId: 5 } }
-
-// Match category by slug
-{ type: "route", pages: ["CATEGORY_PAGES"], params: { categorySlug: "general" } }
-
-// Match subcategory by parent category ID
-{ type: "route", pages: ["CATEGORY_PAGES"], params: { parentCategoryId: 5 } }
-
-// Match discovery pages with specific filter
-{ type: "route", pages: ["DISCOVERY_PAGES"], params: { filter: "latest" } }
-
-// Match specific tag
-{ type: "route", pages: ["TAG_PAGES"], params: { tagId: "javascript" } }
-
-// Match tag filtered by category
-{ type: "route", pages: ["TAG_PAGES"], params: { tagId: "javascript", categoryId: 5 } }
-
-// Match specific topic
-{ type: "route", pages: ["TOPIC_PAGES"], params: { id: 123 } }
-
-// Match specific user profile
-{ type: "route", pages: ["USER_PAGES"], params: { username: "admin" } }
-```
-
-**Multiple Page Types (OR logic):**
-
-```javascript
-// Match category OR tag pages
-{ type: "route", pages: ["CATEGORY_PAGES", "TAG_PAGES"] }
-
-// With params: params must be valid for ALL listed page types
-// This works because both CATEGORY_PAGES and TAG_PAGES support 'categoryId'
-{ type: "route", pages: ["CATEGORY_PAGES", "TAG_PAGES"], params: { categoryId: 5 } }
-
-// This works because both DISCOVERY_PAGES and TOP_MENU support 'filter'
-{ type: "route", pages: ["DISCOVERY_PAGES", "TOP_MENU"], params: { filter: "latest" } }
-```
-
-**Params with `any` and `not` Operators:**
-
-The `params` object supports `any` (OR) and `not` (NOT) operators for complex matching:
-
-```javascript
-// Match if category ID is 1, 2, or 3 (OR logic)
-{
-  type: "route",
-  pages: ["CATEGORY_PAGES"],
-  params: { any: [{ categoryId: 1 }, { categoryId: 2 }, { categoryId: 3 }] }
-}
-
-// Match if category ID is NOT 10 (negation)
-{
-  type: "route",
-  pages: ["CATEGORY_PAGES"],
-  params: { not: { categoryId: 10 } }
-}
-
-// Combined: Match if NOT in categories 1, 2, or 3
-{
-  type: "route",
-  pages: ["CATEGORY_PAGES"],
-  params: { not: { any: [{ categoryId: 1 }, { categoryId: 2 }, { categoryId: 3 }] } }
-}
-
-// Nested: Match if category 1 OR NOT category 2
-{
-  type: "route",
-  pages: ["CATEGORY_PAGES"],
-  params: { any: [{ categoryId: 1 }, { not: { categoryId: 2 } }] }
-}
-```
-
-> :bulb: **Tip:** Use `any` in params when you want to match one of several specific values. Use `not` to exclude specific values while matching others.
-
-**Query Parameters (`queryParams` option):**
-
-Works with both `urls` and `pages`. Query params support the same `any` (OR) and `not` (NOT) operators as `params`:
-
-```javascript
-// Simple query param match
-{
-  type: "route",
-  urls: ["/latest"],
-  queryParams: { filter: "solved" }
-}
-
-// Multiple query params (AND - all must match)
-{
-  type: "route",
-  pages: ["DISCOVERY_PAGES"],
-  queryParams: { filter: "solved", order: "activity" }
-}
-
-// OR logic: match if filter is "solved" OR "open"
-{
-  type: "route",
-  pages: ["DISCOVERY_PAGES"],
-  queryParams: {
-    any: [{ filter: "solved" }, { filter: "open" }]
-  }
-}
-
-// NOT logic: match if filter is NOT "closed"
-{
-  type: "route",
-  pages: ["DISCOVERY_PAGES"],
-  queryParams: { not: { filter: "closed" } }
-}
-
-// Combined: match if NOT (filter is "solved" OR "open")
-{
-  type: "route",
-  pages: ["DISCOVERY_PAGES"],
-  queryParams: { not: { any: [{ filter: "solved" }, { filter: "open" }] } }
-}
-```
-
-**Excluding Pages:**
-
-Use the NOT combinator to exclude pages instead of a dedicated exclude option:
-
-```javascript
-// Show on all pages EXCEPT admin pages
-{ not: { type: "route", pages: ["ADMIN_PAGES"] } }
-
-// Show on all pages EXCEPT specific URLs
-{ not: { type: "route", urls: ["/admin/**", "/wizard/**"] } }
-
-// Show on discovery pages EXCEPT the homepage
-[
-  { type: "route", pages: ["DISCOVERY_PAGES"] },
-  { not: { type: "route", pages: ["HOMEPAGE"] } }
-]
-```
-
-#### User Condition
-
-Evaluates based on user state. By default, checks the **current user** (the person viewing the page). Use `source` to check a different user from outlet args.
-
-```javascript
-{ type: "user", loggedIn: true, admin: true, moderator: true, staff: true,
-  minTrustLevel: 0, maxTrustLevel: 4, groups: ["beta-testers"] }
-```
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `loggedIn` | `boolean` | true = must be logged in, false = must be anonymous |
-| `admin` | `boolean` | true = must be admin |
-| `moderator` | `boolean` | true = must be moderator (admins also pass) |
-| `staff` | `boolean` | true = must be staff member |
-| `minTrustLevel` | `number` (0-4) | Minimum trust level required |
-| `maxTrustLevel` | `number` (0-4) | Maximum trust level allowed |
-| `groups` | `string[]` | Must be in at least one of these groups (OR logic) |
-| `source` | `string` | Check a different user object from outlet args |
-
-**Multiple conditions use AND logic:**
-```javascript
-// User must be logged in AND trust level 2+ AND in beta-testers group
-{ type: "user", loggedIn: true, minTrustLevel: 2, groups: ["beta-testers"] }
-```
-
-**Check outlet arg user:**
-```javascript
-// Check the topic author instead of current user
-{ type: "user", source: "@outletArgs.topicAuthor", admin: true }
-```
-
-#### Setting Condition
-
-Evaluates based on site settings or custom settings objects.
-
-```javascript
-{ type: "setting", name: "setting_name", enabled: true, equals: "value",
-  includes: [...], contains: "value", containsAny: [...], source: {...} }
-```
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `name` | `string` | Setting key (required) |
-| `enabled` | `boolean` | true = setting truthy, false = setting falsy |
-| `equals` | `any` | Exact value match |
-| `includes` | `array` | Setting value is in this array (for enum settings) |
-| `contains` | `string` | List setting contains this value |
-| `containsAny` | `array` | List setting contains any of these values |
-| `source` | `object` | Custom settings object (e.g., theme settings) |
-
-**Only one condition type per setting:**
-```javascript
-// WRONG - multiple condition types
-{ type: "setting", name: "foo", enabled: true, equals: "bar" }
-
-// RIGHT - one condition type
-{ type: "setting", name: "foo", enabled: true }
-// OR
-{ type: "setting", name: "foo", equals: "bar" }
-```
-
-**Theme settings:**
-```javascript
-import { settings } from "virtual:theme";
-
-// Check theme setting instead of site setting
-{ type: "setting", source: settings, name: "show_sidebar", enabled: true }
-```
-
-#### Viewport Condition
-
-Evaluates based on viewport size and device capabilities.
-
-```javascript
-{ type: "viewport", min: "lg", max: "xl", mobile: true, touch: true }
-```
-
-**Breakpoints:**
-- `sm` - ≥640px
-- `md` - ≥768px
-- `lg` - ≥1024px
-- `xl` - ≥1280px
-- `2xl` - ≥1536px
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `min` | `string` | Viewport must be at least this size |
-| `max` | `string` | Viewport must be at most this size |
-| `mobile` | `boolean` | true = mobile device only, false = non-mobile only |
-| `touch` | `boolean` | true = touch device only, false = non-touch only |
-
-```javascript
-// Large screens only
-{ type: "viewport", min: "lg" }
-
-// Small screens only (mobile)
-{ type: "viewport", max: "sm" }
-
-// Medium to large screens
-{ type: "viewport", min: "md", max: "xl" }
-
-// Touch devices only
-{ type: "viewport", touch: true }
-```
-
-> **Note:** For simple show/hide based on viewport, CSS media queries are often more performant. Use this condition when you need to completely remove components from the DOM.
-
-#### OutletArg Condition
-
-Evaluates based on outlet arg values.
-
-```javascript
-{ type: "outletArg", path: "topic.closed", value: true }
-```
-
-| Property | Type | Description |
-|----------|------|-------------|
-| `path` | `string` | Dot-notation path to property (required) |
-| `value` | `any` | Value to match (see matching rules) |
-| `exists` | `boolean` | true = property exists, false = property undefined |
-
-> :warning: You cannot use both `value` and `exists` together—they are mutually exclusive. Use `value` to check what something equals, use `exists` to check whether it's defined at all.
-
-**Value matching rules:**
-- `undefined` → passes if target is truthy
-- `[a, b, c]` → passes if target matches ANY element (OR logic)
-- `{ not: x }` → passes if target does NOT match x
-- Other → passes if target === value
-
-```javascript
-// Check if topic is closed
-{ type: "outletArg", path: "topic.closed", value: true }
-
-// Check trust level is 2, 3, or 4
-{ type: "outletArg", path: "user.trust_level", value: [2, 3, 4] }
-
-// Check topic is NOT closed
-{ type: "outletArg", path: "topic.closed", value: { not: true } }
-
-// Check if topic property exists
-{ type: "outletArg", path: "topic", exists: true }
-```
-
-### What Conditions Can See
-
-Conditions receive a context object with access to several data sources:
-
-**Outlet Args:**
-```javascript
-// Passed from BlockOutlet
-<BlockOutlet @name="topic-blocks" @outletArgs={{hash topic=this.topic}} />
-
-// Accessible in conditions via source or outletArg condition
-{ type: "outletArg", path: "topic.closed", value: true }
-{ type: "user", source: "@outletArgs.topicAuthor", admin: true }
-```
-
-**Services (via injection in custom conditions):**
-```javascript
-// Inside a custom condition class
-@service router;
-@service currentUser;
-@service siteSettings;
-@service capabilities;
-```
-
-**Debug context (when logging is enabled):**
-```javascript
-context.debug = true;
-context._depth = 2;  // Nesting level for log indentation
-context.logger = { ... }; // Interface for structured logging
-```
-
-### Combining Conditions
-
-**AND logic (array):**
-```javascript
-conditions: [
-  { type: "user", loggedIn: true },
-  { type: "route", pages: ["DISCOVERY_PAGES"] }
-]
-```
-
-**OR logic (any wrapper):**
-```javascript
-conditions: [
-  {
-    any: [
-      { type: "user", admin: true },
-      { type: "user", moderator: true }
-    ]
-  }
-]
-```
-
-**NOT logic (not wrapper):**
-```javascript
-conditions: [
-  { not: { type: "route", urls: ["/admin/**"] } }
-]
-```
-
-**Complex combinations:**
-```javascript
-// Show for: logged in users who are either admins OR (TL2+ and not on admin pages)
-conditions: [
-  { type: "user", loggedIn: true },
-  {
-    any: [
-      { type: "user", admin: true },
-      [
-        { type: "user", minTrustLevel: 2 },
-        { not: { type: "route", urls: ["/admin/**"] } }
-      ]
-    ]
-  }
-]
-```
-
-The built-in conditions cover most cases. But if you need something specific to your domain, you can create your own.
-
-### Rolling Your Own
-
-You can create custom condition types:
-
-```javascript
-import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
-import { service } from "@ember/service";
-
-@blockCondition({
-  type: "feature-flag",
+@block("my-block", {
   args: {
-    flag: { type: "string", required: true },
-    enabled: { type: "boolean" },
-  },
-  // Custom validation runs after schema validation (types, required).
-  // Use this for logic that can't be expressed declaratively.
-  // Returns error string or null if valid.
-  validate(args) {
-    if (args.flag && !args.flag.match(/^[a-z][a-z0-9_]*$/)) {
-      return "FeatureFlagCondition: `flag` must be lowercase with underscores.";
-    }
-    return null;
-  },
-})
-export default class FeatureFlagCondition extends BlockCondition {
-  @service featureFlags;
-
-  evaluate(args) {
-    const { flag, enabled = true } = args;
-    const isEnabled = this.featureFlags.isEnabled(flag);
-    return enabled ? isEnabled : !isEnabled;
+    count: { type: "number", required: true },
   }
-}
+})
+
+// If you write:
+{ block: MyBlock, args: { count: "42" } }  // string, not number
+
+// You get:
+// Error: Arg "count" expects type "number", got "string"
 ```
 
-**Registering custom conditions:**
+**Condition Type Validation:**
+```javascript
+// If you write:
+conditions: [{ type: "usr", admin: true }]  // typo: "usr"
 
-Custom conditions must be registered before the registry freezes. Use `api.registerBlockConditionType()` in a pre-initializer:
+// You get:
+// Error: Unknown condition type: "usr" (did you mean "user"?)
+```
+
+**Reserved Args Protection:**
+```javascript
+// If you write:
+{ block: MyBlock, args: { children: [...], args: {...}, block: "name", containerArgs: {...} } }
+
+// You get:
+// Error: Reserved arg names: args, block, children, containerArgs. Names starting with
+// underscore are reserved for internal use.
+```
+
+Validation catches configuration mistakes. But what about intentional misuse—someone trying to render blocks outside the system?
+
+### The Authorization Symbol System
+
+Blocks use a secret symbol system to prevent unauthorized rendering:
 
 ```javascript
-// plugins/my-plugin/assets/javascripts/discourse/pre-initializers/register-conditions.js
-import { withPluginApi } from "discourse/lib/plugin-api";
-import FeatureFlagCondition from "../blocks/conditions/feature-flag";
-
-export default {
-  initialize() {
-    withPluginApi((api) => {
-      api.registerBlockConditionType(FeatureFlagCondition);
-    });
-  },
-};
+// Private symbols (not exported)
+const __BLOCK_FLAG = Symbol("block");
+const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
 ```
 
-> :exclamation: **Important:** Registration must happen in a pre-initializer that runs before `"freeze-block-registry"`. If you register too late, you'll get an error: `api.registerBlockConditionType() was called after the condition type registry was frozen.`
+These symbols are:
+1. **Not exported** - External code can't access them
+2. **Used for authorization** - Child blocks receive `$block$` arg with the container symbol
+3. **Verified in constructor** - If the symbol doesn't match, throws an error
 
-**Using the custom condition:**
+**Why this matters:**
 
-```javascript
-{
-  block: MyBlock,
-  conditions: [{ type: "feature-flag", flag: "new_feature", enabled: true }]
-}
+```handlebars
+{{! This will throw an error: }}
+<MyBlock @title="Direct usage" />
+
+{{! Blocks can ONLY be rendered through BlockOutlet: }}
+<BlockOutlet @name="homepage-blocks" />
 ```
 
-You've seen the individual pieces. Time to watch them work together.
+This prevents:
+- Plugins bypassing condition evaluation
+- Themes rendering blocks outside designated areas
+- Unauthorized block placement
+
+The only way a block can render is as a child of a container block that passes the `$block$` symbol in args. But wait—what authorizes the first block in the chain?
+
+> **Trivia:** `<BlockOutlet>` is itself a block. Look at its definition and you'll see `@block("block-outlet", { container: true })`. It's a special container block that serves as the root of the block tree. It has a `__ROOT_BLOCK` static property set to the container symbol, which allows it to bypass the normal authorization check and start the chain of trust.
+
+With the foundations covered, let's put everything together with some practical examples.
 
 ---
 
-## 7. Putting It Together
+## 8. Putting It Together
 
 Enough theory—let's build some blocks. This section covers common architectural patterns and tutorials that progress from simple to complex.
 
@@ -2721,6 +2652,8 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import PromoBanner from "../blocks/promo-banner";
 
 export default {
+  before: "freeze-block-registry",
+
   initialize() {
     withPluginApi((api) => {
       api.registerBlock(PromoBanner);
@@ -2947,6 +2880,8 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import StatsPanel from "../blocks/stats-panel";
 
 export default {
+  before: "freeze-block-registry",
+
   initialize() {
     withPluginApi((api) => {
       api.registerBlock(StatsPanel);
@@ -2991,6 +2926,8 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import TaskList from "../blocks/task-list";
 
 export default {
+  before: "freeze-block-registry",
+
   initialize() {
     withPluginApi((api) => {
       api.registerBlock(TaskList);
@@ -3037,6 +2974,8 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import Leaderboard from "../blocks/leaderboard";
 
 export default {
+  before: "freeze-block-registry",
+
   initialize() {
     withPluginApi((api) => {
       api.registerBlock(Leaderboard);
@@ -3092,7 +3031,7 @@ That's the Blocks API in practice. What follows is the complete reference for wh
 
 ---
 
-## 8. Quick Reference
+## 9. Quick Reference
 
 When you know what you're looking for, start here.
 
@@ -3346,6 +3285,75 @@ A: No. Block layouts are configured at boot time and frozen. For dynamic visibil
 3. **Use multiple outlets** - Different outlets for different contexts
 
 If you need truly dynamic layout changes, plugin outlets may be more appropriate.
+
+### Testing API
+
+The `block-testing` module provides utilities for test infrastructure:
+
+```javascript
+import { ... } from "discourse/tests/helpers/block-testing";
+```
+
+**Block Registration:**
+- `withTestBlockRegistration(callback)` - Temporarily unfreeze registry for registration
+- `registerBlock(BlockClass)` - Register a block class
+- `registerBlockFactory(name, asyncFn)` - Register a lazy-loading factory
+- `freezeBlockRegistry()` - Manually freeze the registry
+
+**Block Queries:**
+- `hasBlock(name)` - Check if block is registered
+- `getBlockEntry(name)` - Get registry entry
+- `isBlockFactory(name)` - Check if entry is a factory
+- `isBlockResolved(name)` - Check if block is resolved
+- `isBlockRegistryFrozen()` - Check frozen state
+- `resolveBlock(ref)` - Async resolve block reference
+- `tryResolveBlock(ref)` - Sync resolve attempt
+
+**Outlet Registration:**
+- `registerOutlet(name, options)` - Register custom outlet
+- `freezeOutletRegistry()` - Freeze outlet registry
+
+**Outlet Queries:**
+- `isValidOutlet(name)` - Check if outlet is valid
+- `getAllOutlets()` - Get all registered outlets
+- `getCustomOutlet(name)` - Get custom outlet data
+- `isOutletRegistryFrozen()` - Check frozen state
+
+**Condition Registration:**
+- `withTestConditionRegistration(callback)` - Temporarily unfreeze for registration
+- `registerConditionType(ConditionClass)` - Register a condition type
+- `freezeConditionTypeRegistry()` - Freeze condition registry
+
+**Condition Queries:**
+- `hasConditionType(type)` - Check if condition type is registered
+- `isConditionTypeRegistryFrozen()` - Check frozen state
+- `validateConditions(spec, types)` - Validate condition specification
+
+**Debug Utilities:**
+- `debugHooks` - Reactive debug interface for testing debug mode behavior
+- `DEBUG_CALLBACK` - Debug callback type constants
+
+**Reset Utilities:**
+- `resetBlockRegistryForTesting()` - Reset all registries to initial state
+- `setTestSourceIdentifier(id)` - Override source identifier for testing
+
+**Debug Hooks Example:**
+
+```javascript
+import { debugHooks, DEBUG_CALLBACK } from "discourse/tests/helpers/block-testing";
+
+// Reactive getters for checking debug state
+debugHooks.isBlockLoggingEnabled   // boolean
+debugHooks.isOutletBoundaryEnabled // boolean
+debugHooks.isVisualOverlayEnabled  // boolean
+debugHooks.loggerInterface         // logger object or null
+
+// Set/get callbacks by key
+debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)
+debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, () => true)
+```
+
+The `debugHooks` singleton provides reactive getters that automatically track dependencies. This means UI components using these values will re-render when debug settings change.
 
 ### Testing Strategies
 
@@ -3700,6 +3708,8 @@ If you're adding a `<BlockOutlet>` to replace or complement a plugin outlet, her
    ```javascript
    // pre-initializers/register-blocks.js
    export default {
+     before: "freeze-block-registry",
+
      initialize() {
        withPluginApi((api) => {
          api.registerBlock(MyBlock);
@@ -3725,7 +3735,7 @@ If you're adding a `<BlockOutlet>` to replace or complement a plugin outlet, her
 
 ---
 
-## 9. Terms to Know
+## 10. Terms to Know
 
 Key terminology used throughout this documentation:
 

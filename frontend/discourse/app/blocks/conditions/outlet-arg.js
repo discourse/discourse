@@ -26,9 +26,7 @@ const MAX_PATH_LENGTH = 255;
  *
  * ## Value Matching Rules
  *
- * When `value` is omitted, passes if the property is truthy.
- *
- * When `value` is provided, uses the shared `matchValue` utility:
+ * Uses the shared `matchValue` utility:
  *
  * - **Primitive**: Passes if `actual === value` (strict equality)
  * - **RegExp**: Passes if `actual` (coerced to string) matches the pattern
