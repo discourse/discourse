@@ -120,6 +120,10 @@ div.edit-category {
     .form-kit__container-content {
       flex-wrap: wrap;
     }
+
+    .category-permission-hint {
+      font-size: var(--font-down-1);
+    }
   }
 
   #list-area & h2 {

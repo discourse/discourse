@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
+import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -106,22 +107,22 @@ export default class EditCategoryGeneralV2 extends Component {
     const site = this.args.category.site;
     const currentPermissions = this.args.category.permissions || [];
 
-    const postingGroupIds = currentPermissions
-      .filter((p) => p.permission_type <= PermissionType.CREATE_POST)
-      .map((p) => p.group_id);
+    const postingGroupPermissions = new Map(
+      currentPermissions
+        .filter((p) => p.permission_type <= PermissionType.CREATE_POST)
+        .map((p) => [p.group_id, p.permission_type])
+    );
 
     const newPermissions = [];
 
     groupIds.forEach((groupId) => {
       const group = site.groups.find((g) => g.id === groupId);
-      const isPostingGroup = postingGroupIds.includes(groupId);
+      const existingPermission = postingGroupPermissions.get(groupId);
 
       newPermissions.push({
         group_name: group?.name,
         group_id: groupId,
-        permission_type: isPostingGroup
-          ? PermissionType.CREATE_POST
-          : PermissionType.READONLY,
+        permission_type: existingPermission ?? PermissionType.READONLY,
       });
     });
 
@@ -143,7 +144,7 @@ export default class EditCategoryGeneralV2 extends Component {
       newPermissions.push({
         group_name: group?.name,
         group_id: groupId,
-        permission_type: PermissionType.CREATE_POST,
+        permission_type: PermissionType.FULL,
       });
     });
 
@@ -443,6 +444,12 @@ export default class EditCategoryGeneralV2 extends Component {
     return htmlSafe(i18n("category.no_description"));
   }
 
+  @action
+  goToSecurityTab(event) {
+    event.preventDefault();
+    this.args.setSelectedTab?.("security");
+  }
+
   get canSelectParentCategory() {
     return !this.args.category.isUncategorizedCategory;
   }
@@ -652,6 +659,13 @@ export default class EditCategoryGeneralV2 extends Component {
                   @onChange={{this.onChangePostingGroups}}
                 />
               </@form.Container>
+
+              <span class="category-permission-hint">
+                {{i18n "category.visibility.more_options_hint"}}
+                <a href {{on "click" this.goToSecurityTab}}>
+                  {{i18n "category.visibility.more_options_hint_link"}}
+                </a>
+              </span>
             </Content>
           </cc.Contents>
         </@form.ConditionalContent>

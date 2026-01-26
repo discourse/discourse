@@ -80,6 +80,7 @@ export default <template>
               @transientData={{transientData}}
               @form={{form}}
               @updatePreview={{@controller.updatePreview}}
+              @setSelectedTab={{@controller.setSelectedTab}}
             />
           {{/let}}
         {{else}}
