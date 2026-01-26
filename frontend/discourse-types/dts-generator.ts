@@ -1,5 +1,4 @@
 import { createWriteStream } from "node:fs";
-import * as mkdirp from "mkdirp";
 import { EOL } from "node:os";
 import * as path from "node:path";
 import * as ts from "typescript";
@@ -156,7 +155,6 @@ export default function generate(options: Options): Promise<void> {
 
   const baseDir = path.resolve(options.project);
   const filenames = getFilenames(baseDir, files);
-  mkdirp.sync(path.dirname(options.out));
 
   const output = createWriteStream(options.out, {
     mode: parseInt("644", 8),

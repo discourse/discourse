@@ -202,7 +202,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^4.0.16
-        version: 4.0.16(@types/node@25.0.3)(jiti@2.4.2)(jsdom@25.0.1)(terser@5.44.1)
+        version: 4.0.16(@types/node@25.0.10)(jiti@2.4.2)(jsdom@25.0.1)(terser@5.44.1)
 
   frontend/custom-proxy:
     devDependencies:
@@ -508,7 +508,7 @@ importers:
         version: 2.1.1(@babel/core@7.28.6)
       ember-cli:
         specifier: ~6.9.1
-        version: 6.9.1(@types/node@25.0.3)(handlebars@4.7.8)(underscore@1.13.7)
+        version: 6.9.1(@types/node@25.0.10)(handlebars@4.7.8)(underscore@1.13.7)
       ember-cli-app-version:
         specifier: ^7.0.0
         version: 7.0.0(ember-source@6.6.0(patch_hash=fce06f88d4efb23d95b8bcd197505f279346ed295e4daea129961c9f263cdeed)(@glimmer/component@2.0.0)(rsvp@4.8.5))
@@ -674,7 +674,7 @@ importers:
     devDependencies:
       ember-cli:
         specifier: ~6.9.1
-        version: 6.9.1(@types/node@25.0.3)(handlebars@4.7.8)(underscore@1.13.7)
+        version: 6.9.1(@types/node@25.0.10)(handlebars@4.7.8)(underscore@1.13.7)
       webpack:
         specifier: 5.99.9
         version: 5.99.9(@swc/core@1.15.7)(esbuild@0.25.12)
@@ -687,12 +687,12 @@ importers:
       '@babel/traverse':
         specifier: ^7.28.6
         version: 7.28.6(supports-color@8.1.1)
+      '@types/node':
+        specifier: ^25.0.10
+        version: 25.0.10
       compare-versions:
         specifier: ^6.1.1
         version: 6.1.1
-      mkdirp:
-        specifier: ^3.0.1
-        version: 3.0.1
 
   frontend/ember-cli-progress-ci: {}
 
@@ -740,7 +740,7 @@ importers:
         version: 3.0.0
       ember-cli:
         specifier: ~6.9.1
-        version: 6.9.1(@types/node@25.0.3)(handlebars@4.7.8)(underscore@1.13.7)
+        version: 6.9.1(@types/node@25.0.10)(handlebars@4.7.8)(underscore@1.13.7)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -3003,6 +3003,9 @@ packages:
 
   '@types/minimatch@5.1.2':
     resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
+
+  '@types/node@25.0.10':
+    resolution: {integrity: sha512-zWW5KPngR/yvakJgGOmZ5vTBemDoSqF3AcV/LrO5u5wTWyEAVVh+IT39G4gtyAkh3CtTZs8aX/yRM82OfzHJRg==}
 
   '@types/node@25.0.3':
     resolution: {integrity: sha512-W609buLVRVmeW693xKfzHeIV6nJGGz98uCPfeXI1ELMLXVeKYZ9m15fAMSaUPBHYLGFsVRcMmSCksQOrZV9BYA==}
@@ -11162,12 +11165,12 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@inquirer/external-editor@1.0.3(@types/node@25.0.3)':
+  '@inquirer/external-editor@1.0.3(@types/node@25.0.10)':
     dependencies:
       chardet: 2.1.1
       iconv-lite: 0.7.1
     optionalDependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
 
   '@inquirer/figures@1.0.15': {}
 
@@ -11785,6 +11788,10 @@ snapshots:
 
   '@types/minimatch@5.1.2': {}
 
+  '@types/node@25.0.10':
+    dependencies:
+      undici-types: 7.16.0
+
   '@types/node@25.0.3':
     dependencies:
       undici-types: 7.16.0
@@ -11899,13 +11906,13 @@ snapshots:
       chai: 6.2.1
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.16(vite@7.3.0(@types/node@25.0.3)(jiti@2.4.2)(terser@5.44.1))':
+  '@vitest/mocker@4.0.16(vite@7.3.0(@types/node@25.0.10)(jiti@2.4.2)(terser@5.44.1))':
     dependencies:
       '@vitest/spy': 4.0.16
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.3.0(@types/node@25.0.3)(jiti@2.4.2)(terser@5.44.1)
+      vite: 7.3.0(@types/node@25.0.10)(jiti@2.4.2)(terser@5.44.1)
 
   '@vitest/pretty-format@4.0.16':
     dependencies:
@@ -13927,7 +13934,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-cli@6.9.1(@types/node@25.0.3)(handlebars@4.7.8)(underscore@1.13.7):
+  ember-cli@6.9.1(@types/node@25.0.10)(handlebars@4.7.8)(underscore@1.13.7):
     dependencies:
       '@ember-tooling/blueprint-blueprint': 0.2.1
       '@ember-tooling/blueprint-model': 0.4.1
@@ -13983,7 +13990,7 @@ snapshots:
       heimdalljs-logger: 0.1.10
       http-proxy: 1.18.1(patch_hash=3032f3a47f33911d5c278ec6f2d4e0e4afc8f977baea1012613b13de23831c73)
       inflection: 2.0.1
-      inquirer: 9.3.8(@types/node@25.0.3)
+      inquirer: 9.3.8(@types/node@25.0.10)
       is-git-url: 1.0.0
       is-language-code: 3.1.0
       isbinaryfile: 5.0.7
@@ -15830,9 +15837,9 @@ snapshots:
       strip-ansi: 6.0.1
       through: 2.3.8
 
-  inquirer@9.3.8(@types/node@25.0.3):
+  inquirer@9.3.8(@types/node@25.0.10):
     dependencies:
-      '@inquirer/external-editor': 1.0.3(@types/node@25.0.3)
+      '@inquirer/external-editor': 1.0.3(@types/node@25.0.10)
       '@inquirer/figures': 1.0.15
       ansi-escapes: 4.3.2
       cli-width: 4.1.0
@@ -19254,7 +19261,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@7.3.0(@types/node@25.0.3)(jiti@2.4.2)(terser@5.44.1):
+  vite@7.3.0(@types/node@25.0.10)(jiti@2.4.2)(terser@5.44.1):
     dependencies:
       esbuild: 0.27.1
       fdir: 6.5.0(picomatch@4.0.3)
@@ -19263,15 +19270,15 @@ snapshots:
       rollup: 4.53.5
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
       fsevents: 2.3.3
       jiti: 2.4.2
       terser: 5.44.1
 
-  vitest@4.0.16(@types/node@25.0.3)(jiti@2.4.2)(jsdom@25.0.1)(terser@5.44.1):
+  vitest@4.0.16(@types/node@25.0.10)(jiti@2.4.2)(jsdom@25.0.1)(terser@5.44.1):
     dependencies:
       '@vitest/expect': 4.0.16
-      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@25.0.3)(jiti@2.4.2)(terser@5.44.1))
+      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@25.0.10)(jiti@2.4.2)(terser@5.44.1))
       '@vitest/pretty-format': 4.0.16
       '@vitest/runner': 4.0.16
       '@vitest/snapshot': 4.0.16
@@ -19288,10 +19295,10 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 7.3.0(@types/node@25.0.3)(jiti@2.4.2)(terser@5.44.1)
+      vite: 7.3.0(@types/node@25.0.10)(jiti@2.4.2)(terser@5.44.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
       jsdom: 25.0.1(supports-color@8.1.1)
     transitivePeerDependencies:
       - jiti

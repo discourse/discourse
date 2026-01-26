@@ -46,8 +46,8 @@
   "devDependencies": {
     "@babel/parser": "^7.28.6",
     "@babel/traverse": "^7.28.6",
-    "compare-versions": "^6.1.1",
-    "mkdirp": "^3.0.1"
+    "@types/node": "^25.0.10",
+    "compare-versions": "^6.1.1"
   },
   "engines": {
     "node": ">= 18",
