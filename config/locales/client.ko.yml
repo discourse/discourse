@@ -164,7 +164,7 @@ ko:
     emails_are_disabled_non_staff: "운영진이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
       message: "사이트가 업데이트되었습니다. 원활한 작동을 위해 <span>새로고침해 주세요</span>."
-      dismiss: "읽음 처리..."
+      dismiss: "읽음으로 표시..."
     back_button: "뒤로"
     welcome_banner:
       header:
@@ -2201,7 +2201,7 @@ ko:
             other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
           messages:
             other: "확실한가요? 읽지 않은 개인 메시지가 %{count}개 있습니다."
-        dismiss: "읽음 처리..."
+        dismiss: "읽음으로 표시..."
         cancel: "취소"
       group_message_summary:
         other: " %{group_name} 받은 편지함에 %{count}개의 메시지가 있습니다"
@@ -2411,15 +2411,15 @@ ko:
         dismiss: "무시"
         dismiss_read: "읽지 않은 항목 모두 읽음으로 표시"
         dismiss_read_with_selected:
-          other: "읽지 않은 %{count}개 읽음 처리"
-        dismiss_button: "읽음 처리..."
+          other: "읽지 않은 %{count}개 읽음으로 표시"
+        dismiss_button: "읽음으로 표시..."
         dismiss_button_with_selected:
-          other: "무시(%{count})..."
+          other: "읽음으로 표시 (%{count})..."
         dismiss_tooltip: "새 글만 무시하거나 글 팔로우 중지"
         also_dismiss_topics: "이 글을 더 이상 추적하지 않고 읽지 않은 글에서 표시하지 않음"
         dismiss_new: "새 글 읽음으로 표시"
         dismiss_new_with_selected:
-          other: "읽음 처리 (%{count}개)"
+          other: "새글 읽음으로 표시 (%{count})"
         toggle: "글 일괄 선택 전환"
         actions: "일괄 작업"
         close_topics: "글 닫기"
@@ -2465,7 +2465,7 @@ ko:
         bookmarks: "더이상 북마크한 글이 없습니다."
     topic_bulk_actions:
       dismiss:
-        name: "읽음 처리..."
+        name: "읽음으로 표시"
       close_topics:
         name: "닫기"
         optional: (선택 사항)
@@ -3613,7 +3613,7 @@ ko:
       back: "뒤로 가기"
       forward: "앞으로 가기"
       share: "공유"
-      dismiss: "읽음 처리"
+      dismiss: "읽음으로 표시"
     safe_mode:
       enabled: "안전 모드가 활성화되었습니다. 안전 모드를 종료하려면 이 브라우저 창을 닫으세요."
     image_removed: "(이미지 제거됨)"
@@ -3963,7 +3963,7 @@ ko:
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
-        dismiss_notice: "읽음 처리"
+        dismiss_notice: "읽음으로 표시"
         new_features:
           learn_more: "더 보기..."
         last_checked: "마지막으로 확인함"
@@ -5257,7 +5257,7 @@ ko:
         locale: "언어:"
         more_than_50_results: "50개 이상의 결과가 있습니다. 검색 범위를 좁혀보세요."
         outdated:
-          dismiss: "무시"
+          dismiss: "읽음으로 표시"
       settings:
         show_overriden: "오버라이드된 항목만 표시"
         history: "변경 히스토리 보기"
