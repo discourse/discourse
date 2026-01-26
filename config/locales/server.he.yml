@@ -2602,7 +2602,6 @@ he:
     rich_editor: "הפעלת עורך הטקסט העשיר לחלונית כתיבת ההודעות כדי שכל המשתמשים יוכלו לעבור בין מצב ה־Markdown הנוכחי ועורך הטקסט העשיר החדש לכתיבת הודעות מותאמת וידידותית יותר."
     reviewable_ui_refresh: "קבוצות שיכולות להשתמש בממשק המשתמש הניסיוני החדש בתור הסקירה."
     content_localization_enabled: "הצגת תוכן מתורגם/מקומי למשתמשים לפי הדפדפן או העדפות שפת המשתמש. תוכן שכזה יכול לכלול קטגוריות, תגיות, פוסטים ונושאים. השפות הנתמכות מוגדרות תחת ‚content localization supported locales’ (שפות נתמכות לתרגום תוכן)."
-    content_localization_supported_locales: "רשימת שפות שאפשר לתרגם אליהן את תוכן המשתמשים. דורש את הפעלת ‚content localization enabled’ (תרגום תוכן פעיל)."
     content_localization_allowed_groups: "קבוצות שמורשות לעדכן תוכן שתורגם לשפה המקומית. נדרשת הפעלת ‚content localization enabled’ (תרגום תוכן פעיל)."
     content_localization_language_switcher: "הצגת בורר שפות בכותרת, הוא יאפשר למבקרים להחליף בין הגרסאות המתורגמות של Discourse ותוכן שנתרם על ידי המשתמשים. משתמש בשפה שהוגדרה ב‚שפות שנתמכות לתרגום תוכן’ (content localization supported locales)."
     enable_upcoming_changes: "הפעלת שינויים עתידיים"
@@ -5127,8 +5126,6 @@ he:
     upload_row_too_long: "בקובץ ה־CSV אמורה להופיע תגית אחת בכל שורה. מותר להוסיף פסיק לאחר תגית ואז את שם קבוצת התגיות."
     bulk_create:
       invalid_name: "שם התגית שגוי."
-      tag_too_long: "התגית ארוכה מדי (%{max} תווים לכל היותר)."
-      too_many_tags: "יותר מדי תגיות. אפשר ליצור עד %{max} תגיות בבת־אחת. לייבוא של כמות גדולה יותר, יש להשתמש ביכולת העלאת ה־CSV."
     forbidden:
       invalid:
         one: "לא ניתן להשתמש בתגית שבחרת"

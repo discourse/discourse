@@ -116,11 +116,12 @@ zh_CN:
           author_others: "%{username}"
           channel_title: "#聊天活动"
           status_online: "● 在线"
-          message_1: "今年你发送了 <strong>%{count}</strong> 条消息！"
+          message_1:
+            other: "今年你发送了 <strong>%{count}</strong> 条消息！"
           reply_1: "lol 超棒的 B-)"
-          message_2: "你与 <strong>%{channel_count}</strong> 位不同的人进行过 <strong>%{dm_count}</strong> 次 DM 对话"
           reply_2: "酷毙了 :D"
-          message_3: "大家都很喜欢你的留言！你收到了 <strong>%{count}</strong> 个回应 ❤️"
+          message_3:
+            other: "大家都很喜欢你的留言！你收到了 <strong>%{count}</strong> 个回应 ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "你的平均消息长度为 <strong>%{length}</strong> 个字符"
           message_5: "你最喜欢的频道："
