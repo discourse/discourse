@@ -73,7 +73,7 @@
     "prosemirror-schema-list": "^1.5.1",
     "prosemirror-state": "^1.4.4",
     "prosemirror-transform": "^1.10.5",
-    "prosemirror-view": "^1.41.4",
+    "prosemirror-view": "^1.41.5",
     "rrule": "^2.8.1"
   },
   "devDependencies": {
