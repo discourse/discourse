@@ -2,7 +2,7 @@
 /**
  * BlockOutlet System
  *
- * This module provides a secure block rendering system for Discourse. Blocks are
+ * This module provides a robust block rendering system for Discourse. Blocks are
  * special components that can only be rendered within designated BlockOutlet areas,
  * preventing misuse and ensuring consistent rendering behavior.
  *
@@ -727,7 +727,8 @@ export function _isBlock(component) {
 /**
  * Checks if a component is registered as a container block.
  * Note: This function is exported for validation but should not be used
- * to bypass block security. It only returns a boolean, not the symbol itself.
+ * to bypass block rendering authorization.
+ * It only returns a boolean, not the symbol itself.
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
