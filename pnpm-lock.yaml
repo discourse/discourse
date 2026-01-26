@@ -690,9 +690,9 @@ importers:
       compare-versions:
         specifier: ^6.1.1
         version: 6.1.1
-      dts-generator:
-        specifier: ^3.0.0
-        version: 3.0.0
+      mkdirp:
+        specifier: ^3.0.1
+        version: 3.0.1
 
   frontend/ember-cli-progress-ci: {}
 
@@ -4621,10 +4621,6 @@ packages:
   dot-prop@5.3.0:
     resolution: {integrity: sha512-QM8q3zDe58hqUqjraQOmzZ1LIH9SWQJTlEKCH4kJ2oQvLZk7RbQXvtDM2XEq3fwkV9CCvvH4LA0AV+ogFsBM2Q==}
     engines: {node: '>=8'}
-
-  dts-generator@3.0.0:
-    resolution: {integrity: sha512-IrFP0TUGnBOxr8Lth0hLh/iM9odZTRGYyr4Y46IRxyw1SGO1Vvf30+x4npck9yP4FbaRXbB0Zh7gvmiqUta7mg==}
-    hasBin: true
 
   dunder-proto@1.0.1:
     resolution: {integrity: sha512-KIN/nDJBQRcXw0MLVhZE9iQHmG68qAVIBg9CqmUYjmQIhgij9U5MFvrqkUL5FbtyyzZuOeOt0zdeRe4UY7ct+A==}
@@ -13632,11 +13628,6 @@ snapshots:
   dot-prop@5.3.0:
     dependencies:
       is-obj: 2.0.0
-
-  dts-generator@3.0.0:
-    dependencies:
-      glob: 7.2.3
-      mkdirp: 0.5.6
 
   dunder-proto@1.0.1:
     dependencies:

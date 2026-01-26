@@ -1,15 +1,14 @@
 // TODO: rename to generate-external-types or similar
-import generateDtsBundle from "dts-generator";
 import {
   cpSync,
   globSync,
   mkdirSync,
   readFileSync,
-  renameSync,
   rmSync,
   writeFileSync,
 } from "node:fs";
 import { basename, dirname, normalize, relative, resolve } from "node:path";
+import generateDtsBundle from "./dts-generator.js";
 import processPackageJson from "./process-package-json.js";
 
 const packageNames = [
@@ -128,50 +127,28 @@ const packageNames = [
         }
       }
 
-      const hasTsconfig = globSync(`${packagePath}/tsconfig.json`).length > 0;
+      await generateDtsBundle({
+        project: resolve(packagePath) + "/",
+        out: `${targetPackagePath}/index.d.ts`,
+        resolveModuleId({ currentModuleId }) {
+          const path = transformPath(currentModuleId);
 
-      // dts-generator needs a tsconfig file
-      if (hasTsconfig) {
-        renameSync(
-          `${packagePath}/tsconfig.json`,
-          `${packagePath}/__tsconfig.json`
-        );
-      }
-      writeFileSync(`${packagePath}/tsconfig.json`, "");
-
-      try {
-        await generateDtsBundle.default({
-          project: resolve(packagePath) + "/",
-          out: `${targetPackagePath}/index.d.ts`,
-          resolveModuleId({ currentModuleId }) {
-            const path = transformPath(currentModuleId);
-
-            if (path) {
-              return path;
-            } else {
-              // TODO: Somehow remove the whole module declaration
-            }
-          },
-          resolveModuleImport({ importedModuleId, currentModuleId }) {
-            if (importedModuleId.startsWith(".")) {
-              return transformPath(
-                normalize(`${dirname(currentModuleId)}/${importedModuleId}`)
-              );
-            } else {
-              return importedModuleId;
-            }
-          },
-        });
-      } finally {
-        rmSync(`${packagePath}/tsconfig.json`);
-
-        if (hasTsconfig) {
-          renameSync(
-            `${packagePath}/__tsconfig.json`,
-            `${packagePath}/tsconfig.json`
-          );
-        }
-      }
+          if (path) {
+            return path;
+          } else {
+            // TODO: Somehow remove the whole module declaration
+          }
+        },
+        resolveModuleImport({ importedModuleId, currentModuleId }) {
+          if (importedModuleId.startsWith(".")) {
+            return transformPath(
+              normalize(`${dirname(currentModuleId)}/${importedModuleId}`)
+            );
+          } else {
+            return importedModuleId;
+          }
+        },
+      });
     }
   }
 })().then(() => {

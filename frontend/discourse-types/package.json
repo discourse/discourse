@@ -12,7 +12,9 @@
     "tsconfig-plugin.json"
   ],
   "scripts": {
-    "generate": "node generate-dts.js"
+    "compile-generate-dts": "tsc dts-generator.ts --target esnext --moduleResolution nodenext --module nodenext",
+    "generate-external-types": "node generate-dts.js",
+    "generate": "pnpm compile-generate-dts && pnpm generate-external-types"
   },
   "exports": {
     "./tsconfig-plugin": "./tsconfig-plugin.json",
@@ -45,7 +47,7 @@
     "@babel/parser": "^7.28.6",
     "@babel/traverse": "^7.28.6",
     "compare-versions": "^6.1.1",
-    "dts-generator": "^3.0.0"
+    "mkdirp": "^3.0.1"
   },
   "engines": {
     "node": ">= 18",
