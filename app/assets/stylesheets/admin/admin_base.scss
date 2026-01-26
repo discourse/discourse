@@ -148,6 +148,10 @@ $mobile-breakpoint: 700px;
     padding: 8px;
   }
 
+  td {
+    overflow-wrap: break-word;
+  }
+
   tr.selected {
     background-color: var(--primary-low);
   }
