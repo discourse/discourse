@@ -1,4 +1,8 @@
 .uc-enable-simplified-category-creation {
+  .select-kit.multi-select.group-chooser {
+    width: var(--form-kit-large-input);
+  }
+
   div.edit-category {
     display: block;
 
