@@ -95,6 +95,25 @@ module DiscourseAi
             Jobs.enqueue(:fast_track_topic_gist, topic_id: post&.topic_id)
           end
         end
+
+        plugin.on(:posts_moved) do |args|
+          if SiteSetting.discourse_ai_enabled && SiteSetting.ai_summarization_enabled &&
+               !SiteSetting.ai_summary_backfill_maximum_topics_per_hour.zero?
+            topic_ids = [args[:original_topic_id], args[:destination_topic_id]].compact.uniq
+
+            # Mark existing summaries for regeneration by resetting highest_target_number
+            AiSummary.where(target_type: "Topic", target_id: topic_ids).update_all(
+              highest_target_number: 0,
+            )
+
+            # Fast-track gist regeneration since they appear in topic lists
+            if SiteSetting.ai_summary_gists_enabled
+              topic_ids.each do |topic_id|
+                Jobs.enqueue(:fast_track_topic_gist, topic_id: topic_id, force_regenerate: true)
+              end
+            end
+          end
+        end
       end
     end
   end
