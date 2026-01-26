@@ -193,5 +193,62 @@ RSpec.describe TopicHotScore do
 
       expect(hottest_ids).not_to include(category_topic.id)
     end
+
+    it "applies faster decay to closed topics" do
+      freeze_time
+
+      open_topic = Fabricate(:topic, like_count: 10, created_at: 2.weeks.ago)
+      closed_topic = Fabricate(:topic, like_count: 10, created_at: 2.weeks.ago, closed: true)
+
+      TopicHotScore.update_scores
+
+      open_score = TopicHotScore.find_by(topic_id: open_topic.id).score
+      closed_score = TopicHotScore.find_by(topic_id: closed_topic.id).score
+
+      expect(closed_score).to be < open_score
+      expect(closed_score).to be_within(0.0001).of(open_score * 0.5)
+    end
+
+    it "does not create hot scores for unlisted topics" do
+      freeze_time
+
+      unlisted_topic = Fabricate(:topic, visible: false, like_count: 10, created_at: 1.day.ago)
+
+      TopicHotScore.update_scores
+
+      expect(TopicHotScore.find_by(topic_id: unlisted_topic.id)).to be_nil
+    end
+
+    it "excludes unlisted topics from hottest_topic_ids cache" do
+      freeze_time
+
+      unlisted_topic =
+        Fabricate(
+          :topic,
+          visible: false,
+          like_count: 100,
+          created_at: 1.day.ago,
+          last_posted_at: 10.minutes.ago,
+        )
+      TopicHotScore.create!(topic_id: unlisted_topic.id, score: 999.0)
+
+      TopicHotScore.recreate_hottest_topic_ids_cache
+
+      expect(TopicHotScore.hottest_topic_ids).not_to include(unlisted_topic.id)
+    end
+
+    it "sets score to 0 for topics that become unlisted" do
+      freeze_time
+
+      topic = Fabricate(:topic, like_count: 10, created_at: 2.weeks.ago)
+      TopicHotScore.update_scores
+
+      expect(TopicHotScore.find_by(topic_id: topic.id).score).to be > 0
+
+      topic.update!(visible: false)
+      TopicHotScore.update_scores
+
+      expect(TopicHotScore.find_by(topic_id: topic.id).score).to eq(0)
+    end
   end
 end
