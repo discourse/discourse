@@ -6404,7 +6404,7 @@ en:
           daily: Daily
           monthly: Monthly
           weekly: Weekly
-          so_far: "so far"
+          value_so_far: "%{value} (so far)"
           dates: "Dates (UTC)"
           groups: "All groups"
           disabled: "This report is disabled"

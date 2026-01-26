@@ -114,7 +114,9 @@ export default class AdminReportChart extends Component {
                   isLastPointInCurrentPeriod &&
                   tooltipItem.dataIndex === lastDataPointIndex
                 ) {
-                  return `${value} (${i18n("admin.dashboard.reports.so_far")})`;
+                  return i18n("admin.dashboard.reports.value_so_far", {
+                    value,
+                  });
                 }
                 return value;
               },
