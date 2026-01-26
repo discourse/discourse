@@ -4,7 +4,6 @@ import { on } from "@ember/modifier";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
 import concatClass from "discourse/helpers/concat-class";
-import { not } from "discourse/truth-helpers";
 import outletAnimationModifier from "./outlet-animation-modifier";
 import scrollListenerModifier from "./scroll-listener-modifier";
 
@@ -40,30 +39,6 @@ export default class Content extends Component {
     );
   }
 
-  /**
-   * Builds the data-d-sheet attribute string for the content element.
-   * Used when asChild=true to pass attributes to child component.
-   *
-   * @returns {string}
-   */
-  get contentDataDSheet() {
-    const parts = [
-      "content",
-      this.args.sheet?.contentPlacementCssClass,
-      this.args.sheet?.tracks,
-    ];
-
-    if (this.args.sheet?.scrollContainerShouldBePassThrough) {
-      parts.push("no-pointer-events");
-    }
-
-    if (this.args.bleedingBackgroundPresent) {
-      parts.push("no-bleeding-background");
-    }
-
-    return parts.filter(Boolean).join(" ");
-  }
-
   <template>
     <div
       data-d-sheet={{concatClass
@@ -80,7 +55,7 @@ export default class Content extends Component {
           @sheet.isAutomaticallyDisabledForOptimisation "scroll-trap-optimised"
         )
         (if @sheet.swipeOutDisabled "swipe-out-disabled")
-        (if (not @sheet.swipeOvershoot) "overshoot-inactive")
+        (unless @sheet.swipeOvershoot "overshoot-inactive")
         (if @sheet.scrollContainerShouldBePassThrough "no-pointer-events")
       }}
       {{didInsert @sheet.registerScrollContainer}}
@@ -114,7 +89,15 @@ export default class Content extends Component {
         {{#if @asChild}}
           {{yield
             (hash
-              dataDSheet=this.contentDataDSheet
+              dataDSheet=(concatClass
+                "content"
+                @sheet.contentPlacementCssClass
+                @sheet.tracks
+                (if
+                  @sheet.scrollContainerShouldBePassThrough "no-pointer-events"
+                )
+                (if @bleedingBackgroundPresent "no-bleeding-background")
+              )
               registerContent=@sheet.registerContent
               travelAnimation=@travelAnimation
               stackingAnimation=@stackingAnimation
