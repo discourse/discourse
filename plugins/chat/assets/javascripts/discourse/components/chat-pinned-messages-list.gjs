@@ -133,6 +133,7 @@ export default class ChatPinnedMessagesList extends Component {
               @message={{this.decorateMessage pin}}
               @context="pinned"
               @includeSeparator={{false}}
+              @interactive={{false}}
             >
               <:top>
                 <div class="chat-pinned-message__pinned-by">
