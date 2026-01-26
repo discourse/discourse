@@ -32,6 +32,27 @@
 }
 
 .chat-pinned-message {
+  display: block;
+  margin: var(--space-2);
+  border-radius: var(--d-border-radius);
+
+  &,
+  &:hover,
+  &:visited,
+  &:active {
+    color: var(--primary);
+    text-decoration: none;
+  }
+
+  .chat-message-container {
+    background-color: transparent;
+    border-radius: var(--d-border-radius);
+
+    &:hover {
+      background: var(--d-hover);
+    }
+  }
+
   &__pinned-by {
     display: flex;
     align-items: center;
@@ -39,10 +60,11 @@
     padding: 0.5em 1em 0;
     color: var(--primary-medium);
     font-size: var(--font-down-1);
+  }
 
-    .d-icon {
-      color: var(--primary-medium);
-    }
+  &__pinned-by-icon {
+    color: var(--tertiary);
+    transform: rotate(45deg);
   }
 }
 
@@ -72,11 +94,5 @@
     background: var(--tertiary);
     border-radius: 50%;
     border: 2px solid var(--secondary);
-  }
-}
-
-.chat-message-info__pinned--unseen {
-  .d-icon {
-    color: var(--tertiary);
   }
 }

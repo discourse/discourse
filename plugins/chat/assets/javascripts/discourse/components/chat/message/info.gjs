@@ -163,15 +163,6 @@ export default class ChatMessageInfo extends Component {
             >
               {{icon "thumbtack"}}
             </span>
-          {{else if
-            (and @message.pinned (eq @context "pinned") @message.isUnseen)
-          }}
-            <span
-              class="chat-message-info__pinned chat-message-info__pinned--unseen"
-              title={{i18n "chat.pinned"}}
-            >
-              {{icon "thumbtack"}}
-            </span>
           {{/if}}
         {{/if}}
 

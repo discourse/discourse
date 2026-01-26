@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
 import { modifier as modifierFn } from "ember-modifier";
 import icon from "discourse/helpers/d-icon";
@@ -72,6 +73,10 @@ export default class ChatPinnedMessagesList extends Component {
     });
   };
 
+  routeModels = (pin) => {
+    return [...this.args.channel.routeModels, pin.message.id];
+  };
+
   get lastViewedPinsAt() {
     return this.args.channel.currentUserMembership?.lastViewedPinsAt;
   }
@@ -115,17 +120,29 @@ export default class ChatPinnedMessagesList extends Component {
     >
       <div class="chat-pinned-messages-list__items">
         {{#each this.pinnedMessages as |pin|}}
-          <div class="chat-pinned-message">
-            <div class="chat-pinned-message__pinned-by">
-              {{icon "thumbtack"}}
-              <span>{{this.pinnedByText pin}}</span>
-            </div>
+          <LinkTo
+            @route="chat.channel.near-message"
+            @models={{this.routeModels pin}}
+            class="chat-pinned-message"
+          >
             <ChatMessage
               @message={{this.decorateMessage pin}}
               @context="pinned"
               @includeSeparator={{false}}
-            />
-          </div>
+            >
+              <:top>
+                <div class="chat-pinned-message__pinned-by">
+                  {{#if (this.isUnseen pin)}}
+                    {{icon
+                      "thumbtack"
+                      class="chat-pinned-message__pinned-by-icon"
+                    }}
+                  {{/if}}
+                  <span>{{this.pinnedByText pin}}</span>
+                </div>
+              </:top>
+            </ChatMessage>
+          </LinkTo>
         {{else}}
           <div class="chat-pinned-messages-list__empty">
             {{i18n "chat.no_pinned_messages"}}

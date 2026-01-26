@@ -583,6 +583,8 @@ export default class ChatMessage extends Component {
         }}
         ...attributes
       >
+        {{yield to="top"}}
+
         {{#if this.show}}
           {{#if this.pane.selectingMessages}}
             <Input
