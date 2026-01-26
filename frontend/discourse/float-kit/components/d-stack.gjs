@@ -4,25 +4,29 @@ import { guidFor } from "@ember/object/internals";
 import TrackedMediaQuery from "discourse/lib/tracked-media-query";
 import DSheet from "./d-sheet";
 
+function stackingAnimationFor(tracks) {
+  return tracks === "right"
+    ? {
+        translateX: ({ progress }) =>
+          progress <= 1
+            ? progress * -10 + "px"
+            : `calc(-12.5px + 2.5px * ${progress})`,
+        scale: [1, 0.933],
+        transformOrigin: "0 50%",
+      }
+    : {
+        translateY: ({ progress }) =>
+          progress <= 1
+            ? progress * -10 + "px"
+            : `calc(-12.5px + 2.5px * ${progress})`,
+        scale: [1, 0.933],
+        transformOrigin: "50% 0",
+      };
+}
+
 class DStackContent extends Component {
   get stackingAnimation() {
-    return this.args.tracks === "right"
-      ? {
-          translateX: ({ progress }) =>
-            progress <= 1
-              ? progress * -10 + "px"
-              : `calc(-12.5px + 2.5px * ${progress})`,
-          scale: [1, 0.933],
-          transformOrigin: "0 50%",
-        }
-      : {
-          translateY: ({ progress }) =>
-            progress <= 1
-              ? progress * -10 + "px"
-              : `calc(-12.5px + 2.5px * ${progress})`,
-          scale: [1, 0.933],
-          transformOrigin: "50% 0",
-        };
+    return stackingAnimationFor(this.args.tracks);
   }
 
   <template>
@@ -67,23 +71,7 @@ class DStackNested extends Component {
   }
 
   get stackingAnimation() {
-    return this.args.tracks === "right"
-      ? {
-          translateX: ({ progress }) =>
-            progress <= 1
-              ? progress * -10 + "px"
-              : `calc(-12.5px + 2.5px * ${progress})`,
-          scale: [1, 0.933],
-          transformOrigin: "0 50%",
-        }
-      : {
-          translateY: ({ progress }) =>
-            progress <= 1
-              ? progress * -10 + "px"
-              : `calc(-12.5px + 2.5px * ${progress})`,
-          scale: [1, 0.933],
-          transformOrigin: "50% 0",
-        };
+    return stackingAnimationFor(this.args.tracks);
   }
 
   <template>
