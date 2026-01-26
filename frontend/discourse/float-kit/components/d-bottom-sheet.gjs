@@ -5,30 +5,29 @@ import { action } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import DSheet from "discourse/float-kit/components/d-sheet";
+import concatClass from "discourse/helpers/concat-class";
 
 const DETENTS = ["66vh"];
 
-class BottomSheetScrollArea extends Component {
-  <template>
-    <DSheet.Scroll.Root as |controller|>
-      <DSheet.Scroll.View
-        class="bottom-sheet__scroll-view"
-        @scrollGesture={{if @reachedLastDetent "auto" false}}
-        @scrollGestureTrap={{hash yEnd=true}}
-        @safeArea="layout-viewport"
-        @onScrollStart={{hash dismissKeyboard=true}}
+const BottomSheetScrollArea = <template>
+  <DSheet.Scroll.Root as |controller|>
+    <DSheet.Scroll.View
+      class="bottom-sheet__scroll-view"
+      @scrollGesture={{if @reachedLastDetent "auto" false}}
+      @scrollGestureTrap={{hash yEnd=true}}
+      @safeArea="layout-viewport"
+      @onScrollStart={{hash dismissKeyboard=true}}
+      @controller={{controller}}
+    >
+      <DSheet.Scroll.Content
+        class="bottom-sheet__scroll-content"
         @controller={{controller}}
       >
-        <DSheet.Scroll.Content
-          class="bottom-sheet__scroll-content"
-          @controller={{controller}}
-        >
-          {{yield}}
-        </DSheet.Scroll.Content>
-      </DSheet.Scroll.View>
-    </DSheet.Scroll.Root>
-  </template>
-}
+        {{yield}}
+      </DSheet.Scroll.Content>
+    </DSheet.Scroll.View>
+  </DSheet.Scroll.Root>
+</template>;
 
 class ExpandableView extends Component {
   @action
@@ -75,6 +74,28 @@ class ExpandableView extends Component {
   </template>
 }
 
+const BottomSheetInnerContent = <template>
+  <DSheet.Backdrop @sheet={{@sheet}} />
+  <DSheet.Content
+    class={{concatClass
+      "bottom-sheet__content"
+      (if @expandable "--expandable")
+    }}
+    @sheet={{@sheet}}
+  >
+    <DSheet.BleedingBackground
+      @sheet={{@sheet}}
+      class="bottom-sheet__bleeding-background"
+    />
+    <DSheet.Handle
+      class="bottom-sheet__handle"
+      @sheet={{@sheet}}
+      @action={{@handleAction}}
+    />
+    {{yield}}
+  </DSheet.Content>
+</template>;
+
 const BottomSheetContent = <template>
   <DSheet.Portal @sheet={{@sheet}}>
     {{#if @expandable}}
@@ -83,25 +104,15 @@ const BottomSheetContent = <template>
         @reachedLastDetent={{@reachedLastDetent}}
         @setReachedLastDetent={{@setReachedLastDetent}}
       >
-        <DSheet.Backdrop @sheet={{@sheet}} />
-        <DSheet.Content
-          class="bottom-sheet__content --expandable"
+        <BottomSheetInnerContent
           @sheet={{@sheet}}
+          @expandable={{true}}
+          @handleAction={{if @reachedLastDetent "dismiss" "step"}}
         >
-          <DSheet.BleedingBackground
-            @sheet={{@sheet}}
-            class="bottom-sheet__bleeding-background"
-          />
-          <DSheet.Handle
-            class="bottom-sheet__handle"
-            @sheet={{@sheet}}
-            @action={{if @reachedLastDetent "dismiss" "step"}}
-          />
           {{yield
             (hash
               ScrollArea=(component
-                BottomSheetScrollArea
-                reachedLastDetent=@reachedLastDetent
+                BottomSheetScrollArea reachedLastDetent=@reachedLastDetent
               )
               Trigger=(component DSheet.Trigger sheet=@sheet)
               expand=(fn @sheet.stepToDetent 2)
@@ -109,29 +120,25 @@ const BottomSheetContent = <template>
               dismiss=@sheet.close
             )
           }}
-        </DSheet.Content>
+        </BottomSheetInnerContent>
       </ExpandableView>
     {{else}}
       <DSheet.View @sheet={{@sheet}}>
-        <DSheet.Backdrop @sheet={{@sheet}} />
-        <DSheet.Content class="bottom-sheet__content" @sheet={{@sheet}}>
-          <DSheet.BleedingBackground
-            @sheet={{@sheet}}
-            class="bottom-sheet__bleeding-background"
-          />
-          <DSheet.Handle
-            class="bottom-sheet__handle"
-            @sheet={{@sheet}}
-            @action="dismiss"
-          />
+        <BottomSheetInnerContent
+          @sheet={{@sheet}}
+          @expandable={{false}}
+          @handleAction="dismiss"
+        >
           {{yield
             (hash
-              ScrollArea=(component BottomSheetScrollArea reachedLastDetent=false)
+              ScrollArea=(component
+                BottomSheetScrollArea reachedLastDetent=false
+              )
               Trigger=(component DSheet.Trigger sheet=@sheet)
               dismiss=@sheet.close
             )
           }}
-        </DSheet.Content>
+        </BottomSheetInnerContent>
       </DSheet.View>
     {{/if}}
   </DSheet.Portal>
@@ -161,9 +168,7 @@ export default class DBottomSheet extends Component {
       {{yield
         (hash
           Trigger=(component
-            DSheet.Trigger
-            forComponent=this.componentId
-            sheet=sheet
+            DSheet.Trigger forComponent=this.componentId sheet=sheet
           )
           Content=(component
             BottomSheetContent
