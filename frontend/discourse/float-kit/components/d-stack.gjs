@@ -63,38 +63,15 @@ class DStackContent extends Component {
   }
 
   <template>
-    <DSheet.Portal @sheet={{@sheet}}>
-      <DSheet.View
-        class="d-stack__view"
-        @sheet={{@sheet}}
-        @tracks={{@tracks}}
-        @contentPlacement={{@tracks}}
-      >
-        <DSheet.Backdrop
-          class="d-stack__backdrop"
-          @sheet={{@sheet}}
-          @travelAnimation={{hash opacity=(array 0 0.2)}}
-        />
-        <DSheet.Content
-          class="d-stack__content"
-          @sheet={{@sheet}}
-          @stackingAnimation={{this.stackingAnimation}}
-        >
-          <div class="d-stack__inner-content">
-            {{yield
-              (hash
-                sheet=@sheet
-                Trigger=(component DSheet.Trigger sheet=@sheet)
-                Stack=(component
-                  DStackNested stackRoot=@stackRoot tracks=@tracks
-                )
-                dismiss=@sheet.close
-              )
-            }}
-          </div>
-        </DSheet.Content>
-      </DSheet.View>
-    </DSheet.Portal>
+    <DStackSharedContent
+      @sheet={{@sheet}}
+      @stackRoot={{@stackRoot}}
+      @tracks={{@tracks}}
+      @stackingAnimation={{this.stackingAnimation}}
+      as |api|
+    >
+      {{yield api}}
+    </DStackSharedContent>
   </template>
 }
 

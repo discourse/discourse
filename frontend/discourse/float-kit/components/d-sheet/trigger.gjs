@@ -1,14 +1,6 @@
-import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
-import { action } from "@ember/object";
-import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
-import {
-  getActionType,
-  getStepDetent,
-  getStepDirection,
-} from "discourse/float-kit/lib/action-utils";
-import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
+import SheetActionBase from "./sheet-action-base";
 
 /**
  * Trigger button for controlling a sheet.
@@ -26,96 +18,7 @@ import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
  *   - Or function receiving event with changeDefault method
  *   Default: { forceFocus: true, runAction: true }
  */
-export default class Trigger extends Component {
-  @service sheetRegistry;
-
-  /**
-   * Handle click event with onPress behavior processing.
-   *
-   * @param {MouseEvent} event
-   */
-  @action
-  handleClick(event) {
-    const behavior = processBehavior({
-      nativeEvent: event,
-      defaultBehavior: { forceFocus: true, runAction: true },
-      handler: this.args.onPress,
-    });
-
-    if (behavior.forceFocus) {
-      event.currentTarget?.focus({ preventScroll: true });
-    }
-
-    if (!behavior.runAction) {
-      return;
-    }
-
-    this.executeAction();
-  }
-
-  /**
-   * The Root component found via forComponent lookup.
-   *
-   * @type {Object|undefined}
-   */
-  get targetRoot() {
-    if (this.args.forComponent) {
-      return this.sheetRegistry.getRootByComponentId(this.args.forComponent);
-    }
-    return undefined;
-  }
-
-  /**
-   * The sheet controller - from targetRoot or direct @sheet prop.
-   *
-   * @type {Object|undefined}
-   */
-  get sheet() {
-    return this.targetRoot?.sheet ?? this.args.sheet;
-  }
-
-  /**
-   * The raw action prop value.
-   *
-   * @type {string|Object}
-   */
-  get triggerAction() {
-    return this.args.action ?? "present";
-  }
-
-  /**
-   * The action type extracted from the action prop.
-   *
-   * @type {string}
-   */
-  get actionType() {
-    return getActionType(this.triggerAction);
-  }
-
-  /**
-   * The step direction when action is { type: "step", direction: ... }.
-   *
-   * @type {string}
-   */
-  get stepDirection() {
-    return getStepDirection(this.triggerAction);
-  }
-
-  /**
-   * The target detent when action is { type: "step", detent: ... }.
-   *
-   * @type {number|undefined}
-   */
-  get stepDetent() {
-    return getStepDetent(this.triggerAction);
-  }
-
-  /**
-   * aria-haspopup attribute value.
-   * Only set to "dialog" for dialog/alertdialog roles with present action.
-   *
-   * @type {string|undefined}
-   */
+export default class Trigger extends SheetActionBase {
   get ariaHasPopup() {
     const role = this.sheet?.role;
     const isDialogRole = role === "dialog" || role === "alertdialog";
@@ -134,15 +37,6 @@ export default class Trigger extends Component {
       return this.sheet?.isPresented ?? false;
     }
     return undefined;
-  }
-
-  /**
-   * The sheet ID for aria-controls.
-   *
-   * @type {string|undefined}
-   */
-  get sheetId() {
-    return this.sheet?.id;
   }
 
   /**
@@ -170,13 +64,7 @@ export default class Trigger extends Component {
         }
         break;
       case "step":
-        if (this.stepDetent !== undefined) {
-          this.sheet?.stepToDetent(this.stepDetent);
-        } else if (this.stepDirection === "down") {
-          this.sheet?.stepDown();
-        } else {
-          this.sheet?.step();
-        }
+        this.executeStepAction();
         break;
       case "present":
       default:
