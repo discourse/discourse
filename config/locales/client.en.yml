@@ -4651,7 +4651,7 @@ en:
       default_slow_mode: 'Enable "Slow mode" for new topics in this category.'
       subcategory_of: "Subcategory of..."
       none_subcategory_text: "None"
-      subcategory_permissions_warning: "A subcategory cannot be more permissive than its parent category"
+      subcategory_permissions_warning: "A subcategory of a private category can not be public."
       visibility:
         title: "Access"
         public: "Public"
