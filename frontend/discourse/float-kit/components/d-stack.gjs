@@ -24,79 +24,7 @@ function stackingAnimationFor(tracks) {
       };
 }
 
-class DStackContent extends Component {
-  get stackingAnimation() {
-    return stackingAnimationFor(this.args.tracks);
-  }
-
-  <template>
-    <DSheet.Portal @sheet={{@sheet}}>
-      <DSheet.View
-        class="d-stack__view"
-        @sheet={{@sheet}}
-        @tracks={{@tracks}}
-        @contentPlacement={{@tracks}}
-      >
-        <DSheet.Backdrop
-          class="d-stack__backdrop"
-          @sheet={{@sheet}}
-          @travelAnimation={{hash opacity=(array 0 0.2)}}
-        />
-        <DSheet.Content
-          class="d-stack__content"
-          @sheet={{@sheet}}
-          @stackingAnimation={{this.stackingAnimation}}
-        >
-          <div class="d-stack__inner-content">
-            {{yield
-              (hash
-                sheet=@sheet
-                Trigger=(component DSheet.Trigger sheet=@sheet)
-                Stack=(component
-                  DStackNested stackRoot=@stackRoot tracks=@tracks
-                )
-                dismiss=@sheet.close
-              )
-            }}
-          </div>
-        </DSheet.Content>
-      </DSheet.View>
-    </DSheet.Portal>
-  </template>
-}
-
-class DStackNested extends Component {
-  get componentId() {
-    return guidFor(this);
-  }
-
-  get stackingAnimation() {
-    return stackingAnimationFor(this.args.tracks);
-  }
-
-  <template>
-    <DSheet.Root @forComponent={{@stackRoot}} as |sheet|>
-      {{yield
-        (hash
-          Trigger=(component
-            DSheet.Trigger forComponent=this.componentId sheet=sheet
-          )
-          Content=(component
-            DStackNestedContent
-            sheet=sheet
-            stackRoot=@stackRoot
-            tracks=@tracks
-            stackingAnimation=this.stackingAnimation
-          )
-          present=sheet.open
-          dismiss=sheet.close
-        )
-      }}
-    </DSheet.Root>
-  </template>
-}
-
-const DStackNestedContent = <template>
+const DStackSharedContent = <template>
   <DSheet.Portal @sheet={{@sheet}}>
     <DSheet.View
       class="d-stack__view"
@@ -128,6 +56,54 @@ const DStackNestedContent = <template>
     </DSheet.View>
   </DSheet.Portal>
 </template>;
+
+class DStackContent extends Component {
+  get stackingAnimation() {
+    return stackingAnimationFor(this.args.tracks);
+  }
+
+  <template>
+    <DStackSharedContent
+      @sheet={{@sheet}}
+      @stackRoot={{@stackRoot}}
+      @tracks={{@tracks}}
+      @stackingAnimation={{this.stackingAnimation}}
+    >
+      {{yield}}
+    </DStackSharedContent>
+  </template>
+}
+
+class DStackNested extends Component {
+  get componentId() {
+    return guidFor(this);
+  }
+
+  get stackingAnimation() {
+    return stackingAnimationFor(this.args.tracks);
+  }
+
+  <template>
+    <DSheet.Root @forComponent={{@stackRoot}} as |sheet|>
+      {{yield
+        (hash
+          Trigger=(component
+            DSheet.Trigger forComponent=this.componentId sheet=sheet
+          )
+          Content=(component
+            DStackSharedContent
+            sheet=sheet
+            stackRoot=@stackRoot
+            tracks=@tracks
+            stackingAnimation=this.stackingAnimation
+          )
+          present=sheet.open
+          dismiss=sheet.close
+        )
+      }}
+    </DSheet.Root>
+  </template>
+}
 
 export default class DStack extends Component {
   largeViewport = new TrackedMediaQuery("(min-width: 700px)");
