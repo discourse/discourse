@@ -4,7 +4,7 @@ import { htmlSafe } from "@ember/template";
 import avatar from "discourse/helpers/avatar";
 import number from "discourse/helpers/number";
 import getURL from "discourse/lib/get-url";
-import { i18n } from "discourse-i18n";
+import I18n, { i18n } from "discourse-i18n";
 import { i18nForOwner } from "discourse/plugins/discourse-rewind/discourse/lib/rewind-i18n";
 
 const BotMessage = <template>
@@ -67,10 +67,13 @@ export default class ChatUsage extends Component {
   }
 
   get message2Text() {
-    return i18n("discourse_rewind.reports.chat_usage.message_2", {
-      dm_count: this.args.report.data.dm_message_count,
-      channel_count: this.args.report.data.unique_dm_channels,
-    });
+    return I18n.messageFormat(
+      "discourse_rewind.reports.chat_usage.message_2_MF",
+      {
+        dm_count: this.args.report.data.dm_message_count,
+        channel_count: this.args.report.data.unique_dm_channels,
+      }
+    );
   }
 
   get message3Text() {
