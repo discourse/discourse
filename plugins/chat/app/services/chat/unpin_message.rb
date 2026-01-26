@@ -30,7 +30,7 @@ module Chat
     end
 
     def can_unpin(guardian:, message:)
-      guardian.can_unpin_chat_message?(message)
+      guardian.can_manage_chat_message_pin?(message)
     end
 
     def fetch_pin(message:)

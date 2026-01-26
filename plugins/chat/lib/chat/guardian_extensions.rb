@@ -271,20 +271,7 @@ module Chat
       is_admin? && (channel.category_channel? || channel.direct_message_group?)
     end
 
-    def can_pin_chat_message?(message)
-      return false unless can_chat?
-
-      channel = message.chat_channel
-      return false unless can_preview_chat_channel?(channel)
-
-      if channel.direct_message_channel?
-        true
-      else
-        @user.in_any_groups?(SiteSetting.chat_pinning_messages_allowed_groups_map)
-      end
-    end
-
-    def can_unpin_chat_message?(message)
+    def can_manage_chat_message_pin?(message)
       return false unless can_chat?
 
       channel = message.chat_channel
