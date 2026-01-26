@@ -50,6 +50,10 @@ export default class ChatPinnedMessagesList extends Component {
   };
 
   isUnseen = (pin) => {
+    if (pin.pinned_by?.id === this.currentUser?.id) {
+      return false;
+    }
+
     if (!this.lastViewedPinsAt) {
       return true;
     }

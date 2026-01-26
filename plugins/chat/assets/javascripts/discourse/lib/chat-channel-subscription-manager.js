@@ -260,8 +260,11 @@ export default class ChatChannelSubscriptionManager {
     }
     this.channel.pinnedMessagesCount++;
 
-    // Mark as unseen since a new pin was added
-    if (this.channel.currentUserMembership) {
+    // Mark as unseen since a new pin was added, but not if current user pinned it
+    if (
+      this.channel.currentUserMembership &&
+      data.pinned_by_id !== this.currentUser?.id
+    ) {
       this.channel.currentUserMembership.hasUnseenPins = true;
     }
   }
