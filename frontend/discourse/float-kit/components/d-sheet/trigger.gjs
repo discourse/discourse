@@ -3,6 +3,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
+import {
+  getActionType,
+  getStepDetent,
+  getStepDirection,
+} from "discourse/float-kit/lib/action-utils";
 import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
 
 /**
@@ -84,9 +89,7 @@ export default class Trigger extends Component {
    * @type {string}
    */
   get actionType() {
-    return typeof this.triggerAction === "object"
-      ? this.triggerAction.type
-      : this.triggerAction;
+    return getActionType(this.triggerAction);
   }
 
   /**
@@ -95,9 +98,7 @@ export default class Trigger extends Component {
    * @type {string}
    */
   get stepDirection() {
-    return typeof this.triggerAction === "object"
-      ? (this.triggerAction.direction ?? "up")
-      : "up";
+    return getStepDirection(this.triggerAction);
   }
 
   /**
@@ -106,9 +107,7 @@ export default class Trigger extends Component {
    * @type {number|undefined}
    */
   get stepDetent() {
-    return typeof this.triggerAction === "object"
-      ? this.triggerAction.detent
-      : undefined;
+    return getStepDetent(this.triggerAction);
   }
 
   /**

@@ -1,6 +1,11 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
 import { service } from "@ember/service";
+import {
+  getActionType,
+  getStepDetent,
+  getStepDirection,
+} from "discourse/float-kit/lib/action-utils";
 
 /**
  * Interactive handle for d-sheet; supports dismiss and step actions.
@@ -93,8 +98,7 @@ export default class Handle extends Component {
    * @type {string}
    */
   get actionType() {
-    const action = this.triggerAction;
-    return typeof action === "object" ? action.type : action;
+    return getActionType(this.triggerAction);
   }
 
   /**
@@ -103,8 +107,7 @@ export default class Handle extends Component {
    * @type {string}
    */
   get stepDirection() {
-    const action = this.triggerAction;
-    return typeof action === "object" ? (action.direction ?? "up") : "up";
+    return getStepDirection(this.triggerAction);
   }
 
   /**
@@ -113,8 +116,7 @@ export default class Handle extends Component {
    * @type {number|undefined}
    */
   get stepDetent() {
-    const action = this.triggerAction;
-    return typeof action === "object" ? action.detent : undefined;
+    return getStepDetent(this.triggerAction);
   }
 
   /**
