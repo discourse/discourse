@@ -1,4 +1,3 @@
-// TODO: rename to generate-external-types or similar
 import {
   cpSync,
   globSync,

@@ -12,9 +12,9 @@
     "tsconfig-plugin.json"
   ],
   "scripts": {
-    "compile-generate-dts": "tsc dts-generator.ts --target esnext --moduleResolution nodenext --module nodenext",
-    "generate-external-types": "node generate-dts.js",
-    "generate": "pnpm compile-generate-dts && pnpm generate-external-types"
+    "compile-dts-generator": "tsc dts-generator.ts --target esnext --moduleResolution nodenext --module nodenext",
+    "generate-external-types": "node generate-external-types.js",
+    "generate": "pnpm compile-dts-generator && pnpm generate-external-types"
   },
   "exports": {
     "./tsconfig-plugin": "./tsconfig-plugin.json",
