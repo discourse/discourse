@@ -262,14 +262,13 @@ export default function generate(options: Options): Promise<void> {
     /* For some reason, SourceFile.externalModuleIndicator is missing from 1.6+, so having
      * to use a sledgehammer on the nut */
     if ((<any>declarationFile).externalModuleIndicator) {
-      let resolvedModuleId: string = sourceModuleId;
-      if (options.resolveModuleId) {
-        const resolveModuleIdResult: string = options.resolveModuleId({
-          currentModuleId: currentModuleId,
-        });
-        if (resolveModuleIdResult) {
-          resolvedModuleId = resolveModuleIdResult;
-        }
+      const resolvedModuleId: string = options.resolveModuleId({
+        currentModuleId: currentModuleId,
+      });
+
+      // Skip modules rejected by resolveModuleId callback
+      if (!resolvedModuleId) {
+        return;
       }
 
       output.write(

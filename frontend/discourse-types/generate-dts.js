@@ -131,13 +131,7 @@ const packageNames = [
         project: resolve(packagePath) + "/",
         out: `${targetPackagePath}/index.d.ts`,
         resolveModuleId({ currentModuleId }) {
-          const path = transformPath(currentModuleId);
-
-          if (path) {
-            return path;
-          } else {
-            // TODO: Somehow remove the whole module declaration
-          }
+          return transformPath(currentModuleId);
         },
         resolveModuleImport({ importedModuleId, currentModuleId }) {
           if (importedModuleId.startsWith(".")) {
