@@ -78,6 +78,46 @@ module DiscourseAi
 
         render json: success_json
       end
+
+      def regen_summary
+        raise Discourse::InvalidAccess if !guardian.can_regenerate_summary?
+
+        topics = []
+
+        if params[:topic_ids].present?
+          topic_ids =
+            params[:topic_ids].is_a?(String) ? params[:topic_ids].split(",") : params[:topic_ids]
+          topics = Topic.where(id: topic_ids)
+        elsif params[:topic_id].present?
+          topics = [Topic.find(params[:topic_id])]
+        else
+          raise Discourse::InvalidParameters.new(:topic_id)
+        end
+
+        if current_user && topics.size >= 1
+          RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
+        end
+
+        if topics.size > TopicQuery::DEFAULT_PER_PAGE_COUNT
+          raise Discourse::InvalidParameters.new(:topic_ids)
+        end
+
+        topics.each do |topic|
+          guardian.ensure_can_see!(topic)
+
+          summarizer = DiscourseAi::Summarization.topic_summary(topic)
+          summarizer.delete_cached_summaries! if summarizer.present?
+
+          Jobs.enqueue(
+            :stream_topic_ai_summary,
+            topic_id: topic.id,
+            user_id: current_user.id,
+            skip_age_check: true,
+          )
+        end
+
+        render json: success_json
+      end
     end
   end
 end

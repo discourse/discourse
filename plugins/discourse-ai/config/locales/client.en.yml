@@ -1078,14 +1078,23 @@ en:
         topic:
           title: "Topic summary"
           close: "Close summary panel"
-          regenerate: "Regenerate short summary"
-          regenerate_bulk: "Regenerate short summaries"
+          regenerate_ai_summaries: "Regenerate AI summaries"
+          regen_modal_description: "Choose which type of AI summary to regenerate for this topic."
+          bulk_regen_description: "Choose which type of AI summary to regenerate for the selected topics."
+          regenerate_gists_option: "Short summaries (gists)"
+          regenerate_summaries_option: "Topic summaries"
           regenerate_success:
             one: "Short summary regenerated successfully"
             other: "%{count} short summaries regenerated successfully"
           regenerate_error:
             one: "Failed to regenerate short summary"
             other: "Failed to regenerate %{count} short summaries"
+          regenerate_topic_summary_success:
+            one: "Topic summary regenerated successfully"
+            other: "%{count} topic summaries regenerated successfully"
+          regenerate_topic_summary_error:
+            one: "Failed to regenerate topic summary"
+            other: "Failed to regenerate %{count} topic summaries"
         topic_list_layout:
           button:
             compact: "Compact"
