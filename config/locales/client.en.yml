@@ -5026,6 +5026,7 @@ en:
         back: "%{shortcut} Back"
         up_down: "%{shortcut} Move selection &uarr; &darr;"
         open: "%{shortcut} Open selected topic"
+        open_new_window: "%{shortcut} Open selected topic in new tab/window"
         next_prev: "%{shortcut} Next/previous section"
         go_to_unread_post: "%{shortcut} Go to the first unread post"
       application:

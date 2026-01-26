@@ -2742,7 +2742,7 @@ en:
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
     viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
-    content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
+    content_localization_supported_locales: "List of supported locales that user content can be translated to. The site's default locale is always included. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
     content_localization_crawler_param: "Serve localized content to web crawlers when 'content localization enabled' and 'set locale from param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
@@ -4111,8 +4111,9 @@ en:
     user_posts_deleted:
       title: "User Posts Deleted"
       subject_template: "All of %{user}'s posts have been deleted"
-      text_body_template: |
-        %{deleted_posts_count} posts from @%{user} have been deleted by @%{staff_user}.
+      text_body_template:
+        one: "%{count} post from @%{user} has been deleted by @%{staff_user}."
+        other: "%{count} posts from @%{user} have been deleted by @%{staff_user}."
 
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
@@ -5486,8 +5487,12 @@ en:
     bulk_create:
       invalid_params: "Invalid parameters. Please provide an array of tag names."
       invalid_name: "Invalid tag name."
-      tag_too_long: "Tag is too long (max %{max} characters)."
-      too_many_tags: "Too many tags. You can create up to %{max} tags at once. For larger imports, use the CSV upload feature."
+      tag_too_long:
+        one: "Tag is too long (max %{count} character)."
+        other: "Tag is too long (max %{count} characters)."
+      too_many_tags:
+        one: "Too many tags. You can create up to %{count} tag at once. For larger imports, use the CSV upload feature."
+        other: "Too many tags. You can create up to %{count} tags at once. For larger imports, use the CSV upload feature."
     forbidden:
       invalid:
         one: "The tag you selected cannot be used"
