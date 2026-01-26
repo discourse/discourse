@@ -600,6 +600,8 @@ bg:
         reviewable_ai_post:
           noun: "публикация"
       user_label: "Потребител"
+      timeline:
+        target_deleted: "Публикацията е изтрита"
       notes:
         delete: "Изтрий"
       topic_label: "Тема"
@@ -2236,7 +2238,7 @@ bg:
         post_approved: "публикацията е одобрена"
         membership_request_consolidated: "нови заявки за членство"
         reaction: "нова реакция"
-        votes_released: "Гласуването беше публикувано"
+        votes_released: "гласуването беше публикувано"
     upload_selector:
       delete: "Изтрий"
       uploading: "Качване "
@@ -4344,6 +4346,7 @@ bg:
         uploaded_image_list:
           upload:
             label: "Качване"
+        download_file: "Изтегли"
         table_column_heading:
           status: "Статус"
         categories:

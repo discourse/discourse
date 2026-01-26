@@ -640,6 +640,7 @@ de:
     review:
       show_more: "Mehr anzeigen"
       show_less: "Weniger anzeigen"
+      back_to_queue: "Zurück zur Warteschlange"
       order_by: "Sortieren nach"
       date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
@@ -876,6 +877,7 @@ de:
       timeline:
         target_created: "Beitrag erstellt"
         target_created_by: "Beitrag erstellt von %{username} · %{relativeDate}"
+        target_deleted: "Beitrag gelöscht"
         flagged: "Gemeldet"
         flagged_as_by: "Gemeldet als %{flagReason} von %{username} · %{relativeDate}"
         claimed: "Übernommen"
@@ -2121,6 +2123,7 @@ de:
               other {# Tagen}
             } ab.
           edit_link_options: "Link-Optionen bearbeiten oder per E-Mail versenden."
+          edit_link_options_only: "Link-Optionen bearbeiten"
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
           description: "Beschreibung"
@@ -2754,7 +2757,9 @@ de:
         translation_preview: "Übersetzungsvorschau"
         original: "Original"
         translation: "Übersetzen"
+        no_translation_yet: "Fang an zu tippen, um eine Vorschau der Übersetzung zu sehen..."
         placeholder: "Übersetzung für den Beitrag hier eingeben …"
+        show_raw_markdown: "Rohversion anzeigen"
       group_mentioned_limit:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
         other: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzern. Deshalb wird niemand benachrichtigt."
@@ -3022,6 +3027,11 @@ de:
       votes_released: "%{description} – abgeschlossen"
       new_features: "Neue Funktionen verfügbar!"
       admin_problems: "Neue Ratschläge auf deinem Website-Dashboard"
+      upcoming_changes:
+        available:
+          title: "Bevorstehende Änderungen"
+        automatically_promoted:
+          title: "Bevorstehende Änderungen"
       dismiss_confirmation:
         body:
           default:
@@ -3078,7 +3088,6 @@ de:
         membership_request_consolidated: "Neue Mitgliedschaftsanfragen"
         reaction: "neue Reaktion"
         votes_released: "Abstimmung wurde freigegeben"
-        new_features: "Neue Discourse-Funktionen wurden veröffentlicht!"
         admin_problems: "neue Ratschläge auf deinem Website-Dashboard"
     upload_selector:
       change: "Ändern"
@@ -4210,6 +4219,8 @@ de:
       slug_placeholder: "(Optional) durch Bindestrich getrennte Wörter für URL"
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
+      errors:
+        self_lockout: "Du bist dabei, die Berechtigungen für diese Kategorie so zu ändern, dass du selbst nicht länger Zugriff darauf hast. Bist du sicher, dass du fortfahren willst?"
       name: "Name der Kategorie"
       untitled: "Unbenannte Kategorie"
       description: "Beschreibung"
@@ -4778,6 +4789,7 @@ de:
       add_to_calendar: "Zum Kalender hinzufügen"
       google: "Google Kalender"
       ics: "ICS"
+      default_title: "Geplantes Ereignis"
     tagging:
       all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
@@ -4999,6 +5011,7 @@ de:
       tags_form_modal:
         title: "Schlagwörter-Navigation bearbeiten"
         filter_placeholder: "Schlagwörter filtern"
+        no_tags: "Es gibt keine Schlagwörter, die den aktuellen Filtern entsprechen."
         subtitle:
           text: "und wir zeigen automatisch die Top-Schlagwörter dieser Website an"
       edit_navigation_modal_form:
@@ -5374,14 +5387,20 @@ de:
       upcoming_changes:
         name: "Name"
         plugin: "Plug-in"
+        metadata: "Metadaten"
         enabled: "Aktiviert"
+        enabled_for: "Aktiviert für..."
         show_image: "Bild anzeigen"
         edit_groups: "Gruppenweise Aktivierung bearbeiten"
         groups_updated: "Gruppen aktualisiert!"
         save_groups: "Gruppen speichern"
+        add_groups_to_enable: "Gruppen hinzufügen, um diese Funktion zu aktivieren"
+        no_changes_to_save: "Keine Änderungen zu speichern"
         select_groups: "Gruppen auswählen …"
         opt_in_groups: "Gruppenweise Aktivierung"
         opt_in_groups_instructions: "Die gruppenweise Aktivierung kann verwendet werden, um einer bestimmten Benutzergruppe zu ermöglichen, eine Änderung zu testen, bevor sie für alle veröffentlicht wird. Beachte, dass diese Gruppen irrelevant werden, sobald eine Änderung den Status „dauerhaft“ erreicht."
+        enabled_for_throttle: "Du hast zu schnell geändert, für wen diese Änderung aktiviert ist. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
+        change_enabled_for_success: "Du hast diese Änderung für %{enabledFor} aktiviert."
         change_disabled: "Du hast diese Änderung deaktiviert"
         permanent_notice: "Diese Änderung ist nun dauerhaft und die Einstellung wird bald entfernt werden. Du hast keine Möglichkeit mehr, sie zu deaktivieren."
         preview: "Vorschau"
@@ -5394,6 +5413,7 @@ de:
           experimental: "Experimentell"
           alpha: "Alpha"
           beta: "Beta"
+          stable: "Dauerhaft"
           permanent: "Dauerhaft"
         impact_roles:
           admins: "Administratoren"
@@ -5403,6 +5423,7 @@ de:
           developers: "Entwickler"
         filter:
           all: "Gesamt"
+          enabled_all: "Aktiviert oder deaktiviert"
           enabled: "Aktiviert"
           disabled: "Deaktiviert"
           impact_type_feature: "Funktion"
@@ -5468,7 +5489,10 @@ de:
             total_users: "Benutzer insgesamt"
             signups_30_days: "Anmeldungen (30 Tage)"
             logins_30_days: "Anmeldungen (30 Tage)"
+          regenerate_confirm: "Bist du sicher, dass du deine Discourse ID-Anmeldedaten neu generieren willst? Dadurch wird ein neues Client-Geheimnis generiert. Die Erneuerung der Anmeldedaten ist normalerweise nicht erforderlich, kann aber für mehr Sicherheit nützlich sein."
+          description: "Discourse ID ist einen Single-Sign-On-Dienst, der es Benutzern ermöglicht, sich mit einem einzigen Konto bei mehreren Discourse-Seiten anzumelden. Gängige Social-Login-Anbieter wie Google, Facebook, Apple und GitHub werden ohne zusätzliche Konfiguration unterstützt."
           learn_more: "Mehr erfahren"
+          regenerate_success: "Die Anmeldeinformationen wurden erfolgreich neu generiert."
         logo:
           title: "Logo"
           header_description: "Konfiguriere die Logos und Symbole, die auf deiner Website verwendet werden"
@@ -5557,6 +5581,8 @@ de:
             modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
         welcome_banner:
           title: "Willkommensbanner"
+          header_description: "Konfiguriere das Banner mit der Suchleiste, das den Besuchern deiner Website angezeigt wird."
+          saved: "Die Einstellungen für das Willkommensbanner wurden erfolgreich gespeichert."
           form:
             enabled_themes:
               label: "In Themes aktiviert..."
@@ -5570,6 +5596,7 @@ de:
               description: "Wenn du oben ein Hintergrundbild hochgeladen hast, kannst du mit dieser Einstellung die Textfarbe des Banners ändern, um sicherzustellen, dass er lesbar bleibt. Wenn du kein Hintergrundbild hochlädst, wird die Farbe vom aktiven Theme bestimmt."
             page_visibility:
               label: "Sichtbarkeit auf folgenden Seiten"
+              description: "Wähle aus, wo das Banner angezeigt werden soll."
               options:
                 top_menu_pages: "Obere Menüseiten"
                 homepage: "Nur auf der Startseite"
@@ -5577,6 +5604,7 @@ de:
                 all_pages: "Alle Seiten"
             location:
               label: "Ort"
+              description: "Wähle aus, wo das Banner auf der Seite erscheinen soll."
               options:
                 above_topic_content: "Über dem Themeninhalt"
                 below_site_header: "Unter der Kopfzeile"
@@ -5585,11 +5613,9 @@ de:
               locale_label: "Sprache"
             header_new_members:
               label: "Kopfzeile für neue Mitglieder"
-              description: "Verfügbare Variable: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Willkommen, %{preferred_display_name}!"
             header_logged_in:
               label: "Kopfzeile für eingeloggte Mitglieder"
-              description: "Verfügbare Variable: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Willkommen zurück, %{preferred_display_name}!"
             header_anonymous:
               label: "Kopfzeile für anonyme Besucher"
@@ -7959,6 +7985,7 @@ de:
           upload:
             label: "Hochladen"
             title: "Bilder hochladen"
+        download_file: "Herunterladen"
         selectable_avatars:
           title: "Liste von Avataren, aus der Benutzer wählen können."
         table_column_heading:
@@ -8034,6 +8061,7 @@ de:
             prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
           clean_up_inactive_users_after_days:
+            prompt: "Wenn du diesen Wert auf einen anderen Wert als 0 setzt, werden Benutzer, die seit so vielen Tagen nicht mehr aktiv sind, endgültig gelöscht. Bist du sicher, dass du fortfahren willst?"
             confirm: "Ja, ich verstehe, dass inaktive Benutzer dauerhaft gelöscht werden, wenn ich diesen Wert nicht auf 0 setze."
         job_status:
           completed: "Update abgeschlossen"
@@ -8072,6 +8100,7 @@ de:
         no_badges: Es gibt keine Abzeichen, die verliehen werden können.
         none_selected: "Wähle ein Abzeichen aus, um loszulegen"
         sections:
+          design: Design
           query: Anfrage
           settings: Einstellungen
         usage_heading: Verwendung

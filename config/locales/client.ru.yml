@@ -981,6 +981,7 @@ ru:
       timeline:
         target_created: "Публикация создана"
         target_created_by: "Публикация создана пользователем %{username} · %{relativeDate}"
+        target_deleted: "Публикация удалена"
         flagged: "Помечено"
         flagged_as_by: "Помечено как %{flagReason} пользователем %{username} · %{relativeDate}"
         claimed: "Зарезервировано"
@@ -3327,8 +3328,7 @@ ru:
         post_approved: "сообщение одобрено"
         membership_request_consolidated: "новые запросы на членство"
         reaction: "Новая реакция"
-        votes_released: "Голосование опубликовано"
-        new_features: "Появились новые функции Discourse!"
+        votes_released: "голосование опубликовано"
         admin_problems: "новый совет в панели управления сайта"
     upload_selector:
       change: "Изменить"
@@ -8330,6 +8330,7 @@ ru:
           upload:
             label: "Загрузить"
             title: "Загрузка изображений"
+        download_file: "Скачать слова"
         selectable_avatars:
           title: "Список доступных для выбора аватаров"
         table_column_heading:

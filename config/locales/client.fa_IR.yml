@@ -757,6 +757,8 @@ fa_IR:
         reviewable_ai_post:
           noun: "نوشته"
       user_label: "کاربر"
+      timeline:
+        target_deleted: "نوشته حذف شده"
       notes:
         delete: "حذف"
       topic_label: "موضوع"
@@ -1922,6 +1924,7 @@ fa_IR:
               other {# روز}
             } دیگر منقضی می‌شود.
           edit_link_options: "گزینه های پیوند را ویرایش کنید یا از طریق ایمیل ارسال کنید."
+          edit_link_options_only: "گزینه‌های پیوند را ویرایش کنید"
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
           description: "توضیح"
@@ -2782,7 +2785,6 @@ fa_IR:
         membership_request_consolidated: "درخواست های عضویت جدید"
         reaction: "واکنش جدید"
         votes_released: "رأی آزاد شد"
-        new_features: "ویژگی‌های جدید دیسکورس منتشر شده است!"
         admin_problems: "توصیه‌های جدید در پیشخوان سایت شما"
     upload_selector:
       change: "تغییر"
@@ -6928,6 +6930,7 @@ fa_IR:
           upload:
             label: "بارگذاری"
             title: "بارگذاری تصاویر"
+        download_file: "دانلود"
         selectable_avatars:
           title: "فهرست آواتارهایی که کاربران می توانند از بین آنها انتخاب کنند"
         table_column_heading:

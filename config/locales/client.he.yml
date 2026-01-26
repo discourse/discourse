@@ -987,7 +987,7 @@ he:
         reviewable_ai_chat_message:
           noun: "הודעת הצ׳אט"
         reviewable_ai_post:
-          noun: "פרסום"
+          noun: "פוסט"
       flagged_as: "מסומן בתור"
       post_flagged_as: "הפוסט סומן בתור"
       chat_flagged_as: "השיחה סומנה בתור"
@@ -1000,6 +1000,7 @@ he:
       timeline:
         target_created: "פוסט נוצר"
         target_created_by: "הפוסט נוצר על ידי %{username} · %{relativeDate}"
+        target_deleted: "פוסט נמחק"
         flagged: "מסומן"
         flagged_as_by: "מסומן בתור %{flagReason} על ידי %{username} · %{relativeDate}"
         claimed: "נדרש"
@@ -2330,6 +2331,7 @@ he:
               other {# ימים}
             }.
           edit_link_options: "עריכת אפשרויות קישור או לשלוח בדוא״ל."
+          edit_link_options_only: "עריכת אפשרויות קישור"
           show_advanced: "הצגת אפשרויות מתקדמות"
           hide_advanced: "הסתרת אפשרויות מתקדמות"
           description: "תיאור"
@@ -3331,6 +3333,11 @@ he:
       votes_released: "%{description} - הסתיים"
       new_features: "יכולות חדשות זמינות!"
       admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
+      upcoming_changes:
+        available:
+          title: "שינויים צפויים"
+        automatically_promoted:
+          title: "שינויים צפויים"
       dismiss_confirmation:
         body:
           default:
@@ -3395,7 +3402,6 @@ he:
         membership_request_consolidated: "בקשות חברות חדשות"
         reaction: "תגובת אמוג׳י חדשה"
         votes_released: "ההצבעה שוחררה"
-        new_features: "יכולות חדשות של Discourse יצאו לאור!"
         admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
     upload_selector:
       change: "החלפה"
@@ -6139,11 +6145,9 @@ he:
               locale_label: "שפה"
             header_new_members:
               label: "כותרת עליונה לחברים חדשים"
-              description: "משתנה זמין: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "ברוך בואך, %{preferred_display_name}!"
             header_logged_in:
               label: "כותרת עליונה לחברים שנכנסו למערכת"
-              description: "משתנה זמין: <code>&percnt;{preferred_display_name}</code>"
               placeholder: "ברוך שובך, %{preferred_display_name}!"
             header_anonymous:
               label: "כותרת עליונה למבקרים אלמוניים"
@@ -8582,6 +8586,7 @@ he:
           upload:
             label: "העלאה"
             title: "העלאת תמונות"
+        download_file: "הורדה"
         selectable_avatars:
           title: "רשימת תמונות ייצוגיות מהן המשתמשים יכולים לבחור"
         table_column_heading:

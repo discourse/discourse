@@ -2422,7 +2422,6 @@ te:
         membership_request_consolidated: "కొత్త సభ్యత్వ అభ్యర్థనలు"
         reaction: "కొత్త స్పందన"
         votes_released: "ఓటు విడుదలైంది"
-        new_features: "కొత్త డిస్కోర్స్ ఫీచర్‌లు విడుదల చేయబడ్డాయి!"
         admin_problems: "మీ సైట్ డాష్‌బోర్డ్‌లో కొత్త సలహా"
     upload_selector:
       delete: "తొలగించు"
@@ -6072,6 +6071,7 @@ te:
           empty: "ఇంకా చిత్రాలు లేవు. దయచేసి ఒకదాన్ని అప్‌లోడ్ చేయండి."
           upload:
             label: "అప్‌లోడ్ చేయండి"
+        download_file: "దిగుమతి"
         selectable_avatars:
           title: "సభ్యులు ఎంచుకోగల అవతార్ల జాబితా"
         table_column_heading:

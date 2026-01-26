@@ -493,7 +493,7 @@ export class I18n {
       "@messageformat/runtime": MessageFormatRuntime,
     });
 
-    const messages = new Messages(msgData, this.locale);
+    const messages = new Messages(msgData, this.locale.replaceAll("_", "-"));
     messages.defaultLocale = "en";
     this._mfMessages = messages;
   }

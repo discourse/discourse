@@ -863,6 +863,7 @@ el:
       timeline:
         target_created: "Ανάρτηση δημιουργήθηκε"
         target_created_by: "Ανάρτηση δημιουργήθηκε από %{username} · %{relativeDate}"
+        target_deleted: "Η ανάρτΗσΗ διαγράφΗκε"
         flagged: "Αναφέρθηκε"
         flagged_as_by: "Αναφέρθηκε ως %{flagReason} από %{username} · %{relativeDate}"
         claimed: "Διεκδικήθηκε"
@@ -2827,6 +2828,11 @@ el:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - ολοκληρώθηκε"
       new_features: "Νέες δυνατότητες διαθέσιμες!"
+      upcoming_changes:
+        available:
+          title: "Επερχόμενες αλλαγές"
+        automatically_promoted:
+          title: "Επερχόμενες αλλαγές"
       dismiss_confirmation:
         dismiss: "Απόρριψη"
         cancel: "Άκυρο"
@@ -2872,8 +2878,7 @@ el:
         post_approved: "η ανάρτηση εγκρίθηκε"
         membership_request_consolidated: "νέα αιτήματα συμμετοχής"
         reaction: "νέα αντίδραση"
-        votes_released: "Η ψηφοφορία κυκλοφόρησε"
-        new_features: "Νέα χαρακτηριστικά του Discourse έχουν κυκλοφορήσει!"
+        votes_released: "η ψηφοφορία κυκλοφόρησε"
     upload_selector:
       change: "Αλλαγή"
       delete: "Σβήσιμο"
@@ -6321,6 +6326,7 @@ el:
           empty: "Δεν υπάρχουν ακόμα εικόνες. Παρακαλώ επιφορτώστε μία."
           upload:
             label: "Μεταφόρτωση"
+        download_file: "Κατέβασμα"
         selectable_avatars:
           title: "Λίστα των avatars που μπορούν να επιλέξουν οι χρήστες"
         table_column_heading:

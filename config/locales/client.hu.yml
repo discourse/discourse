@@ -864,6 +864,7 @@ hu:
       timeline:
         target_created: "Bejegyzés létrehozva"
         target_created_by: "Bejegyzést készítette: %{username} · %{relativeDate}"
+        target_deleted: "Bejegyzés törölve"
         flagged: "Megjelölt"
         flagged_as_by: "%{flagReason} indokkal megjelölve %{username} felhasználó által · %{relativeDate}"
         claimed: "Igényelt"
@@ -3050,8 +3051,7 @@ hu:
         post_approved: "bejegyzés jóváhagyva"
         membership_request_consolidated: "új tagsági kérés"
         reaction: "új reakció"
-        votes_released: "A szavazat feloldásra került"
-        new_features: "Új Discourse funkciók jelentek meg!"
+        votes_released: "a szavazat feloldásra került"
         admin_problems: "új tanácsok a webhely irányítópultján"
     upload_selector:
       change: "Módosítás"
@@ -7867,6 +7867,7 @@ hu:
           upload:
             label: "Feltöltés"
             title: "Kép(ek) feltöltése"
+        download_file: "Letöltés"
         selectable_avatars:
           title: "A felhasználó által választható profilképek listája"
         table_column_heading:

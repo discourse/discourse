@@ -2436,7 +2436,6 @@ hu:
     reviewable_ui_refresh: "Csoportok, amelyek használhatják a kísérleti új felhasználói felületet a felülvizsgálati sorban."
     viewport_based_mobile_mode: "A mobil/asztali mód meghatározásához használd a nézetablak szélességét. Ez a beállítás hamarosan eltávolításra kerül. Ha ki szeretnéd kapcsolni, kérjük, jelezd nekünk <a href='https://meta.discourse.org/t/384280'>a Meta</a>oldalon."
     content_localization_enabled: "Lokalizált tartalmakat jelenít meg a felhasználók számára a böngésző vagy a felhasználói nyelvi beállítások alapján. Ilyen tartalom lehetnek a kategóriák, címkék, bejegyzések és témák. A támogatott helyi nyelvek a 'tartalom lokalizációja támogatott helyi nyelvek' menüpontban vannak beállítva."
-    content_localization_supported_locales: "A támogatott helyi nyelvek listája, amelyekre a felhasználói tartalom lefordítható. Feltételezi, hogy a 'tartalom lokalizáció engedélyezve'."
     content_localization_allowed_groups: "Lokalizált tartalom frissítésére jogosult csoportok. Feltételezi a 'tartalom lokalizáció engedélyezve' opciót."
     content_localization_language_switcher: "Nyelvváltó megjelenítése a fejlécben, amely lehetővé teszi a látogatók számára a Discourse lefordított verziói és a felhasználók által készített tartalom közötti váltást. A „tartalom lokalizációja által támogatott területek” részben meghatározott nyelveket használja."
     errors:

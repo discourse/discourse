@@ -1110,6 +1110,7 @@ ar:
       timeline:
         target_created: "تم إنشاء المنشور"
         target_created_by: "أُنشئ المنشور من طرف %{username} · %{relativeDate}"
+        target_deleted: "تم حذف المنشور"
         flagged: "تم الإبلاغ"
         flagged_as_by: "تم الإبلاغ عنه بسبب %{flagReason} من قِبل %{username} · %{relativeDate}"
         claimed: "تمت المطالبة به"
@@ -2481,6 +2482,7 @@ ar:
               other {# يوم}
             }.
           edit_link_options: "تعديل خيارات الرابط أو الإرسال عبر البريد الإلكتروني"
+          edit_link_options_only: "تعديل خيارات الرابط"
           show_advanced: "إظهار الخيارات المتقدمة"
           hide_advanced: "إخفاء الخيارات المتقدمة"
           description: "الوصف"
@@ -3623,7 +3625,6 @@ ar:
         membership_request_consolidated: "طلبات العضوية الجديدة"
         reaction: "تفاعل جديد"
         votes_released: "تم تحرير التصويت"
-        new_features: "تم إطلاق ميزات جديدة في Discourse!"
         admin_problems: "نصيحة جديدة بشأن لوحة معلومات موقعك"
     upload_selector:
       change: "تغيير"
@@ -8948,6 +8949,7 @@ ar:
           upload:
             label: "تحميل"
             title: "تحميل الصور"
+        download_file: "تنزيل"
         selectable_avatars:
           title: "قائمة الصور الرمزية التي يمكن للمستخدمين الاختيار منها"
         table_column_heading:

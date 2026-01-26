@@ -35,6 +35,12 @@ export default class ChatChannelSidebarContextMenu extends Component {
       : "chat.channel_settings.star_channel";
   }
 
+  get leaveLabel() {
+    return this.channel.isDirectMessageChannel
+      ? "chat.channel_settings.close_channel"
+      : "chat.channel_settings.leave_channel";
+  }
+
   @action
   async toggleStarred() {
     if (!this.currentUserMembership || this.isTogglingStarred) {
@@ -151,8 +157,8 @@ export default class ChatChannelSidebarContextMenu extends Component {
         <DButton
           @action={{this.leaveChannel}}
           @icon="xmark"
-          @label="chat.channel_settings.leave_channel"
-          @title="chat.channel_settings.leave_channel"
+          @label={{this.leaveLabel}}
+          @title={{this.leaveLabel}}
           class="chat-channel-sidebar-link-menu__leave-channel --danger"
         />
       </dropdown.item>

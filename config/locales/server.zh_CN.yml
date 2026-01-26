@@ -368,6 +368,7 @@ zh_CN:
     redemption_count_less_than_max: "应小于 %{max_redemptions_allowed}。"
     email_xor_domain: "电子邮件和网域字段不允许同时出现"
     existing_user_success: "邀请兑换成功"
+    email_invites_disabled: "发送邀请邮件已禁用"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
     max_rows: "前 %{max_bulk_invites} 个邀请已发出。尝试将文件拆分成更小的部分。"
@@ -553,6 +554,7 @@ zh_CN:
         other: "一次最多可以统计 %{count} 个电子邮件域"
       no_invites_with_discourse_connect: "如果已启用 DiscourseConnect，您只能邀请注册用户"
       no_invites_without_local_logins: "如果已启用社交登录，您只能邀请注册用户"
+      update_existing_users_required: "此更改影响 %{count} 现有群组成员。必须指定 “update_existing_users” 参数（真或假），以指明是否将新通知默认应用于现有成员。"
     default_names:
       everyone: "所有人"
       admins: "管理员"
@@ -1722,6 +1724,7 @@ zh_CN:
     blocked_crawler_user_agents: "用户代理字符串中不区分大小写的唯一字词，用于标识不应被允许访问网站的网抓取工具。如果定义了许可名单，则不适用。"
     slow_down_crawler_user_agents: '网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
     slow_down_crawler_rate: "如果指定了 slow_down_crawler_user_agents，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
+    llms_txt: "上传一个文本文件，该文件将通过 /llms.txt 提供给 LLM 爬虫。更多信息请访问 <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> 。"
     content_security_policy: "启用内容安全策略 (CSP)。CSP 是一个附加安全层，有助于防止某些类型的攻击，包括跨站脚本 (XSS) 和数据注入。"
     content_security_policy_report_only: "启用仅限内容安全策略报告 (CSP)"
     content_security_policy_collect_reports: "在 /csp_reports 启用 CSP 违规报告收集"
@@ -2054,6 +2057,7 @@ zh_CN:
     incoming_email_prefer_html: "对传入电子邮件使用 HTML 而不是文本。"
     strip_incoming_email_lines: "从传入电子邮件的每一行中移除前导和尾随空格。"
     disable_emails: "禁止 Discourse 发送任何类型的电子邮件。选择“是”将对所有用户禁用电子邮件。选择“非管理人员”将仅对非管理人员用户禁用电子邮件。"
+    allow_email_invites: "禁用此功能后，用户将无法通过 Discourse 发送邀请邮件。"
     strip_images_from_short_emails: "从大小小于 2800 字节的电子邮件中去除图片"
     short_email_length: "定义电子邮件被归类为“短”以禁止图片的最大长度（以字节为单位）。如果电子邮件的大小未超过此设置，则电子邮件中的任何图片（例如头像和表情符号）都将被删除。"
     display_name_on_email_from: "在电子邮件发件人字段上显示全名"
@@ -2387,7 +2391,6 @@ zh_CN:
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
     viewport_based_mobile_mode: "使用视口宽度来确定移动/桌面模式。此设置即将移除。如果您需要将其关闭，请在 Meta 中告知我们 <a href='https://meta.discourse.org/t/384280'></a>。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
-    content_localization_supported_locales: "用户内容可以翻译成的受支持语言区域列表。要求 'content localization enabled'。"
     content_localization_allowed_groups: "允许更新本地化内容的群组。需要 'content localization enabled'。"
     content_localization_language_switcher: "在页眉中显示语言切换器，允许访问者在翻译版本的 Discourse 和用户贡献的内容之间切换。使用 \"内容本地化支持的本地语言 \"中定义的语言"
     content_localization_crawler_param: "启用 \"内容本地化 \"和 \"从参数设置本地化 \"后，向网络爬虫提供本地化内容。支持的本地化语言列表在 \"内容本地化支持的本地化语言 \"中定义。"
@@ -3626,8 +3629,8 @@ zh_CN:
     user_posts_deleted:
       title: "用户的帖子已被删除"
       subject_template: "%{user} 的所有帖子已被删除"
-      text_body_template: |
-        @%{user} 的%{deleted_posts_count}个帖子已被 @%{staff_user} 删除。
+      text_body_template:
+        other: "@%{user} 的%{count}个帖子已被 @%{staff_user} 删除。"
   unsubscribe_link: |
     要退订这些电子邮件，请[点击此处](%{unsubscribe_url})。
   unsubscribe_link_and_mail: |
@@ -4171,6 +4174,7 @@ zh_CN:
   upload:
     edit_reason: "下载图片的本地副本"
     unauthorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"
+    images_only: "抱歉，此设置仅支持上传图片。"
     pasted_image_filename: "粘贴图片"
     store_failure: "无法保存用户 #%{user_id} 的上传 #%{upload_id}。"
     file_missing: "抱歉，您必须提供要上传的文件。"
@@ -4892,8 +4896,10 @@ zh_CN:
     bulk_create:
       invalid_params: "参数无效。请提供标签名称数组。"
       invalid_name: "无效的标签名称。"
-      tag_too_long: "标签过长（最多 %{max} 个字符）。"
-      too_many_tags: "标签太多了。您一次最多可以创建 %{max} 标签。对于较大的导入，请使用 CSV 上传功能。"
+      tag_too_long:
+        other: "标签过长（最多 %{count} 个字符）。"
+      too_many_tags:
+        other: "标签太多了。您一次最多可以创建 %{count} 标签。对于较大的导入，请使用 CSV 上传功能。"
     forbidden:
       invalid:
         other: "您选择的标签均无法使用"
@@ -5063,7 +5069,6 @@ zh_CN:
   reviewables:
     already_handled: "谢谢，但我们已经审核该帖子并确定不需要再次举报它。"
     already_handled_and_user_not_exist: "谢谢，但有人已经审核过了，该用户已不存在。"
-    post_deleted_by_author: "帖子被作者删除"
     post_restored_by_author: "帖子被作者恢复。"
     priorities:
       low: "低"

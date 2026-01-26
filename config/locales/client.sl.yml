@@ -605,6 +605,8 @@ sl:
         reviewable_ai_post:
           noun: "prispevek"
       user_label: "Uporabnik"
+      timeline:
+        target_deleted: "Prispevek izbrisan"
       notes:
         delete: "Izbriši"
       topic_label: "Tema"
@@ -4717,6 +4719,7 @@ sl:
         uploaded_image_list:
           upload:
             label: "Naloži"
+        download_file: "Naloži"
         table_column_heading:
           status: "Stanje"
         categories:

@@ -63,11 +63,8 @@ pt_BR:
           author_others: "%{username}"
           channel_title: "#chat-na-atividade"
           status_online: "● on-line"
-          message_1: "Você enviou <strong>%{count}</strong> mensagens este ano!"
           reply_1: "kkkk incrível B-)"
-          message_2: "Você teve <strong>%{dm_count}</strong> conversas por DM com <strong>%{channel_count}</strong> pessoas ou grupos diferentes"
           reply_2: "ShOo0ow :D"
-          message_3: "As pessoas adoraram suas mensagens! Você recebeu <strong>%{count}</strong> reações ❤️"
           message_4: "O tamanho médio de suas mensagens foi de <strong>%{length}</strong> caracteres"
           message_5: "Seus canais favoritos:"
         invites:

@@ -19,7 +19,7 @@ pl_PL:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    -
+    - null
     - Styczeń
     - Luty
     - Marzec
@@ -455,6 +455,7 @@ pl_PL:
     redemption_count_less_than_max: "powinien być mniejszy niż %{max_redemptions_allowed}."
     email_xor_domain: "Pola adresu e-mail i domeny nie są dozwolone jednocześnie"
     existing_user_success: "Zaproszenie zostało pomyślnie zrealizowane"
+    email_invites_disabled: "Wysyłanie zaproszeń e-mailem jest wyłączone"
   bulk_invite:
     file_should_be_csv: "Wgrywany plik powinien być formatu csv."
     max_rows: "Wysłano %{max_bulk_invites} pierwszych zaproszeń. Sprobuj podzielić plik na mniejsze części."
@@ -1954,6 +1955,7 @@ pl_PL:
     blocked_crawler_user_agents: "Unikalne słowo bez rozróżniania wielkości liter w ciągu znaków, które identyfikują crawlery internetowe, które nie powinny mieć dostępu do witryny. Nie ma zastosowania, jeśli dozwolona lista jest zdefiniowana."
     slow_down_crawler_user_agents: 'User-Agent''y robotów indeksujących, którym należy ograniczyć prędkość, zgodnie z ustawieniami "spowolnij szybkość indeksowania". Każda wartość musi mieć co najmniej 3 znaki.'
     slow_down_crawler_rate: "Jeśli określono parametr slow_down_crawler_user_agents, ta stawka będzie obowiązywać dla wszystkich robotów (liczba sekund opóźnienia między żądaniami)"
+    llms_txt: "Prześlij plik tekstowy, który będzie udostępniany w katalogu /llms.txt robotom LLM. Więcej informacji znajdziesz na stronie <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> ."
     content_security_policy: "Włącz ochronę Content-Security-Policy (CSP). CSP to dodatkowa warstwa bezpieczeństwa, która pomaga zapobiegać niektórym rodzajom ataków, takim jak Cross Site Scripting (XSS) i wstrzykiwanie danych."
     content_security_policy_report_only: "Włącz Content-Security-Policy-Report-Only (CSP)."
     content_security_policy_collect_reports: "Włącz zbieranie raportów o naruszeniach CSP na / csp_reports"
@@ -2286,6 +2288,7 @@ pl_PL:
     incoming_email_prefer_html: "Do przychodzących wiadomości e-mail używaj HTML zamiast tekstu."
     strip_incoming_email_lines: "Usuń wiodące i końcowe białe spacje z każdej linii przychodzących wiadomości e-mail."
     disable_emails: "Zapobiegaj wysyłaniu przez Discourse jakichkolwiek wiadomości e-mail. Wybierz 'yes', aby wyłączyć e-maile dla wszystkich użytkowników. Wybierz opcję 'non-staff', aby wyłączyć wiadomości e-mail tylko dla użytkowników niebędących członkami personelu."
+    allow_email_invites: "Po wyłączeniu tej opcji użytkownicy nie będą mogli wysyłać zaproszeń e-mailem za pośrednictwem Discourse"
     strip_images_from_short_emails: "Pasek zdjęć z emaila o rozmiarze mniejszym niż 2800 bajtów"
     short_email_length: "Ustal maksymalną długość wiadomości e-mail w bajtach, aby uznać ją za 'krótką' w celu ukrycia obrazów. Jeżeli rozmiar wiadomości nie przekroczy tego ustawienia, wszelkie obrazy (takie jak awatary i emotikony) w wiadomości zostaną usunięte."
     display_name_on_email_from: "Wyświetl pełne nazwy na emailach z pól"
@@ -2619,7 +2622,7 @@ pl_PL:
     reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
     viewport_based_mobile_mode: "Użyj szerokości pola widzenia, aby określić tryby mobilne/komputerowe. To ustawienie zostanie wkrótce usunięte. Jeśli uznasz, że musisz je wyłączyć, daj nam znać <a href='https://meta.discourse.org/t/384280'>na Meta</a>."
     content_localization_enabled: "Wyświetla zlokalizowaną zawartość dla użytkowników na podstawie ich przeglądarki lub preferencji językowych użytkownika. Taka zawartość może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w 'content localization supported locales'."
-    content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, do których można przetłumaczyć zawartość użytkownika. Wymaga 'włączonej lokalizacji zawartości'."
+    content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, na które można tłumaczyć treści użytkownika. Domyślne ustawienia regionalne witryny są zawsze uwzględniane. Wymagana jest włączona lokalizacja treści."
     content_localization_allowed_groups: "Grupy mogą aktualizować zlokalizowaną zawartość. Wymaga „włączonej lokalizacji zawartości”."
     content_localization_language_switcher: "Pokaż przełącznik języka w nagłówku, umożliwiający użytkownikom przełączanie się między przetłumaczonymi wersjami Discourse a treściami dodanymi przez użytkowników. Używa języków zdefiniowanych w sekcji „Lokalizacje obsługiwane przez lokalizację treści”."
     content_localization_crawler_param: "Wyświetlaj zlokalizowaną treść robotom indeksującym sieć, gdy włączona jest opcja „lokalizacja treści” i „ustaw ustawienia regionalne z parametrów”. Lista obsługiwanych ustawień regionalnych jest zdefiniowana w sekcji „Obsługiwane ustawienia regionalne lokalizacji treści”."
@@ -3955,8 +3958,11 @@ pl_PL:
     user_posts_deleted:
       title: "Usunięto wpisy użytkownika"
       subject_template: "Wszystkie wpisy użytkownika %{user} zostały usunięte"
-      text_body_template: |
-        %{deleted_posts_count} wpisów od @%{user} zostało usuniętych przez @%{staff_user}.
+      text_body_template:
+        one: "%{count} wpis od @%{user} został usunięty przez @%{staff_user}."
+        few: "%{count} wpisów od @%{user} zostało usuniętych przez @%{staff_user}."
+        many: "%{count} wpisów od @%{user} zostało usuniętych przez @%{staff_user}."
+        other: "%{count} wpisów od @%{user} zostało usuniętych przez @%{staff_user}."
   unsubscribe_link: |
     Aby zrezygnować z otrzymywania tych e-maili, [kliknij tutaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -4507,6 +4513,7 @@ pl_PL:
   upload:
     edit_reason: "lokalne kopie pobranych obrazów"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
+    images_only: "Przepraszamy, ale przy tym ustawieniu możesz przesyłać tylko obrazy."
     pasted_image_filename: "Wklejone zdjęcie"
     store_failure: "Błąd zapisu załączników #%{upload_id} dla użytkownika #%{user_id}."
     file_missing: "Przepraszamy, należy podać plik do przesłania."
@@ -5233,8 +5240,16 @@ pl_PL:
     bulk_create:
       invalid_params: "Nieprawidłowe parametry. Podaj tablicę nazw tagów."
       invalid_name: "Nieprawidłowa nazwa tagu."
-      tag_too_long: "Tag jest za długi (maksymalnie %{max} znaków)."
-      too_many_tags: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{max} tagów naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
+      tag_too_long:
+        one: "Tag jest za długi (maksymalnie %{count} znak)."
+        few: "Tag jest za długi (maksymalnie %{count} znaków)."
+        many: "Tag jest za długi (maksymalnie %{count} znaków)."
+        other: "Tag jest za długi (maksymalnie %{count} znaków)."
+      too_many_tags:
+        one: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{count} tag naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
+        few: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{count} tagów naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
+        many: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{count} tagów naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
+        other: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{count} tagów naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
     forbidden:
       invalid:
         one: "Nie można użyć wybranego tagu"
@@ -5425,7 +5440,6 @@ pl_PL:
   reviewables:
     already_handled: "Dziękujemy, ale już przejrzeliśmy ten post i ustaliliśmy, że nie trzeba go ponownie oznaczać."
     already_handled_and_user_not_exist: "Dzięki, ale ktoś już to przejrzał i ten użytkownik już nie istnieje."
-    post_deleted_by_author: "Wpis został usunięty przez autora"
     post_restored_by_author: "Wpis został przywrócony przez autora"
     priorities:
       low: "Niski"

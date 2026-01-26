@@ -35,133 +35,103 @@ class BookmarkQuery
     @count = 0
   end
 
+  def count_all
+    queries = build_list_queries
+    return 0 if queries.empty?
+    Bookmark.from("(#{queries.join(" UNION ")}) AS bookmarks").count
+  end
+
   def list_all(&blk)
-    ts_query = @search_term.present? ? Search.ts_query(term: @search_term) : nil
-    search_term_wildcard = @search_term.present? ? "%#{@search_term}%" : nil
-
-    queries =
-      Bookmark
-        .registered_bookmarkables
-        .map do |bookmarkable|
-          interim_results = bookmarkable.perform_list_query(@user, @guardian)
-
-          # this could occur if there is some security reason that the user cannot
-          # access the bookmarkables that they have bookmarked, e.g. if they had 1 bookmark
-          # on a topic and that topic was moved into a private category
-          next if interim_results.blank?
-
-          if @search_term.present?
-            interim_results =
-              bookmarkable.perform_search_query(interim_results, search_term_wildcard, ts_query)
-          end
-
-          # this is purely to make the query easy to read and debug, otherwise it's
-          # all mashed up into a massive ball in MiniProfiler :)
-          "---- #{bookmarkable.model} bookmarkable ---\n\n #{interim_results.to_sql}"
-        end
-        .compact
-
-    # same for interim results being blank, the user might have been locked out
-    # from all their various bookmarks, in which case they will see nothing and
-    # no further pagination/ordering/etc is required
+    queries = build_list_queries
     return [] if queries.empty?
 
-    union_sql = queries.join("\n\nUNION\n\n")
-    results = Bookmark.select("bookmarks.*").from("(\n\n#{union_sql}\n\n) as bookmarks")
     results =
-      results.order(
-        "(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END),
-        bookmarks.reminder_at ASC,
-        bookmarks.updated_at DESC",
+      Bookmark.from("(#{queries.join(" UNION ")}) AS bookmarks").order(
+        Arel.sql(
+          "(CASE WHEN bookmarks.pinned THEN 0 ELSE 1 END), bookmarks.reminder_at ASC, bookmarks.updated_at DESC",
+        ),
       )
 
     @count = results.count
 
     results = results.offset(@page * @per_page) if @page.positive?
-
-    if updated_results = blk&.call(results)
-      results = updated_results
-    end
-
+    results = blk&.call(results) || results
     results = results.limit(@per_page).to_a
 
     BookmarkQuery.preload(results, self)
+
     results
   end
 
   def unread_notifications(limit: 20)
-    reminder_notifications =
-      Notification
-        .for_user_menu(@user.id, limit: [limit, 100].min)
-        .unread
-        .where(notification_type: Notification.types[:bookmark_reminder])
+    notifications = fetch_reminder_notifications(limit)
+    bookmark_ids = notifications.filter_map { |n| n.data_hash[:bookmark_id] }
 
-    reminder_bookmark_ids = reminder_notifications.map { |n| n.data_hash[:bookmark_id] }.compact
-
-    # We preload associations like we do above for the list to avoid
-    # N1s in the can_see? guardian calls for each bookmark.
-    bookmarks = Bookmark.where(user: @user, id: reminder_bookmark_ids)
+    bookmarks = Bookmark.where(user: @user, id: bookmark_ids)
     BookmarkQuery.preload(bookmarks, self)
 
-    # Any bookmarks that no longer exist, we need to find the associated
-    # records using bookmarkable details.
-    #
-    # First we want to group these by type into a hash to reduce queries:
-    #
-    # {
-    #   "Post": {
-    #     1234: <Post>,
-    #     566: <Post>,
-    #   },
-    #   "Topic": {
-    #     123: <Topic>,
-    #     99: <Topic>,
-    #   }
-    # }
-    #
-    # We may not need to do this most of the time. It depends mostly on
-    # a user's auto_delete_preference for bookmarks.
-    deleted_bookmark_ids = reminder_bookmark_ids - bookmarks.map(&:id)
-    deleted_bookmarkables =
-      reminder_notifications
-        .select do |notif|
-          deleted_bookmark_ids.include?(notif.data_hash[:bookmark_id]) &&
-            notif.data_hash[:bookmarkable_type].present?
-        end
-        .inject({}) do |hash, notif|
-          hash[notif.data_hash[:bookmarkable_type]] ||= {}
-          hash[notif.data_hash[:bookmarkable_type]][notif.data_hash[:bookmarkable_id]] = nil
-          hash
-        end
+    bookmarks_by_id = bookmarks.index_by(&:id)
+    deleted_bookmarkables = load_deleted_bookmarkables(notifications, bookmarks_by_id)
 
-    # Then, we can actually find the associated records for each type in the database.
-    deleted_bookmarkables.each do |type, bookmarkable|
-      records = Bookmark.registered_bookmarkable_from_type(type).model.where(id: bookmarkable.keys)
-      records.each { |record| deleted_bookmarkables[type][record.id] = record }
+    notifications.select do |n|
+      can_see_notification_bookmark?(n, bookmarks_by_id, deleted_bookmarkables)
     end
+  end
 
-    reminder_notifications.select do |notif|
-      bookmark = bookmarks.find { |bm| bm.id == notif.data_hash[:bookmark_id] }
+  private
 
-      # This is the happy path, it's easiest to look up using a bookmark
-      # that hasn't been deleted.
-      if bookmark.present?
-        bookmarkable = Bookmark.registered_bookmarkable_from_type(bookmark.bookmarkable_type)
-        bookmarkable.can_see?(@guardian, bookmark)
-      else
-        # Otherwise, we have to use our cached records from the deleted
-        # bookmarks' related bookmarkable (e.g. Post, Topic) to determine
-        # secure access.
-        bookmarkable =
-          deleted_bookmarkables.dig(
-            notif.data_hash[:bookmarkable_type],
-            notif.data_hash[:bookmarkable_id],
-          )
-        bookmarkable.present? &&
-          Bookmark.registered_bookmarkable_from_type(
-            notif.data_hash[:bookmarkable_type],
-          ).can_see_bookmarkable?(@guardian, bookmarkable)
+  def build_list_queries
+    Bookmark.registered_bookmarkables.filter_map do |bookmarkable|
+      query = bookmarkable.perform_list_query(@user, @guardian)
+      next if query.blank?
+      query = apply_search_filter(bookmarkable, query) if @search_term.present?
+      query.to_sql
+    end
+  end
+
+  def apply_search_filter(bookmarkable, query)
+    ts_query = Search.ts_query(term: @search_term)
+    bookmarkable.perform_search_query(query, "%#{@search_term}%", ts_query)
+  end
+
+  def fetch_reminder_notifications(limit)
+    Notification
+      .for_user_menu(@user.id, limit: [limit, 100].min)
+      .unread
+      .where(notification_type: Notification.types[:bookmark_reminder])
+  end
+
+  def load_deleted_bookmarkables(notifications, bookmarks_by_id)
+    notifications
+      .select do |n|
+        data = n.data_hash
+        data[:bookmark_id].present? && data[:bookmarkable_type].present? &&
+          !bookmarks_by_id[data[:bookmark_id]]
       end
+      .group_by { |n| n.data_hash[:bookmarkable_type] }
+      .transform_values do |notifs|
+        ids = notifs.map { |n| n.data_hash[:bookmarkable_id] }
+        type = notifs.first.data_hash[:bookmarkable_type]
+        Bookmark.registered_bookmarkable_from_type(type).model.where(id: ids).index_by(&:id)
+      end
+  end
+
+  def can_see_notification_bookmark?(notification, bookmarks_by_id, deleted_bookmarkables)
+    data = notification.data_hash
+    return false if data[:bookmark_id].nil?
+
+    if bookmark = bookmarks_by_id[data[:bookmark_id]]
+      Bookmark.registered_bookmarkable_from_type(bookmark.bookmarkable_type).can_see?(
+        @guardian,
+        bookmark,
+      )
+    else
+      bookmarkable = deleted_bookmarkables.dig(data[:bookmarkable_type], data[:bookmarkable_id])
+      bookmarkable &&
+        Bookmark.registered_bookmarkable_from_type(data[:bookmarkable_type]).can_see_bookmarkable?(
+          @guardian,
+          bookmarkable,
+        )
     end
   end
 end
