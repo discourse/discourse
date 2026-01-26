@@ -16,7 +16,7 @@ module Chat
     policy :can_unpin
     model :pin
 
-    transaction { step :destroy_pin }
+    step :destroy_pin
 
     step :publish_unpin_event
 
