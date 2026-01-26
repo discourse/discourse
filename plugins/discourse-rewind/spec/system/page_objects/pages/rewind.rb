@@ -143,6 +143,17 @@ module PageObjects
       def has_no_rewind_preferences_nav?
         has_no_css?(".user-nav__preferences-rewind")
       end
+
+      def has_most_viewed_tags_report?
+        has_css?(".rewind-report-page.--most-viewed-tags")
+      end
+
+      def has_tag_in_report?(tag)
+        has_css?(
+          "a.folder-wrapper[href='/tag/#{tag.name}'] .most-viewed-tags__tag",
+          text: "##{tag.name}",
+        )
+      end
     end
   end
 end
