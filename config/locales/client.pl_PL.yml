@@ -5176,6 +5176,7 @@ pl_PL:
         back: "%{shortcut} wstecz"
         up_down: "%{shortcut} Przesuń zaznaczenie &uarr; &darr;"
         open: "%{shortcut} Otwórz wybrany temat"
+        open_new_window: "%{shortcut} Otwórz wybrany temat w nowej karcie/oknie"
         next_prev: "%{shortcut} Następna/poprzednia sekcja"
         go_to_unread_post: "%{shortcut} Idź do pierwszego nieprzeczytanego wpisu"
       application:
