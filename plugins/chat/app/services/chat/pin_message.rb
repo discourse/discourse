@@ -17,8 +17,7 @@ module Chat
     policy :within_pin_limit
     policy :not_already_pinned
 
-    transaction { step :create_pin }
-
+    model :pin, :create_pin
     step :publish_pin_event
 
     private
@@ -43,7 +42,7 @@ module Chat
     end
 
     def create_pin(message:, guardian:)
-      context[:pin] = Chat::PinnedMessage.create!(
+      Chat::PinnedMessage.create(
         chat_message: message,
         chat_channel: message.chat_channel,
         pinned_by_id: guardian.user.id,
