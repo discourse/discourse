@@ -112,6 +112,10 @@ export default class EditCategoryTabsController extends Controller {
       return false;
     }
 
+    if (transientData.style_type === "emoji" && !transientData.emoji) {
+      return false;
+    }
+
     if (this.saving || this.deleting) {
       return true;
     }
