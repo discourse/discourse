@@ -51,9 +51,9 @@ Before diving in, understand what the Blocks API *doesn't* do:
 
 - **One layout per outlet.** Unlike plugin outlets where multiple connectors coexist, a block outlet has a single owner. If you call `renderBlocks("homepage-blocks", [...])` twice, the second call raises an error—there's no merging or appending. This means two plugins targeting the same outlet will conflict based on load order. The intended pattern: plugins register blocks, themes call `renderBlocks()` to compose the layout. This separates content (plugins) from presentation (themes).
 
-- **No runtime reconfiguration.** Outlet layouts are set at boot time during initializers. You can't add or remove blocks after the application starts. Conditions handle dynamic visibility, but the set of *possible* blocks is fixed.
+- **No runtime reconfiguration.** Outlet layouts are set at boot time during initializers. You can't add or remove blocks after the application starts. Conditions (the visibility rules covered in Section 3) handle dynamic visibility, but the set of *possible* blocks is fixed.
 
-- **Conditions are synchronous.** The `evaluate()` method must return a boolean immediately. You can't await an API call to determine visibility. If you need async data, fetch it elsewhere and pass it via outlet args.
+- **Conditions are synchronous.** The `evaluate()` method must return a boolean immediately. You can't await an API call to determine visibility. If you need async data, fetch it elsewhere and pass it via outlet args (see Section 2).
 
 - **No partial re-evaluation.** When conditions depend on reactive state, the entire block tree re-evaluates. For outlets with many blocks or complex conditions, this can impact performance.
 
@@ -197,7 +197,7 @@ conditions: [
 ]
 ```
 
-**Block entry properties:**
+Each block entry tells the system what to render and how to configure it. The only required property is `block` itself—everything else is optional and lets you customize behavior, appearance, and visibility:
 
 | Property | Required | Notes |
 |----------|----------|-------|
@@ -691,7 +691,7 @@ Now that you've seen how blocks flow from registration to rendering, let's look 
 
 ## 2. The Moving Parts
 
-With the concepts and lifecycle covered, let's get practical. This section covers what you need to build with blocks: how they compare to plugin outlets, how to register and compose them, and how to create block outlets in templates.
+Philosophy is great, but you came here to build something. This section covers the practical tools: the `@block` decorator, the `<BlockOutlet>` component, and the `renderBlocks()` function that ties them together.
 
 ### Blocks and Plugin Outlets
 
@@ -1581,7 +1581,7 @@ With conditions defined, the next question is: what happens when the page actual
 
 ## 4. When Blocks Appear
 
-With conditions in hand, let's look at how the system decides which blocks to show. This is the heart of the rendering pipeline.
+When a `<BlockOutlet>` renders, it kicks off a decision process. The system doesn't just check conditions top-to-bottom—it uses **bottom-up evaluation** to handle containers correctly. This is the heart of the rendering pipeline.
 
 ### How Decisions Are Made
 
@@ -1911,6 +1911,99 @@ Available types: route, user, setting, viewport, outletArg
 Use only one of: `enabled`, `equals`, `includes`, `contains`, or `containsAny`.
 ```
 
+Registration-time errors catch problems before your app even boots. Duplicate names, missing namespaces, or format violations all surface immediately:
+
+```javascript
+// Duplicate block name
+[Blocks] Block "theme:my-theme:banner" is already registered.
+Each block name must be unique across all plugins and themes.
+Previously registered at: your-theme/pre-initializers/register.js:12
+
+// Missing namespace (plugin)
+[Blocks] Plugin blocks must use the "namespace:block-name" format.
+Got: "banner"
+Expected format: "your-plugin:banner"
+
+// Missing namespace (theme)
+[Blocks] Theme blocks must use the "theme:namespace:block-name" format.
+Got: "my-banner"
+Expected format: "theme:your-theme:my-banner"
+```
+
+Args validation catches schema mismatches when `renderBlocks()` is called—missing required args, wrong types, or typos:
+
+```javascript
+// Missing required arg
+[Blocks] Block "my-block" at blocks[0]:
+Required arg "title" was not provided.
+
+// Unknown arg (with suggestion)
+[Blocks] Block "my-block" at blocks[0]:
+Unknown arg "tite" (did you mean "title"?).
+Declared args: title, subtitle, variant
+
+// Type mismatch
+[Blocks] Block "my-block" at blocks[0]:
+Arg "count" expects type "number", got "string".
+Value: "5" (string)
+Hint: Remove quotes to pass a number: { count: 5 }
+
+// Array item type mismatch
+[Blocks] Block "my-block" at blocks[0]:
+Arg "tags" expects array of "string", but item at index 2 is "number".
+Value: ["a", "b", 123]
+```
+
+Outlet configuration validates that blocks can render where you're placing them:
+
+```javascript
+// Block denied in outlet
+[Blocks] Block "theme:my-theme:hero" cannot render in outlet "sidebar-blocks":
+Denied by deniedOutlets pattern "sidebar-*".
+
+// Second renderBlocks call
+[Blocks] Outlet "homepage-blocks" is already configured.
+First configured by: my-theme/api-initializers/layout.js:8
+Attempted again by: another-plugin/api-initializers/setup.js:15
+Only one caller can configure an outlet.
+```
+
+Constraint errors catch violations of cross-arg rules—"provide at least one of these" or "these must go together":
+
+```javascript
+// atLeastOne violation
+[Blocks] Block "featured-list" at blocks[0]:
+At least one of "categoryId", "tagName" must be provided, but got none.
+
+// exactlyOne violation (both provided)
+[Blocks] Block "featured-list" at blocks[0]:
+Exactly one of "categoryId", "tagName" must be provided, but got both.
+
+// allOrNone violation
+[Blocks] Block "image-block" at blocks[0]:
+Args "width", "height" must be provided together or not at all.
+Got: width=100, height=undefined
+```
+
+Container relationships are validated too—missing metadata, schema mismatches, or uniqueness violations:
+
+```javascript
+// Missing containerArgs
+[Blocks] Block "tab-panel" at blocks[0].children[1]:
+Parent container "tabs-container" requires containerArgs, but none provided.
+Required fields: name (string)
+
+// containerArgs without childArgs schema
+[Blocks] Block "simple-panel" at blocks[0].children[0]:
+containerArgs provided but parent "group" has no childArgs schema.
+Remove containerArgs or add childArgs schema to parent.
+
+// Duplicate unique value
+[Blocks] Duplicate value "settings" for containerArgs.name in children of "tabs-container".
+Found at children[0] and children[2].
+The "name" field is marked as unique and must have distinct values.
+```
+
 ### Validation Feedback
 
 Validation happens at registration time when possible, giving you immediate feedback rather than runtime surprises.
@@ -2004,113 +2097,6 @@ The API balances simplicity for common cases with power for advanced use:
 
 Start simple, add complexity only when you need it. You don't have to master conditions to render a block, and you don't have to master combinators to use a single condition. For complete condition syntax, see **Section 3: Show This, Hide That**.
 
-### More Error Message Examples
-
-Here are additional error messages you might encounter, organized by category.
-
-**Registration Errors**
-
-These appear during pre-initializers when the block registry encounters problems—duplicate names, missing namespaces, or format violations:
-
-```javascript
-// Duplicate block name
-[Blocks] Block "theme:my-theme:banner" is already registered.
-Each block name must be unique across all plugins and themes.
-Previously registered at: your-theme/pre-initializers/register.js:12
-
-// Missing namespace (plugin)
-[Blocks] Plugin blocks must use the "namespace:block-name" format.
-Got: "banner"
-Expected format: "your-plugin:banner"
-
-// Missing namespace (theme)
-[Blocks] Theme blocks must use the "theme:namespace:block-name" format.
-Got: "my-banner"
-Expected format: "theme:your-theme:my-banner"
-```
-
-**Args Validation Errors**
-
-These occur when `renderBlocks()` is called and the args you provide don't match the block's schema—missing required args, wrong types, or typos:
-
-```javascript
-// Missing required arg
-[Blocks] Block "my-block" at blocks[0]:
-Required arg "title" was not provided.
-
-// Unknown arg (with suggestion)
-[Blocks] Block "my-block" at blocks[0]:
-Unknown arg "tite" (did you mean "title"?).
-Declared args: title, subtitle, variant
-
-// Type mismatch
-[Blocks] Block "my-block" at blocks[0]:
-Arg "count" expects type "number", got "string".
-Value: "5" (string)
-Hint: Remove quotes to pass a number: { count: 5 }
-
-// Array item type mismatch
-[Blocks] Block "my-block" at blocks[0]:
-Arg "tags" expects array of "string", but item at index 2 is "number".
-Value: ["a", "b", 123]
-```
-
-**Outlet Errors**
-
-These appear when blocks and outlets don't match up—a block is restricted from certain outlets, or multiple callers try to configure the same outlet:
-
-```javascript
-// Block denied in outlet
-[Blocks] Block "theme:my-theme:hero" cannot render in outlet "sidebar-blocks":
-Denied by deniedOutlets pattern "sidebar-*".
-
-// Second renderBlocks call
-[Blocks] Outlet "homepage-blocks" is already configured.
-First configured by: my-theme/api-initializers/layout.js:8
-Attempted again by: another-plugin/api-initializers/setup.js:15
-Only one caller can configure an outlet.
-```
-
-**Constraint Errors**
-
-These catch violations of cross-arg constraints—when you've defined rules like "provide at least one of these" or "these must go together":
-
-```javascript
-// atLeastOne violation
-[Blocks] Block "featured-list" at blocks[0]:
-At least one of "categoryId", "tagName" must be provided, but got none.
-
-// exactlyOne violation (both provided)
-[Blocks] Block "featured-list" at blocks[0]:
-Exactly one of "categoryId", "tagName" must be provided, but got both.
-
-// allOrNone violation
-[Blocks] Block "image-block" at blocks[0]:
-Args "width", "height" must be provided together or not at all.
-Got: width=100, height=undefined
-```
-
-**Container/Child Errors**
-
-These relate to the relationship between container blocks and their children—missing metadata, schema mismatches, or uniqueness violations:
-
-```javascript
-// Missing containerArgs
-[Blocks] Block "tab-panel" at blocks[0].children[1]:
-Parent container "tabs-container" requires containerArgs, but none provided.
-Required fields: name (string)
-
-// containerArgs without childArgs schema
-[Blocks] Block "simple-panel" at blocks[0].children[0]:
-containerArgs provided but parent "group" has no childArgs schema.
-Remove containerArgs or add childArgs schema to parent.
-
-// Duplicate unique value
-[Blocks] Duplicate value "settings" for containerArgs.name in children of "tabs-container".
-Found at children[0] and children[2].
-The "name" field is marked as unique and must have distinct values.
-```
-
 So far we've focused on what happens when things go wrong. But what about when things *seem* fine but aren't working as expected?
 
 ---
@@ -2120,6 +2106,8 @@ So far we've focused on what happens when things go wrong. But what about when t
 The Blocks API includes a suite of visual and console-based tools to help you understand what's happening at runtime—which blocks rendered, which conditions passed or failed, and why.
 
 ### What's in the Toolkit
+
+The toolkit includes four complementary tools—each designed to answer a different debugging question:
 
 | Tool | What it does | How to enable |
 |------|--------------|---------------|
@@ -2413,7 +2401,7 @@ For most day-to-day work, the tools and techniques above are all you need. But i
 
 ## 7. Under the Hood
 
-This section is for those working on the Blocks API itself, or anyone curious about how the pieces fit together. You don't need this for everyday block development—but it's here when you want to understand the machinery.
+What follows is a tour of the internals—useful if you're working on the Blocks API itself or want to understand what's happening beneath the surface.
 
 ### The Blocks Service
 
