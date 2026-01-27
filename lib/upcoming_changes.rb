@@ -39,7 +39,12 @@ module UpcomingChanges
   end
 
   def self.image_path(change_setting_name)
-    File.join("images", "upcoming_changes", "#{change_setting_name}.png")
+    plugin_name = SiteSetting.plugins[change_setting_name.to_sym]
+    if plugin_name.present?
+      File.join("plugins", plugin_name, "images", "upcoming_changes", "#{change_setting_name}.png")
+    else
+      File.join("images", "upcoming_changes", "#{change_setting_name}.png")
+    end
   end
 
   def self.image_data(change_setting_name)
