@@ -700,7 +700,7 @@ zh_CN:
           composer_bold: "%{shortcut} 粗体（仅输入框）"
           composer_italic: "%{shortcut} 斜体（仅输入框）"
           composer_code: "%{shortcut} 代码（仅输入框）"
-          drawer_open: "%{shortcut} 打开聊天抽屉"
+          drawer_toggle: "%{shortcut} 切换聊天抽屉"
           drawer_close: "%{shortcut} 关闭聊天抽屉"
           mark_all_channels_read: "%{shortcut} 将所有频道标记为已读"
     topic_statuses:

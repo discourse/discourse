@@ -823,7 +823,6 @@ uk:
           composer_bold: "%{shortcut} Жирний (лише в редакторі)"
           composer_italic: "%{shortcut} Курсив (лише в редакторі)"
           composer_code: "%{shortcut} Код (тільки в редакторі)"
-          drawer_open: "%{shortcut} Відкрити панель чату"
           drawer_close: "%{shortcut} Закрийте панель чату"
           mark_all_channels_read: "%{shortcut} Позначити всі канали як прочитані"
     topic_statuses:

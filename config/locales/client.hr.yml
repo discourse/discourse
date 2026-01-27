@@ -4279,6 +4279,7 @@ hr:
       back: "Natrag u kategoriju"
       general: "Općenito"
       settings: "Postavke"
+      advanced: "Napredno"
       topic_template: "Predložak"
       tags: "Oznake"
       localizations: "Lokalizacije"
@@ -4310,7 +4311,9 @@ hr:
       save_error: Dogodila se greška pri spremanju kategorije.
       description: "Opis"
       logo_description: "Preporučeni omjer slike 1:1 s minimalnom veličinom od 200 px. Ako je ostavljeno prazno, slika neće biti prikazana."
-      style: "Stilovi"
+      style: "Stil"
+      icon: "Ikona"
+      emoji: "Emoji"
       background_color: "Boja"
       foreground_color: "Boja teksta"
       color_validations:
@@ -4319,13 +4322,13 @@ hr:
         type: "Stil"
         icon: "Ikona"
         emoji: "Emoji"
+        square: "Kvadrat"
         options:
           square: "Kvadrat"
           icon: "Ikona"
           emoji: "Emoji"
       color_used: "Boja u upotrebi"
       predefined_colors: "Unaprijed definirane opcije boja"
-      name_placeholder: "Jedna ili dvije riječi"
       color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategrije."
@@ -4347,7 +4350,7 @@ hr:
       uncategorized_security_warning: "Ova kategorija je posebna. Namijenjen je kao prostor za čuvanje tema koje nemaju kategoriju; ne može imati sigurnosne postavke."
       uncategorized_general_warning: 'Ova kategorija je posebna. Koristi se kao zadana kategorija za nove teme za koje nije odabrana kategorija. Ako želite spriječiti ovo ponašanje i prisiliti odabir kategorije, <a href="%{settingLink}">onemogućite postavku ovdje</a>. Ako želite promijeniti naziv ili opis, idite na <a href="%{customizeLink}">Prilagodi / Tekstualni sadržaj</a>.'
       pending_permission_change_alert: "Niste dodali %{group} ovoj kategoriji; kliknite ovaj gumb da biste ih dodali."
-      images: "Slike"
+      images: "Izgled"
       email_in: "Prilagođena adresa dolaznog e-maila."
       email_in_tooltip: "Možete odvojiti na više adresa e-pošte s | znakom."
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez računa"
@@ -4369,6 +4372,11 @@ hr:
       position: "Položaj na stranici kategorija:"
       position_disabled: "Kategorije će biti prikazane prema redoslijedu aktivnosti. Da biste kontrolirali redoslijed kategorija na popisima, omogućite postavku <a href='%{url}'>'fiksnih pozicija kategorija'</a>."
       minimum_required_tags: "Minimalan broj oznaka potrebnih u temi:"
+      none_subcategory_text: "Ništa"
+      visibility:
+        title: "Pristup"
+        public: "Javnost"
+        group_restricted: "Privatno"
       num_auto_bump_daily: "Broj otvorenih tema koje se automatski mijenjaju dnevno:"
       auto_bump_cooldown_days: "Minimalni broj dana prije ponovnog isticanja iste teme:"
       navigate_to_first_post_after_read: "Idite na prvi post nakon čitanja tema"
@@ -5873,7 +5881,9 @@ hr:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Dnevnici pretraživanja</a>'
             disabled: 'Izvješće o pretraživanju u trendu je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upita za pretraživanje dnevnika</a> za prikupljanje podataka.'
-          average_chart_label: Prosječno
+          sort_button: "Sortiraj po %{column}"
+          sort_ascending: "uzlazno"
+          sort_descending: "silazno"
           filters:
             file_extension:
               label: Proširenje datoteke

@@ -2487,6 +2487,8 @@ ca:
       creation_error: Hi ha hagut un error en crear aquesta categoria.
       save_error: Hi ha hagut un error en desar la categoria.
       description: "Descripció"
+      icon: "Icona"
+      emoji: "Emoji"
       background_color: "Color"
       color_validations:
         cant_be_empty: "no pot ser buit"
@@ -2496,7 +2498,6 @@ ca:
         options:
           icon: "Icona"
           emoji: "Emoji"
-      name_placeholder: "Una o dues paraules com a màxim"
       color_placeholder: "Qualsevol color web"
       delete_confirm: "Esteu segur que voleu suprimir aquesta categoria?"
       delete_error: "Hi ha hagut un error en suprimir aquesta categoria"
@@ -2512,7 +2513,7 @@ ca:
       uncategorized_security_warning: "Aquesta categoria és especial. Es tracta d'una àrea de manteniment per a temes que no tenen cap categoria; no pot tenir configuració de seguretat."
       uncategorized_general_warning: 'Aquesta categoria és especial. S''utilitza com a categoria per defecte per a temes nous que no tinguin una categoria seleccionada. Si voleu evitar aquest comportament i forçar la selecció de categories, <a href="%{settingLink}">desactiveu la configuració aquí</a>. Si voleu canviar el nom o la descripció, aneu a <a href="%{customizeLink}">Personalitza / Contingut de text</a> .'
       pending_permission_change_alert: "No heu afegit %{group} a aquesta categoria; feu clic en aquest botó per a afegir-los."
-      images: "Imatges"
+      images: "Aparença"
       email_in: "Adreça de correu electrònic entrant personalitzada:"
       email_in_allow_strangers: "Accepta missatges de correu d'usuaris anònims sense compte"
       mailinglist_mirror: "Una categoria reflecteix una llista de correu"
@@ -2528,6 +2529,11 @@ ca:
       this_year: "enguany"
       position: "Posició en la pàgina de categories:"
       minimum_required_tags: "Nombre mínim d'etiquetes necessari en un tema:"
+      none_subcategory_text: "Cap"
+      visibility:
+        title: "Accés"
+        public: "Públic"
+        group_restricted: "Privat"
       num_auto_bump_daily: "Nombre de temes oberts que s'eleven automàticament cada dia:"
       navigate_to_first_post_after_read: "Navega fins a la primera publicació després de la lectura dels temes"
       notifications:
@@ -3274,6 +3280,8 @@ ca:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Cerca de registres (logs)</a>'
             disabled: 'El report de cerca de tendències està desactivat. Habiliteu <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">les consultes de cerca de registres</a> per a recopilar dades.'
+          sort_ascending: "ascendent"
+          sort_descending: "descendent"
           filters:
             file_extension:
               label: Extensió de fitxer

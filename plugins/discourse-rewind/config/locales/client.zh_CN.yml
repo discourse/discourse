@@ -119,6 +119,12 @@ zh_CN:
           message_1:
             other: "今年你发送了 <strong>%{count}</strong> 条消息！"
           reply_1: "lol 超棒的 B-)"
+          message_2_MF: |
+            你有 { dm_count, plural,
+                other {<strong>#</strong> DM 对话}
+            } 和 { channel_count, plural,
+                other {~ ~<strong>#</strong> 不同的人或群体}
+            }。
           reply_2: "酷毙了 :D"
           message_3:
             other: "大家都很喜欢你的留言！你收到了 <strong>%{count}</strong> 个回应 ❤️"

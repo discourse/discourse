@@ -3136,6 +3136,7 @@ ro:
       view: "Arată subiectele din categorie"
       general: "General"
       settings: "Setări"
+      advanced: "Avansat"
       tags: "Etichete"
       localizations: "Localizări"
       localization:
@@ -3159,7 +3160,9 @@ ro:
       creation_error: A apărut o eroare în timpul creării categoriei.
       save_error: A apărut o eroare in timpul salvării categoriei.
       description: "Descriere"
-      style: "Stiluri"
+      style: "Stil"
+      icon: "Icon"
+      emoji: "Emoticon"
       background_color: "Culoare"
       foreground_color: "Culoare text"
       color_validations:
@@ -3170,16 +3173,17 @@ ro:
         type: "Stil"
         icon: "Icon"
         emoji: "Emoji"
+        square: "Pătrat"
         options:
           square: "Pătrat"
           icon: "Icon"
           emoji: "Emoji"
-      name_placeholder: "Unul sau două cuvinte maximum"
       color_placeholder: "Orice culoare web"
       delete_confirm: "Sigur dorești să ștergi această categorie?"
       delete_error: "A apărut o eroare la ștergerea acestei categorii."
       no_description: "Adaugă o descriere acestei categorii."
       already_used: "Această culoare este folosită la o altă categorie"
+      color_palette: "Paletă de culori"
       security: "Securitate"
       permissions:
         group: "Grup"
@@ -3187,13 +3191,18 @@ ro:
         reply: "Răspunde"
         create: "Creează"
       special_warning: "Atenție: Această categorie este pre-instalată și setările de securitate nu pot fi editate. Dacă nu dorești să folosești această categorie, va trebui să o ștergi în loc să-i schimbi destinația."
-      images: "Imagini"
+      images: "Aspect"
       email_in: "Adresa email de primire preferențială:"
       email_in_allow_strangers: "Acceptă emailuri de la utilizatori anonimi fără cont"
       allow_badges_label: "Permite acordarea de ecusoane în această categorie"
       review_group_name: "numele grupului"
       require_topic_approval: "Cere obligatoriu aprobarea moderatorilor pentru toate discuțiile noi"
       this_year: "anul acesta"
+      none_subcategory_text: "Nimic"
+      visibility:
+        title: "Acces"
+        public: "Public"
+        group_restricted: "Privat"
       num_auto_bump_daily: "Numărul de discuții active care pot primi bump zilnic"
       navigate_to_first_post_after_read: "Navighează la prima postare după ce le citești pe celelalte"
       notifications:
@@ -4289,6 +4298,9 @@ ro:
           monthly: Lunar
           weekly: Săptămânal
           groups: "Toate grupurile"
+          sort_button: "Sortează după %{column}"
+          sort_ascending: "crescător"
+          sort_descending: "descrescător"
           filters:
             group:
               label: Grup

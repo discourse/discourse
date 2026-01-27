@@ -779,7 +779,6 @@ he:
           composer_bold: "%{shortcut} מודגש (עורך בלבד)"
           composer_italic: "%{shortcut} נטוי (עורך בלבד)"
           composer_code: "%{shortcut} קוד (עורך בלבד)"
-          drawer_open: "%{shortcut} פתיחת מגירת הצ׳אט"
           drawer_close: "%{shortcut} סגירת מגירת הצ׳אט"
           mark_all_channels_read: "%{shortcut} סימון כל הערוצים כנקראו"
     topic_statuses:

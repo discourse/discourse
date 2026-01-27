@@ -27,9 +27,3 @@ pl_PL:
     other: "%{count} odpowiedzi"
   theme_metadata:
     description: "Prosty, piękny motyw, który od razu po zainstalowaniu poprawia komfort korzystania ze stron Discourse."
-    settings:
-      topic_card_context:
-        description: "Ilość informacji wyświetlanych na kartach tematycznych. „Prosty” wyświetla minimalną ilość informacji. „Wysoki kontekst” obejmuje tagi, status rozwiązania, przypisanych użytkowników i liczbę głosów."
-        choices:
-          simple: "Prosty"
-          high_context: "Wysoki kontekst (eksperymentalny)"

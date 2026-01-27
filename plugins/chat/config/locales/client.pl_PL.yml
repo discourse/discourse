@@ -795,7 +795,7 @@ pl_PL:
           composer_bold: "%{shortcut} Pogrubienie (tylko kompozytor)"
           composer_italic: "%{shortcut} Kursywa (tylko kompozytor)"
           composer_code: "%{shortcut} Kod (tylko kompozytor)"
-          drawer_open: "%{shortcut} Otwórz szufladę czatu"
+          drawer_toggle: "%{shortcut} Przełącz szufladę czatu"
           drawer_close: "%{shortcut} Zamknij szufladę czatu"
           mark_all_channels_read: "%{shortcut} Zaznacz wszystkie kanały jako przeczytane"
     topic_statuses:

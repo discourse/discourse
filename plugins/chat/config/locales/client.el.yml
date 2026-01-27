@@ -338,7 +338,6 @@ el:
           composer_bold: "%{shortcut} Έντονη γραφή (μόνο για συνθέτη)"
           composer_italic: "%{shortcut} Πλάγια γραφή (μόνο για συνθέτη)"
           composer_code: "%{shortcut} Κώδικας (μόνο για συνθέτη)"
-          drawer_open: "%{shortcut} Άνοιγμα συρταριού συνομιλίας"
           drawer_close: "%{shortcut} Κλείσιμο συρταριού συνομιλίας"
           mark_all_channels_read: "%{shortcut} Σήμανση όλων των καναλιών ως διαβασμένα"
     styleguide:

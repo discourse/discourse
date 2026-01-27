@@ -2170,6 +2170,8 @@ sr:
       creation_error: Dogodila se greška pri otvaranju kategorije.
       save_error: Dogodila se greška pri čuvanju kategorije.
       description: "Opis"
+      icon: "Ikona"
+      emoji: "Emoji"
       background_color: "Boja"
       styles:
         icon: "Ikona"
@@ -2177,7 +2179,6 @@ sr:
         options:
           icon: "Ikona"
           emoji: "Emoji"
-      name_placeholder: "Jedna ili dve reči maksimalno"
       color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategorije."
@@ -2188,12 +2189,14 @@ sr:
         group: "Grupa"
         see: "Pogledaj"
         reply: "Odgovori"
-      images: "Slike"
       email_in: "Prilagođena adresa dolaznog e-maila."
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez naloga"
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
       review_group_name: "ime grupe"
       this_year: "ove godine"
+      none_subcategory_text: "Ništa"
+      visibility:
+        group_restricted: "Privatna"
       notifications:
         watching:
           title: "Posmatrano"
@@ -2737,6 +2740,7 @@ sr:
           monthly: Top mesečne
           weekly: Top nedeljne
           groups: "Sve grupe"
+          sort_button: "Sortiraj po %{column}"
           filters:
             group:
               label: Grupa

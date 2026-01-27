@@ -664,7 +664,6 @@ fi:
           composer_bold: "%{shortcut} Lihavointi (vain tekstieditori)"
           composer_italic: "%{shortcut} Kursiivi (vain tekstieditori)"
           composer_code: "%{shortcut} Koodi (vain tekstieditori)"
-          drawer_open: "%{shortcut} Avaa chat-laatikko"
           drawer_close: "%{shortcut} Sulje chat-laatikko"
           mark_all_channels_read: "%{shortcut} Merkitse kaikki kanavat luetuiksi"
     topic_statuses:

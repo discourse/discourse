@@ -717,7 +717,6 @@ tr_TR:
           composer_bold: "%{shortcut} Kalın (yalnızca besteci)"
           composer_italic: "%{shortcut} İtalik (yalnızca besteci)"
           composer_code: "%{shortcut} Kod (yalnızca besteci)"
-          drawer_open: "%{shortcut} Sohbet çekmecesini aç"
           drawer_close: "%{shortcut} Sohbet çekmecesini kapat"
           mark_all_channels_read: "%{shortcut} Tüm kanalları okundu olarak işaretle"
     topic_statuses:

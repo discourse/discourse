@@ -717,7 +717,6 @@ it:
           composer_bold: "%{shortcut} Grassetto (solo compositore)"
           composer_italic: "%{shortcut} Corsivo (solo compositore)"
           composer_code: "%{shortcut} Codice (solo compositore)"
-          drawer_open: "%{shortcut} Apri il cassetto della chat"
           drawer_close: "%{shortcut} Chiudi il cassetto della chat"
           mark_all_channels_read: "%{shortcut} Contrassegna tutti i canali come letti"
     topic_statuses:
