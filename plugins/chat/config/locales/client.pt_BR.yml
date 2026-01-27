@@ -717,7 +717,6 @@ pt_BR:
           composer_bold: "%{shortcut} Negrito (somente compositor)"
           composer_italic: "%{shortcut} Itálico (somente compositor)"
           composer_code: "%{shortcut} Código (somente compositor)"
-          drawer_open: "%{shortcut} Abrir a gaveta do chat"
           drawer_close: "%{shortcut} Fechar a gaveta do chat"
           mark_all_channels_read: "%{shortcut} Marcar todos os canais como lidos"
     topic_statuses:
