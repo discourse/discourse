@@ -95,4 +95,8 @@
   .category-permissions-table {
     width: 100%;
   }
+
+  .form-kit__errors-summary + .form-kit__section.edit-category-content {
+    margin-top: 0;
+  }
 }

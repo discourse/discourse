@@ -106,23 +106,6 @@ export default class EditCategoryTabsController extends Controller {
     return data;
   }
 
-  @action
-  canSaveForm(transientData) {
-    if (!transientData.name) {
-      return false;
-    }
-
-    if (transientData.style_type === "emoji" && !transientData.emoji) {
-      return false;
-    }
-
-    if (this.saving || this.deleting) {
-      return true;
-    }
-
-    return true;
-  }
-
   @discourseComputed("saving", "deleting")
   deleteDisabled(saving, deleting) {
     return deleting || saving || false;
