@@ -79,10 +79,6 @@
     }
 
     .mention {
-      &.--wide {
-        @include mention;
-      }
-
       &.highlighted {
         background: var(--tertiary-low);
       }
@@ -94,6 +90,10 @@
           vertical-align: middle;
         }
       }
+    }
+
+    span.mention {
+      @include mention;
     }
 
     // unlinked, invalid mention
