@@ -365,9 +365,9 @@ constraints: {
 }
 ```
 
-Constraints define validation rules across multiple arguments. They're checked at runtime after defaults are applied, and errors are caught at boot time when `renderBlocks()` is called.
+Constraints define validation rules across multiple arguments. While the `args` schema validates each argument individually (type, required, min/max), constraints express *relationships* between arguments—things like "provide one or the other, but not both" or "if you provide A, you must also provide B." They're checked at runtime after defaults are applied, and errors are caught at boot time when `renderBlocks()` is called.
 
-**Constraint types:**
+Here are the available constraint types:
 
 | Constraint | Meaning | Example |
 |------------|---------|---------|
@@ -689,9 +689,11 @@ Now that you understand the concepts and have seen a complete example, let's loo
 
 ## 2. The Moving Parts
 
+With the mental model in place, let's get practical. This section covers what you need to build with blocks: how they compare to plugin outlets, how to register and compose them, and how to create block outlets in templates.
+
 ### Blocks and Plugin Outlets
 
-Blocks and plugin outlets serve different purposes:
+A question that often comes up: when should you use blocks versus plugin outlets? They're complementary tools, not competitors—here's how they differ:
 
 | Aspect | Blocks | Plugin Outlets |
 |--------|--------|----------------|
@@ -726,8 +728,10 @@ What you need to know to build with blocks.
 Ideally, the Blocks API separates **registering blocks** from **composing layouts**. This separation of concerns makes it easier to reason about what belongs where—but real-world usage is flexible. Plugins sometimes need to compose layouts, and themes sometimes provide blocks. Here's the mental model:
 
 **Core** provides built-in blocks:
-- Container blocks like `group` for layout structure
+- Container blocks like `group` for general layout structure, and `first-match` for prioritized conditional rendering (only the first child whose conditions pass will render)
 - Always available—no registration needed in your code
+
+We'll see `first-match` in action in the tutorials.
 
 **Plugins** register blocks:
 ```javascript
@@ -999,19 +1003,37 @@ Pass data from the parent template to blocks via `@outletArgs`. Given a BlockOut
 />
 ```
 
-> **Important difference from plugin outlets:** In blocks, outlet args are accessed via `@outletArgs`, not `@args`. The `@args` namespace is reserved for the block's layout entry args (from `renderBlocks()`). This separation is intentional—it clearly distinguishes "data from the template context" (`@outletArgs`) from "data from the layout entry" (`@args`).
+> :exclamation: **Key difference from plugin outlets:** In blocks, outlet args are accessed via `@outletArgs`, not `@args`. This is different from plugin outlet connectors where you'd use `@outletArgs.topic` or just `@topic`.
+>
+> The `@args` namespace in blocks is reserved for the block's layout entry args (from `renderBlocks()`). This separation is intentional—it clearly distinguishes "data from the template context" (`@outletArgs`) from "data from the layout configuration" (`@args`).
+
+Here's how both look in practice:
 
 ```javascript
 // In your block component:
 <template>
-  {{! Layout entry args - from renderBlocks() layout }}
+  {{! Layout entry args - configured in renderBlocks() }}
   <h2>{{@title}}</h2>
+  <p class={{@variant}}>...</p>
 
-  {{! Outlet args - from BlockOutlet's @outletArgs }}
+  {{! Outlet args - passed from the template via @outletArgs }}
   <p>Topic: {{@outletArgs.topic.title}}</p>
   <p>Author: {{@outletArgs.user.username}}</p>
 </template>
 ```
+
+In the layout configuration, you'd set the `@title` and `@variant` args:
+
+```javascript
+api.renderBlocks("topic-header-blocks", [
+  {
+    block: MyBlock,
+    args: { title: "Related Content", variant: "highlighted" },  // becomes @title, @variant
+  },
+]);
+```
+
+The `@outletArgs.topic` and `@outletArgs.user` come from the BlockOutlet's `@outletArgs` prop in the template—the layout configuration doesn't control those.
 
 Conditions can reference outlet args with the `outletArg` condition type or `source` parameters on other conditions.
 
@@ -1061,11 +1083,11 @@ Conditions can see several things:
 - **Services** like `currentUser`, `siteSettings`, `router` (in custom conditions)
 - **Debug context** when logging is enabled
 
-You'll use conditions constantly, so let's start with how to combine them—then cover each built-in type.
+The system provides five built-in condition types: `user`, `route`, `setting`, `viewport`, and `outletArg`. Before diving into each one, let's look at how to combine them—since many real-world scenarios need more than one check.
 
 ### Combining Conditions
 
-Some blocks need more than one check. The Block API uses familiar boolean logic:
+When blocks need more than one check, the Blocks API uses familiar boolean logic:
 
 **AND logic (array):**
 ```javascript
@@ -1124,6 +1146,8 @@ Evaluates based on user state. By default, checks the **current user** (the pers
 { type: "user", loggedIn: true, admin: true, moderator: true, staff: true,
   minTrustLevel: 0, maxTrustLevel: 4, groups: ["beta-testers"] }
 ```
+
+All properties are optional—include only what you need to check:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -1283,6 +1307,8 @@ Uses [picomatch](https://github.com/micromatch/picomatch) glob syntax:
 - `"/{latest,top}"` - Brace expansion (matches either)
 
 **Semantic Page Types (`pages` option):**
+
+Page types represent Discourse's main navigation contexts. Using these instead of URL patterns means your conditions work correctly even if URLs change or custom routes are configured:
 
 | Page Type | Description | Parameters |
 |-----------|-------------|------------|
