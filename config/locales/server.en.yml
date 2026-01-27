@@ -2752,6 +2752,7 @@ en:
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     experimental_rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
+    always_include_topic_excerpts: "Includes topic excerpts in topic lists like Latest and so on. This excerpt may not be visible unless a theme component like 'Topic List Excerpts' is enabled."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
