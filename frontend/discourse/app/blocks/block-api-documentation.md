@@ -1495,7 +1495,7 @@ With conditions in hand, let's look at how the system decides which blocks to sh
 
 ### How Decisions Are Made
 
-When a `<BlockOutlet>` renders, it needs to decide which blocks to show. This happens in the `#preprocessEntries` method, which implements **bottom-up evaluation**.
+When a `<BlockOutlet>` renders, it needs to decide which blocks to show. It uses **bottom-up evaluation**.
 
 **Why bottom-up?** Container blocks have an implicit condition: they only render if they have at least one visible child. We need to know child visibility before we can determine parent visibility.
 
@@ -1519,8 +1519,8 @@ for each entry in layout:
   3. If container with children:
      a. Recursively preprocess children (this computes their visibility)
      b. Check if any child is visible
-  4. Set __visible = conditions passed AND (not container OR has visible children)
-  5. If not visible, set __failureReason for debug display
+  4. Mark visible if conditions passed AND (not container OR has visible children)
+  5. If not visible, record the reason for debug tools
 ```
 
 ### Figuring Out What to Show
@@ -1531,8 +1531,7 @@ Before conditions can be evaluated, block references must be resolved. The resol
 ```javascript
 // String reference → registry lookup
 { block: "discourse-analytics:stats-panel" }
-// System looks up "discourse-analytics:stats-panel" in blockRegistry Map
-// Returns the registered component class
+// System looks up the name in the block registry and returns the component class
 ```
 
 **Factory Function Resolution:**
@@ -1586,7 +1585,7 @@ api.renderBlocks("outlet", [
 //   - With ?: return null, mark entry as __optional
 ```
 
-The resolution cache (`factoryCache` Map) stores resolved classes to avoid repeated async loads. Once resolved, a factory never executes again—the cached class is returned directly.
+Resolved classes are cached to avoid repeated async loads. Once resolved, a factory never executes again—the cached class is returned directly.
 
 ### How Conditions Work
 
@@ -1606,28 +1605,26 @@ conditions: [
 
 In debug mode (when console logging is enabled), short-circuiting is disabled. All conditions are evaluated so the debug output shows the complete picture—you can see which conditions *would* have passed if earlier ones hadn't failed.
 
-**Visibility Flag Assignment:**
+**Visibility Flags:**
 
-Each entry receives two internal properties after evaluation:
+After evaluation, each entry is marked with:
 
-- `__visible` (`boolean`) - Whether the block should render
-- `__failureReason` (`string | null`) - Why it's hidden (for debug tools)
+- **Visibility** - Whether the block should render
+- **Failure reason** - Why it's hidden (shown in debug tools)
 
 Failure reasons include:
-- `"condition-failed"` - Block's own conditions returned false
-- `"no-visible-children"` - Container has no visible children
+- Condition failed - Block's own conditions returned false
+- No visible children - Container has no visible children
 
 > :bulb: Optional blocks that are not registered are handled separately via a marker object, not a failure reason. They simply don't appear in the rendered output.
 
 **Container Visibility Logic:**
 
-Container blocks have an implicit condition: they only render if at least one child is visible. This prevents empty container wrappers from appearing in the DOM:
+Container blocks have an implicit condition: they only render if at least one child is visible. This prevents empty container wrappers from appearing in the DOM.
 
-```javascript
-// Container visibility calculation
-const ownConditionsPassed = evaluateConditions(entry.conditions);
-const hasVisibleChildren = entry.children?.some(c => c.__visible);
-entry.__visible = ownConditionsPassed && (isContainer ? hasVisibleChildren : true);
+In pseudocode:
+```
+visible = ownConditionsPassed AND (notContainer OR hasVisibleChildren)
 ```
 
 ### Caching Behavior
@@ -1673,9 +1670,9 @@ Conditions can depend on reactive state. When that state changes, the block tree
 **How Re-evaluation Works:**
 
 1. Tracked property changes notify Ember's reactivity system
-2. BlockOutlet's `children` getter (which calls `#preprocessEntries`) re-runs
+2. BlockOutlets re-evaluates the block tree
 3. All conditions re-evaluate with current state
-4. Components update based on new `__visible` flags
+4. Components update based on new visibility state
 
 **Minimizing Re-renders:**
 
@@ -2530,13 +2527,7 @@ Validation catches configuration mistakes. But what about intentional misuse—s
 
 ### The Authorization Symbol System
 
-Blocks use a secret symbol system to prevent unauthorized rendering:
-
-```javascript
-// Private symbols (not exported)
-const __BLOCK_FLAG = Symbol("block");
-const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
-```
+Blocks use a secret symbol system to prevent unauthorized rendering. The system defines private symbols (not exported) for blocks and container blocks.
 
 These symbols are:
 1. **Not exported** - External code can't access them
@@ -2560,7 +2551,7 @@ This prevents:
 
 The only way a block can render is as a child of a container block that passes the `$block$` symbol in args. But wait—what authorizes the first block in the chain?
 
-> **Trivia:** `<BlockOutlet>` is itself a block. Look at its definition and you'll see `@block("block-outlet", { container: true })`. It's a special container block that serves as the root of the block tree. It has a `__ROOT_BLOCK` static property set to the container symbol, which allows it to bypass the normal authorization check and start the chain of trust.
+> **Trivia:** `<BlockOutlet>` is itself a block. Look at its definition and you'll see `@block("block-outlet", { container: true })`. It's a special container block that serves as the root of the block tree. It has a static property that allows it to bypass the normal authorization check and start the chain of trust.
 
 With the foundations covered, let's put everything together with some practical examples.
 
