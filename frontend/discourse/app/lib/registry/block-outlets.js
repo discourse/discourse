@@ -37,7 +37,6 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks";
  */
 // eslint-discourse keep-array-sorted
 export const BLOCK_OUTLETS = Object.freeze([
-  "header-blocks",
   "hero-blocks",
   "homepage-blocks",
   "main-outlet-blocks",
