@@ -11,7 +11,9 @@ import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
-export default class EditCategoryImagesV2 extends buildCategoryPanel("images") {
+export default class UpsertCategoryAppearance extends buildCategoryPanel(
+  "images"
+) {
   @and("category.show_subcategory_list", "isParentCategory")
   showSubcategoryListStyle;
 

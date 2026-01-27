@@ -22,7 +22,7 @@ import IconPicker from "discourse/select-kit/components/icon-picker";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-export default class EditCategoryGeneralV2 extends Component {
+export default class UpsertCategoryGeneral extends Component {
   @service site;
   @service siteSettings;
 

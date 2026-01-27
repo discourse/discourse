@@ -18,7 +18,7 @@ import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { i18n } from "discourse-i18n";
 
-export default class EditCategorySettingsV2 extends buildCategoryPanel(
+export default class UpsertCategorySettings extends buildCategoryPanel(
   "settings"
 ) {
   @setting("email_in") emailInEnabled;
