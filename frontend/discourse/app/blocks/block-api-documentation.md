@@ -882,6 +882,8 @@ Once you're composing layouts, you may want to create your own blocks. The `@blo
 class Banner extends Component { ... }
 ```
 
+Most themes and plugins just use existing blocks. Create your own when you need custom rendering logic or want to encapsulate reusable UI patterns.
+
 See section 1 "What's Inside a Block" for the complete decorator options including args schemas, constraints, and outlet restrictions.
 
 #### Adding Block Outlets
@@ -1097,6 +1099,8 @@ conditions: [
 ]
 ```
 
+That covers the common case. But what if you need "either this OR that"?
+
 **OR logic (any wrapper):**
 ```javascript
 conditions: {
@@ -1107,6 +1111,8 @@ conditions: {
 }
 ```
 
+Sometimes you need the opposite—show this everywhere *except* certain conditions:
+
 **NOT logic (not wrapper):**
 ```javascript
 conditions: { not: { type: "route", pages: ["ADMIN_PAGES"] } }
@@ -1116,6 +1122,8 @@ conditions: { not: { type: "route", pages: ["ADMIN_PAGES"] } }
 ```javascript
 conditions: { type: "user", loggedIn: true }
 ```
+
+These patterns can be nested for complex requirements:
 
 **Complex combinations:**
 ```javascript
@@ -1172,6 +1180,8 @@ All properties are optional—include only what you need to check:
 { type: "user", source: "@outletArgs.topicAuthor", admin: true }
 ```
 
+**Choosing the right check:** Use `staff` when moderators and admins should see the same thing. Use `admin` or `moderator` separately when their experiences should differ. Use `groups` for feature rollouts to specific user segments.
+
 #### Setting Condition
 
 Evaluates based on site settings or custom settings objects.
@@ -1209,6 +1219,8 @@ import { settings } from "virtual:theme";
 // Check theme setting instead of site setting
 { type: "setting", source: settings, name: "show_sidebar", enabled: true }
 ```
+
+**Site settings vs theme settings:** Use site settings for admin-controlled features. Use theme settings when the theme itself controls the behavior, allowing different themes to have different defaults.
 
 #### Viewport Condition
 
@@ -1283,6 +1295,8 @@ Evaluates based on outlet arg values.
 { type: "outletArg", path: "topic", exists: true }
 ```
 
+OutletArg conditions are your tool for context-aware blocks—showing different content based on the specific topic, user, or category being viewed. The route condition, up next, handles broader navigation contexts.
+
 #### Route Condition
 
 The most flexible condition—and the most complex. It evaluates based on the current URL path, semantic page types, route parameters, and query parameters.
@@ -1324,7 +1338,14 @@ Page types represent Discourse's main navigation contexts. Using these instead o
 
 **URLs vs Pages:**
 
-Pages are preferred when you want to match page types regardless of URL structure. URLs are preferred when you need specific path patterns.
+Choose `pages` when:
+- You want to match a logical section (all category pages, all topic pages)
+- You need typed parameters like `categoryId` or `username`
+
+Choose `urls` when:
+- You need exact path matching
+- You're targeting custom routes not covered by page types
+- You need glob patterns for a specific URL structure
 
 ```javascript
 // Page type: matches category pages regardless of URL structure
@@ -1418,6 +1439,8 @@ The `params` object supports `any` (OR) and `not` (NOT) operators for complex ma
 > :bulb: **Tip:** Use `any` in params when you want to match one of several specific values. Use `not` to exclude specific values while matching others.
 
 **Query Parameters (`queryParams` option):**
+
+Query params are useful for targeting filtered views—like showing a "Mark all solved" button only when users are viewing the solved filter, or hiding certain elements on specific sort orders.
 
 Works with both `urls` and `pages`. Query params support the same `any` (OR) and `not` (NOT) operators as `params`:
 
@@ -1550,7 +1573,7 @@ export default {
 }
 ```
 
-Now that you understand conditions, let's see how the system actually evaluates them to decide what appears on screen.
+With conditions defined, the next question is: what happens when the page actually renders? How does the system decide, in real-time, which blocks make the cut?
 
 ---
 
@@ -2372,7 +2395,7 @@ The Blocks API debug tools complement browser DevTools:
 - Check if factory functions trigger network requests
 - Verify block chunks load correctly
 
-For most day-to-day work, the tools and techniques above are all you need. But if you're curious about what's happening beneath the surface—or you're working on the Blocks API itself—the next section dives into the internals.
+For most day-to-day work, the tools and techniques above are all you need. But if you want to understand the machinery that makes it all work—the registries, the evaluation pipeline, the authorization system—read on.
 
 ---
 
