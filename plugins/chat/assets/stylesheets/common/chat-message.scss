@@ -78,9 +78,10 @@
       width: 100%;
     }
 
-    a.mention,
-    span.mention.--wide {
-      @include mention;
+    .mention {
+      &.--wide {
+        @include mention;
+      }
 
       &.highlighted {
         background: var(--tertiary-low);

@@ -169,7 +169,6 @@ module Chat
     def publish(message:, guardian:, options:)
       edit_timestamp = context[:revision]&.created_at&.iso8601(6) || Time.zone.now.iso8601(6)
 
-      message.upsert_mentions
       ::Chat::Publisher.publish_edit!(message.chat_channel, message)
 
       DiscourseEvent.trigger(:chat_message_edited, message, message.chat_channel, message.user)

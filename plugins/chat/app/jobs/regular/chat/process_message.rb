@@ -28,6 +28,9 @@ module Jobs
             )
           end
 
+          # we dont process mentions when creating/updating message so we always have to do it
+          chat_message.upsert_mentions
+
           # extract external links for webhook-based rebaking
           ::Chat::MessageLink.extract_from(chat_message)
 

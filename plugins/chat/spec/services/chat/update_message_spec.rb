@@ -359,28 +359,6 @@ RSpec.describe Chat::UpdateMessage do
         expect(mentioned_user["status"].symbolize_keys.slice(:description, :emoji)).to eq(status)
       end
 
-      it "includes mentioned users in the message bus event" do
-        chat_message = create_chat_message(user1, "This will be updated", public_chat_channel)
-        new_content = "Hey @#{user2.username}"
-
-        edit_message =
-          MessageBus
-            .track_publish("/chat/#{public_chat_channel.id}") do
-              described_class.call(
-                guardian: guardian,
-                params: {
-                  message_id: chat_message.id,
-                  message: new_content,
-                },
-              )
-            end
-            .detect { |m| m.data["type"] == "edit" }
-            .data
-
-        expect(edit_message["chat_message"]["mentioned_users"].count).to eq(1)
-        expect(edit_message["chat_message"]["mentioned_users"][0]["id"]).to eq(user2.id)
-      end
-
       it "doesn't add mentioned user's status to the message bus message when status is disabled" do
         SiteSetting.enable_user_status = false
         user2.set_status!("dentist", "tooth")

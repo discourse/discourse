@@ -79,7 +79,8 @@ RSpec.describe Chat::CreateMessage do
         expect(message).to have_attributes(excerpt: content)
       end
 
-      it "creates mentions synchronously" do
+      it "creates mentions" do
+        Jobs.run_immediately!
         expect { result }.to change { Chat::Mention.count }.by(1)
       end
 
@@ -512,19 +513,6 @@ RSpec.describe Chat::CreateMessage do
                         instance_of(Chat::Message),
                       )
                       result
-                    end
-
-                    it "includes mentioned users in the message bus event" do
-                      sent_message =
-                        MessageBus
-                          .track_publish("/chat/#{channel.id}") { result }
-                          .detect { |m| m.data["type"] == "sent" }
-                          .data
-
-                      expect(sent_message["chat_message"]["mentioned_users"].count).to eq(1)
-                      expect(sent_message["chat_message"]["mentioned_users"][0]["id"]).to eq(
-                        other_user.id,
-                      )
                     end
 
                     context "when upload was created by another user" do
