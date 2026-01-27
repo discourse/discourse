@@ -87,6 +87,24 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       .exists("has the correct css class");
   });
 
+  test("Self-mention is highlighted", async function (assert) {
+    const channel = new ChatFabricators(getOwner(this)).channel();
+    this.message = new ChatFabricators(getOwner(this)).message({
+      channel,
+      message: `Hey @${this.currentUser.username} check this out`,
+      mentioned_users: [this.currentUser],
+    });
+    await this.message.cook();
+
+    await render(
+      <template><ChatMessage @message={{this.message}} /></template>
+    );
+
+    assert
+      .dom(`a.mention[href="/u/${this.currentUser.username.toLowerCase()}"]`)
+      .hasClass("--current", "self-mention has --current class");
+  });
+
   test("Message with streaming", async function (assert) {
     // admin
     this.currentUser.admin = true;

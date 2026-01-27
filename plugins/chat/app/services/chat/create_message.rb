@@ -87,6 +87,7 @@ module Chat
     end
 
     step :publish_new_thread
+    step :create_mentions
     step :process
     step :publish_user_tracking_state
     step :index_message
@@ -232,6 +233,10 @@ module Chat
       return unless channel.threading_enabled? || thread&.force
       return unless reply&.thread_id_previously_changed?(from: nil)
       Chat::Publisher.publish_thread_created!(channel, reply, thread.id)
+    end
+
+    def create_mentions(message_instance:)
+      message_instance.upsert_mentions
     end
 
     def process(channel:, message_instance:, params:, thread:, options:)
