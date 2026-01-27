@@ -15,7 +15,6 @@ import UpsertCategoryTags from "discourse/admin/components/upsert-category/tags"
 import EditCategoryTabsHorizontal from "discourse/admin/templates/edit-category/tabs-horizontal";
 import EditCategoryTabsVertical from "discourse/admin/templates/edit-category/tabs-vertical";
 import Form from "discourse/components/form";
-import { not } from "discourse/truth-helpers";
 
 const TAB_COMPONENTS = {
   general: EditCategoryGeneral,
@@ -60,6 +59,7 @@ export default <template>
       @data={{@controller.formData}}
       @onDirtyCheck={{@controller.isLeavingForm}}
       @onSubmit={{@controller.saveCategory}}
+      @validate={{@controller.validateForm}}
       as |form transientData|
     >
       <form.Section
@@ -112,11 +112,7 @@ export default <template>
       {{/if}}
 
       <form.Actions class="edit-category-footer">
-        <form.Submit
-          @disabled={{not (@controller.canSaveForm transientData)}}
-          @label={{@controller.saveLabel}}
-          id="save-category"
-        />
+        <form.Submit @label={{@controller.saveLabel}} id="save-category" />
 
         {{#if @controller.model.can_delete}}
           <form.Button
