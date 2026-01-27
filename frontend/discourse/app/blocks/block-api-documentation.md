@@ -1258,7 +1258,7 @@ Evaluates based on viewport size and device capabilities.
 { type: "viewport", touch: true }
 ```
 
-> **Note:** For simple show/hide based on viewport, CSS media queries are often more performant. Use this condition when you need to prevent a component from rendering entirely—for example, to avoid unnecessary data fetching on mobile, or to show completely different blocks based on screen size.
+> :bulb: For simple show/hide based on viewport, CSS media queries are often more performant. Use this condition when you need to prevent a component from rendering entirely—for example, to avoid unnecessary data fetching on mobile, or to show completely different blocks based on screen size.
 
 #### OutletArg Condition
 
@@ -2275,43 +2275,43 @@ Now that you know what the tools look like, let's talk about *when* to use them.
 
 **"I can't see my block"**
 
+Start by figuring out whether the block is being skipped or not evaluated at all.
+
 1. Enable **Console Logging** in dev tools
 2. Navigate to the page where the block should appear
 3. Look for your block in the console:
-   - `✗ SKIPPED` - Check which condition failed
-   - Not logged at all - Block not registered or outlet not configured
+   - `✗ SKIPPED` — Your conditions are the issue; check which one failed
+   - Not logged at all — Block not registered or outlet not configured
+
+If you see SKIPPED, dig into the condition tree. If you don't see the block at all, it's a configuration problem. Either way, the visual tools help narrow it down:
 
 4. Enable **Visual Overlay** and **Outlet Boundaries**
 5. Find the outlet where your block should render
-6. Check if a ghost appears (conditions failed) or nothing (configuration issue)
+6. Check what appears: a ghost means conditions failed; nothing at all means the block isn't configured for this outlet
 
 **"My condition isn't working"**
 
+The console logs show you exactly what's being evaluated and why it failed.
+
 1. Enable **Console Logging**
 2. Expand the log for your block
-3. Check the condition tree:
-   - Is the condition type correct?
-   - Are the arguments what you expect?
-   - Is there a type mismatch warning?
+3. Check the condition tree — is the condition type correct? Are the arguments what you expect? Look for type mismatch warnings.
 
-4. For route conditions, check:
-   - Is the current URL what you expect?
-   - Are page types matching? (`CATEGORY_PAGES` vs actual category page)
-   - Are query params present?
+Route conditions are particularly tricky because URLs and page types can be subtle:
+
+4. For route conditions, verify the current URL matches what you expect, that page types are resolving correctly (`CATEGORY_PAGES` vs the actual category page you're on), and that any query params you're checking are actually present.
 
 **"I'm not sure what's happening"**
 
+When you're lost, turn on everything and observe.
+
 1. Enable all debug tools
 2. Open browser DevTools console
-3. Navigate through the app and watch:
-   - Which blocks render/skip on each page
-   - What conditions are evaluated
-   - What the actual vs expected values are
+3. Navigate through the app and watch which blocks render or skip on each page, what conditions are evaluated, and how actual values compare to what you configured
 
-4. Click on block badges to see:
-   - What arguments were passed
-   - What outlet args are available
-   - The full condition specification
+The visual overlay gives you interactive access to block details:
+
+4. Click on block badges to inspect what arguments were passed, what outlet args are available, and the full condition specification
 
 ### State Persistence
 
