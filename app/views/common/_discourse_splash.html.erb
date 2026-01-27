@@ -1,7 +1,7 @@
 <section id="d-splash">
   <style>
     html {
-      overflow-y: hidden !important;
+      overflow: hidden !important;
     }
 
     /* user picked a theme where the "regular" scheme is dark */
@@ -68,7 +68,7 @@
     #d-splash .preloader-image {
       --splash-dot-size: max(1vw, 25px);
       --splash-dot-spacing: calc(var(--splash-dot-size) * 1.5);
-      width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
+      width: 700px;
       height: 100vh;
       background-size: cover;
       display: flex;
@@ -134,13 +134,12 @@
     }
 
     <%- if (logo_upload = SiteSetting.splash_screen_image) && logo_upload.is_a?(Upload) %>
-    #d-splash .preloader-image {
+     #d-splash .preloader-image {
       --splash-dot-size: max(0.7vw, 14px);
     }
-
     #d-splash .splash-logo-container {
-      width: min(300px, 80vw);
-      height: 80px;
+      width: min(200px, 55vw);
+      height: min(130px, 20vh);
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
