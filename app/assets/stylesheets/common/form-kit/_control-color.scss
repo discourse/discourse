@@ -122,14 +122,17 @@
   flex-wrap: wrap;
   gap: 0.25em;
 
+  /* Will show 8 swatches in a row, see color-swatch width and gap */
+  max-width: calc((var(--space) * 7) + (var(--space-5) * 8));
+
   .color-swatches-menu-content & {
     padding: var(--space-2);
   }
 }
 
 .form-kit__control-color-swatch {
-  width: 1.25em;
-  height: 1.25em;
+  width: var(--space-5);
+  height: var(--space-5);
   padding: 0;
   border: 1px solid var(--primary-medium);
   border-radius: 2px;
