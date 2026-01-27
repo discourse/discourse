@@ -69,6 +69,12 @@ export default class FKControlColor extends Component {
     return this.args.allowNamedColors ? null : 6;
   }
 
+  get sortedColors() {
+    return this.args.colors.sort((a) =>
+      isColorUsed(this.args.usedColors, a) ? 1 : -1
+    );
+  }
+
   get normalizedValueForPicker() {
     const value = this.args.field.value;
     if (!value) {
@@ -162,7 +168,7 @@ export default class FKControlColor extends Component {
           >
             <:content as |args|>
               <div class="form-kit__control-color-swatches" role="group">
-                {{#each @colors as |color|}}
+                {{#each this.sortedColors as |color|}}
                   <button
                     type="button"
                     style={{colorStyle color}}
@@ -193,7 +199,7 @@ export default class FKControlColor extends Component {
       {{#if @colors}}
         {{#unless @collapseSwatches}}
           <div class="form-kit__control-color-swatches" role="group">
-            {{#each @colors as |color|}}
+            {{#each this.sortedColors as |color|}}
               <button
                 type="button"
                 style={{colorStyle color}}
