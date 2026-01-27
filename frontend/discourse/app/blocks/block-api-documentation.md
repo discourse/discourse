@@ -309,6 +309,8 @@ export default class HeroBanner extends Component {
 }
 ```
 
+> :bulb: Don't worry about `childArgs` and `containerArgs` yet—they're for container blocks, covered in detail in section (H) below.
+
 Let's examine each part:
 
 #### (A) Block Name: `"theme:my-theme:hero-banner"`
@@ -1095,6 +1097,11 @@ The system provides five built-in condition types: `user`, `route`, `setting`, `
 
 When blocks need more than one check, the Blocks API uses familiar boolean logic:
 
+**Single condition (no array needed):**
+```javascript
+conditions: { type: "user", loggedIn: true }
+```
+
 **AND logic (array):**
 ```javascript
 conditions: [
@@ -1102,8 +1109,6 @@ conditions: [
   { type: "route", pages: ["DISCOVERY_PAGES"] }
 ]
 ```
-
-That covers the common case. But what if you need "either this OR that"?
 
 **OR logic (any wrapper):**
 ```javascript
@@ -1115,16 +1120,9 @@ conditions: {
 }
 ```
 
-Sometimes you need the opposite—show this everywhere *except* certain conditions:
-
 **NOT logic (not wrapper):**
 ```javascript
 conditions: { not: { type: "route", pages: ["ADMIN_PAGES"] } }
-```
-
-**Single condition (no array needed):**
-```javascript
-conditions: { type: "user", loggedIn: true }
 ```
 
 These patterns can be nested for complex requirements:
@@ -3622,7 +3620,9 @@ module("Unit | Condition | feature-flag", function (hooks) {
 
 #### Integration Testing Block Visibility
 
-Test blocks with conditions using the test helpers from the registration module:
+Test blocks with conditions using the test helpers from the registration module.
+
+> :bulb: These test examples use hypothetical outlet names like `test-outlet` and `topic-outlet`. In tests, outlet names can be created on the fly—you don't need to register them separately.
 
 ```javascript
 import Component from "@glimmer/component";
@@ -3943,3 +3943,8 @@ Key terminology used throughout this documentation:
 | **Outlet** | A designated location in the UI where blocks can render. Defined by `<BlockOutlet @name="...">` in templates. |
 | **Outlet Args** | Data passed from the template context to blocks via `@outletArgs` on the BlockOutlet component. |
 | **Ghost Block** | A debug-mode placeholder that appears where a hidden block would render, showing why it's not visible. |
+| **Factory Function** | A function that returns a Promise resolving to a block component, used for lazy loading. Registered with `registerBlock("name", () => import("./block"))`. |
+| **Registry Freeze** | The point during boot when the block, outlet, and condition registries become immutable. Happens after the `freeze-block-registry` initializer runs. |
+| **Namespace** | The prefix portion of a block name that identifies its source. Format: `plugin-name:` for plugins, `theme:theme-name:` for themes. |
+| **Preprocessing Pipeline** | The internal process that transforms a layout configuration into renderable components, including block resolution, condition evaluation, and component creation. |
+| **Evaluation Context** | The data available to conditions during evaluation, including outlet args and outlet name. |
