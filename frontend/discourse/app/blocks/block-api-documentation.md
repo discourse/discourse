@@ -8,7 +8,7 @@
 
 Plugin outlets have served Discourse well for years, but they have limitations:
 
-- **Duplicated logic:** You handle visibility logic inside connector components, often duplicating checks across multiple connectors.
+- **Duplicated logic.** You handle visibility logic inside connector components, often duplicating checks across multiple connectors.
 - **No coordination.** Multiple plugins extending the same outlet have no structured way to order themselves or share context.
 - **Template-only extension.** Outlets are places to inject markup, but there's no registry of what's injected or metadata about it.
 - **No validation.** Typos in outlet names fail silently. Invalid arguments aren't caught until runtime (if at all).
@@ -43,7 +43,7 @@ Blocks are designed for **structured layout areas**—regions where you want to 
 - Minor UI tweaks throughout the app
 - Places where the "composed layout" model doesn't fit
 
-For smaller customizations or complex bespoke features, plugin outlets remain available. A page might use blocks for its main content layout while using plugin outlets for small additions elsewhere.
+For smaller customizations or highly specialized features, plugin outlets remain available. A page might use blocks for its main content layout while using plugin outlets for small additions elsewhere.
 
 ### Limitations
 
@@ -61,7 +61,7 @@ Before diving in, understand what the Blocks API *doesn't* do:
 
 - **Nesting depth limit.** Block layouts cannot nest deeper than 20 levels. This prevents stack overflow from deeply nested configurations and typically indicates a design issue if reached.
 
-These constraints are intentional trade-offs for simplicity and predictability. For truly bespoke customizations that don't fit the block model—complex interactive components, entirely custom layouts, or cases requiring multiple independent contributors—plugin outlets remain available.
+These constraints are intentional trade-offs for simplicity and predictability. For truly custom solutions that don't fit the block model—complex interactive components, entirely custom layouts, or cases requiring multiple independent contributors—plugin outlets remain available.
 
 So how does all this fit together? What are these blocks all about?
 
@@ -206,7 +206,7 @@ Each block entry tells the system what to render and how to configure it. The on
 | `conditions` | No | If omitted, always renders |
 | `classNames` | No | Added to wrapper element |
 | `children` | No | Only for container blocks |
-| `containerArgs` | No | Metadata for parent container—see "Child Args Schema" below |
+| `containerArgs` | No | Data a child provides to its parent container (e.g., a tab name for a tabs container)—see "Child Args Schema" below |
 
 That covers the basics—now let's look at the full anatomy of a block to understand all the options available.
 
@@ -683,7 +683,7 @@ Understanding when things happen helps debug issues.
 - Block not registered? Error at boot.
 - Condition fails at runtime? Block silently doesn't render (or shows ghost in debug).
 
-> :bulb: When lazy-loaded blocks are involved, schema and constraint validations are deferred to when the layout is rendered for the first time.
+> :bulb: When lazy-loaded blocks are involved (blocks registered with a factory function like `() => import("./my-block")` for code splitting), schema and constraint validations are deferred to when the layout is rendered for the first time.
 
 Now that you've seen how blocks flow from registration to rendering, let's look at the building blocks in more detail.
 
@@ -699,7 +699,7 @@ A question that often comes up: when should you use blocks versus plugin outlets
 
 | Aspect | Blocks | Plugin Outlets |
 |--------|--------|----------------|
-| **Best for** | Structured layout regions | Small additions or bespoke customizations |
+| **Best for** | Structured layout regions | Small additions or custom one-offs |
 | **Reusability** | High—define once, use in many layouts | Lower—typically outlet-specific connectors |
 | **Markup** | Standardized wrapper with consistent styling hooks | You control all markup |
 | **Conditions** | Declarative, validated at boot | Custom logic in your component |
@@ -719,7 +719,7 @@ A question that often comes up: when should you use blocks versus plugin outlets
 **Use plugin outlets when:**
 - You're making small additions to existing UI (badges, buttons)
 - You need full control over markup and behavior
-- You're building complex, bespoke features that don't fit the composed layout model
+- You're building complex, highly customized features that don't fit the composed layout model
 
 ### Using the Blocks API
 
@@ -890,15 +890,88 @@ See section 1 "What's Inside a Block" for the complete decorator options includi
 
 #### Adding Block Outlets
 
-The `<BlockOutlet>` component defines where blocks render in templates. Core and plugins use this to create outlet locations that themes can then populate.
+The `<BlockOutlet>` component defines where blocks render in templates. Core and plugins use this to create outlet locations that themes can then populate. Remember from Section 1: outlets are the "rooms" where blocks live—you can't place a block without one.
 
 ```handlebars
 <BlockOutlet @name="homepage-blocks" />
 ```
 
+That's the simplest form—just a named location. The outlet waits for someone to call `renderBlocks()` with its name, then renders whatever blocks are configured.
+
+**Outlet Args**
+
+Some outlets need to pass contextual data to their blocks. A topic sidebar needs to tell blocks which topic is being viewed. A user profile outlet needs to share the user object. This is done via `@outletArgs`:
+
+```handlebars
+{{! Example: a hypothetical outlet in a topic header template }}
+<BlockOutlet
+  @name="topic-header-blocks"
+  @outletArgs={{hash topic=this.model user=this.currentUser}}
+/>
+```
+
+> :exclamation: **Key difference from plugin outlets:** In blocks, outlet args are accessed via `@outletArgs`, not `@args`. This is different from plugin outlet connectors where you'd use `@outletArgs.topic` or just `@topic`.
+>
+> The `@args` namespace in blocks is reserved for the block's layout entry args (from `renderBlocks()`). This separation is intentional—it clearly distinguishes "data from the template context" (`@outletArgs`) from "data from the layout configuration" (`@args`).
+
+Here's how both look in practice:
+
+```javascript
+// In your block component:
+<template>
+  {{! Layout entry args - configured in renderBlocks() }}
+  <h2>{{@title}}</h2>
+  <p class={{@variant}}>...</p>
+
+  {{! Outlet args - passed from the template via @outletArgs }}
+  <p>Topic: {{@outletArgs.topic.title}}</p>
+  <p>Author: {{@outletArgs.user.username}}</p>
+</template>
+```
+
+In the layout configuration, you'd set the `@title` and `@variant` args:
+
+```javascript
+api.renderBlocks("topic-header-blocks", [
+  {
+    block: MyBlock,
+    args: { title: "Related Content", variant: "highlighted" },  // becomes @title, @variant
+  },
+]);
+```
+
+The `@outletArgs.topic` and `@outletArgs.user` come from the BlockOutlet's `@outletArgs` prop in the template—the layout configuration doesn't control those.
+
+Conditions can reference outlet args with the `outletArg` condition type or `source` parameters on other conditions (covered in detail in Section 3).
+
+**System Args**
+
+In addition to outlet args, the block system automatically provides a system arg to all blocks:
+
+| Arg | Type | Description |
+|-----|------|-------------|
+| `@outletName` | `string` | The outlet identifier this block is rendered in (e.g., `"homepage-blocks"`) |
+
+Access it in your block template just like any other arg:
+
+```javascript
+<template>
+  {{! Access the outlet name for conditional styling or logic }}
+  <div class="my-block my-block--in-{{@outletName}}">
+    {{@title}}
+  </div>
+</template>
+```
+
+The system uses `@outletName` internally for:
+- **CSS class generation:** Wrapper classes like `{outletName}__block` and `{outletName}__{name}` for BEM-style scoping
+- **Debug context:** Identifying which outlet a block belongs to in error messages and dev tools
+
+You typically don't need to access `@outletName` directly—the system handles CSS class generation automatically. However, it's available if your block needs outlet-specific behavior or styling.
+
 **Named Blocks: `:before` and `:after`**
 
-BlockOutlet supports Ember's named blocks pattern to render content around your blocks:
+Sometimes you need to render content around your blocks—a header before them, an empty state after. BlockOutlet supports Ember's named blocks pattern for this:
 
 ```handlebars
 <BlockOutlet @name="homepage-blocks">
@@ -995,77 +1068,6 @@ Both named blocks receive a boolean parameter indicating whether **any blocks ar
 
 **Important distinction:** The boolean tells you if blocks are *configured*, not if they're *visible*. If you configure three blocks but all their conditions fail, `isConfigured` is still `true`—the outlet has configuration, it just has no visible output. This is intentional: it distinguishes "no one set this up" from "it's set up but nothing applies right now."
 
-**Outlet Args**
-
-Pass data from the parent template to blocks via `@outletArgs`. Given a BlockOutlet like this:
-
-```handlebars
-{{! Example: a hypothetical outlet in a topic header template }}
-<BlockOutlet
-  @name="topic-header-blocks"
-  @outletArgs={{hash topic=this.model user=this.currentUser}}
-/>
-```
-
-> :exclamation: **Key difference from plugin outlets:** In blocks, outlet args are accessed via `@outletArgs`, not `@args`. This is different from plugin outlet connectors where you'd use `@outletArgs.topic` or just `@topic`.
->
-> The `@args` namespace in blocks is reserved for the block's layout entry args (from `renderBlocks()`). This separation is intentional—it clearly distinguishes "data from the template context" (`@outletArgs`) from "data from the layout configuration" (`@args`).
-
-Here's how both look in practice:
-
-```javascript
-// In your block component:
-<template>
-  {{! Layout entry args - configured in renderBlocks() }}
-  <h2>{{@title}}</h2>
-  <p class={{@variant}}>...</p>
-
-  {{! Outlet args - passed from the template via @outletArgs }}
-  <p>Topic: {{@outletArgs.topic.title}}</p>
-  <p>Author: {{@outletArgs.user.username}}</p>
-</template>
-```
-
-In the layout configuration, you'd set the `@title` and `@variant` args:
-
-```javascript
-api.renderBlocks("topic-header-blocks", [
-  {
-    block: MyBlock,
-    args: { title: "Related Content", variant: "highlighted" },  // becomes @title, @variant
-  },
-]);
-```
-
-The `@outletArgs.topic` and `@outletArgs.user` come from the BlockOutlet's `@outletArgs` prop in the template—the layout configuration doesn't control those.
-
-Conditions can reference outlet args with the `outletArg` condition type or `source` parameters on other conditions.
-
-**System Args**
-
-In addition to outlet args, the block system automatically provides a system arg to all blocks:
-
-| Arg | Type | Description |
-|-----|------|-------------|
-| `@outletName` | `string` | The outlet identifier this block is rendered in (e.g., `"homepage-blocks"`) |
-
-Access it in your block template just like any other arg:
-
-```javascript
-<template>
-  {{! Access the outlet name for conditional styling or logic }}
-  <div class="my-block my-block--in-{{@outletName}}">
-    {{@title}}
-  </div>
-</template>
-```
-
-The system uses `@outletName` internally for:
-- **CSS class generation:** Wrapper classes like `{outletName}__block` and `{outletName}__{name}` for BEM-style scoping
-- **Debug context:** Identifying which outlet a block belongs to in error messages and dev tools
-
-You typically don't need to access `@outletName` directly—the system handles CSS class generation automatically. However, it's available if your block needs outlet-specific behavior or styling.
-
 Now that you know how to register, compose, and create blocks, the next question is: how do you express "show this to admins" or "only on the homepage"?
 
 ---
@@ -1148,6 +1150,18 @@ With the combination syntax covered, let's look at each built-in condition type�
 
 ### Built-in Conditions
 
+Five condition types ship with Discourse, each designed for a specific category of visibility logic:
+
+| When you want to... | Use this condition |
+|---------------------|-------------------|
+| Show content based on who's viewing (logged in, admin, trust level) | `user` |
+| Check a site or theme setting | `setting` |
+| Respond to screen size or device type | `viewport` |
+| Check data passed from the template (topic properties, user objects) | `outletArg` |
+| Match specific pages, URLs, or navigation contexts | `route` |
+
+Most blocks need only one or two condition types. A welcome banner might just check `user.loggedIn`. A category sidebar might combine `route` (to target category pages) with `outletArg` (to check category properties). Start with the simplest condition that achieves your goal—you can always add more later.
+
 #### User Condition
 
 Evaluates based on user state. By default, checks the **current user** (the person viewing the page). Use `source` to check a different user from outlet args.
@@ -1157,7 +1171,7 @@ Evaluates based on user state. By default, checks the **current user** (the pers
   minTrustLevel: 0, maxTrustLevel: 4, groups: ["beta-testers"] }
 ```
 
-All properties are optional—include only what you need to check:
+All properties are optional—include only what you need to check. The table below shows what's available, from basic authentication checks to group membership:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -1192,6 +1206,8 @@ Evaluates based on site settings or custom settings objects.
 { type: "setting", name: "setting_name", enabled: true, equals: "value",
   includes: [...], contains: "value", containsAny: [...], source: {...} }
 ```
+
+The `name` property is always required—it identifies which setting to check. The other properties determine *how* to check it:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -1239,6 +1255,8 @@ Evaluates based on viewport size and device capabilities.
 - `xl` - ≥1280px
 - `2xl` - ≥1536px
 
+You can check breakpoints, or go broader with device-type checks:
+
 | Property | Type | Description |
 |----------|------|-------------|
 | `min` | `string` | Viewport must be at least this size |
@@ -1269,6 +1287,8 @@ Evaluates based on outlet arg values.
 ```javascript
 { type: "outletArg", path: "topic.closed", value: true }
 ```
+
+The `path` property uses dot notation to navigate nested objects. The other properties determine what to check about that value:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -1587,7 +1607,7 @@ When a `<BlockOutlet>` renders, it kicks off a decision process. The system does
 
 When a `<BlockOutlet>` renders, it needs to decide which blocks to show. It uses **bottom-up evaluation**.
 
-**Why bottom-up?** Container blocks have an implicit condition: they only render if they have at least one visible child. We need to know child visibility before we can determine parent visibility.
+**Why bottom-up?** Container blocks have an implicit condition: they only render if they have at least one visible child. We need to know child visibility before we can determine parent visibility. Think of it like our furniture analogy: you can't decide if a shelving unit fits in the room until you know which drawer inserts and compartments will actually be used.
 
 ```
 Block Tree:                    Evaluation Order:
@@ -1843,7 +1863,7 @@ That covers how the evaluation engine works. But what happens when you make a mi
 
 ## 5. When Things Go Wrong
 
-A powerful API is only useful if you can debug it when things go wrong. The Blocks API invests heavily in developer experience—not just catching errors, but explaining them in a way that points you toward the solution.
+A powerful API is only useful if you can debug it when things go wrong. The Blocks API invests heavily in developer experience—not just catching errors, but explaining them in a way that points you toward the solution. Like furniture assembly instructions that catch mistakes before you've bolted everything together incorrectly, most validation happens at boot time so you see problems immediately.
 
 ### Helpful Error Messages
 
@@ -2395,143 +2415,364 @@ The Blocks API debug tools complement browser DevTools:
 - Check if factory functions trigger network requests
 - Verify block chunks load correctly
 
-For most day-to-day work, the tools and techniques above are all you need. But if you want to understand the machinery that makes it all work—the registries, the evaluation pipeline, the authorization system—read on.
+When blocks don't appear where you expect, the debugging tools help you see what's happening. But sometimes you want to understand *why* the system behaves the way it does—or you're working on the Blocks API itself and need to know how the pieces connect.
 
 ---
 
 ## 7. Under the Hood
 
-What follows is a tour of the internals—useful if you're working on the Blocks API itself or want to understand what's happening beneath the surface.
+Most developers never need to look here. The public API—`@block`, `registerBlock`, `renderBlocks`, `<BlockOutlet>`—handles everything you need for building with blocks. But if you're curious about the machinery, debugging something unusual, or contributing to the Blocks API itself, this section explains what happens behind the scenes.
 
 ### The Blocks Service
 
-For runtime introspection, inject the service:
+The `blocks` service is your window into the block system at runtime. While most block work happens declaratively through configuration, sometimes you need to query the system programmatically—checking if a plugin's blocks are available, listing what's registered for debugging, or building developer tools.
+
+Inject it like any Ember service:
 
 ```javascript
-@service blocks;
+import { service } from "@ember/service";
 
-// Check if a block is registered
-this.blocks.hasBlock("my-block")
+class MyComponent extends Component {
+  @service blocks;
 
-// Get all registered blocks with metadata
-this.blocks.listBlocksWithMetadata()
+  get availableBlocks() {
+    return this.blocks.listBlocksWithMetadata();
+  }
+}
 ```
 
-This is primarily useful for debugging, dev tools, and advanced scenarios where you need to query the registry programmatically.
+The service exposes several methods for introspection. The most commonly used is `hasBlock()`, which checks whether a block name is registered:
 
-The service is a thin wrapper around the block registry—let's look at what that registry actually does.
+```javascript
+// Check before referencing a plugin's block
+if (this.blocks.hasBlock("discourse-analytics:stats-panel")) {
+  // Safe to use the block
+}
+```
+
+For more detailed information, `listBlocksWithMetadata()` returns an array of objects describing every registered block:
+
+```javascript
+this.blocks.listBlocksWithMetadata()
+// Returns:
+// [
+//   {
+//     name: "theme:my-theme:banner",
+//     shortName: "banner",
+//     namespace: "theme:my-theme",
+//     type: "theme",
+//     isContainer: false,
+//     metadata: {
+//       description: "A promotional banner",
+//       args: { title: { type: "string", required: true } },
+//       // ... other schema properties
+//     }
+//   },
+//   // ... more blocks
+// ]
+```
+
+This is particularly useful for building admin interfaces that display available blocks, or for debugging tools that need to show what's registered. The metadata includes everything from the `@block()` decorator—description, args schema, constraints, outlet restrictions, and more.
+
+The service is intentionally read-only. You can't register blocks or modify the registry through it—that happens through the plugin API during initialization. The service simply provides a safe way to query what exists.
 
 ### The Block Registry
 
-The registry is a Map storing block name → block class (or factory). Internal tracking includes:
+Behind the service sits the block registry—a collection of Maps that track everything about registered blocks. Understanding its structure helps explain why certain errors occur and how the system enforces its rules.
 
-- **Resolved factory cache** - Stores resolved classes for lazy-loaded blocks
-- **Pending resolutions** - Prevents duplicate concurrent async loads
-- **Failed resolutions** - Prevents infinite retry loops
-- **Source namespace map** - Enforces consistent namespacing per theme/plugin
+**The Core Data Structures**
 
-The registry has two states:
-- **Unfrozen** (during pre-initializers) - Registrations allowed
-- **Frozen** (after `freeze-block-registry` initializer) - No more registrations
+The registry maintains several interconnected maps:
 
-This two-phase design ensures all blocks are registered before any `renderBlocks()` calls.
+The **primary registry** maps block names to their entries. Each entry is either a component class (for eagerly-loaded blocks) or a factory function (for lazy-loaded blocks):
+
+```javascript
+// Conceptually:
+blockRegistry = Map {
+  "theme:my-theme:banner" => BannerComponent,
+  "discourse-analytics:stats-panel" => () => import("./stats-panel"),
+  "group" => GroupComponent,
+  // ...
+}
+```
+
+The **factory cache** stores resolved classes for lazy-loaded blocks. When a factory function is called and its Promise resolves, the resulting class is cached here so subsequent uses don't trigger another async load:
+
+```javascript
+// After first resolution:
+factoryCache = Map {
+  "discourse-analytics:stats-panel" => StatsPanelComponent,
+}
+```
+
+The **pending resolutions** map tracks in-flight Promise resolutions. If two parts of the app try to resolve the same lazy block simultaneously, they share the same Promise rather than triggering duplicate loads:
+
+```javascript
+// During resolution:
+pendingResolutions = Map {
+  "discourse-analytics:stats-panel" => Promise<StatsPanelComponent>,
+}
+```
+
+The **failed resolutions** set remembers which factories have failed. This prevents infinite retry loops—if a lazy-loaded block's import fails (maybe the plugin is disabled or the file doesn't exist), the system won't keep trying:
+
+```javascript
+failedResolutions = Set {
+  "missing-plugin:broken-block",
+}
+```
+
+**The Freeze Mechanism**
+
+The registry has two states: unfrozen and frozen. During application boot, pre-initializers run with the registry unfrozen—this is when all `registerBlock()` calls must happen. After the `freeze-block-registry` initializer runs, the registry freezes and no more registrations are allowed.
+
+This two-phase design serves several purposes. It ensures all blocks are available before any `renderBlocks()` calls configure layouts. It makes the set of available blocks deterministic—you can't have blocks appearing mid-session. And it catches registration timing errors early with clear error messages rather than mysterious runtime failures.
+
+If you try to register a block after the freeze:
+
+```javascript
+// In an api-initializer (too late!):
+api.registerBlock(MyBlock);
+// Error: api.registerBlock() was called after the block registry was frozen.
+// Block registration must happen in pre-initializers that run before "freeze-block-registry".
+```
+
+**Namespace Enforcement**
+
+The registry also tracks which source (plugin or theme) registered each namespace. This prevents naming conflicts where two plugins might accidentally use the same block name.
+
+When you register `"my-plugin:banner"`, the registry records that the `my-plugin` namespace belongs to your plugin. If another plugin later tries to register `"my-plugin:other-block"`, it fails—that namespace is already claimed:
+
+```javascript
+// Plugin A registers:
+api.registerBlock(Banner);  // "my-plugin:banner" - claims "my-plugin" namespace
+
+// Plugin B tries:
+api.registerBlock(OtherBlock);  // "my-plugin:other" - ERROR: namespace conflict
+```
+
+This enforcement happens at registration time, so you'll see the error immediately during development rather than encountering mysterious behavior in production.
 
 ### The Preprocessing Pipeline
 
-With blocks registered and layouts configured, what happens when `<BlockOutlet>` renders?
+When a `<BlockOutlet>` component renders, it triggers a preprocessing pipeline that transforms the layout configuration into renderable components. This happens on every render, but the system is designed to be efficient through caching and short-circuit evaluation.
 
-1. Retrieves layout from the registry
-2. Resolves block references (string names → classes, factories → resolved classes)
-3. Evaluates conditions bottom-up (children before parents for container visibility)
-4. Creates curried components for visible blocks
-5. Creates ghost placeholders for hidden blocks (in debug mode)
+**Step 1: Layout Retrieval**
 
-That pipeline assumes everything is configured correctly. But what catches mistakes before they make it that far?
+The outlet looks up its layout configuration from the outlet registry. If no layout was configured via `renderBlocks()`, the outlet renders nothing (or just its `:before`/`:after` named blocks if provided). The layout is an array of block entries—the same structure you passed to `renderBlocks()`.
 
-### Keeping Things in Check
+**Step 2: Block Resolution**
 
-The Blocks API provides multiple layers of validation:
+Each block entry needs its block reference resolved to an actual component class. This handles the different ways blocks can be referenced:
 
-**Entry Key Validation:**
+For **class references** (when you imported and passed the class directly), resolution is immediate—the class is already available.
+
+For **string references** (`"my-plugin:banner"`), the system looks up the name in the registry. If not found and the reference isn't optional (no `?` suffix), an error is thrown.
+
+For **factory entries** (lazy-loaded blocks), the system checks the factory cache first. On cache hit, it uses the cached class. On cache miss, it calls the factory function, waits for the Promise to resolve, caches the result, and continues. During resolution, the pending resolutions map prevents duplicate concurrent loads.
+
 ```javascript
-// If you write:
-{ block: MyBlock, conditon: [...] }  // typo: "conditon"
-
-// You get:
-// Error: Unknown entry key: "conditon" (did you mean "conditions"?)
+// Resolution flow for lazy-loaded block:
+1. Check factoryCache → miss
+2. Check pendingResolutions → miss
+3. Call factory(), store Promise in pendingResolutions
+4. Await Promise
+5. Store result in factoryCache
+6. Remove from pendingResolutions
+7. Return resolved class
 ```
 
-**Args Schema Validation:**
+**Step 3: Condition Evaluation**
+
+With all blocks resolved, the system evaluates conditions to determine visibility. This happens bottom-up—children are evaluated before their parents—because container visibility depends on having at least one visible child.
+
+For each block entry:
+1. Evaluate the entry's own conditions (if any)
+2. If it's a container with children, recursively process children first
+3. For containers, check if any child is visible
+4. Mark the entry visible or hidden, recording the reason if hidden
+
+The evaluation creates a parallel structure of "processed entries" that include the original configuration plus computed visibility state.
+
+**Step 4: Component Creation**
+
+For visible blocks, the system creates curried components—components with their args pre-bound. This is what actually gets rendered in the template. The currying captures:
+
+- The block's declared args from the layout configuration
+- System args like `@outletName`
+- Outlet args from the `<BlockOutlet>` component
+- For containers: the processed children array
+
+**Step 5: Ghost Generation (Debug Mode)**
+
+When visual overlay debugging is enabled, hidden blocks don't just disappear—they become "ghost" placeholders. The system creates lightweight placeholder components that render as dashed outlines with badges explaining why the block is hidden.
+
+Ghosts preserve their position in the layout so you can see where blocks *would* appear if their conditions passed. This is invaluable for debugging visibility issues.
+
+### Validation Internals
+
+The Blocks API validates at multiple points during the application lifecycle. Understanding when each type of validation occurs helps you anticipate what errors you'll see and when.
+
+**Decoration Time**
+
+When the `@block()` decorator executes (as your JavaScript loads), it performs immediate validation:
+
+- Block name format (correct namespace pattern for plugins/themes)
+- Args schema structure (valid types, no conflicting options)
+- Constraint definitions (no incompatible constraints, no vacuous constraints due to defaults)
+- Outlet patterns (no conflicts between `allowedOutlets` and `deniedOutlets`)
+- Container-specific options (`containerClassNames` only on containers, `childArgs` only on containers)
+
+These errors appear in the console as soon as the file loads, often before the application finishes booting. They're the earliest possible feedback.
+
+**Registration Time**
+
+When `registerBlock()` is called, additional validation occurs:
+
+- Duplicate name detection (with source tracking for helpful error messages)
+- Namespace ownership verification
+- Registry frozen check
+
+Registration errors point to your pre-initializer code with information about what was already registered and where.
+
+**Layout Configuration Time**
+
+When `renderBlocks()` is called, the system validates the entire layout:
+
+- Block existence (all referenced blocks must be registered, unless optional)
+- Outlet validity (the outlet name must be registered)
+- Outlet ownership (no duplicate `renderBlocks()` calls for the same outlet)
+- Entry key validation (no typos in property names)
+- Args validation against schemas (types, required fields, constraints)
+- Condition validation (known types, valid args for each condition type)
+- Container relationships (`children` only on containers, `containerArgs` matches parent's `childArgs`)
+
+This is where most developer errors surface. The validation is thorough because fixing errors at boot time is far better than mysterious runtime behavior.
+
+**Render Time**
+
+By the time blocks actually render, most validation has already happened. Render-time checks are minimal:
+
+- Authorization symbol verification (blocks can only render through proper channels)
+- Lazy block resolution (factory functions are called, imports are loaded)
+
+If a lazy-loaded block's import fails at render time, the error is caught and reported, and the block is marked as failed to prevent retry loops.
+
+### Condition Discovery and Instantiation
+
+Conditions are more than just data objects—they're backed by classes that know how to evaluate themselves. Understanding how conditions are discovered, instantiated, and invoked explains some of the system's design choices.
+
+**The Condition Type Registry**
+
+Like blocks, condition types have their own registry. Built-in types (`user`, `route`, `setting`, `viewport`, `outletArg`) are registered by core during the `freeze-block-registry` initializer. Custom conditions must be registered in pre-initializers that run before this freeze.
+
+Each condition type is a class decorated with `@blockCondition()`:
+
 ```javascript
-@block("my-block", {
+@blockCondition({
+  type: "user",
   args: {
-    count: { type: "number", required: true },
-  }
+    loggedIn: { type: "boolean" },
+    admin: { type: "boolean" },
+    // ...
+  },
 })
+export class BlockUserCondition extends BlockCondition {
+  @service currentUser;
 
-// If you write:
-{ block: MyBlock, args: { count: "42" } }  // string, not number
-
-// You get:
-// Error: Arg "count" expects type "number", got "string"
+  evaluate(args, context) {
+    // Return true if condition passes
+  }
+}
 ```
 
-**Condition Type Validation:**
+The decorator captures the type name and args schema, similar to how `@block()` works for blocks.
+
+**Condition Instantiation**
+
+When the preprocessing pipeline evaluates conditions, it needs instances of condition classes that have access to Ember services. The system creates one instance of each condition type per evaluation context, setting the Ember owner so service injection works:
+
 ```javascript
-// If you write:
-conditions: [{ type: "usr", admin: true }]  // typo: "usr"
-
-// You get:
-// Error: Unknown condition type: "usr" (did you mean "user"?)
+// Conceptually:
+const userCondition = new BlockUserCondition();
+setOwner(userCondition, applicationInstance);
+// Now userCondition.currentUser is injected
 ```
 
-**Reserved Args Protection:**
+These instances are reused across all condition evaluations within the same preprocessing pass, so a layout with 20 user conditions doesn't create 20 instances—just one that's called 20 times with different args.
+
+**The Evaluation Context**
+
+When `evaluate()` is called, it receives two arguments: the condition's args (from the layout configuration) and an evaluation context containing:
+
+- `outletArgs` - Data passed from the template via `@outletArgs`
+- `outletName` - The outlet being rendered
+
+This context allows conditions to access runtime data without hardcoding assumptions about where they'll be used.
+
+**The evaluate() Contract**
+
+Condition evaluation must be synchronous. The `evaluate()` method returns a boolean immediately—no Promises, no async/await. This constraint exists because condition evaluation happens during the render cycle, and async operations would complicate Ember's rendering model.
+
+If your condition needs async data, the pattern is to fetch it elsewhere (in a route, a service, or a component's constructor) and pass it through outlet args. The condition then just checks the already-available data.
+
 ```javascript
-// If you write:
-{ block: MyBlock, args: { children: [...], args: {...}, block: "name", containerArgs: {...} } }
+// Instead of this (won't work):
+evaluate(args) {
+  const data = await fetch('/api/feature-flags');  // Can't await!
+  return data.includes(args.flag);
+}
 
-// You get:
-// Error: Reserved arg names: args, block, children, containerArgs. Names starting with
-// underscore are reserved for internal use.
+// Do this:
+evaluate(args, context) {
+  // Data was fetched elsewhere and passed through outlet args
+  return context.outletArgs.featureFlags?.includes(args.flag);
+}
 ```
-
-Validation catches configuration mistakes. But what about intentional misuse—someone trying to render blocks outside the system?
 
 ### The Authorization Symbol System
 
-Blocks use a secret symbol system to prevent unauthorized rendering. The system defines private symbols (not exported) for blocks and container blocks.
+The final piece of the puzzle is how the system prevents unauthorized block rendering. You might wonder: if blocks are just Glimmer components, what stops someone from using them directly in a template?
 
-These symbols are:
-1. **Not exported** - External code can't access them
-2. **Used for authorization** - Child blocks receive a special arg containing the container symbol
-3. **Verified in constructor** - If the symbol doesn't match, throws an error
+The answer is a private symbol system. When blocks are defined, they receive a reference to a secret symbol that's not exported from any public module. At construction time, blocks verify they received this symbol through a special arg—if not, they throw an error.
 
-**Why this matters:**
+**How It Works**
 
-```handlebars
-{{! This will throw an error: }}
-<MyBlock @title="Direct usage" />
+The `@block()` decorator adds constructor logic that checks for an authorization arg:
 
-{{! Blocks can ONLY be rendered through BlockOutlet: }}
-<BlockOutlet @name="homepage-blocks" />
+```javascript
+// Simplified conceptual view:
+constructor(owner, args) {
+  if (args.__blockAuth !== BLOCK_SYMBOL) {
+    throw new Error("Blocks can only be rendered through BlockOutlet");
+  }
+  super(owner, args);
+}
 ```
 
-This prevents:
-- Plugins bypassing condition evaluation
-- Themes rendering blocks outside designated areas
-- Unauthorized block placement
+When the preprocessing pipeline creates curried components, it includes this secret symbol in the args. Direct template usage (`<MyBlock />`) doesn't include the symbol, so the constructor throws.
 
-The only way a block can render is as a child of a container block that passes the authorization symbol in args. But wait—what authorizes the first block in the chain?
+**The Chain of Trust**
 
-> **Trivia:** `<BlockOutlet>` is itself a block. Look at its definition and you'll see `@block("block-outlet", { container: true })`. It's a special container block that serves as the root of the block tree. It has a static property that allows it to bypass the normal authorization check and start the chain of trust.
+Container blocks pass their own authorization symbol to children, creating a chain of trust. But what authorizes the root? `<BlockOutlet>` is itself a block (decorated with `@block("block-outlet", { container: true })`), but it has special handling that allows it to bypass the check and initiate the chain.
 
-With the foundations covered, let's put everything together with some practical examples.
+This design ensures:
+- Blocks only render through the official system
+- Conditions are always evaluated (can't be bypassed)
+- Layout configuration is always respected
+- Plugin developers can't accidentally misuse blocks
+
+**Why Not Just Documentation?**
+
+You might think "just tell people not to use blocks directly." But plugin ecosystems involve many developers with varying familiarity with the codebase. A runtime enforcement mechanism catches mistakes that documentation warnings miss—and the error message explains exactly what to do instead.
+
+Now that you understand how the pieces fit together, let's apply this knowledge to build something real.
 
 ---
 
 ## 8. Putting It Together
 
-Enough theory—let's build some blocks. The tutorials below progress from simple to complex, applying the concepts from earlier sections.
+The tutorials in this section build on everything we've covered—blocks, conditions, containers, and the patterns that make them work together. Each one adds complexity, showing how the concepts combine in practice.
 
 ### Tutorial 1: A Simple Promotional Banner
 
@@ -2978,9 +3219,11 @@ That's the Blocks API in practice. What follows is the complete reference for wh
 
 ## 9. Quick Reference
 
-When you know what you're looking for, start here.
+When you know what you're looking for, start here. This section collects the API signatures, configuration options, and troubleshooting tips in one place—no prose, just the facts.
 
 ### The Full API
+
+These are the methods and decorators you'll use most often. Each one links back to its detailed explanation earlier in the document.
 
 #### Plugin API Methods
 
@@ -3079,6 +3322,8 @@ api.registerBlockConditionType(ConditionClass)
 
 ### Configuration Options
 
+Quick reference for condition args. Each condition type has its own set of options—here's what's available for each.
+
 #### Route Condition Args
 
 | Arg | Type | Description |
@@ -3134,6 +3379,8 @@ api.registerBlockConditionType(ConditionClass)
 
 ### Troubleshooting Guide
 
+Something not working? Start here. These are the most common issues and their solutions.
+
 #### Block not appearing
 
 1. **Is the block registered?**
@@ -3187,6 +3434,8 @@ api.registerBlockConditionType(ConditionClass)
 
 ### FAQ: Advanced Troubleshooting
 
+For edge cases and deeper issues, these answers address questions that come up after you've checked the basics.
+
 **Q: My block renders in development but not in production. Why?**
 
 A: Check these common causes:
@@ -3233,7 +3482,7 @@ If you need truly dynamic layout changes, plugin outlets may be more appropriate
 
 ### Testing API
 
-The `block-testing` module provides utilities for test infrastructure:
+For writing tests that involve blocks, the `block-testing` module provides utilities for registration, querying, and debugging:
 
 ```javascript
 import { ... } from "discourse/tests/helpers/block-testing";
