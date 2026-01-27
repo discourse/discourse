@@ -776,6 +776,7 @@ RSpec.describe ApplicationController do
           style = css_select("#d-splash style").to_s
           expect(style).not_to include("prefers-color-scheme")
 
+          primary = light_scheme.colors.find { |color| color.name == "primary" }.hex
           secondary = light_scheme.colors.find { |color| color.name == "secondary" }.hex
           tertiary = light_scheme.colors.find { |color| color.name == "tertiary" }.hex
           expect(style).to include(<<~CSS.indent(6))
@@ -800,6 +801,7 @@ RSpec.describe ApplicationController do
           style = css_select("#d-splash style").to_s
           expect(style).not_to include("prefers-color-scheme")
 
+          primary = dark_scheme.colors.find { |color| color.name == "primary" }.hex
           secondary = dark_scheme.colors.find { |color| color.name == "secondary" }.hex
           tertiary = dark_scheme.colors.find { |color| color.name == "tertiary" }.hex
           expect(style).to include(<<~CSS.indent(6))
@@ -823,9 +825,11 @@ RSpec.describe ApplicationController do
 
           style = css_select("#d-splash style").to_s
 
+          light_primary = light_scheme.colors.find { |color| color.name == "primary" }.hex
           light_secondary = light_scheme.colors.find { |color| color.name == "secondary" }.hex
           light_tertiary = light_scheme.colors.find { |color| color.name == "tertiary" }.hex
 
+          dark_primary = dark_scheme.colors.find { |color| color.name == "primary" }.hex
           dark_secondary = dark_scheme.colors.find { |color| color.name == "secondary" }.hex
           dark_tertiary = dark_scheme.colors.find { |color| color.name == "tertiary" }.hex
 

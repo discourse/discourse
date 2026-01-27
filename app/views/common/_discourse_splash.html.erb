@@ -71,6 +71,11 @@
       width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
       height: 100vh;
       background-size: cover;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3rem;
     }
 
     @keyframes d-splash-fade-in {
@@ -82,6 +87,12 @@
       }
     }
 
+    #d-splash .dots-container {
+      position: relative;
+      width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
+      height: var(--splash-dot-size);
+    }
+
     .dots {
       animation-name: d-splash-loader;
       animation-timing-function: ease-in-out;
@@ -90,7 +101,7 @@
       animation-delay: calc(var(--n) * 0.15s);
 
       position: absolute;
-      top: calc(50% - var(--splash-dot-size) / 2);
+      top: 0;
       left: calc((50% - var(--splash-dot-size) / 2) + (var(--n) * var(--splash-dot-spacing)));
       transform-origin: calc((var(--splash-dot-spacing) * var(--n) * -1) + var(--splash-dot-size)/2) center;
 
@@ -121,14 +132,49 @@
         transform: scale(1);
       }
     }
+
+    <%- if (logo_upload = SiteSetting.splash_screen_image) && logo_upload.is_a?(Upload) %>
+    #d-splash .preloader-image {
+      --splash-dot-size: max(0.7vw, 14px);
+    }
+
+    #d-splash .splash-logo-container {
+      width: min(300px, 80vw);
+      height: 80px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-image: url("<%= splash_screen_image_data_uri %>");
+      <%- unless splash_screen_image_animated? %>
+      opacity: 0.4;
+      animation: d-splash-logo-pulse 3s ease-in-out infinite;
+      <%- end %>
+    }
+
+    @keyframes d-splash-logo-pulse {
+      0%, 100% {
+        opacity: 0.4;
+      }
+      25%, 65% {
+        opacity: 1;
+      }
+    }
+    <%- end %>
   </style>
 
   <div class="preloader-image" elementtiming="discourse-splash-visible">
-    <div class="dots" style="--n:-2;"></div>
-    <div class="dots" style="--n:-1;"></div>
-    <div class="dots" style="--n:0;"></div>
-    <div class="dots" style="--n:1;"></div>
-    <div class="dots" style="--n:2;"></div>
+    <%- if (logo_upload = SiteSetting.splash_screen_image) && logo_upload.is_a?(Upload) %>
+      <div class="splash-logo-container"></div>
+    <%- end %>
+    <%- unless splash_screen_image_animated? %>
+      <div class="dots-container">
+        <div class="dots" style="--n:-2;"></div>
+        <div class="dots" style="--n:-1;"></div>
+        <div class="dots" style="--n:0;"></div>
+        <div class="dots" style="--n:1;"></div>
+        <div class="dots" style="--n:2;"></div>
+      </div>
+    <%- end %>
   </div>
   <script nonce="<%= csp_nonce_placeholder %>">
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"><!-- LCP candidate image ${".".repeat(5000)} --></svg>`;

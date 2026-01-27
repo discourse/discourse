@@ -3736,6 +3736,12 @@ uncategorized:
     default: true
     area: "interface"
 
+  splash_screen_image:
+    default: ""
+    type: upload
+    authorized_extensions: "svg"
+    area: "interface"
+
   suggest_weekends_in_date_pickers:
     client: true
     default: true

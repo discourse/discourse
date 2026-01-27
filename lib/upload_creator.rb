@@ -6,6 +6,9 @@ class UploadCreator
   TYPES_TO_CROP = %w[avatar card_background custom_emoji profile_background].each(&:freeze)
 
   ALLOWED_SVG_ELEMENTS = %w[
+    animate
+    animateMotion
+    animateTransform
     circle
     clipPath
     defs
@@ -21,6 +24,7 @@ class UploadCreator
     polyline
     radialGradient
     rect
+    set
     stop
     style
     svg
