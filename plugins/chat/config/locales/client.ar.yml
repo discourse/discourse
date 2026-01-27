@@ -820,7 +820,6 @@ ar:
           composer_bold: "%{shortcut} غامق (أداة الإنشاء فقط)"
           composer_italic: "%{shortcut} مائل (أداة الإنشاء فقط)"
           composer_code: "%{shortcut} رمز برمجي (أداة الإنشاء فقط)"
-          drawer_open: "%{shortcut} فتح درج الدردشة"
           drawer_close: "%{shortcut} إغلاق درج الدردشة"
           mark_all_channels_read: "%{shortcut} وضع علامة \"مقروءة\" على كل القنوات"
     topic_statuses:

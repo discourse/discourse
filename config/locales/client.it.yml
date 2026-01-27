@@ -4044,6 +4044,7 @@ it:
       back: "Torna alla categoria"
       general: "Generale"
       settings: "Impostazioni"
+      advanced: "Avanzato"
       topic_template: "Modello"
       tags: "Etichette"
       localizations: "Localizzazioni"
@@ -4075,7 +4076,9 @@ it:
       save_error: Si è verificato un errore durante il salvataggio della categoria.
       description: "Descrizione"
       logo_description: "Proporzioni consigliate 1:1 con dimensione minima di 200px. Se lasciato vuoto, non verrà mostrata alcuna immagine."
-      style: "Stili"
+      style: "Stile"
+      icon: "Icona"
+      emoji: "Emoji"
       background_color: "Colore"
       foreground_color: "Colore del testo"
       color_validations:
@@ -4084,13 +4087,13 @@ it:
         type: "Stile"
         icon: "Icona"
         emoji: "Emoji"
+        square: "Quadrato"
         options:
           square: "Quadrato"
           icon: "Icona"
           emoji: "Emoji"
       color_used: "Colore in uso"
       predefined_colors: "Opzioni di colore predefinite"
-      name_placeholder: "Una o due parole al massimo"
       color_placeholder: "Qualsiasi colore web"
       delete_confirm: "Vuoi cancellare questa categoria?"
       delete_error: "Si è verificato un errore durante la cancellazione della categoria."
@@ -4098,6 +4101,7 @@ it:
       no_description: "Aggiungi una descrizione alla categoria."
       change_in_category_topic: "Modifica descrizione"
       already_used: "Questo colore è già stato usato in un'altra categoria."
+      color_palette: "Schema di colori"
       security: "Sicurezza"
       security_add_group: "Aggiungi un gruppo"
       permissions:
@@ -4114,7 +4118,7 @@ it:
       uncategorized_security_warning: "Questa è una Categoria speciale. È utilizzata come area di parcheggio per gli Argomenti senza Categoria. Non può avere impostazioni di sicurezza."
       uncategorized_general_warning: 'Questa è una Categoria speciale. È usata come Categoria predefinita per i nuovi Argomenti senza una Categoria selezionata. Se vuoi prevenire questo comportamento e forzare la scelta di una Categoria, <a href="%{settingLink}">per favore disabilita l''impostazione qui</a>. Se vuoi cambiare il nome o la descrizione, vai a <a href="%{customizeLink}">Personalizza / Contenuto Testuale</a>.'
       pending_permission_change_alert: "Non hai aggiunto %{group} a questa categoria; fai clic su questo pulsante per aggiungerlo."
-      images: "Immagini"
+      images: "Aspetto"
       email_in: "Indirizzo email personalizzato:"
       email_in_tooltip: "Puoi separare più indirizzi e-mail con il carattere |."
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
@@ -4136,6 +4140,11 @@ it:
       position: "Posizione nella pagina delle Categorie:"
       position_disabled: "Le categorie verranno visualizzate in ordine di attività. Per controllare l'ordine delle categorie negli elenchi, abilita l'impostazione <a href='%{url}'>'posizioni di categoria fisse'</a>."
       minimum_required_tags: "Numero minimo di etichette richieste per argomento:"
+      none_subcategory_text: "Nessuna"
+      visibility:
+        title: "Accesso"
+        public: "Pubblico"
+        group_restricted: "Privato"
       num_auto_bump_daily: "Numero di argomenti aperti da riproporre automaticamente ogni giorno:"
       auto_bump_cooldown_days: "Numero minimo di giorni prima di affrontare nuovamente lo stesso argomento:"
       navigate_to_first_post_after_read: "Vai al primo messaggio dopo che gli argomenti vengono letti"
@@ -5685,7 +5694,9 @@ it:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Ricerche nei log</a>'
             disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">query di ricerca nei log</a> per iniziare a raccogliere i dati.'
-          average_chart_label: Media
+          sort_button: "Ordina per %{column}"
+          sort_ascending: "crescente"
+          sort_descending: "decrescente"
           filters:
             file_extension:
               label: Estensione file

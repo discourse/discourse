@@ -4115,6 +4115,7 @@ es:
       back: "Volver a la categoría"
       general: "General"
       settings: "Ajustes"
+      advanced: "Avanzado"
       topic_template: "Plantilla"
       tags: "Etiquetas"
       localizations: "Localizaciones"
@@ -4145,6 +4146,7 @@ es:
       create_long: "Crear una nueva categoría"
       save: "Guardar categoría"
       slug: "Identificador de URL de la categoría"
+      parent: "Categoría padre"
       slug_placeholder: "(Opcional) palabras-separadas-por-guiones para URL"
       creation_error: Se produjo un error al crear la categoría.
       save_error: Se produjo un error al guardar la categoría
@@ -4158,7 +4160,9 @@ es:
       logo_description: "Se recomienda la relación de aspecto 1:1 con un tamaño mínimo de 200 px. Si se deja en blanco, no se mostrará ninguna imagen."
       background_image: "Imagen de fondo de la categoría"
       background_image_dark: "Imagen de la categoría para el modo oscuro"
-      style: "Estilos"
+      style: "Estilo"
+      icon: "Icono"
+      emoji: "Emoji"
       background_color: "Color"
       foreground_color: "Color del texto"
       color_validations:
@@ -4169,13 +4173,13 @@ es:
         type: "Estilo"
         icon: "Icono"
         emoji: "Emoji"
+        square: "Cuadrado"
         options:
           square: "Cuadrado"
           icon: "Icono"
           emoji: "Emoji"
       color_used: "Color en uso"
       predefined_colors: "Opciones de color predefinidas"
-      name_placeholder: "Una o dos palabras máximo"
       color_placeholder: "Cualquier color web"
       delete_confirm: "¿Seguro que quieres eliminar esta categoría?"
       delete_error: "Se produjo un error al eliminar la categoría."
@@ -4183,6 +4187,7 @@ es:
       no_description: "Añade una descripción para esta categoría."
       change_in_category_topic: "Editar descripción"
       already_used: "Este color ya ha sido usado para otra categoría"
+      color_palette: "Paleta de colores"
       security: "Seguridad"
       security_add_group: "Añadir un grupo"
       permissions:
@@ -4199,7 +4204,7 @@ es:
       uncategorized_security_warning: "Esta categoría es especial: se usa para temas que no tienen una categoría asignada y no puede tener ajustes de seguridad."
       uncategorized_general_warning: 'Esta categoría es especial. Se utiliza como la categoría predeterminada para los temas nuevos que no tienen una categoría seleccionada. Si deseas evitar este comportamiento y forzar la selección de categorías, <a href="%{settingLink}">desactiva la opción aquí</a>. Si deseas cambiar el nombre o la descripción, ve a <a href="%{customizeLink}">Personalizar / Contenido de texto</a>.'
       pending_permission_change_alert: "No has añadido a %{group} a esta categoría. Haz clic en este botón para añadirlos."
-      images: "Imágenes"
+      images: "Aspecto"
       email_in: "Dirección de correo electrónico personalizada para el correo entrante:"
       email_in_tooltip: "Puedes separar varias direcciones de correo electrónico con el carácter |."
       email_in_allow_strangers: "Aceptar correo electrónicos de usuarios anónimos sin cuenta"
@@ -4228,7 +4233,12 @@ es:
       position_disabled: "Las categorías se mostrarán por orden de actividad. Para controlar el orden de las categorías en las listas, activa el ajuste <a href='%{url}'>«posiciones fijas de las categorías»</a>."
       minimum_required_tags: "Número mínimo de etiquetas requeridas en un tema:"
       default_slow_mode: 'Activar el "modo lento" en los nuevos temas de esta categoría.'
-      parent: "Categoría padre"
+      none_subcategory_text: "Ninguna"
+      visibility:
+        title: "Acceso"
+        public: "Público"
+        all_members: "Todos los miembros"
+        group_restricted: "Privado"
       num_auto_bump_daily: "Número de temas abiertos que se reflotarán diariamente de forma automática:"
       auto_bump_cooldown_days: "Mínimo de días antes de reactivar el mismo tema:"
       navigate_to_first_post_after_read: "Ir a la primera publicación después de haber leído los temas"
@@ -5840,7 +5850,9 @@ es:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Registros de búsqueda</a>'
             disabled: 'El informe de tendencias de búsqueda está desactivado. Activa la opción <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">registrar consultas de búsquedas</a> para recopilar datos.'
-          average_chart_label: Promedio
+          sort_button: "Ordenar por %{column}"
+          sort_ascending: "ascendente"
+          sort_descending: "descendente"
           filters:
             file_extension:
               label: Extensión del archivo
