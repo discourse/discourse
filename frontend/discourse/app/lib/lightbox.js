@@ -292,6 +292,16 @@ export default async function lightbox(elem, additionalData = {}) {
       imgEl?.getAttribute("height") ||
       null;
 
+    // If thumbnail has different aspect ratio than full image,
+    // use the full image as msrc for smooth zoom animation
+    if (data.targetWidth && data.targetHeight && data.w && data.h) {
+      const thumbRatio = data.targetWidth / data.targetHeight;
+      const fullRatio = data.w / data.h;
+      if (Math.abs(thumbRatio - fullRatio) / fullRatio > 0.05) {
+        data.msrc = data.src;
+      }
+    }
+
     // So we can attach things like a Post model from the caller.
     Object.keys(additionalData).forEach((key) => {
       data[key] = additionalData[key];
