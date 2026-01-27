@@ -170,7 +170,7 @@ module Jobs
             end
           when :json
             File.open("#{dirname}/#{component[:filename]}.json", "w") do |file|
-              file.write MultiJson.dump(public_send(component[:method]), indent: 4)
+              file.write MultiJson.dump(public_send(component[:method]), indent: " " * 4)
             end
           else
             raise "unknown export filetype"

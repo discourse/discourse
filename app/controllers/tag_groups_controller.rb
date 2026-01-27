@@ -55,7 +55,7 @@ class TagGroupsController < ApplicationController
     if @tag_group.save
       StaffActionLogger.new(current_user).log_tag_group_create(
         @tag_group.name,
-        TagGroupSerializer.new(@tag_group).to_json(root: false),
+        TagGroupSerializer.new(@tag_group, root: false).to_json,
       )
       render_serialized(@tag_group, TagGroupSerializer)
     else
@@ -65,10 +65,10 @@ class TagGroupsController < ApplicationController
 
   def update
     guardian.ensure_can_admin_tag_groups!
-    old_data = TagGroupSerializer.new(@tag_group).to_json(root: false)
+    old_data = TagGroupSerializer.new(@tag_group, root: false).to_json
     json_result(@tag_group, serializer: TagGroupSerializer) do |tag_group|
       @tag_group.update(tag_groups_params)
-      new_data = TagGroupSerializer.new(@tag_group).to_json(root: false)
+      new_data = TagGroupSerializer.new(@tag_group, root: false).to_json
       StaffActionLogger.new(current_user).log_tag_group_change(@tag_group.name, old_data, new_data)
     end
   end
@@ -77,7 +77,7 @@ class TagGroupsController < ApplicationController
     guardian.ensure_can_admin_tag_groups!
     StaffActionLogger.new(current_user).log_tag_group_destroy(
       @tag_group.name,
-      TagGroupSerializer.new(@tag_group).to_json(root: false),
+      TagGroupSerializer.new(@tag_group, root: false).to_json,
     )
     @tag_group.destroy
     render json: success_json

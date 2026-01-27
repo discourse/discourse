@@ -45,7 +45,7 @@ class Admin::ReportsController < Admin::StaffController
         end
       end
 
-      render_json_dump(reports: reports)
+      render_json_dump(reports: reports.as_json)
     end
   end
 
@@ -65,7 +65,7 @@ class Admin::ReportsController < Admin::StaffController
     report = nil
     report = Report.find_cached(report_type, args) if (params[:cache])
 
-    return render_json_dump(report: report) if report
+    return render_json_dump(report: report.as_json) if report
 
     hijack do
       report = Report.find(report_type, args)
@@ -74,7 +74,7 @@ class Admin::ReportsController < Admin::StaffController
 
       Report.cache(report) if (params[:cache])
 
-      render_json_dump(report: report)
+      render_json_dump(report: report.as_json)
     end
   end
 
