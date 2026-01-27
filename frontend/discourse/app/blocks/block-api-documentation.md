@@ -19,7 +19,7 @@ The Blocks API is a structured alternative for UI extension points that need:
 - Coordinated rendering with predictable ordering
 - Rich developer tooling for debugging visibility issues
 
-It's designed to handle the common cases—adding content to designated areas with conditional visibility, validation, and debugging tools. Plugin outlets remain available for complex scenarios requiring completely custom, bespoke components that don't fit the block model.
+It's designed to handle the common cases—adding content to designated areas with conditional visibility, validation, and debugging tools. Plugin outlets remain available for complex scenarios requiring completely custom components that don't fit the block model.
 
 ### What Blocks Are For
 
@@ -31,10 +31,10 @@ Blocks are designed for **structured layout areas**—regions where you want to 
 - Category page customizations
 - Discovery page sections
 
-**Blocks might not be the best fit for:**
+**When blocks might not fit:**
 
 - Components that need to bypass the block layout constraints or condition system
-- Complex bespoke solutions that require complete control over rendering
+- Highly custom interactive features requiring complete control over rendering
 
 **Blocks are NOT intended for:**
 
@@ -43,7 +43,7 @@ Blocks are designed for **structured layout areas**—regions where you want to 
 - Minor UI tweaks throughout the app
 - Places where the "composed layout" model doesn't fit
 
-For smaller customizations, plugin outlets remain the right choice. Blocks and plugin outlets are complementary—a page might use blocks for its main content layout while using plugin outlets for small additions elsewhere.
+For smaller customizations or complex bespoke features, plugin outlets remain available. A page might use blocks for its main content layout while using plugin outlets for small additions elsewhere.
 
 ### Limitations
 
@@ -94,6 +94,121 @@ This mental model helps explain the API's design decisions:
 - **Why do blocks appear and disappear based on state?** Just like seasonal furniture displays—what's shown depends on context.
 
 Enough with the furniture—let's look at actual code.
+
+### Your First Block
+
+Start with the absolute minimum—a block that just renders static content:
+
+```javascript
+// themes/my-theme/javascripts/discourse/blocks/welcome-banner.gjs
+import Component from "@glimmer/component";
+import { block } from "discourse/blocks/block-outlet";
+
+@block("theme:my-theme:welcome-banner")
+export default class WelcomeBanner extends Component {
+  <template>
+    <div class="welcome-banner">
+      <h2>Welcome to our community!</h2>
+    </div>
+  </template>
+}
+```
+
+```javascript
+// themes/my-theme/javascripts/discourse/pre-initializers/register-blocks.js
+import { withPluginApi } from "discourse/lib/plugin-api";
+import WelcomeBanner from "../blocks/welcome-banner";
+
+export default {
+  before: "freeze-block-registry",
+
+  initialize() {
+    withPluginApi((api) => {
+      api.registerBlock(WelcomeBanner);
+    });
+  },
+};
+```
+
+```javascript
+// themes/my-theme/javascripts/discourse/api-initializers/configure-blocks.js
+import { apiInitializer } from "discourse/lib/api";
+import WelcomeBanner from "../blocks/welcome-banner";
+
+export default apiInitializer((api) => {
+  api.renderBlocks("homepage-blocks", [
+    { block: WelcomeBanner },
+  ]);
+});
+```
+
+That's it. The block, registration, and layout configuration. Each object in the layout array is a **block entry**—it tells the system which block to render and how to configure it.
+
+**Adding args:**
+
+To make the message configurable:
+
+```javascript
+// blocks/welcome-banner.gjs
+@block("theme:my-theme:welcome-banner", {
+  args: {
+    message: { type: "string", required: true },
+  },
+})
+export default class WelcomeBanner extends Component {
+  <template>
+    <div class="welcome-banner">
+      <h2>{{@message}}</h2>
+    </div>
+  </template>
+}
+```
+
+```javascript
+// api-initializers/configure-blocks.js
+api.renderBlocks("homepage-blocks", [
+  {
+    block: WelcomeBanner,
+    args: { message: "Welcome to our community!" },
+  },
+]);
+```
+
+**Adding conditions:**
+
+To show only for logged-in users:
+
+```javascript
+api.renderBlocks("homepage-blocks", [
+  {
+    block: WelcomeBanner,
+    args: { message: "Welcome back!" },
+    conditions: { type: "user", loggedIn: true },
+  },
+]);
+```
+
+For multiple conditions (AND logic), use an array:
+
+```javascript
+conditions: [
+  { type: "user", loggedIn: true },
+  { type: "user", minTrustLevel: 2 },
+]
+```
+
+**Block entry properties:**
+
+| Property | Required | Notes |
+|----------|----------|-------|
+| `block` | Yes | Component class or string name |
+| `args` | No | Passed to component as `@args` |
+| `conditions` | No | If omitted, always renders |
+| `classNames` | No | Added to wrapper element |
+| `children` | No | Only for container blocks |
+| `containerArgs` | No | Metadata for parent container—see "Child Args Schema" below |
+
+That covers the basics—now let's look at the full anatomy of a block to understand all the options available.
 
 ### What's Inside a Block
 
@@ -318,7 +433,7 @@ The args schema serves three purposes:
 - `"boolean"` - True/false
 - `"array"` - Arrays (with optional `itemType` for validation)
 
-**Type-specific properties:**
+Each type supports additional properties for finer-grained validation. Strings can be constrained by length or pattern, numbers by range, and arrays by their item type. Here's what's available for each:
 
 | Property | Types | Description |
 |----------|-------|-------------|
@@ -367,7 +482,7 @@ constraints: {
 
 Constraints define validation rules across multiple arguments. While the `args` schema validates each argument individually (type, required, min/max), constraints express *relationships* between arguments—things like "provide one or the other, but not both" or "if you provide A, you must also provide B." They're checked at runtime after defaults are applied, and errors are caught at boot time when `renderBlocks()` is called.
 
-Here are the available constraint types:
+Think of constraints as answering questions about your args: "Can the user provide both of these?" (`atMostOne`), "Must they provide at least one?" (`atLeastOne`), "Do these go together?" (`allOrNone`). The table below shows all available constraint types:
 
 | Constraint | Meaning | Example |
 |------------|---------|---------|
@@ -570,130 +685,17 @@ Understanding when things happen helps debug issues.
 
 > :bulb: When lazy-loaded blocks are involved, schema and constraint validations are deferred to when the layout is rendered for the first time.
 
-### Your First Block
-
-Start with the absolute minimum—a block that just renders static content:
-
-```javascript
-// themes/my-theme/javascripts/discourse/blocks/welcome-banner.gjs
-import Component from "@glimmer/component";
-import { block } from "discourse/blocks/block-outlet";
-
-@block("theme:my-theme:welcome-banner")
-export default class WelcomeBanner extends Component {
-  <template>
-    <div class="welcome-banner">
-      <h2>Welcome to our community!</h2>
-    </div>
-  </template>
-}
-```
-
-```javascript
-// themes/my-theme/javascripts/discourse/pre-initializers/register-blocks.js
-import { withPluginApi } from "discourse/lib/plugin-api";
-import WelcomeBanner from "../blocks/welcome-banner";
-
-export default {
-  before: "freeze-block-registry",
-
-  initialize() {
-    withPluginApi((api) => {
-      api.registerBlock(WelcomeBanner);
-    });
-  },
-};
-```
-
-```javascript
-// themes/my-theme/javascripts/discourse/api-initializers/configure-blocks.js
-import { apiInitializer } from "discourse/lib/api";
-import WelcomeBanner from "../blocks/welcome-banner";
-
-export default apiInitializer((api) => {
-  api.renderBlocks("homepage-blocks", [
-    { block: WelcomeBanner },
-  ]);
-});
-```
-
-That's it. The block, registration, and layout configuration. Each object in the layout array is a **block entry**—it tells the system which block to render and how to configure it.
-
-**Adding args:**
-
-To make the message configurable:
-
-```javascript
-// blocks/welcome-banner.gjs
-@block("theme:my-theme:welcome-banner", {
-  args: {
-    message: { type: "string", required: true },
-  },
-})
-export default class WelcomeBanner extends Component {
-  <template>
-    <div class="welcome-banner">
-      <h2>{{@message}}</h2>
-    </div>
-  </template>
-}
-```
-
-```javascript
-// api-initializers/configure-blocks.js
-api.renderBlocks("homepage-blocks", [
-  {
-    block: WelcomeBanner,
-    args: { message: "Welcome to our community!" },
-  },
-]);
-```
-
-**Adding conditions:**
-
-To show only for logged-in users:
-
-```javascript
-api.renderBlocks("homepage-blocks", [
-  {
-    block: WelcomeBanner,
-    args: { message: "Welcome back!" },
-    conditions: { type: "user", loggedIn: true },
-  },
-]);
-```
-
-For multiple conditions (AND logic), use an array:
-
-```javascript
-conditions: [
-  { type: "user", loggedIn: true },
-  { type: "user", minTrustLevel: 2 },
-]
-```
-
-**Block entry properties:**
-
-| Property | Required | Notes |
-|----------|----------|-------|
-| `block` | Yes | Component class or string name |
-| `args` | No | Passed to component as `@args` |
-| `conditions` | No | If omitted, always renders |
-| `classNames` | No | Added to wrapper element |
-| `children` | No | Only for container blocks |
-| `containerArgs` | No | Metadata for parent container (when used as child) |
-
-Now that you understand the concepts and have seen a complete example, let's look at the building blocks in more detail.
+Now that you've seen how blocks flow from registration to rendering, let's look at the building blocks in more detail.
 
 ---
 
 ## 2. The Moving Parts
 
-With the mental model in place, let's get practical. This section covers what you need to build with blocks: how they compare to plugin outlets, how to register and compose them, and how to create block outlets in templates.
+With the concepts and lifecycle covered, let's get practical. This section covers what you need to build with blocks: how they compare to plugin outlets, how to register and compose them, and how to create block outlets in templates.
 
 ### Blocks and Plugin Outlets
 
-A question that often comes up: when should you use blocks versus plugin outlets? They're complementary tools, not competitors—here's how they differ:
+A question that often comes up: when should you use blocks versus plugin outlets? They serve different purposes—here's how they differ:
 
 | Aspect | Blocks | Plugin Outlets |
 |--------|--------|----------------|
@@ -704,7 +706,7 @@ A question that often comes up: when should you use blocks versus plugin outlets
 | **Composition** | Theme orchestrates layout from registered blocks | Connectors coexist independently |
 | **Typical use** | Homepage sections, sidebars, dashboards | Badges, buttons, complex interactive features |
 
-**They're complementary, not competing.** A category page might use:
+**They can coexist.** A category page might use:
 - Blocks for its main content area (grid of panels, reusable across pages)
 - Plugin outlets for small additions or highly custom interactive features
 
@@ -728,10 +730,10 @@ What you need to know to build with blocks.
 Ideally, the Blocks API separates **registering blocks** from **composing layouts**. This separation of concerns makes it easier to reason about what belongs where—but real-world usage is flexible. Plugins sometimes need to compose layouts, and themes sometimes provide blocks. Here's the mental model:
 
 **Core** provides built-in blocks:
-- Container blocks like `group` for general layout structure, and `first-match` for prioritized conditional rendering (only the first child whose conditions pass will render)
+- Container blocks like `group` for general layout structure, and `first-match` for "if/else" logic—it evaluates its children in order and renders only the *first* one whose conditions pass, skipping the rest
 - Always available—no registration needed in your code
 
-We'll see `first-match` in action in the tutorials.
+We'll see `first-match` in action in the tutorials (Section 8).
 
 **Plugins** register blocks:
 ```javascript
@@ -1064,15 +1066,15 @@ The system uses `@outletName` internally for:
 
 You typically don't need to access `@outletName` directly—the system handles CSS class generation automatically. However, it's available if your block needs outlet-specific behavior or styling.
 
-Now that you know how to register, compose, and create blocks, the next question is: how do you control when they appear? That's where conditions come in.
+Now that you know how to register, compose, and create blocks, the next question is: how do you express "show this to admins" or "only on the homepage"?
 
 ---
 
 ## 3. Show This, Hide That
 
-Conditions control when blocks appear. They're declarative rules that the system evaluates at render time—no imperative code, just data describing what should be true for a block to show.
+Every visibility rule is a **condition**—a declarative object that the system evaluates at render time. No imperative code, just data describing what should be true for a block to show.
 
-Every condition is an object with a `type` and options specific to that type:
+Conditions have a `type` and options specific to that type:
 
 ```javascript
 { type: "user", loggedIn: true }           // Check user state
@@ -2004,9 +2006,11 @@ Start simple, add complexity only when you need it. You don't have to master con
 
 ### More Error Message Examples
 
-Here are additional error messages you might encounter, organized by category:
+Here are additional error messages you might encounter, organized by category.
 
-**Registration Errors:**
+**Registration Errors**
+
+These appear during pre-initializers when the block registry encounters problems—duplicate names, missing namespaces, or format violations:
 
 ```javascript
 // Duplicate block name
@@ -2025,7 +2029,9 @@ Got: "my-banner"
 Expected format: "theme:your-theme:my-banner"
 ```
 
-**Args Validation Errors:**
+**Args Validation Errors**
+
+These occur when `renderBlocks()` is called and the args you provide don't match the block's schema—missing required args, wrong types, or typos:
 
 ```javascript
 // Missing required arg
@@ -2049,7 +2055,9 @@ Arg "tags" expects array of "string", but item at index 2 is "number".
 Value: ["a", "b", 123]
 ```
 
-**Outlet Errors:**
+**Outlet Errors**
+
+These appear when blocks and outlets don't match up—a block is restricted from certain outlets, or multiple callers try to configure the same outlet:
 
 ```javascript
 // Block denied in outlet
@@ -2063,7 +2071,9 @@ Attempted again by: another-plugin/api-initializers/setup.js:15
 Only one caller can configure an outlet.
 ```
 
-**Constraint Errors:**
+**Constraint Errors**
+
+These catch violations of cross-arg constraints—when you've defined rules like "provide at least one of these" or "these must go together":
 
 ```javascript
 // atLeastOne violation
@@ -2080,7 +2090,9 @@ Args "width", "height" must be provided together or not at all.
 Got: width=100, height=undefined
 ```
 
-**Container/Child Errors:**
+**Container/Child Errors**
+
+These relate to the relationship between container blocks and their children—missing metadata, schema mismatches, or uniqueness violations:
 
 ```javascript
 // Missing containerArgs
