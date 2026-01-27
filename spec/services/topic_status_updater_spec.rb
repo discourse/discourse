@@ -269,5 +269,14 @@ RSpec.describe TopicStatusUpdater do
       expect(topic.visible).to eq(true)
       expect(topic.visibility_reason_id).to eq(Topic.visibility_reasons[:manually_relisted])
     end
+
+    it "deletes hot score when topic is unlisted" do
+      topic = Fabricate(:topic)
+      TopicHotScore.create!(topic_id: topic.id, score: 1.0)
+
+      TopicStatusUpdater.new(topic, admin).update!("visible", false)
+
+      expect(TopicHotScore.find_by(topic_id: topic.id)).to be_nil
+    end
   end
 end
