@@ -28,16 +28,6 @@ class ApplicationSerializer < ActiveModel::Serializer
     @cache ||= DistributedCache.new("am_serializer_fragment_cache")
   end
 
-  def to_json(*args)
-    if perform_caching?
-      cache.fetch expand_cache_key([self.class.to_s.underscore, cache_key, "to-json"]) do
-        super()
-      end
-    else
-      super()
-    end
-  end
-
   protected
 
   def cache_fragment(name, &block)

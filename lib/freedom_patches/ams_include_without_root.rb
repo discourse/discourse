@@ -58,16 +58,4 @@ module ActiveModel
       end
     end
   end
-
-  class ArraySerializer
-    def to_json(*args)
-      if perform_caching?
-        cache.fetch expand_cache_key([self.class.to_s.underscore, cache_key, "to-json"]) do
-          super()
-        end
-      else
-        super()
-      end
-    end
-  end
 end
