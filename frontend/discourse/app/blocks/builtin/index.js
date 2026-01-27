@@ -43,4 +43,5 @@
  *
  * @module discourse/blocks/builtin
  */
+export { default as BlockFirstMatch } from "./block-first-match";
 export { default as BlockGroup } from "./block-group";

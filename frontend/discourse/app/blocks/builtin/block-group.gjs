@@ -21,6 +21,7 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks";
  */
 @block("group", {
   container: true,
+  description: "Groups multiple children blocks together under a named wrapper",
   args: {
     name: { type: "string", pattern: VALID_BLOCK_NAME_PATTERN, required: true },
   },

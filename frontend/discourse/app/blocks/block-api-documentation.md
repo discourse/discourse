@@ -823,6 +823,45 @@ Each outlet can only have one `renderBlocks()` configuration—the first caller 
 - Building reusable components meant for multiple themes
 - Multiple extensions might customize the same outlet
 
+#### Architectural Patterns
+
+These ownership rules lead to a few common patterns worth knowing upfront.
+
+**Pattern A: Theme Composes Plugin Blocks (Recommended)**
+
+Plugins register blocks, theme arranges them:
+
+```
+plugins/analytics/     → api.registerBlock(StatsPanel)
+plugins/tasks/         → api.registerBlock(TaskList)
+themes/my-theme/       → api.renderBlocks("homepage-blocks", [
+                           { block: "analytics:stats-panel?" },
+                           { block: "tasks:task-list?" },
+                         ])
+```
+
+This is the recommended approach because it keeps plugins interoperable. Each plugin focuses on functionality; the theme decides presentation. Multiple plugins can coexist because none of them try to own the layout.
+
+**Pattern B: Self-Contained Plugin**
+
+Plugin owns a specific outlet no one else needs:
+
+```
+plugins/my-plugin/     → api.registerBlock(MyPanel)
+                       → api.renderBlocks("my-plugin-outlet", [...])
+```
+
+Works when the outlet is truly plugin-specific—perhaps an outlet the plugin itself creates via `registerBlockOutlet()`. The plugin provides a turnkey experience without requiring theme configuration.
+
+**Anti-Pattern: Competing for the Same Outlet**
+
+```
+plugins/plugin-a/      → api.renderBlocks("homepage-blocks", [...])  // Claims it
+plugins/plugin-b/      → api.renderBlocks("homepage-blocks", [...])  // ERROR!
+```
+
+If two plugins call `renderBlocks()` on the same outlet, the second fails. This is why Pattern A is recommended—plugins register, themes compose.
+
 #### Creating Blocks
 
 Once you're composing layouts, you may want to create your own blocks. The `@block` decorator transforms a Glimmer component into a block. It adds:
@@ -2335,7 +2374,7 @@ The service is a thin wrapper around the block registry—let's look at what tha
 
 ### The Block Registry
 
-The registry (`registry/block.js`) is a Map storing block name → block class (or factory). Internal tracking includes:
+The registry is a Map storing block name → block class (or factory). Internal tracking includes:
 
 - **Resolved factory cache** - Stores resolved classes for lazy-loaded blocks
 - **Pending resolutions** - Prevents duplicate concurrent async loads
@@ -2443,44 +2482,7 @@ With the foundations covered, let's put everything together with some practical 
 
 ## 8. Putting It Together
 
-Enough theory—let's build some blocks. This section covers common architectural patterns and tutorials that progress from simple to complex.
-
-### Common Patterns
-
-Different scenarios call for different approaches. Here are the common patterns:
-
-**Pattern A: Theme Composes Plugin Blocks (Recommended)**
-
-Plugins register blocks, theme arranges them:
-
-```
-plugins/analytics/     → api.registerBlock(StatsPanel)
-plugins/tasks/         → api.registerBlock(TaskList)
-themes/my-theme/       → api.renderBlocks("homepage-blocks", [
-                           { block: "analytics:stats-panel?" },
-                           { block: "tasks:task-list?" },
-                         ])
-```
-
-**Pattern B: Self-Contained Plugin**
-
-Plugin owns a specific outlet no one else needs:
-
-```
-plugins/my-plugin/     → api.registerBlock(MyPanel)
-                       → api.renderBlocks("my-plugin-outlet", [...])
-```
-
-Works when the outlet is truly plugin-specific.
-
-**Anti-Pattern: Competing for the Same Outlet**
-
-```
-plugins/plugin-a/      → api.renderBlocks("homepage-blocks", [...])  // Claims it
-plugins/plugin-b/      → api.renderBlocks("homepage-blocks", [...])  // ERROR!
-```
-
-If two plugins call `renderBlocks()` on the same outlet, the second fails. Solution: plugins register, themes compose.
+Enough theory—let's build some blocks. The tutorials below progress from simple to complex, applying the concepts from earlier sections.
 
 ### Tutorial 1: A Simple Promotional Banner
 
@@ -2607,7 +2609,9 @@ export default class InfoPanel extends Component {
 }
 ```
 
-**Step 2: Configure panels for different categories**
+**Step 2: Configure panels with prioritized fallback**
+
+Often you want to show one panel OR another based on context, not multiple panels simultaneously. The `first-match` container renders only its first visible child—perfect for "if X, else if Y, else Z" logic:
 
 ```javascript
 // themes/my-theme/javascripts/discourse/api-initializers/category-panels.js
@@ -2616,96 +2620,113 @@ import InfoPanel from "../blocks/info-panel";
 
 export default apiInitializer((api) => {
   api.renderBlocks("category-sidebar-blocks", [
-    // Support category: show help resources
     {
-      block: InfoPanel,
-      args: {
-        title: "Need Help?",
-        content: "Check our FAQ or contact support for assistance.",
-        icon: "question-circle",
-        variant: "highlight",
-      },
-      conditions: [
-        { type: "route", pages: ["CATEGORY_PAGES"], params: { categorySlug: "support" } },
-      ],
-    },
-
-    // Announcements category: show posting guidelines
-    {
-      block: InfoPanel,
-      args: {
-        title: "Posting Guidelines",
-        content: "Only staff can create announcements. Use clear, concise titles.",
-        icon: "bullhorn",
-        variant: "warning",
-      },
-      conditions: [
-        { type: "route", pages: ["CATEGORY_PAGES"], params: { categorySlug: "announcements" } },
-        { type: "user", staff: true },
-      ],
-    },
-
-    // Development categories: show API docs link
-    {
-      block: InfoPanel,
-      args: {
-        title: "Developer Resources",
-        content: "Visit our API documentation for technical details.",
-        icon: "code",
-      },
-      conditions: [
+      block: "first-match",
+      children: [
+        // Priority 1: Support category - show help resources
         {
-          type: "route",
-          pages: ["CATEGORY_PAGES"],
-          params: { any: [{ categorySlug: "dev" }, { categorySlug: "plugins" }, { categorySlug: "themes" }] },
+          block: InfoPanel,
+          args: {
+            title: "Need Help?",
+            content: "Check our FAQ or contact support for assistance.",
+            icon: "question-circle",
+            variant: "highlight",
+          },
+          conditions: [
+            { type: "route", pages: ["CATEGORY_PAGES"], params: { categorySlug: "support" } },
+          ],
         },
-      ],
-    },
 
-    // All categories except meta: show community welcome
-    {
-      block: InfoPanel,
-      args: {
-        title: "Welcome!",
-        content: "Be respectful and help each other learn.",
-        icon: "heart",
-      },
-      conditions: [
-        { type: "route", pages: ["CATEGORY_PAGES"], params: { not: { categorySlug: "meta" } } },
-        { type: "user", loggedIn: false },
+        // Priority 2: Announcements category - show posting guidelines (staff only)
+        {
+          block: InfoPanel,
+          args: {
+            title: "Posting Guidelines",
+            content: "Only staff can create announcements. Use clear, concise titles.",
+            icon: "bullhorn",
+            variant: "warning",
+          },
+          conditions: [
+            { type: "route", pages: ["CATEGORY_PAGES"], params: { categorySlug: "announcements" } },
+            { type: "user", staff: true },
+          ],
+        },
+
+        // Priority 3: Development categories - show API docs link
+        {
+          block: InfoPanel,
+          args: {
+            title: "Developer Resources",
+            content: "Visit our API documentation for technical details.",
+            icon: "code",
+          },
+          conditions: {
+            type: "route",
+            pages: ["CATEGORY_PAGES"],
+            params: { any: [{ categorySlug: "dev" }, { categorySlug: "plugins" }, { categorySlug: "themes" }] },
+          },
+        },
+
+        // Default fallback: show community welcome (no conditions = always matches)
+        {
+          block: InfoPanel,
+          args: {
+            title: "Welcome!",
+            content: "Be respectful and help each other learn.",
+            icon: "heart",
+          },
+        },
       ],
     },
   ]);
 });
 ```
 
-**Step 3: Access category data via outlet args**
+The `first-match` container evaluates children in order and renders only the first one whose conditions pass. In the support category, you see the "Need Help?" panel. In dev/plugins/themes categories, you see "Developer Resources." Everywhere else, the default "Welcome!" panel appears.
 
-You can also use outlet args to access the current category directly:
+**Step 3: Add a conditional panel using outlet args**
+
+The `first-match` container handles "show one of these" logic, but you can add other blocks alongside it. Let's add a rules panel that appears above the category-specific panel whenever the category has custom rules defined. This uses the `outletArg` condition to check data from the outlet:
 
 ```javascript
-// Panel that shows category-specific rules from outlet args
-{
-  block: InfoPanel,
-  args: {
-    title: "Category Rules",
-    content: "Please read the pinned topics before posting.",
-    icon: "list-check",
+api.renderBlocks("category-sidebar-blocks", [
+  // Rules panel: shows above the category panel when rules exist
+  {
+    block: InfoPanel,
+    args: {
+      title: "Category Rules",
+      content: "Please read the pinned topics before posting.",
+      icon: "list-check",
+      variant: "warning",
+    },
+    conditions: {
+      type: "outletArg",
+      path: "category.custom_fields.has_rules",
+      value: true,
+    },
   },
-  conditions: [
-    // Show only if category has custom rules defined
-    { type: "outletArg", path: "category.custom_fields.has_rules", value: true },
-  ],
-}
+
+  // Category-specific panel (first-match from Step 2)
+  {
+    block: "first-match",
+    children: [
+      // ... same children as Step 2
+    ],
+  },
+]);
 ```
 
+Now the layout can show up to two panels: the rules panel (if the category has rules) plus one category-specific panel from the `first-match` container.
+
 **What we accomplished:**
-- Created a reusable panel component for larger UI layouts
+- Created a reusable panel component for category sidebars
+- Used `first-match` container for prioritized "if/else" rendering
+- Combined multiple top-level blocks with different visibility logic
 - Used route conditions with `params` to target specific categories
+- Used `outletArg` condition to check category data from the outlet
 - Combined `any` operator to match multiple categories with one condition
-- Used `not` operator to exclude specific categories
-- Mixed route conditions with user conditions (staff-only, logged-out)
-- Accessed category data via outlet args for dynamic content
+- Mixed route conditions with user conditions (staff-only)
+- Provided a default fallback by omitting conditions on the last child
 
 So far we've been working within a single theme or plugin. The real power of the Blocks API emerges when multiple plugins provide blocks and a theme composes them into a unified layout.
 
