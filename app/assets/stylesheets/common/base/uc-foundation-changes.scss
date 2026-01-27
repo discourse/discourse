@@ -1,5 +1,4 @@
 .uc-experimental-foundation-changes {
-  --shrink-ratio: 0.85;
   --d-nav-underline-height: var(--space-half);
   --d-button-default-bg-color: transparent;
   --d-button-default-border: 1px solid var(--primary-200);
@@ -17,9 +16,7 @@
   --metadata-color: var(--primary-900);
   --d-nav-color--active: var(--primary);
   --d-nav-color--hover: var(--primary);
-  --title-color--read: var(--primary-700);
-  --topic-title-font-weight: 600;
-  --topic-title-font-weight--visited: 500;
+  --topic-title-font-weight: 500;
   --d-sidebar-active-background: var(--primary-100);
   --d-content-background: var(--secondary);
   --category-badge-border-radius: 50%;
@@ -37,6 +34,7 @@
   --webkit-font-smoothing: antialiased;
   --welcome-banner-text-align: center;
   --welcome-banner-search-menu-margin-inline: auto;
+  --search-input-height: var(--space-8);
   --button-height: var(--space-8);
   --button-font-size: var(--font-down-1);
   --btn-small-font-size: var(--font-down-1);
@@ -119,7 +117,7 @@
 
   .search-menu .search-input,
   .search-menu-container .search-input {
-    height: var(--button-height);
+    height: var(--search-input-height);
   }
 
   // Nav pill
@@ -191,28 +189,23 @@
 
   // Header
   .d-header {
-    height: calc(4em * var(--shrink-ratio));
-    background-color: var(--d-sidebar-background);
+    height: 3.25em;
   }
 
   .header-sidebar-toggle button,
   .d-header-icons .icon {
-    width: calc(2.2857em * var(--shrink-ratio));
-    height: calc(2.2857em * var(--shrink-ratio));
+    width: 2em;
+    height: 2em;
   }
 
   .header-sidebar-toggle button .d-icon,
   .d-header-icons .d-icon {
-    font-size: calc(var(--font-up-4) * var(--shrink-ratio));
+    font-size: var(--font-up-3);
   }
 
   .d-header-icons .icon img.avatar {
-    width: calc(2.1333em * var(--shrink-ratio));
-    height: calc(2.1333em * var(--shrink-ratio));
-  }
-
-  .floating-search-input-wrapper {
-    transform: scale(var(--shrink-ratio));
+    width: 1.75em;
+    height: 1.75em;
   }
 
   // Category
