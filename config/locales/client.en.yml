@@ -3348,7 +3348,8 @@ en:
         votes_released: "vote was released"
         new_features: "new discourse features have been released"
         admin_problems: "new advice on your site dashboard"
-        upcoming_change_available: "new upcoming change is available"
+        upcoming_change_available: "new upcoming change '%{changeName}' is available"
+        upcoming_change_automatically_promoted: "upcoming change '%{changeName}' has been automatically enabled"
 
     upload_selector:
       change: "Change"
