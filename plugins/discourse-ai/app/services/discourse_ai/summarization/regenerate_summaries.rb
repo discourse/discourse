@@ -51,10 +51,7 @@ module DiscourseAi
       end
 
       def rate_limit(guardian:, params:)
-        if guardian.user && params.topic_ids.size >= 1
-          RateLimiter.new(guardian.user, "summary", 6, 5.minutes).performed!
-        end
-        true
+        RateLimiter.new(guardian.user, "summary", 6, 5.minutes).performed!
       end
 
       def fetch_topics(params:, guardian:)

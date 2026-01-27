@@ -6,11 +6,11 @@ import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
 export default class AiRegenSummariesButtons extends Component {
-  @service siteSettings;
+  @service currentUser;
   @service toasts;
 
   get showGistOption() {
-    return this.siteSettings.ai_summary_gists_enabled;
+    return this.currentUser.can_request_gists;
   }
 
   get topicIds() {
@@ -39,9 +39,12 @@ export default class AiRegenSummariesButtons extends Component {
 
       this.toasts.success({
         data: {
-          message: i18n("discourse_ai.summarization.topic.regenerate_success", {
-            count: this.count,
-          }),
+          message: i18n(
+            "discourse_ai.summarization.topic.regenerate_gists_success",
+            {
+              count: this.count,
+            }
+          ),
         },
       });
 
@@ -49,9 +52,12 @@ export default class AiRegenSummariesButtons extends Component {
     } catch {
       this.toasts.error({
         data: {
-          message: i18n("discourse_ai.summarization.topic.regenerate_error", {
-            count: this.count,
-          }),
+          message: i18n(
+            "discourse_ai.summarization.topic.regenerate_gists_error",
+            {
+              count: this.count,
+            }
+          ),
         },
       });
     } finally {

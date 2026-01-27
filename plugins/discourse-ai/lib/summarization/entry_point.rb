@@ -4,6 +4,8 @@ module DiscourseAi
   module Summarization
     class EntryPoint
       def inject_into(plugin)
+        plugin.add_to_serializer(:current_user, :can_request_gists) { scope.can_request_gists? }
+
         plugin.add_to_serializer(:current_user, :can_summarize) do
           return false if !SiteSetting.ai_summarization_enabled
 
