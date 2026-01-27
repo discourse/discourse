@@ -23,17 +23,8 @@ export default apiInitializer((api) => {
         user.staff
       );
     },
-    action({ setComponent, model }) {
-      const topics = model.bulkSelectHelper.selected;
-
-      setComponent(BulkActionsAiRegenSummaries, {
-        topics,
-        afterBulkAction: () => {
-          model.refreshClosure?.().then(() => {
-            model.bulkSelectHelper.toggleBulkSelect();
-          });
-        },
-      });
+    action({ setComponent, topics, afterBulkAction }) {
+      setComponent(BulkActionsAiRegenSummaries, { topics, afterBulkAction });
     },
     actionType: "setComponent",
   });

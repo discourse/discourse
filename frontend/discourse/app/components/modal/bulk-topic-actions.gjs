@@ -30,6 +30,7 @@ export default class BulkTopicActions extends Component {
   @service toasts;
 
   @tracked activeComponent = null;
+  @tracked activeComponentProps = null;
   @tracked tags = [];
   @tracked categoryId;
   @tracked loading;
@@ -46,6 +47,14 @@ export default class BulkTopicActions extends Component {
       if (this.model.initialActionLabel in _customActions) {
         _customActions[this.model.initialActionLabel]({
           setComponent: this.setComponent.bind(this),
+          topics: this.model.bulkSelectHelper.selected,
+          performAndRefresh: this.performAndRefresh.bind(this),
+          forEachPerformed: this.forEachPerformed.bind(this),
+          afterBulkAction: () => {
+            this.model.refreshClosure?.();
+            this.args.closeModal();
+            this.model.bulkSelectHelper.toggleBulkSelect();
+          },
         });
       }
     }
@@ -127,8 +136,9 @@ export default class BulkTopicActions extends Component {
   }
 
   @action
-  setComponent(component) {
+  setComponent(component, props = {}) {
     this.activeComponent = component;
+    this.activeComponentProps = props;
   }
 
   @action
@@ -412,6 +422,8 @@ export default class BulkTopicActions extends Component {
             {{component
               this.activeComponent
               onRegisterAction=this.registerCustomAction
+              topics=this.activeComponentProps.topics
+              afterBulkAction=this.activeComponentProps.afterBulkAction
             }}
           {{/if}}
 

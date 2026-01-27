@@ -45,78 +45,23 @@ module DiscourseAi
       end
 
       def regen_gist
-        raise Discourse::InvalidAccess if !guardian.can_request_gists?
-
-        topics = []
-
-        if params[:topic_ids].present?
-          topic_ids =
-            params[:topic_ids].is_a?(String) ? params[:topic_ids].split(",") : params[:topic_ids]
-          topics = Topic.where(id: topic_ids)
-        elsif params[:topic_id].present?
-          topics = [Topic.find(params[:topic_id])]
-        else
-          raise Discourse::InvalidParameters.new(:topic_id)
+        RegenerateGists.call(service_params) do
+          on_success { render json: success_json }
+          on_failed_policy(:can_request_gists) { raise Discourse::InvalidAccess }
+          on_failed_contract do |contract|
+            raise Discourse::InvalidParameters, contract.errors.full_messages.join(", ")
+          end
         end
-
-        if current_user && topics.size >= 1
-          RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
-        end
-
-        if topics.size > TopicQuery::DEFAULT_PER_PAGE_COUNT
-          raise Discourse::InvalidParameters.new(:topic_ids)
-        end
-
-        topics.each do |topic|
-          guardian.ensure_can_see!(topic)
-
-          summarizer = DiscourseAi::Summarization.topic_gist(topic)
-          summarizer.delete_cached_summaries! if summarizer.present?
-
-          Jobs.enqueue(:fast_track_topic_gist, topic_id: topic.id, force_regenerate: true)
-        end
-
-        render json: success_json
       end
 
       def regen_summary
-        raise Discourse::InvalidAccess if !guardian.can_regenerate_summary?
-
-        topics = []
-
-        if params[:topic_ids].present?
-          topic_ids =
-            params[:topic_ids].is_a?(String) ? params[:topic_ids].split(",") : params[:topic_ids]
-          topics = Topic.where(id: topic_ids)
-        elsif params[:topic_id].present?
-          topics = [Topic.find(params[:topic_id])]
-        else
-          raise Discourse::InvalidParameters.new(:topic_id)
+        RegenerateSummaries.call(service_params) do
+          on_success { render json: success_json }
+          on_failed_policy(:can_regenerate_summary) { raise Discourse::InvalidAccess }
+          on_failed_contract do |contract|
+            raise Discourse::InvalidParameters, contract.errors.full_messages.join(", ")
+          end
         end
-
-        if current_user && topics.size >= 1
-          RateLimiter.new(current_user, "summary", 6, 5.minutes).performed!
-        end
-
-        if topics.size > TopicQuery::DEFAULT_PER_PAGE_COUNT
-          raise Discourse::InvalidParameters.new(:topic_ids)
-        end
-
-        topics.each do |topic|
-          guardian.ensure_can_see!(topic)
-
-          summarizer = DiscourseAi::Summarization.topic_summary(topic)
-          summarizer.delete_cached_summaries! if summarizer.present?
-
-          Jobs.enqueue(
-            :stream_topic_ai_summary,
-            topic_id: topic.id,
-            user_id: current_user.id,
-            skip_age_check: true,
-          )
-        end
-
-        render json: success_json
       end
     end
   end
