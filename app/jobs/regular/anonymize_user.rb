@@ -66,18 +66,28 @@ module Jobs
       user_field_ids.each do |field_id|
         user.custom_fields.delete("#{User::USER_FIELD_PREFIX}#{field_id}")
       end
+
       user.save!
     end
 
     def anonymize_username
+      pattern = "%#{UserHistory.sanitize_sql_like(@prev_username)}%"
       reason = I18n.t("user.anonymized")
+
+      sql = <<~SQL
+        context = CASE WHEN context LIKE :pattern THEN :reason ELSE context END,
+        details = CASE WHEN details LIKE :pattern THEN :reason ELSE details END,
+        previous_value = CASE WHEN previous_value LIKE :pattern THEN :reason ELSE previous_value END,
+        new_value = CASE WHEN new_value LIKE :pattern THEN :reason ELSE new_value END
+      SQL
+
       UserHistory
         .where(target_user_id: @user_id)
         .where(
-          "context LIKE :username OR details LIKE :username OR previous_value LIKE :username OR new_value LIKE :username",
-          username: "%#{@prev_username}%",
+          "context LIKE :pattern OR details LIKE :pattern OR previous_value LIKE :pattern OR new_value LIKE :pattern",
+          pattern:,
         )
-        .update_all(context: reason, details: reason, previous_value: reason, new_value: reason)
+        .update_all([sql, { pattern:, reason: }])
     end
   end
 end

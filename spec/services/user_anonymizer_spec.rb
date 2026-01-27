@@ -362,7 +362,7 @@ RSpec.describe UserAnonymizer do
       context "when log_anonymizer_details is disabled" do
         before { SiteSetting.log_anonymizer_details = false }
 
-        it "anonymizes username in historical UserHistory records" do
+        it "anonymizes username only in fields that contain it" do
           StaffActionLogger.new(admin).log_check_email(
             user,
             context: "/admin/users/#{user.id}/#{user.username}",
@@ -381,7 +381,12 @@ RSpec.describe UserAnonymizer do
             )
 
           expect(check_email.context).to eq(reason)
+          expect(check_email.details).to be_nil
+          expect(check_email.previous_value).to be_nil
+          expect(check_email.new_value).to be_nil
+
           expect(username_change.previous_value).to eq(reason)
+          expect(username_change.new_value).to eq("newname")
         end
 
         it "does not affect records without the username" do
