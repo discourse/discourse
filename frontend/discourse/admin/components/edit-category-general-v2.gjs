@@ -599,6 +599,8 @@ export default class EditCategoryGeneralV2 extends Component {
                 excludeCategoryId=@category.id
                 none="category.none_subcategory_text"
                 clearable=true
+                caretUpIcon="chevron-up"
+                caretDownIcon="chevron-down"
               }}
             />
           </field.Custom>

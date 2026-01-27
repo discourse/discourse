@@ -27,6 +27,11 @@
     gap: var(--space-2);
     width: 100%;
 
+    label:hover {
+      cursor: pointer;
+      border: 1px solid var(--tertiary);
+    }
+
     > * {
       width: 50%;
     }

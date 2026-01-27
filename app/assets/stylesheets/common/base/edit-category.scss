@@ -150,6 +150,19 @@ div.edit-category {
     .category-chooser {
       width: min(340px, 90%);
     }
+
+    .select-kit-header {
+      padding-right: 0.65em;
+
+      &:hover {
+        border: 1px solid var(--tertiary);
+      }
+
+      .caret-icon {
+        color: var(--primary-medium);
+        width: 0.85em;
+      }
+    }
   }
 
   .edit-category-tab-security {
