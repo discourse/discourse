@@ -20,4 +20,45 @@ For a 100% up-to-date list of modifiers, check the database schema at the bottom
 
 - `topic thumbnails` **array of dimensions** - request additional resolutions in the topic thumbnail set. Note that they are generated asynchronously, so you must fall-back to the original image if your requested size is not provided. More information available [in the commit message](https://github.com/discourse/discourse/commit/03818e642a1ae871bffdc0c39c10f05f0b8b0398)
 
+- `serialize_post_user_badges` **string array** - a list of badge names (matching entries in the badges table) to serialize alongside post data. When configured, the system includes the specified user badges with each post for client-side rendering.
+
 One theme making heavy use of these new hooks is https://meta.discourse.org/t/topic-list-thumbnails-theme-component/150602?u=david - check out the code to see how it works.
+
+## Setting-dependent modifiers
+
+Theme modifiers can also be configured to pull their value from a theme setting, allowing site operators to override modifier behavior without editing the theme's code. To make a modifier depend on a setting, use this syntax in your `about.json`:
+
+```json
+{
+  "modifiers": {
+    "modifier_name": {
+      "type": "setting",
+      "value": "setting_name"
+    }
+  }
+}
+```
+
+For example, if you have a theme setting called `show_excerpts` and want it to control the `serialize_topic_excerpts` modifier:
+
+In `settings.yml`:
+
+```yaml
+show_excerpts:
+  default: false
+```
+
+In `about.json`:
+
+```json
+{
+  "modifiers": {
+    "serialize_topic_excerpts": {
+      "type": "setting",
+      "value": "show_excerpts"
+    }
+  }
+}
+```
+
+When the `show_excerpts` setting is changed, the modifier value will automatically update to match. This provides flexibility for site operators to customize theme behavior through the admin UI.
