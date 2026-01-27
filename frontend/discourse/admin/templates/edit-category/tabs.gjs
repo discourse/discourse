@@ -59,6 +59,7 @@ export default <template>
       @data={{@controller.formData}}
       @onDirtyCheck={{@controller.isLeavingForm}}
       @onSubmit={{@controller.saveCategory}}
+      @validate={{@controller.validateForm}}
       as |form transientData|
     >
       <form.Section

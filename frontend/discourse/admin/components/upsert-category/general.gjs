@@ -534,7 +534,11 @@ export default class UpsertCategoryGeneral extends Component {
 
       <@form.Container @title={{i18n "category.style"}}>
         <@form.ConditionalContent
-          @activeName={{or @category.styleType "square"}}
+          @activeName={{or
+            @transientData.style_type
+            @category.styleType
+            "square"
+          }}
           @onChange={{this.onStyleTypeChange}}
           as |cc|
         >

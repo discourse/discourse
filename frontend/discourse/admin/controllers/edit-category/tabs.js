@@ -158,6 +158,31 @@ export default class EditCategoryTabsController extends Controller {
   }
 
   @action
+  validateForm(data, { addError }) {
+    let hasGeneralTabErrors = false;
+
+    if (!data.name) {
+      addError("name", {
+        title: i18n("category.name"),
+        message: i18n("form_kit.errors.required"),
+      });
+      hasGeneralTabErrors = true;
+    }
+
+    if (data.style_type === "emoji" && !data.emoji) {
+      addError("emoji", {
+        title: i18n("category.emoji"),
+        message: i18n("category.validations.emoji_required"),
+      });
+      hasGeneralTabErrors = true;
+    }
+
+    if (hasGeneralTabErrors && this.selectedTab !== "general") {
+      this.selectedTab = "general";
+    }
+  }
+
+  @action
   registerValidator(validator) {
     this.validators.push(validator);
   }

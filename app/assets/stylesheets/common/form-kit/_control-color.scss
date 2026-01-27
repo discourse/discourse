@@ -74,12 +74,12 @@
   }
 }
 
-.form-kit__control-color-input-picker {
+.form-kit__control-color-input-picker[type="color"] {
   width: var(--color-button-width);
   height: var(--color-button-height);
   padding: 0;
   border: 1px solid var(--primary-low-mid);
-  border-radius: var(--d-input-border-radius);
+  border-radius: var(--d-button-border-radius);
   cursor: pointer;
 
   &::-webkit-color-swatch-wrapper {

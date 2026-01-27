@@ -96,7 +96,18 @@
     width: 100%;
   }
 
-  .form-kit__errors-summary + .form-kit__section.edit-category-content {
-    margin-top: 0;
+  .form-kit__errors-summary {
+    margin-top: var(--space-4);
+
+    + .form-kit__section.edit-category-content {
+      margin-top: 0;
+    }
+  }
+
+  .form-kit__conditional-display {
+    .badge-category__wrapper {
+      min-height: 2.6em;
+      top: var(--space-1);
+    }
   }
 }
