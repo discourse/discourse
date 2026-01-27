@@ -70,6 +70,10 @@ export default class FKControlColor extends Component {
   }
 
   get sortedColors() {
+    if (!this.args.usedColors) {
+      return this.args.colors;
+    }
+
     return this.args.colors.sort((a) =>
       isColorUsed(this.args.usedColors, a) ? 1 : -1
     );
