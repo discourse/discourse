@@ -237,7 +237,7 @@ RSpec.describe TopicHotScore do
       expect(TopicHotScore.hottest_topic_ids).not_to include(unlisted_topic.id)
     end
 
-    it "sets score to 0 for topics that become unlisted" do
+    it "sets score to 0 for unlisted topics during update" do
       freeze_time
 
       topic = Fabricate(:topic, like_count: 10, created_at: 2.weeks.ago)

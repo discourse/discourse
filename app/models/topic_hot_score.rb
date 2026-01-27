@@ -38,17 +38,6 @@ class TopicHotScore < ActiveRecord::Base
     Discourse.cache.write(CACHE_KEY, DB.query_single(sql, limit:).to_set)
   end
 
-  def self.cleanup!
-    DB.exec(<<~SQL)
-      DELETE FROM topic_hot_scores
-      WHERE topic_id IN (
-        SELECT id FROM topics
-        WHERE visible = false
-        AND created_at > NOW() - INTERVAL '1 month'
-      )
-    SQL
-  end
-
   def self.update_scores(max = DEFAULT_BATCH_SIZE)
     # score is
     # (total likes - 1) / (age in hours + 2) ^ gravity
