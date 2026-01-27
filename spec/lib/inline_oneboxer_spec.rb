@@ -373,6 +373,22 @@ RSpec.describe InlineOneboxer do
       end
     end
 
+    it "uses custom user agent when inline_onebox_user_agent is set" do
+      SiteSetting.enable_inline_onebox_on_all_domains = true
+      SiteSetting.inline_onebox_user_agent = "Custom Inline Onebox Agent"
+
+      stub_request(:get, "https://example.com/page").with(
+        headers: {
+          "User-Agent" => "Custom Inline Onebox Agent",
+        },
+      ).to_return(status: 200, body: "<html><head><title>Custom UA Test</title></head></html>")
+
+      onebox = InlineOneboxer.lookup("https://example.com/page", skip_cache: true)
+
+      expect(onebox).to be_present
+      expect(onebox[:title]).to eq("Custom UA Test")
+    end
+
     it "censors external oneboxes" do
       Fabricate(:watched_word, action: WatchedWord.actions[:censor], word: "my")
 
