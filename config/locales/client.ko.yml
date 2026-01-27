@@ -158,18 +158,22 @@ ko:
       forwarded: "위의 이메일을 전달했습니다."
     topic_admin_menu: "글 관리"
     skip_to_main_content: "메인 콘텐츠로 건너뛰기"
+    skip_to_post: "%{post_number} 게시물로 바로가기"
     skip_user_nav: "프로필 콘텐츠로 건너뛰기"
     emails_are_disabled: "운영자에 의해 모든 이메일의 발신이 비활성화되었습니다. 어떤 종류의 이메일 알림도 전송되지 않습니다."
     emails_are_disabled_non_staff: "운영진이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
       message: "사이트가 업데이트되었습니다. 원활한 작동을 위해 <span>새로고침해 주세요</span>."
-      dismiss: "읽음 처리..."
+      dismiss: "읽음으로 표시..."
     back_button: "뒤로"
     welcome_banner:
       header:
+        new_members: "%{preferred_display_name}에 오신 것을 환영합니다!"
         logged_in_members: "어서오세요, %{preferred_display_name}님!"
         anonymous_members: "%{site_name}에 오신 것을 환영합니다!"
       search_placeholder: "검색"
+    impersonation:
+      notice: "사용자님은 %{username}을 사칭하고 있습니다."
     themes:
       default_description: "기본"
       error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 테마를 업데이트 또는 재설정하거나, 테마 사용을 중지하세요."
@@ -375,6 +379,7 @@ ko:
         existing_reminder: "이 북마크는 %{at_date_time}에 미리 알림이 설정되어 있습니다"
     bookmark_bulk_actions:
       clear_reminders:
+        name: "알림 지우기"
         description:
           other: "<b>%{count}</b>개의 북마크에 대한 알림을 지우시겠습니까?"
       delete_bookmarks:
@@ -385,14 +390,22 @@ ko:
       copied: "복사되었습니다!"
       copy: "클립보드에 코드 복사"
       fullscreen: "전체화면으로 코드 표시"
+      view_code: "코드 보기"
     drafts:
       label: "초안"
       label_with_count: "초안(%{count})"
       resume: "재개"
       remove: "제거"
       remove_confirmation: "이 초안을 삭제할까요?"
+      bulk_delete_confirmation: "초안 삭제"
       new_topic: "새 글 초안"
       new_private_message: "새 개인 메시지 초안"
+      dropdown:
+        title: "최근 초안 메뉴 열기"
+        untitled: "제목 없는 초안"
+        view_all: "모든 초안 보기"
+        other_drafts:
+          other: "+%{count}개의 기타 초안"
     topic_count_all:
       other: "%{count}개의 새로운 글 보기"
     topic_count_categories:
@@ -413,6 +426,7 @@ ko:
     saving: "저장 중…"
     saved: "저장되었습니다!"
     upload: "업로드"
+    uploading: "업로드 중..."
     processing: "처리 중…"
     uploading_filename: "업로드 중: %{filename}…"
     processing_filename: "처리 중: %{filename}…"
@@ -443,9 +457,12 @@ ko:
         placeholder: "여기에 메시지 제목, URL 또는 ID를 입력하세요"
     review:
       show_more: "더 보기"
+      show_less: "간략히 보기"
+      back_to_queue: "대기열로 돌아가기"
       order_by: "정렬 기준"
       date_filter: "작성된 기간"
       in_reply_to: "답장 대상"
+      filtered_flagged_by: "신고자"
       unknown:
         ignore_all: "모두 무시"
         enable_plugins: "플러그인 사용"
@@ -472,7 +489,10 @@ ko:
       revise_and_reject_post:
         title: "수정"
         reason: "이유"
+        send_pm: "쪽지 보내기"
         feedback: "피드백"
+        custom_reason: "이유를 명확하게 설명해 주세요."
+        other_reason: "기타..."
         optional: "선택 사항"
       stale_help: "이 검토 가능 항목은 <b>%{username}</b> 님이 해결했습니다."
       claim_help:
@@ -1014,6 +1034,7 @@ ko:
     user:
       said: "%{username}:"
       profile: "프로필"
+      profile_possessive: "%{username}님의 프로필"
       mute: "뮤트"
       edit: "환경설정 편집"
       download_archive:
@@ -2173,7 +2194,7 @@ ko:
             other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
           messages:
             other: "확실한가요? 읽지 않은 개인 메시지가 %{count}개 있습니다."
-        dismiss: "읽음 처리..."
+        dismiss: "읽음으로 표시..."
         cancel: "취소"
       group_message_summary:
         other: " %{group_name} 받은 편지함에 %{count}개의 메시지가 있습니다"
@@ -2213,7 +2234,7 @@ ko:
         post_approved: "승인된 게시물"
         membership_request_consolidated: "새 멤버십 요청"
         reaction: "새 반응"
-        votes_released: "투표가 시작되었습니다"
+        votes_released: "투표가 발표되었습니다"
         admin_problems: "사이트 대시 보드에 대한 새로운 조언"
     upload_selector:
       delete: "삭제하기"
@@ -2383,15 +2404,15 @@ ko:
         dismiss: "무시"
         dismiss_read: "읽지 않은 항목 모두 읽음으로 표시"
         dismiss_read_with_selected:
-          other: "읽지 않은 %{count}개 읽음 처리"
-        dismiss_button: "읽음 처리..."
+          other: "읽지 않은 %{count}개 읽음으로 표시"
+        dismiss_button: "읽음으로 표시..."
         dismiss_button_with_selected:
-          other: "무시(%{count})..."
+          other: "읽음으로 표시 (%{count})..."
         dismiss_tooltip: "새 글만 무시하거나 글 팔로우 중지"
         also_dismiss_topics: "이 글을 더 이상 추적하지 않고 읽지 않은 글에서 표시하지 않음"
         dismiss_new: "새 글 읽음으로 표시"
         dismiss_new_with_selected:
-          other: "읽음 처리 (%{count}개)"
+          other: "새글 읽음으로 표시 (%{count})"
         toggle: "글 일괄 선택 전환"
         actions: "일괄 작업"
         close_topics: "글 닫기"
@@ -2426,7 +2447,7 @@ ko:
           unread: "읽지 않은 글이 하나도 없네요... 정말 놀랍습니다!"
     topic_bulk_actions:
       dismiss:
-        name: "읽음 처리..."
+        name: "읽음으로 표시"
       close_topics:
         name: "닫기"
         optional: (선택 사항)
@@ -2550,14 +2571,14 @@ ko:
       auto_delete_replies:
         title: "댓글 자동 삭제"
       status_update_notice:
-        auto_open: "이 글은 %{timeLeft}후 자동으로 열립니다."
-        auto_close: "이 글은 %{timeLeft}후 자동으로 잠금 처리됩니다."
+        auto_open: "이 글은 %{timeLeft}에 자동으로 열립니다."
+        auto_close: "이 글은 %{timeLeft}에 자동으로 닫힙니다."
         auto_publish_to_category: "이 글은 <a href=%{categoryUrl}>#%{categoryName}</a>에 %{timeLeft} 후 게시됩니다."
         auto_close_after_last_post: "이 글은 마지막 댓글이 달리고 %{duration} 후 닫힙니다."
-        auto_delete: "이 글은 %{timeLeft}후 자동으로 삭제됩니다."
-        auto_bump: "이 글은 %{timeLeft}후 자동으로 끌어 올림 됩니다."
+        auto_delete: "이 글은 %{timeLeft}에 자동으로 삭제됩니다."
+        auto_bump: "이 글은 %{timeLeft}에 자동으로 끌어 올림 됩니다."
         auto_reminder: "%{timeLeft}후 이 글에 대해 알림을 받게 됩니다."
-        auto_delete_replies: "이 글에 대한 댓글은 %{duration}후에 자동으로 삭제됩니다."
+        auto_delete_replies: "이 글에 대한 댓글은 %{duration}에 자동으로 삭제됩니다."
       auto_close_title: "자동 종료 설정"
       auto_close_immediate:
         other: "글의 마지막 게시물은 이미 %{count}시간이 지났으므로 해당 글은 즉시 닫힙니다."
@@ -3572,7 +3593,7 @@ ko:
       back: "뒤로 가기"
       forward: "앞으로 가기"
       share: "공유"
-      dismiss: "읽음 처리"
+      dismiss: "읽음으로 표시"
     safe_mode:
       enabled: "안전 모드가 활성화되었습니다. 안전 모드를 종료하려면 이 브라우저 창을 닫으세요."
     image_removed: "(이미지 제거됨)"
@@ -3928,7 +3949,7 @@ ko:
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
-        dismiss_notice: "읽음 처리"
+        dismiss_notice: "읽음으로 표시"
         new_features:
           learn_more: "더 보기..."
         last_checked: "마지막으로 확인함"
@@ -5222,7 +5243,7 @@ ko:
         locale: "언어:"
         more_than_50_results: "50개 이상의 결과가 있습니다. 검색 범위를 좁혀보세요."
         outdated:
-          dismiss: "무시"
+          dismiss: "읽음으로 표시"
       settings:
         show_overriden: "오버라이드된 항목만 표시"
         history: "변경 히스토리 보기"

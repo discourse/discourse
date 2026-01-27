@@ -125,7 +125,6 @@ de:
           author_others: "%{username}"
           channel_title: "#chat-Aktivität"
           status_online: "● online"
-          message_1: "Du hast dieses Jahr <strong>%{count}</strong> Nachrichten versendet!"
           reply_1: "lol, super B-)"
           reply_2: "cOo0oL :D"
           reply_3: "r0fl rAwr 8-)"

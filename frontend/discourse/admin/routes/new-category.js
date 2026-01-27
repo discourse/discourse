@@ -49,6 +49,8 @@ export default class NewCategory extends DiscourseRoute {
     return this.store.createRecord("category", {
       color: backgroundColor,
       text_color: textColor,
+      style_type: "icon",
+      icon: "square-full",
       group_permissions,
       available_groups: this.site.groups.map((g) => g.name),
       allow_badges: true,
@@ -61,6 +63,13 @@ export default class NewCategory extends DiscourseRoute {
       minimum_required_tags: 0,
       category_localizations: [],
     });
+  }
+
+  setupController(controller) {
+    super.setupController(...arguments);
+
+    controller.resetPreview();
+    controller.selectedTab = "general";
   }
 
   titleToken() {

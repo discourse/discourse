@@ -205,3 +205,65 @@ export const postStreamWithAcceptedAnswerExcerpt = (excerpt) => ({
     accepter_name: "Tomtom",
   },
 });
+
+export function topicWithNoAnswer(currentUserId) {
+  const twoWeeksAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+
+  return {
+    post_stream: {
+      posts: [
+        {
+          id: 1,
+          username: "topic_creator",
+          cooked: "<p>This is my question</p>",
+          post_number: 1,
+          post_type: 1,
+          topic_id: 100,
+          user_id: currentUserId,
+          can_accept_answer: false,
+          accepted_answer: false,
+        },
+        {
+          id: 2,
+          username: "helper",
+          cooked: "<p>Here is a potential answer</p>",
+          post_number: 2,
+          post_type: 1,
+          topic_id: 100,
+          user_id: 999,
+          can_accept_answer: true,
+          accepted_answer: false,
+        },
+      ],
+      stream: [1, 2],
+    },
+    id: 100,
+    title: "Test topic with no answer",
+    fancy_title: "Test topic with no answer",
+    slug: "test-topic-no-answer",
+    posts_count: 2,
+    created_at: twoWeeksAgo.toISOString(),
+    views: 10,
+    reply_count: 1,
+    like_count: 0,
+    visible: true,
+    closed: false,
+    archived: false,
+    archetype: "regular",
+    category_id: 1,
+    user_id: currentUserId,
+    draft: null,
+    draft_key: "topic_100",
+    draft_sequence: 0,
+    accepted_answer: null,
+    details: {
+      created_by: {
+        id: currentUserId,
+        username: "topic_creator",
+      },
+      can_create_post: true,
+    },
+    highest_post_number: 2,
+    chunk_size: 20,
+  };
+}

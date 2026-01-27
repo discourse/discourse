@@ -3436,8 +3436,7 @@ uk:
         post_approved: "допис затверджено"
         membership_request_consolidated: "нові запити на членство"
         reaction: "нова реакція"
-        votes_released: "Голосування опубліковано"
-        new_features: "З’явилися нові функції Discourse!"
+        votes_released: "голосування опубліковано"
         admin_problems: "нова порада на інформаційній панелі вашого сайту"
     upload_selector:
       change: "Змінити"

@@ -13,6 +13,7 @@ describe Jobs::LocalizeCategories do
     assign_fake_provider_to(:ai_default_llm_model)
     enable_current_plugin
     SiteSetting.ai_translation_enabled = true
+    SiteSetting.default_locale = "pt_BR"
     SiteSetting.content_localization_supported_locales = "pt_BR|zh_CN"
 
     Jobs.run_immediately!
@@ -89,6 +90,7 @@ describe Jobs::LocalizeCategories do
   end
 
   it "limits the number of localizations" do
+    SiteSetting.default_locale = "pt"
     SiteSetting.content_localization_supported_locales = "pt"
 
     6.times { Fabricate(:category) }

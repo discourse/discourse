@@ -3029,8 +3029,7 @@ pt_BR:
         post_approved: "postagem aprovada"
         membership_request_consolidated: "novos pedidos de associação"
         reaction: "nova reação"
-        votes_released: "Voto emitido"
-        new_features: "Novos recursos do Discourse foram lançados!"
+        votes_released: "voto emitido"
         admin_problems: "nova recomendação no painel de controle do seu site"
     upload_selector:
       change: "Mudança"

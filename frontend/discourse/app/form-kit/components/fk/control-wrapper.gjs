@@ -111,6 +111,8 @@ export default class FKControlWrapper extends Component {
           @colors={{@colors}}
           @usedColors={{@usedColors}}
           @allowNamedColors={{@allowNamedColors}}
+          @collapseSwatches={{@collapseSwatches}}
+          @collapseSwatchesLabel={{@collapseSwatchesLabel}}
           @onControlWidthChange={{fn (mut this.controlWidth)}}
           id={{@field.id}}
           name={{@field.name}}

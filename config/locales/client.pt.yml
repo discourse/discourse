@@ -2978,8 +2978,7 @@ pt:
         post_approved: "mensagem aprovada"
         membership_request_consolidated: "novas solicitações de participação"
         reaction: "nova reação"
-        votes_released: "O voto foi liberado"
-        new_features: "Foram lançadas novas funcionalidades do Discourse!"
+        votes_released: "o voto foi liberado"
         admin_problems: "novo conselho no seu painel do ''site''"
     upload_selector:
       change: "Alterar"

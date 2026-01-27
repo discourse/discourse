@@ -315,6 +315,34 @@ RSpec.describe "Managing Posts solved status" do
       expect(notification.post_number).to eq(post.post_number)
     end
 
+    describe "when muting solution accepter" do
+      fab!(:solution_accepter) { Fabricate(:user, trust_level: 4) }
+      fab!(:author, :user)
+
+      before do
+        SiteSetting.notify_on_staff_accept_solved = true
+        MutedUser.create!(user_id: author.id, muted_user_id: solution_accepter.id)
+      end
+
+      it "does not send notification to post author" do
+        topic = Fabricate(:topic, user: Fabricate(:user))
+        post = Fabricate(:post, post_number: 2, topic: topic, user: author)
+
+        expect { DiscourseSolved.accept_answer!(post, solution_accepter) }.not_to change {
+          author.notifications.count
+        }
+      end
+
+      it "does not send notification to topic author" do
+        topic = Fabricate(:topic, user: author)
+        post = Fabricate(:post, post_number: 2, topic: topic, user: Fabricate(:user))
+
+        expect { DiscourseSolved.accept_answer!(post, solution_accepter) }.not_to change {
+          author.notifications.count
+        }
+      end
+    end
+
     it "does not set a timer when the topic is closed" do
       topic.update!(closed: true)
       post "/solution/accept.json", params: { id: p1.id }

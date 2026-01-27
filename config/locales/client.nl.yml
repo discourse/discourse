@@ -2985,8 +2985,7 @@ nl:
         post_approved: "bericht goedgekeurd"
         membership_request_consolidated: "nieuwe lidmaatschapsverzoeken"
         reaction: "nieuwe reactie"
-        votes_released: "Stem is vrijgegeven"
-        new_features: "Er zijn nieuwe Discourse-functies uitgebracht!"
+        votes_released: "stem is vrijgegeven"
         admin_problems: "nieuw advies op je websitedashboard"
     upload_selector:
       change: "Wijzigen"

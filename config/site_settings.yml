@@ -3691,7 +3691,6 @@ uncategorized:
 
   always_include_topic_excerpts:
     default: false
-    hidden: true
 
   allow_bulk_invite:
     default: true
@@ -4227,3 +4226,10 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+  enable_simplified_category_creation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "conceptual"
+      impact: "feature,staff"
