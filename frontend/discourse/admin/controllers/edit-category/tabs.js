@@ -106,23 +106,6 @@ export default class EditCategoryTabsController extends Controller {
     return data;
   }
 
-  @action
-  canSaveForm(transientData) {
-    if (!transientData.name) {
-      return false;
-    }
-
-    if (transientData.style_type === "emoji" && !transientData.emoji) {
-      return false;
-    }
-
-    if (this.saving || this.deleting) {
-      return true;
-    }
-
-    return true;
-  }
-
   @discourseComputed("saving", "deleting")
   deleteDisabled(saving, deleting) {
     return deleting || saving || false;
@@ -172,6 +155,31 @@ export default class EditCategoryTabsController extends Controller {
   setSelectedTab(tab) {
     this.selectedTab = tab;
     this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
+  }
+
+  @action
+  validateForm(data, { addError }) {
+    let hasGeneralTabErrors = false;
+
+    if (!data.name) {
+      addError("name", {
+        title: i18n("category.name"),
+        message: i18n("form_kit.errors.required"),
+      });
+      hasGeneralTabErrors = true;
+    }
+
+    if (data.style_type === "emoji" && !data.emoji) {
+      addError("emoji", {
+        title: i18n("category.emoji"),
+        message: i18n("category.validations.emoji_required"),
+      });
+      hasGeneralTabErrors = true;
+    }
+
+    if (hasGeneralTabErrors && this.selectedTab !== "general") {
+      this.selectedTab = "general";
+    }
   }
 
   @action

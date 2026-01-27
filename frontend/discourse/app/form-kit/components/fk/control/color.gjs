@@ -112,6 +112,13 @@ export default class FKControlColor extends Component {
   }
 
   @action
+  handleBlur() {
+    if (!this.args.field.value && this.args.fallbackValue) {
+      this.args.field.set(this.args.fallbackValue);
+    }
+  }
+
+  @action
   handlePickerInput(event) {
     this.args.field.set(event.target.value.replace(/^#/, ""));
   }
@@ -144,6 +151,7 @@ export default class FKControlColor extends Component {
           class="form-kit__control-color-input-hex"
           disabled={{@field.disabled}}
           {{on "input" this.handleTextInput}}
+          {{on "blur" this.handleBlur}}
           {{on "paste" this.handlePaste}}
           ...attributes
         />

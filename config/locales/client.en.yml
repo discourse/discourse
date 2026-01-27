@@ -4566,6 +4566,8 @@ en:
       save_error: There was an error saving the category.
       errors:
         self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
+      validations:
+        emoji_required: "Select an emoji to continue."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"

@@ -342,16 +342,18 @@ export default class UpsertCategoryGeneral extends Component {
 
     await set("color", color);
 
-    const whiteDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[0]);
-    const blackDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[1]);
-    const colorIndex = whiteDiff > blackDiff ? 0 : 1;
+    if (color) {
+      const whiteDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[0]);
+      const blackDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[1]);
+      const colorIndex = whiteDiff > blackDiff ? 0 : 1;
 
-    this.args.form.set("text_color", CATEGORY_TEXT_COLORS[colorIndex]);
+      this.args.form.set("text_color", CATEGORY_TEXT_COLORS[colorIndex]);
 
-    this.args.updatePreview?.({
-      color,
-      text_color: CATEGORY_TEXT_COLORS[colorIndex],
-    });
+      this.args.updatePreview?.({
+        color,
+        text_color: CATEGORY_TEXT_COLORS[colorIndex],
+      });
+    }
   }
 
   @action
@@ -448,6 +450,16 @@ export default class UpsertCategoryGeneral extends Component {
     }
   }
 
+  @action
+  validateEmoji(name, value, { addError, data }) {
+    if (data.style_type === "emoji" && !value) {
+      addError(name, {
+        title: i18n("category.emoji"),
+        message: i18n("category.validations.emoji_required"),
+      });
+    }
+  }
+
   get categoryDescription() {
     if (this.args.category.description) {
       return htmlSafe(this.args.category.description);
@@ -516,12 +528,17 @@ export default class UpsertCategoryGeneral extends Component {
           @usedColors={{this.usedBackgroundColors}}
           @collapseSwatches={{true}}
           @collapseSwatchesLabel={{i18n "category.color_palette"}}
+          @fallbackValue={{@category.color}}
         />
       </@form.Field>
 
       <@form.Container @title={{i18n "category.style"}}>
         <@form.ConditionalContent
-          @activeName={{or @category.styleType "square"}}
+          @activeName={{or
+            @transientData.style_type
+            @category.styleType
+            "square"
+          }}
           @onChange={{this.onStyleTypeChange}}
           as |cc|
         >
@@ -575,6 +592,7 @@ export default class UpsertCategoryGeneral extends Component {
                 @showTitle={{false}}
                 @format="large"
                 @onSet={{this.onEmojiSet}}
+                @validate={{this.validateEmoji}}
                 as |field|
               >
                 <field.Custom>
