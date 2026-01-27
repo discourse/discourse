@@ -159,6 +159,10 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   validateForm(data, { addError }) {
+    if (this.selectedTab === "general") {
+      return;
+    }
+
     let hasGeneralTabErrors = false;
 
     if (!data.name) {
@@ -177,7 +181,7 @@ export default class EditCategoryTabsController extends Controller {
       hasGeneralTabErrors = true;
     }
 
-    if (hasGeneralTabErrors && this.selectedTab !== "general") {
+    if (hasGeneralTabErrors) {
       this.selectedTab = "general";
     }
   }
