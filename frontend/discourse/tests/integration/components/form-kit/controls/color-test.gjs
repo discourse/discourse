@@ -99,8 +99,8 @@ module(
 
       const swatches = formKit().field("color").swatches();
       assert.false(swatches[0].isUsed);
-      assert.true(swatches[1].isUsed);
-      assert.false(swatches[2].isUsed);
+      assert.false(swatches[1].isUsed);
+      assert.true(swatches[2].isUsed);
     });
 
     test("when disabled", async function (assert) {

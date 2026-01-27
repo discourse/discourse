@@ -144,14 +144,16 @@ export function defaultCategoryLinkRenderer(category, opts) {
   let extraClasses = opts.extraClasses ? " " + opts.extraClasses : "";
   let style = `${categoryVariables(category)}`;
   let html = "";
-  let parentCat = null;
+  let parentCategory = null;
   let categoryDir = "";
   let dataAttributes = category
     ? `data-category-id="${get(category, "id")}"`
     : "";
 
   if (!opts.hideParent) {
-    parentCat = Category.findById(get(category, "parent_category_id"));
+    parentCategory =
+      get(category, "parentCategory") ||
+      Category.findById(get(category, "parent_category_id"));
   }
 
   let siteSettings = helperContext().siteSettings;
@@ -161,9 +163,9 @@ export function defaultCategoryLinkRenderer(category, opts) {
     classNames += " restricted";
   }
 
-  if (parentCat) {
+  if (parentCategory) {
     classNames += ` --has-parent`;
-    dataAttributes += ` data-parent-category-id="${parentCat.id}"`;
+    dataAttributes += ` data-parent-category-id="${parentCategory.id}"`;
   }
 
   if (opts.styleType) {

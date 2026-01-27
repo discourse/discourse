@@ -7,6 +7,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
+import categoryBadge from "discourse/helpers/category-badge";
 import icon from "discourse/helpers/d-icon";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
@@ -21,7 +22,7 @@ import IconPicker from "discourse/select-kit/components/icon-picker";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-export default class EditCategoryGeneralV2 extends Component {
+export default class UpsertCategoryGeneral extends Component {
   @service site;
   @service siteSettings;
 
@@ -214,6 +215,17 @@ export default class EditCategoryGeneralV2 extends Component {
     return this.siteSettings.login_required
       ? "category.visibility.all_members"
       : "category.visibility.public";
+  }
+
+  @action
+  buildTransientModel(transientData) {
+    return Category.create({
+      id: transientData.id,
+      name: transientData.name || i18n("category.untitled"),
+      color: transientData.color,
+      text_color: transientData.text_color,
+      parent_category_id: transientData.parent_category_id,
+    });
   }
 
   @action
@@ -575,6 +587,14 @@ export default class EditCategoryGeneralV2 extends Component {
                   />
                 </field.Custom>
               </@form.Field>
+            </Content>
+
+            <Content @name="square">
+              {{htmlSafe
+                (categoryBadge
+                  (this.buildTransientModel @transientData) styleType="square"
+                )
+              }}
             </Content>
           </cc.Contents>
         </@form.ConditionalContent>
