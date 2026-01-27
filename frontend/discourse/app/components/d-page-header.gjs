@@ -59,6 +59,10 @@ export default class DPageHeader extends Component {
       !HEADLESS_ACTIONS.find((segment) => pathSegments.includes(segment));
   }
 
+  get shouldCollapseActionsOnMobile() {
+    return this.site.mobileView && this.args.collapseActionsOnMobile !== false;
+  }
+
   <template>
     {{#if this.shouldDisplay}}
       <div class="d-page-header">
@@ -77,7 +81,7 @@ export default class DPageHeader extends Component {
 
             {{#if (or (has-block "actions") @headerActionComponent)}}
               <div class="d-page-header__actions">
-                {{#if this.site.mobileView}}
+                {{#if this.shouldCollapseActionsOnMobile}}
                   <DMenu
                     @identifier="d-page-header-mobile-actions"
                     @title={{i18n "more_options"}}
@@ -135,6 +139,12 @@ export default class DPageHeader extends Component {
                 }}</span>
             {{/if}}
           </p>
+        {{/if}}
+
+        {{#if @showDrawer}}
+          <div class="d-page-header__drawer">
+            {{yield to="drawer"}}
+          </div>
         {{/if}}
 
         {{#unless @hideTabs}}

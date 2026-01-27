@@ -34,15 +34,6 @@ export default class EditCategoryTab extends Component {
     scheduleOnce("afterRender", this, this._addToCollection);
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
-
-    this.setProperties({
-      selectedTab: "general",
-      params: {},
-    });
-  }
-
   _addToCollection() {
     addUniqueValueToArray(this.panels, this.tabClassName);
   }

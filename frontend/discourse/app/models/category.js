@@ -24,6 +24,7 @@ import Site from "discourse/models/site";
 import Topic from "./topic";
 
 const CATEGORY_ASYNC_SEARCH_CACHE = {};
+const CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE = {};
 const pluginSaveProperties = new Set();
 
 let _uncategorized;
@@ -417,11 +418,25 @@ export default class Category extends RestModel {
       page: opts.page,
     };
 
-    const result = await ajax("/categories/hierarchical_search", { data });
+    const cacheKey = JSON.stringify(data);
+    CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[cacheKey] ||= await ajax(
+      "/categories/hierarchical_search",
+      {
+        method: "GET",
+        data,
+      }
+    );
+    const result = CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[cacheKey];
 
     return result["categories"].map((category) =>
       Site.current().updateCategory(category)
     );
+  }
+
+  static clearAsyncHierarchicalSearchCache() {
+    Object.keys(CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE).forEach((key) => {
+      delete CATEGORY_ASYNC_HIERARCHICAL_SEARCH_CACHE[key];
+    });
   }
 
   static async asyncSearch(term, opts) {

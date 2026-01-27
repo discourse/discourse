@@ -11,7 +11,7 @@ import PermissionType from "discourse/models/permission-type";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
-export default class EditCategorySecurity extends buildCategoryPanel(
+export default class EditCategorySecurityV2 extends buildCategoryPanel(
   "security"
 ) {
   @service site;
@@ -66,18 +66,20 @@ export default class EditCategorySecurity extends buildCategoryPanel(
   }
 
   <template>
-    <section class="field">
-      {{#if this.category.is_special}}
-        {{#if this.category.isUncategorizedCategory}}
-          <p class="warning">{{i18n
-              "category.uncategorized_security_warning"
-            }}</p>
-        {{else}}
-          <p class="warning">{{i18n "category.special_warning"}}</p>
-        {{/if}}
+    {{#if this.category.is_special}}
+      {{#if this.category.isUncategorizedCategory}}
+        <@form.Alert @type="warning">
+          {{i18n "category.uncategorized_security_warning"}}
+        </@form.Alert>
+      {{else}}
+        <@form.Alert @type="warning">
+          {{i18n "category.special_warning"}}
+        </@form.Alert>
       {{/if}}
+    {{/if}}
 
-      {{#unless this.category.is_special}}
+    {{#unless this.category.is_special}}
+      <@form.Container>
         <div class="category-permissions-table">
           <div class="permission-row row-header">
             <span class="group-name">{{i18n
@@ -106,51 +108,49 @@ export default class EditCategorySecurity extends buildCategoryPanel(
               {{i18n "category.permissions.no_groups_selected"}}
             </div>
           {{/unless}}
+
+          {{#if this.category.availableGroups}}
+            <PluginOutlet
+              @name="category-security-permissions-add-group"
+              @outletArgs={{lazyHash
+                category=this.category
+                availableGroups=this.category.availableGroups
+                onSelectGroup=this.onSelectGroup
+              }}
+              @defaultGlimmer={{true}}
+            >
+              <div class="add-group">
+                <span class="group-name">
+                  <ComboBox
+                    @content={{this.category.availableGroups}}
+                    @onChange={{this.onSelectGroup}}
+                    @value={{null}}
+                    @valueProperty={{null}}
+                    @nameProperty={{null}}
+                    @options={{hash none="category.security_add_group"}}
+                    class="available-groups"
+                  />
+                </span>
+              </div>
+            </PluginOutlet>
+          {{/if}}
         </div>
 
-        <PluginOutlet
-          @name="category-security-permissions-add-group"
-          @outletArgs={{lazyHash
-            category=this.category
-            availableGroups=this.category.availableGroups
-            onSelectGroup=this.onSelectGroup
-          }}
-          @defaultGlimmer={{true}}
-        >
-          {{#if this.category.availableGroups}}
-            <div class="add-group">
-              <span class="group-name">
-                <ComboBox
-                  @content={{this.category.availableGroups}}
-                  @onChange={{this.onSelectGroup}}
-                  @value={{null}}
-                  @valueProperty={{null}}
-                  @nameProperty={{null}}
-                  @options={{hash none="category.security_add_group"}}
-                  class="available-groups"
-                />
-              </span>
-            </div>
-          {{/if}}
+        {{#if this.everyoneGrantedFull}}
+          <@form.Alert @type="warning">
+            {{i18n "category.permissions.everyone_has_access"}}
+          </@form.Alert>
+        {{else}}
+          <@form.Alert @type="warning">
+            {{i18n "category.permissions.specific_groups_have_access"}}
+          </@form.Alert>
+        {{/if}}
+      </@form.Container>
+    {{/unless}}
 
-          {{#if this.everyoneGrantedFull}}
-            <@form.Alert @type="warning">
-              {{i18n "category.permissions.everyone_has_access"}}
-            </@form.Alert>
-          {{else}}
-            <@form.Alert @type="warning">
-              {{i18n "category.permissions.specific_groups_have_access"}}
-            </@form.Alert>
-          {{/if}}
-        </PluginOutlet>
-      {{/unless}}
-    </section>
-
-    <section>
-      <PluginOutlet
-        @name="category-custom-security"
-        @outletArgs={{lazyHash category=this.category}}
-      />
-    </section>
+    <PluginOutlet
+      @name="category-custom-security"
+      @outletArgs={{lazyHash category=this.category}}
+    />
   </template>
 }

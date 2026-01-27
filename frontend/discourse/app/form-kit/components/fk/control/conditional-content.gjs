@@ -24,11 +24,16 @@ const Contents = <template>
 </template>;
 
 export default class FKControlConditionalContent extends Component {
-  @tracked activeName = this.args.activeName;
+  @tracked manuallySetName = null;
+
+  get activeName() {
+    return this.manuallySetName ?? this.args.activeName;
+  }
 
   @action
   setCondition(name) {
-    this.activeName = name;
+    this.manuallySetName = name;
+    this.args.onChange?.(name);
   }
 
   <template>

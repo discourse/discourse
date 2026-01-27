@@ -1,16 +1,21 @@
+import { concat } from "@ember/helper";
 import { htmlSafe } from "@ember/template";
 import EditCategoryGeneral from "discourse/admin/components/edit-category-general";
+import EditCategoryGeneralV2 from "discourse/admin/components/edit-category-general-v2";
 import EditCategoryImages from "discourse/admin/components/edit-category-images";
+import EditCategoryImagesV2 from "discourse/admin/components/edit-category-images-v2";
 import EditCategoryLocalizations from "discourse/admin/components/edit-category-localizations";
 import EditCategorySecurity from "discourse/admin/components/edit-category-security";
+import EditCategorySecurityV2 from "discourse/admin/components/edit-category-security-v2";
 import EditCategorySettings from "discourse/admin/components/edit-category-settings";
-import EditCategoryTab from "discourse/admin/components/edit-category-tab";
+import EditCategorySettingsV2 from "discourse/admin/components/edit-category-settings-v2";
 import EditCategoryTags from "discourse/admin/components/edit-category-tags";
+import EditCategoryTagsV2 from "discourse/admin/components/edit-category-tags-v2";
 import EditCategoryTopicTemplate from "discourse/admin/components/edit-category-topic-template";
-import BreadCrumbs from "discourse/components/bread-crumbs";
-import DButton from "discourse/components/d-button";
+import EditCategoryTabsHorizontal from "discourse/admin/templates/edit-category/tabs-horizontal";
+import EditCategoryTabsVertical from "discourse/admin/templates/edit-category/tabs-vertical";
 import Form from "discourse/components/form";
-import { and, not } from "discourse/truth-helpers";
+import { not } from "discourse/truth-helpers";
 
 const TAB_COMPONENTS = {
   general: EditCategoryGeneral,
@@ -22,91 +27,33 @@ const TAB_COMPONENTS = {
   localizations: EditCategoryLocalizations,
 };
 
-function componentFor(name) {
-  name = name.replace("edit-category-", "");
+const TAB_COMPONENTS_V2 = {
+  general: EditCategoryGeneralV2,
+  security: EditCategorySecurityV2,
+  settings: EditCategorySettingsV2,
+  images: EditCategoryImagesV2,
+  "topic-template": EditCategoryTopicTemplate,
+  tags: EditCategoryTagsV2,
+  localizations: EditCategoryLocalizations,
+};
 
-  if (!TAB_COMPONENTS[name]) {
+function componentFor(name, useSimplified) {
+  name = name.replace("edit-category-", "");
+  const components = useSimplified ? TAB_COMPONENTS_V2 : TAB_COMPONENTS;
+
+  if (!components[name]) {
     throw new Error(`No category-tab component found for tab name: ${name}`);
   }
-  return TAB_COMPONENTS[name];
+  return components[name];
 }
 
 export default <template>
   <div class="edit-category {{if @controller.expandedMenu 'expanded-menu'}}">
-    <div class="edit-category-title-bar">
-      <div class="edit-category-title">
-        <h2>{{@controller.title}}</h2>
-        {{#if @controller.model.id}}
-          <BreadCrumbs
-            @categories={{@controller.breadcrumbCategories}}
-            @category={{@controller.model}}
-            @noSubcategories={{@controller.model.noSubcategories}}
-            @editingCategory={{true}}
-            @editingCategoryTab={{@controller.selectedTab}}
-          />
-        {{/if}}
-      </div>
-      {{#if (and @controller.site.desktopView @controller.model.id)}}
-        <DButton
-          @action={{@controller.goBack}}
-          @label="category.back"
-          @icon="caret-left"
-          class="category-back"
-        />
-      {{/if}}
-    </div>
-
-    <div class="edit-category-nav">
-      <ul class="nav nav-stacked">
-        <EditCategoryTab
-          @panels={{@controller.panels}}
-          @selectedTab={{@controller.selectedTab}}
-          @params={{@controller.parentParams}}
-          @tab="general"
-        />
-        <EditCategoryTab
-          @panels={{@controller.panels}}
-          @selectedTab={{@controller.selectedTab}}
-          @params={{@controller.parentParams}}
-          @tab="security"
-        />
-        <EditCategoryTab
-          @panels={{@controller.panels}}
-          @selectedTab={{@controller.selectedTab}}
-          @params={{@controller.parentParams}}
-          @tab="settings"
-        />
-        <EditCategoryTab
-          @panels={{@controller.panels}}
-          @selectedTab={{@controller.selectedTab}}
-          @params={{@controller.parentParams}}
-          @tab="images"
-        />
-        <EditCategoryTab
-          @panels={{@controller.panels}}
-          @selectedTab={{@controller.selectedTab}}
-          @params={{@controller.parentParams}}
-          @tab="topic-template"
-        />
-        {{#if @controller.siteSettings.tagging_enabled}}
-          <EditCategoryTab
-            @panels={{@controller.panels}}
-            @selectedTab={{@controller.selectedTab}}
-            @params={{@controller.parentParams}}
-            @tab="tags"
-          />
-        {{/if}}
-
-        {{#if @controller.siteSettings.content_localization_enabled}}
-          <EditCategoryTab
-            @panels={{@controller.panels}}
-            @selectedTab={{@controller.selectedTab}}
-            @params={{@controller.parentParams}}
-            @tab="localizations"
-          />
-        {{/if}}
-      </ul>
-    </div>
+    {{#if @controller.siteSettings.enable_simplified_category_creation}}
+      <EditCategoryTabsHorizontal @controller={{@controller}} />
+    {{else}}
+      <EditCategoryTabsVertical @controller={{@controller}} />
+    {{/if}}
 
     <Form
       @data={{@controller.formData}}
@@ -115,20 +62,46 @@ export default <template>
       as |form transientData|
     >
       <form.Section
-        @title={{@controller.selectedTabTitle}}
-        class="edit-category-content"
+        class="edit-category-content edit-category-tab-{{@controller.selectedTab}}"
       >
-        {{#each @controller.panels as |tabName|}}
-          {{#let (componentFor tabName) as |Tab|}}
+        {{#if @controller.siteSettings.enable_simplified_category_creation}}
+
+          {{#let
+            (componentFor
+              (concat "edit-category-" @controller.selectedTab)
+              @controller.siteSettings.enable_simplified_category_creation
+            )
+            as |Tab|
+          }}
             <Tab
               @selectedTab={{@controller.selectedTab}}
               @category={{@controller.model}}
               @registerValidator={{@controller.registerValidator}}
               @transientData={{transientData}}
               @form={{form}}
+              @updatePreview={{@controller.updatePreview}}
+              @setSelectedTab={{@controller.setSelectedTab}}
             />
           {{/let}}
-        {{/each}}
+        {{else}}
+          {{#each @controller.panels as |tabName|}}
+            {{#let
+              (componentFor
+                tabName
+                @controller.siteSettings.enable_simplified_category_creation
+              )
+              as |Tab|
+            }}
+              <Tab
+                @selectedTab={{@controller.selectedTab}}
+                @category={{@controller.model}}
+                @registerValidator={{@controller.registerValidator}}
+                @transientData={{transientData}}
+                @form={{form}}
+              />
+            {{/let}}
+          {{/each}}
+        {{/if}}
       </form.Section>
 
       {{#if @controller.showDeleteReason}}
