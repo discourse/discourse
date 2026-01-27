@@ -11,11 +11,7 @@ export default {
       if (currentUser) {
         const href = getURL(`/u/${currentUser.username.toLowerCase()}`);
         const style = document.createElement("style");
-        style.textContent = `
-          a.mention[href="${href}"] {
-            background: var(--tertiary-400);
-          }
-        `;
+        style.textContent = `.mention[href="${href}"] { background: var(--tertiary-400); }`;
         document.head.appendChild(style);
       }
     });
