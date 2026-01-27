@@ -116,28 +116,21 @@ end
 
 In some cases plugins work best when they add extra "dynamic" features to your posts. Examples of that are the `poll` plugin or the `footnotes` plugin that adds a "..." that dynamically shows a tooltip.
 
-if you need to "decorate" posts add `assets/javascripts/initializers/your-initializer.js`
+if you need to "decorate" posts add `assets/javascripts/api-initializers/your-initializer.js`
 
 ```js
-function magicUpTheElement($elem) {
-  // your amazing magic goes here
-}
+import { apiInitializer } from "discourse/lib/api";
 
-export default {
-  name: "inline-footnotes",
+export default apiInitializer((api) => {
+  const siteSettings = api.container.lookup("service:site-settings");
+  if (!siteSettings.enable_magic_8_ball) {
+    return;
+  }
 
-  initialize(container) {
-    if (!container.lookup("site-settings:main").enable_magic_8_ball) {
-      return;
-    }
-
-    withPluginApi("0.8.9", (api) => {
-      api.decorateCooked(($elem) => {
-        magicUpTheElement($elem);
-      });
-    });
-  },
-};
+  api.decorateCookedElement((elem) => {
+    // your amazing magic goes here
+  });
+});
 ```
 
 ### You may need to "post process" the posts

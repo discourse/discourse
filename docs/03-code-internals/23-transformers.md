@@ -88,7 +88,7 @@ To introduce a new transformer via a theme or plugin, create a `pre-initializer`
 export default {
   before: "freeze-valid-transformers",
   initialize() {
-    withPluginApi("1.33.0", (api) => {
+    withPluginApi((api) => {
       api.addValueTransformerName("my-value-transform");
       api.addBehaviorTransformerName("my-behavior-transform");
     });

@@ -160,7 +160,7 @@ In theme/plugin development, there are two ways this error is normally introduce
     before: "inject-discourse-objects",
 
     initializeWithApi(api) {
-      api.modifyClass("model:user", {
+      api.modifyClass("model:user", (Superclass) => class extends Superclass {
         myNewUserFunction() {
           return "hello world";
         },
@@ -168,7 +168,7 @@ In theme/plugin development, there are two ways this error is normally introduce
     },
 
     initialize() {
-      withPluginApi("0.12.1", this.initializeWithApi);
+      withPluginApi(this.initializeWithApi);
     },
   };
   ```
