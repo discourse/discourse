@@ -45,9 +45,9 @@ module DiscourseAi
       end
 
       def regen_gist
-        RegenerateGists.call(service_params) do
+        RegenerateSummaries.call(**service_params, params: params.merge(type: "gist")) do
           on_success { render json: success_json }
-          on_failed_policy(:can_request_gists) { raise Discourse::InvalidAccess }
+          on_failed_policy(:can_regenerate) { raise Discourse::InvalidAccess }
           on_failed_contract do |contract|
             raise Discourse::InvalidParameters, contract.errors.full_messages.join(", ")
           end
@@ -55,9 +55,9 @@ module DiscourseAi
       end
 
       def regen_summary
-        RegenerateSummaries.call(service_params) do
+        RegenerateSummaries.call(**service_params, params: params.merge(type: "summary")) do
           on_success { render json: success_json }
-          on_failed_policy(:can_regenerate_summary) { raise Discourse::InvalidAccess }
+          on_failed_policy(:can_regenerate) { raise Discourse::InvalidAccess }
           on_failed_contract do |contract|
             raise Discourse::InvalidParameters, contract.errors.full_messages.join(", ")
           end

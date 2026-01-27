@@ -6,10 +6,12 @@ module DiscourseAi
       include Service::Base
 
       MAX_TOPICS = TopicQuery::DEFAULT_PER_PAGE_COUNT
+      TYPES = %i[gist summary].freeze
 
       params do
         attribute :topic_id, :integer
         attribute :topic_ids, :array
+        attribute :type, :string, default: "summary"
 
         before_validation do
           if topic_ids.present?
@@ -17,9 +19,11 @@ module DiscourseAi
           elsif topic_id.present?
             self.topic_ids = [topic_id.to_i]
           end
+          self.type = type.to_s
         end
 
         validates :topic_ids, presence: true
+        validates :type, inclusion: { in: TYPES.map(&:to_s) }
         validate :topic_ids_within_limit
 
         def topic_ids_within_limit
@@ -30,7 +34,7 @@ module DiscourseAi
         end
       end
 
-      policy :can_regenerate_summary
+      policy :can_regenerate
 
       step :rate_limit
       step :fetch_topics
@@ -38,8 +42,12 @@ module DiscourseAi
 
       private
 
-      def can_regenerate_summary(guardian:)
-        guardian.can_regenerate_summary?
+      def can_regenerate(guardian:, params:)
+        if params.type == "gist"
+          guardian.can_request_gists?
+        else
+          guardian.can_regenerate_summary?
+        end
       end
 
       def rate_limit(guardian:, params:)
@@ -57,17 +65,24 @@ module DiscourseAi
         context[:topics] = topics
       end
 
-      def regenerate(topics:, guardian:)
+      def regenerate(topics:, params:, guardian:)
         topics.each do |topic|
-          summarizer = DiscourseAi::Summarization.topic_summary(topic)
-          summarizer.delete_cached_summaries! if summarizer.present?
+          if params.type == "gist"
+            summarizer = DiscourseAi::Summarization.topic_gist(topic)
+            summarizer.delete_cached_summaries! if summarizer.present?
 
-          Jobs.enqueue(
-            :stream_topic_ai_summary,
-            topic_id: topic.id,
-            user_id: guardian.user.id,
-            skip_age_check: true,
-          )
+            Jobs.enqueue(:fast_track_topic_gist, topic_id: topic.id, force_regenerate: true)
+          else
+            summarizer = DiscourseAi::Summarization.topic_summary(topic)
+            summarizer.delete_cached_summaries! if summarizer.present?
+
+            Jobs.enqueue(
+              :stream_topic_ai_summary,
+              topic_id: topic.id,
+              user_id: guardian.user.id,
+              skip_age_check: true,
+            )
+          end
         end
       end
     end
