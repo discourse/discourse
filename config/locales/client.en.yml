@@ -5047,6 +5047,7 @@ en:
         back: "%{shortcut} Back"
         up_down: "%{shortcut} Move selection &uarr; &darr;"
         open: "%{shortcut} Open selected topic"
+        open_new_window: "%{shortcut} Open selected topic in new tab/window"
         next_prev: "%{shortcut} Next/previous section"
         go_to_unread_post: "%{shortcut} Go to the first unread post"
       application:
@@ -6425,6 +6426,7 @@ en:
           daily: Daily
           monthly: Monthly
           weekly: Weekly
+          value_so_far: "%{value} (so far)"
           dates: "Dates (UTC)"
           groups: "All groups"
           disabled: "This report is disabled"
@@ -6435,7 +6437,11 @@ en:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
-          average_chart_label: Average
+          average_chart_label: Showing averages, not totals
+          sort_button: "Sort by %{column}"
+          sort_button_current: "Sorted by %{column}, %{direction}"
+          sort_ascending: "ascending"
+          sort_descending: "descending"
           filters:
             file_extension:
               label: File extension

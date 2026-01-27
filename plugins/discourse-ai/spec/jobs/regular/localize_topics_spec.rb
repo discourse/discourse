@@ -197,7 +197,10 @@ describe Jobs::LocalizeTopics do
       Fabricate(:group_private_message_topic, recipient_group: Fabricate(:group), locale: "es")
     end
 
-    before { SiteSetting.content_localization_supported_locales = "ja" }
+    before do
+      SiteSetting.default_locale = "ja"
+      SiteSetting.content_localization_supported_locales = "ja"
+    end
 
     context "when ai_translation_backfill_limit_to_public_content is true" do
       before { SiteSetting.ai_translation_backfill_limit_to_public_content = true }

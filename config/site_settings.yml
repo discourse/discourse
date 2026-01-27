@@ -3691,7 +3691,6 @@ uncategorized:
 
   always_include_topic_excerpts:
     default: false
-    hidden: true
 
   allow_bulk_invite:
     default: true

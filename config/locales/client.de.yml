@@ -3087,7 +3087,7 @@ de:
         post_approved: "Beitrag genehmigt"
         membership_request_consolidated: "Neue Mitgliedschaftsanfragen"
         reaction: "neue Reaktion"
-        votes_released: "abstimmung wurde freigegeben"
+        votes_released: "Abstimmung wurde freigegeben"
         admin_problems: "neue Ratschläge auf deinem Website-Dashboard"
     upload_selector:
       change: "Ändern"

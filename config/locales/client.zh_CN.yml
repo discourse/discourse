@@ -2942,7 +2942,9 @@ zh_CN:
         membership_request_consolidated: "新成员资格请求"
         reaction: "新回应"
         votes_released: "投票额度已释放"
+        new_features: "已发布新的 Discourse 功能！"
         admin_problems: "网站信息中心有新建议"
+        upcoming_change_available: "新的变化即将到来"
     upload_selector:
       change: "更改"
       delete: "删除"

@@ -19,7 +19,7 @@ zh_CN:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - 1 月
     - 2 月
     - 3 月
@@ -2391,7 +2391,6 @@ zh_CN:
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
     viewport_based_mobile_mode: "使用视口宽度来确定移动/桌面模式。此设置即将移除。如果您需要将其关闭，请在 Meta 中告知我们 <a href='https://meta.discourse.org/t/384280'></a>。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
-    content_localization_supported_locales: "用户内容可以翻译成的受支持语言区域列表。要求 'content localization enabled'。"
     content_localization_allowed_groups: "允许更新本地化内容的群组。需要 'content localization enabled'。"
     content_localization_language_switcher: "在页眉中显示语言切换器，允许访问者在翻译版本的 Discourse 和用户贡献的内容之间切换。使用 \"内容本地化支持的本地语言 \"中定义的语言"
     content_localization_crawler_param: "启用 \"内容本地化 \"和 \"从参数设置本地化 \"后，向网络爬虫提供本地化内容。支持的本地化语言列表在 \"内容本地化支持的本地化语言 \"中定义。"
@@ -3630,8 +3629,8 @@ zh_CN:
     user_posts_deleted:
       title: "用户的帖子已被删除"
       subject_template: "%{user} 的所有帖子已被删除"
-      text_body_template: |
-        @%{user} 的%{deleted_posts_count}个帖子已被 @%{staff_user} 删除。
+      text_body_template:
+        other: "@%{user} 的%{count}个帖子已被 @%{staff_user} 删除。"
   unsubscribe_link: |
     要退订这些电子邮件，请[点击此处](%{unsubscribe_url})。
   unsubscribe_link_and_mail: |
@@ -4897,8 +4896,10 @@ zh_CN:
     bulk_create:
       invalid_params: "参数无效。请提供标签名称数组。"
       invalid_name: "无效的标签名称。"
-      tag_too_long: "标签过长（最多 %{max} 个字符）。"
-      too_many_tags: "标签太多了。您一次最多可以创建 %{max} 标签。对于较大的导入，请使用 CSV 上传功能。"
+      tag_too_long:
+        other: "标签过长（最多 %{count} 个字符）。"
+      too_many_tags:
+        other: "标签太多了。您一次最多可以创建 %{count} 标签。对于较大的导入，请使用 CSV 上传功能。"
     forbidden:
       invalid:
         other: "您选择的标签均无法使用"
