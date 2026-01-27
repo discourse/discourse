@@ -2011,38 +2011,15 @@ Found at children[0] and children[2].
 The "name" field is marked as unique and must have distinct values.
 ```
 
-### Development vs Production Behavior
-
-The Blocks API behaves differently in development and production environments:
-
-| Aspect | Development | Production |
-|--------|-------------|------------|
-| Error messages | Verbose with suggestions | Minimal, logged to console |
-| Ghost blocks | Shown (if overlay enabled) | Hidden |
-| Condition logging | Available | Disabled |
-| Validation timing | Boot time + runtime | Boot time only |
-
-**Enabling Debug Mode:**
-
-Debug features are controlled via the dev tools toolbar. In production builds, the toolbar is hidden by default. To access debug tools in production:
-
-1. Open browser DevTools console
-2. Run: `Discourse.__container__.lookup("service:dev-tools-state").setProperty("enabled", true)`
-3. Refresh the page
-
-> :warning: Debug mode adds performance overhead. Use only for debugging, not routine production use.
-
 So far we've focused on what happens when things go wrong. But what about when things *seem* fine but aren't working as expected?
 
 ---
 
 ## 6. Your Debugging Toolkit
 
-Error messages help when something is wrong. But sometimes you need to understand what's happening when everything appears to work—just not the way you expected. That's where the debugging tools come in.
+The Blocks API includes a suite of visual and console-based tools to help you understand what's happening at runtime—which blocks rendered, which conditions passed or failed, and why.
 
 ### What's in the Toolkit
-
-The Blocks API includes comprehensive debugging tools accessible via the dev tools toolbar:
 
 | Tool | What it does | How to enable |
 |------|--------------|---------------|
@@ -2051,27 +2028,56 @@ The Blocks API includes comprehensive debugging tools accessible via the dev too
 | **Outlet Boundaries** | Shows outlet boundaries even when empty | Toggle "Outlet Boundaries" in toolbar |
 | **Ghost Blocks** | Shows hidden blocks as dashed placeholders | Enabled with Visual Overlay |
 
+### Accessing the Tools
+
+The debug tools live in the dev tools toolbar on the left side of the screen. Click the Block Debug button to reveal a dropdown with three toggleable options:
+
+```
+┌─────────────────────────────────┐
+│ ☐ Console Logging              │
+│ ☐ Visual Overlay               │
+│ ☐ Outlet Boundaries            │
+└─────────────────────────────────┘
+```
+
+The button icon highlights when any option is enabled, so you can tell at a glance whether debugging is active.
+
+> :bulb: **Screenshot opportunity:** The dev tools toolbar with Block Debug dropdown expanded.
+
+**Development vs Production:**
+
+These tools work in both environments. In development builds, the toolbar is loaded and visible by default. In production, you'll need to enable it from the console:
+
+```javascript
+enableDevTools()   // stores preference, reloads page
+disableDevTools()  // removes preference, reloads page
+```
+
+A few minor things differ between environments: production builds suppress some development-only warnings (like hints about unknown outlet patterns), and lazy-loaded blocks are resolved on-demand rather than eagerly. But the debugging tools themselves work identically once enabled.
+
+> :warning: Debug mode adds performance overhead. Use for debugging, not routine production use.
+
 ### Console Logging
 
-When enabled, every block render is logged with its condition tree:
+Toggle this on and open your browser's DevTools console. Every time a block renders (or doesn't), you'll see a collapsible log entry showing exactly what happened:
 
 ```
-[Blocks] ✓ RENDERED hero-banner in homepage-blocks
-  ├─ ✓ AND (2 conditions)
-  │  ├─ ✓ user { loggedIn: true }
-  │  └─ ✓ route { pages: ["DISCOVERY_PAGES"] }
+▼ [Blocks] ✓ RENDERED hero-banner in homepage-blocks
+    ✓ AND (2 conditions)
+      ✓ user { loggedIn: true }
+      ✓ route { pages: ["DISCOVERY_PAGES"] }
 
-[Blocks] ✗ SKIPPED admin-banner in homepage-blocks
-  ├─ ✗ AND (2 conditions)
-  │  ├─ ✗ user { admin: true }
-  │  └─ ─ route { pages: ["DISCOVERY_PAGES"] }  // not evaluated (short-circuit disabled in debug)
+▼ [Blocks] ✗ SKIPPED admin-banner in homepage-blocks
+    ✗ AND (2 conditions)
+      ✗ user { admin: true }
+        actual: false, required: true
+      ✓ route { pages: ["DISCOVERY_PAGES"] }
 ```
 
-**What the icons mean:**
-- `✓` (green) - Condition passed
-- `✗` (red) - Condition failed
+Green checkmarks (✓) mean a condition passed, red X marks (✗) mean it failed. When debug logging is enabled, the system evaluates *all* conditions—even after one fails—so you get the complete picture.
 
-**Type mismatch warnings:**
+When something doesn't match, the logs show you both the actual value and what you configured, making it easy to spot the mismatch. The system also warns you about type mismatches—like when your condition expects a string but the actual value is `undefined`:
+
 ```
 [Blocks] ✗ SKIPPED my-block in homepage-blocks
   ├─ ✗ route
@@ -2079,54 +2085,103 @@ When enabled, every block render is logged with its condition tree:
   │     { actual: undefined, configured: "solved" }
 ```
 
+These type mismatch warnings are particularly helpful for catching bugs where query params aren't present or have unexpected types.
+
 ### Visual Overlay
 
-When enabled, each rendered block shows:
+This is where things get visual. Enable it and every rendered block gets an orange badge in its top-left corner showing the block name:
 
-1. **Badge** - Block name with cube icon
-2. **Tooltip** (on hover/click) containing:
-   - Block name and location (outlet path)
-   - Conditions that were evaluated (if any)
-   - Arguments passed to the block
-   - Outlet args available
+```
+┌─────────────────────────────────────────┐
+│ 🧊 hero-banner                          │
+├─────────────────────────────────────────┤
+│                                         │
+│     [Block content appears here]        │
+│                                         │
+└─────────────────────────────────────────┘
+```
 
-**Example tooltip content:**
+Click a badge and you'll get a tooltip with everything you need to know about that block: where it's rendering, which conditions were checked (and whether they passed), what arguments were passed in, and what outlet args are available.
 
-> :ice_cube: **hero-banner** in `homepage-blocks`
->
-> **Conditions** (passed)
-> - AND
->   - user (loggedIn: true)
->   - route (pages: ["DISCOVERY_PAGES"])
->
-> **Arguments**
-> - title: "Welcome"
-> - ctaText: "Get Started"
->
-> **Outlet Args**
-> - topic: Topic { id: 123, ... }
+```
+┌─────────────────────────────────────────┐
+│ 🧊 hero-banner in homepage-blocks       │
+│ ─────────────────────────────────────── │
+│ Status: RENDERED ✓                      │
+│                                         │
+│ Conditions (passed):                    │
+│   ✓ AND                                 │
+│     ✓ user { loggedIn: true }           │
+│     ✓ route { pages: [...] }            │
+│                                         │
+│ Arguments:                              │
+│   @title: "Welcome"                     │
+│   @ctaText: "Get Started"               │
+│                                         │
+│ Outlet Args:                            │
+│   @outletArgs.topic: Topic {...}        │
+└─────────────────────────────────────────┘
+```
+
+> :bulb: **Screenshot opportunity:** A rendered block with badge and expanded tooltip.
 
 ### Ghost Blocks
 
-When a block's conditions fail, a ghost placeholder appears showing:
+Ghost blocks are enabled automatically with the Visual Overlay. They show you where blocks *would* render if their conditions had passed—a red dashed outline with diagonal stripes marking the spot:
 
-1. **Dashed outline** - Where the block would render
-2. **Badge** - Block name with "(hidden)" label
-3. **Tooltip** explaining why:
-   - "This block is not rendered because its conditions failed."
-   - "This container block is not rendered because none of its children are visible."
-   - "This optional block is not rendered because it's not registered."
+```
+┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
+  🧊 admin-banner (hidden)
+│                                         │
+      ╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱
+│     ╱╱╱╱ (diagonal stripes) ╱╱╱╱       │
+      ╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱
+│                                         │
+└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
+```
 
-**Ghost children:**
+Click a ghost's badge and the tooltip explains why it's hidden:
 
-For container blocks hidden due to no visible children, the ghost shows nested ghost children:
+```
+┌─────────────────────────────────────────┐
+│ 🧊 admin-banner in homepage-blocks      │
+│ ─────────────────────────────────────── │
+│ Status: HIDDEN ✗                        │
+│                                         │
+│ Reason: Conditions failed               │
+│                                         │
+│ Conditions (failed):                    │
+│   ✗ AND                                 │
+│     ✗ user { admin: true }              │
+│     ─ route { ... } (not evaluated)     │
+└─────────────────────────────────────────┘
+```
 
-> :ice_cube: **group** (hidden)
-> > :ice_cube: **banner-a** (hidden)
->
-> > :ice_cube: **banner-b** (hidden)
+Different reasons get different explanations: "conditions failed" for regular blocks, "no visible children" for containers whose children all failed, and "not registered" for optional blocks that reference uninstalled plugins.
 
-Tools are great, but knowing *when* to use *which* tool is the real skill. Here are some common scenarios.
+For containers hidden because none of their children passed, the ghost shows nested ghosts for each child—so you can see exactly which children failed and why.
+
+> :bulb: **Screenshot opportunity:** A ghost block with expanded tooltip showing why it's hidden.
+
+### Outlet Boundaries
+
+The third toggle—Outlet Boundaries—helps you see where outlets *are*, even when they're empty or have no visible blocks. Enable it and every outlet gets an amber dashed border with a badge showing its name and block count:
+
+```
+┌─────────────────────────────────────────┐
+│ 🧊🧊 homepage-blocks (3 blocks)         │
+├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
+│                                         │
+│     [Rendered blocks appear here]       │
+│                                         │
+└─────────────────────────────────────────┘
+```
+
+This is especially useful when you're not sure if a `<BlockOutlet>` even exists on the current page, or when you're trying to figure out where a particular outlet renders relative to other content.
+
+> :bulb: **Screenshot opportunity:** An outlet with amber dashed boundary and badge showing block count.
+
+Now that you know what the tools look like, let's talk about *when* to use them.
 
 ### Debugging Workflows
 
@@ -2178,176 +2233,6 @@ Debug tool settings are saved to sessionStorage:
 - Per-tab independent state
 
 This means you can enable debugging, navigate around, and the tools stay enabled.
-
-### Visual Reference
-
-The following sections describe what each debug tool looks like when enabled.
-
-#### The Dev Tools Toolbar
-
-The Block Debug button appears in the dev tools toolbar (left side of screen). Clicking it reveals a dropdown with three toggleable options:
-
-```
-┌─────────────────────────────────┐
-│ ☐ Console Logging              │
-│ ☐ Visual Overlay               │
-│ ☐ Outlet Boundaries            │
-└─────────────────────────────────┘
-```
-
-The button icon highlights when any option is enabled.
-
-> :bulb: **Screenshot opportunity:** The dev tools toolbar with Block Debug dropdown expanded showing the three checkbox options.
-
-#### Rendered Block Badges
-
-When Visual Overlay is enabled, rendered blocks display an orange badge in their top-left corner:
-
-```
-┌─────────────────────────────────────────┐
-│ 🧊 hero-banner                          │
-├─────────────────────────────────────────┤
-│                                         │
-│     [Block content appears here]        │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-The badge is styled with:
-- Orange background
-- Small cube icon
-- Block name in white text
-- Positioned in top-left corner with cut corner
-
-> :bulb: **Screenshot opportunity:** A rendered block with the orange badge visible in the top-left corner.
-
-#### Block Tooltips
-
-Clicking a badge opens an interactive tooltip with full block details:
-
-```
-┌─────────────────────────────────────────┐
-│ 🧊 hero-banner in homepage-blocks       │
-│ ─────────────────────────────────────── │
-│ Status: RENDERED ✓                      │
-│                                         │
-│ Conditions (passed):                    │
-│   ✓ AND                                 │
-│     ✓ user { loggedIn: true }           │
-│     ✓ route { pages: [...] }            │
-│                                         │
-│ Arguments:                              │
-│   @title: "Welcome"                     │
-│   @ctaText: "Get Started"               │
-│                                         │
-│ Outlet Args:                            │
-│   @outletArgs.topic: Topic {...}        │
-└─────────────────────────────────────────┘
-```
-
-The tooltip shows:
-- Block name and outlet location
-- Render status (RENDERED or HIDDEN)
-- Condition tree with pass/fail indicators
-- Args passed from configuration
-- Outlet args from template context
-
-> :bulb: **Screenshot opportunity:** An expanded block tooltip showing conditions, arguments, and outlet args.
-
-#### Ghost Block Placeholders
-
-Hidden blocks appear as ghost placeholders with a distinctive appearance:
-
-```
-┌ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┐
-  🧊 admin-banner (hidden)
-│                                         │
-      ╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱
-│     ╱╱╱╱ (diagonal stripes) ╱╱╱╱       │
-      ╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱╱
-│                                         │
-└ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ─ ┘
-```
-
-Ghost styling includes:
-- Red dashed border
-- Red diagonal stripe pattern
-- Red badge with "(hidden)" suffix
-- Minimum height to ensure visibility
-
-> :bulb: **Screenshot opportunity:** A ghost block placeholder with red dashed border and diagonal stripes.
-
-#### Ghost Tooltip with Failure Reason
-
-Ghost block tooltips explain why the block is hidden:
-
-```
-┌─────────────────────────────────────────┐
-│ 🧊 admin-banner in homepage-blocks      │
-│ ─────────────────────────────────────── │
-│ Status: HIDDEN ✗                        │
-│                                         │
-│ Reason: Conditions failed               │
-│                                         │
-│ Conditions (failed):                    │
-│   ✗ AND                                 │
-│     ✗ user { admin: true }              │
-│     ─ route { ... } (not evaluated)     │
-│                                         │
-│ Hint: This block is not rendered        │
-│ because its conditions failed.          │
-└─────────────────────────────────────────┘
-```
-
-> :bulb: **Screenshot opportunity:** A ghost block tooltip explaining why the block is hidden with the failed condition highlighted.
-
-#### Outlet Boundaries
-
-When Outlet Boundaries is enabled, outlets show amber borders even when empty:
-
-```
-┌─────────────────────────────────────────┐
-│ 🧊🧊 homepage-blocks (3 blocks)         │
-├╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌╌┤
-│                                         │
-│     [Rendered blocks appear here]       │
-│                                         │
-└─────────────────────────────────────────┘
-```
-
-Outlet boundary styling:
-- Amber dashed border
-- Amber badge with multiple-cubes icon
-- Shows block count
-- Minimum height even when empty
-
-> :bulb: **Screenshot opportunity:** An outlet with amber dashed boundary and badge showing "3 blocks".
-
-#### Console Logging Output
-
-The console output uses colors and collapsible groups:
-
-```
-▼ [Blocks] ✓ RENDERED hero-banner in homepage-blocks
-    ✓ AND (2 conditions)
-      ✓ user { loggedIn: true }
-      ✓ route { pages: ["DISCOVERY_PAGES"] }
-
-▼ [Blocks] ✗ SKIPPED admin-banner in homepage-blocks
-    ✗ AND (2 conditions)
-      ✗ user { admin: true }
-        actual: false, required: true
-      ─ route { ... } (not evaluated)
-```
-
-Console styling:
-- ✓ = green
-- ✗ = red
-- AND/OR/NOT = blue
-- Block names = bold white
-- Hints = yellow italic
-
-> :bulb: **Screenshot opportunity:** Browser console showing collapsible block evaluation logs with colored checkmarks and X marks.
 
 ### Using Tools Together
 
@@ -2416,7 +2301,6 @@ The Blocks API debug tools complement browser DevTools:
 1. Enable Console Logging
 2. Expand a block's log group
 3. Click object references to inspect full objects
-4. Use `copy()` to copy values to clipboard
 
 **Using with Network panel:**
 - Monitor lazy-loaded block imports
@@ -2531,7 +2415,7 @@ Blocks use a secret symbol system to prevent unauthorized rendering. The system 
 
 These symbols are:
 1. **Not exported** - External code can't access them
-2. **Used for authorization** - Child blocks receive `$block$` arg with the container symbol
+2. **Used for authorization** - Child blocks receive a special arg containing the container symbol
 3. **Verified in constructor** - If the symbol doesn't match, throws an error
 
 **Why this matters:**
@@ -2549,7 +2433,7 @@ This prevents:
 - Themes rendering blocks outside designated areas
 - Unauthorized block placement
 
-The only way a block can render is as a child of a container block that passes the `$block$` symbol in args. But wait—what authorizes the first block in the chain?
+The only way a block can render is as a child of a container block that passes the authorization symbol in args. But wait—what authorizes the first block in the chain?
 
 > **Trivia:** `<BlockOutlet>` is itself a block. Look at its definition and you'll see `@block("block-outlet", { container: true })`. It's a special container block that serves as the root of the block tree. It has a static property that allows it to bypass the normal authorization check and start the chain of trust.
 
