@@ -524,6 +524,7 @@ schema:
         - "topic_voting_votes"
         - "translation_overrides"
         - "unsubscribe_keys"
+        - "upcoming_change_events"
         - "upload_references"
         - "uploads"
         - "user_actions"
