@@ -4613,6 +4613,7 @@ en:
         create: "Create"
         no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
         everyone_has_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
+        specific_groups_have_access: "This category is private, only the selected groups can see, reply and create posts."
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
         inherited: 'This permission is inherited from "everyone"'

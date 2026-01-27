@@ -140,6 +140,10 @@ export default class EditCategorySecurityV2 extends buildCategoryPanel(
           <@form.Alert @type="warning">
             {{i18n "category.permissions.everyone_has_access"}}
           </@form.Alert>
+        {{else}}
+          <@form.Alert @type="warning">
+            {{i18n "category.permissions.specific_groups_have_access"}}
+          </@form.Alert>
         {{/if}}
       </@form.Container>
     {{/unless}}
