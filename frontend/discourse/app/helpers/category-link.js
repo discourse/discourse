@@ -151,7 +151,9 @@ export function defaultCategoryLinkRenderer(category, opts) {
     : "";
 
   if (!opts.hideParent) {
-    parentCat = Category.findById(get(category, "parent_category_id"));
+    parentCat =
+      get(category, "parentCategory") ||
+      Category.findById(get(category, "parent_category_id"));
   }
 
   let siteSettings = helperContext().siteSettings;
