@@ -11,7 +11,7 @@ import PermissionType from "discourse/models/permission-type";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
-export default class EditCategorySecurityV2 extends buildCategoryPanel(
+export default class UpsertCategorySecurity extends buildCategoryPanel(
   "security"
 ) {
   @service site;

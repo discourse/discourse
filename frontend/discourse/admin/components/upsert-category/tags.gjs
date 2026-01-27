@@ -11,7 +11,7 @@ import TagChooser from "discourse/select-kit/components/tag-chooser";
 import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
 import { i18n } from "discourse-i18n";
 
-export default class EditCategoryTagsV2 extends buildCategoryPanel("tags") {
+export default class UpsertCategoryTags extends buildCategoryPanel("tags") {
   @empty("category.allowed_tags") allowedTagsEmpty;
   @empty("category.allowed_tag_groups") allowedTagGroupsEmpty;
   @and("allowedTagsEmpty", "allowedTagGroupsEmpty") disableAllowGlobalTags;
