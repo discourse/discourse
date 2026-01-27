@@ -47,7 +47,7 @@
   .btn-danger,
   .btn-primary,
   .view-all-drafts {
-    &:not(.sidebar-footer-actions-button) {
+    &:not(.sidebar-footer-actions-button, #search-button, .btn-sidebar-toggle) {
       height: var(--button-height);
       font-size: var(--button-font-size);
     }
@@ -196,6 +196,7 @@
   .d-header-icons .icon {
     width: 2em;
     height: 2em;
+    font-size: var(--font-down-1);
   }
 
   .header-sidebar-toggle button .d-icon,
