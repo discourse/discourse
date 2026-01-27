@@ -561,6 +561,8 @@ module ApplicationHelper
     @splash_screen_image_svg.sub!(/^<\?xml[^>]*\?>\s*/, "")
   end
 
+  public
+
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
   end
