@@ -24,7 +24,6 @@ const FIELD_LIST = [
   "emoji",
   "icon",
   "localizations",
-  "permissions",
   "position",
   "num_featured_topics",
   "search_priority",
@@ -36,8 +35,6 @@ const FIELD_LIST = [
   "moderating_group_ids",
   "auto_close_hours",
   "auto_close_based_on_last_post",
-  "default_slow_mode_seconds",
-  "category_setting",
   "default_view",
   "default_top_period",
   "sort_order",
@@ -49,13 +46,6 @@ const FIELD_LIST = [
   "email_in",
   "email_in_allow_strangers",
   "mailinglist_mirror",
-  "uploaded_logo",
-  "uploaded_logo_dark",
-  "uploaded_background",
-  "uploaded_background_dark",
-  "allowed_tags",
-  "allowed_tag_groups",
-  "required_tag_groups",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
@@ -91,8 +81,7 @@ export default class EditCategoryTabsController extends Controller {
       data.style_type = "icon";
     }
 
-    // Deep clone to avoid Immer issues with frozen Ember proxies
-    return JSON.parse(JSON.stringify(data));
+    return data;
   }
 
   @discourseComputed("saving", "deleting")
@@ -102,8 +91,8 @@ export default class EditCategoryTabsController extends Controller {
 
   @discourseComputed("name")
   categoryName(name) {
-    name = (name || "").trim();
-    return name.length > 0 ? name : i18n("preview");
+    name = name || "";
+    return name.trim().length > 0 ? name : i18n("preview");
   }
 
   @discourseComputed("saving", "model.id")
