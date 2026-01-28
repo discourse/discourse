@@ -246,17 +246,7 @@ export default class ProsemirrorTextManipulation {
         command = wrapInList(targetType);
       }
     } else if (exampleKey === "blockquote_text") {
-      const isInsideBlockquote = () => {
-        const $from = this.view.state.selection.$from;
-        for (let depth = $from.depth; depth > 0; depth--) {
-          if ($from.node(depth).type === this.schema.nodes.blockquote) {
-            return true;
-          }
-        }
-        return false;
-      };
-
-      command = isInsideBlockquote()
+      command = inNode(this.view.state, this.schema.nodes.blockquote)
         ? lift
         : wrapIn(this.schema.nodes.blockquote);
     } else {
