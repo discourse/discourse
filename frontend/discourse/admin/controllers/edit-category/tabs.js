@@ -4,7 +4,6 @@ import { action, getProperties } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
@@ -49,26 +48,6 @@ const FIELD_LIST = [
   "mailinglist_mirror",
 ];
 
-const PREVIEW_FIELD_MAP = {
-  name: "previewName",
-  color: "previewColor",
-  text_color: "previewTextColor",
-  style_type: "previewStyleType",
-  emoji: "previewEmoji",
-  icon: "previewIcon",
-  parent_category_id: "previewParentCategoryId",
-};
-
-const PREVIEW_DEFAULTS = {
-  previewName: "",
-  previewColor: "",
-  previewTextColor: "",
-  previewStyleType: "",
-  previewEmoji: "",
-  previewIcon: "",
-  previewParentCategoryId: null,
-};
-
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
 
 export default class EditCategoryTabsController extends Controller {
@@ -83,7 +62,6 @@ export default class EditCategoryTabsController extends Controller {
   showAdvancedTabs =
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
   @tracked selectedTab = "general";
-  @tracked previewData = new TrackedObject(PREVIEW_DEFAULTS);
   @trackedArray panels = [];
   saving = false;
   deleting = false;
@@ -133,22 +111,6 @@ export default class EditCategoryTabsController extends Controller {
     }
 
     return i18n("category.create");
-  }
-
-  @action
-  updatePreview(data) {
-    Object.entries(PREVIEW_FIELD_MAP).forEach(([key, previewField]) => {
-      if (data[key] !== undefined) {
-        this.previewData[previewField] = data[key];
-      }
-    });
-  }
-
-  @action
-  resetPreview() {
-    Object.entries(PREVIEW_DEFAULTS).forEach(([key, value]) => {
-      this.previewData[key] = value;
-    });
   }
 
   @action
