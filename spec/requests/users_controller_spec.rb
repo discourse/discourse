@@ -5333,7 +5333,9 @@ RSpec.describe UsersController do
         expect(response.body).to have_tag("div#data-preloaded") do |element|
           json = JSON.parse(element.current_scope.attribute("data-preloaded").value)
           expect(json["accountCreated"]).to include(
-            "{\"message\":\"#{I18n.t("login.activate_email", email: user1.email).gsub!("</", "<\\/")}\",\"show_controls\":true,\"username\":\"#{user1.username}\",\"email\":\"#{user1.email}\"}",
+            ERB::Util.json_escape(
+              "{\"message\":\"#{I18n.t("login.activate_email", email: user1.email)}\",\"show_controls\":true,\"username\":\"#{user1.username}\",\"email\":\"#{user1.email}\"}",
+            ),
           )
         end
       end
