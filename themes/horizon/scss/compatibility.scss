@@ -64,3 +64,9 @@
     grid-template-columns: auto auto;
   }
 }
+
+// TC: Blog Style
+body:not(.d-toc-installed).blog-post .container.posts,
+body.d-toc-installed.blog-post .container.posts {
+  grid-template-columns: var(--blog-width) auto;
+}
