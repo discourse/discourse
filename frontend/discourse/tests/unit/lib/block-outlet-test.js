@@ -612,7 +612,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       withTestBlockRegistration(() => registerBlock(ValidConditionsBlock));
 
       withPluginApi((api) =>
-        api.renderBlocks("header-blocks", [
+        api.renderBlocks("hero-blocks", [
           {
             block: ValidConditionsBlock,
             conditions: { type: "user", loggedIn: true },

@@ -214,7 +214,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     withTestBlockRegistration(() => registerBlock(DeepLeaf));
     withPluginApi((api) =>
-      api.renderBlocks("header-blocks", [
+      api.renderBlocks("hero-blocks", [
         {
           block: BlockGroup,
           args: { name: "level-1" },
@@ -235,14 +235,14 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       ])
     );
 
-    await render(<template><BlockOutlet @name="header-blocks" /></template>);
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     // All nested containers should have the same outlet prefix
-    assert.dom(".header-blocks__group").exists({ count: 3 });
+    assert.dom(".hero-blocks__group").exists({ count: 3 });
 
     // The leaf block should also have the outlet prefix
     assert
-      .dom(".header-blocks__block")
+      .dom(".hero-blocks__block")
       .exists("deeply nested leaf has outlet-prefixed class");
     assert
       .dom(".block-deep-leaf")
@@ -349,7 +349,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     withTestBlockRegistration(() => registerBlock(DeepOverlayLeaf));
     withPluginApi((api) =>
-      api.renderBlocks("header-blocks", [
+      api.renderBlocks("hero-blocks", [
         {
           block: BlockGroup,
           args: { name: "level-1" },
@@ -364,23 +364,23 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       ])
     );
 
-    await render(<template><BlockOutlet @name="header-blocks" /></template>);
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     // All nested containers should have outlet prefix with overlay enabled
     assert
-      .dom(".header-blocks__group")
+      .dom(".hero-blocks__group")
       .exists({ count: 2 }, "nested containers have outlet-prefixed class");
 
     // The deeply nested leaf should have outlet prefix
     assert
-      .dom(".header-blocks__block")
+      .dom(".hero-blocks__block")
       .exists("deeply nested leaf has outlet-prefixed class with overlay");
 
     // @outletName should be accessible in deeply nested blocks
     const leafContent = document.querySelector(".deep-overlay-content");
     assert.strictEqual(
       leafContent.getAttribute("data-outlet"),
-      "header-blocks",
+      "hero-blocks",
       "@outletName is accessible in deeply nested blocks with overlay"
     );
   });
@@ -424,7 +424,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       registerBlock(TabContent);
     });
     withPluginApi((api) =>
-      api.renderBlocks("header-blocks", [
+      api.renderBlocks("hero-blocks", [
         {
           block: TabsContainer,
           children: [
@@ -436,7 +436,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       ])
     );
 
-    await render(<template><BlockOutlet @name="header-blocks" /></template>);
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     // Verify tab headers are rendered from containerArgs
     const tabButtons = document.querySelectorAll(".tab-button");

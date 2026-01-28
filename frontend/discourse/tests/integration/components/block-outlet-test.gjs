@@ -117,12 +117,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       withTestBlockRegistration(() => registerBlock(ArgsTestBlock));
       withPluginApi((api) =>
-        api.renderBlocks("header-blocks", [
+        api.renderBlocks("hero-blocks", [
           { block: ArgsTestBlock, args: { title: "Hello", count: 42 } },
         ])
       );
 
-      await render(<template><BlockOutlet @name="header-blocks" /></template>);
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
       assert.dom(".args-test .title").hasText("Hello");
       assert.dom(".args-test .count").hasText("42");
@@ -658,7 +658,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       withTestBlockRegistration(() => registerBlock(HierarchyDisplayBlock));
       withPluginApi((api) =>
-        api.renderBlocks("header-blocks", [
+        api.renderBlocks("hero-blocks", [
           {
             block: BlockGroup,
             args: { name: "test" },
@@ -667,16 +667,16 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         ])
       );
 
-      await render(<template><BlockOutlet @name="header-blocks" /></template>);
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-      // The nested child should have the full hierarchy path, NOT just "header-blocks"
+      // The nested child should have the full hierarchy path, NOT just "hero-blocks"
       const nestedChildWrapper = document.querySelector(
         '.debug-wrapper[data-block-name="hierarchy-display-block"]'
       );
 
       assert.strictEqual(
         nestedChildWrapper.dataset.debugLocation,
-        "header-blocks/group[0]",
+        "hero-blocks/group[0]",
         "nested child displays full hierarchy path (not overwritten by template's @outletName)"
       );
 
@@ -687,7 +687,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       assert.strictEqual(
         containerWrapper.dataset.debugLocation,
-        "header-blocks",
+        "hero-blocks",
         "container displays outlet name as its location"
       );
     });
@@ -740,7 +740,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       withTestBlockRegistration(() => registerBlock(NoLoggingBlock));
       withPluginApi((api) =>
-        api.renderBlocks("header-blocks", [
+        api.renderBlocks("hero-blocks", [
           {
             block: NoLoggingBlock,
             conditions: { type: "user", loggedIn: false },
@@ -748,7 +748,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         ])
       );
 
-      await render(<template><BlockOutlet @name="header-blocks" /></template>);
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
       assert.false(consoleStub.called, "console logging was not enabled");
       consoleStub.restore();
@@ -1062,12 +1062,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       withTestBlockRegistration(() => registerBlock(StringArgsBlock));
       withPluginApi((api) =>
-        api.renderBlocks("header-blocks", [
+        api.renderBlocks("hero-blocks", [
           { block: "string-args-block", args: { title: "Hello", count: 42 } },
         ])
       );
 
-      await render(<template><BlockOutlet @name="header-blocks" /></template>);
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
       assert.dom(".string-args-content .title").hasText("Hello");
       assert.dom(".string-args-content .count").hasText("42");
@@ -1328,15 +1328,15 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       withTestBlockRegistration(() => registerBlock(OptionalWidget));
 
       withPluginApi((api) =>
-        api.renderBlocks("header-blocks", [
+        api.renderBlocks("hero-blocks", [
           { block: "chat:optional-widget?" }, // Present namespaced optional
           { block: "chat:missing-widget?" }, // Missing namespaced optional
         ])
       );
 
-      await render(<template><BlockOutlet @name="header-blocks" /></template>);
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-      assert.dom(".header-blocks").exists("outlet renders");
+      assert.dom(".hero-blocks").exists("outlet renders");
       assert
         .dom(".optional-widget-content")
         .hasText("Namespaced Optional", "present namespaced optional renders");
@@ -1604,7 +1604,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       withTestBlockRegistration(() => registerBlock(FailingConditionBlock));
       withPluginApi((api) =>
-        api.renderBlocks("header-blocks", [
+        api.renderBlocks("hero-blocks", [
           {
             block: FailingConditionBlock,
             conditions: {
@@ -1620,7 +1620,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       const openTopicArgs = { topic: { closed: false } };
       await render(
         <template>
-          <BlockOutlet @name="header-blocks" @outletArgs={{openTopicArgs}} />
+          <BlockOutlet @name="hero-blocks" @outletArgs={{openTopicArgs}} />
         </template>
       );
 

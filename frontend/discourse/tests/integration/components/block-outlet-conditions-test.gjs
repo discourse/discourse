@@ -139,7 +139,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
 
     withTestBlockRegistration(() => registerBlock(AllPassBlock));
     withPluginApi((api) =>
-      api.renderBlocks("header-blocks", [
+      api.renderBlocks("hero-blocks", [
         {
           block: AllPassBlock,
           conditions: [{ type: "always-true" }, { type: "always-true" }],
@@ -147,7 +147,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       ])
     );
 
-    await render(<template><BlockOutlet @name="header-blocks" /></template>);
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     assert.dom(".all-pass").exists();
   });
@@ -270,7 +270,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       registerBlock(NestedHiddenBlock);
     });
     withPluginApi((api) =>
-      api.renderBlocks("header-blocks", [
+      api.renderBlocks("hero-blocks", [
         {
           block: BlockGroup,
           args: { name: "test-group" },
@@ -288,7 +288,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       ])
     );
 
-    await render(<template><BlockOutlet @name="header-blocks" /></template>);
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     assert.dom(".nested-visible").exists();
     assert.dom(".nested-hidden").doesNotExist();
@@ -399,7 +399,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
 
     withTestBlockRegistration(() => registerBlock(OrWithinAndPassBlock));
     withPluginApi((api) =>
-      api.renderBlocks("header-blocks", [
+      api.renderBlocks("hero-blocks", [
         {
           block: OrWithinAndPassBlock,
           conditions: [
@@ -410,7 +410,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       ])
     );
 
-    await render(<template><BlockOutlet @name="header-blocks" /></template>);
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     assert.dom(".or-within-and-pass").exists();
   });
@@ -596,7 +596,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       registerBlock(DeeplyVisibleChild);
     });
     withPluginApi((api) =>
-      api.renderBlocks("header-blocks", [
+      api.renderBlocks("hero-blocks", [
         {
           block: BlockGroup,
           args: { name: "outer-visible" },
@@ -618,7 +618,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       ])
     );
 
-    await render(<template><BlockOutlet @name="header-blocks" /></template>);
+    await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     // Both containers should render because the deepest child is visible
     assert.dom(".outer-visible-group").exists();
