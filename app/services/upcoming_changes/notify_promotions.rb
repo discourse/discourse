@@ -35,6 +35,9 @@ class UpcomingChanges::NotifyPromotions
   end
 
   def process_changes(changes_already_notified_about_promotion:, admin_user_ids:)
+    context[:successes] = []
+    context[:errors] = []
+
     SiteSetting.upcoming_change_site_settings.each do |setting_name|
       unless UpcomingChanges.meets_or_exceeds_status?(
                setting_name,
@@ -49,45 +52,55 @@ class UpcomingChanges::NotifyPromotions
       # The admin has manually opted out of the upcoming change.
       next if !UpcomingChanges.resolved_value(setting_name)
 
-      # Though we aren't actually changing any site setting value, it's still
-      # good to leave a paper trail for admins outside notification records.
-      StaffActionLogger.new(Discourse.system_user).log_upcoming_change_toggle(
-        setting_name,
-        false,
-        true,
-        {
-          context:
-            I18n.t(
-              "staff_action_logs.upcoming_changes.log_promoted",
-              change_status: UpcomingChanges.change_status(setting_name).to_s.titleize,
-              base_path: Discourse.base_path,
-            ),
-        },
-      )
-
-      notification_data = {
-        upcoming_change_name: setting_name,
-        upcoming_change_humanized_name: SiteSetting.humanized_name(setting_name),
-      }.to_json
-
-      records =
-        admin_user_ids.map do |admin_id|
+      begin
+        # Though we aren't actually changing any site setting value, it's still
+        # good to leave a paper trail for admins outside notification records.
+        StaffActionLogger.new(Discourse.system_user).log_upcoming_change_toggle(
+          setting_name,
+          false,
+          true,
           {
-            user_id: admin_id,
-            notification_type: Notification.types[:upcoming_change_automatically_promoted],
-            data: notification_data,
-          }
-        end
+            context:
+              I18n.t(
+                "staff_action_logs.upcoming_changes.log_promoted",
+                change_status: UpcomingChanges.change_status(setting_name).to_s.titleize,
+                base_path: Discourse.base_path,
+              ),
+          },
+        )
 
-      Notification::Action::BulkCreate.call(records:)
+        notification_data = {
+          upcoming_change_name: setting_name,
+          upcoming_change_humanized_name: SiteSetting.humanized_name(setting_name),
+        }.to_json
 
-      UpcomingChangeEvent.create!(
-        event_type: :admins_notified_automatic_promotion,
-        upcoming_change_name: setting_name,
-        acting_user: Discourse.system_user,
-      )
+        records =
+          admin_user_ids.map do |admin_id|
+            {
+              user_id: admin_id,
+              notification_type: Notification.types[:upcoming_change_automatically_promoted],
+              data: notification_data,
+            }
+          end
 
-      DiscourseEvent.trigger(:upcoming_change_enabled, setting_name)
+        Notification::Action::BulkCreate.call(records:)
+
+        UpcomingChangeEvent.create!(
+          event_type: :admins_notified_automatic_promotion,
+          upcoming_change_name: setting_name,
+          acting_user: Discourse.system_user,
+        )
+
+        DiscourseEvent.trigger(:upcoming_change_enabled, setting_name)
+
+        context[:successes] << setting_name
+      rescue => err
+        context[:errors] << { setting_name:, error: err.message, backtrace: err.backtrace }
+      end
+    end
+
+    if context[:errors].present?
+      fail!("Unexpected error occurred while notifying admins about promotions")
     end
   end
 end

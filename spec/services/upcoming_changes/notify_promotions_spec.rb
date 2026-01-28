@@ -34,8 +34,39 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
       )
     end
 
+    context "when there is an error when trying to process a change" do
+      before do
+        StaffActionLogger
+          .any_instance
+          .stubs(:log_upcoming_change_toggle)
+          .raises(StandardError, "test error")
+      end
+
+      it { is_expected.to fail_a_step(:process_changes) }
+
+      it "returns the errors" do
+        expect(result[:errors]).to match(
+          [
+            {
+              setting_name: :enable_upload_debug_mode,
+              error: "test error",
+              backtrace: a_kind_of(Array),
+            },
+          ],
+        )
+      end
+    end
+
     context "when everything is ok" do
       it { is_expected.to run_successfully }
+
+      it "returns the successes" do
+        expect(result[:successes]).to eq([:enable_upload_debug_mode])
+      end
+
+      it "returns the errors" do
+        expect(result[:errors]).to be_empty
+      end
 
       it "logs the change context in the staff action log" do
         expect { result }.to change {

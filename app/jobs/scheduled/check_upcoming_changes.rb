@@ -67,15 +67,31 @@ module Jobs
 
     def notify_promotions(site)
       UpcomingChanges::NotifyPromotions.call(guardian: Discourse.system_user.guardian) do |result|
-        on_success do
-          verbose_log(site, :info, "Notified admins about promotion of '#{setting_name}'")
+        on_success do |successes:|
+          successes.each do |setting_name|
+            verbose_log(site, :info, "Notified admins about promotion of '#{setting_name}'")
+          end
+        end
+
+        on_failed_step(:notify_promotions) do |successes:, errors:|
+          successes.each do |setting_name|
+            verbose_log(site, :info, "Notified admins about promotion of '#{setting_name}'")
+          end
+
+          errors.each do |error|
+            verbose_log(
+              site,
+              :error,
+              "Failed to notify about promotion of '#{error[:setting_name]}': #{error[:error]}",
+            )
+          end
         end
 
         on_failure do |error|
           verbose_log(
             site,
             :error,
-            "Failed to notify about '#{setting_name}': #{error&.backtrace&.join("\n")}",
+            "Failed to notify about promotions, an unexpected error occurred. Error: #{error&.backtrace&.join("\n")}",
           )
         end
       end
