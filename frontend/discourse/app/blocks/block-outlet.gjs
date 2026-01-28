@@ -184,9 +184,9 @@ const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
  *
  * @param {Function} [options.validate] - Custom validation function called after schema validation.
  *
- * @param {string|string[]|((args: Object) => string)} [options.containerClassNames] - Additional CSS
- *   classes for container block wrapper. Can be a string, array of strings, or function that receives
- *   args and returns a string. Only valid when container: true.
+ * @param {string|string[]|((args: Object) => string)} [options.classNames] - Additional CSS
+ *   classes for block wrapper. Can be a string, array of strings, or function that receives
+ *   args and returns a string.
  *
  * @param {string[]} [options.allowedOutlets] - Glob patterns specifying which outlets
  *   this block CAN be rendered in. If specified, the block can ONLY render in outlets
@@ -293,7 +293,7 @@ export function block(name, options = {}) {
 
   // Extract all options with defaults
   const isContainer = options?.container ?? false;
-  const containerClassNames = options?.containerClassNames ?? null;
+  const decoratorClassNames = options?.classNames ?? null;
   const description = options?.description ?? "";
   const argsSchema = options?.args ?? null;
   const childArgsSchema = options?.childArgs ?? null;
@@ -312,22 +312,15 @@ export function block(name, options = {}) {
     );
   }
 
-  // Validate containerClassNames is only allowed on container blocks
-  if (containerClassNames != null && !isContainer) {
-    raiseBlockError(
-      `Block "${name}": "containerClassNames" is only valid for container blocks (container: true).`
-    );
-  }
-
-  // Validate containerClassNames type (string, array, or function)
+  // Validate classNames type (string, array, or function)
   if (
-    containerClassNames != null &&
-    typeof containerClassNames !== "string" &&
-    typeof containerClassNames !== "function" &&
-    !Array.isArray(containerClassNames)
+    decoratorClassNames != null &&
+    typeof decoratorClassNames !== "string" &&
+    typeof decoratorClassNames !== "function" &&
+    !Array.isArray(decoratorClassNames)
   ) {
     raiseBlockError(
-      `Block "${name}": "containerClassNames" must be a string, array, or function.`
+      `Block "${name}": "classNames" must be a string, array, or function.`
     );
   }
 
@@ -351,7 +344,7 @@ export function block(name, options = {}) {
   const metadata = Object.freeze({
     description,
     container: isContainer,
-    containerClassNames,
+    decoratorClassNames,
     args: argsSchema ? Object.freeze(argsSchema) : null,
     childArgs: childArgsSchema ? Object.freeze(childArgsSchema) : null,
     constraints: constraints ? Object.freeze(constraints) : null,
@@ -594,15 +587,15 @@ function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
 }
 
 /**
- * Resolves the containerClassNames value from block metadata.
+ * Resolves the decoratorClassNames value from block metadata.
  * Handles string, array, and function forms.
  *
  * @param {Object} metadata - The block metadata object.
  * @param {Object} args - The block's args (passed to function form).
  * @returns {string|null} The resolved class names string, or null if none.
  */
-function resolveContainerClassNames(metadata, args) {
-  const value = metadata.containerClassNames;
+function resolveDecoratorClassNames(metadata, args) {
+  const value = metadata.decoratorClassNames;
   if (value == null) {
     return null;
   }
@@ -674,12 +667,10 @@ function createChildBlock(entry, owner, debugContext = {}) {
       name: ComponentClass.blockName,
       outletName: debugContext.outletName,
       isContainer,
-      containerClassNames: isContainer
-        ? resolveContainerClassNames(
-            ComponentClass.blockMetadata,
-            argsWithDefaults
-          )
-        : null,
+      decoratorClassNames: resolveDecoratorClassNames(
+        ComponentClass.blockMetadata,
+        argsWithDefaults
+      ),
       classNames,
       Component: curried,
     },

@@ -10,7 +10,7 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks";
  * - `block__group` - Standard block class
  * - `{outletName}__group` - Standard outlet class
  *
- * Additional class from containerClassNames:
+ * Additional class from classNames decorator option:
  * - `block__group-{name}` - Dynamic class based on name arg
  *
  * System args (curried at creation time, not passed from parent):
@@ -25,7 +25,7 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks";
   args: {
     name: { type: "string", pattern: VALID_BLOCK_NAME_PATTERN, required: true },
   },
-  containerClassNames: (args) => `block__group-${args.name}`,
+  classNames: (args) => `block__group-${args.name}`,
 })
 export default class GroupedBlocks extends Component {
   <template>

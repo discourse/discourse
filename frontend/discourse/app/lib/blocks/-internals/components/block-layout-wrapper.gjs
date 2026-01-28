@@ -23,9 +23,9 @@ import cssIdentifier from "discourse/helpers/css-identifier";
  * @property {string} outletName - The outlet name for class generation.
  * @property {string} name - The block's registered name.
  * @property {boolean} isContainer - Whether this is a container block.
- * @property {string} [containerClassNames] - Extra CSS classes from decorator (container blocks only).
- * @property {string} [classNames] - Additional CSS classes from layout entry.
  * @property {CurriedComponent} Component - The curried block component to render.
+ * @property {string} [classNames] - Additional CSS classes from layout entry.
+ * @property {string} [decoratorClassNames] - Extra CSS classes from the @block decorator.
  */
 
 /**
@@ -40,9 +40,9 @@ import cssIdentifier from "discourse/helpers/css-identifier";
  * @param {string} blockData.outletName - The outlet name for class generation.
  * @param {string} blockData.name - The block's registered name.
  * @param {boolean} blockData.isContainer - Whether this is a container block.
- * @param {string} [blockData.containerClassNames] - Extra CSS classes from decorator (container blocks only).
- * @param {string} [blockData.classNames] - Additional CSS classes from layout entry.
  * @param {CurriedComponent} blockData.Component - The curried block component.
+ * @param {string} [blockData.classNames] - Additional CSS classes from layout entry.
+ * @param {string} [blockData.decoratorClassNames] - Extra CSS classes from the @block decorator.
  * @param {import("@ember/owner").default} owner - The application owner for currying.
  * @returns {CurriedComponent} The wrapped component.
  */
@@ -81,9 +81,9 @@ function blockClass(outletName, name, isContainer) {
  * For container blocks:
  * - `block__{name}` - Identifies the container block type
  * - `{outletName}__{name}` - Identifies this as a container within the outlet
- * - Custom containerClassNames from decorator
  *
- * Both types include custom classNames from layout entry configuration.
+ * Both types can include custom decoratorClassNames from the @block decorator
+ * and custom classNames from layout entry configuration.
  *
  * @extends {Component<WrappedBlockLayoutSignature>}
  */
@@ -93,7 +93,7 @@ class WrappedBlockLayout extends Component {
     <div
       class={{concatClass
         (blockClass @outletName @name @isContainer)
-        @containerClassNames
+        @decoratorClassNames
         @classNames
       }}
     >

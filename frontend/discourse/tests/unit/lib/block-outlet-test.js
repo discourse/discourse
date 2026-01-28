@@ -72,7 +72,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       assert.deepEqual(MetadataDefaultBlock.blockMetadata, {
         description: "",
         container: false,
-        containerClassNames: null,
+        decoratorClassNames: null,
         args: null,
         childArgs: null,
         constraints: null,
@@ -295,68 +295,66 @@ module("Unit | Lib | block-outlet", function (hooks) {
       }, /unknown properties/);
     });
 
-    test("throws for containerClassNames on non-container block", function (assert) {
+    test("throws for classNames with invalid type", function (assert) {
       assert.throws(() => {
-        @block("non-container-with-classes", {
-          containerClassNames: "extra-class",
+        @block("block-invalid-classnames", {
+          classNames: { foo: "bar" },
         })
-        class NonContainerWithClasses extends Component {}
+        class BlockInvalidClassNames extends Component {}
 
-        return NonContainerWithClasses;
-      }, /containerClassNames.*only valid for container blocks/);
+        return BlockInvalidClassNames;
+      }, /classNames.*must be a string, array, or function/);
     });
 
-    test("throws for containerClassNames with invalid type", function (assert) {
-      assert.throws(() => {
-        @block("container-invalid-classnames", {
-          container: true,
-          containerClassNames: { foo: "bar" },
-        })
-        class ContainerInvalidClassNames extends Component {}
-
-        return ContainerInvalidClassNames;
-      }, /containerClassNames.*must be a string, array, or function/);
-    });
-
-    test("accepts containerClassNames as string for container", function (assert) {
-      @block("container-string-classes", {
-        container: true,
-        containerClassNames: "extra-class",
+    test("accepts classNames as string", function (assert) {
+      @block("block-string-classes", {
+        classNames: "extra-class",
       })
-      class ContainerStringClasses extends Component {}
+      class BlockStringClasses extends Component {}
 
       assert.strictEqual(
-        ContainerStringClasses.blockMetadata.containerClassNames,
+        BlockStringClasses.blockMetadata.decoratorClassNames,
         "extra-class"
       );
     });
 
-    test("accepts containerClassNames as array for container", function (assert) {
-      @block("container-array-classes", {
-        container: true,
-        containerClassNames: ["class-a", "class-b"],
+    test("accepts classNames as array", function (assert) {
+      @block("block-array-classes", {
+        classNames: ["class-a", "class-b"],
       })
-      class ContainerArrayClasses extends Component {}
+      class BlockArrayClasses extends Component {}
 
-      assert.deepEqual(
-        ContainerArrayClasses.blockMetadata.containerClassNames,
-        ["class-a", "class-b"]
+      assert.deepEqual(BlockArrayClasses.blockMetadata.decoratorClassNames, [
+        "class-a",
+        "class-b",
+      ]);
+    });
+
+    test("accepts classNames as function", function (assert) {
+      const classNamesFn = (args) => `dynamic-${args.name}`;
+
+      @block("block-fn-classes", {
+        classNames: classNamesFn,
+      })
+      class BlockFnClasses extends Component {}
+
+      assert.strictEqual(
+        BlockFnClasses.blockMetadata.decoratorClassNames,
+        classNamesFn
       );
     });
 
-    test("accepts containerClassNames as function for container", function (assert) {
-      const classNamesFn = (args) => `dynamic-${args.name}`;
-
-      @block("container-fn-classes", {
-        container: true,
-        containerClassNames: classNamesFn,
+    test("accepts classNames on non-container blocks", function (assert) {
+      @block("non-container-with-classes", {
+        classNames: "extra-class",
       })
-      class ContainerFnClasses extends Component {}
+      class NonContainerWithClasses extends Component {}
 
       assert.strictEqual(
-        ContainerFnClasses.blockMetadata.containerClassNames,
-        classNamesFn
+        NonContainerWithClasses.blockMetadata.decoratorClassNames,
+        "extra-class"
       );
+      assert.false(NonContainerWithClasses.blockMetadata.container);
     });
   });
 

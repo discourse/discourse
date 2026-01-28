@@ -34,7 +34,7 @@ import {
  * @typedef {{
  *   description: string,
  *   container: boolean,
- *   containerClassNames: string|Array<string>|Function|null,
+ *   decoratorClassNames: string|Array<string>|Function|null,
  *   args: Object|null,
  *   childArgs: Object|null,
  *   constraints: Object|null,

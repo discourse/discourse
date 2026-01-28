@@ -393,7 +393,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       childArgs: {
         tabName: { type: "string", required: true, unique: true },
       },
-      containerClassNames: "tabs-container",
+      classNames: "tabs-container",
     })
     class TabsContainer extends Component {
       <template>

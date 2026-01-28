@@ -33,11 +33,11 @@ Blocks are designed for **structured layout areas**—regions where you want to 
 
 Before diving in, understand what the Blocks API *doesn't* do:
 
-- **One layout per outlet.** Unlike plugin outlets where multiple connectors coexist, a block outlet has a single owner. If you call `renderBlocks("homepage-blocks", [...])` twice, the second call raises an error—there's no merging or appending. This means two plugins targeting the same outlet will conflict based on load order. The intended pattern: plugins register blocks, themes call `renderBlocks()` to compose the layout. This separates content (plugins) from presentation (themes).
+- **One layout per outlet.** Unlike plugin outlets where multiple connectors coexist, a block outlet has a single owner. If you call `renderBlocks("homepage-blocks", [...])` twice, the second call raises an error—there's no merging or appending.
 
 - **No runtime reconfiguration.** Outlet layouts are set at boot time during initializers. You can't add or remove blocks after the application starts. Conditions (the visibility rules covered in Section 3) handle dynamic visibility, but the set of *possible* blocks is fixed.
 
-- **Conditions are synchronous.** The `evaluate()` method must return a boolean immediately. You can't await an API call to determine visibility. If you need async data, fetch it elsewhere and pass it via outlet args (see Section 2).
+- **Conditions are synchronous.** The `evaluate()` method must return a boolean immediately. You can't await an API call to determine visibility.
 
 - **No partial re-evaluation.** When conditions depend on reactive state, the entire block tree re-evaluates. For outlets with many blocks or complex conditions, this can impact performance.
 
@@ -229,10 +229,10 @@ import { block } from "discourse/blocks/block-outlet";
   // (A) Container mode - can this block contain child blocks?
   container: false,
 
-  // (A.1) Custom CSS classes for container wrapper (container blocks only)
-  // containerClassNames: "my-custom-class",                   // String form
-  // containerClassNames: ["class-one", "class-two"],          // Array form
-  // containerClassNames: (args) => `hero-${args.variant}`,    // Function form
+  // (A.1) Custom CSS classes for the block wrapper
+  // classNames: "my-custom-class",                   // String form
+  // classNames: ["class-one", "class-two"],          // Array form
+  // classNames: (args) => `hero-${args.variant}`,    // Function form
 
   // (B) Human-readable description for documentation and dev tools
   description: "A hero banner with customizable title, subtitle, and call-to-action",
@@ -350,14 +350,12 @@ Container blocks can hold child blocks. Non-container blocks cannot. This is enf
 **Why this distinction?** Container blocks have different responsibilities:
 - They receive `children` as a processed array of renderable components
 - They're responsible for iterating and rendering their children in their template
-- They can define custom wrapper classes via `containerClassNames`
 - They inherit an implicit condition: "only render if I have visible children"
 
 Non-container blocks, by contrast:
 - Cannot hold child blocks
-- Cannot use `containerClassNames`
 
-Both container and non-container blocks are wrapped by the system with a `<div>` for consistent BEM-style class naming. BEM (Block, Element, Modifier) is a CSS naming convention that uses double underscores for elements within blocks (`block__element`) and double hyphens for modifiers (`block--modifier`)—it helps keep styles scoped and predictable:
+Both container and non-container blocks are wrapped by the system with a `<div>` for consistent BEM-style class naming, and both can use the `classNames` option to define custom wrapper classes. BEM (Block, Element, Modifier) is a CSS naming convention that uses double underscores for elements within blocks (`block__element`) and double hyphens for modifiers (`block--modifier`)—it helps keep styles scoped and predictable:
 
 | Block Type | Generated Classes |
 |------------|-------------------|
@@ -368,32 +366,32 @@ The class naming strategy lets you style blocks at different levels of specifici
 
 **Default:** `false` (non-container)
 
-#### (B.1) Container Class Names
+#### (B.1) Custom Class Names
 
 ```javascript
-containerClassNames: (args) => `block__group-${args.name}`,
+classNames: (args) => `block__group-${args.name}`,
 ```
 
-The `containerClassNames` option allows container blocks to define custom CSS classes for their wrapper element. This is **only valid for container blocks** (`container: true`).
+The `classNames` option allows blocks to define custom CSS classes for their wrapper element. This works for both container and non-container blocks.
 
 **Three supported formats:**
 
 1. **String** - A single CSS class:
    ```javascript
-   containerClassNames: "my-container-class"
+   classNames: "my-custom-class"
    ```
 
 2. **Array** - Multiple CSS classes:
    ```javascript
-   containerClassNames: ["container-primary", "container-bordered"]
+   classNames: ["block-primary", "block-bordered"]
    ```
 
 3. **Function** - Dynamic classes based on block args:
    ```javascript
-   containerClassNames: (args) => `container-${args.variant}`
+   classNames: (args) => `block-${args.variant}`
    ```
 
-**When to use:** Use `containerClassNames` when your container block needs custom styling beyond the standard BEM classes provided by the system. The function form is particularly useful when the class should depend on the block's configuration.
+**When to use:** Use `classNames` when your block needs custom styling beyond the standard BEM classes provided by the system. The function form is particularly useful when the class should depend on the block's configuration.
 
 **Real example (based on the built-in `group` block, simplified):**
 
@@ -403,16 +401,11 @@ The `containerClassNames` option allows container blocks to define custom CSS cl
   args: {
     name: { type: "string", required: true },
   },
-  containerClassNames: (args) => `block__group-${args.name}`,
+  classNames: (args) => `block__group-${args.name}`,
 })
 ```
 
 This generates a dynamic class like `block__group-sidebar` when `name: "sidebar"` is passed.
-
-**Error handling:** If you specify `containerClassNames` on a non-container block, you get an error:
-```
-Block "my-block": "containerClassNames" is only valid for container blocks (container: true).
-```
 
 #### (C) Args Schema
 
@@ -787,7 +780,7 @@ Schema:
   args: {
     name: { type: "string", pattern: VALID_BLOCK_NAME_PATTERN, required: true },
   },
-  containerClassNames: (args) => `block__group-${args.name}`,
+  classNames: (args) => `block__group-${args.name}`,
 })
 ```
 
@@ -2886,7 +2879,8 @@ When the `@block()` decorator executes (as your JavaScript loads), it performs i
 - Args schema structure (valid types, no conflicting options)
 - Constraint definitions (no incompatible constraints, no vacuous constraints due to defaults)
 - Outlet patterns (no conflicts between `allowedOutlets` and `deniedOutlets`)
-- Container-specific options (`containerClassNames` only on containers, `childArgs` only on containers)
+- Container-specific options (`childArgs` only on containers)
+- `classNames` type validation (must be string, array, or function)
 
 These errors appear in the console as soon as the file loads, often before the application finishes booting. They're the earliest possible feedback.
 
@@ -3510,7 +3504,7 @@ The first two register blocks—either by passing the class directly or by provi
 // Options:
 {
   container: boolean,           // Can contain child blocks
-  containerClassNames: string | string[] | ((args) => string),  // Custom CSS classes for container wrapper (container blocks only)
+  classNames: string | string[] | ((args) => string),  // Custom CSS classes for block wrapper
   description: string,          // Human-readable description
   args: { [key]: ArgSchema },   // Argument definitions
   childArgs: { [key]: ChildArgSchema },  // Schema for child-provided metadata (container blocks only)
