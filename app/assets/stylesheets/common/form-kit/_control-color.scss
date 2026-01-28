@@ -88,12 +88,12 @@
 
   &::-webkit-color-swatch {
     border: none;
-    border-radius: calc(var(--d-input-border-radius) - 2px);
+    border-radius: var(--d-button-border-radius);
   }
 
   &::-moz-color-swatch {
     border: none;
-    border-radius: calc(var(--d-input-border-radius) - 2px);
+    border-radius: var(--d-button-border-radius);
   }
 
   &:focus,
