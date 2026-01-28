@@ -514,12 +514,10 @@ module ApplicationHelper
     # Replace CSS variable references with actual theme colors
     svg_with_colors = @splash_screen_image_svg.dup
 
-    # Get the actual color values
     primary = "##{light_color_hex_for_name("primary")}"
     secondary = "##{light_color_hex_for_name("secondary")}"
     tertiary = "##{light_color_hex_for_name("tertiary")}"
 
-    # Replace var(--primary), var(--secondary), var(--tertiary) with actual colors
     svg_with_colors.gsub!(/var\(\s*--primary\s*\)/, primary)
     svg_with_colors.gsub!(/var\(\s*--secondary\s*\)/, secondary)
     svg_with_colors.gsub!(/var\(\s*--tertiary\s*\)/, tertiary)
@@ -553,7 +551,6 @@ module ApplicationHelper
     svg = doc.at_css("svg")
     return unless svg
 
-    # Check if SVG has animations
     @splash_screen_image_animated =
       svg.at_xpath(
         ".//*[local-name()='animate' or local-name()='animateTransform' or local-name()='animateMotion' or local-name()='set']",
@@ -561,7 +558,7 @@ module ApplicationHelper
 
     has_scripts = svg.xpath("//script").present?
     has_event_handlers = svg.xpath("//@*[starts-with(name(), 'on')]").present?
-    # Check for animations targeting href attributes (CVE-2025-66412)
+    # Avoid animations targeting href attributes
     has_href_animations =
       svg
         .xpath(".//*[local-name()='animate' or local-name()='set']/@attributeName")
