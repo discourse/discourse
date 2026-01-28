@@ -312,7 +312,7 @@ namespace :release do
       end
 
       ReleaseUtils.write_version(target_version_number)
-      ReleaseUtils.update_versions_json("#{major}.#{minor}")
+      ReleaseUtils.update_versions_json(target_version_number.split(".").first(2).join("."))
       ReleaseUtils.git "add", "lib/version.rb", "versions.json"
       ReleaseUtils.git "commit",
                        "-m",
