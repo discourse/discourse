@@ -152,6 +152,30 @@ describe "Post selection | Copy quote", type: :system do
       clipboard_text = cdp.read_clipboard
       expect(clipboard_text).to include("1. List item 1\n\n2. List item 2")
     end
+
+    it "uses correct indentation based on parent marker width" do
+      # "100. " = 5 chars, so nested content needs 5 spaces
+      post.update!(raw: "100. hello\n     - nested under 100")
+      post.rebake!
+
+      topic_page.visit_topic(topic)
+
+      page.execute_script(<<~JS)
+        (function() {
+          const cooked = document.querySelector("#{topic_page.post_by_number_selector(1)} .cooked");
+          const selection = window.getSelection();
+          const range = document.createRange();
+          range.selectNodeContents(cooked);
+          selection.removeAllRanges();
+          selection.addRange(range);
+        })();
+      JS
+
+      topic_page.copy_quote_button.click
+
+      clipboard_text = cdp.read_clipboard
+      expect(clipboard_text).to include("100. hello\n     * nested under 100")
+    end
   end
 
   context "when anon" do

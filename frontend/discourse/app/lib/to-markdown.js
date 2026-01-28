@@ -534,11 +534,60 @@ export class Tag {
           this.suffix = "\n\n";
         }
 
-        let indent = this.element
-          .filterParentNames(["ol", "ul"])
-          .slice(1)
-          .map(() => "\t")
-          .join("");
+        // Calculate indent based on parent marker widths
+        // Walk up the parent chain to find parent list items and their marker widths
+        let indent = "";
+        let el = this.element.parent;
+        while (el) {
+          if (el.name === "li") {
+            // Found a parent li - find its parent list to determine marker width
+            const parentList = el.parent;
+            if (parentList?.name === "ol") {
+              // Calculate item number based on start attr and position
+              const startAttr = parentList.attributes?.start;
+              const parsedStart = parseInt(startAttr, 10);
+              const start = Number.isFinite(parsedStart) ? parsedStart : 1;
+
+              // Use cached position if available, otherwise compute and cache
+              let position;
+              if (el._liPosition !== undefined) {
+                position = el._liPosition;
+              } else {
+                position = 0;
+                let sibling = el.previous;
+                while (sibling) {
+                  if (sibling.name === "li") {
+                    // Use cached position from previous sibling if available
+                    if (sibling._liPosition !== undefined) {
+                      position = sibling._liPosition + 1;
+                      break;
+                    }
+                    position++;
+                  }
+                  sibling = sibling.previous;
+                }
+                el._liPosition = position;
+              }
+              const itemNumber = start + position;
+              // Marker width = number digits + ". " (2 chars)
+              const markerWidth = String(itemNumber).length + 2;
+              // Use \x01 repeated to encode the width (converted to spaces later)
+              indent = "\x01".repeat(markerWidth) + indent;
+            } else if (parentList?.name === "ul") {
+              // UL marker "- " or "* " = 2 chars
+              indent = "\t" + indent;
+            }
+          } else if (el.name === "ul" || el.name === "ol") {
+            // Check if this list is nested inside another list (malformed HTML)
+            // where <ul> is sibling of <li> instead of child
+            const grandparent = el.parent;
+            if (grandparent?.name === "ul" || grandparent?.name === "ol") {
+              // Nested list without proper li wrapping - use default indent
+              indent = "\t" + indent;
+            }
+          }
+          el = el.parent;
+        }
 
         if (MSO_LIST_CLASSES.includes(attrs.class)) {
           try {
@@ -671,8 +720,14 @@ export class Tag {
     return class extends Tag.list("ol") {
       decorate(text) {
         text = "\n" + text;
-        const bullet = text.match(/\n\t*\*/)[0];
-        let i = parseInt(this.element.attributes.start || 1, 10);
+        const match = text.match(/\n[\t\x01]*\*/);
+        if (!match) {
+          return super.decorate(text.trim());
+        }
+        const bullet = match[0];
+        const startAttr = this.element.attributes.start;
+        const parsedStart = parseInt(startAttr, 10);
+        let i = Number.isFinite(parsedStart) ? parsedStart : 1;
 
         while (text.includes(bullet)) {
           text = text.replace(bullet, bullet.replace("*", `${i}.`));
@@ -983,6 +1038,7 @@ export default function toMarkdown(html) {
       .replace(/ +\n/g, "\n")
       .replace(/ {2,}/g, " ")
       .replace(/\n{3,}/g, "\n\n")
+      .replace(/\x01/g, " ")
       .replace(/\t/g, "  ");
     return replacePlaceholders(markdown, placeholders);
   } catch {

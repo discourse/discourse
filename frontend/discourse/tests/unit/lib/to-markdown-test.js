@@ -293,7 +293,7 @@ helloWorld();</code>consectetur.`;
       <li>Item 3</li>
     </ol>
     `;
-    const markdown = `Testing\n\n1. Item 1\n2. Item 2\n  100. Sub Item 1\n  101. Sub Item 2\n3. Item 3`;
+    const markdown = `Testing\n\n1. Item 1\n2. Item 2\n   100. Sub Item 1\n   101. Sub Item 2\n3. Item 3`;
     assert.strictEqual(toMarkdown(html), markdown);
   });
 
