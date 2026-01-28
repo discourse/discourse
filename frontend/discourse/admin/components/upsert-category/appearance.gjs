@@ -1,115 +1,111 @@
-import { fn, hash } from "@ember/helper";
-import EmberObject, { action } from "@ember/object";
-import { and, empty } from "@ember/object/computed";
-import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
+import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
+import { hash } from "@ember/helper";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
-export default class UpsertCategoryAppearance extends buildCategoryPanel(
-  "images"
-) {
-  @and("category.show_subcategory_list", "isParentCategory")
-  showSubcategoryListStyle;
+export default class UpsertCategoryAppearance extends Component {
+  @service siteSettings;
 
-  @empty("category.sort_order") isDefaultSortOrder;
-
-  @discourseComputed("category.uploaded_background.url")
-  backgroundImageUrl(uploadedBackgroundUrl) {
-    return uploadedBackgroundUrl || "";
+  get isDefaultSortOrder() {
+    return !this.args.transientData?.sort_order;
   }
 
-  @discourseComputed("category.uploaded_background_dark.url")
-  backgroundDarkImageUrl(uploadedBackgroundDarkUrl) {
-    return uploadedBackgroundDarkUrl || "";
+  get sortAscendingValue() {
+    return this.args.transientData?.sort_ascending;
   }
 
-  @discourseComputed("category.uploaded_logo.url")
-  logoImageUrl(uploadedLogoUrl) {
-    return uploadedLogoUrl || "";
+  get backgroundImageUrl() {
+    return this.args.transientData?.uploaded_background?.url ?? "";
   }
 
-  @discourseComputed("category.uploaded_logo_dark.url")
-  logoImageDarkUrl(uploadedLogoDarkUrl) {
-    return uploadedLogoDarkUrl || "";
+  get backgroundDarkImageUrl() {
+    return this.args.transientData?.uploaded_background_dark?.url ?? "";
+  }
+
+  get logoImageUrl() {
+    return this.args.transientData?.uploaded_logo?.url ?? "";
+  }
+
+  get logoImageDarkUrl() {
+    return this.args.transientData?.uploaded_logo_dark?.url ?? "";
+  }
+
+  get isParentCategory() {
+    const parentCategoryId =
+      this.args.transientData?.parent_category_id ??
+      this.args.category.parent_category_id;
+    return this.args.category.isParent || !parentCategoryId;
+  }
+
+  get panelClass() {
+    const isActive = this.args.selectedTab === "images" ? "active" : "";
+    return `edit-category-tab edit-category-tab-images ${isActive}`;
   }
 
   @action
   logoUploadDone(upload) {
-    this._setFromUpload("category.uploaded_logo", upload);
+    this.args.form.set("uploaded_logo", { url: upload.url, id: upload.id });
   }
 
   @action
   logoUploadDeleted() {
-    this._deleteUpload("category.uploaded_logo");
+    this.args.form.set("uploaded_logo", { id: null, url: null });
   }
 
   @action
   logoDarkUploadDone(upload) {
-    this._setFromUpload("category.uploaded_logo_dark", upload);
+    this.args.form.set("uploaded_logo_dark", {
+      url: upload.url,
+      id: upload.id,
+    });
   }
 
   @action
   logoDarkUploadDeleted() {
-    this._deleteUpload("category.uploaded_logo_dark");
+    this.args.form.set("uploaded_logo_dark", { id: null, url: null });
   }
 
   @action
   backgroundUploadDone(upload) {
-    this._setFromUpload("category.uploaded_background", upload);
+    this.args.form.set("uploaded_background", {
+      url: upload.url,
+      id: upload.id,
+    });
   }
 
   @action
   backgroundUploadDeleted() {
-    this._deleteUpload("category.uploaded_background");
+    this.args.form.set("uploaded_background", { id: null, url: null });
   }
 
   @action
   backgroundDarkUploadDone(upload) {
-    this._setFromUpload("category.uploaded_background_dark", upload);
+    this.args.form.set("uploaded_background_dark", {
+      url: upload.url,
+      id: upload.id,
+    });
   }
 
   @action
   backgroundDarkUploadDeleted() {
-    this._deleteUpload("category.uploaded_background_dark");
+    this.args.form.set("uploaded_background_dark", { id: null, url: null });
   }
 
-  _deleteUpload(path) {
-    this.set(
-      path,
-      EmberObject.create({
-        id: null,
-        url: null,
-      })
-    );
+  @action
+  onSortAscendingChange(value) {
+    this.args.form.set("sort_ascending", value);
   }
 
-  _setFromUpload(path, upload) {
-    this.set(
-      path,
-      EmberObject.create({
-        url: upload.url,
-        id: upload.id,
-      })
-    );
-  }
-
-  @discourseComputed(
-    "category.isParent",
-    "category.parent_category_id",
-    "transientData.parent_category_id"
-  )
-  isParentCategory(isParent, parentCategoryId, transientParentCategoryId) {
-    return isParent || !(parentCategoryId || transientParentCategoryId);
-  }
-
-  @discourseComputed
-  availableSubcategoryListStyles() {
+  @cached
+  get availableSubcategoryListStyles() {
     return [
       { name: i18n("category.subcategory_list_styles.rows"), value: "rows" },
       {
@@ -131,16 +127,16 @@ export default class UpsertCategoryAppearance extends buildCategoryPanel(
     ];
   }
 
-  @discourseComputed("category.id", "category.custom_fields")
-  availableViews(categoryId, customFields) {
+  @cached
+  get availableViews() {
     const views = [
       { name: i18n("filters.latest.title"), value: "latest" },
       { name: i18n("filters.top.title"), value: "top" },
     ];
 
     const context = {
-      categoryId,
-      customFields,
+      categoryId: this.args.category.id,
+      customFields: this.args.category.custom_fields,
     };
 
     return applyMutableValueTransformer(
@@ -150,8 +146,8 @@ export default class UpsertCategoryAppearance extends buildCategoryPanel(
     );
   }
 
-  @discourseComputed
-  availableTopPeriods() {
+  @cached
+  get availableTopPeriods() {
     return ["all", "yearly", "quarterly", "monthly", "weekly", "daily"].map(
       (p) => {
         return { name: i18n(`filters.top.${p}.title`), value: p };
@@ -159,15 +155,15 @@ export default class UpsertCategoryAppearance extends buildCategoryPanel(
     );
   }
 
-  @discourseComputed
-  availableListFilters() {
+  @cached
+  get availableListFilters() {
     return ["all", "none"].map((p) => {
       return { name: i18n(`category.list_filters.${p}`), value: p };
     });
   }
 
-  @discourseComputed
-  availableSorts() {
+  @cached
+  get availableSorts() {
     return applyMutableValueTransformer("category-sort-orders", [
       "likes",
       "op_likes",
@@ -182,8 +178,8 @@ export default class UpsertCategoryAppearance extends buildCategoryPanel(
       .sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  @discourseComputed("category.sort_ascending")
-  sortAscendingOption(sortAscending) {
+  get sortAscendingOption() {
+    const sortAscending = this.sortAscendingValue;
     if (sortAscending === "false") {
       return false;
     }
@@ -193,8 +189,8 @@ export default class UpsertCategoryAppearance extends buildCategoryPanel(
     return sortAscending;
   }
 
-  @discourseComputed
-  sortAscendingOptions() {
+  @cached
+  get sortAscendingOptions() {
     return [
       { name: i18n("category.sort_ascending"), value: true },
       { name: i18n("category.sort_descending"), value: false },
@@ -202,191 +198,193 @@ export default class UpsertCategoryAppearance extends buildCategoryPanel(
   }
 
   <template>
-    <@form.Container
-      @title={{i18n "category.logo"}}
-      @subtitle={{i18n "category.logo_description"}}
-    >
-      <UppyImageUploader
-        @imageUrl={{this.logoImageUrl}}
-        @onUploadDone={{this.logoUploadDone}}
-        @onUploadDeleted={{this.logoUploadDeleted}}
-        @type="category_logo"
-        @id="category-logo-uploader"
-        class="no-repeat contain-image"
-      />
-    </@form.Container>
-
-    <@form.Container
-      @title={{i18n "category.logo_dark"}}
-      @subtitle={{i18n "category.logo_description"}}
-    >
-      <UppyImageUploader
-        @imageUrl={{this.logoImageDarkUrl}}
-        @onUploadDone={{this.logoDarkUploadDone}}
-        @onUploadDeleted={{this.logoDarkUploadDeleted}}
-        @type="category_logo_dark"
-        @id="category-dark-logo-uploader"
-        class="no-repeat contain-image"
-      />
-    </@form.Container>
-
-    <@form.Container @title={{i18n "category.background_image"}}>
-      <UppyImageUploader
-        @imageUrl={{this.backgroundImageUrl}}
-        @onUploadDone={{this.backgroundUploadDone}}
-        @onUploadDeleted={{this.backgroundUploadDeleted}}
-        @type="category_background"
-        @id="category-background-uploader"
-      />
-    </@form.Container>
-
-    <@form.Container @title={{i18n "category.background_image_dark"}}>
-      <UppyImageUploader
-        @imageUrl={{this.backgroundDarkImageUrl}}
-        @onUploadDone={{this.backgroundDarkUploadDone}}
-        @onUploadDeleted={{this.backgroundDarkUploadDeleted}}
-        @type="category_background_dark"
-        @id="category-dark-background-uploader"
-      />
-    </@form.Container>
-
-    {{! This field is removed from edit-category-general when the UC is active }}
-    {{#if this.siteSettings.enable_simplified_category_creation}}
-      <@form.Field
-        @name="text_color"
-        @title={{i18n "category.foreground_color"}}
-        @format="large"
-        as |field|
+    <div class={{this.panelClass}}>
+      <@form.Container
+        @title={{i18n "category.logo"}}
+        @subtitle={{i18n "category.logo_description"}}
       >
-        <field.Color @colors={{CATEGORY_TEXT_COLORS}} />
-      </@form.Field>
-    {{/if}}
-
-    <@form.Field
-      @name="default_view"
-      @title={{i18n "category.default_view"}}
-      @format="large"
-      as |field|
-    >
-      <field.Custom>
-        <ComboBox
-          @valueProperty="value"
-          @id="category-default-view"
-          @content={{this.availableViews}}
-          @value={{field.value}}
-          @onChange={{field.set}}
-          @options={{hash placementStrategy="absolute"}}
+        <UppyImageUploader
+          @imageUrl={{this.logoImageUrl}}
+          @onUploadDone={{this.logoUploadDone}}
+          @onUploadDeleted={{this.logoUploadDeleted}}
+          @type="category_logo"
+          @id="category-logo-uploader"
+          class="no-repeat contain-image"
         />
-      </field.Custom>
-    </@form.Field>
+      </@form.Container>
 
-    <@form.Field
-      @name="default_top_period"
-      @title={{i18n "category.default_top_period"}}
-      @format="large"
-      as |field|
-    >
-      <field.Custom>
-        <ComboBox
-          @valueProperty="value"
-          @id="category-default-period"
-          @content={{this.availableTopPeriods}}
-          @value={{field.value}}
-          @onChange={{field.set}}
-          @options={{hash placementStrategy="absolute"}}
-        />
-      </field.Custom>
-    </@form.Field>
-
-    <@form.Field
-      @name="sort_order"
-      @title={{i18n "category.sort_order"}}
-      @format="large"
-      as |field|
-    >
-      <field.Custom>
-        <ComboBox
-          @valueProperty="value"
-          @content={{this.availableSorts}}
-          @value={{field.value}}
-          @options={{hash none="category.sort_options.default"}}
-          @onChange={{field.set}}
-        />
-        {{#unless this.isDefaultSortOrder}}
-          <ComboBox
-            @valueProperty="value"
-            @content={{this.sortAscendingOptions}}
-            @value={{this.sortAscendingOption}}
-            @options={{hash
-              none="category.sort_options.default"
-              placementStrategy="absolute"
-            }}
-            @onChange={{fn (mut @category.sort_ascending)}}
-          />
-        {{/unless}}
-      </field.Custom>
-    </@form.Field>
-
-    <@form.Field
-      @name="default_list_filter"
-      @title={{i18n "category.default_list_filter"}}
-      @format="large"
-      as |field|
-    >
-      <field.Custom>
-        <ComboBox
-          @id="category-default-filter"
-          @valueProperty="value"
-          @content={{this.availableListFilters}}
-          @value={{field.value}}
-          @onChange={{field.set}}
-        />
-      </field.Custom>
-    </@form.Field>
-
-    {{#if this.isParentCategory}}
-      <@form.Field
-        @name="show_subcategory_list"
-        @title={{i18n "category.show_subcategory_list"}}
-        @format="large"
-        as |field|
+      <@form.Container
+        @title={{i18n "category.logo_dark"}}
+        @subtitle={{i18n "category.logo_description"}}
       >
-        <field.Checkbox />
-      </@form.Field>
+        <UppyImageUploader
+          @imageUrl={{this.logoImageDarkUrl}}
+          @onUploadDone={{this.logoDarkUploadDone}}
+          @onUploadDeleted={{this.logoDarkUploadDeleted}}
+          @type="category_logo_dark"
+          @id="category-dark-logo-uploader"
+          class="no-repeat contain-image"
+        />
+      </@form.Container>
 
-      {{#if @transientData.show_subcategory_list}}
+      <@form.Container @title={{i18n "category.background_image"}}>
+        <UppyImageUploader
+          @imageUrl={{this.backgroundImageUrl}}
+          @onUploadDone={{this.backgroundUploadDone}}
+          @onUploadDeleted={{this.backgroundUploadDeleted}}
+          @type="category_background"
+          @id="category-background-uploader"
+        />
+      </@form.Container>
+
+      <@form.Container @title={{i18n "category.background_image_dark"}}>
+        <UppyImageUploader
+          @imageUrl={{this.backgroundDarkImageUrl}}
+          @onUploadDone={{this.backgroundDarkUploadDone}}
+          @onUploadDeleted={{this.backgroundDarkUploadDeleted}}
+          @type="category_background_dark"
+          @id="category-dark-background-uploader"
+        />
+      </@form.Container>
+
+      {{! This field is removed from edit-category-general when the UC is active }}
+      {{#if this.siteSettings.enable_simplified_category_creation}}
         <@form.Field
-          @name="subcategory_list_style"
-          @title={{i18n "category.subcategory_list_style"}}
+          @name="text_color"
+          @title={{i18n "category.foreground_color"}}
           @format="large"
           as |field|
         >
-          <field.Custom>
-            <ComboBox
-              @valueProperty="value"
-              @id="subcategory-list-style"
-              @content={{this.availableSubcategoryListStyles}}
-              @value={{field.value}}
-              @onChange={{field.set}}
-              @options={{hash placementStrategy="absolute"}}
-            />
-          </field.Custom>
+          <field.Color @colors={{CATEGORY_TEXT_COLORS}} />
         </@form.Field>
       {{/if}}
-    {{/if}}
 
-    <@form.Field
-      @name="read_only_banner"
-      @title={{i18n "category.read_only_banner"}}
-      @format="large"
-      as |field|
-    >
-      <field.Input @maxlength="255" />
-    </@form.Field>
+      <@form.Field
+        @name="default_view"
+        @title={{i18n "category.default_view"}}
+        @format="large"
+        as |field|
+      >
+        <field.Custom>
+          <ComboBox
+            @valueProperty="value"
+            @id="category-default-view"
+            @content={{this.availableViews}}
+            @value={{field.value}}
+            @onChange={{field.set}}
+            @options={{hash placementStrategy="absolute"}}
+          />
+        </field.Custom>
+      </@form.Field>
 
-    <PluginOutlet
-      @name="category-custom-images"
-      @outletArgs={{lazyHash category=this.category}}
-    />
+      <@form.Field
+        @name="default_top_period"
+        @title={{i18n "category.default_top_period"}}
+        @format="large"
+        as |field|
+      >
+        <field.Custom>
+          <ComboBox
+            @valueProperty="value"
+            @id="category-default-period"
+            @content={{this.availableTopPeriods}}
+            @value={{field.value}}
+            @onChange={{field.set}}
+            @options={{hash placementStrategy="absolute"}}
+          />
+        </field.Custom>
+      </@form.Field>
+
+      <@form.Field
+        @name="sort_order"
+        @title={{i18n "category.sort_order"}}
+        @format="large"
+        as |field|
+      >
+        <field.Custom>
+          <ComboBox
+            @valueProperty="value"
+            @content={{this.availableSorts}}
+            @value={{field.value}}
+            @options={{hash none="category.sort_options.default"}}
+            @onChange={{field.set}}
+          />
+          {{#unless this.isDefaultSortOrder}}
+            <ComboBox
+              @valueProperty="value"
+              @content={{this.sortAscendingOptions}}
+              @value={{this.sortAscendingOption}}
+              @options={{hash
+                none="category.sort_options.default"
+                placementStrategy="absolute"
+              }}
+              @onChange={{this.onSortAscendingChange}}
+            />
+          {{/unless}}
+        </field.Custom>
+      </@form.Field>
+
+      <@form.Field
+        @name="default_list_filter"
+        @title={{i18n "category.default_list_filter"}}
+        @format="large"
+        as |field|
+      >
+        <field.Custom>
+          <ComboBox
+            @id="category-default-filter"
+            @valueProperty="value"
+            @content={{this.availableListFilters}}
+            @value={{field.value}}
+            @onChange={{field.set}}
+          />
+        </field.Custom>
+      </@form.Field>
+
+      {{#if this.isParentCategory}}
+        <@form.Field
+          @name="show_subcategory_list"
+          @title={{i18n "category.show_subcategory_list"}}
+          @format="large"
+          as |field|
+        >
+          <field.Checkbox />
+        </@form.Field>
+
+        {{#if @transientData.show_subcategory_list}}
+          <@form.Field
+            @name="subcategory_list_style"
+            @title={{i18n "category.subcategory_list_style"}}
+            @format="large"
+            as |field|
+          >
+            <field.Custom>
+              <ComboBox
+                @valueProperty="value"
+                @id="subcategory-list-style"
+                @content={{this.availableSubcategoryListStyles}}
+                @value={{field.value}}
+                @onChange={{field.set}}
+                @options={{hash placementStrategy="absolute"}}
+              />
+            </field.Custom>
+          </@form.Field>
+        {{/if}}
+      {{/if}}
+
+      <@form.Field
+        @name="read_only_banner"
+        @title={{i18n "category.read_only_banner"}}
+        @format="large"
+        as |field|
+      >
+        <field.Input @maxlength="255" />
+      </@form.Field>
+
+      <PluginOutlet
+        @name="category-custom-images"
+        @outletArgs={{lazyHash category=@category}}
+      />
+    </div>
   </template>
 }
