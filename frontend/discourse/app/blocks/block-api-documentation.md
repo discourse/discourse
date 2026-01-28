@@ -23,27 +23,11 @@ It's designed to handle the common cases—adding content to designated areas wi
 
 ### What Blocks Are For
 
-Blocks are designed for **structured layout areas**—regions where you want to compose multiple panels, cards, or content sections with validation, conditions, and theme control:
+Blocks are designed for **structured layout areas**—regions where you want to compose multiple panels, cards, or content sections with validation, conditions, and theme control. Think homepage content grids, sidebar panel areas, dashboard panels, category page customizations, and discovery page sections. These are places where you want multiple contributors (plugins, themes) to provide content that a theme can orchestrate into a cohesive layout.
 
-- Homepage content grids
-- Sidebar panel areas
-- Dashboard panels
-- Category page customizations
-- Discovery page sections
+**When blocks might not fit:** Components that need to bypass the block layout constraints or condition system, or highly custom interactive features requiring complete control over rendering, are better served by plugin outlets.
 
-**When blocks might not fit:**
-
-- Components that need to bypass the block layout constraints or condition system
-- Highly custom interactive features requiring complete control over rendering
-
-**Blocks are NOT intended for:**
-
-- Small UI additions (badges, icons, buttons)
-- Avatar modifications
-- Minor UI tweaks throughout the app
-- Places where the "composed layout" model doesn't fit
-
-For smaller customizations or highly specialized features, plugin outlets remain available. A page might use blocks for its main content layout while using plugin outlets for small additions elsewhere.
+**Blocks are NOT intended for** small UI additions like badges, icons, or buttons; avatar modifications; minor UI tweaks scattered throughout the app; or places where the "composed layout" model simply doesn't fit. For smaller customizations or highly specialized features, plugin outlets remain available. A page might use blocks for its main content layout while using plugin outlets for small additions elsewhere.
 
 ### Limitations
 
@@ -197,22 +181,44 @@ conditions: [
 ]
 ```
 
-Each block entry tells the system what to render and how to configure it. The only required property is `block` itself—everything else is optional and lets you customize behavior, appearance, and visibility:
+Each block entry tells the system what to render and how to configure it. Think of it as filling out an order form: you specify which block you want (`block`), optionally customize it with data (`args`), and set visibility rules (`conditions`). The system handles the rest.
 
-| Property | Required | Notes |
-|----------|----------|-------|
-| `block` | Yes | Component class or string name |
-| `args` | No | Passed to component as `@args` |
-| `conditions` | No | If omitted, always renders |
-| `classNames` | No | Added to wrapper element |
-| `children` | No | Only for container blocks |
-| `containerArgs` | No | Data a child provides to its parent container (e.g., a tab name for a tabs container)—see "Child Args Schema" below |
+The only required property is `block`—a reference to what you want to render. Everything else adds optional customization. You'll often start with just `block` and `args`, then add `conditions` when you need visibility control. As you get into layout composition, you might use `children` for container blocks and `classNames` for styling specific instances. Here's a quick reference:
 
-That covers the basics—now let's look at the full anatomy of a block to understand all the options available.
+| Property | Required | Purpose |
+|----------|----------|---------|
+| `block` | Yes | Which block to render (component class or registered string name) |
+| `args` | No | Configuration data passed to the component via `@args` |
+| `conditions` | No | Visibility rules—when omitted, the block always renders |
+| `classNames` | No | Extra CSS classes added to the block's wrapper element |
+| `children` | No | Nested blocks for container blocks (see subsection (H) below) |
+| `containerArgs` | No | Metadata a child provides to its parent container (see subsection (H) below) |
+
+The last two properties—`children` and `containerArgs`—only make sense once you understand container blocks, which we'll cover shortly. For now, let's look at the full anatomy of a block to understand all the options available in the `@block` decorator.
 
 ### What's Inside a Block
 
-Here's a block definition that uses every available option. We'll walk through each part:
+You've already seen the basics: a name, some args, maybe conditions. But blocks can do much more. Let's build up from what you know, adding capabilities layer by layer—then you'll have a mental map of what's possible when you need it.
+
+**Starting simple: just args validation**
+
+Most blocks start here—you want to accept some configuration and ensure callers provide valid data:
+
+```javascript
+@block("theme:my-theme:promo-banner", {
+  args: {
+    message: { type: "string", required: true },
+    linkUrl: { type: "string" },
+  },
+})
+export default class PromoBanner extends Component { ... }
+```
+
+That's often enough. But what if you need to ensure `linkUrl` is provided whenever `linkText` is? Or restrict where this block can appear? The `@block` decorator offers additional options for these cases.
+
+**The complete picture**
+
+The following example uses every available option—not because you'd use them all at once, but so you can see where each capability lives. We'll walk through each part, explaining what it does and when you'd actually need it:
 
 ```javascript
 import Component from "@glimmer/component";
@@ -315,15 +321,17 @@ Let's examine each part:
 
 #### (A) Block Name: `"theme:my-theme:hero-banner"`
 
-The block name follows a strict namespacing convention:
+Every block needs a unique name. Since plugins and themes come from many different authors, the system uses namespacing to prevent collisions—think of it like package names in JavaScript (`@company/package`) or Java (`com.company.package`). The namespace tells you where the block came from and ensures that two different themes can both have a "banner" block without conflict.
+
+The format depends on who's providing the block:
 
 | Format | Source | Example |
 |--------|--------|---------|
-| `block-name` | Core Discourse | `group`, `block-outlet` |
+| `block-name` | Core Discourse | `group`, `first-match` |
 | `plugin:block-name` | Plugins | `chat:message-panel` |
 | `theme:namespace:block-name` | Themes | `theme:tactile:hero-banner` |
 
-**Why namespacing?** Prevents collisions. Two themes can both have a "banner" block without conflict because they're namespaced: `theme:tactile:banner` vs `theme:starter:banner`.
+Two themes can both define "banner" blocks because they're namespaced differently: `theme:tactile:banner` vs `theme:starter:banner`. Without namespacing, two themes defining a "banner" block would conflict—the second registration raises an error: `Block "banner" is already registered.`
 
 **What happens if you omit it?** You get an error. The system detects your source (plugin or theme) and enforces the naming convention:
 - Plugins without namespace: `Plugin blocks must use the "namespace:block-name" format.`
@@ -349,12 +357,14 @@ Non-container blocks, by contrast:
 - Cannot hold child blocks
 - Cannot use `containerClassNames`
 
-Both container and non-container blocks are wrapped by the system with a `<div>` for consistent BEM-style class naming:
+Both container and non-container blocks are wrapped by the system with a `<div>` for consistent BEM-style class naming. BEM (Block, Element, Modifier) is a CSS naming convention that uses double underscores for elements within blocks (`block__element`) and double hyphens for modifiers (`block--modifier`)—it helps keep styles scoped and predictable:
 
 | Block Type | Generated Classes |
 |------------|-------------------|
 | Non-container | `{outletName}__block`, `block-{name}` |
 | Container | `block__{name}`, `{outletName}__{name}` |
+
+The class naming strategy lets you style blocks at different levels of specificity. Use `block-{name}` to style a block wherever it appears; use `{outletName}__block` to style all blocks in a specific outlet; use `{outletName}__{name}` for outlet-specific styling of a particular block type.
 
 **Default:** `false` (non-container)
 
@@ -424,18 +434,15 @@ The args schema serves three purposes:
 
 > **Important:** If your block accepts args, you must declare them in the schema. Undeclared args will be rejected.
 
-**Schema properties:**
-- `type` (required) - The argument type
-- `required` (optional) - Whether the argument must be provided
-- `default` (optional) - Default value if not provided
+**The basics**
 
-**Supported types:**
-- `"string"` - Text values
-- `"number"` - Numeric values
-- `"boolean"` - True/false
-- `"array"` - Arrays (with optional `itemType` for validation)
+Every arg needs a `type`—that's the only required property. Add `required: true` when callers must provide a value, or `default` when you want to provide one automatically. (Use one or the other, not both—an arg with a default is never "missing.")
 
-Each type supports additional properties for finer-grained validation. Strings can be constrained by length or pattern, numbers by range, and arrays by their item type. Here's what's available for each:
+The four types cover most needs: `string` for text, `number` for counts and IDs, `boolean` for flags, and `array` for collections. Arrays can specify an `itemType` to validate each element.
+
+**Adding constraints**
+
+Each type supports additional properties for finer-grained validation. A title might need to be between 1 and 100 characters. A page number should be a positive integer. A size dropdown should only accept specific values. Here's what's available:
 
 | Property | Types | Description |
 |----------|-------|-------------|
@@ -482,9 +489,42 @@ constraints: {
 }
 ```
 
-Constraints define validation rules across multiple arguments. While the `args` schema validates each argument individually (type, required, min/max), constraints express *relationships* between arguments—things like "provide one or the other, but not both" or "if you provide A, you must also provide B." They're checked at runtime after defaults are applied, and errors are caught at boot time when `renderBlocks()` is called.
+Individual arg validation catches type errors and missing required fields, but some rules span multiple arguments. Consider a block that fetches featured content—it needs *either* a category ID *or* a tag name, but at least one. Or a date range picker where providing `endDate` only makes sense if `startDate` is also provided. Constraints express these relationships declaratively.
 
-Think of constraints as answering questions about your args: "Can the user provide both of these?" (`atMostOne`), "Must they provide at least one?" (`atLeastOne`), "Do these go together?" (`allOrNone`). The table below shows all available constraint types:
+**Start with the most common case:** You want callers to provide at least one of several options. Use `atLeastOne`:
+
+```javascript
+constraints: {
+  atLeastOne: ["categoryId", "tagName"],  // Must provide one or both
+}
+```
+
+**Need mutual exclusion?** When options conflict—like `id` versus `slug` for looking up a resource—use `exactlyOne` (one must be provided, not both) or `atMostOne` (zero or one is fine):
+
+```javascript
+constraints: {
+  exactlyOne: ["id", "slug"],  // Exactly one required
+  atMostOne: ["startDate", "daysAgo"],  // At most one allowed
+}
+```
+
+**Related arguments that go together?** Use `allOrNone` for pairs like width/height or start/end dates:
+
+```javascript
+constraints: {
+  allOrNone: ["width", "height"],  // Both or neither
+}
+```
+
+**One arg depends on another?** Use `requires` when an arg only makes sense with another present:
+
+```javascript
+constraints: {
+  requires: { endDate: "startDate" },  // endDate needs startDate
+}
+```
+
+Here's the complete reference:
 
 | Constraint | Meaning | Example |
 |------------|---------|---------|
@@ -498,10 +538,10 @@ Think of constraints as answering questions about your args: "Can the user provi
 
 ```
 Block "featured-list": at least one of "id", "tag" must be provided.
-Block "featured-list": exactly one of "id", "tag" must be provided, but got both.
+Block "featured-list": exactly one of "id", "tag" must be provided, but got 2: "id", "tag".
 Block "featured-list": exactly one of "id", "tag" must be provided, but got none.
 Block "featured-list": args "width", "height" must be provided together or not at all.
-Block "featured-list": at most one of "id", "tag" may be provided, but got both.
+Block "featured-list": at most one of "id", "tag" may be provided, but got 2: "id", "tag".
 Block "featured-list": arg "endDate" requires "startDate" to also be provided.
 ```
 
@@ -540,7 +580,8 @@ The `validate` function runs after declarative constraints pass.
 allowedOutlets: ["homepage-blocks", "hero-*"],
 ```
 
-Restricts where this block can render. Uses [picomatch](https://github.com/micromatch/picomatch) glob syntax:
+Restricts where this block can render. The patterns use "glob" syntax—a wildcard matching system common in file paths and shell commands. The `*` matches any characters, and `{a,b}` matches either `a` or `b`. We use the [picomatch](https://github.com/micromatch/picomatch) library under the hood:
+
 - `"homepage-blocks"` - Exact match
 - `"hero-*"` - Wildcard (matches `hero-left`, `hero-right`, etc.)
 - `"{sidebar,footer}-*"` - Brace expansion (matches `sidebar-*` OR `footer-*`)
@@ -636,54 +677,19 @@ Found at children[0] and children[2].
 
 ### From Code to Screen
 
-Understanding when things happen helps debug issues.
+Understanding when things happen helps debug issues. The journey from code to screen happens in two distinct phases: boot time (when the app starts) and render time (when users navigate).
 
----
+**Boot time** is all about registration and validation. First, your pre-initializers run—this is when `api.registerBlock()` calls validate the block name, namespace, and decoration, then add each block to the registry. If you have custom outlets, they're registered here too via `api.registerBlockOutlet()`. Core outlets are pre-registered.
 
-#### :rocket: Boot Time
+Next, the `freeze-block-registry` initializer runs. This is a critical moment: it registers the built-in blocks (like `group`) and all the core condition types, then freezes all the registries. After this point, no more registrations are allowed—the set of available blocks, outlets, and condition types is fixed for the session.
 
-**1. Pre-initializers run**
-- `api.registerBlock(HeroBanner)`
-  - Validates block name, namespace, decoration
-  - Adds block to the registry
-- `api.registerBlockOutlet("my-plugin:custom-outlet")` (for custom outlets only; core outlets are pre-defined)
+Finally, your api-initializers run. When you call `api.renderBlocks()`, the system validates everything: does the outlet exist? Are all referenced blocks registered? Do the args match their schemas? Are the conditions syntactically valid? If validation passes, the layout configuration is stored for later use.
 
-**2. Built-ins register, then registries freeze** (`freeze-block-registry` initializer)
-- Registers built-in blocks (`group`, etc.)
-- Registers core condition types (`user`, `route`, `setting`, `viewport`, `outletArg`)
-- Freezes block, outlet, and condition type registries
-- No more registrations allowed after this point
+**Render time** happens when users actually see the page. When a `<BlockOutlet>` component renders, it retrieves the stored layout configuration and begins preprocessing. Conditions are evaluated bottom-up—children before parents—because a container's visibility depends on whether it has any visible children. Each block gets marked visible or hidden based on its conditions.
 
-**3. API-initializers run**
-- `api.renderBlocks("homepage-blocks", [...])`
-  - Validates: outlet exists, blocks registered, schemas match
-  - Validates: conditions syntax, arg names
-  - Stores the layout configuration for the outlet
+Finally, visible blocks render their components. Hidden blocks simply don't appear in the DOM—unless debug mode is enabled, in which case they show as ghost placeholders so you can see what's missing.
 
----
-
-#### :art: Render Time
-
-**4. BlockOutlet renders** (`<BlockOutlet @name="homepage-blocks" />`)
-- Retrieves the layout configuration for this outlet
-- Preprocesses: evaluates conditions, computes visibility
-
-**5. Condition evaluation** (bottom-up for containers)
-- Conditions are evaluated for each block
-- Containers check children first—a container is hidden if all children are hidden
-- Result: each block is marked visible or hidden
-
-**6. Component rendering**
-- Visible blocks render their component
-- Hidden blocks disappear (or show as ghost placeholders in debug mode)
-
----
-
-**Key insight:** Most validation happens at boot time, not render time. This means:
-- Typos in condition types? Error at boot.
-- Invalid arg names? Error at boot.
-- Block not registered? Error at boot.
-- Condition fails at runtime? Block silently doesn't render (or shows ghost in debug).
+**The key insight:** most validation happens at boot time, not render time. Typos in condition types, invalid arg names, unregistered blocks—all of these surface as errors during boot. But when a condition fails at runtime? The block silently doesn't render (or shows as a ghost in debug mode). This design catches configuration mistakes early while allowing dynamic visibility at runtime.
 
 > :bulb: When lazy-loaded blocks are involved (blocks registered with a factory function like `() => import("./my-block")` for code splitting), schema and constraint validations are deferred to when the layout is rendered for the first time.
 
@@ -693,11 +699,11 @@ Now that you've seen how blocks flow from registration to rendering, let's look 
 
 ## 2. The Moving Parts
 
-Philosophy is great, but you came here to build something. This section covers the practical tools: the `@block` decorator, the `<BlockOutlet>` component, and the `renderBlocks()` function that ties them together.
+Section 1 showed you *what* blocks are—the mental model, the anatomy, the lifecycle. Now let's look at *how* to work with them. We'll cover the `@block` decorator, the `<BlockOutlet>` component, and the `renderBlocks()` function, starting with a question you'll likely have: when should I use blocks versus plugin outlets?
 
 ### Blocks and Plugin Outlets
 
-A question that often comes up: when should you use blocks versus plugin outlets? They serve different purposes—here's how they differ:
+A question that often comes up: when should you use blocks versus plugin outlets? They serve different purposes, and understanding their strengths helps you choose the right tool:
 
 | Aspect | Blocks | Plugin Outlets |
 |--------|--------|----------------|
@@ -723,19 +729,21 @@ A question that often comes up: when should you use blocks versus plugin outlets
 - You need full control over markup and behavior
 - You're building complex, highly customized features that don't fit the composed layout model
 
+With that context in mind, let's dive into the mechanics of the Blocks API—how to register blocks, configure layouts, and place outlets in templates.
+
 ### Using the Blocks API
 
-What you need to know to build with blocks.
+This subsection covers the practical APIs: registering blocks, composing layouts with `renderBlocks()`, and placing `<BlockOutlet>` components in templates. We'll start with who does what, then look at how the pieces connect.
 
 #### Registering and Composing
 
-Ideally, the Blocks API separates **registering blocks** from **composing layouts**. This separation of concerns makes it easier to reason about what belongs where—but real-world usage is flexible. Plugins sometimes need to compose layouts, and themes sometimes provide blocks. Here's the mental model:
+By design, the Blocks API separates **registering blocks** from **composing layouts**. This separation of concerns makes it easier to reason about what belongs where—but real-world usage is flexible. Plugins sometimes need to compose layouts, and themes sometimes provide blocks. Here's the mental model:
 
-**Core** provides built-in blocks:
-- Container blocks like `group` for general layout structure, and `first-match` for "if/else" logic—it evaluates its children in order and renders only the *first* one whose conditions pass, skipping the rest
-- Always available—no registration needed in your code
+**Core** provides built-in blocks—pre-registered and always available:
+- `group`: A general-purpose container for organizing related blocks
+- `first-match`: A conditional container for "if/else" logic
 
-We'll see `first-match` in action in the tutorials (Section 8).
+Both are documented in detail in the "Built-in Blocks" subsection below, with full schemas and usage examples.
 
 **Plugins** register blocks:
 ```javascript
@@ -763,6 +771,155 @@ This separation means:
 - Theme components extend the theme's own capabilities
 - The theme decides what appears where
 
+#### Built-in Blocks
+
+Core provides container blocks that you can use without registration. Understanding these helps you structure layouts effectively.
+
+**The `group` Block**
+
+The `group` block is a general-purpose container for organizing related blocks together. It renders all its visible children in sequence, wrapped in a styled container element.
+
+Schema:
+```javascript
+@block("group", {
+  container: true,
+  description: "Groups multiple children blocks together under a named wrapper",
+  args: {
+    name: { type: "string", pattern: VALID_BLOCK_NAME_PATTERN, required: true },
+  },
+  containerClassNames: (args) => `block__group-${args.name}`,
+})
+```
+
+The `name` arg uses `VALID_BLOCK_NAME_PATTERN` (imported from `discourse/lib/blocks`) to ensure the name follows valid block naming conventions—lowercase letters, numbers, and hyphens.
+
+The required `name` arg serves two purposes: it identifies the group for styling (via the generated `block__group-{name}` class) and for debugging (appearing in dev tools output).
+
+Usage example:
+```javascript
+api.renderBlocks("homepage-blocks", [
+  {
+    block: "group",
+    args: { name: "featured" },
+    children: [
+      { block: PromoBanner },
+      { block: FeaturedTopics },
+    ],
+  },
+  {
+    block: "group",
+    args: { name: "recent" },
+    children: [
+      { block: RecentActivity },
+      { block: TrendingTags },
+    ],
+  },
+]);
+```
+
+This creates two distinct visual sections you can style independently via CSS:
+```css
+.block__group-featured {
+  background: var(--tertiary-low);
+  padding: 2rem;
+}
+
+.block__group-recent {
+  border-top: 1px solid var(--primary-low);
+}
+```
+
+**The `first-match` Block**
+
+The `first-match` block implements conditional branching—like a switch statement, it evaluates children in order and renders only the first one whose conditions pass.
+
+Schema:
+```javascript
+@block("first-match", {
+  container: true,
+  // No args required - it's purely a conditional container
+})
+```
+
+Usage example (showing different content based on user state):
+```javascript
+api.renderBlocks("welcome-area", [
+  {
+    block: "first-match",
+    children: [
+      {
+        block: AdminDashboard,
+        conditions: { type: "user", admin: true },
+      },
+      {
+        block: ModeratorTools,
+        conditions: { type: "user", moderator: true },
+      },
+      {
+        block: MemberWelcome,
+        conditions: { type: "user", loggedIn: true },
+      },
+      {
+        block: GuestWelcome,
+        // No conditions = fallback (always matches if reached)
+      },
+    ],
+  },
+]);
+```
+
+The order matters: the first matching child wins. In this example, admins see `AdminDashboard`, moderators (who aren't admins) see `ModeratorTools`, logged-in members see `MemberWelcome`, and anonymous visitors see `GuestWelcome`. The fallback child (no conditions) catches everyone else.
+
+**Choosing Between `group`, `first-match`, and Direct Conditions**
+
+With three ways to structure your blocks, here's a quick decision guide:
+
+| Scenario | Use This | Why |
+|----------|----------|-----|
+| Multiple blocks that should all render together | `group` | Groups related content, provides a styled container |
+| Mutually exclusive alternatives (only one should render) | `first-match` | Evaluates in order, renders only the first match |
+| Independent blocks with unrelated conditions | Direct conditions | Each block stands alone, simpler to configure |
+| A default fallback when nothing else matches | `first-match` | Last child without conditions catches everything |
+
+**Common patterns:**
+
+```javascript
+// Pattern 1: Multiple independent blocks with conditions
+[
+  { block: WelcomeBanner, conditions: { type: "user", loggedIn: false } },
+  { block: AdminPanel, conditions: { type: "user", admin: true } },
+  { block: RecentTopics },  // Always shows
+]
+// All three evaluate independently. Anonymous users see WelcomeBanner + RecentTopics.
+// Admins see AdminPanel + RecentTopics.
+
+// Pattern 2: Mutually exclusive alternatives
+[
+  {
+    block: "first-match",
+    children: [
+      { block: AdminView, conditions: { type: "user", admin: true } },
+      { block: MemberView, conditions: { type: "user", loggedIn: true } },
+      { block: GuestView },  // Fallback
+    ],
+  },
+]
+// Exactly one renders. Admin? AdminView. Non-admin member? MemberView. Anonymous? GuestView.
+
+// Pattern 3: Organized sections with a container
+[
+  {
+    block: "group",
+    args: { name: "featured" },
+    children: [
+      { block: HeroBanner },
+      { block: FeaturedTopics },
+    ],
+  },
+]
+// Both children render (if their conditions pass), wrapped in a styled container.
+```
+
 #### Composing Layouts
 
 Now that you understand who should do what, let's look at how layouts are composed. The `renderBlocks()` function configures which blocks appear in an outlet:
@@ -787,6 +944,7 @@ String names enable cross-plugin references where you can't import the class dir
 When using string names, you can append `?` to make the block **optional**:
 
 ```javascript
+// Given a hypothetical "dashboard" outlet:
 api.renderBlocks("dashboard", [
   { block: "analytics:stats-panel?" },  // Optional - won't error if missing
   { block: "chat:recent-messages?" },   // Optional
@@ -822,14 +980,7 @@ Themes often want to compose blocks from multiple plugins, but those plugins may
 
 Each outlet can only have one `renderBlocks()` configuration—the first caller owns it, and subsequent calls raise an error. While themes typically compose layouts, plugins and theme components *can* call `renderBlocks()` when they need full control of an outlet.
 
-**Good use cases:**
-- Self-contained plugins that own specific UI areas
-- Turnkey solutions providing a complete experience
-- Heavily customized instances with coordinated extensions
-
-**Avoid when:**
-- Building reusable components meant for multiple themes
-- Multiple extensions might customize the same outlet
+This works well for self-contained plugins that own specific UI areas, turnkey solutions providing a complete experience, or heavily customized instances where extensions are coordinated. Avoid this pattern when building reusable components meant for multiple themes, or when multiple extensions might reasonably customize the same outlet—in those cases, stick to registering blocks and let themes compose.
 
 #### Architectural Patterns
 
@@ -1091,60 +1242,9 @@ Conditions can see several things:
 - **Services** like `currentUser`, `siteSettings`, `router` (in custom conditions)
 - **Debug context** when logging is enabled
 
-The system provides five built-in condition types: `user`, `route`, `setting`, `viewport`, and `outletArg`. Before diving into each one, let's look at how to combine them—since many real-world scenarios need more than one check.
+**The `source` parameter:** Some conditions support a `source` parameter that changes *what* they check. By default, the `user` condition checks the person viewing the page, and the `setting` condition checks site settings. But what if you're on a user profile page and want to show a badge based on the *profile owner's* trust level, not the viewer's? Or you want to check theme settings instead of site settings? The `source` parameter lets you redirect the condition to check a different data source. You'll see examples of this in the specific condition types below.
 
-### Combining Conditions
-
-When blocks need more than one check, the Blocks API uses familiar boolean logic:
-
-**Single condition (no array needed):**
-```javascript
-conditions: { type: "user", loggedIn: true }
-```
-
-**AND logic (array):**
-```javascript
-conditions: [
-  { type: "user", loggedIn: true },
-  { type: "route", pages: ["DISCOVERY_PAGES"] }
-]
-```
-
-**OR logic (any wrapper):**
-```javascript
-conditions: {
-  any: [
-    { type: "user", admin: true },
-    { type: "user", moderator: true }
-  ]
-}
-```
-
-**NOT logic (not wrapper):**
-```javascript
-conditions: { not: { type: "route", pages: ["ADMIN_PAGES"] } }
-```
-
-These patterns can be nested for complex requirements:
-
-**Complex combinations:**
-```javascript
-// Show for: logged in users who are either admins OR (TL2+ and not on admin pages)
-conditions: [
-  { type: "user", loggedIn: true },
-  {
-    any: [
-      { type: "user", admin: true },
-      [
-        { type: "user", minTrustLevel: 2 },
-        { not: { type: "route", pages: ["ADMIN_PAGES"] } }
-      ]
-    ]
-  }
-]
-```
-
-With the combination syntax covered, let's look at each built-in condition type—starting with the simplest.
+The system provides five built-in condition types: `user`, `route`, `setting`, `viewport`, and `outletArg`. Let's start by exploring what each one does, then look at how to combine them for more complex requirements.
 
 ### Built-in Conditions
 
@@ -1162,14 +1262,18 @@ Most blocks need only one or two condition types. A welcome banner might just ch
 
 #### User Condition
 
-Evaluates based on user state. By default, checks the **current user** (the person viewing the page). Use `source` to check a different user from outlet args.
+The user condition is probably the one you'll reach for most often. It lets you control visibility based on who's viewing the page—whether they're logged in, their role (admin, moderator, staff), their trust level, or their group membership.
+
+By default, the condition checks the **current user**—the person viewing the page. This handles the common case where you want to show something to admins or hide something from anonymous visitors. But you can also check a *different* user via the `source` option, which is useful when you're rendering content about a topic author or profile owner and want to show extra details based on *their* properties, not the viewer's.
+
+Here's an example showing all available options (you'd never use all of these together—just pick what you need):
 
 ```javascript
 { type: "user", loggedIn: true, admin: true, moderator: true, staff: true,
   minTrustLevel: 0, maxTrustLevel: 4, groups: ["beta-testers"] }
 ```
 
-All properties are optional—include only what you need to check. The table below shows what's available, from basic authentication checks to group membership:
+All properties are optional—include only what you need to check. When you specify multiple properties, they all must be true (AND logic). The following table provides a quick reference:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -1182,7 +1286,7 @@ All properties are optional—include only what you need to check. The table bel
 | `groups` | `string[]` | Must be in at least one of these groups (OR logic) |
 | `source` | `string` | Check a different user object from outlet args |
 
-**Multiple conditions use AND logic:**
+**Multiple properties use AND logic:**
 ```javascript
 // User must be logged in AND trust level 2+ AND in beta-testers group
 { type: "user", loggedIn: true, minTrustLevel: 2, groups: ["beta-testers"] }
@@ -1196,16 +1300,22 @@ All properties are optional—include only what you need to check. The table bel
 
 **Choosing the right check:** Use `staff` when moderators and admins should see the same thing. Use `admin` or `moderator` separately when their experiences should differ. Use `groups` for feature rollouts to specific user segments.
 
+In practice, most user conditions are simple: `{ type: "user", loggedIn: true }` for member-only content, `{ type: "user", admin: true }` for admin tools, or `{ type: "user", minTrustLevel: 2 }` for experienced members. The more complex combinations—trust level ranges, multiple group requirements—tend to appear in specialized plugins rather than typical theme layouts.
+
 #### Setting Condition
 
-Evaluates based on site settings or custom settings objects.
+The setting condition lets you tie block visibility to site configuration. Want a promo banner that only shows when a "show_promotions" setting is enabled? Or a panel that changes based on a dropdown setting's value? This is your tool.
+
+Discourse has different types of settings—boolean toggles, string values, enum dropdowns, and list settings (comma-separated values). The setting condition handles all of these with different comparison modes. You specify `name` to identify the setting, then pick *one* comparison mode to check its value.
+
+Here's the full syntax (but remember, you'd only use one comparison mode at a time):
 
 ```javascript
 { type: "setting", name: "setting_name", enabled: true, equals: "value",
   includes: [...], contains: "value", containsAny: [...], source: {...} }
 ```
 
-The `name` property is always required—it identifies which setting to check. The other properties determine *how* to check it:
+The `name` property is always required—it identifies which setting to check. The comparison modes give you different ways to check the setting's value:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -1217,7 +1327,7 @@ The `name` property is always required—it identifies which setting to check. T
 | `containsAny` | `array` | List setting contains any of these values |
 | `source` | `object` | Custom settings object (e.g., theme settings) |
 
-**Only one condition type per setting:**
+**Only one comparison mode per setting:**
 ```javascript
 // WRONG - multiple condition types
 { type: "setting", name: "foo", enabled: true, equals: "bar" }
@@ -1238,22 +1348,29 @@ import { settings } from "virtual:theme";
 
 **Site settings vs theme settings:** Use site settings for admin-controlled features. Use theme settings when the theme itself controls the behavior, allowing different themes to have different defaults.
 
+The most common pattern is a simple boolean toggle: `{ type: "setting", name: "show_announcements", enabled: true }`. This lets admins control block visibility from the site settings page without touching code. For more sophisticated control—like showing different blocks based on a dropdown setting—use `equals` or `includes`.
+
+So far we've checked *who* is viewing and *what the configuration says*. But what about *where* they're viewing from? The next condition handles device and screen size.
+
 #### Viewport Condition
 
-Evaluates based on viewport size and device capabilities.
+The viewport condition responds to screen size and device type. Use it when you want to show completely different blocks on mobile versus desktop, or when you need to prevent a component from rendering at all below a certain size (perhaps because it fetches data that's irrelevant on small screens).
+
+A word of caution: for simple show/hide scenarios, CSS media queries are usually more performant. The viewport condition's strength is when you need to *prevent rendering entirely* or combine viewport checks with other conditions. If you just want to hide something visually, CSS is the better choice.
 
 ```javascript
 { type: "viewport", min: "lg", max: "xl", mobile: true, touch: true }
 ```
 
-**Breakpoints:**
-- `sm` - ≥640px
-- `md` - ≥768px
-- `lg` - ≥1024px
-- `xl` - ≥1280px
-- `2xl` - ≥1536px
+The breakpoints follow a simple pattern: each name represents a minimum screen width, from small (`sm`) to extra-large (`2xl`):
 
-You can check breakpoints, or go broader with device-type checks:
+- `sm` - ≥640px (larger phones, small tablets)
+- `md` - ≥768px (tablets)
+- `lg` - ≥1024px (laptops, small desktops)
+- `xl` - ≥1280px (desktops)
+- `2xl` - ≥1536px (large desktops)
+
+You can check specific breakpoint ranges, or use device-type checks for a broader approach:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -1278,15 +1395,19 @@ You can check breakpoints, or go broader with device-type checks:
 
 > :bulb: For simple show/hide based on viewport, CSS media queries are often more performant. Use this condition when you need to prevent a component from rendering entirely—for example, to avoid unnecessary data fetching on mobile, or to show completely different blocks based on screen size.
 
+We've covered who's viewing (`user`), what settings say (`setting`), and what device they're using (`viewport`). The next two conditions look at the page itself: what data is available in the current context, and what URL or page type we're on.
+
 #### OutletArg Condition
 
-Evaluates based on outlet arg values.
+When outlets pass contextual data via `@outletArgs`, you can make visibility decisions based on that data. This is how you build truly context-aware blocks—showing a "mark as solved" button only on unsolved topics, or displaying author badges only when viewing a staff member's profile.
+
+The condition works by navigating to a property in the outlet args and checking its value. You specify a `path` using dot notation (like `topic.closed` or `user.trust_level`), then either check what that value equals (`value`) or whether it exists at all (`exists`).
 
 ```javascript
 { type: "outletArg", path: "topic.closed", value: true }
 ```
 
-The `path` property uses dot notation to navigate nested objects. The other properties determine what to check about that value:
+The `path` property uses dot notation to navigate nested objects. You then specify either a value match or an existence check:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -1296,10 +1417,14 @@ The `path` property uses dot notation to navigate nested objects. The other prop
 
 > :warning: You cannot use both `value` and `exists` together—they are mutually exclusive. Use `value` to check what something equals, use `exists` to check whether it's defined at all.
 
+In practice, you'll use `value` most often—checking if a topic is closed, or if a category has a specific slug. The `exists` check is useful when the presence of a property matters regardless of its value, like checking whether a topic has any tags at all rather than checking for specific tags.
+
 **Value matching rules:**
+- Primitive value → passes if target === value (strict equality)
 - `[a, b, c]` → passes if target matches ANY element (OR logic)
 - `{ not: x }` → passes if target does NOT match x
-- Other → passes if target === value
+- `{ any: [...] }` → passes if target matches ANY spec in array (OR logic)
+- RegExp → passes if target (coerced to string) matches the pattern
 
 ```javascript
 // Check if topic is closed
@@ -1319,7 +1444,9 @@ OutletArg conditions are your tool for context-aware blocks—showing different 
 
 #### Route Condition
 
-The most flexible condition—and the most complex. It evaluates based on the current URL path, semantic page types, route parameters, and query parameters.
+The route condition is the most powerful—and the most complex—of the built-in conditions. It lets you target specific pages, entire sections of the site, or precisely filtered views. Want a promo to show only on the homepage? A sidebar widget only on category pages? A feature announcement only on the latest topics list with a specific query parameter? Route conditions handle all of these.
+
+The condition offers two complementary approaches: URL pattern matching (for precise path control) and semantic page types (for logical section targeting). You can use either or both, depending on your needs.
 
 ```javascript
 { type: "route", urls: [...], pages: [...], params: {...}, queryParams: {...} }
@@ -1327,13 +1454,13 @@ The most flexible condition—and the most complex. It evaluates based on the cu
 
 > **Why URLs instead of Ember route names?** Using internal route names like `discovery.latest` would make them part of the public API—any rename would break plugins and themes. URLs are already effectively public: changing them breaks bookmarks, external links, and SEO. By matching URLs, we avoid coupling blocks to Discourse's internal routing structure.
 
-**Two approaches:** The route condition supports two complementary approaches:
-- **`urls`**: Match URL patterns using glob syntax
-- **`pages`**: Match semantic page types with typed parameters
+The two approaches complement each other:
+- **`urls`**: Match URL patterns using glob syntax—precise path control
+- **`pages`**: Match semantic page types—logical section targeting that survives URL changes
 
 **URL Patterns (`urls` option):**
 
-Uses [picomatch](https://github.com/micromatch/picomatch) glob syntax:
+When you need exact path matching or complex wildcard patterns, use URLs. The system uses [picomatch](https://github.com/micromatch/picomatch) glob syntax:
 - `"/latest"` - Exact path match
 - `"/c/*"` - Single segment wildcard (`/c/foo` but not `/c/foo/bar`)
 - `"/c/**"` - Multi-segment wildcard (`/c/foo`, `/c/foo/bar`, `/c/foo/bar/baz`)
@@ -1342,7 +1469,9 @@ Uses [picomatch](https://github.com/micromatch/picomatch) glob syntax:
 
 **Semantic Page Types (`pages` option):**
 
-Page types represent Discourse's main navigation contexts. Using these instead of URL patterns means your conditions work correctly even if URLs change or custom routes are configured:
+Page types represent Discourse's main navigation contexts. Think of them as logical groupings that abstract away the specific URL structure. When you target `TAG_PAGES`, you're saying "anywhere a tag listing is shown"—whether that's `/tag/featured`, `/tags/c/general/13`. This abstraction means your conditions keep working even if the site's URL structure changes.
+
+Each page type can optionally be refined with parameters. For example, `TAG_PAGES` by itself matches all category pages, but `{ pages: ["TAG_PAGES"], params: { categoryId: 5 } }` matches only a specific category.
 
 | Page Type | Description | Parameters |
 |-----------|-------------|------------|
@@ -1356,7 +1485,7 @@ Page types represent Discourse's main navigation contexts. Using these instead o
 | `ADMIN_PAGES` | Admin section pages | (none) |
 | `GROUP_PAGES` | Group pages | `name` (string) |
 
-**URLs vs Pages:**
+**Choosing between URLs and Pages:**
 
 Choose `pages` when:
 - You want to match a logical section (all category pages, all topic pages)
@@ -1424,7 +1553,7 @@ The `params` option works only with `pages` (not `urls`) and validates parameter
 
 **Params with `any` and `not` Operators:**
 
-The `params` object supports `any` (OR) and `not` (NOT) operators for complex matching:
+The `params` object supports `any` (OR) and `not` (NOT) operators for complex matching. These are the same operators used for combining conditions (covered in detail in the next subsection "Combining Conditions"), but here they work within a single route condition's parameters:
 
 ```javascript
 // Match if category ID is 1, 2, or 3 (OR logic)
@@ -1521,7 +1650,75 @@ Use the NOT combinator to exclude pages instead of a dedicated exclude option:
 ]
 ```
 
-The built-in conditions cover most cases. But if you need something specific to your domain, you can create your own.
+Now that you know what each condition type can check, what happens when you need more than one check? A block that should show for "logged-in admins on category pages" needs to combine three conditions. That's where combination syntax comes in.
+
+### Combining Conditions
+
+When blocks need more than one check, the Blocks API uses familiar boolean logic. You can combine conditions using AND, OR, and NOT operators—and nest them for complex requirements.
+
+**Single condition (no array needed):**
+
+When you only need one check, pass the condition object directly:
+
+```javascript
+conditions: { type: "user", loggedIn: true }
+```
+
+**AND logic (array):**
+
+When multiple conditions must ALL be true, use an array. Every condition in the array must pass for the block to show:
+
+```javascript
+conditions: [
+  { type: "user", loggedIn: true },
+  { type: "route", pages: ["DISCOVERY_PAGES"] }
+]
+```
+
+**OR logic (any wrapper):**
+
+When you want a block to show if ANY condition passes, wrap your conditions in an `any` object. The block renders if at least one condition is true:
+
+```javascript
+conditions: {
+  any: [
+    { type: "user", admin: true },
+    { type: "user", moderator: true }
+  ]
+}
+```
+
+**NOT logic (not wrapper):**
+
+To invert a condition—show the block when the condition is false—use a `not` wrapper:
+
+```javascript
+conditions: { not: { type: "route", pages: ["ADMIN_PAGES"] } }
+```
+
+**Nesting for complex requirements:**
+
+These patterns can be nested. Arrays inside `any` create AND groups within OR logic:
+
+```javascript
+// Show for: logged in users who are either admins OR (TL2+ and not on admin pages)
+conditions: [
+  { type: "user", loggedIn: true },
+  {
+    any: [
+      { type: "user", admin: true },
+      [
+        { type: "user", minTrustLevel: 2 },
+        { not: { type: "route", pages: ["ADMIN_PAGES"] } }
+      ]
+    ]
+  }
+]
+```
+
+Think of it like boolean algebra: arrays are AND, `any` is OR, `not` inverts. The nesting depth is limited to 20 levels (matching the overall block nesting limit), though if you're approaching that, consider simplifying your logic or using a custom condition.
+
+The built-in conditions combined with these operators cover most visibility scenarios. But sometimes you need something domain-specific—a feature flag system, subscription tiers, or custom business logic. That's when you create your own condition type.
 
 ### Rolling Your Own
 
@@ -1603,7 +1800,7 @@ When a `<BlockOutlet>` renders, it kicks off a decision process. The system does
 
 ### How Decisions Are Made
 
-When a `<BlockOutlet>` renders, it needs to decide which blocks to show. It uses **bottom-up evaluation**.
+The key insight is **bottom-up evaluation**—children are processed before parents.
 
 **Why bottom-up?** Container blocks have an implicit condition: they only render if they have at least one visible child. We need to know child visibility before we can determine parent visibility. Think of it like our furniture analogy: you can't decide if a shelving unit fits in the room until you know which drawer inserts and compartments will actually be used.
 
@@ -1855,13 +2052,83 @@ In debug mode, you'd see the full evaluation logged even though the `any` short-
 
 > :bulb: This example uses condition combinators (`any`, `not`, nested arrays) to build complex logic. See **Section 3: Show This, Hide That** for the complete syntax reference on combining conditions.
 
+### Performance Considerations
+
+The Blocks API is designed to be fast by default, but understanding how it works helps you make good choices for your specific use case.
+
+**Condition Evaluation Cost**
+
+Conditions are evaluated at render time, which means they run on every page navigation and whenever reactive state changes. Built-in conditions are highly optimized—they access cached services and use simple property lookups. However, these costs can add up:
+
+- **Deeply nested conditions** (many `any`/`not` wrappers) create more function calls
+- **Large outlets** (many blocks with complex conditions) take proportionally longer to evaluate
+- **Reactive triggers** (tracked properties that change frequently) cause re-evaluation
+
+In practice, you're unlikely to hit performance problems with typical layouts. But if you notice sluggishness, enable debug mode to see which conditions are being evaluated and whether any complex condition trees might be causing overhead.
+
+**Container Depth Limits**
+
+Layouts cannot nest deeper than 20 levels. This limit exists primarily to prevent stack overflow from recursive configurations, but hitting it usually indicates a design issue rather than a technical constraint. Most layouts work well with 2-3 levels of nesting.
+
+**Caching Behavior**
+
+Several aspects of the block system are cached for performance:
+
+- **Block classes** from factory functions (lazy loading) are cached permanently after first resolution
+- **Condition type classes** are looked up once and cached
+- **Outlet layouts** are preprocessed once per navigation, not per render cycle
+
+This means the first render of a page with lazy-loaded blocks may be slightly slower as factories resolve, but subsequent renders are fast.
+
+**CSS Media Queries vs Viewport Conditions**
+
+For simple show/hide based on screen size, CSS media queries are usually more performant than the `viewport` condition:
+
+```css
+/* CSS approach - browser handles this natively */
+.mobile-banner { display: none; }
+@media (max-width: 768px) {
+  .mobile-banner { display: block; }
+}
+```
+
+Use the `viewport` condition when you need to:
+- **Prevent rendering entirely** (avoid fetching data that won't be shown)
+- **Swap completely different blocks** based on screen size
+- **Combine viewport checks with other conditions** (e.g., "mobile AND logged in")
+
+For purely visual show/hide without data implications, CSS is the better choice.
+
+**Practical Guidance**
+
+Based on typical usage patterns, here are some rough guidelines:
+
+| Scenario | Typical Performance | Notes |
+|----------|---------------------|-------|
+| 1-10 blocks with simple conditions | Excellent | Most plugins/themes fall here |
+| 10-30 blocks with moderate conditions | Good | Typical for busy homepages |
+| 30-50 blocks or deeply nested conditions | Acceptable | Consider splitting into multiple outlets |
+| 50+ blocks or 5+ nesting levels | May need optimization | Profile with debug mode |
+
+These aren't hard limits—they're starting points for investigation. A simple outlet with 100 blocks might perform fine, while a complex outlet with 20 blocks and deeply nested `any`/`not` conditions might need attention.
+
+**When to Optimize**
+
+Don't optimize prematurely. The Blocks API is designed for typical UI extension use cases, and most plugins/themes won't need to think about performance. If you do notice issues:
+
+1. **Enable debug mode** to see condition evaluation details—the console shows which conditions passed or failed and why
+2. **Simplify conditions** by flattening deeply nested `any`/`not` structures
+3. **Use CSS** for viewport-only visibility (no JavaScript evaluation overhead)
+4. **Split large outlets** into smaller, more focused outlets (e.g., `homepage-hero` + `homepage-featured` instead of one giant `homepage-blocks`)
+5. **Consider custom conditions** if you're repeating the same complex condition logic—a single condition class is often faster than deeply nested built-in conditions
+
 That covers how the evaluation engine works. But what happens when you make a mistake configuring blocks?
 
 ---
 
 ## 5. When Things Go Wrong
 
-A powerful API is only useful if you can debug it when things go wrong. The Blocks API invests heavily in developer experience—not just catching errors, but explaining them in a way that points you toward the solution. Like furniture assembly instructions that catch mistakes before you've bolted everything together incorrectly, most validation happens at boot time so you see problems immediately.
+You've seen how blocks flow through registration, configuration, and evaluation. But what if you typo a condition type? Pass the wrong arg type? Reference a block that doesn't exist? The Blocks API catches these mistakes early and explains them clearly—like furniture assembly instructions that stop you before you've bolted the wrong pieces together. Most validation happens at boot time, surfacing problems before users ever see a broken page.
 
 ### Helpful Error Messages
 
@@ -2125,7 +2392,7 @@ The Blocks API includes a suite of visual and console-based tools to help you un
 
 ### What's in the Toolkit
 
-The toolkit includes four complementary tools—each designed to answer a different debugging question:
+The toolkit includes four complementary tools—each designed to answer a different debugging question. Console Logging tells you *why* conditions passed or failed by showing the full evaluation in your browser's console. Visual Overlay shows you *where* blocks are rendered by adding clickable badges to the page. Outlet Boundaries reveals the outlets themselves, even when they're empty or have no visible blocks. And Ghost Blocks show what's hidden and why, appearing as dashed placeholders where blocks would render if their conditions passed.
 
 | Tool | What it does | How to enable |
 |------|--------------|---------------|
@@ -2476,7 +2743,7 @@ The service is intentionally read-only. You can't register blocks or modify the 
 
 ### The Block Registry
 
-Behind the service sits the block registry—a collection of Maps that track everything about registered blocks. Understanding its structure helps explain why certain errors occur and how the system enforces its rules.
+Behind the service sits the block registry—a collection of Maps that track everything about registered blocks. You don't need to memorize these internals for everyday block development, but understanding the structure helps when you're debugging something unusual—like figuring out why a lazy-loaded block isn't resolving, or why two plugins seem to be conflicting over a namespace.
 
 **The Core Data Structures**
 
@@ -2594,7 +2861,7 @@ The evaluation creates a parallel structure of "processed entries" that include 
 
 **Step 4: Component Creation**
 
-For visible blocks, the system creates curried components—components with their args pre-bound. This is what actually gets rendered in the template. The currying captures:
+For visible blocks, the system creates curried components. "Currying" in this context means pre-binding the component's args—instead of passing `<MyBlock @title="Hello" @count={{5}} />` in a template, the system creates a version of `MyBlock` that already has those args baked in. This is what actually gets rendered in the template. The currying captures:
 
 - The block's declared args from the layout configuration
 - System args like `@outletName`
@@ -2609,7 +2876,7 @@ Ghosts preserve their position in the layout so you can see where blocks *would*
 
 ### Validation Internals
 
-The Blocks API validates at multiple points during the application lifecycle. Understanding when each type of validation occurs helps you anticipate what errors you'll see and when.
+The Blocks API validates at multiple points during the application lifecycle. You don't need to memorize this sequence, but knowing the general flow helps when tracking down a tricky error—especially when you're not sure whether an error is from your decorator, your pre-initializer, or your layout configuration.
 
 **Decoration Time**
 
@@ -2748,7 +3015,7 @@ constructor(owner, args) {
 }
 ```
 
-When the preprocessing pipeline creates curried components, it includes this secret symbol in the args. Direct template usage (`<MyBlock />`) doesn't include the symbol, so the constructor throws.
+When the preprocessing pipeline creates curried components it includes this secret symbol in the args. Direct template usage (`<MyBlock />`) doesn't include the symbol, so the constructor throws.
 
 **The Chain of Trust**
 
@@ -2807,7 +3074,7 @@ export default class PromoBanner extends Component {
 }
 ```
 
-> :bulb: Use BEM naming convention for CSS classes: `.block-name`, `.block-name__element`, `.block-name--modifier`. This keeps styles scoped and predictable.
+> :bulb: Use the BEM naming convention for CSS classes (explained in Section 1): `.block-name`, `.block-name__element`, `.block-name--modifier`. This keeps styles scoped and predictable.
 
 **Step 2: Register the block**
 
@@ -3217,13 +3484,13 @@ That's the Blocks API in practice. What follows is the complete reference for wh
 
 ## 9. Quick Reference
 
-When you know what you're looking for, start here. This section collects the API signatures, configuration options, and troubleshooting tips in one place—no prose, just the facts.
+You've made it through the concepts, seen how the pieces connect, and worked through the tutorials. Now you need a place to quickly look up that decorator option you can't quite remember, or check the exact syntax for a route condition. This section is that place—organized for fast lookup, but still readable when you need to refresh your memory on how things fit together.
 
 ### The Full API
 
-These are the methods and decorators you'll use most often. Each one links back to its detailed explanation earlier in the document.
+The Blocks API surface is compact by design. You'll use these five methods and one decorator for nearly everything. Registration happens in pre-initializers (before the registry freezes), and layout configuration happens in api-initializers.
 
-#### Plugin API Methods
+**The Plugin API methods** handle all registration and configuration:
 
 ```javascript
 api.registerBlock(BlockClass)
@@ -3233,7 +3500,9 @@ api.registerBlockOutlet(outletName, options)
 api.registerBlockConditionType(ConditionClass)
 ```
 
-#### Block Decorator
+The first two register blocks—either by passing the class directly or by providing a factory function for lazy loading. The `renderBlocks()` call configures which blocks appear in an outlet and in what order. The last two are for advanced cases: creating custom outlets and custom condition types.
+
+**The `@block` decorator** transforms a Glimmer component into a block:
 
 ```javascript
 @block(name, options)
@@ -3287,7 +3556,9 @@ api.registerBlockConditionType(ConditionClass)
 }
 ```
 
-#### Block Entry
+Most blocks need only a handful of these options—a name, maybe some args, and perhaps outlet restrictions. The full schema is here when you need it.
+
+**Block entries** are the objects you pass to `renderBlocks()`. Each entry describes one block in your layout:
 
 ```javascript
 {
@@ -3302,7 +3573,7 @@ api.registerBlockConditionType(ConditionClass)
 
 > :bulb: Use string references (`"plugin:block-name"`) for blocks registered with factory functions. Factory functions should be declared in `registerBlock()`, not in the layout.
 
-#### Condition Specification
+**Condition specifications** control when blocks appear. The syntax is designed to be readable—single conditions are just objects, arrays mean AND, and wrappers handle OR and NOT:
 
 ```javascript
 // Single condition
@@ -3318,9 +3589,13 @@ api.registerBlockConditionType(ConditionClass)
 { not: condition }
 ```
 
+These patterns nest arbitrarily deep, so you can express complex visibility rules declaratively. See Section 3 for examples combining multiple conditions.
+
 ### Configuration Options
 
-Quick reference for condition args. Each condition type has its own set of options—here's what's available for each.
+Each condition type accepts different arguments. The tables below serve as a quick lookup—you'll find detailed explanations and examples back in Section 3, but these capture the essentials at a glance.
+
+**Route conditions** match based on URL patterns or semantic page types:
 
 #### Route Condition Args
 
@@ -3333,7 +3608,7 @@ Quick reference for condition args. Each condition type has its own set of optio
 
 > :bulb: **Note:** Use `{ not: { type: "route", ... } }` to exclude URLs or page types.
 
-#### User Condition Args
+**User conditions** check properties of the current user (or another user from outlet args via `source`). All properties use AND logic when combined:
 
 | Arg | Type | Description |
 |-----|------|-------------|
@@ -3346,7 +3621,7 @@ Quick reference for condition args. Each condition type has its own set of optio
 | `maxTrustLevel` | `number` | Maximum trust level (0-4) |
 | `groups` | `string[]` | Must be in one of these groups |
 
-#### Setting Condition Args
+**Setting conditions** check site settings or custom settings objects (like theme settings). You can only use one comparison type per condition—pick `enabled`, `equals`, `includes`, `contains`, or `containsAny`:
 
 | Arg | Type | Description |
 |-----|------|-------------|
@@ -3358,7 +3633,7 @@ Quick reference for condition args. Each condition type has its own set of optio
 | `contains` | `string` | List contains value |
 | `containsAny` | `array` | List contains any value |
 
-#### Viewport Condition Args
+**Viewport conditions** respond to screen size and device capabilities. The breakpoints follow standard responsive design sizes (sm: 640px, md: 768px, lg: 1024px, xl: 1280px, 2xl: 1536px):
 
 | Arg | Type | Description |
 |-----|------|-------------|
@@ -3367,7 +3642,7 @@ Quick reference for condition args. Each condition type has its own set of optio
 | `mobile` | `boolean` | Mobile device only |
 | `touch` | `boolean` | Touch device only |
 
-#### OutletArg Condition Args
+**OutletArg conditions** check values from the template context. Use dot notation to navigate nested objects. Remember that `value` and `exists` are mutually exclusive—use one or the other:
 
 | Arg | Type | Description |
 |-----|------|-------------|
@@ -3377,58 +3652,41 @@ Quick reference for condition args. Each condition type has its own set of optio
 
 ### Troubleshooting Guide
 
-Something not working? Start here. These are the most common issues and their solutions.
+Something not working? This section walks through the most common issues and how to diagnose them. Rather than jumping straight to solutions, we'll trace through the diagnostic process—the same approach you'd take with the debug tools.
 
 #### Block not appearing
 
-1. **Is the block registered?**
-   - Check for errors in console during boot
-   - Verify pre-initializer runs before `freeze-block-registry`
+When a block doesn't show up where you expect it, the issue falls into one of four categories: registration, configuration, conditions, or the outlet itself.
 
-2. **Is a layout configured for the outlet?**
-   - Check that `renderBlocks()` was called with correct outlet name
-   - Enable outlet boundaries to see if outlet exists
+Start by checking whether the block is **registered**. Open your browser console and look for errors during boot. If you see messages about unknown blocks or registration timing, your pre-initializer might be running after the registry freezes. Make sure it specifies `before: "freeze-block-registry"` in its export.
 
-3. **Are conditions failing?**
-   - Enable console logging
-   - Check for `✗ SKIPPED` in console
-   - Review which condition failed
+If registration looks fine, verify the **layout configuration**. Did you call `renderBlocks()` with the correct outlet name? The system validates outlet names and throws an error with a fuzzy-matched suggestion if the outlet doesn't exist. Enable the Outlet Boundaries debug tool to confirm the outlet exists and to see its name.
 
-4. **Is the outlet rendered?**
-   - Check that `<BlockOutlet @name="...">` exists in template
-   - Verify outlet name matches exactly
+Next, check **conditions**. Enable Console Logging in the debug tools and look for your block in the output. If you see `✗ SKIPPED`, expand the log to see which condition failed. The debug output shows exactly what value was found versus what your condition expected.
+
+Finally, confirm the **outlet is rendered** in the template. The `<BlockOutlet @name="...">` component must exist somewhere in the page's template hierarchy, and the name must match exactly what you passed to `renderBlocks()`.
 
 #### Validation errors
 
-1. **"Unknown entry key"**
-   - Check for typos in entry object
-   - Valid keys: block, args, conditions, classNames, children, containerArgs
+Validation errors appear in the console during boot. They're designed to be actionable—read them carefully.
 
-2. **"Unknown condition type"**
-   - Check condition type spelling
-   - Ensure custom conditions are registered
+**"Unknown entry key"** means you have a typo in your block entry object. The valid keys are `block`, `args`, `conditions`, `classNames`, `children`, and `containerArgs`. The error message usually suggests what you meant.
 
-3. **"Block not registered"**
-   - Move registration to pre-initializer
-   - Ensure pre-initializer runs before `freeze-block-registry`
+**"Unknown condition type"** indicates either a typo in your condition's `type` field, or a custom condition that isn't registered. Check the spelling, and if it's a custom condition, verify it's registered in a pre-initializer before the registry freezes.
 
-4. **"Cannot render in outlet"**
-   - Check block's `allowedOutlets` and `deniedOutlets`
-   - Verify outlet name against patterns
+**"Block not registered"** appears when you reference a block that doesn't exist in the registry. Either the block's pre-initializer isn't running, it's running too late (after the freeze), or there's a typo in the block name. For optional blocks from plugins that might not be installed, add the `?` suffix to the name.
+
+**"Cannot render in outlet"** means the block has `allowedOutlets` or `deniedOutlets` restrictions that exclude the outlet you're trying to use. Check the block's decorator options and adjust either the restrictions or your outlet choice.
 
 #### Conditions not evaluating as expected
 
-1. **Type mismatches**
-   - Check console for type mismatch warnings
-   - Ensure query params are compared as strings if that's their type
+When conditions pass or fail unexpectedly, the Console Logging debug tool is your best friend.
 
-2. **Page type not matching**
-   - Verify you're on the expected page type
-   - Check discovery service state (category, tag, custom)
+**Type mismatches** are the most common culprit. The debug output warns you when types don't match—like comparing a string query param to a number. Query params are always strings, so `queryParams: { page: 1 }` won't match `?page=1` (the string "1"). Use `queryParams: { page: "1" }` instead.
 
-3. **Outlet args undefined**
-   - Verify outlet passes args: `@outletArgs={{hash topic=this.topic}}`
-   - Check path spelling in condition
+**Page type confusion** happens when you expect `CATEGORY_PAGES` but you're actually on a different page type. The route condition checks semantic page types, not just URLs. Verify you're on the expected page type by checking the console output, which shows which page types matched.
+
+**Undefined outlet args** occur when the template doesn't pass the expected data. Verify the `<BlockOutlet>` includes `@outletArgs={{hash topic=this.topic}}` or similar, and check that your condition's `path` exactly matches the structure of what's passed.
 
 ### FAQ: Advanced Troubleshooting
 
@@ -3438,18 +3696,14 @@ For edge cases and deeper issues, these answers address questions that come up a
 
 A: Check these common causes:
 1. **Bundle splitting** - Factory functions may fail if the import path is wrong in production builds. Verify the import path resolves correctly.
-2. **Debug-only code** - If your block relies on debug tools being enabled, it won't work in production.
-3. **Different site settings** - Production may have different settings that affect your conditions.
-4. **Asset pipeline** - Ensure your block files are included in the production build.
+2. **Different site settings** - Production may have different settings that affect your conditions.
 
 **Q: Console shows my condition passed, but the block isn't visible. What's happening?**
 
 A: The block may be rendered but hidden by CSS. Check:
-1. Is the block inside a container that's hidden? (Container visibility depends on having visible children)
+1. Is the block inside a container that's hidden? If a parent container's conditions are failing—child visibility doesn't help if the parent is hidden.
 2. Is there CSS that's hiding the block's DOM element?
 3. Is the block rendering empty content? (Check your template)
-
-Also check if a parent container's conditions are failing—child visibility doesn't help if the parent is hidden.
 
 **Q: Two plugins both want to render blocks in the same outlet. How do I resolve this?**
 
@@ -3458,16 +3712,7 @@ A: Only one caller can configure an outlet with `renderBlocks()`. The solution i
 2. The theme should call `renderBlocks()` to compose blocks from both plugins
 3. Use optional blocks (`?`) in case either plugin is disabled
 
-If you control both plugins, consider making the outlet name plugin-specific or coordinating who calls `renderBlocks()`.
-
-**Q: How do I pass data from my block back to the parent component?**
-
-A: Blocks are one-way data flow (parent → block). For communication back:
-1. **Services** - Use a shared service to communicate state
-2. **Actions** - Pass action closures through outlet args: `@outletArgs={{hash onSave=this.handleSave}}`
-3. **Events** - Use Ember's event system or custom events
-
-Avoid trying to modify outlet args directly—they're passed by value.
+You need to control both plugins. Otherwise one of them will need to be disabled.
 
 **Q: Can I dynamically change which blocks render after boot?**
 
@@ -3480,19 +3725,20 @@ If you need truly dynamic layout changes, plugin outlets may be more appropriate
 
 ### Testing API
 
-For writing tests that involve blocks, the `block-testing` module provides utilities for registration, querying, and debugging:
-
+Testing blocks requires the ability to register them outside the normal boot sequence—registries are frozen by the time your tests run. The `block-testing` module provides utilities that temporarily unfreeze registries, let you register test blocks and conditions, and then clean up afterward so tests don't interfere with each other.
 ```javascript
 import { ... } from "discourse/tests/helpers/block-testing";
 ```
 
-**Block Registration:**
+The utilities are organized by what they operate on. For **block registration**, you'll primarily use `withTestBlockRegistration()` which handles the unfreeze/freeze cycle for you:
+
 - `withTestBlockRegistration(callback)` - Temporarily unfreeze registry for registration
 - `registerBlock(BlockClass)` - Register a block class
 - `registerBlockFactory(name, asyncFn)` - Register a lazy-loading factory
 - `freezeBlockRegistry()` - Manually freeze the registry
 
-**Block Queries:**
+When you need to **query the block registry** (useful for assertions or conditional test logic):
+
 - `hasBlock(name)` - Check if block is registered
 - `getBlockEntry(name)` - Get registry entry
 - `isBlockFactory(name)` - Check if entry is a factory
@@ -3501,31 +3747,37 @@ import { ... } from "discourse/tests/helpers/block-testing";
 - `resolveBlock(ref)` - Async resolve block reference
 - `tryResolveBlock(ref)` - Sync resolve attempt
 
-**Outlet Registration:**
+For **outlet registration** (when testing custom outlets):
+
 - `registerOutlet(name, options)` - Register custom outlet
 - `freezeOutletRegistry()` - Freeze outlet registry
 
-**Outlet Queries:**
+And the corresponding **outlet queries**:
+
 - `isValidOutlet(name)` - Check if outlet is valid
 - `getAllOutlets()` - Get all registered outlets
 - `getCustomOutlet(name)` - Get custom outlet data
 - `isOutletRegistryFrozen()` - Check frozen state
 
-**Condition Registration:**
+When testing **custom conditions**, you'll need similar registration utilities:
+
 - `withTestConditionRegistration(callback)` - Temporarily unfreeze for registration
 - `registerConditionType(ConditionClass)` - Register a condition type
 - `freezeConditionTypeRegistry()` - Freeze condition registry
 
-**Condition Queries:**
+The **condition query** utilities help you verify registration and validate condition specs:
+
 - `hasConditionType(type)` - Check if condition type is registered
 - `isConditionTypeRegistryFrozen()` - Check frozen state
 - `validateConditions(spec, types)` - Validate condition specification
 
-**Debug Utilities:**
+For testing **debug tool behavior**, the module exposes a reactive interface:
+
 - `debugHooks` - Reactive debug interface for testing debug mode behavior
 - `DEBUG_CALLBACK` - Debug callback type constants
 
-**Reset Utilities:**
+Finally, **reset utilities** ensure clean state between tests:
+
 - `resetBlockRegistryForTesting()` - Reset all registries to initial state
 - `setTestSourceIdentifier(id)` - Override source identifier for testing
 
@@ -3549,9 +3801,11 @@ The `debugHooks` singleton provides reactive getters that automatically track de
 
 ### Testing Strategies
 
+Writing tests for blocks follows patterns you'll recognize from other Discourse testing, but with a few block-specific considerations. You need to register blocks before using them, you may need custom conditions for controlled testing, and you often want to verify visibility based on different states.
+
 #### Unit Testing Custom Conditions
 
-Test custom conditions by instantiating them directly and setting the owner for service injection:
+Custom conditions are classes with an `evaluate()` method—straightforward to unit test. Instantiate the condition directly, set the Ember owner for service injection, and call `evaluate()` with test arguments:
 
 ```javascript
 import { getOwner, setOwner } from "@ember/owner";
