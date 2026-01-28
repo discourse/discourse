@@ -56,6 +56,8 @@ const FIELD_LIST = [
   "allowed_tags",
   "allowed_tag_groups",
   "required_tag_groups",
+  "topic_template",
+  "form_template_ids",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";

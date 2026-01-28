@@ -1,148 +1,145 @@
-import EmberObject, { action } from "@ember/object";
-import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
+import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
 import lazyHash from "discourse/helpers/lazy-hash";
-import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
-export default class EditCategoryImages extends buildCategoryPanel("images") {
-  @discourseComputed("category.uploaded_background.url")
-  backgroundImageUrl(uploadedBackgroundUrl) {
-    return uploadedBackgroundUrl || "";
+export default class EditCategoryImages extends Component {
+  get category() {
+    return this.args.category;
   }
 
-  @discourseComputed("category.uploaded_background_dark.url")
-  backgroundDarkImageUrl(uploadedBackgroundDarkUrl) {
-    return uploadedBackgroundDarkUrl || "";
+  get form() {
+    return this.args.form;
   }
 
-  @discourseComputed("category.uploaded_logo.url")
-  logoImageUrl(uploadedLogoUrl) {
-    return uploadedLogoUrl || "";
+  get transientData() {
+    return this.args.transientData;
   }
 
-  @discourseComputed("category.uploaded_logo_dark.url")
-  logoImageDarkUrl(uploadedLogoDarkUrl) {
-    return uploadedLogoDarkUrl || "";
+  get backgroundImageUrl() {
+    return this.transientData?.uploaded_background?.url ?? "";
+  }
+
+  get backgroundDarkImageUrl() {
+    return this.transientData?.uploaded_background_dark?.url ?? "";
+  }
+
+  get logoImageUrl() {
+    return this.transientData?.uploaded_logo?.url ?? "";
+  }
+
+  get logoImageDarkUrl() {
+    return this.transientData?.uploaded_logo_dark?.url ?? "";
+  }
+
+  get panelClass() {
+    const isActive = this.args.selectedTab === "images" ? "active" : "";
+    return `edit-category-tab edit-category-tab-images ${isActive}`;
   }
 
   @action
   logoUploadDone(upload) {
-    this._setFromUpload("category.uploaded_logo", upload);
+    this.form.set("uploaded_logo", { url: upload.url, id: upload.id });
   }
 
   @action
   logoUploadDeleted() {
-    this._deleteUpload("category.uploaded_logo");
+    this.form.set("uploaded_logo", { id: null, url: null });
   }
 
   @action
   logoDarkUploadDone(upload) {
-    this._setFromUpload("category.uploaded_logo_dark", upload);
+    this.form.set("uploaded_logo_dark", { url: upload.url, id: upload.id });
   }
 
   @action
   logoDarkUploadDeleted() {
-    this._deleteUpload("category.uploaded_logo_dark");
+    this.form.set("uploaded_logo_dark", { id: null, url: null });
   }
 
   @action
   backgroundUploadDone(upload) {
-    this._setFromUpload("category.uploaded_background", upload);
+    this.form.set("uploaded_background", { url: upload.url, id: upload.id });
   }
 
   @action
   backgroundUploadDeleted() {
-    this._deleteUpload("category.uploaded_background");
+    this.form.set("uploaded_background", { id: null, url: null });
   }
 
   @action
   backgroundDarkUploadDone(upload) {
-    this._setFromUpload("category.uploaded_background_dark", upload);
+    this.form.set("uploaded_background_dark", {
+      url: upload.url,
+      id: upload.id,
+    });
   }
 
   @action
   backgroundDarkUploadDeleted() {
-    this._deleteUpload("category.uploaded_background_dark");
-  }
-
-  _deleteUpload(path) {
-    this.set(
-      path,
-      EmberObject.create({
-        id: null,
-        url: null,
-      })
-    );
-  }
-
-  _setFromUpload(path, upload) {
-    this.set(
-      path,
-      EmberObject.create({
-        url: upload.url,
-        id: upload.id,
-      })
-    );
+    this.form.set("uploaded_background_dark", { id: null, url: null });
   }
 
   <template>
-    <section class="field category-logo">
-      <label>{{i18n "category.logo"}}</label>
-      <UppyImageUploader
-        @imageUrl={{this.logoImageUrl}}
-        @onUploadDone={{this.logoUploadDone}}
-        @onUploadDeleted={{this.logoUploadDeleted}}
-        @type="category_logo"
-        @id="category-logo-uploader"
-        class="no-repeat contain-image"
-      />
-      <div class="category-logo-description">
-        {{i18n "category.logo_description"}}
-      </div>
-    </section>
+    <div class={{this.panelClass}}>
+      <section class="field category-logo">
+        <label>{{i18n "category.logo"}}</label>
+        <UppyImageUploader
+          @imageUrl={{this.logoImageUrl}}
+          @onUploadDone={{this.logoUploadDone}}
+          @onUploadDeleted={{this.logoUploadDeleted}}
+          @type="category_logo"
+          @id="category-logo-uploader"
+          class="no-repeat contain-image"
+        />
+        <div class="category-logo-description">
+          {{i18n "category.logo_description"}}
+        </div>
+      </section>
 
-    <section class="field category-logo">
-      <label>{{i18n "category.logo_dark"}}</label>
-      <UppyImageUploader
-        @imageUrl={{this.logoImageDarkUrl}}
-        @onUploadDone={{this.logoDarkUploadDone}}
-        @onUploadDeleted={{this.logoDarkUploadDeleted}}
-        @type="category_logo_dark"
-        @id="category-dark-logo-uploader"
-        class="no-repeat contain-image"
-      />
-      <div class="category-logo-description">
-        {{i18n "category.logo_description"}}
-      </div>
-    </section>
+      <section class="field category-logo">
+        <label>{{i18n "category.logo_dark"}}</label>
+        <UppyImageUploader
+          @imageUrl={{this.logoImageDarkUrl}}
+          @onUploadDone={{this.logoDarkUploadDone}}
+          @onUploadDeleted={{this.logoDarkUploadDeleted}}
+          @type="category_logo_dark"
+          @id="category-dark-logo-uploader"
+          class="no-repeat contain-image"
+        />
+        <div class="category-logo-description">
+          {{i18n "category.logo_description"}}
+        </div>
+      </section>
 
-    <section class="field category-background-image">
-      <label>{{i18n "category.background_image"}}</label>
-      <UppyImageUploader
-        @imageUrl={{this.backgroundImageUrl}}
-        @onUploadDone={{this.backgroundUploadDone}}
-        @onUploadDeleted={{this.backgroundUploadDeleted}}
-        @type="category_background"
-        @id="category-background-uploader"
-      />
-    </section>
+      <section class="field category-background-image">
+        <label>{{i18n "category.background_image"}}</label>
+        <UppyImageUploader
+          @imageUrl={{this.backgroundImageUrl}}
+          @onUploadDone={{this.backgroundUploadDone}}
+          @onUploadDeleted={{this.backgroundUploadDeleted}}
+          @type="category_background"
+          @id="category-background-uploader"
+        />
+      </section>
 
-    <section class="field category-background-image">
-      <label>{{i18n "category.background_image_dark"}}</label>
-      <UppyImageUploader
-        @imageUrl={{this.backgroundDarkImageUrl}}
-        @onUploadDone={{this.backgroundDarkUploadDone}}
-        @onUploadDeleted={{this.backgroundDarkUploadDeleted}}
-        @type="category_background_dark"
-        @id="category-dark-background-uploader"
-      />
-    </section>
+      <section class="field category-background-image">
+        <label>{{i18n "category.background_image_dark"}}</label>
+        <UppyImageUploader
+          @imageUrl={{this.backgroundDarkImageUrl}}
+          @onUploadDone={{this.backgroundDarkUploadDone}}
+          @onUploadDeleted={{this.backgroundDarkUploadDeleted}}
+          @type="category_background_dark"
+          @id="category-dark-background-uploader"
+        />
+      </section>
 
-    <PluginOutlet
-      @name="category-custom-images"
-      @outletArgs={{lazyHash category=this.category}}
-    />
+      <PluginOutlet
+        @name="category-custom-images"
+        @outletArgs={{lazyHash category=this.category}}
+      />
+    </div>
   </template>
 }
