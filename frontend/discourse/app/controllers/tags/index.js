@@ -74,10 +74,10 @@ export default class TagsIndexController extends Controller {
   }
 
   @action
-  sortById(event) {
+  sortByName(event) {
     event?.preventDefault();
     this.setProperties({
-      sortProperties: ["id"],
+      sortProperties: ["name"],
       sortedByCount: false,
       sortedByName: true,
     });
