@@ -110,7 +110,7 @@ export default {
     withPluginApi((api) => {
       api.registerValueTransformer("topic-list-class", ({ value: classes }) => {
         if (isTopicCardRoute(router.currentRouteName)) {
-          classes.push("--topic-cards");
+          classes.push("--d-topic-cards");
         }
         return classes;
       });

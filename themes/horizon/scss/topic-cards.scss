@@ -61,7 +61,7 @@
   }
 }
 
-.topic-list.--topic-cards .topic-list-body {
+.topic-list.--d-topic-cards .topic-list-body {
   border: none;
   display: flex;
   flex-direction: column;
@@ -77,7 +77,7 @@
   }
 }
 
-.topic-list.--topic-cards
+.topic-list.--d-topic-cards
   .topic-list-body
   .topic-list-item:not(.--high-context) {
   position: relative;
