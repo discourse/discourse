@@ -36,7 +36,7 @@ RSpec.describe "tasks/version_bump" do
       FileUtils.mkdir_p "tmp"
 
       File.write(".gitignore", "tmp\n")
-      File.write("lib/version.rb", fake_version_rb("3.2.0.beta1-latest"))
+      File.write("lib/version.rb", fake_version_rb("2025.12.0-latest"))
       File.write(
         "versions.json",
         JSON.pretty_generate(
@@ -319,20 +319,6 @@ RSpec.describe "tasks/version_bump" do
         run "git", "checkout", "version-bump/main"
         version_rb_content = File.read("lib/version.rb")
         expect(version_rb_content).to include('STRING = "2025.9.0-latest"')
-
-        versions_json = JSON.parse(File.read("versions.json"))
-        expect(versions_json["2025.9"]).to eq(
-          {
-            "developmentStartDate" => "2025-09-15",
-            "releaseDate" => "2025-09",
-            "supportEndDate" => "2025-11",
-            "released" => false,
-            "esr" => false,
-            "supported" => true,
-          },
-        )
-        expect(versions_json["2025.8"]["released"]).to eq(true)
-        expect(versions_json["2025.8"]["releaseDate"]).to eq("2025-09-15")
       end
     end
 
@@ -359,11 +345,6 @@ RSpec.describe "tasks/version_bump" do
 
     it "rolls over to next year when incrementing past December" do
       Dir.chdir(local_path) do
-        File.write("lib/version.rb", fake_version_rb("2025.12.0-latest"))
-        run "git", "add", "."
-        run "git", "commit", "-m", "December version"
-        run "git", "push", "origin", "main"
-
         freeze_time Time.utc(2025, 12, 15) do
           capture_stdout { invoke_rake_task("release:prepare_next_version") }
         end
@@ -374,6 +355,35 @@ RSpec.describe "tasks/version_bump" do
         run "git", "checkout", "version-bump/main"
         version_rb_content = File.read("lib/version.rb")
         expect(version_rb_content).to include('STRING = "2026.1.0-latest"')
+      end
+    end
+
+    it "updates versions.json with new version info" do
+      Dir.chdir(local_path) do
+        freeze_time Time.utc(2025, 12, 28) do
+          capture_stdout { invoke_rake_task("release:prepare_next_version") }
+        end
+      end
+
+      Dir.chdir(origin_path) do
+        run "git", "reset", "--hard"
+        run "git", "checkout", "version-bump/main"
+        version_rb_content = File.read("lib/version.rb")
+        expect(version_rb_content).to include('STRING = "2026.1.0-latest"')
+
+        versions_json = JSON.parse(File.read("versions.json"))
+        expect(versions_json["2026.1"]).to eq(
+          {
+            "developmentStartDate" => "2025-12-28",
+            "releaseDate" => "2026-01",
+            "supportEndDate" => "2026-09",
+            "released" => false,
+            "esr" => true,
+            "supported" => true,
+          },
+        )
+        expect(versions_json["2025.12"]["released"]).to eq(true)
+        expect(versions_json["2025.12"]["releaseDate"]).to eq("2025-12-28")
       end
     end
 
