@@ -290,6 +290,7 @@ end
 gem "dry-initializer", "~> 3.1"
 
 gem "parallel"
+gem "tty-prompt", require: false
 
 # for discourse-zendesk-plugin
 gem "inflection", require: false

@@ -29,6 +29,9 @@ class Admin::StaffActionLogsController < Admin::StaffController
 
   def diff
     @history = UserHistory.find(params[:id])
+    raise Discourse::NotFound unless guardian.can_see_staff_action_log?(@history)
+    raise Discourse::NotFound unless guardian.can_see_staff_action_log_content?(@history)
+
     prev = @history.previous_value
     cur = @history.new_value
 
