@@ -5,10 +5,9 @@ module Jobs
     every 20.minutes
 
     def execute(args)
-      site = RailsMultisite::ConnectionManagement.current_db
-
       return if !SiteSetting.enable_upcoming_changes
 
+      site = RailsMultisite::ConnectionManagement.current_db
       verbose_log(
         site,
         :info,
@@ -67,42 +66,17 @@ module Jobs
     end
 
     def notify_promotions(site)
-      changes_already_notified_about_promotion =
-        UpcomingChangeEvent
-          .where(
-            upcoming_change_name: SiteSetting.upcoming_change_site_settings,
-            event_type: :admins_notified_automatic_promotion,
-          )
-          .pluck(:upcoming_change_name)
-          .map(&:to_sym)
-
-      SiteSetting.upcoming_change_site_settings.each do |setting_name|
-        unless UpcomingChanges.meets_or_exceeds_status?(
-                 setting_name,
-                 SiteSetting.promote_upcoming_changes_on_status.to_sym,
-               )
-          next
+      UpcomingChanges::NotifyPromotions.call(guardian: Discourse.system_user.guardian) do |result|
+        on_success do
+          verbose_log(site, :info, "Notified admins about promotion of '#{setting_name}'")
         end
 
-        next if changes_already_notified_about_promotion.include?(setting_name)
-
-        UpcomingChanges::NotifyPromotion.call(
-          params: {
-            setting_name:,
-          },
-          guardian: Guardian.new(Discourse.system_user),
-        ) do |result|
-          on_success do
-            verbose_log(site, :info, "Notified admins about promotion of '#{setting_name}'")
-          end
-
-          on_failure do |error|
-            verbose_log(
-              site,
-              :error,
-              "Failed to notify about '#{setting_name}': #{error&.backtrace&.join("\n")}",
-            )
-          end
+        on_failure do |error|
+          verbose_log(
+            site,
+            :error,
+            "Failed to notify about '#{setting_name}': #{error&.backtrace&.join("\n")}",
+          )
         end
       end
     end

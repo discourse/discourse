@@ -62,6 +62,15 @@ RSpec.describe UpcomingChanges::Toggle do
             it "does not create an UpcomingChangeEvent" do
               expect { result }.not_to change { UpcomingChangeEvent.count }
             end
+
+            it "triggers the upcoming_change_enabled event" do
+              events =
+                DiscourseEvent
+                  .track_events { result }
+                  .select { |e| e[:event_name] == :upcoming_change_enabled }
+
+              expect(events.first[:params]).to eq([setting_name.to_s])
+            end
           end
 
           context "when disabling the setting" do
@@ -84,6 +93,15 @@ RSpec.describe UpcomingChanges::Toggle do
 
             it "does not create an UpcomingChangeEvent" do
               expect { result }.not_to change { UpcomingChangeEvent.count }
+            end
+
+            it "triggers the upcoming_change_disabled event" do
+              events =
+                DiscourseEvent
+                  .track_events { result }
+                  .select { |e| e[:event_name] == :upcoming_change_disabled }
+
+              expect(events.first[:params]).to eq([setting_name.to_s])
             end
           end
         end
@@ -134,6 +152,15 @@ RSpec.describe UpcomingChanges::Toggle do
 
             it "does not create an UpcomingChangeEvent" do
               expect { result }.not_to change { UpcomingChangeEvent.count }
+            end
+
+            it "triggers the upcoming_change_disabled event" do
+              events =
+                DiscourseEvent
+                  .track_events { result }
+                  .select { |e| e[:event_name] == :upcoming_change_disabled }
+
+              expect(events.first[:params]).to eq([setting_name.to_s])
             end
           end
         end
@@ -175,6 +202,15 @@ RSpec.describe UpcomingChanges::Toggle do
                 ).count
               }.by(1)
             end
+
+            it "triggers the upcoming_change_enabled event" do
+              events =
+                DiscourseEvent
+                  .track_events { result }
+                  .select { |e| e[:event_name] == :upcoming_change_enabled }
+
+              expect(events.first[:params]).to eq([setting_name.to_s])
+            end
           end
 
           context "when disabling the setting" do
@@ -207,6 +243,15 @@ RSpec.describe UpcomingChanges::Toggle do
                 ).count
               }.by(1)
             end
+
+            it "triggers the upcoming_change_disabled event" do
+              events =
+                DiscourseEvent
+                  .track_events { result }
+                  .select { |e| e[:event_name] == :upcoming_change_disabled }
+
+              expect(events.first[:params]).to eq([setting_name.to_s])
+            end
           end
         end
 
@@ -234,6 +279,15 @@ RSpec.describe UpcomingChanges::Toggle do
             it "does not create an UpcomingChangeEvent" do
               expect { result }.not_to change { UpcomingChangeEvent.count }
             end
+
+            it "triggers the upcoming_change_enabled event" do
+              events =
+                DiscourseEvent
+                  .track_events { result }
+                  .select { |e| e[:event_name] == :upcoming_change_enabled }
+
+              expect(events.first[:params]).to eq([setting_name.to_s])
+            end
           end
 
           context "when disabling the setting" do
@@ -256,6 +310,15 @@ RSpec.describe UpcomingChanges::Toggle do
 
             it "does not create an UpcomingChangeEvent" do
               expect { result }.not_to change { UpcomingChangeEvent.count }
+            end
+
+            it "triggers the upcoming_change_disabled event" do
+              events =
+                DiscourseEvent
+                  .track_events { result }
+                  .select { |e| e[:event_name] == :upcoming_change_disabled }
+
+              expect(events.first[:params]).to eq([setting_name.to_s])
             end
           end
         end

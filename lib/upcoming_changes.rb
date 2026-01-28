@@ -86,6 +86,31 @@ module UpcomingChanges
     ).order(created_at: :desc)
   end
 
+  def self.resolved_value(change_setting_name)
+    # An admin has modified the setting and a value is stored
+    # in the database, since the default for upcoming changes
+    # is false.
+    #
+    # If the change is permanent though, the admin has no choice
+    # in the matter.
+    if SiteSetting.modified.key?(change_setting_name) &&
+         UpcomingChanges.change_status(change_setting_name) != :permanent
+      SiteSetting.current[change_setting_name]
+
+      # The change has reached the promotion status and is forcibly
+      # enabled, admins can still disable it.
+    elsif UpcomingChanges.meets_or_exceeds_status?(
+          change_setting_name,
+          SiteSetting.promote_upcoming_changes_on_status.to_sym,
+        ) || UpcomingChanges.change_status(change_setting_name) == :permanent
+      true
+    else
+      # Otherwise use the default value, which for upcoming changes
+      # is false.
+      SiteSetting.defaults[change_setting_name]
+    end
+  end
+
   def self.has_groups?(change_setting_name)
     group_ids_for(change_setting_name).present?
   end

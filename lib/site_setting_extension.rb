@@ -1007,32 +1007,12 @@ module SiteSettingExtension
 
         refresh! if current[name].nil?
 
-        value = current[name]
-
-        if upcoming_change_metadata[name]
-          value =
-            # An admin has modified the setting and a value is stored
-            # in the database, since the default for upcoming changes
-            # is false.
-            #
-            # If the change is permanent though, the admin has no choice
-            # in the matter.
-            if modified.key?(name) && UpcomingChanges.change_status(name) != :permanent
-              value
-
-              # The change has reached the promotion status and is forcibly
-              # enabled, admins can still disable it.
-            elsif UpcomingChanges.meets_or_exceeds_status?(
-                  name,
-                  SiteSetting.promote_upcoming_changes_on_status.to_sym,
-                ) || UpcomingChanges.change_status(name) == :permanent
-              true
-            else
-              # Otherwise use the default value, which for upcoming changes
-              # is false.
-              defaults[name]
-            end
-        end
+        value =
+          if upcoming_change_metadata[name]
+            UpcomingChanges.resolved_value(name)
+          else
+            current[name]
+          end
 
         if mandatory_values[name]
           return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")

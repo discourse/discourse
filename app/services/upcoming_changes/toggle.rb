@@ -23,6 +23,8 @@ class UpcomingChanges::Toggle
     step :log_event
   end
 
+  step :trigger_event
+
   private
 
   def current_user_is_admin(guardian:)
@@ -71,5 +73,13 @@ class UpcomingChanges::Toggle
       upcoming_change_name: params.setting_name,
       acting_user: guardian.user,
     )
+  end
+
+  def trigger_event(params:, guardian:, options:)
+    if params.enabled
+      DiscourseEvent.trigger(:upcoming_change_enabled, params.setting_name)
+    else
+      DiscourseEvent.trigger(:upcoming_change_disabled, params.setting_name)
+    end
   end
 end
