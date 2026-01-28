@@ -146,8 +146,30 @@ pl_PL:
           author_others: "%{username}"
           channel_title: "#chat-activity"
           status_online: "● dostępny"
+          message_1:
+            one: "W tym roku wysłałeś <strong>%{count}</strong> wiadomość!"
+            few: "W tym roku wysłałeś <strong>%{count}</strong> wiadomości!"
+            many: "W tym roku wysłałeś <strong>%{count}</strong> wiadomości!"
+            other: "W tym roku wysłałeś <strong>%{count}</strong> wiadomości!"
           reply_1: "lol super B-)"
+          message_2_MF: |
+            Miałeś { dm_count, plural,
+                one {<strong>#</strong> rozmowę DM}
+                few {<strong>#</strong> rozmowy DM}
+                many {<strong>#</strong> rozmów DM}
+              other {<strong>#</strong> rozmów DM}
+            } z { channel_count, plural,
+                one {<strong>#</strong> osobą lub grupą}
+                few {<strong>#</strong> różnymi osobami lub grupami}
+                many {<strong>#</strong> różnymi osobami lub grupami}
+              other {<strong>#</strong> różnymi osobami lub grupami}
+            }.
           reply_2: "super :D"
+          message_3:
+            one: "Ludzie uwielbiali Twoje wiadomości! Otrzymałeś <strong>%{count}</strong> reakcję ❤️"
+            few: "Ludzie uwielbiali Twoje wiadomości! Otrzymałeś <strong>%{count}</strong> reakcji ❤️"
+            many: "Ludzie uwielbiali Twoje wiadomości! Otrzymałeś <strong>%{count}</strong> reakcji ❤️"
+            other: "Ludzie uwielbiali Twoje wiadomości! Otrzymałeś <strong>%{count}</strong> reakcji ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "Twoja średnia długość wiadomości wynosiła <strong>%{length}</strong> znaków"
           message_5: "Twoje ulubione kanały:"

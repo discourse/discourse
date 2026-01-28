@@ -664,7 +664,6 @@ hu:
           composer_bold: "%{shortcut} Félkövér (csak a szerkesztőben)"
           composer_italic: "%{shortcut} Dőlt (csak a szerkesztőben)"
           composer_code: "%{shortcut} Kód (csak a szerkesztőben)"
-          drawer_open: "%{shortcut} Csevegési fiók megnyitása"
           drawer_close: "%{shortcut} Csevegési fiók bezárása"
           mark_all_channels_read: "%{shortcut} Összes csatorna megjelölése olvasottként"
     topic_statuses:

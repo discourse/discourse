@@ -2799,6 +2799,9 @@ onebox:
     list_type: compact
   enable_inline_onebox_on_all_domains:
     default: true
+  inline_onebox_user_agent:
+    default: ""
+    hidden: true
   onebox_user_agent:
     default: ""
     hidden: true
@@ -4227,3 +4230,10 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+  enable_simplified_category_creation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "conceptual"
+      impact: "feature,staff"

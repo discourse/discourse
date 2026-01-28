@@ -8,9 +8,15 @@
 }
 
 .form-kit__control-color-input {
+  --color-button-height: var(--space-8);
+  --color-button-width: var(--space-8);
   display: flex;
   align-items: center;
   gap: 0.25em;
+
+  @include viewport.until(sm) {
+    --color-button-height: var(--space-9);
+  }
 }
 
 .form-kit__control-color-input-prefix {
@@ -24,10 +30,6 @@
   align-items: center;
   margin-right: -0.25em;
   border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
-
-  @include viewport.until(sm) {
-    height: 2.25em;
-  }
 }
 
 .form-kit__control-color-input-hex {
@@ -50,17 +52,35 @@
   }
 }
 
-.form-kit__control-color-input-picker {
-  width: 2em;
-  height: 2em;
+.form-kit__control-color-picker-wrapper {
+  position: relative;
+  display: inline-flex;
+
+  .d-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    font-size: var(--font-down-1);
+  }
+
+  &.--is-light .d-icon {
+    color: black;
+  }
+
+  &.--is-dark .d-icon {
+    color: white;
+  }
+}
+
+.form-kit__control-color-input-picker[type="color"] {
+  width: var(--color-button-width);
+  height: var(--color-button-height);
   padding: 0;
   border: 1px solid var(--primary-low-mid);
-  border-radius: var(--d-input-border-radius);
+  border-radius: var(--d-button-border-radius);
   cursor: pointer;
-
-  @include viewport.until(sm) {
-    height: 2.25em;
-  }
 
   &::-webkit-color-swatch-wrapper {
     padding: 2px;
@@ -91,15 +111,28 @@
   }
 }
 
+.form-kit__control-color-swatches-btn {
+  --d-button-default-border: 1px solid var(--d-button-default-bg-color); // match input height
+  width: var(--color-button-width);
+  height: var(--color-button-height);
+}
+
 .form-kit__control-color-swatches {
   display: flex;
   flex-wrap: wrap;
   gap: 0.25em;
+
+  /* Will show 8 swatches in a row, see color-swatch width and gap */
+  max-width: calc((var(--space) * 7) + (var(--space-5) * 8));
+
+  .color-swatches-menu-content & {
+    padding: var(--space-2);
+  }
 }
 
 .form-kit__control-color-swatch {
-  width: 1.25em;
-  height: 1.25em;
+  width: var(--space-5);
+  height: var(--space-5);
   padding: 0;
   border: 1px solid var(--primary-medium);
   border-radius: 2px;
@@ -107,7 +140,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
 
   .d-icon {
     display: none;
@@ -116,7 +148,14 @@
 
   &.is-used .d-icon {
     display: inline-flex;
-    opacity: 0.8;
+  }
+
+  &.--is-light .d-icon {
+    color: black;
+  }
+
+  &.--is-dark .d-icon {
+    color: white;
   }
 
   &:hover {

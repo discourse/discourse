@@ -109,6 +109,7 @@ module SvgSprite
         ellipsis-vertical
         envelope
         eye
+        eye-dropper
         eye-slash
         fab-android
         fab-apple

@@ -24,6 +24,13 @@ export default class NoAnswer extends Component {
       oneWeek: ONE_WEEK,
       show: false,
     });
+
+    this.appEvents.on(
+      "discourse-solved:solution-toggled",
+      this,
+      this.hidePopup
+    );
+
     later(() => {
       if (!this.element || this.isDestroying || this.isDestroyed) {
         return;
@@ -48,6 +55,20 @@ export default class NoAnswer extends Component {
         this.set("show", true);
       }
     }, DISPLAY_DELAY);
+  }
+
+  willDestroyElement() {
+    super.willDestroyElement(...arguments);
+
+    this.appEvents.off(
+      "discourse-solved:solution-toggled",
+      this,
+      this.hidePopup
+    );
+  }
+
+  hidePopup() {
+    this.set("show", false);
   }
 
   <template>

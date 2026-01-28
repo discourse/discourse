@@ -51,6 +51,14 @@ RSpec.describe UpcomingChanges do
         "images/upcoming_changes/#{setting_name}.png",
       )
     end
+
+    it "returns the correct path for plugin images" do
+      plugin_setting = :enable_experimental_sample_plugin_feature
+
+      expect(described_class.image_path(plugin_setting)).to eq(
+        "plugins/discourse-sample-plugin/images/upcoming_changes/#{plugin_setting}.png",
+      )
+    end
   end
 
   describe ".image_data" do
