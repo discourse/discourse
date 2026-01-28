@@ -458,4 +458,49 @@ RSpec.describe "tasks/version_bump" do
       )
     end
   end
+
+  describe "release:stage_security_fixes" do
+    it "stages a PR of multiple security fixes" do
+      Dir.chdir(origin_path) do
+        run "git", "checkout", "-b", "security-fix-one"
+
+        File.write("firstfile.txt", "contents")
+        run "git", "add", "firstfile.txt"
+        run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit one"
+        File.write("secondfile.txt", "contents")
+        run "git", "add", "secondfile.txt"
+        run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit two"
+
+        run "git", "checkout", "main"
+        run "git", "checkout", "-b", "security-fix-two"
+        File.write("somefile.txt", "contents")
+        run "git", "add", "somefile.txt"
+        run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix two"
+      end
+
+      Dir.chdir(local_path) do
+        capture_stdout do
+          ENV["SECURITY_FIX_REFS"] = "origin/security-fix-one,origin/security-fix-two"
+          invoke_rake_task("release:stage_security_fixes", "main")
+        ensure
+          ENV.delete("SECURITY_FIX_REFS")
+        end
+      end
+
+      Dir.chdir(origin_path) do
+        expect(run("git", "log", "--pretty=%s", "main").lines.map(&:strip)).to eq(
+          [
+            "security fix two",
+            "security fix one, commit two",
+            "security fix one, commit one",
+            "Initial commit",
+          ],
+        )
+
+        expect(run("git", "show", "main:somefile.txt")).to eq("contents")
+        expect(run("git", "show", "main:firstfile.txt")).to eq("contents")
+        expect(run("git", "show", "main:secondfile.txt")).to eq("contents")
+      end
+    end
+  end
 end
