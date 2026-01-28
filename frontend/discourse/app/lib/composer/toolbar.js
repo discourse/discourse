@@ -1,5 +1,4 @@
 // @ts-check
-import { action } from "@ember/object";
 import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { translateModKey } from "discourse/lib/utilities";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
@@ -135,6 +134,10 @@ export class ToolbarBase {
 
     // Popup menu option item shortcut bindings and title text.
     if (buttonAttrs.popupMenu) {
+      // Default action passes toolbarEvent to option.action
+      buttonAttrs.popupMenu.action ??= (option) =>
+        option.action(this.context.newToolbarEvent());
+
       buttonAttrs.popupMenu.options()?.forEach((option) => {
         if (option.shortcut) {
           const shortcutKeyTranslated = translateModKey(
@@ -270,7 +273,8 @@ export default class Toolbar extends ToolbarBase {
 
                 return false;
               },
-              action: this.onHeadingMenuAction.bind(this),
+              action: (toolbarEvent) =>
+                toolbarEvent.applyHeading(headingLevel, "heading"),
             });
           }
           headingOptions.push({
@@ -282,11 +286,10 @@ export default class Toolbar extends ToolbarBase {
             showActiveIcon: true,
             shortcut: "Alt+0",
             active: ({ state }) => state?.inParagraph,
-            action: this.onHeadingMenuAction.bind(this),
+            action: (toolbarEvent) => toolbarEvent.applyHeading(0, "heading"),
           });
           return headingOptions;
         },
-        action: this.onHeadingMenuAction.bind(this),
       },
     });
 
@@ -344,7 +347,6 @@ export default class Toolbar extends ToolbarBase {
         title: "composer.list_title",
         popupMenu: {
           options: () => this.getListPopupMenuOptions(),
-          action: (option) => option.action(this.context.newToolbarEvent()),
         },
       });
     }
@@ -404,18 +406,5 @@ export default class Toolbar extends ToolbarBase {
     }
 
     return this._listOptions;
-  }
-
-  @action
-  onHeadingMenuAction(menuItem) {
-    let level;
-
-    if (menuItem.name === "heading-paragraph") {
-      level = 0;
-    } else {
-      level = parseInt(menuItem.name.split("-")[1], 10);
-    }
-
-    this.context.newToolbarEvent().applyHeading(level, "heading");
   }
 }

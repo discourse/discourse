@@ -481,14 +481,14 @@ export default class ComposerService extends Service {
         }),
       ];
 
-      return options
-        .concat(
-          customPopupMenuOptions
-            .filter((option) => option.menu !== "list")
-            .map((option) => this._setupPopupMenuOption({ ...option }))
-            .filter((o) => o)
-        )
-        .concat(secondaryOptions);
+      return [
+        ...options,
+        ...customPopupMenuOptions
+          .filter((option) => !option.menu)
+          .map((option) => this._setupPopupMenuOption({ ...option }))
+          .filter(Boolean),
+        ...secondaryOptions,
+      ];
     }
   }
 
@@ -720,12 +720,9 @@ export default class ComposerService extends Service {
       menuItem
     );
     if (typeof menuItem.action === "function") {
-      // note: due to the way args are passed to actions we need
-      // to create the explicity toolbarEvent as a fallback for no
-      // event
-      // Long term we want to avoid needing this awkwardness and pass
-      // the event explicitly
-      return menuItem.action(this.toolbarEvent || toolbarEvent);
+      // toolbarEvent is passed when triggered via keyboard shortcut,
+      // otherwise fall back to stored toolbarEvent from menu open
+      return menuItem.action(toolbarEvent ?? this.toolbarEvent);
     } else {
       return (
         this.actions?.[menuItem.action]?.bind(this) || // Legacy-style contributions from themes/plugins
