@@ -3102,6 +3102,7 @@ en:
       upload_description: "enter upload description here"
       olist_title: "Numbered list"
       ulist_title: "Bulleted list"
+      list_title: "Lists"
       list_item: "List item"
       toggle_direction: "Toggle direction"
       apply_wrap_title: "Apply wrap"

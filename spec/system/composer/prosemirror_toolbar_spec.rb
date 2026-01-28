@@ -11,7 +11,6 @@ describe "Composer - ProseMirror - Toolbar", type: :system do
       expect(page).to have_css(".toolbar__button.italic.--active", count: 0)
       expect(page).to have_css(".toolbar__button.heading.--active", count: 0)
       expect(page).to have_css(".toolbar__button.link.--active", count: 0)
-      expect(page).to have_css(".toolbar__button.bullet.--active", count: 0)
       expect(page).to have_css(".toolbar__button.list.--active", count: 0)
       expect(page).to have_css(".toolbar__button.code.--active", count: 0)
       expect(page).to have_css(".toolbar__button.blockquote.--active", count: 0)
@@ -22,16 +21,9 @@ describe "Composer - ProseMirror - Toolbar", type: :system do
       expect(page).to have_css(".toolbar__button.bold.--active", count: 1)
       expect(page).to have_css(".toolbar__button.italic.--active", count: 1)
       expect(page).to have_css(".toolbar__button.link.--active", count: 1)
-      expect(page).to have_css(".toolbar__button.bullet.--active", count: 1)
-      expect(page).to have_css(".toolbar__button.list.--active", count: 0)
+      expect(page).to have_css(".toolbar__button.list.--active", count: 1)
       expect(page).to have_css(".toolbar__button.code.--active", count: 1)
       expect(page).to have_css(".toolbar__button.blockquote.--active", count: 1)
-
-      page.find(".toolbar__button.bullet").click
-      page.find(".toolbar__button.list").click
-
-      expect(page).to have_css(".toolbar__button.list.--active", count: 1)
-      expect(page).to have_css(".toolbar__button.bullet.--active", count: 0)
     end
   end
 

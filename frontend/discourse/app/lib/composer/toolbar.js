@@ -1,5 +1,6 @@
 // @ts-check
 import { action } from "@ember/object";
+import { customPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import { translateModKey } from "discourse/lib/utilities";
 import { waitForClosedKeyboard } from "discourse/lib/wait-for-keyboard";
 import { PLATFORM_KEY_MODIFIER } from "discourse/services/keyboard-shortcuts";
@@ -326,27 +327,25 @@ export default class Toolbar extends ToolbarBase {
       });
 
       this.addButton({
-        id: "bullet",
-        group: "extras",
-        icon: "list-ul",
-        shortcut: "Shift+8",
-        title: "composer.ulist_title",
-        perform: (e) => e.applyList("* ", "list_item"),
-        active: ({ state }) => state.inBulletList,
-      });
-
-      this.addButton({
         id: "list",
         group: "extras",
-        icon: "list-ol",
-        shortcut: "Shift+7",
-        title: "composer.olist_title",
-        perform: (e) =>
-          e.applyList(
-            (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-            "list_item"
-          ),
-        active: ({ state }) => state.inOrderedList,
+        active: ({ state }) => {
+          return this.getListPopupMenuOptions().some((option) =>
+            option.active({ state })
+          );
+        },
+        icon: ({ state }) => {
+          return (
+            this.getListPopupMenuOptions().find((option) =>
+              option.active({ state })
+            )?.icon || "list-ul"
+          );
+        },
+        title: "composer.list_title",
+        popupMenu: {
+          options: () => this.getListPopupMenuOptions(),
+          action: (option) => option.action(this.context.newToolbarEvent()),
+        },
       });
     }
 
@@ -360,6 +359,51 @@ export default class Toolbar extends ToolbarBase {
         perform: (e) => e.toggleDirection(),
       });
     }
+  }
+
+  getListPopupMenuOptions() {
+    if (!this._listOptions) {
+      this._listOptions = [
+        {
+          name: "list-bullet",
+          icon: "list-ul",
+          label: "composer.ulist_title",
+          shortcut: "Shift+8",
+          showActiveIcon: true,
+          active: ({ state }) => state?.inBulletList,
+          action: (toolbarEvent) => {
+            if (
+              !toolbarEvent.commands?.toggleBulletList ||
+              !toolbarEvent.commands.toggleBulletList()
+            ) {
+              toolbarEvent.applyList("* ", "list_item");
+            }
+          },
+        },
+        {
+          name: "list-ordered",
+          icon: "list-ol",
+          label: "composer.olist_title",
+          shortcut: "Shift+7",
+          showActiveIcon: true,
+          active: ({ state }) => state?.inOrderedList,
+          action: (toolbarEvent) => {
+            if (
+              !toolbarEvent.commands?.toggleOrderedList ||
+              !toolbarEvent.commands.toggleOrderedList()
+            ) {
+              toolbarEvent.applyList(
+                (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+                "list_item"
+              );
+            }
+          },
+        },
+        ...customPopupMenuOptions.filter((option) => option.menu === "list"),
+      ];
+    }
+
+    return this._listOptions;
   }
 
   @action

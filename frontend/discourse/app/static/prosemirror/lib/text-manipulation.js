@@ -5,7 +5,11 @@ import { isEmpty } from "@ember/utils";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import { lift, setBlockType, toggleMark, wrapIn } from "prosemirror-commands";
 import { Slice } from "prosemirror-model";
-import { liftListItem, sinkListItem } from "prosemirror-schema-list";
+import {
+  liftListItem,
+  sinkListItem,
+  wrapInList,
+} from "prosemirror-schema-list";
 import { Selection, TextSelection } from "prosemirror-state";
 import { bind } from "discourse/lib/decorators";
 import escapeRegExp from "discourse/lib/escape-regexp";
@@ -186,26 +190,73 @@ export default class ProsemirrorTextManipulation {
   applyList(_selection, head, exampleKey) {
     let command;
 
-    const isInside = (type) => {
+    const findParentList = () => {
       const $from = this.view.state.selection.$from;
       for (let depth = $from.depth; depth > 0; depth--) {
-        const parent = $from.node(depth);
-        if (parent.type === type) {
-          return true;
+        const node = $from.node(depth);
+        if (
+          node.type === this.schema.nodes.bullet_list ||
+          node.type === this.schema.nodes.ordered_list
+        ) {
+          return {
+            node,
+            pos: $from.before(depth),
+            type: node.type,
+          };
         }
       }
-      return false;
+      return null;
     };
 
     if (exampleKey === "list_item") {
-      const nodeType =
+      const targetType =
         head === "* "
           ? this.schema.nodes.bullet_list
           : this.schema.nodes.ordered_list;
 
-      command = isInside(this.schema.nodes.list_item) ? lift : wrapIn(nodeType);
+      const parentList = findParentList();
+
+      if (parentList) {
+        if (parentList.type === targetType) {
+          // Same list type - toggle off (lift)
+          command = liftListItem(this.schema.nodes.list_item);
+        } else {
+          // Different list type - convert selection
+          // We achieve this by lifting out of the current list, then wrapping in the new type
+          command = (state, dispatch) => {
+            if (dispatch) {
+              const liftCmd = liftListItem(this.schema.nodes.list_item);
+              let lifted = false;
+              liftCmd(state, (tr) => {
+                dispatch(tr);
+                lifted = true;
+              });
+
+              if (lifted) {
+                // If lift succeeded, now wrap in the new list type
+                // We need to re-fetch state from view since dispatch updated it
+                wrapInList(targetType)(this.view.state, dispatch);
+              }
+            }
+            return true;
+          };
+        }
+      } else {
+        // Not in a list - wrap in the target type
+        command = wrapInList(targetType);
+      }
     } else if (exampleKey === "blockquote_text") {
-      command = isInside(this.schema.nodes.blockquote)
+      const isInsideBlockquote = () => {
+        const $from = this.view.state.selection.$from;
+        for (let depth = $from.depth; depth > 0; depth--) {
+          if ($from.node(depth).type === this.schema.nodes.blockquote) {
+            return true;
+          }
+        }
+        return false;
+      };
+
+      command = isInsideBlockquote()
         ? lift
         : wrapIn(this.schema.nodes.blockquote);
     } else {
@@ -213,6 +264,7 @@ export default class ProsemirrorTextManipulation {
     }
 
     command?.(this.view.state, this.view.dispatch);
+    this.focus();
   }
 
   applyHeading(_selection, level) {
