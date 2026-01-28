@@ -1,0 +1,46 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "bundler"
+
+# Find the project root Gemfile (skip gem-local Gemfiles in migrations/)
+def find_project_gemfile(start_dir)
+  dir = start_dir
+  loop do
+    gemfile = File.join(dir, "Gemfile")
+    # Skip Gemfiles inside the migrations/ directory (those are gem-local)
+    if File.exist?(gemfile) && !dir.include?("/migrations/")
+      return gemfile
+    end
+    parent = File.dirname(dir)
+    return nil if parent == dir
+    dir = parent
+  end
+end
+
+gemfile = find_project_gemfile(File.expand_path("..", __dir__))
+gemfile ||= find_project_gemfile(Dir.pwd)
+
+if gemfile
+  ENV["BUNDLE_GEMFILE"] ||= gemfile
+  Bundler.setup(:default, :migrations)
+else
+  warn "Warning: No Gemfile found, some features may not be available"
+end
+
+require "migrations/core"
+
+# Load optional gems if available (they register their commands)
+begin
+  require "migrations/tooling"
+rescue LoadError => e
+  warn "Note: migrations-tooling not available: #{e.message}" if ENV["DEBUG"]
+end
+
+begin
+  require "migrations/converters"
+rescue LoadError => e
+  warn "Note: migrations-converters not available: #{e.message}" if ENV["DEBUG"]
+end
+
+Migrations::Core::CLI::Application.call
