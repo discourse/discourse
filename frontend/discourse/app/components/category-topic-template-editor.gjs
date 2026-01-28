@@ -22,33 +22,13 @@ export default class CategoryTopicTemplateEditor extends Component {
     return this.args.showInsertLinkButton;
   }
 
-  get formTemplateIds() {
-    // DDAU mode: read from transientData if available
-    if (this.args.transientData) {
-      return this.args.transientData.form_template_ids ?? [];
-    }
-    // Legacy mode: read from category
-    return this.args.category?.form_template_ids ?? [];
-  }
-
-  get topicTemplate() {
-    // DDAU mode: read from transientData if available
-    if (this.args.transientData) {
-      return this.args.transientData.topic_template ?? "";
-    }
-    // Legacy mode: read from category
-    return this.args.category?.topic_template ?? "";
-  }
-
-  set topicTemplate(value) {
-    this.#setTopicTemplate(value);
-  }
-
   get showFormTemplate() {
     if (this._showFormTemplateOverride !== undefined) {
       return this._showFormTemplateOverride;
     }
-    return Boolean(this.formTemplateIds?.length);
+    return Boolean(
+      this.args.category && this.args.category.get("form_template_ids.length")
+    );
   }
 
   set showFormTemplate(value) {
@@ -63,52 +43,26 @@ export default class CategoryTopicTemplateEditor extends Component {
     return "admin.form_templates.edit_category.toggle_freeform";
   }
 
-  #setFormTemplateIds(value) {
-    // DDAU mode: use form.set if available
-    if (this.args.form) {
-      this.args.form.set("form_template_ids", value);
-    } else {
-      // Legacy mode: mutate category directly
-      this.args.category.set("form_template_ids", value);
-    }
-
-    if (this.args.onChange) {
-      this.args.onChange();
-    }
-  }
-
-  #setTopicTemplate(value) {
-    // DDAU mode: use form.set if available
-    if (this.args.form) {
-      this.args.form.set("topic_template", value);
-    } else {
-      // Legacy mode: mutate category directly
-      this.args.category.set("topic_template", value);
-    }
-
-    if (this.args.onChange) {
-      this.args.onChange();
-    }
-  }
-
   @action
   toggleTemplateType() {
     this.showFormTemplate = !this.showFormTemplate;
 
     if (!this.showFormTemplate) {
       // Clear associated form templates if switching to freeform
-      this.#setFormTemplateIds([]);
+      this.args.category.set("form_template_ids", []);
+    }
+
+    if (this.args.onChange) {
+      this.args.onChange();
     }
   }
 
   @action
   handleFormTemplateChange(value) {
-    this.#setFormTemplateIds(value);
-  }
-
-  @action
-  handleTopicTemplateChange(event) {
-    this.#setTopicTemplate(event?.target?.value ?? event);
+    this.args.category.set("form_template_ids", value);
+    if (this.args.onChange) {
+      this.args.onChange();
+    }
   }
 
   <template>
@@ -125,7 +79,7 @@ export default class CategoryTopicTemplateEditor extends Component {
       {{#if this.showFormTemplate}}
         <div class="control-group">
           <FormTemplateChooser
-            @value={{this.formTemplateIds}}
+            @value={{@category.form_template_ids}}
             @onChange={{this.handleFormTemplateChange}}
             class="select-category-template"
           />
@@ -142,15 +96,13 @@ export default class CategoryTopicTemplateEditor extends Component {
         </div>
       {{else}}
         <DEditor
-          @value={{this.topicTemplate}}
-          @change={{this.handleTopicTemplateChange}}
+          @value={{@category.topic_template}}
           @showLink={{this.showInsertLinkButton}}
         />
       {{/if}}
     {{else}}
       <DEditor
-        @value={{this.topicTemplate}}
-        @change={{this.handleTopicTemplateChange}}
+        @value={{@category.topic_template}}
         @showLink={{this.showInsertLinkButton}}
       />
     {{/if}}

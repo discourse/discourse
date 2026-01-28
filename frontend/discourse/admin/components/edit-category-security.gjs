@@ -1,7 +1,8 @@
-import Component from "@glimmer/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { not } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { buildCategoryPanel } from "discourse/admin/components/edit-category-panel";
 import CategoryPermissionRow from "discourse/components/category-permission-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -10,35 +11,19 @@ import PermissionType from "discourse/models/permission-type";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
-export default class EditCategorySecurity extends Component {
+export default class EditCategorySecurity extends buildCategoryPanel(
+  "security"
+) {
   @service site;
 
-  get category() {
-    return this.args.category;
-  }
+  selectedGroup = null;
 
-  get form() {
-    return this.args.form;
-  }
-
-  get transientData() {
-    return this.args.transientData;
-  }
-
-  get permissions() {
-    return this.transientData?.permissions ?? this.category?.permissions ?? [];
-  }
-
-  get availableGroups() {
-    const permissions = this.permissions;
-    const permissionGroupIds = new Set(permissions.map((p) => p.group_id));
-    return this.site.groups
-      .filter((g) => !permissionGroupIds.has(g.id))
-      .map((g) => g.name);
-  }
+  @not("selectedGroup") noGroupSelected;
 
   get everyonePermission() {
-    return this.permissions.find((p) => p.group_id === AUTO_GROUPS.everyone.id);
+    return this.category.permissions.find(
+      (p) => p.group_id === AUTO_GROUPS.everyone.id
+    );
   }
 
   get everyoneGrantedFull() {
@@ -54,151 +39,118 @@ export default class EditCategorySecurity extends Component {
       : PermissionType.READONLY;
   }
 
-  get panelClass() {
-    const isActive = this.args.selectedTab === "security" ? "active" : "";
-    return `edit-category-tab edit-category-tab-security ${isActive}`;
-  }
-
-  #setFormPermissions(permissions) {
-    this.form.set("permissions", permissions);
-  }
-
   @action
   onSelectGroup(group_name) {
     const group = this.site.groups.find((g) => g.name === group_name);
-    const newPermissions = [
-      ...this.permissions,
-      {
-        group_name,
-        group_id: group?.id,
-        permission_type: this.minimumPermission,
-      },
-    ];
-    this.#setFormPermissions(newPermissions);
-  }
-
-  @action
-  onRemovePermission(groupName) {
-    const newPermissions = this.permissions.filter(
-      (p) => p.group_name !== groupName
-    );
-    this.#setFormPermissions(newPermissions);
-  }
-
-  @action
-  onUpdatePermission(groupName, permissionType) {
-    const newPermissions = this.permissions.map((p) =>
-      p.group_name === groupName ? { ...p, permission_type: permissionType } : p
-    );
-    this.#setFormPermissions(newPermissions);
+    this.category.addPermission({
+      group_name,
+      group_id: group?.id,
+      permission_type: this.minimumPermission,
+    });
   }
 
   @action
   onChangeEveryonePermission(everyonePermissionType) {
-    const newPermissions = this.permissions.map((permission) => {
+    this.category.permissions.forEach((permission, idx) => {
       if (permission.group_id === AUTO_GROUPS.everyone.id) {
-        return permission;
+        return;
       }
 
       if (everyonePermissionType < permission.permission_type) {
-        return { ...permission, permission_type: everyonePermissionType };
+        this.category.set(
+          `permissions.${idx}.permission_type`,
+          everyonePermissionType
+        );
       }
-
-      return permission;
     });
-    this.#setFormPermissions(newPermissions);
   }
 
   <template>
-    <div class={{this.panelClass}}>
-      <section class="field">
-        {{#if this.category.is_special}}
-          {{#if this.category.isUncategorizedCategory}}
-            <p class="warning">{{i18n
-                "category.uncategorized_security_warning"
-              }}</p>
-          {{else}}
-            <p class="warning">{{i18n "category.special_warning"}}</p>
-          {{/if}}
+    <section class="field">
+      {{#if this.category.is_special}}
+        {{#if this.category.isUncategorizedCategory}}
+          <p class="warning">{{i18n
+              "category.uncategorized_security_warning"
+            }}</p>
+        {{else}}
+          <p class="warning">{{i18n "category.special_warning"}}</p>
         {{/if}}
+      {{/if}}
 
-        {{#unless this.category.is_special}}
-          <div class="category-permissions-table">
-            <div class="permission-row row-header">
-              <span class="group-name">{{i18n
-                  "category.permissions.group"
-                }}</span>
-              <span class="options">
-                <span class="cell">{{i18n "category.permissions.see"}}</span>
-                <span class="cell">{{i18n "category.permissions.reply"}}</span>
-                <span class="cell">{{i18n "category.permissions.create"}}</span>
-                <span class="cell"></span>
+      {{#unless this.category.is_special}}
+        <div class="category-permissions-table">
+          <div class="permission-row row-header">
+            <span class="group-name">{{i18n
+                "category.permissions.group"
+              }}</span>
+            <span class="options">
+              <span class="cell">{{i18n "category.permissions.see"}}</span>
+              <span class="cell">{{i18n "category.permissions.reply"}}</span>
+              <span class="cell">{{i18n "category.permissions.create"}}</span>
+              <span class="cell"></span>
+            </span>
+          </div>
+          {{#each this.category.permissions as |p|}}
+            <CategoryPermissionRow
+              @groupId={{p.group_id}}
+              @groupName={{p.group_name}}
+              @type={{p.permission_type}}
+              @category={{this.category}}
+              @everyonePermission={{this.everyonePermission}}
+              @onChangeEveryonePermission={{this.onChangeEveryonePermission}}
+            />
+          {{/each}}
+
+          {{#unless this.category.permissions}}
+            <div class="permission-row row-empty">
+              {{i18n "category.permissions.no_groups_selected"}}
+            </div>
+          {{/unless}}
+        </div>
+
+        <PluginOutlet
+          @name="category-security-permissions-add-group"
+          @outletArgs={{lazyHash
+            category=this.category
+            availableGroups=this.category.availableGroups
+            onSelectGroup=this.onSelectGroup
+          }}
+          @defaultGlimmer={{true}}
+        >
+          {{#if this.category.availableGroups}}
+            <div class="add-group">
+              <span class="group-name">
+                <ComboBox
+                  @content={{this.category.availableGroups}}
+                  @onChange={{this.onSelectGroup}}
+                  @value={{null}}
+                  @valueProperty={{null}}
+                  @nameProperty={{null}}
+                  @options={{hash none="category.security_add_group"}}
+                  class="available-groups"
+                />
               </span>
             </div>
-            {{#each this.permissions as |p|}}
-              <CategoryPermissionRow
-                @groupId={{p.group_id}}
-                @groupName={{p.group_name}}
-                @type={{p.permission_type}}
-                @category={{this.category}}
-                @everyonePermission={{this.everyonePermission}}
-                @onChangeEveryonePermission={{this.onChangeEveryonePermission}}
-                @onRemovePermission={{this.onRemovePermission}}
-                @onUpdatePermission={{this.onUpdatePermission}}
-              />
-            {{/each}}
+          {{/if}}
 
-            {{#unless this.permissions}}
-              <div class="permission-row row-empty">
-                {{i18n "category.permissions.no_groups_selected"}}
-              </div>
-            {{/unless}}
-          </div>
+          {{#if this.everyoneGrantedFull}}
+            <@form.Alert @type="warning">
+              {{i18n "category.permissions.everyone_has_access"}}
+            </@form.Alert>
+          {{else}}
+            <@form.Alert @type="warning">
+              {{i18n "category.permissions.specific_groups_have_access"}}
+            </@form.Alert>
+          {{/if}}
+        </PluginOutlet>
+      {{/unless}}
+    </section>
 
-          <PluginOutlet
-            @name="category-security-permissions-add-group"
-            @outletArgs={{lazyHash
-              category=this.category
-              availableGroups=this.availableGroups
-              onSelectGroup=this.onSelectGroup
-            }}
-            @defaultGlimmer={{true}}
-          >
-            {{#if this.availableGroups}}
-              <div class="add-group">
-                <span class="group-name">
-                  <ComboBox
-                    @content={{this.availableGroups}}
-                    @onChange={{this.onSelectGroup}}
-                    @value={{null}}
-                    @valueProperty={{null}}
-                    @nameProperty={{null}}
-                    @options={{hash none="category.security_add_group"}}
-                    class="available-groups"
-                  />
-                </span>
-              </div>
-            {{/if}}
-
-            {{#if this.everyoneGrantedFull}}
-              <@form.Alert @type="warning">
-                {{i18n "category.permissions.everyone_has_access"}}
-              </@form.Alert>
-            {{else}}
-              <@form.Alert @type="warning">
-                {{i18n "category.permissions.specific_groups_have_access"}}
-              </@form.Alert>
-            {{/if}}
-          </PluginOutlet>
-        {{/unless}}
-      </section>
-
-      <section>
-        <PluginOutlet
-          @name="category-custom-security"
-          @outletArgs={{lazyHash category=this.category}}
-        />
-      </section>
-    </div>
+    <section>
+      <PluginOutlet
+        @name="category-custom-security"
+        @outletArgs={{lazyHash category=this.category}}
+      />
+    </section>
   </template>
 }
