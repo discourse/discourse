@@ -2507,8 +2507,8 @@ en:
       reset: Reset
       optional: optional
       errors_summary_title:
-        one: "Fix this error to continue:"
-        other: "Fix these errors to continue:"
+        one: "Fix this error to continue"
+        other: "Fix these errors to continue"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:
         starts_with: "Must start with %{prefix}"

@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { on } from "@ember/modifier";
-import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class FKErrorsSummary extends Component {
@@ -42,7 +41,6 @@ export default class FKErrorsSummary extends Component {
     {{#if this.hasErrors}}
       <div class="form-kit__errors-summary" aria-live="assertive" ...attributes>
         <h2 class="form-kit__errors-summary-title">
-          {{icon "triangle-exclamation"}}
           {{i18n "form_kit.errors_summary_title" count=this.errorCount}}
         </h2>
 

@@ -7,18 +7,15 @@
   box-sizing: border-box;
 
   h2 {
-    font-size: var(--font-up-1);
-
-    .d-icon {
-      font-size: var(--font-down-1);
-    }
-  }
-
-  .d-icon-triangle-exclamation {
-    color: var(--danger);
+    font-size: var(--font-0);
   }
 
   ul {
     margin-block: 0;
+    font-size: var(--font-down-1-rem);
+
+    a {
+      font-weight: bold;
+    }
   }
 }
