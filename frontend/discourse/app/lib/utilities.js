@@ -112,6 +112,163 @@ export function extractDomainFromUrl(url) {
   return url.split(":")[0];
 }
 
+function closestElement(node) {
+  while (node && node.nodeType !== Node.ELEMENT_NODE) {
+    node = node.parentNode;
+  }
+  return node;
+}
+
+function getStartElementFromRange(range) {
+  return closestElement(range.startContainer);
+}
+
+function getListStartNumber(listElement, listItem) {
+  if (listElement.tagName !== "OL") {
+    return 1;
+  }
+  const parsed = parseInt(listElement.getAttribute("start") || "1", 10);
+  const baseStart = Number.isNaN(parsed) ? 1 : parsed;
+  if (!listItem) {
+    return baseStart;
+  }
+  const listItems = listElement.querySelectorAll(":scope > li");
+  const itemIndex = Array.from(listItems).indexOf(listItem);
+  return baseStart + Math.max(0, itemIndex);
+}
+
+function createListWrapper(tagName, startNumber) {
+  const list = document.createElement(tagName.toLowerCase());
+  if (tagName === "OL" && startNumber !== 1) {
+    list.setAttribute("start", String(startNumber));
+  }
+  return list;
+}
+
+function findParentList(element) {
+  if (element?.tagName === "OL" || element?.tagName === "UL") {
+    return element;
+  }
+  return element?.closest("ol, ul");
+}
+
+function hasTopLevelListItems(container) {
+  for (const node of container.childNodes) {
+    if (node.nodeName === "LI") {
+      return true;
+    }
+  }
+  return false;
+}
+
+function wrapLeadingNonListContent(container) {
+  const nodesToWrap = [];
+  for (const node of container.childNodes) {
+    if (node.nodeName === "LI") {
+      break;
+    }
+    nodesToWrap.push(node);
+  }
+  if (nodesToWrap.length === 0) {
+    return;
+  }
+  const listItem = document.createElement("li");
+  const firstLi = container.querySelector(":scope > li");
+  container.insertBefore(listItem, firstLi);
+  nodesToWrap.forEach((node) => listItem.appendChild(node));
+}
+
+function wrapContainerContentsInListItem(container, listTagName, startNumber) {
+  const listItem = document.createElement("li");
+  while (container.firstChild) {
+    listItem.appendChild(container.firstChild);
+  }
+  const list = createListWrapper(listTagName, startNumber);
+  list.appendChild(listItem);
+  container.appendChild(list);
+}
+
+function isWhitespaceOnlyTextNode(node) {
+  return node.nodeType === Node.TEXT_NODE && !/\S/.test(node.textContent);
+}
+
+function collectContiguousOrphanRuns(container) {
+  const runs = [];
+  let currentRun = [];
+
+  for (const node of container.childNodes) {
+    if (node.nodeName === "LI") {
+      currentRun.push(node);
+    } else if (!isWhitespaceOnlyTextNode(node)) {
+      if (currentRun.length > 0) {
+        runs.push(currentRun);
+        currentRun = [];
+      }
+    }
+  }
+  if (currentRun.length > 0) {
+    runs.push(currentRun);
+  }
+  return runs;
+}
+
+function wrapOrphanListItems(container, listTagName, startNumber) {
+  const runs = collectContiguousOrphanRuns(container);
+  if (runs.length === 0) {
+    return;
+  }
+
+  let currentStart = startNumber;
+  for (const run of runs) {
+    const list = createListWrapper(listTagName, currentStart);
+    run[0].parentNode.insertBefore(list, run[0]);
+    run.forEach((li) => list.appendChild(li));
+    if (listTagName === "OL") {
+      currentStart += run.length;
+    }
+  }
+}
+
+function preserveListStructureInClonedContent(container, range) {
+  const startElement = getStartElementFromRange(range);
+  const originalListItem = startElement?.closest("li");
+
+  if (originalListItem) {
+    const parentList = originalListItem.parentElement;
+    const isParentAList =
+      parentList?.tagName === "OL" || parentList?.tagName === "UL";
+
+    if (!isParentAList) {
+      return;
+    }
+
+    const listTagName = parentList.tagName;
+    const startNumber = getListStartNumber(parentList, originalListItem);
+
+    const firstElementChild = container.firstElementChild;
+    const isAlreadyWrappedInCorrectList =
+      firstElementChild?.tagName === listTagName &&
+      !hasTopLevelListItems(container);
+
+    if (isAlreadyWrappedInCorrectList) {
+      if (listTagName === "OL" && startNumber !== 1) {
+        firstElementChild.setAttribute("start", String(startNumber));
+      }
+    } else if (hasTopLevelListItems(container)) {
+      wrapLeadingNonListContent(container);
+      wrapOrphanListItems(container, listTagName, startNumber);
+    } else {
+      wrapContainerContentsInListItem(container, listTagName, startNumber);
+    }
+  } else {
+    const originalList = findParentList(startElement);
+    if (originalList) {
+      const startNumber = getListStartNumber(originalList, null);
+      wrapOrphanListItems(container, originalList.tagName, startNumber);
+    }
+  }
+}
+
 export function selectedText() {
   const selection = window.getSelection();
   if (selection.isCollapsed) {
@@ -145,7 +302,10 @@ export function selectedText() {
       // Treat it as though the entire onebox was quoted.
       div.append(oneboxTest.dataset.oneboxSrc);
     } else {
-      div.append(range.cloneContents());
+      const fragmentContainer = document.createElement("div");
+      fragmentContainer.append(range.cloneContents());
+      preserveListStructureInClonedContent(fragmentContainer, range);
+      div.append(...fragmentContainer.childNodes);
     }
   }
 

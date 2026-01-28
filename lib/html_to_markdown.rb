@@ -317,11 +317,22 @@ class HtmlToMarkdown
 
   def visit_li(node)
     text = traverse(node)
+    parent = node.parent
+    return "#{text}\n" unless parent
 
     lists = node.ancestors("ul, ol")
-    marker = "ol" == lists[0]&.name ? "1. " : "- "
+
+    if lists[0]&.name == "ol"
+      start_value = [1, (lists[0]["start"] || 1).to_i].max
+      li_siblings = parent.element_children.select { |c| c.name == "li" }
+      position = li_siblings.index(node) || 0
+      marker = "#{start_value + position}. "
+    else
+      marker = "- "
+    end
+
     indent = (" " * marker.size) * [1, lists.size].max
-    suffix = node == node.parent.elements[-1] ? "" : "\n"
+    suffix = node == parent.elements[-1] ? "" : "\n"
 
     text.gsub!(/\n{2,}/, "\n\n")
     text.gsub!(/^(?!\s*$)/, indent)

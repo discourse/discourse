@@ -367,7 +367,28 @@ RSpec.describe HtmlToMarkdown do
   end
 
   it "supports <ol>" do
-    expect(html_to_markdown("<ol><li>🍆</li><li>🍅</li><li>🍄</li></ol>")).to eq("1. 🍆\n1. 🍅\n1. 🍄")
+    expect(html_to_markdown("<ol><li>🍆</li><li>🍅</li><li>🍄</li></ol>")).to eq("1. 🍆\n2. 🍅\n3. 🍄")
+  end
+
+  it "supports <ol> with custom start attribute" do
+    expect(html_to_markdown("<ol start='5'><li>Fifth</li><li>Sixth</li></ol>")).to eq(
+      "5. Fifth\n6. Sixth",
+    )
+  end
+
+  it "supports nested <ol> with custom start attributes" do
+    html = <<~HTML
+      <ol start="3">
+        <li>Third
+          <ol start="10">
+            <li>Tenth</li>
+            <li>Eleventh</li>
+          </ol>
+        </li>
+        <li>Fourth</li>
+      </ol>
+    HTML
+    expect(html_to_markdown(html)).to eq("3. Third\n   10. Tenth\n   11. Eleventh\n4. Fourth")
   end
 
   it "supports <p> inside <li>" do

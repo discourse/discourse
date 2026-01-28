@@ -511,6 +511,29 @@ export class Tag {
     return class extends Tag.slice("li", "\n") {
       decorate(text) {
         const attrs = this.element.attributes;
+        text = text.trim();
+
+        // Loose lists have <p> as direct child of <li> - use double newline between items
+        // Only apply if both this item and the next have block children (consistent loose list)
+        const hasDirectBlockChild = this.element.children?.some(
+          (child) =>
+            child.name === "p" &&
+            !this.element.children.some(
+              (c) => c.name === "ul" || c.name === "ol"
+            )
+        );
+        const nextElement = this.element.next;
+        const nextHasDirectBlockChild = nextElement?.children?.some(
+          (child) =>
+            child.name === "p" &&
+            !nextElement.children.some(
+              (c) => c.name === "ul" || c.name === "ol"
+            )
+        );
+        if (hasDirectBlockChild && nextHasDirectBlockChild) {
+          this.suffix = "\n\n";
+        }
+
         let indent = this.element
           .filterParentNames(["ol", "ul"])
           .slice(1)
@@ -533,7 +556,7 @@ export class Tag {
           }
         }
 
-        return super.decorate(`${indent}* ${text.trimStart()}`);
+        return super.decorate(`${indent}* ${text}`);
       }
     };
   }
