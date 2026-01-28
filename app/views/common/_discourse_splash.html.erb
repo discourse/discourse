@@ -133,7 +133,7 @@
       }
     }
 
-    <%- if (logo_upload = SiteSetting.splash_screen_image) && logo_upload.is_a?(Upload) %>
+    <%- if custom_splash_screen_enabled? %>
      #d-splash .preloader-image {
       --splash-dot-size: max(0.7vw, 14px);
     }
@@ -162,10 +162,10 @@
   </style>
 
   <div class="preloader-image" elementtiming="discourse-splash-visible">
-    <%- if (logo_upload = SiteSetting.splash_screen_image) && logo_upload.is_a?(Upload) %>
+    <%- if custom_splash_screen_enabled? %>
       <div class="splash-logo-container"></div>
     <%- end %>
-    <%- unless splash_screen_image_animated? %>
+    <%- unless custom_splash_screen_enabled? && splash_screen_image_animated? %>
       <div class="dots-container">
         <div class="dots" style="--n:-2;"></div>
         <div class="dots" style="--n:-1;"></div>

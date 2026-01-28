@@ -494,6 +494,14 @@ module ApplicationHelper
     SiteSetting.splash_screen
   end
 
+  def custom_splash_screen_enabled?
+    return @custom_splash_screen_enabled if defined?(@custom_splash_screen_enabled)
+
+    @custom_splash_screen_enabled =
+      UpcomingChanges.enabled_for_user?(:enable_custom_splash_screen, current_user) &&
+        SiteSetting.splash_screen_image.is_a?(Upload)
+  end
+
   def splash_screen_image_animated?
     build_splash_screen_image unless defined?(@splash_screen_image_animated)
     @splash_screen_image_animated
@@ -553,8 +561,13 @@ module ApplicationHelper
 
     has_scripts = svg.xpath("//script").present?
     has_event_handlers = svg.xpath("//@*[starts-with(name(), 'on')]").present?
+    # Check for animations targeting href attributes (CVE-2025-66412)
+    has_href_animations =
+      svg
+        .xpath(".//*[local-name()='animate' or local-name()='set']/@attributeName")
+        .any? { |attr| attr.value.downcase.include?("href") }
 
-    return if has_scripts || has_event_handlers
+    return if has_scripts || has_event_handlers || has_href_animations
 
     @splash_screen_image_svg = content.dup
 
