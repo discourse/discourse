@@ -319,6 +319,20 @@ RSpec.describe "tasks/version_bump" do
         run "git", "checkout", "version-bump/main"
         version_rb_content = File.read("lib/version.rb")
         expect(version_rb_content).to include('STRING = "2025.9.0-latest"')
+
+        versions_json = JSON.parse(File.read("versions.json"))
+        expect(versions_json["2025.9"]).to eq(
+          {
+            "developmentStartDate" => "2025-09-15",
+            "releaseDate" => "2025-09",
+            "supportEndDate" => "2025-11",
+            "released" => false,
+            "esr" => false,
+            "supported" => true,
+          },
+        )
+        expect(versions_json["2025.8"]["released"]).to eq(true)
+        expect(versions_json["2025.8"]["releaseDate"]).to eq("2025-09-15")
       end
     end
 
