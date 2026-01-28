@@ -3,7 +3,7 @@
 module Onebox
   class Oembed < OpenGraph
     def initialize(response)
-      @data = ::MultiJson.load(response).symbolize_keys
+      @data = ::MultiJson.load(response).deep_symbolize_keys
 
       # never use oembed from WordPress 4.4 (it's broken)
       @data.delete(:html) if @data[:html] && @data[:html]["wp-embedded-content"]
