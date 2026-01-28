@@ -270,10 +270,6 @@ $hpad: 0.65em;
   &.--wide {
     background: var(--highlight-low-or-medium);
   }
-
-  &.--current {
-    background: var(--tertiary-400);
-  }
 }
 
 @mixin nav-active() {

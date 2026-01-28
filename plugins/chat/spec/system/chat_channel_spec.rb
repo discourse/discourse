@@ -201,7 +201,7 @@ RSpec.describe "Chat channel", type: :system do
 
       expect(page).to have_selector(".mention.--wide", text: "@here")
       expect(page).to have_selector(".mention.--wide", text: "@all")
-      expect(page).to have_selector(".mention.--current", text: "@#{current_user.username}")
+      expect(page).to have_selector(".mention", text: "@#{current_user.username}")
       expect(page).to have_selector(".mention", text: "@#{other_user.username}")
       expect(page).to have_selector(".mention", text: "@unexisting")
       expect(page).to have_selector(".mention.--bot", text: "@system")
