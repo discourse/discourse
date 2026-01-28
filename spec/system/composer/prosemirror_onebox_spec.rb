@@ -180,4 +180,34 @@ describe "Composer - ProseMirror - Oneboxing", type: :system do
 
     expect(composer).to have_value("Hey https://example.com/x and https://example.com/x")
   end
+
+  context "with watched word links" do
+    fab!(:topic) { Fabricate(:topic, user: current_user) }
+    fab!(:post) do
+      Fabricate(:post, topic:, user: current_user, raw: "Check out discourse for more info")
+    end
+    fab!(:watched_word) do
+      Fabricate(
+        :watched_word,
+        action: WatchedWord.actions[:link],
+        word: "discourse",
+        replacement: "https://example.com/x",
+      )
+    end
+
+    it "does not onebox watched word links" do
+      visit "/t/#{topic.slug}/#{topic.id}"
+      find(".post-action-menu__edit").click
+      expect(composer).to be_opened
+      composer.focus
+
+      expect(rich).to have_css("a[href='https://example.com/x']", text: "discourse")
+      expect(rich).to have_no_css("a.inline-onebox")
+      expect(rich).to have_no_css(".inline-onebox-loading")
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("Check out discourse for more info")
+    end
+  end
 end
