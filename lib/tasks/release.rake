@@ -48,6 +48,45 @@ module ReleaseUtils
     File.write("lib/version.rb", read_version_rb.sub(/STRING = ".*"/, "STRING = \"#{version}\""))
   end
 
+  def self.update_versions_json(new_version)
+    today_date = DateTime.now.utc.strftime("%Y-%m-%d")
+
+    version_year, version_month = new_version.split(".").map(&:to_i)
+    esr = [1, 7].include?(version_month)
+
+    support_period = esr ? 8.months : 2.months
+    support_end_date = (Date.new(version_year, version_month, 1) + support_period).strftime("%Y-%m")
+
+    new_version_info = {
+      new_version => {
+        developmentStartDate: today_date,
+        releaseDate: "#{version_year}-#{version_month.to_s.rjust(2, "0")}",
+        supportEndDate: support_end_date,
+        released: false,
+        esr: esr,
+        supported: true,
+      },
+    }
+
+    data = JSON.parse(File.read("versions.json"))
+    data.transform_values! do |v|
+      if !v["released"]
+        v["released"] = true
+        v["releaseDate"] = today_date
+      end
+
+      if v["supported"] &&
+           Date.parse(v["supportEndDate"] + "-01") < Date.new(version_year, version_month, 1)
+        v["supported"] = false
+        v["supportEndDate"] = today_date
+      end
+
+      v
+    end
+
+    File.write("versions.json", JSON.pretty_generate({ **new_version_info, **data }) + "\n")
+  end
+
   def self.git(*args, allow_failure: false, silent: false)
     puts "> git #{args.inspect}" unless silent
     stdout, stderr, status = Open3.capture3({ "LEFTHOOK" => "0" }, "git", *args)
@@ -273,17 +312,20 @@ namespace :release do
       end
 
       ReleaseUtils.write_version(target_version_number)
-      ReleaseUtils.git "add", "lib/version.rb"
+      ReleaseUtils.update_versions_json(target_version_number.split(".").first(2).join("."))
+      ReleaseUtils.git "add", "lib/version.rb", "versions.json"
       ReleaseUtils.git "commit",
                        "-m",
                        "DEV: Begin development of v#{target_version_number}\n\nMerging this will trigger the creation of a `release/#{current_version.sub(".0-latest", "")}` branch on the preceding commit."
     end
 
-    ReleaseUtils.git "push", "-f", "--set-upstream", "origin", pr_branch_name
-
-    ReleaseUtils.make_pr(base: branch, branch: pr_branch_name)
-
-    puts "Done! Branch #{pr_branch_name} has been pushed to origin and a pull request has been created."
+    if ReleaseUtils.dry_run?
+      puts "[DRY RUN] Skipping pushing & PR for branch #{pr_branch_name}"
+    else
+      ReleaseUtils.git "push", "-f", "--set-upstream", "origin", pr_branch_name
+      ReleaseUtils.make_pr(base: branch, branch: pr_branch_name)
+      puts "Done! Branch #{pr_branch_name} has been pushed to origin and a pull request has been created."
+    end
   end
 
   desc "Prepare version bump"
