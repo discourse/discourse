@@ -80,7 +80,6 @@ export default <template>
               @registerValidator={{@controller.registerValidator}}
               @transientData={{transientData}}
               @form={{form}}
-              @updatePreview={{@controller.updatePreview}}
               @setSelectedTab={{@controller.setSelectedTab}}
             />
           {{/let}}

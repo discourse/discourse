@@ -68,7 +68,6 @@ export default class NewCategory extends DiscourseRoute {
   setupController(controller) {
     super.setupController(...arguments);
 
-    controller.resetPreview();
     controller.selectedTab = "general";
   }
 
