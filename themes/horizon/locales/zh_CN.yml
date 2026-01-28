@@ -18,9 +18,3 @@ zh_CN:
     other: "%{count} 个回复"
   theme_metadata:
     description: "一个简单、美观的主题，可以改善 Discourse 站点的开箱即用体验。"
-    settings:
-      topic_card_context:
-        description: "主题卡上显示的信息数量。'简单'显示的信息最少。'高内容'包括标签、已解决状态、指定用户和投票计数。"
-        choices:
-          simple: "简单"
-          high_context: "高内容（实验性）"

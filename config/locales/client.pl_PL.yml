@@ -4674,6 +4674,7 @@ pl_PL:
       back: "Powrót do kategorii"
       general: "Ogólne"
       settings: "Ustawienia"
+      advanced: "Zaawansowane"
       topic_template: "Szablon"
       tags: "Tagi"
       localizations: "Języki"
@@ -4704,6 +4705,7 @@ pl_PL:
       create_long: "Utwórz nową kategorię"
       save: "Zapisz kategorię"
       slug: "Slug kategorii"
+      parent: "Kategoria nadrzędna"
       slug_placeholder: "(opcjonalne) słowa-z-myślnikiem dla URLi"
       creation_error: Podczas tworzenia tej kategorii wystąpił błąd.
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
@@ -4717,7 +4719,9 @@ pl_PL:
       logo_description: "Zalecany współczynnik proporcji 1:1 z minimalnym rozmiarem 200px. Jeśli pozostawisz puste, żaden obraz nie zostanie wyświetlony."
       background_image: "Grafika z tłem kategorii"
       background_image_dark: "Obraz tła ciemnej kategorii"
-      style: "Style"
+      style: "Styl"
+      icon: "Ikona"
+      emoji: "Emoji"
       background_color: "Kolor"
       foreground_color: "Kolor tekstu"
       color_validations:
@@ -4728,13 +4732,13 @@ pl_PL:
         type: "Styl"
         icon: "Ikona"
         emoji: "Emoji"
+        square: "Kwadrat"
         options:
           square: "Kwadrat"
           icon: "Ikona"
           emoji: "Emoji"
       color_used: "Kolor w użyciu"
       predefined_colors: "Predefiniowane opcje kolorów"
-      name_placeholder: "Maksymalnie jedno lub dwa słowa"
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
       delete_error: "Podczas próby usunięcia tej kategorii wystąpił błąd."
@@ -4742,6 +4746,7 @@ pl_PL:
       no_description: "Proszę dodaj opis do tej kategorii."
       change_in_category_topic: "Edytuj opis"
       already_used: "Ten kolor jest używany przez inną kategorię"
+      color_palette: "Paleta kolorów"
       security: "Bezpieczeństwo"
       security_add_group: "Dodaj grupę"
       permissions:
@@ -4758,7 +4763,7 @@ pl_PL:
       uncategorized_security_warning: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nie przypisanych do żadnej kategorii i jako taka nie może mieć ustawień bezpieczeństwa."
       uncategorized_general_warning: 'Ta kategoria jest wyjątkowa. Jest używana jako domyślna kategoria dla nowych tematów, które nie mają wybranej kategorii. Jeśli chcesz zapobiec temu zachowaniu i wymusić wybór kategorii, <a href="%{settingLink}">wyłącz to ustawienie tutaj</a>. Jeśli chcesz zmienić nazwę lub opis, przejdź do <a href="%{customizeLink}">Dostosuj / Treść tekstowa</a>.'
       pending_permission_change_alert: "Nie dodałeś/łaś %{group} do tej kategorii; kliknij ten przycisk, aby je dodać."
-      images: "Obrazy"
+      images: "Wygląd"
       email_in: "Dedykowany adres email kategorii:"
       email_in_tooltip: "Możesz oddzielić kilka adresów e-mail znakiem |."
       email_in_allow_strangers: "Akceptuj wiadomości email od anonimowych, nieposiadających kont użytkowników "
@@ -4787,7 +4792,12 @@ pl_PL:
       position_disabled: "Kategorie będą wyświetlane w kolejności aktywności. Aby kontrolować kolejność kategorii na listach, włącz ustawienie <a href='%{url}'>'fixed category positions'</a>."
       minimum_required_tags: "Minimalna liczba tagów wymaganych w temacie:"
       default_slow_mode: 'Włącz „Tryb powolny” dla nowych tematów w tej kategorii.'
-      parent: "Kategoria nadrzędna"
+      none_subcategory_text: "Brak"
+      visibility:
+        title: "Dostęp"
+        public: "Publiczny"
+        all_members: "Wszyscy członkowie"
+        group_restricted: "Prywatny"
       num_auto_bump_daily: "Liczba otwartych tematów do automatycznego podbicia każdego dnia"
       auto_bump_cooldown_days: "Minimalna liczba dni przed ponownym podbiciem tego samego tematu:"
       navigate_to_first_post_after_read: "Przejdź do pierwszego postu po przeczytaniu tematów"
@@ -5176,6 +5186,7 @@ pl_PL:
         back: "%{shortcut} wstecz"
         up_down: "%{shortcut} Przesuń zaznaczenie &uarr; &darr;"
         open: "%{shortcut} Otwórz wybrany temat"
+        open_new_window: "%{shortcut} Otwórz wybrany temat w nowej karcie/oknie"
         next_prev: "%{shortcut} Następna/poprzednia sekcja"
         go_to_unread_post: "%{shortcut} Idź do pierwszego nieprzeczytanego wpisu"
       application:
@@ -6594,7 +6605,9 @@ pl_PL:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logi wyszukiwania</a>'
             disabled: 'Raport wyszukiwań zyskujących popularność jest wyłączony. Włącz <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dziennik zapytań wyszukiwarki</a>, aby zbierać dane.'
-          average_chart_label: Średnia
+          sort_button: "Sortuj według %{column}"
+          sort_ascending: "rosnąco"
+          sort_descending: "malejąco"
           filters:
             file_extension:
               label: Rozszerzenie pliku

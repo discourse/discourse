@@ -2753,6 +2753,7 @@ en:
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     experimental_rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
+    enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -4112,8 +4113,9 @@ en:
     user_posts_deleted:
       title: "User Posts Deleted"
       subject_template: "All of %{user}'s posts have been deleted"
-      text_body_template: |
-        %{deleted_posts_count} posts from @%{user} have been deleted by @%{staff_user}.
+      text_body_template:
+        one: "%{count} post from @%{user} has been deleted by @%{staff_user}."
+        other: "%{count} posts from @%{user} have been deleted by @%{staff_user}."
 
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
@@ -5487,8 +5489,12 @@ en:
     bulk_create:
       invalid_params: "Invalid parameters. Please provide an array of tag names."
       invalid_name: "Invalid tag name."
-      tag_too_long: "Tag is too long (max %{max} characters)."
-      too_many_tags: "Too many tags. You can create up to %{max} tags at once. For larger imports, use the CSV upload feature."
+      tag_too_long:
+        one: "Tag is too long (max %{count} character)."
+        other: "Tag is too long (max %{count} characters)."
+      too_many_tags:
+        one: "Too many tags. You can create up to %{count} tag at once. For larger imports, use the CSV upload feature."
+        other: "Too many tags. You can create up to %{count} tags at once. For larger imports, use the CSV upload feature."
     forbidden:
       invalid:
         one: "The tag you selected cannot be used"

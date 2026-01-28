@@ -481,6 +481,10 @@
 .ProseMirror {
   overflow-wrap: break-word;
   white-space: break-spaces;
+
+  // Any children with position fixed will be relative to this element (eg. footnotes)
+  // see https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Display/Containing_block#identifying_the_containing_block
+  contain: layout;
 }
 
 // stylelint-disable-next-line no-duplicate-selectors

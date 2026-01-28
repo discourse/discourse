@@ -19,7 +19,7 @@ pl_PL:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - Styczeń
     - Luty
     - Marzec
@@ -2622,7 +2622,7 @@ pl_PL:
     reviewable_ui_refresh: "Grupy, które mogą korzystać z nowego eksperymentalnego interfejsu użytkownika w kolejce recenzji."
     viewport_based_mobile_mode: "Użyj szerokości pola widzenia, aby określić tryby mobilne/komputerowe. To ustawienie zostanie wkrótce usunięte. Jeśli uznasz, że musisz je wyłączyć, daj nam znać <a href='https://meta.discourse.org/t/384280'>na Meta</a>."
     content_localization_enabled: "Wyświetla zlokalizowaną zawartość dla użytkowników na podstawie ich przeglądarki lub preferencji językowych użytkownika. Taka zawartość może obejmować kategorie, tagi, posty i tematy. Obsługiwane ustawienia regionalne są ustawione w 'content localization supported locales'."
-    content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, do których można przetłumaczyć zawartość użytkownika. Wymaga 'włączonej lokalizacji zawartości'."
+    content_localization_supported_locales: "Lista obsługiwanych ustawień regionalnych, na które można tłumaczyć treści użytkownika. Domyślne ustawienia regionalne witryny są zawsze uwzględniane. Wymagana jest włączona lokalizacja treści."
     content_localization_allowed_groups: "Grupy mogą aktualizować zlokalizowaną zawartość. Wymaga „włączonej lokalizacji zawartości”."
     content_localization_language_switcher: "Pokaż przełącznik języka w nagłówku, umożliwiający użytkownikom przełączanie się między przetłumaczonymi wersjami Discourse a treściami dodanymi przez użytkowników. Używa języków zdefiniowanych w sekcji „Lokalizacje obsługiwane przez lokalizację treści”."
     content_localization_crawler_param: "Wyświetlaj zlokalizowaną treść robotom indeksującym sieć, gdy włączona jest opcja „lokalizacja treści” i „ustaw ustawienia regionalne z parametrów”. Lista obsługiwanych ustawień regionalnych jest zdefiniowana w sekcji „Obsługiwane ustawienia regionalne lokalizacji treści”."
@@ -3958,8 +3958,11 @@ pl_PL:
     user_posts_deleted:
       title: "Usunięto wpisy użytkownika"
       subject_template: "Wszystkie wpisy użytkownika %{user} zostały usunięte"
-      text_body_template: |
-        %{deleted_posts_count} wpisów od @%{user} zostało usuniętych przez @%{staff_user}.
+      text_body_template:
+        one: "%{count} wpis od @%{user} został usunięty przez @%{staff_user}."
+        few: "%{count} wpisów od @%{user} zostało usuniętych przez @%{staff_user}."
+        many: "%{count} wpisów od @%{user} zostało usuniętych przez @%{staff_user}."
+        other: "%{count} wpisów od @%{user} zostało usuniętych przez @%{staff_user}."
   unsubscribe_link: |
     Aby zrezygnować z otrzymywania tych e-maili, [kliknij tutaj](%{unsubscribe_url}).
   unsubscribe_link_and_mail: |
@@ -5237,8 +5240,16 @@ pl_PL:
     bulk_create:
       invalid_params: "Nieprawidłowe parametry. Podaj tablicę nazw tagów."
       invalid_name: "Nieprawidłowa nazwa tagu."
-      tag_too_long: "Tag jest za długi (maksymalnie %{max} znaków)."
-      too_many_tags: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{max} tagów naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
+      tag_too_long:
+        one: "Tag jest za długi (maksymalnie %{count} znak)."
+        few: "Tag jest za długi (maksymalnie %{count} znaków)."
+        many: "Tag jest za długi (maksymalnie %{count} znaków)."
+        other: "Tag jest za długi (maksymalnie %{count} znaków)."
+      too_many_tags:
+        one: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{count} tag naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
+        few: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{count} tagów naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
+        many: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{count} tagów naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
+        other: "Zbyt wiele tagów. Możesz utworzyć maksymalnie %{count} tagów naraz. W przypadku większych importów skorzystaj z funkcji przesyłania pliku CSV."
     forbidden:
       invalid:
         one: "Nie można użyć wybranego tagu"

@@ -3348,7 +3348,8 @@ en:
         votes_released: "vote was released"
         new_features: "new discourse features have been released"
         admin_problems: "new advice on your site dashboard"
-        upcoming_change_available: "new upcoming change is available"
+        upcoming_change_available: "new upcoming change '%{changeName}' is available"
+        upcoming_change_automatically_promoted: "upcoming change '%{changeName}' has been automatically enabled"
 
     upload_selector:
       change: "Change"
@@ -4525,8 +4526,11 @@ en:
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
+      single_page: "Single Page"
       general: "General"
       settings: "Settings"
+      advanced: "Advanced"
+      show_advanced: "Advanced settings"
       topic_template: "Template"
       tags: "Tags"
       localizations: "Localizations"
@@ -4557,11 +4561,14 @@ en:
       create_long: "Create a new category"
       save: "Save category"
       slug: "Category slug"
+      parent: "Parent category"
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       errors:
         self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
+      validations:
+        emoji_required: "Select an emoji to continue."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -4570,7 +4577,10 @@ en:
       logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
       background_image: "Category background image"
       background_image_dark: "Dark category background image"
-      style: "Styles"
+      style: "Style"
+      icon: "Icon"
+      emoji: "Emoji"
+      select_emoji: "Select emoji"
       background_color: "Color"
       foreground_color: "Text color"
       color_validations:
@@ -4581,13 +4591,14 @@ en:
         type: "Style"
         icon: "Icon"
         emoji: "Emoji"
+        square: "Square"
         options:
           square: "Square"
           icon: "Icon"
           emoji: "Emoji"
       color_used: "Color in use"
       predefined_colors: "Predefined color options"
-      name_placeholder: "One or two words maximum"
+      name_placeholder: "One or two words recommended"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
@@ -4595,6 +4606,7 @@ en:
       no_description: "Please add a description for this category."
       change_in_category_topic: "Edit description"
       already_used: "This color has been used by another category"
+      color_palette: "Color palette"
       security: "Security"
       security_add_group: "Add a group"
       permissions:
@@ -4604,6 +4616,7 @@ en:
         create: "Create"
         no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
         everyone_has_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
+        specific_groups_have_access: "This category is private, only the selected groups can see, reply and create posts."
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
         inherited: 'This permission is inherited from "everyone"'
@@ -4611,7 +4624,7 @@ en:
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
       pending_permission_change_alert: "You haven't added %{group} to this category; click this button to add them."
-      images: "Images"
+      images: "Appearance"
       email_in: "Custom incoming email address:"
       email_in_tooltip: "You can separate multiple email addresses with the | character."
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
@@ -4640,7 +4653,18 @@ en:
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, enable the <a href='%{url}'>'fixed category positions'</a> setting."
       minimum_required_tags: "Minimum number of tags required in a topic:"
       default_slow_mode: 'Enable "Slow mode" for new topics in this category.'
-      parent: "Parent category"
+      subcategory_of: "Subcategory of..."
+      none_subcategory_text: "None"
+      subcategory_permissions_warning: "A subcategory of a private category can not be public."
+      visibility:
+        title: "Access"
+        public: "Public"
+        all_members: "All members"
+        group_restricted: "Private"
+        who_can_see: "Who can see this category"
+        who_can_post: "Who can post in this category"
+        more_options_hint: "More permissions available in"
+        more_options_hint_link: "advanced settings."
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
       auto_bump_cooldown_days: "Minimum days before bumping the same topic again:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
@@ -6405,6 +6429,7 @@ en:
           daily: Daily
           monthly: Monthly
           weekly: Weekly
+          value_so_far: "%{value} (so far)"
           dates: "Dates (UTC)"
           groups: "All groups"
           disabled: "This report is disabled"
@@ -6415,7 +6440,11 @@ en:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
-          average_chart_label: Average
+          average_chart_label: Showing averages, not totals
+          sort_button: "Sort by %{column}"
+          sort_button_current: "Sorted by %{column}, %{direction}"
+          sort_ascending: "ascending"
+          sort_descending: "descending"
           filters:
             file_extension:
               label: File extension

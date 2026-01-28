@@ -4,6 +4,7 @@ $mobile-breakpoint: 700px;
 .d-page-subheader {
   &__title-row {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: stretch;
     margin-bottom: var(--space-2);
@@ -73,6 +74,12 @@ $mobile-breakpoint: 700px;
         }
       }
     }
+  }
+
+  &__drawer {
+    display: flex;
+    align-items: center;
+    margin-bottom: var(--space-2);
   }
 }
 
