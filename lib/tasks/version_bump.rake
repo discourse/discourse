@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "tty-prompt"
+
 def dry_run?
   !!ENV["DRY_RUN"]
 end
@@ -191,22 +193,55 @@ end
 
 desc <<~DESC
   squash-merge many security fixes into a single branch for review/merge.
-  Pass a list of comma-separated branches in the SECURITY_FIX_REFS env var, including the remote name.
-  Pass the name of the destination branch as the argument of the rake task.
+  Fetches open PRs from private-mirror and presents an interactive selection.
   e.g.
-    SECURITY_FIX_REFS='privatemirror/mybranch1,privatemirror/mybranch2' bin/rake "version_bump:stage_security_fixes[main]"
+    bin/rake "version_bump:stage_security_fixes[stable]"
 DESC
 task "version_bump:stage_security_fixes", [:base] do |t, args|
   base = args[:base]
-  raise "Unknown base: #{base.inspect}" if %w[stable main].exclude?(base)
+  if !base.start_with?("release/") && !%w[stable main].include?(base)
+    raise "Unknown base: #{base.inspect}"
+  end
 
   fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
-  raise "No branches specified in SECURITY_FIX_REFS env" if fix_refs.nil? || fix_refs.empty?
 
-  fix_refs.each do |ref|
-    if !ref.include?("/")
-      raise "Ref #{ref} did not specify an origin. Please specify the origin, e.g. privatemirror/mybranch"
-    end
+  if fix_refs.nil?
+    puts "Fetching open security fix PRs from private-mirror using gh CLI..."
+    json_output, status =
+      Open3.capture2(
+        "gh",
+        "pr",
+        "list",
+        "--repo",
+        "discourse/discourse-private-mirror",
+        "--base",
+        base,
+        "--state",
+        "open",
+        "--json",
+        "number,title,headRefName",
+        "--limit",
+        "100",
+      )
+    raise "Failed to fetch PRs from private-mirror" if !status.success?
+
+    prs = JSON.parse(json_output)
+    raise "No open PRs found targeting #{base} on private-mirror" if prs.empty?
+
+    prompt = TTY::Prompt.new
+    choices =
+      prs.map { |pr| { name: "##{pr["number"]}: #{pr["title"]}", value: pr["headRefName"] } }
+
+    selected =
+      prompt.multi_select(
+        "Select security fix PRs to include (space to toggle, enter to finish):",
+        choices,
+        default: [],
+        per_page: choices.size,
+      )
+    raise "No PRs selected" if selected.empty?
+
+    fix_refs = selected.map { |branch| "privatemirror/#{branch}" }
   end
 
   puts "Staging security fixes for #{base} branch: #{fix_refs.inspect}"
