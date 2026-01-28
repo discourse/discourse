@@ -26,13 +26,13 @@ export default class UpsertCategoryGeneral extends Component {
 
   @tracked categoryVisibilityState = null;
   @tracked userModifiedPermissions = false;
-
   uncategorizedSiteSettingLink = getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
   );
   customizeTextContentLink = getURL(
     "/admin/customize/site_texts?q=uncategorized"
   );
+  #previousPermissions = null;
 
   get parentIsRestricted() {
     const parentId = this.args.transientData.parent_category_id;
@@ -69,15 +69,27 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   set isPrivateCategory(value) {
+    // Yes, is private
     if (value) {
-      this.args.category.set("permissions", []);
+      // If the user toggles between private and public we
+      // need to restore whatever previous private permissions were set.
+      if (this.#previousPermissions) {
+        this.#setCategoryPermissions(this.#previousPermissions);
+      } else {
+        this.#setCategoryPermissions([]);
+      }
     } else {
+      // No, is public
+      this.#previousPermissions = [...this.args.category.permissions];
+
       const site = this.args.category.site;
       const everyoneGroup = site.groups.find(
         (g) => g.id === AUTO_GROUPS.everyone.id
       );
 
-      this.args.category.set("permissions", [
+      // By default everyone has full permissions for public categories
+      // to see and create posts and topics.
+      this.#setCategoryPermissions([
         {
           group_name: everyoneGroup?.name || "everyone",
           group_id: AUTO_GROUPS.everyone.id,
@@ -126,7 +138,7 @@ export default class UpsertCategoryGeneral extends Component {
     });
 
     this.userModifiedPermissions = true;
-    this.args.category.set("permissions", newPermissions);
+    this.#setCategoryPermissions(newPermissions);
   }
 
   @action
@@ -158,7 +170,7 @@ export default class UpsertCategoryGeneral extends Component {
     });
 
     this.userModifiedPermissions = true;
-    this.args.category.set("permissions", newPermissions);
+    this.#setCategoryPermissions(newPermissions);
   }
 
   get allowSubCategoriesAsParent() {
@@ -225,7 +237,7 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   @action
-  onVisibilityChange(value) {
+  onChangeVisibility(value) {
     this.categoryVisibilityState = value;
     this.userModifiedPermissions = true;
     if (value === "public") {
@@ -243,7 +255,7 @@ export default class UpsertCategoryGeneral extends Component {
         const everyoneGroup = site.groups.find(
           (g) => g.id === AUTO_GROUPS.everyone.id
         );
-        this.args.category.set("permissions", [
+        this.#setCategoryPermissions([
           {
             group_name: everyoneGroup?.name || "everyone",
             group_id: AUTO_GROUPS.everyone.id,
@@ -272,13 +284,13 @@ export default class UpsertCategoryGeneral extends Component {
           permission_type: p.permission_type,
         }));
 
-        this.args.category.set("permissions", newPermissions);
+        this.#setCategoryPermissions(newPermissions);
       } else {
         const everyoneGroup = site.groups.find(
           (g) => g.id === AUTO_GROUPS.everyone.id
         );
 
-        this.args.category.set("permissions", [
+        this.#setCategoryPermissions([
           {
             group_name: everyoneGroup?.name || "everyone",
             group_id: AUTO_GROUPS.everyone.id,
@@ -334,8 +346,8 @@ export default class UpsertCategoryGeneral extends Component {
     await set("color", color);
 
     if (color) {
-      const whiteDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[0]);
-      const blackDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[1]);
+      const whiteDiff = this.#colorDifference(color, CATEGORY_TEXT_COLORS[0]);
+      const blackDiff = this.#colorDifference(color, CATEGORY_TEXT_COLORS[1]);
       const colorIndex = whiteDiff > blackDiff ? 0 : 1;
 
       this.args.form.set("text_color", CATEGORY_TEXT_COLORS[colorIndex]);
@@ -374,22 +386,6 @@ export default class UpsertCategoryGeneral extends Component {
     } else if (value === "emoji" && currentEmoji) {
       updateData.emoji = currentEmoji;
     }
-  }
-
-  colorDifference(color1, color2) {
-    const r1 = parseInt(color1.substr(0, 2), 16);
-    const g1 = parseInt(color1.substr(2, 2), 16);
-    const b1 = parseInt(color1.substr(4, 2), 16);
-
-    const r2 = parseInt(color2.substr(0, 2), 16);
-    const g2 = parseInt(color2.substr(2, 2), 16);
-    const b2 = parseInt(color2.substr(4, 2), 16);
-
-    const rDiff = Math.max(r1, r2) - Math.min(r1, r2);
-    const gDiff = Math.max(g1, g2) - Math.min(g1, g2);
-    const bDiff = Math.max(b1, b2) - Math.min(b1, b2);
-
-    return rDiff + gDiff + bDiff;
   }
 
   @action
@@ -458,6 +454,26 @@ export default class UpsertCategoryGeneral extends Component {
   get panelClass() {
     const isActive = this.args.selectedTab === "general" ? "active" : "";
     return `edit-category-tab edit-category-tab-general ${isActive}`;
+  }
+
+  #colorDifference(color1, color2) {
+    const r1 = parseInt(color1.substr(0, 2), 16);
+    const g1 = parseInt(color1.substr(2, 2), 16);
+    const b1 = parseInt(color1.substr(4, 2), 16);
+
+    const r2 = parseInt(color2.substr(0, 2), 16);
+    const g2 = parseInt(color2.substr(2, 2), 16);
+    const b2 = parseInt(color2.substr(4, 2), 16);
+
+    const rDiff = Math.max(r1, r2) - Math.min(r1, r2);
+    const gDiff = Math.max(g1, g2) - Math.min(g1, g2);
+    const bDiff = Math.max(b1, b2) - Math.min(b1, b2);
+
+    return rDiff + gDiff + bDiff;
+  }
+
+  #setCategoryPermissions(permissions) {
+    this.args.category.set("permissions", permissions);
   }
 
   <template>
@@ -628,7 +644,7 @@ export default class UpsertCategoryGeneral extends Component {
       >
         <@form.ConditionalContent
           @activeName={{this.categoryVisibility}}
-          @onChange={{this.onVisibilityChange}}
+          @onChange={{this.onChangeVisibility}}
           as |cc|
         >
           <cc.Conditions as |Condition|>
