@@ -416,6 +416,7 @@ namespace :release do
     end
 
     fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
+    private_mirror_pr_numbers = []
 
     if fix_refs.nil? || fix_refs.empty?
       json_output, status =
@@ -441,7 +442,9 @@ namespace :release do
 
       prompt = TTY::Prompt.new
       choices =
-        prs.map { |pr| { name: "##{pr["number"]}: #{pr["title"]}", value: pr["headRefName"] } }
+        prs.map do |pr|
+          { name: "##{pr["number"]}: #{pr["title"]}", value: pr.slice("number", "headRefName") }
+        end
 
       selected =
         prompt.multi_select(
@@ -452,7 +455,8 @@ namespace :release do
         )
       raise "No PRs selected" if selected.empty?
 
-      fix_refs = selected.map { |branch| "privatemirror/#{branch}" }
+      fix_refs = selected.map { |pr| "privatemirror/#{pr["headRefName"]}" }
+      private_mirror_pr_numbers = selected.map { |pr| pr["number"] }
     end
 
     puts "Staging security fixes for #{base} branch: #{fix_refs.inspect}"
@@ -491,6 +495,20 @@ namespace :release do
       )
       puts "Do not merge the PR via the GitHub web interface. Get it approved, then come back here to continue."
       ReleaseUtils.merge_pr(base: base, branch: branch)
+    end
+
+    if private_mirror_pr_numbers.any?
+      puts "Closing associated PRs in private-mirror..."
+      private_mirror_pr_numbers.each do |pr_number|
+        ReleaseUtils.gh(
+          "pr",
+          "close",
+          pr_number.to_s,
+          "--repo",
+          "discourse/discourse-private-mirror",
+          "--delete-branch",
+        )
+      end
     end
   end
 end
