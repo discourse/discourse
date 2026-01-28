@@ -11,8 +11,6 @@ import categoryBadge from "discourse/helpers/category-badge";
 import icon from "discourse/helpers/d-icon";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
-import discourseDebounce from "discourse/lib/debounce";
-import { INPUT_DELAY } from "discourse/lib/environment";
 import getURL from "discourse/lib/get-url";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
@@ -129,7 +127,6 @@ export default class UpsertCategoryGeneral extends Component {
 
     this.userModifiedPermissions = true;
     this.args.category.set("permissions", newPermissions);
-    this.args.updatePreview?.({});
   }
 
   @action
@@ -162,7 +159,6 @@ export default class UpsertCategoryGeneral extends Component {
 
     this.userModifiedPermissions = true;
     this.args.category.set("permissions", newPermissions);
-    this.args.updatePreview?.({});
   }
 
   get allowSubCategoriesAsParent() {
@@ -237,9 +233,6 @@ export default class UpsertCategoryGeneral extends Component {
     } else if (value === "group_restricted") {
       this.isPrivateCategory = true;
     }
-
-    // Trigger preview update to show restricted status
-    this.args.updatePreview?.({});
   }
 
   @action
@@ -300,8 +293,6 @@ export default class UpsertCategoryGeneral extends Component {
   async onParentCategorySet(value, { set, name, index }) {
     await set(name, value, { index });
     await this.onParentCategoryChange(value);
-
-    this.args.updatePreview?.({ parent_category_id: value });
   }
 
   @action
@@ -348,34 +339,22 @@ export default class UpsertCategoryGeneral extends Component {
       const colorIndex = whiteDiff > blackDiff ? 0 : 1;
 
       this.args.form.set("text_color", CATEGORY_TEXT_COLORS[colorIndex]);
-
-      this.args.updatePreview?.({
-        color,
-        text_color: CATEGORY_TEXT_COLORS[colorIndex],
-      });
     }
   }
 
   @action
   async onNameChange(value, { set, name, index }) {
     await set(name, value, { index });
-    discourseDebounce(this, this._updateNamePreview, value, INPUT_DELAY);
-  }
-
-  _updateNamePreview(value) {
-    this.args.updatePreview?.({ name: value });
   }
 
   @action
   async onIconSet(value, { set, name, index }) {
     await set(name, value, { index });
-    this.args.updatePreview?.({ icon: value, style_type: "icon" });
   }
 
   @action
   async onEmojiSet(value, { set, name, index }) {
     await set(name, value, { index });
-    this.args.updatePreview?.({ emoji: value, style_type: "emoji" });
   }
 
   @action
@@ -395,8 +374,6 @@ export default class UpsertCategoryGeneral extends Component {
     } else if (value === "emoji" && currentEmoji) {
       updateData.emoji = currentEmoji;
     }
-
-    this.args.updatePreview?.(updateData);
   }
 
   colorDifference(color1, color2) {
