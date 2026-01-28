@@ -7,6 +7,17 @@
   --topic-card-shadow: rgb(var(--tertiary-rgb), 0.1);
 }
 
+.badge-category__wrapper {
+  --badge-category-bg: light-dark(
+    oklch(from var(--category-badge-color) 97% calc(c * 0.3) h),
+    oklch(from var(--category-badge-color) 45% calc(c * 0.5) h)
+  );
+  --badge-category-text: light-dark(
+    oklch(from var(--category-badge-color) 20% calc(c * 1) h),
+    oklch(from var(--category-badge-color) 100% calc(c * 0.9) h)
+  );
+}
+
 .topic-list .topic-list-item-separator {
   display: none;
 }
@@ -24,10 +35,7 @@
   .badge-category__wrapper {
     border-radius: var(--d-border-radius);
     padding: 3px 6px;
-    background-color: light-dark(
-      oklch(from var(--category-badge-color) 97% calc(c * 0.3) h),
-      oklch(from var(--category-badge-color) 45% calc(c * 0.5) h)
-    );
+    background-color: var(--badge-category-bg);
 
     @include viewport.until(md) {
       padding: 2px 6px;
@@ -35,10 +43,7 @@
     }
 
     .badge-category__name {
-      color: light-dark(
-        oklch(from var(--category-badge-color) 20% calc(c * 1) h),
-        oklch(from var(--category-badge-color) 100% calc(c * 0.9) h)
-      );
+      color: var(--badge-category-text);
     }
   }
 }
@@ -56,7 +61,7 @@
   }
 }
 
-.topic-list-body {
+.topic-list.--topic-cards .topic-list-body {
   border: none;
   display: flex;
   flex-direction: column;
@@ -72,7 +77,9 @@
   }
 }
 
-.topic-list-body .topic-list-item {
+.topic-list.--topic-cards
+  .topic-list-body
+  .topic-list-item:not(.--high-context) {
   position: relative;
   text-overflow: ellipsis;
   padding: var(--space-3);
@@ -86,13 +93,13 @@
   border-radius: var(--d-border-radius);
   cursor: pointer;
 
-  &.has-replies {
+  &.--has-replies {
     grid-template-areas:
       "creator title title title status"
       ". category likes-replies activity .";
   }
 
-  &:not(.has-replies) {
+  &:not(.--has-replies) {
     .topic-likes-replies-data {
       display: none;
     }
@@ -110,7 +117,7 @@
     border-radius: 0;
     padding: var(--space-4) var(--space-3);
 
-    &.has-replies {
+    &.--has-replies {
       grid-template-areas:
         "creator title title title status"
         ". category likes-replies activity . ";
@@ -123,7 +130,7 @@
       "bulk-select creator title title title status"
       "bulk-select category category activity activity .";
 
-    &.has-replies {
+    &.--has-replies {
       grid-template-areas:
         "bulk-select creator title title title status"
         "bulk-select category category activity likes-replies .";
@@ -173,7 +180,7 @@
         ". category activity activity . "
         ". excerpt excerpt excerpt excerpt";
 
-      &.has-replies {
+      &.--has-replies {
         grid-template-areas:
           "creator title title title status"
           ". category likes-replies activity ."
@@ -237,10 +244,7 @@
       max-width: 125px;
     }
     padding: 0.25em 0.5rem;
-    background-color: light-dark(
-      oklch(from var(--category-badge-color) 97% calc(c * 0.3) h),
-      oklch(from var(--category-badge-color) 45% calc(c * 0.5) h)
-    );
+    background-color: var(--badge-category-bg);
 
     @include viewport.until(md) {
       padding: 0.25em 0.5rem;
@@ -252,10 +256,7 @@
 
     .badge-category__name {
       font-size: var(--font-down-1);
-      color: light-dark(
-        oklch(from var(--category-badge-color) 20% calc(c * 1) h),
-        oklch(from var(--category-badge-color) 100% calc(c * 0.9) h)
-      );
+      color: var(--badge-category-text);
       min-width: 0;
       overflow: hidden;
       white-space: nowrap;
@@ -364,7 +365,7 @@
     }
 
     &.--hot {
-      --status-color: #e45735;
+      --status-color: var(--danger);
     }
 
     @include viewport.from(lg) {
@@ -500,7 +501,7 @@
       "creator title title title dropdown"
       ". category activity activity .";
 
-    &.has-replies {
+    &.--has-replies {
       grid-template-areas:
         "creator title title title dropdown"
         "category category likes-replies activity .";
@@ -670,78 +671,6 @@
 .topic-list tr.selected td:first-of-type,
 .topic-list-item.selected td:first-of-type {
   box-shadow: none;
-}
-
-// User Messages
-body.user-messages-page {
-  .topic-list-body {
-    gap: 0;
-  }
-
-  .topic-list .topic-list-data.posters a:not(.latest) {
-    display: block;
-  }
-
-  .topic-list-item {
-    border-radius: 0;
-    box-shadow: none;
-    border-bottom: 1px solid var(--primary-200);
-    border-top: none;
-    border-right: none;
-    border-left: none;
-    display: grid;
-    grid-template-areas: "title activity" "posters .";
-    grid-template-columns: auto auto;
-    grid-template-rows: auto auto;
-
-    &.has-replies {
-      grid-template-areas: "title activity" "posters .";
-    }
-
-    &:hover {
-      .discourse-no-touch & {
-        background-color: var(--primary-low);
-        border-color: var(--primary-200);
-      }
-    }
-
-    td.topic-category-data,
-    td.topic-likes-replies-data,
-    td.topic-status-data,
-    td.topic-creator-data {
-      display: none;
-    }
-
-    .main-link .link-top-line {
-      grid-area: title;
-    }
-
-    &.visited .main-link .link-top-line {
-      font-weight: normal;
-    }
-
-    td.topic-activity-data {
-      grid-area: activity;
-    }
-
-    td.topic-list-data.posters {
-      grid-area: posters;
-      display: flex;
-      align-items: center;
-      height: 100%;
-
-      a {
-        margin-right: 4px;
-      }
-
-      .avatar {
-        width: 20px;
-        height: 20px;
-        border-radius: 4px;
-        background-color: var(--primary-low);
-      }
-    }
-  }
 }
 
 .event-date-container {
