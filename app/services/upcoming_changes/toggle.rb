@@ -12,6 +12,10 @@ class UpcomingChanges::Toggle
     attribute :enabled, :boolean
     validates :setting_name, presence: true
     validates :enabled, inclusion: [true, false]
+
+    def upcoming_change_event
+      enabled ? :upcoming_change_enabled : :upcoming_change_disabled
+    end
   end
 
   policy :current_user_is_admin
@@ -75,11 +79,7 @@ class UpcomingChanges::Toggle
     )
   end
 
-  def trigger_event(params:, guardian:, options:)
-    if params.enabled
-      DiscourseEvent.trigger(:upcoming_change_enabled, params.setting_name)
-    else
-      DiscourseEvent.trigger(:upcoming_change_disabled, params.setting_name)
-    end
+  def trigger_event(params:)
+    DiscourseEvent.trigger(params.upcoming_change_event, params.setting_name)
   end
 end
