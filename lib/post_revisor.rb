@@ -336,7 +336,10 @@ class PostRevisor
     TopicLink.extract_from(@post)
 
     # Skip resetting highest post number if only changing post ownership
-    Topic.reset_highest(@topic.id) unless @fields.size == 1 && @fields.has_key?("user_id")
+    only_user_id_changed =
+      @fields.has_key?("user_id") &&
+        POST_TRACKED_FIELDS.none? { |f| f != "user_id" && @post.previous_changes.has_key?(f) }
+    Topic.reset_highest(@topic.id) unless only_user_id_changed
 
     post_process_post
     alert_users
