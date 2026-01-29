@@ -61,7 +61,7 @@ class UpcomingChanges::NotifyPromotions
 
         on_exceptions do |exception|
           status_hash[:error] = exception.message
-          status_hash[:backtrace] = Service.filter_backtrace(exception.backtrace)
+          status_hash[:backtrace] = exception.backtrace
         end
       end
 

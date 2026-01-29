@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe UpcomingChanges::NotifyPromotion do
+  describe UpcomingChanges::NotifyPromotion::Contract, type: :model do
+    it { is_expected.to validate_presence_of(:setting_name) }
+    it { is_expected.to validate_presence_of(:admin_user_ids) }
+  end
+
   describe ".call" do
     subject(:result) do
       described_class.call(
@@ -34,17 +39,9 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
     end
 
     context "when data is invalid" do
-      context "when setting_name is missing" do
-        let(:setting_name) { nil }
+      let(:setting_name) { nil }
 
-        it { is_expected.to fail_a_contract }
-      end
-
-      context "when admin_user_ids is missing" do
-        let(:admin_user_ids) { [] }
-
-        it { is_expected.to fail_a_contract }
-      end
+      it { is_expected.to fail_a_contract }
     end
 
     context "when setting is not available" do
@@ -72,6 +69,17 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
     end
 
     context "when everything's ok" do
+      let(:notification) do
+        Notification.where("data::text LIKE ?", "%enable_upload_debug_mode%").last
+      end
+      let(:events) { DiscourseEvent.track_events { result } }
+      let(:event) do
+        events.find do |e|
+          e[:event_name] == :upcoming_change_enabled &&
+            e[:params].first == :enable_upload_debug_mode
+        end
+      end
+
       it { is_expected.to run_successfully }
 
       it "logs the change context in the staff action log" do
@@ -102,7 +110,6 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
             .count
         }.by(2)
 
-        notification = Notification.where("data::text LIKE ?", "%enable_upload_debug_mode%").last
         expect(notification.data).to eq(
           {
             upcoming_change_name: :enable_upload_debug_mode,
@@ -121,14 +128,6 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
       end
 
       it "triggers DiscourseEvent for the promoted setting" do
-        events = DiscourseEvent.track_events { result }
-        event =
-          events.find do |e|
-            e[:event_name] == :upcoming_change_enabled &&
-              e[:params].first == :enable_upload_debug_mode
-          end
-
-        expect(event).to be_present
         expect(event[:params]).to eq([:enable_upload_debug_mode])
       end
     end

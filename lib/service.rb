@@ -89,10 +89,4 @@ module Service
   #
   #     …
   #   end
-
-  # Most of the time all the gem & service code is not relevant to the error,
-  # so we provide a shortcut.
-  def self.filter_backtrace(backtrace)
-    backtrace.reject { |line| line =~ %r{/(gems|lib/service|ruby)/} }
-  end
 end

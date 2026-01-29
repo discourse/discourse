@@ -16,12 +16,11 @@ class UpcomingChanges::NotifyPromotion
 
   params do
     attribute :setting_name, :symbol
-    validates :setting_name, presence: true
-
     attribute :admin_user_ids, :array
-    validates :admin_user_ids, presence: true
-
     attribute :changes_already_notified_about_promotion, :array, default: []
+
+    validates :setting_name, presence: true
+    validates :admin_user_ids, presence: true
   end
 
   policy :setting_is_available
@@ -31,6 +30,7 @@ class UpcomingChanges::NotifyPromotion
 
   try do
     step :log_promotion
+    model :records
     step :notify_admins
     step :create_event
     step :trigger_discourse_event
@@ -75,21 +75,22 @@ class UpcomingChanges::NotifyPromotion
     )
   end
 
-  def notify_admins(params:)
+  def fetch_records(params:)
     data = {
       upcoming_change_name: params.setting_name,
       upcoming_change_humanized_name: SiteSetting.humanized_name(params.setting_name),
     }.to_json
 
-    records =
-      params.admin_user_ids.map do |admin_id|
-        {
-          user_id: admin_id,
-          notification_type: Notification.types[:upcoming_change_automatically_promoted],
-          data:,
-        }
-      end
+    params.admin_user_ids.map do |admin_id|
+      {
+        user_id: admin_id,
+        notification_type: Notification.types[:upcoming_change_automatically_promoted],
+        data:,
+      }
+    end
+  end
 
+  def notify_admins(records:)
     Notification::Action::BulkCreate.call(records:)
   end
 
