@@ -139,7 +139,7 @@ class LlmCreditAllocation < ActiveRecord::Base
 
   def relative_reset_time
     return "" if next_reset_at.nil?
-    "in " + AgeWords.distance_of_time_in_words(Time.current, next_reset_at)
+    AgeWords.distance_of_time_in_words(Time.current, next_reset_at)
   end
 
   private
