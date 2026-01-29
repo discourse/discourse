@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
@@ -12,12 +13,14 @@ export default class CustomHtml extends Component {
     return getCustomHTML(this.args.name);
   }
 
+  @action
   didInsertElement() {
     if (this.args.triggerAppEvent) {
       this.appEvents.trigger(`inserted-custom-html:${this.args.name}`);
     }
   }
 
+  @action
   willDestroyElement() {
     if (this.args.triggerAppEvent) {
       this.appEvents.trigger(`destroyed-custom-html:${this.args.name}`);
