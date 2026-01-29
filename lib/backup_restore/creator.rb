@@ -418,7 +418,8 @@ module BackupRestore
       return unless store.remote?
 
       log "Uploading archive..."
-      content_type = MiniMime.lookup_by_filename(@backup_filename).content_type
+      content_type =
+        MiniMime.lookup_by_filename(@backup_filename)&.content_type || "application/gzip"
       archive_path = File.join(@archive_directory, @backup_filename)
       store.upload_file(@backup_filename, archive_path, content_type)
     end
