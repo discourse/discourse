@@ -111,19 +111,48 @@ module DiscourseTagging
         # add missing mandatory parent tags
         tag_ids = tags.map(&:id)
 
-        parent_tags_map =
-          DB
-            .query(
-              "
+        parent_tags_sql =
+          +"
           SELECT tgm.tag_id, tg.parent_tag_id
             FROM tag_groups tg
           INNER JOIN tag_group_memberships tgm
               ON tgm.tag_group_id = tg.id
            WHERE tg.parent_tag_id IS NOT NULL
-             AND tgm.tag_id IN (?)
-        ",
-              tag_ids,
-            )
+             AND tgm.tag_id IN (:tag_ids)
+        "
+
+        query_params = { tag_ids: }
+
+        if category
+          if category.has_restricted_tags?
+            if category.allow_global_tags
+              # include parent tags from tag groups that are not restricted to any category
+              # AND tag groups restricted to the current category
+              parent_tags_sql << "
+                 AND (
+                   tg.id NOT IN (SELECT tag_group_id FROM category_tag_groups)
+                   OR tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = :category_id)
+                 )
+              "
+            else
+              # only include parent tags from tag groups restricted to the current category
+              parent_tags_sql << "
+                 AND tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = :category_id)
+              "
+            end
+            query_params[:category_id] = category.id
+          else
+            # category has no tag restrictions,
+            # so only include parent tags from tag groups not restricted to any category
+            parent_tags_sql << "
+               AND tg.id NOT IN (SELECT tag_group_id FROM category_tag_groups)
+            "
+          end
+        end
+
+        parent_tags_map =
+          DB
+            .query(parent_tags_sql, query_params)
             .inject({}) do |h, v|
               h[v.tag_id] ||= []
               h[v.tag_id] << v.parent_tag_id
