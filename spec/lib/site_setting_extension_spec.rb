@@ -690,6 +690,88 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "dependent settings" do
+    context "when a dependent setting depends_behavior is not set" do
+      before do
+        settings.setting(:cool_thing_image, nil, depends_on: [:enable_cool_thing])
+        settings.refresh!
+      end
+
+      it "is present in all_settings" do
+        expect(settings.all_settings.find { |s| s[:setting] == :cool_thing_image }).not_to be_blank
+      end
+    end
+
+    context "when a dependent setting depends_behavior is hidden" do
+      before do
+        settings.setting(
+          :cool_thing_image,
+          nil,
+          depends_on: [:enable_cool_thing],
+          depends_behavior: :hidden,
+        )
+        settings.refresh!
+      end
+
+      context "when the depends_on setting is an upcoming change" do
+        context "when the upcoming change is enabled by an admin" do
+          before do
+            settings.setting(
+              :enable_cool_thing,
+              true,
+              upcoming_change: {
+                status: :alpha,
+                impact: "feature,staff",
+              },
+            )
+            settings.refresh!
+          end
+
+          it "is present in all_settings" do
+            expect(
+              settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
+            ).not_to be_blank
+          end
+        end
+
+        context "when the upcoming change is automatically enabled because of the promotion status" do
+          # TODO (martin) Fix this when https://github.com/discourse/discourse/pull/37283 is merged
+          # to take into account the dynamic upcoming change settings based on promotion status
+          # using UpcomingChange.resolved_value
+          xit "is present in all_settings" do
+            expect(
+              settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
+            ).not_to be_blank
+          end
+        end
+      end
+
+      context "when the depends_on setting is true" do
+        before do
+          settings.setting(:enable_cool_thing, true)
+          settings.refresh!
+        end
+
+        it "is present in all_settings" do
+          expect(
+            settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
+          ).not_to be_blank
+        end
+      end
+
+      context "when the depends_on setting is false" do
+        before do
+          settings.setting(:enable_cool_thing, false)
+          settings.refresh!
+        end
+
+        it "is not present in all_settings" do
+          expect(settings.all_settings.find { |s| s[:setting] == :cool_thing_image }).to be_blank
+        end
+      end
+    end
+  end
+
   describe "hidden" do
     before do
       settings.setting(:other_setting, "Blah")
