@@ -2,15 +2,17 @@
 import Component from "@ember/component";
 import { array } from "@ember/helper";
 import { LinkTo } from "@ember/routing";
+import { tagName } from "@ember-decorators/component";
 import ReviewableTags from "discourse/components/reviewable-tags";
 import TopicStatus from "discourse/components/topic-status";
 import categoryBadge from "discourse/helpers/category-badge";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class ReviewableTopicLink extends Component {
   <template>
-    <div class="post-topic">
+    <div class="post-topic" ...attributes>
       {{#if this.reviewable.topic}}
         <TopicStatus
           @topic={{this.reviewable.topic}}

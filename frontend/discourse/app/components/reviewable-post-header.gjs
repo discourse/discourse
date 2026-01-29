@@ -1,13 +1,15 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
+import { tagName } from "@ember-decorators/component";
 import ReviewableCreatedByName from "discourse/components/reviewable-created-by-name";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class ReviewablePostHeader extends Component {
   <template>
-    <div class="reviewable-post-header">
+    <div class="reviewable-post-header" ...attributes>
       <ReviewableCreatedByName @user={{this.createdBy}} />
       {{#if this.reviewable.reply_to_post_number}}
         <a

@@ -1,32 +1,36 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { tagName } from "@ember-decorators/component";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import boundAvatar from "discourse/helpers/bound-avatar";
 import lazyHash from "discourse/helpers/lazy-hash";
 
+@tagName("")
 export default class UserProfileAvatar extends Component {
   <template>
-    <PluginOutlet
-      @name="user-profile-avatar-wrapper"
-      @outletArgs={{lazyHash user=@user}}
-    >
-      <div class="user-profile-avatar">
-        <PluginOutlet
-          @name="user-profile-avatar-img-wrapper"
-          @outletArgs={{lazyHash user=@user}}
-        >
-          {{boundAvatar @user "huge"}}
-        </PluginOutlet>
-
-        <UserAvatarFlair @user={{@user}} />
-        <div>
+    <div ...attributes>
+      <PluginOutlet
+        @name="user-profile-avatar-wrapper"
+        @outletArgs={{lazyHash user=@user}}
+      >
+        <div class="user-profile-avatar">
           <PluginOutlet
-            @name="user-profile-avatar-flair"
-            @outletArgs={{lazyHash model=@user}}
-          />
+            @name="user-profile-avatar-img-wrapper"
+            @outletArgs={{lazyHash user=@user}}
+          >
+            {{boundAvatar @user "huge"}}
+          </PluginOutlet>
+
+          <UserAvatarFlair @user={{@user}} />
+          <div>
+            <PluginOutlet
+              @name="user-profile-avatar-flair"
+              @outletArgs={{lazyHash model=@user}}
+            />
+          </div>
         </div>
-      </div>
-    </PluginOutlet>
+      </PluginOutlet>
+    </div>
   </template>
 }
