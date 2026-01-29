@@ -5,12 +5,15 @@ RSpec.describe Jobs::CheckUpcomingChanges do
     context "when enable_upcoming_changes is disabled" do
       before do
         SiteSetting.enable_upcoming_changes = false
-        SiteSetting.promote_upcoming_changes_on_status = :stable
+        SiteSetting.upcoming_change_verbose_logging = true
       end
 
-      it "does nothing" do
-        SiteSetting.expects(:upcoming_change_site_settings).never
-        described_class.new.execute({})
+      it "does not log" do
+        track_log_messages do |logger|
+          described_class.new.execute({})
+          expect(logger.infos).to be_empty
+          expect(logger.errors).to be_empty
+        end
       end
     end
 
@@ -26,9 +29,12 @@ RSpec.describe Jobs::CheckUpcomingChanges do
       context "when there are no upcoming changes" do
         before { SiteSetting.stubs(:upcoming_change_site_settings).returns([]) }
 
-        it "logs that no changes are present" do
+        it "logs start message and that no changes are present" do
           track_log_messages do |logger|
             described_class.new.execute({})
+            expect(logger.infos.join("\n")).to include(
+              "Starting change tracker and promotion notifier for upcoming changes",
+            )
             expect(logger.infos.join("\n")).to include("No upcoming changes present.")
           end
         end
@@ -247,7 +253,7 @@ RSpec.describe Jobs::CheckUpcomingChanges do
             )
           end
 
-          it "notifies admins and logs output" do
+          it "logs promotion notification" do
             track_log_messages do |logger|
               described_class.new.execute({})
               expect(logger.infos.join("\n")).to include(
@@ -255,30 +261,12 @@ RSpec.describe Jobs::CheckUpcomingChanges do
               )
             end
           end
-
-          it "creates a notification for admins" do
-            expect { described_class.new.execute({}) }.to change {
-              Notification.where(
-                notification_type: Notification.types[:upcoming_change_automatically_promoted],
-                user_id: admin.id,
-              ).count
-            }.by(1)
-          end
-
-          it "creates an admins_notified_automatic_promotion event" do
-            expect { described_class.new.execute({}) }.to change {
-              UpcomingChangeEvent.where(
-                event_type: :admins_notified_automatic_promotion,
-                upcoming_change_name: :enable_upload_debug_mode,
-              ).count
-            }.by(1)
-          end
         end
 
         context "when the change does not meet promotion criteria" do
           before { SiteSetting.promote_upcoming_changes_on_status = :never }
 
-          it "does not notify admins" do
+          it "does not log promotion" do
             track_log_messages do |logger|
               described_class.new.execute({})
               expect(logger.infos.join("\n")).not_to include(
@@ -288,34 +276,19 @@ RSpec.describe Jobs::CheckUpcomingChanges do
           end
         end
 
-        context "when admins have already been notified" do
+        context "when notifying about permanent changes" do
           before do
             UpcomingChangeEvent.create!(
-              event_type: :admins_notified_automatic_promotion,
-              upcoming_change_name: :enable_upload_debug_mode,
-              acting_user: Discourse.system_user,
+              event_type: :added,
+              upcoming_change_name: :show_user_menu_avatars,
+            )
+            UpcomingChangeEvent.create!(
+              event_type: :admins_notified_available_change,
+              upcoming_change_name: :show_user_menu_avatars,
             )
           end
 
-          it "does not notify admins again" do
-            expect { described_class.new.execute({}) }.not_to change {
-              UpcomingChangeEvent.where(
-                event_type: :admins_notified_automatic_promotion,
-                upcoming_change_name: :enable_upload_debug_mode,
-              ).count
-            }
-          end
-        end
-
-        context "when notifying about permanent changes" do
-          before do
-            UpcomingChangeEvent.where(
-              upcoming_change_name: :show_user_menu_avatars,
-              event_type: :admins_notified_automatic_promotion,
-            ).delete_all
-          end
-
-          it "notifies admins about permanent changes" do
+          it "logs promotion of permanent change" do
             track_log_messages do |logger|
               described_class.new.execute({})
               expect(logger.infos.join("\n")).to include(
@@ -323,6 +296,21 @@ RSpec.describe Jobs::CheckUpcomingChanges do
               )
             end
           end
+        end
+      end
+    end
+
+    context "when upcoming_change_verbose_logging is disabled" do
+      before do
+        SiteSetting.enable_upcoming_changes = true
+        SiteSetting.upcoming_change_verbose_logging = false
+        SiteSetting.stubs(:upcoming_change_site_settings).returns([])
+      end
+
+      it "does not log" do
+        track_log_messages do |logger|
+          described_class.new.execute({})
+          expect(logger.infos).to be_empty
         end
       end
     end
