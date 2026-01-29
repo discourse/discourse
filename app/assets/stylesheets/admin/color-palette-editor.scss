@@ -71,9 +71,13 @@
   input[type="text"] {
     font-family: monospace;
     margin: 0;
-    width: 4.5rem;
+
+    // width above is em so that it grows/shrinks with base text size
+    width: 5.5em;
+    background-color: transparent;
     padding-left: var(--space-4);
     border: none;
+    border-radius: none;
 
     &:focus {
       outline: none;
