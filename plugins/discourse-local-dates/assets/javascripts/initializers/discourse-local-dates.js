@@ -6,13 +6,8 @@ import { bind } from "discourse/lib/decorators";
 import { downloadCalendar } from "discourse/lib/download-calendar";
 import { iconHTML, renderIcon } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import {
-  addTagDecorateCallback,
-  addTextDecorateCallback,
-} from "discourse/lib/to-markdown";
 import { slugify } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 import LocalDatesCreateModal from "../discourse/components/modal/local-dates-create";
 import generateCurrentDateMarkup from "../lib/generate-current-date-markup";
 import LocalDateBuilder from "../lib/local-date-builder";
@@ -103,25 +98,6 @@ function buildOptionsFromElement(element, siteSettings) {
   return opts;
 }
 
-function buildOptionsFromMarkdownTag(element) {
-  const opts = {};
-
-  // siteSettings defaults as used by buildOptionsFromElement are purposefully
-  // ommitted to reproduce exactly what was on the original element
-  opts.time = element.attributes["data-time"];
-  opts.date = element.attributes["data-date"];
-  opts.recurring = element.attributes["data-recurring"];
-  opts.timezones = element.attributes["data-timezones"];
-  opts.timezone = element.attributes["data-timezone"];
-  opts.calendar = (element.attributes["data-calendar"] || "on") === "on";
-  opts.displayedTimezone = element.attributes["data-displayed-timezone"];
-  opts.format = element.attributes["data-format"];
-  opts.countdown = element.attributes["data-countdown"];
-  opts.range = element.attributes["data-range"];
-
-  return opts;
-}
-
 function _rangeElements(element) {
   if (!element.parentElement) {
     return [];
@@ -181,60 +157,6 @@ function initializeDiscourseLocalDates(api) {
       const timezone = api.getCurrentUser().user_option.timezone;
       event.addText(generateCurrentDateMarkup(timezone));
     },
-  });
-
-  addTextDecorateCallback(
-    function (text, nextElement, _previousElement, metadata) {
-      if (
-        metadata.discourseLocalDateStartRangeOpts &&
-        nextElement?.attributes.class?.includes("discourse-local-date") &&
-        text === "→"
-      ) {
-        return "";
-      }
-    }
-  );
-  addTagDecorateCallback(function () {
-    if (this.element.attributes.class?.includes("discourse-local-date")) {
-      if (this.metadata.discourseLocalDateStartRangeOpts) {
-        const startRangeOpts = this.metadata.discourseLocalDateStartRangeOpts;
-        const endRangeOpts = buildOptionsFromMarkdownTag(this.element);
-        const markup = generateDateMarkup(
-          {
-            date: startRangeOpts.date,
-            time: startRangeOpts.time,
-            format: startRangeOpts.format,
-          },
-          endRangeOpts,
-          true,
-          {
-            date: endRangeOpts.date,
-            time: endRangeOpts.time,
-            format: endRangeOpts.format,
-          }
-        );
-        this.prefix = markup;
-        this.metadata.discourseLocalDateStartRangeOpts = null;
-        return "";
-      }
-      if (
-        this.element.attributes["data-range"] === "true" ||
-        this.element.attributes["data-range"] === "from" ||
-        this.element.attributes["data-range"] === "to"
-      ) {
-        this.metadata.discourseLocalDateStartRangeOpts =
-          buildOptionsFromMarkdownTag(this.element);
-        return "";
-      }
-      const opts = buildOptionsFromMarkdownTag(this.element, siteSettings);
-      const markup = generateDateMarkup(
-        { date: opts.date, time: opts.time, format: opts.format },
-        opts,
-        false
-      );
-      this.prefix = markup;
-      return "";
-    }
   });
 }
 

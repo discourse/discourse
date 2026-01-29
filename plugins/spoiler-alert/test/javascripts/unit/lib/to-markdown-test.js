@@ -1,16 +1,21 @@
 import { module, test } from "qunit";
-import { withPluginApi } from "discourse/lib/plugin-api";
+import {
+  registerRichEditorExtension,
+  resetRichEditorExtensions,
+} from "discourse/lib/composer/rich-editor-extensions";
 import toMarkdown from "discourse/lib/to-markdown";
-import { initializeSpoiler } from "discourse/plugins/spoiler-alert/initializers/spoiler-alert";
+import richEditorExtension from "discourse/plugins/spoiler-alert/lib/rich-editor-extension";
 
 module("Spoiler Alert | Unit | to-markdown", function (hooks) {
-  hooks.beforeEach(function () {
-    withPluginApi(initializeSpoiler);
+  hooks.beforeEach(async function () {
+    await resetRichEditorExtensions();
+    registerRichEditorExtension(richEditorExtension);
   });
 
   test("handles spoiler tags", function (assert) {
     let html = `<div>Text with a</div><div class="spoiled spoiler-blurred">spoiled</div><div>word.</div>`;
-    let markdown = `Text with a\n\n[spoiler]\nspoiled\n[/spoiler]\n\nword.`;
+    // ProseMirror serializes block content with trailing newlines
+    let markdown = `Text with a\n\n[spoiler]\nspoiled\n\n[/spoiler]\n\nword.`;
 
     assert.strictEqual(toMarkdown(html), markdown, "creates block spoiler tag");
 
