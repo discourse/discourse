@@ -144,6 +144,10 @@ html.composer-open:not(.has-full-page-chat) {
     flex-direction: row;
     justify-content: space-between;
 
+    .grippie {
+      display: none;
+    }
+
     .composer-controls {
       display: flex;
       gap: 8px;
@@ -177,6 +181,7 @@ html.composer-open:not(.has-full-page-chat) {
 
   &.saving .saving-text {
     display: flex;
+    align-items: center;
   }
 
   .reply-to {
