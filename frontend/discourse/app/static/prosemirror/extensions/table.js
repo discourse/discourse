@@ -17,6 +17,79 @@ class TableNodeView {
   }
 }
 
+function validateTable(node) {
+  let hasHead = false;
+  let firstRowHasHeaderCells = false;
+  let columnCount = 0;
+  let hasMultilineCell = false;
+  let isFirstRow = true;
+  let hasInconsistentColumns = false;
+
+  node.forEach((group) => {
+    if (group.type.name === "table_head") {
+      hasHead = true;
+    }
+    group.forEach((row) => {
+      if (columnCount === 0) {
+        columnCount = row.childCount;
+      } else if (row.childCount !== columnCount) {
+        hasInconsistentColumns = true;
+      }
+      if (isFirstRow) {
+        let allHeaderCells = true;
+        row.forEach((cell) => {
+          if (cell.type.name !== "table_header_cell") {
+            allHeaderCells = false;
+          }
+        });
+        if (allHeaderCells && row.childCount > 0) {
+          firstRowHasHeaderCells = true;
+        }
+        isFirstRow = false;
+      }
+      row.forEach((cell) => {
+        cell.descendants((n) => {
+          if (n.type.name === "hard_break") {
+            hasMultilineCell = true;
+          }
+        });
+      });
+    });
+  });
+
+  const hasValidHeader = hasHead || firstRowHasHeaderCells;
+
+  return {
+    isValid:
+      hasValidHeader &&
+      columnCount >= 2 &&
+      !hasMultilineCell &&
+      !hasInconsistentColumns,
+    hasHead: hasValidHeader,
+    columnCount,
+    hasMultilineCell,
+    hasInconsistentColumns,
+  };
+}
+
+function serializeTableAsText(state, node) {
+  if (state.out) {
+    state.out += "\n";
+  }
+
+  node.forEach((group) => {
+    group.forEach((row) => {
+      row.forEach((cell, cellOffset, cellIndex) => {
+        if (cellIndex > 0) {
+          state.out += " ";
+        }
+        state.renderInline(cell);
+      });
+      state.out += "\n";
+    });
+  });
+}
+
 /** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
   nodeViews: { table: TableNodeView },
@@ -135,9 +208,17 @@ const extension = {
     table(state, node) {
       state.flushClose(1);
 
-      let headerBuffer = state.delim;
       const prevInTable = state.inTable;
       state.inTable = true;
+
+      // Check if table is valid for markdown format
+      const tableInfo = validateTable(node);
+
+      if (!tableInfo.isValid) {
+        serializeTableAsText(state, node);
+        state.inTable = prevInTable;
+        return;
+      }
 
       // leading newline, it seems to have issues in a line just below a > blockquote otherwise
       if (state.out) {
@@ -145,8 +226,19 @@ const extension = {
       }
 
       // group is table_head or table_body
-      node.forEach((group, groupOffset, groupIndex) => {
-        group.forEach((row) => {
+      let isFirstRow = true;
+      node.forEach((group) => {
+        const isHead = group.type.name === "table_head";
+
+        group.forEach((row, rowOffset, rowIndex) => {
+          const shouldTreatAsHeader =
+            isHead ||
+            (isFirstRow &&
+              rowIndex === 0 &&
+              row.childCount > 0 &&
+              row.firstChild?.type.name === "table_header_cell");
+          let headerBuffer = shouldTreatAsHeader ? state.delim : undefined;
+
           row.forEach((cell, cellOffset, cellIndex) => {
             if (state.delim && state.atBlank()) {
               state.out += state.delim;
@@ -155,8 +247,7 @@ const extension = {
 
             state.renderInline(cell);
 
-            // if table_head
-            if (groupIndex === 0) {
+            if (headerBuffer !== undefined) {
               if (cell.attrs.alignment === "center") {
                 headerBuffer += "|:---:";
               } else if (cell.attrs.alignment === "left") {
@@ -171,11 +262,11 @@ const extension = {
 
           state.out += " |\n";
 
-          if (headerBuffer) {
+          if (headerBuffer !== undefined) {
             state.out += `${headerBuffer}|\n`;
-            headerBuffer = undefined;
           }
         });
+        isFirstRow = false;
       });
       state.out += "\n";
       state.inTable = prevInTable;
@@ -259,9 +350,31 @@ const extension = {
       return schema.nodes.table.create({}, [header, body]);
     }
 
+    /**
+     * Checks if a fragment contains any table nodes.
+     *
+     * @param {Fragment} fragment - The ProseMirror fragment to check
+     * @returns {boolean} True if any table nodes exist
+     */
+    function hasTableNodes(fragment) {
+      let found = false;
+      fragment.descendants((node) => {
+        if (node.type.name === "table") {
+          found = true;
+          return false;
+        }
+      });
+      return found;
+    }
+
     return new Plugin({
       props: {
         transformPasted(paste, view) {
+          // Quick check: only rebuild if tables exist in the paste content
+          if (!hasTableNodes(paste.content)) {
+            return paste;
+          }
+
           const schema = view.state.schema;
 
           function transformNode(node) {

@@ -61,20 +61,55 @@ const extension = {
       draggable: true,
       parseDOM: [
         {
+          priority: 70,
+          tag: "a.lightbox",
+          getAttrs(dom) {
+            const img = dom.querySelector("img");
+            if (!img) {
+              return false;
+            }
+
+            const href = dom.getAttribute("href");
+            const title = dom.getAttribute("title") || img.getAttribute("alt");
+            const base62Sha1 = img.dataset.base62Sha1;
+
+            let originalSrc;
+            if (base62Sha1) {
+              const ext = href?.match(/\.([a-z0-9]+)(?:\?|$)/i)?.[1] || "";
+              originalSrc = `upload://${base62Sha1}${ext ? `.${ext}` : ""}`;
+            } else {
+              originalSrc = href;
+            }
+
+            return {
+              src: img.getAttribute("src"),
+              originalSrc,
+              alt: title,
+              width: img.getAttribute("width"),
+              height: img.getAttribute("height"),
+            };
+          },
+        },
+        {
           tag: "img[src]",
           getAttrs(dom) {
-            const originalSrc =
-              dom.dataset.origSrc ??
-              (dom.dataset.base62Sha1
-                ? `upload://${dom.dataset.base62Sha1}`
-                : undefined);
+            const src = dom.getAttribute("src");
+            if (!src || dom.classList.contains("avatar")) {
+              return false;
+            }
+
+            let originalSrc = dom.dataset.origSrc;
+            if (!originalSrc && dom.dataset.base62Sha1) {
+              const ext = src.match(/\.([a-z0-9]+)(?:\?|$)/i)?.[1] || "";
+              originalSrc = `upload://${dom.dataset.base62Sha1}${ext ? `.${ext}` : ""}`;
+            }
 
             const extras = dom.hasAttribute("data-thumbnail")
               ? "thumbnail"
               : undefined;
 
             return {
-              src: dom.getAttribute("src"),
+              src,
               title: dom.getAttribute("title")?.replace(/\n/g, " "),
               alt: dom.getAttribute("alt")?.replace(/\n/g, " "),
               width: dom.getAttribute("width"),
@@ -166,6 +201,13 @@ const extension = {
         return;
       }
 
+      const src = node.attrs.originalSrc ?? node.attrs.src ?? "";
+
+      if (src.startsWith("data:")) {
+        state.write("[image]");
+        return;
+      }
+
       const alt = (node.attrs.alt || "").replace(/([\\[\]`])/g, "\\$1");
       const scale = node.attrs.scale ? `, ${node.attrs.scale}%` : "";
       const dimensions =
@@ -173,7 +215,6 @@ const extension = {
           ? `|${node.attrs.width}x${node.attrs.height}${scale}`
           : "";
       const extras = node.attrs.extras ? `|${node.attrs.extras}` : "";
-      const src = node.attrs.originalSrc ?? node.attrs.src ?? "";
       const escapedSrc = src.replace(/[\(\)]/g, "\\$&");
       const title = node.attrs.title
         ? ' "' + node.attrs.title.replace(/"/g, '\\"') + '"'

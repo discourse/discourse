@@ -26,6 +26,7 @@ import trailingInlineSpace from "./trailing-inline-space";
 import trailingParagraph from "./trailing-paragraph";
 import typographerReplacements from "./typographer-replacements";
 import underline from "./underline";
+import wordPaste from "./word-paste";
 import wrap from "./wrap";
 
 /**
@@ -54,6 +55,7 @@ const defaultExtensions = [
   typographerReplacements,
   table,
   markdownPaste,
+  wordPaste,
   orderedList,
   bulletList,
   wrap,
