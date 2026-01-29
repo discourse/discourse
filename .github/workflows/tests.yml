@@ -186,7 +186,7 @@ jobs:
         run: echo "cpu-cores=$(nproc)" >> $GITHUB_OUTPUT
 
       - name: Fetch app state cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: app-cache
         with:
           path: tmp/app-cache
@@ -229,7 +229,7 @@ jobs:
         run: rm -rf tmp/app-cache/uploads && cp -r public/uploads tmp/app-cache/uploads
 
       - name: Fetch turbo_rspec_runtime.log cache
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         id: test-runtime-cache
         if: matrix.build_type == 'backend' || matrix.build_type == 'system'
         with:
