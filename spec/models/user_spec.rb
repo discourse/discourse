@@ -1549,6 +1549,14 @@ RSpec.describe User do
     end
   end
 
+  describe "Normalizations" do
+    it { is_expected.to normalize(:username).from("löwe").to("löwe") }
+    it { is_expected.to normalize(:username).from("lo\u0308we").to("löwe") }
+    it { is_expected.to normalize(:username_lower).from("BOB").to("bob") }
+    it { is_expected.to normalize(:username_lower).from("LÖWE").to("löwe") }
+    it { is_expected.to normalize(:username_lower).from("LO\u0308WE").to("löwe") }
+  end
+
   describe "#new_user_posting_on_first_day?" do
     def create_test_user(opts = {})
       Fabricate(:user, { created_at: Time.zone.now }.merge(opts))

@@ -130,7 +130,7 @@ module Migrations::Importer::Steps
         row[:username],
         allow_reserved_username: @always_allow_reserved_names || row[:admin] == 1,
       )
-      row[:username_lower] = row[:username].downcase
+      row[:username_lower] = User.normalize_username(row[:username])
 
       row[:trust_level] ||= TrustLevel[1]
       row[:active] = true if row[:active].nil?

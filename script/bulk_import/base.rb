@@ -1319,7 +1319,7 @@ class BulkImport::Base
       user[:username] = username
     end
 
-    user[:username_lower] = user[:username].downcase
+    user[:username_lower] = User.normalize_username(user[:username])
     user[:trust_level] ||= TrustLevel[1]
     user[:active] = true unless user.has_key?(:active)
     user[:admin] ||= false
@@ -1343,7 +1343,7 @@ class BulkImport::Base
   end
 
   def user_exist?(username)
-    username_lowercase = username.downcase
+    username_lowercase = User.normalize_username(username)
     @usernames_lower.add?(username_lowercase).nil?
   end
 

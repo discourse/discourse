@@ -4,7 +4,7 @@ class UserSearch
   MAX_SIZE_PRIORITY_MENTION = 500
 
   def initialize(term, opts = {})
-    @term = term.downcase
+    @term = User.normalize_username(term) || ""
     @term_like = @term.gsub("_", "\\_") + "%"
     @topic_id = opts[:topic_id]
     @category_id = opts[:category_id]

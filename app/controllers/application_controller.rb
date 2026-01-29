@@ -533,36 +533,36 @@ class ApplicationController < ActionController::Base
 
   def fetch_user_from_params(opts = nil, eager_load = [])
     opts ||= {}
+
     user =
       if params[:username]
-        username_lower = params[:username].downcase.chomp(".json")
-
-        if current_user && current_user.username_lower == username_lower
+        username = params[:username].chomp(".json")
+        if current_user&.matches_username?(username)
           current_user
         else
-          find_opts = { username_lower: username_lower }
-          find_opts[:active] = true unless opts[:include_inactive] || current_user.try(:staff?)
-          result = User
-          (result = result.includes(*eager_load)) if !eager_load.empty?
-          result.find_by(find_opts)
+          require_active = !opts[:include_inactive] && !current_user&.staff?
+          scope = eager_load.present? ? User.includes(*eager_load) : User
+          scope = scope.where(active: true) if require_active
+          scope.find_by(username_lower: username)
         end
       elsif params[:external_id]
         external_id = params[:external_id].chomp(".json")
         if provider_name = params[:external_provider]
-          raise Discourse::InvalidAccess unless guardian.is_admin? # external_id might be something sensitive
+          # external_id might be something sensitive
+          raise Discourse::InvalidAccess unless guardian.is_admin?
           provider = Discourse.enabled_authenticators.find { |a| a.name == provider_name }
-          raise Discourse::NotFound if !provider&.is_managed? # Only managed authenticators use UserAssociatedAccount
-          UserAssociatedAccount.find_by(
-            provider_name: provider_name,
-            provider_uid: external_id,
-          )&.user
+          # only managed authenticators use UserAssociatedAccount
+          raise Discourse::NotFound if !provider&.is_managed?
+          UserAssociatedAccount.find_by(provider_name:, provider_uid: external_id)&.user
         else
-          SingleSignOnRecord.find_by(external_id: external_id).try(:user)
+          SingleSignOnRecord.find_by(external_id:)&.user
         end
       end
+
     raise Discourse::NotFound if user.blank?
 
     guardian.ensure_can_see!(user)
+
     user
   end
 

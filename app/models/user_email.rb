@@ -3,11 +3,12 @@
 class UserEmail < ActiveRecord::Base
   belongs_to :user
 
+  normalizes :email, with: ->(email) { email.strip.downcase }
+
   attr_accessor :skip_validate_email
   attr_accessor :skip_validate_unique_email
   attr_accessor :skip_normalize_email
 
-  before_validation :strip_downcase_email
   before_validation :normalize_email
 
   validates :email, presence: true
@@ -50,13 +51,6 @@ class UserEmail < ActiveRecord::Base
   end
 
   private
-
-  def strip_downcase_email
-    if self.email
-      self.email = self.email.strip
-      self.email = self.email.downcase
-    end
-  end
 
   def validate_email?
     return false if self.skip_validate_email
