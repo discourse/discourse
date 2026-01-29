@@ -1,9 +1,6 @@
-/* eslint-disable ember/no-classic-components */
-import Component from "@ember/component";
-import { getOwner } from "@ember/owner";
+import Component from "@glimmer/component";
 import { hbs } from "ember-cli-htmlbars";
 import { getCustomHTML } from "discourse/helpers/custom-html";
-import deprecated from "discourse/lib/deprecated";
 
 export default class CustomHtml extends Component {
   triggerAppEvent = null;
@@ -16,15 +13,6 @@ export default class CustomHtml extends Component {
     if (html) {
       this.set("html", html);
       this.set("layout", hbs`{{this.html}}`);
-    } else {
-      const template = getOwner(this).lookup(`template:${name}`);
-      if (template) {
-        deprecated(
-          "Defining an hbs template for CustomHTML rendering is deprecated. Use plugin outlets instead.",
-          { id: "discourse.custom_html_template" }
-        );
-        this.set("layout", template);
-      }
     }
   }
 
