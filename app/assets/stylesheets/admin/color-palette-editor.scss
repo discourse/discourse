@@ -72,10 +72,11 @@
     font-family: monospace;
     margin: 0;
 
-    // width above is em so that it grows/shrinks with base text size
+    // width in em so that it grows/shrinks with input font size
     width: 5.5em;
     background-color: transparent;
     padding-left: var(--space-4);
+    padding-right: 0;
     border: none;
     border-radius: none;
 
