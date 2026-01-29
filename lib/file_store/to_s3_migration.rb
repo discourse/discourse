@@ -18,8 +18,10 @@ module FileStore
     end
 
     def self.s3_options_from_site_settings
+      role_session_name =
+        SiteSetting.respond_to?(:s3_role_session_name) ? SiteSetting.s3_role_session_name : nil
       {
-        client_options: S3Helper.s3_options(SiteSetting),
+        client_options: S3Helper.s3_options(SiteSetting, role_session_name: role_session_name),
         bucket: SiteSetting.Upload.s3_upload_bucket,
       }
     end
