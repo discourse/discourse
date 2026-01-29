@@ -15,7 +15,7 @@ class ThemeField < ActiveRecord::Base
            dependent: :destroy,
            autosave: true
   has_one :upload_reference, as: :target, dependent: :destroy
-  has_one :theme_settings_migration
+  has_one :theme_settings_migration, dependent: :destroy
 
   validates :value, { length: { maximum: 1024**2 } }
 
