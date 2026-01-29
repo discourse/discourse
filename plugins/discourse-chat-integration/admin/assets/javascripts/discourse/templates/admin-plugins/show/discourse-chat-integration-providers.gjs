@@ -5,6 +5,7 @@ import { service } from "@ember/service";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
+import EmptyState from "discourse/components/empty-state";
 import NavItem from "discourse/components/nav-item";
 import DMenu from "discourse/float-kit/components/d-menu";
 import { i18n } from "discourse-i18n";
@@ -27,25 +28,25 @@ export default class DiscourseChatIntegrationProviders extends Component {
   // Sorted by popularity (number of customer sites using each provider)
   get allProviders() {
     return [
-      { name: "slack", setting: "chat_integration_slack_enabled" },
-      { name: "discord", setting: "chat_integration_discord_enabled" },
-      { name: "teams", setting: "chat_integration_teams_enabled" },
-      { name: "telegram", setting: "chat_integration_telegram_enabled" },
-      { name: "google", setting: "chat_integration_google_enabled" },
-      { name: "matrix", setting: "chat_integration_matrix_enabled" },
-      { name: "zulip", setting: "chat_integration_zulip_enabled" },
-      { name: "mattermost", setting: "chat_integration_mattermost_enabled" },
-      {
-        name: "powerautomate",
-        setting: "chat_integration_powerautomate_enabled",
-      },
-      { name: "gitter", setting: "chat_integration_gitter_enabled" },
-      { name: "rocketchat", setting: "chat_integration_rocketchat_enabled" },
-      { name: "guilded", setting: "chat_integration_guilded_enabled" },
-      { name: "groupme", setting: "chat_integration_groupme_enabled" },
-      { name: "flowdock", setting: "chat_integration_flowdock_enabled" },
-      { name: "webex", setting: "chat_integration_webex_enabled" },
-    ];
+      "slack",
+      "discord",
+      "teams",
+      "telegram",
+      "google",
+      "matrix",
+      "zulip",
+      "mattermost",
+      "powerautomate",
+      "gitter",
+      "rocketchat",
+      "guilded",
+      "groupme",
+      "flowdock",
+      "webex",
+    ].map((name) => ({
+      name,
+      settingsFilter: `chat_integration_${name}`,
+    }));
   }
 
   get disabledProviders() {
@@ -53,17 +54,25 @@ export default class DiscourseChatIntegrationProviders extends Component {
     return this.allProviders.filter((p) => !enabledNames.includes(p.name));
   }
 
+  get popularProviders() {
+    return this.disabledProviders.slice(0, 4);
+  }
+
+  get otherProviders() {
+    return this.disabledProviders.slice(4);
+  }
+
   @action
   configureProvider(provider) {
     this.router.transitionTo("adminSiteSettings", {
-      queryParams: { filter: provider.setting },
+      queryParams: { filter: provider.settingsFilter },
     });
   }
 
   <template>
     <DBreadcrumbsItem
-      @path="/admin/plugins/discourse-chat-integration"
-      @label={{i18n "chat_integration.menu_title"}}
+      @path="/admin/plugins/discourse-chat-integration/providers"
+      @label={{i18n "chat_integration.nav.providers"}}
     />
 
     <div id="admin-plugin-chat" class="admin-detail">
@@ -113,11 +122,51 @@ export default class DiscourseChatIntegrationProviders extends Component {
 
         {{outlet}}
       {{else}}
-        <div class="admin-config-area">
-          <div class="admin-config-area__empty-list">
-            <p>{{i18n "chat_integration.no_providers_enabled"}}</p>
+        <EmptyState
+          @title={{i18n "chat_integration.empty_state.title"}}
+          @body={{i18n "chat_integration.empty_state.body"}}
+        />
+        {{#if this.disabledProviders.length}}
+          <div class="chat-integration-providers-list">
+            {{#each this.popularProviders as |provider|}}
+              <DButton
+                @translatedLabel={{i18n
+                  (concat "chat_integration.provider." provider.name ".title")
+                }}
+                @action={{fn this.configureProvider provider}}
+                class="btn-default"
+              />
+            {{/each}}
+            {{#if this.otherProviders.length}}
+              <DMenu
+                @identifier="chat-integration-more-providers"
+                @icon="ellipsis"
+                @label={{i18n "chat_integration.more_providers"}}
+                class="btn-default"
+              >
+                <:content>
+                  <DropdownMenu as |dropdown|>
+                    {{#each this.otherProviders as |provider|}}
+                      <dropdown.item>
+                        <DButton
+                          @translatedLabel={{i18n
+                            (concat
+                              "chat_integration.provider."
+                              provider.name
+                              ".title"
+                            )
+                          }}
+                          @action={{fn this.configureProvider provider}}
+                          class="btn-transparent"
+                        />
+                      </dropdown.item>
+                    {{/each}}
+                  </DropdownMenu>
+                </:content>
+              </DMenu>
+            {{/if}}
           </div>
-        </div>
+        {{/if}}
       {{/if}}
     </div>
   </template>

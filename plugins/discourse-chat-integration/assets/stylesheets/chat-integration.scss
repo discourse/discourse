@@ -158,8 +158,60 @@
   }
 }
 
-.admin-config-area__empty-list {
-  text-align: center;
-  padding: 2rem;
-  color: var(--primary-medium);
+.chat-integration-providers-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.inline-channel-form {
+  background: var(--primary-very-low);
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  padding: 1rem;
+  width: 100%;
+
+  .form-kit__container {
+    margin-bottom: 0;
+  }
+
+  &__fields {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    .form-kit__field {
+      flex: 1;
+      min-width: 200px;
+      margin-bottom: 0;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: 0.5rem;
+  }
+}
+
+.chat-integration-add-first-channel {
+  label {
+    display: block;
+    font-size: var(--font-up-1);
+    margin-bottom: 0.75rem;
+  }
+
+  &__input-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  &__input {
+    width: 250px;
+    margin: 0 !important;
+    padding: 0.65em 0.5em;
+  }
 }

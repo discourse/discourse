@@ -114,20 +114,13 @@ acceptance("Chat Integration", function (needs) {
     await visit("/admin/plugins/discourse-chat-integration/providers/dummy");
     await click("#create-channel");
 
-    assert
-      .dom("#chat-integration-edit-channel-modal")
-      .exists("it displays the modal");
-    assert.dom("#save-channel").isDisabled();
+    assert.dom(".inline-channel-form").exists("it displays the inline form");
 
-    await fillIn("#chat-integration-edit-channel-modal input", "#general");
+    await fillIn(".inline-channel-form input", "#general");
 
-    assert.dom("#save-channel").isEnabled();
+    await click(".inline-channel-form .btn-primary");
 
-    await click("#save-channel");
-
-    assert
-      .dom("#chat-integration-edit-channel-modal")
-      .doesNotExist("modal closes on save");
+    assert.dom(".inline-channel-form").doesNotExist("form closes on save");
   });
 
   test("Edit channel works", async function (assert) {
@@ -137,22 +130,15 @@ acceptance("Chat Integration", function (needs) {
     await click(".channel-header .fk-d-menu__trigger");
     await click(".edit-channel");
 
-    assert
-      .dom("#chat-integration-edit-channel-modal")
-      .exists("it displays the modal");
-    assert.dom("#save-channel").isEnabled();
+    assert.dom(".inline-channel-form").exists("it displays the inline form");
 
-    await fillIn("#chat-integration-edit-channel-modal input", " general");
-    assert.dom("#save-channel").isDisabled();
+    await fillIn(".inline-channel-form input", "#random");
 
-    await fillIn("#chat-integration-edit-channel-modal input", "#random");
-    assert.dom("#save-channel").isEnabled();
-
-    await click("#save-channel");
+    await click(".inline-channel-form .btn-primary");
 
     assert
-      .dom("#chat-integration-edit-channel-modal")
-      .doesNotExist("modal closes on save");
+      .dom(".channel-title .inline-channel-form")
+      .doesNotExist("form closes on save");
   });
 
   test("Create rule works", async function (assert) {

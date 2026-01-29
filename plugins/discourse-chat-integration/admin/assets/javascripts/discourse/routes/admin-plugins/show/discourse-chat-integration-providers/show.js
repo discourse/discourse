@@ -46,6 +46,11 @@ export default class DiscourseChatIntegrationProvidersShow extends DiscourseRout
     return { provider: model.provider.id };
   }
 
+  setupController(controller, model) {
+    super.setupController(controller, model);
+    controller.initNewChannel();
+  }
+
   @action
   refreshProvider() {
     this.refresh();
