@@ -37,7 +37,8 @@
   --welcome-banner-search-menu-margin-inline: auto;
   --search-input-height: var(--space-8);
   --button-height: var(--space-8);
-  --button-font-size: var(--font-down-1);
+
+  // --button-font-size: var(--font-down-1);
   --btn-small-font-size: var(--font-down-1);
   -webkit-font-smoothing: var(--webkit-font-smoothing);
 
@@ -47,11 +48,22 @@
   .btn-icon,
   .btn-danger,
   .btn-primary,
+  .btn.no-text,
   .view-all-drafts {
     &:not(.sidebar-footer-actions-button, #search-button, .btn-sidebar-toggle) {
       height: var(--button-height);
-      font-size: var(--button-font-size);
+
+      // font-size: var(--button-font-size);
     }
+  }
+
+  .btn.no-text {
+    padding: var(--space-2);
+  }
+
+  .dropdown-menu__item button,
+  .c-footer button {
+    height: unset !important;
   }
 
   .btn-text,
@@ -66,7 +78,8 @@
   .navigation-container .nav-pills > li > a {
     padding: 0.5em 0.65em;
     height: var(--button-height);
-    font-size: var(--button-font-size);
+
+    // font-size: var(--button-font-size);
   }
 
   .navigation-container {
@@ -160,7 +173,7 @@
 
   // Select Kit
   .select-kit .select-kit-header {
-    font-size: var(--button-font-size);
+    //  font-size: var(--button-font-size);
   }
 
   .list-controls .combo-box .combo-box-header {
@@ -245,5 +258,11 @@
       background-color: var(--primary-200) !important;
       color: var(--primary) !important;
     }
+  }
+
+  // chat
+  .c-navbar .fk-d-tooltip__trigger {
+    height: 100%;
+    align-items: center;
   }
 }
