@@ -1,16 +1,34 @@
+@use "lib/viewport";
+
 .form-kit__errors-summary {
-  padding: 1em;
+  box-sizing: border-box;
+  padding: var(--space-4);
   border: 1px solid var(--danger);
   background-color: var(--danger-low);
-  width: 100%;
   border-radius: var(--d-border-radius);
-  box-sizing: border-box;
+  width: var(--form-kit-large-input);
 
-  .d-icon-triangle-exclamation {
+  @include viewport.until(sm) {
+    width: 100%;
+  }
+
+  h2 {
+    font-size: var(--font-0);
+  }
+
+  .d-icon {
     color: var(--danger);
+    width: var(--space-5);
   }
 
   ul {
     margin-block: 0;
+    margin-inline: var(--space-5) 0;
+    font-size: var(--font-down-1-rem);
+
+    a {
+      font-weight: bold;
+      padding-left: var(--space-1);
+    }
   }
 }
