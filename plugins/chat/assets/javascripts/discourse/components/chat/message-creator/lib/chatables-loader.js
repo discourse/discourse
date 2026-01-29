@@ -7,66 +7,55 @@ import ChatChatable from "discourse/plugins/chat/discourse/models/chat-chatable"
 
 const MAX_RESULTS = 10;
 
-const MATCH_PRIORITY = {
-  EXACT: 0,
-  PREFIX: 1,
-  PARTIAL: 2,
-};
-
 const TYPE_PRIORITY = {
-  CHANNEL: 0,
-  ENABLED: 1,
-  DISABLED: 2,
+  USER: 0,
+  DM_CHANNEL: 1,
+  CATEGORY_CHANNEL: 2,
+  GROUP: 3,
 };
 
-function getChatatableName(chatable) {
-  switch (chatable.type) {
-    case "user":
-      return chatable.model.username?.toLowerCase();
-    case "group":
-      return chatable.model.name?.toLowerCase();
-    case "channel":
-      return (
-        chatable.model.slug?.toLowerCase() ||
-        chatable.model.title?.toLowerCase()
-      );
-    default:
-      return "";
-  }
-}
-
-function matchPriority(chatable, term) {
-  const name = getChatatableName(chatable);
-  const lowerTerm = term.toLowerCase();
-
-  if (name === lowerTerm) {
-    return MATCH_PRIORITY.EXACT;
-  }
-  if (name.startsWith(lowerTerm)) {
-    return MATCH_PRIORITY.PREFIX;
-  }
-  return MATCH_PRIORITY.PARTIAL;
-}
+export const MATCH_QUALITY = {
+  EXACT: 1,
+  PREFIX: 2,
+  PARTIAL: 3,
+};
 
 function typePriority(chatable) {
-  if (chatable.type === "channel") {
-    return TYPE_PRIORITY.CHANNEL;
+  if (chatable.type === "user") {
+    return TYPE_PRIORITY.USER;
   }
-  if (chatable.enabled) {
-    return TYPE_PRIORITY.ENABLED;
+  if (chatable.type === "group") {
+    return TYPE_PRIORITY.GROUP;
   }
-  return TYPE_PRIORITY.DISABLED;
+  if (chatable.model?.chatableType === "DirectMessage") {
+    return TYPE_PRIORITY.DM_CHANNEL;
+  }
+  return TYPE_PRIORITY.CATEGORY_CHANNEL;
 }
 
-export function sortChatables(chatables, term) {
+export function sortChatables(chatables) {
   return chatables.sort((a, b) => {
-    const matchA = matchPriority(a, term);
-    const matchB = matchPriority(b, term);
+    // Primary: type priority (users > DM channels > category channels > groups)
+    const typeA = typePriority(a);
+    const typeB = typePriority(b);
+    if (typeA !== typeB) {
+      return typeA - typeB;
+    }
+
+    // Secondary: match quality (from server, lower is better)
+    const matchA = a.matchQuality ?? MATCH_QUALITY.PARTIAL;
+    const matchB = b.matchQuality ?? MATCH_QUALITY.PARTIAL;
     if (matchA !== matchB) {
       return matchA - matchB;
     }
 
-    return typePriority(a) - typePriority(b);
+    // Tertiary: enabled before disabled (applies to users and groups)
+    if (a.enabled !== b.enabled) {
+      return a.enabled ? -1 : 1;
+    }
+
+    // For channels, server already sorted by recency/alpha
+    return 0;
   });
 }
 
@@ -131,7 +120,7 @@ export default class ChatablesLoader {
         return chatable;
       });
 
-      return sortChatables(chatables, term).slice(0, MAX_RESULTS);
+      return sortChatables(chatables).slice(0, MAX_RESULTS);
     } catch (e) {
       popupAjaxError(e);
     }

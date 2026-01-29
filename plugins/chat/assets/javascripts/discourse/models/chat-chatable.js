@@ -2,6 +2,7 @@ import { tracked } from "@glimmer/tracking";
 import Category from "discourse/models/category";
 import Group from "discourse/models/group";
 import User from "discourse/models/user";
+import { MATCH_QUALITY } from "discourse/plugins/chat/discourse/components/chat/message-creator/lib/chatables-loader";
 import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 
 export default class ChatChatable {
@@ -38,10 +39,12 @@ export default class ChatChatable {
   @tracked model;
   @tracked enabled = true;
   @tracked tracking;
+  @tracked matchQuality = MATCH_QUALITY.PARTIAL;
 
   constructor(args = {}) {
     this.identifier = args.identifier;
     this.type = args.type;
+    this.matchQuality = args.match_quality ?? MATCH_QUALITY.PARTIAL;
 
     switch (this.type) {
       case "channel":

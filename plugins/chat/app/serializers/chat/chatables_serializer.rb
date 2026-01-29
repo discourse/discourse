@@ -20,6 +20,7 @@ module Chat
                 include_status: true,
               ),
             type: "user",
+            match_quality: match_quality_for(user),
           }
         end
         .as_json
@@ -32,6 +33,7 @@ module Chat
             identifier: "g-#{group.id}",
             model: ::Chat::ChatableGroupSerializer.new(group, scope: scope, root: false),
             type: "group",
+            match_quality: match_quality_for(group),
           }
         end
         .as_json
@@ -50,6 +52,7 @@ module Chat
                 root: false,
                 membership: channel_membership(channel.id),
               ),
+            match_quality: match_quality_for(channel),
           }
         end
         .as_json
@@ -68,6 +71,7 @@ module Chat
                 root: false,
                 membership: channel_membership(channel.id),
               ),
+            match_quality: match_quality_for(channel),
           }
         end
         .as_json
@@ -77,6 +81,14 @@ module Chat
 
     def channel_membership(channel_id)
       object.memberships.find { |membership| membership.chat_channel_id == channel_id }
+    end
+
+    def match_quality_for(record)
+      if record.respond_to?(:match_quality)
+        record.match_quality
+      else
+        ChannelFetcher::MATCH_QUALITY_PARTIAL
+      end
     end
   end
 end

@@ -54,14 +54,7 @@ module Chat
     )
       return [] if !guardian.can_chat?
       Chat::ChannelFetcher
-        .secured_public_channel_search(
-          guardian,
-          filter: term,
-          limit: limit,
-          exclude_dm_channels: true,
-          match_filter_on_starts_with:
-            condition == HashtagAutocompleteService.search_conditions[:starts_with],
-        )
+        .secured_public_channel_search(guardian, filter: term, limit: limit)
         .map { |channel| channel_to_hashtag_item(guardian, channel) }
     end
 
