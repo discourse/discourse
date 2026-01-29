@@ -30,6 +30,10 @@ export default class AiTagSuggester extends Component {
     return this.args.composer?.reply;
   }
 
+  get model() {
+    return this.args.composer || this.args.buffered;
+  }
+
   get showSuggestionButton() {
     if (this.composer.disableTagsChooser) {
       return false;
@@ -51,9 +55,7 @@ export default class AiTagSuggester extends Component {
   }
 
   get tagSelectorHasValues() {
-    const model = this.args.composer ? this.args.composer : this.args.buffered;
-
-    return model.get("tags") && model.get("tags").length > 0;
+    return this.model.get("tags")?.length > 0;
   }
 
   @action
@@ -81,11 +83,9 @@ export default class AiTagSuggester extends Component {
 
       this.suggestions = assistant;
 
-      const model = this.args.composer || this.args.buffered;
-
       if (this.tagSelectorHasValues) {
         this.suggestions = this.suggestions.filter(
-          (s) => !model.get("tags").includes(s.name)
+          (s) => !this.model.get("tags").includes(s.name)
         );
       }
 
@@ -110,15 +110,14 @@ export default class AiTagSuggester extends Component {
   @action
   applySuggestion(suggestion) {
     const maxTags = this.siteSettings.max_tags_per_topic;
-    const model = this.args.composer ? this.args.composer : this.args.buffered;
-    if (!model) {
+    if (!this.model) {
       return;
     }
 
-    const tags = model.get("tags");
+    const tags = this.model.get("tags");
 
     if (!tags) {
-      model.set("tags", [suggestion.name]);
+      this.model.set("tags", [suggestion.name]);
       this.#removeAppliedTag(suggestion);
       return;
     }
@@ -135,7 +134,7 @@ export default class AiTagSuggester extends Component {
       });
     }
 
-    model.set("tags", [...tags, suggestion.name]);
+    this.model.set("tags", [...tags, suggestion.name]);
     suggestion.disabled = true;
     this.#removeAppliedTag(suggestion);
   }
