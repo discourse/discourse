@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
