@@ -941,7 +941,8 @@ When using string names, you can append `?` to make the block **optional**:
 api.renderBlocks("dashboard", [
   { block: "analytics:stats-panel?" },  // Optional - won't error if missing
   { block: "chat:recent-messages?" },   // Optional
-  { block: CoreBanner },                // Required - will error if not registered
+  { block: "gamification:scores" },     // Required - will error if not registered
+  { block: CoreBanner },                // Static import
 ]);
 ```
 
@@ -1000,7 +1001,7 @@ Plugin owns a specific outlet no one else needs:
 
 ```
 plugins/my-plugin/     → api.registerBlock(MyPanel)
-                       → api.renderBlocks("my-plugin-outlet", [...])
+                       → api.renderBlocks("my-plugin:outlet", [...])
 ```
 
 Works when the outlet is truly plugin-specific—perhaps an outlet the plugin itself creates via `registerBlockOutlet()`. The plugin provides a turnkey experience without requiring theme configuration.
