@@ -29,9 +29,15 @@ const extension = {
           tag: "a.mention, a.mention-group",
           preserveWhitespace: "full",
           getAttrs: (dom) => {
-            return {
-              name: dom.getAttribute("data-name") ?? dom.textContent.slice(1),
-            };
+            let name = dom.getAttribute("data-name");
+            if (!name) {
+              const clone = dom.cloneNode(true);
+              clone
+                .querySelectorAll("img.user-status")
+                .forEach((el) => el.remove());
+              name = clone.textContent.trim().slice(1);
+            }
+            return { name };
           },
         },
       ],

@@ -5,6 +5,8 @@ import {
 } from "discourse/lib/markdown-image-builder";
 import { createSchema } from "../static/prosemirror/core/schema";
 import Serializer from "../static/prosemirror/core/serializer";
+import { transformWordListsHtml } from "../static/prosemirror/extensions/word-paste";
+import { isBoundary } from "../static/prosemirror/lib/plugin-utils";
 import { getExtensions } from "./composer/rich-editor-extensions";
 
 const MSO_LIST_CLASSES = [
@@ -923,9 +925,12 @@ export default function toMarkdown(html) {
     const extensions = getExtensions();
     const schema = createSchema(extensions);
     const domParser = ProseMirrorDOMParser.fromSchema(schema);
-    const serializer = new Serializer(extensions, {});
+    const pluginParams = { utils: { isBoundary } };
+    const serializer = new Serializer(extensions, pluginParams);
 
-    const element = new DOMParser().parseFromString(html, "text/html");
+    // Transform Word list HTML to standard list structure
+    const processedHtml = transformWordListsHtml(html);
+    const element = new DOMParser().parseFromString(processedHtml, "text/html");
     const doc = domParser.parse(element);
 
     return serializer.convert(doc).trim();
