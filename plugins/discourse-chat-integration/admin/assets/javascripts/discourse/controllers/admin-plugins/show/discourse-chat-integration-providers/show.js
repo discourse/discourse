@@ -1,14 +1,17 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import ChannelErrorModal from "../../../../components/modal/channel-error";
-import EditChannelModal from "../../../../components/modal/edit-channel";
 import EditRuleModal from "../../../../components/modal/edit-rule";
 import TestModal from "../../../../components/modal/test-integration";
 
 export default class DiscourseChatIntegrationProvidersShow extends Controller {
   @service modal;
   @service store;
+
+  @tracked showNewChannelForm = false;
+  @tracked newChannel = null;
 
   get anyErrors() {
     let anyErrors = false;
@@ -20,6 +23,13 @@ export default class DiscourseChatIntegrationProvidersShow extends Controller {
     });
 
     return anyErrors;
+  }
+
+  initNewChannel() {
+    this.newChannel = this.store.createRecord("channel", {
+      provider: this.model.provider.id,
+      data: {},
+    });
   }
 
   async triggerModal(modal, model) {
@@ -35,21 +45,21 @@ export default class DiscourseChatIntegrationProvidersShow extends Controller {
 
   @action
   createChannel() {
-    return this.triggerModal(EditChannelModal, {
-      channel: this.store.createRecord("channel", {
-        provider: this.model.provider.id,
-        data: {},
-      }),
-      provider: this.model.provider,
-    });
+    this.initNewChannel();
+    this.showNewChannelForm = true;
   }
 
   @action
-  editChannel(channel) {
-    return this.triggerModal(EditChannelModal, {
-      channel,
-      provider: this.model.provider,
-    });
+  cancelNewChannel() {
+    this.showNewChannelForm = false;
+    this.newChannel = null;
+  }
+
+  @action
+  onChannelSaved() {
+    this.showNewChannelForm = false;
+    this.initNewChannel();
+    this.refresh();
   }
 
   @action
