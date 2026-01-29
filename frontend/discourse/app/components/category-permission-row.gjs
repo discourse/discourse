@@ -90,7 +90,11 @@ export default class CategoryPermissionRow extends Component {
   @action
   removeRow(event) {
     event?.preventDefault();
-    this.args.category.removePermission(this.args.groupName);
+    if (this.args.onRemovePermission) {
+      this.args.onRemovePermission(this.args.groupName);
+    } else {
+      this.args.category.removePermission(this.args.groupName);
+    }
   }
 
   @action
@@ -119,10 +123,14 @@ export default class CategoryPermissionRow extends Component {
   }
 
   #updatePermission(type) {
-    this.args.category.updatePermission(this.args.groupName, type);
+    if (this.args.onUpdatePermission) {
+      this.args.onUpdatePermission(this.args.groupName, type);
+    } else {
+      this.args.category.updatePermission(this.args.groupName, type);
+    }
 
     if (this.isEveryoneGroup) {
-      this.args.onChangeEveryonePermission(type);
+      this.args.onChangeEveryonePermission?.(type);
     }
   }
 
