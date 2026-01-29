@@ -301,7 +301,7 @@ RSpec.describe Jobs::CheckUpcomingChanges do
             track_log_messages do |logger|
               described_class.new.execute({})
               expect(logger.infos.join("\n")).to include(
-                "Notified admins about promotion of 'show_user_menu_avatars'",
+                "Notified site admins about promotion of 'show_user_menu_avatars'",
               )
             end
           end
