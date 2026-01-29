@@ -27,12 +27,10 @@ export default class TagsIndex extends DiscourseRoute {
   }
 
   setupController(controller, model) {
-    this.controllerFor("tags.index").setProperties({
-      model,
-      sortProperties: this.siteSettings.tags_sort_alphabetically
-        ? ["id"]
-        : ["totalCount:desc", "id"],
-    });
+    const sortProperties = this.siteSettings.tags_sort_alphabetically
+      ? ["name"]
+      : ["totalCount:desc", "name"];
+    controller.setProperties({ model, sortProperties });
   }
 
   @action
