@@ -86,9 +86,6 @@ class ListController < ApplicationController
         end
       end
 
-      list.more_topics_url = construct_url_with(:next, list_opts)
-      list.prev_topics_url = construct_url_with(:prev, list_opts)
-
       if Discourse.anonymous_filters.include?(filter)
         @description = SiteSetting.site_description
         @rss = filter
@@ -138,8 +135,6 @@ class ListController < ApplicationController
 
     user = list_target_user
     list = TopicQuery.new(user, topic_query_opts).list_filter
-    list.more_topics_url = construct_url_with(:next, topic_query_opts)
-    list.prev_topics_url = construct_url_with(:prev, topic_query_opts)
 
     respond_with_list(list)
   end
@@ -165,8 +160,6 @@ class ListController < ApplicationController
     ensure_can_see_profile!(target_user)
 
     list = generate_list_for("topics_by", target_user, list_opts)
-    list.more_topics_url = construct_url_with(:next, list_opts)
-    list.prev_topics_url = construct_url_with(:prev, list_opts)
     respond_with_list(list)
   end
 
@@ -334,8 +327,6 @@ class ListController < ApplicationController
       user = list_target_user
       list = TopicQuery.new(user, top_options).list_top_for(period)
       list.for_period = period
-      list.more_topics_url = construct_url_with(:next, top_options)
-      list.prev_topics_url = construct_url_with(:prev, top_options)
       @rss = "top"
       @params = { period: period }
       @rss_description = "top_#{period}"
