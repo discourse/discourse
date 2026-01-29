@@ -147,7 +147,7 @@
     "qunit-dom": "^3.5.0",
     "sinon": "^21.0.1",
     "source-map": "^0.7.6",
-    "terser": "^5.44.1",
+    "terser": "^5.46.0",
     "testem": "^3.16.0",
     "typescript": "^5.9.3",
     "util": "^0.12.5",
