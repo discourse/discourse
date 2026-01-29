@@ -146,7 +146,7 @@ RSpec.describe TopicsController do
       expect(response.status).to eq(200)
     end
 
-    it "prevents moving a post that is marked as the solution" do
+    it "unsolves the topic when moving a post that is marked as the solution" do
       Fabricate(:solved_topic, topic: topic, answer_post: reply)
 
       post "/t/#{topic.id}/move-posts.json",
@@ -155,13 +155,11 @@ RSpec.describe TopicsController do
              title: "This is a new topic for the moved post",
            }
 
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"]).to include(
-        I18n.t("solved.errors.cannot_move_solution"),
-      )
+      expect(response.status).to eq(200)
+      expect(topic.reload.solved).to be_nil
     end
 
-    it "prevents moving the solution post to an existing topic" do
+    it "unsolves the topic when moving the solution post to an existing topic" do
       Fabricate(:solved_topic, topic: topic, answer_post: reply)
       destination_topic = Fabricate(:topic)
 
@@ -171,25 +169,8 @@ RSpec.describe TopicsController do
              destination_topic_id: destination_topic.id,
            }
 
-      expect(response.status).to eq(422)
-      expect(response.parsed_body["errors"]).to include(
-        I18n.t("solved.errors.cannot_move_solution"),
-      )
-    end
-
-    it "allows moving the post after it has been unmarked as the solution" do
-      Fabricate(:solved_topic, topic: topic, answer_post: reply)
-
-      DiscourseSolved.unaccept_answer!(reply)
-      topic.reload
-
-      post "/t/#{topic.id}/move-posts.json",
-           params: {
-             post_ids: [reply.id],
-             title: "This is a new topic for the moved post",
-           }
-
       expect(response.status).to eq(200)
+      expect(topic.reload.solved).to be_nil
     end
 
     it "allows moving non-solution posts from a topic with a solution" do

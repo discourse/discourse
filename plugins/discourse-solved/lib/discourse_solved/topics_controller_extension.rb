@@ -12,7 +12,8 @@ module DiscourseSolved
         if topic&.solved.present?
           solution_post_id = topic.solved.answer_post_id
           if post_ids.map(&:to_i).include?(solution_post_id)
-            return render_json_error(I18n.t("solved.errors.cannot_move_solution"))
+            solution_post = Post.find_by(id: solution_post_id)
+            DiscourseSolved.unaccept_answer!(solution_post) if solution_post
           end
         end
       end

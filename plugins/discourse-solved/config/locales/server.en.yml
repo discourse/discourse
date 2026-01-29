@@ -30,8 +30,6 @@ en:
       xaxis: "Day"
       yaxis: "Total"
   solved:
-    errors:
-      cannot_move_solution: "You cannot move a post that has been marked as the solution. Please unmark it first."
     no_solutions:
       self: "You have no accepted solutions yet."
       others: "No accepted solutions."
