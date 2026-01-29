@@ -42,17 +42,17 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
           .raises(StandardError, "test error")
       end
 
-      it { is_expected.to fail_a_step(:process_changes) }
-
       it "returns the errors" do
-        expect(result[:errors]).to match(
-          [
-            {
-              setting_name: :enable_upload_debug_mode,
-              error: "test error",
-              backtrace: a_kind_of(Array),
-            },
-          ],
+        expect(result[:change_notification_statuses]).to match(
+          enable_upload_debug_mode: {
+            success: false,
+            error: "test error",
+            backtrace: a_kind_of(Array),
+          },
+          show_user_menu_avatars: {
+            success: false,
+            error: "Setting show_user_menu_avatars does not meet or exceed the promotion status",
+          },
         )
       end
     end
@@ -60,12 +60,16 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
     context "when everything is ok" do
       it { is_expected.to run_successfully }
 
-      it "returns the successes" do
-        expect(result[:successes]).to eq([:enable_upload_debug_mode])
-      end
-
-      it "returns the errors" do
-        expect(result[:errors]).to be_empty
+      it "returns a state of all settings as success or failure, along with the related error message" do
+        expect(result[:change_notification_statuses]).to match(
+          enable_upload_debug_mode: {
+            success: true,
+          },
+          show_user_menu_avatars: {
+            success: false,
+            error: "Setting show_user_menu_avatars does not meet or exceed the promotion status",
+          },
+        )
       end
 
       it "logs the change context in the staff action log" do

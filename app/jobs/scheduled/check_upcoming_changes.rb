@@ -55,11 +55,11 @@ module Jobs
           end
         end
 
-        on_failure do |error|
+        on_failure do
           verbose_log(
             site,
             :error,
-            "Failed to track upcoming changes, an unexpected error occurred. Error: #{error&.backtrace&.join("\n")}",
+            "Failed to track upcoming changes, an unexpected error occurred.\n\n#{result.inspect_steps}",
           )
         end
       end
@@ -67,31 +67,25 @@ module Jobs
 
     def notify_promotions(site)
       UpcomingChanges::NotifyPromotions.call(guardian: Discourse.system_user.guardian) do |result|
-        on_success do |successes:|
-          successes.each do |setting_name|
-            verbose_log(site, :info, "Notified admins about promotion of '#{setting_name}'")
+        on_success do |change_notification_statuses:|
+          change_notification_statuses.each do |setting_name, status|
+            if status[:success]
+              verbose_log(site, :info, "Notified site admins about promotion of '#{setting_name}'")
+            else
+              verbose_log(
+                site,
+                :error,
+                "Failed to notify about promotion of '#{setting_name}': #{status[:error]} with backtrace: #{status[:backtrace]&.join("\n") || "N/A"}",
+              )
+            end
           end
         end
 
-        on_failed_step(:notify_promotions) do |successes:, errors:|
-          successes.each do |setting_name|
-            verbose_log(site, :info, "Notified admins about promotion of '#{setting_name}'")
-          end
-
-          errors.each do |error|
-            verbose_log(
-              site,
-              :error,
-              "Failed to notify about promotion of '#{error[:setting_name]}': #{error[:error]}",
-            )
-          end
-        end
-
-        on_failure do |error|
+        on_failure do
           verbose_log(
             site,
             :error,
-            "Failed to notify about promotions, an unexpected error occurred. Error: #{error&.backtrace&.join("\n")}",
+            "Failed to notify about promotions, an unexpected error occurred.\n\n#{result.inspect_steps}",
           )
         end
       end

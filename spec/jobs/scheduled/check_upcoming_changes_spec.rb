@@ -257,7 +257,7 @@ RSpec.describe Jobs::CheckUpcomingChanges do
             track_log_messages do |logger|
               described_class.new.execute({})
               expect(logger.infos.join("\n")).to include(
-                "Notified admins about promotion of 'enable_upload_debug_mode'",
+                "Notified site admins about promotion of 'enable_upload_debug_mode'",
               )
             end
           end
@@ -270,7 +270,16 @@ RSpec.describe Jobs::CheckUpcomingChanges do
             track_log_messages do |logger|
               described_class.new.execute({})
               expect(logger.infos.join("\n")).not_to include(
-                "Notified admins about promotion of 'enable_upload_debug_mode'",
+                "Notified site admins about promotion of 'enable_upload_debug_mode'",
+              )
+            end
+          end
+
+          it "logs the error" do
+            track_log_messages do |logger|
+              described_class.new.execute({})
+              expect(logger.errors.join("\n")).to include(
+                "Failed to notify about promotion of 'enable_upload_debug_mode': Setting enable_upload_debug_mode does not meet or exceed the promotion status",
               )
             end
           end
