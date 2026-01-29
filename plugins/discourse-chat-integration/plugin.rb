@@ -51,7 +51,9 @@ after_initialize do
     Jobs.enqueue_in(time, :notify_chats, post_id: post.id)
   end
 
-  add_admin_route "chat_integration.menu_title", "discourse-chat-integration", use_new_show_route: true
+  add_admin_route "chat_integration.menu_title",
+                  "discourse-chat-integration",
+                  use_new_show_route: true
 
   DiscourseChatIntegration::Provider.mount_engines
 
@@ -126,7 +128,7 @@ after_initialize do
           )
         provider = DiscourseChatIntegration::Provider.get_by_name(provider)
 
-        channel = provider.get_channel_by_name(channel_name) # user must have created a channel in /admin/plugins/chat-integration/<provider> page
+        channel = provider.get_channel_by_name(channel_name)
 
         if channel.nil?
           Rails.logger.warn "[discourse-automation] Channel not found. Automation ID: #{automation.id}"

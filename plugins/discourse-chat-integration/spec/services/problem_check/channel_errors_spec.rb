@@ -21,7 +21,7 @@ RSpec.describe ProblemCheck::ChannelErrors do
 
       it do
         expect(check).to have_a_problem.with_priority("low").with_message(
-          "Some chat integration channels have errors. Visit <a href='/admin/plugins/chat-integration'>the chat integration section</a> to find out more.",
+          "Some chat integration channels have errors. Visit <a href='/admin/plugins/discourse-chat-integration'>the chat integration section</a> to find out more.",
         )
       end
     end
