@@ -892,6 +892,24 @@ en:
         other: "Can't delete this category because it has %{count} topics. Oldest topic is %{topic_link}."
       topic_exists_no_oldest: "Can't delete this category because topic count is %{count}."
     uncategorized_description: "Topics that don't need a category, or don't fit into any other existing category."
+
+  category_types:
+    discussion:
+      name: "Discussion"
+      description: "General discussion topics"
+    support:
+      name: "Support"
+      description: "Q&A category where answers can be marked as solutions"
+    ideas:
+      name: "Ideas"
+      description: "Feature requests and ideas that can be voted on"
+    events:
+      name: "Events"
+      description: "Calendar events and scheduled activities"
+    docs:
+      name: "Documentation"
+      description: "Knowledge base articles and documentation"
+
   trust_levels:
     admin: "Admin"
     staff: "Staff"
