@@ -331,6 +331,18 @@ module Service
 
     # @!visibility private
     class TryStep < Step
+      module FilteredBacktrace
+        def filtered_backtrace
+          Array
+            .wrap(backtrace)
+            .chunk { _1.match?(%r{/(gems|lib/service|ruby)/}) }
+            .flat_map do |excluded, lines|
+              next "(#{lines.size} framework line(s) excluded)" if excluded
+              lines
+            end
+        end
+      end
+
       include StepsHelpers
 
       attr_reader :steps, :exceptions
@@ -349,6 +361,7 @@ module Service
         end
       rescue *exceptions => e
         raise e if e.is_a?(Failure)
+        e.singleton_class.prepend(FilteredBacktrace)
         context[@current_step.result_key].fail(raised_exception?: true, exception: e)
         context[result_key][:exception] = e
         context.fail!
