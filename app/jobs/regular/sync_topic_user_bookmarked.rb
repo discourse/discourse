@@ -6,34 +6,24 @@ module Jobs
       raise Discourse::InvalidParameters.new(:topic_id) if args[:topic_id].blank?
 
       DB.exec(<<~SQL, topic_id: args[:topic_id])
-        SELECT bookmarks.user_id, COUNT(*)
-        INTO TEMP TABLE tmp_sync_topic_user_bookmarks
-        FROM bookmarks
-        LEFT JOIN posts ON posts.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Post'
-        LEFT JOIN topics ON (topics.id = bookmarks.bookmarkable_id AND bookmarks.bookmarkable_type = 'Topic') OR
-         (topics.id = posts.topic_id)
-        WHERE (topics.id = :topic_id OR posts.topic_id = :topic_id)
-        AND posts.deleted_at IS NULL AND topics.deleted_at IS NULL
-        GROUP BY bookmarks.user_id;
-
-        UPDATE topic_users
-        SET bookmarked = true
-        FROM tmp_sync_topic_user_bookmarks
-        WHERE topic_users.user_id = tmp_sync_topic_user_bookmarks.user_id AND
-          topic_users.topic_id = :topic_id AND
-          tmp_sync_topic_user_bookmarks.count > 0;
-
-        UPDATE topic_users
-        SET bookmarked = false
-        FROM tmp_sync_topic_user_bookmarks
-        WHERE topic_users.topic_id = :topic_id AND
-          topic_users.bookmarked = true AND
-          topic_users.user_id NOT IN (
-            SELECT tmp_sync_topic_user_bookmarks.user_id
-            FROM tmp_sync_topic_user_bookmarks
-          );
-
-        DROP TABLE tmp_sync_topic_user_bookmarks;
+        UPDATE topic_users tu
+        SET bookmarked = computed.has_bookmark
+        FROM (
+          SELECT tu2.id, EXISTS (
+            SELECT 1
+            FROM bookmarks b
+            LEFT JOIN posts p ON p.id = b.bookmarkable_id AND b.bookmarkable_type = 'Post'
+            WHERE b.user_id = tu2.user_id
+            AND (
+                 (b.bookmarkable_type = 'Topic' AND b.bookmarkable_id = tu2.topic_id)
+              OR (b.bookmarkable_type = 'Post' AND p.topic_id = tu2.topic_id AND p.deleted_at IS NULL)
+            )
+          ) AS has_bookmark
+          FROM topic_users tu2
+          WHERE tu2.topic_id = :topic_id
+        ) computed
+        WHERE tu.id = computed.id
+        AND tu.bookmarked IS DISTINCT FROM computed.has_bookmark
       SQL
     end
   end
