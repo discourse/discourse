@@ -124,9 +124,7 @@ module DiscourseTagging
         query_params = [tag_ids]
 
         if category
-          category_has_restricted_tags = category.tag_groups.count > 0 || category.tags.count > 0
-
-          if category_has_restricted_tags
+          if category.has_restricted_tags?
             if category.allow_global_tags
               # include parent tags from tag groups that are not restricted to any category
               # AND tag groups restricted to the current category

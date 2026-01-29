@@ -1434,26 +1434,18 @@ RSpec.describe DiscourseTagging do
       end
 
       context "when a tag belongs to tag groups restricted to different categories" do
-        fab!(:category_a, :category)
-        fab!(:category_b, :category)
+        fab!(:category_a_tag) { Fabricate(:tag, name: "cat-a-tag") }
         fab!(:parent_a) { Fabricate(:tag, name: "parent-a") }
         fab!(:parent_b) { Fabricate(:tag, name: "parent-b") }
 
-        fab!(:group_a) { Fabricate(:tag_group, parent_tag_id: parent_a.id) }
-        fab!(:group_b) { Fabricate(:tag_group, parent_tag_id: parent_b.id) }
+        fab!(:tag_group_a) { Fabricate(:tag_group, parent_tag_id: parent_a.id, tags: [tag3]) }
+        fab!(:tag_group_b) { Fabricate(:tag_group, parent_tag_id: parent_b.id, tags: [tag3]) }
+        fab!(:category_a_tag_group) { Fabricate(:tag_group, tags: [category_a_tag]) }
 
-        fab!(:category_a_tag) { Fabricate(:tag, name: "cat-a-tag") }
-        fab!(:category_a_group, :tag_group)
-
-        before do
-          group_a.tags = [tag3]
-          group_b.tags = [tag3]
-
-          category_a_group.tags = [category_a_tag]
-
-          category_a.allowed_tag_groups = [group_a.name, category_a_group.name]
-          category_b.allowed_tag_groups = [group_b.name]
+        fab!(:category_a) do
+          Fabricate(:category, allowed_tag_groups: [tag_group_a.name, category_a_tag_group.name])
         end
+        fab!(:category_b) { Fabricate(:category, allowed_tag_groups: [tag_group_b.name]) }
 
         it "only adds parent tags from tag groups restricted to the topic's category" do
           topic_in_a = Fabricate(:topic, category: category_a)
@@ -1480,11 +1472,11 @@ RSpec.describe DiscourseTagging do
         end
 
         context "with global tag groups" do
-          fab!(:global_parent) { Fabricate(:tag, name: "global-parent") }
-          fab!(:global_group) { Fabricate(:tag_group, parent_tag_id: global_parent.id) }
+          fab!(:global_parent_tag) { Fabricate(:tag, name: "global-parent") }
           fab!(:global_only_tag) { Fabricate(:tag, name: "global-only-tag") }
-
-          before { global_group.tags = [global_only_tag] }
+          fab!(:global_tag_group) do
+            Fabricate(:tag_group, parent_tag_id: global_parent_tag.id, tags: [global_only_tag])
+          end
 
           context "when category allows global tags" do
             before { category_a.update!(allow_global_tags: true) }
@@ -1499,11 +1491,11 @@ RSpec.describe DiscourseTagging do
                 )
               expect(valid).to eq(true)
               tag_names = topic.reload.tags.map(&:name)
-              expect(tag_names).to include(global_parent.name)
+              expect(tag_names).to include(global_parent_tag.name)
             end
 
             it "adds parent tags from both global and category-specific tag groups" do
-              global_group.tags = [global_only_tag, tag3]
+              global_tag_group.tags = [global_only_tag, tag3]
 
               topic = Fabricate(:topic, category: category_a)
               valid =
@@ -1514,9 +1506,8 @@ RSpec.describe DiscourseTagging do
                 )
               expect(valid).to eq(true)
               tag_names = topic.reload.tags.map(&:name)
-              # parent_a from category-specific group_a, global_parent from global_group
               expect(tag_names).to include(parent_a.name)
-              expect(tag_names).to include(global_parent.name)
+              expect(tag_names).to include(global_parent_tag.name)
               expect(tag_names).not_to include(parent_b.name)
             end
           end
@@ -1525,8 +1516,7 @@ RSpec.describe DiscourseTagging do
             before { category_a.update!(allow_global_tags: false) }
 
             it "does not add parent tags from global tag groups" do
-              # Add global_only_tag to a category-specific group so it can be used
-              category_a_group.tags = [category_a_tag, global_only_tag]
+              category_a_tag_group.tags = [category_a_tag, global_only_tag]
 
               topic = Fabricate(:topic, category: category_a)
               valid =
@@ -1537,8 +1527,7 @@ RSpec.describe DiscourseTagging do
                 )
               expect(valid).to eq(true)
               tag_names = topic.reload.tags.map(&:name)
-              # global_parent should NOT be added because allow_global_tags is false
-              expect(tag_names).not_to include(global_parent.name)
+              expect(tag_names).not_to include(global_parent_tag.name)
             end
 
             it "still adds parent tags from category-specific tag groups" do
