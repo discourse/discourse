@@ -2884,7 +2884,12 @@ ug:
       list_item: "تىزىم تۈرى"
       toggle_direction: "يۆنىلىش ئالماشتۇر"
       wrap_modal:
+        attributes_label: "خاسلىق"
+        add_attribute: "خاسلىق قوش"
+        remove_attribute: "خاسلىق چىقىرىۋەت"
         apply: "قوللان"
+        no_attributes: "تېخى ھېچقانداق خاسلىق قوشۇلمىدى."
+      wrap_text: "مەزمۇن ئوراش"
       help: "Markdown تەھرىر ياردىمى"
       collapse: "تەھرىرلىگۈچ تاختىنى كىچىكلەت"
       open: "تەھرىرلىگۈچ تاختىنى ئاچ"

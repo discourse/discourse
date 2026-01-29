@@ -42,6 +42,8 @@ de:
           show_to_anons: "Für anonyme Benutzer anzeigen"
           show_to_logged_in_users: "Für angemeldete Benutzer anzeigen"
           category_chooser_description: "Wähle die Kategorien aus, in denen diese Anzeige angezeigt werden soll, oder lass das Feld leer, um die Anzeige überall anzuzeigen. Die Seiteneinstellung `no_ads_for_categories` hat Vorrang vor dieser Einstellung."
+          category_chooser_description_with_routes: "Wähle die Kategorien aus, in denen diese Anzeige angezeigt werden soll. Lass das Feld und das Feld für die Route leer, um die Anzeige überall anzuzeigen. Die Seiteneinstellung `no_ads_for_categories` hat Vorrang vor dieser Einstellung."
+          route_chooser_description: "Wähle die Seiten/Routen aus, auf denen diese Anzeige angezeigt werden soll. Lass das Feld und das Feld für die Kategorie leer, um die Anzeige überall anzuzeigen."
           group_chooser_description: "Wähle die Gruppen aus, die diese Anzeige sehen können, oder lass das Feld leer, um die Anzeige allen angemeldeten Benutzern zu zeigen."
           preview: "Vorschau"
           topic_list_top:

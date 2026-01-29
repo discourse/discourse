@@ -894,6 +894,7 @@ sk:
         topic:
           title: "Zhrnutie témy"
           close: "Zatvoriť panel súhrnu"
+          regenerate_summaries_option: "Zhrnutia tém"
         topic_list_layout:
           button:
             compact: "Kompaktné"

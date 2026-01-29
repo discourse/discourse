@@ -883,6 +883,7 @@ tr_TR:
         topic:
           title: "Konu özeti"
           close: "Özet panelini kapatın"
+          regenerate_summaries_option: "Konu özetleri"
         topic_list_layout:
           button:
             compact: "Kompakt"

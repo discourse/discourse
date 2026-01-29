@@ -3436,7 +3436,8 @@ pl_PL:
         votes_released: "głos został opublikowany"
         new_features: "wydano nowe funkcje discourse"
         admin_problems: "nowe porady w panelu administratora"
-        upcoming_change_available: "dostępna jest nowa nadchodząca zmiana"
+        upcoming_change_available: "dostępna jest nowa nadchodząca zmiana '%{changeName}'"
+        upcoming_change_automatically_promoted: "nadchodząca zmiana '%{changeName}' została automatycznie włączona"
     upload_selector:
       change: "Zmień"
       delete: "Usuń"
@@ -4672,9 +4673,11 @@ pl_PL:
       edit_dialog_title: "Edytuj: %{categoryName}"
       view: "Pokaż Tematy w Kategorii"
       back: "Powrót do kategorii"
+      single_page: "Pojedyncza strona"
       general: "Ogólne"
       settings: "Ustawienia"
       advanced: "Zaawansowane"
+      show_advanced: "Ustawienia zaawansowane"
       topic_template: "Szablon"
       tags: "Tagi"
       localizations: "Języki"
@@ -4711,6 +4714,8 @@ pl_PL:
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
       errors:
         self_lockout: "Zamierzasz zmienić uprawnienia kategorii w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
+      validations:
+        emoji_required: "Wybierz emoji, aby kontynuować."
       name: "Nazwa kategorii"
       untitled: "Kategoria bez tytułu"
       description: "Opis"
@@ -4722,6 +4727,7 @@ pl_PL:
       style: "Styl"
       icon: "Ikona"
       emoji: "Emoji"
+      select_emoji: "Wybierz emoji"
       background_color: "Kolor"
       foreground_color: "Kolor tekstu"
       color_validations:
@@ -4739,6 +4745,7 @@ pl_PL:
           emoji: "Emoji"
       color_used: "Kolor w użyciu"
       predefined_colors: "Predefiniowane opcje kolorów"
+      name_placeholder: "Zalecane jedno lub dwa słowa"
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
       delete_error: "Podczas próby usunięcia tej kategorii wystąpił błąd."
@@ -4756,6 +4763,7 @@ pl_PL:
         create: "Utwórz"
         no_groups_selected: "Żadnej grupie nie przyznano dostępu; ta kategoria będzie widoczna tylko dla personelu."
         everyone_has_access: 'Ta kategoria jest publiczna, każdy może wyświetlać, odpowiadać i tworzyć posty. Aby ograniczyć uprawnienia, usuń jedno lub więcej uprawnień przyznanych grupie "wszyscy".'
+        specific_groups_have_access: "Ta kategoria jest prywatna, tylko wybrane grupy mogą widzieć, odpowiadać i tworzyć wpisy."
         toggle_reply: "Przełącz uprawnienie do odpowiedzi"
         toggle_full: "Przełącz uprawnienie do tworzenia"
         inherited: 'To uprawnienie jest dziedziczone po "wszystkich"'
@@ -4792,12 +4800,18 @@ pl_PL:
       position_disabled: "Kategorie będą wyświetlane w kolejności aktywności. Aby kontrolować kolejność kategorii na listach, włącz ustawienie <a href='%{url}'>'fixed category positions'</a>."
       minimum_required_tags: "Minimalna liczba tagów wymaganych w temacie:"
       default_slow_mode: 'Włącz „Tryb powolny” dla nowych tematów w tej kategorii.'
+      subcategory_of: "Podkategoria..."
       none_subcategory_text: "Brak"
+      subcategory_permissions_warning: "Podkategoria kategorii prywatnej nie może być publiczna."
       visibility:
         title: "Dostęp"
         public: "Publiczny"
         all_members: "Wszyscy członkowie"
         group_restricted: "Prywatny"
+        who_can_see: "Kto może zobaczyć tę kategorię"
+        who_can_post: "Kto może tworzyć wpisy w tej kategorii"
+        more_options_hint: "Więcej uprawnień dostępnych w"
+        more_options_hint_link: "ustawieniach zaawansowanych."
       num_auto_bump_daily: "Liczba otwartych tematów do automatycznego podbicia każdego dnia"
       auto_bump_cooldown_days: "Minimalna liczba dni przed ponownym podbiciem tego samego tematu:"
       navigate_to_first_post_after_read: "Przejdź do pierwszego postu po przeczytaniu tematów"
@@ -6595,6 +6609,7 @@ pl_PL:
           daily: Dziennie
           monthly: Miesięcznie
           weekly: Tygodniowo
+          value_so_far: "%{value} (jak dotąd)"
           dates: "Daty (UTC)"
           groups: "Wszystkie grupy"
           disabled: "Ten raport jest nieaktywny"
@@ -6605,7 +6620,9 @@ pl_PL:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logi wyszukiwania</a>'
             disabled: 'Raport wyszukiwań zyskujących popularność jest wyłączony. Włącz <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dziennik zapytań wyszukiwarki</a>, aby zbierać dane.'
+          average_chart_label: Wyświetlanie średnich, a nie sum
           sort_button: "Sortuj według %{column}"
+          sort_button_current: "Posortowane według %{column}, %{direction}"
           sort_ascending: "rosnąco"
           sort_descending: "malejąco"
           filters:

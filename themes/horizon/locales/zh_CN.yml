@@ -18,3 +18,6 @@ zh_CN:
     other: "%{count} 个回复"
   theme_metadata:
     description: "一个简单、美观的主题，可以改善 Discourse 站点的开箱即用体验。"
+    settings:
+      topic_card_high_context:
+        description: "启用后，在话题卡片上显示更大上下文，包括标签、摘录、已解决状态、分配的用户和投票次数（实验性）"

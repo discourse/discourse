@@ -2599,6 +2599,7 @@ lt:
         title: "Ne"
       ignore:
         title: "Ignoruoti"
+        description: "Pašalinkite jį iš eilės nesiimdami jokių veiksmų."
       ignore_and_do_nothing:
         title: "Nieko nedaryti"
       approve:

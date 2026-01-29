@@ -976,14 +976,13 @@ he:
         topic:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
-          regenerate: "לסכם בקצרה מחדש"
-          regenerate_bulk: "לסכם תקצירים מחדש"
-          regenerate_success:
+          regenerate_summaries_option: "תקצירי נושאים."
+          regenerate_gists_success:
             one: "התקציר הקצר נוצר מחדש בהצלחה"
             two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
             many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
             other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
-          regenerate_error:
+          regenerate_gists_error:
             one: "יצירת תקציר מחדש נכשלה"
             two: "יצירת שני תקצירים מחדש נכשלה"
             many: "יצירת %{count} תקצירים מחדש נכשלה"

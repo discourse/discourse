@@ -883,6 +883,7 @@ fi:
         topic:
           title: "Ketjun yhteenveto"
           close: "Sulje yhteenvetopaneeli"
+          regenerate_summaries_option: "Ketjujen yhteenvedot"
         topic_list_layout:
           button:
             compact: "Kompakti"

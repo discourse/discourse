@@ -40,8 +40,8 @@ pt:
         group_mention: Menção de Grupo
       filter:
         mute: 'Silenciar'
-        follow: 'Apenas a primeira publicação'
-        watch: 'Todas as publicações e respostas'
+        follow: 'Apenas a primeira mensagem'
+        watch: 'Todas as mensagens e respostas'
       rule_table:
         filter: "Filtrar"
         category: "Categoria"
@@ -71,7 +71,7 @@ pt:
           type: "Alterar o tipo para acionar as notificações para as mensagens ou menções de grupo"
           filter: "Nível de notificação. Silêncio sobrepõe-se a outras regras correspondentes"
           category: "Esta regra aplica-se apenas para os tópicos na categoria especificada"
-          group: "Esta regra aplicar-se-á às publicações que façam referência a este grupo"
+          group: "Esta regra será aplicada às mensagens que fazem referência a este grupo"
       provider:
         slack:
           title: "Slack"

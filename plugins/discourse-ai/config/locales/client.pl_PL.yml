@@ -1062,18 +1062,31 @@ pl_PL:
         topic:
           title: "Podsumowanie tematu"
           close: "Zamknij panel podsumowania"
-          regenerate: "Wygeneruj krótkie podsumowanie"
-          regenerate_bulk: "Wygeneruj krótkie podsumowania"
-          regenerate_success:
-            one: "Krótkie podsumowanie zostało pomyślnie wygenerowane"
-            few: "%{count} krótkie podsumowania zostały pomyślnie wygenerowane"
-            many: "%{count} krótkich podsumowań zostało pomyślnie wygenerowanych"
-            other: "%{count} krótkich podsumowań zostało pomyślnie wygenerowanych"
-          regenerate_error:
+          regenerate_ai_summaries: "Regeneruj podsumowania AI"
+          regen_modal_description: "Wybierz typ podsumowania AI, który chcesz wygenerować dla tego tematu."
+          bulk_regen_description: "Wybierz typ podsumowania AI, który chcesz wygenerować dla wybranych tematów."
+          regenerate_gists_option: "Krótkie podsumowania (gisty)"
+          regenerate_summaries_option: "Podsumowania tematów"
+          regenerate_gists_success:
+            one: "Krótkie podsumowanie tematu pomyślnie wygenerowano"
+            few: "%{count} krótkie podsumowania tematów pomyślnie wygenerowano"
+            many: "%{count} krótkich podsumowań tematów pomyślnie wygenerowano"
+            other: "%{count} krótkich podsumowań tematów pomyślnie wygenerowano"
+          regenerate_gists_error:
             one: "Nie udało się wygenerować krótkiego podsumowania"
             few: "Nie udało się wygenerować %{count} krótkich podsumowań"
             many: "Nie udało się wygenerować %{count} krótkich podsumowań"
             other: "Nie udało się wygenerować %{count} krótkich podsumowań"
+          regenerate_topic_summary_success:
+            one: "Podsumowanie tematu pomyślnie wygenerowano"
+            few: "Podsumowania %{count} tematów pomyślnie wygenerowano"
+            many: "Podsumowania %{count} tematów pomyślnie wygenerowano"
+            other: "Podsumowania %{count} tematów pomyślnie wygenerowano"
+          regenerate_topic_summary_error:
+            one: "Nie udało się ponownie wygenerować podsumowania tematu"
+            few: "Nie udało się ponownie wygenerować podsumowań %{count} tematów"
+            many: "Nie udało się ponownie wygenerować podsumowań %{count} tematów"
+            other: "Nie udało się ponownie wygenerować podsumowań %{count} tematów"
         topic_list_layout:
           button:
             compact: "Kompaktowy"

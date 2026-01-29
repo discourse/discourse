@@ -3847,6 +3847,8 @@ ko:
               label: "위치"
             text_section:
               locale_label: "언어"
+            header_new_members:
+              placeholder: "%{preferred_display_name}에 오신 것을 환영합니다!"
             header_logged_in:
               placeholder: "어서오세요, %{preferred_display_name}님!"
             header_anonymous:

@@ -13,7 +13,7 @@ pt:
       name: Primeira Reação
       description: Reagiu à publicação
       long_description: |
-        Este distintivo é concedido da primeira vez que reage a uma publicação. Reagir a publicações é uma maneira excelente para fazer com que os restantes membros da comunidade saibam que o que eles publicaram foi interessante, útil, engraçado, ou divertido. Partilhe a sua reação!
+        Este distintivo é concedido da primeira vez que reage a uma publicação. Reagir a publicações é uma excelente maneira de fazer os restantes membros da comunidade saber que o que eles publicaram foi interessante, útil, giro, ou divertido. Partilhe a sua reação!
   reports:
     reactions:
       title: "Reações"

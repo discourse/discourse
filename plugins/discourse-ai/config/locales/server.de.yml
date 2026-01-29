@@ -10,6 +10,10 @@ de:
       llm_model:
         name: "Modell-ID"
         max_prompt_tokens: "Kontextfenster"
+  dashboard:
+    problem:
+      ai_credit_soft_limit: "Für %{model_name} sind nur noch %{percentage_remaining}% des Guthuabens übrig.Das Guthaben wird um %{reset_date} zurückgesetzt. <a href='%{url}'>KI-Modelle ansehen</a>"
+      ai_credit_hard_limit: "Du hast keine KI-Guthaben mehr für %{model_name}. Die KI-Funktionen sind bis %{reset_date} nicht mehr verfügbar. <a href='%{url}'>KI-Modelle ansehen</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -19,6 +23,9 @@ de:
         spam: "Als Spam markieren und Beitrag verbergen"
         spam_silence: "Als Spam melden, Beitrag ausblenden und Benutzer stummschalten"
     scriptables:
+      ai_tool_action:
+        title: KI-Tool Aktion
+        description: Führe ein KI-Tool aus, wenn die Automatisierung ausgelöst wird
       llm_persona_triage:
         title: Sichtung von Beiträgen mit KI-Persona
         description: "Reagiere auf Beiträge mit einer bestimmten KI-Persona"
@@ -127,6 +134,7 @@ de:
     ai_translation_enabled: "Aktiviere die KI-Übersetzungsfunktion"
     ai_translation_model: "Das Modell, das für die Übersetzung verwendet werden soll. Dieses Modell muss die Übersetzung unterstützen. Personas können diese Einstellung überschreiben."
     ai_translation_backfill_limit_to_public_content: "Wenn diese Option aktiviert ist, werden nur Inhalte in öffentlichen Kategorien übersetzt. Wenn sie deaktiviert ist, werden auch Inhalte in Gruppen-PMs und privaten Kategorien zur Übersetzung gesendet."
+    ai_translation_include_bot_content: "Wenn diese Option aktiviert ist, werden auch Inhalte, die von Bots (Benutzer-IDs unter 0) geschrieben wurden, zur Übersetzung gesendet."
     ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
     ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
   reviewables:
@@ -461,6 +469,7 @@ de:
         flag_post:
           flag_type:
             name: "Meldungs-Typ"
+            description: "Steuert, ob der Beitrag überprüft, ausgeblendet, gelöscht oder als Spam behandelt wird."
       tool_summary:
         read_artifact: "Ein Web-Artefakt lesen"
         update_artifact: "Aktualisieren eines Web-Artefakts"
@@ -469,6 +478,7 @@ de:
         github_search_files: "GitHub-Datei-Suche"
         github_search_code: "GitHub-Code-Suche"
         github_file_content: "GitHub-Datei-Inhalt"
+        github_diff: "GitHub-Diff"
         random_picker: "Zufallsauswahl"
         categories: "Kategorien auflisten"
         flag_post: "Beitrag melden"
@@ -497,6 +507,7 @@ de:
         github_search_code: "Code in einem GitHub-Repository suchen"
         github_search_files: "Dateien in einem GitHub-Repository suchen"
         github_file_content: "Inhalt von Dateien aus einem GitHub-Repository abrufen"
+        github_diff: "GitHub-Pull-Request- oder Commit-Diff abrufen"
         random_picker: "Zufallszahl oder zufälliges Element aus einer Liste auswählen"
         categories: "Alle öffentlich sichtbaren Kategorien im Forum auflisten"
         flag_post: "Melde den aktuellen Beitrag zur Überprüfung durch das Team"
@@ -632,8 +643,8 @@ de:
         disabled: "Die KI-Übersetzungsfunktion ist nicht vollständig konfiguriert."
         all_posts_translated: "Alle Beiträge in diesem Thema sind bereits übersetzt."
     llm_credit_allocation:
-      limit_exceeded_user: "Diese Community hat ihr KI-Kreditlimit für heute erreicht. Bitte versuche es erneut nach %{reset_time} oder kontaktiere deinen Website-Administrator für weitere Informationen."
-      limit_exceeded_admin: "Du hast dein KI-Kreditlimit erreicht. Bitte versuche es erneut nach %{reset_time}."
+      limit_exceeded_user: "Diese Community hat ihr KI-Guthabenlimit für heute erreicht. Bitte versuche es erneut nach %{reset_time} oder kontaktiere deinen Website-Administrator für weitere Informationen."
+      limit_exceeded_admin: "Du hast dein KI-Guthabenlimit erreicht. Bitte versuche es erneut nach %{reset_time}."
     errors:
       quota_exceeded: "Du hast das Kontingent für dieses Modell überschritten. Bitte versuche es erneut in %{relative_time}."
       quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"

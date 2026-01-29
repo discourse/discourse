@@ -883,6 +883,7 @@ fr:
         topic:
           title: "Résumé du sujet"
           close: "Fermer le panneau du résumé"
+          regenerate_summaries_option: "Résumés des sujets"
         topic_list_layout:
           button:
             compact: "Compact"
