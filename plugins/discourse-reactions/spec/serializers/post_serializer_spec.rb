@@ -42,13 +42,6 @@ describe PostSerializer do
     SiteSetting.discourse_reactions_like_icon = "heart"
 
     reaction_user_1 && reaction_user_2 && reaction_user_3 && like
-
-    post_1.post_actions_with_reaction_users =
-      DiscourseReactions::TopicViewSerializerExtension.load_post_action_reaction_users_for_posts(
-        [post_1.id],
-      )[
-        post_1.id
-      ]
   end
 
   it "renders custom reactions which should be sorted by count" do
