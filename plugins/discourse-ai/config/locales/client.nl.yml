@@ -883,6 +883,7 @@ nl:
         topic:
           title: "Topicsamenvatting"
           close: "Samenvattingspaneel sluiten"
+          regenerate_summaries_option: "Topicsamenvattingen"
         topic_list_layout:
           button:
             compact: "Compact"

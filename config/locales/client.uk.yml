@@ -3371,6 +3371,7 @@ uk:
       upcoming_changes:
         available:
           title: "Майбутні зміни"
+          description: "'%{changeName}' доступний для попереднього перегляду"
         automatically_promoted:
           title: "Майбутні зміни"
       dismiss_confirmation:

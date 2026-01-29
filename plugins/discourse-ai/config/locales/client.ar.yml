@@ -935,6 +935,7 @@ ar:
         topic:
           title: "ملخص الموضوع"
           close: "إغلاق لوحة الملخص"
+          regenerate_summaries_option: "ملخصات الموضوع"
         topic_list_layout:
           button:
             compact: "مضغوط"

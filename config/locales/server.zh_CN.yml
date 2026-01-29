@@ -965,6 +965,7 @@ zh_CN:
     too_many_drafts:
       title: "草稿过多"
       description: "您已达到允许的最大草稿数。请删除一些[您的草稿](%{base_url}/my/activity/drafts)，然后重试。"
+    bulk_destroy_limit: "一次最多只能删除 %{limit} 个草稿。"
   draft_backup:
     pm_title: "正在进行的话题的备份草稿"
     pm_body: "包含备份草稿的话题"
@@ -2401,7 +2402,7 @@ zh_CN:
     fake_upcoming_change: "这是为测试目的即将进行的虚假更改。无需翻译此字符串。"
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动的 \"忽略... \"按钮，以方便用户访问，并腾出话题列表顶部的空间"
     experimental_rename_faq_to_guidelines: "此更改将常见问题页面重命名为指南。常见问题页面仍可通过 /faq 访问。 'faq url' 的设置与以前一样有效。"
-    always_include_topic_excerpts: "在“最新”等话题列表中包含话题摘录。除非启用了“话题列表摘录”之类的主题组件，否则此摘录可能不可见。"
+    enable_simplified_category_creation: "使用更少的选项和更简洁的界面来简化类别创建流程。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_datetime: "日期时间格式无效。请确保您输入的日期和时间有效。"
@@ -5041,6 +5042,7 @@ zh_CN:
       confirm_body: "成功！已启用通知。"
       custom: "来自%{site_title}上 %{username} 的通知"
   staff_action_logs:
+    redacted: "[内容不可见]"
     json_too_long: "值由于超出列长度限制而未记录"
     not_found: "找不到"
     unknown: "未知"

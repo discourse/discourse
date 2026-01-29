@@ -891,6 +891,7 @@ es:
         topic:
           title: "Resumen del tema"
           close: "Cerrar panel de resumen"
+          regenerate_summaries_option: "Resúmenes de temas"
         topic_list_layout:
           button:
             compact: "Compacto"

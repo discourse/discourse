@@ -956,8 +956,7 @@ ru:
         topic:
           title: "Сводка по теме"
           close: "Закрыть панель сводки"
-          regenerate: "Регенерация краткое содержание"
-          regenerate_bulk: "Регенерируй краткие резюме"
+          regenerate_summaries_option: "Сводки по темам"
         topic_list_layout:
           button:
             compact: "Компактная"

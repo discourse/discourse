@@ -1020,12 +1020,19 @@ zh_CN:
         topic:
           title: "话题摘要"
           close: "关闭摘要面板"
-          regenerate: "重新生成简短摘要"
-          regenerate_bulk: "重新生成简短摘要"
-          regenerate_success:
+          regenerate_ai_summaries: "重新生成 AI 摘要"
+          regen_modal_description: "选择要为此话题重新生成的 AI 摘要类型。"
+          bulk_regen_description: "选择要为所选话题重新生成的 AI 摘要类型。"
+          regenerate_gists_option: "简短摘要（要点）"
+          regenerate_summaries_option: "话题总结"
+          regenerate_gists_success:
             other: "%{count} 条简短摘要已成功重新生成"
-          regenerate_error:
+          regenerate_gists_error:
             other: "无法重新生成 %{count} 条简短摘要"
+          regenerate_topic_summary_success:
+            other: "%{count} 个话题摘要已成功重新生成"
+          regenerate_topic_summary_error:
+            other: "未能重新生成 %{count} 个话题摘要"
         topic_list_layout:
           button:
             compact: "紧凑"

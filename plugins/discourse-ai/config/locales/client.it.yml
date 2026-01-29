@@ -883,6 +883,7 @@ it:
         topic:
           title: "Riepilogo dell'argomento"
           close: "Chiudi il pannello riassuntivo"
+          regenerate_summaries_option: "Riepiloghi degli argomenti"
         topic_list_layout:
           button:
             compact: "Compatto"

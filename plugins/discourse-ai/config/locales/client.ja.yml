@@ -874,6 +874,7 @@ ja:
         topic:
           title: "トピックの要約"
           close: "要約パネルを閉じる"
+          regenerate_summaries_option: "トピックの要約"
         topic_list_layout:
           button:
             compact: "コンパクト"

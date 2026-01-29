@@ -17,8 +17,8 @@ pt:
       assigned_group_to_post: "Atribuiu %{who} à <a href='%{path}'>postagem</a> %{when}"
       unassigned: "Cancelou atribuição de %{who} %{when}"
       unassigned_group: "Cancelou atribuição de %{who} %{when}"
-      unassigned_from_post: "Cancelou atribuição de %{who} da <a href='%{path}'>publicação</a> %{when}"
-      unassigned_group_from_post: "Cancelou atribuição de %{who} da <a href='%{path}'>publicação</a> %{when}"
+      unassigned_from_post: "Cancelou atribuição de %{who} da <a href='%{path}'>postagem</a> %{when}"
+      unassigned_group_from_post: "Cancelou atribuição de %{who} da <a href='%{path}'>postagem</a> %{when}"
       reassigned: "Reatribuiu %{who} %{when}"
       reassigned_group: "Reatribuiu %{who} %{when}"
       details_change: "Detalhes da atribuição alterados para %{who} %{when}"
@@ -43,10 +43,10 @@ pt:
         title: "Atribuir"
         help: "Atribuir tópico ao(à) usuário(a)"
       assign_post:
-        title: "Atribuir Publicação"
+        title: "Atribuir postagem"
       unassign_post:
-        title: "Cancelar Atribuição da Publicação"
-        help: "Cancelar atribuição de %{username} da publicação"
+        title: "Cancelar atribuição da postagem"
+        help: "Cancelar atribuição de %{username} da postagem"
       reassign:
         title: "Editar"
         title_w_ellipsis: "Editar atribuição..."
@@ -68,7 +68,7 @@ pt:
         status_label: Estado
         suggestions: sugestões
       assign_post_modal:
-        title: "Atribuir Publicação"
+        title: "Atribuir postagem"
       claim:
         title: "solicitar"
         help: "Atribuir tópico a si"
@@ -120,8 +120,8 @@ pt:
         random_assign:
           fields:
             post_template:
-              label: Modelo de Publicação
-              description: Se for preenchida, será criada uma publicação com este modelo e um utilizador atribuído a ela em vez do tópico.
+              label: Modelo de postagem
+              description: Se for preenchida, uma postagem com este modelo será criada e um(a) usuário(a) será atribuído(a) a ela no lugar do tópico.
             assignees_group:
               label: Grupo de destinatários(as)
             minimum_time_between_assignments:
@@ -140,7 +140,7 @@ pt:
             in_working_hours:
               label: Usuários(as) em horário de trabalho
     notification_reason:
-      user: "Irá ver uma contagem das novas respostas porque lhe foi atribuído este tópico."
+      user: "Você verá uma contagem de respostas novas porque este tópico foi atribuído a você."
     notifications:
       assigned: "<span>%{username}</span>%{description}"
       popup:

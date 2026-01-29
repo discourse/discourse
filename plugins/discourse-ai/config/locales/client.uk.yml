@@ -1054,14 +1054,13 @@ uk:
         topic:
           title: "Підсумок теми"
           close: "Закрити панель підсумків"
-          regenerate: "Згенерувати короткий зміст"
-          regenerate_bulk: "Згенерувати короткі резюме повторно"
-          regenerate_success:
+          regenerate_summaries_option: "Підсумки тем"
+          regenerate_gists_success:
             one: "Короткий підсумок успішно регенеровано"
             few: "%{count} Коротких змістів успішно перегенеровано"
             many: "%{count} Коротких змістів успішно перегенеровано"
             other: "%{count} Коротких змістів успішно перегенеровано"
-          regenerate_error:
+          regenerate_gists_error:
             one: "Не вдалося створити короткий зміст"
             few: "Не вдалося створити %{count} коротких змісти"
             many: "Не вдалося створити %{count} коротких змістів"

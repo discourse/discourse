@@ -914,6 +914,7 @@ pt_BR:
         topic:
           title: "Resumo do tópico"
           close: "Fechar painel de resumo"
+          regenerate_summaries_option: "Resumos de tópicos"
         topic_list_layout:
           button:
             compact: "Compactar"
