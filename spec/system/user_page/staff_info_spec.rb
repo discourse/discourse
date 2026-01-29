@@ -38,4 +38,29 @@ describe "Viewing user staff info as an admin", type: :system do
       expect(filters["action_name"]).to eq("silence_user")
     end
   end
+
+  context "for flagged posts" do
+    let(:review_page) { PageObjects::Pages::Review.new }
+
+    it "shows count matching review queue results" do
+      Reviewable.set_priorities(low: 5.0)
+
+      # 3 reviewables above the threshold (score >= 5.0)
+      Fabricate(:reviewable_flagged_post, target_created_by: user, score: 10.0)
+      Fabricate(:reviewable_flagged_post, target_created_by: user, score: 7.5)
+      Fabricate(:reviewable_flagged_post, target_created_by: user, score: 5.0)
+
+      # 2 reviewables below the threshold (score < 5.0)
+      Fabricate(:reviewable_flagged_post, target_created_by: user, score: 4.9)
+      Fabricate(:reviewable_flagged_post, target_created_by: user, score: 1.0)
+
+      user_page.visit(user)
+
+      expect(user_page).to have_staff_counter_flagged_posts(count: 3)
+
+      user_page.click_staff_info_flagged_posts_link
+
+      expect(review_page).to have_reviewable_items(count: 3)
+    end
+  end
 end

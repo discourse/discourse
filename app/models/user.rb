@@ -1644,8 +1644,13 @@ class User < ActiveRecord::Base
     Post.with_deleted.where(user_id: self.id).where.not(deleted_at: nil).count
   end
 
-  def number_of_flagged_posts
-    ReviewableFlaggedPost.where(target_created_by: self.id).count
+  def number_of_flagged_posts(guardian)
+    Reviewable.list_for(
+      guardian.user,
+      status: :all,
+      type: "ReviewableFlaggedPost",
+      username: self.username,
+    ).count
   end
 
   def number_of_rejected_posts

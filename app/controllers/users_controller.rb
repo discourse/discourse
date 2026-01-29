@@ -1530,7 +1530,6 @@ class UsersController < ApplicationController
 
     %W[
       number_of_deleted_posts
-      number_of_flagged_posts
       number_of_flags_given
       number_of_silencings
       number_of_suspensions
@@ -1538,6 +1537,8 @@ class UsersController < ApplicationController
       number_of_rejected_posts
       can_remove_password?
     ].each { |info| result[info.delete_suffix("?")] = @user.public_send(info) }
+
+    result["number_of_flagged_posts"] = @user.number_of_flagged_posts(guardian)
 
     render json: result
   end
