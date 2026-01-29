@@ -181,6 +181,7 @@ html.composer-open:not(.has-full-page-chat) {
 
   &.saving .saving-text {
     display: flex;
+    align-items: center;
   }
 
   .reply-to {
