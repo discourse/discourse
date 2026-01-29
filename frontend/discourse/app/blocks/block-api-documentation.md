@@ -1233,7 +1233,7 @@ Conditions have a `type` and options specific to that type:
 
 Conditions can see several things:
 - **Outlet args** passed from the template via `@outletArgs`
-- **Services** like `currentUser`, `siteSettings`, `router` (in custom conditions)
+- Injected **Services** like `currentUser`, `siteSettings`, `router` (in custom conditions)
 - **Debug context** when logging is enabled
 
 **The `source` parameter:** Some conditions support a `source` parameter that changes *what* they check. By default, the `user` condition checks the person viewing the page, and the `setting` condition checks site settings. But what if you're on a user profile page and want to show a badge based on the *profile owner's* trust level, not the viewer's? Or you want to check theme settings instead of site settings? The `source` parameter lets you redirect the condition to check a different data source. You'll see examples of this in the specific condition types below.
@@ -1256,18 +1256,18 @@ Most blocks need only one or two condition types. A welcome banner might just ch
 
 #### User Condition
 
-The user condition is probably the one you'll reach for most often. It lets you control visibility based on who's viewing the page—whether they're logged in, their role (admin, moderator, staff), their trust level, or their group membership.
+The user condition lets you control visibility based on who's viewing the page—whether they're logged in, their role (admin, moderator, staff), their trust level, or their group membership.
 
 By default, the condition checks the **current user**—the person viewing the page. This handles the common case where you want to show something to admins or hide something from anonymous visitors. But you can also check a *different* user via the `source` option, which is useful when you're rendering content about a topic author or profile owner and want to show extra details based on *their* properties, not the viewer's.
 
-Here's an example showing all available options (you'd never use all of these together—just pick what you need):
+Here's an example showing all available options (it's unlikely you will ever need to use all of these together):
 
 ```javascript
 { type: "user", loggedIn: true, admin: true, moderator: true, staff: true,
   minTrustLevel: 0, maxTrustLevel: 4, groups: ["beta-testers"] }
 ```
 
-All properties are optional—include only what you need to check. When you specify multiple properties, they all must be true (AND logic). The following table provides a quick reference:
+All properties are optional—include only what you need to check. When you specify multiple properties, they all must be true. The following table provides a quick reference:
 
 | Property | Type | Description |
 |----------|------|-------------|
@@ -1300,7 +1300,7 @@ In practice, most user conditions are simple: `{ type: "user", loggedIn: true }`
 
 The setting condition lets you tie block visibility to site configuration. Want a promo banner that only shows when a "show_promotions" setting is enabled? Or a panel that changes based on a dropdown setting's value? This is your tool.
 
-Discourse has different types of settings—boolean toggles, string values, enum dropdowns, and list settings (comma-separated values). The setting condition handles all of these with different comparison modes. You specify `name` to identify the setting, then pick *one* comparison mode to check its value.
+Discourse has different types of settings—boolean toggles, string values, enum dropdowns, and list settings. The setting condition handles all of these with different comparison modes. You specify `name` to identify the setting, then pick *one* comparison mode to check its value.
 
 Here's the full syntax (but remember, you'd only use one comparison mode at a time):
 
@@ -1333,6 +1333,9 @@ The `name` property is always required—it identifies which setting to check. T
 ```
 
 **Theme settings:**
+
+Use the `source` option to check theme settings instead of site settings.
+
 ```javascript
 import { settings } from "virtual:theme";
 
@@ -1340,9 +1343,7 @@ import { settings } from "virtual:theme";
 { type: "setting", source: settings, name: "show_sidebar", enabled: true }
 ```
 
-**Site settings vs theme settings:** Use site settings for admin-controlled features. Use theme settings when the theme itself controls the behavior, allowing different themes to have different defaults.
-
-The most common pattern is a simple boolean toggle: `{ type: "setting", name: "show_announcements", enabled: true }`. This lets admins control block visibility from the site settings page without touching code. For more sophisticated control—like showing different blocks based on a dropdown setting—use `equals` or `includes`.
+The most common pattern is a simple boolean toggle: `{ type: "setting", source: settings, name: "show_announcements", enabled: true }`. This lets admins control block visibility from the site settings page without touching code. For more sophisticated control—like showing different blocks based on a dropdown setting—use `equals` or `includes`.
 
 So far we've checked *who* is viewing and *what the configuration says*. But what about *where* they're viewing from? The next condition handles device and screen size.
 
@@ -1358,11 +1359,11 @@ A word of caution: for simple show/hide scenarios, CSS media queries are usually
 
 The breakpoints follow a simple pattern: each name represents a minimum screen width, from small (`sm`) to extra-large (`2xl`):
 
-- `sm` - ≥640px (larger phones, small tablets)
-- `md` - ≥768px (tablets)
-- `lg` - ≥1024px (laptops, small desktops)
-- `xl` - ≥1280px (desktops)
-- `2xl` - ≥1536px (large desktops)
+- `sm` - ≥ 40rem (640px) - larger phones, small tablets
+- `md` - ≥ 48rem (768px) - tablets
+- `lg` - ≥ 64rem (1024px) - laptops, small desktops
+- `xl` - ≥ 80rem (1280px) - desktops
+- `2xl` - ≥ 96rem (1536px) - large desktops
 
 You can check specific breakpoint ranges, or use device-type checks for a broader approach:
 
@@ -1438,7 +1439,7 @@ OutletArg conditions are your tool for context-aware blocks—showing different 
 
 #### Route Condition
 
-The route condition is the most powerful—and the most complex—of the built-in conditions. It lets you target specific pages, entire sections of the site, or precisely filtered views. Want a promo to show only on the homepage? A sidebar widget only on category pages? A feature announcement only on the latest topics list with a specific query parameter? Route conditions handle all of these.
+The route condition is the most powerful—and the most complex—of the built-in conditions. It lets you target specific pages, entire sections of the site, or precisely filtered views. Want a promo to show only on the homepage? A sidebar panel only on category pages? A feature announcement only on the latest topics list with a specific query parameter? Route conditions handle all of these.
 
 The condition offers two complementary approaches: URL pattern matching (for precise path control) and semantic page types (for logical section targeting). You can use either or both, depending on your needs.
 
