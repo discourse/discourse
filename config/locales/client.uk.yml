@@ -3436,8 +3436,7 @@ uk:
         post_approved: "допис затверджено"
         membership_request_consolidated: "нові запити на членство"
         reaction: "нова реакція"
-        votes_released: "Голосування опубліковано"
-        new_features: "З’явилися нові функції Discourse!"
+        votes_released: "голосування опубліковано"
         admin_problems: "нова порада на інформаційній панелі вашого сайту"
     upload_selector:
       change: "Змінити"
@@ -4676,6 +4675,7 @@ uk:
       back: "Повернутися до розділу"
       general: "Основне"
       settings: "Налаштування"
+      advanced: "Розширений"
       topic_template: "Шаблон"
       tags: "Теґи"
       localizations: "Локалізації"
@@ -4706,6 +4706,7 @@ uk:
       create_long: "Створити розділ"
       save: "Зберегти категорію"
       slug: "Посилання на розділ"
+      parent: "Батьківська категорія"
       slug_placeholder: "(Опція) дефіси в url"
       creation_error: Під час створення розділу сталася помилка.
       save_error: Під час збереження розділу сталася помилка.
@@ -4719,7 +4720,9 @@ uk:
       logo_description: "Рекомендоване співвідношення сторін 1:1 з мінімальним розміром 200px. Якщо залишити поле порожнім, зображення не буде показано."
       background_image: "Фонове зображення категорії"
       background_image_dark: "Темне фонове зображення категорії"
-      style: "Стилі"
+      style: "Стиль"
+      icon: "Іконка"
+      emoji: "Смайли"
       background_color: "Колір"
       foreground_color: "Колір тексту"
       color_validations:
@@ -4730,13 +4733,13 @@ uk:
         type: "Стиль"
         icon: "Іконка"
         emoji: "Смайли"
+        square: "Квадрат"
         options:
           square: "Квадрат"
           icon: "Іконка"
           emoji: "Смайли"
       color_used: "Колір використовується"
       predefined_colors: "Попередньо визначені варіанти кольорів"
-      name_placeholder: "Не більше одного-двох слів"
       color_placeholder: "Будь-який веб-колір"
       delete_confirm: "Ви впевнені, що хочете видалити цей розділ?"
       delete_error: "Під час видалення розділу сталася помилка."
@@ -4744,6 +4747,7 @@ uk:
       no_description: "Будь ласка, додайте опис для цього розділу."
       change_in_category_topic: "Редагувати опис"
       already_used: "Цей колір вже використовується іншим розділом"
+      color_palette: "Кольорова палітра"
       security: "Безпека"
       security_add_group: "Додати групу"
       permissions:
@@ -4760,7 +4764,7 @@ uk:
       uncategorized_security_warning: "Цей розділ особливий. Він призначений для зберігання тем, які не мають розділу; у нього не може бути налаштувань безпеки."
       uncategorized_general_warning: 'Цей розділ особливий. Він використовується як стандартний розділ для нових тем, для яких не вибрано розділ. Якщо ви хочете запобігти такій поведінці та примусити вибирати розділ, <a href="%{settingLink}">вимкніть це налаштування тут</a>. Якщо ви хочете змінити ім’я чи опис, перейдіть до <a href="%{customizeLink}">Налаштувати / Текстовий вміст</a>.'
       pending_permission_change_alert: "Ви не додали %{group} до цього розділу; натисніть цю кнопку, щоб додати їх."
-      images: "Зображення"
+      images: "Зовнішній вигляд"
       email_in: "Custom incoming email address:"
       email_in_tooltip: "Ви можете розділити кілька адрес за допомогою символу |."
       email_in_allow_strangers: "Приймати листи від анонімних користувачів без облікових записів"
@@ -4789,7 +4793,12 @@ uk:
       position_disabled: "Розділи показуватимуться в порядку активності. Щоб керувати порядком розділів у списках, увімкніть параметр <a href='%{url}'>«фіксовані позиції розділів»</a>."
       minimum_required_tags: "Мінімальна кількість теґів, необхідних для теми:"
       default_slow_mode: 'Увімкнути «Повільний режим» для нових тем у цій категорії.'
-      parent: "Батьківська категорія"
+      none_subcategory_text: "Немає"
+      visibility:
+        title: "Доступ"
+        public: "Публічні"
+        all_members: "Всі учасники"
+        group_restricted: "Приватні"
       num_auto_bump_daily: "Кількість відкритих тем для автоматичного підняття щодня:"
       auto_bump_cooldown_days: "Мінімальна кількість днів до повторного підняття тієї самої теми:"
       navigate_to_first_post_after_read: "Перейдіть до першого допису після прочитання тем"
@@ -6597,7 +6606,9 @@ uk:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Пошукові логи</a>'
             disabled: 'Звіт про пошукові запити відключено. Включити <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">журнал пошукових запитів</a> для збору даних.'
-          average_chart_label: Середнє
+          sort_button: "Сортувати за %{column}"
+          sort_ascending: "по зростанню"
+          sort_descending: "за зменшенням"
           filters:
             file_extension:
               label: Розширення файлу

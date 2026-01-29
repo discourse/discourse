@@ -458,14 +458,7 @@ RSpec.describe PostGuardian do
     end
 
     context "with system message" do
-      fab!(:private_message) do
-        Fabricate(
-          :topic,
-          archetype: Archetype.private_message,
-          subtype: "system_message",
-          category_id: nil,
-        )
-      end
+      fab!(:private_message) { Fabricate(:system_message_topic, user: user) }
 
       before { user.save! }
       it "allows the user to reply to system messages" do
@@ -476,9 +469,7 @@ RSpec.describe PostGuardian do
     end
 
     context "with private message" do
-      fab!(:private_message) do
-        Fabricate(:topic, archetype: Archetype.private_message, category_id: nil)
-      end
+      fab!(:private_message, :private_message_topic)
 
       before { user.save! }
 
@@ -487,8 +478,16 @@ RSpec.describe PostGuardian do
         expect(Guardian.new(user).can_create?(Post, private_message)).to be_truthy
       end
 
-      it "doesn't allow new posts by people not invited to the pm" do
-        expect(Guardian.new(user).can_create?(Post, private_message)).to be_falsey
+      it "allows new posts by people included via allowed groups" do
+        group = Fabricate(:group)
+        group.add(user)
+        private_message.topic_allowed_groups.create!(group: group)
+
+        expect(Guardian.new(user).can_create_post?(private_message)).to be_truthy
+      end
+
+      it "doesn't allow new posts by people not included in the pm" do
+        expect(Guardian.new(user).can_create_post?(private_message)).to be_falsey
       end
 
       it "allows new posts from silenced users included in the pm" do

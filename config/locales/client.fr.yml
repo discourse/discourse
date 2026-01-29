@@ -2997,8 +2997,7 @@ fr:
         post_approved: "message approuvé"
         membership_request_consolidated: "nouvelles demandes d'adhésion"
         reaction: "nouvelle réaction"
-        votes_released: "Le vote a été publié"
-        new_features: "De nouvelles fonctionnalités de Discourse ont été publiées !"
+        votes_released: "le vote a été publié"
         admin_problems: "de nouveaux conseils sur votre tableau de bord"
     upload_selector:
       change: "Modifier"
@@ -4070,6 +4069,7 @@ fr:
       back: "Retour à la catégorie"
       general: "Général"
       settings: "Paramètres"
+      advanced: "Avancé"
       topic_template: "Modèle"
       tags: "Étiquettes"
       localizations: "Localisations"
@@ -4101,7 +4101,9 @@ fr:
       save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
       description: "Description"
       logo_description: "Format d'image recommandé de 1:1 avec une taille minimale de 200 px. Si ce champ est laissé vide, aucune image ne sera affichée."
-      style: "Styles"
+      style: "Style"
+      icon: "Icône"
+      emoji: "Émoji"
       background_color: "Couleur"
       foreground_color: "Couleur du texte"
       color_validations:
@@ -4110,13 +4112,13 @@ fr:
         type: "Style"
         icon: "Icône"
         emoji: "Émoji"
+        square: "Carré"
         options:
           square: "Carré"
           icon: "Icône"
           emoji: "Émoji"
       color_used: "Couleur en cours d'utilisation"
       predefined_colors: "Options de couleurs prédéfinies"
-      name_placeholder: "Un ou deux mots maximum"
       color_placeholder: "N'importe quelle couleur"
       delete_confirm: "Voulez-vous vraiment supprimer cette catégorie ?"
       delete_error: "Une erreur s'est produite lors de la suppression de la catégorie."
@@ -4124,6 +4126,7 @@ fr:
       no_description: "Veuillez ajouter une description pour cette catégorie."
       change_in_category_topic: "Modifier la description"
       already_used: "Cette couleur est déjà utilisée par une autre catégorie"
+      color_palette: "Palette de couleurs"
       security: "Sécurité"
       security_add_group: "Ajouter un groupe"
       permissions:
@@ -4140,7 +4143,7 @@ fr:
       uncategorized_security_warning: "Cette catégorie est spéciale. Elle sert à rassembler les sujets qui n'ont pas de catégorie ; vous ne pouvez pas modifier ses paramètres de sécurité."
       uncategorized_general_warning: 'Cette catégorie est spéciale. Elle sert de catégorie par défaut pour les nouveaux sujets qui ne sont pas liés à une catégorie. Si vous souhaitez modifier ce comportement et forcer la sélection de catégorie, <a href="%{settingLink}">veuillez désactiver ce paramètre</a>. Si vous voulez modifier son nom ou sa description, allez dans <a href="%{customizeLink}">Personnaliser/contenu</a>.'
       pending_permission_change_alert: "Vous n'avez pas ajouté %{group} à cette catégorie ; cliquez sur ce bouton pour l'ajouter."
-      images: "Images"
+      images: "Apparence"
       email_in: "Adresse e-mail entrant personnalisée :"
       email_in_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère | ."
       email_in_allow_strangers: "Accepter les e-mails d'utilisateurs anonymes sans compte"
@@ -4162,6 +4165,11 @@ fr:
       position: "Position sur la page des catégories :"
       position_disabled: "Les catégories seront affichées par ordre d'activité. Pour contrôler l'ordre des catégories dans les listes, activez le paramètre <a href='%{url}'>« positions de catégorie fixes »</a> ."
       minimum_required_tags: "Nombre minimal d'étiquettes requises dans un sujet :"
+      none_subcategory_text: "Jamais"
+      visibility:
+        title: "Accès"
+        public: "Public"
+        group_restricted: "Privé"
       num_auto_bump_daily: "Nombre de sujets ouverts à remonter dans la liste automatiquement et quotidiennement :"
       auto_bump_cooldown_days: "Nombre minimum de jours avant de revenir sur le même sujet :"
       navigate_to_first_post_after_read: "Naviguer vers le premier message après avoir lu un sujet"
@@ -5711,7 +5719,9 @@ fr:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Journal des recherches</a>'
             disabled: 'Rapport sur les tendances de recherche désactivé. Activez la <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collecter des données.'
-          average_chart_label: Moyenne
+          sort_button: "Trier par %{column}"
+          sort_ascending: "croissant"
+          sort_descending: "décroissant"
           filters:
             file_extension:
               label: Extension de fichier

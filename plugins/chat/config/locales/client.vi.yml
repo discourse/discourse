@@ -276,7 +276,6 @@ vi:
           composer_bold: "%{shortcut} In đậm (chỉ có trên trình soạn thảo)"
           composer_italic: "%{shortcut} In nghiêng (chỉ có trên trình soạn thảo)"
           composer_code: "%{shortcut} Đoạn mã (chỉ có trên trình soạn thảo)"
-          drawer_open: "%{shortcut} Mở khung chat"
           drawer_close: "%{shortcut} Đóng khung chat"
           mark_all_channels_read: "%{shortcut} Đánh dấu tất cả các kênh đã đọc"
     user_menu:

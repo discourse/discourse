@@ -104,11 +104,8 @@ es:
           author_others: "%{username}"
           channel_title: "#actividad-en-el-chat"
           status_online: "● en línea"
-          message_1: "¡Enviaste <strong>%{count}</strong> mensajes este año!"
           reply_1: "lol impresionante B-)"
-          message_2: "Tuviste <strong>%{dm_count}</strong> conversaciones privadas con <strong>%{channel_count}</strong> personas o grupos diferentes"
           reply_2: "MOo0oLa :D"
-          message_3: "¡A la gente le encantaron tus mensajes! Recibiste <strong>%{count}</strong> reacciones ❤️"
           message_4: "La longitud media de tus mensajes fue de <strong>%{length}</strong> caracteres"
           message_5: "Tus canales favoritos:"
         favorite_gifs:

@@ -3088,7 +3088,6 @@ de:
         membership_request_consolidated: "Neue Mitgliedschaftsanfragen"
         reaction: "neue Reaktion"
         votes_released: "Abstimmung wurde freigegeben"
-        new_features: "Neue Discourse-Funktionen wurden veröffentlicht!"
         admin_problems: "neue Ratschläge auf deinem Website-Dashboard"
     upload_selector:
       change: "Ändern"
@@ -3880,6 +3879,7 @@ de:
         actions: "Massenaktionen"
     post:
       accessible_heading: "Beitrag von %{username} %{date}"
+      heading_anchor: "Link zur Überschrift"
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
       quote_reply: "Zitieren"
       quote_reply_shortcut: "Zitieren (oder q drücken)"
@@ -4187,6 +4187,7 @@ de:
       back: "Zurück zur Kategorie"
       general: "Allgemeines"
       settings: "Einstellungen"
+      advanced: "Erweitert "
       topic_template: "Vorlage"
       tags: "Schlagwörter"
       localizations: "Lokalisierungen"
@@ -4217,6 +4218,7 @@ de:
       create_long: "Eine neue Kategorie erstellen"
       save: "Kategorie speichern"
       slug: "Sprechender Name für URL der Kategorie"
+      parent: "Übergeordnete Kategorie"
       slug_placeholder: "(Optional) durch Bindestrich getrennte Wörter für URL"
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
@@ -4230,7 +4232,9 @@ de:
       logo_description: "Empfohlenes Seitenverhältnis 1:1 mit einer Mindestgröße von 200 px. Wenn du nichts angibst, wird kein Bild angezeigt."
       background_image: "Hintergrundbild für Kategorie"
       background_image_dark: "Hintergrundbild für Kategorie im „dunklen Modus“"
-      style: "Stile"
+      style: "Stil"
+      icon: "Symbol"
+      emoji: "Emojis"
       background_color: "Farbe"
       foreground_color: "Textfarbe"
       color_validations:
@@ -4241,13 +4245,13 @@ de:
         type: "Stil"
         icon: "Symbol"
         emoji: "Emoji"
+        square: "Quadrat"
         options:
           square: "Quadrat"
           icon: "Symbol"
           emoji: "Emoji"
       color_used: "Verwendete Farbe"
       predefined_colors: "Vordefinierte Farboptionen"
-      name_placeholder: "Ein oder maximal zwei Wörter"
       color_placeholder: "Beliebige Web-Farbe"
       delete_confirm: "Möchtest du wirklich diese Kategorie löschen?"
       delete_error: "Beim Löschen der Kategorie ist ein Fehler aufgetreten."
@@ -4255,6 +4259,7 @@ de:
       no_description: "Bitte füge eine Beschreibung für diese Kategorie hinzu."
       change_in_category_topic: "Beschreibung bearbeiten"
       already_used: "Diese Farbe wird bereits für eine andere Kategorie verwendet."
+      color_palette: "Farbpalette"
       security: "Sicherheit"
       security_add_group: "Eine Gruppe hinzufügen"
       permissions:
@@ -4271,7 +4276,7 @@ de:
       uncategorized_security_warning: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und besitzt keine Sicherheitseinstellungen."
       uncategorized_general_warning: 'Diese Kategorie ist etwas Spezielles. Sie wird als Standard-Kategorie für neue Themen genutzt, für die keine Kategorie ausgewählt wurde. Deaktiviere <a href="%{settingLink}">diese Einstellung</a>, wenn dieses Verhalten verhindert und eine Kategoriewahl erzwungen werden soll. Der Name und die Beschreibung können unter <a href="%{customizeLink}">Anpassen/Textinhalte</a> geändert werden.'
       pending_permission_change_alert: "Du hast %{group} nicht zu dieser Kategorie hinzugefügt; klicke diese Schaltfläche, um sie zuzufügen."
-      images: "Bilder"
+      images: "Erscheinungsbild"
       email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
       email_in_tooltip: "Du kannst mehrere E-Mail-Adressen mit dem Zeichen | trennen."
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
@@ -4300,7 +4305,12 @@ de:
       position_disabled: "Die Kategorien werden in der Reihenfolge ihrer Aktivität angezeigt. Um die Reihenfolge der Kategorien in den Listen zu kontrollieren, aktiviere die Einstellung <a href='%{url}'>„fixed category positions“</a>."
       minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
       default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
-      parent: "Übergeordnete Kategorie"
+      none_subcategory_text: "Keiner"
+      visibility:
+        title: "Zugriff"
+        public: "Öffentlich"
+        all_members: "Alle Mitglieder"
+        group_restricted: "Privat"
       num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden:"
       auto_bump_cooldown_days: "Mindestanzahl an Tagen, bevor das gleiche Thema erneut angesprochen wird:"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
@@ -5404,6 +5414,7 @@ de:
         change_enabled_for_success: "Du hast diese Änderung für %{enabledFor} aktiviert."
         change_disabled: "Du hast diese Änderung deaktiviert"
         permanent_notice: "Diese Änderung ist nun dauerhaft und die Einstellung wird bald entfernt werden. Du hast keine Möglichkeit mehr, sie zu deaktivieren."
+        permanent_no_group_selection: "Nicht änderbar, dauerhafte Änderungen gelten für alle Gruppen."
         preview: "Vorschau"
         enabled_for_options:
           no_one: "Keiner"
@@ -5979,7 +5990,9 @@ de:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Suchprotokolle</a>'
             disabled: 'Der Bericht über beliebte Suchen ist deaktiviert. Aktiviere <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um die Daten zu erheben.'
-          average_chart_label: Durchschnitt
+          sort_button: "Sortieren nach %{column}"
+          sort_ascending: "aufsteigend"
+          sort_descending: "absteigend"
           filters:
             file_extension:
               label: Dateiendung
@@ -6996,6 +7009,8 @@ de:
           select_base:
             title: "Wähle Basis-Farbpalette"
             description: "Basis-Palette:"
+          non_default_theme_warning: "In deinen <a href='%{link}'>persönlichen Einstellungen</a> hast du ein anderes Theme gewählt als das Standard-Theme. Änderungen hier wirken sich ggf. nicht auf dich aus, aber auf alle mit dem Standard-Theme (%{themeName})."
+          custom_schemes_warning: "In deinen <a href='%{link}'>persönlichen Einstellungen</a> hast du eine andere Farbpalette für %{colorModes} gewählt als die Standard-Farbpalette. Änderungen hier wirken sich ggf. nicht auf dich aus, aber auf alle die, die Standard-Farbpalette nutzen."
           light: "hell"
           dark: "dunkel"
           title: "Farben"
@@ -7339,6 +7354,9 @@ de:
             delete_associated_accounts: "verknüpfte Konten löschen"
             change_theme_site_setting: "Theme-spezifische Website-Einstellung ändern"
             stop_impersonating: "Nutzerrolle verlassen"
+            upcoming_change_toggled: "bevorstehende Änderung verändert"
+            change_site_setting_groups: "Website-Einstellungen für Gruppen geändert"
+            discourse_id_regenerate_credentials: "Discourse-ID-Anmeldedaten neu generieren"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -7393,6 +7411,7 @@ de:
         clear_all: Alle löschen
         clear_all_confirm: "Bist du sicher, dass du alle beobachteten Wörter für die Aktion %{action} löschen möchtest?"
         invalid_regex: 'Das beobachtete Wort „%{word}“ ist ein ungültiger regulärer Ausdruck.'
+        invalid_regex_multiple: "Ungültige reguläre Ausdrücke:"
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Beobachtete Wörter sind reguläre Ausdrücke</a> und sie schließen nicht automatisch Wortgrenzen ein. Wenn du möchtest, dass der reguläre Ausdruck ganze Wörter erfasst, füge <code>\b</code> am Anfang und Ende deines regulären Ausdrucks ein.'
         actions:
           block: "Blockieren"

@@ -400,6 +400,22 @@ describe "Topic bulk select", type: :system do
 
       expect(topic_list).to have_checkbox_selected_on_row(1)
     end
+
+    it "opens topic in new window when pressing meta+Enter" do
+      sign_in(admin)
+      visit("/latest")
+
+      topic_list_header.click_bulk_select_button
+
+      new_window =
+        window_opened_by do
+          find(".topic-list-item[data-topic-id='#{topics.last.id}'] a.raw-topic-link").send_keys(
+            %i[meta return],
+          )
+        end
+
+      within_window(new_window) { expect(topic_page).to have_topic_title(topics.last.title) }
+    end
   end
 
   context "when changing topic notification levels" do

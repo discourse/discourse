@@ -36,7 +36,7 @@ RSpec.describe "tasks/version_bump" do
       FileUtils.mkdir_p "tmp"
 
       File.write(".gitignore", "tmp\n")
-      File.write("lib/version.rb", fake_version_rb("3.2.0.beta1-latest"))
+      File.write("lib/version.rb", fake_version_rb("2025.12.0-latest"))
       File.write(
         "versions.json",
         JSON.pretty_generate(
@@ -345,11 +345,6 @@ RSpec.describe "tasks/version_bump" do
 
     it "rolls over to next year when incrementing past December" do
       Dir.chdir(local_path) do
-        File.write("lib/version.rb", fake_version_rb("2025.12.0-latest"))
-        run "git", "add", "."
-        run "git", "commit", "-m", "December version"
-        run "git", "push", "origin", "main"
-
         freeze_time Time.utc(2025, 12, 15) do
           capture_stdout { invoke_rake_task("release:prepare_next_version") }
         end
@@ -360,6 +355,35 @@ RSpec.describe "tasks/version_bump" do
         run "git", "checkout", "version-bump/main"
         version_rb_content = File.read("lib/version.rb")
         expect(version_rb_content).to include('STRING = "2026.1.0-latest"')
+      end
+    end
+
+    it "updates versions.json with new version info" do
+      Dir.chdir(local_path) do
+        freeze_time Time.utc(2025, 12, 28) do
+          capture_stdout { invoke_rake_task("release:prepare_next_version") }
+        end
+      end
+
+      Dir.chdir(origin_path) do
+        run "git", "reset", "--hard"
+        run "git", "checkout", "version-bump/main"
+        version_rb_content = File.read("lib/version.rb")
+        expect(version_rb_content).to include('STRING = "2026.1.0-latest"')
+
+        versions_json = JSON.parse(File.read("versions.json"))
+        expect(versions_json["2026.1"]).to eq(
+          {
+            "developmentStartDate" => "2025-12-28",
+            "releaseDate" => "2026-01",
+            "supportEndDate" => "2026-09",
+            "released" => false,
+            "esr" => true,
+            "supported" => true,
+          },
+        )
+        expect(versions_json["2025.12"]["released"]).to eq(true)
+        expect(versions_json["2025.12"]["releaseDate"]).to eq("2025-12-28")
       end
     end
 
@@ -432,6 +456,51 @@ RSpec.describe "tasks/version_bump" do
         "--add-label",
         ReleaseUtils::PR_LABEL,
       )
+    end
+  end
+
+  describe "release:stage_security_fixes" do
+    it "stages a PR of multiple security fixes" do
+      Dir.chdir(origin_path) do
+        run "git", "checkout", "-b", "security-fix-one"
+
+        File.write("firstfile.txt", "contents")
+        run "git", "add", "firstfile.txt"
+        run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit one"
+        File.write("secondfile.txt", "contents")
+        run "git", "add", "secondfile.txt"
+        run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix one, commit two"
+
+        run "git", "checkout", "main"
+        run "git", "checkout", "-b", "security-fix-two"
+        File.write("somefile.txt", "contents")
+        run "git", "add", "somefile.txt"
+        run "git", "-c", "commit.gpgsign=false", "commit", "-m", "security fix two"
+      end
+
+      Dir.chdir(local_path) do
+        capture_stdout do
+          ENV["SECURITY_FIX_REFS"] = "origin/security-fix-one,origin/security-fix-two"
+          invoke_rake_task("release:stage_security_fixes", "main")
+        ensure
+          ENV.delete("SECURITY_FIX_REFS")
+        end
+      end
+
+      Dir.chdir(origin_path) do
+        expect(run("git", "log", "--pretty=%s", "main").lines.map(&:strip)).to eq(
+          [
+            "security fix two",
+            "security fix one, commit two",
+            "security fix one, commit one",
+            "Initial commit",
+          ],
+        )
+
+        expect(run("git", "show", "main:somefile.txt")).to eq("contents")
+        expect(run("git", "show", "main:firstfile.txt")).to eq("contents")
+        expect(run("git", "show", "main:secondfile.txt")).to eq("contents")
+      end
     end
   end
 end

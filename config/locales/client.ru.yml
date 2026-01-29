@@ -3328,8 +3328,7 @@ ru:
         post_approved: "сообщение одобрено"
         membership_request_consolidated: "новые запросы на членство"
         reaction: "Новая реакция"
-        votes_released: "Голосование опубликовано"
-        new_features: "Появились новые функции Discourse!"
+        votes_released: "голосование опубликовано"
         admin_problems: "новый совет в панели управления сайта"
     upload_selector:
       change: "Изменить"
@@ -4525,6 +4524,7 @@ ru:
       back: "Вернуться в категорию"
       general: "Основная"
       settings: "Настройки"
+      advanced: "Дополнительно"
       topic_template: "Шаблон"
       tags: "Теги"
       localizations: "Локализации"
@@ -4556,7 +4556,9 @@ ru:
       save_error: При сохранении категории возникла ошибка.
       description: "Описание"
       logo_description: "Рекомендуемое соотношение сторон 1:1 и минимальный размер 200 пикселей. Если оставить поле пустым, изображение отображаться не будет."
-      style: "Стили"
+      style: "Стиль"
+      icon: "Значок"
+      emoji: "Эмодзи"
       background_color: "Цвет"
       foreground_color: "Цвет текста"
       color_validations:
@@ -4565,13 +4567,13 @@ ru:
         type: "Стиль"
         icon: "Значок"
         emoji: "Эмодзи"
+        square: "Квадрат"
         options:
           square: "Квадрат"
           icon: "Значок"
           emoji: "Эмодзи"
       color_used: "Используемый цвет"
       predefined_colors: "Предустановленные варианты цветов"
-      name_placeholder: "Не более одного-двух слов"
       color_placeholder: "Любой цвет из веб-палитры"
       delete_confirm: "Действительно удалить категорию?"
       delete_error: "При удалении категории произошла ошибка."
@@ -4579,6 +4581,7 @@ ru:
       no_description: "Добавьте описание для этой категории."
       change_in_category_topic: "Изменить описание"
       already_used: "Цвет уже используется другой категорией"
+      color_palette: "Цветовая палитра"
       security: "Безопасность"
       security_add_group: "Добавить группу"
       permissions:
@@ -4595,7 +4598,7 @@ ru:
       uncategorized_security_warning: "Это особенная категория. В ней содержатся темы, для которых при создании не была указана категория; у нее не может быть настроек безопасности."
       uncategorized_general_warning: 'Это особенная категория. Она используется как категория по умолчанию для новых тем, не отнесенных к конкретной категории. Чтобы предотвратить такое поведение и обеспечить выбор категории, <a href="%{settingLink}">отключите соответствующую настройку</a>. Изменить название или описание категории можно в разделе <a href="%{customizeLink}">Оформление / Текст</a>.'
       pending_permission_change_alert: "Вы не добавили %{group} в эту категорию; нажмите эту кнопку для добавления."
-      images: "Изображения"
+      images: "Внешний вид"
       email_in: "Специальный адрес для входящих писем:"
       email_in_tooltip: "Адреса электронной почты разделяются символом вертикальной черты «|»."
       email_in_allow_strangers: "Принимать письма от анонимных пользователей, не имеющих аккаунтов"
@@ -4617,6 +4620,11 @@ ru:
       position: "Позиция на странице категорий:"
       position_disabled: "Категории будут отображаться в порядке активности. Чтобы настроить их порядок в списках, включите настройку <a href='%{url}'>fixed category positions</a>."
       minimum_required_tags: "Минимальное количество тегов, требуемых в теме:"
+      none_subcategory_text: "Нет"
+      visibility:
+        title: "Доступ"
+        public: "Публичное"
+        group_restricted: "Закрытое сообщество"
       num_auto_bump_daily: "Число открытых тем для автоматического ежедневного поднятия:"
       auto_bump_cooldown_days: "Минимум дней до повторного поднятия темы:"
       navigate_to_first_post_after_read: "Перейти к первому сообщению после прочтения тем"
@@ -6292,7 +6300,9 @@ ru:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Журналы поиска</a>'
             disabled: 'Отчёт о поисковых запросах отключён. Включить <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">журнал поисковых запросов</a> для сбора данных.'
-          average_chart_label: Среднее
+          sort_button: "Сортировка: %{column}"
+          sort_ascending: "по возрастанию"
+          sort_descending: "по убыванию"
           filters:
             file_extension:
               label: Расширение файла

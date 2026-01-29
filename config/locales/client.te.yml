@@ -2422,7 +2422,6 @@ te:
         membership_request_consolidated: "కొత్త సభ్యత్వ అభ్యర్థనలు"
         reaction: "కొత్త స్పందన"
         votes_released: "ఓటు విడుదలైంది"
-        new_features: "కొత్త డిస్కోర్స్ ఫీచర్‌లు విడుదల చేయబడ్డాయి!"
         admin_problems: "మీ సైట్ డాష్‌బోర్డ్‌లో కొత్త సలహా"
     upload_selector:
       delete: "తొలగించు"
@@ -3404,6 +3403,7 @@ te:
       back: "తిరిగి వర్గానికి"
       general: "సాధారణ"
       settings: "అమరికలు"
+      advanced: "అధునాతన"
       topic_template: "టెంప్లేట్"
       tags: "ట్యాగులు"
       localization:
@@ -3428,6 +3428,8 @@ te:
       creation_error: ఈ వర్గం సృష్టించేప్పుడు దోషం
       save_error: వర్గాన్ని సేవ్ చేయడంలో లోపం ఏర్పడింది.
       description: "వివరణ"
+      icon: "చిహ్నం"
+      emoji: "ఇమోజి"
       background_color: "రంగు"
       color_validations:
         cant_be_empty: "ఖాళీ ఉండకూడదు"
@@ -3437,7 +3439,6 @@ te:
         options:
           icon: "చిహ్నం"
           emoji: "ఇమోజి"
-      name_placeholder: "గరిష్టం ఒకటి లేదా రెండు పదాలు"
       color_placeholder: "ఏదేనీ జాల రంగు"
       delete_confirm: "మీరు నిజంగా ఈ వర్గాన్ని తొలగించాలనుకుంటున్నారా?"
       delete_error: "ఈ వర్గం తొలగించేప్పుడు దొషం."
@@ -3459,7 +3460,7 @@ te:
       uncategorized_security_warning: "ఈ వర్గం ప్రత్యేకమైనది. ఇది వర్గం లేని విషయాల కోసం హోల్డింగ్ ఏరియాగా ఉద్దేశించబడింది; ఇది భద్రతా సెట్టింగ్‌లను కలిగి ఉండదు."
       uncategorized_general_warning: 'ఈ వర్గం ప్రత్యేకమైనది. వర్గాన్ని ఎంచుకోని కొత్త విషయాల కోసం ఇది డిఫాల్ట్ వర్గంగా ఉపయోగించబడుతుంది. మీరు ఈ ప్రవర్తనను నిరోధించి, వర్గ ఎంపికను నిర్బంధించాలనుకుంటే, <a href="%{settingLink}">దయచేసి ఇక్కడ సెట్టింగ్‌ని నిలిపివేయండి</a>. మీరు పేరు లేదా వివరణను మార్చాలనుకుంటే, <a href="%{customizeLink}">అనుకూలీకరించండి / వచన కంటెంట్</a>కి వెళ్లండి.'
       pending_permission_change_alert: "మీరు ఈ వర్గానికి %{group} ని జోడించలేదు; వాటిని జోడించడానికి ఈ బటన్‌ను క్లిక్ చేయండి."
-      images: "చిత్రాలు"
+      images: "స్వరూపం"
       email_in: "అనుకూల ఇన్‌కమింగ్ ఇమెయిల్ చిరునామా:"
       email_in_tooltip: "మీరు | తో బహుళ ఇమెయిల్ చిరునామాలను వేరు చేయవచ్చు."
       email_in_allow_strangers: "ఎటువంటి ఖాతాలు లేని అనామక సభ్యుల నుండి వచ్చే ఈమెయిల్లు అంగీకరించు"
@@ -3481,6 +3482,11 @@ te:
       position: "వర్గాల పేజీలో స్థానం:"
       position_disabled: "కార్యాచరణ క్రమంలో వర్గాలు ప్రదర్శించబడతాయి. జాబితాలలోని వర్గాల క్రమాన్ని నియంత్రించడానికి, <a href='%{url}'>'స్థిర వర్గం స్థానాలు'</a> సెట్టింగ్‌ని ప్రారంభించండి."
       minimum_required_tags: "విషయంలో కనీస ట్యాగ్‌ల సంఖ్య అవసరం:"
+      none_subcategory_text: "ఏదీ లేదు"
+      visibility:
+        title: "యాక్సెస్"
+        public: "బహిరంగం"
+        group_restricted: "అంతరంగికం"
       num_auto_bump_daily: "ప్రతిరోజూ స్వయంచాలకంగా బంప్ చేయడానికి ఓపెన్ విషయాల సంఖ్య:"
       auto_bump_cooldown_days: "అదే విషయాన్ని మళ్లీ బంప్ చేయడానికి కనీసం రోజుల అంతరం:"
       navigate_to_first_post_after_read: "విషయాలు చదివిన తర్వాత మొదటి పోస్ట్‌కి నావిగేట్ చేయండి"
@@ -4567,7 +4573,9 @@ te:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">శోధన లాగ్‌లు</a>'
             disabled: 'ట్రెండింగ్ శోధన నివేదిక నిలిపివేయబడింది. డేటాను సేకరించడానికి <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">శోధన పాదాల లాగ్ ను ప్రారంభించండి</a> .'
-          average_chart_label: సగటు
+          sort_button: "%{column} ద్వారా క్రమబద్ధీకరించండి"
+          sort_ascending: "ఆరోహణ"
+          sort_descending: "అవరోహణ"
           filters:
             file_extension:
               label: ఫైల్ ఎక్స్టెన్షన్

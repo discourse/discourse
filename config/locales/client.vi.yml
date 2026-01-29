@@ -2956,8 +2956,7 @@ vi:
         post_approved: "Được duyệt tút"
         membership_request_consolidated: "Yêu cầu đăng ký thành viên mới"
         reaction: "Phản ứng mới"
-        votes_released: "Đã trả lượt bình chọn"
-        new_features: "Tính năng mới của Discourse!"
+        votes_released: "đã trả lượt bình chọn"
         admin_problems: "Lời khuyên mới trên bảng điều khiển"
     upload_selector:
       change: "Thay đổi"
@@ -3992,6 +3991,7 @@ vi:
       back: "Quay lại chuyên mục"
       general: "Chung"
       settings: "Cấu hình"
+      advanced: "Nâng cao"
       topic_template: "Template"
       tags: "Thẻ"
       localizations: "Bản địa hóa"
@@ -4022,6 +4022,7 @@ vi:
       create_long: "Tạo Chủ đề mới"
       save: "Lưu chuyên mục"
       slug: "Đường dẫn chuyên mục"
+      parent: "Chuyên mục chính"
       slug_placeholder: "(Tùy chọn) các từ sử dụng trong url"
       creation_error: Có lỗi xảy ra khi tạo chuyên mục
       save_error: Có lỗi xảy ra khi lưu chuyên mục
@@ -4036,6 +4037,8 @@ vi:
       background_image: "Ảnh nền của chuyên mục"
       background_image_dark: "Ảnh nền Chế độ tối của chuyên mục"
       style: "Phong cách"
+      icon: "Biểu tượng"
+      emoji: "Emoji"
       background_color: "Màu sắc"
       foreground_color: "Màu chữ"
       color_validations:
@@ -4046,13 +4049,13 @@ vi:
         type: "Phong cách"
         icon: "Biểu tượng"
         emoji: "Emoji"
+        square: "Vuông"
         options:
           square: "Vuông"
           icon: "Biểu tượng"
           emoji: "Emoji"
       color_used: "Màu đang được sử dụng"
       predefined_colors: "Các tùy chọn màu sắc có sẵn"
-      name_placeholder: "Tối đa một hoặc hai từ"
       color_placeholder: "Bất cứ màu nào"
       delete_confirm: "Bạn có chắc sẽ xóa chuyên mục này chứ?"
       delete_error: "Có lỗi xảy ra khi xóa chuyên mục này"
@@ -4060,6 +4063,7 @@ vi:
       no_description: "Hãy thêm mô tả cho chuyên mục này"
       change_in_category_topic: "Sửa mô tả"
       already_used: "Màu này đã được dùng bởi chuyên mục khác"
+      color_palette: "Bảng màu"
       security: "Bảo mật"
       security_add_group: "Thêm một nhóm"
       permissions:
@@ -4076,7 +4080,7 @@ vi:
       uncategorized_security_warning: "Chuyên mục này là đặc biệt. Nó được thiết kế như một khu vực tổ chức cho các chủ đề không có chuyên mục; nó không thể có cài đặt bảo mật."
       uncategorized_general_warning: 'Chuyên mục này là đặc biệt. Nó được sử dụng làm chuyên mục mặc định cho các chủ đề mới chưa chọn chuyên mục. Nếu bạn muốn ngăn hành vi này và buộc lựa chọn chuyên mục, <a href="%{settingLink}">vui lòng tắt cài đặt tại đây</a>. Nếu bạn muốn thay đổi tên hoặc mô tả, hãy chuyển đến <a href="%{customizeLink}">Tùy chỉnh / Nội dung Văn bản</a>.'
       pending_permission_change_alert: "Bạn chưa thêm %{group} vào chuyên mục này; nhấn vào nút này để thêm chúng."
-      images: "Hình ảnh"
+      images: "Ngoại hình"
       email_in: "Tùy chỉnh địa chỉ nhận thư điện tử "
       email_in_tooltip: "Bạn có thể phân tách nhiều địa chỉ email bằng ký tự |."
       email_in_allow_strangers: "Nhận thư điện tử từ người gửi vô danh không tài khoản"
@@ -4105,7 +4109,12 @@ vi:
       position_disabled: "Các chuyên mục sẽ được hiển thị theo thứ tự hoạt động. Để kiểm soát thứ tự các chuyên mục trong danh sách, hãy bật cài đặt <a href='%{url}'>'cố định vị trí chuyên mục'</a> ."
       minimum_required_tags: "Số lượng thẻ tối thiểu được yêu cầu trong một chủ đề:"
       default_slow_mode: 'Bật "Chế độ chậm" cho các chủ đề mới trong chuyên mục này.'
-      parent: "Chuyên mục chính"
+      none_subcategory_text: "Không"
+      visibility:
+        title: "Truy cập"
+        public: "Công khai"
+        all_members: "Tất cả thành viên"
+        group_restricted: "Riêng tư"
       num_auto_bump_daily: "Số lượng chủ đề đẩy tự động hàng ngày:"
       auto_bump_cooldown_days: "Số ngày tối thiểu trước khi đẩy lại cùng một chủ đề:"
       navigate_to_first_post_after_read: "Chuyển đến tút đầu tiên sau khi chủ đề được đọc"
@@ -5747,7 +5756,9 @@ vi:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">tìm kiếm logs</a>'
             disabled: 'Báo cáo tìm kiếm thịnh hành bị tắt. Bật <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log truy vấn tìm kiếm</a> số liệu thu thập.'
-          average_chart_label: Trung bình
+          sort_button: "Sắp xếp theo %{column}"
+          sort_ascending: "tăng dần"
+          sort_descending: "giảm dần"
           filters:
             file_extension:
               label: Phần mở rộng

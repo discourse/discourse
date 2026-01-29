@@ -2828,7 +2828,6 @@ ja:
         membership_request_consolidated: "新しいメンバーシップリクエスト"
         reaction: "新しいリアクション"
         votes_released: "投票がリリースされました"
-        new_features: "新しい Discourse 機能がリリースされました！"
         admin_problems: "サイトダッシュボードに関する新しいアドバイス"
     upload_selector:
       change: "変更"
@@ -3824,6 +3823,7 @@ ja:
       back: "カテゴリに戻る"
       general: "一般"
       settings: "設定"
+      advanced: "高度"
       topic_template: "テンプレート"
       tags: "タグ"
       localizations: "ローカリゼーション"
@@ -3856,6 +3856,8 @@ ja:
       description: "説明"
       logo_description: "推奨アスペクト比は 1:1、最小サイズは 200px です。空白のままにすると、画像は表示されません。"
       style: "スタイル"
+      icon: "アイコン"
+      emoji: "絵文字"
       background_color: "色"
       foreground_color: "テキストの色"
       color_validations:
@@ -3864,13 +3866,13 @@ ja:
         type: "スタイル"
         icon: "アイコン"
         emoji: "絵文字"
+        square: "正方形"
         options:
           square: "正方形"
           icon: "アイコン"
           emoji: "絵文字"
       color_used: "使用中の色"
       predefined_colors: "既定の色オプション"
-      name_placeholder: "簡単な名前にしてください"
       color_placeholder: "すべてのウェブ色"
       delete_confirm: "このカテゴリを削除してもよろしいですか？"
       delete_error: "カテゴリを削除中にエラーが発生しました。"
@@ -3878,6 +3880,7 @@ ja:
       no_description: "このカテゴリの説明を追加してください。"
       change_in_category_topic: "説明を編集する"
       already_used: "この色は他のカテゴリで使用されています。"
+      color_palette: "色パレット"
       security: "セキュリティ"
       security_add_group: "グループの追加"
       permissions:
@@ -3894,7 +3897,7 @@ ja:
       uncategorized_security_warning: "このカテゴリは特殊です。カテゴリのないトピックを保存するために用意されているため、セキュリティを設定できません。"
       uncategorized_general_warning: 'このカテゴリは特殊です。カテゴリが選択されていない新しいトピックのデフォルトのカテゴリとして使用されます。この動作を適用せずにカテゴリの選択を強制するには、<a href="%{settingLink}">ここで設定を無効にしてください</a>。名前または説明を変更するには、<a href="%{customizeLink}">カスタマイズ/テキストコンテンツ</a>に移動してください。'
       pending_permission_change_alert: "このカテゴリに %{group} を追加していません。このボタンをクリックして追加してください。"
-      images: "画像"
+      images: "外観"
       email_in: "カスタム受信メールアドレス:"
       email_in_tooltip: "複数のメールアドレスは「|」文字で区切ることができます。"
       email_in_allow_strangers: "登録されていない匿名のユーザーからのメールを受け取る"
@@ -3916,6 +3919,11 @@ ja:
       position: "カテゴリページの位置:"
       position_disabled: "カテゴリはアクティビティの順に表示されます。リスト内のカテゴリの順を制御するには、<a href='%{url}'>'カテゴリの位置の固定'</a> 設定を有効にしてください。"
       minimum_required_tags: "トピックに必要なタグの最小数:"
+      none_subcategory_text: "なし"
+      visibility:
+        title: "アクセス"
+        public: "公開"
+        group_restricted: "非公開"
       num_auto_bump_daily: "毎日自動的にバンプするオープントピックの数:"
       auto_bump_cooldown_days: "同じトピックをもう一度バンプするまでの最低日数:"
       navigate_to_first_post_after_read: "トピックが読まれた後最初の投稿に移動する"
@@ -5420,7 +5428,9 @@ ja:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">検索ログ</a>'
             disabled: 'トレンド検索レポートは無効です。データを収集するには、<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">ログ検索クエリ</a>を有効にしてください。'
-          average_chart_label: 平均
+          sort_button: "%{column} で並べ替え"
+          sort_ascending: "昇順"
+          sort_descending: "降順"
           filters:
             file_extension:
               label: ファイル拡張子

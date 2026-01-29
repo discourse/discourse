@@ -5,7 +5,10 @@ import {
 import { load } from "pretty-text/oneboxer";
 import { ajax } from "discourse/lib/ajax";
 import escapeRegExp from "discourse/lib/escape-regexp";
-import { isWhiteSpace } from "discourse/static/prosemirror/lib/markdown-it";
+import {
+  getLinkify,
+  isWhiteSpace,
+} from "discourse/static/prosemirror/lib/markdown-it";
 import { isTopLevel } from "discourse-markdown-it/features/onebox";
 
 /** @type {RichEditorExtension} */
@@ -169,6 +172,8 @@ const extension = {
 
             if (
               link?.attrs.markup === "linkify" &&
+              // Excludes watched word links
+              getLinkify().test(node.text) &&
               set.find(pos, pos + node.nodeSize).length === 0 &&
               isOutsideSelection(pos, node.nodeSize, tr)
             ) {

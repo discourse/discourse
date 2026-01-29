@@ -2944,6 +2944,7 @@ zh_CN:
         votes_released: "投票额度已释放"
         new_features: "已发布新的 Discourse 功能！"
         admin_problems: "网站信息中心有新建议"
+        upcoming_change_available: "新的变化即将到来"
     upload_selector:
       change: "更改"
       delete: "删除"
@@ -3977,6 +3978,7 @@ zh_CN:
       back: "返回类别"
       general: "常规"
       settings: "设置"
+      advanced: "高级"
       topic_template: "模板"
       tags: "标签"
       localizations: "本地化"
@@ -4007,6 +4009,7 @@ zh_CN:
       create_long: "创建新类别"
       save: "保存类别"
       slug: "类别缩略名"
+      parent: "父类别"
       slug_placeholder: "（可选）用于 URL 以“-”分隔的字词"
       creation_error: 创建类别时出错。
       save_error: 保存类别时出错。
@@ -4021,6 +4024,8 @@ zh_CN:
       background_image: "类别背景图片"
       background_image_dark: "深色类别背景图片"
       style: "样式"
+      icon: "图标"
+      emoji: "表情符号"
       background_color: "颜色"
       foreground_color: "文本颜色"
       color_validations:
@@ -4031,13 +4036,13 @@ zh_CN:
         type: "样式"
         icon: "图标"
         emoji: "表情符号"
+        square: "方形"
         options:
           square: "方形"
           icon: "图标"
           emoji: "表情符号"
       color_used: "使用的颜色"
       predefined_colors: "预定义颜色选项"
-      name_placeholder: "应该简明扼要"
       color_placeholder: "任意网页颜色"
       delete_confirm: "确定要删除此类别吗？"
       delete_error: "删除类别时出错。"
@@ -4045,6 +4050,7 @@ zh_CN:
       no_description: "请为此类别添加描述。"
       change_in_category_topic: "编辑描述"
       already_used: "此颜色已被其他类别使用"
+      color_palette: "调色板"
       security: "安全性"
       security_add_group: "添加群组"
       permissions:
@@ -4061,7 +4067,7 @@ zh_CN:
       uncategorized_security_warning: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能有安全性设置。"
       uncategorized_general_warning: '此类别比较特殊。它用作未选择类别的新话题的默认类别。如果您想要避免此行为并强制选择类别，<a href="%{settingLink}">请在此处禁用该设置</a>。如果您想要更改其名称或描述，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
       pending_permission_change_alert: "您还没有将 %{group} 添加到此类别；点击此按钮添加它们。"
-      images: "图片"
+      images: "外观"
       email_in: "自定义传入电子邮件地址："
       email_in_tooltip: "您可以使用 | 字符分隔多个电子邮件地址。"
       email_in_allow_strangers: "接受来自没有帐户的匿名用户的电子邮件"
@@ -4090,7 +4096,12 @@ zh_CN:
       position_disabled: "类别将按活动顺序显示。要控制列表中类别的顺序，请启用<a href='%{url}'>固定类别位置</a>设置。"
       minimum_required_tags: "话题中所需的最少标签数："
       default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
-      parent: "父类别"
+      none_subcategory_text: "无"
+      visibility:
+        title: "访问"
+        public: "公开"
+        all_members: "所有成员"
+        group_restricted: "不公开"
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
       auto_bump_cooldown_days: "再次顶帖同一话题之前的最短天数。"
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
@@ -4433,6 +4444,7 @@ zh_CN:
         back: "%{shortcut} 返回"
         up_down: "%{shortcut} 移动选择 &uarr; &darr;"
         open: "%{shortcut} 打开所选话题"
+        open_new_window: "%{shortcut} 在新标签页/窗口中打开所选话题"
         next_prev: "%{shortcut} 下一个/上一个部分"
         go_to_unread_post: "%{shortcut} 转到第一个未读帖子"
       application:
@@ -5185,6 +5197,7 @@ zh_CN:
           impact_type_feature: "功能"
           impact_type_other: "其他"
           status_all: "所有状态"
+          status_conceptual: "概念阶段"
           status_experimental: "实验性"
           status_alpha: "Alpha"
           status_beta: "Beta"
@@ -5720,6 +5733,7 @@ zh_CN:
           daily: 每天
           monthly: 每月
           weekly: 每周
+          value_so_far: "%{value} （目前为止）"
           dates: "日期 (UTC)"
           groups: "所有群组"
           disabled: "此报告已禁用"
@@ -5730,7 +5744,11 @@ zh_CN:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">搜索日志</a>'
             disabled: '趋势搜索报告已禁用。启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
-          average_chart_label: 平均值
+          average_chart_label: 显示平均数，而不是总数
+          sort_button: "按%{column}排序"
+          sort_button_current: "按 %{column}, %{direction} 排序"
+          sort_ascending: "升序"
+          sort_descending: "降序"
           filters:
             file_extension:
               label: 文件扩展名
