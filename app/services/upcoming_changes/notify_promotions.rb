@@ -25,7 +25,7 @@ class UpcomingChanges::NotifyPromotions
     User.human_users.admins.pluck(:id)
   end
 
-  def fetch_change_notification_statuses(changes_already_notified_about_promotion:)
+  def fetch_change_notification_statuses(changes_already_notified_about_promotion:, admin_user_ids:)
     SiteSetting.upcoming_change_site_settings.index_with do |setting_name|
       status_hash = {}
 
@@ -33,6 +33,7 @@ class UpcomingChanges::NotifyPromotions
         params: {
           setting_name: setting_name.to_sym,
           changes_already_notified_about_promotion:,
+          admin_user_ids:,
         },
         guardian: Discourse.system_user.guardian,
       ) do |result|

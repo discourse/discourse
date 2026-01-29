@@ -16,8 +16,12 @@ class UpcomingChanges::NotifyPromotion
 
   params do
     attribute :setting_name, :symbol
-    attribute :changes_already_notified_about_promotion, :array, default: []
     validates :setting_name, presence: true
+
+    attribute :admin_user_ids, :array
+    validates :admin_user_ids, presence: true
+
+    attribute :changes_already_notified_about_promotion, :array, default: []
   end
 
   policy :setting_is_available
@@ -78,17 +82,13 @@ class UpcomingChanges::NotifyPromotion
     }.to_json
 
     records =
-      User
-        .human_users
-        .admins
-        .pluck(:id)
-        .map do |admin_id|
-          {
-            user_id: admin_id,
-            notification_type: Notification.types[:upcoming_change_automatically_promoted],
-            data:,
-          }
-        end
+      params.admin_user_ids.map do |admin_id|
+        {
+          user_id: admin_id,
+          notification_type: Notification.types[:upcoming_change_automatically_promoted],
+          data:,
+        }
+      end
 
     Notification::Action::BulkCreate.call(records:)
   end
