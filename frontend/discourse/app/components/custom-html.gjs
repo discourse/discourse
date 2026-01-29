@@ -33,7 +33,7 @@ export default class CustomHtml extends Component {
       {{willDestroy this.willDestroyElement}}
       ...attributes
     >
-      {{htmlSafe this.html}}
+      {{this.html}}
     </div>
   </template>
 }
