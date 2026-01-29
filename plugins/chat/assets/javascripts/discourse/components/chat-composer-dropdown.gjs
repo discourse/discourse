@@ -16,11 +16,11 @@ export default class ChatComposerDropdown extends Component {
     // See: https://webkit.org/blog/13862/the-user-activation-api/
     if (button.synchronous) {
       closeFn();
+      button.action();
     } else {
       await closeFn();
+      await button.action();
     }
-
-    button.action();
   }
 
   @action
