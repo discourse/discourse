@@ -9,7 +9,7 @@ RSpec.describe Jobs::DownloadBackupEmail do
     email = ActionMailer::Base.deliveries.last
 
     expect(email.subject).to eq(
-      I18n.t("download_backup_mailer.subject_template", email_prefix: SiteSetting.title),
+      I18n.t("download_backup_mailer.subject_template_improved", email_prefix: SiteSetting.title),
     )
 
     expect(email.body.raw_source).to include(
