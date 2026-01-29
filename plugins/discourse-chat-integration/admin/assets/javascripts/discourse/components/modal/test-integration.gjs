@@ -22,7 +22,7 @@ export default class TestIntegration extends Component {
   @action
   async send() {
     try {
-      await ajax("/admin/plugins/chat-integration/test", {
+      await ajax("/admin/plugins/discourse-chat-integration/test", {
         data: {
           channel_id: this.args.model.channel.id,
           topic_id: this.topicId,
@@ -55,6 +55,7 @@ export default class TestIntegration extends Component {
           <form.Field
             @name="topicId"
             @title={{i18n "chat_integration.test_modal.topic"}}
+            @format="full"
             as |field|
           >
             <field.Custom>

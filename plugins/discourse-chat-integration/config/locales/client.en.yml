@@ -97,6 +97,7 @@ en:
               title: Channel
               help: "e.g. #channel, @username."
           errors:
+            auth_error: "The provided authentication token is invalid"
             action_prohibited: "The bot does not have permission to post to that channel"
             channel_not_found: "The specified channel does not exist on Slack"
 

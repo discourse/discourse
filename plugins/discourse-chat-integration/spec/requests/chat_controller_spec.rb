@@ -33,7 +33,9 @@ RSpec.describe "Chat Controller", type: :request do
   end
 
   describe "listing providers" do
-    include_examples "admin constraints", "get", "/admin/plugins/discourse-chat-integration/providers.json"
+    include_examples "admin constraints",
+                     "get",
+                     "/admin/plugins/discourse-chat-integration/providers.json"
 
     context "when signed in as an admin" do
       before { sign_in(admin) }
@@ -57,7 +59,9 @@ RSpec.describe "Chat Controller", type: :request do
   end
 
   describe "testing channels" do
-    include_examples "admin constraints", "get", "/admin/plugins/discourse-chat-integration/test.json"
+    include_examples "admin constraints",
+                     "get",
+                     "/admin/plugins/discourse-chat-integration/test.json"
 
     context "when signed in as an admin" do
       before { sign_in(admin) }
@@ -85,7 +89,9 @@ RSpec.describe "Chat Controller", type: :request do
   end
 
   describe "viewing channels" do
-    include_examples "admin constraints", "get", "/admin/plugins/discourse-chat-integration/channels.json"
+    include_examples "admin constraints",
+                     "get",
+                     "/admin/plugins/discourse-chat-integration/channels.json"
 
     context "when signed in as an admin" do
       before { sign_in(admin) }
@@ -130,14 +136,19 @@ RSpec.describe "Chat Controller", type: :request do
       end
 
       it "should fail for invalid provider" do
-        get "/admin/plugins/discourse-chat-integration/channels.json", params: { provider: "someprovider" }
+        get "/admin/plugins/discourse-chat-integration/channels.json",
+            params: {
+              provider: "someprovider",
+            }
         expect(response.status).to eq(400)
       end
     end
   end
 
   describe "adding a channel" do
-    include_examples "admin constraints", "post", "/admin/plugins/discourse-chat-integration/channels.json"
+    include_examples "admin constraints",
+                     "post",
+                     "/admin/plugins/discourse-chat-integration/channels.json"
 
     context "as an admin" do
       before { sign_in(admin) }
@@ -180,7 +191,9 @@ RSpec.describe "Chat Controller", type: :request do
       DiscourseChatIntegration::Channel.create(provider: "dummy2", data: { val: "something" })
     end
 
-    include_examples "admin constraints", "put", "/admin/plugins/discourse-chat-integration/channels/1.json"
+    include_examples "admin constraints",
+                     "put",
+                     "/admin/plugins/discourse-chat-integration/channels/1.json"
 
     context "as an admin" do
       before { sign_in(admin) }
@@ -236,7 +249,9 @@ RSpec.describe "Chat Controller", type: :request do
   end
 
   describe "adding a rule" do
-    include_examples "admin constraints", "put", "/admin/plugins/discourse-chat-integration/rules.json"
+    include_examples "admin constraints",
+                     "put",
+                     "/admin/plugins/discourse-chat-integration/rules.json"
 
     context "as an admin" do
       before { sign_in(admin) }
@@ -288,7 +303,9 @@ RSpec.describe "Chat Controller", type: :request do
       )
     end
 
-    include_examples "admin constraints", "put", "/admin/plugins/discourse-chat-integration/rules/1.json"
+    include_examples "admin constraints",
+                     "put",
+                     "/admin/plugins/discourse-chat-integration/rules/1.json"
 
     context "as an admin" do
       before { sign_in(admin) }
@@ -336,7 +353,9 @@ RSpec.describe "Chat Controller", type: :request do
       )
     end
 
-    include_examples "admin constraints", "delete", "/admin/plugins/discourse-chat-integration/rules/1.json"
+    include_examples "admin constraints",
+                     "delete",
+                     "/admin/plugins/discourse-chat-integration/rules/1.json"
 
     context "as an admin" do
       before { sign_in(admin) }
