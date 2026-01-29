@@ -10,6 +10,7 @@ da:
       logs:
         staff_actions:
           actions:
+            create_automation: opret automatisering
             update_automation: opdater automatisering
             delete_automation: slet automatisering
     discourse_automation:

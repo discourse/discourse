@@ -6,6 +6,7 @@ import curryComponent from "ember-curry-component";
 import FKControlCalendar from "discourse/form-kit/components/fk/control/calendar";
 import FKControlCheckbox from "discourse/form-kit/components/fk/control/checkbox";
 import FKControlCode from "discourse/form-kit/components/fk/control/code";
+import FKControlColor from "discourse/form-kit/components/fk/control/color";
 import FKControlComposer from "discourse/form-kit/components/fk/control/composer";
 import FKControlCustom from "discourse/form-kit/components/fk/control/custom";
 import FKControlEmoji from "discourse/form-kit/components/fk/control/emoji";
@@ -100,6 +101,7 @@ export default class FKField extends Component {
             Question=(this.componentFor FKControlQuestion field)
             Textarea=(this.componentFor FKControlTextarea field)
             Checkbox=(this.componentFor FKControlCheckbox field)
+            Color=(this.componentFor FKControlColor field)
             Image=(this.componentFor FKControlImage field)
             Password=(this.componentFor FKControlPassword field)
             Composer=(this.componentFor FKControlComposer field)

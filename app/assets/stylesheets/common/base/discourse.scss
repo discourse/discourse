@@ -405,7 +405,6 @@ input {
 
     &::-webkit-color-swatch {
       border: none;
-      border-radius: 0;
     }
   }
 
@@ -579,6 +578,11 @@ textarea {
 .radio.inline .radio.inline,
 .checkbox.inline .checkbox.inline {
   margin-left: 0.67em;
+}
+
+.dropdown,
+.multiselect {
+  position: relative;
 }
 
 .container {

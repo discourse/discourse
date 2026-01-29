@@ -794,6 +794,9 @@ de:
       email_already_used_in_group: "„%{email}“ wird bereits von der Gruppe „%{group_name}“ verwendet."
       email_already_used_in_category: "„%{email}“ wird bereits von der Kategorie „%{category_name}“ verwendet."
       description_incomplete: "Die Kategorie-Beschreibung muss mindestens einen Absatz enthalten."
+      description_too_long:
+        one: "Die Beschreibung ist zu lang (maximal %{count} Zeichen)."
+        other: "Die Beschreibung ist zu lang (maximal %{count} Zeichen)."
       permission_conflict: "Jede Gruppe, die Zugriff auf eine Unterkategorie hat, muss auch Zugriff auf die übergeordnete Kategorie erhalten. Folgende Gruppen haben Zugriff auf eine der Unterkategorien, aber keinen Zugriff auf die übergeordnete Kategorie: %{group_names}."
       disallowed_topic_tags: "Dieses Thema hat Schlagwörter, die in dieser Kategorie nicht erlaubt sind: „%{tags}“"
       disallowed_tags_generic: "Dieses Thema hat unerlaubte Schlagwörter."
@@ -1131,10 +1134,13 @@ de:
       every_month: "jeden Monat"
       every_six_months: "alle sechs Monate"
   user_api_key:
+    title: 'Autorisiere „%{application_name}“'
     authorize: "Genehmigen"
     deny: "Abbrechen"
     read: "Lesen"
     read_write: "Lesen/Schreiben"
+    logged_in_as: "Angemeldet als"
+    permissions_header: 'Dies erlaubt „%{application_name}“:'
     instructions: 'Wir haben gerade einen neuen Benutzer-API-Schlüssel für dich generiert zur Verwendung mit „%{application_name}“, bitte füge den folgenden Schlüssel in deine Anwendung ein:'
     otp_description: 'Möchtest du „%{application_name}“ erlauben, auf diese Website zuzugreifen?'
     otp_confirmation:
@@ -1650,6 +1656,7 @@ de:
     allow_duplicate_topic_titles_category: "Themen mit identischen, doppelten Titeln zulassen, wenn die Kategorie unterschiedlich ist. allow_duplicate_topic_titles muss deaktiviert sein."
     unique_posts_mins: "Minuten, nach denen ein Benutzer denselben Inhalt noch einmal schreiben kann."
     educate_until_posts: "Zeige das Hilfe-Panel im Editor, wenn ein Benutzer einen seiner ersten (n) Beiträge zu schreiben beginnt."
+    title: "Der Name dieser Seite. Sichtbar für alle Besucher, auch für anonyme Benutzer. Beachte, dass eine Änderung dieses Titels eine Aufforderung an die Benutzer der PWA senden kann, die App entweder zu aktualisieren oder zu deinstallieren."
     site_description: "Beschreibe diese Website in einem Satz. Sichtbar für alle Besucher, auch für anonyme Benutzer."
     short_site_description: "Kurze Beschreibung in ein paar Worten. Sichtbar für alle Besucher, auch für anonyme Benutzer."
     contact_email: "E-Mail-Adresse einer verantwortlichen Person für diese Website. Wird verwendet für kritische Benachrichtigungen und unter <a href='%{base_path}/about' target='_blank'>/about</a> angezeigt. Sichtbar für anonyme Benutzer auf öffentlichen Websites."
@@ -1696,6 +1703,7 @@ de:
     logo: "Das Logo oben links auf deiner Website. Verwende ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1. Wenn leer, wird die Website-Überschrift angezeigt."
     logo_small: "Kleine Logo-Grafik oben links auf der Website, die beim Herunterscrollen angezeigt wird. Verwende ein quadratisches Bild (120 × 120). Falls leer, wird ein „Home“-Zeichen angezeigt."
     digest_logo: "Das alternative Logo oben in den E-Mail-Zusammenfassungen deiner Website. Verwende ein breites rechteckiges Bild. Verwende kein SVG-Bild. Wenn leer, wird das Bild aus der `logo`-Einstellung verwendet."
+    mobile_logo: "Das Logo auf der mobilen Ausgabe deiner Website. Wir empehlen ein quartatisches Bild zu verwenden, damit die Kopfzeile nicht zu voll wird. Aber du kannst auch ein breites rechteckiges Bild mit einer Höhe von 120 Pixeln und einem Seitenverhältnis von mindestens 3:1 verwenden. Wenn leer, wird das Bild aus der `logo`-Einstellung verwendet."
     logo_dark: "Alternative für dunkles Schema betreffend die Website-Einstellung „logo“."
     logo_small_dark: "Alternative für dunkles Schema betreffend die Website-Einstellung „logo small“."
     mobile_logo_dark: "Alternative für dunkles Schema betreffend die Website-Einstellung „mobile logo“."
@@ -1710,6 +1718,8 @@ de:
     email_custom_headers: "Eine Liste von eigenen E-Mail-Headern"
     email_subject: "Anpassbares Betreff-Format für Standard-E-Mails. Siehe <a href='https://meta.discourse.org/t/customizing-specific-system-email-templates/88323' target='_blank'>https://meta.discourse.org/t/customizing-specific-system-email-templates/88323</a>"
     detailed_404: "Liefert mehr Details für Benutzer darüber, warum sie keinen Zugriff auf ein spezielles Thema haben. Hinweis: Dies ist weniger sicher, weil Benutzer so herausfinden, ob eine URL zu einem existierenden Thema führt."
+    enforce_second_factor: "Verlangt von den Benutzern, dass sie die Zwei-Faktor-Authentifizierung (2FA) aktivieren, bevor sie auf die Discourse-Benutzeroberfläche zugreifen können. Diese Einstellung wirkt sich nicht auf die API- oder DiscourseConnect-Anbieter-Authentifizierung aus. Wenn enforce_second_factor_on_external_auth aktiviert ist, können sich Benutzer nicht mit externen Authentifizierungsanbietern anmelden, nachdem sie die 2FA eingerichtet haben."
+    enforce_second_factor_on_external_auth: "Verlangt von den Benutzern, dass sie immer die Zwei-Faktor-Authentifizierung (2FA) verwenden. Wenn diese Option aktiviert ist, wird verhindert, dass sich Benutzer mit externen Authentifizierungsmethoden wie sozialen Netzwerken anmelden, wenn sie die 2FA aktiviert haben. Wenn sie deaktiviert ist, müssen die Benutzer die 2FA nur bestätigen, wenn sie sich mit einem Benutzernamen und einem Passwort anmelden. Siehe auch die Einstellung `enforce_second_factor`."
     force_https: "Erzwinge HTTPS für deine Website. ACHTUNG: Aktiviere dies NICHT, bevor HTTPS nicht vollständig eingerichtet ist und auf jeden Fall überall funktioniert! Hast du dein CDN, alle Anmeldungen über soziale Netzwerke, alle externe Logos/Abhängigkeiten geprüft, um sicherzustellen, dass sie auch HTTPS-kompatibel sind?"
     summary_score_threshold: "Mindestscore, den ein Beitrag benötigt, um in der „Dieses Thema zusammenfassen“-Ansicht zu erscheinen."
     summary_posts_required: "Mindestanzahl an Beiträgen in einem Thema, bevor „Dieses Thema zusammenfassen“ aktiviert wird. Änderungen dieser Einstellung werden rückwirkend innerhalb einer Woche angewendet."
@@ -1768,6 +1778,8 @@ de:
     ga_universal_auto_link_domains: "Aktiviere Cross-Domain-Tracking von Google Universal Analytics. Bei ausgehenden Links zu diesen Domains wird die Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=de' target='_blank'>Googles Cross-Domain-Tracking-Handbuch.</a>"
     gtm_container_id: "Google-Tag-Manager-Container-ID, z. B.: GTM-ABCD12E. <br/>Hinweis: Um GTM zu verwenden, wenn die Content Security Policy (CSP) aktiviert ist, siehe die Dokumentation bei Meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Nonces in Google-Tag-Manager-Skripten verwenden</a>."
     enable_escaped_fragments: "Auf die Ajax-Crawling-API von Google zurückgreifen, wenn kein Webcrawler gefunden wird. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
+    moderators_manage_categories: "Moderatoren erlauben, Kategorien zu erstellen und zu verwalten"
+    moderators_manage_groups: "Moderatoren erlauben, Gruppen zu erstellen und zu verwalten"
     moderators_change_post_ownership: "Moderatoren erlauben, die Eigentümerschaft des Beitrags zu ändern"
     cors_origins: "Erlaubte Adressen für Cross-Origin-Requests (CORS). Jede Adresse muss http:// oder https:// enthalten. Die Umgebungsvariable DISCOURSE_ENABLE_CORS muss gesetzt sein, um CORS zu aktivieren."
     use_admin_ip_allowlist: "Administratoren können sich nur anmelden, wenn sie eine IP-Adresse nutzen, die in der Liste der gefilterten IPs definiert ist (Administration > Protokolle > Gefilterte IPs)."
@@ -1809,6 +1821,7 @@ de:
     top_page_default_timeframe: "Standardzeitraum für die Startseite für anonyme Benutzer (passt sich automatisch für angemeldete Benutzer an, basierend auf ihrem letzten Besuch)."
     moderators_view_emails: "Erlaube den Moderatoren, die E-Mail-Adressen der Benutzer einzusehen."
     moderators_view_ips: "Erlaube den Moderatoren, die IP-Adressen der Benutzer einzusehen."
+    moderators_change_trust_levels: "Moderatoren erlauben, die Vertrauensstufen von Benutzern zu ändern."
     prioritize_username_in_ux: "Zeige den Benutzernamen auf der Benutzerseite, der Benutzerkarte und in Beiträgen an erster Stelle (wenn deaktiviert, wird der Name an erster Stelle angezeigt)"
     enable_rich_text_paste: "Aktiviere die automatische Umwandlung von HTML in Markdown, wenn du Text in den Composer einfügst."
     send_old_credential_reminder_days: "An alte Anmeldedaten erinnern (nach Tagen)"
@@ -2091,6 +2104,7 @@ de:
     auto_silence_fast_typers_on_first_post: "Automatisches Stummschalten von Benutzern, die `fast typing threshold` nicht erreichen"
     auto_silence_fast_typers_max_trust_level: "Maximale Vertrauensstufe, um „Schnelltipper“ stummzuschalten."
     auto_silence_first_post_regex: "Regex ohne Berücksichtigung der Groß-/Kleinschreibung, die bei Erfolg dazu führt, dass der erste Beitrag des Benutzers stummgeschaltet und an die Genehmigungswarteschlange gesendet wird. Beispiel: wüten|a[bc]a wird dazu führen, dass alle Beiträge, die „wüten“ oder „aba“ oder „aca“ enthalten, stummgeschaltet werden. Gilt nur für den ersten Beitrag. VERALTET: Verwende stattdessen „Beobachtete Wörter stummschalten“."
+    moderator_guide_topic: "Das Thema, das beschreibt, wie ihr eure Community moderiert. Der Link wird in der Warteschlange für Moderatoren und Administratoren angezeigt."
     reviewable_claiming: "Muss überprüfbarer Inhalt reserviert werden, bevor er bearbeitet werden kann?"
     reviewable_default_topics: "Zeige überprüfbaren Inhalt standardmäßig nach Themen gruppiert."
     reviewable_default_visibility: "Zeige überprüfbare Elemente nicht, solange sie diese Priorität nicht haben"
@@ -2099,6 +2113,7 @@ de:
     allow_all_users_to_flag_illegal_content: "Anonyme Benutzer sehen die Information, dass sie den Administratoren eine E-Mail schicken müssen, um illegale Inhalte zu melden. Diese Einstellung hat Vorrang vor „flag post allowed groups“."
     email_address_to_report_illegal_content: "Wenn dieses Feld leer gelassen wird, wird die Standard-E-Mail-Adresse des Website-Administrators verwendet."
     cooldown_hours_until_reflag: "Wie lange Benutzer warten müssen, bevor sie einen Beitrag erneut melden können"
+    slow_mode_prevents_editing: "Verhindert der langsame Modus Bearbeitungen, nachdem die Zeit, die in „editing grace period“ konfiguriert wurde, verstrichen ist?"
     reply_by_email_enabled: "Aktiviere die Funktion, die es Benutzern ermöglicht, direkt per E-Mail auf Themen zu antworten, anstatt sich auf der Website anmelden zu müssen. Weitere Informationen findest du im <a href='https://meta.discourse.org/t/set-up-reply-by-email-with-pop3-polling/14003' target='_blank'>Leitfaden auf Meta</a> ."
     reply_by_email_address: "Vorlage für Antwort per E-Mail (eingehende E-Mail-Adresse), zum Beispiel: %%{reply_key}@reply.example.com oder replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Liste der alternativen Vorlagen für die Beantwortung per E-Mail (eingehende E-Mail-Adressen). Beispiel: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
@@ -2164,6 +2179,7 @@ de:
     relative_date_duration: "Anzahl der Tage nach Veröffentlichung, nach der das Veröffentlichungsdatum relativ (7 Tage) statt absolut (20. Februar) dargestellt wird."
     delete_user_max_post_age: "Verhindere das Löschen von Benutzerkonten, deren erster Beitrag mehr als (x) Tage alt ist."
     delete_all_posts_max: "Die maximale Anzahl von Beiträgen, welche auf einmal gelöscht werden kann. Hat ein Benutzer mehr Beiträge, so können die Beiträge nicht auf einmal und der Benutzer nicht gelöscht werden."
+    delete_all_posts_background_threshold: "Die maximale Anzahl von Beiträgen, welche mit „Alle Beiträge löschen“ auf einmal gelöscht werden kann, bevor die Löschung im Hintergrund bearbeitet wird."
     delete_user_self_max_post_count: "Die maximale Anzahl an Beiträgen, die ein Benutzer haben darf, um sein Konto eigenständig löschen zu können. Setze den Wert auf -1, um das eigenständige Löschen von Konten zu deaktivieren."
     username_change_period: "Die maximale Anzahl von Tagen nach der Registrierung, nach der Konten ihren Benutzernamen ändern können (0 verbietet die Änderung des Benutzernamen)."
     email_editable: "Erlaube Benutzern, ihre E-Mail-Adresse nach der Registrierung zu ändern."
@@ -2291,6 +2307,7 @@ de:
     disable_watched_word_checking_in_user_fields: "deaktiviere die Prüfung überwachter Wörter in Benutzerfeldern"
     watched_words_regular_expressions: "Erlaubt die Verwendung von regulären Ausdrücken zum Filtern von Wörtern. Wenn diese Funktion aktiviert ist, gruppiert sie sensible Wörter nach ihrer Groß- und Kleinschreibung. Anschließend werden alle ausgewählten Wörter in einem einzigen regulären Ausdruck zusammengefasst, wobei Wortgrenzen für regulär überwachte Wörter hinzugefügt werden. Diese Regex-basierte Filtermethode fügt also eine zusätzliche Kontrollebene für die Inhaltsmoderation hinzu, indem sie komplexere Wortmuster unterstützt. Die Einstellung ermöglicht es außerdem, den ursprünglichen Text einfach durch die Ersetzung deiner Wahl zu ersetzen."
     enable_fast_edit: "Fügt dem Beitragsauswahlmenü eine Schaltfläche hinzu, um eine kleine Auswahl inline zu bearbeiten."
+    old_post_notice_days: "Die Anzahl der Tage, nach denen die Benachrichtigungen über neue und wiederkehrende Benutzer ausgeblendet werden. Offizielle Mitteilungen bleibt immer sichtbar."
     new_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen neuer Benutzer erforderlich ist."
     returning_user_notice_tl: "Minimale Vertrauensstufe, die für das Sehen von Beitragsnotizen wiederkehrender Benutzer erforderlich ist."
     returning_users_days: "Wie viele Tage vergehen sollten, bevor ein Benutzer als wiederkehrend betrachtet wird."
@@ -2372,6 +2389,7 @@ de:
     force_lowercase_tags: "Kleinschreibung für alle neuen Schlagwörter erzwingen."
     create_post_for_category_and_tag_changes: "Um einen Flüsterbeitrag zu erstellen, wenn sich die Kategorie oder die Schlagwörter eines Themas ändern, müssen Flüsterbeiträge aktiviert sein."
     automatically_clean_unused_tags: "Lösche täglich automatisch Schlagwörter, die nicht in Themen oder persönlichen Nachrichten verwendet werden."
+    default_watched_precedence_over_muted: "Benachrichtige Benutzer über Themen in Kategorien oder mit Schlagwörtern, die sie beobachten, auch wenn diese auch mit einem Schlagwort versehen sind oder in einer Kategorie sind, die sie stummgeschaltet haben"
     company_name: "Name deines Unternehmens oder deiner Organisation. Wenn du nichts angibst, werden keine vorgefertigten allgemeinen Geschäftsbedingungen oder Datenschutzhinweise bereitgestellt."
     governing_law: "Gib die Gerichtsbarkeit an, die für die rechtlichen Aspekte der Website gilt, einschließlich der Nutzungsbedingungen und der Datenschutzerklärung. Dies ist in der Regel das Land oder der Staat, in dem das Unternehmen, das die Website betreibt, registriert ist oder Geschäfte tätigt."
     city_for_disputes: "Gib die Stadt an, die für die Beilegung von Streitigkeiten im Zusammenhang mit der Nutzung dieses Forums zuständig sein soll. Diese Information ist normalerweise in rechtlichen Dokumenten wie den Nutzungsbedingungen des Forums enthalten."
@@ -2431,7 +2449,6 @@ de:
     default_composition_mode: "Lege den Standardmodus für den Editor deiner Community fest. Der Rich-Text-Modus bietet den meisten Benutzern ein moderneres, vertrauteres Schreibgefühl, während der Markdown-Modus für ein eher technisches Publikum geeignet sein kann. Die Mitglieder können mit einem Schalter in der Editor-Symbolleiste zwischen den Modi wechseln."
     reviewable_ui_refresh: "Gruppen, die die experimentelle neue Benutzeroberfläche in der Warteschlange zur Überprüfung nutzen können."
     content_localization_enabled: "Zeige Benutzern lokalisierte Inhalte basierend auf ihren Browser- oder Spracheinstellungen an. Solche Inhalte können Kategorien, Schlagwörter, Beiträge und Themen sein. Die unterstützten Sprachversionen werden unter „content localization supported locales“ festgelegt."
-    content_localization_supported_locales: "Liste der unterstützten Oberflächensprachen, in die Benutzerinhalte übersetzt werden können. Erfordert, dass „content localization enabled“ aktiviert ist."
     content_localization_allowed_groups: "Gruppen, die lokalisierte Inhalte aktualisieren dürfen. Erfordert, dass „content localization enabled“ aktiviert ist."
     content_localization_language_switcher: "Zeige einen Sprachumschalter in der Kopfzeile an, mit dem Besucher die Sprache der Discourse-Oberfläche und der von Benutzern erstellten Inhalten ändern können. Nutzt die Sprachen, die in ‚content localization supported locales‘ festgelegt wurden."
     enable_upcoming_changes: "Aktiviere bevorstehende Änderungen"
@@ -4739,12 +4756,18 @@ de:
     nice_share:
       name: Schön geteilt
       description: Hat einen Beitrag mit 25 Besuchern geteilt
+      long_description: |
+        Dieses Abzeichen wird verliehen, wenn du einen Link teilst, der von 25 Besuchern angeklickt wurde. Danke, dass du dazu beigetragen hast, unsere Diskussionen und diese Community bekannt zu machen!
     good_share:
       name: Gut geteilt
       description: Hat einen Beitrag mit 300 Besuchern geteilt
+      long_description: |
+        Dieses Abzeichen wird verliehen, wenn du einen Link teilst, der von 300 Besuchern angeklickt wurde. Gute Arbeit! Du hast eine großartige Diskussion einer ganzen Reihe neuer Leute zur Schau gestellt und dieser Community geholfen zu wachsen.
     great_share:
       name: Großartig geteilt
       description: Hat einen Beitrag mit 1000 Besuchern geteilt
+      long_description: |
+        Dieses Abzeichen wird verliehen, wenn du einen Link teilst, der von 1000 Besuchern angeklickt wurde. Wow! Du hast eine interessante Diskussion einer riesigen Leserschaft nähergebracht und unserer Community sehr geholfen zu wachsen!
     first_like:
       name: Erstes „Gefällt mir“
       description: Hat einen Beitrag mit „Gefällt mir“ markiert
@@ -4912,6 +4935,9 @@ de:
       one: "Du muss mindestens %{count} Schlagwort auswählen."
       other: "Du musst mindestens %{count} Schlagwörter auswählen."
     upload_row_too_long: "Die CSV-Datei sollte ein Schlagwort pro Zeile haben. Optional kann das Schlagwort von einem Komma und dem Namen einer Schlagwortgruppe gefolgt sein."
+    bulk_create:
+      invalid_params: "Ungültige Parameter. Bitte gib ein Array bestehend aus Schlagwort-Namen an."
+      invalid_name: "Ungültiger Schlagwort-Name"
     forbidden:
       invalid:
         one: "Das ausgewählte Schlagwort kann nicht genutzt werden."
@@ -5137,8 +5163,12 @@ de:
         title: "Löschen"
         complete: "Beitrag gelöscht."
       delete_and_ignore:
+        title: "Beitrag löschen und Meldung ignorieren"
+        description: "Lösche den Beitrag, ignoriere die Meldung und entferne sie aus der Warteschlange; falls dies der erste Beitrag im Thema ist, lösche auch das Thema. "
         complete: "Beitrag gelöscht."
       delete_and_ignore_replies:
+        title: "Beitrag und Antworten löschen, Meldung ignorieren"
+        description: "Lösche den Beitrag und alle Antworten; dann ignoriere die Meldung und entferne sie aus der Warteschlange; falls dies der erste Beitrag im Thema ist, lösche auch das Thema"
         confirm: "Möchtest du wirklich auch die Antworten auf diesen Beitrag löschen?"
         complete: "Beitrag und Antworten gelöscht."
       delete_and_agree:
@@ -5152,11 +5182,13 @@ de:
         complete: "Beitrag und Antworten gelöscht."
       disagree_and_restore:
         title: "Beitrag wiederherstellen"
+        description: "Der Meldung widersprechen und den Beitrag wiederherstellen"
         complete: "Beitrag wiederhergestellt."
       disagree_bundle:
         title: "Nein"
       disagree:
         title: "Beitrag behalten"
+        description: "Der Meldung widersprechen"
         complete: "Meldung ignoriert."
       discard_post:
         title: "Beitrag verwerfen"
@@ -5165,6 +5197,7 @@ de:
         complete: "Beitrag wurde bis zur Überarbeitung abgelehnt."
       ignore:
         title: "Ignorieren"
+        description: "Entferne es aus der Warteschlange, ohne weitere Maßnahmen zu ergreifen."
         complete: "Meldung ignoriert."
       ignore_and_do_nothing:
         title: "Nichts tun"
@@ -5192,6 +5225,7 @@ de:
         title: "Nein"
         delete:
           title: "Benutzer löschen"
+          description: "Benutzer löschen, ohne ihn zu blockieren"
           complete: "Benutzer gelöscht."
         block:
           title: "Benutzer löschen und blockieren"
@@ -5201,6 +5235,7 @@ de:
         title: "Ja"
       not_spam:
         title: "Nein"
+        description: "Kein Spam, Benutzer genehmigen"
       reject:
         title: "Ablehnen"
         bundle_title: "Ablehnen …"
@@ -5213,9 +5248,13 @@ de:
       reject_and_delete:
         title: "Den Beitrag ablehnen und löschen"
         complete: "Beitrag abgelehnt und gelöscht."
+      reject_and_delete_standalone:
+        title: "Nein, Beitrag löschen"
       reject_and_keep_deleted:
         title: "Beitrag gelöscht lassen"
         complete: "Beitrag abgelehnt und gelöscht belassen."
+      reject_and_keep_deleted_standalone:
+        title: "Nein, Beitrag gelöscht lassen"
       scrub:
         title: Datensatz bereinigen
       approve_and_restore:

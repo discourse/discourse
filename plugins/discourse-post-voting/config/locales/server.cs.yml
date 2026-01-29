@@ -18,6 +18,7 @@ cs:
           description: "Schválit nahlášení a ztišit uživatele."
         ignore:
           title: "Ignorovat nahlášení"
+          description: "Odstranit z fronty a neprovádět žádnou akci."
   post_action_types:
     vote:
       title: "Hlasovat"
@@ -33,6 +34,7 @@ cs:
             description: "Schválit nahlášení a ztišit uživatele."
           ignore:
             title: "Ignorovat nahlášení"
+            description: "Odstranit z fronty a neprovádět žádnou akci."
       reviewable_score_types:
         needs_review:
           title: "Potřebuje revizi"

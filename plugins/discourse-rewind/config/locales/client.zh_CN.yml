@@ -116,11 +116,18 @@ zh_CN:
           author_others: "%{username}"
           channel_title: "#聊天活动"
           status_online: "● 在线"
-          message_1: "今年你发送了 <strong>%{count}</strong> 条消息！"
+          message_1:
+            other: "今年你发送了 <strong>%{count}</strong> 条消息！"
           reply_1: "lol 超棒的 B-)"
-          message_2: "你与 <strong>%{channel_count}</strong> 位不同的人进行过 <strong>%{dm_count}</strong> 次 DM 对话"
+          message_2_MF: |
+            你有 { dm_count, plural,
+                other {<strong>#</strong> DM 对话}
+            } 和 { channel_count, plural,
+                other {~ ~<strong>#</strong> 不同的人或群体}
+            }。
           reply_2: "酷毙了 :D"
-          message_3: "大家都很喜欢你的留言！你收到了 <strong>%{count}</strong> 个回应 ❤️"
+          message_3:
+            other: "大家都很喜欢你的留言！你收到了 <strong>%{count}</strong> 个回应 ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "你的平均消息长度为 <strong>%{length}</strong> 个字符"
           message_5: "你最喜欢的频道："
@@ -139,6 +146,7 @@ zh_CN:
           redemption_rate: 接受率
           avg_trust_level: 平均信任级别
           invitee_impact: 你的受邀者带来的影响
+          invitee_impact_others: "%{username} 邀请用户的影响"
           invitee_posts: 创建的帖子
           invitee_topics: 发起的话题数
           invitee_likes: 点赞
@@ -169,9 +177,11 @@ zh_CN:
           mentions: 提及
           topics_with_new_users: 有新用户的话题
           contributions_helped: 你的贡献很有帮助
+          contributions_helped_others: "%{username} 的贡献帮助了他人"
         time_of_day_activity:
           title: 每日活动节奏
           play_button: 以声音播放你的活动
+          play_button_others: "播放 %{username} 的活动声音"
           stop_button: 停止音频播放
         writing_analysis:
           title: 写作分析

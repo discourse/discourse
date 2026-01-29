@@ -692,6 +692,8 @@ hy:
         reviewable_ai_post:
           noun: "գրառում"
       user_label: "Օգտատեր"
+      timeline:
+        target_deleted: "Գրառումը ջնջված է"
       notes:
         delete: "Ջնջել"
       topic_label: "Թեմա"
@@ -3142,6 +3144,8 @@ hy:
       creation_error: 'Կատեգորիայի ստեղծման ժամանակ տեղի է ունեցել սխալ:'
       save_error: 'Կատեգորիան պահելիս տեղի է ունեցել սխալ:'
       description: "Նկարագրույթուն"
+      icon: "Պատկերակ"
+      emoji: "Էմոջի"
       background_color: "Գույն"
       color_validations:
         cant_be_empty: "չի կարող դատարկ լինել"
@@ -3151,7 +3155,6 @@ hy:
         options:
           icon: "Պատկերակ"
           emoji: "Էմոջի"
-      name_placeholder: "Առավելագույնը մեկ կամ երկու բառ"
       color_placeholder: "Ցանկացած վեբ-գույն"
       delete_confirm: "Դուք համոզվա՞ծ եք, որ ցանկանում եք ջնջել այս կատեգորիան:"
       delete_error: "Այս կատեգորիան ջնջելիս սխալ է տեղի ունեցել:"
@@ -3167,7 +3170,7 @@ hy:
       uncategorized_security_warning: "Այս կատեգորիան հատուկ է: Այն նախատեսված է որպես կատեգորիա չունեցող թեմաների պահման տարածք; այն չի կարող ունենալ անվտանգության կարգավորումներ:"
       uncategorized_general_warning: 'Այս կատեգորիան հատուկ է: Այն օգտագործվում է որպես լռելյայն կատեգորիա նոր թեմաների համար, որոնք չունեն ընտրված կատեգորիա: Եթե Դուք ցանկանում եք կանխել սա և պարտադրել կատեգորիայի ընտրությունը, <a href="%{settingLink}">խնդրում ենք անջատել կարգավորումը այստեղ</a>: Եթե ցանկանում եք փոփոխել անունը կամ նկարագրությունը, այցելեք <a href="%{customizeLink}">Customize / Text Content</a>:'
       pending_permission_change_alert: "Դուք չեք ավելացրել %{group} այդ կատեգորիայի մեջ, սեղմեք այս կոճակը՝ դրանք ավելացնելու համար: "
-      images: "Նկարներ"
+      images: "Արտաքին տեսք"
       email_in: "Անհատական մուտքային էլ. հասցե՝"
       email_in_allow_strangers: "Ընդունել էլ. նամակներ հաշիվ չունեցող անանուն օգտատերերից"
       mailinglist_mirror: "Կատեգորիան արտապատճենում է փոստային ցուցակ"
@@ -3184,6 +3187,11 @@ hy:
       this_year: "այս տարի"
       position: "Դիրքը կատեգորիայի էջում."
       minimum_required_tags: "Թեմայում պահանջվող պիտակների նվազագույն քանակը՝"
+      none_subcategory_text: "Ոչ մի"
+      visibility:
+        title: "Հասանելիություն"
+        public: "Հանրային"
+        group_restricted: "Մասնավոր"
       num_auto_bump_daily: "Օրեկան ավտոմատ բարձրացվող բաց թեմաների քանակը՝"
       navigate_to_first_post_after_read: "Բոլոր թեմաները կարդալուց հետո տեղափոխվել դեպի առաջին գրառում"
       notifications:
@@ -4003,6 +4011,9 @@ hy:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Որոնման գրառումներ</a>'
             disabled: 'Առաջատար որոնման հաշվետվությունն անջատված է: Միացրեք <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">գրառումների որոնման հարցումները</a>՝ տվյալներ հավաքելու համար:'
+          sort_button: "Դասավորել ըստ %{column}"
+          sort_ascending: "ըստ աճման"
+          sort_descending: "ըստ նվազման"
           filters:
             file_extension:
               label: Ֆայլի ընդլայնում
@@ -5101,6 +5112,7 @@ hy:
           empty: "Նկարներ դեռևս չկան: Խնդրում ենք վերբեռնել:"
           upload:
             label: "Վերբեռնել"
+        download_file: "Ներբեռնել"
         selectable_avatars:
           title: "Անձնապատկերների ցանկը, որոնցից օգտատերերը կարող են ընտրություն կատարել"
         table_column_heading:

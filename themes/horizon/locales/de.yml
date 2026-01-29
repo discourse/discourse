@@ -6,8 +6,10 @@
 
 de:
   solved: "Gelöst"
+  unsolved: "Ungelöst"
   posted: "hat geschrieben"
   by_username: "von @%{username}"
+  replied: "antwortete"
   vote_count:
     one: "%{count} Stimme"
     other: "%{count} Stimmen"

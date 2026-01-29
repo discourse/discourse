@@ -863,6 +863,7 @@ el:
       timeline:
         target_created: "Ανάρτηση δημιουργήθηκε"
         target_created_by: "Ανάρτηση δημιουργήθηκε από %{username} · %{relativeDate}"
+        target_deleted: "Η ανάρτΗσΗ διαγράφΗκε"
         flagged: "Αναφέρθηκε"
         flagged_as_by: "Αναφέρθηκε ως %{flagReason} από %{username} · %{relativeDate}"
         claimed: "Διεκδικήθηκε"
@@ -2827,6 +2828,11 @@ el:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - ολοκληρώθηκε"
       new_features: "Νέες δυνατότητες διαθέσιμες!"
+      upcoming_changes:
+        available:
+          title: "Επερχόμενες αλλαγές"
+        automatically_promoted:
+          title: "Επερχόμενες αλλαγές"
       dismiss_confirmation:
         dismiss: "Απόρριψη"
         cancel: "Άκυρο"
@@ -2872,8 +2878,7 @@ el:
         post_approved: "η ανάρτηση εγκρίθηκε"
         membership_request_consolidated: "νέα αιτήματα συμμετοχής"
         reaction: "νέα αντίδραση"
-        votes_released: "Η ψηφοφορία κυκλοφόρησε"
-        new_features: "Νέα χαρακτηριστικά του Discourse έχουν κυκλοφορήσει!"
+        votes_released: "η ψηφοφορία κυκλοφόρησε"
     upload_selector:
       change: "Αλλαγή"
       delete: "Σβήσιμο"
@@ -3871,6 +3876,8 @@ el:
       creation_error: Παρουσιάστηκε κάποιο σφάλμα κατά την δημιουργία της κατηγορίας
       save_error: Παρουσιάστηκε κάποιο σφάλμα κατά την αποθήκευση της κατηγορίας.
       description: "Περιγραφή"
+      icon: "Σύμβολο"
+      emoji: "Emoji"
       background_color: "Χρώμα"
       color_validations:
         cant_be_empty: "δεν μπορεί να είναι άδειο"
@@ -3880,7 +3887,6 @@ el:
         options:
           icon: "Σύμβολο"
           emoji: "Emoji"
-      name_placeholder: "Μια ή δύο λέξεις το πολύ"
       color_placeholder: "Οποιοδήποτε χρώμα"
       delete_confirm: "Είσαι σίγουρος ότι θέλεις να διαγράψεις αυτή την κατηγορία;"
       delete_error: "Παρουσιάστηκε κάποιο σφάλμα κατά τη διαγραφή της κατηγορίας."
@@ -3898,7 +3904,7 @@ el:
       uncategorized_security_warning: "Αυτή η κατηγορία είναι ξεχωριστή. Προορίζεται ως περιοχή διατήρησης για θέματα που δεν έχουν κατηγορία. Δε μπορεί να έχει ρυθμίσεις ασφαλείας."
       uncategorized_general_warning: 'Αυτή η κατηγορία είναι ξεχωριστή. Χρησιμοποιείται ως προεπιλεγμένη κατηγορία για νέα θέματα που δεν έχουν επιλεγμένη κατηγορία. Αν θέλετε να αποτρέψετε αυτήν τη συμπεριφορά και να επιβάλετε επιλογή κατηγορίας, <a href="%{settingLink}">παρακαλώ απενεργοποιήστε τη ρύθμιση εδώ</a>. Εάν θέλετε να αλλάξετε το όνομα ή την περιγραφή, μεταβείτε στο <a href="%{customizeLink}">Προσαρμογή/Περιεχόμενο κειμένου</a>.'
       pending_permission_change_alert: "Δεν έχετε προσθέσει %{group} σε αυτήν την κατηγορία· κάντε κλικ σε αυτό το κουμπί για να προσθέσετε."
-      images: "Εικόνες"
+      images: "Εμφάνιση"
       email_in: "Προσαρμοσμένη διεύθυνση εισερχόμενων email:"
       email_in_allow_strangers: "Αποδοχή emails από ανώνυμους χρήστες χωρίς λογαριασμό"
       mailinglist_mirror: "Η κατηγορία αντικατοπτρίζει μια λίστα αλληλογραφίας"
@@ -3916,6 +3922,11 @@ el:
       this_year: "φέτος"
       position: "Θέση στη σελίδα κατηγοριών:"
       minimum_required_tags: "Ελάχιστος αριθμός ετικετών που απαιτούνται σε ένα θέμα:"
+      none_subcategory_text: "Κανένα"
+      visibility:
+        title: "Πρόσβαση"
+        public: "Δημόσια"
+        group_restricted: "Ιδιωτική"
       num_auto_bump_daily: "Αριθμός ανοιχτών θεμάτων για αυτόματη ώθηση καθημερινά:"
       navigate_to_first_post_after_read: "Μεταβείτε στην πρώτη ανάρτηση μετά την ανάγνωση των θεμάτων"
       notifications:
@@ -5040,6 +5051,9 @@ el:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Αναζήτηση αρχείων καταγραφής</a>'
             disabled: 'Η αναφορά τάσεων αναζήτησης είναι απενεργοποιημένη. Ενεργοποιήστε <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">την καταγραφή των ερωτημάτων αναζήτησης</a> για τη συλλογή δεδομένων.'
+          sort_button: "Ταξινόμηση κατά %{column}"
+          sort_ascending: "αύξουσα"
+          sort_descending: "φθίνουσα"
           filters:
             file_extension:
               label: Επέκταση αρχείου
@@ -6321,6 +6335,7 @@ el:
           empty: "Δεν υπάρχουν ακόμα εικόνες. Παρακαλώ επιφορτώστε μία."
           upload:
             label: "Μεταφόρτωση"
+        download_file: "Κατέβασμα"
         selectable_avatars:
           title: "Λίστα των avatars που μπορούν να επιλέξουν οι χρήστες"
         table_column_heading:

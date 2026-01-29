@@ -49,7 +49,12 @@
 # type: category_list         - A list of category ids, which shows a special picker in the UI.
 # type: category              - A single category ID, which shows a special picker in the UI.
 # type: uploaded_image_list   - A list of upload IDs that should be images.
-# type: upload                - A single upload ID.
+# type: upload                - A single upload ID. Optional attributes:
+#                               - authorized_extensions: pipe-separated list of allowed extensions
+#                                 without dots (e.g., "txt|json"). If not specified, only images
+#                                 are allowed based on authorized_extensions setting.
+#                               - max_file_size_kb: maximum file size in KB. If not specified,
+#                                 uses max_image_size_kb or max_attachment_size_kb.
 # type: group                 - A single group ID.
 # type: group_list            - A list of group IDs.
 # type: tag_list              - A list of tag names.
@@ -1695,7 +1700,8 @@ posting:
     default: false
     area: "posts_and_topics"
   max_draft_length:
-    default: 400_000
+    default: 150_000
+    max: 150_000
     hidden: true
   max_drafts_per_user:
     default: 10_000
@@ -2072,6 +2078,10 @@ email:
     hidden: true
   require_change_email_confirmation:
     default: false
+    area: "email"
+  allow_email_invites:
+    default: true
+    client: true
     area: "email"
   view_raw_email_allowed_groups:
     type: group_list
@@ -2712,6 +2722,11 @@ security:
     list_type: compact
     requires_confirmation: "simple"
   slow_down_crawler_rate: 60
+  llms_txt:
+    default: ""
+    type: upload
+    authorized_extensions: "txt|md"
+    max_file_size_kb: 512
   content_security_policy:
     default: true
   content_security_policy_report_only:
@@ -2785,6 +2800,9 @@ onebox:
     list_type: compact
   enable_inline_onebox_on_all_domains:
     default: true
+  inline_onebox_user_agent:
+    default: ""
+    hidden: true
   onebox_user_agent:
     default: ""
     hidden: true
@@ -4213,3 +4231,10 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+  enable_simplified_category_creation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "permanent"
+      impact: "feature,staff"

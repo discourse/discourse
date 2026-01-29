@@ -28,7 +28,7 @@ module Jobs
           :user_posts_deleted,
           user: user.username,
           staff_user: acting_user.username,
-          deleted_posts_count: deleted_count,
+          count: deleted_count,
         )
 
       post&.topic&.invite_group(acting_user, Group[:admins])

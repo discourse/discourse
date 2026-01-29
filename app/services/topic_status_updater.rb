@@ -85,6 +85,8 @@ TopicStatusUpdater =
         CategoryFeaturedTopic.where(topic_id: topic.id).delete_all
       end
 
+      TopicHotScore.where(topic_id: topic.id).delete_all if status.visible? && status.disabled?
+
       result
     end
 

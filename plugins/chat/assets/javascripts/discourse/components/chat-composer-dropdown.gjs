@@ -10,9 +10,17 @@ import { i18n } from "discourse-i18n";
 export default class ChatComposerDropdown extends Component {
   @action
   async onButtonClick(button, closeFn) {
-    await closeFn();
-
-    button.action();
+    // Safari requires file input clicks to happen synchronously
+    // within the user gesture event chain. Using await breaks this
+    // chain and prevents the file picker from opening.
+    // See: https://webkit.org/blog/13862/the-user-activation-api/
+    if (button.synchronous) {
+      closeFn();
+      button.action();
+    } else {
+      await closeFn();
+      await button.action();
+    }
   }
 
   @action

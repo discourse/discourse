@@ -871,6 +871,7 @@ sk:
       timeline:
         target_created: "Príspevok vytvorený"
         target_created_by: "Príspevok vytvoril/a %{username} · %{relativeDate}"
+        target_deleted: "Príspevok zmazaný"
         flagged: "Označené"
         flagged_as_by: "Označené ako %{flagReason} od %{username} - %{relativeDate}"
         claimed: "Nárokované"
@@ -2164,6 +2165,7 @@ sk:
               other {# dní}
             }.
           edit_link_options: "Upravte možnosti prepojenia alebo pošlite e-mailom."
+          edit_link_options_only: "Možnosti úpravy odkazu"
           show_advanced: "Zobraziť rozšírené možnosti"
           hide_advanced: "Skryť rozšírené možnosti"
           description: "Popis"
@@ -3187,8 +3189,7 @@ sk:
         post_approved: "príspevok schválený"
         membership_request_consolidated: "nové žiadosti o členstvo"
         reaction: "nová reakcia"
-        votes_released: "Hlasovanie bolo zverejnené"
-        new_features: "Boli vydané nové funkcie Discourse!"
+        votes_released: "hlasovanie bolo zverejnené"
         admin_problems: "nové rady na informačnom paneli vášho webu"
     upload_selector:
       change: "Zmena"
@@ -4371,6 +4372,7 @@ sk:
       back: "Späť na kategóriu"
       general: "Všeobecné"
       settings: "Nastavenia"
+      advanced: "Pokročilé"
       topic_template: "Šablóna"
       tags: "Značky"
       localizations: "Lokalizácie"
@@ -4400,7 +4402,9 @@ sk:
       save_error: Nastala chyba počas ukladania kategórie
       description: "Popis"
       logo_description: "Odporúčaný pomer strán 1:1 s minimálnou veľkosťou 200px. Ak zostane prázdny, nezobrazí sa žiadny obrázok."
-      style: "Štýly"
+      style: "Štýl"
+      icon: "Ikona"
+      emoji: "Emoji"
       background_color: "Farba"
       foreground_color: "Farba textu"
       color_validations:
@@ -4409,13 +4413,13 @@ sk:
         type: "Štýl"
         icon: "Ikona"
         emoji: "Emoji"
+        square: "Štvorec"
         options:
           square: "Štvorec"
           icon: "Ikona"
           emoji: "Emoji"
       color_used: "Používaná farba"
       predefined_colors: "Preddefinované možnosti farieb"
-      name_placeholder: "Maximálne jedno dve slová"
       color_placeholder: "Ľubovoľná farba stránky"
       delete_confirm: "Ste si istý že chcete zmazať túto kategóriu?"
       delete_error: "Nastala chyba počas mazania kategórie"
@@ -4423,6 +4427,7 @@ sk:
       no_description: "Prosím, pridajte popis k tejto kategórii."
       change_in_category_topic: "Upraviť popis"
       already_used: "Táto farba je už použitá inou kategóriou"
+      color_palette: "Paleta farieb"
       security: "Bezpečnosť"
       security_add_group: "Pridať skupinu"
       permissions:
@@ -4439,7 +4444,7 @@ sk:
       uncategorized_security_warning: "Táto kategória je špeciálna. Je určená na uchovávanie tém, ktoré nemajú žiadnu kategóriu; nemôže mať bezpečnostné nastavenia."
       uncategorized_general_warning: 'Táto kategória je špeciálna. Používa sa ako predvolená kategória pre nové témy, ktoré nemajú zvolenú kategóriu. Ak chcete zabrániť tomuto správaniu a vynútiť výber kategórie, <a href="%{settingLink}">vypnite toto nastavenie tu</a>. Ak chcete zmeniť názov alebo popis, prejdite do časti <a href="%{customizeLink}">Prispôsobiť / Obsah textu</a>.'
       pending_permission_change_alert: "Do tejto kategórie ste nepridali %{group} ; kliknutím na toto tlačidlo ich pridáte."
-      images: "Obrázky"
+      images: "Vzhľad"
       email_in: "Vlastná e-mailová adresa pre príchodziu poštu:"
       email_in_tooltip: "Viacero e-mailových adries môžete oddeliť pomocou znaku |."
       email_in_allow_strangers: "Prijímať emaily od anonymných používateľov bez účtu"
@@ -4461,6 +4466,11 @@ sk:
       position: "Pozícia na stránke kategórií:"
       position_disabled: "Kategórie sa zobrazia v poradí podľa aktivity. Ak chcete kontrolovať poradie kategórií v zoznamoch, povoľte nastavenie <a href='%{url}'>\"pevné pozície kategórií</a> \"."
       minimum_required_tags: "Minimálny počet značiek požadovaných v téme:"
+      none_subcategory_text: "Žiadny"
+      visibility:
+        title: "Prístup"
+        public: "Verejné"
+        group_restricted: "Súkromné"
       num_auto_bump_daily: "Počet otvorených tém, ktoré sa majú automaticky denne vypisovať:"
       auto_bump_cooldown_days: "Minimálny počet dní pred opätovným otvorením tej istej témy:"
       navigate_to_first_post_after_read: "Prejsť na prvý príspevok po prečítaní tém"
@@ -6115,7 +6125,9 @@ sk:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">V denníkoch vyhľadávania</a>'
             disabled: 'Prehľad trendov vo vyhľadávaní je zakázaný. Povoľte <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">denníkové vyhľadávacie dopyty</a> na zhromažďovanie údajov.'
-          average_chart_label: Priemer
+          sort_button: "Zoradiť podľa %{column}"
+          sort_ascending: "vzostupne"
+          sort_descending: "zostupne"
           filters:
             file_extension:
               label: Prípona súboru
@@ -8134,6 +8146,7 @@ sk:
           upload:
             label: "Upload"
             title: "Nahrávanie obrázkov"
+        download_file: "Stiahnuť"
         selectable_avatars:
           title: "Zoznam avatarov, z ktorých si používatelia môžu vybrať"
         table_column_heading:

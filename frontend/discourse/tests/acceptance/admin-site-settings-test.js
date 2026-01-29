@@ -40,8 +40,8 @@ acceptance("Admin - Site Settings", function (needs) {
     await visit("/admin/site_settings");
 
     assert
-      .dom(".row.setting.upload .image-uploader")
-      .exists("image uploader is present");
+      .dom(".row.setting.upload .file-uploader")
+      .exists("file uploader is present");
 
     assert.dom(".row.setting.upload .undo").exists("undo button is present");
   });

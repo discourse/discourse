@@ -300,7 +300,6 @@ module SiteSettingExtension
     end
   end
 
-  # Retrieve all settings
   def all_settings(
     include_hidden: false,
     include_locale_setting: true,
@@ -371,7 +370,8 @@ module SiteSettingExtension
       end
       .select do |setting_name, _|
         if only_upcoming_changes
-          upcoming_change_metadata.key?(setting_name)
+          upcoming_change_metadata.key?(setting_name) &&
+            UpcomingChanges.change_status(setting_name) != :conceptual
         else
           true
         end
@@ -390,6 +390,18 @@ module SiteSettingExtension
 
         if type_hash[:type].to_s == "upload" && default.to_i < Upload::SEEDED_ID_THRESHOLD
           default = default_uploads[default.to_i]
+        end
+
+        # For upload type settings, include the upload metadata
+        # public_send returns the Upload object directly (not a URL string)
+        upload_metadata = nil
+        if type_hash[:type].to_s == "upload" && value.is_a?(Upload)
+          upload_metadata = {
+            original_filename: value.original_filename,
+            human_filesize: value.human_filesize,
+            width: value.width,
+            height: value.height,
+          }
         end
 
         # For uploads nested in objects type, hydrate upload IDs to URLs
@@ -431,6 +443,7 @@ module SiteSettingExtension
         end
 
         opts[:plugin] = plugins[s] if plugins[s]
+        opts[:upload] = upload_metadata if upload_metadata
 
         opts
       end
@@ -798,6 +811,17 @@ module SiteSettingExtension
     end
   end
 
+  def log(name, value, prev_value, user = Discourse.system_user, detailed_message = nil)
+    return if hidden_settings.include?(name.to_sym)
+    value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
+    StaffActionLogger.new(user).log_site_setting_change(
+      name,
+      prev_value,
+      value,
+      { details: detailed_message }.compact_blank,
+    )
+  end
+
   def get(name, scoped_to = nil)
     if has_setting?(name)
       if themeable[name]
@@ -1103,17 +1127,6 @@ module SiteSettingExtension
         setup_methods(name)
       end
     end
-  end
-
-  def log(name, value, prev_value, user = Discourse.system_user, detailed_message = nil)
-    value = prev_value = "[FILTERED]" if secret_settings.include?(name.to_sym)
-    return if hidden_settings.include?(name.to_sym)
-    StaffActionLogger.new(user).log_site_setting_change(
-      name,
-      prev_value,
-      value,
-      { details: detailed_message }.compact_blank,
-    )
   end
 
   def default_uploads

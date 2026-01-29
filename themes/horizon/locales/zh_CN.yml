@@ -6,8 +6,10 @@
 
 zh_CN:
   solved: "已解决"
+  unsolved: "未解决"
   posted: "已发布"
   by_username: "作者 @%{username}"
+  replied: "回复"
   vote_count:
     other: "%{count} 票"
   like_count:

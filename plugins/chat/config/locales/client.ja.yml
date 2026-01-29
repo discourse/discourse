@@ -677,7 +677,6 @@ ja:
           composer_bold: "%{shortcut} 太字 (作成ツールのみ)"
           composer_italic: "%{shortcut} 斜体 (作成ツールのみ)"
           composer_code: "%{shortcut} コード (作成ツールのみ)"
-          drawer_open: "%{shortcut} チャットドロワーを開く"
           drawer_close: "%{shortcut} チャットドロワーを閉じる"
           mark_all_channels_read: "%{shortcut} すべてのチャンネルを既読としてマークします"
     topic_statuses:

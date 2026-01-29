@@ -38,28 +38,62 @@ module Chat
 
     validates :title, length: { maximum: Chat::Thread::MAX_TITLE_LENGTH }
 
+    scope :viewable_by_user,
+          ->(user) do
+            joins(:user_chat_thread_memberships, :channel)
+              .joins(<<~SQL)
+                INNER JOIN chat_messages viewable_om
+                  ON viewable_om.id = chat_threads.original_message_id
+                  AND viewable_om.chat_channel_id = chat_threads.channel_id
+                  AND viewable_om.deleted_at IS NULL
+                INNER JOIN chat_messages viewable_lm
+                  ON viewable_lm.id = chat_threads.last_message_id
+                  AND viewable_lm.chat_channel_id = chat_threads.channel_id
+                  AND viewable_lm.deleted_at IS NULL
+                INNER JOIN user_chat_channel_memberships
+                  ON user_chat_channel_memberships.chat_channel_id = chat_channels.id
+                  AND user_chat_channel_memberships.user_id = #{user.id.to_i}
+                  AND user_chat_channel_memberships.following
+              SQL
+              .where(user_chat_thread_memberships: { user_id: user.id })
+              .where.not(
+                user_chat_thread_memberships: {
+                  notification_level: Chat::NotificationLevels.all[:muted],
+                },
+              )
+              .where(chat_channels: { threading_enabled: true, status: :open })
+              .where("chat_threads.replies_count > 0")
+          end
+
     # Since the `replies` for the thread can all be deleted, to avoid errors
     # in lists and previews of the thread, we can consider the original message
     # as the last message in this case as a fallback.
     before_create { self.last_message_id = self.original_message_id }
 
     def add(user, notification_level: Chat::NotificationLevels.all[:tracking])
-      membership = Chat::UserChatThreadMembership.find_by(user: user, thread: self)
+      membership = Chat::UserChatThreadMembership.find_by(user:, thread: self)
       return membership if membership
 
-      Chat::UserChatThreadMembership.create!(
-        user: user,
-        thread: self,
-        notification_level: notification_level,
-      )
+      is_first = channel.threading_enabled && !Chat::Thread.viewable_by_user(user).exists?
+
+      membership = Chat::UserChatThreadMembership.create!(user:, thread: self, notification_level:)
+
+      if is_first && !membership.muted?
+        # This is called from Chat::CreateMessage's post_process_thread step,
+        # which runs inside a transaction block. We use after_commit to ensure
+        # the MessageBus publish only happens after the transaction commits.
+        DB.after_commit { Chat::Publisher.publish_user_has_threads!(user) }
+      end
+
+      membership
     end
 
     def remove(user)
-      Chat::UserChatThreadMembership.find_by(user: user, thread: self)&.destroy
+      Chat::UserChatThreadMembership.find_by(user:, thread: self)&.destroy
     end
 
     def membership_for(user)
-      user_chat_thread_memberships.find_by(user: user)
+      user_chat_thread_memberships.find_by(user:)
     end
 
     def replies

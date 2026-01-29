@@ -149,6 +149,12 @@ class TopicTrackingState
     # this is why they are excluded from the initial scope.
     scope =
       TopicUser.tracking(post.topic_id).includes(user: :user_stat).where.not(user_id: post.user_id)
+    scope =
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_tracking_state_publish_unread_scope,
+        scope,
+        post,
+      )
 
     group_ids =
       if post.post_type == Post.types[:whisper]
@@ -470,6 +476,24 @@ class TopicTrackingState
       end
     end
 
+    exclude_muted_categories =
+      # If we're only gathering topics with unread posts, we've already included the condition
+      # (topic_users.last_read_post_number < topics.highest_post_number), but the muted categories conditions
+      # attempts to exclude rows where (topic_users.last_read_post_number IS NULL) but both can never be true
+      if !custom_state_filter && skip_new && !skip_unread
+        "1=1"
+      else
+        <<~SQL
+          NOT (
+            #{(skip_new && skip_unread) ? "" : "tu.last_read_post_number IS NULL AND"}
+            (
+              topics.category_id IN (#{CategoryUser.muted_category_ids_query(user, include_direct: true).select("categories.id").to_sql})
+              AND tu.notification_level <= #{TopicUser.notification_levels[:regular]}
+            )
+          )
+        SQL
+      end
+
     sql = +<<~SQL
       SELECT #{select_sql}
       FROM topics
@@ -487,13 +511,7 @@ class TopicTrackingState
             #{tags_filter}
             topics.deleted_at IS NULL AND
             #{category_filter}
-            NOT (
-              #{(skip_new && skip_unread) ? "" : "last_read_post_number IS NULL AND"}
-              (
-                topics.category_id IN (#{CategoryUser.muted_category_ids_query(user, include_direct: true).select("categories.id").to_sql})
-                AND tu.notification_level <= #{TopicUser.notification_levels[:regular]}
-              )
-            )
+            #{exclude_muted_categories}
     SQL
 
     sql << " AND topics.id = :topic_id" if topic_id

@@ -864,6 +864,7 @@ hu:
       timeline:
         target_created: "Bejegyzés létrehozva"
         target_created_by: "Bejegyzést készítette: %{username} · %{relativeDate}"
+        target_deleted: "Bejegyzés törölve"
         flagged: "Megjelölt"
         flagged_as_by: "%{flagReason} indokkal megjelölve %{username} felhasználó által · %{relativeDate}"
         claimed: "Igényelt"
@@ -3050,8 +3051,7 @@ hu:
         post_approved: "bejegyzés jóváhagyva"
         membership_request_consolidated: "új tagsági kérés"
         reaction: "új reakció"
-        votes_released: "A szavazat feloldásra került"
-        new_features: "Új Discourse funkciók jelentek meg!"
+        votes_released: "a szavazat feloldásra került"
         admin_problems: "új tanácsok a webhely irányítópultján"
     upload_selector:
       change: "Módosítás"
@@ -4121,6 +4121,7 @@ hu:
       back: "Vissza a kategóriához"
       general: "Általános"
       settings: "Beállítások"
+      advanced: "Speciális"
       topic_template: "Sablon"
       tags: "Címkék"
       localizations: "Lokalizációk"
@@ -4147,6 +4148,7 @@ hu:
         placeholder: "Címkecsoport kiválasztása…"
       topic_featured_link_allowed: "Kiemelt hivatkozások engedélyezése ebben a kategóriában"
       create_long: "Új kategória létrehozása"
+      parent: "Szülő kategória"
       slug_placeholder: "(Nem kötelező) kötőjeles-szavak a webcímhez"
       creation_error: Hiba lépett fel a kategória létrehozása során!
       save_error: Hiba lépett fel a kategória mentése során!
@@ -4160,7 +4162,9 @@ hu:
       logo_description: "Ajánlott 1:1 képarány, minimum 200px-es méret. Ha üresen hagyja, nem jelenik meg kép."
       background_image: "Kategória háttérképe"
       background_image_dark: "Sötét kategória háttérképe"
-      style: "Stílusok"
+      style: "Stílus"
+      icon: "Ikon"
+      emoji: "Hangulatjel"
       background_color: "Szín"
       foreground_color: "Szöveg színe"
       color_validations:
@@ -4171,13 +4175,13 @@ hu:
         type: "Stílus"
         icon: "Ikon"
         emoji: "Emodzsi"
+        square: "Négyzet"
         options:
           square: "Négyzet"
           icon: "Ikon"
           emoji: "Emodzsi"
       color_used: "Használt szín"
       predefined_colors: "Előre definiált színválaszték"
-      name_placeholder: "Maximum egy vagy két szó"
       color_placeholder: "Bármilyen webes szín"
       delete_confirm: "Biztos, hogy törli ezt a kategóriát?"
       delete_error: "Hiba történt a kategória törlése során."
@@ -4185,6 +4189,7 @@ hu:
       no_description: "Adjon leírást ehhez a kategóriához."
       change_in_category_topic: "Leírás szerkesztése"
       already_used: "Ezt a színt már egy másik kategória is használja."
+      color_palette: "Színpaletta"
       security: "Biztonság"
       security_add_group: "Csoport hozzáadása"
       permissions:
@@ -4201,7 +4206,7 @@ hu:
       uncategorized_security_warning: "Ez a kategória különleges. Célja, hogy olyan témákat tartson meg, amelyeknek nincs kategóriája; nem rendelkezhet biztonsági beállításokkal."
       uncategorized_general_warning: 'Ez a kategória különleges. Alapértelmezett kategóriaként használatos az új témákhoz, amelyeknél nincs kategória kiválasztva. Ha meg akarja akadályozni ezt a viselkedést, és ki akarja kényszeríteni a kategória kiválasztását, <a href="%{settingLink}">kapcsolja ki a beállítást itt</a>. Ha meg szeretné változtatni a nevet vagy a leírást, menjen a <a href="%{customizeLink}">Testreszabás / Szövegtartalom</a> menüpontba.'
       pending_permission_change_alert: "Még nem adta hozzá a %{group} címet ehhez a kategóriához; katt ide a hozzáadáshoz."
-      images: "Képek"
+      images: "Megjelenés"
       email_in: "Egyéni e-mail cím a bejövő üzeneteknek:"
       email_in_tooltip: "Több e-mail címet elválaszthat a | karakterrel."
       email_in_allow_strangers: "E-mailek fogadása fiók nélküli névtelen felhasználóktól"
@@ -4229,7 +4234,11 @@ hu:
       position_disabled: "A kategóriák az aktivitás sorrendjében jelennek meg. A kategóriák listákban való sorrendjének szabályozásához engedélyezze a <a href='%{url}'>\"rögzített kategóriapozíciók\"</a> beállítást."
       minimum_required_tags: "A témához szükséges címkék minimális száma:"
       default_slow_mode: 'A „Lassú üzemmód” engedélyezése a kategória új témáihoz.'
-      parent: "Szülő kategória"
+      none_subcategory_text: "Egyik sem"
+      visibility:
+        title: "Hozzáférés"
+        public: "Nyilvános"
+        group_restricted: "Privát"
       num_auto_bump_daily: "A naponta automatikusan előrehozandó nyitott témák száma:"
       auto_bump_cooldown_days: "Minimum napok száma, mielőtt újra feldobná ugyanazt a témát:"
       navigate_to_first_post_after_read: "A témák elolvasása után navigáljon az első hozzászóláshoz"
@@ -5863,7 +5872,9 @@ hu:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Keresési napló</a>'
             disabled: 'A trendkeresési jelentés le van tiltva. Engedélyezze a <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">naplózott keresési lekérdezéseket</a> az adatgyűjtéshez.'
-          average_chart_label: Átlag
+          sort_button: "Rendezés %{column} szerint"
+          sort_ascending: "növekvő"
+          sort_descending: "csökkenő"
           filters:
             file_extension:
               label: Fájlkiterjesztés
@@ -7867,6 +7878,7 @@ hu:
           upload:
             label: "Feltöltés"
             title: "Kép(ek) feltöltése"
+        download_file: "Letöltés"
         selectable_avatars:
           title: "A felhasználó által választható profilképek listája"
         table_column_heading:

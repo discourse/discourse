@@ -12,7 +12,7 @@ export default class UserVotedTopics extends Component {
       <li class="user-nav__activity-votes">
 
         <LinkTo @route="userActivity.votes">
-          {{icon "heart"}}
+          {{icon "check-to-slot" aria-hidden="true"}}
           {{i18n "topic_voting.vote_title_plural"}}
         </LinkTo>
       </li>

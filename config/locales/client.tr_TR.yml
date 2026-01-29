@@ -843,6 +843,7 @@ tr_TR:
       timeline:
         target_created: "Gönderi oluşturuldu"
         target_created_by: "Gönderi %{username} tarafından oluşturuldu · %{relativeDate}"
+        target_deleted: "Gönderi silindi"
         flagged: "Bayrak eklendi"
         flagged_as_by: "%{username} tarafından %{flagReason} nedeniyle bayrak eklendi · %{relativeDate}"
         claimed: "Alındı"
@@ -2055,6 +2056,7 @@ tr_TR:
               other {# günlüğüne}
             } geçerlidir.
           edit_link_options: "Bağlantı seçeneklerini düzenleyin veya e-posta ile gönderin."
+          edit_link_options_only: "Bağlantı seçeneklerini düzenleyin"
           show_advanced: "Gelişmiş Seçenekleri Göster"
           hide_advanced: "Gelişmiş Seçenekleri Gizle"
           description: "Açıklama"
@@ -2984,8 +2986,7 @@ tr_TR:
         post_approved: "gönderi onaylandı"
         membership_request_consolidated: "yeni üyelik talepleri"
         reaction: "yeni tepki"
-        votes_released: "Oy verildi"
-        new_features: "Yeni Discourse özellikleri çıktı!"
+        votes_released: "oy verildi"
         admin_problems: "sitenizin panonuzda yeni öneriler mevcut"
     upload_selector:
       change: "Değiştir"
@@ -4046,6 +4047,7 @@ tr_TR:
       back: "Kategoriye dön"
       general: "Genel"
       settings: "Ayarlar"
+      advanced: "Gelişmiş"
       topic_template: "Şablon"
       tags: "Etiketler"
       localizations: "Yerelleştirmeler"
@@ -4077,7 +4079,9 @@ tr_TR:
       save_error: Kategori kaydedilirken bir hata oluştu.
       description: "Açıklama"
       logo_description: "Önerilen 1:1 en boy oranı ve minimum 200 piksel boyut. Boş bırakılırsa hiçbir görüntü gösterilmez."
-      style: "Stiller"
+      style: "Stil"
+      icon: "Simge"
+      emoji: "Emoji"
       background_color: "Renk"
       foreground_color: "Metin rengi"
       color_validations:
@@ -4086,13 +4090,13 @@ tr_TR:
         type: "Stil"
         icon: "Simge"
         emoji: "Emoji"
+        square: "Kare"
         options:
           square: "Kare"
           icon: "Simge"
           emoji: "Emoji"
       color_used: "Kullanılan renk"
       predefined_colors: "Önceden tanımlanmış renk seçenekleri"
-      name_placeholder: "En fazla bir veya iki kelime"
       color_placeholder: "Herhangi bir web rengi"
       delete_confirm: "Bu kategoriyi silmek istediğinizden emin misiniz?"
       delete_error: "Kategori silinirken bir hata oluştu."
@@ -4100,6 +4104,7 @@ tr_TR:
       no_description: "Lütfen bu kategori için bir açıklama ekleyin."
       change_in_category_topic: "Açıklamayı düzenle"
       already_used: "Bu renk başka bir kategori tarafından kullanılmış."
+      color_palette: "Renk paleti"
       security: "Güvenlik"
       security_add_group: "Grup ekle"
       permissions:
@@ -4116,7 +4121,7 @@ tr_TR:
       uncategorized_security_warning: "Bu kategori özeldir. Kategorisi olmayan konular için tutma alanı olarak tasarlanmıştır; güvenlik ayarlarına sahip olamaz."
       uncategorized_general_warning: 'Bu kategori özeldir. Kategori seçilmeyen yeni konular için varsayılan kategori olarak kullanılır. Bu davranışı önlemek ve kategori seçimini zorlamak isterseniz <a href="%{settingLink}">lütfen buradaki ayarı devre dışı bırakın</a>. Adı veya açıklamayı değiştirmek isterseniz <a href="%{customizeLink}">Özelleştir / Metin İçeriği</a>''ne gidin.'
       pending_permission_change_alert: "Bu kategoriye %{group} eklemediniz; eklemek için bu düğmeye tıklayın."
-      images: "Resimler"
+      images: "Görünüm"
       email_in: "Kişiselleştirilmiş gelen e-posta adresi:"
       email_in_tooltip: "Birden fazla e-posta adresini | karakteri ile ayırabilirsiniz."
       email_in_allow_strangers: "Hesabı olmayan anonim kullanıcılardan gelen e-postaları kabul edin"
@@ -4138,6 +4143,11 @@ tr_TR:
       position: "Kategoriler sayfasındaki pozisyon:"
       position_disabled: "Kategoriler aktivite sırasına göre görüntülenir. Listelerdeki kategorilerin sırasını kontrol etmek için <a href='%{url}'>\"sabit kategori pozisyonları\"</a> ayarını etkinleştirin."
       minimum_required_tags: "Bir konuda gerekli minimum etiket sayısı:"
+      none_subcategory_text: "Hiçbiri"
+      visibility:
+        title: "Erişim"
+        public: "Genel"
+        group_restricted: "Özel"
       num_auto_bump_daily: "Günlük olarak otomatik olarak üste çıkacak açık konu sayısı:"
       auto_bump_cooldown_days: "Aynı konuyu tekrar açmadan önce geçmesi gereken gün sayısı:"
       navigate_to_first_post_after_read: "Konular okunduktan sonra ilk gönderiye gidin"
@@ -5687,7 +5697,9 @@ tr_TR:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Arama günlükleri</a>'
             disabled: 'Trend olan arama raporu devre dışı bırakıldı. Veri toplamak için <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">günlük arama sorgularını</a> etkinleştirin.'
-          average_chart_label: Ortalama
+          sort_button: "%{column} kriterine göre sırala"
+          sort_ascending: "artan"
+          sort_descending: "azalan"
           filters:
             file_extension:
               label: Dosya uzantısı
@@ -7652,6 +7664,7 @@ tr_TR:
           upload:
             label: "Yükle"
             title: "Görüntü yükle"
+        download_file: "İndir"
         selectable_avatars:
           title: "Kullanıcıların seçebileceği avatarların listesi"
         table_column_heading:

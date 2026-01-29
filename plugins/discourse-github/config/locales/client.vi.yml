@@ -12,7 +12,7 @@ vi:
         open: "Mở"
         approved: "Đã phê duyệt"
         merged: "Đã ghép"
-        closed: "Đã "
+        closed: "Đã đóng"
   admin_js:
     admin:
       site_settings:

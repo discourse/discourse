@@ -516,6 +516,8 @@ gl:
         reviewable_ai_post:
           noun: "publicación"
       user_label: "Usuario"
+      timeline:
+        target_deleted: "Publicación eliminada"
       notes:
         delete: "Eliminar"
       topic_label: "Tema"
@@ -1984,7 +1986,7 @@ gl:
         post_approved: "publicación aprobada"
         membership_request_consolidated: "novas solicitudes de incorporación"
         reaction: "nova reacción"
-        votes_released: "O voto foi liberado"
+        votes_released: "o voto foi liberado"
         admin_problems: "novo consello no seu panel de sitio"
     upload_selector:
       delete: "Eliminar"
@@ -2755,6 +2757,8 @@ gl:
       creation_error: Produciuse un erro durante a creación desta categoría.
       save_error: Produciuse un erro gardando a categoría.
       description: "Descrición"
+      icon: "Icona"
+      emoji: "Emoji"
       background_color: "Cor"
       color_validations:
         cant_be_empty: "non pode quedar en branco"
@@ -2764,7 +2768,6 @@ gl:
         options:
           icon: "Icona"
           emoji: "Emoji"
-      name_placeholder: "Dúas palabras como máximo"
       color_placeholder: "Calquera cor web"
       delete_confirm: "Confirma a eliminación desta categoría?"
       delete_error: "Produciuse un erro elimando esta categoría."
@@ -2786,7 +2789,7 @@ gl:
       uncategorized_security_warning: "Esta categoría é especial. Enténdese como unha área de espera para aqueles temas que non teñen categoría. Non pode ter axustes de seguranza."
       uncategorized_general_warning: 'Esta categoría é especial. Úsase como categoría predeterminada para os novos temas que non teñen unha categoría seleccionada. Se non quere isto e prefire forzar a selección de categorías, <a href="%{settingLink}">desactive aquí o axuste</a>. Se quere cambiar o nome ou a descrición, vai a <a href="%{customizeLink}">Personalizar / Contido de texto</a>.'
       pending_permission_change_alert: "Non engadiu %{group} nesta categoría; prema neste botón para engadilos."
-      images: "Imaxes"
+      images: "Aparencia"
       email_in: "Personalizar enderezos de mensaxes de correo entrantes:"
       email_in_allow_strangers: "Aceptar correo de usuarios anónimos sen contas"
       mailinglist_mirror: "A categoría replica unha lista de correo"
@@ -2803,6 +2806,11 @@ gl:
       this_year: "este ano"
       position: "Posición na páxina de categorías:"
       minimum_required_tags: "Número mínimo de etiquetas requiridas nun tema:"
+      none_subcategory_text: "Ningunha"
+      visibility:
+        title: "Acceso"
+        public: "Pública"
+        group_restricted: "Privada"
       num_auto_bump_daily: "Número de temas abertos que se promoven automaticamente cada día:"
       navigate_to_first_post_after_read: "Ir á primeira publicación despois de ler os temas"
       notifications:
@@ -3626,6 +3634,8 @@ gl:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Buscar rexistros</a>'
             disabled: 'O informe de busca de tendencias está desactivado. Activa as <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de busca de rexistros</a> para obter datos.'
+          sort_ascending: "ascendente"
+          sort_descending: "descendente"
           filters:
             file_extension:
               label: Extensión do ficheiro
@@ -4802,6 +4812,7 @@ gl:
           empty: "Aínda non hai imaxes. Cargue unha."
           upload:
             label: "Cargar"
+        download_file: "Descargar"
         selectable_avatars:
           title: "Listaxe de avatares que os usuarios poden elixir"
         table_column_heading:

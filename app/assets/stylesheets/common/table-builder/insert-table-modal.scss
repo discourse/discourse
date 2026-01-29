@@ -24,7 +24,7 @@
   align-items: flex-start;
 
   .d-modal__container {
-    --modal-max-width: $reply-area-max-width;
+    --modal-max-width: #{$reply-area-max-width};
     width: 100%;
     height: 100%;
     max-height: unset;

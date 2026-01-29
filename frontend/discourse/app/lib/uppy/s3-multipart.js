@@ -163,6 +163,8 @@ export default class UppyS3Multipart {
         unique_identifier: file.meta.unique_identifier,
         pasted: file.meta.pasted,
         for_private_message: file.meta.for_private_message,
+        for_site_setting: file.meta.for_site_setting,
+        site_setting_name: file.meta.site_setting_name,
       }),
       // uppy is inconsistent, an error here fires the upload-error event
     }).then((responseData) => {

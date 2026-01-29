@@ -26,6 +26,9 @@ zh_CN:
         spam: "标记为垃圾信息并隐藏帖子"
         spam_silence: "标记为垃圾信息，隐藏帖子并将用户禁言"
     scriptables:
+      ai_tool_action:
+        title: AI 工具操作
+        description: 当自动化触发时，执行 AI 工具
       llm_persona_triage:
         title: 使用 AI 角色对帖子进行分类
         description: "使用特定的 AI 角色回复帖子"
@@ -144,6 +147,7 @@ zh_CN:
     ai_translation_enabled: "启用AI翻译功能"
     ai_translation_model: "用于翻译的模型。此模型必须支持翻译。角色可以覆盖此设置。"
     ai_translation_backfill_limit_to_public_content: "启用时，仅翻译公共类别中的内容。禁用时，群组 PM 和不公开类别中的内容也将发送以进行翻译。"
+    ai_translation_include_bot_content: "启用后，机器人（用户 ID 小于 0）编写的内容也将发送进行翻译。"
     ai_translation_max_post_length: "帖子翻译的最大字符数。超过此长度的帖子将不会被翻译。"
     ai_translation_backfill_max_age_days: "待翻译帖子和话题的最长期限。超过此期限的帖子和话题将不进行翻译。0 表示禁用回填，但不会禁用新帖子的翻译。"
     ai_translation_backfill_hourly_rate: "每小时回填翻译的帖子和话题数量。设置为 0 可禁用现有内容的自动翻译回填。"
@@ -485,6 +489,10 @@ zh_CN:
           base_query:
             name: "基本搜索查询"
             description: "搜索时要使用的基本查询。示例：'#urgent' 会在搜索查询前面加上 '#urgent'，并且仅包含具有紧急类别或标签的话题。"
+        flag_post:
+          flag_type:
+            name: "举报类型"
+            description: "控制帖子是否被审核、隐藏、删除或视为垃圾邮件。"
       tool_summary:
         read_artifact: "阅读 Web 工件"
         update_artifact: "更新 Web 工件"
@@ -493,6 +501,7 @@ zh_CN:
         github_search_files: "GitHub 搜索文件"
         github_search_code: "GitHub 代码搜索"
         github_file_content: "GitHub 文件内容"
+        github_diff: "GitHub 差异"
         random_picker: "随机选择器"
         categories: "列出类别"
         flag_post: "标记帖子"
@@ -521,6 +530,7 @@ zh_CN:
         github_search_code: "在 GitHub 仓库中搜索代码"
         github_search_files: "在 GitHub 仓库中搜索文件"
         github_file_content: "从 GitHub 仓库检索文件的内容"
+        github_diff: "获取 GitHub 拉取请求或提交差异"
         random_picker: "选择一个随机数或列表的随机元素"
         categories: "列出论坛上所有公开可见的类别"
         flag_post: "举报当前帖子以供管理人员审核"

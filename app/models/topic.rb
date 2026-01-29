@@ -996,7 +996,7 @@ class Topic < ActiveRecord::Base
     post_type =
       archetype == Archetype.private_message ? " AND post_type <> #{Post.types[:small_action]}" : ""
 
-    result = DB.query_single(<<~SQL, topic_id: topic_id)
+    result = DB.query_single(<<~SQL, topic_id:)
       UPDATE topics
       SET
         highest_staff_post_number = (
@@ -1053,6 +1053,8 @@ class Topic < ActiveRecord::Base
        WHERE topic_id = :topic_id
          AND last_read_post_number > :highest
     SQL
+
+    highest
   end
 
   cattr_accessor :update_featured_topics
@@ -1364,10 +1366,10 @@ class Topic < ActiveRecord::Base
   # Updates the denormalized statistics of a topic including featured posters. They shouldn't
   # go out of sync unless you do something drastic live move posts from one topic to another.
   # this recalculates everything.
-  def update_statistics
+  def update_statistics!
     feature_topic_users
     update_action_counts
-    Topic.reset_highest(id)
+    self.highest_post_number = Topic.reset_highest(id)
   end
 
   def update_action_counts

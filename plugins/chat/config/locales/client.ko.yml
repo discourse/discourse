@@ -380,6 +380,9 @@ ko:
         chat:
           title: 채팅
     sidebar:
+      start_new_dm:
+        text: 새로운 채팅 시작
+        title: 개인 채팅 시작
       panels:
         chat:
           label: "채팅"

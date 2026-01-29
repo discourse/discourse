@@ -843,6 +843,7 @@ fi:
       timeline:
         target_created: "Viesti luotu"
         target_created_by: "Viestin loi %{username} · %{relativeDate}"
+        target_deleted: "Viesti poistettu"
         flagged: "Liputettu"
         flagged_as_by: "%{username} liputti merkinnällä %{flagReason} · %{relativeDate}"
         claimed: "Omittu"
@@ -2055,6 +2056,7 @@ fi:
               other {# päivän kuluttua}
             }.
           edit_link_options: "Muokkaa linkin asetuksia tai lähetä sähköpostitse."
+          edit_link_options_only: "Muokkaa linkin asetuksia"
           show_advanced: "Näytä lisäasetukset"
           hide_advanced: "Piilota lisäasetukset"
           description: "Kuvaus"
@@ -2984,8 +2986,7 @@ fi:
         post_approved: "viesti hyväksytty"
         membership_request_consolidated: "uusia jäsenhakemuksia"
         reaction: "uusi reaktio"
-        votes_released: "Ääni vapautui"
-        new_features: "Uusia Discoursen ominaisuuksia on julkaistu!"
+        votes_released: "ääni vapautui"
         admin_problems: "uusia suosituksia sivustosi hallintapaneelissa"
     upload_selector:
       change: "Vaihda"
@@ -4046,6 +4047,7 @@ fi:
       back: "Takaisin alueelle"
       general: "Yleistä"
       settings: "Asetukset"
+      advanced: "Lisäasetukset"
       topic_template: "Malli"
       tags: "Tunnisteet"
       localizations: "Lokalisoinnit"
@@ -4077,7 +4079,9 @@ fi:
       save_error: Alueen tallennuksessa tapahtui virhe.
       description: "Kuvaus"
       logo_description: "Suositeltu kuvasuhde on 1:1 ja vähimmäiskoko 200 pikseliä. Jos tämä jätetään tyhjäksi, kuvaa ei näytetä."
-      style: "Tyylit"
+      style: "Tyyli"
+      icon: "Kuvake"
+      emoji: "Emojit"
       background_color: "Väri"
       foreground_color: "Tekstin väri"
       color_validations:
@@ -4086,13 +4090,13 @@ fi:
         type: "Tyyli"
         icon: "Kuvake"
         emoji: "Emojit"
+        square: "Neliö"
         options:
           square: "Neliö"
           icon: "Kuvake"
           emoji: "Emojit"
       color_used: "Väri käytössä"
       predefined_colors: "Ennalta määritetyt värivaihtoehdot"
-      name_placeholder: "Enintään yksi tai kaksi sanaa"
       color_placeholder: "Mikä tahansa verkkoväri"
       delete_confirm: "Oletko varma, että haluat poistaa tämän alueen?"
       delete_error: "Alueen poistossa tapahtui virhe."
@@ -4100,6 +4104,7 @@ fi:
       no_description: "Lisää alueelle kuvaus."
       change_in_category_topic: "Muokkaa kuvausta"
       already_used: "Tämä väri on jo käytössä toisella alueella"
+      color_palette: "Väripaletti"
       security: "Turvallisuus"
       security_add_group: "Lisää ryhmä"
       permissions:
@@ -4116,7 +4121,7 @@ fi:
       uncategorized_security_warning: "Tämä alue on erityinen. Se on tarkoitettu säilytyspaikaksi ketjuille, joilla ei ole aluetta; sille ei voi määritellä turvallisuusasetuksia."
       uncategorized_general_warning: 'Tämä alue on erityinen. Se on oletusalue uusille ketjuille, joille ei ole valittu aluetta. Jos et kaipaa tätä ja haluat mieluummin pakottaa valitsemaan alueen, <a href="%{settingLink}">poista asetus käytöstä täällä</a>. Jos haluat vaihtaa nimeä tai kuvasta, siirry kohtaan <a href="%{customizeLink}">Mukauta / Tekstisisältö</a>.'
       pending_permission_change_alert: "Et ole lisännyt ryhmää %{group} tälle alueelle; lisää klikkaamalla tätä painiketta."
-      images: "Kuvat"
+      images: "Ulkoasu"
       email_in: "Mukautettu saapuvan postin sähköpostiosoite:"
       email_in_tooltip: "Voit erottaa useita sähköpostiosoitteita |-merkillä."
       email_in_allow_strangers: "Hyväksy sähköpostit anonyymeiltä käyttäjiltä, joilla ei ole tiliä"
@@ -4138,6 +4143,11 @@ fi:
       position: "Sijoitus aluesivulla:"
       position_disabled: "Alueet näytetään aktiivisuusjärjestyksessä. Voit hallita alueiden järjestystä luetteloissa ottamalla käyttöön <a href='%{url}'>\"fixed category positions\"</a> -asetuksen."
       minimum_required_tags: "Ketjussa vaadittavien tunnisteiden vähimmäismäärä:"
+      none_subcategory_text: "Ei valittu"
+      visibility:
+        title: "Käyttöoikeudet"
+        public: "Julkinen"
+        group_restricted: "Yksityinen"
       num_auto_bump_daily: "Päivittäin nostettavien avointen ketjujen määrä:"
       auto_bump_cooldown_days: "Vähimmäismäärä päiviä ennen kuin sama ketju nostetaan uudelleen:"
       navigate_to_first_post_after_read: "Siirry ensimmäiseen viestiin, kun ketjut on luettu"
@@ -5695,7 +5705,9 @@ fi:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Hakulokit</a>'
             disabled: 'Suosittujen hakujen raportti ei ole käytössä. Kerää dataa ottamalla käyttöön asetus <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kirjaa hakukyselyitä</a>.'
-          average_chart_label: Keskiverto
+          sort_button: "Lajitteluperuste: %{column}"
+          sort_ascending: "nouseva"
+          sort_descending: "laskeva"
           filters:
             file_extension:
               label: Tiedostomuoto
@@ -7667,6 +7679,7 @@ fi:
           upload:
             label: "Lataa"
             title: "Lataa kuvia"
+        download_file: "Lataa"
         selectable_avatars:
           title: "Avatarit, joista käyttäjä voi valita"
         table_column_heading:

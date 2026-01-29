@@ -915,6 +915,28 @@ RSpec.describe ListController do
 
           expect(response.body).to have_tag "title", text: "Amazing Category - Discourse"
         end
+
+        it "renders og:description and twitter:description without HTML tags" do
+          amazing_category.update!(
+            description: "This is <strong>bold</strong> and <em>italic</em> text",
+          )
+          get "/c/#{amazing_category.slug}/#{amazing_category.id}"
+
+          expect(response.body).to have_tag(
+            :meta,
+            with: {
+              property: "og:description",
+              content: "This is bold and italic text",
+            },
+          )
+          expect(response.body).to have_tag(
+            :meta,
+            with: {
+              name: "twitter:description",
+              content: "This is bold and italic text",
+            },
+          )
+        end
       end
 
       context "for category latest view" do

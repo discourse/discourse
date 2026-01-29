@@ -154,14 +154,6 @@ export default class DEditor extends Component {
     });
   }
 
-  @discourseComputed("placeholder")
-  placeholderTranslated(placeholder) {
-    if (placeholder) {
-      return i18n(placeholder);
-    }
-    return null;
-  }
-
   @discourseComputed("siteSettings.rich_editor", "forceEditorMode")
   showEditorModeToggle() {
     return this.siteSettings.rich_editor && isNone(this.forceEditorMode);
@@ -833,7 +825,7 @@ export default class DEditor extends Component {
             @markdownOptions={{this.markdownOptions}}
             @keymap={{this.keymap}}
             @value={{this.value}}
-            @placeholder={{this.placeholderTranslated}}
+            @placeholder={{@placeholder}}
             @disabled={{this.disabled}}
             @change={{this.onChange}}
             @focusIn={{this.handleFocusIn}}

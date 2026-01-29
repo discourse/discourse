@@ -590,6 +590,7 @@ zh_CN:
       show_more: "展开"
       show_less: "收起"
       back_to_queue: "返回队列"
+      editing_post: "正在编辑帖子…"
       order_by: "排序依据"
       date_filter: "发布时间介于"
       in_reply_to: "回复给"
@@ -778,6 +779,10 @@ zh_CN:
         is_this_post: "此%{reviewable_type}是否%{reviewable_human_score_types}？"
         delimiter: "或者"
         something_else_wrong: "此%{reviewable_type}有什么问题吗？"
+        approve_user: "批准该用户？"
+        suspect_user: "这个用户是垃圾用户吗？"
+        approve_post: "批准该帖子？"
+        approve_topic: "批准该话题？"
       types:
         reviewable_flagged_post:
           title: "被举报的帖子"
@@ -796,9 +801,14 @@ zh_CN:
           title: "帖子"
           noun: "帖子"
         reviewable_ai_chat_message:
+          title: "被 AI 举报的聊天消息"
           noun: "聊天消息"
         reviewable_ai_post:
+          title: "被 AI 举报的帖子"
           noun: "帖子"
+        reviewable_post_voting_comment:
+          title: "被举报的评论"
+          noun: "评论"
       flagged_as: "被标记为"
       post_flagged_as: "帖子被标记为"
       chat_flagged_as: "对话被标记为"
@@ -811,6 +821,8 @@ zh_CN:
       timeline:
         target_created: "帖子已创建"
         target_created_by: "帖子由 %{username} 创建 · %{relativeDate}"
+        target_deleted: "帖子已删除"
+        target_deleted_by: "帖子已被 %{username} · %{relativeDate} 删除"
         flagged: "被举报"
         flagged_as_by: "被 %{username} 举报为%{flagReason} · %{relativeDate}"
         claimed: "已申领"
@@ -1955,6 +1967,7 @@ zh_CN:
         redeemed_tab_with_count: "已确认 (%{count})"
         invited_via: "邀请"
         invited_via_link: "链接 %{key}（已确认 %{count}/%{max}）"
+        generating_link: "正在生成链接..."
         groups: "群组"
         topic: "话题"
         sent: "创建/上次发送日期"
@@ -2018,6 +2031,7 @@ zh_CN:
                 other {# 天}
             }后到期。
           edit_link_options: "编辑链接选项或通过电子邮件发送。"
+          edit_link_options_only: "编辑链接选项"
           show_advanced: "显示高级选项"
           hide_advanced: "隐藏高级选项"
           description: "描述"
@@ -2869,6 +2883,13 @@ zh_CN:
       votes_released: "%{description} - 已完成"
       new_features: "有新功能可用！"
       admin_problems: "网站信息中心有新建议"
+      upcoming_changes:
+        available:
+          title: "即将推出的更改"
+          description: "'%{changeName}' 可供预览"
+        automatically_promoted:
+          title: "即将推出的更改"
+          description: "'%{changeName}' 已自动启用"
       dismiss_confirmation:
         body:
           default:
@@ -2923,6 +2944,7 @@ zh_CN:
         votes_released: "投票额度已释放"
         new_features: "已发布新的 Discourse 功能！"
         admin_problems: "网站信息中心有新建议"
+        upcoming_change_available: "新的变化即将到来"
     upload_selector:
       change: "更改"
       delete: "删除"
@@ -3194,6 +3216,7 @@ zh_CN:
           unread: "没有未读内容… 太棒了！"
           new_new: "目前没有新内容… 稍后再查看！"
           new: "目前没有新内容… 稍后再查看！"
+          generic: "这没什么好看的......一会再回来看看！"
     topic_bulk_actions:
       dismiss:
         name: "忽略"
@@ -3342,6 +3365,8 @@ zh_CN:
           12_hours: "12 小时"
           24_hours: "24 小时"
           custom: "自定义持续时间"
+      slow_mode_notice:
+        duration: "请在本话题的两次发帖之间等待 %{duration}"
       topic_status_update:
         title: "话题计时器"
         save: "设置计时器"
@@ -3371,6 +3396,8 @@ zh_CN:
         title: "在最后一个帖子后自动关闭话题"
       auto_delete:
         title: "自动删除话题"
+      auto_delete_after_last_post:
+        title: "最后回复后自动删除主题"
       auto_bump:
         title: "自动顶帖话题"
       reminder:
@@ -3382,6 +3409,7 @@ zh_CN:
         auto_close: "此话题将在 %{timeLeft}后自动关闭。"
         auto_publish_to_category: "此话题将在 %{timeLeft}后发布到<a href=%{categoryUrl}>#%{categoryName}</a>。"
         auto_close_after_last_post: "此话题将在最后一个回复的%{duration}后关闭。"
+        auto_delete_after_last_post: "本主题将在最后一次回复后删除 %{duration}。"
         auto_delete: "此话题将在 %{timeLeft}后自动删除。"
         auto_bump: "此话题将在 %{timeLeft}后被自动顶帖。"
         auto_reminder: "您将在 %{timeLeft}后收到此话题的提醒。"
@@ -3745,6 +3773,7 @@ zh_CN:
           confirm_delete: "确定要删除 '%{languageCode}' 的翻译吗？"
         success: "翻译已成功更新"
         post_language_selector:
+          title: "帖子语言"
           none: "无"
         edit_warning:
           message: "这是一篇翻译的帖子。<br><br>您想编辑 %{language} 原帖还是编辑此特定翻译？"
@@ -3949,6 +3978,7 @@ zh_CN:
       back: "返回类别"
       general: "常规"
       settings: "设置"
+      advanced: "高级"
       topic_template: "模板"
       tags: "标签"
       localizations: "本地化"
@@ -3979,6 +4009,7 @@ zh_CN:
       create_long: "创建新类别"
       save: "保存类别"
       slug: "类别缩略名"
+      parent: "父类别"
       slug_placeholder: "（可选）用于 URL 以“-”分隔的字词"
       creation_error: 创建类别时出错。
       save_error: 保存类别时出错。
@@ -3993,6 +4024,8 @@ zh_CN:
       background_image: "类别背景图片"
       background_image_dark: "深色类别背景图片"
       style: "样式"
+      icon: "图标"
+      emoji: "表情符号"
       background_color: "颜色"
       foreground_color: "文本颜色"
       color_validations:
@@ -4003,13 +4036,13 @@ zh_CN:
         type: "样式"
         icon: "图标"
         emoji: "表情符号"
+        square: "方形"
         options:
           square: "方形"
           icon: "图标"
           emoji: "表情符号"
       color_used: "使用的颜色"
       predefined_colors: "预定义颜色选项"
-      name_placeholder: "应该简明扼要"
       color_placeholder: "任意网页颜色"
       delete_confirm: "确定要删除此类别吗？"
       delete_error: "删除类别时出错。"
@@ -4017,6 +4050,7 @@ zh_CN:
       no_description: "请为此类别添加描述。"
       change_in_category_topic: "编辑描述"
       already_used: "此颜色已被其他类别使用"
+      color_palette: "调色板"
       security: "安全性"
       security_add_group: "添加群组"
       permissions:
@@ -4033,7 +4067,7 @@ zh_CN:
       uncategorized_security_warning: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能有安全性设置。"
       uncategorized_general_warning: '此类别比较特殊。它用作未选择类别的新话题的默认类别。如果您想要避免此行为并强制选择类别，<a href="%{settingLink}">请在此处禁用该设置</a>。如果您想要更改其名称或描述，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
       pending_permission_change_alert: "您还没有将 %{group} 添加到此类别；点击此按钮添加它们。"
-      images: "图片"
+      images: "外观"
       email_in: "自定义传入电子邮件地址："
       email_in_tooltip: "您可以使用 | 字符分隔多个电子邮件地址。"
       email_in_allow_strangers: "接受来自没有帐户的匿名用户的电子邮件"
@@ -4062,7 +4096,12 @@ zh_CN:
       position_disabled: "类别将按活动顺序显示。要控制列表中类别的顺序，请启用<a href='%{url}'>固定类别位置</a>设置。"
       minimum_required_tags: "话题中所需的最少标签数："
       default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
-      parent: "父类别"
+      none_subcategory_text: "无"
+      visibility:
+        title: "访问"
+        public: "公开"
+        all_members: "所有成员"
+        group_restricted: "不公开"
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
       auto_bump_cooldown_days: "再次顶帖同一话题之前的最短天数。"
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
@@ -4405,6 +4444,7 @@ zh_CN:
         back: "%{shortcut} 返回"
         up_down: "%{shortcut} 移动选择 &uarr; &darr;"
         open: "%{shortcut} 打开所选话题"
+        open_new_window: "%{shortcut} 在新标签页/窗口中打开所选话题"
         next_prev: "%{shortcut} 下一个/上一个部分"
         go_to_unread_post: "%{shortcut} 转到第一个未读帖子"
       application:
@@ -4818,6 +4858,8 @@ zh_CN:
           header_link_text: "类别"
           header_action_title: "编辑边栏类别"
           header_action_new: "新建类别"
+          header_action_edit_sidebar: "编辑侧边栏类别"
+          header_action_edit_header_dropdown: "编辑导航类别"
           configure_defaults: "配置默认值"
         community:
           edit_section:
@@ -5155,11 +5197,13 @@ zh_CN:
           impact_type_feature: "功能"
           impact_type_other: "其他"
           status_all: "所有状态"
+          status_conceptual: "概念阶段"
           status_experimental: "实验性"
           status_alpha: "Alpha"
           status_beta: "Beta"
           status_stable: "稳定"
           status_permanent: "永久"
+          impact_role_all: "所有影响的角色"
           impact_role_admins: "管理员"
           impact_role_moderators: "版主"
           impact_role_staff: "管理人员"
@@ -5340,11 +5384,11 @@ zh_CN:
               locale_label: "语言"
             header_new_members:
               label: "新成员标题"
-              description: "可用变量：<code>&percnt;{preferred_display_name}</code>"
+              description: "可用变量： <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "欢迎， %{preferred_display_name}！"
             header_logged_in:
               label: "已登录成员的标题"
-              description: "可用变量： <code>&percnt;{preferred_display_name}</code>"
+              description: "可用变量： <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "欢迎回来，%{preferred_display_name}！"
             header_anonymous:
               label: "匿名访客标题"
@@ -5608,6 +5652,7 @@ zh_CN:
         new_features:
           title: "最新变化"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
+          no_new_features_found: "加载最新功能列表时出现错误。您可以在<a href='%{url}' target='_blank'>Discourse Meta 社区</a>查看以前的新功能公告。"
           learn_more: "了解详情…"
           experimental: "实验性"
           only_experiments: "只显示实验性功能"
@@ -5688,6 +5733,7 @@ zh_CN:
           daily: 每天
           monthly: 每月
           weekly: 每周
+          value_so_far: "%{value} （目前为止）"
           dates: "日期 (UTC)"
           groups: "所有群组"
           disabled: "此报告已禁用"
@@ -5698,7 +5744,11 @@ zh_CN:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">搜索日志</a>'
             disabled: '趋势搜索报告已禁用。启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
-          average_chart_label: 平均值
+          average_chart_label: 显示平均数，而不是总数
+          sort_button: "按%{column}排序"
+          sort_button_current: "按 %{column}, %{direction} 排序"
+          sort_ascending: "升序"
+          sort_descending: "降序"
           filters:
             file_extension:
               label: 文件扩展名
@@ -7048,6 +7098,7 @@ zh_CN:
             change_theme_site_setting: "更改主题站点设置"
             stop_impersonating: "停止模拟"
             upcoming_change_toggled: "切换即将到来的更新"
+            upcoming_change_available: "即将推出的更改已可用"
             change_site_setting_groups: "更改站点设置组"
             discourse_id_regenerate_credentials: "重新生成 Discourse ID 凭证"
         screened_emails:
@@ -7187,6 +7238,7 @@ zh_CN:
           upload: "上传文件"
           multiselect: "多选"
           tagchooser: "标签群组选择器"
+          composer: "Markdown 答案"
         validations_modal:
           button_title: "验证"
           modal_title: "验证选项"
@@ -7344,6 +7396,17 @@ zh_CN:
         penalty_post_actions: "您想对关联帖子做什么？"
         penalty_post_delete: "删除帖子"
         penalty_post_delete_replies: "删除帖子 + 任何回复"
+        penalty_post_delete_all: "删除用户发布的所有话题和回复"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>这将删除
+          { TOPICS, plural,
+              one {# 个主题}
+              other {# 个主题}
+          } 和
+          { REPLIES, plural,
+              one {# 个回复}
+              other {# 个回复}
+          }。<b>该操作无法撤销！</b>您确定要这样做吗？</span>
         penalty_post_edit: "编辑帖子"
         penalty_post_none: "无操作"
         penalty_count: "处罚计数"
@@ -7429,6 +7492,8 @@ zh_CN:
           button: "删除所有帖子"
           progress:
             title: "删除帖子的进度"
+            description:
+              other: "正在删除 @%{username} 的 %{count} 个帖子"
           confirmation:
             title: "删除 @%{username} 发布的所有帖子"
             description: |
@@ -7440,6 +7505,7 @@ zh_CN:
             text: "删除 @%{username} 发布的帖子"
             delete: "删除 @%{username} 发布的帖子"
             cancel: "取消"
+          all_enqueued: "@%{username} 的所有帖子已加入删除队列"
         merge:
           button: "合并"
           prompt:
@@ -7682,6 +7748,10 @@ zh_CN:
           upload:
             label: "上传"
             title: "上传图片"
+        download_file: "下载"
+        upload_restrictions:
+          extensions: "已接受：%{extensions}"
+          max_size: "最大： %{size}"
         selectable_avatars:
           title: "用户可以选择的头像列表"
         table_column_heading:

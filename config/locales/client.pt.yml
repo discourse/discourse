@@ -861,6 +861,7 @@ pt:
       timeline:
         target_created: "Criada publicação"
         target_created_by: "Publicação criada por %{username} · %{relativeDate}"
+        target_deleted: "Publicação eliminada"
         flagged: "Sinalizado"
         flagged_as_by: "Sinalizado como %{flagReason} por %{username} · %{relativeDate}"
         reviewed: "Revisto"
@@ -2977,8 +2978,7 @@ pt:
         post_approved: "mensagem aprovada"
         membership_request_consolidated: "novas solicitações de participação"
         reaction: "nova reação"
-        votes_released: "O voto foi liberado"
-        new_features: "Foram lançadas novas funcionalidades do Discourse!"
+        votes_released: "o voto foi liberado"
         admin_problems: "novo conselho no seu painel do ''site''"
     upload_selector:
       change: "Alterar"
@@ -3413,6 +3413,7 @@ pt:
         pin: "Afixar Tópico"
         unpin: "Desafixar Tópico"
         pin_globally: "Afixar Tópico Globalmente"
+        make_banner: "Criar Tópico da Faixa"
         remove_banner: "Remover Tópico da Faixa"
       reply:
         title: "Responder"
@@ -3455,9 +3456,9 @@ pt:
         already_pinned_globally:
           one: "Tópicos atualmente afixados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
           other: "Tópicos atualmente afixados globalmente: <strong class='badge badge-notification unread'>%{count}</strong>"
-        make_banner: "Colocar este tópico numa faixa que apareça no topo de todas as páginas."
+        make_banner: "Colocar este tópico numa faixa que aparece no topo de todas as páginas."
         remove_banner: "Remover a faixa que aparece no topo de todas as páginas."
-        banner_note: "Os utilizadores podem ignorar a faixa, fechando-a. Apenas um tópico pode ser colocado como faixa em qualquer momento."
+        banner_note: "Os utilizadores podem ignorar a faixa, fechando-a. Apenas um tópico pode ser colocado na faixa em qualquer momento."
         no_banner_exists: "Não existe tópico de faixa."
         banner_exists: "<strong class='badge badge-notification unread'>Existe</strong> atualmente um tópico de faixa."
       inviting: "Convidando…"
@@ -3845,6 +3846,7 @@ pt:
       back: "Voltar para a categoria"
       general: "Geral"
       settings: "Configurações"
+      advanced: "Avançado"
       topic_template: "Modelo"
       tags: "Etiquetas"
       localizations: "Localizações"
@@ -3869,7 +3871,9 @@ pt:
       creation_error: Ocorreu um erro durante a criação da categoria.
       save_error: Ocorreu um erro ao guardar a categoria.
       description: "Descrição"
-      style: "Estilos"
+      style: "Estilo"
+      icon: "Ícone"
+      emoji: "Emoji"
       background_color: "Cor"
       foreground_color: "Cor do texto"
       color_validations:
@@ -3878,12 +3882,12 @@ pt:
         type: "Estilo"
         icon: "Ícone"
         emoji: "Emoji"
+        square: "Quadrado"
         options:
           square: "Quadrado"
           icon: "Ícone"
           emoji: "Emoji"
       color_used: "Cor em utilização"
-      name_placeholder: "Máximo de uma ou duas palavras"
       color_placeholder: "Qualquer cor da internet"
       delete_confirm: "Tem a certeza que deseja eliminar esta categoria?"
       delete_error: "Ocorreu um erro ao eliminar a categoria."
@@ -3905,7 +3909,7 @@ pt:
       uncategorized_security_warning: "Essa categoria é especial. Destina-se como área de retenção para tópicos que não têm categoria; ela não pode ter configurações de segurança."
       uncategorized_general_warning: 'Esta categoria é especial. É usada como categoria padrão para novos tópicos que não possuem uma categoria selecionada. Se você quiser evitar esse comportamento e forçar a seleção da categoria, <a href="%{settingLink}">por gentileza, desative a configuração aqui</a>. Se você quiser alterar o nome ou a descrição, vá para <a href="%{customizeLink}">Personalizar / Conteúdo do Texto</a>.'
       pending_permission_change_alert: "Você não adicionou %{group} a esta categoria; clique neste botão para adicioná-los."
-      images: "Imagens"
+      images: "Aparência"
       email_in: "Endereço de email personalizado para emails recebidos:"
       email_in_allow_strangers: "Aceitar emails de utilizadores anónimos sem conta"
       mailinglist_mirror: "Categoria espelha uma lista de e-mails"
@@ -3919,6 +3923,11 @@ pt:
       allow_badges_label: "Permitir a atribuição de crachás nesta categoria"
       review_group_name: "nome do grupo"
       this_year: "este ano"
+      none_subcategory_text: "Nenhuma"
+      visibility:
+        title: "Acesso"
+        public: "Público"
+        group_restricted: "Privado"
       notifications:
         title: "alterar o nível de notificação desta categoria"
         watching:
@@ -4461,6 +4470,8 @@ pt:
               content: "Revisão"
             invite:
               content: "Convidar"
+      no_results:
+        title: "Sem resultados"
       search: "Pesquisar"
     until: "Até:"
     form_templates:
@@ -4738,7 +4749,7 @@ pt:
             title_enabled: "Desativar a funcionalidade experimental"
           feature_tooltip:
             title_disabled: "Teste esta funcionalidade"
-            title_enabled: "Desativar a funcionalidade"
+            title_enabled: "Desativar funcionalidade"
         last_checked: "Última verificação"
         refresh_problems: "Atualizar"
         no_problems: "Nenhum problema encontrado."
@@ -4802,7 +4813,9 @@ pt:
           no_data: "Sem dados para exibir."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Pesquisar logs</a>'
-          average_chart_label: Média
+          sort_button: "Organizado por %{column}"
+          sort_ascending: "ascendente"
+          sort_descending: "descendente"
           filters:
             group:
               label: Grupo
@@ -4917,7 +4930,7 @@ pt:
             topics:
               read: Ler um tópico ou uma publicação específica nele. RSS também é suportado.
               write: Criar um novo tópico ou publique num já existente.
-              update: Atualize um tópico. Altere o título, categoria, etiquetas, estado, arquétipo, hiperligação em destaque, etc.
+              update: Atualize um tópico. Altere o título, a categoria, as etiquetas, o estado, o arquétipo, a hiperligação em destaque, etc.
             users:
               suspend: Suspender contas de utilizador.
             invites:
@@ -4987,11 +5000,14 @@ pt:
         sidebar_link:
           backups: "Fazer Cópias de Segurança"
           whats_new:
+            title: "O que é novo?"
             keywords: "registo de alterações|funcionalidade|lançamento"
       community:
         title: "Comunidade"
         sidebar_link:
+          about_your_site: "Sobre o seu ''site''"
           badges: "Crachás"
+          login_and_authentication: "Início de sessão e autenticação"
           notifications: "Notificações"
           permalinks: "Hiperligações Permanentes"
           users: "Utilizadores"
@@ -5014,6 +5030,8 @@ pt:
           title: "Conta"
           backups:
             title: "Fazer Cópias de Segurança"
+          whats_new:
+            title: "O que é novo?"
       config_areas:
         about:
           contact_url_placeholder: "https://johnny-smith.com/contact"
@@ -5805,6 +5823,7 @@ pt:
         uploaded_image_list:
           upload:
             label: "Carregar"
+        download_file: "Transferir"
         table_column_heading:
           status: "Estado"
         categories:

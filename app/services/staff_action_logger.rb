@@ -3,7 +3,7 @@
 # Responsible for logging the actions of admins and moderators.
 class StaffActionLogger
   def self.base_attrs
-    %i[topic_id post_id context subject ip_address previous_value new_value]
+    %i[topic_id post_id category_id context subject ip_address previous_value new_value]
   end
 
   def initialize(admin)
@@ -271,6 +271,17 @@ class StaffActionLogger
         subject: setting_name,
         previous_value: previous_value ? "true" : "false",
         new_value: new_value ? "true" : "false",
+      ),
+    )
+  end
+
+  def log_upcoming_change_available(setting_name, opts = {})
+    raise Discourse::InvalidParameters.new(:setting_name) if setting_name.blank?
+    UserHistory.create!(
+      params(opts).merge(
+        action: UserHistory.actions[:upcoming_change_available],
+        subject: setting_name,
+        details: SiteSetting.humanized_name(setting_name),
       ),
     )
   end
@@ -877,7 +888,12 @@ class StaffActionLogger
     ]
 
     UserHistory.create!(
-      params(opts).merge(action: UserHistory.actions[:post_rejected], details: details.join("\n")),
+      params(opts).merge(
+        action: UserHistory.actions[:post_rejected],
+        details: details.join("\n"),
+        topic_id: topic&.id,
+        category_id: reviewable.category_id,
+      ),
     )
   end
 

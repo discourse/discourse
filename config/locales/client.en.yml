@@ -956,6 +956,8 @@ en:
       timeline:
         target_created: "Post created"
         target_created_by: "Post created by %{username} · %{relativeDate}"
+        target_deleted: "Post deleted"
+        target_deleted_by: "Post deleted by %{username} · %{relativeDate}"
         flagged: "Flagged"
         flagged_as_by: "Flagged as %{flagReason} by %{username} · %{relativeDate}"
         claimed: "Claimed"
@@ -2276,6 +2278,7 @@ en:
               other {# days}
             }.
           edit_link_options: "Edit link options or send by email."
+          edit_link_options_only: "Edit link options"
           show_advanced: "Show Advanced Options"
           hide_advanced: "Hide Advanced Options"
 
@@ -2503,7 +2506,9 @@ en:
     form_kit:
       reset: Reset
       optional: optional
-      errors_summary_title: "This form contains errors:"
+      errors_summary_title:
+        one: "Fix this error to continue"
+        other: "Fix these errors to continue"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:
         starts_with: "Must start with %{prefix}"
@@ -3277,6 +3282,13 @@ en:
       votes_released: "%{description} - completed"
       new_features: "New features available!"
       admin_problems: "New advice on your site dashboard"
+      upcoming_changes:
+        available:
+          title: "Upcoming changes"
+          description: "'%{changeName}' is available for preview"
+        automatically_promoted:
+          title: "Upcoming changes"
+          description: "'%{changeName}' has been automatically enabled"
       dismiss_confirmation:
         body:
           default:
@@ -3335,9 +3347,11 @@ en:
         post_approved: "post approved"
         membership_request_consolidated: "new membership requests"
         reaction: "new reaction"
-        votes_released: "Vote was released"
-        new_features: "New Discourse features have been released!"
+        votes_released: "vote was released"
+        new_features: "new discourse features have been released"
         admin_problems: "new advice on your site dashboard"
+        upcoming_change_available: "new upcoming change '%{changeName}' is available"
+        upcoming_change_automatically_promoted: "upcoming change '%{changeName}' has been automatically enabled"
 
     upload_selector:
       change: "Change"
@@ -4285,6 +4299,7 @@ en:
           confirm_delete: "Are you sure you want to delete translations for '%{languageCode}'?"
         success: "Translations have been updated successfully"
         post_language_selector:
+          title: "Post Language"
           none: "None"
         edit_warning:
           message: "This is a translated post.<br><br>Do you want to edit the original post in %{language} or edit this specific translation?"
@@ -4513,8 +4528,11 @@ en:
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
+      single_page: "Single Page"
       general: "General"
       settings: "Settings"
+      advanced: "Advanced"
+      show_advanced: "Advanced settings"
       topic_template: "Template"
       tags: "Tags"
       localizations: "Localizations"
@@ -4545,11 +4563,14 @@ en:
       create_long: "Create a new category"
       save: "Save category"
       slug: "Category slug"
+      parent: "Parent category"
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       errors:
         self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
+      validations:
+        emoji_required: "Select an emoji."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -4558,7 +4579,10 @@ en:
       logo_description: "Recommended 1:1 aspect ratio with 200px minimum size. If left blank no image will be shown."
       background_image: "Category background image"
       background_image_dark: "Dark category background image"
-      style: "Styles"
+      style: "Style"
+      icon: "Icon"
+      emoji: "Emoji"
+      select_emoji: "Select emoji"
       background_color: "Color"
       foreground_color: "Text color"
       color_validations:
@@ -4569,13 +4593,14 @@ en:
         type: "Style"
         icon: "Icon"
         emoji: "Emoji"
+        square: "Square"
         options:
           square: "Square"
           icon: "Icon"
           emoji: "Emoji"
       color_used: "Color in use"
       predefined_colors: "Predefined color options"
-      name_placeholder: "One or two words maximum"
+      name_placeholder: "One or two words recommended"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
@@ -4583,6 +4608,7 @@ en:
       no_description: "Please add a description for this category."
       change_in_category_topic: "Edit description"
       already_used: "This color has been used by another category"
+      color_palette: "Color palette"
       security: "Security"
       security_add_group: "Add a group"
       permissions:
@@ -4592,6 +4618,7 @@ en:
         create: "Create"
         no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
         everyone_has_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
+        specific_groups_have_access: "This category is private, only the selected groups can see, reply and create posts."
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
         inherited: 'This permission is inherited from "everyone"'
@@ -4599,7 +4626,7 @@ en:
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
       pending_permission_change_alert: "You haven't added %{group} to this category; click this button to add them."
-      images: "Images"
+      images: "Appearance"
       email_in: "Custom incoming email address:"
       email_in_tooltip: "You can separate multiple email addresses with the | character."
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
@@ -4628,7 +4655,18 @@ en:
       position_disabled: "Categories will be displayed in order of activity. To control the order of categories in lists, enable the <a href='%{url}'>'fixed category positions'</a> setting."
       minimum_required_tags: "Minimum number of tags required in a topic:"
       default_slow_mode: 'Enable "Slow mode" for new topics in this category.'
-      parent: "Parent category"
+      subcategory_of: "Subcategory of..."
+      none_subcategory_text: "None"
+      subcategory_permissions_warning: "A subcategory of a private category can not be public."
+      visibility:
+        title: "Access"
+        public: "Public"
+        all_members: "All members"
+        group_restricted: "Private"
+        who_can_see: "Who can see this category"
+        who_can_post: "Who can post in this category"
+        more_options_hint: "More permissions available in"
+        more_options_hint_link: "advanced settings."
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
       auto_bump_cooldown_days: "Minimum days before bumping the same topic again:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
@@ -5014,6 +5052,7 @@ en:
         back: "%{shortcut} Back"
         up_down: "%{shortcut} Move selection &uarr; &darr;"
         open: "%{shortcut} Open selected topic"
+        open_new_window: "%{shortcut} Open selected topic in new tab/window"
         next_prev: "%{shortcut} Next/previous section"
         go_to_unread_post: "%{shortcut} Go to the first unread post"
       application:
@@ -5803,6 +5842,7 @@ en:
         change_enabled_for_success: "You have enabled this change for %{enabledFor}"
         change_disabled: "You have opted-out of this change"
         permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
+        permanent_soon_notice: "This change will become permanent soon. You will no longer be able to opt-out."
         permanent_no_group_selection: "N/A, permanent changes apply to all groups."
         no_changes: "There are no upcoming changes at this time."
         preview: "Preview"
@@ -5830,13 +5870,16 @@ en:
           search_placeholder: "Filter by name, description, or plugin..."
           no_results: "No upcoming changes match your filter"
           all: "All"
-          enabled_all: "Enabled or disabled"
+          enabled_all: "All enabled states"
           enabled: "Enabled"
+          enabled_for_staff: "Enabled for staff"
+          enabled_for_specific_groups: "Enabled for specific groups"
           disabled: "Disabled"
           impact_type_all: "All impact types"
           impact_type_feature: "Feature"
           impact_type_other: "Other"
           status_all: "All statuses"
+          status_conceptual: "Conceptual"
           status_experimental: "Experimental"
           status_alpha: "Alpha"
           status_beta: "Beta"
@@ -6026,11 +6069,11 @@ en:
               locale_label: "Language"
             header_new_members:
               label: "Header for new members"
-              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
+              description: "Available variables: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Welcome, %{preferred_display_name}!"
             header_logged_in:
               label: "Header for logged-in members"
-              description: "Available variable: <code>&percnt;{preferred_display_name}</code>"
+              description: "Available variables: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Welcome back, %{preferred_display_name}!"
             header_anonymous:
               label: "Header for anonymous visitors"
@@ -6391,6 +6434,7 @@ en:
           daily: Daily
           monthly: Monthly
           weekly: Weekly
+          value_so_far: "%{value} (so far)"
           dates: "Dates (UTC)"
           groups: "All groups"
           disabled: "This report is disabled"
@@ -6401,7 +6445,11 @@ en:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Search logs</a>'
             disabled: 'Trending search report is disabled. Enable <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log search queries</a> to collect data.'
-          average_chart_label: Average
+          average_chart_label: Showing averages, not totals
+          sort_button: "Sort by %{column}"
+          sort_button_current: "Sorted by %{column}, %{direction}"
+          sort_ascending: "ascending"
+          sort_descending: "descending"
           filters:
             file_extension:
               label: File extension
@@ -7785,6 +7833,7 @@ en:
             change_theme_site_setting: "change theme site setting"
             stop_impersonating: "stop impersonating"
             upcoming_change_toggled: "upcoming change toggled"
+            upcoming_change_available: "upcoming change available"
             change_site_setting_groups: "change site setting groups"
             discourse_id_regenerate_credentials: "regenerate Discourse ID credentials"
         screened_emails:
@@ -7927,6 +7976,7 @@ en:
           upload: "Upload a file"
           multiselect: "Multiple choice"
           tagchooser: "Tag Group selector"
+          composer: "Markdown answer"
         validations_modal:
           button_title: "Validations"
           modal_title: "Validation Options"
@@ -8484,6 +8534,10 @@ en:
           upload:
             label: "Upload"
             title: "Upload images"
+        download_file: "Download"
+        upload_restrictions:
+          extensions: "Accepted: %{extensions}"
+          max_size: "Max: %{size}"
         selectable_avatars:
           title: "List of avatars users can choose from"
         table_column_heading:
