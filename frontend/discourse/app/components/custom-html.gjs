@@ -3,7 +3,6 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import { getCustomHTML } from "discourse/helpers/custom-html";
 
 export default class CustomHtml extends Component {
