@@ -1,4 +1,5 @@
-import Component from "@glimmer/component";
+/* eslint-disable ember/no-classic-components */
+import Component from "@ember/component";
 import { hbs } from "ember-cli-htmlbars";
 import { getCustomHTML } from "discourse/helpers/custom-html";
 
