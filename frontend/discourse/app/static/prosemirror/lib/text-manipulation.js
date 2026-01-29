@@ -569,6 +569,13 @@ class ProsemirrorAutocompleteHandler {
 
     return isInCodeBlock || hasCodeMark;
   }
+
+  async inLink() {
+    const { schema, view } = this;
+    const { $from } = view.state.selection;
+
+    return $from.marks().some((mark) => mark.type === schema.marks.link);
+  }
 }
 
 /** @implements {PlaceholderHandler} */

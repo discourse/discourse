@@ -242,6 +242,20 @@ describe "Using #hashtag autocompletion to search for and lookup categories and 
     end
   end
 
+  it "does not show hashtag autocomplete when typing a URL with anchor" do
+    topic_page.visit_topic_and_open_composer(topic)
+    expect(topic_page).to have_expanded_composer
+
+    # normal autocomplete works
+    topic_page.type_in_composer("#co")
+    expect(page).to have_css(".hashtag-autocomplete")
+
+    # autocomplete does not trigger within a URL
+    topic_page.clear_composer
+    topic_page.type_in_composer("discourse.org/#co")
+    expect(page).to have_no_css(".hashtag-autocomplete", wait: 2)
+  end
+
   context "when a user cannot access the category for a hashtag cooked in another post" do
     fab!(:admin)
     fab!(:manager_group) { Fabricate(:group, name: "Managers") }

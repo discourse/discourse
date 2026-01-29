@@ -94,6 +94,11 @@ module(
         `<p><a class="hashtag-cooked" data-name="welcome" data-processed="true" contenteditable="false" draggable="true"><span class=\"hashtag-category-square hashtag-color--category-5\"></span>hello <img width=\"20\" height=\"20\" src=\"/images/emoji/twitter/wave.png?v=${v}\" title=\"wave\" alt=\"wave\" class=\"emoji\"></a></p>`,
         "#welcome",
       ],
+      "anchor in link matching hashtag is not converted": [
+        "[Docs](https://example.com/docs/#product)",
+        '<p><a href="https://example.com/docs/#product">Docs</a></p>',
+        "[Docs](https://example.com/docs/#product)",
+      ],
     };
 
     Object.entries(testCases).forEach(
