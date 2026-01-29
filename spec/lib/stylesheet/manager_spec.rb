@@ -606,12 +606,23 @@ RSpec.describe Stylesheet::Manager do
       builder =
         Stylesheet::Manager::Builder.new(target: :desktop_theme, theme: theme, manager: manager)
       digest1 = builder.color_scheme_digest
-      SiteSetting.base_font = DiscourseFonts.fonts[2][:key]
+
+      Fabricate(
+        :theme_site_setting_with_service,
+        theme:,
+        name: "base_font",
+        value: DiscourseFonts.fonts[2][:key],
+      )
       digest2 = builder.color_scheme_digest
 
       expect(digest1).to_not eq(digest2)
 
-      SiteSetting.heading_font = DiscourseFonts.fonts[4][:key]
+      Fabricate(
+        :theme_site_setting_with_service,
+        theme:,
+        name: "heading_font",
+        value: DiscourseFonts.fonts[4][:key],
+      )
       digest3 = builder.color_scheme_digest
 
       expect(digest3).to_not eq(digest2)
@@ -723,11 +734,19 @@ RSpec.describe Stylesheet::Manager do
     end
 
     it "includes updated font definitions" do
-      details1 = manager.color_scheme_stylesheet_details(nil, fallback_to_base: true)
+      theme = Fabricate(:theme)
+      SiteSetting.default_theme_id = theme.id
 
-      SiteSetting.base_font = DiscourseFonts.fonts[2][:key]
+      details1 = manager(theme.id).color_scheme_stylesheet_details(nil, fallback_to_base: true)
 
-      details2 = manager.color_scheme_stylesheet_details(nil, fallback_to_base: true)
+      Fabricate(
+        :theme_site_setting_with_service,
+        theme:,
+        name: "base_font",
+        value: DiscourseFonts.fonts[2][:key],
+      )
+
+      details2 = manager(theme.id).color_scheme_stylesheet_details(nil, fallback_to_base: true)
       expect(details1[:new_href]).not_to eq(details2[:new_href])
     end
 
