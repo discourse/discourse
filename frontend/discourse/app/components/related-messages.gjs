@@ -53,6 +53,7 @@ export default class RelatedMessages extends Component {
           @topics={{@topic.relatedMessages}}
           @hideCategory={{true}}
           @showPosters={{true}}
+          @listContext="related"
         />
       </div>
 
