@@ -26,15 +26,25 @@ function validateTable(node) {
   let hasInconsistentColumns = false;
 
   node.forEach((group) => {
+    if (hasMultilineCell && hasInconsistentColumns) {
+      return;
+    }
+
     if (group.type.name === "table_head") {
       hasHead = true;
     }
+
     group.forEach((row) => {
+      if (hasMultilineCell && hasInconsistentColumns) {
+        return;
+      }
+
       if (columnCount === 0) {
         columnCount = row.childCount;
       } else if (row.childCount !== columnCount) {
         hasInconsistentColumns = true;
       }
+
       if (isFirstRow) {
         let allHeaderCells = true;
         row.forEach((cell) => {
@@ -47,13 +57,20 @@ function validateTable(node) {
         }
         isFirstRow = false;
       }
-      row.forEach((cell) => {
-        cell.descendants((n) => {
-          if (n.type.name === "hard_break") {
-            hasMultilineCell = true;
+
+      if (!hasMultilineCell) {
+        row.forEach((cell) => {
+          if (hasMultilineCell) {
+            return;
           }
+          cell.descendants((n) => {
+            if (n.type.name === "hard_break") {
+              hasMultilineCell = true;
+              return false;
+            }
+          });
         });
-      });
+      }
     });
   });
 
@@ -370,7 +387,6 @@ const extension = {
     return new Plugin({
       props: {
         transformPasted(paste, view) {
-          // Quick check: only rebuild if tables exist in the paste content
           if (!hasTableNodes(paste.content)) {
             return paste;
           }

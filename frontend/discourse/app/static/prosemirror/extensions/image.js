@@ -13,6 +13,15 @@ import { getChangedRanges } from "../lib/plugin-utils";
 
 const PLACEHOLDER_IMG = "/images/transparent.png";
 
+function extractFileExtension(url) {
+  return url?.match(/\.([a-z0-9]+)(?:\?|$)/i)?.[1] || "";
+}
+
+function buildUploadShortUrl(base62Sha1, url) {
+  const ext = extractFileExtension(url);
+  return `upload://${base62Sha1}${ext ? `.${ext}` : ""}`;
+}
+
 const ALT_TEXT_REGEX =
   /^(.*?)(?:\|(\d{1,4}x\d{1,4}))?(?:,\s*(\d{1,3})%)?(?:\|(.*))?$/;
 
@@ -73,13 +82,9 @@ const extension = {
             const title = dom.getAttribute("title") || img.getAttribute("alt");
             const base62Sha1 = img.dataset.base62Sha1;
 
-            let originalSrc;
-            if (base62Sha1) {
-              const ext = href?.match(/\.([a-z0-9]+)(?:\?|$)/i)?.[1] || "";
-              originalSrc = `upload://${base62Sha1}${ext ? `.${ext}` : ""}`;
-            } else {
-              originalSrc = href;
-            }
+            const originalSrc = base62Sha1
+              ? buildUploadShortUrl(base62Sha1, href)
+              : href;
 
             return {
               src: img.getAttribute("src"),
@@ -98,11 +103,10 @@ const extension = {
               return false;
             }
 
-            let originalSrc = dom.dataset.origSrc;
-            if (!originalSrc && dom.dataset.base62Sha1) {
-              const ext = src.match(/\.([a-z0-9]+)(?:\?|$)/i)?.[1] || "";
-              originalSrc = `upload://${dom.dataset.base62Sha1}${ext ? `.${ext}` : ""}`;
-            }
+            const originalSrc =
+              dom.dataset.origSrc ||
+              (dom.dataset.base62Sha1 &&
+                buildUploadShortUrl(dom.dataset.base62Sha1, src));
 
             const extras = dom.hasAttribute("data-thumbnail")
               ? "thumbnail"

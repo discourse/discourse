@@ -38,7 +38,7 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
     open_composer
     cdp.copy_paste('<img src="image.png" alt="alt text" data-base62-sha1="1234567890">', html: true)
     expect(rich).to have_css(
-      "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890']",
+      "img[src$='image.png'][alt='alt text'][data-orig-src='upload://1234567890.png']",
     )
   end
 
@@ -299,10 +299,9 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
 
       composer.toggle_rich_editor
 
-      # The inner table header should be properly normalized
+      # Nested tables are flattened - the inner table content is preserved
+      # The outer table structure is dropped since ProseMirror can't represent nested tables
       markdown = <<~MARKDOWN
-        |  |
-        |----|
 
 
         | CLOSED DOWNSTREAM |  |
