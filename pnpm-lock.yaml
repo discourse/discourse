@@ -86,8 +86,8 @@ importers:
         specifier: ^2.6.4
         version: 2.6.4(encoding@0.1.13)
       lint-to-the-future-ember-template:
-        specifier: ^3.1.0
-        version: 3.1.0(ember-template-lint@7.9.3)
+        specifier: ^4.0.0
+        version: 4.0.0(ember-template-lint@7.9.3)
       lint-to-the-future-eslint:
         specifier: ^3.3.0
         version: 3.3.0(eslint@9.39.2(jiti@2.4.2))
@@ -5256,8 +5256,8 @@ packages:
   fastestsmallesttextencoderdecoder@1.0.22:
     resolution: {integrity: sha512-Pb8d48e+oIuY4MaM64Cd7OW1gt4nxCHs7/ddPPZ/Ic3sg8yVGM7O9wDvZ7us6ScaUupzM+pfBolwtYhN1IxBIw==}
 
-  fastq@1.19.1:
-    resolution: {integrity: sha512-GwLTyxkCXjXbxqIhTsMI2Nui8huMPtnxg7krajPJAjnEG/iiOS7i+zCtWGZR9G0NBKbXKh6X9m9UIsYX/N6vvQ==}
+  fastq@1.20.1:
+    resolution: {integrity: sha512-GGToxJ/w1x32s/D2EKND7kTil4n8OVk/9mycTc4VDza13lOvpUZTGX3mFSCtV9ksdGBVzvsyAVLM6mHFThxXxw==}
 
   faye-websocket@0.11.4:
     resolution: {integrity: sha512-CzbClwlXAuiRQAlUyfqPgvPoNKTckTPGfwZV4ZdAhVcP2lh9KUxJg2b5GkE7XbjKQ3YJnQ9z6D9ntLAlB+tP8g==}
@@ -6503,11 +6503,11 @@ packages:
   linkify-it@5.0.0:
     resolution: {integrity: sha512-5aHCbzQRADcdP+ATqnDuhhJ/MRIqDkZX5pyjFHRRysS8vZ5AbqGEoFIb6pYHPZ+L/OC2Lc+xT8uHVVR5CAK/wQ==}
 
-  lint-to-the-future-ember-template@3.1.0:
-    resolution: {integrity: sha512-MtSKzKEJqbORwnKjaezhdfBby+0w5sXnbCUKMzobvD+kjwoiVX2N1fiHVmno7j54uy2z2YmWGdz+26hAwQO+wQ==}
+  lint-to-the-future-ember-template@4.0.0:
+    resolution: {integrity: sha512-VT/MtjerLYlo89KhFZpWUdVVrwp/z08RRO+TLJXV5TrbqaiE+fq/MpAhJVtCUOfz/XUBK0UVMkzo3hpgUSxyTA==}
     engines: {node: 18.* || 20.* || >= 22.*}
     peerDependencies:
-      ember-template-lint: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0
+      ember-template-lint: ^2.0.0 || ^3.0.0 || ^4.0.0 || ^5.0.0 || ^6.0.0 || ^7.0.0
 
   lint-to-the-future-eslint@3.3.0:
     resolution: {integrity: sha512-tj/fRddJtlhz7/DWLoeK9ERxJ2OFK0Z6qWY74qu+IFYnIzz24Aal9EXuuUqdD+xT4Cl+pKSsddmoPDDXNMIw7Q==}
@@ -11288,7 +11288,7 @@ snapshots:
   '@nodelib/fs.walk@1.2.8':
     dependencies:
       '@nodelib/fs.scandir': 2.1.5
-      fastq: 1.19.1
+      fastq: 1.20.1
 
   '@npmcli/agent@2.2.2':
     dependencies:
@@ -14930,7 +14930,7 @@ snapshots:
 
   fastestsmallesttextencoderdecoder@1.0.22: {}
 
-  fastq@1.19.1:
+  fastq@1.20.1:
     dependencies:
       reusify: 1.1.0
 
@@ -16340,7 +16340,7 @@ snapshots:
     dependencies:
       uc.micro: 2.1.0
 
-  lint-to-the-future-ember-template@3.1.0(ember-template-lint@7.9.3):
+  lint-to-the-future-ember-template@4.0.0(ember-template-lint@7.9.3):
     dependencies:
       content-tag: 3.1.3
       debug: 4.4.3(supports-color@8.1.1)
