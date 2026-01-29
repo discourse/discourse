@@ -4665,6 +4665,7 @@ en:
         group_restricted: "Private"
         who_can_see: "Who can see this category"
         who_can_post: "Who can post in this category"
+        which_groups_can_access: "Which groups can access this category"
         more_options_hint: "More permissions available in"
         more_options_hint_link: "advanced settings."
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
