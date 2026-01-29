@@ -132,6 +132,15 @@
 
 /** @type {RichEditorExtension[]} */
 const registeredExtensions = [];
+let defaultExtensionsRegistered = false;
+
+export function markDefaultExtensionsRegistered() {
+  defaultExtensionsRegistered = true;
+}
+
+export function areDefaultExtensionsRegistered() {
+  return defaultExtensionsRegistered;
+}
 
 /**
  * Registers an extension for the rich editor
@@ -146,6 +155,7 @@ export function registerRichEditorExtension(extension) {
 
 export function clearRichEditorExtensions() {
   registeredExtensions.length = 0;
+  defaultExtensionsRegistered = false;
 }
 
 export async function resetRichEditorExtensions() {
@@ -153,6 +163,7 @@ export async function resetRichEditorExtensions() {
     await import("discourse/static/prosemirror/extensions/register-default");
   clearRichEditorExtensions();
   extensions.forEach(registerRichEditorExtension);
+  markDefaultExtensionsRegistered();
 }
 
 /**

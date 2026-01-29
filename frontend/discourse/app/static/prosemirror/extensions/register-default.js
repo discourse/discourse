@@ -1,6 +1,9 @@
 // @ts-check
 
-import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-extensions";
+import {
+  markDefaultExtensionsRegistered,
+  registerRichEditorExtension,
+} from "discourse/lib/composer/rich-editor-extensions";
 import bulletList from "./bullet-list";
 import code from "./code";
 import codeBlock from "./code-block";
@@ -66,5 +69,6 @@ const defaultExtensions = [
 ];
 
 defaultExtensions.forEach(registerRichEditorExtension);
+markDefaultExtensionsRegistered();
 
 export default defaultExtensions;

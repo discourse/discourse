@@ -4,112 +4,56 @@ import Serializer from "../static/prosemirror/core/serializer";
 import { transformWordListsHtml } from "../static/prosemirror/extensions/word-paste";
 import { isBoundary } from "../static/prosemirror/lib/plugin-utils";
 import {
+  areDefaultExtensionsRegistered,
   getExtensions,
+  markDefaultExtensionsRegistered,
   registerRichEditorExtension,
 } from "./composer/rich-editor-extensions";
 
-let defaultExtensionsLoaded = false;
-
-// Synchronous check and load of default extensions
-// Uses require() if the module is already loaded, otherwise does nothing
-// (extensions will be loaded by resetRichEditorExtensions in tests or prosemirror-editor in app)
 function ensureDefaultExtensions() {
-  // Skip if defaults were already loaded by us, or if any extensions are already registered
-  // (e.g., by prosemirror-editor or after resetRichEditorExtensions)
-  if (defaultExtensionsLoaded || getExtensions().length > 0) {
+  if (areDefaultExtensionsRegistered()) {
     return;
   }
 
-  // Try to load default extensions synchronously if they're already bundled
   try {
     if (typeof require !== "undefined" && typeof require.has === "function") {
       const modulePath =
         "discourse/static/prosemirror/extensions/register-default";
 
       if (require.has(modulePath)) {
-        const extensions = require(modulePath).default;
-        extensions.forEach(registerRichEditorExtension);
-        defaultExtensionsLoaded = true;
+        const defaultExtensions = require(modulePath).default;
+
+        if (!areDefaultExtensionsRegistered()) {
+          defaultExtensions.forEach(registerRichEditorExtension);
+          markDefaultExtensionsRegistered();
+        }
       }
     }
   } catch {
-    // Silently ignore if require is not available or module not found
+    // require not available or module not found
   }
 }
 
-// Legacy callback system - deprecated, kept for backward compatibility
-// These callbacks are no longer invoked by toMarkdown() which now uses ProseMirror.
-// Use api.registerRichEditorExtension() instead.
-let tagDecorateCallbacks = [];
-let blockDecorateCallbacks = [];
-let textDecorateCallbacks = [];
-
-let hasWarnedTag = false;
-let hasWarnedBlock = false;
-let hasWarnedText = false;
-
-/**
- * @deprecated This callback is no longer invoked. Use api.registerRichEditorExtension() instead.
- * See: https://meta.discourse.org/t/developing-prose-mirror-rich-editor-extensions/
- */
-export function addTagDecorateCallback(callback) {
-  if (!hasWarnedTag) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      "addTagDecorateCallback is deprecated and no longer invoked. " +
-        "Use api.registerRichEditorExtension() instead. " +
-        "See: https://meta.discourse.org/t/developing-prose-mirror-rich-editor-extensions/"
-    );
-    hasWarnedTag = true;
-  }
-  tagDecorateCallbacks.push(callback);
+// Deprecated no-ops - kept for backward compatibility
+function deprecationWarning(name) {
+  // eslint-disable-next-line no-console
+  console.warn(
+    `${name} is deprecated. Use api.registerRichEditorExtension() instead.`
+  );
 }
 
-export function clearTagDecorateCallbacks() {
-  tagDecorateCallbacks = [];
+export function addTagDecorateCallback() {
+  deprecationWarning("addTagDecorateCallback");
 }
-
-/**
- * @deprecated This callback is no longer invoked. Use api.registerRichEditorExtension() instead.
- * See: https://meta.discourse.org/t/developing-prose-mirror-rich-editor-extensions/
- */
-export function addBlockDecorateCallback(callback) {
-  if (!hasWarnedBlock) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      "addBlockDecorateCallback is deprecated and no longer invoked. " +
-        "Use api.registerRichEditorExtension() instead. " +
-        "See: https://meta.discourse.org/t/developing-prose-mirror-rich-editor-extensions/"
-    );
-    hasWarnedBlock = true;
-  }
-  blockDecorateCallbacks.push(callback);
+export function addBlockDecorateCallback() {
+  deprecationWarning("addBlockDecorateCallback");
 }
-
-export function clearBlockDecorateCallbacks() {
-  blockDecorateCallbacks = [];
+export function addTextDecorateCallback() {
+  deprecationWarning("addTextDecorateCallback");
 }
-
-/**
- * @deprecated This callback is no longer invoked. Use api.registerRichEditorExtension() instead.
- * See: https://meta.discourse.org/t/developing-prose-mirror-rich-editor-extensions/
- */
-export function addTextDecorateCallback(callback) {
-  if (!hasWarnedText) {
-    // eslint-disable-next-line no-console
-    console.warn(
-      "addTextDecorateCallback is deprecated and no longer invoked. " +
-        "Use api.registerRichEditorExtension() instead. " +
-        "See: https://meta.discourse.org/t/developing-prose-mirror-rich-editor-extensions/"
-    );
-    hasWarnedText = true;
-  }
-  textDecorateCallbacks.push(callback);
-}
-
-export function clearTextDecorateCallbacks() {
-  textDecorateCallbacks = [];
-}
+export function clearTagDecorateCallbacks() {}
+export function clearBlockDecorateCallbacks() {}
+export function clearTextDecorateCallbacks() {}
 
 export default function toMarkdown(html) {
   try {
@@ -120,12 +64,9 @@ export default function toMarkdown(html) {
     const pluginParams = { utils: { isBoundary } };
     const serializer = new Serializer(extensions, pluginParams);
 
-    // Transform Word list HTML to standard list structure
     const processedHtml = transformWordListsHtml(html);
     const element = new DOMParser().parseFromString(processedHtml, "text/html");
 
-    // Apply extension-provided DOM transforms before parsing
-    // Each transform is wrapped in try/catch so a faulty extension doesn't blank the entire conversion
     for (const ext of extensions) {
       if (typeof ext.transformParsedHTML === "function") {
         try {
@@ -133,7 +74,7 @@ export default function toMarkdown(html) {
         } catch (e) {
           // eslint-disable-next-line no-console
           console.warn(
-            "toMarkdown: transformParsedHTML failed for extension",
+            `toMarkdown: transformParsedHTML failed for extension ${ext.name || ext.id || "(unknown)"}`,
             e
           );
         }

@@ -14,7 +14,6 @@ module("Spoiler Alert | Unit | to-markdown", function (hooks) {
 
   test("handles spoiler tags", function (assert) {
     let html = `<div>Text with a</div><div class="spoiled spoiler-blurred">spoiled</div><div>word.</div>`;
-    // ProseMirror serializes block content with trailing newlines
     let markdown = `Text with a\n\n[spoiler]\nspoiled\n\n[/spoiler]\n\nword.`;
 
     assert.strictEqual(toMarkdown(html), markdown, "creates block spoiler tag");
