@@ -97,6 +97,25 @@ RSpec.describe DiscourseTagging do
         expect(DiscourseTagging.visible_tags(guardian2)).not_to include(tag4)
       end
     end
+
+    context "for moderator with admin-only tags" do
+      fab!(:admin_only_tag, :tag)
+      let!(:admin_tag_group) do
+        Fabricate(:tag_group, permissions: { "admins" => 1 }, tag_names: [admin_only_tag.name])
+      end
+
+      it "does not include admin-only tags for moderators" do
+        expect(DiscourseTagging.visible_tags(moderator_guardian)).not_to include(admin_only_tag)
+      end
+
+      it "includes staff-visible tags for moderators" do
+        expect(DiscourseTagging.visible_tags(moderator_guardian)).to include(tag3)
+      end
+
+      it "includes admin-only tags for admins" do
+        expect(DiscourseTagging.visible_tags(admin_guardian)).to include(admin_only_tag)
+      end
+    end
   end
 
   describe "#validate_one_tag_from_group_per_topic" do
@@ -487,13 +506,40 @@ RSpec.describe DiscourseTagging do
           Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
         end
 
-        it "should return all tags to staff" do
+        it "should return staff tags to admin" do
           tags = DiscourseTagging.filter_allowed_tags(Guardian.new(admin)).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3, hidden_tag]))
+        end
+
+        it "should return staff tags to moderator" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(moderator), for_input: true).to_a
           expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3, hidden_tag]))
         end
 
         it "should not return hidden tag to non-staff" do
           tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user)).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
+        end
+      end
+
+      context "with tags visible only to admins" do
+        fab!(:admin_only_tag, :tag)
+        let!(:admin_tag_group) do
+          Fabricate(:tag_group, permissions: { "admins" => 1 }, tag_names: [admin_only_tag.name])
+        end
+
+        it "should return admin-only tags to admin" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(admin), for_input: true).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3, admin_only_tag]))
+        end
+
+        it "should not return admin-only tags to moderator" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(moderator), for_input: true).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
+        end
+
+        it "should not return admin-only tags to regular user" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user), for_input: true).to_a
           expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
         end
       end
