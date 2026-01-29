@@ -43,9 +43,9 @@ module("Unit | Blocks | Conditions | decorator", function () {
     test("accepts valid sourceType values", function (assert) {
       const validSourceTypes = ["none", "outletArgs", "object"];
 
-      for (const sourceType of validSourceTypes) {
+      validSourceTypes.forEach((sourceType, index) => {
         const decorator = blockCondition({
-          type: `test-${sourceType}`,
+          type: `test-source-type-${index}`,
           sourceType,
           args: {},
         });
@@ -62,7 +62,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
           sourceType,
           `sourceType "${sourceType}" should be accepted`
         );
-      }
+      });
     });
 
     test("throws for invalid sourceType with suggestion", function (assert) {
@@ -512,6 +512,116 @@ module("Unit | Blocks | Conditions | decorator", function () {
       }
 
       assert.true(Object.isFrozen(TestCondition.argsSchema));
+    });
+  });
+
+  module("type namespace validation", function () {
+    test("accepts valid core type (simple name)", function (assert) {
+      @blockCondition({
+        type: "simple-type",
+        args: {},
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.strictEqual(TestCondition.type, "simple-type");
+      assert.strictEqual(TestCondition.namespace, null);
+      assert.strictEqual(TestCondition.namespaceType, "core");
+    });
+
+    test("accepts valid plugin type (namespace:name)", function (assert) {
+      @blockCondition({
+        type: "chat:unread-messages",
+        args: {},
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.strictEqual(TestCondition.type, "chat:unread-messages");
+      assert.strictEqual(TestCondition.namespace, "chat");
+      assert.strictEqual(TestCondition.namespaceType, "plugin");
+    });
+
+    test("accepts valid theme type (theme:namespace:name)", function (assert) {
+      @blockCondition({
+        type: "theme:tactile:dark-mode",
+        args: {},
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.strictEqual(TestCondition.type, "theme:tactile:dark-mode");
+      assert.strictEqual(TestCondition.namespace, "tactile");
+      assert.strictEqual(TestCondition.namespaceType, "theme");
+    });
+
+    test("throws for uppercase in type", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "InvalidType",
+            args: {},
+          }),
+        /type "InvalidType" is invalid/
+      );
+    });
+
+    test("throws for underscores in type", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "invalid_type",
+            args: {},
+          }),
+        /type "invalid_type" is invalid/
+      );
+    });
+
+    test("throws for type exceeding max length", function (assert) {
+      const longType = "a".repeat(101);
+
+      assert.throws(
+        () =>
+          blockCondition({
+            type: longType,
+            args: {},
+          }),
+        /exceeds maximum length/
+      );
+    });
+
+    test("throws for invalid theme format (theme:name without namespace)", function (assert) {
+      assert.throws(
+        () =>
+          blockCondition({
+            type: "theme:my-type",
+            args: {},
+          }),
+        /type "theme:my-type" is invalid/
+      );
+    });
+
+    test("allows type with numbers", function (assert) {
+      @blockCondition({
+        type: "type-123",
+        args: {},
+      })
+      class TestCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.strictEqual(TestCondition.type, "type-123");
     });
   });
 });

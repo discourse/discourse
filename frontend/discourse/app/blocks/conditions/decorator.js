@@ -1,4 +1,9 @@
 // @ts-check
+import {
+  MAX_BLOCK_NAME_LENGTH,
+  parseBlockName,
+  VALID_NAMESPACED_BLOCK_PATTERN,
+} from "discourse/lib/blocks/-internals/patterns";
 import { validateConditionArgsSchema } from "discourse/lib/blocks/-internals/validation/condition-args";
 import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/validation/constraints";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
@@ -116,6 +121,25 @@ export function blockCondition(config) {
     throw new Error("blockCondition: `type` is required and must be a string.");
   }
 
+  // Validate type length
+  if (type.length > MAX_BLOCK_NAME_LENGTH) {
+    throw new Error(
+      `blockCondition: type "${type}" exceeds maximum length of ${MAX_BLOCK_NAME_LENGTH} characters.`
+    );
+  }
+
+  // Validate type follows the namespaced pattern
+  if (!VALID_NAMESPACED_BLOCK_PATTERN.test(type)) {
+    throw new Error(
+      `blockCondition: type "${type}" is invalid. ` +
+        `Valid formats: "condition-name" (core), "plugin:condition-name" (plugin), ` +
+        `"theme:namespace:condition-name" (theme).`
+    );
+  }
+
+  // Parse the type to extract namespace components
+  const parsed = parseBlockName(type);
+
   // Validate sourceType is one of the allowed values
   if (!VALID_SOURCE_TYPES.includes(sourceType)) {
     const suggestion = formatWithSuggestion(sourceType, VALID_SOURCE_TYPES);
@@ -177,6 +201,8 @@ export function blockCondition(config) {
     // Define static getters (non-configurable to prevent reassignment).
     Object.defineProperties(TargetClass, {
       type: { get: () => type, configurable: false },
+      namespace: { get: () => parsed.namespace, configurable: false },
+      namespaceType: { get: () => parsed.type, configurable: false },
       sourceType: { get: () => sourceType, configurable: false },
       argsSchema: { get: () => frozenSchema, configurable: false },
       constraints: { get: () => frozenConstraints, configurable: false },

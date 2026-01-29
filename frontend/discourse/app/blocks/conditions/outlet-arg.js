@@ -36,34 +36,34 @@ const MAX_PATH_LENGTH = 255;
  *
  * @example
  * // Check if topic is closed
- * { type: "outletArg", path: "topic.closed", value: true }
+ * { type: "outlet-arg", path: "topic.closed", value: true }
  *
  * @example
  * // Check user trust level is 2 or higher
- * { type: "outletArg", path: "user.trust_level", value: [2, 3, 4] }
+ * { type: "outlet-arg", path: "user.trust_level", value: [2, 3, 4] }
  *
  * @example
  * // Check category is one of several IDs
- * { type: "outletArg", path: "category.id", value: [1, 2, 3] }
+ * { type: "outlet-arg", path: "category.id", value: [1, 2, 3] }
  *
  * @example
  * // Check if topic property exists
- * { type: "outletArg", path: "topic", exists: true }
+ * { type: "outlet-arg", path: "topic", exists: true }
  *
  * @example
  * // Check topic is NOT closed
- * { type: "outletArg", path: "topic.closed", value: { not: true } }
+ * { type: "outlet-arg", path: "topic.closed", value: { not: true } }
  *
  * @example
  * // Check category slug matches pattern
- * { type: "outletArg", path: "category.slug", value: /^support/ }
+ * { type: "outlet-arg", path: "category.slug", value: /^support/ }
  *
  * @example
  * // Check topic is closed OR archived (using any)
- * { type: "outletArg", path: "topic.closed", value: { any: [true, { not: false }] } }
+ * { type: "outlet-arg", path: "topic.closed", value: { any: [true, { not: false }] } }
  */
 @blockCondition({
-  type: "outletArg",
+  type: "outlet-arg",
   args: {
     path: { type: "string", required: true },
     value: { type: "any" },

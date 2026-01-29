@@ -126,12 +126,11 @@ export function _registerOutlet(outletName, options = {}) {
     return;
   }
 
-  // Validate namespace requirements (no consistency check for outlets)
+  // Validate namespace requirements (shared consistency check with blocks and conditions)
   if (
     !validateSourceNamespace({
       name: outletName,
       entityType: "outlet",
-      enforceConsistency: false,
     })
   ) {
     return;

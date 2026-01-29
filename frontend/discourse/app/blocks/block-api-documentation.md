@@ -1018,7 +1018,7 @@ If two plugins call `renderBlocks()` on the same outlet, the second fails. This 
 
 Once you're composing layouts, you may want to create your own blocks. The `@block` decorator transforms a Glimmer component into a block. It adds:
 
-- **Static properties** for introspection: `blockName`, `blockShortName`, `blockNamespace`, `blockType`, `blockMetadata`
+- **Static properties** for introspection: `blockName`, `blockMetadata`, `namespace`, `namespaceType`
 - **Validation** at decoration time: name format, args schema, outlet patterns
 
 ```javascript
@@ -1088,7 +1088,7 @@ api.renderBlocks("topic-header-blocks", [
 
 The `@outletArgs.topic` and `@outletArgs.user` come from the BlockOutlet's `@outletArgs` prop in the template—the layout configuration doesn't control those.
 
-Conditions can reference outlet args with the `outletArg` condition type or `source` parameters on other conditions (covered in detail in Section 3).
+Conditions can reference outlet args with the `outlet-arg` condition type or `source` parameters on other conditions (covered in detail in Section 3).
 
 **System Args**
 
@@ -1237,7 +1237,7 @@ Conditions can see several things:
 
 **The `source` parameter:** Some conditions support a `source` parameter that changes *what* they check. By default, the `user` condition checks the person viewing the page, and the `setting` condition checks site settings. But what if you're on a user profile page and want to show a badge based on the *profile owner's* trust level, not the viewer's? Or you want to check theme settings instead of site settings? The `source` parameter lets you redirect the condition to check a different data source. You'll see examples of this in the specific condition types below.
 
-The system provides five built-in condition types: `user`, `route`, `setting`, `viewport`, and `outletArg`. Let's start by exploring what each one does, then look at how to combine them for more complex requirements.
+The system provides five built-in condition types: `user`, `route`, `setting`, `viewport`, and `outlet-arg`. Let's start by exploring what each one does, then look at how to combine them for more complex requirements.
 
 ### Built-in Conditions
 
@@ -1248,10 +1248,10 @@ Five condition types ship with Discourse, each designed for a specific category 
 | Show content based on who's viewing (logged in, admin, trust level) | `user` |
 | Check a site or theme setting | `setting` |
 | Respond to screen size or device type | `viewport` |
-| Check data passed from the template (topic properties, user objects) | `outletArg` |
+| Check data passed from the template (topic properties, user objects) | `outlet-arg` |
 | Match specific pages, URLs, or navigation contexts | `route` |
 
-Most blocks need only one or two condition types. A welcome banner might just check `user.loggedIn`. A category sidebar might combine `route` (to target category pages) with `outletArg` (to check category properties). Start with the simplest condition that achieves your goal—you can always add more later.
+Most blocks need only one or two condition types. A welcome banner might just check `user.loggedIn`. A category sidebar might combine `route` (to target category pages) with `outlet-arg` (to check category properties). Start with the simplest condition that achieves your goal—you can always add more later.
 
 #### User Condition
 
@@ -1397,7 +1397,7 @@ When outlets pass contextual data via `@outletArgs`, you can make visibility dec
 The condition works by navigating to a property in the outlet args and checking its value. You specify a `path` using dot notation (like `topic.closed` or `user.trust_level`), then either check what that value equals (`value`) or whether it exists at all (`exists`).
 
 ```javascript
-{ type: "outletArg", path: "topic.closed", value: true }
+{ type: "outlet-arg", path: "topic.closed", value: true }
 ```
 
 The `path` property uses dot notation to navigate nested objects. You then specify either a value match or an existence check:
@@ -1421,16 +1421,16 @@ In practice, you'll use `value` most often—checking if a topic is closed, or i
 
 ```javascript
 // Check if topic is closed
-{ type: "outletArg", path: "topic.closed", value: true }
+{ type: "outlet-arg", path: "topic.closed", value: true }
 
 // Check trust level is 2, 3, or 4
-{ type: "outletArg", path: "user.trust_level", value: [2, 3, 4] }
+{ type: "outlet-arg", path: "user.trust_level", value: [2, 3, 4] }
 
 // Check topic is NOT closed
-{ type: "outletArg", path: "topic.closed", value: { not: true } }
+{ type: "outlet-arg", path: "topic.closed", value: { not: true } }
 
 // Check if topic property exists
-{ type: "outletArg", path: "topic", exists: true }
+{ type: "outlet-arg", path: "topic", exists: true }
 ```
 
 OutletArg conditions are your tool for context-aware blocks—showing different content based on the specific topic, user, or category being viewed. The route condition, up next, handles broader navigation contexts.
@@ -1719,14 +1719,21 @@ Need something the built-ins don't cover? Maybe you have a feature flag service,
 
 Custom conditions have two parts: the `@blockCondition` decorator and a class that extends `BlockCondition`. The decorator defines metadata—the type name (what you'll use in `{ type: "..." }`), the args schema, and optional validation. The class implements the actual logic in an `evaluate()` method that returns true or false.
 
-Here's a feature flag condition:
+> :bulb: **Namespace Requirements:** Condition type names follow the same namespacing rules as blocks:
+> - **Plugins** must use `namespace:condition-name` format (e.g., `"my-plugin:feature-flag"`)
+> - **Themes** must use `theme:namespace:condition-name` format (e.g., `"theme:mytheme:dark-mode"`)
+> - **Core** conditions use simple names without a namespace prefix
+>
+> Additionally, each plugin/theme must use the **same namespace** across all its blocks, outlets, and conditions.
+
+Here's a feature flag condition for a plugin:
 
 ```javascript
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import { service } from "@ember/service";
 
 @blockCondition({
-  type: "feature-flag",
+  type: "my-plugin:feature-flag",  // Plugin conditions must be namespaced
   args: {
     flag: { type: "string", required: true },
     enabled: { type: "boolean" },
@@ -1779,7 +1786,7 @@ export default {
 ```javascript
 {
   block: MyBlock,
-  conditions: [{ type: "feature-flag", flag: "new_feature", enabled: true }]
+  conditions: [{ type: "my-plugin:feature-flag", flag: "new_feature", enabled: true }]
 }
 ```
 
@@ -2176,7 +2183,7 @@ Context:
 
 // Error message:
 [Blocks] Unknown condition type: "usr" (did you mean "user"?).
-Available types: route, user, setting, viewport, outletArg
+Available types: route, user, setting, viewport, outlet-arg
 ```
 
 **Conflicting options:**
@@ -2923,7 +2930,7 @@ Conditions are more than just data objects—they're backed by classes that know
 
 **The Condition Type Registry**
 
-Like blocks, condition types have their own registry. Built-in types (`user`, `route`, `setting`, `viewport`, `outletArg`) are registered by core during the `freeze-block-registry` initializer. Custom conditions must be registered in pre-initializers that run before this freeze.
+Like blocks, condition types have their own registry. Built-in types (`user`, `route`, `setting`, `viewport`, `outlet-arg`) are registered by core during the `freeze-block-registry` initializer. Custom conditions must be registered in pre-initializers that run before this freeze.
 
 Each condition type is a class decorated with `@blockCondition()`:
 
@@ -3235,7 +3242,7 @@ The `first-match` container evaluates children in order and renders only the fir
 
 **Step 3: Add a conditional panel using outlet args**
 
-The `first-match` container handles "show one of these" logic, but you can add other blocks alongside it. Let's add a rules panel that appears above the category-specific panel whenever the category has custom rules defined. This uses the `outletArg` condition to check data from the outlet:
+The `first-match` container handles "show one of these" logic, but you can add other blocks alongside it. Let's add a rules panel that appears above the category-specific panel whenever the category has custom rules defined. This uses the `outlet-arg` condition to check data from the outlet:
 
 ```javascript
 api.renderBlocks("category-sidebar-blocks", [
@@ -3249,7 +3256,7 @@ api.renderBlocks("category-sidebar-blocks", [
       variant: "warning",
     },
     conditions: {
-      type: "outletArg",
+      type: "outlet-arg",
       path: "category.custom_fields.has_rules",
       value: true,
     },
@@ -3272,7 +3279,7 @@ Now the layout can show up to two panels: the rules panel (if the category has r
 - Used `first-match` container for prioritized "if/else" rendering
 - Combined multiple top-level blocks with different visibility logic
 - Used route conditions with `params` to target specific categories
-- Used `outletArg` condition to check category data from the outlet
+- Used `outlet-arg` condition to check category data from the outlet
 - Combined `any` operator to match multiple categories with one condition
 - Mixed route conditions with user conditions (staff-only)
 - Provided a default fallback by omitting conditions on the last child
@@ -3808,7 +3815,7 @@ import { module, test } from "qunit";
 import FeatureFlagCondition from "my-plugin/blocks/conditions/feature-flag";
 import { validateConditions } from "discourse/tests/helpers/block-testing";
 
-module("Unit | Condition | feature-flag", function (hooks) {
+module("Unit | Condition | my-plugin:feature-flag", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
@@ -3817,9 +3824,9 @@ module("Unit | Condition | feature-flag", function (hooks) {
 
     // Helper to validate through the infrastructure (handles schema + custom validation)
     this.validateCondition = (args) => {
-      const conditionTypes = new Map([["feature-flag", this.condition]]);
+      const conditionTypes = new Map([["my-plugin:feature-flag", this.condition]]);
       try {
-        validateConditions({ type: "feature-flag", ...args }, conditionTypes);
+        validateConditions({ type: "my-plugin:feature-flag", ...args }, conditionTypes);
         return null;
       } catch (error) {
         return error;
@@ -4053,7 +4060,7 @@ test("uses outlet args in conditions", async function (assert) {
     api.renderBlocks("topic-outlet", [
       {
         block: OutletArgsBlock,
-        conditions: { type: "outletArg", path: "topic.closed", value: false },
+        conditions: { type: "outlet-arg", path: "topic.closed", value: false },
       },
     ])
   );
@@ -4087,7 +4094,7 @@ test("hides when outlet arg condition fails", async function (assert) {
     api.renderBlocks("closed-topic-outlet", [
       {
         block: ClosedTopicBlock,
-        conditions: { type: "outletArg", path: "topic.closed", value: false },
+        conditions: { type: "outlet-arg", path: "topic.closed", value: false },
       },
     ])
   );
@@ -4181,18 +4188,18 @@ If you're adding a `<BlockOutlet>` to replace or complement a plugin outlet, her
 
 Key terminology used throughout this documentation:
 
-| Term | Definition |
-|------|------------|
-| **Block Schema** | The options passed to the `@block()` decorator that define a block's interface: its name, args schema, childArgs, constraints, and outlet restrictions. |
-| **Block Entry** | An object in an outlet layout that specifies how to use a block: which block class, what args to pass, what conditions to evaluate, and any children. |
-| **Outlet Layout** | An array of block entries passed to `renderBlocks()` that defines which blocks appear in an outlet and how they're configured. |
-| **Container Block** | A block that can hold child blocks. Defined with `container: true` in the block schema. Responsible for rendering its children. |
-| **Condition** | A declarative rule that determines whether a block should be visible. Evaluated at render time. |
-| **Outlet** | A designated location in the UI where blocks can render. Defined by `<BlockOutlet @name="...">` in templates. |
-| **Outlet Args** | Data passed from the template context to blocks via `@outletArgs` on the BlockOutlet component. |
-| **Ghost Block** | A debug-mode placeholder that appears where a hidden block would render, showing why it's not visible. |
-| **Factory Function** | A function that returns a Promise resolving to a block component, used for lazy loading. Registered with `registerBlock("name", () => import("./block"))`. |
-| **Registry Freeze** | The point during boot when the block, outlet, and condition registries become immutable. Happens after the `freeze-block-registry` initializer runs. |
-| **Namespace** | The prefix portion of a block name that identifies its source. Format: `plugin-name:` for plugins, `theme:theme-name:` for themes. |
+| Term | Definition                                                                                                                                                        |
+|------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Block Schema** | The options passed to the `@block()` decorator that define a block's interface: its name, args schema, childArgs, constraints, and outlet restrictions.           |
+| **Block Entry** | An object in an outlet layout that specifies how to use a block: which block class, what args to pass, what conditions to evaluate, and any children.             |
+| **Outlet Layout** | An array of block entries passed to `renderBlocks()` that defines which blocks appear in an outlet and how they're configured.                                    |
+| **Container Block** | A block that can hold child blocks. Defined with `container: true` in the block schema. Responsible for rendering its children.                                   |
+| **Condition** | A declarative rule that determines whether a block should be visible. Evaluated at render time.                                                                   |
+| **Outlet** | A designated location in the UI where blocks can render. Defined by `<BlockOutlet @name="...">` in templates.                                                     |
+| **Outlet Args** | Data passed from the template context to blocks via `@outletArgs` on the BlockOutlet component.                                                                   |
+| **Ghost Block** | A debug-mode placeholder that appears where a hidden block would render, showing why it's not visible.                                                            |
+| **Factory Function** | A function that returns a Promise resolving to a block component, used for lazy loading. Registered with `registerBlock("name", () => import("./block"))`.        |
+| **Registry Freeze** | The point during boot when the block, outlet, and condition registries become immutable. Happens after the `freeze-block-registry` initializer runs.              |
+| **Namespace** | The prefix portion of a block name that identifies its source. Format: `plugin-name:` for plugins, `theme:theme-name:` for themes.                                |
 | **Preprocessing Pipeline** | The internal process that transforms a layout configuration into renderable components, including block resolution, condition evaluation, and component creation. |
-| **Evaluation Context** | The data available to conditions during evaluation, including outlet args and outlet name. |
+| **Evaluation Context** | The data available to conditions during evaluation, including outlet args and outlet name.                                                                        |

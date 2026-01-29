@@ -496,16 +496,7 @@ export function block(name, options = {}) {
         get: () => name,
         configurable: false,
       },
-      blockShortName: {
-        /**
-         * The short block name without namespace (e.g., "hero-banner").
-         *
-         * @type {() => string}
-         */
-        get: () => parsed.name,
-        configurable: false,
-      },
-      blockNamespace: {
+      namespace: {
         /**
          * The namespace portion of the name, or null for core blocks.
          *
@@ -514,9 +505,9 @@ export function block(name, options = {}) {
         get: () => parsed.namespace,
         configurable: false,
       },
-      blockType: {
+      namespaceType: {
         /**
-         * The block type indicating its source: "core", "plugin", or "theme".
+         * Indicates the block's source: "core", "plugin", or "theme".
          *
          * @type {() => "core"|"plugin"|"theme"}
          */

@@ -6,6 +6,8 @@ import { isTesting } from "discourse/lib/environment";
 import {
   assertRegistryNotFrozen,
   createTestRegistrationWrapper,
+  validateNamePattern,
+  validateSourceNamespace,
 } from "./helpers";
 
 /*
@@ -128,6 +130,16 @@ export function _registerConditionType(ConditionClass) {
   }
 
   const type = ConditionClass.type;
+
+  // Validate condition type follows the namespaced pattern
+  if (!validateNamePattern(type, "Condition")) {
+    return;
+  }
+
+  // Validate namespace requirements for plugins/themes and enforce consistency
+  if (!validateSourceNamespace({ name: type, entityType: "condition" })) {
+    return;
+  }
 
   if (conditionTypeRegistry.has(type)) {
     raiseBlockError(`Condition type "${type}" is already registered`);

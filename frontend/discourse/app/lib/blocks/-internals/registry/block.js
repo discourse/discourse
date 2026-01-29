@@ -20,9 +20,8 @@ import {
  *
  * @typedef {typeof import("@glimmer/component").default & {
  *   blockName: string,
- *   blockShortName: string,
- *   blockNamespace: string|null,
- *   blockType: "core"|"plugin"|"theme",
+ *   namespace: string|null,
+ *   namespaceType: "core"|"plugin"|"theme",
  *   blockMetadata: BlockMetadata
  * }} BlockClass
  */

@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks/block-outlet";
+import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import { OPTIONAL_MISSING } from "discourse/lib/blocks/-internals/patterns";
 import {
   _freezeBlockRegistry,
@@ -15,6 +16,10 @@ import {
   resolveBlock,
   tryResolveBlock,
 } from "discourse/lib/blocks/-internals/registry/block";
+import {
+  _registerConditionType,
+  hasConditionType,
+} from "discourse/lib/blocks/-internals/registry/condition";
 import {
   _freezeOutletRegistry,
   _registerOutlet,
@@ -352,9 +357,8 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
 
       assert.true(hasBlock("core-block"));
       assert.strictEqual(CoreBlock.blockName, "core-block");
-      assert.strictEqual(CoreBlock.blockShortName, "core-block");
-      assert.strictEqual(CoreBlock.blockNamespace, null);
-      assert.strictEqual(CoreBlock.blockType, "core");
+      assert.strictEqual(CoreBlock.namespace, null);
+      assert.strictEqual(CoreBlock.namespaceType, "core");
     });
 
     test("registers plugin block (namespace:name)", function (assert) {
@@ -365,9 +369,8 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
 
       assert.true(hasBlock("chat:message-widget"));
       assert.strictEqual(MessageWidget.blockName, "chat:message-widget");
-      assert.strictEqual(MessageWidget.blockShortName, "message-widget");
-      assert.strictEqual(MessageWidget.blockNamespace, "chat");
-      assert.strictEqual(MessageWidget.blockType, "plugin");
+      assert.strictEqual(MessageWidget.namespace, "chat");
+      assert.strictEqual(MessageWidget.namespaceType, "plugin");
     });
 
     test("registers theme block (theme:namespace:name)", function (assert) {
@@ -378,9 +381,8 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
 
       assert.true(hasBlock("theme:tactile:hero-banner"));
       assert.strictEqual(HeroBanner.blockName, "theme:tactile:hero-banner");
-      assert.strictEqual(HeroBanner.blockShortName, "hero-banner");
-      assert.strictEqual(HeroBanner.blockNamespace, "tactile");
-      assert.strictEqual(HeroBanner.blockType, "theme");
+      assert.strictEqual(HeroBanner.namespace, "tactile");
+      assert.strictEqual(HeroBanner.namespaceType, "theme");
     });
 
     test("registers factory with namespaced name", function (assert) {
@@ -401,7 +403,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
 
       const resolved = await resolveBlock("theme:test:lazy-block");
       assert.strictEqual(resolved, LazyBlock);
-      assert.strictEqual(resolved.blockType, "theme");
+      assert.strictEqual(resolved.namespaceType, "theme");
     });
 
     test("throws for invalid namespaced format", function (assert) {
@@ -940,6 +942,190 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
         isValidOutlet(BLOCK_OUTLETS[0]),
         "core outlets should still be valid"
       );
+    });
+  });
+
+  module("condition namespace enforcement", function (nestedHooks) {
+    nestedHooks.afterEach(function () {
+      setTestSourceIdentifier(undefined);
+    });
+
+    test("theme source must use theme:namespace:name format", function (assert) {
+      setTestSourceIdentifier("theme:My Theme");
+
+      @blockCondition({ type: "unnamespaced-condition", args: {} })
+      class UnamespacedCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.throws(
+        () => _registerConditionType(UnamespacedCondition),
+        /Theme conditions must use the "theme:namespace:condition-name" format/
+      );
+    });
+
+    test("theme source allows properly namespaced conditions", function (assert) {
+      setTestSourceIdentifier("theme:My Theme");
+
+      @blockCondition({ type: "theme:mytheme:custom-condition", args: {} })
+      class ThemeCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      _registerConditionType(ThemeCondition);
+
+      assert.true(hasConditionType("theme:mytheme:custom-condition"));
+    });
+
+    test("plugin source must use namespace:name format", function (assert) {
+      setTestSourceIdentifier("plugin:my-plugin");
+
+      @blockCondition({ type: "unnamespaced-plugin-condition", args: {} })
+      class UnamespacedCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.throws(
+        () => _registerConditionType(UnamespacedCondition),
+        /Plugin conditions must use the "namespace:condition-name" format/
+      );
+    });
+
+    test("plugin source allows properly namespaced conditions", function (assert) {
+      setTestSourceIdentifier("plugin:chat");
+
+      @blockCondition({ type: "chat:unread-count", args: {} })
+      class ChatCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      _registerConditionType(ChatCondition);
+
+      assert.true(hasConditionType("chat:unread-count"));
+    });
+
+    test("core source (null) allows unnamespaced conditions", function (assert) {
+      setTestSourceIdentifier(null);
+
+      @blockCondition({ type: "core-condition", args: {} })
+      class CoreCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      _registerConditionType(CoreCondition);
+
+      assert.true(hasConditionType("core-condition"));
+    });
+  });
+
+  module("unified namespace consistency", function (nestedHooks) {
+    nestedHooks.afterEach(function () {
+      setTestSourceIdentifier(undefined);
+    });
+
+    test("plugin must use same namespace for blocks and conditions", function (assert) {
+      setTestSourceIdentifier("plugin:chat");
+
+      @block("chat:message-block")
+      class ChatBlock extends Component {}
+      _registerBlock(ChatBlock);
+
+      @blockCondition({ type: "different:my-condition", args: {} })
+      class DifferentCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.throws(
+        () => _registerConditionType(DifferentCondition),
+        /already used namespace.*chat.*must use a single consistent namespace/
+      );
+    });
+
+    test("plugin must use same namespace for blocks and outlets", function (assert) {
+      setTestSourceIdentifier("plugin:chat");
+
+      @block("chat:message-block")
+      class ChatBlock extends Component {}
+      _registerBlock(ChatBlock);
+
+      assert.throws(
+        () => _registerOutlet("different:my-outlet"),
+        /already used namespace.*chat.*must use a single consistent namespace/
+      );
+    });
+
+    test("plugin must use same namespace for outlets and conditions", function (assert) {
+      setTestSourceIdentifier("plugin:chat");
+
+      _registerOutlet("chat:sidebar-outlet");
+
+      @blockCondition({ type: "different:my-condition", args: {} })
+      class DifferentCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+
+      assert.throws(
+        () => _registerConditionType(DifferentCondition),
+        /already used namespace.*chat.*must use a single consistent namespace/
+      );
+    });
+
+    test("plugin can register blocks, outlets, and conditions with same namespace", function (assert) {
+      setTestSourceIdentifier("plugin:chat");
+
+      @block("chat:message-block")
+      class ChatBlock extends Component {}
+      _registerBlock(ChatBlock);
+
+      _registerOutlet("chat:sidebar-outlet");
+
+      @blockCondition({ type: "chat:unread-count", args: {} })
+      class ChatCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+      _registerConditionType(ChatCondition);
+
+      assert.true(hasBlock("chat:message-block"));
+      assert.true(isValidOutlet("chat:sidebar-outlet"));
+      assert.true(hasConditionType("chat:unread-count"));
+    });
+
+    test("theme must use same namespace for blocks, outlets, and conditions", function (assert) {
+      setTestSourceIdentifier("theme:Tactile Theme");
+
+      @block("theme:tactile:hero-block")
+      class ThemeBlock extends Component {}
+      _registerBlock(ThemeBlock);
+
+      _registerOutlet("theme:tactile:custom-outlet");
+
+      @blockCondition({ type: "theme:tactile:dark-mode", args: {} })
+      class ThemeCondition extends BlockCondition {
+        evaluate() {
+          return true;
+        }
+      }
+      _registerConditionType(ThemeCondition);
+
+      assert.true(hasBlock("theme:tactile:hero-block"));
+      assert.true(isValidOutlet("theme:tactile:custom-outlet"));
+      assert.true(hasConditionType("theme:tactile:dark-mode"));
     });
   });
 });

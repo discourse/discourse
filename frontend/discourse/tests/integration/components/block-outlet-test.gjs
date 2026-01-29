@@ -1570,7 +1570,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
           {
             block: ConditionalBlock,
             conditions: {
-              type: "outletArg",
+              type: "outlet-arg",
               path: "topic.closed",
               value: true,
             },
@@ -1591,7 +1591,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       assert
         .dom(".conditional-content")
-        .exists("block renders when outletArg condition passes");
+        .exists("block renders when outlet-arg condition passes");
     });
 
     test("outlet args condition can fail", async function (assert) {
@@ -1608,7 +1608,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
           {
             block: FailingConditionBlock,
             conditions: {
-              type: "outletArg",
+              type: "outlet-arg",
               path: "topic.closed",
               value: true,
             },
@@ -1626,7 +1626,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       assert
         .dom(".failing-condition-content")
-        .doesNotExist("block does not render when outletArg condition fails");
+        .doesNotExist("block does not render when outlet-arg condition fails");
     });
 
     test("debug callback receives outletArgs in context", async function (assert) {
@@ -1797,7 +1797,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         api.renderBlocks("main-outlet-blocks", [
           {
             block: ValidationErrorBlock,
-            conditions: { type: "outletArg" }, // missing required "path"
+            conditions: { type: "outlet-arg" }, // missing required "path"
           },
         ])
       );

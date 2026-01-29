@@ -4,7 +4,7 @@ import { module, test } from "qunit";
 import BlockOutletArgCondition from "discourse/blocks/conditions/outlet-arg";
 import { validateConditions } from "discourse/tests/helpers/block-testing";
 
-module("Unit | Blocks | Condition | outletArg", function (hooks) {
+module("Unit | Blocks | Condition | outlet-arg", function (hooks) {
   setupTest(hooks);
 
   hooks.beforeEach(function () {
@@ -13,10 +13,10 @@ module("Unit | Blocks | Condition | outletArg", function (hooks) {
 
     // Helper to validate via infrastructure
     this.validateCondition = (args) => {
-      const conditionTypes = new Map([["outletArg", this.condition]]);
+      const conditionTypes = new Map([["outlet-arg", this.condition]]);
 
       try {
-        validateConditions({ type: "outletArg", ...args }, conditionTypes);
+        validateConditions({ type: "outlet-arg", ...args }, conditionTypes);
         return null;
       } catch (error) {
         return error;

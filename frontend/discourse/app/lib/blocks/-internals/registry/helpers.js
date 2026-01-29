@@ -115,7 +115,7 @@ export function assertNotDuplicate(registry, name, entityType) {
  *
  * @param {Object} options - Validation options.
  * @param {string} options.name - The name being registered.
- * @param {"block"|"outlet"} options.entityType - Type of entity for error messages.
+ * @param {"block"|"outlet"|"condition"} options.entityType - Type of entity for error messages.
  * @param {boolean} [options.enforceConsistency=true] - Whether to enforce single namespace per source.
  * @returns {boolean} True if validation passes, false if it failed (error was raised).
  */
@@ -130,7 +130,14 @@ export function validateSourceNamespace({
   }
 
   const namespacePrefix = getNamespacePrefix(name);
-  const entityPlural = entityType === "block" ? "blocks" : "outlets";
+
+  const ENTITY_PLURALS = {
+    block: "blocks",
+    outlet: "outlets",
+    condition: "conditions",
+  };
+  const entityPlural = ENTITY_PLURALS[entityType] ?? "conditions";
+
   const entityCapitalized =
     entityType.charAt(0).toUpperCase() + entityType.slice(1);
 
@@ -153,7 +160,7 @@ export function validateSourceNamespace({
     return false;
   }
 
-  // Enforce single namespace per source
+  // Enforce single namespace per source (shared across blocks, outlets, and conditions)
   if (enforceConsistency) {
     const existingNamespace = sourceNamespaceMap.get(sourceId);
     if (
@@ -162,8 +169,8 @@ export function validateSourceNamespace({
     ) {
       raiseBlockError(
         `${entityCapitalized} "${name}" uses namespace "${namespacePrefix ?? "(core)"}" but ` +
-          `${sourceId} already registered ${entityPlural} with namespace "${existingNamespace ?? "(core)"}". ` +
-          `Each theme/plugin must use a single consistent namespace.`
+          `${sourceId} already used namespace "${existingNamespace ?? "(core)"}". ` +
+          `Each theme/plugin must use a single consistent namespace for all blocks, outlets, and conditions.`
       );
       return false;
     }
