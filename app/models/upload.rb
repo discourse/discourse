@@ -783,3 +783,7 @@ end
 #  index_uploads_on_url                     (url)
 #  index_uploads_on_user_id                 (user_id)
 #
+# Foreign Keys
+#
+#  fk_rails_...  (primary_upload_id => uploads.id) ON DELETE => nullify
+#
