@@ -78,25 +78,27 @@ acceptance("User Preferences - Security", function (needs) {
     await visit("/u/eviltrout/preferences/security");
 
     assert
-      .dom(".pref-user-api-keys__application-name")
+      .dom(".user-api-key__name")
       .hasText(
         "Discourse Hub",
         "displays the application name for the API key"
       );
 
+    await click(".user-api-key__scopes-toggle > a");
+
     assert
-      .dom(".pref-user-api-keys__scopes-list-item")
+      .dom(".user-api-key__scopes-list-item")
       .hasText(
         "Read and clear notifications",
         "displays the scope for the API key"
       );
 
     assert
-      .dom(".pref-user-api-keys__created-at")
+      .dom(".user-api-key__date-approved")
       .exists("displays the created at date for the API key");
 
     assert
-      .dom(".pref-user-api-keys__last-used-at")
+      .dom(".user-api-key__date-last-used")
       .exists("displays the last used at date for the API key");
   });
 
