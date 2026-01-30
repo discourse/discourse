@@ -5,6 +5,7 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import categoryBadge from "discourse/helpers/category-badge";
@@ -90,11 +91,11 @@ export default class UpsertCategoryGeneral extends Component {
       // By default everyone has full permissions for public categories
       // to see and create posts and topics.
       this.#setCategoryPermissions([
-        {
+        new TrackedObject({
           group_name: everyoneGroup?.name || "everyone",
           group_id: AUTO_GROUPS.everyone.id,
           permission_type: PermissionType.FULL,
-        },
+        }),
       ]);
     }
   }
@@ -125,11 +126,11 @@ export default class UpsertCategoryGeneral extends Component {
     const site = this.args.category.site;
     const newPermissions = groupIds.map((groupId) => {
       const group = site.groups.find((g) => g.id === groupId);
-      return {
+      return new TrackedObject({
         group_name: group?.name,
         group_id: groupId,
         permission_type: PermissionType.FULL,
-      };
+      });
     });
 
     this.userModifiedPermissions = true;
@@ -219,11 +220,11 @@ export default class UpsertCategoryGeneral extends Component {
           (g) => g.id === AUTO_GROUPS.everyone.id
         );
         this.#setCategoryPermissions([
-          {
+          new TrackedObject({
             group_name: everyoneGroup?.name || "everyone",
             group_id: AUTO_GROUPS.everyone.id,
             permission_type: PermissionType.FULL,
-          },
+          }),
         ]);
       }
       return;
@@ -241,11 +242,14 @@ export default class UpsertCategoryGeneral extends Component {
           parentCategory.permissions[0].group_name === "everyone");
 
       if (!onlyEveryone) {
-        const newPermissions = parentCategory.permissions.map((p) => ({
-          group_name: p.group_name,
-          group_id: p.group_id,
-          permission_type: p.permission_type,
-        }));
+        const newPermissions = parentCategory.permissions.map(
+          (p) =>
+            new TrackedObject({
+              group_name: p.group_name,
+              group_id: p.group_id,
+              permission_type: p.permission_type,
+            })
+        );
 
         this.#setCategoryPermissions(newPermissions);
       } else {
@@ -254,11 +258,11 @@ export default class UpsertCategoryGeneral extends Component {
         );
 
         this.#setCategoryPermissions([
-          {
+          new TrackedObject({
             group_name: everyoneGroup?.name || "everyone",
             group_id: AUTO_GROUPS.everyone.id,
             permission_type: PermissionType.FULL,
-          },
+          }),
         ]);
       }
     }
