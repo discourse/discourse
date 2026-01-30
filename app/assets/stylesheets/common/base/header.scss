@@ -178,7 +178,7 @@
     }
 
     .discourse-no-touch &:hover,
-    .discourse-no-touch &:focus {
+    .discourse-no-touch &:focus-visible {
       background-color: var(--d-hover);
     }
   }
@@ -304,7 +304,7 @@
     height: 2.2857em;
     padding: 0.2143em;
 
-    &:focus,
+    &:focus-visible,
     .discourse-no-touch & {
       &:hover {
         background-color: var(--primary-low);
