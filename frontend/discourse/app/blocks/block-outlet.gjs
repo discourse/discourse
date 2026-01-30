@@ -292,15 +292,15 @@ export function block(name, options = {}) {
   const parsed = validateAndParseBlockName(name);
 
   // Extract all options with defaults
-  const isContainer = options?.container ?? false;
-  const decoratorClassNames = options?.classNames ?? null;
-  const description = options?.description ?? "";
-  const argsSchema = options?.args ?? null;
-  const childArgsSchema = options?.childArgs ?? null;
-  const constraints = options?.constraints ?? null;
-  const validateFn = options?.validate ?? null;
-  const allowedOutlets = options?.allowedOutlets ?? null;
-  const deniedOutlets = options?.deniedOutlets ?? null;
+  const isContainer = options.container ?? false;
+  const decoratorClassNames = options.classNames ?? null;
+  const description = options.description ?? "";
+  const argsSchema = options.args ?? null;
+  const childArgsSchema = options.childArgs ?? null;
+  const constraints = options.constraints ?? null;
+  const validateFn = options.validate ?? null;
+  const allowedOutlets = options.allowedOutlets ?? null;
+  const deniedOutlets = options.deniedOutlets ?? null;
 
   // Validate arg schema structure and types
   validateArgsSchema(argsSchema, name);

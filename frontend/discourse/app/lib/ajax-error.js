@@ -8,7 +8,7 @@ export function extractErrorInfo(
   defaultMessage,
   opts = { skipConsoleError: false }
 ) {
-  const skipConsoleError = opts?.skipConsoleError ?? false;
+  const skipConsoleError = opts.skipConsoleError ?? false;
 
   if (error instanceof Error) {
     if (!skipConsoleError) {
