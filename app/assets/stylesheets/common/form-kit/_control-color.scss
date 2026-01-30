@@ -75,10 +75,11 @@
 }
 
 .form-kit__control-color-input-picker[type="color"] {
+  --color-input-border-width: 1px;
   width: var(--color-button-width);
   height: var(--color-button-height);
   padding: 0;
-  border: 1px solid var(--primary-low-mid);
+  border: var(--color-input-border-width) solid var(--primary-low-mid);
   border-radius: var(--d-button-border-radius);
   cursor: pointer;
 
@@ -88,12 +89,16 @@
 
   &::-webkit-color-swatch {
     border: none;
-    border-radius: var(--d-button-border-radius);
+    border-radius: calc(
+      var(--d-button-border-radius) - var(--color-input-border-width)
+    );
   }
 
   &::-moz-color-swatch {
     border: none;
-    border-radius: var(--d-button-border-radius);
+    border-radius: calc(
+      var(--d-button-border-radius) - var(--color-input-border-width)
+    );
   }
 
   &:focus,
