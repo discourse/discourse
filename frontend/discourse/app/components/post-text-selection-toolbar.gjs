@@ -135,25 +135,20 @@ export default class PostTextSelectionToolbar extends Component {
           />
 
           {{#if this.quoteSharingEnabled}}
-            <span class="quote-sharing">
+            {{#each this.quoteSharingSources as |source|}}
+              <DButton
+                @action={{fn this.share source}}
+                @translatedTitle={{source.title}}
+                @icon={{source.icon}}
+                class="btn-flat"
+              />
+            {{/each}}
 
-              <span class="quote-share-buttons">
-                {{#each this.quoteSharingSources as |source|}}
-                  <DButton
-                    @action={{fn this.share source}}
-                    @translatedTitle={{source.title}}
-                    @icon={{source.icon}}
-                    class="btn-flat"
-                  />
-                {{/each}}
-
-                <PluginOutlet
-                  @name="quote-share-buttons-after"
-                  @connectorTagName="span"
-                  @outletArgs={{lazyHash data=@data}}
-                />
-              </span>
-            </span>
+            <PluginOutlet
+              @name="quote-share-buttons-after"
+              @connectorTagName="span"
+              @outletArgs={{lazyHash data=@data}}
+            />
           {{/if}}
         </PluginOutlet>
       </div>
