@@ -89,4 +89,40 @@ module("Integration | Component | select-kit/tag-drop", function (hooks) {
       .dom(".filter-for-more")
       .doesNotExist("does not have the 'filter for more' note");
   });
+
+  test("sorts tags alphabetically when setting enabled", async function (assert) {
+    this.siteSettings.tags_sort_alphabetically = true;
+    this.site.top_tags = [
+      { id: 1, name: "zebra" },
+      { id: 2, name: "apple" },
+      { id: 3, name: "banana" },
+    ];
+
+    await render(<template><TagDrop /></template>);
+    await this.subject.expand();
+
+    const content = this.subject.displayedContent();
+    // first item is "no tags" shortcut
+    assert.strictEqual(content[1].name, "apple");
+    assert.strictEqual(content[2].name, "banana");
+    assert.strictEqual(content[3].name, "zebra");
+  });
+
+  test("preserves tag order when alphabetical sorting disabled", async function (assert) {
+    this.siteSettings.tags_sort_alphabetically = false;
+    this.site.top_tags = [
+      { id: 1, name: "zebra" },
+      { id: 2, name: "apple" },
+      { id: 3, name: "banana" },
+    ];
+
+    await render(<template><TagDrop /></template>);
+    await this.subject.expand();
+
+    const content = this.subject.displayedContent();
+    // first item is "no tags" shortcut
+    assert.strictEqual(content[1].name, "zebra");
+    assert.strictEqual(content[2].name, "apple");
+    assert.strictEqual(content[3].name, "banana");
+  });
 });
