@@ -16,6 +16,8 @@ class Upload < ActiveRecord::Base
 
   belongs_to :user
   belongs_to :access_control_post, class_name: "Post"
+  belongs_to :primary_upload, class_name: "Upload", optional: true
+  has_many :dependent_uploads, class_name: "Upload", foreign_key: :primary_upload_id
 
   # when we access this post we don't care if the post
   # is deleted
@@ -55,6 +57,15 @@ class Upload < ActiveRecord::Base
     UserProfile.where(profile_background_upload_id: self.id).update_all(
       profile_background_upload_id: nil,
     )
+
+    # If this is a primary upload, transfer primary status to a dependent
+    if primary_upload_id.nil? && dependent_uploads.exists?
+      new_primary = dependent_uploads.first
+      remaining = dependent_uploads.where.not(id: new_primary.id)
+
+      new_primary.update_columns(primary_upload_id: nil, url: self.url)
+      remaining.update_all(primary_upload_id: new_primary.id)
+    end
   end
 
   after_destroy do
@@ -248,6 +259,29 @@ class Upload < ActiveRecord::Base
       return nil
     end
     upload
+  end
+
+  # Find a primary upload for the given content hash and security context.
+  # Primary uploads have primary_upload_id = nil and are the canonical storage
+  # location for deduplicated uploads.
+  def self.find_primary_for(original_sha1:, secure:)
+    return nil if original_sha1.blank?
+    where(original_sha1: original_sha1, secure: secure, primary_upload_id: nil).first
+  end
+
+  # Check if this upload is a primary (has dependents or could have dependents)
+  def primary?
+    primary_upload_id.nil? && original_sha1.present?
+  end
+
+  # Check if this upload is a dependent (references a primary)
+  def dependent?
+    primary_upload_id.present?
+  end
+
+  # Get the actual storage URL (from primary if dependent)
+  def storage_url
+    primary_upload&.url || url
   end
 
   def self.secure_uploads_url?(url)

@@ -1099,4 +1099,124 @@ RSpec.describe Upload do
       expect(upload_3.reload.verification_status).to eq(Upload.verification_statuses[:verified])
     end
   end
+
+  describe "primary upload deduplication" do
+    fab!(:user)
+
+    describe ".find_primary_for" do
+      it "returns nil when original_sha1 is blank" do
+        expect(Upload.find_primary_for(original_sha1: nil, secure: false)).to be_nil
+        expect(Upload.find_primary_for(original_sha1: "", secure: false)).to be_nil
+      end
+
+      it "finds a primary upload matching original_sha1 and secure status" do
+        primary = Fabricate(:secure_upload, original_sha1: "abc123", secure: true)
+
+        found = Upload.find_primary_for(original_sha1: "abc123", secure: true)
+        expect(found).to eq(primary)
+      end
+
+      it "does not find a primary with different secure status" do
+        Fabricate(:secure_upload, original_sha1: "abc123", secure: true)
+
+        found = Upload.find_primary_for(original_sha1: "abc123", secure: false)
+        expect(found).to be_nil
+      end
+
+      it "does not find an upload that is itself a dependent" do
+        primary = Fabricate(:secure_upload, original_sha1: "abc123", secure: true)
+        dependent =
+          Fabricate(:secure_upload, original_sha1: "abc123", secure: true, primary_upload: primary)
+
+        found = Upload.find_primary_for(original_sha1: "abc123", secure: true)
+        expect(found).to eq(primary)
+        expect(found).not_to eq(dependent)
+      end
+    end
+
+    describe "#primary? and #dependent?" do
+      it "returns true for primary when primary_upload_id is nil and original_sha1 present" do
+        upload = Fabricate(:secure_upload, original_sha1: "abc123", primary_upload_id: nil)
+        expect(upload.primary?).to be true
+        expect(upload.dependent?).to be false
+      end
+
+      it "returns true for dependent when primary_upload_id is set" do
+        primary = Fabricate(:secure_upload, original_sha1: "abc123")
+        dependent = Fabricate(:secure_upload, original_sha1: "abc123", primary_upload: primary)
+
+        expect(dependent.primary?).to be false
+        expect(dependent.dependent?).to be true
+      end
+
+      it "returns false for primary when original_sha1 is blank" do
+        upload = Fabricate(:upload, original_sha1: nil, primary_upload_id: nil)
+        expect(upload.primary?).to be false
+      end
+    end
+
+    describe "#storage_url" do
+      it "returns own url when no primary" do
+        upload = Fabricate(:upload, url: "/uploads/test.png")
+        expect(upload.storage_url).to eq("/uploads/test.png")
+      end
+
+      it "returns primary url when dependent" do
+        primary = Fabricate(:secure_upload, url: "/uploads/primary.png", original_sha1: "abc123")
+        dependent =
+          Fabricate(
+            :secure_upload,
+            url: "/uploads/dependent.png",
+            original_sha1: "abc123",
+            primary_upload: primary,
+          )
+
+        expect(dependent.storage_url).to eq("/uploads/primary.png")
+      end
+    end
+
+    describe "before_destroy primary transfer" do
+      it "transfers primary status to a dependent when destroyed" do
+        primary =
+          Fabricate(
+            :secure_upload,
+            url: "/uploads/primary.png",
+            original_sha1: "abc123",
+            secure: true,
+          )
+        dependent1 =
+          Fabricate(
+            :secure_upload,
+            url: "/uploads/dep1.png",
+            original_sha1: "abc123",
+            secure: true,
+            primary_upload: primary,
+          )
+        dependent2 =
+          Fabricate(
+            :secure_upload,
+            url: "/uploads/dep2.png",
+            original_sha1: "abc123",
+            secure: true,
+            primary_upload: primary,
+          )
+
+        primary.destroy!
+
+        dependent1.reload
+        dependent2.reload
+
+        expect(dependent1.primary_upload_id).to be_nil
+        expect(dependent1.url).to eq("/uploads/primary.png")
+        expect(dependent2.primary_upload_id).to eq(dependent1.id)
+      end
+
+      it "does nothing when no dependents exist" do
+        primary = Fabricate(:secure_upload, url: "/uploads/primary.png", original_sha1: "abc123")
+
+        expect { primary.destroy! }.not_to raise_error
+        expect(Upload.find_by(id: primary.id)).to be_nil
+      end
+    end
+  end
 end
