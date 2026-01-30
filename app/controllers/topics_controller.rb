@@ -911,6 +911,7 @@ class TopicsController < ApplicationController
     post_ids = params.require(:post_ids)
     topic_id = params.require(:topic_id)
     params.permit(:category_id)
+    params.permit(:tag_ids)
     params.permit(:tags)
     params.permit(:participants)
     params.permit(:chronological_order)
@@ -1072,7 +1073,8 @@ class TopicsController < ApplicationController
           :message,
           :silent,
           *DiscoursePluginRegistry.permitted_bulk_action_parameters,
-          tags: %i[id name slug],
+          tag_ids: [],
+          tags: [],
         )
         .to_h
         .symbolize_keys
@@ -1427,7 +1429,16 @@ class TopicsController < ApplicationController
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[
       :destination_topic_id
     ].present?
-    args[:tags] = params[:tags] if params[:tags].present?
+    if params[:tag_ids].present?
+      args[:tag_ids] = params[:tag_ids]
+    elsif params[:tags].present?
+      Discourse.deprecate(
+        "the tags param for move_posts is deprecated, use tag_ids instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+      args[:tags] = params[:tags]
+    end
     args[:chronological_order] = params[:chronological_order] == "true"
     args[:freeze_original] = true if params[:freeze_original] == "true"
 
