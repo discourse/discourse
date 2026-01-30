@@ -28,8 +28,8 @@ const MORE_TAGS_COLLECTION = "MORE_TAGS_COLLECTION";
 @classNames("tag-drop")
 @selectKitOptions({
   allowAny: false,
-  caretDownIcon: "caret-right",
-  caretUpIcon: "caret-down",
+  caretDownIcon: "chevron-right",
+  caretUpIcon: "chevron-down",
   fullWidthOnMobile: true,
   filterable: true,
   headerComponent: TagDropHeader,
