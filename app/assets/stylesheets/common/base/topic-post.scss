@@ -328,6 +328,7 @@ nav.post-controls {
   justify-content: space-between;
   color: var(--d-post-control-text-color);
   user-select: none;
+  overflow: scroll;
 
   .actions {
     display: inline-flex;
