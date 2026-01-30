@@ -743,29 +743,30 @@ end
 # Table name: uploads
 #
 #  id                           :integer          not null, primary key
-#  user_id                      :integer          not null
-#  original_filename            :string           not null
-#  filesize                     :bigint           not null
-#  width                        :integer
-#  height                       :integer
-#  url                          :string           not null
-#  created_at                   :datetime         not null
-#  updated_at                   :datetime         not null
-#  sha1                         :string(40)
-#  origin                       :string(2000)
-#  retain_hours                 :integer
-#  extension                    :string(10)
-#  thumbnail_width              :integer
-#  thumbnail_height             :integer
-#  etag                         :string
-#  secure                       :boolean          default(FALSE), not null
-#  access_control_post_id       :bigint
-#  original_sha1                :string
 #  animated                     :boolean
-#  verification_status          :integer          default(1), not null
+#  dominant_color               :text
+#  etag                         :string
+#  extension                    :string(10)
+#  filesize                     :bigint           not null
+#  height                       :integer
+#  origin                       :string(2000)
+#  original_filename            :string           not null
+#  original_sha1                :string
+#  retain_hours                 :integer
+#  secure                       :boolean          default(FALSE), not null
 #  security_last_changed_at     :datetime
 #  security_last_changed_reason :string
-#  dominant_color               :text
+#  sha1                         :string(40)
+#  thumbnail_height             :integer
+#  thumbnail_width              :integer
+#  url                          :string           not null
+#  verification_status          :integer          default(1), not null
+#  width                        :integer
+#  created_at                   :datetime         not null
+#  updated_at                   :datetime         not null
+#  access_control_post_id       :bigint
+#  primary_upload_id            :bigint
+#  user_id                      :integer          not null
 #
 # Indexes
 #
@@ -776,6 +777,8 @@ end
 #  index_uploads_on_id                      (id) WHERE (dominant_color IS NULL)
 #  index_uploads_on_id_and_url              (id,url)
 #  index_uploads_on_original_sha1           (original_sha1)
+#  index_uploads_on_primary_lookup          (original_sha1,secure) WHERE ((primary_upload_id IS NULL) AND (original_sha1 IS NOT NULL))
+#  index_uploads_on_primary_upload_id       (primary_upload_id)
 #  index_uploads_on_sha1                    (sha1) UNIQUE
 #  index_uploads_on_url                     (url)
 #  index_uploads_on_user_id                 (user_id)
