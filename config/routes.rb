@@ -1671,6 +1671,8 @@ Discourse::Application.routes.draw do
       constraints format: :json do
         get "/" => "tags#show", :as => "tag_show"
         get "/info" => "tags#info"
+        get "/settings" => "tags#settings"
+        put "/settings" => "tags#update_settings"
         get "/notifications" => "tags#notifications"
         put "/notifications" => "tags#update_notifications"
         put "/" => "tags#update"
@@ -1681,6 +1683,12 @@ Discourse::Application.routes.draw do
         Discourse.filters.each do |filter|
           get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}"
         end
+      end
+
+      constraints format: :html do
+        get "/" => "tags#show"
+        get "/edit" => "tags#show"
+        get "/edit/:tab" => "tags#show"
       end
 
       constraints format: :rss do
