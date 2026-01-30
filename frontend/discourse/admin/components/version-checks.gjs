@@ -139,12 +139,7 @@ const VersionChecks = <template>
       </div>
     {{/if}}
 
-    <CustomHtml
-      @name="update-header"
-      @versionCheck={{@versionCheck}}
-      @tagName="div"
-      @classNames="update-header"
-    />
+    <CustomHtml @name="update-header" class="update-header" />
 
     <PluginOutlet
       @name="admin-upgrade-header"
