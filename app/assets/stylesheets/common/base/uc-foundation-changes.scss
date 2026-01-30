@@ -47,9 +47,20 @@
   .btn-primary,
   .btn.no-text,
   .view-all-drafts {
-    &:not(.sidebar-footer-actions-button, #search-button, .btn-sidebar-toggle) {
+    &:not(
+      .sidebar-footer-actions-button,
+      #search-button,
+      .btn-sidebar-toggle,
+      .topic-map__views-trigger,
+      .topic-map__likes-trigger,
+      .topic-map__users-trigger
+    ) {
       height: var(--button-height);
     }
+  }
+
+  .btn-icon {
+    padding-inline: var(--space-2);
   }
 
   .dropdown-menu__item button,
