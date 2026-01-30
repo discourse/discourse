@@ -1715,9 +1715,9 @@ en:
         flags_given:
           one: '<span class="%{className}">%{count}</span> helpful flag'
           other: '<span class="%{className}">%{count}</span> helpful flags'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> flagged post'
-          other: '<span class="%{className}">%{count}</span> flagged posts'
+        flags:
+          one: '<span class="%{className}">%{count}</span> flag'
+          other: '<span class="%{className}">%{count}</span> flags'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> deleted post'
           other: '<span class="%{className}">%{count}</span> deleted posts'

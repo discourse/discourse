@@ -8022,29 +8022,32 @@ RSpec.describe UsersController do
       end
 
       it "delegates work to `User`" do
-        user_instance = mock
-        UsersController.any_instance.stubs(:fetch_user_from_params).returns(user_instance)
+        sign_in(admin)
 
-        result = {}
+        get "/u/#{user.username}/staff-info.json"
+
+        parsed_body = response.parsed_body
 
         %i[
           number_of_deleted_posts
-          number_of_flagged_posts
           number_of_flags_given
           number_of_silencings
           number_of_suspensions
           warnings_received_count
           number_of_rejected_posts
-          can_remove_password?
-        ].each do |info|
-          user_instance.expects(info).returns(user.public_send(info))
-          result[info.to_s.delete_suffix("?")] = user.public_send(info)
-        end
+        ].each { |info| expect(parsed_body[info.to_s]).to eq(user.public_send(info)) }
 
+        expect(parsed_body["can_remove_password"]).to eq(user.can_remove_password?)
+      end
+
+      it "returns correct number_of_flagged_posts count for all reviewable types" do
         sign_in(admin)
 
+        Fabricate(:reviewable_queued_post, target_created_by: user)
+
         get "/u/#{user.username}/staff-info.json"
-        expect(response.parsed_body).to eq(result)
+
+        expect(response.parsed_body["number_of_flagged_posts"]).to eq(2)
       end
     end
   end

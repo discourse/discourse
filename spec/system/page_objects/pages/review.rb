@@ -60,6 +60,10 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".status .pending") }
       end
 
+      def has_reviewable_items?(count:)
+        page.has_css?(".review-item", count: count)
+      end
+
       def has_reviewable_with_rejected_status?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".status .rejected") }
       end

@@ -38,4 +38,21 @@ describe "Viewing user staff info as an admin", type: :system do
       expect(filters["action_name"]).to eq("silence_user")
     end
   end
+
+  context "for flags" do
+    let(:review_page) { PageObjects::Pages::RefreshedReview.new }
+
+    it "shows count and links to review queue for all reviewable types" do
+      reviewable_flagged_post = Fabricate(:reviewable_flagged_post, target_created_by: user)
+      reviewable_queued_post = Fabricate(:reviewable_queued_post, target_created_by: user)
+
+      user_page.visit(user)
+
+      expect(user_page).to have_staff_counter_flags(count: 2)
+
+      user_page.click_staff_info_flags_link
+
+      expect(review_page).to have_reviewables([reviewable_flagged_post, reviewable_queued_post])
+    end
+  end
 end
