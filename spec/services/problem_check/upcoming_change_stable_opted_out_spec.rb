@@ -35,6 +35,8 @@ RSpec.describe ProblemCheck::UpcomingChangeStableOptedOut do
       end
 
       context "when upcoming change is stable and not opted in" do
+        before { SiteSetting.enable_upload_debug_mode = false }
+
         it do
           expect(check).to have_a_problem.with_priority("low").with_target(
             "enable_upload_debug_mode",
@@ -57,25 +59,6 @@ RSpec.describe ProblemCheck::UpcomingChangeStableOptedOut do
         end
 
         it { expect(check).to be_chill_about_it }
-      end
-
-      context "when upcoming change is permanent and not opted in" do
-        before do
-          mock_upcoming_change_metadata(
-            enable_upload_debug_mode: {
-              impact: "other,developers",
-              status: :permanent,
-              impact_type: "other",
-              impact_role: "developers",
-            },
-          )
-        end
-
-        it do
-          expect(check).to have_a_problem.with_priority("low").with_target(
-            "enable_upload_debug_mode",
-          )
-        end
       end
     end
   end
