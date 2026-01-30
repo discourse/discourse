@@ -42,7 +42,7 @@ export default class CustomWelcomeBanner extends Component {
 
 ## Using core components
 
-Themes can import and use any components from Discourse core. The majority of them can be found [in this directory](https://github.com/discourse/discourse/tree/main/app/assets/javascripts/discourse/app/components) of the core repository. Some of these are very specific to certain use-cases in core, and probably won't be useful for plugins. But others are more generic, and are designed to be reused from anywhere.
+Themes can import and use any components from Discourse core. The majority of them can be found [in this directory](https://github.com/discourse/discourse/tree/main/frontend/discourse/app/components) of the core repository. Some of these are very specific to certain use-cases in core, and probably won't be useful for plugins. But others are more generic, and are designed to be reused from anywhere.
 
 The most-used component is `DButton`. As the name suggests, that can be used to render an HTML `<button>`, but with a little extra Discourse flair. To import it, add this to the top of your `custom-welcome-banner.gjs` file:
 
