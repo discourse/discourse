@@ -892,10 +892,13 @@ RSpec.describe Upload do
     end
 
     context "with deduplication" do
+      let(:mock_store) { mock("store") }
+
+      before { Discourse.stubs(:store).returns(mock_store) }
+
       it "removes S3 file when standalone upload is destroyed" do
         upload = Fabricate(:upload)
-        store = Discourse.store
-        store.expects(:remove_upload).with(upload).once
+        mock_store.expects(:remove_upload).with(upload).once
 
         upload.destroy
       end
@@ -903,8 +906,7 @@ RSpec.describe Upload do
       it "does not remove S3 file when dependent upload is destroyed" do
         primary = Fabricate(:secure_upload, original_sha1: "abc123")
         dependent = Fabricate(:secure_upload, original_sha1: "abc123", primary_upload: primary)
-        store = Discourse.store
-        store.expects(:remove_upload).with(dependent).never
+        mock_store.expects(:remove_upload).with(dependent).never
 
         dependent.destroy
       end
@@ -918,16 +920,14 @@ RSpec.describe Upload do
             original_sha1: "abc123",
             primary_upload: primary,
           )
-        store = Discourse.store
-        store.expects(:remove_upload).with(primary).never
+        mock_store.expects(:remove_upload).with(primary).never
 
         primary.destroy
       end
 
       it "removes S3 file when primary has no dependents" do
         primary = Fabricate(:secure_upload, original_sha1: "abc123")
-        store = Discourse.store
-        store.expects(:remove_upload).with(primary).once
+        mock_store.expects(:remove_upload).with(primary).once
 
         primary.destroy
       end
@@ -1262,58 +1262,37 @@ RSpec.describe Upload do
     end
 
     describe "context transition handling" do
+      let(:sha1_hash) { "a" * 40 }
+
       it "switches to existing primary when secure status changes" do
-        secure_primary =
-          Fabricate(:secure_upload, original_sha1: "abc123", secure: true, url: "/secure/url.png")
-        public_primary =
-          Fabricate(
-            :upload,
-            original_sha1: "abc123",
-            secure: false,
-            url: "/public/url.png",
-            primary_upload_id: nil,
-          )
+        secure_primary = Fabricate(:upload, original_sha1: sha1_hash, secure: true)
+        public_primary = Fabricate(:upload, original_sha1: sha1_hash, secure: false)
         dependent =
-          Fabricate(
-            :secure_upload,
-            original_sha1: "abc123",
-            secure: true,
-            url: "/secure/url.png",
-            primary_upload: secure_primary,
-          )
+          Fabricate(:upload, original_sha1: sha1_hash, secure: true, primary_upload: secure_primary)
 
         dependent.handle_dedup_context_transition(false)
+        dependent.reload
 
         expect(dependent.primary_upload_id).to eq(public_primary.id)
-        expect(dependent.url).to eq("/public/url.png")
+        expect(dependent.url).to eq(public_primary.url)
       end
 
       it "breaks relationship when no matching primary exists" do
-        secure_primary =
-          Fabricate(:secure_upload, original_sha1: "abc123", secure: true, url: "/secure/url.png")
+        secure_primary = Fabricate(:upload, original_sha1: sha1_hash, secure: true)
         dependent =
-          Fabricate(
-            :secure_upload,
-            original_sha1: "abc123",
-            secure: true,
-            url: "/secure/url.png",
-            primary_upload: secure_primary,
-          )
-
-        # Stub external store check to skip S3 operations
-        Discourse.stubs(:store).returns(stub(external?: false))
+          Fabricate(:upload, original_sha1: sha1_hash, secure: true, primary_upload: secure_primary)
 
         dependent.handle_dedup_context_transition(false)
+        dependent.reload
 
         expect(dependent.primary_upload_id).to be_nil
       end
 
       it "does nothing for non-dependents" do
-        primary =
-          Fabricate(:secure_upload, original_sha1: "abc123", secure: true, url: "/secure/url.png")
+        primary = Fabricate(:upload, original_sha1: sha1_hash, secure: true)
 
         expect { primary.handle_dedup_context_transition(false) }.not_to change {
-          primary.primary_upload_id
+          primary.reload.primary_upload_id
         }
       end
     end

@@ -226,7 +226,6 @@ class UploadCreator
           primary = Upload.find_primary_for(original_sha1: sha1, secure: @upload.secure)
           if primary && primary.url.present?
             @upload.primary_upload_id = primary.id
-            @upload.url = primary.url
             @dedup_from_primary = true
           end
         end
@@ -250,9 +249,12 @@ class UploadCreator
           Upload.generate_digest(@file) != sha1_before_changes
         end
 
-      # Skip storage if deduplicating from an existing primary upload
+      # Storage deduplication: share the primary's URL instead of re-uploading
+      # The dependent upload keeps its own unique sha1 (used for short_url and data-base62-sha1)
+      # but points to the same storage object as the primary
       if @dedup_from_primary
-        # URL already set from primary, just save
+        primary = Upload.find(@upload.primary_upload_id)
+        @upload.url = primary.url
         @upload.save!(validate: @opts[:validate])
       else
         store = Discourse.store

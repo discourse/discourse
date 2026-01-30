@@ -508,6 +508,10 @@ class Upload < ActiveRecord::Base
     self.sha1_from_base62_encoded($2) if url =~ %r{(upload://)?([a-zA-Z0-9]+)(\..*)?}
   end
 
+  def self.sha1_from_base62(base62)
+    self.sha1_from_base62_encoded(base62)
+  end
+
   def self.sha1_from_long_url(url)
     $2 if url =~ URL_REGEX || url =~ OptimizedImage::URL_REGEX
   end
@@ -563,7 +567,6 @@ class Upload < ActiveRecord::Base
 
   def handle_dedup_context_transition(new_secure_status)
     return if primary_upload_id.nil?
-    return if !Discourse.store.external?
 
     # Try to find a primary with matching secure status
     new_primary = Upload.find_primary_for(original_sha1: original_sha1, secure: new_secure_status)
@@ -571,9 +574,12 @@ class Upload < ActiveRecord::Base
     if new_primary
       # Switch to the new primary
       update_columns(primary_upload_id: new_primary.id, url: new_primary.url)
-    else
-      # No matching primary exists - copy file and become a primary
+    elsif Discourse.store.external?
+      # No matching primary exists and using S3 - copy file and become a primary
       copy_from_primary_and_become_primary(new_secure_status)
+    else
+      # Local store - just break the relationship, file will be handled by store
+      update_columns(primary_upload_id: nil)
     end
   end
 

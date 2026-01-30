@@ -76,73 +76,82 @@ module HasPostUploadReferences
         "div/@data-original-video-src",
       )
 
-    links =
-      selectors
-        .map do |media|
-          src = media.value
-          next if src.blank?
+    # Collect (src, sha1) pairs. Use data-base62-sha1 when available for unique
+    # upload identification, even when multiple uploads share the same storage URL.
+    seen_sha1s = Set.new
+    upload_entries = []
 
-          if src.end_with?("/images/transparent.png") &&
-               (parent = media.parent)["data-orig-src"].present?
-            parent["data-orig-src"]
-          else
-            src
-          end
-        end
-        .compact
-        .uniq
+    selectors.each do |media|
+      src = media.value
+      next if src.blank?
 
-    links.each do |src|
+      # Handle lazy-loaded images with data-orig-src
+      if src.end_with?("/images/transparent.png") &&
+           (parent = media.parent)["data-orig-src"].present?
+        src = parent["data-orig-src"]
+      end
+
       src = src.split("?")[0]
+      sha1 = nil
 
-      if src.start_with?("upload://")
-        sha1 = Upload.sha1_from_short_url(src)
-        yield(src, nil, sha1)
-        next
+      # Check for data-base62-sha1 attribute which preserves unique upload identity
+      # even when uploads share storage URLs (deduplication)
+      parent = media.parent
+      if parent && (base62 = parent["data-base62-sha1"]).present?
+        sha1 = Upload.sha1_from_base62(base62)
       end
 
-      if src.include?("/uploads/short-url/")
-        host =
-          begin
-            URI(src).host
-          rescue URI::Error
+      # If no sha1 from attribute, try to extract from URL
+      if sha1.blank?
+        if src.start_with?("upload://")
+          sha1 = Upload.sha1_from_short_url(src)
+        elsif src.include?("/uploads/short-url/")
+          host =
+            begin
+              URI(src).host
+            rescue URI::Error
+            end
+          next if host.present? && host != Discourse.current_hostname
+          sha1 = Upload.sha1_from_short_path(src)
+        else
+          next if upload_patterns.none? { |pattern| src =~ pattern }
+          next if Rails.configuration.multisite && src.exclude?(current_db)
+
+          src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
+
+          if !Discourse.store.has_been_uploaded?(src) && !Upload.secure_uploads_url?(src) &&
+               !(include_local_upload && src =~ %r{\A/[^/]}i)
+            next
           end
 
-        next if host.present? && host != Discourse.current_hostname
+          path =
+            begin
+              URI(
+                UrlHelper.unencode(
+                  GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src,
+                ),
+              )&.path
+            rescue URI::Error
+            end
 
-        sha1 = Upload.sha1_from_short_path(src)
-        yield(src, nil, sha1)
-        next
+          next if path.blank?
+
+          sha1 =
+            if path.include? "optimized"
+              OptimizedImage.extract_sha1(path)
+            else
+              Upload.extract_sha1(path) || Upload.sha1_from_short_path(path)
+            end
+        end
       end
 
-      next if upload_patterns.none? { |pattern| src =~ pattern }
-      next if Rails.configuration.multisite && src.exclude?(current_db)
+      # Dedupe by sha1 to avoid duplicate references for the same upload
+      next if sha1.present? && seen_sha1s.include?(sha1)
+      seen_sha1s.add(sha1) if sha1.present?
 
-      src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
-
-      if !Discourse.store.has_been_uploaded?(src) && !Upload.secure_uploads_url?(src) &&
-           !(include_local_upload && src =~ %r{\A/[^/]}i)
-        next
-      end
-
-      path =
-        begin
-          URI(
-            UrlHelper.unencode(GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src),
-          )&.path
-        rescue URI::Error
-        end
-
-      next if path.blank?
-
-      sha1 =
-        if path.include? "optimized"
-          OptimizedImage.extract_sha1(path)
-        else
-          Upload.extract_sha1(path) || Upload.sha1_from_short_path(path)
-        end
-
-      yield(src, path, sha1)
+      upload_entries << [src, sha1]
     end
+
+    upload_entries.each { |src, sha1| yield(src, nil, sha1) }
   end
 end
