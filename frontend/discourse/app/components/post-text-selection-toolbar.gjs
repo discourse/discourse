@@ -51,10 +51,6 @@ export default class PostTextSelectionToolbar extends Component {
     );
   }
 
-  get quoteSharingShowLabel() {
-    return this.quoteSharingSources.length > 1;
-  }
-
   get shareUrl() {
     return getAbsoluteURL(
       postUrl(this.topic.slug, this.topic.id, this.post.post_number)
@@ -140,13 +136,6 @@ export default class PostTextSelectionToolbar extends Component {
 
           {{#if this.quoteSharingEnabled}}
             <span class="quote-sharing">
-              {{#if this.quoteSharingShowLabel}}
-                <DButton
-                  @icon="share"
-                  @label="post.quote_share"
-                  class="btn-flat quote-share-label"
-                />
-              {{/if}}
 
               <span class="quote-share-buttons">
                 {{#each this.quoteSharingSources as |source|}}
