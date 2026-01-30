@@ -11,5 +11,8 @@ class AddPrimaryUploadIdToUploads < ActiveRecord::Migration[7.2]
               %i[original_sha1 secure],
               where: "primary_upload_id IS NULL AND original_sha1 IS NOT NULL",
               name: "index_uploads_on_primary_lookup"
+
+    # FK ensures DB-level integrity; SET NULL handles edge cases like raw SQL deletes
+    add_foreign_key :uploads, :uploads, column: :primary_upload_id, on_delete: :nullify
   end
 end
