@@ -22,17 +22,38 @@ vi:
         post_voting_comment:
           composer:
             too_short:
-              other: "Nhập ít nhất %{count} kí tự"
+              other: "Nhập ít nhất %{count} ký tự"
+            length_ok:
+              other: "%{count} ký tự còn lại..."
+            too_long:
+              other: "Bình luận không được dài hơn %{count} ký tự"
+          submit: "Thêm bình luận"
           edit: "sửa"
           cancel: "hủy"
+          add: "Thêm bình luận"
+          show:
+            other: Hiển thị %{count} bình luận khác
+          delete:
+            confirm: "Bạn có chắc muốn xóa bình luận này?"
           user:
             deleted: "(người dùng đã bị xóa)"
           reviewables:
+            comment_already_handled: "Cảm ơn, nhưng chúng tôi đã xem xét bình luận này và xác định rằng nó không cần phải được báo cáo lại."
             actions:
+              agree:
+                title: "Đồng ý..."
+              agree_and_keep_comment:
+                title: "Giữ bình luận"
+                description: "Đồng ý với báo cáo và giữ nguyên bình luận."
+              agree_and_keep_deleted:
+                title: "Giữ bình luận đã xóa"
+                description: "Đồng ý với báo cáo và để lại bình luận bị xóa."
               agree_and_suspend:
                 title: "Tạm ngưng người dùng"
+                description: "Đồng ý với báo cáo và tạm ngưng tài khoản người dùng."
               agree_and_silence:
                 title: "Người dùng im lặng"
+                description: "Đồng ý với cờ và im lặng người dùng."
               disagree:
                 title: "Không đồng ý"
       topic:

@@ -312,6 +312,9 @@ el:
               description: "Ο χρήστης που κλείνει το θέμα (προεπιλογή: σύστημα)"
         set_topic_timer:
           title: Ορισμός Χρονοδιακόπτη Θέματος
+          fields:
+            duration:
+              label: Διάρκεια Χρονομέτρου
       unnamed_automation: "Ανώνυμος αυτοματισμός"
       models:
         trigger:
