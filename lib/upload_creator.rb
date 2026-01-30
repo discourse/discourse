@@ -522,7 +522,7 @@ class UploadCreator
       .css("animate, animateTransform, animateMotion, set")
       .each do |anim_el|
         attr_name = anim_el.attr("attributeName")&.downcase
-        anim_el.remove if attr_name&.match?(/href/i)
+        anim_el.remove if attr_name&.include?("href")
       end
 
     File.write(@file.path, doc.to_s)
