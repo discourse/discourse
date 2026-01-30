@@ -55,6 +55,8 @@ export function extractErrorInfo(error, defaultMessage) {
       parsedError = parsedJSON.message;
     } else if (parsedJSON.failed) {
       parsedError = parsedJSON.failed;
+    } else if (parsedJSON.error_key) {
+      parsedError = i18n(parsedJSON.error_key);
     }
   }
 
