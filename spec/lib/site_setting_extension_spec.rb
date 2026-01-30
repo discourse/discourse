@@ -725,6 +725,9 @@ RSpec.describe SiteSettingExtension do
               },
             )
             settings.refresh!
+            allow(UpcomingChanges).to receive(:resolved_value).with(:enable_cool_thing).and_return(
+              true,
+            )
           end
 
           it "is present in all_settings" do
@@ -735,10 +738,22 @@ RSpec.describe SiteSettingExtension do
         end
 
         context "when the upcoming change is automatically enabled because of the promotion status" do
-          # TODO (martin) Fix this when https://github.com/discourse/discourse/pull/37283 is merged
-          # to take into account the dynamic upcoming change settings based on promotion status
-          # using UpcomingChange.resolved_value
-          xit "is present in all_settings" do
+          before do
+            settings.setting(
+              :enable_cool_thing,
+              true,
+              upcoming_change: {
+                status: :alpha,
+                impact: "feature,staff",
+              },
+            )
+            settings.refresh!
+            allow(UpcomingChanges).to receive(:resolved_value).with(:enable_cool_thing).and_return(
+              true,
+            )
+          end
+
+          it "is present in all_settings" do
             expect(
               settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
             ).not_to be_blank
