@@ -72,6 +72,11 @@ export default class ChatMessageActionsDesktop extends Component {
     }
 
     const boundary = this.messageContainer.closest(".chat-messages-scroller");
+
+    if (!boundary) {
+      return;
+    }
+
     this.size = boundary.clientWidth < REDUCED_WIDTH_THRESHOLD ? REDUCED : FULL;
 
     computePosition(this.messageContainer, element, {

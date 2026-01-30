@@ -628,6 +628,26 @@ export default class ChatApi extends Service {
     return this.#deleteRequest(`/channels/${channelId}/memberships/${userId}`);
   }
 
+  pinMessage(channelId, messageId) {
+    return this.#postRequest(
+      `/channels/${channelId}/messages/${messageId}/pin`
+    );
+  }
+
+  unpinMessage(channelId, messageId) {
+    return this.#deleteRequest(
+      `/channels/${channelId}/messages/${messageId}/pin`
+    );
+  }
+
+  pinnedMessages(channelId) {
+    return this.#getRequest(`/channels/${channelId}/pins`);
+  }
+
+  markPinsAsRead(channelId) {
+    return this.#putRequest(`/channels/${channelId}/pins/read`);
+  }
+
   get #basePath() {
     return "/chat/api";
   }

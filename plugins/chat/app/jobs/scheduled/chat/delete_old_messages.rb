@@ -18,9 +18,11 @@ module Jobs
         return unless valid_day_value?(:chat_channel_retention_days)
 
         ::Chat::MessageDestroyer.new.destroy_in_batches(
-          ::Chat::Message.in_public_channel.with_deleted.created_before(
-            ::SiteSetting.chat_channel_retention_days.days.ago,
-          ),
+          ::Chat::Message
+            .in_public_channel
+            .with_deleted
+            .created_before(::SiteSetting.chat_channel_retention_days.days.ago)
+            .where.not(id: ::Chat::PinnedMessage.select(:chat_message_id)),
         )
       end
 
@@ -28,9 +30,11 @@ module Jobs
         return unless valid_day_value?(:chat_dm_retention_days)
 
         ::Chat::MessageDestroyer.new.destroy_in_batches(
-          ::Chat::Message.in_dm_channel.with_deleted.created_before(
-            ::SiteSetting.chat_dm_retention_days.days.ago,
-          ),
+          ::Chat::Message
+            .in_dm_channel
+            .with_deleted
+            .created_before(::SiteSetting.chat_dm_retention_days.days.ago)
+            .where.not(id: ::Chat::PinnedMessage.select(:chat_message_id)),
         )
       end
 

@@ -57,6 +57,10 @@ module Chat
              dependent: :destroy,
              class_name: "Chat::Mention",
              foreign_key: :chat_message_id
+    has_one :pinned_message,
+            class_name: "Chat::PinnedMessage",
+            foreign_key: :chat_message_id,
+            dependent: :destroy
     has_many :user_mentions,
              dependent: :destroy,
              class_name: "Chat::UserMention",

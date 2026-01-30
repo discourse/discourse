@@ -53,6 +53,7 @@ export default class ChatMessage {
   @tracked manager;
   @tracked deletedById;
   @tracked streaming;
+  @tracked pinned;
   @trackedArray reactions;
 
   @tracked _deletedAt;
@@ -103,6 +104,8 @@ export default class ChatMessage {
     if (args.thread) {
       this.thread = args.thread;
     }
+
+    this.pinned = args.pinned ?? false;
   }
 
   get url() {
