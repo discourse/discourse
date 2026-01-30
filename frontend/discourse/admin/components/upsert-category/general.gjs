@@ -99,74 +99,37 @@ export default class UpsertCategoryGeneral extends Component {
     }
   }
 
-  get visibilityGroups() {
+  get accessGroups() {
     const permissions = this.args.category.permissions || [];
-    return permissions
-      .filter((p) => p.permission_type <= PermissionType.READONLY)
-      .map((p) => p.group_id);
+    return permissions.map((p) => p.group_id);
   }
 
-  get postingGroups() {
-    const permissions = this.args.category.permissions || [];
-    return permissions
-      .filter((p) => p.permission_type <= PermissionType.CREATE_POST)
-      .map((p) => p.group_id);
-  }
+  get availableAccessGroups() {
+    const allGroups = this.args.category.site.groups;
 
-  @action
-  onChangeVisibilityGroups(groupIds) {
-    const site = this.args.category.site;
-    const currentPermissions = this.args.category.permissions || [];
+    if (!this.parentIsRestricted) {
+      return allGroups;
+    }
 
-    const postingGroupPermissions = new Map(
-      currentPermissions
-        .filter((p) => p.permission_type <= PermissionType.CREATE_POST)
-        .map((p) => [p.group_id, p.permission_type])
+    const parentId = this.args.transientData.parent_category_id;
+    const parentCategory = Category.findById(parentId);
+    const parentGroupIds = new Set(
+      parentCategory.permissions.map((p) => p.group_id)
     );
 
-    const newPermissions = [];
-
-    groupIds.forEach((groupId) => {
-      const group = site.groups.find((g) => g.id === groupId);
-      const existingPermission = postingGroupPermissions.get(groupId);
-
-      newPermissions.push({
-        group_name: group?.name,
-        group_id: groupId,
-        permission_type: existingPermission ?? PermissionType.READONLY,
-      });
-    });
-
-    this.userModifiedPermissions = true;
-    this.#setCategoryPermissions(newPermissions);
+    return allGroups.filter((group) => parentGroupIds.has(group.id));
   }
 
   @action
-  onChangePostingGroups(groupIds) {
-    // Posting groups automatically get visibility (if they can post, they can see)
+  onChangeAccessGroups(groupIds) {
     const site = this.args.category.site;
-    const currentPermissions = this.args.category.permissions || [];
-    const currentVisibilityGroupIds = currentPermissions.map((p) => p.group_id);
-    const newPermissions = [];
-
-    groupIds.forEach((groupId) => {
+    const newPermissions = groupIds.map((groupId) => {
       const group = site.groups.find((g) => g.id === groupId);
-      newPermissions.push({
+      return {
         group_name: group?.name,
         group_id: groupId,
         permission_type: PermissionType.FULL,
-      });
-    });
-
-    currentVisibilityGroupIds.forEach((groupId) => {
-      if (!groupIds.includes(groupId)) {
-        const group = site.groups.find((g) => g.id === groupId);
-        newPermissions.push({
-          group_name: group?.name,
-          group_id: groupId,
-          permission_type: PermissionType.READONLY,
-        });
-      }
+      };
     });
 
     this.userModifiedPermissions = true;
@@ -632,6 +595,7 @@ export default class UpsertCategoryGeneral extends Component {
                 clearable=true
                 caretUpIcon="chevron-up"
                 caretDownIcon="chevron-down"
+                displayCategoryDescription=false
               }}
             />
           </field.Custom>
@@ -674,22 +638,12 @@ export default class UpsertCategoryGeneral extends Component {
           <cc.Contents as |Content|>
             <Content @name="group_restricted">
               <@form.Container
-                @title={{i18n "category.visibility.who_can_see"}}
+                @title={{i18n "category.visibility.which_groups_can_access"}}
               >
                 <GroupChooser
-                  @content={{@category.site.groups}}
-                  @value={{this.visibilityGroups}}
-                  @onChange={{this.onChangeVisibilityGroups}}
-                />
-              </@form.Container>
-
-              <@form.Container
-                @title={{i18n "category.visibility.who_can_post"}}
-              >
-                <GroupChooser
-                  @content={{@category.site.groups}}
-                  @value={{this.postingGroups}}
-                  @onChange={{this.onChangePostingGroups}}
+                  @content={{this.availableAccessGroups}}
+                  @value={{this.accessGroups}}
+                  @onChange={{this.onChangeAccessGroups}}
                 />
               </@form.Container>
 

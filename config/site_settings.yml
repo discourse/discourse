@@ -4236,5 +4236,5 @@ experimental:
     hidden: true
     client: true
     upcoming_change:
-      status: "permanent"
+      status: "experimental"
       impact: "feature,staff"
