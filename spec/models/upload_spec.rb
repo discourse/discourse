@@ -890,6 +890,48 @@ RSpec.describe Upload do
       expect(user.user_profile.card_background_upload_id).to eq(nil)
       expect(user.user_profile.profile_background_upload_id).to eq(nil)
     end
+
+    context "with deduplication" do
+      it "removes S3 file when standalone upload is destroyed" do
+        upload = Fabricate(:upload)
+        store = Discourse.store
+        store.expects(:remove_upload).with(upload).once
+
+        upload.destroy
+      end
+
+      it "does not remove S3 file when dependent upload is destroyed" do
+        primary = Fabricate(:secure_upload, original_sha1: "abc123")
+        dependent = Fabricate(:secure_upload, original_sha1: "abc123", primary_upload: primary)
+        store = Discourse.store
+        store.expects(:remove_upload).with(dependent).never
+
+        dependent.destroy
+      end
+
+      it "does not remove S3 file when primary transfers to dependent" do
+        primary = Fabricate(:secure_upload, url: "/uploads/primary.png", original_sha1: "abc123")
+        _dependent =
+          Fabricate(
+            :secure_upload,
+            url: "/uploads/dep.png",
+            original_sha1: "abc123",
+            primary_upload: primary,
+          )
+        store = Discourse.store
+        store.expects(:remove_upload).with(primary).never
+
+        primary.destroy
+      end
+
+      it "removes S3 file when primary has no dependents" do
+        primary = Fabricate(:secure_upload, original_sha1: "abc123")
+        store = Discourse.store
+        store.expects(:remove_upload).with(primary).once
+
+        primary.destroy
+      end
+    end
   end
 
   describe ".secure_uploads_url_from_upload_url" do

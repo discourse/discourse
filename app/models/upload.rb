@@ -65,6 +65,9 @@ class Upload < ActiveRecord::Base
 
       new_primary.update_columns(primary_upload_id: nil, url: self.url)
       remaining.update_all(primary_upload_id: new_primary.id)
+
+      # Mark that we transferred ownership so destroy skips S3 removal
+      @transferred_to_new_primary = true
     end
   end
 
@@ -227,7 +230,11 @@ class Upload < ActiveRecord::Base
 
   def destroy
     Upload.transaction do
-      Discourse.store.remove_upload(self)
+      # Skip S3 removal if:
+      # - This is a dependent upload (file belongs to the primary)
+      # - This primary just transferred ownership to a new primary
+      should_remove_file = primary_upload_id.nil? && !@transferred_to_new_primary
+      Discourse.store.remove_upload(self) if should_remove_file
       super
     end
   end
