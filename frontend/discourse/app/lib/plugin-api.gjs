@@ -846,6 +846,8 @@ class _PluginApi {
    * @returns {boolean} - Whether the button should be displayed.
    *
    * @param {Object} opts - An Object.
+   * @param {string} [opts.menu] - Target menu: 'list' for list dropdown, omit for options popup (default).
+   * @param {string} [opts.name] - Unique identifier for the option.
    * @param {string} opts.icon - The name of the FontAwesome icon to display for the button.
    * @param {string} opts.label - The I18n translation key for the button's label.
    * @param {string} opts.shortcut - The keyboard shortcut to apply, NOTE: this will unconditionally add CTRL/META key (eg: m means CTRL+m).
@@ -862,6 +864,18 @@ class _PluginApi {
    *   shortcut: 'm',
    *   condition: (composer) => {
    *     return composer.editingPost;
+   *   }
+   * });
+   *
+   * @example
+   * // Add option to list dropdown
+   * api.addComposerToolbarPopupMenuOption({
+   *   menu: 'list',
+   *   name: 'my-custom-list',
+   *   icon: 'list-check',
+   *   label: 'my_plugin.custom_list',
+   *   action: (toolbarEvent) => {
+   *     toolbarEvent.applyList("- [x] ", "list_item");
    *   }
    * });
    **/

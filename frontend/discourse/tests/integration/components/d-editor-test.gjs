@@ -566,12 +566,14 @@ third line`
     async function (assert, textarea) {
       const example = i18n("composer.list_item");
 
-      await click(`button.bullet`);
+      await click(`button.list`);
+      await click('.btn[data-name="list-bullet"]');
       assert.strictEqual(this.value, `hello world.\n\n* ${example}`);
       assert.strictEqual(textarea.selectionStart, 14);
       assert.strictEqual(textarea.selectionEnd, 16 + example.length);
 
-      await click(`button.bullet`);
+      await click(`button.list`);
+      await click('.btn[data-name="list-bullet"]');
       assert.strictEqual(this.value, `hello world.\n\n${example}`);
     }
   );
@@ -582,12 +584,14 @@ third line`
       textarea.selectionStart = 6;
       textarea.selectionEnd = 11;
 
-      await click(`button.bullet`);
+      await click(`button.list`);
+      await click('.btn[data-name="list-bullet"]');
       assert.strictEqual(this.value, `hello\n\n* world\n\n.`);
       assert.strictEqual(textarea.selectionStart, 7);
       assert.strictEqual(textarea.selectionEnd, 14);
 
-      await click(`button.bullet`);
+      await click(`button.list`);
+      await click('.btn[data-name="list-bullet"]');
       assert.strictEqual(this.value, `hello\n\nworld\n\n.`);
       assert.strictEqual(textarea.selectionStart, 7);
       assert.strictEqual(textarea.selectionEnd, 12);
@@ -602,12 +606,14 @@ third line`
       textarea.selectionStart = 0;
       textarea.selectionEnd = 20;
 
-      await click(`button.bullet`);
+      await click(`button.list`);
+      await click('.btn[data-name="list-bullet"]');
       assert.strictEqual(this.value, "Hello\n\nWorld\n\nEvil");
       assert.strictEqual(textarea.selectionStart, 0);
       assert.strictEqual(textarea.selectionEnd, 18);
 
-      await click(`button.bullet`);
+      await click(`button.list`);
+      await click('.btn[data-name="list-bullet"]');
       assert.strictEqual(this.value, "* Hello\n\n* World\n\n* Evil");
       assert.strictEqual(textarea.selectionStart, 0);
       assert.strictEqual(textarea.selectionEnd, 24);
@@ -620,11 +626,13 @@ third line`
       const example = i18n("composer.list_item");
 
       await click(`button.list`);
+      await click('.btn[data-name="list-ordered"]');
       assert.strictEqual(this.value, `hello world.\n\n1. ${example}`);
       assert.strictEqual(textarea.selectionStart, 14);
       assert.strictEqual(textarea.selectionEnd, 17 + example.length);
 
       await click(`button.list`);
+      await click('.btn[data-name="list-ordered"]');
       assert.strictEqual(this.value, `hello world.\n\n${example}`);
       assert.strictEqual(textarea.selectionStart, 14);
       assert.strictEqual(textarea.selectionEnd, 14 + example.length);
@@ -638,11 +646,13 @@ third line`
       textarea.selectionEnd = 11;
 
       await click(`button.list`);
+      await click('.btn[data-name="list-ordered"]');
       assert.strictEqual(this.value, `hello\n\n1. world\n\n.`);
       assert.strictEqual(textarea.selectionStart, 7);
       assert.strictEqual(textarea.selectionEnd, 15);
 
       await click(`button.list`);
+      await click('.btn[data-name="list-ordered"]');
       assert.strictEqual(this.value, `hello\n\nworld\n\n.`);
       assert.strictEqual(textarea.selectionStart, 7);
       assert.strictEqual(textarea.selectionEnd, 12);
@@ -658,11 +668,13 @@ third line`
       textarea.selectionEnd = 18;
 
       await click(`button.list`);
+      await click('.btn[data-name="list-ordered"]');
       assert.strictEqual(this.value, "1. Hello\n\n2. World\n\n3. Evil");
       assert.strictEqual(textarea.selectionStart, 0);
       assert.strictEqual(textarea.selectionEnd, 27);
 
       await click(`button.list`);
+      await click('.btn[data-name="list-ordered"]');
       assert.strictEqual(this.value, "Hello\n\nWorld\n\nEvil");
       assert.strictEqual(textarea.selectionStart, 0);
       assert.strictEqual(textarea.selectionEnd, 18);
@@ -677,6 +689,7 @@ third line`
       textarea.selectionEnd = 8;
 
       await click("button.list");
+      await click('.btn[data-name="list-ordered"]');
       assert.strictEqual(this.value, "1. existing");
 
       document.execCommand("undo");
