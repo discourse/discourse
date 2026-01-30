@@ -38,6 +38,9 @@ el:
           unassigned: "Όταν ένας χρήστης αναιρεί την ανάθεση ενός θέματος"
     search:
       advanced:
+        in:
+          assigned: "έχουν ανατεθεί"
+          unassigned: "δεν έχουν ανατεθεί"
         assigned:
           label: "Ανατέθηκε σε"
     notifications:

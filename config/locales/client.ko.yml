@@ -174,6 +174,7 @@ ko:
       search_placeholder: "검색"
     impersonation:
       notice: "사용자님은 %{username}을 사칭하고 있습니다."
+      stop: "더 이상 사칭하지 마세요"
     themes:
       default_description: "기본"
       error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 테마를 업데이트 또는 재설정하거나, 테마 사용을 중지하세요."
@@ -1249,9 +1250,9 @@ ko:
         unread: "읽지 않음"
         unread_with_count:
           other: "읽지 않음(%{count})"
-        new: "신규"
+        new: "새글"
         new_with_count:
-          other: "신규(%{count})"
+          other: "새글 (%{count})"
         archive: "보관"
         groups: "내 그룹"
         move_to_inbox: "받은 편지함으로 이동"
@@ -2360,7 +2361,7 @@ ko:
           aria_label: 최대 조회수로 필터링
         additional_options:
           label: "게시물 수 및 글 조회수로 필터링"
-    new_item: "신규"
+    new_item: "새로운"
     go_back: "뒤로 가기"
     not_logged_in_user: "현재 활동 및 환경설정에 대한 요약이 포함된 사용자 페이지"
     current_user: "사용자 페이지로 이동"
@@ -3308,9 +3309,9 @@ ko:
         lower_title_with_count:
           other: "%{count} new"
         lower_title: "new"
-        title: "신규"
+        title: "새글"
         title_with_count:
-          other: "신규(%{count})"
+          other: "새글 (%{count})"
         help: "지난 며칠 동안 작성된 주제"
         all: "전체"
         topics: "글"
@@ -3376,7 +3377,7 @@ ko:
         title: "이동"
         home: "%{shortcut} 홈"
         latest: "%{shortcut} 최신"
-        new: "%{shortcut} 신규"
+        new: "%{shortcut} 새로운"
         unread: "%{shortcut} 읽지 않음"
         categories: "%{shortcut} 카테고리"
         top: "%{shortcut} 주요 항목"
@@ -3669,7 +3670,7 @@ ko:
             inbox: "받은 편지함"
             sent: "전송됨"
             new: "신규"
-            new_with_count: "신규(%{count})"
+            new_with_count: "새 메시지 (%{count})"
             unread: "읽지 않음"
             unread_with_count: "읽지 않음(%{count})"
             archive: "보관"
@@ -4745,7 +4746,7 @@ ko:
           context: "상황"
           details: "상세 정보"
           previous_value: "이전"
-          new_value: "신규"
+          new_value: "새값"
           show: "표시"
           modal_title: "상세 정보"
           no_previous: "이전 값이 없습니다."

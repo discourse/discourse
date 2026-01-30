@@ -17,6 +17,11 @@ el:
           always: "Πάντα"
           fullscreen: "Όταν η συνομιλία είναι σε πλήρη οθόνη"
           never: "Ποτέ"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Δημιουργία μηνύματος συνομιλίας σε ένα καθορισμένο κανάλι."
       web_hooks:
         chat_event:
           group_name: "Συμβάντα συνομιλίας"
@@ -160,9 +165,12 @@ el:
         open: "Ξεκίνημα"
       browse:
         back: "Πίσω"
+        title: Κανάλια
         filter_all: Όλα
         filter_open: Ξεκίνημα
         filter_closed: Κλειστό
+        filter_archived: Αρχειοθετημένα
+        filter_input_placeholder: Αναζήτηση καναλιού με βάση το όνομα
       chat_message_separator:
         today: Σήμερα
         yesterday: Χτες

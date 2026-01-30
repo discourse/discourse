@@ -21,6 +21,8 @@ el:
         search: "Αναζήτηση"
         time: "Ώρα"
         summarize: "Συνοψίστε"
+      tool_description:
+        web_browser: "Γίνεται ανάγνωση <a href='%{url}'>%{url}</a>"
     ai_staff_action_logger:
       updated: "ενημερώθηκε"
       removed: "αφαιρέθηκε"

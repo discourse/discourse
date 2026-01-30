@@ -207,6 +207,7 @@ el:
     confirm_email: "<p>Έχετε σχεδόν τελειώσει! Στείλαμε ένα email ενεργοποίησης στη διεύθυνση email σας. Παρακαλούμε ακολουθήστε τις οδηγίες στο μήνυμα για να ενεργοποιήσετε τον λογαριασμό σας.</p><p>Εάν δε φτάσει, ελέγξτε τον φάκελο ανεπιθύμητων μηνυμάτων.</p>"
     disabled_errors:
       invalid_access: "Δεν έχεις δικαίωμα να δεις τους πόρους που ζήτησες."
+    requires_groups: "Η πρόσκληση δεν αποθηκεύτηκε επειδή το καθορισμένο θέμα δεν είναι προσβάσιμο. Προσθέστε μία από τις ακόλουθες ομάδες: %{groups}."
     domain_not_allowed_admin: "Αυτός ο τομέας δεν μπορεί να χρησιμοποιηθεί για προσκλήσεις."
     max_redemptions_allowed_one: "για προσκλήσεις μέσω email θα πρέπει να είναι 1."
     email_xor_domain: "Δεν επιτρέπονται ταυτόχρονα πεδία email και τομέα"
@@ -336,6 +337,7 @@ el:
     tag: "Θέματα με ετικέτα"
     badge: "%{display_name} παράσημο στην %{site_title}"
   too_late_to_edit: "Αυτή η ανάρτηση δημιουργήθηκε πολύ καιρό πριν. Δεν μπορεί πλέον να γίνει επεξεργασία της ή να διαγραφεί."
+  edit_conflict: "Αυτή η ανάρτηση επεξεργάστηκε από άλλον χρήστη και οι αλλαγές σας δεν μπορούν πλέον να αποθηκευτούν."
   revert_version_same: "Η τρέχουσα έκδοση είναι η ίδια με την έκδοση που προσπαθείς να επαναφέρεις."
   reverted_to_version: "επανήλθε στην έκδοση #%{version}"
   excerpt_image: "εικόνα"
@@ -446,6 +448,9 @@ el:
           attributes:
             execute_at:
               in_the_past: "θα πρέπει να είναι στο μέλλον."
+            duration_minutes:
+              cannot_be_zero: "πρέπει να είναι μεγαλύτερο από 0."
+              exceeds_maximum: "δεν μπορεί να υπερβαίνει τα 20 έτη."
         watched_word:
           attributes:
             word:
@@ -2307,10 +2312,22 @@ el:
     sender_body_blank: "body είναι κενό"
   color_schemes:
     base_theme_name: "Βάση"
-    light: "Ανοιχτό"
-    dark: "Σκούρο"
-    light_theme_name: "Ανοιχτό"
-    dark_theme_name: "Σκούρο"
+    light: "Φωτεινό"
+    dark: "Σκοτεινό"
+    neutral: "Ουδέτερο"
+    summer: "Καλοκαίρι"
+    dark_rose: "Σκούρο Τριαντάφυλλο"
+    wcag: "WCAG Φωτεινό"
+    wcag_theme_name: "WCAG Φωτεινό"
+    wcag_dark: "WCAG Σκοτεινό"
+    wcag_dark_theme_name: "WCAG Σκοτεινό"
+    light_theme_name: "Φωτεινό"
+    dark_theme_name: "Σκοτεινό"
+    neutral_theme_name: "Ουδέτερο"
+    summer_theme_name: "Καλοκαίρι"
+    dark_rose_theme_name: "Σκούρο Τριαντάφυλλο"
+    errors:
+      cannot_edit_remote_copies: "Δεν επιτρέπονται αλλαγές σε απομακρυσμένα αντίγραφα χρωματικών παλετών."
   edit_this_page: "Επεξεργασία αυτής της σελίδας"
   csv_export:
     boolean_yes: "Ναι "

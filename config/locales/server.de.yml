@@ -144,6 +144,8 @@ de:
         invalid_type: "%{type} ist kein gültiger Typ"
         humanize_not_valid_string_value: "Die Eigenschaft bei JSON Pointer „%{property_json_pointer}“ muss eine Zeichenfolge sein."
         not_valid_string_value: "muss eine Zeichenfolge sein"
+        humanize_not_valid_datetime_value: "Die Eigenschaft am JSON-Pointer '%{property_json_pointer}' muss eine gültige Zeitangabe sein."
+        not_valid_datetime_value: "muss eine gültige Zeitangabe sein"
         humanize_not_valid_integer_value: "Die Eigenschaft bei JSON-Pointer „%{property_json_pointer}“ muss eine Ganzzahl sein."
         not_valid_integer_value: "muss eine Ganzzahl sein"
         humanize_not_valid_float_value: "Die Eigenschaft bei JSON-Pointer „%{property_json_pointer}“ muss eine Gleitkommazahl sein."
@@ -394,6 +396,7 @@ de:
     redemption_count_less_than_max: "sollte weniger als %{max_redemptions_allowed} sein."
     email_xor_domain: "E-Mail- und Domain-Felder sind nicht gleichzeitig erlaubt"
     existing_user_success: "Einladung erfolgreich eingelöst"
+    email_invites_disabled: "Das Versenden von Einladung via E-Mail ist deaktiviert"
   bulk_invite:
     file_should_be_csv: "Die hochgeladene Datei sollte im CSV-Format vorliegen."
     max_rows: "Die ersten %{max_bulk_invites} Einladungen wurden versandt. Versuche, die Datei in kleinere Teile aufzuteilen."
@@ -1781,6 +1784,7 @@ de:
     ga_universal_domain_name: "Google Universal Analytics Domainname, z. B.: mysite.com; siehe <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Aktiviere Cross-Domain-Tracking von Google Universal Analytics. Bei ausgehenden Links zu diesen Domains wird die Client-ID hinzugefügt. Siehe <a href='https://support.google.com/analytics/answer/1034342?hl=de' target='_blank'>Googles Cross-Domain-Tracking-Handbuch.</a>"
     gtm_container_id: "Google-Tag-Manager-Container-ID, z. B.: GTM-ABCD12E. <br/>Hinweis: Um GTM zu verwenden, wenn die Content Security Policy (CSP) aktiviert ist, siehe die Dokumentation bei Meta: <a href='https://meta.discourse.org/t/use-nonces-in-google-tag-manager-scripts/188296' target='_blank'>Nonces in Google-Tag-Manager-Skripten verwenden</a>."
+    google_site_verification_token: Google Search Console-Verifizierungstoken. Wird als Meta-Tag im HTML-Head eingebunden.
     enable_escaped_fragments: "Auf die Ajax-Crawling-API von Google zurückgreifen, wenn kein Webcrawler gefunden wird. Siehe <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories: "Moderatoren erlauben, Kategorien zu erstellen und zu verwalten"
     moderators_manage_groups: "Moderatoren erlauben, Gruppen zu erstellen und zu verwalten"
@@ -1795,6 +1799,7 @@ de:
     blocked_crawler_user_agents: "Eindeutiges Wort unter Vernachlässigung der Groß- und Kleinschreibung in der Zeichenfolge der Browserkennung, das Webcrawler identifiziert, die nicht auf die Website zugreifen dürfen. Gilt nicht, wenn die Positivliste definiert ist."
     slow_down_crawler_user_agents: 'Browserkennungen von Webcrawlern, die wie in der Einstellung „slow down crawler rate“ konfiguriert, einer Durchsatzratenbegrenzung unterworfen werden sollen. Jeder Wert muss mindestens 3 Zeichen lang sein.'
     slow_down_crawler_rate: "Wenn slow_down_crawler_user_agents ausgewählt ist, wird diese Anfragenbegrenzung auf alle Crawler angewendet (Anzahl der Sekunden zwischen zwei Anfragen)"
+    llms_txt: "Lade eine Textdatei hoch, die unter /llms.txt für LLM-Crawler bereitgestellt wird. Siehe <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> für weitere Informationen."
     content_security_policy: "Aktiviere die Content-Security-Policy (CSP). CSP ist eine zusätzliche Sicherheitsebene, die hilft, bestimmte Arten von Angriffen zu verhindern, z. B. Cross Site Scripting (XSS) und Data Injection."
     content_security_policy_report_only: "Content-Security-Policy-Report-Only (CSP) aktivieren"
     content_security_policy_collect_reports: "Aktiviere die Sammlung von Berichten zu CSP-Verstößen unter /csp_reports"
@@ -1952,6 +1957,7 @@ de:
     invite_link_max_redemptions_limit_users: "Die maximal zulässigen Einlösungen für Einladungslinks, die von regulären Benutzern erstellt wurden, dürfen diesen Wert nicht überschreiten."
     alert_admins_if_errors_per_minute: "Anzahl der Fehler pro Minute, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. HINWEIS: Erfordert einen Neustart."
     alert_admins_if_errors_per_hour: "Anzahl der Fehler pro Stunde, bei der ein Administrator benachrichtigt werden soll. Ein Wert von 0 deaktiviert diese Funktion. HINWEIS: Erfordert einen Neustart."
+    categories_topics: 'Anzahl der Themen, die auf der Seite /categories angezeigt werden. Bei 0 wird automatisch ein Wert gewählt, um die beiden Spalten (Kategorien und Themen) symmetrisch zu halten. Nur relevant für „Kategorien und aktuelle/ angesagte Themen“ <a href="%{base_path}/admin/site_settings/category/all_results?filter=category style">category page style Einstellungen</a>.'
     suggested_topics: "Anzahl der empfohlenen Themen am Ende eines Themas."
     limit_suggested_to_category: "Zeige nur Themen der aktuellen Kategorie in vorgeschlagenen Themen."
     suggested_topics_max_days_old: "Vorgeschlagene Themen sollten nicht älter als n Tage sein."
