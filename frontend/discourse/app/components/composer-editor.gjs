@@ -243,14 +243,18 @@ export default class ComposerEditor extends Component {
 
   @action
   _composerEditorInitPreview(elem) {
-    const preview = elem.querySelector(".d-editor-preview-wrapper");
+    const preview = elem.classList.contains("d-editor-preview-wrapper")
+      ? elem
+      : elem.querySelector(".d-editor-preview-wrapper");
     this._registerImageAltTextButtonClick(preview);
     this._editorInitPreview = true;
   }
 
   @action
   _composerEditorDestroyPreview(elem) {
-    const preview = elem.querySelector(".d-editor-preview-wrapper");
+    const preview = elem.classList.contains("d-editor-preview-wrapper")
+      ? elem
+      : elem.querySelector(".d-editor-preview-wrapper");
 
     if (preview) {
       preview.removeEventListener(
@@ -1008,6 +1012,8 @@ export default class ComposerEditor extends Component {
       this.composer.selectedFormTemplate,
       false
     );
+
+    this.composer.model.set("reply", formTemplateData);
 
     this.preview = await this.cachedCookAsync(
       formTemplateData,
