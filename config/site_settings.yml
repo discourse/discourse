@@ -4184,6 +4184,9 @@ experimental:
     default: false
     hidden: true
     area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
