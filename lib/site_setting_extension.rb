@@ -364,13 +364,11 @@ module SiteSettingExtension
 
         if type_supervisor.dependencies[setting_name].present? &&
              type_supervisor.dependencies.behaviors[setting_name] == :hidden
-          # Hidden if any of the dependent settings are not true
+          # Hidden if any of the dependent settings are not true. Use the getter so upcoming
+          # change settings use their resolved value (promotion status, admin override, etc.).
           is_hidden =
             !type_supervisor.dependencies[setting_name].all? do |dependency|
-              # TODO (martin) Fix this when https://github.com/discourse/discourse/pull/37283 is merged
-              # to take into account the dynamic upcoming change settings based on promotion status
-              # using UpcomingChange.resolved_value
-              current[dependency.to_sym]
+              public_send(dependency)
             end
         end
 
