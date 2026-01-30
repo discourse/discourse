@@ -754,6 +754,7 @@ end
 #  created_at                   :datetime         not null
 #  updated_at                   :datetime         not null
 #  access_control_post_id       :bigint
+#  primary_upload_id            :bigint
 #  user_id                      :integer          not null
 #
 # Indexes
@@ -765,6 +766,8 @@ end
 #  index_uploads_on_id                      (id) WHERE (dominant_color IS NULL)
 #  index_uploads_on_id_and_url              (id,url)
 #  index_uploads_on_original_sha1           (original_sha1)
+#  index_uploads_on_primary_lookup          (original_sha1,secure) WHERE ((primary_upload_id IS NULL) AND (original_sha1 IS NOT NULL))
+#  index_uploads_on_primary_upload_id       (primary_upload_id)
 #  index_uploads_on_sha1                    (sha1) UNIQUE
 #  index_uploads_on_url                     (url)
 #  index_uploads_on_user_id                 (user_id)
