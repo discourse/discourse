@@ -40,7 +40,7 @@ module TagGuardian
   def hidden_tag_names
     @hidden_tag_names ||=
       begin
-        if SiteSetting.tagging_enabled && !is_staff?
+        if SiteSetting.tagging_enabled && !is_admin?
           DiscourseTagging.hidden_tag_names(self)
         else
           []

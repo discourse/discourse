@@ -111,19 +111,48 @@ module DiscourseTagging
         # add missing mandatory parent tags
         tag_ids = tags.map(&:id)
 
-        parent_tags_map =
-          DB
-            .query(
-              "
+        parent_tags_sql =
+          +"
           SELECT tgm.tag_id, tg.parent_tag_id
             FROM tag_groups tg
           INNER JOIN tag_group_memberships tgm
               ON tgm.tag_group_id = tg.id
            WHERE tg.parent_tag_id IS NOT NULL
-             AND tgm.tag_id IN (?)
-        ",
-              tag_ids,
-            )
+             AND tgm.tag_id IN (:tag_ids)
+        "
+
+        query_params = { tag_ids: }
+
+        if category
+          if category.has_restricted_tags?
+            if category.allow_global_tags
+              # include parent tags from tag groups that are not restricted to any category
+              # AND tag groups restricted to the current category
+              parent_tags_sql << "
+                 AND (
+                   tg.id NOT IN (SELECT tag_group_id FROM category_tag_groups)
+                   OR tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = :category_id)
+                 )
+              "
+            else
+              # only include parent tags from tag groups restricted to the current category
+              parent_tags_sql << "
+                 AND tg.id IN (SELECT tag_group_id FROM category_tag_groups WHERE category_id = :category_id)
+              "
+            end
+            query_params[:category_id] = category.id
+          else
+            # category has no tag restrictions,
+            # so only include parent tags from tag groups not restricted to any category
+            parent_tags_sql << "
+               AND tg.id NOT IN (SELECT tag_group_id FROM category_tag_groups)
+            "
+          end
+        end
+
+        parent_tags_map =
+          DB
+            .query(parent_tags_sql, query_params)
             .inject({}) do |h, v|
               h[v.tag_id] ||= []
               h[v.tag_id] << v.parent_tag_id
@@ -423,15 +452,15 @@ module DiscourseTagging
     category_has_restricted_tags = category_has_tag_groups || (category && category.tags.count > 0)
 
     # If guardian is nil, it means the caller doesn't want tags to be filtered
-    # based on guardian rules. Use the same rules as for staff users.
-    filter_for_non_staff = !guardian.nil? && !guardian.is_staff?
+    # based on guardian rules. Use the same rules as for admin users.
+    filter_for_non_admin = !guardian.nil? && !guardian.is_admin?
 
     builder_params = {}
 
     builder_params[:selected_tag_ids] = selected_tag_ids unless selected_tag_ids.empty?
 
     sql = +"WITH #{TAG_GROUP_RESTRICTIONS_SQL}, #{CATEGORY_RESTRICTIONS_SQL}"
-    if (opts[:for_input] || opts[:for_topic]) && filter_for_non_staff
+    if (opts[:for_input] || opts[:for_topic]) && filter_for_non_admin
       sql << ", #{PERMITTED_TAGS_SQL} "
       builder_params[:group_ids] = permitted_group_ids(guardian)
       sql.gsub!("/*and_group_ids*/", "AND group_id IN (:group_ids)")
@@ -497,7 +526,7 @@ module DiscourseTagging
       builder.where("category_id IS NULL")
     end
 
-    if filter_for_non_staff && (opts[:for_input] || opts[:for_topic])
+    if filter_for_non_admin && (opts[:for_input] || opts[:for_topic])
       # exclude staff-only tag groups
       builder.where(
         "tag_group_id IS NULL OR tag_group_id IN (SELECT tag_group_id FROM permitted_tag_groups)",
@@ -526,11 +555,11 @@ module DiscourseTagging
     required_tag_ids = nil
     required_category_tag_group = nil
     if opts[:for_input] && category&.category_required_tag_groups.present? &&
-         (filter_for_non_staff || term.blank?)
+         (filter_for_non_admin || term.blank?)
       category.category_required_tag_groups.each do |crtg|
         group_tags = crtg.tag_group.tags.pluck(:id)
         next if (group_tags & selected_tag_ids).size >= crtg.min_count
-        if filter_for_non_staff || group_tags.size >= opts[:limit].to_i
+        if filter_for_non_admin || group_tags.size >= opts[:limit].to_i
           required_category_tag_group = crtg
           required_tag_ids = group_tags
           builder.where("id IN (?)", required_tag_ids)
@@ -539,7 +568,7 @@ module DiscourseTagging
       end
     end
 
-    if filter_for_non_staff
+    if filter_for_non_admin
       group_ids = permitted_group_ids(guardian)
 
       builder.where(<<~SQL, group_ids, group_ids)
@@ -626,7 +655,7 @@ module DiscourseTagging
   end
 
   def self.visible_tags(guardian)
-    if guardian&.is_staff?
+    if guardian&.is_admin?
       Tag.all
     else
       # Visible tags either have no permissions or have allowable permissions
@@ -645,11 +674,11 @@ module DiscourseTagging
   end
 
   def self.filter_visible(query, guardian = nil)
-    guardian&.is_staff? ? query : query.where(id: visible_tags(guardian).select(:id))
+    guardian&.is_admin? ? query : query.where(id: visible_tags(guardian).select(:id))
   end
 
   def self.hidden_tag_names(guardian = nil)
-    if guardian&.is_staff?
+    if guardian&.is_admin?
       []
     else
       # Hidden tags have at least one TagGroupPermission but must not have any for permitted groups
