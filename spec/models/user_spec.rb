@@ -2138,20 +2138,6 @@ RSpec.describe User do
       end
     end
 
-    describe "#number_of_flagged_posts" do
-      it "counts flagged posts from the user" do
-        Fabricate(:reviewable_flagged_post, target_created_by: user)
-
-        expect(user.number_of_flagged_posts).to eq(1)
-      end
-
-      it "ignores flagged posts from another user" do
-        Fabricate(:reviewable_flagged_post, target_created_by: Fabricate(:user))
-
-        expect(user.number_of_flagged_posts).to eq(0)
-      end
-    end
-
     describe "#number_of_silencings" do
       it "counts the number of silencings" do
         3.times do

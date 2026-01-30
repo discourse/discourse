@@ -68,13 +68,12 @@ export default <template>
                     @query={{hash
                       username=@controller.model.username
                       status="all"
-                      type="ReviewableFlaggedPost"
                     }}
                   >
                     {{htmlSafe
                       (i18n
-                        "user.staff_counters.flagged_posts"
-                        className="flagged-posts"
+                        "user.staff_counters.flags"
+                        className="flags"
                         count=@controller.model.number_of_flagged_posts
                       )
                     }}
