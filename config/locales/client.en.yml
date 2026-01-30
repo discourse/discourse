@@ -351,6 +351,8 @@ en:
 
     broken_plugin_alert: "Caused by plugin '%{name}'"
     broken_transformer_alert: "There was an error. Your site may not work properly."
+    broken_block_alert: "A block configuration error was detected. Check browser console for details."
+    broken_block_factory_alert: "A block failed to load. Some UI elements may not display correctly."
 
     critical_deprecation:
       notice: "<b>[Admin Notice]</b> %{source} contains code which needs updating. (id:%{id})"
@@ -358,6 +360,19 @@ en:
       theme_source: "Theme <a target='_blank' href='%{path}'>'%{name}'</a>"
       plugin_source: "Plugin '%{name}'"
       unknown_source: "One of your themes or plugins"
+
+    dev_tools:
+      drag_to_move: "Drag to move"
+      toggle_plugin_outlet_debug: "Toggle plugin outlet debug"
+      toggle_block_debug: "Toggle block debug"
+      block_debug:
+        console_logging: "Console logging"
+        visual_overlay: "Visual overlay"
+        outlet_boundaries: "Outlet boundaries"
+      toggle_safe_mode: "Toggle safe mode"
+      toggle_verbose_localization: "Toggle verbose localization"
+      toggle_mobile_view: "Toggle mobile view"
+      disable_dev_tools: "Disable dev tools"
 
     s3:
       regions:

@@ -13,6 +13,7 @@ import MessageBus from "message-bus-client";
 import { resetCache as resetOneboxCache } from "pretty-text/oneboxer";
 import QUnit, { module, test } from "qunit";
 import sinon from "sinon";
+import { _resetOutletLayoutsForTesting } from "discourse/blocks/block-outlet";
 import { clearAboutPageActivities } from "discourse/components/about-page";
 import { resetCardClickListenerSelector } from "discourse/components/card-contents-base";
 import {
@@ -99,6 +100,7 @@ import {
 } from "discourse/services/keyboard-shortcuts";
 import sessionFixtures from "discourse/tests/fixtures/session-fixtures";
 import siteFixtures from "discourse/tests/fixtures/site-fixtures";
+import { resetBlockRegistryForTesting } from "discourse/tests/helpers/block-testing";
 import {
   currentSettings,
   mergeSettings,
@@ -269,6 +271,8 @@ export function testCleanup(container, app) {
   enableClearA11yAnnouncementsInTests();
   resetHtmlDecorators();
   resetCustomUserNavMessagesDropdownRows();
+  _resetOutletLayoutsForTesting();
+  resetBlockRegistryForTesting();
 }
 
 function cleanupCssGeneratorTags() {
