@@ -544,14 +544,56 @@ class Upload < ActiveRecord::Base
     end
 
     secure_status_did_change = self.secure? != mark_secure
+
+    # Handle deduplication context transitions before changing secure status
+    if secure_status_did_change && primary_upload_id.present?
+      handle_dedup_context_transition(mark_secure)
+    end
+
     self.update(secure_params(mark_secure, reason, source))
 
     if secure_status_did_change && Discourse.store.external?
-      Discourse.store.update_upload_access_control(self)
+      # Skip ACL update if we're still a dependent (we switched to a new primary)
+      Discourse.store.update_upload_access_control(self) if primary_upload_id.nil?
       sync_optimized_videos_secure_status(mark_secure)
     end
 
     secure_status_did_change
+  end
+
+  def handle_dedup_context_transition(new_secure_status)
+    return if primary_upload_id.nil?
+    return if !Discourse.store.external?
+
+    # Try to find a primary with matching secure status
+    new_primary = Upload.find_primary_for(original_sha1: original_sha1, secure: new_secure_status)
+
+    if new_primary
+      # Switch to the new primary
+      update_columns(primary_upload_id: new_primary.id, url: new_primary.url)
+    else
+      # No matching primary exists - copy file and become a primary
+      copy_from_primary_and_become_primary(new_secure_status)
+    end
+  end
+
+  def copy_from_primary_and_become_primary(new_secure_status)
+    return if primary_upload_id.nil?
+
+    store = Discourse.store
+    source_path = store.get_path_for_upload(self)
+
+    # Generate our own destination path using our sha1
+    extension = self.extension.present? ? ".#{self.extension}" : File.extname(original_filename)
+    dest_path = store.get_path_for("original", id, sha1, extension)
+    dest_path = File.join(store.upload_path, dest_path) if Rails.configuration.multisite
+
+    # Copy the file to our own path
+    store.copy_file(source: source_path, destination: dest_path, secure: new_secure_status)
+
+    # Update URL to our own path and clear primary relationship
+    new_url = File.join(store.absolute_base_url, dest_path)
+    update_columns(primary_upload_id: nil, url: new_url)
   end
 
   def sync_optimized_videos_secure_status(mark_secure)

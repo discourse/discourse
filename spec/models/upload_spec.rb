@@ -1260,5 +1260,62 @@ RSpec.describe Upload do
         expect(Upload.find_by(id: primary.id)).to be_nil
       end
     end
+
+    describe "context transition handling" do
+      it "switches to existing primary when secure status changes" do
+        secure_primary =
+          Fabricate(:secure_upload, original_sha1: "abc123", secure: true, url: "/secure/url.png")
+        public_primary =
+          Fabricate(
+            :upload,
+            original_sha1: "abc123",
+            secure: false,
+            url: "/public/url.png",
+            primary_upload_id: nil,
+          )
+        dependent =
+          Fabricate(
+            :secure_upload,
+            original_sha1: "abc123",
+            secure: true,
+            url: "/secure/url.png",
+            primary_upload: secure_primary,
+          )
+
+        dependent.handle_dedup_context_transition(false)
+
+        expect(dependent.primary_upload_id).to eq(public_primary.id)
+        expect(dependent.url).to eq("/public/url.png")
+      end
+
+      it "breaks relationship when no matching primary exists" do
+        secure_primary =
+          Fabricate(:secure_upload, original_sha1: "abc123", secure: true, url: "/secure/url.png")
+        dependent =
+          Fabricate(
+            :secure_upload,
+            original_sha1: "abc123",
+            secure: true,
+            url: "/secure/url.png",
+            primary_upload: secure_primary,
+          )
+
+        # Stub external store check to skip S3 operations
+        Discourse.stubs(:store).returns(stub(external?: false))
+
+        dependent.handle_dedup_context_transition(false)
+
+        expect(dependent.primary_upload_id).to be_nil
+      end
+
+      it "does nothing for non-dependents" do
+        primary =
+          Fabricate(:secure_upload, original_sha1: "abc123", secure: true, url: "/secure/url.png")
+
+        expect { primary.handle_dedup_context_transition(false) }.not_to change {
+          primary.primary_upload_id
+        }
+      end
+    end
   end
 end
