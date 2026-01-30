@@ -101,7 +101,7 @@ class TagGroup < ActiveRecord::Base
   end
 
   def self.visible(guardian)
-    if guardian.is_staff?
+    if guardian.is_admin?
       TagGroup
     else
       # (

@@ -14,9 +14,7 @@ acceptance("CustomHTML set", function () {
     setCustomHTML("top", '<span class="custom-html-test">HTML</span>');
 
     await visit("/static/faq");
-    assert
-      .dom("span.custom-html-test")
-      .hasText("HTML", "it inserted the markup");
+    assert.dom("span.custom-html-test").hasText("HTML", "inserted the markup");
   });
 
   test("renders preloaded HTML", async function (assert) {
@@ -25,6 +23,6 @@ acceptance("CustomHTML set", function () {
     });
 
     await visit("/static/faq");
-    assert.dom("span.cookie").hasText("monster", "it inserted the markup");
+    assert.dom("span.cookie").hasText("monster", "inserted the markup");
   });
 });

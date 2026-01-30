@@ -347,6 +347,7 @@ RSpec.configure do |config|
 
     SystemThemesManager.clear_system_theme_user_history!
     ThemeField.delete_all
+    ThemeSettingsMigration.delete_all
     JavascriptCache.delete_all
     ThemeSiteSetting.delete_all
     SiteSetting.refresh!

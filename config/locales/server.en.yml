@@ -1130,6 +1130,7 @@ en:
     too_many_drafts:
       title: "Too many drafts"
       description: "You have reached the maximum number of allowed drafts. Please delete some of [your drafts](%{base_url}/my/activity/drafts) and try again."
+    bulk_destroy_limit: "You can only delete up to %{limit} drafts at once."
   draft_backup:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
@@ -5647,6 +5648,7 @@ en:
       custom: "Notification from %{username} on %{site_title}"
 
   staff_action_logs:
+    redacted: "[content not visible]"
     json_too_long: "Values not logged because they exceed the column length limits"
     not_found: "not found"
     unknown: "unknown"

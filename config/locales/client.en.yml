@@ -2506,7 +2506,9 @@ en:
     form_kit:
       reset: Reset
       optional: optional
-      errors_summary_title: "This form contains errors:"
+      errors_summary_title:
+        one: "Fix this error to continue"
+        other: "Fix these errors to continue"
       dirty_form: "You didn't submit your changes! Are you sure you want to leave?"
       errors:
         starts_with: "Must start with %{prefix}"
@@ -4568,7 +4570,7 @@ en:
       errors:
         self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       validations:
-        emoji_required: "Select an emoji to continue."
+        emoji_required: "Select an emoji."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -4663,6 +4665,7 @@ en:
         group_restricted: "Private"
         who_can_see: "Who can see this category"
         who_can_post: "Who can post in this category"
+        which_groups_can_access: "Which groups can access this category"
         more_options_hint: "More permissions available in"
         more_options_hint_link: "advanced settings."
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
@@ -5840,6 +5843,7 @@ en:
         change_enabled_for_success: "You have enabled this change for %{enabledFor}"
         change_disabled: "You have opted-out of this change"
         permanent_notice: "This change is now permanent and it will soon be removed. You are no longer able to opt-out."
+        permanent_soon_notice: "This change will become permanent soon. You will no longer be able to opt-out."
         permanent_no_group_selection: "N/A, permanent changes apply to all groups."
         no_changes: "There are no upcoming changes at this time."
         preview: "Preview"
@@ -5867,8 +5871,10 @@ en:
           search_placeholder: "Filter by name, description, or plugin..."
           no_results: "No upcoming changes match your filter"
           all: "All"
-          enabled_all: "Enabled or disabled"
+          enabled_all: "All enabled states"
           enabled: "Enabled"
+          enabled_for_staff: "Enabled for staff"
+          enabled_for_specific_groups: "Enabled for specific groups"
           disabled: "Disabled"
           impact_type_all: "All impact types"
           impact_type_feature: "Feature"

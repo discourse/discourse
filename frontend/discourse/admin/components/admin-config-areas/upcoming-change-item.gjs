@@ -237,6 +237,8 @@ export default class UpcomingChangeItem extends Component {
       }
 
       await this.saveGroups({ silenceToast: true });
+
+      this.args.enabledForChanged?.(this.args.change.setting, newValue);
     } catch (error) {
       this.bufferedEnabledFor = oldValue;
       popupAjaxError(error);
@@ -303,9 +305,16 @@ export default class UpcomingChangeItem extends Component {
         {{/if}}
 
         {{#if (eq @change.upcoming_change.status "permanent")}}
-          <div class="upcoming-change__permanent-notice">
+          <div class="upcoming-change__status-notice">
             {{icon "triangle-exclamation"}}
             {{i18n "admin.upcoming_changes.permanent_notice"}}
+          </div>
+        {{/if}}
+
+        {{#if (eq @change.upcoming_change.status "stable")}}
+          <div class="upcoming-change__status-notice">
+            {{icon "triangle-exclamation"}}
+            {{i18n "admin.upcoming_changes.permanent_soon_notice"}}
           </div>
         {{/if}}
 

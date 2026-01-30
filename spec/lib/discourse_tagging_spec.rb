@@ -97,6 +97,25 @@ RSpec.describe DiscourseTagging do
         expect(DiscourseTagging.visible_tags(guardian2)).not_to include(tag4)
       end
     end
+
+    context "for moderator with admin-only tags" do
+      fab!(:admin_only_tag, :tag)
+      let!(:admin_tag_group) do
+        Fabricate(:tag_group, permissions: { "admins" => 1 }, tag_names: [admin_only_tag.name])
+      end
+
+      it "does not include admin-only tags for moderators" do
+        expect(DiscourseTagging.visible_tags(moderator_guardian)).not_to include(admin_only_tag)
+      end
+
+      it "includes staff-visible tags for moderators" do
+        expect(DiscourseTagging.visible_tags(moderator_guardian)).to include(tag3)
+      end
+
+      it "includes admin-only tags for admins" do
+        expect(DiscourseTagging.visible_tags(admin_guardian)).to include(admin_only_tag)
+      end
+    end
   end
 
   describe "#validate_one_tag_from_group_per_topic" do
@@ -487,13 +506,40 @@ RSpec.describe DiscourseTagging do
           Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [hidden_tag.name])
         end
 
-        it "should return all tags to staff" do
+        it "should return staff tags to admin" do
           tags = DiscourseTagging.filter_allowed_tags(Guardian.new(admin)).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3, hidden_tag]))
+        end
+
+        it "should return staff tags to moderator" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(moderator), for_input: true).to_a
           expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3, hidden_tag]))
         end
 
         it "should not return hidden tag to non-staff" do
           tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user)).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
+        end
+      end
+
+      context "with tags visible only to admins" do
+        fab!(:admin_only_tag, :tag)
+        let!(:admin_tag_group) do
+          Fabricate(:tag_group, permissions: { "admins" => 1 }, tag_names: [admin_only_tag.name])
+        end
+
+        it "should return admin-only tags to admin" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(admin), for_input: true).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3, admin_only_tag]))
+        end
+
+        it "should not return admin-only tags to moderator" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(moderator), for_input: true).to_a
+          expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
+        end
+
+        it "should not return admin-only tags to regular user" do
+          tags = DiscourseTagging.filter_allowed_tags(Guardian.new(user), for_input: true).to_a
           expect(sorted_tag_names(tags)).to eq(sorted_tag_names([tag1, tag2, tag3]))
         end
       end
@@ -1431,6 +1477,120 @@ RSpec.describe DiscourseTagging do
           )
         expect(valid).to eq(true)
         expect(topic.reload.tags.map(&:name)).to contain_exactly(*[parent_tag, common].map(&:name))
+      end
+
+      context "when a tag belongs to tag groups restricted to different categories" do
+        fab!(:category_a_tag) { Fabricate(:tag, name: "cat-a-tag") }
+        fab!(:parent_a) { Fabricate(:tag, name: "parent-a") }
+        fab!(:parent_b) { Fabricate(:tag, name: "parent-b") }
+
+        fab!(:tag_group_a) { Fabricate(:tag_group, parent_tag_id: parent_a.id, tags: [tag3]) }
+        fab!(:tag_group_b) { Fabricate(:tag_group, parent_tag_id: parent_b.id, tags: [tag3]) }
+        fab!(:category_a_tag_group) { Fabricate(:tag_group, tags: [category_a_tag]) }
+
+        fab!(:category_a) do
+          Fabricate(:category, allowed_tag_groups: [tag_group_a.name, category_a_tag_group.name])
+        end
+        fab!(:category_b) { Fabricate(:category, allowed_tag_groups: [tag_group_b.name]) }
+
+        it "only adds parent tags from tag groups restricted to the topic's category" do
+          topic_in_a = Fabricate(:topic, category: category_a)
+          valid =
+            DiscourseTagging.tag_topic_by_names(
+              topic_in_a,
+              Guardian.new(user),
+              [category_a_tag.name, tag3.name],
+            )
+          expect(valid).to eq(true)
+          tag_names = topic_in_a.reload.tags.map(&:name)
+          expect(tag_names).to include(parent_a.name)
+          expect(tag_names).not_to include(parent_b.name)
+        end
+
+        it "does not add parent tags from category-restricted groups when topic is in an unrestricted category" do
+          unrestricted_category = Fabricate(:category)
+          topic = Fabricate(:topic, category: unrestricted_category)
+          valid = DiscourseTagging.tag_topic_by_names(topic, Guardian.new(user), [tag3.name])
+          expect(valid).to eq(true)
+          tag_names = topic.reload.tags.map(&:name)
+          expect(tag_names).not_to include(parent_a.name)
+          expect(tag_names).not_to include(parent_b.name)
+        end
+
+        context "with global tag groups" do
+          fab!(:global_parent_tag) { Fabricate(:tag, name: "global-parent") }
+          fab!(:global_only_tag) { Fabricate(:tag, name: "global-only-tag") }
+          fab!(:global_tag_group) do
+            Fabricate(:tag_group, parent_tag_id: global_parent_tag.id, tags: [global_only_tag])
+          end
+
+          context "when category allows global tags" do
+            before { category_a.update!(allow_global_tags: true) }
+
+            it "adds parent tags from global tag groups" do
+              topic = Fabricate(:topic, category: category_a)
+              valid =
+                DiscourseTagging.tag_topic_by_names(
+                  topic,
+                  Guardian.new(user),
+                  [category_a_tag.name, global_only_tag.name],
+                )
+              expect(valid).to eq(true)
+              tag_names = topic.reload.tags.map(&:name)
+              expect(tag_names).to include(global_parent_tag.name)
+            end
+
+            it "adds parent tags from both global and category-specific tag groups" do
+              global_tag_group.tags = [global_only_tag, tag3]
+
+              topic = Fabricate(:topic, category: category_a)
+              valid =
+                DiscourseTagging.tag_topic_by_names(
+                  topic,
+                  Guardian.new(user),
+                  [category_a_tag.name, tag3.name, global_only_tag.name],
+                )
+              expect(valid).to eq(true)
+              tag_names = topic.reload.tags.map(&:name)
+              expect(tag_names).to include(parent_a.name)
+              expect(tag_names).to include(global_parent_tag.name)
+              expect(tag_names).not_to include(parent_b.name)
+            end
+          end
+
+          context "when category does not allow global tags" do
+            before { category_a.update!(allow_global_tags: false) }
+
+            it "does not add parent tags from global tag groups" do
+              category_a_tag_group.tags = [category_a_tag, global_only_tag]
+
+              topic = Fabricate(:topic, category: category_a)
+              valid =
+                DiscourseTagging.tag_topic_by_names(
+                  topic,
+                  Guardian.new(user),
+                  [category_a_tag.name, global_only_tag.name],
+                )
+              expect(valid).to eq(true)
+              tag_names = topic.reload.tags.map(&:name)
+              expect(tag_names).not_to include(global_parent_tag.name)
+            end
+
+            it "still adds parent tags from category-specific tag groups" do
+              topic = Fabricate(:topic, category: category_a)
+              valid =
+                DiscourseTagging.tag_topic_by_names(
+                  topic,
+                  Guardian.new(user),
+                  [category_a_tag.name, tag3.name],
+                )
+              expect(valid).to eq(true)
+              tag_names = topic.reload.tags.map(&:name)
+              expect(tag_names).to include(parent_a.name)
+              expect(tag_names).not_to include(parent_b.name)
+            end
+          end
+        end
       end
     end
 

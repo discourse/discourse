@@ -466,7 +466,7 @@ RSpec.describe Service::Runner do
     context "when using the on_exceptions action" do
       let(:actions) { <<-BLOCK }
         proc do |result|
-          on_exceptions { |exception| exception.message == "BOOM" }
+          on_exceptions { |exception| exception }
         end
       BLOCK
 
@@ -474,7 +474,13 @@ RSpec.describe Service::Runner do
         let(:service) { FailureTryService }
 
         it "runs the provided block" do
-          expect(runner).to be true
+          expect(runner).to be_a RuntimeError
+        end
+
+        context "when accessing the exception object" do
+          it "has access to a filtered backtrace" do
+            expect(runner.filtered_backtrace.size).to be < runner.backtrace.size
+          end
         end
       end
 
@@ -482,7 +488,7 @@ RSpec.describe Service::Runner do
         let(:service) { SuccessTryService }
 
         it "does not run the provided block" do
-          expect(runner).not_to eq true
+          expect(runner).not_to be_a RuntimeError
         end
       end
     end
