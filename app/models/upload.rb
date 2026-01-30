@@ -60,7 +60,7 @@ class Upload < ActiveRecord::Base
 
     # If this is a primary upload, transfer primary status to a dependent
     if primary_upload_id.nil? && dependent_uploads.exists?
-      new_primary = dependent_uploads.first
+      new_primary = dependent_uploads.order(:id).first
       remaining = dependent_uploads.where.not(id: new_primary.id)
 
       new_primary.update_columns(primary_upload_id: nil, url: self.url)
