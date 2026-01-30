@@ -4176,6 +4176,9 @@ experimental:
     default: false
     client: true
     area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
