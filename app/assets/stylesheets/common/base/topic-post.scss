@@ -773,10 +773,6 @@ aside.quote {
     width: 100%;
   }
 
-  .insert-quote + .quote-sharing {
-    border-left: 1px solid rgb(255, 255, 255, 0.3);
-  }
-
   .btn-flat {
     &:hover {
       .d-icon {
@@ -786,59 +782,6 @@ aside.quote {
 
     .d-button-label {
       white-space: nowrap;
-    }
-  }
-
-  .quote-sharing {
-    vertical-align: middle;
-    display: inline-flex;
-    align-items: center;
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .quote-share-label {
-      opacity: 1;
-      transition: opacity 0.3s ease-in-out;
-    }
-
-    &:hover {
-      .quote-share-label {
-        background: transparent;
-        opacity: 0;
-        max-width: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-
-      .quote-share-label + .quote-share-buttons {
-        max-width: 10em;
-        opacity: 1;
-        transition: opacity 0.3s ease-in-out;
-      }
-
-      // this pseudo element creates a transition buffer zone
-      // without it, the width change on hover can cause transition jitter
-      // the width is roughly wide enough to cover long translations of "share"
-      &::after {
-        content: "";
-        position: absolute;
-        display: block;
-        background: transparent;
-        height: 100%;
-        padding: 0.5em 4em;
-        z-index: -1; // below the buttons
-      }
-    }
-
-    .quote-share-label + .quote-share-buttons {
-      opacity: 0;
-      overflow: hidden;
-      max-width: 0;
-      display: inline-flex;
-      transition: opacity 0.3s ease-in-out;
     }
   }
 }
