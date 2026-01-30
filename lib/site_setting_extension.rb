@@ -362,6 +362,18 @@ module SiteSettingExtension
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
 
+        if type_supervisor.dependencies[setting_name].present? &&
+             type_supervisor.dependencies.behaviors[setting_name] == :hidden
+          # Hidden if any of the dependent settings are not true
+          is_hidden =
+            !type_supervisor.dependencies[setting_name].all? do |dependency|
+              # TODO (martin) Fix this when https://github.com/discourse/discourse/pull/37283 is merged
+              # to take into account the dynamic upcoming change settings based on promotion status
+              # using UpcomingChange.resolved_value
+              current[dependency.to_sym]
+            end
+        end
+
         next true if !is_hidden
         next false if !include_hidden
         next true if filter_allowed_hidden.nil?

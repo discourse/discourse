@@ -25,6 +25,10 @@
 #                          - status: experimental | alpha | beta | stable
 #                          - impact: two parts separated by comma - feature|other , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
+# depends_on            - One or more boolean settings that must be true for this setting to take effect.
+# depends_behavior      - The behavior of the dependent setting. Only currently supported behaviour is "hidden"
+#                         to hide the setting if the dependent setting is false. If left blank, no special behavior
+#                         is applied and the setting is shown as normal.
 #
 #
 #
