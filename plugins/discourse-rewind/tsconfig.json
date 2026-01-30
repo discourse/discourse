@@ -9,10 +9,10 @@
   "compilerOptions": {
     "types": ["discourse/external-types"],
     "paths": {
-      "discourse/plugins/discourse-user-notes/*": [
+      "discourse/plugins/discourse-rewind/*": [
         "./assets/javascripts/*"
       ],
-      "discourse/plugins/discourse-user-notes/admin/*": [
+      "discourse/plugins/discourse-rewind/admin/*": [
         "./admin/assets/javascripts/admin/*"
       ]
     }

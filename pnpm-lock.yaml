@@ -202,7 +202,7 @@ importers:
     devDependencies:
       vitest:
         specifier: ^4.0.16
-        version: 4.0.16(@types/node@25.0.3)(jiti@2.4.2)(jsdom@25.0.1)(terser@5.44.1)
+        version: 4.0.16(@types/node@25.0.10)(jiti@2.4.2)(jsdom@25.0.1)(terser@5.44.1)
 
   frontend/custom-proxy:
     devDependencies:
@@ -443,6 +443,9 @@ importers:
       '@types/rsvp':
         specifier: ^4.0.9
         version: 4.0.9
+      '@types/sinon':
+        specifier: ^21.0.0
+        version: 21.0.0
       '@uppy/aws-s3':
         specifier: ^4.1.0
         version: 4.1.0(@uppy/core@4.2.2)
@@ -505,7 +508,7 @@ importers:
         version: 2.1.1(@babel/core@7.28.6)
       ember-cli:
         specifier: ~6.9.1
-        version: 6.9.1(@types/node@25.0.3)(handlebars@4.7.8)(underscore@1.13.7)
+        version: 6.9.1(@types/node@25.0.10)(handlebars@4.7.8)(underscore@1.13.7)
       ember-cli-app-version:
         specifier: ^7.0.0
         version: 7.0.0(ember-source@6.6.0(patch_hash=fce06f88d4efb23d95b8bcd197505f279346ed295e4daea129961c9f263cdeed)(@glimmer/component@2.0.0)(rsvp@4.8.5))
@@ -671,25 +674,19 @@ importers:
     devDependencies:
       ember-cli:
         specifier: ~6.9.1
-        version: 6.9.1(@types/node@25.0.3)(handlebars@4.7.8)(underscore@1.13.7)
+        version: 6.9.1(@types/node@25.0.10)(handlebars@4.7.8)(underscore@1.13.7)
       webpack:
         specifier: 5.99.9
         version: 5.99.9(@swc/core@1.15.7)(esbuild@0.25.12)
 
   frontend/discourse-types:
-    dependencies:
-      '@types/@glimmer__component':
-        specifier: npm:@glimmer/component@^2.0.0
-        version: '@glimmer/component@2.0.0'
-      '@types/@glint__ember-tsc':
-        specifier: npm:@glint/ember-tsc@^1.0.7
-        version: '@glint/ember-tsc@1.0.8(typescript@5.9.3)'
-      '@types/@glint__template':
-        specifier: npm:@glint/template@^1.7.2
-        version: '@glint/template@1.7.3'
-      ember-source:
-        specifier: ~6.6.0
-        version: 6.6.0(patch_hash=fce06f88d4efb23d95b8bcd197505f279346ed295e4daea129961c9f263cdeed)(@glimmer/component@2.0.0)(rsvp@4.8.5)
+    devDependencies:
+      '@types/node':
+        specifier: ^25.0.10
+        version: 25.0.10
+      compare-versions:
+        specifier: ^6.1.1
+        version: 6.1.1
 
   frontend/ember-cli-progress-ci: {}
 
@@ -737,7 +734,7 @@ importers:
         version: 3.0.0
       ember-cli:
         specifier: ~6.9.1
-        version: 6.9.1(@types/node@25.0.3)(handlebars@4.7.8)(underscore@1.13.7)
+        version: 6.9.1(@types/node@25.0.10)(handlebars@4.7.8)(underscore@1.13.7)
       ember-cli-inject-live-reload:
         specifier: ^2.1.0
         version: 2.1.0
@@ -772,253 +769,259 @@ importers:
   plugins/automation:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/chat:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/checklist:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-adplugin:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-affiliate:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-ai:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-apple-auth:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-assign:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-cakeday:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-calendar:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-chat-integration:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-data-explorer:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-details:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-gamification:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-github:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-graphviz:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-hcaptcha:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-lazy-videos:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-local-dates:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-login-with-amazon:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-lti:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-math:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-microsoft-auth:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-narrative-bot:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-oauth2-basic:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-openid-connect:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-patreon:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-policy:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-post-voting:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-presence:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-reactions:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-rss-polling:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-solved:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-subscriptions:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-templates:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-topic-voting:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-user-notes:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/discourse-zendesk-plugin:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/footnote:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/poll:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/spoiler-alert:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
   plugins/styleguide:
     dependencies:
       discourse:
-        specifier: workspace:@discourse/types@0.0.0
+        specifier: workspace:@discourse/types@*
+        version: link:../../frontend/discourse-types
+
+  themes/horizon:
+    dependencies:
+      discourse:
+        specifier: workspace:@discourse/types@*
         version: link:../../frontend/discourse-types
 
 packages:
@@ -2995,8 +2998,8 @@ packages:
   '@types/minimatch@5.1.2':
     resolution: {integrity: sha512-K0VQKziLUWkVKiRVrx4a40iPaxTUefQmjtkQofBkYRcoaaL/8rhwDWww9qWbrgicNOgnpIsMxyNIUM4+n6dUIA==}
 
-  '@types/node@25.0.3':
-    resolution: {integrity: sha512-W609buLVRVmeW693xKfzHeIV6nJGGz98uCPfeXI1ELMLXVeKYZ9m15fAMSaUPBHYLGFsVRcMmSCksQOrZV9BYA==}
+  '@types/node@25.0.10':
+    resolution: {integrity: sha512-zWW5KPngR/yvakJgGOmZ5vTBemDoSqF3AcV/LrO5u5wTWyEAVVh+IT39G4gtyAkh3CtTZs8aX/yRM82OfzHJRg==}
 
   '@types/qs@6.14.0':
     resolution: {integrity: sha512-eOunJqu0K1923aExK6y8p6fsihYEn/BYuQ4g0CxAAgFc4b/ZLN4CrsRZ55srTdqoiLzU2B2evC+apEIxprEzkQ==}
@@ -3024,6 +3027,12 @@ packages:
 
   '@types/serve-static@1.15.10':
     resolution: {integrity: sha512-tRs1dB+g8Itk72rlSI2ZrW6vZg0YrLI81iQSTkMmOqnqCaNr/8Ek4VwWcN5vZgCYWbg/JJSGBlUaYGAOP73qBw==}
+
+  '@types/sinon@21.0.0':
+    resolution: {integrity: sha512-+oHKZ0lTI+WVLxx1IbJDNmReQaIsQJjN2e7UUrJHEeByG7bFeKJYsv1E75JxTQ9QKJDp21bAa/0W2Xo4srsDnw==}
+
+  '@types/sinonjs__fake-timers@15.0.1':
+    resolution: {integrity: sha512-Ko2tjWJq8oozHzHV+reuvS5KYIRAokHnGbDwGh/J64LntgpbuylF74ipEL24HCyRjf9FOlBiBHWBR1RlVKsI1w==}
 
   '@types/sizzle@2.3.10':
     resolution: {integrity: sha512-TC0dmN0K8YcWEAEfiPi5gJP14eJe30TTGjkvek3iM/1NdHHsdCA/Td6GvNndMOo/iSnIsZ4HuuhrYPDAmbxzww==}
@@ -4111,6 +4120,9 @@ packages:
 
   commondir@1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
+
+  compare-versions@6.1.1:
+    resolution: {integrity: sha512-4hm4VPpIecmlg59CHXnRDnqGplJFrbLG4aFEl5vl6cK1u76ws3LLvX7ikFnTDl5vo39sjWD6AaDPYodJp/NNHg==}
 
   component-emitter@1.3.1:
     resolution: {integrity: sha512-T0+barUSQRTUQASh8bx02dl+DhF54GtIDY13Y3m9oWTklKbb3Wv974meRpeZ3lp1JpLVECWWNHC4vaG2XHXouQ==}
@@ -8611,6 +8623,7 @@ packages:
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   temp@0.9.4:
     resolution: {integrity: sha512-yYrrsWnrXMcdsnu/7YMYAofM1ktpL5By7vZhf15CrXijWWrEYZks5AXBudalfSWJLlnen/QUJUB5aoB0kqZUGA==}
@@ -11144,12 +11157,12 @@ snapshots:
 
   '@humanwhocodes/retry@0.4.3': {}
 
-  '@inquirer/external-editor@1.0.3(@types/node@25.0.3)':
+  '@inquirer/external-editor@1.0.3(@types/node@25.0.10)':
     dependencies:
       chardet: 2.1.1
       iconv-lite: 0.7.1
     optionalDependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
 
   '@inquirer/figures@1.0.15': {}
 
@@ -11676,7 +11689,7 @@ snapshots:
   '@types/body-parser@1.19.6':
     dependencies:
       '@types/connect': 3.4.38
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
 
   '@types/chai-as-promised@7.1.8':
     dependencies:
@@ -11691,11 +11704,11 @@ snapshots:
 
   '@types/connect@3.4.38':
     dependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
 
   '@types/cors@2.8.18':
     dependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
 
   '@types/deep-eql@4.0.2': {}
 
@@ -11718,7 +11731,7 @@ snapshots:
 
   '@types/express-serve-static-core@4.19.7':
     dependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
       '@types/qs': 6.14.0
       '@types/range-parser': 1.2.7
       '@types/send': 1.2.1
@@ -11732,11 +11745,11 @@ snapshots:
 
   '@types/fs-extra@5.1.0':
     dependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
 
   '@types/fs-extra@8.1.5':
     dependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
 
   '@types/glob@9.0.0':
     dependencies:
@@ -11767,7 +11780,7 @@ snapshots:
 
   '@types/minimatch@5.1.2': {}
 
-  '@types/node@25.0.3':
+  '@types/node@25.0.10':
     dependencies:
       undici-types: 7.16.0
 
@@ -11782,24 +11795,30 @@ snapshots:
   '@types/rimraf@2.0.5':
     dependencies:
       '@types/glob': 9.0.0
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
 
   '@types/rsvp@4.0.9': {}
 
   '@types/send@0.17.6':
     dependencies:
       '@types/mime': 1.3.5
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
 
   '@types/send@1.2.1':
     dependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
 
   '@types/serve-static@1.15.10':
     dependencies:
       '@types/http-errors': 2.0.5
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
       '@types/send': 0.17.6
+
+  '@types/sinon@21.0.0':
+    dependencies:
+      '@types/sinonjs__fake-timers': 15.0.1
+
+  '@types/sinonjs__fake-timers@15.0.1': {}
 
   '@types/sizzle@2.3.10': {}
 
@@ -11817,7 +11836,7 @@ snapshots:
 
   '@types/yauzl@2.10.3':
     dependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
     optional: true
 
   '@typescript-eslint/tsconfig-utils@8.46.4(typescript@5.9.3)':
@@ -11875,13 +11894,13 @@ snapshots:
       chai: 6.2.1
       tinyrainbow: 3.0.3
 
-  '@vitest/mocker@4.0.16(vite@7.3.0(@types/node@25.0.3)(jiti@2.4.2)(terser@5.44.1))':
+  '@vitest/mocker@4.0.16(vite@7.3.0(@types/node@25.0.10)(jiti@2.4.2)(terser@5.44.1))':
     dependencies:
       '@vitest/spy': 4.0.16
       estree-walker: 3.0.3
       magic-string: 0.30.21
     optionalDependencies:
-      vite: 7.3.0(@types/node@25.0.3)(jiti@2.4.2)(terser@5.44.1)
+      vite: 7.3.0(@types/node@25.0.10)(jiti@2.4.2)(terser@5.44.1)
 
   '@vitest/pretty-format@4.0.16':
     dependencies:
@@ -13146,7 +13165,7 @@ snapshots:
 
   chrome-launcher@1.2.1:
     dependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
       escape-string-regexp: 4.0.0
       is-wsl: 2.2.0
       lighthouse-logger: 2.0.2
@@ -13283,6 +13302,8 @@ snapshots:
   common-tags@1.8.2: {}
 
   commondir@1.0.1: {}
+
+  compare-versions@6.1.1: {}
 
   component-emitter@1.3.1: {}
 
@@ -13901,7 +13922,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-cli@6.9.1(@types/node@25.0.3)(handlebars@4.7.8)(underscore@1.13.7):
+  ember-cli@6.9.1(@types/node@25.0.10)(handlebars@4.7.8)(underscore@1.13.7):
     dependencies:
       '@ember-tooling/blueprint-blueprint': 0.2.1
       '@ember-tooling/blueprint-model': 0.4.1
@@ -13957,7 +13978,7 @@ snapshots:
       heimdalljs-logger: 0.1.10
       http-proxy: 1.18.1(patch_hash=3032f3a47f33911d5c278ec6f2d4e0e4afc8f977baea1012613b13de23831c73)
       inflection: 2.0.1
-      inquirer: 9.3.8(@types/node@25.0.3)
+      inquirer: 9.3.8(@types/node@25.0.10)
       is-git-url: 1.0.0
       is-language-code: 3.1.0
       isbinaryfile: 5.0.7
@@ -14294,7 +14315,7 @@ snapshots:
   engine.io@6.6.4:
     dependencies:
       '@types/cors': 2.8.18
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
       accepts: 1.3.8
       base64id: 2.0.0
       cookie: 0.7.2
@@ -15804,9 +15825,9 @@ snapshots:
       strip-ansi: 6.0.1
       through: 2.3.8
 
-  inquirer@9.3.8(@types/node@25.0.3):
+  inquirer@9.3.8(@types/node@25.0.10):
     dependencies:
-      '@inquirer/external-editor': 1.0.3(@types/node@25.0.3)
+      '@inquirer/external-editor': 1.0.3(@types/node@25.0.10)
       '@inquirer/figures': 1.0.15
       ansi-escapes: 4.3.2
       cli-width: 4.1.0
@@ -16095,7 +16116,7 @@ snapshots:
 
   jest-worker@27.5.1:
     dependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
       merge-stream: 2.0.0
       supports-color: 8.1.1
 
@@ -19228,7 +19249,7 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite@7.3.0(@types/node@25.0.3)(jiti@2.4.2)(terser@5.44.1):
+  vite@7.3.0(@types/node@25.0.10)(jiti@2.4.2)(terser@5.44.1):
     dependencies:
       esbuild: 0.27.1
       fdir: 6.5.0(picomatch@4.0.3)
@@ -19237,15 +19258,15 @@ snapshots:
       rollup: 4.53.5
       tinyglobby: 0.2.15
     optionalDependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
       fsevents: 2.3.3
       jiti: 2.4.2
       terser: 5.44.1
 
-  vitest@4.0.16(@types/node@25.0.3)(jiti@2.4.2)(jsdom@25.0.1)(terser@5.44.1):
+  vitest@4.0.16(@types/node@25.0.10)(jiti@2.4.2)(jsdom@25.0.1)(terser@5.44.1):
     dependencies:
       '@vitest/expect': 4.0.16
-      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@25.0.3)(jiti@2.4.2)(terser@5.44.1))
+      '@vitest/mocker': 4.0.16(vite@7.3.0(@types/node@25.0.10)(jiti@2.4.2)(terser@5.44.1))
       '@vitest/pretty-format': 4.0.16
       '@vitest/runner': 4.0.16
       '@vitest/snapshot': 4.0.16
@@ -19262,10 +19283,10 @@ snapshots:
       tinyexec: 1.0.2
       tinyglobby: 0.2.15
       tinyrainbow: 3.0.3
-      vite: 7.3.0(@types/node@25.0.3)(jiti@2.4.2)(terser@5.44.1)
+      vite: 7.3.0(@types/node@25.0.10)(jiti@2.4.2)(terser@5.44.1)
       why-is-node-running: 2.3.0
     optionalDependencies:
-      '@types/node': 25.0.3
+      '@types/node': 25.0.10
       jsdom: 25.0.1(supports-color@8.1.1)
     transitivePeerDependencies:
       - jiti

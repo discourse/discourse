@@ -1,13 +1,20 @@
 {
   "extends": "discourse/tsconfig-plugin",
   "include": [
-    "./package.json",
-    "./assets/javascripts/**/*",
-    "./test/javascripts/**/*"
+    "admin/assets/javascripts/**/*",
+    "assets/javascripts/**/*",
+    "test/javascripts/**/*",
+    "node_modules/discourse/declarations/**/*"
   ],
   "compilerOptions": {
+    "types": ["discourse/external-types"],
     "paths": {
-      "discourse/plugins/discourse-microsoft-auth/*": ["./assets/javascripts/*"]
+      "discourse/plugins/discourse-microsoft-auth/*": [
+        "./assets/javascripts/*"
+      ],
+      "discourse/plugins/discourse-microsoft-auth/admin/*": [
+        "./admin/assets/javascripts/admin/*"
+      ]
     }
   }
 }

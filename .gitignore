@@ -125,6 +125,10 @@ openapi/*
 
 # Types
 frontend/discourse-types/declarations
+frontend/discourse-types/external-types
+frontend/discourse-types/external-types.d.ts
+frontend/discourse-i18n/src/index.d.ts
+frontend/discourse-i18n/src/index.d.ts.map
 *.tsbuildinfo
 
 # discourse-ai evals
@@ -136,3 +140,4 @@ frontend/discourse-types/declarations
 /.claude
 /.cursor
 .playwright-mcp
+/frontend/discourse-types/dts-generator.js

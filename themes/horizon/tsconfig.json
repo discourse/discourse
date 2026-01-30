@@ -1,0 +1,11 @@
+{
+  "extends": "discourse/tsconfig-plugin",
+  "include": [
+    "javascripts/**/*",
+    "test/**/*",
+    "node_modules/discourse/declarations/**/*"
+  ],
+  "compilerOptions": {
+    "types": ["discourse/external-types"]
+  }
+}
