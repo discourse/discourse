@@ -20,8 +20,7 @@
   --topic-title-font-weight: 500;
   --d-sidebar-active-background: var(--primary-100);
   --d-content-background: var(--secondary);
-  --category-badge-border-radius: 50%;
-  --category-badge-size: var(--space-2);
+  --category-badge-border-radius: calc(var(--d-border-radius) / 2);
   --category-badge-title-color: var(--primary);
   --category-boxes-description-text-color: var(--primary-700);
   --d-category-border-box-width: 1px;
@@ -30,6 +29,7 @@
   --d-sidebar-link-color: var(--primary-800);
   --d-sidebar-link-icon-color: var(--primary-800);
   --d-sidebar-active-font-weight: 600;
+  --title-color--read: var(--primary-700);
 
   // new variables
   --webkit-font-smoothing: antialiased;
@@ -37,9 +37,6 @@
   --welcome-banner-search-menu-margin-inline: auto;
   --search-input-height: var(--space-8);
   --button-height: var(--space-8);
-
-  // --button-font-size: var(--font-down-1);
-  --btn-small-font-size: var(--font-down-1);
   -webkit-font-smoothing: var(--webkit-font-smoothing);
 
   // Buttons & Actions
@@ -52,13 +49,7 @@
   .view-all-drafts {
     &:not(.sidebar-footer-actions-button, #search-button, .btn-sidebar-toggle) {
       height: var(--button-height);
-
-      // font-size: var(--button-font-size);
     }
-  }
-
-  .btn.no-text {
-    padding: var(--space-2);
   }
 
   .dropdown-menu__item button,
@@ -78,8 +69,6 @@
   .navigation-container .nav-pills > li > a {
     padding: 0.5em 0.65em;
     height: var(--button-height);
-
-    // font-size: var(--button-font-size);
   }
 
   .navigation-container {
@@ -95,11 +84,6 @@
   .topic-replies-toggle-wrapper .topics-replies-toggle.active:hover {
     background-color: var(--d-nav-bg-color--active);
     color: var(--d-nav-color--active);
-  }
-
-  .btn-small,
-  .json-editor-btn-collapse {
-    font-size: var(--btn-small-font-size);
   }
 
   // welcome banner
@@ -131,6 +115,11 @@
 
   .search-menu .search-input,
   .search-menu-container .search-input {
+    height: var(--search-input-height);
+    padding: 0;
+  }
+
+  .search-container .search-bar input.search-query {
     height: var(--search-input-height);
   }
 
@@ -172,8 +161,9 @@
   }
 
   // Select Kit
-  .select-kit .select-kit-header {
-    //  font-size: var(--button-font-size);
+  .select-kit .select-kit-header:not(.btn),
+  .d-date-input .date-picker {
+    height: var(--button-height);
   }
 
   .list-controls .combo-box .combo-box-header {
@@ -210,7 +200,6 @@
   .d-header-icons .icon {
     width: 2em;
     height: 2em;
-    font-size: var(--font-down-1);
   }
 
   .header-sidebar-toggle button .d-icon,
@@ -219,8 +208,8 @@
   }
 
   .d-header-icons .icon img.avatar {
-    width: 1.75em;
-    height: 1.75em;
+    width: 2em;
+    height: 2em;
   }
 
   // Category
