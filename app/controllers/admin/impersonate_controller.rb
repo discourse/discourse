@@ -11,10 +11,9 @@ class Admin::ImpersonateController < Admin::AdminController
 
     guardian.ensure_can_impersonate!(user)
 
-    # log impersonate
     StaffActionLogger.new(current_user).log_impersonate(user)
 
-    if SiteSetting.experimental_impersonation
+    if UpcomingChanges.enabled_for_user?(:experimental_impersonation, current_user)
       raise Discourse::InvalidAccess if current_user.is_impersonating
 
       start_impersonating_user(user)
@@ -27,7 +26,9 @@ class Admin::ImpersonateController < Admin::AdminController
   end
 
   def destroy
-    raise Discourse::NotFound if !SiteSetting.experimental_impersonation
+    if !UpcomingChanges.enabled_for_user?(:experimental_impersonation, current_user)
+      raise Discourse::NotFound
+    end
     raise Discourse::InvalidAccess if !current_user.is_impersonating
 
     puppet = current_user

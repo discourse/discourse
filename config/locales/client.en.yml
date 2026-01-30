@@ -6287,6 +6287,9 @@ en:
         embedding:
           title: "Embedding"
           header_description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
+        form_templates:
+          title: "Form templates"
+          header_description: "Form templates allow you to enforce a structured form with data validation as part of the topic creation flow"
 
       theme_site_settings:
         setting: "Setting"
