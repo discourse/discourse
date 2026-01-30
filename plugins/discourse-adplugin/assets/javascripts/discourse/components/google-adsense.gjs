@@ -1,4 +1,4 @@
-import { scheduleOnce } from "@ember/runloop";
+import { scheduleOnce, later } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
 import { classNameBindings } from "@ember-decorators/component";
 import RSVP from "rsvp";
@@ -54,6 +54,7 @@ function loadAdsense() {
   const adsenseSrc =
     ("https:" === document.location.protocol ? "https:" : "http:") +
     "//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js";
+
   _promise = loadScript(adsenseSrc, { scriptTag: true }).then(function () {
     _loaded = true;
   });
@@ -126,7 +127,6 @@ export default class GoogleAdsense extends AdComponent {
     }
 
     const sizes = (this.siteSettings[config.sizes] || "").split("|");
-
     if (sizes.length === 1) {
       size = sizes[0];
     } else {
@@ -143,35 +143,49 @@ export default class GoogleAdsense extends AdComponent {
 
   async _triggerAds() {
     if (isTesting()) {
-      return; // Don't load external JS during tests
+      return;
     }
 
     this.set("adRequested", true);
 
     await loadAdsense();
-
     if (this.isDestroyed || this.isDestroying) {
-      // Component removed from DOM before script loaded
       return;
     }
 
     try {
       const adsbygoogle = (window.adsbygoogle ||= []);
-      adsbygoogle.push({}); // ask AdSense to fill one ad unit
+      adsbygoogle.push({});
     } catch (ex) {
-      // eslint-disable-next-line no-console
       console.error("Adsense error:", ex);
     }
   }
 
   didInsertElement() {
-    super.didInsertElement();
+    super.didInsertElement(...arguments);
 
-    if (!this.get("showAd")) {
+    if (!this.showAd) {
       return;
     }
 
     scheduleOnce("afterRender", this, this._triggerAds);
+
+    const safeRetry = () => {
+      if (this.isDestroying || this.isDestroyed || !this.element) {
+        return;
+      }
+
+      const insElement = this.element.querySelector("ins.adsbygoogle");
+
+      if (insElement && !insElement.getAttribute("data-adsbygoogle-status")) {
+        this._triggerAds();
+      }
+    };
+
+    requestAnimationFrame(() => {
+      later(this, safeRetry, 500);
+      later(this, safeRetry, 1500);
+    });
   }
 
   @discourseComputed("ad_width")
@@ -191,7 +205,8 @@ export default class GoogleAdsense extends AdComponent {
 
   @discourseComputed("isResponsive", "isFluid")
   autoAdFormat(isResponsive, isFluid) {
-    return isResponsive ? htmlSafe(isFluid ? "fluid" : "auto") : false;
+    return isResponsive ?
+      htmlSafe(isFluid ? "fluid" : "auto") : false;
   }
 
   @discourseComputed("ad_width", "ad_height", "isResponsive")
