@@ -75,21 +75,40 @@ module SiteSettingExtension
     @mutex ||= Mutex.new
   end
 
+  # Represents the current values of all site settings, incorporating
+  # the database values and merging them with shadowed settings and
+  # default values.
   def current
     @containers ||= {}
     @containers[provider.current_site] ||= {}
   end
 
+  # Represents settings that actually have a value saved in the
+  # database. We currently even store the default value in the
+  # DB if an admin saves a different value then changes back
+  # to the default.
+  def modified
+    @modified ||= {}
+    @modified[provider.current_site] ||= {}
+  end
+
+  # Represents a map of theme IDs to all theme site settings
+  # and values.
   def theme_site_settings
     @theme_site_settings ||= {}
     @theme_site_settings[provider.current_site] ||= {}
   end
 
+  #
   def humanized_names(name)
     @humanized_names ||= {}
     @humanized_names[name] ||= humanized_name(name)
   end
 
+  # Used for upcoming changes settings to determine which specific
+  # groups have the change turned on for them. This is done separately
+  # from group-based site settings because upcoming change settings
+  # are always booleans.
   def site_setting_group_ids
     @site_setting_group_ids ||= {}
     @site_setting_group_ids[provider.current_site] ||= {}
@@ -131,7 +150,9 @@ module SiteSettingExtension
   # in site_settings.yml:
   #
   # setting_name:
-  #   setting_options...
+  #   default: false
+  #   client: true
+  #   hidden: true
   #   upcoming_change:
   #     status: "alpha" (see UpcomingChanges.statuses.keys)
   #     impact: "feature,staff" (feature|other for the first part, staff|admins|moderators|all_members|developers for the second part)
@@ -500,6 +521,8 @@ module SiteSettingExtension
             )
           ]
 
+        new_modified = new_hash.dup
+
         refresh_site_setting_group_ids!
 
         defaults_view = defaults.all(new_hash[:default_locale])
@@ -514,6 +537,8 @@ module SiteSettingExtension
 
         changes.each { |name, val| current[name] = val }
         deletions.each { |name, _| current[name] = defaults_view[name] }
+        modified.clear
+        modified.merge!(new_modified)
         uploads.clear
       end
 
@@ -608,6 +633,7 @@ module SiteSettingExtension
     old_val = current[name]
     provider.destroy(name)
     current[name] = defaults.get(name, default_locale)
+    modified.delete(name)
 
     return if current[name] == old_val
 
@@ -662,6 +688,7 @@ module SiteSettingExtension
 
     provider.save(name, sanitized_val, type)
     current[name] = type_supervisor.to_rb_value(name, sanitized_val)
+    modified[name] = current[name]
 
     return if current[name] == old_val
 
@@ -980,11 +1007,17 @@ module SiteSettingExtension
 
         refresh! if current[name].nil?
 
-        value = current[name]
+        value =
+          if upcoming_change_metadata[name]
+            UpcomingChanges.resolved_value(name)
+          else
+            current[name]
+          end
 
         if mandatory_values[name]
           return (mandatory_values[name].split("|") | value.to_s.split("|")).join("|")
         end
+
         value
       end
     end

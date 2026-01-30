@@ -1240,6 +1240,80 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "site setting singleton methods" do
+    describe "for an upcoming change site setting" do
+      let(:setting_name) { :enable_upload_debug_mode }
+      let(:default_value) { SiteSetting.defaults[setting_name] }
+
+      before do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :beta,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+          },
+        )
+        SiteSetting.send(:setup_methods, setting_name)
+        SiteSetting.refresh!
+      end
+
+      after do
+        SiteSetting.remove_override!(setting_name)
+        SiteSetting.refresh!
+      end
+
+      it "returns the stored value when it differs from the default" do
+        SiteSetting.public_send("#{setting_name}=", !default_value)
+        expect(SiteSetting.public_send(setting_name)).to eq(!default_value)
+      end
+
+      it "returns true when the setting meets the promotion status" do
+        SiteSetting.promote_upcoming_changes_on_status = :beta
+        expect(SiteSetting.public_send(setting_name)).to eq(true)
+      end
+
+      it "returns false when admins have changed the setting to false even if the promotion status is met" do
+        SiteSetting.public_send("#{setting_name}=", false)
+        expect(SiteSetting.public_send(setting_name)).to eq(false)
+
+        SiteSetting.promote_upcoming_changes_on_status = :beta
+        expect(SiteSetting.public_send(setting_name)).to eq(false)
+      end
+
+      it "returns the default when the setting does not meet the promotion status" do
+        SiteSetting.promote_upcoming_changes_on_status = :stable
+        expect(SiteSetting.public_send(setting_name)).to eq(default_value)
+      end
+
+      context "when the upcoming change is permanent" do
+        before do
+          mock_upcoming_change_metadata(
+            {
+              enable_upload_debug_mode: {
+                impact: "other,developers",
+                status: :permanent,
+                impact_type: "other",
+                impact_role: "developers",
+              },
+            },
+          )
+        end
+
+        it "returns true" do
+          expect(SiteSetting.public_send(setting_name)).to eq(true)
+        end
+
+        it "return true even if the setting value is false in the database" do
+          SiteSetting.public_send("#{setting_name}=", false)
+          expect(SiteSetting.public_send(setting_name)).to eq(true)
+        end
+      end
+    end
+  end
+
   describe "#notify_clients!" do
     context "when the site setting is an upcoming change" do
       before do
