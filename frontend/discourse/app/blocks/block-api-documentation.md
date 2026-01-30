@@ -1462,6 +1462,8 @@ When you need exact path matching or complex wildcard patterns, use URLs. The sy
 - `"/t/*/**"` - Combined (`/t/123/slug`, `/t/123/slug/4`)
 - `"/{latest,top}"` - Brace expansion (matches either)
 
+> **Subfolder installations:** URL matching automatically handles Discourse subfolder installations by normalizing URLs before matching. You don't need to know whether Discourse runs on `/forum` or at the root—patterns like `/c/**` work everywhere.
+
 **Semantic Page Types (`pages` option):**
 
 Page types represent Discourse's main navigation contexts. Think of them as logical groupings that abstract away the specific URL structure. When you target `TAG_PAGES`, you're saying "anywhere a tag listing is shown"—whether that's `/tag/featured`, `/tags/c/general/13`. This abstraction means your conditions keep working even if the site's URL structure changes.
@@ -1645,7 +1647,7 @@ Use the NOT combinator to exclude pages instead of a dedicated exclude option:
 ]
 ```
 
-Now that you know what each condition type can check, what happens when you need more than one check? A block that should show for "logged-in admins on category pages" needs to combine three conditions. That's where combination syntax comes in.
+Now that you know what each condition type can check, what happens when you need more than one check? A block that should show for "logged-in admins on category pages" needs to combine multiple conditions. That's where combination syntax comes in.
 
 ### Combining Conditions
 
@@ -1711,7 +1713,7 @@ conditions: [
 ]
 ```
 
-Think of it like boolean algebra: arrays are AND, `any` is OR, `not` inverts. The nesting depth is limited to 20 levels (matching the overall block nesting limit), though if you're approaching that, consider simplifying your logic or using a custom condition.
+Think of it like boolean algebra: arrays are AND, `any` is OR, `not` inverts.
 
 The built-in conditions combined with these operators cover most visibility scenarios. But sometimes you need something domain-specific—a feature flag system, subscription tiers, or custom business logic. That's when you create your own condition type.
 
@@ -1737,17 +1739,8 @@ import { service } from "@ember/service";
 @blockCondition({
   type: "my-plugin:feature-flag",  // Plugin conditions must be namespaced
   args: {
-    flag: { type: "string", required: true },
+    flag: { type: "string", required: true, pattern: /^[a-z][a-z0-9_]*$/ },
     enabled: { type: "boolean" },
-  },
-  // Custom validation runs after schema validation (types, required).
-  // Use this for logic that can't be expressed declaratively.
-  // Returns error string or null if valid.
-  validate(args) {
-    if (args.flag && !args.flag.match(/^[a-z][a-z0-9_]*$/)) {
-      return "FeatureFlagCondition: `flag` must be lowercase with underscores.";
-    }
-    return null;
   },
 })
 export default class FeatureFlagCondition extends BlockCondition {
@@ -1788,9 +1781,56 @@ export default {
 ```javascript
 {
   block: MyBlock,
-  conditions: [{ type: "my-plugin:feature-flag", flag: "new_feature", enabled: true }]
+  conditions: { type: "my-plugin:feature-flag", flag: "new_feature", enabled: true }
 }
 ```
+
+### Simple by Default
+
+The API balances simplicity for common cases with power for advanced use:
+
+**Minimal configuration:**
+```javascript
+// Just show a block
+{ block: WelcomeBanner }
+```
+
+**Add args when needed:**
+```javascript
+// Pass data to the block
+{ block: WelcomeBanner, args: { title: "Hello" } }
+```
+
+**Add conditions when needed:**
+```javascript
+// Show conditionally
+{
+  block: WelcomeBanner,
+  args: { title: "Hello" },
+  conditions: [{ type: "user", loggedIn: true }]
+}
+```
+
+**Add complex logic when needed:**
+```javascript
+// Complex conditional rendering
+{
+  block: WelcomeBanner,
+  args: { title: "Hello" },
+  conditions: [
+    { type: "user", loggedIn: true },
+    {
+      any: [
+        { type: "user", admin: true },
+        { type: "user", minTrustLevel: 2 }
+      ]
+    },
+    { not: { type: "route", urls: ["/admin/**"] } }
+  ]
+}
+```
+
+Start simple, add complexity only when you need it. You don't have to master conditions to render a block, and you don't have to master combinators to use a single condition.
 
 With conditions defined, the next question is: what happens when the page actually renders? How does the system decide, in real-time, which blocks make the cut?
 
@@ -1889,7 +1929,7 @@ api.renderBlocks("outlet", [
 { block: "some-plugin:optional-block?" }
 // If not found in registry:
 //   - Without ?: throw BlockError
-//   - With ?: return null, mark entry as __optional
+//   - With ?: return null, mark entry as optional
 ```
 
 Resolved classes are cached to avoid repeated async loads. Once resolved, a factory never executes again—the cached class is returned directly.
@@ -1900,7 +1940,7 @@ After resolution, conditions are evaluated. The evaluation process has several i
 
 **Short-Circuit Evaluation:**
 
-In production mode, AND conditions short-circuit—if any condition fails, remaining conditions aren't evaluated:
+When debug mode is disabled, conditions short-circuit—AND stops on first failure, OR stops on first success—remaining conditions aren't evaluated:
 
 ```javascript
 conditions: [
@@ -1910,7 +1950,7 @@ conditions: [
 ]
 ```
 
-In debug mode (when console logging is enabled), short-circuiting is disabled. All conditions are evaluated so the debug output shows the complete picture—you can see which conditions *would* have passed if earlier ones hadn't failed.
+In debug mode, short-circuiting is disabled. All conditions are evaluated so the debug output shows the complete picture—you can see which conditions *would* have passed or failed without short-circuiting.
 
 **Visibility Flags:**
 
@@ -1985,7 +2025,6 @@ Conditions can depend on reactive state. When that state changes, the block tree
 
 To keep re-evaluation efficient:
 - Avoid complex conditions when simple ones suffice
-- Use route conditions instead of outlet arg conditions when possible (routes change less frequently)
 - Keep container hierarchies shallow
 
 ### Step-by-Step Evaluation Example
@@ -2050,7 +2089,7 @@ Step 1: Evaluate top-level AND (array)
 Result: Block renders (admin bypass)
 ```
 
-In debug mode, you'd see the full evaluation logged even though the `any` short-circuited in production.
+In debug mode, you'd see the full evaluation logged even though the `any` short-circuited.
 
 > :bulb: This example uses condition combinators (`any`, `not`, nested arrays) to build complex logic. See **Section 3: Show This, Hide That** for the complete syntax reference on combining conditions.
 
@@ -2101,19 +2140,6 @@ Use the `viewport` condition when you need to:
 
 For purely visual show/hide without data implications, CSS is the better choice.
 
-**Practical Guidance**
-
-Based on typical usage patterns, here are some rough guidelines:
-
-| Scenario | Typical Performance | Notes |
-|----------|---------------------|-------|
-| 1-10 blocks with simple conditions | Excellent | Most plugins/themes fall here |
-| 10-30 blocks with moderate conditions | Good | Typical for busy homepages |
-| 30-50 blocks or deeply nested conditions | Acceptable | Consider splitting into multiple outlets |
-| 50+ blocks or 5+ nesting levels | May need optimization | Profile with debug mode |
-
-These aren't hard limits—they're starting points for investigation. A simple outlet with 100 blocks might perform fine, while a complex outlet with 20 blocks and deeply nested `any`/`not` conditions might need attention.
-
 **When to Optimize**
 
 Don't optimize prematurely. The Blocks API is designed for typical UI extension use cases, and most plugins/themes won't need to think about performance. If you do notice issues:
@@ -2121,8 +2147,6 @@ Don't optimize prematurely. The Blocks API is designed for typical UI extension 
 1. **Enable debug mode** to see condition evaluation details—the console shows which conditions passed or failed and why
 2. **Simplify conditions** by flattening deeply nested `any`/`not` structures
 3. **Use CSS** for viewport-only visibility (no JavaScript evaluation overhead)
-4. **Split large outlets** into smaller, more focused outlets (e.g., `homepage-hero` + `homepage-featured` instead of one giant `homepage-blocks`)
-5. **Consider custom conditions** if you're repeating the same complex condition logic—a single condition class is often faster than deeply nested built-in conditions
 
 That covers how the evaluation engine works. But what happens when you make a mistake configuring blocks?
 
@@ -2130,7 +2154,7 @@ That covers how the evaluation engine works. But what happens when you make a mi
 
 ## 5. When Things Go Wrong
 
-You've seen how blocks flow through registration, configuration, and evaluation. But what if you typo a condition type? Pass the wrong arg type? Reference a block that doesn't exist? The Blocks API catches these mistakes early and explains them clearly—like furniture assembly instructions that stop you before you've bolted the wrong pieces together. Most validation happens at boot time, surfacing problems before users ever see a broken page.
+You've seen how blocks flow through registration, configuration, and evaluation. But what if you typo a condition type? Pass the wrong arg type? Reference a block that doesn't exist? The Blocks API catches these mistakes early and explains them clearly—like dry-fitting all the furniture joints before applying any glue. Most validation happens at boot time, surfacing problems before users ever see a broken page.
 
 ### Helpful Error Messages
 
@@ -2295,21 +2319,6 @@ The "name" field is marked as unique and must have distinct values.
 
 Validation happens at registration time when possible, giving you immediate feedback rather than runtime surprises.
 
-**Source-mapped stack traces:**
-
-When an error occurs, the stack trace points to your code, not internal block machinery:
-
-```javascript
-// Error shows:
-at renderBlocks (your-theme/api-initializers/configure-blocks.js:15:3)
-// Not:
-at validateBlockConditions (discourse/lib/blocks/-internals/validation/layout.js:400:1)
-```
-
-This is achieved via `captureCallSite()` which excludes internal frames. Note that this API isn't available in all browsers—we provide cleaner stack traces when we can, but you'll still get useful error messages regardless.
-
-Nested structures can be tricky to debug. The system helps here too.
-
 **Condition path tracking:**
 
 Errors in nested conditions include the full path:
@@ -2334,55 +2343,6 @@ conditions: {
   ]
 }
 ```
-
-Good errors help you fix problems. But the best experience is not needing to learn everything upfront.
-
-### Simple by Default
-
-The API balances simplicity for common cases with power for advanced use:
-
-**Minimal configuration:**
-```javascript
-// Just show a block
-{ block: WelcomeBanner }
-```
-
-**Add args when needed:**
-```javascript
-// Pass data to the block
-{ block: WelcomeBanner, args: { title: "Hello" } }
-```
-
-**Add conditions when needed:**
-```javascript
-// Show conditionally
-{
-  block: WelcomeBanner,
-  args: { title: "Hello" },
-  conditions: [{ type: "user", loggedIn: true }]
-}
-```
-
-**Add complex logic when needed:**
-```javascript
-// Complex conditional rendering
-{
-  block: WelcomeBanner,
-  args: { title: "Hello" },
-  conditions: [
-    { type: "user", loggedIn: true },
-    {
-      any: [
-        { type: "user", admin: true },
-        { type: "user", minTrustLevel: 2 }
-      ]
-    },
-    { not: { type: "route", urls: ["/admin/**"] } }
-  ]
-}
-```
-
-Start simple, add complexity only when you need it. You don't have to master conditions to render a block, and you don't have to master combinators to use a single condition. For complete condition syntax, see **Section 3: Show This, Hide That**.
 
 So far we've focused on what happens when things go wrong. But what about when things *seem* fine but aren't working as expected?
 
@@ -2409,9 +2369,9 @@ The debug tools live in the dev tools toolbar on the left side of the screen. Cl
 
 ```
 ┌─────────────────────────────────┐
-│ ☐ Console Logging              │
-│ ☐ Visual Overlay               │
-│ ☐ Outlet Boundaries            │
+│ ☐ Console Logging               │
+│ ☐ Visual Overlay                │
+│ ☐ Outlet Boundaries             │
 └─────────────────────────────────┘
 ```
 
@@ -3704,7 +3664,7 @@ A: Check these common causes:
 **Q: Console shows my condition passed, but the block isn't visible. What's happening?**
 
 A: The block may be rendered but hidden by CSS. Check:
-1. Is the block inside a container that's hidden? If a parent container's conditions are failing—child visibility doesn't help if the parent is hidden.
+1. Is the block inside a container that's hidden? Child visibility doesn't help if the parent is hidden.
 2. Is there CSS that's hiding the block's DOM element?
 3. Is the block rendering empty content? (Check your template)
 
@@ -3722,7 +3682,6 @@ You need to control both plugins. Otherwise one of them will need to be disabled
 A: No. Block layouts are configured at boot time and frozen. For dynamic visibility:
 1. **Use conditions** - Blocks can appear/disappear based on reactive state
 2. **Use outlet args** - Pass dynamic data that conditions can check
-3. **Use multiple outlets** - Different outlets for different contexts
 
 If you need truly dynamic layout changes, plugin outlets may be more appropriate.
 
