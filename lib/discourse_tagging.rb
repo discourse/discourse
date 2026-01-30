@@ -690,9 +690,9 @@ module DiscourseTagging
     guardian&.is_admin? ? query : query.where(id: visible_tags(guardian).select(:id))
   end
 
-  def self.hidden_tag_names(guardian = nil)
+  def self.hidden_tags(guardian = nil)
     if guardian&.is_admin?
-      []
+      Tag.none
     else
       # Hidden tags have at least one TagGroupPermission but must not have any for permitted groups
       Tag
@@ -704,8 +704,11 @@ module DiscourseTagging
               .where(group_id: permitted_group_ids_query(guardian))
               .select("tag_group_memberships.tag_id"),
         )
-        .pluck(:name)
     end
+  end
+
+  def self.hidden_tag_names(guardian = nil)
+    hidden_tags(guardian).pluck(:name)
   end
 
   def self.permitted_group_ids_query(guardian = nil)

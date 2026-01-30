@@ -380,8 +380,8 @@ class TopicsController < ApplicationController
       return render_json_error(I18n.t("edit_conflict"), status: 409)
     end
 
-    original_tags = params[:original_tags]
-    if original_tags.present? && original_tags.sort != topic.tags.pluck(:name).sort
+    original_tag_ids = params[:original_tags]&.map { |t| t["id"] }&.sort
+    if original_tag_ids.present? && original_tag_ids != topic.tags.pluck(:id).sort
       return render_json_error(I18n.t("edit_conflict"), status: 409)
     end
 
