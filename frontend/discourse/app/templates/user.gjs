@@ -61,21 +61,20 @@ export default <template>
                   }}
                 </div>
               {{/if}}
-              {{#if @controller.model.number_of_flagged_posts}}
+              {{#if @controller.model.number_of_flags}}
                 <div>
                   <LinkTo
                     @route="review"
                     @query={{hash
                       username=@controller.model.username
                       status="all"
-                      type="ReviewableFlaggedPost"
                     }}
                   >
                     {{htmlSafe
                       (i18n
-                        "user.staff_counters.flagged_posts"
-                        className="flagged-posts"
-                        count=@controller.model.number_of_flagged_posts
+                        "user.staff_counters.flags"
+                        className="flags"
+                        count=@controller.model.number_of_flags
                       )
                     }}
                   </LinkTo>
