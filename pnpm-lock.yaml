@@ -336,7 +336,7 @@ importers:
         version: link:../pretty-text
       prosemirror-codemark:
         specifier: ^0.4.2
-        version: 0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)
+        version: 0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.5)
       prosemirror-commands:
         specifier: ^1.7.1
         version: 1.7.1
@@ -348,7 +348,7 @@ importers:
         version: 1.4.0
       prosemirror-highlightjs:
         specifier: ^0.9.1
-        version: 0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4)
+        version: 0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.5)
       prosemirror-history:
         specifier: ^1.5.0
         version: 1.5.0
@@ -359,8 +359,8 @@ importers:
         specifier: ^1.2.3
         version: 1.2.3
       prosemirror-markdown:
-        specifier: ^1.13.2
-        version: 1.13.2
+        specifier: ^1.13.3
+        version: 1.13.3
       prosemirror-model:
         specifier: ^1.25.4
         version: 1.25.4
@@ -371,11 +371,11 @@ importers:
         specifier: ^1.4.4
         version: 1.4.4
       prosemirror-transform:
-        specifier: ^1.10.5
-        version: 1.10.5
+        specifier: ^1.11.0
+        version: 1.11.0
       prosemirror-view:
-        specifier: ^1.41.4
-        version: 1.41.4
+        specifier: ^1.41.5
+        version: 1.41.5
       rrule:
         specifier: ^2.8.1
         version: 2.8.1
@@ -7690,8 +7690,8 @@ packages:
   prosemirror-keymap@1.2.3:
     resolution: {integrity: sha512-4HucRlpiLd1IPQQXNqeo81BGtkY8Ai5smHhKW9jjPKRc2wQIxksg7Hl1tTI2IfT2B/LgX6bfYvXxEpJl7aKYKw==}
 
-  prosemirror-markdown@1.13.2:
-    resolution: {integrity: sha512-FPD9rHPdA9fqzNmIIDhhnYQ6WgNoSWX9StUZ8LEKapaXU9i6XgykaHKhp6XMyXlOWetmaFgGDS/nu/w9/vUc5g==}
+  prosemirror-markdown@1.13.3:
+    resolution: {integrity: sha512-3E+Et6cdXIH0EgN2tGYQ+EBT7N4kMiZFsW+hzx+aPtOmADDHWCdd2uUQb7yklJrfUYUOjEEu22BiN6UFgPe4cQ==}
 
   prosemirror-model@1.25.4:
     resolution: {integrity: sha512-PIM7E43PBxKce8OQeezAs9j4TP+5yDpZVbuurd1h5phUxEKIu+G2a+EUZzIC5nS1mJktDJWzbqS23n1tsAf5QA==}
@@ -7702,11 +7702,11 @@ packages:
   prosemirror-state@1.4.4:
     resolution: {integrity: sha512-6jiYHH2CIGbCfnxdHbXZ12gySFY/fz/ulZE333G6bPqIZ4F+TXo9ifiR86nAHpWnfoNjOb3o5ESi7J8Uz1jXHw==}
 
-  prosemirror-transform@1.10.5:
-    resolution: {integrity: sha512-RPDQCxIDhIBb1o36xxwsaeAvivO8VLJcgBtzmOwQ64bMtsVFh5SSuJ6dWSxO1UsHTiTXPCgQm3PDJt7p6IOLbw==}
+  prosemirror-transform@1.11.0:
+    resolution: {integrity: sha512-4I7Ce4KpygXb9bkiPS3hTEk4dSHorfRw8uI0pE8IhxlK2GXsqv5tIA7JUSxtSu7u8APVOTtbUBxTmnHIxVkIJw==}
 
-  prosemirror-view@1.41.4:
-    resolution: {integrity: sha512-WkKgnyjNncri03Gjaz3IFWvCAE94XoiEgvtr0/r2Xw7R8/IjK3sKLSiDoCHWcsXSAinVaKlGRZDvMCsF1kbzjA==}
+  prosemirror-view@1.41.5:
+    resolution: {integrity: sha512-UDQbIPnDrjE8tqUBbPmCOZgtd75htE6W3r0JCmY9bL6W1iemDM37MZEKC49d+tdQ0v/CKx4gjxLoLsfkD2NiZA==}
 
   proxy-addr@2.0.7:
     resolution: {integrity: sha512-llQsMLSUDUPT44jdrU/O37qlnifitDP+ZwrmmZcoSKyLKvtZxpyV0n2/bD/N4tBAAZ/gJEdZU7KMraoK1+XYAg==}
@@ -8611,6 +8611,7 @@ packages:
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   temp@0.9.4:
     resolution: {integrity: sha512-yYrrsWnrXMcdsnu/7YMYAofM1ktpL5By7vZhf15CrXijWWrEYZks5AXBudalfSWJLlnen/QUJUB5aoB0kqZUGA==}
@@ -17486,57 +17487,57 @@ snapshots:
       retry: 0.12.0
       signal-exit: 3.0.7
 
-  prosemirror-codemark@0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4):
+  prosemirror-codemark@0.4.2(prosemirror-inputrules@1.5.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.5):
     dependencies:
       prosemirror-inputrules: 1.5.1
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
-      prosemirror-view: 1.41.4
+      prosemirror-view: 1.41.5
 
   prosemirror-commands@1.7.1:
     dependencies:
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
-      prosemirror-transform: 1.10.5
+      prosemirror-transform: 1.11.0
 
   prosemirror-dropcursor@1.8.2:
     dependencies:
       prosemirror-state: 1.4.4
-      prosemirror-transform: 1.10.5
-      prosemirror-view: 1.41.4
+      prosemirror-transform: 1.11.0
+      prosemirror-view: 1.41.5
 
   prosemirror-gapcursor@1.4.0:
     dependencies:
       prosemirror-keymap: 1.2.3
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
-      prosemirror-view: 1.41.4
+      prosemirror-view: 1.41.5
 
-  prosemirror-highlightjs@0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.4):
+  prosemirror-highlightjs@0.9.1(highlight.js@11.11.1)(prosemirror-model@1.25.4)(prosemirror-state@1.4.4)(prosemirror-view@1.41.5):
     dependencies:
       highlight.js: 11.11.1
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
-      prosemirror-view: 1.41.4
+      prosemirror-view: 1.41.5
 
   prosemirror-history@1.5.0:
     dependencies:
       prosemirror-state: 1.4.4
-      prosemirror-transform: 1.10.5
-      prosemirror-view: 1.41.4
+      prosemirror-transform: 1.11.0
+      prosemirror-view: 1.41.5
       rope-sequence: 1.3.4
 
   prosemirror-inputrules@1.5.1:
     dependencies:
       prosemirror-state: 1.4.4
-      prosemirror-transform: 1.10.5
+      prosemirror-transform: 1.11.0
 
   prosemirror-keymap@1.2.3:
     dependencies:
       prosemirror-state: 1.4.4
       w3c-keyname: 2.2.8
 
-  prosemirror-markdown@1.13.2:
+  prosemirror-markdown@1.13.3:
     dependencies:
       '@types/markdown-it': 14.1.2
       markdown-it: 14.0.0
@@ -17550,23 +17551,23 @@ snapshots:
     dependencies:
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
-      prosemirror-transform: 1.10.5
+      prosemirror-transform: 1.11.0
 
   prosemirror-state@1.4.4:
     dependencies:
       prosemirror-model: 1.25.4
-      prosemirror-transform: 1.10.5
-      prosemirror-view: 1.41.4
+      prosemirror-transform: 1.11.0
+      prosemirror-view: 1.41.5
 
-  prosemirror-transform@1.10.5:
+  prosemirror-transform@1.11.0:
     dependencies:
       prosemirror-model: 1.25.4
 
-  prosemirror-view@1.41.4:
+  prosemirror-view@1.41.5:
     dependencies:
       prosemirror-model: 1.25.4
       prosemirror-state: 1.4.4
-      prosemirror-transform: 1.10.5
+      prosemirror-transform: 1.11.0
 
   proxy-addr@2.0.7:
     dependencies:
