@@ -234,5 +234,34 @@ describe "Tags", type: :system do
       expect(topic_page.topic_tags).to include("tag-one", "tag-three")
       expect(topic_page.topic_tags).not_to include("tag-two")
     end
+
+    it "saves draft correctly when editing topic with tags" do
+      topic = Fabricate(:topic, user: admin, tags: [tag_one, tag_two])
+      Fabricate(:post, topic: topic, user: admin)
+      toasts = PageObjects::Components::Toasts.new
+
+      sign_in(admin)
+      visit topic.url
+
+      find("#post_1 .post-controls .edit").click
+      expect(composer).to be_opened
+
+      # wait for composer to load topic data including tags
+      # this ensures originalTags is set from topic.tags
+      expect(page).to have_css(".mini-tag-chooser", text: "tag-one")
+
+      composer.fill_content("Updated content for draft test")
+
+      draft = nil
+      try_until_success(reason: "saving a draft") do
+        draft = Draft.find_by(user: admin)
+        expect(draft).to be_present
+      end
+
+      # check that original_tags is in the draft data as tag objects
+      draft_data = JSON.parse(draft.data)
+      original_tag_ids = draft_data["original_tags"].map { |t| t["id"] }
+      expect(original_tag_ids).to contain_exactly(tag_one.id, tag_two.id)
+    end
   end
 end

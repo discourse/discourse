@@ -380,8 +380,8 @@ class TopicsController < ApplicationController
       return render_json_error(I18n.t("edit_conflict"), status: 409)
     end
 
-    original_tags = params[:original_tags]
-    if original_tags.present? && original_tags.sort != topic.tags.pluck(:name).sort
+    original_tag_ids = params[:original_tags]&.map { |t| t["id"] }&.sort
+    if original_tag_ids.present? && original_tag_ids != topic.tags.pluck(:id).sort
       return render_json_error(I18n.t("edit_conflict"), status: 409)
     end
 
@@ -472,14 +472,26 @@ class TopicsController < ApplicationController
   end
 
   def update_tags
-    params.require(:tags)
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
+
+    tags =
+      if params[:tag_ids].present?
+        params[:tag_ids].map(&:to_i)
+      else
+        params.require(:tags)
+        Discourse.deprecate(
+          "the tags param is deprecated, use tag_ids instead",
+          since: "2026.01",
+          drop_from: "2026.07",
+        )
+        params[:tags]
+      end
 
     success =
       PostRevisor.new(topic.first_post, topic).revise!(
         current_user,
-        { tags: params[:tags] },
+        { tags: },
         validate_post: false,
       )
 
@@ -899,6 +911,7 @@ class TopicsController < ApplicationController
     post_ids = params.require(:post_ids)
     topic_id = params.require(:topic_id)
     params.permit(:category_id)
+    params.permit(:tag_ids)
     params.permit(:tags)
     params.permit(:participants)
     params.permit(:chronological_order)
@@ -1060,6 +1073,7 @@ class TopicsController < ApplicationController
           :message,
           :silent,
           *DiscoursePluginRegistry.permitted_bulk_action_parameters,
+          tag_ids: [],
           tags: [],
         )
         .to_h
@@ -1415,7 +1429,16 @@ class TopicsController < ApplicationController
     args[:destination_topic_id] = params[:destination_topic_id].to_i if params[
       :destination_topic_id
     ].present?
-    args[:tags] = params[:tags] if params[:tags].present?
+    if params[:tag_ids].present?
+      args[:tag_ids] = params[:tag_ids]
+    elsif params[:tags].present?
+      Discourse.deprecate(
+        "the tags param for move_posts is deprecated, use tag_ids instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+      args[:tags] = params[:tags]
+    end
     args[:chronological_order] = params[:chronological_order] == "true"
     args[:freeze_original] = true if params[:freeze_original] == "true"
 

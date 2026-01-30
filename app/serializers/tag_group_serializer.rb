@@ -1,14 +1,15 @@
 # frozen_string_literal: true
 
 class TagGroupSerializer < ApplicationSerializer
-  attributes :id, :name, :tag_names, :parent_tag_name, :one_per_topic, :permissions
+  attributes :id, :name, :tags, :parent_tag, :one_per_topic, :permissions
 
-  def tag_names
-    object.tags.base_tags.map(&:name).sort
+  def tags
+    object.tags.base_tags.order(:name).map { |t| { id: t.id, name: t.name, slug: t.slug } }
   end
 
-  def parent_tag_name
-    [object.parent_tag.try(:name)].compact
+  def parent_tag
+    return [] unless object.parent_tag
+    [{ id: object.parent_tag.id, name: object.parent_tag.name, slug: object.parent_tag.slug }]
   end
 
   def permissions

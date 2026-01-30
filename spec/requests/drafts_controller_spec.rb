@@ -146,7 +146,11 @@ RSpec.describe DraftsController do
 
     it "checks for a tag conflict on update" do
       sign_in(user)
+      tag1 = Fabricate(:tag, name: "tag1")
+      tag2 = Fabricate(:tag, name: "tag2")
       post = Fabricate(:post, user:)
+      # topic has different tags than original_tags in draft
+      post.topic.tags = [tag1]
 
       post "/drafts.json",
            params: {
@@ -189,6 +193,32 @@ RSpec.describe DraftsController do
                postId: post.id,
                original_text: post.raw,
                original_tags: [regular_tag.name],
+               action: "edit",
+             }.to_json,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["conflict_user"]).to eq(nil)
+    end
+
+    it "handles tag objects format when checking for tag conflict" do
+      sign_in(user)
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      post = Fabricate(:post, user:)
+      post.topic.tags = [tag1, tag2]
+
+      post "/drafts.json",
+           params: {
+             draft_key: "topic",
+             sequence: 0,
+             data: {
+               postId: post.id,
+               original_text: post.raw,
+               original_tags: [
+                 { "id" => tag1.id, "name" => tag1.name, "slug" => tag1.name },
+                 { "id" => tag2.id, "name" => tag2.name, "slug" => tag2.name },
+               ],
                action: "edit",
              }.to_json,
            }

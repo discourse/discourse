@@ -1,4 +1,5 @@
 import { get } from "@ember/object";
+import { isNone } from "@ember/utils";
 
 export default function selectKitPropUtils(target) {
   target.prototype.defaultItem = function (value, name) {
@@ -26,12 +27,12 @@ export default function selectKitPropUtils(target) {
     property,
     options = { definedOnly: true }
   ) {
-    if (!item) {
+    if (isNone(item)) {
       return null;
     }
-    if (item && typeof property === "string") {
+    if (typeof property === "string") {
       const attempt = get(item, property);
-      if (attempt) {
+      if (attempt !== undefined) {
         return attempt;
       }
     }
@@ -40,6 +41,10 @@ export default function selectKitPropUtils(target) {
       return options.definedOnly ? null : item;
     }
     if (typeof property === "string") {
+      // primitives don't have properties, return the value directly
+      if (typeof item !== "object" || item === null) {
+        return item;
+      }
       return get(item, property);
     }
 

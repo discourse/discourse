@@ -83,7 +83,10 @@ export default class TopicNotificationsButton extends Component {
     } else if (!isEmpty(this.args.topic.tags)) {
       if (level === 3 && reason === 10) {
         // 3_10 watching tag
-        return !this.args.topic.tags.some((tag) => watchedTags.includes(tag));
+        return !this.args.topic.tags.some((tag) => {
+          const tagName = typeof tag === "string" ? tag : tag.name;
+          return watchedTags.includes(tagName);
+        });
       }
     }
 

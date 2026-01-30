@@ -125,9 +125,8 @@ RSpec.describe "AI Post helper", type: :system do
         response =
           Tag
             .take(5)
-            .pluck(:name)
-            .map { |s| { name: s, score: rand(0.0...45.0) } }
-            .sort { |h| h[:score] }
+            .map { |t| { id: t.id, name: t.name, score: rand(0.0...45.0) } }
+            .sort_by { |h| h[:score] }
         DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
 
         open_move_topic_modal

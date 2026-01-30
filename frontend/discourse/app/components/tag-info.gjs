@@ -166,12 +166,15 @@ export default class TagInfo extends Component {
       })
       .then((result) => {
         this.set("editing", false);
-        this.tagInfo.set("description", this.newTagDescription);
-
         if (result.responseJson.tag) {
-          const newTagName = result.responseJson.tag.name;
-          if (oldTagName !== newTagName) {
-            this.router.transitionTo("tag.show", newTagName);
+          const updatedTag = result.responseJson.tag;
+          this.tagInfo.setProperties({
+            name: updatedTag.name,
+            slug: updatedTag.slug,
+            description: this.newTagDescription,
+          });
+          if (oldTagName !== updatedTag.name) {
+            this.router.transitionTo("tag.show", updatedTag.name);
           }
         }
       })
@@ -222,7 +225,11 @@ export default class TagInfo extends Component {
         return ajax(`/tag/${this.tagInfo.name}/synonyms`, {
           type: "POST",
           data: {
-            synonyms: this.newSynonyms,
+            tags: this.newSynonyms.map((t) =>
+              typeof t.id === "number"
+                ? { id: t.id, name: t.name }
+                : { name: t.name }
+            ),
           },
         })
           .then((response) => {

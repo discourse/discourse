@@ -149,8 +149,10 @@ export default class MultiSelect extends SelectKitComponent {
 
       value.forEach((v) => {
         if (this.selectKit.valueProperty) {
+          // extract ID from object values for comparison
+          const vId = this.getValue(v);
           const c = makeArray(this.content).find(
-            (item) => item[this.selectKit.valueProperty] === v
+            (item) => item[this.selectKit.valueProperty] === vId
           );
           if (c) {
             content.push(c);

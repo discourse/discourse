@@ -515,11 +515,11 @@ acceptance("Search - Full Page", function (needs) {
     const tagSelector = selectKit("#search-with-tags");
 
     await tagSelector.expand();
-    await tagSelector.selectRowByValue("monkey");
+    await tagSelector.selectRowByName("monkey");
 
     assert.dom("input.all-tags").isNotVisible("all tags checkbox not visible");
 
-    await tagSelector.selectRowByValue("gazelle");
+    await tagSelector.selectRowByName("gazelle");
     assert.dom("input.all-tags").isVisible("all tags checkbox is visible");
   });
 

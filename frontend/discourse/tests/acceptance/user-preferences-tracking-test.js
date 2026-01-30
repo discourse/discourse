@@ -39,7 +39,7 @@ acceptance("User Preferences - Tracking", function (needs) {
     );
 
     await trackedTagsSelector.expand();
-    await trackedTagsSelector.selectRowByValue("monkey");
+    await trackedTagsSelector.selectRowByName("monkey");
 
     const watchedTagsSelector = selectKit(
       ".tracking-controls__watched-tags .tag-chooser"
@@ -48,11 +48,11 @@ acceptance("User Preferences - Tracking", function (needs) {
     await watchedTagsSelector.expand();
 
     assert.false(
-      watchedTagsSelector.rowByValue("monkey").exists(),
+      watchedTagsSelector.rowByName("monkey").exists(),
       "tag that has already been selected is not available for selection"
     );
 
-    await watchedTagsSelector.selectRowByValue("gazelle");
+    await watchedTagsSelector.selectRowByName("gazelle");
 
     const mutedTagsSelector = selectKit(
       ".tracking-controls__muted-tags .tag-chooser"
@@ -62,12 +62,12 @@ acceptance("User Preferences - Tracking", function (needs) {
 
     ["monkey", "gazelle"].forEach((tagName) => {
       assert.false(
-        mutedTagsSelector.rowByValue(tagName).exists(),
-        `tag "${tagName}" has already been selected is not available for selection`
+        mutedTagsSelector.rowByName(tagName).exists(),
+        `tag ${tagName} has already been selected is not available for selection`
       );
     });
 
-    await mutedTagsSelector.selectRowByValue("dog");
+    await mutedTagsSelector.selectRowByName("dog");
 
     const watchedFirstPostTagsSelector = selectKit(
       ".tracking-controls__watched-first-post-tags .tag-chooser"
@@ -77,12 +77,12 @@ acceptance("User Preferences - Tracking", function (needs) {
 
     ["dog", "gazelle", "monkey"].forEach((tagName) => {
       assert.false(
-        watchedFirstPostTagsSelector.rowByValue(tagName).exists(),
-        "tag `${tagName}` has already been selected is not available for selection"
+        watchedFirstPostTagsSelector.rowByName(tagName).exists(),
+        `tag ${tagName} has already been selected is not available for selection`
       );
     });
 
-    await watchedFirstPostTagsSelector.selectRowByValue("cat");
+    await watchedFirstPostTagsSelector.selectRowByName("cat");
 
     await click(".save-changes");
 
@@ -206,7 +206,7 @@ acceptance("User Preferences - Tracking", function (needs) {
 
     assert.dom(".user-preferences__watched-precedence-over-muted").doesNotExist;
     await mutedTagsSelector.expand();
-    await mutedTagsSelector.selectRowByValue("dog");
+    await mutedTagsSelector.selectRowByName("dog");
 
     assert.dom(".user-preferences__watched-precedence-over-muted").exists();
   });

@@ -116,7 +116,11 @@ RSpec.describe FormTemplate, type: :model do
 
       g1, g2 = YAML.safe_load(form_template.template)
 
-      expect(g1["choices"]).to eq([tag1.name, tag2.name, tag3.name].sort)
+      expect(g1["choices"]).to contain_exactly(
+        { "id" => tag1.id, "name" => tag1.name },
+        { "id" => tag2.id, "name" => tag2.name },
+        { "id" => tag3.id, "name" => tag3.name },
+      )
       expect(g2["attributes"]["tag_group"]).to eq(tag_group2.name)
       expect(g2["attributes"]["multiple"]).to eq(true)
     end

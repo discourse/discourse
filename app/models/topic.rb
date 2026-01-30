@@ -1359,7 +1359,12 @@ class Topic < ActiveRecord::Base
 
       topic
     elsif opts[:title]
-      post_mover.to_new_topic(opts[:title], opts[:category_id], opts[:tags])
+      post_mover.to_new_topic(
+        opts[:title],
+        opts[:category_id],
+        tag_ids: opts[:tag_ids],
+        tags: opts[:tags],
+      )
     end
   end
 

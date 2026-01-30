@@ -143,7 +143,9 @@ export default class TagDrop extends ComboBoxComponent {
   get content() {
     const topTags = this.topTags.slice(0, this.maxTagsInFilterList);
     if (this.sortTagsAlphabetically && topTags) {
-      return this.shortcuts.concat(topTags.sort());
+      return this.shortcuts.concat(
+        topTags.sort((a, b) => a.name.localeCompare(b.name))
+      );
     } else {
       return this.shortcuts.concat(makeArray(topTags));
     }

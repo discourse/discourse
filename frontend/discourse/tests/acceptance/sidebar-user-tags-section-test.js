@@ -17,17 +17,19 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   });
 
   needs.user({
-    tracked_tags: ["tag1"],
-    watched_tags: ["tag2", "tag3"],
+    tracked_tags: [1],
+    watched_tags: [2, 3],
     watching_first_post_tags: [],
     sidebar_tags: [
-      { name: "tag2", pm_only: false },
-      { name: "tag1", pm_only: false },
+      { id: 2, name: "tag2", pm_only: false },
+      { id: 1, name: "tag1", pm_only: false },
       {
+        id: 4,
         name: "tag4",
         pm_only: true,
       },
       {
+        id: 3,
         name: "tag3",
         pm_only: false,
       },
@@ -168,7 +170,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         notification_level: null,
         created_in_new_period: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag1"],
+        tags: [{ id: 1, name: "tag1", slug: "tag1" }],
       },
     ]);
 
@@ -209,7 +211,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag1"],
+        tags: [{ id: 1, name: "tag1", slug: "tag1" }],
       },
     ]);
 
@@ -328,7 +330,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         notification_level: null,
         created_in_new_period: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag1"],
+        tags: [{ id: 1, name: "tag1", slug: "tag1" }],
       },
       {
         topic_id: 2,
@@ -339,7 +341,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         notification_level: 2,
         created_in_new_period: false,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag1"],
+        tags: [{ id: 1, name: "tag1", slug: "tag1" }],
       },
       {
         topic_id: 3,
@@ -350,7 +352,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         notification_level: 2,
         created_in_new_period: false,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag2"],
+        tags: [{ id: 2, name: "tag2", slug: "tag2" }],
       },
     ]);
 
@@ -424,7 +426,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         notification_level: null,
         created_in_new_period: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag1"],
+        tags: [{ id: 1, name: "tag1", slug: "tag1" }],
       },
       {
         topic_id: 2,
@@ -435,7 +437,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         notification_level: 2,
         created_in_new_period: false,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag1"],
+        tags: [{ id: 1, name: "tag1", slug: "tag1" }],
       },
       {
         topic_id: 3,
@@ -446,7 +448,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         notification_level: 2,
         created_in_new_period: false,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag2"],
+        tags: [{ id: 2, name: "tag2", slug: "tag2" }],
       },
       {
         topic_id: 4,
@@ -457,7 +459,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
         notification_level: 2,
         created_in_new_period: false,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag4"],
+        tags: [{ id: 4, name: "tag4", slug: "tag4" }],
       },
     ]);
 
@@ -579,9 +581,9 @@ acceptance(
       new_new_view_enabled: true,
       display_sidebar_tags: true,
       sidebar_tags: [
-        { name: "tag2", pm_only: false },
-        { name: "tag1", pm_only: false },
-        { name: "tag3", pm_only: false },
+        { id: 2, name: "tag2", pm_only: false },
+        { id: 1, name: "tag1", pm_only: false },
+        { id: 3, name: "tag3", pm_only: false },
       ],
     });
 
@@ -602,7 +604,10 @@ acceptance(
           notification_level: null,
           created_in_new_period: true,
           treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-          tags: ["tag1", "tag3"],
+          tags: [
+            { id: 1, name: "tag1", slug: "tag1" },
+            { id: 3, name: "tag3", slug: "tag3" },
+          ],
         },
         {
           topic_id: 2,
@@ -613,7 +618,10 @@ acceptance(
           notification_level: 2,
           created_in_new_period: false,
           treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-          tags: ["tag1", "tag2"],
+          tags: [
+            { id: 1, name: "tag1", slug: "tag1" },
+            { id: 2, name: "tag2", slug: "tag2" },
+          ],
         },
         {
           topic_id: 3,
@@ -624,7 +632,7 @@ acceptance(
           notification_level: 2,
           created_in_new_period: false,
           treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-          tags: ["tag1"],
+          tags: [{ id: 1, name: "tag1", slug: "tag1" }],
         },
       ]);
 
@@ -669,7 +677,7 @@ acceptance(
           notification_level: null,
           created_in_new_period: true,
           treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-          tags: ["tag1"],
+          tags: [{ id: 1, name: "tag1", slug: "tag1" }],
         },
         {
           topic_id: 2,
@@ -680,7 +688,7 @@ acceptance(
           notification_level: 2,
           created_in_new_period: false,
           treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-          tags: ["tag2"],
+          tags: [{ id: 2, name: "tag2", slug: "tag2" }],
         },
       ]);
 
@@ -722,7 +730,7 @@ acceptance(
           notification_level: null,
           created_in_new_period: true,
           treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-          tags: ["tag1"],
+          tags: [{ id: 1, name: "tag1", slug: "tag1" }],
         },
         {
           topic_id: 2,
@@ -733,7 +741,7 @@ acceptance(
           notification_level: 2,
           created_in_new_period: false,
           treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-          tags: ["tag2"],
+          tags: [{ id: 2, name: "tag2", slug: "tag2" }],
         },
         {
           topic_id: 3,
@@ -744,7 +752,7 @@ acceptance(
           notification_level: 2,
           created_in_new_period: false,
           treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-          tags: ["tag3"],
+          tags: [{ id: 3, name: "tag3", slug: "tag3" }],
         },
       ]);
 
@@ -792,7 +800,7 @@ acceptance(
           notification_level: null,
           created_in_new_period: true,
           treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-          tags: ["tag1"],
+          tags: [{ id: 1, name: "tag1", slug: "tag1" }],
         },
         {
           topic_id: 2,
@@ -803,7 +811,7 @@ acceptance(
           notification_level: 2,
           created_in_new_period: false,
           treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-          tags: ["tag2"],
+          tags: [{ id: 2, name: "tag2", slug: "tag2" }],
         },
       ]);
 

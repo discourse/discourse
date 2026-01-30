@@ -23,21 +23,24 @@ export default class TagsIntersectionChooser extends MiniTagChooser {
 
   @action
   onChange(tags) {
-    if (tags.includes(this.mainTag)) {
-      const remainingTags = tags.filter((t) => t !== this.mainTag);
+    const mainTagName = this.mainTag?.name ?? this.mainTag;
+    const tagNames = tags.map((t) => t.name ?? t);
+
+    if (mainTagName && tagNames.includes(mainTagName)) {
+      const remainingTags = tagNames.filter((t) => t !== mainTagName);
 
       if (remainingTags.length >= 1) {
         DiscourseURL.routeTo(
-          `/tags/intersection/${this.mainTag}/${remainingTags.join("/")}`
+          `/tags/intersection/${mainTagName}/${remainingTags.join("/")}`
         );
       } else {
-        DiscourseURL.routeTo(`/tag/${this.mainTag}`);
+        DiscourseURL.routeTo(`/tag/${mainTagName}`);
       }
     } else {
-      if (tags.length >= 2) {
-        DiscourseURL.routeTo(`/tags/intersection/${tags.join("/")}`);
-      } else if (tags.length === 1) {
-        DiscourseURL.routeTo(`/tag/${tags[0]}`);
+      if (tagNames.length >= 2) {
+        DiscourseURL.routeTo(`/tags/intersection/${tagNames.join("/")}`);
+      } else if (tagNames.length === 1) {
+        DiscourseURL.routeTo(`/tag/${tagNames[0]}`);
       } else {
         DiscourseURL.routeTo("/tags");
       }

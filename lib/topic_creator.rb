@@ -27,7 +27,12 @@ class TopicCreator
 
     category = find_category
     if category.present? && guardian.can_tag?(topic)
-      tags = @opts[:tags].presence || []
+      tags =
+        if @opts[:tag_ids].present?
+          Tag.where(id: @opts[:tag_ids]).pluck(:name)
+        else
+          @opts[:tags].presence || []
+        end
 
       # adds topic.errors
       DiscourseTagging.validate_category_tags(guardian, topic, category, tags)
@@ -190,10 +195,18 @@ class TopicCreator
   end
 
   def setup_tags(topic)
-    if @opts[:tags].present?
-      # We can try the full tagging workflow which does validations and other
-      # things like replacing synonyms first, but if this fails then we can try
-      # the simple workflow if validations are skipped.
+    if @opts[:tag_ids].present?
+      valid_tags = DiscourseTagging.tag_topic_by_ids(topic, @guardian, @opts[:tag_ids])
+      if !valid_tags
+        if @opts[:skip_validations]
+          tag_names = Tag.where(id: @opts[:tag_ids]).pluck(:name)
+          DiscourseTagging.add_or_create_tags_by_name(topic, tag_names)
+        else
+          topic.errors.add(:base, :unable_to_tag)
+          rollback_from_errors!(topic)
+        end
+      end
+    elsif @opts[:tags].present?
       valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
       if !valid_tags
         if @opts[:skip_validations]

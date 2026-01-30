@@ -28,7 +28,7 @@ module("Integration | Component | da-tags-field", function (hooks) {
     );
 
     await selectKit().expand();
-    await selectKit().selectRowByValue("monkey");
+    await selectKit().selectRowByName("monkey");
 
     assert.deepEqual(this.field.metadata.value, ["monkey"]);
   });
@@ -47,11 +47,11 @@ module("Integration | Component | da-tags-field", function (hooks) {
       </template>
     );
     await selectKit().expand();
-    await selectKit().selectRowByValue("monkey");
+    await selectKit().selectRowByName("monkey");
 
     assert.deepEqual(this.field.metadata.value, ["monkey"]);
 
-    await selectKit().deselectItemByValue("monkey");
+    await selectKit().deselectItemByName("monkey");
 
     assert.strictEqual(this.field.metadata.value, undefined);
   });

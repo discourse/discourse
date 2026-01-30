@@ -50,10 +50,10 @@ export function isTrackedTopic(topic) {
   }
 
   if (topic.tags) {
-    const tags = User.current().trackedTags;
+    const tagIds = User.current().trackedTags;
 
-    for (const tag of tags) {
-      if (topic.tags.includes(tag)) {
+    for (const tagId of tagIds) {
+      if (topic.tags.some((t) => t.id === tagId)) {
         return true;
       }
     }

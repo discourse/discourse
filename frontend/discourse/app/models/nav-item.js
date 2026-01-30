@@ -33,7 +33,8 @@ export default class NavItem extends EmberObject {
       return path;
     }
 
-    if (context.tagId && Site.currentProp("filters").includes(filterType)) {
+    const tagName = context.tag?.name;
+    if (tagName && Site.currentProp("filters").includes(filterType)) {
       includesTagContext = true;
 
       if (context.category) {
@@ -53,7 +54,7 @@ export default class NavItem extends EmberObject {
     }
 
     if (includesTagContext) {
-      path += `/${context.tagId}`;
+      path += `/${tagName}`;
     }
 
     if (includesTagContext || includesCategoryContext) {
@@ -93,8 +94,8 @@ export default class NavItem extends EmberObject {
     if (opts.category) {
       args.category = opts.category;
     }
-    if (opts.tagId) {
-      args.tagId = opts.tagId;
+    if (opts.tag) {
+      args.tag = opts.tag;
     }
     if (opts.currentRouteQueryParams) {
       args.currentRouteQueryParams = opts.currentRouteQueryParams;
@@ -158,6 +159,7 @@ export default class NavItem extends EmberObject {
 
     const context = {
       category: args.category,
+      tag: args.tag,
       tagId: args.tagId,
       noSubcategories: args.noSubcategories,
     };
@@ -221,6 +223,7 @@ export default class NavItem extends EmberObject {
   @service currentUser;
 
   @tracked name;
+  @tracked tag;
   @reads("name") filterType;
 
   @tracked _title;
@@ -255,7 +258,7 @@ export default class NavItem extends EmberObject {
 
     if (
       this.name === "latest" &&
-      (Site.currentProp("desktopView") || this.tagId !== undefined)
+      (Site.currentProp("desktopView") || this.tag !== undefined)
     ) {
       count = 0;
     }
@@ -272,8 +275,8 @@ export default class NavItem extends EmberObject {
     this._displayName = value;
   }
 
-  @discourseComputed("filterType", "category", "noSubcategories", "tagId")
-  href(filterType, category, noSubcategories, tagId) {
+  @discourseComputed("filterType", "category", "noSubcategories", "tag")
+  href(filterType, category, noSubcategories, tag) {
     let customHref = null;
 
     NavItem.customNavItemHrefs.forEach(function (cb) {
@@ -287,7 +290,7 @@ export default class NavItem extends EmberObject {
       return getURL(customHref);
     }
 
-    const context = { category, noSubcategories, tagId };
+    const context = { category, noSubcategories, tag };
     return NavItem.pathFor(filterType, context);
   }
 
@@ -308,16 +311,16 @@ export default class NavItem extends EmberObject {
   @discourseComputed(
     "name",
     "category",
-    "tagId",
+    "tag",
     "noSubcategories",
     "currentRouteQueryParams",
     "topicTrackingState.messageCount"
   )
-  count(name, category, tagId, noSubcategories, currentRouteQueryParams) {
+  count(name, category, tag, noSubcategories, currentRouteQueryParams) {
     return this.topicTrackingState?.lookupCount({
       type: name,
       category,
-      tagId,
+      tagId: tag?.id,
       noSubcategories,
       customFilterFn: hasTrackedFilter(currentRouteQueryParams)
         ? isTrackedTopic

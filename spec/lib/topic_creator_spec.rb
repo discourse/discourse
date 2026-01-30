@@ -128,6 +128,17 @@ RSpec.describe TopicCreator do
           expect(topic).to be_valid
           expect(topic.tags.length).to eq(1)
         end
+
+        it "user can add tags to topic using tag_ids" do
+          topic =
+            TopicCreator.create(
+              user,
+              Guardian.new(user),
+              valid_attrs.merge(tag_ids: [tag1.id, tag2.id]),
+            )
+          expect(topic).to be_valid
+          expect(topic.tags).to contain_exactly(tag1, tag2)
+        end
       end
 
       context "when assigned via matched watched words" do

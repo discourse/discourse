@@ -102,7 +102,12 @@ class TagGroupsController < ApplicationController
 
     render json: {
              results:
-               matches.map { |x| { name: x.name, tag_names: x.tags.base_tags.pluck(:name).sort } },
+               matches.map do |x|
+                 {
+                   name: x.name,
+                   tags: x.tags.base_tags.pluck(:id, :name).map { |id, name| { id:, name: } },
+                 }
+               end,
            }
   end
 
@@ -117,10 +122,44 @@ class TagGroupsController < ApplicationController
     params.merge!(tag_group.permit!) if tag_group
 
     result =
-      params.permit(:id, :name, :one_per_topic, tag_names: [], parent_tag_name: [], permissions: {})
+      params.permit(
+        :id,
+        :name,
+        :one_per_topic,
+        tags: %i[id name slug],
+        tag_names: [],
+        parent_tag: %i[id name slug],
+        parent_tag_name: [],
+        permissions: {
+        },
+      )
 
-    result[:tag_names] ||= []
-    result[:parent_tag_name] ||= []
+    if result[:tags].present?
+      result[:tag_ids] = result[:tags].map { |t| t["id"] }
+    elsif result[:tag_names].present?
+      Discourse.deprecate(
+        "the tag_names param is deprecated, use tags instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+    else
+      result[:tag_names] = []
+    end
+    result.delete(:tags)
+
+    if result[:parent_tag].present?
+      result[:parent_tag_id] = result[:parent_tag].first&.dig("id")
+    elsif result[:parent_tag_name].present?
+      Discourse.deprecate(
+        "the parent_tag_name param is deprecated, use parent_tag instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+    else
+      result[:parent_tag_name] = []
+    end
+    result.delete(:parent_tag)
+
     result[:one_per_topic] = params[:one_per_topic].in?([true, "true"])
 
     result

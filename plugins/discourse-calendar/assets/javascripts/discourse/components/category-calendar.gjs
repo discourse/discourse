@@ -118,7 +118,10 @@ export default class CategoryCalendar extends Component {
       if (post.topic.tags) {
         const tagColorEntry = this.tagsColorsMap.find(
           (entry) =>
-            entry.type === "tag" && post.topic.tags.includes(entry.slug)
+            entry.type === "tag" &&
+            post.topic.tags.some(
+              (t) => (typeof t === "string" ? t : t.name) === entry.slug
+            )
         );
         backgroundColor = tagColorEntry ? tagColorEntry.color : null;
       }
