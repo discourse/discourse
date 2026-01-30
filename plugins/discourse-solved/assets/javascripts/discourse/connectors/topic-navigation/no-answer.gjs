@@ -9,6 +9,7 @@ import { i18n } from "discourse-i18n";
 const ONE_WEEK = 7 * 24 * 60 * 60 * 1000; // milliseconds
 const MAX_DURATION_WITH_NO_ANSWER = ONE_WEEK;
 const DISPLAY_DELAY = isTesting() ? 0 : 2000;
+const CONFETTI_PARTICLE_COUNT = 50;
 
 @tagName("div")
 @classNames("topic-navigation-outlet", "no-answer")
@@ -19,10 +20,10 @@ export default class NoAnswer extends Component {
 
   init() {
     super.init(...arguments);
-    this.set("show", false);
     this.setProperties({
       oneWeek: ONE_WEEK,
       show: false,
+      showConfetti: false,
     });
 
     this.appEvents.on(
@@ -68,10 +69,29 @@ export default class NoAnswer extends Component {
   }
 
   hidePopup() {
+    if (!this.show) {
+      return;
+    }
+
     this.set("show", false);
+
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      this.set("showConfetti", true);
+    }
+  }
+
+  get confettiParticles() {
+    return Array.from({ length: CONFETTI_PARTICLE_COUNT }, (_, i) => i);
   }
 
   <template>
+    {{#if this.showConfetti}}
+      <div class="solved-confetti">
+        {{#each this.confettiParticles}}
+          <div class="solved-confetti-particle"></div>
+        {{/each}}
+      </div>
+    {{/if}}
     {{#if this.show}}
       <TopicNavigationPopup
         @popupId="solved-notice"
