@@ -1715,10 +1715,23 @@ posting:
     min: 5
     max: 255
     area: "posts_and_topics"
+    depends_on:
+      - "experimental_form_templates"
+    depends_behavior: "hidden"
   max_form_template_content_length:
     default: 5000
     max: 150000
     area: "posts_and_topics"
+    depends_on:
+      - "experimental_form_templates"
+    depends_behavior: "hidden"
+  show_preview_for_form_templates:
+    client: true
+    default: true
+    area: "posts_and_topics"
+    depends_on:
+      - "experimental_form_templates"
+    depends_behavior: "hidden"
   group_pm_user_limit:
     default: 1000
     type: integer
@@ -4179,7 +4192,12 @@ experimental:
   experimental_form_templates:
     client: true
     default: false
+    hidden: true
     area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/introducing-experimental-form-templates/278631"
   experimental_impersonation:
     default: false
     hidden: true
@@ -4187,13 +4205,10 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/impersonate-a-user-and-returning-to-admin-user/119683"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
-    area: "experimental"
-  show_preview_for_form_templates:
-    client: true
-    default: true
     area: "experimental"
   experimental_new_new_view_groups:
     client: true
