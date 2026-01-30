@@ -1660,7 +1660,14 @@ Discourse::Application.routes.draw do
     get ".well-known/apple-app-site-association" => "metadata#app_association_ios", :format => false
     get "opensearch" => "metadata#opensearch", :constraints => { format: :xml }
 
-    scope "/tag/:tag_name" do
+    # Tag Routes - Canonical vs Legacy
+    #
+    # Canonical: /tag/:slug/:id - stable URLs using numeric IDs
+    # Legacy: /tag/:name - for backward compat, redirects browsers to canonical
+    #
+    # The legacy routes can be removed once all external links have migrated.
+    # API consumers can use either format (legacy returns data without redirect).
+    scope "/tag/:tag_slug/:tag_id", constraints: { tag_id: /\d+/ } do
       constraints format: :json do
         get "/" => "tags#show", :as => "tag_show"
         get "/info" => "tags#info"
@@ -1681,6 +1688,39 @@ Discourse::Application.routes.draw do
       end
     end
 
+    scope "/tag/:tag_name" do
+      constraints format: :json do
+        get "/" => "tags#show", :as => "tag_show_by_name"
+        get "/info" => "tags#info"
+        get "/notifications" => "tags#notifications"
+        put "/notifications" => "tags#update_notifications"
+        put "/" => "tags#update"
+        delete "/" => "tags#destroy"
+        post "/synonyms" => "tags#create_synonyms"
+        delete "/synonyms/:synonym_id" => "tags#destroy_synonym"
+
+        Discourse.filters.each do |filter|
+          get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}_by_name"
+        end
+      end
+
+      # html routes for browser redirects to canonical URLs
+      constraints format: :html do
+        get "/" => "tags#show"
+        get "/info" => "tags#info"
+        get "/notifications" => "tags#notifications"
+
+        Discourse.filters.each { |filter| get "/l/#{filter}" => "tags#show_#{filter}" }
+      end
+
+      constraints format: :rss do
+        get "/" => "tags#tag_feed"
+      end
+    end
+
+    # Tag listings & category+tag combinations:
+    #   /tags - index, search, management endpoints
+    #   /tags/c/:category/:slug/:id - topics filtered by category AND tag
     scope "/tags" do
       get "/" => "tags#index"
       get "/filter/list" => "tags#index"
@@ -1695,38 +1735,75 @@ Discourse::Application.routes.draw do
       get "/unused" => "tags#list_unused"
       delete "/unused" => "tags#destroy_unused"
 
-      constraints(tag_name: %r{[^/]+?}, format: /json|rss/) do
+      # canonical slug/id format for category+tag routes
+      constraints(tag_id: /\d+/, format: /json|rss/) do
         scope path: "/c/*category_slug_path_with_id" do
           Discourse.filters.each do |filter|
-            get "/none/:tag_name/l/#{filter}" => "tags#show_#{filter}",
+            get "/none/:tag_slug/:tag_id/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_none_show_#{filter}",
                 :defaults => {
                   no_subcategories: true,
                 }
-            get "/all/:tag_name/l/#{filter}" => "tags#show_#{filter}",
+            get "/all/:tag_slug/:tag_id/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_all_show_#{filter}",
                 :defaults => {
                   no_subcategories: false,
                 }
           end
 
-          get "/none/:tag_name" => "tags#show",
+          get "/none/:tag_slug/:tag_id" => "tags#show",
               :as => "tag_category_none_show",
               :defaults => {
                 no_subcategories: true,
               }
-          get "/all/:tag_name" => "tags#show",
+          get "/all/:tag_slug/:tag_id" => "tags#show",
               :as => "tag_category_all_show",
               :defaults => {
                 no_subcategories: false,
               }
 
           Discourse.filters.each do |filter|
-            get "/:tag_name/l/#{filter}" => "tags#show_#{filter}",
+            get "/:tag_slug/:tag_id/l/#{filter}" => "tags#show_#{filter}",
                 :as => "tag_category_show_#{filter}"
           end
 
-          get "/:tag_name" => "tags#show", :as => "tag_category_show"
+          get "/:tag_slug/:tag_id" => "tags#show", :as => "tag_category_show"
+        end
+      end
+
+      # legacy name-based format for category+tag routes
+      constraints(tag_name: %r{[^/]+?}, format: /json|rss/) do
+        scope path: "/c/*category_slug_path_with_id" do
+          Discourse.filters.each do |filter|
+            get "/none/:tag_name/l/#{filter}" => "tags#show_#{filter}",
+                :as => "tag_category_none_show_#{filter}_by_name",
+                :defaults => {
+                  no_subcategories: true,
+                }
+            get "/all/:tag_name/l/#{filter}" => "tags#show_#{filter}",
+                :as => "tag_category_all_show_#{filter}_by_name",
+                :defaults => {
+                  no_subcategories: false,
+                }
+          end
+
+          get "/none/:tag_name" => "tags#show",
+              :as => "tag_category_none_show_by_name",
+              :defaults => {
+                no_subcategories: true,
+              }
+          get "/all/:tag_name" => "tags#show",
+              :as => "tag_category_all_show_by_name",
+              :defaults => {
+                no_subcategories: false,
+              }
+
+          Discourse.filters.each do |filter|
+            get "/:tag_name/l/#{filter}" => "tags#show_#{filter}",
+                :as => "tag_category_show_#{filter}_by_name"
+          end
+
+          get "/:tag_name" => "tags#show", :as => "tag_category_show_by_name"
         end
 
         get "/intersection/:tag_name/*additional_tag_names" => "tags#show",

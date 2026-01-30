@@ -1,6 +1,7 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { queryParams, resetParams } from "discourse/controllers/discovery/list";
+import { ajax } from "discourse/lib/ajax";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 import { disableImplicitInjections } from "discourse/lib/implicit-injections";
 import PreloadStore from "discourse/lib/preload-store";
@@ -40,11 +41,39 @@ export default class TagShowRoute extends DiscourseRoute {
   }
 
   async model(params, transition) {
-    const name = escapeExpression(params.tag_name);
-    const id = params.tag_id;
+    // support both canonical (tag_slug/tag_id) and legacy (tag_name) params
+    let slug = params.tag_slug || params.tag_name;
+    let id = params.tag_id;
+
+    if (!slug) {
+      slug = NONE;
+      id = null;
+    }
+
+    // handle legacy URLs without tag_id - fetch tag info to get the ID
+    // e.g., /tags/c/category/1/my-tag -> need to lookup my-tag to get its ID
+    // skip redirect for intersection routes (they use tag_name, not tag_slug/tag_id)
+    const isIntersectionRoute = params.additional_tags !== undefined;
+    if (slug && slug !== NONE && !id && !isIntersectionRoute) {
+      try {
+        const result = await ajax(`/tag/${slug}/info.json`);
+        if (result.tag_info) {
+          id = result.tag_info.id;
+          // redirect to canonical URL with ID
+          const routeName = transition.to.name;
+          const newParams = { ...params, tag_slug: slug, tag_id: id };
+          return this.router.replaceWith(routeName, newParams);
+        }
+      } catch {
+        // tag not found, continue with slug only
+      }
+    }
+
+    // use slug as initial name until API returns actual name
     const tag = this.store.createRecord("tag", {
       id,
-      name,
+      name: slug,
+      slug,
     });
 
     let additionalTags;
@@ -60,10 +89,11 @@ export default class TagShowRoute extends DiscourseRoute {
     const filterType = filterTypeForMode(this.navMode);
 
     let tagNotification;
-    if (tag && name !== NONE && this.currentUser && !additionalTags) {
+    if (tag && slug !== NONE && this.currentUser && !additionalTags) {
+      // encode as "slug/id" string so store treats it as single record lookup
       tagNotification = await this.store.find(
         "tagNotification",
-        name.toLowerCase()
+        `${slug}/${id}`
       );
     }
 
@@ -75,7 +105,7 @@ export default class TagShowRoute extends DiscourseRoute {
       {}
     );
     const topicFilter = this.navMode;
-    const tagName = name ? name.toLowerCase() : NONE;
+    const tagPath = id ? `${slug}/${id}` : slug;
     let filter;
 
     if (category) {
@@ -86,9 +116,9 @@ export default class TagShowRoute extends DiscourseRoute {
         filter += this.noSubcategories ? `/${NONE}` : `/${ALL}`;
       }
 
-      filter += `/${tagName}/l/${topicFilter}`;
+      filter += `/${tagPath}/l/${topicFilter}`;
     } else if (additionalTags) {
-      filter = `tags/intersection/${tagName}/${additionalTags.join("/")}`;
+      filter = `tags/intersection/${slug}/${additionalTags.join("/")}`;
 
       if (transition.to.queryParams["category"]) {
         filteredQueryParams["category"] = transition.to.queryParams["category"];
@@ -97,7 +127,7 @@ export default class TagShowRoute extends DiscourseRoute {
         );
       }
     } else {
-      filter = `tag/${tagName}/l/${topicFilter}`;
+      filter = `tag/${tagPath}/l/${topicFilter}`;
     }
 
     if (
@@ -110,7 +140,8 @@ export default class TagShowRoute extends DiscourseRoute {
       return this.router.replaceWith(
         "tags.showCategoryNone",
         params.category_slug_path_with_id,
-        tagName
+        slug,
+        id
       );
     }
 
@@ -125,10 +156,11 @@ export default class TagShowRoute extends DiscourseRoute {
     );
 
     if (list.topic_list.tags && list.topic_list.tags.length === 1) {
-      // Update name of tag (case might be different)
+      // update tag properties from API response
       tag.setProperties({
         id: list.topic_list.tags[0].id,
         name: list.topic_list.tags[0].name,
+        slug: list.topic_list.tags[0].slug,
         staff: list.topic_list.tags[0].staff,
       });
     }
