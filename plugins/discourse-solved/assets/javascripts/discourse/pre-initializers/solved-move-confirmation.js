@@ -1,5 +1,5 @@
 import MoveToTopic from "discourse/components/modal/move-to-topic";
-import ModalService from "discourse/services/modal";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import MoveSolutionConfirmationModal from "../components/modal/move-solution-confirmation";
 
 const STORAGE_KEY = "discourse-solved-hide-move-confirmation";
@@ -10,37 +10,49 @@ export default {
   before: "inject-discourse-objects",
 
   initialize() {
-    const originalShow = ModalService.prototype.show;
+    withPluginApi((api) => {
+      api.modifyClass("service:modal", {
+        pluginId: "discourse-solved",
 
-    ModalService.prototype.show = async function (modal, opts) {
-      if (modal === MoveToTopic && opts?.model?.selectedPosts) {
-        const selectedPosts = opts.model.selectedPosts;
-        const solvedPost = selectedPosts?.find((p) => p.accepted_answer);
+        _solvedOriginalShow: null,
 
-        if (solvedPost) {
-          const hideConfirmation = localStorage.getItem(STORAGE_KEY) === "true";
+        async show(modal, opts) {
+          if (!this._solvedOriginalShow) {
+            this._solvedOriginalShow = this._super.bind(this);
+          }
 
-          if (!hideConfirmation) {
-            const result = await originalShow.call(
-              this,
-              MoveSolutionConfirmationModal,
-              {
-                model: { count: selectedPosts.length },
+          const originalShow = this._solvedOriginalShow;
+
+          if (modal === MoveToTopic && opts?.model?.selectedPosts) {
+            const selectedPosts = opts.model.selectedPosts;
+            const solvedPost = selectedPosts?.find((p) => p.accepted_answer);
+
+            if (solvedPost) {
+              const hideConfirmation =
+                localStorage.getItem(STORAGE_KEY) === "true";
+
+              if (!hideConfirmation) {
+                const result = await originalShow(
+                  MoveSolutionConfirmationModal,
+                  {
+                    model: { count: selectedPosts.length },
+                  }
+                );
+
+                if (!result?.confirmed) {
+                  return;
+                }
+
+                if (result.dontShowAgain) {
+                  localStorage.setItem(STORAGE_KEY, "true");
+                }
               }
-            );
-
-            if (!result?.confirmed) {
-              return;
-            }
-
-            if (result.dontShowAgain) {
-              localStorage.setItem(STORAGE_KEY, "true");
             }
           }
-        }
-      }
 
-      return originalShow.call(this, modal, opts);
-    };
+          return originalShow(modal, opts);
+        },
+      });
+    });
   },
 };
