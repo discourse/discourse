@@ -35,6 +35,15 @@ en:
       no_solved_topics_title_others: "%{username} has not solved any topics yet"
       no_solved_topics_body: "When you provide a helpful reply to a topic, your reply might be selected as the solution by the topic owner or staff."
       marked_solved_by: "Marked as solved by %{user}"
+      confirm_move_solution_title: "Move solution post"
+      confirm_move_solution:
+        one: "The post you selected is marked as the solution for this topic. If you move it, the topic will be updated to unsolved."
+        other: "One of the posts you selected is marked as the solution for this topic. If you move them, the topic will be updated to unsolved."
+      move_post_confirm:
+        one: "Move post"
+        other: "Move posts"
+      move_post_cancel: "Cancel"
+      dont_show_again: "Got it, don't show me this again"
 
       no_answer:
         title: Has your question been answered?
