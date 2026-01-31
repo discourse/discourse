@@ -110,7 +110,7 @@ export default class DatePicker extends Component {
   }
 
   <template>
-    <div class="date-picker-wrapper" ...attributes>
+    <div class="date-picker-wrapper">
       <Input
         @type={{this.inputType}}
         class="date-picker"
