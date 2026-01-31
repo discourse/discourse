@@ -232,8 +232,9 @@ class Upload < ActiveRecord::Base
     Upload.transaction do
       # Skip S3 removal if:
       # - This is a dependent upload (file belongs to the primary)
-      # - This primary just transferred ownership to a new primary
-      should_remove_file = primary_upload_id.nil? && !@transferred_to_new_primary
+      # - This primary will transfer ownership to a dependent (before_destroy sets the flag)
+      will_transfer = primary_upload_id.nil? && dependent_uploads.exists?
+      should_remove_file = primary_upload_id.nil? && !will_transfer
       Discourse.store.remove_upload(self) if should_remove_file
       super
     end
