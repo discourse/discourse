@@ -375,7 +375,11 @@ module Email
           if FileHelper.is_supported_image?(original_upload.original_filename)
             next if !should_attach_image?(original_upload, optimized_1X)
             # Don't attach images that aren't rendered in the e-mail.
-            next if is_digest && !@message.html_part.body.include?(original_upload.sha1)
+            # Check for both raw sha1 and base62-encoded sha1 (used in data-base62-sha1 attributes)
+            body = @message.html_part.body.to_s
+            has_sha1 = body.include?(original_upload.sha1)
+            has_base62 = body.include?(Upload.base62_sha1(original_upload.sha1))
+            next if is_digest && !has_sha1 && !has_base62
           else
             # Only attach images in digests.
             next if is_digest
