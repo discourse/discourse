@@ -656,6 +656,9 @@ RSpec.describe Email::Sender do
         end
 
         it "attaches only allowed images from multiple posts in the activity summary" do
+          # Stub S3 downloads to return the fixture file
+          FileHelper.stubs(:download).returns(file_from_fixtures("logo.png", "images"))
+
           digest_post = Fabricate(:post)
           other_digest_post = Fabricate(:post)
 
