@@ -3,11 +3,7 @@ import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import {
-  attributeBindings,
-  classNames,
-  tagName,
-} from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import DateInput from "discourse/components/date-input";
 import PluginOutlet from "discourse/components/plugin-outlet";
@@ -119,9 +115,7 @@ export function addAdvancedSearchOptions(options) {
   _extraOptions.push(options);
 }
 
-@tagName("details")
-@attributeBindings("expandFilters:open")
-@classNames("advanced-filters")
+@tagName("")
 export default class SearchAdvancedOptions extends Component {
   category = null;
 
@@ -735,19 +729,24 @@ export default class SearchAdvancedOptions extends Component {
 
   <template>
     {{! template-lint-disable no-nested-interactive }}
-    <summary>
-      {{i18n "search.advanced.title"}}
-    </summary>
-    <div class="search-advanced-filters">
-      <div class="search-advanced-options">
-        <PluginOutlet
-          @name="advanced-search-options-above"
-          @connectorTagName="div"
-          @outletArgs={{lazyHash
-            searchedTerms=this.searchedTerms
-            onChangeSearchedTermField=this.onChangeSearchedTermField
-          }}
-        />
+    <details
+      class="advanced-filters"
+      open={{this.expandFilters}}
+      ...attributes
+    >
+      <summary>
+        {{i18n "search.advanced.title"}}
+      </summary>
+      <div class="search-advanced-filters">
+        <div class="search-advanced-options">
+          <PluginOutlet
+            @name="advanced-search-options-above"
+            @connectorTagName="div"
+            @outletArgs={{lazyHash
+              searchedTerms=this.searchedTerms
+              onChangeSearchedTermField=this.onChangeSearchedTermField
+            }}
+          />
 
         <div class="control-group advanced-search-category">
           <label class="control-label">{{i18n
@@ -950,18 +949,19 @@ export default class SearchAdvancedOptions extends Component {
         </div>
       </details>
 
-      {{#if this.site.mobileView}}
-        <div class="second-search-button">
-          <DButton
-            @action={{this.search}}
-            @icon="magnifying-glass"
-            @label="search.search_button"
-            @ariaLabel="search.search_button"
-            @disabled={{this.searchButtonDisabled}}
-            class="btn-primary search-cta"
-          />
-        </div>
-      {{/if}}
-    </div>
+        {{#if this.site.mobileView}}
+          <div class="second-search-button">
+            <DButton
+              @action={{this.search}}
+              @icon="magnifying-glass"
+              @label="search.search_button"
+              @ariaLabel="search.search_button"
+              @disabled={{this.searchButtonDisabled}}
+              class="btn-primary search-cta"
+            />
+          </div>
+        {{/if}}
+      </div>
+    </details>
   </template>
 }
