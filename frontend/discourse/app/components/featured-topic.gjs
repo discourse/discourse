@@ -1,13 +1,17 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { htmlSafe } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
+import {
+  attributeBindings,
+  classNameBindings,
+} from "@ember-decorators/component";
 import $ from "jquery";
 import TopicPostBadges from "discourse/components/topic-post-badges";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import TopicStatus from "./topic-status";
 
-@tagName("")
+@classNameBindings(":featured-topic")
+@attributeBindings("topic.id:data-topic-id")
 export default class FeaturedTopic extends Component {
   click(e) {
     if (e.target.closest(".last-posted-at")) {
@@ -20,20 +24,18 @@ export default class FeaturedTopic extends Component {
   }
 
   <template>
-    <div data-topic-id={{this.topic.id}} class="featured-topic" ...attributes>
-      <TopicStatus @topic={{this.topic}} @disableActions={{true}} />
-      <a href={{this.topic.lastUnreadUrl}} class="title">{{htmlSafe
-          this.topic.fancyTitle
-        }}</a>
-      <TopicPostBadges
-        @unreadPosts={{this.topic.unread_posts}}
-        @unseen={{this.topic.unseen}}
-        @url={{this.topic.lastUnreadUrl}}
-      />
+    <TopicStatus @topic={{this.topic}} @disableActions={{true}} />
+    <a href={{this.topic.lastUnreadUrl}} class="title">{{htmlSafe
+        this.topic.fancyTitle
+      }}</a>
+    <TopicPostBadges
+      @unreadPosts={{this.topic.unread_posts}}
+      @unseen={{this.topic.unseen}}
+      @url={{this.topic.lastUnreadUrl}}
+    />
 
-      <a href={{this.topic.lastPostUrl}} class="last-posted-at">{{ageWithTooltip
-          this.topic.last_posted_at
-        }}</a>
-    </div>
+    <a href={{this.topic.lastPostUrl}} class="last-posted-at">{{ageWithTooltip
+        this.topic.last_posted_at
+      }}</a>
   </template>
 }

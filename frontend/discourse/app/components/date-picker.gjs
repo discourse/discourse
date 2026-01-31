@@ -3,14 +3,14 @@ import Component, { Input } from "@ember/component";
 import { computed } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { waitForPromise } from "@ember/test-waiters";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 const DATE_FORMAT = "YYYY-MM-DD";
 
-@classNames("date-picker-wrapper")
+@tagName("")
 export default class DatePicker extends Component {
   value = null;
   minDate = null;
@@ -110,13 +110,15 @@ export default class DatePicker extends Component {
   }
 
   <template>
-    <Input
-      @type={{this.inputType}}
-      class="date-picker"
-      placeholder={{this.placeholder}}
-      @value={{this.value}}
-      autocomplete="off"
-      ...attributes
-    />
+    <div class="date-picker-wrapper" ...attributes>
+      <Input
+        @type={{this.inputType}}
+        class="date-picker"
+        placeholder={{this.placeholder}}
+        @value={{this.value}}
+        autocomplete="off"
+        ...attributes
+      />
+    </div>
   </template>
 }

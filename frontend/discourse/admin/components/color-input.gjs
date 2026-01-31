@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
-import { tagName } from "@ember-decorators/component";
+import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import TextField from "discourse/components/text-field";
 import { isValidHex } from "discourse/lib/color-transformations";
@@ -16,7 +16,7 @@ import { isValidHex } from "discourse/lib/color-transformations";
   @param {string} [fallbackHexValue] Hex color string to use if hexValue is empty. Optional.
 **/
 
-@tagName("")
+@classNames("color-picker")
 export default class ColorInput extends Component {
   onlyHex = true;
   styleSelection = true;
@@ -98,24 +98,22 @@ export default class ColorInput extends Component {
   }
 
   <template>
-    <div class="color-picker" ...attributes>
-      {{#if this.onlyHex}}<span class="add-on">#</span>{{/if}}<TextField
-        @value={{this.hexValue}}
-        @maxlength={{this.maxlength}}
-        @input={{this.onHexInput}}
-        class="hex-input"
-        aria-labelledby={{this.ariaLabelledby}}
-        {{on "blur" this.handleBlur}}
-        {{on "paste" this.handlePaste}}
-      />
-      <input
-        class="picker"
-        type="color"
-        value={{this.valueForPicker}}
-        title={{this.valueForPicker}}
-        {{on "input" this.onPickerInput}}
-        aria-labelledby={{this.ariaLabelledby}}
-      />
-    </div>
+    {{#if this.onlyHex}}<span class="add-on">#</span>{{/if}}<TextField
+      @value={{this.hexValue}}
+      @maxlength={{this.maxlength}}
+      @input={{this.onHexInput}}
+      class="hex-input"
+      aria-labelledby={{this.ariaLabelledby}}
+      {{on "blur" this.handleBlur}}
+      {{on "paste" this.handlePaste}}
+    />
+    <input
+      class="picker"
+      type="color"
+      value={{this.valueForPicker}}
+      title={{this.valueForPicker}}
+      {{on "input" this.onPickerInput}}
+      aria-labelledby={{this.ariaLabelledby}}
+    />
   </template>
 }

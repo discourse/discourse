@@ -5,13 +5,12 @@ import { action } from "@ember/object";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { classNames, tagName } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import { on as onEvent } from "@ember-decorators/object";
 import $ from "jquery";
 import icon from "discourse/helpers/d-icon";
 
-@tagName("ul")
-@classNames("mobile-nav")
+@tagName("")
 export default class MobileNav extends Component {
   @service router;
 
@@ -81,20 +80,22 @@ export default class MobileNav extends Component {
   }
 
   <template>
-    {{#if this.site.mobileView}}
-      {{#if this.selectedHtml}}
-        <li>
-          <a href {{on "click" this.toggleExpanded}} class="expander">
-            <span class="selection">{{htmlSafe this.selectedHtml}}</span>
-            {{icon "caret-down"}}
-          </a>
-        </li>
-      {{/if}}
-      <ul class="drop {{if this.expanded 'expanded'}}">
+    <ul class="mobile-nav" ...attributes>
+      {{#if this.site.mobileView}}
+        {{#if this.selectedHtml}}
+          <li>
+            <a href {{on "click" this.toggleExpanded}} class="expander">
+              <span class="selection">{{htmlSafe this.selectedHtml}}</span>
+              {{icon "caret-down"}}
+            </a>
+          </li>
+        {{/if}}
+        <ul class="drop {{if this.expanded 'expanded'}}">
+          {{yield}}
+        </ul>
+      {{else}}
         {{yield}}
-      </ul>
-    {{else}}
-      {{yield}}
-    {{/if}}
+      {{/if}}
+    </ul>
   </template>
 }

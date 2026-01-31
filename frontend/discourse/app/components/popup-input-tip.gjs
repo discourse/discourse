@@ -3,12 +3,17 @@ import Component from "@ember/component";
 import { not, or, reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
-import concatClass from "discourse/helpers/concat-class";
+import {
+  attributeBindings,
+  classNameBindings,
+  tagName,
+} from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import discourseComputed from "discourse/lib/decorators";
 
-@tagName("")
+@tagName("a")
+@classNameBindings(":popup-tip", "good", "bad", "lastShownAt::hide")
+@attributeBindings("role", "ariaLabel", "tabindex")
 export default class PopupInputTip extends Component {
   @service composer;
 
@@ -57,18 +62,5 @@ export default class PopupInputTip extends Component {
     }
   }
 
-  <template>
-    <a
-      role={{this.role}}
-      tabindex={{this.tabindex}}
-      aria-label={{this.ariaLabel}}
-      class={{concatClass
-        "popup-tip"
-        (if this.good "good")
-        (if this.bad "bad")
-        (unless this.lastShownAt "hide")
-      }}
-      ...attributes
-    >{{this.tipReason}} {{icon "circle-xmark"}}</a>
-  </template>
+  <template>{{this.tipReason}} {{icon "circle-xmark"}}</template>
 }

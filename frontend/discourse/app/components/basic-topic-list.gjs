@@ -2,7 +2,6 @@
 import Component from "@ember/component";
 import { alias, not } from "@ember/object/computed";
 import { service } from "@ember/service";
-import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import $ from "jquery";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
@@ -10,7 +9,6 @@ import List from "discourse/components/topic-list/list";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
 export default class BasicTopicList extends Component {
   @service site;
 
@@ -93,30 +91,28 @@ export default class BasicTopicList extends Component {
   }
 
   <template>
-    <div ...attributes>
-      <ConditionalLoadingSpinner @condition={{this.loading}}>
-        {{#if this.topics}}
-          <List
-            @showPosters={{this.showPosters}}
-            @hideCategory={{this.hideCategory}}
-            @topics={{this.topics}}
-            @expandExcerpts={{this.expandExcerpts}}
-            @bulkSelectHelper={{this.bulkSelectHelper}}
-            @canBulkSelect={{this.canBulkSelect}}
-            @tagsForUser={{this.tagsForUser}}
-            @changeSort={{this.changeSort}}
-            @order={{this.order}}
-            @ascending={{this.ascending}}
-            @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
-          />
-        {{else}}
-          {{#unless this.loadingMore}}
-            <div class="alert alert-info">
-              {{i18n "choose_topic.none_found"}}
-            </div>
-          {{/unless}}
-        {{/if}}
-      </ConditionalLoadingSpinner>
-    </div>
+    <ConditionalLoadingSpinner @condition={{this.loading}}>
+      {{#if this.topics}}
+        <List
+          @showPosters={{this.showPosters}}
+          @hideCategory={{this.hideCategory}}
+          @topics={{this.topics}}
+          @expandExcerpts={{this.expandExcerpts}}
+          @bulkSelectHelper={{this.bulkSelectHelper}}
+          @canBulkSelect={{this.canBulkSelect}}
+          @tagsForUser={{this.tagsForUser}}
+          @changeSort={{this.changeSort}}
+          @order={{this.order}}
+          @ascending={{this.ascending}}
+          @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+        />
+      {{else}}
+        {{#unless this.loadingMore}}
+          <div class="alert alert-info">
+            {{i18n "choose_topic.none_found"}}
+          </div>
+        {{/unless}}
+      {{/if}}
+    </ConditionalLoadingSpinner>
   </template>
 }

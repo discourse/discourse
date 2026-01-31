@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import noop from "discourse/helpers/noop";
 import discourseComputed, { bind } from "discourse/lib/decorators";
@@ -23,7 +23,7 @@ import { i18n } from "discourse-i18n";
 // binding will still be added, and the file type will be validated here. This
 // is sometimes useful if you need to do something outside the uppy upload with
 // the file, such as directly using JSON or CSV data from a file in JS.
-@classNames("pick-files-button")
+@tagName("")
 export default class PickFilesButton extends Component {
   @service dialog;
 
@@ -126,32 +126,34 @@ export default class PickFilesButton extends Component {
   }
 
   <template>
-    {{#if this.showButton}}
-      <DButton
-        @action={{this.openSystemFilePicker}}
-        @label={{this.label}}
-        @icon={{this.icon}}
-      />
-    {{/if}}
-    {{#if this.acceptsAllFormats}}
-      <input
-        {{didInsert (or @registerFileInput (noop))}}
-        type="file"
-        id={{this.fileInputId}}
-        class={{this.fileInputClass}}
-        multiple={{this.allowMultiple}}
-        disabled={{this.fileInputDisabled}}
-      />
-    {{else}}
-      <input
-        {{didInsert (or @registerFileInput (noop))}}
-        type="file"
-        id={{this.fileInputId}}
-        class={{this.fileInputClass}}
-        accept={{this.acceptedFormats}}
-        multiple={{this.allowMultiple}}
-        disabled={{this.fileInputDisabled}}
-      />
-    {{/if}}
+    <div class="pick-files-button" ...attributes>
+      {{#if this.showButton}}
+        <DButton
+          @action={{this.openSystemFilePicker}}
+          @label={{this.label}}
+          @icon={{this.icon}}
+        />
+      {{/if}}
+      {{#if this.acceptsAllFormats}}
+        <input
+          {{didInsert (or @registerFileInput (noop))}}
+          type="file"
+          id={{this.fileInputId}}
+          class={{this.fileInputClass}}
+          multiple={{this.allowMultiple}}
+          disabled={{this.fileInputDisabled}}
+        />
+      {{else}}
+        <input
+          {{didInsert (or @registerFileInput (noop))}}
+          type="file"
+          id={{this.fileInputId}}
+          class={{this.fileInputClass}}
+          accept={{this.acceptedFormats}}
+          multiple={{this.allowMultiple}}
+          disabled={{this.fileInputDisabled}}
+        />
+      {{/if}}
+    </div>
   </template>
 }
