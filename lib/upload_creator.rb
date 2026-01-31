@@ -253,10 +253,18 @@ class UploadCreator
       # The dependent upload keeps its own unique sha1 (used for short_url and data-base62-sha1)
       # but points to the same storage object as the primary
       if @dedup_from_primary
-        primary = Upload.find(@upload.primary_upload_id)
-        @upload.url = primary.url
-        @upload.save!(validate: @opts[:validate])
-      else
+        primary = Upload.find_by(id: @upload.primary_upload_id)
+        if primary&.url.present?
+          @upload.url = primary.url
+          @upload.save!(validate: @opts[:validate])
+        else
+          # Primary was deleted between dedup check and now - clear the reference and upload normally
+          @upload.update_columns(primary_upload_id: nil)
+          @dedup_from_primary = false
+        end
+      end
+
+      if !@dedup_from_primary
         store = Discourse.store
 
         if @opts[:existing_external_upload_key] && store.external?
