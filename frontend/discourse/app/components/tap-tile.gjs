@@ -1,17 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { reads } from "@ember/object/computed";
-import {
-  attributeBindings,
-  classNameBindings,
-  classNames,
-} from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { propertyEqual } from "discourse/lib/computed";
 
-@classNames("tap-tile")
-@classNameBindings("active")
-@attributeBindings("role", "ariaPressed", "tabIndex")
+@tagName("")
 export default class TapTile extends Component {
   role = "button";
   tabIndex = 0;
@@ -36,9 +31,17 @@ export default class TapTile extends Component {
   }
 
   <template>
-    {{#if this.icon}}
-      {{icon this.icon}}
-    {{/if}}
-    {{yield}}
+    <div
+      role={{this.role}}
+      tabindex={{this.tabIndex}}
+      aria-pressed={{this.ariaPressed}}
+      class={{concatClass "tap-tile" (if this.active "active")}}
+      ...attributes
+    >
+      {{#if this.icon}}
+        {{icon this.icon}}
+      {{/if}}
+      {{yield}}
+    </div>
   </template>
 }

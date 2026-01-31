@@ -26,9 +26,9 @@ export default class ColorPicker extends Component {
 
   <template>
     <div
-      class="colors-container"
       role={{this.role}}
       aria-label={{this.ariaLabel}}
+      class="colors-container"
       ...attributes
     >
       {{#each this.colors as |c|}}
