@@ -196,7 +196,7 @@ class HashtagAutocompleteService
       limited_slugs.reject do |slug|
         HashtagAutocompleteService.data_source_types.any? { |type| slug.ends_with?("::#{type}") }
       end
-    slugs_with_suffixes = (limited_slugs - slugs_without_suffixes)
+    slugs_with_suffixes = (limited_slugs - slugs_without_suffixes).to_set
 
     # For all the slugs without a type suffix, we need to lookup in order, falling
     # back to the next type if no results are returned for a slug for the current
@@ -342,11 +342,12 @@ class HashtagAutocompleteService
       search_for_type(type, guardian, term, limit - limited_results.length, condition)
     return limited_results if search_results.empty?
 
+    # Use Set for O(1) lookup instead of O(n) array scan
+    existing_slugs_for_type = limited_results.select { |r| r.type == type }.map(&:slug).to_set
+
     search_results =
       HashtagAutocompleteService.data_source_from_type(type).search_sort(
-        search_results.reject do |item|
-          limited_results.any? { |exact| exact.type == type && exact.slug === item.slug }
-        end,
+        search_results.reject { |item| existing_slugs_for_type.include?(item.slug) },
         term,
       )
 
@@ -432,22 +433,25 @@ class HashtagAutocompleteService
   end
 
   def append_types_to_conflicts(limited_results, top_ranked_type, types_in_priority_order, limit)
+    # Precompute type -> index mapping for O(1) lookup instead of O(n) array scan
+    type_to_index = types_in_priority_order.each_with_index.to_h
+
+    # Precompute slugs grouped by type for O(1) lookup
+    slugs_by_type =
+      limited_results.group_by(&:type).transform_values { |items| items.map(&:slug).to_set }
+
     limited_results.each do |hashtag_item|
       next if hashtag_item.type == top_ranked_type
 
       # We only need to change the ref to include the type if there is a
       # higher-ranked hashtag slug that conflicts with this one.
-      higher_ranked_types =
-        types_in_priority_order.slice(0, types_in_priority_order.index(hashtag_item.type))
-      higher_ranked_slugs =
-        limited_results
-          .reject { |r| r.type === hashtag_item.type }
-          .select { |r| higher_ranked_types.include?(r.type) }
-          .map(&:slug)
+      item_type_index = type_to_index[hashtag_item.type]
+      has_conflict =
+        types_in_priority_order[0...item_type_index].any? do |higher_type|
+          slugs_by_type[higher_type]&.include?(hashtag_item.slug)
+        end
 
-      if higher_ranked_slugs.include?(hashtag_item.slug)
-        hashtag_item.ref = "#{hashtag_item.ref}::#{hashtag_item.type}"
-      end
+      hashtag_item.ref = "#{hashtag_item.ref}::#{hashtag_item.type}" if has_conflict
     end
 
     limited_results.take(limit)

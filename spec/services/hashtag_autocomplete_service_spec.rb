@@ -444,4 +444,46 @@ RSpec.describe HashtagAutocompleteService do
       end
     end
   end
+
+  describe "with many items" do
+    fab!(:categories) { Fabricate.times(15, :category) }
+    fab!(:tags) { (1..15).map { |i| Fabricate(:tag, name: "tag-#{i}") } }
+
+    it "#search handles many results without duplicates" do
+      results = service.search("tag-", %w[category tag], limit: 20)
+      tag_results = results.select { |r| r.type == "tag" }
+
+      expect(tag_results.map(&:slug).uniq.length).to eq(tag_results.length)
+    end
+
+    it "#search correctly appends type suffixes when many slugs conflict" do
+      conflicting_categories =
+        (1..5).map { |i| Fabricate(:category, name: "Conflict #{i}", slug: "conflict-#{i}") }
+      conflicting_tags = (1..5).map { |i| Fabricate(:tag, name: "conflict-#{i}") }
+
+      results = service.search("conflict", %w[category tag], limit: 20)
+
+      category_refs = results.select { |r| r.type == "category" }.map(&:ref)
+      tag_refs = results.select { |r| r.type == "tag" }.map(&:ref)
+
+      expect(category_refs).to all(satisfy { |ref| !ref.include?("::") })
+      expect(tag_refs).to all(satisfy { |ref| ref.end_with?("::tag") })
+    end
+
+    it "#lookup handles many slugs with mixed type suffixes" do
+      new_categories =
+        (1..5).map { |i| Fabricate(:category, name: "Lookup Cat #{i}", slug: "lookup-#{i}") }
+      new_tags = (1..5).map { |i| Fabricate(:tag, name: "lookup-#{i}") }
+
+      slugs_without_suffix = new_categories.map(&:slug)
+      slugs_with_suffix = new_tags.map { |t| "#{t.name}::tag" }
+      all_slugs = slugs_without_suffix + slugs_with_suffix
+
+      result = service.lookup(all_slugs, %w[category tag])
+
+      expect(result[:category].length).to eq(5)
+      expect(result[:tag].length).to eq(5)
+      expect(result[:tag].map(&:ref)).to all(end_with("::tag"))
+    end
+  end
 end
