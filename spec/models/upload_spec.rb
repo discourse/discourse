@@ -894,7 +894,11 @@ RSpec.describe Upload do
     context "with deduplication" do
       let(:mock_store) { mock("store") }
 
-      before { Discourse.stubs(:store).returns(mock_store) }
+      before do
+        Discourse.stubs(:store).returns(mock_store)
+        # Allow fabricator to call get_path_for for URL generation
+        mock_store.stubs(:get_path_for).returns("/uploads/default/original/1X/test.png")
+      end
 
       it "removes S3 file when standalone upload is destroyed" do
         upload = Fabricate(:upload)

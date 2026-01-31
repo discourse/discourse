@@ -596,16 +596,19 @@ module PrettyText
                                url,
                                width: img["width"],
                                height: img["height"],
+                               base62_sha1: img["data-base62-sha1"],
                              )
           a.remove
         else
-          width = non_image_media ? nil : a.at_css("img").attr("width")
-          height = non_image_media ? nil : a.at_css("img").attr("height")
+          img = non_image_media ? nil : a.at_css("img")
+          width = img&.attr("width")
+          height = img&.attr("height")
           target.add_next_sibling secure_uploads_placeholder(
                                     doc,
                                     a["href"],
                                     width: width,
                                     height: height,
+                                    base62_sha1: img&.[]("data-base62-sha1"),
                                   )
           target.remove
         end
@@ -652,18 +655,28 @@ module PrettyText
                                  onebox_type: onebox_type,
                                  width: width,
                                  height: height,
+                                 base62_sha1: img["data-base62-sha1"],
                                )
           img.remove
         end
       end
   end
 
-  def self.secure_uploads_placeholder(doc, url, onebox_type: false, width: nil, height: nil)
+  def self.secure_uploads_placeholder(
+    doc,
+    url,
+    onebox_type: false,
+    width: nil,
+    height: nil,
+    base62_sha1: nil
+  )
     data_width = width ? "data-width=#{width}" : ""
     data_height = height ? "data-height=#{height}" : ""
     data_onebox_type = onebox_type ? "data-onebox-type='#{onebox_type}'" : ""
+    # Preserve data-base62-sha1 for proper upload identification with deduplication
+    data_base62_sha1 = base62_sha1 ? "data-base62-sha1='#{base62_sha1}'" : ""
     <<~HTML
-    <div class="secure-upload-notice" data-stripped-secure-upload="#{url}" #{data_onebox_type} #{data_width} #{data_height}>
+    <div class="secure-upload-notice" data-stripped-secure-upload="#{url}" #{data_onebox_type} #{data_width} #{data_height} #{data_base62_sha1}>
       #{I18n.t("emails.secure_uploads_placeholder")} <a class='stripped-secure-view-upload' href="#{url}">#{I18n.t("emails.view_redacted_media")}</a>.
     </div>
     HTML

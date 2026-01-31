@@ -76,7 +76,7 @@ module HasPostUploadReferences
         "div/@data-original-video-src",
       )
 
-    # Collect (src, sha1) pairs. Use data-base62-sha1 when available for unique
+    # Collect (src, path, sha1) tuples. Use data-base62-sha1 when available for unique
     # upload identification, even when multiple uploads share the same storage URL.
     seen_sha1s = Set.new
     upload_entries = []
@@ -93,6 +93,7 @@ module HasPostUploadReferences
 
       src = src.split("?")[0]
       sha1 = nil
+      path = nil
 
       # Check for data-base62-sha1 attribute which preserves unique upload identity
       # even when uploads share storage URLs (deduplication)
@@ -149,9 +150,9 @@ module HasPostUploadReferences
       next if sha1.present? && seen_sha1s.include?(sha1)
       seen_sha1s.add(sha1) if sha1.present?
 
-      upload_entries << [src, sha1]
+      upload_entries << [src, path, sha1]
     end
 
-    upload_entries.each { |src, sha1| yield(src, nil, sha1) }
+    upload_entries.each { |src, path, sha1| yield(src, path, sha1) }
   end
 end
