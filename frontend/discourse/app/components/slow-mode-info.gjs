@@ -30,28 +30,26 @@ export default class SlowModeInfo extends Component {
   }
 
   <template>
-    <div ...attributes>
-      {{#if this.showSlowModeNotice}}
-        <div class="topic-status-info">
-          <h3 class="slow-mode-heading">
-            <span>
-              {{icon "hourglass-start"}}
-              {{i18n
-                "topic.slow_mode_notice.duration"
-                duration=this.durationText
-              }}
-            </span>
+    {{#if this.showSlowModeNotice}}
+      <div class="topic-status-info">
+        <h3 class="slow-mode-heading">
+          <span>
+            {{icon "hourglass-start"}}
+            {{i18n
+              "topic.slow_mode_notice.duration"
+              duration=this.durationText
+            }}
+          </span>
 
-            {{#if this.user.canManageTopic}}
-              <DButton
-                @action={{this.disableSlowMode}}
-                @icon="trash-can"
-                class="slow-mode-remove"
-              />
-            {{/if}}
-          </h3>
-        </div>
-      {{/if}}
-    </div>
+          {{#if this.user.canManageTopic}}
+            <DButton
+              @action={{this.disableSlowMode}}
+              @icon="trash-can"
+              class="slow-mode-remove"
+            />
+          {{/if}}
+        </h3>
+      </div>
+    {{/if}}
   </template>
 }

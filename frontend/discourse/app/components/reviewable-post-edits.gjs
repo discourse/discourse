@@ -54,18 +54,16 @@ export default class ReviewablePostEdits extends Component {
   }
 
   <template>
-    <div ...attributes>
-      {{#if this.hasEdits}}
-        <div class="post-info edits">
-          <DButton
-            @action={{this.showEditHistory}}
-            @icon="pencil"
-            @translatedLabel={{this.editCount}}
-            @translatedTitle={{this.editedTitle}}
-            class="btn-icon-text btn-flat {{this.historyClass}}"
-          />
-        </div>
-      {{/if}}
-    </div>
+    {{#if this.hasEdits}}
+      <div class="post-info edits">
+        <DButton
+          @action={{this.showEditHistory}}
+          @icon="pencil"
+          @translatedLabel={{this.editCount}}
+          @translatedTitle={{this.editedTitle}}
+          class="btn-icon-text btn-flat {{this.historyClass}}"
+        />
+      </div>
+    {{/if}}
   </template>
 }

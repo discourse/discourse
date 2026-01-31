@@ -9,28 +9,26 @@ import lazyHash from "discourse/helpers/lazy-hash";
 @tagName("")
 export default class UserProfileAvatar extends Component {
   <template>
-    <div ...attributes>
-      <PluginOutlet
-        @name="user-profile-avatar-wrapper"
-        @outletArgs={{lazyHash user=@user}}
-      >
-        <div class="user-profile-avatar">
-          <PluginOutlet
-            @name="user-profile-avatar-img-wrapper"
-            @outletArgs={{lazyHash user=@user}}
-          >
-            {{boundAvatar @user "huge"}}
-          </PluginOutlet>
+    <PluginOutlet
+      @name="user-profile-avatar-wrapper"
+      @outletArgs={{lazyHash user=@user}}
+    >
+      <div class="user-profile-avatar">
+        <PluginOutlet
+          @name="user-profile-avatar-img-wrapper"
+          @outletArgs={{lazyHash user=@user}}
+        >
+          {{boundAvatar @user "huge"}}
+        </PluginOutlet>
 
-          <UserAvatarFlair @user={{@user}} />
-          <div>
-            <PluginOutlet
-              @name="user-profile-avatar-flair"
-              @outletArgs={{lazyHash model=@user}}
-            />
-          </div>
+        <UserAvatarFlair @user={{@user}} />
+        <div>
+          <PluginOutlet
+            @name="user-profile-avatar-flair"
+            @outletArgs={{lazyHash model=@user}}
+          />
         </div>
-      </PluginOutlet>
-    </div>
+      </div>
+    </PluginOutlet>
   </template>
 }

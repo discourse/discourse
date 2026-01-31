@@ -65,115 +65,113 @@ export default class ReviewableUser extends Component {
   }
 
   <template>
-    <div ...attributes>
-      <div class="reviewable-user-info">
-        <div class="reviewable-user-fields">
-          {{#if this.isScrubbed}}
-            <ReviewableField
-              @classes="reviewable-user-details reject-reason"
-              @name={{i18n "review.user.scrubbed_reject_reason"}}
-              @value={{this.reviewable.reject_reason}}
-            />
+    <div class="reviewable-user-info">
+      <div class="reviewable-user-fields">
+        {{#if this.isScrubbed}}
+          <ReviewableField
+            @classes="reviewable-user-details reject-reason"
+            @name={{i18n "review.user.scrubbed_reject_reason"}}
+            @value={{this.reviewable.reject_reason}}
+          />
 
-            <ReviewableField
-              @classes="reviewable-user-details scrubbed-by"
-              @name={{i18n "review.user.scrubbed_by"}}
-              @value={{this.reviewable.payload.scrubbed_by}}
-            />
+          <ReviewableField
+            @classes="reviewable-user-details scrubbed-by"
+            @name={{i18n "review.user.scrubbed_by"}}
+            @value={{this.reviewable.payload.scrubbed_by}}
+          />
 
-            <ReviewableField
-              @classes="reviewable-user-details scrubbed-reason"
-              @name={{i18n "review.user.scrubbed_reason"}}
-              @value={{this.reviewable.payload.scrubbed_reason}}
-            />
+          <ReviewableField
+            @classes="reviewable-user-details scrubbed-reason"
+            @name={{i18n "review.user.scrubbed_reason"}}
+            @value={{this.reviewable.payload.scrubbed_reason}}
+          />
 
-            <ReviewableField
-              @classes="reviewable-user-details scrubbed-at"
-              @name={{i18n "review.user.scrubbed_at"}}
-              @value={{rawDate this.reviewable.payload.scrubbed_at}}
-            />
-          {{else}}
-            <div class="reviewable-user-details username">
-              <div class="name">{{i18n "review.user.username"}}</div>
-              <div class="value">
-                {{#if this.reviewable.link_admin}}
-                  <a
-                    href={{getUrl
-                      (concat
-                        "/admin/users/"
-                        this.reviewable.user.id
-                        "/"
-                        this.reviewable.payload.username
-                      )
-                    }}
-                  >
-                    {{this.reviewable.payload.username}}
-                  </a>
-                {{else}}
+          <ReviewableField
+            @classes="reviewable-user-details scrubbed-at"
+            @name={{i18n "review.user.scrubbed_at"}}
+            @value={{rawDate this.reviewable.payload.scrubbed_at}}
+          />
+        {{else}}
+          <div class="reviewable-user-details username">
+            <div class="name">{{i18n "review.user.username"}}</div>
+            <div class="value">
+              {{#if this.reviewable.link_admin}}
+                <a
+                  href={{getUrl
+                    (concat
+                      "/admin/users/"
+                      this.reviewable.user.id
+                      "/"
+                      this.reviewable.payload.username
+                    )
+                  }}
+                >
                   {{this.reviewable.payload.username}}
-                {{/if}}
+                </a>
+              {{else}}
+                {{this.reviewable.payload.username}}
+              {{/if}}
+            </div>
+          </div>
+          <ReviewableField
+            @classes="reviewable-user-details name"
+            @name={{i18n "review.user.name"}}
+            @value={{this.reviewable.payload.name}}
+          />
+
+          <ReviewableField
+            @classes="reviewable-user-details email"
+            @name={{i18n "review.user.email"}}
+            @value={{this.reviewable.payload.email}}
+          />
+
+          <ReviewableField
+            @classes="reviewable-user-details bio"
+            @name={{i18n "review.user.bio"}}
+            @value={{this.reviewable.payload.bio}}
+          />
+
+          {{#if this.reviewable.payload.website}}
+            <div class="reviewable-user-details website">
+              <div class="name">{{i18n "review.user.website"}}</div>
+              <div class="value">
+                <a
+                  href={{this.reviewable.payload.website}}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >{{this.reviewable.payload.website}}</a>
               </div>
             </div>
-            <ReviewableField
-              @classes="reviewable-user-details name"
-              @name={{i18n "review.user.name"}}
-              @value={{this.reviewable.payload.name}}
-            />
-
-            <ReviewableField
-              @classes="reviewable-user-details email"
-              @name={{i18n "review.user.email"}}
-              @value={{this.reviewable.payload.email}}
-            />
-
-            <ReviewableField
-              @classes="reviewable-user-details bio"
-              @name={{i18n "review.user.bio"}}
-              @value={{this.reviewable.payload.bio}}
-            />
-
-            {{#if this.reviewable.payload.website}}
-              <div class="reviewable-user-details website">
-                <div class="name">{{i18n "review.user.website"}}</div>
-                <div class="value">
-                  <a
-                    href={{this.reviewable.payload.website}}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >{{this.reviewable.payload.website}}</a>
-                </div>
-              </div>
-            {{/if}}
-
-            <ReviewableField
-              @classes="reviewable-user-details reject-reason"
-              @name={{i18n "review.user.reject_reason"}}
-              @value={{this.reviewable.reject_reason}}
-            />
-
-            {{#each this.userFields as |f|}}
-              <ReviewableField
-                @classes="reviewable-user-details user-field"
-                @name={{f.name}}
-                @value={{f.value}}
-                @tagName=""
-              />
-            {{/each}}
           {{/if}}
-        </div>
 
-        {{yield}}
+          <ReviewableField
+            @classes="reviewable-user-details reject-reason"
+            @name={{i18n "review.user.reject_reason"}}
+            @value={{this.reviewable.reject_reason}}
+          />
+
+          {{#each this.userFields as |f|}}
+            <ReviewableField
+              @classes="reviewable-user-details user-field"
+              @name={{f.name}}
+              @value={{f.value}}
+            />
+          {{/each}}
+        {{/if}}
       </div>
-      {{#if this.canScrubRejectedUser}}
-        <div class="scrub-rejected-user">
-          <button
-            class="btn btn-danger"
-            {{on "click" this.showScrubRejectedUserModal}}
-          >
-            {{i18n "review.user.scrub_record.button"}}
-          </button>
-        </div>
-      {{/if}}
+
+      {{yield}}
     </div>
+
+    {{#if this.canScrubRejectedUser}}
+      <div class="scrub-rejected-user">
+        <button
+          class="btn btn-danger"
+          {{on "click" this.showScrubRejectedUserModal}}
+        >
+          {{i18n "review.user.scrub_record.button"}}
+        </button>
+      </div>
+    {{/if}}
   </template>
 }

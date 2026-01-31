@@ -562,7 +562,6 @@ export default <template>
                 <SlowModeInfo
                   @topic={{@controller.model}}
                   @user={{@controller.currentUser}}
-                  @tagName=""
                 />
 
                 <TopicTimerInfo

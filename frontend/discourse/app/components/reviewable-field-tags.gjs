@@ -11,21 +11,18 @@ export default class ReviewableFieldTags extends Component {
   onChange(tags) {
     this.set("value", tags);
 
-    this.valueChanged &&
-      this.valueChanged({
-        target: {
-          value: tags,
-        },
-      });
+    this.valueChanged?.({
+      target: {
+        value: tags,
+      },
+    });
   }
 
   <template>
-    <div ...attributes>
-      <MiniTagChooser
-        @value={{this.value}}
-        @onChange={{this.onChange}}
-        @options={{hash categoryId=this.tagCategoryId}}
-      />
-    </div>
+    <MiniTagChooser
+      @value={{this.value}}
+      @onChange={{this.onChange}}
+      @options={{hash categoryId=this.tagCategoryId}}
+    />
   </template>
 }
