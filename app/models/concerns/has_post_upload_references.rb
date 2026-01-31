@@ -98,52 +98,52 @@ module HasPostUploadReferences
       # Check for data-base62-sha1 attribute which preserves unique upload identity
       # even when uploads share storage URLs (deduplication)
       parent = media.parent
-      if parent && (base62 = parent["data-base62-sha1"]).present?
-        sha1 = Upload.sha1_from_base62(base62)
-      end
+      sha1_from_attribute =
+        if parent && (base62 = parent["data-base62-sha1"]).present?
+          Upload.sha1_from_base62(base62)
+        end
 
-      # If no sha1 from attribute, try to extract from URL
-      if sha1.blank?
-        if src.start_with?("upload://")
-          sha1 = Upload.sha1_from_short_url(src)
-        elsif src.include?("/uploads/short-url/")
-          host =
-            begin
-              URI(src).host
-            rescue URI::Error
-            end
-          next if host.present? && host != Discourse.current_hostname
-          sha1 = Upload.sha1_from_short_path(src)
-        else
-          next if upload_patterns.none? { |pattern| src =~ pattern }
-          next if Rails.configuration.multisite && src.exclude?(current_db)
+      # Handle short URLs (upload:// or /uploads/short-url/) - these don't have extractable paths
+      if src.start_with?("upload://")
+        sha1 = sha1_from_attribute || Upload.sha1_from_short_url(src)
+      elsif src.include?("/uploads/short-url/")
+        host =
+          begin
+            URI(src).host
+          rescue URI::Error
+          end
+        next if host.present? && host != Discourse.current_hostname
+        sha1 = sha1_from_attribute || Upload.sha1_from_short_path(src)
+      else
+        # Regular URLs - extract path and optionally sha1
+        next if upload_patterns.none? { |pattern| src =~ pattern }
+        next if Rails.configuration.multisite && src.exclude?(current_db)
 
-          src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
+        src = "#{SiteSetting.force_https ? "https" : "http"}:#{src}" if src.start_with?("//")
 
-          if !Discourse.store.has_been_uploaded?(src) && !Upload.secure_uploads_url?(src) &&
-               !(include_local_upload && src =~ %r{\A/[^/]}i)
-            next
+        if !Discourse.store.has_been_uploaded?(src) && !Upload.secure_uploads_url?(src) &&
+             !(include_local_upload && src =~ %r{\A/[^/]}i)
+          next
+        end
+
+        path =
+          begin
+            URI(
+              UrlHelper.unencode(GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src),
+            )&.path
+          rescue URI::Error
           end
 
-          path =
-            begin
-              URI(
-                UrlHelper.unencode(
-                  GlobalSetting.cdn_url ? src.sub(GlobalSetting.cdn_url, "") : src,
-                ),
-              )&.path
-            rescue URI::Error
-            end
+        next if path.blank?
 
-          next if path.blank?
-
-          sha1 =
+        # Use sha1 from attribute if available, otherwise extract from path
+        sha1 =
+          sha1_from_attribute ||
             if path.include? "optimized"
               OptimizedImage.extract_sha1(path)
             else
               Upload.extract_sha1(path) || Upload.sha1_from_short_path(path)
             end
-        end
       end
 
       # Dedupe by sha1 to avoid duplicate references for the same upload
