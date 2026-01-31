@@ -49,7 +49,7 @@ module DiscourseAssign
       assign_to =
         (
           if username.present?
-            User.find_by(username_lower: username.downcase)
+            User.find_by_username(username)
           else
             Group.where("LOWER(name) = ?", group_name.downcase).first
           end
@@ -146,23 +146,23 @@ module DiscourseAssign
           .limit(limit)
           .offset(offset)
 
-      users_with_assignments_count =
-        users_with_assignments_count.where(<<~SQL, pattern: "%#{params[:filter]}%") if params[
-          users.name ILIKE :pattern OR users.username_lower ILIKE :pattern
-        SQL
-        :filter
-      ]
-      group_assignments_count = Assignment.active_for_group(group).count
-      users_assignments_count =
-        users_with_assignments_count.reduce(0) do |sum, assignment|
-          sum + assignment.assignments_count
-        end
+      if params[:filter].present?
+        pattern = "%#{User.normalize_username(params[:filter])}%"
 
-      render json: {
-               members: serialize_data(users_with_assignments_count, GroupUserAssignedSerializer),
-               assignment_count: users_assignments_count + group_assignments_count,
-               group_assignment_count: group_assignments_count,
-             }
+        users_with_assignments_count =
+          users_with_assignments_count.where(
+            "users.name ILIKE :pattern OR users.username_lower ILIKE :pattern",
+            pattern:,
+          )
+      end
+
+      users_assignments_count = users_with_assignments_count.sum(&:assignments_count)
+      group_assignment_count = Assignment.active_for_group(group).count
+      assignment_count = users_assignments_count + group_assignment_count
+
+      members = serialize_data(users_with_assignments_count, GroupUserAssignedSerializer)
+
+      render json: { members:, assignment_count:, group_assignment_count: }
     end
 
     private

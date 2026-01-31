@@ -12,8 +12,8 @@ module Jobs
       user = User.find_by(id: @user_id)
       return unless user
 
-      @old_username = args[:old_username].unicode_normalize
-      @new_username = args[:new_username].unicode_normalize
+      @old_username = args[:old_username].to_s.unicode_normalize
+      @new_username = args[:new_username].to_s.unicode_normalize
 
       @avatar_img = PrettyText.avatar_img(args[:avatar_template], "tiny")
 

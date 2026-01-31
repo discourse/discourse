@@ -861,7 +861,7 @@ class GroupsController < ApplicationController
 
   def users_from_params
     if params[:usernames].present?
-      users = User.where(username_lower: params[:usernames].split(",").map(&:downcase))
+      users = User.where(username_lower: params[:usernames].split(","))
       raise Discourse::InvalidParameters.new(:usernames) if users.blank?
     elsif params[:user_id].present?
       users = User.where(id: params[:user_id].to_i)

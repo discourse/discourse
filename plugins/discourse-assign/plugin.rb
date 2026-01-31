@@ -317,7 +317,7 @@ after_initialize do
     end
 
     user_id = topic_query.guardian.user.id if name == "me"
-    user_id ||= User.where(username_lower: name.downcase).pick(:id)
+    user_id ||= User.where(username_lower: name).pick(:id)
 
     if user_id
       next(
@@ -508,7 +508,7 @@ after_initialize do
       options = object.instance_variable_get(:@opts)
 
       if assigned_user = options.dig(:assigned)
-        scope.can_assign? || assigned_user.downcase == scope.current_user&.username_lower
+        scope.can_assign? || scope.current_user&.matches_username?(assigned_user)
       end
     end,
   ) do
@@ -912,8 +912,7 @@ after_initialize do
       next scope.where("topics.id IN (SELECT a.topic_id FROM assignments a WHERE a.active)")
     end
 
-    found_names, user_ids =
-      User.where(username_lower: names.map(&:downcase)).pluck(:username, :id).transpose
+    found_names, user_ids = User.where(username_lower: names).pluck(:username, :id).transpose
 
     found_names ||= []
     user_ids ||= []

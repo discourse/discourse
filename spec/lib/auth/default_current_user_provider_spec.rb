@@ -141,6 +141,21 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(provider("/", params).current_user.id).to eq(user.id)
     end
 
+    it "finds a user with Unicode username for a correct system api key" do
+      SiteSetting.unicode_usernames = true
+      unicode_user = Fabricate(:user, username: "löwe")
+      api_key = ApiKey.create!(created_by_id: -1)
+
+      params = { "HTTP_API_KEY" => api_key.key, "HTTP_API_USERNAME" => "löwe" }
+      expect(provider("/", params).current_user.id).to eq(unicode_user.id)
+
+      params = { "HTTP_API_KEY" => api_key.key, "HTTP_API_USERNAME" => "LÖWE" }
+      expect(provider("/", params).current_user.id).to eq(unicode_user.id)
+
+      params = { "HTTP_API_KEY" => api_key.key, "HTTP_API_USERNAME" => "LO\u0308WE" }
+      expect(provider("/", params).current_user.id).to eq(unicode_user.id)
+    end
+
     it "raises for a mismatched api_key header and param username" do
       api_key = ApiKey.create!(created_by_id: -1)
       params = { "HTTP_API_KEY" => api_key.key }

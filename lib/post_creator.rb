@@ -117,7 +117,7 @@ class PostCreator
 
       # Make sure none of the users have muted or ignored the creator or prevented
       # PMs from being sent to them
-      target_users = User.where(username_lower: names.map(&:downcase)).pluck(:id, :username).to_h
+      target_users = User.where(username_lower: names).pluck(:id, :username).to_h
       UserCommScreener
         .new(acting_user: @user, target_user_ids: target_users.keys)
         .preventing_actor_communication

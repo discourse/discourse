@@ -154,7 +154,7 @@ module DiscourseAi
         end
 
         register_filter(/\Ausernames?:(.+)\z/i) do |relation, username, filter|
-          user_ids = User.where(username_lower: username.split(",").map(&:downcase)).pluck(:id)
+          user_ids = User.where(username_lower: username.split(",")).pluck(:id)
           if user_ids.empty?
             relation.where("1 = 0")
           else

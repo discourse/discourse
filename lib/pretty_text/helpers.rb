@@ -16,8 +16,9 @@ module PrettyText
     end
 
     def avatar_template(username)
-      return "" unless username
-      user = User.find_by(username_lower: username.downcase)
+      return "" if username.blank?
+
+      user = User.find_by_username(username)
       return "" if user.blank?
 
       # TODO: Add support for ES6 and call `avatar-template` directly
@@ -25,8 +26,9 @@ module PrettyText
     end
 
     def lookup_primary_user_group(username)
-      return "" unless username
-      user = User.find_by(username_lower: username.downcase)
+      return "" if username.blank?
+
+      user = User.find_by_username(username)
       return "" if user.blank?
 
       user.primary_group.try(:name) || ""

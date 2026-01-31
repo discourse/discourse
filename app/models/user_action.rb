@@ -242,22 +242,14 @@ class UserAction < ActiveRecord::Base
     apply_common_filters(builder, user_id, guardian, ignore_private_messages)
 
     if action_id
-      builder.where("a.id = :id", id: action_id.to_i)
+      builder.where("a.id = ?", action_id.to_i)
     else
-      builder.where("a.user_id = :user_id", user_id: user_id.to_i)
-      if action_types && action_types.length > 0
-        builder.where("a.action_type in (:action_types)", action_types: action_types)
-      end
+      builder.where("a.user_id = ?", user_id.to_i)
+      builder.where("a.action_type IN (?)", action_types) if action_types.present?
+      builder.where("a.action_type <> ?", UserAction::MENTION) unless SiteSetting.enable_mentions?
 
       if acting_username
-        builder.where(
-          "u.username_lower = :acting_username",
-          acting_username: acting_username.downcase,
-        )
-      end
-
-      unless SiteSetting.enable_mentions?
-        builder.where("a.action_type <> :mention_type", mention_type: UserAction::MENTION)
+        builder.where("u.username_lower = ?", User.normalize_username(acting_username))
       end
 
       builder.order_by("a.created_at desc").offset(offset.to_i).limit(limit.to_i)

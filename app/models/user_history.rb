@@ -399,7 +399,7 @@ class UserHistory < ActiveRecord::Base
     query = query.where(custom_type: filters[:custom_type]) if filters[:custom_type].present?
 
     %i[acting_user target_user].each do |key|
-      if filters[key] && (obj_id = User.where(username_lower: filters[key].downcase).pluck(:id))
+      if filters[key] && (obj_id = User.where(username_lower: filters[key]).pluck(:id))
         query = query.where("#{key}_id = ?", obj_id)
       end
     end

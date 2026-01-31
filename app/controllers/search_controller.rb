@@ -258,7 +258,7 @@ class SearchController < ApplicationController
       # A user is found by username
       context_obj = nil
       if %w[user private_messages].include? search_context[:type]
-        context_obj = User.find_by(username_lower: search_context[:id].downcase)
+        context_obj = User.find_by_username(search_context[:id])
       elsif "category" == search_context[:type]
         context_obj = Category.find_by(id: search_context[:id].to_i)
       elsif "topic" == search_context[:type]

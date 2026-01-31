@@ -113,9 +113,7 @@ class ::Assigner
 
   def self.mentioned_staff(post)
     mentions = post.raw_mentions
-    if mentions.present?
-      User.human_users.assign_allowed.where("username_lower IN (?)", mentions.map(&:downcase)).first
-    end
+    User.human_users.assign_allowed.where(username_lower: mentions).first if mentions.present?
   end
 
   def self.publish_topic_tracking_state(topic, user_id)

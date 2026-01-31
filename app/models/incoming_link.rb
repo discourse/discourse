@@ -19,10 +19,7 @@ class IncomingLink < ActiveRecord::Base
     username = opts[:username]
     username = nil if !(String === username)
     username = nil if username&.include?("\0")
-    if username
-      u = User.select(:id).find_by(username_lower: username.downcase)
-      user_id = u.id if u
-    end
+    user_id = User.where(username_lower: username).pick(:id) if username
     ip_address = opts[:ip_address]
 
     if opts[:referer].present?

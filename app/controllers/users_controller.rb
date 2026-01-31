@@ -557,7 +557,7 @@ class UsersController < ApplicationController
         filter_sql = "(LOWER(users.username) LIKE :filter)"
         filter_sql =
           "(LOWER(invites.email) LIKE :filter) or (LOWER(users.username) LIKE :filter)" if show_emails
-        invites = invites.where(filter_sql, filter: "%#{params[:search].downcase}%")
+        invites = invites.where(filter_sql, filter: "%#{User.normalize_username(params[:search])}%")
       end
 
       pending_count = Invite.pending(inviter).reorder(nil).count.to_i
@@ -600,7 +600,7 @@ class UsersController < ApplicationController
   end
 
   def changing_case_of_own_username(target_user, username)
-    target_user && username.downcase == (target_user.username.downcase)
+    target_user&.matches_username?(username)
   end
 
   # Used for checking availability of a username and will return suggestions
@@ -1242,7 +1242,7 @@ class UsersController < ApplicationController
     # the search can specify the parameter term or usernames, term will perform the classic user search algorithm while
     # usernames will perform an exact search on the usernames passed as parameter
     term = params[:term].to_s.strip
-    usernames = params[:usernames]&.split(",")&.map { |username| username.downcase.strip }
+    usernames = params[:usernames]&.split(",")&.map(&:strip)
 
     topic_id = params[:topic_id].to_i if params[:topic_id].present?
     category_id = params[:category_id].to_i if params[:category_id].present?

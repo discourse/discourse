@@ -8,6 +8,10 @@ class User < ActiveRecord::Base
   include HasDestroyedWebHook
   include HasDeprecatedColumns
 
+  normalizes :username, with: ->(username) { username.unicode_normalize }
+  normalizes :username_lower,
+             with: ->(username) { normalize_value_for(:username, username).downcase }
+
   DEFAULT_FEATURED_BADGE_COUNT = 3
   MAX_SIMILAR_USERS = 10
 
@@ -168,7 +172,7 @@ class User < ActiveRecord::Base
 
   before_validation :set_skip_validate_email
 
-  before_save :update_usernames
+  before_save { self.username_lower = username }
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
   before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
@@ -306,35 +310,30 @@ class User < ActiveRecord::Base
 
   scope :filter_by_username,
         ->(filter) do
-          if filter.is_a?(Array)
-            where("username_lower ~* ?", "(#{filter.join("|")})")
-          else
-            where("username_lower ILIKE ?", "%#{filter}%")
-          end
+          where(
+            "username_lower ILIKE ANY(ARRAY[?])",
+            Array.wrap(filter).map { "%#{normalize_value_for(:username_lower, _1)}%" },
+          )
         end
 
   scope :filter_by_username_or_email,
         ->(filter) do
           if filter.is_a?(String) && filter =~ /.+@.+/
             # probably an email so try the bypass
-            if user_id = UserEmail.where("lower(email) = ?", filter.downcase).pick(:user_id)
-              return where("users.id = ?", user_id)
+            if user_id = UserEmail.where(email: filter).pick(:user_id)
+              return where(id: user_id)
             end
           end
 
-          users = joins(:primary_email)
+          filters = Array.wrap(filter)
+          username_patterns = filters.map { "%#{normalize_value_for(:username_lower, _1)}%" }
+          email_patterns = filters.map { "%#{_1}%" }
 
-          if filter.is_a?(Array)
-            users.where(
-              "username_lower ~* :filter OR lower(user_emails.email) SIMILAR TO :filter",
-              filter: "(#{filter.join("|")})",
-            )
-          else
-            users.where(
-              "username_lower ILIKE :filter OR lower(user_emails.email) ILIKE :filter",
-              filter: "%#{filter}%",
-            )
-          end
+          joins(:primary_email).where(
+            "username_lower ILIKE ANY(ARRAY[?]) OR LOWER(user_emails.email) ILIKE ANY(ARRAY[?])",
+            username_patterns,
+            email_patterns,
+          )
         end
 
   scope :watching_topic,
@@ -415,7 +414,7 @@ class User < ActiveRecord::Base
   end
 
   def self.normalize_username(username)
-    username.to_s.unicode_normalize.downcase if username.present?
+    normalize_value_for(:username_lower, username) if username.present?
   end
 
   def self.username_available?(username, email = nil, allow_reserved_username: false)
@@ -441,7 +440,7 @@ class User < ActiveRecord::Base
     return true if SiteSetting.here_mention == username
 
     SiteSetting.reserved_usernames_map.any? do |reserved|
-      username.match?(/\A#{Regexp.escape(reserved.unicode_normalize).gsub('\*', ".*")}\z/)
+      username.match?(/\A#{Regexp.escape(normalize_username(reserved)).gsub('\*', ".*")}\z/)
     end
   end
 
@@ -449,7 +448,6 @@ class User < ActiveRecord::Base
     fields = []
     fields.push(*DiscoursePluginRegistry.self_editable_user_custom_fields)
     fields.push(*DiscoursePluginRegistry.staff_editable_user_custom_fields) if by_staff
-
     fields.uniq
   end
 
@@ -544,7 +542,7 @@ class User < ActiveRecord::Base
   end
 
   def self.find_by_username(username)
-    find_by(username_lower: normalize_username(username))
+    find_by(username_lower: username)
   end
 
   def in_any_groups?(group_ids)
@@ -1898,8 +1896,9 @@ class User < ActiveRecord::Base
   end
 
   def username_equals_to?(another_username)
-    username_lower == User.normalize_username(another_username)
+    username_lower == self.class.normalize_value_for(:username_lower, another_username)
   end
+  alias_method :matches_username?, :username_equals_to?
 
   def relative_url
     "#{Discourse.base_path}/u/#{encoded_username}"
@@ -2037,11 +2036,6 @@ class User < ActiveRecord::Base
     # there is a possibility we did not load trust level column, skip it
     return unless has_attribute? :trust_level
     self.trust_level ||= SiteSetting.default_trust_level
-  end
-
-  def update_usernames
-    self.username.unicode_normalize!
-    self.username_lower = username.downcase
   end
 
   USERNAME_EXISTS_SQL = <<~SQL

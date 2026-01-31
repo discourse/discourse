@@ -62,11 +62,11 @@ module Migrations::Importer
       @suffix_wildcard_patterns = []
 
       if (here_mention = SiteSetting.here_mention.presence)
-        @exact_reserved_usernames << here_mention.unicode_normalize.downcase
+        @exact_reserved_usernames << User.normalize_username(here_mention)
       end
 
       SiteSetting.reserved_usernames_map.each do |reserved|
-        normalized = reserved.unicode_normalize.downcase
+        normalized = User.normalize_username(reserved)
 
         if normalized.include?("*")
           pattern = /\A#{Regexp.escape(normalized).gsub('\*', ".*")}\z/

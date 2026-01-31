@@ -15,8 +15,8 @@ module Jobs
 
       # We need to account for the case where the instance allows
       # name to be empty by falling back to username.
-      @old_display_name = (args[:old_name].presence || user.username).unicode_normalize
-      @new_display_name = (args[:new_name].presence || user.username).unicode_normalize
+      @old_display_name = (args[:old_name].presence || user.username).to_s.unicode_normalize
+      @new_display_name = (args[:new_name].presence || user.username).to_s.unicode_normalize
 
       @quote_rewriter = QuoteRewriter.new(user.id)
 

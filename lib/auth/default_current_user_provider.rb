@@ -397,9 +397,9 @@ class Auth::DefaultCurrentUserProvider
 
       user =
         if api_key.user
-          api_key.user if !api_username || (api_key.user.username_lower == api_username.downcase)
+          api_key.user if !api_username || api_key.user.matches_username?(api_username)
         elsif api_username
-          User.find_by(username_lower: api_username.downcase)
+          User.find_by_username(api_username)
         elsif user_id = header_api_key? ? @env[HEADER_API_USER_ID] : request["api_user_id"]
           User.find_by(id: user_id.to_i)
         elsif external_id =

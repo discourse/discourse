@@ -113,7 +113,7 @@ class Admin::EmailLogsController < Admin::AdminController
         .offset(params[:offset] || 0)
         .limit(50)
 
-    logs = logs.where("users.username ILIKE ?", "%#{params[:user]}%") if params[:user].present?
+    logs = logs.merge(User.filter_by_username(params[:user])) if params[:user].present?
 
     if params[:address].present?
       query = "#{table_name}.to_address ILIKE :address"

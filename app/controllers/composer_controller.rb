@@ -126,8 +126,7 @@ class ComposerController < ApplicationController
   end
 
   def users
-    @users ||=
-      User.not_staged.where(username_lower: @names.map(&:downcase)).index_by(&:username_lower)
+    @users ||= User.not_staged.where(username_lower: @names).index_by(&:username_lower)
   end
 
   def groups
@@ -165,7 +164,7 @@ class ComposerController < ApplicationController
   def topic_allowed_user_ids
     @topic_allowed_user_ids ||=
       if @allowed_names.present?
-        User.where(username_lower: @allowed_names.map(&:downcase)).pluck(:id).to_set
+        User.where(username_lower: @allowed_names).pluck(:id).to_set
       elsif @topic&.private_message?
         TopicAllowedUser.where(topic: @topic).pluck(:user_id).to_set
       end

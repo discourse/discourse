@@ -212,14 +212,14 @@ module Chat
 
       if options[:filter]
         if options[:match_filter_on_starts_with]
-          filter_sql = "#{options[:filter].downcase}%"
+          filter_sql = "#{User.normalize_username(options[:filter])}%"
         else
-          filter_sql = "%#{options[:filter].downcase}%"
+          filter_sql = "%#{User.normalize_username(options[:filter])}%"
         end
 
         query =
           query.joins(user_chat_channel_memberships: :user).where(
-            "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter OR users.username ILIKE :filter",
+            "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter OR users.username_lower ILIKE :filter",
             filter: filter_sql,
           )
       end

@@ -59,7 +59,7 @@ module DiscoursePostEvent
     def self.filter_by_attending_user(events, params, guardian, user)
       return events if params[:attending_user].blank?
 
-      attending_user = User.find_by(username_lower: params[:attending_user].downcase)
+      attending_user = User.find_by_username(params[:attending_user])
       return events.none if !attending_user
 
       events =

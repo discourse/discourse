@@ -879,8 +879,8 @@ module Discourse
   # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
     user =
-      User.find_by(
-        username_lower: SiteSetting.site_contact_username.downcase,
+      User.find_by_username(
+        SiteSetting.site_contact_username,
       ) if SiteSetting.site_contact_username.present?
     user ||= (system_user || User.admins.real.order(:id).first)
   end

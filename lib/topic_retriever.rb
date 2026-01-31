@@ -46,6 +46,6 @@ class TopicRetriever
       @opts[:author_username].presence || SiteSetting.embed_by_username.presence ||
         SiteSetting.site_contact_username.presence || Discourse.system_user.username
 
-    TopicEmbed.import_remote(@embed_url, user: User.find_by(username_lower: username.downcase))
+    TopicEmbed.import_remote(@embed_url, user: User.find_by_username(username))
   end
 end
