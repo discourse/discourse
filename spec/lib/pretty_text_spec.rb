@@ -1677,6 +1677,29 @@ RSpec.describe PrettyText do
       expect(PrettyText.cook("❤️💣")).to match(/<img src[^>]+bomb[^>]+>/)
     end
 
+    it "correctly cooks skin tone and gendered ZWJ sequences" do
+      # 1. Standard RGI Input (Man Bouncing Ball: Light Skin Tone)
+      # Structure: ⛹ (26f9) + 🏻 (1f3fb) + ZWJ (200d) + ♂ (2642) + VS16 (fe0f)
+      standard_input = [0x26f9, 0x1f3fb, 0x200d, 0x2642, 0xfe0f].pack("U*")
+      expect(PrettyText.cook(standard_input)).to eq(
+        "<p><img src=\"/images/emoji/twitter/man_bouncing_ball/2.png?v=#{Emoji::EMOJI_VERSION}\" title=\":man_bouncing_ball:t2:\" class=\"emoji only-emoji\" alt=\":man_bouncing_ball:t2:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
+      )
+
+      # 2. Regression: Ordinary Skin Tone (Thumbs Up: Light Skin Tone)
+      # Structure: 👍 (1f44d) + 🏻 (1f3fb)
+      thumbs_up = [0x1f44d, 0x1f3fb].pack("U*")
+      expect(PrettyText.cook(thumbs_up)).to eq(
+        "<p><img src=\"/images/emoji/twitter/+1/2.png?v=#{Emoji::EMOJI_VERSION}\" title=\":+1:t2:\" class=\"emoji only-emoji\" alt=\":+1:t2:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
+      )
+
+      # 3. Regression: Ordinary ZWJ Sequence (Family: Man, Woman, Girl)
+      # Structure: 👨 (1f468) + ZWJ (200d) + 👩 (1f469) + ZWJ (200d) + 👧 (1f467)
+      family = [0x1f468, 0x200d, 0x1f469, 0x200d, 0x1f467].pack("U*")
+      expect(PrettyText.cook(family)).to eq(
+        "<p><img src=\"/images/emoji/twitter/family_man_woman_girl.png?v=#{Emoji::EMOJI_VERSION}\" title=\":family_man_woman_girl:\" class=\"emoji only-emoji\" alt=\":family_man_woman_girl:\" loading=\"lazy\" width=\"20\" height=\"20\"></p>",
+      )
+    end
+
     it "replaces Emoji from Unicode 14.0" do
       expect(PrettyText.cook("🫣")).to match(/\:face_with_peeking_eye\:/)
     end
