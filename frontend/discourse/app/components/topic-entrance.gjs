@@ -40,7 +40,6 @@ function entranceDate(dt, showTime) {
 export default class TopicEntrance extends Component {
   @service historyStore;
 
-  elementId = "topic-entrance";
   topic = null;
   visible = null;
   _position = null;
@@ -203,7 +202,11 @@ export default class TopicEntrance extends Component {
   }
 
   <template>
-    <div class={{unless this.visible "hidden"}} ...attributes>
+    <div
+      id="topic-entrance"
+      class={{unless this.visible "hidden"}}
+      ...attributes
+    >
       <DButton
         @action={{this.enterTop}}
         @translatedAriaLabel={{i18n

@@ -33,10 +33,6 @@ function bind(fn, context) {
 
 @tagName("")
 export default class TopicFooterButtons extends Component {
-  elementId = "topic-footer-buttons";
-  role = "region";
-  ariaLabel = i18n("topic.footer_buttons.region_label");
-
   @alias("currentUser.can_send_private_messages") canSendPms;
   @alias("topic.details.can_invite_to") canInviteTo;
   @alias("currentUser.user_option.enable_defer") canDefer;
@@ -116,7 +112,12 @@ export default class TopicFooterButtons extends Component {
   }
 
   <template>
-    <div role={{this.role}} aria-label={{this.ariaLabel}} ...attributes>
+    <div
+      role="region"
+      aria-label={{i18n "topic.footer_buttons.region_label"}}
+      id="topic-footer-buttons"
+      ...attributes
+    >
       <div class="topic-footer-main-buttons">
         <div class="topic-footer-main-buttons__actions">
           <TopicAdminMenu

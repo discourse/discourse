@@ -10,9 +10,6 @@ import { getTopicFooterButtons } from "discourse/lib/register-topic-footer-butto
 
 @tagName("")
 export default class AnonymousTopicFooterButtons extends Component {
-  elementId = "topic-footer-buttons";
-  role = "region";
-
   get allButtons() {
     return getTopicFooterButtons(this);
   }
@@ -29,7 +26,7 @@ export default class AnonymousTopicFooterButtons extends Component {
   }
 
   <template>
-    <div role={{this.role}} ...attributes>
+    <div role="region" id="topic-footer-buttons" ...attributes>
       <div class="topic-footer-main-buttons">
         {{#each this.buttons key="id" as |button|}}
           <DButton

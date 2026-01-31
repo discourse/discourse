@@ -15,8 +15,6 @@ import { i18n } from "discourse-i18n";
 
 @tagName("")
 export default class LoginButtons extends Component {
-  elementId = "login-buttons";
-
   @discourseComputed(
     "buttons.length",
     "showLoginWithEmailLink",
@@ -48,6 +46,7 @@ export default class LoginButtons extends Component {
 
   <template>
     <div
+      id="login-buttons"
       class={{concatClass
         (if this.hidden "hidden")
         (if this.multiple "multiple")
