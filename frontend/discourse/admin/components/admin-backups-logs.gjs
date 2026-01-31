@@ -1,12 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { scheduleOnce } from "@ember/runloop";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import discourseDebounce from "discourse/lib/debounce";
 import { i18n } from "discourse-i18n";
 
-@classNames("admin-backups-logs")
+@tagName("")
 export default class AdminBackupsLogs extends Component {
   showLoadingSpinner = false;
   hasFormattedLogs = false;
@@ -78,13 +78,15 @@ export default class AdminBackupsLogs extends Component {
   }
 
   <template>
-    {{#if this.hasFormattedLogs}}
-      <pre>{{this.formattedLogs}}</pre>
-    {{else}}
-      <p>{{this.noLogsMessage}}</p>
-    {{/if}}
-    {{#if this.showLoadingSpinner}}
-      <div class="spinner small"></div>
-    {{/if}}
+    <div class="admin-backups-logs" ...attributes>
+      {{#if this.hasFormattedLogs}}
+        <pre>{{this.formattedLogs}}</pre>
+      {{else}}
+        <p>{{this.noLogsMessage}}</p>
+      {{/if}}
+      {{#if this.showLoadingSpinner}}
+        <div class="spinner small"></div>
+      {{/if}}
+    </div>
   </template>
 }

@@ -4,7 +4,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { empty, reads } from "@ember/object/computed";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import {
   addUniqueValueToArray,
@@ -16,7 +16,7 @@ import { makeArray } from "discourse/lib/helpers";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 
-@classNames("value-list")
+@tagName("")
 export default class ValueList extends Component {
   @trackedArray collection = null;
 
@@ -157,47 +157,49 @@ export default class ValueList extends Component {
   }
 
   <template>
-    {{#if this.collection}}
-      <div class="values">
-        {{#each this.collection as |value index|}}
-          <div data-index={{index}} class="value">
-            <DButton
-              @action={{fn this.removeValue value}}
-              @icon="xmark"
-              class="btn-default remove-value-btn btn-small"
-            />
-
-            <Input
-              title={{value}}
-              @value={{value}}
-              class="value-input"
-              {{on "focusout" (fn this.changeValue index)}}
-            />
-
-            {{#if this.showUpDownButtons}}
+    <div class="value-list" ...attributes>
+      {{#if this.collection}}
+        <div class="values">
+          {{#each this.collection as |value index|}}
+            <div data-index={{index}} class="value">
               <DButton
-                @action={{fn this.shift -1 index}}
-                @icon="arrow-up"
-                class="btn-default shift-up-value-btn btn-small"
+                @action={{fn this.removeValue value}}
+                @icon="xmark"
+                class="btn-default remove-value-btn btn-small"
               />
-              <DButton
-                @action={{fn this.shift 1 index}}
-                @icon="arrow-down"
-                class="btn-default shift-down-value-btn btn-small"
-              />
-            {{/if}}
-          </div>
-        {{/each}}
-      </div>
-    {{/if}}
 
-    <ComboBox
-      @valueProperty={{null}}
-      @nameProperty={{null}}
-      @value={{this.newValue}}
-      @content={{this.filteredChoices}}
-      @onChange={{this.selectChoice}}
-      @options={{hash allowAny=true none=this.noneKey disabled=@disabled}}
-    />
+              <Input
+                title={{value}}
+                @value={{value}}
+                class="value-input"
+                {{on "focusout" (fn this.changeValue index)}}
+              />
+
+              {{#if this.showUpDownButtons}}
+                <DButton
+                  @action={{fn this.shift -1 index}}
+                  @icon="arrow-up"
+                  class="btn-default shift-up-value-btn btn-small"
+                />
+                <DButton
+                  @action={{fn this.shift 1 index}}
+                  @icon="arrow-down"
+                  class="btn-default shift-down-value-btn btn-small"
+                />
+              {{/if}}
+            </div>
+          {{/each}}
+        </div>
+      {{/if}}
+
+      <ComboBox
+        @valueProperty={{null}}
+        @nameProperty={{null}}
+        @value={{this.newValue}}
+        @content={{this.filteredChoices}}
+        @onChange={{this.selectChoice}}
+        @options={{hash allowAny=true none=this.noneKey disabled=@disabled}}
+      />
+    </div>
   </template>
 }

@@ -4,7 +4,7 @@ import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
-import { classNames, tagName } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import ScreenedIpAddress from "discourse/admin/models/screened-ip-address";
 import DButton from "discourse/components/d-button";
 import TextField from "discourse/components/text-field";
@@ -23,8 +23,7 @@ import { i18n } from "discourse-i18n";
   as an argument.
 **/
 
-@tagName("form")
-@classNames("screened-ip-address-form", "inline-form")
+@tagName("")
 export default class ScreenedIpAddressForm extends Component {
   @service dialog;
 
@@ -94,28 +93,30 @@ export default class ScreenedIpAddressForm extends Component {
   }
 
   <template>
-    <label>{{i18n "admin.logs.screened_ips.form.label"}}</label>
-    <TextField
-      @value={{this.ip_address}}
-      @disabled={{this.formSubmitted}}
-      @placeholderKey="admin.logs.screened_ips.form.ip_address"
-      @autocorrect="off"
-      @autocapitalize="off"
-      class="ip-address-input"
-    />
+    <form class="screened-ip-address-form inline-form" ...attributes>
+      <label>{{i18n "admin.logs.screened_ips.form.label"}}</label>
+      <TextField
+        @value={{this.ip_address}}
+        @disabled={{this.formSubmitted}}
+        @placeholderKey="admin.logs.screened_ips.form.ip_address"
+        @autocorrect="off"
+        @autocapitalize="off"
+        class="ip-address-input"
+      />
 
-    <ComboBox
-      @content={{this.actionNames}}
-      @value={{this.actionName}}
-      @onChange={{fn (mut this.actionName)}}
-    />
+      <ComboBox
+        @content={{this.actionNames}}
+        @value={{this.actionName}}
+        @onChange={{fn (mut this.actionName)}}
+      />
 
-    <DButton
-      @action={{this.submitForm}}
-      @disabled={{this.formSubmitted}}
-      @label="admin.logs.screened_ips.form.add"
-      type="submit"
-      class="btn-default"
-    />
+      <DButton
+        @action={{this.submitForm}}
+        @disabled={{this.formSubmitted}}
+        @label="admin.logs.screened_ips.form.add"
+        type="submit"
+        class="btn-default"
+      />
+    </form>
   </template>
 }
