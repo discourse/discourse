@@ -773,24 +773,6 @@ aside.quote {
     width: 100%;
   }
 
-  .fast-edit-container {
-    display: flex;
-    padding: 0.5em;
-    padding-top: 0;
-    flex-direction: column;
-    align-items: flex-start;
-
-    #fast-edit-input {
-      margin: 0;
-      width: 300px;
-      height: 90px;
-    }
-
-    .save-fast-edit {
-      margin-top: 0.5em;
-    }
-  }
-
   .insert-quote + .quote-sharing {
     border-left: 1px solid rgb(255, 255, 255, 0.3);
   }
@@ -859,6 +841,10 @@ aside.quote {
       transition: opacity 0.3s ease-in-out;
     }
   }
+}
+
+#fast-edit-input {
+  resize: block;
 }
 
 .post-avatar,

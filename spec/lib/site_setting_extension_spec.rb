@@ -690,6 +690,103 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "dependent settings" do
+    context "when a dependent setting depends_behavior is not set" do
+      before do
+        settings.setting(:cool_thing_image, nil, depends_on: [:enable_cool_thing])
+        settings.refresh!
+      end
+
+      it "is present in all_settings" do
+        expect(settings.all_settings.find { |s| s[:setting] == :cool_thing_image }).not_to be_blank
+      end
+    end
+
+    context "when a dependent setting depends_behavior is hidden" do
+      before do
+        settings.setting(
+          :cool_thing_image,
+          nil,
+          depends_on: [:enable_cool_thing],
+          depends_behavior: :hidden,
+        )
+        settings.refresh!
+      end
+
+      context "when the depends_on setting is an upcoming change" do
+        context "when the upcoming change is enabled by an admin" do
+          before do
+            settings.setting(
+              :enable_cool_thing,
+              true,
+              upcoming_change: {
+                status: :alpha,
+                impact: "feature,staff",
+              },
+            )
+            settings.refresh!
+            allow(UpcomingChanges).to receive(:resolved_value).with(:enable_cool_thing).and_return(
+              true,
+            )
+          end
+
+          it "is present in all_settings" do
+            expect(
+              settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
+            ).not_to be_blank
+          end
+        end
+
+        context "when the upcoming change is automatically enabled because of the promotion status" do
+          before do
+            settings.setting(
+              :enable_cool_thing,
+              true,
+              upcoming_change: {
+                status: :alpha,
+                impact: "feature,staff",
+              },
+            )
+            settings.refresh!
+            allow(UpcomingChanges).to receive(:resolved_value).with(:enable_cool_thing).and_return(
+              true,
+            )
+          end
+
+          it "is present in all_settings" do
+            expect(
+              settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
+            ).not_to be_blank
+          end
+        end
+      end
+
+      context "when the depends_on setting is true" do
+        before do
+          settings.setting(:enable_cool_thing, true)
+          settings.refresh!
+        end
+
+        it "is present in all_settings" do
+          expect(
+            settings.all_settings.find { |s| s[:setting] == :cool_thing_image },
+          ).not_to be_blank
+        end
+      end
+
+      context "when the depends_on setting is false" do
+        before do
+          settings.setting(:enable_cool_thing, false)
+          settings.refresh!
+        end
+
+        it "is not present in all_settings" do
+          expect(settings.all_settings.find { |s| s[:setting] == :cool_thing_image }).to be_blank
+        end
+      end
+    end
+  end
+
   describe "hidden" do
     before do
       settings.setting(:other_setting, "Blah")
@@ -1237,6 +1334,80 @@ RSpec.describe SiteSettingExtension do
     it "returns the correct group for a setting" do
       SiteSetting.refresh!
       expect(SiteSetting.site_setting_group_ids[:enable_upload_debug_mode]).to eq([10, 11])
+    end
+  end
+
+  describe "site setting singleton methods" do
+    describe "for an upcoming change site setting" do
+      let(:setting_name) { :enable_upload_debug_mode }
+      let(:default_value) { SiteSetting.defaults[setting_name] }
+
+      before do
+        mock_upcoming_change_metadata(
+          {
+            enable_upload_debug_mode: {
+              impact: "other,developers",
+              status: :beta,
+              impact_type: "other",
+              impact_role: "developers",
+            },
+          },
+        )
+        SiteSetting.send(:setup_methods, setting_name)
+        SiteSetting.refresh!
+      end
+
+      after do
+        SiteSetting.remove_override!(setting_name)
+        SiteSetting.refresh!
+      end
+
+      it "returns the stored value when it differs from the default" do
+        SiteSetting.public_send("#{setting_name}=", !default_value)
+        expect(SiteSetting.public_send(setting_name)).to eq(!default_value)
+      end
+
+      it "returns true when the setting meets the promotion status" do
+        SiteSetting.promote_upcoming_changes_on_status = :beta
+        expect(SiteSetting.public_send(setting_name)).to eq(true)
+      end
+
+      it "returns false when admins have changed the setting to false even if the promotion status is met" do
+        SiteSetting.public_send("#{setting_name}=", false)
+        expect(SiteSetting.public_send(setting_name)).to eq(false)
+
+        SiteSetting.promote_upcoming_changes_on_status = :beta
+        expect(SiteSetting.public_send(setting_name)).to eq(false)
+      end
+
+      it "returns the default when the setting does not meet the promotion status" do
+        SiteSetting.promote_upcoming_changes_on_status = :stable
+        expect(SiteSetting.public_send(setting_name)).to eq(default_value)
+      end
+
+      context "when the upcoming change is permanent" do
+        before do
+          mock_upcoming_change_metadata(
+            {
+              enable_upload_debug_mode: {
+                impact: "other,developers",
+                status: :permanent,
+                impact_type: "other",
+                impact_role: "developers",
+              },
+            },
+          )
+        end
+
+        it "returns true" do
+          expect(SiteSetting.public_send(setting_name)).to eq(true)
+        end
+
+        it "return true even if the setting value is false in the database" do
+          SiteSetting.public_send("#{setting_name}=", false)
+          expect(SiteSetting.public_send(setting_name)).to eq(true)
+        end
+      end
     end
   end
 
