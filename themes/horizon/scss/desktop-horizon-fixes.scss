@@ -41,13 +41,17 @@
     padding: 0;
 
     &:not(.default) {
-      display: none;
+      body:not(.user-messages-page) & {
+        display: none;
+      }
     }
 
     &.default {
-      .bulk-select,
-      span:not(.bulk-select-topics, .d-button-label) {
-        display: none;
+      body:not(.user-messages-page) & {
+        .bulk-select,
+        span:not(.bulk-select-topics, .d-button-label) {
+          display: none;
+        }
       }
     }
   }

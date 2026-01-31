@@ -97,19 +97,13 @@
       margin: 0;
 
       .badge-category__wrapper {
-        background-color: light-dark(
-          oklch(from var(--category-badge-color) 98% calc(c * 0.2) h),
-          oklch(from var(--category-badge-color) 45% calc(c * 0.5) h)
-        );
+        background-color: var(--badge-category-bg);
         padding: 0.25em 0.5rem;
         border-radius: var(--d-border-radius);
       }
 
       .badge-category__name {
-        color: light-dark(
-          oklch(from var(--category-badge-color) 20% calc(c * 1) h),
-          oklch(from var(--category-badge-color) 100% calc(c * 0.9) h)
-        );
+        color: var(--badge-category-text);
       }
 
       .badge-category.--style-square::before {
@@ -162,10 +156,7 @@
     .badge-category__wrapper {
       border-radius: var(--d-border-radius);
       padding: 0.25em 0.5rem;
-      background-color: light-dark(
-        oklch(from var(--category-badge-color) 97% calc(c * 0.3) h),
-        oklch(from var(--category-badge-color) 45% calc(c * 0.5) h)
-      );
+      background-color: var(--badge-category-bg);
 
       @include viewport.until(md) {
         padding: 0.25em 0.5rem;
@@ -173,10 +164,7 @@
       }
 
       .badge-category__name {
-        color: light-dark(
-          oklch(from var(--category-badge-color) 20% calc(c * 1) h),
-          oklch(from var(--category-badge-color) 100% calc(c * 0.9) h)
-        );
+        color: var(--badge-category-text);
       }
     }
 

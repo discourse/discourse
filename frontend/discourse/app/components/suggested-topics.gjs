@@ -41,9 +41,13 @@ export default class SuggestedTopics extends Component {
             @topics={{@topic.suggestedTopics}}
             @hideCategory={{true}}
             @showPosters={{true}}
+            @listContext="suggested"
           />
         {{else}}
-          <BasicTopicList @topics={{@topic.suggestedTopics}} />
+          <BasicTopicList
+            @topics={{@topic.suggestedTopics}}
+            @listContext="suggested"
+          />
         {{/if}}
       </div>
     </div>
