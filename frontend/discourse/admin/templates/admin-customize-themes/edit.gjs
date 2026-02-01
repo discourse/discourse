@@ -35,7 +35,7 @@ export default <template>
         @fieldAdded={{@controller.fieldAdded}}
         @maximized={{@controller.maximized}}
         @save={{@controller.save}}
-        @class="editor-container"
+        class="editor-container"
       />
 
       <div class="admin-footer">

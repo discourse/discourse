@@ -2,11 +2,11 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { i18n } from "discourse-i18n";
 
-@classNames("assigned-advanced-search")
+@tagName("")
 export default class AssignedAdvancedSearch extends Component {
   static shouldRender(args, { currentUser }) {
     return currentUser?.can_assign;
@@ -22,22 +22,24 @@ export default class AssignedAdvancedSearch extends Component {
   }
 
   <template>
-    <div class="control-group">
-      <label class="control-label" for="search-assigned-to">
-        {{i18n "search.advanced.assigned.label"}}
-      </label>
+    <div class="assigned-advanced-search" ...attributes>
+      <div class="control-group">
+        <label class="control-label" for="search-assigned-to">
+          {{i18n "search.advanced.assigned.label"}}
+        </label>
 
-      <div class="controls">
-        <EmailGroupUserChooser
-          @value={{this.outletArgs.searchedTerms.assigned}}
-          @onChange={{this.onChangeAssigned}}
-          @options={{hash
-            maximum=1
-            excludeCurrentUser=false
-            includeGroups=true
-            customSearchOptions=(hash assignableGroups=true)
-          }}
-        />
+        <div class="controls">
+          <EmailGroupUserChooser
+            @value={{this.outletArgs.searchedTerms.assigned}}
+            @onChange={{this.onChangeAssigned}}
+            @options={{hash
+              maximum=1
+              excludeCurrentUser=false
+              includeGroups=true
+              customSearchOptions=(hash assignableGroups=true)
+            }}
+          />
+        </div>
       </div>
     </div>
   </template>

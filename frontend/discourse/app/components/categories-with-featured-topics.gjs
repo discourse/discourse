@@ -1,9 +1,13 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { tagName } from "@ember-decorators/component";
 import CategoriesOnly from "discourse/components/categories-only";
 
+@tagName("")
 export default class CategoriesWithFeaturedTopics extends Component {
   <template>
-    <CategoriesOnly @categories={{this.categories}} @showTopics="true" />
+    <div ...attributes>
+      <CategoriesOnly @categories={{this.categories}} @showTopics="true" />
+    </div>
   </template>
 }

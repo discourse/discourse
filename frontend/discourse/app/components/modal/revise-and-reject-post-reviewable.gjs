@@ -75,7 +75,7 @@ export default class ReviseAndRejectPostReviewable extends Component {
     >
       <:body>
         <div class="revise-and-reject-reviewable__queued-post">
-          <ReviewableQueuedPost @reviewable={{@model.reviewable}} @tagName="" />
+          <ReviewableQueuedPost @reviewable={{@model.reviewable}} />
         </div>
 
         <div class="control-group">

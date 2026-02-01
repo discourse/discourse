@@ -2,17 +2,12 @@
 import Component from "@ember/component";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
-import {
-  classNameBindings,
-  classNames,
-  tagName,
-} from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@tagName("li")
-@classNames("user-main-nav-outlet", "billing")
-@classNameBindings("viewingSelf::hidden")
+@tagName("")
 export default class Billing extends Component {
   @service currentUser;
 
@@ -25,9 +20,18 @@ export default class Billing extends Component {
   }
 
   <template>
-    <LinkTo @route="user.billing">
-      {{icon "far-credit-card"}}
-      <span>{{i18n "discourse_subscriptions.navigation.billing"}}</span>
-    </LinkTo>
+    <li
+      class={{concatClass
+        "user-main-nav-outlet"
+        "billing"
+        (unless this.viewingSelf "hidden")
+      }}
+      ...attributes
+    >
+      <LinkTo @route="user.billing">
+        {{icon "far-credit-card"}}
+        <span>{{i18n "discourse_subscriptions.navigation.billing"}}</span>
+      </LinkTo>
+    </li>
   </template>
 }

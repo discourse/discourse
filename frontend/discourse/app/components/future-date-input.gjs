@@ -4,6 +4,7 @@ import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { and, empty, equal } from "@ember/object/computed";
+import { tagName } from "@ember-decorators/component";
 import DatePickerFuture from "discourse/components/date-picker-future";
 import icon from "discourse/helpers/d-icon";
 import withEventValue from "discourse/helpers/with-event-value";
@@ -20,6 +21,7 @@ import FutureDateInputSelector, {
 } from "discourse/select-kit/components/future-date-input-selector";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class FutureDateInput extends Component {
   selection = null;
   includeDateTime = true;
@@ -133,7 +135,7 @@ export default class FutureDateInput extends Component {
   }
 
   <template>
-    <div class="future-date-input">
+    <div class="future-date-input" ...attributes>
       {{#unless this.noRelativeOptions}}
         <div class="control-group">
           <label class={{this.labelClasses}}>

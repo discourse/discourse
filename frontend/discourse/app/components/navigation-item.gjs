@@ -2,23 +2,12 @@
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { dependentKeyCompat } from "@ember/object/compat";
-import {
-  attributeBindings,
-  classNameBindings,
-  tagName,
-} from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
+import concatClass from "discourse/helpers/concat-class";
 import discourseComputed from "discourse/lib/decorators";
 import { filterTypeForMode } from "discourse/lib/filter-mode";
 
-@tagName("li")
-@classNameBindings(
-  "active",
-  "content.hasIcon:has-icon",
-  "content.classNames",
-  "isHidden:hidden",
-  "content.name"
-)
-@attributeBindings("content.title:title")
+@tagName("")
 export default class NavigationItem extends Component {
   @tracked filterMode;
 
@@ -99,15 +88,27 @@ export default class NavigationItem extends Component {
   }
 
   <template>
-    <a
-      href={{this.hrefLink}}
-      class={{this.activeClass}}
-      aria-current={{if this.activeClass "page"}}
+    <li
+      title={{this.content.title}}
+      class={{concatClass
+        (if this.active "active")
+        (if this.content.hasIcon "has-icon")
+        this.content.classNames
+        (if this.isHidden "hidden")
+        this.content.name
+      }}
+      ...attributes
     >
-      {{#if this.hasIcon}}
-        <span class={{this.content.name}}></span>
-      {{/if}}
-      {{this.content.displayName}}
-    </a>
+      <a
+        href={{this.hrefLink}}
+        class={{this.activeClass}}
+        aria-current={{if this.activeClass "page"}}
+      >
+        {{#if this.hasIcon}}
+          <span class={{this.content.name}}></span>
+        {{/if}}
+        {{this.content.displayName}}
+      </a>
+    </li>
   </template>
 }

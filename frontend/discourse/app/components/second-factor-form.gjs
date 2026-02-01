@@ -3,10 +3,12 @@ import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class SecondFactorForm extends Component {
   @discourseComputed("secondFactorMethod")
   secondFactorTitle(secondFactorMethod) {
@@ -67,7 +69,7 @@ export default class SecondFactorForm extends Component {
   }
 
   <template>
-    <div id="second-factor">
+    <div id="second-factor" ...attributes>
       <h3>{{this.secondFactorTitle}}</h3>
 
       {{#if this.optionalText}}

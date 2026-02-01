@@ -6,6 +6,7 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { classify } from "@ember/string";
 import { htmlSafe } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import DModal from "discourse/components/d-modal";
 import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
@@ -17,6 +18,7 @@ import { i18n } from "discourse-i18n";
 import PollBreakdownChart from "discourse/plugins/poll/discourse/components/poll-breakdown-chart";
 import PollBreakdownOption from "discourse/plugins/poll/discourse/components/poll-breakdown-option";
 
+@tagName("")
 export default class PollBreakdownModal extends Component {
   @service dialog;
   @service siteSettings;

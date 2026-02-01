@@ -2,7 +2,7 @@
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import { observes, on } from "@ember-decorators/object";
 import $ from "jquery";
 import AvatarFlair from "discourse/components/avatar-flair";
@@ -18,7 +18,7 @@ import IconPicker from "discourse/select-kit/components/icon-picker";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-@classNames("group-flair-inputs")
+@tagName("")
 export default class GroupFlairInputs extends Component {
   @discourseComputed
   demoAvatarUrl() {
@@ -103,115 +103,117 @@ export default class GroupFlairInputs extends Component {
   }
 
   <template>
-    <div class="control-group">
-      <label class="control-label" for="flair_url">{{i18n
-          "groups.flair_url"
-        }}</label>
+    <div class="group-flair-inputs" ...attributes>
+      <div class="control-group">
+        <label class="control-label" for="flair_url">{{i18n
+            "groups.flair_url"
+          }}</label>
 
-      <div class="radios">
-        <label class="radio-label" for="avatar-flair-icon">
-          <RadioButton
-            @name="avatar-flair-icon"
-            @id="avatar-flair-icon"
-            @value="icon"
-            @selection={{this.model.flair_type}}
-          />
-          {{i18n "groups.flair_type.icon"}}
-        </label>
+        <div class="radios">
+          <label class="radio-label" for="avatar-flair-icon">
+            <RadioButton
+              @name="avatar-flair-icon"
+              @id="avatar-flair-icon"
+              @value="icon"
+              @selection={{this.model.flair_type}}
+            />
+            {{i18n "groups.flair_type.icon"}}
+          </label>
 
-        <label class="radio-label" for="avatar-flair-image">
-          <RadioButton
-            @name="avatar-flair-image"
-            @id="avatar-flair-image"
-            @value="image"
-            @selection={{this.model.flair_type}}
+          <label class="radio-label" for="avatar-flair-image">
+            <RadioButton
+              @name="avatar-flair-image"
+              @id="avatar-flair-image"
+              @value="image"
+              @selection={{this.model.flair_type}}
+            />
+            {{i18n "groups.flair_type.image"}}
+          </label>
+        </div>
+
+        {{#if this.flairPreviewIcon}}
+          <IconPicker
+            @name="icon"
+            @value={{this.model.flair_icon}}
+            @options={{hash maximum=1}}
+            @onChange={{fn (mut this.model.flair_icon)}}
           />
-          {{i18n "groups.flair_type.image"}}
-        </label>
+        {{else if this.flairPreviewImage}}
+          <UppyImageUploader
+            @imageUrl={{this.flairImageUrl}}
+            @onUploadDone={{this.setFlairImage}}
+            @onUploadDeleted={{this.removeFlairImage}}
+            @type="group_flair"
+            @id="group-flair-uploader"
+            class="no-repeat contain-image"
+          />
+          <div class="control-instructions">
+            {{i18n "groups.flair_upload_description"}}
+          </div>
+        {{/if}}
       </div>
 
-      {{#if this.flairPreviewIcon}}
-        <IconPicker
-          @name="icon"
-          @value={{this.model.flair_icon}}
-          @options={{hash maximum=1}}
-          @onChange={{fn (mut this.model.flair_icon)}}
-        />
-      {{else if this.flairPreviewImage}}
-        <UppyImageUploader
-          @imageUrl={{this.flairImageUrl}}
-          @onUploadDone={{this.setFlairImage}}
-          @onUploadDeleted={{this.removeFlairImage}}
-          @type="group_flair"
-          @id="group-flair-uploader"
-          class="no-repeat contain-image"
-        />
-        <div class="control-instructions">
-          {{i18n "groups.flair_upload_description"}}
-        </div>
-      {{/if}}
-    </div>
-
-    <div class="control-group">
-      <label class="control-label" for="flair_bg_color">{{i18n
-          "groups.flair_bg_color"
-        }}</label>
-
-      <TextField
-        @name="flair_bg_color"
-        @value={{this.model.flair_bg_color}}
-        @placeholderKey="groups.flair_bg_color_placeholder"
-        class="group-flair-bg-color input-xxlarge"
-      />
-    </div>
-
-    {{#if this.flairPreviewIcon}}
       <div class="control-group">
-        <label class="control-label" for="flair_color">{{i18n
-            "groups.flair_color"
+        <label class="control-label" for="flair_bg_color">{{i18n
+            "groups.flair_bg_color"
           }}</label>
 
         <TextField
-          @name="flair_color"
-          @value={{this.model.flair_color}}
-          @placeholderKey="groups.flair_color_placeholder"
-          class="group-flair-color input-xxlarge"
+          @name="flair_bg_color"
+          @value={{this.model.flair_bg_color}}
+          @placeholderKey="groups.flair_bg_color_placeholder"
+          class="group-flair-bg-color input-xxlarge"
         />
       </div>
-    {{/if}}
 
-    <div class="control-group">
-      <label class="control-label">{{this.flairPreviewLabel}}</label>
+      {{#if this.flairPreviewIcon}}
+        <div class="control-group">
+          <label class="control-label" for="flair_color">{{i18n
+              "groups.flair_color"
+            }}</label>
 
-      <div class="avatar-flair-preview">
-        <div class="avatar-wrapper">
-          <img
-            width="45"
-            height="45"
-            src={{this.demoAvatarUrl}}
-            class="avatar actor"
-            alt
+          <TextField
+            @name="flair_color"
+            @value={{this.model.flair_color}}
+            @placeholderKey="groups.flair_color_placeholder"
+            class="group-flair-color input-xxlarge"
           />
         </div>
+      {{/if}}
 
-        {{#if
-          (or
-            this.model.flair_icon
-            this.flairImageUrl
-            this.model.flairBackgroundHexColor
-          )
-        }}
-          <AvatarFlair
-            @flairName={{this.model.name}}
-            @flairUrl={{if
-              this.flairPreviewIcon
+      <div class="control-group">
+        <label class="control-label">{{this.flairPreviewLabel}}</label>
+
+        <div class="avatar-flair-preview">
+          <div class="avatar-wrapper">
+            <img
+              width="45"
+              height="45"
+              src={{this.demoAvatarUrl}}
+              class="avatar actor"
+              alt
+            />
+          </div>
+
+          {{#if
+            (or
               this.model.flair_icon
-              (if this.flairPreviewImage this.flairImageUrl "")
-            }}
-            @flairBgColor={{this.model.flairBackgroundHexColor}}
-            @flairColor={{this.model.flairHexColor}}
-          />
-        {{/if}}
+              this.flairImageUrl
+              this.model.flairBackgroundHexColor
+            )
+          }}
+            <AvatarFlair
+              @flairName={{this.model.name}}
+              @flairUrl={{if
+                this.flairPreviewIcon
+                this.model.flair_icon
+                (if this.flairPreviewImage this.flairImageUrl "")
+              }}
+              @flairBgColor={{this.model.flairBackgroundHexColor}}
+              @flairColor={{this.model.flairHexColor}}
+            />
+          {{/if}}
+        </div>
       </div>
     </div>
   </template>

@@ -3,6 +3,7 @@ import Component from "@ember/component";
 import { fn } from "@ember/helper";
 import { alias, equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import ChooseTopic from "discourse/components/choose-topic";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
@@ -16,6 +17,7 @@ export const NEW_TOPIC_SELECTION = "new_topic";
 export const EXISTING_TOPIC_SELECTION = "existing_topic";
 export const NEW_MESSAGE_SELECTION = "new_message";
 
+@tagName("")
 export default class ChatToTopicSelector extends Component {
   newTopicSelection = NEW_TOPIC_SELECTION;
   existingTopicSelection = EXISTING_TOPIC_SELECTION;
@@ -51,7 +53,7 @@ export default class ChatToTopicSelector extends Component {
   }
 
   <template>
-    <div class="chat-to-topic-selector">
+    <div class="chat-to-topic-selector" ...attributes>
       <div class="radios">
         <label class="radio-label" for="move-to-new-topic">
           <RadioButton

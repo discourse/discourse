@@ -1,13 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { attributeBindings, classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import ColorPickerChoice from "discourse/components/color-picker-choice";
 import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
-@classNames("colors-container")
-@attributeBindings("role", "ariaLabel:aria-label")
+@tagName("")
 export default class ColorPicker extends Component {
   role = "group";
 
@@ -26,15 +25,22 @@ export default class ColorPicker extends Component {
   }
 
   <template>
-    {{#each this.colors as |c|}}
-      <ColorPickerChoice
-        @color={{c}}
-        @usedColors={{this.usedColors}}
-        @selectColor={{this.selectColor}}
-        @ariaLabel={{this.getColorLabel c}}
-      >
-        {{icon "check"}}
-      </ColorPickerChoice>
-    {{/each}}
+    <div
+      role={{this.role}}
+      aria-label={{this.ariaLabel}}
+      class="colors-container"
+      ...attributes
+    >
+      {{#each this.colors as |c|}}
+        <ColorPickerChoice
+          @color={{c}}
+          @usedColors={{this.usedColors}}
+          @selectColor={{this.selectColor}}
+          @ariaLabel={{this.getColorLabel c}}
+        >
+          {{icon "check"}}
+        </ColorPickerChoice>
+      {{/each}}
+    </div>
   </template>
 }

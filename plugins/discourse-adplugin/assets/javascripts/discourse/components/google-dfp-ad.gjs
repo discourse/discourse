@@ -1,8 +1,9 @@
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
-import { classNameBindings, classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import RSVP from "rsvp";
+import concatClass from "discourse/helpers/concat-class";
 import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
@@ -244,8 +245,7 @@ function loadGoogle() {
   return _promise;
 }
 
-@classNameBindings("adUnitClass")
-@classNames("google-dfp-ad")
+@tagName("")
 export default class GoogleDfpAd extends AdComponent {
   loadedGoogletag = false;
   lastAdRefresh = null;
@@ -441,27 +441,29 @@ export default class GoogleDfpAd extends AdComponent {
   }
 
   <template>
-    {{#if this.showAd}}
-      {{#if this.site.mobileView}}
-        <div class="google-dfp-ad-label" style={{this.adTitleStyleMobile}}><h2
-          >{{i18n "adplugin.advertisement_label"}}</h2></div>
-        <div
-          id={{this.divId}}
-          style={{this.adWrapperStyle}}
-          class="dfp-ad-unit"
-          align="center"
-        ></div>
-      {{else}}
-        <div class="google-dfp-ad-label"><h2>{{i18n
-              "adplugin.advertisement_label"
-            }}</h2></div>
-        <div
-          id={{this.divId}}
-          style={{this.adWrapperStyle}}
-          class="dfp-ad-unit"
-          align="center"
-        ></div>
+    <div class={{concatClass "google-dfp-ad" this.adUnitClass}} ...attributes>
+      {{#if this.showAd}}
+        {{#if this.site.mobileView}}
+          <div class="google-dfp-ad-label" style={{this.adTitleStyleMobile}}><h2
+            >{{i18n "adplugin.advertisement_label"}}</h2></div>
+          <div
+            id={{this.divId}}
+            style={{this.adWrapperStyle}}
+            class="dfp-ad-unit"
+            align="center"
+          ></div>
+        {{else}}
+          <div class="google-dfp-ad-label"><h2>{{i18n
+                "adplugin.advertisement_label"
+              }}</h2></div>
+          <div
+            id={{this.divId}}
+            style={{this.adWrapperStyle}}
+            class="dfp-ad-unit"
+            align="center"
+          ></div>
+        {{/if}}
       {{/if}}
-    {{/if}}
+    </div>
   </template>
 }

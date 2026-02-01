@@ -45,7 +45,7 @@ export default class ReviewableRefreshAiChatMessage extends Component {
             <ChannelTitle @channel={{this.channel}} />
           </LinkTo>
         {{else}}
-          <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="" />
+          <ReviewableTopicLink @reviewable={{@reviewable}} />
         {{/if}}
       </div>
 
