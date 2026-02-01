@@ -21,8 +21,6 @@ import { logSearchLinkClick } from "discourse/lib/search";
 
 @tagName("")
 export default class SearchResultEntry extends Component {
-  role = "listitem";
-
   get shouldShowPrivateMessageIcon() {
     // Only show PM icon if this is a PM AND we're not in a PM-only search
     return this.post.topic.isPrivateMessage && !this.isPMOnly;
@@ -46,7 +44,7 @@ export default class SearchResultEntry extends Component {
 
   <template>
     <div
-      role={{this.role}}
+      role="listitem"
       class={{concatClass
         "fps-result"
         (if this.bulkSelectEnabled "bulk-select-enabled")
@@ -62,12 +60,10 @@ export default class SearchResultEntry extends Component {
             {{avatar this.post imageSize="large"}}
           </a>
         </div>
-
       </PluginOutlet>
 
       <div class="fps-topic" data-topic-id={{this.post.topic.id}}>
         <div class="topic">
-
           {{#if this.bulkSelectEnabled}}
             <TrackSelected
               @selectedList={{this.selected}}
