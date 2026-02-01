@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { next } from "@ember/runloop";
