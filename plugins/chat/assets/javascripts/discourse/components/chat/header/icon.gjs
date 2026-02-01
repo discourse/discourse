@@ -91,7 +91,6 @@ export default class ChatHeaderIcon extends Component {
               @urgentCount={{@urgentCount}}
               @unreadCount={{@unreadCount}}
               @indicatorPreference={{@indicatorPreference}}
-              @class="c-unread-indicator__number"
             />
           {{/if}}
         </DButton>
