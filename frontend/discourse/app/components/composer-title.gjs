@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import EmberObject from "@ember/object";
 import { alias, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
-import { tagName } from "@ember-decorators/component";
+import { classNames } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import { load } from "pretty-text/oneboxer";
 import { lookupCache } from "pretty-text/oneboxer-cache";
@@ -18,7 +18,7 @@ import { isTesting } from "discourse/lib/environment";
 import putCursorAtEnd from "discourse/lib/put-cursor-at-end";
 import { i18n } from "discourse-i18n";
 
-@tagName("")
+@classNames("title-input")
 export default class ComposerTitle extends Component {
   @alias("composer.canEditTopicFeaturedLink") watchForLink;
   @or("composer.loading", "composer.disableTitleInput") disabled;
@@ -241,24 +241,22 @@ export default class ComposerTitle extends Component {
   }
 
   <template>
-    <div class="title-input" ...attributes>
-      <TextField
-        @value={{this.composer.title}}
-        @id="reply-title"
-        @maxLength={{this.titleMaxLength}}
-        @placeholderKey={{this.composer.titlePlaceholder}}
-        @aria-label={{i18n this.composer.titlePlaceholder}}
-        @disabled={{this.disabled}}
-        @autocomplete="off"
-      />
+    <TextField
+      @value={{this.composer.title}}
+      @id="reply-title"
+      @maxLength={{this.titleMaxLength}}
+      @placeholderKey={{this.composer.titlePlaceholder}}
+      @aria-label={{i18n this.composer.titlePlaceholder}}
+      @disabled={{this.disabled}}
+      @autocomplete="off"
+    />
 
-      <PluginOutlet
-        @name="after-composer-title-input"
-        @connectorTagName="div"
-        @outletArgs={{lazyHash composer=this.composer}}
-      />
+    <PluginOutlet
+      @name="after-composer-title-input"
+      @connectorTagName="div"
+      @outletArgs={{lazyHash composer=this.composer}}
+    />
 
-      <PopupInputTip @validation={{this.validation}} />
-    </div>
+    <PopupInputTip @validation={{this.validation}} />
   </template>
 }

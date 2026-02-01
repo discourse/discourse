@@ -4,7 +4,7 @@ import { action } from "@ember/object";
 import { scheduleOnce } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
+import { classNameBindings } from "@ember-decorators/component";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";
 import DButton from "discourse/components/d-button";
@@ -36,10 +36,11 @@ function entranceDate(dt, showTime) {
   );
 }
 
-@tagName("")
+@classNameBindings("visible::hidden")
 export default class TopicEntrance extends Component {
   @service historyStore;
 
+  elementId = "topic-entrance";
   topic = null;
   visible = null;
   _position = null;
@@ -202,36 +203,30 @@ export default class TopicEntrance extends Component {
   }
 
   <template>
-    <div
-      id="topic-entrance"
-      class={{unless this.visible "hidden"}}
-      ...attributes
+    <DButton
+      @action={{this.enterTop}}
+      @translatedAriaLabel={{i18n
+        "topic_entrance.sr_jump_top_button"
+        date=this.topDate
+      }}
+      title={{i18n "topic_entrance.jump_top_button_title"}}
+      class="btn-default full jump-top"
     >
-      <DButton
-        @action={{this.enterTop}}
-        @translatedAriaLabel={{i18n
-          "topic_entrance.sr_jump_top_button"
-          date=this.topDate
-        }}
-        title={{i18n "topic_entrance.jump_top_button_title"}}
-        class="btn-default full jump-top"
-      >
-        {{icon "backward-step"}}
-        {{htmlSafe this.topDate}}
-      </DButton>
+      {{icon "backward-step"}}
+      {{htmlSafe this.topDate}}
+    </DButton>
 
-      <DButton
-        @action={{this.enterBottom}}
-        @translatedAriaLabel={{i18n
-          "topic_entrance.sr_jump_bottom_button"
-          date=this.bottomDate
-        }}
-        title={{i18n "topic_entrance.jump_bottom_button_title"}}
-        class="btn-default full jump-bottom"
-      >
-        {{htmlSafe this.bottomDate}}
-        {{icon "forward-step"}}
-      </DButton>
-    </div>
+    <DButton
+      @action={{this.enterBottom}}
+      @translatedAriaLabel={{i18n
+        "topic_entrance.sr_jump_bottom_button"
+        date=this.bottomDate
+      }}
+      title={{i18n "topic_entrance.jump_bottom_button_title"}}
+      class="btn-default full jump-bottom"
+    >
+      {{htmlSafe this.bottomDate}}
+      {{icon "forward-step"}}
+    </DButton>
   </template>
 }

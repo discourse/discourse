@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { mapBy } from "@ember/object/computed";
 import { next } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
+import { classNames } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
 import loadChartJS, {
   loadChartJSDatalabels,
@@ -12,7 +12,7 @@ import I18n from "discourse-i18n";
 import { getColors } from "discourse/plugins/poll/lib/chart-colors";
 import { PIE_CHART_TYPE } from "../components/modal/poll-ui-builder";
 
-@tagName("")
+@classNames("poll-breakdown-chart-container")
 export default class PollBreakdownChart extends Component {
   // Arguments:
   group = null;
@@ -186,9 +186,7 @@ export default class PollBreakdownChart extends Component {
   }
 
   <template>
-    <div class="poll-breakdown-chart-container" ...attributes>
-      <label class="poll-breakdown-chart-label">{{@group}}</label>
-      <canvas class="poll-breakdown-chart-chart"></canvas>
-    </div>
+    <label class="poll-breakdown-chart-label">{{@group}}</label>
+    <canvas class="poll-breakdown-chart-chart"></canvas>
   </template>
 }

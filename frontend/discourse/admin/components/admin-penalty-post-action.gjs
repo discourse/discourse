@@ -5,14 +5,12 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { equal } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
 import discourseComputed, { afterRender } from "discourse/lib/decorators";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import I18n, { i18n } from "discourse-i18n";
 
 const ACTIONS = ["delete", "delete_all", "delete_replies", "edit", "none"];
 
-@tagName("")
 export default class AdminPenaltyPostAction extends Component {
   @tracked confirmDeleteAll = false;
 
@@ -91,36 +89,34 @@ export default class AdminPenaltyPostAction extends Component {
   }
 
   <template>
-    <div ...attributes>
-      <div class="penalty-post-controls">
-        <label>
-          <div class="penalty-post-label">
-            {{htmlSafe (i18n "admin.user.penalty_post_actions")}}
-          </div>
-        </label>
-        <ComboBox
-          @value={{this.postAction}}
-          @content={{this.penaltyActions}}
-          @onChange={{this.penaltyChanged}}
-        />
-      </div>
-
-      {{#if this.editing}}
-        <div class="penalty-post-edit">
-          <Textarea @value={{this.postEdit}} class="post-editor" />
+    <div class="penalty-post-controls">
+      <label>
+        <div class="penalty-post-label">
+          {{htmlSafe (i18n "admin.user.penalty_post_actions")}}
         </div>
-      {{/if}}
-
-      {{#if this.deletingAll}}
-        <label>
-          <Input
-            @type="checkbox"
-            @checked={{this.confirmDeleteAll}}
-            {{on "click" this.toggleConfirmDeleteAll}}
-          />
-          {{htmlSafe this.deleteAllMessage}}
-        </label>
-      {{/if}}
+      </label>
+      <ComboBox
+        @value={{this.postAction}}
+        @content={{this.penaltyActions}}
+        @onChange={{this.penaltyChanged}}
+      />
     </div>
+
+    {{#if this.editing}}
+      <div class="penalty-post-edit">
+        <Textarea @value={{this.postEdit}} class="post-editor" />
+      </div>
+    {{/if}}
+
+    {{#if this.deletingAll}}
+      <label>
+        <Input
+          @type="checkbox"
+          @checked={{this.confirmDeleteAll}}
+          {{on "click" this.toggleConfirmDeleteAll}}
+        />
+        {{htmlSafe this.deleteAllMessage}}
+      </label>
+    {{/if}}
   </template>
 }

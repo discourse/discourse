@@ -3,7 +3,7 @@ import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
-import { tagName } from "@ember-decorators/component";
+import { classNames, tagName } from "@ember-decorators/component";
 import $ from "jquery";
 import icon from "discourse/helpers/d-icon";
 import cookie from "discourse/lib/cookie";
@@ -15,7 +15,8 @@ export function incrementTopicsOpened() {
   numTopicsOpened++;
 }
 
-@tagName("")
+@tagName("div")
+@classNames("topic-above-footer-buttons-outlet", "patreon")
 export default class Patreon extends Component {
   static shouldRender(_args, context) {
     return context.currentUser;
@@ -47,21 +48,19 @@ export default class Patreon extends Component {
   }
 
   <template>
-    <div class="topic-above-footer-buttons-outlet patreon" ...attributes>
-      {{#if this.showDonationPrompt}}
-        <div class="patreon-donation-prompt">
-          <span {{on "click" this.close}} role="button" class="close">
-            {{icon "xmark"}}
-          </span>
+    {{#if this.showDonationPrompt}}
+      <div class="patreon-donation-prompt">
+        <span {{on "click" this.close}} role="button" class="close">
+          {{icon "xmark"}}
+        </span>
 
-          {{htmlSafe
-            (i18n
-              "patreon.donation_prompt.body"
-              campaignUrl=this.siteSettings.patreon_donation_prompt_campaign_url
-            )
-          }}
-        </div>
-      {{/if}}
-    </div>
+        {{htmlSafe
+          (i18n
+            "patreon.donation_prompt.body"
+            campaignUrl=this.siteSettings.patreon_donation_prompt_campaign_url
+          )
+        }}
+      </div>
+    {{/if}}
   </template>
 }
