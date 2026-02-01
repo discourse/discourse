@@ -4,6 +4,7 @@ import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import DiscourseTemplateMap from "discourse/lib/discourse-template-map";
 import { findHelper } from "discourse/lib/helpers";
 import SuffixTrie from "discourse/lib/suffix-trie";
+import { defineModules } from "./lib/loader-shim";
 import resolverShims from "./resolver-shims";
 
 let _options = {};
@@ -191,7 +192,7 @@ export function buildResolver(baseName) {
         // We need the same for our connector templates names
         normalized = "template:" + split[1].replace(/_/g, "-");
       } else {
-        normalized = super._normalize(fullName);
+        normalized = original;
       }
 
       // This is code that we don't really want to keep long term. The main situation where we need it is for
@@ -270,10 +271,13 @@ export function buildResolver(baseName) {
     // If no match is found here, the resolver falls back to `resolveOther`.
     resolveRoute(parsedName) {
       if (parsedName.fullNameWithoutType === "basic") {
-        return requirejs("discourse/routes/discourse", null, null, true)
-          .default;
+        return this.resolveRoute("discourse");
       }
     }
+
+    // resolveController(parsedName) {
+    // console.trace("lookup", parsedName);
+    // }
 
     resolveTemplate(parsedName) {
       return (
@@ -283,6 +287,10 @@ export function buildResolver(baseName) {
         this.findConnectorTemplate(parsedName) ||
         this.discourseTemplateModule("not_found")
       );
+    }
+
+    addModules(modules) {
+      defineModules(null, modules);
     }
 
     findLoadingTemplate(parsedName) {
