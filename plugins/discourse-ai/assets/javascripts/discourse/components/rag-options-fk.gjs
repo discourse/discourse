@@ -70,7 +70,7 @@ export default class RagOptionsFk extends Component {
               @value={{field.value}}
               @llms={{this.visionLlms}}
               @onChange={{field.set}}
-              @class="ai-persona-editor__llms"
+              class="ai-persona-editor__llms"
             />
           </field.Custom>
         </@form.Field>

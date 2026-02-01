@@ -8,7 +8,7 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import { eq } from "discourse/truth-helpers";
 
 const TopicLabelButton = <template>
-  <DButton class={{@class}} @action={{@action}}>
+  <DButton @action={{@action}} ...attributes>
     <div class="topic-title">
       <div class="topic-title__top-line">
         <span class="topic-statuses">
@@ -62,15 +62,15 @@ export default class TopicReplyChoiceDialog extends Component {
 
   <template>
     <TopicLabelButton
-      @class="btn-primary btn-reply-where btn-reply-on-original"
       @action={{this.replyOnOriginal}}
       @topic={{@model.originalTopic}}
+      class="btn-primary btn-reply-where btn-reply-on-original"
     />
 
     <TopicLabelButton
-      @class="btn-reply-where btn-reply-here"
       @action={{this.replyOnCurrent}}
       @topic={{@model.currentTopic}}
+      class="btn-reply-where btn-reply-here"
     />
   </template>
 }

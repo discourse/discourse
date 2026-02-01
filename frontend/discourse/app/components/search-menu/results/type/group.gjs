@@ -10,7 +10,6 @@ const Group = <template>
         @flairUrl={{@result.flairUrl}}
         @flairBgColor={{@result.flairBgColor}}
         @flairColor={{@result.flairColor}}
-        @class="avatar-flair__wrapper"
       />
     {{else}}
       {{icon "users"}}
