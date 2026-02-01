@@ -32,7 +32,7 @@ export default class NoAnswer extends Component {
     );
 
     later(() => {
-      if (!this.element || this.isDestroying || this.isDestroyed) {
+      if (this.isDestroying || this.isDestroyed) {
         return;
       }
       const topic = this.topic;
