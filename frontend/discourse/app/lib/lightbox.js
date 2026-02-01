@@ -7,6 +7,7 @@ import quoteImage, {
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import { waitForPromise } from "@ember/test-waiters";
 
 export default async function lightbox(elem, additionalData = {}) {
   if (!elem) {
@@ -17,7 +18,9 @@ export default async function lightbox(elem, additionalData = {}) {
   const siteSettings = helperContext().siteSettings;
   const caps = helperContext().capabilities;
 
-  const { default: PhotoSwipeLightbox } = await import("photoswipe/lightbox");
+  const { default: PhotoSwipeLightbox } = await waitForPromise(
+    import("photoswipe/lightbox")
+  );
   const isTestEnv = isTesting() || isRailsTesting();
   const canDownload =
     !siteSettings.prevent_anons_from_downloading_files || !!currentUser;
@@ -49,7 +52,7 @@ export default async function lightbox(elem, additionalData = {}) {
     escKey: false,
     tapAction,
     paddingFn,
-    pswpModule: async () => await import("photoswipe"),
+    pswpModule: async () => await waitForPromise(import("photoswipe")),
     appendToEl: isTesting() && document.getElementById("ember-testing"),
   });
 

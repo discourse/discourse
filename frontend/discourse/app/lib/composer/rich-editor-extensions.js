@@ -1,5 +1,7 @@
 // @ts-check
 
+import { waitForPromise } from "@ember/test-waiters";
+
 /**
  * @typedef PluginContext
  * @property {string} placeholder
@@ -148,8 +150,9 @@ export function clearRichEditorExtensions() {
 }
 
 export async function resetRichEditorExtensions() {
-  const { default: extensions } =
-    await import("discourse/static/prosemirror/extensions/register-default");
+  const { default: extensions } = await waitForPromise(
+    import("discourse/static/prosemirror/extensions/register-default")
+  );
   clearRichEditorExtensions();
   extensions.forEach(registerRichEditorExtension);
 }

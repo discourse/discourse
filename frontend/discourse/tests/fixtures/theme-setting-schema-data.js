@@ -1,5 +1,5 @@
-import ThemeSettings from "admin/models/theme-settings";
-import SiteSetting from "admin/models/site-setting";
+import ThemeSettings from "discourse/admin/models/theme-settings";
+import SiteSetting from "discourse/admin/models/site-setting";
 export const SCHEMA_MODES = {
   THEME: "theme",
   SITE_SETTING: "SITE_SETTING",
