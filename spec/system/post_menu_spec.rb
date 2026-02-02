@@ -532,7 +532,7 @@ describe "Post menu", type: :system do
       # don't show when the post has reads = 0
       expect(topic_page).to have_no_post_action_button(pm_post2, :read)
 
-      # dont't show on regular posts
+      # don't show on regular posts
       topic_page.visit_topic(post.topic)
       expect(topic_page).to have_no_post_action_button(post, :read)
       expect(topic_page).to have_no_post_action_button(post2, :read)

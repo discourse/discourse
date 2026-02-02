@@ -219,7 +219,7 @@ describe "Viewing sidebar", type: :system do
         it "should remove unread icon after all messages are read" do
           sign_in(admin)
           user_private_messages_page.visit(admin)
-          user_private_messages_page.click_unseen_private_mesage(private_message.id)
+          user_private_messages_page.click_unseen_private_message(private_message.id)
           expect(sidebar).to have_my_messages_link_with_unread_icon
 
           try_until_success(reason: "Liking relying on messagebus updates") do

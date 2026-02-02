@@ -1245,7 +1245,7 @@ RSpec.describe Email::Receiver do
         expect(User.find_by_email("team@somesmtpaddress.com")).to eq(nil)
       end
 
-      it "creates the reply when the sender and referenced messsage id are known" do
+      it "creates the reply when the sender and referenced message id are known" do
         expect { process(:email_reply_to_group_email_username) }.to change { topic.posts.count }.by(
           1,
         ).and not_change { Topic.count }

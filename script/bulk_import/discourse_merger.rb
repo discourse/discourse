@@ -223,7 +223,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
     copy_model(GroupUser, skip_if_merged: true)
   end
 
-  def category_exisits(cat_row)
+  def category_exists(cat_row)
     # Categories with the same name/slug and parent are merged
 
     parent = category_id_from_imported_id(cat_row["parent_category_id"])
@@ -250,7 +250,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         )
         .each do |row|
           # If a category with the same slug or name, and the same parent, exists
-          existing_category = category_exisits(row)
+          existing_category = category_exists(row)
 
           if existing_category
             @categories[row["id"].to_i] = existing_category
@@ -305,7 +305,7 @@ class BulkImport::DiscourseMerger < BulkImport::Base
         )
         .each do |row|
           # If a category with the same slug or name, and the same parent, exists
-          existing_category = category_exisits(row)
+          existing_category = category_exists(row)
 
           if existing_category
             @categories[row["id"].to_i] = existing_category

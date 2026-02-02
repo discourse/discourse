@@ -530,7 +530,7 @@ class PostRevisor
     @post.link_post_uploads
     @post.save_reply_relationships
 
-    # we dont want to increment post count on user merge
+    # we don't want to increment post count on user merge
     if @post_successfully_saved && @editor.id != Discourse::SYSTEM_USER_ID
       @editor.increment_post_edits_count
     end

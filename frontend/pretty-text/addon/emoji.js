@@ -202,7 +202,7 @@ export function emojiSearch(term, options) {
 
   function addResult(t) {
     const val = aliasMap.get(t) || t;
-    // dont add skin tone variations or alias of denied emoji to search results
+    // don't add skin tone variations or alias of denied emoji to search results
     if (!results.includes(val) && !exclude.includes(val)) {
       if (diversity && diversity > 1 && isSkinTonableEmoji(val)) {
         results.push(`${val}:t${diversity}`);

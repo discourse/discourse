@@ -450,7 +450,7 @@ RSpec.describe User do
         end
       end
 
-      context "when reseting user fields" do
+      context "when resetting user fields" do
         let!(:censored_word) do
           Fabricate(:watched_word, word: "censored", action: WatchedWord.actions[:censor])
         end

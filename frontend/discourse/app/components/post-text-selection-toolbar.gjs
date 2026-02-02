@@ -77,7 +77,7 @@ export default class PostTextSelectionToolbar extends Component {
     clipboardCopy(text);
     this.toasts.success({
       duration: "short",
-      data: { message: i18n("post.quote_copied_to_clibboard") },
+      data: { message: i18n("post.quote_copied_to_clipboard") },
     });
     await this.args.data.hideToolbar();
   }
