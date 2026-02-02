@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .form-kit__conditional-display {
   display: flex;
   flex-direction: column;
@@ -18,8 +20,12 @@
 .--radio-cards {
   width: var(--form-kit-large-input);
 
+  @include viewport.until(sm) {
+    width: 100%;
+  }
+
   .form-kit__conditional-display,
-  .form-kit__container-content {
+  .form-kit__container-content.--large {
     width: 100%;
   }
 
