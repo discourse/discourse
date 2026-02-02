@@ -130,6 +130,7 @@ export default class ChatFooter extends Component {
             @route="chat.search"
             @icon="magnifying-glass"
             @label="chat.search.short_title"
+            aria-label={{i18n "chat.search.aria_label"}}
             id="c-footer-search"
             class={{concatClass
               "btn-transparent"
