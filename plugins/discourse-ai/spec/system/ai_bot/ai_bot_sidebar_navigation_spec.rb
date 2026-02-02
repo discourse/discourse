@@ -41,4 +41,26 @@ RSpec.describe "AI Bot sidebar navigation" do
     expect(page).to have_no_css(".sidebar-sections.ai-conversations-panel")
     expect(page).to have_no_css(".sidebar-sections.chat-panel")
   end
+
+  context "with header dropdown navigation menu" do
+    before { SiteSetting.navigation_menu = "header dropdown" }
+
+    it "clears forced sidebar when navigating from AI bot to chat and then away" do
+      chat_page.prefers_full_page
+
+      ai_pm_homepage.visit
+
+      expect(page).to have_css(".sidebar-sections.ai-conversations-panel")
+
+      find(".chat-header-icon").click
+
+      expect(page).to have_css(".channels-list")
+      expect(page).to have_no_css("#sidebar-section-content-categories")
+
+      find("#site-logo").click
+
+      expect(page).to have_no_css(".sidebar-sections")
+      expect(page).to have_no_css(".channels-list")
+    end
+  end
 end
