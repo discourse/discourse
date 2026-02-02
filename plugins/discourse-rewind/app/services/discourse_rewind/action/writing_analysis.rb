@@ -57,6 +57,7 @@ module DiscourseRewind
             FROM posts p
             WHERE p.user_id = :user_id
               AND p.created_at BETWEEN :start AND :end
+              AND p.deleted_at IS NULL
           ),
           metrics AS (
             SELECT

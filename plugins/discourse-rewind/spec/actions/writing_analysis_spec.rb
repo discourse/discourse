@@ -140,6 +140,17 @@ RSpec.describe DiscourseRewind::Action::WritingAnalysis do
 
         expect(result[:data][:total_words]).to eq(total_words)
       end
+
+      it "does not include deleted posts in readability score calculation" do
+        result_with_deletion = call_report
+
+        post1.recover!
+        result_without_deletion = call_report
+
+        expect(result_with_deletion[:data][:readability_score]).not_to eq(
+          result_without_deletion[:data][:readability_score],
+        )
+      end
     end
 
     context "when posts are from another user" do
