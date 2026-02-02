@@ -146,7 +146,11 @@ RSpec.describe DraftsController do
 
     it "checks for a tag conflict on update" do
       sign_in(user)
+      tag1 = Fabricate(:tag, name: "tag1")
+      tag2 = Fabricate(:tag, name: "tag2")
       post = Fabricate(:post, user:)
+      # topic has different tags than original_tags in draft
+      post.topic.tags = [tag1]
 
       post "/drafts.json",
            params: {
@@ -189,6 +193,32 @@ RSpec.describe DraftsController do
                postId: post.id,
                original_text: post.raw,
                original_tags: [regular_tag.name],
+               action: "edit",
+             }.to_json,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["conflict_user"]).to eq(nil)
+    end
+
+    it "handles tag objects format when checking for tag conflict" do
+      sign_in(user)
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      post = Fabricate(:post, user:)
+      post.topic.tags = [tag1, tag2]
+
+      post "/drafts.json",
+           params: {
+             draft_key: "topic",
+             sequence: 0,
+             data: {
+               postId: post.id,
+               original_text: post.raw,
+               original_tags: [
+                 { "id" => tag1.id, "name" => tag1.name, "slug" => tag1.name },
+                 { "id" => tag2.id, "name" => tag2.name, "slug" => tag2.name },
+               ],
                action: "edit",
              }.to_json,
            }
@@ -320,6 +350,15 @@ RSpec.describe DraftsController do
           expect(response).to have_http_status :bad_request
         end
       end
+
+      context "when data is not a string" do
+        before { sign_in(user) }
+
+        it "returns an error" do
+          post "/drafts.json", params: { draft_key: "xyz", data: { cat: "tomtom" }, sequence: 0 }
+          expect(response).to have_http_status :bad_request
+        end
+      end
     end
 
     it "returns 403 when the maximum amount of drafts per users is reached" do
@@ -359,6 +398,25 @@ RSpec.describe DraftsController do
       # check the draft counts just to be safe
       expect(Draft.where(user_id: user1.id).count).to eq(2)
       expect(Draft.where(user_id: user2.id).count).to eq(1)
+    end
+
+    it "does not leak conflict info for posts user cannot see" do
+      private_post = Fabricate(:private_message_post)
+
+      sign_in(user)
+      post "/drafts.json",
+           params: {
+             draft_key: "topic_#{private_post.topic_id}",
+             sequence: 0,
+             data: {
+               postId: private_post.id,
+               action: "edit",
+               original_text: "wrong text to trigger conflict",
+             }.to_json,
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("conflict_user")
     end
   end
 
@@ -531,6 +589,18 @@ RSpec.describe DraftsController do
       delete "/drafts/bulk_destroy.json", params: {}
 
       expect(response.status).to eq(400)
+    end
+
+    it "rejects too many draft_keys" do
+      sign_in(user)
+
+      keys = (1..31).map { |i| "key_#{i}" }
+      delete "/drafts/bulk_destroy.json", params: { draft_keys: keys }
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].first).to include(
+        I18n.t("draft.bulk_destroy_limit", limit: DraftsController::BULK_DESTROY_LIMIT),
+      )
     end
 
     it "updates user draft count after bulk deletion" do

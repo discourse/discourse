@@ -147,6 +147,7 @@ de:
       separate_sidebar_mode:
         title: "Separate Seitenleisten-Modi für Forum und Chat anzeigen"
       send_shortcut:
+        title: "Tastenkombinationen zum Absenden"
         enter:
           label: "Senden mit Enter"
         meta_enter:
@@ -248,6 +249,7 @@ de:
       chat_notifications_title: "Chat-Benachrichtigungen"
       only_chat_push_notifications:
         title: "Nur Chat-Push-Benachrichtigungen senden"
+      personalization_title: "Personalisierung"
       ignore_channel_wide_mention:
         title: "Kanalweite Erwähnungen ignorieren"
       show_thread_title_prompts:
@@ -333,7 +335,10 @@ de:
         yesterday: Gestern
       search_view:
         filter_placeholder: Nachrichten durchsuchen
+        message_result_label: "Chatnachricht von %{username}: %{preview} %{threadInfo}"
+        in_thread: "im Thread %{title}"
         sr_instructions: "Drücke die Eingabetaste oder die Leertaste, um die Nachricht zu öffnen. Verwende Tab, um zwischen den Ergebnissen zu navigieren."
+        results_list_label: "Ergebnisse der Suche nach Chatnachrichten"
       members_view:
         filter_placeholder: Mitglieder finden
         add_member: Mitglied hinzufügen
@@ -377,6 +382,7 @@ de:
         name: Kanalname
         slug: Kanal-Kürzel (optional)
         emoji: Kanal-Emoji (optional)
+        reset_emoji: Emoji zurücksetzen
       channel_edit_description_modal:
         title: Beschreibung bearbeiten
         input_placeholder: Beschreibung hinzufügen
@@ -443,6 +449,7 @@ de:
           topic: "Thema"
         emoji:
           label: "Kanal-Emoji (optional)"
+          reset: "Emoji zurücksetzen"
       reviewable:
         type: "Chat-Nachricht"
         message_in_channel: "Kanal"
@@ -485,6 +492,7 @@ de:
         follow: "Beitreten"
         followed: "Beigetreten"
         mute: "Kanal stummschalten"
+        unmute: "Stummschaltung des Kanals aufgeben"
         threading_enabled: "Aktiviert"
         threading_disabled: "Deaktiviert"
         muted_on: "An"
@@ -731,7 +739,6 @@ de:
           composer_bold: "%{shortcut} Fett (nur Composer)"
           composer_italic: "%{shortcut} Kursiv (nur Composer)"
           composer_code: "%{shortcut} Code (nur Composer)"
-          drawer_open: "%{shortcut} Chat-Bereich öffnen"
           drawer_close: "%{shortcut} Chat-Bereich schließen"
           mark_all_channels_read: "%{shortcut} Alle Kanäle als gelesen markieren"
     topic_statuses:

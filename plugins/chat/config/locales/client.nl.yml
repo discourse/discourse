@@ -717,7 +717,6 @@ nl:
           composer_bold: "%{shortcut} Vet (alleen opstellen)"
           composer_italic: "%{shortcut} Cursief (alleen opstellen)"
           composer_code: "%{shortcut} Code (alleen opstellen)"
-          drawer_open: "%{shortcut} Chatlade openen"
           drawer_close: "%{shortcut} Chatlade sluiten"
           mark_all_channels_read: "%{shortcut} Alle kanalen als gelezen markeren"
     topic_statuses:

@@ -2068,7 +2068,6 @@ sk:
     invite_link_max_redemptions_limit_users: "Maximálny povolený počet uplatnení pre odkazy s pozvánkou vygenerované bežnými používateľmi nemôže presiahnuť túto hodnotu."
     alert_admins_if_errors_per_minute: "Počet chýb za minútu na spustenie upozornenia správcu. Hodnota 0 túto funkciu vypína. POZNÁMKA: vyžaduje reštart."
     alert_admins_if_errors_per_hour: "Počet chýb za hodinu, aby sa spustilo upozornenie administrátora. Hodnota 0 túto funkciu vypína. POZNÁMKA: vyžaduje reštart."
-    categories_topics: "Počet tém, ktoré sa majú zobraziť na stránke /kategórie. Ak je nastavená na 0, automaticky sa pokúsi nájsť hodnotu, aby boli oba stĺpce (kategórie a témy) symetrické."
     suggested_topics: "Zobrazovaný počet navrhovaných tém na konci témy."
     limit_suggested_to_category: "V navrhovaných témach zobraziť iba témy z aktuálnej kategórie."
     suggested_topics_max_days_old: "Navrhované témy by nemali byť staršie ako n dní."
@@ -2557,7 +2556,6 @@ sk:
     default_composition_mode: "Nastavenie predvoleného režimu pre skladateľa vašej komunity. Režim Rich text poskytuje modernejšie a známejšie písanie pre väčšinu používateľov, zatiaľ čo režim Markdown môže byť vhodný pre technickejšie publikum. Členovia môžu na prepínanie medzi režimami používať prepínač na paneli nástrojov kompozitora."
     reviewable_ui_refresh: "Skupiny, ktoré môžu používať nové experimentálne používateľské rozhranie vo fronte revízií."
     content_localization_enabled: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich prehliadača alebo jazykových preferencií používateľa. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Podporované lokálne jazyky sú nastavené v položke 'content localization supported locales'."
-    content_localization_supported_locales: "Zoznam podporovaných lokálnych jazykov, do ktorých možno preložiť obsah používateľa. Vyžaduje \"povolená lokalizácia obsahu\"."
     content_localization_allowed_groups: "Skupiny môžu aktualizovať lokalizovaný obsah. Vyžaduje \"povolená lokalizácia obsahu\"."
     errors:
       invalid_css_color: "Neplatná farba. Zadajte názov farby alebo hexadecimálnu hodnotu."

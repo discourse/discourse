@@ -26,6 +26,11 @@ RSpec.describe Chat::Api::ChannelThreadMessagesController do
           thread.original_message.id,
           message_1.id,
         )
+        thread_json =
+          response.parsed_body["messages"].find { |m| m["id"] == thread.original_message.id }[
+            "thread"
+          ]
+        expect(thread_json).not_to have_key("original_message")
       end
     end
 

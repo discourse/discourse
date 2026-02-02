@@ -62,14 +62,9 @@ module DiscourseHub
       Excon.public_send(
         action,
         "#{hub_base_url}#{rel_url}",
-        {
-          headers: {
-            "Referer" => referer,
-            "Accept" => accepts.join(", "),
-          },
-          query: params,
-          omit_default_port: true,
-        }.merge(connect_opts),
+        { headers: { "Referer" => referer, "Accept" => accepts.join(", ") }, query: params }.merge(
+          connect_opts,
+        ),
       ).body,
     )
   end
@@ -88,7 +83,6 @@ module DiscourseHub
             "Accept" => accepts.join(", "),
             "Content-Type" => "application/json",
           },
-          omit_default_port: true,
         }.merge(connect_opts),
       )
 

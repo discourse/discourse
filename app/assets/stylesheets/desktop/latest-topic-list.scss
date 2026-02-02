@@ -1,6 +1,8 @@
+@use "common/foundation/mixins";
+
 .latest-topic-list,
 .top-topic-list {
-  @extend .topic-list-icons;
+  @include mixins.topic-list-icons;
 
   .table-heading {
     padding: 12px 5px;

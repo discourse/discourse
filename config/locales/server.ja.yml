@@ -1849,7 +1849,6 @@ ja:
     invite_link_max_redemptions_limit_users: "通常のユーザーが生成した招待リンクに許可される最大引き換え数はこの値を超えることはできません。"
     alert_admins_if_errors_per_minute: "管理者アラートをトリガーするための 1 分あたりのエラー数。値 0 はこの機能を無効にします。注意: 再起動が必要です。"
     alert_admins_if_errors_per_hour: "管理者アラートをトリガーするための 1 時間あたりのエラー数。値 0 はこの機能を無効にします。注意: 再起動が必要です。"
-    categories_topics: "/categories ページに表示するトピック数。0 に設定すると、2 つの列 (カテゴリとトピック) を対称に維持するための値が自動的に求められます。"
     suggested_topics: "トピックの下に表示される推奨トピックの数"
     limit_suggested_to_category: "推奨トピックには現在参照しているカテゴリのトピックのみを表示する。"
     suggested_topics_max_days_old: "投稿されて n 日経過したものを推奨トピックにしない。"
@@ -2342,7 +2341,6 @@ ja:
     default_composition_mode: "コミュニティーの作成ツールのデフォルトモードを設定する。リッチテキストモードでは、よりモダンでほとんどのユーザーが使い慣れた書き心地を得られます。Markdown モードはより技術的な知識を持つユーザーに適しています。メンバーは作成ツールのツールバーにあるトグルでモードを切り替えられます。"
     reviewable_ui_refresh: "レビューキューで実験的な新しい UI を使用できるグループ。"
     content_localization_enabled: "ユーザーのブラウザまたはユーザの言語設定に基づいて、ローカライズされたコンテンツを表示します。コンテンツには、カテゴリ、タグ、投稿、トピックが含まれる場合があります。サポートされているロケールは、'content localization supported locales' に設定されているロケールです。"
-    content_localization_supported_locales: "ユーザーコンテンツを翻訳できるサポートされたロケールのリスト。'content localization enabled' が必要です。"
     content_localization_allowed_groups: "ローカライズされたコンテンツの更新を許可されたグループ。'content localization enabled' が必要です。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"

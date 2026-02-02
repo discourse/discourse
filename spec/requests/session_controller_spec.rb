@@ -504,7 +504,7 @@ RSpec.describe SessionController do
         end
         let!(:user_second_factor) { Fabricate(:user_second_factor_totp, user: user) }
 
-        it "doesnt allow logging in if the 2fa params are garbled" do
+        it "doesn't allow logging in if the 2fa params are garbled" do
           post "/session/email-login/#{email_token.token}.json",
                params: {
                  second_factor_method: UserSecondFactor.methods[:totp],
@@ -517,7 +517,7 @@ RSpec.describe SessionController do
           expect(response_body["error"]).to eq(I18n.t("login.invalid_second_factor_code"))
         end
 
-        it "doesnt allow login if both of the 2fa params are blank" do
+        it "doesn't allow login if both of the 2fa params are blank" do
           post "/session/email-login/#{email_token.token}.json",
                params: {
                  second_factor_method: UserSecondFactor.methods[:totp],
@@ -1900,7 +1900,7 @@ RSpec.describe SessionController do
         SiteSetting.enable_local_logins_via_email = false
         EmailToken.confirm(email_token.token)
       end
-      it "doesnt matter, logs in correctly" do
+      it "doesn't matter, logs in correctly" do
         post "/session.json", params: { login: user.username, password: "myawesomepassword" }
         expect(response.status).to eq(200)
         expect(response.parsed_body["error"]).not_to be_present

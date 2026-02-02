@@ -12,7 +12,7 @@ export default class ChatIndexRoute extends DiscourseRoute {
       return false;
     }
 
-    return this.chatChannelsManager.hasThreadedChannels;
+    return this.chatChannelsManager.shouldShowMyThreads;
   }
 
   get hasDirectMessages() {

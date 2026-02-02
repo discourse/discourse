@@ -13,9 +13,13 @@ const CLIENT_SETTING_TEST_OVERRIDES = {
   anon_polling_interval: 30000,
 };
 
-let siteSettings;
+// window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS is injected by `/bootstrap/site-settings-for-tests.js`
+const ORIGINAL_CLIENT_SITE_SETTINGS = {
+  ...window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS,
+  ...CLIENT_SETTING_TEST_OVERRIDES,
+};
 
-let ORIGINAL_CLIENT_SITE_SETTINGS;
+let siteSettings;
 
 export function currentSettings() {
   return siteSettings;

@@ -18,7 +18,7 @@ describe "Edit Category Images", type: :system do
       it "displays and updates new counter" do
         category_page.visit_images(category)
 
-        find("#category-logo-uploader .image-upload-controls").click
+        find("#category-logo-uploader .file-uploader__controls").click
         attach_file(
           "category-logo-uploader__input",
           "#{Rails.root}/spec/fixtures/images/logo.png",
@@ -26,7 +26,7 @@ describe "Edit Category Images", type: :system do
         )
 
         expect(page).to have_content("uploaded successfully").or have_css(
-               ".has-image .uploaded-image-preview.input-xxlarge",
+               ".has-image .file-uploader__preview.input-xxlarge",
              )
 
         upload = Upload.last

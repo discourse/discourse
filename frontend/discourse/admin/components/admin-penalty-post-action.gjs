@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component, { Input, Textarea } from "@ember/component";
 import { on } from "@ember/modifier";
@@ -23,9 +23,18 @@ export default class AdminPenaltyPostAction extends Component {
 
   @discourseComputed
   penaltyActions() {
-    return ACTIONS.map((id) => {
-      return { id, name: i18n(`admin.user.penalty_post_${id}`) };
-    });
+    const allActions = ACTIONS.map((id) => ({
+      id,
+      name: i18n(`admin.user.penalty_post_${id}`),
+    }));
+
+    // Remove "delete all" option for users at or above the configured trust level
+    // For now the trust level is static, add a site setting later if we want users to be able to modify this
+    if (this.user.trust_level >= 2) {
+      return allActions.filter((act) => act.id !== "delete_all");
+    }
+
+    return allActions;
   }
 
   get topicsCount() {
@@ -44,7 +53,7 @@ export default class AdminPenaltyPostAction extends Component {
     return this.canSubmitDeleteAll();
   }
 
-  get postTotalMessage() {
+  get deleteAllMessage() {
     return I18n.messageFormat(
       "admin.user.penalty_post_delete_all_confirmation_MF",
       {
@@ -106,7 +115,7 @@ export default class AdminPenaltyPostAction extends Component {
           @checked={{this.confirmDeleteAll}}
           {{on "click" this.toggleConfirmDeleteAll}}
         />
-        {{htmlSafe this.postTotalMessage}}
+        {{htmlSafe this.deleteAllMessage}}
       </label>
     {{/if}}
   </template>

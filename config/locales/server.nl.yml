@@ -1919,7 +1919,6 @@ nl:
     invite_link_max_redemptions_limit_users: "Het maximaal toegestane aantal verzilveringen van uitnodigingslinks gegenereerd door reguliere gebruikers mag niet hoger zijn dan deze waarde."
     alert_admins_if_errors_per_minute: "Aantal foutmeldingen per minuut waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
     alert_admins_if_errors_per_hour: "Aantal foutmeldingen per uur waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
-    categories_topics: "Aantal topics dat op de pagina /categories wordt weergegeven. Als dit op 0 is ingesteld, wordt automatisch naar een waarde gezocht die de twee kolommen symmetrisch houdt (categorieën en topics)."
     suggested_topics: "Aantal uitgelichte topics onderaan een topic."
     limit_suggested_to_category: "Alleen topics van de huidige categorie weergeven in uitgelichte topics."
     suggested_topics_max_days_old: "Voorgestelde topics mogen niet meer dan n dagen oud zijn."
@@ -2412,7 +2411,6 @@ nl:
     default_composition_mode: "Stel de standaardmodus in voor de editor van je community. De rich text modus biedt een modernere, vertrouwde schrijfervaring voor de meeste gebruikers, terwijl de Markdown-modus geschikter kan zijn voor een technischer publiek. Leden kunnen van modus wisselen met een schakelaar op de editorwerkbalk."
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_enabled: "Geeft gelokaliseerde content weer voor gebruikers op basis van hun browser- of taalvoorkeuren. Dergelijke content kan categorieën, tags, berichten en onderwerpen omvatten. Ondersteunde talen worden ingesteld in 'content localization supported locales'."
-    content_localization_supported_locales: "Lijst van ondersteunde talen waarnaar gebruikerscontent kan worden vertaald. Vereist 'content localization enabled'."
     content_localization_allowed_groups: "Groepen mogen gelokaliseerde content bijwerken. Vereist 'content localization enabled'."
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."

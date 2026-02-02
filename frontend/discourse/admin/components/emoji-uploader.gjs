@@ -7,6 +7,7 @@ import { notEmpty } from "@ember/object/computed";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { isEmpty } from "@ember/utils";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import withEventValue from "discourse/helpers/with-event-value";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
@@ -17,6 +18,7 @@ import { i18n } from "discourse-i18n";
 
 const DEFAULT_GROUP = "default";
 
+@tagName("")
 export default class EmojiUploader extends Component {
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "emoji-uploader",
@@ -56,7 +58,6 @@ export default class EmojiUploader extends Component {
   group = "default";
   emojiGroups = null;
   newEmojiGroups = null;
-  tagName = null;
 
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);

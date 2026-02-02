@@ -113,14 +113,6 @@ tr_TR:
             persona_id:
               label: "Kişilik"
               description: "Rapor oluşturmada kullanılacak YZ Kişiliği"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Model"
-              description: "Sınıflandırma için kullanılan varsayılan dil modeli"
-            tool:
-              label: "Araç"
-              description: "Sınıflandırma için kullanılacak araç (aracın tanımlanmış parametresi olmamalıdır)"
         llm_persona_triage:
           fields:
             persona:

@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -23,46 +23,44 @@ export default class AiTagSuggester extends Component {
 
   @tracked loading = false;
   @tracked suggestions = null;
-  @tracked untriggers = [];
   @tracked triggerIcon = "discourse-sparkles";
-  @tracked content = null;
+  dMenu;
+
+  get content() {
+    return this.args.composer?.reply;
+  }
+
+  get model() {
+    return this.args.composer || this.args.buffered;
+  }
 
   get showSuggestionButton() {
     if (this.composer.disableTagsChooser) {
       return false;
     }
 
-    const composerFields = document.querySelector(".composer-fields");
-    this.content = this.args.composer?.reply;
     const showTrigger =
       this.content?.length > MIN_CHARACTER_COUNT ||
       this.args.topicState === "edit";
 
-    if (composerFields) {
-      if (showTrigger) {
-        composerFields.classList.add("showing-ai-suggestions");
-      } else {
-        composerFields.classList.remove("showing-ai-suggestions");
-      }
-    }
+    document
+      .querySelector(".composer-fields")
+      ?.classList.toggle("showing-ai-suggestions", showTrigger);
 
     return this.siteSettings.ai_embeddings_enabled && showTrigger;
   }
 
   get showDropdown() {
-    if (this.suggestions?.length <= 0) {
-      this.dMenu.close();
-    }
     return !this.loading && this.suggestions?.length > 0;
+  }
+
+  get tagSelectorHasValues() {
+    return this.model.get("tags")?.length > 0;
   }
 
   @action
   async loadSuggestions() {
-    if (
-      this.suggestions &&
-      this.suggestions?.length > 0 &&
-      !this.dMenu.expanded
-    ) {
+    if (this.suggestions?.length > 0 && !this.dMenu.expanded) {
       return this.suggestions;
     }
 
@@ -85,17 +83,13 @@ export default class AiTagSuggester extends Component {
 
       this.suggestions = assistant;
 
-      const model = this.args.composer
-        ? this.args.composer
-        : this.args.buffered;
-
-      if (this.#tagSelectorHasValues()) {
+      if (this.tagSelectorHasValues) {
         this.suggestions = this.suggestions.filter(
-          (s) => !model.get("tags").includes(s.name)
+          (s) => !model.get("tags").some((t) => t.id === s.id)
         );
       }
 
-      if (this.suggestions?.length <= 0) {
+      if (this.suggestions?.length === 0) {
         showSuggestionsError(this, this.loadSuggestions.bind(this));
         return;
       }
@@ -109,35 +103,26 @@ export default class AiTagSuggester extends Component {
     return this.suggestions;
   }
 
-  #tagSelectorHasValues() {
-    const model = this.args.composer ? this.args.composer : this.args.buffered;
-
-    return model.get("tags") && model.get("tags").length > 0;
-  }
-
-  #removedAppliedTag(suggestion) {
-    return (this.suggestions = this.suggestions.filter(
-      (s) => s.id !== suggestion.id
-    ));
+  #removeAppliedTag(suggestion) {
+    this.suggestions = this.suggestions.filter((s) => s.id !== suggestion.id);
   }
 
   @action
   applySuggestion(suggestion) {
     const maxTags = this.siteSettings.max_tags_per_topic;
-    const model = this.args.composer ? this.args.composer : this.args.buffered;
-    if (!model) {
+    if (!this.model) {
       return;
     }
 
-    const tags = model.get("tags");
+    const tags = this.model.get("tags");
 
     if (!tags) {
-      model.set("tags", [suggestion.name]);
-      this.#removedAppliedTag(suggestion);
+      this.model.set("tags", [suggestion]);
+      this.#removeAppliedTag(suggestion);
       return;
     }
 
-    if (tags?.length >= maxTags) {
+    if (tags.length >= maxTags) {
       return this.toasts.error({
         class: "ai-suggestion-error",
         duration: "short",
@@ -149,10 +134,10 @@ export default class AiTagSuggester extends Component {
       });
     }
 
-    tags.push(suggestion.name);
-    model.set("tags", [...tags]);
+    tags.push(suggestion);
+    this.model.set("tags", [...tags]);
     suggestion.disabled = true;
-    this.#removedAppliedTag(suggestion);
+    this.#removeAppliedTag(suggestion);
   }
 
   @action
@@ -185,7 +170,7 @@ export default class AiTagSuggester extends Component {
         @contentClass="ai-suggestions-menu"
         @onRegisterApi={{this.onRegisterApi}}
         @modalForMobile={{true}}
-        @untriggers={{this.untriggers}}
+        @untriggers={{array}}
         {{on "click" this.loadSuggestions}}
       >
         <:content>

@@ -53,6 +53,8 @@ vi:
             related_topics: "Các chủ đề liên quan"
         ai_helper:
           proofread: Hiệu chỉnh văn bản
+          explain: "Giải thích"
+          smart_dates: "Ngày thông minh"
           markdown_tables: "Tạo bảng Markdown"
         spam:
           name: "Rác"
@@ -69,7 +71,7 @@ vi:
             other: "%{count} ngày"
         progress_chart:
           bar_done:
-            other: "%{count} bài đăng"
+            other: "%{count} tút"
       spam:
         short_title: "Rác"
         last_seven_days: "7 ngày qua"
@@ -115,7 +117,7 @@ vi:
         description: "Mô tả"
         summary: "Tóm tắt"
         save: "Lưu lại"
-        remove_parameter: "Xoá"
+        remove_parameter: "Xóa"
         parameter_required: "Bắt buộc"
         edit: "Sửa"
         delete: "Xóa"
@@ -151,15 +153,27 @@ vi:
         pill: "Liên quan"
       ai_helper:
         context_menu:
+          trigger: "Hỏi AI"
+          loading: "AI đang tạo ra"
           cancel: "Hủy"
+          regen: "Thử lại"
           confirm: "Xác nhận"
           discard: "Hủy bỏ"
+          changes: "Đề xuất chỉnh sửa"
+          custom_prompt:
+            placeholder: "Nhập prompt tùy chỉnh..."
           translate_prompt: "Dịch sang %{language}"
         post_options_menu:
+          trigger: "Hỏi AI"
+          title: "Hỏi AI"
+          loading: "AI đang tạo ra"
           close: "Đóng lại"
           copy: "Sao chép"
           copied: "Đã sao chép!"
           cancel: "Hủy"
+          insert_footnote: "Thêm chú thích"
+          footnote_disabled: "Chức năng chèn tự động đã bị vô hiệu hóa, hãy nhấn vào nút sao chép và chỉnh sửa thủ công"
+          footnote_credits: "Giải thích bởi AI"
         thumbnail_suggestions:
           select: "Chọn"
           try_again: "Thử lại"
@@ -177,14 +191,21 @@ vi:
         providers:
           google: "G"
           fake: "Tùy biến"
+        semantic_search_loading: "Tìm kiếm thêm kết quả bằng AI"
         semantic_search_results:
           toggle: "Xem %{count} kết quả tìm thấy bằng AI"
           toggle_hidden: "Đang ẩn %{count} kết quả tìm thấy bằng AI"
           none: "Rất tiếc, tìm kiếm AI của chúng tôi không tìm thấy chủ đề phù hợp"
           new: "Nhấn 'Tìm' để bắt đầu tìm kiếm kết quả mới bằng AI."
+          unavailable: "Kết quả AI không khả dụng"
+          zero_results_expanded: "Không tìm thấy kết quả, hiển thị %{count} kết quả AI"
         semantic_search_tooltips:
           results_explanation: "Khi được bật, các kết quả tìm kiếm AI bổ sung sẽ được thêm vào bên dưới."
+          invalid_sort: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
+        semantic_search_unavailable_tooltip: "Kết quả tìm kiếm phải được sắp xếp theo mức độ Liên quan để hiển thị kết quả AI"
+        ai_generated_result: "Kết quả tìm kiếm được tìm thấy bằng AI"
       ai_bot:
+        try_again: "Thử lại"
         debug_ai_modal:
           request: "Yêu cầu"
           response: "Đáp ứng"
@@ -223,3 +244,9 @@ vi:
         tooltip:
           actions:
             disable: "Tắt"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Tút bị gắn nhãn AI"
+        reviewable_ai_chat_message:
+          title: "Tin nhắn trò chuyện bị gắn nhãn AI"

@@ -8,7 +8,7 @@ module("Integration | Component | ColorInput", function (hooks) {
 
   test("updates hex codes on blur", async function (assert) {
     let result;
-    const expandHex = (color) => (result = color.replace("#", ""));
+    const expandHex = (color) => (result = color.replace(/^#/, ""));
 
     await render(<template><ColorInput @onBlur={{expandHex}} /></template>);
 

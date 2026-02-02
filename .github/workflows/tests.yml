@@ -29,8 +29,8 @@ jobs:
       ${{
         github.repository_owner == 'discourse' && (
           matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins')
-          && 'debian-12-16core'
-          || 'debian-12-8core'
+          && 'cdck-linux-16-core'
+          || 'cdck-linux-8-core'
         )
         || 'ubuntu-latest'
       }}

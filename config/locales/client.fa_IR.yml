@@ -757,6 +757,8 @@ fa_IR:
         reviewable_ai_post:
           noun: "نوشته"
       user_label: "کاربر"
+      timeline:
+        target_deleted: "نوشته حذف شده"
       notes:
         delete: "حذف"
       topic_label: "موضوع"
@@ -1922,6 +1924,7 @@ fa_IR:
               other {# روز}
             } دیگر منقضی می‌شود.
           edit_link_options: "گزینه های پیوند را ویرایش کنید یا از طریق ایمیل ارسال کنید."
+          edit_link_options_only: "گزینه‌های پیوند را ویرایش کنید"
           show_advanced: "نمایش تنظیمات پیشرفته"
           hide_advanced: "پنهان کردن تنظیمات پیشرفته"
           description: "توضیح"
@@ -2782,7 +2785,6 @@ fa_IR:
         membership_request_consolidated: "درخواست های عضویت جدید"
         reaction: "واکنش جدید"
         votes_released: "رأی آزاد شد"
-        new_features: "ویژگی‌های جدید دیسکورس منتشر شده است!"
         admin_problems: "توصیه‌های جدید در پیشخوان سایت شما"
     upload_selector:
       change: "تغییر"
@@ -3206,8 +3208,6 @@ fa_IR:
           12_hours: "۱۲ ساعت"
           24_hours: "۲۴ ساعت"
           custom: "مدت زمان سفارشی"
-      slow_mode_notice:
-        duration: "لطفا بین پست‌های این موضوع %{duration} صبر کنید"
       topic_status_update:
         title: "زمانسنج مبحث"
         save: "تنظیم زمان‌سنج"
@@ -3811,6 +3811,7 @@ fa_IR:
       back: "بازگشت به دسته‌بندی"
       general: "عمومی"
       settings: "تنظیمات"
+      advanced: "پیشرفته"
       topic_template: "قالب"
       tags: "برچسب‌ها"
       localizations: "محلی‌سازی‌ها"
@@ -3844,6 +3845,8 @@ fa_IR:
       name: "نام دسته‌بندی"
       untitled: "دسته‌بندی بدون‌عنوان"
       description: "توضیحات"
+      icon: "آیکن"
+      emoji: "شکلک"
       background_color: "رنگ"
       color_validations:
         cant_be_empty: "نمی‌تواند خالی باشد"
@@ -3855,7 +3858,6 @@ fa_IR:
           emoji: "شکلک"
       color_used: "رنگ در حال استفاده"
       predefined_colors: "گزینه‌های رنگ از پیش تعریف شده"
-      name_placeholder: "حداکثر یک یا دو کلمه"
       color_placeholder: "هر رنگ وب"
       delete_confirm: "آیا مطمئنید که می‌خواهید این دسته‌بندی را پاک کنید؟"
       delete_error: "هنگام حذف دسته بندی خطایی رخ داد."
@@ -3879,7 +3881,7 @@ fa_IR:
       uncategorized_security_warning: "این دسته خاص است و به عنوان محل نگهداری موضوعاتی در نظر گرفته شده است که دسته‌بندی ندارند. این دسته نمی‌تواند تنظیمات امنیتی داشته باشد."
       uncategorized_general_warning: 'این دسته، دسته‌ای خاص است و به عنوان دسته پیش‌فرض برای موضوعات جدیدی که دسته‌بندی آن‌ها انتخاب نشده، استفاده می‌شود. اگر می‌خواهید از این رفتار جلوگیری کنید و انتخاب دسته را اجباری کنید، لطفاً <a href="%{settingLink}"> تنظیمات را در اینجا غیرفعال کنید</a>. اگر می‌خواهید نام یا توضیحات را تغییر دهید، به قسمت <a href="%{customizeLink}">Customize / Text Content</a>بروید.'
       pending_permission_change_alert: "شما %{group} را به این دسته اضافه نکرده‌اید. برای افزودن آنها روی این دکمه کلیک کنید."
-      images: "تصاویر"
+      images: "ظاهر"
       email_in: "آدرس ایمیل های دریافتی سفارشی:"
       email_in_tooltip: "شما می‌توانید چندیدن آدرس ایمیل را با کارکتر | جدا کنید."
       email_in_allow_strangers: "تایید ایمیل ها از کاربران ناشناس بدون حساب کاربری"
@@ -3901,6 +3903,11 @@ fa_IR:
       position: "موقعیت در صفحه دسته‌بندی:"
       position_disabled: "دسته ها به ترتیب فعالیت نمایش داده می شوند. برای کنترل ترتیب دسته‌ها در فهرست‌ها، گزینه <a href='%{url}'>'fixed category positions'</a> را فعال کنید."
       minimum_required_tags: "حداقل تعداد برچسب‌های مورد نیاز در یک تاپیک:"
+      none_subcategory_text: "هیچ‌کدام"
+      visibility:
+        title: "دسترسی"
+        public: "عمومی"
+        group_restricted: "خصوصی"
       auto_bump_cooldown_days: "حداقل روزها قبل از بالا آوردن دوباره یک موضوع واحد"
       navigate_to_first_post_after_read: "پس از خواندن موضوعات به اولین پست بروید"
       notifications:
@@ -4641,6 +4648,7 @@ fa_IR:
           click_to_get_started: "برای شروع اینجا را کلیک کنید."
           header_link_text: "دسته‌بندی‌ها"
           header_action_title: "ويرايش دسته‌بندی‌های نوار کناری خود"
+          header_action_new: "دسته‌بندی جدید"
           configure_defaults: "تنظیمات پیش‌فرض"
         community:
           edit_section:
@@ -4872,6 +4880,9 @@ fa_IR:
           disabled: "غیرفعال"
           impact_type_other: "دیگر"
           status_experimental: "آزمایشی"
+          impact_role_admins: "مدیران ارشد"
+          impact_role_moderators: "ناظران"
+          impact_role_staff: "همکاران"
       config:
         about:
           title: "درباره سایت شما"
@@ -5096,7 +5107,6 @@ fa_IR:
         new_features:
           title: "چه چیزی جدید شده؟"
           subtitle: "ما همیشه در حال انتشار ویژگی ها و بهبودهای جدید هستیم. این صفحه نکات برجسته را پوشش می‌دهد، اما می‌توانید روی «بیشتر بدانید» کلیک کنید تا یادداشت‌های انتشار گسترده را ببینید."
-          previous_announcements: "می‌توانید اعلامیه‌ ویژگی‌های جدید قبلی را در <a href='%{url}' target='_blank'>Discourse Meta</a> مشاهده کنید"
           learn_more: "بیشتر بدانید..."
           experimental: "آزمایشی"
           experiment_enabled: "شما ویژگی آزمایشی را فعال کرده‌اید."
@@ -5181,7 +5191,9 @@ fa_IR:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">سوابق جستجو</a>'
             disabled: 'گزارش جستجوی پرطرفدار غیرفعال است. برای جمع‌آوری داده‌ها، <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">لاگ درخواست‌های جستجو</a> را فعال کنید.'
-          average_chart_label: میانگین
+          sort_button: "مرتب‌سازی براساس %{column}"
+          sort_ascending: "صعودی"
+          sort_descending: "نزولی"
           filters:
             file_extension:
               label: پسوند فایل
@@ -6927,6 +6939,7 @@ fa_IR:
           upload:
             label: "بارگذاری"
             title: "بارگذاری تصاویر"
+        download_file: "دانلود"
         selectable_avatars:
           title: "فهرست آواتارهایی که کاربران می توانند از بین آنها انتخاب کنند"
         table_column_heading:

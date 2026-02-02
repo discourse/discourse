@@ -6,6 +6,10 @@
 
 lt:
   js:
+    carousel:
+      go_to_slide: "Eiti į skaidrę %{index}"
+      previous: "Ankstesnė skaidrė"
+      next: "Kita skaidrė"
     number:
       format:
         separator: "."
@@ -126,6 +130,11 @@ lt:
           few: "%{count} dienos"
           many: "%{count} dienų"
           other: "%{count} dienų"
+        x_months:
+          one: "%{count} mėnuo"
+          few: "%{count} mėnesiai"
+          many: "%{count} mėnesį"
+          other: "%{count} mėnesių"
         date_year: "MMM D, YYYY"
       medium_with_ago:
         x_minutes:
@@ -588,6 +597,7 @@ lt:
     review:
       show_more: "Rodyti daugiau"
       show_less: "Rodyti mažiau"
+      editing_post: "Redaguojamas įrašas…"
       order_by: "Rūšiuoti pagal"
       date_filter: "Paskelbta tarp"
       in_reply_to: "atsakant į"
@@ -776,6 +786,10 @@ lt:
         is_this_post: "Ar tai %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "arba"
         something_else_wrong: "Ar kažkas čia negerai %{reviewable_type}?"
+        approve_user: "Patvirtinti šį naudotoją?"
+        suspect_user: "Ar tai yra vartotojo šlamštas?"
+        approve_post: "Patvirtinti šį įrašą?"
+        approve_topic: "Patvirtinti šią temą?"
       types:
         reviewable_flagged_post:
           title: "Pažymėtas pranešimas"
@@ -793,9 +807,19 @@ lt:
         reviewable_post:
           title: "Įrašai"
           noun: "įrašai"
+        reviewable_ai_chat_message:
+          title: "Dirbtinio intelekto pažymėtas pokalbio pranešimas"
+          noun: "pokalbio žinutė"
         reviewable_ai_post:
+          title: "Dirbtinio intelekto pažymėtas įrašas"
           noun: "įrašai"
+        reviewable_post_voting_comment:
+          title: "Pažymėtas komentaras"
+          noun: "komentaras"
       user_label: "Narys"
+      timeline:
+        target_deleted: "Įrašas ištrintas"
+        target_deleted_by: "Įrašą ištrynė %{username} · %{relativeDate}"
       notes:
         delete: "Pašalinti"
       topic_label: "Tema"
@@ -975,6 +999,7 @@ lt:
           smtp_title: "SMTP"
           smtp_instructions: "Įjungus SMTP grupei, visi iš grupės gautųjų laiškų dėžutės siunčiami el. laiškai bus siunčiami per čia nurodytus SMTP nustatymus, o ne per pašto serverį, sukonfigūruotą kitiems jūsų forumo siunčiamiems el. laiškams."
           additional_settings: "Papildomi nustatymai"
+          smtp_disable_confirm: "Jei išjungsite SMTP, visi SMTP nustatymai bus nustatyti iš naujo, o susijusios funkcijos bus išjungtos. Ar tikrai norite tęsti?"
           prefill:
             title: "Užpildykite nustatymus:"
             gmail: "„Gmail“"
@@ -1250,6 +1275,7 @@ lt:
       private_message: "Žinutės"
       private_messages: "Žinutės"
       upcoming_changes:
+        title: "Būsimi pakeitimai"
         for_user:
           enabled: "Galimas?"
       user_notifications:
@@ -2513,6 +2539,11 @@ lt:
       reaction_2: "<span>%{username}, %{username2}</span> %{description}"
       votes_released: "%{description} - baigtas"
       admin_problems: "Nauji patarimai jūsų svetainės informacijos suvestinėje"
+      upcoming_changes:
+        available:
+          title: "Būsimi pakeitimai"
+        automatically_promoted:
+          title: "Būsimi pakeitimai"
       dismiss_confirmation:
         body:
           default:
@@ -2563,7 +2594,7 @@ lt:
         post_approved: "įrašas patvirtintas"
         membership_request_consolidated: "nauji narystės prašymai"
         reaction: "nauja reakcija"
-        votes_released: "Balsavimas buvo išleistas"
+        votes_released: "balsavimas buvo išleistas"
         admin_problems: "nauji patarimai jūsų svetainės informacijos suvestinėje"
     upload_selector:
       delete: "Pašalinti"
@@ -2850,8 +2881,6 @@ lt:
           12_hours: "12 valandų"
           24_hours: "24 valandos"
           custom: "Pasirinktinė trukmė"
-      slow_mode_notice:
-        duration: "Prašome palaukti %{duration} tarp įrašų šioje temoje"
       topic_status_update:
         title: "Temos laikmatis"
         save: "Nustatyti laikmatį"
@@ -3378,6 +3407,8 @@ lt:
       creation_error: Įvyko klaida kuriant kategoriją.
       save_error: Įvyko klaida išsaugant kategoriją.
       description: "Aprašymas"
+      icon: "Ikona"
+      emoji: "Emoji"
       background_color: "Spalva"
       color_validations:
         cant_be_empty: "negali būti tuščia"
@@ -3387,7 +3418,6 @@ lt:
         options:
           icon: "Ikona"
           emoji: "Emoji"
-      name_placeholder: "Daugiausiai vienas arba du žodžiai"
       color_placeholder: "Bet kokia internetinė spalva"
       delete_confirm: "Ar tikrai norite ištrinti šią kategoriją?"
       delete_error: "Įvyko klaida ištrinant kategoriją."
@@ -3406,7 +3436,7 @@ lt:
       special_warning: "Įspėjimas: Ši kategorija yra iš anksto numatyta kategorija ir saugumo nustatymai negali būti keičiami. Jeigu nenorite naudoti šios kategorijos, ištrinkie ją vietoj pakartotino naudojimo."
       uncategorized_security_warning: "Ši kategorija yra ypatinga. Jis skirta temoms, kurios neturi kategorijos, laikyti; ji negali turėti saugos nustatymų."
       pending_permission_change_alert: "Jūs nepridėjote %{group} į šią kategoriją; spustelėkite šį mygtuką, norėdami juos pridėti."
-      images: "Paveiksliukai"
+      images: "išvaizda"
       email_in: " papildomas naujas el. pašto adresas:"
       email_in_allow_strangers: "Gauti el. laiškus iš anoniminių paskyrų neturinčių vartotojų "
       mailinglist_mirror: "Kategorija atspindi adresatų sąrašą"
@@ -3424,6 +3454,11 @@ lt:
       this_year: "šiais metais"
       position: "Pozicija kategorijų puslapyje:"
       minimum_required_tags: "Minimalus temoje reikalingas žymų skaičius:"
+      none_subcategory_text: "Nieko"
+      visibility:
+        title: "Prieiga"
+        public: "Vieša"
+        group_restricted: "Privatu"
       num_auto_bump_daily: "Atvirų temų, kurios bus automatiškai rodomos kasdien, skaičius:"
       navigate_to_first_post_after_read: "Perskaitykite temas, eikite į pirmąjį įrašą"
       notifications:
@@ -3549,6 +3584,8 @@ lt:
       pinned:
         title: "Prisegta"
         help: "Ši tema yra Pažymėta tik tau. Ji bus rodoma sąrašo kategorijos sąrašo viršuje."
+      hot:
+        title: "Karšta"
       personal_message:
         title: "Ši tema yra asmeninė žinutė"
         help: "Ši tema yra asmeninė žinutė"
@@ -3627,6 +3664,10 @@ lt:
       unseen:
         title: "Nematytas"
         lower_title: "nematytas"
+      hot:
+        title: "Karšta"
+        lower_title: "karšta"
+        help: "populiariausios naujausios temos"
       new:
         lower_title_with_count:
           one: "%{count} nauja"
@@ -4050,8 +4091,21 @@ lt:
         yesterday: "Vakar"
     discovery:
       headings:
+        all:
+          hot: "Visos aktualios temos"
+        category:
+          hot: "Karštos temos %{category}"
+        single_tag:
+          hot: "Karštos temos su žyme %{tag}"
         multi_tag:
           default: "Temos pažymėtos %{tags}"
+        category_tag:
+          hot: "Karštos temos %{category} pažymėtos žyme %{tag}"
+        no_tags:
+          all:
+            hot: "Karštos temos be etikečių"
+          category:
+            hot: "Karštos temos %{category} be žymų"
         categories: "Visos kategorijos"
   admin_js:
     type_to_filter: "Įveskite filtrą…"
@@ -4100,6 +4154,9 @@ lt:
           enabled: "Galimas"
           disabled: "Uždrausta"
           impact_type_other: "Kiti"
+          impact_role_admins: "Administratoriai"
+          impact_role_moderators: "Moderatoriai"
+          impact_role_staff: "Personalas"
       config:
         developer:
           title: "Programuotojams"
@@ -4121,6 +4178,8 @@ lt:
           form:
             mobile: "Mobilus"
             email: "El. paštas"
+            manifest_screenshots:
+              title: "Manifesto ekrano kopijos"
         fonts:
           form:
             heading_font:
@@ -4292,7 +4351,9 @@ lt:
           no_data: "Nėra rodomų duomenų."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Paieškos įrašai</a>'
-          average_chart_label: Vidutinis
+          sort_button: "Rūšiuoti pagal %{column}"
+          sort_ascending: "didėjantis"
+          sort_descending: "mažėjantis"
           filters:
             file_extension:
               label: Failo plėtinys
@@ -5420,6 +5481,7 @@ lt:
           empty: "Nuotraukų dar nėra. Prašome įkelti vieną."
           upload:
             label: "Įkelti"
+        download_file: "Atsisiųsti"
         selectable_avatars:
           title: "Avatarų, kuriuos vartotojai gali pasirinkti, sąrašas"
         table_column_heading:

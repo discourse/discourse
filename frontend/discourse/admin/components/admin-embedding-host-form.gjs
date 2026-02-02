@@ -51,6 +51,7 @@ export default class AdminEmbeddingHostForm extends Component {
         ...data,
         user: data.user?.at(0),
         category_id: data.category,
+        tags: data.tags?.map((t) => t.id),
       });
       if (!this.isEditing) {
         this.adminEmbedding.embedding.embeddable_hosts.push(host);

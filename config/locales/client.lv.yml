@@ -491,6 +491,8 @@ lv:
         reviewable_ai_post:
           noun: "ieraksts"
       user_label: "Lietotājs"
+      timeline:
+        target_deleted: "Ieraksts dzēsts"
       notes:
         delete: "Dzēst"
       topic_label: "Tēmas"
@@ -1756,7 +1758,7 @@ lv:
         topic_reminder: "atgādinājums par tēmu"
         liked_consolidated: "jauns \"patīk\""
         post_approved: "ziņa apstiprināta"
-        votes_released: "Balsojums tika izveidots"
+        votes_released: "balsojums tika izveidots"
     upload_selector:
       delete: "Dzēst"
       uploading: "Augšuplādē"
@@ -2331,6 +2333,8 @@ lv:
       creation_error: Izveidojot šo sadaļu, notika kļūda.
       save_error: Saglabājot šo sadaļu, notika kļūda.
       description: "Apraksts"
+      icon: "Ikona"
+      emoji: "Smaidiņi"
       background_color: "Krāsa"
       styles:
         icon: "Ikona"
@@ -2338,7 +2342,6 @@ lv:
         options:
           icon: "Ikona"
           emoji: "Smaidiņi"
-      name_placeholder: "Ne vairāk par vienu vai diviem vārdiem"
       color_placeholder: "Jebkura interneta krāsa"
       delete_confirm: "Vai tiešām vēlies dzēst šo kategoriju?"
       delete_error: "Dzēšot šo sadaļu, notika kļūda."
@@ -2351,7 +2354,6 @@ lv:
         reply: "Atbildēt"
         create: "Izveidot"
       special_warning: "Brīdinājums: šī sadaļa ir automātiski izveidota un tās drošības uzstādījumi nav maināmi. Ja jūs nevēlaties šo sadaļu izmantot, izdzēsiet to, nevis pielietojiet citiem mērķiem."
-      images: "Attēli"
       email_in: "Īpašas ienākošā e-pasta adreses:"
       email_in_allow_strangers: "Pieņemt e-pastus no anonīmiem lietotājiem bez profiliem"
       show_subcategory_list: "Rādīt apakšsadaļu sarakstu virs tēmām šai sadaļā."
@@ -2360,6 +2362,11 @@ lv:
       allow_badges_label: "Atļaut apbalvot ar žetoniem šai sadaļā"
       review_group_name: "grupas nosaukums"
       this_year: "šogad"
+      none_subcategory_text: "Nav"
+      visibility:
+        title: "Piekļuve"
+        public: "Publisks"
+        group_restricted: "Privāts"
       notifications:
         watching:
           title: "Novērošana"
@@ -2856,6 +2863,9 @@ lv:
           enabled: "Ieslēgts"
           disabled: "Atslēgt"
           impact_type_other: "Citi"
+          impact_role_admins: "Administratori"
+          impact_role_moderators: "Moderātori"
+          impact_role_staff: "Personāls"
       config:
         developer:
           title: "Izstrādātājs"
@@ -3001,6 +3011,8 @@ lv:
           monthly: Mēneša
           weekly: Nedēļas
           groups: "Visas grupas"
+          sort_ascending: "augoši"
+          sort_descending: "dilstoši"
           filters:
             group:
               label: Grupa
@@ -3751,6 +3763,7 @@ lv:
         uploaded_image_list:
           upload:
             label: "Augšupielādēt"
+        download_file: "Lejuplādēt"
         table_column_heading:
           status: "Statuss"
         categories:

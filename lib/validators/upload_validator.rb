@@ -16,10 +16,7 @@ class UploadValidator < ActiveModel::Validator
 
     extension = File.extname(upload.original_filename)[1..-1] || ""
 
-    if upload.for_site_setting && upload.user&.staff? &&
-         FileHelper.is_supported_image?(upload.original_filename)
-      return true
-    end
+    return validate_site_setting_upload(upload, extension) if upload.for_site_setting
 
     if upload.for_gravatar && FileHelper.supported_gravatar_extensions.include?(extension)
       maximum_image_file_size(upload)
@@ -37,6 +34,37 @@ class UploadValidator < ActiveModel::Validator
         maximum_attachment_file_size(upload)
       end
     end
+  end
+
+  def validate_site_setting_upload(upload, extension)
+    unless upload.user&.staff?
+      upload.errors.add(:base, I18n.t("upload.unauthorized"))
+      return false
+    end
+
+    setting_opts = site_setting_type_hash(upload.site_setting_name)
+    authorized_extensions = setting_opts[:authorized_extensions]
+
+    if authorized_extensions.present?
+      unless extension_allowed_for_site_setting?(extension, authorized_extensions)
+        upload.errors.add(
+          :original_filename,
+          I18n.t("upload.unauthorized", authorized_extensions: authorized_extensions),
+        )
+        return false
+      end
+
+      validate_site_setting_file_size(upload, setting_opts)
+    else
+      unless FileHelper.is_supported_image?(upload.original_filename)
+        upload.errors.add(:original_filename, I18n.t("upload.images_only"))
+        return false
+      end
+
+      validate_site_setting_file_size(upload, setting_opts)
+    end
+
+    upload.errors.empty?
   end
 
   # this should only be run on existing records, and covers cases of
@@ -70,6 +98,38 @@ class UploadValidator < ActiveModel::Validator
   end
 
   private
+
+  def site_setting_type_hash(setting_name)
+    return {} if setting_name.blank?
+    SiteSetting.type_supervisor.type_hash(setting_name.to_sym)
+  end
+
+  def validate_site_setting_file_size(upload, setting_opts)
+    return if !upload.validate_file_size
+
+    max_size_kb = setting_opts[:max_file_size_kb]
+
+    if max_size_kb.present?
+      max_size_bytes = max_size_kb.to_i.kilobytes
+      if upload.filesize > max_size_bytes
+        upload.errors.add(
+          :filesize,
+          I18n.t(
+            "upload.attachments.too_large_humanized",
+            max_size: ActiveSupport::NumberHelper.number_to_human_size(max_size_bytes),
+          ),
+        )
+      end
+    elsif FileHelper.is_supported_image?(upload.original_filename)
+      maximum_image_file_size(upload)
+    else
+      maximum_attachment_file_size(upload)
+    end
+  end
+
+  def extension_allowed_for_site_setting?(extension, authorized_extensions)
+    extensions_to_set(authorized_extensions).include?(extension.downcase)
+  end
 
   def extensions_to_set(exts)
     extensions = Set.new

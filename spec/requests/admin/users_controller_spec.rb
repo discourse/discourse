@@ -142,7 +142,7 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body["id"]).to eq(user.id)
       end
 
-      it "includes count of similiar users" do
+      it "includes count of similar users" do
         Fabricate(:user, ip_address: "88.88.88.88")
         Fabricate(:admin, ip_address: user.ip_address)
         Fabricate(:moderator, ip_address: user.ip_address)

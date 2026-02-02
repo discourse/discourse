@@ -1110,6 +1110,7 @@ ar:
       timeline:
         target_created: "تم إنشاء المنشور"
         target_created_by: "أُنشئ المنشور من طرف %{username} · %{relativeDate}"
+        target_deleted: "تم حذف المنشور"
         flagged: "تم الإبلاغ"
         flagged_as_by: "تم الإبلاغ عنه بسبب %{flagReason} من قِبل %{username} · %{relativeDate}"
         claimed: "تمت المطالبة به"
@@ -2481,6 +2482,7 @@ ar:
               other {# يوم}
             }.
           edit_link_options: "تعديل خيارات الرابط أو الإرسال عبر البريد الإلكتروني"
+          edit_link_options_only: "تعديل خيارات الرابط"
           show_advanced: "إظهار الخيارات المتقدمة"
           hide_advanced: "إخفاء الخيارات المتقدمة"
           description: "الوصف"
@@ -3623,7 +3625,6 @@ ar:
         membership_request_consolidated: "طلبات العضوية الجديدة"
         reaction: "تفاعل جديد"
         votes_released: "تم تحرير التصويت"
-        new_features: "تم إطلاق ميزات جديدة في Discourse!"
         admin_problems: "نصيحة جديدة بشأن لوحة معلومات موقعك"
     upload_selector:
       change: "تغيير"
@@ -4183,8 +4184,6 @@ ar:
           12_hours: "12 ساعة"
           24_hours: "24 ساعة"
           custom: "المدة المخصَّصة"
-      slow_mode_notice:
-        duration: "يُرجى الانتظار لمدة %{duration} بين المنشورات في هذا الموضوع"
       topic_status_update:
         title: "مؤقِّت الموضوع"
         save: "تعيين المؤقِّت"
@@ -4949,6 +4948,7 @@ ar:
       back: "الرجوع إلى الفئة"
       general: "عام"
       settings: "الإعدادات"
+      advanced: "متقدمة"
       topic_template: "قالب"
       tags: "الوسوم"
       localizations: "التوطينات"
@@ -4989,7 +4989,9 @@ ar:
       logo_description: "يُنصح باستخدام نسبة أبعاد 1:1 وبحجم أدنى 200 بكسل. إذا تُرك الحقل فارغًا، لن تظهر أي صورة."
       background_image: "صورة خلفية الفئة"
       background_image_dark: "صورة خلفية داكنة للفئة"
-      style: "الأنماط"
+      style: "النمط"
+      icon: "الأيقونة"
+      emoji: "الرمز التعبيري"
       background_color: "اللون"
       foreground_color: "لون النص"
       color_validations:
@@ -5000,13 +5002,13 @@ ar:
         type: "النمط"
         icon: "الأيقونة"
         emoji: "الرمز التعبيري"
+        square: "مربع"
         options:
           square: "مربع"
           icon: "الأيقونة"
           emoji: "الرمز التعبيري"
       color_used: "اللون قيد الاستخدام"
       predefined_colors: "خيارات الألوان المحدَّدة مسبقًا"
-      name_placeholder: "كلمة أو كلمتان بحد أقصى"
       color_placeholder: "لون الويب"
       delete_confirm: "هل تريد بالتأكيد حذف هذه الفئة؟"
       delete_error: "حدث خطأ في أثناء حذف هذه الفئة"
@@ -5014,6 +5016,7 @@ ar:
       no_description: "يُرجى إضافة وصف لهذه الفئة."
       change_in_category_topic: "عدّل الوصف"
       already_used: "هذا اللون مستخدم بالفعل في فئة أخرى"
+      color_palette: "لوحة الألوان"
       security: "الأمان"
       security_add_group: "إضافة مجموعة"
       permissions:
@@ -5030,7 +5033,7 @@ ar:
       uncategorized_security_warning: "هذه الفئة خاصة. وتهدف إلى جمع الموضوعات التي لا تنتمي إلى أي فئة، ولا يمكنك تعيين إعدادات حماية لها."
       uncategorized_general_warning: 'هذه الفئة خاصة. ويتم استخدامها كفئة افتراضية للموضوعات الجديدة التي لا تنتمي إلى أي فئة. إذا أردت منع هذا السلوك وفرض تحديد الفئة، <a href="%{settingLink}">يُرجى إيقاف هذا الإعداد من هنا</a>. إذا أردت تغيير اسم الفئة أو وصفها، فانتقل إلى <a href="%{customizeLink}">التخصيص/المحتوى النصي</a>.'
       pending_permission_change_alert: "لم تُضف المجموعة %{group} إلى هذه الفئة، انقر على هذا الزر لإضافتها."
-      images: "الصور"
+      images: "المظهر"
       email_in: "العنوان المخصَّص للبريد الوارد:"
       email_in_tooltip: "يمكنك فصل عدة عناوين بريد إلكتروني باستخدام الرمز |."
       email_in_allow_strangers: "قبول الرسائل الإلكترونية من المستخدمين المجهولين الذين لا يملكون حسابات"
@@ -5053,6 +5056,12 @@ ar:
       position: "الترتيب في صفحة الفئات:"
       position_disabled: "سيتم عرض الفئات بترتيب النشاط. للتحكم في ترتيب الفئات في القوائم، قم بتفعيل الإعداد <a href='%{url}'>\"المواضع الثابتة للفئات\"</a>."
       minimum_required_tags: "الحد الأدنى من عدد الوسوم المطلوبة في الموضوع:"
+      none_subcategory_text: "لا يوجد"
+      visibility:
+        title: "الوصول"
+        public: "عام"
+        all_members: "جميع الأعضاء"
+        group_restricted: "خاص"
       num_auto_bump_daily: "عدد الموضوعات المفتوحة التي سيتم رفعها تلقائيًا بشكلٍ يومي:"
       auto_bump_cooldown_days: "الحد الأدنى لعدد الأيام قبل رفع الموضوع نفسه مرة أخرى:"
       navigate_to_first_post_after_read: "الانتقال إلى أول منشور بعد قراءة الموضوعات"
@@ -5976,6 +5985,7 @@ ar:
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الفئات"
           header_action_title: "تعديل فئات الشريط الجانبي"
+          header_action_new: "فئة جديدة"
           configure_defaults: "إعداد الإعدادات الافتراضية"
         community:
           edit_section:
@@ -6316,6 +6326,11 @@ ar:
           impact_type_feature: "الميزة"
           impact_type_other: "أخرى"
           status_experimental: "تجريبي"
+          impact_role_admins: "المسؤولون"
+          impact_role_moderators: "المشرفون"
+          impact_role_staff: "فريق العمل"
+          impact_role_all_members: "جميع الأعضاء"
+          impact_role_developers: "المطوّرون"
       config:
         about:
           title: "نبذة عن موقعك"
@@ -6742,7 +6757,6 @@ ar:
         new_features:
           title: "ما الجديد؟"
           subtitle: "نحن نصدر ميزات وتحسينات جديدة طوال الوقت. تغطي هذه الصفحة أبرز النقاط، ولكن يمكنك النقر على \"معرفة المزيد\" للاطلاع على ملاحظات الإصدار الشاملة."
-          previous_announcements: "يمكنك رؤية إعلانات الميزات الجديدة السابقة على <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "معرفة المزيد..."
           experimental: "تجريبي"
           only_experiments: "عرض الميزات التجريبية فقط"
@@ -6853,7 +6867,9 @@ ar:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">سجلات البحث</a>'
             disabled: 'تقرير عبارات البحث الرائجة متوقف. قم بتفعيل <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">تسجيل استعلامات البحث</a> لجمع البيانات.'
-          average_chart_label: المتوسط
+          sort_button: "الترتيب حسب %{column}"
+          sort_ascending: "تصاعدي"
+          sort_descending: "تنازلي"
           filters:
             file_extension:
               label: امتداد الملف
@@ -8945,6 +8961,7 @@ ar:
           upload:
             label: "تحميل"
             title: "تحميل الصور"
+        download_file: "تنزيل"
         selectable_avatars:
           title: "قائمة الصور الرمزية التي يمكن للمستخدمين الاختيار منها"
         table_column_heading:

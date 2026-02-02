@@ -60,8 +60,8 @@ cs:
           title: Tvůj FBFF (nejlepší kámoš/ka na fóru)
         most_viewed_categories:
           title:
-            one: Tvoje nejsledovanější kategorie
-            few: Tvoje %{count} nejsledovanější kategorie
+            one: Tvá nejsledovanější kategorie
+            few: Tvé %{count} nejsledovanější kategorie
             many: Tvých %{count} nejsledovanějších kategorií
             other: Tvých %{count} nejsledovanějších kategorií
         most_viewed_tags:
@@ -116,11 +116,8 @@ cs:
           author_others: "%{username}"
           channel_title: "#aktivita-chatu"
           status_online: "● online"
-          message_1: "Letos jsi odeslal/a <strong>%{count}</strong> zpráv!"
           reply_1: "lol úžasné B-)"
-          message_2: "Poslala/a jsi <strong>%{dm_count}</strong> soukromých zpráv s <strong>%{channel_count}</strong> různými lidmi nebo skupinami"
           reply_2: "cOo0oL :D"
-          message_3: "Lidem se tvé zprávy moc líbily! Dostal jsi <strong>%{count}</strong> reakcí ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "Průměrná délka tvé zprávy byla <strong>%{length}</strong> znaků"
           message_5: "Tvé oblíbené kanály:"

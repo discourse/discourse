@@ -843,6 +843,7 @@ nl:
       timeline:
         target_created: "Bericht gemaakt"
         target_created_by: "Bericht gemaakt door %{username} · %{relativeDate}"
+        target_deleted: "Bericht verwijderd"
         flagged: "Gemarkeerd"
         flagged_as_by: "Gemarkeerd als %{flagReason} door %{username} · %{relativeDate}"
         claimed: "Geclaimd"
@@ -2984,8 +2985,7 @@ nl:
         post_approved: "bericht goedgekeurd"
         membership_request_consolidated: "nieuwe lidmaatschapsverzoeken"
         reaction: "nieuwe reactie"
-        votes_released: "Stem is vrijgegeven"
-        new_features: "Er zijn nieuwe Discourse-functies uitgebracht!"
+        votes_released: "stem is vrijgegeven"
         admin_problems: "nieuw advies op je websitedashboard"
     upload_selector:
       change: "Wijzigen"
@@ -3426,8 +3426,6 @@ nl:
           12_hours: "12 uur"
           24_hours: "24 uur"
           custom: "Aangepaste duur"
-      slow_mode_notice:
-        duration: "Wacht %{duration} tussen berichten in dit topic"
       topic_status_update:
         title: "Topictimer"
         save: "Timer instellen"
@@ -4048,6 +4046,7 @@ nl:
       back: "Terug naar categorie"
       general: "Algemeen"
       settings: "Instellingen"
+      advanced: "Geavanceerd"
       topic_template: "Sjabloon"
       tags: "Tags"
       localizations: "Lokalisaties"
@@ -4079,7 +4078,9 @@ nl:
       save_error: Er is een fout opgetreden bij het opslaan van de categorie.
       description: "Beschrijving"
       logo_description: "Aanbevolen beeldverhouding 1:1 met een minimale bestandsgrootte van 200 pixels. Als dit leeg wordt gelaten, wordt er geen afbeelding weergegeven."
-      style: "Stijlen"
+      style: "Stijl"
+      icon: "Pictogram"
+      emoji: "Emoji"
       background_color: "Kleur"
       foreground_color: "Tekstkleur"
       color_validations:
@@ -4088,13 +4089,13 @@ nl:
         type: "Stijl"
         icon: "Pictogram"
         emoji: "Emoji"
+        square: "Vierkant"
         options:
           square: "Vierkant"
           icon: "Pictogram"
           emoji: "Emoji"
       color_used: "Kleur in gebruik"
       predefined_colors: "Voorgedefinieerde kleuropties"
-      name_placeholder: "Maximaal een of twee woorden"
       color_placeholder: "Elke webkleur"
       delete_confirm: "Weet je zeker dat je deze categorie wilt verwijderen?"
       delete_error: "Er is een fout opgetreden bij het verwijderen van de categorie."
@@ -4102,6 +4103,7 @@ nl:
       no_description: "Voeg een beschrijving toe voor deze categorie."
       change_in_category_topic: "Beschrijving bewerken"
       already_used: "Deze kleur is al in gebruik door een andere categorie"
+      color_palette: "Kleurenpalet"
       security: "Beveiliging"
       security_add_group: "Groep toevoegen"
       permissions:
@@ -4118,7 +4120,7 @@ nl:
       uncategorized_security_warning: "Deze categorie is speciaal. Hij is bedoeld als wachtruimte voor topics die geen categorie hebben en kan geen beveiligingsinstellingen hebben."
       uncategorized_general_warning: 'Deze categorie is bijzonder. Hij wordt gebruikt als de standaardcategorie voor nieuwe topics waarvoor geen categorie is selecteerd. Als je dit gedrag wilt voorkomen en categorieselectie wilt afdwingen, <a href="%{settingLink}">schakel de instelling dan hier uit</a>. Als je de naam of beschrijving wilt wijzigen, ga dan naar <a href="%{customizeLink}">Aanpassen / Tekstinhoud</a>.'
       pending_permission_change_alert: "Je hebt %{group} niet toegevoegd aan deze categorie. Klik op deze knop om de groep toe te voegen."
-      images: "Afbeeldingen"
+      images: "Vormgeving"
       email_in: "Aangepast adres voor inkomende e-mail:"
       email_in_tooltip: "Je kunt meerdere e-mailadressen scheiden met het teken |."
       email_in_allow_strangers: "E-mails van anonieme gebruikers zonder account accepteren"
@@ -4140,6 +4142,11 @@ nl:
       position: "Positie op de categoriepagina:"
       position_disabled: "Categorieën worden weergegeven op volgorde van activiteit. Schakel de instelling <a href='%{url}'>'Vaste categorieposities'</a> in om de volgorde van categorieën in lijsten te regelen."
       minimum_required_tags: "Minimale aantal tags vereist in een topic:"
+      none_subcategory_text: "Geen"
+      visibility:
+        title: "Toegang"
+        public: "Openbaar"
+        group_restricted: "Privé"
       num_auto_bump_daily: "Aantal open topics dat dagelijks automatisch omhoog wordt geplaatst:"
       auto_bump_cooldown_days: "Minimaal aantal dagen voordat hetzelfde topic opnieuw omhoog wordt plaatst:"
       navigate_to_first_post_after_read: "Naar eerste bericht nadat topics zijn gelezen"
@@ -5205,6 +5212,9 @@ nl:
           impact_type_feature: "Functie"
           impact_type_other: "Anders"
           status_experimental: "Experimenteel"
+          impact_role_admins: "Beheerders"
+          impact_role_moderators: "Moderators"
+          impact_role_staff: "Medewerker"
       config:
         about:
           title: "Over je site"
@@ -5600,7 +5610,6 @@ nl:
         new_features:
           title: "Wat is er nieuw?"
           subtitle: "We brengen voortdurend nieuwe functies en verbeteringen uit. Deze pagina behandelt de belangrijkste punten, maar je kunt op 'Meer informatie' klikken om uitgebreide releaseopmerkingen te bekijken."
-          previous_announcements: "Je kunt eerdere aankondigingen van nieuwe functies bekijken op <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Meer informatie..."
           experimental: "Experimenteel"
           only_experiments: "Alleen experimentele functies weergeven"
@@ -5687,7 +5696,9 @@ nl:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Zoeken in logs</a>'
             disabled: 'Rapport voor populaire zoekopdrachten is uitgeschakeld. Schakel <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">zoekopdrachten registreren</a> in om gegevens te verzamelen.'
-          average_chart_label: Gemiddeld
+          sort_button: "Sorteren op %{column}"
+          sort_ascending: "oplopend"
+          sort_descending: "aflopend"
           filters:
             file_extension:
               label: Bestandsextensie
@@ -7652,6 +7663,7 @@ nl:
           upload:
             label: "Uploaden"
             title: "Afbeeldingen uploaden"
+        download_file: "Downloaden"
         selectable_avatars:
           title: "Lijst van avatars waaruit gebruikers kunnen kiezen"
         table_column_heading:

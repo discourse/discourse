@@ -841,6 +841,7 @@ ro:
       timeline:
         target_created: "A fost creată postarea"
         target_created_by: "Postare creată de %{username} · %{relativeDate}"
+        target_deleted: "Postarea a fost ștearsă"
         flagged: "Semnalat"
         flagged_as_by: "Semnalat ca %{flagReason} de %{username} · %{relativeDate}"
         claimed: "Revendicat"
@@ -1792,6 +1793,7 @@ ro:
               other {în # de zile}
             }.
           edit_link_options: "Editează opțiunile de legătură sau trimite prin email."
+          edit_link_options_only: "Editează opțiuni legătură"
           show_advanced: "Afișați opțiunile avansate"
           hide_advanced: "Ascundeți opțiunile avansate"
           description: "Descriere"
@@ -2394,7 +2396,6 @@ ro:
         bookmark_reminder_with_name: "memento semn de carte - %{name}"
         watching_first_post: "subiect nou"
         post_approved: "articol aprobat"
-        new_features: "Au fost lansate funcționalități Discourse noi!"
         admin_problems: "sfaturi noi în panoul de control al site-ului tău"
     upload_selector:
       change: "Schimbă"
@@ -3135,6 +3136,7 @@ ro:
       view: "Arată subiectele din categorie"
       general: "General"
       settings: "Setări"
+      advanced: "Avansat"
       tags: "Etichete"
       localizations: "Localizări"
       localization:
@@ -3158,7 +3160,9 @@ ro:
       creation_error: A apărut o eroare în timpul creării categoriei.
       save_error: A apărut o eroare in timpul salvării categoriei.
       description: "Descriere"
-      style: "Stiluri"
+      style: "Stil"
+      icon: "Icon"
+      emoji: "Emoticon"
       background_color: "Culoare"
       foreground_color: "Culoare text"
       color_validations:
@@ -3169,16 +3173,17 @@ ro:
         type: "Stil"
         icon: "Icon"
         emoji: "Emoji"
+        square: "Pătrat"
         options:
           square: "Pătrat"
           icon: "Icon"
           emoji: "Emoji"
-      name_placeholder: "Unul sau două cuvinte maximum"
       color_placeholder: "Orice culoare web"
       delete_confirm: "Sigur dorești să ștergi această categorie?"
       delete_error: "A apărut o eroare la ștergerea acestei categorii."
       no_description: "Adaugă o descriere acestei categorii."
       already_used: "Această culoare este folosită la o altă categorie"
+      color_palette: "Paletă de culori"
       security: "Securitate"
       permissions:
         group: "Grup"
@@ -3186,13 +3191,18 @@ ro:
         reply: "Răspunde"
         create: "Creează"
       special_warning: "Atenție: Această categorie este pre-instalată și setările de securitate nu pot fi editate. Dacă nu dorești să folosești această categorie, va trebui să o ștergi în loc să-i schimbi destinația."
-      images: "Imagini"
+      images: "Aspect"
       email_in: "Adresa email de primire preferențială:"
       email_in_allow_strangers: "Acceptă emailuri de la utilizatori anonimi fără cont"
       allow_badges_label: "Permite acordarea de ecusoane în această categorie"
       review_group_name: "numele grupului"
       require_topic_approval: "Cere obligatoriu aprobarea moderatorilor pentru toate discuțiile noi"
       this_year: "anul acesta"
+      none_subcategory_text: "Nimic"
+      visibility:
+        title: "Acces"
+        public: "Public"
+        group_restricted: "Privat"
       num_auto_bump_daily: "Numărul de discuții active care pot primi bump zilnic"
       navigate_to_first_post_after_read: "Navighează la prima postare după ce le citești pe celelalte"
       notifications:
@@ -3918,6 +3928,9 @@ ro:
           disabled: "Dezactivate"
           impact_type_other: "Altele"
           status_experimental: "Experimental"
+          impact_role_admins: "Admini"
+          impact_role_moderators: "Moderatori"
+          impact_role_staff: "Echipa"
       config:
         about:
           title: "Despre site-ul tău"
@@ -4225,7 +4238,6 @@ ro:
         new_features:
           title: "Ce este nou?"
           subtitle: "Lansăm noi funcții și îmbunătățiri tot timpul. Această pagină le acoperă pe cele mai importante, dar poți da clic pe „Află mai multe” pentru a vedea notele extinse de lansare."
-          previous_announcements: "Poți vedea anunțurile anterioare privind noile caracteristici pe <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Află mai multe..."
           experimental: "Experimental"
           only_experiments: "Afișează doar caracteristici experimentale"
@@ -4286,6 +4298,9 @@ ro:
           monthly: Lunar
           weekly: Săptămânal
           groups: "Toate grupurile"
+          sort_button: "Sortează după %{column}"
+          sort_ascending: "crescător"
+          sort_descending: "descrescător"
           filters:
             group:
               label: Grup
@@ -4463,6 +4478,7 @@ ro:
       community:
         title: "Comunitate"
         sidebar_link:
+          about_your_site: "Despre site-ul tău"
           badges: "Insigne"
           notifications: "Notificări"
           permalinks: "Legături permanente"
@@ -4473,6 +4489,8 @@ ro:
           user_fields: "Câmpuri utilizator"
           watched_words: "Cuvinte urmărite"
           legal: "Legal"
+          moderation_flags:
+            title: "Moderare"
       appearance:
         title: "Aspect"
         sidebar_link:
@@ -5486,6 +5504,7 @@ ro:
         uploaded_image_list:
           upload:
             label: "Încarcă"
+        download_file: "Descărcare"
         table_column_heading:
           status: "Stare"
         categories:

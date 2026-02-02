@@ -30,8 +30,10 @@ pt_BR:
         label: "Criar tópico de votação em postagem"
       composer_actions:
         create_as_post_voting:
+          label: "Ativar/desativar votação em postagem"
           desc: "O tópico será criado com publicações para votar"
         remove_as_post_voting:
+          label: "Remover votação em postagem"
           desc: "O tópico será criado no formato regular"
     vote:
       already_voted: "Você só pode votar uma vez por pergunta."

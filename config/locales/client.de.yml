@@ -640,6 +640,7 @@ de:
     review:
       show_more: "Mehr anzeigen"
       show_less: "Weniger anzeigen"
+      back_to_queue: "Zurück zur Warteschlange"
       order_by: "Sortieren nach"
       date_filter: "Gepostet zwischen"
       in_reply_to: "Antwort auf"
@@ -836,6 +837,10 @@ de:
         is_this_post: "Ist diese(r/s) %{reviewable_type} %{reviewable_human_score_types}?"
         delimiter: "oder"
         something_else_wrong: "Stimmt etwas nicht mit diesem/dieser %{reviewable_type}?"
+        approve_user: "Diesen Benutzer genehmigen?"
+        suspect_user: "Ist dieser Benutzer ein Spammer?"
+        approve_post: "Diesen Beitrag genehmigen?"
+        approve_topic: "Dieses Thema genehmigen?"
       types:
         reviewable_flagged_post:
           title: "Gemeldeter Beitrag"
@@ -857,6 +862,9 @@ de:
           noun: "Chat-Nachricht"
         reviewable_ai_post:
           noun: "Beitrag"
+        reviewable_post_voting_comment:
+          title: "Gemeldeter Kommentar"
+          noun: "Kommentar"
       flagged_as: "Gemeldet als"
       post_flagged_as: "Beitrag gemeldet als"
       chat_flagged_as: "Chat gemeldet als"
@@ -869,6 +877,7 @@ de:
       timeline:
         target_created: "Beitrag erstellt"
         target_created_by: "Beitrag erstellt von %{username} · %{relativeDate}"
+        target_deleted: "Beitrag gelöscht"
         flagged: "Gemeldet"
         flagged_as_by: "Gemeldet als %{flagReason} von %{username} · %{relativeDate}"
         claimed: "Übernommen"
@@ -2114,6 +2123,7 @@ de:
               other {# Tagen}
             } ab.
           edit_link_options: "Link-Optionen bearbeiten oder per E-Mail versenden."
+          edit_link_options_only: "Link-Optionen bearbeiten"
           show_advanced: "Erweiterte Optionen anzeigen"
           hide_advanced: "Erweiterte Optionen ausblenden"
           description: "Beschreibung"
@@ -2637,6 +2647,7 @@ de:
     welcome_banner_page_visibility:
       top_menu_pages: "Obere Menüseiten"
       homepage: "Homepage"
+      discovery: "Discovery"
       all_pages: "Alle Seiten"
     composition_mode:
       markdown: "Markdown"
@@ -2746,7 +2757,9 @@ de:
         translation_preview: "Übersetzungsvorschau"
         original: "Original"
         translation: "Übersetzen"
+        no_translation_yet: "Fang an zu tippen, um eine Vorschau der Übersetzung zu sehen..."
         placeholder: "Übersetzung für den Beitrag hier eingeben …"
+        show_raw_markdown: "Rohversion anzeigen"
       group_mentioned_limit:
         one: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzer. Deshalb wird niemand benachrichtigt."
         other: "<b>Warnung!</b> Du erwähnst <a href='%{group_link}'>%{group}</a>, jedoch übersteigt die Mitgliederzahl der Gruppe das vom Administrator konfigurierte Erwähnungslimit von %{count} Benutzern. Deshalb wird niemand benachrichtigt."
@@ -2860,6 +2873,7 @@ de:
       toggle_direction: "Schreibrichtung wechseln"
       wrap_modal:
         apply: "Anwenden"
+        no_attributes: "Noch keine Attribute hinzugefügt."
       help: "Hilfe zur Markdown-Formatierung"
       collapse: "Editor minimieren"
       open: "Editor öffnen"
@@ -3013,6 +3027,11 @@ de:
       votes_released: "%{description} – abgeschlossen"
       new_features: "Neue Funktionen verfügbar!"
       admin_problems: "Neue Ratschläge auf deinem Website-Dashboard"
+      upcoming_changes:
+        available:
+          title: "Bevorstehende Änderungen"
+        automatically_promoted:
+          title: "Bevorstehende Änderungen"
       dismiss_confirmation:
         body:
           default:
@@ -3069,7 +3088,6 @@ de:
         membership_request_consolidated: "Neue Mitgliedschaftsanfragen"
         reaction: "neue Reaktion"
         votes_released: "Abstimmung wurde freigegeben"
-        new_features: "Neue Discourse-Funktionen wurden veröffentlicht!"
         admin_problems: "neue Ratschläge auf deinem Website-Dashboard"
     upload_selector:
       change: "Ändern"
@@ -3861,6 +3879,7 @@ de:
         actions: "Massenaktionen"
     post:
       accessible_heading: "Beitrag von %{username} %{date}"
+      heading_anchor: "Link zur Überschrift"
       confirm_delete: "Möchtest du wirklich diesen Beitrag löschen?"
       quote_reply: "Zitieren"
       quote_reply_shortcut: "Zitieren (oder q drücken)"
@@ -3953,6 +3972,7 @@ de:
           confirm_delete: "Bist du sicher, dass du die Übersetzungen für '%{languageCode}' löschen willst?"
         success: "Die Übersetzungen wurden erfolgreich aktualisiert"
         post_language_selector:
+          title: "Sprache des Beitrags"
           none: "Keine"
         edit_warning:
           message: "Dies ist ein übersetzter Beitrag.<br><br>Willst du den Originalbeitrag auf %{language} bearbeiten oder diese spezielle Übersetzung bearbeiten?"
@@ -4167,6 +4187,7 @@ de:
       back: "Zurück zur Kategorie"
       general: "Allgemeines"
       settings: "Einstellungen"
+      advanced: "Erweitert "
       topic_template: "Vorlage"
       tags: "Schlagwörter"
       localizations: "Lokalisierungen"
@@ -4197,9 +4218,12 @@ de:
       create_long: "Eine neue Kategorie erstellen"
       save: "Kategorie speichern"
       slug: "Sprechender Name für URL der Kategorie"
+      parent: "Übergeordnete Kategorie"
       slug_placeholder: "(Optional) durch Bindestrich getrennte Wörter für URL"
       creation_error: Beim Erstellen der Kategorie ist ein Fehler aufgetreten.
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
+      errors:
+        self_lockout: "Du bist dabei, die Berechtigungen für diese Kategorie so zu ändern, dass du selbst nicht länger Zugriff darauf hast. Bist du sicher, dass du fortfahren willst?"
       name: "Name der Kategorie"
       untitled: "Unbenannte Kategorie"
       description: "Beschreibung"
@@ -4208,7 +4232,9 @@ de:
       logo_description: "Empfohlenes Seitenverhältnis 1:1 mit einer Mindestgröße von 200 px. Wenn du nichts angibst, wird kein Bild angezeigt."
       background_image: "Hintergrundbild für Kategorie"
       background_image_dark: "Hintergrundbild für Kategorie im „dunklen Modus“"
-      style: "Stile"
+      style: "Stil"
+      icon: "Symbol"
+      emoji: "Emojis"
       background_color: "Farbe"
       foreground_color: "Textfarbe"
       color_validations:
@@ -4219,13 +4245,13 @@ de:
         type: "Stil"
         icon: "Symbol"
         emoji: "Emoji"
+        square: "Quadrat"
         options:
           square: "Quadrat"
           icon: "Symbol"
           emoji: "Emoji"
       color_used: "Verwendete Farbe"
       predefined_colors: "Vordefinierte Farboptionen"
-      name_placeholder: "Ein oder maximal zwei Wörter"
       color_placeholder: "Beliebige Web-Farbe"
       delete_confirm: "Möchtest du wirklich diese Kategorie löschen?"
       delete_error: "Beim Löschen der Kategorie ist ein Fehler aufgetreten."
@@ -4233,6 +4259,7 @@ de:
       no_description: "Bitte füge eine Beschreibung für diese Kategorie hinzu."
       change_in_category_topic: "Beschreibung bearbeiten"
       already_used: "Diese Farbe wird bereits für eine andere Kategorie verwendet."
+      color_palette: "Farbpalette"
       security: "Sicherheit"
       security_add_group: "Eine Gruppe hinzufügen"
       permissions:
@@ -4249,7 +4276,7 @@ de:
       uncategorized_security_warning: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und besitzt keine Sicherheitseinstellungen."
       uncategorized_general_warning: 'Diese Kategorie ist etwas Spezielles. Sie wird als Standard-Kategorie für neue Themen genutzt, für die keine Kategorie ausgewählt wurde. Deaktiviere <a href="%{settingLink}">diese Einstellung</a>, wenn dieses Verhalten verhindert und eine Kategoriewahl erzwungen werden soll. Der Name und die Beschreibung können unter <a href="%{customizeLink}">Anpassen/Textinhalte</a> geändert werden.'
       pending_permission_change_alert: "Du hast %{group} nicht zu dieser Kategorie hinzugefügt; klicke diese Schaltfläche, um sie zuzufügen."
-      images: "Bilder"
+      images: "Erscheinungsbild"
       email_in: "Benutzerdefinierte Adresse für eingehende E-Mails:"
       email_in_tooltip: "Du kannst mehrere E-Mail-Adressen mit dem Zeichen | trennen."
       email_in_allow_strangers: "Akzeptiere E-Mails von anonymen Benutzern."
@@ -4278,7 +4305,12 @@ de:
       position_disabled: "Die Kategorien werden in der Reihenfolge ihrer Aktivität angezeigt. Um die Reihenfolge der Kategorien in den Listen zu kontrollieren, aktiviere die Einstellung <a href='%{url}'>„fixed category positions“</a>."
       minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
       default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
-      parent: "Übergeordnete Kategorie"
+      none_subcategory_text: "Keiner"
+      visibility:
+        title: "Zugriff"
+        public: "Öffentlich"
+        all_members: "Alle Mitglieder"
+        group_restricted: "Privat"
       num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden:"
       auto_bump_cooldown_days: "Mindestanzahl an Tagen, bevor das gleiche Thema erneut angesprochen wird:"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
@@ -4622,6 +4654,7 @@ de:
         latest: "%{shortcut} Neueste Beiträge"
         new: "%{shortcut} Neue Beiträge"
         unread: "%{shortcut} Ungelesene Beiträge"
+        unseen: "%{shortcut} Ungesehen"
         categories: "%{shortcut} Kategorien"
         top: "%{shortcut} Top-Beiträge"
         bookmarks: "%{shortcut} Lesezeichen"
@@ -4767,6 +4800,7 @@ de:
       add_to_calendar: "Zum Kalender hinzufügen"
       google: "Google Kalender"
       ics: "ICS"
+      default_title: "Geplantes Ereignis"
     tagging:
       all_tags: "Alle Schlagwörter"
       other_tags: "Sonstige Schlagwörter"
@@ -4876,6 +4910,7 @@ de:
         parent_tag_label: "Übergeordnetes Schlagwort"
         parent_tag_description: "Schlagwörter aus dieser Gruppe können nur verwendet werden, wenn das übergeordnete Schlagwort vorhanden ist."
         one_per_topic_label: "Beschränke diese Gruppe auf ein Schlagwort pro Thema"
+        new_name: "Neue Schlagwortgruppe"
         name_placeholder: "Name"
         save: "Speichern"
         delete: "Löschen"
@@ -4987,6 +5022,7 @@ de:
       tags_form_modal:
         title: "Schlagwörter-Navigation bearbeiten"
         filter_placeholder: "Schlagwörter filtern"
+        no_tags: "Es gibt keine Schlagwörter, die den aktuellen Filtern entsprechen."
         subtitle:
           text: "und wir zeigen automatisch die Top-Schlagwörter dieser Website an"
       edit_navigation_modal_form:
@@ -5067,6 +5103,8 @@ de:
           click_to_get_started: "Klicke hier, um zu beginnen."
           header_link_text: "Kategorien"
           header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
+          header_action_new: "Neue Kategorie"
+          header_action_edit_sidebar: "Angezeigte Kategorien ändern"
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           edit_section:
@@ -5319,6 +5357,8 @@ de:
       toggle_localized:
         translated: "Die Seite wurde maschinell übersetzt. Klicke, um das Original zu sehen."
         not_translated: "Die Seite ist nicht übersetzt. Klicke zum Übersetzen."
+    language_switcher:
+      title: "Sprache der Website ändern"
   admin_js:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
@@ -5358,16 +5398,23 @@ de:
       upcoming_changes:
         name: "Name"
         plugin: "Plug-in"
+        metadata: "Metadaten"
         enabled: "Aktiviert"
+        enabled_for: "Aktiviert für..."
         show_image: "Bild anzeigen"
         edit_groups: "Gruppenweise Aktivierung bearbeiten"
         groups_updated: "Gruppen aktualisiert!"
         save_groups: "Gruppen speichern"
+        add_groups_to_enable: "Gruppen hinzufügen, um diese Funktion zu aktivieren"
+        no_changes_to_save: "Keine Änderungen zu speichern"
         select_groups: "Gruppen auswählen …"
         opt_in_groups: "Gruppenweise Aktivierung"
         opt_in_groups_instructions: "Die gruppenweise Aktivierung kann verwendet werden, um einer bestimmten Benutzergruppe zu ermöglichen, eine Änderung zu testen, bevor sie für alle veröffentlicht wird. Beachte, dass diese Gruppen irrelevant werden, sobald eine Änderung den Status „dauerhaft“ erreicht."
+        enabled_for_throttle: "Du hast zu schnell geändert, für wen diese Änderung aktiviert ist. Bitte warte ein paar Sekunden, bevor du es erneut versuchst."
+        change_enabled_for_success: "Du hast diese Änderung für %{enabledFor} aktiviert."
         change_disabled: "Du hast diese Änderung deaktiviert"
         permanent_notice: "Diese Änderung ist nun dauerhaft und die Einstellung wird bald entfernt werden. Du hast keine Möglichkeit mehr, sie zu deaktivieren."
+        permanent_no_group_selection: "Nicht änderbar, dauerhafte Änderungen gelten für alle Gruppen."
         preview: "Vorschau"
         enabled_for_options:
           no_one: "Keiner"
@@ -5378,6 +5425,7 @@ de:
           experimental: "Experimentell"
           alpha: "Alpha"
           beta: "Beta"
+          stable: "Dauerhaft"
           permanent: "Dauerhaft"
         impact_roles:
           admins: "Administratoren"
@@ -5387,6 +5435,7 @@ de:
           developers: "Entwickler"
         filter:
           all: "Gesamt"
+          enabled_all: "Aktiviert oder deaktiviert"
           enabled: "Aktiviert"
           disabled: "Deaktiviert"
           impact_type_feature: "Funktion"
@@ -5396,6 +5445,11 @@ de:
           status_beta: "Beta"
           status_stable: "Dauerhaft"
           status_permanent: "Dauerhaft"
+          impact_role_admins: "Administratoren"
+          impact_role_moderators: "Moderatoren"
+          impact_role_staff: "Team"
+          impact_role_all_members: "Alle Mitglieder"
+          impact_role_developers: "Entwickler"
       config:
         about:
           title: "Über deine Website"
@@ -5447,7 +5501,10 @@ de:
             total_users: "Benutzer insgesamt"
             signups_30_days: "Anmeldungen (30 Tage)"
             logins_30_days: "Anmeldungen (30 Tage)"
+          regenerate_confirm: "Bist du sicher, dass du deine Discourse ID-Anmeldedaten neu generieren willst? Dadurch wird ein neues Client-Geheimnis generiert. Die Erneuerung der Anmeldedaten ist normalerweise nicht erforderlich, kann aber für mehr Sicherheit nützlich sein."
+          description: "Discourse ID ist einen Single-Sign-On-Dienst, der es Benutzern ermöglicht, sich mit einem einzigen Konto bei mehreren Discourse-Seiten anzumelden. Gängige Social-Login-Anbieter wie Google, Facebook, Apple und GitHub werden ohne zusätzliche Konfiguration unterstützt."
           learn_more: "Mehr erfahren"
+          regenerate_success: "Die Anmeldeinformationen wurden erfolgreich neu generiert."
         logo:
           title: "Logo"
           header_description: "Konfiguriere die Logos und Symbole, die auf deiner Website verwendet werden"
@@ -5536,7 +5593,13 @@ de:
             modal_no: "Nein, die Änderung soll sich nur zukünftig auswirken"
         welcome_banner:
           title: "Willkommensbanner"
+          header_description: "Konfiguriere das Banner mit der Suchleiste, das den Besuchern deiner Website angezeigt wird."
+          saved: "Die Einstellungen für das Willkommensbanner wurden erfolgreich gespeichert."
           form:
+            enabled_themes:
+              label: "In Themes aktiviert..."
+              description: "Wähle aus, welche Themes das Banner anzeigen sollen. Nur aktive Themes werden angezeigt."
+              select_label: "Themes auswählen"
             background_image:
               label: "Hintergrundbild"
               description: "Dieses Bild wird hinter dem Text des Banners angezeigt."
@@ -5544,22 +5607,44 @@ de:
               label: "Textfarbe"
               description: "Wenn du oben ein Hintergrundbild hochgeladen hast, kannst du mit dieser Einstellung die Textfarbe des Banners ändern, um sicherzustellen, dass er lesbar bleibt. Wenn du kein Hintergrundbild hochlädst, wird die Farbe vom aktiven Theme bestimmt."
             page_visibility:
+              label: "Sichtbarkeit auf folgenden Seiten"
+              description: "Wähle aus, wo das Banner angezeigt werden soll."
               options:
                 top_menu_pages: "Obere Menüseiten"
+                homepage: "Nur auf der Startseite"
+                discovery: "Discovery-Seiten"
                 all_pages: "Alle Seiten"
             location:
               label: "Ort"
+              description: "Wähle aus, wo das Banner auf der Seite erscheinen soll."
               options:
                 above_topic_content: "Über dem Themeninhalt"
                 below_site_header: "Unter der Kopfzeile"
             text_section:
+              title: "Anpassbare Texte"
               locale_label: "Sprache"
             header_new_members:
+              label: "Kopfzeile für neue Mitglieder"
               placeholder: "Willkommen, %{preferred_display_name}!"
             header_logged_in:
+              label: "Kopfzeile für eingeloggte Mitglieder"
               placeholder: "Willkommen zurück, %{preferred_display_name}!"
             header_anonymous:
+              label: "Kopfzeile für anonyme Besucher"
+              description: "Verfügbare Variable: <code>&percnt;{site_name}</code>"
               placeholder: "Willkommen bei %{site_name}!"
+            subheader_logged_in:
+              label: "Unterüberschrift für eingeloggte Mitglieder"
+              description: "Sekundärer Text, der unter der Kopfzeile für eingeloggte Benutzer angezeigt wird."
+              placeholder: "Schau dir an, was es in der Community Neues gibt"
+            subheader_anonymous:
+              label: "Unterüberschrift für anonyme Besucher"
+              description: "Sekundärer Text, der unter der Kopfzeile für anonyme Besucher angezeigt wird."
+              placeholder: "Tritt unserer Community bei und nimm an Diskussionen teil"
+            search_placeholder:
+              label: "Platzhalter für die Suche"
+              description: "Platzhaltertext für das Suchfeld im Willkommensbanner."
+              placeholder: "Themen suchen..."
         navigation:
           title: "Navigation"
           header_description: "Konfiguriere die Navigationslinks und Menüpunkte für deine Website. Dazu gehören die Position und das Verhalten des Hauptnavigationsmenüs, die Quicklinks oben auf der Homepage und die Administrator-Seitenleiste."
@@ -5811,7 +5896,6 @@ de:
         new_features:
           title: "Was ist neu?"
           subtitle: "Wir veröffentlichen laufend neue Funktionen und Verbesserungen. Auf dieser Seite findest du die wichtigsten Neuerungen, aber du kannst auch auf „Mehr erfahren“ klicken, um ausführliche Versionshinweise zu lesen."
-          previous_announcements: "Du kannst frühere Ankündigungen neuer Funktionen bei <a href='%{url}' target='_blank'>Discourse Meta</a> sehen."
           learn_more: "Mehr erfahren …"
           experimental: "Experimentell"
           only_experiments: "Nur experimentelle Funktionen anzeigen"
@@ -5906,7 +5990,9 @@ de:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Suchprotokolle</a>'
             disabled: 'Der Bericht über beliebte Suchen ist deaktiviert. Aktiviere <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um die Daten zu erheben.'
-          average_chart_label: Durchschnitt
+          sort_button: "Sortieren nach %{column}"
+          sort_ascending: "aufsteigend"
+          sort_descending: "absteigend"
           filters:
             file_extension:
               label: Dateiendung
@@ -6076,6 +6162,7 @@ de:
               recover: Ein Thema wiederherstellen.
               read_lists: Lies Themenlisten wie „Angesagt“, „Neu“, „Aktuell“ usw. RSS wird ebenfalls unterstützt.
               status: "Den Status eines Themas aktualisieren. Status: geschlossen, archiviert, sichtbar, angeheftet. Aktiviert: wahr, falsch. Hier und im Anfrage-Payload eine category_id angeben, um Statusänderungen nur für Themen dieser Kategorie zuzulassen."
+              change_owner: Ändere den Eigentümer von Beiträgen in einem Thema.
             posts:
               edit: Bearbeite jeden Beitrag oder einen bestimmten.
               delete: Einen Beitrag löschen.
@@ -6703,6 +6790,8 @@ de:
           create_name: "Name"
           save: "Speichern"
           long_title: "Farben, CSS und HTML-Inhalte deiner Website erweitern"
+          dark_mode: "%{themeName} dunkler Modus"
+          light_mode: "%{themeName} heller Modus"
           edit: "Bearbeiten"
           edit_confirm: "Dies ist ein Remote-Theme, wenn du CSS/HTML bearbeitest, werden deine Änderungen zurückgesetzt, wenn du das Theme das nächste Mal aktualisierst."
           update_confirm: "Diese lokalen Änderungen werden durch das Update gelöscht. Bist du sicher, dass du fortfahren möchtest?"
@@ -6920,6 +7009,8 @@ de:
           select_base:
             title: "Wähle Basis-Farbpalette"
             description: "Basis-Palette:"
+          non_default_theme_warning: "In deinen <a href='%{link}'>persönlichen Einstellungen</a> hast du ein anderes Theme gewählt als das Standard-Theme. Änderungen hier wirken sich ggf. nicht auf dich aus, aber auf alle mit dem Standard-Theme (%{themeName})."
+          custom_schemes_warning: "In deinen <a href='%{link}'>persönlichen Einstellungen</a> hast du eine andere Farbpalette für %{colorModes} gewählt als die Standard-Farbpalette. Änderungen hier wirken sich ggf. nicht auf dich aus, aber auf alle die, die Standard-Farbpalette nutzen."
           light: "hell"
           dark: "dunkel"
           title: "Farben"
@@ -7263,6 +7354,9 @@ de:
             delete_associated_accounts: "verknüpfte Konten löschen"
             change_theme_site_setting: "Theme-spezifische Website-Einstellung ändern"
             stop_impersonating: "Nutzerrolle verlassen"
+            upcoming_change_toggled: "bevorstehende Änderung verändert"
+            change_site_setting_groups: "Website-Einstellungen für Gruppen geändert"
+            discourse_id_regenerate_credentials: "Discourse-ID-Anmeldedaten neu generieren"
         screened_emails:
           title: "Gefilterte E-Mails"
           description: "Wenn jemand ein Konto erstellt, werden die folgenden E-Mail-Adressen überprüft und es wird die Registrierung blockiert oder eine andere Aktion ausgeführt."
@@ -7317,6 +7411,7 @@ de:
         clear_all: Alle löschen
         clear_all_confirm: "Bist du sicher, dass du alle beobachteten Wörter für die Aktion %{action} löschen möchtest?"
         invalid_regex: 'Das beobachtete Wort „%{word}“ ist ein ungültiger regulärer Ausdruck.'
+        invalid_regex_multiple: "Ungültige reguläre Ausdrücke:"
         regex_warning: '<a href="%{basePath}/admin/site_settings/category/all_results?filter=watched%20words%20regular%20expressions%20">Beobachtete Wörter sind reguläre Ausdrücke</a> und sie schließen nicht automatisch Wortgrenzen ein. Wenn du möchtest, dass der reguläre Ausdruck ganze Wörter erfasst, füge <code>\b</code> am Anfang und Ende deines regulären Ausdrucks ein.'
         actions:
           block: "Blockieren"
@@ -7619,6 +7714,8 @@ de:
         approve_bulk_success: "Erfolgreich! Alle ausgewählten Benutzer wurden genehmigt und benachrichtigt."
         time_read: "Lesezeit"
         post_edits_count: "Beitragsbearbeitungen"
+        upcoming_changes:
+          filter_no_results: "Keine bevorstehenden Änderungen gefunden"
         exports:
           title: Benutzerexporte
           download:
@@ -7643,6 +7740,9 @@ de:
           button: "Alle Beiträge löschen"
           progress:
             title: "Fortschritt beim Löschen von Beiträgen"
+            description:
+              one: "Lösche %{count} Beitrag von @%{username}..."
+              other: "Lösche %{count} Beiträge von @%{username}..."
           confirmation:
             title: "Alle Beiträge von @%{username} löschen"
             description: |
@@ -7681,6 +7781,7 @@ de:
         merging_user: "Benutzer wird zusammengeführt …"
         merge_failed: "Beim Zusammenführen der Benutzer ist ein Fehler aufgetreten."
         delete_forbidden_because_admin: "Administratoren können nicht gelöscht werden."
+        delete_posts_forbidden_because_admin: "Löschen aller Beiträge von Administratoren ist nicht möglich."
         delete_forbidden:
           one: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tag sind, können nicht gelöscht werden.)"
           other: "Benutzer können nicht gelöscht werden, wenn diese Beiträge haben. Lösche zuerst alle seine Beiträge, bevor du versuchst, einen Benutzer zu löschen. (Beiträge, die älter als %{count} Tage sind, können nicht gelöscht werden.)"
@@ -7904,6 +8005,7 @@ de:
           upload:
             label: "Hochladen"
             title: "Bilder hochladen"
+        download_file: "Herunterladen"
         selectable_avatars:
           title: "Liste von Avataren, aus der Benutzer wählen können."
         table_column_heading:
@@ -7942,6 +8044,7 @@ de:
           experimental: "Experimentell"
         secret_list:
           invalid_input: "Eingabefelder können nicht leer sein oder vertikale Balkenzeichen enthalten."
+          already_exists: "Der Eintrag für %{key} ist bereits vorhanden."
         default_categories:
           modal_description:
             one: "Soll diese Änderung rückwirkend gelten? Das ändert die Einstellungen für %{count} bestehenden Benutzer."
@@ -7977,6 +8080,9 @@ de:
           block_common_passwords:
             prompt: "Du bist dabei, deine Passwortrichtlinie zu ändern. Dies wird von jetzt an alle Benutzer betreffen, die ihre Passwörter ändern. Bist du sicher, dass du fortfahren möchtest?"
             confirm: "Ja, Passwortrichtlinie aktualisieren"
+          clean_up_inactive_users_after_days:
+            prompt: "Wenn du diesen Wert auf einen anderen Wert als 0 setzt, werden Benutzer, die seit so vielen Tagen nicht mehr aktiv sind, endgültig gelöscht. Bist du sicher, dass du fortfahren willst?"
+            confirm: "Ja, ich verstehe, dass inaktive Benutzer dauerhaft gelöscht werden, wenn ich diesen Wert nicht auf 0 setze."
         job_status:
           completed: "Update abgeschlossen"
           enqueued: "Update läuft"
@@ -8014,6 +8120,7 @@ de:
         no_badges: Es gibt keine Abzeichen, die verliehen werden können.
         none_selected: "Wähle ein Abzeichen aus, um loszulegen"
         sections:
+          design: Design
           query: Anfrage
           settings: Einstellungen
         usage_heading: Verwendung

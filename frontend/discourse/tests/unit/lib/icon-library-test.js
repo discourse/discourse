@@ -14,7 +14,7 @@ module("Unit | Utility | icon-library", function (hooks) {
     assert.strictEqual(icon.tagName, "svg");
     assert.strictEqual(
       icon.className.baseVal,
-      "fa d-icon d-icon-bars svg-icon svg-node"
+      "fa d-icon d-icon-bars svg-icon fa-width-auto svg-node"
     );
   });
 

@@ -1278,6 +1278,7 @@ RSpec.describe CategoriesController do
 
     describe "Showing top topics from private categories" do
       it "returns the top topic from the private category when the user is a member" do
+        SiteSetting.categories_topics = 5
         restricted_group = Fabricate(:group)
         private_cat = Fabricate(:private_category, group: restricted_group)
         private_topic = Fabricate(:topic, category: private_cat, like_count: 1000, posts_count: 100)
@@ -1298,10 +1299,11 @@ RSpec.describe CategoriesController do
 
     describe "Showing hot topics from private categories" do
       it "returns the hot topic from the private category when the user is a member" do
+        SiteSetting.categories_topics = 5
         restricted_group = Fabricate(:group)
         private_cat = Fabricate(:private_category, group: restricted_group)
         private_topic = Fabricate(:topic, category: private_cat, like_count: 1000, posts_count: 100)
-        TopicHotScore.update_scores
+        TopicHotScore.create!(topic_id: private_topic.id, score: 1.0)
         restricted_group.add(user)
         sign_in(user)
 
@@ -1313,6 +1315,34 @@ RSpec.describe CategoriesController do
             .detect { |t| t.dig("id") == private_topic.id }
 
         expect(parsed_topic).to be_present
+      end
+    end
+
+    it "only counts categories the user can see when calculating topics per page" do
+      SiteSetting.categories_topics = 0
+      restricted_group = Fabricate(:group)
+      4.times { Fabricate(:private_category, group: restricted_group) }
+
+      # anon sees 2 categories (uncategorized + category): 2 * 1.5 = 3, clamped to min 5
+      get "/categories_and_latest.json"
+      expect(response.parsed_body["topic_list"]["topics"].size).to eq(5)
+
+      # member sees 6 categories (2 + 4 private): 6 * 1.5 = 9
+      restricted_group.add(user)
+      sign_in(user)
+      get "/categories_and_latest.json"
+      expect(response.parsed_body["topic_list"]["topics"].size).to eq(9)
+    end
+
+    it "enforces maximum cap on topics per page" do
+      SiteSetting.categories_topics = 0
+      5.times { Fabricate(:category) }
+
+      # 7 categories (uncategorized + category + 5 new): 7 * 1.5 = 10, capped to max 7
+      stub_const(CategoriesController, :MAX_CATEGORIES_TOPICS, 7) do
+        sign_in(admin)
+        get "/categories_and_latest.json"
+        expect(response.parsed_body["topic_list"]["topics"].size).to eq(7)
       end
     end
   end

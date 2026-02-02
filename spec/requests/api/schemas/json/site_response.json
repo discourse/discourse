@@ -122,6 +122,12 @@
         "chat_watched_thread": {
           "type": "integer"
         },
+        "upcoming_change_available": {
+          "type": "integer"
+        },
+        "upcoming_change_automatically_promoted": {
+          "type": "integer"
+        },
         "assigned": {
           "type": "integer"
         },
@@ -474,7 +480,19 @@
     "top_tags": {
       "type": "array",
       "items": {
-
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "slug"]
       }
     },
     "wizard_required": {

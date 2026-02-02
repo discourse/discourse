@@ -29,6 +29,7 @@ Discourse::Application.routes.draw do
 
     if Rails.env.local?
       get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
+      get "/bootstrap/site-settings-for-tests.js" => "bootstrap#site_settings_for_tests"
       get "/bootstrap/plugin-test-info" => "bootstrap#plugin_test_info"
     end
 
@@ -1647,6 +1648,7 @@ Discourse::Application.routes.draw do
 
     get "robots.txt" => "robots_txt#index"
     get "robots-builder.json" => "robots_txt#builder"
+    get "llms.txt" => "static#llms_txt"
     get "offline.html" => "offline#index"
     get "manifest.webmanifest" => "metadata#manifest", :as => :manifest
     get "manifest.json" => "metadata#manifest"

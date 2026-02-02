@@ -126,7 +126,7 @@ function iconClasses(icon, params) {
       ? icon.replacementId
       : icon.id;
 
-  let classNames = `fa d-icon d-icon-${dClass} svg-icon`;
+  let classNames = `fa d-icon d-icon-${dClass} svg-icon fa-width-auto`;
 
   if (params && params["class"]) {
     classNames += " " + params["class"];
@@ -165,7 +165,7 @@ registerIconRenderer({
 
   string(icon, params) {
     const id = escape(handleIconId(icon));
-    let html = `<svg class='${escape(iconClasses(icon, params))} svg-string'`;
+    let html = `<svg class='${escape(iconClasses(icon, params))} svg-string' width='1em' height='1em'`;
 
     if (params["aria-label"]) {
       html += ` aria-hidden='false' aria-label='${escape(params["aria-label"])}'`;
@@ -205,6 +205,8 @@ registerIconRenderer({
 
     const svgElement = document.createElementNS(SVG_NAMESPACE, "svg");
     svgElement.setAttribute("class", classes);
+    svgElement.setAttribute("width", "1em");
+    svgElement.setAttribute("height", "1em");
     svgElement.setAttribute("aria-hidden", true);
 
     const useElement = document.createElementNS(SVG_NAMESPACE, "use");

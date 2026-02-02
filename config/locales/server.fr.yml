@@ -1925,7 +1925,6 @@ fr:
     invite_link_max_redemptions_limit_users: "Le nombre maximal d'utilisations d'un lien d'invitation généré par un utilisateur normal ne peut excéder cette valeur."
     alert_admins_if_errors_per_minute: "Nombre d'erreurs par minute nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. REMARQUE : nécessite un redémarrage."
     alert_admins_if_errors_per_hour: "Nombre d'erreurs par heure nécessaires pour déclencher une alerte administrateur. Une valeur de 0 désactive cette fonctionnalité. REMARQUE : nécessite un redémarrage."
-    categories_topics: "Nombre de sujets à afficher dans la page /categories. Si ce paramètres est configuré à 0, une valeur automatique sera appliquée pour que les colonnes des catégories et des sujets soient symétriques."
     suggested_topics: "Nombre de sujets suggérés affichés en bas d'un sujet."
     limit_suggested_to_category: "Afficher uniquement les sujets de la catégorie actuelle dans les sujets similaires."
     suggested_topics_max_days_old: "Les sujets suggérés ne devraient pas remonter à plus de n jours."
@@ -2418,7 +2417,6 @@ fr:
     default_composition_mode: "Définir le mode par défaut de l'éditeur de rédaction de votre communauté. Le mode texte enrichi offre une expérience de rédaction plus moderne et familière pour la plupart des utilisateurs, tandis que le mode Markdown peut convenir à un public plus technique. Les membres peuvent utiliser un bouton dans la barre d'outils de l'éditeur pour basculer entre les modes."
     reviewable_ui_refresh: "Groupes pouvant utiliser la nouvelle interface utilisateur expérimentale dans la file d'attente de révision."
     content_localization_enabled: "Affiche le contenu localisé pour les utilisateurs en fonction de leur navigateur ou de leurs préférences linguistiques. Ce contenu peut inclure des catégories, des étiquettes, des publications et des sujets. Les paramètres régionaux pris en charge sont définis dans « Paramètres régionaux pris en charge pour la localisation du contenu »."
-    content_localization_supported_locales: "Liste des langues prises en charge dans lesquelles le contenu utilisateur peut être traduit. Nécessite que « la localisation du contenu soit activée »."
     content_localization_allowed_groups: "Groupes autorisés à mettre à jour le contenu localisé. Nécessite que « la localisation du contenu soit activée »."
     errors:
       invalid_css_color: "Couleur non valide. Indiquez un nom de couleur ou une valeur hexadécimale."

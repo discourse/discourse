@@ -661,6 +661,8 @@ nb_NO:
         reviewable_ai_post:
           noun: "innlegg"
       user_label: "Bruker"
+      timeline:
+        target_deleted: "Post slettet"
       notes:
         delete: "Slett"
       topic_label: "Emne"
@@ -2619,8 +2621,7 @@ nb_NO:
         post_approved: "innlegg godkjent"
         membership_request_consolidated: "ny forespørsel om medlemskap"
         reaction: "ny reaksjon"
-        votes_released: "Stemmen ble utgitt"
-        new_features: "Nye Discourse-funksjoner har blitt lansert!"
+        votes_released: "stemmen ble utgitt"
         admin_problems: "nye råd på dashbordet på nettstedet ditt"
     upload_selector:
       delete: "Slett"
@@ -3043,8 +3044,6 @@ nb_NO:
           12_hours: "12 timer"
           24_hours: "24 timer"
           custom: "Egendefinert varighet"
-      slow_mode_notice:
-        duration: "Vennligst vent %{duration} mellom innlegg i dette emnet"
       topic_status_update:
         title: "Tidsbestemt handling for emne"
         save: "Sett opp tidsbestemt handling"
@@ -3644,6 +3643,8 @@ nb_NO:
       creation_error: Det oppstod en feil ved lagring av denne kategorien.
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
       description: "Beskrivelse"
+      icon: "Ikon"
+      emoji: "Emoji"
       background_color: "Farge"
       color_validations:
         cant_be_empty: "kan ikke være tom"
@@ -3653,7 +3654,6 @@ nb_NO:
         options:
           icon: "Ikon"
           emoji: "Emoji"
-      name_placeholder: "Maksimalt ett eller to ord"
       color_placeholder: "Vilkårlig nettfarge"
       delete_confirm: "Er du sikker på at du vil slette denne kategorien?"
       delete_error: "Det oppstod en feil ved å slette denne kategorien."
@@ -3675,7 +3675,7 @@ nb_NO:
       uncategorized_security_warning: "Denne kategorien er spesielt. Den er beregnet til å holde områder for emner som ikke har noen kategori; den kan ikke ha sikkerhetsinnstillinger."
       uncategorized_general_warning: 'Denne kategorien er spesielt. Han blir brukt som standardkategori for nye emner som ikke har en valgt kategori. Hvis du vil forhindre denne oppførselen og tvinge valg av kategori, <a href="%{settingLink}">vennligst deaktiver innstillingen her</a>. Hvis du vil endre navn eller beskrivelse, gå til <a href="%{customizeLink}">Tilpass / tekstinnhold</a>.'
       pending_permission_change_alert: "Du har ikke lagt til %{group} i denne kategorien; klikk denne knappen for å legge dem til."
-      images: "Bilder"
+      images: "Utseende"
       email_in: "Egendefinert innkommende e-postadresse:"
       email_in_tooltip: "Du kan skille flere e-postadresser fra hverandre med tegnet |."
       email_in_allow_strangers: "Godta e-post fra anonyme brukere uten brukerkonto"
@@ -3697,6 +3697,11 @@ nb_NO:
       position: "Posisjon på kategorisiden:"
       position_disabled: "Kategoriene vises i aktivitetsrekkefølge. Hvis du vil kontrollere rekkefølgen på kategoriene i lister, aktiverer du innstillingen <a href='%{url}'>'faste kategoriposisjoner'</a>."
       minimum_required_tags: "Minste antall stikkord som kreves for et emne:"
+      none_subcategory_text: "Ingen"
+      visibility:
+        title: "Tilgang"
+        public: "Offentlig"
+        group_restricted: "Privat"
       num_auto_bump_daily: "Antall åpne emner som automatisk flyttes øverst per dag:"
       auto_bump_cooldown_days: "Minimum dager før samme emnet blir flyttet øverst i emneliste igjen:"
       navigate_to_first_post_after_read: "Naviger til første innlegg etter at emner er lest"
@@ -4357,6 +4362,9 @@ nb_NO:
           enabled: "Aktivert"
           disabled: "Deaktivert"
           impact_type_other: "Annet"
+          impact_role_admins: "Adminer"
+          impact_role_moderators: "Moderatorer"
+          impact_role_staff: "Stab"
       config:
         developer:
           title: "Utvikler"
@@ -4549,7 +4557,9 @@ nb_NO:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logg for søk</a>'
             disabled: 'Rapporten for trending av søk er deaktivert. Aktiver <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">logging av søkeord</a> for å samle inn data.'
-          average_chart_label: Gjennomsnitt
+          sort_button: "Sorter etter %{column}"
+          sort_ascending: "stigende"
+          sort_descending: "synkende"
           filters:
             file_extension:
               label: Fil utvidelse
@@ -5577,6 +5587,7 @@ nb_NO:
           empty: "Det finnes ingen bilder enda. Vennligst last opp ett."
           upload:
             label: "Last opp"
+        download_file: "Last ned"
         selectable_avatars:
           title: "Liste over avatarer brukere kan velge mellom"
         table_column_heading:

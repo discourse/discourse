@@ -1,0 +1,23 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+zh_CN:
+  js:
+    discourse_math:
+      edit_math: "编辑公式"
+      edit_modal:
+        title: "编辑公式"
+        label: "公式"
+        apply: "应用"
+      composer:
+        insert_math: "插入公式"
+      insert_modal:
+        title_inline: "插入行内公式"
+        title_block: "插入块级公式"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
+        insert: "插入"
+        block_mode: "块模式（显示方程式）"

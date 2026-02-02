@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
@@ -158,10 +158,10 @@ export default class ComposerEditor extends Component {
       placeholder = `composer.${key}`;
     }
 
-    return applyValueTransformer(
-      "composer-editor-reply-placeholder",
-      placeholder,
-      { model: this.composer }
+    return i18n(
+      applyValueTransformer("composer-editor-reply-placeholder", placeholder, {
+        model: this.composer,
+      })
     );
   }
 

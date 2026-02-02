@@ -8,6 +8,8 @@ vi:
   js:
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
+      titles:
+        question_answer_user_commented: "Bình luận mới"
     vote:
       already_voted: "Bạn chỉ được phép bình chọn một lần cho mỗi câu hỏi."
       user_over_limit: "Bạn không thể vượt quá số bình chọn tương ứng với độ tin cậy của mình."
@@ -39,3 +41,9 @@ vi:
         activity: "Hoạt động"
         voters_count_diff:
           other: "và %{count} người khác..."
+    review:
+      transcript:
+        view: "Xem bản ghi các tin nhắn trước đó"
+      types:
+        reviewable_post_voting_comment:
+          title: "Bình luận về tút bị báo cáo"

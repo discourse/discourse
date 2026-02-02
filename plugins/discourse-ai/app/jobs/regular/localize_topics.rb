@@ -24,7 +24,9 @@ module Jobs
         find_llm_model_for_persona(SiteSetting.ai_translation_post_raw_translator_persona)
       return if topic_title_llm_model.blank? && post_raw_llm_model.blank?
 
-      locales = SiteSetting.content_localization_supported_locales.split("|")
+      locales = DiscourseAi::Translation.locales
+      return if locales.blank?
+
       locales.each do |locale|
         base_locale = locale.split("_").first
         topics =

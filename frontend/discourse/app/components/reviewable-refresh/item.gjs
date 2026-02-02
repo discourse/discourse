@@ -173,7 +173,7 @@ export default class ReviewableItem extends Component {
     return (
       (oldModeratorActions &&
         createdFromFlag &&
-        status === 0 &&
+        status === PENDING &&
         (claimOptional || (claimRequired && claimedBy !== null))) ||
       isAiReviewable
     );
@@ -378,7 +378,7 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateStatus(data) {
-    if (data.remove_reviewable_ids.includes(this.reviewable.id)) {
+    if (data.remove_reviewable_ids?.includes(this.reviewable.id)) {
       delete data.remove_reviewable_ids;
       this._performResult(data, {}, this.reviewable);
     }
@@ -467,7 +467,7 @@ export default class ReviewableItem extends Component {
       });
     }
 
-    if (this.remove && result.remove_reviewable_ids) {
+    if (this.remove && result.remove_reviewable_ids?.length > 0) {
       this.remove(result.remove_reviewable_ids);
     } else {
       return this.store.find("reviewable", reviewable.id);
@@ -763,7 +763,6 @@ export default class ReviewableItem extends Component {
                       as |FieldComponent|
                     }}
                       <FieldComponent
-                        @tagName=""
                         @value={{editableValue this.reviewable f.id}}
                         @tagCategoryId={{this.tagCategoryId}}
                         @valueChanged={{fn this.valueChanged f.id}}
@@ -779,10 +778,7 @@ export default class ReviewableItem extends Component {
                 (lookupComponent this this.reviewableComponent)
                 as |ReviewableComponent|
               }}
-                <ReviewableComponent
-                  @reviewable={{this.reviewable}}
-                  @tagName=""
-                />
+                <ReviewableComponent @reviewable={{this.reviewable}} />
               {{/let}}
             {{/if}}
           </div>
@@ -843,14 +839,10 @@ export default class ReviewableItem extends Component {
                 <h3 class="review-item__aside-title">
                   {{#if this.editing}}
                     {{i18n "review.editing_post"}}
-                  {{else if (eq this.reviewable.status PENDING)}}
-                    {{#if this.displayContextQuestion}}
-                      {{this.reviewable.flaggedReviewableContextQuestion}}
-                    {{else if this.reviewable.userReviewableContextQuestion}}
-                      {{this.reviewable.userReviewableContextQuestion}}
-                    {{else}}
-                      {{i18n "review.moderator_actions"}}
-                    {{/if}}
+                  {{else if this.displayContextQuestion}}
+                    {{this.reviewable.flaggedReviewableContextQuestion}}
+                  {{else if this.reviewable.userReviewableContextQuestion}}
+                    {{this.reviewable.userReviewableContextQuestion}}
                   {{else}}
                     {{i18n "review.moderator_actions"}}
                   {{/if}}

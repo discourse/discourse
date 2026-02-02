@@ -3,15 +3,9 @@
 .schema-field {
   margin-bottom: 1em;
   width: 100%;
-  display: grid;
-  grid-template-columns: 25% 1fr;
-  gap: 1em;
-
-  @include viewport.until(sm) {
-    grid-template-columns: 1fr;
-    grid-template-rows: auto 1fr;
-    gap: 0;
-  }
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
 
   .schema-field__label {
     word-break: break-all;
@@ -24,7 +18,6 @@
   .schema-field__input {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     min-width: 0;
 
     input {

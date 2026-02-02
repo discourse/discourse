@@ -96,11 +96,11 @@
     border: 1px solid transparent;
 
     a {
-      color: var(--primary-medium);
+      color: var(--primary-high);
     }
 
     .d-icon {
-      color: currentcolor;
+      color: var(--primary-medium);
       font-size: var(--font-up-5);
       display: block;
       margin: 0.25em auto;
@@ -110,7 +110,7 @@
     &.rate-limited {
       background: var(--secondary);
       border-color: var(--primary-low);
-      color: var(--primary-low-mid);
+      color: var(--primary);
     }
 
     &.rate-limited .d-icon {
@@ -125,12 +125,11 @@
   }
 
   .average-chart {
-    padding: 0.5em;
-    border: 1px solid var(--highlight);
-    color: var(--highlight);
-    margin-bottom: 1em;
+    font-style: italic;
     text-align: center;
-    background: var(--highlight-bg);
+    color: var(--primary-high);
+    margin-bottom: 1em;
+    line-height: var(--line-height-medium);
   }
 
   .filters {

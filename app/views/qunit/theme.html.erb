@@ -8,6 +8,10 @@
     <link rel="canonical" href="<%= Discourse.base_path %>/" />
 
     <%- if @has_test_bundle && !@suggested_themes %>
+      <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
+      <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
+      <%= theme_translations_lookup %>
+
       <%= preload_script "vendor" %>
       <%= preload_script "test-support" %>
       <%= preload_script "discourse" %>

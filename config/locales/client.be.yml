@@ -1637,6 +1637,8 @@ be:
       creation_error: Пры стварэнні катэгорыі адбылася памылка.
       save_error: У выпадку захавання катэгорыі адбылася памылка.
       description: "апісанне"
+      icon: "Абразка"
+      emoji: "Emoji"
       background_color: "колер"
       color_validations:
         cant_be_empty: "не можа быць пустым"
@@ -1646,7 +1648,6 @@ be:
         options:
           icon: "Абразка"
           emoji: "Emoji"
-      name_placeholder: "Не больш за аднаго-двух слоў"
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэтую катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
@@ -1657,11 +1658,15 @@ be:
         see: "бачыць"
         reply: "Адказаць"
         create: "Стварыць"
-      images: "Выява"
       email_in: "Custom incoming email address:"
       allow_badges_label: "Дазволіць ўзнагароджваць значкамі ў гэтай катэгорыі"
       review_group_name: "назва групы"
       this_year: "гэтага года"
+      none_subcategory_text: "Няма"
+      visibility:
+        title: "Доступ"
+        public: "Публічная"
+        group_restricted: "Прыватная"
       notifications:
         watching:
           title: "сачыць"
@@ -1990,6 +1995,9 @@ be:
           all: "Усе"
           disabled: "Адключана"
           impact_type_other: "Іншае"
+          impact_role_admins: "адміністратары"
+          impact_role_moderators: "Мадэратары"
+          impact_role_staff: "персанал"
       config:
         developer:
           title: "для распрацоўшчыкаў"
@@ -2730,6 +2738,7 @@ be:
         uploaded_image_list:
           upload:
             label: "Загрузіць"
+        download_file: "спампаваць"
         selectable_avatars:
           title: "Спіс аватараў карыстальнікі могуць выбраць"
         table_column_heading:

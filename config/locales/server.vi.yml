@@ -53,6 +53,9 @@ vi:
   redirect_warning: "Chúng tôi không thể xác minh rằng liên kết bạn chọn đã thực sự được đăng lên diễn đàn. Nếu bạn vẫn muốn tiếp tục, hãy chọn liên kết bên dưới."
   on_another_topic: "Về chủ đề khác"
   topic_category_changed: "Từ %{from} đến %{to}"
+  topic_tag_changed:
+    added: "Đã thêm %{added}"
+    removed: "Đã xóa %{removed}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} bởi %{username}"
@@ -114,8 +117,8 @@ vi:
         inactive_user_error: "Xảy ra khi người gửi không hoạt động."
         silenced_user_error: "Xảy ra khi người gửi đã được tắt tiếng."
         bad_destination_address: "Xảy ra khi không có địa chỉ email nào trong trường To/Cc khớp với địa chỉ email đến đã được định cấu hình."
-        strangers_not_allowed_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ không phải là thành viên."
-        insufficient_trust_level_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một danh mục mà họ chưa đủ độ tin cậy."
+        strangers_not_allowed_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một chuyên mục mà họ không phải là thành viên."
+        insufficient_trust_level_error: "Xảy ra khi người dùng cố tạo chủ đề mới trong một chuyên mục mà họ chưa đủ độ tin cậy."
         reply_user_not_matching_error: "Xảy ra khi trả lời đến từ một địa chỉ email khác với thông báo được gửi đến."
         topic_not_found_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã bị xóa."
         topic_closed_error: "Xảy ra khi trả lời đến từ chủ đề liên quan đã được đóng lại."
@@ -173,8 +176,8 @@ vi:
     embed:
       load_from_remote: "Đã xảy ra lỗi khi tải tút."
     site_settings:
-      invalid_category_id: "Bạn đã chỉ định một danh mục không tồn tại"
-      default_categories_already_selected: "Bạn không thể chọn một danh mục được sử dụng trong danh sách khác."
+      invalid_category_id: "Bạn đã chỉ định một chuyên mục không tồn tại"
+      default_categories_already_selected: "Bạn không thể chọn một chuyên mục được sử dụng trong danh sách khác."
       default_tags_already_selected: "Bạn không thể chọn một thẻ được sử dụng trong danh sách khác."
       s3_upload_bucket_is_required: "Bạn không thể tải lên S3 mà chưa thiết lập 's3_upload_bucket'."
       enable_s3_uploads_is_required: "Bạn không thể cho phép sử dụng kho lưu trữ S3 trừ khi bạn đã bật tính năng tải lên S3."
@@ -189,13 +192,15 @@ vi:
       x_summary_large_image_no_svg: "Hình ảnh tóm tắt trên Twitter được sử dụng cho twitter: siêu dữ liệu hình ảnh không được là hình ảnh .svg."
     conflicting_google_user_id: 'ID Tài khoản Google cho tài khoản này đã thay đổi; cần có sự can thiệp của nhân viên vì lý do an ninh. Vui lòng liên hệ với nhân viên và chỉ họ đến <br><a href="https://meta.discourse.org/t/76575">https://meta.discourse.org/t/76575</a>'
     onebox:
-      invalid_address: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy máy chủ %{hostname}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn :cry:"
-      error_response: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì máy chủ web trả về mã lỗi là %{status_code}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong bài đăng của bạn. :cry:"
+      invalid_address: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy máy chủ %{hostname}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong tút của bạn :cry:"
+      error_response: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì máy chủ web trả về mã lỗi là %{status_code}. Thay vì xem trước, chỉ một liên kết sẽ xuất hiện trong tút của bạn. :cry:"
       missing_data:
         other: "Xin lỗi, chúng tôi không thể tạo bản xem trước cho trang web này vì không thể tìm thấy các thẻ oEmbed / OpenGraph sau: %{missing_attributes}"
   word_connector:
     comma: ", "
   invite:
+    not_found_template_link: |
+      <p>Lời mời này tới <a href="%{base_url}">%{site_name}</a> không thể được sử dụng nữa. Vui lòng yêu cầu người đã mời bạn gửi cho bạn một lời mời mới.</p>
     invite_exists: "Bạn đã mời <b>%{email}</b>."
     invalid_email: "%{email} không phải là một địa chỉ email hợp lệ."
     rate_limit:
@@ -236,10 +241,10 @@ vi:
   read_only_mode_enabled: "Trang web đang ở chế độ chỉ đọc. Tất cả các tương tác đã bị tắt."
   invalid_grant_badge_reason_link: "Liên kết Discourse bên ngoài hoặc không hợp lệ không được phép trong lý do huy hiệu"
   email_template_cant_be_modified: "Không thể sửa đổi mẫu email này"
-  invalid_whisper_access: "Lời thì thầm không được bật hoặc bạn không có quyền truy cập để tạo bài đăng thì thầm"
+  invalid_whisper_access: "Lời thì thầm không được bật hoặc bạn không có quyền truy cập để tạo tút thì thầm"
   not_in_group:
     title_topic: "Bạn cần yêu cầu thành viên của nhóm '%{group}' để xem chủ đề này."
-    title_category: "Bạn cần phải yêu cầu thành viên của nhóm '%{group}' để xem danh mục này."
+    title_category: "Bạn cần phải là thành viên của nhóm '%{group}' để xem chuyên mục này."
     request_membership: "Yêu cầu tư cách thành viên"
     join_group: "Tham gia nhóm"
   deleted_topic: "Ôi! Chủ đề này đã bị xóa và không còn khả dụng nữa."
@@ -277,10 +282,10 @@ vi:
   no_mentions_allowed_newuser: "Xin lỗi, thành viên mới không thể nhắc tới thành viên khác."
   too_many_mentions_newuser:
     other: "Xin lỗi, thành viên mới chỉ có thể nhắc tới %{count} thành viên khác trong một tút."
-  no_embedded_media_allowed_group: "Xin lỗi, bạn không thể nhúng các mục phương tiện vào một bài đăng."
+  no_embedded_media_allowed_group: "Xin lỗi, bạn không thể nhúng các tệp phương tiện vào một tút."
   no_embedded_media_allowed: "Xin lỗi, người dùng mới không thể nhúng các mục phương tiện vào tút."
   too_many_embedded_media:
-    other: "Xin lỗi, người dùng mới chỉ có thể đưa %{count} mục phương tiện được nhúng vào một bài đăng."
+    other: "Xin lỗi, thành viên mới chỉ có thể nhúng %{count} tệp phương tiện vào một tút."
   no_attachments_allowed: "Xin lỗi, thành viên mới chưa được chèn tập tin trong tút."
   too_many_attachments:
     other: "Xin lỗi, thành viên mới chỉ được chèn %{count} file đính kèm trong một tút."
@@ -291,8 +296,8 @@ vi:
   contains_blocked_word: "Xin lỗi, bạn không thể đăng từ '%{word}'; nó không được cho phép."
   contains_blocked_words: "Xin lỗi, bạn không thể đăng nó. Không được phép: %{words}."
   spamming_host: "Bạn không thể chèn link tới trang đó."
-  user_is_suspended: "Người dùng đang bị treo không được phép đăng bài."
-  topic_not_found: "Có gì đó đã sai. Có lẽ chủ đề này đã bị đóng hoặc bị xóa trong khi bạn đang xem?"
+  user_is_suspended: "Thành viên bị đình chỉ không được phép đăng tút."
+  topic_not_found: "Có gì đó sai sai. Có lẽ chủ đề này đã bị đóng hoặc bị xóa trong khi bạn đang xem?"
   not_accepting_pms: "Xin lỗi, %{username} hiện không chấp nhận tin nhắn."
   max_pm_recipients: "Xin lỗi, bạn có thể gửi tin nhắn cho tối đa %{recipients_limit} người nhận."
   pm_reached_recipients_limit: "Xin lỗi, bạn không thể có nhiều hơn %{recipients_limit} người nhận trong một tin nhắn."
@@ -325,18 +330,18 @@ vi:
     top_monthly: "Các chủ đề hàng đầu hàng tháng"
     top_weekly: "Các chủ đề hàng đầu hàng tuần"
     top_daily: "Chủ đề hàng ngày"
-    posts: "Bài viết mới nhất"
+    posts: "Tút mới nhất"
     private_posts: "Tin nhắn cá nhân mới nhất"
-    group_posts: "Bài viết mới từ %{group_name}"
+    group_posts: "Tút mới từ %{group_name}"
     group_mentions: "Đề cập mới từ %{group_name}"
-    user_posts: "Bài viết mới của @%{username}"
+    user_posts: "Tút mới của @%{username}"
     user_topics: "Chủ đề mới của @%{username}"
     tag: "Những chủ đề được gắn thẻ"
     badge: "%{display_name} huy hiệu trên %{site_title}"
-  too_late_to_edit: "Bài đăng đã được tạo từ rất lâu. Nó không thể được chỉnh sửa hoặc xóa nữa."
-  edit_conflict: "Bài đăng đó đã được chỉnh sửa bởi một người dùng khác và các thay đổi của bạn không thể lưu được nữa."
+  too_late_to_edit: "Tút đã được tạo từ rất lâu. Nó không thể được chỉnh sửa hoặc xóa nữa."
+  edit_conflict: "Tút đó đã được chỉnh sửa bởi một thành viên khác và các thay đổi của bạn không thể lưu được nữa."
   revert_version_same: "Phiên bản hiện tại giống với phiên bản mà bạn muốn hoàn nguyên."
-  cannot_edit_on_slow_mode: "Chủ đề này đang ở chế độ chậm. Để khuyến khích thảo luận có suy nghĩ, cân nhắc, hiện không được phép chỉnh sửa các bài đăng cũ trong chủ đề này ở chế độ chậm."
+  cannot_edit_on_slow_mode: "Chủ đề này đang ở chế độ chậm. Để khuyến khích thảo luận có suy nghĩ, cân nhắc, hiện không được phép chỉnh sửa các tút cũ trong chủ đề này ở chế độ chậm."
   excerpt_image: "hình ảnh"
   bookmarks:
     errors:
@@ -369,7 +374,7 @@ vi:
       invalid_domain: "'%{domain}' không phải là tên miền hợp lệ."
       invalid_incoming_email: "'%{email}' không phải là email hợp lệ."
       email_already_used_in_group: "'%{email}' đã được sử dụng trong nhóm '%{group_name}'."
-      email_already_used_in_category: "'%{email}' đã được sử dụng trong danh mục '%{category_name}'."
+      email_already_used_in_category: "'%{email}' đã được sử dụng trong chuyên mục '%{category_name}'."
       cant_allow_membership_requests: "Bạn không thể cho phép yêu cầu tham gia đối với một nhóm mà chưa có chủ nhóm."
       already_requested_membership: "Bạn đã yêu cầu thành viên cho nhóm này."
       adding_too_many_users:
@@ -483,26 +488,26 @@ vi:
     invalid_date: "Ngày không đúng định dạng, hãy sử dụng YYYY-MM-DD"
   category:
     topic_prefix: "Giới thiệu chuyên mục %{category}"
-    replace_paragraph: "(Thay thế đoạn đầu tiên này bằng một mô tả ngắn gọn về danh mục mới của bạn. Hướng dẫn này sẽ xuất hiện trong vùng chọn danh mục, vì vậy hãy cố gắng giữ cho nó dưới 200 ký tự.)"
+    replace_paragraph: "(Thay thế đoạn đầu tiên này bằng một mô tả ngắn gọn về chuyên mục mới của bạn. Hướng dẫn này sẽ xuất hiện trong vùng chọn danh mục, vì vậy hãy cố gắng giữ cho nó dưới 200 ký tự.)"
     post_template: "%{replace_paragraph}\n\nSử dụng những đoạn sau để viết mô tả dài, hướng dẫn sử dụng hoặc điều luật sử dụng:\n\n- Mục đích sử dụng của category này là gì?\n\n- Category này khác với những cái khác như thế nào?\n\n- Những topic trong category này thường có nội dung gì?\n\n- Chúng ta có thể ghép với category khác không?\n"
     errors:
-      not_found: "Không tìm thấy danh mục!"
+      not_found: "Không tìm thấy chuyên mục!"
       uncategorized_parent: "Mục \"Chưa được phân loại\" không thể có một chuyên mục chính"
-      self_parent: "Cha của chủ đề phụ không thể nào là chính nó"
-      depth: "Bạn không thể để một chuyên mục con trong một chuyên mục con khác."
+      self_parent: "Chuyên mục chính của chuyên mục phụ không thể nào là chính nó"
+      depth: "Bạn không thể để một chuyên mục phụ trong một chuyên mục phụ khác."
       invalid_email_in: "'%{email}' không phải là email hợp lệ."
       email_already_used_in_group: "'%{email}' đã được sử dụng trong nhóm '%{group_name}'."
-      email_already_used_in_category: "'%{email}' đã được sử dụng trong danh mục '%{category_name}'."
-      description_incomplete: "Phần mô tả danh mục phải có ít nhất một đoạn văn."
-      permission_conflict: "Bất kỳ nhóm nào được phép truy cập vào một thể loại con cũng phải được phép truy cập thể loại cha. Các nhóm sau đây có quyền truy cập vào một trong các thể loại con, nhưng không có quyền truy cập vào thể loại mẹ: %{group_names}."
-      disallowed_topic_tags: "Chủ đề này có các thẻ không được danh mục này cho phép: '%{tags}'"
+      email_already_used_in_category: "'%{email}' đã được sử dụng trong chuyên mục '%{category_name}'."
+      description_incomplete: "Phần mô tả chuyên mục phải có ít nhất một đoạn văn."
+      permission_conflict: "Bất kỳ nhóm nào được phép truy cập vào một chuyên mục phụ cũng phải được phép truy cập chuyên mục chính. Các nhóm sau đây có quyền truy cập vào một trong các chuyên mục phụ, nhưng không có quyền truy cập vào chuyên mục chính: %{group_names}."
+      disallowed_topic_tags: "Chủ đề này có các thẻ không được chuyên mục này cho phép: '%{tags}'"
       disallowed_tags_generic: "Chủ đề này có thẻ không được phép."
     cannot_delete:
-      uncategorized: "Danh mục này là đặc biệt. Nó được thiết kế như một khu vực lưu trữ cho các chủ đề không có danh mục; nó không thể bị xóa."
-      has_subcategories: "Không thể xoá chuyên mục này được vì nó có chuyên mục con."
+      uncategorized: "Chuyên mục này là đặc biệt. Nó được thiết kế như một khu vực lưu trữ cho các chủ đề không có chuyên mục; nó không thể bị xóa."
+      has_subcategories: "Không thể xóa chuyên mục này vì nó có chuyên mục con."
       topic_exists:
-        other: "Không thể xóa danh mục này vì nó có %{count} chủ đề. Chủ đề cũ nhất là %{topic_link}."
-      topic_exists_no_oldest: "Không thể xoá chuyên mục này vì nó có %{count} chủ để."
+        other: "Không thể xóa chuyên mục này vì nó có %{count} chủ đề. Chủ đề cũ nhất là %{topic_link}."
+      topic_exists_no_oldest: "Không thể xóa chuyên mục này vì nó có %{count} chủ để."
     uncategorized_description: "Chủ đề không cần chuyên mục, hoặc không phù hợp với bất kỳ chuyên mục nào hiện có."
   trust_levels:
     admin: "Quản trị viên"
@@ -518,9 +523,9 @@ vi:
     too_many_requests: "Bạn đã thực hiện hành động này quá nhiều lần. Vui lòng đợi %{time_left} trước khi thử lại."
     by_type:
       first_day_replies_per_day: "Chúng tôi đánh giá cao sự nhiệt tình của bạn, hãy duy trì nó! Điều đó có nghĩa là, vì sự an toàn của cộng đồng của chúng tôi, bạn đã đạt đến số lượng câu trả lời tối đa mà người dùng mới có thể tạo vào ngày đầu tiên của họ. Vui lòng đợi %{time_left} và bạn sẽ có thể tạo thêm câu trả lời."
-      create_like: "Ồ! Bạn đã chia sẻ rất nhiều yêu thương! Bạn đã đạt đến số lượt thích tối đa trong khoảng thời gian 24 giờ, nhưng khi bạn đạt được độ tin cậy, bạn sẽ được phép gửi nhiều lượt thích hàng ngày hơn. Bạn sẽ có thể thích lại các bài đăng sau %{time_left}."
+      create_like: "Ồ! Bạn đã chia sẻ rất nhiều yêu thương! Bạn đã đạt đến số lượt thích tối đa trong khoảng thời gian 24 giờ, nhưng khi bạn đạt được độ tin cậy, bạn sẽ được phép gửi nhiều lượt thích hàng ngày hơn. Bạn sẽ có thể thích tiếp các tút sau %{time_left}."
       create_bookmark: "Bạn đã đạt đến số lượng đánh dấu tối đa mỗi ngày. Bạn có thể tiếp tục đánh dấu trang sau %{time_left}."
-      live_post_counts: "Bạn đang yêu cầu số lượng bài đăng trực tiếp quá nhanh. Vui lòng đợi %{time_left} trước khi thử lại."
+      live_post_counts: "Bạn đang yêu cầu số lượng tút trực tiếp quá nhanh. Vui lòng đợi %{time_left} trước khi thử lại."
       unsubscribe_via_email: "Bạn đã đạt đến số lượng người hủy đăng ký tối đa qua email. Vui lòng đợi %{time_left} trước khi thử lại."
     hours:
       other: "%{count} giờ"
@@ -609,30 +614,34 @@ vi:
   post_action_types:
     off_topic:
       title: "Không-đúng-chủ-đề"
-      description: "Tút này không liên quan đến cuộc thảo luận hiện tại như đã được xác định trong tiêu đề và tút gốc, và có lẽ nên được chuyển sang nơi khác."
+      description: "Tút này không liên quan đến thảo luận hiện tại như đã được xác định trong tiêu đề và tút gốc, và nên được chuyển sang nơi khác."
+      short_description: "Không liên quan đến cuộc thảo luận"
     spam:
       title: "Spam"
       description: "Tút này là quảng cáo hoặc phá hoại. Nó không hữu ích hoặc không liên quan đến chủ đề hiện tại."
+      short_description: "Đây là quảng cáo hoặc hành vi phá hoại"
       email_title: '"%{title}" đã bị gắn cờ spam'
       email_body: "%{link}\n\n%{message}"
     inappropriate:
       title: "Không thích hợp"
       description: 'Tút này chứa nội dung mà một người bình thường sẽ coi là xúc phạm, lăng mạ, có hành vi hận thù hoặc vi phạm <a href="%{base_path}/guidelines">quy định cộng đồng</a>.'
+      short_description: 'Vi phạm <a href="%{base_path}/guidelines">quy định cộng đồng của chúng ta</a>'
     illegal:
       title: "Bất hợp pháp"
       description: "Tút này cần được BQT xem xét vì tôi cho rằng nó chứa nội dung bất hợp pháp."
+      short_description: "Đây là phạm pháp"
       email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
     notify_user:
       title: "Nhắn riêng cho @%{username}"
       description: "Tôi muốn nói chuyện trực tiếp với người này về tút của họ."
       short_description: "Tôi muốn nói chuyện trực tiếp với người này về tút của họ."
-      email_title: 'Bài đăng của bạn trong "%{title}"'
+      email_title: 'Tút của bạn trong "%{title}"'
       email_body: "%{link}\n\n%{message}"
     notify_moderators:
-      title: "Một thứ khác"
+      title: "Khác"
       description: "Tút này cần được BQT chú ý vì một lý do chưa được liệt kê trong danh sách."
-      short_description: "Yêu cầu sự chú ý của nhân viên vì một lý do khác"
+      short_description: "Yêu cầu BQT chú ý vì một lý do khác"
       email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n %{message}"
     bookmark:
@@ -655,22 +664,28 @@ vi:
       title: "Rác"
       description: "Chủ đề này mang bản chất quảng cáo, không có ích và không thích hợp với nơi này."
       long_form: "Đã báo cáo tút"
+      short_description: "Đây là quảng cáo"
     inappropriate:
       title: "Không phù hợp"
+      description: 'Chủ đề này chứa nội dung mà một người bình thường sẽ coi là xúc phạm, lăng mạ, có hành vi hận thù hoặc vi phạm <a href="%{base_path}/guidelines">quy định cộng đồng</a>.'
       long_form: "đã đánh dấu bài này không phù hợp"
+      short_description: 'Vi phạm <a href="%{base_path}/guidelines">quy định cộng đồng của chúng ta</a>'
     notify_moderators:
-      title: "Một điều gì đó khác"
-      description: 'Chủ đề này yêu cầu sự chú ý của nhân viên nói chung dựa trên <a href="%{base_path}/guidelines">nguyên tắc</a>, <a href="%{tos_url}">TOS</a>hoặc vì lý do khác không được liệt kê ở trên.'
+      title: "Khác"
+      description: 'Chủ đề này yêu cầu BQT chú ý dựa trên <a href="%{base_path}/guidelines">quy định</a>, <a href="%{tos_url}">TOS</a>hoặc vì lý do khác không được liệt kê ở trên.'
       long_form: "đã đánh dấu cho điều hành viên xem xét"
-      short_description: "Yêu cầu sự chú ý của nhân viên vì một lý do khác"
+      short_description: "Yêu cầu BQT chú ý vì một lý do khác"
       email_title: 'Chủ đề "%{title}" cần được ban điều hành quan tâm'
       email_body: "%{link}\n\n%{message}"
     illegal:
       title: "Bất hợp pháp"
+      description: "Chủ đề này cần được BQT xem xét vì tôi cho rằng nó chứa nội dung bất hợp pháp."
+      short_description: "Đây là phạm pháp"
       email_title: 'Một tút trong "%{title}" cần Ban quản trị lưu ý'
       email_body: "%{link}\n\n%{message}"
   flagging:
-    user_must_edit: "<p>Bài viết này đã bị đánh dấu bởi cộng đồng và đang được ẩn tạm thời.</p>"
+    you_must_edit: '<p>Tút của bạn đã báo cáo bởi cộng đồng. Vui lòng <a href="%{path}">xem tin nhắn của bạn</a>.</p>'
+    user_must_edit: "<p>Tút này đã bị báo cáo bởi cộng đồng và đang được ẩn tạm thời.</p>"
   archetypes:
     regular:
       title: "Chủ đề thường"
@@ -711,10 +726,10 @@ vi:
         count: Đếm
         day: Ngày
     post_edits:
-      title: "Sửa Bài Viết"
+      title: "Sửa tút"
       labels:
         edited_at: ày
-        post: Bài viết
+        post: Tút
         editor: Biên tập
         author: Tác giả
         edit_reason: Lý do
@@ -736,7 +751,7 @@ vi:
         post_count: Tút đã tạo
         pm_count: PMs đã tạo
         revision_count: Bản sửa đổi
-      description: Danh sách hoạt động của người điều hành bao gồm các cờ được xem xét, thời gian đọc, chủ đề được tạo, bài đăng được tạo, tin nhắn cá nhân được tạo, và sửa đổi.
+      description: Danh sách hoạt động của người điều hành bao gồm các báo cáo được xem xét, thời gian đọc, chủ đề được tạo, tút được tạo, tin nhắn cá nhân được tạo, và sửa đổi.
     flags_status:
       title: "Tình trạng cờ"
       values:
@@ -759,7 +774,7 @@ vi:
       xaxis: "Ngày"
     new_contributors:
       xaxis: "Ngày"
-      description: "Số thành viên thực hiện bài đăng đầu tiên của họ trong giai đoạn này."
+      description: "Số lượng thành viên thực hiện tút đầu tiên của họ trong giai đoạn này."
     trust_level_growth:
       yaxis: "Ngày"
       description: "Số lượng người dùng đã tăng Độ tin cậy của họ trong khoảng thời gian này."
@@ -772,7 +787,7 @@ vi:
       yaxis: "Ngày"
       description_legacy: "Số lần xem trang cho người dùng đã đăng nhập, người dùng ẩn danh và trình thu thập thông tin."
       labels:
-        post: Bài viết
+        post: Tút
         editor: Biên tập
         author: Tác giả
         edit_reason: Lý do
@@ -799,7 +814,7 @@ vi:
       xaxis: "Ngày"
       yaxis: "Số lượng chủ đề mới"
     posts:
-      title: "Bài viết"
+      title: "Tút"
       xaxis: "Ngày"
       yaxis: "Số lượng tút mới"
     likes:
@@ -1020,51 +1035,51 @@ vi:
     max_topic_title_length: "Số kí tự tối đa trong tiêu đề chủ đề."
     min_personal_message_title_length: "Chiều dài tối thiểu cho phép theo số kí tự của một thông điệp"
     min_search_term_length: "Số kí tự tối thiểu trong từ khóa tìm kiếm."
-    search_recent_posts_size: "Có bao nhiêu bài đăng gần đây để giữ trong chỉ mục"
+    search_recent_posts_size: "Có bao nhiêu tút gần đây để giữ trong chỉ mục"
     log_search_queries: "Ghi nhật ký các truy vấn tìm kiếm do người dùng thực hiện"
     search_query_log_max_size: "Số lượng truy vấn tìm kiếm tối đa cần lưu giữ"
     search_query_log_max_retention_days: "Khoảng thời gian tối đa để giữ các truy vấn tìm kiếm, tính bằng ngày."
     allow_uncategorized_topics: "Cho phép các chủ đề được tạo ra mà không gán chuyên mục. LƯU Ý: Nếu có bất kỳ chủ đề nào chưa gán chuyên mục, bạn phải phân loại chúng trước khi thay đổi."
     allow_duplicate_topic_titles: "Cho phép các chủ đề trùng tiêu đề."
     unique_posts_mins: "Trong bao nhiêu phút người sử dụng có thể viết tút khác với nội dung giống nhau"
-    educate_until_posts: "Khi người dùng bắt đầu đăng (n) tút đầu tiên, hiện pop-up để hướng dẫn họ khi soạn thảo."
+    educate_until_posts: "Khi thành viên bắt đầu đăng (n) tút đầu tiên, hiện pop-up để hướng dẫn họ khi soạn thảo."
     crawl_images: "Lấy hình ảnh tử URL bên ngoài để thêm vào đúng chiều dài và chiều cao."
     download_remote_images_threshold: "Dung lượng tối thiểu cần để tải ảnh từ xa về lưu trữ (tính bằng phần trăm)"
-    editing_grace_period: "Trong khoảng (n) giây sau khi gửi bài, chỉnh sửa sẽ không tạo ra một phiên bản mới trong bài lịch sử tút."
+    editing_grace_period: "Trong khoảng (n) giây sau khi gửi tút, chỉnh sửa sẽ không tạo ra một phiên bản mới trong bài lịch sử tút."
     edit_history_visible_to_public: "Cho phép mọi người nhìn thấy phiên bản trước khi chỉnh sửa tút. Khi không cho phép, chỉ nhân viên có thể xem."
-    delete_removed_posts_after: "Bài viết đã được xóa bởi tác giả sẽ được tự động xóa sau (n) giờ. Nếu cài là 0, bài viết sẽ được xóa ngay lập tức."
-    notify_users_after_responses_deleted_on_flagged_post: "Khi một bài đăng bị gắn cờ và sau đó bị xóa, tất cả người dùng đã phản hồi bài đăng và đã xóa phản hồi của họ sẽ được thông báo."
+    delete_removed_posts_after: "Tút đã được xóa bởi tác giả sẽ được tự động xóa sau (n) giờ. Nếu cài là 0, bài viết sẽ được xóa ngay lập tức."
+    notify_users_after_responses_deleted_on_flagged_post: "Khi một tút bị báo cáo và sau đó bị xóa, tất cả thành viên đã phản hồi tút và đã xóa phản hồi của họ sẽ được thông báo."
     fixed_category_positions: "Nếu được bật, bạn sẽ có thể sắp xếp chuyên mục theo một thứ tự cố định. Nếu không bật, chuyên mục sẽ được sắp xếp theo thứ tử hoạt động."
-    fixed_category_positions_on_create: "Nếu chọn, sắp xếp danh mục sẽ được thực hiện trong cửa sổ tạo chủ đề (yêu cầu fixed_category_positions)."
-    add_rel_nofollow_to_user_content: 'Thêm rel=''nofollow'' cho tất cả các nội dung mà người dùng gửi, ngoại trừ các liên kết nội bộ (của tên miền chính). Nếu thay đổi, bạn phải thực hiện lại cho tất cả các bài viết với: "rake posts:rebake"'
+    fixed_category_positions_on_create: "Nếu chọn, sắp xếp chuyên mục sẽ được thực hiện trong cửa sổ tạo chủ đề (yêu cầu fixed_category_positions)."
+    add_rel_nofollow_to_user_content: 'Thêm rel=''nofollow'' cho tất cả các nội dung mà người dùng gửi, ngoại trừ các liên kết nội bộ (của tên miền chính). Nếu thay đổi, bạn phải thực hiện lại cho tất cả các tút với: "rake posts:rebake"'
     post_excerpt_maxlength: "Chiều dài tối đa của đoạn trích / tóm tắt chủ đề."
     post_onebox_maxlength: "Số ký tự tối đa của một bài onebox Discourse."
     facebook_app_access_token: "Mã thông báo được tạo từ bí mật và ID ứng dụng Facebook của bạn. Được sử dụng để tạo hộp thư Instagram."
     notification_email: "Địa chỉ email 'Từ:' được dùng để gửi các email thiết yếu của hệ thống. Các tên miền quy định ở đây phải có SPF, DKIM và bản ghi PTR phải được thiết lập chính xác cho email đến."
     force_https: "Buộc trang web của bạn chỉ sử dụng HTTPS. CẢNH BÁO: KHÔNG kích hoạt tính năng này cho đến khi bạn xác minh HTTPS được thiết lập đầy đủ và hoạt động hoàn toàn ở mọi nơi! Bạn đã kiểm tra CDN của mình, tất cả thông tin đăng nhập xã hội và bất kỳ biểu trưng / phụ thuộc bên ngoài nào để đảm bảo tất cả chúng đều tương thích với HTTPS?"
-    summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một bài viết bao gồm 'Tóm tắt chủ đề này'"
-    summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của bài viết"
-    summary_max_results: "Các bài đăng tối đa được trả về bởi 'Tóm tắt Chủ đề này'"
+    summary_score_threshold: "Số điểm tối thiểu yêu cầu cho một tút bao gồm 'Tóm tắt chủ đề này'"
+    summary_percent_filter: "Khi người dùng nhấn 'Tóm tắt chủ đề này', hiển thị phí trên % của tút"
+    summary_max_results: "Số lượng tút tối đa được trả về bởi 'Tóm tắt Chủ đề này'"
     enable_personal_messages: "KHÔNG ĐƯỢC PHÉP, hãy sử dụng cài đặt 'nhóm hỗ trợ tin nhắn cá nhân' để thay thế. Cho phép người dùng cấp độ tin cậy 1 (có thể định cấu hình thông qua độ tin cậy tối thiểu để gửi tin nhắn) tạo tin nhắn và trả lời tin nhắn. Lưu ý rằng nhân viên luôn có thể gửi tin nhắn bất kể điều gì."
     enable_system_message_replies: "Cho phép người dùng trả lời tin nhắn hệ thống, ngay cả khi tin nhắn cá nhân bị tắt"
     long_polling_base_url: "URL chính sử dụng cho vòng gọi dài (khi một CDN phục vụ nội dung động, hãy chắc chắn để thiết lập này là vòng gọi gốc), vd: http://origin.site.com"
     polling_interval: "When not long polling, how often should logged on clients poll in milliseconds"
     anon_polling_interval: "How often should anonymous clients poll in milliseconds"
     background_polling_interval: "How often should the clients poll in milliseconds (when the window is in the background)"
-    cooldown_minutes_after_hiding_posts: "Số phút một người dùng phải chờ trước khi họ có thể sửa một bài viết ẩn bởi gắn cờ cộng đồng"
+    cooldown_minutes_after_hiding_posts: "Số phút một thành viên phải chờ trước khi họ có thể sửa một tút bị ẩn bởi báo cáo cộng đồng"
     tl2_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 2 (thành viên) bằng cách nhân với số này"
     tl3_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 3 (bình thường) bằng cách nhân với số này"
     tl4_additional_likes_per_day_multiplier: "Tăng giới hạn thích mỗi ngày cho mức độ tin tưởng 4 (dẫn đầu) bằng cách nhân với số này"
     notify_mods_when_user_silenced: "Nếu người dùng tự động bị tắt tiếng, hãy gửi tin nhắn cho tất cả người điều hành."
     traditional_markdown_linebreaks: "Sử dụng ngắt dòng truyền thống trong Markdown, đòi hỏi hai khoảng trống kế tiếp cho một ngắt dòng."
     markdown_typographer_quotation_marks: "Danh sách các cặp thay thế dấu ngoặc kép và dấu ngoặc đơn"
-    post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với bài viết (like, đánh dấu...)."
+    post_undo_action_window_mins: "Số phút thành viên được phép làm lại các hành động gần đây với tút (thích, đánh dấu...)."
     pending_users_reminder_delay_minutes: "Thông báo cho người kiểm duyệt nếu người dùng mới đã chờ phê duyệt lâu hơn nhiều phút này. Đặt thành -1 để vô hiệu hóa thông báo."
     ga_version: "Phiên bản Google Universal Analytics sẽ sử dụng: v3 (analytics.js), v4 (gtag)"
     ga_universal_tracking_code: "ID mã theo dõi Google Universal Analytics, ví dụ: UA-12345678-9; xem <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_domain_name: "Tên miền Google Universal Analytics, ví dụ: mysite.com; xem <a href='https://google.com/analytics' target='_blank'>https://google.com/analytics</a>"
     ga_universal_auto_link_domains: "Bật tính năng theo dõi tên miền chéo của Google Universal Analytics. Các liên kết gửi đi tới các miền này sẽ có id ứng dụng khách được thêm vào chúng. Xem <a href='https://support.google.com/analytics/answer/1034342?hl=en' target='_blank'>Hướng dẫn theo dõi tên miền chéo của Google.</a>"
-    moderators_change_post_ownership: "Cho phép người kiểm duyệt thay đổi quyền sở hữu bài đăng"
+    moderators_change_post_ownership: "Cho phép kiểm duyệt viên thay đổi quyền sở hữu tút"
     cors_origins: "Cho phép CORS (Cross-Origin Requests). Mỗi nguyên gốc phải kèm theo http:// hoặc https://. Biến env DISCOURSE_ENABLE_CORS phải được đặt là 'true' để bật CORS."
     use_admin_ip_allowlist: "Admin chỉ có thể đăng nhập nếu có địa chỉ IP được định nghĩa trước trong danh sách Screened IPs (Admin > Logs > Screened Ips)."
     content_security_policy_frame_ancestors: "Hạn chế người có thể nhúng trang web này vào iframe thông qua CSP. Kiểm soát các máy chủ được phép trên <a href='%{base_path}/admin/customize/embedding'>Nhúng</a>"
@@ -1075,12 +1090,12 @@ vi:
     send_welcome_message: "Gửi tất cả các thành viên mới một thông điệp chào mừng kèm theo hướng dẫn nhanh."
     suppress_reply_directly_below: "Không hiện bộ đếm trả lời mở rộng cho bài viết chỉ có duy nhất một trả lời trực tiếp bên dưới bài viết này."
     suppress_reply_directly_above: "Không hiện trả lời mở rộng cho bài viết chỉ có duy nhất một trả lời trực tiếp bên trên bài viết này."
-    remove_full_quote: "Tự động xóa dấu ngoặc kép nếu (a) nó xuất hiện ở đầu bài đăng, (b) nó nằm trong toàn bộ bài đăng và (c) nó nằm ngay trước bài viết. Để biết chi tiết, hãy xem <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Xóa các trích dẫn đầy đủ khỏi các câu trả lời trực tiếp</a>"
+    remove_full_quote: "Tự động xóa dấu ngoặc kép nếu (a) nó xuất hiện ở đầu tút, (b) nó nằm trong toàn bộ tút và (c) nó nằm ngay trước tút. Để biết chi tiết, hãy xem <a href='https://meta.discourse.org/t/removal-of-full-quotes-from-direct-replies/106857' target='_blank'>Xóa các trích dẫn đầy đủ khỏi các câu trả lời trực tiếp</a>"
     suppress_reply_when_quoting: "Không hiện trả lời mở rộng cho bài viết chỉ trích dẫn trả lời."
     max_reply_history: "Số tối đa trả lời được mở rộng khi trả lời mở rộng"
     topics_per_period_in_top_summary: "Số lượng chủ đề top hiển thị trong tóm tắt các chủ đề top theo mặc định."
     topics_per_period_in_top_page: "Số lượng chủ đề top hiển thị khi click 'Xem thêm'."
-    prioritize_username_in_ux: "Hiển thị tên người dùng đầu tiên trên trang người dùng, thẻ người dùng và bài đăng (khi tên bị vô hiệu được hiển thị trước)"
+    prioritize_username_in_ux: "Hiển thị tên người dùng đầu tiên trên trang người dùng, thẻ người dùng và tút (khi tên bị vô hiệu được hiển thị trước)"
     email_token_valid_hours: "Token quyên mật khẩu / kích hoạt tài khoản có giá trị trong (n) giờ."
     whispers_allowed_groups: "Cho phép giao tiếp riêng tư trong các chủ đề cho các thành viên của các nhóm được chỉ định."
     normalize_emails: "Kiểm tra xem email chuẩn hóa có phải là duy nhất không. Email được chuẩn hóa sẽ xóa tất cả các dấu chấm khỏi tên người dùng và mọi thứ nằm giữa ký hiệu + và @."
@@ -1130,8 +1145,8 @@ vi:
     top_topics_formula_first_post_likes_multiplier: "giá trị của lượt like bài viết đầu tiên nhân với (n) trong công thức chủ đề top: `log(views_count) * 2 + op_likes_count * (n) + LEAST(likes_count / posts_count, 3) + 10 + log(posts_count)`"
     top_topics_formula_least_likes_per_post_multiplier: "giá trị số lượt like tối thiểu của mỗi bài viết nhân với (n) trong công thức chủ đề top: `log(views_count) * 2 + op_likes_count * 0.5 + LEAST(likes_count / posts_count, (n)) + 10 + log(posts_count)`"
     rate_limit_create_topic: "Sau khi tạo một chủ đề, người dùng phải chờ (n) giây trước khi tạo một chủ đề khác."
-    rate_limit_create_post: "Sau khi đăn bài, người dùng phải chờ (n) giây trước khi đăng bài khác."
-    rate_limit_new_user_create_post: "Sau khi đăng bài, người dùng mới phải chờ (n) giây trước khi đăng bài khác."
+    rate_limit_create_post: "Sau khi đăng tút, thành viên phải chờ (n) giây trước khi đăng tút khác."
+    rate_limit_new_user_create_post: "Sau khi đăng tút, thành viên mới phải chờ (n) giây trước khi đăng tút khác."
     max_likes_per_day: "Số tối đa người dùng có thể like mỗi ngày."
     max_flags_per_day: "Số tối đa mà người dùng có thể gắn cờ mỗi ngày."
     max_bookmarks_per_day: "Số lượng đánh dấu tối đa người dùng có thể mỗi ngày."
@@ -1139,12 +1154,12 @@ vi:
     max_topics_per_day: "Số chủ đề tối đa người dùng có thể tạo mỗi ngày."
     max_invites_per_day: "Số tối đa người dùng có thể gửi lời mời mỗi ngày."
     max_topic_invitations_per_day: "Số tối đa lời mời chủ đề thành viên có thể gửi mỗi ngày."
-    max_post_deletions_per_minute: "Số bài đăng tối đa mà người dùng có thể xóa mỗi phút. Đặt thành 0 để tắt tính năng xóa bài đăng."
-    max_post_deletions_per_day: "Số lượng bài đăng tối đa mà người dùng có thể xóa mỗi ngày. Đặt thành 0 để tắt tính năng xóa bài đăng."
+    max_post_deletions_per_minute: "Số tút tối đa mà thành viên có thể xóa mỗi phút. Đặt thành 0 để tắt tính năng xóa tút."
+    max_post_deletions_per_day: "Số lượng tút tối đa mà người dùng có thể xóa mỗi ngày. Đặt thành 0 để tắt tính năng xóa tút."
     alert_admins_if_errors_per_minute: "Số lỗi trong một phút để kích hoạt cảnh báo admin, điền 0 để tắt tính năng này. LƯU Ý: yêu cầu khởi động lại."
     alert_admins_if_errors_per_hour: "Số lỗi trong một giờ để kích hoạt cảnh báo admin, điền 0 để tắt tính năng này. LƯU Ý: yêu cầu khởi động lại."
     suggested_topics: "Số chủ đề gợi ý hiện ở cuối một chủ đề"
-    limit_suggested_to_category: "Chỉ hiện thị những chủ đề từ danh mục hiện tại trong chủ đề gợi ý."
+    limit_suggested_to_category: "Chỉ hiện thị những chủ đề từ chuyên mục hiện tại trong chủ đề gợi ý."
     clean_up_uploads: "Loại bỏ không triệt các dòng mồ côi khi upload để ngăn chặn hosting bất hợp pháp. LƯU Ý: bạn cần phải backup thư mục /uploads trước khi bật thiết lập này."
     clean_orphan_uploads_grace_period_hours: "Thời gian gia hạn (theo giờ) trước khi dòng mồ côi upload được loại bỏ."
     purge_deleted_uploads_grace_period_days: "Thời gian gia hạn (theo ngày) trước khi upload cần xóa được xóa."
@@ -1172,7 +1187,7 @@ vi:
     tl3_requires_topics_replied_to: "Số lượng chủ đề tối thiểu mà thành viên cần phải trả lời trong (tl3) ngày để được thăng lên độ tin cậy 3. (0 hoặc cao hơn)"
     tl3_requires_topics_viewed: "Phần trăm số chủ đề được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy 3. (0 tới 100)"
     tl3_requires_posts_read: "Phần trăm số bài viết được tạo trong (tl3) ngày để thành viên được thăng lên độ tin cậy 3. (0 tới 100)"
-    tl3_requires_posts_read_cap: "Số lượng bài đăng được yêu cầu tối đa được đọc trong (khoảng thời gian tl3) ngày qua."
+    tl3_requires_posts_read_cap: "Số lượng tút tối đa được đọc trong (khoảng thời gian tl3) ngày qua."
     tl3_requires_topics_viewed_all_time: "Số lượng chủ đề tối thiểu mà thành viên phải xem trước khi được thăng lên độ tin cậy 3."
     tl3_requires_posts_read_all_time: "Tổng số bài viết tối thiểu mà thành viên phải đọc trước khi được thăng lên độ tin cậy 3."
     tl3_requires_max_flagged: "Thành viên phải không có nhiều hơn X bài viết được đánh dấu bởi X thành viên khác trong (tl3) ngày để được thăng lên độ tin cậy 3, khi X là giá trị thiết lập. (0 hoặc cao hơn)"
@@ -1187,7 +1202,7 @@ vi:
     newuser_max_replies_per_topic: "Số lượng tối đa trả lời mà thành viên có thể thực hiện trong một chủ đề cho đến khi có ai đó gửi trả lời."
     max_mentions_per_post: "Số tối đa thông báo @name mà tất cả mọi người có thể sử dụng trong bài viết."
     max_users_notified_per_group_mention: "Số thành viên tối đa có thể nhận được thông báo nếu một nhóm được đề cập (nếu đáp ứng ngưỡng sẽ không có thông báo nào được nêu ra)"
-    create_thumbnails: "Tạo ảnh nhỏ và ảnh lightbox nếu quá lớn để vừa trong một bài đăng."
+    create_thumbnails: "Tạo ảnh nhỏ và ảnh lightbox nếu quá lớn để vừa trong một tút."
     email_time_window_mins: "Chờ (n) phút trước khi gửi bất kỳ một email thông báo nào, để cung cấp cho người dùng cơ hội để chỉnh sửa và hoàn tất bài viết của họ."
     personal_email_time_window_seconds: "Chờ (n) giây trước khi gửi bất kỳ email thông báo tin nhắn cá nhân nào để người dùng có cơ hội chỉnh sửa và hoàn thiện tin nhắn của họ."
     email_posts_context: "Có bao nhiêu trả lời trước được kèm theo như là bối cảnh trong email thông báo."
@@ -1195,10 +1210,10 @@ vi:
     title_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho tên chủ đề."
     body_min_entropy: "Entropy tối thiểu (ký tự độc đáo, số từ phi tiếng Anh) cần thiết cho nội dung bài viết."
     allow_uppercase_posts: "Cho phép viết hoa tất cả các chữ trong tên chủ đề hoặc nội dung bài viết."
-    enable_filtered_replies_view: 'Nút "(n) trả lời" thu gọn tất cả các bài đăng khác và chỉ hiển thị bài đăng hiện tại và các câu trả lời của nó.'
+    enable_filtered_replies_view: 'Nút "(n) trả lời" thu gọn tất cả các tút khác và chỉ hiển thị tút hiện tại và các câu trả lời của nó.'
     title_fancy_entities: "Chuyển đổi các ký tự ASCII phổ biến thành các thực thể HTML ưa thích trong tiêu đề chủ đề, xem SmartyPants <a href='https://daringfireball.net/projects/smartypants/' target='_blank'>https://daringfireball.net/projects/smartypants/</a>"
     min_title_similar_length: "Chiều dài tối thiểu của tiêu đề trước khi kiểm tra trùng chủ đề."
-    category_colors: "Danh sách mã màu hexa cho phép cho danh mục."
+    category_colors: "Danh sách mã màu hexa cho phép cho chuyên mục."
     dark_mode_none: "Không có gì"
     title_prettify: "Ngăn chặn lỗi chính tả và sai sót phổ biến trong tiêu đề, bao gồm tất cả là chữ hoa, ký tự đầu tiên là chữ thường, sử dụng quá nhiều ! và ?, thêm . ở cuối..."
     automatic_topic_heat_values: 'Tự động cập nhật cài đặt "lượt xem chủ đề nổi bật" và "lượt thích chủ đề nổi bật" dựa trên hoạt động của trang web.'
@@ -1244,25 +1259,25 @@ vi:
     email_prefix: "Nhãn [label] sử dụng trong tiêu đề email, mặc định được đặt là 'title'."
     email_site_title: "Tên website được sử dụng là tên người gửi email, mặc định là 'title' nếu không thiết lập. Nếu 'title' có chứa ký tự không được phép trong chuỗi người gửi email, sử dụng thiết lập này."
     minimum_topics_similar: "Có bao nhiêu chủ đề cần phải có trước các chủ đề tương tự được giới thiệu khi soạn thảo chủ đề mới."
-    relative_date_duration: "Số ngày sau khi đăng bài nơi ngày của bài viết sẽ được hiển thị tương đối (7d) thay vì tuyệt đối (20 Feb)."
+    relative_date_duration: "Số ngày sau khi đăng tút nơi ngày của bài viết sẽ được hiển thị tương đối (7d) thay vì tuyệt đối (20 Feb)."
     delete_user_max_post_age: "Không cho phép xóa thành viên khi bài viết đầu tiên của họ cũ hơn (x) ngày."
     delete_all_posts_max: "Số lượng tối đa bài viết có thể được xóa cùng một lúc khi sử dụng nút Xóa Tất Cả Bài Viết. Nếu thành viên có nhiều hơn số lượng bài viết này, các bài viết có thể không bị xóa cùng một lúc và cũng không thể xóa được thành viên đó."
-    delete_user_self_max_post_count: "Số lượng bài đăng tối đa mà người dùng có thể có trong khi cho phép xóa tài khoản tự phục vụ. Đặt thành -1 để tắt tính năng xóa tài khoản tự phục vụ."
+    delete_user_self_max_post_count: "Số lượng tút tối đa mà thành viên có thể có trong khi cho phép xóa tài khoản tự phục vụ. Đặt thành -1 để tắt tính năng xóa tài khoản tự phục vụ."
     email_editable: "Cho phép thành viên thay đổi địa chỉ email sau khi đăng kí"
     default_avatars: "URL avatar mặc định được sử dụng cho các thành viên mới cho đến khi họ tự sửa đổi."
     automatically_download_gravatars: "Download Gravatar cho thành viên khi họ tạo tài khoản hoặc thay đổi email."
     digest_topics: "Số lượng tối đa các chủ đề phổ biến để hiển thị trong phần tóm tắt email."
-    digest_posts: "Số lượng bài đăng phổ biến tối đa để hiển thị trong phần tóm tắt email."
+    digest_posts: "Số lượng tút phổ biến tối đa để hiển thị trong phần tóm tắt email."
     detect_custom_avatars: "Có kiểm tra hay không việc thành viên đã upload ảnh hồ sơ của họ."
     max_daily_gravatar_crawls: "Giới hạn số lần Discourse sẽ kiểm tra Gravatar mới trong một ngày"
-    enable_user_directory: "Cung cấp một danh mục thành viên để duyệt xem"
+    enable_user_directory: "Cung cấp một chỉ mục thành viên để duyệt xem"
     anonymous_account_duration_minutes: "Để bảo vệ danh tính tạo ra một tài khoản ẩn danh mới mỗi N phút cho mỗi người dùng. Ví dụ: nếu đặt là 600, ngay sau khi 600 phút trôi qua kể từ bài viết cuối cùng VÀ lập tức tạo ra một tài khoản ẩn danh mới cho thành viên."
-    hide_user_profiles_from_public: "Vô hiệu hóa thẻ thành viên, hồ sơ và thư mục người dùng với các thành viên ẩn danh."
+    hide_user_profiles_from_public: "Vô hiệu hóa thẻ thành viên, hồ sơ và chỉ mục người dùng với các thành viên ẩn danh."
     log_personal_messages_views: "Ghi nhật ký lượt xem tin nhắn cá nhân của Admin cho người dùng / nhóm khác."
     ignored_users_count_message_threshold: "Thông báo cho người kiểm duyệt nếu một người dùng cụ thể bị bỏ qua bởi nhiều người dùng khác này."
     ignored_users_message_gap_days: "Phải đợi bao lâu trước khi thông báo lại cho người kiểm duyệt về một người dùng đã bị nhiều người khác bỏ qua."
-    clean_up_inactive_users_after_days: "Số ngày trước khi người dùng không hoạt động (độ tin cậy 0 không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
-    clean_up_unused_staged_users_after_days: "Số ngày trước khi người dùng theo giai đoạn không sử dụng (không có bất kỳ bài đăng nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
+    clean_up_inactive_users_after_days: "Số ngày trước khi người dùng không hoạt động (độ tin cậy 0 không có bất kỳ tút nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
+    clean_up_unused_staged_users_after_days: "Số ngày trước khi người dùng theo giai đoạn không sử dụng (không có bất kỳ tút nào) bị xóa. Để tắt tính năng dọn dẹp, hãy đặt thành 0."
     allow_profile_backgrounds: "Cho phép người dùng tải lên ảnh nền"
     get_a_room_threshold: "Số lượng bài viết mà người dùng phải thực hiện với cùng một người trong cùng một chủ đề trước khi bị cảnh báo."
     enable_mobile_theme: "Thiết bị di động có thể sử dụng giao diện riêng, với khả năng chuyển sang chế độ xem đầy đủ. Tắt thiết lập này nếu bạn muốn sử dụng một style tùy biến hỗ trợ responsive."
@@ -1277,20 +1292,20 @@ vi:
     enable_names: "Hiển thị tên đầy đủ của thành viên trên trang hồ sơ, thẻ thành viên, và email. Tắt để ẩn tên đầy đủ ở khắp mọi nơi."
     display_name_on_posts: "Hiển thị tên đầy đủ của thành viên trên bài viết của họ và khi gõ @username."
     show_time_gap_days: "Nếu hai bài viết được thực hiện cách nhau nhiều ngày, hiển thị thời gian cách nhau đó trong chủ đề."
-    short_progress_text_threshold: "Sau khi số bài đăng của một chủ đề vượt qua giới hạn này, thanh tiến trình sẽ chỉ hiện số thứ tự của bài đăng hiện tại. Nếu bạn thay đổi chiều rộng của thanh tiến trình, bạn có thể cần thay đổi giá trị này"
+    short_progress_text_threshold: "Sau khi số lượng tút của một chủ đề vượt qua giới hạn này, thanh tiến trình sẽ chỉ hiện số thứ tự của tút hiện tại. Nếu bạn thay đổi chiều rộng của thanh tiến trình, bạn có thể cần thay đổi giá trị này."
     embed_unlisted: "Các chủ đề được nhúng sẽ không được hiển thị công khai cho đến khi có thành viên trả lời."
     import_embed_unlisted: "Các chủ đề nhập được nhúng sẽ không hiển thị cho đến khi một thành viên trả lời (kể cả khi tùy chọn `nhúng không công khai` trên trang web không được chọn)."
     embed_post_limit: "Số lượng tối đa bài viết được nhúng."
     embed_username_required: "Tên tài khoản để tạo chủ đề là bắt buộc."
     slug_generation_method: "Chọn phương thức tạo slug. 'encoded' sẽ tạo ra phần trăm chuỗi mã hóa. 'none' sẽ tắt slug."
     approve_post_count: "Số lượng bài viết từ một thành viên mới hoặc thành viên cũ phải được duyệt"
-    notify_about_queued_posts_after: "Nếu có bài đăng đang chờ được xem xét trong hơn nhiều giờ này, hãy gửi thông báo cho tất cả người điều hành. Đặt thành 0 để tắt các thông báo này."
-    auto_close_messages_post_count: "Số lượng bài đăng tối đa được phép trong một tin nhắn trước khi nó tự động đóng (0 để tắt)"
-    auto_close_topics_post_count: "Số bài đăng tối đa được phép trong một chủ đề trước khi nó tự động đóng (0 để tắt)"
-    returning_user_notice_tl: "Cần có độ tin cậy tối thiểu để xem các thông báo về bài đăng của người dùng cũ."
+    notify_about_queued_posts_after: "Nếu có tút đang chờ được xem xét trong hơn nhiều giờ này, hãy gửi thông báo cho tất cả kiểm duyệt viên. Đặt thành 0 để tắt các thông báo này."
+    auto_close_messages_post_count: "Số lượng tút tối đa được phép trong một tin nhắn trước khi nó tự động đóng (0 để tắt)"
+    auto_close_topics_post_count: "Số lượng tút tối đa được phép trong một chủ đề trước khi nó tự động đóng (0 để tắt)"
+    returning_user_notice_tl: "Cần có độ tin cậy tối thiểu để xem các thông báo về tút của thành viên cũ."
     returning_users_days: "Bao nhiêu ngày sẽ trôi qua trước khi người dùng được coi là trở lại."
     enable_page_publishing: "Cho phép nhân viên xuất bản các chủ đề lên các URL mới với phong cách riêng của họ."
-    skip_auto_delete_reply_likes: "Khi tự động xóa các trả lời cũ, bỏ qua việc xóa các bài đăng có số lượt thích này trở lên."
+    skip_auto_delete_reply_likes: "Khi tự động xóa các trả lời cũ, bỏ qua việc xóa các tút có số lượt thích này trở lên."
     default_email_mailing_list_mode: "Mặc định gửi email cho mỗi bài viết mới."
     default_email_previous_replies: "Kèm theo các trả lời trước trong email theo mặc định."
     default_email_in_reply_to: "Kèm theo trích đoạn trả lời bài viết trong email theo mặc định."
@@ -1305,12 +1320,12 @@ vi:
     default_categories_tracking: "Hiển thị danh sách chuyên mục đang theo dõi theo mặc định."
     default_categories_muted: "Hiển thị danh sách chuyên mục đang im lặng theo mặc định."
     default_categories_watching_first_post: "Danh sách các chuyên mục mà tút đầu tiên trong mỗi chủ đề mới sẽ được giám sát theo mặc định."
-    default_categories_normal: "Danh sách các danh mục không bị tắt tiếng theo mặc định. Hữu ích khi cài đặt trang web `mute_all_categories_by_default` được bật."
+    default_categories_normal: "Danh sách các chuyên mục không bị phớt lờ theo mặc định. Hữu ích khi cài đặt trang web `mute_all_categories_by_default` được bật."
     default_tags_watching: "Danh sách các thẻ được giám sát theo mặc định."
     default_tags_tracking: "Danh sách các thẻ được theo dõi theo mặc định."
     default_tags_watching_first_post: "Danh sách các thẻ mà tút đầu tiên trong mỗi chủ đề mới sẽ được giám sát theo mặc định."
     allowed_user_api_auth_redirects: "URL được phép để chuyển hướng xác thực cho các khóa API của người dùng. Ký hiệu đại diện * có thể được sử dụng để khớp với bất kỳ phần nào của nó (ví dụ: www.example.com/*)."
-    default_watched_precedence_over_muted: "Thông báo cho người dùng về các chủ đề trong các danh mục hoặc thẻ mà họ đang giám sát, đồng thời các chủ đề đó cũng thuộc về chuyên mục hoặc thẻ mà họ đã tắt thông báo."
+    default_watched_precedence_over_muted: "Thông báo cho người dùng về các chủ đề trong các chuyên mục hoặc thẻ mà họ đang giám sát, đồng thời các chủ đề đó cũng thuộc về chuyên mục hoặc thẻ mà họ đã tắt thông báo."
     heading_font: "Phông chữ để sử dụng cho các tiêu đề trên trang web. Chủ đề có thể ghi đè thông qua thuộc tính tùy chỉnh CSS `--heading-font-family`."
     enable_sitemap: "Tạo sơ đồ trang web cho trang web của bạn và đưa nó vào tệp robots.txt."
     sitemap_page_size: "Số lượng URL để bao gồm trong mỗi trang sơ đồ trang web. Tối đa 50.000"
@@ -1354,11 +1369,11 @@ vi:
       status: "Lọc chủ đề theo trạng thái của chúng"
       in: "Lọc chủ đề trong danh sách cá nhân"
       order: "Sắp xếp chủ đề theo một trường cụ thể"
-      category: "Hiển thị chủ đề trong một danh mục cụ thể"
+      category: "Hiển thị chủ đề trong một chuyên mục cụ thể"
       category_any: "Hiển thị chủ đề trong bất kỳ chuyên mục cụ thể (phân cách bằng dấu phẩy)"
       exclude_category: "Loại trừ chủ đề khỏi một chuyên mục cụ thể"
-      category_without_subcategories: "Chỉ hiển thị chủ đề trong chuyên mục mẹ, không bao gồm các chuyên mục con"
-      exclude_category_without_subcategories: "Loại trừ chủ đề từ chuyên mục mẹ, không bao gồm các chuyên mục con"
+      category_without_subcategories: "Chỉ hiển thị chủ đề trong chuyên mục chính, không bao gồm các chuyên mục chính"
+      exclude_category_without_subcategories: "Loại trừ chủ đề từ chuyên mục chính, không bao gồm các chuyên mục phụ"
       tag: "Hiển thị chủ đề chứa một thẻ cụ thể"
       tags_any: "Hiển thị chủ đề chứa bất kỳ thẻ cụ thể (phân cách bằng dấu phẩy)"
       tags_all: "Hiển thị chủ đề chứa bất kỳ thẻ cụ thể (phân cách bằng dấu cộng)"
@@ -1448,7 +1463,10 @@ vi:
   frequent_poster: "Người Gửi Thường Xuyên"
   redirected_to_top_reasons:
     new_user: "Chào mừng đến với cộng dồng của chúng tôi! Ở đây có những chủ để phổ biến."
-    not_seen_in_a_month: "Chào mừng quay trở lại! Chúng tôi thấy bạn truy cập một khoảng thời gian. Ở đây có những bài viết phổ biến từ lúc bạn đ."
+    not_seen_in_a_month: "Chào mừng quay trở lại! Chúng tôi thấy bạn truy cập một khoảng thời gian. Ở đây có những tút hot từ lúc bạn đi."
+  move_posts:
+    new_topic_moderator_post:
+      other: "%{count} tút đã được tách ra thành một chủ đề mới: %{topic_link}"
   publish_page:
     slug_errors:
       blank: "không được để trống"
@@ -1626,41 +1644,44 @@ vi:
   new_version_mailer_with_notes:
     subject_template: "[%{email_prefix}] có bản cập nhật"
   flag_reasons:
-    off_topic: "Bài viết của bạn được đánh dấu là **off-topic**: cộng đồng cảm thấy nó không phù hợp cho chủ đề này, được xác định bởi tiêu đề và bài viết đầu tiên."
-    spam: "Bài viết của bạn được đánh dấu là **spam**: cộng đồng cảm thấy đó là một quảng cáo, khuyến mại thay vì một nội dung hữu ích như mong đợi."
-    notify_moderators: "Bài viết của bạn được đánh dấu là **for moderator attention**: cộng đồng cảm thấy có điều gì đó cần được BQT xét duyệt."
+    off_topic: "Tút của bạn được đánh dấu là **off-topic**: cộng đồng cảm thấy nó không phù hợp cho chủ đề này, được xác định bởi tiêu đề và tút đầu tiên."
+    inappropriate: "Tút của bạn đã bị đánh dấu là **không chấp nhận được**: cộng đồng cảm thấy đó là sự xúc phạm, lăng mạ, hoặc vi phạm [nội quy diễn đàn](%{base_path}/guidelines)."
+    spam: "Tút của bạn được đánh dấu là **spam**: cộng đồng cảm thấy đó là một quảng cáo, khuyến mãi thay vì một nội dung hữu ích như mong đợi."
+    notify_moderators: "Tút của bạn được đánh dấu là **for moderator attention**: cộng đồng cảm thấy có điều gì đó cần được BQT xét duyệt."
     responder:
-      notify_moderators: "Bài đăng đã được gắn cờ **để người kiểm duyệt chú ý**: cộng đồng cảm thấy điều gì đó về bài đăng cần có sự can thiệp thủ công của nhân viên."
+      inappropriate: "Tút đã bị đánh dấu là **không chấp nhận được**: cộng đồng cảm thấy đó là sự xúc phạm, lăng mạ, hoặc vi phạm [nội quy diễn đàn](%{base_path}/guidelines)."
+      notify_moderators: "Tút đã bị báo cáo **Kiểm duyệt viên cần chú ý**: cộng đồng cảm thấy điều gì đó về tút cần có sự can thiệp từ BQT."
   flags_dispositions:
     agreed: "Cảm ơn đã cho chúng tôi biết. Chúng thôi đồng ý nó là một vấn đề và chúng tôi sẽ xem xét nó."
-    agreed_and_deleted: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đồng ý đây là một vấn đề và chúng tôi đã xóa bài viết này."
+    agreed_and_deleted: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đồng ý đây là một vấn đề và chúng tôi đã xóa tút này."
     disagreed: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đang xem xét nó."
     ignored: "Cảm ơn đã cho chúng tôi biết thông tin. Chúng tôi đang xem xét nó."
-    ignored_and_deleted: "Cảm ơn bạn đã cho chúng tôi biết, chúng tôi đã gỡ bỏ bài viết."
+    ignored_and_deleted: "Cảm ơn bạn đã cho chúng tôi biết, chúng tôi đã gỡ bỏ tút."
   system_messages:
     queued_by_staff:
-      title: "Bài viết cần phê duyệt"
+      title: "Tút cần phê duyệt"
+      subject_template: "Tút đã bị BQT ẩn, đang chờ duyệt"
     flags_disagreed:
-      title: "Nhân viên đã khôi phục bài đăng bị gắn cờ"
-      subject_template: "Nhân viên đã khôi phục bài đăng bị gắn cờ"
+      title: "BQT đã khôi phục tút bị báo cáo"
+      subject_template: "BQT đã khôi phục tút bị báo cáo"
       text_body_template: |
         Xin chào,
 
-        Đây là thông báo tự động từ %{site_name} để cho bạn biết rằng [bài đăng của bạn](%{base_url}%{url}) đã được khôi phục.
+        Đây là thông báo tự động từ %{site_name} để cho bạn biết rằng [tút của bạn](%{base_url}%{url}) đã được khôi phục.
 
-        Bài đăng này đã bị cộng đồng gắn cờ và một nhân viên đã chọn khôi phục nó.
+        Tút này đã bị cộng đồng đánh dấu và một nhân viên đã chọn khôi phục nó.
 
-        [chi tiết = "Nhấn vào đây để mở rộng bài phục hồi"]
+        [chi tiết = "Nhấn vào đây để xem tút đã khôi phục"]
         `` `markdown
         %{flagged_post_raw_content}
         ` ``
         [/details]
     flags_agreed_and_post_deleted:
-      title: "Nhân viên đã xóa bài đăng bị gắn cờ"
-      subject_template: "Nhân viên đã xóa bài đăng bị gắn cờ"
+      title: "BQT đã xóa tút bị báo cáo"
+      subject_template: "BQT đã xóa tút bị báo cáo"
     flags_agreed_and_post_deleted_for_responders:
-      title: "Trả lời bị xóa khỏi bài đăng bị gắn cờ bởi nhân viên"
-      subject_template: "Trả lời bị xóa khỏi bài đăng bị gắn cờ bởi nhân viên"
+      title: "Trả lời bị xóa khỏi tút bị báo cáo bởi BQT"
+      subject_template: "Trả lời bị xóa khỏi tút bị báo cáo bởi BQT"
     welcome_user:
       preview: "Chào mừng đến với %{site_name}!"
       subject_template: "Chào mừng đến với %{site_name}!"
@@ -1768,7 +1789,7 @@ vi:
         %{post_error}
 
         Nếu bạn có thể khắc phục sự cố, xin hãy thử lại.
-      date_invalid: "Không tìm thấy ngày tạo bài viết. Có phải e-mail thiếu tiêu đề Date:?"
+      date_invalid: "Không tìm thấy ngày tạo tút. Có phải e-mail thiếu tiêu đề Date:?"
     email_reject_invalid_post_action:
       text_body_template: |2
 
@@ -1785,7 +1806,7 @@ vi:
 
         Nếu có một giao diện web cho các tài khoản email POP, bạn có thể cần phải đăng nhập vào website và kiểm tra các thiết lập này.
     spam_post_blocked:
-      subject_template: "Các bài viết của tài khoản mới %{username} đã bị chặn do lặp đi lặp lại các liên kết"
+      subject_template: "Các tút của tài khoản mới %{username} đã bị chặn do lặp đi lặp lại các liên kết"
     pending_users_reminder:
       subject_template:
         other: "%{count} thành viên đang chờ duyệt"
@@ -1970,8 +1991,8 @@ vi:
     suspicious_login:
       subject_template: "[%{site_name}] Đăng nhập mới từ %{location}"
     post_approved:
-      title: "Bài đăng của bạn đã được phê duyệt"
-      subject_template: "[%{site_name}] Bài đăng của bạn đã được phê duyệt"
+      title: "Tút của bạn đã được phê duyệt"
+      subject_template: "[%{site_name}] Tút của bạn đã được phê duyệt"
   page_not_found:
     page_title: "Không Tìm Thấy Trang"
     title: "Rất tiếc! Địa chỉ này không tồn tại hoặc riêng tư."
@@ -2413,21 +2434,21 @@ vi:
     conflict: "Đã có xung đột cập nhật ngăn bạn làm điều đó."
     reasons:
       post_count: "Một vài tút đầu tiên của mọi người dùng phải được nhân viên phê duyệt. Xem %{link}."
-      fast_typer: "Người dùng mới nhập bài đăng đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
+      fast_typer: "Thành viên mới nhập tút đầu tiên của họ nhanh một cách đáng ngờ, bị nghi ngờ là bot hoặc hành vi gửi thư rác. Xem %{link}."
     actions:
       agree:
         title: "Đồng ý"
       delete:
         title: "Xóa"
-        complete: "Bài viết đã bị xóa."
+        complete: "Tút đã bị xóa."
       delete_and_ignore:
-        complete: "Bài viết đã bị xóa."
+        complete: "Tút đã bị xóa."
       delete_and_ignore_replies:
-        confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
+        confirm: "Bạn có chắc muốn xóa các câu trả lời của tút?"
       delete_and_agree:
-        complete: "Bài viết đã bị xóa."
+        complete: "Tút đã bị xóa."
       delete_and_agree_replies:
-        confirm: "Bạn có chắc chắn muốn xóa các câu trả lời cho bài đăng không?"
+        confirm: "Bạn có chắc muốn xóa các câu trả lời của tút?"
       disagree_bundle:
         title: "Không"
       ignore:
@@ -2471,7 +2492,7 @@ vi:
       no_action_post:
         title: "Không có hành động"
       delete_post:
-        complete: "Bài viết đã bị xóa"
+        complete: "Tút đã bị xóa"
       no_action_user:
         title: "Không có hành động"
       delete_user:

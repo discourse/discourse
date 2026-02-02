@@ -1925,7 +1925,6 @@ fi:
     invite_link_max_redemptions_limit_users: "Tavallisten käyttäjien luomien kutsulinkkien sallittujen lunastusten enimmäismäärä ei voi olla tätä arvoa suurempi."
     alert_admins_if_errors_per_minute: "Virheiden määrä minuutissa, jonka seurauksena hälytetään ylläpitäjä. 0 poistaa toiminnon käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     alert_admins_if_errors_per_hour: "Virheiden määrä tunnissa, jonka seurauksena hälytetään ylläpitäjä. 0 poistaa toiminnon käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
-    categories_topics: "Kuinka monta ketjua näytetään Alueet-sivulla (/categories). Jos 0, etsitään automaattisesti arvoa, jolla kaksi saraketta pysyvät symmetrisinä (alueet ja ketjut)."
     suggested_topics: "Ehdotettujen ketjujen määrä ketjun alaosassa."
     limit_suggested_to_category: "Ehdota ketjuja vain nykyiseltä alueelta."
     suggested_topics_max_days_old: "Ehdotettujen ketjujen ei tulisi olla yli n päivää vanhoja."
@@ -2417,7 +2416,6 @@ fi:
     default_composition_mode: "Aseta yhteisösi kirjoitustilan oletustila. Muotoilutila tarjoaa useimmille käyttäjille modernimman ja tutumman kirjoituskokemuksen, kun taas markdown-tila saattaa sopia teknisemmälle yleisölle. Jäsenet voivat vaihtaa tilojen välillä kirjoitustilan työkalupalkin valitsimella."
     reviewable_ui_refresh: "Ryhmät, jotka voivat käyttää kokeellista uutta käyttöliittymää tarkastusjonossa."
     content_localization_enabled: "Näyttää käyttäjille lokalisoitua sisältöä heidän selain- tai kieliasetustensa perusteella. Tällainen sisältö voi sisältää alueita, tunnisteita, viestejä ja ketjuja. Tuetut kielialueet on asetettu asetuksessa \"content localization supported locales\"."
-    content_localization_supported_locales: "Luettelo tuetuista kielialueista, joille käyttäjäsisältö voidaan kääntää. Edellyttää \"content localization enabled\" -asetusta."
     content_localization_allowed_groups: "Ryhmät, jotka voivat päivittää lokalisoitua sisältöä. Edellyttää \"content localization enabled\" -asetusta."
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."

@@ -68,4 +68,42 @@ RSpec.describe ReviewableSerializer do
       expect(json[:target_created_by_id]).to eq(reviewable_user.target.id)
     end
   end
+
+  describe "target_deleted_by" do
+    it "serializes when post was staff-deleted" do
+      fp = Fabricate(:reviewable_flagged_post)
+      fp.target.trash!(admin)
+      fp.reload
+
+      json = described_class.new(fp, scope: Guardian.new(admin), root: nil).as_json
+      post = Post.with_deleted.find(fp.target_id)
+      expect(json[:target_deleted_by_id]).to eq(admin.id)
+      expect(json[:target_deleted_at]).to eq(post.deleted_at)
+    end
+
+    it "serializes when post was user-deleted" do
+      fp = Fabricate(:reviewable_flagged_post)
+      post = fp.target
+
+      freeze_time do
+        revision = post.revisions.create!(user: post.user, modifications: {})
+        post.update!(user_deleted: true)
+        fp.reload
+
+        json = described_class.new(fp, scope: Guardian.new(admin), root: nil).as_json
+        expect(json[:target_deleted_by_id]).to eq(post.user.id)
+        expect(json[:target_deleted_at]).to eq_time(revision.created_at)
+      end
+    end
+  end
+
+  describe "topic_tags" do
+    it "returns tag objects with id, name, and slug" do
+      SiteSetting.tagging_enabled = true
+      tag = Fabricate(:tag)
+      reviewable.topic.tags = [tag]
+      json = described_class.new(reviewable, scope: Guardian.new(admin), root: nil).as_json
+      expect(json[:topic_tags]).to eq([{ id: tag.id, name: tag.name, slug: tag.slug }])
+    end
+  end
 end

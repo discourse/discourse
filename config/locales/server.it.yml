@@ -1919,7 +1919,6 @@ it:
     invite_link_max_redemptions_limit_users: "Il numero massimo di riscatti consentiti per i link di invito generati da utenti regolari non può superare questo valore."
     alert_admins_if_errors_per_minute: "Soglia di errori al minuto che attiva un allarme agli amministratori. Un valore pari a 0 disabilita questa funzione. NOTA: richiede un riavvio."
     alert_admins_if_errors_per_hour: "Soglia di errori all'ora che attiva un allarme agli amministratori. Un valore pari a 0 disabilita questa funzione. NOTA: richiede un riavvio."
-    categories_topics: "Numero di argomenti da mostrare in /categories page. Se impostato su 0, il sistema proverà automaticamente a trovare un valore per mantenere simmetriche le due colonne (categorie e argomenti)."
     suggested_topics: "Numero di argomenti suggeriti mostrati in fondo ad un argomento."
     limit_suggested_to_category: "Negli argomenti suggeriti, mostra soltanto argomenti della categoria corrente. "
     suggested_topics_max_days_old: "Gli argomenti suggeriti non dovrebbero essere più vecchi di n giorni."
@@ -2411,7 +2410,6 @@ it:
     default_composition_mode: "Imposta la modalità predefinita per il compositore della tua community. La modalità Rich Text offre un'esperienza di scrittura più moderna e familiare per la maggior parte degli utenti, mentre la modalità Markdown potrebbe essere adatta a un pubblico più tecnico. I membri possono utilizzare un interruttore nella barra degli strumenti del compositore per passare da una modalità all'altra."
     reviewable_ui_refresh: "Gruppi che possono utilizzare la nuova interfaccia utente sperimentale nella coda di revisione."
     content_localization_enabled: "Mostra contenuti localizzati per gli utenti in base alle preferenze del browser o della lingua. Tali contenuti possono includere categorie, tag, post e argomenti. Le impostazioni locali supportate sono impostate in \"Impostazioni locali supportate per la localizzazione dei contenuti\"."
-    content_localization_supported_locales: "Elenco delle lingue supportate in cui è possibile tradurre i contenuti utente. Richiede \"localizzazione dei contenuti abilitata\"."
     content_localization_allowed_groups: "Gruppi autorizzati ad aggiornare i contenuti localizzati. Richiede \"localizzazione dei contenuti abilitata\"."
     errors:
       invalid_css_color: "Colore non valido. Immettere un nome o un valore esadecimale per il colore."

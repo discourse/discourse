@@ -35,6 +35,12 @@ export default class DashboardNewFeatures extends Component {
       const json = await ajax(
         "/admin/whats-new.json?force_refresh=" + opts.forceRefresh
       );
+
+      if (!json.new_features || json.new_features.length === 0) {
+        this.newFeatures = {};
+        return;
+      }
+
       this.newFeatures = json.new_features.reduce((acc, feature) => {
         const key = moment(feature.released_at || feature.created_at).format(
           "YYYY-MM"
@@ -115,7 +121,7 @@ export default class DashboardNewFeatures extends Component {
         {{else}}
           <AdminConfigAreaEmptyList
             @emptyLabelTranslated={{i18n
-              "admin.dashboard.new_features.previous_announcements"
+              "admin.dashboard.new_features.no_new_features_found"
               url="https://meta.discourse.org/tags/c/announcements/67/release-notes"
             }}
           />

@@ -14,8 +14,12 @@ class PostOwnerChanger
   end
 
   def change_owner!
+    guardian = Guardian.new(@acting_user)
+    raise Discourse::InvalidAccess unless guardian.can_see?(@topic)
+
     @post_ids.each do |post_id|
       next unless post = Post.with_deleted.find_by(id: post_id, topic_id: @topic.id)
+      raise Discourse::InvalidAccess unless guardian.can_see?(post)
 
       if post.is_first_post?
         @topic.user = @new_owner
@@ -43,7 +47,7 @@ class PostOwnerChanger
         @topic.last_poster = @new_owner
       end
 
-      @topic.update_statistics
+      @topic.update_statistics!
 
       @new_owner.user_stat.update(
         first_post_created_at: @new_owner.reload.posts.order("created_at ASC").first&.created_at,

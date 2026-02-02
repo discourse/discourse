@@ -35,7 +35,7 @@ export default class FKFieldData extends Component {
   constructor() {
     super(...arguments);
 
-    if (!this.args.title?.length) {
+    if (!this.args.title?.toString?.()?.length) {
       throw new Error("@title is required on `<form.Field />`.");
     }
   }

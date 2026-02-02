@@ -14,7 +14,7 @@ vi:
     poll_groupable_user_fields: "Một tập hợp các tên người dùng có thể được sử dụng để nhóm và lọc các kết quả bình chọn."
     poll_export_data_explorer_query_id: "ID của truy vấn trình khám phá dữ liệu được sử dụng để xuất kết quả thăm dò ý kiến (0 để vô hiệu hóa)."
     poll_export_ranked_choice_data_explorer_query_id: "ID của truy vấn Data Explorer được sử dụng để xuất kết quả bầu cử theo phương pháp bầu cử trực tiếp."
-    poll_default_public: "Khi tạo cuộc bình chọn mới, bật tùy chọn 'hiển thị người đã bình chọn' theo mặc định."
+    poll_default_public: "Khi tạo cuộc bình chọn mới, bật tùy chọn 'hiện người đã bình chọn' theo mặc định."
   keywords:
     poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:

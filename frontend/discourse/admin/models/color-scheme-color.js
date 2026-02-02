@@ -1,6 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { observes, on } from "@ember-decorators/object";
+import { isValidHex, normalizeHex } from "discourse/lib/color-transformations";
 import { propertyNotEqual } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
@@ -84,15 +85,7 @@ export default class ColorSchemeColor extends EmberObject {
   @discourseComputed("hex")
   brightness(hex) {
     if (hex.length === 6 || hex.length === 3) {
-      if (hex.length === 3) {
-        hex =
-          hex.slice(0, 1) +
-          hex.slice(0, 1) +
-          hex.slice(1, 2) +
-          hex.slice(1, 2) +
-          hex.slice(2, 3) +
-          hex.slice(2, 3);
-      }
+      hex = normalizeHex(hex);
       return Math.round(
         (parseInt(hex.slice(0, 2), 16) * 299 +
           parseInt(hex.slice(2, 4), 16) * 587 +
@@ -111,6 +104,6 @@ export default class ColorSchemeColor extends EmberObject {
 
   @discourseComputed("hex")
   valid(hex) {
-    return hex.match(/^([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/) !== null;
+    return isValidHex(hex);
   }
 }

@@ -34,6 +34,7 @@ lt:
       add_to_calendar: "Pridėti prie kalendoriaus"
       created_by: "Sukurta"
       bulk_invite: "Masinis kvietimas"
+      destroy_event: "Sunaikinti įvykį"
       bulk_invite_modal:
         confirm: "patvirtinti"
         title: "Masinis kvietimas"
@@ -50,6 +51,12 @@ lt:
               title: "Vieša"
             private:
               title: "Privatu"
+      composer:
+        name_placeholder: "Įvykis"
+        end_date_placeholder: "Nustatyti pabaigos datą"
+        location_placeholder: "Pridėti vietą arba URL"
+        max_attendees_placeholder: "Nustatyti maksimalų dalyvių skaičių"
+        description_placeholder: "Pridėti įvykio aprašymą"
       builder_modal:
         custom_fields:
           placeholder: "Pasirinktinai"
@@ -78,5 +85,6 @@ lt:
           label: "Aprašymas"
         status:
           label: "Statusas"
+        delete_confirmation_message: "Ištrinti šį įvykį?"
       invite_user_or_group:
         invite: "Siųsti"

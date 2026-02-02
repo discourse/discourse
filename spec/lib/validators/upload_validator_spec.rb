@@ -81,32 +81,137 @@ RSpec.describe UploadValidator do
     end
 
     describe "upload for site settings" do
-      fab!(:user, :admin)
+      fab!(:admin)
+      fab!(:user)
 
       let(:upload) do
-        Fabricate.build(:upload, user: user, original_filename: "test.ico", for_site_setting: true)
+        Fabricate.build(:upload, user: admin, original_filename: "test.png", for_site_setting: true)
       end
 
-      before { SiteSetting.authorized_extensions = "png" }
+      it "allows image uploads for staff" do
+        expect(validator.validate(upload)).to eq(true)
+      end
 
-      describe "for admin user" do
-        it "should allow the upload" do
+      it "rejects non-image uploads when no authorized_extensions specified" do
+        upload.original_filename = "test.txt"
+        validator.validate(upload)
+        expect(upload.errors[:original_filename]).to include(I18n.t("upload.images_only"))
+      end
+
+      it "rejects uploads from non-staff users" do
+        upload.user = user
+        validator.validate(upload)
+        expect(upload.errors[:base]).to include(I18n.t("upload.unauthorized"))
+      end
+
+      it "validates image file size" do
+        SiteSetting.max_image_size_kb = 1
+        upload.filesize = 10.kilobytes
+        validator.validate(upload)
+        expect(upload.errors[:filesize]).to be_present
+      end
+
+      context "with authorized_extensions" do
+        before do
+          upload.site_setting_name = "test_setting"
+          SiteSetting
+            .type_supervisor
+            .stubs(:type_hash)
+            .with(:test_setting)
+            .returns({ type: "upload", authorized_extensions: "txt|md" })
+        end
+
+        it "allows matching extensions" do
+          upload.original_filename = "file.txt"
+          expect(validator.validate(upload)).to eq(true)
+
+          upload.original_filename = "file.md"
           expect(validator.validate(upload)).to eq(true)
         end
 
-        describe "when filename is invalid" do
-          it "should not allow the upload" do
-            upload.original_filename = "test.txt"
-            expect(validator.validate(upload)).to eq(nil)
-          end
+        it "rejects non-matching extensions" do
+          upload.original_filename = "script.js"
+          validator.validate(upload)
+          expect(upload.errors[:original_filename]).to include(
+            I18n.t("upload.unauthorized", authorized_extensions: "txt|md"),
+          )
+        end
+
+        it "validates attachment file size for non-images" do
+          SiteSetting.max_attachment_size_kb = 1
+          upload.original_filename = "file.txt"
+          upload.filesize = 10.kilobytes
+          validator.validate(upload)
+          expect(upload.errors[:filesize]).to be_present
+        end
+
+        it "validates image file size for images" do
+          SiteSetting
+            .type_supervisor
+            .stubs(:type_hash)
+            .with(:test_setting)
+            .returns({ type: "upload", authorized_extensions: "png" })
+          SiteSetting.max_image_size_kb = 1
+          upload.original_filename = "image.png"
+          upload.filesize = 10.kilobytes
+          validator.validate(upload)
+          expect(upload.errors[:filesize]).to be_present
         end
       end
 
-      describe "for normal user" do
-        fab!(:user)
+      context "with site_setting_name but no authorized_extensions" do
+        before do
+          upload.site_setting_name = "image_only_setting"
+          SiteSetting
+            .type_supervisor
+            .stubs(:type_hash)
+            .with(:image_only_setting)
+            .returns({ type: "upload" })
+        end
 
-        it "should not allow the upload" do
-          expect(validator.validate(upload)).to eq(nil)
+        it "falls back to images only" do
+          upload.original_filename = "test.txt"
+          validator.validate(upload)
+          expect(upload.errors[:original_filename]).to include(I18n.t("upload.images_only"))
+        end
+      end
+
+      context "with max_file_size_kb" do
+        before do
+          upload.site_setting_name = "limited_upload"
+          upload.original_filename = "file.txt"
+        end
+
+        it "enforces the setting-specific file size limit" do
+          SiteSetting
+            .type_supervisor
+            .stubs(:type_hash)
+            .with(:limited_upload)
+            .returns({ type: "upload", authorized_extensions: "txt", max_file_size_kb: 5 })
+          upload.filesize = 10.kilobytes
+          validator.validate(upload)
+          expect(upload.errors[:filesize]).to be_present
+        end
+
+        it "allows files within the limit" do
+          SiteSetting
+            .type_supervisor
+            .stubs(:type_hash)
+            .with(:limited_upload)
+            .returns({ type: "upload", authorized_extensions: "txt", max_file_size_kb: 100 })
+          upload.filesize = 50.kilobytes
+          expect(validator.validate(upload)).to eq(true)
+        end
+
+        it "uses setting limit instead of global attachment limit" do
+          SiteSetting.max_attachment_size_kb = 1
+          SiteSetting
+            .type_supervisor
+            .stubs(:type_hash)
+            .with(:limited_upload)
+            .returns({ type: "upload", authorized_extensions: "txt", max_file_size_kb: 100 })
+          upload.filesize = 50.kilobytes
+          expect(validator.validate(upload)).to eq(true)
         end
       end
     end

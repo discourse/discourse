@@ -217,7 +217,6 @@
       font-size: var(--font-up-1-rem);
       color: var(--tertiary);
       overflow-wrap: anywhere;
-      margin-right: var(--space-1);
     }
   }
 
@@ -458,8 +457,4 @@
       }
     }
   }
-}
-
-.no-results {
-  padding: var(--search-result-element-padding);
 }

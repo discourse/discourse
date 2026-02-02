@@ -17,9 +17,6 @@ pt_BR:
         spam: "Sinalizar como spam e ocultar postagem"
         spam_silence: "Sinalizar como spam, ocultar postagem e silenciar usuário(a)"
     scriptables:
-      llm_tool_triage:
-        title: Fazer triagem de postagens com a Ferramenta de IA
-        description: "Fazer triagem de postagens com lógica personalizada em uma ferramenta de IA"
       llm_persona_triage:
         title: Fazer triagem de postagens com persona de IA
         description: "Responder a postagens com uma persona de IA específica"

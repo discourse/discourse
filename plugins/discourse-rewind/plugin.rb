@@ -68,7 +68,9 @@ after_initialize do
   end
 
   add_to_serializer(:current_user, :is_rewind_active) do
-    Rails.env.development? || Date.today.month == 1 || Date.today.month == 12
+    is_rewind_period = Rails.env.development? || Date.today.month == 1 || Date.today.month == 12
+    user_old_enough = scope.user.created_at <= 1.month.ago
+    is_rewind_period && user_old_enough
   end
 
   Discourse::Application.routes.append do

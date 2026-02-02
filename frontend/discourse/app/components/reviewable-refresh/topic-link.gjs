@@ -55,7 +55,7 @@ import { i18n } from "discourse-i18n";
         {{/if}}
 
         <div class="reviewable-topic-link__details-tags">
-          <ReviewableTags @tags={{@reviewable.topic_tags}} @tagName="" />
+          <ReviewableTags @tags={{@reviewable.topic_tags}} />
         </div>
       </div>
     {{else if (has-block)}}

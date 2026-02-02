@@ -264,10 +264,10 @@ cs:
       kicked_from_channel: "K tomuto kanálu již nemáte přístup."
       chat_notifications_title: "Upozornění chatu"
       only_chat_push_notifications:
-        title: "Odesílání pouze push notifikací chatu"
+        title: "Odesílat pouze push notifikace chatu"
       personalization_title: "Osobní přizpůsobení"
       ignore_channel_wide_mention:
-        title: "Ignorování zmínek v rámci celého kanálu"
+        title: "Ignorovat zmínky v rámci celého kanálu"
       show_thread_title_prompts:
         title: "Zobrazit výzvy k zadání názvu vlákna"
         description: "Zobrazit výzvy k nastavení názvu pro nová vlákna"
@@ -811,7 +811,6 @@ cs:
           composer_bold: "%{shortcut} Tučné (pouze editor)"
           composer_italic: "%{shortcut} Kurzíva (pouze editor)"
           composer_code: "%{shortcut} Kód (pouze editor)"
-          drawer_open: "%{shortcut} Otevření okénka chatu"
           drawer_close: "%{shortcut} Zavření okénka chatu"
           mark_all_channels_read: "%{shortcut} Označit všechny kanály jako přečtené"
     topic_statuses:

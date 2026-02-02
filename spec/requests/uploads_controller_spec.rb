@@ -501,6 +501,66 @@ RSpec.describe UploadsController do
         expect(response.status).to eq(200)
       end
 
+      it "includes CSP sandbox header for all uploads" do
+        get image_upload.short_path
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+      end
+
+      it "serves PNG images inline with CSP header when inline param is given" do
+        png_upload = upload_file("smallest.png")
+        get "#{png_upload.short_path}?inline=1"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Content-Disposition"]).to include("inline")
+        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+      end
+
+      it "serves PDFs inline with CSP header when inline param is given" do
+        SiteSetting.authorized_extensions = "pdf|png"
+        pdf_upload = upload_file("smallest.png")
+        pdf_upload.update!(original_filename: "document.pdf", extension: "pdf")
+        get "#{pdf_upload.short_path}?inline=1"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Content-Disposition"]).to include("inline")
+        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+      end
+
+      it "forces attachment disposition for HTML files with CSP header" do
+        SiteSetting.authorized_extensions = "html|png"
+        html_upload = upload_file("smallest.png")
+        html_upload.update!(original_filename: "page.html", extension: "html")
+        get "#{html_upload.short_path}?inline=1"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Content-Disposition"]).to include("attachment")
+        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+      end
+
+      it "forces attachment disposition for XML files with CSP header" do
+        SiteSetting.authorized_extensions = "xml|png"
+        xml_upload = upload_file("smallest.png")
+        xml_upload.update!(original_filename: "data.xml", extension: "xml")
+        get "#{xml_upload.short_path}?inline=1"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Content-Disposition"]).to include("attachment")
+        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+      end
+
+      it "forces attachment disposition for SVG files with CSP header" do
+        SiteSetting.authorized_extensions = "svg|png"
+        svg_upload = upload_file("smallest.png")
+        svg_upload.update!(original_filename: "image.svg", extension: "svg")
+        get "#{svg_upload.short_path}?inline=1"
+
+        expect(response.status).to eq(200)
+        expect(response.headers["Content-Disposition"]).to include("attachment")
+        expect(response.headers["Content-Security-Policy"]).to eq("sandbox;")
+      end
+
       it "returns the right response when anon tries to download a file " \
            "when prevent_anons_from_downloading_files is true" do
         delete "/session/#{user.username}.json"
@@ -1556,6 +1616,57 @@ RSpec.describe UploadsController do
         expect(result[:upload]).to eq(JSON.parse(UploadSerializer.new(upload).to_json)[:upload])
       end
 
+      context "with site setting uploads" do
+        fab!(:admin)
+        fab!(:text_upload_stub) do
+          Fabricate(
+            :multipart_external_upload_stub,
+            created_by: admin,
+            original_filename: "llms.txt",
+            upload_type: "site_setting",
+          )
+        end
+        let(:site_setting_upload) { Fabricate(:upload) }
+
+        before { sign_in(admin) }
+
+        it "passes site_setting_name to ExternalUploadManager" do
+          FileStore::S3Store.any_instance.stubs(:list_multipart_parts).returns({ parts: [] })
+
+          temp_location = "#{upload_base_url}/#{text_upload_stub.key}"
+          stub_request(
+            :post,
+            "#{temp_location}?uploadId=#{text_upload_stub.external_upload_identifier}",
+          ).to_return(status: 200, body: <<~XML)
+            <?xml version="1.0" encoding="UTF-8"?>
+            <CompleteMultipartUploadResult>
+               <Location>#{temp_location}</Location>
+               <Bucket>s3-upload-bucket</Bucket>
+               <Key>#{text_upload_stub.key}</Key>
+               <ETag>testfinal</ETag>
+            </CompleteMultipartUploadResult>
+          XML
+
+          ExternalUploadManager
+            .expects(:new)
+            .with(
+              text_upload_stub,
+              has_entries(for_site_setting: true, site_setting_name: "llms_txt"),
+            )
+            .returns(stub(transform!: site_setting_upload))
+
+          post "/uploads/complete-multipart.json",
+               params: {
+                 unique_identifier: text_upload_stub.unique_identifier,
+                 parts: [{ part_number: 1, etag: "test1" }],
+                 for_site_setting: "true",
+                 site_setting_name: "llms_txt",
+               }
+
+          expect(response.status).to eq(200)
+        end
+      end
+
       describe "rate limiting" do
         before { RateLimiter.enable }
 
@@ -1805,6 +1916,55 @@ RSpec.describe UploadsController do
         expect(ExternalUploadStub.exists?(id: external_upload_stub.id)).to eq(false)
         expect(response.status).to eq(200)
         expect(response.parsed_body).to eq(UploadsController.serialize_upload(upload))
+      end
+
+      context "with site setting uploads" do
+        fab!(:admin)
+        fab!(:text_upload_stub) do
+          Fabricate(
+            :external_upload_stub,
+            created_by: admin,
+            original_filename: "llms.txt",
+            upload_type: "site_setting",
+          )
+        end
+
+        before { sign_in(admin) }
+
+        it "passes site_setting_name to ExternalUploadManager" do
+          ExternalUploadManager
+            .expects(:new)
+            .with(
+              text_upload_stub,
+              has_entries(for_site_setting: true, site_setting_name: "llms_txt"),
+            )
+            .returns(stub(transform!: upload))
+
+          post "/uploads/complete-external-upload.json",
+               params: {
+                 unique_identifier: text_upload_stub.unique_identifier,
+                 for_site_setting: "true",
+                 site_setting_name: "llms_txt",
+               }
+
+          expect(response.status).to eq(200)
+        end
+
+        it "does not pass site_setting_name when for_site_setting is false" do
+          ExternalUploadManager
+            .expects(:new)
+            .with(text_upload_stub, has_entries(for_site_setting: false, site_setting_name: nil))
+            .returns(stub(transform!: upload))
+
+          post "/uploads/complete-external-upload.json",
+               params: {
+                 unique_identifier: text_upload_stub.unique_identifier,
+                 for_site_setting: "false",
+                 site_setting_name: "llms_txt",
+               }
+
+          expect(response.status).to eq(200)
+        end
       end
     end
 

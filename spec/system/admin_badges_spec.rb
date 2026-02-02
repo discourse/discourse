@@ -31,8 +31,12 @@ describe "Admin Badges Page", type: :system do
       expect(form.field("icon")).to be_enabled
       expect(form.field("icon")).to have_value("user-pen")
       expect(form.container("name")).to have_content(badge.name.strip)
-      expect(form.container("description")).to have_content(badge.description.strip)
-      expect(form.container("long_description")).to have_content(badge.long_description.strip)
+      expect(form.container("description")).to have_content(
+        Nokogiri::HTML5.fragment(badge.description).text.strip,
+      )
+      expect(form.container("long_description")).to have_content(
+        Nokogiri::HTML5.fragment(badge.long_description).text.strip,
+      )
     end
   end
 

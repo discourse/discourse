@@ -830,6 +830,7 @@ pt_BR:
         is_this_post: "Este(a) %{reviewable_type} é %{reviewable_human_score_types}?"
         delimiter: "ou"
         something_else_wrong: "Há algo errado em %{reviewable_type}?"
+        approve_user: "Aprovar este usuário?"
       types:
         reviewable_flagged_post:
           title: "Postagem sinalizada"
@@ -850,7 +851,7 @@ pt_BR:
         reviewable_ai_chat_message:
           noun: "mensagem de chat"
         reviewable_ai_post:
-          noun: "postar"
+          noun: "postagem"
       flagged_as: "Sinalizado como"
       post_flagged_as: "Resposta sinalizada como"
       queued_post_label: "Resposta citada"
@@ -862,6 +863,7 @@ pt_BR:
       timeline:
         target_created: "Postagem criada"
         target_created_by: "Postagem criada por %{username} · %{relativeDate}"
+        target_deleted: "Postagem excluída"
         flagged: "Sinalizado(a)"
         flagged_as_by: "Marcado(a) como %{flagReason} por %{username} - %{relativeDate}"
         claimed: "Reivindicado(a)"
@@ -1060,6 +1062,7 @@ pt_BR:
           title: Interação
           posting: Postando
           notification: Notificação
+          self_lockout: "Você está prestes a alterar a visibilidade do grupo de uma forma que removerá o seu próprio acesso. Tem certeza de que deseja continuar?"
         email:
           title: "E-mail"
           enable_smtp: "Ativar SMTP"
@@ -1072,6 +1075,7 @@ pt_BR:
           smtp_title: "SMTP"
           smtp_instructions: "Quando você ativa o SMTP para o grupo, todos os e-mails enviados da caixa de entrada do grupo serão enviados pelas configurações de SMTP especificadas aqui, em vez do servidor de e-mail configurado para outros e-mails enviados pelo seu fórum."
           additional_settings: "Configurações adicionais"
+          smtp_disable_confirm: "Ao desativar o SMTP, todas as configurações serão redefinidas e os recursos relacionados deixarão de funcionar. Deseja continuar?"
           prefill:
             title: "Preencher com configurações para:"
             gmail: "Gmail"
@@ -2090,6 +2094,7 @@ pt_BR:
               other {# dias}
             }.
           edit_link_options: "Editar opções de link ou enviar por e-mail"
+          edit_link_options_only: "Edite as opções do link"
           show_advanced: "Exibir opções avançadas"
           hide_advanced: "Ocultar opções avançadas"
           description: "Descrição"
@@ -3024,8 +3029,7 @@ pt_BR:
         post_approved: "postagem aprovada"
         membership_request_consolidated: "novos pedidos de associação"
         reaction: "nova reação"
-        votes_released: "Voto emitido"
-        new_features: "Novos recursos do Discourse foram lançados!"
+        votes_released: "voto emitido"
         admin_problems: "nova recomendação no painel de controle do seu site"
     upload_selector:
       change: "Mudança"
@@ -3466,8 +3470,6 @@ pt_BR:
           12_hours: "12 horas"
           24_hours: "24 horas"
           custom: "Duração personalizada"
-      slow_mode_notice:
-        duration: "Aguarde %{duration} entre as postagens neste tópico"
       topic_status_update:
         title: "Timer de tópico"
         save: "Definir timer"
@@ -4088,6 +4090,7 @@ pt_BR:
       back: "Voltar para a categoria"
       general: "Geral"
       settings: "Configurações"
+      advanced: "Avançado"
       topic_template: "Modelo"
       tags: "Etiquetas"
       localizations: "Localizações"
@@ -4119,7 +4122,9 @@ pt_BR:
       save_error: Houve um erro ao salvar a categoria.
       description: "Descrição"
       logo_description: "Proporção de tela recomendada 1:1 com tamanho mínimo de 200px. Se deixada em branco, nenhuma imagem será exibida."
-      style: "Estilos"
+      style: "Estilo"
+      icon: "Ícone"
+      emoji: "Emoji"
       background_color: "Cor"
       foreground_color: "Cor do texto"
       color_validations:
@@ -4128,13 +4133,13 @@ pt_BR:
         type: "Estilo"
         icon: "Ícone"
         emoji: "Emoji"
+        square: "Quadrado"
         options:
           square: "Quadrado"
           icon: "Ícone"
           emoji: "Emoji"
       color_used: "Cor em uso"
       predefined_colors: "Opções predefinidas de cor"
-      name_placeholder: "máximo de uma ou duas palavras"
       color_placeholder: "Qualquer cor da web"
       delete_confirm: "Tem certeza que quer excluir esta categoria?"
       delete_error: "Houve um erro ao excluir a categoria."
@@ -4142,6 +4147,7 @@ pt_BR:
       no_description: "Adicione uma descrição para esta categoria."
       change_in_category_topic: "Editar descrição"
       already_used: "Esta cor já foi usada para outra categoria"
+      color_palette: "Paleta de cores"
       security: "Segurança"
       security_add_group: "Adicionar a um grupo"
       permissions:
@@ -4158,7 +4164,7 @@ pt_BR:
       uncategorized_security_warning: "Esta categoria é especial. É destinada para tópicos que não têm categoria e não pode ter configurações de segurança."
       uncategorized_general_warning: 'Esta categoria é especial. Ela é usada como a categoria padrão para novos tópicos que não têm uma categoria selecionada. Se quiser evitar este comportamento e forçar a seleção da categoria, <a href="%{settingLink}">desative a configuração aqui</a>. Se você quiser alterar o nome ou a descrição, vá para <a href="%{customizeLink}">Personalização/Conteúdo de texto</a>.'
       pending_permission_change_alert: "Você não adicionou %{group} a esta categoria. Clique neste botão para adicionar."
-      images: "Imagens"
+      images: "Aparência"
       email_in: "Endereço de e-mail de entrada personalizado:"
       email_in_tooltip: "Você pode separar múltiplos endereços de e-mail com o caractere |."
       email_in_allow_strangers: "Aceitar e-mails de usuários(as) anônimos(as) sem contas"
@@ -4180,6 +4186,11 @@ pt_BR:
       position: "Posição na página de categorias:"
       position_disabled: "As categorias serão exibidas em ordem de atividade. Para controlar a ordem das categorias nas listas, ative a configuração de <a href='%{url}'>\"posições de categorias fixas\"</a>"
       minimum_required_tags: "Número mínimo de etiquetas exigidas em um tópico:"
+      none_subcategory_text: "Nenhum"
+      visibility:
+        title: "Acesso"
+        public: "Público"
+        group_restricted: "Privado"
       num_auto_bump_daily: "Número de tópicos em aberto para promover automaticamente:"
       auto_bump_cooldown_days: "Mínimo de dias antes de subir o mesmo tópico novamente:"
       navigate_to_first_post_after_read: "Navegue até a primeira postagem depois que os tópicos forem lidos"
@@ -5244,6 +5255,8 @@ pt_BR:
           impact_type_feature: "Recurso"
           impact_type_other: "Outras"
           status_experimental: "Experimental"
+          impact_role_moderators: "Moderadores(as)"
+          impact_role_staff: "Equipe"
       config:
         about:
           title: "Sobre seu site"
@@ -5386,6 +5399,8 @@ pt_BR:
                 below_site_header: "Abaixo do cabeçalho do site"
             text_section:
               locale_label: "Idioma"
+            header_new_members:
+              placeholder: "Bem-vindo(a), %{preferred_display_name}"
             header_logged_in:
               placeholder: "Boas-vindas novamente, %{preferred_display_name}!"
             header_anonymous:
@@ -5639,7 +5654,6 @@ pt_BR:
         new_features:
           title: "Novidades?"
           subtitle: "Estamos lançando recursos e melhorias inéditas o tempo todo. Esta página contém os principais. Clique em \"Saiba mais\" se quiser ver as notas da versão completas."
-          previous_announcements: "Confira os anúncios de recursos novos no <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Saiba mais..."
           experimental: "Experimental"
           only_experiments: "Exibir apenas recursos experimentais"
@@ -5726,7 +5740,9 @@ pt_BR:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Registros de pesquisa</a>'
             disabled: 'O relatório de pesquisa de conteúdo em alta está desativado. Ative as <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">consultas de pesquisa de registro</a> para coletar dados.'
-          average_chart_label: Média
+          sort_button: "Classificar por %{column}"
+          sort_ascending: "ordem crescente"
+          sort_descending: "ordem decrescente"
           filters:
             file_extension:
               label: Extensão de arquivo
@@ -7691,6 +7707,7 @@ pt_BR:
           upload:
             label: "Enviar"
             title: "Enviar imagens"
+        download_file: "Download"
         selectable_avatars:
           title: "Lista de avatares que os usuários podem escolher"
         table_column_heading:

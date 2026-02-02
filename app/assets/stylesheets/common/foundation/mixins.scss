@@ -41,7 +41,7 @@ $breakpoints: (
   @if $sidebar {
     // when the sidebar is shown, we want to increase the breakpoints by the width of the sidebar
     /* stylelint-disable-next-line scss/no-global-function-names */
-    @media #{$type} and (#{$rule}: calc(#{map-get($breakpoints, $bp)} + #{$d-sidebar-width})) {
+    @media #{$type} and (#{$rule}: calc(#{map-get($breakpoints, $bp)} + #{$sidebar-width})) {
       .has-sidebar-page {
         @content;
       }
@@ -270,10 +270,6 @@ $hpad: 0.65em;
   &.--wide {
     background: var(--highlight-low-or-medium);
   }
-
-  &.--current {
-    background: var(--tertiary-400);
-  }
 }
 
 @mixin nav-active() {
@@ -320,4 +316,44 @@ $hpad: 0.65em;
   white-space: nowrap;
   display: inline-block;
   margin: 0.15em;
+}
+
+@mixin topic-list-icons {
+  .d-icon-thumbtack {
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  .d-icon-thumbtack.unpinned {
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  a.title {
+    color: var(--primary);
+  }
+
+  .d-icon-bookmark {
+    color: var(--primary-med-or-secondary-med);
+  }
+}
+
+@mixin hide-posters {
+  width: 2em;
+  text-align: center;
+
+  a:first-child .avatar.latest:not(.single) {
+    top: 0;
+    left: 0;
+  }
+
+  a:not(.latest) {
+    display: none;
+  }
+
+  a.latest {
+    width: 100%;
+
+    img {
+      margin: 0 auto;
+    }
+  }
 }

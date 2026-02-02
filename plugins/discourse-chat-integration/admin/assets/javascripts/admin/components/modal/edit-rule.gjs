@@ -6,15 +6,22 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { bind } from "discourse/lib/decorators";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import getTagName from "../../lib/get-tag-name";
 import ChannelData from "../channel-data";
 
 export default class EditRule extends Component {
   @service siteSettings;
+
+  @bind
+  onTagsChanged(tags) {
+    this.args.model.rule.tags = (tags || []).map((tag) => getTagName(tag));
+  }
 
   @action
   async save(rule) {
@@ -200,7 +207,7 @@ export default class EditRule extends Component {
                     @name="tags"
                     @tags={{@model.rule.tags}}
                     @everyTag="true"
-                    @onChange={{fn (mut @model.rule.tags)}}
+                    @onChange={{this.onTagsChanged}}
                   />
                 </td>
               </tr>
