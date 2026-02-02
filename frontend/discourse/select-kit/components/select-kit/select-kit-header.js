@@ -28,9 +28,12 @@ export default class SelectKitHeader extends Component {
 
   @computed("value")
   get selectedValue() {
-    return this.value === this.getValue(this.selectKit.noneItem)
-      ? null
-      : makeArray(this.value).join(",");
+    if (this.value === this.getValue(this.selectKit.noneItem)) {
+      return null;
+    }
+    return makeArray(this.value)
+      .map((v) => this.getValue(v))
+      .join(",");
   }
 
   @computed("selectedContent.[]")

@@ -113,10 +113,16 @@ class DraftsController < ApplicationController
             # Since the topic might have hidden tags the current editor can't see,
             # we need to check for conflicts even though there might not be any visible tags in the editor
             if !conflict
-              original_tags = (original_tags || []).map(&:downcase).to_set
-              current_tags = post.topic.tags.pluck(:name).to_set
-              hidden_tags = DiscourseTagging.hidden_tag_names(@guardian).to_set
-              conflict = original_tags != (current_tags - hidden_tags)
+              original_tags ||= []
+              original_tag_ids = original_tags.filter_map { |t| t["id"] if t.is_a?(Hash) }
+              # old draft format is tag names as strings
+              old_format_names = original_tags.select { |t| t.is_a?(String) }
+              original_tag_ids +=
+                Tag.where(name: old_format_names).pluck(:id) if old_format_names.present?
+
+              current_tag_ids = post.topic.tags.pluck(:id).to_set
+              hidden_tag_ids = DiscourseTagging.hidden_tags(@guardian).pluck(:id).to_set
+              conflict = original_tag_ids.to_set != (current_tag_ids - hidden_tag_ids)
             end
           end
 

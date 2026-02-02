@@ -40,6 +40,54 @@ class PostRevisor
     def diff
       @diff ||= {}
     end
+
+    def apply_tag_changes(tag_value)
+      return unless guardian.can_tag_topics?
+
+      prev_tags = topic.tags.map(&:name)
+      return if tag_value.blank? && prev_tags.blank?
+
+      by_ids = tag_value.first.is_a?(Integer)
+      success =
+        if by_ids
+          DiscourseTagging.tag_topic_by_ids(topic, guardian, tag_value)
+        else
+          DiscourseTagging.tag_topic_by_names(topic, guardian, tag_value)
+        end
+
+      unless success
+        check_result(false)
+        return
+      end
+
+      new_tags = topic.tags.map(&:name)
+      return if prev_tags.sort == new_tags.sort
+
+      record_change("tags", prev_tags, new_tags)
+      DB.after_commit do
+        t = topic.reload
+        post = t.ordered_posts.first
+        notified_user_ids = [post.user_id, post.last_editor_id].uniq
+
+        persisted_tag_names = t.tags.pluck(:name)
+        added_tags = persisted_tag_names - prev_tags
+        removed_tags = prev_tags - persisted_tag_names
+        diff_tags = added_tags | removed_tags
+
+        if diff_tags.present?
+          if !SiteSetting.disable_tags_edit_notifications
+            Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids:, diff_tags:)
+          end
+
+          PostRevisor.create_small_action_for_tag_changes(
+            topic: t,
+            user: user,
+            added_tags:,
+            removed_tags:,
+          )
+        end
+      end
+    end
   end
 
   POST_TRACKED_FIELDS = %w[raw cooked edit_reason user_id wiki post_type locale]
@@ -108,46 +156,7 @@ class PostRevisor
     end
   end
 
-  track_topic_field(:tags) do |tc, tags|
-    if tc.guardian.can_tag_topics?
-      prev_tags = tc.topic.tags.map(&:name)
-      next if tags.blank? && prev_tags.blank?
-
-      if !DiscourseTagging.tag_topic_by_names(tc.topic, tc.guardian, tags)
-        tc.check_result(false)
-        next
-      end
-
-      new_tags = tc.topic.tags.map(&:name)
-
-      if prev_tags.sort != new_tags.sort
-        tc.record_change("tags", prev_tags, new_tags)
-        DB.after_commit do
-          topic = tc.topic.reload
-          post = topic.ordered_posts.first
-          notified_user_ids = [post.user_id, post.last_editor_id].uniq
-
-          persisted_tag_names = topic.tags.pluck(:name)
-          added_tags = persisted_tag_names - prev_tags
-          removed_tags = prev_tags - persisted_tag_names
-          diff_tags = added_tags | removed_tags
-
-          if diff_tags.present?
-            if !SiteSetting.disable_tags_edit_notifications
-              Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids:, diff_tags:)
-            end
-
-            create_small_action_for_tag_changes(
-              topic: topic,
-              user: tc.user,
-              added_tags:,
-              removed_tags:,
-            )
-          end
-        end
-      end
-    end
-  end
+  track_topic_field(:tags) { |tc, tags| tc.apply_tag_changes(tags) }
 
   track_topic_field(:featured_link) do |topic_changes, featured_link|
     if !SiteSetting.topic_featured_link_enabled ||
@@ -381,6 +390,9 @@ class PostRevisor
 
   def should_create_new_version?
     return false if @skip_revision
+    # topic-only changes (without post content changes) should always create a new version
+    # since the grace period concept doesn't apply to metadata changes like tags
+    return true if topic_changed? && !post_changed?
     edited_by_another_user? || flagged? || !grace_period_edit? || owner_changed? ||
       force_new_version? || edit_reason_specified?
   end
