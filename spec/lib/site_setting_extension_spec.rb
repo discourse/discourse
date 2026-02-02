@@ -242,7 +242,7 @@ RSpec.describe SiteSettingExtension do
       expect(settings.test_setting).to eq(77)
     end
 
-    context "when overidden" do
+    context "when overridden" do
       after :each do
         settings.remove_override!(:test_setting)
       end
@@ -476,7 +476,7 @@ RSpec.describe SiteSettingExtension do
       )
     end
 
-    context "when overidden" do
+    context "when overridden" do
       after :each do
         settings.remove_override!(:test_setting)
       end

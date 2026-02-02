@@ -730,11 +730,11 @@ class ImportScripts::DiscuzX < ImportScripts::Base
     s.gsub!(
       %r{\[img[^\]]*\]https?://#{ORIGINAL_SITE_PREFIX}/(.*)\[/img\]}i,
       '[x-attach]\1[/x-attach]',
-    ) # dont convert attachment
+    ) # don't convert attachment
     s.gsub!(
       %r{<img[^>]*src="https?://#{ORIGINAL_SITE_PREFIX}/(.*)".*?>}i,
       '[x-attach]\1[/x-attach]',
-    ) # dont convert attachment
+    ) # don't convert attachment
     s.gsub!(
       %r{\[img[^\]]*\]https?://www\.touhou\.cc/blog/(.*)\[/img\]}i,
       '[x-attach]../blog/\1[/x-attach]',

@@ -101,7 +101,7 @@ class Auth::ManagedAuthenticator < Auth::Authenticator
     result.email = info[:email]
     result.name = "#{info[:first_name]} #{info[:last_name]}".presence || info[:name]
     # Some IDPs send the email address in the name parameter (e.g. Auth0 with default configuration)
-    # We add some generic protection here, so that users don't accidently make their email addresses public
+    # We add some generic protection here, so that users don't accidentally make their email addresses public
     result.name = nil if result.name.present? && result.name == result.email
     result.username = info[:nickname]
     result.email_valid = primary_email_verified?(auth_token) if result.email.present?

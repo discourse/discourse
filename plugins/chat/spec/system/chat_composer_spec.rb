@@ -201,7 +201,7 @@ RSpec.describe "Chat composer", type: :system do
         )
       end
 
-      it "doesnt delete the message" do
+      it "doesn't delete the message" do
         chat_page.visit_channel(channel_1)
         channel_page.composer.edit_last_message_shortcut
         channel_page.composer.send_keys("")
