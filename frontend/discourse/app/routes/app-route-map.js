@@ -1,3 +1,4 @@
+/* eslint-disable ember/route-path-style */
 import { capitalize } from "@ember/string";
 import Site from "discourse/models/site";
 

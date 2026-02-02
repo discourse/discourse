@@ -13,6 +13,7 @@ export default [
       "ember/no-side-effects": "error",
       "ember/no-tracked-properties-from-args": "error",
       "ember/require-tagless-components": "error",
+      "ember/route-path-style": "error",
       "qunit/no-assert-equal": "error",
       "qunit/no-loose-assertions": "error",
     },
