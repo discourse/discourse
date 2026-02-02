@@ -35,7 +35,7 @@ export default class TagsIndexController extends Controller {
     this.setProperties({
       sortedByCount: isAlphaSort ? false : true,
       sortedByName: isAlphaSort ? true : false,
-      sortProperties: isAlphaSort ? ["id"] : ["totalCount:desc", "id"],
+      sortProperties: isAlphaSort ? ["name"] : ["totalCount:desc", "name"],
     });
   }
 
@@ -67,7 +67,7 @@ export default class TagsIndexController extends Controller {
   sortByCount(event) {
     event?.preventDefault();
     this.setProperties({
-      sortProperties: ["totalCount:desc", "id"],
+      sortProperties: ["totalCount:desc", "name"],
       sortedByCount: true,
       sortedByName: false,
     });
