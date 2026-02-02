@@ -113,6 +113,16 @@
     padding: var(--space-1);
   }
 
+  .dropdown-menu__item .btn {
+    display: inline-flex;
+    gap: var(--d-sidebar-section-link-prefix-margin-right);
+  }
+
+  .dropdown-menu__item .btn .svg-icon {
+    width: var(--d-sidebar-section-link-prefix-width);
+    margin-right: 0;
+  }
+
   .sidebar-more-section-content .sidebar-row {
     padding-block: 0;
   }
