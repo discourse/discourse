@@ -65,7 +65,13 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
     context "when admin has manually opted out" do
       before { SiteSetting.enable_upload_debug_mode = false }
 
-      it { is_expected.to fail_a_policy(:admin_has_not_manually_opted_out) }
+      it { is_expected.to fail_a_policy(:admin_has_not_manually_toggled) }
+    end
+
+    context "when admin has manually opted in" do
+      before { SiteSetting.enable_upload_debug_mode = true }
+
+      it { is_expected.to fail_a_policy(:admin_has_not_manually_toggled) }
     end
 
     context "when everything's ok" do
