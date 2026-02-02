@@ -35,7 +35,7 @@ export default class AdminEmojis extends Service {
   }
 
   get sortedEmojis() {
-    return this.filteredEmojis.sort((a, b) => a.name.localeCompare(b.name));
+    return this.filteredEmojis.toSorted((a, b) => a.name.localeCompare(b.name));
   }
 
   get emojiGroups() {
