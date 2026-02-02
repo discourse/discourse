@@ -30,7 +30,7 @@ jobs:
         github.repository_owner == 'discourse' && (
           matrix.build_type == 'system' && (matrix.target == 'core-plugins' || matrix.target == 'official-plugins')
           && 'cdck-linux-16-core'
-          || 'cdck-linux-8-core'
+          || 'testing'
         )
         || 'ubuntu-latest'
       }}
