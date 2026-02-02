@@ -28,9 +28,10 @@ class Search
   end
 
   # Patterns that indicate a valid search even without meeting minimum term length
-  # Includes shortcuts (l, r, t) and advanced filter syntax
+  # Includes shortcuts (l, r) and advanced filter syntax
+  # Note: 't' is NOT included because it's a modifier (in:title) not a standalone filter
   VALID_SEARCH_SHORTCUT_PATTERN =
-    /\A[lrt]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
+    /\A[lr]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
 
   def self.valid_search_shortcut?(term)
     return false if term.blank?

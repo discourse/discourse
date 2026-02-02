@@ -1543,6 +1543,19 @@ RSpec.describe Search do
 
         expect(search.valid?).to eq(false)
       end
+
+      it "does not allow 't' shortcut alone as a valid search shortcut" do
+        # 't' is a modifier (search in titles) not a standalone filter
+        # It should not pass controller validation as a valid search shortcut
+        expect(Search.valid_search_shortcut?("t")).to eq(false)
+      end
+
+      it "marks 't' alone as an invalid search" do
+        search = Search.new("t", type_filter: "topic")
+        search.execute
+
+        expect(search.valid?).to eq(false)
+      end
     end
 
     context "with security" do

@@ -222,8 +222,9 @@ export function getSearchKey(args) {
 }
 
 // Patterns that indicate a valid search even without a traditional search term
+// Note: 't' is NOT included because it's a modifier (in:title) not a standalone filter
 const SEARCH_SYNTAX_PATTERNS =
-  /^(l|r|t)$|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i;
+  /^(l|r)$|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i;
 
 export function isValidSearchTerm(searchTerm, siteSettings) {
   if (!searchTerm) {
