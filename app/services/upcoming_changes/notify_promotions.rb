@@ -56,7 +56,7 @@ class UpcomingChanges::NotifyPromotions
         on_failed_policy(:change_has_not_already_been_notified_about_promotion) do |policy|
           status_hash[
             :error
-          ] = "Setting #{setting_name} has already notified admins about promotion",
+          ] = "Setting #{setting_name} has already notified admins about promotion"
           status_hash[:error_key] = :already_notified_about_promotion
         end
 
