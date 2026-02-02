@@ -53,7 +53,8 @@
       .btn-sidebar-toggle,
       .topic-map__views-trigger,
       .topic-map__likes-trigger,
-      .topic-map__users-trigger
+      .topic-map__users-trigger,
+      .user-menu-tab
     ) {
       padding-block: 0;
       height: var(--button-height);
@@ -64,7 +65,6 @@
     padding-inline: var(--space-2);
   }
 
-  .dropdown-menu__item .btn,
   .c-footer button {
     height: unset !important;
   }
@@ -96,6 +96,25 @@
   .topic-replies-toggle-wrapper .topics-replies-toggle.active:hover {
     background-color: var(--d-nav-bg-color--active);
     color: var(--d-nav-color--active);
+  }
+
+  // dropdown menu
+  .dropdown-menu__item .btn,
+  .dropdown-menu__item .sidebar-section-link {
+    height: var(--d-sidebar-row-height) !important;
+    padding-inline: var(--d-sidebar-row-horizontal-padding);
+    border-radius: var(--d-border-radius);
+  }
+
+  .dropdown-menu {
+    display: flex;
+    flex-direction: column;
+    gap: var(--d-sidebar-vertical-gap);
+    padding: var(--space-1);
+  }
+
+  .sidebar-more-section-content .sidebar-row {
+    padding-block: 0;
   }
 
   // welcome banner
