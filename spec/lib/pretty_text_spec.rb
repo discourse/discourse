@@ -1913,7 +1913,7 @@ RSpec.describe PrettyText do
     expect(PrettyText.cook(" http://somewhere.com/?abc#known")).not_to include("hashtag")
   end
 
-  it "does not trigger when preceeded with a slash" do
+  it "does not trigger when preceded with a slash" do
     expect(PrettyText.cook("/#known")).not_to include("hashtag")
     expect(PrettyText.cook("test/#known")).not_to include("hashtag")
   end

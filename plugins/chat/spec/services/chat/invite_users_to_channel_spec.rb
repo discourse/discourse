@@ -39,7 +39,7 @@ RSpec.describe Chat::InviteUsersToChannel do
         expect(notification).to be_nil
       end
 
-      it "doesnt create notifications for suspended users" do
+      it "doesn't create notifications for suspended users" do
         user_1.update!(suspended_till: 2.days.from_now, suspended_at: Time.now)
 
         result
@@ -48,7 +48,7 @@ RSpec.describe Chat::InviteUsersToChannel do
         expect(notification).to be_nil
       end
 
-      it "doesnt create notifications for users with disabled chat" do
+      it "doesn't create notifications for users with disabled chat" do
         user_1.user_option.update!(chat_enabled: false)
 
         result

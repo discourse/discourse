@@ -1012,12 +1012,12 @@ HTML
       theme.save!
     end
 
-    it "returns the value of the setting when given a string represeting the setting name" do
+    it "returns the value of the setting when given a string representing the setting name" do
       expect(theme.get_setting("enabled")).to eq(false)
       expect(theme.get_setting("some_value")).to eq("hello")
     end
 
-    it "returns the value of the setting when given a symbol represeting the setting name" do
+    it "returns the value of the setting when given a symbol representing the setting name" do
       expect(theme.get_setting(:enabled)).to eq(false)
       expect(theme.get_setting(:some_value)).to eq("hello")
     end

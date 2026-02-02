@@ -1315,7 +1315,7 @@ RSpec.describe TagsController do
           [
             Fabricate(
               :tag,
-              name: "used_publically",
+              name: "used_publicly",
               public_topic_count: 2,
               staff_topic_count: 2,
               pm_topic_count: 0,
@@ -1361,7 +1361,7 @@ RSpec.describe TagsController do
           expect { delete "/tags/unused.json" }.to change { Tag.count }.by(-2) &
             change { UserHistory.count }.by(1)
           expect(Tag.pluck(:name)).to contain_exactly(
-            "used_publically",
+            "used_publicly",
             "used_privately",
             "used_everywhere",
           )
