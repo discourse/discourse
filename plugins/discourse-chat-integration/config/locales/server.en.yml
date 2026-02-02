@@ -90,8 +90,8 @@ en:
     #######################################
     chat_integration_groupme_enabled: "Enable the Groupme chat integration provider"
     chat_integration_groupme_excerpt_length: "Groupme post excerpt length"
-    chat_integration_groupme_bot_ids: "*required* Bot IDs, separated by ',' if there are multiple"
-    chat_integration_groupme_instance_names: " *required* Name of the GroupMe chat, separated by ',' if there are multiple (same order as Bot IDs)"
+    chat_integration_groupme_bot_ids: "*required* Bot IDs, seperated by ',' if there are multiple"
+    chat_integration_groupme_instance_names: " *required* Name of the GroupMe chat, seperated by ',' if there are multiple (same order as Bot IDs)"
 
     ###########################################
     ######## MICROSOFT TEAMS SETTINGS #########
@@ -159,10 +159,10 @@ en:
         create:
           created: "Rule created successfully"
           updated: "Rule updated successfully"
-          error: "Sorry, an error occurred while creating that rule."
+          error: "Sorry, an error occured while creating that rule."
         delete:
           success: "Rule deleted successfully"
-          error: "Sorry, an error occurred while deleting that rule. Run `/discourse status` for a list of rules."
+          error: "Sorry, an error occured while deleting that rule. Run `/discourse status` for a list of rules."
         not_found:
           tag: "The *%{name}* tag cannot be found."
           category: "The *%{name}* category cannot be found. Available categories: *%{list}*"
@@ -229,10 +229,10 @@ en:
         create:
           created: "Rule created successfully"
           updated: "Rule updated successfully"
-          error: "Sorry, an error occurred while creating that rule."
+          error: "Sorry, an error occured while creating that rule."
         delete:
           success: "Rule deleted successfully"
-          error: "Sorry, an error occurred while deleting that rule. Run <code>/status</code> for a list of rules."
+          error: "Sorry, an error occured while deleting that rule. Run <code>/status</code> for a list of rules."
         not_found:
           tag: "The <b>%{name}</b> tag cannot be found."
           category: "The <b>%{name}</b> category cannot be found. Available categories: <b>%{list}</b>"
@@ -271,10 +271,10 @@ en:
         create:
           created: "Rule created successfully"
           updated: "Rule updated successfully"
-          error: "Sorry, an error occurred while creating that rule."
+          error: "Sorry, an error occured while creating that rule."
         delete:
           success: "Rule deleted successfully"
-          error: "Sorry, an error occurred while deleting that rule. Run `/discourse status` for a list of rules."
+          error: "Sorry, an error occured while deleting that rule. Run `/discourse status` for a list of rules."
         not_found:
           tag: "The *%{name}* tag cannot be found."
           category: "The *%{name}* category cannot be found. Available categories: *%{list}*"
