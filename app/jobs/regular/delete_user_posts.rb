@@ -5,10 +5,10 @@ module Jobs
     sidekiq_options queue: "critical"
 
     def execute(args)
-      user = User.find(args[:user_id])
+      user = User.find_by(id: args[:user_id])
       return if user.nil?
 
-      acting_user = User.find(args[:acting_user_id]) if args[:acting_user_id]
+      acting_user = User.find_by(id: args[:acting_user_id])
       return if acting_user.nil?
 
       guardian = Guardian.new(acting_user)
