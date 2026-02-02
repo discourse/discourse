@@ -266,6 +266,15 @@
   }
 
   // chat
+  .c-navbar {
+    align-items: center;
+  }
+
+  .chat-composer .chat-composer-button,
+  .chat-composer .chat-composer-separator {
+    align-self: center;
+  }
+
   .c-navbar .fk-d-tooltip__trigger {
     height: 100%;
     align-items: center;
