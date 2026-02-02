@@ -51,10 +51,6 @@ export default class PostTextSelectionToolbar extends Component {
     );
   }
 
-  get quoteSharingShowLabel() {
-    return this.quoteSharingSources.length > 1;
-  }
-
   get shareUrl() {
     return getAbsoluteURL(
       postUrl(this.topic.slug, this.topic.id, this.post.post_number)
@@ -139,32 +135,20 @@ export default class PostTextSelectionToolbar extends Component {
           />
 
           {{#if this.quoteSharingEnabled}}
-            <span class="quote-sharing">
-              {{#if this.quoteSharingShowLabel}}
-                <DButton
-                  @icon="share"
-                  @label="post.quote_share"
-                  class="btn-flat quote-share-label"
-                />
-              {{/if}}
+            {{#each this.quoteSharingSources as |source|}}
+              <DButton
+                @action={{fn this.share source}}
+                @translatedTitle={{source.title}}
+                @icon={{source.icon}}
+                class="btn-flat"
+              />
+            {{/each}}
 
-              <span class="quote-share-buttons">
-                {{#each this.quoteSharingSources as |source|}}
-                  <DButton
-                    @action={{fn this.share source}}
-                    @translatedTitle={{source.title}}
-                    @icon={{source.icon}}
-                    class="btn-flat"
-                  />
-                {{/each}}
-
-                <PluginOutlet
-                  @name="quote-share-buttons-after"
-                  @connectorTagName="span"
-                  @outletArgs={{lazyHash data=@data}}
-                />
-              </span>
-            </span>
+            <PluginOutlet
+              @name="quote-share-buttons-after"
+              @connectorTagName="span"
+              @outletArgs={{lazyHash data=@data}}
+            />
           {{/if}}
         </PluginOutlet>
       </div>
