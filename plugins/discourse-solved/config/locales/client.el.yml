@@ -30,8 +30,8 @@ el:
         all: "όλα"
         solved: "λύθηκε"
         unsolved: "άλυτο"
-      no_solved_topics_title: "Δεν έχετε λύσει κανένα θέμα ακόμα"
-      no_solved_topics_title_others: "Ο χρήστης %{username} δεν έχει λύσει κανένα θέμα ακόμα"
+      no_solved_topics_title: "Δεν έχετε λύσει κανένα θέμα ακόμη"
+      no_solved_topics_title_others: "Ο χρήστης %{username} δεν έχει λύσει κανένα θέμα ακόμη"
       marked_solved_by: "Σημάνθηκε ως λυμένο από %{user}"
       no_answer:
         title: Έχει απαντηθεί η ερώτηση σας;
@@ -49,7 +49,7 @@ el:
     admin:
       web_hooks:
         solved_event:
-          group_name: "Επιλυμένη εκδήλωση"
+          group_name: "Συμβάν επίλυσης"
       api:
         scopes:
           descriptions:

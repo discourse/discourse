@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 el:
+  site_settings:
+    user_invited_score_value: "Η τιμή της επευφημίας που απονέμεται όταν ένας χρήστης έχει μια πρόσκληση εξαργυρωμένη"

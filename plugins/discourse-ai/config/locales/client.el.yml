@@ -90,6 +90,7 @@ el:
         filters:
           all: "Όλα"
           reset: "Επαναφορά"
+        no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
         search:
           name: "Αναζήτηση"
         ai_helper:
@@ -161,6 +162,7 @@ el:
         back: "Πίσω"
         export: "Εξαγωγή"
         import: "Εισαγωγή"
+        no_tools: "Δεν έχετε δημιουργήσει κανένα εργαλείο ακόμη"
         name: "Όνομα"
         description: "Περιγραφή"
         summary: "Περίληψη"
@@ -170,6 +172,7 @@ el:
         edit: "Επεξεργασία"
         delete: "Σβήσιμο"
       llms:
+        no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
@@ -226,6 +229,7 @@ el:
         providers:
           google: "Google"
           fake: "Προσαρμοσμένο"
+        semantic_search_loading: "Γίνεται αναζήτηση περισσότερων αποτελεσμάτων χρησιμοποιώντας AI"
       ai_bot:
         llm: "Μοντέλο"
         try_again: "Δοκιμάστε ξανά"

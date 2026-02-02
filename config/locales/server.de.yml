@@ -5093,6 +5093,7 @@ de:
       confirm_body: "Erfolgreich! Benachrichtigungen wurden aktiviert."
       custom: "Benachrichtigung von %{username} auf %{site_title}"
   staff_action_logs:
+    redacted: "[Inhalt nicht sichtbar]"
     json_too_long: "Werte werden nicht protokolliert, weil sie die Grenzwerte für die Spaltenlänge überschreiten"
     not_found: "nicht gefunden"
     unknown: "unbekannt"

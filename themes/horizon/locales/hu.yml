@@ -6,7 +6,10 @@
 
 hu:
   solved: "Megoldva"
+  unsolved: "Megoldatlan"
   posted: "közzétett"
+  by_username: "szerző: @%{username}"
+  replied: "válaszolt"
   vote_count:
     one: "%{count} szavazat"
     other: "%{count} szavazat"
@@ -18,3 +21,6 @@ hu:
     other: "%{count} válasz"
   theme_metadata:
     description: "Egy egyszerű, gyönyörű téma, amely javítja a Discourse webhelyek élményét."
+    settings:
+      topic_card_high_context:
+        description: "Ha engedélyezve van, további kontextust jelenít meg a témakártyákon, beleértve a címkéket, a részleteket, a megoldott állapotot, a hozzárendelt felhasználókat és a szavazatok számát (kísérleti)"
