@@ -10,7 +10,7 @@ en:
       settings: "Settings"
       no_providers: "You need to enable some providers in the plugin settings"
       channels_with_errors: "Some channels for this provider failed last time messages were sent. Click the error icon(s) to learn more."
-      channel_exception: "An unknown error occured when a message was last sent to this channel."
+      channel_exception: "An unknown error occurred when a message was last sent to this channel."
       group_mention_template: "Mentions of: @%{name}"
       group_message_template: "Messages to: @%{name}"
       choose_group: "(choose a group)"
@@ -27,7 +27,7 @@ en:
         topic: "Topic"
         send: "Send Test Message"
         close: "Close"
-        error: "An unknown error occured while sending the message. Check the site logs for more information."
+        error: "An unknown error occurred while sending the message. Check the site logs for more information."
         success: "Message sent successfully"
       type:
         normal: Normal

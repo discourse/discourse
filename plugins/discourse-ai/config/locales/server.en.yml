@@ -127,7 +127,7 @@ en:
 
     ai_bot_enabled: "Enable the AI Bot module."
     ai_bot_enabled_llms: "LLMs available to select for AI bot conversations"
-    ai_bot_enable_chat_warning: "Display a warning when PM chat is initiated. Can be overriden by editing the translation string: discourse_ai.ai_bot.pm_warning"
+    ai_bot_enable_chat_warning: "Display a warning when PM chat is initiated. Can be overridden by editing the translation string: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "When the GPT Bot has access to the PM, it will reply to members of these groups."
     ai_bot_debugging_allowed_groups: "Allow these groups to see a debug button on posts which displays the raw AI request and response"
     ai_bot_public_sharing_allowed_groups: "Allow these groups to share AI personal messages with the public via a unique publicly available link. Note: if your site requires login, shares will also require login."
@@ -337,7 +337,7 @@ en:
       flag_reason: "Flagged as spam by <a href='%{url}'>Discourse AI</a>"
       silence_reason: "User silenced automatically by <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Invalid error type provided"
-      unexpected: "An unexpected error occured"
+      unexpected: "An unexpected error occurred"
       bot_user_update_failed: "Failed to update the spam scanning bot user"
       configuration_missing: "The AI spam detection configuration is missing. Add configuration in the 'Admin > Plugins > Discourse AI > Spam' before enabling."
       logging_subject: "Spam detection"
