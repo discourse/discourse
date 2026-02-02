@@ -40,12 +40,13 @@ class UpcomingChanges::Toggle
   end
 
   def toggle(params:, guardian:, options:)
+    context[:previous_value] = SiteSetting.public_send(params.setting_name)
+
     # TODO (martin) Remove this once we release upcoming changes,
     # otherwise it will be confusing for people to see log messages
     # about upcoming changes via "What's new?" experimental toggles
     # before we update that UI.
     if SiteSetting.enable_upcoming_changes
-      context[:previous_value] = SiteSetting.public_send(params.setting_name)
       SiteSetting.send("#{params.setting_name}=", params.enabled)
     else
       SiteSetting.public_send("#{params.setting_name}=", params.enabled)

@@ -11,6 +11,8 @@
 #
 # Admins will only be notified once for each upcoming change,
 # both via a staff action log and a Notification in the UI.
+# We don't need to notify admins if they have manually opted in
+# or out of the change, since that overrides the automatic promotion.
 class UpcomingChanges::NotifyPromotion
   include Service::Base
 
@@ -26,7 +28,7 @@ class UpcomingChanges::NotifyPromotion
   policy :setting_is_available
   policy :meets_or_exceeds_status
   policy :change_has_not_already_been_notified_about_promotion
-  policy :admin_has_not_manually_opted_out
+  policy :admin_has_not_manually_toggled
 
   try do
     step :log_promotion
@@ -53,10 +55,8 @@ class UpcomingChanges::NotifyPromotion
     !params.changes_already_notified_about_promotion.include?(params.setting_name)
   end
 
-  def admin_has_not_manually_opted_out(params:)
-    # If they have opted out this will return false, since it will
-    # return true if the change has exceeded the promotion status.
-    UpcomingChanges.resolved_value(params.setting_name)
+  def admin_has_not_manually_toggled(params:)
+    !SiteSetting.modified.key?(params.setting_name)
   end
 
   def log_promotion(params:, guardian:)

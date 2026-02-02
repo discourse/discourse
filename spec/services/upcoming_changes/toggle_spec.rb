@@ -61,6 +61,17 @@ RSpec.describe UpcomingChanges::Toggle do
               }.by(1)
             end
 
+            it "logs the correct previous value" do
+              result
+              history =
+                UserHistory.find_by(
+                  action: UserHistory.actions[:change_site_setting],
+                  subject: "display_local_time_in_user_card",
+                )
+              expect(history.previous_value).to eq("false")
+              expect(history.new_value).to eq("true")
+            end
+
             it "does not create an UpcomingChangeEvent" do
               expect { result }.not_to change { UpcomingChangeEvent.count }
             end
