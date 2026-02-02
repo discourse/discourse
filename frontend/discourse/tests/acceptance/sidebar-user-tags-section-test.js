@@ -31,11 +31,11 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
   });
 
   needs.pretender((server, helper) => {
-    server.get("/tag/:tagSlug/:tagId/notifications.json", (request) => {
+    server.get("/tag/:tagId/notifications.json", (request) => {
       return helper.response({
         tag_notification: {
           id: request.params.tagId,
-          name: request.params.tagSlug,
+          name: `tag-${request.params.tagId}`,
         },
       });
     });

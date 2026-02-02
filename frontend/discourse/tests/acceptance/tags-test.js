@@ -13,7 +13,7 @@ acceptance("Tags", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
-    server.get("/tag/test/42/notifications.json", () =>
+    server.get("/tag/42/notifications.json", () =>
       helper.response({
         tag_notification: { id: 42, name: "test", notification_level: 2 },
       })
@@ -129,7 +129,7 @@ acceptance("Tags listed by group", function (needs) {
     tags_listed_by_group: true,
   });
   needs.pretender((server, helper) => {
-    server.get("/tag/regular-tag/1/notifications.json", () =>
+    server.get("/tag/1/notifications.json", () =>
       helper.response({
         tag_notification: { id: 1, name: "regular-tag", notification_level: 1 },
       })
@@ -157,7 +157,7 @@ acceptance("Tags listed by group", function (needs) {
       })
     );
 
-    server.get("/tag/staff-only-tag/2/notifications.json", () =>
+    server.get("/tag/2/notifications.json", () =>
       helper.response({
         tag_notification: {
           id: 2,
@@ -328,7 +328,7 @@ acceptance("Tag info", function (needs) {
     tags_listed_by_group: true,
   });
   needs.pretender((server, helper) => {
-    server.get("/tag/planters/12/notifications.json", () =>
+    server.get("/tag/12/notifications.json", () =>
       helper.response({
         tag_notification: {
           id: 12,
@@ -361,7 +361,7 @@ acceptance("Tag info", function (needs) {
       })
     );
 
-    server.get("/tag/happy-monkey/13/notifications.json", () =>
+    server.get("/tag/13/notifications.json", () =>
       helper.response({
         tag_notification: {
           id: 13,
@@ -394,7 +394,7 @@ acceptance("Tag info", function (needs) {
       })
     );
 
-    server.get("/tag/happy-monkey2/14/notifications.json", () =>
+    server.get("/tag/14/notifications.json", () =>
       helper.response({
         tag_notification: {
           id: 14,
@@ -424,19 +424,6 @@ acceptance("Tag info", function (needs) {
           ],
           topics: [],
         },
-      })
-    );
-
-    // notification routes for category+tag pages
-    // the route params extraction may vary, handle both patterns
-    server.get("/tag/planters/12/notifications.json", () =>
-      helper.response({
-        tag_notification: { id: 12, name: "planters", notification_level: 1 },
-      })
-    );
-    server.get("/tag/2/planters/notifications.json", () =>
-      helper.response({
-        tag_notification: { id: 12, name: "planters", notification_level: 1 },
       })
     );
 
@@ -485,7 +472,7 @@ acceptance("Tag info", function (needs) {
       });
     });
 
-    server.get("/tag/planters/12/info.json", () => {
+    server.get("/tag/12/info.json", () => {
       return helper.response({
         __rest_serializer: "1",
         tag_info: {
@@ -528,7 +515,7 @@ acceptance("Tag info", function (needs) {
         ],
       });
     });
-    server.put("/tag/happy-monkey/13.json", (request) => {
+    server.put("/tag/13.json", (request) => {
       const data = helper.parsePostData(request.requestBody);
       // ID stays the same when renaming - use 13 (original tag ID)
       return helper.response({
@@ -536,7 +523,7 @@ acceptance("Tag info", function (needs) {
       });
     });
 
-    server.get("/tag/happy-monkey/13/info.json", () => {
+    server.get("/tag/13/info.json", () => {
       return helper.response({
         tag_info: {
           id: 13,
@@ -553,16 +540,7 @@ acceptance("Tag info", function (needs) {
       });
     });
 
-    server.get("/tag/happy-monkey2/13/notifications.json", () =>
-      helper.response({
-        tag_notification: {
-          id: 13,
-          name: "happy-monkey2",
-          notification_level: 1,
-        },
-      })
-    );
-
+    // Route for post-rename navigation (tag renamed from happy-monkey to happy-monkey2)
     server.get("/tag/happy-monkey2/13/l/latest.json", () =>
       helper.response({
         users: [],
@@ -574,24 +552,7 @@ acceptance("Tag info", function (needs) {
       })
     );
 
-    server.get("/tag/happy-monkey2/13/info.json", () => {
-      return helper.response({
-        tag_info: {
-          id: 13,
-          name: "happy-monkey2",
-          slug: "happy-monkey2",
-          description: "happy monkey description",
-          topic_count: 1,
-          staff: false,
-          synonyms: [],
-          tag_group_names: [],
-          category_ids: [],
-        },
-        categories: [],
-      });
-    });
-
-    server.delete("/tag/planters/12/synonyms/22.json", () =>
+    server.delete("/tag/12/synonyms/22.json", () =>
       helper.response({ success: true })
     );
 
@@ -824,7 +785,7 @@ acceptance("Tag show - create topic", function (needs) {
     tags_listed_by_group: true,
   });
   needs.pretender((server, helper) => {
-    server.get("/tag/none/0/notifications.json", () => {
+    server.get("/tag/0/notifications.json", () => {
       return helper.response({
         tag_notification: {
           id: 0,
@@ -855,7 +816,7 @@ acceptance("Tag show - create topic", function (needs) {
         },
       });
     });
-    server.get("/tag/all/99/notifications.json", () => {
+    server.get("/tag/99/notifications.json", () => {
       return helper.response({
         tag_notification: {
           id: 99,
@@ -886,7 +847,7 @@ acceptance("Tag show - create topic", function (needs) {
         },
       });
     });
-    server.get("/tag/planters/12/notifications.json", () => {
+    server.get("/tag/12/notifications.json", () => {
       return helper.response({
         tag_notification: {
           id: 12,

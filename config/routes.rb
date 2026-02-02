@@ -1662,25 +1662,35 @@ Discourse::Application.routes.draw do
 
     # Tag Routes - Canonical vs Legacy
     #
-    # Canonical: /tag/:slug/:id - stable URLs using numeric IDs
+    # Canonical:
+    #   - /tag/:slug/:id - for user-facing endpoints with SEO-friendly URLs
+    #   - /tag/:id - for APIs
     # Legacy: /tag/:name - for backward compat, redirects browsers to canonical
     #
-    # The legacy routes can be removed once all external links have migrated.
-    # API consumers can use either format (legacy returns data without redirect).
+
+    scope "/tag/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
+      get "/info" => "tags#info", :as => "tag_info"
+      get "/notifications" => "tags#notifications", :as => "tag_notifications"
+      put "/notifications" => "tags#update_notifications"
+      put "/" => "tags#update", :as => "tag_update"
+      delete "/" => "tags#destroy", :as => "tag_destroy"
+      post "/synonyms" => "tags#create_synonyms", :as => "tag_synonyms"
+      delete "/synonyms/:synonym_id" => "tags#destroy_synonym"
+    end
+
     scope "/tag/:tag_slug/:tag_id", constraints: { tag_id: /\d+/ } do
       constraints format: :json do
         get "/" => "tags#show", :as => "tag_show"
-        get "/info" => "tags#info"
-        get "/notifications" => "tags#notifications"
-        put "/notifications" => "tags#update_notifications"
-        put "/" => "tags#update"
-        delete "/" => "tags#destroy"
-        post "/synonyms" => "tags#create_synonyms"
-        delete "/synonyms/:synonym_id" => "tags#destroy_synonym"
 
         Discourse.filters.each do |filter|
           get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}"
         end
+      end
+
+      constraints format: :html do
+        get "/" => "tags#show"
+
+        Discourse.filters.each { |filter| get "/l/#{filter}" => "tags#show_#{filter}" }
       end
 
       constraints format: :rss do

@@ -90,11 +90,7 @@ export default class TagShowRoute extends DiscourseRoute {
 
     let tagNotification;
     if (tag && slug !== NONE && this.currentUser && !additionalTags) {
-      // encode as "slug/id" string so store treats it as single record lookup
-      tagNotification = await this.store.find(
-        "tagNotification",
-        `${slug}/${id}`
-      );
+      tagNotification = await this.store.find("tagNotification", id);
     }
 
     let category = params.category_slug_path_with_id

@@ -253,7 +253,14 @@ class TagsController < ::ApplicationController
           new_value: tag.name,
         )
       end
-      render json: { tag: { id: tag.id, name: tag.name, description: tag.description } }
+      render json: {
+               tag: {
+                 id: tag.id,
+                 name: tag.name,
+                 slug: tag.slug,
+                 description: tag.description,
+               },
+             }
     else
       render_json_error tag.errors.full_messages
     end

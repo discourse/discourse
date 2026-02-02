@@ -89,9 +89,7 @@ export default class TagInfo extends Component {
       return;
     }
     this.set("loading", true);
-    const findArgs = this.tag.id
-      ? `${this.tag.slug}/${this.tag.id}`
-      : this.tag.name;
+    const findArgs = this.tag.id || this.tag.name;
     return this.store
       .find("tag-info", findArgs)
       .then((result) => {
@@ -124,9 +122,8 @@ export default class TagInfo extends Component {
   @action
   unlinkSynonym(synonym, event) {
     event?.preventDefault();
-    const slug = this.tagInfo.slug;
     const id = this.tagInfo.id;
-    ajax(`/tag/${slug}/${id}/synonyms/${synonym.id}.json`, {
+    ajax(`/tag/${id}/synonyms/${synonym.id}.json`, {
       type: "DELETE",
     })
       .then(() => removeValueFromArray(this.tagInfo.synonyms, synonym))
@@ -229,9 +226,8 @@ export default class TagInfo extends Component {
         })
       ),
       didConfirm: () => {
-        const slug = this.tagInfo.slug;
         const id = this.tagInfo.id;
-        return ajax(`/tag/${slug}/${id}/synonyms.json`, {
+        return ajax(`/tag/${id}/synonyms.json`, {
           type: "POST",
           data: {
             tags: this.newSynonyms.map((t) =>

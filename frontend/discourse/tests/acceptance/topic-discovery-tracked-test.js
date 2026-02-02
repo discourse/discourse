@@ -22,7 +22,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
       return helper.response(cloneJSON(topicFixtures["/latest.json"]));
     });
 
-    server.get("/tag/:tag_slug/:tag_id/notifications.json", () => {
+    server.get("/tag/:tag_id/notifications.json", () => {
       return helper.response({
         tag_notification: {
           id: "test",

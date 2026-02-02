@@ -50,7 +50,7 @@ acceptance("Search - Anonymous", function (needs) {
       });
     });
 
-    server.get("/tag/:tag_slug/:tag_id/notifications.json", () => {
+    server.get("/tag/:tag_id/notifications.json", () => {
       return helper.response({
         tag_notification: { id: 1, name: "important", notification_level: 2 },
       });
@@ -831,8 +831,8 @@ acceptance("Search - with tagging enabled", function (needs) {
       return helper.response(searchFixtures["search/query"]);
     });
 
-    // canonical format: /tag/:tag_slug/:tag_id
-    server.get("/tag/:tag_slug/:tag_id/notifications.json", () => {
+    // canonical format: /tag/:tag_id
+    server.get("/tag/:tag_id/notifications.json", () => {
       return helper.response({
         tag_notification: { id: 1, name: "dev", notification_level: 2 },
       });
