@@ -180,7 +180,7 @@ acceptance("Review", function (needs) {
     assert.strictEqual(requests.length, 1);
     assert.strictEqual(requests[0].queryParams.categoryId, "6");
     await tags.fillInFilter("monkey");
-    await tags.selectRowByValue("monkey");
+    await tags.selectRowByName("monkey");
 
     await fillIn(".editable-field.payload-raw textarea", "new raw contents");
     await click(`${topic} .reviewable-action.save-edit`);

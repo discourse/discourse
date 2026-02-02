@@ -9,6 +9,13 @@ RSpec.describe TagSerializer do
   fab!(:topic_in_public_category) { Fabricate(:topic, tags: [tag]) }
   fab!(:topic_in_private_category) { Fabricate(:topic, category: private_category, tags: [tag]) }
 
+  describe "#slug" do
+    it "includes the slug attribute" do
+      serialized = described_class.new(tag, scope: Guardian.new(user), root: false).as_json
+      expect(serialized[:slug]).to eq(tag.slug)
+    end
+  end
+
   describe "#topic_count" do
     it "should return the value of `Tag#public_topic_count` for a non-staff user" do
       serialized = described_class.new(tag, scope: Guardian.new(user), root: false).as_json

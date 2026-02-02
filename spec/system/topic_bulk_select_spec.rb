@@ -97,9 +97,9 @@ describe "Topic bulk select", type: :system do
 
       topic_bulk_actions_modal.tag_selector.expand
       topic_bulk_actions_modal.tag_selector.search(tag1.name)
-      topic_bulk_actions_modal.tag_selector.select_row_by_value(tag1.name)
+      topic_bulk_actions_modal.tag_selector.select_row_by_name(tag1.name)
       topic_bulk_actions_modal.tag_selector.search(tag2.name)
-      topic_bulk_actions_modal.tag_selector.select_row_by_value(tag2.name)
+      topic_bulk_actions_modal.tag_selector.select_row_by_name(tag2.name)
 
       topic_bulk_actions_modal.click_bulk_topics_confirm
 
@@ -149,9 +149,9 @@ describe "Topic bulk select", type: :system do
 
         topic_bulk_actions_modal.tag_selector.expand
         topic_bulk_actions_modal.tag_selector.search(restricted_tag.name)
-        topic_bulk_actions_modal.tag_selector.select_row_by_value(restricted_tag.name)
+        topic_bulk_actions_modal.tag_selector.select_row_by_name(restricted_tag.name)
         topic_bulk_actions_modal.tag_selector.search(tag1.name)
-        topic_bulk_actions_modal.tag_selector.select_row_by_value(tag1.name)
+        topic_bulk_actions_modal.tag_selector.select_row_by_name(tag1.name)
 
         topic_bulk_actions_modal.click_bulk_topics_confirm
 

@@ -57,6 +57,7 @@ export default class AiSplitTopicSuggester extends Component {
         } else if (this.args.mode === this.SUGGESTION_TYPES.tag) {
           this.suggestions = result.assistant.map((s) => {
             return {
+              id: s.id,
               name: s.name,
               count: s.count,
             };
@@ -148,7 +149,7 @@ export default class AiSplitTopicSuggester extends Component {
               <li data-name={{suggestion.name}} data-value={{index}}>
                 <DButton
                   @translatedLabel={{suggestion.name}}
-                  @action={{fn this.applySuggestion suggestion.name menu}}
+                  @action={{fn this.applySuggestion suggestion menu}}
                 >
                   <span class="topic-count">x{{suggestion.count}}</span>
                 </DButton>

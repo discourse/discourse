@@ -908,8 +908,8 @@ acceptance(
 
       const tags = selectKit("#reply-control .mini-tag-chooser");
       await tags.expand();
-      await tags.selectRowByValue("monkey");
-      await tags.selectRowByValue("gazelle");
+      await tags.selectRowByName("monkey");
+      await tags.selectRowByName("gazelle");
 
       await click("#reply-control .save-or-cancel button");
 

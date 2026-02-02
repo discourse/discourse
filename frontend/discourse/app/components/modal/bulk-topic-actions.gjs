@@ -191,10 +191,16 @@ export default class BulkTopicActions extends Component {
         );
         break;
       case "append-tags":
-        this.performAndRefresh({ type: "append_tags", tags: this.tags });
+        this.performAndRefresh({
+          type: "append_tags",
+          tag_ids: this.tags?.map((t) => t.id),
+        });
         break;
       case "replace-tags":
-        this.performAndRefresh({ type: "change_tags", tags: this.tags });
+        this.performAndRefresh({
+          type: "change_tags",
+          tag_ids: this.tags?.map((t) => t.id),
+        });
         break;
       case "remove-tags":
         this.performAndRefresh({ type: "remove_tags" });

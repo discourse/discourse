@@ -447,7 +447,8 @@ export default class SearchAdvancedOptions extends Component {
 
   @action
   onChangeSearchTermForTags(tags) {
-    this.set("searchedTerms.tags", tags.length ? tags : null);
+    const tagNames = tags.map((t) => (typeof t === "object" ? t.name : t));
+    this.set("searchedTerms.tags", tagNames.length ? tagNames : null);
     this._updateSearchTermForTags();
   }
 

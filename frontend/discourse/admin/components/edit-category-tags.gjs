@@ -36,6 +36,11 @@ export default class EditCategoryTags extends buildCategoryPanel("tags") {
     removeValueFromArray(this.category.required_tag_groups, rtg);
   }
 
+  @action
+  onAllowedTagsChange(items) {
+    set(this.category, "allowed_tags", items);
+  }
+
   <template>
     <section class="field minimum-required-tags">
       <label for="category-minimum-tags">
@@ -62,7 +67,7 @@ export default class EditCategoryTags extends buildCategoryPanel("tags") {
         @everyTag={{true}}
         @excludeSynonyms={{true}}
         @unlimitedTagCount={{true}}
-        @onChange={{fn (mut this.category.allowed_tags)}}
+        @onChange={{this.onAllowedTagsChange}}
         @options={{hash filterPlaceholder="category.tags_placeholder"}}
       />
     </section>
