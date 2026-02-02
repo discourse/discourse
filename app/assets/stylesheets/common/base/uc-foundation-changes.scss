@@ -55,6 +55,7 @@
       .topic-map__likes-trigger,
       .topic-map__users-trigger
     ) {
+      padding-block: 0;
       height: var(--button-height);
     }
   }
@@ -78,7 +79,7 @@
   }
 
   .navigation-container .nav-pills > li > a {
-    padding: 0.5em 0.65em;
+    padding: 0 0.65em;
     height: var(--button-height);
   }
 
@@ -89,7 +90,7 @@
   .topic-replies-toggle-wrapper .topics-replies-toggle {
     border-radius: var(--d-border-radius);
     height: var(--button-height);
-    padding: 0.5em 0.65em;
+    padding: 0 0.65em;
   }
 
   .topic-replies-toggle-wrapper .topics-replies-toggle.active:hover {
