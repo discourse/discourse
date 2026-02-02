@@ -11,6 +11,7 @@ export default [
       "ember/no-classic-components": "error",
       "ember/no-observers": "error",
       "ember/no-side-effects": "error",
+      "ember/no-tracked-properties-from-args": "error",
       "ember/require-tagless-components": "error",
       "qunit/no-loose-assertions": "error",
     },

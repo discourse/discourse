@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
