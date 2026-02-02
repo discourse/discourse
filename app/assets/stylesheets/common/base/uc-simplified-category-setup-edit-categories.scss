@@ -1,6 +1,12 @@
+@use "lib/viewport";
+
 .uc-enable-simplified-category-creation {
   .select-kit.multi-select.group-chooser {
     width: var(--form-kit-large-input);
+
+    @include viewport.until(sm) {
+      width: 100%;
+    }
   }
 
   div.edit-category {
@@ -109,5 +115,10 @@
       min-height: 2.6em;
       top: var(--space-1);
     }
+  }
+
+  .edit-category .edit-category-footer {
+    padding: 0;
+    margin-bottom: var(--space-4);
   }
 }
