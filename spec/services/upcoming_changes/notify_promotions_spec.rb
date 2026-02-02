@@ -47,11 +47,13 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
           enable_upload_debug_mode: {
             success: false,
             error: "test error",
+            error_key: :unexpected_error,
             backtrace: a_kind_of(Array),
           },
           show_user_menu_avatars: {
             success: false,
             error: "Setting show_user_menu_avatars does not meet or exceed the promotion status",
+            error_key: :does_not_meet_or_exceed_promotion_status,
           },
         )
       end
@@ -68,6 +70,7 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
           show_user_menu_avatars: {
             success: false,
             error: "Setting show_user_menu_avatars does not meet or exceed the promotion status",
+            error_key: :does_not_meet_or_exceed_promotion_status,
           },
         )
       end
@@ -188,6 +191,14 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
           events = DiscourseEvent.track_events { result }
           expect(events.select { |e| e[:event_name] == :upcoming_change_enabled }).to be_empty
         end
+
+        it "returns the correct error and error key" do
+          expect(result[:change_notification_statuses][:enable_upload_debug_mode]).to match(
+            success: false,
+            error: "Setting enable_upload_debug_mode does not meet or exceed the promotion status",
+            error_key: :does_not_meet_or_exceed_promotion_status,
+          )
+        end
       end
 
       context "when settings are already notified about promotion" do
@@ -217,6 +228,14 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
             end,
           ).to be_empty
         end
+
+        it "returns the correct error and error key" do
+          expect(result[:change_notification_statuses][:enable_upload_debug_mode]).to match(
+            success: false,
+            error: "Setting enable_upload_debug_mode has already notified admins about promotion",
+            error_key: :already_notified_about_promotion,
+          )
+        end
       end
 
       context "when settings are opted out" do
@@ -239,6 +258,15 @@ RSpec.describe UpcomingChanges::NotifyPromotions do
                 e[:params].first == :enable_upload_debug_mode
             end,
           ).to be_empty
+        end
+
+        it "returns the correct error and error key" do
+          expect(result[:change_notification_statuses][:enable_upload_debug_mode]).to match(
+            success: false,
+            error:
+              "Setting enable_upload_debug_mode has been manually opted in or out by an admin, we did not notify admins about promotion",
+            error_key: :already_manually_toggled,
+          )
         end
       end
     end

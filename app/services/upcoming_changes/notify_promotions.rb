@@ -29,6 +29,8 @@ class UpcomingChanges::NotifyPromotions
     SiteSetting.upcoming_change_site_settings.index_with do |setting_name|
       status_hash = {}
 
+      # NOTE: Make sure to handle additional error_key values in the
+      # CheckUpcomingChanges job's verbose_log.
       UpcomingChanges::NotifyPromotion.call(
         params: {
           setting_name: setting_name.to_sym,
@@ -41,28 +43,33 @@ class UpcomingChanges::NotifyPromotions
 
         on_failed_policy(:setting_is_available) do |policy|
           status_hash[:error] = "Setting #{setting_name} is not available"
+          status_hash[:error_key] = :setting_not_available
         end
 
         on_failed_policy(:meets_or_exceeds_status) do |policy|
           status_hash[
             :error
           ] = "Setting #{setting_name} does not meet or exceed the promotion status"
+          status_hash[:error_key] = :does_not_meet_or_exceed_promotion_status
         end
 
         on_failed_policy(:change_has_not_already_been_notified_about_promotion) do |policy|
           status_hash[
             :error
           ] = "Setting #{setting_name} has already notified admins about promotion"
+          status_hash[:error_key] = :already_notified_about_promotion
         end
 
         on_failed_policy(:admin_has_not_manually_toggled) do |policy|
           status_hash[
             :error
           ] = "Setting #{setting_name} has been manually opted in or out by an admin, we did not notify admins about promotion"
+          status_hash[:error_key] = :already_manually_toggled
         end
 
         on_exceptions do |exception|
           status_hash[:error] = exception.message
+          status_hash[:error_key] = :unexpected_error
           status_hash[:backtrace] = exception.backtrace
         end
       end

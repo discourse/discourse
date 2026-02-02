@@ -278,7 +278,7 @@ RSpec.describe Jobs::CheckUpcomingChanges do
           it "logs the error" do
             track_log_messages do |logger|
               described_class.new.execute({})
-              expect(logger.errors.join("\n")).to include(
+              expect(logger.infos.join("\n")).to include(
                 "Failed to notify about promotion of 'enable_upload_debug_mode': Setting enable_upload_debug_mode does not meet or exceed the promotion status",
               )
             end
