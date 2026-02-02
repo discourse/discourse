@@ -14,6 +14,7 @@ export default [
       "ember/no-tracked-properties-from-args": "error",
       "ember/require-tagless-components": "error",
       "ember/route-path-style": "error",
+      "ember/routes-segments-snake-case": "error",
       "qunit/no-assert-equal": "error",
       "qunit/no-loose-assertions": "error",
     },
