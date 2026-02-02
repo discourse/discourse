@@ -615,6 +615,7 @@ export default class UpsertCategoryGeneral extends Component {
       <@form.Container
         @title={{i18n "category.visibility.title"}}
         class="--radio-cards"
+        @format="large"
       >
         <@form.ConditionalContent
           @activeName={{this.categoryVisibility}}
@@ -649,6 +650,7 @@ export default class UpsertCategoryGeneral extends Component {
             <Content @name="group_restricted">
               <@form.Container
                 @title={{i18n "category.visibility.which_groups_can_access"}}
+                @format="large"
               >
                 <GroupChooser
                   @content={{this.availableAccessGroups}}
