@@ -1114,7 +1114,7 @@ class Search
   def user_search
     return if SiteSetting.hide_user_profiles_from_public && !@guardian.user
 
-    # Exlude B weight from search which is the weight `User#name` is indexed with in `SearchIndexer.update_users_index`
+    # Exclude B weight from search which is the weight `User#name` is indexed with in `SearchIndexer.update_users_index`
     query = ts_query("simple", weight_filter: SiteSetting.enable_names ? nil : "AC")
 
     users =
