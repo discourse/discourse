@@ -492,91 +492,97 @@ export default class UpsertCategoryGeneral extends Component {
         />
       </@form.Field>
 
-      <@form.Container @title={{i18n "category.style"}}>
-        <@form.ConditionalContent
-          @activeName={{or
-            @transientData.style_type
-            @category.styleType
-            "square"
-          }}
-          @onChange={{this.onStyleTypeChange}}
-          as |cc|
-        >
-          <cc.Conditions as |Condition|>
-            <Condition @name="icon">
-              {{i18n "category.styles.icon"}}
-            </Condition>
-            <Condition @name="emoji">
-              {{i18n "category.styles.emoji"}}
-            </Condition>
-            <Condition @name="square">
-              {{i18n "category.styles.square"}}
-            </Condition>
-          </cc.Conditions>
+      <@form.Field
+        @name="style_type"
+        @title={{i18n "category.style"}}
+        @format="large"
+        as |styleField|
+      >
+        <styleField.Custom>
+          <@form.ConditionalContent
+            @activeName={{or styleField.value @category.styleType "square"}}
+            @onChange={{this.onStyleTypeChange}}
+            as |cc|
+          >
+            <cc.Conditions as |Condition|>
+              <Condition @name="icon">
+                {{i18n "category.styles.icon"}}
+              </Condition>
+              <Condition @name="emoji">
+                {{i18n "category.styles.emoji"}}
+              </Condition>
+              <Condition @name="square">
+                {{i18n "category.styles.square"}}
+              </Condition>
+            </cc.Conditions>
 
-          <cc.Contents as |Content|>
-            <Content @name="icon">
-              <@form.Field
-                @name="icon"
-                @title={{i18n "category.icon"}}
-                @showTitle={{false}}
-                @format="large"
-                @onSet={{this.onIconSet}}
-                as |field|
-              >
-                <field.Custom>
-                  <IconPicker
-                    @value={{readonly field.value}}
-                    @onlyAvailable={{true}}
-                    @options={{hash
-                      maximum=1
-                      disabled=field.disabled
-                      caretDownIcon="angle-down"
-                      caretUpIcon="angle-up"
-                      icons=field.value
-                    }}
-                    @onChange={{field.set}}
-                    class="form-kit__control-icon"
-                    style={{htmlSafe
-                      (concat "--icon-color: #" @transientData.color ";")
-                    }}
-                  />
-                </field.Custom>
-              </@form.Field>
-            </Content>
+            <cc.Contents as |Content|>
+              <Content @name="icon">
+                <@form.Field
+                  @name="icon"
+                  @title={{i18n "category.icon"}}
+                  @showTitle={{false}}
+                  @format="large"
+                  @onSet={{this.onIconSet}}
+                  as |field|
+                >
+                  <field.Custom>
+                    <IconPicker
+                      @value={{readonly field.value}}
+                      @onlyAvailable={{true}}
+                      @options={{hash
+                        maximum=1
+                        disabled=field.disabled
+                        caretDownIcon="angle-down"
+                        caretUpIcon="angle-up"
+                        icons=field.value
+                      }}
+                      @onChange={{field.set}}
+                      class="form-kit__control-icon"
+                      style={{htmlSafe
+                        (concat "--icon-color: #" @transientData.color ";")
+                      }}
+                    />
+                  </field.Custom>
+                </@form.Field>
+              </Content>
 
-            <Content @name="emoji">
-              <@form.Field
-                @name="emoji"
-                @title={{i18n "category.emoji"}}
-                @showTitle={{false}}
-                @format="large"
-                @onSet={{this.onEmojiSet}}
-                @validate={{this.validateEmoji}}
-                as |field|
-              >
-                <field.Custom>
-                  <EmojiPicker
-                    @emoji={{field.value}}
-                    @didSelectEmoji={{field.set}}
-                    @modalForMobile={{false}}
-                    @btnClass="btn-default btn-emoji"
-                    @label={{unless field.value (i18n "category.select_emoji")}}
-                  />
-                </field.Custom>
-              </@form.Field>
-            </Content>
+              <Content @name="emoji">
+                <@form.Field
+                  @name="emoji"
+                  @title={{i18n "category.emoji"}}
+                  @showTitle={{false}}
+                  @format="large"
+                  @onSet={{this.onEmojiSet}}
+                  @validate={{this.validateEmoji}}
+                  as |field|
+                >
+                  <field.Custom>
+                    <EmojiPicker
+                      @emoji={{field.value}}
+                      @didSelectEmoji={{field.set}}
+                      @modalForMobile={{false}}
+                      @btnClass="btn-default btn-emoji"
+                      @label={{unless
+                        field.value
+                        (i18n "category.select_emoji")
+                      }}
+                    />
+                  </field.Custom>
+                </@form.Field>
+              </Content>
 
-            <Content @name="square">
-              {{htmlSafe
-                (categoryBadge
-                  (this.buildTransientModel @transientData) styleType="square"
-                )
-              }}
-            </Content>
-          </cc.Contents>
-        </@form.ConditionalContent>
-      </@form.Container>
+              <Content @name="square">
+                {{htmlSafe
+                  (categoryBadge
+                    (this.buildTransientModel @transientData) styleType="square"
+                  )
+                }}
+              </Content>
+            </cc.Contents>
+          </@form.ConditionalContent>
+        </styleField.Custom>
+      </@form.Field>
 
       {{#unless @category.isUncategorizedCategory}}
         <@form.Field
@@ -609,6 +615,7 @@ export default class UpsertCategoryGeneral extends Component {
       <@form.Container
         @title={{i18n "category.visibility.title"}}
         class="--radio-cards"
+        @format="large"
       >
         <@form.ConditionalContent
           @activeName={{this.categoryVisibility}}
@@ -643,6 +650,7 @@ export default class UpsertCategoryGeneral extends Component {
             <Content @name="group_restricted">
               <@form.Container
                 @title={{i18n "category.visibility.which_groups_can_access"}}
+                @format="large"
               >
                 <GroupChooser
                   @content={{this.availableAccessGroups}}
