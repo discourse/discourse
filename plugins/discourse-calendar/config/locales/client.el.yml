@@ -27,6 +27,7 @@ el:
             topic_id:
               label: ID Θέματος
     discourse_calendar:
+      invite_user_notification: "Ο/Η %{username} σας προσκάλεσε στο: %{description}"
       disable_holiday: "Απενεργοποίηση"
       enable_holiday: "Ενεργοποίηση"
       date: "Ημερομηνία"
@@ -183,6 +184,7 @@ el:
         after_event_reminder: "Μια εκδήλωση έχει λήξει"
         ongoing_event_reminder: "Μια εκδήλωση βρίσκεται σε εξέλιξη"
         invite_user_notification: "%{username} %{description}"
+        invite_user_predefined_attendance_notification: "Ο/Η %{username} έχει ορίσει αυτόματα την παρουσία σας και σας έχει προσκαλέσει στο %{eventName}"
         an_event: "μια εκδήλωση"
       edit_reason: "Η εκδήλωση ενημερώθηκε"
       edit_reason_closed: "Η εκδήλωση έκλεισε"
@@ -278,6 +280,13 @@ el:
               title: "Δημόσια"
             private:
               title: "Ιδιωτική"
+              description: "Σε μια ιδιωτική εκδήλωση μπορούν να συμμετάσχουν μόνο προσκεκλημένοι χρήστες."
+      composer:
+        name_placeholder: "Εκδήλωση"
+        end_date_placeholder: "Ορισμός ημερομηνίας λήξης"
+        location_placeholder: "Προσθέστε τοποθεσία ή URL"
+        max_attendees_placeholder: "Ορισμός μέγιστων συμμετεχόντων"
+        description_placeholder: "Προσθήκη περιγραφής εκδήλωσης"
       builder_modal:
         custom_fields:
           label: "Προσαρμοσμένα πεδία"

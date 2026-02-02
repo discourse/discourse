@@ -1239,7 +1239,7 @@ be:
     last_seen: "быў(-ла)"
     created: "Створана"
     created_lowercase: "створана"
-    trust_level: "ўзровень даверу"
+    trust_level: "Узровень даверу"
     search_hint: "імя карыстальніка, email або IP-адрас"
     create_account:
       header_title: "Вітаем!"

@@ -5,6 +5,14 @@
 # https://translate.discourse.org/
 
 el:
+  discourse_automation:
+    scriptables:
+      llm_triage:
+        notify_author_pm:
+          subject: "Η ανάρτησή σας αφαιρέθηκε προσωρινά για έλεγχο."
+  site_settings:
+    ai_translation_max_post_length: "Ο μέγιστος αριθμός χαρακτήρων για τη μετάφραση μιας ανάρτησης. Οι αναρτήσεις που είναι μεγαλύτερες από αυτόν τον αριθμό δεν θα μεταφράζονται."
+    ai_translation_backfill_max_age_days: "Η μέγιστη ηλικία μιας ανάρτησης και ενός θέματος που θα μεταφραστεί. Οι αναρτήσεις και τα θέματα που είναι παλαιότερα από αυτό δεν θα μεταφράζονται. Το 0 απενεργοποιεί την συμπλήρωση, αλλά δεν θα απενεργοποιήσει τη μετάφραση νέων αναρτήσεων."
   reports:
     overall_sentiment:
       yaxis: "Ημερομηνία"
@@ -26,3 +34,6 @@ el:
     ai_staff_action_logger:
       updated: "ενημερώθηκε"
       removed: "αφαιρέθηκε"
+    translation:
+      errors:
+        all_posts_translated: "Όλες οι αναρτήσεις σε αυτό το θέμα είναι ήδη μεταφρασμένες."

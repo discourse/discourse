@@ -34,20 +34,41 @@ el:
           title: "Συμφωνώ..."
         agree_and_keep_message:
           title: "Διατήρηση μηνύματος"
+          description: "Συμφωνώ με την αναφορά και διατήρηση του μηνύματος χωρίς αλλαγή."
+        agree_and_keep_deleted:
+          description: "Συμφωνώ με την αναφορά και διατήρηση του μηνύματος ως διαγραμμένο."
         agree_and_suspend:
           title: "Αποβολή Χρήστη"
+          description: "Συμφωνώ με την αναφορά και αναστολή του χρήστη."
         agree_and_silence:
           title: "Σίγαση Χρήστη"
+          description: "Συμφωνώ με την αναφορά και σίγηση του χρήστη."
+        agree_and_restore:
+          title: "Επαναφορά Μηνύματος"
+          description: "Επαναφορά του μηνύματος ώστε οι χρήστες να μπορούν να το δουν."
+        agree_and_delete:
+          title: "Διαγραφή Μηνύματος"
+          description: "Διαγράψτε το μήνυμα έτσι ώστε οι χρήστες να μην μπορούν να το δουν."
+        delete_and_agree:
+          title: "Αγνόηση αναφοράς και διαγραφή μηνύματος"
+          description: "Αγνοήστε την αναφορά αφαιρώντας την από την ουρά και διαγραφή του μηνύματος."
+        disagree_and_restore:
+          title: "Διαφωνώ και Επαναφορά Μηνύματος"
+        disagree:
+          description: "Διαφωνώ με την αναφορά και διατήρηση του μηνύματος χωρίς αλλαγή."
         ignore:
           title: "Αγνόηση επισήμανσης"
     channel:
+      users_invited_to_channel:
+        one: "%{invited_users} έχει προσκληθεί από %{inviting_user}."
+        other: "%{invited_users} έχουν προσκληθεί από %{inviting_user}."
       dm_title:
         single_user: "%{username}"
         multi_user_truncated:
-          one: "%{comma_separated_usernames} και %{count} ακόμη"
-          other: "%{comma_separated_usernames} και %{count} ακόμη"
+          one: "%{comma_separated_usernames} και %{count} ακόμα"
+          other: "%{comma_separated_usernames} και %{count} ακόμα"
     mention_warning:
-      dismiss: "απόρριψη"
+      dismiss: "παράβλεψη"
       invitations_sent:
         one: "Η πρόσκληση στάλθηκε"
         other: "Οι προσκλήσεις στάλθηκαν"
@@ -74,8 +95,8 @@ el:
         one: "%{count} μέλος"
         other: "%{count} μέλη"
       and_x_others:
-        one: "και %{count} ακόμη"
-        other: "και %{count} ακόμη"
+        one: "και %{count} ακόμα"
+        other: "και %{count} ακόμα"
     transcript:
       default_thread_title: "Νήμα"
   discourse_push_notifications:

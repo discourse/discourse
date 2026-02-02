@@ -2062,6 +2062,7 @@ ug:
         redeemed_tab_with_count: "جەزملەندى (%{count})"
         invited_via: "تەكلىپ"
         invited_via_link: "ئۇلانما %{key} (%{count} / %{max} جەزملەندى)"
+        generating_link: "ئۇلانما قۇرۇۋاتىدۇ…"
         groups: "گۇرۇپپا"
         topic: "تېما"
         sent: "قۇرۇلغان/يوللانغان ۋاقتى"
@@ -2883,11 +2884,15 @@ ug:
       ulist_title: "بەلگە تىزىمى"
       list_item: "تىزىم تۈرى"
       toggle_direction: "يۆنىلىش ئالماشتۇر"
+      apply_wrap_title: "ئوراشنى قوللان"
       wrap_modal:
+        title: "ئوراشنى تەھرىرلە"
+        name_label: "ئوراش ئىسمى"
         attributes_label: "خاسلىق"
         add_attribute: "خاسلىق قوش"
         remove_attribute: "خاسلىق چىقىرىۋەت"
         apply: "قوللان"
+        unwrap: "ئوراشنى سۆك"
         no_attributes: "تېخى ھېچقانداق خاسلىق قوشۇلمىدى."
       wrap_text: "مەزمۇن ئوراش"
       help: "Markdown تەھرىر ياردىمى"
@@ -2961,6 +2966,7 @@ ug:
         move_outside_grid: "شادا سىرتىغا يۆتكە"
       image: "سۈرەت"
       grid_label: "بۇ شادا سۈپىتىدە كۆرسىتىلىدۇ"
+      grid_mode_grid: "شادا"
       image_scale_button: "سۈرەتنى %%{percent} كە تەڭشە"
       delete_image_button: سۈرەت ئۆچۈر
       toggle_image_grid: سۈرەت سېتكىسىنى ئالماشتۇر

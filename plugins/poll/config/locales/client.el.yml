@@ -97,7 +97,7 @@ el:
           outcome: "Αποτέλεσμα"
         none: "Κανένα"
         majority: "Πλειοψηφία"
-        eliminated: "Μη επιλεγμένο"
+        eliminated: "Εξαλείφθηκε"
         round: "Γύρος"
         winner:
           one: "Νικητής ήταν %{winner} μετά από έναν γύρο."
