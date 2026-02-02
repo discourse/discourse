@@ -49,11 +49,12 @@
 
   .form-kit__control-radio-label {
     flex: 1 1 50%;
-    padding: var(--space-2);
+    padding: 0.5em var(--space-2);
     border: 1px solid var(--primary-low-mid);
     border-radius: var(--d-input-border-radius);
     justify-content: center;
     position: relative;
+    line-height: normal;
 
     .d-icon {
       display: none;
