@@ -55,6 +55,10 @@ module Jobs
           end
         end
 
+        on_model_not_found(:all_admins) do |model_name|
+          verbose_log(site, :debug, "No admins found, skipping tracking of upcoming changes")
+        end
+
         on_failure do
           verbose_log(
             site,
@@ -71,14 +75,31 @@ module Jobs
           change_notification_statuses.each do |setting_name, status|
             if status[:success]
               verbose_log(site, :info, "Notified site admins about promotion of '#{setting_name}'")
-            else
-              verbose_log(
-                site,
-                :error,
-                "Failed to notify about promotion of '#{setting_name}': #{status[:error]} with backtrace: #{status[:backtrace]&.join("\n") || "N/A"}",
-              )
+              next
             end
+
+            log_level =
+              case status[:error_key]
+              when :does_not_meet_or_exceed_promotion_status
+                :info
+              when :already_notified_about_promotion
+                :debug
+              when :already_manually_toggled
+                :debug
+              else
+                :error
+              end
+
+            verbose_log(
+              site,
+              log_level,
+              "Failed to notify about promotion of '#{setting_name}': #{status[:error]} with backtrace: #{status[:backtrace]&.join("\n") || "N/A"}",
+            )
           end
+        end
+
+        on_model_not_found(:admin_user_ids) do |model_name|
+          verbose_log(site, :debug, "No admins found, skipping notification of promotions")
         end
 
         on_failure do
