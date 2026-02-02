@@ -159,12 +159,16 @@ export default class AiConversationsSidebarManager extends Service {
     document.body.classList.remove("has-ai-conversations-sidebar");
     document.body.classList.remove("has-empty-ai-conversations-sidebar");
 
-    // Only reset if no other route has claimed the sidebar in its activate() hook
+    // Only reset panel if no other route has claimed the sidebar in its activate() hook
     const isStillAiPanel =
       this.sidebarState.currentPanel?.key === AI_CONVERSATIONS_PANEL;
 
     if (this.sidebarState.isForcingSidebar && isStillAiPanel) {
       this.sidebarState.setPanel(MAIN_PANEL);
+    }
+
+    // Always clear the forcing flag when leaving AI conversations
+    if (this.sidebarState.isForcingSidebar) {
       this.sidebarState.isForcingSidebar = false;
       this.appEvents.trigger("discourse-ai:stop-forcing-conversations-sidebar");
     }
