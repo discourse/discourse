@@ -103,6 +103,27 @@ module(
       assert.true(swatches[2].isUsed);
     });
 
+    test("sorting used colors does not mutate the original array", async function (assert) {
+      const colors = ["FF0000", "00FF00", "0000FF"];
+      const usedColors = ["00FF00"];
+
+      await render(
+        <template>
+          <Form as |form|>
+            <form.Field @name="color" @title="Color" as |field|>
+              <field.Color @colors={{colors}} @usedColors={{usedColors}} />
+            </form.Field>
+          </Form>
+        </template>
+      );
+
+      assert.deepEqual(
+        colors,
+        ["FF0000", "00FF00", "0000FF"],
+        "original colors array should not be mutated"
+      );
+    });
+
     test("when disabled", async function (assert) {
       const colors = ["FF0000", "00FF00"];
 
