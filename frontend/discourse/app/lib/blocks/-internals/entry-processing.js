@@ -185,6 +185,25 @@ export function processBlockEntries({
       ? buildContainerPath(blockName, baseHierarchy, containerCounts)
       : undefined;
 
+    // For containers with children, recursively process children FIRST
+    // This creates the child components at the root level, so containers
+    // receive pre-processed children via @children arg instead of raw entries.
+    let processedChildren;
+    if (isContainer && entry.children?.length) {
+      processedChildren = processBlockEntries({
+        entries: entry.children,
+        cache, // Same root cache for all levels
+        owner,
+        baseHierarchy: containerPath,
+        outletName,
+        outletArgs,
+        showGhosts,
+        isLoggingEnabled,
+        createChildBlockFn,
+        isContainerBlockFn,
+      });
+    }
+
     // Render visible blocks
     if (entry.__visible) {
       result.push(
@@ -199,6 +218,7 @@ export function processBlockEntries({
             conditions: entry.conditions,
             outletArgs,
             key,
+            processedChildren, // Pass pre-processed children for containers
           },
           owner,
           createChildBlockFn

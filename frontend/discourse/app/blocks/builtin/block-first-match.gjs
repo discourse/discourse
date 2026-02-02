@@ -39,7 +39,7 @@ import { block } from "discourse/blocks/block-outlet";
 })
 export default class FirstMatchBlock extends Component {
   get firstChild() {
-    return this.children?.[0];
+    return this.args.children?.[0];
   }
 
   <template>

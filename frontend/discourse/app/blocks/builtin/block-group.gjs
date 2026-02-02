@@ -29,7 +29,7 @@ import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks";
 })
 export default class GroupedBlocks extends Component {
   <template>
-    {{#each this.children key="key" as |child|}}
+    {{#each @children key="key" as |child|}}
       <child.Component />
     {{/each}}
   </template>

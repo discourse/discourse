@@ -18,8 +18,11 @@
  */
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
+import {
+  getInternalComponentManager,
+  setInternalComponentManager,
+} from "@glimmer/manager";
 import { cached } from "@glimmer/tracking";
-import { getOwner } from "@ember/owner";
 import curryComponent from "ember-curry-component";
 import AsyncContent from "discourse/components/async-content";
 /** @type {import("discourse/lib/blocks/-internals/components/block-layout-wrapper.gjs")} */
@@ -30,7 +33,6 @@ import {
   DEBUG_CALLBACK,
   debugHooks,
 } from "discourse/lib/blocks/-internals/debug-hooks";
-import { processBlockEntries } from "discourse/lib/blocks/-internals/entry-processing";
 import {
   captureCallSite,
   raiseBlockError,
@@ -149,6 +151,50 @@ export function _getOutletLayouts() {
  */
 const __BLOCK_FLAG = Symbol("block");
 const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
+
+/**
+ * Custom component manager proxy that enforces block authorization.
+ *
+ * Blocks can only be instantiated in two authorized scenarios:
+ * 1. As a root block - The class has `static __ROOT_BLOCK = __BLOCK_CONTAINER_FLAG`
+ *    (set by BlockOutlet to mark itself as the root of a block tree)
+ * 2. As a child of a container - The parent passes `$block$` arg with the secret symbol
+ *    (set by `createBlockArgsWithReactiveGetters` when creating child block args)
+ *
+ * This prevents blocks from being used directly in templates, ensuring they
+ * can only be rendered through the BlockOutlet system.
+ */
+const BlockComponentManager = new Proxy(
+  getInternalComponentManager(Component),
+  {
+    get(target, prop) {
+      if (prop === "create") {
+        return function (owner, klass, args) {
+          // Check if this is a root block (BlockOutlet sets __ROOT_BLOCK static property)
+          const isRootBlock = klass.__ROOT_BLOCK === __BLOCK_CONTAINER_FLAG;
+
+          // Check if this is an authorized child (parent passes $block$ secret symbol)
+          let isAuthorizedChild = false;
+          const named = args?.named;
+          if (named?.names?.includes("$block$")) {
+            const ref = named.get("$block$");
+            isAuthorizedChild = ref.compute() === __BLOCK_CONTAINER_FLAG;
+          }
+
+          if (!isRootBlock && !isAuthorizedChild) {
+            throw new Error(
+              `Block "${klass.blockName || klass.name}" cannot be used directly in templates. ` +
+                `Blocks can only be rendered inside BlockOutlets or container blocks.`
+            );
+          }
+
+          return target.create(...arguments);
+        };
+      }
+      return Reflect.get(target, prop);
+    },
+  }
+);
 
 /**
  * Decorator that transforms a Glimmer component into a block component.
@@ -353,140 +399,32 @@ export function block(name, options = {}) {
     deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
   });
 
-  // @ts-ignore - TS2322: Decorator return type mismatch (returns extended class)
   return function (target) {
+    setInternalComponentManager(BlockComponentManager, target);
+
     if (!(target.prototype instanceof Component)) {
       raiseBlockError("@block target must be a Glimmer component class");
       return target; // Return original in production to avoid crash
     }
 
-    const DecoratedBlock = class extends target {
-      /**
-       * Cache for curried child components in nested containers.
-       *
-       * Similar to BlockOutletRootContainer's cache, this prevents
-       * unnecessary recreation of leaf block children during navigation.
-       *
-       * Memory note: This cache is bounded, not unbounded:
-       * - Keys use stable `__stableKey` values assigned once at registration time
-       * - The same keys are reused on every render/navigation
-       * - This cache instance is garbage collected when the owning component is destroyed
-       *
-       * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult}>}
-       */
-      #childComponentCache = new Map();
+    // Set authorization symbols on the original class (used by BlockComponentManager
+    // and _isBlock/_isContainerBlock functions)
+    target[__BLOCK_FLAG] = true;
+    target[__BLOCK_CONTAINER_FLAG] = isContainer;
 
-      static [__BLOCK_FLAG] = true;
-      static [__BLOCK_CONTAINER_FLAG] = isContainer;
-
-      constructor() {
-        // @ts-ignore - TS2556: Spread argument for parent class constructor
-        super(...arguments);
-
-        // Authorization check: blocks can only be instantiated in two scenarios:
-        // 1. As a root block (BlockOutlet sets __ROOT_BLOCK static property)
-        // 2. As a child of a container block (parent passes $block$ secret symbol)
-        const isAuthorized =
-          this.isRoot || this.args.$block$ === __BLOCK_CONTAINER_FLAG;
-
-        if (!isAuthorized) {
-          throw new Error(
-            `Block components cannot be used directly in templates. ` +
-              `They can only be rendered inside BlockOutlets or container blocks.`
-          );
-        }
-      }
-
-      /**
-       * Indicates if this block is the root of a block tree (i.e., a BlockOutlet).
-       *
-       * @returns {boolean}
-       */
-      get isRoot() {
-        // @ts-ignore - TS2339: __ROOT_BLOCK is dynamically added to constructor
-        return this.constructor.__ROOT_BLOCK === __BLOCK_CONTAINER_FLAG;
-      }
-
-      /**
-       * Returns the raw outlet layout. Only meaningful for root blocks.
-       * For child blocks (non-root), this returns an empty array because their
-       * layout is managed by their parent block.
-       *
-       * @returns {Array<Object>} The block entries, or an empty array for non-root blocks.
-       */
-      get layout() {
-        // @ts-ignore - TS2339: layout getter added to root blocks (BlockOutlet)
-        return this.isRoot ? super.layout : [];
-      }
-
-      /**
-       * Processes and returns child blocks as renderable components.
-       * Only container blocks have children. The children are curried components
-       * with all necessary args pre-bound.
-       *
-       * For root blocks (BlockOutlet), this defers to the component's own children
-       * getter which handles preprocessing. For nested containers, entries are
-       * already pre-processed by the parent, so we just create components.
-       *
-       * Each child object contains:
-       * - `Component`: The curried block component ready to render
-       * - `containerArgs`: Values provided by the child entry for the parent's
-       *   `childArgs` schema (e.g., `{ name: "settings" }` for a tabs container).
-       *   These are available to the parent but not passed to the child block itself.
-       *
-       * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined}>|undefined}
-       */
-      // @ts-ignore - TS1206: Decorators not valid in anonymous class expressions
-      @cached
-      get children() {
-        // set the tracking before any guard clause to ensure updating the options in the dev tools will track state
-        const showGhosts = debugHooks.isVisualOverlayEnabled;
-
-        // Non-containers have no children
-        if (!isContainer) {
-          return;
-        }
-
-        // Root blocks (BlockOutlet) override this getter to do full preprocessing.
-        // Defer to the component's own implementation.
-        if (this.isRoot) {
-          // @ts-ignore - TS2339: children getter added to root blocks (BlockOutlet)
-          return super.children;
-        }
-
-        // Nested containers: entries already pre-processed by parent
-        const rawChildren = this.args.children;
-        if (!rawChildren?.length) {
-          return;
-        }
-
-        // @ts-ignore - TS2322: ChildBlockResult type compatible with return type
-        return processBlockEntries({
-          entries: rawChildren,
-          cache: this.#childComponentCache,
-          owner: getOwner(this),
-          baseHierarchy: this.args.__hierarchy,
-          outletName: this.args.outletName,
-          outletArgs: this.args.outletArgs,
-          showGhosts,
-          isLoggingEnabled: false,
-          createChildBlockFn: createChildBlock,
-          isContainerBlockFn: _isContainerBlock,
-        });
-      }
-
+    // Define instance getter for block name on the prototype
+    Object.defineProperty(target.prototype, "name", {
       /**
        * The registered name of this block.
        *
        * @returns {string}
        */
-      get name() {
-        return name;
-      }
-    };
+      get: () => name,
+      configurable: false,
+    });
 
-    // Define static getters (non-configurable to prevent reassignment).
-    Object.defineProperties(DecoratedBlock, {
+    // Define static getters on the original class (non-configurable to prevent reassignment)
+    Object.defineProperties(target, {
       blockName: {
         /**
          * The full namespaced block name (e.g., "theme:tactile:hero-banner").
@@ -526,7 +464,7 @@ export function block(name, options = {}) {
       },
     });
 
-    return DecoratedBlock;
+    return target;
   };
 }
 
@@ -618,6 +556,7 @@ function resolveDecoratorClassNames(metadata, args) {
  * @param {Object} [debugContext.outletArgs] - Outlet args for debug display
  * @param {string} [debugContext.key] - Stable unique key for this block
  * @param {string} [debugContext.outletName] - The outlet name for wrapper class generation
+ * @param {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}>} [debugContext.processedChildren] - Pre-processed children for container blocks
  * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
  *   An object containing the curried block component, any containerArgs
  *   provided in the block entry, and a stable unique key for list rendering.
@@ -625,13 +564,7 @@ function resolveDecoratorClassNames(metadata, args) {
  *   schema, accessible to the parent but not to the child block itself.
  */
 function createChildBlock(entry, owner, debugContext = {}) {
-  const {
-    block: ComponentClass,
-    args = {},
-    containerArgs,
-    classNames,
-    children: nestedChildren,
-  } = entry;
+  const { block: ComponentClass, args = {}, containerArgs, classNames } = entry;
   const isContainer = _isContainerBlock(ComponentClass);
 
   // Apply default values from metadata before building args
@@ -639,8 +572,10 @@ function createChildBlock(entry, owner, debugContext = {}) {
 
   // All blocks use the same arg structure - classNames are handled by wrappers.
   // Pass containerPath so nested containers know their full path for debug logging.
+  // For containers, use processedChildren (pre-processed array of {Component, containerArgs, key})
+  // instead of raw entry.children. This allows containers to render children directly via @children.
   const blockArgs = createBlockArgsWithReactiveGetters(argsWithDefaults, {
-    children: nestedChildren,
+    children: debugContext.processedChildren,
     outletArgs: debugContext.outletArgs,
     outletName: debugContext.outletName,
     __hierarchy: isContainer
