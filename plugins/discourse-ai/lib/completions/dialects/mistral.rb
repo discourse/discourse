@@ -12,10 +12,6 @@ module DiscourseAi
           end
         end
 
-        def native_tool_support?
-          !disable_native_tools?
-        end
-
         def translate
           corrected = super
           corrected.each do |msg|
