@@ -1,6 +1,7 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import A11ySkipLinks from "discourse/components/a11y/skip-links";
+import BlockTesting, { BLOCK_SYMBOL } from "discourse/components/block-testing";
 import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
 import CustomHtml from "discourse/components/custom-html";
@@ -34,6 +35,8 @@ import routeAction from "discourse/helpers/route-action";
 import { eq } from "discourse/truth-helpers";
 
 export default <template>
+  <BlockTesting @_block={{BLOCK_SYMBOL}} />
+
   <DStyles />
   <DVirtualHeight />
 
