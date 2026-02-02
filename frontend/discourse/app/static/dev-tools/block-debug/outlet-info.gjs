@@ -10,14 +10,23 @@ import { DEPRECATED_ARGS_KEY } from "discourse/lib/outlet-args";
 import ArgsTable from "../shared/args-table";
 
 /**
+ * Component signature for OutletInfo.
+ *
+ * @typedef {Object} OutletInfoSignature
+ * @property {Object} Args
+ * @property {string} Args.outletName - The name of the block outlet.
+ * @property {number} Args.blockCount - Number of blocks registered.
+ * @property {Object} [Args.outletArgs] - Arguments passed to the outlet.
+ * @property {Error} [Args.error] - Validation error if config failed.
+ * @property {Object} Blocks
+ * @property {[]} Blocks.default - Default block for rendering children.
+ */
+
+/**
  * Debug overlay for BlockOutlet components.
  * Shows outlet name badge with a tooltip containing outlet info and GitHub search link.
  *
- * @param {string} outletName - The name of the block outlet.
- * @param {number} blockCount - Number of blocks registered.
- * @param {Object} [outletArgs] - Arguments passed to the outlet. May contain a non-enumerable
- *   `__deprecatedArgs__` property with the raw deprecated args for display in the debug tooltip.
- * @param {Error} [error] - Validation error if config failed validation.
+ * @extends {Component<OutletInfoSignature>}
  */
 export default class OutletInfo extends Component {
   /**
@@ -138,7 +147,6 @@ export default class OutletInfo extends Component {
           </div>
         </:content>
       </DTooltip>
-      {{! @glint-expect-error - yield signature not typed }}
       {{yield}}
     </div>
   </template>

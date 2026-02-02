@@ -843,6 +843,20 @@ function hasLayout(outletName) {
 }
 
 /**
+ * Component signature for BlockOutlet.
+ *
+ * @typedef {Object} BlockOutletSignature
+ * @property {Object} Args
+ * @property {string} Args.name - The outlet name (must be in BLOCK_OUTLETS registry).
+ * @property {Object} [Args.outletArgs] - Arguments to pass to blocks rendered in this outlet.
+ * @property {Object} [Args.deprecatedArgs] - Deprecated args with deprecation warnings.
+ * @property {Object} Blocks
+ * @property {[hasLayout: boolean]} Blocks.before - Yields hasLayout flag before content.
+ * @property {[hasLayout: boolean]} Blocks.after - Yields hasLayout flag after content.
+ * @property {[error: Error]} Blocks.error - Yields error when validation fails.
+ */
+
+/**
  * Root component for rendering registered blocks in a designated outlet.
  *
  * BlockOutlet serves as the entry point for the block rendering system. It:
@@ -856,6 +870,8 @@ function hasLayout(outletName) {
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
+ *
+ * @extends {Component<BlockOutletSignature>}
  *
  * @example
  * ```hbs
@@ -1030,7 +1046,6 @@ export default class BlockOutlet extends Component {
     {{! yield to :before block with hasLayout boolean for conditional rendering
         This allows block outlets to wrap other elements and conditionally render them based on
         the presence of a registered layout if necessary }}
-    {{! @glint-expect-error - yield signature not typed }}
     {{yield (hasLayout this.outletName) to="before"}}
 
     {{#let
@@ -1079,14 +1094,12 @@ export default class BlockOutlet extends Component {
           {{#if OutletInfo}}
             <OutletInfo @error={{error}}>
               {{#if (has-block "error")}}
-                {{! @glint-expect-error - yield signature not typed }}
                 {{yield error to="error"}}
               {{else}}
                 <BlockOutletInlineError @error={{error}} />
               {{/if}}
             </OutletInfo>
           {{else if (has-block "error")}}
-            {{! @glint-expect-error - yield signature not typed }}
             {{yield error to="error"}}
           {{else}}
             <BlockOutletInlineError @error={{error}} />
@@ -1104,7 +1117,6 @@ export default class BlockOutlet extends Component {
     {{! yield to :after block with hasLayout boolean for conditional rendering
         This allows block outlets to wrap other elements and conditionally render them based on
         the presence of a registered layout if necessary }}
-    {{! @glint-expect-error - yield signature not typed }}
     {{yield (hasLayout this.outletName) to="after"}}
   </template>
 }
