@@ -213,6 +213,11 @@
     height: 2em;
   }
 
+  .d-header-icons .badge-notification {
+    right: -6px;
+    padding: 0.2em 0.4em;
+  }
+
   .header-sidebar-toggle button .d-icon,
   .d-header-icons .d-icon {
     font-size: var(--font-up-3);
