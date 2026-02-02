@@ -8613,7 +8613,7 @@ en:
           min_admin_password_length:
             prompt: "You're about to change your password policy. This will affect all admins changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
-          password_unique_characters:
+          password_unique_charactes:
             prompt: "You're about to change your password policy. This will affect all users changing their passwords from now on. Are you sure you want to proceed?"
             confirm: "Yes, update password policy"
           block_common_passwords:
