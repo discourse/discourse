@@ -167,9 +167,10 @@ export default class ChatPaneState {
    * Use this in scroll handlers that already have distanceToBottom computed.
    *
    * @param {object} options
+   * @param {HTMLElement | null} options.scroller
    * @param {boolean} options.fetchedOnce
    * @param {boolean} options.canLoadMoreFuture
-   * @param {object} options.state - Scroll state with scroller and distanceToBottom
+   * @param {object} options.state - Scroll state with distanceToBottom
    * @param {number} [options.distanceThresholdPixels]
    */
   updatePendingContentFromScrollState(options) {
