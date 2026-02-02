@@ -5,7 +5,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import categoryBadge from "discourse/helpers/category-badge";
@@ -35,6 +34,21 @@ export default class UpsertCategoryGeneral extends Component {
   );
   #previousPermissions = null;
 
+  get categorySite() {
+    return this.args.category.site;
+  }
+
+  #createEveryoneFullPermission() {
+    const everyoneGroup = this.categorySite.groups.find(
+      (g) => g.id === AUTO_GROUPS.everyone.id
+    );
+    return {
+      group_name: everyoneGroup?.name || "everyone",
+      group_id: AUTO_GROUPS.everyone.id,
+      permission_type: PermissionType.FULL,
+    };
+  }
+
   get parentIsRestricted() {
     const parentId = this.args.transientData.parent_category_id;
     if (!parentId) {
@@ -54,8 +68,14 @@ export default class UpsertCategoryGeneral extends Component {
     return !onlyEveryone;
   }
 
+  get permissions() {
+    return (
+      this.args.transientData?.permissions ?? this.args.category.permissions
+    );
+  }
+
   get isPrivateCategory() {
-    const permissions = this.args.category.permissions;
+    const permissions = this.permissions;
 
     if (!permissions || permissions.length === 0) {
       return true;
@@ -75,38 +95,29 @@ export default class UpsertCategoryGeneral extends Component {
       // If the user toggles between private and public we
       // need to restore whatever previous private permissions were set.
       if (this.#previousPermissions) {
-        this.#setCategoryPermissions(this.#previousPermissions);
+        this.#setFormPermissions(this.#previousPermissions);
       } else {
-        this.#setCategoryPermissions([]);
+        this.#setFormPermissions([]);
       }
     } else {
       // No, is public
-      this.#previousPermissions = [...this.args.category.permissions];
-
-      const site = this.args.category.site;
-      const everyoneGroup = site.groups.find(
-        (g) => g.id === AUTO_GROUPS.everyone.id
-      );
+      this.#previousPermissions = (this.permissions || []).map((p) => ({
+        ...p,
+      }));
 
       // By default everyone has full permissions for public categories
       // to see and create posts and topics.
-      this.#setCategoryPermissions([
-        new TrackedObject({
-          group_name: everyoneGroup?.name || "everyone",
-          group_id: AUTO_GROUPS.everyone.id,
-          permission_type: PermissionType.FULL,
-        }),
-      ]);
+      this.#setFormPermissions([this.#createEveryoneFullPermission()]);
     }
   }
 
   get accessGroups() {
-    const permissions = this.args.category.permissions || [];
+    const permissions = this.permissions || [];
     return permissions.map((p) => p.group_id);
   }
 
   get availableAccessGroups() {
-    const allGroups = this.args.category.site.groups;
+    const allGroups = this.categorySite.groups;
 
     if (!this.parentIsRestricted) {
       return allGroups;
@@ -123,18 +134,17 @@ export default class UpsertCategoryGeneral extends Component {
 
   @action
   onChangeAccessGroups(groupIds) {
-    const site = this.args.category.site;
     const newPermissions = groupIds.map((groupId) => {
-      const group = site.groups.find((g) => g.id === groupId);
-      return new TrackedObject({
+      const group = this.categorySite.groups.find((g) => g.id === groupId);
+      return {
         group_name: group?.name,
         group_id: groupId,
         permission_type: PermissionType.FULL,
-      });
+      };
     });
 
     this.userModifiedPermissions = true;
-    this.#setCategoryPermissions(newPermissions);
+    this.#setFormPermissions(newPermissions);
   }
 
   get allowSubCategoriesAsParent() {
@@ -215,24 +225,13 @@ export default class UpsertCategoryGeneral extends Component {
   async onParentCategoryChange(parentCategoryId) {
     if (!parentCategoryId) {
       if (!this.userModifiedPermissions) {
-        const site = this.args.category.site;
-        const everyoneGroup = site.groups.find(
-          (g) => g.id === AUTO_GROUPS.everyone.id
-        );
-        this.#setCategoryPermissions([
-          new TrackedObject({
-            group_name: everyoneGroup?.name || "everyone",
-            group_id: AUTO_GROUPS.everyone.id,
-            permission_type: PermissionType.FULL,
-          }),
-        ]);
+        this.#setFormPermissions([this.#createEveryoneFullPermission()]);
       }
       return;
     }
 
     const result = await Category.reloadById(parentCategoryId);
-    const site = this.args.category.site;
-    const parentCategory = site.updateCategory(result.category);
+    const parentCategory = this.categorySite.updateCategory(result.category);
     parentCategory.setupGroupsAndPermissions();
 
     if (parentCategory?.permissions?.length > 0) {
@@ -242,28 +241,15 @@ export default class UpsertCategoryGeneral extends Component {
           parentCategory.permissions[0].group_name === "everyone");
 
       if (!onlyEveryone) {
-        const newPermissions = parentCategory.permissions.map(
-          (p) =>
-            new TrackedObject({
-              group_name: p.group_name,
-              group_id: p.group_id,
-              permission_type: p.permission_type,
-            })
-        );
+        const newPermissions = parentCategory.permissions.map((p) => ({
+          group_name: p.group_name,
+          group_id: p.group_id,
+          permission_type: p.permission_type,
+        }));
 
-        this.#setCategoryPermissions(newPermissions);
+        this.#setFormPermissions(newPermissions);
       } else {
-        const everyoneGroup = site.groups.find(
-          (g) => g.id === AUTO_GROUPS.everyone.id
-        );
-
-        this.#setCategoryPermissions([
-          new TrackedObject({
-            group_name: everyoneGroup?.name || "everyone",
-            group_id: AUTO_GROUPS.everyone.id,
-            permission_type: PermissionType.FULL,
-          }),
-        ]);
+        this.#setFormPermissions([this.#createEveryoneFullPermission()]);
       }
     }
   }
@@ -401,8 +387,10 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   get categoryDescription() {
-    if (this.args.category.description) {
-      return htmlSafe(this.args.category.description);
+    const description =
+      this.args.transientData?.description ?? this.args.category.description;
+    if (description) {
+      return htmlSafe(description);
     }
 
     return htmlSafe(i18n("category.no_description"));
@@ -439,8 +427,8 @@ export default class UpsertCategoryGeneral extends Component {
     return rDiff + gDiff + bDiff;
   }
 
-  #setCategoryPermissions(permissions) {
-    this.args.category.set("permissions", permissions);
+  #setFormPermissions(permissions) {
+    this.args.form.set("permissions", permissions);
   }
 
   <template>
