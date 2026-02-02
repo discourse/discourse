@@ -61,6 +61,14 @@ export default class ChatPaneState {
   contextKey = null;
 
   /**
+   * Whether teardown() has been called. Used to guard against async
+   * callbacks that fire after the pane is destroyed.
+   *
+   * @type {boolean}
+   */
+  #tornDown = false;
+
+  /**
    * Callback invoked when user returns after being away.
    *
    * @type {(() => void) | null}
@@ -88,6 +96,7 @@ export default class ChatPaneState {
    * Cleanup presence tracking. Call from component teardown (e.g. willDestroy).
    */
   teardown() {
+    this.#tornDown = true;
     removeOnPresenceChange(this.onPresenceChangeCallback);
     this.clearPendingMessages();
   }
@@ -271,7 +280,7 @@ export default class ChatPaneState {
     this.addPendingMessages(messageCount);
 
     schedule("afterRender", () => {
-      if (this.isDestroying || this.isDestroyed) {
+      if (this.#tornDown) {
         return;
       }
 
