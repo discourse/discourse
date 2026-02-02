@@ -1134,7 +1134,7 @@ module SiteSettingExtension
         split_areas = opts[:area].split("|")
         if split_areas.any? { |area| !SiteSetting.valid_areas.include?(area) }
           raise Discourse::InvalidParameters.new(
-                  "Area is invalid, valid areas are: #{SiteSetting.valid_areas.join(", ")}",
+                  "One of the areas in #{opts[:area]} for setting #{name} is invalid, valid areas are: #{SiteSetting.valid_areas.join(", ")}",
                 )
         end
         areas[name] = split_areas

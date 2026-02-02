@@ -424,7 +424,8 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         {
           name: "admin_customize_form_templates",
           route: "adminCustomizeFormTemplates",
-          label: "admin.form_templates.nav_title",
+          label: "admin.config.form_templates.title",
+          description: "admin.config.form_templates.header_description",
           icon: "list",
         },
       ]);
