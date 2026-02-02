@@ -2,9 +2,11 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
 import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
 
+@tagName("")
 export default class TagGroupList extends Component {
   @discourseComputed("value")
   selectedTagGroups(value) {
@@ -17,13 +19,15 @@ export default class TagGroupList extends Component {
   }
 
   <template>
-    <TagGroupChooser
-      @tagGroups={{this.selectedTagGroups}}
-      @onChange={{this.onTagGroupChange}}
-      @options={{hash
-        filterPlaceholder="category.required_tag_group.placeholder"
-        disabled=@disabled
-      }}
-    />
+    <div ...attributes>
+      <TagGroupChooser
+        @tagGroups={{this.selectedTagGroups}}
+        @onChange={{this.onTagGroupChange}}
+        @options={{hash
+          filterPlaceholder="category.required_tag_group.placeholder"
+          disabled=@disabled
+        }}
+      />
+    </div>
   </template>
 }

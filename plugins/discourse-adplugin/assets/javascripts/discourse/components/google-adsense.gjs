@@ -1,7 +1,8 @@
 import { scheduleOnce } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
-import { classNameBindings } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import RSVP from "rsvp";
+import concatClass from "discourse/helpers/concat-class";
 import discourseComputed from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import loadScript from "discourse/lib/load-script";
@@ -99,11 +100,7 @@ const MOBILE_SETTINGS = {
   },
 };
 
-@classNameBindings(
-  ":google-adsense",
-  "classForSlot",
-  "isResponsive:adsense-responsive"
-)
+@tagName("")
 export default class GoogleAdsense extends AdComponent {
   loadedGoogletag = false;
   publisher_id = null;
@@ -260,24 +257,33 @@ export default class GoogleAdsense extends AdComponent {
   }
 
   <template>
-    {{#if this.showAd}}
-      <div class="google-adsense-label"><h2>{{i18n
-            "adplugin.advertisement_label"
-          }}</h2></div>
-      <div
-        class="google-adsense-content"
-        id={{if this.isResponsive "google-adsense__responsive"}}
-        style={{this.adWrapperStyle}}
-      >
-        <ins
-          class="adsbygoogle"
-          style={{this.adInsStyle}}
-          data-ad-client="ca-pub-{{this.publisher_id}}"
-          data-ad-slot={{this.ad_code}}
-          data-ad-format={{this.autoAdFormat}}
+    <div
+      class={{concatClass
+        "google-adsense"
+        this.classForSlot
+        (if this.isResponsive "adsense-responsive")
+      }}
+      ...attributes
+    >
+      {{#if this.showAd}}
+        <div class="google-adsense-label"><h2>{{i18n
+              "adplugin.advertisement_label"
+            }}</h2></div>
+        <div
+          class="google-adsense-content"
+          id={{if this.isResponsive "google-adsense__responsive"}}
+          style={{this.adWrapperStyle}}
         >
-        </ins>
-      </div>
-    {{/if}}
+          <ins
+            class="adsbygoogle"
+            style={{this.adInsStyle}}
+            data-ad-client="ca-pub-{{this.publisher_id}}"
+            data-ad-slot={{this.ad_code}}
+            data-ad-format={{this.autoAdFormat}}
+          >
+          </ins>
+        </div>
+      {{/if}}
+    </div>
   </template>
 }

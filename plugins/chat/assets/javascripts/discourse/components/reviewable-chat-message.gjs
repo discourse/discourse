@@ -41,7 +41,6 @@ export default class ReviewableChatMessage extends Component {
         <ReviewablePostHeader
           @reviewable={{@reviewable}}
           @createdBy={{@reviewable.target_created_by}}
-          @tagName=""
         />
 
         <div class="post-body">

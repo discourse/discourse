@@ -4,7 +4,7 @@ import { hash } from "@ember/helper";
 import { action, computed } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { isPresent } from "@ember/utils";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import ComboBox from "discourse/select-kit/components/combo-box";
 
 function convertMinutes(num) {
@@ -36,7 +36,7 @@ function convertMinutesToDurationString(n) {
   return output;
 }
 
-@classNames("d-time-input")
+@tagName("")
 export default class TimeInput extends Component {
   hours = null;
   minutes = null;
@@ -189,17 +189,19 @@ export default class TimeInput extends Component {
   }
 
   <template>
-    <ComboBox
-      @value={{this.time}}
-      @content={{this.timeOptions}}
-      @onChange={{this.onChangeTime}}
-      @options={{hash
-        translatedNone="--:--"
-        allowAny=true
-        filterable=false
-        autoInsertNoneItem=false
-        translatedFilterPlaceholder="--:--"
-      }}
-    />
+    <div class="d-time-input" ...attributes>
+      <ComboBox
+        @value={{this.time}}
+        @content={{this.timeOptions}}
+        @onChange={{this.onChangeTime}}
+        @options={{hash
+          translatedNone="--:--"
+          allowAny=true
+          filterable=false
+          autoInsertNoneItem=false
+          translatedFilterPlaceholder="--:--"
+        }}
+      />
+    </div>
   </template>
 }

@@ -1,12 +1,11 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
-import { classNames, tagName } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 
-@tagName("div")
-@classNames("user-custom-preferences-outlet", "user-date-of-birth-input")
+@tagName("")
 export default class UserDateOfBirthInput extends Component {
   init() {
     super.init(...arguments);
@@ -46,31 +45,38 @@ export default class UserDateOfBirthInput extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.cakeday_birthday_enabled}}
-      <div class="control-group">
-        <label class="control-label">{{i18n "user.date_of_birth.label"}}</label>
-        <div class="controls">
-          <ComboBox
-            @content={{this.months}}
-            @value={{this.month}}
-            @valueAttribute="value"
-            @valueProperty="value"
-            @none="cakeday.none"
-            @options={{hash clearable=true autoInsertNoneItem=false}}
-            @onChange={{fn (mut this.month)}}
-          />
+    <div
+      class="user-custom-preferences-outlet user-date-of-birth-input"
+      ...attributes
+    >
+      {{#if this.siteSettings.cakeday_birthday_enabled}}
+        <div class="control-group">
+          <label class="control-label">{{i18n
+              "user.date_of_birth.label"
+            }}</label>
+          <div class="controls">
+            <ComboBox
+              @content={{this.months}}
+              @value={{this.month}}
+              @valueAttribute="value"
+              @valueProperty="value"
+              @none="cakeday.none"
+              @options={{hash clearable=true autoInsertNoneItem=false}}
+              @onChange={{fn (mut this.month)}}
+            />
 
-          <ComboBox
-            @content={{this.days}}
-            @value={{this.day}}
-            @valueProperty={{null}}
-            @nameProperty={{null}}
-            @none="cakeday.none"
-            @options={{hash clearable=true autoInsertNoneItem=false}}
-            @onChange={{fn (mut this.day)}}
-          />
+            <ComboBox
+              @content={{this.days}}
+              @value={{this.day}}
+              @valueProperty={{null}}
+              @nameProperty={{null}}
+              @none="cakeday.none"
+              @options={{hash clearable=true autoInsertNoneItem=false}}
+              @onChange={{fn (mut this.day)}}
+            />
+          </div>
         </div>
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
   </template>
 }

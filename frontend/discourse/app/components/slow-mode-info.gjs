@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { durationTextFromSeconds } from "discourse/helpers/slow-mode";
@@ -9,6 +10,7 @@ import discourseComputed from "discourse/lib/decorators";
 import Topic from "discourse/models/topic";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class SlowModeInfo extends Component {
   @discourseComputed("topic.slow_mode_seconds")
   durationText(seconds) {

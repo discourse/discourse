@@ -5,9 +5,10 @@ import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import { not } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
-import { classNameBindings } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import ComposerMessage from "discourse/components/composer-message";
 import ShareTopic from "discourse/components/modal/share-topic";
+import concatClass from "discourse/helpers/concat-class";
 import { ajax } from "discourse/lib/ajax";
 import {
   addUniqueValueToArray,
@@ -21,7 +22,7 @@ import { trackedArray } from "../lib/tracked-tools";
 
 let _messagesCache = {};
 
-@classNameBindings(":composer-popup-container", "hidden")
+@tagName("")
 export default class ComposerMessages extends Component {
   @tracked showShareModal;
   @trackedArray similarTopics = null;
@@ -349,19 +350,24 @@ export default class ComposerMessages extends Component {
   }
 
   <template>
-    {{#each this.messages as |message|}}
-      <ComposerMessage
-        @message={{message}}
-        @closeMessage={{this.closeMessage}}
-        @shareModal={{fn (mut this.showShareModal) true}}
-        @switchPM={{this.switchPM}}
-      />
-      {{#if this.showShareModal}}
-        <ShareTopic
-          @closeModal={{fn (mut this.showShareModal) false}}
-          @model={{this.shareModalData}}
+    <div
+      class={{concatClass "composer-popup-container" (if this.hidden "hidden")}}
+      ...attributes
+    >
+      {{#each this.messages as |message|}}
+        <ComposerMessage
+          @message={{message}}
+          @closeMessage={{this.closeMessage}}
+          @shareModal={{fn (mut this.showShareModal) true}}
+          @switchPM={{this.switchPM}}
         />
-      {{/if}}
-    {{/each}}
+        {{#if this.showShareModal}}
+          <ShareTopic
+            @closeModal={{fn (mut this.showShareModal) false}}
+            @model={{this.shareModalData}}
+          />
+        {{/if}}
+      {{/each}}
+    </div>
   </template>
 }

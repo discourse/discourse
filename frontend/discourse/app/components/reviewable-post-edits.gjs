@@ -3,6 +3,7 @@ import Component from "@ember/component";
 import { action } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import HistoryModal from "discourse/components/modal/history";
 import { historyHeat } from "discourse/components/post/meta-data/edits-indicator";
@@ -10,6 +11,7 @@ import discourseComputed from "discourse/lib/decorators";
 import { longDate } from "discourse/lib/formatter";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class ReviewablePostEdits extends Component {
   @service modal;
 

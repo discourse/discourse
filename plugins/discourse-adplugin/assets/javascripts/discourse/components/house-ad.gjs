@@ -1,10 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import { isBlank } from "@ember/utils";
-import {
-  attributeBindings,
-  classNameBindings,
-  classNames,
-} from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
+import concatClass from "discourse/helpers/concat-class";
 import discourseComputed from "discourse/lib/decorators";
 import AdComponent from "./ad-component";
 
@@ -16,9 +13,7 @@ const adIndex = {
   topic_list_between: null,
 };
 
-@classNames("house-creative")
-@classNameBindings("adUnitClass")
-@attributeBindings("colspanAttribute:colspan")
+@tagName("")
 export default class HouseAd extends AdComponent {
   adHtml = "";
   currentAd = null;
@@ -185,8 +180,14 @@ export default class HouseAd extends AdComponent {
   }
 
   <template>
-    {{#if this.showAd}}
-      {{htmlSafe this.adHtml}}
-    {{/if}}
+    <div
+      colspan={{this.colspanAttribute}}
+      class={{concatClass "house-creative" this.adUnitClass}}
+      ...attributes
+    >
+      {{#if this.showAd}}
+        {{htmlSafe this.adHtml}}
+      {{/if}}
+    </div>
   </template>
 }

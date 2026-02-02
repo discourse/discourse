@@ -9,8 +9,8 @@ export default <template>
     <div class="review-item__meta-label">{{i18n "review.posted_in"}}</div>
 
     <div class="review-item__meta-topic-title">
-      <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="" />
-      <ReviewablePostEdits @reviewable={{@reviewable}} @tagName="" />
+      <ReviewableTopicLink @reviewable={{@reviewable}} />
+      <ReviewablePostEdits @reviewable={{@reviewable}} />
     </div>
 
     <div class="review-item__meta-label">{{i18n "review.review_user"}}</div>

@@ -53,8 +53,8 @@ export default class ReviewablePost extends Component {
       <div class="review-item__meta-label">{{this.metaLabel}}</div>
 
       <div class="review-item__meta-topic-title">
-        <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="" />
-        <ReviewablePostEdits @reviewable={{@reviewable}} @tagName="" />
+        <ReviewableTopicLink @reviewable={{@reviewable}} />
+        <ReviewablePostEdits @reviewable={{@reviewable}} />
       </div>
 
       <div class="review-item__meta-label">{{this.userLabel}}</div>

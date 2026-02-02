@@ -33,12 +33,12 @@ export default class ReviewableQueuedPost extends Component {
       <div class="review-item__meta-label">{{i18n "review.topic_label"}}</div>
 
       <div class="review-item__meta-topic-title">
-        <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="">
+        <ReviewableTopicLink @reviewable={{@reviewable}}>
           <div class="title-text">
             {{highlightWatchedWords @reviewable.payload.title @reviewable}}
           </div>
           {{categoryBadge @reviewable.category}}
-          <ReviewableTags @tags={{@reviewable.payload.tags}} @tagName="" />
+          <ReviewableTags @tags={{@reviewable.payload.tags}} />
           {{#if @reviewable.payload.via_email}}
             <a href {{on "click" this.showRawEmail}} class="show-raw-email">
               {{icon "envelope" title="post.via_email"}}

@@ -179,10 +179,9 @@ export default <template>
               @name="before-user-profile-avatar"
               @outletArgs={{lazyHash model=@controller.model}}
             />
-            <UserProfileAvatar @user={{@controller.model}} @tagName="" />
+            <UserProfileAvatar @user={{@controller.model}} />
             <div class="primary-textual">
               <div class="user-profile-names">
-
                 <div
                   class="{{if @controller.nameFirst 'full-name' 'username'}}
                     user-profile-names__primary"

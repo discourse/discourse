@@ -33,15 +33,12 @@ export default class ReviewablePostVotingComment extends Component {
     </div>
 
     <div class="post-contents-wrapper">
-      <ReviewableCreatedBy
-        @user={{@reviewable.target_created_by}}
-        @tagName=""
-      />
+      <ReviewableCreatedBy @user={{@reviewable.target_created_by}} />
+
       <div class="post-contents">
         <ReviewablePostHeader
           @reviewable={{@reviewable}}
           @createdBy={{@reviewable.target_created_by}}
-          @tagName=""
         />
 
         <div class="post-body">

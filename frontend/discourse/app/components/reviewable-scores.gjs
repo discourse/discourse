@@ -1,10 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { htmlSafe } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import ReviewableConversationPost from "discourse/components/reviewable-conversation-post";
 import ReviewableScore from "discourse/components/reviewable-score";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class ReviewableScores extends Component {
   <template>
     {{#if this.reviewable.reviewable_scores}}
@@ -52,7 +54,6 @@ export default class ReviewableScores extends Component {
           </div>
         {{/if}}
       {{/each}}
-
     {{/if}}
   </template>
 }

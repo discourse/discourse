@@ -1,12 +1,14 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { filterBy } from "@ember/object/computed";
+import { tagName } from "@ember-decorators/component";
 import UserLink from "discourse/components/user-link";
 import avatar from "discourse/helpers/avatar";
 import formatDate from "discourse/helpers/format-date";
 import reviewableHistoryDescription from "discourse/helpers/reviewable-history-description";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class ReviewableHistories extends Component {
   @filterBy("histories", "created", false) filteredHistories;
 
