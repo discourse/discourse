@@ -18,18 +18,24 @@ module DiscourseRewind
 
         total_words =
           DB.query_single(<<~SQL, user_id: user.id, date_start: date.first, date_end: date.last)
-          SELECT SUM(word_count) FROM posts
-          WHERE user_id = :user_id
-          AND created_at BETWEEN :date_start AND :date_end
-          AND deleted_at IS NULL
+          SELECT SUM(p.word_count)
+          FROM posts p
+          INNER JOIN topics t ON t.id = p.topic_id
+          WHERE p.user_id = :user_id
+          AND p.created_at BETWEEN :date_start AND :date_end
+          AND p.deleted_at IS NULL
+          AND t.deleted_at IS NULL
         SQL
 
         post_count =
           DB.query_single(<<~SQL, user_id: user.id, date_start: date.first, date_end: date.last)
-          SELECT COUNT(*) FROM posts
-          WHERE user_id = :user_id
-          AND created_at BETWEEN :date_start AND :date_end
-          AND deleted_at IS NULL
+          SELECT COUNT(*)
+          FROM posts p
+          INNER JOIN topics t ON t.id = p.topic_id
+          WHERE p.user_id = :user_id
+          AND p.created_at BETWEEN :date_start AND :date_end
+          AND p.deleted_at IS NULL
+          AND t.deleted_at IS NULL
         SQL
 
         average_post_length =
@@ -55,9 +61,11 @@ module DiscourseRewind
               p.word_count,
               regexp_replace(p.cooked, '<[^>]+>', ' ', 'g') AS plain
             FROM posts p
+            INNER JOIN topics t ON t.id = p.topic_id
             WHERE p.user_id = :user_id
               AND p.created_at BETWEEN :start AND :end
               AND p.deleted_at IS NULL
+              AND t.deleted_at IS NULL
           ),
           metrics AS (
             SELECT
