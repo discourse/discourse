@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { array } from "@ember/helper";
 import { action } from "@ember/object";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
@@ -8,6 +9,7 @@ import AdminFilterControls from "discourse/admin/components/admin-filter-control
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
+  @cached
   get upcomingChanges() {
     return this.args.upcomingChanges.map((change) => {
       change.upcoming_change = new TrackedObject(change.upcoming_change);

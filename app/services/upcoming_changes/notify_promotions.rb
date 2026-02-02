@@ -55,8 +55,10 @@ class UpcomingChanges::NotifyPromotions
           ] = "Setting #{setting_name} has already notified admins about promotion"
         end
 
-        on_failed_policy(:admin_has_not_manually_opted_out) do |policy|
-          status_hash[:error] = "Setting #{setting_name} has been manually opted out by an admin"
+        on_failed_policy(:admin_has_not_manually_toggled) do |policy|
+          status_hash[
+            :error
+          ] = "Setting #{setting_name} has been manually opted in or out by an admin, we did not notify admins about promotion"
         end
 
         on_exceptions do |exception|
