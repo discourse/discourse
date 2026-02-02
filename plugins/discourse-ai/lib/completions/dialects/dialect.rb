@@ -43,8 +43,6 @@ module DiscourseAi
           @llm_model = llm_model
         end
 
-        VALID_ID_REGEX = /\A[a-zA-Z0-9_]+\z/
-
         def native_tool_support?
           false
         end

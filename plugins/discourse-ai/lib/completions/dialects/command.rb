@@ -10,8 +10,6 @@ module DiscourseAi
           llm_model.provider == "cohere"
         end
 
-        VALID_ID_REGEX = /\A[a-zA-Z0-9_]+\z/
-
         def translate
           messages = super
 
