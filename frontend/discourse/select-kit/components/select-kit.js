@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
