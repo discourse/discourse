@@ -4179,6 +4179,7 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/automatically-apply-grids-to-image-uploads/394784"
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
