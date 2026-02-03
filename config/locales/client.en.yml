@@ -3559,6 +3559,7 @@ en:
         deleted_post: "(deleted post)"
         post_number_with_topic_title: "post #%{post_number} - %{title}"
         new_post_in_topic: "new post in %{title}"
+        new_post_in_deleted_topic: "new post in a deleted topic"
         user_requires_approval: "%{username} requires approval"
         default_item: "reviewable item #%{reviewable_id}"
 
