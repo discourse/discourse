@@ -81,8 +81,6 @@ he:
           invalid: "שגוי"
           no_such_category: "אין קטגוריה כזו"
           no_such_group: "אין קבוצה כזו"
-          invalid_date: "%{date} הוא תאריך שגוי"
-          invalid_time: "%{time} היא שעה שגויה"
     group:
       reports: "דוחות"
     admin:

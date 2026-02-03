@@ -83,7 +83,7 @@ pl_PL:
           no_such_category: "Nie ma takiej kategorii"
           no_such_group: "Nie ma takiej grupy"
           invalid_date: "%{date} jest nieprawidłową datą"
-          invalid_time: "%{time} jest nieprawidłową godziną"
+          invalid_time: "%{time} to nieprawidłowy godzina"
     group:
       reports: "Zgłoszeń"
     admin:

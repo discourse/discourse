@@ -65,7 +65,6 @@ pl_PL:
       starred_channels_empty: "Nie wyróżniono jeszcze żadnego kanału. Wyróżnij kanały, aby je tu zobaczyć i mieć do nich szybki dostęp."
       browse_all_channels: "Przeglądaj wszystkie kanały"
       see_in: "Zobacz w"
-      open_channel_menu: "Otwórz menu kanału"
       move_to_channel:
         title: "Przenieś wiadomości na kanał"
         instructions:
@@ -93,8 +92,6 @@ pl_PL:
         join_channel: "Dołącz do kanału"
         leave_channel: "Opuść kanał"
         leave_groupchat_info: "Opuszczając ten czat grupowy, nie będziesz już mieć do niego dostępu i nie będziesz otrzymywać związanych z nim powiadomień. Aby ponownie dołączyć, musisz otrzymać ponowne zaproszenie od członka czatu grupowego."
-        notification_settings: "Ustawienia powiadomień"
-        notification_settings_context: "Powiadomienia"
         join: "Dołącz"
         leave: "Opuść"
         save_label:
@@ -530,7 +527,6 @@ pl_PL:
         follow: "Dołącz"
         followed: "Dołączył"
         mute: "Wycisz kanał"
-        unmute: "Wyłącz wyciszenie kanału"
         threading_enabled: "Włączona"
         threading_disabled: "Wyłączone"
         muted_on: "Wł"
@@ -795,7 +791,6 @@ pl_PL:
           composer_bold: "%{shortcut} Pogrubienie (tylko kompozytor)"
           composer_italic: "%{shortcut} Kursywa (tylko kompozytor)"
           composer_code: "%{shortcut} Kod (tylko kompozytor)"
-          drawer_toggle: "%{shortcut} Przełącz szufladę czatu"
           drawer_close: "%{shortcut} Zamknij szufladę czatu"
           mark_all_channels_read: "%{shortcut} Zaznacz wszystkie kanały jako przeczytane"
     topic_statuses:

@@ -75,7 +75,7 @@ pt_BR:
       ongoing_event_reminder: "%{title} está em andamento."
     errors:
       bulk_invite:
-        max_invitees: "Os primeiros %{max_invittes} convites foram enviados. Tente dividir o arquivo em partes menores."
+        max_invitees: "Os primeiros %{max_invitees} convites foram enviados. Tente dividir o arquivo em partes menores."
         error: "Houve um erro ao tentar enviar este arquivo. Tente novamente mais tarde."
       models:
         event:

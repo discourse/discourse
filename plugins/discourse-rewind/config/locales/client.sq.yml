@@ -16,8 +16,6 @@ sq:
           title: Koha e leximit
         chat_usage:
           messages: mesazhet
-          author: Ju
-          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Ftesat

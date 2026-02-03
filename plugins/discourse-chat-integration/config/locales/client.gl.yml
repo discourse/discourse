@@ -16,7 +16,6 @@ gl:
       settings: "Configuración"
       no_providers: "Cómpre activar algúns fornecedores na configuración do complemento"
       channels_with_errors: "Algunhas das canles deste fornecedor fallaron a última vez que se enviaron mensaxes. Prema na icona(s) de erro para saber máis."
-      channel_exception: "Produciuse un erro descoñecido a última vez que se enviou unha mensaxe por esta canle."
       group_mention_template: "Mencións de: @%{name}"
       group_message_template: "Mensaxes a: @%{name}"
       choose_group: "(escolla un grupo)"
@@ -33,7 +32,6 @@ gl:
         topic: "Tema"
         send: "Enviar mensaxe de proba"
         close: "Pechar"
-        error: "Produciuse un erro descoñecido ao enviar a mensaxe. Consulte os rexistros do sitio para obter máis información."
         success: "A mensaxe enviouse correctamente"
       type:
         normal: Normal

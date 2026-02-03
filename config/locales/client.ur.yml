@@ -2276,7 +2276,6 @@ ur:
     form_kit:
       reset: رِی سَیٹ
       optional: اختیاری
-      errors_summary_title: "اس فارم میں غلطیاں ہیں:"
       dirty_form: "آپ نے اپنی تبدیلیاں جمع نہیں کروائیں! کیا آپ واقعی چھوڑنا چاہتے ہیں؟"
       errors:
         starts_with: "%{prefix}سے شروع ہونا چاہیے"
@@ -3793,7 +3792,7 @@ ur:
       quote_edit: "ترمیم"
       quote_edit_shortcut: "ترمیم کریں (یا e دبائیں)"
       quote_copy: "اقتباس کاپی کریں"
-      quote_copied_to_clibboard: "اقتباس کلپ بورڈ پر کاپی ہو گیا"
+      quote_copied_to_clipboard: "اقتباس کلپ بورڈ پر کاپی ہو گیا"
       quote_share: "شیئر"
       edit_reason: "وجہ: "
       post_number: "پوسٹ %{number}"
@@ -4181,7 +4180,7 @@ ur:
       minimum_required_tags: "ایک موضوع میں ضروری ٹیگز کی کم از کم تعداد:"
       none_subcategory_text: "کوئی نہیں"
       visibility:
-        title: "رسائی"
+        title: "نموداری"
         public: "عوامی"
         group_restricted: "نجی"
       num_auto_bump_daily: "روزانہ خود کار طریقے سے بَمپ کرنے کیلئے کھلے موضوعات کی تعداد:"
@@ -6459,8 +6458,6 @@ ur:
         delete: "حذف کریں"
         delete_confirm: 'کیا آپ واقعی "%{theme_name}" مٹانا چاہتے ہیں؟'
         bulk_delete: "کیا آپ پر یقین ہیں؟"
-        bulk_themes_delete_confirm: "اس سے درج ذیل تھیمز حذف ہو جائیں گی، وہ آپ کی سائٹ پر کسی بھی رکن کے لیے مزید استعمال کے قابل نہیں رہیں گی۔"
-        bulk_components_delete_confirm: "یہ مندرجہ ذیل اجزاء کو ان انسٹال کر دے گا، وہ آپ کی سائٹ پر کسی بھی رکن کے ذریعہ مزید استعمال کے قابل نہیں ہوں گے:"
         color: "رنگ"
         opacity: "دھندلاپن"
         copy: "نقل"

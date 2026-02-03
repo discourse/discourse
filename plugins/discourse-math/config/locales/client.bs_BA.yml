@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 bs_BA:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "Snimi"
-      insert_modal:
-        insert: "Unesi"

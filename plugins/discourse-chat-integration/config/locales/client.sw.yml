@@ -32,7 +32,6 @@ sw:
         topic: "Mada"
         send: "Tuma Ujumbe wa Kujaribu"
         close: "Funga"
-        error: "Hitilafu isilojulikana limetokea wakati wa kutuma ujumbe. Angalia logi ya mtandao kwa ajili ya taarifa zaidi."
         success: "Ujumbe umetumwa Vizuri"
       type:
         normal: Kawaida

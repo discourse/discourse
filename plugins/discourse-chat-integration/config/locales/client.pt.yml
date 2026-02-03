@@ -15,7 +15,6 @@ pt:
       menu_title: "Integrações de conversação"
       settings: "Configurações"
       no_providers: "Precisa de ativar alguns provedores nas definições do ''plug-in''"
-      channel_exception: "Ocorreu um erro desconhecido quando foi enviada uma mensagem para este canal."
       group_mention_template: "Menções de: @%{name}"
       group_message_template: "Mensagens para: @%{name}"
       choose_group: "(escolher um grupo)"
@@ -32,7 +31,6 @@ pt:
         topic: "Tópico"
         send: "Enviar Mensagem de Teste"
         close: "Fechar"
-        error: "Ocorreu um erro desconhecido enquanto enviava a mensagem. Verifique os registos do ''site'' para mais informação."
         success: "Mensagem enviada com sucesso"
       type:
         normal: Normal

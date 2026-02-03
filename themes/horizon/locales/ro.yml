@@ -5,16 +5,5 @@
 # https://translate.discourse.org/
 
 ro:
-  solved: "Rezolvat"
-  posted: "postat"
-  by_username: "de @%{username}"
-  vote_count:
-    one: "%{count} vot"
-    few: "%{count} voturi"
-    other: "%{count} voturi"
-  reply_count:
-    one: "%{count} răspuns"
-    few: "%{count} răspunsuri"
-    other: "%{count} de răspunsuri"
   theme_metadata:
     description: "O temă simplă și frumoasă care îmbunătățește experiența de utilizare pentru site-urile Discourse."

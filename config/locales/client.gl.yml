@@ -2808,7 +2808,7 @@ gl:
       minimum_required_tags: "Número mínimo de etiquetas requiridas nun tema:"
       none_subcategory_text: "Ningunha"
       visibility:
-        title: "Acceso"
+        title: "Visibilidade"
         public: "Pública"
         group_restricted: "Privada"
       num_auto_bump_daily: "Número de temas abertos que se promoven automaticamente cada día:"

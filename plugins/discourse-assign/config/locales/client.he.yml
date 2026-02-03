@@ -128,8 +128,6 @@ he:
       web_hooks:
         assign_event:
           group_name: "הקצאת אירועים"
-          assigned: "בעת הקצאת נושא על ידי משתמש"
-          unassigned: "בעת ביטול הקצאת נושא על ידי משתמש"
     search:
       advanced:
         in:

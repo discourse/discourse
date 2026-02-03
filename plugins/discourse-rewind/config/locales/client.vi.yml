@@ -20,8 +20,6 @@ vi:
           title: Thời gian đọc
         chat_usage:
           messages: tin nhắn
-          author: Bạn
-          author_others: "%{username}"
           status_online: "● trực tuyến"
         invites:
           title: Lời mời

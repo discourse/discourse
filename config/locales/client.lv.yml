@@ -2364,7 +2364,6 @@ lv:
       this_year: "šogad"
       none_subcategory_text: "Nav"
       visibility:
-        title: "Piekļuve"
         public: "Publisks"
         group_restricted: "Privāts"
       notifications:

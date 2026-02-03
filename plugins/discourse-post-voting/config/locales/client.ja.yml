@@ -110,6 +110,3 @@ ja:
     review:
       transcript:
         view: "前のメッセージのトランスクリプトを表示"
-      types:
-        reviewable_post_voting_comment:
-          title: "通報された投稿の投票コメント"

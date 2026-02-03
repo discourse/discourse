@@ -7,6 +7,7 @@
 de:
   discourse_subscriptions:
     customer_not_found: Kunde nicht gefunden
+    subscription_not_found: Abonnement nicht gefunden
     card:
       declined: Karte abgelehnt
       invalid: Karte ungültig

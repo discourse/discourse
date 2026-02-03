@@ -16,8 +16,6 @@ sl:
           title: Čas branja
         chat_usage:
           messages: zasebna sporočila
-          author: Vi
-          author_others: "%{username}"
         invites:
           title: Povabila
           invitee_posts: Ustvarjenih prispevkov

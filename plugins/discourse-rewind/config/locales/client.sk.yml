@@ -16,8 +16,6 @@ sk:
           title: Doba čítania
         chat_usage:
           messages: správy
-          author: Vy
-          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Pozvánky

@@ -16,8 +16,6 @@ hr:
           title: Vrijeme čitanja
         chat_usage:
           messages: poruke
-          author: Vi
-          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Pozivnice

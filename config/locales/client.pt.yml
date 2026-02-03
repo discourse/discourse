@@ -2274,7 +2274,6 @@ pt:
     form_kit:
       reset: Repor
       optional: opcional
-      errors_summary_title: "Este formulário contém erros:"
       dirty_form: "Não submeteste as tuas alterações! Tens a certeza de que queres sair?"
       errors:
         starts_with: "Deve começar com %{prefix}"
@@ -3601,7 +3600,7 @@ pt:
       quote_edit: "Editar"
       quote_edit_shortcut: "Editar (ou pressione e)"
       quote_copy: "Copiar Citação"
-      quote_copied_to_clibboard: "Citação copiada para a área de transferência"
+      quote_copied_to_clipboard: "Citação copiada para a área de transferência"
       quote_share: "Partilhar"
       edit_reason: "Motivo:"
       post_number: "publicação %{number}"
@@ -3925,7 +3924,7 @@ pt:
       this_year: "este ano"
       none_subcategory_text: "Nenhuma"
       visibility:
-        title: "Acesso"
+        title: "Visibilidade"
         public: "Público"
         group_restricted: "Privado"
       notifications:

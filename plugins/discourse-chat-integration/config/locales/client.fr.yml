@@ -16,7 +16,6 @@ fr:
       settings: "Paramètres"
       no_providers: "Vous devez activer certains fournisseurs dans les paramètres de l'extension"
       channels_with_errors: "Certains canaux de ce fournisseur ont échoué la dernière fois que des messages ont été envoyés. Cliquez sur les icônes d'erreur pour en savoir plus."
-      channel_exception: "Une erreur inconnue s'est produite lors du dernier envoi d'un message à ce canal."
       group_mention_template: "Mentions de : @%{name}"
       group_message_template: "Messages à : @%{name}"
       choose_group: "(choisir un groupe)"
@@ -33,7 +32,6 @@ fr:
         topic: "Sujet"
         send: "Envoyer message de test"
         close: "Fermer"
-        error: "Une erreur inconnue s'est produite lors de l'envoi du message. Consultez les journaux du site pour plus d'informations."
         success: "Message envoyé avec succès"
       type:
         normal: Normal

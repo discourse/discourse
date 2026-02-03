@@ -78,7 +78,6 @@ ja:
         join_channel: "チャンネルに参加する"
         leave_channel: "チャンネルから退出する"
         leave_groupchat_info: "このグループチャットから退出すると、それにアクセスできなくなり、そのチャットに関連する通知を受信しなくなります。もう一度参加するには、グループチャットのメンバーから招待を受ける必要があります。"
-        notification_settings_context: "通知"
         join: "参加"
         leave: "退出"
         save_label:

@@ -1337,7 +1337,6 @@ lt:
     digest_posts: "Didžiausias populiarių įrašų, rodomų el. pašto suvestinėje, skaičius."
     digest_other_topics: "Didžiausias temų skaičius, rodomas el. laiškų santraukos skiltyje „Naujienos jūsų stebimose temose ir kategorijose“."
     show_inactive_accounts: "Leisti prisijungusiems vartotojams naršyti neaktyvių paskyrų profilius."
-    hide_suspension_reasons: "Nerodyti sustabdymo priežasčių viešai naudotojų profiliuose."
     user_selected_primary_groups: "Leiskite vartotojams nustatyti savo pagrindinę grupę"
     max_notifications_per_user: "Maksimalus vieno vartotojo pranešimų skaičius, jei šis skaičius viršijamas, senieji pranešimai bus ištrinti. Taikoma kas savaitę. Norėdami išjungti, nustatykite 0"
     header_dropdown_category_count: "Kiek kategorijų gali būti rodoma antraštės išskleidžiamajame meniu."
@@ -2599,6 +2598,7 @@ lt:
         title: "Ne"
       ignore:
         title: "Ignoruoti"
+        description: "Pašalinkite jį iš eilės nesiimdami jokių veiksmų."
       ignore_and_do_nothing:
         title: "Nieko nedaryti"
       approve:

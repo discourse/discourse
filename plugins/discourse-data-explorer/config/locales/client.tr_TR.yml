@@ -77,8 +77,6 @@ tr_TR:
           invalid: "Geçersiz"
           no_such_category: "Böyle bir kategori yok"
           no_such_group: "Böyle bir grup yok"
-          invalid_date: "%{date} geçersiz bir tarih"
-          invalid_time: "%{time} geçersiz bir saat"
     group:
       reports: "Raporlar"
     admin:

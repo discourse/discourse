@@ -222,8 +222,6 @@ fi:
           name: "Upotukset"
           description: "Tarjoaa ominaisuuksia, kuten aiheeseen liittyvät ketjut ja tekoälyhaun, luomalla semanttisia kuvauksia tekstistä"
           hyde: "HyDE"
-          setting_groups:
-            related_topics: "Liittyvät ketjut"
         discord:
           name: "Discord-integraatio"
           description: "Lisää mahdollisuuden hakea Discord-kanavia"
@@ -234,8 +232,6 @@ fi:
           generate_concepts: "Käsitteiden päättely"
           match_concepts: "Käsitteiden sovittaminen"
           deduplicate_concepts: "Käsitteiden deduplikaatio"
-          setting_groups:
-            personas: "Persoonat"
         ai_helper:
           name: "Apuri"
           description: "Auttaa käyttäjiä vuorovaikutuksessa yhteisön kanssa, kuten ketjujen luomisessa, viestien kirjoittamisessa ja sisällön lukemisessa"
@@ -250,9 +246,6 @@ fi:
           image_caption: "Lisää kuvateksti"
           translator: "Kääntäjä"
           post_illustrator: "Viestin havainnollistaja"
-          setting_groups:
-            automation: "Automaatio"
-            personas: "Persoonat"
         translation:
           name: "Käännös"
           description: "Kääntää sisällön tuetuille kielille"
@@ -260,8 +253,6 @@ fi:
           post_raw_translator: "Viestin raakakääntäjä"
           topic_title_translator: "Ketjun otsikon kääntäjä"
           short_text_translator: "Lyhyen tekstin kääntäjä"
-          setting_groups:
-            personas: "Persoonat"
         spam:
           name: "Roskaposti"
           description: "Tunnistaa mahdollisen roskapostin valitun suuren kielimallin avulla ja liputtaa sen sivuston valvojien tarkastettavaksi tarkastusjonoon"
@@ -904,9 +895,3 @@ fi:
             disable: "Poista käytöstä"
       user_preferences:
         empty: "Olennaisia asetuksia ei ole käytettävissä tällä hetkellä"
-    review:
-      types:
-        reviewable_ai_post:
-          title: "Tekoälyn liputtama viesti"
-        reviewable_ai_chat_message:
-          title: "Tekoälyn liputtama chat-viesti"

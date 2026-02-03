@@ -16,7 +16,6 @@ sv:
       settings: "Inställningar"
       no_providers: "Du måste aktivera vissa leverantörer i tilläggsinställningarna"
       channels_with_errors: "Vissa kanaler för denna leverantör misslyckades förra gången meddelanden skickades. Klicka på felikonen/-erna för att få veta mer."
-      channel_exception: "Det uppstod ett okänt fel när ett meddelande senast skickades till den här kanalen."
       group_mention_template: "Omnämnanden av: @%{name}"
       group_message_template: "Meddelanden till: @%{name}"
       choose_group: "(välj en grupp)"
@@ -33,7 +32,6 @@ sv:
         topic: "Ämne"
         send: "Skicka testmeddelande"
         close: "Stäng"
-        error: "Ett okänt fel uppstod när meddelandet skickades. Kontrollera webbplatsloggarna för mer information."
         success: "Meddelandet har skickats"
       type:
         normal: Normal

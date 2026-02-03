@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 hr:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "Primijeni"
-      insert_modal:
-        insert: "Umetni"

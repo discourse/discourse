@@ -2121,7 +2121,6 @@ fa_IR:
     form_kit:
       reset: بازنشانی
       optional: اختیاری
-      errors_summary_title: "این فرم حاوی خطاهایی است:"
       dirty_form: "شما تغییرات خود را ارسال نکرده‌اید! آیا مطمئنید می‌خواهید بروید؟"
       errors:
         required: "مورد نیاز"
@@ -3536,7 +3535,7 @@ fa_IR:
       quote_edit: "ویرایش"
       quote_edit_shortcut: "ویرایش (یا e را فشار دهید)"
       quote_copy: "رونوشت نقل قول"
-      quote_copied_to_clibboard: "نقل قول در کلیپ بورد کپی شد"
+      quote_copied_to_clipboard: "نقل قول در کلیپ بورد کپی شد"
       quote_share: "اشتراک‌گذاری"
       edit_reason: "دلیل:"
       post_number: "نوشته %{number}"
@@ -3905,7 +3904,7 @@ fa_IR:
       minimum_required_tags: "حداقل تعداد برچسب‌های مورد نیاز در یک تاپیک:"
       none_subcategory_text: "هیچ‌کدام"
       visibility:
-        title: "دسترسی"
+        title: "قابل مشاهده"
         public: "عمومی"
         group_restricted: "خصوصی"
       auto_bump_cooldown_days: "حداقل روزها قبل از بالا آوردن دوباره یک موضوع واحد"
@@ -5863,8 +5862,6 @@ fa_IR:
         delete: "پاک کردن"
         delete_confirm: 'آیا از حذف "%{theme_name}" مطمئن هستید؟ '
         bulk_delete: "مطمئنید؟"
-        bulk_themes_delete_confirm: "با این کار پوسته‌های زیر حذف نصب می‌شوند و دیگر برای هیچ‌کدام از کاربران سایت شما قابل استفاده نخواهند بود:"
-        bulk_components_delete_confirm: "با این کار اجزای زیر حذف نصب خواهند شد و دیگر برای هیچ یک از کاربران سایت شما قابل استفاده نخواهند بود:"
         color: "رنگ"
         opacity: "تاری"
         copy: "تکراری"

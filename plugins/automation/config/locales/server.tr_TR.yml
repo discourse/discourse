@@ -67,7 +67,6 @@ tr_TR:
         description: Bir konunun etiketleri değiştirildiğinde otomasyon tetiklenir
       topic:
         title: Konu
-        description: İlişkili komut dosyası yalnızca belirtilen konuda kullanılır, bu, örneğin doğrulama yapan komut dosyaları için faydalıdır
       after_post_cook:
         title: Gönderi finalize edildikten sonra
         description: Bir gönderi içeriği hazırlandığında otomasyon tetiklenir

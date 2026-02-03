@@ -38,7 +38,6 @@ et:
         close_channel: "Sulge kanal"
         open_channel: "Ava kanal"
         archive_channel: "Arhiveeri kanal"
-        notification_settings_context: "Teavitus"
         join: "Liitu"
         leave: "Lahku"
       close: "Sulge"

@@ -81,8 +81,6 @@ sk:
           invalid: "Neplatné"
           no_such_category: "Žiadna takáto kategória"
           no_such_group: "Žiadna takáto skupina"
-          invalid_date: "%{date} je neplatný dátum"
-          invalid_time: "%{time} je neplatný čas"
     group:
       reports: "Hlásení"
     admin:

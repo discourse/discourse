@@ -51,8 +51,6 @@ fi:
     chat_integration_flowdock_excerpt_length: "Flowdock-viestin otteen pituus"
     chat_integration_groupme_enabled: "Ota Groupmen chat-integraatiopalveluntarjoaja käyttöön"
     chat_integration_groupme_excerpt_length: "Groupme-viestin otteen pituus"
-    chat_integration_groupme_bot_ids: "*pakollinen* Bottitunnukset, erotettu pilkulla, jos niitä on useita"
-    chat_integration_groupme_instance_names: " *pakollinen* GroupMe-keskutelun nimi, erotettuna pilkulla, jos niitä on useita (sama järjestys kuin bottitunnuksilla)"
     chat_integration_teams_enabled: "Ota Microsoft Teamsin chat-integraatiopalveluntarjoaja käyttöön"
     chat_integration_teams_excerpt_length: "Microsoft Teams -viestin otteen pituus"
     chat_integration_powerautomate_enabled: "Ota Microsoft Power Automate -integraatiopalveluntarjoaja käyttöön"
@@ -93,10 +91,8 @@ fi:
         create:
           created: "Säännön luominen onnistui"
           updated: "Säännön päivittäminen onnistui"
-          error: "Virhe luotaessa tätä sääntöä."
         delete:
           success: "Säännön poistaminen onnistui"
-          error: "Sääntöä poistettaessa tapahtui virhe. Katso sääntöjen luettelo suorittamalla `/discourse status'."
         not_found:
           tag: "Tunnistetta *%{name}* ei löydy."
           category: "Aluetta *%{name}* ei löydy. Käytettävissä olevat alueet: *%{list}*"
@@ -158,10 +154,8 @@ fi:
         create:
           created: "Säännön luominen onnistui"
           updated: "Säännön päivittäminen onnistui"
-          error: "Virhe luotaessa tätä sääntöä."
         delete:
           success: "Säännön poistaminen onnistui"
-          error: "Sääntöä poistettaessa tapahtui virhe. Katso sääntöjen luettelo suorittamalla <code>/status</code>."
         not_found:
           tag: "Tunnistetta <b>%{name}</b> ei löydy."
           category: "Aluetta <b>%{name}</b> ei löydy. Käytettävissä olevat alueet: <b>%{list}</b>"
@@ -192,10 +186,8 @@ fi:
         create:
           created: "Säännön luominen onnistui"
           updated: "Säännön päivittäminen onnistui"
-          error: "Virhe luotaessa tätä sääntöä."
         delete:
           success: "Säännön poistaminen onnistui"
-          error: "Sääntöä poistettaessa tapahtui virhe. Katso sääntöjen luettelo suorittamalla `/discourse status'."
         not_found:
           tag: "Tunnistetta *%{name}* ei löydy."
           category: "Aluetta *%{name}* ei löydy. Käytettävissä olevat alueet: *%{list}*"

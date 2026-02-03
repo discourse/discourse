@@ -76,7 +76,7 @@ he:
       ongoing_event_reminder: "%{title} מתרחש כרגע."
     errors:
       bulk_invite:
-        max_invitees: "%{max_invittes} המוזמנים הראשונים נוצרו. עדיף לנסות לפצל את הקובץ לחלקים קטנים יותר."
+        max_invitees: "%{max_invitees} המוזמנים הראשונים נוצרו. עדיף לנסות לפצל את הקובץ לחלקים קטנים יותר."
         error: "אירעה שגיאה בשליחת הקובץ. נא לנסות שוב מאוחר יותר."
       models:
         event:

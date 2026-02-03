@@ -51,7 +51,6 @@ id:
         add: "Menambahkan"
         close_channel: "Tutup kanal"
         open_channel: "Buka kanal"
-        notification_settings_context: "Pemberitahuan"
         join: "Gabung"
         leave: "Keluar"
       channels_list_popup:

@@ -53,7 +53,7 @@ sl:
       ongoing_event_reminder: "%{title} je v teku."
     errors:
       bulk_invite:
-        max_invitees: "Ustvarjenih je bilo prvih %{max_invittes} povabljencev. Poskusite razbiti datoteko na manjše dele."
+        max_invitees: "Ustvarjenih je bilo prvih %{max_invitees} povabljencev. Poskusite razbiti datoteko na manjše dele."
         error: "Pri nalaganju te datoteke je prišlo do napake. Prosimo, poskusite ponovno."
       models:
         event:

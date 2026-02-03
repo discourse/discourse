@@ -72,7 +72,6 @@ zh_CN:
         description: 当话题的标签发生变化时，将触发自动化
       topic:
         title: 话题
-        description: 关联的脚本将仅用于指定的话题，这对于执行验证的脚本十分有用
       topic_closed:
         title: 主题已关闭
         description: 当主题关闭时触发脚本。

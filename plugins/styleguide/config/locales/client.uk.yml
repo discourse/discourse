@@ -85,8 +85,6 @@ uk:
           title: "Список публікацій"
           empty_example: "<PostList /> порожній стан"
           populated_example: "<PostList /> заповнений стан"
-        post_oneboxes:
-          title: "Пошта OneBoxes"
         topic_map:
           title: "Карта теми"
         site_header:

@@ -2256,7 +2256,6 @@ it:
     form_kit:
       reset: Annulla
       optional: facoltativo
-      errors_summary_title: "Questo modulo contiene errori:"
       dirty_form: "Non hai caricato le modifiche! Vuoi davvero uscire?"
       errors:
         starts_with: "Deve iniziare con %{prefix}"
@@ -3752,7 +3751,7 @@ it:
       quote_edit: "Modifica"
       quote_edit_shortcut: "Modifica (o premi e)"
       quote_copy: "Copia citazione"
-      quote_copied_to_clibboard: "Citazione copiata negli appunti"
+      quote_copied_to_clipboard: "Citazione copiata negli appunti"
       quote_share: "Condividi"
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"
@@ -4142,7 +4141,7 @@ it:
       minimum_required_tags: "Numero minimo di etichette richieste per argomento:"
       none_subcategory_text: "Nessuna"
       visibility:
-        title: "Accesso"
+        title: "Visibilità"
         public: "Pubblico"
         group_restricted: "Privato"
       num_auto_bump_daily: "Numero di argomenti aperti da riproporre automaticamente ogni giorno:"
@@ -6432,8 +6431,6 @@ it:
         delete: "Cancella"
         delete_confirm: 'Sei sicuro di voler eliminare "%{theme_name}"?'
         bulk_delete: "Continuare?"
-        bulk_themes_delete_confirm: "Ciò disinstallerà i seguenti temi, che non saranno più utilizzabili da nessun utente sul tuo sito:"
-        bulk_components_delete_confirm: "I seguenti componenti verranno disinstallati e non saranno più utilizzabili dagli utenti del tuo sito:"
         color: "Colore"
         opacity: "Opacità"
         copy: "Duplica"

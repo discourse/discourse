@@ -267,9 +267,6 @@ he:
         embeddings:
           name: "הטמעות"
           hyde: "HyDE"
-          setting_groups:
-            related_topics: "נושאים קשורים"
-            semantic_search: "חיפוש סמנטי"
         discord:
           name: "שילוב מול Discord"
           description: "הוספת היכולת לחפש בערוצי Discord"
@@ -279,8 +276,6 @@ he:
           generate_concepts: "הסקת תפיסות"
           match_concepts: "תיאום מושגים"
           deduplicate_concepts: "הסרת כפילות מושגים"
-          setting_groups:
-            personas: "דמויות"
         ai_helper:
           name: "מסייע"
           proofread: הגהת הטקסט
@@ -294,8 +289,6 @@ he:
           image_caption: "הוספת כותרות לתמונות"
           translator: "תרגום"
           post_illustrator: "איור פוסטים"
-          setting_groups:
-            personas: "דמויות"
         translation:
           name: "תרגום"
           description: "תרגום תוכן לשפות נתמכות"
@@ -309,8 +302,6 @@ he:
             two: "תזמון תרגום של שני פוסטים לא מתורגמים."
             many: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
             other: "תזמון תרגום של %{count} פוסטים לא מתורגמים."
-          setting_groups:
-            personas: "דמויות"
         spam:
           name: "ספאם"
           inspect_posts: "בדיקת פוסטים"
@@ -976,18 +967,6 @@ he:
         topic:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
-          regenerate: "לסכם בקצרה מחדש"
-          regenerate_bulk: "לסכם תקצירים מחדש"
-          regenerate_success:
-            one: "התקציר הקצר נוצר מחדש בהצלחה"
-            two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
-            many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
-            other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
-          regenerate_error:
-            one: "יצירת תקציר מחדש נכשלה"
-            two: "יצירת שני תקצירים מחדש נכשלה"
-            many: "יצירת %{count} תקצירים מחדש נכשלה"
-            other: "יצירת %{count} תקצירים מחדש נכשלה"
         topic_list_layout:
           button:
             compact: "מצומצם"
@@ -1009,9 +988,3 @@ he:
             disable: "השבתה"
       user_preferences:
         empty: "אין הגדרות תואמות זמינות בשלב זה"
-    review:
-      types:
-        reviewable_ai_post:
-          title: "פוסט שסומן על ידי בינה מלאכותית"
-        reviewable_ai_chat_message:
-          title: "הודעת צ׳אט שסומנה על ידי בינה מלאכותית"

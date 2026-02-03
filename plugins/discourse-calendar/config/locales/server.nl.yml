@@ -75,7 +75,7 @@ nl:
       ongoing_event_reminder: "%{title} is gaande."
     errors:
       bulk_invite:
-        max_invitees: "De eerste %{max_invittes} genodigden zijn gemaakt. Probeer het bestand op te splitsen in kleinere delen."
+        max_invitees: "De eerste %{max_invitees} genodigden zijn gemaakt. Probeer het bestand op te splitsen in kleinere delen."
         error: "Er is een fout opgetreden bij het uploaden van het bestand. Probeer het later opnieuw."
       models:
         event:

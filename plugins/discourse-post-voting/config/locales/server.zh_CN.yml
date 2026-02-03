@@ -51,24 +51,9 @@ zh_CN:
         agree_and_delete:
           title: "删除评论"
           description: "删除评论，使用户看不到。"
-        agree_and_suspend:
-          title: "封禁用户"
-          description: "同意举报并封禁用户。"
-        agree_and_silence:
-          title: "禁言用户"
-          description: "同意举报并将用户禁言。"
         disagree_and_restore:
           title: "不同意并恢复评论"
           description: "恢复评论，以便所有用户都可以看到。"
-        disagree:
-          title: "保留评论"
-          description: "不同意举报内容，保持评论不变。"
-        ignore:
-          title: "忽略举报"
-          description: "将其从审核队列中移除，不采取任何措施"
-        delete_and_agree:
-          title: "忽略举报并删除消息"
-          description: "通过从队列中移除来忽略举报并删除评论。"
   post_action_types:
     vote:
       title: "投票"
@@ -115,17 +100,10 @@ zh_CN:
             title: "删除评论"
             description: "删除评论，使用户看不到。"
           delete_and_agree:
-            title: "忽略举报并删除消息"
             description: "通过从队列中移除来忽略举报并删除评论。"
           disagree_and_restore:
             title: "不同意并恢复评论"
             description: "恢复评论，以便所有用户都可以看到。"
-          disagree:
-            title: "保留评论"
-            description: "不同意举报内容，保持评论不变。"
-          ignore:
-            title: "忽略举报"
-            description: "将其从审核队列中移除，不采取任何措施"
         transcript:
           view: "查看以前的评论转录文本"
       reviewable_score_types:

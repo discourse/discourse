@@ -351,7 +351,6 @@ pt_BR:
       bulk_invite: "Convite em massa"
       close_event: "Encerrar evento"
       open_event: "Evento aberto"
-      destroy_event: "Excluir evento"
       invitees_modal:
         title_invited: "Participação no evento"
         title_participated: "Lista de usuários(as) que participaram"
@@ -428,12 +427,6 @@ pt_BR:
             private:
               title: "Privado(a)"
               description: "Um evento privado só pode ter a participação de usuários(as) convidados(as)."
-      composer:
-        name_placeholder: "Evento"
-        end_date_placeholder: "Definir data final"
-        location_placeholder: "Adicionar local ou URL"
-        max_attendees_placeholder: "Máx. de participantes"
-        description_placeholder: "Adicionar descrição do evento"
       builder_modal:
         custom_fields:
           label: "Campos personalizados"
@@ -503,7 +496,6 @@ pt_BR:
           label: "Grupos convidados"
         status:
           label: "Status"
-        delete_confirmation_message: "Excluir este evento?"
       invite_user_or_group:
         title: "Notificar usuário(s) ou grupo(s)"
         invite: "Enviar"

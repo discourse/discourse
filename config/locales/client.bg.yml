@@ -2955,7 +2955,7 @@ bg:
       minimum_required_tags: "Минимален брой етикети на тема"
       none_subcategory_text: "Без"
       visibility:
-        title: "Достъп"
+        title: "Видимост"
         public: "Публични"
         group_restricted: "Затворени"
       auto_bump_cooldown_days: "Минимум дни преди да попаднете повторно на същата тема:"

@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 sk:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "Použi"
-      insert_modal:
-        insert: "Vložiť"

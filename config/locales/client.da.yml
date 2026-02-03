@@ -3534,7 +3534,7 @@ da:
       minimum_required_tags: "Minimum antal tags krævet i et emne:"
       none_subcategory_text: "Ingen"
       visibility:
-        title: "Adgang"
+        title: "Synlighed"
         public: "Offentlig"
         group_restricted: "Privat"
       num_auto_bump_daily: "Antal åbne emner, der automatisk 'bump'es dagligt:"

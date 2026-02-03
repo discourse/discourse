@@ -2246,7 +2246,7 @@ et:
       minimum_required_tags: "Minimaalne nõutud siltide arv teemas:"
       none_subcategory_text: "Pole"
       visibility:
-        title: "Juurdepääs"
+        title: "Nähtavus"
         public: "Avalik"
         group_restricted: "Privaatne"
       num_auto_bump_daily: "Avatud teemade arv, mida iga päev automaatselt tõsta:"

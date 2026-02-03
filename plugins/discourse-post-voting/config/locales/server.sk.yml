@@ -10,12 +10,6 @@ sk:
       actions:
         no_action_comment:
           title: "Žiadna akcia"
-        agree_and_suspend:
-          title: "Pozastavenie používateľa"
-          description: "Súhlas s príznakom a pozastavenie používateľa."
-        agree_and_silence:
-          title: "Umlčať používateľa"
-          description: "Súhlas s príznakom a umlčte používateľa."
   post_action_types:
     vote:
       title: "Hlasovať"

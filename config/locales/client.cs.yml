@@ -2579,7 +2579,6 @@ cs:
     form_kit:
       reset: obnovit výchozí
       optional: volitelné
-      errors_summary_title: "Tento formulář obsahuje chyby:"
       dirty_form: "Neodeslali jste změny! Opravdu chcete odejít?"
       errors:
         starts_with: "Musí začínat na %{prefix}"
@@ -4336,7 +4335,7 @@ cs:
       quote_edit: "Upravit"
       quote_edit_shortcut: "Upravit (nebo stiskněte e)"
       quote_copy: "Kopírovat citaci"
-      quote_copied_to_clibboard: "Citace byla zkopírována do schránky"
+      quote_copied_to_clipboard: "Citace byla zkopírována do schránky"
       quote_share: "Sdílet"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. %{number}"
@@ -4799,7 +4798,7 @@ cs:
       default_slow_mode: 'Povolit "Pomalý režim" pro nová témata v této kategorii.'
       none_subcategory_text: "Žádná"
       visibility:
-        title: "Přístup"
+        title: "Viditelnost"
         public: "Veřejná"
         all_members: "Všichni členové"
         group_restricted: "Soukromá"
@@ -6035,7 +6034,6 @@ cs:
           search_placeholder: "Filtrovat podle názvu, popisu nebo pluginu..."
           no_results: "Vašemu filtru neodpovídají žádné nadcházející změny."
           all: "Vše"
-          enabled_all: "Povoleno nebo zakázáno"
           enabled: "Zapnuto"
           disabled: "Vypnuto"
           impact_type_all: "Všechny typy dopadů"
@@ -7378,8 +7376,6 @@ cs:
         delete: "Smazat"
         delete_confirm: 'Opravdu chcete odstranit "%{theme_name}"?'
         bulk_delete: "Jste si jisti?"
-        bulk_themes_delete_confirm: "Tímto se odinstalují následující motivy. Nebudou již použitelné žádnými uživateli na vašem webu:"
-        bulk_components_delete_confirm: "Tímto se odinstalují následující komponenty. Nebudou již použitelné žádnými uživateli na vašem webu:"
         color: "Barva"
         opacity: "Neprůhlednost"
         copy: "Duplikovat"

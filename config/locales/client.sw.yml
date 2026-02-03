@@ -1960,7 +1960,7 @@ sw:
       minimum_required_tags: "Kiwango cha chini cha lebo zinazohitajika kwenye mada:"
       none_subcategory_text: "Hakuna"
       visibility:
-        title: "Kufikia"
+        title: "Uonekanaji"
         public: "Umma"
         group_restricted: "Binafsi"
       notifications:

@@ -20,7 +20,6 @@ bs_BA:
       channel_settings:
         edit: "Edit"
         add: "Add"
-        notification_settings_context: "Obavijest"
         join: "Učlani se"
         leave: "Napusti"
       close: "Zatvori"

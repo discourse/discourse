@@ -7,6 +7,8 @@
 hu:
   js:
     discourse_rewind:
+      cannot_view_rewind: >
+        Nem tekintheted meg ezt a Discourse Rewind jelentést. Lehet, hogy a tulajdonos nem osztotta meg nyilvánosan?<br><br> $> _<br><br>
       share:
         toggle_label:
           private: "Privát"
@@ -16,8 +18,6 @@ hu:
           title: Olvasási Idő
         chat_usage:
           messages: üzenetek
-          author: Ön
-          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Meghívók

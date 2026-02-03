@@ -75,7 +75,7 @@ ja:
       ongoing_event_reminder: "%{title} は進行中です。"
     errors:
       bulk_invite:
-        max_invitees: "最初の %{max_invittes} 人の招待者が作成されました。ファイルをより小さく分割してください。"
+        max_invitees: "最初の %{max_invitees} 人の招待者が作成されました。ファイルをより小さく分割してください。"
         error: "そのファイルをアップロード中にエラーが発生しました。後でもう一度お試しください。"
       models:
         event:

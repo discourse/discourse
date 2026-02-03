@@ -36,7 +36,6 @@ ro:
         edit: "Modifică"
         add: "Adaugă"
         leave_groupchat_info: "Dacă părăsești această discuție de grup, nu vei mai avea acces la ea și nu vei mai primi notificări legate de ea. Pentru a reveni, va trebui să te re-invite un membru al discuției de grup."
-        notification_settings_context: "Notificări"
         join: "Alătură-te"
         leave: "Părăsește"
       channel_delete:

@@ -5,13 +5,36 @@
 # https://translate.discourse.org/
 
 el:
+  admin_js:
+    site_settings:
+      categories:
+        post_voting: Ψήφιση Αναρτήσεων
+  post_voting:
+    reviewables:
+      comment_already_handled: "Ευχαριστούμε, αλλά έχουμε ήδη αναθεωρήσει αυτό το σχόλιο και έχουμε διαπιστώσει ότι δεν χρειάζεται να αναφερθεί ξανά."
   js:
+    discourse_post_voting:
+      title: "Ψήφιση αναρτήσεων"
     notifications:
       question_answer_user_commented: "<span>%{username}</span> %{description}"
       titles:
         question_answer_user_commented: "νέο σχόλιο"
       popup:
         question_answer_user_commented: 'Ο χρήστης %{username} σχολίασε στο "%{topic}" - %{site_title}'
+    category:
+      post_voting_settings_heading: Ψήφιση Αναρτήσεων
+      create_as_post_voting_default: Τα νέα θέματα ξεκινάνε από προεπιλογή ως θέματα Ψήφισης Αναρτήσεων σε αυτήν την κατηγορία.
+      only_post_voting_in_this_category: Τα νέα θέματα μπορούν να είναι μόνο θέματα Ψήφισης Αναρτήσεων σε αυτήν την κατηγορία.
+    composer:
+      create_post_voting:
+        label: "Δημιουργία θέματος ψήφισης αναρτήσεων"
+      composer_actions:
+        create_as_post_voting:
+          label: "Εναλλαγή ψήφισης αναρτήσεων"
+          desc: "Το θέμα θα δημιουργηθεί με ψηφίσιμες αναρτήσεις"
+        remove_as_post_voting:
+          label: "Αφαίρεση ψήφισης αναρτήσεων"
+          desc: "Το θέμα θα δημιουργηθεί σε κανονική μορφή"
     last_answer_lowercase: τελευταία απάντηση
     answer_lowercase:
       one: απάντηση
@@ -34,36 +57,48 @@ el:
           cancel: "ακύρωση"
           add: "Προσθήκη σχολίου"
           show:
-            one: Εμφάνιση %{count} ακόμη σχολίου
-            other: Εμφάνιση %{count} ακόμη σχολίων
+            one: Εμφάνιση %{count} ακόμα σχολίου
+            other: Εμφάνιση %{count} ακόμα σχολίων
           delete:
             confirm: "Σίγουρα θέλετε να διαγράψετε αυτό το σχόλιο;"
           user:
             deleted: "(ο χρήστης διαγράφηκε)"
           reviewables:
+            comment_already_handled: "Ευχαριστούμε, αλλά έχουμε ήδη αναθεωρήσει αυτό το σχόλιο και έχουμε διαπιστώσει ότι δεν χρειάζεται να αναφερθεί ξανά."
             actions:
               agree:
                 title: "Συμφωνώ..."
               agree_and_keep_comment:
                 title: "Διατήρηση σχολίου"
+                description: "Συμφωνώ με την αναφορά και διατήρηση του σχολίου χωρίς αλλαγή."
               agree_and_keep_deleted:
                 title: "Διατήρηση σχολίου ως Διαγραμμένο"
+                description: "Συμφωνώ με την αναφορά και διατήρηση του σχολίου ως διαγραμμένο."
               agree_and_suspend:
                 title: "Αποβολή Χρήστη"
+                description: "Συμφωνώ με την αναφορά και αναστολή του χρήστη."
               agree_and_silence:
                 title: "Σίγαση Χρήστη"
+                description: "Συμφωνώ με την αναφορά και σίγηση του χρήστη."
               agree_and_restore:
                 title: "Επαναφορά σχολίου"
                 description: "Επαναφορά του σχολίου ώστε οι χρήστες να μπορούν να το δουν."
               agree_and_delete:
                 title: "Διαγραφή σχολίου"
                 description: "Διαγράψτε το σχόλιο ώστε οι χρήστες να μην μπορούν να το δουν."
+              delete_and_agree:
+                title: "Αγνόηση αναφοράς και διαγραφή σχολίου"
+                description: "Αγνοήστε την αναφορά αφαιρώντας την από την ουρά και διαγραφή του σχολίου."
               disagree_and_restore:
                 title: "Διαφωνώ και Επαναφορά σχολίου"
+                description: "Επαναφορά του σχολίου ώστε όλοι οι χρήστες να μπορούν να το δουν."
               disagree:
                 title: "Διαφωνώ"
               ignore:
                 title: "Μην κάνετε τίποτα"
+                description: "Αγνοήστε την αναφορά αφαιρώντας την από την ουρά χωρίς να προβείτε σε κάποια ενέργεια."
+            transcript:
+              view: "Προβολή μεταγραφής προηγούμενων σχολίων"
       topic:
         answer:
           label: "Απάντηση"
@@ -75,5 +110,5 @@ el:
           one: "%{count} Απάντηση"
           other: "%{count} Απαντήσεις"
         voters_count_diff:
-          one: "και %{count} ακόμη χρήστης..."
-          other: "και %{count} ακόμη χρήστες..."
+          one: "και %{count} ακόμα χρήστης..."
+          other: "και %{count} ακόμα χρήστες..."

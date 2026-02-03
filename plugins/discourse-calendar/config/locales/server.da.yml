@@ -54,7 +54,7 @@ da:
       ongoing_event_reminder: "%{title} er i gang."
     errors:
       bulk_invite:
-        max_invitees: "De første %{max_invittes} inviterede er oprettet. Prøv at opdele filen i mindre dele."
+        max_invitees: "De første %{max_invitees} inviterede er oprettet. Prøv at opdele filen i mindre dele."
         error: "Der opstod en fejl under overførsel af filen. Prøv venligst igen senere."
       models:
         event:

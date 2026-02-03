@@ -129,8 +129,6 @@ fi:
       web_hooks:
         assign_event:
           group_name: "Osoitustapahtumat"
-          assigned: "Kun käyttäjä osoittaa ketjun"
-          unassigned: "Kun käyttäjä peruu ketjun osoituksen"
     search:
       advanced:
         in:

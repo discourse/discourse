@@ -1436,7 +1436,6 @@ ca:
     anonymous_account_duration_minutes: "Per a protegir l'anonimat, crea un compte anònim nou per a cada usuari cada N minuts. Per exemple: si és configurat a 600, tan bon punt passin 600 minuts des de la darrera publicació *i* l'usuari canviï a anònim, es crearà un nou compte anònim."
     hide_user_profiles_from_public: "Inhabilita targetes d'usuari, perfils d'usuari i directori d'usuaris per a usuaris anònims."
     show_inactive_accounts: "Permet que els usuaris que han iniciat la sessió explorin els perfils dels comptes inactius."
-    hide_suspension_reasons: "No mostris públicament els motius de suspensió en els perfils d'usuari."
     log_personal_messages_views: "Registra les visualitzacions dels missatges personals d'altres usuaris o grups fetes per administradors."
     ignored_users_count_message_threshold: "Notifica als moderadors si un usuari determinat és ignorat per molts altres usuaris."
     ignored_users_message_gap_days: "Quant de temps haureu d'esperar abans de notificar de nou als moderadors sobre un usuari ignorat per molts altres."

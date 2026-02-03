@@ -76,8 +76,6 @@ zh_CN:
           invalid: "无效"
           no_such_category: "没有此类类别"
           no_such_group: "没有此类群组"
-          invalid_date: "%{date} 是无效日期"
-          invalid_time: "%{time} 是无效时间"
     group:
       reports: "报告"
     admin:

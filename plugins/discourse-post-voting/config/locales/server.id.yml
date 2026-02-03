@@ -10,12 +10,6 @@ id:
       actions:
         no_action_comment:
           title: "Tidak ada tindakan"
-        agree_and_suspend:
-          title: "Tangguhkan pengguna"
-          description: "Setuju dengan penanda dan menangguhkan pengguna."
-        agree_and_silence:
-          title: "Senyapkan pengguna"
-          description: "Setuju dengan penanda dan senyapkan pengguna."
   post_action_types:
     vote:
       title: "Pilih"

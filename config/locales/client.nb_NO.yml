@@ -1978,7 +1978,6 @@ nb_NO:
     form_kit:
       reset: Tilbakestill
       optional: valgfritt
-      errors_summary_title: "Dette skjemaet inneholder feil:"
       dirty_form: "Du har ikke sendt inn endringene dine! Er du sikker på at du vil dra?"
       errors:
         required: "Påkrevd"
@@ -3362,7 +3361,7 @@ nb_NO:
       quote_edit: "Rediger"
       quote_edit_shortcut: "Rediger (eller trykk e)"
       quote_copy: "Kopier sitat"
-      quote_copied_to_clibboard: "Sitat kopiert til utklippstavlen"
+      quote_copied_to_clipboard: "Sitat kopiert til utklippstavlen"
       quote_share: "Del"
       edit_reason: "Begrunnelse: "
       post_number: "innlegg %{number}"
@@ -3699,7 +3698,7 @@ nb_NO:
       minimum_required_tags: "Minste antall stikkord som kreves for et emne:"
       none_subcategory_text: "Ingen"
       visibility:
-        title: "Tilgang"
+        title: "Synlighet"
         public: "Offentlig"
         group_restricted: "Privat"
       num_auto_bump_daily: "Antall åpne emner som automatisk flyttes øverst per dag:"

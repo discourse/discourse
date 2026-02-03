@@ -1970,7 +1970,6 @@ id:
       review_group_name: "nama grup"
       none_subcategory_text: "Tidak ada"
       visibility:
-        title: "Mengakses"
         public: "Umum"
         group_restricted: "Pribadi"
       notifications:

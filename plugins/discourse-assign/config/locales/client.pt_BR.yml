@@ -129,8 +129,6 @@ pt_BR:
       web_hooks:
         assign_event:
           group_name: "Eventos de atribuição"
-          assigned: "Quando um(a) usuário(a) atribuir um tópico"
-          unassigned: "Quando um(a) usuário(a) cancelar a atribuição de um tópico"
     search:
       advanced:
         in:

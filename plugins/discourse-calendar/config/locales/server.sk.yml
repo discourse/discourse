@@ -75,7 +75,7 @@ sk:
       ongoing_event_reminder: "%{title} práve prebieha."
     errors:
       bulk_invite:
-        max_invitees: "Prvých %{max_invittes} pozvaných bolo vytvorených. Skúste súbor rozdeliť na menšie časti."
+        max_invitees: "Prvých %{max_invitees} pozvaných bolo vytvorených. Skúste súbor rozdeliť na menšie časti."
         error: "Počas nahrávanie súboru sa vyskytla chyba. Prosím, vyskúšajte ho nahraď znovu neskôr."
       models:
         event:

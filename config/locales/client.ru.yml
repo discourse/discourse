@@ -2503,7 +2503,6 @@ ru:
     form_kit:
       reset: Сбросить
       optional: необязательно
-      errors_summary_title: "В этой форме есть ошибки:"
       dirty_form: "Вы не отправили изменения! Действительно выйти?"
       errors:
         starts_with: "Должно начинаться с %{prefix}"
@@ -4189,7 +4188,7 @@ ru:
       quote_edit: "Изменить"
       quote_edit_shortcut: "Изменить (или нажмите e)"
       quote_copy: "Копировать цитату"
-      quote_copied_to_clibboard: "Цитата скопирована в буфер обмена"
+      quote_copied_to_clipboard: "Цитата скопирована в буфер обмена"
       quote_share: "Поделиться"
       edit_reason: "Причина: "
       post_number: "сообщение %{number}"
@@ -4622,7 +4621,7 @@ ru:
       minimum_required_tags: "Минимальное количество тегов, требуемых в теме:"
       none_subcategory_text: "Нет"
       visibility:
-        title: "Доступ"
+        title: "Видимость"
         public: "Публичное"
         group_restricted: "Закрытое сообщество"
       num_auto_bump_daily: "Число открытых тем для автоматического ежедневного поднятия:"
@@ -7045,8 +7044,6 @@ ru:
         delete: "Удалить"
         delete_confirm: 'Действительно удалить тему «%{theme_name}»?'
         bulk_delete: "Точно?"
-        bulk_themes_delete_confirm: "Это приведет к удалению следующих тем, и пользователи больше не смогут их применять на вашем сайте:"
-        bulk_components_delete_confirm: "Это приведет к удалению следующих компонентов, и пользователи больше не смогут их применять на вашем сайте:"
         color: "Цвет"
         opacity: "Прозрачность"
         copy: "Дублировать"

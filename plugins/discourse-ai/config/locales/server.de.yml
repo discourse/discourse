@@ -10,6 +10,10 @@ de:
       llm_model:
         name: "Modell-ID"
         max_prompt_tokens: "Kontextfenster"
+  dashboard:
+    problem:
+      ai_credit_soft_limit: "Für %{model_name} sind nur noch %{percentage_remaining}% des Guthuabens übrig.Das Guthaben wird um %{reset_date} zurückgesetzt. <a href='%{url}'>KI-Modelle ansehen</a>"
+      ai_credit_hard_limit: "Du hast keine KI-Guthaben mehr für %{model_name}. Die KI-Funktionen sind bis %{reset_date} nicht mehr verfügbar. <a href='%{url}'>KI-Modelle ansehen</a>"
   discourse_automation:
     ai:
       flag_types:
@@ -19,6 +23,9 @@ de:
         spam: "Als Spam markieren und Beitrag verbergen"
         spam_silence: "Als Spam melden, Beitrag ausblenden und Benutzer stummschalten"
     scriptables:
+      ai_tool_action:
+        title: KI-Tool Aktion
+        description: Führe ein KI-Tool aus, wenn die Automatisierung ausgelöst wird
       llm_persona_triage:
         title: Sichtung von Beiträgen mit KI-Persona
         description: "Reagiere auf Beiträge mit einer bestimmten KI-Persona"
@@ -72,18 +79,13 @@ de:
     ai_nsfw_models: "Modelle, die für NSFW-Inferenz verwendet werden."
     ai_spam_detection_enabled: "Aktiviere das KI-Spamerkennungsmodul"
     ai_openai_api_key: "API-Schlüssel für OpenAI-API. Wird NUR für Bilderstellung und -bearbeitung verwendet. Für GPT verwende die Registerkarte für die LLM-Konfiguration"
-    ai_openai_image_generation_url: "URL für die OpenAI-Bilderstellungs-API"
-    ai_openai_image_edit_url: "URL für die OpenAI-Bildbearbeitungs-API"
     ai_helper_enabled: "Aktiviere den KI-Helfer."
     composer_ai_helper_allowed_groups: "Benutzer dieser Gruppen sehen die KI-Helfer-Schaltfläche im Composer."
     ai_helper_allowed_in_pm: "Aktiviere den Composer-KI-Helfer in PN."
-    ai_helper_model: "Modell, das für den KI-Helfer verwendet werden soll."
     ai_helper_automatic_chat_thread_title_delay: "Verzögerung in Minuten, bevor der KI-Helfer automatisch den Titel des Chat-Threads festlegt."
     ai_helper_automatic_chat_thread_title: "Lege die Titel der Chat-Threads automatisch anhand der Thread-Inhalte fest."
-    ai_helper_illustrate_post_model: "Modell, das für die Funktion „Beitrag illustrieren“ des Composer-KI-Helfers verwendet wird"
     ai_helper_enabled_features: "Wähle die Funktionen aus, die im KI-Helfer aktiviert werden sollen."
     post_ai_helper_allowed_groups: "Benutzergruppen, die auf KI-Helfer-Funktionen in Beiträgen zugreifen dürfen"
-    ai_helper_image_caption_model: "Wähle das Modell aus, das für die Erstellung von Bildbeschriftungen verwendet werden soll"
     ai_embeddings_selected_model: "Verwende das ausgewählte Modell für die Erzeugung von Einbettungen."
     ai_embeddings_generate_for_pms: "Erstelle Einbettungen für persönliche Nachrichten."
     ai_embeddings_semantic_related_topics_enabled: "Verwende die semantische Suche für verwandte Themen."
@@ -95,15 +97,11 @@ de:
     ai_embeddings_semantic_related_include_closed_topics: "Geschlossene Themen in semantische Suchergebnisse einbeziehen"
     ai_embeddings_semantic_related_age_penalty: "Wende eine exponentielle Altersstrafe auf Themen in semantischen Suchergebnissen an. 0,0 = kein Abzug, 0,3 = leichte Tendenz zu kürzlich aktiven Inhalten, 1,0+ = starke Tendenz zur Aktualität."
     ai_embeddings_semantic_related_age_time_scale: "Zeitskala in Tagen für die Berechnung der Altersstrafe. Themen, die so viele Tage inaktiv sind, erhalten ~50 % Strafe bei \"penalty\"=1,0. Verwende 365 für die jährliche Skala, 90 für die vierteljährliche Skala."
-    ai_embeddings_semantic_search_hyde_model: "Modell zur Erweiterung von Schlüsselwörtern, um bessere Ergebnisse bei der semantischen Suche zu erzielen"
     ai_embeddings_per_post_enabled: Erstelle Einbettungen für jeden Beitrag
     ai_summarization_enabled: "Aktiviere die Zusammenfassungsfunktion"
-    ai_summarization_model: "Modell, das für die Zusammenfassung verwendet werden soll"
     ai_summarization_persona: "Persona, die für die Zusammenfassungsfunktion verwendet werden soll"
-    ai_custom_summarization_allowed_groups: "Gruppen, die neue Zusammenfassungen erstellen dürfen."
     ai_pm_summarization_allowed_groups: "Gruppen, die Zusammenfassungen in PN erstellen und ansehen dürfen."
     ai_summary_gists_enabled: "Erstelle automatisch kurze Zusammenfassungen der letzten Antworten in Themen"
-    ai_summary_gists_allowed_groups: "Gruppen, die zentrale Punkte in der Liste der aktuellen Themen sehen dürfen."
     ai_summary_backfill_maximum_topics_per_hour: "Anzahl der Themenzusammenfassungen, die pro Stunde nachgeholt werden."
     ai_bot_enabled: "Aktiviere das KI-Bot-Modul."
     ai_bot_enable_chat_warning: "Zeigt eine Warnung an, wenn der PN-Chat initiiert wird. Kann durch Bearbeiten der Übersetzungszeichenfolge überschrieben werden: discourse_ai.ai_bot.pm_warning"
@@ -113,9 +111,6 @@ de:
     ai_bot_github_access_token: "GitHub-Zugangstoken für die Verwendung mit den GitHub-KI-Tools (erforderlich für die Suchunterstützung)"
     ai_discover_enabled: "Aktivieren Sie die Entdeckungs-Suchfunktion"
     ai_discover_persona: "Persona, die für die Entdeckungsfunktion verwendet werden soll"
-    ai_stability_api_key: "API-Schlüssel für die stability.ai-API"
-    ai_stability_engine: "Bildgenerierungsengine für die stability.ai-API"
-    ai_stability_api_url: "URL für die stability.ai-API"
     ai_google_custom_search_api_key: "API-Schlüssel für die Google Custom Search API, siehe: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX für Google Custom Search API"
     ai_discord_search_enabled: "Aktiviert die Discord-Suchfunktion"
@@ -125,8 +120,8 @@ de:
     ai_discord_search_persona: "Die Persona, die für die Discord-Suche verwendet wird."
     ai_discord_allowed_guilds: "Discord-Gilden (Server), auf denen der Bot suchen darf"
     ai_translation_enabled: "Aktiviere die KI-Übersetzungsfunktion"
-    ai_translation_model: "Das Modell, das für die Übersetzung verwendet werden soll. Dieses Modell muss die Übersetzung unterstützen. Personas können diese Einstellung überschreiben."
     ai_translation_backfill_limit_to_public_content: "Wenn diese Option aktiviert ist, werden nur Inhalte in öffentlichen Kategorien übersetzt. Wenn sie deaktiviert ist, werden auch Inhalte in Gruppen-PMs und privaten Kategorien zur Übersetzung gesendet."
+    ai_translation_include_bot_content: "Wenn diese Option aktiviert ist, werden auch Inhalte, die von Bots (Benutzer-IDs unter 0) geschrieben wurden, zur Übersetzung gesendet."
     ai_translation_max_post_length: "Die maximale Zeichenanzahl eines zu übersetzenden Beitrags. Längere Beiträge werden nicht übersetzt."
     ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
   reviewables:
@@ -461,6 +456,7 @@ de:
         flag_post:
           flag_type:
             name: "Meldungs-Typ"
+            description: "Steuert, ob der Beitrag überprüft, ausgeblendet, gelöscht oder als Spam behandelt wird."
       tool_summary:
         read_artifact: "Ein Web-Artefakt lesen"
         update_artifact: "Aktualisieren eines Web-Artefakts"
@@ -469,6 +465,7 @@ de:
         github_search_files: "GitHub-Datei-Suche"
         github_search_code: "GitHub-Code-Suche"
         github_file_content: "GitHub-Datei-Inhalt"
+        github_diff: "GitHub-Diff"
         random_picker: "Zufallsauswahl"
         categories: "Kategorien auflisten"
         flag_post: "Beitrag melden"
@@ -497,6 +494,7 @@ de:
         github_search_code: "Code in einem GitHub-Repository suchen"
         github_search_files: "Dateien in einem GitHub-Repository suchen"
         github_file_content: "Inhalt von Dateien aus einem GitHub-Repository abrufen"
+        github_diff: "GitHub-Pull-Request- oder Commit-Diff abrufen"
         random_picker: "Zufallszahl oder zufälliges Element aus einer Liste auswählen"
         categories: "Alle öffentlich sichtbaren Kategorien im Forum auflisten"
         flag_post: "Melde den aktuellen Beitrag zur Überprüfung durch das Team"
@@ -632,8 +630,8 @@ de:
         disabled: "Die KI-Übersetzungsfunktion ist nicht vollständig konfiguriert."
         all_posts_translated: "Alle Beiträge in diesem Thema sind bereits übersetzt."
     llm_credit_allocation:
-      limit_exceeded_user: "Diese Community hat ihr KI-Kreditlimit für heute erreicht. Bitte versuche es erneut nach %{reset_time} oder kontaktiere deinen Website-Administrator für weitere Informationen."
-      limit_exceeded_admin: "Du hast dein KI-Kreditlimit erreicht. Bitte versuche es erneut nach %{reset_time}."
+      limit_exceeded_user: "Diese Community hat ihr KI-Guthabenlimit für heute erreicht. Bitte versuche es erneut nach %{reset_time} oder kontaktiere deinen Website-Administrator für weitere Informationen."
+      limit_exceeded_admin: "Du hast dein KI-Guthabenlimit erreicht. Bitte versuche es erneut nach %{reset_time}."
     errors:
       quota_exceeded: "Du hast das Kontingent für dieses Modell überschritten. Bitte versuche es erneut in %{relative_time}."
       quota_required: "Du musst die maximale Anzahl an Token oder Verwendungen für dieses Modell angeben"

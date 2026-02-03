@@ -2295,7 +2295,6 @@ es:
     form_kit:
       reset: Restablecer
       optional: opcional
-      errors_summary_title: "Este formulario contiene errores:"
       dirty_form: "¡No has enviado tus cambios! ¿Seguro que quieres salir?"
       errors:
         starts_with: "Debe comenzar con %{prefix}"
@@ -3814,7 +3813,7 @@ es:
       quote_edit: "Editar"
       quote_edit_shortcut: "Editar (o pulsa e)"
       quote_copy: "Copiar cita"
-      quote_copied_to_clibboard: "Cita copiada en el portapapeles"
+      quote_copied_to_clipboard: "Cita copiada en el portapapeles"
       quote_share: "Compartir"
       edit_reason: "Motivo: "
       post_number: "publicación %{number}"
@@ -4235,7 +4234,7 @@ es:
       default_slow_mode: 'Activar el "modo lento" en los nuevos temas de esta categoría.'
       none_subcategory_text: "Ninguna"
       visibility:
-        title: "Acceso"
+        title: "Visibilidad"
         public: "Público"
         all_members: "Todos los miembros"
         group_restricted: "Privado"
@@ -5311,7 +5310,6 @@ es:
           search_placeholder: "Filtrar por nombre, descripción o plugin..."
           no_results: "No hay cambios próximos que coincidan con tu filtro"
           all: "Todo"
-          enabled_all: "Activado o desactivado"
           enabled: "Activado"
           disabled: "Desactivado"
           impact_type_all: "Todos los tipos de impacto"
@@ -6587,8 +6585,6 @@ es:
         delete: "Eliminar"
         delete_confirm: '¿Seguro que quieres eliminar «%{theme_name}»?'
         bulk_delete: "¿Estás seguro/a?"
-        bulk_themes_delete_confirm: "Esto desinstalará los siguientes temas, que ya no podrán ser utilizados por ningún usuario de tu sitio:"
-        bulk_components_delete_confirm: "Esto desinstalará los siguientes componentes, que ya no podrán ser utilizados por ningún usuario de tu sitio:"
         color: "Color"
         opacity: "Opacidad"
         copy: "Duplicar"

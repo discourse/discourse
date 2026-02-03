@@ -353,7 +353,6 @@ cs:
       bulk_invite: "Hromadné pozvání"
       close_event: "Zavřít událost"
       open_event: "Otevřít událost"
-      destroy_event: "Odstranit událost"
       invitees_modal:
         title_invited: "Účast na události"
         title_participated: "Seznam uživatelů, kteří se zúčastnili"
@@ -438,12 +437,6 @@ cs:
             private:
               title: "Soukromá"
               description: "Soukromé události se můžou účastnit jen pozvaní uživatelé."
-      composer:
-        name_placeholder: "Událost"
-        end_date_placeholder: "Nastavit datum ukončení"
-        location_placeholder: "Přidat polohu nebo adresu URL"
-        max_attendees_placeholder: "Nastavit maximální počet účastníků"
-        description_placeholder: "Přidat popis události"
       builder_modal:
         custom_fields:
           label: "Vlastní pole"
@@ -513,7 +506,6 @@ cs:
           label: "Pozvané skupiny"
         status:
           label: "Stav"
-        delete_confirmation_message: "Smazat tuto událost?"
       invite_user_or_group:
         title: "Oznámit uživatelům nebo skupinám"
         invite: "Odeslat"

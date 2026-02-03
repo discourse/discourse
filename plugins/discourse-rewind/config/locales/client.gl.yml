@@ -16,8 +16,6 @@ gl:
           title: Tempo de lectura
         chat_usage:
           messages: mensaxes
-          author: Vostede
-          author_others: "%{username}"
         invites:
           title: Convites
           invitee_posts: Publicacións creadas

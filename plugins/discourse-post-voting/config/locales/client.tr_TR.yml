@@ -117,6 +117,3 @@ tr_TR:
     review:
       transcript:
         view: "Önceki mesajların dökümünü görüntüle"
-      types:
-        reviewable_post_voting_comment:
-          title: "Bayraklı Gönderi Oylama Yorumu"

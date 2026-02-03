@@ -16,7 +16,6 @@ fi:
       settings: "Asetukset"
       no_providers: "Sinun täytyy sallia jotkin palveluntarjoajat lisäosien asetuksissa"
       channels_with_errors: "Jotkin tämän palveluntuottajan kanavista pettivät viimeksi, kun viestejä lähetettiin. Klikkaa vikaikonia/ikoneita saadaksesi lisää tietoa."
-      channel_exception: "Tuntematon virhe tapahtui viimeksi, kun viesti lähetettiin tälle kanavalle. "
       group_mention_template: "Maininnat: @%{name}"
       group_message_template: "Viestejä käyttäjälle: @%{name}"
       choose_group: "(valitse ryhmä) "
@@ -33,7 +32,6 @@ fi:
         topic: "Ketju"
         send: "Lähetä testiviesti"
         close: "Sulje"
-        error: "Tuntematon virhe tapahtui viestiä lähetettäessä. Tarkasta sivuston loki saadaksesi lisätietoa."
         success: "Viesti lähetetty onnistuneesti"
       type:
         normal: Normaali

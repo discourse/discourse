@@ -15,8 +15,6 @@ sr:
           title: Vreme za čitanje
         chat_usage:
           messages: poruke
-          author: Ti
-          author_others: "%{username}"
         invites:
           title: Pozivnice
           invitee_posts: Poruka Otvoreno

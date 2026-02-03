@@ -20,7 +20,6 @@ be:
       channel_settings:
         edit: "рэдагаваць"
         add: "дадаць"
-        notification_settings_context: "Апавяшчэнні"
       close: "зачыніць"
       remove: "выдаліць"
       delete: "выдаляць"

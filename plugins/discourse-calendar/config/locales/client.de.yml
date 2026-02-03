@@ -351,7 +351,6 @@ de:
       bulk_invite: "Masseneinladung"
       close_event: "Ereignis beenden"
       open_event: "Ereignis öffnen"
-      destroy_event: "Ereignis zerstören"
       invitees_modal:
         title_invited: "Teilnahme am Ereignis"
         title_participated: "Liste von Benutzern, die teilgenommen haben"
@@ -428,12 +427,6 @@ de:
             private:
               title: "Privat"
               description: "An einem privaten Ereignis können nur eingeladene Benutzer teilnehmen."
-      composer:
-        name_placeholder: "Ereignis"
-        end_date_placeholder: "Enddatum festlegen"
-        location_placeholder: "Ort oder URL hinzufügen"
-        max_attendees_placeholder: "Maximale Teilnehmerzahl festlegen"
-        description_placeholder: "Beschreibung hinzufügen"
       builder_modal:
         custom_fields:
           label: "Benutzerdefinierte Felder"
@@ -503,7 +496,6 @@ de:
           label: "Eingeladene Gruppen"
         status:
           label: "Status"
-        delete_confirmation_message: "Dieses Ereignis löschen?"
       invite_user_or_group:
         title: "Benachrichtige Benutzer oder Gruppe(n)"
         invite: "Senden"

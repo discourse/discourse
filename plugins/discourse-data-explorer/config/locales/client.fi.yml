@@ -77,8 +77,6 @@ fi:
           invalid: "Virheellinen"
           no_such_category: "Tällaista luokkaa ei ole"
           no_such_group: "Tällaista ryhmää ei ole"
-          invalid_date: "%{date} on virheellinen päivämäärä"
-          invalid_time: "%{time} on virheellinen aika"
     group:
       reports: "Raportit"
     admin:
