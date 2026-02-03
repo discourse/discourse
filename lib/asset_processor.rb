@@ -47,14 +47,14 @@ class AssetProcessor
     ctx.attach(
       "rails.logger.warn",
       proc do |err|
-        Rails.logger.warn(err.to_s)
+        Rails.logger.warn(p err.to_s)
         nil
       end,
     )
     ctx.attach(
       "rails.logger.error",
       proc do |err|
-        Rails.logger.error(err.to_s)
+        Rails.logger.error(p err.to_s)
         nil
       end,
     )

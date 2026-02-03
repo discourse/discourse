@@ -2,20 +2,23 @@ import rollupVirtualImports from "../rollup-virtual-imports";
 
 export default function discourseVirtualLoader({
   basePath,
-  modules,
+  entrypoints,
   opts,
   isTheme,
 }) {
   const availableVirtualImports = isTheme
     ? rollupVirtualImports
     : {
-        "virtual:main": rollupVirtualImports["virtual:main"],
+        "virtual:entrypoint": rollupVirtualImports["virtual:entrypoint"],
       };
 
   return {
     name: "discourse-virtual-loader",
     resolveId(source) {
-      if (availableVirtualImports[source]) {
+      if (
+        availableVirtualImports[source] ||
+        source.startsWith("virtual:entrypoint:")
+      ) {
         return `${basePath}${source}`;
       }
     },
@@ -26,8 +29,20 @@ export default function discourseVirtualLoader({
 
       const fromBase = id.slice(basePath.length);
 
-      if (availableVirtualImports[fromBase]) {
-        return availableVirtualImports[fromBase](modules, opts, basePath, this);
+      if (fromBase.startsWith("virtual:entrypoint:")) {
+        const entrypointName = fromBase.replace("virtual:entrypoint:", "");
+        const entrypointConfig = entrypoints[entrypointName];
+
+        return availableVirtualImports["virtual:entrypoint"](
+          entrypointConfig.modules,
+          opts,
+          {
+            basePath,
+            context: this,
+          }
+        );
+      } else if (availableVirtualImports[fromBase]) {
+        return availableVirtualImports[fromBase](opts);
       }
     },
   };

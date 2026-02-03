@@ -11,6 +11,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { removeValueFromArray } from "discourse/lib/array-tools";
 import { i18n } from "discourse-i18n";
+// TODO: Remove hard dependency on chat plugin
 import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
 
 export default class AdminChatIncomingWebhooksList extends Component {

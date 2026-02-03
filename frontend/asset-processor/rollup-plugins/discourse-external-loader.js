@@ -5,12 +5,7 @@ export default function discourseExternalLoader({ basePath }) {
     name: "discourse-external-loader",
     async resolveId(source, context) {
       if (source.startsWith(basePath)) {
-        return (
-          (await this.resolve(
-            `./${relative(dirname(context), source)}`,
-            context
-          )) || { id: source, external: true } // Might be in a different bundle for the same plugin
-        );
+        return this.resolve(`./${relative(dirname(context), source)}`, context);
       }
 
       if (!source.startsWith(".")) {

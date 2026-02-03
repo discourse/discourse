@@ -4,13 +4,17 @@ module Plugin
   class JsManager
     def self.digested_logical_path_for(script)
       return if !script.start_with?("plugins/")
+      _, plugin_name, filename = script.split("/")
+
+      # Todo: optimize this lookup
       Rails
         .application
         .assets
         .load_path
         .assets
         .find do |a|
-          a.logical_path.to_s.start_with?("#{script}-") && a.logical_path.extname == ".js"
+          a.logical_path.to_s.start_with?("plugins/#{plugin_name}-") &&
+            a.logical_path.basename.to_s == "#{filename}.js"
         end
         &.logical_path
     end
@@ -19,78 +23,82 @@ module Plugin
       puts "[Plugin::JSManager] Compiling plugins..."
       start = Time.now
 
-      Parallel.each(Discourse.plugins, in_threads: 8) { |plugin| compile_js_bundle(plugin) }
+      Parallel.each(Discourse.plugins, in_threads: 1) { |plugin| compile_js_bundle(plugin) }
 
       puts "[Plugin::JSManager] Finished initial compilation of plugins in #{(Time.now - start).round(2)}s"
     end
 
     def compile_js_bundle(plugin)
-      # print "Building #{plugin.directory_name}... "
+      print "Building #{plugin.directory_name}... "
       start = Time.now
 
       output_dir = "#{Rails.root}/app/assets/generated/#{plugin.directory_name}/plugins"
 
-      bundles = [
-        ["assets/javascripts", plugin.directory_name],
-        ["admin/assets/javascripts", "#{plugin.directory_name}_admin"],
-      ]
+      entrypoints = { "main" => "assets/javascripts", "admin" => "admin/assets/javascripts" }
+      entrypoints["test"] = "test/javascripts" if Rails.env.local?
 
-      bundles << ["test/javascripts", "#{plugin.directory_name}_test"] if Rails.env.local?
+      tree = {}
+      entrypoints_config = {}
 
-      bundles.each do |js_path, output_name|
-        output_path = "#{output_dir}/#{output_name}-"
-
+      entrypoints.each do |name, js_path|
         js_base = "#{plugin.directory}/#{js_path}"
 
         files = Dir.glob("**/*", base: js_base)
 
-        if files.empty?
-          Dir.glob("#{output_path}*").each { |f| File.delete(f) }
-          next
-        end
+        next if files.empty?
 
-        tree = {}
+        entrypoints_config[name] = { modules: [] }
+
         files.sort.each do |file|
           full_path = File.join(js_base, file)
-          tree[file] = File.read(full_path) if File.file?(full_path)
+          if File.file?(full_path)
+            tree[file] = File.read(full_path)
+            entrypoints_config[name][:modules] << file
+          end
         end
-
-        hex_digest =
-          Digest::SHA1.hexdigest(
-            [
-              *tree.keys,
-              *tree.values,
-              Theme::BASE_COMPILER_VERSION,
-              # AssetProcessor.new.ember_version, # TODO: This is annoyingly slow
-              minify?.to_s,
-            ].join,
-          )
-        base36_digest = hex_digest.to_i(16).to_s(36).first(8)
-
-        output_js_file = "#{output_path}#{base36_digest}.digested.js"
-        output_map_file = "#{output_path}#{base36_digest}.digested.js.map"
-
-        if !(cache? && File.exist?(output_js_file) && File.exist?(output_map_file))
-          compiler = Plugin::JsCompiler.new(plugin.directory_name, minify: minify?)
-          compiler.append_tree(tree)
-          compiler.compile!
-
-          FileUtils.mkdir_p(output_dir)
-          File.write(
-            output_js_file,
-            compiler.content + "\n//# sourceMappingURL=#{output_name}.js.map\n",
-          )
-          File.write(output_map_file, compiler.source_map)
-        end
-
-        # Delete any old versions
-        Dir
-          .glob("#{output_path}*")
-          .reject { |f| f == output_js_file || f == output_map_file }
-          .each { |f| File.delete(f) }
-        next
       end
-      # puts "done (#{(Time.now - start).round(2)}s)"
+
+      hex_digest =
+        Digest::SHA1.hexdigest(
+          [
+            *tree.keys,
+            *tree.values,
+            Theme::BASE_COMPILER_VERSION,
+            # AssetProcessor.new.ember_version, # TODO: This is annoyingly slow
+            minify?.to_s,
+          ].join,
+        )
+      base36_digest = hex_digest.to_i(16).to_s(36).first(8)
+
+      output_path = "#{output_dir}/#{plugin.directory_name}-#{base36_digest}.digested"
+
+      if !(cache? && Dir.exist?(output_path))
+        compiler =
+          Plugin::JsCompiler.new(
+            plugin.directory_name,
+            minify: minify?,
+            tree: tree,
+            entrypoints: entrypoints_config,
+          )
+        result = compiler.compile!
+
+        FileUtils.mkdir_p(output_path)
+        result.each do |file, info|
+          code = info["code"]
+          code += "\n//# sourceMappingURL=#{file}.map\n" if info["map"]
+          File.write("#{output_path}/#{file}", code)
+
+          File.write("#{output_path}/#{file}.map", info["map"]) if info["map"]
+        end
+      end
+
+      # Delete any old versions
+      Dir
+        .glob("#{output_dir}/#{plugin.directory_name}*")
+        .reject { |path| path == output_path }
+        .each { |path| FileUtils.rm_rf(path) }
+
+      puts "done (#{(Time.now - start).round(2)}s)"
     end
 
     def watch
@@ -129,7 +137,7 @@ module Plugin
     end
 
     def cache?
-      true
+      false
     end
   end
 end

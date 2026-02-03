@@ -29,10 +29,16 @@ globalThis.rollup = function (modules, opts) {
     ? `discourse/plugins/${opts.pluginName}/`
     : `theme-${opts.themeId}/`;
 
+  const inputConfig = {};
+
+  for (const key of Object.keys(opts.entrypoints)) {
+    inputConfig[key] = `virtual:entrypoint:${key}`;
+  }
+
   const { vol } = memfs(modules, basePath);
 
   const resultPromise = rollup({
-    input: "virtual:main",
+    input: inputConfig,
     logLevel: "info",
     fs: vol.promises,
     onLog(level, message) {
@@ -48,7 +54,7 @@ globalThis.rollup = function (modules, opts) {
       discourseVirtualLoader({
         isTheme: !!opts.themeId,
         basePath,
-        modules,
+        entrypoints: opts.entrypoints,
         opts,
       }),
       discourseExternalLoader({ basePath }),
@@ -107,13 +113,23 @@ globalThis.rollup = function (modules, opts) {
       return bundle.generate({
         format: "es",
         sourcemap: "hidden",
+        chunkFileNames: "chunk.[hash:6].js",
       });
     })
     .then(({ output }) => {
-      lastRollupResult = {
-        code: output[0].code,
-        map: JSON.stringify(output[0].map),
-      };
+      lastRollupResult = Object.fromEntries(
+        output
+          .filter((c) => c.code)
+          .map((chunk) => {
+            return [
+              chunk.fileName,
+              {
+                code: chunk.code,
+                map: JSON.stringify(chunk.map),
+              },
+            ];
+          })
+      );
     })
     .catch((error) => {
       lastRollupError = error;

@@ -10,6 +10,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+// TODO: Remove hard dependency on chat plugin
 import ChatChannelChooser from "discourse/plugins/chat/discourse/components/chat-channel-chooser";
 
 export default class ChatIncomingWebhookEditForm extends Component {

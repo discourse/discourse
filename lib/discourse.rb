@@ -456,7 +456,7 @@ module Discourse
     plugins.each do |plugin|
       if plugin.js_asset_exists?
         assets << {
-          name: "plugins/#{plugin.directory_name}",
+          name: "plugins/#{plugin.directory_name}/main",
           plugin: plugin,
           type_module: true,
           importmap_name: "discourse/plugins/#{plugin.directory_name}",
@@ -473,7 +473,7 @@ module Discourse
 
       if args[:include_admin_asset] && plugin.admin_js_asset_exists?
         assets << {
-          name: "plugins/#{plugin.directory_name}_admin",
+          name: "plugins/#{plugin.directory_name}/admin",
           plugin: plugin,
           type_module: true,
         }
@@ -482,7 +482,7 @@ module Discourse
       if args[:include_test_assets_for]&.include?(plugin.directory_name) &&
            plugin.test_js_asset_exists?
         assets << {
-          name: "plugins/#{plugin.directory_name}_test",
+          name: "plugins/#{plugin.directory_name}/test",
           plugin: plugin,
           type_module: true,
         }

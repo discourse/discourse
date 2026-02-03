@@ -5,7 +5,11 @@ const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
 export default {
-  "virtual:main": async (tree, { themeId }, basePath, context) => {
+  "virtual:entrypoint": async (
+    moduleFilenames,
+    { themeId },
+    { basePath, context }
+  ) => {
     let output = `const compatModules = {};`;
 
     if (themeId) {
@@ -14,8 +18,10 @@ export default {
       `);
     }
 
+    const moduleFilenamesSet = new Set(moduleFilenames);
+
     let i = 1;
-    for (const moduleFilename of Object.keys(tree)) {
+    for (const moduleFilename of moduleFilenames) {
       if (
         !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
       ) {
@@ -64,7 +70,7 @@ export default {
 
       const isIndexModule =
         compatModuleName.endsWith("/index") &&
-        !tree[moduleFilename.replace("/index", "")];
+        !moduleFilenamesSet.has(moduleFilename.replace("/index", ""));
 
       if (isIndexModule) {
         loadedModule.exports.forEach((exportedName) => {
@@ -76,7 +82,7 @@ export default {
         });
       }
 
-      output += `export { ${reexportPairs.join(", ")} } from "./${importPath}";\n`;
+      output += `export {\n${reexportPairs.join(",\n")}\n} from "./${importPath}";\n`;
 
       i += 1;
     }
@@ -85,13 +91,13 @@ export default {
 
     return output;
   },
-  "virtual:init-settings": (_, { themeId, settings }) => {
+  "virtual:init-settings": ({ themeId, settings }) => {
     return (
       `import { registerSettings } from "discourse/lib/theme-settings-store";\n\n` +
       `registerSettings(${themeId}, ${JSON.stringify(settings, null, 2)});\n`
     );
   },
-  "virtual:theme": (_, { themeId }) => {
+  "virtual:theme": ({ themeId }) => {
     return cleanMultiline(`
       import { getObjectForTheme } from "discourse/lib/theme-settings-store";
 
