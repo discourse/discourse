@@ -117,6 +117,3 @@ es:
     review:
       transcript:
         view: "Ver la transcripción de los mensajes anteriores"
-      types:
-        reviewable_post_voting_comment:
-          title: "Comentario de votación de publicación denunciado"

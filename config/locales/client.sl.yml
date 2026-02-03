@@ -3031,7 +3031,7 @@ sl:
       minimum_required_tags: "Najmanjše število oznak zahtevanih na temi:"
       none_subcategory_text: "Brez"
       visibility:
-        title: "Dostopnost"
+        title: "Vidljivost"
         public: "Javni"
         group_restricted: "Zasebni"
       num_auto_bump_daily: "Število odprtih tem, ki se samodejno izpostavijo vsak dan:"

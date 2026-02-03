@@ -16,7 +16,6 @@ ja:
       settings: "設定"
       no_providers: "プラグイン設定でいくつかのプロバイダーを有効にする必要があります"
       channels_with_errors: "このプロバイダーの一部のチャンネルは、最後にメッセージが送信されたときに失敗しました。詳細については、エラーアイコンをクリックしてください。"
-      channel_exception: "メッセージがこのチャンネルに最後に送信されたときに、不明なエラーが発生しました。"
       group_mention_template: "メンション: @%{name}"
       group_message_template: "メッセージの宛先: @%{name}"
       choose_group: "（グループを選択）"
@@ -33,7 +32,6 @@ ja:
         topic: "トピック"
         send: "テストメッセージを送信"
         close: "閉じる"
-        error: "メッセージの送信中に不明なエラーが発生しました。詳細については、サイトログをご覧ください。"
         success: "メッセージは正常に送信されました"
       type:
         normal: 標準

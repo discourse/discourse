@@ -16,7 +16,6 @@ ko:
       settings: "설정"
       no_providers: "플러그인 설정에서 일부 제공자를 활성화해야합니다"
       channels_with_errors: "이 제공자의 일부 채널은 마지막으로 메시지를 송신 할 때 실패했습니다. 자세한 내용을 보려면 오류 아이콘을 클릭하십시오."
-      channel_exception: "메시지가이 채널로 마지막으로 전송 될 때 알 수없는 오류가 발생했습니다."
       group_mention_template: "언급 : @ %{name}"
       group_message_template: "메시지 : @ %{name}"
       choose_group: "(그룹을 선택하십시오)"
@@ -33,7 +32,6 @@ ko:
         topic: "글"
         send: "테스트 메시지 보내기"
         close: "닫기"
-        error: "메시지를 보내는 동안 알 수없는 오류가 발생했습니다. 자세한 내용은 사이트 로그를 확인하십시오."
         success: "메세지가 성공적으로 전송되었습니다"
       type:
         normal: 일반

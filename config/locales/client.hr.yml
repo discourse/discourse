@@ -2373,7 +2373,6 @@ hr:
     form_kit:
       reset: Resetirati
       optional: neobvezno
-      errors_summary_title: "Ovaj obrazac sadrži pogreške:"
       dirty_form: "Niste poslali promjene! Jeste li sigurni da želite otići?"
       errors:
         starts_with: "Mora početi sa %{prefix}"
@@ -3965,7 +3964,7 @@ hr:
       quote_edit: "Izmijeni"
       quote_edit_shortcut: "Uredite (ili pritisnite e)"
       quote_copy: "Kopirajte citat"
-      quote_copied_to_clibboard: "Citat kopiran u međuspremnik"
+      quote_copied_to_clipboard: "Citat kopiran u međuspremnik"
       quote_share: "Podijelite"
       edit_reason: "Razlog:"
       post_number: "objava %{number}"
@@ -4374,7 +4373,7 @@ hr:
       minimum_required_tags: "Minimalan broj oznaka potrebnih u temi:"
       none_subcategory_text: "Ništa"
       visibility:
-        title: "Pristup"
+        title: "Vidljivost"
         public: "Javnost"
         group_restricted: "Privatno"
       num_auto_bump_daily: "Broj otvorenih tema koje se automatski mijenjaju dnevno:"

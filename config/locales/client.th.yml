@@ -2104,7 +2104,6 @@ th:
       minimum_required_tags: "จำนวนแท็กขั้นต่ำในกระทู้:"
       none_subcategory_text: "ไม่มี"
       visibility:
-        title: "การเข้าถึง"
         public: "สาธารณะ"
         group_restricted: "ส่วนตัว"
       notifications:

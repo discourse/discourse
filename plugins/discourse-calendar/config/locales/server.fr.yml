@@ -75,7 +75,7 @@ fr:
       ongoing_event_reminder: "L'événement %{title} est en cours."
     errors:
       bulk_invite:
-        max_invitees: "Les %{max_invittes} premières invitations ont été créées. Essayez de diviser le fichier en plus petites parties."
+        max_invitees: "Les %{max_invitees} premières invitations ont été créées. Essayez de diviser le fichier en plus petites parties."
         error: "Une erreur s'est produite lors du téléversement du fichier. Veuillez réessayer plus tard."
       models:
         event:

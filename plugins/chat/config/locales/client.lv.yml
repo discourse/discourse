@@ -20,7 +20,6 @@ lv:
       channel_settings:
         edit: "Rediģēt"
         add: "Pievienot"
-        notification_settings_context: "Paziņojumi"
         join: "Pievienojieties"
         leave: "Iziet"
       close: "Aizvērt"

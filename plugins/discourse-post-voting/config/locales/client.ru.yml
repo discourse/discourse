@@ -133,6 +133,3 @@ ru:
     review:
       transcript:
         view: "Просмотр содержимого предыдущих сообщений"
-      types:
-        reviewable_post_voting_comment:
-          title: "Помеченный комментарий к публикации с голосованием"

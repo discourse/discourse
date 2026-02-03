@@ -46,28 +46,11 @@ ko:
         edit: "설정"
         expand_list:
           other: "(%{count}개 더보기)"
-        bot:
-          setting_groups:
-            settings: "기본 설정"
         filters:
           all: "모두"
           reset: "리셋"
-        summarization:
-          setting_groups:
-            settings: "기본 설정"
         search:
           name: "검색"
-          setting_groups:
-            settings: "기본 설정"
-        discord:
-          setting_groups:
-            settings: "기본 설정"
-        inference:
-          setting_groups:
-            settings: "기본 설정"
-        translation:
-          setting_groups:
-            settings: "기본 설정"
         spam:
           name: "스팸"
       modals:
