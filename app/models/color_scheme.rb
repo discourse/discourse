@@ -560,6 +560,15 @@ class ColorScheme < ActiveRecord::Base
     ApplicationSerializer.expire_cache_fragment!("user_color_schemes")
   end
 
+  def self.ensure_consistency!
+    DB.exec <<~SQL
+      UPDATE themes
+      SET color_scheme_id = NULL
+      WHERE color_scheme_id IS NOT NULL
+        AND color_scheme_id NOT IN (SELECT id FROM color_schemes)
+    SQL
+  end
+
   def bump_version
     self.version += 1 if self.id
   end
