@@ -166,6 +166,17 @@ div.edit-category {
   }
 
   .edit-category-tab-security {
+    --permission-table-max-width: 450px;
+
+    .form-kit__container-content {
+      flex-direction: column;
+    }
+
+    .alert {
+      display: block;
+      max-width: var(--permission-table-max-width);
+    }
+
     .permission-selector {
       margin-right: 0.25em;
     }
@@ -300,7 +311,7 @@ div.edit-category {
 }
 
 .category-permissions-table {
-  max-width: 450px;
+  max-width: var(--permission-table-max-width);
   margin-bottom: 0;
 
   .permission-row {

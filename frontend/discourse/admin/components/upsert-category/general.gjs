@@ -34,17 +34,10 @@ export default class UpsertCategoryGeneral extends Component {
   );
   #previousPermissions = null;
 
-  get categorySite() {
-    return this.args.category.site;
-  }
-
   #createEveryoneFullPermission() {
-    const everyoneGroup = this.categorySite.groups.find(
-      (g) => g.id === AUTO_GROUPS.everyone.id
-    );
     return {
-      group_name: everyoneGroup?.name || "everyone",
       group_id: AUTO_GROUPS.everyone.id,
+      group_name: AUTO_GROUPS.everyone.name,
       permission_type: PermissionType.FULL,
     };
   }
@@ -60,12 +53,9 @@ export default class UpsertCategoryGeneral extends Component {
       return false;
     }
 
-    const onlyEveryone =
-      parentCategory.permissions.length === 1 &&
-      (parentCategory.permissions[0].group_id === AUTO_GROUPS.everyone.id ||
-        parentCategory.permissions[0].group_name === "everyone");
-
-    return !onlyEveryone;
+    return !parentCategory.permissions.some(
+      (p) => p.group_id === AUTO_GROUPS.everyone.id
+    );
   }
 
   get permissions() {
@@ -81,46 +71,20 @@ export default class UpsertCategoryGeneral extends Component {
       return true;
     }
 
-    const onlyEveryone =
-      permissions.length === 1 &&
-      (permissions[0].group_id === AUTO_GROUPS.everyone.id ||
-        permissions[0].group_name === "everyone");
-
-    return !onlyEveryone;
-  }
-
-  set isPrivateCategory(value) {
-    // Yes, is private
-    if (value) {
-      // If the user toggles between private and public we
-      // need to restore whatever previous private permissions were set.
-      if (this.#previousPermissions) {
-        this.#setFormPermissions(this.#previousPermissions);
-      } else {
-        this.#setFormPermissions([]);
-      }
-    } else {
-      // No, is public
-      this.#previousPermissions = (this.permissions || []).map((p) => ({
-        ...p,
-      }));
-
-      // By default everyone has full permissions for public categories
-      // to see and create posts and topics.
-      this.#setFormPermissions([this.#createEveryoneFullPermission()]);
-    }
+    return !permissions.some((p) => p.group_id === AUTO_GROUPS.everyone.id);
   }
 
   get accessGroups() {
-    const permissions = this.permissions || [];
-    return permissions.map((p) => p.group_id);
+    return (this.permissions || []).map((p) => p.group_id);
   }
 
   get availableAccessGroups() {
-    const allGroups = this.categorySite.groups;
+    const groups = this.site.groups.filter(
+      (g) => g.id !== AUTO_GROUPS.everyone.id
+    );
 
     if (!this.parentIsRestricted) {
-      return allGroups;
+      return groups;
     }
 
     const parentId = this.args.transientData.parent_category_id;
@@ -129,16 +93,16 @@ export default class UpsertCategoryGeneral extends Component {
       parentCategory.permissions.map((p) => p.group_id)
     );
 
-    return allGroups.filter((group) => parentGroupIds.has(group.id));
+    return groups.filter((g) => parentGroupIds.has(g.id));
   }
 
   @action
   onChangeAccessGroups(groupIds) {
     const newPermissions = groupIds.map((groupId) => {
-      const group = this.categorySite.groups.find((g) => g.id === groupId);
+      const group = this.site.groups.find((g) => g.id === groupId);
       return {
-        group_name: group?.name,
         group_id: groupId,
+        group_name: group?.name,
         permission_type: PermissionType.FULL,
       };
     });
@@ -212,12 +176,24 @@ export default class UpsertCategoryGeneral extends Component {
 
   @action
   onChangeVisibility(value) {
+    // Save current permissions before switching to public
+    if (value === "public" && this.isPrivateCategory) {
+      this.#previousPermissions = (this.permissions || []).map((p) => ({
+        ...p,
+      }));
+    }
+
     this.categoryVisibilityState = value;
     this.userModifiedPermissions = true;
+
     if (value === "public") {
-      this.isPrivateCategory = false;
+      this.#setFormPermissions([this.#createEveryoneFullPermission()]);
     } else if (value === "group_restricted") {
-      this.isPrivateCategory = true;
+      if (this.#previousPermissions?.length) {
+        this.#setFormPermissions(this.#previousPermissions);
+      } else {
+        this.#setFormPermissions([]);
+      }
     }
   }
 
@@ -231,16 +207,15 @@ export default class UpsertCategoryGeneral extends Component {
     }
 
     const result = await Category.reloadById(parentCategoryId);
-    const parentCategory = this.categorySite.updateCategory(result.category);
+    const parentCategory = this.site.updateCategory(result.category);
     parentCategory.setupGroupsAndPermissions();
 
     if (parentCategory?.permissions?.length > 0) {
-      const onlyEveryone =
-        parentCategory.permissions.length === 1 &&
-        (parentCategory.permissions[0].group_id === AUTO_GROUPS.everyone.id ||
-          parentCategory.permissions[0].group_name === "everyone");
+      const hasEveryone = parentCategory.permissions.some(
+        (p) => p.group_id === AUTO_GROUPS.everyone.id
+      );
 
-      if (!onlyEveryone) {
+      if (!hasEveryone) {
         const newPermissions = parentCategory.permissions.map((p) => ({
           group_name: p.group_name,
           group_id: p.group_id,
@@ -260,36 +235,8 @@ export default class UpsertCategoryGeneral extends Component {
     await this.onParentCategoryChange(value);
   }
 
-  @action
-  togglePrivateCategory() {
-    this.isPrivateCategory = !this.isPrivateCategory;
-  }
-
   get showWarning() {
     return this.args.category.isUncategorizedCategory;
-  }
-
-  @cached
-  get subCategories() {
-    if (this.args.category.isNew) {
-      return null;
-    }
-    return Category.list().filter(
-      (category) => category.get("parent_category_id") === this.args.category.id
-    );
-  }
-
-  @cached
-  get showDescription() {
-    const category = this.args.category;
-    return (
-      !category.isUncategorizedCategory && category.id && category.topic_url
-    );
-  }
-
-  @action
-  showCategoryTopic() {
-    window.open(this.args.category.get("topic_url"), "_blank").focus();
   }
 
   @action
@@ -342,41 +289,6 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   @action
-  validateColor(name, color, { addError }) {
-    color = color.trim();
-
-    let title;
-    if (name === "color") {
-      title = i18n("category.background_color");
-    } else if (name === "text_color") {
-      title = i18n("category.foreground_color");
-    } else {
-      throw new Error(`unknown title for category attribute ${name}`);
-    }
-
-    if (!color) {
-      addError(name, {
-        title,
-        message: i18n("category.color_validations.cant_be_empty"),
-      });
-    }
-
-    if (color.length !== 3 && color.length !== 6) {
-      addError(name, {
-        title,
-        message: i18n("category.color_validations.incorrect_length"),
-      });
-    }
-
-    if (!/^[0-9A-Fa-f]+$/.test(color)) {
-      addError(name, {
-        title,
-        message: i18n("category.color_validations.non_hexdecimal"),
-      });
-    }
-  }
-
-  @action
   validateEmoji(name, value, { addError, data }) {
     if (data.style_type === "emoji" && !value) {
       addError(name, {
@@ -386,24 +298,19 @@ export default class UpsertCategoryGeneral extends Component {
     }
   }
 
-  get categoryDescription() {
-    const description =
-      this.args.transientData?.description ?? this.args.category.description;
-    if (description) {
-      return htmlSafe(description);
-    }
-
-    return htmlSafe(i18n("category.no_description"));
-  }
-
   @action
   goToSecurityTab(event) {
-    event.preventDefault();
-    this.args.setSelectedTab?.("security");
+    if (event.target.tagName === "A") {
+      event.preventDefault();
+      this.args.setSelectedTab?.("security");
+    }
   }
 
-  get canSelectParentCategory() {
-    return !this.args.category.isUncategorizedCategory;
+  get permissionHint() {
+    const key = this.parentIsRestricted
+      ? "category.visibility.inherited_from_parent"
+      : "category.visibility.more_options_hint";
+    return htmlSafe(i18n(key));
   }
 
   get panelClass() {
@@ -644,14 +551,16 @@ export default class UpsertCategoryGeneral extends Component {
                   @content={{this.availableAccessGroups}}
                   @value={{this.accessGroups}}
                   @onChange={{this.onChangeAccessGroups}}
+                  @options={{hash disabled=this.parentIsRestricted}}
                 />
               </@form.Container>
 
-              <span class="category-permission-hint">
-                {{i18n "category.visibility.more_options_hint"}}
-                <a href {{on "click" this.goToSecurityTab}}>
-                  {{i18n "category.visibility.more_options_hint_link"}}
-                </a>
+              {{! template-lint-disable no-invalid-interactive }}
+              <span
+                class="category-permission-hint"
+                {{on "click" this.goToSecurityTab}}
+              >
+                {{this.permissionHint}}
               </span>
             </Content>
           </cc.Contents>
