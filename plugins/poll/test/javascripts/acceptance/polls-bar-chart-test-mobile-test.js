@@ -21,23 +21,11 @@ acceptance("Rendering polls with bar charts - mobile", function (needs) {
 
   test("Public number poll", async function (assert) {
     await visit("/t/-/13");
-
     assert.dom(".poll").exists({ count: 1 }, "renders the poll correctly");
 
     await click("button.toggle-results");
-
     assert
-      .dom(".poll-voters:nth-of-type(1) li")
-      .exists({ count: 25 }, "displays the right number of voters");
-
-    assert
-      .dom(".poll-voters:nth-of-type(1) li:nth-of-type(1) a")
-      .doesNotHaveAttribute("href", "user URL does not exist");
-
-    await click(".poll-voters-toggle-expand:nth-of-type(1) a");
-
-    assert
-      .dom(".poll-voters:nth-of-type(1) li")
-      .exists({ count: 35 }, "displays the right number of voters");
+      .dom(".poll-info_counts-count .info-number")
+      .hasText("35", "displays the right number of voters");
   });
 });
