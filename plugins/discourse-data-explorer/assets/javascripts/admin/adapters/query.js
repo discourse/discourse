@@ -1,6 +1,8 @@
 import { optionalRequire } from "discourse/lib/utilities";
 
-const buildPluginAdapter = optionalRequire("admin/adapters/build-plugin");
+const buildPluginAdapter = optionalRequire(
+  "discourse/admin/adapters/build-plugin"
+);
 
 export default buildPluginAdapter
   ? buildPluginAdapter("explorer").extend({})

@@ -356,6 +356,38 @@ RSpec.describe AssetProcessor do
     expect(result["main.js"]["code"]).not_to include("../components/my-component")
   end
 
+  it "handles relative import of gjs index file" do
+    mod_1 = <<~JS.chomp
+      export default "module 1";
+    JS
+
+    mod_2 = <<~JS.chomp
+      export default "module 2";
+    JS
+
+    result =
+      AssetProcessor.new.rollup(
+        {
+          "discourse/components/my-component.gjs" => mod_1,
+          "discourse/components/my-component/index.gjs" => mod_2,
+        },
+        {
+          themeId: 22,
+          entrypoints: {
+            main: {
+              modules: %w[
+                discourse/components/my-component.gjs
+                discourse/components/my-component/index.gjs
+              ],
+            },
+          },
+        },
+      )
+
+    expect(result["main.js"]["code"]).to include("module 1")
+    expect(result["main.js"]["code"]).to include("module 2")
+  end
+
   it "returns the ember version" do
     expect(AssetProcessor.new.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
   end
