@@ -326,7 +326,8 @@ export default class Composer extends RestModel {
 
   @discourseComputed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
-    const manyCategories = this.site.categories.length > 1;
+    const manyCategories =
+      this.site.lazy_load_categories || this.site.categories.length > 1;
     return !isPrivateMessage && (hasOptions || manyCategories);
   }
 
