@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-conditional-assertions */
 import { fillIn, render, waitFor } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import EmailLogsList from "discourse/admin/components/email-logs-list";
