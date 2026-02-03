@@ -1,5 +1,7 @@
+@use "lib/viewport";
+
 .uc-experimental-foundation-changes {
-  --d-logo-height: 2.25em;
+  --d-logo-height: 2.3em;
   --d-nav-underline-height: var(--space-half);
   --d-button-default-bg-color: transparent;
   --d-button-default-border: 1px solid var(--primary-200);
@@ -15,14 +17,13 @@
   --d-topic-list-data-font-size: var(--font-down-1);
   --d-topic-list-header-text-color: var(--primary-900);
   --metadata-color: var(--primary-900);
-  --d-nav-color--active: var(--primary);
-  --d-nav-color--hover: var(--primary);
   --topic-title-font-weight: 500;
   --d-sidebar-active-background: var(--primary-100);
   --d-content-background: var(--secondary);
   --category-badge-border-radius: calc(var(--d-border-radius) / 2);
   --category-badge-title-color: var(--primary);
   --category-boxes-description-text-color: var(--primary-700);
+  --d-category-boxes-gap: var(--space-4);
   --d-category-border-box-width: 1px;
   --d-category-border-accent-width: 0px;
   --d-sidebar-active-color: var(--primary);
@@ -250,6 +251,12 @@
   // Header
   .d-header {
     height: 3.25em;
+  }
+
+  .d-header .title {
+    @include viewport.from(sm) {
+      --d-logo-height: 2.3em;
+    }
   }
 
   .header-sidebar-toggle button,

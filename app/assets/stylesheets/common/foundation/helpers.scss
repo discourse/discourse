@@ -38,20 +38,6 @@
   border: 0;
 }
 
-// Contain floats
-// --------------------------------------------------
-.clearfix {
-  &::before,
-  &::after {
-    display: table;
-    content: " ";
-  }
-
-  &::after {
-    clear: both;
-  }
-}
-
 // Overflow
 // --------------------------------------------------
 .overflow-ellipsis {
