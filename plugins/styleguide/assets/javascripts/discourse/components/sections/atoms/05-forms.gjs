@@ -372,7 +372,7 @@ import Form from "discourse/components/form";
       </row.Col>
 
       <row.Col @size={{12}}>
-        <form.Field @title="Adress" @name="adress" as |field|>
+        <form.Field @title="Address" @name="address" as |field|>
           <field.Input />
         </form.Field>
       </row.Col>
@@ -713,7 +713,7 @@ import Form from "discourse/components/form";
           </row.Col>
 
           <row.Col @size={{12}}>
-            <form.Field @title="Adress" @name="adress" as |field|>
+            <form.Field @title="Address" @name="address" as |field|>
               <field.Input />
             </form.Field>
           </row.Col>

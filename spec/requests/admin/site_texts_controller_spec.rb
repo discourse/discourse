@@ -174,7 +174,6 @@ RSpec.describe Admin::SiteTextsController do
       end
 
       it "returns only untranslated (english) strings" do
-        available_locales = I18n.config.available_locales
         I18n.config.available_locales = %i[en test]
 
         I18n.backend.store_translations(:en, { shrubbery: "Shrubbery" })
