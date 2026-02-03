@@ -56,7 +56,7 @@ acceptance("Search - Anonymous", function (needs) {
       });
     });
 
-    server.get("/tag/:tag_slug/:tag_id/l/latest.json", (request) => {
+    server.get("/tag/:tag_id/l/latest.json", (request) => {
       return helper.response({
         users: [],
         primary_groups: [],
@@ -69,8 +69,8 @@ acceptance("Search - Anonymous", function (needs) {
           tags: [
             {
               id: parseInt(request.params.tag_id, 10),
-              name: request.params.tag_slug,
-              slug: request.params.tag_slug,
+              name: "important",
+              slug: "important",
               topic_count: 1,
             },
           ],

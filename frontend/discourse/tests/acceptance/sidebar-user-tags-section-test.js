@@ -55,7 +55,7 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     });
 
     ["latest", "top", "new", "unread", "hot"].forEach((type) => {
-      server.get(`/tag/:tagSlug/:tagId/l/${type}.json`, () => {
+      server.get(`/tag/:tagId/l/${type}.json`, () => {
         return helper.response(
           cloneJSON(discoveryFixture["/tag/important/l/latest.json"])
         );
