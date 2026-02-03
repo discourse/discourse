@@ -564,8 +564,8 @@ importers:
         specifier: ^4.1.1
         version: 4.1.1
       jsuites:
-        specifier: ^5.13.3
-        version: 5.13.3
+        specifier: ^6.1.1
+        version: 6.1.1
       loader.js:
         specifier: ^4.7.0
         version: 4.7.0
@@ -2547,6 +2547,9 @@ packages:
   '@jsquash/resize@2.1.1':
     resolution: {integrity: sha512-0R5UL1ZLHUT+carjVikcE1QfA+kfNQ2YamYyGVRmhfh4zttU5EY3bQBGxPIPtY2xIAw1P4Kgyxm2xrceRw1r2w==}
 
+  '@jsuites/utils@6.0.3':
+    resolution: {integrity: sha512-mLk2KH/y8bSEu85PohiglldoOn2Rkjb/1FJ3x3loiPB5vohwMYPbvbSIK9AGg4q1IQQKmKLv2ww/FDUD1IoYEg==}
+
   '@keyv/bigmap@1.3.1':
     resolution: {integrity: sha512-WbzE9sdmQtKy8vrNPa9BRnwZh5UF4s1KTmSK0KUVLo3eff5BlQNNWDnFOouNpKfPKDnms9xynJjsMYjMaT/aFQ==}
     engines: {node: '>= 18'}
@@ -2558,6 +2561,33 @@ packages:
 
   '@kurkle/color@0.3.4':
     resolution: {integrity: sha512-M5UknZPHRu3DEDWoipU6sE8PdkZ6Z/S+v4dD+Ke8IaNlpdSQah50lz1KtcFBa2vsdOnwbbnxJwVM4wty6udA5w==}
+
+  '@lemonadejs/calendar@5.8.3':
+    resolution: {integrity: sha512-9ZRtos28CMPryMt1hsHfi9NRw5WIy/RdF26G5djRfin6e9xx3xZy0CmEEvx+hxjI43qtqvmDriRzVdT59Zvwaw==}
+
+  '@lemonadejs/color@5.8.0':
+    resolution: {integrity: sha512-ep9yJAgRvRPrrx56p/3hGVctqcXgc5F3wJtefjvwKJv/CVMY19clZ3+vRoZm7Ndth6kN8h+Q6Pu5EkHkl/WLZQ==}
+
+  '@lemonadejs/contextmenu@5.8.1':
+    resolution: {integrity: sha512-hgvRIVwYJQB0n13TTFwj/cNpz17FK5oXBldv25KkfjojsFDQ/CvU3OgYg5tb9ouGhzvV2oJLJzKv3adpn+r4Rw==}
+
+  '@lemonadejs/dropdown@5.8.2':
+    resolution: {integrity: sha512-QzbHCiF6G4juuIbo3EonYQU/bBcZPTeutyFZHZI3ppS18HVyf3TR3XXKBFRdJT61hilUJ+bX4vWWEgidpzY/Pg==}
+
+  '@lemonadejs/modal@5.8.2':
+    resolution: {integrity: sha512-wMsc6W+zf36/WcvUtfODG7IimAE/nEecvuHLKkfseGVgvPXlBB6OA4Kw+T3mmDwdWE1U8guSXcrcyvOoaUuqIQ==}
+
+  '@lemonadejs/rating@5.8.1':
+    resolution: {integrity: sha512-g/FJVJ/ay1BmcdqHDHX/2CHBQ1vBViJipWuEMdsqnwbnGGpkKf2q5Ml3xI2GMwCVw8ovvcy/++3UP1xs9GLyMQ==}
+
+  '@lemonadejs/switch@5.8.0':
+    resolution: {integrity: sha512-EpqK5iCpQj3o1bN8wW+jka6O4aMIKP5IbLXtD9iTv/ipasyQgxz2oZNkHD8yS6JrpGffSd87FNi37qm/XcJN3w==}
+
+  '@lemonadejs/tabs@5.8.0':
+    resolution: {integrity: sha512-nyqHOVwqKnFvqOxwidT5VFzKuFJ/Bzdfvqs7QY30LK9CXK3MrQBgLrijpQOTL3Als1Qp6qp3Q0HRQqUsLARhyA==}
+
+  '@lemonadejs/topmenu@5.8.0':
+    resolution: {integrity: sha512-mkWnaiE+0c/i+wv9cz88d2U4GOTxVIVj4aEOad4rQ2JCKkQfw02sP6PS/NaXWJMgDsF1cJOMnO3BThnP5/BqVw==}
 
   '@lint-todo/utils@13.1.1':
     resolution: {integrity: sha512-F5z53uvRIF4dYfFfJP3a2Cqg+4P1dgJchJsFnsZE0eZp0LK8X7g2J0CsJHRgns+skpXOlM7n5vFGwkWCWj8qJg==}
@@ -5697,7 +5727,7 @@ packages:
 
   glob@5.0.15:
     resolution: {integrity: sha512-c9IPMazfRITpmAAKi22dK1VKxGDX9ehhqfABDriL/lzO92xcUKEJPQHrVA/2YHSNFB4iFlykVmWvwo48nr3OxA==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
@@ -5706,11 +5736,12 @@ packages:
   glob@8.1.0:
     resolution: {integrity: sha512-r8hpEjiQEYlF2QU0df3dS+nxxSIreXQS1qRhMJM0Q5NDdR386C7jb7Hwwod8Fgiuex+k0GFjgft18yvxm5XoCQ==}
     engines: {node: '>=12'}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   glob@9.3.5:
     resolution: {integrity: sha512-e1LleDykUz2Iu+MTYdkSsuWX8lvAjAcs0Xef0lNIu0S2wOAzuTxCJtcd9S3cijlwYF18EsU3rzb8jPVobxDh9Q==}
     engines: {node: '>=16 || 14 >=14.17'}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-modules@1.0.0:
     resolution: {integrity: sha512-sKzpEkf11GpOFuw0Zzjzmt4B4UZwjOcG757PPvrfhxcLFbq0wpsgpOqxpxtxFiCG4DtG93M6XRVbF2oGdev7bg==}
@@ -6456,8 +6487,11 @@ packages:
   jspreadsheet-ce@5.0.4:
     resolution: {integrity: sha512-ra1JI1n+tEGgRMzTzNkPZjG0HZz8W6bFGAiTiHl+eYarXdRmS5qDc/ua3l2ev7oZ6Og9kjfrXYHVLUWiVc308w==}
 
-  jsuites@5.13.3:
-    resolution: {integrity: sha512-je27Vu9Sl+jBnUQmyX+WWenK6ThSBP4NufDgOZhlZ7eRAHn6SdiB9dg5eMqCRkzhw2N4MywemYkx1B0aze8eSA==}
+  jsuites@5.13.5:
+    resolution: {integrity: sha512-cvkcpy/v5I3+IAcNPE4UP38PFCEfUQw9JI5NN61dlcXLwkD+2UTIOsRPvgMLeqI1eDWHL4AHfrbcE/+TFciUsw==}
+
+  jsuites@6.1.1:
+    resolution: {integrity: sha512-YWZd/nhGPO+A7ykfvUwTU7FtNSOwgst+R0+U9sXIK94RRwe4K2twBn5HROuieUTBqwgqIV4idCPbsJIs6lSikA==}
 
   just-diff-apply@5.5.0:
     resolution: {integrity: sha512-OYTthRfSh55WOItVqwpefPtNt2VdKsq5AnAK6apdtR6yCH8pr0CmSr710J0Mf+WdQy7K/OzMy7K2MgAfdQURDw==}
@@ -6549,6 +6583,9 @@ packages:
   lefthook@2.1.0:
     resolution: {integrity: sha512-+vS+yywGQW6CN1J1hbGkez//6ixGHIQqfxDN/d3JDm531w9GfGt2lAWTDfZTw/CEl80XsN0raFcnEraR3ldw9g==}
     hasBin: true
+
+  lemonadejs@5.3.6:
+    resolution: {integrity: sha512-GfmoZvCcnesiRsU9oC3OJDZ2VU+U4TsOJKD3A+rEV7dwm2IBO0xaBkLYtpgY3kcoFQjm7u5k9KSQXEtIkanjHQ==}
 
   levn@0.4.1:
     resolution: {integrity: sha512-+bT2uH4E5LGE7h/n3evcS/sQlJXCpIp6ym8OWJ5eV6+67Dsql/LaaT7qJBAt2rzfoa/5QBGBhxDix1dMt2kQKQ==}
@@ -11399,6 +11436,8 @@ snapshots:
 
   '@jsquash/resize@2.1.1': {}
 
+  '@jsuites/utils@6.0.3': {}
+
   '@keyv/bigmap@1.3.1(keyv@5.6.0)':
     dependencies:
       hashery: 1.4.0
@@ -11408,6 +11447,49 @@ snapshots:
   '@keyv/serialize@1.1.1': {}
 
   '@kurkle/color@0.3.4': {}
+
+  '@lemonadejs/calendar@5.8.3':
+    dependencies:
+      '@jsuites/utils': 6.0.3
+      '@lemonadejs/modal': 5.8.2
+      lemonadejs: 5.3.6
+
+  '@lemonadejs/color@5.8.0':
+    dependencies:
+      '@lemonadejs/modal': 5.8.2
+      '@lemonadejs/tabs': 5.8.0
+      lemonadejs: 5.3.6
+
+  '@lemonadejs/contextmenu@5.8.1':
+    dependencies:
+      '@lemonadejs/modal': 5.8.2
+      lemonadejs: 5.3.6
+
+  '@lemonadejs/dropdown@5.8.2':
+    dependencies:
+      '@lemonadejs/modal': 5.8.2
+      lemonadejs: 5.3.6
+
+  '@lemonadejs/modal@5.8.2':
+    dependencies:
+      lemonadejs: 5.3.6
+
+  '@lemonadejs/rating@5.8.1':
+    dependencies:
+      lemonadejs: 5.3.6
+
+  '@lemonadejs/switch@5.8.0':
+    dependencies:
+      lemonadejs: 5.3.6
+
+  '@lemonadejs/tabs@5.8.0':
+    dependencies:
+      lemonadejs: 5.3.6
+
+  '@lemonadejs/topmenu@5.8.0':
+    dependencies:
+      '@lemonadejs/contextmenu': 5.8.1
+      lemonadejs: 5.3.6
 
   '@lint-todo/utils@13.1.1':
     dependencies:
@@ -16424,9 +16506,22 @@ snapshots:
   jspreadsheet-ce@5.0.4:
     dependencies:
       '@jspreadsheet/formula': 2.0.2
-      jsuites: 5.13.3
+      jsuites: 5.13.5
 
-  jsuites@5.13.3: {}
+  jsuites@5.13.5: {}
+
+  jsuites@6.1.1:
+    dependencies:
+      '@jsuites/utils': 6.0.3
+      '@lemonadejs/calendar': 5.8.3
+      '@lemonadejs/color': 5.8.0
+      '@lemonadejs/contextmenu': 5.8.1
+      '@lemonadejs/dropdown': 5.8.2
+      '@lemonadejs/modal': 5.8.2
+      '@lemonadejs/rating': 5.8.1
+      '@lemonadejs/switch': 5.8.0
+      '@lemonadejs/tabs': 5.8.0
+      '@lemonadejs/topmenu': 5.8.0
 
   just-diff-apply@5.5.0: {}
 
@@ -16504,6 +16599,8 @@ snapshots:
       lefthook-openbsd-x64: 2.1.0
       lefthook-windows-arm64: 2.1.0
       lefthook-windows-x64: 2.1.0
+
+  lemonadejs@5.3.6: {}
 
   levn@0.4.1:
     dependencies:
