@@ -279,17 +279,6 @@ export function isAppleDevice() {
   return caps.isIOS && !window.navigator.userAgent.match(/Trident/g);
 }
 
-let iPadDetected = undefined;
-
-export function isiPad() {
-  if (iPadDetected === undefined) {
-    iPadDetected =
-      window.navigator.userAgent.match(/iPad/g) &&
-      !window.navigator.userAgent.match(/Trident/g);
-  }
-  return iPadDetected;
-}
-
 export function safariHacksDisabled() {
   deprecated(
     "`safariHacksDisabled()` is deprecated, it now always returns `false`",
