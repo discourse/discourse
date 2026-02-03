@@ -31,6 +31,23 @@ RSpec.describe ColorScheme do
     expect(colors_href).not_to eq(colors_href2)
   end
 
+  describe "#ensure_consistency!" do
+    it "removes references to deleted color schemes from themes" do
+      scheme = ColorScheme.create_from_base(name: "Test Scheme")
+      theme1 = Fabricate(:theme, color_scheme_id: scheme.id)
+
+      unrelated_scheme = ColorScheme.create_from_base(name: "Unrelated Scheme")
+      theme2 = Fabricate(:theme, color_scheme_id: unrelated_scheme.id)
+
+      scheme.destroy!
+
+      ColorScheme.ensure_consistency!
+
+      expect(theme1.reload.color_scheme_id).to eq(nil)
+      expect(theme2.reload.color_scheme_id).to eq(unrelated_scheme.id)
+    end
+  end
+
   describe "new" do
     it "can take colors" do
       c = ColorScheme.new(valid_params)

@@ -358,6 +358,15 @@ class ColorScheme < ActiveRecord::Base
 
   @mutex = Mutex.new
 
+  def self.ensure_consistency!
+    DB.exec <<~SQL
+      UPDATE themes
+      SET color_scheme_id = NULL
+      WHERE color_scheme_id IS NOT NULL
+        AND color_scheme_id NOT IN (SELECT id FROM color_schemes)
+    SQL
+  end
+
   def self.base_colors
     return @base_colors if @base_colors
     @mutex.synchronize do
