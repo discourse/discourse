@@ -928,7 +928,8 @@ export default class Composer extends RestModel {
     if (opts.post) {
       this.setProperties({
         post: opts.post,
-        whisper: opts.post.post_type === this.site.post_types.whisper,
+        whisper:
+          opts.whisper ?? opts.post.post_type === this.site.post_types.whisper,
       });
 
       if (!this.topic) {
