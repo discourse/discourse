@@ -250,8 +250,6 @@ class QunitRunner
 
     args = []
 
-    system("bin/rake assets:precompile:build_plugins", exception: true) unless reuse_build
-
     if @qunit_path
       run_theme_build(unless_build_reused: reuse_build)
       env["THEME_TEST_PAGES"] = build_theme_test_pages(query)
@@ -376,6 +374,7 @@ class QunitRunner
       if @dry_run
         puts "[dry-run] skipping unicorn startup"
       else
+        system("bin/rake assets:precompile:build_plugins", exception: true)
         unicorn_pid =
           Process.spawn(unicorn_env, File.join(rails_root, "bin", "unicorn"), pgroup: true)
       end
