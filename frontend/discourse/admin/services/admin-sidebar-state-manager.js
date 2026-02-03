@@ -46,6 +46,7 @@ export default class AdminSidebarStateManager extends Service {
   stopForcingAdminSidebar() {
     this.sidebarState.setPanel(MAIN_PANEL);
     this.sidebarState.isForcingSidebar = false;
+    this.sidebarState.forcingSidebarPanel = null;
   }
 
   get modals() {
@@ -57,6 +58,7 @@ export default class AdminSidebarStateManager extends Service {
     this.sidebarState.setSeparatedMode();
     this.sidebarState.hideSwitchPanelButtons();
     this.sidebarState.isForcingSidebar = true;
+    this.sidebarState.forcingSidebarPanel = ADMIN_PANEL;
 
     // we may navigate to admin from the header dropdown
     // and when we do, we have to close it
