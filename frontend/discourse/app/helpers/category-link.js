@@ -61,7 +61,7 @@ export function categoryBadgeHTML(category, opts) {
   }
 
   if (opts.ancestors) {
-    const { ancestors, ...newOpts } = opts;
+    const { ancestors, readOnly, ...newOpts } = opts;
 
     // allow each ancestor to use its own style
     ["styleType", "icon", "emoji"].forEach((k) => delete newOpts[k]);
@@ -69,7 +69,10 @@ export function categoryBadgeHTML(category, opts) {
     return [category, ...ancestors]
       .reverse()
       .map((c) => {
-        return categoryBadgeHTML(c, { ...newOpts });
+        return categoryBadgeHTML(c, {
+          ...newOpts,
+          ...(readOnly && c === category ? { readOnly } : {}),
+        });
       })
       .join("");
   }
