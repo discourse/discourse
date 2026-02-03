@@ -107,6 +107,9 @@ class ReviewableQueuedPost < Reviewable
     result[:cooking_options].symbolize_keys! if result[:cooking_options]
     result[:topic_id] = topic_id if topic_id
     result[:category] = category_id if category_id
+    if result[:tags].is_a?(Array)
+      result[:tags] = result[:tags].map { |t| t.is_a?(Hash) ? t["name"] : t }
+    end
     result
   end
 
