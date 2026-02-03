@@ -290,18 +290,9 @@
     align-items: center;
   }
 
-  .category.category-box {
-    box-shadow: 0 0 0 0 transparent;
-    transition:
-      box-shadow 25ms ease-in-out,
-      border-color 25ms ease-in-out;
-  }
-
-  .category.category-box:hover {
-    .category-box-inner {
-      border-color: oklch(from var(--category-badge-color) l c h / 0.5);
-    }
-    box-shadow: 0 0 0 2px oklch(from var(--category-badge-color) l c h / 0.25);
+  .category-boxes .category-box,
+  .category-boxes-with-topics .category-box {
+    --category-badge-color: var(--content-border-color) !important;
   }
 
   .category-boxes .category-box-inner,
