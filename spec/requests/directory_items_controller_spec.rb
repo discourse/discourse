@@ -43,6 +43,11 @@ RSpec.describe DirectoryItemsController do
       get "/directory_items.json", params: { period: "all", page: 0 }
       expect(response.status).to eq(200)
     end
+
+    it "has a page number limit" do
+      get "/directory_items.json", params: { period: "all", page: described_class::PAGE_LIMIT + 1 }
+      expect(response.status).to eq(400)
+    end
   end
 
   context "with exclude_groups parameter" do
