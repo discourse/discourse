@@ -44,11 +44,11 @@ importers:
         specifier: 7.1.0
         version: 7.1.0
       '@glint/ember-tsc':
-        specifier: ^1.0.8
-        version: 1.0.8(typescript@5.9.3)
+        specifier: ^1.0.9
+        version: 1.0.9(typescript@5.9.3)
       '@glint/tsserver-plugin':
-        specifier: ^2.0.8
-        version: 2.0.8
+        specifier: ^2.0.9
+        version: 2.0.9
       '@rdil/parallel-prettier':
         specifier: ^3.0.0
         version: 3.0.0(prettier@3.8.0)
@@ -254,8 +254,8 @@ importers:
         specifier: 0.93.1
         version: 0.93.1
       '@glint/ember-tsc':
-        specifier: ^1.0.8
-        version: 1.0.8(typescript@5.9.3)
+        specifier: ^1.0.9
+        version: 1.0.9(typescript@5.9.3)
       '@glint/template':
         specifier: ^1.7.3
         version: 1.7.3
@@ -2373,11 +2373,17 @@ packages:
     peerDependencies:
       typescript: '>=5.6.0'
 
+  '@glint/ember-tsc@1.0.9':
+    resolution: {integrity: sha512-yZ0+3sSN2RxFAWsK9vJah8fv4Cq5RRFgsb+bben8HN8+rddp+YxHO63U0UvHhQWykHhMunuvN9NIzjwwD/696w==}
+    hasBin: true
+    peerDependencies:
+      typescript: '>=5.6.0'
+
   '@glint/template@1.7.3':
     resolution: {integrity: sha512-ouB9HjLJ5kDnAhORLx43vTmGukm6uHg5hg+jAoiSlyifQdVINmXIkkGPGCD1HQ0WeIDZ/CmxH7aIZlIyI90AAw==}
 
-  '@glint/tsserver-plugin@2.0.8':
-    resolution: {integrity: sha512-2flMuz8oYWBk4baylCzsGSVMnfSDaApWDcYWBhTvNfpwrWvJb/rnedyG0VLp64mAN3uCoS86ZbtcyBFWRvbvAQ==}
+  '@glint/tsserver-plugin@2.0.9':
+    resolution: {integrity: sha512-HTZGfi1EfxKEO1d0EISTkLB8iSiqqYwrfIjQ2Q9TL+Ksoens/KyN5JcyzBF6uEqNfjZffYECNwdRK6qCvQaP6g==}
 
   '@handlebars/parser@2.0.0':
     resolution: {integrity: sha512-EP9uEDZv/L5Qh9IWuMUGJRfwhXJ4h1dqKTT4/3+tY0eu7sPis7xh23j61SYUnNF4vqCQvvUXpDo9Bh/+q1zASA==}
@@ -8611,6 +8617,7 @@ packages:
   tar@6.2.1:
     resolution: {integrity: sha512-DZ4yORTwrbTj/7MZYq2w+/ZFdI6OZ/f9SFHR+71gIVUZhOQPHzVCLpvRnPgyaMpfWxxk/4ONva3GQSyNIKRv6A==}
     engines: {node: '>=10'}
+    deprecated: Old versions of tar are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exhorbitant rates) by contacting i@izs.me
 
   temp@0.9.4:
     resolution: {integrity: sha512-yYrrsWnrXMcdsnu/7YMYAofM1ktpL5By7vZhf15CrXijWWrEYZks5AXBudalfSWJLlnen/QUJUB5aoB0kqZUGA==}
@@ -11115,11 +11122,38 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  '@glint/ember-tsc@1.0.9(typescript@5.9.3)':
+    dependencies:
+      '@glimmer/syntax': 0.95.0
+      '@glint/template': 1.7.3
+      '@volar/kit': 2.4.23(typescript@5.9.3)
+      '@volar/language-core': 2.4.23
+      '@volar/language-server': 2.4.23
+      '@volar/language-service': 2.4.23
+      '@volar/source-map': 2.4.23
+      '@volar/test-utils': 2.4.23
+      '@volar/typescript': 2.4.23
+      computeds: 0.0.1
+      content-tag: 3.1.3
+      escape-string-regexp: 4.0.0
+      semver: 7.7.3
+      silent-error: 1.1.1
+      typescript: 5.9.3
+      uuid: 8.3.2
+      volar-service-html: 0.0.64(@volar/language-service@2.4.23)
+      volar-service-typescript: 0.0.65(@volar/language-service@2.4.23)
+      vscode-languageserver-protocol: 3.17.5
+      vscode-languageserver-textdocument: 1.0.12
+      vscode-uri: 3.1.0
+      yargs: 17.7.2
+    transitivePeerDependencies:
+      - supports-color
+
   '@glint/template@1.7.3': {}
 
-  '@glint/tsserver-plugin@2.0.8':
+  '@glint/tsserver-plugin@2.0.9':
     dependencies:
-      '@glint/ember-tsc': 1.0.8(typescript@5.9.3)
+      '@glint/ember-tsc': 1.0.9(typescript@5.9.3)
       '@volar/language-core': 2.4.23
       '@volar/typescript': 2.4.23
       jiti: 2.4.2
