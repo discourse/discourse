@@ -1009,8 +1009,11 @@ class TopicQuery
   end
 
   def remove_topics_from_ignored_users(list, user)
-    ignored_users = user.ignored_user_ids.join(",")
-    list = list.where("topics.user_id NOT IN (#{ignored_users})") if ignored_users.present?
+    if user
+      ignored_users = user.ignored_user_ids.join(",")
+      list = list.where("topics.user_id NOT IN (#{ignored_users})") if ignored_users.present?
+    end
+
     list
   end
 
