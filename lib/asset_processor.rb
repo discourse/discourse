@@ -52,7 +52,7 @@ class AssetProcessor
   end
 
   def self.processor_file_path
-    "#{PROCESSOR_DIR}/asset-processor-#{inputs_digest}.js"
+    "#{PROCESSOR_DIR}/asset-processor-#{inputs_digest}.v8.bin"
   end
 
   def self.with_file_lock(&block)
@@ -66,26 +66,27 @@ class AssetProcessor
 
   def self.cleanup_old_cache_files
     Dir
-      .glob("#{PROCESSOR_DIR}/asset-processor-*.js")
+      .glob("#{PROCESSOR_DIR}/asset-processor-*")
       .reject { it.end_with?(processor_file_path) }
       .each { File.delete(it) }
   end
 
-  def self.load_or_build_processor_source
+  def self.load_or_build_processor_snapshot
     cache_path = processor_file_path
 
     if File.exist?(cache_path)
-      File.read(cache_path)
+      File.binread(cache_path)
     else
       with_file_lock do
         if File.exist?(cache_path)
-          File.read(cache_path)
+          File.binread(cache_path)
         else
           built_source = build_asset_processor
+          snapshot = MiniRacer::Snapshot.new(built_source).dump
           FileUtils.mkdir_p(PROCESSOR_DIR)
-          File.write(cache_path, built_source)
+          File.binwrite(cache_path, snapshot)
           cleanup_old_cache_files
-          built_source
+          snapshot
         end
       end
     end
@@ -93,9 +94,13 @@ class AssetProcessor
 
   def self.create_new_context
     # timeout any eval that takes longer than 15 seconds
-    ctx = MiniRacer::Context.new(timeout: 15_000, ensure_gc_after_idle: 2000)
+    ctx =
+      MiniRacer::Context.new(
+        timeout: 15_000,
+        ensure_gc_after_idle: 2000,
+        snapshot: MiniRacer::Snapshot.load(load_or_build_processor_snapshot),
+      )
 
-    # General shims
     ctx.attach(
       "rails.logger.info",
       proc do |err|
@@ -117,10 +122,7 @@ class AssetProcessor
         nil
       end,
     )
-
-    source = load_or_build_processor_source
-
-    ctx.eval(source, filename: "asset-processor.js")
+    ctx.eval("globalThis.patchWebAssembly();")
 
     ctx
   end
