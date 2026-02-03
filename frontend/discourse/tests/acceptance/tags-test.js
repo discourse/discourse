@@ -19,7 +19,7 @@ acceptance("Tags", function (needs) {
       })
     );
 
-    server.get("/tag/test/42/l/unread.json", () =>
+    server.get("/tag/42/l/unread.json", () =>
       helper.response({
         users: [
           {
@@ -135,7 +135,7 @@ acceptance("Tags listed by group", function (needs) {
       })
     );
 
-    server.get("/tag/regular-tag/1/l/latest.json", () =>
+    server.get("/tag/1/l/latest.json", () =>
       helper.response({
         users: [],
         primary_groups: [],
@@ -167,7 +167,7 @@ acceptance("Tags listed by group", function (needs) {
       })
     );
 
-    server.get("/tag/staff-only-tag/2/l/latest.json", () =>
+    server.get("/tag/2/l/latest.json", () =>
       helper.response({
         users: [],
         primary_groups: [],
@@ -338,7 +338,7 @@ acceptance("Tag info", function (needs) {
       })
     );
 
-    server.get("/tag/planters/12/l/latest.json", () =>
+    server.get("/tag/12/l/latest.json", () =>
       helper.response({
         users: [],
         primary_groups: [],
@@ -371,7 +371,7 @@ acceptance("Tag info", function (needs) {
       })
     );
 
-    server.get("/tag/happy-monkey/13/l/latest.json", () =>
+    server.get("/tag/13/l/latest.json", () =>
       helper.response({
         users: [],
         primary_groups: [],
@@ -404,7 +404,7 @@ acceptance("Tag info", function (needs) {
       })
     );
 
-    server.get("/tag/happy-monkey2/14/l/latest.json", () =>
+    server.get("/tag/14/l/latest.json", () =>
       helper.response({
         users: [],
         primary_groups: [],
@@ -540,14 +540,13 @@ acceptance("Tag info", function (needs) {
       });
     });
 
-    // Route for post-rename navigation (tag renamed from happy-monkey to happy-monkey2)
-    server.get("/tag/happy-monkey2/13/l/latest.json", () =>
+    server.get("/tag/13/l/latest.json", () =>
       helper.response({
         users: [],
         primary_groups: [],
         topic_list: {
           topics: [],
-          tags: [{ id: 13, name: "happy-monkey2", slug: "happy-monkey2" }],
+          tags: [{ id: 13, name: "happy-monkey", slug: "happy-monkey" }],
         },
       })
     );
@@ -794,7 +793,7 @@ acceptance("Tag show - create topic", function (needs) {
         },
       });
     });
-    server.get("/tag/none/0/l/latest.json", () => {
+    server.get("/tag/0/l/latest.json", () => {
       return helper.response({
         users: [],
         primary_groups: [],
@@ -825,7 +824,7 @@ acceptance("Tag show - create topic", function (needs) {
         },
       });
     });
-    server.get("/tag/all/99/l/latest.json", () => {
+    server.get("/tag/99/l/latest.json", () => {
       return helper.response({
         users: [],
         primary_groups: [],
@@ -856,7 +855,7 @@ acceptance("Tag show - create topic", function (needs) {
         },
       });
     });
-    server.get("/tag/planters/12/l/latest.json", () => {
+    server.get("/tag/12/l/latest.json", () => {
       return helper.response({
         users: [],
         primary_groups: [],

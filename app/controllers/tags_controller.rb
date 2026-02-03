@@ -241,15 +241,15 @@ class TagsController < ::ApplicationController
 
     guardian.ensure_can_edit_tag!(tag)
 
-    old_tag_name = tag.name
+    previous_tag_name = tag.name
     tag.name = DiscourseTagging.clean_tag(new_tag_name) if new_tag_name.present?
     tag.description = new_tag_description if new_tag_description.present?
 
     if tag.save
-      if tag.name != old_tag_name
+      if tag.name != previous_tag_name
         StaffActionLogger.new(current_user).log_custom(
           "renamed_tag",
-          previous_value: old_tag_name,
+          previous_value: previous_tag_name,
           new_value: tag.name,
         )
       end
@@ -704,7 +704,10 @@ class TagsController < ::ApplicationController
         "tag_category_#{action_name}_by_name_path"
       end
     else
-      if opts[:tag_id]
+      if opts[:tag_slug] && opts[:tag_id]
+        # user-facing canonical URLs use slug/id format
+        "tag_#{action_name}_with_slug_path"
+      elsif opts[:tag_id]
         "tag_#{action_name}_path"
       else
         "tag_#{action_name}_by_name_path"
