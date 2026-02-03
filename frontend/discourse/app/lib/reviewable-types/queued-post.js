@@ -24,7 +24,7 @@ export default class extends ReviewableTypeBase {
         })
       );
     } else {
-      return htmlSafe(i18n("user_menu.reviewable.new_post_in_deleted_topic"));
+      return i18n("user_menu.reviewable.new_post_in_deleted_topic");
     }
   }
 

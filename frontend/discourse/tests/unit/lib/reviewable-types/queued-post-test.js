@@ -68,7 +68,7 @@ module("Unit | Reviewable Items | queued-post", function (hooks) {
     );
     assert.deepEqual(
       director.description,
-      htmlSafe(i18n("user_menu.reviewable.new_post_in_deleted_topic")),
+      i18n("user_menu.reviewable.new_post_in_deleted_topic"),
       "shows deleted topic fallback when no title is available"
     );
   });
