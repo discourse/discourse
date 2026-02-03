@@ -5,12 +5,3 @@
 # https://translate.discourse.org/
 
 vi:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          footnote: "Discourse Footnotes"
-  js:
-    footnote:
-      title: "Chú thích"
-      add: "Thêm chú thích"

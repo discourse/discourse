@@ -2051,7 +2051,6 @@ sq:
     form_kit:
       reset: Rivendosni
       optional: opsionale
-      errors_summary_title: "Ky formular përmban gabime:"
       dirty_form: "Nuk i keni dorëzuar ndryshimet tuaja! Jeni të sigurt që dëshironi të largoheni?"
       errors:
         required: "E nevojshme"
@@ -3513,7 +3512,6 @@ sq:
       this_year: "këtë vit"
       none_subcategory_text: "Asnjë"
       visibility:
-        title: "Lejimi"
         public: "Publike"
         group_restricted: "Private"
       notifications:

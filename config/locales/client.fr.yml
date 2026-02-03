@@ -2267,7 +2267,6 @@ fr:
     form_kit:
       reset: Réinitialiser
       optional: facultatif
-      errors_summary_title: "Ce formulaire contient des erreurs :"
       dirty_form: "Vous n'avez pas soumis vos modifications ! Voulez-vous vraiment partir ?"
       errors:
         starts_with: "Doit commencer par %{prefix}"
@@ -3775,7 +3774,7 @@ fr:
       quote_edit: "Modifier"
       quote_edit_shortcut: "Modifier (ou appuyer sur e)"
       quote_copy: "Copier la citation"
-      quote_copied_to_clibboard: "Citation copiée dans le presse-papiers"
+      quote_copied_to_clipboard: "Citation copiée dans le presse-papiers"
       quote_share: "Partager"
       edit_reason: "Raison : "
       post_number: "message %{number}"
@@ -4167,7 +4166,7 @@ fr:
       minimum_required_tags: "Nombre minimal d'étiquettes requises dans un sujet :"
       none_subcategory_text: "Jamais"
       visibility:
-        title: "Accès"
+        title: "Visibilité"
         public: "Public"
         group_restricted: "Privé"
       num_auto_bump_daily: "Nombre de sujets ouverts à remonter dans la liste automatiquement et quotidiennement :"
@@ -6457,8 +6456,6 @@ fr:
         delete: "Supprimer"
         delete_confirm: 'Voulez-vous vraiment supprimer « %{theme_name} » ?'
         bulk_delete: "Voulez-vous continuer ?"
-        bulk_themes_delete_confirm: "Cela désinstallera les thèmes suivants, ils ne pourront plus être utilisés par aucun utilisateur de votre site :"
-        bulk_components_delete_confirm: "Cela désinstallera les composants suivants, ils ne pourront plus être utilisés par aucun utilisateur de votre site :"
         color: "Couleur"
         opacity: "Opacité"
         copy: "Dupliquer"

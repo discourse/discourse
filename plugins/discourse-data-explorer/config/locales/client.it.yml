@@ -77,8 +77,6 @@ it:
           invalid: "Non valido"
           no_such_category: "Categoria inesistente"
           no_such_group: "Gruppo inesistente"
-          invalid_date: "%{date} è una data non valida"
-          invalid_time: "%{time} è un orario non valido"
     group:
       reports: "Report"
     admin:

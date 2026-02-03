@@ -2256,7 +2256,6 @@ fi:
     form_kit:
       reset: Palauta
       optional: valinnainen
-      errors_summary_title: "Tämä lomake sisältää virheitä:"
       dirty_form: "Et lähettänyt muutoksiasi! Oletko varma, että haluat poistua?"
       errors:
         starts_with: "Täytyy alkaa %{prefix}"
@@ -3755,7 +3754,7 @@ fi:
       quote_edit: "Muokkaa"
       quote_edit_shortcut: "Muokkaa (tai paina e)"
       quote_copy: "Kopioi lainaus"
-      quote_copied_to_clibboard: "Lainaus kopioitiin leikepöydälle"
+      quote_copied_to_clipboard: "Lainaus kopioitiin leikepöydälle"
       quote_share: "Jaa"
       edit_reason: "Syy: "
       post_number: "viesti %{number}"
@@ -4145,7 +4144,7 @@ fi:
       minimum_required_tags: "Ketjussa vaadittavien tunnisteiden vähimmäismäärä:"
       none_subcategory_text: "Ei valittu"
       visibility:
-        title: "Käyttöoikeudet"
+        title: "Näkyvyys"
         public: "Julkinen"
         group_restricted: "Yksityinen"
       num_auto_bump_daily: "Päivittäin nostettavien avointen ketjujen määrä:"
@@ -6443,8 +6442,6 @@ fi:
         delete: "Poista"
         delete_confirm: 'Haluatko varmasti poistaa teeman "%{theme_name}"?'
         bulk_delete: "Oletko varma?"
-        bulk_themes_delete_confirm: "Tämä poistaa seuraavat teemat, eivätkä sivustosi käyttäjät voi enää käyttää niitä:"
-        bulk_components_delete_confirm: "Tämä poistaa seuraavat komponentit, eivätkä sivustosi käyttäjät voi enää käyttää niitä:"
         color: "Väri"
         opacity: "Läpinäkyvyys"
         copy: "Monista"

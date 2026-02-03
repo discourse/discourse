@@ -20,7 +20,6 @@ nb_NO:
       channel_settings:
         edit: "Endre"
         add: "Legg til"
-        notification_settings_context: "Varsler"
         join: "Bli medlem"
         leave: "Forlat"
       close: "Lukk"

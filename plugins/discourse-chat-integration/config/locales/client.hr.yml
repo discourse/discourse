@@ -16,7 +16,6 @@ hr:
       settings: "Postavke"
       no_providers: "Morate omogućiti neke davatelje usluga u postavkama dodatka"
       channels_with_errors: "Neki kanali za tog davatelja usluga nisu uspjeli zadnji put kada su poruke poslane. Kliknite ikon(u) pogreške da biste saznali više."
-      channel_exception: "Došlo je do nepoznate pogreške kada je poruka zadnji put poslana na ovaj kanal."
       group_mention_template: "Spominjanje: @%{name}"
       group_message_template: "Poruke na: @%{name}"
       choose_group: "(odaberite grupu)"
@@ -33,7 +32,6 @@ hr:
         topic: "Tema"
         send: "Pošalji testnu poruku"
         close: "Zatvori"
-        error: "Došlo je do nepoznate pogreške prilikom slanja poruke. Više podataka potražite u zapisnicima web mjesta."
         success: "Poruka je uspješno poslana"
       type:
         normal: Normalno

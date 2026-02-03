@@ -19,7 +19,6 @@ pt_BR:
           title: Uso de Palavras
         reading_time:
           title: Tempo de leitura
-          book_comparison: "Você passou <code>%{readingTime}</code> lendo em nosso site! Esse é o tempo que levaria para ler <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Reações mais usadas em tópicos
           total_number: "Número total de reações: %{count}"
@@ -53,14 +52,10 @@ pt_BR:
           system_title: "USO DE IA DETECTADO"
           section_features: "TOP RECURSOS"
           section_models: "TOP MODELOS"
-        assignments:
-          total_assigned_others: "Atribuiu a %{username}"
         chat_usage:
           unique_dm_channels: Conversas por DM
           avg_message_length: Tamanho Médio de Mensagem
           messages: mensagens
-          author: Você
-          author_others: "%{username}"
           channel_title: "#chat-na-atividade"
           status_online: "● on-line"
           reply_1: "kkkk incrível B-)"
@@ -78,7 +73,6 @@ pt_BR:
             other: "%{count} novos membros"
           likes_given: Curtidas Dadas
           mentions: Menções
-          contributions_helped: suas contribuições ajudaram
         time_of_day_activity:
           title: Ritmo de Atividade Diária
         writing_analysis:

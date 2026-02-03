@@ -145,6 +145,3 @@ ar:
     review:
       transcript:
         view: "عرض نص الرسائل السابقة"
-      types:
-        reviewable_post_voting_comment:
-          title: "تم الإبلاغ عن تعليق للتصويت على منشور"

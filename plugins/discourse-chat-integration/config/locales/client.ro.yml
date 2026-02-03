@@ -16,7 +16,6 @@ ro:
       settings: "Setări"
       no_providers: "Trebuie să activezi niște furnizori în setările modulului"
       channels_with_errors: "Unele canale pentru acest furnizor au eșuat când au fost trimise mesaje ultima dată. Dă clic pe pictogramele de eroare pentru a afla mai multe."
-      channel_exception: "A apărut o eroare necunoscută atunci când un mesaj a fost trimis ultima dată pe acest canal."
       group_mention_template: "Mențiuni despre: @%{name}"
       group_message_template: "Mesaje către: @%{name}"
       choose_group: "(selectează un grup)"
@@ -33,7 +32,6 @@ ro:
         topic: "Subiect"
         send: "Trimite un mesaj de test"
         close: "Închide"
-        error: "O eroare necunoscută a apărut atunci când mesajul era în curs de trimitere. Verifică jurnalele site-ului pentru mai multe informații."
         success: "Mesajul a fost trimis cu succes"
       type:
         normal: Normal

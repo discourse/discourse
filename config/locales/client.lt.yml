@@ -1517,6 +1517,7 @@ lt:
         tags: "Gairės"
         interface: "Sąsaja"
         apps: "Programėlės"
+        upcoming_changes: "Būsimi pakeitimai"
       change_password:
         success: "(el. laiškas išsiųstas)"
         in_progress: "(siunčiamas el. laiškas)"
@@ -3456,7 +3457,7 @@ lt:
       minimum_required_tags: "Minimalus temoje reikalingas žymų skaičius:"
       none_subcategory_text: "Nieko"
       visibility:
-        title: "Prieiga"
+        title: "Matomumas"
         public: "Vieša"
         group_restricted: "Privatu"
       num_auto_bump_daily: "Atvirų temų, kurios bus automatiškai rodomos kasdien, skaičius:"
