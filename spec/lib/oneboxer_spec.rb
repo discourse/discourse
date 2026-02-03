@@ -942,6 +942,16 @@ RSpec.describe Oneboxer do
     end
   end
 
+  describe ".ignore_redirects" do
+    it "includes youtube.com" do
+      expect(Oneboxer.ignore_redirects).to include("https://www.youtube.com")
+    end
+
+    it "includes youtu.be" do
+      expect(Oneboxer.ignore_redirects).to include("https://youtu.be")
+    end
+  end
+
   describe "strategies" do
     it "has a 'default' strategy" do
       expect(Oneboxer.strategies.keys.first).to eq(:default)
