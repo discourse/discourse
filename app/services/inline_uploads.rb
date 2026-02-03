@@ -150,8 +150,12 @@ class InlineUploads
     markdown
   end
 
+  URL_REGEX = /(?:[^\s()"']|\((?:[^\s()]*|\([^\s()]*\))*\))+/
+  TITLE_PART_REGEX = /"[^"]*"|'[^']*'/
+  private_constant :URL_REGEX, :TITLE_PART_REGEX
+
   def self.match_md_inline_img(markdown, external_src: false)
-    markdown.scan(/(!?\[([^\[\]]*)\]\(([^\s\)]+)([ ]*['"]{1}[^\)]*['"]{1}[ ]*)?\))/) do |match|
+    markdown.scan(/(!?\[([^\[\]]*)\]\((#{URL_REGEX})([ ]*#{TITLE_PART_REGEX}[ ]*)?\))/) do |match|
       if (external_src || matched_uploads(match[2]).present?) && block_given?
         yield(
           match[0],
