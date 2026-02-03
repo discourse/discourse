@@ -115,6 +115,11 @@
       min-height: 2.6em;
       top: var(--space-1);
     }
+
+    .form-kit__container-content:has(.is-disabled) {
+      // select-kit has pointer-events disabled, so we need to style the parent
+      cursor: not-allowed;
+    }
   }
 
   .edit-category .edit-category-footer {
