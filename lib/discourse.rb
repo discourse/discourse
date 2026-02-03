@@ -4,6 +4,7 @@ require "cache"
 require "open3"
 require "plugin/instance"
 require "version"
+require "version_compatibility"
 require "git_utils"
 
 module Discourse

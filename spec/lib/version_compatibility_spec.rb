@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-require "version"
+require "version_compatibility"
 
-RSpec.describe Discourse::VERSION do
+RSpec.describe Discourse do
   describe ".has_needed_version?" do
     it "works for major comparisons" do
       expect(Discourse.has_needed_version?("1.0.0", "1.0.0")).to eq(true)
