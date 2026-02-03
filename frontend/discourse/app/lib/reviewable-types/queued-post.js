@@ -17,12 +17,14 @@ export default class extends ReviewableTypeBase {
     title = emojiUnescape(title);
     if (this.reviewable.is_new_topic) {
       return htmlSafe(title);
-    } else {
+    } else if (title) {
       return htmlSafe(
         i18n("user_menu.reviewable.new_post_in_topic", {
           title,
         })
       );
+    } else {
+      return htmlSafe(i18n("user_menu.reviewable.new_post_in_deleted_topic"));
     }
   }
 
