@@ -113,6 +113,14 @@ uk:
             persona_id:
               label: "Персона"
               description: "Персона AI для створення звітів"
+        ai_tool_action:
+          fields:
+            tool:
+              label: "Інструмент ШІ"
+              description: "Інструмент штучного інтелекту, який запускається, коли спрацьовує автоматизація"
+            llm_model:
+              label: "Модель LLM"
+              description: "Мовна модель для інструментів, що використовують llm.generate() (необов'язково)"
         llm_persona_triage:
           fields:
             persona:
@@ -1054,6 +1062,10 @@ uk:
         topic:
           title: "Підсумок теми"
           close: "Закрити панель підсумків"
+          regenerate_ai_summaries: "Регенерувати підсумок ШІ"
+          regen_modal_description: "Виберіть, який тип зведення ШІ потрібно перегенерувати для цієї теми."
+          bulk_regen_description: "Виберіть, який тип резюме ШІ перегенерувати для вибраних тем."
+          regenerate_gists_option: "Короткі резюме (гісти)"
           regenerate_summaries_option: "Підсумки тем"
           regenerate_gists_success:
             one: "Короткий підсумок успішно регенеровано"
@@ -1065,6 +1077,16 @@ uk:
             few: "Не вдалося створити %{count} коротких змісти"
             many: "Не вдалося створити %{count} коротких змістів"
             other: "Не вдалося створити %{count} коротких змістів"
+          regenerate_topic_summary_success:
+            one: "Короткий зміст теми успішно згенеровано"
+            few: "Короткий зміст %{count} тем успішно згенеровано"
+            many: "Короткий зміст %{count} тем успішно згенеровано"
+            other: "Короткий зміст %{count} тем успішно згенеровано"
+          regenerate_topic_summary_error:
+            one: "Не вдалося повторно створити короткий зміст теми"
+            few: "Не вдалося повторно створити короткий зміст %{count} тем"
+            many: "Не вдалося повторно створити короткий зміст %{count} тем"
+            other: "Не вдалося повторно створити короткий зміст %{count} тем"
         topic_list_layout:
           button:
             compact: "Компактний"
