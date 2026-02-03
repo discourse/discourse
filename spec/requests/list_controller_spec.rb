@@ -1948,4 +1948,24 @@ RSpec.describe ListController do
       expect(new_sql_queries).to eq(initial_sql_queries)
     end
   end
+
+  context "with ignored users" do
+    fab!(:ignored_user, :user)
+
+    fab!(:ignored_relation) do
+      Fabricate(:ignored_user, user: user, ignored_user: ignored_user, expiring_at: 1.day.from_now)
+    end
+
+    it "does not show topics created by ignored users in the topic list" do
+      ignored_topic = Fabricate(:topic, user: ignored_user)
+      sign_in(user)
+
+      get "/latest.json"
+
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      topic_ids = json["topic_list"]["topics"].pluck("id")
+      expect(topic_ids).not_to include(ignored_topic.id)
+    end
+  end
 end

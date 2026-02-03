@@ -2617,6 +2617,28 @@ RSpec.describe Topic do
 
       expect(result.pluck(:id)).to contain_exactly(categorized_topic.id)
     end
+
+    context "with ignored users" do
+      fab!(:ignored_user, :user)
+
+      fab!(:ignored_relation) do
+        Fabricate(
+          :ignored_user,
+          user: user,
+          ignored_user: ignored_user,
+          expiring_at: 1.day.from_now,
+        )
+      end
+      it "excludes topics created by ignored users" do
+        ignored_topic = Fabricate(:topic, user: ignored_user)
+        allowed_topic = Fabricate(:topic, user: user)
+
+        topics = Topic.secured(Guardian.new(user))
+
+        expect(topics).to include(allowed_topic)
+        expect(topics).not_to include(ignored_topic)
+      end
+    end
   end
 
   describe "all_allowed_users" do

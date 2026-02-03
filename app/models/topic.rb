@@ -374,10 +374,24 @@ class Topic < ActiveRecord::Base
 
           uncategorized_condition = "topics.category_id IS NULL OR" if include_uncategorized
 
-          where(
-            "#{uncategorized_condition} topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})",
-            condition[1],
-          )
+          scope =
+            where(
+              "#{uncategorized_condition} topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})",
+              condition[1],
+            )
+
+          ignored_users_ids =
+            if guardian.nil? || guardian.anonymous?
+              ""
+            else
+              guardian.user.ignored_user_ids.join(",")
+            end
+
+          if ignored_users_ids.present?
+            scope = scope.where("topics.user_id NOT IN (#{ignored_users_ids})")
+          end
+
+          scope
         }
 
   scope :in_category_and_subcategories,

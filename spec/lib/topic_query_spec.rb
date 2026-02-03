@@ -193,6 +193,25 @@ RSpec.describe TopicQuery do
 
       expect(TopicQuery.new(user).list_hot.topics.map(&:id)).not_to include(muted_topic.id)
     end
+
+    context "with ignored users" do
+      fab!(:ignored_user, :user)
+
+      fab!(:ignored_relation) do
+        Fabricate(
+          :ignored_user,
+          user: user,
+          ignored_user: ignored_user,
+          expiring_at: 1.day.from_now,
+        )
+      end
+      it "excludes topics created by ignored users" do
+        ignored_topic = Fabricate(:topic, user: ignored_user)
+        TopicHotScore.create!(topic_id: ignored_topic.id, score: 1.0)
+
+        expect(TopicQuery.new(user).list_hot.topics.map(&:id)).not_to include(ignored_topic.id)
+      end
+    end
   end
 
   describe "#prioritize_pinned_topics" do
