@@ -3757,6 +3757,24 @@ uncategorized:
     default: true
     area: "interface"
 
+  enable_custom_splash_screen:
+    default: false
+    client: true
+    hidden: true
+    area: "interface"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+
+  splash_screen_image:
+    default: ""
+    type: upload
+    authorized_extensions: "svg"
+    area: "interface"
+    depends_on:
+      - "enable_custom_splash_screen"
+    depends_behavior: "hidden"
+
   suggest_weekends_in_date_pickers:
     client: true
     default: true
