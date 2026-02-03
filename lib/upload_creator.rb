@@ -6,6 +6,9 @@ class UploadCreator
   TYPES_TO_CROP = %w[avatar card_background custom_emoji profile_background].each(&:freeze)
 
   ALLOWED_SVG_ELEMENTS = %w[
+    animate
+    animateMotion
+    animateTransform
     circle
     clipPath
     defs
@@ -21,6 +24,7 @@ class UploadCreator
     polyline
     radialGradient
     rect
+    set
     stop
     style
     svg
@@ -512,6 +516,15 @@ class UploadCreator
         end
         use_el.remove_attribute("xlink:href")
       end
+
+    # Remove animation elements that target href/xlink:href attributes
+    doc
+      .css("animate, animateTransform, animateMotion, set")
+      .each do |anim_el|
+        attr_name = anim_el.attr("attributeName")&.downcase
+        anim_el.remove if attr_name&.include?("href")
+      end
+
     File.write(@file.path, doc.to_s)
     @file.rewind
   end
