@@ -22,20 +22,22 @@ worker_processes (ENV["UNICORN_WORKERS"] || 3).to_i
 # stree-ignore
 listen ENV["UNICORN_LISTENER"] || "#{(ENV["UNICORN_BIND_ALL"] ? "" : "127.0.0.1:")}#{(ENV["UNICORN_PORT"] || 3000).to_i}", reuseport: true
 
-timeout =
-  (
-    if ENV["RAILS_ENV"] == "production"
-      30
-    else
-      ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60
-    end
-  )
-timeout(timeout)
-spawn_timeout(timeout) # Allow workers more than 10 seconds to spawn
+if ENV["RAILS_ENV"] == "production"
+  # nuke workers after 30 seconds instead of 20 seconds (the default)
+  timeout 30
+else
+  # we want a longer timeout in dev cause first request can be really slow
+  timeout(ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
+end
 
 check_client_connection false
 
-before_fork { |server| Discourse.redis.close }
+before_fork do |server|
+  Discourse.redis.close
+
+  throttle_time = Float(ENV["APP_SERVER_FORK_THROTTLE"], exception: false) || 1
+  sleep(throttle_time) if !Rails.env.development?
+end
 
 after_mold_fork do |server, mold|
   if mold.generation.zero?
