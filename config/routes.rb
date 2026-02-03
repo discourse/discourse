@@ -1683,16 +1683,20 @@ Discourse::Application.routes.draw do
       end
     end
 
-    # User-facing routes with slug/id for SEO-friendly URLs (HTML and RSS)
-    scope "/tag/:tag_slug/:tag_id", constraints: { tag_id: /\d+/ } do
+    scope "/tag/:tag_slug/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
       get "/" => "tags#show", :as => "tag_show_with_slug"
 
       Discourse.filters.each do |filter|
         get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}_with_slug"
       end
-
-      get "/" => "tags#tag_feed", :constraints => { format: :rss }
     end
+
+    get "/tag/:tag_slug/:tag_id" => "tags#tag_feed",
+        :constraints => {
+          tag_id: /\d+/,
+          format: :rss,
+        },
+        :as => "tag_feed_with_id"
 
     scope "/tag/:tag_name" do
       constraints format: :json do
@@ -1708,14 +1712,6 @@ Discourse::Application.routes.draw do
         Discourse.filters.each do |filter|
           get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}_by_name"
         end
-      end
-
-      # html routes for browser redirects to canonical URLs
-      # Use permissive format constraint to accept bare URLs (no extension)
-      get "/" => "tags#show", :constraints => { format: %r{(html|\*/\*)} }
-
-      Discourse.filters.each do |filter|
-        get "/l/#{filter}" => "tags#show_#{filter}", :constraints => { format: %r{(html|\*/\*)} }
       end
 
       constraints format: :rss do
