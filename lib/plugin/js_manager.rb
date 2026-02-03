@@ -53,7 +53,11 @@ module Plugin
           full_path = File.join(js_base, file)
           if File.file?(full_path)
             tree[file] = File.read(full_path)
-            entrypoints_config[name][:modules] << file
+            if name == "test"
+              entrypoints_config[name][:modules] << file if file.match?(/-test\.g?js$/)
+            else
+              entrypoints_config[name][:modules] << file
+            end
           end
         end
       end
