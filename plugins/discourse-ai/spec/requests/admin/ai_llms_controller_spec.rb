@@ -573,7 +573,6 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
     context "with llms configured" do
       fab!(:ai_persona) { Fabricate(:ai_persona, default_llm_id: llm_model.id) }
 
-      before { assign_fake_provider_to(:ai_helper_model) }
       it "validates the model is not in use" do
         delete "/admin/plugins/discourse-ai/ai-llms/#{llm_model.id}.json"
         expect(response.status).to eq(409)
