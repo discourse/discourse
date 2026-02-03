@@ -1713,8 +1713,6 @@ Discourse::Application.routes.draw do
       # html routes for browser redirects to canonical URLs
       # Use permissive format constraint to accept bare URLs (no extension)
       get "/" => "tags#show", :constraints => { format: %r{(html|\*/\*)} }
-      get "/info" => "tags#info", :constraints => { format: %r{(html|\*/\*)} }
-      get "/notifications" => "tags#notifications", :constraints => { format: %r{(html|\*/\*)} }
 
       Discourse.filters.each do |filter|
         get "/l/#{filter}" => "tags#show_#{filter}", :constraints => { format: %r{(html|\*/\*)} }
