@@ -232,6 +232,9 @@ export default function () {
         path: "/:tag_slug/:tag_id/l/" + filter,
       });
     });
+
+    // legacy route: /tag/:tag_name -> redirects to /tag/:slug/:id
+    this.route("legacyRedirect", { path: "/:tag_name" });
   });
 
   this.route("tags", function () {

@@ -1669,6 +1669,7 @@ Discourse::Application.routes.draw do
     #
 
     scope "/tag/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
+      get "/" => "tags#show", :as => "tag_show"
       get "/info" => "tags#info", :as => "tag_info"
       get "/notifications" => "tags#notifications", :as => "tag_notifications"
       put "/notifications" => "tags#update_notifications"
@@ -1676,26 +1677,21 @@ Discourse::Application.routes.draw do
       delete "/" => "tags#destroy", :as => "tag_destroy"
       post "/synonyms" => "tags#create_synonyms", :as => "tag_synonyms"
       delete "/synonyms/:synonym_id" => "tags#destroy_synonym"
+
+      Discourse.filters.each do |filter|
+        get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}"
+      end
     end
 
+    # User-facing routes with slug/id for SEO-friendly URLs (HTML and RSS)
     scope "/tag/:tag_slug/:tag_id", constraints: { tag_id: /\d+/ } do
-      constraints format: :json do
-        get "/" => "tags#show", :as => "tag_show"
+      get "/" => "tags#show", :as => "tag_show_with_slug"
 
-        Discourse.filters.each do |filter|
-          get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}"
-        end
+      Discourse.filters.each do |filter|
+        get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}_with_slug"
       end
 
-      constraints format: :html do
-        get "/" => "tags#show"
-
-        Discourse.filters.each { |filter| get "/l/#{filter}" => "tags#show_#{filter}" }
-      end
-
-      constraints format: :rss do
-        get "/" => "tags#tag_feed"
-      end
+      get "/" => "tags#tag_feed", :constraints => { format: :rss }
     end
 
     scope "/tag/:tag_name" do
@@ -1715,12 +1711,13 @@ Discourse::Application.routes.draw do
       end
 
       # html routes for browser redirects to canonical URLs
-      constraints format: :html do
-        get "/" => "tags#show"
-        get "/info" => "tags#info"
-        get "/notifications" => "tags#notifications"
+      # Use permissive format constraint to accept bare URLs (no extension)
+      get "/" => "tags#show", :constraints => { format: %r{(html|\*/\*)} }
+      get "/info" => "tags#info", :constraints => { format: %r{(html|\*/\*)} }
+      get "/notifications" => "tags#notifications", :constraints => { format: %r{(html|\*/\*)} }
 
-        Discourse.filters.each { |filter| get "/l/#{filter}" => "tags#show_#{filter}" }
+      Discourse.filters.each do |filter|
+        get "/l/#{filter}" => "tags#show_#{filter}", :constraints => { format: %r{(html|\*/\*)} }
       end
 
       constraints format: :rss do

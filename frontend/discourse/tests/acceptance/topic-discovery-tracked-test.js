@@ -31,14 +31,15 @@ acceptance("Topic Discovery Tracked", function (needs) {
       });
     });
 
-    server.get("/tag/:tag_slug/:tag_id/l/latest.json", (request) => {
+    server.get("/tag/:tag_id/l/latest.json", (request) => {
       const response = cloneJSON(topicFixtures["/latest.json"]);
       // add tag with id to response so tracking state gets the tag id
+      const tagId = parseInt(request.params.tag_id, 10);
       response.topic_list.tags = [
         {
-          id: parseInt(request.params.tag_id, 10),
-          name: request.params.tag_slug,
-          slug: request.params.tag_slug,
+          id: tagId,
+          name: `tag-${tagId}`,
+          slug: `tag-${tagId}`,
         },
       ];
       return helper.response(response);

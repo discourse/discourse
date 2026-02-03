@@ -101,7 +101,6 @@ export default class TagShowRoute extends DiscourseRoute {
       {}
     );
     const topicFilter = this.navMode;
-    const tagPath = id ? `${slug}/${id}` : slug;
     let filter;
 
     if (category) {
@@ -112,7 +111,13 @@ export default class TagShowRoute extends DiscourseRoute {
         filter += this.noSubcategories ? `/${NONE}` : `/${ALL}`;
       }
 
-      filter += `/${tagPath}/l/${topicFilter}`;
+      if (slug === NONE) {
+        // untagged category route - use "none" without ID
+        filter += `/${NONE}/l/${topicFilter}`;
+      } else {
+        // category+tag routes still use slug/id format
+        filter += `/${slug}/${id}/l/${topicFilter}`;
+      }
     } else if (additionalTags) {
       filter = `tags/intersection/${slug}/${additionalTags.join("/")}`;
 
@@ -123,7 +128,8 @@ export default class TagShowRoute extends DiscourseRoute {
         );
       }
     } else {
-      filter = `tag/${tagPath}/l/${topicFilter}`;
+      // use ID-only format for API calls
+      filter = `tag/${id}/l/${topicFilter}`;
     }
 
     if (
