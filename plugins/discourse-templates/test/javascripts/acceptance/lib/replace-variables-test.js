@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-conditional-assertions */
 import EmberObject from "@ember/object";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
