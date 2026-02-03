@@ -30,7 +30,17 @@ class TagsController < ::ApplicationController
                   list
                 ]
 
-  before_action :fetch_tag, only: %i[info create_synonyms destroy_synonym]
+  before_action :fetch_tag,
+                only: %i[
+                  info
+                  update
+                  destroy
+                  tag_feed
+                  notifications
+                  update_notifications
+                  create_synonyms
+                  destroy_synonym
+                ]
 
   after_action :add_noindex_header, except: %i[index show]
 
@@ -142,13 +152,7 @@ class TagsController < ::ApplicationController
 
   Discourse.filters.each do |filter|
     define_method("show_#{filter}") do
-      # resolve tag from either slug/id or name params
-      @tag =
-        if params[:tag_id].present?
-          Tag.find_by(id: params[:tag_id])
-        elsif params[:tag_name].present?
-          Tag.find_by_name(params[:tag_name].force_encoding("UTF-8"))
-        end
+      fetch_tag(raise_not_found: false)
 
       if @tag
         if @tag.target_tag_id.present? && @tag.target_tag_id != @tag.id
@@ -227,42 +231,34 @@ class TagsController < ::ApplicationController
       return render_json_error(warning)
     end
 
-    tag =
-      if params[:tag_id].present?
-        Tag.find_by(id: params[:tag_id])
-      else
-        Tag.find_by_name(params[:tag_name])
-      end
-    raise Discourse::NotFound if tag.nil?
-
     new_tag = params[:tag]
     new_tag_name = new_tag[:name]
     new_tag_description = new_tag[:description]
 
-    guardian.ensure_can_edit_tag!(tag)
+    guardian.ensure_can_edit_tag!(@tag)
 
-    previous_tag_name = tag.name
-    tag.name = DiscourseTagging.clean_tag(new_tag_name) if new_tag_name.present?
-    tag.description = new_tag_description if new_tag_description.present?
+    previous_tag_name = @tag.name
+    @tag.name = DiscourseTagging.clean_tag(new_tag_name) if new_tag_name.present?
+    @tag.description = new_tag_description if new_tag_description.present?
 
-    if tag.save
-      if tag.name != previous_tag_name
+    if @tag.save
+      if @tag.name != previous_tag_name
         StaffActionLogger.new(current_user).log_custom(
           "renamed_tag",
           previous_value: previous_tag_name,
-          new_value: tag.name,
+          new_value: @tag.name,
         )
       end
       render json: {
                tag: {
-                 id: tag.id,
-                 name: tag.name,
-                 slug: tag.slug,
-                 description: tag.description,
+                 id: @tag.id,
+                 name: @tag.name,
+                 slug: @tag.slug,
+                 description: @tag.description,
                },
              }
     else
-      render_json_error tag.errors.full_messages
+      render_json_error @tag.errors.full_messages
     end
   end
 
@@ -326,17 +322,10 @@ class TagsController < ::ApplicationController
 
   def destroy
     guardian.ensure_can_admin_tags!
-    tag =
-      if params[:tag_id].present?
-        Tag.find_by(id: params[:tag_id])
-      else
-        Tag.find_by_name(params[:tag_name])
-      end
-    raise Discourse::NotFound if tag.nil?
 
-    tag_name = tag.name
+    tag_name = @tag.name
     TopicCustomField.transaction do
-      tag.destroy
+      @tag.destroy
       StaffActionLogger.new(current_user).log_custom("deleted_tag", subject: tag_name)
     end
     render json: success_json
@@ -345,20 +334,12 @@ class TagsController < ::ApplicationController
   def tag_feed
     discourse_expires_in 1.minute
 
-    tag =
-      if params[:tag_id].present?
-        Tag.find_by(id: params[:tag_id])
-      else
-        Tag.find_by_name(params[:tag_name])
-      end
-    raise Discourse::NotFound if tag.nil?
-
-    @link = tag.full_url
-    @description = I18n.t("rss_by_tag", tag: tag.name)
+    @link = @tag.full_url
+    @description = I18n.t("rss_by_tag", tag: @tag.name)
     @title = "#{SiteSetting.title} - #{@description}"
-    @atom_link = "#{tag.full_url}.rss"
+    @atom_link = "#{@tag.full_url}.rss"
 
-    query = TopicQuery.new(current_user, tags: [tag.name])
+    query = TopicQuery.new(current_user, tags: [@tag.name])
     latest_results = query.latest_results
     @topic_list = query.create_list(:by_tag, {}, latest_results)
 
@@ -451,42 +432,27 @@ class TagsController < ::ApplicationController
   end
 
   def notifications
-    tag =
-      if params[:tag_id].present?
-        Tag.find_by(id: params[:tag_id])
-      else
-        Tag.where_name(params[:tag_name]).first
-      end
-    raise Discourse::NotFound unless tag
-
-    if should_redirect_tag?(tag)
-      url = "#{tag.url}/notifications"
+    if should_redirect_tag?(@tag)
+      url = "#{@tag.url}/notifications"
       url += ".json" if request.format.json?
       return redirect_to url, status: :moved_permanently
     end
 
     level =
-      tag.tag_users.where(user: current_user).first.try(:notification_level) ||
+      @tag.tag_users.where(user: current_user).first.try(:notification_level) ||
         TagUser.notification_levels[:regular]
     render json: {
              tag_notification: {
-               id: tag.id,
-               name: tag.name,
+               id: @tag.id,
+               name: @tag.name,
                notification_level: level.to_i,
              },
            }
   end
 
   def update_notifications
-    tag =
-      if params[:tag_id].present?
-        Tag.find_by(id: params[:tag_id])
-      else
-        Tag.find_by_name(params[:tag_name])
-      end
-    raise Discourse::NotFound unless tag
     level = params[:tag_notification][:notification_level].to_i
-    TagUser.change(current_user.id, tag.id, level)
+    TagUser.change(current_user.id, @tag.id, level)
     render_serialized(current_user, UserTagNotificationsSerializer, root: false)
   end
 
@@ -541,14 +507,15 @@ class TagsController < ::ApplicationController
 
   private
 
-  def fetch_tag
+  def fetch_tag(raise_not_found: true)
     @tag =
       if params[:tag_id].present?
         Tag.find_by(id: params[:tag_id])
-      else
+      elsif params[:tag_name].present?
         Tag.find_by_name(params[:tag_name].force_encoding("UTF-8"))
       end
-    raise Discourse::NotFound unless @tag
+    raise Discourse::NotFound if raise_not_found && @tag.nil?
+    @tag
   end
 
   def redirect_to_correct_tag(tag, filter: nil)
