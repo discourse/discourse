@@ -989,7 +989,9 @@ class TopicQuery
     if options && (options[:include_muted].nil? || options[:include_muted]) &&
          options[:state] != "muted"
       list = remove_muted_topics(list, user)
-      list = remove_topics_from_ignored_users(list, user)
+      if SiteSetting.ignored_users_topics_gets_hidden
+        list = remove_topics_from_ignored_users(list, user)
+      end
     end
 
     list = remove_muted_categories(list, user, exclude: options[:category])

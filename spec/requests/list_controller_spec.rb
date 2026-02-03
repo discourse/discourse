@@ -1956,16 +1956,34 @@ RSpec.describe ListController do
       Fabricate(:ignored_user, user: user, ignored_user: ignored_user, expiring_at: 1.day.from_now)
     end
 
-    it "does not show topics created by ignored users in the topic list" do
-      ignored_topic = Fabricate(:topic, user: ignored_user)
-      sign_in(user)
+    describe "when ignored_users_topics_gets_hidden is true" do
+      before { SiteSetting.ignored_users_topics_gets_hidden = true }
+      it "does not show topics created by ignored users in the topic list" do
+        ignored_topic = Fabricate(:topic, user: ignored_user)
+        sign_in(user)
 
-      get "/latest.json"
+        get "/latest.json"
 
-      expect(response.status).to eq(200)
-      json = response.parsed_body
-      topic_ids = json["topic_list"]["topics"].pluck("id")
-      expect(topic_ids).not_to include(ignored_topic.id)
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        topic_ids = json["topic_list"]["topics"].pluck("id")
+        expect(topic_ids).not_to include(ignored_topic.id)
+      end
+    end
+
+    describe "when ignored_users_topics_gets_hidden is false" do
+      before { SiteSetting.ignored_users_topics_gets_hidden = false }
+      it "shows topics created by ignored users in the topic list" do
+        ignored_topic = Fabricate(:topic, user: ignored_user)
+        sign_in(user)
+
+        get "/latest.json"
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        topic_ids = json["topic_list"]["topics"].pluck("id")
+        expect(topic_ids).to include(ignored_topic.id)
+      end
     end
   end
 end

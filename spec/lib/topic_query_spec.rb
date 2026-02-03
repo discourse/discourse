@@ -205,11 +205,24 @@ RSpec.describe TopicQuery do
           expiring_at: 1.day.from_now,
         )
       end
-      it "excludes topics created by ignored users" do
-        ignored_topic = Fabricate(:topic, user: ignored_user)
-        TopicHotScore.create!(topic_id: ignored_topic.id, score: 1.0)
+      describe "when ignored_users_topics_gets_hidden is true" do
+        before { SiteSetting.ignored_users_topics_gets_hidden = true }
+        it "excludes topics created by ignored users" do
+          ignored_topic = Fabricate(:topic, user: ignored_user)
+          TopicHotScore.create!(topic_id: ignored_topic.id, score: 1.0)
 
-        expect(TopicQuery.new(user).list_hot.topics.map(&:id)).not_to include(ignored_topic.id)
+          expect(TopicQuery.new(user).list_hot.topics.map(&:id)).not_to include(ignored_topic.id)
+        end
+      end
+
+      describe "when ignored_users_topics_gets_hidden is false" do
+        before { SiteSetting.ignored_users_topics_gets_hidden = false }
+        it "includes topics created by ignored users" do
+          ignored_topic = Fabricate(:topic, user: ignored_user)
+          TopicHotScore.create!(topic_id: ignored_topic.id, score: 1.0)
+
+          expect(TopicQuery.new(user).list_hot.topics.map(&:id)).to include(ignored_topic.id)
+        end
       end
     end
   end

@@ -2629,14 +2629,31 @@ RSpec.describe Topic do
           expiring_at: 1.day.from_now,
         )
       end
-      it "excludes topics created by ignored users" do
-        ignored_topic = Fabricate(:topic, user: ignored_user)
-        allowed_topic = Fabricate(:topic, user: user)
 
-        topics = Topic.secured(Guardian.new(user))
+      describe "when ignored_users_topics_gets_hidden is true" do
+        before { SiteSetting.ignored_users_topics_gets_hidden = true }
+        it "excludes topics created by ignored users" do
+          ignored_topic = Fabricate(:topic, user: ignored_user)
+          allowed_topic = Fabricate(:topic, user: user)
 
-        expect(topics).to include(allowed_topic)
-        expect(topics).not_to include(ignored_topic)
+          topics = Topic.secured(Guardian.new(user))
+
+          expect(topics).to include(allowed_topic)
+          expect(topics).not_to include(ignored_topic)
+        end
+      end
+
+      describe "when ignored_users_topics_gets_hidden is false" do
+        before { SiteSetting.ignored_users_topics_gets_hidden = false }
+        it "includes topics created by ignored users" do
+          ignored_topic = Fabricate(:topic, user: ignored_user)
+          allowed_topic = Fabricate(:topic, user: user)
+
+          topics = Topic.secured(Guardian.new(user))
+
+          expect(topics).to include(allowed_topic)
+          expect(topics).to include(ignored_topic)
+        end
       end
     end
   end

@@ -380,15 +380,17 @@ class Topic < ActiveRecord::Base
               condition[1],
             )
 
-          ignored_users_ids =
-            if guardian.nil? || guardian.anonymous?
-              ""
-            else
-              guardian.user.ignored_user_ids.join(",")
-            end
+          if SiteSetting.ignored_users_topics_gets_hidden
+            ignored_users_ids =
+              if guardian.nil? || guardian.anonymous?
+                ""
+              else
+                guardian.user.ignored_user_ids.join(",")
+              end
 
-          if ignored_users_ids.present?
-            scope = scope.where("topics.user_id NOT IN (#{ignored_users_ids})")
+            if ignored_users_ids.present?
+              scope = scope.where("topics.user_id NOT IN (#{ignored_users_ids})")
+            end
           end
 
           scope
