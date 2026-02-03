@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import { handleLogoff } from "discourse/lib/ajax";
 import { isProduction, isTesting } from "discourse/lib/environment";

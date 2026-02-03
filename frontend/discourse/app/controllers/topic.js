@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";

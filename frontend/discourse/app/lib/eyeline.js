@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import EmberObject from "@ember/object";
 import Evented from "@ember/object/evented";
 import $ from "jquery";

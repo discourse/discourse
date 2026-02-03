@@ -55,6 +55,7 @@ export function normalizeEmberEventHandling(app) {
  */
 function eliminateClassicEventDelegation() {
   EventDispatcher.reopen({
+    // eslint-disable-next-line ember/avoid-leaking-state-in-ember-objects
     events: {},
   });
 }

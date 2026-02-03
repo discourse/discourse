@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import { addAboutPageActivity } from "discourse/components/about-page";
 import { addBulkDropdownButton } from "discourse/components/bulk-select-topics-dropdown";

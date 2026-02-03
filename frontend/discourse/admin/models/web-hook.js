@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import { computed } from "@ember/object";
 import { isEmpty } from "@ember/utils";

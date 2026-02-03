@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-private-routing-service */
+/* eslint-disable ember/no-jquery, ember/no-private-routing-service */
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";

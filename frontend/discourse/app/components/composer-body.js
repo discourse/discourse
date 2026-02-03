@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
 import { cancel, schedule } from "@ember/runloop";
 import { dasherize } from "@ember/string";

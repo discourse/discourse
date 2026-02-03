@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { gt, or } from "@ember/object/computed";

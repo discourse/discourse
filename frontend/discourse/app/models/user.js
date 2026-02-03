@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";

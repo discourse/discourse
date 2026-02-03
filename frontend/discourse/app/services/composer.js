@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-side-effects */
+/* eslint-disable ember/no-observers, ember/no-side-effects */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";

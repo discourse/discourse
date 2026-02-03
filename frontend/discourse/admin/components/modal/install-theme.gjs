@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
@@ -32,7 +33,6 @@ export default class InstallThemeModal extends Component {
 
   @tracked selection = this.args.model.selection || "popular";
   @tracked uploadUrl = this.args.model.uploadUrl;
-  @tracked uploadName = this.args.model.uploadName;
   @tracked selectedType = this.args.model.selectedType;
   @tracked advancedVisible = false;
   @tracked loading = false;
@@ -466,7 +466,7 @@ export default class InstallThemeModal extends Component {
                   {{htmlSafe
                     (i18n
                       "admin.customize.theme.direct_install_tip"
-                      name=this.uploadName
+                      name=@model.uploadName
                     )
                   }}
                 </div>

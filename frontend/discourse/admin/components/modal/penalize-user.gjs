@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
@@ -23,7 +24,6 @@ export default class PenalizeUser extends Component {
   @tracked confirmClose = false;
   @tracked otherUserIds = [];
   @tracked postAction = "delete";
-  @tracked postEdit = this.args.model.postEdit;
   @tracked flash;
   @tracked reason;
   @tracked message;
@@ -34,6 +34,10 @@ export default class PenalizeUser extends Component {
     if (this.postEdit && this.siteSettings.penalty_include_post_message) {
       this.message = `-------------------\n${this.postEdit}\n-------------------`;
     }
+  }
+
+  get postEdit() {
+    return this.args.model.postEdit;
   }
 
   get modalTitle() {

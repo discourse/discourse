@@ -44,8 +44,6 @@ export default class AiPostHelperMenu extends Component {
   @tracked streaming = false;
   @tracked lastSelectedOption = null;
   @tracked isSavingFootnote = false;
-  @tracked supportsAddFootnote = this.args.data.supportsFastEdit;
-
   @tracked
   smoothStreamer = new SmoothStreamer(
     () => this.suggestion,
@@ -59,7 +57,7 @@ export default class AiPostHelperMenu extends Component {
   };
 
   showFootnoteTooltip = modifier((element) => {
-    if (this.supportsAddFootnote || this.streaming) {
+    if (this.args.data.supportsFastEdit || this.streaming) {
       return;
     }
 
@@ -80,7 +78,7 @@ export default class AiPostHelperMenu extends Component {
   @tracked _activeAiRequest = null;
 
   get footnoteDisabled() {
-    return this.streaming || !this.supportsAddFootnote;
+    return this.streaming || !this.args.data.supportsFastEdit;
   }
 
   get helperOptions() {

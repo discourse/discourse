@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import EmberObject from "@ember/object";
 import { observes, on } from "@ember-decorators/object";

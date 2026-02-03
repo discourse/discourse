@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { getOwner } from "@ember/owner";
 import { on } from "@ember-decorators/object";
 import $ from "jquery";

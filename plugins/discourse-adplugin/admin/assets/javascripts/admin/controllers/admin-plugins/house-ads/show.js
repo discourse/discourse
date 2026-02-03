@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";

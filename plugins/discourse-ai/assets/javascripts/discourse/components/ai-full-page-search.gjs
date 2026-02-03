@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-side-effects */
+/* eslint-disable ember/no-side-effects, ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";

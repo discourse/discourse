@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { click, fillIn, triggerEvent } from "@ember/test-helpers";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";

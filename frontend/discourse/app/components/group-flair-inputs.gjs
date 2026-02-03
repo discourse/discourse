@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers */
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
