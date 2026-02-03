@@ -2531,6 +2531,10 @@ en:
         too_short:
           one: "Must be at least %{count} character"
           other: "Must be at least %{count} characters"
+      color:
+        available_presets: "Available presets"
+        already_used: "Already used"
+        edit_presets: "Edit color presets"
 
     close: "Close"
     assets_changed_confirm: "This site just received a software update. Get the latest version now?"
