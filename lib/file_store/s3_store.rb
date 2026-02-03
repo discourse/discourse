@@ -464,7 +464,7 @@ module FileStore
       if acl.present? || remove_existing_acl
         begin
           object = object_from_path(key).acl.put(acl:)
-        rescue Aws::S3::Errors::NotImplemented => err
+        rescue Aws::S3::Errors::AccessControlListNotSupported => err
           Discourse.warn_exception(
             err,
             message: "The file store object storage provider does not support setting ACLs",

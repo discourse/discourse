@@ -682,8 +682,8 @@ RSpec.describe Upload do
           .any_instance
           .stubs(:update_upload_access_control)
           .raises(
-            Aws::S3::Errors::NotImplemented.new(
-              "A header you provided implies functionality that is not implemented",
+            Aws::S3::Errors::AccessControlListNotSupported.new(
+              "The bucket does not allow ACLs",
               "",
             ),
           )
