@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import $ from "jquery";
