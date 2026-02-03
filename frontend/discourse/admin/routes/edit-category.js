@@ -12,10 +12,20 @@ export default class EditCategory extends DiscourseRoute {
       : Category.reloadCategoryWithPermissions(params, this.store, this.site);
   }
 
-  afterModel(model) {
+  async afterModel(model) {
     if (!model.can_edit) {
       this.router.replaceWith("/404");
       return;
+    }
+
+    // Load parent category permissions if this is a subcategory
+    if (model.parent_category_id) {
+      const parentCategory = Category.findById(model.parent_category_id);
+      if (parentCategory && !parentCategory.permissions?.length) {
+        const result = await Category.reloadById(model.parent_category_id);
+        const updatedParent = this.site.updateCategory(result.category);
+        updatedParent.setupGroupsAndPermissions();
+      }
     }
   }
 
