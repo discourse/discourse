@@ -184,7 +184,7 @@ export default class AiTagSuggester extends Component {
                     data-value={{index}}
                     title={{suggestion.name}}
                     @translatedLabel={{suggestion.name}}
-                    @disabled={{this.isDisabled suggestion}}
+                    @disabled={{suggestion.disabled}}
                     @action={{fn this.applySuggestion suggestion}}
                   >
                     {{discourseTag

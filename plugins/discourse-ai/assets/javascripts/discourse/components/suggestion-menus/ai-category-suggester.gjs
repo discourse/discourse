@@ -41,12 +41,7 @@ export default class AiCategorySuggester extends Component {
   }
 
   get showDropdown() {
-    if (this.suggestions?.length === 0) {
-      this.dMenu.close();
-      return false;
-    }
-
-    return !this.loading;
+    return !this.loading && this.suggestions?.length > 0;
   }
 
   @action
@@ -75,6 +70,7 @@ export default class AiCategorySuggester extends Component {
       this.suggestions = assistant;
 
       if (this.suggestions?.length === 0) {
+        this.dMenu.close();
         showSuggestionsError(this, this.loadSuggestions.bind(this));
         return;
       }
