@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
@@ -272,7 +272,8 @@ export default class ChatPaneState {
     this.addPendingMessages(messageCount);
 
     schedule("afterRender", () => {
-      if (this.isDestroying || this.isDestroyed) {
+      const owner = getOwner(this);
+      if (owner.isDestroying || owner.isDestroyed) {
         return;
       }
 
