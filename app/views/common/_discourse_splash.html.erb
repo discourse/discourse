@@ -16,6 +16,9 @@
 
       #d-splash {
         --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
+        <%- if custom_splash_screen_enabled? %>
+        --splash-bg: url("<%= splash_screen_image_data_uri %>");
+        <%- end %>
       }
     <%- elsif forced_light_mode? %>
       html {
@@ -24,6 +27,9 @@
 
       #d-splash {
         --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
+        <%- if custom_splash_screen_enabled? %>
+        --splash-bg: url("<%= splash_screen_image_data_uri %>");
+        <%- end %>
       }
     <%- elsif forced_dark_mode? %>
       html {
@@ -32,6 +38,9 @@
 
       #d-splash {
         --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
+        <%- if custom_splash_screen_enabled? %>
+        --splash-bg: url("<%= splash_screen_image_data_uri(dark: true) %>");
+        <%- end %>
       }
     <%- else %>
       /* user picked a theme a light scheme and also enabled a dark scheme */
@@ -44,6 +53,9 @@
 
         #d-splash {
           --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
+          <%- if custom_splash_screen_enabled? %>
+          --splash-bg: url("<%= splash_screen_image_data_uri %>");
+          <%- end %>
         }
       }
 
@@ -55,6 +67,9 @@
 
         #d-splash {
           --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
+          <%- if custom_splash_screen_enabled? %>
+          --splash-bg: url("<%= splash_screen_image_data_uri(dark: true) %>");
+          <%- end %>
         }
       }
     <%- end %>
@@ -74,6 +89,9 @@
       --splash-dot-spacing: calc(var(--splash-dot-size) * 1.5);
       <%- if custom_splash_screen_enabled? %>
       width: 700px;
+      @media (width < 700px) {
+        width: 320px;
+      }
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -157,7 +175,7 @@
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-      background-image: url("<%= splash_screen_image_data_uri %>");
+      background-image: var(--splash-bg);
       <%- unless splash_screen_image_animated? %>
       opacity: 0.4;
       animation: d-splash-logo-pulse 3s ease-in-out infinite;

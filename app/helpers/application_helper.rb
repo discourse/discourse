@@ -507,16 +507,17 @@ module ApplicationHelper
     @splash_screen_image_animated
   end
 
-  def splash_screen_image_data_uri
+  def splash_screen_image_data_uri(dark: false)
     build_splash_screen_image unless defined?(@splash_screen_image_svg)
     return nil if @splash_screen_image_svg.blank?
 
     # Replace CSS variable references with actual theme colors
     svg_with_colors = @splash_screen_image_svg.dup
 
-    primary = "##{light_color_hex_for_name("primary")}"
-    secondary = "##{light_color_hex_for_name("secondary")}"
-    tertiary = "##{light_color_hex_for_name("tertiary")}"
+    color_method = dark ? :dark_color_hex_for_name : :light_color_hex_for_name
+    primary = "##{public_send(color_method, "primary")}"
+    secondary = "##{public_send(color_method, "secondary")}"
+    tertiary = "##{public_send(color_method, "tertiary")}"
 
     svg_with_colors.gsub!(/var\(\s*--primary\s*\)/, primary)
     svg_with_colors.gsub!(/var\(\s*--secondary\s*\)/, secondary)
