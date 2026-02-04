@@ -887,6 +887,7 @@ ug:
         target_created: "يازما قۇرۇلدى"
         target_created_by: "يازما قۇرغۇچى %{username} · %{relativeDate}"
         target_deleted: "يازما ئۆچۈرۈلدى"
+        target_deleted_by: "يازمىنى %{username} · %{relativeDate} دە ئۆچۈردى"
         flagged: "پاش قىلىندى"
         flagged_as_by: "%{username} · %{relativeDate} دە %{flagReason} دەپ پاش قىلغان"
         claimed: "تەلەپ قىلىندى"
@@ -1093,6 +1094,7 @@ ug:
           title: تەسىرلىشىش
           posting: يوللاۋاتىدۇ
           notification: ئۇقتۇرۇش
+          self_lockout: "سىز گۇرۇپپا كۆرۈنۈشچانلىقىنى ئۆزىڭىزنىڭ ئىجازىتىتىنى چىقىرىۋېتىدىغان ئۇسۇلدا ئۆزگەرتمەكچى بولۇۋاتىسىز. راستتىنلا داۋاملاشتۇرامسىز؟"
         email:
           title: "ئېلخەت"
           enable_smtp: "SMTP نى قوزغات"
@@ -1105,6 +1107,7 @@ ug:
           smtp_title: "SMTP"
           smtp_instructions: "گۇرۇپپىغا SMTP نى قوزغاتسىڭىز، گۇرۇپپىنىڭ خەت ساندۇقىدىن ئەۋەتىلگەن بارلىق ئېلخەتلەرمۇنبىرىڭىزيوللايدىغان باشقا ئېلخەتلەرگە تەڭشەلگەن خەت مۇلازىمېتىرىدىن ئەمەس بەلكى مۇشۇ جايدا بەلگىلەنگەن SMTP تەڭشىكى ئارقىلىق ئەۋەتىلىدۇ."
           additional_settings: "قوشۇمچە تەڭشەكلەر"
+          smtp_disable_confirm: "ئەگەر SMTP نى چەكلىسىڭىز، بارلىق SMTP تەڭشەكلىرى ئەسلىگە قايتۇرۇلۇپ، مۇناسىۋەتلىك ئىقتىدارلار چەكلىنىدۇ. داۋاملاشتۇرۇۋېرەمسىز؟"
           prefill:
             title: "تەڭشەكتىن ئالدىن تولدۇرۇش:"
             gmail: "Gmail"
