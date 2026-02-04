@@ -278,6 +278,17 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       expect(create_options[:archetype]).to eq("regular")
     end
 
+    it "normalizes tag objects to strings in create_options" do
+      reviewable.payload["tags"] = [
+        { "id" => 1, "name" => "tag-one", "count" => 5 },
+        { "id" => 2, "name" => "tag-two", "count" => 10 },
+      ]
+
+      create_options = reviewable.create_options
+
+      expect(create_options[:tags]).to eq(%w[tag-one tag-two])
+    end
+
     it "creates the post and topic when approved" do
       topic_count, post_count = Topic.count, Post.count
       result = reviewable.perform(moderator, :approve_post)
@@ -306,6 +317,21 @@ RSpec.describe ReviewableQueuedPost, type: :model do
       expect(result.created_post_topic).to be_valid
       expect(reviewable.topic_id).to eq(result.created_post_topic.id)
       expect(result.created_post_topic.tags.pluck(:name)).to match_array(reviewable.payload["tags"])
+    end
+
+    it "approves successfully when tags are stored as objects instead of strings" do
+      tag1 = Fabricate(:tag, name: "tag-one")
+      tag2 = Fabricate(:tag, name: "tag-two")
+      reviewable.payload["tags"] = [
+        { "id" => tag1.id, "name" => "tag-one", "count" => 5 },
+        { "id" => tag2.id, "name" => "tag-two", "count" => 10 },
+      ]
+      reviewable.save!
+
+      result = reviewable.perform(moderator, :approve_post)
+
+      expect(result.success?).to eq(true)
+      expect(result.created_post_topic.tags.pluck(:name)).to contain_exactly("tag-one", "tag-two")
     end
 
     it "does not create the post and topic when rejected" do

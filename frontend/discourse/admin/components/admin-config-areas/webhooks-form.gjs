@@ -22,10 +22,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
   @service siteSettings;
   @service store;
 
-  @tracked webhook = this.args.webhook;
-
   @tracked loadingExtras = true;
-
   @tracked defaultEventTypes = {};
   @tracked groupedEventTypes = {};
   @tracked contentTypes = [];
@@ -36,6 +33,10 @@ export default class AdminConfigAreasWebhookForm extends Component {
     super(...arguments);
 
     this.#loadExtras();
+  }
+
+  get webhook() {
+    return this.args.webhook;
   }
 
   @cached

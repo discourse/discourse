@@ -65,10 +65,8 @@ ca:
         create:
           created: "Regla creada amb èxit"
           updated: "Regla actualitzada amb èxit"
-          error: "Ho sentim. Hi ha hagut un error en crear-se la regla."
         delete:
           success: "Regla suprimida amb èxit"
-          error: "Ho sentim, s'ha produït un error en esborrar aquesta regla. Executeu `/discourse status` per a veure una llista de regles."
         not_found:
           tag: "No es pot trobar l'etiqueta *%{name}*."
           category: "No es pot trobar la categoria *%{name}*. Categories disponibles: *%{list}*"
@@ -101,10 +99,8 @@ ca:
         create:
           created: "Regla creada amb èxit"
           updated: "Regla actualitzada amb èxit"
-          error: "Ho sentim. Hi ha hagut un error en crear-se la regla."
         delete:
           success: "Regla suprimida amb èxit"
-          error: "Ho sentim, s'ha produït un error en esborrar aquesta regla. Executa <code>/status</code> per a una llista de regles."
         not_found:
           tag: "No es pot trobar l'etiqueta <b>%{name}</b>."
           category: "No es pot trobar la categoria <b>%{name}</b>. Categories disponibles: <b>%{list}</b>"
@@ -135,10 +131,8 @@ ca:
         create:
           created: "Regla creada amb èxit"
           updated: "Regla actualitzada amb èxit"
-          error: "Ho sentim. Hi ha hagut un error en crear-se la regla."
         delete:
           success: "Regla suprimida amb èxit"
-          error: "Ho sentim, s'ha produït un error en esborrar aquesta regla. Executeu `/discourse status` per a veure una llista de regles."
         not_found:
           tag: "No es pot trobar l'etiqueta *%{name}*."
           category: "No es pot trobar la categoria *%{name}*. Categories disponibles: *%{list}*"

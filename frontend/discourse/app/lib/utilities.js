@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import * as AvatarUtils from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
@@ -276,17 +277,6 @@ export function isAppleDevice() {
   // This will apply hack on all iDevices
   let caps = capabilities;
   return caps.isIOS && !window.navigator.userAgent.match(/Trident/g);
-}
-
-let iPadDetected = undefined;
-
-export function isiPad() {
-  if (iPadDetected === undefined) {
-    iPadDetected =
-      window.navigator.userAgent.match(/iPad/g) &&
-      !window.navigator.userAgent.match(/Trident/g);
-  }
-  return iPadDetected;
 }
 
 export function safariHacksDisabled() {

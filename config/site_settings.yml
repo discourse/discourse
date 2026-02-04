@@ -3757,6 +3757,25 @@ uncategorized:
     default: true
     area: "interface"
 
+  enable_custom_splash_screen:
+    default: false
+    client: true
+    hidden: true
+    area: "interface"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/395100"
+
+  splash_screen_image:
+    default: ""
+    type: upload
+    authorized_extensions: "svg"
+    area: "interface"
+    depends_on:
+      - "enable_custom_splash_screen"
+    depends_behavior: "hidden"
+
   suggest_weekends_in_date_pickers:
     client: true
     default: true
@@ -4179,7 +4198,7 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/automatically-apply-grids-to-image-uploads/394784"
+      learn_more_url: "https://meta.discourse.org/t/-/394784"
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -4188,6 +4207,7 @@ experimental:
     upcoming_change:
       impact: "feature,all_members"
       status: "experimental"
+      learn_more_url: "https://meta.discourse.org/t/-/395099"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -4201,7 +4221,7 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/introducing-experimental-form-templates/278631"
+      learn_more_url: "https://meta.discourse.org/t/-/278631"
   experimental_impersonation:
     default: false
     hidden: true
@@ -4209,7 +4229,7 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,staff"
-      learn_more_url: "https://meta.discourse.org/t/impersonate-a-user-and-returning-to-admin-user/119683"
+      learn_more_url: "https://meta.discourse.org/t/-/119683"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
@@ -4257,6 +4277,7 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/387322"
   enable_simplified_category_creation:
     default: false
     hidden: true
@@ -4264,3 +4285,4 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/394971"

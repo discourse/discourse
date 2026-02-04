@@ -51,8 +51,6 @@ es:
     chat_integration_flowdock_excerpt_length: "Longitud del extracto de la publicación de Flowdock"
     chat_integration_groupme_enabled: "Habilitar el proveedor de integración de chat de Groupme"
     chat_integration_groupme_excerpt_length: "Longitud del extracto de la publicación de Groupme"
-    chat_integration_groupme_bot_ids: "ID de bots *requeridos*, separados por ',' si hay varios"
-    chat_integration_groupme_instance_names: "Nombre del chat de GroupMe *obligatorio*, separado por ',' si hay varios (en el mismo orden que los ID de los bots)"
     chat_integration_teams_enabled: "Habilitar el proveedor de integración de chat de Microsoft Teams"
     chat_integration_teams_excerpt_length: "Longitud del extracto de la publicación de Microsoft Team"
     chat_integration_powerautomate_enabled: "Activar el proveedor de integración Microsoft Power Automate"
@@ -93,10 +91,8 @@ es:
         create:
           created: "Regla creada con éxito"
           updated: "Regla actualizada con éxito"
-          error: "Lo sentimos, se produjo un error al crear esa regla."
         delete:
           success: "Regla creada con éxito"
-          error: "Lo sentimos, se produjo un error al eliminar esa regla. Ejecuta `/discourse status` para obtener una lista de reglas."
         not_found:
           tag: "La etiqueta *%{name}* no se encuentra."
           category: "No se puede encontrar la categoría *%{name}*. Categorías disponibles: *%{list}*."
@@ -158,10 +154,8 @@ es:
         create:
           created: "Regla creada con éxito"
           updated: "Regla actualizada con éxito"
-          error: "Lo sentimos, se produjo un error al crear esa regla."
         delete:
           success: "Regla creada con éxito"
-          error: "Lo sentimos, se produjo un error al eliminar esta regla. Ejecuta <code>/status</code> para obtener una lista de reglas."
         not_found:
           tag: "No se puede encontrar la etiqueta <b>%{name}</b>."
           category: "No se encuentra la categoría <b>%{name}</b>. Categorías disponibles: <b>%{list}</b>"
@@ -192,10 +186,8 @@ es:
         create:
           created: "Regla creada con éxito"
           updated: "Regla actualizada con éxito"
-          error: "Lo sentimos, se produjo un error al crear esa regla."
         delete:
           success: "Regla creada con éxito"
-          error: "Lo sentimos, se produjo un error al eliminar esa regla. Ejecuta `/discourse status` para obtener una lista de reglas."
         not_found:
           tag: "La etiqueta *%{name}* no se encuentra."
           category: "No se puede encontrar la categoría *%{name} Categorías disponibles: *%{list}*"

@@ -2385,7 +2385,6 @@ sk:
     form_kit:
       reset: Resetovať
       optional: nepovinné
-      errors_summary_title: "Tento formulár obsahuje chyby:"
       dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
       errors:
         starts_with: "Musí začínať s %{prefix}"
@@ -4038,7 +4037,7 @@ sk:
       quote_edit: "Upraviť"
       quote_edit_shortcut: "Upraviť (alebo stlačte e)"
       quote_copy: "Kopírovať citát"
-      quote_copied_to_clibboard: "Citácia skopírovaná do schránky"
+      quote_copied_to_clipboard: "Citácia skopírovaná do schránky"
       quote_share: "Zdieľaj"
       edit_reason: "Dôvod:"
       post_number: "príspevok %{number}"
@@ -4468,7 +4467,7 @@ sk:
       minimum_required_tags: "Minimálny počet značiek požadovaných v téme:"
       none_subcategory_text: "Žiadny"
       visibility:
-        title: "Prístup"
+        title: "Viditeľnosť"
         public: "Verejné"
         group_restricted: "Súkromné"
       num_auto_bump_daily: "Počet otvorených tém, ktoré sa majú automaticky denne vypisovať:"
@@ -6877,8 +6876,6 @@ sk:
         delete: "Odstrániť"
         delete_confirm: 'Naozaj chcete odstrániť „%{theme_name}“?'
         bulk_delete: "Ste si istý?"
-        bulk_themes_delete_confirm: "Odinštalujú sa nasledujúce témy, ktoré už nebudú môcť používať žiadni používatelia na vašom webe:"
-        bulk_components_delete_confirm: "Odinštalujú sa nasledujúce komponenty, ktoré už nebudú môcť používať žiadni používatelia na vašom webe:"
         color: "Farba"
         opacity: "Nepriesvitnosť"
         copy: "Duplikát"

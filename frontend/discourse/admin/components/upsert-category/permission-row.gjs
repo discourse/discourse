@@ -80,7 +80,7 @@ export default class UpsertCategoryPermissionRow extends Component {
   @action
   removeRow(event) {
     event?.preventDefault();
-    this.args.onRemovePermission(this.args.groupName);
+    this.args.onRemovePermission(this.args.groupId);
   }
 
   @action
@@ -92,7 +92,7 @@ export default class UpsertCategoryPermissionRow extends Component {
       newType = PermissionType.CREATE_POST;
     }
 
-    this.args.onUpdatePermission(this.args.groupName, newType);
+    this.args.onUpdatePermission(this.args.groupId, newType);
 
     if (this.isEveryoneGroup) {
       this.args.onChangeEveryonePermission(newType);
@@ -115,7 +115,7 @@ export default class UpsertCategoryPermissionRow extends Component {
       newType = PermissionType.FULL;
     }
 
-    this.args.onUpdatePermission(this.args.groupName, newType);
+    this.args.onUpdatePermission(this.args.groupId, newType);
 
     if (this.isEveryoneGroup) {
       this.args.onChangeEveryonePermission(newType);

@@ -2531,7 +2531,7 @@ ca:
       minimum_required_tags: "Nombre mínim d'etiquetes necessari en un tema:"
       none_subcategory_text: "Cap"
       visibility:
-        title: "Accés"
+        title: "Visibilitat"
         public: "Públic"
         group_restricted: "Privat"
       num_auto_bump_daily: "Nombre de temes oberts que s'eleven automàticament cada dia:"

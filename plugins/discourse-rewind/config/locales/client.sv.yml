@@ -16,11 +16,8 @@ sv:
           title: Lästid
         assignments:
           title: Tilldelningar
-          total_assigned_others: "Tilldelad till %{username}"
         chat_usage:
           messages: meddelanden
-          author: Du
-          author_others: "%{username}"
         invites:
           title: Inbjudningar
           invitee_posts: Inlägg skapade

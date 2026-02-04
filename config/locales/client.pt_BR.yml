@@ -2294,7 +2294,6 @@ pt_BR:
     form_kit:
       reset: Redefinir
       optional: opcional
-      errors_summary_title: "Este formulário contém erros:"
       dirty_form: "Você não enviou as alterações! Deseja mesmo sair?"
       errors:
         starts_with: "Deve começar com %{prefix}"
@@ -3798,7 +3797,7 @@ pt_BR:
       quote_edit: "Editar"
       quote_edit_shortcut: "Editar (ou apertar e)"
       quote_copy: "Copiar citação"
-      quote_copied_to_clibboard: "Citação copiada para área de transferência"
+      quote_copied_to_clipboard: "Citação copiada para área de transferência"
       quote_share: "Compartilhar"
       edit_reason: "Motivo:"
       post_number: "postagem %{number}"
@@ -4188,7 +4187,7 @@ pt_BR:
       minimum_required_tags: "Número mínimo de etiquetas exigidas em um tópico:"
       none_subcategory_text: "Nenhum"
       visibility:
-        title: "Acesso"
+        title: "Visibilidade"
         public: "Público"
         group_restricted: "Privado"
       num_auto_bump_daily: "Número de tópicos em aberto para promover automaticamente:"
@@ -6478,8 +6477,6 @@ pt_BR:
         delete: "Excluir"
         delete_confirm: 'Você tem certeza de que deseja excluir "%{theme_name}"?'
         bulk_delete: "Tem certeza?"
-        bulk_themes_delete_confirm: "Os temas a seguir serão desinstalados e não poderão mais ser usados pelos(as) usuários(as) no seu site:"
-        bulk_components_delete_confirm: "Os componentes a seguir serão desinstalados e não poderão mais ser usados pelos(as) usuários(as) no seu site:"
         color: "Cor"
         opacity: "Opacidade"
         copy: "Duplicado"

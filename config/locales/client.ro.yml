@@ -3200,7 +3200,7 @@ ro:
       this_year: "anul acesta"
       none_subcategory_text: "Nimic"
       visibility:
-        title: "Acces"
+        title: "Vizibilitate"
         public: "Public"
         group_restricted: "Privat"
       num_auto_bump_daily: "Numărul de discuții active care pot primi bump zilnic"
