@@ -285,6 +285,10 @@
     padding-block: 0;
   }
 
+  .select-kit .caret-icon {
+    font-size: var(--font-down-1);
+  }
+
   .list-controls .combo-box .combo-box-header {
     border: var(--d-button-default-border);
     height: var(--button-height);
