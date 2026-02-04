@@ -106,8 +106,8 @@ export default class SectionFormLink extends Component {
           @value={{@link.icon}}
           @options={{hash
             maximum=1
-            caretDownIcon="caret-down"
-            caretUpIcon="caret-up"
+            caretDownIcon="angle-down"
+            caretUpIcon="angle-up"
             icons=@link.icon
           }}
           @onlyAvailable={{true}}

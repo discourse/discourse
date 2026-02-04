@@ -30,7 +30,7 @@ export default class CategoryDropHeader extends ComboBoxSelectBoxHeaderComponent
         />
       {{/let}}
 
-      {{icon this.caretIcon class="caret-icon"}}
+      {{icon this.caretIcon class="angle-icon"}}
     </div>
   </template>
 }

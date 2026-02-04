@@ -21,7 +21,7 @@ class SearchController < ApplicationController
     raise Discourse::InvalidParameters.new(:q) if params[:q].present? && !@search_term.present?
 
     if @search_term.present? && @search_term.length < SiteSetting.min_search_term_length &&
-         !Search.valid_search_shortcut?(@search_term)
+         !Search.min_length_bypass?(@search_term)
       raise Discourse::InvalidParameters.new(:q)
     end
 

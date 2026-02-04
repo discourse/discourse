@@ -1718,9 +1718,9 @@ en:
         flags_given:
           one: '<span class="%{className}">%{count}</span> helpful flag'
           other: '<span class="%{className}">%{count}</span> helpful flags'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> flagged post'
-          other: '<span class="%{className}">%{count}</span> flagged posts'
+        flags:
+          one: '<span class="%{className}">%{count}</span> flag'
+          other: '<span class="%{className}">%{count}</span> flags'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> deleted post'
           other: '<span class="%{className}">%{count}</span> deleted posts'
@@ -8667,6 +8667,8 @@ en:
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
         none_selected: "Select a badge to get started"
+        filter_placeholder: "Filter badges..."
+        no_badges_found: "No badges found"
         sections:
           design: Design
           query: Query

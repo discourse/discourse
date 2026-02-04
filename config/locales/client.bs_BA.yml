@@ -2540,7 +2540,6 @@ bs_BA:
         see: "Vidi"
         reply: "Odgovori"
         create: "napravi"
-      special_warning: "Upozorenje: Ova kategorija je pre-seeded kategorija i sigurnosne postavke se ne mogu uređivati. Ako ne želite koristiti ovu kategoriju, izbrišite je umjesto da je prenamijenite."
       images: "Izgled"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
