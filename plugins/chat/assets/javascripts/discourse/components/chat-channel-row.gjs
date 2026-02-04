@@ -34,7 +34,6 @@ export default class ChatChannelRow extends Component {
   @tracked shouldReset = false;
   @tracked diff = 0;
   @tracked rowStyle = null;
-  @tracked canSwipe = true;
 
   registerSwipableRow = modifierFn((element) => {
     this.swipableRow = element;

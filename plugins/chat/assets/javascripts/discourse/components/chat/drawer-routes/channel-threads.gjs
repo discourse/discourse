@@ -39,10 +39,7 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
 
         {{#if this.chatStateManager.isDrawerExpanded}}
           <div class="chat-drawer-content">
-            <ChatThreadList
-              @channel={{@model.channel}}
-              @includeHeader={{false}}
-            />
+            <ChatThreadList @channel={{@model.channel}} />
           </div>
         {{/if}}
       {{/if}}

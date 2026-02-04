@@ -19,7 +19,7 @@ export default class BulkUserDeleteConfirmation extends Component {
 
   @tracked confirmButtonDisabled = true;
   @tracked deleteStarted = false;
-  @tracked logs = new TrackedArray();
+  logs = new TrackedArray();
   failedUsernames = [];
 
   callAfterBulkDelete = false;

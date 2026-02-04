@@ -52,14 +52,10 @@ export default class Post extends Component {
 
   @tracked expandedFirstPost;
   @tracked repliesAbove;
-  @tracked repliesBelow = new TrackedArray();
-
-  /**
-   * @type {boolean}
-   */
   @tracked isTogglingReplies = false;
   @tracked isLoadingMoreReplies = false;
 
+  repliesBelow = new TrackedArray();
   decoratorState = new TrackedMap();
 
   addEventListeners = modifier((element, [listeners]) => {

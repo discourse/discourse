@@ -20,7 +20,6 @@ export default class RecalculateScoresForm extends Component {
 
   @tracked updateRangeValue = 0;
   @tracked recalculateFromDate = "";
-  @tracked haveAvailability = this.args.model.recalculate_scores_remaining > 0;
   @tracked remaining = this.args.model.recalculate_scores_remaining;
   @tracked status = "initial";
 
@@ -75,16 +74,15 @@ export default class RecalculateScoresForm extends Component {
   }
 
   get applyDisabled() {
-    if (!this.haveAvailability || this.status !== "initial") {
+    const haveAvailability = this.args.model.recalculate_scores_remaining > 0;
+    if (!haveAvailability || this.status !== "initial") {
       return true;
-    } else if (
+    }
+
+    return (
       this.updateRangeValue === 5 &&
       this.recalculateFromDate <= moment().locale("en").utc().endOf("day")
-    ) {
-      return true;
-    } else {
-      return false;
-    }
+    );
   }
 
   get dateRange() {

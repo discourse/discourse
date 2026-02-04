@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import DButton from "discourse/components/d-button";
@@ -13,7 +12,9 @@ import { i18n } from "discourse-i18n";
 import PluginOutlet from "./plugin-outlet";
 
 export default class BadgeCard extends Component {
-  @tracked size = this.args.size || "medium";
+  get size() {
+    return this.args.size || "medium";
+  }
 
   get url() {
     const { badge, filterUser, username } = this.args;
@@ -31,9 +32,9 @@ export default class BadgeCard extends Component {
   }
 
   get summary() {
-    const { size, badge } = this.args;
+    const { badge } = this.args;
 
-    if (size === "large" && !isEmpty(badge.long_description)) {
+    if (this.size === "large" && !isEmpty(badge.long_description)) {
       return emojiUnescape(sanitize(badge.long_description));
     }
     return sanitize(badge.description);

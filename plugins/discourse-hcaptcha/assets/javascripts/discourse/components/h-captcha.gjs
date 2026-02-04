@@ -12,7 +12,6 @@ export default class HCaptcha extends Component {
   @service hCaptchaService;
 
   @tracked widgetId;
-  @tracked invalid = true;
   @tracked hCaptchaConfigError = "";
   hCaptcha;
 
