@@ -3,6 +3,8 @@
 RSpec.describe Jobs::DownloadBackupEmail do
   fab!(:user, :admin)
 
+  before { SiteSetting.simple_email_subject = true }
+
   it "should work" do
     described_class.new.execute(user_id: user.id, backup_file_path: "http://some.example.test/")
 
