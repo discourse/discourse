@@ -22,6 +22,7 @@ jobs:
   build:
     name: run
     runs-on: ubuntu-latest
+    if: github.repository == 'discourse/discourse'
     container: discourse/discourse_test:slim
     timeout-minutes: 10
 
