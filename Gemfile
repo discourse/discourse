@@ -278,7 +278,7 @@ group :migrations, optional: true do
   gem "zeitwerk"
 
   # databases
-  gem "trilogy"
+  gem "mysql2"
 
   # CLI
   gem "ruby-progressbar"

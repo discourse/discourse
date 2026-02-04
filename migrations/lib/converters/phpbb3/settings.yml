@@ -1,0 +1,32 @@
+intermediate_db:
+  path: "/shared/import/intermediate.db"
+
+source_db:
+  type: mysql          # mysql or postgres
+  host: "127.0.0.1"
+  port: 3306
+  username: "phpbb_user"
+  password: "phpbb_password"
+  database: "phpbb"
+  encoding: "utf8mb4"  # Optional, defaults to utf8mb4
+
+phpbb:
+  table_prefix: "phpbb_"
+  base_dir: "/path/to/phpbb"      # Path to phpBB installation directory
+  version_override: null          # Optional: force version family (v3_0 or v3_1)
+
+import:
+  users: true
+  anonymous_users: true
+  groups: true
+  categories: true
+  topics: true
+  posts: true
+  private_messages: true
+  avatars:
+    uploaded: true
+    gallery: true
+    remote: true
+  attachments: true
+  bookmarks: true
+  polls: true
