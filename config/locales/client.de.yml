@@ -1400,6 +1400,11 @@ de:
           upcoming_change: "Bevorstehende Änderung"
           enabled: "Aktiviert?"
           why: "Warum?"
+        why_reasons:
+          not_in_specific_groups: "Der Benutzer ist nicht in einer der Gruppen, für die diese Änderung aktiviert ist"
+          in_specific_groups: "Der Benutzer ist in mindestens einer der Gruppen, für die diese Änderung aktiviert ist"
+          enabled_for_everyone: "Diese Änderung ist für alle Mitglieder aktiviert."
+          enabled_for_no_one: "Diese Änderung ist für alle Mitglieder deaktiviert."
       user_notifications:
         filters:
           filter_by: "Filtern nach"
@@ -3045,8 +3050,10 @@ de:
       upcoming_changes:
         available:
           title: "Bevorstehende Änderungen"
+          description: "'%{changeName}' ist zur Vorschau verfügbar"
         automatically_promoted:
           title: "Bevorstehende Änderungen"
+          description: "'%{changeName}' wurde automatisch aktiviert"
       dismiss_confirmation:
         body:
           default:
@@ -3104,6 +3111,8 @@ de:
         reaction: "neue Reaktion"
         votes_released: "Abstimmung wurde freigegeben"
         admin_problems: "neue Ratschläge auf deinem Website-Dashboard"
+        upcoming_change_available: "neue bevorstehende Änderung '%{changeName}' ist verfügbar"
+        upcoming_change_automatically_promoted: "bevorstehende Änderung '%{changeName}' wurde automatisch aktiviert"
     upload_selector:
       change: "Ändern"
       delete: "Löschen"
@@ -4239,6 +4248,8 @@ de:
       save_error: Beim Speichern der Kategorie ist ein Fehler aufgetreten.
       errors:
         self_lockout: "Du bist dabei, die Berechtigungen für diese Kategorie so zu ändern, dass du selbst nicht länger Zugriff darauf hast. Bist du sicher, dass du fortfahren willst?"
+      validations:
+        emoji_required: "Wähle ein Emoji aus, um fortzufahren."
       name: "Name der Kategorie"
       untitled: "Unbenannte Kategorie"
       description: "Beschreibung"
@@ -5430,17 +5441,21 @@ de:
         change_disabled: "Du hast diese Änderung deaktiviert"
         permanent_notice: "Diese Änderung ist nun dauerhaft und die Einstellung wird bald entfernt werden. Du hast keine Möglichkeit mehr, sie zu deaktivieren."
         permanent_no_group_selection: "Nicht änderbar, dauerhafte Änderungen gelten für alle Gruppen."
+        no_changes: "Derzeit gibt es keine bevorstehenden Änderungen."
         preview: "Vorschau"
         enabled_for_options:
           no_one: "Keinen"
           everyone: "Jeden"
           staff: "Nur Team-Mitglieder"
           specific_groups: "Bestimmte Gruppe(n)"
+          specific_groups_with_group_names:
+            one: "die Gruppe %{groupNames}"
+            other: "die Gruppen %{groupNames}"
         statuses:
           experimental: "Experimentell"
           alpha: "Alpha"
           beta: "Beta"
-          stable: "Dauerhaft"
+          stable: "Stabil"
           permanent: "Dauerhaft"
         impact_roles:
           admins: "Administratoren"
@@ -5450,17 +5465,20 @@ de:
           developers: "Entwickler"
         filter:
           search_placeholder: "Nach Namen, Beschreibung oder Plug-in filtern …"
+          no_results: "Keine bevorstehende Änderung entspricht deinem Filter"
           all: "Gesamt"
           enabled_all: "Aktiviert oder deaktiviert"
           enabled: "Aktiviert"
           disabled: "Deaktiviert"
+          impact_type_all: "Alle Änderungstypen"
           impact_type_feature: "Funktion"
           impact_type_other: "Sonstiges"
           status_all: "Alle Status"
+          status_conceptual: "Konzeptionell"
           status_experimental: "Experimentell"
           status_alpha: "Alpha"
           status_beta: "Beta"
-          status_stable: "Dauerhaft"
+          status_stable: "Stabil"
           status_permanent: "Dauerhaft"
           impact_role_all: "Alle Rollen"
           impact_role_admins: "Administratoren"
@@ -6008,7 +6026,9 @@ de:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Suchprotokolle</a>'
             disabled: 'Der Bericht über beliebte Suchen ist deaktiviert. Aktiviere <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">Suchanfragen protokollieren</a>, um die Daten zu erheben.'
+          average_chart_label: Durchschnittswerte, keine Gesamtwerte
           sort_button: "Sortieren nach %{column}"
+          sort_button_current: "Sortiert nach %{column}, %{direction}"
           sort_ascending: "aufsteigend"
           sort_descending: "absteigend"
           filters:
@@ -7373,6 +7393,7 @@ de:
             change_theme_site_setting: "Theme-spezifische Website-Einstellung ändern"
             stop_impersonating: "Nutzerrolle verlassen"
             upcoming_change_toggled: "bevorstehende Änderung verändert"
+            upcoming_change_available: "bevorstehende Änderung verfügbar"
             change_site_setting_groups: "Website-Einstellungen für Gruppen geändert"
             discourse_id_regenerate_credentials: "Discourse-ID-Anmeldedaten neu generieren"
         screened_emails:
@@ -7733,6 +7754,9 @@ de:
         time_read: "Lesezeit"
         post_edits_count: "Beitragsbearbeitungen"
         upcoming_changes:
+          title: "Status bevorstehender Änderungen"
+          description: "Um Gruppen zu ändern oder bevorstehende Änderungen zu aktivieren bzw. zu deaktivieren, besuche bitte die <a href='%{basePath}/admin/config/upcoming-changes'>Konfigurationsseite für bevorstehende Änderungen</a>."
+          filter_placeholder: "Bevorstehende Änderungen nach Name oder Beschreibung filtern"
           filter_no_results: "Keine bevorstehenden Änderungen gefunden"
         exports:
           title: Benutzerexporte
