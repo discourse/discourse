@@ -336,26 +336,12 @@ export default class UpsertCategoryGeneral extends Component {
 
   #setFormPermissions(permissions) {
     this.args.form.set("permissions", permissions);
+  @action
+  onStyleTypeChange(value) {
+    this.args.form.setProperties({ style_type: value });
   }
 
-  <template>
-    <div class={{this.panelClass}}>
-      {{#if this.showWarning}}
-        <@form.Alert @type="warning" @icon="triangle-exclamation">
-          {{htmlSafe
-            (i18n
-              "category.uncategorized_general_warning"
-              settingLink=this.uncategorizedSiteSettingLink
-              customizeLink=this.customizeTextContentLink
-            )
-          }}
-        </@form.Alert>
-      {{/if}}
-
-      {{#unless @category.isUncategorizedCategory}}
-        <@form.Field
-          @name="name"
-          @title={{i18n "category.name"}}
+  @action
           @format="large"
           @validation="required"
           @onSet={{this.onNameChange}}
