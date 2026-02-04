@@ -3,6 +3,8 @@ import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import cssIdentifier from "discourse/helpers/css-identifier";
+import { registerOutletContainerStyle } from "discourse/lib/blocks/-internals/css";
 import { withDebugGroup } from "discourse/lib/blocks/-internals/debug-hooks";
 import { processBlockEntries } from "discourse/lib/blocks/-internals/entry-processing";
 import { isOptionalMissing } from "discourse/lib/blocks/-internals/patterns";
@@ -43,6 +45,51 @@ export default class BlockOutletRootContainer extends Component {
    * @type {Map<string, {ComponentClass: typeof Component, args: Object, result: Object}>}
    */
   #componentCache = new Map();
+
+  /**
+   * Initializes the container component and registers its CSS.
+   *
+   * Registers a CSS rule for this outlet's container element in a shared
+   * `<style>` tag, enabling container queries in child blocks.
+   *
+   * @param {import("@ember/owner").default} owner - The Ember owner instance.
+   * @param {Object} args - The component arguments.
+   * @param {string} args.outletName - The name of the outlet.
+   */
+  constructor(owner, args) {
+    super(owner, args);
+    registerOutletContainerStyle(this.containerClassName, args.outletName);
+  }
+
+  /**
+   * The CSS-safe version of the outlet name.
+   *
+   * Converts namespaced outlet names (e.g., "plugin:outlet") to valid CSS
+   * identifiers by replacing colons with hyphens.
+   *
+   * @returns {string} The CSS-safe outlet name (e.g., "plugin-outlet").
+   */
+  get safeOutletName() {
+    return cssIdentifier(this.args.outletName);
+  }
+
+  /**
+   * The CSS class name for the container element.
+   *
+   * @returns {string} The container class name (e.g., "topic-list__container").
+   */
+  get containerClassName() {
+    return `${this.safeOutletName}__container`;
+  }
+
+  /**
+   * The CSS class name for the layout element.
+   *
+   * @returns {string} The layout class name (e.g., "topic-list__layout").
+   */
+  get layoutClassName() {
+    return `${this.safeOutletName}__layout`;
+  }
 
   /**
    * Processes raw block entries and creates renderable child components.
@@ -215,9 +262,9 @@ export default class BlockOutletRootContainer extends Component {
   }
 
   <template>
-    <div class={{@outletName}}>
-      <div class="{{@outletName}}__container">
-        <div class="{{@outletName}}__layout">
+    <div class={{this.safeOutletName}}>
+      <div class={{this.containerClassName}}>
+        <div class={{this.layoutClassName}}>
           {{#each this.processedChildren key="key" as |child|}}
             <child.Component />
           {{/each}}
