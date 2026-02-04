@@ -8667,6 +8667,8 @@ en:
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
         none_selected: "Select a badge to get started"
+        filter_placeholder: "Filter badges..."
+        no_badges_found: "No badges found"
         sections:
           design: Design
           query: Query
