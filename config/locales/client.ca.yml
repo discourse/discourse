@@ -2509,7 +2509,6 @@ ca:
         see: "Mira"
         reply: "Respon"
         create: "Crea"
-      special_warning: "Atenció: aquesta és una categoria preconfigurada i no se'n pot editar la configuració de seguretat. Si no voleu fer servir aquesta categoria, suprimiu-la en comptes de reutilitzar-la."
       uncategorized_security_warning: "Aquesta categoria és especial. Es tracta d'una àrea de manteniment per a temes que no tenen cap categoria; no pot tenir configuració de seguretat."
       uncategorized_general_warning: 'Aquesta categoria és especial. S''utilitza com a categoria per defecte per a temes nous que no tinguin una categoria seleccionada. Si voleu evitar aquest comportament i forçar la selecció de categories, <a href="%{settingLink}">desactiveu la configuració aquí</a>. Si voleu canviar el nom o la descripció, aneu a <a href="%{customizeLink}">Personalitza / Contingut de text</a> .'
       pending_permission_change_alert: "No heu afegit %{group} a aquesta categoria; feu clic en aquest botó per a afegir-los."

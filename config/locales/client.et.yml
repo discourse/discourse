@@ -2223,11 +2223,10 @@ et:
         reply: "Vasta"
         create: "Loo"
         no_groups_selected: "Ühele rühmale pole juurdepääsu antud; see kategooria on nähtav ainult meeskonnaliikmetele."
-        everyone_has_access: 'See kategooria on avalik, kõik saavad seda vaadata, vastata ja siia postitusi lisada. Õiguste piiramiseks eemalda õiguseid rühmalt "kõik".'
+        everyone_full_access: 'See kategooria on avalik, kõik saavad seda vaadata, vastata ja siia postitusi lisada. Õiguste piiramiseks eemalda õiguseid rühmalt "kõik".'
         toggle_reply: "Lülita vastamine sisse/välja"
         toggle_full: "Lülita loomine sisse/välja"
         inherited: 'Need õigused on päritud rühmalt "kõik"'
-      special_warning: "Hoiatus: See on eelseadistatud kategooria, mille turvasätteid muuta ei saa. Kui sa seda kategooriat kasutada ei soovi, kustuta see ümberkohandamise asemel."
       uncategorized_security_warning: "See kategooria on eriline. Siin on teemad, millel ei ole kategooriat; sellele kategooriale ei saa eraldi õiguseid määrata."
       email_in: "Sissetuleva meili individuaalne aadress:"
       email_in_allow_strangers: "Aktsepteeri meile kontota anonüümsetelt kasutajatelt"

@@ -1891,13 +1891,6 @@ ar:
           few: '<span class="%{className}">%{count}</span> بلاغات مفيدة'
           many: '<span class="%{className}">%{count}</span> بلاغًا مفيدًا'
           other: '<span class="%{className}">%{count}</span> بلاغ مفيد'
-        flagged_posts:
-          zero: '<span class="%{className}">%{count}</span> منشور تم الإبلاغ عنه'
-          one: 'منشور واحد (<span class="%{className}">%{count}</span>) تم الإبلاغ عنه'
-          two: 'منشوران (<span class="%{className}">%{count}</span>) تم الإبلاغ عنهما'
-          few: '<span class="%{className}">%{count}</span> منشورات تم الإبلاغ عنها'
-          many: '<span class="%{className}">%{count}</span> منشورًا تم الإبلاغ عنه'
-          other: '<span class="%{className}">%{count}</span> منشور تم الإبلاغ عنه'
         deleted_posts:
           zero: '<span class="%{className}">%{count}</span> منشور تم حذفه'
           one: 'منشور واحد (<span class="%{className}">%{count}</span>) تم حذفه'
@@ -5024,11 +5017,10 @@ ar:
         reply: "الرد"
         create: "إنشاء"
         no_groups_selected: "لم يتم منح إذن الوصول لأي مجموعة؛ لذا فإن هذه الفئة ستكون مرئية لفريق العمل فقط."
-        everyone_has_access: 'هذه الفئة عامة، ويمكن للجميع رؤية المنشورات والرد عليها وإنشائها. لتقييد الأذونات، عليك إزالة واحد أو أكثر من الأذونات الممنوحة لمجموعة "الجميع".'
+        everyone_full_access: 'هذه الفئة عامة، ويمكن للجميع رؤية المنشورات والرد عليها وإنشائها. لتقييد الأذونات، عليك إزالة واحد أو أكثر من الأذونات الممنوحة لمجموعة "الجميع".'
         toggle_reply: "إذن تفعيل الرد"
         toggle_full: "إذن تفعيل الإنشاء"
         inherited: 'هذا الإذن مكتسب من "الجميع"'
-      special_warning: "تحذير: هذه الفئة مصنَّفة مسبقًا ولا يمكن تعديل إعدادات الأمان لها. إذا كنت لا ترغب في استخدام هذه الفئة، فعليك حذفها بدلًا من إعادة توظيفها."
       uncategorized_security_warning: "هذه الفئة خاصة. وتهدف إلى جمع الموضوعات التي لا تنتمي إلى أي فئة، ولا يمكنك تعيين إعدادات حماية لها."
       uncategorized_general_warning: 'هذه الفئة خاصة. ويتم استخدامها كفئة افتراضية للموضوعات الجديدة التي لا تنتمي إلى أي فئة. إذا أردت منع هذا السلوك وفرض تحديد الفئة، <a href="%{settingLink}">يُرجى إيقاف هذا الإعداد من هنا</a>. إذا أردت تغيير اسم الفئة أو وصفها، فانتقل إلى <a href="%{customizeLink}">التخصيص/المحتوى النصي</a>.'
       pending_permission_change_alert: "لم تُضف المجموعة %{group} إلى هذه الفئة، انقر على هذا الزر لإضافتها."

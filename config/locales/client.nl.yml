@@ -1543,9 +1543,6 @@ nl:
         flags_given:
           one: '<span class="%{className}">%{count}</span> nuttige markering'
           other: '<span class="%{className}">%{count}</span> nuttige markeringen'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> gemarkeerd bericht'
-          other: '<span class="%{className}">%{count}</span> gemarkeerde berichten'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> verwijderd bericht'
           other: '<span class="%{className}">%{count}</span> verwijderde berichten'
@@ -4111,11 +4108,10 @@ nl:
         reply: "Antwoorden"
         create: "Maken"
         no_groups_selected: "Er is geen toegang verleend aan groepen; deze categorie is alleen zichtbaar voor medewerkers."
-        everyone_has_access: 'Deze categorie is openbaar; iedereen kan berichten zien, beantwoorden en maken. Verwijder een of meer van de verleende toestemmingen voor de groep ''iedereen'' om toestemmingen te beperken.'
+        everyone_full_access: 'Deze categorie is openbaar; iedereen kan berichten zien, beantwoorden en maken. Verwijder een of meer van de verleende toestemmingen voor de groep ''iedereen'' om toestemmingen te beperken.'
         toggle_reply: "Toestemming Antwoorden in-/uitschakelen"
         toggle_full: "Toestemming Maken in-/uitschakelen"
         inherited: 'Deze toestemming is overgenomen van ''iedereen'''
-      special_warning: "Waarschuwing: deze categorie is een vooraf geseede categorie, de beveiligingsinstellingen kunnen niet worden bewerkt. Als je deze categorie niet wilt gebruiken, verwijder deze dan in plaats van het doel ervan te wijzigen."
       uncategorized_security_warning: "Deze categorie is speciaal. Hij is bedoeld als wachtruimte voor topics die geen categorie hebben en kan geen beveiligingsinstellingen hebben."
       uncategorized_general_warning: 'Deze categorie is bijzonder. Hij wordt gebruikt als de standaardcategorie voor nieuwe topics waarvoor geen categorie is selecteerd. Als je dit gedrag wilt voorkomen en categorieselectie wilt afdwingen, <a href="%{settingLink}">schakel de instelling dan hier uit</a>. Als je de naam of beschrijving wilt wijzigen, ga dan naar <a href="%{customizeLink}">Aanpassen / Tekstinhoud</a>.'
       pending_permission_change_alert: "Je hebt %{group} niet toegevoegd aan deze categorie. Klik op deze knop om de groep toe te voegen."
