@@ -888,11 +888,11 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       assert.dom(".homepage-blocks").exists("outlet renders");
 
-      assert.dom(".block__group-level-0").exists("level 0 group exists");
-      assert.dom(".block__group-level-1").exists("level 1 group exists");
-      assert.dom(".block__group-level-2").exists("level 2 group exists");
-      assert.dom(".block__group-level-3").exists("level 3 group exists");
-      assert.dom(".block__group-level-4").exists("level 4 group exists");
+      assert.dom(".block-group-level-0").exists("level 0 group exists");
+      assert.dom(".block-group-level-1").exists("level 1 group exists");
+      assert.dom(".block-group-level-2").exists("level 2 group exists");
+      assert.dom(".block-group-level-3").exists("level 3 group exists");
+      assert.dom(".block-group-level-4").exists("level 4 group exists");
 
       const leafBlocks = document.querySelectorAll(".leaf-block");
       assert.strictEqual(
@@ -945,8 +945,8 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       assert.dom(".sidebar-blocks").exists("outlet renders");
 
-      assert.dom(".block__group-deep-10").exists("deepest group exists");
-      assert.dom(".block__group-deep-1").exists("shallowest group exists");
+      assert.dom(".block-group-deep-10").exists("deepest group exists");
+      assert.dom(".block-group-deep-1").exists("shallowest group exists");
       assert.dom(".deep-leaf").exists("leaf block renders at bottom");
     });
 
@@ -1001,8 +1001,8 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         <template><BlockOutlet @name="main-outlet-blocks" /></template>
       );
 
-      assert.dom(".block__group-outer").exists("outer group renders");
-      assert.dom(".block__group-middle-1").exists("middle-1 group renders");
+      assert.dom(".block-group-outer").exists("outer group renders");
+      assert.dom(".block-group-middle-1").exists("middle-1 group renders");
       assert
         .dom('.conditional-leaf[data-level="3a"]')
         .doesNotExist("conditional leaf 3a hidden (logged out required)");
@@ -1010,7 +1010,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         .dom('.conditional-leaf[data-level="3b"]')
         .exists("unconditional leaf 3b renders");
       assert
-        .dom(".block__group-middle-2")
+        .dom(".block-group-middle-2")
         .doesNotExist("middle-2 group hidden (logged out required)");
       assert
         .dom('.conditional-leaf[data-level="3c"]')
@@ -1133,7 +1133,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         <template><BlockOutlet @name="main-outlet-blocks" /></template>
       );
 
-      assert.dom(".block__group-container").exists("container renders");
+      assert.dom(".block-group-container").exists("container renders");
       assert
         .dom(".nested-string-content")
         .hasText(

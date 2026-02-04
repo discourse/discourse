@@ -1,41 +1,42 @@
+import Component from "@glimmer/component";
 import { module, test } from "qunit";
+import { block } from "discourse/blocks";
 import { applyArgDefaults } from "discourse/lib/blocks/-internals/utils";
 
 module("Unit | Lib | blocks/core/utils", function () {
   module("applyArgDefaults", function () {
     test("returns original args when no schema", function (assert) {
-      const ComponentClass = {
-        blockMetadata: {},
-      };
-      const providedArgs = { title: "Hello", count: 5 };
+      @block("no-schema-block")
+      class NoSchemaBlock extends Component {}
 
-      const result = applyArgDefaults(ComponentClass, providedArgs);
+      const providedArgs = { title: "Hello", count: 5 };
+      const result = applyArgDefaults(NoSchemaBlock, providedArgs);
 
       assert.deepEqual(result, providedArgs);
     });
 
-    test("returns original args when no blockMetadata", function (assert) {
-      const ComponentClass = {};
+    test("returns original args when component is not a block", function (assert) {
+      // eslint-disable-next-line ember/no-empty-glimmer-component-classes
+      class PlainComponent extends Component {}
       const providedArgs = { title: "Hello" };
 
-      const result = applyArgDefaults(ComponentClass, providedArgs);
+      const result = applyArgDefaults(PlainComponent, providedArgs);
 
       assert.deepEqual(result, providedArgs);
     });
 
     test("applies defaults for undefined args", function (assert) {
-      const ComponentClass = {
-        blockMetadata: {
-          args: {
-            title: { type: "string", default: "Default Title" },
-            count: { type: "number", default: 0 },
-            enabled: { type: "boolean", default: true },
-          },
+      @block("defaults-block", {
+        args: {
+          title: { type: "string", default: "Default Title" },
+          count: { type: "number", default: 0 },
+          enabled: { type: "boolean", default: true },
         },
-      };
-      const providedArgs = {};
+      })
+      class DefaultsBlock extends Component {}
 
-      const result = applyArgDefaults(ComponentClass, providedArgs);
+      const providedArgs = {};
+      const result = applyArgDefaults(DefaultsBlock, providedArgs);
 
       assert.deepEqual(result, {
         title: "Default Title",
@@ -45,34 +46,32 @@ module("Unit | Lib | blocks/core/utils", function () {
     });
 
     test("does not override provided args", function (assert) {
-      const ComponentClass = {
-        blockMetadata: {
-          args: {
-            title: { type: "string", default: "Default Title" },
-            count: { type: "number", default: 0 },
-          },
+      @block("override-block", {
+        args: {
+          title: { type: "string", default: "Default Title" },
+          count: { type: "number", default: 0 },
         },
-      };
-      const providedArgs = { title: "Custom Title", count: 42 };
+      })
+      class OverrideBlock extends Component {}
 
-      const result = applyArgDefaults(ComponentClass, providedArgs);
+      const providedArgs = { title: "Custom Title", count: 42 };
+      const result = applyArgDefaults(OverrideBlock, providedArgs);
 
       assert.deepEqual(result, { title: "Custom Title", count: 42 });
     });
 
     test("applies defaults only for missing args (partial args)", function (assert) {
-      const ComponentClass = {
-        blockMetadata: {
-          args: {
-            title: { type: "string", default: "Default Title" },
-            subtitle: { type: "string", default: "Default Subtitle" },
-            count: { type: "number", default: 0 },
-          },
+      @block("partial-args-block", {
+        args: {
+          title: { type: "string", default: "Default Title" },
+          subtitle: { type: "string", default: "Default Subtitle" },
+          count: { type: "number", default: 0 },
         },
-      };
-      const providedArgs = { title: "Custom Title" };
+      })
+      class PartialArgsBlock extends Component {}
 
-      const result = applyArgDefaults(ComponentClass, providedArgs);
+      const providedArgs = { title: "Custom Title" };
+      const result = applyArgDefaults(PartialArgsBlock, providedArgs);
 
       assert.deepEqual(result, {
         title: "Custom Title",
@@ -82,50 +81,47 @@ module("Unit | Lib | blocks/core/utils", function () {
     });
 
     test("does not apply defaults for args with no default value", function (assert) {
-      const ComponentClass = {
-        blockMetadata: {
-          args: {
-            title: { type: "string", required: true },
-            count: { type: "number", default: 5 },
-          },
+      @block("no-default-block", {
+        args: {
+          title: { type: "string", required: true },
+          count: { type: "number", default: 5 },
         },
-      };
-      const providedArgs = {};
+      })
+      class NoDefaultBlock extends Component {}
 
-      const result = applyArgDefaults(ComponentClass, providedArgs);
+      const providedArgs = {};
+      const result = applyArgDefaults(NoDefaultBlock, providedArgs);
 
       assert.deepEqual(result, { count: 5 });
       assert.false("title" in result, "Title should not be added");
     });
 
     test("preserves null and false values in provided args", function (assert) {
-      const ComponentClass = {
-        blockMetadata: {
-          args: {
-            value: { type: "string", default: "default" },
-            enabled: { type: "boolean", default: true },
-          },
+      @block("preserve-values-block", {
+        args: {
+          value: { type: "string", default: "default" },
+          enabled: { type: "boolean", default: true },
         },
-      };
-      const providedArgs = { value: null, enabled: false };
+      })
+      class PreserveValuesBlock extends Component {}
 
-      const result = applyArgDefaults(ComponentClass, providedArgs);
+      const providedArgs = { value: null, enabled: false };
+      const result = applyArgDefaults(PreserveValuesBlock, providedArgs);
 
       assert.strictEqual(result.value, null, "Null should be preserved");
       assert.false(result.enabled, "False should be preserved");
     });
 
     test("returns a new object (does not mutate input)", function (assert) {
-      const ComponentClass = {
-        blockMetadata: {
-          args: {
-            count: { type: "number", default: 0 },
-          },
+      @block("immutable-block", {
+        args: {
+          count: { type: "number", default: 0 },
         },
-      };
-      const providedArgs = { title: "Hello" };
+      })
+      class ImmutableBlock extends Component {}
 
-      const result = applyArgDefaults(ComponentClass, providedArgs);
+      const providedArgs = { title: "Hello" };
+      const result = applyArgDefaults(ImmutableBlock, providedArgs);
 
       assert.notStrictEqual(result, providedArgs, "Should return new object");
       assert.deepEqual(

@@ -8,6 +8,7 @@
  * @module discourse/lib/blocks/-internals/error
  */
 import { DEBUG } from "@glimmer/env";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 
 /* Value Display Helpers */
 
@@ -26,13 +27,15 @@ function formatSimpleValue(obj) {
     return "null";
   }
   if (typeof obj === "function") {
-    return `<${obj.blockName || obj.name || "Function"}>`;
+    const blockName = getBlockMetadata(obj)?.blockName;
+    return `<${blockName || obj.name || "Function"}>`;
   }
   if (typeof obj !== "object") {
     return JSON.stringify(obj);
   }
-  if (obj.blockName) {
-    return `<${obj.blockName}>`;
+  const blockName = getBlockMetadata(obj)?.blockName;
+  if (blockName) {
+    return `<${blockName}>`;
   }
   return null;
 }
@@ -67,7 +70,7 @@ function formatTruncatedValue(obj) {
  * Parses a condition path string into path segments.
  * Handles both dot notation (`.key`) and bracket notation (`[0]`).
  *
- * @param {string} path - The path string (e.g., "conditions.any[0][1].querParams").
+ * @param {string} path - The path string (e.g., "conditions.any[0][1].queryParams").
  * @returns {Array<string|number>} Array of path segments.
  *
  * @example
@@ -468,7 +471,7 @@ class PathHighlightRenderer {
  * to indicate where the error occurred.
  *
  * @param {Object|Array} entry - The block entry object to render.
- * @param {string} errorPath - The path to the error (e.g., "conditions.any[0][0].querParams").
+ * @param {string} errorPath - The path to the error (e.g., "conditions.any[0][0].queryParams").
  * @param {Object} [options] - Formatting options.
  * @param {string} [options.prefix] - Optional prefix to skip in the path (e.g., "conditions").
  * @param {string} [options.label] - Label to show before the entry (e.g., "conditions:").
@@ -536,7 +539,7 @@ export function truncateForDisplay(
   for (const key of displayKeys) {
     // Handle special keys that don't serialize well or are verbose
     if (key === "block") {
-      result[key] = `<${obj[key]?.blockName || "Component"}>`;
+      result[key] = `<${getBlockMetadata(obj[key])?.blockName || "Component"}>`;
     } else if (key === "children") {
       result[key] = `[${obj[key]?.length || 0} children]`;
     } else {
@@ -563,7 +566,7 @@ export function truncateForDisplay(
  * point directly to the user's code, not to internal block system functions.
  *
  * @param {Function} callerFn - The function to exclude from the stack trace.
- *   Pass the function that calls `captureCallSite` (e.g., `renderBlocks`).
+ *   Pass the function that calls `captureCallSite` (e.g., `_renderBlocks`).
  * @returns {Error} An Error object with stack trace starting from callerFn's caller.
  */
 export function captureCallSite(callerFn) {
@@ -591,7 +594,7 @@ export function captureCallSite(callerFn) {
  * @example
  * // Returns:
  * // └─ [4] BlockGroup (name: "callouts")
- * //    └─ children[2] BlockGroup
+ * //    └─ [2] ChildBlockName
  * //       └─ args.nme  ← error here
  */
 function buildBreadcrumb(rootLayout, errorPath) {
@@ -607,7 +610,8 @@ function buildBreadcrumb(rootLayout, errorPath) {
       // Array index - show block info
       const block = current[seg];
       const blockClass = block?.block;
-      const blockName = blockClass?.blockName || blockClass?.name || "Block";
+      const blockName =
+        getBlockMetadata(blockClass)?.blockName || blockClass?.name || "Block";
       const nameArg = block?.args?.name ? ` (name: "${block.args.name}")` : "";
       lines.push(`${indent}└─ [${seg}] ${blockName}${nameArg}`);
       current = block;
@@ -751,10 +755,11 @@ function formatErrorContext(context) {
  * Used by block entry and condition validation to report
  * errors at registration time.
  *
- * Supports the `cause` option to chain errors together. When a `cause` is
- * provided (typically the call site Error from `captureCallSite()`), browsers
- * will display both stack traces together, allowing developers to see both
- * where the error occurred and where the block was registered.
+ * Supports the standard `cause` option from ES2022 to chain errors together.
+ * Note: `raiseBlockError()` uses a different approach - it reuses the
+ * `callSiteError` directly (mutating its message and name) rather than
+ * passing it as `cause`. This preserves the original stack trace pointing
+ * to where `renderBlocks()` was called.
  *
  * @class BlockError
  * @extends Error

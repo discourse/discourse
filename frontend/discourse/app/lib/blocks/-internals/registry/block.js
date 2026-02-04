@@ -1,6 +1,7 @@
 // @ts-check
 import { DEBUG } from "@glimmer/env";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { raiseBlockError } from "discourse/lib/blocks/-internals/error";
 import {
   OPTIONAL_MISSING,
@@ -18,12 +19,10 @@ import {
 /**
  * A block class decorated with `@block`.
  *
- * @typedef {typeof import("@glimmer/component").default & {
- *   blockName: string,
- *   namespace: string|null,
- *   namespaceType: "core"|"plugin"|"theme",
- *   blockMetadata: BlockMetadata
- * }} BlockClass
+ * Block metadata is stored in an internal WeakMap and accessed via the
+ * `getBlockMetadata()` function from the decorator module.
+ *
+ * @typedef {typeof import("@glimmer/component").default} BlockClass
  */
 
 /**
@@ -31,8 +30,12 @@ import {
  * Includes args schema, container settings, validation, and outlet restrictions.
  *
  * @typedef {{
+ *   blockName: string,
+ *   shortName: string,
+ *   namespace: string|null,
+ *   namespaceType: "core"|"plugin"|"theme",
  *   description: string,
- *   container: boolean,
+ *   isContainer: boolean,
  *   decoratorClassNames: string|Array<string>|Function|null,
  *   args: Object|null,
  *   childArgs: Object|null,
@@ -131,7 +134,8 @@ export function hasBlock(nameOrClass) {
   if (typeof nameOrClass === "string") {
     return blockRegistry.has(nameOrClass);
   }
-  return nameOrClass?.blockName && blockRegistry.has(nameOrClass.blockName);
+  const blockName = getBlockMetadata(nameOrClass)?.blockName;
+  return blockName && blockRegistry.has(blockName);
 }
 
 /**
@@ -171,15 +175,14 @@ export function isBlockResolved(name) {
 /**
  * Checks if a registry entry is a factory function (not a resolved class).
  *
- * Factory functions are plain functions without a `blockName` property.
- * BlockClasses have `blockName` set by the `@block` decorator.
+ * Factory functions are plain functions not registered in the block metadata WeakMap.
+ * BlockClasses are tracked by the `@block` decorator.
  *
  * @param {BlockRegistryEntry} entry - The registry entry to check.
  * @returns {entry is BlockFactory} True if the entry is a factory function.
  */
 export function isBlockFactory(entry) {
-  // @ts-ignore - blockName exists on BlockClass but not BlockFactory
-  return typeof entry === "function" && !entry.blockName;
+  return typeof entry === "function" && !getBlockMetadata(entry);
 }
 
 /**
@@ -201,7 +204,7 @@ export function isBlockFactory(entry) {
  */
 export async function resolveBlock(nameOrClass) {
   if (typeof nameOrClass !== "string") {
-    if (!nameOrClass?.blockName) {
+    if (!getBlockMetadata(nameOrClass)) {
       raiseBlockError(
         `Invalid block reference: expected string name or @block-decorated class, ` +
           `got ${typeof nameOrClass}.`
@@ -255,7 +258,7 @@ export async function resolveBlock(nameOrClass) {
  * @returns {BlockClass | { optionalMissing: symbol, name: string } | null}
  *   - The BlockClass if found and resolved
  *   - An object with `optionalMissing` marker if the block is optional and not registered
- *   - null if the block is not registered (non-optional) or is a pending factory
+ *   - null if the block is not registered (non-optional) or is a factory awaiting resolution
  */
 export function tryResolveBlock(blockRef) {
   if (typeof blockRef !== "string") {
@@ -320,14 +323,16 @@ export function _freezeBlockRegistry() {
  * Registers a block component in the registry.
  * Must be called before any renderBlocks() configuration is registered.
  *
- * The block component must be decorated with `@block` and have a
- * `blockName` static property (set by the decorator).
+ * The block component must be decorated with `@block`. Block metadata
+ * (including `blockName`) is stored in an internal WeakMap and accessed
+ * via `getBlockMetadata()`.
  *
  * @param {BlockClass} BlockClass - The block component class
  * @throws {Error} If called after registry is locked, or if block is invalid
  *
  * @example
  * ```javascript
+ * // In a plugin's pre-initializer (plugins/my-plugin/assets/javascripts/pre-initializers/...)
  * import { withPluginApi } from "discourse/lib/plugin-api";
  * import MyBlock from "../blocks/my-block";
  *
@@ -341,25 +346,25 @@ export function _freezeBlockRegistry() {
  * ```
  */
 export function _registerBlock(BlockClass) {
+  const blockName = getBlockMetadata(BlockClass)?.blockName;
+
   if (
     !assertRegistryNotFrozen({
       frozen: registryFrozen,
       apiMethod: "api.registerBlock()",
       entityType: "Block",
-      entityName: BlockClass?.blockName || BlockClass?.name,
+      entityName: blockName || BlockClass?.name,
     })
   ) {
     return;
   }
 
-  if (!BlockClass?.blockName) {
+  if (!blockName) {
     raiseBlockError(
       `Block class "${BlockClass?.name}" must be decorated with @block to be registered.`
     );
     return;
   }
-
-  const blockName = BlockClass.blockName;
 
   if (!validateNamePattern(blockName, "Block")) {
     return;
@@ -432,24 +437,26 @@ export function _registerBlockFactory(name, factory) {
  *
  * @param {string} name - The block name.
  * @param {BlockFactory} factory - The factory function to resolve.
- * @returns {Promise<BlockClass|undefined>} The resolved block class, or undefined on failure.
+ * @returns {Promise<BlockClass>} The resolved block class.
+ * @throws {BlockError} If the factory returns an invalid class or the resolved name doesn't match.
  */
 async function resolveFactory(name, factory) {
   try {
     const result = await factory();
     // @ts-ignore - result may be a module with .default or direct BlockClass
     const BlockClass = result?.default ?? result;
+    const resolvedBlockName = getBlockMetadata(BlockClass)?.blockName;
 
-    if (!BlockClass?.blockName) {
+    if (!resolvedBlockName) {
       raiseBlockError(
         `Block factory for "${name}" did not return a valid @block-decorated class.`
       );
     }
 
-    if (BlockClass.blockName !== name) {
+    if (resolvedBlockName !== name) {
       raiseBlockError(
         `Block factory registered as "${name}" resolved to a block with ` +
-          `blockName "${BlockClass.blockName}". The registered name must match ` +
+          `blockName "${resolvedBlockName}". The registered name must match ` +
           `the block's @block decorator name.`
       );
     }

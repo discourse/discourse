@@ -118,7 +118,7 @@ module("Unit | Lib | blocks/core/patterns", function () {
 
       assert.deepEqual(result, {
         type: "theme",
-        namespace: "tactile",
+        namespace: "theme-tactile",
         name: "hero-banner",
       });
     });
@@ -128,7 +128,7 @@ module("Unit | Lib | blocks/core/patterns", function () {
 
       assert.deepEqual(result, {
         type: "theme",
-        namespace: "my-cool-theme",
+        namespace: "theme-my-cool-theme",
         name: "sidebar-widget",
       });
     });

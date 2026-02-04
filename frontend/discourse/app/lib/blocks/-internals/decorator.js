@@ -40,7 +40,7 @@ import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/valid
  * 1. AUTH_TOKEN is a secret symbol known only to this module
  * 2. blockMetadataMap tracks which classes are decorated with @block
  * 3. rootBlockClass holds the single block that can be rendered directly (BlockOutlet)
- * 4. Child blocks receive AUTH_TOKEN via the $block$ arg from their parent
+ * 4. Child blocks receive AUTH_TOKEN via the __block$ arg from their parent
  * 5. BlockComponentManager verifies authorization before instantiation
  *
  * This prevents:
@@ -51,9 +51,26 @@ import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/valid
 
 /**
  * Secret token used to authorize block rendering.
- * Passed via $block$ arg from parent containers to child blocks.
+ * Passed via __block$ arg from parent containers to child blocks.
  */
 const AUTH_TOKEN = Symbol("block-auth-token");
+
+/**
+ * @typedef {Object} BlockMetadataEntry
+ * @property {boolean} isContainer - Whether the block is a container.
+ * @property {string} blockName - The block's full name identifier (e.g., "theme:tactile:hero-banner").
+ * @property {string} shortName - The block's plain name without namespace (e.g., "hero-banner").
+ * @property {string|null} namespace - The parsed namespace for CSS (e.g., "my-plugin" or "theme-tactile").
+ * @property {"core"|"plugin"|"theme"} namespaceType - The type of namespace.
+ * @property {string} description - Human-readable description of the block.
+ * @property {string|string[]|Function|null} decoratorClassNames - CSS classNames from decorator.
+ * @property {Object|null} args - Args schema for the block.
+ * @property {Object|null} childArgs - Child args schema (containers only).
+ * @property {Object|null} constraints - Cross-arg validation constraints.
+ * @property {Function|null} validate - Custom validation function.
+ * @property {readonly string[]|null} allowedOutlets - Allowed outlet patterns.
+ * @property {readonly string[]|null} deniedOutlets - Denied outlet patterns.
+ */
 
 /**
  * Maps block classes to their metadata.
@@ -61,7 +78,7 @@ const AUTH_TOKEN = Symbol("block-auth-token");
  * - Classes are garbage collected when no longer referenced
  * - Authorization state cannot be discovered via Object.getOwnPropertySymbols()
  *
- * @type {WeakMap<Function, { isContainer: boolean }>}
+ * @type {WeakMap<Function, BlockMetadataEntry>}
  */
 const blockMetadataMap = new WeakMap();
 
@@ -79,7 +96,7 @@ let rootBlockClass = null;
  *
  * Blocks can only be instantiated in two authorized scenarios:
  * 1. As a root block - The class is the rootBlockClass (marked with root: true in decorator)
- * 2. As a child of a container - The parent passes $block$ arg with AUTH_TOKEN
+ * 2. As a child of a container - The parent passes __block$ arg with AUTH_TOKEN
  *
  * This prevents blocks from being used directly in templates, ensuring they
  * can only be rendered through the BlockOutlet system.
@@ -93,17 +110,19 @@ const BlockComponentManager = new Proxy(
           // Check if this is the root block (BlockOutlet)
           const isRootBlock = klass === rootBlockClass;
 
-          // Check if this is an authorized child (parent passes $block$ secret token)
+          // Check if this is an authorized child (parent passes __block$ secret token)
           let isAuthorizedChild = false;
           const named = args?.named;
-          if (named?.names?.includes("$block$")) {
-            const ref = named.get("$block$");
+          if (named?.names?.includes("__block$")) {
+            const ref = named.get("__block$");
             isAuthorizedChild = ref.compute() === AUTH_TOKEN;
           }
 
           if (!isRootBlock && !isAuthorizedChild) {
+            const blockName =
+              blockMetadataMap.get(klass)?.blockName || klass.name;
             throw new Error(
-              `Block "${klass.blockName || klass.name}" cannot be used directly in templates. ` +
+              `Block "${blockName}" cannot be used directly in templates. ` +
                 `Blocks can only be rendered inside BlockOutlets or container blocks.`
             );
           }
@@ -247,19 +266,6 @@ export function block(name, options = {}) {
   // Validate outlet restriction patterns
   validateOutletRestrictions(name, allowedOutlets, deniedOutlets);
 
-  // Create metadata object once (returned by getter)
-  const metadata = Object.freeze({
-    description,
-    container: isContainer,
-    decoratorClassNames,
-    args: argsSchema ? Object.freeze(argsSchema) : null,
-    childArgs: childArgsSchema ? Object.freeze(childArgsSchema) : null,
-    constraints: constraints ? Object.freeze(constraints) : null,
-    validate: validateFn,
-    allowedOutlets: allowedOutlets ? Object.freeze([...allowedOutlets]) : null,
-    deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
-  });
-
   return function (target) {
     setInternalComponentManager(BlockComponentManager, target);
 
@@ -268,8 +274,26 @@ export function block(name, options = {}) {
       return target;
     }
 
-    // Register block in WeakMap (replaces setting symbols on class)
-    blockMetadataMap.set(target, { isContainer });
+    // Create and register metadata object with all block information
+    const metadata = Object.freeze({
+      allowedOutlets: allowedOutlets
+        ? Object.freeze([...allowedOutlets])
+        : null,
+      args: argsSchema ? Object.freeze(argsSchema) : null,
+      blockName: name,
+      childArgs: childArgsSchema ? Object.freeze(childArgsSchema) : null,
+      constraints: constraints ? Object.freeze(constraints) : null,
+      decoratorClassNames,
+      deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
+      description,
+      isContainer,
+      namespace: parsed.namespace,
+      namespaceType: parsed.type,
+      shortName: parsed.name,
+      validate: validateFn,
+    });
+
+    blockMetadataMap.set(target, metadata);
 
     // Mark as root block if specified - only one root block is allowed (BlockOutlet)
     if (isRoot) {
@@ -282,32 +306,6 @@ export function block(name, options = {}) {
       rootBlockClass = target;
     }
 
-    // Define instance getter for block name on the prototype
-    Object.defineProperty(target.prototype, "name", {
-      get: () => name,
-      configurable: false,
-    });
-
-    // Define static getters on the class
-    Object.defineProperties(target, {
-      blockName: {
-        get: () => name,
-        configurable: false,
-      },
-      namespace: {
-        get: () => parsed.namespace,
-        configurable: false,
-      },
-      namespaceType: {
-        get: () => parsed.type,
-        configurable: false,
-      },
-      blockMetadata: {
-        get: () => metadata,
-        configurable: false,
-      },
-    });
-
     return target;
   };
 }
@@ -315,7 +313,7 @@ export function block(name, options = {}) {
 /**
  * Creates the args object for a child block with reactive getters for context args.
  *
- * This function embeds the AUTH_TOKEN in the $block$ property, which is how
+ * This function embeds the AUTH_TOKEN in the __block$ property, which is how
  * child blocks are authorized to render. The token is not exposed - it's
  * embedded in the returned object.
  *
@@ -331,7 +329,7 @@ export function block(name, options = {}) {
 export function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
   const blockArgs = {
     ...entryArgs,
-    $block$: AUTH_TOKEN,
+    __block$: AUTH_TOKEN,
   };
 
   // Dynamically define reactive getters for each context arg
@@ -351,31 +349,29 @@ export function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
 }
 
 /**
- * Checks if a component is registered as a block.
+ * Gets all metadata for a component registered with @block.
+ *
+ * Returns a flat object containing all block information:
+ * - `blockName` - Full block name (e.g., "theme:my-theme:heading")
+ * - `shortName` - Plain name without namespace (e.g., "heading")
+ * - `namespace` - Full namespace for CSS ("my-plugin" or "theme-tactile") or null for core
+ * - `namespaceType` - "core" | "plugin" | "theme"
+ * - `isContainer` - Whether block is a container
+ * - `description` - Human-readable description
+ * - `decoratorClassNames` - CSS classNames from decorator
+ * - `args` - Args schema
+ * - `childArgs` - Child args schema (containers only)
+ * - `constraints` - Cross-arg validation constraints
+ * - `validate` - Custom validation function
+ * - `allowedOutlets` - Allowed outlet patterns
+ * - `deniedOutlets` - Denied outlet patterns
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
  *
- * @param {Function} component - The component to check
- * @returns {boolean} True if the component is registered as a block, false otherwise
+ * @param {Function} component - The component to get metadata for.
+ * @returns {Object|null} The block metadata object, or null if not a block.
  */
-export function _isBlock(component) {
-  return blockMetadataMap.has(component);
-}
-
-/**
- * Checks if a component is registered as a container block.
- *
- * Note: This function is exported for validation but should not be used
- * to bypass block rendering authorization.
- * It only returns a boolean, not the internal authorization state.
- *
- * @experimental This API is under active development and may change or be removed
- * in future releases without prior notice. Use with caution in production environments.
- *
- * @param {Function} component - The component to check
- * @returns {boolean} True if the component is registered as a container block, false otherwise
- */
-export function _isContainerBlock(component) {
-  return blockMetadataMap.get(component)?.isContainer ?? false;
+export function getBlockMetadata(component) {
+  return blockMetadataMap.get(component) ?? null;
 }

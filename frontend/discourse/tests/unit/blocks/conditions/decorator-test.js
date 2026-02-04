@@ -560,7 +560,7 @@ module("Unit | Blocks | Conditions | decorator", function () {
       }
 
       assert.strictEqual(TestCondition.type, "theme:tactile:dark-mode");
-      assert.strictEqual(TestCondition.namespace, "tactile");
+      assert.strictEqual(TestCondition.namespace, "theme-tactile");
       assert.strictEqual(TestCondition.namespaceType, "theme");
     });
 

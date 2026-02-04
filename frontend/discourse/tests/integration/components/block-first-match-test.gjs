@@ -169,7 +169,7 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     assert.dom(".hero-blocks__first-match").exists("has outlet-prefixed class");
-    assert.dom(".block__first-match").exists("has block class");
+    assert.dom(".block-first-match").exists("has block class");
     assert.dom(".custom-first-match").exists("has custom class");
   });
 
@@ -209,7 +209,7 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
 
     await render(<template><BlockOutlet @name="homepage-blocks" /></template>);
 
-    assert.dom(".block__group-outer").exists("group renders");
+    assert.dom(".block-group-outer").exists("group renders");
     assert.dom(".nested-a").exists("first-match renders first child");
     assert
       .dom(".nested-b")

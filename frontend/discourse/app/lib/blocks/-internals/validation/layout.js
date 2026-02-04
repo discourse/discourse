@@ -14,6 +14,7 @@
  */
 
 import { DEBUG } from "@glimmer/env";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import {
   BlockError,
   raiseBlockError,
@@ -454,9 +455,8 @@ export const RESERVED_ARG_NAMES = Object.freeze([
   "outletName",
   "children",
   "conditions",
-  "$block$",
-  "__visible",
-  "__failureReason",
+  // Note: Names starting with underscore (e.g., __block$, __visible, __hierarchy)
+  // are automatically reserved via the argName.startsWith("_") check in isReservedArgName()
 ]);
 
 /**
@@ -615,8 +615,6 @@ export function validateReservedArgs(entry) {
  * @param {Array<Object>} layout - The outlet layout (array of block entries) to validate.
  * @param {string} outletName - The outlet these blocks belong to.
  * @param {import("discourse/services/blocks").default} blocksService - Service for validating conditions.
- * @param {Function} isBlockFn - Function to check if component is a block.
- * @param {Function} isContainerBlockFn - Function to check if component is a container block.
  * @param {string} [parentPath=""] - JSON-path style parent location for error context.
  * @param {Error | null} [callSiteError] - Where renderBlocks() was called from.
  * @param {Array<Object>} [rootLayout] - The root layout array for error context display.
@@ -630,8 +628,6 @@ export async function validateLayout(
   layout,
   outletName,
   blocksService,
-  isBlockFn,
-  isContainerBlockFn,
   parentPath = "",
   callSiteError = null,
   rootLayout = null,
@@ -682,8 +678,6 @@ export async function validateLayout(
       entry,
       outletName,
       blocksService,
-      isBlockFn,
-      isContainerBlockFn,
       currentPath,
       callSiteError,
       effectiveRootLayout,
@@ -713,7 +707,7 @@ export async function validateLayout(
           typeof resolved !== "string" &&
           !resolved[OPTIONAL_MISSING]
         ) {
-          blockName = resolved.blockName;
+          blockName = getBlockMetadata(resolved)?.blockName;
         }
       }
 
@@ -721,8 +715,6 @@ export async function validateLayout(
         entry.children,
         outletName,
         blocksService,
-        isBlockFn,
-        isContainerBlockFn,
         `${currentPath}.children`,
         callSiteError,
         effectiveRootLayout,
@@ -760,8 +752,6 @@ export async function validateLayout(
  * @param {Array<Object>|Object} [entry.conditions] - Conditions for rendering.
  * @param {string} outletName - The outlet this block belongs to.
  * @param {import("discourse/services/blocks").default} blocksService - Service for validating conditions.
- * @param {Function} isBlockFn - Function to check if component is a block.
- * @param {Function} isContainerBlockFn - Function to check if component is a container block.
  * @param {string} [path] - JSON-path style location in layout (e.g., "[3].children[0]").
  * @param {Error | null} [callSiteError] - Where renderBlocks() was called from.
  * @param {Array<Object>} [rootLayout] - The root layout array for error context display.
@@ -774,8 +764,6 @@ export async function validateEntry(
   entry,
   outletName,
   blocksService,
-  isBlockFn,
-  isContainerBlockFn,
   path,
   callSiteError = null,
   rootLayout = null,
@@ -870,16 +858,16 @@ export async function validateEntry(
   }
 
   // Full validation with resolved class
-  if (!isBlockFn(resolvedBlock)) {
+  const blockMeta = getBlockMetadata(resolvedBlock);
+  if (!blockMeta) {
     raiseBlockError(
-      `Block "${resolvedBlock?.blockName}" at ${path} for outlet "${outletName}" is not a valid @block-decorated component.`,
+      `Block "${resolvedBlock?.name || "unknown"}" at ${path} for outlet "${outletName}" is not a valid @block-decorated component.`,
       earlyContext
     );
     return null;
   }
 
-  const blockName = resolvedBlock.blockName;
-  const metadata = resolvedBlock.blockMetadata;
+  const blockName = blockMeta.blockName;
 
   // Build base context for all validation errors in this block
   const baseContext = createValidationContext({
@@ -892,12 +880,14 @@ export async function validateEntry(
   });
 
   // Validate outlet permission (allowedOutlets/deniedOutlets)
-  if (!validateOutletPermission(metadata, outletName, blockName, baseContext)) {
+  if (
+    !validateOutletPermission(blockMeta, outletName, blockName, baseContext)
+  ) {
     return null;
   }
 
   // Validate container/children relationship
-  const isContainer = isContainerBlockFn(resolvedBlock);
+  const isContainer = blockMeta.isContainer;
   if (
     !validateContainerChildren(
       entry,
@@ -925,7 +915,7 @@ export async function validateEntry(
 
   // Validate constraints and custom validation (after applying defaults)
   validateBlockConstraints(
-    metadata,
+    blockMeta,
     resolvedBlock,
     entry,
     blockName,
@@ -957,5 +947,5 @@ export async function validateEntry(
   validateOrphanContainerArgs(entry, parentChildArgsSchema, baseContext);
 
   // Return the block's childArgsSchema for validating its children
-  return isContainer ? metadata.childArgs : null;
+  return isContainer ? blockMeta.childArgs : null;
 }

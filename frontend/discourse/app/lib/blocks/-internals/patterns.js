@@ -111,7 +111,7 @@ export const VALID_NAMESPACED_BLOCK_PATTERN =
  * // => { type: "plugin", namespace: "chat", name: "message-widget" }
  *
  * parseBlockName("theme:tactile:hero-banner")
- * // => { type: "theme", namespace: "tactile", name: "hero-banner" }
+ * // => { type: "theme", namespace: "theme-tactile", name: "hero-banner" }
  *
  * parseBlockName("Invalid_Name")
  * // => null
@@ -122,7 +122,11 @@ export function parseBlockName(fullName) {
     /^theme:([a-z][a-z0-9-]*):([a-z][a-z0-9-]*)$/
   );
   if (themeMatch) {
-    return { type: "theme", namespace: themeMatch[1], name: themeMatch[2] };
+    return {
+      type: "theme",
+      namespace: `theme-${themeMatch[1]}`,
+      name: themeMatch[2],
+    };
   }
 
   // Plugin: namespace:name (where namespace is NOT "theme")

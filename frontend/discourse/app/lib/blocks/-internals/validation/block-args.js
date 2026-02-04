@@ -11,6 +11,7 @@
  * @module discourse/lib/blocks/-internals/validation/block-args
  */
 
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import {
   BlockError,
   raiseBlockError,
@@ -111,7 +112,7 @@ export function validateArgsSchema(argsSchema, blockName) {
  * @throws {BlockError} If args are invalid.
  */
 export function validateBlockArgs(entry, blockClass) {
-  const metadata = blockClass?.blockMetadata;
+  const metadata = getBlockMetadata(blockClass);
   const providedArgs = entry.args || {};
   const hasProvidedArgs = Object.keys(providedArgs).length > 0;
   const argsSchema = metadata?.args;

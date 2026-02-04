@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import cssIdentifier from "discourse/helpers/css-identifier";
 import { registerOutletContainerStyle } from "discourse/lib/blocks/-internals/css";
 import { withDebugGroup } from "discourse/lib/blocks/-internals/debug-hooks";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { processBlockEntries } from "discourse/lib/blocks/-internals/entry-processing";
 import { isOptionalMissing } from "discourse/lib/blocks/-internals/patterns";
 import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block";
@@ -22,9 +23,8 @@ import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block"
  * previously), service reads would not be tracked and route navigation
  * would not trigger re-evaluation.
  *
- * The component receives authorization-dependent functions (`createChildBlockFn`,
- * `isContainerBlockFn`) as props to maintain the authorization model in the
- * main block-outlet module.
+ * The component receives the authorization-dependent function `createChildBlockFn`
+ * as a prop to maintain the authorization model in the main block-outlet module.
  *
  * @private
  */
@@ -110,7 +110,6 @@ export default class BlockOutletRootContainer extends Component {
       outletName,
       outletArgs,
       createChildBlockFn,
-      isContainerBlockFn,
     } = this.args;
 
     if (!rawChildren?.length) {
@@ -129,8 +128,7 @@ export default class BlockOutletRootContainer extends Component {
       this.blocks,
       showGhosts,
       isLoggingEnabled,
-      baseHierarchy,
-      isContainerBlockFn
+      baseHierarchy
     );
 
     // Step 2: Create components from processed entries
@@ -145,7 +143,6 @@ export default class BlockOutletRootContainer extends Component {
       showGhosts,
       isLoggingEnabled,
       createChildBlockFn,
-      isContainerBlockFn,
     });
   }
 
@@ -166,7 +163,6 @@ export default class BlockOutletRootContainer extends Component {
    * @param {boolean} showGhosts - If true, keep all blocks for ghost rendering.
    * @param {boolean} isLoggingEnabled - If true, log condition evaluation.
    * @param {string} baseHierarchy - Base hierarchy path for logging.
-   * @param {Function} isContainerBlockFn - Function to check if a block is a container.
    * @returns {Array<Object>} Processed entries with visibility metadata.
    */
   #preprocessEntries(
@@ -175,8 +171,7 @@ export default class BlockOutletRootContainer extends Component {
     blocksService,
     showGhosts,
     isLoggingEnabled,
-    baseHierarchy,
-    isContainerBlockFn
+    baseHierarchy
   ) {
     const result = [];
 
@@ -202,8 +197,9 @@ export default class BlockOutletRootContainer extends Component {
         /** @type {import("discourse/lib/blocks/-internals/registry/block").BlockClass} */ (
           resolvedBlock
         );
-      const blockName = blockClass.blockName || "unknown";
-      const isContainer = isContainerBlockFn(blockClass);
+      const blockMeta = getBlockMetadata(blockClass);
+      const blockName = blockMeta?.blockName || "unknown";
+      const isContainer = blockMeta?.isContainer ?? false;
 
       // Evaluate this block's own conditions.
       // The withDebugGroup wrapper ensures START_GROUP/END_GROUP are always paired.
@@ -229,8 +225,7 @@ export default class BlockOutletRootContainer extends Component {
           blocksService,
           showGhosts,
           isLoggingEnabled,
-          `${baseHierarchy}/${blockName}`,
-          isContainerBlockFn
+          `${baseHierarchy}/${blockName}`
         );
 
         hasVisibleChildren = processedChildren.some((child) => child.__visible);

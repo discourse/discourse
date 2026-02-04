@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { BlockError } from "discourse/lib/blocks/-internals/error";
 import {
   validateArgValue,
@@ -2070,7 +2071,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       })
       class ConstraintMetadataBlock extends Component {}
 
-      assert.deepEqual(ConstraintMetadataBlock.blockMetadata.constraints, {
+      assert.deepEqual(getBlockMetadata(ConstraintMetadataBlock).constraints, {
         atLeastOne: ["id", "tag"],
       });
     });
@@ -2092,7 +2093,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       class ValidateFnBlock extends Component {}
 
       assert.strictEqual(
-        ValidateFnBlock.blockMetadata.validate,
+        getBlockMetadata(ValidateFnBlock).validate,
         validateFn,
         "validate function is stored"
       );

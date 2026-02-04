@@ -5,7 +5,7 @@ import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import { _renderBlocks } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
-import { _isBlock } from "discourse/lib/blocks/-internals/decorator";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   hasBlock,
@@ -16,39 +16,42 @@ import {
 module("Unit | Lib | block-outlet", function (hooks) {
   setupTest(hooks);
 
-  module("isBlock", function () {
-    test("returns true for @block decorated components", function (assert) {
+  module("isBlock (via getBlockMetadata)", function () {
+    test("returns metadata for @block decorated components", function (assert) {
       @block("test-decorated")
       class DecoratedBlock extends Component {}
 
-      assert.true(_isBlock(DecoratedBlock));
+      assert.notStrictEqual(getBlockMetadata(DecoratedBlock), null);
     });
 
-    test("returns false for plain Glimmer components", function (assert) {
+    test("returns null for plain Glimmer components", function (assert) {
       // eslint-disable-next-line ember/no-empty-glimmer-component-classes
       class PlainComponent extends Component {}
 
-      assert.false(_isBlock(PlainComponent));
+      assert.strictEqual(getBlockMetadata(PlainComponent), null);
     });
 
-    test("returns false for non-component classes", function (assert) {
+    test("returns null for non-component classes", function (assert) {
       class NotAComponent {}
 
-      assert.false(_isBlock(NotAComponent));
+      assert.strictEqual(getBlockMetadata(NotAComponent), null);
     });
 
-    test("returns false for null/undefined", function (assert) {
-      assert.false(_isBlock(null));
-      assert.false(_isBlock(undefined));
+    test("returns null/undefined for null/undefined", function (assert) {
+      assert.strictEqual(getBlockMetadata(null), null);
+      assert.strictEqual(getBlockMetadata(undefined), null);
     });
   });
 
   module("@block decorator", function () {
-    test("sets static blockName property", function (assert) {
+    test("sets blockName via getBlockMetadata", function (assert) {
       @block("my-block-name")
       class NamedBlock extends Component {}
 
-      assert.strictEqual(NamedBlock.blockName, "my-block-name");
+      assert.strictEqual(
+        getBlockMetadata(NamedBlock)?.blockName,
+        "my-block-name"
+      );
     });
 
     test("throws for non-Glimmer component targets", function (assert) {
@@ -60,28 +63,31 @@ module("Unit | Lib | block-outlet", function (hooks) {
       }, /@block target must be a Glimmer component/);
     });
 
-    test("marks component as block via isBlock check", function (assert) {
+    test("marks component as block via getBlockMetadata check", function (assert) {
       @block("check-block")
       class CheckBlock extends Component {}
 
-      assert.true(_isBlock(CheckBlock));
+      assert.notStrictEqual(getBlockMetadata(CheckBlock), null);
     });
 
     test("sets blockMetadata with default values", function (assert) {
       @block("metadata-default")
       class MetadataDefaultBlock extends Component {}
 
-      assert.deepEqual(MetadataDefaultBlock.blockMetadata, {
-        description: "",
-        container: false,
-        decoratorClassNames: null,
-        args: null,
-        childArgs: null,
-        constraints: null,
-        validate: null,
-        allowedOutlets: null,
-        deniedOutlets: null,
-      });
+      const meta = getBlockMetadata(MetadataDefaultBlock);
+      assert.strictEqual(meta.blockName, "metadata-default");
+      assert.strictEqual(meta.shortName, "metadata-default");
+      assert.strictEqual(meta.namespace, null);
+      assert.strictEqual(meta.namespaceType, "core");
+      assert.false(meta.isContainer);
+      assert.strictEqual(meta.description, "");
+      assert.strictEqual(meta.decoratorClassNames, null);
+      assert.strictEqual(meta.args, null);
+      assert.strictEqual(meta.childArgs, null);
+      assert.strictEqual(meta.constraints, null);
+      assert.strictEqual(meta.validate, null);
+      assert.strictEqual(meta.allowedOutlets, null);
+      assert.strictEqual(meta.deniedOutlets, null);
     });
 
     test("sets blockMetadata with description", function (assert) {
@@ -91,7 +97,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       class MetadataDescriptionBlock extends Component {}
 
       assert.strictEqual(
-        MetadataDescriptionBlock.blockMetadata.description,
+        getBlockMetadata(MetadataDescriptionBlock).description,
         "A test block for metadata"
       );
     });
@@ -100,7 +106,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       @block("metadata-container", { container: true })
       class MetadataContainerBlock extends Component {}
 
-      assert.true(MetadataContainerBlock.blockMetadata.container);
+      assert.true(getBlockMetadata(MetadataContainerBlock).isContainer);
     });
 
     test("sets blockMetadata with args schema", function (assert) {
@@ -112,7 +118,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class MetadataArgsBlock extends Component {}
 
-      assert.deepEqual(MetadataArgsBlock.blockMetadata.args, {
+      assert.deepEqual(getBlockMetadata(MetadataArgsBlock).args, {
         title: { type: "string", required: true },
         count: { type: "number", default: 5 },
       });
@@ -125,8 +131,8 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class MetadataFrozenBlock extends Component {}
 
-      assert.true(Object.isFrozen(MetadataFrozenBlock.blockMetadata));
-      assert.true(Object.isFrozen(MetadataFrozenBlock.blockMetadata.args));
+      assert.true(Object.isFrozen(getBlockMetadata(MetadataFrozenBlock)));
+      assert.true(Object.isFrozen(getBlockMetadata(MetadataFrozenBlock).args));
     });
 
     test("sets blockMetadata with allowedOutlets", function (assert) {
@@ -135,7 +141,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class AllowedOutletsBlock extends Component {}
 
-      assert.deepEqual(AllowedOutletsBlock.blockMetadata.allowedOutlets, [
+      assert.deepEqual(getBlockMetadata(AllowedOutletsBlock).allowedOutlets, [
         "sidebar-*",
         "homepage-blocks",
       ]);
@@ -147,7 +153,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class DeniedOutletsBlock extends Component {}
 
-      assert.deepEqual(DeniedOutletsBlock.blockMetadata.deniedOutlets, [
+      assert.deepEqual(getBlockMetadata(DeniedOutletsBlock).deniedOutlets, [
         "modal-*",
         "tooltip-*",
       ]);
@@ -161,10 +167,10 @@ module("Unit | Lib | block-outlet", function (hooks) {
       class FrozenOutletsBlock extends Component {}
 
       assert.true(
-        Object.isFrozen(FrozenOutletsBlock.blockMetadata.allowedOutlets)
+        Object.isFrozen(getBlockMetadata(FrozenOutletsBlock).allowedOutlets)
       );
       assert.true(
-        Object.isFrozen(FrozenOutletsBlock.blockMetadata.deniedOutlets)
+        Object.isFrozen(getBlockMetadata(FrozenOutletsBlock).deniedOutlets)
       );
     });
 
@@ -257,9 +263,9 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class ValidOptionsBlock extends Component {}
 
-      assert.true(ValidOptionsBlock.blockMetadata.container);
+      assert.true(getBlockMetadata(ValidOptionsBlock).isContainer);
       assert.strictEqual(
-        ValidOptionsBlock.blockMetadata.description,
+        getBlockMetadata(ValidOptionsBlock).description,
         "Test block"
       );
     });
@@ -315,7 +321,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       class BlockStringClasses extends Component {}
 
       assert.strictEqual(
-        BlockStringClasses.blockMetadata.decoratorClassNames,
+        getBlockMetadata(BlockStringClasses).decoratorClassNames,
         "extra-class"
       );
     });
@@ -326,10 +332,10 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class BlockArrayClasses extends Component {}
 
-      assert.deepEqual(BlockArrayClasses.blockMetadata.decoratorClassNames, [
-        "class-a",
-        "class-b",
-      ]);
+      assert.deepEqual(
+        getBlockMetadata(BlockArrayClasses).decoratorClassNames,
+        ["class-a", "class-b"]
+      );
     });
 
     test("accepts classNames as function", function (assert) {
@@ -341,7 +347,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       class BlockFnClasses extends Component {}
 
       assert.strictEqual(
-        BlockFnClasses.blockMetadata.decoratorClassNames,
+        getBlockMetadata(BlockFnClasses).decoratorClassNames,
         classNamesFn
       );
     });
@@ -353,10 +359,10 @@ module("Unit | Lib | block-outlet", function (hooks) {
       class NonContainerWithClasses extends Component {}
 
       assert.strictEqual(
-        NonContainerWithClasses.blockMetadata.decoratorClassNames,
+        getBlockMetadata(NonContainerWithClasses).decoratorClassNames,
         "extra-class"
       );
-      assert.false(NonContainerWithClasses.blockMetadata.container);
+      assert.false(getBlockMetadata(NonContainerWithClasses).isContainer);
     });
   });
 
@@ -487,23 +493,6 @@ module("Unit | Lib | block-outlet", function (hooks) {
           {
             block: ReservedConditionsBlock,
             args: { conditions: {} },
-          },
-        ]),
-        /Reserved arg names/i
-      );
-    });
-
-    test("throws for reserved arg name: $block$", async function (assert) {
-      @block("reserved-block-symbol")
-      class ReservedBlockSymbolBlock extends Component {}
-
-      withTestBlockRegistration(() => registerBlock(ReservedBlockSymbolBlock));
-
-      await assert.rejects(
-        _renderBlocks("hero-blocks", [
-          {
-            block: ReservedBlockSymbolBlock,
-            args: { $block$: "test" },
           },
         ]),
         /Reserved arg names/i
@@ -940,7 +929,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       })
       class UnderscoreArgBlock extends Component {}
 
-      assert.deepEqual(UnderscoreArgBlock.blockMetadata.args, {
+      assert.deepEqual(getBlockMetadata(UnderscoreArgBlock).args, {
         my_arg_name: { type: "string" },
       });
     });

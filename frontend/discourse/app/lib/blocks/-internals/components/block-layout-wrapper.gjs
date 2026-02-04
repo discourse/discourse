@@ -21,7 +21,9 @@ import cssIdentifier from "discourse/helpers/css-identifier";
 /**
  * @typedef {Object} WrappedBlockLayoutArgs
  * @property {string} outletName - The outlet name for class generation.
- * @property {string} name - The block's registered name.
+ * @property {string} name - The block's full registered name.
+ * @property {string} shortName - The block's plain name without namespace prefix.
+ * @property {string|null} namespace - The block's namespace prefix.
  * @property {boolean} isContainer - Whether this is a container block.
  * @property {CurriedComponent} Component - The curried block component to render.
  * @property {string} [classNames] - Additional CSS classes from layout entry.
@@ -38,7 +40,9 @@ import cssIdentifier from "discourse/helpers/css-identifier";
  *
  * @param {Object} blockData - Block rendering data.
  * @param {string} blockData.outletName - The outlet name for class generation.
- * @param {string} blockData.name - The block's registered name.
+ * @param {string} blockData.name - The block's full registered name.
+ * @param {string} blockData.shortName - The block's plain name without namespace prefix.
+ * @param {string} blockData.namespace - The block's namespace prefix.
  * @param {boolean} blockData.isContainer - Whether this is a container block.
  * @param {CurriedComponent} blockData.Component - The curried block component.
  * @param {string} [blockData.classNames] - Additional CSS classes from layout entry.
@@ -54,33 +58,42 @@ export function wrapBlockLayout(blockData, owner) {
  * Generates the appropriate CSS class based on block type.
  *
  * @param {string} outletName - The outlet name.
- * @param {string} name - The block name.
+ * @param {string} shortName - The block's plain name without namespace prefix.
+ * @param {string} namespace - The block's namespace prefix.
  * @param {boolean} isContainer - Whether this is a container block.
  * @returns {string[]} An array of CSS class names.
  */
-function blockClass(outletName, name, isContainer) {
-  const safeName = cssIdentifier(name);
+function blockClass(outletName, shortName, namespace, isContainer) {
+  const safeShortName = cssIdentifier(shortName);
+  const safeNamespace = namespace ? cssIdentifier(namespace) : null;
   const safeOutlet = cssIdentifier(outletName);
 
   if (isContainer) {
-    return [`block__${safeName}`, `${safeOutlet}__${safeName}`];
+    // Outlet-prefixed class first, then block type identifier
+    return [`${safeOutlet}__${safeShortName}`, `block-${safeShortName}`];
   }
 
-  return [`${safeOutlet}__block`, `block-${safeName}`];
+  return [
+    `${safeOutlet}__block`,
+    `block-${safeShortName}`,
+    safeNamespace ? `block-${safeShortName}--${safeNamespace}` : null,
+  ].filter(Boolean);
 }
 
 /**
  * Component that wraps all blocks with BEM-style classes.
  *
- * Generates BEM-style class names based on block type:
+ * Generates BEM-style class names based on block type, using the short name
+ * (without namespace prefix) for CSS class generation:
  *
  * For non-container blocks:
  * - `{outletName}__block` - Identifies this as a block within the outlet
- * - `block-{name}` - Identifies the specific block type
+ * - `block-{shortName}` - Identifies the specific block type
+ * - `block-{shortName}--{namespace}` - Namespace modifier (only if namespace is present)
  *
  * For container blocks:
- * - `block__{name}` - Identifies the container block type
- * - `{outletName}__{name}` - Identifies this as a container within the outlet
+ * - `{outletName}__{shortName}` - Identifies this as a container within the outlet
+ * - `block-{shortName}` - Identifies the container block type
  *
  * Both types can include custom decoratorClassNames from the @block decorator
  * and custom classNames from layout entry configuration.
@@ -92,7 +105,7 @@ class WrappedBlockLayout extends Component {
   <template>
     <div
       class={{concatClass
-        (blockClass @outletName @name @isContainer)
+        (blockClass @outletName @shortName @namespace @isContainer)
         @decoratorClassNames
         @classNames
       }}

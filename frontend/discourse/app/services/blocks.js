@@ -1,6 +1,7 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { evaluateConditions } from "discourse/lib/blocks/-internals/matching/condition-evaluator";
 import {
   getAllBlockEntries,
@@ -23,7 +24,7 @@ import { validateConditions } from "discourse/lib/blocks/-internals/validation/c
  * - `listBlocks()` - Get all registered blocks
  * - `listBlocksWithMetadata()` - Get all blocks with their metadata
  *
- * Core blocks are auto-discovered from `discourse/blocks`.
+ * Core blocks are auto-discovered from `discourse/blocks/builtin`.
  * Theme/plugin blocks are registered via `api.registerBlock()` in pre-initializers.
  *
  * ## Condition Evaluation
@@ -138,8 +139,7 @@ export default class Blocks extends Service {
     return getAllBlockEntries().map(([name, component]) => ({
       name,
       component,
-      // @ts-expect-error blockMetadata exists on resolved BlockClass, not BlockFactory
-      metadata: component.blockMetadata,
+      metadata: getBlockMetadata(component),
     }));
   }
 

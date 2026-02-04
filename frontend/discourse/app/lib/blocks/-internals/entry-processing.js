@@ -6,9 +6,9 @@
  * renderable components. These functions iterate through pre-processed block
  * entries and transform them into curried Glimmer components.
  *
- * The functions use dependency injection for authorization-dependent operations
- * (`createChildBlockFn`, `isContainerBlockFn`) to maintain the authorization model
- * in the main block-outlet module.
+ * The functions use dependency injection for the authorization-dependent operation
+ * `createChildBlockFn` to maintain the authorization model in the main block-outlet
+ * module.
  *
  * @module discourse/lib/blocks/-internals/entry-processing
  */
@@ -17,6 +17,7 @@ import {
   createGhostBlock,
   handleOptionalMissingBlock,
 } from "discourse/lib/blocks/-internals/debug-hooks";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { isOptionalMissing } from "discourse/lib/blocks/-internals/patterns";
 import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block";
 import { shallowArgsEqual } from "discourse/lib/blocks/-internals/utils";
@@ -123,7 +124,6 @@ function getOrCreateLeafBlockComponent(
  * @param {boolean} options.showGhosts - Whether to render ghost blocks for invisible entries.
  * @param {boolean} options.isLoggingEnabled - Whether debug logging is active.
  * @param {Function} options.createChildBlockFn - Function to create child block components (injected from block-outlet.gjs).
- * @param {Function} options.isContainerBlockFn - Function to check if a block is a container (injected from block-outlet.gjs).
  * @returns {Array<ChildBlockResult>} Array of renderable child objects with Component and containerArgs.
  */
 export function processBlockEntries({
@@ -136,7 +136,6 @@ export function processBlockEntries({
   showGhosts,
   isLoggingEnabled,
   createChildBlockFn,
-  isContainerBlockFn,
 }) {
   const result = [];
   const containerCounts = new Map();
@@ -173,8 +172,9 @@ export function processBlockEntries({
       /** @type {import("discourse/lib/blocks/-internals/registry/block").BlockClass} */ (
         resolvedBlock
       );
-    const blockName = blockClass.blockName || "unknown";
-    const isContainer = isContainerBlockFn(blockClass);
+    const blockMeta = getBlockMetadata(blockClass);
+    const blockName = blockMeta?.blockName || "unknown";
+    const isContainer = blockMeta?.isContainer ?? false;
 
     // Use the stable key assigned at registration time. This key survives
     // shallow cloning and ensures DOM identity is maintained when blocks
@@ -201,7 +201,6 @@ export function processBlockEntries({
         showGhosts,
         isLoggingEnabled,
         createChildBlockFn,
-        isContainerBlockFn,
       });
     }
 

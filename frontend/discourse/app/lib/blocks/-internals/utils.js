@@ -4,6 +4,7 @@
  *
  * @module discourse/lib/blocks/-internals/utils
  */
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 
 /**
  * @typedef {Object} ValidationContext
@@ -89,7 +90,7 @@ export function buildErrorPath(basePath, segment) {
  * ```
  */
 export function applyArgDefaults(ComponentClass, providedArgs) {
-  const schema = ComponentClass.blockMetadata?.args;
+  const schema = getBlockMetadata(ComponentClass)?.args;
 
   const result = { ...providedArgs };
 

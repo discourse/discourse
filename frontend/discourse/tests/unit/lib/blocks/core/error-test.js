@@ -1,5 +1,7 @@
+import Component from "@glimmer/component";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { block } from "discourse/blocks";
 import {
   raiseBlockError,
   truncateForDisplay,
@@ -9,7 +11,7 @@ module("Unit | Lib | blocks/core/error", function (hooks) {
   setupTest(hooks);
 
   module("raiseBlockError", function () {
-    test("throws error in DEBUG mode", function (assert) {
+    test("throws error with Blocks prefix", function (assert) {
       assert.throws(
         () => raiseBlockError("Test error message"),
         /\[Blocks\] Test error message/
@@ -78,14 +80,20 @@ module("Unit | Lib | blocks/core/error > entry-formatter", function () {
     });
 
     test("handles block key specially", function (assert) {
-      const entry = { block: { blockName: "MyBlock" }, args: {} };
+      @block("my-block")
+      class MyBlock extends Component {}
+
+      const entry = { block: MyBlock, args: {} };
       const result = truncateForDisplay(entry);
 
-      assert.strictEqual(result.block, "<MyBlock>");
+      assert.strictEqual(result.block, "<my-block>");
     });
 
     test("handles children key specially", function (assert) {
-      const entry = { block: {}, children: [{}, {}, {}] };
+      @block("parent-block")
+      class ParentBlock extends Component {}
+
+      const entry = { block: ParentBlock, children: [{}, {}, {}] };
       const result = truncateForDisplay(entry);
 
       assert.strictEqual(result.children, "[3 children]");
@@ -127,15 +135,18 @@ module("Unit | Lib | blocks/core/error > entry-formatter", function () {
     });
 
     test("handles mixed nested structures", function (assert) {
+      @block("test-block")
+      class TestBlock extends Component {}
+
       const config = {
-        block: { blockName: "TestBlock" },
+        block: TestBlock,
         args: { title: "Hello" },
-        children: [{ block: {} }],
+        children: [{ block: TestBlock }],
       };
 
       const result = truncateForDisplay(config);
 
-      assert.strictEqual(result.block, "<TestBlock>");
+      assert.strictEqual(result.block, "<test-block>");
       assert.deepEqual(result.args, { title: "Hello" });
       assert.strictEqual(result.children, "[1 children]");
     });

@@ -3,6 +3,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { OPTIONAL_MISSING } from "discourse/lib/blocks/-internals/patterns";
 import {
   _freezeBlockRegistry,
@@ -356,9 +357,10 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
       _registerBlock(CoreBlock);
 
       assert.true(hasBlock("core-block"));
-      assert.strictEqual(CoreBlock.blockName, "core-block");
-      assert.strictEqual(CoreBlock.namespace, null);
-      assert.strictEqual(CoreBlock.namespaceType, "core");
+      const meta = getBlockMetadata(CoreBlock);
+      assert.strictEqual(meta.blockName, "core-block");
+      assert.strictEqual(meta.namespace, null);
+      assert.strictEqual(meta.namespaceType, "core");
     });
 
     test("registers plugin block (namespace:name)", function (assert) {
@@ -368,9 +370,10 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
       _registerBlock(MessageWidget);
 
       assert.true(hasBlock("chat:message-widget"));
-      assert.strictEqual(MessageWidget.blockName, "chat:message-widget");
-      assert.strictEqual(MessageWidget.namespace, "chat");
-      assert.strictEqual(MessageWidget.namespaceType, "plugin");
+      const meta = getBlockMetadata(MessageWidget);
+      assert.strictEqual(meta.blockName, "chat:message-widget");
+      assert.strictEqual(meta.namespace, "chat");
+      assert.strictEqual(meta.namespaceType, "plugin");
     });
 
     test("registers theme block (theme:namespace:name)", function (assert) {
@@ -380,9 +383,10 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
       _registerBlock(HeroBanner);
 
       assert.true(hasBlock("theme:tactile:hero-banner"));
-      assert.strictEqual(HeroBanner.blockName, "theme:tactile:hero-banner");
-      assert.strictEqual(HeroBanner.namespace, "tactile");
-      assert.strictEqual(HeroBanner.namespaceType, "theme");
+      const meta = getBlockMetadata(HeroBanner);
+      assert.strictEqual(meta.blockName, "theme:tactile:hero-banner");
+      assert.strictEqual(meta.namespace, "theme-tactile");
+      assert.strictEqual(meta.namespaceType, "theme");
     });
 
     test("registers factory with namespaced name", function (assert) {
@@ -403,7 +407,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
 
       const resolved = await resolveBlock("theme:test:lazy-block");
       assert.strictEqual(resolved, LazyBlock);
-      assert.strictEqual(resolved.namespaceType, "theme");
+      assert.strictEqual(getBlockMetadata(resolved).namespaceType, "theme");
     });
 
     test("throws for invalid namespaced format", function (assert) {

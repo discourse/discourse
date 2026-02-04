@@ -1,5 +1,6 @@
 import * as BuiltinBlocks from "discourse/blocks/builtin";
 import * as conditions from "discourse/blocks/conditions";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { _freezeBlockRegistry } from "discourse/lib/blocks/-internals/registry/block";
 import {
   _freezeConditionTypeRegistry,
@@ -32,7 +33,7 @@ export default {
     // Register built-in blocks
     withPluginApi((api) => {
       for (const BlockClass of Object.values(BuiltinBlocks)) {
-        if (typeof BlockClass === "function" && BlockClass.blockName) {
+        if (typeof BlockClass === "function" && getBlockMetadata(BlockClass)) {
           api.registerBlock(BlockClass);
         }
       }

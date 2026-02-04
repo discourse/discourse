@@ -16,7 +16,7 @@ module("Unit | Lib | blocks/validation/layout", function () {
       assert.true(RESERVED_ARG_NAMES.includes("outletName"));
       assert.true(RESERVED_ARG_NAMES.includes("children"));
       assert.true(RESERVED_ARG_NAMES.includes("conditions"));
-      assert.true(RESERVED_ARG_NAMES.includes("$block$"));
+      // Note: __block$, __visible, etc. are reserved via startsWith("_") check
     });
 
     test("is frozen", function (assert) {
@@ -279,7 +279,6 @@ module("Unit | Lib | blocks/validation/layout", function () {
         args: { title: "Hello" },
         children: [{ block: "child" }],
         conditions: { type: "user" },
-        name: "My Block",
         classNames: "custom-class",
       };
 
@@ -424,7 +423,6 @@ module("Unit | Lib | blocks/validation/layout", function () {
       assert.true(isReservedArgName("outletName"));
       assert.true(isReservedArgName("children"));
       assert.true(isReservedArgName("conditions"));
-      assert.true(isReservedArgName("$block$"));
     });
 
     test("returns true for names starting with underscore", function (assert) {

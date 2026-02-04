@@ -27,10 +27,9 @@ import {
   debugHooks,
 } from "discourse/lib/blocks/-internals/debug-hooks";
 import {
-  _isBlock,
-  _isContainerBlock,
   block,
   createBlockArgsWithReactiveGetters,
+  getBlockMetadata,
 } from "discourse/lib/blocks/-internals/decorator";
 import {
   captureCallSite,
@@ -80,7 +79,7 @@ let nextEntryKey = 0;
  * renders. This is critical for Ember's `{{#each key=}}` to maintain DOM
  * identity when blocks are hidden/shown by conditions.
  *
- * Keys are assigned at registration time (in `renderBlocks()`) rather than
+ * Keys are assigned at registration time (in `_renderBlocks()`) rather than
  * render time, ensuring they survive the shallow cloning in `BlockOutletRootContainer#preprocessEntries`.
  *
  * @param {Array<Object>} entries - The block entries to process.
@@ -172,7 +171,8 @@ function resolveDecoratorClassNames(metadata, args) {
  */
 function createChildBlock(entry, owner, debugContext = {}) {
   const { block: ComponentClass, args = {}, containerArgs, classNames } = entry;
-  const isContainer = _isContainerBlock(ComponentClass);
+  const blockMeta = getBlockMetadata(ComponentClass);
+  const isContainer = blockMeta?.isContainer ?? false;
 
   // Apply default values from metadata before building args
   const argsWithDefaults = applyArgDefaults(ComponentClass, args);
@@ -195,11 +195,13 @@ function createChildBlock(entry, owner, debugContext = {}) {
   // All blocks are wrapped for consistent styling
   let wrappedComponent = wrapBlockLayout(
     {
-      name: ComponentClass.blockName,
+      name: blockMeta?.blockName,
+      shortName: blockMeta?.shortName,
+      namespace: blockMeta?.namespace,
       outletName: debugContext.outletName,
       isContainer,
       decoratorClassNames: resolveDecoratorClassNames(
-        ComponentClass.blockMetadata,
+        blockMeta,
         argsWithDefaults
       ),
       classNames,
@@ -213,7 +215,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
   if (debugCallback) {
     const debugResult = debugCallback(
       {
-        name: ComponentClass.blockName,
+        name: blockMeta?.blockName,
         Component: wrappedComponent,
         args: argsWithDefaults,
         containerArgs,
@@ -249,13 +251,14 @@ function createChildBlock(entry, owner, debugContext = {}) {
  * @param {Error|null} [callSiteError] - Pre-captured error for source-mapped stack traces.
  *   When called via api.renderBlocks(), this is captured there to exclude the PluginApi wrapper.
  * @returns {Promise<Array<Object>>} Promise resolving to the validated layout array.
- * @throws {Error} If validation fails or outlet already has a layout (in DEBUG mode).
+ * @throws {Error} If validation fails or outlet already has a layout.
  *
  * @example
  * ```js
- * import { _renderBlocks } from "discourse/blocks/block-outlet";
+ * // This is an internal function. Plugins should use api.renderBlocks() instead.
+ * // import { _renderBlocks } from "discourse/blocks/block-outlet";
  *
- * _renderBlocks("homepage-blocks", [
+ * api.renderBlocks("homepage-blocks", [
  *   { block: HeroBanner, args: { title: "Welcome" } },
  *   {
  *     block: BlockGroup,
@@ -310,8 +313,6 @@ export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
     layout,
     outletName,
     blocksService,
-    _isBlock,
-    _isContainerBlock,
     "", // parentPath - empty so paths start with array index like [0]
     callSiteError // Error object for source-mapped call site
   ).then(() => layout);
@@ -533,7 +534,6 @@ export default class BlockOutlet extends Component {
               showGhosts=layout.showGhosts
               isLoggingEnabled=layout.isLoggingEnabled
               createChildBlockFn=createChildBlock
-              isContainerBlockFn=_isContainerBlock
             )
             as |ChildrenContainer|
           }}

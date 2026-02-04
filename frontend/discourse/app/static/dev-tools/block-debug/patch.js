@@ -4,7 +4,7 @@ import {
   DEBUG_CALLBACK,
   debugHooks,
 } from "discourse/lib/blocks/-internals/debug-hooks";
-import { _isContainerBlock } from "discourse/lib/blocks/-internals/decorator";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import {
   MAX_LAYOUT_DEPTH,
   OPTIONAL_MISSING,
@@ -47,7 +47,7 @@ function makeDebugCallback(fn) {
  * protection is validation-time depth checking in `validateLayout`, but this
  * provides additional safety during ghost rendering.
  *
- * @param {Array<Object>} childEntries - Child layout entries (already preprocessed with __visible)
+ * @param {Array<Object>} childEntries - Child layout entries (already preprocessed with __visible and __failureReason)
  * @param {import("@ember/owner").default} owner - The application owner
  * @param {string} containerPath - The container's hierarchy path (e.g., "outlet/group[0]")
  * @param {Object} outletArgs - Outlet arguments for context
@@ -102,8 +102,9 @@ function createGhostChildren(
       continue;
     }
 
-    const blockName = resolvedBlock.blockName || "unknown";
-    const isChildContainer = _isContainerBlock(resolvedBlock);
+    const blockMeta = getBlockMetadata(resolvedBlock);
+    const blockName = blockMeta?.blockName || "unknown";
+    const isChildContainer = blockMeta?.isContainer ?? false;
 
     // Build container path for nested containers
     let nestedContainerPath;

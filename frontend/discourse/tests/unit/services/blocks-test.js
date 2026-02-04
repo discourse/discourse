@@ -4,6 +4,7 @@ import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { block } from "discourse/blocks";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
+import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import {
   registerBlock,
   registerConditionType,
@@ -43,7 +44,7 @@ module("Unit | Service | blocks", function (hooks) {
       });
 
       const result = this.blocks.getBlock("get-block-test");
-      assert.strictEqual(result.blockName, "get-block-test");
+      assert.strictEqual(getBlockMetadata(result)?.blockName, "get-block-test");
     });
 
     test("getBlock returns undefined for unregistered blocks", function (assert) {
@@ -63,7 +64,7 @@ module("Unit | Service | blocks", function (hooks) {
       });
 
       const blocks = this.blocks.listBlocks();
-      const names = blocks.map((b) => b.blockName);
+      const names = blocks.map((b) => getBlockMetadata(b)?.blockName);
 
       assert.true(names.includes("list-block-a"));
       assert.true(names.includes("list-block-b"));

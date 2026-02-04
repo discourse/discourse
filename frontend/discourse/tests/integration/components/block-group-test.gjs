@@ -53,7 +53,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     assert.dom(".hero-blocks__group").exists();
-    assert.dom(".block__group-features").exists();
+    assert.dom(".block-group-features").exists();
     assert.dom(".custom-group-class").exists();
   });
 
@@ -164,8 +164,8 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       <template><BlockOutlet @name="main-outlet-blocks" /></template>
     );
 
-    assert.dom(".block__group-outer").exists();
-    assert.dom(".block__group-inner").exists();
+    assert.dom(".block-group-outer").exists();
+    assert.dom(".block-group-inner").exists();
     assert.dom(".nested-leaf").exists();
   });
 
@@ -194,7 +194,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     assert
       .dom(".sidebar-blocks__group")
       .exists("container has outlet-prefixed class");
-    assert.dom(".block__group").exists("container has block__group class");
+    assert.dom(".block-group").exists("container has block-group class");
 
     // Child block wrapper should have outlet-prefixed class
     assert
@@ -399,14 +399,14 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     class TabsContainer extends Component {
       <template>
         <div class="tabs-header">
-          {{#each this.children as |child|}}
+          {{#each @children as |child|}}
             <button class="tab-button" data-tab={{child.containerArgs.tabName}}>
               {{child.containerArgs.tabName}}
             </button>
           {{/each}}
         </div>
         <div class="tabs-content">
-          {{#each this.children as |child|}}
+          {{#each @children as |child|}}
             <child.Component />
           {{/each}}
         </div>
