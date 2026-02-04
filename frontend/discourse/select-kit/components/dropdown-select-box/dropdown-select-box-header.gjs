@@ -46,7 +46,7 @@ export default class DropdownSelectBoxHeader extends SingleSelectHeaderComponent
       {{/let}}
 
       {{#if this.selectKit.options.showCaret}}
-        {{icon this.caretIcon class="caret-icon"}}
+        {{icon this.caretIcon class="angle-icon"}}
       {{/if}}
       &#8203;
       {{! Zero-width space character, so icon-only button height = regular button height }}

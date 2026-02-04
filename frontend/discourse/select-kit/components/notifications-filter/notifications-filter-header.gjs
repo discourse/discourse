@@ -11,7 +11,7 @@ export default class NotificationsFilterHeader extends DropdownSelectBoxHeaderCo
 
   @discourseComputed("selectKit.isExpanded")
   caretIcon(isExpanded) {
-    return isExpanded ? "caret-up" : "caret-down";
+    return isExpanded ? "angle-up" : "angle-down";
   }
 
   <template>
@@ -22,7 +22,7 @@ export default class NotificationsFilterHeader extends DropdownSelectBoxHeaderCo
       <span class="header-text">
         {{i18n this.label}}
       </span>
-      {{icon this.caretIcon class="caret-icon"}}
+      {{icon this.caretIcon class="angle-icon"}}
     </div>
   </template>
 }

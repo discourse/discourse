@@ -106,7 +106,7 @@ export default class ThemesListItem extends Component {
 
           <span class="icons">
             {{#if @theme.selected}}
-              {{icon "caret-right"}}
+              {{icon "angle-right"}}
             {{else}}
               {{#if @theme.default}}
                 {{icon

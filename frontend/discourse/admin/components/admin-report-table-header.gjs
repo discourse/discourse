@@ -11,7 +11,7 @@ export default class AdminReportTableHeader extends Component {
   }
 
   get sortIcon() {
-    return this.args.currentSortDirection === 1 ? "caret-up" : "caret-down";
+    return this.args.currentSortDirection === 1 ? "angle-up" : "angle-down";
   }
 
   get sortButtonTitle() {

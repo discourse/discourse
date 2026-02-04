@@ -26,8 +26,8 @@ export default <template>
           @onChange={{@controller.updateUsername}}
           @options={{hash
             maximum=1
-            caretDownIcon="caret-down"
-            caretUpIcon="caret-up"
+            caretDownIcon="angle-down"
+            caretUpIcon="angle-up"
           }}
         />
         <DButton

@@ -30,7 +30,7 @@ const EditCategoryTabsVerticalTemplate = <template>
       <DButton
         @action={{@controller.goBack}}
         @label="category.back"
-        @icon="caret-left"
+        @icon="angle-left"
         class="category-back"
       />
     {{/if}}

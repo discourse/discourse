@@ -166,12 +166,13 @@
       margin-right: 5px;
     }
 
-    .caret-icon {
+    .angle-icon {
       margin-left: auto;
       margin-right: 0;
       padding-left: 5px;
       pointer-events: none;
       color: inherit;
+      font-size: var(--font-down-1);
     }
 
     .d-button-label {

@@ -17,7 +17,7 @@ export default <template>
     <nav>
       <ul class="nav nav-pills">
         <li><LinkTo @route="adminUser" @model={{@controller.user}}>{{icon
-              "caret-left"
+              "angle-left"
             }}
             &nbsp;{{@controller.user.username}}</LinkTo></li>
       </ul>
