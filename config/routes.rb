@@ -1673,6 +1673,8 @@ Discourse::Application.routes.draw do
       get "/info" => "tags#info", :as => "tag_info"
       get "/notifications" => "tags#notifications", :as => "tag_notifications"
       put "/notifications" => "tags#update_notifications"
+      get "/settings" => "tags#settings"
+      put "/settings" => "tags#update_settings"
       put "/" => "tags#update", :as => "tag_update"
       delete "/" => "tags#destroy", :as => "tag_destroy"
       post "/synonyms" => "tags#create_synonyms", :as => "tag_synonyms"
@@ -1685,6 +1687,10 @@ Discourse::Application.routes.draw do
 
     scope "/tag/:tag_slug/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
       get "/" => "tags#show", :as => "tag_show_with_slug"
+      get "/edit" => "tags#show"
+      get "/edit/:tab" => "tags#show"
+      get "/settings" => "tags#settings"
+      put "/settings" => "tags#update_settings"
 
       Discourse.filters.each do |filter|
         get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}_with_slug"
