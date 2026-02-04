@@ -1563,9 +1563,6 @@ ur:
         flags_given:
           one: '<span class="%{className}">%{count}</span> مددگارنشان دھی'
           other: '<span class="%{className}">%{count}</span> مددگارنشان دھییاں'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> نشان دھی پوسٹ'
-          other: '<span class="%{className}">%{count}</span>نشان دھی پوسٹس'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> حذف شدہ پوسٹ'
           other: '<span class="%{className}">%{count}</span> حذف شدہ پوسٹس'
@@ -2276,7 +2273,6 @@ ur:
     form_kit:
       reset: رِی سَیٹ
       optional: اختیاری
-      errors_summary_title: "اس فارم میں غلطیاں ہیں:"
       dirty_form: "آپ نے اپنی تبدیلیاں جمع نہیں کروائیں! کیا آپ واقعی چھوڑنا چاہتے ہیں؟"
       errors:
         starts_with: "%{prefix}سے شروع ہونا چاہیے"
@@ -3793,7 +3789,7 @@ ur:
       quote_edit: "ترمیم"
       quote_edit_shortcut: "ترمیم کریں (یا e دبائیں)"
       quote_copy: "اقتباس کاپی کریں"
-      quote_copied_to_clibboard: "اقتباس کلپ بورڈ پر کاپی ہو گیا"
+      quote_copied_to_clipboard: "اقتباس کلپ بورڈ پر کاپی ہو گیا"
       quote_share: "شیئر"
       edit_reason: "وجہ: "
       post_number: "پوسٹ %{number}"
@@ -4086,6 +4082,7 @@ ur:
       back: "واپس زمرے میں"
       general: "عام"
       settings: "سیٹِنگ"
+      advanced: "اعلی درجے کی"
       topic_template: "سانچہ"
       tags: "ٹیگز"
       localizations: "لوکلائزیشنز"
@@ -4117,7 +4114,9 @@ ur:
       save_error: زمرہ محفوظ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔
       description: "تفصیل"
       logo_description: "200px کم از کم سائز کے ساتھ تجویز کردہ 1:1 پہلو کا تناسب۔ اگر خالی چھوڑ دیا جائے تو کوئی تصویر نہیں دکھائی جائے گی۔"
-      style: "طرزیں"
+      style: "ظرز"
+      icon: "آئیکن"
+      emoji: "اِیمَوجی"
       background_color: "رنگ"
       foreground_color: "متن کا رنگ"
       color_validations:
@@ -4126,13 +4125,13 @@ ur:
         type: "ظرز"
         icon: "آئیکن"
         emoji: "اِیمَوجی"
+        square: "مربع"
         options:
           square: "مربع"
           icon: "آئیکن"
           emoji: "اِیمَوجی"
       color_used: "رنگ جواستعمال میں"
       predefined_colors: "پہلے سے طے شدہ رنگ کے اختیارات"
-      name_placeholder: "زیادہ سے زیادہ ایک یا دو الفاظ"
       color_placeholder: "کوئی بھی ویب رنگ"
       delete_confirm: "کیا آپ واقعی اِس زمرہ کو مٹانا چاہتے ہیں؟"
       delete_error: "اِس زمرہ کو مٹانے میں ایک خرابی کا سامنا کرنا پڑا۔"
@@ -4146,15 +4145,14 @@ ur:
         reply: "جواب"
         create: "بنائیں"
         no_groups_selected: "کسی گروپ کو رسائی نہیں دی گئی ہے؛ یہ زمرہ صرف عملے کو نظر آئے گا."
-        everyone_has_access: 'یہ زمرہ عوامی ہے، ہر کوئی دیکھ سکتا ہے، جواب دے سکتا ہے اور پوسٹس بنا سکتا ہے۔ اجازتوں کو محدود کرنے کے لیے، "ہر ایک" گروپ کو دی گئی اجازتوں میں سے ایک یا زیادہ کو ہٹا دیں۔'
+        everyone_full_access: 'یہ زمرہ عوامی ہے، ہر کوئی دیکھ سکتا ہے، جواب دے سکتا ہے اور پوسٹس بنا سکتا ہے۔ اجازتوں کو محدود کرنے کے لیے، "ہر ایک" گروپ کو دی گئی اجازتوں میں سے ایک یا زیادہ کو ہٹا دیں۔'
         toggle_reply: "جواب کی اجازت ٹوگل کریں"
         toggle_full: "تخلیق کی اجازت کو ٹوگل کریں"
         inherited: 'یہ اجازت "ہر ایک" سے وراثت میں ملی ہے'
-      special_warning: "انتباہ: یہ زمرہ ایک پہلے سے بنایا ہوا زمرہ ہے اور اِس کی سیکورٹی سیٹِنگ میں ترمیم نہیں کی جا سکتی۔ اگر آپ اِس زمرہ کو استعمال کرنے کی خواہش نہیں رکھتے، تو اِسے کسی اور حوالے سے استعمال کرنے کی بجائے، حذف کردیں۔"
       uncategorized_security_warning: "یہ زمرہ خاص ہے۔ اِس کا مقصد بغیر زمرہ والے موضوعات کیلئے جگہ فراہم کرنا ہے؛ اِس میں سیکورٹی کی ترتیبات نہیں ہو سکتیں۔"
       uncategorized_general_warning: 'یہ زمرہ خاص ہے۔ یہ نئے موضوعات کے لیے پہلے سے طے شدہ زمرہ کے طور پر استعمال ہوتا ہے جن میں کوئی زمرہ منتخب نہیں ہوتا ہے۔ اگر آپ اس رویے کو روکنا چاہتے ہیں اور زمرہ کے انتخاب پر مجبور کرنا چاہتے ہیں تو، <a href="%{settingLink}">براہ کرم یہاں ترتیب کو غیر فعال کریں</a>۔ اگر آپ نام یا تفصیل کو تبدیل کرنا چاہتے ہیں تو <a href="%{customizeLink}">Customize / Text Content</a>پر جائیں۔'
       pending_permission_change_alert: "آپ نے اِس زمرہ میں %{group} کو شامل نہیں کیا ہے؛ اِن کو شامل کرنے کیلئے اِس بٹن پر کلک کریں۔"
-      images: "تصاویر"
+      images: "ظاہری شکل"
       email_in: "اپنی مرضی کا اِنکَمِنگ اِیمیل ایڈریس:"
       email_in_tooltip: "آپ متعدد ای میل پتوں کو | کردار کے ساتھ الگ کر سکتے ہیں۔"
       email_in_allow_strangers: "اکاؤنٹس نہ رکھنے والے گمنام اراکین کی طرف سے اِی میلز کو قبول کریں"
@@ -4176,6 +4174,11 @@ ur:
       position: "زمرہ جات کے صفحے پر پوزیشن:"
       position_disabled: "زمرہ جات کو سرگرمی کی ترتیب میں دکھایا جائے گا۔ فہرستوں میں زمرہ جات کی ترتیب کو کنٹرول کرنے کے لیے، <a href='%{url}'>'نسب شدہ زمرہ ترتیب'</a> سیٹنگ کو فعال کریں۔"
       minimum_required_tags: "ایک موضوع میں ضروری ٹیگز کی کم از کم تعداد:"
+      none_subcategory_text: "کوئی نہیں"
+      visibility:
+        title: "نموداری"
+        public: "عوامی"
+        group_restricted: "نجی"
       num_auto_bump_daily: "روزانہ خود کار طریقے سے بَمپ کرنے کیلئے کھلے موضوعات کی تعداد:"
       auto_bump_cooldown_days: "اسی موضوع کو دوبارہ آگے کرنے سے پہلے کم از کم دن:"
       navigate_to_first_post_after_read: "موضوعات پڑھنے کے بعد پہلے دھاگہ پر جائیں"
@@ -5743,7 +5746,9 @@ ur:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">تلاشی کے لاگز</a>'
             disabled: 'ٹرینڈنگ سرچ رپورٹ غیر فعال ہے۔ ڈیٹا اکٹھا کرنے کے لیے <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">لاگ سرچ سوالات</a> کو فعال کریں۔'
-          average_chart_label: اوسط
+          sort_button: "%{column}کے حساب سے ترتیب دیں"
+          sort_ascending: "ترتیب صعودی"
+          sort_descending: "ترتیب نزولی"
           filters:
             file_extension:
               label: فائل ایکسٹینشن
@@ -6449,8 +6454,6 @@ ur:
         delete: "حذف کریں"
         delete_confirm: 'کیا آپ واقعی "%{theme_name}" مٹانا چاہتے ہیں؟'
         bulk_delete: "کیا آپ پر یقین ہیں؟"
-        bulk_themes_delete_confirm: "اس سے درج ذیل تھیمز حذف ہو جائیں گی، وہ آپ کی سائٹ پر کسی بھی رکن کے لیے مزید استعمال کے قابل نہیں رہیں گی۔"
-        bulk_components_delete_confirm: "یہ مندرجہ ذیل اجزاء کو ان انسٹال کر دے گا، وہ آپ کی سائٹ پر کسی بھی رکن کے ذریعہ مزید استعمال کے قابل نہیں ہوں گے:"
         color: "رنگ"
         opacity: "دھندلاپن"
         copy: "نقل"

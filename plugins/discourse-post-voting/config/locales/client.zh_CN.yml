@@ -112,6 +112,3 @@ zh_CN:
     review:
       transcript:
         view: "查看以前的消息转录文本"
-      types:
-        reviewable_post_voting_comment:
-          title: "被举报的“帖子投票”评论"

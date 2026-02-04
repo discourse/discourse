@@ -77,8 +77,6 @@ nl:
           invalid: "Ongeldig"
           no_such_category: "Geen dergelijke categorie"
           no_such_group: "Geen dergelijke groep"
-          invalid_date: "%{date} is een ongeldige datum"
-          invalid_time: "%{time} is een ongeldige tijd"
     group:
       reports: "Rapporten"
     admin:

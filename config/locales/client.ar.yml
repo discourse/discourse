@@ -1891,13 +1891,6 @@ ar:
           few: '<span class="%{className}">%{count}</span> بلاغات مفيدة'
           many: '<span class="%{className}">%{count}</span> بلاغًا مفيدًا'
           other: '<span class="%{className}">%{count}</span> بلاغ مفيد'
-        flagged_posts:
-          zero: '<span class="%{className}">%{count}</span> منشور تم الإبلاغ عنه'
-          one: 'منشور واحد (<span class="%{className}">%{count}</span>) تم الإبلاغ عنه'
-          two: 'منشوران (<span class="%{className}">%{count}</span>) تم الإبلاغ عنهما'
-          few: '<span class="%{className}">%{count}</span> منشورات تم الإبلاغ عنها'
-          many: '<span class="%{className}">%{count}</span> منشورًا تم الإبلاغ عنه'
-          other: '<span class="%{className}">%{count}</span> منشور تم الإبلاغ عنه'
         deleted_posts:
           zero: '<span class="%{className}">%{count}</span> منشور تم حذفه'
           one: 'منشور واحد (<span class="%{className}">%{count}</span>) تم حذفه'
@@ -2722,7 +2715,6 @@ ar:
     form_kit:
       reset: إعادة التعيين
       optional: اختياري
-      errors_summary_title: "يحتوي هذا النموذج على أخطاء:"
       dirty_form: "لم ترسل التغييرات! هل تريد بالتأكيد المغادرة؟"
       errors:
         starts_with: "يجب أن يبدأ بـ %{prefix}"
@@ -4569,7 +4561,7 @@ ar:
       quote_edit: "تعديل"
       quote_edit_shortcut: "تعديل (أو اضغط على e)"
       quote_copy: "نسخ الاقتباس"
-      quote_copied_to_clibboard: "تم نسخ الاقتباس إلى الحافظة"
+      quote_copied_to_clipboard: "تم نسخ الاقتباس إلى الحافظة"
       quote_share: "مشاركة"
       edit_reason: "السبب: "
       post_number: "المنشور %{number}"
@@ -4948,6 +4940,7 @@ ar:
       back: "الرجوع إلى الفئة"
       general: "عام"
       settings: "الإعدادات"
+      advanced: "متقدمة"
       topic_template: "قالب"
       tags: "الوسوم"
       localizations: "التوطينات"
@@ -4988,7 +4981,9 @@ ar:
       logo_description: "يُنصح باستخدام نسبة أبعاد 1:1 وبحجم أدنى 200 بكسل. إذا تُرك الحقل فارغًا، لن تظهر أي صورة."
       background_image: "صورة خلفية الفئة"
       background_image_dark: "صورة خلفية داكنة للفئة"
-      style: "الأنماط"
+      style: "النمط"
+      icon: "الأيقونة"
+      emoji: "الرمز التعبيري"
       background_color: "اللون"
       foreground_color: "لون النص"
       color_validations:
@@ -4999,13 +4994,13 @@ ar:
         type: "النمط"
         icon: "الأيقونة"
         emoji: "الرمز التعبيري"
+        square: "مربع"
         options:
           square: "مربع"
           icon: "الأيقونة"
           emoji: "الرمز التعبيري"
       color_used: "اللون قيد الاستخدام"
       predefined_colors: "خيارات الألوان المحدَّدة مسبقًا"
-      name_placeholder: "كلمة أو كلمتان بحد أقصى"
       color_placeholder: "لون الويب"
       delete_confirm: "هل تريد بالتأكيد حذف هذه الفئة؟"
       delete_error: "حدث خطأ في أثناء حذف هذه الفئة"
@@ -5013,6 +5008,7 @@ ar:
       no_description: "يُرجى إضافة وصف لهذه الفئة."
       change_in_category_topic: "عدّل الوصف"
       already_used: "هذا اللون مستخدم بالفعل في فئة أخرى"
+      color_palette: "لوحة الألوان"
       security: "الأمان"
       security_add_group: "إضافة مجموعة"
       permissions:
@@ -5021,15 +5017,14 @@ ar:
         reply: "الرد"
         create: "إنشاء"
         no_groups_selected: "لم يتم منح إذن الوصول لأي مجموعة؛ لذا فإن هذه الفئة ستكون مرئية لفريق العمل فقط."
-        everyone_has_access: 'هذه الفئة عامة، ويمكن للجميع رؤية المنشورات والرد عليها وإنشائها. لتقييد الأذونات، عليك إزالة واحد أو أكثر من الأذونات الممنوحة لمجموعة "الجميع".'
+        everyone_full_access: 'هذه الفئة عامة، ويمكن للجميع رؤية المنشورات والرد عليها وإنشائها. لتقييد الأذونات، عليك إزالة واحد أو أكثر من الأذونات الممنوحة لمجموعة "الجميع".'
         toggle_reply: "إذن تفعيل الرد"
         toggle_full: "إذن تفعيل الإنشاء"
         inherited: 'هذا الإذن مكتسب من "الجميع"'
-      special_warning: "تحذير: هذه الفئة مصنَّفة مسبقًا ولا يمكن تعديل إعدادات الأمان لها. إذا كنت لا ترغب في استخدام هذه الفئة، فعليك حذفها بدلًا من إعادة توظيفها."
       uncategorized_security_warning: "هذه الفئة خاصة. وتهدف إلى جمع الموضوعات التي لا تنتمي إلى أي فئة، ولا يمكنك تعيين إعدادات حماية لها."
       uncategorized_general_warning: 'هذه الفئة خاصة. ويتم استخدامها كفئة افتراضية للموضوعات الجديدة التي لا تنتمي إلى أي فئة. إذا أردت منع هذا السلوك وفرض تحديد الفئة، <a href="%{settingLink}">يُرجى إيقاف هذا الإعداد من هنا</a>. إذا أردت تغيير اسم الفئة أو وصفها، فانتقل إلى <a href="%{customizeLink}">التخصيص/المحتوى النصي</a>.'
       pending_permission_change_alert: "لم تُضف المجموعة %{group} إلى هذه الفئة، انقر على هذا الزر لإضافتها."
-      images: "الصور"
+      images: "المظهر"
       email_in: "العنوان المخصَّص للبريد الوارد:"
       email_in_tooltip: "يمكنك فصل عدة عناوين بريد إلكتروني باستخدام الرمز |."
       email_in_allow_strangers: "قبول الرسائل الإلكترونية من المستخدمين المجهولين الذين لا يملكون حسابات"
@@ -5052,6 +5047,12 @@ ar:
       position: "الترتيب في صفحة الفئات:"
       position_disabled: "سيتم عرض الفئات بترتيب النشاط. للتحكم في ترتيب الفئات في القوائم، قم بتفعيل الإعداد <a href='%{url}'>\"المواضع الثابتة للفئات\"</a>."
       minimum_required_tags: "الحد الأدنى من عدد الوسوم المطلوبة في الموضوع:"
+      none_subcategory_text: "لا يوجد"
+      visibility:
+        title: "الرؤية"
+        public: "عام"
+        all_members: "جميع الأعضاء"
+        group_restricted: "خاص"
       num_auto_bump_daily: "عدد الموضوعات المفتوحة التي سيتم رفعها تلقائيًا بشكلٍ يومي:"
       auto_bump_cooldown_days: "الحد الأدنى لعدد الأيام قبل رفع الموضوع نفسه مرة أخرى:"
       navigate_to_first_post_after_read: "الانتقال إلى أول منشور بعد قراءة الموضوعات"
@@ -6857,7 +6858,9 @@ ar:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">سجلات البحث</a>'
             disabled: 'تقرير عبارات البحث الرائجة متوقف. قم بتفعيل <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">تسجيل استعلامات البحث</a> لجمع البيانات.'
-          average_chart_label: المتوسط
+          sort_button: "الترتيب حسب %{column}"
+          sort_ascending: "تصاعدي"
+          sort_descending: "تنازلي"
           filters:
             file_extension:
               label: امتداد الملف
@@ -7621,8 +7624,6 @@ ar:
         delete: "حذف"
         delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{theme_name}"؟'
         bulk_delete: "هل أنت متأكد؟"
-        bulk_themes_delete_confirm: "سيؤدي هذا إلى إلغاء تثبيت السمات التالية، ولن تكون قابلة للاستخدام من قِبل أي مستخدم على موقعك بعد الآن:"
-        bulk_components_delete_confirm: "سيؤدي هذا إلى إلغاء تثبيت المكوِّنات التالية، ولن تكون قابلة للاستخدام من قِبل أي مستخدم على موقعك بعد الآن:"
         color: "اللون"
         opacity: "الشفافية"
         copy: "تكرار"

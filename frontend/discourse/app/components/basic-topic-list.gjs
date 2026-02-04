@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
 import { alias, not } from "@ember/object/computed";
 import { service } from "@ember/service";

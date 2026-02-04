@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
@@ -364,7 +365,7 @@ export default class PersonaEditor extends Component {
               @value={{field.value}}
               @llms={{@personas.resultSetMeta.llms}}
               @onChange={{field.set}}
-              @class="ai-persona-editor__llms"
+              class="ai-persona-editor__llms"
             />
           </field.Custom>
         </form.Field>
@@ -597,7 +598,7 @@ export default class PersonaEditor extends Component {
                     @value={{field.value}}
                     @llms={{@personas.resultSetMeta.llms}}
                     @onChange={{field.set}}
-                    @class="ai-persona-editor__llms"
+                    class="ai-persona-editor__llms"
                   />
                 </field.Custom>
               </form.Field>

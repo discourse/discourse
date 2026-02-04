@@ -129,8 +129,6 @@ ru:
       web_hooks:
         assign_event:
           group_name: "Назначение событий"
-          assigned: "Когда пользователь назначает тему"
-          unassigned: "Когда пользователь отменяет назначение темы"
     search:
       advanced:
         in:

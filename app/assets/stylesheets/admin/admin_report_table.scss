@@ -2,14 +2,13 @@
   &.two-columns {
     .table .admin-report-table-cell:first-child,
     .table .admin-report-table-header:first-child {
-      @include ellipsis;
       text-align: left;
       width: 80%;
+      overflow-wrap: break-word;
     }
 
     .table .admin-report-table-cell:last-child,
     .table .admin-report-table-header:last-child {
-      display: inline-block;
       width: 80%;
       text-align: right;
     }
@@ -26,35 +25,45 @@
   }
 
   .table .admin-report-table-header {
-    .sort-btn {
-      outline: none;
-      background: none;
-      padding: 3px 8px;
+    --header-caret-offset: calc(var(--space-4) * -1);
+    overflow-wrap: break-word;
 
-      @include ellipsis;
+    &.date {
+      width: 6em;
+    }
+
+    .sort-btn {
+      padding: 0;
+      flex-direction: row-reverse;
+      gap: var(--space-1);
+      position: relative;
+
+      .d-icon {
+        // avoiding the appearance of the icon affecting alignment
+        position: absolute;
+        margin: 0;
+        right: var(--header-caret-offset);
+      }
+    }
+
+    &:last-child {
+      .sort-btn {
+        .d-icon {
+          left: var(--header-caret-offset);
+        }
+      }
     }
 
     &.is-current-sort {
       .d-icon {
         color: var(--tertiary);
       }
-
-      .sort-btn:hover {
-        color: var(--primary-medium);
-        background: var(--primary-low);
-      }
     }
 
     &:not(.is-current-sort) .sort-btn {
-      background: none;
-
-      &:hover {
-        color: var(--primary-medium);
-        background: var(--primary-low);
-
-        .d-icon {
-          color: var(--primary-medium);
-        }
+      .d-icon {
+        // avoiding the appearance of the icon changing column size
+        visibility: hidden;
       }
     }
   }

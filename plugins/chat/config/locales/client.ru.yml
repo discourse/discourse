@@ -88,7 +88,6 @@ ru:
         join_channel: "Подписаться на канал"
         leave_channel: "Покинуть канал"
         leave_groupchat_info: "Покинув этот групповой чат, вы потеряете к нему доступ и не будете получать связанные с ним уведомления. Чтобы снова присоединиться, вам потребуется повторное приглашение от участника группового чата."
-        notification_settings_context: "Уведомления"
         join: "Подписаться"
         leave: "Отписаться"
         save_label:
@@ -813,7 +812,6 @@ ru:
           composer_bold: "%{shortcut} Жирный (только в редакторе)"
           composer_italic: "%{shortcut} Курсив (только в редакторе)"
           composer_code: "%{shortcut} Код (только в редакторе)"
-          drawer_open: "%{shortcut} Открыть панель чата"
           drawer_close: "%{shortcut} Закрыть панель чата"
           mark_all_channels_read: "%{shortcut} Пометить все каналы прочитанными"
     topic_statuses:

@@ -11,7 +11,6 @@ RSpec.describe DiscourseAi::Summarization::ChatSummaryController do
 
     assign_fake_provider_to(:ai_default_llm_model)
     SiteSetting.ai_summarization_enabled = true
-    SiteSetting.ai_custom_summarization_allowed_groups = group.id
 
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = group.id

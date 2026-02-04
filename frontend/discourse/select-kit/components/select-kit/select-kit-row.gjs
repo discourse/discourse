@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
 import { reads } from "@ember/object/computed";

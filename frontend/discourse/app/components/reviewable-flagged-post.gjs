@@ -49,8 +49,8 @@ export default class ReviewableFlaggedPost extends Component {
 
   <template>
     <div class="flagged-post-header">
-      <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="" />
-      <ReviewablePostEdits @reviewable={{@reviewable}} @tagName="" />
+      <ReviewableTopicLink @reviewable={{@reviewable}} />
+      <ReviewablePostEdits @reviewable={{@reviewable}} />
     </div>
 
     <div class="post-contents-wrapper">
@@ -59,7 +59,6 @@ export default class ReviewableFlaggedPost extends Component {
         <ReviewablePostHeader
           @reviewable={{@reviewable}}
           @createdBy={{@reviewable.target_created_by}}
-          @tagName=""
         />
         <div
           class="post-body {{if this.isCollapsed 'is-collapsed'}}"

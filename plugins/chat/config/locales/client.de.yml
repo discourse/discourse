@@ -63,7 +63,6 @@ de:
       starred_channels_empty: "Du hast noch keine Kanäle mit einem Sternchen versehen. Markiere Kanäle mit einem Sternchen, um sie hier für schnellen Zugriff zu sehen."
       browse_all_channels: "Alle Kanäle durchsuchen"
       see_in: "Ansehen in"
-      open_channel_menu: "Kanalmenü öffnen"
       move_to_channel:
         title: "Nachrichten in Kanal verschieben"
         instructions:
@@ -87,8 +86,6 @@ de:
         join_channel: "Kanal beitreten"
         leave_channel: "Kanal verlassen"
         leave_groupchat_info: "Wenn du den Gruppenchat verlässt, hast du keinen Zugriff mehr darauf und erhältst keine Benachrichtigungen mehr. Um wieder teilzunehmen, musst du von einem Mitglied des Gruppenchats erneut eingeladen werden."
-        notification_settings: "Benachrichtigungseinstellungen"
-        notification_settings_context: "Benachrichtigungen"
         join: "Beitreten"
         leave: "Verlassen"
         save_label:
@@ -492,7 +489,6 @@ de:
         follow: "Beitreten"
         followed: "Beigetreten"
         mute: "Kanal stummschalten"
-        unmute: "Stummschaltung des Kanals aufgeben"
         threading_enabled: "Aktiviert"
         threading_disabled: "Deaktiviert"
         muted_on: "An"
@@ -739,7 +735,6 @@ de:
           composer_bold: "%{shortcut} Fett (nur Composer)"
           composer_italic: "%{shortcut} Kursiv (nur Composer)"
           composer_code: "%{shortcut} Code (nur Composer)"
-          drawer_open: "%{shortcut} Chat-Bereich öffnen"
           drawer_close: "%{shortcut} Chat-Bereich schließen"
           mark_all_channels_read: "%{shortcut} Alle Kanäle als gelesen markieren"
     topic_statuses:

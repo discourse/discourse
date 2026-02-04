@@ -1356,9 +1356,6 @@ sq:
         flags_given:
           one: '<span class="%{className}">%{count}</span> flamur i dobishëm'
           other: '<span class="%{className}">%{count}</span> flamuj të dobishëm'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> postim me flamur'
-          other: '<span class="%{className}">%{count}</span> postime me flamur'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> postimi i fshirë'
           other: '<span class="%{className}">%{count}</span> postime të fshira'
@@ -2051,7 +2048,6 @@ sq:
     form_kit:
       reset: Rivendosni
       optional: opsionale
-      errors_summary_title: "Ky formular përmban gabime:"
       dirty_form: "Nuk i keni dorëzuar ndryshimet tuaja! Jeni të sigurt që dëshironi të largoheni?"
       errors:
         required: "E nevojshme"
@@ -3484,6 +3480,8 @@ sq:
       creation_error: Pati një gabim gjatë krijimit të kategorisë
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
       description: "Përshkrimi"
+      icon: "Ikonë"
+      emoji: "Emoji"
       background_color: "Ngjyra"
       color_validations:
         cant_be_empty: "nuk mund të lihet bosh"
@@ -3493,7 +3491,6 @@ sq:
         options:
           icon: "Ikonë"
           emoji: "Emoji"
-      name_placeholder: "Maksimumi një ose dy fjalë"
       color_placeholder: "Çdo ngjyrë web"
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
@@ -3504,13 +3501,15 @@ sq:
         group: "Grupi"
         see: "Shiko"
         reply: "Përgjigju"
-      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
-      images: "Imazhet"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
       review_group_name: "emri i grupit"
       this_year: "këtë vit"
+      none_subcategory_text: "Asnjë"
+      visibility:
+        public: "Publike"
+        group_restricted: "Private"
       notifications:
         watching:
           title: "Në vëzhgim"
@@ -4108,6 +4107,7 @@ sq:
           monthly: Mujore
           weekly: Javore
           groups: "Të gjitha grupet"
+          sort_button: "Rendit sipas %{column}"
           filters:
             group:
               label: Grupi

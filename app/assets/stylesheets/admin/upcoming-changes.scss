@@ -79,7 +79,7 @@
   }
 
   &__description-details {
-    display: inline;
+    display: inline-block;
   }
 
   &__save-groups {
@@ -116,9 +116,9 @@
     padding: var(--space-2) 0;
   }
 
-  &__permanent-notice {
+  &__status-notice {
     font-size: var(--font-down-1);
-    color: var(--primary-medium);
+    color: var(--danger);
     margin-top: var(--space-2);
   }
 }

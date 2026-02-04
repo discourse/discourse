@@ -58,7 +58,7 @@ RSpec.describe "Chat channel", type: :system do
     end
   end
 
-  context "when first batch of messages doesnt fill page" do
+  context "when first batch of messages doesn't fill page" do
     before { Fabricate.times(30, :chat_message, user: current_user, chat_channel: channel_1) }
 
     it "autofills for more messages" do
@@ -201,7 +201,7 @@ RSpec.describe "Chat channel", type: :system do
 
       expect(page).to have_selector(".mention.--wide", text: "@here")
       expect(page).to have_selector(".mention.--wide", text: "@all")
-      expect(page).to have_selector(".mention.--current", text: "@#{current_user.username}")
+      expect(page).to have_selector(".mention", text: "@#{current_user.username}")
       expect(page).to have_selector(".mention", text: "@#{other_user.username}")
       expect(page).to have_selector(".mention", text: "@unexisting")
       expect(page).to have_selector(".mention.--bot", text: "@system")

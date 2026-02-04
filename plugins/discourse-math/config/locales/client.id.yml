@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 id:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "menerapkan"
-      insert_modal:
-        insert: "Masukkan"

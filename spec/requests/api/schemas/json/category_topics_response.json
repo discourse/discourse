@@ -47,7 +47,21 @@
         },
         "top_tags": {
           "type": "array",
-          "items": {}
+          "items": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "integer"
+              },
+              "name": {
+                "type": "string"
+              },
+              "slug": {
+                "type": "string"
+              }
+            },
+            "required": ["id", "name", "slug"]
+          }
         },
         "topics": {
           "type": "array",

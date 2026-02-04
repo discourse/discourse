@@ -16,7 +16,6 @@ sk:
       settings: "Nastavení"
       no_providers: "Musíte povoliť niektorích poskytovateľov v nastavení zásuvných modulov"
       channels_with_errors: "Pri poslednom odosielaní správ zlyhali niektoré kanály pre tohto poskytovateľa. Kliknutím na ikonu(y) chyby sa dozviete viac."
-      channel_exception: "Pri poslednom odoslaní správy na tento kanál došlo k neznámej chybe."
       group_mention_template: "Zmienky o: @%{name}"
       group_message_template: "Správy pre: @%{name}"
       choose_group: "(vyberte skupinu)"
@@ -33,7 +32,6 @@ sk:
         topic: "Téma"
         send: "Odoslať testovaciu správu"
         close: "Zatvoriť"
-        error: "Pri odosielaní správy sa vyskytla neznáma chyba. Ďalšie informácie nájdete v protokoloch stránky."
         success: "Správa úspešne odoslaná"
       type:
         normal: Bežné

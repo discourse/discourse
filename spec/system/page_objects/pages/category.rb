@@ -98,6 +98,16 @@ module PageObjects
         self
       end
 
+      def toggle_advanced_settings
+        PageObjects::Components::DToggleSwitch.new(".d-toggle-switch__checkbox").toggle
+        self
+      end
+
+      def toggle_checkbox(label_text)
+        find("label.checkbox-label", text: label_text).click
+        self
+      end
+
       def select_form_template(template_name)
         find(".select-category-template").click
         find(".select-kit-collection .select-kit-row", text: template_name).click
@@ -137,11 +147,11 @@ module PageObjects
       end
 
       def has_public_access_message?
-        page.has_content?(I18n.t("js.category.permissions.everyone_has_access"))
+        page.has_content?(I18n.t("js.category.permissions.everyone_full_access"))
       end
 
       def has_no_public_access_message?
-        page.has_no_content?(I18n.t("js.category.permissions.everyone_has_access"))
+        page.has_no_content?(I18n.t("js.category.permissions.everyone_full_access"))
       end
 
       def has_setting_tab?(tab_name)

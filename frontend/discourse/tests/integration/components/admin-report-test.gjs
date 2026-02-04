@@ -30,11 +30,11 @@ module("Integration | Component | admin-report", function (hooks) {
       );
 
     assert
-      .dom(".admin-report-table thead tr th:first-child .title")
+      .dom(".admin-report-table thead tr th:first-child .sort-btn")
       .hasText("Day", "has col headers");
 
     assert
-      .dom(".admin-report-table thead tr th:nth-child(2) .title")
+      .dom(".admin-report-table thead tr th:nth-child(2) .sort-btn")
       .hasText("Count", "has col headers");
 
     assert

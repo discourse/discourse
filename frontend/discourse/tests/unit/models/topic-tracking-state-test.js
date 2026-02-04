@@ -635,7 +635,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       0
     );
     assert.strictEqual(
-      trackingState.countNew({ categoryId: 1, tagId: "missing-tag" }),
+      trackingState.countNew({ categoryId: 1, tagId: 999 }),
       0
     );
     assert.strictEqual(trackingState.countNew({ categoryId: 2 }), 1);
@@ -646,7 +646,7 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
       id: 113,
       notification_level: NotificationLevels.TRACKING,
       category_id: 3,
-      tags: ["amazing"],
+      tags: [{ id: 77, name: "amazing", slug: "amazing" }],
       created_in_new_period: true,
     });
 
@@ -656,14 +656,14 @@ module("Unit | Model | topic-tracking-state", function (hooks) {
     assert.strictEqual(
       trackingState.countNew({
         categoryId: 3,
-        tagId: "amazing",
+        tagId: 77,
       }),
       1
     );
     assert.strictEqual(
       trackingState.countNew({
         categoryId: 3,
-        tagId: "missing",
+        tagId: 888,
       }),
       0
     );
@@ -730,8 +730,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
     message_type: "unread",
     payload: {
       category_id: 123,
-      topic_tag_ids: [44],
-      tags: ["pending"],
+      tags: [{ id: 44 }],
       highest_post_number: 10,
       created_at: "2012-11-31 12:00:00 UTC",
       archetype: "regular",
@@ -787,8 +786,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
       {
         topic_id: 111,
         category_id: 123,
-        topic_tag_ids: [44],
-        tags: ["pending"],
+        tags: [{ id: 44 }],
         last_read_post_number: 4,
         highest_post_number: 10,
         notification_level: NotificationLevels.TRACKING,
@@ -856,22 +854,22 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
   test("correct tag and category filters for different lists", function (assert) {
     this.trackingState.trackIncoming("unread");
     assert.strictEqual(this.trackingState.filterCategory, undefined);
-    assert.strictEqual(this.trackingState.filterTag, undefined);
+    assert.strictEqual(this.trackingState.filterTagName, undefined);
     assert.strictEqual(this.trackingState.filter, "unread");
 
     this.trackingState.trackIncoming("tag/test/l/latest");
     assert.strictEqual(this.trackingState.filterCategory, undefined);
-    assert.strictEqual(this.trackingState.filterTag, "test");
+    assert.strictEqual(this.trackingState.filterTagName, "test");
     assert.strictEqual(this.trackingState.filter, "latest");
 
     this.trackingState.trackIncoming("c/cat/sub-cat/6/l/latest");
     assert.strictEqual(this.trackingState.filterCategory.id, 6);
-    assert.strictEqual(this.trackingState.filterTag, undefined);
+    assert.strictEqual(this.trackingState.filterTagName, undefined);
     assert.strictEqual(this.trackingState.filter, "latest");
 
     this.trackingState.trackIncoming("tags/c/cat/sub-cat/6/test/l/latest");
     assert.strictEqual(this.trackingState.filterCategory.id, 6);
-    assert.strictEqual(this.trackingState.filterTag, "test");
+    assert.strictEqual(this.trackingState.filterTagName, "test");
     assert.strictEqual(this.trackingState.filter, "latest");
   });
 
@@ -884,8 +882,7 @@ module("Unit | Model | topic-tracking-state | /unread", function (hooks) {
       this.trackingState.findState(999),
       {
         category_id: 123,
-        topic_tag_ids: [44],
-        tags: ["pending"],
+        tags: [{ id: 44 }],
         last_read_post_number: 9,
         highest_post_number: 10,
         notification_level: NotificationLevels.TRACKING,
@@ -982,8 +979,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
     message_type: "new_topic",
     payload: {
       category_id: 123,
-      topic_tag_ids: [44],
-      tags: ["pending"],
+      tags: [{ id: 44 }],
       last_read_post_number: null,
       highest_post_number: 1,
       created_at: "2012-11-31 12:00:00 UTC",
@@ -1049,8 +1045,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
       this.trackingState.findState(222),
       {
         category_id: 123,
-        topic_tag_ids: [44],
-        tags: ["pending"],
+        tags: [{ id: 44 }],
         last_read_post_number: null,
         highest_post_number: 1,
         created_at: "2012-11-31 12:00:00 UTC",
@@ -1061,7 +1056,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
   });
 
   test("topics in muted tags do not get added to the state", async function (assert) {
-    this.currentUser.set("muted_tags", ["pending"]);
+    this.currentUser.set("muted_tags", [{ id: 44, name: "muted-tag" }]);
 
     await publishToMessageBus("/new", newTopicPayload);
 
@@ -1093,8 +1088,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
       this.trackingState.findState(222),
       {
         category_id: 123,
-        topic_tag_ids: [44],
-        tags: ["pending"],
+        tags: [{ id: 44 }],
         last_read_post_number: null,
         highest_post_number: 1,
         created_at: "2012-11-31 12:00:00 UTC",

@@ -133,11 +133,13 @@ export default class EditCategorySecurity extends buildCategoryPanel(
             </div>
           {{/if}}
 
-          {{#if this.everyoneGrantedFull}}
-            <p class="warning everyone-has-access-warning">{{i18n
-                "category.permissions.everyone_has_access"
-              }}</p>
-          {{/if}}
+          <@form.Alert @type="warning">
+            {{#if this.everyoneGrantedFull}}
+              {{i18n "category.permissions.everyone_full_access"}}
+            {{else}}
+              {{i18n "category.permissions.specific_groups_have_access"}}
+            {{/if}}
+          </@form.Alert>
         </PluginOutlet>
       {{/unless}}
     </section>

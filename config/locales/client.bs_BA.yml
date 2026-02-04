@@ -2520,6 +2520,8 @@ bs_BA:
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       description: "Description"
+      icon: "Icon"
+      emoji: "Emoji"
       background_color: "Color"
       styles:
         icon: "Icon"
@@ -2527,7 +2529,6 @@ bs_BA:
         options:
           icon: "Icon"
           emoji: "Emoji"
-      name_placeholder: "One or two words maximum"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
@@ -2539,8 +2540,7 @@ bs_BA:
         see: "Vidi"
         reply: "Odgovori"
         create: "napravi"
-      special_warning: "Upozorenje: Ova kategorija je pre-seeded kategorija i sigurnosne postavke se ne mogu uređivati. Ako ne želite koristiti ovu kategoriju, izbrišite je umjesto da je prenamijenite."
-      images: "Images"
+      images: "Izgled"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       mailinglist_mirror: "Kategorija odražava mailing listu"
@@ -2555,6 +2555,11 @@ bs_BA:
       this_year: "this year"
       position: "Pozicija na stranici kategorije:"
       minimum_required_tags: "Minimalni broj oznaka potrebnih za temu:"
+      none_subcategory_text: "Ništa"
+      visibility:
+        title: "Vidljivost"
+        public: "Javno"
+        group_restricted: "Privatno"
       num_auto_bump_daily: "Broj otvorenih tema koje se svakodnevno automatski izbijaju:"
       navigate_to_first_post_after_read: "Idite na prvi post nakon što se teme pročitaju"
       notifications:
@@ -3362,6 +3367,8 @@ bs_BA:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Pretraživanje dnevnika</a>'
             disabled: 'Izvješće o pretraživanju trendova je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upite pretraživanja dnevnika</a> za prikupljanje podataka.'
+          sort_ascending: "diže se"
+          sort_descending: "spužđšta se"
           filters:
             file_extension:
               label: Ekstenzija datoteke

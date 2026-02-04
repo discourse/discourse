@@ -81,7 +81,6 @@ it:
         join_channel: "Partecipa al canale"
         leave_channel: "Lascia il canale"
         leave_groupchat_info: "Uscendo da questa chat di gruppo, non avrai più accesso a essa e non riceverai notifiche a essa relative. Per partecipare nuovamente, dovrai ricevere nuovamente un invito da un membro della chat di gruppo."
-        notification_settings_context: "Notifiche"
         join: "Partecipa"
         leave: "Esci"
         save_label:
@@ -717,7 +716,6 @@ it:
           composer_bold: "%{shortcut} Grassetto (solo compositore)"
           composer_italic: "%{shortcut} Corsivo (solo compositore)"
           composer_code: "%{shortcut} Codice (solo compositore)"
-          drawer_open: "%{shortcut} Apri il cassetto della chat"
           drawer_close: "%{shortcut} Chiudi il cassetto della chat"
           mark_all_channels_read: "%{shortcut} Contrassegna tutti i canali come letti"
     topic_statuses:

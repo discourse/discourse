@@ -2,6 +2,7 @@ import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { AUTO_GROUPS, SEARCH_PRIORITIES } from "discourse/lib/constants";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import PermissionType from "discourse/models/permission-type";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
@@ -49,6 +50,8 @@ export default class NewCategory extends DiscourseRoute {
     return this.store.createRecord("category", {
       color: backgroundColor,
       text_color: textColor,
+      style_type: "icon",
+      icon: "square-full",
       group_permissions,
       available_groups: this.site.groups.map((g) => g.name),
       allow_badges: true,
@@ -61,6 +64,12 @@ export default class NewCategory extends DiscourseRoute {
       minimum_required_tags: 0,
       category_localizations: [],
     });
+  }
+
+  setupController(controller) {
+    super.setupController(...arguments);
+
+    controller.selectedTab = "general";
   }
 
   titleToken() {
@@ -76,10 +85,9 @@ export default class NewCategory extends DiscourseRoute {
   defaultGroupPermissions() {
     return [
       {
-        group_name: this.site.groups.find(
-          (g) => g.id === AUTO_GROUPS.everyone.id
-        ).name,
-        permission_type: 1,
+        group_id: AUTO_GROUPS.everyone.id,
+        group_name: AUTO_GROUPS.everyone.name,
+        permission_type: PermissionType.FULL,
       },
     ];
   }
