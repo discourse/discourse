@@ -295,7 +295,7 @@ export default class UpcomingChangeItem extends Component {
                 <span class="upcoming-change__learn-more">
                   {{htmlSafe
                     (i18n
-                      "learn_more_with_link"
+                      "feedback_with_link"
                       url=@change.upcoming_change.learn_more_url
                     )
                   }}
