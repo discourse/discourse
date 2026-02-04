@@ -2,19 +2,12 @@ import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class MoveSolutionConfirmationModal extends Component {
   @tracked dontShowAgain = false;
-
-  get message() {
-    return htmlSafe(
-      i18n("solved.confirm_move_solution", { count: this.args.model.count })
-    );
-  }
 
   get confirmLabel() {
     return this.args.model.count > 1
@@ -47,7 +40,7 @@ export default class MoveSolutionConfirmationModal extends Component {
       class="move-solution-confirmation-modal"
     >
       <:body>
-        <p>{{this.message}}</p>
+        <p>{{i18n "solved.confirm_move_solution" count=@model.count}}</p>
         <label class="move-solution-dont-show-again">
           <input
             type="checkbox"

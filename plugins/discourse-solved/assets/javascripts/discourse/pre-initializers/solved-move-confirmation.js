@@ -25,9 +25,9 @@ export default {
 
           if (modal === MoveToTopic && opts?.model?.selectedPosts) {
             const selectedPosts = opts.model.selectedPosts;
-            const solvedPost = selectedPosts?.find((p) => p.accepted_answer);
+            const hasSolvedPost = selectedPosts?.some((p) => p.accepted_answer);
 
-            if (solvedPost) {
+            if (hasSolvedPost) {
               const hideConfirmation =
                 localStorage.getItem(STORAGE_KEY) === "true";
 
