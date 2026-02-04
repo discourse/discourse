@@ -25,7 +25,7 @@ export default class UserController extends Controller {
   @equal("router.currentRouteName", "user.summary") isSummaryRoute;
   @or("model.can_ignore_user", "model.can_mute_user") canMuteOrIgnoreUser;
   @gt("model.number_of_flags_given", 0) hasGivenFlags;
-  @gt("model.number_of_flagged_posts", 0) hasFlaggedPosts;
+  @gt("model.number_of_flags", 0) hasFlags;
   @gt("model.number_of_deleted_posts", 0) hasDeletedPosts;
   @gt("model.number_of_silencings", 0) hasBeenSilenced;
   @gt("model.number_of_suspensions", 0) hasBeenSuspended;
@@ -35,7 +35,7 @@ export default class UserController extends Controller {
   @or("isTrustLevelZero", "model.trust_level") hasTrustLevel;
   @or(
     "hasGivenFlags",
-    "hasFlaggedPosts",
+    "hasFlags",
     "hasDeletedPosts",
     "hasBeenSilenced",
     "hasBeenSuspended",

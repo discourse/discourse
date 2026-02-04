@@ -174,6 +174,12 @@ module PageObjects
         expect(page).to have_css(".timeline-event", count: count)
       end
 
+      def has_reviewables?(reviewables)
+        reviewable_ids = reviewables.map(&:id)
+        page.has_css?(".review-item", count: reviewables.size) &&
+          reviewable_ids.all? { |id| page.has_css?(".review-item[data-reviewable-id='#{id}']") }
+      end
+
       private
 
       def reviewable_by_id(id)
