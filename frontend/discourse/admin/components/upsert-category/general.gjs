@@ -272,20 +272,6 @@ export default class UpsertCategoryGeneral extends Component {
   @action
   onStyleTypeChange(value) {
     this.args.form.setProperties({ style_type: value });
-
-    const updateData = { style_type: value };
-
-    // Use transientData (current form values) if available, otherwise fall back to category model
-    const currentIcon =
-      this.args.transientData?.icon ?? this.args.category.icon ?? null;
-    const currentEmoji =
-      this.args.transientData?.emoji ?? this.args.category.emoji ?? null;
-
-    if (value === "icon" && currentIcon) {
-      updateData.icon = currentIcon;
-    } else if (value === "emoji" && currentEmoji) {
-      updateData.emoji = currentEmoji;
-    }
   }
 
   @action
