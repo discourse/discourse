@@ -98,6 +98,16 @@ module PageObjects
         self
       end
 
+      def toggle_advanced_settings
+        find(".d-toggle-switch .d-toggle-switch__checkbox-slider").click
+        self
+      end
+
+      def toggle_checkbox(label_text)
+        find("label.checkbox-label", text: label_text).click
+        self
+      end
+
       def select_form_template(template_name)
         find(".select-category-template").click
         find(".select-kit-collection .select-kit-row", text: template_name).click
