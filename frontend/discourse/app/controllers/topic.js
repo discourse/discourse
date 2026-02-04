@@ -801,6 +801,9 @@ export default class TopicController extends Controller {
       post?.get("post_number") !== 1
     ) {
       composerController.set("model.post", post);
+      if (post?.get("post_type") === this.site.post_types.whisper) {
+        composerController.set("model.whisper", true);
+      }
       composerController.set("model.composeState", Composer.OPEN);
       this.appEvents.trigger("composer:insert-block", quotedText.trim());
     } else {
@@ -821,6 +824,7 @@ export default class TopicController extends Controller {
       if (draftData.draft) {
         const data = JSON.parse(draftData.draft);
         opts.draftSequence = draftData.draft_sequence;
+        opts.whisper = data.whisper;
 
         if (quotedText) {
           opts.reply = data.reply + "\n" + quotedText;
