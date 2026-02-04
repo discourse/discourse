@@ -161,15 +161,10 @@ class Service::Runner
     actions[[name, *args].join("_").to_sym] = [
       -> { instance_exec(*args, &action[:condition]) },
       -> do
-        key_path = [*action[:key], action[:name] || args.first || action[:default_name]].join(".")
-        value =
-          if key_path.empty?
-            result
-          else
-            result[key_path]&.public_send(action[:property] || :itself)
-          end
         object.instance_exec(
-          value,
+          result[
+            [*action[:key], action[:name] || args.first || action[:default_name]].join(".")
+          ].public_send(action[:property] || :itself),
           **result.slice(*block.parameters.filter_map { _1.last if _1.first == :keyreq }),
           &block
         )
