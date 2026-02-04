@@ -120,6 +120,18 @@
     border-radius: var(--d-border-radius);
   }
 
+  .bookmark-menu-content .bookmark-menu__title,
+  .bookmark-menu-content .bookmark-menu__row-title {
+    padding-block: 0;
+    padding-inline: var(--d-sidebar-row-horizontal-padding);
+    height: var(--d-sidebar-row-height);
+  }
+
+  .bookmark-menu-content .bookmark-menu__row-title {
+    display: flex;
+    align-items: center;
+  }
+
   .notifications-tracking-btn__icons {
     margin-right: 0;
   }
