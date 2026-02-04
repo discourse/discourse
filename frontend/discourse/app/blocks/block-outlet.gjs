@@ -196,7 +196,6 @@ function createChildBlock(entry, owner, debugContext = {}) {
   let wrappedComponent = wrapBlockLayout(
     {
       name: blockMeta?.blockName,
-      shortName: blockMeta?.shortName,
       namespace: blockMeta?.namespace,
       outletName: debugContext.outletName,
       isContainer,

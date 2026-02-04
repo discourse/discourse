@@ -10,7 +10,9 @@
  * @module discourse/lib/blocks/-internals/components/block-layout-wrapper
  */
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import curryComponent from "ember-curry-component";
+import booleanString from "discourse/helpers/boolean-string";
 import concatClass from "discourse/helpers/concat-class";
 import cssIdentifier from "discourse/helpers/css-identifier";
 
@@ -22,7 +24,6 @@ import cssIdentifier from "discourse/helpers/css-identifier";
  * @typedef {Object} WrappedBlockLayoutArgs
  * @property {string} outletName - The outlet name for class generation.
  * @property {string} name - The block's full registered name.
- * @property {string} shortName - The block's plain name without namespace prefix.
  * @property {string|null} namespace - The block's namespace prefix.
  * @property {boolean} isContainer - Whether this is a container block.
  * @property {CurriedComponent} Component - The curried block component to render.
@@ -41,7 +42,6 @@ import cssIdentifier from "discourse/helpers/css-identifier";
  * @param {Object} blockData - Block rendering data.
  * @param {string} blockData.outletName - The outlet name for class generation.
  * @param {string} blockData.name - The block's full registered name.
- * @param {string} blockData.shortName - The block's plain name without namespace prefix.
  * @param {string} blockData.namespace - The block's namespace prefix.
  * @param {boolean} blockData.isContainer - Whether this is a container block.
  * @param {CurriedComponent} blockData.Component - The curried block component.
@@ -55,48 +55,17 @@ export function wrapBlockLayout(blockData, owner) {
 }
 
 /**
- * Generates the appropriate CSS class based on block type.
+ * Component that wraps all blocks with a standard class structure.
  *
- * @param {string} outletName - The outlet name.
- * @param {string} shortName - The block's plain name without namespace prefix.
- * @param {string} namespace - The block's namespace prefix.
- * @param {boolean} isContainer - Whether this is a container block.
- * @returns {string[]} An array of CSS class names.
- */
-function blockClass(outletName, shortName, namespace, isContainer) {
-  const safeShortName = cssIdentifier(shortName);
-  const safeNamespace = namespace ? cssIdentifier(namespace) : null;
-  const safeOutlet = cssIdentifier(outletName);
-
-  if (isContainer) {
-    // Outlet-prefixed class first, then block type identifier
-    return [`${safeOutlet}__${safeShortName}`, `block-${safeShortName}`];
-  }
-
-  return [
-    `${safeOutlet}__block`,
-    `block-${safeShortName}`,
-    safeNamespace ? `block-${safeShortName}--${safeNamespace}` : null,
-  ].filter(Boolean);
-}
-
-/**
- * Component that wraps all blocks with BEM-style classes.
+ * All blocks (both containers and non-containers) receive:
+ * - `{outletName}__block` - Outlet-scoped class for styling
+ * - Custom classes from `@decoratorClassNames` (from the @block decorator)
+ * - Custom classes from `@classNames` (from the layout entry)
  *
- * Generates BEM-style class names based on block type, using the short name
- * (without namespace prefix) for CSS class generation:
- *
- * For non-container blocks:
- * - `{outletName}__block` - Identifies this as a block within the outlet
- * - `block-{shortName}` - Identifies the specific block type
- * - `block-{shortName}--{namespace}` - Namespace modifier (only if namespace is present)
- *
- * For container blocks:
- * - `{outletName}__{shortName}` - Identifies this as a container within the outlet
- * - `block-{shortName}` - Identifies the container block type
- *
- * Both types can include custom decoratorClassNames from the @block decorator
- * and custom classNames from layout entry configuration.
+ * Block identity is available via data attributes:
+ * - `data-block-name` - The block's full registered name
+ * - `data-block-namespace` - The block's namespace (if present)
+ * - `data-block-container` - "true" for container blocks (omitted for non-containers)
  *
  * @extends {Component<WrappedBlockLayoutSignature>}
  */
@@ -105,10 +74,13 @@ class WrappedBlockLayout extends Component {
   <template>
     <div
       class={{concatClass
-        (blockClass @outletName @shortName @namespace @isContainer)
+        (concat (cssIdentifier @outletName) "__block")
         @decoratorClassNames
         @classNames
       }}
+      data-block-name={{@name}}
+      data-block-namespace={{@namespace}}
+      data-block-container={{booleanString @isContainer omitFalse=true}}
     >
       <@Component />
     </div>

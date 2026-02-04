@@ -52,7 +52,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    assert.dom(".hero-blocks__group").exists();
+    assert.dom('[data-block-container="true"]').exists();
     assert.dom(".block-group-features").exists();
     assert.dom(".custom-group-class").exists();
   });
@@ -190,19 +190,21 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
-    // Container block wrapper should have outlet-prefixed class
+    // Container block wrapper should have data-block-container attribute
     assert
-      .dom(".sidebar-blocks__group")
-      .exists("container has outlet-prefixed class");
-    assert.dom(".block-group").exists("container has block-group class");
+      .dom('[data-block-container="true"]')
+      .exists("container has data-block-container attribute");
+    assert
+      .dom(".block-group-wrapper-test")
+      .exists("container has block-group-{name} class");
 
     // Child block wrapper should have outlet-prefixed class
     assert
       .dom(".sidebar-blocks__block")
       .exists("child has outlet-prefixed __block class");
     assert
-      .dom(".block-wrapper-test-child")
-      .exists("child has block-{name} class");
+      .dom('[data-block-name="wrapper-test-child"]')
+      .exists("child has data-block-name attribute");
   });
 
   test("deeply nested blocks have correct outlet-prefixed wrapper classes", async function (assert) {
@@ -238,16 +240,16 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    // All nested containers should have the same outlet prefix
-    assert.dom(".hero-blocks__group").exists({ count: 3 });
+    // All nested containers should have data-block-container attribute
+    assert.dom('[data-block-container="true"]').exists({ count: 3 });
 
     // The leaf block should also have the outlet prefix
     assert
       .dom(".hero-blocks__block")
       .exists("deeply nested leaf has outlet-prefixed class");
     assert
-      .dom(".block-deep-leaf")
-      .exists("deeply nested leaf has block-{name} class");
+      .dom('[data-block-name="deep-leaf"]')
+      .exists("deeply nested leaf has data-block-name attribute");
   });
 
   test("@outletName is curried and accessible in blocks", async function (assert) {
@@ -314,10 +316,10 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
-    // Verify container has correct outlet-prefixed class even with overlay
+    // Verify container has data-block-container attribute even with overlay
     assert
-      .dom(".sidebar-blocks__group")
-      .exists("container has outlet-prefixed class with overlay enabled");
+      .dom('[data-block-container="true"]')
+      .exists("container has data-block-container with overlay enabled");
 
     // Verify child has correct outlet-prefixed class even with overlay
     assert
@@ -367,10 +369,10 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    // All nested containers should have outlet prefix with overlay enabled
+    // All nested containers should have data-block-container with overlay enabled
     assert
-      .dom(".hero-blocks__group")
-      .exists({ count: 2 }, "nested containers have outlet-prefixed class");
+      .dom('[data-block-container="true"]')
+      .exists({ count: 2 }, "nested containers have data-block-container");
 
     // The deeply nested leaf should have outlet prefix
     assert

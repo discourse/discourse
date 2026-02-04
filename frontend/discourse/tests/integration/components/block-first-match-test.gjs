@@ -6,10 +6,6 @@ import BlockOutlet from "discourse/blocks/block-outlet";
 import BlockFirstMatch from "discourse/blocks/builtin/block-first-match";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import { withPluginApi } from "discourse/lib/plugin-api";
-import {
-  registerBlock,
-  withTestBlockRegistration,
-} from "discourse/tests/helpers/block-testing";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 module("Integration | Blocks | BlockFirstMatch", function (hooks) {
@@ -37,11 +33,6 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(ChildA);
-      registerBlock(ChildB);
-      registerBlock(ChildC);
-    });
     withPluginApi((api) =>
       api.renderBlocks("homepage-blocks", [
         {
@@ -80,11 +71,6 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(ConditionalChild1);
-      registerBlock(ConditionalChild2);
-      registerBlock(ConditionalChild3);
-    });
     withPluginApi((api) =>
       api.renderBlocks("homepage-blocks", [
         {
@@ -121,7 +107,6 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(AllFailChild));
     withPluginApi((api) =>
       api.renderBlocks("homepage-blocks", [
         {
@@ -155,7 +140,6 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(BemTestChild));
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
@@ -168,8 +152,12 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    assert.dom(".hero-blocks__first-match").exists("has outlet-prefixed class");
-    assert.dom(".block-first-match").exists("has block class");
+    assert
+      .dom('[data-block-container="true"]')
+      .exists("has data-block-container attribute");
+    assert
+      .dom('[data-block-name="first-match"]')
+      .exists("has data-block-name attribute");
     assert.dom(".custom-first-match").exists("has custom class");
   });
 
@@ -188,10 +176,6 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(NestedFirstA);
-      registerBlock(NestedFirstB);
-    });
     withPluginApi((api) =>
       api.renderBlocks("homepage-blocks", [
         {
@@ -224,7 +208,6 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(ArgsFirstChild));
     withPluginApi((api) =>
       api.renderBlocks("homepage-blocks", [
         {
@@ -255,7 +238,6 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(OutletNameFirstChild));
     withPluginApi((api) =>
       api.renderBlocks("sidebar-blocks", [
         {

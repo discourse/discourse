@@ -96,7 +96,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       );
 
       assert.dom(".main-outlet-blocks__block").exists();
-      assert.dom(".block-wrapped-block").exists();
+      assert.dom('[data-block-name="wrapped-block"]').exists();
       assert.dom(".custom-class").exists();
     });
 
