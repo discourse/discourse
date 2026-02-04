@@ -8,8 +8,6 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   DEBUG_CALLBACK,
   debugHooks,
-  registerBlock,
-  withTestBlockRegistration,
 } from "discourse/tests/helpers/block-testing";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
@@ -35,10 +33,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(GroupChild1);
-      registerBlock(GroupChild2);
-    });
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
@@ -79,11 +73,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(MultiChildA);
-      registerBlock(MultiChildB);
-      registerBlock(MultiChildC);
-    });
     withPluginApi((api) =>
       api.renderBlocks("homepage-blocks", [
         {
@@ -113,7 +102,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(ArgsChild));
     withPluginApi((api) =>
       api.renderBlocks("sidebar-blocks", [
         {
@@ -143,7 +131,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(NestedLeaf));
     withPluginApi((api) =>
       api.renderBlocks("main-outlet-blocks", [
         {
@@ -177,7 +164,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(WrapperTestChild));
     withPluginApi((api) =>
       api.renderBlocks("sidebar-blocks", [
         {
@@ -215,7 +201,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(DeepLeaf));
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
@@ -262,7 +247,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(OutletNameTest));
     withPluginApi((api) =>
       api.renderBlocks("homepage-blocks", [
         {
@@ -303,7 +287,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       return { Component: blockData.Component };
     });
 
-    withTestBlockRegistration(() => registerBlock(OverlayTestChild));
     withPluginApi((api) =>
       api.renderBlocks("sidebar-blocks", [
         {
@@ -350,7 +333,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       return { Component: blockData.Component };
     });
 
-    withTestBlockRegistration(() => registerBlock(DeepOverlayLeaf));
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
@@ -422,10 +404,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(TabsContainer);
-      registerBlock(TabContent);
-    });
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {

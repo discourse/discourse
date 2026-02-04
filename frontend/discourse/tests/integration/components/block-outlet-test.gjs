@@ -43,7 +43,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(RenderTestBlock));
       withPluginApi((api) =>
         api.renderBlocks("homepage-blocks", [{ block: RenderTestBlock }])
       );
@@ -64,7 +63,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(BemTestBlock));
       withPluginApi((api) =>
         api.renderBlocks("sidebar-blocks", [{ block: BemTestBlock }])
       );
@@ -84,7 +82,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(WrappedBlock));
       withPluginApi((api) =>
         api.renderBlocks("main-outlet-blocks", [
           { block: WrappedBlock, classNames: "custom-class" },
@@ -113,7 +110,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(ArgsTestBlock));
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [
           { block: ArgsTestBlock, args: { title: "Hello", count: 42 } },
@@ -144,7 +140,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(DefaultsTestBlock));
       withPluginApi((api) =>
         api.renderBlocks("main-outlet-blocks", [{ block: DefaultsTestBlock }])
       );
@@ -174,7 +169,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(OverrideDefaultsBlock));
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [
           {
@@ -206,7 +200,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(PartialDefaultsBlock));
       withPluginApi((api) =>
         api.renderBlocks("sidebar-blocks", [
           {
@@ -310,7 +303,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         return { Component: blockData.Component };
       });
 
-      withTestBlockRegistration(() => registerBlock(DebugWrapBlock));
       withPluginApi((api) =>
         api.renderBlocks("homepage-blocks", [{ block: DebugWrapBlock }])
       );
@@ -355,7 +347,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         return { Component: blockData.Component };
       });
 
-      withTestBlockRegistration(() => registerBlock(GhostTestBlock));
       withPluginApi((api) =>
         api.renderBlocks("sidebar-blocks", [
           {
@@ -391,7 +382,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
 
-      withTestBlockRegistration(() => registerBlock(ClearCallbackBlock));
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [{ block: ClearCallbackBlock }])
       );
@@ -423,7 +413,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => registerBlock(DirectChildBlock));
       withPluginApi((api) =>
         api.renderBlocks("homepage-blocks", [{ block: DirectChildBlock }])
       );
@@ -466,7 +455,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => registerBlock(NestedChildBlock));
       withPluginApi((api) =>
         api.renderBlocks("sidebar-blocks", [
           {
@@ -518,7 +506,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => registerBlock(DeepNestedBlock));
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [
           {
@@ -586,7 +573,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => registerBlock(MultiContainerChild));
       withPluginApi((api) =>
         api.renderBlocks("main-outlet-blocks", [
           {
@@ -654,7 +640,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => registerBlock(HierarchyDisplayBlock));
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [
           {
@@ -707,7 +692,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         () => (consoleCalled = true)
       );
 
-      withTestBlockRegistration(() => registerBlock(LoggingTestBlock));
       withPluginApi((api) =>
         api.renderBlocks("main-outlet-blocks", [
           {
@@ -736,7 +720,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, () => false);
 
-      withTestBlockRegistration(() => registerBlock(NoLoggingBlock));
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [
           {
@@ -776,7 +759,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         () => MockOutletInfo
       );
 
-      withTestBlockRegistration(() => registerBlock(BoundaryTestBlock));
       withPluginApi((api) =>
         api.renderBlocks("homepage-blocks", [{ block: BoundaryTestBlock }])
       );
@@ -800,7 +782,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, () => null);
 
-      withTestBlockRegistration(() => registerBlock(NoBoundaryBlock));
       withPluginApi((api) =>
         api.renderBlocks("sidebar-blocks", [{ block: NoBoundaryBlock }])
       );
@@ -827,7 +808,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       );
       debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, null);
 
-      withTestBlockRegistration(() => registerBlock(BoundaryClearBlock));
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [{ block: BoundaryClearBlock }])
       );
@@ -851,10 +831,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
           </div>
         </template>
       }
-
-      withTestBlockRegistration(() => {
-        registerBlock(LeafBlock);
-      });
 
       const buildNestedConfig = (depth, maxDepth) => {
         if (depth >= maxDepth) {
@@ -919,10 +895,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => {
-        registerBlock(DeepLeafBlock);
-      });
-
       const buildDeeplyNestedConfig = (depth) => {
         if (depth <= 0) {
           return [{ block: DeepLeafBlock }];
@@ -960,10 +932,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
           </div>
         </template>
       }
-
-      withTestBlockRegistration(() => {
-        registerBlock(ConditionalLeaf);
-      });
 
       withPluginApi((api) =>
         api.renderBlocks("main-outlet-blocks", [
@@ -1203,8 +1171,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(RequiredBlock));
-
       // Configure with one required block and one optional missing block
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [
@@ -1259,10 +1225,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => {
-        registerBlock(MixRequiredBlock);
-        registerBlock(MixOptionalPresent);
-      });
+      withTestBlockRegistration(() => registerBlock(MixOptionalPresent));
 
       withPluginApi((api) =>
         api.renderBlocks("main-outlet-blocks", [
@@ -1290,8 +1253,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
           <div class="single-required-content">Only Required</div>
         </template>
       }
-
-      withTestBlockRegistration(() => registerBlock(SingleRequired));
 
       withPluginApi((api) =>
         api.renderBlocks("homepage-blocks", [
@@ -1369,8 +1330,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         }
       );
 
-      withTestBlockRegistration(() => registerBlock(GhostTestBlock));
-
       withPluginApi((api) =>
         api.renderBlocks("sidebar-blocks", [
           { block: GhostTestBlock },
@@ -1426,7 +1385,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(OutletArgsTestBlock));
       withPluginApi((api) =>
         api.renderBlocks("homepage-blocks", [
           { block: OutletArgsTestBlock, args: { title: "Hello", count: 42 } },
@@ -1477,7 +1435,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(GroupChildBlock));
       withPluginApi((api) =>
         api.renderBlocks("sidebar-blocks", [
           {
@@ -1521,7 +1478,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(DeepNestedBlock));
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [
           {
@@ -1562,7 +1518,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(ConditionalBlock));
       withPluginApi((api) =>
         api.renderBlocks("main-outlet-blocks", [
           {
@@ -1600,7 +1555,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(FailingConditionBlock));
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [
           {
@@ -1645,7 +1599,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(DebugOutletArgsBlock));
       withPluginApi((api) =>
         api.renderBlocks("sidebar-blocks", [{ block: DebugOutletArgsBlock }])
       );
@@ -1692,10 +1645,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => {
-        registerBlock(ThrowingBlock);
-        registerBlock(SafeBlock);
-      });
       withPluginApi((api) =>
         api.renderBlocks("homepage-blocks", [
           { block: SafeBlock },
@@ -1715,15 +1664,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
     });
 
     test("block with invalid condition type shows warning in dev mode", async function (assert) {
-      @block("invalid-condition-block")
-      class InvalidConditionBlock extends Component {
-        <template>
-          <div class="invalid-condition-content">Content</div>
-        </template>
-      }
-
-      withTestBlockRegistration(() => registerBlock(InvalidConditionBlock));
-
       const blocks = getOwner(this).lookup("service:blocks");
 
       // Using an unknown condition type should return false (fail silently)
@@ -1742,7 +1682,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(NullConditionsBlock));
       withPluginApi((api) =>
         api.renderBlocks("sidebar-blocks", [
           { block: NullConditionsBlock, conditions: null },
@@ -1764,7 +1703,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
-      withTestBlockRegistration(() => registerBlock(UndefinedConditionsBlock));
       withPluginApi((api) =>
         api.renderBlocks("hero-blocks", [
           { block: UndefinedConditionsBlock, conditions: undefined },
@@ -1785,8 +1723,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
           <div class="validation-error-content">Content</div>
         </template>
       }
-
-      withTestBlockRegistration(() => registerBlock(ValidationErrorBlock));
 
       // The validation promise rejects when conditions are invalid.
       // In tests, unhandled promise rejections cause test failures.

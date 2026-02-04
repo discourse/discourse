@@ -7,9 +7,7 @@ import BlockGroup from "discourse/blocks/builtin/block-group";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {
-  registerBlock,
   registerConditionType,
-  withTestBlockRegistration,
   withTestConditionRegistration,
 } from "discourse/tests/helpers/block-testing";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
@@ -49,7 +47,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(NoConditionBlock));
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [{ block: NoConditionBlock }])
     );
@@ -67,7 +64,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(PassingConditionBlock));
     withPluginApi((api) =>
       api.renderBlocks("homepage-blocks", [
         {
@@ -90,7 +86,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(FailingConditionBlock));
     withPluginApi((api) =>
       api.renderBlocks("sidebar-blocks", [
         {
@@ -113,7 +108,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(AndLogicBlock));
     withPluginApi((api) =>
       api.renderBlocks("main-outlet-blocks", [
         {
@@ -138,7 +132,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(AllPassBlock));
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
@@ -161,7 +154,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(OrLogicPassBlock));
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
@@ -186,7 +178,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(OrLogicFailBlock));
     withPluginApi((api) =>
       api.renderBlocks("homepage-blocks", [
         {
@@ -211,7 +202,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(NotTrueBlock));
     withPluginApi((api) =>
       api.renderBlocks("sidebar-blocks", [
         {
@@ -234,7 +224,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(NotFalseBlock));
     withPluginApi((api) =>
       api.renderBlocks("main-outlet-blocks", [
         {
@@ -266,10 +255,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(NestedVisibleBlock);
-      registerBlock(NestedHiddenBlock);
-    });
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
@@ -317,11 +302,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(MixedVisible1);
-      registerBlock(MixedVisible2);
-      registerBlock(MixedHidden);
-    });
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         { block: MixedVisible1, conditions: { type: "always-true" } },
@@ -345,7 +325,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(NotWithinOrBlock));
     withPluginApi((api) =>
       api.renderBlocks("sidebar-blocks", [
         {
@@ -370,7 +349,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(OrWithinAndBlock));
     withPluginApi((api) =>
       api.renderBlocks("main-outlet-blocks", [
         {
@@ -398,7 +376,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(OrWithinAndPassBlock));
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
@@ -424,7 +401,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => registerBlock(DeepNestedBlock));
     withPluginApi((api) =>
       api.renderBlocks("homepage-blocks", [
         {
@@ -462,10 +438,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(ChildHidden1);
-      registerBlock(ChildHidden2);
-    });
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
@@ -509,10 +481,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(ChildVisibleContainer);
-      registerBlock(ChildHiddenContainer);
-    });
     withPluginApi((api) =>
       api.renderBlocks("sidebar-blocks", [
         {
@@ -549,9 +517,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(DeeplyHiddenChild);
-    });
     withPluginApi((api) =>
       api.renderBlocks("main-outlet-blocks", [
         {
@@ -593,9 +558,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(DeeplyVisibleChild);
-    });
     withPluginApi((api) =>
       api.renderBlocks("hero-blocks", [
         {
@@ -635,9 +597,6 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       </template>
     }
 
-    withTestBlockRegistration(() => {
-      registerBlock(ChildWouldBeVisible);
-    });
     withPluginApi((api) =>
       api.renderBlocks("homepage-blocks", [
         {
