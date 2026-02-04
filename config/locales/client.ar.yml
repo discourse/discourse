@@ -2722,7 +2722,6 @@ ar:
     form_kit:
       reset: إعادة التعيين
       optional: اختياري
-      errors_summary_title: "يحتوي هذا النموذج على أخطاء:"
       dirty_form: "لم ترسل التغييرات! هل تريد بالتأكيد المغادرة؟"
       errors:
         starts_with: "يجب أن يبدأ بـ %{prefix}"
@@ -4569,7 +4568,7 @@ ar:
       quote_edit: "تعديل"
       quote_edit_shortcut: "تعديل (أو اضغط على e)"
       quote_copy: "نسخ الاقتباس"
-      quote_copied_to_clibboard: "تم نسخ الاقتباس إلى الحافظة"
+      quote_copied_to_clipboard: "تم نسخ الاقتباس إلى الحافظة"
       quote_share: "مشاركة"
       edit_reason: "السبب: "
       post_number: "المنشور %{number}"
@@ -5058,7 +5057,7 @@ ar:
       minimum_required_tags: "الحد الأدنى من عدد الوسوم المطلوبة في الموضوع:"
       none_subcategory_text: "لا يوجد"
       visibility:
-        title: "الوصول"
+        title: "الرؤية"
         public: "عام"
         all_members: "جميع الأعضاء"
         group_restricted: "خاص"
@@ -7633,8 +7632,6 @@ ar:
         delete: "حذف"
         delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{theme_name}"؟'
         bulk_delete: "هل أنت متأكد؟"
-        bulk_themes_delete_confirm: "سيؤدي هذا إلى إلغاء تثبيت السمات التالية، ولن تكون قابلة للاستخدام من قِبل أي مستخدم على موقعك بعد الآن:"
-        bulk_components_delete_confirm: "سيؤدي هذا إلى إلغاء تثبيت المكوِّنات التالية، ولن تكون قابلة للاستخدام من قِبل أي مستخدم على موقعك بعد الآن:"
         color: "اللون"
         opacity: "الشفافية"
         copy: "تكرار"

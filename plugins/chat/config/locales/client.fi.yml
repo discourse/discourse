@@ -81,7 +81,6 @@ fi:
         join_channel: "Liity kanavalle"
         leave_channel: "Poistu kanavalta"
         leave_groupchat_info: "Kun poistut tästä ryhmäkeskustelusta, sinulla ei ole enää pääsyä siihen etkä saa siihen liittyviä ilmoituksia. Jotta voit liittyä uudelleen, ryhmäkeskustelun jäsenen täytyy kutsua sinut uudelleen."
-        notification_settings_context: "Ilmoitukset"
         join: "Liity"
         leave: "Poistu"
         save_label:

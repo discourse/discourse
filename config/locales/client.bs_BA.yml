@@ -2558,7 +2558,7 @@ bs_BA:
       minimum_required_tags: "Minimalni broj oznaka potrebnih za temu:"
       none_subcategory_text: "Ništa"
       visibility:
-        title: "Pristup"
+        title: "Vidljivost"
         public: "Javno"
         group_restricted: "Privatno"
       num_auto_bump_daily: "Broj otvorenih tema koje se svakodnevno automatski izbijaju:"

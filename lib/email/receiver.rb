@@ -210,6 +210,22 @@ module Email
         return
       end
 
+      if post = find_related_post(force: true)
+        # the email is a reply to *something*
+        if category = post.topic&.category
+          # it's a topic in a category
+          if category.mailinglist_mirror?
+            # replies to categories that are mailing mirrors should work,
+            # even if reply_by_email is not otherwise enabled
+          elsif !SiteSetting.reply_by_email_enabled
+            # an edge case where reply by email is disabled but the user has replied to the category email
+            # without this, the category email would be looked up and found and then the new post associated
+            # with the existing topic, bypassing the reply_by_email_enabled setting
+            raise ReplyNotAllowedError
+          end
+        end
+      end
+
       if post = find_related_post
         # Most of the time, it is impossible to **reply** without a reply key, so exit early
         if user.blank?
@@ -844,7 +860,7 @@ module Email
         return group if group
 
         category = Category.find_by_email(address)
-        return category if category && SiteSetting.reply_by_email_enabled?
+        return category if category
       end
 
       # reply

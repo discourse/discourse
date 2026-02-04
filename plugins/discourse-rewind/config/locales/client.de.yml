@@ -19,7 +19,7 @@ de:
       cannot_view_rewind_gibberish: >
         [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br> Bootstrapping anomaly log...<br><br> &nbsp;&nbsp;>> quantum buffer underrun ⧛<br> &nbsp;&nbsp;>> cross-node parity drift (Δ=004.33)<br> &nbsp;&nbsp;>> packet ϟ fragment at offset ∇47<br> &nbsp;&nbsp;>> flux conduit handshake TIMED OUT<br><br>
       cannot_view_rewind: >
-        Du kannst diesen Discourse-Rückblick-Bericht nicht anzeigen.  Vielleicht hat der Eigentümer ihn nicht öffentlich freigegeben?<br><br> $> _<br><br>
+        Du kannst diesen Discourse-Rückblick-Bericht nicht anzeigen. Vielleicht hat der Eigentümer ihn nicht öffentlich freigegeben?<br><br> $> _<br><br>
       preferences:
         enable_rewind: "Discourse Rückblick aktivieren. Dadurch wird die Jahresübersicht deiner Aktivitäten in deinem Profil und auf deinem Avatar angezeigt."
         share_publicly: "Discourse-Rückblick mit anderen Forenmitgliedern teilen. Jedes Forenmitglied kann deinen Discourse-Rückblick ansehen."
@@ -40,21 +40,14 @@ de:
           title: Aktivitätskalender
           cell_title:
             visited_no_posts: "Du hast am %{date} vorbeigeschaut und mitgelesen, aber keine Beiträge erstellt."
-            visited_no_posts_others: "%{username} hat am %{date} vorbeigeschaut und mitgelesen, aber keine Beiträge erstellt."
             visited_with_posts:
               one: "Du hast am %{date} %{count} Beitrag verfasst."
               other: "Du hast am %{date} %{count} Beiträge verfasst."
-            visited_with_posts_others:
-              one: "%{username} hat am %{date} %{count} Beitrag verfasst."
-              other: "%{username} hat am %{date} %{count} Beiträge verfasst."
             no_activity: "Du warst am %{date} nicht online."
-            no_activity_others: "%{username} war am %{date} nicht online."
         top_words:
           title: Wortnutzung
         reading_time:
           title: Lesezeit
-          book_comparison: "Du hast <code>%{readingTime}</code> auf unserer Webseite mit Lesen verbracht! Das entspricht der Zeit, die man benötigt, um <i>%{bookTitle}</i> zu lesen."
-          book_comparison_others: "%{username} hat <code>%{readingTime}</code> auf unserer Webseite mit Lesen verbracht! Das entspricht der Zeit, die man benötigt, um <i>%{bookTitle}</i> zu lesen."
         post_used_reactions:
           title: Am häufigsten verwendete Reaktionen in Themen
           total_number: "Gesamtzahl der Reaktionen: %{count}"
@@ -62,37 +55,24 @@ de:
           title: Am häufigsten erhaltene Reaktionen in Themen
         fbff:
           title: Dein FBFF (Forum-Bester-Freund für immer)
-          title_others: "Der FBFF (Forum-Bester-Freund für immer) von %{username}"
         most_viewed_categories:
           title:
             one: Deine am häufigsten betrachtete Kategorie
             other: Deine %{count} am häufigsten betrachteten Kategorien
-          title_others:
-            one: "Die von %{username} am häufigsten betrachtete Kategorie"
-            other: "Die %{count} von %{username} am häufigsten betrachteten Kategorien"
         most_viewed_tags:
           title:
             one: Dein am häufigsten betrachtetes Schlagwort
             other: Deine %{count} am häufigsten betrachteten Schlagwörter
-          title_others:
-            one: "Das von %{username} am häufigsten betrachtete Schlagwort"
-            other: "Die %{count} von %{username} am häufigsten betrachteten Schlagwörter"
         best_topics:
           view_topic: Thema ansehen
           title:
             one: Dein bestes Thema
             other: Deine %{count} besten Themen
-          title_others:
-            one: "Das beste Thema von %{username}"
-            other: "Die %{count} besten Themen von %{username}"
         best_posts:
           view_post: Beitrag ansehen
           title:
             one: Dein bester Beitrag
             other: Deine %{count} besten Beiträge
-          title_others:
-            one: "Der beste Beitrag von %{username}"
-            other: "Die %{count} besten Beiträge von %{username}"
         ai_usage:
           title: KI-Nutzung
           total_requests: Gesamtanzahl der Anfragen
@@ -107,7 +87,6 @@ de:
         assignments:
           title: Zuordnungen
           total_assigned: Mir zugeordnet
-          total_assigned_others: "%{username} Zugeordnet"
           completed: Abgeschlossene Zuordnungen
           pending: Ausstehende Zuordnungen
           assigned_by_user: Erhaltene Zuordnungen
@@ -121,22 +100,18 @@ de:
           favorite_channels: Lieblingskanäle
           messages: Nachrichten
           bot_name: XxRückblickBotxX
-          author: Du
-          author_others: "%{username}"
           channel_title: "#chat-Aktivität"
           status_online: "● online"
           reply_1: "lol, super B-)"
           reply_2: "cOo0oL :D"
           reply_3: "r0fl rAwr 8-)"
+          message_4: "Deine durchschnittliche Nachrichtenlänge betrug <strong>%{length}</strong> Zeichen"
           message_5: "Deine Lieblingskanäle:"
           dancing_baby_alt: "Tanzendes Baby"
         favorite_gifs:
           title:
             one: Dein Lieblings-GIF
             other: Deine %{count} Lieblings-GIFs
-          title_others:
-            one: "Das Lieblings-GIF von %{username}"
-            other: "Die %{count} Lieblings-GIFs von %{username}"
           total_usage:
             one: '%{count} mal benutzt'
             other: Insgesamt %{count} mal benutzt
@@ -147,14 +122,12 @@ de:
           redemption_rate: Annahmequote
           avg_trust_level: Ø Vertrauensstufe
           invitee_impact: Auswirkungen deiner Einladungen
-          invitee_impact_others: "Auswirkungen der Einladungen von %{username}"
           invitee_posts: Erstellte Beiträge
           invitee_topics: Erstellte Themen
           invitee_likes: Abgegebene „Gefällt mir“
           most_active_invitee: Aktivster Einladender
           guest_book_title: Gästebuch
           guest_book_subtitle: Deine Community Einladungen
-          guest_book_subtitle_others: "Community-Einladungen von %{username}"
           label_invitations_sent: "Einladungen gesendet:"
           label_guests_joined: "Angenommene Einladungen:"
           label_acceptance_rate: "Annahmequote:"
@@ -168,9 +141,6 @@ de:
           subtitle:
             one: Du hast dieses Jahr einem neuen Benutzer geholfen
             other: Du hast dieses Jahr %{count} neuen Benutzern geholfen
-          subtitle_others:
-            one: "%{username} hat einem neuen Benutzer in diesem Jahr geholfen"
-            other: "%{username} hat %{count} neuen Benutzern in diesem Jahr geholfen"
           new_member:
             one: "%{count} neuen Mitglied geholfen"
             other: "%{count} neuen Mitgliedern geholfen"
@@ -180,12 +150,9 @@ de:
           replies: Antworten auf Beiträge
           mentions: Erwähnungen
           topics_with_new_users: Themen mit neuen Benutzern
-          contributions_helped: Deine Beiträge haben
-          contributions_helped_others: "Die Beiträge von %{username} haben"
         time_of_day_activity:
           title: Täglicher Aktivitätsrhythmus
           play_button: Spiele deine Aktivität als Ton ab
-          play_button_others: "Spiele die Aktivität von %{username} als Ton ab"
           stop_button: Audiowiedergabe stoppen
         writing_analysis:
           title: Textanalyse

@@ -5,66 +5,102 @@
 # https://translate.discourse.org/
 
 el:
+  post:
+    post_voting:
+      errors:
+        post_voting_not_enabled: "Η ψήφιση αναρτήσεων δεν είναι ενεργοποιημένη."
+        replying_to_post_not_permited: "Δεν επιτρέπεται να δημιουργήσετε μια ανάρτηση ως απάντηση σε άλλη ανάρτηση."
+        voting_not_permitted: "Δεν επιτρέπεται να ψηφίσετε σε αυτήν την ανάρτηση."
+        comment_cannot_be_downvoted: "Μπορείτε να υπερψηφίσετε μόνο σχόλια."
+        self_voting_not_permitted: "Δεν επιτρέπεται να ψηφίσετε τη δική σας ανάρτηση ή σχόλιο."
+        vote_archived_topic: "Δεν μπορείτε να ψηφίσετε σε αρχειοθετημένα θέματα."
+        vote_closed_topic: "Δεν μπορείτε να ψηφίσετε σε κλειστά θέματα."
   topic:
     post_voting:
+      errors:
+        post_voting_not_enabled: "Η ψήφιση αναρτήσεων δεν είναι ενεργοποιημένη."
+        subtype_not_allowed: "Ο υποτύπος Ψήφιση Αναρτήσεων μπορεί να χρησιμοποιηθεί μόνο με κανονικά θέματα."
+        cannot_change_to_post_voting_subtype: "Η αλλαγή του υποτύπου ενός θέματος σε Ψήφιση Αναρτήσεων δεν επιτρέπεται."
       answer_count:
         one: "%{count} Απάντηση"
         other: "%{count} Απαντήσεις"
+  site_settings:
+    qa_tags: "Ετικέτες για την ενεργοποίηση της ψήφισης αναρτήσεων στο θέμα"
+    post_voting_enabled: "Ενεργοποίηση πρόσθετου ψήφισης αναρτήσεων"
+    post_voting_enable_likes_on_answers: "Ενεργοποίηση κουμπιού \"Μου αρέσει\" στις απαντήσεις σε θέματα Ψήφισης Αναρτήσεων"
+    post_voting_undo_vote_action_window: "Αριθμός λεπτών που επιτρέπεται στους χρήστες να αναιρέσουν ψήφους σε θέματα Ψήφισης Αναρτήσεων (εισάγετε 0 για χωρίς όριο)"
+    post_voting_comment_limit_per_post: "Αριθμός επιτρεπόμενων σχολίων σε κάθε ανάρτηση"
+    flag_posts_voting_comments_allowed_groups: "Ομάδες που επιτρέπεται να αναφέρουν ένα σχόλιο σε ψήφιση αναρτήσεων"
+    post_voting_comment_enabled: "Ενεργοποίηση σχολίων σε ανάρτηση στα θέματα Ψήφισης Αναρτήσεων"
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "Τι θέλετε να κάνετε με το σχόλιο;"
         no_action_comment:
           title: "Καμία ενέργεια"
+          description: "Αφήστε το σχόλιο ως έχει."
         agree_and_keep_comment:
           title: "Διατήρηση σχολίου"
+          description: "Συμφωνώ με την αναφορά και διατήρηση του σχολίου χωρίς αλλαγή."
         agree_and_keep_deleted:
           title: "Διατήρηση σχολίου ως Διαγραμμένο"
+          description: "Συμφωνώ με την αναφορά και διατήρηση του σχολίου ως διαγραμμένο."
         agree_and_restore:
           title: "Επαναφορά σχολίου"
           description: "Επαναφορά του σχολίου ώστε οι χρήστες να μπορούν να το δουν."
         agree_and_delete:
           title: "Διαγραφή σχολίου"
           description: "Διαγράψτε το σχόλιο ώστε οι χρήστες να μην μπορούν να το δουν."
-        agree_and_suspend:
-          title: "Αναστολή χρήστη"
-        agree_and_silence:
-          title: "Σίγαση χρήστη"
-          description: "Συμφωνία με την αναφορά και σίγηση του χρήστη."
         disagree_and_restore:
           title: "Διαφωνώ και Επαναφορά σχολίου"
-        disagree:
-          title: "Διατήρηση σχολίου"
-        ignore:
-          title: "Αγνόηση επισήμανσης"
+          description: "Επαναφορά του σχολίου ώστε όλοι οι χρήστες να μπορούν να το δουν."
   post_action_types:
     vote:
       title: "Ψήφισε"
   post_voting:
     comment:
+      errors:
+        post_voting_not_enabled: "Δεν επιτρέπεται ο σχολιασμός μιας ανάρτησης που δεν βρίσκεται σε θέμα Ψήφισης Αναρτήσεων."
+        not_permitted: "Δεν επιτρέπεται ο σχολιασμός σε συσχετιζόμενη ανάρτηση."
+        limit_exceeded: "Έχει επιτευχθεί το όριο των %{limit} σχολίων ανά ανάρτηση."
+        perform: "Το σχόλιο σε ψήφιση αναρτήσεων έχει αναφορά με αρκετά υψηλή βαθμολογία για να σιγήσει ο χρήστης."
+        auto_silence_from_flags: "Αυτόματη σίγηση λόγω αναφοράς."
+        disabled: "Δεν επιτρέπεται ο σχολιασμός σε ανάρτηση."
       reviewables:
+        comment_already_handled: "Ευχαριστούμε, αλλά έχουμε ήδη αναθεωρήσει αυτό το σχόλιο και έχουμε διαπιστώσει ότι δεν χρειάζεται να αναφερθεί ξανά."
         actions:
           agree_and_keep_comment:
             title: "Διατήρηση σχολίου"
+            description: "Συμφωνώ με την αναφορά και διατήρηση του σχολίου χωρίς αλλαγή."
           agree_and_keep_deleted:
             title: "Διατήρηση σχολίου ως Διαγραμμένο"
+            description: "Συμφωνώ με την αναφορά και διατήρηση του σχολίου ως διαγραμμένο."
           agree_and_suspend:
             title: "Αποβολή Χρήστη"
+            description: "Συμφωνώ με την αναφορά και αναστολή του χρήστη."
           agree_and_silence:
             title: "Σίγαση Χρήστη"
+            description: "Συμφωνώ με την αναφορά και σίγηση του χρήστη."
           agree_and_restore:
             title: "Επαναφορά σχολίου"
             description: "Επαναφορά του σχολίου ώστε οι χρήστες να μπορούν να το δουν."
           agree_and_delete:
             title: "Διαγραφή σχολίου"
             description: "Διαγράψτε το σχόλιο ώστε οι χρήστες να μην μπορούν να το δουν."
+          delete_and_agree:
+            description: "Αγνοήστε την αναφορά αφαιρώντας την από την ουρά και διαγραφή του σχολίου."
           disagree_and_restore:
             title: "Διαφωνώ και Επαναφορά σχολίου"
-          disagree:
-            title: "Διατήρηση σχολίου"
-          ignore:
-            title: "Αγνόηση επισήμανσης"
+            description: "Επαναφορά του σχολίου ώστε όλοι οι χρήστες να μπορούν να το δουν."
+        transcript:
+          view: "Προβολή μεταγραφής προηγούμενων σχολίων"
       reviewable_score_types:
+        needs_review:
+          title: "Χρειάζεται έλεγχο"
         notify_user:
+          comment_pm_title: "Το σχόλιό σας σε ψήφιση αναρτήσεων"
           comment_pm_body: "%{link}\n\n%{comment}"
         notify_moderators:
+          comment_pm_title: "Ένα σχόλιο σε ψήφιση αναρτήσεων απαιτεί έλεγχο από το προσωπικό"
           comment_pm_body: "%{link}\n\n%{comment}"

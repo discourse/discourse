@@ -61,7 +61,6 @@ hu:
         description: Amikor egy téma címkéit megváltoztatják, az automatizálás aktiválódik
       topic:
         title: Téma
-        description: A társított szkript csak a megadott témában lesz használva, ez például az érvényesítést végző szkripteknél hasznos
       after_post_cook:
         title: Bejegyzés elkészítése után
         description: Amikor egy bejegyzés tartalma elkészül, az automatizálás aktiválódik

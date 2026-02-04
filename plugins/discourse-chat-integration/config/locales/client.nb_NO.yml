@@ -30,7 +30,6 @@ nb_NO:
         topic: "Emne"
         send: "Send testmelding"
         close: "Lukk"
-        error: "En ukjent feil inntraff under forsendelse av meldingen. Sjekk sideloggen for mer informasjon."
         success: "Melding sendt"
       type:
         normal: Normal

@@ -3,15 +3,8 @@ import DiscourseRecommended from "@discourse/lint-configs/eslint";
 export default [
   ...DiscourseRecommended,
   {
-    rules: {
-      "qunit/no-assert-equal": "error",
-      "discourse/moved-packages-import-paths": "error",
-      "discourse/no-route-template": "error",
-      "ember/no-classic-components": "error",
-      "ember/no-side-effects": "error",
-      "ember/require-tagless-components": "error",
-      "qunit/no-loose-assertions": "error",
-    },
+    rules: {},
+    // custom overrides go here
   },
   {
     ignores: [

@@ -3189,7 +3189,7 @@ hy:
       minimum_required_tags: "Թեմայում պահանջվող պիտակների նվազագույն քանակը՝"
       none_subcategory_text: "Ոչ մի"
       visibility:
-        title: "Հասանելիություն"
+        title: "Տեսանելիություն"
         public: "Հանրային"
         group_restricted: "Մասնավոր"
       num_auto_bump_daily: "Օրեկան ավտոմատ բարձրացվող բաց թեմաների քանակը՝"

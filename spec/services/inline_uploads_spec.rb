@@ -727,6 +727,15 @@ RSpec.describe InlineUploads do
 
       expect(url).to eq("https://some-site.com/a_test?q=1&b=hello%20there")
     end
+
+    it "matches URLs with parentheses" do
+      md = "![|444x444](https://example.com/filters:strip_icc()/pic.jpg)"
+
+      url = nil
+      InlineUploads.match_md_inline_img(md, external_src: true) { |_match, src| url = src }
+
+      expect(url).to eq("https://example.com/filters:strip_icc()/pic.jpg")
+    end
   end
 
   describe ".replace_hotlinked_image_urls" do

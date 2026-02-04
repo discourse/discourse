@@ -3149,7 +3149,7 @@ te:
       quote_edit: "సవరించండి"
       quote_edit_shortcut: "సవరించండి (లేదా e నొక్కండి)"
       quote_copy: "కోట్‌ని కాపీ చేయండి"
-      quote_copied_to_clibboard: "కోట్ క్లిప్‌బోర్డ్‌కి కాపీ చేయబడింది"
+      quote_copied_to_clipboard: "కోట్ క్లిప్‌బోర్డ్‌కి కాపీ చేయబడింది"
       quote_share: "షేర్ చేయండి"
       edit_reason: "కారణం:"
       post_number: "పోస్ట్ %{number}"
@@ -3484,7 +3484,7 @@ te:
       minimum_required_tags: "విషయంలో కనీస ట్యాగ్‌ల సంఖ్య అవసరం:"
       none_subcategory_text: "ఏదీ లేదు"
       visibility:
-        title: "యాక్సెస్"
+        title: "దృశ్యమానత"
         public: "బహిరంగం"
         group_restricted: "అంతరంగికం"
       num_auto_bump_daily: "ప్రతిరోజూ స్వయంచాలకంగా బంప్ చేయడానికి ఓపెన్ విషయాల సంఖ్య:"
@@ -5110,8 +5110,6 @@ te:
         delete: "తొలగించండి"
         delete_confirm: 'మీరు "%{theme_name}"ని ఖచ్చితంగా తొలగించాలనుకుంటున్నారా?'
         bulk_delete: "ఖచితమేనా?"
-        bulk_themes_delete_confirm: "ఇది క్రింది థీమ్‌లను అన్‌ఇన్‌స్టాల్ చేస్తుంది, వాటిని మీ సైట్‌లోని ఏ సభ్యులు ఉపయోగించలేరు:"
-        bulk_components_delete_confirm: "ఇది క్రింది భాగాలను అన్‌ఇన్‌స్టాల్ చేస్తుంది, వాటిని మీ సైట్‌లోని ఏ సభ్యులు ఉపయోగించలేరు:"
         color: "రంగు"
         opacity: "అపారదర్శకత"
         copy: "నకిలీ చేయండి"

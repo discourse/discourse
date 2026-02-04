@@ -2070,7 +2070,6 @@ zh_TW:
     form_kit:
       reset: 重置
       optional: 選擇性
-      errors_summary_title: "此表單包含錯誤："
       dirty_form: "您尚未提交您的更改！您確實要離開嗎？"
       errors:
         required: "必要設定"
@@ -3405,7 +3404,7 @@ zh_TW:
       quote_edit: "編輯"
       quote_edit_shortcut: "編輯（或按 e）"
       quote_copy: "複製引用"
-      quote_copied_to_clibboard: "引用已複製到剪貼簿"
+      quote_copied_to_clipboard: "引用已複製到剪貼簿"
       quote_share: "分享"
       edit_reason: "原因: "
       post_number: "貼文 %{number}"
@@ -3745,7 +3744,7 @@ zh_TW:
       minimum_required_tags: "話題標籤的最低要求數量："
       none_subcategory_text: "無"
       visibility:
-        title: "訪問"
+        title: "能見度"
         public: "公開"
         group_restricted: "私密"
       num_auto_bump_daily: "每日自動上浮的主題數："
@@ -5739,8 +5738,6 @@ zh_TW:
         delete: "刪除"
         delete_confirm: '你確定要刪除%{theme_name}嗎？'
         bulk_delete: "你確定嗎？"
-        bulk_themes_delete_confirm: "這將卸載以下佈景主題，您的網站上的任何用戶將無法再使用它們："
-        bulk_components_delete_confirm: "這將卸載以下元件，您網站上的任何使用者將無法再使用它們："
         color: "顏色"
         opacity: "不透明度"
         copy: "複製"

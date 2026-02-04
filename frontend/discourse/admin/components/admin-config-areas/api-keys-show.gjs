@@ -21,7 +21,6 @@ export default class AdminConfigAreasApiKeysShow extends Component {
   @service router;
 
   @tracked editingDescription = false;
-  @tracked scopes = this.args.apiKey.api_key_scopes;
   newDescription = "";
 
   @action

@@ -2531,6 +2531,10 @@ en:
         too_short:
           one: "Must be at least %{count} character"
           other: "Must be at least %{count} characters"
+      color:
+        available_presets: "Available presets"
+        already_used: "Already used"
+        edit_presets: "Edit color presets"
 
     close: "Close"
     assets_changed_confirm: "This site just received a software update. Get the latest version now?"
@@ -3555,6 +3559,7 @@ en:
         deleted_post: "(deleted post)"
         post_number_with_topic_title: "post #%{post_number} - %{title}"
         new_post_in_topic: "new post in %{title}"
+        new_post_in_deleted_topic: "new post in a deleted topic"
         user_requires_approval: "%{username} requires approval"
         default_item: "reviewable item #%{reviewable_id}"
 
@@ -4620,12 +4625,15 @@ en:
         reply: "Reply"
         create: "Create"
         no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
-        everyone_has_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
+        everyone_full_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
+        everyone_reply_access: 'This category is public, everyone can see and reply to topics. To restrict permissions, remove the "everyone" group.'
+        everyone_see_access: 'This category is public, everyone can see posts. To restrict permissions, remove the "everyone" group.'
         specific_groups_have_access: "This category is private, only the selected groups can see, reply and create posts."
+        all_parent_groups_used: "All groups from the parent category have been added. To add more groups, first add them to the parent category."
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
         inherited: 'This permission is inherited from "everyone"'
-      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
+      special_warning: "This is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
       pending_permission_change_alert: "You haven't added %{group} to this category; click this button to add them."
@@ -4669,8 +4677,8 @@ en:
         who_can_see: "Who can see this category"
         who_can_post: "Who can post in this category"
         which_groups_can_access: "Which groups can see and post in this category"
-        more_options_hint: "More permissions available in"
-        more_options_hint_link: "advanced settings."
+        more_options_hint: "More permissions available in <a href>advanced settings</a>."
+        inherited_from_parent: "Permissions are inherited from the parent category. To refine, visit <a href>advanced settings</a>."
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
       auto_bump_cooldown_days: "Minimum days before bumping the same topic again:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"

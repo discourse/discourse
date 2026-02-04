@@ -129,8 +129,6 @@ ar:
       web_hooks:
         assign_event:
           group_name: "أحداث التعيين"
-          assigned: "عندما يقوم المستخدم بتعيين موضوع"
-          unassigned: "عندما يلغي المستخدم تعيين موضوع"
     search:
       advanced:
         in:

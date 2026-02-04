@@ -12,7 +12,6 @@ import OneTable from "./explorer-schema/one-table";
 export default class ExplorerSchema extends Component {
   @tracked filter;
   @tracked loading;
-  @tracked hideSchema = this.args.hideSchema;
 
   get transformedSchema() {
     const schema = this.args.schema;
@@ -131,18 +130,16 @@ export default class ExplorerSchema extends Component {
 
   @action
   collapseSchema() {
-    this.hideSchema = true;
     this.args.updateHideSchema(true);
   }
 
   @action
   expandSchema() {
-    this.hideSchema = false;
     this.args.updateHideSchema(false);
   }
 
   <template>
-    {{#if this.hideSchema}}
+    {{#if @hideSchema}}
       <DButton
         @action={{this.expandSchema}}
         @icon="chevron-left"

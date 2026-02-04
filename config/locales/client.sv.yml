@@ -3168,7 +3168,7 @@ sv:
       quote_edit: "Redigera"
       quote_edit_shortcut: "Redigera (eller tryck på e)"
       quote_copy: "Kopiera citat"
-      quote_copied_to_clibboard: "Citatet har kopierats till urklipp"
+      quote_copied_to_clipboard: "Citatet har kopierats till urklipp"
       quote_share: "Dela"
       edit_reason: "Anledning: "
       post_number: "inlägg %{number}"
@@ -3506,7 +3506,7 @@ sv:
       minimum_required_tags: "Minsta antalet taggar som krävs för ett ämne:"
       none_subcategory_text: "Ingen"
       visibility:
-        title: "Tillgång"
+        title: "Synlighet"
         public: "Offentligt"
         group_restricted: "Privat"
       num_auto_bump_daily: "Antalet öppnade ämnen för att dagligen automatiskt knuffa ett ämne:"
@@ -5142,8 +5142,6 @@ sv:
         delete: "Radera"
         delete_confirm: 'Är du säker på att du vill radera "%{theme_name}"?'
         bulk_delete: "Är du säker?"
-        bulk_themes_delete_confirm: "Detta kommer att avinstallera följande teman, som inte längre kommer att kunna användas av användare på din webbplats:"
-        bulk_components_delete_confirm: "Detta kommer att avinstallera följande komponenter, som inte längre kommer att kunna användas av användare på din webbplats:"
         color: "Färg"
         opacity: "Opacitet"
         copy: "Duplicera"

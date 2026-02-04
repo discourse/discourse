@@ -113,10 +113,6 @@ de:
             persona_id:
               label: "Persona"
               description: "KI Persona zur Berichtserstellung"
-        ai_tool_action:
-          fields:
-            llm_model:
-              label: "LLM-Modell"
         llm_persona_triage:
           fields:
             persona:
@@ -220,7 +216,6 @@ de:
         short_title: "Funktionen"
         description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Personas und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
         back: "Zurück"
-        settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
         disabled: "(deaktiviert)"
         persona:
           one: "Persona:"
@@ -241,11 +236,6 @@ de:
           bot: "Chatbot"
           name: "Bot"
           description: "Ein Chatbot, der Fragen beantworten und Benutzern in persönlichen Nachrichten, im Forum und im Chat helfen kann"
-          setting_groups:
-            settings: "Grundlegende Einstellungen"
-            access_control: "Zugriffskontrolle"
-            ui_settings: "Oberflächen-Einstellungen"
-            integrations: "Integrationen"
         nav:
           configured: "Konfiguriert"
           unconfigured: "Nicht konfiguriert"
@@ -260,37 +250,24 @@ de:
           description: "Stellt eine Schaltfläche für Zusammenfassungen zur Verfügung, mit der Besucher Themen zusammenfassen können"
           topic_summaries: "Themenzusammenfassungen"
           gists: "Kurze Zusammenfassungen der Themenliste"
-          setting_groups:
-            settings: "Grundlegende Einstellungen"
         search:
           name: "Suche"
           description: "Verbessert das Sucherlebnis durch KI-generierte Antworten auf Suchanfragen"
           discoveries: "Entdeckungen"
-          setting_groups:
-            settings: "Grundlegende Einstellungen"
         embeddings:
           name: "Einbettungen"
           description: "Ermöglicht Funktionen wie „Verwandte Themen“ und „KI-Suche“ durch die Erstellung semantischer Textdarstellungen"
           hyde: "HyDE"
-          setting_groups:
-            model_settings: "Modelleinstellungen"
-            related_topics: "Verwandte Themen"
-            semantic_search: "Semantische Suche"
         discord:
           name: "Discord-Integration"
           description: "Fügt die Möglichkeit hinzu, Discord-Kanäle zu durchsuchen"
           search: "Discord-Suche"
-          setting_groups:
-            settings: "Grundlegende Einstellungen"
         inference:
           name: "Abgeleitete Konzepte"
           description: "Ordnet Themen und Beiträge in Interessensgebiete/Labels."
           generate_concepts: "Konzepterkennung"
           match_concepts: "Passende Konzepte"
           deduplicate_concepts: "Deduplizierung von Konzepten"
-          setting_groups:
-            settings: "Grundlegende Einstellungen"
-            personas: "Personas"
         ai_helper:
           name: "Helfer"
           description: "Unterstützt Benutzer bei der Interaktion in der Community, z. B. beim Erstellen von Themen, Verfassen von Beiträgen und Lesen von Inhalten"
@@ -305,9 +282,6 @@ de:
           image_caption: "Bildbeschriftungen"
           translator: "Übersetzer"
           post_illustrator: "Beitragsillustrator"
-          setting_groups:
-            automation: "Automatisierung"
-            personas: "Personas"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -315,9 +289,6 @@ de:
           post_raw_translator: "Übersetzer für die Roheingabe des Beitrags"
           topic_title_translator: "Thementitel-Übersetzer"
           short_text_translator: "Kurztext-Übersetzer"
-          setting_groups:
-            settings: "Grundlegende Einstellungen"
-            personas: "Personas"
         spam:
           name: "Spam"
           description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."
@@ -364,6 +335,8 @@ de:
             title: "Übersetzt diesen Beitrag in alle unterstützten Sprachen"
             confirm: "Dadurch werden alle vorhandenen Übersetzungen in diesem Beitrag aktualisiert. Bist du sicher?"
             success: "Der Beitrag wurde zur Übersetzung gesendet"
+        credit_limit_warning: "Die Übersetzungen sind pausiert, weil das Guthabenlimit erreicht wurde. Sie werden fortgesetzt, wenn das Guthaben um %{reset_time} zurückgesetzt wird."
+        credit_limit_warning_no_time: "Die Übersetzungen sind pausiert, weil das Guthabenlimit erreicht wurde. Sie werden fortgesetzt, wenn das Guthaben zurückgesetzt wird."
       spam:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
@@ -412,6 +385,7 @@ de:
         feature: "Funktion"
         usage_count: "Nutzungsanzahl"
         model: "Modell"
+        credits_remaining: "Verbleibendes Guthaben"
         models_breakdown: "Nutzung pro Modell"
         users_breakdown: "Nutzung pro Benutzer"
         all_features: "Alle Funktionen"
@@ -441,6 +415,7 @@ de:
           last_week: "Letzte Woche"
           last_month: "Letzter Monat"
           custom: "Benutzerdefiniert …"
+        credit_allocations: "Guthabenzuweisungen"
       ai_persona:
         ai_tools: "Tools"
         tool_strategies:
@@ -644,6 +619,11 @@ de:
           max_tokens_required: "Muss gesetzt werden, wenn die maximale Nutzung nicht festgelegt ist"
           max_usages_help: "Die maximale Anzahl von Benutzern in dieser Gruppe, die das KI-Modell innerhalb der angegebenen Dauer nutzen können. Dieses Kontingent wird für jeden einzelnen Nutzer verfolgt und nicht für die ganze Gruppe."
           max_usages_required: "Muss gesetzt werden, wenn die maximale Anzahl an Tokens nicht gesetzt ist"
+        credit_allocation:
+          credits_remaining: "Verbleibendes Guthaben: %{remaining} von %{total} (%{percentage} %)"
+          soft_limit_warning: "Für dieses Modell sind heute noch %{percentage}% des KI-Guthabens übrig."
+          hard_limit_warning: "Du hast keine KI-Guthaben mehr für dieses Modell. Die KI-Funktionen, die dieses Modell nutzen, sind bis %{reset_date} nicht mehr verfügbar."
+          next_reset: "Guthaben wird am %{time} Uhr zurückgesetzt"
         usage:
           ai_bot: "KI-Bot"
           ai_helper: "Helfer (%{persona})"
@@ -787,6 +767,13 @@ de:
           credits: "Beschriftet durch KI"
           save_caption: "Speichern"
         no_content_error: "Füge zuerst Inhalte hinzu, um KI-Aktionen darauf anzuwenden"
+      errors:
+        credit_limit_dialog:
+          title: "KI-Guthabenlimit erreicht"
+          message_user: "Diese Community hat ihr KI-Guthabenlimit für heute erreicht. Bitte versuche es erneut nach %{reset_time} oder kontaktiere deinen Website-Administrator für weitere Informationen."
+          message_without_time_user: "Diese Community hat ihr KI-Guthabenlimit für heute erreicht. Antworten sind wieder möglich, nachdem dein Guthaben zurückgesetzt wurde. Bitte kontaktiere deinen Website-Administrator für weitere Informationen."
+          message_admin: "Du hast das KI-Guthabenlimit deines Plans erreicht. Antworten sind wieder möglich, nachdem dein Guthaben um %{reset_time} zurückgesetzt wurde."
+          message_without_time_admin: "Du hast das KI-Guthabenlimit deines Plans erreicht. Antworten sind wieder möglich, nachdem dein Guthaben zurückgesetzt wurde."
       reviewables:
         model_used: "Verwendetes Modell:"
         accuracy: "Genauigkeit:"
@@ -962,14 +949,6 @@ de:
         topic:
           title: "Zusammenfassung des Themas"
           close: "Zusammenfassungspanel schließen"
-          regenerate: "Kurzzusammenfassung neu generieren"
-          regenerate_bulk: "Kurzzusammenfassungen neu generieren"
-          regenerate_success:
-            one: "Kurzzusammenfassung erfolgreich neu generiert"
-            other: "%{count} Kurzzusammenfassungen erfolgreich neu generiert"
-          regenerate_error:
-            one: "Kurzzusammenfassung konnte nicht neu generiert werden"
-            other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
         topic_list_layout:
           button:
             compact: "Kompakt"
@@ -991,9 +970,3 @@ de:
             disable: "Deaktivieren"
       user_preferences:
         empty: "Zurzeit sind keine relevanten Einstellungen verfügbar"
-    review:
-      types:
-        reviewable_ai_post:
-          title: "KI-gemeldeter Beitrag"
-        reviewable_ai_chat_message:
-          title: "KI-gemeldete Chat-Nachricht"

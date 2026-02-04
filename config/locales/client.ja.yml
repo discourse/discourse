@@ -2138,7 +2138,6 @@ ja:
     form_kit:
       reset: リセット
       optional: オプション
-      errors_summary_title: "このフォームにはエラーがあります:"
       dirty_form: "変更を送信しませんでした！終了してもよろしいですか？"
       errors:
         starts_with: "%{prefix} で始まる必要があります"
@@ -3552,7 +3551,7 @@ ja:
       quote_edit: "編集"
       quote_edit_shortcut: "編集 (または e を押す)"
       quote_copy: "引用をコピー"
-      quote_copied_to_clibboard: "引用をクリップボードにコピーしました"
+      quote_copied_to_clipboard: "引用をクリップボードにコピーしました"
       quote_share: "共有"
       edit_reason: "理由: "
       post_number: "投稿 %{number}"
@@ -3921,7 +3920,7 @@ ja:
       minimum_required_tags: "トピックに必要なタグの最小数:"
       none_subcategory_text: "なし"
       visibility:
-        title: "アクセス"
+        title: "表示状態"
         public: "公開"
         group_restricted: "非公開"
       num_auto_bump_daily: "毎日自動的にバンプするオープントピックの数:"
@@ -6159,8 +6158,6 @@ ja:
         delete: "削除"
         delete_confirm: '"%{theme_name}" を削除してもよろしいですか？'
         bulk_delete: "よろしいですか？"
-        bulk_themes_delete_confirm: "これにより次のテーマがアンインストールされ、サイト上のどのユーザーも使用できなくなります。"
-        bulk_components_delete_confirm: "これにより次のコンポーネントがアンインストールされ、サイト上のどのユーザーも使用できなくなります。"
         color: "色"
         opacity: "透明度"
         copy: "複製"
