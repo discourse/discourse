@@ -5,7 +5,6 @@ import EmberObject, { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { htmlSafe } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
 import AdminReportCounters from "discourse/admin/components/admin-report-counters";
@@ -761,10 +760,6 @@ export default class AdminReport extends Component {
             {{/if}}
           </div>
         </ConditionalLoadingSection>
-      {{else}}
-        <div class="alert alert-info">
-          {{htmlSafe this.disabledLabel}}
-        </div>
       {{/unless}}
     </div>
   </template>
