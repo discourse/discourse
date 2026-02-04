@@ -88,6 +88,19 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".edit-category-security")
       expect(page).to have_css(".edit-category-settings")
     end
+
+    it "automatically switches to private when selecting a restricted parent" do
+      restricted_parent =
+        Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
+
+      category_page.visit_new_category
+
+      parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
+      parent_chooser.expand
+      parent_chooser.select_row_by_value(restricted_parent.id)
+
+      expect(page).to have_css(".group-chooser")
+    end
   end
 
   describe "Security Tab" do

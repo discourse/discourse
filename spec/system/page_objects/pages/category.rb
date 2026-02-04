@@ -99,7 +99,7 @@ module PageObjects
       end
 
       def toggle_advanced_settings
-        find(".d-toggle-switch .d-toggle-switch__checkbox-slider").click
+        PageObjects::Components::DToggleSwitch.new(".d-toggle-switch__checkbox").toggle
         self
       end
 
