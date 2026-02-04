@@ -273,6 +273,16 @@
   .select-kit .select-kit-header:not(.btn),
   .d-date-input .date-picker {
     height: var(--button-height);
+    border: var(--d-button-default-border);
+  }
+
+  .select-kit.is-expanded .select-kit-filter.is-expanded {
+    border: none;
+  }
+
+  .select-kit.is-expanded .select-kit-filter.is-expanded {
+    height: var(--button-height);
+    padding-block: 0;
   }
 
   .list-controls .combo-box .combo-box-header {
