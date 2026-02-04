@@ -1,14 +1,19 @@
+import Component from "@glimmer/component";
 import { concat } from "@ember/helper";
 import bodyClass from "discourse/helpers/body-class";
 
-const AddCategoryTagClasses = <template>
-  {{#if @category}}
-    {{bodyClass "category" (concat "category-" @category.fullSlug)}}
-  {{/if}}
+export default class AddCategoryTagClasses extends Component {
+  get tagNames() {
+    return this.args.tags?.map((tag) => tag.slug ?? tag);
+  }
 
-  {{#each @tags as |tag|}}
-    {{bodyClass (concat "tag-" tag)}}
-  {{/each}}
-</template>;
+  <template>
+    {{#if @category}}
+      {{bodyClass "category" (concat "category-" @category.fullSlug)}}
+    {{/if}}
 
-export default AddCategoryTagClasses;
+    {{#each this.tagNames as |tagName|}}
+      {{bodyClass (concat "tag-" tagName)}}
+    {{/each}}
+  </template>
+}
