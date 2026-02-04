@@ -122,4 +122,67 @@ RSpec.describe TopicsController do
       expect(response.body).not_to include(schema_json(1))
     end
   end
+
+  describe "#move_posts" do
+    fab!(:admin)
+    fab!(:category)
+    fab!(:topic) { Fabricate(:topic, category: category) }
+    fab!(:op) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic) }
+    fab!(:another_reply) { Fabricate(:post, topic: topic) }
+
+    before do
+      SiteSetting.allow_solved_on_all_topics = true
+      sign_in(admin)
+    end
+
+    it "allows moving posts from a topic without a solution" do
+      post "/t/#{topic.id}/move-posts.json",
+           params: {
+             post_ids: [reply.id],
+             title: "This is a new topic for the moved post",
+           }
+
+      expect(response.status).to eq(200)
+    end
+
+    it "unsolves the topic when moving a post that is marked as the solution" do
+      Fabricate(:solved_topic, topic: topic, answer_post: reply)
+
+      post "/t/#{topic.id}/move-posts.json",
+           params: {
+             post_ids: [reply.id],
+             title: "This is a new topic for the moved post",
+           }
+
+      expect(response.status).to eq(200)
+      expect(topic.reload.solved).to be_nil
+    end
+
+    it "unsolves the topic when moving the solution post to an existing topic" do
+      Fabricate(:solved_topic, topic: topic, answer_post: reply)
+      destination_topic = Fabricate(:topic)
+
+      post "/t/#{topic.id}/move-posts.json",
+           params: {
+             post_ids: [reply.id],
+             destination_topic_id: destination_topic.id,
+           }
+
+      expect(response.status).to eq(200)
+      expect(topic.reload.solved).to be_nil
+    end
+
+    it "allows moving non-solution posts from a topic with a solution" do
+      Fabricate(:solved_topic, topic: topic, answer_post: reply)
+
+      post "/t/#{topic.id}/move-posts.json",
+           params: {
+             post_ids: [another_reply.id],
+             title: "This is a new topic for the moved post",
+           }
+
+      expect(response.status).to eq(200)
+    end
+  end
 end
