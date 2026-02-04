@@ -136,13 +136,7 @@ describe Chat::MessageReactor do
     expect(message_1.reactions.where(emoji: ":heart:").count).to eq(1)
   end
 
-  it "doesn’t create a membership when present" do
-    Chat::UserChatChannelMembership.create!(
-      user: reacting_user,
-      chat_channel: channel,
-      following: true,
-    )
-
+  it "doesn't create a membership when present" do
     expect {
       reactor.react!(message_id: message_1.id, react_action: :add, emoji: ":heart:")
     }.not_to change(Chat::UserChatChannelMembership, :count)
