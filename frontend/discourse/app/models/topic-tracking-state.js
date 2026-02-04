@@ -37,10 +37,11 @@ function isUnseen(topic) {
   return !topic.is_seen;
 }
 
-function hasMutedTags(topicTagIds, mutedTagIds, siteSettings) {
-  if (!mutedTagIds || !topicTagIds) {
+function hasMutedTags(topicTagIds, mutedTags, siteSettings) {
+  if (!mutedTags || !topicTagIds) {
     return false;
   }
+  const mutedTagIds = mutedTags.map((t) => t.id);
   return (
     (siteSettings.remove_muted_tags_from_latest === "always" &&
       topicTagIds.some((tagId) => mutedTagIds.includes(tagId))) ||

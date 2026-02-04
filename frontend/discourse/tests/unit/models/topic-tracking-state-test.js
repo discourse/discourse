@@ -1056,7 +1056,7 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
   });
 
   test("topics in muted tags do not get added to the state", async function (assert) {
-    this.currentUser.set("muted_tags", [44]);
+    this.currentUser.set("muted_tags", [{ id: 44, name: "muted-tag" }]);
 
     await publishToMessageBus("/new", newTopicPayload);
 
