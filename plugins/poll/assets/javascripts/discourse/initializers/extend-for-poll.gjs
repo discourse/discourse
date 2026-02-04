@@ -92,6 +92,7 @@ function initializePolls(api) {
     "model:post",
     (Superclass) =>
       class extends Superclass {
+        @tracked polls_votes = new TrackedObject();
         @tracked pollsObject = new TrackedObject();
         @tracked _polls;
 

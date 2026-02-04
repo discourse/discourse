@@ -2781,11 +2781,10 @@ gl:
         reply: "Responder"
         create: "Crear"
         no_groups_selected: "Non se lle concedeu acceso a ningún grupo; esta categoría só será visíbel para o equipo."
-        everyone_has_access: 'Esta categoría é pública, todos poden ver, responder e crear publicacións. Para restrinxir os permisos, retire un ou máis dos permisos concedidos ao grupo «todos».'
+        everyone_full_access: 'Esta categoría é pública, todos poden ver, responder e crear publicacións. Para restrinxir os permisos, retire un ou máis dos permisos concedidos ao grupo «todos».'
         toggle_reply: "Trocar permiso de resposta"
         toggle_full: "Trocar permiso para crear"
         inherited: 'Este permiso hérdase do de «todos»'
-      special_warning: "Aviso: esta categoría ten axustes predeterminados e as opcións de seguranza non se poden modificar. Se non quere usala, elimínea no canto de reciclala."
       uncategorized_security_warning: "Esta categoría é especial. Enténdese como unha área de espera para aqueles temas que non teñen categoría. Non pode ter axustes de seguranza."
       uncategorized_general_warning: 'Esta categoría é especial. Úsase como categoría predeterminada para os novos temas que non teñen unha categoría seleccionada. Se non quere isto e prefire forzar a selección de categorías, <a href="%{settingLink}">desactive aquí o axuste</a>. Se quere cambiar o nome ou a descrición, vai a <a href="%{customizeLink}">Personalizar / Contido de texto</a>.'
       pending_permission_change_alert: "Non engadiu %{group} nesta categoría; prema neste botón para engadilos."
@@ -2808,7 +2807,7 @@ gl:
       minimum_required_tags: "Número mínimo de etiquetas requiridas nun tema:"
       none_subcategory_text: "Ningunha"
       visibility:
-        title: "Acceso"
+        title: "Visibilidade"
         public: "Pública"
         group_restricted: "Privada"
       num_auto_bump_daily: "Número de temas abertos que se promoven automaticamente cada día:"

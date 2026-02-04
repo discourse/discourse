@@ -67,7 +67,6 @@ nl:
         description: Wanneer de tags van een topic worden gewijzigd, wordt de automatisering getriggerd
       topic:
         title: Topic
-        description: Het bijbehorende script wordt alleen gebruikt voor het opgegeven topic, dit is bijvoorbeeld handig voor scripts die validatie uitvoeren
       after_post_cook:
         title: Na finalisering bericht
         description: Wanneer de inhoud van een bericht wordt gefinaliseerd, wordt de automatisering getriggerd

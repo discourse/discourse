@@ -58,7 +58,7 @@
 
     &.is-disabled {
       .select-kit-header {
-        background: var(--primary-low);
+        background: var(--d-input-bg-color--disabled);
         border-color: var(--primary-low-mid);
         color: var(--primary-medium);
 

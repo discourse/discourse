@@ -1047,9 +1047,21 @@ form {
     color: var(--primary-medium);
     margin-right: 0.2em;
 
+    --icon-size: 0.74em;
+
     .d-icon {
-      height: 0.74em;
-      width: 0.74em;
+      height: var(--icon-size);
+      width: var(--icon-size);
+    }
+
+    &:first-child {
+      .d-icon.d-icon-bookmark {
+        --bookmark-icon-size: 0.56em;
+        width: var(--bookmark-icon-size);
+
+        // we compensate for the width we lost on the right
+        padding-right: calc((var(--icon-size) - var(--bookmark-icon-size)) / 2);
+      }
     }
   }
 

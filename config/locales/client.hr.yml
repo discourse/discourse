@@ -1628,10 +1628,6 @@ hr:
           one: '<span class="%{className}">%{count}</span> korisna oznaka'
           few: '<span class="%{className}">%{count}</span> korisnih oznaka'
           other: '<span class="%{className}">%{count}</span> korisne oznake'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> označena objava'
-          few: '<span class="%{className}">%{count}</span> označenih objava'
-          other: '<span class="%{className}">%{count}</span> označene objave'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> izbrisana objava'
           few: '<span class="%{className}">%{count}</span> izbrisanih objava'
@@ -2373,7 +2369,6 @@ hr:
     form_kit:
       reset: Resetirati
       optional: neobvezno
-      errors_summary_title: "Ovaj obrazac sadrži pogreške:"
       dirty_form: "Niste poslali promjene! Jeste li sigurni da želite otići?"
       errors:
         starts_with: "Mora početi sa %{prefix}"
@@ -3965,7 +3960,7 @@ hr:
       quote_edit: "Izmijeni"
       quote_edit_shortcut: "Uredite (ili pritisnite e)"
       quote_copy: "Kopirajte citat"
-      quote_copied_to_clibboard: "Citat kopiran u međuspremnik"
+      quote_copied_to_clipboard: "Citat kopiran u međuspremnik"
       quote_share: "Podijelite"
       edit_reason: "Razlog:"
       post_number: "objava %{number}"
@@ -4342,11 +4337,10 @@ hr:
         reply: "Odgovor"
         create: "Kreiraj"
         no_groups_selected: "Nijedna grupa nije dobila pristup; ova će kategorija biti vidljiva samo osoblju."
-        everyone_has_access: 'Ova je kategorija javna, svi mogu vidjeti, odgovarati i stvarati postove. Da biste ograničili dopuštenja, uklonite jedno ili više dopuštenja dodijeljenih grupi "svi".'
+        everyone_full_access: 'Ova je kategorija javna, svi mogu vidjeti, odgovarati i stvarati postove. Da biste ograničili dopuštenja, uklonite jedno ili više dopuštenja dodijeljenih grupi "svi".'
         toggle_reply: "Uključi / isključi dozvolu za odgovor"
         toggle_full: "Uključi / isključi dozvolu za stvaranje"
         inherited: 'Ovo je dopuštenje naslijeđeno od "svih"'
-      special_warning: "Upozorenje: Ova je kategorija unaprijed postavljena kategorija i sigurnosne postavke ne mogu se uređivati. Ako ne želite koristiti ovu kategoriju, izbrišite je umjesto da je prenamijenite."
       uncategorized_security_warning: "Ova kategorija je posebna. Namijenjen je kao prostor za čuvanje tema koje nemaju kategoriju; ne može imati sigurnosne postavke."
       uncategorized_general_warning: 'Ova kategorija je posebna. Koristi se kao zadana kategorija za nove teme za koje nije odabrana kategorija. Ako želite spriječiti ovo ponašanje i prisiliti odabir kategorije, <a href="%{settingLink}">onemogućite postavku ovdje</a>. Ako želite promijeniti naziv ili opis, idite na <a href="%{customizeLink}">Prilagodi / Tekstualni sadržaj</a>.'
       pending_permission_change_alert: "Niste dodali %{group} ovoj kategoriji; kliknite ovaj gumb da biste ih dodali."
@@ -4374,7 +4368,7 @@ hr:
       minimum_required_tags: "Minimalan broj oznaka potrebnih u temi:"
       none_subcategory_text: "Ništa"
       visibility:
-        title: "Pristup"
+        title: "Vidljivost"
         public: "Javnost"
         group_restricted: "Privatno"
       num_auto_bump_daily: "Broj otvorenih tema koje se automatski mijenjaju dnevno:"

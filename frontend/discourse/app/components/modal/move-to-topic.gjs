@@ -148,14 +148,14 @@ export default class MoveToTopic extends Component {
         title: this.topicName,
         post_ids: this.args.model.selectedPostIds,
         category_id: this.categoryId,
-        tags: this.tags,
+        tag_ids: this.tags?.map((t) => t.id),
       };
     } else {
       mergeOptions = {};
       moveOptions = {
         title: this.topicName,
         post_ids: this.args.model.selectedPostIds,
-        tags: this.tags,
+        tag_ids: this.tags?.map((t) => t.id),
         archetype: "private_message",
       };
     }

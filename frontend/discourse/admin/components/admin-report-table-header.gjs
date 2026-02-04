@@ -11,7 +11,7 @@ export default class AdminReportTableHeader extends Component {
   }
 
   get sortIcon() {
-    return this.args.currentSortDirection === 1 ? "caret-up" : "caret-down";
+    return this.args.currentSortDirection === 1 ? "angle-up" : "angle-down";
   }
 
   get sortButtonTitle() {
@@ -47,10 +47,14 @@ export default class AdminReportTableHeader extends Component {
         <DButton
           @action={{@sortByLabel}}
           @icon={{this.sortIcon}}
-          @translatedLabel={{@label.title}}
+          @translatedLabel={{unless @label.htmlTitle @label.title}}
           @translatedTitle={{this.sortButtonTitle}}
           class="btn-primary btn-transparent sort-btn"
-        />
+        >
+          {{#if @label.htmlTitle}}
+            <span class="d-button-label">{{htmlSafe @label.htmlTitle}}</span>
+          {{/if}}
+        </DButton>
       {{else if @label.htmlTitle}}
         <span class="title">{{htmlSafe @label.htmlTitle}}</span>
       {{else}}

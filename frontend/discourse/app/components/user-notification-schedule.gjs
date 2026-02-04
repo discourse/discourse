@@ -1,6 +1,7 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import EmberObject, { action } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import PreferenceCheckbox from "discourse/components/preference-checkbox";
 import UserNotificationScheduleDay from "discourse/components/user-notification-schedule-day";
 import discourseComputed from "discourse/lib/decorators";
@@ -78,6 +79,7 @@ class Day extends EmberObject {
   }
 }
 
+@tagName("")
 export default class UserNotificationSchedule extends Component {
   days = null;
 
@@ -142,6 +144,7 @@ export default class UserNotificationSchedule extends Component {
     <div
       class="control-group notification-schedule"
       data-setting-name="user-notification-schedule"
+      ...attributes
     >
       <label class="control-label">{{i18n
           "user.notification_schedule.title"

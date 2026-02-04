@@ -1,14 +1,13 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { classNames, tagName } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import icon from "discourse/helpers/d-icon";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { afterRender } from "discourse/lib/decorators";
 import { REPLACEMENTS } from "discourse/lib/icon-library";
 import discourseLater from "discourse/lib/later";
 
-@tagName("section")
-@classNames("styleguide-icons")
+@tagName("")
 export default class StyleguideIcons extends Component {
   iconIds = [];
 
@@ -31,11 +30,13 @@ export default class StyleguideIcons extends Component {
   }
 
   <template>
-    {{#each this.iconIds as |id|}}
-      <div class="styleguide-icon">
-        {{icon id}}
-        <span>{{id}}</span>
-      </div>
-    {{/each}}
+    <section class="styleguide-icons" ...attributes>
+      {{#each this.iconIds as |id|}}
+        <div class="styleguide-icon">
+          {{icon id}}
+          <span>{{id}}</span>
+        </div>
+      {{/each}}
+    </section>
   </template>
 }

@@ -55,4 +55,21 @@ module("Unit | Reviewable Items | queued-post", function (hooks) {
       "contains the payload title escaped and correctly unescapes emojis"
     );
   });
+
+  test("description falls back for deleted topic", function (assert) {
+    const reviewable = getReviewable({
+      topic_fancy_title: null,
+    });
+    delete reviewable.payload_title;
+    const director = createRenderDirector(
+      reviewable,
+      "ReviewableQueuedPost",
+      this.siteSettings
+    );
+    assert.deepEqual(
+      director.description,
+      i18n("user_menu.reviewable.new_post_in_deleted_topic"),
+      "shows deleted topic fallback when no title is available"
+    );
+  });
 });

@@ -135,8 +135,6 @@ it:
         disagree_and_restore:
           title: "Rifiuta e ripristina il messaggio"
           description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
-        ignore:
-          title: "Ignore flag"
       direct_messages:
         transcript_title: "Trascrizione dei messaggi precedenti in %{channel_name}"
         transcript_body: "Per darti più contesto, abbiamo incluso una trascrizione dei messaggi precedenti in questa conversazione (fino a dieci):\n\n%{transcript}"

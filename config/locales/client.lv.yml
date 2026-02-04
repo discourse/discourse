@@ -2353,7 +2353,6 @@ lv:
         see: "Skatīt"
         reply: "Atbildēt"
         create: "Izveidot"
-      special_warning: "Brīdinājums: šī sadaļa ir automātiski izveidota un tās drošības uzstādījumi nav maināmi. Ja jūs nevēlaties šo sadaļu izmantot, izdzēsiet to, nevis pielietojiet citiem mērķiem."
       email_in: "Īpašas ienākošā e-pasta adreses:"
       email_in_allow_strangers: "Pieņemt e-pastus no anonīmiem lietotājiem bez profiliem"
       show_subcategory_list: "Rādīt apakšsadaļu sarakstu virs tēmām šai sadaļā."
@@ -2364,7 +2363,6 @@ lv:
       this_year: "šogad"
       none_subcategory_text: "Nav"
       visibility:
-        title: "Piekļuve"
         public: "Publisks"
         group_restricted: "Privāts"
       notifications:

@@ -2,11 +2,11 @@
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 
-@classNames("item")
+@tagName("")
 export default class GroupMember extends Component {
   @action
   remove(event) {
@@ -15,14 +15,16 @@ export default class GroupMember extends Component {
   }
 
   <template>
-    <a href={{this.member.adminPath}}>
-      {{avatar this.member imageSize="small"}}
-    </a>
-    <span>{{this.member.username}}</span>
-    {{#unless this.automatic}}
-      <a href {{on "click" this.remove}} class="remove">
-        {{icon "xmark"}}
+    <div class="item" ...attributes>
+      <a href={{this.member.adminPath}}>
+        {{avatar this.member imageSize="small"}}
       </a>
-    {{/unless}}
+      <span>{{this.member.username}}</span>
+      {{#unless this.automatic}}
+        <a href {{on "click" this.remove}} class="remove">
+          {{icon "xmark"}}
+        </a>
+      {{/unless}}
+    </div>
   </template>
 }

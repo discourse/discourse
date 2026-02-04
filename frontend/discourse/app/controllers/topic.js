@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
@@ -670,30 +671,28 @@ export default class TopicController extends Controller {
   }
 
   @action
-  cancelFilter(nearestPost = null) {
-    const postStream = this.get("model.postStream");
+  async cancelFilter(nearestPost = null) {
+    const postStream = this.model.postStream;
 
     if (!nearestPost) {
       const loadedPost = postStream.findLoadedPost(this.currentPostId);
       if (loadedPost) {
         nearestPost = loadedPost.post_number;
       } else {
-        postStream.findPostsByIds([this.currentPostId]).then((arr) => {
-          nearestPost = arr[0].post_number;
-        });
+        try {
+          const [post] = await postStream.findPostsByIds([this.currentPostId]);
+          nearestPost = post.post_number;
+        } catch (error) {
+          popupAjaxError(error);
+          return;
+        }
       }
     }
 
     postStream.cancelFilter();
-    postStream
-      .refresh({
-        nearPost: nearestPost,
-        forceLoad: true,
-      })
-      .then(() => {
-        DiscourseURL.routeTo(this.model.urlForPostNumber(nearestPost));
-        this.updateQueryParams();
-      });
+    await postStream.refresh({ nearPost: nearestPost, forceLoad: true });
+    DiscourseURL.routeTo(this.model.urlForPostNumber(nearestPost));
+    this.updateQueryParams();
   }
 
   @action
@@ -800,6 +799,9 @@ export default class TopicController extends Controller {
       post?.get("post_number") !== 1
     ) {
       composerController.set("model.post", post);
+      if (post?.get("post_type") === this.site.post_types.whisper) {
+        composerController.set("model.whisper", true);
+      }
       composerController.set("model.composeState", Composer.OPEN);
       this.appEvents.trigger("composer:insert-block", quotedText.trim());
     } else {
@@ -820,6 +822,7 @@ export default class TopicController extends Controller {
       if (draftData.draft) {
         const data = JSON.parse(draftData.draft);
         opts.draftSequence = draftData.draft_sequence;
+        opts.whisper = data.whisper;
 
         if (quotedText) {
           opts.reply = data.reply + "\n" + quotedText;
@@ -1534,7 +1537,7 @@ export default class TopicController extends Controller {
     }
   }
 
-  _jumpToPostId(postId) {
+  async _jumpToPostId(postId) {
     if (!postId) {
       // eslint-disable-next-line no-console
       console.warn(
@@ -1545,25 +1548,21 @@ export default class TopicController extends Controller {
 
     this.appEvents.trigger("topic:jump-to-post", postId);
 
-    const topic = this.model;
-    const postStream = topic.get("postStream");
-    const post = postStream.findLoadedPost(postId);
+    const postStream = this.model.postStream;
+    let post = postStream.findLoadedPost(postId);
 
-    if (post) {
-      DiscourseURL.routeTo(topic.urlForPostNumber(post.get("post_number")), {
-        keepFilter: true,
-      });
-    } else {
-      // need to load it
-      postStream.findPostsByIds([postId]).then((arr) => {
-        DiscourseURL.routeTo(
-          topic.urlForPostNumber(arr[0].get("post_number")),
-          {
-            keepFilter: true,
-          }
-        );
-      });
+    if (!post) {
+      try {
+        [post] = await postStream.findPostsByIds([postId]);
+      } catch (error) {
+        popupAjaxError(error);
+        return;
+      }
     }
+
+    DiscourseURL.routeTo(this.model.urlForPostNumber(post.post_number), {
+      keepFilter: true,
+    });
   }
 
   _modifyTopicBookmark(bookmark) {

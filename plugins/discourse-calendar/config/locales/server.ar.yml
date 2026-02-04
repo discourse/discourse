@@ -75,7 +75,7 @@ ar:
       ongoing_event_reminder: "%{title} جارٍ."
     errors:
       bulk_invite:
-        max_invitees: "تم إنشاء أول %{max_invittes} من المدعوين. جرِّب تقسيم الملف إلى أجزاء أصغر."
+        max_invitees: "تم إنشاء أول %{max_invitees} من المدعوين. جرِّب تقسيم الملف إلى أجزاء أصغر."
         error: "حدث خطأ في تحميل هذا الملف. يُرجى إعادة المحاولة لاحقًا."
       models:
         event:

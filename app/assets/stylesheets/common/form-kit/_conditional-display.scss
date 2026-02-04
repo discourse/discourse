@@ -1,12 +1,9 @@
+@use "lib/viewport";
+
 .form-kit__conditional-display {
   display: flex;
   flex-direction: column;
   gap: var(--space-3);
-
-  input[disabled] + span {
-    color: var(--primary-medium);
-    cursor: not-allowed;
-  }
 
   &-content {
     display: flex;
@@ -18,8 +15,12 @@
 .--radio-cards {
   width: var(--form-kit-large-input);
 
+  @include viewport.until(sm) {
+    width: 100%;
+  }
+
   .form-kit__conditional-display,
-  .form-kit__container-content {
+  .form-kit__container-content.--large {
     width: 100%;
   }
 
@@ -27,9 +28,9 @@
     gap: var(--space-2);
     width: 100%;
 
-    label:hover {
+    .form-kit__control-radio-label:not(.--disabled):hover {
       cursor: pointer;
-      border: 1px solid var(--tertiary);
+      border-color: var(--tertiary);
     }
 
     > * {
@@ -43,11 +44,17 @@
 
   .form-kit__control-radio-label {
     flex: 1 1 50%;
-    padding: var(--space-2);
+    padding: 0.5em var(--space-2);
     border: 1px solid var(--primary-low-mid);
     border-radius: var(--d-input-border-radius);
     justify-content: center;
     position: relative;
+    line-height: normal;
+
+    &.--disabled {
+      color: var(--primary-medium);
+      cursor: not-allowed;
+    }
 
     .d-icon {
       display: none;
@@ -61,7 +68,7 @@
     }
 
     &:has(input[disabled]) {
-      background: var(--primary-very-low);
+      background: var(--d-input-bg-color--disabled);
 
       .d-icon {
         color: currentcolor;

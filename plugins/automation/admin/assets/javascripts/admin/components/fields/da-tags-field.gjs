@@ -11,6 +11,8 @@ export default class TagsField extends BaseField {
   onChangeTags(tags) {
     if (isBlank(tags)) {
       tags = undefined;
+    } else {
+      tags = tags.map((t) => (typeof t === "string" ? t : t.name));
     }
 
     this.mutValue(tags);

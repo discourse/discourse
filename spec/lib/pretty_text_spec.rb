@@ -1905,11 +1905,17 @@ RSpec.describe PrettyText do
     ) do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })
     end
+  end
 
-    # ensure it does not fight with the autolinker
+  it "does not fight with the autolinker" do
     expect(PrettyText.cook(" http://somewhere.com/#known")).not_to include("hashtag")
     expect(PrettyText.cook(" http://somewhere.com/?#known")).not_to include("hashtag")
     expect(PrettyText.cook(" http://somewhere.com/?abc#known")).not_to include("hashtag")
+  end
+
+  it "does not trigger when preceded with a slash" do
+    expect(PrettyText.cook("/#known")).not_to include("hashtag")
+    expect(PrettyText.cook("test/#known")).not_to include("hashtag")
   end
 
   it "can handle mixed lists" do

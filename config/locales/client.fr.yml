@@ -1550,9 +1550,6 @@ fr:
         flags_given:
           one: '<span class="%{className}">%{count}</span> signalement utile'
           other: '<span class="%{className}">%{count}</span> signalements utiles'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> message signalé'
-          other: '<span class="%{className}">%{count}</span> messages signalés'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> message supprimé'
           other: '<span class="%{className}">%{count}</span> messages supprimés'
@@ -2267,7 +2264,6 @@ fr:
     form_kit:
       reset: Réinitialiser
       optional: facultatif
-      errors_summary_title: "Ce formulaire contient des erreurs :"
       dirty_form: "Vous n'avez pas soumis vos modifications ! Voulez-vous vraiment partir ?"
       errors:
         starts_with: "Doit commencer par %{prefix}"
@@ -3775,7 +3771,7 @@ fr:
       quote_edit: "Modifier"
       quote_edit_shortcut: "Modifier (ou appuyer sur e)"
       quote_copy: "Copier la citation"
-      quote_copied_to_clibboard: "Citation copiée dans le presse-papiers"
+      quote_copied_to_clipboard: "Citation copiée dans le presse-papiers"
       quote_share: "Partager"
       edit_reason: "Raison : "
       post_number: "message %{number}"
@@ -4135,11 +4131,10 @@ fr:
         reply: "Répondre"
         create: "Créer"
         no_groups_selected: "Aucun groupe n'a été autorisé à accéder ; cette catégorie ne sera visible que par les responsables."
-        everyone_has_access: 'Cette catégorie est publique, tout le monde peut voir, répondre et créer des messages. Pour restreindre les autorisations, supprimez une ou plusieurs des autorisations accordées au groupe « tout le monde ».'
+        everyone_full_access: 'Cette catégorie est publique, tout le monde peut voir, répondre et créer des messages. Pour restreindre les autorisations, supprimez une ou plusieurs des autorisations accordées au groupe « tout le monde ».'
         toggle_reply: "Modifier la permission de répondre"
         toggle_full: "Modifier la permission de créer"
         inherited: 'Cette autorisation est héritée de « tout le monde »'
-      special_warning: "Avertissement : cette catégorie est une catégorie préremplie et les réglages de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas utiliser cette catégorie, supprimez-la au lieu de détourner sa fonction."
       uncategorized_security_warning: "Cette catégorie est spéciale. Elle sert à rassembler les sujets qui n'ont pas de catégorie ; vous ne pouvez pas modifier ses paramètres de sécurité."
       uncategorized_general_warning: 'Cette catégorie est spéciale. Elle sert de catégorie par défaut pour les nouveaux sujets qui ne sont pas liés à une catégorie. Si vous souhaitez modifier ce comportement et forcer la sélection de catégorie, <a href="%{settingLink}">veuillez désactiver ce paramètre</a>. Si vous voulez modifier son nom ou sa description, allez dans <a href="%{customizeLink}">Personnaliser/contenu</a>.'
       pending_permission_change_alert: "Vous n'avez pas ajouté %{group} à cette catégorie ; cliquez sur ce bouton pour l'ajouter."
@@ -4167,7 +4162,7 @@ fr:
       minimum_required_tags: "Nombre minimal d'étiquettes requises dans un sujet :"
       none_subcategory_text: "Jamais"
       visibility:
-        title: "Accès"
+        title: "Visibilité"
         public: "Public"
         group_restricted: "Privé"
       num_auto_bump_daily: "Nombre de sujets ouverts à remonter dans la liste automatiquement et quotidiennement :"
@@ -6457,8 +6452,6 @@ fr:
         delete: "Supprimer"
         delete_confirm: 'Voulez-vous vraiment supprimer « %{theme_name} » ?'
         bulk_delete: "Voulez-vous continuer ?"
-        bulk_themes_delete_confirm: "Cela désinstallera les thèmes suivants, ils ne pourront plus être utilisés par aucun utilisateur de votre site :"
-        bulk_components_delete_confirm: "Cela désinstallera les composants suivants, ils ne pourront plus être utilisés par aucun utilisateur de votre site :"
         color: "Couleur"
         opacity: "Opacité"
         copy: "Dupliquer"

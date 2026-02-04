@@ -38,6 +38,11 @@ module(
         '<p><a href="/404" class="attachment" data-orig-href="upload://some-hash">File</a></p>',
         "[File|attachment](upload://some-hash)",
       ],
+      "link with anchor": [
+        "[Docs](https://example.com/docs/#section)",
+        '<p><a href="https://example.com/docs/#section">Docs</a></p>',
+        "[Docs](https://example.com/docs/#section)",
+      ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
         this.siteSettings.rich_editor = true;

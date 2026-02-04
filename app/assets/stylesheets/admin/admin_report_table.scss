@@ -9,7 +9,6 @@
 
     .table .admin-report-table-cell:last-child,
     .table .admin-report-table-header:last-child {
-      display: inline-block;
       width: 80%;
       text-align: right;
     }
@@ -26,12 +25,33 @@
   }
 
   .table .admin-report-table-header {
+    --header-caret-offset: calc(var(--space-4) * -1);
+    overflow-wrap: break-word;
+
+    &.date {
+      width: 6em;
+    }
+
     .sort-btn {
       padding: 0;
       flex-direction: row-reverse;
       gap: var(--space-1);
+      position: relative;
 
-      @include ellipsis;
+      .d-icon {
+        // avoiding the appearance of the icon affecting alignment
+        position: absolute;
+        margin: 0;
+        right: var(--header-caret-offset);
+      }
+    }
+
+    &:last-child {
+      .sort-btn {
+        .d-icon {
+          left: var(--header-caret-offset);
+        }
+      }
     }
 
     &.is-current-sort {
@@ -42,6 +62,7 @@
 
     &:not(.is-current-sort) .sort-btn {
       .d-icon {
+        // avoiding the appearance of the icon changing column size
         visibility: hidden;
       }
     }
@@ -192,15 +213,6 @@
       writing-mode: vertical-rl;
       text-orientation: mixed;
       text-align: right;
-      transform: rotate(180deg);
-
-      .emoji {
-        transform: rotate(-180deg);
-      }
-    }
-
-    .sort-btn {
-      display: none;
     }
   }
 

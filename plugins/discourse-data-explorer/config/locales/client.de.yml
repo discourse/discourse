@@ -79,7 +79,7 @@ de:
           no_such_category: "Keine solche Kategorie"
           no_such_group: "Keine solche Gruppe"
           invalid_date: "%{date} ist ein ungültiges Datum"
-          invalid_time: "%{time} ist eine ungültige Zeit"
+          invalid_time: "%{time} ist eine ungültige Zeitangabe"
     group:
       reports: "Berichte"
     admin:

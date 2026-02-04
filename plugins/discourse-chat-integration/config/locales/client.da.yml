@@ -16,7 +16,6 @@ da:
       settings: "Indstillinger"
       no_providers: "Du skal aktivere nogle udbydere i udvidelses-indstillingerne"
       channels_with_errors: "Nogle kanaler for denne udbyder gav fejl sidste gang beskeder blev sendt. Klik på fejlikonet/fejlikonerne for at få mere at vide."
-      channel_exception: "Der opstod en ukendt fejl, da en meddelelse sidst blev sendt til denne kanal."
       group_message_template: "Meddelelser til: @%{name}"
       choose_group: "(vælg en gruppe)"
       all_categories: "(alle kategorier)"

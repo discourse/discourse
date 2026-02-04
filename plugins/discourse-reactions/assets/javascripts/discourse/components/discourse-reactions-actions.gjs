@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";

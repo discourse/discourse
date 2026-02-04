@@ -39,7 +39,6 @@ sl:
       channel_settings:
         edit: "Uredi"
         add: "Dodaj"
-        notification_settings_context: "Obvestila"
         join: "Pridruži se"
         leave: "Zapusti"
       close: "Zapri"

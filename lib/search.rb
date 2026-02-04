@@ -27,14 +27,16 @@ class Search
     %w[topic category user private_messages tags all_topics exclude_topics]
   end
 
-  # Patterns that indicate a valid search even without meeting minimum term length
-  # Includes shortcuts (l, r, t) and advanced filter syntax
-  VALID_SEARCH_SHORTCUT_PATTERN =
-    /\A[lrt]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
+  # Patterns that bypass minimum search term length because they
+  # produce meaningful results on their own. Note: 't' (in:title) is
+  # intentionally excluded - it modifies where to search but still
+  # requires actual search terms.
+  MIN_LENGTH_BYPASS_PATTERN =
+    /\A[lr]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
 
-  def self.valid_search_shortcut?(term)
+  def self.min_length_bypass?(term)
     return false if term.blank?
-    VALID_SEARCH_SHORTCUT_PATTERN.match?(term)
+    MIN_LENGTH_BYPASS_PATTERN.match?(term)
   end
 
   def self.ts_config(locale = SiteSetting.default_locale)
@@ -1114,7 +1116,7 @@ class Search
   def user_search
     return if SiteSetting.hide_user_profiles_from_public && !@guardian.user
 
-    # Exlude B weight from search which is the weight `User#name` is indexed with in `SearchIndexer.update_users_index`
+    # Exclude B weight from search which is the weight `User#name` is indexed with in `SearchIndexer.update_users_index`
     query = ts_query("simple", weight_filter: SiteSetting.enable_names ? nil : "AC")
 
     users =

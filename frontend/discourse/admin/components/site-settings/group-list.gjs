@@ -1,8 +1,10 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action, computed } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import ListSetting from "discourse/select-kit/components/list-setting";
 
+@tagName("")
 export default class GroupList extends Component {
   tokenSeparator = "|";
   nameProperty = "name";
@@ -26,14 +28,16 @@ export default class GroupList extends Component {
   }
 
   <template>
-    <ListSetting
-      @value={{this.settingValue}}
-      @choices={{this.groupChoices}}
-      @settingName="name"
-      @mandatoryValues={{this.setting.mandatory_values}}
-      @nameProperty={{this.nameProperty}}
-      @valueProperty={{this.valueProperty}}
-      @onChange={{this.onChangeGroupListSetting}}
-    />
+    <div ...attributes>
+      <ListSetting
+        @value={{this.settingValue}}
+        @choices={{this.groupChoices}}
+        @settingName="name"
+        @mandatoryValues={{this.setting.mandatory_values}}
+        @nameProperty={{this.nameProperty}}
+        @valueProperty={{this.valueProperty}}
+        @onChange={{this.onChangeGroupListSetting}}
+      />
+    </div>
   </template>
 }

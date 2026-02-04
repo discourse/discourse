@@ -68,7 +68,7 @@ it:
       ongoing_event_reminder: "%{title} è in corso."
     errors:
       bulk_invite:
-        max_invitees: "I primi %{max_invittes} inviti sono stati creati. Prova a dividere il file in parti più piccole."
+        max_invitees: "I primi %{max_invitees} inviti sono stati creati. Prova a dividere il file in parti più piccole."
         error: "Si è verificato un errore durante il caricamento del file. Riprova più tardi."
       models:
         event:

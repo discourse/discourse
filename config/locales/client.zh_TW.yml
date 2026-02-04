@@ -1406,8 +1406,6 @@ zh_TW:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> 個有用的檢舉'
-        flagged_posts:
-          other: '<span class="%{className}">%{count}</span> 篇被檢舉的貼文'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> 篇刪除的貼文'
         suspensions:
@@ -2070,7 +2068,6 @@ zh_TW:
     form_kit:
       reset: 重置
       optional: 選擇性
-      errors_summary_title: "此表單包含錯誤："
       dirty_form: "您尚未提交您的更改！您確實要離開嗎？"
       errors:
         required: "必要設定"
@@ -3405,7 +3402,7 @@ zh_TW:
       quote_edit: "編輯"
       quote_edit_shortcut: "編輯（或按 e）"
       quote_copy: "複製引用"
-      quote_copied_to_clibboard: "引用已複製到剪貼簿"
+      quote_copied_to_clipboard: "引用已複製到剪貼簿"
       quote_share: "分享"
       edit_reason: "原因: "
       post_number: "貼文 %{number}"
@@ -3713,11 +3710,10 @@ zh_TW:
         reply: "回覆"
         create: "建立"
         no_groups_selected: "沒有群組被授予訪問權限；此類別僅對管理人員可見。"
-        everyone_has_access: '此類別是公開的，任何人都可以查看、回覆和創建貼文。要限制權限，請移除授予「所有人」組的一個或多個權限。'
+        everyone_full_access: '此類別是公開的，任何人都可以查看、回覆和創建貼文。要限制權限，請移除授予「所有人」組的一個或多個權限。'
         toggle_reply: "切換回覆權限"
         toggle_full: "切換建立權限"
         inherited: '此權限繼承自“所有人”'
-      special_warning: "警告：這個分類是已經自動建立好的分類，它的安全設置不能被更改。如果你不想要使用這個分類，直接刪除它，而不是另作他用。"
       uncategorized_security_warning: "此為特殊分類，僅作為沒有分類的話題暫存區，無法有安全設定。"
       uncategorized_general_warning: '此為特殊分類，作為尚未選定分類的新話題的預設分類。若您要停用此行為並強制使用者選擇分類，請在<a href="%{settingLink}">停用此設定，若您要更改名稱或說明，請到<a href="%{customizeLink}">自訂 / 文字內容</a>。'
       pending_permission_change_alert: "您尚未將 %{group} 新增至此類別；單擊此按鈕以新增它們。"
@@ -3745,7 +3741,7 @@ zh_TW:
       minimum_required_tags: "話題標籤的最低要求數量："
       none_subcategory_text: "無"
       visibility:
-        title: "訪問"
+        title: "能見度"
         public: "公開"
         group_restricted: "私密"
       num_auto_bump_daily: "每日自動上浮的主題數："
@@ -5739,8 +5735,6 @@ zh_TW:
         delete: "刪除"
         delete_confirm: '你確定要刪除%{theme_name}嗎？'
         bulk_delete: "你確定嗎？"
-        bulk_themes_delete_confirm: "這將卸載以下佈景主題，您的網站上的任何用戶將無法再使用它們："
-        bulk_components_delete_confirm: "這將卸載以下元件，您網站上的任何使用者將無法再使用它們："
         color: "顏色"
         opacity: "不透明度"
         copy: "複製"

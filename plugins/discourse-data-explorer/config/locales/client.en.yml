@@ -95,8 +95,8 @@ en:
           invalid: "Invalid"
           no_such_category: "No such category"
           no_such_group: "No such group"
-          invalid_date: "%{date} is a invalid date"
-          invalid_time: "%{time} is a invalid time"
+          invalid_date: "%{date} is an invalid date"
+          invalid_time: "%{time} is an invalid time"
     group:
       reports: "Reports"
     admin:

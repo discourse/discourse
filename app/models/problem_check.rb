@@ -81,6 +81,7 @@ class ProblemCheck
     ProblemCheck::OutOfDateThemes,
     ProblemCheck::PollPop3Timeout,
     ProblemCheck::PollPop3AuthError,
+    ProblemCheck::QqMailSmtp,
     ProblemCheck::RailsEnv,
     ProblemCheck::Ram,
     ProblemCheck::S3BackupConfig,
@@ -168,9 +169,15 @@ class ProblemCheck
   end
 
   def run
+    # Never run a targeted check with NO_TARGET (stale job or default targets used by mistake).
+    if target == NO_TARGET && targeted?
+      tracker.destroy
+      return
+    end
+
     # target is always a string when initializing this class, but the targets function
     # could return IDs from the DB. Make everything string so we don't return early all the time.
-    if targeted? && (target == NO_TARGET || targets.call.map(&:to_s).exclude?(target))
+    if targeted? && targets.call.map(&:to_s).exclude?(target)
       tracker.destroy
       return
     end

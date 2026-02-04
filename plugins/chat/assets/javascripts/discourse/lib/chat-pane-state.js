@@ -1,5 +1,5 @@
 import { tracked } from "@glimmer/tracking";
-import { setOwner } from "@ember/owner";
+import { getOwner, setOwner } from "@ember/owner";
 import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { bind } from "discourse/lib/decorators";
@@ -167,9 +167,10 @@ export default class ChatPaneState {
    * Use this in scroll handlers that already have distanceToBottom computed.
    *
    * @param {object} options
+   * @param {HTMLElement | null} options.scroller
    * @param {boolean} options.fetchedOnce
    * @param {boolean} options.canLoadMoreFuture
-   * @param {object} options.state - Scroll state with scroller and distanceToBottom
+   * @param {object} options.state - Scroll state with distanceToBottom
    * @param {number} [options.distanceThresholdPixels]
    */
   updatePendingContentFromScrollState(options) {
@@ -271,7 +272,8 @@ export default class ChatPaneState {
     this.addPendingMessages(messageCount);
 
     schedule("afterRender", () => {
-      if (this.isDestroying || this.isDestroyed) {
+      const owner = getOwner(this);
+      if (owner.isDestroying || owner.isDestroyed) {
         return;
       }
 

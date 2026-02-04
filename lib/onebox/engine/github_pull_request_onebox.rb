@@ -61,6 +61,7 @@ module Onebox
           result["pr"] = true
         end
 
+        result["number"] = match[:number]
         result["i18n"] = i18n
         result["i18n"]["status_date_label"] = status_date_label(result["pr_status"])
         result["i18n"]["pr_summary"] = I18n.t(

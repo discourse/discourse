@@ -3506,11 +3506,10 @@ da:
         reply: "Svar"
         create: "Opret"
         no_groups_selected: "Ingen grupper har fået adgang; denne kategori vil kun være synlig for personalet."
-        everyone_has_access: 'Denne kategori er offentlig, alle kan se, besvare og oprette indlæg. Hvis du vil begrænse tilladelserne, skal du fjerne en eller flere af de tilladelser, der er tildelt gruppen "alle".'
+        everyone_full_access: 'Denne kategori er offentlig, alle kan se, besvare og oprette indlæg. Hvis du vil begrænse tilladelserne, skal du fjerne en eller flere af de tilladelser, der er tildelt gruppen "alle".'
         toggle_reply: "Slå Svar tilladelse til/ fra"
         toggle_full: "Slå Opret tilladelse til/fra"
         inherited: 'Denne tilladelse er arvet fra "alle"'
-      special_warning: "Advarsel: Denne kategori er forud-seedet og sikkerhedsindstillingerne kan ikke redigeres. Hvis du ikke ønsker at bruge denne kategori, bør du slette den snarere end at genbruge den til et andet formål."
       uncategorized_security_warning: "Denne kategori er speciel. Det er beregnet som et opholdsområde for emner, der ikke har nogen kategori; denkan ikke have sikkerheds indstillinger."
       uncategorized_general_warning: 'Denne kategori er speciel. Den bruges som standard kategori for nye emner, der ikke har valgt en kategori. Hvis du vil forhindre denne opførsel og tvinge valg af kategori, <a href="%{settingLink}">skal du deaktivere indstillingen her</a> . Hvis du vil ændre navn eller beskrivelse, skal du gå til <a href="%{customizeLink}">Tilpas / tekst indhold</a> .'
       pending_permission_change_alert: "Du har ikke tilføjet %{group} til denne kategori. Klik på denne knap for at tilføje dem."
@@ -3534,7 +3533,7 @@ da:
       minimum_required_tags: "Minimum antal tags krævet i et emne:"
       none_subcategory_text: "Ingen"
       visibility:
-        title: "Adgang"
+        title: "Synlighed"
         public: "Offentlig"
         group_restricted: "Privat"
       num_auto_bump_daily: "Antal åbne emner, der automatisk 'bump'es dagligt:"

@@ -24,6 +24,7 @@ describe "Admin upcoming changes", type: :system do
       },
     )
 
+    SiteSetting.about_page_extra_groups_show_description = false
     sign_in(current_user)
   end
 

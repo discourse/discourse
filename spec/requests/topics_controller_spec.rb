@@ -200,6 +200,26 @@ RSpec.describe TopicsController do
           expect(Tag.all.pluck(:name)).to include("foo", "bar")
         end
 
+        it "moves posts to new topic with existing tags" do
+          tag1 = Fabricate(:tag, name: "existing-tag")
+          tag2 = Fabricate(:tag, name: "another-tag")
+
+          post "/t/#{topic.id}/move-posts.json",
+               params: {
+                 title: "Topic with tags",
+                 post_ids: [p2.id],
+                 category_id: category.id,
+                 tag_ids: [tag1.id, tag2.id],
+               }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["success"]).to eq(true)
+
+          new_topic = Topic.last
+          expect(new_topic.tags).to contain_exactly(tag1, tag2)
+        end
+
         describe "with freeze_original param" do
           it "duplicates post to new topic and keeps original post in place" do
             expect do
@@ -2113,6 +2133,15 @@ RSpec.describe TopicsController do
             user_2.groups << Group.find_by(name: "trust_level_2")
 
             expect do put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] } end.to change {
+              topic.reload.first_post.revisions.count
+            }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
+          it "can update tags using tag_ids" do
+            expect do put "/t/#{topic.id}/tags.json", params: { tag_ids: [tag.id] } end.to change {
               topic.reload.first_post.revisions.count
             }.by(1)
 
@@ -4071,6 +4100,44 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
+      end
+
+      it "can append tags" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        tag1 = Fabricate(:tag)
+        topic.update!(user:)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id],
+              operation: {
+                type: "append_tags",
+                tag_ids: [tag1.id],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.tags).to include(tag1)
+      end
+
+      it "can append tags with tag names for backward compatibility" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        tag1 = Fabricate(:tag)
+        topic.update!(user:)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id],
+              operation: {
+                type: "append_tags",
+                tags: [tag1.name],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.tags).to include(tag1)
       end
 
       context "with private message" do

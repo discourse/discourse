@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { htmlSafe } from "@ember/template";
 import $ from "jquery";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";

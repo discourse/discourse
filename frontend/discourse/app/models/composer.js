@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
@@ -325,7 +326,8 @@ export default class Composer extends RestModel {
 
   @discourseComputed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
-    const manyCategories = this.site.categories.length > 1;
+    const manyCategories =
+      this.site.lazy_load_categories || this.site.categories.length > 1;
     return !isPrivateMessage && (hasOptions || manyCategories);
   }
 
@@ -927,7 +929,8 @@ export default class Composer extends RestModel {
     if (opts.post) {
       this.setProperties({
         post: opts.post,
-        whisper: opts.post.post_type === this.site.post_types.whisper,
+        whisper:
+          opts.whisper ?? opts.post.post_type === this.site.post_types.whisper,
       });
 
       if (!this.topic) {
@@ -1154,8 +1157,14 @@ export default class Composer extends RestModel {
   serialize(serializer, dest) {
     dest = dest || {};
     Object.keys(serializer).forEach((f) => {
-      const val = this.get(serializer[f]);
+      let val = this.get(serializer[f]);
       if (typeof val !== "undefined") {
+        if (f === "tags" && Array.isArray(val)) {
+          // extract tag names from objects for backend compatibility
+          if (val.some((t) => typeof t === "object" && t !== null)) {
+            val = val.map((t) => (typeof t === "object" ? t.name : t));
+          }
+        }
         set(dest, f, val);
       }
     });

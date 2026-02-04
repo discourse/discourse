@@ -1467,10 +1467,6 @@ ro:
           one: '<span class="%{className}">%{count}</span> semnalare utilă'
           few: '<span class="%{className}">%{count}</span> semnalări utile'
           other: '<span class="%{className}">%{count}</span> de semnalări utile'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> articol semnalat'
-          few: '<span class="%{className}">%{count}</span> articole semnalate'
-          other: '<span class="%{className}">%{count}</span> de articole semnalate'
         silencings:
           one: '<span class="%{className}">%{count}</span> redus la tăcere'
           few: '<span class="%{className}">%{count}</span> reduși la tăcere'
@@ -3190,7 +3186,6 @@ ro:
         see: "Doar citire"
         reply: "Răspunde"
         create: "Creează"
-      special_warning: "Atenție: Această categorie este pre-instalată și setările de securitate nu pot fi editate. Dacă nu dorești să folosești această categorie, va trebui să o ștergi în loc să-i schimbi destinația."
       images: "Aspect"
       email_in: "Adresa email de primire preferențială:"
       email_in_allow_strangers: "Acceptă emailuri de la utilizatori anonimi fără cont"
@@ -3200,7 +3195,7 @@ ro:
       this_year: "anul acesta"
       none_subcategory_text: "Nimic"
       visibility:
-        title: "Acces"
+        title: "Vizibilitate"
         public: "Public"
         group_restricted: "Privat"
       num_auto_bump_daily: "Numărul de discuții active care pot primi bump zilnic"

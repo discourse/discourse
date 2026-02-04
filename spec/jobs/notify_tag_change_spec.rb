@@ -48,7 +48,7 @@ RSpec.describe ::Jobs::NotifyTagChange do
     }
   end
 
-  it "doesnt create notification for user watching category" do
+  it "doesn't create notification for user watching category" do
     CategoryUser.create!(
       user_id: user.id,
       category_id: post.topic.category_id,
