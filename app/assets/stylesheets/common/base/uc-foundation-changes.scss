@@ -113,8 +113,11 @@
     &:not(.notifications-tracking-btn) {
       height: var(--d-sidebar-row-height) !important;
       padding-inline: var(--d-sidebar-row-horizontal-padding);
-      border-radius: var(--d-border-radius);
     }
+  }
+
+  .dropdown-menu__item {
+    border-radius: var(--d-border-radius);
   }
 
   .notifications-tracking-btn__icons {
