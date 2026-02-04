@@ -5,10 +5,12 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
+import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryAppearance extends Component {
@@ -43,11 +45,6 @@ export default class UpsertCategoryAppearance extends Component {
       this.args.transientData?.parent_category_id ??
       this.args.category.parent_category_id;
     return this.args.category.isParent || !parentCategoryId;
-  }
-
-  get panelClass() {
-    const isActive = this.args.selectedTab === "images" ? "active" : "";
-    return `edit-category-tab edit-category-tab-images ${isActive}`;
   }
 
   @action
@@ -146,7 +143,6 @@ export default class UpsertCategoryAppearance extends Component {
     );
   }
 
-  @cached
   get availableTopPeriods() {
     return ["all", "yearly", "quarterly", "monthly", "weekly", "daily"].map(
       (p) => {
@@ -155,14 +151,12 @@ export default class UpsertCategoryAppearance extends Component {
     );
   }
 
-  @cached
   get availableListFilters() {
     return ["all", "none"].map((p) => {
       return { name: i18n(`category.list_filters.${p}`), value: p };
     });
   }
 
-  @cached
   get availableSorts() {
     return applyMutableValueTransformer("category-sort-orders", [
       "likes",
@@ -189,7 +183,6 @@ export default class UpsertCategoryAppearance extends Component {
     return sortAscending;
   }
 
-  @cached
   get sortAscendingOptions() {
     return [
       { name: i18n("category.sort_ascending"), value: true },
@@ -198,7 +191,13 @@ export default class UpsertCategoryAppearance extends Component {
   }
 
   <template>
-    <div class={{this.panelClass}}>
+    <div
+      class={{concatClass
+        "edit-category-tab"
+        "edit-category-tab-images"
+        (if (eq @selectedTab "images") "active")
+      }}
+    >
       <@form.Container
         @title={{i18n "category.logo"}}
         @subtitle={{i18n "category.logo_description"}}
