@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { Textarea } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -7,11 +6,12 @@ import { schedule } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import icon from "discourse/helpers/d-icon";
+import { resettableTracked } from "discourse/lib/tracked-tools";
 
 export default class FormTemplateFieldTextarea extends Component {
   @service appEvents;
 
-  @tracked value = this.args.value || "";
+  @resettableTracked value = this.args.value || "";
 
   constructor() {
     super(...arguments);
