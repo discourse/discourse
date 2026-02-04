@@ -25,7 +25,6 @@ export default class UpsertCategoryGeneral extends Component {
   @service siteSettings;
 
   @tracked categoryVisibilityState = null;
-  @tracked userModifiedPermissions = false;
   uncategorizedSiteSettingLink = getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
   );
@@ -107,7 +106,6 @@ export default class UpsertCategoryGeneral extends Component {
       };
     });
 
-    this.userModifiedPermissions = true;
     this.#setFormPermissions(newPermissions);
   }
 
@@ -184,7 +182,6 @@ export default class UpsertCategoryGeneral extends Component {
     }
 
     this.categoryVisibilityState = value;
-    this.userModifiedPermissions = true;
 
     if (value === "public") {
       this.#setFormPermissions([this.#createEveryoneFullPermission()]);
@@ -200,9 +197,8 @@ export default class UpsertCategoryGeneral extends Component {
   @action
   async onParentCategoryChange(parentCategoryId) {
     if (!parentCategoryId) {
-      if (!this.userModifiedPermissions) {
-        this.#setFormPermissions([this.#createEveryoneFullPermission()]);
-      }
+      this.categoryVisibilityState = null;
+      this.#setFormPermissions([this.#createEveryoneFullPermission()]);
       return;
     }
 
@@ -216,6 +212,8 @@ export default class UpsertCategoryGeneral extends Component {
       );
 
       if (!hasEveryone) {
+        this.categoryVisibilityState = null;
+
         const newPermissions = parentCategory.permissions.map((p) => ({
           group_name: p.group_name,
           group_id: p.group_id,
