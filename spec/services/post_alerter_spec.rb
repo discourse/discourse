@@ -2595,6 +2595,7 @@ RSpec.describe PostAlerter do
     it "skips sending a notification email to the group and all other email addresses that are _not_ members of the group,
     sends a group_smtp_email instead" do
       NotificationEmailer.enable
+      SiteSetting.simple_email_subject = true
 
       incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic

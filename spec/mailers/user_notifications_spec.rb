@@ -969,6 +969,7 @@ RSpec.describe UserNotifications do
     context "when SiteSetting.group_name_in_subject is true" do
       before do
         SiteSetting.group_in_subject = true
+        SiteSetting.simple_email_subject = true
         SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
       end
 

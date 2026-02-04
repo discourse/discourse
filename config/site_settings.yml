@@ -1866,7 +1866,7 @@ email:
     default: "%{site_name}: %{topic_title}"
     area: "email"
   simple_email_subject:
-    default: true
+    default: false
     client: true
     hidden: true
   reply_by_email_enabled:
