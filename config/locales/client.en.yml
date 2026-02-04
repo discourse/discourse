@@ -2591,6 +2591,7 @@ en:
 
     learn_more: "Learn more…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Learn more…</a>"
+    feedback_with_link: "<a href='%{url}' target='_blank'>Feedback…</a>"
 
     mute: Mute
     unmute: Unmute

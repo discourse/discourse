@@ -10,7 +10,7 @@ export default <template>
     @descriptionLabel={{i18n
       "admin.config.upcoming_changes.header_description"
     }}
-    @learnMoreUrl="https://meta.discourse.org/t/-/395006"
+    @learnMoreUrl="https://meta.discourse.org/t/-/392894"
   >
     <:breadcrumbs>
       <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />
