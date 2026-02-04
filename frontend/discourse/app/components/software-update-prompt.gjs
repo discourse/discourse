@@ -14,9 +14,7 @@ export default class SoftwareUpdatePrompt extends Component {
   @service messageBus;
   @service session;
 
-  // eslint-disable-next-line discourse/no-unnecessary-tracked
   @tracked showPrompt = false;
-  // eslint-disable-next-line discourse/no-unnecessary-tracked
   @tracked animatePrompt = false;
   timeoutHandler;
 
