@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import replaceEmoji from "discourse/helpers/replace-emoji";
@@ -18,13 +18,14 @@ export default class SidebarCustomSection extends Component {
   @service navigationMenu;
   @service router;
 
+  @tracked section = this.initialSection;
+
   willDestroy() {
     super.willDestroy();
     this.section.teardown?.();
   }
 
-  @cached
-  get section() {
+  get initialSection() {
     const opts = {
       section: this.args.sectionData,
       owner: getOwner(this),
