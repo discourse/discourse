@@ -578,10 +578,19 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
         expect(result).to eq("true")
       end
 
-      it "throws error for invalid type" do
+      it "throws error for invalid type in setCustomField" do
         tool.update!(
           script:
             "function invoke(params) { return discourse.setCustomField('invalid', 1, 'key', 'val'); }",
+        )
+        runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+        expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Invalid type/)
+      end
+
+      it "throws error for invalid type in getCustomField" do
+        tool.update!(
+          script:
+            "function invoke(params) { return discourse.getCustomField('invalid', 1, 'key'); }",
         )
         runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
         expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Invalid type/)
