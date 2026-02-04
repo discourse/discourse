@@ -4,6 +4,8 @@ en:
       sort_options:
         votes: "Votes"
     topic_voting:
+      notification_label:
+        vote_released: "Vote released"
       title: "Topic voting"
       reached_limit: "You are out of votes, remove an existing vote!"
       list_votes: "List your votes"
