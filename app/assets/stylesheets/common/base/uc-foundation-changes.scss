@@ -186,10 +186,46 @@
     margin-inline: var(--welcome-banner-search-menu-margin-inline);
   }
 
+  .welcome-banner__wrap
+    .search-menu-container
+    .results
+    .search-random-quick-tip {
+    padding-top: var(--space-2);
+  }
+
+  .search-menu .results .heading,
+  .search-menu-container .results .heading {
+    padding-left: var(--space-2);
+  }
+
+  .search-menu .search-link,
+  .search-menu-container .search-link {
+    padding-left: var(--space-2);
+  }
+
+  .search-random-quick-tip {
+    padding: var(--space-2) var(--space-3);
+  }
+
   .search-menu .search-input,
-  .search-menu-container .search-input {
+  .search-menu-container .search-input,
+  .bookmark-reminder-modal .d-modal__body .ember-text-field.bookmark-name,
+  input[type="text"],
+  input[type="password"],
+  input[type="datetime"],
+  input[type="datetime-local"],
+  input[type="date"],
+  input[type="month"],
+  input[type="time"],
+  input[type="week"],
+  input[type="number"],
+  input[type="email"],
+  input[type="url"],
+  input[type="search"],
+  input[type="tel"],
+  input[type="color"] {
     height: var(--search-input-height);
-    padding: 0;
+    padding-block: 0;
   }
 
   .search-container .search-bar input.search-query {
