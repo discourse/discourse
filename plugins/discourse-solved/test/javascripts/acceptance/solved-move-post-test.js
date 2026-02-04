@@ -50,7 +50,9 @@ acceptance("Discourse Solved | Move Solution Post", function (needs) {
       .exists("Confirm button exists");
 
     assert
-      .dom(".move-solution-confirmation-modal .d-modal__footer .btn-default")
+      .dom(
+        ".move-solution-confirmation-modal .d-modal__footer .btn-transparent"
+      )
       .exists("Cancel button exists");
   });
 
@@ -67,7 +69,7 @@ acceptance("Discourse Solved | Move Solution Post", function (needs) {
       .exists("Confirmation modal is shown");
 
     await click(
-      ".move-solution-confirmation-modal .d-modal__footer .btn-default"
+      ".move-solution-confirmation-modal .d-modal__footer .btn-transparent"
     );
 
     assert
