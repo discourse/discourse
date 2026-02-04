@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -10,11 +9,11 @@ import StyleguideExample from "discourse/plugins/styleguide/discourse/components
 export default class Dialogs extends Component {
   @service dialog;
 
-  @tracked alertOutput = "";
-  @tracked deleteConfirmOutput = "";
-  @tracked noticeOutput = "";
-  @tracked confirmOutput = "";
-  @tracked yesNoConfirmOutput = "";
+  alertOutput = "";
+  deleteConfirmOutput = "";
+  noticeOutput = "";
+  confirmOutput = "";
+  yesNoConfirmOutput = "";
 
   @action
   async openDialog(dialog = {}) {

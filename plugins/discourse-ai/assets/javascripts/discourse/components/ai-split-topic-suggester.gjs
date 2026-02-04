@@ -17,7 +17,6 @@ export default class AiSplitTopicSuggester extends Component {
 
   @tracked suggestions = [];
   @tracked loading = false;
-  @tracked icon = "discourse-sparkles";
 
   SUGGESTION_TYPES = {
     title: "suggest_title",

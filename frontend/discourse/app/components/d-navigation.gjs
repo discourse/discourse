@@ -1,5 +1,4 @@
 /* eslint-disable ember/no-classic-components */
-import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
@@ -29,8 +28,6 @@ import { and, gt } from "discourse/truth-helpers";
 export default class DNavigation extends Component {
   @service router;
   @service site;
-
-  @tracked filterMode;
 
   @setting("fixed_category_positions") fixedCategoryPositions;
 

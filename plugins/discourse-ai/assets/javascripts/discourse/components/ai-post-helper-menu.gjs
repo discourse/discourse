@@ -44,7 +44,6 @@ export default class AiPostHelperMenu extends Component {
   @tracked streaming = false;
   @tracked lastSelectedOption = null;
   @tracked isSavingFootnote = false;
-  @tracked
   smoothStreamer = new SmoothStreamer(
     () => this.suggestion,
     (newValue) => (this.suggestion = newValue)

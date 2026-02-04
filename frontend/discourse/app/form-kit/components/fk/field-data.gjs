@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import ValidationParser from "discourse/form-kit/lib/validation-parser";
 import Validator from "discourse/form-kit/lib/validator";
@@ -9,12 +8,6 @@ import uniqueId from "discourse/helpers/unique-id";
  * Represents a field in a form with validation, registration, and field data management capabilities.
  */
 export default class FKFieldData extends Component {
-  /**
-   * Type of the field.
-   * @type {string}
-   */
-  @tracked type;
-
   /**
    * Unique identifier for the field.
    * @type {string}
