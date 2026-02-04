@@ -371,16 +371,14 @@ export default <template>
               @expanded={{info.topicProgressExpanded}}
               @jumpToPost={{@controller.jumpToPost}}
             >
-              <span>
-                <PluginOutlet
-                  @name="before-topic-progress"
-                  @connectorTagName="div"
-                  @outletArgs={{lazyHash
-                    model=@controller.model
-                    jumpToPost=@controller.jumpToPost
-                  }}
-                />
-              </span>
+              <PluginOutlet
+                @name="before-topic-progress"
+                @connectorTagName="div"
+                @outletArgs={{lazyHash
+                  model=@controller.model
+                  jumpToPost=@controller.jumpToPost
+                }}
+              />
               <TopicAdminMenu
                 @topic={{@controller.model}}
                 @toggleMultiSelect={{@controller.toggleMultiSelect}}
@@ -562,7 +560,6 @@ export default <template>
                 <SlowModeInfo
                   @topic={{@controller.model}}
                   @user={{@controller.currentUser}}
-                  @tagName=""
                 />
 
                 <TopicTimerInfo

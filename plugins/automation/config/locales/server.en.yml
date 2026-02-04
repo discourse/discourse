@@ -66,7 +66,7 @@ en:
         description: When the tags of a topic are changed the automation will be triggered
       topic:
         title: Topic
-        description: The associated script will only be used on the specified topic, this is usefull for scripts doing validation for example
+        description: The associated script will only be used on the specified topic, this is useful for scripts doing validation for example
       topic_closed:
         title: Topic closed
         description: Triggers a script when a topic is closed.

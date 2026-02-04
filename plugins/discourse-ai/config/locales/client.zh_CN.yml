@@ -113,14 +113,6 @@ zh_CN:
             persona_id:
               label: "角色"
               description: "用于生成报告的 AI 角色"
-        ai_tool_action:
-          fields:
-            tool:
-              label: "AI 工具"
-              description: "当自动化触发时，要执行的 AI 工具"
-            llm_model:
-              label: "LLM 模型"
-              description: "使用 llm.generate() 的工具的语言模型（可选）"
         llm_persona_triage:
           fields:
             persona:
@@ -229,7 +221,6 @@ zh_CN:
         short_title: "功能"
         description: "这些是您网站的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的角色和 LLM，并按群组控制访问权限。"
         back: "返回"
-        settings_save_error: "部分设置无法保存。"
         disabled: "（已禁用）"
         persona:
           other: "角色："
@@ -247,11 +238,6 @@ zh_CN:
           bot: "聊天机器人"
           name: "机器人"
           description: "可以回答问题以及帮助用户回复个人消息、论坛和聊天的聊天机器人"
-          setting_groups:
-            settings: "基本设置"
-            access_control: "访问控制"
-            ui_settings: "UI 设置"
-            integrations: "集成"
         nav:
           configured: "已配置"
           unconfigured: "未配置"
@@ -266,42 +252,24 @@ zh_CN:
           description: "提供总结按钮，允许访客总结话题"
           topic_summaries: "话题总结"
           gists: "话题列表的简短总结"
-          setting_groups:
-            settings: "基本设置"
-            gists: "要点"
-            backfill: "回填"
         search:
           name: "搜索"
           description: "通过提供 AI 生成的查询回答来增强搜索体验"
           discoveries: "发现"
-          setting_groups:
-            settings: "基本设置"
         embeddings:
           name: "嵌入向量"
           description: "通过生成文本的语义表示来支持“相关话题”和“AI 搜索”等功能"
           hyde: "HyDE"
-          setting_groups:
-            model_settings: "模型设置"
-            related_topics: "相关话题"
-            semantic_search: "语义搜索"
         discord:
           name: "Discord 集成"
           description: "增加了搜索 Discord 频道的功能"
           search: "Discord 搜索"
-          setting_groups:
-            settings: "基本设置"
-            discord_configuration: "Discord 配置"
         inference:
           name: "推断的概念"
           description: "将话题和帖子分类到感兴趣的领域/标签。"
           generate_concepts: "概念推理"
           match_concepts: "概念匹配"
           deduplicate_concepts: "概念去重"
-          setting_groups:
-            settings: "基本设置"
-            topic_criteria: "话题条件"
-            post_criteria: "帖子条件"
-            personas: "角色"
         ai_helper:
           name: "助手"
           description: "协助用户进行社区互动，例如创建话题、撰写帖子和阅读内容"
@@ -316,11 +284,6 @@ zh_CN:
           image_caption: "标题图片"
           translator: "翻译器"
           post_illustrator: "帖子插图创建器"
-          setting_groups:
-            access_permissions: "访问 & 权限"
-            enabled_features: "已启用功能"
-            automation: "自动化"
-            personas: "角色"
         translation:
           name: "翻译"
           description: "将内容翻译成支持的语言"
@@ -332,10 +295,6 @@ zh_CN:
           schedule_topic_success:
             other: "已定时翻译 %{count} 未翻译的帖子。"
           schedule_topic_error: "定时翻译失败。请重试。"
-          setting_groups:
-            settings: "基本设置"
-            personas: "角色"
-            backfill_and_limits: "回填 & 限制"
         spam:
           name: "垃圾信息"
           description: "使用所选 LLM 识别潜在垃圾信息，并进行标记，使其进入审核队列，以便站点版主可以进行检查"
@@ -1020,12 +979,6 @@ zh_CN:
         topic:
           title: "话题摘要"
           close: "关闭摘要面板"
-          regenerate: "重新生成简短摘要"
-          regenerate_bulk: "重新生成简短摘要"
-          regenerate_success:
-            other: "%{count} 条简短摘要已成功重新生成"
-          regenerate_error:
-            other: "无法重新生成 %{count} 条简短摘要"
         topic_list_layout:
           button:
             compact: "紧凑"
@@ -1048,9 +1001,3 @@ zh_CN:
             disable: "禁用"
       user_preferences:
         empty: "目前没有相关设置"
-    review:
-      types:
-        reviewable_ai_post:
-          title: "AI 标记的帖子"
-        reviewable_ai_chat_message:
-          title: "AI 标记的聊天消息"

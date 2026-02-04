@@ -2200,6 +2200,8 @@ et:
       creation_error: Kategooria loomisel tekkis viga.
       save_error: Kategooria salvestamisel tekkis viga.
       description: "Kirjeldus"
+      icon: "Ikoon"
+      emoji: "Emotikon"
       background_color: "Värv"
       color_validations:
         cant_be_empty: "ei tohi olla tühi"
@@ -2209,7 +2211,6 @@ et:
         options:
           icon: "Ikoon"
           emoji: "Emotikon"
-      name_placeholder: "Maksimaalselt üks või kaks sõna"
       color_placeholder: "Mis tahes veebivärv"
       delete_confirm: "Kas oled kindel, et soovid selle kategooria kustutada?"
       delete_error: "Kategooria kustutamisel tekkis viga."
@@ -2228,7 +2229,6 @@ et:
         inherited: 'Need õigused on päritud rühmalt "kõik"'
       special_warning: "Hoiatus: See on eelseadistatud kategooria, mille turvasätteid muuta ei saa. Kui sa seda kategooriat kasutada ei soovi, kustuta see ümberkohandamise asemel."
       uncategorized_security_warning: "See kategooria on eriline. Siin on teemad, millel ei ole kategooriat; sellele kategooriale ei saa eraldi õiguseid määrata."
-      images: "Pildid"
       email_in: "Sissetuleva meili individuaalne aadress:"
       email_in_allow_strangers: "Aktsepteeri meile kontota anonüümsetelt kasutajatelt"
       show_subcategory_list: "Näita selles kategoorias alamkategooriate nimekirja teemadest üleval pool."
@@ -2244,6 +2244,11 @@ et:
       this_year: "sel aastal"
       position: "Asukoht kategooriate lehel:"
       minimum_required_tags: "Minimaalne nõutud siltide arv teemas:"
+      none_subcategory_text: "Pole"
+      visibility:
+        title: "Nähtavus"
+        public: "Avalik"
+        group_restricted: "Privaatne"
       num_auto_bump_daily: "Avatud teemade arv, mida iga päev automaatselt tõsta:"
       navigate_to_first_post_after_read: "Ava pärast teemade läbi lugemist esimene sõnum"
       notifications:
@@ -2901,6 +2906,8 @@ et:
           weekly: Iganädalaselt
           groups: "Kõik rühmad"
           no_data: "Pole andmeid, mida näidata."
+          sort_ascending: "ülenev"
+          sort_descending: "alanev"
           filters:
             group:
               label: Rühm

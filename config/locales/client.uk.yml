@@ -1786,6 +1786,11 @@ uk:
       undo_revoke_access: "Скасувати анулювання доступу"
       api_approved: "Схвалено:"
       api_last_used_at: "Останнє використання:"
+      api_show_permissions:
+        one: "Дозвіл надано (%{count})"
+        few: "Дозволи надано (%{count})"
+        many: "Дозволи надано (%{count})"
+        other: "Дозволи надано (%{count})"
       theme: "Стиль"
       save_to_change_theme: 'Тему буде оновлено після натискання "%{save_text}"'
       home: "Типова головна сторінка"
@@ -2584,7 +2589,11 @@ uk:
     form_kit:
       reset: Скинути
       optional: опціонально
-      errors_summary_title: "Ця форма містить помилки:"
+      errors_summary_title:
+        one: "Виправте цю помилку, щоб продовжити"
+        few: "Виправте ці помилки, щоб продовжити"
+        many: "Виправте ці помилки, щоб продовжити"
+        other: "Виправте ці помилки, щоб продовжити"
       dirty_form: "Ви не надсилали свої зміни! Ви впевнені, що хочете піти?"
       errors:
         starts_with: "Повинно починатися з %{prefix}"
@@ -2608,6 +2617,10 @@ uk:
           few: "Має бути не менше %{count} символи"
           many: "Має бути не менше %{count} символів"
           other: "Має бути не менше %{count} символів"
+      color:
+        available_presets: "Доступні пресети"
+        already_used: "Вже використано"
+        edit_presets: "Редагувати налаштування кольорів"
     close: "Закрити"
     assets_changed_confirm: "Цей сайт щойно отримав оновлення програмного забезпечення. Отримати останню версію зараз?"
     logout: "Ви вийшли."
@@ -3371,8 +3384,10 @@ uk:
       upcoming_changes:
         available:
           title: "Майбутні зміни"
+          description: "'%{changeName}' доступний для попереднього перегляду"
         automatically_promoted:
           title: "Майбутні зміни"
+          description: "'%{changeName}' було автоматично ввімкнено"
       dismiss_confirmation:
         body:
           default:
@@ -3437,7 +3452,10 @@ uk:
         membership_request_consolidated: "нові запити на членство"
         reaction: "нова реакція"
         votes_released: "голосування опубліковано"
+        new_features: "випущено нові функції дискурсу"
         admin_problems: "нова порада на інформаційній панелі вашого сайту"
+        upcoming_change_available: "доступна нова майбутня зміна '%{changeName}'"
+        upcoming_change_automatically_promoted: "майбутню зміну '%{changeName}' було автоматично ввімкнено"
     upload_selector:
       change: "Змінити"
       delete: "Видалити"
@@ -4331,7 +4349,7 @@ uk:
       quote_edit: "Редагувати"
       quote_edit_shortcut: "Редагувати (або натиснути e)"
       quote_copy: "Копіювати цитату"
-      quote_copied_to_clibboard: "Цитата скопійована в буфер обміну"
+      quote_copied_to_clipboard: "Цитата скопійована в буфер обміну"
       quote_share: "Поширити"
       edit_reason: "Причина: "
       post_number: "допис %{number}"
@@ -4673,8 +4691,11 @@ uk:
       edit_dialog_title: "Редагувати:%{categoryName}"
       view: "Переглянути теми, що належать до розділу"
       back: "Повернутися до розділу"
+      single_page: "Одна сторінка"
       general: "Основне"
       settings: "Налаштування"
+      advanced: "Розширений"
+      show_advanced: "Розширені налаштування"
       topic_template: "Шаблон"
       tags: "Теґи"
       localizations: "Локалізації"
@@ -4705,11 +4726,14 @@ uk:
       create_long: "Створити розділ"
       save: "Зберегти категорію"
       slug: "Посилання на розділ"
+      parent: "Батьківська категорія"
       slug_placeholder: "(Опція) дефіси в url"
       creation_error: Під час створення розділу сталася помилка.
       save_error: Під час збереження розділу сталася помилка.
       errors:
         self_lockout: "Ви збираєтеся змінити дозволи категорії таким чином, що позбавите себе доступу. Ви впевнені, що хочете продовжити?"
+      validations:
+        emoji_required: "Виберіть емодзі."
       name: "Назва категорії"
       untitled: "Категорія без назви"
       description: "Опис"
@@ -4718,7 +4742,10 @@ uk:
       logo_description: "Рекомендоване співвідношення сторін 1:1 з мінімальним розміром 200px. Якщо залишити поле порожнім, зображення не буде показано."
       background_image: "Фонове зображення категорії"
       background_image_dark: "Темне фонове зображення категорії"
-      style: "Стилі"
+      style: "Стиль"
+      icon: "Іконка"
+      emoji: "Смайли"
+      select_emoji: "Виберіть емодзі"
       background_color: "Колір"
       foreground_color: "Колір тексту"
       color_validations:
@@ -4729,13 +4756,14 @@ uk:
         type: "Стиль"
         icon: "Іконка"
         emoji: "Смайли"
+        square: "Квадрат"
         options:
           square: "Квадрат"
           icon: "Іконка"
           emoji: "Смайли"
       color_used: "Колір використовується"
       predefined_colors: "Попередньо визначені варіанти кольорів"
-      name_placeholder: "Не більше одного-двох слів"
+      name_placeholder: "Рекомендується одне або два слова"
       color_placeholder: "Будь-який веб-колір"
       delete_confirm: "Ви впевнені, що хочете видалити цей розділ?"
       delete_error: "Під час видалення розділу сталася помилка."
@@ -4743,6 +4771,7 @@ uk:
       no_description: "Будь ласка, додайте опис для цього розділу."
       change_in_category_topic: "Редагувати опис"
       already_used: "Цей колір вже використовується іншим розділом"
+      color_palette: "Кольорова палітра"
       security: "Безпека"
       security_add_group: "Додати групу"
       permissions:
@@ -4752,6 +4781,7 @@ uk:
         create: "Створити"
         no_groups_selected: "Жодній групі не було надано доступ. Цей розділ буде доступний тільки команді обслуговування."
         everyone_has_access: 'Цей розділ є загальнодоступним, кожен може бачити, відповідати і створювати дописи. Щоб обмежити дозволи, видаліть один або кілька дозволів, наданих групі «всі».'
+        specific_groups_have_access: "Ця категорія є приватною, лише вибрані групи можуть бачити, відповідати та створювати повідомлення."
         toggle_reply: "Перемкнути дозвіл на відповідь"
         toggle_full: "Увімкнути або вимкнути дозвіл на створення"
         inherited: 'Цей дозвіл успадковується від "усіх"'
@@ -4759,7 +4789,7 @@ uk:
       uncategorized_security_warning: "Цей розділ особливий. Він призначений для зберігання тем, які не мають розділу; у нього не може бути налаштувань безпеки."
       uncategorized_general_warning: 'Цей розділ особливий. Він використовується як стандартний розділ для нових тем, для яких не вибрано розділ. Якщо ви хочете запобігти такій поведінці та примусити вибирати розділ, <a href="%{settingLink}">вимкніть це налаштування тут</a>. Якщо ви хочете змінити ім’я чи опис, перейдіть до <a href="%{customizeLink}">Налаштувати / Текстовий вміст</a>.'
       pending_permission_change_alert: "Ви не додали %{group} до цього розділу; натисніть цю кнопку, щоб додати їх."
-      images: "Зображення"
+      images: "Зовнішній вигляд"
       email_in: "Custom incoming email address:"
       email_in_tooltip: "Ви можете розділити кілька адрес за допомогою символу |."
       email_in_allow_strangers: "Приймати листи від анонімних користувачів без облікових записів"
@@ -4788,7 +4818,18 @@ uk:
       position_disabled: "Розділи показуватимуться в порядку активності. Щоб керувати порядком розділів у списках, увімкніть параметр <a href='%{url}'>«фіксовані позиції розділів»</a>."
       minimum_required_tags: "Мінімальна кількість теґів, необхідних для теми:"
       default_slow_mode: 'Увімкнути «Повільний режим» для нових тем у цій категорії.'
-      parent: "Батьківська категорія"
+      subcategory_of: "Підкатегорія..."
+      none_subcategory_text: "Немає"
+      subcategory_permissions_warning: "Підкатегорія приватної категорії не може бути публічною."
+      visibility:
+        title: "Видимість"
+        public: "Публічні"
+        all_members: "Всі учасники"
+        group_restricted: "Приватні"
+        who_can_see: "Хто може бачити цю категорію"
+        who_can_post: "Хто може писати в цій категорії"
+        more_options_hint: "Більше дозволів доступно в"
+        more_options_hint_link: "розширені налаштування."
       num_auto_bump_daily: "Кількість відкритих тем для автоматичного підняття щодня:"
       auto_bump_cooldown_days: "Мінімальна кількість днів до повторного підняття тієї самої теми:"
       navigate_to_first_post_after_read: "Перейдіть до першого допису після прочитання тем"
@@ -5179,6 +5220,7 @@ uk:
         back: "%{shortcut} Назад"
         up_down: "%{shortcut} Рухати курсор виділення теми &uarr; &darr;"
         open: "%{shortcut} Відкрити обрану тему"
+        open_new_window: "%{shortcut} Відкрити вибрану тему в новій вкладці/вікні"
         next_prev: "%{shortcut} Наступна/попередня секція"
         go_to_unread_post: "%{shortcut} Перейти до першого непрочитаного допису"
       application:
@@ -5982,6 +6024,7 @@ uk:
         change_enabled_for_success: "Ви ввімкнули цю зміну для %{enabledFor}"
         change_disabled: "Ви відмовилися від цієї зміни"
         permanent_notice: "Ця зміна зараз постійна і незабаром буде видалена. Ви більше не зможете її відмінити."
+        permanent_soon_notice: "Ця зміна незабаром стане остаточною. Ви більше не зможете відмовитися від неї."
         permanent_no_group_selection: "Н/Д, постійні зміни застосовуються до всіх груп."
         no_changes: "Наразі жодних змін не планується."
         preview: "Попередній перегляд"
@@ -6011,13 +6054,16 @@ uk:
           search_placeholder: "Фільтрувати за назвою, описом або плагіном..."
           no_results: "Немає майбутніх змін, що відповідають вашому фільтру"
           all: "Всі"
-          enabled_all: "Увімкнено або вимкнено"
+          enabled_all: "Усі увімкнені стани"
           enabled: "Включено"
+          enabled_for_staff: "Увімкнено для персоналу"
+          enabled_for_specific_groups: "Увімкнено для певних груп"
           disabled: "Вимкнено"
           impact_type_all: "Всі види впливу"
           impact_type_feature: "Особливість"
           impact_type_other: "Інше"
           status_all: "Усі статуси"
+          status_conceptual: "Концептуальний"
           status_experimental: "Експериментальний"
           status_alpha: "Альфа"
           status_beta: "Бета"
@@ -6423,6 +6469,9 @@ uk:
         embedding:
           title: "Взаємодія"
           header_description: "Discourse має можливість вбудовувати коментарі з теми на віддалений сайт за допомогою Javascript API, який створює IFRAME"
+        form_templates:
+          title: "Шаблони форм"
+          header_description: "Шаблони форм дозволяють вам застосовувати структуровану форму з перевіркою даних як частину процесу створення теми."
       theme_site_settings:
         setting: "Налаштування"
         overridden_by: "Перевизначено"
@@ -6586,6 +6635,7 @@ uk:
           daily: За день
           monthly: Щомісяця
           weekly: Щотижня
+          value_so_far: "%{value} (поки що)"
           dates: "Дати (UTC)"
           groups: "Усі групи"
           disabled: "Цей звіт відключено"
@@ -6596,7 +6646,11 @@ uk:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Пошукові логи</a>'
             disabled: 'Звіт про пошукові запити відключено. Включити <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">журнал пошукових запитів</a> для збору даних.'
-          average_chart_label: Середнє
+          average_chart_label: Показані середні показники, а не підсумки
+          sort_button: "Сортувати за %{column}"
+          sort_button_current: "Відсортовано за %{column}, %{direction}"
+          sort_ascending: "по зростанню"
+          sort_descending: "за зменшенням"
           filters:
             file_extension:
               label: Розширення файлу
@@ -7354,8 +7408,8 @@ uk:
         delete: "Видалити"
         delete_confirm: 'Ви впевнені, що хочете видалити "%{theme_name}"?'
         bulk_delete: "Ви впевнені?"
-        bulk_themes_delete_confirm: "Це призведе до видалення наступних тем, вони більше не будуть доступні для користувачів вашого сайту:"
-        bulk_components_delete_confirm: "Це призведе до видалення наступних компонентів, які більше не зможуть використовуватись користувачами вашого сайту:"
+        bulk_themes_delete_confirm: "Це призведе до видалення наступних тем, і користувачі вашого сайту більше не зможуть їх використовувати:"
+        bulk_components_delete_confirm: "Це призведе до видалення наступних компонентів, вони більше не будуть доступні для користувачів вашого сайту:"
         color: "Колір"
         opacity: "Непрозорість"
         copy: "Дублювати"
@@ -7988,6 +8042,7 @@ uk:
             change_theme_site_setting: "змінити налаштування теми сайту"
             stop_impersonating: "припиніть видавати себе за іншу особу"
             upcoming_change_toggled: "майбутню зміну переключено"
+            upcoming_change_available: "доступні майбутні зміни"
             change_site_setting_groups: "змінити групи налаштувань сайту"
             discourse_id_regenerate_credentials: "відновити облікові дані Discourse ID"
         screened_emails:
@@ -8130,6 +8185,7 @@ uk:
           upload: "Завантажити файл"
           multiselect: "Множинний вибір"
           tagchooser: "Вибір групи тегів"
+          composer: "Відповідь Markdown"
         validations_modal:
           button_title: "Погодження"
           modal_title: "Параметри перевірки"
@@ -8691,6 +8747,7 @@ uk:
         download_file: "Завантажити"
         upload_restrictions:
           extensions: "Прийнято: %{extensions}"
+          max_size: "Макс: %{size}"
         selectable_avatars:
           title: "Список аватарів, які користувачі можуть вибрати"
         table_column_heading:

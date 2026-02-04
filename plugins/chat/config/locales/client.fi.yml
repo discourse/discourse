@@ -81,7 +81,6 @@ fi:
         join_channel: "Liity kanavalle"
         leave_channel: "Poistu kanavalta"
         leave_groupchat_info: "Kun poistut tästä ryhmäkeskustelusta, sinulla ei ole enää pääsyä siihen etkä saa siihen liittyviä ilmoituksia. Jotta voit liittyä uudelleen, ryhmäkeskustelun jäsenen täytyy kutsua sinut uudelleen."
-        notification_settings_context: "Ilmoitukset"
         join: "Liity"
         leave: "Poistu"
         save_label:
@@ -664,7 +663,6 @@ fi:
           composer_bold: "%{shortcut} Lihavointi (vain tekstieditori)"
           composer_italic: "%{shortcut} Kursiivi (vain tekstieditori)"
           composer_code: "%{shortcut} Koodi (vain tekstieditori)"
-          drawer_open: "%{shortcut} Avaa chat-laatikko"
           drawer_close: "%{shortcut} Sulje chat-laatikko"
           mark_all_channels_read: "%{shortcut} Merkitse kaikki kanavat luetuiksi"
     topic_statuses:

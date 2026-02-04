@@ -21,6 +21,7 @@ el:
         normal: Φυσιολογικό
       filter:
         mute: 'Σίγαση'
+        follow: 'Πρώτη ανάρτηση μόνο'
       rule_table:
         filter: "Φίλτρο"
         category: "Κατηγορία"

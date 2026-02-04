@@ -3453,6 +3453,7 @@ da:
       back: "Tilbage til kategori"
       general: "Overordnet"
       settings: "Indstillinger"
+      advanced: "Avanceret"
       topic_template: "Skabelon"
       tags: "Tags"
       localization:
@@ -3476,6 +3477,9 @@ da:
       creation_error: Der opstod en fejl under oprettelsen af kategorien.
       save_error: Der opstod en fejl da kategorien skulle gemmes.
       description: "Beskrivelse"
+      style: "Stil"
+      icon: "Ikon"
+      emoji: "Humørikon"
       background_color: "Farve"
       foreground_color: "Tekst farve"
       color_validations:
@@ -3488,7 +3492,6 @@ da:
           icon: "Ikon"
           emoji: "Humørikon"
       color_used: "Farve i brug"
-      name_placeholder: "Et eller to ord maksimalt"
       color_placeholder: "Enhver webfarve"
       delete_confirm: "Er du sikker på, at du vil slette denne kategori?"
       delete_error: "Der opstod en fejl under sletningen af kategorien."
@@ -3511,7 +3514,7 @@ da:
       uncategorized_security_warning: "Denne kategori er speciel. Det er beregnet som et opholdsområde for emner, der ikke har nogen kategori; denkan ikke have sikkerheds indstillinger."
       uncategorized_general_warning: 'Denne kategori er speciel. Den bruges som standard kategori for nye emner, der ikke har valgt en kategori. Hvis du vil forhindre denne opførsel og tvinge valg af kategori, <a href="%{settingLink}">skal du deaktivere indstillingen her</a> . Hvis du vil ændre navn eller beskrivelse, skal du gå til <a href="%{customizeLink}">Tilpas / tekst indhold</a> .'
       pending_permission_change_alert: "Du har ikke tilføjet %{group} til denne kategori. Klik på denne knap for at tilføje dem."
-      images: "Billeder"
+      images: "Udseende"
       email_in: "Brugerindstillet ingående email adresse:"
       email_in_allow_strangers: "Accepter emails fra ikke oprettede brugere"
       mailinglist_mirror: "Kategori spejler en mailing liste"
@@ -3529,6 +3532,11 @@ da:
       this_year: "dette år"
       position: "Placering på kategorisiden:"
       minimum_required_tags: "Minimum antal tags krævet i et emne:"
+      none_subcategory_text: "Ingen"
+      visibility:
+        title: "Synlighed"
+        public: "Offentlig"
+        group_restricted: "Privat"
       num_auto_bump_daily: "Antal åbne emner, der automatisk 'bump'es dagligt:"
       navigate_to_first_post_after_read: "Navigér til det første indlæg, når emnerne er læst"
       notifications:
@@ -4636,7 +4644,9 @@ da:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Søgninger</a>'
             disabled: 'Rapport over søge tendenser er deaktiveret. Aktivér <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log søgeforespørgelser for</a> at indsamle data.'
-          average_chart_label: Gennemsnit
+          sort_button: "Sorter efter %{column}"
+          sort_ascending: "stigende"
+          sort_descending: "faldende"
           filters:
             file_extension:
               label: Filtypenavn

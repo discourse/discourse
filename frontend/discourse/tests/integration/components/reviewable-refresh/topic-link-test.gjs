@@ -87,5 +87,26 @@ module(
         .dom(".title-text")
         .doesNotExist("does not render default deleted topic message");
     });
+
+    test("renders deleted topic message over block content when removed_topic_id is present", async function (assert) {
+      const reviewable = {
+        removed_topic_id: 999,
+      };
+
+      await render(
+        <template>
+          <ReviewableTopicLink @reviewable={{reviewable}}>
+            <span class="custom-fallback">Custom fallback content</span>
+          </ReviewableTopicLink>
+        </template>
+      );
+
+      assert
+        .dom("span.title-text")
+        .containsText("[Topic Deleted]", "shows deleted topic message");
+      assert
+        .dom(".custom-fallback")
+        .doesNotExist("does not render the block content");
+    });
   }
 );

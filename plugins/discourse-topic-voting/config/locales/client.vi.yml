@@ -8,42 +8,45 @@ vi:
   js:
     category:
       sort_options:
-        votes: "Bình chọn"
+        votes: "Ủng hộ"
     topic_voting:
-      reached_limit: "Bạn đã hết lượt bình chọn, hãy xóa lượt đang có của bạn"
-      list_votes: "Liệt kê bình chọn của bạn"
-      votes_nav_help: "chủ đề có nhiều bình chọn nhất"
-      voted: "Bạn đã bình chọn cho chủ đề này"
-      allow_topic_voting: "Cho phép người dùng bình chọn chủ đề trong chuyên mục này"
-      vote_title: "Bình chọn"
-      vote_title_plural: "Bình chọn"
-      voted_title: "Đã bình chọn"
+      title: "Ủng hộ chủ đề"
+      reached_limit: "Bạn đã hết lượt ủng hộ, hãy bỏ bớt lượt ủng hộ trước của bạn!"
+      list_votes: "Liệt kê lượt ủng hộ của bạn"
+      votes_nav_help: "chủ đề được ủng hộ nhiều nhất"
+      voted: "Bạn đã ủng hộ cho chủ đề này"
+      allow_topic_voting: "Cho phép thành viên ủng hộ chủ đề trong chuyên mục này"
+      vote_title: "Ủng hộ"
+      vote_title_plural: "Ủng hộ"
+      voted_title: "Đã ủng hộ"
       voting_closed_title: "Đã đóng"
-      voting_limit: "Giới h"
-      see_votes: "Bạn còn %{count}/%{max} lượt bình chọn"
-      locked_description: "Tăng độ tin cậy của bạn để bình chọn"
+      voting_limit: "Giới hạn"
+      see_votes: "Bạn còn %{count}/%{max} lượt ủng hộ"
+      locked: "Đã khóa"
+      locked_description: "Tăng độ tin cậy của bạn để ủng hộ"
       votes:
-        other: "%{count} lượt bình chọn"
+        other: "%{count} lượt ủng hộ"
       anonymous_button:
-        other: "Bình chọn"
-      remove_vote: "Xóa bình chọn"
-      no_votes_title_self: "Bạn chưa bình chọn trong chủ đề nào"
-      no_votes_title_others: "%{username} chưa bình chọn bất kỳ chủ đề nào"
+        other: "Ủng hộ"
+      remove_vote: "Bỏ ủng hộ"
+      no_votes_title_self: "Bạn chưa ủng hộ chủ đề nào"
+      no_votes_title_others: "%{username} chưa ủng hộ chủ đề nào"
     filters:
       votes:
         title: "Bình chọn"
         help: "chủ đề có nhiều bình chọn nhất"
       my_votes:
-        title: "Bình chọn của tôi"
-        help: "Những chủ đề bạn đã bình chọn"
+        title: "Ủng hộ của tôi"
+        help: "Những chủ đề bạn đã ủng hộ"
     search:
-      most_votes: "Bình chọn nhiều nhất"
+      most_votes: "Ủng hộ nhiều nhất"
       advanced:
         vote:
           count:
-            label: "Điểm bình chọn ít nhất"
+            label: "Ủng hộ ít nhất"
     admin:
       web_hooks:
         voting_event:
-          topic_upvote: "Khi người dùng bình chọn cho một chủ đề"
-          topic_unvote: "Khi người dùng hủy bình chọn cho một chủ đề"
+          group_name: "Sự kiện ủng hộ chủ đề"
+          topic_upvote: "Khi thành viên ủng hộ cho một chủ đề"
+          topic_unvote: "Khi thành viên hủy ủng hộ cho một chủ đề"

@@ -1,10 +1,10 @@
 import { hash } from "@ember/helper";
 import { computed } from "@ember/object";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import FilterComponent from "discourse/admin/components/report-filters/filter";
 import ComboBox from "discourse/select-kit/components/combo-box";
 
-@classNames("group-filter")
+@tagName("")
 export default class Group extends FilterComponent {
   @computed
   get groupOptions() {
@@ -19,17 +19,19 @@ export default class Group extends FilterComponent {
   }
 
   <template>
-    <ComboBox
-      @valueProperty="value"
-      @content={{this.groupOptions}}
-      @value={{this.groupId}}
-      @onChange={{this.onChange}}
-      @options={{hash
-        allowAny=this.filter.allow_any
-        autoInsertNoneItem=this.filter.auto_insert_none_item
-        filterable=true
-        none="admin.dashboard.reports.groups"
-      }}
-    />
+    <div class="group-filter" ...attributes>
+      <ComboBox
+        @valueProperty="value"
+        @content={{this.groupOptions}}
+        @value={{this.groupId}}
+        @onChange={{this.onChange}}
+        @options={{hash
+          allowAny=this.filter.allow_any
+          autoInsertNoneItem=this.filter.auto_insert_none_item
+          filterable=true
+          none="admin.dashboard.reports.groups"
+        }}
+      />
+    </div>
   </template>
 }

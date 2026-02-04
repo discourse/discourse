@@ -137,7 +137,6 @@ export default class ChannelsListDirect extends Component {
 
     <PluginOutlet
       @name="below-direct-chat-channels"
-      @tagName=""
       @outletArgs={{lazyHash inSidebar=this.inSidebar}}
     />
   </template>

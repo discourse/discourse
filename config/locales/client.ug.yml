@@ -887,6 +887,7 @@ ug:
         target_created: "يازما قۇرۇلدى"
         target_created_by: "يازما قۇرغۇچى %{username} · %{relativeDate}"
         target_deleted: "يازما ئۆچۈرۈلدى"
+        target_deleted_by: "يازمىنى %{username} · %{relativeDate} دە ئۆچۈردى"
         flagged: "پاش قىلىندى"
         flagged_as_by: "%{username} · %{relativeDate} دە %{flagReason} دەپ پاش قىلغان"
         claimed: "تەلەپ قىلىندى"
@@ -1093,6 +1094,7 @@ ug:
           title: تەسىرلىشىش
           posting: يوللاۋاتىدۇ
           notification: ئۇقتۇرۇش
+          self_lockout: "سىز گۇرۇپپا كۆرۈنۈشچانلىقىنى ئۆزىڭىزنىڭ ئىجازىتىتىنى چىقىرىۋېتىدىغان ئۇسۇلدا ئۆزگەرتمەكچى بولۇۋاتىسىز. راستتىنلا داۋاملاشتۇرامسىز؟"
         email:
           title: "ئېلخەت"
           enable_smtp: "SMTP نى قوزغات"
@@ -1105,6 +1107,7 @@ ug:
           smtp_title: "SMTP"
           smtp_instructions: "گۇرۇپپىغا SMTP نى قوزغاتسىڭىز، گۇرۇپپىنىڭ خەت ساندۇقىدىن ئەۋەتىلگەن بارلىق ئېلخەتلەرمۇنبىرىڭىزيوللايدىغان باشقا ئېلخەتلەرگە تەڭشەلگەن خەت مۇلازىمېتىرىدىن ئەمەس بەلكى مۇشۇ جايدا بەلگىلەنگەن SMTP تەڭشىكى ئارقىلىق ئەۋەتىلىدۇ."
           additional_settings: "قوشۇمچە تەڭشەكلەر"
+          smtp_disable_confirm: "ئەگەر SMTP نى چەكلىسىڭىز، بارلىق SMTP تەڭشەكلىرى ئەسلىگە قايتۇرۇلۇپ، مۇناسىۋەتلىك ئىقتىدارلار چەكلىنىدۇ. داۋاملاشتۇرۇۋېرەمسىز؟"
           prefill:
             title: "تەڭشەكتىن ئالدىن تولدۇرۇش:"
             gmail: "Gmail"
@@ -2062,6 +2065,7 @@ ug:
         redeemed_tab_with_count: "جەزملەندى (%{count})"
         invited_via: "تەكلىپ"
         invited_via_link: "ئۇلانما %{key} (%{count} / %{max} جەزملەندى)"
+        generating_link: "ئۇلانما قۇرۇۋاتىدۇ…"
         groups: "گۇرۇپپا"
         topic: "تېما"
         sent: "قۇرۇلغان/يوللانغان ۋاقتى"
@@ -2332,7 +2336,6 @@ ug:
     form_kit:
       reset: ئەسلىگە قايتۇر
       optional: تاللاشچان
-      errors_summary_title: "بۇ جەدۋەلدە خاتالىق بار:"
       dirty_form: "ئۆزگەرتىشلىرىڭىزنى تاپشۇرمىدىڭىز! راستتىنلا ئايرىلامسىز؟"
       errors:
         starts_with: "چوقۇم %{prefix} بىلەن باشلىنىدۇ"
@@ -2883,8 +2886,17 @@ ug:
       ulist_title: "بەلگە تىزىمى"
       list_item: "تىزىم تۈرى"
       toggle_direction: "يۆنىلىش ئالماشتۇر"
+      apply_wrap_title: "ئوراشنى قوللان"
       wrap_modal:
+        title: "ئوراشنى تەھرىرلە"
+        name_label: "ئوراش ئىسمى"
+        attributes_label: "خاسلىق"
+        add_attribute: "خاسلىق قوش"
+        remove_attribute: "خاسلىق چىقىرىۋەت"
         apply: "قوللان"
+        unwrap: "ئوراشنى سۆك"
+        no_attributes: "تېخى ھېچقانداق خاسلىق قوشۇلمىدى."
+      wrap_text: "مەزمۇن ئوراش"
       help: "Markdown تەھرىر ياردىمى"
       collapse: "تەھرىرلىگۈچ تاختىنى كىچىكلەت"
       open: "تەھرىرلىگۈچ تاختىنى ئاچ"
@@ -2956,6 +2968,7 @@ ug:
         move_outside_grid: "شادا سىرتىغا يۆتكە"
       image: "سۈرەت"
       grid_label: "بۇ شادا سۈپىتىدە كۆرسىتىلىدۇ"
+      grid_mode_grid: "شادا"
       image_scale_button: "سۈرەتنى %%{percent} كە تەڭشە"
       delete_image_button: سۈرەت ئۆچۈر
       toggle_image_grid: سۈرەت سېتكىسىنى ئالماشتۇر
@@ -3886,7 +3899,7 @@ ug:
       quote_edit: "تەھرىر"
       quote_edit_shortcut: "تەھرىر(ياكى e بېسىلىدۇ)"
       quote_copy: "نەقىل كۆچۈر"
-      quote_copied_to_clibboard: "نەقىل چاپلاش تاختىسىغا كۆچۈرۈلدى"
+      quote_copied_to_clipboard: "نەقىل چاپلاش تاختىسىغا كۆچۈرۈلدى"
       quote_share: "ھەمبەھىر"
       edit_reason: "سەۋەبى: "
       post_number: "%{number} يازما"
@@ -4187,6 +4200,7 @@ ug:
       back: "سەھىپىگە قايت"
       general: "ئادەتتىكى"
       settings: "تەڭشەك"
+      advanced: "ئالىي"
       topic_template: "قېلىپ"
       tags: "بەلگە"
       localizations: "يەرلىكلەشتۈرۈش"
@@ -4217,6 +4231,7 @@ ug:
       create_long: "يېڭى سەھىپە قۇرىدۇ"
       save: "سەھىپە ساقلا"
       slug: "سەھىپە قىسقارتما"
+      parent: "ئانا سەھىپە"
       slug_placeholder: "(تاللاشچان) تور ئادرېسىغا ئىشلىتىلىدىغان سىزىقلىق سۆز"
       creation_error: سەھىپە قۇرۇۋاتقاندا خاتالىق كۆرۈلدى.
       save_error: سەھىپە ساقلاۋاتقاندا خاتالىق كۆرۈلگەن.
@@ -4229,6 +4244,8 @@ ug:
       background_image: "سەھىپە تەگلىك سۈرىتى"
       background_image_dark: "قاراڭغۇ سەھىپە تەگلىك سۈرىتى"
       style: "ئۇسلۇب"
+      icon: "سىنبەلگە"
+      emoji: "چىراي ئىپادە"
       background_color: "رەڭ"
       foreground_color: "تېكىست رەڭگى"
       color_validations:
@@ -4239,13 +4256,13 @@ ug:
         type: "ئۇسلۇب"
         icon: "سىنبەلگە"
         emoji: "چىراي ئىپادە"
+        square: "چاسا"
         options:
           square: "چاسا"
           icon: "سىنبەلگە"
           emoji: "چىراي ئىپادە"
       color_used: "ئىشلىتىلىۋاتقان رەڭ"
       predefined_colors: "ئالدىن بېكىتىلگەن رەڭ تاللانمىسى"
-      name_placeholder: "ئەڭ كۆپ بولغاندا بىر ياكى ئىككى سۆز"
       color_placeholder: "خالىغان تور رەڭگى"
       delete_confirm: "بۇ سەھىپىنى راستتىنلا ئۆچۈرەمسىز؟"
       delete_error: "بۇ سەھىپىنى ئۆچۈرۈۋاتقاندا خاتالىق كۆرۈلگەن."
@@ -4253,6 +4270,7 @@ ug:
       no_description: "بۇ سەھىپىنىڭ چۈشەندۈرۈشىنى قوشۇڭ."
       change_in_category_topic: "چۈشەندۈرۈش تەھرىر"
       already_used: "بۇ رەڭ باشقا بىر سەھىپىگە ئىشلىتىلگەن"
+      color_palette: "رەڭ تاختا"
       security: "بىخەتەرلىك"
       security_add_group: "گۇرۇپپا قوش"
       permissions:
@@ -4269,7 +4287,7 @@ ug:
       uncategorized_security_warning: "بۇ سەھىپە ئالاھىدە. ئۇ سەھىپە تەۋەلىكى بولمىغان تېمىلار ساقلىنىدىغان جاي، ئۇنىڭ بىخەتەرلىك تەڭشىكى بولمايدۇ."
       uncategorized_general_warning: 'بۇ سەھىپە ئالاھىدە. ئۇ سەھىپىسى تاللانمىغان يېڭى تېمىنىڭ كۆڭۈلدىكى سەھىپىسى ئۈچۈن ئىشلىتىلىدۇ. ئەگەر بۇ خىل قىلمىشنىڭ ئالدىنى ئېلىپ مەجبۇرىي سەھىپە تاللاتماقچى بولسىڭىز، <a href="%{settingLink}">بۇ جايدىكى تەڭشەكتە چەكلەڭ</a>. ئەگەر ئىسىم ياكى چۈشەندۈرۈشىنى ئۆزگەرتمەكچى بولسىڭىز، <a href="%{customizeLink}">ئىختىيارى/تېكىست مەزمۇن</a>غا يۆتكىلىڭ.'
       pending_permission_change_alert: "سىز تېخى %{group} نى مەزكۇر سەھىپىگە قوشمىدىڭىز؛ ئۇلارنى قوشۇشتا بۇ توپچە چېكىلىدۇ."
-      images: "سۈرەت"
+      images: "كۆرۈنۈش"
       email_in: "كەلگەن ئىختىيارى ئېلخەت ئادرېسى:"
       email_in_tooltip: "سىز بىر قانچە ئېلخەت ئادرېسىنى | بىلەن ئايرىيالايسىز."
       email_in_allow_strangers: "ھېساباتى يوق ئاتسىز ئىشلەتكۈچىدىن كەلگەن ئېلخەتنى قوبۇل قىلىدۇ"
@@ -4298,7 +4316,12 @@ ug:
       position_disabled: "سەھىپە پائالىيەت تەرتىپى بويىچە كۆرسىتىلىدۇ. تىزىمدىكى سەھىپە تەرتىپىنى تىزگىنلەشتە، <a href='%{url}'>مۇقىم سەھىپە ئورنى</a> تەڭشىكىنى قوزغىتىش كېرەك."
       minimum_required_tags: "تېمىدا بولۇشقا تېگىشلىك ئەڭ ئاز بەلگە سانى:"
       default_slow_mode: 'بۇ سەھىپىدىكى يېڭى تېمىغا «ئاستا ھالەت» نى قوزغىتىدۇ.'
-      parent: "ئانا سەھىپە"
+      none_subcategory_text: "يوق"
+      visibility:
+        title: "كۆرۈنۈشچانلىقى"
+        public: "ئاممىۋى"
+        all_members: "بارلىق ئەزا"
+        group_restricted: "شەخسىي"
       num_auto_bump_daily: "ھەر كۈنى ئۆزلۈكىدىن چوققىلىنىدىغان ئوچۇق تېما سانى:"
       auto_bump_cooldown_days: "ئوخشاش بىر تېما قايتىدىن چوققىلاشقا كېرەكلىك ئەڭ قىسقا كۈن سانى."
       navigate_to_first_post_after_read: "تېما ئوقۇلغاندىن كېيىن تۇنجى يازمىغا يۆتكىلىدۇ"
@@ -5418,7 +5441,6 @@ ug:
         filter:
           search_placeholder: "ئات، چۈشەندۈرۈش ياكى قىستۇرما بويىچە سۈزىدۇ…"
           all: "ھەممىسى"
-          enabled_all: "قوزغىتىلغان ياكى چەكلەنگەن"
           enabled: "قوزغىتىلدى"
           disabled: "چەكلەندى"
           impact_type_feature: "ئىقتىدار"
@@ -5937,7 +5959,9 @@ ug:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">ئىزدەش خاتىرىسى</a>'
             disabled: 'ۋەزىيەت ئىزدەش دوكلاتى چەكلەنگەن. سانلىق مەلۇمات توپلاشتا <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">خاتىرە ئىزدەش سۈرۈشتۈرۈشى</a> قوزغىتىلىدۇ.'
-          average_chart_label: ئوتتۇرىچە
+          sort_button: "%{column} بويىچە تەرتىپلە"
+          sort_ascending: "ئۆسكۈچى"
+          sort_descending: "كېمەيگۈچى"
           filters:
             file_extension:
               label: ھۆججەت كېڭەيتىلمىسى
@@ -6674,8 +6698,6 @@ ug:
         delete: "ئۆچۈر"
         delete_confirm: '«%{theme_name}» نى راستتىنلا ئۆچۈرەمسىز؟'
         bulk_delete: "راستىنلا شۇنداق قىلامسىز؟"
-        bulk_themes_delete_confirm: "بۇ تۆۋەندىكى ئۆرنەكنى ئۆچۈرۈۋېتىدۇ، ئۇلارنى تور بېتىڭىزدىكى ئىشلەتكۈچىلەرئەمدى ئىشلىتەلمەيدۇ:"
-        bulk_components_delete_confirm: "بۇ تۆۋەندىكى بۆلەكنى ئۆچۈرۈۋېتىدۇ، ئۇلارنى تور بېتىڭىزدىكى ئىشلەتكۈچىلەرئەمدى ئىشلىتەلمەيدۇ:"
         color: "رەڭ"
         opacity: "سۈزۈكلۈكى"
         copy: "كۆپەيت"

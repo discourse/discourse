@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "tty-prompt"
+
 module ReleaseUtils
   PRIMARY_RELEASE_TAG = "release"
   RELEASE_TAGS = [PRIMARY_RELEASE_TAG, "beta", "latest-release"].freeze
@@ -48,6 +50,45 @@ module ReleaseUtils
     File.write("lib/version.rb", read_version_rb.sub(/STRING = ".*"/, "STRING = \"#{version}\""))
   end
 
+  def self.update_versions_json(new_version)
+    today_date = DateTime.now.utc.strftime("%Y-%m-%d")
+
+    version_year, version_month = new_version.split(".").map(&:to_i)
+    esr = [1, 7].include?(version_month)
+
+    support_period = esr ? 8.months : 2.months
+    support_end_date = (Date.new(version_year, version_month, 1) + support_period).strftime("%Y-%m")
+
+    new_version_info = {
+      new_version => {
+        developmentStartDate: today_date,
+        releaseDate: "#{version_year}-#{version_month.to_s.rjust(2, "0")}",
+        supportEndDate: support_end_date,
+        released: false,
+        esr: esr,
+        supported: true,
+      },
+    }
+
+    data = JSON.parse(File.read("versions.json"))
+    data.transform_values! do |v|
+      if !v["released"]
+        v["released"] = true
+        v["releaseDate"] = today_date
+      end
+
+      if v["supported"] &&
+           Date.parse(v["supportEndDate"] + "-01") < Date.new(version_year, version_month, 1)
+        v["supported"] = false
+        v["supportEndDate"] = today_date
+      end
+
+      v
+    end
+
+    File.write("versions.json", JSON.pretty_generate({ **new_version_info, **data }) + "\n")
+  end
+
   def self.git(*args, allow_failure: false, silent: false)
     puts "> git #{args.inspect}" unless silent
     stdout, stderr, status = Open3.capture3({ "LEFTHOOK" => "0" }, "git", *args)
@@ -70,17 +111,54 @@ module ReleaseUtils
     false
   end
 
-  def self.make_pr(base:, branch:)
-    title_and_body = [
-      "--title",
-      git("log", "-1", branch, "--pretty=%s").strip,
-      "--body",
-      git("log", "-1", branch, "--pretty=%b").strip,
-    ]
+  def self.confirm(msg)
+    return if test_mode?
+    prompt = TTY::Prompt.new
+    raise "Aborted" unless prompt.yes?(msg)
+  end
+
+  def self.merge_pr(base:, branch:)
+    if dry_run?
+      puts "[DRY RUN] Skipping merge of #{branch}"
+      return
+    end
+
+    loop do
+      confirm "Ready to merge #{branch}?"
+
+      if test_mode?
+        git "push", "origin", "#{branch}:#{base}"
+        break
+      else
+        success = gh("pr", "merge", branch, "--rebase", "--delete-branch")
+        break if success
+        puts "Merge failed. Maybe the PR isn't approved yet, or there's a conflict."
+      end
+    end
+
+    puts "Merge successful"
+  end
+
+  def self.make_pr(base:, branch:, title: nil, body: nil, draft: false)
+    title ||= git("log", "-1", branch, "--pretty=%s").strip
+    body ||= git("log", "-1", branch, "--pretty=%b").strip
+
+    title_and_body = ["--title", title, "--body", body]
+    draft_flag = draft ? ["--draft"] : []
 
     success =
-      gh("pr", "create", "--base", base, "--head", branch, *title_and_body, "--label", PR_LABEL) ||
-        gh("pr", "edit", branch, *title_and_body, "--add-label", PR_LABEL)
+      gh(
+        "pr",
+        "create",
+        "--base",
+        base,
+        "--head",
+        branch,
+        *title_and_body,
+        *draft_flag,
+        "--label",
+        PR_LABEL,
+      ) || gh("pr", "edit", branch, *title_and_body, "--add-label", PR_LABEL)
 
     raise "Failed to create or update PR" unless success
   end
@@ -273,17 +351,20 @@ namespace :release do
       end
 
       ReleaseUtils.write_version(target_version_number)
-      ReleaseUtils.git "add", "lib/version.rb"
+      ReleaseUtils.update_versions_json(target_version_number.split(".").first(2).join("."))
+      ReleaseUtils.git "add", "lib/version.rb", "versions.json"
       ReleaseUtils.git "commit",
                        "-m",
                        "DEV: Begin development of v#{target_version_number}\n\nMerging this will trigger the creation of a `release/#{current_version.sub(".0-latest", "")}` branch on the preceding commit."
     end
 
-    ReleaseUtils.git "push", "-f", "--set-upstream", "origin", pr_branch_name
-
-    ReleaseUtils.make_pr(base: branch, branch: pr_branch_name)
-
-    puts "Done! Branch #{pr_branch_name} has been pushed to origin and a pull request has been created."
+    if ReleaseUtils.dry_run?
+      puts "[DRY RUN] Skipping pushing & PR for branch #{pr_branch_name}"
+    else
+      ReleaseUtils.git "push", "-f", "--set-upstream", "origin", pr_branch_name
+      ReleaseUtils.make_pr(base: branch, branch: pr_branch_name)
+      puts "Done! Branch #{pr_branch_name} has been pushed to origin and a pull request has been created."
+    end
   end
 
   desc "Prepare version bump"
@@ -319,5 +400,115 @@ namespace :release do
     ReleaseUtils.make_pr(base: branch, branch: pr_branch_name)
 
     puts "Done! Branch #{pr_branch_name} has been pushed to origin and a pull request has been created."
+  end
+
+  desc <<~DESC
+    Stage security fixes from private-mirror PRs into a single branch for review/merge.
+    Fetches open PRs from private-mirror and presents an interactive selection.
+    e.g.
+      bin/rake "release:stage_security_fixes[main]"
+      bin/rake "release:stage_security_fixes[release/2025.11]"
+  DESC
+  task "stage_security_fixes", [:base] do |t, args|
+    base = args[:base]
+    if !base.start_with?("release/") && !%w[stable main].include?(base)
+      raise "Unknown base: #{base.inspect}"
+    end
+
+    fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
+    private_mirror_pr_numbers = []
+
+    if fix_refs.nil? || fix_refs.empty?
+      json_output, status =
+        Open3.capture2(
+          "gh",
+          "pr",
+          "list",
+          "--repo",
+          "discourse/discourse-private-mirror",
+          "--base",
+          base,
+          "--state",
+          "open",
+          "--json",
+          "number,title,headRefName",
+          "--limit",
+          "100",
+        )
+      raise "Failed to fetch PRs from private-mirror" if !status.success?
+
+      prs = JSON.parse(json_output)
+      raise "No open PRs found targeting #{base} on private-mirror" if prs.empty?
+
+      prompt = TTY::Prompt.new
+      choices =
+        prs.map do |pr|
+          { name: "##{pr["number"]}: #{pr["title"]}", value: pr.slice("number", "headRefName") }
+        end
+
+      selected =
+        prompt.multi_select(
+          "Select security fix PRs to include (space to toggle, enter to finish):",
+          choices,
+          default: [],
+          per_page: choices.size,
+        )
+      raise "No PRs selected" if selected.empty?
+
+      fix_refs = selected.map { |pr| "privatemirror/#{pr["headRefName"]}" }
+      private_mirror_pr_numbers = selected.map { |pr| pr["number"] }
+    end
+
+    puts "Staging security fixes for #{base} branch: #{fix_refs.inspect}"
+
+    branch = "security/#{base}-security-fixes"
+
+    ReleaseUtils.with_clean_worktree(base) do
+      ReleaseUtils.git "branch", "-D", branch if ReleaseUtils.ref_exists?(branch)
+      ReleaseUtils.git "checkout", "-b", branch
+
+      fix_refs.each do |ref|
+        origin, origin_branch = ref.split("/", 2)
+        ReleaseUtils.git "fetch", origin, origin_branch
+
+        first_commit_on_branch =
+          ReleaseUtils.git("log", "--format=%H", "origin/#{base}..#{ref}").lines.last.strip
+        ReleaseUtils.git "cherry-pick", "#{first_commit_on_branch}^..#{ref}"
+      end
+
+      puts "Finished merging commits into a locally-staged #{branch} branch. Git log is:"
+      puts ReleaseUtils.git("log", "origin/#{base}..#{branch}")
+
+      ReleaseUtils.confirm "Check the log above. Ready to push this branch to the origin and create a PR?"
+      ReleaseUtils.git("push", "-f", "--set-upstream", "origin", branch)
+
+      ReleaseUtils.make_pr(
+        base: base,
+        branch: branch,
+        title: "Security fixes for #{base}",
+        body: <<~MD,
+          > :warning: This PR should not be merged via the GitHub web interface
+          >
+          > It should only be merged using the associated `bin/rake release:stage_security_fixes` task.
+        MD
+        draft: true,
+      )
+      puts "Do not merge the PR via the GitHub web interface. Get it approved, then come back here to continue."
+      ReleaseUtils.merge_pr(base: base, branch: branch)
+    end
+
+    if private_mirror_pr_numbers.any?
+      puts "Closing associated PRs in private-mirror..."
+      private_mirror_pr_numbers.each do |pr_number|
+        ReleaseUtils.gh(
+          "pr",
+          "close",
+          pr_number.to_s,
+          "--repo",
+          "discourse/discourse-private-mirror",
+          "--delete-branch",
+        )
+      end
+    end
   end
 end

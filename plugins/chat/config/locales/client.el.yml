@@ -17,12 +17,17 @@ el:
           always: "Πάντα"
           fullscreen: "Όταν η συνομιλία είναι σε πλήρη οθόνη"
           never: "Ποτέ"
+      api:
+        scopes:
+          descriptions:
+            chat:
+              create_message: "Δημιουργία μηνύματος συνομιλίας σε ένα καθορισμένο κανάλι."
       web_hooks:
         chat_event:
           group_name: "Συμβάντα συνομιλίας"
           chat_message_created: "Μήνυμα δημιουργήθηκε"
           chat_message_edited: "Μήνυμα έχει επεξεργαστεί"
-          chat_message_trashed: "Μήνυμα έχει απορριφθεί"
+          chat_message_trashed: "Μήνυμα έχει πεταχθεί στα σκουπίδια"
           chat_message_restored: "Μήνυμα έχει αποκατασταθεί"
     about:
       chat_messages_count: "Μηνύματα συνομιλίας"
@@ -59,7 +64,7 @@ el:
         delete_channel: "Διαγραφή καναλιού"
         join_channel: "Εγγραφή στο κανάλι"
         leave_channel: "Αποχώρηση από το κανάλι"
-        notification_settings_context: "Ειδοποιήσεις"
+        leave_groupchat_info: "Αποχωρώντας από αυτήν την ομαδική συνομιλία, δεν θα έχετε πλέον πρόσβαση σε αυτήν και δεν θα λαμβάνετε ειδοποιήσεις σχετικά με αυτήν. Για να συμμετάσχετε ξανά, θα πρέπει να σας προσκαλέσει ξανά ένα μέλος της ομαδικής συνομιλίας."
         join: "Γίνετε μέλος"
         leave: "Αποχώρηση"
       channel_archive:
@@ -84,6 +89,7 @@ el:
       empty_state:
         direct_message_cta: "Ξεκινήστε μια προσωπική συνομιλία"
         direct_message: "Μπορείτε επίσης να ξεκινήσετε μια προσωπική συνομιλία με έναν ή περισσότερους χρήστες."
+        my_threads: "Δεν έχετε κανένα νήμα ακόμη. Τα νήματα στα οποία συμμετέχετε θα εμφανίζονται εδώ."
       email_frequency:
         never: "Ποτέ"
       header_indicator_preference:
@@ -98,6 +104,7 @@ el:
       enable: "Ενεργοποίηση συνομιλίας"
       flag: "Αναφορά"
       emoji: "Εισαγωγή emoji"
+      invitation_notification: "Ο/Η <span>%{username}</span> <span>σας προσκάλεσε να συμμετάσχετε σε ένα κανάλι συνομιλίας</span>"
       in_reply_to: "Ως απάντηση σε"
       heading: "Συνομιλία"
       join: "Γίνετε μέλος"
@@ -115,7 +122,9 @@ el:
         header: "Κεφαλίδα συνομιλίας"
         composer: "Συνθέτης συνομιλίας"
         channels_list: "Λίστα καναλιών συνομιλίας"
+      no_direct_message_channels: "Δεν έχετε μπει σε κανένα άμεσο μήνυμα ακόμη!"
       no_direct_message_channels_cta: "Ξεκινήστε μια συνομιλία"
+      no_public_channels: "Δεν έχετε μπει σε κανένα κανάλι ακόμη!"
       no_public_channels_cta: "Περιήγηση καναλιών"
       kicked_from_channel: "Δεν έχετε πλέον πρόσβαση σε αυτό το κανάλι."
       open: "Άνοιγμα συνομιλίας"
@@ -160,9 +169,12 @@ el:
         open: "Ξεκίνημα"
       browse:
         back: "Πίσω"
+        title: Κανάλια
         filter_all: Όλα
         filter_open: Ξεκίνημα
         filter_closed: Κλειστό
+        filter_archived: Αρχειοθετημένα
+        filter_input_placeholder: Αναζήτηση καναλιού με βάση το όνομα
       chat_message_separator:
         today: Σήμερα
         yesterday: Χτες
@@ -214,7 +226,6 @@ el:
       settings:
         follow: "Γίνετε μέλος"
         followed: "Έγινε μέλος"
-        unmute: "Άρση σίγασης καναλιού"
         threading_enabled: "Ενεργοποιημένα"
         threading_disabled: "Απενεργοποιημένο"
         notifications: "Ειδοποιήσεις"
@@ -297,14 +308,18 @@ el:
             description: "Λάβετε ειδοποίηση όταν κάποιος σας επισημάνει σε αυτό το νήμα και δείτε τον αριθμό των νέων απαντήσεων στη λίστα των νημάτων."
           watching:
             title: "Επιτηρείται"
+      thread_title_toast:
+        dismiss_action: "Να μην εμφανιστεί ξανά"
       draft_channel_screen:
         header: "Νέο Μήνυμα"
         cancel: "Ακύρωση"
     notifications:
+      chat_invitation: "σας προσκάλεσε να συμμετάσχετε σε ένα κανάλι συνομιλίας"
+      chat_invitation_html: "Ο/Η <span>%{username}</span> <span>σας προσκάλεσε να συμμετάσχετε σε ένα κανάλι συνομιλίας</span>"
       chat_quoted: "<span>%{username}</span> %{description}"
       chat_watched_thread_label:
         one: "%{username} και %{username2}"
-        other: "%{username} και %{count} ακόμη"
+        other: "%{username} και %{count} ακόμα"
       popup:
         chat_mention:
           direct: 'σας επισήμανε στο "%{channel}"'
@@ -314,6 +329,11 @@ el:
           direct_html: "<span>%{username}</span> <span>σας επισήμανε σε προσωπική συνομιλία</span>"
           other_plain: "επισήμανε %{identifier} σε προσωπική συνομιλία"
           other_html: "<span>%{username}</span> <span>επισήμανε %{identifier} σε προσωπική συνομιλία</span>"
+      titles:
+        chat_mention: "Επισημάνθηκες σε συνομιλία"
+        chat_invitation: "Προσκλήθηκες σε κανάλι συνομιλίας"
+        chat_quoted: "Παράθεση μηνύματος συνομιλίας"
+        chat_watched_thread: "Νήμα παρακολουθούμενης συνομιλίας"
     discourse_automation:
       scriptables:
         send_chat_message:
@@ -338,9 +358,10 @@ el:
           composer_bold: "%{shortcut} Έντονη γραφή (μόνο για συνθέτη)"
           composer_italic: "%{shortcut} Πλάγια γραφή (μόνο για συνθέτη)"
           composer_code: "%{shortcut} Κώδικας (μόνο για συνθέτη)"
-          drawer_open: "%{shortcut} Άνοιγμα συρταριού συνομιλίας"
           drawer_close: "%{shortcut} Κλείσιμο συρταριού συνομιλίας"
           mark_all_channels_read: "%{shortcut} Σήμανση όλων των καναλιών ως διαβασμένα"
+    user_menu:
+      no_chat_notifications_title: "Δεν έχετε ειδοποιήσεις συνομιλίας ακόμη"
     styleguide:
       sections:
         chat:

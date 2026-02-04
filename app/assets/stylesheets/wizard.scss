@@ -5,9 +5,11 @@
   --wizard-primary-100: #f4f2fc;
   --wizard-primary-300: #b8a4ff;
   --wizard-primary-400: #8b6df8;
-  --wizard-bg-color: #f9f8fc;
-  --wizard-bg-color-2: #e1d5ff;
+  --wizard-primary-800: #3a275e;
+  --wizard-bg-color: light-dark(#f9f8fc, var(--background-color));
+  --wizard-bg-color-2: light-dark(#e1d5ff, var(--wizard-primary-800));
   --wizard-input-radius: 8px;
+  --wizard-button-radius: 6.25em;
 }
 
 @keyframes bump {
@@ -102,7 +104,7 @@ body.wizard {
   position: relative;
   z-index: 11;
   background-color: var(--secondary);
-  box-shadow: 0 10px 30px rgb(123, 95, 226, 0.15);
+  box-shadow: light-dark(0 10px 30px rgb(123, 95, 226, 0.15), none);
   box-sizing: border-box;
   margin: 1em auto;
   border-radius: 16px;
@@ -343,11 +345,14 @@ body.wizard {
 
     &.--selected {
       .wizard-container__label {
-        background-color: var(--wizard-primary-100);
+        background-color: light-dark(
+          var(--wizard-primary-100),
+          var(--wizard-primary-900)
+        );
         border-color: var(--wizard-primary);
         border-width: 2px;
         margin: 0;
-        color: var(--wizard-primary);
+        color: light-dark(var(--wizard-primary), var(--primary));
         font-weight: bold;
       }
     }
@@ -397,17 +402,22 @@ body.wizard {
       }
     }
 
-    .row:not(.finish-installation-image) {
-      margin-right: auto;
+    h1 {
+      margin: 0 auto 0.5em;
+      font-weight: 900;
     }
 
-    h1 {
-      margin: 0 auto 1em 0;
+    p {
+      margin-bottom: 1.5em;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
     }
 
     .tada {
-      height: 15vw;
-      max-height: 9em;
+      max-height: 3em;
+      margin-bottom: 1em;
     }
 
     .help-text {
@@ -420,7 +430,19 @@ body.wizard {
 // /finish-installation and /finish-installation/register
 .wizard-container-contents.finish-installation {
   font-family: var(--font-family);
-  max-width: min(800px, 90vh);
+  max-width: 500px;
+
+  a {
+    color: var(--wizard-primary);
+
+    &:hover {
+      color: var(--wizard-primary-400);
+    }
+  }
+
+  form {
+    margin-bottom: 0;
+  }
 
   .wizard-container__combobox {
     background: var(--secondary);
@@ -451,23 +473,25 @@ body.wizard {
     cursor: pointer;
 
     &.btn-primary {
-      background-color: var(--tertiary);
-      color: var(--secondary);
+      background-color: var(--wizard-primary);
+      color: light-dark(var(--secondary), var(--primary));
       display: inline-block;
+      padding: 0.75em 2em;
+      border-radius: var(--wizard-button-radius);
+      width: auto;
+      font-size: 1rem;
 
-      @include viewport.until(sm) {
-        order: 1;
-        margin-left: 0;
+      &:hover {
+        background-color: var(--wizard-primary-400);
       }
-    }
 
-    &:hover,
-    &:focus {
-      background-color: var(--tertiary-hover);
-    }
+      &:focus {
+        background-color: var(--wizard-primary-300);
+      }
 
-    &primary:active {
-      background-color: var(--tertiary-high);
+      &:active {
+        background-color: var(--wizard-primary);
+      }
     }
 
     &:disabled {

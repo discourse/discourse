@@ -5,12 +5,3 @@
 # https://translate.discourse.org/
 
 lt:
-  admin_js:
-    admin:
-      site_settings:
-        categories:
-          footnote: "Diskurso išnašos"
-  js:
-    footnote:
-      title: "Išnašos"
-      add: "Pridėti išnašą"

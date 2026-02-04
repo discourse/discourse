@@ -245,7 +245,11 @@ module PageObjects
       end
 
       def choose_conditional(name)
-        find(".form-kit__conditional-display .form-kit__control-radio[value='#{name}']").click
+        within component do
+          find("input.form-kit__control-radio[value='#{name}']", visible: :all).ancestor(
+            "label",
+          ).click
+        end
       end
     end
   end

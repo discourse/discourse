@@ -2121,7 +2121,6 @@ fa_IR:
     form_kit:
       reset: بازنشانی
       optional: اختیاری
-      errors_summary_title: "این فرم حاوی خطاهایی است:"
       dirty_form: "شما تغییرات خود را ارسال نکرده‌اید! آیا مطمئنید می‌خواهید بروید؟"
       errors:
         required: "مورد نیاز"
@@ -3536,7 +3535,7 @@ fa_IR:
       quote_edit: "ویرایش"
       quote_edit_shortcut: "ویرایش (یا e را فشار دهید)"
       quote_copy: "رونوشت نقل قول"
-      quote_copied_to_clibboard: "نقل قول در کلیپ بورد کپی شد"
+      quote_copied_to_clipboard: "نقل قول در کلیپ بورد کپی شد"
       quote_share: "اشتراک‌گذاری"
       edit_reason: "دلیل:"
       post_number: "نوشته %{number}"
@@ -3811,6 +3810,7 @@ fa_IR:
       back: "بازگشت به دسته‌بندی"
       general: "عمومی"
       settings: "تنظیمات"
+      advanced: "پیشرفته"
       topic_template: "قالب"
       tags: "برچسب‌ها"
       localizations: "محلی‌سازی‌ها"
@@ -3844,6 +3844,8 @@ fa_IR:
       name: "نام دسته‌بندی"
       untitled: "دسته‌بندی بدون‌عنوان"
       description: "توضیحات"
+      icon: "آیکن"
+      emoji: "شکلک"
       background_color: "رنگ"
       color_validations:
         cant_be_empty: "نمی‌تواند خالی باشد"
@@ -3855,7 +3857,6 @@ fa_IR:
           emoji: "شکلک"
       color_used: "رنگ در حال استفاده"
       predefined_colors: "گزینه‌های رنگ از پیش تعریف شده"
-      name_placeholder: "حداکثر یک یا دو کلمه"
       color_placeholder: "هر رنگ وب"
       delete_confirm: "آیا مطمئنید که می‌خواهید این دسته‌بندی را پاک کنید؟"
       delete_error: "هنگام حذف دسته بندی خطایی رخ داد."
@@ -3879,7 +3880,7 @@ fa_IR:
       uncategorized_security_warning: "این دسته خاص است و به عنوان محل نگهداری موضوعاتی در نظر گرفته شده است که دسته‌بندی ندارند. این دسته نمی‌تواند تنظیمات امنیتی داشته باشد."
       uncategorized_general_warning: 'این دسته، دسته‌ای خاص است و به عنوان دسته پیش‌فرض برای موضوعات جدیدی که دسته‌بندی آن‌ها انتخاب نشده، استفاده می‌شود. اگر می‌خواهید از این رفتار جلوگیری کنید و انتخاب دسته را اجباری کنید، لطفاً <a href="%{settingLink}"> تنظیمات را در اینجا غیرفعال کنید</a>. اگر می‌خواهید نام یا توضیحات را تغییر دهید، به قسمت <a href="%{customizeLink}">Customize / Text Content</a>بروید.'
       pending_permission_change_alert: "شما %{group} را به این دسته اضافه نکرده‌اید. برای افزودن آنها روی این دکمه کلیک کنید."
-      images: "تصاویر"
+      images: "ظاهر"
       email_in: "آدرس ایمیل های دریافتی سفارشی:"
       email_in_tooltip: "شما می‌توانید چندیدن آدرس ایمیل را با کارکتر | جدا کنید."
       email_in_allow_strangers: "تایید ایمیل ها از کاربران ناشناس بدون حساب کاربری"
@@ -3901,6 +3902,11 @@ fa_IR:
       position: "موقعیت در صفحه دسته‌بندی:"
       position_disabled: "دسته ها به ترتیب فعالیت نمایش داده می شوند. برای کنترل ترتیب دسته‌ها در فهرست‌ها، گزینه <a href='%{url}'>'fixed category positions'</a> را فعال کنید."
       minimum_required_tags: "حداقل تعداد برچسب‌های مورد نیاز در یک تاپیک:"
+      none_subcategory_text: "هیچ‌کدام"
+      visibility:
+        title: "قابل مشاهده"
+        public: "عمومی"
+        group_restricted: "خصوصی"
       auto_bump_cooldown_days: "حداقل روزها قبل از بالا آوردن دوباره یک موضوع واحد"
       navigate_to_first_post_after_read: "پس از خواندن موضوعات به اولین پست بروید"
       notifications:
@@ -5184,7 +5190,9 @@ fa_IR:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">سوابق جستجو</a>'
             disabled: 'گزارش جستجوی پرطرفدار غیرفعال است. برای جمع‌آوری داده‌ها، <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">لاگ درخواست‌های جستجو</a> را فعال کنید.'
-          average_chart_label: میانگین
+          sort_button: "مرتب‌سازی براساس %{column}"
+          sort_ascending: "صعودی"
+          sort_descending: "نزولی"
           filters:
             file_extension:
               label: پسوند فایل
@@ -5854,8 +5862,6 @@ fa_IR:
         delete: "پاک کردن"
         delete_confirm: 'آیا از حذف "%{theme_name}" مطمئن هستید؟ '
         bulk_delete: "مطمئنید؟"
-        bulk_themes_delete_confirm: "با این کار پوسته‌های زیر حذف نصب می‌شوند و دیگر برای هیچ‌کدام از کاربران سایت شما قابل استفاده نخواهند بود:"
-        bulk_components_delete_confirm: "با این کار اجزای زیر حذف نصب خواهند شد و دیگر برای هیچ یک از کاربران سایت شما قابل استفاده نخواهند بود:"
         color: "رنگ"
         opacity: "تاری"
         copy: "تکراری"

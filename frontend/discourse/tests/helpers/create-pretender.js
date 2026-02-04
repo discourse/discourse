@@ -198,17 +198,17 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/tags/filter/search", (request) => {
     const responseBody = {
       results: [
-        { id: "monkey", name: "monkey", count: 1 },
-        { id: "gazelle", name: "gazelle", count: 2 },
-        { id: "dog", name: "dog", count: 3 },
-        { id: "cat", name: "cat", count: 4 },
+        { id: 1, name: "monkey", slug: "monkey", count: 1 },
+        { id: 2, name: "gazelle", slug: "gazelle", count: 2 },
+        { id: 3, name: "dog", slug: "dog", count: 3 },
+        { id: 4, name: "cat", slug: "cat", count: 4 },
       ],
     };
 
     if (
       request.queryParams.categoryId === "1" &&
       request.queryParams.q === "" &&
-      !request.queryParams.selected_tags.includes("monkey")
+      !request.queryParams.selected_tag_ids?.includes("1")
     ) {
       responseBody["required_tag_group"] = {
         name: "monkey group",

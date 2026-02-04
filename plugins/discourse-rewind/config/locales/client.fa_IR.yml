@@ -16,8 +16,6 @@ fa_IR:
           title: زمان مطالعه
         chat_usage:
           messages: پیام‌ها
-          author: شما
-          author_others: "%{username}"
           status_online: "● آنلاین"
         invites:
           title: دعوت‌ها

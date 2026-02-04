@@ -1781,6 +1781,11 @@ pl_PL:
       undo_revoke_access: "Cofnij zablokowanie dostępu"
       api_approved: "Zatwierdzony:"
       api_last_used_at: "Ostatnio użyto:"
+      api_show_permissions:
+        one: "Przyznano uprawnienia (%{count})"
+        few: "Przyznano uprawnienia (%{count})"
+        many: "Przyznano uprawnienia (%{count})"
+        other: "Przyznano uprawnienia (%{count})"
       theme: "Motyw"
       save_to_change_theme: 'Motyw zostanie zaktualizowany po kliknięciu "%{save_text}”'
       home: "Domyślna strona główna"
@@ -2579,7 +2584,11 @@ pl_PL:
     form_kit:
       reset: Przywróć
       optional: opcjonalnie
-      errors_summary_title: "Ten formularz zawiera błędy:"
+      errors_summary_title:
+        one: "Napraw ten błąd, aby kontynuować"
+        few: "Napraw te błędy, aby kontynuować"
+        many: "Napraw te błędy, aby kontynuować"
+        other: "Napraw te błędy, aby kontynuować"
       dirty_form: "Nie przesłano zmian. Czy na pewno chcesz wyjść?"
       errors:
         starts_with: "Musi zaczynać się od %{prefix}"
@@ -2603,6 +2612,10 @@ pl_PL:
           few: "Musi zawierać co najmniej %{count} znaki"
           many: "Musi zawierać co najmniej %{count} znaków"
           other: "Musi zawierać co najmniej %{count} znaków"
+      color:
+        available_presets: "Dostępne ustawienia wstępne"
+        already_used: "Już używane"
+        edit_presets: "Edytuj ustawienia wstępne kolorów"
     close: "Zamknij"
     assets_changed_confirm: "Ta strona właśnie otrzymała aktualizację oprogramowania. Pobrać najnowszą wersję teraz?"
     logout: "Nastąpiło wylogowanie."
@@ -3436,7 +3449,8 @@ pl_PL:
         votes_released: "głos został opublikowany"
         new_features: "wydano nowe funkcje discourse"
         admin_problems: "nowe porady w panelu administratora"
-        upcoming_change_available: "dostępna jest nowa nadchodząca zmiana"
+        upcoming_change_available: "dostępna jest nowa nadchodząca zmiana '%{changeName}'"
+        upcoming_change_automatically_promoted: "nadchodząca zmiana '%{changeName}' została automatycznie włączona"
     upload_selector:
       change: "Zmień"
       delete: "Usuń"
@@ -4330,7 +4344,7 @@ pl_PL:
       quote_edit: "Edytuj"
       quote_edit_shortcut: "Edytuj (lub naciśnij e)"
       quote_copy: "Skopiuj cytat"
-      quote_copied_to_clibboard: "Cytat skopiowany do schowka"
+      quote_copied_to_clipboard: "Cytat skopiowany do schowka"
       quote_share: "Udostępnij"
       edit_reason: "Powód"
       post_number: "wpis %{number}"
@@ -4672,8 +4686,11 @@ pl_PL:
       edit_dialog_title: "Edytuj: %{categoryName}"
       view: "Pokaż Tematy w Kategorii"
       back: "Powrót do kategorii"
+      single_page: "Pojedyncza strona"
       general: "Ogólne"
       settings: "Ustawienia"
+      advanced: "Zaawansowane"
+      show_advanced: "Ustawienia zaawansowane"
       topic_template: "Szablon"
       tags: "Tagi"
       localizations: "Języki"
@@ -4704,11 +4721,14 @@ pl_PL:
       create_long: "Utwórz nową kategorię"
       save: "Zapisz kategorię"
       slug: "Slug kategorii"
+      parent: "Kategoria nadrzędna"
       slug_placeholder: "(opcjonalne) słowa-z-myślnikiem dla URLi"
       creation_error: Podczas tworzenia tej kategorii wystąpił błąd.
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
       errors:
         self_lockout: "Zamierzasz zmienić uprawnienia kategorii w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
+      validations:
+        emoji_required: "Wybierz emoji."
       name: "Nazwa kategorii"
       untitled: "Kategoria bez tytułu"
       description: "Opis"
@@ -4717,7 +4737,10 @@ pl_PL:
       logo_description: "Zalecany współczynnik proporcji 1:1 z minimalnym rozmiarem 200px. Jeśli pozostawisz puste, żaden obraz nie zostanie wyświetlony."
       background_image: "Grafika z tłem kategorii"
       background_image_dark: "Obraz tła ciemnej kategorii"
-      style: "Style"
+      style: "Styl"
+      icon: "Ikona"
+      emoji: "Emoji"
+      select_emoji: "Wybierz emoji"
       background_color: "Kolor"
       foreground_color: "Kolor tekstu"
       color_validations:
@@ -4728,13 +4751,14 @@ pl_PL:
         type: "Styl"
         icon: "Ikona"
         emoji: "Emoji"
+        square: "Kwadrat"
         options:
           square: "Kwadrat"
           icon: "Ikona"
           emoji: "Emoji"
       color_used: "Kolor w użyciu"
       predefined_colors: "Predefiniowane opcje kolorów"
-      name_placeholder: "Maksymalnie jedno lub dwa słowa"
+      name_placeholder: "Zalecane jedno lub dwa słowa"
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
       delete_error: "Podczas próby usunięcia tej kategorii wystąpił błąd."
@@ -4742,6 +4766,7 @@ pl_PL:
       no_description: "Proszę dodaj opis do tej kategorii."
       change_in_category_topic: "Edytuj opis"
       already_used: "Ten kolor jest używany przez inną kategorię"
+      color_palette: "Paleta kolorów"
       security: "Bezpieczeństwo"
       security_add_group: "Dodaj grupę"
       permissions:
@@ -4751,6 +4776,7 @@ pl_PL:
         create: "Utwórz"
         no_groups_selected: "Żadnej grupie nie przyznano dostępu; ta kategoria będzie widoczna tylko dla personelu."
         everyone_has_access: 'Ta kategoria jest publiczna, każdy może wyświetlać, odpowiadać i tworzyć posty. Aby ograniczyć uprawnienia, usuń jedno lub więcej uprawnień przyznanych grupie "wszyscy".'
+        specific_groups_have_access: "Ta kategoria jest prywatna, tylko wybrane grupy mogą widzieć, odpowiadać i tworzyć wpisy."
         toggle_reply: "Przełącz uprawnienie do odpowiedzi"
         toggle_full: "Przełącz uprawnienie do tworzenia"
         inherited: 'To uprawnienie jest dziedziczone po "wszystkich"'
@@ -4758,7 +4784,7 @@ pl_PL:
       uncategorized_security_warning: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nie przypisanych do żadnej kategorii i jako taka nie może mieć ustawień bezpieczeństwa."
       uncategorized_general_warning: 'Ta kategoria jest wyjątkowa. Jest używana jako domyślna kategoria dla nowych tematów, które nie mają wybranej kategorii. Jeśli chcesz zapobiec temu zachowaniu i wymusić wybór kategorii, <a href="%{settingLink}">wyłącz to ustawienie tutaj</a>. Jeśli chcesz zmienić nazwę lub opis, przejdź do <a href="%{customizeLink}">Dostosuj / Treść tekstowa</a>.'
       pending_permission_change_alert: "Nie dodałeś/łaś %{group} do tej kategorii; kliknij ten przycisk, aby je dodać."
-      images: "Obrazy"
+      images: "Wygląd"
       email_in: "Dedykowany adres email kategorii:"
       email_in_tooltip: "Możesz oddzielić kilka adresów e-mail znakiem |."
       email_in_allow_strangers: "Akceptuj wiadomości email od anonimowych, nieposiadających kont użytkowników "
@@ -4787,7 +4813,19 @@ pl_PL:
       position_disabled: "Kategorie będą wyświetlane w kolejności aktywności. Aby kontrolować kolejność kategorii na listach, włącz ustawienie <a href='%{url}'>'fixed category positions'</a>."
       minimum_required_tags: "Minimalna liczba tagów wymaganych w temacie:"
       default_slow_mode: 'Włącz „Tryb powolny” dla nowych tematów w tej kategorii.'
-      parent: "Kategoria nadrzędna"
+      subcategory_of: "Podkategoria..."
+      none_subcategory_text: "Brak"
+      subcategory_permissions_warning: "Podkategoria kategorii prywatnej nie może być publiczna."
+      visibility:
+        title: "Widoczność"
+        public: "Publiczny"
+        all_members: "Wszyscy członkowie"
+        group_restricted: "Prywatny"
+        who_can_see: "Kto może zobaczyć tę kategorię"
+        who_can_post: "Kto może tworzyć wpisy w tej kategorii"
+        which_groups_can_access: "Które grupy mogą widzieć i publikować w tej kategorii"
+        more_options_hint: "Więcej uprawnień dostępnych w"
+        more_options_hint_link: "ustawieniach zaawansowanych."
       num_auto_bump_daily: "Liczba otwartych tematów do automatycznego podbicia każdego dnia"
       auto_bump_cooldown_days: "Minimalna liczba dni przed ponownym podbiciem tego samego tematu:"
       navigate_to_first_post_after_read: "Przejdź do pierwszego postu po przeczytaniu tematów"
@@ -5176,6 +5214,7 @@ pl_PL:
         back: "%{shortcut} wstecz"
         up_down: "%{shortcut} Przesuń zaznaczenie &uarr; &darr;"
         open: "%{shortcut} Otwórz wybrany temat"
+        open_new_window: "%{shortcut} Otwórz wybrany temat w nowej karcie/oknie"
         next_prev: "%{shortcut} Następna/poprzednia sekcja"
         go_to_unread_post: "%{shortcut} Idź do pierwszego nieprzeczytanego wpisu"
       application:
@@ -5979,6 +6018,7 @@ pl_PL:
         change_enabled_for_success: "Włączono tę zmianę dla %{enabledFor}"
         change_disabled: "Zrezygnowałeś z tej zmiany"
         permanent_notice: "Ta zmiana jest teraz trwała i wkrótce zostanie usunięta. Nie możesz już zrezygnować."
+        permanent_soon_notice: "Ta zmiana wkrótce stanie się trwała. Nie będzie już możliwości rezygnacji."
         permanent_no_group_selection: "Nie dotyczy, stałe zmiany dotyczą wszystkich grup."
         no_changes: "W tej chwili nie ma żadnych nadchodzących zmian."
         preview: "Podgląd"
@@ -6008,8 +6048,10 @@ pl_PL:
           search_placeholder: "Filtruj według nazwy, opisu lub wtyczki..."
           no_results: "Brak nadchodzących zmian odpowiadających wybranemu filtrowi"
           all: "Wszystkie"
-          enabled_all: "Włączone lub wyłączone"
+          enabled_all: "Wszystkie włączone stany"
           enabled: "Włączona"
+          enabled_for_staff: "Włączone dla personelu"
+          enabled_for_specific_groups: "Włączone dla określonych grup"
           disabled: "Wyłączone"
           impact_type_all: "Wszystkie rodzaje uderzeń"
           impact_type_feature: "Funkcja"
@@ -6421,6 +6463,9 @@ pl_PL:
         embedding:
           title: "Osadzanie"
           header_description: "Discourse ma możliwość osadzania komentarzy z tematu w zdalnej witrynie za pomocą interfejsu API Javascript, który tworzy IFRAME"
+        form_templates:
+          title: "Szablony formularzy"
+          header_description: "Szablony formularzy umożliwiają wprowadzenie ustrukturyzowanego formularza z weryfikacją danych jako części procesu tworzenia tematu"
       theme_site_settings:
         setting: "Ustawienie"
         overridden_by: "Zastąpione przez"
@@ -6584,6 +6629,7 @@ pl_PL:
           daily: Dziennie
           monthly: Miesięcznie
           weekly: Tygodniowo
+          value_so_far: "%{value} (jak dotąd)"
           dates: "Daty (UTC)"
           groups: "Wszystkie grupy"
           disabled: "Ten raport jest nieaktywny"
@@ -6594,7 +6640,11 @@ pl_PL:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logi wyszukiwania</a>'
             disabled: 'Raport wyszukiwań zyskujących popularność jest wyłączony. Włącz <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dziennik zapytań wyszukiwarki</a>, aby zbierać dane.'
-          average_chart_label: Średnia
+          average_chart_label: Wyświetlanie średnich, a nie sum
+          sort_button: "Sortuj według %{column}"
+          sort_button_current: "Posortowane według %{column}, %{direction}"
+          sort_ascending: "rosnąco"
+          sort_descending: "malejąco"
           filters:
             file_extension:
               label: Rozszerzenie pliku
@@ -7352,8 +7402,8 @@ pl_PL:
         delete: "Usuń"
         delete_confirm: 'Czy na pewno chcesz usunąć "%{theme_name}"?'
         bulk_delete: "Jesteś pewny/a?"
-        bulk_themes_delete_confirm: "Spowoduje to odinstalowanie następujących motywów. Nie będą już dostępne dla żadnego użytkownika w Twojej witrynie:"
-        bulk_components_delete_confirm: "Spowoduje to odinstalowanie następujących komponentów. Nie będą już dostępne dla żadnego użytkownika w Twojej witrynie:"
+        bulk_themes_delete_confirm: "Spowoduje to odinstalowanie następujących motywów. Nie będą one już dostępne dla użytkowników Twojej witryny:"
+        bulk_components_delete_confirm: "Spowoduje to odinstalowanie następujących komponentów, z których żaden użytkownik Twojej witryny nie będzie mógł już korzystać:"
         color: "Kolor"
         opacity: "Widoczność"
         copy: "Powiel"

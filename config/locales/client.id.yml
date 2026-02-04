@@ -1968,6 +1968,10 @@ id:
         create: "Buat"
       email_in_tooltip: "Anda dapat memisahkan beberapa alamat email dengan karakter |."
       review_group_name: "nama grup"
+      none_subcategory_text: "Tidak ada"
+      visibility:
+        public: "Umum"
+        group_restricted: "Pribadi"
       notifications:
         watching:
           title: "Melihat"
@@ -2401,7 +2405,7 @@ id:
           all: "Semua"
           trending_search:
             disabled: 'Laporan pencarian sedang tren dinonaktifkan. Aktifkan <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kueri penelusuran log</a> untuk mengumpulkan data.'
-          average_chart_label: Rata-rata
+          sort_button: "Urutkan berdasarkan %{column}"
           filters:
             category:
               label: Kategori

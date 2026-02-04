@@ -51,8 +51,8 @@ pl_PL:
     chat_integration_flowdock_excerpt_length: "Długość skrótu wpisu na Flowdock"
     chat_integration_groupme_enabled: "Włącz integrację z GroupMe"
     chat_integration_groupme_excerpt_length: "Długość fragmentu postu GroupMe"
-    chat_integration_groupme_bot_ids: "*wymagane* Identyfikatory botów, oddzielone przez ',' jeśli jest ich wiele"
-    chat_integration_groupme_instance_names: " *wymagana* Nazwa czatu GroupMe, rozdzielona przez ',' jeśli istnieje wiele (taka sama kolejność jak identyfikatory botów)"
+    chat_integration_groupme_bot_ids: "*wymagane* Identyfikatory bota, rozdzielone przecinkiem, jeśli jest ich wiele"
+    chat_integration_groupme_instance_names: " *wymagane* Nazwa czatu GroupMe, oddzielona przecinkiem, jeśli jest ich więcej (w tej samej kolejności, co identyfikatory botów)"
     chat_integration_teams_enabled: "Włącz integrację z Microsoft Teams"
     chat_integration_teams_excerpt_length: "Długość fragmentu postu Microsoft Team"
     chat_integration_powerautomate_enabled: "Włącz dostawcę integracji Microsoft Power Automate"
@@ -93,10 +93,10 @@ pl_PL:
         create:
           created: "Reguła utworzona z powodzeniem"
           updated: "Reguła zaktualizowana z powodzeniem"
-          error: "Podczas tworzenia reguły wystąpił błąd."
+          error: "Przepraszamy, wystąpił błąd podczas tworzenia tej reguły."
         delete:
           success: "Reguła usunięta"
-          error: "Podczas usuwania reguły wystąpił błąd. Użyj `/discourse status`, by uzyskać listę reguł."
+          error: "Przepraszamy, wystąpił błąd podczas usuwania tej reguły. Uruchom `/discourse status`, aby wyświetlić listę reguł."
         not_found:
           tag: "Tag o nazwie *%{name}* nie może zostać znaleziony."
           category: "Kategoria o nazwie *%{name}* nie może zostać znaleziona. Dostępne kategorie: *%{list}*"
@@ -158,10 +158,10 @@ pl_PL:
         create:
           created: "Reguła utworzona z powodzeniem"
           updated: "Reguła zaktualizowana z powodzeniem"
-          error: "Podczas tworzenia reguły wystąpił błąd."
+          error: "Przepraszamy, wystąpił błąd podczas tworzenia tej reguły."
         delete:
           success: "Reguła usunięta"
-          error: "Podczas usuwania reguły wystąpił błąd. Użyj <code>/status</code>, by uzyskać listę reguł."
+          error: "Przepraszamy, wystąpił błąd podczas usuwania tej reguły. Uruchom polecenie <code>/status</code> , aby wyświetlić listę reguł."
         not_found:
           tag: "Tag <b>%{name}</b> nie może zostać znaleziony."
           category: "Kategoria <b>%{name}</b> nie może zostać znaleziona. Dostępne kategorie: <b>%{list}</b>"
@@ -192,10 +192,10 @@ pl_PL:
         create:
           created: "Reguła utworzona z powodzeniem"
           updated: "Reguła zaktualizowana z powodzeniem"
-          error: "Podczas tworzenia reguły wystąpił błąd."
+          error: "Przepraszamy, wystąpił błąd podczas tworzenia tej reguły."
         delete:
           success: "Reguła usunięta"
-          error: "Podczas usuwania reguły wystąpił błąd. Użyj `/discourse status`, by uzyskać listę reguł."
+          error: "Przepraszamy, wystąpił błąd podczas usuwania tej reguły. Uruchom `/discourse status`, aby wyświetlić listę reguł."
         not_found:
           tag: "Tag o nazwie *%{name}* nie może zostać znaleziony."
           category: "Kategoria o nazwie *%{name}* nie może zostać znaleziona. Dostępne kategorie: *%{list}*"

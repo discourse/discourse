@@ -2224,7 +2224,6 @@ zh_CN:
     form_kit:
       reset: 重置
       optional: 可选
-      errors_summary_title: "此表单包含错误："
       dirty_form: "您没有提交更改！确定要离开吗？"
       errors:
         starts_with: "必须以 %{prefix} 开头"
@@ -2942,7 +2941,10 @@ zh_CN:
         membership_request_consolidated: "新成员资格请求"
         reaction: "新回应"
         votes_released: "投票额度已释放"
+        new_features: "已发布新的 Discourse 功能！"
         admin_problems: "网站信息中心有新建议"
+        upcoming_change_available: "即将到来的新变化 '%{changeName}' 已可用"
+        upcoming_change_automatically_promoted: "即将到来的变化 '%{changeName}' 已自动启用"
     upload_selector:
       change: "更改"
       delete: "删除"
@@ -3695,7 +3697,7 @@ zh_CN:
       quote_edit: "编辑"
       quote_edit_shortcut: "编辑（或按 e）"
       quote_copy: "复制引用"
-      quote_copied_to_clibboard: "引用已复制到剪贴板"
+      quote_copied_to_clipboard: "引用已复制到剪贴板"
       quote_share: "分享"
       edit_reason: "原因："
       post_number: "帖子 %{number}"
@@ -3974,8 +3976,11 @@ zh_CN:
       edit_dialog_title: "编辑: %{categoryName}"
       view: "查看类别中的话题"
       back: "返回类别"
+      single_page: "单页"
       general: "常规"
       settings: "设置"
+      advanced: "高级"
+      show_advanced: "高级设置"
       topic_template: "模板"
       tags: "标签"
       localizations: "本地化"
@@ -4006,6 +4011,7 @@ zh_CN:
       create_long: "创建新类别"
       save: "保存类别"
       slug: "类别缩略名"
+      parent: "父类别"
       slug_placeholder: "（可选）用于 URL 以“-”分隔的字词"
       creation_error: 创建类别时出错。
       save_error: 保存类别时出错。
@@ -4020,6 +4026,9 @@ zh_CN:
       background_image: "类别背景图片"
       background_image_dark: "深色类别背景图片"
       style: "样式"
+      icon: "图标"
+      emoji: "表情符号"
+      select_emoji: "选择 emoji"
       background_color: "颜色"
       foreground_color: "文本颜色"
       color_validations:
@@ -4030,13 +4039,14 @@ zh_CN:
         type: "样式"
         icon: "图标"
         emoji: "表情符号"
+        square: "方形"
         options:
           square: "方形"
           icon: "图标"
           emoji: "表情符号"
       color_used: "使用的颜色"
       predefined_colors: "预定义颜色选项"
-      name_placeholder: "应该简明扼要"
+      name_placeholder: "建议使用一到两个词"
       color_placeholder: "任意网页颜色"
       delete_confirm: "确定要删除此类别吗？"
       delete_error: "删除类别时出错。"
@@ -4044,6 +4054,7 @@ zh_CN:
       no_description: "请为此类别添加描述。"
       change_in_category_topic: "编辑描述"
       already_used: "此颜色已被其他类别使用"
+      color_palette: "调色板"
       security: "安全性"
       security_add_group: "添加群组"
       permissions:
@@ -4053,6 +4064,7 @@ zh_CN:
         create: "创建"
         no_groups_selected: "没有群组被授予访问权限；此类别仅对管理人员可见。"
         everyone_has_access: '此类别是公开的，任何人都可以查看、回复和创建帖子。要限制权限，请移除授予“所有人”组的一个或多个权限。'
+        specific_groups_have_access: "此类别是私密的，只有选定的组才能看见、回复和创建帖子。"
         toggle_reply: "切换回复权限"
         toggle_full: "切换创建权限"
         inherited: '此权限继承自“所有人”'
@@ -4060,7 +4072,7 @@ zh_CN:
       uncategorized_security_warning: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能有安全性设置。"
       uncategorized_general_warning: '此类别比较特殊。它用作未选择类别的新话题的默认类别。如果您想要避免此行为并强制选择类别，<a href="%{settingLink}">请在此处禁用该设置</a>。如果您想要更改其名称或描述，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
       pending_permission_change_alert: "您还没有将 %{group} 添加到此类别；点击此按钮添加它们。"
-      images: "图片"
+      images: "外观"
       email_in: "自定义传入电子邮件地址："
       email_in_tooltip: "您可以使用 | 字符分隔多个电子邮件地址。"
       email_in_allow_strangers: "接受来自没有帐户的匿名用户的电子邮件"
@@ -4089,7 +4101,18 @@ zh_CN:
       position_disabled: "类别将按活动顺序显示。要控制列表中类别的顺序，请启用<a href='%{url}'>固定类别位置</a>设置。"
       minimum_required_tags: "话题中所需的最少标签数："
       default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
-      parent: "父类别"
+      subcategory_of: "子类别……"
+      none_subcategory_text: "无"
+      subcategory_permissions_warning: "私有类别的子类别不能公开。"
+      visibility:
+        title: "公开范围"
+        public: "公开"
+        all_members: "所有成员"
+        group_restricted: "不公开"
+        who_can_see: "谁可以查看此类别"
+        who_can_post: "谁可以在此类别中发帖"
+        more_options_hint: "更多可用权限"
+        more_options_hint_link: "高级设置."
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
       auto_bump_cooldown_days: "再次顶帖同一话题之前的最短天数。"
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
@@ -4432,6 +4455,7 @@ zh_CN:
         back: "%{shortcut} 返回"
         up_down: "%{shortcut} 移动选择 &uarr; &darr;"
         open: "%{shortcut} 打开所选话题"
+        open_new_window: "%{shortcut} 在新标签页/窗口中打开所选话题"
         next_prev: "%{shortcut} 下一个/上一个部分"
         go_to_unread_post: "%{shortcut} 转到第一个未读帖子"
       application:
@@ -5151,6 +5175,7 @@ zh_CN:
         change_enabled_for_success: "您已为 %{enabledFor} 启用此更改"
         change_disabled: "您已选择不加入此变更"
         permanent_notice: "这项变更已永久生效，并将很快被移除。您不能选择退出。"
+        permanent_soon_notice: "这一变化将很快永久生效。您将无法再选择退出。"
         permanent_no_group_selection: "不适用，永久性变更适用于所有群组。"
         no_changes: "目前暂无变更计划"
         preview: "预览"
@@ -5177,13 +5202,16 @@ zh_CN:
           search_placeholder: "按名称、描述或插件筛选……"
           no_results: "没有符合您筛选条件的更改"
           all: "所有"
-          enabled_all: "启用或禁用"
+          enabled_all: "所有已启用的状态"
           enabled: "已启用"
+          enabled_for_staff: "为管理人员启用"
+          enabled_for_specific_groups: "为特定群组启用"
           disabled: "已禁用"
           impact_type_all: "影响类型"
           impact_type_feature: "功能"
           impact_type_other: "其他"
           status_all: "所有状态"
+          status_conceptual: "概念阶段"
           status_experimental: "实验性"
           status_alpha: "Alpha"
           status_beta: "Beta"
@@ -5719,6 +5747,7 @@ zh_CN:
           daily: 每天
           monthly: 每月
           weekly: 每周
+          value_so_far: "%{value} （目前为止）"
           dates: "日期 (UTC)"
           groups: "所有群组"
           disabled: "此报告已禁用"
@@ -5729,7 +5758,11 @@ zh_CN:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">搜索日志</a>'
             disabled: '趋势搜索报告已禁用。启用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">记录搜索查询</a>以收集数据。'
-          average_chart_label: 平均值
+          average_chart_label: 显示平均数，而不是总数
+          sort_button: "按%{column}排序"
+          sort_button_current: "按 %{column}, %{direction} 排序"
+          sort_ascending: "升序"
+          sort_descending: "降序"
           filters:
             file_extension:
               label: 文件扩展名
@@ -6466,8 +6499,6 @@ zh_CN:
         delete: "删除"
         delete_confirm: '确定要删除“%{theme_name}”吗？'
         bulk_delete: "确定吗？"
-        bulk_themes_delete_confirm: "这将卸载以下主题，您网站上的任何用户将无法再使用它们："
-        bulk_components_delete_confirm: "这将卸载以下主题组件，您网站上的任何用户将无法再使用它们："
         color: "颜色"
         opacity: "不透明度"
         copy: "复制"

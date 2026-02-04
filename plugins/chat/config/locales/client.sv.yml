@@ -73,7 +73,6 @@ sv:
         join_channel: "Gå med i kanal"
         leave_channel: "Lämna kanal"
         leave_groupchat_info: "Genom att lämna den här gruppchatten har du inte längre tillgång till den och kommer inte att få aviseringar relaterade till den. För att gå med igen måste du bjudas in igen av en medlem av gruppchatten."
-        notification_settings_context: "Aviseringar"
         join: "Gå med"
         leave: "Lämna"
         save_label:
@@ -658,7 +657,6 @@ sv:
           composer_bold: "%{shortcut} Fet (endast kompositör)"
           composer_italic: "%{shortcut} Kursiv (endast kompositör)"
           composer_code: "%{shortcut} Kod (endast kompositör)"
-          drawer_open: "%{shortcut} Öppna chattmenyn"
           drawer_close: "%{shortcut} Stäng chattmenyn"
           mark_all_channels_read: "%{shortcut} Markera alla kanaler som lästa"
     topic_statuses:

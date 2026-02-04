@@ -1517,6 +1517,7 @@ lt:
         tags: "Gairės"
         interface: "Sąsaja"
         apps: "Programėlės"
+        upcoming_changes: "Būsimi pakeitimai"
       change_password:
         success: "(el. laiškas išsiųstas)"
         in_progress: "(siunčiamas el. laiškas)"
@@ -3407,6 +3408,8 @@ lt:
       creation_error: Įvyko klaida kuriant kategoriją.
       save_error: Įvyko klaida išsaugant kategoriją.
       description: "Aprašymas"
+      icon: "Ikona"
+      emoji: "Emoji"
       background_color: "Spalva"
       color_validations:
         cant_be_empty: "negali būti tuščia"
@@ -3416,7 +3419,6 @@ lt:
         options:
           icon: "Ikona"
           emoji: "Emoji"
-      name_placeholder: "Daugiausiai vienas arba du žodžiai"
       color_placeholder: "Bet kokia internetinė spalva"
       delete_confirm: "Ar tikrai norite ištrinti šią kategoriją?"
       delete_error: "Įvyko klaida ištrinant kategoriją."
@@ -3435,7 +3437,7 @@ lt:
       special_warning: "Įspėjimas: Ši kategorija yra iš anksto numatyta kategorija ir saugumo nustatymai negali būti keičiami. Jeigu nenorite naudoti šios kategorijos, ištrinkie ją vietoj pakartotino naudojimo."
       uncategorized_security_warning: "Ši kategorija yra ypatinga. Jis skirta temoms, kurios neturi kategorijos, laikyti; ji negali turėti saugos nustatymų."
       pending_permission_change_alert: "Jūs nepridėjote %{group} į šią kategoriją; spustelėkite šį mygtuką, norėdami juos pridėti."
-      images: "Paveiksliukai"
+      images: "išvaizda"
       email_in: " papildomas naujas el. pašto adresas:"
       email_in_allow_strangers: "Gauti el. laiškus iš anoniminių paskyrų neturinčių vartotojų "
       mailinglist_mirror: "Kategorija atspindi adresatų sąrašą"
@@ -3453,6 +3455,11 @@ lt:
       this_year: "šiais metais"
       position: "Pozicija kategorijų puslapyje:"
       minimum_required_tags: "Minimalus temoje reikalingas žymų skaičius:"
+      none_subcategory_text: "Nieko"
+      visibility:
+        title: "Matomumas"
+        public: "Vieša"
+        group_restricted: "Privatu"
       num_auto_bump_daily: "Atvirų temų, kurios bus automatiškai rodomos kasdien, skaičius:"
       navigate_to_first_post_after_read: "Perskaitykite temas, eikite į pirmąjį įrašą"
       notifications:
@@ -4345,7 +4352,9 @@ lt:
           no_data: "Nėra rodomų duomenų."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Paieškos įrašai</a>'
-          average_chart_label: Vidutinis
+          sort_button: "Rūšiuoti pagal %{column}"
+          sort_ascending: "didėjantis"
+          sort_descending: "mažėjantis"
           filters:
             file_extension:
               label: Failo plėtinys

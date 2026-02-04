@@ -87,7 +87,6 @@ sk:
         join_channel: "Pripojte sa ku kanálu"
         leave_channel: "Opustiť kanál"
         leave_groupchat_info: "Keď opustíte tento skupinový čet, už k nemu nebudete mať prístup a nebudete dostávať súvisiace upozornenia. Ak sa chcete znova pripojiť, musíte byť znova pozvaní členom skupinového rozhovoru."
-        notification_settings_context: "Upozornenia"
         join: "Pridať sa"
         leave: "Opustiť"
         save_label:
@@ -786,7 +785,6 @@ sk:
           composer_bold: "%{shortcut} Tučné (iba skladateľ)"
           composer_italic: "%{shortcut} Kurzíva (iba skladateľ)"
           composer_code: "%{shortcut} Kód (iba skladateľ)"
-          drawer_open: "%{shortcut} Otvoriť zásuvku chatu"
           drawer_close: "%{shortcut} Zatvoriť zásuvku chatu"
           mark_all_channels_read: "%{shortcut} Označiť všetky kanály ako prečítané"
     topic_statuses:

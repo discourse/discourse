@@ -77,30 +77,6 @@ discourse_ai:
     default: false
     hidden: true
 
-  # Deprecated image generation settings - TODO(keegan): Remove 2026-02-01
-  ai_openai_image_generation_url:
-    default: ""
-    hidden: true
-  ai_openai_image_edit_url:
-    default: ""
-    hidden: true
-  ai_stability_api_key:
-    default: ""
-    secret: true
-    hidden: true
-  ai_stability_api_url:
-    default: ""
-    hidden: true
-  ai_stability_engine:
-    default: ""
-    hidden: true
-  ai_helper_illustrate_post_model:
-    default: ""
-    type: enum
-    allow_any: false
-    enum: "DiscourseAi::Configuration::LlmEnumerator"
-    hidden: true
-
   ai_helper_enabled:
     default: false
     client: true
@@ -117,19 +93,6 @@ discourse_ai:
     default: false
     client: true
     area: "ai-features/ai_helper"
-  ai_helper_model: # Deprecated. TODO(keegan): Remove 2025-09-01
-    default: ""
-    allow_any: false
-    type: enum
-    enum: "DiscourseAi::Configuration::LlmEnumerator"
-    hidden: true
-  ai_helper_custom_prompts_allowed_groups: # Deprecated. TODO(roman): Remove 2025-09-01
-    type: group_list
-    list_type: compact
-    default: "3" # 3: @staff
-    allow_any: false
-    refresh: true
-    hidden: true
   post_ai_helper_allowed_groups:
     type: group_list
     list_type: compact
@@ -155,11 +118,6 @@ discourse_ai:
       - "context_menu"
       - "image_caption"
     area: "ai-features/ai_helper"
-  ai_helper_image_caption_model: # Deprecated. TODO(keegan): Remove 2025-09-01
-    default: ""
-    type: enum
-    enum: "DiscourseAi::Configuration::LlmVisionEnumerator"
-    hidden: true
   ai_helper_proofreader_persona:
     default: "-22"
     type: enum
@@ -263,12 +221,6 @@ discourse_ai:
     default: false
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/embeddings"
-  ai_embeddings_semantic_search_hyde_model: # Deprecated. TODO(keegan): Remove 2025-09-01
-    hidden: true
-    default: ""
-    type: enum
-    allow_any: false
-    enum: "DiscourseAi::Configuration::LlmEnumerator"
   ai_embeddings_semantic_quick_search_enabled:
     default: false
     client: true
@@ -312,12 +264,6 @@ discourse_ai:
     client: true
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/summarization"
-  ai_summarization_model: # Deprecated. TODO(keegan): Remove 2025-09-01
-    default: ""
-    allow_any: false
-    type: enum
-    enum: "DiscourseAi::Configuration::LlmEnumerator"
-    hidden: true
   ai_summarization_persona:
     default: "-11"
     type: enum
@@ -328,11 +274,6 @@ discourse_ai:
     list_type: compact
     default: ""
     area: "ai-features/summarization"
-  ai_custom_summarization_allowed_groups: # Deprecated. TODO(roman): Remove 2025-09-01
-    type: group_list
-    list_type: compact
-    default: "3|13" # 3: @staff, 13: @trust_level_3
-    hidden: true
   ai_summary_gists_enabled:
     default: false
     client: true
@@ -342,11 +283,6 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::PersonaEnumerator"
     area: "ai-features/summarization"
-  ai_summary_gists_allowed_groups: # Deprecated. TODO(roman): Remove 2025-09-01
-    type: group_list
-    list_type: compact
-    default: "0" #everyone
-    hidden: true
   ai_summary_backfill_topic_max_age_days:
     default: 30
     min: 1
@@ -419,9 +355,6 @@ discourse_ai:
     client: true
     enum: "DiscourseAi::Configuration::PersonaEnumerator"
     area: "ai-features/search"
-  ai_bot_discover_persona: # Replaced by ai_discover_persona. TODO(roman): Remove 2026-01-01
-    default: ""
-    hidden: true
   ai_automation_max_triage_per_minute:
     default: 60
     hidden: true
@@ -486,12 +419,6 @@ discourse_ai:
     client: true
     validator: "DiscourseAi::Configuration::LlmDependencyValidator"
     area: "ai-features/translation"
-  ai_translation_model: # Deprecated. TODO(keegan): Remove 2025-09-01
-    default: ""
-    type: enum
-    allow_any: false
-    enum: "DiscourseAi::Configuration::LlmEnumerator"
-    hidden: true
   ai_translation_locale_detector_persona:
     default: "-27"
     type: enum
@@ -520,6 +447,10 @@ discourse_ai:
     area: "ai-features/translation"
   ai_translation_backfill_limit_to_public_content:
     default: true
+    client: false
+    area: "ai-features/translation"
+  ai_translation_include_bot_content:
+    default: false
     client: false
     area: "ai-features/translation"
   ai_translation_max_post_length:

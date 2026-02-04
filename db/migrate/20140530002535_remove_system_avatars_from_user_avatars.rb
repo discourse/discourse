@@ -8,7 +8,7 @@ class RemoveSystemAvatarsFromUserAvatars < ActiveRecord::Migration[4.2]
       SELECT system_upload_id FROM user_avatars
     )"
 
-    # normally we dont reach into the object model, but we have to here.
+    # normally we don't reach into the object model, but we have to here.
     # otherwise we will wait a real long time for uploads to go away
     skip = -1
     while skip = destroy_system_avatar_batch(skip)

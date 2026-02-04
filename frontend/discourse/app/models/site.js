@@ -270,16 +270,18 @@ export default class Site extends RestModel {
     const categoryId = get(newCategory, "id");
     const existingCategory = categories.find((c) => c.id === categoryId);
 
-    // Don't update null permissions
     if (newCategory.permission === null) {
       delete newCategory.permission;
+    }
+
+    if (newCategory.has_children == null) {
+      delete newCategory.has_children;
     }
 
     if (existingCategory) {
       existingCategory.setProperties(newCategory);
       return existingCategory;
     } else {
-      // TODO insert in right order?
       newCategory = this.store.createRecord("category", newCategory);
       categories.push(newCategory);
       return newCategory;

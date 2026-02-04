@@ -66,7 +66,7 @@ module Jobs
         Email::Sender.new(message, :group_smtp, recipient_user).send
       rescue Net::ReadTimeout => err
         # We can't be sure if the send actually failed or if ENTER . ENTER (to end
-        # the SMTP data sequence) just timed out, as is the case with Gmail occassionaly,
+        # the SMTP data sequence) just timed out, as is the case with Gmail occasionally,
         # where they can do this if they suspect you are sending spam.
         Discourse.warn_exception(
           err,

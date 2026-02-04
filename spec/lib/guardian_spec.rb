@@ -2206,8 +2206,12 @@ RSpec.describe Guardian do
         expect(Guardian.new(user).can_edit_email?(user)).to be_truthy
       end
 
-      it "is true for moderators" do
-        expect(Guardian.new(moderator).can_edit_email?(user)).to be_truthy
+      it "is true for moderators to edit their own email" do
+        expect(Guardian.new(moderator).can_edit_email?(moderator)).to be_truthy
+      end
+
+      it "is false for moderators to edit another user's email" do
+        expect(Guardian.new(moderator).can_edit_email?(user)).to be_falsey
       end
 
       it "is true for admins" do
@@ -2444,7 +2448,7 @@ RSpec.describe Guardian do
       end
     end
 
-    context "when ignorer is not in requred trust level group" do
+    context "when ignorer is not in required trust level group" do
       let(:guardian) { Guardian.new(trust_level_0) }
       it "does not allow ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(false)

@@ -164,7 +164,7 @@ ko:
     emails_are_disabled_non_staff: "운영진이 아닌 사용자의 발신 이메일이 비활성화되었습니다."
     software_update_prompt:
       message: "사이트가 업데이트되었습니다. 원활한 작동을 위해 <span>새로고침해 주세요</span>."
-      dismiss: "읽음 처리..."
+      dismiss: "읽음으로 표시..."
     back_button: "뒤로"
     welcome_banner:
       header:
@@ -174,6 +174,7 @@ ko:
       search_placeholder: "검색"
     impersonation:
       notice: "사용자님은 %{username}을 사칭하고 있습니다."
+      stop: "더 이상 사칭하지 마세요"
     themes:
       default_description: "기본"
       error_caused_by: "'%{name}' 테마에서 오류가 발생하였습니다. <a target='blank' href='%{path}'>여기</a>를 클릭해 테마를 업데이트 또는 재설정하거나, 테마 사용을 중지하세요."
@@ -1151,12 +1152,15 @@ ko:
       allow_private_messages: "다른 사용자가 나에게 개인 메시지 보내기 허용"
       external_links_in_new_tab: "새 탭에서 모든 외부 링크 열기"
       enable_quoting: "하이라이트된 텍스트에 대한 인용 댓글 활성화"
+      enable_smart_lists: "글 작성 모드에서 스마트 목록 활성화"
       enable_defer: "글을 읽지 않은 상태로 표시 활성화"
+      enable_markdown_monospace_font: "마크다운 모드에서 글 작성시 고정폭 글꼴 사용"
       experimental_sidebar:
         enable: "사이드바 활성화"
         options: "옵션"
         navigation_section: "내비게이션"
         navigation_section_instruction: "탐색 메뉴의 글 목록에 새 항목이나 읽지 않은 항목이 있는 경우…"
+        show_count_new_items_checkbox_description: "새 항목의 개수 표시"
       change: "변경"
       featured_topic: "주요 글"
       moderator: "%{user} 님은 운영자입니다"
@@ -1249,9 +1253,9 @@ ko:
         unread: "읽지 않음"
         unread_with_count:
           other: "읽지 않음(%{count})"
-        new: "신규"
+        new: "새글"
         new_with_count:
-          other: "신규(%{count})"
+          other: "새글 (%{count})"
         archive: "보관"
         groups: "내 그룹"
         move_to_inbox: "받은 편지함으로 이동"
@@ -2194,7 +2198,7 @@ ko:
             other: "확실한가요? %{count}개의 중요한 알림이 있습니다."
           messages:
             other: "확실한가요? 읽지 않은 개인 메시지가 %{count}개 있습니다."
-        dismiss: "읽음 처리..."
+        dismiss: "읽음으로 표시..."
         cancel: "취소"
       group_message_summary:
         other: " %{group_name} 받은 편지함에 %{count}개의 메시지가 있습니다"
@@ -2360,7 +2364,7 @@ ko:
           aria_label: 최대 조회수로 필터링
         additional_options:
           label: "게시물 수 및 글 조회수로 필터링"
-    new_item: "신규"
+    new_item: "새로운"
     go_back: "뒤로 가기"
     not_logged_in_user: "현재 활동 및 환경설정에 대한 요약이 포함된 사용자 페이지"
     current_user: "사용자 페이지로 이동"
@@ -2404,15 +2408,15 @@ ko:
         dismiss: "무시"
         dismiss_read: "읽지 않은 항목 모두 읽음으로 표시"
         dismiss_read_with_selected:
-          other: "읽지 않은 %{count}개 읽음 처리"
-        dismiss_button: "읽음 처리..."
+          other: "읽지 않은 %{count}개 읽음으로 표시"
+        dismiss_button: "읽음으로 표시..."
         dismiss_button_with_selected:
-          other: "무시(%{count})..."
+          other: "읽음으로 표시 (%{count})..."
         dismiss_tooltip: "새 글만 무시하거나 글 팔로우 중지"
         also_dismiss_topics: "이 글을 더 이상 추적하지 않고 읽지 않은 글에서 표시하지 않음"
         dismiss_new: "새 글 읽음으로 표시"
         dismiss_new_with_selected:
-          other: "읽음 처리 (%{count}개)"
+          other: "새글 읽음으로 표시 (%{count})"
         toggle: "글 일괄 선택 전환"
         actions: "일괄 작업"
         close_topics: "글 닫기"
@@ -2447,7 +2451,7 @@ ko:
           unread: "읽지 않은 글이 하나도 없네요... 정말 놀랍습니다!"
     topic_bulk_actions:
       dismiss:
-        name: "읽음 처리..."
+        name: "읽음으로 표시"
       close_topics:
         name: "닫기"
         optional: (선택 사항)
@@ -3068,6 +3072,8 @@ ko:
       creation_error: 카테고리 생성 중에 오류가 발생했습니다.
       save_error: 카테고리 저장 중에 오류가 발생했습니다.
       description: "설명"
+      icon: "아이콘"
+      emoji: "이모티콘"
       background_color: "색상"
       color_validations:
         cant_be_empty: "필수 작성"
@@ -3077,7 +3083,6 @@ ko:
         options:
           icon: "아이콘"
           emoji: "이모티콘"
-      name_placeholder: "최대 1~2자"
       color_placeholder: "모든 웹 색상"
       delete_confirm: "이 카테고리를 삭제할까요?"
       delete_error: "카테고리를 삭제하는 중에 오류가 발생했습니다."
@@ -3100,7 +3105,7 @@ ko:
       uncategorized_security_warning: "특수 카테고리입니다. 카테고리가 없는 주제의 보관 영역으로 사용되므로 보안 설정을 가질 수 없습니다."
       uncategorized_general_warning: '이 카테고리는 특별합니다. 카테고리를 선택하지 않은 새 글의 기본 카테고리로 사용됩니다. 이 동작을 방지하고 범주를 강제로 선택 <a href="%{settingLink}">하려면 여기에서 설정을 비활성화하십시오</a> . 이름이나 설명을 변경하려면 <a href="%{customizeLink}">사용자 정의 / 텍스트 내용으로 이동하십시오</a> .'
       pending_permission_change_alert: "이 카테고리에 %{group} 그룹을 추가하지 않았습니다. 이 버튼을 클릭하여 추가하세요."
-      images: "이미지"
+      images: "외관"
       email_in: "수신 메일 주소 사용자 지정:"
       email_in_tooltip: "| 문자로 여러 이메일 주소를 구분할 수 있습니다."
       email_in_allow_strangers: "계정이 없는 익명 사용자의 이메일을 수신합니다"
@@ -3119,6 +3124,11 @@ ko:
       this_year: "올해"
       position: "카테고리 페이지에서의 위치:"
       minimum_required_tags: "주제에 필요한 최소 태그 수:"
+      none_subcategory_text: "없음"
+      visibility:
+        title: "시계"
+        public: "공개"
+        group_restricted: "비공개"
       num_auto_bump_daily: "열린 주제 중 매일 자동으로 끌어 올릴 주제 수:"
       navigate_to_first_post_after_read: "주제를 읽은 후 첫 게시물로 이동"
       notifications:
@@ -3302,9 +3312,9 @@ ko:
         lower_title_with_count:
           other: "%{count} new"
         lower_title: "new"
-        title: "신규"
+        title: "새글"
         title_with_count:
-          other: "신규(%{count})"
+          other: "새글 (%{count})"
         help: "지난 며칠 동안 작성된 주제"
         all: "전체"
         topics: "글"
@@ -3370,7 +3380,7 @@ ko:
         title: "이동"
         home: "%{shortcut} 홈"
         latest: "%{shortcut} 최신"
-        new: "%{shortcut} 신규"
+        new: "%{shortcut} 새로운"
         unread: "%{shortcut} 읽지 않음"
         categories: "%{shortcut} 카테고리"
         top: "%{shortcut} 주요 항목"
@@ -3593,7 +3603,7 @@ ko:
       back: "뒤로 가기"
       forward: "앞으로 가기"
       share: "공유"
-      dismiss: "읽음 처리"
+      dismiss: "읽음으로 표시"
     safe_mode:
       enabled: "안전 모드가 활성화되었습니다. 안전 모드를 종료하려면 이 브라우저 창을 닫으세요."
     image_removed: "(이미지 제거됨)"
@@ -3663,7 +3673,7 @@ ko:
             inbox: "받은 편지함"
             sent: "전송됨"
             new: "신규"
-            new_with_count: "신규(%{count})"
+            new_with_count: "새 메시지 (%{count})"
             unread: "읽지 않음"
             unread_with_count: "읽지 않음(%{count})"
             archive: "보관"
@@ -3841,6 +3851,8 @@ ko:
               label: "위치"
             text_section:
               locale_label: "언어"
+            header_new_members:
+              placeholder: "%{preferred_display_name}에 오신 것을 환영합니다!"
             header_logged_in:
               placeholder: "어서오세요, %{preferred_display_name}님!"
             header_anonymous:
@@ -3949,7 +3961,7 @@ ko:
         installed_version: "설치됨"
         latest_version: "최신"
         problems_found: "현재 사이트 설정에 따른 몇 가지 권고 사항"
-        dismiss_notice: "읽음 처리"
+        dismiss_notice: "읽음으로 표시"
         new_features:
           learn_more: "더 보기..."
         last_checked: "마지막으로 확인함"
@@ -4015,7 +4027,9 @@ ko:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">검색 로그</a>'
             disabled: '인기 검색 리포트가 비활성화되었습니다. <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">로그 검색 쿼리</a> 를 활성화하여 데이터를 수집하세요.'
-          average_chart_label: 평균
+          sort_button: "%{column}로 정렬"
+          sort_ascending: "오름차순"
+          sort_descending: "내림차순"
           filters:
             file_extension:
               label: 파일 확장자
@@ -4735,7 +4749,7 @@ ko:
           context: "상황"
           details: "상세 정보"
           previous_value: "이전"
-          new_value: "신규"
+          new_value: "새값"
           show: "표시"
           modal_title: "상세 정보"
           no_previous: "이전 값이 없습니다."
@@ -5243,7 +5257,7 @@ ko:
         locale: "언어:"
         more_than_50_results: "50개 이상의 결과가 있습니다. 검색 범위를 좁혀보세요."
         outdated:
-          dismiss: "무시"
+          dismiss: "읽음으로 표시"
       settings:
         show_overriden: "오버라이드된 항목만 표시"
         history: "변경 히스토리 보기"

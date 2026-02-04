@@ -3168,7 +3168,7 @@ sv:
       quote_edit: "Redigera"
       quote_edit_shortcut: "Redigera (eller tryck på e)"
       quote_copy: "Kopiera citat"
-      quote_copied_to_clibboard: "Citatet har kopierats till urklipp"
+      quote_copied_to_clipboard: "Citatet har kopierats till urklipp"
       quote_share: "Dela"
       edit_reason: "Anledning: "
       post_number: "inlägg %{number}"
@@ -3425,6 +3425,7 @@ sv:
       back: "Tillbaka till kategorin"
       general: "Allmänt"
       settings: "Inställningar"
+      advanced: "Avancerat"
       topic_template: "Mall"
       tags: "Taggar"
       localization:
@@ -3449,6 +3450,8 @@ sv:
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
       save_error: Ett fel inträffade då kategorin skulle sparas.
       description: "Beskrivning"
+      icon: "Ikon"
+      emoji: "Emoji"
       background_color: "Färg"
       color_validations:
         cant_be_empty: "kan inte vara tomt"
@@ -3458,7 +3461,6 @@ sv:
         options:
           icon: "Ikon"
           emoji: "Emoji"
-      name_placeholder: "Ett eller två ord max"
       color_placeholder: "Någon webbfärg"
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
       delete_error: "Ett fel inträffade vid borttagning av kategorin."
@@ -3480,7 +3482,7 @@ sv:
       uncategorized_security_warning: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som saknar kategori. Den kan inte ha säkerhetsinställningar."
       uncategorized_general_warning: 'Denna kategori är speciell. Den används som standardkategori för nya ämnen som inte har en vald kategori. Om du vill förhindra detta beteende och tvinga val av kategori <a href="%{settingLink}">inaktiverar du inställningen här</a>. Om du vill ändra namn eller beskrivning går du till <a href="%{customizeLink}">Anpassa / Textinnehåll</a>.'
       pending_permission_change_alert: "Du har inte lagt till %{group} för denna kategori. Klicka på följande knapp för att lägga till den."
-      images: "Bilder"
+      images: "Utseende"
       email_in: "Egenvald inkommande e-postadress:"
       email_in_tooltip: "Du kan skilja på flera e-postadresser med tecknet |."
       email_in_allow_strangers: "Ta emot e-post från anonyma användare utan konton"
@@ -3502,6 +3504,11 @@ sv:
       position: "Position på kategorisidan:"
       position_disabled: "Kategorier kommer att visas i aktivitetsordning. För att styra ordningen på kategorier i listor, aktivera inställningen <a href='%{url}'>'fasta kategoripositioner'</a>."
       minimum_required_tags: "Minsta antalet taggar som krävs för ett ämne:"
+      none_subcategory_text: "Ingen"
+      visibility:
+        title: "Synlighet"
+        public: "Offentligt"
+        group_restricted: "Privat"
       num_auto_bump_daily: "Antalet öppnade ämnen för att dagligen automatiskt knuffa ett ämne:"
       auto_bump_cooldown_days: "Minsta antal dagar innan samma ämne får knuffas:"
       navigate_to_first_post_after_read: "Navigera till första inlägget efter att ämnen är lästa"
@@ -4594,7 +4601,9 @@ sv:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Sökloggar</a>'
             disabled: 'Trendsökrapporten är inaktiverad. Aktivera <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">sökfrågor för loggar</a> för att samla data.'
-          average_chart_label: Genomsnitt
+          sort_button: "Sortera efter %{column}"
+          sort_ascending: "stigande"
+          sort_descending: "fallande"
           filters:
             file_extension:
               label: Filändelse
@@ -5133,8 +5142,6 @@ sv:
         delete: "Radera"
         delete_confirm: 'Är du säker på att du vill radera "%{theme_name}"?'
         bulk_delete: "Är du säker?"
-        bulk_themes_delete_confirm: "Detta kommer att avinstallera följande teman, som inte längre kommer att kunna användas av användare på din webbplats:"
-        bulk_components_delete_confirm: "Detta kommer att avinstallera följande komponenter, som inte längre kommer att kunna användas av användare på din webbplats:"
         color: "Färg"
         opacity: "Opacitet"
         copy: "Duplicera"

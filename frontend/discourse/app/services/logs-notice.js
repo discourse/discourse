@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { readOnly } from "@ember/object/computed";
 import Service, { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";

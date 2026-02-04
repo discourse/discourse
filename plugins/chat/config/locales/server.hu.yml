@@ -183,6 +183,7 @@ hu:
         is_already_in_use: "már használatban van"
     bookmarkable:
       notification_title_channel: "Üzenet a(z) %{channel_name} csatornában."
+      notification_title_direct_message: "%{channel_name} csatornával üzenet"
     personal_chat: "személyes csevegés"
     onebox:
       inline_to_message: "Üzenet #%{message_id}, %{username} által – #%{chat_channel}"
@@ -262,8 +263,10 @@ hu:
       view_more:
         one: "%{count} további üzenet megtekintése"
         other: "%{count} további üzenet megtekintése"
+      your_chat_settings: "csevegési e-mail-beállítás"
   unsubscribe:
     chat_summary:
+      select_title: "Csevegés összefoglaló e-mailek beállítása:"
       never: Soha
       when_away: Csak ha távol van
   category:

@@ -72,14 +72,16 @@ class InlineOneboxer
            (always_allow || allowed_domains.include?(uri.hostname)) &&
            !Onebox::DomainChecker.is_blocked?(uri.hostname)
         max_redirects = 0 if SiteSetting.block_onebox_on_redirect
+        headers = { "Accept-Language" => Oneboxer.accept_language }
+        if SiteSetting.inline_onebox_user_agent.present?
+          headers["User-Agent"] = SiteSetting.inline_onebox_user_agent
+        end
         title =
           RetrieveTitle.crawl(
             url,
             max_redirects: max_redirects,
             initial_https_redirect_ignore_limit: SiteSetting.block_onebox_on_redirect,
-            headers: {
-              "Accept-Language" => Oneboxer.accept_language,
-            },
+            headers: headers,
           )
         title = nil if title && title.length < MIN_TITLE_LENGTH
         return onebox_for(url, title, opts)

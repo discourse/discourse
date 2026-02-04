@@ -78,7 +78,6 @@ ja:
         join_channel: "チャンネルに参加する"
         leave_channel: "チャンネルから退出する"
         leave_groupchat_info: "このグループチャットから退出すると、それにアクセスできなくなり、そのチャットに関連する通知を受信しなくなります。もう一度参加するには、グループチャットのメンバーから招待を受ける必要があります。"
-        notification_settings_context: "通知"
         join: "参加"
         leave: "退出"
         save_label:
@@ -677,7 +676,6 @@ ja:
           composer_bold: "%{shortcut} 太字 (作成ツールのみ)"
           composer_italic: "%{shortcut} 斜体 (作成ツールのみ)"
           composer_code: "%{shortcut} コード (作成ツールのみ)"
-          drawer_open: "%{shortcut} チャットドロワーを開く"
           drawer_close: "%{shortcut} チャットドロワーを閉じる"
           mark_all_channels_read: "%{shortcut} すべてのチャンネルを既読としてマークします"
     topic_statuses:

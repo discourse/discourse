@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 RSpec.describe "Net::HTTP timeouts when processing a request" do
-  it "should set the right timeouts for any `Net::HTTP` instances intialized while processing a request" do
+  it "should set the right timeouts for any `Net::HTTP` instances initialized while processing a request" do
     stub_const(NetHTTPPatch, :OPEN_TIMEOUT, 0.001) do
       stub_const(NetHTTPPatch, :READ_TIMEOUT, 0.002) do
         stub_const(NetHTTPPatch, :WRITE_TIMEOUT, 0.003) do

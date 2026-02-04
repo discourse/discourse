@@ -74,7 +74,7 @@ en:
       ongoing_event_reminder: "%{title} is ongoing."
     errors:
       bulk_invite:
-        max_invitees: "First %{max_invittes} invitees have been created. Try splitting the file in smaller parts."
+        max_invitees: "First %{max_invitees} invitees have been created. Try splitting the file in smaller parts."
         error: "There was an error uploading that file. Please try again later."
       models:
         event:

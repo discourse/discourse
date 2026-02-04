@@ -173,10 +173,10 @@ RSpec.describe UserSerializer do
           notification_level: TagUser.notification_levels[:watching_first_post],
         )
 
-        expect(json[:muted_tags]).to eq([tag1.name])
-        expect(json[:tracked_tags]).to eq([tag2.name])
-        expect(json[:watched_tags]).to eq([tag3.name])
-        expect(json[:watching_first_post_tags]).to eq([tag4.name])
+        expect(json[:muted_tags]).to eq([{ id: tag1.id, name: tag1.name }])
+        expect(json[:tracked_tags]).to eq([{ id: tag2.id, name: tag2.name }])
+        expect(json[:watched_tags]).to eq([{ id: tag3.id, name: tag3.name }])
+        expect(json[:watching_first_post_tags]).to eq([{ id: tag4.id, name: tag4.name }])
       end
     end
 

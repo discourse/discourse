@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import EmberObject, { computed, get } from "@ember/object";
 import { guidFor } from "@ember/object/internals";
@@ -684,7 +684,7 @@ export default class SelectKit extends Component {
   }
 
   deselectByValue(value) {
-    if (!value) {
+    if (isNone(value)) {
       return;
     }
 
@@ -895,7 +895,10 @@ export default class SelectKit extends Component {
 
   _deselectLast() {
     if (this.selectKit.hasSelection) {
-      this.deselectByValue(this.value[this.value.length - 1]);
+      const lastItem = this.value[this.value.length - 1];
+      // handle both raw values and objects with valueProperty
+      const value = this.getValue(lastItem) ?? lastItem;
+      this.deselectByValue(value);
     }
   }
 

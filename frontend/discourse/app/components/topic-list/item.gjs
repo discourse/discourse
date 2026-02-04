@@ -61,7 +61,10 @@ export default class Item extends Component {
   }
 
   get tagClassNames() {
-    return this.args.topic.tags?.map((tagName) => `tag-${tagName}`);
+    return this.args.topic.tags?.map((tag) => {
+      const tagName = typeof tag === "string" ? tag : tag.name;
+      return `tag-${tagName}`;
+    });
   }
 
   get expandPinned() {
@@ -162,7 +165,8 @@ export default class Item extends Component {
 
   @action
   click(event) {
-    if (this.args.bulkSelectEnabled) {
+    // when in bulk select mode, select/unselect the row (except when ctrl/meta+clicking)
+    if (this.args.bulkSelectEnabled && !wantsNewWindow(event)) {
       event.preventDefault();
 
       const topicNode = event.target.closest(".topic-list-item");
@@ -219,13 +223,11 @@ export default class Item extends Component {
 
   @action
   keyDown(event) {
-    if (
-      event.key === "Enter" &&
-      (event.target.classList.contains("post-activity") ||
-        event.target.classList.contains("badge-posts"))
-    ) {
+    // We only handle cmd/meta+Enter to open topic in a new window here
+    // Simple Enter event for topic list is handled in keyboard-shortcuts (which triggers click() event)
+    if (event.key === "Enter" && wantsNewWindow(event)) {
       event.preventDefault();
-      this.navigateToTopic(this.args.topic, event.target.href);
+      window.open(this.args.topic.lastUnreadUrl, "_blank");
     }
   }
 

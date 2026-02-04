@@ -2070,7 +2070,6 @@ zh_TW:
     form_kit:
       reset: 重置
       optional: 選擇性
-      errors_summary_title: "此表單包含錯誤："
       dirty_form: "您尚未提交您的更改！您確實要離開嗎？"
       errors:
         required: "必要設定"
@@ -3405,7 +3404,7 @@ zh_TW:
       quote_edit: "編輯"
       quote_edit_shortcut: "編輯（或按 e）"
       quote_copy: "複製引用"
-      quote_copied_to_clibboard: "引用已複製到剪貼簿"
+      quote_copied_to_clipboard: "引用已複製到剪貼簿"
       quote_share: "分享"
       edit_reason: "原因: "
       post_number: "貼文 %{number}"
@@ -3660,6 +3659,7 @@ zh_TW:
       back: "回到類別"
       general: "一般"
       settings: "設定"
+      advanced: "進階"
       topic_template: "範本"
       tags: "標記"
       localization:
@@ -3685,6 +3685,8 @@ zh_TW:
       save_error: 儲存分類時發生錯誤。
       description: "描述"
       logo_description: "建議長寬比為 1:1，最小尺寸為 200px。如果留空，將不會顯示圖片。"
+      icon: "圖示"
+      emoji: "Emoji"
       background_color: "顏色"
       color_validations:
         cant_be_empty: "不能空白"
@@ -3696,7 +3698,6 @@ zh_TW:
           emoji: "Emoji"
       color_used: "使用中的顏色"
       predefined_colors: "預先定義的顏色選項"
-      name_placeholder: "請簡單明瞭。"
       color_placeholder: "任何網頁顏色"
       delete_confirm: "你確定要刪除此分類嗎?"
       delete_error: "刪除此分類時發生錯誤。"
@@ -3719,7 +3720,7 @@ zh_TW:
       uncategorized_security_warning: "此為特殊分類，僅作為沒有分類的話題暫存區，無法有安全設定。"
       uncategorized_general_warning: '此為特殊分類，作為尚未選定分類的新話題的預設分類。若您要停用此行為並強制使用者選擇分類，請在<a href="%{settingLink}">停用此設定，若您要更改名稱或說明，請到<a href="%{customizeLink}">自訂 / 文字內容</a>。'
       pending_permission_change_alert: "您尚未將 %{group} 新增至此類別；單擊此按鈕以新增它們。"
-      images: "圖片"
+      images: "外觀"
       email_in: "自訂外來電郵地址:"
       email_in_tooltip: "您可以使用 | 字元分隔多個電子郵件地址。"
       email_in_allow_strangers: "接受非使用者的電郵"
@@ -3741,6 +3742,11 @@ zh_TW:
       position: "在分類頁面上的位置："
       position_disabled: "類別將按活動順序顯示。若要控制清單中類別的順序，請啟用 <a href='%{url}'>「固定類別位置」</a> 設定。"
       minimum_required_tags: "話題標籤的最低要求數量："
+      none_subcategory_text: "無"
+      visibility:
+        title: "能見度"
+        public: "公開"
+        group_restricted: "私密"
       num_auto_bump_daily: "每日自動上浮的主題數："
       auto_bump_cooldown_days: "再次提出相同主題的最少天數："
       navigate_to_first_post_after_read: "所有話題已讀後，跳轉至最新貼文"
@@ -5053,7 +5059,9 @@ zh_TW:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs"> 搜尋記錄檔 </a>'
             disabled: '搜尋趨勢已停用，啟用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">搜尋紀錄以</a>收集資料。'
-          average_chart_label: 平均值
+          sort_button: "依 %{column}排序"
+          sort_ascending: "升序"
+          sort_descending: "降序"
           filters:
             file_extension:
               label: 檔案副檔名
@@ -5730,8 +5738,6 @@ zh_TW:
         delete: "刪除"
         delete_confirm: '你確定要刪除%{theme_name}嗎？'
         bulk_delete: "你確定嗎？"
-        bulk_themes_delete_confirm: "這將卸載以下佈景主題，您的網站上的任何用戶將無法再使用它們："
-        bulk_components_delete_confirm: "這將卸載以下元件，您網站上的任何使用者將無法再使用它們："
         color: "顏色"
         opacity: "不透明度"
         copy: "複製"

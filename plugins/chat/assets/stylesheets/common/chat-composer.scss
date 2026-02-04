@@ -63,7 +63,7 @@
     }
 
     .chat-composer.is-disabled & {
-      background: var(--primary-low);
+      background: var(--d-input-bg-color--disabled);
 
       &:hover {
         cursor: not-allowed;

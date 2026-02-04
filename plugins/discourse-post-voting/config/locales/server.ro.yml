@@ -10,10 +10,6 @@ ro:
       actions:
         no_action_comment:
           title: "Nicio acțiune"
-        agree_and_suspend:
-          title: "Suspendă utilizatorul"
-        agree_and_silence:
-          title: "Redu la tăcere utilizatorul"
   post_action_types:
     vote:
       title: "Votează"

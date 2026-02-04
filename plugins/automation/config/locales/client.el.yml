@@ -46,6 +46,7 @@ el:
           raw:
             label: Κύριο μέρος
         pms:
+          no_pm_created: Δεν έχετε δημιουργήσει ακόμη κανένα προσωπικό μήνυμα. Τα προσωπικά μηνύματα θα σταλούν μόλις πυροδοτηθεί ο αυτοματισμός σας.
           title:
             label: Τίτλος
           raw:
@@ -137,6 +138,10 @@ el:
               label: Κατηγορίες
             restricted_archetype:
               description: Προαιρετικά, να επιτρέπεται το έναυσμα μόνο σε θέματα ή προσωπικά μηνύματα
+            first_post_only:
+              label: Πρώτη ανάρτηση μόνο
+            first_topic_only:
+              label: Πρώτο θέμα μόνο
           created: Δημιουργήθηκε
           topics: Όλα τα θέματα
           personal_messages: Προσωπικά μηνύματα
@@ -312,6 +317,9 @@ el:
               description: "Ο χρήστης που κλείνει το θέμα (προεπιλογή: σύστημα)"
         set_topic_timer:
           title: Ορισμός Χρονοδιακόπτη Θέματος
+          fields:
+            duration:
+              label: Διάρκεια Χρονομέτρου
       unnamed_automation: "Ανώνυμος αυτοματισμός"
       models:
         trigger:
