@@ -922,7 +922,7 @@ acceptance("Tag settings page", function (needs) {
     experimental_tag_settings_page: true,
   });
   needs.pretender((server, helper) => {
-    server.get("/tag/test-tag/100/notifications.json", () =>
+    server.get("/tag/100/notifications.json", () =>
       helper.response({
         tag_notification: {
           id: 100,
@@ -932,7 +932,7 @@ acceptance("Tag settings page", function (needs) {
       })
     );
 
-    server.get("/tag/test-tag/100/l/latest.json", () =>
+    server.get("/tag/100/l/latest.json", () =>
       helper.response({
         users: [],
         primary_groups: [],
@@ -989,7 +989,7 @@ acceptance("Tag settings page", function (needs) {
       })
     );
 
-    server.put("/tag/test-tag/100/settings.json", (request) => {
+    server.put("/tag/100/settings.json", (request) => {
       const data = helper.parsePostData(request.requestBody);
       return helper.response({
         tag_settings: {
@@ -1098,7 +1098,7 @@ acceptance("Tag settings page - disabled", function (needs) {
     experimental_tag_settings_page: false,
   });
   needs.pretender((server, helper) => {
-    server.get("/tag/test-tag/100/notifications.json", () =>
+    server.get("/tag/100/notifications.json", () =>
       helper.response({
         tag_notification: {
           id: 100,
@@ -1108,7 +1108,7 @@ acceptance("Tag settings page - disabled", function (needs) {
       })
     );
 
-    server.get("/tag/test-tag/100/l/latest.json", () =>
+    server.get("/tag/100/l/latest.json", () =>
       helper.response({
         users: [],
         primary_groups: [],
@@ -1131,7 +1131,7 @@ acceptance("Tag settings page - disabled", function (needs) {
       })
     );
 
-    server.get("/tag/test-tag/100/info.json", () =>
+    server.get("/tag/100/info.json", () =>
       helper.response({
         tag_info: {
           id: 100,

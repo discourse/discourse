@@ -56,7 +56,7 @@ export default class TagInfoButton extends Component {
 
     this.loading = true;
 
-    const findArgs = tag.id ? `${tag.slug}/${tag.id}` : tag.name;
+    const findArgs = tag.id || tag.name;
 
     try {
       this.tagInfo = await this.store.find("tag-info", findArgs);

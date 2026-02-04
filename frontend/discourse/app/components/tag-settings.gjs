@@ -184,7 +184,7 @@ export default class TagSettings extends Component {
       message,
       didConfirm: async () => {
         try {
-          await ajax(`/tag/${tag.slug}/${tag.id}.json`, { type: "DELETE" });
+          await ajax(`/tag/${tag.id}.json`, { type: "DELETE" });
           this.router.transitionTo("tags.index");
         } catch (error) {
           popupAjaxError(error);

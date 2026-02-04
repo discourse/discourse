@@ -80,6 +80,18 @@ describe "Tag Settings", type: :system do
       tag_settings_page.click_back
       expect(page).to have_current_path("/tag/custom-slug/#{tag_1.id}")
     end
+
+    it "allows adding a new tag as synonym" do
+      sign_in(admin)
+      tag_settings_page.visit(tag_1)
+      tag_settings_page.add_synonym("new-synonym-tag")
+      tag_settings_page.click_save
+
+      dialog.click_yes
+
+      expect(toasts).to have_success(I18n.t("js.tagging.settings.saved"))
+      expect(tag_settings_page).to have_synonym("new-synonym-tag")
+    end
   end
 
   context "when experimental_tag_settings_page is disabled" do

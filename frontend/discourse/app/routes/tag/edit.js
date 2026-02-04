@@ -39,18 +39,6 @@ export default class TagEditRoute extends DiscourseRoute {
     return tag;
   }
 
-  afterModel(model, transition) {
-    if (transition.to.name === "tag.edit.index") {
-      const params = this.paramsFor("tag.edit");
-      this.router.replaceWith(
-        "tag.edit.tab",
-        params.tag_slug,
-        params.tag_id,
-        "general"
-      );
-    }
-  }
-
   titleToken() {
     return i18n("tagging.settings.edit_title", {
       name: this.currentModel?.name,

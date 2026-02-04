@@ -149,6 +149,7 @@ module PageObjects
         synonyms_chooser.expand
         synonyms_chooser.search(name)
         synonyms_chooser.select_row_by_value(name)
+        synonyms_chooser.collapse
         self
       end
 

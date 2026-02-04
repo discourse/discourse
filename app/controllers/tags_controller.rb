@@ -236,8 +236,13 @@ class TagsController < ::ApplicationController
   end
 
   def settings
-    includes = %i[synonyms tag_groups]
-    includes << :localizations if SiteSetting.content_localization_enabled
+    includes = %i[tag_groups]
+    if SiteSetting.content_localization_enabled
+      includes << :localizations
+      includes << { synonyms: :localizations }
+    else
+      includes << :synonyms
+    end
     tag = Tag.includes(includes).find_by(id: params[:tag_id])
     raise Discourse::NotFound unless tag && guardian.can_edit_tag?(tag)
 
