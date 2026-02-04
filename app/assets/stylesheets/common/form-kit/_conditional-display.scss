@@ -68,7 +68,7 @@
     }
 
     &:has(input[disabled]) {
-      background: var(--primary-very-low);
+      background: var(--d-input-bg-color--disabled);
 
       .d-icon {
         color: currentcolor;
