@@ -1234,8 +1234,6 @@ ko:
       home: "기본 홈페이지"
       staged: "스테이징됨"
       staff_counters:
-        flagged_posts:
-          other: '<span class="%{className}">%{count}</span> 신고된 게시물'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> 삭제된 게시물'
         suspensions:
@@ -3097,11 +3095,10 @@ ko:
         reply: "댓글 달기"
         create: "생성"
         no_groups_selected: "액세스 권한이 부여된 그룹이 없습니다. 이 카테고리는 운영진만 볼 수 있습니다."
-        everyone_has_access: '이 카테고리는 공개이며, 누구나 볼 수 있고, 댓글을 달고 게시물을 작성할 수 있습니다. 권한을 제한하려면 ''everyone'' 그룹에 부여된 권한 중 하나 이상을 제거해야 합니다.'
+        everyone_full_access: '이 카테고리는 공개이며, 누구나 볼 수 있고, 댓글을 작성 하고, 글을 쓸 수 있습니다. 사용 권한을 제한하려면 "everyone" 그룹에 부여된 사용 권한 중 하나 이상을 제거해야 합니다.'
         toggle_reply: "댓글 권한 토글"
         toggle_full: "생성 권한 토글"
         inherited: '이 권한은 ''everyone''으로부터 상속됩니다'
-      special_warning: "경고: 이 카테고리는 사전 생성된 카테고리이기 때문에 보안 설정 편집이 불가합니다. 이 카테고리를 사용하고 싶지 않다면, 편집 대신 삭제하세요."
       uncategorized_security_warning: "특수 카테고리입니다. 카테고리가 없는 주제의 보관 영역으로 사용되므로 보안 설정을 가질 수 없습니다."
       uncategorized_general_warning: '이 카테고리는 특별합니다. 카테고리를 선택하지 않은 새 글의 기본 카테고리로 사용됩니다. 이 동작을 방지하고 범주를 강제로 선택 <a href="%{settingLink}">하려면 여기에서 설정을 비활성화하십시오</a> . 이름이나 설명을 변경하려면 <a href="%{customizeLink}">사용자 정의 / 텍스트 내용으로 이동하십시오</a> .'
       pending_permission_change_alert: "이 카테고리에 %{group} 그룹을 추가하지 않았습니다. 이 버튼을 클릭하여 추가하세요."

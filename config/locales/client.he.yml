@@ -1771,11 +1771,6 @@ he:
           two: '<span class="%{className}">%{count}</span> סימונים מועילים'
           many: '<span class="%{className}">%{count}</span> סימונים מועילים'
           other: '<span class="%{className}">%{count}</span> סימונים מועילים'
-        flagged_posts:
-          one: 'פוסט <span class="%{className}">%{count}</span> מסומן'
-          two: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
-          many: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
-          other: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
         deleted_posts:
           one: 'פוסט <span class="%{className}">%{count}</span> נמחק'
           two: '<span class="%{className}">%{count}</span> פוסטים נמחקו'
@@ -4706,11 +4701,10 @@ he:
         reply: "להגיב"
         create: "ליצור"
         no_groups_selected: "אף קבוצה לא קיבלה גישה; קטגוריה זו תהיה גלויה רק לסגל."
-        everyone_has_access: 'קטגוריה זו היא ציבורית, כולם יכולים לצפות, להגיב וליצור פוסטים. די להגביל את ההרשאות, יש להסיר הרשאה אחת או יותר מאלו שהוענקו לקבוצה „כולם”.'
+        everyone_full_access: 'קטגוריה זו היא ציבורית, כולם יכולים לצפות, להגיב וליצור פוסטים. די להגביל את ההרשאות, יש להסיר הרשאה אחת או יותר מאלו שהוענקו לקבוצה „כולם”.'
         toggle_reply: "החלפת הרשאות תגובה"
         toggle_full: "החלפת הרשאות יצירה"
         inherited: 'הרשאה זו התקבלה בירושה מתוך „כולם”'
-      special_warning: "אזהרה: קטגוריה זו הגיעה מראש והגדרות האבטחה שלה אינן ניתנות לשינוי. אם אתם מעוניינים להשתמש בקטגוריה זו, מחקו אותה במקום להשתמש בה מחדש."
       uncategorized_security_warning: "קטגוריה זו היא מיוחדת. היא מיועדת להחזקת מגוון של נושאים שאין להם קטגוריה, לא יכולות להיות לקבוצה זו הגדרות אבטחה."
       uncategorized_general_warning: 'קטגוריה זו היא מיוחדת. היא משמשת כקטגוריית בררת המחדל לנושאים חדשים שלא נבחרה עבורם קטגוריה. כדי למנוע את ההתנהגות הזאת ולאלץ בחירת קטגוריה, <a href="%{settingLink}">נא להשבית את ההגדרה הזאת כאן</a>. אם מעניין אותך לשנות את השם או את התיאור, עליך לגשת אל <a href="%{customizeLink}">התאמה אישית / תוכן טקסט</a>.'
       pending_permission_change_alert: "לא הוספת %{group} לקטגוריה הזאת, יש ללחוץ על הכפתור הזה כדי להוסיף אותן."

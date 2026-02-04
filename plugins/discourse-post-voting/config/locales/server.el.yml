@@ -102,5 +102,5 @@ el:
           comment_pm_title: "Το σχόλιό σας σε ψήφιση αναρτήσεων"
           comment_pm_body: "%{link}\n\n%{comment}"
         notify_moderators:
-          comment_pm_title: "Ένα σχόλιο σε ψήφιση αναρτήσεων απαιτεί έλεγχο από το προσωπικό"
+          comment_pm_title: "Ένα σχόλιο σε ψήφιση αναρτήσεων χρειάζεται έλεγχο από το προσωπικό"
           comment_pm_body: "%{link}\n\n%{comment}"
