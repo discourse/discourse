@@ -6,7 +6,7 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
 
 @classNames("categories-admin-dropdown")
 @selectKitOptions({
-  icons: ["wrench", "caret-down"],
+  icons: ["wrench", "angle-down"],
   showFullTitle: false,
   autoFilterable: false,
   filterable: false,

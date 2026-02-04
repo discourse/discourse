@@ -17,7 +17,7 @@ function initializeDetails(api) {
         { multiline: false }
       );
     },
-    icon: "caret-right",
+    icon: "angle-right",
     label: "details.title",
   });
 
