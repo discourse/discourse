@@ -12,15 +12,10 @@ class Admin::GroupsController < Admin::StaffController
       *DiscoursePluginRegistry.group_params,
     )
 
-    Groups::Create.call(guardian: guardian, params: resolved_group_params) do
+    Groups::Create.call(guardian: guardian, params: resolved_group_params) do |result|
       on_success { |group:| render_serialized(group, BasicGroupSerializer) }
       on_failed_policy(:can_create_group) { |policy| raise Discourse::InvalidAccess }
-      on_failure do |result|
-        render(
-          json: failed_json.merge(errors: result.errors.full_messages),
-          status: :unprocessable_entity,
-        )
-      end
+      on_failure { render(json: failed_json, status: :unprocessable_entity) }
     end
   end
 

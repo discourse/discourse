@@ -31,6 +31,7 @@ class Groups::Create
   #   @option params [String] :usernames
   #   @option params [Boolean] :publish_read_state
   #   @option params [Hash] :custom_fields
+  #   @option params [Hash] :plugin_group_params
   #   @option params [Array] :associated_group_ids
 
   params do
@@ -56,6 +57,7 @@ class Groups::Create
     attribute :default_notification_level,
               :integer,
               default: GroupUser.notification_levels[:watching]
+
     attribute :membership_request_template, :string
     attribute :owner_usernames, :string
     attribute :usernames, :string
@@ -65,6 +67,7 @@ class Groups::Create
     attribute :associated_group_ids, :array
 
     validates :name, presence: true
+    validates :default_notification_level, inclusion: { in: GroupUser.notification_levels.values }
     validates :mentionable_level, inclusion: { in: Group::ALIAS_LEVELS.values }
     validates :messageable_level, inclusion: { in: Group::ALIAS_LEVELS.values }
     validates :visibility_level,
@@ -93,52 +96,54 @@ class Groups::Create
     end
   end
 
-  step :validate_associated_group_ids
   policy :can_create_group
-  step :build_group
-  step :prepare_owners
-  step :prepare_members
+  model :group
   step :save_group
+  step :log_group_histories
 
   private
-
-  def validate_associated_group_ids(guardian:, params:)
-    if params.associated_group_ids.present? && !guardian.can_associate_groups?
-      params.associated_group_ids = []
-    end
-  end
 
   def can_create_group(guardian:)
     guardian.can_create_group?
   end
 
-  def build_group(guardian:, params:)
+  def fetch_group(params:, guardian:)
+    # We don't know the plugin group params ahead of time when calling Create,
+    # so we have them in a nested key and hoist them out here.
     params_hash = params.to_hash.except(:owner_usernames, :usernames, :plugin_group_params)
     params_hash.merge!(params.plugin_group_params.to_hash)
 
-    context[:group] = Group.new(params_hash) do |group|
+    params_hash[:associated_group_ids] = [] if params.associated_group_ids.present? &&
+      !guardian.can_associate_groups?
+
+    Group.new(params_hash) do |group|
       group.membership_request_template = nil unless params.allow_membership_requests
-    end
-  end
 
-  def prepare_owners(guardian:, params:, group:)
-    if params.owner_usernames.present?
-      owner_ids = User.where(username: params.owner_usernames.split(",")).pluck(:id)
-      owner_ids.each { |user_id| group.group_users.build(user_id: user_id, owner: true) }
-      context[:owner_ids] = owner_ids
-    end
-  end
+      if params.owner_usernames.present?
+        owner_ids = User.where(username: params.owner_usernames.split(",")).pluck(:id)
+        owner_ids.each { |user_id| group.group_users.build(user_id: user_id, owner: true) }
+      end
 
-  def prepare_members(guardian:, params:, group:, owner_ids:)
-    if params.usernames.present?
-      user_ids = User.where(username: params.usernames.split(",")).pluck(:id)
-      user_ids -= owner_ids if owner_ids
-      user_ids.each { |user_id| group.group_users.build(user_id: user_id) }
+      if params.usernames.present?
+        user_ids = User.where(username: params.usernames.split(",")).pluck(:id)
+        user_ids -= owner_ids if owner_ids
+        user_ids.each { |user_id| group.group_users.build(user_id: user_id) }
+      end
     end
   end
 
   def save_group(guardian:, params:, group:)
     group.save!
     group.restore_user_count!
+  end
+
+  def log_group_histories(guardian:, group:)
+    GroupHistory.transaction do
+      group_action_logger = GroupActionLogger.new(guardian.user, group)
+      group.group_users.each do |group_user|
+        group_action_logger.log_make_user_group_owner(group_user.user) if group_user.owner?
+        group_action_logger.log_add_user_to_group(group_user.user)
+      end
+    end
   end
 end

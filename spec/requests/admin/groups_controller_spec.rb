@@ -31,6 +31,7 @@ RSpec.describe Admin::GroupsController do
         group = Group.last
 
         expect(group.name).to eq("testing")
+        expect(group.group_users.where(owner: true).pluck(:user_id)).to contain_exactly(user.id)
         expect(group.users).to contain_exactly(admin, user)
         expect(group.allow_membership_requests).to eq(true)
         expect(group.membership_request_template).to eq("Testing")
