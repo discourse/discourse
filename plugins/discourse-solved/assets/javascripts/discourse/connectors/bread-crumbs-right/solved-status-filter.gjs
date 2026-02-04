@@ -67,7 +67,7 @@ export default class SolvedStatusFilter extends Component {
           @content={{this.statuses}}
           @value={{this.status}}
           @valueProperty="value"
-          @options={{hash caretDownIcon="caret-right" caretUpIcon="caret-down"}}
+          @options={{hash caretDownIcon="angle-right" caretUpIcon="angle-down"}}
           @onChange={{this.changeStatus}}
           class="solved-status-filter"
         />

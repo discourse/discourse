@@ -30,8 +30,8 @@ const MORE_COLLECTION = "MORE_COLLECTION";
 @classNameBindings("noSubcategories:has-selection")
 @selectKitOptions({
   none: "category.all",
-  caretDownIcon: "caret-right",
-  caretUpIcon: "caret-down",
+  caretDownIcon: "angle-right",
+  caretUpIcon: "angle-down",
   fullWidthOnMobile: true,
   noSubcategories: false,
   subCategory: false,

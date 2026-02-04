@@ -8,7 +8,7 @@ export default <template>
     <nav>
       <ul class="nav nav-pills">
         <li><LinkTo @route="adminUser" @model={{@controller.model}}>{{icon
-              "caret-left"
+              "angle-left"
             }}
             &nbsp;{{@controller.model.username}}</LinkTo></li>
         <li><LinkTo @route="adminUsersList.show" @model="member">{{i18n
