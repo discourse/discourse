@@ -144,15 +144,9 @@ module("Unit | Lib | blocks/matching/page-definitions", function () {
 
     test("returns null for completely unrelated strings", function (assert) {
       const result = suggestPageType("xyz123abc");
-      // May return null or a distant match depending on implementation
-      if (result !== null) {
-        assert.true(
-          VALID_PAGE_TYPES.includes(result),
-          "If not null, should be a valid page type"
-        );
-      } else {
-        assert.strictEqual(result, null);
-      }
+      const isValidResult =
+        result === null || VALID_PAGE_TYPES.includes(result);
+      assert.true(isValidResult, "Should return null or a valid page type");
     });
   });
 
