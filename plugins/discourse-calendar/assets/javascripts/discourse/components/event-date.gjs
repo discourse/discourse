@@ -99,7 +99,10 @@ export default class EventDate extends Component {
   }
 
   _parsedDate(date) {
-    return moment.utc(date).tz(moment.tz.guess());
+    const timezone = this.args.topic.event_show_local_time
+      ? this.args.topic.event_timezone
+      : moment.tz.guess();
+    return moment.utc(date).tz(timezone || moment.tz.guess());
   }
 
   _guessedDateFormat() {
