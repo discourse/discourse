@@ -1356,9 +1356,6 @@ sq:
         flags_given:
           one: '<span class="%{className}">%{count}</span> flamur i dobishëm'
           other: '<span class="%{className}">%{count}</span> flamuj të dobishëm'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> postim me flamur'
-          other: '<span class="%{className}">%{count}</span> postime me flamur'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> postimi i fshirë'
           other: '<span class="%{className}">%{count}</span> postime të fshira'
@@ -3504,7 +3501,6 @@ sq:
         group: "Grupi"
         see: "Shiko"
         reply: "Përgjigju"
-      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"

@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 el:
+  site_settings:
+    openid_connect_rp_initiated_logout_redirect: "(προαιρετικό) Το post_logout_redirect_uri που θα διαβιβαστεί στο τελικό σημείο αποσύνδεσης. Εάν παρέχεται, πρέπει να είναι καταχωρημένο με τον πάροχο ταυτότητας."

@@ -1543,9 +1543,6 @@ it:
         flags_given:
           one: '<span class="%{className}">%{count}</span> segnalazione utile'
           other: '<span class="%{className}">%{count}</span> segnalazioni utili'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> messaggio segnalato'
-          other: '<span class="%{className}">%{count}</span> messaggi segnalati'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> messaggio cancellato'
           other: '<span class="%{className}">%{count}</span> messaggi cancellati'
@@ -4109,11 +4106,10 @@ it:
         reply: "Rispondi"
         create: "Crea"
         no_groups_selected: "Nessun gruppo ha ottenuto l'accesso; questa categoria sarà visibile solo allo staff."
-        everyone_has_access: 'Questa categoria è pubblica, tutti possono vedere, rispondere e creare messaggi. Per limitare i permessi, rimuovere uno o più permessi concessi al gruppo "tutti".'
+        everyone_full_access: 'Questa categoria è pubblica, tutti possono vedere, rispondere e creare messaggi. Per limitare i permessi, rimuovere uno o più permessi concessi al gruppo "tutti".'
         toggle_reply: "Attiva/Disattiva permesso di risposta"
         toggle_full: "Attiva/Disattiva permesso di creazione"
         inherited: 'Questo permesso è ereditato da "tutti"'
-      special_warning: "Attenzione: questa è una categoria predefinita e le impostazioni di sicurezza ne vietano la modifica. Se non vuoi usare questa categoria, cancellala invece di modificarla."
       uncategorized_security_warning: "Questa è una Categoria speciale. È utilizzata come area di parcheggio per gli Argomenti senza Categoria. Non può avere impostazioni di sicurezza."
       uncategorized_general_warning: 'Questa è una Categoria speciale. È usata come Categoria predefinita per i nuovi Argomenti senza una Categoria selezionata. Se vuoi prevenire questo comportamento e forzare la scelta di una Categoria, <a href="%{settingLink}">per favore disabilita l''impostazione qui</a>. Se vuoi cambiare il nome o la descrizione, vai a <a href="%{customizeLink}">Personalizza / Contenuto Testuale</a>.'
       pending_permission_change_alert: "Non hai aggiunto %{group} a questa categoria; fai clic su questo pulsante per aggiungerlo."

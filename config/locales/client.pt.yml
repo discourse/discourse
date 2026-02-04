@@ -1557,9 +1557,6 @@ pt:
         flags_given:
           one: '<span class="%{className}">%{count}</span> bandeira útil'
           other: '<span class="%{className}">%{count}</span> bandeiras úteis'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> assinalou uma mensagem'
-          other: '<span class="%{className}">%{count}</span> mensagens assinaladas'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> mensagem apagada'
           other: '<span class="%{className}">%{count}</span> mensagens apagadas'
@@ -3900,11 +3897,10 @@ pt:
         reply: "Responder"
         create: "Criar"
         no_groups_selected: "Nenhum grupo recebeu acesso; essa categoria só ficará visível para a equipe."
-        everyone_has_access: 'Esta categoria é pública, todos podem ver, responder e criar publicações. Para restringir as permissões, remova uma ou mais das permissões concedidas ao grupo "todos".'
+        everyone_full_access: 'Esta categoria é pública, todos podem ver, responder e criar publicações. Para restringir as permissões, remova uma ou mais das permissões concedidas ao grupo "todos".'
         toggle_reply: "Alternar permissão Responder"
         toggle_full: "Alternar permissão Criar"
         inherited: 'Esta permissão é herdada de "todos"'
-      special_warning: "Aviso: Esta categoria é uma categoria pré-preenchida e as configurações de segurança não podem ser editadas. Se não deseja utilizar esta categoria, elimine-a em vez de lhe dar um novo propósito."
       uncategorized_security_warning: "Essa categoria é especial. Destina-se como área de retenção para tópicos que não têm categoria; ela não pode ter configurações de segurança."
       uncategorized_general_warning: 'Esta categoria é especial. É usada como categoria padrão para novos tópicos que não possuem uma categoria selecionada. Se você quiser evitar esse comportamento e forçar a seleção da categoria, <a href="%{settingLink}">por gentileza, desative a configuração aqui</a>. Se você quiser alterar o nome ou a descrição, vá para <a href="%{customizeLink}">Personalizar / Conteúdo do Texto</a>.'
       pending_permission_change_alert: "Você não adicionou %{group} a esta categoria; clique neste botão para adicioná-los."

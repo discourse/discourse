@@ -1406,8 +1406,6 @@ zh_TW:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> 個有用的檢舉'
-        flagged_posts:
-          other: '<span class="%{className}">%{count}</span> 篇被檢舉的貼文'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> 篇刪除的貼文'
         suspensions:
@@ -3712,11 +3710,10 @@ zh_TW:
         reply: "回覆"
         create: "建立"
         no_groups_selected: "沒有群組被授予訪問權限；此類別僅對管理人員可見。"
-        everyone_has_access: '此類別是公開的，任何人都可以查看、回覆和創建貼文。要限制權限，請移除授予「所有人」組的一個或多個權限。'
+        everyone_full_access: '此類別是公開的，任何人都可以查看、回覆和創建貼文。要限制權限，請移除授予「所有人」組的一個或多個權限。'
         toggle_reply: "切換回覆權限"
         toggle_full: "切換建立權限"
         inherited: '此權限繼承自“所有人”'
-      special_warning: "警告：這個分類是已經自動建立好的分類，它的安全設置不能被更改。如果你不想要使用這個分類，直接刪除它，而不是另作他用。"
       uncategorized_security_warning: "此為特殊分類，僅作為沒有分類的話題暫存區，無法有安全設定。"
       uncategorized_general_warning: '此為特殊分類，作為尚未選定分類的新話題的預設分類。若您要停用此行為並強制使用者選擇分類，請在<a href="%{settingLink}">停用此設定，若您要更改名稱或說明，請到<a href="%{customizeLink}">自訂 / 文字內容</a>。'
       pending_permission_change_alert: "您尚未將 %{group} 新增至此類別；單擊此按鈕以新增它們。"

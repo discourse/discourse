@@ -7,3 +7,7 @@
 el:
   site_settings:
     user_invited_score_value: "Η τιμή της επευφημίας που απονέμεται όταν ένας χρήστης έχει μια πρόσκληση εξαργυρωμένη"
+    score_ranking_strategy: "Στρατηγική κατάταξης θέσης στον πίνακα κατάταξης"
+  default_leaderboard_name: "Παγκόσμιος Πίνακας Κατάταξης"
+  errors:
+    leaderboard_positions_not_ready: "Δημιουργούμε τον πίνακα κατάταξης σας. Δοκιμάστε ξανά σε λίγα λεπτά."

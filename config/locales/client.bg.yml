@@ -1221,9 +1221,6 @@ bg:
         flags_given:
           one: '<span class="%{className}">%{count}</span> полезен сигнал'
           other: '<span class="%{className}">%{count}</span> полезни сигнала'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> публикация със сигнал'
-          other: '<span class="%{className}">%{count}</span> публикации със сигнал'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> изтрита публикация'
           other: '<span class="%{className}">%{count}</span> изтрити публикации'
@@ -2939,7 +2936,6 @@ bg:
         see: "Виж"
         reply: "Отговорете"
         create: "Създай"
-      special_warning: "Внимание: Тази категория е предварително семена категория и настройките й за сигурност не могат да се променят. Ако не искате да използвате тази категория, изтрийте темата си, вместо да я местите в категорията по предназначение."
       uncategorized_security_warning: "Тази категория е специална. Тя е предназначен като обща зона за теми, които нямат категория. Като такава, тя не може да има настройки за сигурност."
       email_in: "Персонализиран входящ имейл адрес: "
       email_in_allow_strangers: "Приемай имейли от анонимни потребители, които нямат регистрация"

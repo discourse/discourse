@@ -1274,9 +1274,6 @@ sv:
         flags_given:
           one: '<span class="%{className}">%{count}</span> hjälpsam flagga'
           other: '<span class="%{className}">%{count}</span> hjälpsamma flaggor'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> flaggat inlägg'
-          other: '<span class="%{className}">%{count}</span> flaggade inlägg'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> raderat inlägg'
           other: '<span class="%{className}">%{count}</span> raderade inlägg'
@@ -3474,11 +3471,10 @@ sv:
         reply: "Svara"
         create: "Skapa"
         no_groups_selected: "Inga grupper har beviljats åtkomst; denna kategori kommer endast att vara synlig för personalen."
-        everyone_has_access: 'Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”.'
+        everyone_full_access: 'Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”.'
         toggle_reply: "Slå på/av behörighet att svara"
         toggle_full: "Slå på/av behörighet att skapa"
         inherited: 'Denna behörighet ärvs från "alla"'
-      special_warning: "Varning: Den här kategorin är en förutbestämd kategori och säkerhetsinställningarna kan inte ändras. Om du inte vill använda kategorin tar du bort den istället för att återanvända den."
       uncategorized_security_warning: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som saknar kategori. Den kan inte ha säkerhetsinställningar."
       uncategorized_general_warning: 'Denna kategori är speciell. Den används som standardkategori för nya ämnen som inte har en vald kategori. Om du vill förhindra detta beteende och tvinga val av kategori <a href="%{settingLink}">inaktiverar du inställningen här</a>. Om du vill ändra namn eller beskrivning går du till <a href="%{customizeLink}">Anpassa / Textinnehåll</a>.'
       pending_permission_change_alert: "Du har inte lagt till %{group} för denna kategori. Klicka på följande knapp för att lägga till den."
