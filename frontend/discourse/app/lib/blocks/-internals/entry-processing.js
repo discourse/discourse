@@ -42,6 +42,7 @@ import { shallowArgsEqual } from "discourse/lib/blocks/-internals/utils";
  * @param {string} [debugContext.containerPath] - Container's full path (for children's __hierarchy).
  * @param {Object} [debugContext.conditions] - The block's conditions.
  * @param {Object} debugContext.outletArgs - Outlet arguments passed from the parent.
+ * @param {Array<Object>} [debugContext.processedChildren] - Pre-processed children for container blocks.
  * @param {import("@ember/owner").default} owner - The application owner for service lookup.
  * @param {Function} createChildBlockFn - Function to create child block components (injected from block-outlet.gjs).
  * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}

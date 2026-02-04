@@ -1,11 +1,10 @@
 // @ts-check
 import curryComponent from "ember-curry-component";
-/** @type {import("discourse/blocks/block-outlet.gjs")} */
-import { _isContainerBlock } from "discourse/blocks/block-outlet";
 import {
   DEBUG_CALLBACK,
   debugHooks,
 } from "discourse/lib/blocks/-internals/debug-hooks";
+import { _isContainerBlock } from "discourse/lib/blocks/-internals/decorator";
 import {
   MAX_LAYOUT_DEPTH,
   OPTIONAL_MISSING,

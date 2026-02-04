@@ -1,7 +1,7 @@
 import Component from "@glimmer/component";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { block } from "discourse/blocks/block-outlet";
+import { block } from "discourse/blocks";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import { OPTIONAL_MISSING } from "discourse/lib/blocks/-internals/patterns";
 import {

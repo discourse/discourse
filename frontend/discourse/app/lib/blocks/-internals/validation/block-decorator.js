@@ -23,6 +23,7 @@ import { formatWithSuggestion } from "discourse/lib/string-similarity";
  */
 export const VALID_BLOCK_OPTIONS = Object.freeze([
   "container",
+  "root",
   "classNames",
   "description",
   "args",

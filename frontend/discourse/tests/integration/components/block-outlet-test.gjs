@@ -3,10 +3,8 @@ import { getOwner } from "@ember/owner";
 import { render, setupOnerror } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import sinon from "sinon";
-import BlockOutlet, {
-  _getOutletLayouts,
-  block,
-} from "discourse/blocks/block-outlet";
+import { block } from "discourse/blocks";
+import BlockOutlet, { _getOutletLayouts } from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {

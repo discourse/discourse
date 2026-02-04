@@ -10,6 +10,5 @@
 
 // Public API for plugin developers
 
-/** @type {import("discourse/blocks/block-outlet.gjs")} */
-export { block } from "discourse/blocks/block-outlet";
+export { block } from "discourse/lib/blocks/-internals/decorator";
 export { BlockCondition } from "discourse/blocks/conditions";

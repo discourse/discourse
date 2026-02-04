@@ -1,5 +1,6 @@
+// @ts-check
 import Component from "@glimmer/component";
-import { block } from "discourse/blocks/block-outlet";
+import { block } from "discourse/blocks";
 
 /**
  * A container block that renders only its first visible child.

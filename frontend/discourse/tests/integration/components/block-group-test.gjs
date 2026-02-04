@@ -1,7 +1,8 @@
 import Component from "@glimmer/component";
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import BlockOutlet, { block } from "discourse/blocks/block-outlet";
+import { block } from "discourse/blocks";
+import BlockOutlet from "discourse/blocks/block-outlet";
 import BlockGroup from "discourse/blocks/builtin/block-group";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import {

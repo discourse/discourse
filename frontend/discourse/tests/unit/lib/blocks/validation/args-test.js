@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { module, test } from "qunit";
-import { block } from "discourse/blocks/block-outlet";
+import { block } from "discourse/blocks";
 import { BlockError } from "discourse/lib/blocks/-internals/error";
 import {
   validateArgValue,

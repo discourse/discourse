@@ -2,53 +2,42 @@
 /**
  * BlockOutlet System
  *
- * This module provides a robust block rendering system for Discourse. Blocks are
- * special components that can only be rendered within designated BlockOutlet areas,
- * preventing misuse and ensuring consistent rendering behavior.
+ * This module provides the BlockOutlet component and outlet layout management.
+ * BlockOutlet is the root entry point for rendering blocks in designated areas.
  *
- * Key concepts:
- * - BlockOutlet: A designated area in the UI where blocks can be rendered
- * - Block: A component decorated with @block that can only render inside BlockOutlets
- * - Container Block: A block that can contain nested child blocks
- *
- * Authorization model:
- * - Blocks use secret symbols to verify they're being rendered in authorized contexts
- * - Direct template usage of blocks (outside BlockOutlets) throws an error
- * - This prevents plugins from bypassing the block system's validation
+ * This file handles:
+ * - BlockOutlet component
+ * - Outlet layout registration and management
+ * - Child block creation and rendering
  */
 import Component from "@glimmer/component";
 import { DEBUG } from "@glimmer/env";
-import {
-  getInternalComponentManager,
-  setInternalComponentManager,
-} from "@glimmer/manager";
 import { cached } from "@glimmer/tracking";
 import curryComponent from "ember-curry-component";
+/** @type {import("discourse/components/async-content.gjs")} */
 import AsyncContent from "discourse/components/async-content";
 /** @type {import("discourse/lib/blocks/-internals/components/block-layout-wrapper.gjs")} */
 import { wrapBlockLayout } from "discourse/lib/blocks/-internals/components/block-layout-wrapper";
+/** @type {import("discourse/lib/blocks/-internals/components/block-outlet-inline-error.gjs")} */
 import BlockOutletInlineError from "discourse/lib/blocks/-internals/components/block-outlet-inline-error";
+/** @type {import("discourse/lib/blocks/-internals/components/block-outlet-root-container.gjs")} */
 import BlockOutletRootContainer from "discourse/lib/blocks/-internals/components/block-outlet-root-container";
 import {
   DEBUG_CALLBACK,
   debugHooks,
 } from "discourse/lib/blocks/-internals/debug-hooks";
 import {
+  _isBlock,
+  _isContainerBlock,
+  block,
+  createBlockArgsWithReactiveGetters,
+} from "discourse/lib/blocks/-internals/decorator";
+import {
   captureCallSite,
   raiseBlockError,
 } from "discourse/lib/blocks/-internals/error";
 import { isBlockRegistryFrozen } from "discourse/lib/blocks/-internals/registry/block";
 import { applyArgDefaults } from "discourse/lib/blocks/-internals/utils";
-import {
-  validateArgsSchema,
-  validateChildArgsSchema,
-} from "discourse/lib/blocks/-internals/validation/block-args";
-import {
-  validateAndParseBlockName,
-  validateBlockOptions,
-  validateOutletRestrictions,
-} from "discourse/lib/blocks/-internals/validation/block-decorator";
-import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/validation/constraints";
 import { validateLayout } from "discourse/lib/blocks/-internals/validation/layout";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { buildArgsWithDeprecations } from "discourse/lib/outlet-args";
@@ -78,7 +67,7 @@ const outletLayouts = new Map();
 
 /**
  * Counter for generating stable entry keys.
- * Incremented each time a block entry is registered via `renderBlocks()`.
+ * Incremented for each block entry when a layout is registered via `_renderBlocks()`.
  *
  * @type {number}
  */
@@ -92,7 +81,7 @@ let nextEntryKey = 0;
  * identity when blocks are hidden/shown by conditions.
  *
  * Keys are assigned at registration time (in `renderBlocks()`) rather than
- * render time, ensuring they survive the shallow cloning in `#preprocessEntries`.
+ * render time, ensuring they survive the shallow cloning in `BlockOutletRootContainer#preprocessEntries`.
  *
  * @param {Array<Object>} entries - The block entries to process.
  */
@@ -134,387 +123,6 @@ export function _getOutletLayouts() {
   return new Map();
 }
 
-/*
- * Authorization Symbols
- *
- * IMPORTANT: These symbols MUST NOT be exported.
- * DO NOT REFACTOR TO EXTRACT THESE SYMBOLS INTO ANOTHER FILE
- *
- * These secret symbols form the core of the block authorization model. They allow
- * the system to verify that:
- * 1. A component was decorated with @block (has __BLOCK_FLAG)
- * 2. A component is authorized to contain children (has __BLOCK_CONTAINER_FLAG)
- * 3. A block is being rendered in an authorized context (via $block$ arg)
- *
- * By keeping these symbols private, we prevent external code from spoofing
- * block authorization or bypassing validation.
- */
-const __BLOCK_FLAG = Symbol("block");
-const __BLOCK_CONTAINER_FLAG = Symbol("block-container");
-
-/**
- * Custom component manager proxy that enforces block authorization.
- *
- * Blocks can only be instantiated in two authorized scenarios:
- * 1. As a root block - The class has `static __ROOT_BLOCK = __BLOCK_CONTAINER_FLAG`
- *    (set by BlockOutlet to mark itself as the root of a block tree)
- * 2. As a child of a container - The parent passes `$block$` arg with the secret symbol
- *    (set by `createBlockArgsWithReactiveGetters` when creating child block args)
- *
- * This prevents blocks from being used directly in templates, ensuring they
- * can only be rendered through the BlockOutlet system.
- */
-const BlockComponentManager = new Proxy(
-  getInternalComponentManager(Component),
-  {
-    get(target, prop) {
-      if (prop === "create") {
-        return function (owner, klass, args) {
-          // Check if this is a root block (BlockOutlet sets __ROOT_BLOCK static property)
-          const isRootBlock = klass.__ROOT_BLOCK === __BLOCK_CONTAINER_FLAG;
-
-          // Check if this is an authorized child (parent passes $block$ secret symbol)
-          let isAuthorizedChild = false;
-          const named = args?.named;
-          if (named?.names?.includes("$block$")) {
-            const ref = named.get("$block$");
-            isAuthorizedChild = ref.compute() === __BLOCK_CONTAINER_FLAG;
-          }
-
-          if (!isRootBlock && !isAuthorizedChild) {
-            throw new Error(
-              `Block "${klass.blockName || klass.name}" cannot be used directly in templates. ` +
-                `Blocks can only be rendered inside BlockOutlets or container blocks.`
-            );
-          }
-
-          return target.create(...arguments);
-        };
-      }
-      return Reflect.get(target, prop);
-    },
-  }
-);
-
-/**
- * Decorator that transforms a Glimmer component into a block component.
- *
- * Block components have special authorization constraints:
- * - They can only be rendered inside BlockOutlets or container blocks
- * - They cannot be used directly in templates
- * - They receive special args for authorization and hierarchy management
- *
- * @experimental This API is under active development and may change or be removed
- * in future releases without prior notice. Use with caution in production environments.
- *
- * @param {string} name - Unique identifier for the block. Supports three namespacing formats:
- *   - Core blocks: `"block-name"` (e.g., "hero-banner", "sidebar-panel")
- *   - Plugin blocks: `"plugin-name:block-name"` (e.g., "my-plugin:custom-card")
- *   - Theme blocks: `"theme:theme-name:block-name"` (e.g., "theme:tactile:hero-section")
- *   Names must use lowercase letters, numbers, and hyphens only.
- *
- * @param {Object} [options] - Configuration options for the block.
- *
- * @param {boolean} [options.container=false] - If true, this block can contain nested child blocks.
- *   Container blocks MUST have children in their config.
- *
- * @param {string} [options.description] - Human-readable description of the block.
- *   Used for documentation and dev tools.
- *
- * @param {Object.<string, ArgSchema>} [options.args] - Schema for block arguments.
- *
- * @param {Object.<string, ArgSchema>} [options.childArgs] - Schema for args passed to children
- *   of this container block. Only valid when container: true.
- *
- * @param {Object} [options.constraints] - Cross-arg validation constraints (atLeastOne, exactlyOne, allOrNone, atMostOne, requires).
- *
- * @param {Function} [options.validate] - Custom validation function called after schema validation.
- *
- * @param {string|string[]|((args: Object) => string)} [options.classNames] - Additional CSS
- *   classes for block wrapper. Can be a string, array of strings, or function that receives
- *   args and returns a string.
- *
- * @param {string[]} [options.allowedOutlets] - Glob patterns specifying which outlets
- *   this block CAN be rendered in. If specified, the block can ONLY render in outlets
- *   matching at least one pattern. Uses picomatch syntax:
- *   - Exact match: `"sidebar-blocks"` - only this specific outlet
- *   - Wildcard: `"sidebar-*"` - matches sidebar-left, sidebar-right, etc.
- *   - Brace expansion: `"{sidebar,footer}-*"` - matches sidebar-* OR footer-*
- *   - Character class: `"modal-[0-9]"` - matches modal-1, modal-2, etc.
- *   - Negation: `"!(*-debug)"` - matches anything NOT ending in -debug
- *   Namespaced outlets (containing `:`) bypass known-outlet validation:
- *   - `"my-plugin:custom-outlet"` - plugin-defined outlet
- *   - `"my-theme:hero-section"` - theme-defined outlet
- *
- * @param {string[]} [options.deniedOutlets] - Glob patterns specifying which outlets
- *   this block CANNOT be rendered in. If an outlet matches any denied pattern, the
- *   block will not render there. Uses the same picomatch syntax as allowedOutlets.
- *   When both allowedOutlets and deniedOutlets are specified:
- *   - Outlet must match at least one allowed pattern
- *   - Outlet must NOT match any denied pattern
- *   - Conflicting patterns (same outlet in both) cause decoration-time errors
- *
- * @returns {function(typeof Component): typeof Component} Decorator function
- *
- * @typedef {Object} ArgSchema
- * @property {"string"|"number"|"boolean"|"array"|"any"} type - The argument type (required)
- * @property {boolean} [required=false] - Whether the argument is required
- * @property {*} [default] - Default value for the argument
- * @property {"string"|"number"|"boolean"} [itemType] - Item type for array arguments (no nested arrays)
- * @property {RegExp} [pattern] - Regex pattern for string validation
- * @property {number} [minLength] - Minimum length for string or array
- * @property {number} [maxLength] - Maximum length for string or array
- * @property {number} [min] - Minimum value for number
- * @property {number} [max] - Maximum value for number
- * @property {boolean} [integer] - Whether number must be an integer
- * @property {Array} [enum] - Allowed values for the argument
- * @property {Array} [itemEnum] - Allowed values for array items
- *
- * @example
- * // Simple block with no restrictions
- * @block("my-card")
- * class MyCard extends Component {
- *   <template>
- *     <div class="card">{{@title}}</div>
- *   </template>
- * }
- *
- * @example
- * // Container block that can hold children
- * @block("my-section", { container: true })
- * class MySection extends Component {
- *   <template>
- *     <section>
- *       {{#each this.children as |child|}}
- *         <child.Component />
- *       {{/each}}
- *     </section>
- *   </template>
- * }
- *
- * @example
- * // Block with metadata and arg schema
- * @block("hero-banner", {
- *   description: "A hero banner with customizable title and call-to-action",
- *   args: {
- *     title: { type: "string", required: true },
- *     ctaText: { type: "string", default: "Learn More" },
- *     count: { type: "number" },
- *     showImage: { type: "boolean" },
- *     tags: { type: "array", itemType: "string" },
- *   }
- * })
- * class HeroBanner extends Component { ... }
- *
- * @example
- * // Block restricted to sidebar outlets only
- * @block("sidebar-widget", {
- *   description: "A widget designed for sidebar placement",
- *   allowedOutlets: ["sidebar-*"],
- *   args: { title: { type: "string", required: true } }
- * })
- * class SidebarWidget extends Component { ... }
- *
- * @example
- * // Block denied from specific outlets
- * @block("full-width-banner", {
- *   description: "Full-width banner that doesn't fit in narrow containers",
- *   deniedOutlets: ["sidebar-*", "modal-*", "tooltip-*"]
- * })
- * class FullWidthBanner extends Component { ... }
- *
- * @example
- * // Block for plugin-defined outlets (namespaced)
- * @block("plugin-dashboard-widget", {
- *   allowedOutlets: ["my-plugin:dashboard", "sidebar-*"]
- * })
- * class PluginDashboardWidget extends Component { ... }
- */
-export function block(name, options = {}) {
-  // === Decoration-time validation ===
-  // All validation happens here (not at render time) for fail-fast behavior.
-
-  validateBlockOptions(name, options);
-  const parsed = validateAndParseBlockName(name);
-
-  // Extract all options with defaults
-  const isContainer = options.container ?? false;
-  const decoratorClassNames = options.classNames ?? null;
-  const description = options.description ?? "";
-  const argsSchema = options.args ?? null;
-  const childArgsSchema = options.childArgs ?? null;
-  const constraints = options.constraints ?? null;
-  const validateFn = options.validate ?? null;
-  const allowedOutlets = options.allowedOutlets ?? null;
-  const deniedOutlets = options.deniedOutlets ?? null;
-
-  // Validate arg schema structure and types
-  validateArgsSchema(argsSchema, name);
-
-  // Validate childArgs is only allowed on container blocks
-  if (childArgsSchema && !isContainer) {
-    raiseBlockError(
-      `Block "${name}": "childArgs" is only valid for container blocks (container: true).`
-    );
-  }
-
-  // Validate classNames type (string, array, or function)
-  if (
-    decoratorClassNames != null &&
-    typeof decoratorClassNames !== "string" &&
-    typeof decoratorClassNames !== "function" &&
-    !Array.isArray(decoratorClassNames)
-  ) {
-    raiseBlockError(
-      `Block "${name}": "classNames" must be a string, array, or function.`
-    );
-  }
-
-  // Validate childArgs schema structure and types (includes unique property)
-  validateChildArgsSchema(childArgsSchema, name);
-
-  // Validate constraints schema (references to args, incompatible constraints, vacuous constraints)
-  validateConstraintsSchema(constraints, argsSchema, name);
-
-  // Validate that validate is a function if provided
-  if (validateFn !== null && typeof validateFn !== "function") {
-    raiseBlockError(
-      `Block "${name}": "validate" must be a function, got ${typeof validateFn}.`
-    );
-  }
-
-  // Validate outlet restriction patterns
-  validateOutletRestrictions(name, allowedOutlets, deniedOutlets);
-
-  // Create metadata object once (returned by getter)
-  const metadata = Object.freeze({
-    description,
-    container: isContainer,
-    decoratorClassNames,
-    args: argsSchema ? Object.freeze(argsSchema) : null,
-    childArgs: childArgsSchema ? Object.freeze(childArgsSchema) : null,
-    constraints: constraints ? Object.freeze(constraints) : null,
-    validate: validateFn,
-    allowedOutlets: allowedOutlets ? Object.freeze([...allowedOutlets]) : null,
-    deniedOutlets: deniedOutlets ? Object.freeze([...deniedOutlets]) : null,
-  });
-
-  return function (target) {
-    setInternalComponentManager(BlockComponentManager, target);
-
-    if (!(target.prototype instanceof Component)) {
-      raiseBlockError("@block target must be a Glimmer component class");
-      return target; // Return original in production to avoid crash
-    }
-
-    // Set authorization symbols on the original class (used by BlockComponentManager
-    // and _isBlock/_isContainerBlock functions)
-    target[__BLOCK_FLAG] = true;
-    target[__BLOCK_CONTAINER_FLAG] = isContainer;
-
-    // Define instance getter for block name on the prototype
-    Object.defineProperty(target.prototype, "name", {
-      /**
-       * The registered name of this block.
-       *
-       * @returns {string}
-       */
-      get: () => name,
-      configurable: false,
-    });
-
-    // Define static getters on the original class (non-configurable to prevent reassignment)
-    Object.defineProperties(target, {
-      blockName: {
-        /**
-         * The full namespaced block name (e.g., "theme:tactile:hero-banner").
-         *
-         * @type {() => string}
-         */
-        get: () => name,
-        configurable: false,
-      },
-      namespace: {
-        /**
-         * The namespace portion of the name, or null for core blocks.
-         *
-         * @type {() => string|null}
-         */
-        get: () => parsed.namespace,
-        configurable: false,
-      },
-      namespaceType: {
-        /**
-         * Indicates the block's source: "core", "plugin", or "theme".
-         *
-         * @type {() => "core"|"plugin"|"theme"}
-         */
-        get: () => parsed.type,
-        configurable: false,
-      },
-      blockMetadata: {
-        /**
-         * Block configuration including description, container status, args schema,
-         * childArgs schema, constraints, validate function, and outlet restrictions.
-         *
-         * @type {() => import("discourse/lib/blocks/-internals/registry/block").BlockMetadata}
-         */
-        get: () => metadata,
-        configurable: false,
-      },
-    });
-
-    return target;
-  };
-}
-
-/**
- * Creates the args object for a child block with reactive getters for context args.
- *
- * Block args come from two sources:
- * 1. **Entry args** (`entryArgs`) - Defined in layout entries by theme/plugin authors.
- *    These are spread directly onto the block args object.
- * 2. **Context args** (`contextArgs`) - Framework-provided values that describe the
- *    rendering context: where the block is rendered (`outletName`), what data is
- *    available (`outletArgs`), and structural info (`children`, `__hierarchy`).
- *
- * Context args are defined as getters rather than direct properties. This allows
- * `curryComponent` to maintain a stable component identity while enabling reactive
- * updates when the getter values change. Without getters, changing any arg would
- * require creating a new curried component, breaking Ember's identity-based rendering.
- *
- * @param {Object} entryArgs - User-provided args from the layout entry.
- * @param {Object} contextArgs - Rendering context to define as reactive getters. Each
- *   key becomes an enumerable getter property on the returned args object. Common
- *   context args include:
- *   - `children` - Nested children block configs (for container blocks)
- *   - `__hierarchy` - Debug hierarchy path for developer tools
- *   - `outletArgs` - Args passed from the parent outlet
- *   - `outletName` - The outlet identifier where this block is rendered
- * @returns {Object} The merged args object ready for `curryComponent`.
- */
-function createBlockArgsWithReactiveGetters(entryArgs, contextArgs) {
-  const blockArgs = {
-    ...entryArgs,
-    $block$: __BLOCK_CONTAINER_FLAG,
-  };
-
-  // Dynamically define reactive getters for each context arg
-  /** @type {PropertyDescriptorMap} */
-  const propertyDescriptors = {};
-  for (const [key, value] of Object.entries(contextArgs)) {
-    propertyDescriptors[key] = {
-      get() {
-        return value;
-      },
-      enumerable: true,
-    };
-  }
-  Object.defineProperties(blockArgs, propertyDescriptors);
-
-  return blockArgs;
-}
-
 /**
  * Resolves the decoratorClassNames value from block metadata.
  * Handles string, array, and function forms.
@@ -547,7 +155,6 @@ function resolveDecoratorClassNames(metadata, args) {
  * @param {Object} [entry.args] - Args to pass to the block
  * @param {Object} [entry.containerArgs] - Container args for parent's childArgs schema
  * @param {string} [entry.classNames] - Additional CSS classes
- * @param {Array<Object>} [entry.children] - Nested block entries
  * @param {import("@ember/owner").default} owner - The application owner
  * @param {Object} [debugContext] - Debug context for visual overlay
  * @param {string} [debugContext.displayHierarchy] - Where the block is rendered (for tooltip display)
@@ -556,7 +163,7 @@ function resolveDecoratorClassNames(metadata, args) {
  * @param {Object} [debugContext.outletArgs] - Outlet args for debug display
  * @param {string} [debugContext.key] - Stable unique key for this block
  * @param {string} [debugContext.outletName] - The outlet name for wrapper class generation
- * @param {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}>} [debugContext.processedChildren] - Pre-processed children for container blocks
+ * @param {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}>} [debugContext.processedChildren] - Pre-processed children
  * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
  *   An object containing the curried block component, any containerArgs
  *   provided in the block entry, and a stable unique key for list rendering.
@@ -570,10 +177,8 @@ function createChildBlock(entry, owner, debugContext = {}) {
   // Apply default values from metadata before building args
   const argsWithDefaults = applyArgDefaults(ComponentClass, args);
 
-  // All blocks use the same arg structure - classNames are handled by wrappers.
-  // Pass containerPath so nested containers know their full path for debug logging.
-  // For containers, use processedChildren (pre-processed array of {Component, containerArgs, key})
-  // instead of raw entry.children. This allows containers to render children directly via @children.
+  // Create block args with authorization token embedded.
+  // classNames are handled by wrappers, containerPath provides full path for debug logging.
   const blockArgs = createBlockArgsWithReactiveGetters(argsWithDefaults, {
     children: debugContext.processedChildren,
     outletArgs: debugContext.outletArgs,
@@ -629,41 +234,11 @@ function createChildBlock(entry, owner, debugContext = {}) {
 }
 
 /**
- * Checks if a component is registered as a block.
- *
- * @experimental This API is under active development and may change or be removed
- * in future releases without prior notice. Use with caution in production environments.
- *
- * @param {Function} component - The component to check
- * @returns {boolean} True if the component is registered as a block, false otherwise
- */
-export function _isBlock(component) {
-  return !!component?.[__BLOCK_FLAG];
-}
-
-/**
- * Checks if a component is registered as a container block.
- * Note: This function is exported for validation but should not be used
- * to bypass block rendering authorization.
- * It only returns a boolean, not the symbol itself.
- *
- * @experimental This API is under active development and may change or be removed
- * in future releases without prior notice. Use with caution in production environments.
- *
- * @param {Function} component - The component to check
- * @returns {boolean} True if the component is registered as a container block, false otherwise
- */
-export function _isContainerBlock(component) {
-  return !!component?.[__BLOCK_CONTAINER_FLAG];
-}
-
-/**
  * Registers an outlet layout (array of block entries) for a named outlet.
  *
  * This is the main entry point for plugins to render blocks in designated areas.
- * Each outlet can only have one layout registered. In development mode,
- * attempting to register a second layout throws an error; in production,
- * it logs a warning.
+ * Each outlet can only have one layout registered. Attempting to register a
+ * second layout throws an error.
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
@@ -700,17 +275,11 @@ export function _isContainerBlock(component) {
  * ```
  */
 export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
-  // Use provided call site error, or capture one here as fallback.
-  // When called via api.renderBlocks(), the call site is captured there
-  // to exclude the PluginApi wrapper from the stack trace.
   if (!callSiteError) {
     callSiteError = captureCallSite(_renderBlocks);
   }
 
-  // === Synchronous validation for outlet-level checks ===
-  // These don't depend on block resolution and can fail fast.
-
-  // Check for duplicate registration before anything else
+  // Check for duplicate registration
   if (outletLayouts.has(outletName)) {
     raiseBlockError(
       `Block outlet "${outletName}" already has a layout registered.`
@@ -722,9 +291,7 @@ export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
     raiseBlockError(`Unknown block outlet: ${outletName}`);
   }
 
-  // Verify registries are frozen before allowing renderBlocks().
-  // This ensures all blocks and conditions are registered before any layout configuration.
-  // MUST happen before service lookup to avoid instantiating service with empty registries.
+  // Verify registries are frozen
   if (!isBlockRegistryFrozen()) {
     raiseBlockError(
       `api.renderBlocks() was called before the block registry was frozen. ` +
@@ -733,23 +300,12 @@ export function _renderBlocks(outletName, layout, owner, callSiteError = null) {
     );
   }
 
-  // Get blocks service for condition validation (safe now that registries are frozen)
   const blocksService = owner?.lookup("service:blocks");
 
-  // Assign stable keys to all entries before validation. These keys survive
-  // shallow cloning in #preprocessEntries and ensure Ember maintains DOM
-  // identity when blocks are hidden/shown by conditions.
+  // Assign stable keys to all entries
   assignStableKeys(layout);
 
-  // All block validation is async (handles both class refs and string refs).
-  // In dev mode, this eagerly resolves all factories for early error detection.
-  // In prod, it defers factory resolution to render time.
-  //
-  // Validation errors are reported via raiseBlockError() which always throws.
-  // In catch handlers (e.g., BlockOutlet.children), errors are dispatched as
-  // 'discourse-error' events and surfaced to admins.
-  //
-  // The promise is returned so tests can await and catch errors.
+  // Validate layout asynchronously
   const validatedLayout = validateLayout(
     layout,
     outletName,
@@ -819,8 +375,7 @@ function hasLayout(outletName) {
  * </BlockOutlet>
  * ```
  */
-// @ts-ignore - TS1238/TS1270: Decorator return type issues with @block
-@block("block-outlet", { container: true })
+@block("block-outlet", { container: true, root: true })
 export default class BlockOutlet extends Component {
   /**
    * The outlet name, locked at construction time.
@@ -830,17 +385,8 @@ export default class BlockOutlet extends Component {
    */
   #name;
 
-  /**
-   * Marks this class as a root block, allowing it to bypass the normal
-   * authorization check in the @block decorator's constructor.
-   *
-   * @type {symbol}
-   */
-  static __ROOT_BLOCK = __BLOCK_CONTAINER_FLAG;
-
-  constructor() {
-    // @ts-ignore - TS2556: Spread argument for parent class constructor
-    super(...arguments);
+  constructor(owner, args) {
+    super(owner, args);
 
     // Lock the name at construction to prevent dynamic changes
     this.#name = this.args.name;
@@ -859,24 +405,7 @@ export default class BlockOutlet extends Component {
   /**
    * Processes block entries and returns renderable components.
    *
-   * This is the root-level implementation that:
-   * 1. Gets raw entries from the outlet layout registry
-   * 2. Preprocesses them to evaluate conditions and compute visibility
-   * 3. Creates renderable components from visible blocks
-   * 4. Creates ghost components for invisible blocks (in debug mode)
-   *
-   * The decorator's `children` getter defers to this for root blocks,
-   * while nested containers use their own simplified logic since
-   * their entries are already preprocessed by their parent.
-   *
-   * Each child object contains:
-   * - `Component`: The curried block component ready to render
-   * - `containerArgs`: Values provided by the child entry for the parent's
-   *   `childArgs` schema (accessible to parent, not the child block itself)
-   *
    * @returns {Promise<{rawChildren: Array<Object>, showGhosts: boolean, isLoggingEnabled: boolean}>|undefined}
-   *   A promise that resolves with the raw children and debug state once the
-   *   layout is validated, or undefined if no layout exists.
    */
   @cached
   get children() {
@@ -904,16 +433,9 @@ export default class BlockOutlet extends Component {
           return;
         }
 
-        // Return raw configs and metadata - BlockOutletRootContainer will handle
-        // condition evaluation and component creation in a tracked context
         return { rawChildren, showGhosts, isLoggingEnabled };
       })
       .catch((error) => {
-        // Note on test failures:
-        // - Validation errors (from validateLayout): Already fail tests as
-        //   unhandled promise rejections before this handler runs.
-        // - Preprocessing errors (from .then block above): Need setTimeout to
-        //   escape TrackedAsyncData's error handling and surface as test failures.
         if (isTesting() || isRailsTesting()) {
           setTimeout(() => {
             throw error;

@@ -1,5 +1,6 @@
+// @ts-check
 import Component from "@glimmer/component";
-import { block } from "discourse/blocks/block-outlet";
+import { block } from "discourse/blocks";
 import { VALID_BLOCK_NAME_PATTERN } from "discourse/lib/blocks";
 
 /**

@@ -3,7 +3,7 @@ import EmberObject, { computed } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
-import { block } from "discourse/blocks/block-outlet";
+import { block } from "discourse/blocks";
 import { BlockCondition, blockCondition } from "discourse/blocks/conditions";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import discourseComputed from "discourse/lib/decorators";
