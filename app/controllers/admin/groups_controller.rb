@@ -7,12 +7,13 @@ class Admin::GroupsController < Admin::StaffController
   end
 
   def create
-    resolved_group_params = group_params
-    resolved_group_params[:plugin_group_params] = resolved_group_params.slice(
-      *DiscoursePluginRegistry.group_params,
-    )
-
-    Groups::Create.call(guardian: guardian, params: resolved_group_params) do |result|
+    Groups::Create.call(
+      guardian:,
+      params: group_params.except(*DiscoursePluginRegistry.group_params),
+      options: {
+        dynamic_attributes: group_params.slice(*DiscoursePluginRegistry.group_params),
+      },
+    ) do |result|
       on_success { |group:| render_serialized(group, BasicGroupSerializer) }
       on_failed_policy(:can_create_group) { |policy| raise Discourse::InvalidAccess }
       on_failure { render(json: failed_json, status: :unprocessable_entity) }

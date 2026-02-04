@@ -72,13 +72,15 @@ RSpec.describe Groups::Create do
   end
 
   describe ".call" do
-    subject(:result) { described_class.call(params:, **dependencies) }
+    subject(:result) { described_class.call(params:, **dependencies, options:) }
 
     fab!(:admin)
     fab!(:moderator)
     fab!(:member_1, :user)
     fab!(:member_2, :user)
+
     let(:dependencies) { { guardian: } }
+    let(:options) { {} }
     let(:guardian) { admin.guardian }
     let(:params) do
       {
@@ -166,20 +168,16 @@ RSpec.describe Groups::Create do
         ).to contain_exactly(member_1.id, member_2.id, admin.id)
       end
 
-      context "when the plugin_group_params are provided" do
-        let(:params) do
-          { name: "builders", plugin_group_params: { allow_unknown_sender_topic_replies: true } }
-        end
+      context "when dynamic attributes are provided" do
+        let(:options) { { dynamic_attributes: { allow_unknown_sender_topic_replies: true } } }
+        let(:created_group) { Group.last }
+
+        before { Plugin::Instance.new.register_group_param :allow_unknown_sender_topic_replies }
 
         after { DiscoursePluginRegistry.reset! }
 
-        it "creates a new group with the plugin_group_params" do
-          plugin = Plugin::Instance.new
-          plugin.register_group_param :allow_unknown_sender_topic_replies
-
+        it "creates a new group with the dynamic attributes" do
           result
-
-          created_group = Group.last
           expect(created_group.allow_unknown_sender_topic_replies).to eq(true)
         end
       end
