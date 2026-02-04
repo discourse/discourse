@@ -35,6 +35,7 @@ RSpec.describe "Chat lazy YouTube videos", type: :system do
     channel.add(current_user)
     sign_in(current_user)
 
+    # NOTE: This spec is testing integration with the core discourse-lazy-videos plugin.
     SiteSetting.lazy_videos_enabled = true
     SiteSetting.lazy_youtube_enabled = true
 
