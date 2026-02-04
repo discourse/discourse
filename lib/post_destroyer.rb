@@ -121,10 +121,9 @@ class PostDestroyer
 
     @topic.update_column(:user_id, Discourse::SYSTEM_USER_ID) if !@topic.user_id
     @topic.recover!(@user) if @post.is_first_post?
-    @topic.update_statistics
+    @topic.update_statistics!
     Topic.publish_stats_to_clients!(@topic.id, :recovered)
 
-    @topic.reload
     @topic.reset_bumped_at(@post) if @post.is_last_reply? && !@post.whisper?
 
     UserActionManager.post_created(@post)
@@ -249,7 +248,11 @@ class PostDestroyer
             ignore(@post.reviewable_flag)
           end
         elsif reviewable = @post.reviewable_flag
-          @opts[:defer_flags] ? ignore(reviewable) : agree(reviewable)
+          if @opts[:defer_flags]
+            ignore(reviewable)
+          else
+            agree(reviewable) unless reviewable.potentially_illegal?
+          end
         end
       end
     end
@@ -534,16 +537,21 @@ class PostDestroyer
   end
 
   def resolve_reviewables_for_author_deletion
-    reviewables = Reviewable.where(target: @post, status: Reviewable.statuses[:pending])
+    # Don't auto-ignore if user was penalized for this post - staff should review the penalty.
+    return if user_penalized_for_post?
 
-    reviewables.each do |reviewable|
-      reviewable.reviewable_notes.create!(
-        user: Discourse.system_user,
-        content: I18n.t("reviewables.post_deleted_by_author"),
-      )
+    Reviewable
+      .where(target: @post, status: Reviewable.statuses[:pending])
+      .find_each { |reviewable| reviewable.transition_to(:ignored, Discourse.system_user) }
+  end
 
-      reviewable.transition_to(:ignored, Discourse.system_user)
-    end
+  def user_penalized_for_post?
+    return false unless @post.user.silenced? || @post.user.suspended?
+
+    UserHistory.exists?(
+      action: [UserHistory.actions[:silence_user], UserHistory.actions[:suspend_user]],
+      post: @post,
+    )
   end
 
   def restore_reviewables_for_author_recovery

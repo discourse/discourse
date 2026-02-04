@@ -165,7 +165,9 @@ class GroupsController < ApplicationController
             render status: :unprocessable_entity,
                    json: {
                      user_count: user_count,
-                     errors: [I18n.t("invalid_params", message: :update_existing_users)],
+                     errors: [
+                       I18n.t("groups.errors.update_existing_users_required", count: user_count),
+                     ],
                    }
           )
         end
@@ -734,8 +736,8 @@ class GroupsController < ApplicationController
 
         settings.delete(:ssl_mode)
 
-        if params[:ssl_mode].blank? || !Group.smtp_ssl_modes.values.include?(params[:ssl_mode].to_i)
-          raise Discourse::InvalidParameters.new("SSL mode must be present and valid")
+        if Group.smtp_ssl_modes.values.exclude?(params[:ssl_mode].to_i)
+          raise Discourse::InvalidParameters.new("SSL mode must be valid")
         end
 
         final_settings =

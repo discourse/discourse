@@ -113,14 +113,6 @@ uk:
             persona_id:
               label: "Персона"
               description: "Персона AI для створення звітів"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Модель"
-              description: "Мовна модель за замовчуванням, що використовується для сортування"
-            tool:
-              label: "Інструмент"
-              description: "Інструмент для сортування (інструмент не повинен мати визначених параметрів)"
         llm_persona_triage:
           fields:
             persona:
@@ -229,7 +221,6 @@ uk:
         short_title: "Особливості"
         description: "Це функції штучного інтелекту, доступні відвідувачам вашого сайту. Їх можна налаштувати для використання певних персон та LLM, а також контролювати доступ до них за групами."
         back: "Назад"
-        settings_save_error: "Деякі налаштування не вдалося зберегти."
         disabled: "(вимкнено)"
         persona:
           one: "Персона:"
@@ -256,11 +247,6 @@ uk:
           bot: "Чат-бот"
           name: "Бот"
           description: "Чат-бот, який може відповідати на запитання та допомагати користувачам в особистих повідомленнях, на форумі та в чаті"
-          setting_groups:
-            settings: "Основні налаштування"
-            access_control: "Контроль доступу"
-            ui_settings: "Налаштування інтерфейсу"
-            integrations: "Інтеграції"
         nav:
           configured: "Налаштовано"
           unconfigured: "Не налаштовано"
@@ -275,42 +261,24 @@ uk:
           description: "Надає можливість відвідувачам підсумувати теми за допомогою кнопки підсумовування"
           topic_summaries: "Підсумки тем"
           gists: "Короткий опис списку тем"
-          setting_groups:
-            settings: "Основні налаштування"
-            gists: "Списки"
-            backfill: "Засипка"
         search:
           name: "Пошук"
           description: "Покращує пошук, надаючи відповіді на запити, згенеровані штучним інтелектом"
           discoveries: "Відкриття"
-          setting_groups:
-            settings: "Основні налаштування"
         embeddings:
           name: "Вбудовування"
           description: "Посилює такі функції, як \"Пов'язані теми\" та пошук зі штучним інтелектом, створюючи семантичне представлення тексту"
           hyde: "HyDE"
-          setting_groups:
-            model_settings: "Налаштування моделі"
-            related_topics: "Пов’язані теми"
-            semantic_search: "Семантичний пошук"
         discord:
           name: "Інтеграція з Discord"
           description: "Додано можливість пошуку каналів Discord"
           search: "Пошук у Discord"
-          setting_groups:
-            settings: "Основні налаштування"
-            discord_configuration: "Конфігурація Discord"
         inference:
           name: "Виведені поняття"
           description: "Класифікує теми та публікації за сферами інтересів / мітками."
           generate_concepts: "Виведення понять"
           match_concepts: "Узгодження концепцій"
           deduplicate_concepts: "Дедуплікація понять"
-          setting_groups:
-            settings: "Основні налаштування"
-            topic_criteria: "Тематичні критерії"
-            post_criteria: "Критерії допису"
-            personas: "Персони"
         ai_helper:
           name: "Помічник"
           description: "Допомагає користувачам у взаємодії зі спільнотою, такій як створення тем, написання постів та читання контенту"
@@ -325,11 +293,6 @@ uk:
           image_caption: "Зображення підписів"
           translator: "Перекладач"
           post_illustrator: "Ілюстратор постів"
-          setting_groups:
-            access_permissions: "Доступ та дозволи"
-            enabled_features: "Увімкнені функції"
-            automation: "Автоматизація"
-            personas: "Персони"
         translation:
           name: "Переклад"
           description: "Переклад вмісту на підтримувані мови"
@@ -344,10 +307,6 @@ uk:
             many: "Заплановано переклад для неперекладених %{count} дописів."
             other: "Заплановано переклад для неперекладених %{count} дописів."
           schedule_topic_error: "Не вдалося запланувати переклади. Спробуйте ще раз."
-          setting_groups:
-            settings: "Основні налаштування"
-            personas: "Персони"
-            backfill_and_limits: "Засипка та обмеження"
         spam:
           name: "Спам"
           description: "Визначає потенційний спам за допомогою вибраного LLM і відзначити його для модераторів для перегляду в черзі відгуків"
@@ -1062,18 +1021,6 @@ uk:
         topic:
           title: "Підсумок теми"
           close: "Закрити панель підсумків"
-          regenerate: "Згенерувати короткий зміст"
-          regenerate_bulk: "Згенерувати короткі резюме повторно"
-          regenerate_success:
-            one: "Короткий підсумок успішно регенеровано"
-            few: "%{count} Коротких змістів успішно перегенеровано"
-            many: "%{count} Коротких змістів успішно перегенеровано"
-            other: "%{count} Коротких змістів успішно перегенеровано"
-          regenerate_error:
-            one: "Не вдалося створити короткий зміст"
-            few: "Не вдалося створити %{count} коротких змісти"
-            many: "Не вдалося створити %{count} коротких змістів"
-            other: "Не вдалося створити %{count} коротких змістів"
         topic_list_layout:
           button:
             compact: "Компактний"
@@ -1096,9 +1043,3 @@ uk:
             disable: "Вимкнути"
       user_preferences:
         empty: "Наразі немає відповідних налаштувань"
-    review:
-      types:
-        reviewable_ai_post:
-          title: "Повідомлення з позначкою ШІ"
-        reviewable_ai_chat_message:
-          title: "Повідомлення чату з прапорцем ШІ"

@@ -129,8 +129,6 @@ ja:
       web_hooks:
         assign_event:
           group_name: "割り当てイベント"
-          assigned: "ユーザーがトピックを割り当てたとき"
-          unassigned: "ユーザーがトピックの割り当てを解除したとき"
     search:
       advanced:
         in:

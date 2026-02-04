@@ -368,6 +368,7 @@ zh_CN:
     redemption_count_less_than_max: "应小于 %{max_redemptions_allowed}。"
     email_xor_domain: "电子邮件和网域字段不允许同时出现"
     existing_user_success: "邀请兑换成功"
+    email_invites_disabled: "发送邀请邮件已禁用"
   bulk_invite:
     file_should_be_csv: "上传的文件应为 csv 格式。"
     max_rows: "前 %{max_bulk_invites} 个邀请已发出。尝试将文件拆分成更小的部分。"
@@ -553,6 +554,7 @@ zh_CN:
         other: "一次最多可以统计 %{count} 个电子邮件域"
       no_invites_with_discourse_connect: "如果已启用 DiscourseConnect，您只能邀请注册用户"
       no_invites_without_local_logins: "如果已启用社交登录，您只能邀请注册用户"
+      update_existing_users_required: "此更改影响 %{count} 现有群组成员。必须指定 “update_existing_users” 参数（真或假），以指明是否将新通知默认应用于现有成员。"
     default_names:
       everyone: "所有人"
       admins: "管理员"
@@ -963,6 +965,7 @@ zh_CN:
     too_many_drafts:
       title: "草稿过多"
       description: "您已达到允许的最大草稿数。请删除一些[您的草稿](%{base_url}/my/activity/drafts)，然后重试。"
+    bulk_destroy_limit: "一次最多只能删除 %{limit} 个草稿。"
   draft_backup:
     pm_title: "正在进行的话题的备份草稿"
     pm_body: "包含备份草稿的话题"
@@ -970,12 +973,9 @@ zh_CN:
     no_log_search_queries: "搜索查询日志当前已禁用（管理员可以在网站设置中启用它们）。"
   email_settings:
     pop3_authentication_error: "提供的 POP3 凭据存在问题，请检查用户名和密码并重试。"
-    imap_authentication_error: "提供的 IMAP 凭据存在问题，请检查用户名和密码并重试。"
-    imap_no_response_error: "与 IMAP 服务器通信时出错。%{message}"
     smtp_authentication_error: "提供的 SMTP 凭据存在问题，请检查用户名和密码，然后重试。%{message}"
     smtp_server_busy_error: "SMTP 服务器当前正忙，请稍后再试。"
     smtp_unhandled_error: "与 SMTP 服务器通信时出现未处理的错误。%{message}"
-    imap_unhandled_error: "与 IMAP 服务器通信时发生未处理错误。%{message}"
     connection_error: "与服务器连接时出现问题，请检查服务器名称和端口并重试。"
     timeout_error: "连接服务器时超时，请检查服务器名称和端口后并重试。"
     unhandled_error: "测试电子邮件设置时出现未处理的错误。%{message}"
@@ -1644,7 +1644,6 @@ zh_CN:
     manifest_icon: "在 Android 上用作徽标/初始屏幕图片的图片。将自动调整为 512 × 512。如果留空，将使用 large_icon。"
     manifest_screenshots: "在安装提示页面上展示您的实例特色和功能的屏幕截图。所有图片均应为本地上传且尺寸相同。"
     favicon: "您的网站的网站图标，请参阅 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是 png 图片。将调整为 32x32。如果留空，将使用 large_icon。"
-    apple_touch_icon: "用于 Apple 触摸设备的图标。不推荐透明背景。将自动调整为 180x180。如果留空，将使用 large_icon。"
     opengraph_image: "默认 OpenGraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
     x_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150，不能为 .svg）。如果留空，则使用 opengraph_image（前提是也不能为 .svg）生成常规卡片元数据。"
     notification_email: "发送所有重要系统电子邮件时使用的 from: 电子邮件地址。此处指定的网域必须正确设置 SPF、DKIM 和反向 PTR 记录才能收到电子邮件。"
@@ -1725,6 +1724,7 @@ zh_CN:
     blocked_crawler_user_agents: "用户代理字符串中不区分大小写的唯一字词，用于标识不应被允许访问网站的网抓取工具。如果定义了许可名单，则不适用。"
     slow_down_crawler_user_agents: '网络爬虫的用户代理应该按照“减慢爬虫速率”设置中的配置进行速率限制。每个值的长度必须至少为 3 个字符。'
     slow_down_crawler_rate: "如果指定了 slow_down_crawler_user_agents，则此速率将应用于所有抓取工具（请求之间的延迟秒数）"
+    llms_txt: "上传一个文本文件，该文件将通过 /llms.txt 提供给 LLM 爬虫。更多信息请访问 <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> 。"
     content_security_policy: "启用内容安全策略 (CSP)。CSP 是一个附加安全层，有助于防止某些类型的攻击，包括跨站脚本 (XSS) 和数据注入。"
     content_security_policy_report_only: "启用仅限内容安全策略报告 (CSP)"
     content_security_policy_collect_reports: "在 /csp_reports 启用 CSP 违规报告收集"
@@ -1882,7 +1882,7 @@ zh_CN:
     invite_link_max_redemptions_limit_users: "普通用户生成的邀请链接允许的最大确认次数不能超过此值。"
     alert_admins_if_errors_per_minute: "激活管理员警告的每分钟错误数量。值为 0 会禁用此功能。注意：需要重启。"
     alert_admins_if_errors_per_hour: "激活管理员警告的每小时错误数量。值为 0 会禁用此功能。注意：需要重启。"
-    categories_topics: "要在 /categories 页面中显示的话题数量。如果设置为 0，它将自动尝试寻找一个值来保持两列对称（类别和话题）。"
+    categories_topics: '在 /categories 页面上显示的主题数量。如果设置为 0，则会自动设置一个值以保持两列对称。该设置仅适用于“分类和最新/热门主题” <a href="%{base_path}/admin/site_settings/category/all_results?filter=category style">分类页面样式</a>。'
     suggested_topics: "在话题底部显示的推荐话题的数量。"
     limit_suggested_to_category: "仅在推荐话题中显示当前类别中的话题"
     suggested_topics_max_days_old: "推荐话题的存在时间不应超过 n 天。"
@@ -2057,6 +2057,7 @@ zh_CN:
     incoming_email_prefer_html: "对传入电子邮件使用 HTML 而不是文本。"
     strip_incoming_email_lines: "从传入电子邮件的每一行中移除前导和尾随空格。"
     disable_emails: "禁止 Discourse 发送任何类型的电子邮件。选择“是”将对所有用户禁用电子邮件。选择“非管理人员”将仅对非管理人员用户禁用电子邮件。"
+    allow_email_invites: "禁用此功能后，用户将无法通过 Discourse 发送邀请邮件。"
     strip_images_from_short_emails: "从大小小于 2800 字节的电子邮件中去除图片"
     short_email_length: "定义电子邮件被归类为“短”以禁止图片的最大长度（以字节为单位）。如果电子邮件的大小未超过此设置，则电子邮件中的任何图片（例如头像和表情符号）都将被删除。"
     display_name_on_email_from: "在电子邮件发件人字段上显示全名"
@@ -2108,14 +2109,7 @@ zh_CN:
     email_in_allowed_groups: "能够通过电子邮件发布新话题的组。管理员和版主始终可以通过电子邮件发布新话题。"
     email_in_authserv_id: "对传入电子邮件进行身份验证检查的服务的标识符。请参阅 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> 了解配置说明"
     email_in_spam_header: "选择用于识别垃圾邮件的特定电子邮件头。此选项可以是 X-Spam-Flag、X-Spam-Status 或 X-SES-Spam-Verdict，电子邮件会根据头值被标记为垃圾邮件。例如，如果选择的设置是 X-Spam-Flag，则此头值设置为 YES 的电子邮件将被归类为垃圾邮件。"
-    enable_imap: "启用 IMAP 以同步群组消息。"
-    enable_imap_write: "启用双向 IMAP 同步。如果禁用，IMAP 帐户上的所有写入操作都将被禁用。"
-    enable_imap_idle: "使用 IMAP IDLE 机制等待新电子邮件。"
     enable_smtp: "启用 SMTP 以发送群组消息通知。"
-    imap_polling_period_mins: "检查 IMAP 帐户有无电子邮件的时间间隔（以分钟为单位）。"
-    imap_polling_old_emails: "每次轮询 IMAP 邮箱时要更新的旧电子邮件（已处理）的最大数量（设为 0 将更新全部）。"
-    imap_polling_new_emails: "每次轮询 IMAP 邮箱时要更新的新电子邮件（已处理）的最大数量。"
-    imap_batch_import_email: "触发导入模式的新电子邮件的最小数量（禁用导入帖子的通知）。"
     email_prefix: "电子邮件主题中使用的[标签]。如果不设置，将默认为 'title'。"
     email_site_title: "用作来自网站的电子邮件发件人的网站标头。如果不设置，则默认为 'title'。如果您的 'title' 包含电子邮件发件人字符串中不允许的字符，请使用此设置。"
     find_related_post_with_key: "仅使用“回复键”查找回复的帖子。警告：禁用此功能将允许基于电子邮件地址的用户模拟。"
@@ -2123,6 +2117,7 @@ zh_CN:
     relative_date_duration: "发帖后发布日期将显示为相对（7 天）而不是绝对（2 月 20 日）的天数。"
     delete_user_max_post_age: "不允许删除第一个帖子超过 (x) 天的用户。"
     delete_all_posts_max: "使用“删除所有帖子”按钮可以一次删除的最大帖子数。如果用户的帖子超过此数值，则无法一次全部删除这些帖子，用户也不能被删除。"
+    delete_all_posts_background_threshold: "使用“删除所有帖子”按钮一次性可以删除的帖子数量上限，超过此上限后，删除操作将在后台进行处理。"
     delete_user_self_max_post_count: "允许自助帐户删除时用户可以拥有的最大帖子数。设置为 -1 将禁用自助帐户删除。"
     username_change_period: "注册后帐户可以更改其用户名的最大天数（0 表示不允许更改用户名）。"
     email_editable: "允许用户在注册后更改他们的电子邮件地址。"
@@ -2161,8 +2156,6 @@ zh_CN:
     delete_associated_accounts_on_password_reset: "当用户更改密码时，删除用户关联帐户。"
     allow_featured_topic_on_user_profiles: "允许用户在他们的用户卡片和个人资料上添加指向某个话题的链接。"
     show_inactive_accounts: "允许登录用户浏览闲置帐户的个人资料。"
-    hide_silencing_reasons: "不在用户个人资料中公开显示禁言原因。"
-    hide_suspension_reasons: "不在用户个人资料中公开显示封禁原因。"
     log_personal_messages_views: "管理员为其他用户/群组记录个人消息浏览。"
     ignored_users_count_message_threshold: "如果某个特定用户被此数量的其他用户忽略，则通知版主。"
     ignored_users_message_gap_days: "当一个用户被多个用户忽略时，再次通知版主前需要等待的天数。"
@@ -2176,7 +2169,6 @@ zh_CN:
     dont_feed_the_trolls_threshold: "被警告前来自其他用户的举报数量。"
     enable_mobile_theme: "移动设备使用适合移动设备的主题，并且可以切换到完整网站。如果您想使用完全自适应的自定义样式表，请禁用此选项。"
     dominating_topic_minimum_percent: "在被提醒过度主导某个话题之前，用户必须在某个话题中发布的帖子所占的百分比。"
-    pm_warn_user_last_seen_months_ago: "在创建新的私信时，如果目标接收者已经超过 n 个月前无活动，则警告用户。"
     suppress_uncategorized_badge: "不在话题列表中显示未分类话题的徽章。"
     header_dropdown_category_count: "标题下拉菜单中可以显示的类别数量。"
     permalink_normalizations: "在匹配永久链接之前应用以下正则表达式，例如：/(topic.*)\\?.*/\\1 将从话题路由中去除查询字符串。格式为正则表达式+字符串。使用 \\1 等访问捕获"
@@ -2376,11 +2368,9 @@ zh_CN:
     default_navigation_menu_categories: "所选类别默认将显示在导航菜单的“类别”版块下。"
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
     experimental_new_new_view_groups: '启用新的话题列表，将未读话题与新话题合并，并使边栏中的“一切”链接指向该列表。'
-    experimental_form_templates: "启用表单模板功能。在<a href='%{base_path}/admin/customize/form-templates'>自定义/模板</a>下管理模板。"
     show_preview_for_form_templates: "启用表单模板预览功能"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     experimental_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图像包装在 [grid] 标记中。"
-    experimental_impersonation: "无需注销管理员帐户即可模拟用户。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
@@ -2396,7 +2386,7 @@ zh_CN:
     reviewable_ui_refresh: "可以在审核队列中使用实验性新 UI 的群组。"
     viewport_based_mobile_mode: "使用视口宽度来确定移动/桌面模式。此设置即将移除。如果您需要将其关闭，请在 Meta 中告知我们 <a href='https://meta.discourse.org/t/384280'></a>。"
     content_localization_enabled: "根据用户的浏览器或语言偏好设置，显示本地化内容。此类内容可能包括类别、标签、帖子和话题。支持的语言环境在 'content localization supported locales' 中设置。"
-    content_localization_supported_locales: "用户内容可以翻译成的受支持语言区域列表。要求 'content localization enabled'。"
+    content_localization_supported_locales: "用户内容可翻译成的支持语言列表。网站默认语言始终包含在内。需要启用 'content localization enabled'。"
     content_localization_allowed_groups: "允许更新本地化内容的群组。需要 'content localization enabled'。"
     content_localization_language_switcher: "在页眉中显示语言切换器，允许访问者在翻译版本的 Discourse 和用户贡献的内容之间切换。使用 \"内容本地化支持的本地语言 \"中定义的语言"
     content_localization_crawler_param: "启用 \"内容本地化 \"和 \"从参数设置本地化 \"后，向网络爬虫提供本地化内容。支持的本地化语言列表在 \"内容本地化支持的本地化语言 \"中定义。"
@@ -2404,7 +2394,9 @@ zh_CN:
     content_localization_allow_author_localization: "允许作者通过帖子菜单更新自己主题和帖子的本地化内容。"
     enable_upcoming_changes: "启用即将到来的更改"
     fake_upcoming_change: "这是为测试目的即将进行的虚假更改。无需翻译此字符串。"
+    floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动的 \"忽略... \"按钮，以方便用户访问，并腾出话题列表顶部的空间"
     experimental_rename_faq_to_guidelines: "此更改将常见问题页面重命名为指南。常见问题页面仍可通过 /faq 访问。 'faq url' 的设置与以前一样有效。"
+    enable_simplified_category_creation: "使用更少的选项和更简洁的界面来简化类别创建流程。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_datetime: "日期时间格式无效。请确保您输入的日期和时间有效。"
@@ -2749,6 +2741,7 @@ zh_CN:
         updating_user_ids: "正在更新用户 ID…"
         deleting_source_user: "正在删除源用户…"
   user:
+    anonymized: "[因用户匿名化已移除]"
     deactivated: "由于 '%{email}' 的退回电子邮件过多，已被停用。"
     deactivated_by_staff: "被管理人员停用"
     deactivated_by_inactivity:
@@ -2978,6 +2971,7 @@ zh_CN:
     contents_hidden: "请访问帖子以查看内容。"
     post_hidden:
       title: "帖子被隐藏"
+      preview: "由于社区成员的举报，帖子已被隐藏。"
       subject_template: "帖子因社区举报而被隐藏"
       text_body_template: |
         您好，
@@ -3039,6 +3033,7 @@ zh_CN:
         %{site_name} 版主
     post_hidden_again:
       title: "帖子被再次隐藏"
+      preview: "由于社区成员的再次举报，帖子已被隐藏。"
       subject_template: "帖子因社区举报而被隐藏，已通知管理人员"
       text_body_template: |
         您好，
@@ -3523,6 +3518,7 @@ zh_CN:
         有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     too_many_spam_flags:
       title: "垃圾信息举报过多"
+      preview: "由于垃圾信息举报，帖子已被暂时隐藏。"
       subject_template: "新帐户被暂停"
       text_body_template: |
         您好，
@@ -3545,6 +3541,7 @@ zh_CN:
         有关其他指导，请参阅我们的[社区准则](%{base_url}/guidelines)。
     silenced_by_staff:
       title: "被管理人员禁言"
+      preview: "帐户已被临时暂停。"
       subject_template: "帐户被临时暂停"
       text_body_template: |
         您好，
@@ -3626,6 +3623,11 @@ zh_CN:
         您好，
 
         新用户的帖子目前正在等待审核。[在此处批准或拒绝他们](%{base_url}/review?type=ReviewableQueuedPost)。
+    user_posts_deleted:
+      title: "用户的帖子已被删除"
+      subject_template: "%{user} 的所有帖子已被删除"
+      text_body_template:
+        other: "@%{user} 的%{count}个帖子已被 @%{staff_user} 删除。"
   unsubscribe_link: |
     要退订这些电子邮件，请[点击此处](%{unsubscribe_url})。
   unsubscribe_link_and_mail: |
@@ -3737,6 +3739,7 @@ zh_CN:
         %{respond_instructions}
     user_replied:
       title: "用户回复"
+      preview: "有用户回复了你的帖子。"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3759,6 +3762,7 @@ zh_CN:
         %{respond_instructions}
     user_quoted:
       title: "用户引用"
+      preview: "有用户在帖子内引用了你的内容。"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3770,6 +3774,7 @@ zh_CN:
         %{respond_instructions}
     user_linked:
       title: "用户链接"
+      preview: "你的帖子与另一个话题相关联。"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3781,6 +3786,7 @@ zh_CN:
         %{respond_instructions}
     user_mentioned:
       title: "用户提及"
+      preview: "有用户在帖子中@了你。"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3836,6 +3842,7 @@ zh_CN:
         %{respond_instructions}
     user_posted:
       title: "用户发帖"
+      preview: "有用户回复了你关注的帖子。"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3869,6 +3876,7 @@ zh_CN:
         %{respond_instructions}
     user_posted_pm:
       title: "用户发布私信"
+      preview: "有用户向你发送了私信。"
       subject_template: "[%{email_prefix}] [私信] %{topic_title}"
       text_body_template: |
         %{header_instructions}
@@ -3963,6 +3971,7 @@ zh_CN:
       preheader: "自 %{since} 以来的简要摘要"
     forgot_password:
       title: "忘记密码"
+      preview: "重置您的密码。"
       subject_template: "[%{email_prefix}] 密码重置"
       text_body_template: |
         有人要求重置您在 [%{site_name}](%{base_url}) 上的密码。
@@ -3984,6 +3993,7 @@ zh_CN:
         %{base_url}/session/email-login/%{email_token}
     set_password:
       title: "设置密码"
+      preview: "设置帐户密码。"
       subject_template: "[%{email_prefix}] 设置密码"
       text_body_template: |
         有人要求为您在 [%{site_name}](%{base_url}) 上的帐户设置密码。您也可以使用与此经过验证的电子邮件地址关联的任何受支持在线服务（Google、Facebook 等）登录。
@@ -3994,6 +4004,7 @@ zh_CN:
         %{base_url}/u/password-reset/%{email_token}
     admin_login:
       title: "管理员登录"
+      preview: "已请求管理员登录。"
       subject_template: "[%{email_prefix}] 登录"
       text_body_template: |
         有人要求登录您在 [%{site_name}](%{base_url}) 上的帐户。
@@ -4004,6 +4015,7 @@ zh_CN:
         %{base_url}/session/email-login/%{email_token}
     account_created:
       title: "帐户已创建"
+      preview: "已为您创建新帐户。"
       subject_template: "[%{email_prefix}] 您的新帐户"
       text_body_template: |
         已在 %{site_name} 为您创建一个新帐户
@@ -4048,6 +4060,7 @@ zh_CN:
         %{base_url}/u/confirm-old-email/%{email_token}
     notify_old_email:
       title: "通知旧电子邮件"
+      preview: "电子邮件地址已更新。"
       subject_template: "[%{email_prefix}] 您的电子邮件地址已更改"
       text_body_template: |
         这是一封自动发送的邮件，旨在通知您为 %{site_name} 使用的电子邮件地址已更改。如果有误，请联系网站管理员。
@@ -4066,6 +4079,7 @@ zh_CN:
         %{new_email}
     signup_after_approval:
       title: "批准后注册"
+      preview: "新帐户已被批准。"
       subject_template: "您已被批准加入 %{site_name}！"
       text_body_template: |
         欢迎来到 %{site_name}！
@@ -4091,6 +4105,7 @@ zh_CN:
         %{reject_reason}
     signup:
       title: "注册"
+      preview: "确认您的帐户。"
       subject_template: "[%{email_prefix}] 确认您的新帐户"
       text_body_template: |
         欢迎来到 %{site_name}！
@@ -4113,6 +4128,7 @@ zh_CN:
         如果无法点击以上链接，请尝试将其复制并粘贴到您的网络浏览器的地址栏中。
     suspicious_login:
       title: "新登录提醒"
+      preview: "验证您的设备。"
       subject_template: "[%{site_name}] 来自%{location}的新登录"
       text_body_template: |
         您好，
@@ -4155,6 +4171,7 @@ zh_CN:
   upload:
     edit_reason: "下载图片的本地副本"
     unauthorized: "抱歉，您尝试上传的文件不被允许（允许的扩展名：%{authorized_extensions}）。"
+    images_only: "抱歉，此设置仅支持上传图片。"
     pasted_image_filename: "粘贴图片"
     store_failure: "无法保存用户 #%{user_id} 的上传 #%{upload_id}。"
     file_missing: "抱歉，您必须提供要上传的文件。"
@@ -4876,8 +4893,10 @@ zh_CN:
     bulk_create:
       invalid_params: "参数无效。请提供标签名称数组。"
       invalid_name: "无效的标签名称。"
-      tag_too_long: "标签过长（最多 %{max} 个字符）。"
-      too_many_tags: "标签太多了。您一次最多可以创建 %{max} 标签。对于较大的导入，请使用 CSV 上传功能。"
+      tag_too_long:
+        other: "标签过长（最多 %{count} 个字符）。"
+      too_many_tags:
+        other: "标签太多了。您一次最多可以创建 %{count} 标签。对于较大的导入，请使用 CSV 上传功能。"
     forbidden:
       invalid:
         other: "您选择的标签均无法使用"
@@ -4927,6 +4946,10 @@ zh_CN:
     deprecation_error_label: 让 Javascript 弃用引发一个错误
     enter: "进入安全模式"
     must_select: "您必须至少选择一个选项才能进入安全模式。"
+  dev_mode:
+    title: "开发者模式"
+    enable_rack_mini_profiler: "启用 Rack Mini Profiler，使其在会话切换后保持 1 小时。"
+    enter: "Enter"
   wizard:
     title: "Discourse 设置"
     step:
@@ -5013,6 +5036,7 @@ zh_CN:
       confirm_body: "成功！已启用通知。"
       custom: "来自%{site_title}上 %{username} 的通知"
   staff_action_logs:
+    redacted: "[内容不可见]"
     json_too_long: "值由于超出列长度限制而未记录"
     not_found: "找不到"
     unknown: "未知"
@@ -5033,8 +5057,6 @@ zh_CN:
     api_post_delete: "通过 API 删除"
     reminder_deleted: "由新提醒替换"
     user_associated_posts_deleted: "用户已被删除"
-    imap_email_deleted: "电子邮件已在 IMAP 服务器上删除"
-    imap_email_marked_as_spam: "电子邮件已在 IMAP 服务器上移至垃圾邮件"
     auto_deleted_hidden_posts: "自动删除隐藏的帖子"
     seed_data_topic_updated: "种子数据话题已更新"
     seed_data_topic_deleted: "种子数据话题已删除"
@@ -5045,7 +5067,6 @@ zh_CN:
   reviewables:
     already_handled: "谢谢，但我们已经审核该帖子并确定不需要再次举报它。"
     already_handled_and_user_not_exist: "谢谢，但有人已经审核过了，该用户已不存在。"
-    post_deleted_by_author: "帖子被作者删除"
     post_restored_by_author: "帖子被作者恢复。"
     priorities:
       low: "低"
@@ -5111,19 +5132,19 @@ zh_CN:
         description: "同意举报并隐藏此帖子 + 自动向用户发送信息，敦促他们进行编辑。"
         complete: "帖子已隐藏，用户已被通知。"
       agree_and_edit:
-        title: "同意并编辑帖子"
+        title: "编辑帖子"
         description: "同意举报并打开编辑器窗口以编辑帖子。"
         complete: "举报已确认，您现在可以编辑该帖子。"
       delete:
         title: "删除"
         complete: "帖子已被删除。"
       delete_and_ignore:
-        title: "忽略举报并删除帖子"
-        description: "忽略举报，将举报从队列中移除，并删除该帖子；如果是第一个帖子，同时删除该话题。 "
+        title: "删除帖子并忽略举报"
+        description: "删除帖子并忽略举报，将其从队列中移除；如果是第一篇帖子，则同时删除话题。 "
         complete: "帖子已被删除。"
       delete_and_ignore_replies:
-        title: "忽略举报，删除帖子和回复"
-        description: "忽略举报，将举报从队列中移除，并删除该帖子及所有回复；如果是第一个帖子，同时删除该话题"
+        title: "删除帖子及与之关联的回复，并忽略该举报"
+        description: "删除帖子及与之关联的回复，忽略该举报，并将其从审核队列中移除；如果这是首帖，则同时删除该话题"
         confirm: "确定要同时删除对帖子的回复吗？"
         complete: "帖子和回复已被删除。"
       delete_and_agree:
@@ -5136,11 +5157,14 @@ zh_CN:
         confirm: "确定要同时删除对帖子的回复吗？"
         complete: "帖子和回复已被删除。"
       disagree_and_restore:
-        title: "否，恢复帖子"
-        description: "恢复帖子，以便所有用户都可以看到它。"
+        title: "恢复帖子"
+        description: "拒绝该举报，恢复帖子"
         complete: "帖子已恢复。"
-      disagree:
+      disagree_bundle:
         title: "否"
+      disagree:
+        title: "保留帖子"
+        description: "拒绝该举报"
         complete: "举报已被忽略。"
       discard_post:
         title: "舍弃帖子"
@@ -5150,37 +5174,45 @@ zh_CN:
         complete: "帖子被拒绝，等待修订。"
       ignore:
         title: "忽略"
+        description: "将其从审核队列中移除，不采取任何措施"
         complete: "举报已被忽略。"
       ignore_and_do_nothing:
         title: "不进行操作"
         description: "忽略举报，将举报从队列中移除并且不采取任何操作。隐藏的帖子会保持隐藏并且由自动工具处理。"
         complete: "举报已被忽略。"
       approve:
-        title: "批准"
+        title: "是"
         complete: "帖子已被批准。"
       approve_post:
-        title: "批准帖子"
+        title: "是"
         complete: "帖子已被批准。"
       approve_post_closed:
-        title: "批准帖子"
+        title: "是"
         confirm: "此话题已被关闭。仍要创建帖子吗？"
         complete: "帖子已被批准。"
+      reject_post_bundle:
+        title: "否"
       reject_post:
         title: "拒绝帖子"
         complete: "帖子被拒绝。"
       approve_user:
-        title: "批准用户"
+        title: "是"
         complete: "用户已被批准。"
       reject_user:
-        title: "删除用户…"
+        title: "否"
         delete:
           title: "删除用户"
-          description: "该用户将被从论坛中删除。"
+          description: "删除用户，而不封禁其IP/Email"
           complete: "用户已被删除。"
         block:
           title: "删除并阻止用户"
           description: "该用户将被删除，我们将屏蔽他们的 IP 和电子邮件地址。"
           complete: "用户已被删除并被屏蔽。"
+      confirm_spam:
+        title: "是"
+      not_spam:
+        title: "否"
+        description: "不是，批准该用户"
       reject:
         title: "拒绝"
         bundle_title: "拒绝…"
@@ -5193,16 +5225,20 @@ zh_CN:
       reject_and_delete:
         title: "拒绝并删除帖子"
         complete: "帖子被拒绝并被删除。"
+      reject_and_delete_standalone:
+        title: "不是，删除帖子"
       reject_and_keep_deleted:
         title: "保持帖子删除"
         complete: "帖子被拒绝，保持删除状态。"
+      reject_and_keep_deleted_standalone:
+        title: "不是，保持帖子删除状态"
       scrub:
         title: 清除记录
       approve_and_restore:
-        title: "批准并恢复帖子"
+        title: "是"
         complete: "帖子被批准并恢复。"
       approve_and_unhide:
-        title: "批准并取消隐藏帖子"
+        title: "是"
         complete: "帖子已获批准并取消隐藏"
       post_actions:
         bundle_title: "您想对这篇帖子做什么？"

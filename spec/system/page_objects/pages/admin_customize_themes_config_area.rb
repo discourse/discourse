@@ -78,6 +78,32 @@ module PageObjects
       def click_install_button
         PageObjects::Components::AdminCustomizeThemeInstallButton.new.click
       end
+
+      def screenshot_toggle_button(theme)
+        find_theme_card(theme).find(".theme-card__screenshot-toggle")
+      end
+
+      def has_screenshot_toggle_button?(theme)
+        find_theme_card(theme).has_css?(".theme-card__screenshot-toggle")
+      end
+
+      def has_no_screenshot_toggle_button?(theme)
+        find_theme_card(theme).has_no_css?(".theme-card__screenshot-toggle")
+      end
+
+      def click_screenshot_toggle(theme)
+        find_theme_card(theme).hover
+        screenshot_toggle_button(theme).click
+      end
+
+      def screenshot_image(theme)
+        find_theme_card(theme).find(".theme-card__image")
+      end
+
+      def has_screenshot_with_icon?(theme, icon_name)
+        find_theme_card(theme).hover
+        find_theme_card(theme).has_css?(".theme-card__screenshot-toggle .d-icon-#{icon_name}")
+      end
     end
   end
 end

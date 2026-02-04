@@ -17,20 +17,22 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::GIFT_EXCHANGE)
     group_id = fields.dig("gift_exchangers_group", "value")
 
     unless group = Group.find_by(id: group_id)
-      Rails.logger.warn "[discourse-automation] Couldn’t find group with id #{group_id}"
+      DiscourseAutomation::Logger.warn("Couldn't find group with id #{group_id}")
       next
     end
 
     cf_name = "#{group.name}-gifts-were-exchanged-#{automation.id}-#{version}-#{now.year}"
     if group.custom_fields[cf_name].present?
-      Rails.logger.warn "[discourse-automation] Gift exchange script has already been run on #{cf_name} this year #{now.year} for this script version #{version}"
+      DiscourseAutomation::Logger.warn(
+        "Gift exchange script has already been run on #{cf_name} this year #{now.year} for this script version #{version}",
+      )
       next
     end
 
     usernames = group.users.pluck(:username)
 
     if usernames.size < 3
-      Rails.logger.warn "[discourse-automation] Gift exchange needs at least 3 users in a group"
+      DiscourseAutomation::Logger.warn("Gift exchange needs at least 3 users in a group")
       next
     end
 
@@ -45,12 +47,12 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::GIFT_EXCHANGE)
 
       Array(fields.dig("giftee_assignment_messages", "value")).each do |giftee_assignment_message|
         if giftee_assignment_message["title"].blank?
-          Rails.logger.warn "[discourse-automation] Gift exchange requires a title for the PM"
+          DiscourseAutomation::Logger.warn("Gift exchange requires a title for the PM")
           next
         end
 
         if giftee_assignment_message["raw"].blank?
-          Rails.logger.warn "[discourse-automation] Gift exchange requires a raw for the PM"
+          DiscourseAutomation::Logger.warn("Gift exchange requires a raw for the PM")
           next
         end
 

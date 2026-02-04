@@ -1196,12 +1196,9 @@ cs:
     no_log_search_queries: "Záznamy o vyhledávacích dotazech jsou momentálně zakázány (správce je může povolit v nastavení webu)."
   email_settings:
     pop3_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji POP3, zkontrolujte uživatelské jméno a heslo a zkuste to znovu."
-    imap_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji IMAP. Zkontrolujte uživatelské jméno a heslo a zkuste to znovu."
-    imap_no_response_error: "Při komunikaci se serverem IMAP došlo k chybě. %{message}"
     smtp_authentication_error: "Vyskytl se problém s poskytnutými přihlašovacími údaji SMTP. Zkontrolujte uživatelské jméno a heslo a zkuste to znovu. %{message}"
     smtp_server_busy_error: "SMTP server je momentálně zaneprázdněn, zkuste to znovu později."
     smtp_unhandled_error: "Při komunikaci se SMTP serverem došlo k neošetřené chybě. %{message}"
-    imap_unhandled_error: "Při komunikaci se serverem IMAP došlo k neošetřené chybě. %{message}"
     connection_error: "Došlo k problému s připojením k serveru, zkontrolujte název serveru a port a zkuste to znovu."
     timeout_error: "Časový limit připojení k serveru vypršel, zkontrolujte název serveru a port a zkuste to znovu."
     unhandled_error: "Při testování nastavení e-mailu nastala neošetřená chyba. %{message}"
@@ -1868,7 +1865,6 @@ cs:
     manifest_icon: "Obrázek použitý jako logo/úvodní obrázek v systému Android. Jeho velikost bude automaticky změněna na 512 × 512. Pokud pole ponecháte prázdné, použije se large_icon."
     manifest_screenshots: "Snímky obrazovky, které na stránce s výzvou k instalaci předvádějí funkce vaší instance a funkce. Všechny obrázky by měly být lokálně nahrávány a mít stejné rozměry."
     favicon: "Favicon pro váš web, viz <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Pro správné fungování přes CDN musí být ve formátu png. Velikost bude změněna na 32x32. Pokud zůstane prázdná, použije se large_icon."
-    apple_touch_icon: "Ikona používaná pro dotyková zařízení Apple. Průhledné pozadí se nedoporučuje. Velikost se automaticky změní na 180x180. Pokud pole ponecháte prázdné, použije se ikona large_icon."
     opengraph_image: "Výchozí obrázek opengraph, který se použije, pokud stránka nemá jiný vhodný obrázek. Pokud zůstane prázdný, použije se large_icon"
     x_summary_large_image: "„Velký souhrnný obrázek“ karty Twitteru (měl by mít šířku alespoň 280 a výšku alespoň 150, nesmí být ve formátu .svg). Pokud se toto pole ponechá prázdné, budou generována běžná metadata karty pomocí opengraph_image, pokud se zároveň nejedná o soubor .svg."
     notification_email: "E-mailová adresa odesílatele používaná při odesílání všech základních systémových e-mailů. Aby mohl e-mail dorazit, zde určená doména musí mít správně nastavené SPF, DKIM a reverzní PTR záznamy."
@@ -2101,7 +2097,6 @@ cs:
     max_post_deletions_per_day: "Maximální počet příspěvků, které může uživatel smazat za den. Nastavením na 0 mazání příspěvků zakážete."
     alert_admins_if_errors_per_minute: "Počet chyb za minutu potřebný pro spuštění upozornění administrátora. Hodnota 0 tuto funkci deaktivuje. POZNÁMKA: Vyžaduje restart."
     alert_admins_if_errors_per_hour: "Počet chyb za hodinu potřebný pro spuštění upozornění administrátora. Hodnota 0 tuto funkci deaktivuje. POZNÁMKA: Vyžaduje restart."
-    categories_topics: "Počet témat, která se mají zobrazit na stránce /categories. Pokud je nastaveno na 0, automaticky se pokusí najít hodnotu, která zachová symetrii obou sloupců (kategorie a témata)."
     suggested_topics: "Počet navrhovaných témat zobrazených ve spodní části tématu."
     limit_suggested_to_category: "V navrhovaných tématech zobrazit pouze témata z aktuální kategorie."
     suggested_topics_max_days_old: "Navrhovaná témata by neměla být starší než n dní."
@@ -2288,7 +2283,6 @@ cs:
     delete_associated_accounts_on_password_reset: "Odstranit přidružené uživatelské účty, když uživatel změní heslo."
     allow_featured_topic_on_user_profiles: "Umožnit uživatelům zobrazit odkaz na téma na své uživatelské kartě a profilu."
     show_inactive_accounts: "Povolit přihlášeným uživatelům prohlížet profily neaktivních účtů."
-    hide_suspension_reasons: "Nezobrazovat důvody pozastavení veřejně na uživatelských profilech."
     log_personal_messages_views: "Zaznamenávat zobrazení soukromých zpráv administrátorem pro ostatní uživatele/skupiny."
     ignored_users_count_message_threshold: "Upozornit moderátory, pokud je určitý uživatel ignorován tímto počtem ostatních uživatelů."
     ignored_users_message_gap_days: "Jak dlouho čekat, než znovu upozornit moderátory na uživatele, kterého mnoho dalších ignorovalo."
@@ -2296,7 +2290,6 @@ cs:
     clean_up_unused_staged_users_after_days: "Počet dní před odstraněním nepoužívaného předběžného uživatele (bez jakýchkoli příspěvků). Chcete-li čištění zakázat, nastavte hodnotu 0."
     user_selected_primary_groups: "Umožnit uživatelům nastavit si vlastní primární skupinu"
     enable_mobile_theme: "Používat na mobilních zařízeních verzi přizpůsobenou pro mobily s možností přejít na plnou verzi. Zrušte, pokud chcete používat vlastní plně responzivní kaskádový styl."
-    pm_warn_user_last_seen_months_ago: "Při vytváření nové SZ upozornit uživatele, když adresát nebyl viděn více než n měsíců."
     permalink_normalizations: "Před přiřazením trvalých odkazů použijte následující regulární výraz, např.: /(topic.*)\\?.*/\\1 pomůže odstranit query string z route témat. Formát je regex+řetězec. Použijte \\1 atd. pro přístup k captures."
     disable_system_edit_notifications: "Zakáže upozornění na úpravy od systémového uživatele, když je aktivní 'download_remote_images_to_local'."
     penalty_step_hours: "Výchozí sankce pro ztišení nebo pozastavení uživatelů v hodinách. První přestupek se rovná první hodnotě, druhý přestupek druhé hodnotě, atd."
@@ -2330,7 +2323,6 @@ cs:
     allow_changing_staged_user_tracking: "Umožnit administrátorovi změnit předvolby oznámení o kategoriích a štítcích u předběžně založeného uživatele.."
     use_email_for_username_and_name_suggestions: "Pro návrhy uživatelského jména a jména použijte první část e-mailové adresy. Upozornění: To může usnadnit zjištění e-mailové adresy vašich členů útočníky (protože mnoho lidí používá běžné poskytovatele e-mailu, jako je `gmail.com`)."
     use_name_for_username_suggestions: "Při navrhování uživatelských jmen použít celé jméno uživatele."
-    experimental_form_templates: "Povolit funkci šablon formulářů. Spravujte šablony v <a href='%{base_path}/admin/customize/form-templates'>Přizpůsobit/Šablony</a>."
     adobe_analytics_tags_url: "Adresa URL tagů Adobe Analytics (`https://assets.adobedtm.com/...`)"
     errors:
       invalid_email: "Neplatná emailová adresa."
@@ -4450,6 +4442,8 @@ cs:
     deprecation_error_label: Umožnit, aby zastaralé Javascripty vyvolaly chybu
     enter: "Vstoupit do bezpečného režimu"
     must_select: "Chcete-li vstoupit do bezpečného režimu, musíte vybrat alespoň jednu možnost."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Nastavení Discourse"
     step:
@@ -4515,8 +4509,6 @@ cs:
     api_key:
       revoked: Zrušeno
     user_associated_posts_deleted: "Uživatel byl zcela odstraněn"
-    imap_email_deleted: "E-mail byl na serveru IMAP odstraněn"
-    imap_email_marked_as_spam: "E-mail byl na serveru IMAP přesunut do spamu."
     auto_deleted_hidden_posts: "Automaticky smazané skryté příspěvky"
   reviewables:
     already_handled: "Děkujeme, ale tento příspěvek jsme již zkontrolovali a rozhodli jsme se, že jej není třeba znovu nahlašovat."
@@ -4588,19 +4580,15 @@ cs:
         description: "Souhlasit s nahlášením a skrytím tohoto příspěvku + automaticky odeslat uživateli zprávu s výzvou k jeho úpravě."
         complete: "Příspěvek byl skryt a uživatel byl upozorněn."
       agree_and_edit:
-        title: "Souhlasit a upravit příspěvek"
+        title: "Upravit příspěvek"
         description: "Souhlasit s nahlášením a otevřít okno editoru pro úpravu příspěvku."
         complete: "Nahlášení potvrzeno, nyní můžete příspěvek upravit."
       delete:
         title: "Smazat"
         complete: "Příspěvek smazán."
       delete_and_ignore:
-        title: "Ignorovat nahlášení a smazat příspěvek"
-        description: "Ignorovat nahlášení tím, že jej odstraněníte z fronty a smažete příspěvek; pokud jde o první příspěvek, smaže i téma. "
         complete: "Příspěvek smazán."
       delete_and_ignore_replies:
-        title: "Ignorovat nahlášení, smazat příspěvek a odpovědi"
-        description: "Ignorovat nahlášení odstraněním z fronty, smazáním příspěvku a všech jeho odpovědí; pokud jde o první příspěvek, smaže i téma"
         confirm: "Jste si jisti, že chcete odstranit i odpovědi na příspěvek?"
         complete: "Příspěvek a odpovědi byly odstraněny."
       delete_and_agree:
@@ -4613,11 +4601,12 @@ cs:
         confirm: "Jste si jisti, že chcete odstranit i odpovědi na příspěvek?"
         complete: "Příspěvek a odpovědi byly odstraněny."
       disagree_and_restore:
-        title: "Ne, obnovit příspěvek"
-        description: "Obnov příspěvek, aby ho mohli vidět všichni ostatní uživatelé."
+        title: "Obnovit příspěvek"
         complete: "Příspěvek obnoven."
-      disagree:
+      disagree_bundle:
         title: "Ne"
+      disagree:
+        title: "Ponechat příspěvek"
         complete: "Nahlášení ignorováno."
       discard_post:
         title: "Zahodit příspěvek"
@@ -4627,37 +4616,43 @@ cs:
         complete: "Příspěvek zamítnut a čeká na revizi."
       ignore:
         title: "ignorovat"
+        description: "Odstranit z fronty a neprovádět žádnou akci."
         complete: "Nahlášení ignorováno."
       ignore_and_do_nothing:
         title: "Nic nedělat"
         description: "Ignorovat nahlášením odstraněním z fronty bez jakékoli akce. Skryté příspěvky zůstanou skryté a budou řešeny pomocí automatických nástrojů."
         complete: "Nahlášení ignorováno."
       approve:
-        title: "Schválit"
+        title: "Ano"
         complete: "Příspěvek schválen."
       approve_post:
-        title: "Schválit příspěvek"
+        title: "Ano"
         complete: "Příspěvek schválen."
       approve_post_closed:
-        title: "Schválit příspěvek"
+        title: "Ano"
         confirm: "Toto téma je uzavřeno. Chcete příspěvek přesto vytvořit?"
         complete: "Příspěvek schválen."
+      reject_post_bundle:
+        title: "Ne"
       reject_post:
         title: "Odmítnout příspěvek"
         complete: "Příspěvek zamítnut."
       approve_user:
-        title: "Schválit uživatele"
+        title: "Ano"
         complete: "Uživatel schválen."
       reject_user:
-        title: "Odstranit uživatele..."
+        title: "Ne"
         delete:
           title: "Smazat uživatele"
-          description: "Uživatel bude odstraněn z fóra."
           complete: "Uživatel smazán."
         block:
           title: "Odstranit a blokovat uživatele"
           description: "Uživatel bude smazán a zablokujeme jeho IP a e-mailovou adresu."
           complete: "Uživatel smazán a zablokován."
+      confirm_spam:
+        title: "Ano"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Odmítnout"
         bundle_title: "Odmítnout…"
@@ -4676,10 +4671,10 @@ cs:
       scrub:
         title: Očistit záznam
       approve_and_restore:
-        title: "Schválit a obnovit příspěvek"
+        title: "Ano"
         complete: "Příspěvek schválen a obnoven."
       approve_and_unhide:
-        title: "Schválit a zviditelnit příspěvek"
+        title: "Ano"
         complete: "Příspěvek schválen a zviditelněn"
       post_actions:
         bundle_title: "Co chcete s příspěvkem udělat?"

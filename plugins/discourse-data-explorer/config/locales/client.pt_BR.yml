@@ -77,8 +77,6 @@ pt_BR:
           invalid: "Inválido"
           no_such_category: "Não há esta categoria"
           no_such_group: "Não há este grupo"
-          invalid_date: "%{date} é uma data inválida"
-          invalid_time: "%{time} é um horário inválido"
     group:
       reports: "Relatórios"
     admin:

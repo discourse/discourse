@@ -81,7 +81,6 @@ fr:
         join_channel: "Rejoindre le canal"
         leave_channel: "Quitter le canal"
         leave_groupchat_info: "Si vous quittez cette discussion de groupe, vous n'y aurez plus accès et vous ne recevrez plus de notifications associées. Pour vous inscrire à nouveau, vous devrez être réinvité(e) par un membre de la discussion de groupe."
-        notification_settings_context: "Notifications"
         join: "Rejoindre"
         leave: "Quitter"
         save_label:
@@ -717,7 +716,6 @@ fr:
           composer_bold: "%{shortcut} Gras (éditeur uniquement)"
           composer_italic: "%{shortcut} Italique (éditeur uniquement)"
           composer_code: "%{shortcut} Code (éditeur uniquement)"
-          drawer_open: "%{shortcut} Ouvrir le tiroir de discussion"
           drawer_close: "%{shortcut} Fermer le tiroir de discussion"
           mark_all_channels_read: "%{shortcut} Marquer tous les canaux comme lus"
     topic_statuses:

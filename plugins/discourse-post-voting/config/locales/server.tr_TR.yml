@@ -99,16 +99,10 @@ tr_TR:
             title: "Yorumu sil"
             description: "Kullanıcıların görememesi için yorumu silin."
           delete_and_agree:
-            title: "Bayrağı yok say ve yorumu Sil"
             description: "Kuyruktan kaldırarak bayrağı yok sayın ve yorumu silin."
           disagree_and_restore:
             title: "Katılma ve yorumu Geri Yükle"
             description: "Tüm kullanıcıların görebilmesi için yorumu geri yükleyin."
-          disagree:
-            title: "Katılma"
-          ignore:
-            title: "Hiçbir şey yapma"
-            description: "Herhangi bir işlem yapmadan bayrağı kuyruktan kaldırarak yok say."
         transcript:
           view: "Önceki yorumların dökümünü görüntüle"
       reviewable_score_types:

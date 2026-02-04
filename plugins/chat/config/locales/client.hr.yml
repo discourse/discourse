@@ -51,7 +51,6 @@ hr:
         edit: "Uredi"
         add: "Dodaj"
         leave_channel: "Napusti kanal"
-        notification_settings_context: "Obavijest"
         join: "Pridružite se"
         leave: "Napustiti"
       channel_archive:

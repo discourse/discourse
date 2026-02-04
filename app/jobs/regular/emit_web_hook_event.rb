@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "excon"
-
 module Jobs
   class EmitWebHookEvent < ::Jobs::Base
     sidekiq_options queue: "low"

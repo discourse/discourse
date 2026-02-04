@@ -87,7 +87,6 @@ lt:
         join_channel: "Prisijungti prie kanalo"
         leave_channel: "Išeiti iš kanalo"
         leave_groupchat_info: "Išėję iš šio grupinio pokalbio, nebeturėsite jo prieigos ir negausite su juo susijusių pranešimų. Norėdami vėl prisijungti, turėsite gauti pakartotinį grupės pokalbio nario kvietimą."
-        notification_settings_context: "Pranešimai"
         join: "Prisijungti"
         leave: "Palikti"
         save_label:

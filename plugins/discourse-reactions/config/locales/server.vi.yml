@@ -5,11 +5,26 @@
 # https://translate.discourse.org/
 
 vi:
+  site_settings:
+    discourse_reactions_like_icon: "Xác định biểu tượng được sử dụng cho nút phản ứng chính. Đây phải là tên biểu tượng <a href='https://fontawesome.com/v6/search?o=r&m=free' target='_blank'>Font Awesome</a> , chứ không phải tên biểu tượng cảm xúc."
+    discourse_reactions_reaction_for_like: "Xác định phản ứng liên quan đến hành động Thích. Các bản ghi Thích trước đây sẽ không thay đổi nếu cài đặt này thay đổi, <strong>rất khuyến khích</strong> không bao giờ thay đổi cài đặt này."
+    discourse_reactions_enabled: "Kích hoạt plugin discourse-reactions."
+    discourse_reactions_enabled_reactions: "Xác định danh sách các biểu tượng cảm xúc được phép sử dụng, bất kỳ biểu tượng cảm xúc nào cũng được chấp nhận ở đây."
+    discourse_reactions_desaturated_reaction_panel: "Giảm nhiễu thị giác của các biểu cảm bằng cách hiển thị chúng ở độ bão hòa thấp cho đến khi di chuột qua."
+    discourse_reactions_excluded_from_like: "Các biểu cảm không được tính là \"Thích\". Bất kỳ biểu cảm nào không có trong danh sách này sẽ được tính là \"Thích\" cho mục đích nhận huy hiệu, báo cáo và các mục đích khác."
+    discourse_reactions_like_sync_enabled: "Nếu tùy chọn này được bật, các phản hồi trong quá khứ sẽ được tạo bản ghi Thích tương ứng, ngoại trừ những phản hồi được định nghĩa trong `discourse_reactions_excluded_from_like`. Quá trình đồng bộ này sẽ diễn ra thường xuyên trong nền, và cả khi bạn thay đổi `discourse_reactions_excluded_from_like`."
+    discourse_reactions_allow_any_emoji: "Nếu tính năng này được bật, một nút sẽ được thêm vào cho phép người dùng chọn bất kỳ biểu tượng cảm xúc nào trong trình chọn biểu tượng cảm xúc. Thành viên sẽ được phép chọn bất kỳ biểu tượng cảm xúc nào, bao gồm cả biểu tượng cảm xúc tùy chỉnh, cho các biểu tượng cảm xúc. Để giới hạn các biểu tượng cảm xúc có sẵn, hãy sử dụng cài đặt trang web `emoji_deny_list`."
+    errors:
+      invalid_excluded_emoji: "Bạn không thể loại trừ các biểu tượng cảm xúc không nằm trong mục 'phản ứng được kích hoạt trong diễn đàn' và bạn cũng không thể loại trừ biểu tượng cảm xúc được sử dụng cho mục 'phản ứng thích trong diễn đàn'."
   badges:
     first_reaction:
-      name: Cảm Xúc Đầu Tiên
+      name: Lần Đầu Biểu Cảm
+      description: Lần đầu tiên biểu cảm với tút
+      long_description: |
+        Huy hiệu này được trao cho lần đầu tiên bạn biểu cảm với một tút. Biểu cảm với tút là một cách tuyệt vời để cho các thành viên cộng đồng biết rằng những gì họ đăng là thú vị, hữu ích, hoặc vui vẻ. Hãy chia sẻ cảm xúc của bạn!
   reports:
     reactions:
       title: "Cảm xúc"
+      description: "Liệt kê các biểu cảm gần đây."
       labels:
         day: "Ngày"

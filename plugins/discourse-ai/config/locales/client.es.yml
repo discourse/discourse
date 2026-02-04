@@ -113,14 +113,6 @@ es:
             persona_id:
               label: "Persona"
               description: "Persona de IA a utilizar para la generación de informes"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Modelo"
-              description: "El modelo de idioma por defecto usado para el triaje"
-            tool:
-              label: "Herramienta"
-              description: "Herramienta a utilizar para el triaje (la herramienta no debe tener parámetros definidos)"
         llm_persona_triage:
           fields:
             persona:
@@ -234,8 +226,6 @@ es:
           name: "Incrustaciones"
           description: "Impulsa características como Temas relacionados y Búsqueda de IA al generar representaciones semánticas de texto"
           hyde: "HyDE"
-          setting_groups:
-            related_topics: "Temas relacionados"
         discord:
           name: "Integración de Discord"
           description: "Añade la posibilidad de buscar canales de Discord"
@@ -246,8 +236,6 @@ es:
           generate_concepts: "Inferencia de conceptos"
           match_concepts: "Coincidencia de conceptos"
           deduplicate_concepts: "Duplicación de conceptos"
-          setting_groups:
-            personas: "Personas"
         ai_helper:
           name: "Ayudante"
           description: "Ayuda a los usuarios a interactuar con la comunidad, como crear temas, escribir publicaciones y leer contenido"
@@ -262,9 +250,6 @@ es:
           image_caption: "Añadir pie de foto"
           translator: "Traductor"
           post_illustrator: "Ilustrador de publicaciones"
-          setting_groups:
-            automation: "Automatización"
-            personas: "Personas"
         translation:
           name: "Traducción"
           description: "Traduce el contenido a los idiomas compatibles"
@@ -272,8 +257,6 @@ es:
           post_raw_translator: "Traductor de publicaciones"
           topic_title_translator: "Traductor de títulos de temas"
           short_text_translator: "Traductor de textos cortos"
-          setting_groups:
-            personas: "Personas"
         spam:
           name: "Spam"
           description: "Identifica spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
@@ -920,9 +903,3 @@ es:
             disable: "Desactivar"
       user_preferences:
         empty: "No hay ajustes relevantes disponibles en este momento"
-    review:
-      types:
-        reviewable_ai_post:
-          title: "Publicación denunciada por IA"
-        reviewable_ai_chat_message:
-          title: "Mensaje de chat denunciado por IA"

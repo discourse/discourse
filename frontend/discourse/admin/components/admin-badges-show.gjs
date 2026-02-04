@@ -4,6 +4,7 @@ import { concat, fn, hash } from "@ember/helper";
 import { action, getProperties } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import { htmlSafe } from "@ember/template";
 import AdminBadgesList from "discourse/admin/components/admin-badges-list";
 import BadgePreviewModal from "discourse/admin/components/modal/badge-preview";
 import Form from "discourse/components/form";
@@ -14,6 +15,7 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
+import { sanitize } from "discourse/lib/text";
 import { i18n } from "discourse-i18n";
 
 const FORM_FIELDS = [
@@ -76,6 +78,10 @@ export default class AdminBadgesShow extends Component {
 
   get textCustomizationPrefix() {
     return `badges.${this.args.badge.i18n_name}.`;
+  }
+
+  sanitizeDescription(text) {
+    return htmlSafe(sanitize(text));
   }
 
   hasQuery(query) {
@@ -347,7 +353,7 @@ export default class AdminBadgesShow extends Component {
               @title={{i18n "admin.badges.description"}}
             >
               <span class="readonly-field">
-                {{@badge.description}}
+                {{this.sanitizeDescription @badge.description}}
               </span>
               <LinkTo
                 @route="adminSiteText"
@@ -375,7 +381,7 @@ export default class AdminBadgesShow extends Component {
               @title={{i18n "admin.badges.long_description"}}
             >
               <span class="readonly-field">
-                {{@badge.long_description}}
+                {{this.sanitizeDescription @badge.long_description}}
               </span>
 
               <LinkTo

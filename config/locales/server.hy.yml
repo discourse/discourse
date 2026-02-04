@@ -51,6 +51,8 @@ hy:
   remove_posts_deleted_by_author: "Ջնջված է հեղինակի կողմից"
   redirect_warning: "Մենք չկարողացանք հաստատել, որ Ձեր ընտրած հղումը իրականում հրապարակվել է ֆորումում: Եթե ամեն դեպքում ցանկանում եք շարունակել, ընտրեք ներքևի հղումը:"
   on_another_topic: "Մեկ այլ թեմայում"
+  topic_tag_changed:
+    added: "Ավելացվել է %{added}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "#%{post_number} %{username}-ի կողմից"
   components:
@@ -1346,7 +1348,6 @@ hy:
     anonymous_account_duration_minutes: "Անանունությունը պահպանելու համար ստեղծեք անանուն հաշիվ յուրաքանչյուր N րոպեն մեկ յուրաքանչյուր օգտատիրոջ համար: Օրինակ՝ եթե սահմանված է 600, հենց որ վերջին գրառումից անցնի 600 րոպե ԵՎ օգտատերը միացնի անանուն ռեժիմը, կստեղծվի նոր անանուն հաշիվ:"
     hide_user_profiles_from_public: "Անջատել օգտատիրոջ քարտը, պրոֆիլները և դիրեկտորիան անանուն օգտագործողների համար:"
     show_inactive_accounts: "Թույլատրել մուտքագրված օգտատերերին դիտել ապակտիվ հաշիվների պրոֆիլները:"
-    hide_suspension_reasons: "Հանրայնորեն չցուցադրել սառեցման պատճառները օգտատերերի պրոֆիլներում:"
     log_personal_messages_views: "Գրանցել անձնական նամակների դիտումները Ադմինի կողմից այլ օգտատերերի/խմբերի համար:"
     ignored_users_count_message_threshold: "Ծանուցել մոդերատորներին, եթե մասնավորապես որևէ օգտատեր անտեսվում է այսքան այլ օգտատերերի կողմից:"
     ignored_users_message_gap_days: "Որքան սպասել՝ մինչ մոդերատորներին կրկին ծանուցելը օգտատիրոջ մասին, որը անտեսվել է շատ այլոց կողմից:"
@@ -2734,6 +2735,8 @@ hy:
     title: "Մուտք գործել անվտանգ ռեժիմ"
     enter: "Մուտք գործել Ապահով Ռեժիմ"
     must_select: "Դուք պետք է ընտրեք առնվազն մեկ տարբերակ՝ անվտանգ ռեժիմ մուտք գործելու համար:"
+  dev_mode:
+    enter: "Մուտք"
   wizard:
     title: "Discourse Տեղադրում"
     step:
@@ -2801,10 +2804,9 @@ hy:
         complete: "Գրառումը ջնջված է."
       delete_and_agree:
         complete: "Գրառումը ջնջված է."
-      disagree_and_restore:
-        description: "Վերականգնել գրառումը, որպեսզի բոլոր օգտատերերը կարողանան տեսնել այն:"
-      disagree:
+      disagree_bundle:
         title: "Ոչ"
+      disagree:
         complete: "Բողոքը անտեսվել է."
       ignore:
         title: "Անտեսել"
@@ -2813,22 +2815,36 @@ hy:
         title: "Ոչինչ չանել"
         complete: "Բողոքը անտեսվել է."
       approve:
-        title: "Հաստատել"
+        title: "Այո"
         complete: "Գրառումը հաստատվել է."
       approve_post:
+        title: "Այո"
         complete: "Գրառումը հաստատվել է."
       approve_post_closed:
+        title: "Այո"
         complete: "Գրառումը հաստատվել է."
+      reject_post_bundle:
+        title: "Ոչ"
       reject_post:
         complete: "Գրառումը մերժվել է."
       approve_user:
+        title: "Այո"
         complete: "Օգտատերը հաստատվել է."
       reject_user:
+        title: "Ոչ"
         delete:
           title: "Ջնջել Օգտատիրոջը"
           complete: "Օգտատերը ջնջված է."
+      confirm_spam:
+        title: "Այո"
+      not_spam:
+        title: "Ոչ"
       reject:
         title: "Մերժել"
+      approve_and_restore:
+        title: "Այո"
+      approve_and_unhide:
+        title: "Այո"
       no_action_post:
         title: "Առանց գործողության"
       delete_post:

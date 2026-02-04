@@ -694,7 +694,11 @@ sq:
         reviewable_post:
           title: "Postim"
           noun: "postim"
+        reviewable_ai_post:
+          noun: "postim"
       user_label: "User"
+      timeline:
+        target_deleted: "Postimi u fshi"
       notes:
         delete: "Fshij"
       topic_label: "Topic"
@@ -853,9 +857,7 @@ sq:
           notification: Njoftim
         email:
           title: "Email"
-          status: "Emailet e sinkronizuara %{old_emails} / %{total_emails} nëpërmjet IMAP."
           enable_smtp: "Aktivizoni SMTP"
-          enable_imap: "Aktivizoni IMAP"
           test_settings: "Cilësimet e Testimit"
           save_settings: "Ruani Cilësimet"
           last_updated: "Përditësimi i fundit:"
@@ -864,14 +866,7 @@ sq:
           smtp_settings_valid: "Cilësimet SMTP janë të vlefshme."
           smtp_title: "SMTP"
           smtp_instructions: "Kur aktivizoni SMTP për grupin, të gjitha emailet dalëse të dërguara nga kutia postare e grupit do të dërgohen përmes cilësimeve SMTP të specifikuara këtu në vend të serverit të postës të konfiguruar për emailet e tjera të dërguara nga forumi juaj."
-          imap_title: "IMAP"
-          imap_additional_settings: "Cilësimet Shtesë"
-          imap_instructions: 'Kur aktivizoni IMAP për grupin, emailet sinkronizohen ndërmjet kutisë hyrëse të grupit dhe serverit dhe kutisë postare të ofruar IMAP. SMTP duhet të aktivizohet me kredenciale të vlefshme dhe të testuara përpara se të aktivizohet IMAP. Emri i përdoruesit dhe fjalëkalimi i emailit të përdorur për SMTP do të përdoren për IMAP. Për më shumë informacion, shihni njoftimin e veçorive <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">në Discourse Meta</a>.'
-          imap_alpha_warning: "Paralajmërim: Ky është një veçori e fazës alfa. Vetëm Gmail mbështetet zyrtarisht. Përdoreni në rrezikun tuaj!"
-          imap_settings_valid: "Cilësimet IMAP janë të vlefshme."
-          smtp_disable_confirm: "Nëse çaktivizoni SMTP, të gjitha cilësimet SMTP dhe IMAP do të rivendosen dhe funksionaliteti përkatës do të çaktivizohet. Je tëi sigurt që dëshiron të vazhdoni?"
-          imap_disable_confirm: "Nëse çaktivizoni IMAP, të gjitha cilësimet IMAP do të rivendosen dhe funksionaliteti përkatës do të çaktivizohet. Jeni të sigurt që dëshironi të vazhdoni?"
-          imap_mailbox_not_selected: "Duhet të zgjidhni një kuti postare për këtë konfigurim IMAP ose asnjë kuti postare nuk do të sinkronizohet!"
+          additional_settings: "Cilësimet Shtesë"
           prefill:
             title: "Plotësoni paraprakisht me cilësimet për:"
             gmail: "Gmail"
@@ -886,9 +881,6 @@ sq:
             smtp_server: "Serveri SMTP"
             smtp_port: "Porta SMTP"
             smtp_ssl_mode: "Modaliteti SSL"
-            imap_server: "Serveri IMAP"
-            imap_port: "Porta IMAP"
-            imap_ssl: "Përdorni SSL për IMAP"
             username: "Emri i përdoruesit"
             password: "Fjalëkalimi"
           settings:
@@ -897,10 +889,6 @@ sq:
             allow_unknown_sender_topic_replies_hint: "Lejon dërguesit e panjohur të përgjigjen temave të grupit. Nëse kjo nuk është e aktivizuar, përgjigjet nga adresat e postës elektronike që nuk janë ftuar tashmë në temë do të krijojnë një temë të re."
             from_alias: "Nga Alias"
             from_alias_hint: "Alias për t'u përdorur si adresë nga kur dërgoni email SMTP në grup. Vini re se kjo mund të mos mbështetet nga të gjithë ofruesit e postës, ju lutemi konsultohuni me dokumentacionin e ofruesit tuaj të postës."
-          mailboxes:
-            synchronized: "Kuti postare e sinkronizuar"
-            none_found: "Nuk u gjet asnjë kuti postare në këtë llogari emaili."
-            disabled: "E çaktivizuar"
         membership:
           title: Anëtarësimi
           access: Lejimi
@@ -2063,7 +2051,6 @@ sq:
     form_kit:
       reset: Rivendosni
       optional: opsionale
-      errors_summary_title: "Ky formular përmban gabime:"
       dirty_form: "Nuk i keni dorëzuar ndryshimet tuaja! Jeni të sigurt që dëshironi të largoheni?"
       errors:
         required: "E nevojshme"
@@ -2712,8 +2699,7 @@ sq:
         post_approved: "postimi u miratua"
         membership_request_consolidated: "kërkesa të reja për anëtarësim"
         reaction: "reagim i ri"
-        votes_released: "Votimi u hap"
-        new_features: "Veçoritë e reja të Diskursit janë lëshuar!"
+        votes_released: "votimi u hap"
         admin_problems: "këshilla të reja në panelin e faqes suaj"
     upload_selector:
       delete: "Fshij"
@@ -3103,8 +3089,6 @@ sq:
           12_hours: "12 orë"
           24_hours: "24 orë"
           custom: "Kohëzgjatja e personalizuar"
-      slow_mode_notice:
-        duration: "Ju lutemi prisni %{duration} mes postimeve në këtë temë"
       topic_status_update:
         title: "Kohëmatësi i temës"
         save: "Cakto kohëmatësin"
@@ -3499,6 +3483,8 @@ sq:
       creation_error: Pati një gabim gjatë krijimit të kategorisë
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
       description: "Përshkrimi"
+      icon: "Ikonë"
+      emoji: "Emoji"
       background_color: "Ngjyra"
       color_validations:
         cant_be_empty: "nuk mund të lihet bosh"
@@ -3508,7 +3494,6 @@ sq:
         options:
           icon: "Ikonë"
           emoji: "Emoji"
-      name_placeholder: "Maksimumi një ose dy fjalë"
       color_placeholder: "Çdo ngjyrë web"
       delete_confirm: "Jeni i sigurtë që dëshironi ta fshini këtë kategori?"
       delete_error: "Pati një gabim gjatë fshirjes së kategorisë."
@@ -3520,12 +3505,15 @@ sq:
         see: "Shiko"
         reply: "Përgjigju"
       special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
-      images: "Imazhet"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
       review_group_name: "emri i grupit"
       this_year: "këtë vit"
+      none_subcategory_text: "Asnjë"
+      visibility:
+        public: "Publike"
+        group_restricted: "Private"
       notifications:
         watching:
           title: "Në vëzhgim"
@@ -3983,6 +3971,9 @@ sq:
           enabled: "Aktivizuar"
           disabled: "E çaktivizuar"
           impact_type_other: "Të tjerë"
+          impact_role_admins: "Administratorët"
+          impact_role_moderators: "Moderatorë"
+          impact_role_staff: "Stafi"
       config:
         developer:
           title: "Developer"
@@ -4120,6 +4111,7 @@ sq:
           monthly: Mujore
           weekly: Javore
           groups: "Të gjitha grupet"
+          sort_button: "Rendit sipas %{column}"
           filters:
             group:
               label: Grupi
@@ -4815,6 +4807,7 @@ sq:
         uploaded_image_list:
           upload:
             label: "Ngarko"
+        download_file: "Shkarko"
         categories:
           all_results: "Të gjitha"
           required: "E nevojshme"

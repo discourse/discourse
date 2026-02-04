@@ -286,6 +286,12 @@ acceptance(`Composer`, function (needs) {
 
     await click(".d-modal__footer button");
     assert.dom(".d-modal").doesNotExist("the modal can be dismissed");
+    assert
+      .dom("#reply-control")
+      .hasClass("closed", "composer is closed after enqueuing");
+    assert
+      .dom(".saving-text")
+      .doesNotExist("composer is not stuck in saving state");
   });
 
   test("Can display a message and route to a URL", async function (assert) {
@@ -562,6 +568,12 @@ acceptance(`Composer`, function (needs) {
     await click(".d-modal__footer button");
     assert.dom(".d-modal").doesNotExist("the modal can be dismissed");
     assert.dom(".pending-posts .reviewable-item").exists();
+    assert
+      .dom("#reply-control")
+      .hasClass("closed", "composer is closed after enqueuing");
+    assert
+      .dom(".saving-text")
+      .doesNotExist("composer is not stuck in saving state");
   });
 
   test("Edit the first post", async function (assert) {
@@ -1146,10 +1158,11 @@ acceptance(`Composer - Customizations`, function (needs) {
   needs.site({ can_tag_topics: true });
 
   function customComposerAction(composer) {
-    return (
-      (composer.tags || []).includes("monkey") &&
-      composer.action === CREATE_TOPIC
+    const tags = composer.tags || [];
+    const hasMonkey = tags.some(
+      (t) => (typeof t === "string" ? t : t.name) === "monkey"
     );
+    return hasMonkey && composer.action === CREATE_TOPIC;
   }
 
   needs.hooks.beforeEach(() => {
@@ -1177,7 +1190,7 @@ acceptance(`Composer - Customizations`, function (needs) {
     assert.dom(".save-or-cancel button").hasText(i18n("composer.create_topic"));
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
-    await tags.selectRowByValue("monkey");
+    await tags.selectRowByName("monkey");
     assert.dom(".action-title").hasText("custom text");
     assert.dom(".save-or-cancel button").hasText(i18n("composer.emoji"));
   });

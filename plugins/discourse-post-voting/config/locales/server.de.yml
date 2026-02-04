@@ -99,16 +99,10 @@ de:
             title: "Kommentar löschen"
             description: "Kommentar löschen, damit Benutzer ihn nicht sehen können."
           delete_and_agree:
-            title: "Meldung ignorieren und Kommentar löschen"
             description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst und den Kommentar löschst."
           disagree_and_restore:
             title: "Ablehnen und Kommentar wiederherstellen"
             description: "Kommentar wiederherstellen, damit alle Benutzer ihn sehen können."
-          disagree:
-            title: "Ablehnen"
-          ignore:
-            title: "Nichts tun"
-            description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen."
         transcript:
           view: "Transkript früherer Kommentare anzeigen"
       reviewable_score_types:

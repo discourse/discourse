@@ -113,14 +113,6 @@ pt_BR:
             persona_id:
               label: "Persona"
               description: "A persona de IA para usar na geração de relatórios"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Modelo"
-              description: "O modelo de linguagem padrão usado para triagem"
-            tool:
-              label: "Ferramenta"
-              description: "A ferramenta a ser usada para triagem (a ferramenta não pode ter parâmetros definidos)"
         llm_persona_triage:
           fields:
             persona:
@@ -167,6 +159,11 @@ pt_BR:
             flag_post:
               label: "Sinalizar postagem"
               description: "Sinaliza a postagem (como spam ou para revisão)"
+            notify_author_pm:
+              label: "Notificar o autor via PM"
+              description: "Enviar uma mensagem pessoal ao autor da postagem quando os posts forem citados e deletados"
+            notify_author_pm_message:
+              label: "Conteúdo da mensagem pessoal"
             include_personal_messages:
               label: "Incluir mensagens pessoais"
               description: "Também verificar e fazer triagem de mensagens pessoais"
@@ -179,6 +176,10 @@ pt_BR:
             max_output_tokens:
               label: "Máximo de tokens de saída"
               description: "Quando especificado, define um limite superior para o número máximo de tokens que o modelo pode gerar. Respeita o limite máximo de tokens de saída do LLM"
+        llm_tagger:
+          fields:
+            available_tags:
+              label: "Tags disponíveis"
     discourse_ai:
       title: "IA"
       default_llm:
@@ -230,8 +231,6 @@ pt_BR:
           name: "Incorporações"
           description: "Alimenta recursos, como tópicos relacionados e pesquisa com IA, ao gerar representações semânticas do texto"
           hyde: "HyDE"
-          setting_groups:
-            related_topics: "Tópicos relacionados"
         discord:
           name: "Integração com o Discourse"
           description: "Adiciona a possibilidade de pesquisar nos canais do Discord"
@@ -242,8 +241,6 @@ pt_BR:
           generate_concepts: "Inferência de conceitos"
           match_concepts: "Correspondência de conceitos"
           deduplicate_concepts: "Deduplicação de conceitos"
-          setting_groups:
-            personas: "Personas"
         ai_helper:
           name: "Ajudante"
           description: "Auxilia os(as) usuários(as) na interação com a comunidade, em atividades tais como criação de tópicos, escrita de postagens e leitura de conteúdo"
@@ -258,9 +255,6 @@ pt_BR:
           image_caption: "Legendas em imagens"
           translator: "Tradutor"
           post_illustrator: "Ilustrador de postagens"
-          setting_groups:
-            automation: "Automação"
-            personas: "Personas"
         translation:
           name: "Tradução"
           description: "Traduz o conteúdo para os idiomas compatíveis"
@@ -268,8 +262,11 @@ pt_BR:
           post_raw_translator: "Tradutor sem processamento de postagens"
           topic_title_translator: "Tradutor de título de tópico"
           short_text_translator: "Tradutor de textos curtos"
-          setting_groups:
-            personas: "Personas"
+          schedule_untranslated: "Agendar traduções"
+          schedule_topic_success:
+            one: "Tradução agendada para %{count} postagem não traduzida"
+            other: "Tradução agendada para %{count} postagens não traduzidas"
+          schedule_topic_error: "Erro ao agendar traduções. Por favor tente novamente."
         spam:
           name: "Spam"
           description: "Identifica possíveis spams usando o LLM selecionado e os sinaliza para inspeção pela moderação do site na fila de revisão"
@@ -287,6 +284,7 @@ pt_BR:
         card: "Cartão"
       translations:
         title: "Traduções"
+        description: "Traduzir automaticamente todo o conteúdo no seu fórum para a linguagem preferida do usuário"
         stats:
           eta_minutes:
             one: "%{count} minuto"
@@ -912,9 +910,3 @@ pt_BR:
             disable: "Desativar"
       user_preferences:
         empty: "Não há configurações relevantes disponíveis no momento"
-    review:
-      types:
-        reviewable_ai_post:
-          title: "Postagem sinalizada com IA"
-        reviewable_ai_chat_message:
-          title: "Mensagem de chat sinalizada com IA"

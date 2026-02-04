@@ -6,6 +6,10 @@
 
 he:
   js:
+    carousel:
+      go_to_slide: "מעבר לשקופית %{index}"
+      previous: "השקופית הקודמת"
+      next: "השקופית הבאה"
     number:
       format:
         separator: "."
@@ -980,6 +984,10 @@ he:
         reviewable_post:
           title: "פוסט"
           noun: "פוסט"
+        reviewable_ai_chat_message:
+          noun: "הודעת הצ׳אט"
+        reviewable_ai_post:
+          noun: "פוסט"
       flagged_as: "מסומן בתור"
       post_flagged_as: "הפוסט סומן בתור"
       chat_flagged_as: "השיחה סומנה בתור"
@@ -992,6 +1000,7 @@ he:
       timeline:
         target_created: "פוסט נוצר"
         target_created_by: "הפוסט נוצר על ידי %{username} · %{relativeDate}"
+        target_deleted: "פוסט נמחק"
         flagged: "מסומן"
         flagged_as_by: "מסומן בתור %{flagReason} על ידי %{username} · %{relativeDate}"
         claimed: "נדרש"
@@ -1220,9 +1229,7 @@ he:
           notification: התראה
         email:
           title: "כתובת דוא״ל"
-          status: "סונכרנו %{old_emails} / %{total_emails} הודעות דוא״ל דרך IMAP."
           enable_smtp: "הפעלת SMTP"
-          enable_imap: "הפעלת IMAP"
           test_settings: "בדיקת ההגדרות"
           save_settings: "שמירת ההגדרות"
           last_updated: "עדכון אחרון:"
@@ -1231,14 +1238,8 @@ he:
           smtp_settings_valid: "הגדרות ה־SMTP תקינות."
           smtp_title: "SMTP"
           smtp_instructions: "הפעלת SMTP לקבוצה תגרום לכך שכל הודעות הדוא״ל היוצאות נשלחות מהתיבה של הקבוצה יישלחו באמצעות הגדרות ה־SMTP שמוגדרות כאן במקום בשרת הדוא״ל שמוגדר להודעות דוא״ל אחרות שנשלחות על ידי הפורום שלך."
-          imap_title: "IMAP"
-          imap_additional_settings: "הגדרות נוספות"
-          imap_instructions: 'הפעלת IMAP לקבוצה תגרום לכך שההודעות תסונכרנה בין התיבה של הקבוצה ושרת ה־IMAP ותיבת הדואר שסופקו. יש להפעיל SMTP עם פרטי גישה תקפים ומאומתים לפני שניתן יהיה להפעיל IMAP. שם המשתמש והססמה של תיבת הדוא״ל שתשמש ל־SMTP ישמשו גם ל־IMAP. למידע נוסף ניתן <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">לקרוא את ההכרזה על התכונה בפורום Discourse Meta</a>.'
-          imap_alpha_warning: "אזהרה: יכולת זו היא בחיתולים. יש תמיכה רשמית רק ב־GMail. השימוש על אחריותך בלבד!"
-          imap_settings_valid: "הגדרות ה־IMAP תקינות."
-          smtp_disable_confirm: "השבתת ה־SMTP תוביל לאיפוס הגדרות ה־SMTP וה־IMAP והשבתת כל יכולותיהן. להמשיך?"
-          imap_disable_confirm: "השבתת ה־IMAP תוביל לאיפוס הגדרות ה־IMAP והשבתת כל יכולותיהן. להמשיך?"
-          imap_mailbox_not_selected: "עליך לבחור תיבת דואר עבור תצורת IMAP זו, אחרת לא יסונכרנו תיבות דואר כלל!"
+          additional_settings: "הגדרות נוספות"
+          smtp_disable_confirm: "השבתת ה־SMTP תוביל לאיפוס הגדרות ה־SMTP והשבתת כל יכולותיהן. להמשיך?"
           prefill:
             title: "מילוי הגדרות מראש עבור:"
             gmail: "Gmail"
@@ -1253,9 +1254,6 @@ he:
             smtp_server: "שרת SMTP"
             smtp_port: "פתחת SMTP"
             smtp_ssl_mode: "מצב SSL"
-            imap_server: "שרת IMAP"
-            imap_port: "פתחת IMAP"
-            imap_ssl: "להשתמש ב־SSL ל־IMAP"
             username: "שם משתמש"
             password: "סיסמה"
           settings:
@@ -1264,10 +1262,6 @@ he:
             allow_unknown_sender_topic_replies_hint: "מאפשר לשולחים בלתי־ידועים להגיב לנושאים קבוצתיים. אם האפשרות מבוטלת, תגובות מכתובות דוא״ל שטרם הוזמנו לנושא תיצורנה נושא חדש."
             from_alias: "כינוי מאת"
             from_alias_hint: "כינוי בו יש להשתמש בתור כתוב מאת בעת שליחת הודעות SMTP קבוצתיות בדוא״ל. נא לשים לב שאולי חלק מספקי הדוא״ל לא תומכים בזה, נא להיעזר בתיעוד של ספק הדוא״ל שלך."
-          mailboxes:
-            synchronized: "תיבת דוא״ל מסונכרנת"
-            none_found: "לא נמצאו תיבות דוא״ל בחשבון הדוא״ל הזה."
-            disabled: "מושבתת"
         membership:
           title: חברות
           access: גישה
@@ -1560,7 +1554,9 @@ he:
       upcoming_changes:
         title: "שינויים צפויים"
         for_user:
+          upcoming_change: "שינוי צפוי"
           enabled: "מאופשר?"
+          why: "למה?"
       user_notifications:
         filters:
           filter_by: "סינון לפי"
@@ -2335,6 +2331,7 @@ he:
               other {# ימים}
             }.
           edit_link_options: "עריכת אפשרויות קישור או לשלוח בדוא״ל."
+          edit_link_options_only: "עריכת אפשרויות קישור"
           show_advanced: "הצגת אפשרויות מתקדמות"
           hide_advanced: "הסתרת אפשרויות מתקדמות"
           description: "תיאור"
@@ -2562,7 +2559,6 @@ he:
     form_kit:
       reset: איפוס
       optional: רשות
-      errors_summary_title: "הטופס הזה מכיל שגיאות:"
       dirty_form: "לא הגשת את השינויים שלך! לצאת?"
       errors:
         starts_with: "חייב להיפתח בקידומת %{prefix}"
@@ -3336,6 +3332,11 @@ he:
       votes_released: "%{description} - הסתיים"
       new_features: "יכולות חדשות זמינות!"
       admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
+      upcoming_changes:
+        available:
+          title: "שינויים צפויים"
+        automatically_promoted:
+          title: "שינויים צפויים"
       dismiss_confirmation:
         body:
           default:
@@ -3400,7 +3401,6 @@ he:
         membership_request_consolidated: "בקשות חברות חדשות"
         reaction: "תגובת אמוג׳י חדשה"
         votes_released: "ההצבעה שוחררה"
-        new_features: "יכולות חדשות של Discourse יצאו לאור!"
         admin_problems: "עצה חדשה בלוח המחוונים של האתר שלך"
     upload_selector:
       change: "החלפה"
@@ -3913,8 +3913,6 @@ he:
           12_hours: "12 שעות"
           24_hours: "24 שעות"
           custom: "משך מותאם אישית"
-      slow_mode_notice:
-        duration: "נא להמתין %{duration} בין פוסטים בנושא הזה"
       topic_status_update:
         title: "שעון עצר לנושא"
         save: "קביעת שעון עצר"
@@ -4286,7 +4284,7 @@ he:
       quote_edit: "עריכה"
       quote_edit_shortcut: "עריכה (או בלחיצה על e)"
       quote_copy: "העתקת ציטוט"
-      quote_copied_to_clibboard: "הציטוט הועתק ללוח הגזירים"
+      quote_copied_to_clipboard: "הציטוט הועתק ללוח הגזירים"
       quote_share: "שיתוף"
       edit_reason: "סיבה: "
       post_number: "פוסט %{number}"
@@ -4629,6 +4627,7 @@ he:
       back: "חזרה לקטגוריה"
       general: "כללי"
       settings: "הגדרות"
+      advanced: "מתקדם"
       topic_template: "תבנית"
       tags: "תגיות"
       localizations: "תרגומים"
@@ -4659,6 +4658,7 @@ he:
       create_long: "יצירת קטגוריה חדשה"
       save: "שמירת קטגוריה"
       slug: "כתובת ייצוגית לקטגוריה"
+      parent: "קטגוריית הורה"
       slug_placeholder: "(רשות) מילים-מחוברות-במקפים-ככתובת"
       creation_error: ארעה שגיאה במהלך יצירת הקטגוריה הזו.
       save_error: ארעה שגיאה בשמירת הקטגוריה הזו
@@ -4670,7 +4670,9 @@ he:
       logo_description: "מומלץ יחס תצוגה של 1:1 בגודל של 200 פיקסלים לכל הפחות. אם האפשרות נשארת ריקה לא תופיע תמונה."
       background_image: "תמונת רקע לקטגוריה"
       background_image_dark: "תמונת רקע כהה לקטגוריה"
-      style: "סגנונות"
+      style: "סגנון"
+      icon: "סמל"
+      emoji: "אמוג׳י"
       background_color: "צבע"
       foreground_color: "צבע הטקסט"
       color_validations:
@@ -4681,13 +4683,13 @@ he:
         type: "סגנון"
         icon: "סמל"
         emoji: "אמוג׳י"
+        square: "מרובע"
         options:
           square: "מרובע"
           icon: "סמל"
           emoji: "אמוג׳י"
       color_used: "צבע בשימוש"
       predefined_colors: "אפשרויות צבע מוגדרות מראש"
-      name_placeholder: "מילה או שתיים לכל היותר"
       color_placeholder: "כל צבע אינטרנטי"
       delete_confirm: "האם שברצונך להסיר את הקטגוריה הזו?"
       delete_error: "ארעה שגיאה במחיקת הקטגוריה."
@@ -4695,6 +4697,7 @@ he:
       no_description: "אנא הוסיפו תיאור לקטגוריה זו."
       change_in_category_topic: "עריכת תיאור"
       already_used: "הצבע הזה בשימוש על ידי קטגוריה אחרת"
+      color_palette: "ערכת צבעים"
       security: "אבטחה"
       security_add_group: "הוספת קבוצה"
       permissions:
@@ -4711,7 +4714,7 @@ he:
       uncategorized_security_warning: "קטגוריה זו היא מיוחדת. היא מיועדת להחזקת מגוון של נושאים שאין להם קטגוריה, לא יכולות להיות לקבוצה זו הגדרות אבטחה."
       uncategorized_general_warning: 'קטגוריה זו היא מיוחדת. היא משמשת כקטגוריית בררת המחדל לנושאים חדשים שלא נבחרה עבורם קטגוריה. כדי למנוע את ההתנהגות הזאת ולאלץ בחירת קטגוריה, <a href="%{settingLink}">נא להשבית את ההגדרה הזאת כאן</a>. אם מעניין אותך לשנות את השם או את התיאור, עליך לגשת אל <a href="%{customizeLink}">התאמה אישית / תוכן טקסט</a>.'
       pending_permission_change_alert: "לא הוספת %{group} לקטגוריה הזאת, יש ללחוץ על הכפתור הזה כדי להוסיף אותן."
-      images: "תמונות"
+      images: "מראה"
       email_in: "כתובת דואר נכנס מותאמת אישית:"
       email_in_tooltip: "אפשר להפריד בין כתובות דוא״ל עם התו |."
       email_in_allow_strangers: "קבלת דוא״ל ממשתמשים אלמוניים ללא חשבונות במערכת הפורומים"
@@ -4740,7 +4743,12 @@ he:
       position_disabled: "הקטגוריות יוצגו לפי סדר הפעילות. כדי לשלוט בסדר הקטגוריות ברשימות, יש להפעיל את ההגדרה <a href='%{url}'>‚מיקומי קטגוריה קבועים’</a>."
       minimum_required_tags: "מספר התגיות המזערי הנדרש לנושא:"
       default_slow_mode: 'להפעיל „מצב איטי” לנושאים חדשים בקטגוריה הזאת.'
-      parent: "קטגוריית הורה"
+      none_subcategory_text: "ללא"
+      visibility:
+        title: "חשיפה"
+        public: "ציבורי"
+        all_members: "כל החברים"
+        group_restricted: "פרטי"
       num_auto_bump_daily: "מספר הנושאים הפתוחים להקפצה מדי יום:"
       auto_bump_cooldown_days: "כמות הימים המזערית להקפצת אותו הנושא שוב:"
       navigate_to_first_post_after_read: "ניווט לפוסט הראשוני לאחר שהנושאים נקראו"
@@ -5608,6 +5616,7 @@ he:
           click_to_get_started: "ללחוץ כאן כדי להתחיל."
           header_link_text: "קטגוריות"
           header_action_title: "לערוך את קטגוריות סרגל הצד שלך"
+          header_action_new: "קטגוריה חדשה"
           configure_defaults: "הגדרת ברירות מחדל"
         community:
           edit_section:
@@ -5956,7 +5965,6 @@ he:
           search_placeholder: "סינון לפי שם, תיאור או תוסף…"
           no_results: "אין שינויים עתידיים שתואמים את המסנן שלך"
           all: "הכול"
-          enabled_all: "מופעל או מושבת"
           enabled: "פעיל"
           disabled: "כבוי"
           impact_type_all: "כל סוגי ההשפעה"
@@ -5968,6 +5976,11 @@ he:
           status_beta: "בטא"
           status_stable: "יציב"
           status_permanent: "קבוע"
+          impact_role_admins: "מנהלים ראשיים"
+          impact_role_moderators: "מפקחים"
+          impact_role_staff: "סגל"
+          impact_role_all_members: "כל החברים"
+          impact_role_developers: "מפתחים"
       config:
         about:
           title: "על האתר שלך"
@@ -6146,6 +6159,7 @@ he:
               placeholder: "ברוך שובך, %{preferred_display_name}!"
             header_anonymous:
               label: "כותרת עליונה למבקרים אלמוניים"
+              description: "משתנה זמין: <code>&percnt;{site_name}</code>"
               placeholder: "ברוכים הבאים ל %{site_name}!"
             subheader_logged_in:
               label: "תת־כותרת עליונה לחברים שנכנסו למערכת"
@@ -6418,7 +6432,7 @@ he:
         new_features:
           title: "מה חדש?"
           subtitle: "אנו מוציאים לאור יכולות ושיפורים חדשים כל הזמן. העמוד הזה מסקר את הנקודות החשובות אבל ניתן ללחוץ על ‚מידע נוסף’ כדי לצפות בהערות ההוצאה לאור המפורטות."
-          previous_announcements: "אפשר לצפות בהכרזות הקודמות על יכולות ב־<a href='%{url}' target='_blank'>Discourse Meta</a>"
+          no_new_features_found: "אירעה שגיאה בטעינת ערוץ העדכונים. ניתן לראות הכרזות קודמות על יכולות חדשות ב<a href='%{url}' target='_blank'>קהילת Discourse Meta</a>."
           learn_more: "מידע נוסף…"
           experimental: "ניסיוני"
           only_experiments: "להציג יכולות ניסיוניות בלבד"
@@ -6521,7 +6535,9 @@ he:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">חיפוש ביומנים</a>'
             disabled: 'דוח מגמות חיפושים מושבת. יש להפעיל <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">שאילתות חיפוש ביומן</a> כדי לאסוף נתונים.'
-          average_chart_label: ממוצע
+          sort_button: "מיון לפי %{column}"
+          sort_ascending: "בסדר עולה"
+          sort_descending: "בסדר יורד"
           filters:
             file_extension:
               label: סיומת קובץ
@@ -7277,8 +7293,6 @@ he:
         delete: "מחיקה"
         delete_confirm: 'למחוק את „%{theme_name}”?'
         bulk_delete: "להמשיך?"
-        bulk_themes_delete_confirm: "פעולה זו תסיר את ערכות העיצוב הבאות, הן לא תהיינה זמינות לשימוש על ידי משתמשים באתר שלך:"
-        bulk_components_delete_confirm: "פעולה זו תסיר את הרכיבים הבאים, הם לא יהיו זמינים לשימוש על ידי משתמשים באתר שלך:"
         color: "צבע"
         opacity: "שקיפות"
         copy: "שכפול"
@@ -7908,6 +7922,7 @@ he:
             delete_associated_accounts: "מחיקת חשבונות משויכים"
             change_theme_site_setting: "שנוי הגדרות ערכת עיצוב של האתר"
             stop_impersonating: "הפסקת התחזות"
+            change_site_setting_groups: "שינוי קבוצות הגדרות אתר"
         screened_emails:
           title: "הודעות דוא״ל מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."
@@ -8580,6 +8595,7 @@ he:
           upload:
             label: "העלאה"
             title: "העלאת תמונות"
+        download_file: "הורדה"
         selectable_avatars:
           title: "רשימת תמונות ייצוגיות מהן המשתמשים יכולים לבחור"
         table_column_heading:

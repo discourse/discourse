@@ -832,6 +832,10 @@ it:
         reviewable_post:
           title: "Messaggio"
           noun: "messaggio"
+        reviewable_ai_chat_message:
+          noun: "messaggio di chat"
+        reviewable_ai_post:
+          noun: "messaggio"
       flagged_as: "Contrassegnato come"
       user_label: "Utente"
       moderator_actions: "Azioni del moderatore"
@@ -839,6 +843,7 @@ it:
       timeline:
         target_created: "Messaggio creato"
         target_created_by: "Messaggio creato da %{username} - %{relativeDate}"
+        target_deleted: "Messaggio eliminato"
         flagged: "Contrassegnato"
         flagged_as_by: "Contrassegnato come %{flagReason} da %{username} · %{relativeDate}"
         claimed: "Rivendicato"
@@ -1028,9 +1033,7 @@ it:
           notification: Notifica
         email:
           title: "Email"
-          status: "Sincronizzate %{old_emails} / %{total_emails} email via IMAP."
           enable_smtp: "Abilita SMTP"
-          enable_imap: "Abilita IMAP"
           test_settings: "Prova le impostazioni"
           save_settings: "Salva Impostazioni"
           last_updated: "Ultimo aggiornamento:"
@@ -1039,14 +1042,7 @@ it:
           smtp_settings_valid: "Impostazioni SMTP valide."
           smtp_title: "SMTP"
           smtp_instructions: "Quando abiliti l'SMTP di gruppo, tutte le email in uscita dalla casella di posta del gruppo saranno inviate usando queste impostazioni SMTP, invece che tramite il server di posta configurato per le altre email inviate dal forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Altre impostazioni"
-          imap_instructions: 'Abilitando l''IMAP di gruppo, le e-mail vengono sincronizzate tra la casella di posta del gruppo e il server e la casella di posta IMAP forniti. Affinché l''IMAP possa essere abilitato, l''SMTP deve prima essere impostato con credenziali valide e verificate. Il nome utente e la password di posta elettronica utilizzati per SMTP saranno utilizzati anche per IMAP. Per ulteriori informazioni, consulta <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588"> l''annuncio della funzionalità su Discourse Meta</a>.'
-          imap_alpha_warning: "Attenzione: questa è una funzionalità in fase alfa. Solo Gmail è ufficialmente supportato. Gli utenti che la usano se ne assumono il rischio!"
-          imap_settings_valid: "Impostazioni IMAP valide."
-          smtp_disable_confirm: "Se disabiliti SMTP, tutte le impostazioni SMTP e IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Sei sicuro di voler continuare?"
-          imap_disable_confirm: "Se disabiliti IMAP, tutte le impostazioni IMAP verranno reimpostate e le funzionalità associate verranno disabilitate. Continuare?"
-          imap_mailbox_not_selected: "Devi selezionare una casella di posta per questa configurazione IMAP, altrimenti non verrà sincronizzata nessuna casella di posta!"
+          additional_settings: "Altre impostazioni"
           prefill:
             title: "Precompila con impostazioni per:"
             gmail: "Gmail"
@@ -1061,9 +1057,6 @@ it:
             smtp_server: "Server SMTP"
             smtp_port: "Porta SMTP"
             smtp_ssl_mode: "Modalità SSL"
-            imap_server: "Server IMAP"
-            imap_port: "Porta IMAP"
-            imap_ssl: "Usa SSL per IMAP"
             username: "Nome utente"
             password: "Password"
           settings:
@@ -1072,10 +1065,6 @@ it:
             allow_unknown_sender_topic_replies_hint: "Consenti a mittenti sconosciuti di rispondere agli argomenti del gruppo. Se l'opzione è disabilitata, le risposte provenienti da indirizzi e-mail non invitati all'argomento causeranno la creazione di un nuovo argomento in cui saranno incluse."
             from_alias: "Da Alias"
             from_alias_hint: "Alias da usare come indirizzo di provenienza per l'invio di email SMTP di gruppo. Nota che questo potrebbe non essere supportato da tutti i provider di posta; consulta la documentazione del tuo provider di posta."
-          mailboxes:
-            synchronized: "Maibox sincronizzata"
-            none_found: "Nessuna mailbox trovata in questo account e-mail."
-            disabled: "Disabilitato"
         membership:
           title: Iscrizione
           access: Accesso
@@ -2067,6 +2056,7 @@ it:
               other {# giorni}
             }.
           edit_link_options: "Modifica le opzioni del link o invialo per e-mail."
+          edit_link_options_only: "Modifica le opzioni del link"
           show_advanced: "Mostra Opzioni Avanzate"
           hide_advanced: "Nascondi opzioni avanzate"
           description: "Descrizione"
@@ -2266,7 +2256,6 @@ it:
     form_kit:
       reset: Annulla
       optional: facoltativo
-      errors_summary_title: "Questo modulo contiene errori:"
       dirty_form: "Non hai caricato le modifiche! Vuoi davvero uscire?"
       errors:
         starts_with: "Deve iniziare con %{prefix}"
@@ -2993,8 +2982,7 @@ it:
         post_approved: "messaggio approvato"
         membership_request_consolidated: "nuove richieste di iscrizione"
         reaction: "nuova reazione"
-        votes_released: "Il voto è stato sbloccato"
-        new_features: "Sono state rilasciate nuove funzionalità di Discourse!"
+        votes_released: "il voto è stato sbloccato"
         admin_problems: "nuovo avviso sulla dashboard del tuo sito"
     upload_selector:
       change: "Cambia"
@@ -3435,8 +3423,6 @@ it:
           12_hours: "12 Ore"
           24_hours: "24 Ore"
           custom: "Durata personalizzata"
-      slow_mode_notice:
-        duration: "Devi aspettare %{duration} tra ciascun messaggio inserito in questo argomento"
       topic_status_update:
         title: "Timer Argomento"
         save: "Imposta Timer"
@@ -3765,7 +3751,7 @@ it:
       quote_edit: "Modifica"
       quote_edit_shortcut: "Modifica (o premi e)"
       quote_copy: "Copia citazione"
-      quote_copied_to_clibboard: "Citazione copiata negli appunti"
+      quote_copied_to_clipboard: "Citazione copiata negli appunti"
       quote_share: "Condividi"
       edit_reason: "Motivo:"
       post_number: "messaggio %{number}"
@@ -4057,6 +4043,7 @@ it:
       back: "Torna alla categoria"
       general: "Generale"
       settings: "Impostazioni"
+      advanced: "Avanzato"
       topic_template: "Modello"
       tags: "Etichette"
       localizations: "Localizzazioni"
@@ -4088,7 +4075,9 @@ it:
       save_error: Si è verificato un errore durante il salvataggio della categoria.
       description: "Descrizione"
       logo_description: "Proporzioni consigliate 1:1 con dimensione minima di 200px. Se lasciato vuoto, non verrà mostrata alcuna immagine."
-      style: "Stili"
+      style: "Stile"
+      icon: "Icona"
+      emoji: "Emoji"
       background_color: "Colore"
       foreground_color: "Colore del testo"
       color_validations:
@@ -4097,13 +4086,13 @@ it:
         type: "Stile"
         icon: "Icona"
         emoji: "Emoji"
+        square: "Quadrato"
         options:
           square: "Quadrato"
           icon: "Icona"
           emoji: "Emoji"
       color_used: "Colore in uso"
       predefined_colors: "Opzioni di colore predefinite"
-      name_placeholder: "Una o due parole al massimo"
       color_placeholder: "Qualsiasi colore web"
       delete_confirm: "Vuoi cancellare questa categoria?"
       delete_error: "Si è verificato un errore durante la cancellazione della categoria."
@@ -4111,6 +4100,7 @@ it:
       no_description: "Aggiungi una descrizione alla categoria."
       change_in_category_topic: "Modifica descrizione"
       already_used: "Questo colore è già stato usato in un'altra categoria."
+      color_palette: "Schema di colori"
       security: "Sicurezza"
       security_add_group: "Aggiungi un gruppo"
       permissions:
@@ -4127,7 +4117,7 @@ it:
       uncategorized_security_warning: "Questa è una Categoria speciale. È utilizzata come area di parcheggio per gli Argomenti senza Categoria. Non può avere impostazioni di sicurezza."
       uncategorized_general_warning: 'Questa è una Categoria speciale. È usata come Categoria predefinita per i nuovi Argomenti senza una Categoria selezionata. Se vuoi prevenire questo comportamento e forzare la scelta di una Categoria, <a href="%{settingLink}">per favore disabilita l''impostazione qui</a>. Se vuoi cambiare il nome o la descrizione, vai a <a href="%{customizeLink}">Personalizza / Contenuto Testuale</a>.'
       pending_permission_change_alert: "Non hai aggiunto %{group} a questa categoria; fai clic su questo pulsante per aggiungerlo."
-      images: "Immagini"
+      images: "Aspetto"
       email_in: "Indirizzo email personalizzato:"
       email_in_tooltip: "Puoi separare più indirizzi e-mail con il carattere |."
       email_in_allow_strangers: "Accetta email da utenti anonimi senza alcun account"
@@ -4149,6 +4139,11 @@ it:
       position: "Posizione nella pagina delle Categorie:"
       position_disabled: "Le categorie verranno visualizzate in ordine di attività. Per controllare l'ordine delle categorie negli elenchi, abilita l'impostazione <a href='%{url}'>'posizioni di categoria fisse'</a>."
       minimum_required_tags: "Numero minimo di etichette richieste per argomento:"
+      none_subcategory_text: "Nessuna"
+      visibility:
+        title: "Visibilità"
+        public: "Pubblico"
+        group_restricted: "Privato"
       num_auto_bump_daily: "Numero di argomenti aperti da riproporre automaticamente ogni giorno:"
       auto_bump_cooldown_days: "Numero minimo di giorni prima di affrontare nuovamente lo stesso argomento:"
       navigate_to_first_post_after_read: "Vai al primo messaggio dopo che gli argomenti vengono letti"
@@ -5214,6 +5209,9 @@ it:
           impact_type_feature: "Funzionalità"
           impact_type_other: "Altri"
           status_experimental: "Sperimentale"
+          impact_role_admins: "Amministratori"
+          impact_role_moderators: "Moderatori"
+          impact_role_staff: "Staff"
       config:
         about:
           title: "Informazioni sul tuo sito"
@@ -5609,7 +5607,6 @@ it:
         new_features:
           title: "Cosa c'è di nuovo?"
           subtitle: "Stiamo rilasciando nuove funzionalità e miglioramenti in continuazione. Questa pagina mostra i punti salienti, ma puoi cliccare su \"Scopri di più\" per vedere le note di rilascio approfondite."
-          previous_announcements: "Puoi vedere i precedenti annunci di nuove funzionalità su <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Scopri di più..."
           experimental: "Sperimentale"
           only_experiments: "Mostra solo le funzionalità sperimentali"
@@ -5696,7 +5693,9 @@ it:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Ricerche nei log</a>'
             disabled: 'Il rapporto sulle ricerche di tendenza è disabilitato. Attiva l''opzione <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">query di ricerca nei log</a> per iniziare a raccogliere i dati.'
-          average_chart_label: Media
+          sort_button: "Ordina per %{column}"
+          sort_ascending: "crescente"
+          sort_descending: "decrescente"
           filters:
             file_extension:
               label: Estensione file
@@ -6432,8 +6431,6 @@ it:
         delete: "Cancella"
         delete_confirm: 'Sei sicuro di voler eliminare "%{theme_name}"?'
         bulk_delete: "Continuare?"
-        bulk_themes_delete_confirm: "Ciò disinstallerà i seguenti temi, che non saranno più utilizzabili da nessun utente sul tuo sito:"
-        bulk_components_delete_confirm: "I seguenti componenti verranno disinstallati e non saranno più utilizzabili dagli utenti del tuo sito:"
         color: "Colore"
         opacity: "Opacità"
         copy: "Duplica"
@@ -7661,6 +7658,7 @@ it:
           upload:
             label: "Carica"
             title: "Carica immagini"
+        download_file: "Scarica"
         selectable_avatars:
           title: "Elenco degli Avatar tra cui l'utente può scegliere"
         table_column_heading:

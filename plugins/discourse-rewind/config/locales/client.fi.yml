@@ -16,8 +16,6 @@ fi:
           title: Lukuaika
         chat_usage:
           messages: viestit
-          author: Sinä
-          author_others: "%{username}"
           status_online: "● online-tilassa"
         invites:
           title: Kutsut

@@ -1040,12 +1040,9 @@ nl:
     no_log_search_queries: "Zoekopdrachtenlogs zijn momenteel uitgeschakeld (een beheerder kan ze inschakelen in de website-instellingen)."
   email_settings:
     pop3_authentication_error: "Er was een probleem met de opgegeven POP3-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw."
-    imap_authentication_error: "Er was een probleem met de opgegeven IMAP-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw."
-    imap_no_response_error: "Er is een fout opgetreden tijdens de communicatie met de IMAP-server. %{message}"
     smtp_authentication_error: "Er was een probleem met de opgegeven SMTP-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw. %{message}"
     smtp_server_busy_error: "De SMTP-server is momenteel bezig, probeer het later opnieuw."
     smtp_unhandled_error: "Er is een onafgehandelde fout opgetreden tijdens de communicatie met de SMTP-server. %{message}"
-    imap_unhandled_error: "Er is een onafgehandelde fout opgetreden tijdens de communicatie met de IMAP-server. %{message}"
     connection_error: "Er was een probleem bij het verbinden met de server. Controleer de servernaam en -poort en probeer het opnieuw."
     timeout_error: "Er is een time-out opgetreden bij het verbinden met de server. Controleer de servernaam en -poort en probeer het opnieuw."
     unhandled_error: "Niet-afgehandelde fout bij het testen van e-mailinstellingen. %{message}"
@@ -1695,7 +1692,6 @@ nl:
     manifest_icon: "Afbeelding die als logo/splashafbeelding op Android wordt gebruikt. Wordt automatisch verkleind naar 512 x 512. Bij leeg laten wordt large_icon gebruikt."
     manifest_screenshots: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
     favicon: "Een favicon voor je website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://nl.wikipedia.org/wiki/Favicon</a>.  Om goed via een CDN te werken, moet dit een png zijn. Wordt verkleind naar 32x32. Bij leeg laten wordt large_icon gebruikt."
-    apple_touch_icon: "Pictogram voor Apple touch-apparaten. Een doorzichtige achtergrond wordt niet aanbevolen. De grootte wordt automatisch aangepast naar 180x180. Bij leeg laten wordt large_icon gebruikt."
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     x_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
@@ -1922,7 +1918,6 @@ nl:
     invite_link_max_redemptions_limit_users: "Het maximaal toegestane aantal verzilveringen van uitnodigingslinks gegenereerd door reguliere gebruikers mag niet hoger zijn dan deze waarde."
     alert_admins_if_errors_per_minute: "Aantal foutmeldingen per minuut waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
     alert_admins_if_errors_per_hour: "Aantal foutmeldingen per uur waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
-    categories_topics: "Aantal topics dat op de pagina /categories wordt weergegeven. Als dit op 0 is ingesteld, wordt automatisch naar een waarde gezocht die de twee kolommen symmetrisch houdt (categorieën en topics)."
     suggested_topics: "Aantal uitgelichte topics onderaan een topic."
     limit_suggested_to_category: "Alleen topics van de huidige categorie weergeven in uitgelichte topics."
     suggested_topics_max_days_old: "Voorgestelde topics mogen niet meer dan n dagen oud zijn."
@@ -2144,14 +2139,7 @@ nl:
     email_in_allowed_groups: "Groepen die nieuwe topics mogen plaatsen via e-mail. Beheerders en moderators kunnen altijd nieuwe topics plaatsen via e-mail."
     email_in_authserv_id: "De ID van de service die verificatiecontroles op inkomende e-mails uitvoert. Zie <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> voor instructies over het configureren hiervan."
     email_in_spam_header: "Selecteert de specifieke e-mailheader die moet worden gebruikt voor het identificeren van spam. Deze optie kan X-Spam-Flag, X-Spam-Status of X-SES-Spam-Verdict zijn. De e-mail wordt als spam geclassificeerd op basis van de waarde van de header. Als de gekozen instelling bijvoorbeeld X-Spam-Flag is, wordt een e-mail waarvoor deze headerwaarde is ingesteld op JA als spam geclassificeerd."
-    enable_imap: "IMAP inschakelen voor het synchroniseren van groepsberichten."
-    enable_imap_write: "IMAP-synchronisatie in twee richtingen inschakelen. Wanneer uitgeschakeld, zijn alle schrijfbewerkingen op IMAP-accounts uitgeschakeld."
-    enable_imap_idle: "IMAP IDLE-mechanisme gebruiken voor het wachten op nieuwe e-mails."
     enable_smtp: "SMTP inschakelen voor het sturen van meldingen voor groepsberichten."
-    imap_polling_period_mins: "De periode in minuten tussen het controleren van de IMAP-accounts op e-mail."
-    imap_polling_old_emails: "Het maximale aantal oude e-mails (verwerkt) dat telkens bij het pollen van een IMAP-postvak moet worden bijgewerkt (0 voor alle)."
-    imap_polling_new_emails: "Het maximale aantal nieuwe e-mails (onverwerkt) dat telkens bij het pollen van een IMAP-postvak moet worden bijgewerkt."
-    imap_batch_import_email: "Het minimale aantal nieuwe e-mails dat de importmodus activeert (schakelt berichtmeldingen uit)."
     email_prefix: "Het [label] dat in het onderwerp van e-mails wordt gebruikt. Als niets is ingevuld, wordt 'titel' gebruikt."
     email_site_title: "De titel van de website die als de afzender van e-mails van de website wordt gebruikt. Standaard wordt 'titel' gebruikt als niets is ingesteld. Gebruik deze instelling als je 'titel' tekens bevat die niet in tekenreeksen van e-mailafzenders zijn toegestaan."
     find_related_post_with_key: "Alleen de 'reply key' gebruiken om het beantwoorde bericht te vinden. WAARSCHUWING: uitschakelen hiervan staat imitatie van gebruikers op basis van e-mailadres toe."
@@ -2195,8 +2183,6 @@ nl:
     delete_associated_accounts_on_password_reset: "Verwijder het aan de gebruiker gekoppelde account wanneer deze het wachtwoord wijzigt."
     allow_featured_topic_on_user_profiles: "Sta gebruikers toe een link naar een topic uit te lichten op hun gebruikerskaart en profiel."
     show_inactive_accounts: "Aangemelde gebruikers mogen profielen van inactieve accounts doorbladeren."
-    hide_silencing_reasons: "Dempingsredenen niet openbaar weergeven in gebruikersprofielen."
-    hide_suspension_reasons: "Schorsingsredenen niet openbaar weergeven op gebruikersprofielen."
     log_personal_messages_views: "PB-weergaven door beheerder voor andere gebruikers/groepen loggen."
     ignored_users_count_message_threshold: "Moderators inlichten als een bepaalde gebruiker door dit aantal andere gebruikers wordt genegeerd."
     ignored_users_message_gap_days: "Wachttijd voordat moderators opnieuw worden ingelicht over een gebruiker die door veel andere wordt genegeerd."
@@ -2209,7 +2195,6 @@ nl:
     dont_feed_the_trolls_threshold: "Aantal markeringen van andere gebruikers voordat er wordt gewaarschuwd."
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobielvriendelijk thema, met de mogelijkheid om naar de volledige website over te schakelen. Schakel dit uit als je een eigen stylesheet wilt gebruiken dat volledig responsief is."
     dominating_topic_minimum_percent: "Het percentage berichten dat een gebruiker in een topic moet maken voordat deze aan het te veel domineren van een topic wordt herinnerd."
-    pm_warn_user_last_seen_months_ago: "Waarschuw gebruikers bij het maken van een nieuw PB wanneer de doelontvanger meer dan n maanden niet is gezien."
     suppress_uncategorized_badge: "De badge voor ongecategoriseerde topics niet in topiclijsten weergeven."
     header_dropdown_category_count: "Het aantal categorieën dat in het header-vervolgkeuzemenu kan worden weergegeven."
     permalink_normalizations: "De volgende reguliere expressie toepassen voordat permalinks worden verwerkt. Voorbeeld: /(topic.*)\\?.*/\\1 verwijdert querystrings uit topicroutes. Notatie is regex+strings, gebruik \\1 etc. voor deeluitdrukkingen."
@@ -2405,7 +2390,6 @@ nl:
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'Schakel een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en laat de link "Alles" in de zijbalk ernaartoe verwijzen.'
-    experimental_form_templates: "Schakel de functie Formuliersjablonen in. Beheer de sjablonen via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
     show_preview_for_form_templates: "Schakel het voorbeeld voor formuliersjablonenfunctie in"
     lazy_load_categories_groups: "Laad categorie-informatie op luie wijze, alleen voor gebruikers van deze groepen. Dit verbetert de prestaties op sites met veel categorieën."
     experimental_auto_grid_images: "Afbeeldingen worden automatisch tussen [grid]-tags geplaatst wanneer er 3 of meer afbeeldingen worden geüpload in de editor."
@@ -2422,7 +2406,6 @@ nl:
     default_composition_mode: "Stel de standaardmodus in voor de editor van je community. De rich text modus biedt een modernere, vertrouwde schrijfervaring voor de meeste gebruikers, terwijl de Markdown-modus geschikter kan zijn voor een technischer publiek. Leden kunnen van modus wisselen met een schakelaar op de editorwerkbalk."
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_enabled: "Geeft gelokaliseerde content weer voor gebruikers op basis van hun browser- of taalvoorkeuren. Dergelijke content kan categorieën, tags, berichten en onderwerpen omvatten. Ondersteunde talen worden ingesteld in 'content localization supported locales'."
-    content_localization_supported_locales: "Lijst van ondersteunde talen waarnaar gebruikerscontent kan worden vertaald. Vereist 'content localization enabled'."
     content_localization_allowed_groups: "Groepen mogen gelokaliseerde content bijwerken. Vereist 'content localization enabled'."
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."
@@ -4919,6 +4902,8 @@ nl:
     deprecation_error_label: Laat Javascript-deprecaties een foutmelding geven
     enter: "Veilige modus starten"
     must_select: "Je moet ten minste één optie selecteren om naar de veilige modus te gaan."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse instellen"
     step:
@@ -5012,8 +4997,6 @@ nl:
     api_post_delete: "Verwijderd via API"
     reminder_deleted: "Vervangen door nieuwe herinnering"
     user_associated_posts_deleted: "Gebruiker is vernietigd"
-    imap_email_deleted: "E-mail is verwijderd op de IMAP-server"
-    imap_email_marked_as_spam: "E-mail is verplaatst naar spam op de IMAP-server"
     auto_deleted_hidden_posts: "Verborgen berichten automatisch vernietigd"
     seed_data_topic_updated: "Seeddatatopic bijgewerkt"
     seed_data_topic_deleted: "Seeddatatopic verwijderd"
@@ -5085,19 +5068,14 @@ nl:
         description: "Ga akkoord met de markering en verberg dit bericht, stuur de gebruiker automatisch een bericht waarin deze wordt aangespoord het gemarkeerde bericht te bewerken."
         complete: "Bericht verborgen, gebruiker is geïnformeerd."
       agree_and_edit:
-        title: "Akkoord en bericht bewerken"
         description: "Ga akkoord met de markering en open een editorvenster om het bericht te bewerken."
         complete: "Markering bevestigd, je kunt het bericht nu bewerken."
       delete:
         title: "Verwijderen"
         complete: "Bericht verwijderd."
       delete_and_ignore:
-        title: "Markering negeren en bericht verwijderen"
-        description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht. Als dit het eerste bericht is, wordt het topic ook verwijderd. "
         complete: "Bericht verwijderd."
       delete_and_ignore_replies:
-        title: "Markering negeren, bericht en antwoorden verwijderen"
-        description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht en alle antwoorden. Als dit het eerste bericht is, wordt het topic ook verwijderd"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       delete_and_agree:
@@ -5110,11 +5088,12 @@ nl:
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       disagree_and_restore:
-        title: "Nee, bericht herstellen"
-        description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
+        title: "Bericht herstellen"
         complete: "Bericht hersteld."
-      disagree:
+      disagree_bundle:
         title: "Nee"
+      disagree:
+        title: "Bericht behouden"
         complete: "Markering genegeerd."
       discard_post:
         title: "Bericht weggooien"
@@ -5129,31 +5108,36 @@ nl:
         description: "Negeer de vlag door deze uit de wachtrij te verwijderen zonder enige actie te ondernemen. Verborgen berichten blijven verborgen en worden afgehandeld door de automatische tools."
         complete: "Markering genegeerd."
       approve:
-        title: "Goedkeuren"
+        title: "Ja"
         complete: "Bericht goedgekeurd."
       approve_post:
-        title: "Bericht goedkeuren"
+        title: "Ja"
         complete: "Bericht goedgekeurd."
       approve_post_closed:
-        title: "Bericht goedkeuren"
+        title: "Ja"
         confirm: "Dit topic is gesloten. Wil je het bericht toch maken?"
         complete: "Bericht goedgekeurd."
+      reject_post_bundle:
+        title: "Nee"
       reject_post:
         title: "Bericht weigeren"
         complete: "Bericht afgekeurd."
       approve_user:
-        title: "Gebruiker goedkeuren"
+        title: "Ja"
         complete: "Gebruiker goedgekeurd."
       reject_user:
-        title: "Gebruiker verwijderen…"
+        title: "Nee"
         delete:
           title: "Gebruiker verwijderen"
-          description: "De gebruiker wordt van het forum verwijderd."
           complete: "Gebruiker verwijderd."
         block:
           title: "Gebruiker verwijderen en blokkeren"
           description: "De gebruiker wordt verwijderd, en het IP- en e-mailadres ervan geblokkeerd."
           complete: "Gebruiker verwijderd en geblokkeerd."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nee"
       reject:
         title: "Weigeren"
         bundle_title: "Weigeren…"
@@ -5172,10 +5156,10 @@ nl:
       scrub:
         title: Record scrubben
       approve_and_restore:
-        title: "Bericht goedkeuren en herstellen"
+        title: "Ja"
         complete: "Bericht goedgekeurd en hersteld."
       approve_and_unhide:
-        title: "Bericht goedkeuren en zichtbaar maken"
+        title: "Ja"
         complete: "Bericht goedgekeurd en zichtbaar gemaakt"
       no_action_post:
         title: "Geen actie"

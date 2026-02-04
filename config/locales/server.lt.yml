@@ -52,6 +52,8 @@ lt:
   remove_posts_deleted_by_author: "Pašalinta autoriaus"
   redirect_warning: "Negalėjome patvirtinti, kad jūsų pasirinkta nuoroda buvo faktiškai paskelbta forume. Jei vis tiek norite tęsti, pasirinkite žemiau esančią nuorodą."
   on_another_topic: "Kitoje temoje"
+  topic_tag_changed:
+    added: "Pridėta %{added}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} nuo %{username}"
@@ -289,6 +291,7 @@ lt:
   read_full_topic: "Skaityti pilną temą"
   private_message_abbrev: "Žinutė"
   rss_description:
+    hot: "Karštos temos"
     latest: "Naujausios temos"
     top: "Top temos"
     top_all: "Visų laikų Top temos"
@@ -736,7 +739,6 @@ lt:
     pm_body: "Tema, kurioje yra atsarginių juodraščių"
   email_settings:
     pop3_authentication_error: "Iškilo problema dėl pateiktų POP3 prisijungimo duomenų, patikrinkite naudotojo vardą ir slaptažodį ir bandykite dar kartą."
-    imap_no_response_error: "Ryšio su IMAP serveriu metu įvyko klaida. %{message}"
     smtp_server_busy_error: "SMTP serveris šiuo metu užimtas, bandykite dar kartą vėliau."
     smtp_unhandled_error: "Bendraujant su SMTP serveriu įvyko neapdorota klaida. %{message}"
     connection_error: "Prisijungiant prie serverio kilo problema, patikrinkite serverio pavadinimą ir prievadą ir bandykite dar kartą."
@@ -1335,7 +1337,6 @@ lt:
     digest_posts: "Didžiausias populiarių įrašų, rodomų el. pašto suvestinėje, skaičius."
     digest_other_topics: "Didžiausias temų skaičius, rodomas el. laiškų santraukos skiltyje „Naujienos jūsų stebimose temose ir kategorijose“."
     show_inactive_accounts: "Leisti prisijungusiems vartotojams naršyti neaktyvių paskyrų profilius."
-    hide_suspension_reasons: "Nerodyti sustabdymo priežasčių viešai naudotojų profiliuose."
     user_selected_primary_groups: "Leiskite vartotojams nustatyti savo pagrindinę grupę"
     max_notifications_per_user: "Maksimalus vieno vartotojo pranešimų skaičius, jei šis skaičius viršijamas, senieji pranešimai bus ištrinti. Taikoma kas savaitę. Norėdami išjungti, nustatykite 0"
     header_dropdown_category_count: "Kiek kategorijų gali būti rodoma antraštės išskleidžiamajame meniu."
@@ -2509,6 +2510,8 @@ lt:
     title: "Įeikite į saugųjį režimą"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
+  dev_mode:
+    enter: "Įeiti"
   wizard:
     title: "Discourse sąranka"
     step:
@@ -2591,32 +2594,37 @@ lt:
         complete: "Įrašas ištrintas."
       delete_and_agree_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
-      disagree_and_restore:
-        description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
-      disagree:
+      disagree_bundle:
         title: "Ne"
       ignore:
         title: "Ignoruoti"
+        description: "Pašalinkite jį iš eilės nesiimdami jokių veiksmų."
       ignore_and_do_nothing:
         title: "Nieko nedaryti"
       approve:
-        title: "Patvirtinti"
+        title: "Taip"
       approve_post:
-        title: "Patvirtinti įrašą"
+        title: "Taip"
       approve_post_closed:
-        title: "Patvirtinti įrašą"
+        title: "Taip"
         complete: "Įrašas patvirtintas."
+      reject_post_bundle:
+        title: "Ne"
       reject_post:
         title: "Atmesti įrašą"
       approve_user:
-        title: "Patvirtinti vartotoją"
+        title: "Taip"
       reject_user:
+        title: "Ne"
         delete:
           title: "Ištrinti vartotoją"
-          description: "Vartotojas bus pašalintas iš forumo."
           complete: "Naudotojas ištrintas."
         block:
           title: "Ištrinti ir blokuoti vartotoją"
+      confirm_spam:
+        title: "Taip"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Atmesti"
       reject_and_suspend:
@@ -2629,6 +2637,10 @@ lt:
         title: "Palikti įrašą ištrintą"
       scrub:
         title: Šveitimo įrašas
+      approve_and_restore:
+        title: "Taip"
+      approve_and_unhide:
+        title: "Taip"
       no_action_post:
         title: "Jokių veiksmų"
       delete_post:

@@ -87,7 +87,6 @@ he:
         join_channel: "הצטרפות לערוץ"
         leave_channel: "יציאה מהערוץ"
         leave_groupchat_info: "יציאה מהצ׳אט הקבוצתי הזה תשלול את הגישה שלך אליו ולא תאפשר לך לקבל התראות שקשורות אליו. כדי להצטרף מחדש צריכה להישלח אליך הזמנה מאחד מהחברים בצ׳אט הקבוצתי הזה."
-        notification_settings_context: "התראות"
         join: "הצטרפות"
         leave: "עזוב"
         save_label:
@@ -779,7 +778,6 @@ he:
           composer_bold: "%{shortcut} מודגש (עורך בלבד)"
           composer_italic: "%{shortcut} נטוי (עורך בלבד)"
           composer_code: "%{shortcut} קוד (עורך בלבד)"
-          drawer_open: "%{shortcut} פתיחת מגירת הצ׳אט"
           drawer_close: "%{shortcut} סגירת מגירת הצ׳אט"
           mark_all_channels_read: "%{shortcut} סימון כל הערוצים כנקראו"
     topic_statuses:

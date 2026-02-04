@@ -94,8 +94,8 @@ module(
         </template>
       );
 
-      assert.dom(".image-upload-controls input[type='file']").isDisabled();
-      assert.dom(".image-upload-controls .btn-danger").isDisabled();
+      assert.dom(".file-uploader__controls input[type='file']").isDisabled();
+      assert.dom(".file-uploader__controls .btn-danger").isDisabled();
     });
   }
 );

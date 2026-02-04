@@ -16,10 +16,6 @@ cs:
       title: Ohlédnutí
       loading: "Probíhá výpočet, nepropadejte panice..."
       viewing_other_user: "Prohlížíte si zprávu <strong>%{username}od</strong> Discourse Ohlédnutí."
-      cannot_view_rewind_gibberish: >
-        [PŘÍSTUP ZAMÍTNUT::NÁVRATOVÁ SMYČKA JÁDRA SELHALA]<br><br> Inicializační protokol anomálií…<br><br> &nbsp;&nbsp;>> kvantový buffer se vyprázdnil příliš brzy<br> &nbsp;&nbsp;>> uzlová parita se rozchází (Δ=004.33)<br> &nbsp;&nbsp;>> paket ϟ se rozpadl na offsetu ∇47<br> &nbsp;&nbsp;>> handshake tokového kanálu nedorazil včas<br><br>
-      cannot_view_rewind: >
-        Tuto zprávu Discourse Ohlédnutí si nemůžete prohlédnout. Možná ji vlastník nesdílel veřejně?<br><br> $> _<br><br>
       preferences:
         enable_rewind: "Povolit Diskuse Ohlédnutí. To zobrazuje shrnutí aktivity na konci roku ve vašem profilu a na vašem avataru."
         share_publicly: "Sdílejte shrnutí Discourse Ohlédnutí s ostatními členy fóra. Vaše shrnutí Discourse Ohlédnutí si bude moci prohlédnout kterýkoli člen fóra."
@@ -50,7 +46,6 @@ cs:
           title: Použití slov
         reading_time:
           title: Čas čtení
-          book_comparison: "Strávil/a jsi <code>%{readingTime}</code> čtením na našich stránkách! Tolik času by ti trvalo přečíst <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Nejčastěji používané reakce v tématech
           total_number: "Celkový počet reakcí: %{count}"
@@ -60,8 +55,8 @@ cs:
           title: Tvůj FBFF (nejlepší kámoš/ka na fóru)
         most_viewed_categories:
           title:
-            one: Tvoje nejsledovanější kategorie
-            few: Tvoje %{count} nejsledovanější kategorie
+            one: Tvá nejsledovanější kategorie
+            few: Tvé %{count} nejsledovanější kategorie
             many: Tvých %{count} nejsledovanějších kategorií
             other: Tvých %{count} nejsledovanějších kategorií
         most_viewed_tags:
@@ -112,15 +107,10 @@ cs:
           favorite_channels: Oblíbené kanály
           messages: zprávy
           bot_name: XxRewindBotxX
-          author: Vy
-          author_others: "%{username}"
           channel_title: "#aktivita-chatu"
           status_online: "● online"
-          message_1: "Letos jsi odeslal/a <strong>%{count}</strong> zpráv!"
           reply_1: "lol úžasné B-)"
-          message_2: "Poslala/a jsi <strong>%{dm_count}</strong> soukromých zpráv s <strong>%{channel_count}</strong> různými lidmi nebo skupinami"
           reply_2: "cOo0oL :D"
-          message_3: "Lidem se tvé zprávy moc líbily! Dostal jsi <strong>%{count}</strong> reakcí ❤️"
           reply_3: "r0fl rAwr 8-)"
           message_4: "Průměrná délka tvé zprávy byla <strong>%{length}</strong> znaků"
           message_5: "Tvé oblíbené kanály:"
@@ -175,7 +165,6 @@ cs:
           replies: Odpovědi na příspěvky
           mentions: Zmínky
           topics_with_new_users: Témata s novými uživateli
-          contributions_helped: tvé příspěvky pomohly
         time_of_day_activity:
           title: Denní rytmus činnosti
           play_button: Přehraj si aktivitu jako zvuk

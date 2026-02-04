@@ -12,4 +12,5 @@ vi:
   unsubscribe:
     policy_emails:
       never: Không bao giờ
+      when_away: Khi vắng mặt
       always: Luôn luôn

@@ -1190,12 +1190,9 @@ sk:
     no_log_search_queries: "Protokoly vyhľadávacích dotazov sú momentálne zakázané (správca ich môže povoliť v nastaveniach lokality)."
   email_settings:
     pop3_authentication_error: "Vyskytol sa problém so zadanými povereniami POP3, skontrolujte používateľské meno a heslo a skúste to znova."
-    imap_authentication_error: "Vyskytol sa problém so zadanými povereniami IMAP, skontrolujte používateľské meno a heslo a skúste to znova."
-    imap_no_response_error: "Pri komunikácii so serverom IMAP došlo k chybe. %{message}"
     smtp_authentication_error: "Vyskytol sa problém so zadanými povereniami SMTP, skontrolujte používateľské meno a heslo a skúste to znova. %{message}"
     smtp_server_busy_error: "Server SMTP je momentálne zaneprázdnený, skúste to znova neskôr."
     smtp_unhandled_error: "Pri komunikácii so serverom SMTP sa vyskytla neošetrená chyba. %{message}"
-    imap_unhandled_error: "Pri komunikácii so serverom IMAP sa vyskytla neošetrená chyba. %{message}"
     connection_error: "Nastal problém s pripojením k serveru, skontrolujte názov a port servera a skúste to znova."
     timeout_error: "Časový limit pripojenia k serveru vypršal, skontrolujte názov servera a port a skúste to znova."
     unhandled_error: "Nevyriešená chyba pri testovaní nastavení e-mailu. %{message}"
@@ -1846,7 +1843,6 @@ sk:
     manifest_icon: "Obrázok použitý ako logo/splash obrázok v systéme Android. Automaticky sa zmenší na 512 × 512. Ak zostane prázdny, použije sa large_icon."
     manifest_screenshots: "Snímky obrazovky, ktoré prezentujú vlastnosti a funkcie vašej inštancie na stránke s výzvou na inštaláciu. Všetky obrázky by mali byť nahrané lokálne a mali by mať rovnaké rozmery."
     favicon: "Obľúbená ikona pre vašu stránku, pozri <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Aby správne fungovala cez CDN, musí to byť png. Bude mať zmenšenú veľkosť na 32x32. Ak zostane prázdna, použije sa large_icon."
-    apple_touch_icon: "Ikona používaná pre dotykové zariadenia Apple. Priehľadné pozadie sa neodporúča. Automaticky sa zmení veľkosť na 180x180. Ak zostane prázdna, použije sa large_icon."
     opengraph_image: "Predvolený obrázok opengraph, ktorý sa používa, ak stránka nemá iný vhodný obrázok. Ak zostane prázdny, použije sa large_icon"
     x_summary_large_image: "Karta Twitter \"súhrnný veľký obrázok\" (mal by mať šírku aspoň 280 a výšku aspoň 150, nemôže mať formát .svg). Ak zostane prázdne, bežné metadáta karty sa vygenerujú pomocou opengraph_image, pokiaľ to nie je tiež .svg"
     notification_email: "Odosieľateľ: email adresa použitá na zasielanie všetkých systémových emailov. Uvedená doména musí mať správne nastavené záznamy SPF, DKIM a opačný PTR aby email dorazil."
@@ -2071,7 +2067,6 @@ sk:
     invite_link_max_redemptions_limit_users: "Maximálny povolený počet uplatnení pre odkazy s pozvánkou vygenerované bežnými používateľmi nemôže presiahnuť túto hodnotu."
     alert_admins_if_errors_per_minute: "Počet chýb za minútu na spustenie upozornenia správcu. Hodnota 0 túto funkciu vypína. POZNÁMKA: vyžaduje reštart."
     alert_admins_if_errors_per_hour: "Počet chýb za hodinu, aby sa spustilo upozornenie administrátora. Hodnota 0 túto funkciu vypína. POZNÁMKA: vyžaduje reštart."
-    categories_topics: "Počet tém, ktoré sa majú zobraziť na stránke /kategórie. Ak je nastavená na 0, automaticky sa pokúsi nájsť hodnotu, aby boli oba stĺpce (kategórie a témy) symetrické."
     suggested_topics: "Zobrazovaný počet navrhovaných tém na konci témy."
     limit_suggested_to_category: "V navrhovaných témach zobraziť iba témy z aktuálnej kategórie."
     suggested_topics_max_days_old: "Navrhované témy by nemali byť staršie ako n dní."
@@ -2293,14 +2288,7 @@ sk:
     email_in_allowed_groups: "Skupiny, ktoré môžu zverejňovať nové témy prostredníctvom e-mailu. Správcovia a moderátori môžu vždy zverejňovať nové témy prostredníctvom e-mailu."
     email_in_authserv_id: "Identifikátor služby, ktorá vykonáva overovanie prichádzajúcich e-mailov. Pokyny na konfiguráciu <a href='https://meta.discourse.org/t/134358'>nájdete na adrese https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Výber konkrétnej hlavičky e-mailu, ktorá sa má použiť na identifikáciu spamu. Táto možnosť môže byť X-Spam-Flag, X-Spam-Status alebo X-SES-Spam-Verdict a e-mail sa označí ako spam na základe hodnoty hlavičky. Ak je napríklad zvolené nastavenie X-Spam-Flag, e-mail s hodnotou tejto hlavičky nastavenou na ÁNO bude klasifikovaný ako spam."
-    enable_imap: "Povolenie protokolu IMAP na synchronizáciu skupinových správ."
-    enable_imap_write: "Povolenie obojsmernej synchronizácie IMAP. Ak je vypnutá, všetky operácie zápisu na účty IMAP sú zakázané."
-    enable_imap_idle: "Na čakanie na nové e-maily použite mechanizmus IMAP IDLE."
     enable_smtp: "Povolenie protokolu SMTP na odosielanie oznámení pre skupinové správy."
-    imap_polling_period_mins: "Časový interval v minútach medzi kontrolou e-mailov na účtoch IMAP."
-    imap_polling_old_emails: "Maximálny počet starých e-mailov (spracovaných), ktoré sa majú aktualizovať pri každom dotazovaní schránky IMAP (0 pre všetky)."
-    imap_polling_new_emails: "Maximálny počet nových e-mailov (nespracovaných), ktoré sa majú aktualizovať pri každom dotazovaní schránky IMAP ."
-    imap_batch_import_email: "Minimálny počet nových e-mailov, ktoré spustia režim importu (vypne oznámenia pre importované príspevky)."
     email_prefix: "[Menovka], ktorá má byť použitá ako predmet emailov. Ak nie je nastavená bude nahradená 'nadpisom'."
     email_site_title: "Názov stránok, použitý ako odosieľateľ emailov zo stránok. Ak nie ne nastavený bude použitý 'nadpis'. Použite toto nastavenie, ak Váš nadpis obsahuje nepovolené znaky pre emailový reťazec odosieľateľ."
     find_related_post_with_key: "Používať iba 'kľúč odpovede' na nájdenie príspevku, na ktorý sa odpovedá. UPOZORNENIE: deaktivácia tohto nastavenia umožňuje vydávanie sa za používateľa na základe e-mailovej adresy."
@@ -2344,8 +2332,6 @@ sk:
     delete_associated_accounts_on_password_reset: "Odstránenie účtu spojeného s používateľom, keď používateľ zmení heslo."
     allow_featured_topic_on_user_profiles: "Umožniť používateľom uviesť odkaz na tému na karte používateľa a v profile."
     show_inactive_accounts: "Umožniť prihláseným používateľom prezerať profily neaktívnych účtov."
-    hide_silencing_reasons: "Nezobrazujte dôvody umlčania verejne v profiloch používateľov."
-    hide_suspension_reasons: "Nezobrazujte dôvody pozastavenia verejne v profiloch používateľov."
     log_personal_messages_views: "Zaznamenávanie osobných zobrazení správ administrátorom pre iných používateľov/skupiny."
     ignored_users_count_message_threshold: "Upozorniť moderátorov, ak je konkrétny používateľ ignorovaný týmto počtom iných používateľov."
     ignored_users_message_gap_days: "Ako dlho treba čakať, kým sa moderátorom opäť oznámi používateľ, ktorého mnohí ostatní ignorovali."
@@ -2358,7 +2344,6 @@ sk:
     dont_feed_the_trolls_threshold: "Počet príznakov od iných používateľov pred upozornením."
     enable_mobile_theme: "Mobilné zariadenia používajú tému pre mobilné zariadenia s možnosťou prepnutia na plnú verziu stránok. Vypnite, ak chcete použiť vlastný štýl, ktorý podporuje mobilné zariadenia."
     dominating_topic_minimum_percent: "Koľko percent príspevkov musí používateľ pridať do témy než sa mu zobrazí pripomienka o dominovaní témy."
-    pm_warn_user_last_seen_months_ago: "Pri vytváraní nového PM upozorniť používateľov, keď cieľový príjemca nebol videný pred viac ako n mesiacmi."
     suppress_uncategorized_badge: "V zozname tém nezobrazuj odznak za nekategorizované príspevky."
     header_dropdown_category_count: "Koľko kategórií sa môže zobraziť v rozbaľovacom menu v záhlaví."
     permalink_normalizations: "Pred priraďovaním trvalých odkazov použite nasledujúci regulárny výraz, napríklad: /(téma.*)\\?.*/\\1 odstráni reťazce dopytov z trás tém. Formát je regex+reťazec použite \\1 atď. na prístup k záberom"
@@ -2550,7 +2535,6 @@ sk:
     default_navigation_menu_categories: "Vybrané kategórie sa predvolene zobrazia v časti Kategórie navigačného menu."
     default_navigation_menu_tags: "Vybrané značky sa predvolene zobrazia v časti Značky v navigačnom menu."
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
-    experimental_form_templates: "Povoľte funkciu šablón formulárov. Šablóny spravujte v časti <a href='%{base_path}/admin/customize/form-templates'>Prispôsobiť / Šablóny</a>."
     show_preview_for_form_templates: "Povolenie funkcie náhľadu pre šablóny formulárov"
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
     experimental_auto_grid_images: "Automatické zabalenie obrázkov do značiek [grid], keď sú v kompozitore nahrané 3 alebo viac obrázkov."
@@ -2567,7 +2551,6 @@ sk:
     default_composition_mode: "Nastavenie predvoleného režimu pre skladateľa vašej komunity. Režim Rich text poskytuje modernejšie a známejšie písanie pre väčšinu používateľov, zatiaľ čo režim Markdown môže byť vhodný pre technickejšie publikum. Členovia môžu na prepínanie medzi režimami používať prepínač na paneli nástrojov kompozitora."
     reviewable_ui_refresh: "Skupiny, ktoré môžu používať nové experimentálne používateľské rozhranie vo fronte revízií."
     content_localization_enabled: "Zobrazuje lokalizovaný obsah pre používateľov na základe ich prehliadača alebo jazykových preferencií používateľa. Takýto obsah môže zahŕňať kategórie, značky, príspevky a témy. Podporované lokálne jazyky sú nastavené v položke 'content localization supported locales'."
-    content_localization_supported_locales: "Zoznam podporovaných lokálnych jazykov, do ktorých možno preložiť obsah používateľa. Vyžaduje \"povolená lokalizácia obsahu\"."
     content_localization_allowed_groups: "Skupiny môžu aktualizovať lokalizovaný obsah. Vyžaduje \"povolená lokalizácia obsahu\"."
     errors:
       invalid_css_color: "Neplatná farba. Zadajte názov farby alebo hexadecimálnu hodnotu."
@@ -5151,6 +5134,8 @@ sk:
     deprecation_error_label: Zabezpečte, aby deprekácie Javascriptu vyvolali chybu
     enter: "Vstup do núdzového režimu"
     must_select: "Ak chcete vstúpiť do núdzového režimu, musíte vybrať aspoň jednu možnosť."
+  dev_mode:
+    enter: "Zadajte"
   wizard:
     title: "Nastavenie Discourse"
     step:
@@ -5248,8 +5233,6 @@ sk:
     api_post_delete: "Odstránené cez API"
     reminder_deleted: "Nahradené novou pripomienkou"
     user_associated_posts_deleted: "Používateľ bol zničený"
-    imap_email_deleted: "E-mail bol odstránený na serveri IMAP"
-    imap_email_marked_as_spam: "E-mail bol presunutý do spamu na serveri IMAP"
     auto_deleted_hidden_posts: "Automaticky odstránené skryté príspevky"
     seed_data_topic_updated: "Téma počiatočných údajov bola aktualizovaná"
     seed_data_topic_deleted: "Téma počiatočných údajov bola odstránená"
@@ -5323,19 +5306,14 @@ sk:
         description: "Súhlasiť s označením a skryť tento príspevok + automaticky odoslať používateľovi správu, ktorá ho vyzve, aby ho upravil."
         complete: "Príspevok skrytý, používateľ bol upozornený."
       agree_and_edit:
-        title: "Súhlasím a upraviť príspevok"
         description: "Súhlasím s príznakom a otvorte okno kompozície na úpravu príspevku."
         complete: "Príznak bol potvrdený, teraz môžete príspevok upraviť."
       delete:
         title: "Odstrániť"
         complete: "Príspevok zmazaný."
       delete_and_ignore:
-        title: "Ignorovať príznak a vymazať príspevok"
-        description: "Ignorujte označenie odstránením z fronty a zmažte príspevok; ak je to prvý príspevok, zmažte aj tému. "
         complete: "Príspevok zmazaný."
       delete_and_ignore_replies:
-        title: "Ignorujte príznak, odstráňte príspevok a odpovede"
-        description: "Ignorovať príznak odstránením z frontu, vymazať príspevok a všetky jeho odpovede; ak ide o prvý príspevok, vymazať aj tému"
         confirm: "Ste si istí, že chcete vymazať aj odpovede na príspevok?"
         complete: "Príspevok a odpovede vymazané."
       delete_and_agree:
@@ -5348,11 +5326,12 @@ sk:
         confirm: "Naozaj chcete odstrániť aj odpovede na príspevok?"
         complete: "Príspevok a odpovede vymazané."
       disagree_and_restore:
-        title: "Nie, obnoviť príspevok"
-        description: "Obnovte príspevok tak, aby ho mohli vidieť všetci používatelia."
+        title: "Obnoviť príspevok"
         complete: "Príspevok bol obnovený."
-      disagree:
+      disagree_bundle:
         title: "Nie"
+      disagree:
+        title: "Ponechať príspevok"
         complete: "Vlajka ignorovaná."
       discard_post:
         title: "Zahodiť príspevok"
@@ -5367,31 +5346,36 @@ sk:
         description: "Ignorujte označenie odstránením z fronty bez prijatia akýchkoľvek opatrení. Skryté príspevky zostanú skryté a budú spracované automatickými nástrojmi."
         complete: "Vlajka ignorovaná."
       approve:
-        title: "Schváliť"
+        title: "Áno"
         complete: "Príspevok schválený."
       approve_post:
-        title: "Schváliť príspevok"
+        title: "Áno"
         complete: "Príspevok schválený."
       approve_post_closed:
-        title: "Schváliť príspevok"
+        title: "Áno"
         confirm: "Táto téma je uzavretá. Chcete aj tak vytvoriť príspevok?"
         complete: "Príspevok schválený."
+      reject_post_bundle:
+        title: "Nie"
       reject_post:
         title: "Odmietnuť príspevok"
         complete: "Príspevok zamietnutý."
       approve_user:
-        title: "Schváliť používateľa"
+        title: "Áno"
         complete: "Používateľ schválený."
       reject_user:
-        title: "Odstrániť používateľa…"
+        title: "Nie"
         delete:
           title: "Odstrániť používateľa"
-          description: "Používateľ bude z fóra vymazaný."
           complete: "Používateľ odstránený."
         block:
           title: "Odstránenie a blokovanie používateľa"
           description: "Používateľ bude vymazaný a my zablokujeme jeho IP a e-mailovú adresu."
           complete: "Používateľ vymazaný a zablokovaný."
+      confirm_spam:
+        title: "Áno"
+      not_spam:
+        title: "Nie"
       reject:
         title: "Zamietnuť"
         bundle_title: "Odmietnuť…"
@@ -5410,10 +5394,10 @@ sk:
       scrub:
         title: Záznam o čistení
       approve_and_restore:
-        title: "Schváliť a obnoviť príspevok"
+        title: "Áno"
         complete: "Príspevok schválený a obnovený."
       approve_and_unhide:
-        title: "Schváliť a Odkryť príspevok"
+        title: "Áno"
         complete: "Príspevok schválený a odkrytý"
       no_action_post:
         title: "Žiadna akcia"

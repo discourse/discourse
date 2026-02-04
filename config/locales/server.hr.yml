@@ -1390,14 +1390,7 @@ hr:
     pop3_polling_delete_from_server: "Izbrišite e-poštu s poslužitelja. NAPOMENA: Ako ovo onemogućite, trebali biste ručno očistiti svoj poštanski sandučić"
     log_mail_processing_failures: "Zabilježite sve pogreške obrade e-pošte na <a href='%{base_path}/logs' target='_blank'>/zapisi</a>"
     email_in_authserv_id: "Identifikator usluge koja vrši provjeru autentičnosti dolazne e-pošte. Pogledajte <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> za upute o tome kako to konfigurirati."
-    enable_imap: "Omogućite IMAP za sinkronizaciju grupnih poruka."
-    enable_imap_write: "Omogućite dvosmjernu IMAP sinkronizaciju. Ako je onemogućeno, sve operacije pisanja na IMAP računima su onemogućene."
-    enable_imap_idle: "Koristite IMAP IDLE mehanizam za čekanje novih e-poruka."
     enable_smtp: "Omogućite SMTP za slanje obavijesti za grupne poruke."
-    imap_polling_period_mins: "Razdoblje u minutama između provjere IMAP računa za e-poštu."
-    imap_polling_old_emails: "Maksimalan broj starih e-poruka (obrađenih) koje će se ažurirati svaki put kada se IMAP pretinac ispita (0 za sve)."
-    imap_polling_new_emails: "Maksimalan broj novih e-poruka (neobrađenih) koje će se ažurirati svaki put kada se traži IMAP okvir."
-    imap_batch_import_email: "Najmanji broj novih poruka e-pošte koji pokreću način uvoza (onemogućuje obavijesti za uvezene objave)."
     email_prefix: "[label] koji se koristi u predmetu e-pošte. Zadano će biti \"naslov\" ako nije postavljen."
     email_site_title: "Naslov stranice koja se koristi kao pošiljatelj e-pošte s stranice. Zadano je 'title' ako nije postavljeno. Ako vaš 'naslov' sadrži znakove koji nisu dopušteni u nizovima pošiljatelja e-pošte, koristite ovu postavku."
     find_related_post_with_key: "Koristite samo 'tipku za odgovor' da biste pronašli objavu na koju ste odgovorili. UPOZORENJE: onemogućivanje ovoga dopušta lažno predstavljanje korisnika na temelju adrese e-pošte."
@@ -2758,6 +2751,8 @@ hr:
       help: "Za početak registrirajte novi korisnički račun."
     resend_email:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
+  dev_mode:
+    enter: "Unesi"
   wizard:
     step:
       setup:
@@ -2817,8 +2812,9 @@ hr:
         complete: "Post izbrisan."
       delete_and_agree:
         complete: "Post izbrisan."
-      disagree:
+      disagree_bundle:
         title: "Ne"
+      disagree:
         complete: "Zastava zanemarena."
       ignore:
         title: "Zanemari"
@@ -2827,25 +2823,38 @@ hr:
         title: "Ne radi ništa"
         complete: "Zastava zanemarena."
       approve:
-        title: "Odobri"
+        title: "Da"
         complete: "Objava odobrena."
       approve_post:
+        title: "Da"
         complete: "Objava odobrena."
       approve_post_closed:
+        title: "Da"
         complete: "Objava odobrena."
+      reject_post_bundle:
+        title: "Ne"
       reject_post:
         complete: "Objava je odbijena."
       approve_user:
-        title: "Odobri korisnika"
+        title: "Da"
         complete: "Korisnik odobren."
       reject_user:
+        title: "Ne"
         delete:
           title: "Obriši korisnika"
           complete: "Korisnik izbrisan."
+      confirm_spam:
+        title: "Da"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Odbij"
       scrub:
         title: Obriši zapis
+      approve_and_restore:
+        title: "Da"
+      approve_and_unhide:
+        title: "Da"
       no_action_post:
         title: "Nema akcije"
       delete_post:

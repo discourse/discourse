@@ -597,7 +597,11 @@ bg:
         reviewable_post:
           title: "Публикация"
           noun: "публикация"
+        reviewable_ai_post:
+          noun: "публикация"
       user_label: "Потребител"
+      timeline:
+        target_deleted: "Публикацията е изтрита"
       notes:
         delete: "Изтрий"
       topic_label: "Тема"
@@ -744,9 +748,7 @@ bg:
           notification: Известие
         email:
           title: "Имейл"
-          status: "Синхронизирани %{old_emails} / %{total_emails} имейли чрез IMAP."
           enable_smtp: "Активирайте SMTP"
-          enable_imap: "Активирайте IMAP"
           test_settings: "Изпробвайте настройките"
           save_settings: "Запазване на настройките"
           last_updated: "Последна актуализация:"
@@ -755,14 +757,7 @@ bg:
           smtp_settings_valid: "SMTP настройките са валидни."
           smtp_title: "SMTP"
           smtp_instructions: "Когато активирате SMTP за групата, всички изходящи имейли, изпратени от входящата кутия на групата, ще бъдат изпращани чрез SMTP настройките, посочени тук, вместо пощенския сървър, конфигуриран за други имейли, изпратени от вашия форум."
-          imap_title: "IMAP"
-          imap_additional_settings: "Допълнителни настройки"
-          imap_instructions: 'Когато активирате IMAP за групата, имейлите се синхронизират между входящата кутия на групата и предоставения IMAP сървър и пощенска кутия. SMTP трябва да бъде активиран с валидни и тествани идентификационни данни, преди да може да се активира IMAP. Имейл потребителското име и паролата, използвани за SMTP, ще се използват за IMAP. За повече информация вижте <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">функции на Discourse Meta</a>.'
-          imap_alpha_warning: "Предупреждение: Това е функция за алфа-етап. Официално се поддържа само Gmail. Използвайте на свой собствен риск!"
-          imap_settings_valid: "Настройките за IMAP са валидни."
-          smtp_disable_confirm: "Ако деактивирате SMTP, всички настройки за SMTP и IMAP ще бъдат нулирани и свързаната функционалност ще бъде деактивирана. Сигурен ли си, че искаш да продължиш?"
-          imap_disable_confirm: "Ако деактивирате IMAP, всички IMAP настройки ще бъдат нулирани и свързаната функционалност ще бъде деактивирана. Сигурен ли си, че искаш да продължиш?"
-          imap_mailbox_not_selected: "Трябва да изберете пощенска кутия за тази IMAP конфигурация или пощенските кутии няма да се синхронизират!"
+          additional_settings: "Допълнителни настройки"
           prefill:
             title: "Предварително попълване с настройки за:"
           ssl_modes:
@@ -771,9 +766,6 @@ bg:
             title: "Данни за удостоверяване"
             smtp_server: "SMTP сървър"
             smtp_port: "SMTP порт"
-            imap_server: "IMAP сървър"
-            imap_port: "IMAP порт"
-            imap_ssl: "Използвайте SSL за IMAP"
             username: "Потребителско име"
             password: "Парола"
           settings:
@@ -782,10 +774,6 @@ bg:
             allow_unknown_sender_topic_replies_hint: "Позволява на неизвестни податели да отговарят на групови теми. Ако това не е активирано, отговорите от имейл адреси, които все още не са поканени в темата, ще създадат нова тема."
             from_alias: "От Псевдоним"
             from_alias_hint: "Псевдоним, който да се използва като адрес от при изпращане на групови SMTP имейли. Имайте предвид, че това може да не се поддържа от всички доставчици на поща. Моля, консултирайте се с документацията на вашия доставчик на поща."
-          mailboxes:
-            synchronized: "Синхронизирана пощенска кутия"
-            none_found: "В този имейл акаунт не бяха намерени пощенски кутии."
-            disabled: "Деактивирани"
         membership:
           title: Членство
           access: Достъп
@@ -2250,7 +2238,7 @@ bg:
         post_approved: "публикацията е одобрена"
         membership_request_consolidated: "нови заявки за членство"
         reaction: "нова реакция"
-        votes_released: "Гласуването беше публикувано"
+        votes_released: "гласуването беше публикувано"
     upload_selector:
       delete: "Изтрий"
       uploading: "Качване "
@@ -2483,8 +2471,6 @@ bg:
           12_hours: "12 Часа"
           24_hours: "24 Часа"
           custom: "Персонализирана продължителност"
-      slow_mode_notice:
-        duration: "Моля, изчакайте %{duration} между публикациите в тази тема"
       topic_status_update:
         title: "Таймер за тема"
         save: "Задайте таймер"
@@ -2931,6 +2917,8 @@ bg:
       creation_error: Възникна грешка при създаването на категория.
       save_error: Възникна грешка при запазването на категорията.
       description: "Описание"
+      icon: "Икона"
+      emoji: "Емотикони"
       background_color: "Цвят"
       color_validations:
         cant_be_empty: "не може да бъде празно"
@@ -2940,7 +2928,6 @@ bg:
         options:
           icon: "Икона"
           emoji: "Емотикони"
-      name_placeholder: "Максимум една или две думи"
       color_placeholder: "Някакъв уеб цвят "
       delete_confirm: "Сигурни ли сте, че искате да изтриете тази категория? "
       delete_error: "Възникна грешка по време на изтриването на категорията. "
@@ -2954,7 +2941,6 @@ bg:
         create: "Създай"
       special_warning: "Внимание: Тази категория е предварително семена категория и настройките й за сигурност не могат да се променят. Ако не искате да използвате тази категория, изтрийте темата си, вместо да я местите в категорията по предназначение."
       uncategorized_security_warning: "Тази категория е специална. Тя е предназначен като обща зона за теми, които нямат категория. Като такава, тя не може да има настройки за сигурност."
-      images: "Изображения"
       email_in: "Персонализиран входящ имейл адрес: "
       email_in_allow_strangers: "Приемай имейли от анонимни потребители, които нямат регистрация"
       email_in_disabled: "Публикуването на нови теми по имейл е забранено. За да активирате публикуването на нови теми по имейл, активирайте настройката <a href='%{setting_url}'>'имейл в'</a>."
@@ -2967,6 +2953,11 @@ bg:
       review_group_name: "име на групата"
       this_year: "тази година "
       minimum_required_tags: "Минимален брой етикети на тема"
+      none_subcategory_text: "Без"
+      visibility:
+        title: "Видимост"
+        public: "Публични"
+        group_restricted: "Затворени"
       auto_bump_cooldown_days: "Минимум дни преди да попаднете повторно на същата тема:"
       notifications:
         watching:
@@ -3456,6 +3447,9 @@ bg:
           enabled: "Да е включен"
           disabled: "Деактивирани"
           impact_type_other: "Други"
+          impact_role_admins: "Админи"
+          impact_role_moderators: "Модератори"
+          impact_role_staff: "Персонал"
       config:
         developer:
           title: "Разработчик"
@@ -3589,6 +3583,9 @@ bg:
           monthly: Месечно
           weekly: Седмично
           groups: "Всички групи"
+          sort_button: "Сортиране по %{column}"
+          sort_ascending: "в възходящ ред"
+          sort_descending: "в низходящ ред"
           filters:
             group:
               label: Група
@@ -4357,6 +4354,7 @@ bg:
         uploaded_image_list:
           upload:
             label: "Качване"
+        download_file: "Изтегли"
         table_column_heading:
           status: "Статус"
         categories:

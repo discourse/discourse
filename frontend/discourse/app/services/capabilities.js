@@ -9,7 +9,7 @@ const APPLE_USER_AGENT_DATA_PLATFORM = /macOS/;
 
 const ua = navigator.userAgent;
 
-const anyPointerCourseQuery = new TrackedMediaQuery("(any-pointer: coarse)");
+const anyPointerCoarseQuery = new TrackedMediaQuery("(any-pointer: coarse)");
 
 let siteInitialized = false;
 
@@ -110,7 +110,7 @@ class Capabilities {
   }
 
   get touch() {
-    return anyPointerCourseQuery.matches;
+    return anyPointerCoarseQuery.matches;
   }
 
   get userHasBeenActive() {

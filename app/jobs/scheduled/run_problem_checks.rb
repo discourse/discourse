@@ -12,6 +12,8 @@ module Jobs
     def execute(_args)
       ProblemCheck.scheduled.filter_map do |scheduled_check|
         scheduled_check.each_target do |target|
+          next if target == ProblemCheck::NO_TARGET && scheduled_check.targeted?
+
           check = scheduled_check.new(target)
 
           if check.enabled? && check.ready_to_run?

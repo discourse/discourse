@@ -1905,6 +1905,8 @@ sl:
     resend_email:
       title: "Ponovno pošlji aktivacijsko e-sporočilo"
       message: "<p>Ponovno smo poslali aktivacijsko e-sporočilo na<b>%{email}</b>"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Postavitev Discourse"
     step:
@@ -1978,38 +1980,46 @@ sl:
         complete: "Prispevek izbrisan."
       delete_and_agree_replies:
         confirm: "Ali ste prepričani, da hočete izbrisati tudi odgovore na prispevek?"
-      disagree_and_restore:
-        description: "Povrni prispevek tako da ga lahko vidijo vsi uporabniki"
-      disagree:
+      disagree_bundle:
         title: "Ne"
       ignore:
         title: "Prezri"
       ignore_and_do_nothing:
         title: "Ne naredi nič"
       approve:
-        title: "Odobri"
+        title: "Da"
         complete: "Objava odobrena."
       approve_post:
-        title: "Odobri prispevek"
+        title: "Da"
         complete: "Objava odobrena."
       approve_post_closed:
-        title: "Odobri prispevek"
+        title: "Da"
         complete: "Objava odobrena."
+      reject_post_bundle:
+        title: "Ne"
       reject_post:
         title: "Zavrni prispevek"
         complete: "Objava zavrnjena."
       approve_user:
-        title: "Odobri uporabnika"
+        title: "Da"
       reject_user:
+        title: "Ne"
         delete:
           title: "Izbriši uporabnika"
-          description: "Ta uporabnik bo izbrisan iz foruma."
           complete: "Uporabnik izbrisan."
         block:
           title: "Izbriši in blokiraj uporabnika"
           description: "Ta uporabnik bo izbrisan in njegov IP naslov in e-naslov bo blokiran."
+      confirm_spam:
+        title: "Da"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Zavrni"
+      approve_and_restore:
+        title: "Da"
+      approve_and_unhide:
+        title: "Da"
       delete_post:
         complete: "Prispevek izbrisan"
       delete_user:

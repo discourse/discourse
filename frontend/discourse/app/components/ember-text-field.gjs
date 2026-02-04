@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 /* eslint-disable ember/no-classic-classes */
 import { MUTABLE_CELL } from "@ember/-internals/views";
 import Component from "@ember/component";

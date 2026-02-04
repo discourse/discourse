@@ -1414,7 +1414,6 @@ gl:
     invite_link_max_redemptions_limit_users: "O máximo de ofrecementos permitidos para enviar ligazóns de convite xerados por usuarios regulares non poden superar este valor."
     alert_admins_if_errors_per_minute: "Número de erros por minuto para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre rearrancar."
     alert_admins_if_errors_per_hour: "Número de erros por hora para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre rearrancar."
-    categories_topics: "Número de temas que se mostran na páxina de /categorías. Se se estabelece en 0, automaticamente tentará atopar un valor para manter as dúas columnas simétricas (categorías e temas)."
     suggested_topics: "Número de temas suxeridos que se mostran na parte inferior do tema."
     limit_suggested_to_category: "Mostrar só temas da categoría actual nos temas suxeridos."
     suggested_topics_max_days_old: "Os temas suxeridos non deben ter máis de n días de antigüidade."
@@ -1566,14 +1565,7 @@ gl:
     pop3_polling_delete_from_server: "Eliminar correos do servidor. NOTA: se desactiva isto, deberá limpar manualmente a caixa de entrada"
     log_mail_processing_failures: "Rexistrar todos os erros de procesamento do correo en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in_authserv_id: "O identificador do servizo que realiza revisións de autenticación no correo entrante. Revisa <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instrucións sobre como configurar isto."
-    enable_imap: "Activar IMAP para sincronizar mensaxes de grupo."
-    enable_imap_write: "Activar a sincronización IMAP bidireccional. Se está desactivada, todas as operacións de escritura das contas IMAP están desactivadas."
-    enable_imap_idle: "Utilice o mecanismo IMAP IDLE para agardar por novos correos electrónicos."
     enable_smtp: "Active SMTP para enviar notificacións de mensaxes de grupo."
-    imap_polling_period_mins: "Período en minutos entre revisións das contas IMAP para correos electrónicos."
-    imap_polling_old_emails: "Número máximo de correos electrónicos antigos (procesados) que se actualizarán cada vez que se recolla unha caixa de correo IMAP (0 para todos)."
-    imap_polling_new_emails: "Número máximo de correos electrónicos novos (sen procesar) que se actualizarán cada vez que se recolla unha caixa de correo IMAP."
-    imap_batch_import_email: "O número mínimo de correos electrónicos novos que disparan o modo de importación (desactiva as alertas de publicación)."
     email_prefix: "A [label] utilizada no asunto dos correos. Será «título» se non se define."
     email_site_title: "O título do sitio utilizado como remitente de correos electrónicos do sitio. Será o de «título» se non se estabelece. Se o seu «título» contén caracteres que non están permitidos nas cadeas do remitente de correo electrónico, utilice este axuste."
     find_related_post_with_key: "Utilice só a «clave de resposta» para atopar a publicación respondida. AVISO: desactivar isto permite a suplantación de identidade do usuario baseada no enderezo de correo electrónico."
@@ -1610,7 +1602,6 @@ gl:
     allow_users_to_hide_profile: "Permitirlles aos usuarios agochar o seu perfil e presenza"
     allow_featured_topic_on_user_profiles: "Permitir aos usuarios salientar unha ligazón a un tema da súa tarxeta de usuario e perfil."
     show_inactive_accounts: "Permitir aos usuarios coa sesión iniciada ver os perfís de contas inactivas."
-    hide_suspension_reasons: "Non amosar publicamente os motivos de suspensión nos perfís dos usuarios."
     log_personal_messages_views: "Rexistra as visualizacións de mensaxes persoais por parte do administrador para outros usuarios/grupos."
     ignored_users_count_message_threshold: "Notificar aos moderadores se un usuario en particular é ignorado por moitos outros."
     ignored_users_message_gap_days: "Tempo de espera antes de lles volver notificar aos moderadores que un usuario é ignorado por moitos outros."
@@ -3409,6 +3400,8 @@ gl:
     title: "Entrar en modo seguro"
     enter: "Entrar en modo seguro"
     must_select: "Debe seleccionar polo menos unha opción para entrar no modo seguro."
+  dev_mode:
+    enter: "Intro"
   wizard:
     title: "Configuración de Discourse"
     step:
@@ -3494,35 +3487,43 @@ gl:
         complete: "Publicación eliminada."
       delete_and_agree_replies:
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
-      disagree_and_restore:
-        description: "Restaurar a publicación para que todos os usuarios a poidan ver."
-      disagree:
+      disagree_bundle:
         title: "Non"
       ignore:
         title: "Ignorar"
       ignore_and_do_nothing:
         title: "Non facer nada"
       approve:
-        title: "Aprobar"
+        title: "Si"
       approve_post:
-        title: "Aprobar publicación"
+        title: "Si"
       approve_post_closed:
-        title: "Aprobar publicación"
+        title: "Si"
         confirm: "Este tema está pechado. Gustaríalle crear a publicación igualmente?"
+      reject_post_bundle:
+        title: "Non"
       reject_post:
         title: "Rexeitar a publicación"
       approve_user:
-        title: "Aprobar usuario"
+        title: "Si"
       reject_user:
+        title: "Non"
         delete:
           title: "Eliminar usuario"
-          description: "O usuario será eliminado do foro."
           complete: "Usuario eliminado."
         block:
           title: "Eliminar e bloquear usuario"
           description: "O usuario será eliminado e bloquearase a súa IP e enderezo electrónico."
+      confirm_spam:
+        title: "Si"
+      not_spam:
+        title: "Non"
       reject:
         title: "Rexeitar"
+      approve_and_restore:
+        title: "Si"
+      approve_and_unhide:
+        title: "Si"
       no_action_post:
         title: "Sen acción"
       delete_post:

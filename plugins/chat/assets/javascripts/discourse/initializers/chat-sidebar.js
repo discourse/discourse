@@ -9,7 +9,7 @@ import { avatarUrl } from "discourse/lib/avatar-utils";
 import { bind } from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { emojiUnescape } from "discourse/lib/text";
-import { escapeExpression, isiPad } from "discourse/lib/utilities";
+import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import ChatModalNewMessage from "discourse/plugins/chat/discourse/components/chat/modal/new-message";
 import ChatChannelSidebarContextMenu from "discourse/plugins/chat/discourse/components/chat-channel-sidebar-context-menu";
@@ -99,7 +99,7 @@ function createChannelLink(BaseCustomSidebarSectionLink, options = {}) {
     get text() {
       if (this.isDM) {
         if (this.channel.chatable.group) {
-          return this.channel.title;
+          return this.channel.displayTitle;
         } else {
           const username = this.channel.escapedTitle.replaceAll("@", "");
           return htmlSafe(
@@ -240,6 +240,7 @@ export default {
 
     this.siteSettings = container.lookup("service:site-settings");
     this.currentUser = container.lookup("service:current-user");
+    this.capabilities = container.lookup("service:capabilities");
 
     withPluginApi((api) => {
       const chatStateManager = container.lookup("service:chat-state-manager");
@@ -355,7 +356,7 @@ export default {
             }
 
             get displaySection() {
-              return this.chatChannelsManager.hasThreadedChannels;
+              return this.chatChannelsManager.shouldShowMyThreads;
             }
           };
 
@@ -374,13 +375,14 @@ export default {
           );
 
           const SidebarChatStarredChannelLink = class extends BaseStarredChannelLink {
-            constructor({ menuService }) {
+            constructor({ menuService, capabilities }) {
               super(...arguments);
               this.menuService = menuService;
+              this.capabilities = capabilities;
             }
 
             get hoverValue() {
-              if (isiPad()) {
+              if (this.capabilities.isIpadOS) {
                 return;
               }
 
@@ -392,7 +394,7 @@ export default {
             }
 
             get hoverAction() {
-              if (isiPad()) {
+              if (this.capabilities.isIpadOS) {
                 return noop;
               }
 
@@ -429,6 +431,7 @@ export default {
                 "service:chat-channels-manager"
               );
               this.menuService = container.lookup("service:menu");
+              this.capabilities = container.lookup("service:capabilities");
             }
 
             get sectionLinks() {
@@ -441,6 +444,7 @@ export default {
                     siteSettings: this.siteSettings,
                     chatStateManager: this.chatStateManager,
                     menuService: this.menuService,
+                    capabilities: this.capabilities,
                   })
               );
             }
@@ -479,16 +483,26 @@ export default {
           (BaseCustomSidebarSection, BaseCustomSidebarSectionLink) => {
             const SidebarChatChannelsSectionLink = class extends BaseCustomSidebarSectionLink {
               hoverType = "icon";
-              hoverValue = isiPad() ? null : "ellipsis-vertical";
               hoverTitle = i18n("chat.open_channel_menu");
 
-              constructor({ channel, chatService, siteSettings, menuService }) {
+              constructor({
+                channel,
+                chatService,
+                siteSettings,
+                menuService,
+                capabilities,
+              }) {
                 super(...arguments);
                 this.channel = channel;
                 this.chatService = chatService;
                 this.menuService = menuService;
                 this.chatStateManager = chatStateManager;
                 this.siteSettings = siteSettings;
+                this.capabilities = capabilities;
+              }
+
+              get hoverValue() {
+                return this.capabilities.isIpadOS ? null : "ellipsis-vertical";
               }
 
               get name() {
@@ -570,7 +584,7 @@ export default {
               }
 
               get hoverAction() {
-                if (isiPad()) {
+                if (this.capabilities.isIpadOS) {
                   return noop;
                 }
 
@@ -612,6 +626,7 @@ export default {
                 );
                 this.router = container.lookup("service:router");
                 this.menuService = container.lookup("service:menu");
+                this.capabilities = container.lookup("service:capabilities");
               }
 
               get sectionLinks() {
@@ -622,6 +637,7 @@ export default {
                       chatService: this.chatService,
                       menuService: this.menuService,
                       siteSettings: this.siteSettings,
+                      capabilities: this.capabilities,
                     })
                 );
               }
@@ -687,7 +703,6 @@ export default {
               route = "chat.channel";
               suffixType = "icon";
               hoverType = "icon";
-              hoverValue = isiPad() ? null : "ellipsis-vertical";
               hoverTitle = i18n("chat.open_channel_menu");
 
               constructor({
@@ -696,6 +711,7 @@ export default {
                 currentUser,
                 menuService,
                 siteSettings,
+                capabilities,
               }) {
                 super(...arguments);
                 this.channel = channel;
@@ -704,6 +720,7 @@ export default {
                 this.currentUser = currentUser;
                 this.chatStateManager = chatStateManager;
                 this.menuService = menuService;
+                this.capabilities = capabilities;
 
                 if (this.oneOnOneMessage) {
                   const user = this.channel.chatable.users[0];
@@ -718,6 +735,10 @@ export default {
                 if (this.oneOnOneMessage) {
                   this.channel.chatable.users[0].statusManager.stopTrackingStatus();
                 }
+              }
+
+              get hoverValue() {
+                return this.capabilities.isIpadOS ? null : "ellipsis-vertical";
               }
 
               get oneOnOneMessage() {
@@ -785,7 +806,7 @@ export default {
 
               get text() {
                 if (this.channel.chatable.group) {
-                  return this.channel.title;
+                  return this.channel.displayTitle;
                 } else {
                   const username = this.channel.escapedTitle.replaceAll(
                     "@",
@@ -838,7 +859,7 @@ export default {
               }
 
               get hoverAction() {
-                if (isiPad()) {
+                if (this.capabilities.isIpadOS) {
                   return noop;
                 }
 
@@ -877,6 +898,7 @@ export default {
                   "service:chat-channels-manager"
                 );
                 this.menuService = container.lookup("service:menu");
+                this.capabilities = container.lookup("service:capabilities");
               }
 
               get hideSectionHeader() {
@@ -900,6 +922,7 @@ export default {
                         currentUser: this.currentUser,
                         menuService: this.menuService,
                         siteSettings: this.siteSettings,
+                        capabilities: this.capabilities,
                       })
                   );
                 } else {

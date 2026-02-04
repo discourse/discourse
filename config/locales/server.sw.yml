@@ -1986,21 +1986,36 @@ sw:
         description: "Rudisha chapisho ili watumiaji wote waweze kuliona."
       delete:
         title: "Futa"
-      disagree_and_restore:
-        description: "Rudisha chapisho ili watumiaji wote waweze kuliona."
-      disagree:
+      disagree_bundle:
         title: "Hapana"
       ignore:
         title: "Puuzia"
       ignore_and_do_nothing:
         title: "Usifanye chochote"
       approve:
-        title: "Imethibitishwa"
+        title: "Ndio"
+      approve_post:
+        title: "Ndio"
+      approve_post_closed:
+        title: "Ndio"
+      reject_post_bundle:
+        title: "Hapana"
+      approve_user:
+        title: "Ndio"
       reject_user:
+        title: "Hapana"
         delete:
           title: "Futa Mtumiaji"
+      confirm_spam:
+        title: "Ndio"
+      not_spam:
+        title: "Hapana"
       reject:
         title: "Kataa"
+      approve_and_restore:
+        title: "Ndio"
+      approve_and_unhide:
+        title: "Ndio"
   fallback_username: "Mtumiaji"
   activemodel:
     errors:

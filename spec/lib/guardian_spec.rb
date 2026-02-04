@@ -2206,8 +2206,12 @@ RSpec.describe Guardian do
         expect(Guardian.new(user).can_edit_email?(user)).to be_truthy
       end
 
-      it "is true for moderators" do
-        expect(Guardian.new(moderator).can_edit_email?(user)).to be_truthy
+      it "is true for moderators to edit their own email" do
+        expect(Guardian.new(moderator).can_edit_email?(moderator)).to be_truthy
+      end
+
+      it "is false for moderators to edit another user's email" do
+        expect(Guardian.new(moderator).can_edit_email?(user)).to be_falsey
       end
 
       it "is true for admins" do
@@ -2444,7 +2448,7 @@ RSpec.describe Guardian do
       end
     end
 
-    context "when ignorer is not in requred trust level group" do
+    context "when ignorer is not in required trust level group" do
       let(:guardian) { Guardian.new(trust_level_0) }
       it "does not allow ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(false)
@@ -2983,6 +2987,32 @@ RSpec.describe Guardian do
 
       it "staff can see silencings" do
         expect(Guardian.new(moderator).can_see_silencing_reason?(user)).to eq(true)
+      end
+    end
+  end
+
+  describe "#can_see_user_status?" do
+    it "returns true for non-silenced users" do
+      expect(Guardian.new.can_see_user_status?(user)).to eq(true)
+    end
+
+    context "with a silenced user" do
+      before { user.update!(silenced_till: 1.year.from_now) }
+
+      it "returns false to anonymous users" do
+        expect(Guardian.new.can_see_user_status?(user)).to eq(false)
+      end
+
+      it "returns false to other users" do
+        expect(Guardian.new(another_user).can_see_user_status?(user)).to eq(false)
+      end
+
+      it "returns true to the silenced user themselves" do
+        expect(Guardian.new(user).can_see_user_status?(user)).to eq(true)
+      end
+
+      it "returns true to staff" do
+        expect(Guardian.new(moderator).can_see_user_status?(user)).to eq(true)
       end
     end
   end

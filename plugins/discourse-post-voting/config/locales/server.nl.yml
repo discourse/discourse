@@ -99,16 +99,10 @@ nl:
             title: "Reactie verwijderen"
             description: "Verwijder de reactie zodat gebruikers deze niet kunnen zien."
           delete_and_agree:
-            title: "Markering negeren en reactie verwijderen"
             description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder de reactie."
           disagree_and_restore:
             title: "Niet akkoord en reactie herstellen"
             description: "Herstel de reactie zodat alle gebruikers deze kunnen zien."
-          disagree:
-            title: "Niet akkoord"
-          ignore:
-            title: "Niets doen"
-            description: "Negeer de markering door deze uit de wachtrij te verwijderen zonder enige actie te ondernemen."
         transcript:
           view: "Transcript van eerdere reacties weergeven"
       reviewable_score_types:

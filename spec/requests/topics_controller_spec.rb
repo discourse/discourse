@@ -200,6 +200,26 @@ RSpec.describe TopicsController do
           expect(Tag.all.pluck(:name)).to include("foo", "bar")
         end
 
+        it "moves posts to new topic with existing tags" do
+          tag1 = Fabricate(:tag, name: "existing-tag")
+          tag2 = Fabricate(:tag, name: "another-tag")
+
+          post "/t/#{topic.id}/move-posts.json",
+               params: {
+                 title: "Topic with tags",
+                 post_ids: [p2.id],
+                 category_id: category.id,
+                 tag_ids: [tag1.id, tag2.id],
+               }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["success"]).to eq(true)
+
+          new_topic = Topic.last
+          expect(new_topic.tags).to contain_exactly(tag1, tag2)
+        end
+
         describe "with freeze_original param" do
           it "duplicates post to new topic and keeps original post in place" do
             expect do
@@ -1129,6 +1149,71 @@ RSpec.describe TopicsController do
           expect(response.status).to eq(403)
         end
       end
+
+      describe "private messages" do
+        fab!(:private_category) do
+          Fabricate(
+            :private_category,
+            group: Fabricate(:group),
+            permission_type: CategoryGroup.permission_types[:full],
+          )
+        end
+        fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+        fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+        fab!(:pm_user, :user)
+        fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_user) }
+        fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_user) }
+
+        describe "moderator signed in" do
+          before do
+            SiteSetting.moderators_change_post_ownership = true
+            sign_in(moderator)
+          end
+
+          it "returns 403 for topics in private categories the moderator cannot see" do
+            post "/t/#{private_topic.id}/change-owner.json",
+                 params: {
+                   username: user_a.username,
+                   post_ids: [private_post.id],
+                 }
+            expect(response.status).to eq(403)
+          end
+
+          it "returns 403 for private messages the moderator is not a participant of" do
+            post "/t/#{pm_topic.id}/change-owner.json",
+                 params: {
+                   username: user_a.username,
+                   post_ids: [pm_post.id],
+                 }
+            expect(response.status).to eq(403)
+          end
+        end
+
+        describe "admin signed in" do
+          before { sign_in(admin) }
+
+          it "can change ownership of posts in private messages" do
+            post "/t/#{pm_topic.id}/change-owner.json",
+                 params: {
+                   username: user_a.username,
+                   post_ids: [pm_post.id],
+                 }
+            expect(response.status).to eq(200)
+            expect(pm_post.reload.user).to eq(user_a)
+          end
+
+          it "can change ownership of posts in private categories" do
+            post "/t/#{private_topic.id}/change-owner.json",
+                 params: {
+                   username: user_a.username,
+                   post_ids: [private_post.id],
+                 }
+            expect(response.status).to eq(200)
+            expect(private_post.reload.user).to eq(user_a)
+          end
+        end
+      end
     end
   end
 
@@ -2048,6 +2133,15 @@ RSpec.describe TopicsController do
             user_2.groups << Group.find_by(name: "trust_level_2")
 
             expect do put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] } end.to change {
+              topic.reload.first_post.revisions.count
+            }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+          end
+
+          it "can update tags using tag_ids" do
+            expect do put "/t/#{topic.id}/tags.json", params: { tag_ids: [tag.id] } end.to change {
               topic.reload.first_post.revisions.count
             }.by(1)
 
@@ -4008,6 +4102,44 @@ RSpec.describe TopicsController do
         expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
       end
 
+      it "can append tags" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        tag1 = Fabricate(:tag)
+        topic.update!(user:)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id],
+              operation: {
+                type: "append_tags",
+                tag_ids: [tag1.id],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.tags).to include(tag1)
+      end
+
+      it "can append tags with tag names for backward compatibility" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        tag1 = Fabricate(:tag)
+        topic.update!(user:)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id],
+              operation: {
+                type: "append_tags",
+                tags: [tag1.name],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.tags).to include(tag1)
+      end
+
       context "with private message" do
         fab!(:group) do
           Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
@@ -4967,6 +5099,12 @@ RSpec.describe TopicsController do
         expect(response).to be_forbidden
       end
 
+      it "raises an error when a moderator doesn't have permission to convert topic" do
+        sign_in(moderator)
+        put "/t/#{topic.id}/convert-topic/public.json"
+        expect(response).to be_forbidden
+      end
+
       context "with success" do
         it "returns success and the new url" do
           sign_in(admin)
@@ -5711,7 +5849,7 @@ RSpec.describe TopicsController do
       fab!(:page2_time) { 2.months.ago }
       fab!(:page3_time) { 1.month.ago }
 
-      fab!(:page_1_topics) do
+      fab!(:page_1_posts) do
         Fabricate.times(
           20,
           :post,
@@ -5722,7 +5860,7 @@ RSpec.describe TopicsController do
         )
       end
 
-      fab!(:page_2_topics) do
+      fab!(:page_2_posts) do
         Fabricate.times(
           20,
           :post,
@@ -5733,7 +5871,7 @@ RSpec.describe TopicsController do
         )
       end
 
-      fab!(:page_3_topics) do
+      fab!(:page_3_posts) do
         Fabricate.times(
           2,
           :post,
@@ -5775,6 +5913,8 @@ RSpec.describe TopicsController do
 
         get topic.relative_url + "?page=3", env: { "HTTP_USER_AGENT" => bot_user_agent }
         body = response.body
+
+        page_3_posts.each { |post| expect(body).to include(post.cooked) }
 
         expect(response.headers["Last-Modified"]).to eq(page3_time.httpdate)
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")

@@ -7,26 +7,59 @@
 vi:
   site_settings:
     poll_enabled: "Cho phép bình chọn?"
-    poll_maximum_options: "Số lượng tối đa tùy chọn trong một cuộc thăm dò. "
-    poll_edit_window_mins: "Số phút tình từ lúc tạo bài viết mà người dùng có quyền sửa thăm dò."
+    poll_maximum_options: "Số lượng tối đa lựa chọn trong một cuộc bình chọn."
+    poll_edit_window_mins: "Số phút tình từ lúc tạo tút mà thành viên có quyền sửa bình chọn."
     poll_minimum_trust_level_to_create: "Xác định độ tin cậy tối thiểu cần thiết để tạo các cuộc bình chọn."
-    poll_groupable_user_fields: "Một tập hợp các tên trường người dùng có thể được sử dụng để nhóm và lọc các kết quả thăm dò ý kiến."
+    poll_create_allowed_groups: "Các nhóm được phép tạo cuộc bình chọn."
+    poll_groupable_user_fields: "Một tập hợp các tên người dùng có thể được sử dụng để nhóm và lọc các kết quả bình chọn."
+    poll_export_data_explorer_query_id: "ID của truy vấn trình khám phá dữ liệu được sử dụng để xuất kết quả thăm dò ý kiến (0 để vô hiệu hóa)."
+    poll_export_ranked_choice_data_explorer_query_id: "ID của truy vấn Data Explorer được sử dụng để xuất kết quả bầu cử theo phương pháp bầu cử trực tiếp."
+    poll_default_public: "Khi tạo cuộc bình chọn mới, bật tùy chọn 'hiện người đã bình chọn' theo mặc định."
+  keywords:
+    poll_create_allowed_groups: "poll_minimum_trust_level_to_create"
   poll:
-    multiple_polls_with_same_name: "Có nhiều cuộc thăm dò có cùng tên: <strong>%{name}</strong>. Sử dụng thuộc tính '<code>name</code>' để xác định cuộc thăm dò của bạn."
+    poll: "bình chọn"
+    invalid_argument: "Giá trị không hợp lệ '%{value}' cho đối số '%{argument}'."
+    multiple_polls_without_name: "Khi tạo nhiều cuộc bình chọn, hãy bao gồm các tên duy nhất bằng cách thêm <code>name=example</code> vào thẻ <code>[poll]</code> của bạn."
+    multiple_polls_with_same_name: "Có nhiều cuộc bình chọn có cùng tên: <strong>%{name}</strong>. Sử dụng thuộc tính '<code>name</code>' để xác định cuộc bình chọn của bạn."
+    default_poll_must_have_at_least_1_option: "Bình chọn phải có ít nhất 1 lựa chọn."
+    named_poll_must_have_at_least_1_option: "Cuộc bình chọn có tên <strong>%{name}</strong> phải có ít nhất 1 lựa chọn."
     default_poll_must_have_less_options:
-      other: "Thăm dò ý kiến phải có ít hơn %{count} tùy chọn."
+      other: "Bình chọn phải có ít hơn %{count} lựa chọn."
     named_poll_must_have_less_options:
-      other: "Cuộc thăm dò có tên <strong>%{name}</strong> phải có ít hơn %{count} lựa chọn."
-    default_poll_must_have_different_options: "Thăm dò ​​phải có các lựa chọn khác nhau."
-    named_poll_must_have_different_options: "Thăm dò <strong>%{name}</strong> ​​phải có các lựa chọn khác nhau."
-    default_poll_with_multiple_choices_has_invalid_parameters: "Thăm dò ​​với nhiều lựa chọn có các tham số không hợp lệ."
-    named_poll_with_multiple_choices_has_invalid_parameters: "Thăm dò <strong>%{name}</strong> ​​với nhiều lựa chọn có các tham số không hợp lệ. "
+      other: "Bình chọn có tên <strong>%{name}</strong> phải có ít hơn %{count} lựa chọn."
+    default_poll_must_have_different_options: "Bình chọn ​​phải có các lựa chọn khác nhau."
+    named_poll_must_have_different_options: "Bình chọn <strong>%{name}</strong> ​​phải có các lựa chọn khác nhau."
+    default_poll_must_not_have_any_empty_options: "Bình chọn không được có bất kỳ lựa chọn trống nào."
+    named_poll_must_not_have_any_empty_options: "Cuộc bình chọn có tên <strong>%{name}</strong> không được có bất kỳ lựa chọn trống nào."
+    default_poll_with_multiple_choices_has_invalid_parameters: "Bình chọn ​​với nhiều lựa chọn có các tham số không hợp lệ."
+    named_poll_with_multiple_choices_has_invalid_parameters: "Bình chọn <strong>%{name}</strong> ​​với nhiều lựa chọn có các tham số không hợp lệ."
     requires_at_least_1_valid_option: "Bạn phải chọn ít nhất 1 lựa chọn hợp lệ."
-    no_poll_with_this_name: "Không có thăm dò có tên <strong>%{name}</strong> liên kết với bài viết này."
-    post_is_deleted: "Không thể thực hiện trên bài viết đã xóa."
-    topic_must_be_open_to_vote: "Chủ đề phải được mở để bầu chọn."
-    poll_must_be_open_to_vote: "Thăm dò ​​phải được mở để tiến hành bầu chọn."
+    requires_that_at_least_one_option_is_ranked: "Trong các cuộc bình chọn theo thứ tự ưu tiên, bạn phải xếp hạng ít nhất một lựa chọn."
+    edit_window_expired:
+      cannot_edit_default_poll_with_votes: "Bạn không thể thay đổi kết quả bình chọn sau %{minutes} phút đầu tiên."
+      cannot_edit_named_poll_with_votes: "Bạn không thể thay đổi cuộc bình chọn <strong>${name}</strong> sau %{minutes} phút đầu tiên."
+    dynamic_poll:
+      enabled_hint: "Có thể thêm hoặc xóa các lựa chọn."
+    no_poll_with_this_name: "Không có cuộc bình chọn có tên <strong>%{name}</strong> liên kết với tút này."
+    post_is_deleted: "Không thể thực hiện trên một tút đã xóa."
+    user_cant_post_in_topic: "Bạn không thể bình chọn vì bạn không thể đăng tút trong chủ đề này."
+    topic_must_be_open_to_vote: "Chủ đề phải được mở để bình chọn."
+    poll_must_be_open_to_vote: "Bình chọn ​​phải được mở để tiến hành bình chọn."
+    one_vote_per_user: "Mỗi người chỉ được bình chọn 1 lần cho cuộc bình chọn này."
+    max_vote_per_user:
+      other: Tối đa %{count} bình chọn được cho phép cho cuộc bình chọn này.
+    min_vote_per_user:
+      other: Cuộc bình chọn này cần tối thiểu %{count} lượt bình chọn.
+    ranked_choice:
+      vote_options_mismatch: "Đối với bình chọn vòng loại trực tiếp, số lượng lựa chọn trong một bình chọn phải khớp với số lượng tùy chọn. Số lượng lựa chọn là %{count} và số lượng lựa chọn đã tạo là %{provided}."
+      no_group_results_support: "Loại bình chọn không hợp lệ, ranked_choice không hỗ trợ kết quả được nhóm lại."
     topic_must_be_open_to_toggle_status: "Chủ đề phải được mở để chuyển trạng thái."
-    only_staff_or_op_can_toggle_status: "Chỉ có người quản lí hoặc người đăng bài mới có quyền chuyển trạng thái của một thăm dò."
+    only_staff_or_op_can_toggle_status: "Chỉ có BQT hoặc người đăng tút gốc mới có quyền chuyển trạng thái của một cuộc bình chọn."
+    errors:
+      poll_not_found: "Không tìm thấy cuộc bình chọn, vui lòng xác nhận lại các thông số."
+    insufficient_rights_to_create: "Bạn không được phép tạo bình chọn."
     email:
-      link_to_poll: "Click để xem thăm dò."
+      link_to_poll: "Nhấn để xem bình chọn."
+    user_field:
+      no_data: "Không có dữ liệu"

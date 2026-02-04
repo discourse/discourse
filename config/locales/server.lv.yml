@@ -492,6 +492,8 @@ lv:
       button: "Reģistrēties"
     resend_email:
       title: "Atkārtoti nosūtīt aktivācijas e-pastu"
+  dev_mode:
+    enter: "Ievadīt"
   wizard:
     step:
       setup:
@@ -539,18 +541,35 @@ lv:
         complete: "Ieraksts dzēsts."
       delete_and_agree:
         complete: "Ieraksts dzēsts."
-      disagree:
+      disagree_bundle:
         title: "Nē"
       ignore:
         title: "Ignorēt"
       approve:
-        title: "Apstiprināt"
+        title: "Jā"
+      approve_post:
+        title: "Jā"
+      approve_post_closed:
+        title: "Jā"
+      reject_post_bundle:
+        title: "Nē"
+      approve_user:
+        title: "Jā"
       reject_user:
+        title: "Nē"
         delete:
           title: "Dzēst lietotāju."
           complete: "Lietotājs dzēsts."
+      confirm_spam:
+        title: "Jā"
+      not_spam:
+        title: "Nē"
       reject:
         title: "Noraidīt"
+      approve_and_restore:
+        title: "Jā"
+      approve_and_unhide:
+        title: "Jā"
       delete_post:
         complete: "Ieraksts dzēsts"
       delete_user:

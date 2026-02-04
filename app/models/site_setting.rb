@@ -93,14 +93,25 @@ class SiteSetting < ActiveRecord::Base
         upload_ids = self.value.split("|").compact.uniq
         UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
       elsif self.data_type == SiteSettings::TypeSupervisor.types[:objects] && self.value.present?
-        upload_ids =
+        upload_values =
           SchemaSettingsObjectValidator.property_values_of_type(
             schema: SiteSetting.type_supervisor.type_hash(self.name.to_sym)[:schema],
             objects: JSON.parse(self.value),
             type: "upload",
           )
 
-        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self) if upload_ids.any?
+        # Convert URLs to upload IDs (values can be either integer IDs or URL strings)
+        upload_ids =
+          upload_values.filter_map do |value|
+            if value.is_a?(Integer)
+              value
+            elsif value.is_a?(String) && value.present?
+              ::Upload.get_from_url(value)&.id
+            end
+          end
+
+        # Always call ensure_exist! to clean up old references when uploads are removed
+        UploadReference.ensure_exist!(upload_ids: upload_ids, target: self)
       end
     end
   end
@@ -134,18 +145,20 @@ class SiteSetting < ActiveRecord::Base
     LocaleSiteSetting.values.to_json
   end
 
+  def self.content_localization_locales
+    locales = SiteSetting.content_localization_supported_locales.split("|")
+    default_locale = SiteSetting.default_locale
+    locales << default_locale if default_locale.present? && !locales.include?(default_locale)
+    locales
+  end
+
   client_settings << :available_content_localization_locales
 
   def self.available_content_localization_locales
     return [] if !SiteSetting.content_localization_enabled?
 
-    supported_locales = SiteSetting.content_localization_supported_locales.split("|")
-    default_locale = SiteSetting.default_locale
-    if default_locale.present? && !supported_locales.include?(default_locale)
-      supported_locales << default_locale
-    end
-
-    LocaleSiteSetting.values.select { |locale| supported_locales.include?(locale[:value]) }
+    locales = content_localization_locales
+    LocaleSiteSetting.values.select { |locale| locales.include?(locale[:value]) }
   end
 
   def self.topic_title_length

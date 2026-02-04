@@ -702,6 +702,8 @@ be:
         reviewable_post:
           title: "Паведамленне"
           noun: "пост"
+        reviewable_ai_post:
+          noun: "пост"
       user_label: "Карыстальнік"
       notes:
         delete: "выдаляць"
@@ -791,8 +793,6 @@ be:
             password: "Пароль"
           settings:
             title: "Налады"
-          mailboxes:
-            disabled: "Адключана"
         membership:
           access: Доступ
         categories:
@@ -1224,29 +1224,29 @@ be:
       hide_forever: "няма дзякуй"
     summary:
       buttons:
-        regenerate: "Перагенераваць"
-      disable: "Усе паведамленні"
+        regenerate: "Перагенерыраваць"
+      disable: "Паказаць усе допісы"
     deleted_filter:
-      enabled_description: "Гэтая тэма ўтрымлівае выдаленыя паведамленні, якія былі схаваныя."
-      disabled_description: "Выдаленыя паведамленні ў гэтай тэме паказана."
-      enable: "Выдаленыя паведамленні ў гэтай тэме паказана...."
-      disable: "Паказаць выдаленыя паведамленні"
+      enabled_description: "Гэта тэма ўтрымлівае выдаленыя допісы, якія былі схаваныя."
+      disabled_description: "Выдаленыя допісы ў гэтай тэме паказваюцца."
+      enable: "Схаваць выдаленыя допісы"
+      disable: "Паказаць выдаленыя допісы"
     private_message_info:
-      title: "Паказаць выдаленыя паведамленні..."
-      remove_user: "выдаліць карыстальніка"
+      title: "Паведамленне"
+      remove_user: "Выдаліць карыстальніка"
     email: "Электронная пошта"
     username: "Імя карыстальніка"
-    last_seen: "заўважаны апошні раз"
+    last_seen: "быў(-ла)"
     created: "Створана"
     created_lowercase: "створана"
-    trust_level: "ўзровень даверу"
+    trust_level: "Узровень даверу"
     search_hint: "імя карыстальніка, email або IP-адрас"
     create_account:
-      header_title: "жаданы!"
-      title: "рэгістрацыя"
-      failed: "Нешта пайшло не так; хутчэй за ўсё, гэтую электронную пошту ўжо зарэгістравана, паспрабуйце спасылкі Забыўся пароль"
+      header_title: "Вітаем!"
+      title: "Рэгістрацыя"
+      failed: "Нешта пайшло не так. Магчыма, гэта электронная пошта ўжо зарэгістравана, паспрабуйце націснуць \"Забыўся пароль\""
       progress_bar:
-        signup: "рэгістрацыя"
+        signup: "Рэгістрацыя"
         approve: "ўхваляць"
         login: "Увайсці"
     forgot_password:
@@ -1637,6 +1637,8 @@ be:
       creation_error: Пры стварэнні катэгорыі адбылася памылка.
       save_error: У выпадку захавання катэгорыі адбылася памылка.
       description: "апісанне"
+      icon: "Абразка"
+      emoji: "Emoji"
       background_color: "колер"
       color_validations:
         cant_be_empty: "не можа быць пустым"
@@ -1646,7 +1648,6 @@ be:
         options:
           icon: "Абразка"
           emoji: "Emoji"
-      name_placeholder: "Не больш за аднаго-двух слоў"
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэтую катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
@@ -1657,11 +1658,14 @@ be:
         see: "бачыць"
         reply: "Адказаць"
         create: "Стварыць"
-      images: "Выява"
       email_in: "Custom incoming email address:"
       allow_badges_label: "Дазволіць ўзнагароджваць значкамі ў гэтай катэгорыі"
       review_group_name: "назва групы"
       this_year: "гэтага года"
+      none_subcategory_text: "Няма"
+      visibility:
+        public: "Публічная"
+        group_restricted: "Прыватная"
       notifications:
         watching:
           title: "сачыць"
@@ -1990,6 +1994,9 @@ be:
           all: "Усе"
           disabled: "Адключана"
           impact_type_other: "Іншае"
+          impact_role_admins: "адміністратары"
+          impact_role_moderators: "Мадэратары"
+          impact_role_staff: "персанал"
       config:
         developer:
           title: "для распрацоўшчыкаў"
@@ -2730,6 +2737,7 @@ be:
         uploaded_image_list:
           upload:
             label: "Загрузіць"
+        download_file: "спампаваць"
         selectable_avatars:
           title: "Спіс аватараў карыстальнікі могуць выбраць"
         table_column_heading:

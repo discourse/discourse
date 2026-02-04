@@ -99,16 +99,10 @@ fi:
             title: "Poista kommentti"
             description: "Poista kommentti, jotta käyttäjät eivät näe sitä."
           delete_and_agree:
-            title: "Ohita liputus ja poista kommentti"
             description: "Ohita lippu poistamalla se jonosta ja poista kommentti."
           disagree_and_restore:
             title: "Hylkää ja palauta kommentti"
             description: "Palauta kommentti, jotta kaikki käyttäjät näkevät sen."
-          disagree:
-            title: "Hylkää"
-          ignore:
-            title: "Älä tee mitään"
-            description: "Ohita lippu poistamalla se jonosta tekemättä toimia."
         transcript:
           view: "Näytä aiempien kommenttien transkriptio"
       reviewable_score_types:

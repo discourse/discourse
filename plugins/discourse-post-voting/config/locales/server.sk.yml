@@ -23,11 +23,6 @@ sk:
           agree_and_silence:
             title: "Tichý užívateľ"
             description: "Súhlas s príznakom a umlčte používateľa."
-          disagree:
-            title: "Nesúhlasiť"
-          ignore:
-            title: "Nerobte nič"
-            description: "Ignorujte príznak jeho odstránením z frontu bez vykonania akejkoľvek akcie."
       reviewable_score_types:
         needs_review:
           title: "Potreba preskúmať"

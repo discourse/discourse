@@ -900,6 +900,8 @@ hr:
         reviewable_post:
           title: "Objava"
           noun: "Objava"
+        reviewable_ai_post:
+          noun: "Objava"
       flagged_as: "Označeno kao"
       user_label: "Korisnik"
       moderator_actions: "Radnje moderatora"
@@ -907,6 +909,7 @@ hr:
       timeline:
         target_created: "Objava je kreirana"
         target_created_by: "Objavu kreirao/la %{username} · %{relativeDate}"
+        target_deleted: "Post izbrisan"
         flagged: "Označeno"
         flagged_as_by: " %{username} označio/la kao %{flagReason} · %{relativeDate}"
         claimed: "Preuzeto"
@@ -1105,9 +1108,7 @@ hr:
           notification: Obavijest
         email:
           title: "Email"
-          status: "Sinkronizirano %{old_emails} / %{total_emails} e-mail poruka putem IMAP-a."
           enable_smtp: "Omogući SMTP"
-          enable_imap: "Omogući IMAP"
           test_settings: "Postavke testiranja"
           save_settings: "Spremi postavke"
           last_updated: "Posljednje ažuriranje:"
@@ -1116,14 +1117,7 @@ hr:
           smtp_settings_valid: "SMTP postavke važeće."
           smtp_title: "SMTP"
           smtp_instructions: "Kada omogućite SMTP za grupu, sve odlazne e-pošte poslane iz ulazne pošte grupe poslat će se putem SMTP postavki navedenih ovdje umjesto poslužitelja e-pošte konfiguriranog za druge e-mail poruke  koje šalje vaš forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Dodatne postavke"
-          imap_instructions: 'Kada omogućite IMAP za grupu, e-adrese se sinkroniziraju između pristigle pošte grupe i isporučenog IMAP poslužitelja i poštanskog sandučića. SMTP mora biti omogućen s važećim i provjerenim vjerodajnicama da bi se IMAP mogao omogućiti. Korisničko ime i lozinka e-mail adrese korišteni za SMTP koristit će se za IMAP. Za više informacija pogledajte <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">najava značajke na Discourse Meta</a>.'
-          imap_alpha_warning: "Upozorenje: Ovo značajka je u alfa fazi. Službeno je podržan samo Gmail. Koristite na vlastiti rizik!"
-          imap_settings_valid: "IMAP postavke važeće."
-          smtp_disable_confirm: "Ako onemogućite SMTP, sve SMTP i IMAP postavke bit će resetirane i povezana funkcionalnost će biti onemogućena. Jeste li sigurni da želite nastaviti?"
-          imap_disable_confirm: "Ako onemogućite IMAP sve će IMAP postavke biti resetirane i povezane funkcije će biti onemogućene. Jeste li sigurni da želite nastaviti?"
-          imap_mailbox_not_selected: "Morate odabrati poštanski sandučić za ovu IMAP konfiguraciju jer se neće sinkronizirati nijedan poštanski sandučić!"
+          additional_settings: "Dodatne postavke"
           prefill:
             title: "Unaprijed ispunite postavke za:"
             gmail: "Gmail"
@@ -1137,9 +1131,6 @@ hr:
             smtp_server: "SMTP poslužitelj"
             smtp_port: "SMTP priključak"
             smtp_ssl_mode: "SSL način rada"
-            imap_server: "IMAP poslužitelj"
-            imap_port: "IMAP priključak"
-            imap_ssl: "Koristi SSL za IMAP"
             username: "Korisničko ime"
             password: "Zaporka"
           settings:
@@ -1148,10 +1139,6 @@ hr:
             allow_unknown_sender_topic_replies_hint: "Omogućuje nepoznatim pošiljateljima da odgovore na teme grupe. Ako to nije omogućeno, odgovori s e-adresa koje još nisu pozvane u temu stvorit će novu temu."
             from_alias: "Od Aliasa"
             from_alias_hint: "Alias koji se koristi kao adresa pošiljatelja pri slanju grupnih SMTP e-poruka. Imajte na umu da to možda ne podržavaju svi davatelji e-pošte, molimo pogledajte dokumentaciju svog e-mail pružatelja usluga."
-          mailboxes:
-            synchronized: "Sinkronizirani poštanski sandučić"
-            none_found: "Na ovom računu e-pošte nisu pronađeni poštanski sandučići."
-            disabled: "Onemogućeno"
         membership:
           title: Članstvo
           access: Pristup
@@ -2386,7 +2373,6 @@ hr:
     form_kit:
       reset: Resetirati
       optional: neobvezno
-      errors_summary_title: "Ovaj obrazac sadrži pogreške:"
       dirty_form: "Niste poslali promjene! Jeste li sigurni da želite otići?"
       errors:
         starts_with: "Mora početi sa %{prefix}"
@@ -3166,8 +3152,7 @@ hr:
         post_approved: "post odobren"
         membership_request_consolidated: "novi zahtjevi za članstvo"
         reaction: "nova reakcija"
-        votes_released: "Glasanje je objavljeno"
-        new_features: "Objavljene su nove značajke za platformu Discourse!"
+        votes_released: "glasanje je objavljeno"
         admin_problems: "novi savjeti na vašoj nadzornoj ploči"
     upload_selector:
       change: "Promijeniti"
@@ -3638,8 +3623,6 @@ hr:
           12_hours: "12 sati"
           24_hours: "24 sata"
           custom: "Prilagođeno trajanje"
-      slow_mode_notice:
-        duration: "Molimo pričekajte %{duration} između postova u ovoj temi"
       topic_status_update:
         title: "Timer teme"
         save: "Postavi tajmer"
@@ -3981,7 +3964,7 @@ hr:
       quote_edit: "Izmijeni"
       quote_edit_shortcut: "Uredite (ili pritisnite e)"
       quote_copy: "Kopirajte citat"
-      quote_copied_to_clibboard: "Citat kopiran u međuspremnik"
+      quote_copied_to_clipboard: "Citat kopiran u međuspremnik"
       quote_share: "Podijelite"
       edit_reason: "Razlog:"
       post_number: "objava %{number}"
@@ -4295,6 +4278,7 @@ hr:
       back: "Natrag u kategoriju"
       general: "Općenito"
       settings: "Postavke"
+      advanced: "Napredno"
       topic_template: "Predložak"
       tags: "Oznake"
       localizations: "Lokalizacije"
@@ -4326,7 +4310,9 @@ hr:
       save_error: Dogodila se greška pri spremanju kategorije.
       description: "Opis"
       logo_description: "Preporučeni omjer slike 1:1 s minimalnom veličinom od 200 px. Ako je ostavljeno prazno, slika neće biti prikazana."
-      style: "Stilovi"
+      style: "Stil"
+      icon: "Ikona"
+      emoji: "Emoji"
       background_color: "Boja"
       foreground_color: "Boja teksta"
       color_validations:
@@ -4335,13 +4321,13 @@ hr:
         type: "Stil"
         icon: "Ikona"
         emoji: "Emoji"
+        square: "Kvadrat"
         options:
           square: "Kvadrat"
           icon: "Ikona"
           emoji: "Emoji"
       color_used: "Boja u upotrebi"
       predefined_colors: "Unaprijed definirane opcije boja"
-      name_placeholder: "Jedna ili dvije riječi"
       color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategrije."
@@ -4363,7 +4349,7 @@ hr:
       uncategorized_security_warning: "Ova kategorija je posebna. Namijenjen je kao prostor za čuvanje tema koje nemaju kategoriju; ne može imati sigurnosne postavke."
       uncategorized_general_warning: 'Ova kategorija je posebna. Koristi se kao zadana kategorija za nove teme za koje nije odabrana kategorija. Ako želite spriječiti ovo ponašanje i prisiliti odabir kategorije, <a href="%{settingLink}">onemogućite postavku ovdje</a>. Ako želite promijeniti naziv ili opis, idite na <a href="%{customizeLink}">Prilagodi / Tekstualni sadržaj</a>.'
       pending_permission_change_alert: "Niste dodali %{group} ovoj kategoriji; kliknite ovaj gumb da biste ih dodali."
-      images: "Slike"
+      images: "Izgled"
       email_in: "Prilagođena adresa dolaznog e-maila."
       email_in_tooltip: "Možete odvojiti na više adresa e-pošte s | znakom."
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez računa"
@@ -4385,6 +4371,11 @@ hr:
       position: "Položaj na stranici kategorija:"
       position_disabled: "Kategorije će biti prikazane prema redoslijedu aktivnosti. Da biste kontrolirali redoslijed kategorija na popisima, omogućite postavku <a href='%{url}'>'fiksnih pozicija kategorija'</a>."
       minimum_required_tags: "Minimalan broj oznaka potrebnih u temi:"
+      none_subcategory_text: "Ništa"
+      visibility:
+        title: "Vidljivost"
+        public: "Javnost"
+        group_restricted: "Privatno"
       num_auto_bump_daily: "Broj otvorenih tema koje se automatski mijenjaju dnevno:"
       auto_bump_cooldown_days: "Minimalni broj dana prije ponovnog isticanja iste teme:"
       navigate_to_first_post_after_read: "Idite na prvi post nakon čitanja tema"
@@ -5245,6 +5236,7 @@ hr:
       back_to_forum: "Povratak na forum"
       filter_links: "Filtriraj poveznice..."
       no_results:
+        title: "Nema rezultata"
         description_admin_search: "Nismo mogli pronaći ništa što odgovara '%{filter}'."
       collapse_all_sections: "Sažmite sve odjeljke"
       expand_all_sections: "Proširite sve odjeljke"
@@ -5493,6 +5485,9 @@ hr:
           disabled: "Onemogućeno"
           impact_type_other: "Ostalo"
           status_experimental: "Eksperimentalno"
+          impact_role_admins: "Admini"
+          impact_role_moderators: "Moderatori"
+          impact_role_staff: "Osoblje"
       config:
         about:
           title: "O vašoj web stranici"
@@ -5802,7 +5797,6 @@ hr:
         new_features:
           title: "Što je novo?"
           subtitle: "Neprestano objavljujemo nove značajke i poboljšanja. Ova stranica pokriva najvažnije, ali možete kliknuti na 'Saznajte više' da biste vidjeli opsežne bilješke o izdanju."
-          previous_announcements: "Prethodne najave novih značajki možete vidjeti na <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Saznajte više..."
           experimental: "Eksperimentalno"
           only_experiments: "Prikaži samo eksperimentalne značajke"
@@ -5886,7 +5880,9 @@ hr:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Dnevnici pretraživanja</a>'
             disabled: 'Izvješće o pretraživanju u trendu je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upita za pretraživanje dnevnika</a> za prikupljanje podataka.'
-          average_chart_label: Prosječno
+          sort_button: "Sortiraj po %{column}"
+          sort_ascending: "uzlazno"
+          sort_descending: "silazno"
           filters:
             file_extension:
               label: Proširenje datoteke
@@ -6179,25 +6175,34 @@ hr:
       community:
         title: "Zajednica"
         sidebar_link:
+          about_your_site: "O vašoj web stranici"
           badges: "Značke"
+          login_and_authentication: "Prijava i autentifikacija"
           notifications: "Obavijesti"
           permalinks: "Poveznice"
+          group_permissions: "Dozvole grupe"
           users: "Korisnika"
           groups: "Grupe"
+          watched_words: "Praćene riječi"
           legal: "Legalno"
           moderation_flags:
             title: "Moderiranje"
       appearance:
         title: "Izgled"
         sidebar_link:
+          color_schemes: "Palete boja"
           emoji: "Emoji"
           navigation: "Navigacija"
+          site_texts: "Tekstovi web-mjesta"
       email_settings:
         title: "E-mail postavke"
         sidebar_link:
           appearance: "Izgled"
       security:
         title: "Sigurnost"
+        sidebar_link:
+          staff_action_logs:
+            title: "Dnevnici i pregled"
       section_landing_pages:
         account:
           title: "Račun"
@@ -7372,6 +7377,7 @@ hr:
           empty: "Još nema slika. Prenesite jednu."
           upload:
             label: "Učitaj"
+        download_file: "Preuzmi"
         selectable_avatars:
           title: "Popis avatara koji korisnici mogu birati"
         table_column_heading:

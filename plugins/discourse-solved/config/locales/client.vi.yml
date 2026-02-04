@@ -5,32 +5,74 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_solved: "Discourse Solved"
   js:
     notifications:
       alt:
         solved:
           accepted_notification: "đã chấp nhận"
-    solutions: "Những giải pháp"
+    solutions: "Giải pháp"
     solved:
-      title: "Đã xử lý"
+      title: "Giải pháp"
+      allow_accepted_answers: "Cho phép người tạo chủ đề và BQT đánh dấu câu trả lời là giải pháp"
+      solved_topics_auto_close_hours: "Tự động đóng chủ đề (n) giờ sau trả lời cuối cùng khi chủ đề đã được đánh dấu là đã giải quyết."
+      accept_answer: "Chọn nếu câu trả lời này giải quyết được vấn đề."
+      accepted_description: "Đây là giải pháp được chấp nhận cho chủ đề này"
+      has_no_accepted_answer: "Chủ đề này chưa được giải quyết"
+      unaccept_answer: "Bỏ chọn nếu câu trả lời này không còn giải quyết được vấn đề nữa"
       accepted_answer: "Giải pháp"
       solution: "Giải pháp"
       solution_summary:
         other: "giải pháp"
-      accepted_answer_solver_info: "%{user} đã giúp trong %{post}"
-      accepted_answer_post_number: "bài viết %{post_number}"
+      accepted_answer_solver_info: "Giải quyết bởi %{user} ở %{post}"
+      accepted_answer_post_number: "tút %{post_number}"
+      accepted_notification: "<p><span>%{username}</span> %{description}</p>"
       topic_status_filter:
         all: "Tất cả"
-        solved: "đã xử lý"
-      marked_solved_by: "Đã đánh dấu là giải pháp bởi %{user}"
+        solved: "Có giải pháp"
+        unsolved: "Chưa có giải pháp"
+      no_solved_topics_title: "Bạn chưa có giải pháp cho chủ đề nào"
+      no_solved_topics_title_others: "%{username} chưa giải quyết chủ đề nào"
+      no_solved_topics_body: "Khi bạn đưa ra câu trả lời hữu ích cho một chủ đề, câu trả lời của bạn có thể được người tạo chủ đề hoặc BQT chọn làm giải pháp."
+      marked_solved_by: "Xác nhận bởi %{user}"
+      no_answer:
+        title: Câu hỏi của bạn đã được giải đáp chưa?
+        description: "Hãy đánh dấu câu trả lời và giúp đỡ người khác bằng cách sử dụng nút \"Giải pháp\" bên dưới câu trả lời đúng."
+      notification:
+        title: "Tút của bạn được đánh dấu là giải pháp"
     topic_statuses:
       solved:
         help: "Chủ đề này có giải pháp"
+    search:
+      advanced:
+        statuses:
+          solved: "Đã có giải pháp"
+          unsolved: "Chưa có giải pháp"
+    admin:
+      web_hooks:
+        solved_event:
+          group_name: "Solved Event"
+          accepted_solution: "Khi thành viên đánh dấu một tút là câu trả lời được chấp nhận"
+          unaccepted_solution: "Khi thành viên đánh dấu một tút là câu trả lời không được chấp nhận"
+      api:
+        scopes:
+          descriptions:
+            solved:
+              answer: Chấp nhận/Không chấp nhận giải pháp.
     discourse_automation:
       triggerables:
         first_accepted_solution:
           max_trust_level:
+            tl1: < TL1
+            tl2: < TL2
+            tl3: < TL3
+            tl4: < TL4
             any: Bất kỳ
           fields:
             maximum_trust_level:
               label: Độ tin cậy
+              description: Người dùng có độ tin cậy dưới mức này sẽ kích hoạt quy trình tự động hóa này.

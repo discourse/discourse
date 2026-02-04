@@ -8,10 +8,12 @@
   span {
     background-color: var(--danger);
     color: var(--secondary);
-    padding: 0.15em 0.3em 0.2em;
     display: inline-block;
-    font-size: var(--font-down-2);
-    border-radius: var(--d-button-border-radius);
+    font-size: var(--font-down-2-rem);
+    border-radius: 1em;
+    height: 1rem;
+    width: 1rem;
+    line-height: 1rem;
   }
 }
 
@@ -370,6 +372,10 @@ nav.post-controls {
             var(--d-post-control-border-radius) 0;
         }
 
+        &:nth-child(2) {
+          padding-left: var(--space-1);
+        }
+
         &:first-child:last-child {
           border-radius: var(--d-post-control-border-radius);
         }
@@ -389,11 +395,6 @@ nav.post-controls {
 
           &.my-likes {
             flex-direction: row-reverse;
-          }
-
-          + .toggle-like {
-            // Like button when like count is present
-            padding-left: 0.45em;
           }
 
           // Like count button
@@ -772,28 +773,6 @@ aside.quote {
     width: 100%;
   }
 
-  .fast-edit-container {
-    display: flex;
-    padding: 0.5em;
-    padding-top: 0;
-    flex-direction: column;
-    align-items: flex-start;
-
-    #fast-edit-input {
-      margin: 0;
-      width: 300px;
-      height: 90px;
-    }
-
-    .save-fast-edit {
-      margin-top: 0.5em;
-    }
-  }
-
-  .insert-quote + .quote-sharing {
-    border-left: 1px solid rgb(255, 255, 255, 0.3);
-  }
-
   .btn-flat {
     &:hover {
       .d-icon {
@@ -805,59 +784,10 @@ aside.quote {
       white-space: nowrap;
     }
   }
+}
 
-  .quote-sharing {
-    vertical-align: middle;
-    display: inline-flex;
-    align-items: center;
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .quote-share-label {
-      opacity: 1;
-      transition: opacity 0.3s ease-in-out;
-    }
-
-    &:hover {
-      .quote-share-label {
-        background: transparent;
-        opacity: 0;
-        max-width: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-
-      .quote-share-label + .quote-share-buttons {
-        max-width: 10em;
-        opacity: 1;
-        transition: opacity 0.3s ease-in-out;
-      }
-
-      // this pseudo element creates a transition buffer zone
-      // without it, the width change on hover can cause transition jitter
-      // the width is roughly wide enough to cover long translations of "share"
-      &::after {
-        content: "";
-        position: absolute;
-        display: block;
-        background: transparent;
-        height: 100%;
-        padding: 0.5em 4em;
-        z-index: -1; // below the buttons
-      }
-    }
-
-    .quote-share-label + .quote-share-buttons {
-      opacity: 0;
-      overflow: hidden;
-      max-width: 0;
-      display: inline-flex;
-      transition: opacity 0.3s ease-in-out;
-    }
-  }
+#fast-edit-input {
+  resize: block;
 }
 
 .post-avatar,

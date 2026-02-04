@@ -12,7 +12,7 @@
     "deprecation-silencer": "workspace:1.0.0",
     "ember-cli-babel": "^8.2.0",
     "ember-cli-htmlbars": "^7.0.0",
-    "ember-template-imports": "^4.3.0",
+    "ember-template-imports": "^4.4.0",
     "ember-this-fallback": "^0.4.0"
   },
   "devDependencies": {
@@ -23,7 +23,7 @@
     "node": ">= 18",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm",
-    "pnpm": "^9"
+    "pnpm": "^10"
   },
   "ember": {
     "edition": "default"

@@ -5,14 +5,47 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_gamification: "Discourse Gamification"
   js:
+    gamification_score: "Danh vọng"
     gamification:
+      score: "Danh vọng"
       you: "Bạn"
       leaderboard:
         title: "Bảng xếp hạng"
+        info: "Cơ chế hoạt động?"
         link_to_settings: "Cài đặt"
         refresh: "Làm mới"
+        modal:
+          title: "Bảng xếp hạng hoạt động như thế nào?"
+          text: "Điểm danh vọng được trao dựa trên việc tương tác với cộng đồng, chẳng hạn như ghé thăm, thích và đăng tút. Điểm của bạn được cập nhật sau mỗi vài phút. Vì vậy, hãy tích cực tham gia, hỗ trợ người khác và vươn lên trong bảng xếp hạng!"
         name: "Tên"
+        name_placeholder: "Tên..."
+        new: "Bảng xếp hạng mới"
+        create_success: "Bảng xếp hạng đã được tạo"
+        delete_success: "Bảng xếp hạng đã bị xóa"
+        save_success: "Bảng xếp hạng đã được lưu"
+        cta: "Tạo bảng xếp hạng đầu tiên của bạn"
+        none: "Chưa có bảng xếp hạng nào được tạo."
+        confirm_destroy: "Bạn có chắc muốn xóa bảng xếp hạng này?"
+        date:
+          range: "Khoảng thời gian từ / đến"
+          from: "Từ ngày"
+          to: "Đến ngày"
+          helper: "Nếu để trống phần ngày tháng, bảng xếp hạng sẽ hiển thị điểm số đạt được mà không có bất kỳ giới hạn thời gian nào."
+        visible_to_groups: "Hiển thị cho các nhóm"
+        visible_to_groups_help: "Chỉ những người dùng thuộc các nhóm đó mới có thể xem bảng xếp hạng. Để trống nếu muốn cho phép tất cả mọi người."
+        included_groups: "Các nhóm được bao gồm"
+        included_groups_help: "Chỉ những người dùng thuộc các nhóm đó mới được đưa vào bảng xếp hạng. Để trống nếu muốn liệt kê tất cả mọi người."
+        excluded_groups: "Các nhóm bị loại trừ"
+        excluded_groups_help: "Loại bỏ người dùng trong các nhóm đó khỏi bảng xếp hạng. Để trống nếu muốn hiển thị tất cả mọi người."
+        default_period: "Khoảng thời gian mặc định"
+        default_period_help: "Đặt khoảng thời gian mặc định để hiển thị cho bảng xếp hạng này."
+        period_filter_disabled: "Vô hiệu hóa bộ lọc khoảng thời gian"
         period:
           all_time: "Từ trước tới nay"
           yearly: "Hàng năm"
@@ -20,6 +53,7 @@ vi:
           monthly: "Hàng tháng"
           weekly: "Hàng tuần"
           daily: "hằng ngày"
+        rank: "Xếp hạng"
       create: "Tạo"
       cancel: "Hủy"
       close: "Đóng lại"
@@ -28,11 +62,21 @@ vi:
       back: "Quay lại"
       save: "Lưu lại"
       apply: "Áp dụng"
+      recalculate: "Tính toán lại điểm số"
+      recalculating: "Đang tính toán lại điểm số..."
+      completed: "Xong! Điểm số đã được tính toán lại thành công."
+      update_scores_help: "Cập nhật tất cả điểm số cho tất cả bảng xếp hạng từ"
       update_range:
         last_10_days: "10 ngày qua"
         last_30_days: "30 ngày qua"
         last_90_days: "90 ngày qua"
+        last_year: "Năm ngoái"
         all_time: "Từ trước tới nay"
+        custom_date_range: "Phạm vi tùy chỉnh"
       custom_range_from: "Từ"
+      daily_update_scores_availability:
+        other: "%{count} còn lại các phép tính lại hàng ngày"
       admin:
+        title: "Trò chơi hóa"
         name: "Tên"
+        period: "Giai đoạn"

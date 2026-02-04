@@ -871,11 +871,8 @@ sv:
     no_log_search_queries: "Sökfrågeloggar är för närvarande inaktiverade (en administratör kan aktivera dem i webbplatsinställningarna)."
   email_settings:
     pop3_authentication_error: "Det uppstod ett problem med de angivna POP3-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
-    imap_authentication_error: "Det uppstod ett problem med de angivna IMAP-autentiseringsuppgifterna. Kontrollera användarnamn och lösenord och försök igen."
-    imap_no_response_error: "Det uppstod ett fel vid kommunikation med IMAP-servern. %{message}"
     smtp_server_busy_error: "SMTP-servern är för närvarande upptagen. Försök igen senare."
     smtp_unhandled_error: "Det uppstod ett ohanterat fel vid kommunikation med SMTP-servern. %{message}"
-    imap_unhandled_error: "Det uppstod ett ohanterat fel vid kommunikation med IMAP-servern. %{message}"
     connection_error: "Det uppstod ett problem vid anslutning till servern. Kontrollera serverns namn och port och försök igen."
     timeout_error: "Tidsgränsen för anslutning till servern uppnåddes. Kontrollera serverns namn och port och försök igen."
     unhandled_error: "Ohanterat fel vid testning av e-postinställningar. %{message}"
@@ -1470,7 +1467,6 @@ sv:
     manifest_icon: "Bild som används som logotyp/startbild på Android. Storleken ändras automatiskt till 512 × 512. Om detta lämnas tomt används large_icon."
     manifest_screenshots: "Skärmdumpar som visar dina instansfunktioner och funktionaliteten på dess installationsfrågesida. Alla bilder ska vara lokala uppladdningar, med samma dimensioner."
     favicon: "En favoritikon för din webbplats, se <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>http://en.wikipedia.org/wiki/Favicon</a>. För att fungera korrekt över en CDN måste det vara en png. Storleken ändras automatiskt till 32 x 32. Om detta lämnas tomt används large_icon."
-    apple_touch_icon: "Ikon som används för Apple-pekskärmsenheter. En transparent bakgrund rekommenderas inte. Storleken ändras automatiskt till 180 x 180. Om detta lämnas tomt används large_icon."
     opengraph_image: "Standard Open Graph bild, används när sidan inte har någon annan lämplig bild. Om detta lämnas tomt används large_icon."
     x_summary_large_image: "Twitter-kortets 'summary large image' (bör vara minst 280 i bredd och minst 150 i höjd, kan inte vara .svg). Om den lämnas tom skapas istället vanlig metadata för kort med hjälp av opengraph_image, så länge den inte också är en .svg"
     notification_email: "Avsändaradressen som används vid utskick av system e-post. Domänen som specificeras här måste ha en SPF-, DKIM- och reverse PTR-post korrekt inställd för att e-post ska levereras."
@@ -1661,7 +1657,6 @@ sv:
     invite_link_max_redemptions_limit_users: "Maximalt antal inlösningar som tillåts för inbjudningslänkar som genererats av vanliga användare kan inte vara större än detta värde."
     alert_admins_if_errors_per_minute: "Antal felindikeringar per minut för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
     alert_admins_if_errors_per_hour: "Antal felindikeringar per timme för att utlösa ett administratörslarm. Ange 0 för att inaktivera den här funktionen. OBS: kräver omstart."
-    categories_topics: "Antal ämnen som ska visas i /kategorisida. Om detta ställs in till 0 kommer systemet automatiskt att försöka hitta ett värde så att de två kolumnerna hålls symmetriskt (kategorier och ämnen.)"
     suggested_topics: "Antal föreslagna ämnen som visas nederst i ett ämne."
     limit_suggested_to_category: "Visa bara ämnen från den aktuella kategorin bland föreslagna ämnen."
     suggested_topics_max_days_old: "Föreslagna ämnen bör inte vara mer än n dagar gamla."
@@ -1847,14 +1842,7 @@ sv:
     log_mail_processing_failures: "Logga alla behandlingsfel för e-post till <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Tillåt användare att lägga upp nya ämnen via e-post. När du har aktiverat den här inställningen kan du konfigurera inkommande e-postadresser för grupper och kategorier."
     email_in_authserv_id: "Identifieraren för tjänsten som utför autentiseringskontroller av inkommande e-postmeddelanden. Se <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> för instruktioner om hur du konfigurerar detta."
-    enable_imap: "Aktivera IMAP för synkroniserade gruppmeddelanden."
-    enable_imap_write: "Aktivera två-stegs IMAP-synkronisering. Om avstängd kommer alla skriv-operationer för IMAP-konton inte att genomföras."
-    enable_imap_idle: "Använd IMAP IDLE-funktionen för att invänta ny e-post."
     enable_smtp: "Aktivera SMTP för att skicka aviseringar för gruppmeddelanden."
-    imap_polling_period_mins: "Tidsintervall i minuter mellan varje kontroll av IMAP-konton för e-post."
-    imap_polling_old_emails: "Maximalt antal äldre e-post (behandlad) som uppdateras varje gång IMAP-boxen anropas (0 för alla)."
-    imap_polling_new_emails: "Maximalt antal ny e-post (obehandlad) som uppdateras varje gång IMAP-boxen anropas."
-    imap_batch_import_email: "Lägsta antalet ny e-post som kommer att trigga importläge (stänger av inläggsvarningar)."
     email_prefix: "[label] används i ämnesraden för e-post. Om ej ifylld sätts standardrubriken 'title'."
     email_site_title: "Webbplatsens titel som används som avsändare för e-post från webbplatsen. Om ej ifylld sätts standardtiteln 'title'. Använd det alternativet om din titel innehåller tecken som inte tillåts i e-posts avsändarsträngar."
     find_related_post_with_key: "Använd bara 'svarsnyckeln' för att hitta svaret på inlägget. VARNING: om du inaktiverar detta tillåts användarimitationer baserat på e-postadress."
@@ -1894,7 +1882,6 @@ sv:
     hide_user_activity_tab: "Dölj aktivitetsfliken på användarprofiler utom för administratörer och användaren själv."
     allow_featured_topic_on_user_profiles: "Tillåt att användarna visar en länk till ett ämne från sitt användarkort och profil."
     show_inactive_accounts: "Tillåt att inloggade användare bläddrar bland profiler av inaktiva konton."
-    hide_suspension_reasons: "Visa inte avstängningsskäl offentligt i användarprofiler."
     log_personal_messages_views: "Logga personliga meddelandevisningar av administratörer för andra användare/grupper."
     ignored_users_count_message_threshold: "Meddela moderatorer om en viss användare ignoreras av många andra användare."
     ignored_users_message_gap_days: "Hur lång tid att vänta innan moderatorer meddelas igen om en användare som ignorerats av många andra."
@@ -1907,7 +1894,6 @@ sv:
     dont_feed_the_trolls_threshold: "Antal flaggor från andra användare innan du varnas."
     enable_mobile_theme: "Mobila enheter använder ett mobilvänligt tema, med möjligheten att byta till standardsidan. Inaktivera detta om du vill använda en anpassad stilmall som är helt responsiv."
     dominating_topic_minimum_percent: "Procentandel av antalet inlägg som en användare måste skriva i ett ämne innan de påminns om att de är för dominerande."
-    pm_warn_user_last_seen_months_ago: "När du skapar ett nytt PM varnas användare om det är mer än n månader sedan målmottagaren sågs till."
     suppress_uncategorized_badge: "Visa inte utmärkelsen för okategoriserade ämnen i ämneslistan."
     header_dropdown_category_count: "Hur många kategorier kan visas i rubrikens rullgardinsmeny."
     permalink_normalizations: "Tillämpa följande regex innan matchning av permalänkar, till exempel: /(topic.*)\\?.*/\\1 kommer att rensa bort söksträngar från ämnesvägen. Formatet är regex+sträng, använd \\1 osv. för att komma åt grupperingar."
@@ -4073,6 +4059,8 @@ sv:
     deprecation_error_label: Se till att Javascript-utfasningar ger upphov till ett fel
     enter: "Starta felsäkert läge"
     must_select: "Du måste välja minst ett alternativ för att aktivera felsäkert läge."
+  dev_mode:
+    enter: "Retur"
   wizard:
     title: "Discourse-inställningar"
     step:
@@ -4206,12 +4194,8 @@ sv:
         title: "Radera"
         complete: "Inlägg raderat."
       delete_and_ignore:
-        title: "Ignorera flaggning och radera inlägget"
-        description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget. Om det är det första inlägget, radera ämnet också. "
         complete: "Inlägg raderat."
       delete_and_ignore_replies:
-        title: "Ignorera flaggning, radera inlägg och svar"
-        description: "Ignorera flaggningen genom att ta bort den från kön och radera inlägget och alla dess svar. Om det är det första inlägget, radera ämnet också"
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       delete_and_agree:
         title: "Radera inlägg"
@@ -4222,10 +4206,11 @@ sv:
         description: "Godkänn flaggning och radera detta inlägg och alla dess svar. Om det är det första inlägget, radera ämnet också."
         confirm: "Är du säker på att du vill radera alla svar på inlägget också?"
       disagree_and_restore:
-        title: "Nej, återställ inlägget"
-        description: "Återställ inlägget så att alla användare kan se det."
-      disagree:
+        title: "Återställ inlägg"
+      disagree_bundle:
         title: "Nej"
+      disagree:
+        title: "Behåll inlägg"
         complete: "Flaggning ignoreras."
       discard_post:
         title: "Kasta inlägg"
@@ -4237,30 +4222,35 @@ sv:
         description: "Ignorera flaggningen genom att ta bort den från kön utan att vidta några åtgärder. Dolda inlägg kommer att förbli dolda och hanteras av de automatiska verktygen."
         complete: "Flaggning ignoreras."
       approve:
-        title: "Godkänn"
+        title: "Ja"
         complete: "Inlägget godkändes."
       approve_post:
-        title: "Godkänn inlägg"
+        title: "Ja"
         complete: "Inlägget godkändes."
       approve_post_closed:
-        title: "Godkänn inlägg"
+        title: "Ja"
         confirm: "Detta ämne är stängt. Vill du skapa inlägget ändå?"
         complete: "Inlägget godkändes."
+      reject_post_bundle:
+        title: "Nej"
       reject_post:
         title: "Avvisa inlägg"
         complete: "Inlägget avvisades."
       approve_user:
-        title: "Godkänn användare"
+        title: "Ja"
         complete: "Användaren godkändes."
       reject_user:
-        title: "Radera användare…"
+        title: "Nej"
         delete:
           title: "Ta bort användare"
-          description: "Användaren kommer att raderas från forumet."
           complete: "Användare raderad."
         block:
           title: "Radera och blockera användare"
           description: "Användaren kommer att raderas, och vi blockerar också hens IP och e-postadress."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nej"
       reject:
         title: "Avvisa"
         bundle_title: "Avvisa…"
@@ -4273,7 +4263,9 @@ sv:
       reject_and_keep_deleted:
         title: "Behåll inlägg raderat"
       approve_and_restore:
-        title: "Godkänn och återställ inlägg"
+        title: "Ja"
+      approve_and_unhide:
+        title: "Ja"
       no_action_post:
         title: "Ingen åtgärd"
       delete_post:

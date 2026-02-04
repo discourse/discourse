@@ -1040,12 +1040,9 @@ pt_BR:
     no_log_search_queries: "Os registros de consultas de pesquisa foram desativados (um(a) administrador(a) pode ativá-las nas configurações do site)."
   email_settings:
     pop3_authentication_error: "Ocorreu um problema com as credenciais POP3 informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
-    imap_authentication_error: "Ocorreu um problema com as credenciais IMAP informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente."
-    imap_no_response_error: "Ocorreu um erro ao se comunicar com o servidor IMAP. %{message}"
     smtp_authentication_error: "Ocorreu um problema com as credenciais SMTP informadas, verifique o nome do(a) usuário(a) e a senha e tente novamente. %{message}"
     smtp_server_busy_error: "O servidor SMTP está ocupado neste momento, tente novamente mais tarde."
     smtp_unhandled_error: "Ocorreu um erro sem tratamento ao se comunicar com o servidor SMTP. %{message}"
-    imap_unhandled_error: "Ocorreu um erro sem tratamento ao se comunicar com o servidor IMAP. %{message}"
     connection_error: "Ocorreu um problema ao se conectar com o servidor, verifique o nome e a porta do servidor e tente novamente."
     timeout_error: "O tempo de conexão com o servidor se esgotou, verifique a porta e o nome do servidor e tente novamente."
     unhandled_error: "Erro sem tratamento ao testar as configurações do e-mail. %{message}"
@@ -1134,6 +1131,7 @@ pt_BR:
       every_month: "a cada mês"
       every_six_months: "a cada seis meses"
   user_api_key:
+    title: 'Autorizar "%{application_name}"'
     authorize: "Autorizar"
     deny: "Cancelar"
     read: "ler"
@@ -1695,7 +1693,6 @@ pt_BR:
     manifest_icon: "Imagem usada como logotipo/splash no Android. Será redimensionada automaticamente para 512×512. Se for deixada em branco, large_icon será usado."
     manifest_screenshots: "Capturas de tela que mostram os recursos e funcionalidades da sua instância na sua página de alerta de instalação. Todas as imagens devem ser envios locais e devem ter as mesmas dimensões."
     favicon: "Um favicon para o seu site, consulte <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Para funcionar corretamente em um CDN, precisa ser um png, que será redimensionado para 32x32. Se for deixado em branco, large_icon será usado."
-    apple_touch_icon: "Ícone usado para dispositivos Apple touch. Não é recomendado usar um fundo transparente. Será automaticamente redimensionado para 180x180. Se for deixado em branco, large_icon será usado."
     opengraph_image: "Imagem opengraph padrão, usada quando a página não tiver outra imagem adequada. Se for deixada em branco, large_icon será usado."
     x_summary_large_image: "Cartão do Twitter \"resumo de imagem grande\" (deve ter pelo menos 280 de largura e pelo menos 150 de altura, não pode ser .svg). Se for deixado em branco, os metadados comuns do cartão são gerados usando o opengraph_image, desde que também não sejam um .svg."
     notification_email: "O endereço de e-mail utilizado ao enviar e-mails do sistema. O domínio especificado deve ter registros SPF, DKIM e PTR devidamente configurados para que os e-mails funcionem corretamente."
@@ -1922,7 +1919,6 @@ pt_BR:
     invite_link_max_redemptions_limit_users: "A quantidade máxima de resgates de links de convite gerados por usuário(a) não pode exceder este valor."
     alert_admins_if_errors_per_minute: "Quantidade de erros por minuto para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
     alert_admins_if_errors_per_hour: "Quantidade de erros por hora para acionar um alerta à administração. Um valor igual a 0 desativa esse recurso. OBSERVAÇÃO: requer reinicialização."
-    categories_topics: "Quantidade de tópicos para exibir na página /categorias. Se definido como 0, será realizada uma tentativa de encontrar um valor para manter as duas colunas simétricas (tópicos e categorias)."
     suggested_topics: "Quantidade de tópicos sugeridos exibidos no final de um tópico."
     limit_suggested_to_category: "Exiba apenas tópicos da categoria atual nos tópicos sugeridos."
     suggested_topics_max_days_old: "Tópicos sugeridos não devem ter mais de n dia(s)."
@@ -2144,14 +2140,7 @@ pt_BR:
     email_in_allowed_groups: "Grupos com permissão para postar tópicos novos via e-mail. Administradores(as) e moderadores(as) sempre podem postar tópicos novos por e-mail."
     email_in_authserv_id: "O identificador do serviço realizando verificações de autenticação em e-mails recebidos. Confira <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instruções de como configurar isso."
     email_in_spam_header: "Seleciona o cabeçalho de um e-mail específico e o usa para identificar spam. Esta opção pode ser X-Spam-Flag, X-Spam-Status, ou X-SES-Spam-Verdict, e o e-mail recebe a etiqueta de spam de acordo com o valor do cabeçalho. Por exemplo, se a configuraçao escolhida for X-Spam-Flag, um e-mail com esse valor de cabeçalho definido como \"YES\" seria classificado como spam."
-    enable_imap: "Ative IMAP para sincronizar mensagens de grupo."
-    enable_imap_write: "Ative sincronização de dois fatores IMAP. Se desativado, desativa todas as operações de escrita para contas IMAP."
-    enable_imap_idle: "Use o mecanismo IMAP IDLE para aguardar novos e-mails."
     enable_smtp: "Ative SMTP para enviar notificações de mensagens de grupo."
-    imap_polling_period_mins: "O período em minutos entre a conferência de contas IMAP para e-mails."
-    imap_polling_old_emails: "A quantidade máxima de e-mails antigos (processados) a serem enviados sempre que uma caixa IMAP for sondada (0 para todos)."
-    imap_polling_new_emails: "A quantidade máxima de e-mails novos (não processados) a serem enviados sempre que uma caixa IMAP for sondada."
-    imap_batch_import_email: "A quantidade mínima de novos e-mails que acionam o modo de importação (desativa alertas de postagem)."
     email_prefix: "A [label] usada no assunto dos e-mails. Por padrão, será \"título\" se não for configurada."
     email_site_title: "O título do site usado como o remetente dos e-mails do site. Por padrão, será \"título' se não for configurado. Caso seu \"título\" contenha caracteres não permitidos em linhas do remetente de e-mails, utilize esta configuração."
     find_related_post_with_key: "Use somente a \"chave de resposta\" para encontrar a postagem respondida. AVISO: desativar isso permite a representação do usuário(a) com base no endereço de e-mail."
@@ -2195,8 +2184,6 @@ pt_BR:
     delete_associated_accounts_on_password_reset: "Exclua a conta associada ao(à) usuário(a) quando este(a) alterar a senha."
     allow_featured_topic_on_user_profiles: "Permitir que usuários apresentem o link de um tópico em seu cartão de usuário(a) e perfil."
     show_inactive_accounts: "Permitir que usuários(as) conectados(as) naveguem em perfis de contas inativas."
-    hide_silencing_reasons: "Não exiba razões de silenciamento publicamente nos perfis de usuário(a)."
-    hide_suspension_reasons: "Não exiba razões de suspensão publicamente nos perfis de usuário(a)."
     log_personal_messages_views: "Registre visualizações de mensagens pessoais do(a) administrador(a) para outros(as) usuários(as)/grupos."
     ignored_users_count_message_threshold: "Notifique moderadores(as) se um(a) usuário(a) específico(a) for ignorado(a) por muitos(as) outros(as) usuários(as)."
     ignored_users_message_gap_days: "Quanto tempo esperar antes de notificar novamente moderadores(as) sobre um(a) usuário(a) que foi ignorado(a) por muitos(as) outros(as)."
@@ -2209,7 +2196,6 @@ pt_BR:
     dont_feed_the_trolls_threshold: "Número de sinalizadores de outros(as) usuários(as) antes de serem avisados(as)."
     enable_mobile_theme: "Os dispositivos móveis usam um tema compatível com dispositivos móveis, com a possibilidade de mudar para o site completo. Desative isso se quiser usar um estilo personalizado totalmente responsivo."
     dominating_topic_minimum_percent: "Percentual de postagens que um(a) usuário(a) precisa fazer em um tópico antes de ser relembrado(a) de ser excessivamente dominante em um tópico."
-    pm_warn_user_last_seen_months_ago: "Ao criar uma nova PM, avise aos usuários quando o destinatário de destino não foi visto há mais de n meses."
     suppress_uncategorized_badge: "Não exiba o emblema para assuntos não categorizados em listas de tópicos."
     header_dropdown_category_count: "Quantidade de categorias que podem ser exibidas no menu suspenso do cabeçalho."
     permalink_normalizations: "Aplique o seguinte regex antes de combinar permalinks, por exemplo: /(topic.*)\\?.*/\\1 irá retirar as linhas de consulta das rotas de tópicos. O formato é regex + string use \\ 1 etc. para acessar capturas"
@@ -2405,7 +2391,6 @@ pt_BR:
     default_navigation_menu_categories: "As categorias selecionadas serão exibidas abaixo da seção de Categorias do Menu de Navegação por padrão."
     default_navigation_menu_tags: "As etiquetas selecionadas serão exibidas na seção Etiquetas do Menu de Navegação por padrão."
     experimental_new_new_view_groups: 'Ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
-    experimental_form_templates: "Ative o recurso de modelo de formulário. Gerencie os modelos em <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
     show_preview_for_form_templates: "Ativar a pré-visualização para o recurso de modelos de formulário"
     lazy_load_categories_groups: "Carregue informações de forma ociosa apenas para os(as) usuários(as) destes grupos. Melhora o desempenho em sites com várias categorias."
     experimental_auto_grid_images: "Envolve automaticamente as imagens em tags [grid] quando três ou mais imagens são carregadas no compositor."
@@ -2422,7 +2407,6 @@ pt_BR:
     default_composition_mode: "Defina o modo padrão para o compositor da sua comunidade. O modo rich text proporciona uma experiência de escrita mais moderna e familiar para a maioria dos(as) usuários(as), já o modo Markdown pode ser apropriado para públicos mais avançados. Os membros poderão usar um botão de alternância na barra de ferramentas do compositor para alternar entre os modos."
     reviewable_ui_refresh: "Grupos que podem usar a nova IU experimental na fila de revisão."
     content_localization_enabled: "Exibe o conteúdo localizado para os(as) usuários(as) com base no navegador ou nas preferências de idioma deles(as). Esse conteúdo pode incluir categorias, etiquetas, postagens e tópicos. Os locais compatíveis estão definidos em \"locais compatíveis com localização de conteúdo\"."
-    content_localization_supported_locales: "As lista de locais compatíveis para os quais o conteúdo do usuário(a) pode ser traduzido. Requer \"content localization enabled\""
     content_localization_allowed_groups: "Grupos com permissão para enviar conteúdo localizado. Requer \"content localization enabled\"."
     errors:
       invalid_css_color: "Cor inválida. Digite o nome da cor ou valor hexadecimal."
@@ -4687,12 +4671,18 @@ pt_BR:
     nice_share:
       name: Compartilhamento interessante
       description: Compartilhou uma postagem com 25 visitantes exclusivos
+      long_description: |
+        Este emblema é concedido quando um link compartilhado recebe 25 cliques. Obrigado por divulgar nossas discussões e esta comunidade.
     good_share:
       name: Compartilhamento bom
       description: Compartilhou uma postagem com 300 visitantes exclusivos
+      long_description: |
+        Este emblema é concedido quando um link compartilhado recebe 300 cliques. Bom trabalho! Você apresentou uma ótima discussão e ajudou esta comunidade a crescer.
     great_share:
       name: Compartilhamento excelente
       description: Compartilhou uma postagem com 1.000 visitantes exclusivos
+      long_description: |
+        Este emblema é concedido quando um link compartilhado recebe 1000 cliques. Uau! Você promoveu uma discussão interessante para um grande público e ajudou a expandir significativamente a nossa comunidade.
     first_like:
       name: Primeira curtida
       description: Curtiu uma postagem
@@ -4907,6 +4897,8 @@ pt_BR:
     deprecation_error_label: Faça com que conteúdos obsoletos de Javascript causem um erro
     enter: "Entrar no modo de segurança"
     must_select: "Você deve selecionar pelo menos uma opção para entrar no modo de segurança."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Configuração do Discourse"
     step:
@@ -5000,8 +4992,6 @@ pt_BR:
     api_post_delete: "Exclusão via API"
     reminder_deleted: "Substituído por um novo lembrete"
     user_associated_posts_deleted: "O(a) usuário(a) foi destruído(a)"
-    imap_email_deleted: "O e-mail foi excluído do servidor IMAP"
-    imap_email_marked_as_spam: "O e-mail foi movido para a pasta de spam no servidor IMAP"
     auto_deleted_hidden_posts: "Postagens ocultas destruídas automaticamente"
     seed_data_topic_updated: "Tópico de dados de semente atualizado"
     seed_data_topic_deleted: "Tópico de dados de semente excluído"
@@ -5073,19 +5063,14 @@ pt_BR:
         description: "Aceite a sinalização, oculte esta publicação e envie automaticamente ao(à) usuário(a) uma mensagem solicitando edição."
         complete: "Postagem oculta, o(a) usuário(a) recebeu uma notificação."
       agree_and_edit:
-        title: "Concordar e editar postagem"
         description: "Concorde com o sinalizador e abra uma janela do compositor para editar a postagem."
         complete: "Sinalizador reconhecido, você pode editar a postagem."
       delete:
         title: "Excluir"
         complete: "Postagem excluída."
       delete_and_ignore:
-        title: "Ignorar sinalizador e excluir postagem"
-        description: "Ignore o sinalizador removendo da fila e exclua a postagem. Se for a primeira postagem, exclua o tópico também. "
         complete: "Postagem excluída."
       delete_and_ignore_replies:
-        title: "Ignorar sinalizadores, excluir postagem e respostas"
-        description: "Ignore o sinalizador removendo da fila e exclua a postagem e todas as suas respostas. Se for a primeira postagem, exclua o tópico também"
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
         complete: "Postagem e respostas excluídas."
       delete_and_agree:
@@ -5098,11 +5083,12 @@ pt_BR:
         confirm: "Você tem certeza de que deseja excluir as respostas desta postagem também?"
         complete: "Postagem e respostas excluídas."
       disagree_and_restore:
-        title: "Não, restaurar postagem"
-        description: "Restaure a postagem para que todos os(as) usuários(as) possam ver."
+        title: "Restaurar postagem"
         complete: "Postagem restaurada."
-      disagree:
+      disagree_bundle:
         title: "Não"
+      disagree:
+        title: "Manter postagem"
         complete: "Sinalizador ignorado."
       discard_post:
         title: "Descartar postagem"
@@ -5111,37 +5097,43 @@ pt_BR:
         complete: "Postagem recusada aguardando revisão."
       ignore:
         title: "Ignorar"
+        description: "Remover da fila sem tomar nenhuma ação."
         complete: "Sinalizador ignorado."
       ignore_and_do_nothing:
         title: "Não fazer nada"
         description: "Ignore o sinalizador removendo da fila sem realizar nenhuma ação. Postagens ocultas permanecerão ocultas e serão manipuladas por ferramentas automáticas."
         complete: "Sinalizador ignorado."
       approve:
-        title: "Aprovar"
+        title: "Sim"
         complete: "Postagem aprovada."
       approve_post:
-        title: "Aprovar postagem"
+        title: "Sim"
         complete: "Postagem aprovada."
       approve_post_closed:
-        title: "Aprovar postagem"
+        title: "Sim"
         confirm: "Este tópico está fechado. Gostaria de criar a postagem mesmo assim?"
         complete: "Postagem aprovada."
+      reject_post_bundle:
+        title: "Não"
       reject_post:
         title: "Rejeitar postagem"
         complete: "Postagem recusada."
       approve_user:
-        title: "Aprovar usuário(a)"
+        title: "Sim"
         complete: "Usuário(a) aprovado(a)."
       reject_user:
-        title: "Excluir usuário(a)…"
+        title: "Não"
         delete:
           title: "Excluir usuário(a)"
-          description: "O(a) usuário(a) será excluído(a) do fórum."
           complete: "Usuário(a) excluído(a)."
         block:
           title: "Excluir e bloquear usuário(a)"
           description: "O(a) usuário(a) será excluído(a) e bloquearemos seu endereço IP e de e-mail."
           complete: "Usuário(a) excluído(a) e bloqueado(a)."
+      confirm_spam:
+        title: "Sim"
+      not_spam:
+        title: "Não"
       reject:
         title: "Rejeitar"
         bundle_title: "Rejeitar…"
@@ -5160,10 +5152,10 @@ pt_BR:
       scrub:
         title: Registro removido
       approve_and_restore:
-        title: "Aprovar e restaurar postagem"
+        title: "Sim"
         complete: "Postagem aprovada e restaurada."
       approve_and_unhide:
-        title: "Aprovar e revelar postagem."
+        title: "Sim"
         complete: "Postagem aprovada e revelada"
       no_action_post:
         title: "Sem ação"

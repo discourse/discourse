@@ -94,6 +94,7 @@ class ChatSetupInit {
         label: "chat.upload",
         position: "dropdown",
         action: "uploadClicked",
+        synchronous: true,
         dependentKeys: ["canAttachUploads"],
         displayed() {
           return this.canAttachUploads;

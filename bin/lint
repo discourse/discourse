@@ -184,7 +184,7 @@ class LefthookLinter
     cmd << "--verbose" if @verbose
 
     puts "Running: #{cmd.shelljoin}" if @verbose
-    exit 1 unless system(*cmd)
+    exit 1 unless system({ "LEFTHOOK" => "1" }, *cmd)
   end
 
   def lefthook_config

@@ -120,6 +120,10 @@ div.edit-category {
     .form-kit__container-content {
       flex-wrap: wrap;
     }
+
+    .category-permission-hint {
+      font-size: var(--font-down-1);
+    }
   }
 
   #list-area & h2 {
@@ -146,9 +150,33 @@ div.edit-category {
     .category-chooser {
       width: min(340px, 90%);
     }
+
+    .select-kit-header {
+      padding-right: 0.65em;
+
+      &:hover {
+        border: 1px solid var(--tertiary);
+      }
+
+      .caret-icon {
+        color: var(--primary-medium);
+        width: 0.85em;
+      }
+    }
   }
 
   .edit-category-tab-security {
+    --permission-table-max-width: 450px;
+
+    .form-kit__container-content {
+      flex-direction: column;
+    }
+
+    .alert {
+      display: block;
+      max-width: var(--permission-table-max-width);
+    }
+
     .permission-selector {
       margin-right: 0.25em;
     }
@@ -283,8 +311,8 @@ div.edit-category {
 }
 
 .category-permissions-table {
-  max-width: 450px;
-  margin-bottom: 2em;
+  max-width: var(--permission-table-max-width);
+  margin-bottom: 0;
 
   .permission-row {
     border-bottom: 1px solid var(--content-border-color);
@@ -348,12 +376,16 @@ div.edit-category {
     padding: 0.5em 0;
     color: var(--primary-medium);
   }
+}
 
-  .add-group {
-    margin: 1em 0;
+.edit-category .add-group {
+  margin: 1em 0 2em;
 
-    .group-name {
-      width: 100%;
-    }
+  .group-name {
+    width: 100%;
   }
+}
+
+.edit-category .everyone-has-access-warning {
+  margin-top: 2em;
 }

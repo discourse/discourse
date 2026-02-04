@@ -106,16 +106,10 @@ pl_PL:
             title: "Usuń komentarz"
             description: "Usuń komentarz, aby użytkownicy nie mogli go zobaczyć."
           delete_and_agree:
-            title: "Zignoruj flagę i usuń komentarz"
             description: "Zignoruj flagę, usuwając ją z kolejki i usuń komentarz."
           disagree_and_restore:
             title: "Nie zgadzam się i przywróć komentarz"
             description: "Przywróć komentarz, aby wszyscy użytkownicy mogli go zobaczyć."
-          disagree:
-            title: "Wycofaj"
-          ignore:
-            title: "Nic nie rób"
-            description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
         transcript:
           view: "Zobacz transkrypt poprzednich komentarzy"
       reviewable_score_types:

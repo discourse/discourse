@@ -498,8 +498,6 @@ RSpec.describe Reviewable, type: :model do
       expect(messages.first.data).to eq(
         {
           success: true,
-          transition_to: :approved,
-          transition_to_id: 1,
           created_post_id: perform_result.created_post.id,
           created_post_topic_id: perform_result.created_post_topic.id,
           remove_reviewable_ids: [reviewable.id],
@@ -529,8 +527,6 @@ RSpec.describe Reviewable, type: :model do
       expect(messages.first.data).to eq(
         {
           success: true,
-          transition_to: :rejected,
-          transition_to_id: 2,
           remove_reviewable_ids: [reviewable.id],
           version: 1,
           reviewable_count: 0,
@@ -844,16 +840,13 @@ RSpec.describe Reviewable, type: :model do
 
     it "gets the bundles and actions for a reviewable" do
       actions = reviewable.actions_for(user.guardian)
-      expect(actions.bundles.map(&:id)).to eq(%w[approve_post reject_post revise_and_reject_post])
+      expect(actions.bundles.map(&:id)).to eq(["approve_post", "#{reviewable.id}-reject-post"])
       expect(actions.bundles.find { |b| b.id == "approve_post" }.actions.map(&:id)).to eq(
         ["approve_post"],
       )
-      expect(actions.bundles.find { |b| b.id == "reject_post" }.actions.map(&:id)).to eq(
-        ["reject_post"],
-      )
-      expect(actions.bundles.find { |b| b.id == "revise_and_reject_post" }.actions.map(&:id)).to eq(
-        ["revise_and_reject_post"],
-      )
+      expect(
+        actions.bundles.find { |b| b.id == "#{reviewable.id}-reject-post" }.actions.map(&:id),
+      ).to eq(%w[reject_post revise_and_reject_post])
     end
 
     describe "handling empty bundles" do

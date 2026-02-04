@@ -18,8 +18,6 @@ he:
           title: הקצאות
         chat_usage:
           messages: הודעות
-          author: אני
-          author_others: "%{username}"
           status_online: "● מקוון"
         invites:
           title: הזמנות
@@ -29,6 +27,5 @@ he:
         new_user_interactions:
           likes_given: לייקים שהוענקו
           mentions: אזכורים
-          contributions_helped: התרומות שלך עזרו
         writing_analysis:
           menu_other: אחר

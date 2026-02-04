@@ -537,7 +537,11 @@ bs_BA:
         reviewable_post:
           title: "Objava"
           noun: "objava"
+        reviewable_ai_post:
+          noun: "objava"
       user_label: "User"
+      timeline:
+        target_deleted: "Post izbrisan"
       notes:
         delete: "Delete"
       topic_label: "Topic"
@@ -656,7 +660,6 @@ bs_BA:
           notification: Obavijest
         email:
           title: "Email"
-          status: "Sinkronizirano %{old_emails} / %{total_emails} e-pošte putem IMAP-a."
           last_updated_by: "by"
           ssl_modes:
             none: "Ništa"
@@ -664,17 +667,10 @@ bs_BA:
             title: "Identifikacija"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP Port"
-            imap_ssl: "Koristi SSL za IMAP"
             username: "Ime"
             password: "Lozinka"
           settings:
             title: "Postavke"
-          mailboxes:
-            synchronized: "Sinkronizirani poštanski sandučić"
-            none_found: "Na ovom računu e-pošte nisu pronađeni poštanski sandučići."
-            disabled: "Neomogućen"
         membership:
           title: Članstvo
           access: Pristup
@@ -2524,6 +2520,8 @@ bs_BA:
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
       description: "Description"
+      icon: "Icon"
+      emoji: "Emoji"
       background_color: "Color"
       styles:
         icon: "Icon"
@@ -2531,7 +2529,6 @@ bs_BA:
         options:
           icon: "Icon"
           emoji: "Emoji"
-      name_placeholder: "One or two words maximum"
       color_placeholder: "Any web color"
       delete_confirm: "Are you sure you want to delete this category?"
       delete_error: "There was an error deleting the category."
@@ -2544,7 +2541,7 @@ bs_BA:
         reply: "Odgovori"
         create: "napravi"
       special_warning: "Upozorenje: Ova kategorija je pre-seeded kategorija i sigurnosne postavke se ne mogu uređivati. Ako ne želite koristiti ovu kategoriju, izbrišite je umjesto da je prenamijenite."
-      images: "Images"
+      images: "Izgled"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
       mailinglist_mirror: "Kategorija odražava mailing listu"
@@ -2559,6 +2556,11 @@ bs_BA:
       this_year: "this year"
       position: "Pozicija na stranici kategorije:"
       minimum_required_tags: "Minimalni broj oznaka potrebnih za temu:"
+      none_subcategory_text: "Ništa"
+      visibility:
+        title: "Vidljivost"
+        public: "Javno"
+        group_restricted: "Privatno"
       num_auto_bump_daily: "Broj otvorenih tema koje se svakodnevno automatski izbijaju:"
       navigate_to_first_post_after_read: "Idite na prvi post nakon što se teme pročitaju"
       notifications:
@@ -3169,6 +3171,9 @@ bs_BA:
           enabled: "Omogućen"
           disabled: "Neomogućen"
           impact_type_other: "Other"
+          impact_role_admins: "Admins"
+          impact_role_moderators: "Moderators"
+          impact_role_staff: "Staff"
       config:
         developer:
           title: "Developer"
@@ -3363,6 +3368,8 @@ bs_BA:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Pretraživanje dnevnika</a>'
             disabled: 'Izvješće o pretraživanju trendova je onemogućeno. Omogućite <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">upite pretraživanja dnevnika</a> za prikupljanje podataka.'
+          sort_ascending: "diže se"
+          sort_descending: "spužđšta se"
           filters:
             file_extension:
               label: Ekstenzija datoteke
@@ -4378,6 +4385,7 @@ bs_BA:
           empty: "Još nema slika. Molimo, učitajte jedan."
           upload:
             label: "Učitavanje"
+        download_file: "Skinuti"
         selectable_avatars:
           title: "Popis avatara koje korisnici mogu izabrati"
         table_column_heading:

@@ -1040,12 +1040,9 @@ it:
     no_log_search_queries: "I log delle query di ricerca sono attualmente disabilitati (possono essere abilitati da un amministratore nelle impostazioni del sito)."
   email_settings:
     pop3_authentication_error: "Si è verificato un problema con le credenziali POP3 fornite. Controlla il nome utente e la password e riprova."
-    imap_authentication_error: "Si è verificato un problema con le credenziali IMAP fornite. Controlla il nome utente e la password e riprova."
-    imap_no_response_error: "Si è verificato un errore durante la comunicazione con il server IMAP. %{message}"
     smtp_authentication_error: "Si è verificato un problema con le credenziali SMTP fornite. Controlla nome utente e password, quindi riprova. %{message}"
     smtp_server_busy_error: "Il server SMTP è attualmente occupato. Riprova più tardi."
     smtp_unhandled_error: "Si è verificato un errore non gestito durante la comunicazione con il server SMTP. %{message}"
-    imap_unhandled_error: "Si è verificato un errore non gestito durante la comunicazione con il server IMAP. %{message}"
     connection_error: "Si è verificato un problema durante la connessione con il server. Controlla il nome e la porta del server e riprova."
     timeout_error: "Connessione al server scaduta. Controlla il nome e la porta del server e riprova."
     unhandled_error: "Errore non gestito durante il test delle impostazioni e-mail. %{message}"
@@ -1695,7 +1692,6 @@ it:
     manifest_icon: "Immagine utilizzata come immagine logo / splash su Android. Verrà automaticamente ridimensionato a 512 × 512. Se lasciato vuoto, verrà utilizzato large_icon."
     manifest_screenshots: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
     favicon: "Una favicon per il tuo sito, vedi <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> . Per funzionare correttamente su un CDN deve essere un'immagine PNG. Verrà ridimensionata a 32x32. Se lasciato vuoto, verrà usato large_icon."
-    apple_touch_icon: "Icona utilizzata per i dispositivi touch Apple. Si sconsiglia l'uso di sfondi trasparenti.Verrà automaticamente ridimensionata a 180x180. Se lasciata vuota, verrà usato il formato large_icon."
     opengraph_image: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon"
     x_summary_large_image: "Opzione 'Summary large image' di una scheda Twitter (deve misurare almeno 280 di larghezza e almeno 150 di altezza e non può essere un'imagine .svg). Se lasciato vuoto, i normali metadati delle schede vengono generati utilizzando l'opzione opengraph_image, a meno che l'immagine non sia un file .svg."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
@@ -1922,7 +1918,6 @@ it:
     invite_link_max_redemptions_limit_users: "Il numero massimo di riscatti consentiti per i link di invito generati da utenti regolari non può superare questo valore."
     alert_admins_if_errors_per_minute: "Soglia di errori al minuto che attiva un allarme agli amministratori. Un valore pari a 0 disabilita questa funzione. NOTA: richiede un riavvio."
     alert_admins_if_errors_per_hour: "Soglia di errori all'ora che attiva un allarme agli amministratori. Un valore pari a 0 disabilita questa funzione. NOTA: richiede un riavvio."
-    categories_topics: "Numero di argomenti da mostrare in /categories page. Se impostato su 0, il sistema proverà automaticamente a trovare un valore per mantenere simmetriche le due colonne (categorie e argomenti)."
     suggested_topics: "Numero di argomenti suggeriti mostrati in fondo ad un argomento."
     limit_suggested_to_category: "Negli argomenti suggeriti, mostra soltanto argomenti della categoria corrente. "
     suggested_topics_max_days_old: "Gli argomenti suggeriti non dovrebbero essere più vecchi di n giorni."
@@ -2144,14 +2139,7 @@ it:
     email_in_allowed_groups: "Gruppi a cui è consentito pubblicare nuovi argomenti via email. Ad amministratori e moderatori è sempre consentito pubblicare nuovi argomenti via email."
     email_in_authserv_id: "L'identificatore del servizio che esegue i controlli di autenticazione sulle e-mail in arrivo. Consulta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> per istruzioni su come configurare questa opzione."
     email_in_spam_header: "Selezione l'intestazione di email da utilizzare per individuare lo spam. L'opzione può essere X-Spam-Flag, X-Spam-Status o X-SES-Spam-Verdict. L'email verrà contrassegnata come spam in base al valore della sua intestazione. Per esempio, se l'impostazione selezionata è X-Spam-Flag, un'email con intestazione impostata sul valore YES verrà classificata come spam."
-    enable_imap: "Abilita IMAP per la sincronizzazione dei messaggi di gruppo."
-    enable_imap_write: "Abilita la sincronizzazione IMAP bidirezionale. Se l'opzione è disabilitata, tutte le operazioni di scrittura sugli account IMAP sono disabilitate."
-    enable_imap_idle: "Usa il meccanismo IMAP IDLE per attendere nuove email."
     enable_smtp: "Abilita SMTP per l'invio di notifiche per i messaggi di gruppo."
-    imap_polling_period_mins: "Intervallo in minuti per il controllo degli account IMAP tra un' e-mail e l'altra."
-    imap_polling_old_emails: "Il numero massimo di vecchie email (elaborate) da aggiornare ogni volta che viene interrogata una casella IMAP (0 indica tutte le e-mail)."
-    imap_polling_new_emails: "Il numero massimo di nuove e-mail (non elaborate) da aggiornare ogni volta che viene interrogata una casella IMAP."
-    imap_batch_import_email: "Il numero minimo di nuove e-mail che attivano la modalità di importazione (disabilita gli avvisi di messaggi importati)."
     email_prefix: "[Etichetta] utilizzata nell'oggetto delle email. Se non impostata sarà 'titolo'."
     email_site_title: "Il titolo del sito utilizzato come mittente delle email dal sito. Impostazione di default a 'titolo' se non impostata. Se il tuo 'titolo' contiene caratteri non consentiti nelle stringhe del mittente email, utilizza questa impostazione."
     find_related_post_with_key: "Utilizza solo la 'reply key' per trovare il messaggio inviato. ATTENZIONE: la disattivazione di questa funzione consente di impersonare l'utente in base all'indirizzo email."
@@ -2195,8 +2183,6 @@ it:
     delete_associated_accounts_on_password_reset: "Elimina l'account associato all'utente quando l'utente modifica la password."
     allow_featured_topic_on_user_profiles: "Permetti agli utenti di aggiungere un link a un argomento nella scheda utente e nel profilo."
     show_inactive_accounts: "Consenti agli utenti registrati di consultare i profili degli account inattivi."
-    hide_silencing_reasons: "Non mostrare pubblicamente i motivi del silenziamento sui profili utente."
-    hide_suspension_reasons: "Non visualizzare pubblicamente i motivi della sospensione sui profili utente."
     log_personal_messages_views: "Registra le visualizzazioni fatte da Amministratore dei messaggi personali di altri utenti/gruppi ."
     ignored_users_count_message_threshold: "Informare i moderatori se un determinato utente viene ignorato da molti altri utenti."
     ignored_users_message_gap_days: "Quanto a lungo attendere prima di informare nuovamente i moderatori di un utente che è stato ignorato da molti altri."
@@ -2209,7 +2195,6 @@ it:
     dont_feed_the_trolls_threshold: "Numero di segnalazioni da parte di altri utenti prima di essere avvisati."
     enable_mobile_theme: "I dispositivi mobili usano un tema apposito, con possibilità di passare alla visualizzazione completa. Disabilita questa opzione se vuoi usare un foglio di stile personalizzato che sia completamente reattivo."
     dominating_topic_minimum_percent: "Quale percentuale di messaggi un utente deve pubblicare in un argomento prima di essere avvertito che sta intervenendo eccessivamente nell'argomento."
-    pm_warn_user_last_seen_months_ago: "Quando si crea un nuovo MP, il sistema avvisa gli utenti quando il destinatario non si fa vedere lì da più di n mesi."
     suppress_uncategorized_badge: "Non mostrare il distintivo per gli argomenti senza categoria nell'elenco degli argomenti."
     header_dropdown_category_count: "Quante categorie possono essere visualizzate nel menu a discesa dell'intestazione."
     permalink_normalizations: "Applicare il seguente regex prima di accedere ai permalink, ad esempio: /(topic.*)\\?.*/\\1 eliminerà le stringhe query dalla route degli argomenti. Il formato è regex+string use \\1 ecc. per accedere alle acquisizioni"
@@ -2404,7 +2389,6 @@ it:
     default_navigation_menu_categories: "Le categorie selezionate appariranno, per impostazione predefinita, nella sezione Categorie del menu di navigazione."
     default_navigation_menu_tags: "Le etichette selezionate appariranno, per impostazione predefinita, nella sezione Etichette del menu di navigazione."
     experimental_new_new_view_groups: 'Abilita un nuovo elenco di argomenti che combini argomenti non letti e nuovi e crea il link "Tutto" nella barra laterale a esso.'
-    experimental_form_templates: "Abilita la funzionalità dei modelli di modulo. Gestisci i modelli in <a href='%{base_path}/admin/customize/form-templates'>Personalizza / Modelli</a>."
     show_preview_for_form_templates: "Abilita la funzionalità di anteprima per i modelli di modulo"
     lazy_load_categories_groups: "Caricamento lazy delle informazioni di categoria solo per gli utenti di questi gruppi. Migliora le prestazioni sui siti con numerose categorie."
     experimental_auto_grid_images: "Inserisce automaticamente le immagini nell'etichetta [grid] quando vengono caricate 3 o più immagini nel compositore."
@@ -2421,7 +2405,6 @@ it:
     default_composition_mode: "Imposta la modalità predefinita per il compositore della tua community. La modalità Rich Text offre un'esperienza di scrittura più moderna e familiare per la maggior parte degli utenti, mentre la modalità Markdown potrebbe essere adatta a un pubblico più tecnico. I membri possono utilizzare un interruttore nella barra degli strumenti del compositore per passare da una modalità all'altra."
     reviewable_ui_refresh: "Gruppi che possono utilizzare la nuova interfaccia utente sperimentale nella coda di revisione."
     content_localization_enabled: "Mostra contenuti localizzati per gli utenti in base alle preferenze del browser o della lingua. Tali contenuti possono includere categorie, tag, post e argomenti. Le impostazioni locali supportate sono impostate in \"Impostazioni locali supportate per la localizzazione dei contenuti\"."
-    content_localization_supported_locales: "Elenco delle lingue supportate in cui è possibile tradurre i contenuti utente. Richiede \"localizzazione dei contenuti abilitata\"."
     content_localization_allowed_groups: "Gruppi autorizzati ad aggiornare i contenuti localizzati. Richiede \"localizzazione dei contenuti abilitata\"."
     errors:
       invalid_css_color: "Colore non valido. Immettere un nome o un valore esadecimale per il colore."
@@ -4523,6 +4506,8 @@ it:
     deprecation_error_label: Fai in modo che le deprecazioni di Javascript generino un errore
     enter: "Avvia Modalità Sicura"
     must_select: "È necessario selezionare almeno un'opzione per accedere alla modalità sicura."
+  dev_mode:
+    enter: "Invio"
   wizard:
     title: "Configurazione Discourse"
     step:
@@ -4616,8 +4601,6 @@ it:
     api_post_delete: "Eliminato tramite API"
     reminder_deleted: "Sostituito da un nuovo promemoria"
     user_associated_posts_deleted: "L'utente è stato distrutto"
-    imap_email_deleted: "L'e-mail è stata eliminata sul server IMAP"
-    imap_email_marked_as_spam: "L'e-mail è stata spostata nello spam sul server IMAP"
     auto_deleted_hidden_posts: "Messaggi nascosti distrutti automaticamente"
     seed_data_topic_updated: "Dati seed dell'argomento aggiornati"
     seed_data_topic_deleted: "Dati seed dell'argomento eliminati"
@@ -4689,19 +4672,14 @@ it:
         description: "Accetta la segnalazione, nascondi il messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
         complete: "Messaggio nascosto, l'utente è stato avvisato."
       agree_and_edit:
-        title: "Accetta e modifica messaggio"
         description: "Accetta segnalazione e apri la finestra di modifica per emendare il messaggio."
         complete: "Segnalazione riconosciuta, ora puoi modificare il messaggio."
       delete:
         title: "Elimina"
         complete: "Messaggio eliminato."
       delete_and_ignore:
-        title: "Ignora segnalazione ed elimina post"
-        description: "Ignora segnalazione rimuovendola dalla coda ed elimina il messaggio; se è li primo messaggio, elimina anche l'argomento. "
         complete: "Messaggio eliminato."
       delete_and_ignore_replies:
-        title: "Ignora segnalazione, elimina messaggio e risposte"
-        description: "Ignora segnalazione rimuovendola dalla coda ed elimina il messaggio e tutte le sue risposte; se è li primo messaggio, elimina anche l'argomento"
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
         complete: "Messaggi e risposte eliminati."
       delete_and_agree:
@@ -4714,11 +4692,12 @@ it:
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
         complete: "Messaggi e risposte eliminati."
       disagree_and_restore:
-        title: "No, ripristina messaggio"
-        description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
+        title: "Ripristina messaggio"
         complete: "Messaggio ripristinato."
-      disagree:
+      disagree_bundle:
         title: "No"
+      disagree:
+        title: "Mantieni il messaggio"
         complete: "Segnalazione ignorata."
       discard_post:
         title: "Annulla messaggio"
@@ -4733,31 +4712,36 @@ it:
         description: "Ignora segnalazione rimuovendola dalla coda senza intraprendere alcuna azione. I messaggi nascosti rimarranno nascosti e saranno gestiti dagli strumenti automatici."
         complete: "Segnalazione ignorata."
       approve:
-        title: "Approva"
+        title: "Sì"
         complete: "Messaggio approvato."
       approve_post:
-        title: "Approva Messaggio"
+        title: "Sì"
         complete: "Messaggio approvato."
       approve_post_closed:
-        title: "Approva messaggio"
+        title: "Sì"
         confirm: "Questo argomento è chiuso. Vuoi creare un messaggio comunque?"
         complete: "Messaggio approvato."
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Rifiuta Messaggio"
         complete: "Messaggio rifiutato."
       approve_user:
-        title: "Approva Utente"
+        title: "Sì"
         complete: "Utente approvato."
       reject_user:
-        title: "Elimina utente…"
+        title: "No"
         delete:
           title: "Cancella utente"
-          description: "L'utente sarà eliminato dal forum."
           complete: "Utente eliminato."
         block:
           title: "Elimina e blocca Utente"
           description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
           complete: "Utente eliminato e bloccato."
+      confirm_spam:
+        title: "Sì"
+      not_spam:
+        title: "No"
       reject:
         title: "Rifiuta"
         bundle_title: "Rifiuta…"
@@ -4776,10 +4760,10 @@ it:
       scrub:
         title: Cancella il record
       approve_and_restore:
-        title: "Approva e ripristina il messaggio"
+        title: "Sì"
         complete: "Messaggio approvato e ripristinato."
       approve_and_unhide:
-        title: "Approva e mostra il messaggio"
+        title: "Sì"
         complete: "Messaggio approvato e reso visibile"
       no_action_post:
         title: "Nessuna azione"

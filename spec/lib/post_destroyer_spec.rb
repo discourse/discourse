@@ -374,6 +374,48 @@ RSpec.describe PostDestroyer do
       expect(post.like_count).to eq(2)
       expect(post.custom_fields["deleted_public_actions"]).to be_nil
     end
+
+    it "restores PostReply when the reply is recovered" do
+      reply =
+        create_post(topic: post.topic, user: codinghorror, reply_to_post_number: post.post_number)
+      expect(post.post_replies.count).to eq(1)
+
+      PostDestroyer.new(moderator, reply).destroy
+      expect(post.post_replies.count).to eq(0)
+
+      PostDestroyer.new(moderator, reply.reload).recover
+      expect(post.post_replies.reload.count).to eq(1)
+    end
+
+    it "restores reply_count when the reply is recovered" do
+      reply =
+        create_post(topic: post.topic, user: codinghorror, reply_to_post_number: post.post_number)
+      expect(post.reload.reply_count).to eq(1)
+
+      PostDestroyer.new(moderator, reply).destroy
+      expect(post.reload.reply_count).to eq(0)
+
+      PostDestroyer.new(moderator, reply.reload).recover
+      expect(post.reload.reply_count).to eq(1)
+    end
+
+    it "restores PostReply for quoted posts when recovered" do
+      reply =
+        create_post(
+          topic: post.topic,
+          user: codinghorror,
+          raw:
+            "[quote=\"#{post.user.username}, post:#{post.post_number}, topic:#{post.topic_id}\"]\nquoted\n[/quote]\nmy reply",
+        )
+      expect(post.post_replies.count).to eq(1)
+      expect(reply.reply_to_post_number).to be_nil
+
+      PostDestroyer.new(moderator, reply).destroy
+      expect(post.post_replies.count).to eq(0)
+
+      PostDestroyer.new(moderator, reply.reload).recover
+      expect(post.post_replies.reload.count).to eq(1)
+    end
   end
 
   describe "basic destroying" do
@@ -446,11 +488,6 @@ RSpec.describe PostDestroyer do
 
       expect(reply.reload.user_deleted).to eq(true)
       expect(reviewable.reload).to be_ignored
-
-      note = reviewable.reviewable_notes.last
-      expect(note.user).to eq(Discourse.system_user)
-      expect(note.content).to eq(I18n.t("reviewables.post_deleted_by_author"))
-
       expect(reviewable.reviewable_scores.first.reviewed_by_id).to eq(Discourse.system_user.id)
       expect(reviewable.reviewable_scores.first.reviewed_at).to be_present
 
@@ -491,6 +528,74 @@ RSpec.describe PostDestroyer do
       PostDestroyer.new(reply.user, reply).recover
 
       expect(reply.reload.user_deleted).to eq(false)
+      expect(reviewable.reload).to be_ignored
+    end
+
+    it "does not auto-ignore reviewable when author was silenced for the post" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+
+      UserSilencer.silence(reply.user, moderator, post_id: reply.id)
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+      expect(reviewable.reload).to be_pending
+
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reply.reload.user_deleted).to eq(false)
+      expect(reviewable.reload).to be_pending
+    end
+
+    it "does not auto-ignore reviewable when author was suspended for the post" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+
+      UserSuspender.new(
+        reply.user,
+        suspended_till: 5.days.from_now,
+        reason: "spam",
+        by_user: moderator,
+        post_id: reply.id,
+      ).suspend
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+      expect(reviewable.reload).to be_pending
+
+      PostDestroyer.new(reply.user, reply).recover
+
+      expect(reply.reload.user_deleted).to eq(false)
+      expect(reviewable.reload).to be_pending
+    end
+
+    it "auto-ignores reviewable when author was silenced but is no longer silenced" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+
+      UserSilencer.silence(reply.user, moderator, post_id: reply.id)
+      UserSilencer.unsilence(reply.user, moderator)
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
+      expect(reviewable.reload).to be_ignored
+    end
+
+    it "auto-ignores reviewable when author was suspended but is no longer suspended" do
+      reply = create_post(topic: post.topic)
+      reviewable = PostActionCreator.spam(coding_horror, reply).reviewable
+
+      UserSuspender.new(
+        reply.user,
+        suspended_till: 5.days.from_now,
+        reason: "spam",
+        by_user: moderator,
+        post_id: reply.id,
+      ).suspend
+      reply.user.update!(suspended_till: nil, suspended_at: nil)
+      PostDestroyer.new(reply.user, reply).destroy
+
+      expect(reply.reload.user_deleted).to eq(true)
       expect(reviewable.reload).to be_ignored
     end
 
@@ -981,6 +1086,17 @@ RSpec.describe PostDestroyer do
       PostDestroyer.new(moderator, second_post, defer_flags: true).destroy
       expect(Jobs::SendSystemMessage.jobs.size).to eq(0)
       expect(ReviewableFlaggedPost.pending.count).to eq(0)
+    end
+
+    context "when the flagged post is potentially illegal" do
+      before { ReviewableFlaggedPost.pending.update_all(potentially_illegal: true) }
+
+      it "does not automatically mark it as ignored or approved" do
+        expect { PostDestroyer.new(moderator, second_post).destroy }.not_to change {
+          ReviewableFlaggedPost.pending.count
+        }
+        expect(Jobs::SendSystemMessage.jobs).to be_empty
+      end
     end
 
     context "when custom flags" do

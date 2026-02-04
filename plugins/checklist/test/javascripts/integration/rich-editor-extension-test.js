@@ -21,9 +21,9 @@ module(
     });
 
     const checked =
-      '<span class="chcklst-box checked fa fa-square-check-o fa-fw" contenteditable="false" draggable="true"></span>';
+      '<span class="chcklst-box checked fa fa-square-check-o" contenteditable="false" draggable="true"></span>';
     const unchecked =
-      '<span class="chcklst-box fa fa-square-o fa-fw" contenteditable="false" draggable="true"></span>';
+      '<span class="chcklst-box fa fa-square-o" contenteditable="false" draggable="true"></span>';
 
     Object.entries({
       "renders unchecked checkbox correctly": [

@@ -488,7 +488,11 @@ lv:
         reviewable_post:
           title: "Ieraksts"
           noun: "ieraksts"
+        reviewable_ai_post:
+          noun: "ieraksts"
       user_label: "Lietotājs"
+      timeline:
+        target_deleted: "Ieraksts dzēsts"
       notes:
         delete: "Dzēst"
       topic_label: "Tēmas"
@@ -616,9 +620,7 @@ lv:
           notification: Paziņojumi
         email:
           title: "E-pasts"
-          status: "Sinhronizēti %{old_emails} / %{total_emails} e -pasta ziņojumi, izmantojot IMAP."
           enable_smtp: "Iespējot SMTP"
-          enable_imap: "Iespējot IMAP"
           test_settings: "Pārbaudes iestatījumi"
           save_settings: "Saglabāt iestatījumus"
           last_updated: "Pēdējoreiz atjaunots:"
@@ -627,14 +629,7 @@ lv:
           smtp_settings_valid: "SMTP iestatījumi ir derīgi."
           smtp_title: "SMTP"
           smtp_instructions: "Ja grupai iespējojat SMTP, visi izejošie e -pasta ziņojumi, kas nosūtīti no grupas iesūtnes, tiks nosūtīti, izmantojot šeit norādītos SMTP iestatījumus, nevis pasta serveri, kas konfigurēts citiem jūsu foruma sūtītajiem e -pasta ziņojumiem."
-          imap_title: "IMAP"
-          imap_additional_settings: "Papildu iestatījumi"
-          imap_instructions: 'Ja grupai iespējojat IMAP, e -pasta ziņojumi tiek sinhronizēti starp grupas iesūtni un norādīto IMAP serveri un pastkasti. Lai varētu iespējot IMAP, SMTP ir jāiespējo ar derīgiem un pārbaudītiem akreditācijas datiem. IMAP tiks izmantots SMTP e -pasta lietotājvārds un parole. Lai iegūtu vairāk informācijas, skatiet <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">funkciju paziņojumu vietnē Discourse Meta</a>.'
-          imap_alpha_warning: "Brīdinājums: šī ir alfa stadijas funkcija. Oficiāli tiek atbalstīts tikai Gmail. Lietojiet uz savu risku!"
-          imap_settings_valid: "IMAP iestatījumi ir derīgi."
-          smtp_disable_confirm: "Ja atspējosiet SMTP, visi SMTP un IMAP iestatījumi tiks atiestatīti un saistītā funkcionalitāte tiks atspējota. Vai tiešām vēlaties turpināt?"
-          imap_disable_confirm: "Ja atspējosiet IMAP, visi IMAP iestatījumi tiks atiestatīti un saistītā funkcionalitāte tiks atspējota. Vai tiešām vēlaties turpināt?"
-          imap_mailbox_not_selected: "Šai IMAP konfigurācijai ir jāizvēlas pastkaste, pretējā gadījumā neviena pastkaste netiks sinhronizēta!"
+          additional_settings: "Papildu iestatījumi"
           prefill:
             title: "Iepriekš aizpildiet ar iestatījumiem:"
           ssl_modes:
@@ -643,19 +638,12 @@ lv:
             title: "Atsauksme uz"
             smtp_server: "SMTP serveris"
             smtp_port: "SMTP ports"
-            imap_server: "IMAP serveris"
-            imap_port: "IMAP ports"
-            imap_ssl: "IMAP izmanto SSL"
             username: "Lietotājvārds"
             password: "Parole"
           settings:
             title: "Iestatījumi"
             allow_unknown_sender_topic_replies: "Atļaut atbildes uz nezināmu sūtītāja tēmu."
             allow_unknown_sender_topic_replies_hint: "Ļauj nezināmiem sūtītājiem atbildēt uz grupas tēmām. Ja tas nav iespējots, atbildes no e -pasta adresēm, kas vēl nav uzaicinātas uz šo tēmu, izveidos jaunu tēmu."
-          mailboxes:
-            synchronized: "Sinhronizēta pastkaste"
-            none_found: "Šajā e -pasta kontā netika atrastas pastkastes."
-            disabled: "Atslēgt"
         membership:
           title: Piederība
           access: Piekļuve
@@ -1770,7 +1758,7 @@ lv:
         topic_reminder: "atgādinājums par tēmu"
         liked_consolidated: "jauns \"patīk\""
         post_approved: "ziņa apstiprināta"
-        votes_released: "Balsojums tika izveidots"
+        votes_released: "balsojums tika izveidots"
     upload_selector:
       delete: "Dzēst"
       uploading: "Augšuplādē"
@@ -2345,6 +2333,8 @@ lv:
       creation_error: Izveidojot šo sadaļu, notika kļūda.
       save_error: Saglabājot šo sadaļu, notika kļūda.
       description: "Apraksts"
+      icon: "Ikona"
+      emoji: "Smaidiņi"
       background_color: "Krāsa"
       styles:
         icon: "Ikona"
@@ -2352,7 +2342,6 @@ lv:
         options:
           icon: "Ikona"
           emoji: "Smaidiņi"
-      name_placeholder: "Ne vairāk par vienu vai diviem vārdiem"
       color_placeholder: "Jebkura interneta krāsa"
       delete_confirm: "Vai tiešām vēlies dzēst šo kategoriju?"
       delete_error: "Dzēšot šo sadaļu, notika kļūda."
@@ -2365,7 +2354,6 @@ lv:
         reply: "Atbildēt"
         create: "Izveidot"
       special_warning: "Brīdinājums: šī sadaļa ir automātiski izveidota un tās drošības uzstādījumi nav maināmi. Ja jūs nevēlaties šo sadaļu izmantot, izdzēsiet to, nevis pielietojiet citiem mērķiem."
-      images: "Attēli"
       email_in: "Īpašas ienākošā e-pasta adreses:"
       email_in_allow_strangers: "Pieņemt e-pastus no anonīmiem lietotājiem bez profiliem"
       show_subcategory_list: "Rādīt apakšsadaļu sarakstu virs tēmām šai sadaļā."
@@ -2374,6 +2362,10 @@ lv:
       allow_badges_label: "Atļaut apbalvot ar žetoniem šai sadaļā"
       review_group_name: "grupas nosaukums"
       this_year: "šogad"
+      none_subcategory_text: "Nav"
+      visibility:
+        public: "Publisks"
+        group_restricted: "Privāts"
       notifications:
         watching:
           title: "Novērošana"
@@ -2870,6 +2862,9 @@ lv:
           enabled: "Ieslēgts"
           disabled: "Atslēgt"
           impact_type_other: "Citi"
+          impact_role_admins: "Administratori"
+          impact_role_moderators: "Moderātori"
+          impact_role_staff: "Personāls"
       config:
         developer:
           title: "Izstrādātājs"
@@ -3015,6 +3010,8 @@ lv:
           monthly: Mēneša
           weekly: Nedēļas
           groups: "Visas grupas"
+          sort_ascending: "augoši"
+          sort_descending: "dilstoši"
           filters:
             group:
               label: Grupa
@@ -3765,6 +3762,7 @@ lv:
         uploaded_image_list:
           upload:
             label: "Augšupielādēt"
+        download_file: "Lejuplādēt"
         table_column_heading:
           status: "Statuss"
         categories:

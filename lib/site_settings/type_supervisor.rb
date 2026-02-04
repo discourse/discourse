@@ -23,6 +23,9 @@ class SiteSettings::TypeSupervisor
     schema
     requires_confirmation
     depends_on
+    depends_behavior
+    authorized_extensions
+    max_file_size_kb
   ].freeze
   VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema schema].freeze
 
@@ -101,6 +104,8 @@ class SiteSettings::TypeSupervisor
     @textareas = {}
     @json_schemas = {}
     @schemas = {}
+    @authorized_extensions = {}
+    @max_file_size_kb = {}
     @dependencies = SiteSettings::DependencyGraph.new
   end
 
@@ -110,6 +115,8 @@ class SiteSettings::TypeSupervisor
     name = name_arg.to_sym
 
     @textareas[name] = opts[:textarea] if opts[:textarea]
+    @authorized_extensions[name] = opts[:authorized_extensions] if opts[:authorized_extensions]
+    @max_file_size_kb[name] = opts[:max_file_size_kb] if opts[:max_file_size_kb]
 
     @json_schemas[name] = opts[:json_schema].constantize if opts[:json_schema]
     @schemas[name] = opts[:schema] if opts[:schema]
@@ -152,6 +159,7 @@ class SiteSettings::TypeSupervisor
     end
 
     @dependencies[name] = opts[:depends_on] || []
+    @dependencies.change_behavior(name, opts[:depends_behavior]) if opts[:depends_behavior]
   end
 
   def to_rb_value(name, value, override_type = nil)
@@ -220,6 +228,10 @@ class SiteSettings::TypeSupervisor
     result[:list_type] = @list_type[name] if @list_type.has_key? name
     result[:textarea] = @textareas[name] if @textareas.has_key? name
     result[:schema] = @schemas[name] if @schemas.has_key? name
+    result[:authorized_extensions] = @authorized_extensions[
+      name
+    ] if @authorized_extensions.has_key? name
+    result[:max_file_size_kb] = @max_file_size_kb[name] if @max_file_size_kb.has_key? name
 
     if @json_schemas.has_key?(name) && json_klass = json_schema_class(name)
       result[:json_schema] = json_klass.schema

@@ -66,7 +66,7 @@ RSpec.describe TagGroupsController do
     end
 
     context "for anons" do
-      it "returns the tag group with the associated tag names" do
+      it "returns the tag group with the associated tags" do
         tag_group = tag_group_with_permission(everyone, readonly)
         tag_group2 = tag_group_with_permission(everyone, readonly)
 
@@ -76,8 +76,8 @@ RSpec.describe TagGroupsController do
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
 
         expect(results).to contain_exactly(
-          { name: tag_group.name, tag_names: [tag.name] },
-          { name: tag_group2.name, tag_names: [tag.name] },
+          { name: tag_group.name, tags: [{ id: tag.id, name: tag.name }] },
+          { name: tag_group2.name, tags: [{ id: tag.id, name: tag.name }] },
         )
       end
 
@@ -96,7 +96,7 @@ RSpec.describe TagGroupsController do
     context "for regular users" do
       before { sign_in(user) }
 
-      it "returns the tag group with the associated tag names" do
+      it "returns the tag group" do
         tag_group = tag_group_with_permission(everyone, readonly)
 
         get "/tag_groups/filter/search.json"
@@ -105,7 +105,6 @@ RSpec.describe TagGroupsController do
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
 
         expect(results.first[:name]).to eq(tag_group.name)
-        expect(results.first[:tag_names]).to contain_exactly(tag.name)
       end
 
       it "returns an empty array if the tag group is private" do
@@ -164,6 +163,7 @@ RSpec.describe TagGroupsController do
 
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
+    fab!(:parent_tag, :tag)
 
     before { sign_in(admin) }
 
@@ -172,7 +172,10 @@ RSpec.describe TagGroupsController do
            params: {
              tag_group: {
                name: "test_tag_group_log",
-               tag_names: [tag1.name, tag2.name],
+               tags: [
+                 { id: tag1.id, name: tag1.name, slug: tag1.slug },
+                 { id: tag2.id, name: tag2.name, slug: tag2.slug },
+               ],
              },
            }
 
@@ -186,6 +189,23 @@ RSpec.describe TagGroupsController do
         subject: "test_tag_group_log",
         new_value: response.parsed_body["tag_group"].to_json,
       )
+    end
+
+    it "should create a tag group with a parent tag" do
+      post "/tag_groups.json",
+           params: {
+             tag_group: {
+               name: "test_tag_group_with_parent",
+               tag_names: [tag1.name],
+               parent_tag_name: [parent_tag.name],
+             },
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tag_group"]["parent_tag"]).to eq(
+        [{ "id" => parent_tag.id, "name" => parent_tag.name, "slug" => parent_tag.slug }],
+      )
+      expect(TagGroup.last.parent_tag).to eq(parent_tag)
     end
   end
 
@@ -222,6 +242,7 @@ RSpec.describe TagGroupsController do
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
     fab!(:tag3, :tag)
+    fab!(:parent_tag, :tag)
     fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2]) }
 
     before { sign_in(admin) }
@@ -232,22 +253,39 @@ RSpec.describe TagGroupsController do
       put "/tag_groups/#{tag_group.id}.json",
           params: {
             tag_group: {
-              tag_group: {
-                name: "test_tag_group_new_name",
-                tag_names: [tag2.name, tag3.name],
-              },
+              name: "test_tag_group_new_name",
+              tags: [
+                { id: tag2.id, name: tag2.name, slug: tag2.slug },
+                { id: tag3.id, name: tag3.name, slug: tag3.slug },
+              ],
             },
           }
 
       expect(response.status).to eq(200)
+      expect(tag_group.tags.map(&:id)).to contain_exactly(tag2.id, tag3.id)
 
       expect(UserHistory.last).to have_attributes(
         acting_user_id: admin.id,
         action: UserHistory.actions[:tag_group_change],
-        subject: tag_group.name,
+        subject: "test_tag_group_new_name",
         previous_value:,
         new_value: response.parsed_body["tag_group"].to_json,
       )
+    end
+
+    it "should update the tag group's parent tag" do
+      put "/tag_groups/#{tag_group.id}.json",
+          params: {
+            tag_group: {
+              parent_tag_name: [parent_tag.name],
+            },
+          }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["tag_group"]["parent_tag"]).to eq(
+        [{ "id" => parent_tag.id, "name" => parent_tag.name, "slug" => parent_tag.slug }],
+      )
+      expect(tag_group.reload.parent_tag).to eq(parent_tag)
     end
   end
 end

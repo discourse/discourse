@@ -52,6 +52,8 @@ ko:
   remove_posts_deleted_by_author: "작성자가 삭제함"
   redirect_warning: "선택한 링크가 실제로 포럼에 게시되어 있는지 확인할 수 없습니다. 계속 진행하려면 아래 링크를 선택하세요."
   on_another_topic: "다른 주제"
+  topic_tag_changed:
+    added: "%{added}에 추가됨"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "%{username} 님의 게시물 #%{post_number}"
@@ -122,7 +124,7 @@ ko:
         insufficient_trust_level_error: "카테고리에서 요구하는 최소 신뢰 레벨이 아닌 사용자가 해당 카테고리에서 새 주제를 작성하려고 할 때 발생합니다."
         reply_user_not_matching_error: "알림이 전송된 이메일 주소와 다른 이메일 주소로부터 댓글이 달릴 때 발생합니다."
         topic_not_found_error: "댓글이 달렸지만 관련 주제가 삭제된 경우 발생합니다."
-        topic_closed_error: "댓글이 달렸지만 관련 주제가 종료된 경우 발생합니다."
+        topic_closed_error: "댓글이 달렸지만 관련 글이 잠긴 경우 발생합니다."
         bounced_email_error: "이메일이 반송된 이메일 리포트입니다."
         screened_email_error: "보내는 사람의 이메일 주소가 이미 스크린된 경우 발생합니다."
         unsubscribe_not_allowed: "이 사용자에게 이메일을 통한 구독 취소가 허용되지 않은 경우 발생합니다."
@@ -232,7 +234,7 @@ ko:
     email_taken: "이 이메일은 이미 사용 중입니다. 이미 계정이 있는 경우 로그인하거나 비밀번호를 리셋하세요."
     max_redemptions_limit: "2 ~ %{max_limit} 사이여야 합니다."
   topic_invite:
-    failed_to_invite: "%{group_names} 그룹 중 하나에 그룹 구성원이 없으면 이 주제에 사용자를 초대할 수 없습니다."
+    failed_to_invite: "%{group_names} 그룹 중 하나에 그룹 구성원이 없으면 이 글에 사용자를 초대할 수 없습니다."
     user_exists: "이 사용자는 이미 초대를 받았습니다. 주제 초대는 한 번만 할 수 있습니다."
     muted_topic: "이 사용자는 이 주제를 뮤트했습니다."
     user_cannot_see_topic: "%{username} 님은 주제를 볼 수 없습니다."
@@ -310,7 +312,7 @@ ko:
   contains_blocked_words: "게시할 수 없습니다. 금지어: %{words}."
   spamming_host: "이 호스트로의 링크를 게시할 수 없습니다."
   user_is_suspended: "정지된 사용자는 게시할 수 없습니다."
-  topic_not_found: "문제가 발생했습니다. 읽는 도중 이 주제가 종료되었거나 삭제되었을 수 있습니다."
+  topic_not_found: "문제가 발생했습니다. 읽는 도중 이 글이 잠금 처리 되었거나 삭제되었을 수 있습니다."
   not_accepting_pms: "%{username} 님은 현재 메시지를 받지 않습니다."
   max_pm_recipients: "최대 %{recipients_limit}명의 수신자에게만 메시지를 보낼 수 있습니다."
   pm_reached_recipients_limit: "메시지에 수신자가 %{recipients_limit}명을 초과할 수 없습니다."
@@ -728,11 +730,8 @@ ko:
     pm_body: "백업 초안이 포함된 주제"
   email_settings:
     pop3_authentication_error: "제공된 POP3 크리덴셜에 문제가 있습니다. 아이디와 비밀번호를 확인하고 다시 시도하세요."
-    imap_authentication_error: "제공된 IMAP 크리덴셜에 문제가 있습니다. 아이디와 비밀번호를 확인하고 다시 시도하세요."
-    imap_no_response_error: "IMAP 서버와 통신하는 중에 오류가 발생했습니다. %{message}"
     smtp_server_busy_error: "SMTP 서버가 현재 사용 중입니다. 나중에 다시 시도하세요."
     smtp_unhandled_error: "SMTP 서버와 통신 중에 처리되지 않은 오류가 발생했습니다. %{message}"
-    imap_unhandled_error: "IMAP 서버와 통신 중에 처리되지 않은 오류가 발생했습니다. %{message}"
     connection_error: "서버에 연결하는 중에 문제가 발생했습니다. 서버 이름과 포트를 확인한 후 다시 시도하세요."
     timeout_error: "서버 연결 시간이 초과되었습니다. 서버 이름과 포트를 확인한 후 다시 시도하세요."
     unhandled_error: "이메일 설정을 테스트하는 중에 처리되지 않은 오류가 발생했습니다. %{message}"
@@ -1305,7 +1304,7 @@ ko:
     background_polling_interval: "(창이 백그라운드에 있을 때) 클라이언트가 폴링할 주기(밀리초)"
     hide_post_sensitivity: "신고된 게시물이 숨겨질 가능성"
     silence_new_user_sensitivity: "스팸 신고로 인해 새 사용자가 차단될 가능성"
-    auto_close_topic_sensitivity: "신고된 주제가 자동 종료될 가능성"
+    auto_close_topic_sensitivity: "신고된 글이 자동으로 잠금 처리될 가능성"
     cooldown_minutes_after_hiding_posts: "커뮤니티 신고로 인해 숨겨진 주제를 사용자가 편집할 수 있기 전까지 대기해야 하는 시간(분)"
     max_topics_in_first_day: "첫 게시물 생성 후 24시간 사용자가 생성할 수 있는 최대 주제 수"
     max_replies_in_first_day: "첫 게시물 생성 후 24시간 사용자가 생성할 수 있는 최대 댓글 수"
@@ -1449,7 +1448,6 @@ ko:
     invite_link_max_redemptions_limit_users: "일반 사용자가 생성한 초대 링크에 허용되는 최대 사용 횟수는 이 값을 초과할 수 없습니다."
     alert_admins_if_errors_per_minute: "관리자 경고를 트리거하기 위한 분당 오류 수입니다. 이 기능을 비활성화하려면 0으로 설정하세요. 참고: 재시작해야 합니다."
     alert_admins_if_errors_per_hour: "관리자 경고를 트리거하기 위한 시간당 오류 수입니다. 이 기능을 비활성화하려면 0으로 설정하세요. 참고: 재시작해야 합니다."
-    categories_topics: "/categories 페이지에 표시할 주제 수입니다. 0으로 설정하면 두 열을 대칭으로 유지하기 위해 값을 자동으로 찾습니다(카테고리 및 주제)."
     suggested_topics: "주제 하단에 표시할 제안된 주제 수입니다."
     limit_suggested_to_category: "제안된 주제는 현재의 카테고리에 있는 주제만 표시합니다."
     suggested_topics_max_days_old: "제안된 주제는 n일을 넘지 않아야 합니다."
@@ -1607,14 +1605,7 @@ ko:
     pop3_polling_delete_from_server: "서버에서 이메일을 삭제하세요. 참고: 이 기능을 비활성화하면 받은 편지함을 수동으로 정리해야 합니다."
     log_mail_processing_failures: "모든 이메일 처리 실패를 <a href='%{base_path}/logs' target='_blank'>/logs</a>에 기록"
     email_in_authserv_id: "수신 이메일에 대한 인증 확인을 수행하는 서비스의 식별자입니다. 이를 환경설정하는 방법에 대한 지침은 <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>을 참조하세요."
-    enable_imap: "그룹 메시지를 동기화하기 위해 IMAP을 활성화합니다."
-    enable_imap_write: "양방향 IMAP 동기화를 활성화합니다. 비활성화하면 IMAP 계정에 대한 모든 쓰기 작업이 비활성화됩니다."
-    enable_imap_idle: "새 이메일을 기다리는 IMAP IDLE 메커니즘을 사용합니다."
     enable_smtp: "그룹 메시지에 대한 알림을 보내기 위해 SMTP를 활성화합니다."
-    imap_polling_period_mins: "IMAP 계정에서 이메일을 확인하는 간격(분)입니다."
-    imap_polling_old_emails: "IMAP 상자가 폴링될 때마다 업데이트되는 오래된 이메일(처리됨)의 최대 개수(모두 하려면 0)입니다."
-    imap_polling_new_emails: "IMAP 상자가 폴링될 때마다 업데이트되는 새 이메일(처리 안 됨)의 최대 개수입니다."
-    imap_batch_import_email: "임포트 모드를 트리거하는 새 이메일의 최소 개수입니다(임포트한 게시물 알림 비활성화)."
     email_prefix: "이메일 제목에 사용할 [라벨]입니다. 설정하지 않으면 기본적으로 '제목'이 됩니다."
     email_site_title: "사이트에서 이메일의 발신자로 사용되는 사이트 제목입니다. 설정하지 않으면 기본적으로 '제목'이 됩니다. '제목'에 이메일 발신자 스트링에 허용되지 않는 문자가 포함된 경우 이 설정을 사용하세요."
     find_related_post_with_key: "댓글을 달은 게시물을 찾으려면 '댓글 키'만 사용하세요. 경고: 이 기능을 비활성화하면 이메일 주소를 기반으로 사용자 가장이 허용됩니다."
@@ -1651,7 +1642,6 @@ ko:
     allow_users_to_hide_profile: "사용자가 자신의 프로필과 현재 상태를 숨기도록 허용"
     allow_featured_topic_on_user_profiles: "사용자가 자신의 사용자 카드 및 프로필에 있는 주제로 연결되는 링크를 제공하도록 허용합니다."
     show_inactive_accounts: "로그인한 사용자가 비활성 계정의 프로필을 탐색할 수 있도록 허용합니다."
-    hide_suspension_reasons: "사용자 프로필에 정지 이유를 공개적으로 표시하지 않습니다."
     log_personal_messages_views: "다른 사용자/그룹에 대해 관리자가 개인 메시지 조회수를 기록합니다."
     ignored_users_count_message_threshold: "이 정도의 다른 사용자가 특정 사용자를 무시하는 경우 운영자에게 알립니다."
     ignored_users_message_gap_days: "많은 사용자가 무시한 사용자를 운영자에게 다시 알리기 전에 기다려야 하는 시간입니다."
@@ -1724,6 +1714,7 @@ ko:
     default_other_external_links_in_new_tab: "기본적으로 새 탭에서 외부 링크를 엽니다."
     default_other_enable_quoting: "기본적으로 하이라이트된 텍스트에 대한 인용 댓글을 활성화합니다."
     default_other_enable_defer: "기본적으로 주제 함수 기능 연기를 활성화합니다."
+    default_other_enable_markdown_monospace_font: "마크다운 모드에서 글 작성시 기본적으로 고정폭 글꼴 사용"
     default_other_dynamic_favicon: "기본적으로 브라우저 아이콘에 신규/업데이트된 주제 수를 표시합니다."
     default_other_skip_new_user_tips: "신규 사용자 온보딩 팁 및 배지를 건너뜁니다."
     default_topics_automatic_unpin: "기본적으로 사용자가 주제 하단에 도달하면 주제를 자동으로 고정 해제합니다."
@@ -1827,6 +1818,16 @@ ko:
     results_page: "&#39;%{term}&#39;에 대한 검색 결과"
     audio: "[오디오]"
     video: "[비디오]"
+  filter:
+    description:
+      status: "글의 상태별 필터링"
+      order: "특정 필드를 기준으로 글 정렬"
+      category: "특정 카테고리의 글 보기"
+      tag: "특정 태그가 있는 글 보기"
+      tag_group: "특정 태그 그룹의 태그가 있는 글 보기"
+      created_after: "특정 날짜 이후에 작성된 글 보기 (YYYY-MM-DD 또는 일 전)"
+      users: "참가자별로 글 필터링"
+      group: "그룹별로 글 보기"
   discourse_connect:
     login_error: "로그인 오류"
     not_found: "계정을 찾을 수 없습니다. 사이트 관리자에게 문의하세요."
@@ -2792,7 +2793,7 @@ ko:
 
         %{respond_instructions}
     user_mentioned:
-      title: "사용자가 멘션함"
+      title: "사용자가 언급함"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |2
 
@@ -2804,7 +2805,7 @@ ko:
 
         %{respond_instructions}
     user_mentioned_pm:
-      title: "사용자가 개인 메시지를 멘션함"
+      title: "사용자가 개인 메시지를 언급함"
       subject_template: "[%{email_prefix}] [PM] %{topic_title}"
       text_body_template: |2
 
@@ -2816,7 +2817,7 @@ ko:
 
         %{respond_instructions}
     user_group_mentioned:
-      title: "사용자가 그룹 멘션함"
+      title: "사용자가 그룹 언급함"
       subject_template: "[%{email_prefix}] %{topic_title}"
       text_body_template: |2
 
@@ -3444,7 +3445,7 @@ ko:
       long_description: |
         이 배지는 게시물에 이모티콘을 처음 추가 할 때 부여됩니다 :thumbsup:. 이모티콘을 사용하면 게시물에 행복 :smiley: , 슬픔 :anguished: , 분노 :angry: 등 모든 감정을 전달할 수 있습니다 :sunglasses:. :(콜론)을 입력하거나 편집기에서 이모티콘 도구 모음 버튼을 눌러 수백 가지 선택 항목 중에서 선택하세요. :ok_hand:
     first_mention:
-      name: 첫 번째 멘션
+      name: 첫 번째 언급
       description: 처음으로 포스트에서 다른 사용자를 멘션했습니다
       long_description: |
         이 배지는 게시물에서 누군가의 @username 형식으로 처음 언급 했을때 부여됩니다. 각 멘션은 해당 사용자에게 알림을 생성하므로 사용자는 게시물에 대해 알 수 있습니다. @ (기호)를 입력하기만 하면 사용자 또는 허용되는 경우 그룹을 언급 할 수 있습니다. 이는 사용자의 관심을 끌 수있는 편리한 방법입니다.
@@ -3524,6 +3525,8 @@ ko:
     title: "안전 모드 시작"
     enter: "안전 모드 시작"
     must_select: "안전 모드를 시작하려면 옵션을 하나 이상 선택하세요."
+  dev_mode:
+    enter: "시작하다"
   wizard:
     title: "Discourse Setup"
     step:
@@ -3623,33 +3626,37 @@ ko:
         complete: "게시물 삭제됨."
       delete_and_agree_replies:
         confirm: "게시물에 대한 댓글도 삭제할까요?"
-      disagree_and_restore:
-        description: "모든 사용자가 볼 수 있도록 게시물을 복원합니다."
-      disagree:
+      disagree_bundle:
         title: "아니오"
       ignore:
         title: "무시"
       ignore_and_do_nothing:
         title: "아무것도하지 않음"
       approve:
-        title: "승인"
+        title: "예"
       approve_post:
-        title: "게시물 승인"
+        title: "예"
       approve_post_closed:
-        title: "게시물 승인"
+        title: "예"
         confirm: "이 주제는 종료되었습니다. 어쨌든 게시물을 작성 하시겠습니까?"
+      reject_post_bundle:
+        title: "아니오"
       reject_post:
         title: "게시물 거부"
       approve_user:
-        title: "사용자 승인"
+        title: "예"
       reject_user:
+        title: "아니오"
         delete:
           title: "사용자 삭제"
-          description: "사용자가 포럼에서 삭제됩니다."
           complete: "사용자 삭제됨."
         block:
           title: "사용자 삭제 및 차단"
           description: "사용자가 삭제되고 IP 및 이메일 주소가 차단됩니다."
+      confirm_spam:
+        title: "예"
+      not_spam:
+        title: "아니오"
       reject:
         title: "거부"
       reject_and_suspend:
@@ -3661,7 +3668,9 @@ ko:
       reject_and_keep_deleted:
         title: "게시물 삭제 유지"
       approve_and_restore:
-        title: "게시물 승인 및 복원"
+        title: "예"
+      approve_and_unhide:
+        title: "예"
       no_action_post:
         title: "조치 없음"
       delete_post:

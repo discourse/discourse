@@ -30,6 +30,9 @@ vi:
           cancel: hủy
       subscribe:
         countries:
+          KI: "Kiribati"
+          RU: "Liên bang Nga"
+          TR: "Thổ Nhĩ Kỳ"
           VN: "Việt Nam"
       billing:
         email: Email
@@ -38,7 +41,7 @@ vi:
           title: Bảng điều khiển
           table:
             head:
-              user: Người dùng
+              user: Thành viên
         products:
           product:
             description: Mô tả
@@ -54,6 +57,6 @@ vi:
           actions: Hành động
         subscriptions:
           subscription:
-            user: Người dùng
+            user: Thành viên
             status: Trạng thái
             created_at: Tạo bởi

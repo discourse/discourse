@@ -21,10 +21,6 @@ da:
             title: "Suspendér Bruger"
           agree_and_silence:
             title: "Ignorer bruger"
-          disagree:
-            title: "Uenig"
-          ignore:
-            title: "Gør ingenting"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

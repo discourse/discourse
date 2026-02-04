@@ -99,16 +99,10 @@ hu:
             title: "Hozzászólás törlése"
             description: "Hozzászólás törlése, hogy a felhasználók ne láthassák."
           delete_and_agree:
-            title: "Jelzés figyelmen kívül hagyása és megjegyzés törlése"
             description: "A jelző figyelmen kívül hagyásához távolítsa el a sorból, és törölje a megjegyzést."
           disagree_and_restore:
             title: "Nem értek egyet, és visszaállítom a hozzászólást"
             description: "Állítsa vissza a megjegyzést, hogy minden felhasználó láthassa."
-          disagree:
-            title: "Elutasítás"
-          ignore:
-            title: "Ne csináljon semmit"
-            description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne."
         transcript:
           view: "Korábbi hozzászólások átiratának megtekintése"
       reviewable_score_types:

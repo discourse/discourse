@@ -946,7 +946,6 @@ fa_IR:
   user_activity:
     no_log_search_queries: "لاگ درخواست‌های جستجو در حال حاضر غیرفعال است (مدیر می‌تواند آن را در تنظیمات سایت فعال کند)."
   email_settings:
-    imap_unhandled_error: "هنگام برقراری ارتباط با سرور IMAP یک خطای کنترل نشده وجود داشت. %{message}"
     connection_error: "مشکلی در اتصال با سرور وجود داشت. نام سرور و پورت را بررسی کنید و دوباره امتحان کنید."
     timeout_error: "مدت زمان اتصال به سرور، بیش از حد طول کشید. نام سرور و پورت را بررسی کنید و دوباره امتحان کنید."
     unhandled_error: "خطای کنترل نشده هنگام تست تنظیمات ایمیل. %{message}"
@@ -2761,6 +2760,8 @@ fa_IR:
     title: "ورود به حالت امن"
     no_themes: "غیرفعال کردن پوسته‌ها و اجزای پوسته"
     enter: "فعال‌سازی حالت امن"
+  dev_mode:
+    enter: "وارد شدن "
   wizard:
     title: "راه اندازی Discourse"
     step:
@@ -2826,8 +2827,11 @@ fa_IR:
       delete_and_agree:
         title: "حذف نوشته"
         complete: "نوشته حذف شده."
-      disagree:
+      disagree_and_restore:
+        title: "بازیابی نوشته"
+      disagree_bundle:
         title: "خیر"
+      disagree:
         complete: "پرچم نادیده گرفته شد."
       ignore:
         title: "چشم پوشی"
@@ -2835,24 +2839,37 @@ fa_IR:
       ignore_and_do_nothing:
         complete: "پرچم نادیده گرفته شد."
       approve:
-        title: "تایید"
+        title: "بله"
         complete: "نوشته تایید شده."
       approve_post:
+        title: "بله"
         complete: "نوشته تایید شده."
       approve_post_closed:
+        title: "بله"
         complete: "نوشته تایید شده."
+      reject_post_bundle:
+        title: "خیر"
       reject_post:
         complete: "نوشته رد شده."
       approve_user:
+        title: "بله"
         complete: "کاربر تایید شده."
       reject_user:
-        title: "حذف کاربر…"
+        title: "خیر"
         delete:
           title: "حذف کاربر"
           complete: "کاربر حذف شده."
+      confirm_spam:
+        title: "بله"
+      not_spam:
+        title: "خیر"
       reject:
         title: "رد کردن"
         bundle_title: "رد کردن…"
+      approve_and_restore:
+        title: "بله"
+      approve_and_unhide:
+        title: "بله"
       no_action_post:
         title: "هیچ اقدامی"
       delete_post:

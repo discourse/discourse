@@ -1040,12 +1040,9 @@ fi:
     no_log_search_queries: "Haun kyselylokit eivät ole tällä hetkellä käytössä (ylläpitäjä voi ottaa ne käyttöön sivuston asetuksista)."
   email_settings:
     pop3_authentication_error: "Annetuissa POP3-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
-    imap_authentication_error: "Annetuissa IMAP-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen."
-    imap_no_response_error: "Yhteydessä IMAP-palvelimeen tapahtui virhe. %{message}"
     smtp_authentication_error: "Annetuissa SMTP-tunnistetiedoissa oli ongelma, tarkista käyttäjätunnus ja salasana ja yritä uudelleen. %{message}"
     smtp_server_busy_error: "SMTP-palvelin on tällä hetkellä varattu, yritä myöhemmin uudelleen."
     smtp_unhandled_error: "Kommunikoinnissa SMTP-palvelimen kanssa tapahtui käsittelemätön virhe. %{message}"
-    imap_unhandled_error: "Kommunikoinnissa IMAP-palvelimen kanssa tapahtui käsittelemätön virhe. %{message}"
     connection_error: "Yhteyden muodostaminen palvelimeen ei onnistunut, tarkista palvelimen nimi ja portti ja yritä uudelleen."
     timeout_error: "Yhteys palvelimeen aikakatkaistiin, tarkista palvelimen nimi ja portti ja yritä uudelleen."
     unhandled_error: "Käsittelemätön virhe sähköpostiasetusten testauksessa. %{message}"
@@ -1701,7 +1698,6 @@ fi:
     manifest_icon: "Kuva, jota käytetään logo-/splash-kuvana Androidissa. Skaalataan automaattisesti kokoon 512×512. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään."
     manifest_screenshots: "Näyttökuvat, jotka esittelevät esiintymäsi ominaisuuksia ja toimintoja sen asennuskehotussivulla. Kaikkien kuvien täytyy olla paikallisia ja samankokoisia."
     favicon: "Sivuston favicon, ks. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. Täytyy olla png, jotta toimii CDN:n kanssa. Skaalataan kokoon 32x32. Jos jätetty tyhjäksi, large_icon-kuvaketta käytetään."
-    apple_touch_icon: "Applen kosketuslaitteissa käytettävä kuvake. Läpinäkyvää taustaa ei suositella. Skaalataan automaattisesti kokoon 180x180. Jos jätetään tyhjäksi, large_icon-kuvaketta käytetään."
     opengraph_image: "Oletuksena käytettävä opengraph-kuva, käytetään, kun sivulla ei ole muita sopivia kuvia. Jos jätetty tyhjäksi, large_icon-kuvaa käytetään"
     x_summary_large_image: "Twitter-kortin \"summary large image\" (leveys vähintään 280 ja korkeus vähintään 150, ei voi olla .svg). Jos jätetty tyhjäksi, tavallisen kortin metatiedot luodaan käyttämällä opengraph_image-kuvaa, kunhan se ei ole myös .svg."
     notification_email: "Sähköpostiosoite, josta kaikki tärkeät järjestelmän lähettämät sähköpostiviestit lähetetään. Tässä määritetyn verkkotunnuksen SPF, DKIM ja käänteiset PTR-tietueet täytyy olla asetettu oikein, jotta sähköpostit menevät perille."
@@ -1928,7 +1924,6 @@ fi:
     invite_link_max_redemptions_limit_users: "Tavallisten käyttäjien luomien kutsulinkkien sallittujen lunastusten enimmäismäärä ei voi olla tätä arvoa suurempi."
     alert_admins_if_errors_per_minute: "Virheiden määrä minuutissa, jonka seurauksena hälytetään ylläpitäjä. 0 poistaa toiminnon käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
     alert_admins_if_errors_per_hour: "Virheiden määrä tunnissa, jonka seurauksena hälytetään ylläpitäjä. 0 poistaa toiminnon käytöstä. HUOM: vaatii uudelleenkäynnistyksen."
-    categories_topics: "Kuinka monta ketjua näytetään Alueet-sivulla (/categories). Jos 0, etsitään automaattisesti arvoa, jolla kaksi saraketta pysyvät symmetrisinä (alueet ja ketjut)."
     suggested_topics: "Ehdotettujen ketjujen määrä ketjun alaosassa."
     limit_suggested_to_category: "Ehdota ketjuja vain nykyiseltä alueelta."
     suggested_topics_max_days_old: "Ehdotettujen ketjujen ei tulisi olla yli n päivää vanhoja."
@@ -2150,14 +2145,7 @@ fi:
     email_in_allowed_groups: "Ryhmät, jotka voivat julkaista uusia ketjuja sähköpostitse. Ylläpitäjät ja valvojat voivat aina julkaista uusia ketjuja sähköpostitse."
     email_in_authserv_id: "Saapuvien sähköpostien todennustarkistukset suorittavan palvelun tunniste. Katso ohjeet tämän määrittämiseen osoitteesta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a>."
     email_in_spam_header: "Valitsee tietyn sähköpostin ylätunnisteen, jota käytetään roskapostin tunnistamiseen. Tämä vaihtoehto voi olla X-Spam-Flag, X-Spam-Status tai X-SES-Spam-Verdict, ja sähköposti merkitään roskapostiksi ylätunnisteen arvon perusteella. Jos valittu asetus on esimerkiksi X-Spam-Flag, sähköposti, jonka ylätunnisteen arvo on KYLLÄ, luokitellaan roskapostiksi."
-    enable_imap: "Ota IMAP käyttöön ryhmäviestien synkronoimiseksi."
-    enable_imap_write: "Ota kaksisuuntainen IMAP-synkronointi käyttöön. Jos se on poistettu käytöstä, kaikki IMAP-tilien kirjoitustoiminnot poistetaan käytöstä."
-    enable_imap_idle: "Käytä IMAP IDLE -mekanismia uusien sähköpostien odottamiseen."
     enable_smtp: "Ota SMTP käyttöön ryhmäviestien ilmoitusten lähettämisessä."
-    imap_polling_period_mins: "Aika minuutteina sähköpostien tarkistusten välillä IMAP-tileiltä."
-    imap_polling_old_emails: "Päivitettävien vanhojen (käsiteltyjen) sähköpostien enimmäismäärä joka kerta, kun IMAP-laatikkoa pollataan (0 on kaikki)."
-    imap_polling_new_emails: "Päivitettävien uusien (käsittelemättömien) sähköpostien enimmäismäärä joka kerta, kun IMAP-laatikkoa pollataan."
-    imap_batch_import_email: "Tuontitilan käynnistävä vähimmäismäärä uusia sähköposteja (poistaa viestihälytykset käytöstä)."
     email_prefix: "Sähköpostin aiheessa käytettävä [tunniste]. Jos et aseta arvoa, oletusarvona käytetään 'otsikkoa'."
     email_site_title: "Sähköpostin lähettäjänä käytettävä nimi. Jos arvoa ei ole asetettu, oletuksena käytetään 'otsikkoa'. Jos 'otsikko' sisältää merkkejä, joita ei sallita sähköpostin lähettäjän nimessä, käytä tätä asetusta."
     find_related_post_with_key: "Käytä vain vastausavainta vastatun viestin löytämiseen. VAROITUS: tämän poistaminen käytöstä mahdollistaa sähköpostiosoitteeseen pohjautuvan toisena esiintymisen."
@@ -2201,8 +2189,6 @@ fi:
     delete_associated_accounts_on_password_reset: "Poista käyttäjään liitetty tili, kun käyttäjä vaihtaa salasanaa."
     allow_featured_topic_on_user_profiles: "Salli käyttäjän esitellä linkkiä ketjuun käyttäjäkortissaan ja profiilissaan."
     show_inactive_accounts: "Salli kirjautuneiden käyttäjien selata aktivoimattomia käyttäjätilejä."
-    hide_silencing_reasons: "Älä näytä hiljennysten syitä julkisesti käyttäjäprofiileissa."
-    hide_suspension_reasons: "Älä näytä hyllytysten syitä julkisesti käyttäjäprofiileissa."
     log_personal_messages_views: "Pidä lokia siitä, kun ylläpitäjät lukevat toisten käyttäjien/ryhmien henkilökohtaisia viestejä."
     ignored_users_count_message_threshold: "Huomauta valvojille, jos näin moni käyttäjä sivuuttaa tietyn käyttäjän."
     ignored_users_message_gap_days: "Millaisin väliajoin valvojia huomautetaan uudelleen käyttäjästä, jonka monet muut ovat sivuuttaneet."
@@ -2215,7 +2201,6 @@ fi:
     dont_feed_the_trolls_threshold: "Muiden käyttäjien tekemä ilmoitusmäärä, josta seuraa varoitus."
     enable_mobile_theme: "Mobiililaitteet käyttävät mobiiliystävällistä teemaa, jonka voi vaihtaa koko sivustoon. Poista asetus käytöstä, jos haluat käyttää omaa tyylitiedostoa, joka on mukautuva eri laitteille."
     dominating_topic_minimum_percent: "Kuinka monta prosenttia ketjun viesteistä käyttäjän täytyy kirjoittaa, ennen kuin häntä muistutetaan ketjun dominoinnista."
-    pm_warn_user_last_seen_months_ago: "Varoita käyttäjiä yksityisviestiä luotaessa siitä, että vastaanottaja on nähty viimeksi yli n kuukautta sitten."
     suppress_uncategorized_badge: "Älä näytä alueettomille ketjuille tunnusta ketjujen listauksissa."
     header_dropdown_category_count: "Kuinka monta aluetta näytetään yläpalkin pudotusvalikossa."
     permalink_normalizations: "Sovella tätä säännöllistä lauseketta ennen pysyvien linkkien sovittamista, esim. /(topic.*)\\?.*/\\1 poistaa hakulausekkeet ketjujen reiteistä. Muoto on regex+string, \\1 jne. avulla pääset käsiksi captureihin."
@@ -2410,7 +2395,6 @@ fi:
     default_navigation_menu_categories: "Valitut alueet näkyvät navigointivalikon Alueet-osiossa oletuksena."
     default_navigation_menu_tags: "Valitut tunnisteet näkyvät navigointivalikon Tunnisteet-osiossa oletuksena."
     experimental_new_new_view_groups: 'Ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
-    experimental_form_templates: "Ota lomakemalliominaisuus käyttöön.Voit hallinnoida malleja kohdassa <a href='%{base_path}/admin/customize/form-templates'>Mukauta / Mallit</a>."
     show_preview_for_form_templates: "Ota esikatselu käyttöön lomakkemalliominaisuudessa"
     lazy_load_categories_groups: "Käytä laiskaa latausta alueen tietoihin vain näiden ryhmien käyttäjille. Tämä parantaa suorituskykyä sivustoilla, joilla on useita alueita."
     experimental_auto_grid_images: "Lisää automaattisesti kuvat [grid]-tunnisteisiin, kun 3 tai useampia kuvia ladataan kirjoitustilassa."
@@ -2427,7 +2411,6 @@ fi:
     default_composition_mode: "Aseta yhteisösi kirjoitustilan oletustila. Muotoilutila tarjoaa useimmille käyttäjille modernimman ja tutumman kirjoituskokemuksen, kun taas markdown-tila saattaa sopia teknisemmälle yleisölle. Jäsenet voivat vaihtaa tilojen välillä kirjoitustilan työkalupalkin valitsimella."
     reviewable_ui_refresh: "Ryhmät, jotka voivat käyttää kokeellista uutta käyttöliittymää tarkastusjonossa."
     content_localization_enabled: "Näyttää käyttäjille lokalisoitua sisältöä heidän selain- tai kieliasetustensa perusteella. Tällainen sisältö voi sisältää alueita, tunnisteita, viestejä ja ketjuja. Tuetut kielialueet on asetettu asetuksessa \"content localization supported locales\"."
-    content_localization_supported_locales: "Luettelo tuetuista kielialueista, joille käyttäjäsisältö voidaan kääntää. Edellyttää \"content localization enabled\" -asetusta."
     content_localization_allowed_groups: "Ryhmät, jotka voivat päivittää lokalisoitua sisältöä. Edellyttää \"content localization enabled\" -asetusta."
     errors:
       invalid_css_color: "Virheellinen väri. Anna värin nimi tai heksadesimaaliarvo."
@@ -4828,6 +4811,8 @@ fi:
     deprecation_error_label: Aseta Javascriptin vanhentumiset aiheuttamaan virhe
     enter: "Siirry vikasietotilaan"
     must_select: "Ainakin yksi on valittava, jotta voi siirtyä vikasietotilaan."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discoursen asennus"
     step:
@@ -4921,8 +4906,6 @@ fi:
     api_post_delete: "Poistettu APIn kautta"
     reminder_deleted: "Korvattu uudella muistutuksella"
     user_associated_posts_deleted: "Käyttäjä tuhottiin"
-    imap_email_deleted: "Sähköposti on poistettu IMAP-palvelimelta"
-    imap_email_marked_as_spam: "Sähköposti on siirretty roskapostiin IMAP-palvelimella"
     auto_deleted_hidden_posts: "Automaattisesti tuhotut piilotetut viestit"
     seed_data_topic_updated: "Seed-tiedon aihe päivitetty"
     seed_data_topic_deleted: "Seed-tiedon aihe poistettu"
@@ -4994,19 +4977,14 @@ fi:
         description: "Hyväksy liputtamalla ja piilota julkaisu + lähetä käyttäjälle automattisesti yksityisviesti, jossa häntä pyydetään muokkaamaan sitä."
         complete: "Viesti piilotettu, käyttäjälle on ilmoitettu."
       agree_and_edit:
-        title: "Hyväksy ja muokkaa viestiä"
         description: "Hyväksy lipulla ja avaa kirjoitusikkuna viestin muokkaamiseksi."
         complete: "Lippu vahvistettu, voit nyt muokata viestiä."
       delete:
         title: "Poista"
         complete: "Viesti poistettu."
       delete_and_ignore:
-        title: "Ohita liputus ja poista viesti"
-        description: "Ohita liputus poistamalla se jonosta ja poista viesti; jos viesti on ensimmäinen viesti, poista myös ketju. "
         complete: "Viesti poistettu."
       delete_and_ignore_replies:
-        title: "Ohita liputus, poista viesti ja vastaukset"
-        description: "Ohita liputus poistamalla se jonosta, poista viesti ja kaikki sen vastaukset; jos viesti on ensimmäinen viesti, poista myös ketju"
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
         complete: "Viesti ja vastaukset poistettu."
       delete_and_agree:
@@ -5019,11 +4997,12 @@ fi:
         confirm: "Oletko varma, että haluat poistaa myös viestin vastaukset?"
         complete: "Viesti ja vastaukset poistettu."
       disagree_and_restore:
-        title: "Ei, palauta viesti"
-        description: "Palauta viesti, niin kaikki käyttäjät näkevät sen."
+        title: "Palauta viesti"
         complete: "Viesti palautettu."
-      disagree:
+      disagree_bundle:
         title: "Ei"
+      disagree:
+        title: "Säilytä viesti"
         complete: "Liputus ohitettu."
       discard_post:
         title: "Hylkää viesti"
@@ -5038,31 +5017,36 @@ fi:
         description: "Ohita liputus poistamalla se jonosta tekemättä mitään. Piilotetut viestit pysyvät piilossa ja automaattiset työkalut käsittelevät ne."
         complete: "Liputus ohitettu."
       approve:
-        title: "Hyväksy"
+        title: "Kyllä"
         complete: "Viesti hyväksytty."
       approve_post:
-        title: "Hyväksy viesti"
+        title: "Kyllä"
         complete: "Viesti hyväksytty."
       approve_post_closed:
-        title: "Hyväksy viesti"
+        title: "Kyllä"
         confirm: "Tämä ketju on suljettu. Haluatko silti luoda viestin?"
         complete: "Viesti hyväksytty."
+      reject_post_bundle:
+        title: "Ei"
       reject_post:
         title: "Hylkää viesti"
         complete: "Viesti hylätty."
       approve_user:
-        title: "Hyväksy käyttäjä"
+        title: "Kyllä"
         complete: "Käyttäjä hyväksytty."
       reject_user:
-        title: "Poista käyttäjä…"
+        title: "Ei"
         delete:
           title: "Poista käyttäjä"
-          description: "Käyttäjä poistetaan foorumista."
           complete: "Käyttäjä poistettu."
         block:
           title: "Poista ja estä käyttäjä"
           description: "Käyttäjä poistetaan ja hänen IP-osoitteensa sekä sähköpostiosoitteensa estetään."
           complete: "Käyttäjä poistettu ja estetty."
+      confirm_spam:
+        title: "Kyllä"
+      not_spam:
+        title: "Ei"
       reject:
         title: "Hylkää"
         bundle_title: "Hylkää…"
@@ -5081,10 +5065,10 @@ fi:
       scrub:
         title: Puhdistusrekisteri
       approve_and_restore:
-        title: "Hyväksy ja palauta viesti"
+        title: "Kyllä"
         complete: "Viesti hyväksytty ja palautettu."
       approve_and_unhide:
-        title: "Hyväksy ja näytä viesti"
+        title: "Kyllä"
         complete: "Viesti hyväksytty ja näkyvissä"
       no_action_post:
         title: "Ei toimintaa"

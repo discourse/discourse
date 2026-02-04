@@ -1006,6 +1006,8 @@ bs_BA:
       button: "Registriraj"
     resend_email:
       title: "Pošalji ponovo email aktivacije"
+  dev_mode:
+    enter: "Naprijed"
   wizard:
     step:
       setup:
@@ -1062,20 +1064,37 @@ bs_BA:
         complete: "Post izbrisan."
       delete_and_agree:
         complete: "Post izbrisan."
-      disagree:
+      disagree_bundle:
         title: "Ne"
       ignore:
         title: "Zanemari"
       ignore_and_do_nothing:
         title: "Ne radi ništa"
       approve:
-        title: "Odobri"
+        title: "Da"
+      approve_post:
+        title: "Da"
+      approve_post_closed:
+        title: "Da"
+      reject_post_bundle:
+        title: "Ne"
+      approve_user:
+        title: "Da"
       reject_user:
+        title: "Ne"
         delete:
           title: "Delete User"
           complete: "Korisnik izbrisan."
+      confirm_spam:
+        title: "Da"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Odbij"
+      approve_and_restore:
+        title: "Da"
+      approve_and_unhide:
+        title: "Da"
       delete_post:
         complete: "Post izbrisan"
       delete_user:

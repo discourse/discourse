@@ -30,6 +30,7 @@ Discourse::Application.routes.draw do
     if Rails.env.local?
       get "/bootstrap/plugin-css-for-tests.css" => "bootstrap#plugin_css_for_tests"
       get "/bootstrap/core-css-for-tests.css" => "bootstrap#core_css_for_tests"
+      get "/bootstrap/site-settings-for-tests.js" => "bootstrap#site_settings_for_tests"
     end
 
     # This is not a valid production route and is causing routing errors to be raised in
@@ -1647,6 +1648,7 @@ Discourse::Application.routes.draw do
 
     get "robots.txt" => "robots_txt#index"
     get "robots-builder.json" => "robots_txt#builder"
+    get "llms.txt" => "static#llms_txt"
     get "offline.html" => "offline#index"
     get "manifest.webmanifest" => "metadata#manifest", :as => :manifest
     get "manifest.json" => "metadata#manifest"

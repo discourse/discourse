@@ -26,8 +26,6 @@ fa_IR:
             title: "کاربر تعلیق شده"
           agree_and_silence:
             title: "سکوت کاربر"
-          disagree:
-            title: "مخالف"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

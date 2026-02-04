@@ -117,6 +117,3 @@ it:
     review:
       transcript:
         view: "Visualizza la trascrizione dei messaggi precedenti"
-      types:
-        reviewable_post_voting_comment:
-          title: "Commento sulla votazione del messaggio contrassegnato"

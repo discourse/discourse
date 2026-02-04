@@ -147,8 +147,8 @@ export default <template>
     {{#if @controller.showFooter}}
       <CustomHtml
         @name="footer"
-        @triggerAppEvent="true"
-        @classNames="custom-footer-content"
+        @triggerAppEvent={{true}}
+        class="custom-footer-content"
       />
     {{/if}}
     <PluginOutlet

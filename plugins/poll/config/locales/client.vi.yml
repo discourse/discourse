@@ -5,32 +5,73 @@
 # https://translate.discourse.org/
 
 vi:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          poll: "Discourse Poll"
   js:
     poll:
+      dynamic:
+        enabled_hint: "Có thể thêm hoặc xóa các tùy chọn."
       voters:
         other: "người bình chọn"
       total_votes:
-        other: "tổng số bình chọn"
+        other: "tổng bình chọn"
       votes:
-        other: "%{count} vốt"
+        other: "%{count} lượt bình chọn"
       average_rating: "Trung bình: <strong>%{average}</strong>."
       public:
-        title: "Bình chọn <strong>công khai</strong>"
+        title: "Lượt bình chọn là <strong>công khai</strong>"
+      results:
+        groups:
+          title: "Bạn cần phải là thành viên của %{groups} để bình chọn."
+        vote:
+          title: "Kết quả sẽ được hiển thị trên <strong>bình chọn</strong>."
+        closed:
+          title: "Kết quả sẽ được hiển thị sau khi <strong>đóng</strong>."
+        staff:
+          title: "Kết quả chỉ được hiển thị cho <strong>BQT</strong>."
+        tabs:
+          votes: "Lượt bình chọn"
+          outcome: "Kết quả"
+      multiple:
+        help:
+          at_least_min_options:
+            other: "Chọn ít nhất <strong>%{count} lựa chọn</strong>."
+          up_to_max_options:
+            other: "Chọn tối đa <strong>%{count} lựa chọn</strong>."
+          x_options:
+            other: "Chọn <strong>%{count} lựa chọn</strong>."
+          between_min_and_max_options: "Chọn giữa các lựa chọn <strong>%{min} và %{max}</strong>."
       cast-votes:
-        title: "Thay đổi bình chọn của bạn"
+        title: "Bình chọn theo ý bạn"
         label: "Bình chọn ngay!"
       show-results:
-        title: "Hiển thị kết quả thăm dò"
+        title: "Hiển thị kết quả bình chọn"
         label: "Kết quả"
+      show-tally:
+        title: "Hiển thị kết quả bình chọn theo số lượng bình chọn"
+        label: "Hiển thị số liệu"
+      show-percentage:
+        title: "Hiển thị kết quả bình chọn dưới dạng phần trăm"
+        label: "Hiển thị dưới dạng phần trăm"
+      remove-vote:
+        title: "Xóa bình chọn của bạn"
+        label: "Thu hồi bình chọn"
       hide-results:
         title: "Trở lại bình chọn của bạn"
+        label: "Bình chọn"
+      group-results:
+        title: "Nhóm lượt bình chọn theo trường người dùng"
+        label: "Hiển thị phân tích"
       export-results:
-        title: "Xuất kết quả thăm dò ý kiến"
+        title: "Xuất kết quả bình chọn"
         label: "Xuất"
       open:
-        title: "Mở thăm dò"
+        title: "Mở bình chọn"
         label: "Mở"
-        confirm: "Bạn có muốn mở thăm dò này?"
+        confirm: "Bạn có muốn mở bình chọn này?"
       close:
         title: "Đóng thăm dò"
         label: "Đóng"
@@ -40,55 +81,75 @@ vi:
         age: "Đã đóng <strong>%{age}</strong>"
       breakdown:
         title: "Kết quả thăm dò ý kiến"
-        votes: "%{count} vốt"
+        votes: "%{count} lượt bình chọn"
+        breakdown: "Phân tích chi tiết"
         percentage: "Phần trăm"
         count: "Đếm"
       ranked_choice:
+        title:
+          rounds: "Số vòng"
+          outcome: "Kết quả"
         none: "Không có gì"
+        majority: "Đa số"
+        eliminated: "Bị loại"
+        round: "Vòng"
+        winner:
+          other: "Người chiến thắng là %{winner} sau %{count} vòng."
+        tied:
+          other: "Sau %{count} vòng, các ứng cử viên sau đây đã hòa nhau:"
       options:
         label: "Tùy chọn"
-      error_while_toggling_status: "Đã có lỗi xảy ra khi chuyển trạng thái của thăm dò."
-      error_while_casting_votes: "Đã có lỗi xảy ra làm ảnh hưởng đến bình chọn của bạn."
-      error_while_fetching_voters: "Đã có lỗi xảy ra khi hiển thị những người tham gia bình chọn."
-      error_while_exporting_results: "Xin lỗi, đã xảy ra lỗi khi xuất kết quả thăm dò ý kiến."
+        ranked_choice:
+          abstain: "Không tham gia"
+          highest_priority: "(Ưu tiên cao nhất)"
+          lowest_priority: "(Ưu tiên thấp nhất)"
+          login: "Đăng nhập để bình chọn!"
+      error_while_toggling_status: "Đã có lỗi xảy ra khi chuyển trạng thái bình chọn."
+      error_while_casting_votes: "Đã có lỗi xảy ra làm ảnh hưởng đến lượt bình chọn của bạn."
+      error_while_fetching_voters: "Đã có lỗi xảy ra khi hiện những người tham gia bình chọn."
+      error_while_exporting_results: "Đã có lỗi xảy ra khi xuất kết quả bình chọn."
       ui_builder:
-        insert: Chèn thăm dò
+        title: Tạo bình chọn
+        insert: Chèn bình chọn
         help:
-          options_min_count: Nhập ít nhất 1 tùy chọn.
-          options_max_count: Nhập nhiều nhất %{count} tùy chọn.
+          options_min_count: Nhập ít nhất 1 lựa chọn.
+          options_max_count: Nhập tối đa %{count} lựa chọn.
           invalid_min_value: Giá trị tối thiểu phải ít nhất là 1.
           invalid_max_value: Giá trị lớn nhất phải ít nhất là 1, nhưng nhỏ hơn hoặc bằng số lượng tùy chọn.
-          invalid_values: Giá trị nhỏ nhất phải nhỏ hơn giá trị lớn nhất.
+          invalid_values: Giá trị tối thiểu phải nhỏ hơn giá trị tối đa.
           min_step_value: Khoảng cách tối thiểu là 1
         poll_type:
           label: Loại
           regular: Một lựa chọn
           multiple: Nhiều lựa chọn
+          ranked_choice: Lựa chọn thứ hạng
           number: Xếp hạng
         poll_result:
-          label: Hiển thị kết quả...
+          label: Hiện kết quả
           always: Luôn hiển thị
-          vote: Chỉ sau khi bỏ phiếu
-          closed: Khi cuộc thăm dò kết thúc
-          staff: Chỉ nhân viên
+          vote: Chỉ sau khi bình chọn
+          closed: Khi cuộc bình chọn kết thúc
+          staff: Chỉ BQT
         poll_groups:
-          label: Hạn chế bỏ phiếu cho các nhóm này
+          label: Hạn chế bình chọn với các nhóm sau
         poll_chart_type:
           label: Biểu đồ kết quả
-          bar: Bar
-          pie: Pie
+          bar: Cột
+          pie: Tròn
         poll_config:
           max: Lựa chọn tối đa
           min: Lựa chọn tối thiểu
-          step: Bước
+          step: Vòng
         poll_public:
-          label: Hiển thị người đã bình chọn
+          label: Hiện người đã bình chọn
+        poll_dynamic:
+          label: Cho phép thêm hoặc xóa các lựa chọn sau khi đăng
         poll_title:
           label: Tiêu đề (tùy chọn)
         poll_options:
-          label: Tùy chọn (một trên mỗi dòng)
-          add: Thêm tùy chọn
+          label: Lựa chọn (mỗi dòng một cái)
+          add: Thêm lựa chọn
         automatic_close:
-          label: Tự động đóng thăm dò ý kiến
+          label: Tự động đóng bình chọn
         show_advanced: "Hiển thị các tùy chọn nâng cao"
         hide_advanced: "Ẩn các tùy chọn nâng cao"

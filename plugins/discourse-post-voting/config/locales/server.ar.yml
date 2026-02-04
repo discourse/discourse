@@ -107,16 +107,10 @@ ar:
             title: "حذف التعليق"
             description: "حذف التعليق حتى لا يتمكن المستخدمون من رؤيته."
           delete_and_agree:
-            title: "تجاهل البلاغ وحذف التعليق"
             description: "تجاهل البلاغ بإزالته من قائمة الانتظار وحذف التعليق."
           disagree_and_restore:
             title: "عدم الموافقة واستعادة التعليق"
             description: "استعادة التعليق حتى يتمكن جميع المستخدمين من رؤيته."
-          disagree:
-            title: "عدم الموافقة"
-          ignore:
-            title: "عدم اتخاذ أي إجراء"
-            description: "تجاهل البلاغ بإزالته من قائمة الانتظار دون اتخاذ أي إجراء."
         transcript:
           view: "عرض نص التعليقات السابقة"
       reviewable_score_types:

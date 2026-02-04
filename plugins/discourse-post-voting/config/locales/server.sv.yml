@@ -23,11 +23,6 @@ sv:
           agree_and_silence:
             title: "Tysta användaren"
             description: "Godkänn flaggning och tysta användaren."
-          disagree:
-            title: "Håll inte med"
-          ignore:
-            title: "Gör ingenting"
-            description: "Ignorera flaggan genom att ta bort den från kön utan att vidta någon åtgärd."
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

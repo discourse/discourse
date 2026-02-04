@@ -18,8 +18,6 @@ nl:
           title: Toewijzingen
         chat_usage:
           messages: berichten
-          author: Jij
-          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Uitnodigingen

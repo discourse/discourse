@@ -346,6 +346,8 @@ sw:
         reviewable_post:
           title: "Ujumbe"
           noun: "ujumbe"
+        reviewable_ai_post:
+          noun: "ujumbe"
       user_label: "Mtumiaji"
       notes:
         delete: "Futa"
@@ -451,8 +453,6 @@ sw:
             password: "Nywila"
           settings:
             title: "Mpangilio"
-          mailboxes:
-            disabled: "Imezuiwa"
         membership:
           title: Uanachama
           access: Ufikivu
@@ -1928,6 +1928,8 @@ sw:
       creation_error: Tatizo limetokea wakati wa kutengeneza kategoria.
       save_error: Hitilafu imetokea wakati wa kuhifadhi kategoria.
       description: "Maelezo"
+      icon: "ikoni"
+      emoji: "Emoji"
       background_color: "Rangi"
       color_validations:
         cant_be_empty: "haiwezi kuachwa wazi"
@@ -1937,7 +1939,6 @@ sw:
         options:
           icon: "ikoni"
           emoji: "Emoji"
-      name_placeholder: "Neno moja au mawili"
       color_placeholder: "Rangi yoyote ya mtandao"
       delete_confirm: "Una uhakika unataka kufuta kategoria hii?"
       delete_error: "Hitilafu imetokea wakati wa kuondoa kategoria."
@@ -1949,7 +1950,6 @@ sw:
         see: "Angalia"
         reply: "Jibu"
         create: "Tengeneza"
-      images: "Picha"
       email_in: "Barua Pepe inayoingia:"
       email_in_allow_strangers: "Pokea barua pepe kutoka kwa watumiaji wasiojulikana ambao hawana akaunti"
       num_featured_topics: "Idadi ya mada zitakazo onyeshwa ndani ya ukurasa wa kategoria:"
@@ -1958,6 +1958,11 @@ sw:
       review_group_name: "jina la kikundi"
       this_year: "mwaka huu"
       minimum_required_tags: "Kiwango cha chini cha lebo zinazohitajika kwenye mada:"
+      none_subcategory_text: "Hakuna"
+      visibility:
+        title: "Uonekanaji"
+        public: "Umma"
+        group_restricted: "Binafsi"
       notifications:
         watching:
           title: "Angalia"
@@ -2413,6 +2418,9 @@ sw:
           enabled: "Imeruhusiwa"
           disabled: "Imezuiwa"
           impact_type_other: "Nyingine"
+          impact_role_admins: "Viongozi"
+          impact_role_moderators: "Wasimamizi"
+          impact_role_staff: "Wasaidizi"
       config:
         developer:
           title: "Mtengenezaji"
@@ -2565,6 +2573,8 @@ sw:
           disabled: "Hii ripoti imezuiwa"
           total: "Jumla ya wakati wote"
           no_data: "Hakuna data za kuoneshwa"
+          sort_ascending: "kupanda"
+          sort_descending: "kushuka"
           filters:
             group:
               label: Kikundi
@@ -3404,6 +3414,7 @@ sw:
           empty: "Hakuna picha ,Tafadhali pakia moja."
           upload:
             label: "Pakia"
+        download_file: "Pakua"
         categories:
           all_results: "Zote"
           required: "Muhimu na Inahitajika"

@@ -25,6 +25,10 @@
 #                          - status: experimental | alpha | beta | stable
 #                          - impact: two parts separated by comma - feature|other , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
+# depends_on            - One or more boolean settings that must be true for this setting to take effect.
+# depends_behavior      - The behavior of the dependent setting. Only currently supported behaviour is "hidden"
+#                         to hide the setting if the dependent setting is false. If left blank, no special behavior
+#                         is applied and the setting is shown as normal.
 #
 #
 #
@@ -49,7 +53,12 @@
 # type: category_list         - A list of category ids, which shows a special picker in the UI.
 # type: category              - A single category ID, which shows a special picker in the UI.
 # type: uploaded_image_list   - A list of upload IDs that should be images.
-# type: upload                - A single upload ID.
+# type: upload                - A single upload ID. Optional attributes:
+#                               - authorized_extensions: pipe-separated list of allowed extensions
+#                                 without dots (e.g., "txt|json"). If not specified, only images
+#                                 are allowed based on authorized_extensions setting.
+#                               - max_file_size_kb: maximum file size in KB. If not specified,
+#                                 uses max_image_size_kb or max_attachment_size_kb.
 # type: group                 - A single group ID.
 # type: group_list            - A list of group IDs.
 # type: tag_list              - A list of tag names.
@@ -202,7 +211,7 @@ basic:
     default: false
     area: "localization"
   categories_topics:
-    default: 20
+    default: 0
     validator: "CategoriesTopicsValidator"
     area: "interface"
   suggested_topics:
@@ -1695,7 +1704,8 @@ posting:
     default: false
     area: "posts_and_topics"
   max_draft_length:
-    default: 400_000
+    default: 150_000
+    max: 150_000
     hidden: true
   max_drafts_per_user:
     default: 10_000
@@ -1705,10 +1715,23 @@ posting:
     min: 5
     max: 255
     area: "posts_and_topics"
+    depends_on:
+      - "experimental_form_templates"
+    depends_behavior: "hidden"
   max_form_template_content_length:
     default: 5000
     max: 150000
     area: "posts_and_topics"
+    depends_on:
+      - "experimental_form_templates"
+    depends_behavior: "hidden"
+  show_preview_for_form_templates:
+    client: true
+    default: true
+    area: "posts_and_topics"
+    depends_on:
+      - "experimental_form_templates"
+    depends_behavior: "hidden"
   group_pm_user_limit:
     default: 1000
     type: integer
@@ -2073,6 +2096,10 @@ email:
   require_change_email_confirmation:
     default: false
     area: "email"
+  allow_email_invites:
+    default: true
+    client: true
+    area: "email"
   view_raw_email_allowed_groups:
     type: group_list
     list_type: compact
@@ -2333,9 +2360,9 @@ files:
     max: 1
   simultaneous_uploads:
     client: true
-    default: 5
+    default: 15
     min: 0
-    max: 20
+    max: 30
   decompressed_theme_max_file_size_mb:
     default: 1000
     hidden: true
@@ -2712,6 +2739,11 @@ security:
     list_type: compact
     requires_confirmation: "simple"
   slow_down_crawler_rate: 60
+  llms_txt:
+    default: ""
+    type: upload
+    authorized_extensions: "txt|md"
+    max_file_size_kb: 512
   content_security_policy:
     default: true
   content_security_policy_report_only:
@@ -2785,6 +2817,9 @@ onebox:
     list_type: compact
   enable_inline_onebox_on_all_domains:
     default: true
+  inline_onebox_user_agent:
+    default: ""
+    hidden: true
   onebox_user_agent:
     default: ""
     hidden: true
@@ -3722,6 +3757,25 @@ uncategorized:
     default: true
     area: "interface"
 
+  enable_custom_splash_screen:
+    default: false
+    client: true
+    hidden: true
+    area: "interface"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/395100"
+
+  splash_screen_image:
+    default: ""
+    type: upload
+    authorized_extensions: "svg"
+    area: "interface"
+    depends_on:
+      - "enable_custom_splash_screen"
+    depends_behavior: "hidden"
+
   suggest_weekends_in_date_pickers:
     client: true
     default: true
@@ -4141,6 +4195,10 @@ experimental:
     default: false
     client: true
     area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/394784"
   experimental_rename_faq_to_guidelines:
     default: false
     hidden: true
@@ -4149,6 +4207,7 @@ experimental:
     upcoming_change:
       impact: "feature,all_members"
       status: "experimental"
+      learn_more_url: "https://meta.discourse.org/t/-/395099"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -4157,18 +4216,23 @@ experimental:
   experimental_form_templates:
     client: true
     default: false
+    hidden: true
     area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/278631"
   experimental_impersonation:
     default: false
     hidden: true
     area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/119683"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
-    area: "experimental"
-  show_preview_for_form_templates:
-    client: true
-    default: true
     area: "experimental"
   experimental_new_new_view_groups:
     client: true
@@ -4213,3 +4277,12 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/387322"
+  enable_simplified_category_creation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/394971"

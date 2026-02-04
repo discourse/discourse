@@ -1265,7 +1265,6 @@ ca:
     max_logins_per_ip_per_minute: "Nombre màxim de connexions permeses per adreça IP per minut"
     alert_admins_if_errors_per_minute: "Nombre d'errors per minut que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
     alert_admins_if_errors_per_hour: "Nombre d'errors per hora que dispara una notificació d'administració. Un valor 0 inhabilita aquesta característica. NOTA: cal reiniciar."
-    categories_topics: "Nombre de temes en la pàgina /categories. Si es posa a 0, s'intentarà automàticament trobar un valor per a mantenir les dues columnes simètriques (categories i temes)."
     suggested_topics: "Nombre de temes recomanats que es mostren a baix d'un tema."
     limit_suggested_to_category: "Mostra solament temes de la categoria actual en els temes recomanats."
     suggested_topics_max_days_old: "Els temes recomanats no haurien de tenir més de n dies."
@@ -1437,7 +1436,6 @@ ca:
     anonymous_account_duration_minutes: "Per a protegir l'anonimat, crea un compte anònim nou per a cada usuari cada N minuts. Per exemple: si és configurat a 600, tan bon punt passin 600 minuts des de la darrera publicació *i* l'usuari canviï a anònim, es crearà un nou compte anònim."
     hide_user_profiles_from_public: "Inhabilita targetes d'usuari, perfils d'usuari i directori d'usuaris per a usuaris anònims."
     show_inactive_accounts: "Permet que els usuaris que han iniciat la sessió explorin els perfils dels comptes inactius."
-    hide_suspension_reasons: "No mostris públicament els motius de suspensió en els perfils d'usuari."
     log_personal_messages_views: "Registra les visualitzacions dels missatges personals d'altres usuaris o grups fetes per administradors."
     ignored_users_count_message_threshold: "Notifica als moderadors si un usuari determinat és ignorat per molts altres usuaris."
     ignored_users_message_gap_days: "Quant de temps haureu d'esperar abans de notificar de nou als moderadors sobre un usuari ignorat per molts altres."
@@ -2734,6 +2732,8 @@ ca:
     title: "Entra en mode segur"
     enter: "Entra en mode segur"
     must_select: "Cal seleccionar almenys una opció per a entrar en mode segur."
+  dev_mode:
+    enter: "Retorn"
   wizard:
     title: "Instal·lació de Discourse"
     step:
@@ -2814,35 +2814,43 @@ ca:
         complete: "Publicació suprimida."
       delete_and_agree_replies:
         confirm: "Esteu segur que també voleu suprimir les respostes a la publicació?"
-      disagree_and_restore:
-        description: "Restaura la publicació de manera que tots els usuaris puguin veure-la."
-      disagree:
+      disagree_bundle:
         title: "No"
       ignore:
         title: "Ignora"
       ignore_and_do_nothing:
         title: "No facis res"
       approve:
-        title: "Aprova"
+        title: "Sí"
       approve_post:
-        title: "Aprova la publicació"
+        title: "Sí"
       approve_post_closed:
-        title: "Aprova la publicació"
+        title: "Sí"
         confirm: "Aquest tema és tancat. Voleu crear la publicació de totes maneres?"
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Rebutja la publicació"
       approve_user:
-        title: "Aprova l'usuari"
+        title: "Sí"
       reject_user:
+        title: "No"
         delete:
           title: "Suprimeix l'usuari"
-          description: "L'usuari serà suprimit del fòrum."
           complete: "Usuari suprimit."
         block:
           title: "Suprimeix i bloca l'usuari"
           description: "Se suprimirà l'usuari i es blocarà la seva adreça IP i adreça de correu electrònic."
+      confirm_spam:
+        title: "Sí"
+      not_spam:
+        title: "No"
       reject:
         title: "Rebutja"
+      approve_and_restore:
+        title: "Sí"
+      approve_and_unhide:
+        title: "Sí"
       no_action_post:
         title: "Cap acció"
       delete_post:

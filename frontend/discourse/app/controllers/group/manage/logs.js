@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import Controller, { inject as controller } from "@ember/controller";
 import EmberObject, { action } from "@ember/object";
 import { observes } from "@ember-decorators/object";

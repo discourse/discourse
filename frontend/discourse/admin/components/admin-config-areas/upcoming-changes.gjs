@@ -1,5 +1,7 @@
 import Component from "@glimmer/component";
+import { cached } from "@glimmer/tracking";
 import { array } from "@ember/helper";
+import { action } from "@ember/object";
 import { TrackedObject } from "@ember-compat/tracked-built-ins";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import UpcomingChangeItem from "discourse/admin/components/admin-config-areas/upcoming-change-item";
@@ -7,6 +9,7 @@ import AdminFilterControls from "discourse/admin/components/admin-filter-control
 import { i18n } from "discourse-i18n";
 
 export default class AdminConfigAreasUpcomingChanges extends Component {
+  @cached
   get upcomingChanges() {
     return this.args.upcomingChanges.map((change) => {
       change.upcoming_change = new TrackedObject(change.upcoming_change);
@@ -67,6 +70,41 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           filterFn: (change) => change.upcoming_change.impact_type === "other",
         },
       ],
+      impactRole: [
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_all"),
+          value: "all",
+          filterFn: () => true,
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_admins"),
+          value: "admins",
+          filterFn: (change) => change.upcoming_change.impact_role === "admins",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_moderators"),
+          value: "moderators",
+          filterFn: (change) =>
+            change.upcoming_change.impact_role === "moderators",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_staff"),
+          value: "staff",
+          filterFn: (change) => change.upcoming_change.impact_role === "staff",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_all_members"),
+          value: "all_members",
+          filterFn: (change) =>
+            change.upcoming_change.impact_role === "all_members",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.impact_role_developers"),
+          value: "developers",
+          filterFn: (change) =>
+            change.upcoming_change.impact_role === "developers",
+        },
+      ],
       enabled: [
         {
           label: i18n("admin.upcoming_changes.filter.enabled_all"),
@@ -76,7 +114,20 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
         {
           label: i18n("admin.upcoming_changes.filter.enabled"),
           value: "enabled",
-          filterFn: (change) => change.value,
+          filterFn: (change) =>
+            change.upcoming_change.enabled_for === "everyone",
+        },
+        {
+          label: i18n("admin.upcoming_changes.filter.enabled_for_staff"),
+          value: "enabled_for_staff",
+          filterFn: (change) => change.upcoming_change.enabled_for === "staff",
+        },
+        {
+          label: i18n(
+            "admin.upcoming_changes.filter.enabled_for_specific_groups"
+          ),
+          value: "enabled_for_specific_groups",
+          filterFn: (change) => change.upcoming_change.enabled_for === "groups",
         },
         {
           label: i18n("admin.upcoming_changes.filter.disabled"),
@@ -85,6 +136,13 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
         },
       ],
     };
+  }
+
+  @action
+  enabledForChanged(changeSettingName, newEnabledFor) {
+    this.upcomingChanges.find(
+      (change) => change.setting === changeSettingName
+    ).upcoming_change.enabled_for = newEnabledFor;
   }
 
   <template>
@@ -117,7 +175,10 @@ export default class AdminConfigAreasUpcomingChanges extends Component {
           </thead>
           <tbody class="d-table__body">
             {{#each upcomingChanges as |change|}}
-              <UpcomingChangeItem @change={{change}} />
+              <UpcomingChangeItem
+                @change={{change}}
+                @enabledForChanged={{this.enabledForChanged}}
+              />
             {{/each}}
           </tbody>
         </table>

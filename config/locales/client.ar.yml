@@ -1097,6 +1097,10 @@ ar:
         reviewable_post:
           title: "المنشور"
           noun: "منشور"
+        reviewable_ai_chat_message:
+          noun: "رسالة الدردشة"
+        reviewable_ai_post:
+          noun: "منشور"
       flagged_as: "صفة الإبلاغ"
       post_flagged_as: "عُلّم على المنشور على أنه"
       chat_flagged_as: "عُلّم على الدردشة على أنها"
@@ -1106,6 +1110,7 @@ ar:
       timeline:
         target_created: "تم إنشاء المنشور"
         target_created_by: "أُنشئ المنشور من طرف %{username} · %{relativeDate}"
+        target_deleted: "تم حذف المنشور"
         flagged: "تم الإبلاغ"
         flagged_as_by: "تم الإبلاغ عنه بسبب %{flagReason} من قِبل %{username} · %{relativeDate}"
         claimed: "تمت المطالبة به"
@@ -1332,9 +1337,7 @@ ar:
           notification: الإشعارات
         email:
           title: "البريد الإلكتروني"
-          status: "تمت مزامنة %{old_emails}/%{total_emails} من الرسائل الإلكترونية عبر IMAP."
           enable_smtp: "تفعيل SMTP"
-          enable_imap: "تفعيل IMAP"
           test_settings: "إعدادات الاختبار"
           save_settings: "إعدادات الحفظ"
           last_updated: "آخر تحديث:"
@@ -1343,14 +1346,7 @@ ar:
           smtp_settings_valid: "إعدادات SMTP صالحة."
           smtp_title: "SMTP"
           smtp_instructions: "عند تفعيل SMTP للمجموعة، سيتم إرسال جميع الرسائل الإلكترونية الصادرة المُرسَلة من صندوق الوارد الخاص بالمجموعة عبر إعدادات SMTP المحدَّدة هنا بدلًا من خادم البريد الذي تم إعداده للرسائل الإلكترونية الأخرى التي يرسلها منتداك."
-          imap_title: "IMAP"
-          imap_additional_settings: "إعدادات إضافية"
-          imap_instructions: 'عند تفعيل IMAP للمجموعة، تتم مزامنة الرسائل الإلكترونية بين صندوق الوارد للمجموعة وخادم IMAP وصندوق البريد المقدَّمين. يجب تفعيل SMTP باستخدام بيانات اعتماد صالحة ومُختبَرة قبل تفعيل IMAP. سيتم استخدام اسم مستخدم البريد الإلكتروني وكلمة المرور المستخدمين لخادم SMTP في خادم IMAP. لمزيد من المعلومات، راجع <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">إعلان الميزة في Discourse Meta</a>.'
-          imap_alpha_warning: "تحذير: هذه الميزة في مرحلة الإصدار الأولي. ويتم دعم Gmail فقط بشكلٍٍ رسمي. استخدمها على مسؤوليتك الخاصة!"
-          imap_settings_valid: "إعدادات IMAP صالحة."
-          smtp_disable_confirm: "إذا أوقفت SMTP، فستتم إعادة تعيين جميع إعدادات SMTP وIMAP وإيقاف الوظائف المرتبطة. هل تريد بالتأكيد الاستمرار؟"
-          imap_disable_confirm: "إذا أوقفت IMAP، فستتم إعادة تعيين جميع إعدادات IMAP وإيقاف الوظائف المرتبطة. هل تريد بالتأكيد الاستمرار؟"
-          imap_mailbox_not_selected: "يجب تحديد صندوق بريد لإعداد خادم IMAP وإلا فلن تتم مزامنة أي صناديق بريد!"
+          additional_settings: "إعدادات إضافية"
           prefill:
             title: "الملء المسبق بإعدادات:"
             gmail: "Gmail"
@@ -1365,9 +1361,6 @@ ar:
             smtp_server: "خادم SMTP"
             smtp_port: "منفذ SMTP"
             smtp_ssl_mode: "وضع SSL"
-            imap_server: "خادم IMAP"
-            imap_port: "منفذ IMAP"
-            imap_ssl: "استخدام SSL لخادم IMAP"
             username: "اسم المستخدم"
             password: "كلمة المرور"
           settings:
@@ -1376,10 +1369,6 @@ ar:
             allow_unknown_sender_topic_replies_hint: "يسمح لمُرسِلين غير معروفين بالرد على موضوعات المجموعة. إذا لم يتم تفعيل هذا الإعداد، فستؤدي الردود الواردة من عناوين البريد الإلكتروني التي لم تتم دعوتها بالفعل إلى الموضوع إلى إنشاء موضوع جديد."
             from_alias: "من الاسم المستعار"
             from_alias_hint: "اسم مستعار لاستخدامه في عنوان \"من\" عند إرسال رسائل بريد إلكتروني SMTP جماعية. لاحظ أن هذا قد لا يكون مدعومًا لدى كل مقدِّمي خدمة البريد الإلكتروني، يُرجى الرجوع إلى وثائق مقدِّم خدمة البريد الإلكتروني."
-          mailboxes:
-            synchronized: "صندوق البريد المتزامن"
-            none_found: "لم يتم العثور على صناديق بريد في حساب البريد الإلكتروني هذا."
-            disabled: "متوقفة"
         membership:
           title: العضوية
           access: الوصول
@@ -2493,6 +2482,7 @@ ar:
               other {# يوم}
             }.
           edit_link_options: "تعديل خيارات الرابط أو الإرسال عبر البريد الإلكتروني"
+          edit_link_options_only: "تعديل خيارات الرابط"
           show_advanced: "إظهار الخيارات المتقدمة"
           hide_advanced: "إخفاء الخيارات المتقدمة"
           description: "الوصف"
@@ -2732,7 +2722,6 @@ ar:
     form_kit:
       reset: إعادة التعيين
       optional: اختياري
-      errors_summary_title: "يحتوي هذا النموذج على أخطاء:"
       dirty_form: "لم ترسل التغييرات! هل تريد بالتأكيد المغادرة؟"
       errors:
         starts_with: "يجب أن يبدأ بـ %{prefix}"
@@ -3635,7 +3624,6 @@ ar:
         membership_request_consolidated: "طلبات العضوية الجديدة"
         reaction: "تفاعل جديد"
         votes_released: "تم تحرير التصويت"
-        new_features: "تم إطلاق ميزات جديدة في Discourse!"
         admin_problems: "نصيحة جديدة بشأن لوحة معلومات موقعك"
     upload_selector:
       change: "تغيير"
@@ -4195,8 +4183,6 @@ ar:
           12_hours: "12 ساعة"
           24_hours: "24 ساعة"
           custom: "المدة المخصَّصة"
-      slow_mode_notice:
-        duration: "يُرجى الانتظار لمدة %{duration} بين المنشورات في هذا الموضوع"
       topic_status_update:
         title: "مؤقِّت الموضوع"
         save: "تعيين المؤقِّت"
@@ -4582,7 +4568,7 @@ ar:
       quote_edit: "تعديل"
       quote_edit_shortcut: "تعديل (أو اضغط على e)"
       quote_copy: "نسخ الاقتباس"
-      quote_copied_to_clibboard: "تم نسخ الاقتباس إلى الحافظة"
+      quote_copied_to_clipboard: "تم نسخ الاقتباس إلى الحافظة"
       quote_share: "مشاركة"
       edit_reason: "السبب: "
       post_number: "المنشور %{number}"
@@ -4961,6 +4947,7 @@ ar:
       back: "الرجوع إلى الفئة"
       general: "عام"
       settings: "الإعدادات"
+      advanced: "متقدمة"
       topic_template: "قالب"
       tags: "الوسوم"
       localizations: "التوطينات"
@@ -5001,7 +4988,9 @@ ar:
       logo_description: "يُنصح باستخدام نسبة أبعاد 1:1 وبحجم أدنى 200 بكسل. إذا تُرك الحقل فارغًا، لن تظهر أي صورة."
       background_image: "صورة خلفية الفئة"
       background_image_dark: "صورة خلفية داكنة للفئة"
-      style: "الأنماط"
+      style: "النمط"
+      icon: "الأيقونة"
+      emoji: "الرمز التعبيري"
       background_color: "اللون"
       foreground_color: "لون النص"
       color_validations:
@@ -5012,13 +5001,13 @@ ar:
         type: "النمط"
         icon: "الأيقونة"
         emoji: "الرمز التعبيري"
+        square: "مربع"
         options:
           square: "مربع"
           icon: "الأيقونة"
           emoji: "الرمز التعبيري"
       color_used: "اللون قيد الاستخدام"
       predefined_colors: "خيارات الألوان المحدَّدة مسبقًا"
-      name_placeholder: "كلمة أو كلمتان بحد أقصى"
       color_placeholder: "لون الويب"
       delete_confirm: "هل تريد بالتأكيد حذف هذه الفئة؟"
       delete_error: "حدث خطأ في أثناء حذف هذه الفئة"
@@ -5026,6 +5015,7 @@ ar:
       no_description: "يُرجى إضافة وصف لهذه الفئة."
       change_in_category_topic: "عدّل الوصف"
       already_used: "هذا اللون مستخدم بالفعل في فئة أخرى"
+      color_palette: "لوحة الألوان"
       security: "الأمان"
       security_add_group: "إضافة مجموعة"
       permissions:
@@ -5042,7 +5032,7 @@ ar:
       uncategorized_security_warning: "هذه الفئة خاصة. وتهدف إلى جمع الموضوعات التي لا تنتمي إلى أي فئة، ولا يمكنك تعيين إعدادات حماية لها."
       uncategorized_general_warning: 'هذه الفئة خاصة. ويتم استخدامها كفئة افتراضية للموضوعات الجديدة التي لا تنتمي إلى أي فئة. إذا أردت منع هذا السلوك وفرض تحديد الفئة، <a href="%{settingLink}">يُرجى إيقاف هذا الإعداد من هنا</a>. إذا أردت تغيير اسم الفئة أو وصفها، فانتقل إلى <a href="%{customizeLink}">التخصيص/المحتوى النصي</a>.'
       pending_permission_change_alert: "لم تُضف المجموعة %{group} إلى هذه الفئة، انقر على هذا الزر لإضافتها."
-      images: "الصور"
+      images: "المظهر"
       email_in: "العنوان المخصَّص للبريد الوارد:"
       email_in_tooltip: "يمكنك فصل عدة عناوين بريد إلكتروني باستخدام الرمز |."
       email_in_allow_strangers: "قبول الرسائل الإلكترونية من المستخدمين المجهولين الذين لا يملكون حسابات"
@@ -5065,6 +5055,12 @@ ar:
       position: "الترتيب في صفحة الفئات:"
       position_disabled: "سيتم عرض الفئات بترتيب النشاط. للتحكم في ترتيب الفئات في القوائم، قم بتفعيل الإعداد <a href='%{url}'>\"المواضع الثابتة للفئات\"</a>."
       minimum_required_tags: "الحد الأدنى من عدد الوسوم المطلوبة في الموضوع:"
+      none_subcategory_text: "لا يوجد"
+      visibility:
+        title: "الرؤية"
+        public: "عام"
+        all_members: "جميع الأعضاء"
+        group_restricted: "خاص"
       num_auto_bump_daily: "عدد الموضوعات المفتوحة التي سيتم رفعها تلقائيًا بشكلٍ يومي:"
       auto_bump_cooldown_days: "الحد الأدنى لعدد الأيام قبل رفع الموضوع نفسه مرة أخرى:"
       navigate_to_first_post_after_read: "الانتقال إلى أول منشور بعد قراءة الموضوعات"
@@ -5988,6 +5984,7 @@ ar:
           click_to_get_started: "انقر هنا للبدء."
           header_link_text: "الفئات"
           header_action_title: "تعديل فئات الشريط الجانبي"
+          header_action_new: "فئة جديدة"
           configure_defaults: "إعداد الإعدادات الافتراضية"
         community:
           edit_section:
@@ -6328,6 +6325,11 @@ ar:
           impact_type_feature: "الميزة"
           impact_type_other: "أخرى"
           status_experimental: "تجريبي"
+          impact_role_admins: "المسؤولون"
+          impact_role_moderators: "المشرفون"
+          impact_role_staff: "فريق العمل"
+          impact_role_all_members: "جميع الأعضاء"
+          impact_role_developers: "المطوّرون"
       config:
         about:
           title: "نبذة عن موقعك"
@@ -6754,7 +6756,6 @@ ar:
         new_features:
           title: "ما الجديد؟"
           subtitle: "نحن نصدر ميزات وتحسينات جديدة طوال الوقت. تغطي هذه الصفحة أبرز النقاط، ولكن يمكنك النقر على \"معرفة المزيد\" للاطلاع على ملاحظات الإصدار الشاملة."
-          previous_announcements: "يمكنك رؤية إعلانات الميزات الجديدة السابقة على <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "معرفة المزيد..."
           experimental: "تجريبي"
           only_experiments: "عرض الميزات التجريبية فقط"
@@ -6865,7 +6866,9 @@ ar:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">سجلات البحث</a>'
             disabled: 'تقرير عبارات البحث الرائجة متوقف. قم بتفعيل <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">تسجيل استعلامات البحث</a> لجمع البيانات.'
-          average_chart_label: المتوسط
+          sort_button: "الترتيب حسب %{column}"
+          sort_ascending: "تصاعدي"
+          sort_descending: "تنازلي"
           filters:
             file_extension:
               label: امتداد الملف
@@ -7629,8 +7632,6 @@ ar:
         delete: "حذف"
         delete_confirm: 'هل تريد بالتأكيد حذف السمة "%{theme_name}"؟'
         bulk_delete: "هل أنت متأكد؟"
-        bulk_themes_delete_confirm: "سيؤدي هذا إلى إلغاء تثبيت السمات التالية، ولن تكون قابلة للاستخدام من قِبل أي مستخدم على موقعك بعد الآن:"
-        bulk_components_delete_confirm: "سيؤدي هذا إلى إلغاء تثبيت المكوِّنات التالية، ولن تكون قابلة للاستخدام من قِبل أي مستخدم على موقعك بعد الآن:"
         color: "اللون"
         opacity: "الشفافية"
         copy: "تكرار"
@@ -8957,6 +8958,7 @@ ar:
           upload:
             label: "تحميل"
             title: "تحميل الصور"
+        download_file: "تنزيل"
         selectable_avatars:
           title: "قائمة الصور الرمزية التي يمكن للمستخدمين الاختيار منها"
         table_column_heading:

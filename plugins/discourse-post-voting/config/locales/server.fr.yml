@@ -99,16 +99,10 @@ fr:
             title: "Supprimer le commentaire"
             description: "Supprimer le commentaire pour que les utilisateurs ne puissent pas le voir."
           delete_and_agree:
-            title: "Ignorer le signalement et supprimer le commentaire"
             description: "Ignorez le signalement en le supprimant de la file d'attente et supprimez le commentaire."
           disagree_and_restore:
             title: "Rejeter le signalement et rétablir le commentaire"
             description: "Restaurer le commentaire pour que tous les utilisateurs puissent le voir."
-          disagree:
-            title: "Refuser"
-          ignore:
-            title: "Ne rien faire"
-            description: "Ignorez le signalement en le supprimant de la file d'attente sans prendre aucune mesure."
         transcript:
           view: "Afficher la transcription des commentaires précédents"
       reviewable_score_types:

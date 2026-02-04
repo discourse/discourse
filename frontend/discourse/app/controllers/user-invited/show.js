@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action } from "@ember/object";
@@ -17,6 +18,8 @@ export default class UserInvitedShowController extends Controller {
   @service dialog;
   @service modal;
   @service toasts;
+  @service currentUser;
+  @service siteSettings;
 
   @tracked canLoadMore = true;
   @tracked hasLoadedInitialInvites = false;
@@ -34,7 +37,11 @@ export default class UserInvitedShowController extends Controller {
   @equal("filter", "expired") inviteExpired;
   @equal("filter", "pending") invitePending;
   @reads("currentUser.can_invite_to_forum") canInviteToForum;
-  @reads("currentUser.admin") canBulkInvite;
+
+  @discourseComputed("currentUser.admin", "siteSettings.allow_bulk_invite")
+  canBulkInvite(isAdmin, allowBulkInvite) {
+    return isAdmin && allowBulkInvite;
+  }
 
   @observes("searchTerm")
   searchTermChanged() {

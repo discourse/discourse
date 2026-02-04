@@ -24,6 +24,7 @@ describe "Admin upcoming changes", type: :system do
       },
     )
 
+    SiteSetting.about_page_extra_groups_show_description = false
     sign_in(current_user)
   end
 
@@ -38,6 +39,29 @@ describe "Admin upcoming changes", type: :system do
     expect(
       upcoming_changes_page.change_item(:about_page_extra_groups_show_description),
     ).to have_impact_role(:all_members)
+  end
+
+  it "does not show conceptual upcoming changes" do
+    mock_upcoming_change_metadata(
+      {
+        enable_upload_debug_mode: {
+          impact: "other,developers",
+          status: :experimental,
+          impact_type: "other",
+          impact_role: "developers",
+        },
+        about_page_extra_groups_show_description: {
+          impact: "feature,all_members",
+          status: :conceptual,
+          impact_type: "feature",
+          impact_role: "all_members",
+        },
+      },
+    )
+
+    upcoming_changes_page.visit
+    expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
+    expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
   end
 
   # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
@@ -176,6 +200,17 @@ describe "Admin upcoming changes", type: :system do
 
     upcoming_changes_page.filter_controls.select_all_dropdown_option(dropdown_id: "type")
 
+    # Filter by impact role
+    upcoming_changes_page.filter_controls.select_dropdown_option(
+      "Developers",
+      dropdown_id: "impactRole",
+    )
+
+    expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
+    expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+
+    upcoming_changes_page.filter_controls.select_all_dropdown_option(dropdown_id: "impactRole")
+
     # Filter by enabled/disabled
     upcoming_changes_page.filter_controls.select_dropdown_option("Enabled", dropdown_id: "enabled")
 
@@ -183,5 +218,41 @@ describe "Admin upcoming changes", type: :system do
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
 
     upcoming_changes_page.filter_controls.select_all_dropdown_option(dropdown_id: "enabled")
+  end
+
+  it "displays a notification dot on the sidebar and clears it when navigating to upcoming changes" do
+    sidebar = PageObjects::Components::NavigationMenu::Sidebar.new
+
+    UpcomingChangeEvent.create!(
+      event_type: :added,
+      upcoming_change_name: "enable_upload_debug_mode",
+    )
+
+    visit "/admin"
+    sidebar.toggle_all_sections
+
+    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_css(
+      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
+    )
+
+    sidebar.find_section_link("admin_upcoming_changes").click
+
+    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_no_css(
+      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
+    )
+  end
+
+  it "does not display a notification dot when there are no new added events" do
+    sidebar = PageObjects::Components::NavigationMenu::Sidebar.new
+
+    current_user.custom_fields["last_visited_upcoming_changes_at"] = Time.current.iso8601
+    current_user.save_custom_fields
+
+    visit "/admin"
+    sidebar.toggle_all_sections
+
+    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_no_css(
+      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
+    )
   end
 end

@@ -18,9 +18,30 @@ module PageObjects
         find(".action-list li.insights").click
       end
 
-      def select_bundled_action(reviewable, value)
+      def select_bundled_action(reviewable, value, bundle_id = nil)
         within(reviewable_by_id(reviewable.id)) do
-          reviewable_action_dropdown.select_row_by_value(value)
+          if bundle_id
+            dropdown_selector = "#{REVIEWABLE_ACTION_DROPDOWN}.#{bundle_id.dasherize}"
+            dropdown = PageObjects::Components::SelectKit.new(dropdown_selector)
+            dropdown.expand
+            dropdown.select_row_by_value(value)
+          else
+            dropdown_count = all(REVIEWABLE_ACTION_DROPDOWN).count
+            dropdown_count.times do |index|
+              dropdown_selector = "#{REVIEWABLE_ACTION_DROPDOWN}:nth-of-type(#{index + 1})"
+              dropdown = PageObjects::Components::SelectKit.new(dropdown_selector)
+              dropdown.expand
+              if dropdown.expanded_component.has_css?(
+                   ".select-kit-row[data-value='#{value}']",
+                   wait: 0,
+                 )
+                dropdown.select_row_by_value(value)
+                break
+              else
+                dropdown.collapse
+              end
+            end
+          end
         end
       end
 
@@ -126,6 +147,12 @@ module PageObjects
 
       def click_unclaim_reviewable
         find(".reviewable-claimed-topic .unclaim").click
+      end
+
+      def has_context_question?(reviewable, text)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".review-item__aside-title", text: text)
+        end
       end
 
       def has_created_at_history_item?

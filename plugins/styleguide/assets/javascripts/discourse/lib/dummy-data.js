@@ -313,7 +313,7 @@ export function createData(store) {
         <h4><a href="https://github.com/discourse/discourse/pull/1234" target="_blank" rel="noopener">FIX: Improve loading state for topic lists</a></h4>
         <div class="branches"><code>discourse:main</code> ← <code>username:fix-loading-state</code></div>
         <div class="github-info">
-          <div class="date"><span class="status-label">opened Jan 5, 2026</div>
+          <div class="date">opened Jan 5, 2026</div>
           <div class="user"><img alt="" src="/images/avatar.png" class="onebox-avatar-inline" width="20" height="20" /> username</div>
           <div class="lines"><span class="added">+42</span> <span class="removed">-15</span></div>
         </div>

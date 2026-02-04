@@ -23,11 +23,6 @@ ug:
           agree_and_silence:
             title: "ئىشلەتكۈچىنى ئۈنسىزلە"
             description: "پاش قىلىشقا قوشۇلىدۇ ۋە ئىشلەتكۈچىنى ئۈنسىزلەيدۇ."
-          disagree:
-            title: "قوشۇلما"
-          ignore:
-            title: "ھېچ ئىش قىلما"
-            description: "پاش قىلىشنى ئۆچرەتتىن چىقىرىۋېتىپ پەرۋا قىلماي، ھېچقانداق مەشغۇلات قىلمايدۇ."
       reviewable_score_types:
         needs_review:
           title: "تەستىقلاش كېرەك"

@@ -145,16 +145,10 @@ pl_PL:
           title: "Usuń wiadomość"
           description: "Usuń wiadomość, aby użytkownicy nie mogli jej zobaczyć."
         delete_and_agree:
-          title: "Zignoruj flagę i usuń wiadomość"
           description: "Zignoruj flagę usuwając ją z kolejki i usuń wiadomość."
         disagree_and_restore:
           title: "Nie zgadzam się i przywracam wiadomość"
           description: "Przywróć wiadomość, aby wszyscy użytkownicy mogli ją zobaczyć."
-        disagree:
-          title: "Wycofaj"
-        ignore:
-          title: "Nic nie rób"
-          description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
       direct_messages:
         transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
         transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"

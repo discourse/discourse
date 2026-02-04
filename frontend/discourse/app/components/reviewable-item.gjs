@@ -583,7 +583,6 @@ export default class ReviewableItem extends Component {
                   as |FieldComponent|
                 }}
                   <FieldComponent
-                    @tagName=""
                     @value={{editableValue this.reviewable f.id}}
                     @tagCategoryId={{this.tagCategoryId}}
                     @valueChanged={{fn this.valueChanged f.id}}
@@ -598,8 +597,8 @@ export default class ReviewableItem extends Component {
             (lookupComponent this this.reviewableComponent)
             as |ReviewableComponent|
           }}
-            <ReviewableComponent @reviewable={{this.reviewable}} @tagName="">
-              <ReviewableScores @reviewable={{this.reviewable}} @tagName="" />
+            <ReviewableComponent @reviewable={{this.reviewable}}>
+              <ReviewableScores @reviewable={{this.reviewable}} />
             </ReviewableComponent>
           {{/let}}
         {{/if}}
@@ -608,6 +607,10 @@ export default class ReviewableItem extends Component {
       {{#if this.displayContextQuestion}}
         <h3 class="reviewable-item__context-question">
           {{this.reviewable.flaggedReviewableContextQuestion}}
+        </h3>
+      {{else if this.reviewable.userReviewableContextQuestion}}
+        <h3 class="reviewable-item__context-question">
+          {{this.reviewable.userReviewableContextQuestion}}
         </h3>
       {{/if}}
 

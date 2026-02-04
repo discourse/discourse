@@ -35,8 +35,10 @@ export default class ChatChannelSidebarContextMenu extends Component {
       : "chat.channel_settings.star_channel";
   }
 
-  get isGroupChannel() {
-    return !!this.channel?.chatable?.group;
+  get leaveLabel() {
+    return this.channel.isDirectMessageChannel
+      ? "chat.channel_settings.close_channel"
+      : "chat.channel_settings.leave_channel";
   }
 
   @action
@@ -67,10 +69,10 @@ export default class ChatChannelSidebarContextMenu extends Component {
   @action
   async leaveChannel() {
     try {
-      if (this.isGroupChannel) {
-        await this.chatApi.leaveChannel(this.channel.id);
-      } else {
+      if (this.channel.isDirectMessageChannel) {
         await this.chat.unfollowChannel(this.channel);
+      } else {
+        await this.chatApi.leaveChannel(this.channel.id);
       }
       this.currentUser.custom_fields.last_chat_channel_id = null;
 
@@ -155,8 +157,8 @@ export default class ChatChannelSidebarContextMenu extends Component {
         <DButton
           @action={{this.leaveChannel}}
           @icon="xmark"
-          @label="chat.channel_settings.leave_channel"
-          @title="chat.channel_settings.leave_channel"
+          @label={{this.leaveLabel}}
+          @title={{this.leaveLabel}}
           class="chat-channel-sidebar-link-menu__leave-channel --danger"
         />
       </dropdown.item>

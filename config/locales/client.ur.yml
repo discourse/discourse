@@ -852,6 +852,10 @@ ur:
         reviewable_post:
           title: "دھاگہ"
           noun: "پوسٹ"
+        reviewable_ai_chat_message:
+          noun: "گپ شپ کا پیغام"
+        reviewable_ai_post:
+          noun: "دھاگہ"
       flagged_as: "کے طور پرفلَیگ"
       user_label: "رکن"
       moderator_actions: "ناظم کی کاروائیاں"
@@ -859,6 +863,7 @@ ur:
       timeline:
         target_created: "دھاگہ بنایا گیا"
         target_created_by: "%{relativeDate}پر %{username}نےدھاگہ بنایا"
+        target_deleted: "دھاگہ مٹا دیا"
         flagged: "نشان دہی کی"
         flagged_as_by: "%{username} نے%{relativeDate}پر %{flagReason} کے طور پر فلیگ کیا گیا"
         claimed: "دعویٰ کیا"
@@ -1048,9 +1053,7 @@ ur:
           notification: اطلاع
         email:
           title: "ای میل"
-          status: "IMAP کے ذریعے ای میلز کو ہم آہنگ کیا %{old_emails} / %{total_emails}"
           enable_smtp: "SMTP فعال کریں"
-          enable_imap: "IMAP فعال کریں"
           test_settings: "ترتیبات کو ٹیسٹ کریں"
           save_settings: "ترتیبات کو محفوظ کریں"
           last_updated: "آخری اپ ڈیٹ:"
@@ -1059,14 +1062,7 @@ ur:
           smtp_settings_valid: "SMTP ترتیبات درست ہیں۔"
           smtp_title: "SMTP"
           smtp_instructions: "جب آپ گروپ کے لیے SMTP کو فعال کرتے ہیں، تو گروپ کے ان باکس سے بھیجے گئے تمام آؤٹ باؤنڈ ای میلز آپ کے فورم کے ذریعے بھیجے گئے دیگر ای میلز کے لیے ترتیب کردہ میل سرور کے بجائے یہاں بیان کردہ SMTP سیٹنگز کے ذریعے بھیجے جائیں گے۔"
-          imap_title: "IMAP"
-          imap_additional_settings: "اضافی ترتیبات"
-          imap_instructions: 'جب آپ گروپ کے لیے IMAP کو فعال کرتے ہیں، تو ای میلز گروپ ان باکس اور فراہم کردہ IMAP سرور اور میل باکس کے درمیان مطابقت پذیر ہو جاتی ہیں۔ IMAP کو فعال کرنے سے پہلے SMTP کو درست اور جانچ شدہ اسناد کے ساتھ فعال کیا جانا چاہیے۔ SMTP کے لیے استعمال ہونے والا ای میل رکن نام اور پاس ورڈ IMAP کے لیے استعمال کیا جائے گا۔ مزید معلومات کے لیے ڈسکورس میٹا<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">فیچر کےاعلان پر دیکھیں </a>۔'
-          imap_alpha_warning: "انتباہ: یہ الفا اسٹیج کی خصوصیت ہے۔ صرف Gmail باضابطہ طور پر تعاون یافتہ ہے۔ اپنے خطرے پر استعمال کریں!"
-          imap_settings_valid: "SMTP ترتیبات درست ہیں۔"
-          smtp_disable_confirm: "اگر آپ SMTP کو غیر فعال کرتے ہیں، تو تمام SMTP اور IMAP ترتیبات دوبارہ ترتیب دی جائیں گی اور متعلقہ فعالیت کو غیر فعال کر دیا جائے گا۔ کیا آپ واقعی جاری رکھنا چاہتے ہیں؟"
-          imap_disable_confirm: "اگر آپ IMAP کو غیر فعال کرتے ہیں تو تمام IMAP ترتیبات دوبارہ ترتیب دی جائیں گی اور متعلقہ فعالیت کو غیر فعال کر دیا جائے گا۔ کیا آپ واقعی جاری رکھنا چاہتے ہیں؟"
-          imap_mailbox_not_selected: "آپ کو اس IMAP کنفیگریشن کے لیے ایک میل باکس کا انتخاب کرنا چاہیے ورنہ کوئی میل باکس مطابقت پذیر نہیں ہوگا!"
+          additional_settings: "اضافی ترتیبات"
           prefill:
             title: "ترتیبات کے ساتھ پہلے سے بھریں:"
             gmail: "Gmail"
@@ -1081,9 +1077,6 @@ ur:
             smtp_server: "SMTP سرور"
             smtp_port: "SMTP پورٹ"
             smtp_ssl_mode: "SSL موڈ"
-            imap_server: "IMAP سرور"
-            imap_port: "IMAP پورٹ"
-            imap_ssl: "IMAP کے لیے SSL استعمال کریں"
             username: "اسمِ صارف"
             password: "پاسورڈ"
           settings:
@@ -1092,10 +1085,6 @@ ur:
             allow_unknown_sender_topic_replies_hint: "نامعلوم بھیجنے والوں کو گروپ کے موضوعات کا جواب دینے کی اجازت دیتا ہے۔ اگر یہ فعال نہیں ہے تو، ای میل پتوں کے جوابات جو پہلے ہی موضوع پر مدعو نہیں کیے گئے ہیں ایک نیا موضوع بنائیں گے۔"
             from_alias: "عرف سے"
             from_alias_hint: "گروپ SMTP ای میلز بھیجتے وقت فرم ایڈریس کے طور پر استعمال کرنے کے لیے عرف نوٹ کریں کہ یہ تمام میل فراہم کنندگان کے ذریعہ تعاون یافتہ نہیں ہوسکتا ہے، براہ کرم اپنے میل فراہم کنندہ کی دستاویزات سے مشورہ کریں۔"
-          mailboxes:
-            synchronized: "مطابقت پذیر میل باکس"
-            none_found: "اس ای میل اکاؤنٹ میں کوئی میل باکس نہیں ملا۔"
-            disabled: "غیر فعال"
         membership:
           title: رکنیت
           access: رسائی
@@ -2287,7 +2276,6 @@ ur:
     form_kit:
       reset: رِی سَیٹ
       optional: اختیاری
-      errors_summary_title: "اس فارم میں غلطیاں ہیں:"
       dirty_form: "آپ نے اپنی تبدیلیاں جمع نہیں کروائیں! کیا آپ واقعی چھوڑنا چاہتے ہیں؟"
       errors:
         starts_with: "%{prefix}سے شروع ہونا چاہیے"
@@ -3035,7 +3023,6 @@ ur:
         membership_request_consolidated: "نئی رکنیت کی درخواستیں"
         reaction: "نیا ردعمل"
         votes_released: "ووٹ جاری کر دیا گیا"
-        new_features: "ڈسکورس کی نئی خصوصیات جاری کر دی گئی ہیں!"
         admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
     upload_selector:
       change: "تبدیل"
@@ -3477,8 +3464,6 @@ ur:
           12_hours: "12 گھنٹے"
           24_hours: "24 گھنٹے"
           custom: "اپنی مرضی کے مطابق مدت"
-      slow_mode_notice:
-        duration: "براہ کرم اس عنوان میں پوسٹ کے درمیان %{duration}"
       topic_status_update:
         title: "موضوع ٹائمر"
         save: "ٹائمر مقرر کریں"
@@ -3807,7 +3792,7 @@ ur:
       quote_edit: "ترمیم"
       quote_edit_shortcut: "ترمیم کریں (یا e دبائیں)"
       quote_copy: "اقتباس کاپی کریں"
-      quote_copied_to_clibboard: "اقتباس کلپ بورڈ پر کاپی ہو گیا"
+      quote_copied_to_clipboard: "اقتباس کلپ بورڈ پر کاپی ہو گیا"
       quote_share: "شیئر"
       edit_reason: "وجہ: "
       post_number: "پوسٹ %{number}"
@@ -4100,6 +4085,7 @@ ur:
       back: "واپس زمرے میں"
       general: "عام"
       settings: "سیٹِنگ"
+      advanced: "اعلی درجے کی"
       topic_template: "سانچہ"
       tags: "ٹیگز"
       localizations: "لوکلائزیشنز"
@@ -4131,7 +4117,9 @@ ur:
       save_error: زمرہ محفوظ کرنے میں ایک خرابی کا سامنا کرنا پڑا۔
       description: "تفصیل"
       logo_description: "200px کم از کم سائز کے ساتھ تجویز کردہ 1:1 پہلو کا تناسب۔ اگر خالی چھوڑ دیا جائے تو کوئی تصویر نہیں دکھائی جائے گی۔"
-      style: "طرزیں"
+      style: "ظرز"
+      icon: "آئیکن"
+      emoji: "اِیمَوجی"
       background_color: "رنگ"
       foreground_color: "متن کا رنگ"
       color_validations:
@@ -4140,13 +4128,13 @@ ur:
         type: "ظرز"
         icon: "آئیکن"
         emoji: "اِیمَوجی"
+        square: "مربع"
         options:
           square: "مربع"
           icon: "آئیکن"
           emoji: "اِیمَوجی"
       color_used: "رنگ جواستعمال میں"
       predefined_colors: "پہلے سے طے شدہ رنگ کے اختیارات"
-      name_placeholder: "زیادہ سے زیادہ ایک یا دو الفاظ"
       color_placeholder: "کوئی بھی ویب رنگ"
       delete_confirm: "کیا آپ واقعی اِس زمرہ کو مٹانا چاہتے ہیں؟"
       delete_error: "اِس زمرہ کو مٹانے میں ایک خرابی کا سامنا کرنا پڑا۔"
@@ -4168,7 +4156,7 @@ ur:
       uncategorized_security_warning: "یہ زمرہ خاص ہے۔ اِس کا مقصد بغیر زمرہ والے موضوعات کیلئے جگہ فراہم کرنا ہے؛ اِس میں سیکورٹی کی ترتیبات نہیں ہو سکتیں۔"
       uncategorized_general_warning: 'یہ زمرہ خاص ہے۔ یہ نئے موضوعات کے لیے پہلے سے طے شدہ زمرہ کے طور پر استعمال ہوتا ہے جن میں کوئی زمرہ منتخب نہیں ہوتا ہے۔ اگر آپ اس رویے کو روکنا چاہتے ہیں اور زمرہ کے انتخاب پر مجبور کرنا چاہتے ہیں تو، <a href="%{settingLink}">براہ کرم یہاں ترتیب کو غیر فعال کریں</a>۔ اگر آپ نام یا تفصیل کو تبدیل کرنا چاہتے ہیں تو <a href="%{customizeLink}">Customize / Text Content</a>پر جائیں۔'
       pending_permission_change_alert: "آپ نے اِس زمرہ میں %{group} کو شامل نہیں کیا ہے؛ اِن کو شامل کرنے کیلئے اِس بٹن پر کلک کریں۔"
-      images: "تصاویر"
+      images: "ظاہری شکل"
       email_in: "اپنی مرضی کا اِنکَمِنگ اِیمیل ایڈریس:"
       email_in_tooltip: "آپ متعدد ای میل پتوں کو | کردار کے ساتھ الگ کر سکتے ہیں۔"
       email_in_allow_strangers: "اکاؤنٹس نہ رکھنے والے گمنام اراکین کی طرف سے اِی میلز کو قبول کریں"
@@ -4190,6 +4178,11 @@ ur:
       position: "زمرہ جات کے صفحے پر پوزیشن:"
       position_disabled: "زمرہ جات کو سرگرمی کی ترتیب میں دکھایا جائے گا۔ فہرستوں میں زمرہ جات کی ترتیب کو کنٹرول کرنے کے لیے، <a href='%{url}'>'نسب شدہ زمرہ ترتیب'</a> سیٹنگ کو فعال کریں۔"
       minimum_required_tags: "ایک موضوع میں ضروری ٹیگز کی کم از کم تعداد:"
+      none_subcategory_text: "کوئی نہیں"
+      visibility:
+        title: "نموداری"
+        public: "عوامی"
+        group_restricted: "نجی"
       num_auto_bump_daily: "روزانہ خود کار طریقے سے بَمپ کرنے کیلئے کھلے موضوعات کی تعداد:"
       auto_bump_cooldown_days: "اسی موضوع کو دوبارہ آگے کرنے سے پہلے کم از کم دن:"
       navigate_to_first_post_after_read: "موضوعات پڑھنے کے بعد پہلے دھاگہ پر جائیں"
@@ -5015,6 +5008,7 @@ ur:
       back_to_forum: "واپس فورم پر"
       filter_links: "روابط کو چھاننا۔۔۔"
       no_results:
+        title: "کوئی نتائج نہیں"
         description_admin_search: "ہمیں '%{filter}' سے مماثل کوئی چیز نہیں ملی۔"
       collapse_all_sections: "تمام شعبوں کو سکیڑیں"
       expand_all_sections: "تمام شعبوں کو پھیلائیں"
@@ -5259,6 +5253,9 @@ ur:
           disabled: "غیر فعال"
           impact_type_other: "دیگر"
           status_experimental: "تجرباتی"
+          impact_role_admins: "منتظمین"
+          impact_role_moderators: "نگران"
+          impact_role_staff: "عملہ"
       config:
         about:
           title: "آپ کی سائٹ کے بارے میں"
@@ -5659,7 +5656,6 @@ ur:
         new_features:
           title: "نیا کیا ہے؟"
           subtitle: "ہم وقتاً فوقتاً نئی خصوصیات اور بہتریاں جاری کر رہے ہیں۔ یہ صفحہ نمایاں نکات کا احاطہ کرتا ہے، لیکن آپ 'مزید جانیں' پر کلک کر کے اجرا کی تفصیلات دیکھ سکتے ہیں"
-          previous_announcements: "آپ پچھلی نئی خصوصیات کے اعلانات <a href='%{url}' target='_blank'>Discourse Meta</a> پر دیکھ سکتے ہیں"
           learn_more: "مزید جانیں..."
           experimental: "تجرباتی"
           only_experiments: "صرف تجرباتی خصوصیات دکھائیں"
@@ -5754,7 +5750,9 @@ ur:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">تلاشی کے لاگز</a>'
             disabled: 'ٹرینڈنگ سرچ رپورٹ غیر فعال ہے۔ ڈیٹا اکٹھا کرنے کے لیے <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">لاگ سرچ سوالات</a> کو فعال کریں۔'
-          average_chart_label: اوسط
+          sort_button: "%{column}کے حساب سے ترتیب دیں"
+          sort_ascending: "ترتیب صعودی"
+          sort_descending: "ترتیب نزولی"
           filters:
             file_extension:
               label: فائل ایکسٹینشن
@@ -6128,27 +6126,39 @@ ur:
       community:
         title: "کمیونٹی"
         sidebar_link:
+          about_your_site: "آپ کی سائٹ کے بارے میں"
           badges: "تمغات"
+          login_and_authentication: "لاگ ان اور تصدیق"
           notifications: "اطلاعات"
           permalinks: "دائمی لِنکس"
+          trust_levels: "فعالیت کے درجات"
+          group_permissions: "گروپ کی اجازتیں"
           users: "اراکین"
           groups: "گروپس"
+          user_fields: "یوزر فیلڈز"
+          watched_words: "دیکھے ہوئے موضوعات"
           legal: "قانونی"
           moderation_flags:
             title: "ماڈریٹر کا کام"
       appearance:
         title: "ظاہری شکل"
         sidebar_link:
+          color_schemes: "رنگ تختی"
           emoji: "اِیمَوجی"
           navigation: "نیویگیشن"
           themes_and_components:
             title: "تھیمز اور اجزاء"
             keywords: "ایکسٹینشن"
+          site_texts: "سائٹ کے متون"
       email_settings:
         sidebar_link:
           appearance: "ظاہری شکل"
       security:
         title: "سیکورٹی"
+        sidebar_link:
+          staff_action_logs:
+            title: "اندراجات اور جانچ پڑتال"
+            keywords: "خرابی کے نوشتہ جات | عملے کی کارروائی | اسکرین شدہ ای میلز"
       section_landing_pages:
         account:
           title: "اکاؤنٹ"
@@ -6187,6 +6197,7 @@ ur:
           site_contact_group: "سائٹ پر رابطے کے لیے گروپ"
           site_contact_group_help: |
             وہ گروپ جو خود بخود بھیجے گئے تمام ذاتی پیغامات میں مدعو کیا جاتا ہے۔
+          your_organization: "آپ کی تنظیم"
           your_organization_description: "ہم اس معلومات کو سروس کی شرائط اور پردہ داری کے نوٹس میں استعمال کریں گے تاکہ یہ ظاہر کیا جا سکے کہ سائٹ کون چلاتا ہے اور کس کے دائرہ اختیار میں ہے۔"
           company_name: "نام"
           company_name_placeholder: "ایکمی آرگنائزیشن"
@@ -6447,8 +6458,6 @@ ur:
         delete: "حذف کریں"
         delete_confirm: 'کیا آپ واقعی "%{theme_name}" مٹانا چاہتے ہیں؟'
         bulk_delete: "کیا آپ پر یقین ہیں؟"
-        bulk_themes_delete_confirm: "اس سے درج ذیل تھیمز حذف ہو جائیں گی، وہ آپ کی سائٹ پر کسی بھی رکن کے لیے مزید استعمال کے قابل نہیں رہیں گی۔"
-        bulk_components_delete_confirm: "یہ مندرجہ ذیل اجزاء کو ان انسٹال کر دے گا، وہ آپ کی سائٹ پر کسی بھی رکن کے ذریعہ مزید استعمال کے قابل نہیں ہوں گے:"
         color: "رنگ"
         opacity: "دھندلاپن"
         copy: "نقل"
@@ -6531,6 +6540,7 @@ ur:
           convert_theme_tooltip: "اِس تِھیم کو کمپنَینٹ میں تبدیل کریں"
           inactive_themes: "غیر فعال تِھیمز:"
           set_default_theme: "بطور ڈیفالٹ سیٹ کریں"
+          default_theme: "ڈیفالٹ تھیم"
           setting_was_saved: "تھیم کی سیٹنگ محفوظ ہو گئی"
           inactive_components: "غیر استعمال شدہ کمپنَینٹ:"
           cancel: "منسوخ"
@@ -7363,6 +7373,7 @@ ur:
           empty: "ابھی تک کوئی تصویریں نہیں ہیں۔ براہ مہربانی ایک اَپ لوڈ کریں۔"
           upload:
             label: "اَپ لوڈ"
+        download_file: "ڈاؤن لوڈ"
         selectable_avatars:
           title: "اوتار کی فہرست جس میں سے صارفین منتخب کر سکتے ہیں"
         table_column_heading:

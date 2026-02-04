@@ -571,7 +571,13 @@ id:
         reviewable_post:
           title: "Postingan"
           noun: "postingan"
+        reviewable_ai_chat_message:
+          noun: "pesan obrolan"
+        reviewable_ai_post:
+          noun: "post"
       user_label: "Pengguna"
+      timeline:
+        target_deleted: "Pos dihapus"
       notes:
         delete: "Hapus"
       topic_label: "Topik"
@@ -715,9 +721,7 @@ id:
           notification: Pemberitahuan
         email:
           title: "Email"
-          status: "Sinkronisasi email %{old_emails} / %{total_emails} melalui IMAP."
           enable_smtp: "Aktifkan SMTP"
-          enable_imap: "Aktifkan IMAP"
           test_settings: "Pengaturan Tes"
           save_settings: "Simpan Pengaturan"
           last_updated: "Terakhir diperbarui:"
@@ -725,9 +729,7 @@ id:
           settings_required: "Semua pengaturan diperlukan, harap isi semua kolom sebelum validasi."
           smtp_settings_valid: "Pengaturan SMTP valid."
           smtp_title: "SMTP"
-          imap_title: "IMAP"
-          imap_additional_settings: "Pengaturan Tambahan"
-          imap_settings_valid: "Pengaturan IMAP valid."
+          additional_settings: "Pengaturan Tambahan"
           prefill:
             title: "Isi terlebih dahulu dengan pengaturan untuk:"
             gmail: "Gmail"
@@ -742,15 +744,10 @@ id:
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
             smtp_ssl_mode: "Mode SSL"
-            imap_server: "Server IMAP"
-            imap_port: "Port IMAP"
-            imap_ssl: "Gunakan SSL untuk IMAP"
             username: "Nama Pengguna"
             password: "Kata Sandi"
           settings:
             title: "Pengaturan"
-          mailboxes:
-            disabled: "Dinonaktifkan"
         membership:
           title: Keanggotaan
           access: Mengakses
@@ -1971,6 +1968,10 @@ id:
         create: "Buat"
       email_in_tooltip: "Anda dapat memisahkan beberapa alamat email dengan karakter |."
       review_group_name: "nama grup"
+      none_subcategory_text: "Tidak ada"
+      visibility:
+        public: "Umum"
+        group_restricted: "Pribadi"
       notifications:
         watching:
           title: "Melihat"
@@ -2328,6 +2329,8 @@ id:
           enabled: "Diaktifkan"
           disabled: "Dinonaktifkan"
           impact_type_other: "Lainnya"
+          impact_role_moderators: "Moderator"
+          impact_role_staff: "Staf"
       config:
         login:
           sub_pages:
@@ -2402,7 +2405,7 @@ id:
           all: "Semua"
           trending_search:
             disabled: 'Laporan pencarian sedang tren dinonaktifkan. Aktifkan <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kueri penelusuran log</a> untuk mengumpulkan data.'
-          average_chart_label: Rata-rata
+          sort_button: "Urutkan berdasarkan %{column}"
           filters:
             category:
               label: Kategori

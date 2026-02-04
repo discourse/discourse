@@ -20,6 +20,7 @@ ko:
       voted_title: "투표함"
       voting_closed_title: "닫힘"
       voting_limit: "한도"
+      see_votes: "남은 투표 수는 %{count}/%{max} 입니다."
       votes:
         other: "%{count} 투표"
       anonymous_button:

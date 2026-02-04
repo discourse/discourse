@@ -759,6 +759,10 @@ zh_TW:
         reviewable_post:
           title: "貼文"
           noun: "貼文"
+        reviewable_ai_chat_message:
+          noun: "聊天訊息"
+        reviewable_ai_post:
+          noun: "貼文"
       user_label: "使用者"
       notes:
         delete: "刪除"
@@ -910,9 +914,7 @@ zh_TW:
           notification: 通知
         email:
           title: "電子信箱"
-          status: "已透過 IMAP 同步了 %{old_emails}/%{total_emails} 封郵件。"
           enable_smtp: "啟用 SMTP"
-          enable_imap: "啟用 IMAP"
           test_settings: "測試設定"
           save_settings: "儲存設定"
           last_updated: "上次更新："
@@ -921,14 +923,7 @@ zh_TW:
           smtp_settings_valid: "SMTP 設定有效。"
           smtp_title: "SMTP"
           smtp_instructions: "當您為群組啟用 SMTP 時，從群組收件匣發送的所有外發電子郵件將透過此處指定的 SMTP 設定發送，而非透過為您的論壇配置的其他郵件伺服器發送。"
-          imap_title: "IMAP"
-          imap_additional_settings: "其他設定"
-          imap_instructions: '當您為群組啟用 IMAP 時，電子郵件將在群組收件匣與提供的 IMAP 伺服器之間同步。在啟用 IMAP 之前，必須先啟用 SMTP，並驗證與測試憑據。IMAP 將使用與 SMTP 相同的電子郵件帳號與密碼。詳情請參閱 <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta 功能公告</a>。'
-          imap_alpha_warning: "警告：此功能仍處於 Alpha 版階段。目前僅官方支援 Gmail，使用風險請自行承擔！"
-          imap_settings_valid: "IMAP 設定有效。"
-          smtp_disable_confirm: "如果您禁用 SMTP，所有 SMTP 和 IMAP 設定都將被重置，相關功能將被禁用。確定要繼續嗎？"
-          imap_disable_confirm: "如果您禁用 IMAP，所有 IMAP 設定都將被重置，相關功能將被禁用。確定要繼續嗎？"
-          imap_mailbox_not_selected: "您必須為此 IMAP 配置選擇一個郵箱，否則將不會同步任何郵箱！"
+          additional_settings: "其他設定"
           prefill:
             title: "使用設定預填充："
             gmail: "Gmail"
@@ -943,9 +938,6 @@ zh_TW:
             smtp_server: "SMTP 伺服器"
             smtp_port: "SMTP 通訊埠"
             smtp_ssl_mode: "SSL 模式"
-            imap_server: "IMAP 伺服器"
-            imap_port: "IMAP 連接埠"
-            imap_ssl: "在 IMAP 上使用 SSL"
             username: "使用者名稱"
             password: "密碼"
           settings:
@@ -954,10 +946,6 @@ zh_TW:
             allow_unknown_sender_topic_replies_hint: "允許未知的寄件者回覆群組主題。如果未啟用此功能，則來自尚未邀請到主題的電子郵件地址回覆，將建立一個新主題。"
             from_alias: "來自別名"
             from_alias_hint: "傳送群組 SMTP 電子郵件時，用作寄件者位址的別名。請注意，並非所有郵件供應商都支援此功能，請參閱郵件供應商的說明文件。"
-          mailboxes:
-            synchronized: "信箱已同步"
-            none_found: "未在此電子郵件帳戶中找到任何郵件信箱。"
-            disabled: "停用"
         membership:
           title: 會員身份
           access: 存取
@@ -2082,7 +2070,6 @@ zh_TW:
     form_kit:
       reset: 重置
       optional: 選擇性
-      errors_summary_title: "此表單包含錯誤："
       dirty_form: "您尚未提交您的更改！您確實要離開嗎？"
       errors:
         required: "必要設定"
@@ -2704,7 +2691,6 @@ zh_TW:
         membership_request_consolidated: "新會員申請"
         reaction: "新反應"
         votes_released: "投票結果已公佈"
-        new_features: "新的 Discourse 功能已發佈！"
         admin_problems: "有新的建議出現在後台儀表板"
     upload_selector:
       change: "修改"
@@ -3104,8 +3090,6 @@ zh_TW:
           12_hours: "12 小時"
           24_hours: "24 小時"
           custom: "自訂持續時間"
-      slow_mode_notice:
-        duration: "在此話題下，請在兩次發帖之間等待 %{duration}"
       topic_status_update:
         title: "話題計時器"
         save: "設定計時器"
@@ -3420,7 +3404,7 @@ zh_TW:
       quote_edit: "編輯"
       quote_edit_shortcut: "編輯（或按 e）"
       quote_copy: "複製引用"
-      quote_copied_to_clibboard: "引用已複製到剪貼簿"
+      quote_copied_to_clipboard: "引用已複製到剪貼簿"
       quote_share: "分享"
       edit_reason: "原因: "
       post_number: "貼文 %{number}"
@@ -3675,6 +3659,7 @@ zh_TW:
       back: "回到類別"
       general: "一般"
       settings: "設定"
+      advanced: "進階"
       topic_template: "範本"
       tags: "標記"
       localization:
@@ -3700,6 +3685,8 @@ zh_TW:
       save_error: 儲存分類時發生錯誤。
       description: "描述"
       logo_description: "建議長寬比為 1:1，最小尺寸為 200px。如果留空，將不會顯示圖片。"
+      icon: "圖示"
+      emoji: "Emoji"
       background_color: "顏色"
       color_validations:
         cant_be_empty: "不能空白"
@@ -3711,7 +3698,6 @@ zh_TW:
           emoji: "Emoji"
       color_used: "使用中的顏色"
       predefined_colors: "預先定義的顏色選項"
-      name_placeholder: "請簡單明瞭。"
       color_placeholder: "任何網頁顏色"
       delete_confirm: "你確定要刪除此分類嗎?"
       delete_error: "刪除此分類時發生錯誤。"
@@ -3734,7 +3720,7 @@ zh_TW:
       uncategorized_security_warning: "此為特殊分類，僅作為沒有分類的話題暫存區，無法有安全設定。"
       uncategorized_general_warning: '此為特殊分類，作為尚未選定分類的新話題的預設分類。若您要停用此行為並強制使用者選擇分類，請在<a href="%{settingLink}">停用此設定，若您要更改名稱或說明，請到<a href="%{customizeLink}">自訂 / 文字內容</a>。'
       pending_permission_change_alert: "您尚未將 %{group} 新增至此類別；單擊此按鈕以新增它們。"
-      images: "圖片"
+      images: "外觀"
       email_in: "自訂外來電郵地址:"
       email_in_tooltip: "您可以使用 | 字元分隔多個電子郵件地址。"
       email_in_allow_strangers: "接受非使用者的電郵"
@@ -3756,6 +3742,11 @@ zh_TW:
       position: "在分類頁面上的位置："
       position_disabled: "類別將按活動順序顯示。若要控制清單中類別的順序，請啟用 <a href='%{url}'>「固定類別位置」</a> 設定。"
       minimum_required_tags: "話題標籤的最低要求數量："
+      none_subcategory_text: "無"
+      visibility:
+        title: "能見度"
+        public: "公開"
+        group_restricted: "私密"
       num_auto_bump_daily: "每日自動上浮的主題數："
       auto_bump_cooldown_days: "再次提出相同主題的最少天數："
       navigate_to_first_post_after_read: "所有話題已讀後，跳轉至最新貼文"
@@ -4685,6 +4676,8 @@ zh_TW:
           disabled: "停用"
           impact_type_other: "其他"
           status_experimental: "實驗性"
+          impact_role_moderators: "板主"
+          impact_role_staff: "管理員"
       config:
         about:
           title: "關於您的網站"
@@ -4984,7 +4977,6 @@ zh_TW:
         new_features:
           title: "有什麼最新消息？"
           subtitle: "我們一直在發布新功能和改進。此頁面涵蓋了重點，但您可以單擊「了解更多」以查看詳細的版本說明。"
-          previous_announcements: "您可以在 <a href='%{url}' target='_blank'>Discourse Meta</a>上查看先前的新功能公告"
           learn_more: "了解更多..."
           experimental: "實驗性"
           only_experiments: "僅顯示實驗性功能"
@@ -5067,7 +5059,9 @@ zh_TW:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs"> 搜尋記錄檔 </a>'
             disabled: '搜尋趨勢已停用，啟用<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">搜尋紀錄以</a>收集資料。'
-          average_chart_label: 平均值
+          sort_button: "依 %{column}排序"
+          sort_ascending: "升序"
+          sort_descending: "降序"
           filters:
             file_extension:
               label: 檔案副檔名
@@ -5430,14 +5424,23 @@ zh_TW:
         title: "帳號"
         sidebar_link:
           backups: "備份"
+          whats_new:
+            title: "有什麼最新消息？"
+            keywords: "更新紀錄|功能|發布"
       community:
         title: "社群"
         sidebar_link:
+          about_your_site: "關於您的網站"
           badges: "徽章"
+          login_and_authentication: "登入與驗證"
           notifications: "通知"
           permalinks: "固定連結"
+          trust_levels: "信任等級"
+          group_permissions: "群組權限"
           users: "使用者"
           groups: "群組"
+          user_fields: "使用者欄位"
+          watched_words: "監察字詞"
           legal: "法律"
           moderation_flags:
             title: "管理"
@@ -5445,21 +5448,34 @@ zh_TW:
       appearance:
         title: "外觀"
         sidebar_link:
+          font_style: "字體樣式"
+          site_logo: "網站標誌"
+          color_schemes: "調色盤"
           emoji: "Emoji"
           navigation: "導覽"
           themes_and_components:
             title: "主題與組件"
             keywords: "延伸插件"
+          site_texts: "網站文字"
       email_settings:
         sidebar_link:
           appearance: "外觀"
+          server_setup:
+            title: "伺服器設定和記錄檔"
+            keywords: "電子郵件|smtp|mailgun|sendgrid|已發送|已跳過|已退回|已收到|已拒絕|電子郵件日誌|預覽摘要"
       security:
         title: "安全性"
+        sidebar_link:
+          staff_action_logs:
+            title: "日誌和篩選"
+            keywords: "錯誤日誌 | 員工操作 | 篩選的電子郵件 | 篩選的 ip | 篩選網址 | 搜索日誌"
       section_landing_pages:
         account:
           title: "帳號"
           backups:
             title: "備份"
+          whats_new:
+            title: "有什麼最新消息？"
       config_areas:
         about:
           general_settings: "一般設定"
@@ -5722,8 +5738,6 @@ zh_TW:
         delete: "刪除"
         delete_confirm: '你確定要刪除%{theme_name}嗎？'
         bulk_delete: "你確定嗎？"
-        bulk_themes_delete_confirm: "這將卸載以下佈景主題，您的網站上的任何用戶將無法再使用它們："
-        bulk_components_delete_confirm: "這將卸載以下元件，您網站上的任何使用者將無法再使用它們："
         color: "顏色"
         opacity: "不透明度"
         copy: "複製"
@@ -6866,6 +6880,7 @@ zh_TW:
           upload:
             label: "上傳"
             title: "上傳圖像"
+        download_file: "下載"
         selectable_avatars:
           title: "使用者可選擇的頭像列表"
         table_column_heading:

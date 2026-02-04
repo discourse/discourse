@@ -765,7 +765,11 @@ sr:
         reviewable_post:
           title: "Post"
           noun: "post"
+        reviewable_ai_post:
+          noun: "post"
       user_label: "Korisnik"
+      timeline:
+        target_deleted: "Post izbrisan"
       notes:
         delete: "Obriši"
       topic_label: "Tema"
@@ -915,9 +919,7 @@ sr:
           notification: Obaveštenje
         email:
           title: "E-mail"
-          status: "Sinhronizovano %{old_emails} / %{total_emails} e-pošte putem IMAP-a."
           enable_smtp: "Omogući SMTP"
-          enable_imap: "Omogući IMAP"
           test_settings: "Postavke testiranja"
           save_settings: "Sačuvaj podešavanja"
           last_updated: "Posljednje ažuriranje:"
@@ -926,14 +928,7 @@ sr:
           smtp_settings_valid: "SMTP podešavanja su ispravna."
           smtp_title: "SMTP"
           smtp_instructions: "Kada omogućite SMTP za grupu, sve odlazne e-pošte poslate iz ulazne pošte grupe poslat će se putem SMTP parametara navedenih ovde umesto servera e-pošte konfigurisanog za druge poruke e-pošte koje šalje vaš forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Dodatna Podešavanja"
-          imap_instructions: 'Kada uključite IMAP za grupu, emailovi su sync-ovani između grupinog prijemnog foldera i podešenog IMAP servera odlaznog foldera. SMTP mora biti uključen sa validnim i testiranim kredencijalima pre nego što se IMAP može uključiti. Email korisničko ime i šifra koji se koriste za SMTP će se koristiti i za IMAP. Za više informacija pogledajte <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">objavu na Discourse Meta</a>.'
-          imap_alpha_warning: "Upozorenje: Ovo je alfa funkcionalnost. Samo Gmail je oficijalno podržan. Koristite na svoju odgovornost!"
-          imap_settings_valid: "IMAP podešavanja su validna."
-          smtp_disable_confirm: "Ukoliko isključite SMTP, sva SMTP i IMAP podešavanja će biti resetovana i povezana funkcionalnost će biti ugašena. Želite li da nastavite?"
-          imap_disable_confirm: "Ukoliko ugasite IMAP, sva IMAP podešavanja će biti resetovana i povezana funkcionalnost će biti ugašena. Želite li da nastavite?"
-          imap_mailbox_not_selected: "Morate odabrati Mailbox za ovu IMAP konfiguraciju inače ni jedna odlazna pošta se neće sinhronizovati."
+          additional_settings: "Dodatna Podešavanja"
           prefill:
             title: "Popunite sa podešavanjima za:"
             gmail: "Gmail"
@@ -948,9 +943,6 @@ sr:
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
             smtp_ssl_mode: "SSL Mod"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP Port"
-            imap_ssl: "Koristi SSL za IMAP"
             username: "Korisničko ime"
             password: "Šifra"
           settings:
@@ -959,10 +951,6 @@ sr:
             allow_unknown_sender_topic_replies_hint: "Omogući nepoznatim pošiljaocima odgovore na teme u grupi. Ukoliko ovo nije uključeno, odgovori sa email adresa koje nisu već pozvane u temu, napraviće novu temu."
             from_alias: "From Alias"
             from_alias_hint: "Alias koji da se koristi za from adresu kada se šalju grupni SMTP emailovi. Ovo može bit nepodržano od svih email provajdera, molimo konsultujte dokumentaciju vašeg email provajder."
-          mailboxes:
-            synchronized: "Sinhronizovani Mailbox"
-            none_found: "Ni jedan mailbox nije pronađen u ovom email nalogu."
-            disabled: "Isključeno"
         membership:
           title: Članstvo
         categories:
@@ -2182,6 +2170,8 @@ sr:
       creation_error: Dogodila se greška pri otvaranju kategorije.
       save_error: Dogodila se greška pri čuvanju kategorije.
       description: "Opis"
+      icon: "Ikona"
+      emoji: "Emoji"
       background_color: "Boja"
       styles:
         icon: "Ikona"
@@ -2189,7 +2179,6 @@ sr:
         options:
           icon: "Ikona"
           emoji: "Emoji"
-      name_placeholder: "Jedna ili dve reči maksimalno"
       color_placeholder: "bilo koja boja"
       delete_confirm: "Jeste li sigurni da želite izbrisati ovu kategoriju?"
       delete_error: "Dogodila se greška pri brisanju kategorije."
@@ -2200,12 +2189,14 @@ sr:
         group: "Grupa"
         see: "Pogledaj"
         reply: "Odgovori"
-      images: "Slike"
       email_in: "Prilagođena adresa dolaznog e-maila."
       email_in_allow_strangers: "Prihvati emailove anonimnih korisnika bez naloga"
       allow_badges_label: "Dozvoli dodjeljivanje značaka u ovoj kategoriji."
       review_group_name: "ime grupe"
       this_year: "ove godine"
+      none_subcategory_text: "Ništa"
+      visibility:
+        group_restricted: "Privatna"
       notifications:
         watching:
           title: "Posmatrano"
@@ -2629,6 +2620,9 @@ sr:
           enabled: "Omogućeno"
           disabled: "Isključeno"
           impact_type_other: "Ostalo"
+          impact_role_admins: "Admini"
+          impact_role_moderators: "Moderatori"
+          impact_role_staff: "Osoblje"
       config:
         developer:
           title: "Programer"
@@ -2746,6 +2740,7 @@ sr:
           monthly: Top mesečne
           weekly: Top nedeljne
           groups: "Sve grupe"
+          sort_button: "Sortiraj po %{column}"
           filters:
             group:
               label: Grupa
@@ -3348,6 +3343,7 @@ sr:
         uploaded_image_list:
           upload:
             label: "Učitaj"
+        download_file: "Preuzmi"
         categories:
           all_results: "Sve"
           required: "Potrebno"

@@ -106,7 +106,17 @@ export default class EditCategorySecurity extends buildCategoryPanel(
               {{i18n "category.permissions.no_groups_selected"}}
             </div>
           {{/unless}}
+        </div>
 
+        <PluginOutlet
+          @name="category-security-permissions-add-group"
+          @outletArgs={{lazyHash
+            category=this.category
+            availableGroups=this.category.availableGroups
+            onSelectGroup=this.onSelectGroup
+          }}
+          @defaultGlimmer={{true}}
+        >
           {{#if this.category.availableGroups}}
             <div class="add-group">
               <span class="group-name">
@@ -122,13 +132,15 @@ export default class EditCategorySecurity extends buildCategoryPanel(
               </span>
             </div>
           {{/if}}
-        </div>
 
-        {{#if this.everyoneGrantedFull}}
-          <p class="warning">{{i18n
-              "category.permissions.everyone_has_access"
-            }}</p>
-        {{/if}}
+          <@form.Alert @type="warning">
+            {{#if this.everyoneGrantedFull}}
+              {{i18n "category.permissions.everyone_full_access"}}
+            {{else}}
+              {{i18n "category.permissions.specific_groups_have_access"}}
+            {{/if}}
+          </@form.Alert>
+        </PluginOutlet>
       {{/unless}}
     </section>
 

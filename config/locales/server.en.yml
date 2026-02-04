@@ -431,6 +431,7 @@ en:
     redemption_count_less_than_max: "should be less than %{max_redemptions_allowed}."
     email_xor_domain: "Email and domain fields are not allowed at the same time"
     existing_user_success: "Invite redeemed successfully"
+    email_invites_disabled: "Sending invite emails is disabled"
 
   bulk_invite:
     file_should_be_csv: "The uploaded file should be of csv format."
@@ -654,6 +655,7 @@ en:
         other: "Maximum %{count} email domains can be counted at once"
       no_invites_with_discourse_connect: "You can invite only registered users when DiscourseConnect is enabled"
       no_invites_without_local_logins: "You can invite only registered users when local logins are disabled"
+      update_existing_users_required: "This change affects %{count} existing group members. You must specify the 'update_existing_users' parameter (true or false) to indicate whether to apply the new notification defaults to existing members."
     default_names:
       everyone: "everyone"
       admins: "admins"
@@ -1128,6 +1130,7 @@ en:
     too_many_drafts:
       title: "Too many drafts"
       description: "You have reached the maximum number of allowed drafts. Please delete some of [your drafts](%{base_url}/my/activity/drafts) and try again."
+    bulk_destroy_limit: "You can only delete up to %{limit} drafts at once."
   draft_backup:
     pm_title: "Backup Drafts from ongoing topics"
     pm_body: "Topic containing backup drafts"
@@ -1708,6 +1711,7 @@ en:
         one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
         other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
       missing_mailgun_api_key: "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages."
+      qq_mail_smtp: "Your SMTP server (%{smtp_address}) is known to cause duplicate emails with Discourse. QQ Mail does not return proper acknowledgments, causing Discourse to retry sends that already succeeded. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>See recommended alternatives</a>."
       bad_favicon_url: "The favicon is failing to load. Check your favicon setting in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
       poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> and service provider."
       poll_pop3_auth_error: "Connection to the POP3 server is failing with an authentication error. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a>."
@@ -1822,7 +1826,7 @@ en:
     manifest_icon: "Image used as logo/splash image on Android. Will be automatically resized to 512 × 512. If left blank, large_icon will be used."
     manifest_screenshots: "Screenshots that showcase your instance features and functionality on its install prompt page. All images should be local uploads and of the same dimensions."
     favicon: "A favicon for your site, see <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. To work correctly over a CDN it must be a png. Will be resized to 32x32. If left blank, large_icon will be used."
-    apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not reccomended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
+    apple_touch_icon: "Icon used for Apple touch devices. A transparent background is not recommended. Will be automatically resized to 180x180. If left blank, large_icon will be used."
     opengraph_image: "Default opengraph image, used when the page has no other suitable image. If left blank, large_icon will be used"
     x_summary_large_image: "Twitter card 'summary large image' (should be at least 280 in width, and at least 150 in height, cannot be .svg). If left blank, regular card metadata is generated using the opengraph_image, as long as that is not also a .svg"
 
@@ -1912,6 +1916,7 @@ en:
     blocked_crawler_user_agents: "Unique case insensitive word in the user agent string identifying web crawlers that should not be allowed to access the site. Does not apply if allowlist is defined."
     slow_down_crawler_user_agents: 'User agents of web crawlers that should be rate limited as configured in the "slow down crawler rate" setting. Each value must be at least 3 characters long.'
     slow_down_crawler_rate: "If slow_down_crawler_user_agents is specified this rate will apply to all the crawlers (number of seconds delay between requests)"
+    llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."
     content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection."
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
     content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
@@ -2098,7 +2103,7 @@ en:
     alert_admins_if_errors_per_minute: "Number of errors per minute in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
     alert_admins_if_errors_per_hour: "Number of errors per hour in order to trigger an admin alert. A value of 0 disables this feature. NOTE: requires restart."
 
-    categories_topics: "Number of topics to show in /categories page. If set to 0, it will automatically try to find a value to keep the two columns symmetrical (categories and topics)."
+    categories_topics: 'Number of topics to show on the /categories page. If set to 0, it will automatically set a value to keep the two columns symmetrical. Only relevant for "categories and latest/top topics" <a href="%{base_path}/admin/site_settings/category/all_results?filter=category style">category page styles</a>.'
     suggested_topics: "Number of suggested topics shown at the bottom of a topic."
     limit_suggested_to_category: "Only show topics from the current category in suggested topics."
     suggested_topics_max_days_old: "Suggested topics should not be more than n days old."
@@ -2316,7 +2321,7 @@ en:
     strip_incoming_email_lines: "Remove leading and trailing whitespaces from each line of incoming emails."
 
     disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable emails for all users. Select 'non-staff' to disable emails for non-staff users only."
-
+    allow_email_invites: "When disabled, users won't be able to send invite emails via Discourse"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Define the maximum length, in bytes, for an email to be classified as 'short' for image suppression. If an email's size does not exceed this setting, any images (such as avatars and emojis) within the email will be stripped out."
     display_name_on_email_from: "Display full names on email from fields"
@@ -2434,9 +2439,9 @@ en:
 
     show_inactive_accounts: "Allow logged in users to browse profiles of inactive accounts."
 
-    hide_silencing_reasons: "Don't display silencing reasons publically on user profiles."
+    hide_silencing_reasons: "Don't display silencing reasons publicly on user profiles."
 
-    hide_suspension_reasons: "Don't display suspension reasons publically on user profiles."
+    hide_suspension_reasons: "Don't display suspension reasons publicly on user profiles."
 
     log_personal_messages_views: "Log personal message views by Admin for other users/groups."
 
@@ -2463,7 +2468,7 @@ en:
 
     dominating_topic_minimum_percent: "What percentage of posts a user has to make in a topic before being reminded about overly dominating a topic."
 
-    pm_warn_user_last_seen_months_ago: "When creating a new PM warn users when target recepient has not been seen more than n months ago."
+    pm_warn_user_last_seen_months_ago: "When creating a new PM warn users when target recipient has not been seen more than n months ago."
 
     suppress_uncategorized_badge: "Don't show the badge for uncategorized topics in topic lists."
 
@@ -2715,15 +2720,16 @@ en:
     welcome_banner_text_color: "When the 'Welcome banner image' setting has been configured, use this setting to change the banner text color to ensure it remains readable. When left blank or when no image has been uploaded, the active theme controls the color."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
+    splash_screen_image: "An SVG image to display on the splash screen while the site loads. Supports animated SVGs. You can use var(--primary), var(--secondary), and var(--tertiary) in your SVG to reference theme colors."
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
     experimental_new_new_view_groups: 'Enable a new topics list that combines unread and new topics and make the "Everything" link in the sidebar link to it.'
-    experimental_form_templates: "Enable the form templates feature. Manage the templates at <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a>."
+    experimental_form_templates: "Enable the form templates feature. With it, you can enforce a structured form with data validation as part of the topic creation flow."
     show_preview_for_form_templates: "Enable the preview for form templates feature"
     lazy_load_categories_groups: "Lazy load category information only for users of these groups. This improves performance on sites with many categories."
     experimental_auto_grid_images: "Automatically wraps images in [grid] tags when 3 or more images are uploaded in the composer."
-    experimental_impersonation: "Impersonate a user without having to log out of your admin account."
+    experimental_impersonation: "Allow admins to impersonate a user without having to log out of their admin account."
     experimental_impersonation_time_limit_minutes: "How long before an impersonation session is automatically ended."
     page_loading_indicator: "Configure the loading indicator which appears during page navigations within Discourse. 'Spinner' is a full page indicator. 'Slider' shows a narrow bar at the top of the screen."
     show_user_menu_avatars: "Show user avatars in the user menu"
@@ -2739,7 +2745,7 @@ en:
     reviewable_ui_refresh: "Groups that can use the experimental new UI in the review queue."
     viewport_based_mobile_mode: "Use viewport width to determine mobile/desktop modes. This setting will be removed soon. If you find the need to turn it off, please let us know <a href='https://meta.discourse.org/t/384280'>on Meta</a>."
     content_localization_enabled: "Displays localized content for users based on their browser or user language preferences. Such content may include categories, tags, posts, and topics. Supported locales are set in 'content localization supported locales'."
-    content_localization_supported_locales: "List of supported locales that user content can be translated to. Requires 'content localization enabled'."
+    content_localization_supported_locales: "List of supported locales that user content can be translated to. The site's default locale is always included. Requires 'content localization enabled'."
     content_localization_allowed_groups: "Groups allowed to update localized content. Requires 'content localization enabled'."
     content_localization_language_switcher: "Show a language switcher in the header, allowing visitors to switch between translated versions of Discourse and user-contributed content. Uses languages defined in 'content localization supported locales'"
     content_localization_crawler_param: "Serve localized content to web crawlers when 'content localization enabled' and 'set locale from param' is enabled. The list of supported locales is defined in 'content localization supported locales'."
@@ -2749,6 +2755,8 @@ en:
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     experimental_rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
+    enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
+    enable_custom_splash_screen: "Allows customizing the loading splash screen with your own SVG image. Upload an image via the 'splash screen image' setting. Warning: This may negatively impact LCP scores and Google indexing."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
@@ -3133,6 +3141,7 @@ en:
         updating_user_ids: "Updating user ids…"
         deleting_source_user: "Deleting source user…"
   user:
+    anonymized: "[removed due to user anonymization]"
     deactivated: "Was deactivated due to too many bounced emails to '%{email}'."
     deactivated_by_staff: "Deactivated by staff"
     deactivated_by_inactivity:
@@ -4107,8 +4116,9 @@ en:
     user_posts_deleted:
       title: "User Posts Deleted"
       subject_template: "All of %{user}'s posts have been deleted"
-      text_body_template: |
-        %{deleted_posts_count} posts from @%{user} have been deleted by @%{staff_user}.
+      text_body_template:
+        one: "%{count} post from @%{user} has been deleted by @%{staff_user}."
+        other: "%{count} posts from @%{user} have been deleted by @%{staff_user}."
 
   unsubscribe_link: |
     To unsubscribe from these emails, [click here](%{unsubscribe_url}).
@@ -4744,6 +4754,7 @@ en:
   upload:
     edit_reason: "downloaded local copies of images"
     unauthorized: "Sorry, the file you are trying to upload is not authorized (authorized extensions: %{authorized_extensions})."
+    images_only: "Sorry, you can only upload images for this setting."
     pasted_image_filename: "Pasted image"
     store_failure: "Failed to store upload #%{upload_id} for user #%{user_id}."
     file_missing: "Sorry, you must provide a file to upload."
@@ -5481,8 +5492,12 @@ en:
     bulk_create:
       invalid_params: "Invalid parameters. Please provide an array of tag names."
       invalid_name: "Invalid tag name."
-      tag_too_long: "Tag is too long (max %{max} characters)."
-      too_many_tags: "Too many tags. You can create up to %{max} tags at once. For larger imports, use the CSV upload feature."
+      tag_too_long:
+        one: "Tag is too long (max %{count} character)."
+        other: "Tag is too long (max %{count} characters)."
+      too_many_tags:
+        one: "Too many tags. You can create up to %{count} tag at once. For larger imports, use the CSV upload feature."
+        other: "Too many tags. You can create up to %{count} tags at once. For larger imports, use the CSV upload feature."
     forbidden:
       invalid:
         one: "The tag you selected cannot be used"
@@ -5634,6 +5649,7 @@ en:
       custom: "Notification from %{username} on %{site_title}"
 
   staff_action_logs:
+    redacted: "[content not visible]"
     json_too_long: "Values not logged because they exceed the column length limits"
     not_found: "not found"
     unknown: "unknown"
@@ -5667,7 +5683,6 @@ en:
   reviewables:
     already_handled: "Thanks, but we've already reviewed that post and determined it does not need to be flagged again."
     already_handled_and_user_not_exist: "Thanks, but someone already reviewed and that user no longer exists."
-    post_deleted_by_author: "Post was deleted by the author"
     post_restored_by_author: "Post was restored by the author"
     priorities:
       low: "Low"
@@ -5735,19 +5750,19 @@ en:
         description: "Agree with flag and hide this post + automatically send the user a message urging them to edit it."
         complete: "Post hidden, user has been notified."
       agree_and_edit:
-        title: "Agree and Edit Post"
+        title: "Edit post"
         description: "Agree with flag and open a composer window to edit the post."
         complete: "Flag acknowledged, you can now edit the post."
       delete:
         title: "Delete"
         complete: "Post deleted."
       delete_and_ignore:
-        title: "Ignore flag and delete post"
-        description: "Ignore the flag by removing it from the queue and delete the post; if the first post, delete the topic as well. "
+        title: "Delete post and ignore flag"
+        description: "Delete the post and ignore the flag by removing it from the queue; if the first post, delete the topic as well. "
         complete: "Post deleted."
       delete_and_ignore_replies:
-        title: "Ignore flag, delete post and replies"
-        description: "Ignore the flag by removing it from the queue, delete the post and all of its replies; if the first post, delete the topic as well"
+        title: "Delete post and replies, ignore flag"
+        description: "Delete the post and all of its replies, then ignore the flag by removing it from the queue; if the first post, delete the topic as well"
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       delete_and_agree:
@@ -5760,11 +5775,14 @@ en:
         confirm: "Are you sure you want to delete the replies to the post as well?"
         complete: "Post and replies deleted."
       disagree_and_restore:
-        title: "No, restore post"
-        description: "Restore the post so that all users can see it."
+        title: "Restore post"
+        description: "Disagree with flag and restore post"
         complete: "Post restored."
-      disagree:
+      disagree_bundle:
         title: "No"
+      disagree:
+        title: "Keep post"
+        description: "Disagree with flag"
         complete: "Flag ignored."
       discard_post:
         title: "Discard Post"
@@ -5774,37 +5792,45 @@ en:
         complete: "Post rejected pending revision."
       ignore:
         title: "Ignore"
+        description: "Remove it from the queue without taking action."
         complete: "Flag ignored."
       ignore_and_do_nothing:
         title: "Do nothing"
         description: "Ignore the flag by removing it from the queue without taking any action. Hidden posts will stay hidden and be handled by the auto-tools."
         complete: "Flag ignored."
       approve:
-        title: "Approve"
+        title: "Yes"
         complete: "Post approved."
       approve_post:
-        title: "Approve Post"
+        title: "Yes"
         complete: "Post approved."
       approve_post_closed:
-        title: "Approve Post"
+        title: "Yes"
         confirm: "This topic is closed. Would you like to create the post anyway?"
         complete: "Post approved."
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Reject Post"
         complete: "Post rejected."
       approve_user:
-        title: "Approve User"
+        title: "Yes"
         complete: "User approved."
       reject_user:
-        title: "Delete User…"
+        title: "No"
         delete:
           title: "Delete User"
-          description: "The user will be deleted from the forum."
+          description: "Delete user without blocking"
           complete: "User deleted."
         block:
           title: "Delete and Block User"
           description: "The user will be deleted, and we'll block their IP and email address."
           complete: "User deleted and blocked."
+      confirm_spam:
+        title: "Yes"
+      not_spam:
+        title: "No"
+        description: "Not spam, approve user"
       reject:
         title: "Reject"
         bundle_title: "Reject…"
@@ -5817,16 +5843,20 @@ en:
       reject_and_delete:
         title: "Reject and Delete the post"
         complete: "Post rejected and deleted."
+      reject_and_delete_standalone:
+        title: "No, delete post"
       reject_and_keep_deleted:
         title: "Keep post deleted"
         complete: "Post rejected and kept deleted."
+      reject_and_keep_deleted_standalone:
+        title: "No, keep post deleted"
       scrub:
         title: Scrub record
       approve_and_restore:
-        title: "Approve and Restore post"
+        title: "Yes"
         complete: "Post approved and restored."
       approve_and_unhide:
-        title: "Approve and Unhide post"
+        title: "Yes"
         complete: "Post approved and unhidden"
       # New separated post actions
       post_actions:

@@ -1355,7 +1355,6 @@ zh_TW:
     anonymous_account_duration_minutes: "為了匿名性，為每個使用者每 N 分鐘創建一個匿名帳號。例如：如果設置為 600，只要發帖後 600 分鐘到了，並且使用者切換至了匿名模式，就會創建一個新的匿名帳號。"
     hide_user_profiles_from_public: "不對來訪使用者顯示使用者信息卡、使用者資料和使用者目錄。"
     show_inactive_accounts: "允許登入使用者瀏覽未啟用帳戶的使用者個人檔案。"
-    hide_suspension_reasons: "不要在使用者個人檔案上公開顯示暫停原因。"
     log_personal_messages_views: "管理員記錄其他使用者或群組的個人資訊畫面"
     ignored_users_count_message_threshold: "如果特定使用者被這麽多的其他使用者忽略，則通知版主。"
     ignored_users_message_gap_days: "被許多使用者忽略的使用者，再次通知版主此事件需要等待的時間。"
@@ -2767,6 +2766,8 @@ zh_TW:
     title: "進入安全模式"
     enter: "進入安全模式"
     must_select: "您必須至少選擇一個選項才能進入安全模式。"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse 安裝"
     step:
@@ -2847,10 +2848,9 @@ zh_TW:
         confirm: "您確定要刪除對該貼文的留言嗎？"
       delete_and_agree_replies:
         confirm: "您確定要刪除對該貼文的留言嗎？"
-      disagree_and_restore:
-        description: "將話題變更為對所有人顯示。"
-      disagree:
+      disagree_bundle:
         title: "否"
+      disagree:
         complete: "檢舉已忽略."
       ignore:
         title: "忽略"
@@ -2859,29 +2859,39 @@ zh_TW:
         title: "不做任何動作"
         complete: "檢舉已忽略."
       approve:
-        title: "批准"
+        title: "是"
         complete: "帖文已批准."
       approve_post:
-        title: "批准貼文"
+        title: "是"
         complete: "帖文已批准."
       approve_post_closed:
-        title: "批准貼文"
+        title: "是"
         complete: "帖文已批准."
+      reject_post_bundle:
+        title: "否"
       reject_post:
         title: "否決貼文"
         complete: "貼文被拒絕."
       approve_user:
-        title: "批准使用者"
+        title: "是"
         complete: "使用者已核准."
       reject_user:
+        title: "否"
         delete:
           title: "刪除使用者"
-          description: "該使用者將從論壇中刪除。"
         block:
           title: "刪除並阻擋使用者"
           description: "這個使用者將被刪除，我們將阻擋他們的IP及郵件地址。"
+      confirm_spam:
+        title: "是"
+      not_spam:
+        title: "否"
       reject:
         title: "拒絕"
+      approve_and_restore:
+        title: "是"
+      approve_and_unhide:
+        title: "是"
       no_action_post:
         title: "沒有動作"
       delete_post:

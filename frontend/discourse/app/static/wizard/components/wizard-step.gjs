@@ -3,7 +3,6 @@ import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import concatClass from "discourse/helpers/concat-class";
-import emoji from "discourse/helpers/emoji";
 import getUrl from "discourse/lib/get-url";
 import { i18n } from "discourse-i18n";
 import WizardField from "./wizard-field";
@@ -58,9 +57,6 @@ export default class WizardStepComponent extends Component {
       <div class={{concatClass "wizard-container" this.containerFontClasses}}>
         <div class="wizard-container__step-contents">
           <div class="wizard-container__step-header">
-            <div class="wizard-container__step-header--emoji">
-              {{emoji @step.emoji}}
-            </div>
             <h1 class="wizard-container__step-title">{{@step.title}}</h1>
           </div>
 

@@ -299,6 +299,7 @@ after_initialize do
       {
         type: :number,
         property: :like_count,
+        title: main_id,
         html_title: PrettyText.unescape_emoji(CGI.escapeHTML(":#{main_id}:")),
       },
     ]
@@ -309,6 +310,7 @@ after_initialize do
       report.labels << {
         type: :number,
         property: "#{reaction}_count",
+        title: reaction,
         html_title: PrettyText.unescape_emoji(CGI.escapeHTML(":#{reaction}:")),
       }
     end

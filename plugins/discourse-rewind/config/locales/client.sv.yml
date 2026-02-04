@@ -18,8 +18,6 @@ sv:
           title: Tilldelningar
         chat_usage:
           messages: meddelanden
-          author: Du
-          author_others: "%{username}"
         invites:
           title: Inbjudningar
           invitee_posts: Inlägg skapade

@@ -117,19 +117,19 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   }
 
   get suffixType() {
-    if (this.#hasUnseenFeatures) {
+    if (this.#hasUnseenFeatures || this.#hasNewUpcomingChanges) {
       return "icon";
     }
   }
 
   get suffixValue() {
-    if (this.#hasUnseenFeatures) {
+    if (this.#hasUnseenFeatures || this.#hasNewUpcomingChanges) {
       return "circle";
     }
   }
 
   get suffixCSSClass() {
-    if (this.#hasUnseenFeatures) {
+    if (this.#hasUnseenFeatures || this.#hasNewUpcomingChanges) {
       return "admin-sidebar-nav-link__dot";
     }
   }
@@ -138,6 +138,13 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
     return (
       this.adminSidebarNavLink.name === "admin_whats_new" &&
       this.currentUser.hasUnseenFeatures
+    );
+  }
+
+  get #hasNewUpcomingChanges() {
+    return (
+      this.adminSidebarNavLink.name === "admin_upcoming_changes" &&
+      this.currentUser.hasNewUpcomingChanges
     );
   }
 }
@@ -417,23 +424,30 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         {
           name: "admin_customize_form_templates",
           route: "adminCustomizeFormTemplates",
-          label: "admin.form_templates.nav_title",
+          label: "admin.config.form_templates.title",
+          description: "admin.config.form_templates.header_description",
           icon: "list",
         },
       ]);
     }
 
     if (siteSettings.enable_upcoming_changes) {
-      this.adminNavManager.amendLinksToSection("root", [
-        {
-          name: "admin_upcoming_changes",
-          route: "adminConfig.upcomingChanges",
-          label: "admin.config.upcoming_changes.title",
-          description: "admin.config.upcoming_changes.header_description",
-          icon: "flask",
-          keywords: "admin.config.upcoming_changes.keywords",
-        },
-      ]);
+      const rootSection = this.adminNavManager.findSection("root");
+      const linkExists = rootSection?.links.some(
+        (link) => link.name === "admin_upcoming_changes"
+      );
+      if (!linkExists) {
+        this.adminNavManager.amendLinksToSection("root", [
+          {
+            name: "admin_upcoming_changes",
+            route: "adminConfig.upcomingChanges",
+            label: "admin.config.upcoming_changes.title",
+            description: "admin.config.upcoming_changes.header_description",
+            icon: "flask",
+            keywords: "admin.config.upcoming_changes.keywords",
+          },
+        ]);
+      }
     }
 
     for (const [sectionName, additionalLinks] of Object.entries(

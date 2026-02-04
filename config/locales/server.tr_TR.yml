@@ -1040,12 +1040,9 @@ tr_TR:
     no_log_search_queries: "Arama sorguları günlükleri şu anda devre dışı (bir yönetici bunları site ayarlarından etkinleştirebilir)."
   email_settings:
     pop3_authentication_error: "Sağlanan POP3 giriş bilgileriyle ilgili bir sorun oluştu, kullanıcı adı ve şifreyi kontrol edip tekrar deneyin."
-    imap_authentication_error: "Sağlanan IMAP giriş bilgileriyle ilgili bir sorun oluştu, kullanıcı adı ve şifreyi kontrol edip tekrar deneyin."
-    imap_no_response_error: "IMAP sunucusuyla iletişim kurulurken bir hata oluştu. %{message}"
     smtp_authentication_error: "Sağlanan SMTP giriş bilgileriyle ilgili bir sorun oluştu. Kullanıcı adı ve şifreyi kontrol edip tekrar deneyin. %{message}"
     smtp_server_busy_error: "SMTP sunucusu şu anda meşgul, daha sonra yeniden deneyin."
     smtp_unhandled_error: "SMTP sunucusuyla iletişim kurulurken işlenmemiş bir hata oluştu. %{message}"
-    imap_unhandled_error: "IMAP sunucusuyla iletişim kurulurken işlenmemiş bir hata oluştu. %{message}"
     connection_error: "Sunucuya bağlanırken bir sorun oluştu, sunucu adını ve bağlantı noktasını kontrol edip tekrar deneyin."
     timeout_error: "Sunucuya bağlantı zaman aşımına uğradı, sunucu adını ve bağlantı noktasını kontrol edin ve tekrar deneyin."
     unhandled_error: "E-posta ayarları test edilirken işlenmemiş hata. %{message}"
@@ -1701,7 +1698,6 @@ tr_TR:
     manifest_icon: "Android'de logo/splash görüntüsü olarak kullanılan görüntü. Otomatik olarak 512 × 512 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
     manifest_screenshots: "Kurulum istemi sayfasında örneğinizin özelliklerini ve işlevselliğini gösteren ekran görüntüleri. Tüm görüntüler yerel yüklemeler olmalı ve aynı boyutlarda olmalıdır."
     favicon: "Siteniz için bir favicon, bkz. <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a>. CDN üzerinden düzgün çalışması için png olmalıdır. 32x32 olarak yeniden boyutlandırılır. Boş bırakılırsa large_icon kullanılır."
-    apple_touch_icon: "Apple dokunmatik cihazlar için kullanılan simge. Şeffaf bir arka plan önerilmez. Otomatik olarak 180x180 olarak yeniden boyutlandırılacak. Boş bırakılırsa large_icon kullanılır."
     opengraph_image: "Varsayılan opengraph görüntüsü, sayfada başka uygun görüntü olmadığında kullanılır. Boş bırakılırsa large_icon kullanılır"
     x_summary_large_image: "Twitter kartı \"özet büyük görüntü\" (en az 280 genişliğinde ve en az 150 yüksekliğinde olmalıdır, .svg olamaz). Boş bırakılırsa .svg olmadığı sürece opengraph_image kullanılarak normal kart meta verileri oluşturulur"
     notification_email: "Tüm temel sistem e-postalarını gönderirken kullanılan kimden: e-posta adresi. Burada belirtilen alan adının, e-postanın ulaşması için SPF, DKIM ve ters PTR kayıtlarının doğru şekilde ayarlanmış olması gerekir."
@@ -1928,7 +1924,6 @@ tr_TR:
     invite_link_max_redemptions_limit_users: "Normal kullanıcılar tarafından oluşturulan davet bağlantıları için izin verilen maksimum kullanım sayısı bu değerden fazla olamaz."
     alert_admins_if_errors_per_minute: "Bir yönetici uyarısını tetiklemek için dakika başına hata sayısı. 0 değeri bu özelliği devre dışı bırakır. NOT: Yeniden başlatma gerektirir."
     alert_admins_if_errors_per_hour: "Bir yönetici uyarısını tetiklemek için saat başına hata sayısı. 0 değeri bu özelliği devre dışı bırakır. NOT: Yeniden başlatma gerektirir."
-    categories_topics: "Kategoriler sayfasında gösterilecek konu sayısı. 0 olarak ayarlanırsa iki sütunu simetrik tutmak için otomatik olarak bir değer bulmaya çalışır (kategoriler ve konular)."
     suggested_topics: "Bir konunun altında gösterilen önerilen konu sayısı."
     limit_suggested_to_category: "Önerilen konularda yalnızca geçerli kategorideki konuları gösterin."
     suggested_topics_max_days_old: "Önerilen konular n günden daha eski olmamalıdır."
@@ -2150,14 +2145,7 @@ tr_TR:
     email_in_allowed_groups: "E-posta yoluyla yeni konu göndermesine izin verilen gruplar. Yöneticiler ve moderatörler her zaman e-posta yoluyla yeni konular gönderebilir."
     email_in_authserv_id: "Gelen e-postalarda kimlik doğrulaması kontrolleri yapan hizmetin tanımlayıcısı. Bunun nasıl yapılandırılacağına ilişkin talimatlar için <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> adresine bakın."
     email_in_spam_header: "Spam'i tanımlamak için kullanılacak belirli e-posta başlığını seçer. Bu seçenek X-Spam-Flag, X-Spam-Status veya X-SES-Spam-Verdict olabilir ve e-posta, başlığın değerine göre spam olarak etiketlenir. Örneğin, seçilen ayar X-Spam-Flag ise, bu başlık değeri EVET olarak ayarlanmış bir e-posta istenmeyen olarak sınıflandırılır."
-    enable_imap: "Grup mesajlarını senkronize etmek için IMAP'i etkinleştirin."
-    enable_imap_write: "İki yönlü IMAP senkronizasyonunu etkinleştirin. Devre dışı bırakılırsa IMAP hesapları üzerindeki tüm yazma işlemleri devre dışı bırakılır."
-    enable_imap_idle: "Yeni e-postaları beklemek için IMAP IDLE mekanizmasını kullanın."
     enable_smtp: "Grup mesajları için bildirim göndermek üzere SMTP'yi etkinleştirin."
-    imap_polling_period_mins: "E-postalar için IMAP hesaplarını kontrol etme arasındaki dakika cinsinden süre."
-    imap_polling_old_emails: "Bir IMAP kutusu her sorgulandığında güncellenecek maksimum eski e-posta (işlenmiş) sayısı (tümü için 0)."
-    imap_polling_new_emails: "Bir IMAP kutusu her sorgulandığında güncellenecek maksimum yeni e-posta (işlenmemiş) sayısı."
-    imap_batch_import_email: "İçe aktarma modunu tetikleyen minimum yeni e-posta sayısı (içe aktarılan gönderiler için bildirimleri devre dışı bırakır)."
     email_prefix: "E-postaların konusunda kullanılan [label]. Ayarlanmamışsa varsayılan olarak \"başlık\" olacaktır."
     email_site_title: "Siteden gelen e-postaların göndericisi olarak kullanılan sitenin başlığı. Ayarlanmamışsa varsayılan değer \"başlık\"tır. \"Başlığınız\" e-posta gönderen dizelerinde izin verilmeyen karakterler içeriyorsa bu ayarı kullanın."
     find_related_post_with_key: "Yanıtlanan gönderiyi bulmak için yalnızca \"yanıt anahtarını\" kullanın. UYARI: Bunun devre dışı bırakılması, e-posta adresine dayalı olarak kullanıcı kimliğine bürünmeye izin verir."
@@ -2201,8 +2189,6 @@ tr_TR:
     delete_associated_accounts_on_password_reset: "Kullanıcı şifreyi değiştirdiğinde kullanıcı ilişkili hesabı silin."
     allow_featured_topic_on_user_profiles: "Kullanıcıların, kullanıcı kartlarında ve profillerinde bir konuya bağlantı vermelerine izin verin."
     show_inactive_accounts: "Giriş yapan kullanıcıların etkin olmayan hesapların profillerine göz atmasına izin verin."
-    hide_silencing_reasons: "Kullanıcı profillerinde susturma nedenlerini herkese açık şekilde göstermeyin."
-    hide_suspension_reasons: "Askıya alma nedenlerini kullanıcı profillerinde herkese açık olarak göstermeyin."
     log_personal_messages_views: "Yönetici tarafından diğer kullanıcılar/gruplar için kişisel mesaj görüntülemelerini günlüğe kaydedin."
     ignored_users_count_message_threshold: "Belirli bir kullanıcı şu kadar diğer kullanıcı tarafından göz ardı edilirse moderatörleri bilgilendirin."
     ignored_users_message_gap_days: "Diğerleri tarafından görmezden gelinen bir kullanıcı hakkında moderatörleri tekrar bilgilendirmeden önce ne kadar bekleneceği."
@@ -2215,7 +2201,6 @@ tr_TR:
     dont_feed_the_trolls_threshold: "Uyarılmadan önce diğer kullanıcılardan gelen bayrak sayısı."
     enable_mobile_theme: "Mobil cihazlar, sitenin tamamına geçebilme özelliğine sahip mobil uyumlu bir tema kullanır. Tamamen duyarlı özel bir stil sayfası kullanmak istiyorsanız bunu devre dışı bırakın."
     dominating_topic_minimum_percent: "Bir kullanıcının bir konuda aşırı baskınlık kurduğu hatırlatılmadan önce bir konuda yüzde kaç gönderi yapması gerektiği."
-    pm_warn_user_last_seen_months_ago: "Yeni bir kişisel mesaj oluştururken, hedef alıcı n aydan daha uzun bir süre önce görülmediğinde kullanıcıları uyarın."
     suppress_uncategorized_badge: "Konu listelerinde kategorize edilmemiş konular için rozet göstermeyin."
     header_dropdown_category_count: "Başlık açılır menüsünde kaç kategori görüntülenebileceği."
     permalink_normalizations: "Kalıcı bağlantıları eşleştirmeden önce aşağıdaki regex'i uygulayın, örneğin: /(topic.*)\\?.*/\\1 sorgu dizelerini konu rotalarından söker. Format, regex+string ve yakalamalara erişmek için \\1 vb. kullanın"
@@ -2411,7 +2396,6 @@ tr_TR:
     default_navigation_menu_categories: "Seçilen kategoriler, varsayılan olarak Navigasyon Menüsü'nün Kategoriler bölümünde gösterilir."
     default_navigation_menu_tags: "Seçilen etiketler, varsayılan olarak Navigasyon Menüsü'nün Etiketler bölümünde gösterilir."
     experimental_new_new_view_groups: 'Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
-    experimental_form_templates: "Form şablonları özelliğini etkinleştirin. Şablonları <a href='%{base_path}/admin/customize/form-templates'>Özelleştir / Şablonlar</a> bölümünden yönetin."
     show_preview_for_form_templates: "Form şablonları özelliği için ön izlemeyi etkinleştirin"
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
     experimental_auto_grid_images: "Bestecide 3 veya daha fazla görüntü yüklendiğinde görüntüleri otomatik olarak [grid] etiketlerine sarar."
@@ -2428,7 +2412,6 @@ tr_TR:
     default_composition_mode: "Topluluğunuzun bestecisi için varsayılan modu ayarlayın. Zengin metin modu çoğu kullanıcı için daha modern ve tanıdık bir yazma deneyimi sağlarken, Markdown modu daha teknik kitleler için uygun olabilir. Üyeler, besteci araç çubuğundaki geçiş düğmesini kullanarak modlar arasında geçiş yapabilirler."
     reviewable_ui_refresh: "İnceleme kuyruğunda deneysel yeni kullanıcı arayüzünü kullanabilen gruplar."
     content_localization_enabled: "Kullanıcılara tarayıcı veya kullanıcı dil tercihlerine göre yerelleştirilmiş içerik görüntüler. Bu içerik kategoriler, etiketler, gönderiler ve konular içerebilir. Desteklenen yerel ayarlar, \"İçerik yerelleştirmesi tarafından desteklenen yerel ayarlar\" bölümünde belirtilmiştir."
-    content_localization_supported_locales: "Kullanıcı içeriğinin çevrilebileceği desteklenen yerel ayarların listesi. \"İçerik yerelleştirmesinin etkinleştirilmesini\" gerektirir."
     content_localization_allowed_groups: "Grupların yerelleştirilmiş içeriği güncellemesine izin verildi. \"İçerik yerelleştirmesinin etkinleştirilmesini\" gerektirir."
     errors:
       invalid_css_color: "Geçersiz renk. Bir renk adı veya hex değeri girin."
@@ -4884,6 +4867,8 @@ tr_TR:
     deprecation_error_label: Javascript kullanımdan kaldırmaları hata oluştursun
     enter: "Güvenli Moda Gir"
     must_select: "Güvenli moda girmek için en az bir seçenek belirlemelisiniz."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse Kurulumu"
     step:
@@ -4977,8 +4962,6 @@ tr_TR:
     api_post_delete: "API aracılığıyla silindi"
     reminder_deleted: "Yeni anımsatıcıyla değiştirildi"
     user_associated_posts_deleted: "Kullanıcı yok edildi"
-    imap_email_deleted: "E-posta IMAP sunucusundan silindi"
-    imap_email_marked_as_spam: "E-posta IMAP sunucusunda spam'e taşındı"
     auto_deleted_hidden_posts: "Gizli gönderiler otomatik olarak yok edildi"
     seed_data_topic_updated: "Tohum veri konusu güncellendi"
     seed_data_topic_deleted: "Tohum veri konusu silindi"
@@ -5050,19 +5033,14 @@ tr_TR:
         description: "Bayrağı kabul edin ve bu gönderiyi gizleyin + otomatik olarak kullanıcıya bu gönderiyi düzenlemesini isteyen bir mesaj gönderin"
         complete: "Gönderi gizlendi, kullanıcı bilgilendirildi."
       agree_and_edit:
-        title: "Kabul Et ve Gönderiyi Düzenle"
         description: "Bayrağı kabul edin ve gönderiyi düzenlemek için bir besteci penceresi açın."
         complete: "Bayrak onaylandı, artık gönderiyi düzenleyebilirsiniz."
       delete:
         title: "Sil"
         complete: "Gönderi silindi."
       delete_and_ignore:
-        title: "Bayrağı yok say ve gönderiyi sil"
-        description: "Kuyruktan kaldırarak bayrağı yok sayın ve gönderiyi silin; ilk gönderiyse konuyu da silin. "
         complete: "Gönderi silindi."
       delete_and_ignore_replies:
-        title: "Bayrağı yok say, gönderiyi ve yanıtları sil"
-        description: "Kuyruktan kaldırarak bayrağı yok sayın, gönderiyi ve tüm yanıtlarını silin; ilk gönderiyse konuyu da silin"
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
         complete: "Gönderi ve yanıtlar silindi."
       delete_and_agree:
@@ -5075,11 +5053,12 @@ tr_TR:
         confirm: "Gönderiye verilen yanıtları da silmek istediğinizden emin misiniz?"
         complete: "Gönderi ve yanıtlar silindi."
       disagree_and_restore:
-        title: "Hayır, gönderiyi geri yükle"
-        description: "Gönderiyi tüm kullanıcıların görebilmesi için geri yükleyin."
+        title: "Gönderiyi geri yükle"
         complete: "Gönderi geri yüklendi."
-      disagree:
+      disagree_bundle:
         title: "Hayır"
+      disagree:
+        title: "Gönderiyi tut"
         complete: "Bayrak yok sayıldı."
       discard_post:
         title: "Gönderiyi sil"
@@ -5094,31 +5073,36 @@ tr_TR:
         description: "Herhangi bir işlem yapmadan kuyruktan kaldırarak bayrağı yok sayın. Gizli gönderiler gizli kalır ve otomatik araçlar tarafından işlenir."
         complete: "Bayrak yok sayıldı."
       approve:
-        title: "Onayla"
+        title: "Evet"
         complete: "Gönderi onaylandı."
       approve_post:
-        title: "Gönderiyi Onayla"
+        title: "Evet"
         complete: "Gönderi onaylandı."
       approve_post_closed:
-        title: "Gönderiyi Onayla"
+        title: "Evet"
         confirm: "Bu konu kapalı. Yine de gönderiyi oluşturmak istiyor musunuz?"
         complete: "Gönderi onaylandı."
+      reject_post_bundle:
+        title: "Hayır"
       reject_post:
         title: "Gönderiyi Reddet"
         complete: "Gönderi reddedildi."
       approve_user:
-        title: "Kullanıcıyı Onayla"
+        title: "Evet"
         complete: "Kullanıcı onaylandı."
       reject_user:
-        title: "Kullanıcıyı sil…"
+        title: "Hayır"
         delete:
           title: "Kullanıcıyı Sil"
-          description: "Kullanıcı forumdan silinecek."
           complete: "Kullanıcı silindi."
         block:
           title: "Kullanıcıyı Sil ve Engelle"
           description: "Kullanıcı silinecek ve IP ve e-posta adresini engelleyeceğiz."
           complete: "Kullanıcı silindi ve engellendi."
+      confirm_spam:
+        title: "Evet"
+      not_spam:
+        title: "Hayır"
       reject:
         title: "Reddet"
         bundle_title: "Reddet…"
@@ -5137,10 +5121,10 @@ tr_TR:
       scrub:
         title: Temizleme kaydı
       approve_and_restore:
-        title: "Onayla ve Gönderiyi Geri Yükle"
+        title: "Evet"
         complete: "Gönderi onaylandı ve geri yüklendi."
       approve_and_unhide:
-        title: "Gönderiyi onayla ve Gizlemesini kaldır"
+        title: "Evet"
         complete: "Gönderi onaylandı ve gizlemesi kaldırıldı"
       no_action_post:
         title: "Eylem yok"

@@ -1208,7 +1208,6 @@ ro:
     anonymous_account_duration_minutes: "Pentru protejarea anonimității, creează un nou cont anonim la fiecare N minute pentru fiecare utilizator. Exemplu: dacă e setat la 600, imediat ce au trecut 600 de minute de la ultima postare șI utilizatorul a comutat pe anonim, va fi creat un nou cont anonim."
     hide_user_profiles_from_public: "Dezactivează cardurile, profilurile și „cartea de telefon” pentru utilizatorii anonimi."
     allow_users_to_hide_profile: "Permite utilizatorilor să-şi ascundă profilul şi prezenţa"
-    hide_silencing_reasons: "Nu afișa motive de reducere la tăcere în mod public pe profilurile utilizatorilor."
     allow_profile_backgrounds: "Permite utilizatorilor să încarce fundaluri de profil."
     get_a_room_threshold: "Numărul de postări pe care un utilizator poate să le facă la adresa aceleiași persoane înainte de a primi un avertisment."
     enable_mobile_theme: "Dispozitivele mobile folosesc o temă cu abilitatea de a schimba la întregul site. Dezactivează pentru a folosi o foiae de stil personalizată ce este total responsivă."
@@ -1282,21 +1281,19 @@ ro:
     welcome_banner_location: "Stabilește unde va apărea bannerul de bun venit pe pagină."
     welcome_banner_page_visibility: "Stabilește pe ce pagini va apărea bannerul de bun venit."
     experimental_new_new_view_groups: 'Activează o nouă listă de subiecte care combină subiectele necitite și cele noi și fă ca legătura „Toate” din bara laterală să ducă spre aceasta.'
-    experimental_form_templates: "Activează caracteristica șabloane de formulare. Gestionează șabloanele la <a href='%{base_path}/admin/customize/form-templates'>Personalizare/șabloane</a>."
     show_preview_for_form_templates: "Activează funcționalitatea de previzualizare pentru șabloanele de formulare"
-    experimental_impersonation: "Preia identitatea unui utilizator fără a fi nevoie să te deconectezi din contul tău de administrator."
     experimental_impersonation_time_limit_minutes: "Cât durează până când o sesiune de preluare a identității se încheie automat."
     show_user_menu_avatars: "Arată avatare utilizator în meniul utilizatorului"
     about_page_extra_groups: "Grupuri de afișat pe pagina despre sub moderatori."
     about_page_extra_groups_initial_members: "Numărul de membri pentru a extinde fiecare grup pe pagina „Despre”."
     about_page_extra_groups_show_description: "Dacă se includ descrierile grupurilor pe pagina „Despre”."
     about_page_extra_groups_order: "Ordonarea grupurilor suplimentare pe pagina „Despre”."
+    adobe_analytics_tags_url: "Adresa URL a etichetelor Adobe Analytics (`https://assets.adobedtm.com/...`)"
     rich_editor: "Activează editorul îmbogățit pentru compoziție astfel încât toți utilizatorii să poată comuta între modul Markdown curent și noul editor de text îmbogățit pentru o compoziție mai intuitivă și mai ușor de utilizat."
     default_composition_mode: "Setează modul implicit pentru compozitorul comunității tale. Modul de text îmbogățit oferă o experienţă de scriere mai modernă, familiară pentru majoritatea utilizatorilor, în timp ce Markdown este potrivit pentru publicul mai tehnic. Membrii pot folosi o comutare în bara de instrumente a compozitorului pentru a comuta între moduri."
     reviewable_ui_refresh: "Grupuri care pot folosi noua interfață de utilizator experimentală în coada de revizuire."
     viewport_based_mobile_mode: "Folosește lățimea ferestrei de vizualizare pentru a determina modurile mobil sau desktop. Această setare va fi eliminată în curând. Dacă ai nevoie să o dezactivezi, te rog să ne anunți <a href='https://meta.discourse.org/t/384280'>pe Meta</a>."
     content_localization_enabled: "Afișează conținutul localizat pentru utilizatori bazat pe preferințele lor de navigator sau de limbă ale utilizatorului. Acest conținut poate include categorii, etichete, postări și subiecte. Localele acceptate sunt setate în „locale disponibile pentru localizarea conținutului”."
-    content_localization_supported_locales: "Lista localelor acceptate în care poate fi tradus conținutul. Necesită „localizarea conținutului activată”."
     content_localization_allowed_groups: "Grupuri care pot actualiza conținutul localizat. Necesită „localizarea conținutului activat”."
     content_localization_language_switcher: "Arată un comutator de limbă în antet, permițând vizitatorilor să schimbe între versiunile traduse Discourse și conținutul la care au contribuit utilizatorii. Folosește limbile definite în „locale acceptate din localizarea de conținut”"
     content_localization_crawler_param: "Servește conținut localizat crawlerelor web atunci când opțiunile „localizare conținut” și „setare locală din parametru” sunt activate. Lista localelor acceptate este definită în secțiunea „locale acceptate în localizarea conținutului”."
@@ -2231,6 +2228,8 @@ ro:
     deprecation_error_description: "Pentru a verifica compatibilitatea cu viitoarele actualizări Discourse, poți face ca deprecierile Javascript să ridice o eroare:"
     deprecation_error_label: Fă ca deprecierile Javascript să ridice o eroare
     enter: "Activează modul sigur"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Configurare Discourse"
     step:
@@ -2264,8 +2263,6 @@ ro:
     api_post_delete: "Șters prin API"
     reminder_deleted: "Înlocuit de un nou memento"
     user_associated_posts_deleted: "Utilizatorul a fost distrus"
-    imap_email_deleted: "Emailul a fost șters de pe serverul IMAP"
-    imap_email_marked_as_spam: "Emailul a fost mutat în spam pe serverul IMAP"
     auto_deleted_hidden_posts: "Postări ascunse distruse automat"
   reviewables:
     priorities:
@@ -2315,10 +2312,10 @@ ro:
       delete_and_agree_replies:
         complete: "Postarea și răspunsurile au fost șterse."
       disagree_and_restore:
-        description: "Restabilește postarea pentru astfel încât toți utilizatorii să o poată vedea."
         complete: "Postarea a fost restaurată."
-      disagree:
+      disagree_bundle:
         title: "Nu"
+      disagree:
         complete: "Semnalarea a fost ignorată."
       revise_and_reject_post:
         title: "Cere revizuire..."
@@ -2329,24 +2326,33 @@ ro:
         title: "Nu face nimic"
         complete: "Semnalarea a fost ignorată."
       approve:
-        title: "Aprobare"
+        title: "Da"
         complete: "Postarea a fost aprobată."
       approve_post:
+        title: "Da"
         complete: "Postarea a fost aprobată."
       approve_post_closed:
-        title: "Aprobă postarea"
+        title: "Da"
         confirm: "Acest subiect este închis. Vrei să creezi postarea oricum?"
         complete: "Postarea a fost aprobată."
+      reject_post_bundle:
+        title: "Nu"
       reject_post:
         complete: "Postarea a fost respinsă."
       approve_user:
+        title: "Da"
         complete: "Utilizatorul a fost aprobat."
       reject_user:
+        title: "Nu"
         delete:
           title: "Şterge utilizatorul"
           complete: "Utilizatorul a fost șters."
         block:
           complete: "Utilizatorul a fost șters și blocat."
+      confirm_spam:
+        title: "Da"
+      not_spam:
+        title: "Nu"
       reject:
         title: "Respingere"
       reject_and_suspend:
@@ -2358,9 +2364,10 @@ ro:
       reject_and_keep_deleted:
         complete: "Postarea a fost respinsă și păstrată ștearsă."
       approve_and_restore:
+        title: "Da"
         complete: "Postare a fost aprobată și restaurată."
       approve_and_unhide:
-        title: "Aprobă și reafișează postarea"
+        title: "Da"
         complete: "Postare aprobată și afișată"
       no_action_post:
         title: "Nicio acțiune"

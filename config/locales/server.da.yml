@@ -771,8 +771,6 @@ da:
     pm_body: "Emne, der indeholder backup-kladder"
   email_settings:
     pop3_authentication_error: "Der var et problem med de angivne POP3-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
-    imap_authentication_error: "Der var et problem med de leverede IMAP-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
-    imap_no_response_error: "Der opstod en fejl under kommunikation med IMAP-serveren. %{message}"
     smtp_server_busy_error: "SMTP-serveren er i øjeblikket optaget, prøv igen senere."
     smtp_unhandled_error: "Der opstod en uhåndteret fejl under kommunikation med SMTP-serveren. %{message}"
     connection_error: "Der var et problem med forbindelsen til serveren, tjek serverens navn og port og prøv igen."
@@ -1495,9 +1493,6 @@ da:
     pop3_polling_password: "Adgangskoden til POP3-kontoen til kontrol for e-mail."
     pop3_polling_delete_from_server: "Slet e-mails fra serveren. BEMÆRK: Hvis du deaktiverer dette, skal du manuelt rense din postindbakke"
     log_mail_processing_failures: "Log alle e-mail-behandlingsfejl til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    enable_imap: "Aktiver IMAP til synkronisering af gruppemeddelelser."
-    enable_imap_write: "Aktiver to-vejs IMAP-synkronisering. Hvis deaktiveret, er alle skriveoperationer på IMAP-konti deaktiveret."
-    enable_imap_idle: "Brug IMAP-IDLE-mekanismen til at vente på nye e-mails."
     enable_smtp: "Aktiver SMTP for afsendelse af notifikationer for gruppemeddelelser."
     email_site_title: "Titlen på webstedet der bruges som afsender af e-mails fra webstedet. Standard er 'titel', hvis ikke angivet. Hvis din 'titel' indeholder tegn, der ikke er tilladt i e-mail-afsenderstrenge, så brug denne indstilling."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
@@ -1517,7 +1512,6 @@ da:
     enable_group_directory: "Tilbyd en oversigt over grupper til gennemsyn"
     hide_user_profiles_from_public: "Deaktiver brugerkort, brugerprofiler og brugerkatalog for anonyme brugere."
     show_inactive_accounts: "Tillad brugere der er logget ind at gennemse profiler af inaktive konti."
-    hide_suspension_reasons: "Vis ikke suspensionsårsager offentligt på brugerprofiler."
     user_selected_primary_groups: "Tillad brugere at indstille deres egen primære gruppe"
     allow_profile_backgrounds: "Tillad brugere at uploade en profil baggrund."
     enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
@@ -3104,6 +3098,8 @@ da:
     title: "Gå ind i fejlsikret tilstand"
     enter: "Gå ind i fejlsikret tilstand"
     must_select: "Du skal vælge mindst én mulighed for at gå i fejlsikret tilstand."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse Opsætning"
     step:
@@ -3188,10 +3184,9 @@ da:
         complete: "Indlæg slettet."
       delete_and_agree_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
-      disagree_and_restore:
-        description: "Gendan indlægget, så alle brugere kan se det."
-      disagree:
+      disagree_bundle:
         title: "Nej"
+      disagree:
         complete: "Rapportering ignoreret."
       ignore:
         title: "Ignorér"
@@ -3200,32 +3195,41 @@ da:
         title: "Gøre ingenting"
         complete: "Rapportering ignoreret."
       approve:
-        title: "Godkend"
+        title: "Ja"
         complete: "Indlæg godkendt."
       approve_post:
-        title: "Godkend Indlæg"
+        title: "Ja"
         complete: "Indlæg godkendt."
       approve_post_closed:
-        title: "Godkend Indlæg"
+        title: "Ja"
         complete: "Indlæg godkendt."
+      reject_post_bundle:
+        title: "Nej"
       reject_post:
         title: "Afvis Indlæg"
         complete: "Indlæg afvist."
       approve_user:
-        title: "Godkend Bruger"
+        title: "Ja"
         complete: "Bruger godkendt."
       reject_user:
-        title: "Slet Bruger…"
+        title: "Nej"
         delete:
           title: "Slet Bruger"
-          description: "Brugeren vil blive slettet fra forummet."
           complete: "Bruger slettet."
         block:
           title: "Slet og Blokér Bruger"
           description: "Brugeren vil blive slettet, og vi vil blokere deres IP og e-mail-adresse."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nej"
       reject:
         title: "Afvis"
         bundle_title: "Afvis…"
+      approve_and_restore:
+        title: "Ja"
+      approve_and_unhide:
+        title: "Ja"
       no_action_post:
         title: "Ingen handling"
       delete_post:

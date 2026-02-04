@@ -37,6 +37,7 @@ import { showAlert } from "discourse/lib/post-action-feedback";
 import { clipboardCopy } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import Composer from "discourse/models/composer";
+import { PENDING } from "discourse/models/reviewable";
 import Topic from "discourse/models/topic";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -157,7 +158,8 @@ export default class ReviewableItem extends Component {
     "claimOptional",
     "claimRequired",
     "reviewable.claimed_by",
-    "siteSettings.reviewable_old_moderator_actions"
+    "siteSettings.reviewable_old_moderator_actions",
+    "isAiReviewable"
   )
   displayContextQuestion(
     createdFromFlag,
@@ -165,14 +167,21 @@ export default class ReviewableItem extends Component {
     claimOptional,
     claimRequired,
     claimedBy,
-    oldModeratorActions
+    oldModeratorActions,
+    isAiReviewable
   ) {
     return (
-      oldModeratorActions &&
-      createdFromFlag &&
-      status === 0 &&
-      (claimOptional || (claimRequired && claimedBy !== null))
+      (oldModeratorActions &&
+        createdFromFlag &&
+        status === PENDING &&
+        (claimOptional || (claimRequired && claimedBy !== null))) ||
+      isAiReviewable
     );
+  }
+
+  @discourseComputed("reviewable.type")
+  isAiReviewable(type) {
+    return type === "ReviewableAiChatMessage" || type === "ReviewableAiPost";
   }
 
   @discourseComputed(
@@ -369,7 +378,7 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateStatus(data) {
-    if (data.remove_reviewable_ids.includes(this.reviewable.id)) {
+    if (data.remove_reviewable_ids?.includes(this.reviewable.id)) {
       delete data.remove_reviewable_ids;
       this._performResult(data, {}, this.reviewable);
     }
@@ -458,7 +467,7 @@ export default class ReviewableItem extends Component {
       });
     }
 
-    if (this.remove && result.remove_reviewable_ids) {
+    if (this.remove && result.remove_reviewable_ids?.length > 0) {
       this.remove(result.remove_reviewable_ids);
     } else {
       return this.store.find("reviewable", reviewable.id);
@@ -754,7 +763,6 @@ export default class ReviewableItem extends Component {
                       as |FieldComponent|
                     }}
                       <FieldComponent
-                        @tagName=""
                         @value={{editableValue this.reviewable f.id}}
                         @tagCategoryId={{this.tagCategoryId}}
                         @valueChanged={{fn this.valueChanged f.id}}
@@ -770,10 +778,7 @@ export default class ReviewableItem extends Component {
                 (lookupComponent this this.reviewableComponent)
                 as |ReviewableComponent|
               }}
-                <ReviewableComponent
-                  @reviewable={{this.reviewable}}
-                  @tagName=""
-                />
+                <ReviewableComponent @reviewable={{this.reviewable}} />
               {{/let}}
             {{/if}}
           </div>
@@ -832,8 +837,12 @@ export default class ReviewableItem extends Component {
             {{#if this.canPerform}}
               <div class="review-item__moderator-actions">
                 <h3 class="review-item__aside-title">
-                  {{#if this.displayContextQuestion}}
+                  {{#if this.editing}}
+                    {{i18n "review.editing_post"}}
+                  {{else if this.displayContextQuestion}}
                     {{this.reviewable.flaggedReviewableContextQuestion}}
+                  {{else if this.reviewable.userReviewableContextQuestion}}
+                    {{this.reviewable.userReviewableContextQuestion}}
                   {{else}}
                     {{i18n "review.moderator_actions"}}
                   {{/if}}

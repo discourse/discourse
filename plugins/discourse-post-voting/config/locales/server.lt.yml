@@ -22,8 +22,6 @@ lt:
           agree_and_silence:
             title: "Nutildyti narį"
             description: "Sutikti su pranešimu ir nutildyti narį."
-          disagree:
-            title: "Nesutinka"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

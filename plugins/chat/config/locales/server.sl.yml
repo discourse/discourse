@@ -17,8 +17,6 @@ sl:
         agree_and_silence:
           title: "Utišaj uporabnika"
           description: "Potrdi prijavo in utišaj uporabnika"
-        disagree:
-          title: "Se ne strinjam"
     channel:
       dm_title:
         single_user: "%{username}"

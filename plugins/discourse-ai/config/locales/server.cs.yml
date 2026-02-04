@@ -43,6 +43,8 @@ cs:
         summarize: "Shrnout"
       tool_help:
         summary: "Shrnout téma"
+      tool_description:
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
     ai_staff_action_logger:
       updated: "aktualizováno"
       removed: "odstraněno"

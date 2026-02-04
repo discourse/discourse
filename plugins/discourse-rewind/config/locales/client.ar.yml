@@ -16,8 +16,6 @@ ar:
           title: وقت القراءة
         chat_usage:
           messages: الرسائل
-          author: أنت
-          author_others: "%{username}"
           status_online: "● متصل"
         invites:
           title: الدعوات

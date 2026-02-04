@@ -965,12 +965,9 @@ ja:
     no_log_search_queries: "検索クエリログは現在無効になっています (管理者はサイト設定で有効にできます)。"
   email_settings:
     pop3_authentication_error: "指定された POP3 の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
-    imap_authentication_error: "指定された IMAP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
-    imap_no_response_error: "IMAP サーバーとの通信中にエラーが発生しました。%{message}"
     smtp_authentication_error: "指定された SMTP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。%{message}"
     smtp_server_busy_error: "SMTP サーバーは現在ビジー状態です。後でもう一度お試しください。"
     smtp_unhandled_error: "SMTP サーバーとの通信中に未処理のエラーが発生しました。%{message}"
-    imap_unhandled_error: "IMAP サーバーとの通信中に未処理のエラーが発生しました。%{message}"
     connection_error: "サーバーとの接続に問題が発生しました。サーバー名とポートを確認して、もう一度お試しください。"
     timeout_error: "サーバーへの接続がタイムアウトしました。サーバー名とポートを確認して、もう一度お試しください。"
     unhandled_error: "メールの設定をテスト中に未処理のエラーが発生しました。%{message}"
@@ -1625,7 +1622,6 @@ ja:
     manifest_icon: "Android でロゴ/スプラッシュ画像として使用される画像。自動的に 512 × 512 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     manifest_screenshots: "インストールプロンプトページでインスタンスの特徴と機能を紹介するスクリーンショット。すべての画像はローカルアップロードであり、同じサイズである必要があります。"
     favicon: "サイトのファビコン。<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> をご覧ください。CDN で正しく動作させるには、png である必要があります。32 x 32 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
-    apple_touch_icon: "Apple タッチデバイスに使用されるアイコン。透明な背景は推奨されません。自動的に 180x180 にサイズ変更されます。空白のままにすると、large_icon が使用されます。"
     opengraph_image: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます"
     x_summary_large_image: "Twitter カードの 'summary large image' (幅 280 以上、高さ 150 以上である必要があり、.svg を使用できません)。空のままにすると、.svg でない限り opengraph_image を使って通常のカードメタデータが生成されます。"
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインは SPF、DKIM、逆引き PTR レコードが正しく設定されている必要があります。"
@@ -1852,7 +1848,6 @@ ja:
     invite_link_max_redemptions_limit_users: "通常のユーザーが生成した招待リンクに許可される最大引き換え数はこの値を超えることはできません。"
     alert_admins_if_errors_per_minute: "管理者アラートをトリガーするための 1 分あたりのエラー数。値 0 はこの機能を無効にします。注意: 再起動が必要です。"
     alert_admins_if_errors_per_hour: "管理者アラートをトリガーするための 1 時間あたりのエラー数。値 0 はこの機能を無効にします。注意: 再起動が必要です。"
-    categories_topics: "/categories ページに表示するトピック数。0 に設定すると、2 つの列 (カテゴリとトピック) を対称に維持するための値が自動的に求められます。"
     suggested_topics: "トピックの下に表示される推奨トピックの数"
     limit_suggested_to_category: "推奨トピックには現在参照しているカテゴリのトピックのみを表示する。"
     suggested_topics_max_days_old: "投稿されて n 日経過したものを推奨トピックにしない。"
@@ -2074,14 +2069,7 @@ ja:
     email_in_allowed_groups: "メールで新規トピックを投稿できるグループ。管理者とモデレーターはいつでもメールで新規トピックを投稿できます。"
     email_in_authserv_id: "受信メールに認証チェックを実行するサービスの識別子。この構成方法については、<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> をご覧ください。"
     email_in_spam_header: "迷惑投稿を識別するために使用するを特定のメールヘッダーを選択します。このオプションは X-Spam-Flag、X-Spam-Status、または X-SES-Spam-Verdict のいずれかで、このヘッダー値が YES に設定されたメールは迷惑投稿として分類されます。"
-    enable_imap: "グループメッセージを同期するために IMAP を有効にする。"
-    enable_imap_write: "双方向の IMAP 同期を有効にする。無効にすると、IMAP アカウントのすべての書き込み操作が無効になります。"
-    enable_imap_idle: "IMAP IDLE メカニズムを使用して新規メールを待機する。"
     enable_smtp: "グループメッセージの通知を送信するための SMTP を有効にする。"
-    imap_polling_period_mins: "IMAP アカウントでメールを確認する間隔 (分)。"
-    imap_polling_old_emails: "IMAP ボックスがポーリングされるたびに更新される古いメール (処理済み) の最大数 (すべての場合は 0)。"
-    imap_polling_new_emails: "IMAP ボックスがポーリングされるたびに更新される新しいメール (未処理) の最大数。"
-    imap_batch_import_email: "インポートモードをトリガーする新しいメールの最低数 (投稿アラートを無効にします)。"
     email_prefix: "メールの件名に使用される [label]。空白の場合、'title' がデフォルトで使用されます。"
     email_site_title: "サイトからのメールの送信者として使用されるサイトのタイトル。 空白の場合、'title' がデフォルトで使用されます。'title' にメールの送信者として使用できない文字列が含まれている場合、この設定を使用します。"
     find_related_post_with_key: "'reply key' のみを使って返信先の投稿を検索する。警告: これを無効にすると、メールアドレスに基づいてユーザー代理操作が可能になります。"
@@ -2125,8 +2113,6 @@ ja:
     delete_associated_accounts_on_password_reset: "ユーザーがパスワードを変更すると、ユーザーに関連付けられたアカウントを削除します。"
     allow_featured_topic_on_user_profiles: "ユーザーがトピックへのリンクをユーザーカードとプロファイルに掲載することを許可する。"
     show_inactive_accounts: "ログインユーザーが非アクティブアカウントのプロファイルを閲覧することを許可する。"
-    hide_silencing_reasons: "ユーザープロファイルに投稿禁止理由を公開しない。"
-    hide_suspension_reasons: "ユーザープロファイルに凍結理由を公開しない。"
     log_personal_messages_views: "管理者による他のユーザー/グループの個人メッセージビューをログに記録する。"
     ignored_users_count_message_threshold: "特定のユーザーがこの数のユーザーに無視された場合、モデレーターに通知する。"
     ignored_users_message_gap_days: "多数のユーザーによって無視されたユーザーについてモデレーターに再通知するまでの時間。"
@@ -2139,7 +2125,6 @@ ja:
     dont_feed_the_trolls_threshold: "警告を受けるまでの他のユーザーからの通報数。"
     enable_mobile_theme: "モバイルデバイスにモバイル対応のテーマを使用します (デスクトップサイトに切り替え可能)。完全にレスポンシブなカスタムスタイルシートを使用する場合はこの設定を無効にしてください。"
     dominating_topic_minimum_percent: "ユーザーがトピックを過度に占領していることを通知する、トピック内のユーザーの投稿率。"
-    pm_warn_user_last_seen_months_ago: "新しい PM を作成するときに、対象の受信者 n か月以上もアクセスしていないことをユーザーに警告します。"
     suppress_uncategorized_badge: "トピックリストに未分類のトピックのバッジを表示しない"
     header_dropdown_category_count: "ヘッダードロップダウンメニューに表示できるカテゴリ数。"
     permalink_normalizations: "パーマリンクを照合する前に、次の正規表現を適用する。例: /(topic.*)\\?.*/\\1 はトピックルートからクエリ文字列を削除します。形式は正規表現+文字列です。キャプチャにアクセスするには \\1 などを使用します"
@@ -2335,7 +2320,6 @@ ja:
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
-    experimental_form_templates: "フォームのテンプレート機能を有効にします。テンプレートは <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> で管理できます。"
     show_preview_for_form_templates: "フォームテンプレート機能のプレビューを有効にする"
     lazy_load_categories_groups: "これらのグループのユーザーに対してのみ、カテゴリ情報を遅延読み込みする。これにより、カテゴリ数の多いサイトのパフォーマンスが改善されます。"
     experimental_auto_grid_images: "作成ツールに 3 つ以上の画像がアップロードされると、画像を自動的に [grid] タグで囲みます。"
@@ -2352,7 +2336,6 @@ ja:
     default_composition_mode: "コミュニティーの作成ツールのデフォルトモードを設定する。リッチテキストモードでは、よりモダンでほとんどのユーザーが使い慣れた書き心地を得られます。Markdown モードはより技術的な知識を持つユーザーに適しています。メンバーは作成ツールのツールバーにあるトグルでモードを切り替えられます。"
     reviewable_ui_refresh: "レビューキューで実験的な新しい UI を使用できるグループ。"
     content_localization_enabled: "ユーザーのブラウザまたはユーザの言語設定に基づいて、ローカライズされたコンテンツを表示します。コンテンツには、カテゴリ、タグ、投稿、トピックが含まれる場合があります。サポートされているロケールは、'content localization supported locales' に設定されているロケールです。"
-    content_localization_supported_locales: "ユーザーコンテンツを翻訳できるサポートされたロケールのリスト。'content localization enabled' が必要です。"
     content_localization_allowed_groups: "ローカライズされたコンテンツの更新を許可されたグループ。'content localization enabled' が必要です。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
@@ -4791,6 +4774,8 @@ ja:
     deprecation_error_label: JavaScript の非推奨設定でエラーを発生させる
     enter: "セーフモードを開始"
     must_select: "セーフモードを開始するには、少なくとも 1 つのオプションを選択する必要があります。"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse のセットアップ"
     step:
@@ -4882,8 +4867,6 @@ ja:
     api_post_delete: "API で削除されました"
     reminder_deleted: "新しいリマインダーに置き換えられました"
     user_associated_posts_deleted: "ユーザーは破棄されました"
-    imap_email_deleted: "メールは IMAP サーバー上で削除されました"
-    imap_email_marked_as_spam: "メールは IMAP サーバー上で迷惑メールに移動されました"
     auto_deleted_hidden_posts: "非表示の投稿は自動的に破棄されました"
     seed_data_topic_updated: "シードデータのトピックが更新されました"
     seed_data_topic_deleted: "シードデータのトピックが削除されました"
@@ -4954,19 +4937,14 @@ ja:
         description: "通報に同意し、この投稿を非表示にします。さらに、ユーザーに編集を求めるメッセージを自動送信します。"
         complete: "投稿は非表示になり、ユーザーに通知されました。"
       agree_and_edit:
-        title: "同意して投稿を編集"
         description: "通報に同意し、コンポーザーウィンドウを開いて投稿を編集します。"
         complete: "通報が承認され、投稿を編集できるようになりました。"
       delete:
         title: "削除"
         complete: "投稿は削除されました。"
       delete_and_ignore:
-        title: "通報を無視して投稿を削除する"
-        description: "通報をキューから削除して通報を無視し、投稿を削除します。最初の投稿である場合は、トピックも削除します。 "
         complete: "投稿は削除されました。"
       delete_and_ignore_replies:
-        title: "通報を無視し、投稿と返信を削除する"
-        description: "通報をキューから削除して通報を無視し、投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       delete_and_agree:
@@ -4979,11 +4957,12 @@ ja:
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       disagree_and_restore:
-        title: "いいえ。投稿を復元する"
-        description: "すべてのユーザーが閲覧できるように投稿を復元します。"
+        title: "投稿を復元する"
         complete: "投稿を復元しました。"
-      disagree:
+      disagree_bundle:
         title: "いいえ"
+      disagree:
+        title: "投稿を維持する"
         complete: "通報は無視されました。"
       discard_post:
         title: "投稿を破棄"
@@ -4998,31 +4977,36 @@ ja:
         description: "何もアクションを起こさずにキューから通報を削除して、通報を無視します。非表示の投稿は非表示のままになり、自動ツールによって処理されます。"
         complete: "通報は無視されました。"
       approve:
-        title: "承認"
+        title: "はい"
         complete: "投稿は承認されました。"
       approve_post:
-        title: "投稿の承認"
+        title: "はい"
         complete: "投稿は承認されました。"
       approve_post_closed:
-        title: "投稿の承認"
+        title: "はい"
         confirm: "このトピックはクローズされています。それでも投稿を作成しますか？"
         complete: "投稿は承認されました。"
+      reject_post_bundle:
+        title: "いいえ"
       reject_post:
         title: "投稿の拒否"
         complete: "投稿は拒否されました。"
       approve_user:
-        title: "ユーザーの承認"
+        title: "はい"
         complete: "ユーザーは承認されました。"
       reject_user:
-        title: "ユーザーを削除…"
+        title: "いいえ"
         delete:
           title: "ユーザーの削除"
-          description: "ユーザーはフォーラムから削除されます。"
           complete: "ユーザーは削除されました。"
         block:
           title: "ユーザーの削除とブロック"
           description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
           complete: "ユーザーを削除してブロックしました。"
+      confirm_spam:
+        title: "はい"
+      not_spam:
+        title: "いいえ"
       reject:
         title: "却下"
         bundle_title: "拒否…"
@@ -5041,10 +5025,10 @@ ja:
       scrub:
         title: レコードを削除
       approve_and_restore:
-        title: "投稿の承認と復元"
+        title: "はい"
         complete: "投稿を承認して復元しました。"
       approve_and_unhide:
-        title: "投稿を承認して非表示を解除"
+        title: "はい"
         complete: "投稿を承認して非表示状態を解除しました"
       no_action_post:
         title: "未対応"

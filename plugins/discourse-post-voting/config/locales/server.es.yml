@@ -102,16 +102,10 @@ es:
             title: "Eliminar comentario"
             description: "Elimina el comentario para que los usuarios no puedan verlo."
           delete_and_agree:
-            title: "Ignorar denuncia y eliminar comentario"
             description: "Ignorar la denuncia eliminándola de la cola y eliminar el comentario."
           disagree_and_restore:
             title: "Discrepar y restaurar comentario"
             description: "Restaura el comentario para que todos los usuarios puedan verlo."
-          disagree:
-            title: "No estoy de acuerdo"
-          ignore:
-            title: "No hacer nada"
-            description: "Ignora la denuncia eliminándola de la cola sin realizar ninguna acción."
         transcript:
           view: "Ver la transcripción de los comentarios anteriores"
       reviewable_score_types:

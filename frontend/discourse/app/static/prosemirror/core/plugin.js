@@ -1,7 +1,8 @@
 import { Plugin } from "prosemirror-state";
+import GlimmerNodeView from "../lib/glimmer-node-view";
 
 /*
-  There are 3 ways to define a node view:
+  There are 4 ways to define a node view:
 
   Setting a node view class directly (e.g. code-block)
   `nodeViews: { nodeName: NodeViewClass }`
@@ -11,6 +12,9 @@ import { Plugin } from "prosemirror-state";
 
   Setting a node view instance as returned by a function, when plugin params are needed (e.g. image)
   `nodeViews: { nodeName: (pluginParams) => (...args) => nodeViewInstance }`
+
+  Setting a Glimmer component with auto-wrapping (new)
+  `nodeViews: { nodeName: { component: GlimmerComponent, name: "nodeName" } }`
 */
 export function extractNodeViews(extensions, pluginParams) {
   /** @type {Record<string, import('prosemirror-view').NodeViewConstructor>} */
@@ -18,6 +22,21 @@ export function extractNodeViews(extensions, pluginParams) {
   for (const { nodeViews } of extensions) {
     if (nodeViews) {
       for (let [name, nodeView] of Object.entries(nodeViews)) {
+        // Check if nodeView is a Glimmer component descriptor
+        if (nodeView && typeof nodeView === "object" && nodeView.component) {
+          allNodeViews[name] = (node, view, getPos) => {
+            return new GlimmerNodeView({
+              node,
+              view,
+              getPos,
+              getContext: pluginParams.getContext,
+              component: nodeView.component,
+              name: nodeView.name || name,
+            });
+          };
+          continue;
+        }
+
         // node view can be a function, to which we pass pluginParams
         if (!nodeView.toString().startsWith("class")) {
           nodeView = nodeView(pluginParams);
