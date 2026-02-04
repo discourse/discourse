@@ -366,10 +366,10 @@ RSpec.describe TagUser do
       end
       it "every tag from the default_tags_* site settings get overridden to watching_first_post, except for muted" do
         levels = TagUser.notification_levels_for(user)
-        expect(levels[tag1.id]).to eq(TagUser.notification_levels[:regular])
-        expect(levels[tag2.id]).to eq(TagUser.notification_levels[:regular])
-        expect(levels[tag3.id]).to eq(TagUser.notification_levels[:regular])
-        expect(levels[tag4.id]).to eq(TagUser.notification_levels[:muted])
+        expect(levels[tag1.id][:level]).to eq(TagUser.notification_levels[:regular])
+        expect(levels[tag2.id][:level]).to eq(TagUser.notification_levels[:regular])
+        expect(levels[tag3.id][:level]).to eq(TagUser.notification_levels[:regular])
+        expect(levels[tag4.id][:level]).to eq(TagUser.notification_levels[:muted])
       end
     end
 
@@ -402,10 +402,10 @@ RSpec.describe TagUser do
       include tags the user is not tracking at all" do
         tag5 = Fabricate(:tag)
         levels = TagUser.notification_levels_for(user)
-        expect(levels[tag1.id]).to eq(TagUser.notification_levels[:watching])
-        expect(levels[tag2.id]).to eq(TagUser.notification_levels[:tracking])
-        expect(levels[tag3.id]).to eq(TagUser.notification_levels[:watching_first_post])
-        expect(levels[tag4.id]).to eq(TagUser.notification_levels[:muted])
+        expect(levels[tag1.id][:level]).to eq(TagUser.notification_levels[:watching])
+        expect(levels[tag2.id][:level]).to eq(TagUser.notification_levels[:tracking])
+        expect(levels[tag3.id][:level]).to eq(TagUser.notification_levels[:watching_first_post])
+        expect(levels[tag4.id][:level]).to eq(TagUser.notification_levels[:muted])
         expect(levels.key?(tag5.id)).to eq(false)
       end
 
