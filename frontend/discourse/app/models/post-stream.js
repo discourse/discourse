@@ -1187,9 +1187,11 @@ export default class PostStream extends RestModel {
       }
     } catch (error) {
       // If we get a 403 error, refresh the window to prevent continuous retries
-      if (error.jqXHR && error.jqXHR.status === 403) {
+      if (error.jqXHR?.status === 403) {
         window.location.reload();
+        return;
       }
+      throw error;
     }
   }
 
