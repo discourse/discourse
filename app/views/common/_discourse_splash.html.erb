@@ -81,6 +81,7 @@
       left: 0;
       top: 0;
       width: 100vw;
+      height: 100dvh;
       z-index: 1001;
     }
 
@@ -92,11 +93,15 @@
       @media (width < 700px) {
         width: 320px;
       }
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3rem;
+      gap: 1.5rem;
+      <%- unless splash_screen_image_animated? %>
+      margin-top: -10vh;
+      <%- end %>
       <%- else %>
       width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
       <%- end %>
@@ -170,8 +175,8 @@
       --splash-dot-size: max(0.7vw, 14px);
     }
     #d-splash .splash-logo-container {
-      width: min(200px, 55vw);
-      height: min(130px, 20vh);
+      width: min(250px, 60vw);
+      height: min(150px, 25vh);
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
