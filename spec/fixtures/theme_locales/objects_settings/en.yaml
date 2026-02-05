@@ -17,3 +17,9 @@ en:
                   url:
                     label: URL
                     description: "URL of the link"
+                  child_links:
+                    schema:
+                      properties:
+                        title:
+                          label: Title
+                          description: "Title of the child link"

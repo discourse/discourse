@@ -28,6 +28,8 @@ RSpec.describe ThemeObjectsSettingMetadataSerializer do
 
       expect(payload[:property_descriptions]).to eq(
         {
+          "links.child_links.title.description" => "Title of the child link",
+          "links.child_links.title.label" => "Title",
           "links.name.description" => "Name of the link",
           "links.name.label" => "Name",
           "links.url.description" => "URL of the link",
