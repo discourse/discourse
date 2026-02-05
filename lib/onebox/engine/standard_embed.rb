@@ -233,9 +233,8 @@ module Onebox
       end
 
       def find_anchor_target(fragment)
-        html_doc.at_xpath("//*[@id='#{fragment.gsub("'", "\\'")}']") ||
-          html_doc.at_xpath("//a[@name='#{fragment.gsub("'", "\\'")}']") ||
-          html_doc.at_css("##{CSS.escape(fragment)}")
+        escaped = fragment.gsub('"', "&quot;")
+        html_doc.at_xpath(%{//*[@id="#{escaped}"]}) || html_doc.at_xpath(%{//a[@name="#{escaped}"]})
       end
 
       def extract_description_from_target(target)

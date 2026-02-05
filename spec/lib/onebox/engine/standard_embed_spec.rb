@@ -203,6 +203,13 @@ RSpec.describe Onebox::Engine::StandardEmbed do
         embed.send(:enhance_title_with_anchor)
         expect(embed.instance_variable_get(:@raw)[:title]).to eq("Page")
       end
+
+      it "handles fragments containing single quotes" do
+        html = "<h2 id=\"it's-complicated\">It's Complicated</h2>"
+        embed = embed_with_html("https://x.com#it's-complicated", html, { title: "Docs" })
+        embed.send(:enhance_title_with_anchor)
+        expect(embed.instance_variable_get(:@raw)[:title]).to eq("It's Complicated - Docs")
+      end
     end
 
     describe "#enhance_description_with_anchor" do
