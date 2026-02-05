@@ -372,12 +372,28 @@
   .search-container .search-filters,
   .search-container .search-bar,
   .d-admin-filter,
-  .search-container .search-filters .search-advanced-filters {
+  .search-container .search-filters .search-advanced-filters,
+  .reviewable-filters,
+  .admin-site-settings-filter-controls,
+  .admin-site-settings-filter-controls .controls,
+  .admin-site-settings-filter-controls .search.controls {
     background: unset;
+    background-color: unset;
   }
 
-  .d-admin-filter {
+  // Misc Spacing
+  .d-admin-filter,
+  .reviewable-filters,
+  .admin-site-settings-filter-controls .controls {
     padding: 0;
+  }
+
+  .admin-nav .nav-stacked {
+    margin: 0;
+  }
+
+  .admin-filter-controls {
+    margin-block: 0;
   }
 
   // Full Calendar
