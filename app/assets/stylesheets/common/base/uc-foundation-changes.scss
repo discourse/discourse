@@ -4,8 +4,8 @@
   --d-logo-height: 2.3em;
   --d-nav-underline-height: var(--space-half);
   --d-button-default-bg-color: transparent;
-  --input-border-color: var(--primary-300);
-  --d-button-default-border: 1px solid var(--primary-300);
+  --input-border-color: var(--primary-200);
+  --d-button-default-border: 1px solid var(--primary-200);
   --d-button-default-border--hover: 1px solid var(--primary-300);
   --d-button-default-bg-color--hover: var(--primary-200);
   --d-button-default-text-color--hover: var(--primary);
@@ -115,6 +115,11 @@
       height: var(--d-sidebar-row-height) !important;
       padding-inline: var(--d-sidebar-row-horizontal-padding);
     }
+  }
+
+  .sidebar-section-link-wrapper.dropdown-menu__item .sidebar-section-link,
+  .sidebar-section-link-wrapper .dropdown-menu__item .sidebar-section-link {
+    border-radius: var(--d-border-radius);
   }
 
   .dropdown-menu__item {
@@ -386,6 +391,11 @@
   .reviewable-filters,
   .admin-site-settings-filter-controls .controls {
     padding: 0;
+  }
+
+  .search-container .search-header {
+    padding: var(--space-6);
+    border: 1px solid var(--content-border-color);
   }
 
   .admin-nav .nav-stacked {
