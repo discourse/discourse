@@ -93,6 +93,56 @@ RSpec.describe GroupActionLogger do
     end
   end
 
+  describe "#log_group_creation" do
+    it "creates make_user_group_owner and add_user_to_group for each owner" do
+      expect { logger.log_group_creation }.to change { GroupHistory.count }.by(2)
+
+      make_owner =
+        GroupHistory.find_by(action: GroupHistory.actions[:make_user_group_owner], group: group)
+      add_user =
+        GroupHistory.find_by(action: GroupHistory.actions[:add_user_to_group], group: group)
+
+      expect(make_owner).to have_attributes(
+        action: GroupHistory.actions[:make_user_group_owner],
+        acting_user: group_owner,
+        target_user: group_owner,
+      )
+      expect(add_user).to have_attributes(
+        action: GroupHistory.actions[:add_user_to_group],
+        acting_user: group_owner,
+        target_user: group_owner,
+      )
+    end
+
+    it "creates add_user_to_group for each member and make_user_group_owner only for owners" do
+      group.add(user)
+
+      expect { logger.log_group_creation }.to change { GroupHistory.count }.by(3)
+
+      make_owner_records =
+        GroupHistory.where(action: GroupHistory.actions[:make_user_group_owner], group: group)
+      add_user_records =
+        GroupHistory.where(action: GroupHistory.actions[:add_user_to_group], group: group)
+
+      expect(make_owner_records.first).to have_attributes(
+        action: GroupHistory.actions[:make_user_group_owner],
+        acting_user: group_owner,
+        target_user: group_owner,
+      )
+
+      expect(add_user_records.first).to have_attributes(
+        action: GroupHistory.actions[:add_user_to_group],
+        acting_user: group_owner,
+        target_user: group_owner,
+      )
+      expect(add_user_records.second).to have_attributes(
+        action: GroupHistory.actions[:add_user_to_group],
+        acting_user: group_owner,
+        target_user: user,
+      )
+    end
+  end
+
   describe "#log_change_group_settings" do
     it "should create the right record" do
       group.update!(public_admission: true, created_at: Time.zone.now)

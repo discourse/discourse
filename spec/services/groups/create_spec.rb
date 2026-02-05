@@ -25,38 +25,6 @@ RSpec.describe Groups::Create do
     end
 
     describe "custom_fields_allowed_keys" do
-      after { DiscoursePluginRegistry.reset! }
-
-      it "rejects custom_fields with disallowed keys when some keys are registered" do
-        plugin = Plugin::Instance.new
-        plugin.register_editable_group_custom_field :test
-
-        contract =
-          described_class.new(
-            name: "builders",
-            custom_fields: {
-              disallowed_key: "x",
-            },
-            options: nil,
-          )
-        expect(contract).not_to be_valid
-        expect(contract.errors[:custom_fields].first).to include("disallowed key: disallowed_key")
-      end
-
-      it "accepts custom_fields with allowed keys" do
-        plugin = Plugin::Instance.new
-        plugin.register_editable_group_custom_field :test
-
-        contract =
-          described_class.new(name: "builders", custom_fields: { test: "value" }, options: nil)
-        expect(contract).to be_valid
-      end
-
-      it "accepts blank custom_fields" do
-        contract = described_class.new(name: "builders", custom_fields: {}, options: nil)
-        expect(contract).to be_valid
-      end
-
       it "accepts custom_fields when no editable group custom fields are registered" do
         contract =
           described_class.new(
@@ -67,6 +35,36 @@ RSpec.describe Groups::Create do
             options: nil,
           )
         expect(contract).to be_valid
+      end
+
+      context "when some group custom fields are registered" do
+        before { Plugin::Instance.new.register_editable_group_custom_field(:test) }
+
+        after { DiscoursePluginRegistry.reset! }
+
+        it "rejects custom_fields with disallowed keys when some keys are registered" do
+          contract =
+            described_class.new(
+              name: "builders",
+              custom_fields: {
+                disallowed_key: "x",
+              },
+              options: nil,
+            )
+          expect(contract).not_to be_valid
+          expect(contract.errors[:custom_fields].first).to include("disallowed key: disallowed_key")
+        end
+
+        it "accepts custom_fields with allowed keys" do
+          contract =
+            described_class.new(name: "builders", custom_fields: { test: "value" }, options: nil)
+          expect(contract).to be_valid
+        end
+
+        it "accepts blank custom_fields" do
+          contract = described_class.new(name: "builders", custom_fields: {}, options: nil)
+          expect(contract).to be_valid
+        end
       end
     end
   end
@@ -99,6 +97,12 @@ RSpec.describe Groups::Create do
 
     context "when invalid visibility_level is provided" do
       let(:params) { { name: "builders", visibility_level: 999 } }
+
+      it { is_expected.to fail_a_contract }
+    end
+
+    context "when invalid members_visibility_level is provided" do
+      let(:params) { { name: "builders", members_visibility_level: 999 } }
 
       it { is_expected.to fail_a_contract }
     end
