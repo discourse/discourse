@@ -1,6 +1,5 @@
 /**
  * Based on https://github.com/SitePen/dts-generator
- *
  * The original package: © 2015-2019 SitePen, Inc. New BSD License.
  */
 import { createWriteStream } from "node:fs";
