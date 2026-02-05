@@ -134,27 +134,18 @@ class TopicsBulkAction
   def change_category
     updatable_topics = topics.where.not(category_id: @operation[:category_id])
 
-    if SiteSetting.create_revision_on_bulk_topic_moves
-      opts = {
-        bypass_bump: true,
-        validate_post: false,
-        bypass_rate_limiter: true,
-        silent: @operation[:silent],
-      }
+    opts = {
+      bypass_bump: true,
+      validate_post: false,
+      bypass_rate_limiter: true,
+      silent: @operation[:silent],
+      skip_revision: !SiteSetting.create_revision_on_bulk_topic_moves,
+    }
 
-      updatable_topics.each do |t|
-        if guardian.can_edit?(t)
-          changes = { category_id: @operation[:category_id] }
-          @changed_ids << t.id if t.first_post.revise(@user, changes, opts)
-        end
-      end
-    else
-      updatable_topics.each do |t|
-        if guardian.can_edit?(t)
-          if t.change_category_to_id(@operation[:category_id], silent: @operation[:silent])
-            @changed_ids << t.id
-          end
-        end
+    updatable_topics.each do |t|
+      if guardian.can_edit?(t)
+        changes = { category_id: @operation[:category_id] }
+        @changed_ids << t.id if t.first_post.revise(@user, changes, opts)
       end
     end
   end
