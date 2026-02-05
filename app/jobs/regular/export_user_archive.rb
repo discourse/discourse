@@ -396,26 +396,32 @@ module Jobs
 
     def likes_export
       return enum_for(:likes_export) unless block_given?
-      PostAction
-        .with_deleted
-        .where(user_id: @archive_for_user.id)
-        .where(post_action_type_id: post_action_type_view.types[:like])
-        .order(:created_at)
-        .each do |pa|
-          post = Post.with_deleted.find_by(id: pa.post_id)
-          yield(
-            [
-              pa.id,
-              pa.post_id,
-              post&.topic_id,
-              post&.post_number,
-              pa.created_at,
-              pa.updated_at,
-              pa.deleted_at,
-              self_or_other(pa.deleted_by_id),
-            ]
-          )
-        end
+
+      post_actions =
+        PostAction
+          .with_deleted
+          .where(user_id: @archive_for_user.id)
+          .where(post_action_type_id: post_action_type_view.types[:like])
+          .order(:created_at)
+
+      post_ids = post_actions.pluck(:post_id).uniq
+      posts_by_id = Post.with_deleted.where(id: post_ids).index_by(&:id)
+
+      post_actions.each do |pa|
+        post = posts_by_id[pa.post_id]
+        yield(
+          [
+            pa.id,
+            pa.post_id,
+            post&.topic_id,
+            post&.post_number,
+            pa.created_at,
+            pa.updated_at,
+            pa.deleted_at,
+            self_or_other(pa.deleted_by_id),
+          ]
+        )
+      end
     end
 
     def include_post_actions?
