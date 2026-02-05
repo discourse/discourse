@@ -81,7 +81,7 @@ class Groups::Create
               },
               allow_blank: true
 
-    validate :custom_fields_allowed_keys
+    validate :custom_fields_allowed_keys, if: -> { custom_fields.present? }
 
     after_validation { self.membership_request_template = nil unless allow_membership_requests }
 
@@ -98,15 +98,12 @@ class Groups::Create
     private
 
     def custom_fields_allowed_keys
-      return if custom_fields.blank?
-
       allowed_keys = DiscoursePluginRegistry.editable_group_custom_fields
       return if allowed_keys.blank?
 
-      invalid_keys = custom_fields.keys.map(&:to_sym) - allowed_keys.map(&:to_sym)
-      return if invalid_keys.empty?
-
-      invalid_keys.each { |key| errors.add(:custom_fields, "contains disallowed key: #{key}") }
+      (custom_fields.keys.map(&:to_sym) - allowed_keys.map(&:to_sym)).each do |key|
+        errors.add(:custom_fields, "disallowed key: #{key}")
+      end
     end
   end
 
