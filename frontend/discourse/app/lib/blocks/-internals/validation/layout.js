@@ -3,8 +3,8 @@
  * Outlet layout validation utilities.
  *
  * This module provides validation for outlet layouts passed to renderBlocks().
- * It validates block entries, container/children relationships, reserved args,
- * and conditions.
+ * It validates block entries, container/children relationships, args against
+ * block schemas, and conditions.
  *
  * Terminology:
  * - **Block Entry**: An object in a layout that specifies how to use a block.
@@ -466,25 +466,6 @@ export async function resolveBlockForValidation(
 }
 
 /**
- * Reserved argument names that cannot be used in layout entries.
- * These are used internally by the block system and would conflict with
- * user-provided args. Names starting with underscore are also reserved.
- */
-export const RESERVED_ARG_NAMES = Object.freeze([
-  "args",
-  "block",
-  "classNames",
-  "containerArgs",
-  "id",
-  "outletArgs",
-  "outletName",
-  "children",
-  "conditions",
-  // Note: Names starting with underscore (e.g., __block$, __visible, __hierarchy)
-  // are automatically reserved via the argName.startsWith("_") check in isReservedArgName()
-]);
-
-/**
  * Valid top-level keys in block entry objects.
  * Any key not in this list will trigger a validation error, helping catch
  * common typos like `condition` instead of `conditions`.
@@ -595,43 +576,6 @@ export function validateEntryTypes(entry) {
         { path: field }
       );
     }
-  }
-}
-
-/**
- * Checks if an argument name is reserved for internal use.
- * Reserved names include explicit names in RESERVED_ARG_NAMES and
- * any name starting with underscore (private by convention).
- *
- * @param {string} argName - The argument name to check
- * @returns {boolean} True if the name is reserved
- */
-export function isReservedArgName(argName) {
-  return RESERVED_ARG_NAMES.includes(argName) || argName.startsWith("_");
-}
-
-/**
- * Validates that block entry args don't use reserved names.
- * Throws an error if any arg name is reserved (either explicitly listed
- * or prefixed with underscore).
- *
- * @param {Object} entry - The block entry
- * @throws {BlockError} If reserved arg names are used
- */
-export function validateReservedArgs(entry) {
-  if (!entry.args) {
-    return;
-  }
-
-  const usedReservedArgs = Object.keys(entry.args).filter(isReservedArgName);
-
-  if (usedReservedArgs.length > 0) {
-    // Throw BlockError directly - wrapValidationError will add context
-    throw new BlockError(
-      `Reserved arg names: ${usedReservedArgs.join(", ")}. ` +
-        `These names are reserved as entry-level properties or for internal use.`,
-      { path: `args.${usedReservedArgs[0]}` }
-    );
   }
 }
 
@@ -899,16 +843,7 @@ export async function validateEntry(
   if (typeof resolvedBlock === "string") {
     const blockName = resolvedBlock;
 
-    // Validate reserved args even for unresolved factories.
-    // Reserved arg names (args, block, children, __visible, etc.) are deterministic
-    // and don't depend on the block class, so we can validate immediately.
-    wrapValidationError(
-      () => validateReservedArgs(entry),
-      `Invalid block "${blockName}" at ${path} for outlet "${outletName}"`,
-      earlyContext
-    );
-
-    // Still validate conditions since they don't depend on the block class
+    // Validate conditions since they don't depend on the block class
     validateBlockConditions(
       blocksService,
       entry,
@@ -966,13 +901,8 @@ export async function validateEntry(
     return null;
   }
 
-  // Validate reserved args and block args against schema
+  // Validate block args against schema
   const errorPrefix = `Invalid block "${blockName}" at ${path} for outlet "${outletName}"`;
-  wrapValidationError(
-    () => validateReservedArgs(entry),
-    errorPrefix,
-    baseContext
-  );
   const owner = blocksService ? getOwner(blocksService) : null;
   wrapValidationError(
     () => validateBlockArgs(entry, resolvedBlock, { owner }),

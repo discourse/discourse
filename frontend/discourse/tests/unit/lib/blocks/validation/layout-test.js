@@ -2,6 +2,8 @@ import { module, test } from "qunit";
 import {
   isReservedArgName,
   RESERVED_ARG_NAMES,
+} from "discourse/lib/blocks/-internals/validation/args";
+import {
   VALID_ENTRY_KEYS,
   validateEntryIdFormat,
   validateEntryKeys,

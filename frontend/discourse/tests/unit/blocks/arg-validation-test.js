@@ -24,7 +24,7 @@ module("Unit | Blocks | arg-validation", function (hooks) {
     test("accepts childArgs schema with unique property", function (assert) {
       const schema = {
         name: { type: "string", required: true, unique: true },
-        id: { type: "number", unique: true },
+        itemId: { type: "number", unique: true },
       };
 
       // Should not throw
@@ -67,7 +67,7 @@ module("Unit | Blocks | arg-validation", function (hooks) {
 
     test("allows unique: true with number type", function (assert) {
       const schema = {
-        id: { type: "number", unique: true },
+        itemId: { type: "number", unique: true },
       };
 
       validateChildArgsSchema(schema, "test-container");

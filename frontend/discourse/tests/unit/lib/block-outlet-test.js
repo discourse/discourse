@@ -422,7 +422,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
       );
     });
 
-    test("throws for reserved arg name: classNames", async function (assert) {
+    test("throws for undeclared arg: classNames", async function (assert) {
       @block("reserved-test")
       class ReservedTestBlock extends Component {}
 
@@ -433,11 +433,11 @@ module("Unit | Lib | block-outlet", function (hooks) {
             args: { classNames: "custom" },
           },
         ]),
-        /Reserved arg names/i
+        /does not declare an args schema/i
       );
     });
 
-    test("throws for reserved arg name: outletName", async function (assert) {
+    test("throws for undeclared arg: outletName", async function (assert) {
       @block("reserved-outlet")
       class ReservedOutletBlock extends Component {}
 
@@ -448,11 +448,11 @@ module("Unit | Lib | block-outlet", function (hooks) {
             args: { outletName: "test" },
           },
         ]),
-        /Reserved arg names/i
+        /does not declare an args schema/i
       );
     });
 
-    test("throws for reserved arg name: children", async function (assert) {
+    test("throws for undeclared arg: children", async function (assert) {
       @block("reserved-children")
       class ReservedChildrenBlock extends Component {}
 
@@ -463,11 +463,11 @@ module("Unit | Lib | block-outlet", function (hooks) {
             args: { children: [] },
           },
         ]),
-        /Reserved arg names/i
+        /does not declare an args schema/i
       );
     });
 
-    test("throws for reserved arg name: conditions", async function (assert) {
+    test("throws for undeclared arg: conditions", async function (assert) {
       @block("reserved-conditions")
       class ReservedConditionsBlock extends Component {}
 
@@ -478,11 +478,11 @@ module("Unit | Lib | block-outlet", function (hooks) {
             args: { conditions: {} },
           },
         ]),
-        /Reserved arg names/i
+        /does not declare an args schema/i
       );
     });
 
-    test("throws for underscore-prefixed arg names", async function (assert) {
+    test("throws for undeclared underscore-prefixed arg", async function (assert) {
       @block("underscore-arg-reserved")
       class UnderscoreArgReservedBlock extends Component {}
 
@@ -493,7 +493,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
             args: { _privateArg: "value" },
           },
         ]),
-        /Reserved arg names/i
+        /does not declare an args schema/i
       );
     });
 

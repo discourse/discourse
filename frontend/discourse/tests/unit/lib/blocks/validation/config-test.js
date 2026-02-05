@@ -1,7 +1,7 @@
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
+import { RESERVED_ARG_NAMES } from "discourse/lib/blocks/-internals/validation/args";
 import {
-  RESERVED_ARG_NAMES,
   VALID_ENTRY_KEYS,
   validateEntryKeys,
   validateEntryTypes,

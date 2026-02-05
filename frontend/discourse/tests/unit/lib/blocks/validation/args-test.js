@@ -4,6 +4,7 @@ import { block } from "discourse/blocks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { BlockError } from "discourse/lib/blocks/-internals/error";
 import {
+  validateArgName,
   validateArgValue,
   validateArrayItemType,
 } from "discourse/lib/blocks/-internals/validation/args";
@@ -986,6 +987,51 @@ module("Unit | Lib | blocks/validation/args", function () {
       assert.throws(
         () => validateArgsSchema(schema, "test-block"),
         /has "instanceOfName" with a "model:\*" instanceOf.*only valid for class references/
+      );
+    });
+  });
+
+  module("validateArgName", function () {
+    test("accepts valid arg names", function (assert) {
+      assert.true(validateArgName("title", { entityName: "test-block" }));
+      assert.true(validateArgName("myArg", { entityName: "test-block" }));
+      assert.true(validateArgName("arg123", { entityName: "test-block" }));
+      assert.true(validateArgName("my_arg", { entityName: "test-block" }));
+    });
+
+    test("throws for reserved arg name: id", function (assert) {
+      assert.throws(
+        () => validateArgName("id", { entityName: "test-block" }),
+        /reserved/i
+      );
+    });
+
+    test("throws for reserved arg name: children", function (assert) {
+      assert.throws(
+        () => validateArgName("children", { entityName: "test-block" }),
+        /reserved/i
+      );
+    });
+
+    test("throws for reserved arg name: conditions", function (assert) {
+      assert.throws(
+        () => validateArgName("conditions", { entityName: "test-block" }),
+        /reserved/i
+      );
+    });
+
+    test("throws for underscore-prefixed arg names", function (assert) {
+      assert.throws(
+        () => validateArgName("_private", { entityName: "test-block" }),
+        /invalid/i,
+        "underscore-prefixed names don't match required format"
+      );
+    });
+
+    test("throws for invalid arg name format", function (assert) {
+      assert.throws(
+        () => validateArgName("123invalid", { entityName: "test-block" }),
+        /invalid/i
       );
     });
   });
@@ -2721,17 +2767,17 @@ module("Unit | Lib | blocks/validation/args", function () {
     test("stores constraints in block metadata", function (assert) {
       @block("constraint-metadata-block", {
         args: {
-          id: { type: "number" },
+          itemId: { type: "number" },
           tag: { type: "string" },
         },
         constraints: {
-          atLeastOne: ["id", "tag"],
+          atLeastOne: ["itemId", "tag"],
         },
       })
       class ConstraintMetadataBlock extends Component {}
 
       assert.deepEqual(getBlockMetadata(ConstraintMetadataBlock).constraints, {
-        atLeastOne: ["id", "tag"],
+        atLeastOne: ["itemId", "tag"],
       });
     });
 
@@ -2762,10 +2808,10 @@ module("Unit | Lib | blocks/validation/args", function () {
       assert.throws(() => {
         @block("invalid-constraint-block", {
           args: {
-            id: { type: "number" },
+            itemId: { type: "number" },
           },
           constraints: {
-            unknownConstraint: ["id", "other"],
+            unknownConstraint: ["itemId", "other"],
           },
         })
         class InvalidConstraintBlock extends Component {}

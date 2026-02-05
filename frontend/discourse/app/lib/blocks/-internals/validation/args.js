@@ -35,6 +35,37 @@ import RestModel from "discourse/models/rest";
 export const VALID_ARG_NAME_PATTERN = /^[a-zA-Z][a-zA-Z0-9_]*$/;
 
 /**
+ * Reserved argument names that cannot be used in block/condition arg schemas.
+ * These are used internally by the block system and would conflict with
+ * user-provided args. Names starting with underscore are also reserved.
+ */
+export const RESERVED_ARG_NAMES = Object.freeze([
+  "args",
+  "block",
+  "classNames",
+  "containerArgs",
+  "id",
+  "outletArgs",
+  "outletName",
+  "children",
+  "conditions",
+  // Note: Names starting with underscore (e.g., __block$, __visible, __hierarchy)
+  // are automatically reserved via the argName.startsWith("_") check in isReservedArgName()
+]);
+
+/**
+ * Checks if an argument name is reserved for internal use.
+ * Reserved names include explicit names in RESERVED_ARG_NAMES and
+ * any name starting with underscore (private by convention).
+ *
+ * @param {string} argName - The argument name to check
+ * @returns {boolean} True if the name is reserved
+ */
+export function isReservedArgName(argName) {
+  return RESERVED_ARG_NAMES.includes(argName) || argName.startsWith("_");
+}
+
+/**
  * Valid arg types for schema definitions.
  */
 export const VALID_ARG_TYPES = Object.freeze([
@@ -460,6 +491,16 @@ export function validateArgName(argName, options = {}) {
     );
     return false;
   }
+
+  // Check for reserved names (entry-level properties and underscore-prefixed names)
+  if (isReservedArgName(argName)) {
+    raiseBlockError(
+      `${entityType} "${entityName}": ${argLabel} name "${argName}" is reserved. ` +
+        `Reserved names are used as entry-level properties (id, children, conditions, etc.) or for internal use.`
+    );
+    return false;
+  }
+
   return true;
 }
 
