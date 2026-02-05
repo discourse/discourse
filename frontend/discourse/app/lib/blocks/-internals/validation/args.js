@@ -69,6 +69,7 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
   "enum",
   "properties",
   "instanceOf",
+  "instanceOfName",
 ]);
 
 /**
@@ -403,6 +404,28 @@ export function validateCommonSchemaProperties(argDef, argName, options = {}) {
       raiseBlockError(
         `${entityType} "${entityName}": arg "${argName}" has invalid "instanceOf" value. ` +
           `Must be a class constructor or a "model:*" string (e.g., "model:user").`
+      );
+    }
+  }
+
+  // Validate instanceOfName for object types (only valid when instanceOf is a class reference)
+  if (argDef.instanceOfName !== undefined) {
+    if (argDef.instanceOf === undefined) {
+      raiseBlockError(
+        `${entityType} "${entityName}": arg "${argName}" has "instanceOfName" but no "instanceOf". ` +
+          `"instanceOfName" is only valid when "instanceOf" is also specified.`
+      );
+    }
+    if (typeof argDef.instanceOf === "string") {
+      raiseBlockError(
+        `${entityType} "${entityName}": arg "${argName}" has "instanceOfName" with a "model:*" instanceOf. ` +
+          `"instanceOfName" is only valid for class references, not model strings.`
+      );
+    }
+    if (typeof argDef.instanceOfName !== "string") {
+      raiseBlockError(
+        `${entityType} "${entityName}": arg "${argName}" has invalid "instanceOfName" value. ` +
+          `Must be a string.`
       );
     }
   }
@@ -765,10 +788,19 @@ export function validateArgValue(value, argSchema, argName, options = {}) {
         if (typeof instanceOf === "function") {
           // Direct class reference
           if (!(value instanceof instanceOf)) {
-            const expectedName = instanceOf.name || "specified class";
+            // Use instanceOfName if provided, otherwise fall back to generic message.
+            // The generic fallback handles two edge cases:
+            // 1. ES6 "named evaluation" - bundlers may inline anonymous classes into object literals,
+            //    causing the class to inherit the property key name "instanceOf" instead of its
+            //    original name (per ECMAScript SetFunctionName semantics).
+            // 2. Minification - production builds mangle class names to short identifiers like "ge".
+            // See: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name
+            const expectedName = argSchema.instanceOfName;
             return argValidationError(
               argName,
-              `must be an instance of ${expectedName}.`,
+              expectedName
+                ? `must be an instance of ${expectedName}.`
+                : "must match the required class type.",
               options
             );
           }

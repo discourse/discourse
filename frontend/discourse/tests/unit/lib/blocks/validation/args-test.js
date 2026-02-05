@@ -933,6 +933,61 @@ module("Unit | Lib | blocks/validation/args", function () {
         /has "instanceOf" and "properties".*mutually exclusive/
       );
     });
+
+    test("accepts instanceOfName with instanceOf", function (assert) {
+      class MyClass {}
+      const schema = {
+        data: {
+          type: "object",
+          instanceOf: MyClass,
+          instanceOfName: "MyClass",
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for instanceOfName without instanceOf", function (assert) {
+      const schema = {
+        data: { type: "object", instanceOfName: "MyClass" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "instanceOfName" but no "instanceOf".*only valid when "instanceOf" is also specified/
+      );
+    });
+
+    test("throws for non-string instanceOfName", function (assert) {
+      class MyClass {}
+      const schema = {
+        data: { type: "object", instanceOf: MyClass, instanceOfName: 123 },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "instanceOfName" value.*Must be a string/
+      );
+    });
+
+    test("throws for instanceOfName with model string instanceOf", function (assert) {
+      const schema = {
+        data: {
+          type: "object",
+          instanceOf: "model:user",
+          instanceOfName: "User",
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "instanceOfName" with a "model:\*" instanceOf.*only valid for class references/
+      );
+    });
   });
 
   module("validateArgValue", function () {
@@ -1647,7 +1702,13 @@ module("Unit | Lib | blocks/validation/args", function () {
       class MyClass {}
       class OtherClass {}
       const instance = new OtherClass();
-      const schema = { type: "object", instanceOf: MyClass };
+      // Use instanceOfName to get a reliable class name in error message
+      // (class names can be mangled by bundlers or minifiers)
+      const schema = {
+        type: "object",
+        instanceOf: MyClass,
+        instanceOfName: "MyClass",
+      };
 
       assert.true(
         validateArgValue(
@@ -1662,13 +1723,32 @@ module("Unit | Lib | blocks/validation/args", function () {
 
     test("validates instanceOf with direct class reference - plain object fails", function (assert) {
       class MyClass {}
-      const schema = { type: "object", instanceOf: MyClass };
+      // Use instanceOfName to get a reliable class name in error message
+      const schema = {
+        type: "object",
+        instanceOf: MyClass,
+        instanceOfName: "MyClass",
+      };
 
       assert.true(
         validateArgValue({}, schema, "data", "test-block")?.message.includes(
           "must be an instance of MyClass"
         ),
         "plain object fails instanceOf check"
+      );
+    });
+
+    test("validates instanceOf without instanceOfName uses generic fallback", function (assert) {
+      class MyClass {}
+      // Without instanceOfName, error message uses generic fallback
+      // (because class names can be mangled by bundlers or minifiers)
+      const schema = { type: "object", instanceOf: MyClass };
+
+      assert.true(
+        validateArgValue({}, schema, "data", "test-block")?.message.includes(
+          "must match the required class type"
+        ),
+        "uses generic fallback without instanceOfName"
       );
     });
 
