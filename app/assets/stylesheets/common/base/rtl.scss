@@ -1,6 +1,6 @@
 // Right to left styles.
 .rtl {
-  [class*="d-icon-"] {
+  .d-icon {
     transform: scaleX(-1);
   }
 }
