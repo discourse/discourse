@@ -21,58 +21,42 @@ module Jobs
 
     def rebuild_categories(limit: 500, indexer: SearchIndexer)
       category_ids = load_problem_category_ids(limit)
-
       puts "rebuilding #{category_ids.size} categories" if @verbose
-
-      category_ids.each do |id|
-        category = Category.find_by(id: id)
-        indexer.index(category, force: true) if category
-      end
+      reindex_records(Category, category_ids, indexer)
     end
 
     def rebuild_tags(limit: 1_000, indexer: SearchIndexer)
       tag_ids = load_problem_tag_ids(limit)
-
       puts "rebuilding #{tag_ids.size} tags" if @verbose
-
-      tag_ids.each do |id|
-        tag = Tag.find_by(id: id)
-        indexer.index(tag, force: true) if tag
-      end
+      reindex_records(Tag, tag_ids, indexer)
     end
 
     def rebuild_topics(limit: 10_000, indexer: SearchIndexer)
       topic_ids = load_problem_topic_ids(limit)
-
       puts "rebuilding #{topic_ids.size} topics" if @verbose
-
-      topic_ids.each do |id|
-        topic = Topic.find_by(id: id)
-        indexer.index(topic, force: true) if topic
-      end
+      reindex_records(Topic, topic_ids, indexer)
     end
 
     def rebuild_posts(limit: 20_000, indexer: SearchIndexer)
       post_ids = load_problem_post_ids(limit)
-
       puts "rebuilding #{post_ids.size} posts" if @verbose
-
-      post_ids.each do |id|
-        post = Post.find_by(id: id)
-        indexer.index(post, force: true) if post
-      end
+      reindex_records(Post, post_ids, indexer)
     end
 
     def rebuild_users(limit: 5_000, indexer: SearchIndexer)
       user_ids = load_problem_user_ids(limit)
-
       puts "rebuilding #{user_ids.size} users" if @verbose
-
-      user_ids.each do |id|
-        user = User.find_by(id: id)
-        indexer.index(user, force: true) if user
-      end
+      reindex_records(User, user_ids, indexer)
     end
+
+    private
+
+    def reindex_records(model_class, ids, indexer)
+      return if ids.empty?
+      model_class.where(id: ids).find_each { |record| indexer.index(record, force: true) }
+    end
+
+    public
 
     def rebuild_registered_search_handlers(limit: 10_000, indexer: SearchIndexer)
       DiscoursePluginRegistry.search_handlers.each do |handler|
