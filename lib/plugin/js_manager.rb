@@ -53,7 +53,7 @@ module Plugin
           full_path = File.join(js_base, file)
           if File.file?(full_path)
             tree[file] = File.read(full_path)
-            if name == "test"
+            if name == "test" && file.match(%r{/(acceptance|integration|unit)/})
               entrypoints_config[name][:modules] << file if file.match?(/-test\.g?js$/)
             else
               entrypoints_config[name][:modules] << file
@@ -141,7 +141,7 @@ module Plugin
     end
 
     def cache?
-      false
+      true
     end
   end
 end
