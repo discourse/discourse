@@ -222,6 +222,8 @@ tr_TR:
           name: "Gömmeler"
           description: "Metnin anlamsal temsillerini oluşturarak İlgili Konular ve YZ Arama gibi özellikleri güçlendirir"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "İlgili Konular"
         discord:
           name: "Discord entegrasyonu"
           description: "Discord kanallarında arama yapma özelliğini ekler"
@@ -232,6 +234,8 @@ tr_TR:
           generate_concepts: "Kavram çıkarımı"
           match_concepts: "Kavram eşleştirme"
           deduplicate_concepts: "Kavram tekilleştirme"
+          setting_groups:
+            personas: "Kişilikler"
         ai_helper:
           name: "Yardımcı"
           description: "Kullanıcıların konu oluşturma, gönderi yazma ve içerik okuma gibi topluluk etkileşiminde bulunmasına yardımcı olur"
@@ -246,6 +250,9 @@ tr_TR:
           image_caption: "Görüntülere alt yazı ekle"
           translator: "Çevirmen"
           post_illustrator: "Gönderi illüstratörü"
+          setting_groups:
+            automation: "Otomasyon"
+            personas: "Kişilikler"
         translation:
           name: "Çeviri"
           description: "İçeriği desteklenen dillere çevirir"
@@ -253,6 +260,8 @@ tr_TR:
           post_raw_translator: "Gönderi ham çevirmeni"
           topic_title_translator: "Konu başlığı çevirmeni"
           short_text_translator: "Kısa metin çevirmeni"
+          setting_groups:
+            personas: "Kişilikler"
         spam:
           name: "İstenmeyen içerik"
           description: "Seçili LLM'i kullanarak potansiyel istenmeyen içerikleri belirler ve inceleme kuyruğunda site moderatörlerinin incelemesi için işaretler"
@@ -579,17 +588,7 @@ tr_TR:
           anthropic-claude-opus-4-5: "Antropic'in en akıllı modeli"
           anthropic-claude-sonnet-4-5: "Hız ve maliyetin optimum dengesi"
           anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
-          google-gemini-2-5-pro: "Çok çeşitli görevleri yerine getirebilen büyük çok modlu model"
-          google-gemini-2-5-flash: "Çok modlu muhakeme ile hafif, hızlı ve uygun maliyetli"
-          open_ai-gpt-5-mini: "Zekâ, hız ve maliyet arasında bir denge sağlar ve bu da onu birçok kullanım durumu için cazip bir model hâline getirir."
-          open_ai-gpt-5-nano: "En hızlı ve en uygun maliyetli GPT-5 modeli."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Verimli hafif çok dilli model"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Güçlü çok amaçlı model"
-          mistral-mistral-large-latest: "Mistral'in en güçlü modeli"
-          mistral-pixtral-large-latest: "Mistral'in en güçlü görüş yeteneğine sahip modeli"
-          open_router-x-ai-grok-4: "xAI'ın en son modeli"
-          open_router-deepseek-deepseek-r1-0528-free: "DeepSeek'in en son muhakeme modeli"
-          open_router-meta-llama-3-3-70b-instruct: "Son derece yetenekli çok dilli model"
+          open_ai-gpt-5-nano: "En hızlı ve en uygun maliyetli GPT-5 modeli"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
         configured:
           title: "Yapılandırılmış LLM'ler"
@@ -874,6 +873,7 @@ tr_TR:
         topic:
           title: "Konu özeti"
           close: "Özet panelini kapatın"
+          regenerate_summaries_option: "Konu özetleri"
         topic_list_layout:
           button:
             compact: "Kompakt"
@@ -895,3 +895,9 @@ tr_TR:
             disable: "Devre dışı bırak"
       user_preferences:
         empty: "Şu anda ilgili bir ayar bulunmuyor"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "YZ Bayraklı gönderi"
+        reviewable_ai_chat_message:
+          title: "YZ Bayraklı sohbet mesajı"

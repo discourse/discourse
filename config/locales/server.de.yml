@@ -2442,6 +2442,7 @@ de:
     welcome_banner_page_visibility: "Legt fest, auf welchen Seiten das Willkommensbanner erscheinen soll."
     welcome_banner_text_color: "Wenn du die „Welcome banner image“ Einstellung konfiguriert hast, kannst du mit dieser Einstellung die Textfarbe des Banners ändern, um sicherzustellen, dass er lesbar bleibt. Wenn du keine Farbe wählst oder kein Hintergrundbild hochgeladen hast, wird die Farbe vom aktiven Theme bestimmt."
     splash_screen: "Zeigt einen temporären Ladebildschirm an, während Website-Assets geladen werden"
+    splash_screen_image: "Ein SVG-Bild, das auf dem Bildschirm angezeigt wird, während die Website geladen wird. Unterstützt animierte SVGs. Du kannst var(--primary), var(--secondary) und var(--tertiary) in deinem SVG verwenden, um auf die Farben des Themes zu verweisen."
     navigation_menu: "Lege die Seitenleiste oder das Kopfzeilen-Drop-down als Hauptnavigationsmenü für deine Website fest. Die Seitenleiste wird empfohlen."
     default_navigation_menu_categories: "Ausgewählte Kategorien werden standardmäßig im Abschnitt „Kategorien“ des Navigationsmenüs angezeigt."
     default_navigation_menu_tags: "Ausgewählte Schlagwörter werden standardmäßig im Abschnitt „Schlagwörter“ des Navigationsmenüs angezeigt."
@@ -2473,6 +2474,7 @@ de:
     content_localization_allow_author_localization: "Ermögliche es Autoren, die Lokalisierungen ihrer eigenen Themen und Beiträge über das Beitragsmenü zu aktualisieren."
     enable_upcoming_changes: "Aktiviere bevorstehende Änderungen"
     fake_upcoming_change: "Dies ist keine echte bevorstehende Änderung. Sie dient zu Testzwecken und muss nicht übersetzt werden."
+    enable_custom_splash_screen: "Ermöglicht die Anpassung des Ladebildschirms mit einem eigenen SVG-Bild. Lade ein Bild über die Einstellung \"Splash Screen Image\" hoch. Achtung! Dies kann sich negativ auf die LCP-Bewertung und die Google-Indexierung auswirken."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_datetime: "Ungültiges Datums-/Uhrzeitformat. Bitte stelle sicher, dass du ein gültiges Datum und eine gültige Uhrzeit eingegeben hast."

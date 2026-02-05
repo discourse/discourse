@@ -222,6 +222,8 @@ fi:
           name: "Upotukset"
           description: "Tarjoaa ominaisuuksia, kuten aiheeseen liittyvät ketjut ja tekoälyhaun, luomalla semanttisia kuvauksia tekstistä"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Liittyvät ketjut"
         discord:
           name: "Discord-integraatio"
           description: "Lisää mahdollisuuden hakea Discord-kanavia"
@@ -232,6 +234,8 @@ fi:
           generate_concepts: "Käsitteiden päättely"
           match_concepts: "Käsitteiden sovittaminen"
           deduplicate_concepts: "Käsitteiden deduplikaatio"
+          setting_groups:
+            personas: "Persoonat"
         ai_helper:
           name: "Apuri"
           description: "Auttaa käyttäjiä vuorovaikutuksessa yhteisön kanssa, kuten ketjujen luomisessa, viestien kirjoittamisessa ja sisällön lukemisessa"
@@ -246,6 +250,9 @@ fi:
           image_caption: "Lisää kuvateksti"
           translator: "Kääntäjä"
           post_illustrator: "Viestin havainnollistaja"
+          setting_groups:
+            automation: "Automaatio"
+            personas: "Persoonat"
         translation:
           name: "Käännös"
           description: "Kääntää sisällön tuetuille kielille"
@@ -253,6 +260,8 @@ fi:
           post_raw_translator: "Viestin raakakääntäjä"
           topic_title_translator: "Ketjun otsikon kääntäjä"
           short_text_translator: "Lyhyen tekstin kääntäjä"
+          setting_groups:
+            personas: "Persoonat"
         spam:
           name: "Roskaposti"
           description: "Tunnistaa mahdollisen roskapostin valitun suuren kielimallin avulla ja liputtaa sen sivuston valvojien tarkastettavaksi tarkastusjonoon"
@@ -579,17 +588,7 @@ fi:
           anthropic-claude-opus-4-5: "Anthropicin älykkäin malli"
           anthropic-claude-sonnet-4-5: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
           anthropic-claude-haiku-4-5: "Nopea ja kustannustehokas"
-          google-gemini-2-5-pro: "Suuri multimodaalinen malli, joka pystyy suorittamaan monenlaisia tehtäviä"
-          google-gemini-2-5-flash: "Kevyt, nopea ja kustannustehokas multimodaalisella päättelyllä"
-          open_ai-gpt-5-mini: "Tarjoaa tasapainon älykkyyden, nopeuden ja kustannusten välillä, mikä tekee siitä houkuttelevan mallin moniin käyttötarkoituksiin."
-          open_ai-gpt-5-nano: "Nopein ja kustannustehokkain GPT-5-malli."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Tehokas kevyt monikielinen malli"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Tehokas monikäyttöinen malli"
-          mistral-mistral-large-latest: "Mistralin tehokkain malli"
-          mistral-pixtral-large-latest: "Mistralin tehokkain näkökykyinen malli"
-          open_router-x-ai-grok-4: "xAI:n uusin malli"
-          open_router-deepseek-deepseek-r1-0528-free: "DeepSeekin uusin päättelymalli"
-          open_router-meta-llama-3-3-70b-instruct: "Erittäin kyvykäs monikielinen malli"
+          open_ai-gpt-5-nano: "Nopein ja kustannustehokkain GPT-5-malli"
         preseeded_model_description: "Ennalta määritetty avoimen lähdekoodin malli, joka käyttää mallia %{model}"
         configured:
           title: "Määritetyt LLM:t"
@@ -874,6 +873,7 @@ fi:
         topic:
           title: "Ketjun yhteenveto"
           close: "Sulje yhteenvetopaneeli"
+          regenerate_summaries_option: "Ketjujen yhteenvedot"
         topic_list_layout:
           button:
             compact: "Kompakti"
@@ -895,3 +895,9 @@ fi:
             disable: "Poista käytöstä"
       user_preferences:
         empty: "Olennaisia asetuksia ei ole käytettävissä tällä hetkellä"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Tekoälyn liputtama viesti"
+        reviewable_ai_chat_message:
+          title: "Tekoälyn liputtama chat-viesti"

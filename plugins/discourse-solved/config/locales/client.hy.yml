@@ -26,6 +26,7 @@ hy:
         all: "բոլոր"
         solved: "լուծված"
         unsolved: "չլուծված"
+      move_post_cancel: "Չեղարկել"
     topic_statuses:
       solved:
         help: "Այս թեման ունի լուծում:"

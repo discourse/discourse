@@ -33,6 +33,7 @@ el:
       no_solved_topics_title: "Δεν έχετε λύσει κανένα θέμα ακόμη"
       no_solved_topics_title_others: "Ο χρήστης %{username} δεν έχει λύσει κανένα θέμα ακόμη"
       marked_solved_by: "Σημάνθηκε ως λυμένο από %{user}"
+      move_post_cancel: "Άκυρο"
       no_answer:
         title: Έχει απαντηθεί η ερώτηση σας;
         description: "Επισημάνετε την απάντηση και βοηθήστε άλλους χρησιμοποιώντας το κουμπί λύσης κάτω από τη σωστή απάντηση."

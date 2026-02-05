@@ -14,6 +14,7 @@ gl:
       accepted_answer_post_number: "publicación %{post_number}"
       topic_status_filter:
         all: "todo"
+      move_post_cancel: "Cancelar"
     discourse_automation:
       triggerables:
         first_accepted_solution:

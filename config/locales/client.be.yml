@@ -1347,42 +1347,42 @@ be:
         apply: "Прымяніць"
       help: "Даведка па рэдагаванні Markdown"
       modal_ok: "ОК"
-      admin_options_title: "Неабавязковыя налады персаналу для гэтай тэмы"
+      admin_options_title: "Неабавязковыя налады каманды для гэтай тэмы"
       composer_actions:
         reply: Адказаць
         edit: Рэдагаваць
         create_personal_message:
           label: "Новае паведамленне"
           desc: "Напісаць новае асабістае паведамленне"
-      ignore: "ігнараваць"
-      image: "малюнак"
+      ignore: "Ігнараваць"
+      image: "відарыс"
     notifications:
-      watching_first_post_label: "Стварыць новую тэму"
-      admin_problems: "Новыя рэкамендацыі на вашым сайце прыборнай панэлі"
+      watching_first_post_label: "Новая тэма"
+      admin_problems: "Новая парада на панэлі кіравання сайта"
       dismiss_confirmation:
-        cancel: "Адмяніць"
+        cancel: "Скасаваць"
       popup:
-        mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'
-        group_mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'
-        quoted: '% {Імя карыстальніка} працытаваў вас у "% {} тэме" -% {SITE_TITLE}'
-        replied: '% {Імя карыстальніка} адказаў вам у "% {} тэме" -% {SITE_TITLE}'
-        posted: '% {Імя карыстальніка} пісаў у "% {} тэме" -% {SITE_TITLE}'
-        linked: '% {Імя карыстальніка} звязана з вашай пасады ад "% {} тэме" -% {SITE_TITLE}'
-        watching_first_post: '% {Імя карыстальніка} стварыў новую тэму "% {тэма}" - {%} SITE_TITLE'
-        confirm_title: "Апавяшчэння ўключаная -% {SITE_TITLE}"
-        confirm_body: "Поспех! Паведамлення былі ўключаны."
-        custom: "Апавяшчэнне ад% {імя карыстальніка} на {%} SITE_TITLE"
+        mentioned: '%{username} згадаў(-ла) вас у "%{topic}" - %{site_title}'
+        group_mentioned: '%{username} згадаў(-ла) вас у "%{topic}" - %{site_title}'
+        quoted: '%{username} працытаваў(-ла) вас у "%{topic}" - %{site_title}'
+        replied: '%{username} адказаў(-ла) вам у "%{topic}" - %{site_title}'
+        posted: '%{username} апублікаваў(-ла) допіс у "%{topic}" - %{site_title}'
+        linked: '%{username} спаслаўся(-лася) на ваш допіс у "%{topic}" - %{site_title}'
+        watching_first_post: '%{username} стварыў(-ла) новую тэму "%{topic}" - %{site_title}'
+        confirm_title: "Апавяшчэнні ўключаны - %{site_title}"
+        confirm_body: "Гатова! Апавяшчэнні ўключаны."
+        custom: "Апавяшчэнне ад %{username} на %{site_title}"
       titles:
         watching_first_post: "новая тэма"
-        admin_problems: "новыя рэкамендацыі на вашым сайце прыборнай панэлі"
+        admin_problems: "новая парада на панэлі кіравання сайта"
     upload_selector:
-      delete: "выдаляць"
-      uploading: "загрузка"
-      default_image_alt_text: малюнак
+      delete: "Выдаліць"
+      uploading: "Запампоўванне"
+      default_image_alt_text: відарыс
     search:
-      sort_by: "сартаваць па"
-      latest_post: "апошняе паведамленне"
-      select_all: "выбраць усе"
+      sort_by: "Сартаваць па"
+      latest_post: "Апошні допіс"
+      select_all: "Выбраць усе"
       title: "Пошук"
       full_page_title: "Пошук"
       results: "вынікі"
@@ -1391,7 +1391,7 @@ be:
       search_google_button: "Google"
       search_button: "Пошук"
       categories: "Катэгорыі"
-      tags: "Цэтлікі"
+      tags: "Тэгі"
       type:
         users: "Карыстальнікі"
         categories: "Катэгорыі"
@@ -1400,43 +1400,43 @@ be:
         private_messages: "Пошук паведамленняў"
       advanced:
         posted_by:
-          label: апублікавана
+          label: Апублікаваў(-ла)
         in_group:
           label: У групе
         post:
           count:
-            label: Паведамленні
+            label: Допісы
           time:
-            before: перад
+            before: да
             after: пасля
         views:
-          label: прагляды
+          label: Прагляды
     new_item: "новы"
     go_back: "вярнуцца назад"
-    not_logged_in_user: "старонка карыстальніка з вынікам бягучай дзейнасці і наладамі"
-    current_user: "перайсці да Вашай старонкі карыстальніка"
+    not_logged_in_user: "старонка карыстальніка з вынікам бягучай актыўнасці і наладамі"
+    current_user: "перайсці да старонкі карыстальніка"
     user_menu:
       tabs:
         replies: "Адказы"
-        mentions: "згадкі"
-        likes: "сімпатыі"
-        bookmarks: "закладкі"
+        mentions: "Згадкі"
+        likes: "Падабайкі"
+        bookmarks: "Закладкі"
         profile: "Профіль"
     topics:
-      new_messages_marker: "апошні візыт"
+      new_messages_marker: "быў(-ла)"
       bulk:
-        select_all: "выбраць усе"
+        select_all: "Выбраць усе"
         delete: "Выдаліць тэмы"
         delete_topics_count:
           one: "Выдаліць тэму"
           few: "Выдаліць тэмы"
           many: "Выдаліць тэмы"
           other: "Выдаліць тэмы"
-        dismiss_read: "Пазначыць усе як прачытаныя"
-        dismiss_new: "Dismiss New"
+        dismiss_read: "Адхіліць усе непрачытаныя"
+        dismiss_new: "Адхіліць новыя"
         toggle: "перамыкач масавай дзеянні над тэмамі"
-        actions: "масавыя дзеянні"
-        close_topics: "Закрыць тэму"
+        actions: "Масавыя дзеянні"
+        close_topics: "Закрыць тэмы"
         archive_topics: "Заархіваваныя тэмы"
         move_messages_to_inbox: "Перамясціць у тэчцы Уваходныя"
       none:

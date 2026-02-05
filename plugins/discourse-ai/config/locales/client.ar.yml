@@ -234,6 +234,8 @@ ar:
           name: "التضمينات"
           description: "يدعم ميزات مثل الموضوعات ذات الصلة والبحث بالذكاء الاصطناعي عن طريق إنشاء تمثيلات دلالية للنصوص"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "الموضوعات ذات الصلة"
         discord:
           name: "التكامل مع Discord"
           description: "يُمكّن من إجراء عمليات البحث داخل قنوات Discord"
@@ -244,6 +246,8 @@ ar:
           generate_concepts: "استنتاج المفاهيم"
           match_concepts: "مطابقة المفاهيم"
           deduplicate_concepts: "إزالة التكرارات بين المفاهيم"
+          setting_groups:
+            personas: "الشخصيات"
         ai_helper:
           name: "المساعد"
           description: "يُسهم في دعم تفاعل المستخدمين في المجتمع، بما يشمل إنشاء الموضوعات، وكتابة المنشورات، وقراءة المحتوى"
@@ -258,6 +262,9 @@ ar:
           image_caption: "وضع تسميات توضيحية للصور"
           translator: "مترجم"
           post_illustrator: "مُوضِّح المنشورات"
+          setting_groups:
+            automation: "الأتمتة"
+            personas: "الشخصيات"
         translation:
           name: "ترجمة"
           description: "يترجم المحتوى إلى اللغات المدعومة"
@@ -265,6 +272,8 @@ ar:
           post_raw_translator: "مترجم المنشور الخام"
           topic_title_translator: "مترجم عنوان الموضوع"
           short_text_translator: "مترجم النصوص القصيرة"
+          setting_groups:
+            personas: "الشخصيات"
         spam:
           name: "عشوائي"
           description: "يحدِّد المحتوى العشوائي المُحتمَل باستخدام نموذج اللغة الكبير المُحدَّد، ويبلغ عنه مشرفو الموقع لفحصه في قائمة انتظار المراجعة"
@@ -619,17 +628,7 @@ ar:
           anthropic-claude-opus-4-5: "النموذج الأكثر ذكاءً لدى Anthropic"
           anthropic-claude-sonnet-4-5: "التوازن الأمثل بين السرعة والتكلفة"
           anthropic-claude-haiku-4-5: "سريع وفعَّال من حيث التكلفة"
-          google-gemini-2-5-pro: "نموذج كبير متعدد الوسائط قادر على أداء مجموعة واسعة من المهام"
-          google-gemini-2-5-flash: "خفيف وسريع وفعَّال من حيث التكلفة مع الاستدلال متعدد النماذج"
-          open_ai-gpt-5-mini: "يقدّم توازنًا بين الذكاء والسرعة والتكلفة، مما يجعله نموذجًا جذابًا للعديد من الاستخدامات."
-          open_ai-gpt-5-nano: "أسرع وأوفر نموذج GPT-5 من حيث التكلفة."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "نموذج متعدد اللغات خفيف وفعَّال"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "نموذج قوي متعدد الأغراض"
-          mistral-mistral-large-latest: "أقوى نموذج لدى Mistral"
-          mistral-pixtral-large-latest: "أقوى نموذج قادر على الرؤية لدى Mistral"
-          open_router-x-ai-grok-4: "أحدث نموذج لشركة xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "أحدث نموذج استدلال لشركة DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "نموذج متعدد اللغات عالي الكفاءة"
+          open_ai-gpt-5-nano: "أسرع وأوفر نموذج GPT-5 من حيث التكلفة"
         preseeded_model_description: "نموذج مفتوح المصدر تم تكوينه مسبقًا باستخدام %{model}"
         configured:
           title: "تم تكوين نماذج اللغة الكبيرة (LLM)"
@@ -926,6 +925,7 @@ ar:
         topic:
           title: "ملخص الموضوع"
           close: "إغلاق لوحة الملخص"
+          regenerate_summaries_option: "ملخصات الموضوع"
         topic_list_layout:
           button:
             compact: "مضغوط"
@@ -947,3 +947,9 @@ ar:
             disable: "إيقاف"
       user_preferences:
         empty: "ليست هناك أي إعدادات متاحة ذات صلة في الوقت الحالي"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "منشور تم الإبلاغ عنه بواسطة الذكاء الاصطناعي"
+        reviewable_ai_chat_message:
+          title: "رسالة دردشة تم الإبلاغ عنها بواسطة الذكاء الاصطناعي"

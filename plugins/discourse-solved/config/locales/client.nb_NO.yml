@@ -23,6 +23,7 @@ nb_NO:
       topic_status_filter:
         all: "alle"
         solved: "løst"
+      move_post_cancel: "Avbryt"
     topic_statuses:
       solved:
         help: "Dette emnet har en løsning"
