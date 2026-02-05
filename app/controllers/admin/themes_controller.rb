@@ -178,7 +178,7 @@ class Admin::ThemesController < Admin::AdminController
         .all
         .includes(
           :theme,
-          :base_scheme,
+          base_scheme: :color_scheme_colors,
           color_scheme_colors: {
             color_scheme: {
               base_scheme: :color_scheme_colors,
