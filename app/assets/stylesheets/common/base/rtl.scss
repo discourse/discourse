@@ -3,16 +3,6 @@
   [class*="d-icon-"] {
     transform: scaleX(-1);
   }
-
-  .btn {
-    &:not(.no-text) {
-      .d-icon {
-        order: 1;
-        margin-right: 0;
-        margin-left: 0.45em;
-      }
-    }
-  }
 }
 
 // For the support_mixed_text_direction setting
