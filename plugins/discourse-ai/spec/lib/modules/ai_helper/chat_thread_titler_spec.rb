@@ -8,12 +8,9 @@ RSpec.describe DiscourseAi::AiHelper::ChatThreadTitler do
   fab!(:user)
   fab!(:llm_model)
 
-  fab!(:chat_thread_titler_persona) do
-    Fabricate(
-      :ai_persona,
-      name: "Chat Thread Titler",
-      system_prompt: "Generate a title",
-      response_format: [{ "key" => "title", "type" => "string" }],
+  let(:chat_thread_titler_persona) do
+    AiPersona.find(
+      DiscourseAi::Personas::Persona.system_personas[DiscourseAi::Personas::ChatThreadTitler],
     )
   end
 
