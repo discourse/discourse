@@ -308,9 +308,8 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   <template>
-    <div
+    <@form.Section
       class={{concatClass
-        "yolo"
         "edit-category-tab"
         "edit-category-tab-general"
         (if (eq @selectedTab "general") "active")
@@ -539,7 +538,6 @@ export default class UpsertCategoryGeneral extends Component {
           </cc.Contents>
         </@form.ConditionalContent>
       </@form.Container>
-
-    </div>
+    </@form.Section>
   </template>
 }
