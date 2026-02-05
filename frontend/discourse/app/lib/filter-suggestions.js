@@ -354,9 +354,7 @@ class FilterTypeValueSuggester {
       });
 
       return response.results.map((tagGroup) => {
-        // Quote the name if it contains special characters
-        const needsQuoting = /[\s&\-()']/.test(tagGroup.name);
-        const quotedName = needsQuoting ? `"${tagGroup.name}"` : tagGroup.name;
+        const quotedName = this.quoteIfNeeded(tagGroup.name);
 
         return {
           name: this.buildSuggestionName(quotedName),
@@ -367,6 +365,26 @@ class FilterTypeValueSuggester {
       });
     } catch {
       return [];
+    }
+  }
+
+  quoteIfNeeded(name) {
+    const needsQuoting = /[\s&\-()'""]/.test(name);
+    if (!needsQuoting) {
+      return name;
+    }
+
+    const hasDoubleQuote = name.includes('"');
+    const hasSingleQuote = name.includes("'");
+
+    if (hasDoubleQuote && !hasSingleQuote) {
+      return `'${name}'`;
+    } else if (hasSingleQuote && !hasDoubleQuote) {
+      return `"${name}"`;
+    } else if (hasDoubleQuote && hasSingleQuote) {
+      return `'${name.replace(/'/g, "\\'")}'`;
+    } else {
+      return `"${name}"`;
     }
   }
 
