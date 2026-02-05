@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -7,6 +6,7 @@ import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
+import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
@@ -14,6 +14,7 @@ import getUrl from "discourse/lib/get-url";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategorySettings extends Component {
@@ -35,12 +36,6 @@ export default class UpsertCategorySettings extends Component {
     return this.args.category.isParent || !parentCategoryId;
   }
 
-  get panelClass() {
-    const isActive = this.args.selectedTab === "settings" ? "active" : "";
-    return `edit-category-tab edit-category-tab-settings ${isActive}`;
-  }
-
-  @cached
   get availableSubcategoryListStyles() {
     return [
       { name: i18n("category.subcategory_list_styles.rows"), value: "rows" },
@@ -63,7 +58,6 @@ export default class UpsertCategorySettings extends Component {
     ];
   }
 
-  @cached
   get availableViews() {
     const views = [
       { name: i18n("filters.hot.title"), value: "hot" },
@@ -83,7 +77,6 @@ export default class UpsertCategorySettings extends Component {
     );
   }
 
-  @cached
   get availableTopPeriods() {
     return ["all", "yearly", "quarterly", "monthly", "weekly", "daily"].map(
       (p) => {
@@ -92,14 +85,12 @@ export default class UpsertCategorySettings extends Component {
     );
   }
 
-  @cached
   get availableListFilters() {
     return ["all", "none"].map((p) => {
       return { name: i18n(`category.list_filters.${p}`), value: p };
     });
   }
 
-  @cached
   get searchPrioritiesOptions() {
     const options = [];
 
@@ -115,7 +106,6 @@ export default class UpsertCategorySettings extends Component {
     return options;
   }
 
-  @cached
   get availableSorts() {
     return applyMutableValueTransformer("category-sort-orders", [
       "likes",
@@ -142,7 +132,6 @@ export default class UpsertCategorySettings extends Component {
     return sortAscending;
   }
 
-  @cached
   get sortAscendingOptions() {
     return [
       { name: i18n("category.sort_ascending"), value: true },
@@ -241,7 +230,13 @@ export default class UpsertCategorySettings extends Component {
   }
 
   <template>
-    <div class={{this.panelClass}}>
+    <@form.Section
+      class={{concatClass
+        "edit-category-tab"
+        "edit-category-tab-settings"
+        (if (eq @selectedTab "settings") "active")
+      }}
+    >
       {{! This field is removed from edit-category-general when the UC is active }}
       {{#if this.siteSettings.enable_simplified_category_creation}}
         <@form.Field
@@ -477,8 +472,8 @@ export default class UpsertCategorySettings extends Component {
 
       <PluginOutlet
         @name="category-custom-settings"
-        @outletArgs={{lazyHash category=@category}}
+        @outletArgs={{lazyHash category=@category form=@form}}
       />
-    </div>
+    </@form.Section>
   </template>
 }
