@@ -59,8 +59,6 @@
       text-align: left;
 
       &__checkbox {
-
-        // TODO: Make them look good!
         input[disabled] {
           color: var(--accent-color);
           pointer-events: none;
