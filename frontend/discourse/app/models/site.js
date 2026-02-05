@@ -251,6 +251,21 @@ export default class Site extends RestModel {
     return this.get("topicFlagByIdLookup.action" + id);
   }
 
+  #transformTags(tags) {
+    if (!tags) {
+      return [];
+    }
+    return tags.map((tag) => this.store.createRecord("tag", tag));
+  }
+
+  get topTags() {
+    return this.#transformTags(this.top_tags);
+  }
+
+  get categoryTopTags() {
+    return this.#transformTags(this.category_top_tags);
+  }
+
   removeCategory(id) {
     const categories = this.categories;
     const existingCategory = categories.find((c) => c.id === id);
