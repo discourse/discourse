@@ -385,7 +385,7 @@ module("Unit | Lib | blocks/core/registration", function (hooks) {
       assert.true(hasBlock("theme:tactile:hero-banner"));
       const meta = getBlockMetadata(HeroBanner);
       assert.strictEqual(meta.blockName, "theme:tactile:hero-banner");
-      assert.strictEqual(meta.namespace, "theme-tactile");
+      assert.strictEqual(meta.namespace, "theme:tactile");
       assert.strictEqual(meta.namespaceType, "theme");
     });
 

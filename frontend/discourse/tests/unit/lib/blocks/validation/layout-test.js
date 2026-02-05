@@ -3,6 +3,7 @@ import {
   isReservedArgName,
   RESERVED_ARG_NAMES,
   VALID_ENTRY_KEYS,
+  validateEntryIdFormat,
   validateEntryKeys,
   validateEntryTypes,
 } from "discourse/lib/blocks/-internals/validation/layout";
@@ -13,6 +14,7 @@ module("Unit | Lib | blocks/validation/layout", function () {
       assert.true(RESERVED_ARG_NAMES.includes("args"));
       assert.true(RESERVED_ARG_NAMES.includes("block"));
       assert.true(RESERVED_ARG_NAMES.includes("classNames"));
+      assert.true(RESERVED_ARG_NAMES.includes("id"));
       assert.true(RESERVED_ARG_NAMES.includes("outletName"));
       assert.true(RESERVED_ARG_NAMES.includes("children"));
       assert.true(RESERVED_ARG_NAMES.includes("conditions"));
@@ -31,14 +33,15 @@ module("Unit | Lib | blocks/validation/layout", function () {
       assert.true(VALID_ENTRY_KEYS.includes("children"));
       assert.true(VALID_ENTRY_KEYS.includes("conditions"));
       assert.true(VALID_ENTRY_KEYS.includes("classNames"));
+      assert.true(VALID_ENTRY_KEYS.includes("id"));
     });
 
     test("is frozen", function (assert) {
       assert.true(Object.isFrozen(VALID_ENTRY_KEYS));
     });
 
-    test("has exactly 6 keys", function (assert) {
-      assert.strictEqual(VALID_ENTRY_KEYS.length, 6);
+    test("has exactly 7 keys", function (assert) {
+      assert.strictEqual(VALID_ENTRY_KEYS.length, 7);
     });
   });
 
@@ -420,6 +423,7 @@ module("Unit | Lib | blocks/validation/layout", function () {
   module("isReservedArgName", function () {
     test("returns true for explicitly reserved names", function (assert) {
       assert.true(isReservedArgName("classNames"));
+      assert.true(isReservedArgName("id"));
       assert.true(isReservedArgName("outletName"));
       assert.true(isReservedArgName("children"));
       assert.true(isReservedArgName("conditions"));
@@ -442,6 +446,65 @@ module("Unit | Lib | blocks/validation/layout", function () {
     test("returns false for names containing but not starting with underscore", function (assert) {
       assert.false(isReservedArgName("my_arg"));
       assert.false(isReservedArgName("some_value_here"));
+    });
+  });
+
+  module("validateEntryIdFormat", function () {
+    test("passes for valid id starting with letter", function (assert) {
+      validateEntryIdFormat({ block: "my-block", id: "featured-banner" });
+      validateEntryIdFormat({ block: "my-block", id: "a" });
+      validateEntryIdFormat({ block: "my-block", id: "abc123" });
+      validateEntryIdFormat({ block: "my-block", id: "my-block-1" });
+      assert.true(true, "validation passed");
+    });
+
+    test("passes when id is not provided", function (assert) {
+      validateEntryIdFormat({ block: "my-block" });
+      assert.true(true, "validation passed");
+    });
+
+    test("passes when id is undefined", function (assert) {
+      validateEntryIdFormat({ block: "my-block", id: undefined });
+      assert.true(true, "validation passed");
+    });
+
+    test("throws for id starting with number", function (assert) {
+      assert.throws(
+        () => validateEntryIdFormat({ block: "my-block", id: "123-block" }),
+        (error) =>
+          error.message.includes("must start with a lowercase letter") &&
+          error.path === "id"
+      );
+    });
+
+    test("throws for id with uppercase letters", function (assert) {
+      assert.throws(
+        () => validateEntryIdFormat({ block: "my-block", id: "Featured" }),
+        (error) => error.message.includes("lowercase")
+      );
+    });
+
+    test("throws for id with underscore", function (assert) {
+      assert.throws(
+        () => validateEntryIdFormat({ block: "my-block", id: "my_block" }),
+        (error) =>
+          error.message.includes("lowercase letters, numbers, and hyphens")
+      );
+    });
+
+    test("throws for id starting with hyphen", function (assert) {
+      assert.throws(
+        () => validateEntryIdFormat({ block: "my-block", id: "-invalid" }),
+        (error) => error.message.includes("must start with a lowercase letter")
+      );
+    });
+
+    test("throws for id with spaces", function (assert) {
+      assert.throws(
+        () => validateEntryIdFormat({ block: "my-block", id: "my block" }),
+        (error) =>
+          error.message.includes("lowercase letters, numbers, and hyphens")
+      );
     });
   });
 });

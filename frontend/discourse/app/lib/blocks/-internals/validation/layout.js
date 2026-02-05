@@ -25,6 +25,7 @@ import {
   MAX_LAYOUT_DEPTH,
   OPTIONAL_MISSING,
   parseBlockReference,
+  VALID_BLOCK_ID_PATTERN,
 } from "discourse/lib/blocks/-internals/patterns";
 import {
   hasBlock,
@@ -285,6 +286,28 @@ function validateContainerArgsUniqueness(
 }
 
 /**
+ * Validates that a block entry's `id` matches the required pattern.
+ * IDs must start with a lowercase letter and contain only lowercase letters,
+ * numbers, and hyphens (same format as block names).
+ *
+ * @param {Object} entry - The block entry.
+ * @throws {BlockError} If the id format is invalid.
+ */
+export function validateEntryIdFormat(entry) {
+  if (!entry.id) {
+    return;
+  }
+
+  if (!VALID_BLOCK_ID_PATTERN.test(entry.id)) {
+    throw new BlockError(
+      `"id" value "${entry.id}" is invalid. ` +
+        `IDs must start with a lowercase letter and contain only lowercase letters, numbers, and hyphens.`,
+      { path: "id" }
+    );
+  }
+}
+
+/**
  * Validates that containerArgs is not provided when parent has no childArgs.
  * Follows the pattern: error in dev/test, warn in production.
  *
@@ -452,6 +475,7 @@ export const RESERVED_ARG_NAMES = Object.freeze([
   "block",
   "classNames",
   "containerArgs",
+  "id",
   "outletArgs",
   "outletName",
   "children",
@@ -472,6 +496,7 @@ export const VALID_ENTRY_KEYS = Object.freeze([
   "containerArgs", // Arguments required by parent container's childArgs schema
   "classNames", // CSS classes to add to wrapper
   "children", // Nested block entries
+  "id", // Unique identifier for targeting and BEM styling
 ]);
 
 /**
@@ -511,6 +536,11 @@ const ENTRY_TYPE_RULES = {
   conditions: {
     validate: (v) => typeof v === "object",
     expected: "an object or array",
+    actual: (v) => typeof v,
+  },
+  id: {
+    validate: (v) => typeof v === "string",
+    expected: "a string",
     actual: (v) => typeof v,
   },
 };
@@ -599,11 +629,20 @@ export function validateReservedArgs(entry) {
     // Throw BlockError directly - wrapValidationError will add context
     throw new BlockError(
       `Reserved arg names: ${usedReservedArgs.join(", ")}. ` +
-        `Names starting with underscore are reserved for internal use.`,
+        `These names are reserved as entry-level properties or for internal use.`,
       { path: `args.${usedReservedArgs[0]}` }
     );
   }
 }
+
+/**
+ * Validation context passed through layout validation recursion.
+ * Created at the root level and shared across all entries to enable
+ * cross-cutting validation (e.g., ID uniqueness across the entire tree).
+ *
+ * @typedef {Object} LayoutValidationContext
+ * @property {Map<string, {path: string}>} seenIds - Map of entry IDs to their paths for uniqueness validation.
+ */
 
 /**
  * Recursively validates an outlet layout (array of block entries).
@@ -622,6 +661,7 @@ export function validateReservedArgs(entry) {
  * @param {Object|null} [parentChildArgsSchema=null] - The parent container's childArgs schema, if any.
  * @param {string|null} [parentBlockName=null] - The parent container's block name for error messages.
  * @param {number} [depth=0] - Current nesting depth for recursion limit checking.
+ * @param {LayoutValidationContext} [context] - Validation context for cross-cutting concerns like ID uniqueness.
  * @returns {Promise<void>} Resolves when validation completes.
  * @throws {Error} If any block entry is invalid or nesting depth exceeds MAX_LAYOUT_DEPTH.
  */
@@ -634,7 +674,8 @@ export async function validateLayout(
   rootLayout = null,
   parentChildArgsSchema = null,
   parentBlockName = null,
-  depth = 0
+  depth = 0,
+  context = { seenIds: new Map() }
 ) {
   // On first call, capture the root layout for error display
   const effectiveRootLayout = rootLayout ?? layout;
@@ -672,6 +713,28 @@ export async function validateLayout(
   // Use Promise.all for parallel validation (faster in dev when resolving factories)
   const validationPromises = layout.map(async (entry, index) => {
     const currentPath = `${parentPath}[${index}]`;
+
+    // Check ID uniqueness across the entire layout using shared context
+    if (entry.id) {
+      if (context.seenIds.has(entry.id)) {
+        const first = context.seenIds.get(entry.id);
+        raiseBlockError(
+          `Duplicate block id "${entry.id}" in outlet "${outletName}". ` +
+            `Found at ${first.path} and ${currentPath}. Block IDs must be unique per layout.`,
+          {
+            ...createValidationContext({
+              outletName,
+              path: currentPath,
+              entry,
+              callSiteError,
+              rootLayout: effectiveRootLayout,
+            }),
+            errorPath: `${currentPath}.id`,
+          }
+        );
+      }
+      context.seenIds.set(entry.id, { path: currentPath });
+    }
 
     // Validate the block entry itself (whether it has children or not)
     // Returns the block's childArgsSchema if it's a container with childArgs
@@ -721,7 +784,8 @@ export async function validateLayout(
         effectiveRootLayout,
         childArgsSchema,
         blockName,
-        depth + 1
+        depth + 1,
+        context
       );
     }
   });
@@ -792,11 +856,12 @@ export async function validateEntry(
     return null;
   }
 
-  // Validate entry structure (keys and types) with error tracing
+  // Validate entry structure (keys, types, and id format) with error tracing
   wrapValidationError(
     () => {
       validateEntryKeys(entry);
       validateEntryTypes(entry);
+      validateEntryIdFormat(entry);
     },
     `Invalid block entry at ${path} for outlet "${outletName}"`,
     earlyContext

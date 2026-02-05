@@ -63,6 +63,15 @@ export function isOptionalMissing(resolvedBlock) {
 export const VALID_BLOCK_NAME_PATTERN = /^[a-z][a-z0-9-]*$/;
 
 /**
+ * Valid block ID pattern for the `id` entry property.
+ * Same format as block names: lowercase letters, numbers, and hyphens,
+ * must start with a letter.
+ *
+ * Examples: "featured-banner", "sidebar-1", "main-content"
+ */
+export const VALID_BLOCK_ID_PATTERN = VALID_BLOCK_NAME_PATTERN;
+
+/**
  * Valid namespaced block name pattern. Supports three formats:
  *
  * - **Core blocks**: `block-name` (no prefix)
@@ -111,7 +120,7 @@ export const VALID_NAMESPACED_BLOCK_PATTERN =
  * // => { type: "plugin", namespace: "chat", name: "message-widget" }
  *
  * parseBlockName("theme:tactile:hero-banner")
- * // => { type: "theme", namespace: "theme-tactile", name: "hero-banner" }
+ * // => { type: "theme", namespace: "theme:tactile", name: "hero-banner" }
  *
  * parseBlockName("Invalid_Name")
  * // => null
@@ -124,7 +133,7 @@ export function parseBlockName(fullName) {
   if (themeMatch) {
     return {
       type: "theme",
-      namespace: `theme-${themeMatch[1]}`,
+      namespace: `theme:${themeMatch[1]}`,
       name: themeMatch[2],
     };
   }

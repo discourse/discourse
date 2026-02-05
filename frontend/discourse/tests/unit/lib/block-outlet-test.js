@@ -417,9 +417,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
 
     test("throws for container block without children", async function (assert) {
       await assert.rejects(
-        _renderBlocks("hero-blocks", [
-          { block: BlockGroup, args: { name: "test" } },
-        ]),
+        _renderBlocks("hero-blocks", [{ block: BlockGroup }]),
         /must have children/
       );
     });
@@ -510,7 +508,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
         _renderBlocks("hero-blocks", [
           {
             block: BlockGroup,
-            args: { name: "test" },
+            id: "test",
             children: [{ block: NestedChildBlock }, { block: NotABlock }],
           },
         ]),
@@ -560,7 +558,7 @@ module("Unit | Lib | block-outlet", function (hooks) {
         api.renderBlocks("main-outlet-blocks", [
           {
             block: BlockGroup,
-            args: { name: "test" },
+            id: "test",
             children: [{ block: ContainerChildBlock }],
           },
         ])

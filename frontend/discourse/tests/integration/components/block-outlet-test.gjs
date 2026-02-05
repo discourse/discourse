@@ -459,7 +459,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         api.renderBlocks("sidebar-blocks", [
           {
             block: BlockGroup,
-            args: { name: "test-group" },
+
             children: [{ block: NestedChildBlock }],
           },
         ])
@@ -510,11 +510,11 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         api.renderBlocks("hero-blocks", [
           {
             block: BlockGroup,
-            args: { name: "outer" },
+
             children: [
               {
                 block: BlockGroup,
-                args: { name: "inner" },
+
                 children: [{ block: DeepNestedBlock }],
               },
             ],
@@ -577,12 +577,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         api.renderBlocks("main-outlet-blocks", [
           {
             block: BlockGroup,
-            args: { name: "first" },
+
             children: [{ block: MultiContainerChild }],
           },
           {
             block: BlockGroup,
-            args: { name: "second" },
+
             children: [{ block: MultiContainerChild }],
           },
         ])
@@ -644,7 +644,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         api.renderBlocks("hero-blocks", [
           {
             block: BlockGroup,
-            args: { name: "test" },
+
             children: [{ block: HierarchyDisplayBlock }],
           },
         ])
@@ -832,6 +832,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         </template>
       }
 
+      // Counter to generate unique IDs for each group at each depth
+      let idCounter = 0;
+
       const buildNestedConfig = (depth, maxDepth) => {
         if (depth >= maxDepth) {
           return [
@@ -843,12 +846,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         return [
           {
             block: BlockGroup,
-            args: { name: `level-${depth}` },
+            id: `level-${depth}-${idCounter++}`,
             children: buildNestedConfig(depth + 1, maxDepth),
           },
           {
             block: BlockGroup,
-            args: { name: `level-${depth}-alt` },
+            id: `level-${depth}-${idCounter++}`,
             children: buildNestedConfig(depth + 1, maxDepth),
           },
         ];
@@ -864,11 +867,11 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       assert.dom(".homepage-blocks").exists("outlet renders");
 
-      assert.dom(".block-group-level-0").exists("level 0 group exists");
-      assert.dom(".block-group-level-1").exists("level 1 group exists");
-      assert.dom(".block-group-level-2").exists("level 2 group exists");
-      assert.dom(".block-group-level-3").exists("level 3 group exists");
-      assert.dom(".block-group-level-4").exists("level 4 group exists");
+      assert.dom('[data-block-id^="level-0"]').exists("level 0 groups exist");
+      assert.dom('[data-block-id^="level-1"]').exists("level 1 groups exist");
+      assert.dom('[data-block-id^="level-2"]').exists("level 2 groups exist");
+      assert.dom('[data-block-id^="level-3"]').exists("level 3 groups exist");
+      assert.dom('[data-block-id^="level-4"]').exists("level 4 groups exist");
 
       const leafBlocks = document.querySelectorAll(".leaf-block");
       assert.strictEqual(
@@ -903,7 +906,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         return [
           {
             block: BlockGroup,
-            args: { name: `deep-${depth}` },
+            id: `deep-${depth}`,
             children: buildDeeplyNestedConfig(depth - 1),
           },
         ];
@@ -917,8 +920,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       assert.dom(".sidebar-blocks").exists("outlet renders");
 
-      assert.dom(".block-group-deep-10").exists("deepest group exists");
-      assert.dom(".block-group-deep-1").exists("shallowest group exists");
+      assert
+        .dom(".sidebar-blocks__block-container--deep-10")
+        .exists("deepest group exists");
+      assert
+        .dom(".sidebar-blocks__block-container--deep-1")
+        .exists("shallowest group exists");
       assert.dom(".deep-leaf").exists("leaf block renders at bottom");
     });
 
@@ -937,11 +944,11 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         api.renderBlocks("main-outlet-blocks", [
           {
             block: BlockGroup,
-            args: { name: "outer" },
+            id: "outer",
             children: [
               {
                 block: BlockGroup,
-                args: { name: "middle-1" },
+                id: "middle-1",
                 children: [
                   {
                     block: ConditionalLeaf,
@@ -956,7 +963,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
               },
               {
                 block: BlockGroup,
-                args: { name: "middle-2" },
+                id: "middle-2",
                 conditions: { type: "user", loggedIn: false },
                 children: [{ block: ConditionalLeaf, args: { level: "3c" } }],
               },
@@ -969,8 +976,12 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         <template><BlockOutlet @name="main-outlet-blocks" /></template>
       );
 
-      assert.dom(".block-group-outer").exists("outer group renders");
-      assert.dom(".block-group-middle-1").exists("middle-1 group renders");
+      assert
+        .dom(".main-outlet-blocks__block-container--outer")
+        .exists("outer group renders");
+      assert
+        .dom(".main-outlet-blocks__block-container--middle-1")
+        .exists("middle-1 group renders");
       assert
         .dom('.conditional-leaf[data-level="3a"]')
         .doesNotExist("conditional leaf 3a hidden (logged out required)");
@@ -978,7 +989,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         .dom('.conditional-leaf[data-level="3b"]')
         .exists("unconditional leaf 3b renders");
       assert
-        .dom(".block-group-middle-2")
+        .dom(".main-outlet-blocks__block-container--middle-2")
         .doesNotExist("middle-2 group hidden (logged out required)");
       assert
         .dom('.conditional-leaf[data-level="3c"]')
@@ -1091,7 +1102,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         api.renderBlocks("main-outlet-blocks", [
           {
             block: BlockGroup,
-            args: { name: "container" },
+            id: "container",
             children: [{ block: "nested-string-block" }],
           },
         ])
@@ -1101,7 +1112,9 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         <template><BlockOutlet @name="main-outlet-blocks" /></template>
       );
 
-      assert.dom(".block-group-container").exists("container renders");
+      assert
+        .dom(".main-outlet-blocks__block-container--container")
+        .exists("container renders");
       assert
         .dom(".nested-string-content")
         .hasText(
@@ -1439,7 +1452,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         api.renderBlocks("sidebar-blocks", [
           {
             block: BlockGroup,
-            args: { name: "test" },
+
             children: [{ block: GroupChildBlock }],
           },
         ])
@@ -1482,11 +1495,11 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         api.renderBlocks("hero-blocks", [
           {
             block: BlockGroup,
-            args: { name: "outer" },
+
             children: [
               {
                 block: BlockGroup,
-                args: { name: "inner" },
+
                 children: [{ block: DeepNestedBlock }],
               },
             ],

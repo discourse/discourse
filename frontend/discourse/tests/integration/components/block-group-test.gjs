@@ -37,7 +37,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       api.renderBlocks("hero-blocks", [
         {
           block: BlockGroup,
-          args: { name: "features" },
+          id: "features",
           classNames: "custom-group-class",
           children: [{ block: GroupChild1 }, { block: GroupChild2 }],
         },
@@ -46,9 +46,10 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    assert.dom('[data-block-container="true"]').exists();
-    assert.dom(".block-group-features").exists();
-    assert.dom(".custom-group-class").exists();
+    assert
+      .dom(".hero-blocks__block-container--features")
+      .exists("container has BEM modifier class from id");
+    assert.dom(".custom-group-class").exists("custom classNames applied");
   });
 
   test("renders all children blocks", async function (assert) {
@@ -77,7 +78,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       api.renderBlocks("homepage-blocks", [
         {
           block: BlockGroup,
-          args: { name: "multi-children" },
           children: [
             { block: MultiChildA },
             { block: MultiChildB },
@@ -106,7 +106,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       api.renderBlocks("sidebar-blocks", [
         {
           block: BlockGroup,
-          args: { name: "args-children" },
           children: [
             { block: ArgsChild, args: { title: "First" } },
             { block: ArgsChild, args: { title: "Second" } },
@@ -135,11 +134,11 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       api.renderBlocks("main-outlet-blocks", [
         {
           block: BlockGroup,
-          args: { name: "outer" },
+          id: "outer",
           children: [
             {
               block: BlockGroup,
-              args: { name: "inner" },
+              id: "inner",
               children: [{ block: NestedLeaf }],
             },
           ],
@@ -151,8 +150,12 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       <template><BlockOutlet @name="main-outlet-blocks" /></template>
     );
 
-    assert.dom(".block-group-outer").exists();
-    assert.dom(".block-group-inner").exists();
+    assert
+      .dom(".main-outlet-blocks__block-container--outer")
+      .exists("outer container has BEM modifier");
+    assert
+      .dom(".main-outlet-blocks__block-container--inner")
+      .exists("inner container has BEM modifier");
     assert.dom(".nested-leaf").exists();
   });
 
@@ -168,7 +171,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       api.renderBlocks("sidebar-blocks", [
         {
           block: BlockGroup,
-          args: { name: "wrapper-test" },
+          id: "wrapper-test",
           children: [{ block: WrapperTestChild }],
         },
       ])
@@ -176,13 +179,9 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
-    // Container block wrapper should have data-block-container attribute
     assert
-      .dom('[data-block-container="true"]')
-      .exists("container has data-block-container attribute");
-    assert
-      .dom(".block-group-wrapper-test")
-      .exists("container has block-group-{name} class");
+      .dom(".sidebar-blocks__block-container--wrapper-test")
+      .exists("container has BEM modifier from id");
 
     // Child block wrapper should have outlet-prefixed class
     assert
@@ -205,15 +204,15 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       api.renderBlocks("hero-blocks", [
         {
           block: BlockGroup,
-          args: { name: "level-1" },
+          id: "level-1",
           children: [
             {
               block: BlockGroup,
-              args: { name: "level-2" },
+              id: "level-2",
               children: [
                 {
                   block: BlockGroup,
-                  args: { name: "level-3" },
+                  id: "level-3",
                   children: [{ block: DeepLeaf }],
                 },
               ],
@@ -225,8 +224,16 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    // All nested containers should have data-block-container attribute
-    assert.dom('[data-block-container="true"]').exists({ count: 3 });
+    // All nested containers should have BEM modifier classes from id
+    assert
+      .dom(".hero-blocks__block-container--level-1")
+      .exists("level-1 container has BEM modifier");
+    assert
+      .dom(".hero-blocks__block-container--level-2")
+      .exists("level-2 container has BEM modifier");
+    assert
+      .dom(".hero-blocks__block-container--level-3")
+      .exists("level-3 container has BEM modifier");
 
     // The leaf block should also have the outlet prefix
     assert
@@ -251,7 +258,6 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       api.renderBlocks("homepage-blocks", [
         {
           block: BlockGroup,
-          args: { name: "parent" },
           children: [{ block: OutletNameTest }],
         },
       ])
@@ -291,7 +297,7 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       api.renderBlocks("sidebar-blocks", [
         {
           block: BlockGroup,
-          args: { name: "overlay-test" },
+          id: "overlay-test",
           children: [{ block: OverlayTestChild }],
         },
       ])
@@ -299,10 +305,10 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
 
-    // Verify container has data-block-container attribute even with overlay
+    // Verify container has BEM modifier class with overlay enabled
     assert
-      .dom('[data-block-container="true"]')
-      .exists("container has data-block-container with overlay enabled");
+      .dom(".sidebar-blocks__block-container--overlay-test")
+      .exists("container has BEM modifier with overlay enabled");
 
     // Verify child has correct outlet-prefixed class even with overlay
     assert
@@ -337,11 +343,11 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
       api.renderBlocks("hero-blocks", [
         {
           block: BlockGroup,
-          args: { name: "level-1" },
+          id: "level-1",
           children: [
             {
               block: BlockGroup,
-              args: { name: "level-2" },
+              id: "level-2",
               children: [{ block: DeepOverlayLeaf }],
             },
           ],
@@ -351,10 +357,13 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
 
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-    // All nested containers should have data-block-container with overlay enabled
+    // All nested containers should have BEM modifier with overlay enabled
     assert
-      .dom('[data-block-container="true"]')
-      .exists({ count: 2 }, "nested containers have data-block-container");
+      .dom(".hero-blocks__block-container--level-1")
+      .exists("level-1 has BEM modifier with overlay");
+    assert
+      .dom(".hero-blocks__block-container--level-2")
+      .exists("level-2 has BEM modifier with overlay");
 
     // The deeply nested leaf should have outlet prefix
     assert
@@ -441,5 +450,33 @@ module("Integration | Blocks | BlockGroup", function (hooks) {
     // Verify tab content panels are rendered
     const tabPanels = document.querySelectorAll(".tab-panel");
     assert.strictEqual(tabPanels.length, 3, "three tab panels rendered");
+  });
+
+  test("data-block-id attribute is set when id is provided", async function (assert) {
+    @block("id-test-child")
+    class IdTestChild extends Component {
+      <template>
+        <span class="id-test-content">Child</span>
+      </template>
+    }
+
+    withPluginApi((api) =>
+      api.renderBlocks("sidebar-blocks", [
+        {
+          block: BlockGroup,
+          id: "main-group",
+          children: [{ block: IdTestChild, id: "first-child" }],
+        },
+      ])
+    );
+
+    await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+    assert
+      .dom('[data-block-id="main-group"]')
+      .exists("container has data-block-id attribute");
+    assert
+      .dom('[data-block-id="first-child"]')
+      .exists("child has data-block-id attribute");
   });
 });

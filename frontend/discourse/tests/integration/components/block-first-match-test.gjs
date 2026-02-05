@@ -153,9 +153,6 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
     await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
     assert
-      .dom('[data-block-container="true"]')
-      .exists("has data-block-container attribute");
-    assert
       .dom('[data-block-name="first-match"]')
       .exists("has data-block-name attribute");
     assert.dom(".custom-first-match").exists("has custom class");
@@ -180,7 +177,7 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
       api.renderBlocks("homepage-blocks", [
         {
           block: BlockGroup,
-          args: { name: "outer" },
+          id: "outer",
           children: [
             {
               block: BlockFirstMatch,
@@ -193,7 +190,9 @@ module("Integration | Blocks | BlockFirstMatch", function (hooks) {
 
     await render(<template><BlockOutlet @name="homepage-blocks" /></template>);
 
-    assert.dom(".block-group-outer").exists("group renders");
+    assert
+      .dom(".homepage-blocks__block-container--outer")
+      .exists("group renders with BEM modifier");
     assert.dom(".nested-a").exists("first-match renders first child");
     assert
       .dom(".nested-b")

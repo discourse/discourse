@@ -85,59 +85,46 @@ module("Integration | Blocks | BlockLayoutWrapper", function (hooks) {
       );
     });
 
-    test("container block has data-block-container='true'", async function (assert) {
-      @block("container-attr-child")
-      class ContainerAttrChild extends Component {
+    test("data-block-id is set when id is provided", async function (assert) {
+      @block("id-attr-test-block")
+      class IdAttrTestBlock extends Component {
         <template>
-          <div class="container-child">Child</div>
+          <div class="id-content">Content</div>
         </template>
       }
 
       withPluginApi((api) =>
-        api.renderBlocks("homepage-blocks", [
-          {
-            block: BlockGroup,
-            args: { name: "test-container" },
-            children: [{ block: ContainerAttrChild }],
-          },
+        api.renderBlocks("hero-blocks", [
+          { block: IdAttrTestBlock, id: "my-block-id" },
         ])
       );
 
-      await render(
-        <template><BlockOutlet @name="homepage-blocks" /></template>
-      );
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
       assert
-        .dom('[data-block-container="true"]')
-        .exists("container block has data-block-container attribute");
-      assert
-        .dom('[data-block-name="group"]')
-        .hasAttribute(
-          "data-block-container",
-          "true",
-          "container has data-block-container='true'"
-        );
+        .dom('[data-block-id="my-block-id"]')
+        .exists("data-block-id attribute is set");
     });
 
-    test("non-container block does not have data-block-container", async function (assert) {
-      @block("non-container-attr-block")
-      class NonContainerAttrBlock extends Component {
+    test("data-block-id is not set when id is not provided", async function (assert) {
+      @block("no-id-attr-block")
+      class NoIdAttrBlock extends Component {
         <template>
-          <div class="non-container-content">Leaf</div>
+          <div class="no-id-content">Content</div>
         </template>
       }
 
       withPluginApi((api) =>
-        api.renderBlocks("sidebar-blocks", [{ block: NonContainerAttrBlock }])
+        api.renderBlocks("hero-blocks", [{ block: NoIdAttrBlock }])
       );
 
-      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-      const wrapper = document.querySelector(".sidebar-blocks__block");
+      const wrapper = document.querySelector(".hero-blocks__block");
       assert.strictEqual(
-        wrapper.getAttribute("data-block-container"),
+        wrapper.getAttribute("data-block-id"),
         null,
-        "non-container blocks do not have data-block-container attribute"
+        "data-block-id is not set when id is not provided"
       );
     });
 
@@ -153,7 +140,7 @@ module("Integration | Blocks | BlockLayoutWrapper", function (hooks) {
         api.renderBlocks("main-outlet-blocks", [
           {
             block: BlockGroup,
-            args: { name: "full-test" },
+            id: "full-test",
             children: [{ block: FullAttrChild }],
           },
         ])
@@ -177,9 +164,9 @@ module("Integration | Blocks | BlockLayoutWrapper", function (hooks) {
         "built-in container has no namespace"
       );
       assert.strictEqual(
-        containerWrapper.getAttribute("data-block-container"),
-        "true",
-        "container has data-block-container='true'"
+        containerWrapper.getAttribute("data-block-id"),
+        "full-test",
+        "container has correct data-block-id"
       );
     });
 
@@ -195,11 +182,11 @@ module("Integration | Blocks | BlockLayoutWrapper", function (hooks) {
         api.renderBlocks("hero-blocks", [
           {
             block: BlockGroup,
-            args: { name: "outer" },
+            id: "outer",
             children: [
               {
                 block: BlockGroup,
-                args: { name: "inner" },
+                id: "inner",
                 children: [{ block: NestedAttrLeaf }],
               },
             ],
@@ -209,28 +196,26 @@ module("Integration | Blocks | BlockLayoutWrapper", function (hooks) {
 
       await render(<template><BlockOutlet @name="hero-blocks" /></template>);
 
-      const containers = document.querySelectorAll(
-        '[data-block-container="true"]'
-      );
-      assert.strictEqual(
-        containers.length,
-        2,
-        "both nested containers have attribute"
-      );
+      assert
+        .dom('[data-block-id="outer"]')
+        .exists("outer container has data-block-id");
+      assert
+        .dom('[data-block-id="inner"]')
+        .exists("inner container has data-block-id");
 
       const leaf = document.querySelector(
         '[data-block-name="nested-attr-leaf"]'
       );
       assert.strictEqual(
-        leaf.getAttribute("data-block-container"),
+        leaf.getAttribute("data-block-id"),
         null,
-        "nested leaf does not have container attribute"
+        "nested leaf without id does not have data-block-id"
       );
     });
   });
 
   module("CSS classes", function () {
-    test("all blocks have {outlet}__block class", async function (assert) {
+    test("leaf blocks have {outlet}__block class", async function (assert) {
       @block("css-class-block")
       class CssClassBlock extends Component {
         <template>
@@ -246,10 +231,10 @@ module("Integration | Blocks | BlockLayoutWrapper", function (hooks) {
 
       assert
         .dom(".sidebar-blocks__block")
-        .exists("block has outlet__block class");
+        .exists("leaf block has outlet__block class");
     });
 
-    test("container blocks also have {outlet}__block class", async function (assert) {
+    test("container blocks have {outlet}__block-container class", async function (assert) {
       @block("container-css-child")
       class ContainerCssChild extends Component {
         <template>
@@ -261,7 +246,6 @@ module("Integration | Blocks | BlockLayoutWrapper", function (hooks) {
         api.renderBlocks("hero-blocks", [
           {
             block: BlockGroup,
-            args: { name: "css-test" },
             children: [{ block: ContainerCssChild }],
           },
         ])
@@ -273,9 +257,55 @@ module("Integration | Blocks | BlockLayoutWrapper", function (hooks) {
         '[data-block-name="group"]'
       );
       assert.true(
-        containerWrapper.classList.contains("hero-blocks__block"),
-        "container has outlet__block class"
+        containerWrapper.classList.contains("hero-blocks__block-container"),
+        "container has outlet__block-container class"
       );
+    });
+
+    test("id generates BEM modifier class on leaf blocks", async function (assert) {
+      @block("bem-modifier-block")
+      class BemModifierBlock extends Component {
+        <template>
+          <div class="bem-content">Content</div>
+        </template>
+      }
+
+      withPluginApi((api) =>
+        api.renderBlocks("sidebar-blocks", [
+          { block: BemModifierBlock, id: "featured" },
+        ])
+      );
+
+      await render(<template><BlockOutlet @name="sidebar-blocks" /></template>);
+
+      assert
+        .dom(".sidebar-blocks__block--featured")
+        .exists("leaf block has BEM modifier class from id");
+    });
+
+    test("id generates BEM modifier class on container blocks", async function (assert) {
+      @block("bem-container-child")
+      class BemContainerChild extends Component {
+        <template>
+          <div class="bem-child">Child</div>
+        </template>
+      }
+
+      withPluginApi((api) =>
+        api.renderBlocks("hero-blocks", [
+          {
+            block: BlockGroup,
+            id: "main-group",
+            children: [{ block: BemContainerChild }],
+          },
+        ])
+      );
+
+      await render(<template><BlockOutlet @name="hero-blocks" /></template>);
+
+      assert
+        .dom(".hero-blocks__block-container--main-group")
+        .exists("container has BEM modifier class from id");
     });
 
     test("decorator classNames are applied", async function (assert) {

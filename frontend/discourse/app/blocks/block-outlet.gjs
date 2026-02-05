@@ -154,6 +154,7 @@ function resolveDecoratorClassNames(metadata, args) {
  * @param {Object} [entry.args] - Args to pass to the block
  * @param {Object} [entry.containerArgs] - Container args for parent's childArgs schema
  * @param {string} [entry.classNames] - Additional CSS classes
+ * @param {string} [entry.id] - Unique identifier for BEM styling and targeting
  * @param {import("@ember/owner").default} owner - The application owner
  * @param {Object} [debugContext] - Debug context for visual overlay
  * @param {string} [debugContext.displayHierarchy] - Where the block is rendered (for tooltip display)
@@ -170,7 +171,13 @@ function resolveDecoratorClassNames(metadata, args) {
  *   schema, accessible to the parent but not to the child block itself.
  */
 function createChildBlock(entry, owner, debugContext = {}) {
-  const { block: ComponentClass, args = {}, containerArgs, classNames } = entry;
+  const {
+    block: ComponentClass,
+    args = {},
+    containerArgs,
+    classNames,
+    id,
+  } = entry;
   const blockMeta = getBlockMetadata(ComponentClass);
   const isContainer = blockMeta?.isContainer ?? false;
 
@@ -199,6 +206,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
       namespace: blockMeta?.namespace,
       outletName: debugContext.outletName,
       isContainer,
+      id,
       decoratorClassNames: resolveDecoratorClassNames(
         blockMeta,
         argsWithDefaults

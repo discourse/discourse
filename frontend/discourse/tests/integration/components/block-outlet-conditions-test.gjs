@@ -259,7 +259,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       api.renderBlocks("hero-blocks", [
         {
           block: BlockGroup,
-          args: { name: "test-group" },
+
           children: [
             {
               block: NestedVisibleBlock,
@@ -442,7 +442,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       api.renderBlocks("hero-blocks", [
         {
           block: BlockGroup,
-          args: { name: "admin-only" },
+
           classNames: "admin-only-group",
           children: [
             {
@@ -485,7 +485,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       api.renderBlocks("sidebar-blocks", [
         {
           block: BlockGroup,
-          args: { name: "mixed" },
+
           classNames: "mixed-group",
           children: [
             {
@@ -521,12 +521,12 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       api.renderBlocks("main-outlet-blocks", [
         {
           block: BlockGroup,
-          args: { name: "outer" },
+
           classNames: "outer-group",
           children: [
             {
               block: BlockGroup,
-              args: { name: "inner" },
+
               classNames: "inner-group",
               children: [
                 {
@@ -562,12 +562,12 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       api.renderBlocks("hero-blocks", [
         {
           block: BlockGroup,
-          args: { name: "outer-visible" },
+
           classNames: "outer-visible-group",
           children: [
             {
               block: BlockGroup,
-              args: { name: "inner-visible" },
+
               classNames: "inner-visible-group",
               children: [
                 {
@@ -601,7 +601,7 @@ module("Integration | Blocks | BlockOutlet | Conditions", function (hooks) {
       api.renderBlocks("homepage-blocks", [
         {
           block: BlockGroup,
-          args: { name: "failing" },
+
           classNames: "failing-container",
           conditions: { type: "always-false" },
           children: [
