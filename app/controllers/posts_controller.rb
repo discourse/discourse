@@ -937,23 +937,23 @@ class PostsController < ApplicationController
     # Staff are allowed to pass `is_warning`
     if current_user.staff?
       params.permit(:is_warning)
-      result[:is_warning] = (params[:is_warning] == "true")
+      result[:is_warning] = ActiveModel::Type::Boolean.new.cast(params[:is_warning])
     else
       result[:is_warning] = false
     end
 
-    if params[:no_bump] == "true"
+    if ActiveModel::Type::Boolean.new.cast(params[:no_bump])
       raise Discourse::InvalidParameters.new(:no_bump) unless guardian.can_skip_bump?
       result[:no_bump] = true
     end
 
-    if params[:shared_draft] == "true"
+    if ActiveModel::Type::Boolean.new.cast(params[:shared_draft])
       raise Discourse::InvalidParameters.new(:shared_draft) unless guardian.can_create_shared_draft?
 
       result[:shared_draft] = true
     end
 
-    if params[:whisper] == "true"
+    if ActiveModel::Type::Boolean.new.cast(params[:whisper])
       unless guardian.can_create_whisper?
         raise Discourse::InvalidAccess.new(
                 "invalid_whisper_access",
