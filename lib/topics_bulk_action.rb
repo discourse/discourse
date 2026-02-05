@@ -66,6 +66,7 @@ class TopicsBulkAction
         else
           UserArchivedMessage.move_to_inbox!(@user.id, t)
         end
+        @changed_ids << t.id
       end
     end
   end
@@ -79,6 +80,7 @@ class TopicsBulkAction
         else
           UserArchivedMessage.archive!(@user.id, t)
         end
+        @changed_ids << t.id
       end
     end
   end
