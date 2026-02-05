@@ -307,16 +307,14 @@ export default class AdminSearchDataSource extends Service {
             return dataSourceItem.keywords.match(regex);
           })
         ) {
-          dataSourceItem.score = dataSourceItem.score +=
-            SEARCH_SCORES.exactKeyword;
+          dataSourceItem.score += SEARCH_SCORES.exactKeyword;
         } else if (
           partialKeywordRegexes.length > 0 &&
           partialKeywordRegexes.every((regex) => {
             return dataSourceItem.keywords.match(regex);
           })
         ) {
-          dataSourceItem.score = dataSourceItem.score +=
-            SEARCH_SCORES.partialKeyword;
+          dataSourceItem.score += SEARCH_SCORES.partialKeyword;
         }
         if (filter.length > 3 && dataSourceItem.keywords.match(fallbackRegex)) {
           dataSourceItem.score += SEARCH_SCORES.fallback;
