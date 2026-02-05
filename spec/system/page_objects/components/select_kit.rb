@@ -129,6 +129,10 @@ module PageObjects
       def unselect_by_name(name)
         expanded_component.find(".selected-choice[data-name='#{name}']").click
       end
+
+      def clear
+        expanded_component.all(".selected-choice").each(&:click)
+      end
     end
   end
 end
