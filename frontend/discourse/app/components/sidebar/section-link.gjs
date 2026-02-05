@@ -213,9 +213,55 @@ export default class SectionLink extends Component {
               @prefixBadge={{@prefixBadge}}
             />
 
-            <span class="sidebar-section-link-content-text">
+            <span
+              class={{concatClass
+                "sidebar-section-link-content-text"
+                @contentCSSClass
+              }}
+            >
               {{@content}}
+              <@contentComponent />
             </span>
+
+            {{#if @badgeText}}
+              <span class="sidebar-section-link-content-badge">
+                {{@badgeText}}
+              </span>
+            {{/if}}
+
+            {{#if @suffixComponent}}
+              <@suffixComponent @suffixArgs={{@suffixArgs}} />
+            {{/if}}
+
+            {{#if @suffixValue}}
+              <span
+                class={{concatClass
+                  "sidebar-section-link-suffix"
+                  @suffixType
+                  @suffixCSSClass
+                }}
+              >
+                {{#if (eq @suffixType "icon")}}
+                  {{icon @suffixValue}}
+                {{/if}}
+              </span>
+            {{/if}}
+
+            {{! template-lint-disable no-nested-interactive }}
+            {{#if @hoverValue}}
+              <span class="sidebar-section-link-hover">
+                <button
+                  {{on "click" this.runHoverAction}}
+                  type="button"
+                  title={{@hoverTitle}}
+                  class="sidebar-section-hover-button btn-flat"
+                >
+                  {{#if (eq @hoverType "icon")}}
+                    {{icon @hoverValue class="hover-icon"}}
+                  {{/if}}
+                </button>
+              </span>
+            {{/if}}
           </a>
         {{else}}
           <LinkTo

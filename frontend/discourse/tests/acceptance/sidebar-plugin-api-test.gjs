@@ -96,6 +96,10 @@ acceptance("Sidebar - Plugin API", function (needs) {
                 href = "https://www.discourse.org";
                 title = "Homepage";
                 text = "Homepage";
+                hoverType = "icon";
+                hoverValue = "trash-can";
+                hoverAction = () => {};
+                hoverTitle = "href hover button title";
               })(),
             ];
             willDestroy = () => (sectionDestroy = "section test");
@@ -250,11 +254,23 @@ acceptance("Sidebar - Plugin API", function (needs) {
       );
 
     assert
-      .dom(".sidebar-section-link-hover button")
+      .dom(
+        ".sidebar-section-link[data-link-name='fun-channel'] .sidebar-section-link-hover button"
+      )
       .hasAttribute(
         "title",
         "hover button title attribute",
-        "displays hover button with correct title"
+        "displays hover button for route link"
+      );
+
+    assert
+      .dom(
+        ".sidebar-section-link[data-link-name='homepage'] .sidebar-section-link-hover button"
+      )
+      .hasAttribute(
+        "title",
+        "href hover button title",
+        "displays hover button for href link"
       );
 
     await click(".btn-sidebar-toggle");
