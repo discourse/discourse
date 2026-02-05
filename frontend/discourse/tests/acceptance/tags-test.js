@@ -686,25 +686,6 @@ acceptance("Tag info", function (needs) {
   });
 });
 
-acceptance(
-  "Tag show - topic list with `more_topics_url` present",
-  function (needs) {
-    needs.pretender((server, helper) => {
-      server.get("/tag/:tagName/l/latest.json", () =>
-        helper.response({
-          users: [],
-          primary_groups: [],
-          topic_list: {
-            topics: [],
-            more_topics_url: "...",
-          },
-        })
-      );
-      server.put("/topics/bulk", () => helper.response({}));
-    });
-  }
-);
-
 acceptance("Tag show - create topic", function (needs) {
   needs.user();
   needs.site({ can_tag_topics: true });
@@ -763,21 +744,6 @@ acceptance("Tag show - create topic", function (needs) {
     await visit("/tag/planters");
     await click("#create-topic");
     assert.deepEqual(composer.model.tags, ["planters"]);
-  });
-});
-
-acceptance("Tag show - topic list without `more_topics_url`", function (needs) {
-  needs.pretender((server, helper) => {
-    server.get("/tag/:tagName/l/latest.json", () =>
-      helper.response({
-        users: [],
-        primary_groups: [],
-        topic_list: {
-          topics: [],
-        },
-      })
-    );
-    server.put("/topics/bulk", () => helper.response({}));
   });
 });
 
