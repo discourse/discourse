@@ -20,6 +20,7 @@ id:
         other: "Solusi"
       topic_status_filter:
         all: "Semua"
+      move_post_cancel: "Batal"
     topic_statuses:
       solved:
         help: "Topik ini memiliki solusi"

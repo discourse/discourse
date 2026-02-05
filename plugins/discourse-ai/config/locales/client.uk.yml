@@ -113,6 +113,14 @@ uk:
             persona_id:
               label: "Персона"
               description: "Персона AI для створення звітів"
+        ai_tool_action:
+          fields:
+            tool:
+              label: "Інструмент ШІ"
+              description: "Інструмент штучного інтелекту, який запускається, коли спрацьовує автоматизація"
+            llm_model:
+              label: "Модель LLM"
+              description: "Мовна модель для інструментів, що використовують llm.generate() (необов'язково)"
         llm_persona_triage:
           fields:
             persona:
@@ -221,6 +229,7 @@ uk:
         short_title: "Особливості"
         description: "Це функції штучного інтелекту, доступні відвідувачам вашого сайту. Їх можна налаштувати для використання певних персон та LLM, а також контролювати доступ до них за групами."
         back: "Назад"
+        settings_save_error: "Деякі налаштування не вдалося зберегти."
         disabled: "(вимкнено)"
         persona:
           one: "Персона:"
@@ -247,6 +256,11 @@ uk:
           bot: "Чат-бот"
           name: "Бот"
           description: "Чат-бот, який може відповідати на запитання та допомагати користувачам в особистих повідомленнях, на форумі та в чаті"
+          setting_groups:
+            settings: "Основні налаштування"
+            access_control: "Контроль доступу"
+            ui_settings: "Налаштування інтерфейсу"
+            integrations: "Інтеграції"
         nav:
           configured: "Налаштовано"
           unconfigured: "Не налаштовано"
@@ -261,24 +275,42 @@ uk:
           description: "Надає можливість відвідувачам підсумувати теми за допомогою кнопки підсумовування"
           topic_summaries: "Підсумки тем"
           gists: "Короткий опис списку тем"
+          setting_groups:
+            settings: "Основні налаштування"
+            gists: "Списки"
+            backfill: "Засипка"
         search:
           name: "Пошук"
           description: "Покращує пошук, надаючи відповіді на запити, згенеровані штучним інтелектом"
           discoveries: "Відкриття"
+          setting_groups:
+            settings: "Основні налаштування"
         embeddings:
           name: "Вбудовування"
           description: "Посилює такі функції, як \"Пов'язані теми\" та пошук зі штучним інтелектом, створюючи семантичне представлення тексту"
           hyde: "HyDE"
+          setting_groups:
+            model_settings: "Налаштування моделі"
+            related_topics: "Пов’язані теми"
+            semantic_search: "Семантичний пошук"
         discord:
           name: "Інтеграція з Discord"
           description: "Додано можливість пошуку каналів Discord"
           search: "Пошук у Discord"
+          setting_groups:
+            settings: "Основні налаштування"
+            discord_configuration: "Конфігурація Discord"
         inference:
           name: "Виведені поняття"
           description: "Класифікує теми та публікації за сферами інтересів / мітками."
           generate_concepts: "Виведення понять"
           match_concepts: "Узгодження концепцій"
           deduplicate_concepts: "Дедуплікація понять"
+          setting_groups:
+            settings: "Основні налаштування"
+            topic_criteria: "Тематичні критерії"
+            post_criteria: "Критерії допису"
+            personas: "Персони"
         ai_helper:
           name: "Помічник"
           description: "Допомагає користувачам у взаємодії зі спільнотою, такій як створення тем, написання постів та читання контенту"
@@ -293,6 +325,11 @@ uk:
           image_caption: "Зображення підписів"
           translator: "Перекладач"
           post_illustrator: "Ілюстратор постів"
+          setting_groups:
+            access_permissions: "Доступ та дозволи"
+            enabled_features: "Увімкнені функції"
+            automation: "Автоматизація"
+            personas: "Персони"
         translation:
           name: "Переклад"
           description: "Переклад вмісту на підтримувані мови"
@@ -307,6 +344,10 @@ uk:
             many: "Заплановано переклад для неперекладених %{count} дописів."
             other: "Заплановано переклад для неперекладених %{count} дописів."
           schedule_topic_error: "Не вдалося запланувати переклади. Спробуйте ще раз."
+          setting_groups:
+            settings: "Основні налаштування"
+            personas: "Персони"
+            backfill_and_limits: "Засипка та обмеження"
         spam:
           name: "Спам"
           description: "Визначає потенційний спам за допомогою вибраного LLM і відзначити його для модераторів для перегляду в черзі відгуків"
@@ -694,22 +735,7 @@ uk:
           anthropic-claude-sonnet-4-5: "Оптимальний баланс швидкості та витрат"
           anthropic-claude-haiku-4-5: "Швидко та економічно ефективно"
           google-gemini-3-pro: "Найрозумніша модель Google"
-          google-gemini-2-5-pro: "Велика мультимодальна модель, здатна виконувати широкий спектр завдань"
-          google-gemini-2-5-flash: "Легкий, швидкий та економічний з мультимодальними міркуваннями"
-          google-gemini-2-5-flash-lite: "Найменша та найекономічніша модель від Google"
-          google-gemini-2-5-flash-image-preview: "Найновіша модель генерації зображень з можливостями зору"
-          open_ai-gpt-5-1: "Флагманська модель OpenAI. Вона добре підходить для вирішення проблем у різних сферах."
-          open_ai-gpt-5-mini: "Забезпечує баланс між інтелектом, швидкістю та вартістю, що робить його привабливою моделлю для багатьох випадків використання."
-          open_ai-gpt-5-nano: "Найшвидша та найекономічніша модель GPT-5."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Ефективна легка багатомовна модель"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Потужна багатофункціональна модель"
-          mistral-mistral-large-latest: "Найпотужніша модель Mistral"
-          mistral-pixtral-large-latest: "Найпотужніша модель Mistral з функцією бачення"
-          open_router-x-ai-grok-4: "Найновіша модель xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "Найновіша модель міркувань DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "Високопродуктивна багатомовна модель"
-          groq-openai-gpt-oss-120b: "Найсучасніша відкрита модель від OpenAI"
-          groq-openai-gpt-oss-20b: "Легка, швидка, відкрита модель від OpenAI"
+          open_ai-gpt-5-nano: "Найшвидша та найекономічніша модель GPT-5"
         preseeded_model_description: "Попередньо налаштована модель з відкритим кодом, що використовує %{model}"
         configured:
           title: "Налаштовані LLM"
@@ -1021,6 +1047,31 @@ uk:
         topic:
           title: "Підсумок теми"
           close: "Закрити панель підсумків"
+          regenerate_ai_summaries: "Регенерувати підсумок ШІ"
+          regen_modal_description: "Виберіть, який тип зведення ШІ потрібно перегенерувати для цієї теми."
+          bulk_regen_description: "Виберіть, який тип резюме ШІ перегенерувати для вибраних тем."
+          regenerate_gists_option: "Короткі резюме (гісти)"
+          regenerate_summaries_option: "Підсумки тем"
+          regenerate_gists_success:
+            one: "Короткий підсумок успішно регенеровано"
+            few: "%{count} Коротких змістів успішно перегенеровано"
+            many: "%{count} Коротких змістів успішно перегенеровано"
+            other: "%{count} Коротких змістів успішно перегенеровано"
+          regenerate_gists_error:
+            one: "Не вдалося створити короткий зміст"
+            few: "Не вдалося створити %{count} коротких змісти"
+            many: "Не вдалося створити %{count} коротких змістів"
+            other: "Не вдалося створити %{count} коротких змістів"
+          regenerate_topic_summary_success:
+            one: "Короткий зміст теми успішно згенеровано"
+            few: "Короткий зміст %{count} тем успішно згенеровано"
+            many: "Короткий зміст %{count} тем успішно згенеровано"
+            other: "Короткий зміст %{count} тем успішно згенеровано"
+          regenerate_topic_summary_error:
+            one: "Не вдалося повторно створити короткий зміст теми"
+            few: "Не вдалося повторно створити короткий зміст %{count} тем"
+            many: "Не вдалося повторно створити короткий зміст %{count} тем"
+            other: "Не вдалося повторно створити короткий зміст %{count} тем"
         topic_list_layout:
           button:
             compact: "Компактний"
@@ -1043,3 +1094,9 @@ uk:
             disable: "Вимкнути"
       user_preferences:
         empty: "Наразі немає відповідних налаштувань"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Повідомлення з позначкою ШІ"
+        reviewable_ai_chat_message:
+          title: "Повідомлення чату з прапорцем ШІ"

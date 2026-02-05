@@ -38,8 +38,8 @@ de:
       others: "Keine akzeptierten Lösungen."
     filter:
       description:
-        solved: "Themen anzeigen, die gelöst wurden"
-        unsolved: "Themen anzeigen, die noch nicht gelöst wurden"
+        solved: "Themen anzeigen, die gelöst sind"
+        unsolved: "Themen anzeigen, die noch nicht gelöst sind"
   badges:
     solved_1:
       name: "Gelöst!"
