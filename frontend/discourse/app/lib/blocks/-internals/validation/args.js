@@ -16,6 +16,7 @@ import {
   raiseBlockError,
 } from "discourse/lib/blocks/-internals/error";
 import { formatWithSuggestion } from "discourse/lib/string-similarity";
+import RestModel from "discourse/models/rest";
 
 /**
  * Valid arg name pattern: must be a valid JavaScript identifier.
@@ -32,6 +33,7 @@ export const VALID_ARG_TYPES = Object.freeze([
   "number",
   "boolean",
   "array",
+  "object",
   "any",
 ]);
 
@@ -56,6 +58,8 @@ export const VALID_ARG_SCHEMA_PROPERTIES = Object.freeze([
   "max",
   "integer",
   "enum",
+  "properties",
+  "instanceOf",
 ]);
 
 /**
@@ -118,6 +122,16 @@ export const SCHEMA_PROPERTY_RULES = Object.freeze({
     // valueCheck handled separately (uses validateEnumArray)
     typeErrorSuffix: "array",
   },
+  properties: {
+    allowedTypes: ["object"],
+    // valueCheck handled separately (recursive schema validation)
+    typeErrorSuffix: "object",
+  },
+  instanceOf: {
+    allowedTypes: ["object"],
+    // valueCheck handled separately (function or "model:*" string)
+    typeErrorSuffix: "object",
+  },
 });
 
 /**
@@ -153,6 +167,45 @@ export function validateSchemaProperty(
   if (rule.valueCheck && !rule.valueCheck(argDef[prop])) {
     raiseBlockError(
       `${entityType} "${entityName}": arg "${argName}" has invalid "${prop}" value. ${rule.valueError}`
+    );
+  }
+}
+
+/**
+ * Validates that at most one of the specified schema properties is defined (mutually exclusive).
+ *
+ * @param {Object} argDef - The argument definition.
+ * @param {string[]} properties - Array of property names that are mutually exclusive.
+ * @param {string} argName - The argument name for error messages.
+ * @param {string} entityName - The entity name for error messages.
+ * @param {string} entityType - The entity type (e.g., "Block", "Condition").
+ * @param {Object} [options] - Optional configuration.
+ * @param {string} [options.argLabel="arg"] - Label for the argument (e.g., "arg", "childArgs arg").
+ * @param {string} [options.reason] - Custom reason message.
+ */
+export function validateMutuallyExclusive(
+  properties,
+  argDef,
+  argName,
+  entityName,
+  entityType,
+  options = {}
+) {
+  const definedProps = properties.filter((prop) => argDef[prop] !== undefined);
+
+  if (definedProps.length > 1) {
+    const argLabel = options.argLabel ?? "arg";
+    const reason =
+      options.reason ?? "These are mutually exclusive - use only one.";
+
+    // Format the list of conflicting properties
+    const propList =
+      definedProps.length === 2
+        ? `"${definedProps[0]}" and "${definedProps[1]}"`
+        : definedProps.map((p) => `"${p}"`).join(", ");
+
+    raiseBlockError(
+      `${entityType} "${entityName}": ${argLabel} "${argName}" has ${propList}. ${reason}`
     );
   }
 }
@@ -297,6 +350,63 @@ export function validateCommonSchemaProperties(
       entityName,
       entityType,
     });
+  }
+
+  // Validate properties schema for object types
+  if (argDef.type === "object" && argDef.properties !== undefined) {
+    if (
+      !argDef.properties ||
+      typeof argDef.properties !== "object" ||
+      Array.isArray(argDef.properties)
+    ) {
+      raiseBlockError(
+        `${entityType} "${entityName}": arg "${argName}" has invalid "properties" value. Must be an object.`
+      );
+    } else {
+      // Recursively validate each property schema
+      for (const [propName, propDef] of Object.entries(argDef.properties)) {
+        validateArgName(
+          propName,
+          entityName,
+          entityType,
+          `arg "${argName}" property`
+        );
+
+        // Validate the property definition recursively
+        const nestedArgName = `${argName}.properties.${propName}`;
+        validateArgSchemaEntry(propDef, nestedArgName, entityName, {
+          entityType,
+          validProperties: VALID_ARG_SCHEMA_PROPERTIES,
+          allowAnyType: false,
+          argLabel: "property",
+        });
+      }
+    }
+  }
+
+  // Validate instanceOf for object types
+  if (argDef.type === "object" && argDef.instanceOf !== undefined) {
+    // Check mutual exclusivity with properties
+    validateMutuallyExclusive(
+      ["instanceOf", "properties"],
+      argDef,
+      argName,
+      entityName,
+      entityType
+    );
+
+    // Validate instanceOf value: must be a function (constructor) or "model:*" string
+    const isFunction = typeof argDef.instanceOf === "function";
+    const isModelString =
+      typeof argDef.instanceOf === "string" &&
+      argDef.instanceOf.startsWith("model:");
+
+    if (!isFunction && !isModelString) {
+      raiseBlockError(
+        `${entityType} "${entityName}": arg "${argName}" has invalid "instanceOf" value. ` +
+          `Must be a class constructor or a "model:*" string (e.g., "model:user").`
+      );
+    }
   }
 
   // Validate required is boolean
@@ -456,6 +566,8 @@ export function formatArgError(argName, message, contextName, contextType) {
  * @param {string|null} [contextName=null] - Optional entity name for context.
  *   When provided, errors include context prefix.
  * @param {string|null} [contextType=null] - The entity type for error prefix (e.g., "Block", "Condition").
+ * @param {Object} [options={}] - Optional configuration.
+ * @param {Object} [options.owner] - Ember owner for registry lookups (used for "model:*" instanceOf).
  * @returns {string|null} Error message if validation fails, null otherwise.
  */
 export function validateArgValue(
@@ -463,7 +575,8 @@ export function validateArgValue(
   argSchema,
   argName,
   contextName = null,
-  contextType = null
+  contextType = null,
+  options = {}
 ) {
   const {
     type,
@@ -476,6 +589,7 @@ export function validateArgValue(
     max,
     integer,
     enum: enumValues,
+    instanceOf,
   } = argSchema;
 
   // Skip validation if value is undefined (handled by required check)
@@ -643,6 +757,112 @@ export function validateArgValue(
       }
       break;
 
+    case "object": {
+      // Check for plain object (not array, null, or other types)
+      // Note: For instanceOf validation, we allow non-plain objects (class instances)
+      if (!instanceOf) {
+        if (
+          value === null ||
+          typeof value !== "object" ||
+          Array.isArray(value)
+        ) {
+          let actualType;
+          if (value === null) {
+            actualType = "null";
+          } else if (Array.isArray(value)) {
+            actualType = "array";
+          } else {
+            actualType = typeof value;
+          }
+          return formatArgError(
+            argName,
+            `must be an object, got ${actualType}.`,
+            contextName,
+            contextType
+          );
+        }
+      }
+
+      // Validate instanceOf if specified
+      if (instanceOf) {
+        if (typeof instanceOf === "function") {
+          // Direct class reference
+          if (!(value instanceof instanceOf)) {
+            const expectedName = instanceOf.name || "specified class";
+            return formatArgError(
+              argName,
+              `must be an instance of ${expectedName}.`,
+              contextName,
+              contextType
+            );
+          }
+        } else if (typeof instanceOf === "string") {
+          // Model string format: "model:user"
+          const modelType = instanceOf.replace(/^model:/, "");
+          const { owner } = options;
+
+          // Try to look up the model class via registry
+          const klass = owner?.factoryFor?.(`model:${modelType}`)?.class;
+          if (klass && klass !== RestModel) {
+            // Specific model class exists, use instanceof
+            if (!(value instanceof klass)) {
+              return formatArgError(
+                argName,
+                `must be an instance of ${modelType} model.`,
+                contextName,
+                contextType
+              );
+            }
+          } else {
+            // No specific class or RestModel fallback, check RestModel + __type
+            if (!(value instanceof RestModel) || value.__type !== modelType) {
+              return formatArgError(
+                argName,
+                `must be an instance of ${modelType} model.`,
+                contextName,
+                contextType
+              );
+            }
+          }
+        }
+      }
+
+      // Validate properties if schema is defined
+      if (argSchema.properties) {
+        for (const [propName, propDef] of Object.entries(
+          argSchema.properties
+        )) {
+          const propValue = value[propName];
+
+          // Check required properties
+          if (propDef.required && propValue === undefined) {
+            return formatArgError(
+              `${argName}.${propName}`,
+              `is required.`,
+              contextName,
+              contextType
+            );
+          }
+
+          // Recursively validate property value
+          if (propValue !== undefined) {
+            const propError = validateArgValue(
+              propValue,
+              propDef,
+              `${argName}.${propName}`,
+              contextName,
+              contextType,
+              options
+            );
+            if (propError) {
+              return propError;
+            }
+          }
+        }
+      }
+      break;
+    }
+
     case "any":
       // Any value is valid, no type checking needed
       break;
@@ -725,9 +945,16 @@ export function validateArrayItemType(
  * @param {Object} providedArgs - The arguments to validate.
  * @param {Object} schema - The schema to validate against.
  * @param {string} pathPrefix - Prefix for error paths (e.g., "args" or "containerArgs").
+ * @param {Object} [options={}] - Optional configuration.
+ * @param {Object} [options.owner] - Ember owner for registry lookups (used for "model:*" instanceOf).
  * @throws {BlockError} If validation fails.
  */
-export function validateArgsAgainstSchema(providedArgs, schema, pathPrefix) {
+export function validateArgsAgainstSchema(
+  providedArgs,
+  schema,
+  pathPrefix,
+  options = {}
+) {
   // 1. Check for unknown args FIRST (catches typos before missing required)
   const declaredArgs = Object.keys(schema);
   for (const argName of Object.keys(providedArgs)) {
@@ -752,7 +979,14 @@ export function validateArgsAgainstSchema(providedArgs, schema, pathPrefix) {
 
     // 3. Validate type if value is provided
     if (value !== undefined) {
-      const typeError = validateArgValue(value, argDef, argName);
+      const typeError = validateArgValue(
+        value,
+        argDef,
+        argName,
+        null,
+        null,
+        options
+      );
       if (typeError) {
         throw new BlockError(typeError, { path: `${pathPrefix}.${argName}` });
       }

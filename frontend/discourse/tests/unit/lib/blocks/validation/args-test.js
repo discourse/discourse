@@ -690,6 +690,249 @@ module("Unit | Lib | blocks/validation/args", function () {
         /invalid default value.*must be one of/
       );
     });
+
+    test("accepts object type without properties", function (assert) {
+      const schema = {
+        metadata: { type: "object" },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts object type with properties schema", function (assert) {
+      const schema = {
+        user: {
+          type: "object",
+          properties: {
+            name: { type: "string", required: true },
+            age: { type: "number" },
+          },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts nested object properties", function (assert) {
+      const schema = {
+        data: {
+          type: "object",
+          properties: {
+            user: {
+              type: "object",
+              properties: {
+                name: { type: "string" },
+              },
+            },
+          },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for properties on non-object type", function (assert) {
+      const schema = {
+        title: { type: "string", properties: { foo: { type: "string" } } },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "properties" but type is "string".*only valid for object type/
+      );
+    });
+
+    test("throws for non-object properties value", function (assert) {
+      const schema = {
+        data: { type: "object", properties: "invalid" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "properties" value.*Must be an object/
+      );
+    });
+
+    test("throws for array properties value", function (assert) {
+      const schema = {
+        data: { type: "object", properties: [{ type: "string" }] },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "properties" value.*Must be an object/
+      );
+    });
+
+    test("throws for invalid property name in properties", function (assert) {
+      const schema = {
+        data: {
+          type: "object",
+          properties: {
+            "123invalid": { type: "string" },
+          },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /property name "123invalid" is invalid/
+      );
+    });
+
+    test("throws for invalid property schema within properties", function (assert) {
+      const schema = {
+        data: {
+          type: "object",
+          properties: {
+            name: { type: "invalid" },
+          },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid type "invalid"/
+      );
+    });
+
+    test("accepts valid default object value", function (assert) {
+      const schema = {
+        config: {
+          type: "object",
+          default: { key: "value" },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts valid default object with properties validation", function (assert) {
+      const schema = {
+        user: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+            age: { type: "number" },
+          },
+          default: { name: "John", age: 30 },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for default object with invalid property type", function (assert) {
+      const schema = {
+        user: {
+          type: "object",
+          properties: {
+            name: { type: "string" },
+          },
+          default: { name: 123 },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be a string/
+      );
+    });
+
+    test("throws for non-object default value on object type", function (assert) {
+      const schema = {
+        config: { type: "object", default: "invalid" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid default value.*must be an object/
+      );
+    });
+
+    test("accepts instanceOf with function (class constructor)", function (assert) {
+      class MyClass {}
+      const schema = {
+        data: { type: "object", instanceOf: MyClass },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("accepts instanceOf with model string", function (assert) {
+      const schema = {
+        user: { type: "object", instanceOf: "model:user" },
+      };
+
+      assert.strictEqual(
+        validateArgsSchema(schema, "test-block"),
+        undefined,
+        "no error thrown"
+      );
+    });
+
+    test("throws for instanceOf on non-object type", function (assert) {
+      class MyClass {}
+      const schema = {
+        data: { type: "string", instanceOf: MyClass },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "instanceOf" but type is "string".*only valid for object type/
+      );
+    });
+
+    test("throws for instanceOf with invalid string format", function (assert) {
+      const schema = {
+        data: { type: "object", instanceOf: "invalid-format" },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /invalid "instanceOf" value.*Must be a class constructor or a "model:\*" string/
+      );
+    });
+
+    test("throws for both instanceOf and properties together", function (assert) {
+      class MyClass {}
+      const schema = {
+        data: {
+          type: "object",
+          instanceOf: MyClass,
+          properties: { name: { type: "string" } },
+        },
+      };
+
+      assert.throws(
+        () => validateArgsSchema(schema, "test-block"),
+        /has "instanceOf" and "properties".*mutually exclusive/
+      );
+    });
   });
 
   module("validateArgValue", function () {
@@ -1180,6 +1423,282 @@ module("Unit | Lib | blocks/validation/args", function () {
       assert.true(
         result?.includes('did you mean "home"'),
         "suggests closest match for typo"
+      );
+    });
+
+    test("validates object type - valid plain object", function (assert) {
+      assert.strictEqual(
+        validateArgValue(
+          { key: "value" },
+          { type: "object" },
+          "data",
+          "test-block"
+        ),
+        null
+      );
+    });
+
+    test("validates object type - rejects null", function (assert) {
+      assert.true(
+        validateArgValue(
+          null,
+          { type: "object" },
+          "data",
+          "test-block"
+        )?.includes("must be an object, got null")
+      );
+    });
+
+    test("validates object type - rejects array", function (assert) {
+      assert.true(
+        validateArgValue(
+          [],
+          { type: "object" },
+          "data",
+          "test-block"
+        )?.includes("must be an object, got array")
+      );
+    });
+
+    test("validates object type - rejects string", function (assert) {
+      assert.true(
+        validateArgValue(
+          "string",
+          { type: "object" },
+          "data",
+          "test-block"
+        )?.includes("must be an object, got string")
+      );
+    });
+
+    test("validates object type - rejects number", function (assert) {
+      assert.true(
+        validateArgValue(
+          123,
+          { type: "object" },
+          "data",
+          "test-block"
+        )?.includes("must be an object, got number")
+      );
+    });
+
+    test("validates object with properties schema - valid object", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+          age: { type: "number" },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgValue(
+          { name: "John", age: 30 },
+          schema,
+          "user",
+          "test-block"
+        ),
+        null
+      );
+    });
+
+    test("validates object with properties schema - allows extra properties", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgValue(
+          { name: "John", extra: "allowed" },
+          schema,
+          "user",
+          "test-block"
+        ),
+        null,
+        "extra properties not in schema are allowed"
+      );
+    });
+
+    test("validates object with properties schema - missing required property", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          name: { type: "string", required: true },
+        },
+      };
+
+      assert.true(
+        validateArgValue({}, schema, "user", "test-block")?.includes(
+          '"user.name" is required'
+        )
+      );
+    });
+
+    test("validates object with properties schema - invalid property type", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          name: { type: "string" },
+        },
+      };
+
+      assert.true(
+        validateArgValue({ name: 123 }, schema, "user", "test-block")?.includes(
+          '"user.name" must be a string'
+        )
+      );
+    });
+
+    test("validates nested object properties", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          address: {
+            type: "object",
+            properties: {
+              city: { type: "string", required: true },
+            },
+          },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgValue(
+          { address: { city: "NYC" } },
+          schema,
+          "user",
+          "test-block"
+        ),
+        null,
+        "valid nested object passes"
+      );
+
+      assert.true(
+        validateArgValue(
+          { address: {} },
+          schema,
+          "user",
+          "test-block"
+        )?.includes('"user.address.city" is required'),
+        "missing nested required property fails"
+      );
+
+      assert.true(
+        validateArgValue(
+          { address: { city: 123 } },
+          schema,
+          "user",
+          "test-block"
+        )?.includes('"user.address.city" must be a string'),
+        "invalid nested property type fails"
+      );
+    });
+
+    test("validates object property with array type", function (assert) {
+      const schema = {
+        type: "object",
+        properties: {
+          tags: { type: "array", itemType: "string" },
+        },
+      };
+
+      assert.strictEqual(
+        validateArgValue({ tags: ["a", "b"] }, schema, "data", "test-block"),
+        null,
+        "valid array property passes"
+      );
+
+      assert.true(
+        validateArgValue(
+          { tags: "invalid" },
+          schema,
+          "data",
+          "test-block"
+        )?.includes('"data.tags" must be an array'),
+        "non-array value for array property fails"
+      );
+    });
+
+    test("validates instanceOf with direct class reference - valid", function (assert) {
+      class MyClass {}
+      const instance = new MyClass();
+      const schema = { type: "object", instanceOf: MyClass };
+
+      assert.strictEqual(
+        validateArgValue(instance, schema, "data", "test-block"),
+        null,
+        "valid instance passes"
+      );
+    });
+
+    test("validates instanceOf with direct class reference - invalid", function (assert) {
+      class MyClass {}
+      class OtherClass {}
+      const instance = new OtherClass();
+      const schema = { type: "object", instanceOf: MyClass };
+
+      assert.true(
+        validateArgValue(instance, schema, "data", "test-block")?.includes(
+          "must be an instance of MyClass"
+        ),
+        "wrong instance type fails"
+      );
+    });
+
+    test("validates instanceOf with direct class reference - plain object fails", function (assert) {
+      class MyClass {}
+      const schema = { type: "object", instanceOf: MyClass };
+
+      assert.true(
+        validateArgValue({}, schema, "data", "test-block")?.includes(
+          "must be an instance of MyClass"
+        ),
+        "plain object fails instanceOf check"
+      );
+    });
+
+    test("validates instanceOf with model string - valid RestModel with __type", function (assert) {
+      // Create a mock that passes instanceof RestModel check
+      const RestModel = require("discourse/models/rest").default;
+      const mockModel = Object.create(RestModel.prototype);
+      mockModel.__type = "user";
+
+      const schema = { type: "object", instanceOf: "model:user" };
+
+      assert.strictEqual(
+        validateArgValue(mockModel, schema, "data", "test-block"),
+        null,
+        "RestModel instance with matching __type passes"
+      );
+    });
+
+    test("validates instanceOf with model string - wrong __type fails", function (assert) {
+      const RestModel = require("discourse/models/rest").default;
+      const mockModel = Object.create(RestModel.prototype);
+      mockModel.__type = "post";
+
+      const schema = { type: "object", instanceOf: "model:user" };
+
+      assert.true(
+        validateArgValue(mockModel, schema, "data", "test-block")?.includes(
+          "must be an instance of user model"
+        ),
+        "RestModel with wrong __type fails"
+      );
+    });
+
+    test("validates instanceOf with model string - plain object fails", function (assert) {
+      const plainObject = { __type: "user", name: "test" };
+      const schema = { type: "object", instanceOf: "model:user" };
+
+      assert.true(
+        validateArgValue(plainObject, schema, "data", "test-block")?.includes(
+          "must be an instance of user model"
+        ),
+        "plain object fails even with matching __type"
       );
     });
   });

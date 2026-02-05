@@ -49,6 +49,8 @@ function validateBlockDefaultValue(
   blockName,
   argLabel = "arg"
 ) {
+  // Check for required + default contradiction (value-based, not presence-based)
+  // An arg with required: false + default is valid, so we check required === true
   if (argDef.required === true && argDef.default !== undefined) {
     raiseBlockError(
       `Block "${blockName}": ${argLabel} "${argName}" has both "required: true" and "default". ` +
@@ -109,9 +111,11 @@ export function validateArgsSchema(argsSchema, blockName) {
  *
  * @param {Object} entry - The block entry.
  * @param {Object} blockClass - The resolved block class (must be a class, not a string reference).
+ * @param {Object} [options={}] - Optional configuration.
+ * @param {Object} [options.owner] - Ember owner for registry lookups (used for "model:*" instanceOf).
  * @throws {BlockError} If args are invalid.
  */
-export function validateBlockArgs(entry, blockClass) {
+export function validateBlockArgs(entry, blockClass, options = {}) {
   const metadata = getBlockMetadata(blockClass);
   const providedArgs = entry.args || {};
   const hasProvidedArgs = Object.keys(providedArgs).length > 0;
@@ -132,7 +136,7 @@ export function validateBlockArgs(entry, blockClass) {
     return;
   }
 
-  validateArgsAgainstSchema(providedArgs, argsSchema, "args");
+  validateArgsAgainstSchema(providedArgs, argsSchema, "args", options);
 }
 
 /**

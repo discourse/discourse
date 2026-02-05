@@ -14,6 +14,7 @@
  */
 
 import { DEBUG } from "@glimmer/env";
+import { getOwner } from "@ember/owner";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import {
   BlockError,
@@ -907,8 +908,9 @@ export async function validateEntry(
     errorPrefix,
     baseContext
   );
+  const owner = blocksService ? getOwner(blocksService) : null;
   wrapValidationError(
-    () => validateBlockArgs(entry, resolvedBlock),
+    () => validateBlockArgs(entry, resolvedBlock, { owner }),
     errorPrefix,
     baseContext
   );
