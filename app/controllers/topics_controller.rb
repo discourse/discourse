@@ -904,6 +904,8 @@ class TopicsController < ApplicationController
     hijack(info: "merging topic #{topic_id.inspect} into #{destination_topic_id.inspect}") do
       destination_topic = topic.move_posts(acting_user, topic.posts.pluck(:id), args)
       render_topic_changes(destination_topic)
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => ex
+      render_json_error(ex)
     end
   end
 
