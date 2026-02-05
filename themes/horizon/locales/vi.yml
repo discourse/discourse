@@ -6,7 +6,10 @@
 
 vi:
   solved: "Giải pháp"
+  unsolved: "Chưa có giải pháp"
   posted: "ngày đăng"
+  by_username: "bởi @%{username}"
+  replied: "đã trả lời"
   vote_count:
     other: "%{count} lượt bình chọn"
   like_count:
@@ -15,3 +18,6 @@ vi:
     other: "%{count} trả lời"
   theme_metadata:
     description: "Một giao diện đơn giản, đẹp mắt giúp cải thiện trải nghiệm mặc định cho các trang web Discourse."
+    settings:
+      topic_card_high_context:
+        description: "Khi được kích hoạt, hiển thị thêm thông tin chi tiết trên thẻ chủ đề, bao gồm thẻ, trích dẫn, trạng thái đã giải quyết, người dùng được giao và số lượt bình chọn (thử nghiệm)."
