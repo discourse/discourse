@@ -162,29 +162,6 @@
     box-shadow: 0 0 12px 1px var(--topic-card-shadow);
   }
 
-  &.excerpt-expanded {
-    @include viewport.until(sm) {
-      .topic-excerpt,
-      .link-bottom-line {
-        display: none;
-      }
-    }
-
-    @include viewport.from(sm) {
-      grid-template-areas:
-        "creator title title title status"
-        ". category activity activity . "
-        ". excerpt excerpt excerpt excerpt";
-
-      &.--has-replies {
-        grid-template-areas:
-          "creator title title title status"
-          ". category likes-replies activity ."
-          ". excerpt excerpt excerpt excerpt";
-      }
-    }
-  }
-
   .bulk-select-enabled & {
     grid-template-areas:
       "bulk-select creator title title title status"
@@ -542,20 +519,6 @@
       }
     }
 
-    &.excerpt-expanded {
-      grid-template-areas:
-        "creator title title title dropdown"
-        "category category activity . . "
-        "excerpt excerpt excerpt excerpt excerpt";
-
-      @include viewport.until(sm) {
-        grid-template-areas:
-          "title title title title dropdown"
-          "category category activity activity . "
-          "excerpt excerpt excerpt excerpt excerpt";
-      }
-    }
-
     &.has-metadata {
       grid-template-areas:
         "creator title title title dropdown"
@@ -566,21 +529,6 @@
           "metadata metadata metadata metadata dropdown"
           "title title title title ."
           "category category activity activity . ";
-      }
-
-      &.excerpt-expanded {
-        grid-template-areas:
-          "creator title title title dropdown"
-          "category category activity metadata . "
-          "excerpt excerpt excerpt excerpt excerpt";
-
-        @include viewport.until(sm) {
-          grid-template-areas:
-            "metadata metadata metadata metadata dropdown"
-            "title title title title ."
-            "category category activity activity . "
-            "excerpt excerpt excerpt excerpt excerpt";
-        }
       }
     }
 
