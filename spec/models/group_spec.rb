@@ -1532,6 +1532,24 @@ RSpec.describe Group do
     end
   end
 
+  describe ".smtp_ssl_modes" do
+    it "returns the correct enum values" do
+      expect(Group.smtp_ssl_modes[:none]).to eq(0)
+      expect(Group.smtp_ssl_modes[:ssl_tls]).to eq(1)
+      expect(Group.smtp_ssl_modes[:starttls]).to eq(2)
+    end
+
+    it "uses its own instance variable and does not overwrite @visibility_levels" do
+      Group.visibility_levels
+      Group.smtp_ssl_modes
+
+      expect(Group.instance_variable_get(:@smtp_ssl_modes)[:none]).to eq(0)
+      expect(Group.instance_variable_get(:@smtp_ssl_modes)[:starttls]).to eq(2)
+      expect(Group.instance_variable_get(:@visibility_levels)[:public]).to eq(0)
+      expect(Group.instance_variable_get(:@visibility_levels)[:owners]).to eq(4)
+    end
+  end
+
   describe "email setting changes" do
     it "enables smtp and records the change" do
       group.update(
