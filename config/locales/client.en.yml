@@ -5850,6 +5850,7 @@ en:
         no_changes_to_save: "No changes to save"
         select_groups: "Select groups…"
         opt_in_groups: "Opt-in groups"
+        show_related_settings: "Show related settings..."
         opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
         enabled_for_throttle: "You have modified who this change is enabled for too quickly. Please wait a few seconds before trying again."
         change_enabled_for_success: "You have enabled this change for %{enabledFor}"

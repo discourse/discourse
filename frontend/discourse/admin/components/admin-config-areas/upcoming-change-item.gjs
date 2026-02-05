@@ -18,10 +18,11 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
+import getUrl from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import lightbox from "discourse/lib/lightbox";
 import Group from "discourse/models/group";
-import { eq } from "discourse/truth-helpers";
+import { and, eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeItem extends Component {
@@ -384,9 +385,25 @@ export default class UpcomingChangeItem extends Component {
         >
           {{#each this.enabledForOptions as |option|}}
             <select.Option @value={{option.value}}>
-              {{option.label}}</select.Option>
+              {{option.label}}
+            </select.Option>
           {{/each}}
         </DSelect>
+
+        {{#if (and @change.dependents (eq this.bufferedEnabledFor "everyone"))}}
+          <div class="upcoming-change__dependents">
+            <a
+              href={{getUrl
+                (concat
+                  "/admin/site_settings/category/all_results?dependsOn="
+                  @change.setting
+                )
+              }}
+            >
+              {{i18n "admin.upcoming_changes.show_related_settings"}}
+            </a>
+          </div>
+        {{/if}}
 
         {{#if (eq this.bufferedEnabledFor "groups")}}
           <div class="upcoming-change__group-selection-wrapper">
