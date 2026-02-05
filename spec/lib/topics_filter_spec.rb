@@ -1492,6 +1492,31 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
         end
       end
+
+      describe "when query string contains multiple tags with underscores" do
+        before do
+          tag.update!(name: "tag_one")
+          tag2.update!(name: "tag_two")
+        end
+
+        it "should return topics when filtering with comma-separated underscore tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:tag_one,tag_two")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
+        end
+
+        it "should return topics when filtering with plus-separated underscore tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:tag_one+tag_two")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag_and_tag2.id)
+        end
+      end
     end
 
     describe "when filtering by tag_groups" do
