@@ -266,7 +266,7 @@ export default class UpsertCategoryGeneral extends Component {
 
   @action
   onStyleTypeChange(value) {
-    this.args.form.setProperties({ style_type: value });
+    this.args.form.set("style_type", value);
   }
 
   @action
