@@ -135,7 +135,18 @@ class TagGroupsController < ApplicationController
       )
 
     if result[:tags].present?
-      result[:tag_ids] = result[:tags].map { |t| t["id"] }
+      existing_tags, new_tags = result[:tags].partition { |t| t["id"].present? }
+      tag_ids = existing_tags.map { |t| t["id"].to_i }
+
+      if new_tags.present?
+        new_tag_names = new_tags.map { |t| DiscourseTagging.clean_tag(t["name"]) }.reject(&:blank?)
+        new_tag_names.each do |name|
+          tag = Tag.find_by_name(name) || Tag.create!(name: name)
+          tag_ids << tag.id
+        end
+      end
+
+      result[:tag_ids] = tag_ids
     elsif result[:tag_names].present?
       Discourse.deprecate(
         "the tag_names param is deprecated, use tags instead",
@@ -148,7 +159,14 @@ class TagGroupsController < ApplicationController
     result.delete(:tags)
 
     if result[:parent_tag].present?
-      result[:parent_tag_id] = result[:parent_tag].first&.dig("id")
+      parent_tag_data = result[:parent_tag].first
+      if parent_tag_data&.dig("id").present?
+        result[:parent_tag_id] = parent_tag_data["id"]
+      elsif parent_tag_data&.dig("name").present?
+        name = DiscourseTagging.clean_tag(parent_tag_data["name"])
+        tag = Tag.find_by_name(name) || Tag.create!(name: name)
+        result[:parent_tag_id] = tag.id
+      end
     elsif result[:parent_tag_name].present?
       Discourse.deprecate(
         "the parent_tag_name param is deprecated, use parent_tag instead",
