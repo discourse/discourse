@@ -8,7 +8,6 @@
   "files": [
     "declarations",
     "external-types",
-    "external-types.d.ts",
     "tsconfig-plugin.json"
   ],
   "scripts": {
@@ -18,9 +17,6 @@
   },
   "exports": {
     "./tsconfig-plugin": "./tsconfig-plugin.json",
-    "./external-types": {
-      "types": "./external-types.d.ts"
-    },
     "./tests/*": {
       "types": "./declarations/tests/*.d.ts"
     },
