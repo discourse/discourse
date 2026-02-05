@@ -958,7 +958,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           { type: "string" },
           "title",
           "test-block"
-        )?.includes("must be a string")
+        )?.message.includes("must be a string")
       );
     });
 
@@ -981,7 +981,7 @@ module("Unit | Lib | blocks/validation/args", function () {
         "name",
         "test-block"
       );
-      assert.true(result?.includes("does not match required pattern"));
+      assert.true(result?.message.includes("does not match required pattern"));
     });
 
     test("validates string with minLength constraint", function (assert) {
@@ -1000,7 +1000,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArgValue("ab", schema, "title", "test-block")?.includes(
+        validateArgValue("ab", schema, "title", "test-block")?.message.includes(
           "must be at least 3 characters"
         ),
         "below minLength fails"
@@ -1023,9 +1023,12 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArgValue("abcdef", schema, "title", "test-block")?.includes(
-          "must be at most 5 characters"
-        ),
+        validateArgValue(
+          "abcdef",
+          schema,
+          "title",
+          "test-block"
+        )?.message.includes("must be at most 5 characters"),
         "above maxLength fails"
       );
     });
@@ -1046,9 +1049,12 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArgValue("huge", schema, "size", "test-block")?.includes(
-          'must be one of: "small", "medium", "large"'
-        ),
+        validateArgValue(
+          "huge",
+          schema,
+          "size",
+          "test-block"
+        )?.message.includes('must be one of: "small", "medium", "large"'),
         "invalid enum value fails"
       );
     });
@@ -1059,7 +1065,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       const result = validateArgValue("small", schema, "min", "test-block");
 
       assert.true(
-        result?.includes('did you mean "sm"'),
+        result?.message.includes('did you mean "sm"'),
         "suggests closest match for typo"
       );
     });
@@ -1076,7 +1082,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           { type: "number" },
           "count",
           "test-block"
-        )?.includes("must be a number")
+        )?.message.includes("must be a number")
       );
 
       assert.true(
@@ -1085,7 +1091,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           { type: "number" },
           "count",
           "test-block"
-        )?.includes("must be a number")
+        )?.message.includes("must be a number")
       );
     });
 
@@ -1105,7 +1111,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArgValue(-1, schema, "count", "test-block")?.includes(
+        validateArgValue(-1, schema, "count", "test-block")?.message.includes(
           "must be at least 0"
         ),
         "below min fails"
@@ -1128,7 +1134,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArgValue(101, schema, "count", "test-block")?.includes(
+        validateArgValue(101, schema, "count", "test-block")?.message.includes(
           "must be at most 100"
         ),
         "above max fails"
@@ -1157,7 +1163,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArgValue(3.14, schema, "count", "test-block")?.includes(
+        validateArgValue(3.14, schema, "count", "test-block")?.message.includes(
           "must be an integer"
         ),
         "float fails"
@@ -1174,21 +1180,21 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArgValue(0, schema, "page", "test-block")?.includes(
+        validateArgValue(0, schema, "page", "test-block")?.message.includes(
           "must be at least 1"
         ),
         "below min fails"
       );
 
       assert.true(
-        validateArgValue(11, schema, "page", "test-block")?.includes(
+        validateArgValue(11, schema, "page", "test-block")?.message.includes(
           "must be at most 10"
         ),
         "above max fails"
       );
 
       assert.true(
-        validateArgValue(5.5, schema, "page", "test-block")?.includes(
+        validateArgValue(5.5, schema, "page", "test-block")?.message.includes(
           "must be an integer"
         ),
         "non-integer fails"
@@ -1211,7 +1217,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArgValue(4, schema, "priority", "test-block")?.includes(
+        validateArgValue(4, schema, "priority", "test-block")?.message.includes(
           "must be one of: 1, 2, 3, 5, 8"
         ),
         "invalid enum value fails"
@@ -1230,7 +1236,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           { type: "boolean" },
           "enabled",
           "test-block"
-        )?.includes("must be a boolean")
+        )?.message.includes("must be a boolean")
       );
     });
 
@@ -1246,7 +1252,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           { type: "array" },
           "tags",
           "test-block"
-        )?.includes("must be an array")
+        )?.message.includes("must be an array")
       );
     });
 
@@ -1267,7 +1273,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           { type: "array", itemType: "string" },
           "tags",
           "test-block"
-        )?.includes("must be a string")
+        )?.message.includes("must be a string")
       );
     });
 
@@ -1287,7 +1293,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArgValue(["a"], schema, "tags", "test-block")?.includes(
+        validateArgValue(["a"], schema, "tags", "test-block")?.message.includes(
           "must have at least 2 items"
         ),
         "below minLength fails"
@@ -1315,7 +1321,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           schema,
           "tags",
           "test-block"
-        )?.includes("must have at most 3 items"),
+        )?.message.includes("must have at most 3 items"),
         "above maxLength fails"
       );
     });
@@ -1335,7 +1341,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArgValue([], schema, "tags", "test-block")?.includes(
+        validateArgValue([], schema, "tags", "test-block")?.message.includes(
           "must have at least 1 items"
         ),
         "empty array fails"
@@ -1347,7 +1353,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           schema,
           "tags",
           "test-block"
-        )?.includes("must have at most 5 items"),
+        )?.message.includes("must have at most 5 items"),
         "too many items fails"
       );
 
@@ -1357,7 +1363,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           schema,
           "tags",
           "test-block"
-        )?.includes("must be a string"),
+        )?.message.includes("must be a string"),
         "wrong item type fails"
       );
     });
@@ -1397,11 +1403,11 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        result?.includes('pages[1]" must be one of'),
+        result?.message.includes('pages[1]" must be one of'),
         "error includes indexed arg name"
       );
       assert.true(
-        result?.includes('"home", "topic", "category", "user"'),
+        result?.message.includes('"home", "topic", "category", "user"'),
         "error lists valid values"
       );
     });
@@ -1421,7 +1427,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        result?.includes('did you mean "home"'),
+        result?.message.includes('did you mean "home"'),
         "suggests closest match for typo"
       );
     });
@@ -1445,7 +1451,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           { type: "object" },
           "data",
           "test-block"
-        )?.includes("must be an object, got null")
+        )?.message.includes("must be an object, got null")
       );
     });
 
@@ -1456,7 +1462,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           { type: "object" },
           "data",
           "test-block"
-        )?.includes("must be an object, got array")
+        )?.message.includes("must be an object, got array")
       );
     });
 
@@ -1467,7 +1473,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           { type: "object" },
           "data",
           "test-block"
-        )?.includes("must be an object, got string")
+        )?.message.includes("must be an object, got string")
       );
     });
 
@@ -1478,7 +1484,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           { type: "object" },
           "data",
           "test-block"
-        )?.includes("must be an object, got number")
+        )?.message.includes("must be an object, got number")
       );
     });
 
@@ -1531,7 +1537,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       };
 
       assert.true(
-        validateArgValue({}, schema, "user", "test-block")?.includes(
+        validateArgValue({}, schema, "user", "test-block")?.message.includes(
           '"user.name" is required'
         )
       );
@@ -1546,9 +1552,12 @@ module("Unit | Lib | blocks/validation/args", function () {
       };
 
       assert.true(
-        validateArgValue({ name: 123 }, schema, "user", "test-block")?.includes(
-          '"user.name" must be a string'
-        )
+        validateArgValue(
+          { name: 123 },
+          schema,
+          "user",
+          "test-block"
+        )?.message.includes('"user.name" must be a string')
       );
     });
 
@@ -1582,7 +1591,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           schema,
           "user",
           "test-block"
-        )?.includes('"user.address.city" is required'),
+        )?.message.includes('"user.address.city" is required'),
         "missing nested required property fails"
       );
 
@@ -1592,7 +1601,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           schema,
           "user",
           "test-block"
-        )?.includes('"user.address.city" must be a string'),
+        )?.message.includes('"user.address.city" must be a string'),
         "invalid nested property type fails"
       );
     });
@@ -1617,7 +1626,7 @@ module("Unit | Lib | blocks/validation/args", function () {
           schema,
           "data",
           "test-block"
-        )?.includes('"data.tags" must be an array'),
+        )?.message.includes('"data.tags" must be an array'),
         "non-array value for array property fails"
       );
     });
@@ -1641,9 +1650,12 @@ module("Unit | Lib | blocks/validation/args", function () {
       const schema = { type: "object", instanceOf: MyClass };
 
       assert.true(
-        validateArgValue(instance, schema, "data", "test-block")?.includes(
-          "must be an instance of MyClass"
-        ),
+        validateArgValue(
+          instance,
+          schema,
+          "data",
+          "test-block"
+        )?.message.includes("must be an instance of MyClass"),
         "wrong instance type fails"
       );
     });
@@ -1653,7 +1665,7 @@ module("Unit | Lib | blocks/validation/args", function () {
       const schema = { type: "object", instanceOf: MyClass };
 
       assert.true(
-        validateArgValue({}, schema, "data", "test-block")?.includes(
+        validateArgValue({}, schema, "data", "test-block")?.message.includes(
           "must be an instance of MyClass"
         ),
         "plain object fails instanceOf check"
@@ -1683,9 +1695,12 @@ module("Unit | Lib | blocks/validation/args", function () {
       const schema = { type: "object", instanceOf: "model:user" };
 
       assert.true(
-        validateArgValue(mockModel, schema, "data", "test-block")?.includes(
-          "must be an instance of user model"
-        ),
+        validateArgValue(
+          mockModel,
+          schema,
+          "data",
+          "test-block"
+        )?.message.includes("must be an instance of user model"),
         "RestModel with wrong __type fails"
       );
     });
@@ -1695,9 +1710,12 @@ module("Unit | Lib | blocks/validation/args", function () {
       const schema = { type: "object", instanceOf: "model:user" };
 
       assert.true(
-        validateArgValue(plainObject, schema, "data", "test-block")?.includes(
-          "must be an instance of user model"
-        ),
+        validateArgValue(
+          plainObject,
+          schema,
+          "data",
+          "test-block"
+        )?.message.includes("must be an instance of user model"),
         "plain object fails even with matching __type"
       );
     });
@@ -1711,9 +1729,13 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArrayItemType(123, "string", "tags", 0, "test-block")?.includes(
-          'tags[0]" must be a string'
-        )
+        validateArrayItemType(
+          123,
+          "string",
+          "tags",
+          0,
+          "test-block"
+        )?.message.includes('tags[0]" must be a string')
       );
     });
 
@@ -1724,9 +1746,13 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArrayItemType("42", "number", "ids", 1, "test-block")?.includes(
-          'ids[1]" must be a number'
-        )
+        validateArrayItemType(
+          "42",
+          "number",
+          "ids",
+          1,
+          "test-block"
+        )?.message.includes('ids[1]" must be a number')
       );
     });
 
@@ -1737,9 +1763,13 @@ module("Unit | Lib | blocks/validation/args", function () {
       );
 
       assert.true(
-        validateArrayItemType(1, "boolean", "flags", 2, "test-block")?.includes(
-          'flags[2]" must be a boolean'
-        )
+        validateArrayItemType(
+          1,
+          "boolean",
+          "flags",
+          2,
+          "test-block"
+        )?.message.includes('flags[2]" must be a boolean')
       );
     });
   });
@@ -1892,6 +1922,36 @@ module("Unit | Lib | blocks/validation/args", function () {
           "error should suggest the correct arg name"
         );
         assert.strictEqual(error.path, "args.nam");
+      }
+    });
+
+    test("validates nested object arg with correct error path", function (assert) {
+      @block("nested-object-block", {
+        args: {
+          user: {
+            type: "object",
+            properties: {
+              name: { type: "string" },
+            },
+          },
+        },
+      })
+      class NestedObjectBlock extends Component {}
+
+      try {
+        validateBlockArgs({ args: { user: { name: 123 } } }, NestedObjectBlock);
+        assert.ok(false, "should have thrown");
+      } catch (error) {
+        assert.true(error instanceof BlockError, "should be BlockError");
+        assert.true(
+          error.message.includes("must be a string"),
+          `message should mention type error, got: ${error.message}`
+        );
+        assert.strictEqual(
+          error.path,
+          "args.user.name",
+          "error path should include nested property"
+        );
       }
     });
   });

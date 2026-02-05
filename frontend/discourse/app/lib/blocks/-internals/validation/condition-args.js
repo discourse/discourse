@@ -54,12 +54,18 @@ export function validateConditionArgsSchema(argsSchema, conditionType) {
   }
 
   for (const [argName, argDef] of Object.entries(argsSchema)) {
-    if (!validateArgName(argName, conditionType, "Condition")) {
+    if (
+      !validateArgName(argName, {
+        entityName: conditionType,
+        entityType: "Condition",
+      })
+    ) {
       continue;
     }
 
     // Conditions have no additional validation after the shared entry validation
-    validateArgSchemaEntry(argDef, argName, conditionType, {
+    validateArgSchemaEntry(argDef, argName, {
+      entityName: conditionType,
       entityType: "Condition",
       validProperties: VALID_CONDITION_ARG_PROPERTIES,
       disallowedProperties: DISALLOWED_CONDITION_PROPERTIES,
@@ -117,11 +123,11 @@ export function validateConditionArgValues(
     if (typeError) {
       throw new BlockError(
         formatConditionArgError(
-          argName,
-          typeError.replace(/^Arg "[^"]+" /, ""),
+          typeError.path,
+          typeError.message.replace(/^Arg "[^"]+" /, ""),
           conditionType
         ),
-        { path: path ? `${path}.${argName}` : argName }
+        { path: path ? `${path}.${typeError.path}` : typeError.path }
       );
     }
   }

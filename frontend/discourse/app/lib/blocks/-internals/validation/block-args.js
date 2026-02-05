@@ -59,16 +59,13 @@ function validateBlockDefaultValue(
   }
 
   if (argDef.default !== undefined) {
-    const defaultError = validateArgValue(
-      argDef.default,
-      argDef,
-      argName,
-      blockName,
-      "Block"
-    );
+    const defaultError = validateArgValue(argDef.default, argDef, argName, {
+      contextName: blockName,
+      contextType: "Block",
+    });
     if (defaultError) {
       raiseBlockError(
-        `Block "${blockName}": ${argLabel} "${argName}" has invalid default value. ${defaultError}`
+        `Block "${blockName}": ${argLabel} "${argName}" has invalid default value. ${defaultError.message}`
       );
     }
   }
@@ -88,11 +85,14 @@ export function validateArgsSchema(argsSchema, blockName) {
   }
 
   for (const [argName, argDef] of Object.entries(argsSchema)) {
-    if (!validateArgName(argName, blockName, "Block")) {
+    if (
+      !validateArgName(argName, { entityName: blockName, entityType: "Block" })
+    ) {
       continue;
     }
 
-    const shouldContinue = validateArgSchemaEntry(argDef, argName, blockName, {
+    const shouldContinue = validateArgSchemaEntry(argDef, argName, {
+      entityName: blockName,
       entityType: "Block",
       validProperties: VALID_ARG_SCHEMA_PROPERTIES,
     });
@@ -154,11 +154,18 @@ export function validateChildArgsSchema(childArgsSchema, blockName) {
   }
 
   for (const [argName, argDef] of Object.entries(childArgsSchema)) {
-    if (!validateArgName(argName, blockName, "Block", "childArgs arg")) {
+    if (
+      !validateArgName(argName, {
+        entityName: blockName,
+        entityType: "Block",
+        argLabel: "childArgs arg",
+      })
+    ) {
       continue;
     }
 
-    const shouldContinue = validateArgSchemaEntry(argDef, argName, blockName, {
+    const shouldContinue = validateArgSchemaEntry(argDef, argName, {
+      entityName: blockName,
       entityType: "Block",
       validProperties: VALID_CHILD_ARG_SCHEMA_PROPERTIES,
       argLabel: "childArgs arg",
