@@ -976,6 +976,29 @@ RSpec.describe TopicsController do
         end
       end
     end
+
+    describe "error handling" do
+      fab!(:p1) { Fabricate(:post, user: user) }
+      fab!(:topic) { p1.topic }
+
+      it "returns a JSON error when move_posts raises RecordInvalid" do
+        sign_in(moderator)
+
+        Topic
+          .any_instance
+          .stubs(:move_posts)
+          .raises(
+            ActiveRecord::RecordInvalid.new(
+              Post.new.tap { |p| p.errors.add(:base, "Something went wrong") },
+            ),
+          )
+
+        post "/t/#{topic.id}/merge-topic.json", params: { destination_topic_id: dest_topic.id }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to be_present
+      end
+    end
   end
 
   describe "#change_post_owners" do

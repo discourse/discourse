@@ -41,7 +41,7 @@ class ApplicationLayoutPreloader
     self
       .class
       .banner_json_cache
-      .defer_get_set("json") do
+      .defer_get_set("json_#{I18n.locale}") do
         topic = Topic.where(archetype: Archetype.banner).first
         banner = topic.present? ? topic.banner(@guardian) : {}
         MultiJson.dump(banner)

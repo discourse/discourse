@@ -263,5 +263,54 @@ describe "Tags", type: :system do
       original_tag_ids = draft_data["original_tags"].map { |t| t["id"] }
       expect(original_tag_ids).to contain_exactly(tag_one.id, tag_two.id)
     end
+
+    it "shows child tags when parent tag is selected in topic title editor and composer" do
+      parent_tag = Fabricate(:tag, name: "cap")
+      child_tag_approved = Fabricate(:tag, name: "cap-approved")
+      child_tag_closed = Fabricate(:tag, name: "cap-closed")
+      child_tag_open = Fabricate(:tag, name: "cap-open")
+
+      tag_group =
+        Fabricate(
+          :tag_group,
+          name: "Corrective Action Plans",
+          parent_tag: parent_tag,
+          one_per_topic: true,
+          tags: [child_tag_approved, child_tag_closed, child_tag_open],
+        )
+
+      topic = Fabricate(:topic, user: admin, tags: [parent_tag])
+      Fabricate(:post, topic: topic, user: admin)
+
+      sign_in(admin)
+      visit topic.url
+
+      topic_page.click_topic_edit_title
+      expect(topic_page).to have_topic_title_editor
+
+      mini_tag_chooser.expand
+      mini_tag_chooser.search("cap-")
+
+      expect(mini_tag_chooser).to have_option_name("cap-approved")
+      expect(mini_tag_chooser).to have_option_name("cap-closed")
+      expect(mini_tag_chooser).to have_option_name("cap-open")
+
+      mini_tag_chooser.collapse_with_escape
+      topic_page.click_topic_title_cancel_edit
+
+      find("#post_1 .post-controls .edit").click
+      expect(composer).to be_opened
+
+      expect(page).to have_css(".mini-tag-chooser", text: "cap")
+
+      composer_tag_chooser =
+        PageObjects::Components::SelectKit.new(".composer-fields .mini-tag-chooser")
+      composer_tag_chooser.expand
+      composer_tag_chooser.search("cap-")
+
+      expect(composer_tag_chooser).to have_option_name("cap-approved")
+      expect(composer_tag_chooser).to have_option_name("cap-closed")
+      expect(composer_tag_chooser).to have_option_name("cap-open")
+    end
   end
 end

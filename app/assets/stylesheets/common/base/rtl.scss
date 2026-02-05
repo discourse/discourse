@@ -1,25 +1,7 @@
 // Right to left styles.
 .rtl {
-  .d-icon-align-right,
-  .d-icon-angles-right,
-  .d-icon-angle-right,
-  .d-icon-arrow-right,
-  .d-icon-caret-right,
-  .d-icon-chevron-right,
-  .d-icon-hand-point-right,
-  .d-icon-quote-right {
-    transform: rotate(180deg);
-  }
-
-  .d-icon-align-left,
-  .d-icon-angles-left,
-  .d-icon-angle-left,
-  .d-icon-arrow-left,
-  .d-icon-caret-left,
-  .d-icon-chevron-left,
-  .d-icon-hand-point-left,
-  .d-icon-quote-left {
-    transform: rotate(180deg);
+  .d-icon {
+    transform: scaleX(-1);
   }
 }
 

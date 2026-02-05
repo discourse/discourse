@@ -96,6 +96,7 @@ en:
     ai_helper_enabled_features: "Select the features to enable in the AI helper."
     post_ai_helper_allowed_groups: "User groups allowed to access AI Helper features in posts"
     ai_helper_post_illustrator_persona: "The persona to use for the AI helper's illustrate post feature. Note: you must also create an image generation tool (Admin > Plugins > Discourse AI > Tools) for this feature to work."
+    ai_helper_chat_thread_title_persona: "The persona to use for generating chat thread titles."
 
     ai_embeddings_selected_model: "Use the selected model for generating embeddings."
     ai_embeddings_generate_for_pms: "Generate embeddings for personal messages."
@@ -439,6 +440,9 @@ en:
         discover:
           name: "Discover"
           description: "Default persona used in the discoveries feature (complimentary search)"
+        chat_thread_titler:
+          name: "Chat Thread Titler"
+          description: "Default persona powering automatic chat thread title generation"
 
       topic_not_found: "Summary unavailable, topic not found!"
       summarizing: "Summarizing topic"
