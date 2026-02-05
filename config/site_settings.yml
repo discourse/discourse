@@ -3817,13 +3817,15 @@ uncategorized:
     default: "top_menu_pages"
     area: "interface"
 
-  experimental_foundation_changes:
+  modernize_foundation_theme:
     default: false
     client: true
+    hidden: true
     area: "experimental"
     upcoming_change:
       impact: "feature,all_members"
       status: "experimental"
+      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
 
 user_preferences:
   default_email_digest_frequency:
