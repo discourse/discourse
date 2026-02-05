@@ -13,7 +13,7 @@ module Plugin
         .load_path
         .assets
         .find do |a|
-          a.logical_path.to_s.start_with?("plugins/#{plugin_name}-") &&
+          a.logical_path.to_s.match?(/^plugins\/#{plugin_name}-\w{8}\.digested\//) &&
             a.logical_path.basename.to_s == "#{filename}.js"
         end
         &.logical_path
