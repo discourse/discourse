@@ -227,7 +227,7 @@
                       (
                         ((n.to_f % 100) % 1).zero? &&
                           (
-                            !(10..19).include?(n.to_f % 100) || !(70..79).include?(n.to_f % 100) ||
+                            !(10..19).include?(n.to_f % 100) && !(70..79).include?(n.to_f % 100) &&
                               !(90..99).include?(n.to_f % 100)
                           )
                       )
