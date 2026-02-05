@@ -222,6 +222,8 @@ it:
           name: "Integrazioni"
           description: "Sono alla base di funzionalità come Argomenti correlati e Ricerca IA generando rappresentazioni semantiche di un testo"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Argomenti correlati"
         discord:
           name: "Integrazione Discord"
           description: "Aggiunge l'opzione di cercare tra i canali di Discord"
@@ -232,6 +234,8 @@ it:
           generate_concepts: "Inferenza dei concetti"
           match_concepts: "Corrispondenza dei concetti"
           deduplicate_concepts: "Deduplicazione dei concetti"
+          setting_groups:
+            personas: "Personaggi"
         ai_helper:
           name: "Assistente"
           description: "Assiste gli utenti nelle interazioni con la community, come la creazione di argomenti, la scrittura di messaggi e la lettura di contenuti"
@@ -246,6 +250,9 @@ it:
           image_caption: "Didascalia immagini"
           translator: "Assistente traduzione"
           post_illustrator: "Assistente messaggi illustrati"
+          setting_groups:
+            automation: "Automazione"
+            personas: "Personaggi"
         translation:
           name: "Traduzione"
           description: "Traduce i contenuti nelle lingue supportate"
@@ -253,6 +260,8 @@ it:
           post_raw_translator: "Pubblica traduzione grezza"
           topic_title_translator: "Assistente traduzione titolo argomenti"
           short_text_translator: "Assistente traduzione testi brevi"
+          setting_groups:
+            personas: "Personaggi"
         spam:
           name: "Spam"
           description: "Identifica lo spam potenziale utilizzando l'LLM selezionato e lo segnala ai moderatori del sito affinché lo ispezionino nella coda di revisione"
@@ -579,17 +588,7 @@ it:
           anthropic-claude-opus-4-5: "Il modello più intelligente di Anthropic"
           anthropic-claude-sonnet-4-5: "Equilibrio ottimale tra velocità e costi"
           anthropic-claude-haiku-4-5: "Veloce e conveniente"
-          google-gemini-2-5-pro: "Modello multimodale di grandi dimensioni in grado di svolgere un'ampia gamma di attività"
-          google-gemini-2-5-flash: "Leggero, veloce ed economico con ragionamento multimodale"
-          open_ai-gpt-5-mini: "Grazie all'equilibrio tra intelligenza, velocità e costo, è un modello che si presta a numerosi casi d'uso."
-          open_ai-gpt-5-nano: "Il modello GPT-5 più veloce ed economicamente efficiente."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Modello multilingue leggero ed efficiente"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Potente modello multifunzionale"
-          mistral-mistral-large-latest: "Il modello Mistral più potente"
-          mistral-pixtral-large-latest: "Il modello Mistral con capacità di visione più potente"
-          open_router-x-ai-grok-4: "L'ultimo modello di xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "L'ultimo modello di ragionamento di DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "Modello multilingue di eccellenti capacità"
+          open_ai-gpt-5-nano: "Il modello GPT-5 più veloce ed economicamente efficiente"
         preseeded_model_description: "Modello open source preconfigurato che utilizza %{model}"
         configured:
           title: "LLM configurati"
@@ -874,6 +873,7 @@ it:
         topic:
           title: "Riepilogo dell'argomento"
           close: "Chiudi il pannello riassuntivo"
+          regenerate_summaries_option: "Riepiloghi degli argomenti"
         topic_list_layout:
           button:
             compact: "Compatto"
@@ -895,3 +895,9 @@ it:
             disable: "Disabilita"
       user_preferences:
         empty: "Al momento non sono disponibili impostazioni rilevanti"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Messaggio contrassegnato da IA"
+        reviewable_ai_chat_message:
+          title: "Messaggio di chat contrassegnato da IA"

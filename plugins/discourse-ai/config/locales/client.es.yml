@@ -226,6 +226,8 @@ es:
           name: "Incrustaciones"
           description: "Impulsa características como Temas relacionados y Búsqueda de IA al generar representaciones semánticas de texto"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Temas relacionados"
         discord:
           name: "Integración de Discord"
           description: "Añade la posibilidad de buscar canales de Discord"
@@ -236,6 +238,8 @@ es:
           generate_concepts: "Inferencia de conceptos"
           match_concepts: "Coincidencia de conceptos"
           deduplicate_concepts: "Duplicación de conceptos"
+          setting_groups:
+            personas: "Personas"
         ai_helper:
           name: "Ayudante"
           description: "Ayuda a los usuarios a interactuar con la comunidad, como crear temas, escribir publicaciones y leer contenido"
@@ -250,6 +254,9 @@ es:
           image_caption: "Añadir pie de foto"
           translator: "Traductor"
           post_illustrator: "Ilustrador de publicaciones"
+          setting_groups:
+            automation: "Automatización"
+            personas: "Personas"
         translation:
           name: "Traducción"
           description: "Traduce el contenido a los idiomas compatibles"
@@ -257,6 +264,8 @@ es:
           post_raw_translator: "Traductor de publicaciones"
           topic_title_translator: "Traductor de títulos de temas"
           short_text_translator: "Traductor de textos cortos"
+          setting_groups:
+            personas: "Personas"
         spam:
           name: "Spam"
           description: "Identifica spam potencial utilizando el LLM seleccionado y lo marca para que los moderadores del sitio lo inspeccionen en la cola de revisión"
@@ -587,17 +596,7 @@ es:
           anthropic-claude-opus-4-5: "El modelo antrópico más inteligente"
           anthropic-claude-sonnet-4-5: "Equilibrio óptimo entre velocidad y coste"
           anthropic-claude-haiku-4-5: "Rápido y rentable"
-          google-gemini-2-5-pro: "Modelo multimodal de tamaño grande capaz de realizar una amplia gama de tareas"
-          google-gemini-2-5-flash: "Ligero, rápido y rentable con razonamiento multimodal"
-          open_ai-gpt-5-mini: "Proporciona un equilibrio entre inteligencia, velocidad y coste que lo convierte en un modelo atractivo para muchos casos de uso."
-          open_ai-gpt-5-nano: "El modelo GPT-5 más rápido y rentable."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Modelo multilingüe, ligero y eficaz"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Potente modelo polivalente"
-          mistral-mistral-large-latest: "El modelo más potente de Mistral"
-          mistral-pixtral-large-latest: "El modelo más potente de Mistral con capacidad de visión"
-          open_router-x-ai-grok-4: "El último modelo de xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "El último modelo de razonamiento de DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "Modelo multilingüe de gran capacidad"
+          open_ai-gpt-5-nano: "El modelo GPT-5 más rápido y rentable"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:
           title: "LLM configurados"
@@ -882,6 +881,7 @@ es:
         topic:
           title: "Resumen del tema"
           close: "Cerrar panel de resumen"
+          regenerate_summaries_option: "Resúmenes de temas"
         topic_list_layout:
           button:
             compact: "Compacto"
@@ -903,3 +903,9 @@ es:
             disable: "Desactivar"
       user_preferences:
         empty: "No hay ajustes relevantes disponibles en este momento"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Publicación denunciada por IA"
+        reviewable_ai_chat_message:
+          title: "Mensaje de chat denunciado por IA"
