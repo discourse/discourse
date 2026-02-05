@@ -323,6 +323,7 @@ en:
           image_caption: "Caption images"
           translator: "Translator"
           post_illustrator: "Post illustrator"
+          chat_thread_titles: "Chat thread titles"
           setting_groups:
             access_permissions: "Access & Permissions"
             enabled_features: "Enabled Features"

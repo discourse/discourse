@@ -71,6 +71,7 @@ module DiscourseAi
             ContentCreator => -32,
             ReportRunner => -33,
             Discover => -34,
+            ChatThreadTitler => -35,
           }
         end
 
