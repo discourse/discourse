@@ -1,5 +1,5 @@
 import Component from "@glimmer/component";
-import { cached, tracked } from "@glimmer/tracking";
+import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -8,7 +8,9 @@ import { htmlSafe } from "@ember/template";
 import EmojiPicker from "discourse/components/emoji-picker";
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import categoryBadge from "discourse/helpers/category-badge";
+import concatClass from "discourse/helpers/concat-class";
 import icon from "discourse/helpers/d-icon";
+import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
 import { AUTO_GROUPS, CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
@@ -17,31 +19,32 @@ import PermissionType from "discourse/models/permission-type";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import IconPicker from "discourse/select-kit/components/icon-picker";
-import { or } from "discourse/truth-helpers";
+import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+
+const EVERYONE_FULL_PERMISSION = {
+  group_id: AUTO_GROUPS.everyone.id,
+  group_name: AUTO_GROUPS.everyone.name,
+  permission_type: PermissionType.FULL,
+};
 
 export default class UpsertCategoryGeneral extends Component {
   @service site;
   @service siteSettings;
 
   @tracked categoryVisibilityState = null;
+
   uncategorizedSiteSettingLink = getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
   );
+
   customizeTextContentLink = getURL(
     "/admin/customize/site_texts?q=uncategorized"
   );
+
   #previousPermissions = null;
 
-  #createEveryoneFullPermission() {
-    return {
-      group_id: AUTO_GROUPS.everyone.id,
-      group_name: AUTO_GROUPS.everyone.name,
-      permission_type: PermissionType.FULL,
-    };
-  }
-
-  get parentIsRestricted() {
+  get isParentRestricted() {
     const parentId = this.args.transientData.parent_category_id;
     if (!parentId) {
       return false;
@@ -64,13 +67,13 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   get isPrivateCategory() {
-    const permissions = this.permissions;
-
-    if (!permissions || permissions.length === 0) {
+    if (!this.permissions || this.permissions.length === 0) {
       return true;
     }
 
-    return !permissions.some((p) => p.group_id === AUTO_GROUPS.everyone.id);
+    return !this.permissions.some(
+      (p) => p.group_id === AUTO_GROUPS.everyone.id
+    );
   }
 
   get accessGroups() {
@@ -82,7 +85,7 @@ export default class UpsertCategoryGeneral extends Component {
       (g) => g.id !== AUTO_GROUPS.everyone.id
     );
 
-    if (!this.parentIsRestricted) {
+    if (!this.isParentRestricted) {
       return groups;
     }
 
@@ -115,7 +118,6 @@ export default class UpsertCategoryGeneral extends Component {
     return this.siteSettings.max_category_nesting > 2;
   }
 
-  @cached
   get backgroundColors() {
     const categories = this.site.get("categoriesList");
     return uniqueItemsFromArray(
@@ -127,7 +129,6 @@ export default class UpsertCategoryGeneral extends Component {
     );
   }
 
-  @cached
   get usedBackgroundColors() {
     const categories = this.site.get("categoriesList");
     const categoryId = this.args.category.id;
@@ -148,7 +149,7 @@ export default class UpsertCategoryGeneral extends Component {
       return this.categoryVisibilityState;
     }
 
-    if (this.parentIsRestricted) {
+    if (this.isParentRestricted) {
       return "group_restricted";
     }
 
@@ -159,6 +160,17 @@ export default class UpsertCategoryGeneral extends Component {
     return this.siteSettings.login_required
       ? "category.visibility.all_members"
       : "category.visibility.public";
+  }
+
+  get showWarning() {
+    return this.args.category.isUncategorizedCategory;
+  }
+
+  get permissionHint() {
+    const key = this.isParentRestricted
+      ? "category.visibility.inherited_from_parent"
+      : "category.visibility.more_options_hint";
+    return htmlSafe(i18n(key));
   }
 
   @action
@@ -184,7 +196,7 @@ export default class UpsertCategoryGeneral extends Component {
     this.categoryVisibilityState = value;
 
     if (value === "public") {
-      this.#setFormPermissions([this.#createEveryoneFullPermission()]);
+      this.#setFormPermissions([EVERYONE_FULL_PERMISSION]);
     } else if (value === "group_restricted") {
       if (this.#previousPermissions?.length) {
         this.#setFormPermissions(this.#previousPermissions);
@@ -198,32 +210,36 @@ export default class UpsertCategoryGeneral extends Component {
   async onParentCategoryChange(parentCategoryId) {
     if (!parentCategoryId) {
       this.categoryVisibilityState = null;
-      this.#setFormPermissions([this.#createEveryoneFullPermission()]);
+      this.#setFormPermissions([EVERYONE_FULL_PERMISSION]);
       return;
     }
 
-    const result = await Category.reloadById(parentCategoryId);
-    const parentCategory = this.site.updateCategory(result.category);
-    parentCategory.setupGroupsAndPermissions();
+    try {
+      const result = await Category.reloadById(parentCategoryId);
+      const parentCategory = this.site.updateCategory(result.category);
+      parentCategory.setupGroupsAndPermissions();
 
-    if (parentCategory?.permissions?.length > 0) {
-      const hasEveryone = parentCategory.permissions.some(
-        (p) => p.group_id === AUTO_GROUPS.everyone.id
-      );
+      if (parentCategory?.permissions?.length > 0) {
+        const hasEveryone = parentCategory.permissions.some(
+          (p) => p.group_id === AUTO_GROUPS.everyone.id
+        );
 
-      if (!hasEveryone) {
-        this.categoryVisibilityState = null;
+        if (!hasEveryone) {
+          this.categoryVisibilityState = null;
 
-        const newPermissions = parentCategory.permissions.map((p) => ({
-          group_name: p.group_name,
-          group_id: p.group_id,
-          permission_type: p.permission_type,
-        }));
+          const newPermissions = parentCategory.permissions.map((p) => ({
+            group_name: p.group_name,
+            group_id: p.group_id,
+            permission_type: p.permission_type,
+          }));
 
-        this.#setFormPermissions(newPermissions);
-      } else {
-        this.#setFormPermissions([this.#createEveryoneFullPermission()]);
+          this.#setFormPermissions(newPermissions);
+        } else {
+          this.#setFormPermissions([EVERYONE_FULL_PERMISSION]);
+        }
       }
+    } catch (error) {
+      popupAjaxError(error);
     }
   }
 
@@ -231,10 +247,6 @@ export default class UpsertCategoryGeneral extends Component {
   async onParentCategorySet(value, { set, name, index }) {
     await set(name, value, { index });
     await this.onParentCategoryChange(value);
-  }
-
-  get showWarning() {
-    return this.args.category.isUncategorizedCategory;
   }
 
   @action
@@ -253,23 +265,8 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   @action
-  async onNameChange(value, { set, name, index }) {
-    await set(name, value, { index });
-  }
-
-  @action
-  async onIconSet(value, { set, name, index }) {
-    await set(name, value, { index });
-  }
-
-  @action
-  async onEmojiSet(value, { set, name, index }) {
-    await set(name, value, { index });
-  }
-
-  @action
   onStyleTypeChange(value) {
-    this.args.form.setProperties({ style_type: value });
+    this.args.form.set("style_type", value);
   }
 
   @action
@@ -288,18 +285,6 @@ export default class UpsertCategoryGeneral extends Component {
       event.preventDefault();
       this.args.setSelectedTab?.("security");
     }
-  }
-
-  get permissionHint() {
-    const key = this.parentIsRestricted
-      ? "category.visibility.inherited_from_parent"
-      : "category.visibility.more_options_hint";
-    return htmlSafe(i18n(key));
-  }
-
-  get panelClass() {
-    const isActive = this.args.selectedTab === "general" ? "active" : "";
-    return `edit-category-tab edit-category-tab-general ${isActive}`;
   }
 
   #colorDifference(color1, color2) {
@@ -323,7 +308,13 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   <template>
-    <div class={{this.panelClass}}>
+    <@form.Section
+      class={{concatClass
+        "edit-category-tab"
+        "edit-category-tab-general"
+        (if (eq @selectedTab "general") "active")
+      }}
+    >
       {{#if this.showWarning}}
         <@form.Alert @type="warning" @icon="triangle-exclamation">
           {{htmlSafe
@@ -342,7 +333,6 @@ export default class UpsertCategoryGeneral extends Component {
           @title={{i18n "category.name"}}
           @format="large"
           @validation="required"
-          @onSet={{this.onNameChange}}
           as |field|
         >
           <field.Input
@@ -402,7 +392,6 @@ export default class UpsertCategoryGeneral extends Component {
                   @title={{i18n "category.icon"}}
                   @showTitle={{false}}
                   @format="large"
-                  @onSet={{this.onIconSet}}
                   as |field|
                 >
                   <field.Custom>
@@ -432,7 +421,6 @@ export default class UpsertCategoryGeneral extends Component {
                   @title={{i18n "category.emoji"}}
                   @showTitle={{false}}
                   @format="large"
-                  @onSet={{this.onEmojiSet}}
                   @validate={{this.validateEmoji}}
                   as |field|
                 >
@@ -502,7 +490,7 @@ export default class UpsertCategoryGeneral extends Component {
           as |cc|
         >
           <cc.Conditions as |Condition|>
-            {{#if this.parentIsRestricted}}
+            {{#if this.isParentRestricted}}
               <DTooltip
                 @content={{i18n "category.subcategory_permissions_warning"}}
               >
@@ -535,7 +523,7 @@ export default class UpsertCategoryGeneral extends Component {
                   @content={{this.availableAccessGroups}}
                   @value={{this.accessGroups}}
                   @onChange={{this.onChangeAccessGroups}}
-                  @options={{hash disabled=this.parentIsRestricted}}
+                  @options={{hash disabled=this.isParentRestricted}}
                 />
               </@form.Container>
 
@@ -550,7 +538,6 @@ export default class UpsertCategoryGeneral extends Component {
           </cc.Contents>
         </@form.ConditionalContent>
       </@form.Container>
-
-    </div>
+    </@form.Section>
   </template>
 }
