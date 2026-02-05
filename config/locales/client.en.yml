@@ -451,6 +451,24 @@ en:
       pill: "Suggested"
       pm_title: "Suggested Messages"
 
+    admin_onboarding_banner:
+      launch_in_easy_steps: "Launch in %{step_count} easy steps"
+      confirm_cancel_onboarding: "Are you sure you want to cancel the onboarding process? This will remove all progress you've made so far."
+      invite_collaborators:
+        title: "Invite Collaborators"
+        description: "Early members help bring your community to life"
+        action: "Create invite"
+      start_posting:
+        title: "Start Posting"
+        description: "Give people something to talk about together"
+        action: "Icebreaker ideas"
+        icebreaker_title: "What are some fun facts about you?"
+        icebreaker_post: "Hi everyone! I'm excited to start this new community. To kick things off, let's share a fun fact about ourselves. I'll go first: I love hiking and exploring new trails! What's something interesting about you?"
+      spread_the_word:
+        title: "Spread the Word!"
+        description: "Share a link with everyone in your network"
+        action: "Copy link"
+
     about:
       edit: "Edit this page"
       simple_title: "About"

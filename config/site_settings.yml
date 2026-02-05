@@ -3790,6 +3790,11 @@ uncategorized:
     default: true
     area: "posts_and_topics"
 
+  enable_site_owner_onboarding:
+    client: true
+    default: false
+    area: "site_admin"
+
   enable_welcome_banner:
     client: true
     default: true
