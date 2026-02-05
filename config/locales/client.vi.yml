@@ -1330,7 +1330,7 @@ vi:
           all: "Tất cả"
           read: "Đã đọc"
           unread: "Chưa đọc"
-          unseen: "Không nhìn thấy"
+          unseen: "Chưa xem"
         ignore_duration_title: "Bỏ qua người dùng"
         ignore_duration_username: "Tên đăng nhập"
         ignore_duration_when: "Thời hạn:"
