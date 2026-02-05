@@ -1427,10 +1427,12 @@ span.mention {
   border-top: 1px solid var(--content-border-color);
   display: flex;
   width: 100%;
-  max-width: 100%;
+  max-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
+  );
   padding: var(--space-2) var(--space-4);
   font-size: var(--font-down-1-rem);
-  border-radius: var(--d-border-radius);
   gap: var(--space-2);
   box-sizing: border-box;
 
