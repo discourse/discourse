@@ -1097,6 +1097,19 @@ RSpec.describe PostDestroyer do
         }
         expect(Jobs::SendSystemMessage.jobs).to be_empty
       end
+
+      context "when deleting a reply with a reviewable option and notify_users_after_responses_deleted_on_flagged_post enabled" do
+        let(:parent_reviewable) { flag_result.reviewable }
+        let(:reply_reviewable) { second_post.reviewable_flag }
+
+        before { SiteSetting.notify_users_after_responses_deleted_on_flagged_post = true }
+
+        it "does not ignore a potentially illegal flag on the reply" do
+          expect {
+            PostDestroyer.new(moderator, second_post, reviewable: parent_reviewable).destroy
+          }.not_to change { reply_reviewable.reload.pending? }
+        end
+      end
     end
 
     context "when custom flags" do
