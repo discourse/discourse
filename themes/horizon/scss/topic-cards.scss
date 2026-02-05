@@ -124,7 +124,7 @@
     }
   }
 
-  .bulk-select-enabled & {
+  &.bulk-selecting {
     grid-template-columns: min-content min-content min-content min-content auto min-content;
     grid-template-areas:
       "bulk-select creator title title title status"
@@ -160,10 +160,6 @@
   &.selected {
     border: 1px solid var(--accent-color);
     box-shadow: 0 0 12px 1px var(--topic-card-shadow);
-
-    .user-messages-page & {
-      box-shadow: inset 0 0 0 2px var(--accent-color);
-    }
   }
 
   &.excerpt-expanded {
@@ -186,14 +182,14 @@
           ". category likes-replies activity ."
           ". excerpt excerpt excerpt excerpt";
       }
-
-      .bulk-select-enabled & {
-        grid-template-areas:
-          "bulk-select creator title title title status"
-          "bulk-select category category activity likes-replies likes-replies "
-          " bulk-select excerpt excerpt excerpt excerpt excerpt";
-      }
     }
+  }
+
+  .bulk-select-enabled & {
+    grid-template-areas:
+      "bulk-select creator title title title status"
+      "bulk-select category category activity likes-replies likes-replies "
+      " bulk-select excerpt excerpt excerpt excerpt excerpt";
   }
 
   .link-top-line {

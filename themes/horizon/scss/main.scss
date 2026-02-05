@@ -21,8 +21,9 @@ body {
 }
 
 #main-outlet-wrapper {
-  gap: var(--main-grid-gap);
-  padding-right: var(--main-grid-gap);
+  @include viewport.from(lg) {
+    gap: var(--main-grid-gap);
+  }
 }
 
 body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
@@ -62,14 +63,6 @@ body:not(.has-full-page-chat, .wizard) {
   }
 
   #main-outlet-wrapper {
-    @include viewport.until(lg) {
-      --main-grid-gap: 0em;
-    }
-
-    @media screen and (width >= 768px) {
-      gap: var(--main-grid-gap);
-    }
-
     #main-outlet {
       width: 100%;
       max-width: unset;
