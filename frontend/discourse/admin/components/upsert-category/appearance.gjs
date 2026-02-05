@@ -191,7 +191,7 @@ export default class UpsertCategoryAppearance extends Component {
   }
 
   <template>
-    <div
+    <@form.Section
       class={{concatClass
         "edit-category-tab"
         "edit-category-tab-images"
@@ -382,8 +382,8 @@ export default class UpsertCategoryAppearance extends Component {
 
       <PluginOutlet
         @name="category-custom-images"
-        @outletArgs={{lazyHash category=@category}}
+        @outletArgs={{lazyHash category=@category form=@form}}
       />
-    </div>
+    </@form.Section>
   </template>
 }

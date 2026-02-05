@@ -230,7 +230,7 @@ export default class UpsertCategorySettings extends Component {
   }
 
   <template>
-    <div
+    <@form.Section
       class={{concatClass
         "edit-category-tab"
         "edit-category-tab-settings"
@@ -472,8 +472,8 @@ export default class UpsertCategorySettings extends Component {
 
       <PluginOutlet
         @name="category-custom-settings"
-        @outletArgs={{lazyHash category=@category}}
+        @outletArgs={{lazyHash category=@category form=@form}}
       />
-    </div>
+    </@form.Section>
   </template>
 }

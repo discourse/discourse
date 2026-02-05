@@ -4,11 +4,13 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import UpsertCategoryPermissionRow from "discourse/admin/components/upsert-category/permission-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategorySecurity extends Component {
@@ -101,11 +103,6 @@ export default class UpsertCategorySecurity extends Component {
     return this.everyonePermission?.permission_type ?? PermissionType.READONLY;
   }
 
-  get panelClass() {
-    const isActive = this.args.selectedTab === "security" ? "active" : "";
-    return `edit-category-tab edit-category-tab-security ${isActive}`;
-  }
-
   #setFormPermissions(permissions) {
     this.args.form.set("permissions", permissions);
   }
@@ -157,7 +154,13 @@ export default class UpsertCategorySecurity extends Component {
   }
 
   <template>
-    <div class={{this.panelClass}}>
+    <@form.Section
+      class={{concatClass
+        "edit-category-tab"
+        "edit-category-tab-security"
+        (if (eq @selectedTab "security") "active")
+      }}
+    >
       {{#if @category.is_special}}
         {{#if @category.isUncategorizedCategory}}
           <@form.Alert @type="warning">
@@ -247,8 +250,8 @@ export default class UpsertCategorySecurity extends Component {
 
       <PluginOutlet
         @name="category-custom-security"
-        @outletArgs={{lazyHash category=@category}}
+        @outletArgs={{lazyHash category=@category form=@form}}
       />
-    </div>
+    </@form.Section>
   </template>
 }

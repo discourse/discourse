@@ -75,7 +75,7 @@ export default class UpsertCategoryTags extends Component {
   }
 
   <template>
-    <div
+    <@form.Section
       class={{concatClass
         "edit-category-tab"
         "edit-category-tab-tags"
@@ -172,6 +172,6 @@ export default class UpsertCategoryTags extends Component {
           class="btn-default add-required-tag-group"
         />
       </@form.Section>
-    </div>
+    </@form.Section>
   </template>
 }
