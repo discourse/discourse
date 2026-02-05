@@ -488,16 +488,12 @@ RSpec.describe Admin::ThemesController do
 
         theme.save!
 
-        # this will get serialized as well
-        ColorScheme.create_from_base(name: "test", colors: [])
-
         get "/admin/themes.json"
 
         expect(response.status).to eq(200)
 
         json = response.parsed_body
 
-        expect(json["extras"]["color_schemes"].length).to eq(1)
         theme_json = json["themes"].find { |t| t["id"] == theme.id }
         expect(theme_json["theme_fields"].length).to eq(3)
 
@@ -546,6 +542,27 @@ RSpec.describe Admin::ThemesController do
           end
 
         expect(first_request_queries.count).to eq(second_request_queries.count)
+      end
+
+      it "includes color schemes in the `extras` object of the response body" do
+        base =
+          Fabricate(
+            :color_scheme,
+            color_scheme_colors: [
+              Fabricate(:color_scheme_color, name: "newcolor1", hex: "fafafa"),
+              Fabricate(:color_scheme_color, name: "newcolor2", hex: "afafaf"),
+            ],
+          )
+        copy1 = Fabricate(:color_scheme, base_scheme_id: base.id)
+        copy2 = Fabricate(:color_scheme, base_scheme_id: base.id)
+
+        get "/admin/themes.json"
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["extras"]["color_schemes"].map { |cs| cs["id"] }).to include(
+          base.id,
+          copy1.id,
+          copy2.id,
+        )
       end
     end
 
