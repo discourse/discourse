@@ -301,7 +301,9 @@ module BackupRestore
     end
 
     # Lightweight struct to avoid holding full ActiveRecord objects in memory
-    UploadData = Struct.new(:id, :url, :sha1, keyword_init: true)
+    # Includes extension and original_filename for FileStore::BaseStore#get_path_for_upload
+    # fallback path when URL doesn't match UPLOAD_PATH_REGEX
+    UploadData = Struct.new(:id, :url, :sha1, :extension, :original_filename, keyword_init: true)
 
     def add_remote_uploads_to_archive(tar_filename)
       if !SiteSetting.include_s3_uploads_in_backups
@@ -350,12 +352,20 @@ module BackupRestore
           :id,
           :url,
           :sha1,
+          :extension,
+          :original_filename,
         )
 
       uploads_by_sha1 = {}
-      upload_tuples.each do |sha1_key, id, url, sha1|
+      upload_tuples.each do |sha1_key, id, url, sha1, extension, original_filename|
         uploads_by_sha1[sha1_key] ||= []
-        uploads_by_sha1[sha1_key] << UploadData.new(id: id, url: url, sha1: sha1)
+        uploads_by_sha1[sha1_key] << UploadData.new(
+          id: id,
+          url: url,
+          sha1: sha1,
+          extension: extension,
+          original_filename: original_filename,
+        )
       end
       uploads_by_sha1
     end
