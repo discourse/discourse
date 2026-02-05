@@ -22,14 +22,6 @@ export default {
     ],
     themes_and_components: [
       {
-        id: 57,
-        name: "Air Theme",
-        description: "A clean and modern theme for Discourse",
-        created_at: "2024-10-16T05:10:28.695Z",
-        updated_at: "2024-10-16T05:10:36.298Z",
-        component: false,
-      },
-      {
         id: 59,
         name: "Clickable Topic",
         description: null,
