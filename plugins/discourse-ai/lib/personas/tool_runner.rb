@@ -888,6 +888,11 @@ module DiscourseAi
               user = resolve_user(username)
               return { error: "User not found: #{username}" } if user.nil?
 
+              guardian = Guardian.new(user)
+              unless guardian.can_edit?(post)
+                return { error: "User is not allowed to edit this post" }
+              end
+
               revisor = PostRevisor.new(post)
               if revisor.revise!(user, { raw: raw, edit_reason: edit_reason })
                 { success: true, post_id: post.id }
