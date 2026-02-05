@@ -356,7 +356,7 @@ RSpec.describe AssetProcessor do
     expect(result["main.js"]["code"]).not_to include("../components/my-component")
   end
 
-  it "handles relative import of gjs index file" do
+  it "prioritizes exact match over /index match" do
     mod_1 = <<~JS.chomp
       export default "module 1";
     JS
@@ -376,8 +376,8 @@ RSpec.describe AssetProcessor do
           entrypoints: {
             main: {
               modules: %w[
-                discourse/components/my-component.gjs
                 discourse/components/my-component/index.gjs
+                discourse/components/my-component.gjs
               ],
             },
           },

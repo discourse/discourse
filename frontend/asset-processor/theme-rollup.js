@@ -13,11 +13,10 @@ import AddThemeGlobals from "./add-theme-globals";
 import BabelReplaceImports from "./babel-replace-imports";
 import { precompile } from "./node_modules/ember-source/dist/ember-template-compiler";
 import discourseColocation from "./rollup-plugins/discourse-colocation";
-import discourseExtensionSearch from "./rollup-plugins/discourse-extension-search";
 import discourseExternalLoader from "./rollup-plugins/discourse-external-loader";
+import discourseFileSearch from "./rollup-plugins/discourse-file-search";
 import discourseGjs from "./rollup-plugins/discourse-gjs";
 import discourseHbs from "./rollup-plugins/discourse-hbs";
-import discourseIndexSearch from "./rollup-plugins/discourse-index-search";
 import discourseTerser from "./rollup-plugins/discourse-terser";
 import discourseVirtualLoader from "./rollup-plugins/discourse-virtual-loader";
 import buildEmberTemplateManipulatorPlugin from "./theme-hbs-ast-transforms";
@@ -49,8 +48,7 @@ globalThis.rollup = function (modules, opts) {
       console.info(level, message);
     },
     plugins: [
-      discourseExtensionSearch(),
-      discourseIndexSearch(),
+      discourseFileSearch(),
       discourseVirtualLoader({
         isTheme: !!opts.themeId,
         basePath,
