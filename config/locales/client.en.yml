@@ -4580,6 +4580,7 @@ en:
         self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       validations:
         emoji_required: "Select an emoji."
+        icon_required: "Select an icon."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"

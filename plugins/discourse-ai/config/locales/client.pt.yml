@@ -287,6 +287,8 @@ pt:
       summarization:
         chat:
           summarize: "Resumir"
+        topic:
+          regenerate_summaries_option: "Resumos de tópico"
       discobot_discoveries:
         regular_results: "Tópicos"
         collapse: "Colapsar"
