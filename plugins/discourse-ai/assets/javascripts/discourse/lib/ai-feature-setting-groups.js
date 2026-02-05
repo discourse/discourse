@@ -38,6 +38,7 @@ export const AI_FEATURE_SETTING_GROUPS = {
         "ai_helper_markdown_tables_persona",
         "ai_helper_custom_prompt_persona",
         "ai_helper_image_caption_persona",
+        "ai_helper_chat_thread_title_persona",
       ],
     },
   ],
