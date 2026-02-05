@@ -141,7 +141,7 @@ class Group < ActiveRecord::Base
   end
 
   def self.smtp_ssl_modes
-    @visibility_levels = Enum.new(none: 0, ssl_tls: 1, starttls: 2)
+    @smtp_ssl_modes = Enum.new(none: 0, ssl_tls: 1, starttls: 2)
   end
 
   def self.auto_groups_between(lower, upper)
