@@ -4,9 +4,10 @@
   --d-logo-height: 2.3em;
   --d-nav-underline-height: var(--space-half);
   --d-button-default-bg-color: transparent;
-  --d-button-default-border: 1px solid var(--primary-200);
-  --d-button-default-border--hover: 1px solid var(--primary-200);
-  --d-button-default-bg-color--hover: var(--primary-100);
+  --d-input-border-color: var(--primary-300);
+  --d-button-default-border: 1px solid var(--primary-300);
+  --d-button-default-border--hover: 1px solid var(--primary-300);
+  --d-button-default-bg-color--hover: var(--primary-200);
   --d-button-default-text-color--hover: var(--primary);
   --d-button-default-icon-color--hover: var(--primary);
   --d-button-default-text-color: var(--primary-900);
@@ -364,6 +365,19 @@
   .category-boxes-with-topics .category-box-inner {
     border: var(--d-category-border-box-width) solid var(--content-border-color);
     border-radius: var(--d-border-radius);
+  }
+
+  // Eliminate grey background
+  .search-container .search-header,
+  .search-container .search-filters,
+  .search-container .search-bar,
+  .d-admin-filter,
+  .search-container .search-filters .search-advanced-filters {
+    background: unset;
+  }
+
+  .d-admin-filter {
+    padding: 0;
   }
 
   // Full Calendar
