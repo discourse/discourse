@@ -1,0 +1,37 @@
+name: Publish @discourse/types package
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - "lib/version.rb"
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: publish
+    runs-on: ubuntu-latest
+    if: github.repository == 'discourse/discourse'
+    container: discourse/discourse_test:slim
+    timeout-minutes: 5
+
+    steps:
+      - name: Set working directory owner
+        run: chown root:root .
+
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+
+      - name: pnpm install
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate type definitions
+        run: pnpm types-generate
+
+      - name: Publish the package
+        run: pnpm publish
