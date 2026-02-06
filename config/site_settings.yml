@@ -1863,12 +1863,16 @@ email:
     default: "Auto-Submitted: auto-generated"
     area: "email"
   email_subject:
-    default: "%{site_name}: %{topic_title}"
+    default: "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
     area: "email"
   simple_email_subject:
     default: false
     client: true
     hidden: true
+    upcoming_change:
+      status: "alpha"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/-"
   reply_by_email_enabled:
     default: false
     validator: "ReplyByEmailEnabledValidator"
