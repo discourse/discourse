@@ -21,20 +21,23 @@ RSpec.describe Admin::GroupsController do
     end
 
     context "when logged in as an admin" do
+      let(:group) { Group.last }
+
       before { sign_in(admin) }
 
-      it "should work" do
+      it "creates a group with the specified attributes" do
         post "/admin/groups.json", params: group_params
 
-        expect(response.status).to eq(200)
+        expect(response).to have_http_status(:ok)
 
-        group = Group.last
-
-        expect(group.name).to eq("testing")
+        expect(group).to have_attributes(
+          name: "testing",
+          allow_membership_requests: true,
+          membership_request_template: "Testing",
+          members_visibility_level: Group.visibility_levels[:staff],
+        )
+        expect(group.group_users.where(owner: true).map(&:user)).to contain_exactly(user)
         expect(group.users).to contain_exactly(admin, user)
-        expect(group.allow_membership_requests).to eq(true)
-        expect(group.membership_request_template).to eq("Testing")
-        expect(group.members_visibility_level).to eq(Group.visibility_levels[:staff])
       end
 
       context "with custom_fields" do

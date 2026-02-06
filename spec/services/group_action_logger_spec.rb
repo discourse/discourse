@@ -93,6 +93,52 @@ RSpec.describe GroupActionLogger do
     end
   end
 
+  describe "#log_group_creation" do
+    subject(:log_creation) { logger.log_group_creation }
+
+    let(:owner_history) do
+      GroupHistory.where(group:, action: GroupHistory.actions[:make_user_group_owner])
+    end
+    let(:member_history) do
+      GroupHistory.where(group:, action: GroupHistory.actions[:add_user_to_group])
+    end
+
+    context "when group has only an owner" do
+      it "logs make_user_group_owner for the owner" do
+        expect { log_creation }.to change { owner_history.count }.by(1)
+        expect(owner_history).to contain_exactly(
+          an_object_having_attributes(acting_user: group_owner, target_user: group_owner),
+        )
+      end
+
+      it "logs add_user_to_group for the owner" do
+        expect { log_creation }.to change { member_history.count }.by(1)
+        expect(member_history).to contain_exactly(
+          an_object_having_attributes(acting_user: group_owner, target_user: group_owner),
+        )
+      end
+    end
+
+    context "when group has an owner and a member" do
+      before { group.add(user) }
+
+      it "logs make_user_group_owner only for the owner" do
+        expect { log_creation }.to change { owner_history.count }.by(1)
+        expect(owner_history).to contain_exactly(
+          an_object_having_attributes(acting_user: group_owner, target_user: group_owner),
+        )
+      end
+
+      it "logs add_user_to_group for both owner and member" do
+        expect { log_creation }.to change { member_history.count }.by(2)
+        expect(member_history).to contain_exactly(
+          an_object_having_attributes(acting_user: group_owner, target_user: group_owner),
+          an_object_having_attributes(acting_user: group_owner, target_user: user),
+        )
+      end
+    end
+  end
+
   describe "#log_change_group_settings" do
     it "should create the right record" do
       group.update!(public_admission: true, created_at: Time.zone.now)

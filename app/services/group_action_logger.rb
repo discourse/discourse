@@ -62,6 +62,13 @@ class GroupActionLogger
       end
   end
 
+  def log_group_creation
+    @group.group_users.each do |group_user|
+      log_make_user_group_owner(group_user.user) if group_user.owner?
+      log_add_user_to_group(group_user.user)
+    end
+  end
+
   private
 
   def excluded_attributes
