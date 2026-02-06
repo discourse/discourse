@@ -12,6 +12,7 @@ module Reports
 
       def to_h(admin:)
         return if Report.hidden?(type, admin:)
+        return if plugin_disabled?
 
         {
           type:,
@@ -52,9 +53,14 @@ module Reports
 
         # Extract plugin name from path like /plugins/discourse-ai/...
         match = source_path.match(%r{/plugins/([^/]+)/})
-        match[1] if match
+        @plugin_name = match[1] if match
       rescue NameError
         nil
+      end
+
+      def plugin_disabled?
+        return false unless plugin_name
+        !Discourse.plugins_by_name[plugin_name]&.enabled?
       end
     end
 
