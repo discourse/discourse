@@ -2169,6 +2169,8 @@ sr:
       slug_placeholder: "(Opciono) spojene-reči za url"
       creation_error: Dogodila se greška pri otvaranju kategorije.
       save_error: Dogodila se greška pri čuvanju kategorije.
+      validations:
+        icon_required: "Odaberite ikonu."
       description: "Opis"
       icon: "Ikona"
       emoji: "Emoji"

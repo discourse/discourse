@@ -4394,6 +4394,8 @@ sk:
       slug_placeholder: "(Voliteľné) pomlčkou-prerušované-slová pre url"
       creation_error: Nastala chyba počas vytvárania kategórie.
       save_error: Nastala chyba počas ukladania kategórie
+      validations:
+        icon_required: "Vyberte ikonu."
       description: "Popis"
       logo_description: "Odporúčaný pomer strán 1:1 s minimálnou veľkosťou 200px. Ak zostane prázdny, nezobrazí sa žiadny obrázok."
       style: "Štýl"

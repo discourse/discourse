@@ -2199,6 +2199,8 @@ et:
       slug_placeholder: "(Valikulised) sidekriipsuga-sõnad url-i jaoks"
       creation_error: Kategooria loomisel tekkis viga.
       save_error: Kategooria salvestamisel tekkis viga.
+      validations:
+        icon_required: "Vali ikoon."
       description: "Kirjeldus"
       icon: "Ikoon"
       emoji: "Emotikon"

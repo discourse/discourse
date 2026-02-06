@@ -2332,6 +2332,8 @@ lv:
       create_long: "Izveidot jaunu sadaļu"
       creation_error: Izveidojot šo sadaļu, notika kļūda.
       save_error: Saglabājot šo sadaļu, notika kļūda.
+      validations:
+        icon_required: "Izvēlieties ikonu."
       description: "Apraksts"
       icon: "Ikona"
       emoji: "Smaidiņi"
