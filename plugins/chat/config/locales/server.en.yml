@@ -68,6 +68,7 @@ en:
         closed: "The channel is closed, no messages can be edited or deleted"
         read_only: "The channel is read only, no messages can be edited or deleted"
       user_cannot_send_message: "You cannot send messages at this time."
+      user_not_in_channel: "You must be a member of this channel."
       rate_limit_exceeded: "Exceeded the limit of chat messages that can be sent within 30 seconds"
       auto_silence_from_flags: "Chat message flagged with score high enough to silence user."
       channel_cannot_be_archived: "The channel cannot be archived at this time, it must be either closed or open to archive."
