@@ -65,11 +65,17 @@ export default <template>
 
       {{#if @controller.isReportsTabVisible}}
         <li class="navigation-item reports">
-          <LinkTo @route="admin.dashboardReports" class="navigation-link">
+          <LinkTo @route="adminReports" class="navigation-link">
             {{i18n "admin.dashboard.reports_tab"}}
           </LinkTo>
         </li>
       {{/if}}
+
+      <li class="navigation-item settings">
+        <LinkTo @route="adminReports.dashboardSettings" class="navigation-link">
+          {{i18n "admin.config.reports.sub_pages.settings.title"}}
+        </LinkTo>
+      </li>
 
       <PluginOutlet @name="admin-dashboard-tabs-after" />
     </ul>
