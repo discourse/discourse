@@ -19,6 +19,16 @@ This guide walks you through building your first block-based layout. By the end,
 
 ---
 
+## Documentation Guide
+
+**If you learn by doing**, start here. This guide gets you building in 15 minutes. When you're ready to create your own blocks with custom validation and conditions, continue to [Authoring](block-api-authoring.md).
+
+**If you prefer understanding the system first**, start with [Concepts](block-api-01-concepts.md) for the full mental model, then work through Architecture, Conditions, and Runtime.
+
+For quick lookups, [Reference](block-api-06-reference.md) has API tables, troubleshooting tips, and a glossary.
+
+---
+
 ## What You'll Build
 
 A homepage layout with:
@@ -310,6 +320,8 @@ Without `?`, a missing block causes a boot error. With `?`, it's silently skippe
 
 ## Next Steps
 
-- **`block-api-authoring.md`** - Creating custom blocks, conditions, and containers
-- **`block-api-documentation.md`** - Conceptual deep-dive with the full mental model
-- **`block-api-reference.md`** - Quick lookup for all options and patterns
+This guide showed you how to use existing blocks and compose layouts. To create your own blocks with custom validation, constraints, and conditions, continue to the Authoring guide.
+
+- **[Authoring](block-api-authoring.md)** - Creating custom blocks, conditions, and containers
+- **[Concepts](block-api-01-concepts.md)** - Conceptual deep-dive with the full mental model
+- **[Reference](block-api-06-reference.md)** - Quick lookup for all options and patterns
