@@ -37,17 +37,15 @@ class AiSecret < ActiveRecord::Base
 
     return LlmModel.none if secret_keys.empty?
 
-    conditions =
-      secret_keys.map do |provider, key|
-        LlmModel.where(
-          "provider = ? AND provider_params ->> ? = ?",
-          provider.to_s,
-          key.to_s,
-          id.to_s,
-        )
-      end
+    sql_conditions = []
+    bind_values = []
 
-    conditions.reduce(:or).where("llm_models.id > 0")
+    secret_keys.each do |provider, key|
+      sql_conditions << "(provider = ? AND provider_params ->> ? = ?)"
+      bind_values << provider.to_s << key.to_s << id.to_s
+    end
+
+    LlmModel.where(sql_conditions.join(" OR "), *bind_values).where("llm_models.id > 0")
   end
 end
 

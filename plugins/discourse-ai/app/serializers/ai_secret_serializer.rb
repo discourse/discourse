@@ -3,7 +3,7 @@
 class AiSecretSerializer < ApplicationSerializer
   root "ai_secret"
 
-  attributes :id, :name, :secret, :created_at, :updated_at
+  attributes :id, :name, :secret, :created_at, :updated_at, :used_by
 
   def secret
     if scope.is_a?(Hash) && scope[:unmask]
@@ -11,5 +11,9 @@ class AiSecretSerializer < ApplicationSerializer
     else
       "********"
     end
+  end
+
+  def used_by
+    @used_by ||= object.used_by.map { |usage| usage.deep_stringify_keys }
   end
 end

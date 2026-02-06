@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
 import BackButton from "discourse/components/back-button";
@@ -10,6 +11,7 @@ import {
   addUniqueValueToArray,
   removeValueFromArray,
 } from "discourse/lib/array-tools";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class AiSecretEditorForm extends Component {
@@ -27,6 +29,15 @@ export default class AiSecretEditorForm extends Component {
       name: model.name,
       secret: model.secret,
     };
+  }
+
+  get isInUse() {
+    return this.args.model.used_by?.length > 0;
+  }
+
+  get usedByLastIndex() {
+    const length = this.args.model.used_by?.length || 0;
+    return Math.max(0, length - 1);
   }
 
   @action
@@ -110,11 +121,33 @@ export default class AiSecretEditorForm extends Component {
         <form.Submit />
 
         {{#unless @model.isNew}}
-          <form.Button
-            @action={{this.delete}}
-            @label="discourse_ai.secrets.delete"
-            class="btn-danger"
-          />
+          {{#if this.isInUse}}
+            <div class="ai-secret-editor__in-use-message">
+              {{i18n "discourse_ai.secrets.cannot_delete_in_use"}}
+              {{#each @model.used_by as |usage index|}}
+                {{~#if (eq usage.type "embedding")~}}
+                  <LinkTo
+                    @route="adminPlugins.show.discourse-ai-embeddings.edit"
+                    @model={{usage.id}}
+                  >{{usage.name}}</LinkTo>
+                {{~else~}}
+                  <LinkTo
+                    @route="adminPlugins.show.discourse-ai-llms.edit"
+                    @model={{usage.id}}
+                  >{{usage.name}}</LinkTo>
+                {{~/if~}}
+                {{~#unless (eq index this.usedByLastIndex)~}}{{i18n
+                    "word_connector.comma"
+                  }}{{~/unless~}}
+              {{/each}}
+            </div>
+          {{else}}
+            <form.Button
+              @action={{this.delete}}
+              @label="discourse_ai.secrets.delete"
+              class="btn-danger"
+            />
+          {{/if}}
         {{/unless}}
       </form.Actions>
     </Form>

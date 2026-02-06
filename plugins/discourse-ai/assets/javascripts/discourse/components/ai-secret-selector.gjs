@@ -16,6 +16,10 @@ export default class AiSecretSelector extends Component {
     }));
   }
 
+  get hasSecrets() {
+    return this.secretOptions.length > 0;
+  }
+
   @action
   onSelectSecret(secretId) {
     this.args.onChange?.(secretId);
@@ -35,22 +39,31 @@ export default class AiSecretSelector extends Component {
 
   <template>
     <div class="ai-secret-selector">
-      <ComboBox
-        @value={{@value}}
-        @content={{this.secretOptions}}
-        @onChange={{this.onSelectSecret}}
-        @options={{hash
-          filterable=true
-          none="discourse_ai.secrets.select_secret"
-        }}
-        class="ai-secret-selector__dropdown"
-      />
-      <DButton
-        @action={{this.openCreateModal}}
-        @icon="plus"
-        @title="discourse_ai.secrets.create_new"
-        class="btn-default ai-secret-selector__add-btn"
-      />
+      {{#if this.hasSecrets}}
+        <ComboBox
+          @value={{@value}}
+          @content={{this.secretOptions}}
+          @onChange={{this.onSelectSecret}}
+          @options={{hash
+            filterable=true
+            none="discourse_ai.secrets.select_secret"
+          }}
+          class="ai-secret-selector__dropdown"
+        />
+        <DButton
+          @action={{this.openCreateModal}}
+          @icon="plus"
+          @title="discourse_ai.secrets.create_new"
+          class="btn-default ai-secret-selector__add-btn"
+        />
+      {{else}}
+        <DButton
+          @action={{this.openCreateModal}}
+          @icon="plus"
+          @label="discourse_ai.secrets.add_secret"
+          class="btn-default ai-secret-selector__add-btn"
+        />
+      {{/if}}
     </div>
   </template>
 }

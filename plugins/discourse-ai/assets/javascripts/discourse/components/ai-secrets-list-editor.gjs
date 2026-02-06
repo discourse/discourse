@@ -1,8 +1,11 @@
 import Component from "@glimmer/component";
+import { LinkTo } from "@ember/routing";
 import { service } from "@ember/service";
+import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
 import DBreadcrumbsItem from "discourse/components/d-breadcrumbs-item";
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiSecretEditorForm from "./ai-secret-editor-form";
 
@@ -41,6 +44,7 @@ export default class AiSecretsListEditor extends Component {
             <thead>
               <tr>
                 <th>{{i18n "discourse_ai.secrets.name"}}</th>
+                <th>{{i18n "discourse_ai.secrets.used_by"}}</th>
                 <th></th>
               </tr>
             </thead>
@@ -52,6 +56,43 @@ export default class AiSecretsListEditor extends Component {
                 >
                   <td class="d-admin-row__overview">
                     <strong>{{secret.name}}</strong>
+                  </td>
+                  <td class="d-admin-row__detail ai-secret-list__usage">
+                    <div class="d-admin-row__mobile-label">
+                      {{i18n "discourse_ai.secrets.used_by"}}
+                    </div>
+                    {{#if secret.used_by}}
+                      {{#if secret.used_by.length}}
+                        {{#each secret.used_by as |usage|}}
+                          <div class="ai-secret-list__usage-item">
+                            {{#if (eq usage.type "embedding")}}
+                              <LinkTo
+                                @route="adminPlugins.show.discourse-ai-embeddings.edit"
+                                @model={{usage.id}}
+                              >
+                                {{usage.name}}
+                              </LinkTo>
+                              ({{i18n "discourse_ai.secrets.embedding"}})
+                            {{else}}
+                              <LinkTo
+                                @route="adminPlugins.show.discourse-ai-llms.edit"
+                                @model={{usage.id}}
+                              >
+                                {{usage.name}}
+                              </LinkTo>
+                            {{/if}}
+                          </div>
+                        {{/each}}
+                      {{else}}
+                        <span class="ai-secret-list__usage-none">
+                          {{i18n "discourse_ai.secrets.not_used"}}
+                        </span>
+                      {{/if}}
+                    {{else}}
+                      <span class="ai-secret-list__usage-none">
+                        {{i18n "discourse_ai.secrets.not_used"}}
+                      </span>
+                    {{/if}}
                   </td>
                   <td class="d-admin-row__controls">
                     <DButton
@@ -66,7 +107,12 @@ export default class AiSecretsListEditor extends Component {
             </tbody>
           </table>
         {{else}}
-          <p>{{i18n "discourse_ai.secrets.no_secrets"}}</p>
+          <AdminConfigAreaEmptyList
+            @ctaLabel="discourse_ai.secrets.create_new"
+            @ctaRoute="adminPlugins.show.discourse-ai-secrets.new"
+            @ctaClass="ai-secret-list-editor__empty-new-btn"
+            @emptyLabel="discourse_ai.secrets.no_secrets"
+          />
         {{/if}}
       {{/if}}
     </section>

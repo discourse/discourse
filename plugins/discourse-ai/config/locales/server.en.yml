@@ -665,20 +665,20 @@ en:
     embeddings:
       delete_failed: "This model is currently in use. Update the `ai embeddings selected model` first."
       cannot_edit_builtin: "You can't edit a built-in model."
-      secret_required: "An API secret must be selected"
-      secret_not_found: "The selected API secret does not exist"
+      secret_required: "A credential must be selected"
+      secret_not_found: "The selected credential does not exist"
       configuration:
         disable_embeddings: "You have to disable 'ai embeddings enabled' first."
         choose_model: "Set 'ai embeddings selected model' first."
         model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     secrets:
-      delete_failed_in_use: "This secret is currently in use by one or more LLMs or embeddings and cannot be deleted."
+      delete_failed_in_use: "This credential is currently in use by one or more LLMs or embeddings and cannot be deleted."
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"
-      secret_required: "An API secret must be selected"
-      secret_not_found: "The selected API secret does not exist"
+      secret_required: "A credential must be selected"
+      secret_not_found: "The selected credential does not exist"
       bedrock_invalid_url: "Please complete all the fields to use this model."
       bedrock_missing_auth: "AWS Bedrock requires either Access Key ID or Role ARN to be configured"
 
