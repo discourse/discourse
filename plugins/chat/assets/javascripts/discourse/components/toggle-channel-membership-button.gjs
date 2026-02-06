@@ -76,7 +76,9 @@ export default class ToggleChannelMembershipButton extends Component {
     this.isLoading = true;
 
     try {
-      if (this.args.channel.chatable.group) {
+      // For DM channels (including group DMs), use non-destructive unfollow
+      // unless explicitly requested to be destructive (e.g., from settings page)
+      if (this.args.channel.chatable.group && this.options.leaveDestructive) {
         await this.chatApi.leaveChannel(this.args.channel.id);
       } else {
         await this.chat.unfollowChannel(this.args.channel);
