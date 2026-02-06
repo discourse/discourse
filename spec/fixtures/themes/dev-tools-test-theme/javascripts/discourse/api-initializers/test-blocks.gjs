@@ -130,20 +130,20 @@ export default apiInitializer((api) => {
     // This tests that ghost blocks are shown for container blocks when all children are hidden
     {
       block: BlockGroup,
-      args: { name: "level-1" },
+      id: "level-1",
       classNames: "deep-ghosts",
       children: [
         {
           block: BlockGroup,
-          args: { name: "level-2" },
+          id: "level-2",
           children: [
             {
               block: BlockGroup,
-              args: { name: "level-3" },
+              id: "level-3",
               children: [
                 {
                   block: BlockGroup,
-                  args: { name: "level-4" },
+                  id: "level-4",
                   children: [
                     {
                       block: NestedGhostLeafBlock,
