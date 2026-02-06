@@ -496,7 +496,7 @@ module PrettyText
     doc =
       begin
         Nokogiri::HTML5.fragment(html)
-      rescue ArgumentError => e
+      rescue ArgumentError
         return ""
       end
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
