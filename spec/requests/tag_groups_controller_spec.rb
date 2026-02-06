@@ -207,6 +207,43 @@ RSpec.describe TagGroupsController do
       )
       expect(TagGroup.last.parent_tag).to eq(parent_tag)
     end
+
+    it "creates a tag group with a mix of existing and brand-new tags" do
+      post "/tag_groups.json",
+           params: {
+             tag_group: {
+               name: "group_with_new_tags",
+               tags: [{ id: tag1.id, name: tag1.name }, { name: "brand-new-tag" }],
+             },
+           }
+
+      expect(response.status).to eq(200)
+
+      created_group = TagGroup.find(response.parsed_body["tag_group"]["id"])
+      new_tag = Tag.find_by(name: "brand-new-tag")
+
+      expect(new_tag).to be_present
+      expect(created_group.tags).to contain_exactly(tag1, new_tag)
+    end
+
+    it "creates a tag group with a brand-new parent tag" do
+      post "/tag_groups.json",
+           params: {
+             tag_group: {
+               name: "group_with_new_parent",
+               tags: [{ id: tag1.id, name: tag1.name }],
+               parent_tag: [{ name: "new-parent-tag" }],
+             },
+           }
+
+      expect(response.status).to eq(200)
+
+      created_group = TagGroup.find(response.parsed_body["tag_group"]["id"])
+      new_parent = Tag.find_by(name: "new-parent-tag")
+
+      expect(new_parent).to be_present
+      expect(created_group.parent_tag).to eq(new_parent)
+    end
   end
 
   describe "#delete" do
@@ -286,6 +323,38 @@ RSpec.describe TagGroupsController do
         [{ "id" => parent_tag.id, "name" => parent_tag.name, "slug" => parent_tag.slug }],
       )
       expect(tag_group.reload.parent_tag).to eq(parent_tag)
+    end
+
+    it "adds a brand-new tag to an existing tag group" do
+      put "/tag_groups/#{tag_group.id}.json",
+          params: {
+            tag_group: {
+              tags: [{ id: tag1.id, name: tag1.name }, { name: "another-new-tag" }],
+            },
+          }
+
+      expect(response.status).to eq(200)
+
+      new_tag = Tag.find_by(name: "another-new-tag")
+
+      expect(new_tag).to be_present
+      expect(tag_group.reload.tags).to contain_exactly(tag1, new_tag)
+    end
+
+    it "updates a tag group with a brand-new parent tag" do
+      put "/tag_groups/#{tag_group.id}.json",
+          params: {
+            tag_group: {
+              parent_tag: [{ name: "new-update-parent" }],
+            },
+          }
+
+      expect(response.status).to eq(200)
+
+      new_parent = Tag.find_by(name: "new-update-parent")
+
+      expect(new_parent).to be_present
+      expect(tag_group.reload.parent_tag).to eq(new_parent)
     end
   end
 end
