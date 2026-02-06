@@ -123,22 +123,28 @@ module("Integration | Component | upcoming-events-list", function (hooks) {
 
     await waitFor(".loading-container .spinner", { count: 0 });
 
+    assert
+      .dom(".upcoming-events-list__event")
+      .exists({ count: 1 }, "multi-day event appears only once");
+
     assert.deepEqual(
       [...queryAll(".upcoming-events-list__event-name")].map(
         (el) => el.innerText
       ),
-      [
-        "Awesome Multiday Event",
-        "Awesome Multiday Event",
-        "Awesome Multiday Event",
-        "Awesome Multiday Event",
-        "Awesome Multiday Event",
-        "Awesome Multiday Event",
-        "Awesome Multiday Event",
-        "Awesome Multiday Event",
-      ],
+      ["Awesome Multiday Event"],
+      "displays the multiday event name once"
+    );
 
-      "displays the multiday event on all scheduled dates"
+    const eventTime = document.querySelector(
+      ".upcoming-events-list__event-time"
+    ).innerText;
+
+    // Events in same month should use compact format: "February 2–9, 2100"
+    const expectedFormat = `${moment(tomorrowAllDay).format("MMMM D")}–${moment(nextWeek).format("D, YYYY")}`;
+    assert.strictEqual(
+      eventTime,
+      expectedFormat,
+      "displays date range in compact format for same-month events"
     );
   });
 

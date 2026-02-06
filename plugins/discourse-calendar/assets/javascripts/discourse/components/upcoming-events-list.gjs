@@ -12,7 +12,7 @@ import { i18n } from "discourse-i18n";
 import { isNotFullDayEvent } from "../lib/guess-best-date-format";
 
 export const DEFAULT_TIME_FORMAT = "LT";
-const DEFAULT_UPCOMING_DAYS = 180;
+const DEFAULT_UPCOMING_DAYS = 1800;
 const DEFAULT_COUNT = 8;
 
 function addToResult(date, item, result) {
@@ -96,7 +96,8 @@ export default class UpcomingEventsList extends Component {
     const data = {
       limit: this.count,
       before: moment().add(this.upcomingDays, "days").toISOString(),
-      after: moment().subtract(2, "hours").toISOString(),
+      // this enables showing ongoing multi-day events that started in the past but haven't ended yet
+      after: moment().subtract(30, "days").toISOString(),
     };
 
     if (this.includeSubcategories) {
@@ -121,9 +122,16 @@ export default class UpcomingEventsList extends Component {
   }
 
   @action
-  formatTime({ starts_at, ends_at }) {
-    return isNotFullDayEvent(moment(starts_at), moment(ends_at))
-      ? moment(starts_at).format(this.timeFormat)
+  formatTime(event) {
+    if (this.isMultiDayEvent(event)) {
+      return this.formatDateRange(event);
+    }
+
+    const startsAt = moment(event.starts_at);
+    const endsAt = event.ends_at ? moment(event.ends_at) : null;
+
+    return isNotFullDayEvent(startsAt, endsAt)
+      ? startsAt.format(this.timeFormat)
       : this.allDayLabel;
   }
 
@@ -137,23 +145,62 @@ export default class UpcomingEventsList extends Component {
     return moment(`${month}-${day}`).format("D");
   }
 
+  @action
+  isMultiDayEvent(event) {
+    if (!event.ends_at) {
+      return false;
+    }
+    const startDate = moment(event.starts_at);
+    const endDate = moment(event.ends_at);
+    return !startDate.isSame(endDate, "day");
+  }
+
+  @action
+  formatDateRange(event) {
+    const start = moment(event.starts_at);
+    const end = moment(event.ends_at);
+
+    // Different years - use full format with en-dash
+    if (start.year() !== end.year()) {
+      return `${start.format("LL")}–${end.format("LL")}`;
+    }
+
+    // Same month and year - drop redundant month and year
+    if (start.month() === end.month()) {
+      return `${start.format("MMMM D")}–${end.format("D, YYYY")}`;
+    }
+
+    // Different months, same year - drop redundant year
+    return `${start.format("MMMM D")}–${end.format("MMMM D, YYYY")}`;
+  }
+
   groupByMonthAndDay(data) {
+    const today = moment();
     let events = data.reduce((result, item) => {
       const startDate = moment(item.starts_at);
       const endDate = item.ends_at ? moment(item.ends_at) : null;
-      const today = moment();
 
-      if (!endDate) {
-        addToResult(startDate, item, result);
-        return result;
+      let displayDate;
+      if (!endDate || startDate.isSame(endDate, "day")) {
+        // Single-day event
+        displayDate = startDate.clone();
+      } else {
+        // Multi-day event
+        if (startDate.isAfter(today, "day")) {
+          // Future event - show at start date
+          displayDate = startDate.clone();
+        } else if (today.isSameOrBefore(endDate, "day")) {
+          // Ongoing event - show at today's date
+          displayDate = today.clone();
+        } else {
+          // Past event - skip it
+          return result;
+        }
       }
 
-      while (startDate.isSameOrBefore(endDate, "day")) {
-        if (startDate.isAfter(today)) {
-          addToResult(startDate, item, result);
-        }
-
-        startDate.add(1, "day");
+      // Only add if display date is in the future or today
+      if (displayDate.isSameOrAfter(today, "day")) {
+        addToResult(displayDate, item, result);
       }
 
       return result;
