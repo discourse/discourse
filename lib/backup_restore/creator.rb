@@ -360,11 +360,11 @@ module BackupRestore
       upload_tuples.each do |sha1_key, id, url, sha1, extension, original_filename|
         uploads_by_sha1[sha1_key] ||= []
         uploads_by_sha1[sha1_key] << UploadData.new(
-          id: id,
-          url: url,
-          sha1: sha1,
-          extension: extension,
-          original_filename: original_filename,
+          id:,
+          url:,
+          sha1:,
+          extension:,
+          original_filename:,
         )
       end
       uploads_by_sha1
