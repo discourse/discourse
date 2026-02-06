@@ -53,10 +53,7 @@ export default class MostViewedTags extends Component {
             >
               <span class="folder-tab"></span>
               <div class="rewind-card">
-                <p
-                  class="most-viewed-tags__tag"
-                  href={{getURL (concat "/tag/" data.name)}}
-                >
+                <p class="most-viewed-tags__tag">
                   #{{data.name}}
                 </p>
               </div>
