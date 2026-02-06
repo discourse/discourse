@@ -24,6 +24,7 @@ export default class GlimmerNodeView {
     view,
     getPos,
     pluginParams,
+    getContext,
     component,
     name,
     hasContent = false,
@@ -31,10 +32,10 @@ export default class GlimmerNodeView {
     this.node = node;
     this.view = view;
     this.getPos = getPos;
-    this.pluginParams = pluginParams;
+    this.pluginParams = pluginParams ?? { getContext };
     this.component = component;
 
-    pluginParams.getContext().addGlimmerNodeView(this);
+    this.pluginParams.getContext().addGlimmerNodeView(this);
 
     this.dom = document.createElement(node.isInline ? "span" : "div");
     this.dom.classList.add(`composer-${name}-node`);
