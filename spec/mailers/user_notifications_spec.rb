@@ -875,10 +875,6 @@ RSpec.describe UserNotifications do
     let(:user) { Fabricate(:user) }
     let(:notification) { Fabricate(:private_message_notification, user: user, post: response) }
 
-    before do
-      SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
-    end
-
     it "generates a correct email" do
       SiteSetting.enable_names = true
       mail =
@@ -970,7 +966,6 @@ RSpec.describe UserNotifications do
       before do
         SiteSetting.group_in_subject = true
         SiteSetting.simple_email_subject = true
-        SiteSetting.email_subject = "[%{site_name}] %{optional_pm}%{optional_cat}%{topic_title}"
       end
 
       let(:group) { Fabricate(:group, name: "my_group") }
@@ -1779,6 +1774,44 @@ RSpec.describe UserNotifications do
         mail = UserNotifications.account_suspended(user, { user_history: user_history })
 
         expect(mail.body).to include(date)
+      end
+    end
+  end
+
+  describe "improved email subject templates" do
+    def assert_improved_template_format(base_key)
+      original = I18n.t("user_notifications.#{base_key}.subject_template")
+      improved = I18n.t("user_notifications.#{base_key}.subject_template_improved")
+
+      # subject changed from "[Discourse] my topic title" to "Discourse: my topic title"
+      expect(original).to include("[%{email_prefix}]")
+      expect(improved).to include("%{email_prefix}:")
+      expect(improved).not_to match(/\[.*\]/)
+    end
+
+    describe "notification email templates" do
+      %w[
+        user_replied
+        user_replied_pm
+        user_quoted
+        user_mentioned
+        user_mentioned_pm
+        user_posted
+        user_posted_pm
+      ].each do |template_key|
+        it "has improved version for #{template_key}" do
+          assert_improved_template_format(template_key)
+        end
+      end
+    end
+
+    describe "account-related email templates" do
+      %w[account_exists account_suspended account_silenced].each do |template_key|
+        it "has improved version for #{template_key} without email_prefix" do
+          improved = I18n.t("user_notifications.#{template_key}.subject_template_improved")
+
+          expect(improved).not_to include("%{email_prefix}")
+        end
       end
     end
   end

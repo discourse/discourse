@@ -2596,6 +2596,7 @@ RSpec.describe PostAlerter do
     sends a group_smtp_email instead" do
       NotificationEmailer.enable
       SiteSetting.simple_email_subject = true
+      SiteSetting.email_subject = "%{site_name}: %{topic_title}"
 
       incoming_email_post = create_post_with_incoming
       topic = incoming_email_post.topic
