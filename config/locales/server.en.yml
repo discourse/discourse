@@ -1326,9 +1326,11 @@ en:
       description: "List of flags' statuses including type of flag, poster, flagger, and time to resolution."
     visits:
       title: "User Visits"
-      xaxis: "Day"
+      xaxis:
+        desktop: "Desktop"
+        mobile: "Mobile"
       yaxis: "Number of visits"
-      description: "Number of signed-in user visits."
+      description: "Number of signed-in user visits by device type."
     signups:
       title: "Signups"
       xaxis: "Day"

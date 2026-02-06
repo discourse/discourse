@@ -15,7 +15,6 @@ const REPORT_GROUPS = {
     reports: [
       "daily_engaged_users",
       "dau_by_mau",
-      "mobile_visits",
       "new_contributors",
       "signups",
       "topic_view_stats",
