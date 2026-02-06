@@ -40,12 +40,17 @@ class GitUtils
 
   # The `config/git-utils-override.json` file can be used by hosting providers
   # to override the git information that Discourse reports in the UI.
-  def self.filesystem_overrides
+  private_class_method def self.filesystem_overrides
     @filesystem_overrides ||=
       begin
-        JSON.parse(File.read("#{Rails.root}/config/git-utils-overrides.json"))
+        JSON.parse(File.read("#{rails_root}/config/git-utils-overrides.json"))
       rescue Errno::ENOENT
         {}
       end
+  end
+
+  private_class_method def self.rails_root
+    # Can't use `Rails.root` here because GitUtils is `require`'d before Rails is initialized'
+    Pathname.new(File.expand_path("..", __dir__))
   end
 end
