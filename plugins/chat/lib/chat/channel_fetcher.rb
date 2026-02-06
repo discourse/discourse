@@ -7,19 +7,24 @@ module Chat
     # NOTE: this should always be > than `DIRECT_MESSAGE_CHANNELS_LIMIT` in `chat-channel-manager.js`
     MAX_DM_CHANNEL_RESULTS = 75
 
+    # Match quality constants for search ranking (lower is better)
+    MATCH_QUALITY_EXACT = 1
+    MATCH_QUALITY_PREFIX = 2
+    MATCH_QUALITY_PARTIAL = 3
+
     def self.structured(guardian, include_threads: false)
       memberships = Chat::ChannelMembershipManager.all_for_user(guardian.user)
       public_channels = secured_public_channels(guardian, status: :open, following: true)
       direct_message_channels = secured_direct_message_channels(guardian.user.id, guardian)
       {
-        public_channels: public_channels,
-        direct_message_channels: direct_message_channels,
-        memberships: memberships,
+        public_channels:,
+        direct_message_channels:,
+        memberships:,
         tracking:
           tracking_state(
             public_channels.map(&:id) + direct_message_channels.map(&:id),
             guardian,
-            include_threads: include_threads,
+            include_threads:,
           ),
       }
     end
@@ -30,13 +35,11 @@ module Chat
       return DB.query_single(allowed_channel_ids_sql) if !following
 
       DB.query_single(<<~SQL, user_id: guardian.user.id)
-      SELECT chat_channel_id
-      FROM user_chat_channel_memberships
-      WHERE user_chat_channel_memberships.user_id = :user_id
-      AND user_chat_channel_memberships.chat_channel_id IN (
-        #{allowed_channel_ids_sql}
-      )
-    SQL
+        SELECT chat_channel_id
+        FROM user_chat_channel_memberships
+        WHERE user_chat_channel_memberships.user_id = :user_id
+        AND user_chat_channel_memberships.chat_channel_id IN (#{allowed_channel_ids_sql})
+      SQL
     end
 
     def self.generate_allowed_channel_ids_sql(guardian, exclude_dm_channels: false)
@@ -48,7 +51,9 @@ module Chat
           )
           .select("chat_channels.id")
           .to_sql
+
       dm_channel_sql = ""
+
       if !exclude_dm_channels
         dm_channel_sql = <<~SQL
       UNION
@@ -69,10 +74,10 @@ module Chat
       end
 
       <<~SQL
-      -- secured category chat channels
-      #{category_channel_sql}
-      #{dm_channel_sql}
-    SQL
+        -- secured category chat channels
+        #{category_channel_sql}
+        #{dm_channel_sql}
+      SQL
     end
 
     def self.secured_public_channel_slug_lookup(guardian, slugs)
@@ -82,7 +87,7 @@ module Chat
         .with_categories
         .where(chatable_type: Chat::Channel.public_channel_chatable_types)
         .where("chat_channels.id IN (#{allowed_channel_ids})")
-        .where("chat_channels.slug IN (:slugs)", slugs: slugs)
+        .where("chat_channels.slug IN (:slugs)", slugs:)
     end
 
     def self.secured_public_channel_search(guardian, options = {})
@@ -112,21 +117,59 @@ module Chat
       channels = channels.where(status: options[:status]) if options[:status].present?
 
       if options[:filter].present?
-        category_filter =
-          (options[:filter_on_category_name] ? "OR categories.name ILIKE :filter" : "")
+        filter_term = options[:filter].downcase
+        like_term = Chat::Channel.sanitize_sql_like(filter_term)
 
-        sql =
-          "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter #{category_filter}"
-        if options[:match_filter_on_starts_with]
-          filter_sql = "#{options[:filter].downcase}%"
+        if options.key?(:match_filter_on_starts_with)
+          filter_sql = options[:match_filter_on_starts_with] ? "#{like_term}%" : "%#{like_term}%"
+          category_filter =
+            (options[:filter_on_category_name] ? "OR categories.name ILIKE :filter" : "")
+
+          channels =
+            channels.where(
+              "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter #{category_filter}",
+              filter: filter_sql,
+            )
+
+          channels = channels.select("chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality")
+          channels = channels.order("chat_channels.name ASC, categories.name ASC")
         else
-          filter_sql = "%#{options[:filter].downcase}%"
-        end
+          escaped_exact = Chat::Channel.connection.quote(filter_term)
+          escaped_prefix = Chat::Channel.connection.quote("#{like_term}%")
+          category_filter =
+            (options[:filter_on_category_name] ? "OR categories.name ILIKE :partial" : "")
 
-        channels =
-          channels.where(sql, filter: filter_sql).order(
-            "chat_channels.name ASC, categories.name ASC",
-          )
+          channels =
+            channels.where(
+              <<~SQL,
+                LOWER(chat_channels.name) = :exact
+                OR LOWER(chat_channels.name) LIKE :prefix
+                OR LOWER(chat_channels.name) LIKE :partial
+                OR LOWER(chat_channels.slug) = :exact
+                OR LOWER(chat_channels.slug) LIKE :prefix
+                OR LOWER(chat_channels.slug) LIKE :partial
+                #{category_filter}
+              SQL
+              exact: filter_term,
+              prefix: "#{like_term}%",
+              partial: "%#{like_term}%",
+            )
+
+          select_sql = <<~SQL
+            chat_channels.*,
+            CASE
+              WHEN LOWER(chat_channels.name) = #{escaped_exact} OR LOWER(chat_channels.slug) = #{escaped_exact} THEN #{MATCH_QUALITY_EXACT}
+              WHEN LOWER(chat_channels.name) LIKE #{escaped_prefix} OR LOWER(chat_channels.slug) LIKE #{escaped_prefix} THEN #{MATCH_QUALITY_PREFIX}
+              ELSE #{MATCH_QUALITY_PARTIAL}
+            END AS match_quality
+          SQL
+
+          channels = channels.select(select_sql)
+          channels =
+            channels.order("match_quality ASC, chat_channels.name ASC, categories.name ASC")
+        end
+      else
+        channels = channels.select("chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality")
       end
 
       if options.key?(:slugs)
@@ -194,7 +237,7 @@ module Chat
           .joins(
             "INNER JOIN direct_message_users ON direct_message_users.direct_message_channel_id = direct_message_channels.id",
           )
-          .where("direct_message_users.user_id = :user_id", user_id: user_id)
+          .where("direct_message_users.user_id = :user_id", user_id:)
 
       query =
         Chat::Channel
@@ -211,21 +254,45 @@ module Chat
       query = query.includes(chatable: [{ users: :user_status }]) if SiteSetting.enable_user_status
 
       if options[:filter]
-        if options[:match_filter_on_starts_with]
-          filter_sql = "#{options[:filter].downcase}%"
-        else
-          filter_sql = "%#{options[:filter].downcase}%"
-        end
+        filter_term = options[:filter].downcase
+        like_term = Chat::Channel.sanitize_sql_like(filter_term)
+        escaped_exact = Chat::Channel.connection.quote(filter_term)
+        escaped_prefix = Chat::Channel.connection.quote("#{like_term}%")
 
         query =
           query.joins(user_chat_channel_memberships: :user).where(
-            "chat_channels.name ILIKE :filter OR chat_channels.slug ILIKE :filter OR users.username ILIKE :filter",
-            filter: filter_sql,
+            <<~SQL,
+              users.username_lower = :exact
+              OR users.username_lower LIKE :prefix
+              OR users.username_lower LIKE :partial
+              OR LOWER(chat_channels.name) LIKE :partial
+              OR LOWER(chat_channels.slug) LIKE :partial
+            SQL
+            exact: filter_term,
+            prefix: "#{like_term}%",
+            partial: "%#{like_term}%",
           )
+
+        # MIN() gives us the best match among all participants
+        # If ANY participant is an exact match, match_quality = MATCH_QUALITY_EXACT
+        select_sql = <<~SQL
+          chat_channels.*,
+          MIN(
+            CASE
+              WHEN users.username_lower = #{escaped_exact} THEN #{MATCH_QUALITY_EXACT}
+              WHEN users.username_lower LIKE #{escaped_prefix} THEN #{MATCH_QUALITY_PREFIX}
+              ELSE #{MATCH_QUALITY_PARTIAL}
+            END
+          ) AS match_quality
+        SQL
+
+        query = query.select(select_sql)
+      else
+        query = query.select("chat_channels.*, #{MATCH_QUALITY_PARTIAL} AS match_quality")
       end
 
       if options.key?(:following)
-        following_params = { user_id: user_id }
+        following_params = { user_id: }
         following_params[:following] = options[:following] if options[:following].present?
         query =
           query.joins(:user_chat_channel_memberships).where(
@@ -233,11 +300,13 @@ module Chat
           )
       end
 
-      query =
-        query
-          .limit(MAX_DM_CHANNEL_RESULTS)
-          .order("last_message.created_at DESC NULLS LAST")
-          .group("chat_channels.id", "last_message.id")
+      query = query.limit(MAX_DM_CHANNEL_RESULTS).group("chat_channels.id", "last_message.id")
+
+      if options[:filter]
+        query = query.order("match_quality ASC, last_message.created_at DESC NULLS LAST")
+      else
+        query = query.order("last_message.created_at DESC NULLS LAST")
+      end
 
       channels = query.to_a
 
@@ -289,6 +358,7 @@ module Chat
 
       raise Discourse::NotFound if chat_channel.blank?
       raise Discourse::InvalidAccess if !guardian.can_join_chat_channel?(chat_channel)
+
       chat_channel
     end
   end
