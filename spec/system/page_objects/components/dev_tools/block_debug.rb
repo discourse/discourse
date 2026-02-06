@@ -65,8 +65,8 @@ module PageObjects
           page.has_css?(".block-debug-tooltip__title", text: name)
         end
 
-        def has_block_outlet?(outlet_name)
-          page.has_css?(".block-debug-tooltip__outlet", text: outlet_name)
+        def has_block_location?(location)
+          page.has_css?(".block-debug-tooltip__location", text: location)
         end
 
         def has_block_arg?(key:)

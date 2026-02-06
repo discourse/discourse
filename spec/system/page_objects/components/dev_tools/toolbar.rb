@@ -37,6 +37,13 @@ module PageObjects
           self
         end
 
+        def toggle_ghost_blocks
+          open_blocks_menu
+          find(".block-debug-menu label", text: "Ghost blocks").click
+          close_blocks_menu
+          self
+        end
+
         def toggle_block_outlet_boundaries
           open_blocks_menu
           find(".block-debug-menu label", text: "Outlet boundaries").click

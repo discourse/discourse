@@ -76,7 +76,7 @@ describe "Discourse dev tools", type: :system do
         block_debug.hover_block_badge("theme:dev-tools-test:dev-tools-test-block")
         expect(block_debug).to have_block_tooltip
         expect(block_debug).to have_block_title("dev-tools-test-block")
-        expect(block_debug).to have_block_outlet("hero-blocks")
+        expect(block_debug).to have_block_location("hero-blocks")
         expect(block_debug).to have_block_arg(key: "title")
       end
 
@@ -93,7 +93,7 @@ describe "Discourse dev tools", type: :system do
       it "shows ghost blocks for failed conditions" do
         visit("/latest") # Anonymous user, admin condition fails
         toolbar.enable
-        toolbar.toggle_block_visual_overlay
+        toolbar.toggle_ghost_blocks
 
         expect(block_debug).to have_ghost_block("theme:dev-tools-test:dev-tools-conditional-block")
         block_debug.hover_ghost_badge("theme:dev-tools-test:dev-tools-conditional-block")
@@ -104,7 +104,7 @@ describe "Discourse dev tools", type: :system do
       it "shows conditions as failed with condition type" do
         visit("/latest") # Anonymous user, admin condition fails
         toolbar.enable
-        toolbar.toggle_block_visual_overlay
+        toolbar.toggle_ghost_blocks
 
         block_debug.hover_ghost_badge("theme:dev-tools-test:dev-tools-conditional-block")
         expect(block_debug).to have_failed_conditions
@@ -114,7 +114,7 @@ describe "Discourse dev tools", type: :system do
       it "shows multiple condition types for combined conditions" do
         visit("/latest") # Anonymous user, admin + TL2 condition fails
         toolbar.enable
-        toolbar.toggle_block_visual_overlay
+        toolbar.toggle_ghost_blocks
 
         block_debug.hover_ghost_badge("theme:dev-tools-test:debug-conditions-block")
         expect(block_debug).to have_failed_conditions
@@ -138,7 +138,7 @@ describe "Discourse dev tools", type: :system do
       it "shows ghost blocks with combined conditions" do
         visit("/latest") # Anonymous user, admin + TL2 condition fails
         toolbar.enable
-        toolbar.toggle_block_visual_overlay
+        toolbar.toggle_ghost_blocks
 
         expect(block_debug).to have_ghost_block("theme:dev-tools-test:debug-conditions-block")
         block_debug.hover_ghost_badge("theme:dev-tools-test:debug-conditions-block")
@@ -149,7 +149,7 @@ describe "Discourse dev tools", type: :system do
       it "shows nested ghost blocks for groups with all children hidden (4 levels deep)" do
         visit("/latest") # Anonymous user, all nested children fail admin condition
         toolbar.enable
-        toolbar.toggle_block_visual_overlay
+        toolbar.toggle_ghost_blocks
 
         # The outermost group should appear as a ghost since all its children are hidden
         expect(block_debug).to have_ghost_block("group")
@@ -169,18 +169,21 @@ describe "Discourse dev tools", type: :system do
         expect(block_debug).to have_no_block_info
         expect(block_debug).to have_no_ghost_block
 
-        # Enable visual overlay - should appear without page refresh
+        # Enable visual overlay and ghost blocks - should appear without page refresh
         toolbar.toggle_block_visual_overlay
+        toolbar.toggle_ghost_blocks
         expect(block_debug).to have_block_info("theme:dev-tools-test:dev-tools-test-block")
         expect(block_debug).to have_ghost_block("theme:dev-tools-test:dev-tools-conditional-block")
 
-        # Disable visual overlay - should disappear without page refresh
+        # Disable both - should disappear without page refresh
         toolbar.toggle_block_visual_overlay
+        toolbar.toggle_ghost_blocks
         expect(block_debug).to have_no_block_info
         expect(block_debug).to have_no_ghost_block
 
         # Re-enable to confirm reactivity works both ways
         toolbar.toggle_block_visual_overlay
+        toolbar.toggle_ghost_blocks
         expect(block_debug).to have_block_info("theme:dev-tools-test:dev-tools-test-block")
         expect(block_debug).to have_ghost_block("theme:dev-tools-test:dev-tools-conditional-block")
       end
