@@ -9,7 +9,7 @@
   &__wrap {
     box-sizing: border-box;
     position: relative;
-    padding: var(--space-6) 0 3em;
+    padding: var(--space-6) var(--space-3);
     border-radius: var(--d-border-radius-large);
     background: var(--accent-color);
 
@@ -30,6 +30,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0 var(--space-4);
+    margin-bottom: var(--space);
 
     .btn-transparent:hover {
       color: var(--primary-high);
@@ -57,13 +58,22 @@
       flex-direction: column;
       align-items: flex-start;
       text-align: left;
+      gap: var(--space-2);
+
+      .btn-default {
+        border-radius: var(--d-border-radius);
+
+        svg {
+          color: var(--primary-medium);
+        }
+      }
 
       &__checkbox {
-        input[disabled] {
-          color: var(--accent-color);
+        gap: var(--space-2);
+
+        .chcklst-box {
           pointer-events: none;
-          width: 1em;
-          height: 1em;
+          margin-bottom: var(--space-half);
         }
       }
     }

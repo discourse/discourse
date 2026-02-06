@@ -454,6 +454,7 @@ en:
     admin_onboarding_banner:
       launch_in_easy_steps: "Launch in %{step_count} easy steps"
       confirm_cancel_onboarding: "Are you sure you want to cancel the onboarding process? This will remove all progress you've made so far."
+      congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
       invite_collaborators:
         title: "Invite Collaborators"
         description: "Early members help bring your community to life"

@@ -10,10 +10,8 @@ import DButton from "discourse/components/d-button";
 import CreateInvite from "discourse/components/modal/create-invite";
 import bodyClass from "discourse/helpers/body-class";
 import { getAbsoluteURL } from "discourse/lib/get-url";
-import { clipboardCopy } from "discourse/lib/utilities";
+import { clipboardCopy, defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-
-// TODO: Should we have a EXCLUDED_ROUTES constant like in welcome-banner.gjs?
 
 class OnboardingStep extends Component {
   static name() {
@@ -51,20 +49,22 @@ class OnboardingStep extends Component {
   }
 
   <template>
-    <div class={{"onboarding-step"}}>
-      <label class="onboarding-step__checkbox" for={{this.name}}>
-        <Input
-          @type="checkbox"
-          name={{this.name}}
-          id={{this.name}}
-          @checked={{this.completed}}
-          disabled="true"
+    <div class={{"onboarding-step"}} id={{this.name}}>
+      <div class="onboarding-step__checkbox">
+        <span
+          class={{if
+            this.completed
+            "chcklst-box checked fa fa-square-check-o"
+            "chcklst-box fa fa-square-o"
+          }}
         />
         <span>{{i18n (concat this.i18nKey this.name ".title")}}</span>
-      </label>
+      </div>
 
       <div class="onboarding-step__description">
-        {{i18n (concat this.i18nKey this.name ".description")}}
+        <span>
+          {{i18n (concat this.i18nKey this.name ".description")}}
+        </span>
       </div>
 
       <div class="onboarding-step__action">
@@ -72,7 +72,7 @@ class OnboardingStep extends Component {
           @icon={{this.icon}}
           @label={{(concat this.i18nKey this.name ".action")}}
           @action={{this.performAction}}
-          class="btn"
+          class="btn btn-default"
         />
       </div>
     </div>
@@ -80,6 +80,36 @@ class OnboardingStep extends Component {
 }
 
 const STEPS = [
+  class StartPosting extends OnboardingStep {
+    static name = "start_posting";
+
+    @service composer;
+    @service appEvents;
+
+    icon = "comments";
+
+    constructor() {
+      super(...arguments);
+      this.appEvents.on("topic:created", this, this.checkIfPosted);
+    }
+
+    willDestroyElement() {
+      super.willDestroyElement(...arguments);
+      this.appEvents.off("topic:created", this, this.checkIfPosted);
+    }
+
+    checkIfPosted() {
+      this.markAsCompleted();
+    }
+
+    @action
+    async performAction() {
+      this.composer.openNewTopic({
+        title: i18n("admin_onboarding_banner.start_posting.icebreaker_title"),
+        body: i18n("admin_onboarding_banner.start_posting.icebreaker_post"),
+      });
+    }
+  },
   class InviteCollaborators extends OnboardingStep {
     static name = "invite_collaborators";
 
@@ -106,38 +136,6 @@ const STEPS = [
       });
     }
   },
-  class StartPosting extends OnboardingStep {
-    static name = "start_posting";
-
-    @service composer;
-    @service appEvents;
-
-    icon = "comments";
-
-    constructor() {
-      super(...arguments);
-      this.appEvents.on("topic:created", this, this.checkIfPosted);
-    }
-
-    willDestroyElement() {
-      super.willDestroyElement(...arguments);
-      this.appEvents.off("topic:created", this, this.checkIfPosted);
-    }
-
-    checkIfPosted(/* post, composer */) {
-      // TODO: maybe add a metadata to identify this post as an onboarding post,
-      //  so we can mark the step as completed when this post is created
-      this.markAsCompleted();
-    }
-
-    @action
-    async performAction() {
-      this.composer.openNewTopic({
-        title: i18n("admin_onboarding_banner.start_posting.icebreaker_title"),
-        body: i18n("admin_onboarding_banner.start_posting.icebreaker_post"),
-      });
-    }
-  },
   class SpreadTheWord extends OnboardingStep {
     static name = "spread_the_word";
 
@@ -147,8 +145,6 @@ const STEPS = [
     performAction() {
       clipboardCopy(getAbsoluteURL("/"));
 
-      // TODO: could we use a toast
-      // would that be better?
       this.icon = "check";
       setTimeout(() => {
         this.icon = "copy";
@@ -165,6 +161,8 @@ export default class AdminOnboardingBanner extends Component {
   @service appEvents;
   @service keyValueStore;
   @service dialog;
+  @service router;
+  @service toasts;
 
   constructor() {
     super(...arguments);
@@ -199,8 +197,8 @@ export default class AdminOnboardingBanner extends Component {
       return false;
     }
 
-    // TODO: Is there a way to know if this user is the _first_ admin user?
-    return true;
+    const { currentRouteName } = this.router;
+    return currentRouteName === `discovery.${defaultHomepage()}`;
   }
 
   checkIfOnboardingIsComplete() {
@@ -210,6 +208,12 @@ export default class AdminOnboardingBanner extends Component {
 
     if (allStepsAreDone) {
       this.endOnboarding({ showConfirmation: false });
+      this.toasts.success({
+        duration: "short",
+        data: {
+          message: i18n("admin_onboarding_banner.congrats_onboarding_complete"),
+        },
+      });
     }
   }
 
@@ -223,7 +227,8 @@ export default class AdminOnboardingBanner extends Component {
         return;
       }
     }
-    SiteSetting.update("enable_site_owner_onboarding", false);
+
+    await SiteSetting.update("enable_site_owner_onboarding", false);
     STEPS.forEach((Step) => {
       this.keyValueStore.remove(`onboarding_step_${Step.name}`);
     });
@@ -244,7 +249,7 @@ export default class AdminOnboardingBanner extends Component {
             <DButton
               @action={{this.endOnboarding}}
               @icon="xmark"
-              class="btn no-text btn-transparent"
+              class="btn no-text btn-transparent btn-close"
             />
           </div>
           <div class={{"admin-onboarding-banner__content"}}>
