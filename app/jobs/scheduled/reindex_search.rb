@@ -49,15 +49,6 @@ module Jobs
       reindex_records(User, user_ids, indexer)
     end
 
-    private
-
-    def reindex_records(model_class, ids, indexer)
-      return if ids.empty?
-      model_class.where(id: ids).find_each { |record| indexer.index(record, force: true) }
-    end
-
-    public
-
     def rebuild_registered_search_handlers(limit: 10_000, indexer: SearchIndexer)
       DiscoursePluginRegistry.search_handlers.each do |handler|
         next unless handler[:enabled]&.call
@@ -183,6 +174,13 @@ module Jobs
         .order("users.id ASC")
         .limit(limit)
         .pluck(:id)
+    end
+
+    private
+
+    def reindex_records(model_class, ids, indexer)
+      return if ids.empty?
+      model_class.where(id: ids).find_each { |record| indexer.index(record, force: true) }
     end
   end
 end
