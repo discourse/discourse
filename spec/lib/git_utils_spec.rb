@@ -17,6 +17,7 @@ RSpec.describe GitUtils do
       run("git config user.email 'test@example.com'")
       run("git config user.name 'Test User'")
       run("git config commit.gpgsign false")
+      run("git checkout --quiet -b main")
       yield
     end
   end
@@ -40,15 +41,11 @@ RSpec.describe GitUtils do
     end
   end
 
-  it "returns fallback values when not in a git repo or missing data" do
+  it "returns fallback values when missing data" do
     within_temp_git_repo do
       create_commit
-      expect(GitUtils.full_version).to eq("unknown")
-    end
-
-    Dir.chdir(temp_dir) do
-      FileUtils.rm_rf(".git")
-      expect(GitUtils.git_version).to eq("unknown")
+      run("git checkout --quiet --detach HEAD")
+      expect(GitUtils.git_branch).to eq("unknown")
     end
   end
 
@@ -87,15 +84,7 @@ RSpec.describe GitUtils do
           "full_version" => "override-full",
         }.to_json,
       )
-      Rails.stubs(:root).returns(Pathname.new(temp_dir))
-
-      expect(GitUtils.filesystem_overrides).to eq(
-        {
-          "git_version" => "override-sha",
-          "git_branch" => "override-branch",
-          "full_version" => "override-full",
-        },
-      )
+      GitUtils.stubs(:rails_root).returns(Pathname.new(temp_dir))
 
       within_temp_git_repo do
         create_commit
@@ -105,9 +94,24 @@ RSpec.describe GitUtils do
       end
     end
 
-    it "returns empty hash when file does not exist" do
-      Rails.stubs(:root).returns(Pathname.new(temp_dir))
-      expect(GitUtils.filesystem_overrides).to eq({})
+    it "returns regular info when file does not exist" do
+      GitUtils.stubs(:rails_root).returns(Pathname.new(temp_dir))
+      within_temp_git_repo do
+        create_commit
+        expect(GitUtils.git_version).to eq(`git rev-parse HEAD`.strip)
+        expect(GitUtils.git_branch).to eq("main")
+        expect(GitUtils.full_version).to eq("unknown")
+      end
     end
+  end
+
+  it "calculates rails root correctly" do
+    expected = Rails.root
+    Rails.stubs(:root).raises "Rails.root might not be available during GitUtils initialization"
+    expect(GitUtils.send(:rails_root)).to eq(expected)
+  ensure
+    # This will get unstubbed automatically by rails_helper, but we gotta do it
+    # even earlier, since some other test cleanup code calls Rails.root
+    Rails.unstub(:root)
   end
 end
