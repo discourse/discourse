@@ -191,7 +191,11 @@ export default class AdminReport extends Component {
   }
 
   get isChartMode() {
-    return this.currentMode === REPORT_MODES.chart;
+    return (
+      this.currentMode === REPORT_MODES.chart ||
+      this.currentMode === REPORT_MODES.stacked_chart ||
+      this.currentMode === REPORT_MODES.stacked_line_chart
+    );
   }
 
   @action
@@ -291,11 +295,14 @@ export default class AdminReport extends Component {
     const chartGrouping = this.options?.chartGrouping;
     const options = ["daily", "weekly", "monthly"];
 
+    const dataLength = Array.isArray(this.model.chartData?.[0]?.data)
+      ? this.model.chartData[0].data.length
+      : this.model.chartData?.length || 0;
+
     return options.map((id) => {
       return {
         id,
-        disabled:
-          id === "daily" && this.model.chartData.length >= DAILY_LIMIT_DAYS,
+        disabled: id === "daily" && dataLength >= DAILY_LIMIT_DAYS,
         label: `admin.dashboard.reports.${id}`,
         class: `chart-grouping ${chartGrouping === id ? "active" : "inactive"}`,
       };
@@ -495,11 +502,19 @@ export default class AdminReport extends Component {
         Object.assign(chartOptions, this.args.reportOptions?.chart || {}, {
           chartGrouping:
             this.args.reportOptions?.chartGrouping ||
+            report.default_group_by ||
             Report.groupingForDatapoints(report.chartData.length),
         })
       );
     } else if (mode === REPORT_MODES.stacked_chart) {
-      return this.args.reportOptions?.stackedChart || {};
+      const stackedChartOptions = this.args.reportOptions?.stackedChart || {};
+      const firstSeriesData = report.chartData?.[0]?.data || [];
+      return Object.assign(stackedChartOptions, {
+        chartGrouping:
+          this.args.reportOptions?.chartGrouping ||
+          report.default_group_by ||
+          Report.groupingForDatapoints(firstSeriesData.length),
+      });
     }
   }
 
