@@ -809,6 +809,16 @@ module DiscourseTagging
     DiscoursePluginRegistry.apply_modifier(:tags_for_saving, saving_tags, tag_names, guardian, opts)
   end
 
+  def self.find_or_create_tags!(tag_names, guardian)
+    tag_names = tags_for_saving(tag_names, guardian) || []
+    return [] if tag_names.empty?
+
+    existing_tag_names = Tag.where_name(tag_names).pluck(:name)
+    new_tag_names = tag_names - existing_tag_names
+    new_tag_names.each { |name| Tag.create!(name: name) }
+    Tag.where_name(tag_names).all
+  end
+
   def self.add_or_create_tags_by_name(taggable, tag_names_arg, opts = {})
     tag_names =
       DiscourseTagging.tags_for_saving(tag_names_arg, Guardian.new(Discourse.system_user), opts) ||
