@@ -8,9 +8,7 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/footnote/*": [
-        "./assets/javascripts/*"
-      ],
+      "discourse/plugins/footnote/*": ["./assets/javascripts/*"],
       "discourse/plugins/footnote/admin/*": [
         "./admin/assets/javascripts/admin/*"
       ]

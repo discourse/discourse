@@ -8,9 +8,7 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/styleguide/*": [
-        "./assets/javascripts/*"
-      ],
+      "discourse/plugins/styleguide/*": ["./assets/javascripts/*"],
       "discourse/plugins/styleguide/admin/*": [
         "./admin/assets/javascripts/admin/*"
       ]

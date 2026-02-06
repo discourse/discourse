@@ -8,9 +8,7 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-solved/*": [
-        "./assets/javascripts/*"
-      ],
+      "discourse/plugins/discourse-solved/*": ["./assets/javascripts/*"],
       "discourse/plugins/discourse-solved/admin/*": [
         "./admin/assets/javascripts/admin/*"
       ]

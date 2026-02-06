@@ -8,9 +8,7 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-calendar/*": [
-        "./assets/javascripts/*"
-      ],
+      "discourse/plugins/discourse-calendar/*": ["./assets/javascripts/*"],
       "discourse/plugins/discourse-calendar/admin/*": [
         "./admin/assets/javascripts/admin/*"
       ]

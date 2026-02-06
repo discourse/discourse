@@ -8,9 +8,7 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-adplugin/*": [
-        "./assets/javascripts/*"
-      ],
+      "discourse/plugins/discourse-adplugin/*": ["./assets/javascripts/*"],
       "discourse/plugins/discourse-adplugin/admin/*": [
         "./admin/assets/javascripts/admin/*"
       ]

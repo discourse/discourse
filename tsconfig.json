@@ -44,7 +44,7 @@
     { "path": "plugins/poll" },
     { "path": "plugins/spoiler-alert" },
     { "path": "plugins/styleguide" },
-    { "path": "themes/horizon" },
+    { "path": "themes/horizon" }
   ],
-  "include": [],
+  "include": []
 }

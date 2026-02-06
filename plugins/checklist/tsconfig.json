@@ -8,9 +8,7 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/checklist/*": [
-        "./assets/javascripts/*"
-      ],
+      "discourse/plugins/checklist/*": ["./assets/javascripts/*"],
       "discourse/plugins/checklist/admin/*": [
         "./admin/assets/javascripts/admin/*"
       ]

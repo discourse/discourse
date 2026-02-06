@@ -8,9 +8,7 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-narrative-bot/*": [
-        "./assets/javascripts/*"
-      ],
+      "discourse/plugins/discourse-narrative-bot/*": ["./assets/javascripts/*"],
       "discourse/plugins/discourse-narrative-bot/admin/*": [
         "./admin/assets/javascripts/admin/*"
       ]

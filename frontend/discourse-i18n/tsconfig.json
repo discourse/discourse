@@ -1,7 +1,5 @@
 {
-  "include": [
-    "./src/**/*.js"
-  ],
+  "include": ["./src/**/*.js"],
   "extends": "../../tsconfig-base.json",
   "compilerOptions": {
     "composite": true,

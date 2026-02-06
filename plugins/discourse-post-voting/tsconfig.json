@@ -8,9 +8,7 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/discourse-post-voting/*": [
-        "./assets/javascripts/*"
-      ],
+      "discourse/plugins/discourse-post-voting/*": ["./assets/javascripts/*"],
       "discourse/plugins/discourse-post-voting/admin/*": [
         "./admin/assets/javascripts/admin/*"
       ]

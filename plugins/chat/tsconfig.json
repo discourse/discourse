@@ -8,12 +8,8 @@
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/chat/*": [
-        "./assets/javascripts/*"
-      ],
-      "discourse/plugins/chat/admin/*": [
-        "./admin/assets/javascripts/admin/*"
-      ]
+      "discourse/plugins/chat/*": ["./assets/javascripts/*"],
+      "discourse/plugins/chat/admin/*": ["./admin/assets/javascripts/admin/*"]
     }
   }
 }
