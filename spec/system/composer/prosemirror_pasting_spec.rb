@@ -161,6 +161,27 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
       composer.toggle_rich_editor
       expect(composer).to have_value("image")
     end
+
+    it "replaces multiple base64 images with same data URI" do
+      valid_png_data_uri =
+        "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+      cdp.allow_clipboard
+      open_composer
+      html = <<~HTML
+        <p>before</p>
+        <img src="#{valid_png_data_uri}" alt="img1">
+        <p>middle</p>
+        <img src="#{valid_png_data_uri}" alt="img2">
+        <p>after</p>
+      HTML
+      cdp.copy_paste(html, html: true)
+      expect(rich).to have_no_css("img")
+      expect(rich).to have_text("before")
+      expect(rich).to have_text("middle")
+      expect(rich).to have_text("after")
+      composer.toggle_rich_editor
+      expect(composer).to have_value("before\n\nimage\n\nmiddle\n\nimage\n\nafter")
+    end
   end
 
   it "merges text with link marks created from parsing" do
