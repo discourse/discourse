@@ -3638,6 +3638,8 @@ nb_NO:
       slug_placeholder: "(Valgfritt) sammensatte ord for bruk i URL"
       creation_error: Det oppstod en feil ved lagring av denne kategorien.
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
+      validations:
+        icon_required: "Velg et ikon."
       description: "Beskrivelse"
       icon: "Ikon"
       emoji: "Emoji"

@@ -2982,6 +2982,8 @@ sl:
       slug_placeholder: "(neobvezno) besede-s-črtico za URL"
       creation_error: Prišlo je do napake pri kreiranju kategorije.
       save_error: Prišlo je do napake pri shranjevanju kategorije.
+      validations:
+        icon_required: "Izberite ikono."
       description: "Opis"
       icon: "Ikona"
       emoji: "Emoji"

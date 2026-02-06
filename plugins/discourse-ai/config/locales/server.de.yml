@@ -86,6 +86,7 @@ de:
     ai_helper_automatic_chat_thread_title: "Lege die Titel der Chat-Threads automatisch anhand der Thread-Inhalte fest."
     ai_helper_enabled_features: "Wähle die Funktionen aus, die im KI-Helfer aktiviert werden sollen."
     post_ai_helper_allowed_groups: "Benutzergruppen, die auf KI-Helfer-Funktionen in Beiträgen zugreifen dürfen"
+    ai_helper_chat_thread_title_persona: "Die Persona, die zum Generieren von Chat-Thread-Titeln verwendet wird."
     ai_embeddings_selected_model: "Verwende das ausgewählte Modell für die Erzeugung von Einbettungen."
     ai_embeddings_generate_for_pms: "Erstelle Einbettungen für persönliche Nachrichten."
     ai_embeddings_semantic_related_topics_enabled: "Verwende die semantische Suche für verwandte Themen."
@@ -401,6 +402,9 @@ de:
         discover:
           name: "Entdecken"
           description: "Standard-Persona, die in der Entdeckungsfunktion verwendet wird (ergänzende Suche)"
+        chat_thread_titler:
+          name: "Chat-Thread-Titelgenerator"
+          description: "Standard-Persona für die automatische Generierung von Chat-Thread-Titeln"
       topic_not_found: "Zusammenfassung nicht verfügbar, Thema nicht gefunden!"
       summarizing: "Thema zusammenfassen"
       searching: "Suche nach: „%{query}“"

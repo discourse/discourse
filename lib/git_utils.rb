@@ -2,16 +2,17 @@
 
 class GitUtils
   def self.git_version
-    self.try_git("git rev-parse HEAD", "unknown")
+    filesystem_overrides["git_version"] || self.try_git("git rev-parse HEAD", "unknown")
   end
 
   def self.git_branch
-    self.try_git("git branch --show-current", nil) ||
+    filesystem_overrides["git_branch"] || self.try_git("git branch --show-current", nil) ||
       self.try_git("git config user.discourse-version", "unknown")
   end
 
   def self.full_version
-    self.try_git('git describe --dirty --match "v[0-9]*" 2> /dev/null', "unknown")
+    filesystem_overrides["full_version"] ||
+      self.try_git('git describe --dirty --match "v[0-9]*" 2> /dev/null', "unknown")
   end
 
   def self.has_commit?(hash)
@@ -35,5 +36,21 @@ class GitUtils
       end
 
     (!value.empty? ? value : nil) || default_value
+  end
+
+  # The `config/git-utils-override.json` file can be used by hosting providers
+  # to override the git information that Discourse reports in the UI.
+  private_class_method def self.filesystem_overrides
+    @filesystem_overrides ||=
+      begin
+        JSON.parse(File.read("#{rails_root}/config/git-utils-overrides.json"))
+      rescue Errno::ENOENT
+        {}
+      end
+  end
+
+  private_class_method def self.rails_root
+    # Can't use `Rails.root` here because GitUtils is `require`'d before Rails is initialized
+    Pathname.new(File.expand_path("..", __dir__))
   end
 end
