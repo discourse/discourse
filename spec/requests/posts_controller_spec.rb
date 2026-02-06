@@ -1603,6 +1603,27 @@ RSpec.describe PostsController do
         expect(json["errors"]).to be_present
       end
 
+      describe "tagging by name" do
+        it "can create a post with a tag when tagging is enabled" do
+          SiteSetting.tagging_enabled = true
+          tag = Fabricate(:tag)
+
+          logger =
+            track_log_messages do
+              post "/posts.json",
+                   params: {
+                     raw: "this is the test content",
+                     title: "this is the test title for the topic",
+                     tags: [tag.name],
+                   }
+            end
+
+          expect(response.status).to eq(200)
+          expect(Post.last.topic.tags.count).to eq(1)
+          expect(logger.warnings.join("\n")).to include("tag names as strings")
+        end
+      end
+
       it "can create a post with a tag when tagging is enabled" do
         SiteSetting.tagging_enabled = true
         tag = Fabricate(:tag)
@@ -1611,11 +1632,11 @@ RSpec.describe PostsController do
              params: {
                raw: "this is the test content",
                title: "this is the test title for the topic",
-               tags: [tag.name],
+               tags: [{ id: tag.id, name: tag.name }],
              }
 
         expect(response.status).to eq(200)
-        expect(Post.last.topic.tags.count).to eq(1)
+        expect(Post.last.topic.tags).to contain_exactly(tag)
       end
 
       it "creates the topic and post with the right attributes" do
