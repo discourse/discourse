@@ -17,6 +17,8 @@ sw:
         agree_and_silence:
           title: "Nyamazisha Mtumiaji"
           description: "Kubaliana na bendera na nyamazisha mtumiaji."
+        ignore:
+          title: "Puuzia bendera"
     channel:
       dm_title:
         single_user: "%{username}"

@@ -4148,6 +4148,8 @@ es:
       save_error: Se produjo un error al guardar la categoría
       errors:
         self_lockout: "Estás a punto de cambiar los permisos de la categoría de una forma que perderías tu propio acceso. ¿De verdad quieres continuar?"
+      validations:
+        icon_required: "Selecciona un icono."
       name: "Nombre de la categoría"
       untitled: "Categoría sin nombre"
       description: "Descripción"

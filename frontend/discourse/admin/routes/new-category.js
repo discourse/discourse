@@ -70,6 +70,7 @@ export default class NewCategory extends DiscourseRoute {
     super.setupController(...arguments);
 
     controller.selectedTab = "general";
+    controller.parentParams = {};
   }
 
   titleToken() {

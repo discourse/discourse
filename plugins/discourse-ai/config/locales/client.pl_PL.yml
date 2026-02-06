@@ -325,6 +325,7 @@ pl_PL:
           image_caption: "Obrazy z podpisami"
           translator: "Tłumacz"
           post_illustrator: "Ilustrator postów"
+          chat_thread_titles: "Tytuły wątków czatu"
           setting_groups:
             access_permissions: "Dostęp i uprawnienia"
             enabled_features: "Włączone funkcje"
