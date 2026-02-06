@@ -25,6 +25,7 @@ import FKSection from "discourse/form-kit/components/fk/section";
 import FKSubmit from "discourse/form-kit/components/fk/submit";
 import { VALIDATION_TYPES } from "discourse/form-kit/lib/constants";
 import FKFormData from "discourse/form-kit/lib/fk-form-data";
+import concatClass from "discourse/helpers/concat-class";
 import { headerOffset } from "discourse/lib/offset-calculator";
 import DButton from "discourse/ui-kit/d-button";
 import { i18n } from "discourse-i18n";
@@ -347,7 +348,7 @@ class FKForm extends Component {
   <template>
     <form
       novalidate
-      class="form-kit"
+      class={{concatClass "form-kit" (if @noLayout "--no-layout")}}
       ...attributes
       {{on "submit" this.onSubmit}}
       {{on "reset" this.onReset}}
@@ -387,6 +388,7 @@ class FKForm extends Component {
           InputGroup=(this.componentFor FKInputGroup)
           CheckboxGroup=(this.componentFor FKCheckboxGroup)
           set=this.set
+          submit=this.onSubmit
           setProperties=this.setProperties
           commitField=this.commitField
           addItemToCollection=this.addItemToCollection
@@ -409,6 +411,7 @@ const Form = <template>
       @onReset={{@onReset}}
       @onSet={{@onSet}}
       @onDirtyCheck={{@onDirtyCheck}}
+      @noLayout={{@noLayout}}
       ...attributes
       as |components draftData|
     >

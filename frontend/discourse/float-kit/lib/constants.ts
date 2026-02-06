@@ -1,6 +1,7 @@
 import type { AutoUpdateOptions, ReferenceElement } from "@floating-ui/dom";
 import { type ComponentLike } from "@glint/template";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
+import type DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 
 /**
  * The placements floating-ui may position a float at, ordered by preference. Kept
@@ -254,6 +255,15 @@ export interface ToastAction {
   class?: string;
 }
 
+/** An action rendered by the sheet-based default toast. */
+export interface ToastButtonAction {
+  /** The button label. */
+  label: string;
+
+  /** Called after the toast starts closing. */
+  onClick?: () => void;
+}
+
 /**
  * The `@data` passed to a toast component. The default toast reads these fields;
  * custom components may add their own (hence the index signature).
@@ -271,28 +281,40 @@ export interface ToastData {
   /** The toast message. */
   message?: string;
 
+  /** An alternative name for the toast message. */
+  description?: string;
+
   /** Whether `message` is trusted HTML rather than plain text. */
   isHtmlMessage?: boolean;
 
   /** The action buttons shown in the toast. */
   actions?: ToastAction[];
 
+  /** The primary action shown by the default toast. */
+  action?: ToastButtonAction;
+
+  /** An optional cancel action shown by the default toast. */
+  cancel?: Partial<ToastButtonAction>;
+
   [key: string]: unknown;
 }
 
 /** The arguments a toast component receives (the default is `DDefaultToast`). */
 export interface ToastComponentArgs {
-  /** The data to render in the toast. */
-  data?: ToastData;
+  /** The toast instance being rendered. */
+  toast: DToastInstance;
 
   /** Closes the toast. */
-  close?: FloatCallback;
+  close: () => void;
 
-  /** Whether to show a progress bar counting down to auto-close. */
-  showProgressBar?: boolean;
+  /** Whether this is the front-most active toast. */
+  isFront: boolean;
 
-  /** Registers the progress-bar element so the auto-close modifier can animate it. */
-  onRegisterProgressBar?: (element: HTMLElement) => void;
+  /** Inline animation styles for the auto-close progress bar. */
+  progressBarStyle: unknown;
+
+  /** Handles completion of the auto-close progress animation. */
+  onProgressComplete: (event: AnimationEvent) => void;
 }
 
 /** The signature of a toast component (the default is `DDefaultToast`). */

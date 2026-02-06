@@ -1,0 +1,128 @@
+.assign-sheet__nested-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  height: 100%;
+  padding: var(--space-2);
+
+  .filter-input,
+  .assign-sheet__assignees-list {
+    width: 100%;
+  }
+
+  .assign-sheet__assignees-list {
+    padding: 0;
+  }
+
+  .assign-sheet__full-width-btn {
+    width: 100%;
+    justify-content: center;
+    margin: 0;
+  }
+}
+
+.assign-sheet__note-field {
+  width: 100%;
+}
+
+.assign-sheet__assignees {
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.assign-sheet__assignee-row {
+  display: flex;
+  text-align: left;
+  gap: var(--space-2);
+
+  &:hover {
+    .assign-sheet__assignee-avatar {
+      .assign-sheet__no-assignee {
+        border: 1px dotted var(--d-button-default-icon-color--hover);
+      }
+    }
+  }
+
+  .assign-sheet__assignee-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+
+    .assign-sheet__no-assignee {
+      display: flex;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 1px dotted var(--primary-medium);
+      align-items: center;
+      justify-content: center;
+
+      .d-icon {
+        padding: 5px;
+      }
+    }
+
+    img.avatar {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+    }
+
+    .d-icon {
+      width: 20px;
+      height: 20px;
+      color: var(--primary-medium);
+    }
+  }
+
+  .assign-sheet__assignee-details {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-width: 0;
+    flex: 1;
+
+    .assign-sheet__assignee-name {
+      font-size: var(--font-down-1);
+
+      @include ellipsis;
+    }
+
+    .assign-sheet__assignee-full-name {
+      font-size: var(--font-down-1);
+      color: var(--primary-medium);
+      font-weight: normal;
+
+      @include ellipsis;
+    }
+  }
+}
+
+.assign-sheet__assignees-list {
+  display: flex;
+  width: 100%;
+  gap: var(--space-2);
+  flex-direction: column;
+  padding: var(--space-2);
+
+  .btn {
+    width: 100%;
+  }
+
+  .assign-sheet__assignee-row {
+    .disclosure-indicator-icon {
+      visibility: hidden;
+    }
+
+    &:hover,
+    &.--selected {
+      .disclosure-indicator-icon {
+        visibility: visible;
+      }
+    }
+  }
+}

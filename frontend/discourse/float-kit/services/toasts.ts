@@ -1,7 +1,7 @@
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { trackedArray } from "@ember/reactive/collections";
+import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import Service from "@ember/service";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import type {
@@ -22,6 +22,16 @@ type ThemedToastOptions = Partial<ToastOptions> & { data: ToastData };
  */
 export default class Toasts extends Service {
   @tracked activeToasts = trackedArray<DToastInstance>();
+  heights = trackedMap<string, number>();
+  #stackOrderCounter = 0;
+
+  get frontToast() {
+    return this.activeToasts.filter((toast) => !toast.dismissed).slice(-1)[0];
+  }
+
+  get frontToastHeight() {
+    return this.heights.get(this.frontToast?.id ?? "") ?? 0;
+  }
 
   /**
    * Render a toast.
@@ -40,6 +50,7 @@ export default class Toasts extends Service {
     });
 
     if (instance.isValidForView) {
+      instance.stackOrder = this.#stackOrderCounter++;
       this.activeToasts.push(instance);
     }
 

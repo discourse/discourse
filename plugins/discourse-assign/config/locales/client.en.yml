@@ -24,6 +24,9 @@ en:
       note_change: "Changed assignment note for %{who} %{when}"
       status_change: "Changed assignment status for %{who} %{when}"
     discourse_assign:
+      post_number: "Post#%{number}"
+      unassigned: "Unassigned"
+      assign_to: Assign to...
       add_unassigned_filter: "Add 'unassigned' filter to category"
       additional_assign_allowed_groups: "Additional groups with assignment permission"
       additional_assign_allowed_groups_description: "Members of these groups can assign topics in this category. Groups already allowed globally are shown and cannot be removed here. Parent category settings do not apply to subcategories."

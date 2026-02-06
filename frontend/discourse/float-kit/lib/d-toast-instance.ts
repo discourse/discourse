@@ -1,8 +1,10 @@
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import Owner, { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import { TOAST, type ToastOptions } from "discourse/float-kit/lib/constants";
 import type ToastsService from "discourse/float-kit/services/toasts";
+import deprecated from "discourse/lib/deprecated";
 import type Site from "discourse/models/site";
 import dUniqueId from "discourse/ui-kit/helpers/d-unique-id";
 
@@ -16,12 +18,34 @@ export default class DToastInstance {
   @service declare site: Site;
   @service declare toasts: ToastsService;
 
+  @tracked dismissed = false;
+  @tracked stackOrder = 0;
+
   options: ToastOptions;
   id = dUniqueId();
 
   constructor(owner: Owner, options: Partial<ToastOptions> = {}) {
     setOwner(this, owner);
     this.options = { ...TOAST.options, ...options };
+  }
+
+  get duration() {
+    const { duration } = this.options;
+
+    if (duration === "long") {
+      return 5000;
+    } else if (duration === "short") {
+      return 3000;
+    } else if (Number.isInteger(duration)) {
+      deprecated(
+        "Using an integer for the duration property of the d-toast component is deprecated. Use `short` or `long` instead.",
+        { id: "float-kit.d-toast.duration" }
+      );
+
+      return duration;
+    }
+
+    return 3000;
   }
 
   @action

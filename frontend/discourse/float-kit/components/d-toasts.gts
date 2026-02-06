@@ -3,17 +3,28 @@ import { service } from "@ember/service";
 import DToast from "discourse/float-kit/components/d-toast";
 import type ToastsService from "discourse/float-kit/services/toasts";
 
+const MAX_VISIBLE_TOASTS = 3;
+
 /**
- * The app-root host for toasts, mounted once. It renders a `DToast` for every
- * toast currently active in the `toasts` service, stacked in a fixed container.
+ * The container component for all toasts.
+ * Renders the last N active toasts.
  */
 export default class DToasts extends Component {
   @service declare toasts: ToastsService;
 
+  get visibleToasts() {
+    return this.toasts.activeToasts.slice(-MAX_VISIBLE_TOASTS);
+  }
+
   <template>
-    <section class="fk-d-toasts">
-      {{#each this.toasts.activeToasts as |toast|}}
-        <DToast @toast={{toast}} />
+    <section
+      class="fk-d-toasts"
+      role="status"
+      aria-live="polite"
+      aria-label="Notifications"
+    >
+      {{#each this.visibleToasts key="id" as |toast|}}
+        <DToast @toasts={{this.toasts.activeToasts}} @toast={{toast}} />
       {{/each}}
     </section>
   </template>
