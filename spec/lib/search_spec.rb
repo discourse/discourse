@@ -1543,6 +1543,13 @@ RSpec.describe Search do
 
         expect(search.valid?).to eq(false)
       end
+
+      it "marks 't' alone as an invalid search" do
+        search = Search.new("t", type_filter: "topic")
+        search.execute
+
+        expect(search.valid?).to eq(false)
+      end
     end
 
     context "with security" do

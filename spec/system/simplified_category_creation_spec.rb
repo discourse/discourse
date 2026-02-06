@@ -80,6 +80,21 @@ describe "Simplified Category Creation" do
       expect(page).to have_content("Color is invalid")
     end
 
+    it "shows error when icon is missing" do
+      category_page.visit_new_category
+
+      form.field("name").fill_in("Test Category")
+
+      icon_picker = PageObjects::Components::SelectKit.new(".form-kit__control-icon")
+      icon_picker.expand
+      icon_picker.clear
+      icon_picker.collapse
+
+      category_page.save_settings
+
+      expect(form.field("icon")).to have_errors(I18n.t("js.category.validations.icon_required"))
+    end
+
     it "shows advanced tabs when toggled" do
       category_page.visit_general(category)
 
@@ -88,9 +103,24 @@ describe "Simplified Category Creation" do
       expect(page).to have_css(".edit-category-security")
       expect(page).to have_css(".edit-category-settings")
     end
+
+    it "automatically switches to private when selecting a restricted parent" do
+      restricted_parent =
+        Fabricate(:category, name: "Restricted Parent", permissions: { group.name => :full })
+
+      category_page.visit_new_category
+
+      parent_chooser = PageObjects::Components::SelectKit.new(".category-chooser")
+      parent_chooser.expand
+      parent_chooser.select_row_by_value(restricted_parent.id)
+
+      expect(page).to have_css(".group-chooser")
+    end
   end
 
   describe "Security Tab" do
+    fab!(:private_category) { Fabricate(:private_category, group:) }
+
     before do
       CategoryGroup.create!(
         category:,
@@ -102,6 +132,14 @@ describe "Simplified Category Creation" do
         group:,
         permission_type: CategoryGroup.permission_types[:readonly],
       )
+    end
+
+    it "resets security settings when navigating from edit to new category" do
+      category_page.visit_general(private_category)
+      expect(page).to have_css(".group-chooser")
+
+      category_page.visit_new_category
+      expect(page).to have_no_css(".group-chooser")
     end
 
     it "removes a group permission" do

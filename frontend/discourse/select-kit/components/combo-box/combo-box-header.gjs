@@ -43,7 +43,7 @@ export default class ComboBoxHeader extends SingleSelectHeaderComponent {
       {{/if}}
 
       {{#if this.caretIcon}}
-        {{icon this.caretIcon class="caret-icon"}}
+        {{icon this.caretIcon class="angle-icon"}}
       {{/if}}
     </div>
   </template>

@@ -869,6 +869,13 @@ form {
   grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
   gap: 0;
 
+  @include viewport.until(md) {
+    grid-template-areas:
+      "content"
+      "below-content";
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   #main-outlet {
     grid-area: content;
   }

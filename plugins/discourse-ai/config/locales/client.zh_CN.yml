@@ -113,6 +113,14 @@ zh_CN:
             persona_id:
               label: "角色"
               description: "用于生成报告的 AI 角色"
+        ai_tool_action:
+          fields:
+            tool:
+              label: "AI 工具"
+              description: "当自动化触发时，要执行的 AI 工具"
+            llm_model:
+              label: "LLM 模型"
+              description: "使用 llm.generate() 的工具的语言模型（可选）"
         llm_persona_triage:
           fields:
             persona:
@@ -221,6 +229,7 @@ zh_CN:
         short_title: "功能"
         description: "这些是您网站的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的角色和 LLM，并按群组控制访问权限。"
         back: "返回"
+        settings_save_error: "部分设置无法保存。"
         disabled: "（已禁用）"
         persona:
           other: "角色："
@@ -238,6 +247,11 @@ zh_CN:
           bot: "聊天机器人"
           name: "机器人"
           description: "可以回答问题以及帮助用户回复个人消息、论坛和聊天的聊天机器人"
+          setting_groups:
+            settings: "基本设置"
+            access_control: "访问控制"
+            ui_settings: "UI 设置"
+            integrations: "集成"
         nav:
           configured: "已配置"
           unconfigured: "未配置"
@@ -252,24 +266,42 @@ zh_CN:
           description: "提供总结按钮，允许访客总结话题"
           topic_summaries: "话题总结"
           gists: "话题列表的简短总结"
+          setting_groups:
+            settings: "基本设置"
+            gists: "要点"
+            backfill: "回填"
         search:
           name: "搜索"
           description: "通过提供 AI 生成的查询回答来增强搜索体验"
           discoveries: "发现"
+          setting_groups:
+            settings: "基本设置"
         embeddings:
           name: "嵌入向量"
           description: "通过生成文本的语义表示来支持“相关话题”和“AI 搜索”等功能"
           hyde: "HyDE"
+          setting_groups:
+            model_settings: "模型设置"
+            related_topics: "相关话题"
+            semantic_search: "语义搜索"
         discord:
           name: "Discord 集成"
           description: "增加了搜索 Discord 频道的功能"
           search: "Discord 搜索"
+          setting_groups:
+            settings: "基本设置"
+            discord_configuration: "Discord 配置"
         inference:
           name: "推断的概念"
           description: "将话题和帖子分类到感兴趣的领域/标签。"
           generate_concepts: "概念推理"
           match_concepts: "概念匹配"
           deduplicate_concepts: "概念去重"
+          setting_groups:
+            settings: "基本设置"
+            topic_criteria: "话题条件"
+            post_criteria: "帖子条件"
+            personas: "角色"
         ai_helper:
           name: "助手"
           description: "协助用户进行社区互动，例如创建话题、撰写帖子和阅读内容"
@@ -284,6 +316,11 @@ zh_CN:
           image_caption: "标题图片"
           translator: "翻译器"
           post_illustrator: "帖子插图创建器"
+          setting_groups:
+            access_permissions: "访问 & 权限"
+            enabled_features: "已启用功能"
+            automation: "自动化"
+            personas: "角色"
         translation:
           name: "翻译"
           description: "将内容翻译成支持的语言"
@@ -295,6 +332,10 @@ zh_CN:
           schedule_topic_success:
             other: "已定时翻译 %{count} 未翻译的帖子。"
           schedule_topic_error: "定时翻译失败。请重试。"
+          setting_groups:
+            settings: "基本设置"
+            personas: "角色"
+            backfill_and_limits: "回填 & 限制"
         spam:
           name: "垃圾信息"
           description: "使用所选 LLM 识别潜在垃圾信息，并进行标记，使其进入审核队列，以便站点版主可以进行检查"
@@ -661,22 +702,6 @@ zh_CN:
           anthropic-claude-sonnet-4-5: "速度与成本的最佳平衡"
           anthropic-claude-haiku-4-5: "快速、经济高效"
           google-gemini-3-pro: "谷歌最智能的模型"
-          google-gemini-2-5-pro: "能够执行多种任务的大型多模态模型"
-          google-gemini-2-5-flash: "轻量、快速、经济高效，具有多模态推理能力"
-          google-gemini-2-5-flash-lite: "谷歌最小、性价比最高的机型"
-          google-gemini-2-5-flash-image-preview: "具备视觉能力的最新图像生成模型"
-          open_ai-gpt-5-1: "OpenAI 的旗舰模型。它非常适合跨领域解决问题"
-          open_ai-gpt-5-mini: "在智能、速度和成本之间实现平衡，使其成为适合许多用例的极具吸引力的模型。"
-          open_ai-gpt-5-nano: "最快、最具成本效益的 GPT-5 模型。"
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "高效的轻量级多语言模型"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "强大的多用途模型"
-          mistral-mistral-large-latest: "Mistral 最强大的模型"
-          mistral-pixtral-large-latest: "Mistral 最强大的视觉模型"
-          open_router-x-ai-grok-4: "xAI 的最新模型"
-          open_router-deepseek-deepseek-r1-0528-free: "DeepSeek 的最新推理模型"
-          open_router-meta-llama-3-3-70b-instruct: "功能强大的多语言模式"
-          groq-openai-gpt-oss-120b: "OpenAI 最先进的开放权重模型"
-          groq-openai-gpt-oss-20b: "OpenAI 的轻量级、快速、开放权重模型"
         preseeded_model_description: "利用 %{model} 的预配置开源模型"
         configured:
           title: "配置的 LLM"
@@ -979,6 +1004,19 @@ zh_CN:
         topic:
           title: "话题摘要"
           close: "关闭摘要面板"
+          regenerate_ai_summaries: "重新生成 AI 摘要"
+          regen_modal_description: "选择要为此话题重新生成的 AI 摘要类型。"
+          bulk_regen_description: "选择要为所选话题重新生成的 AI 摘要类型。"
+          regenerate_gists_option: "简短摘要（要点）"
+          regenerate_summaries_option: "话题总结"
+          regenerate_gists_success:
+            other: "%{count} 条简短摘要已成功重新生成"
+          regenerate_gists_error:
+            other: "无法重新生成 %{count} 条简短摘要"
+          regenerate_topic_summary_success:
+            other: "%{count} 个话题摘要已成功重新生成"
+          regenerate_topic_summary_error:
+            other: "未能重新生成 %{count} 个话题摘要"
         topic_list_layout:
           button:
             compact: "紧凑"
@@ -1001,3 +1039,9 @@ zh_CN:
             disable: "禁用"
       user_preferences:
         empty: "目前没有相关设置"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "AI 标记的帖子"
+        reviewable_ai_chat_message:
+          title: "AI 标记的聊天消息"

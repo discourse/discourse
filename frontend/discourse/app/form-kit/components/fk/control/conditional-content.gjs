@@ -27,6 +27,10 @@ export default class FKControlConditionalContent extends Component {
   @tracked manuallySetName = null;
 
   get activeName() {
+    // If onChange is provided, parent controls state - always use @activeName
+    if (this.args.onChange) {
+      return this.args.activeName;
+    }
     return this.manuallySetName ?? this.args.activeName;
   }
 

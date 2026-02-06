@@ -586,8 +586,8 @@ export default class AdminReport extends Component {
                       }}%{{/if}}
                     {{/if}}
 
-                    {{#if this.model.trenicon}}
-                      {{icon this.model.trenicon class="icon"}}
+                    {{#if this.model.trendIcon}}
+                      {{icon this.model.trendIcon class="icon"}}
                     {{/if}}
                   </span>
                 </div>

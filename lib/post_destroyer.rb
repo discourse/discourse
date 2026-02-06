@@ -238,22 +238,7 @@ class PostDestroyer
       DB.after_commit do
         Topic.reset_highest(@post.topic_id)
 
-        if @opts[:reviewable]
-          notify_deletion(
-            @opts[:reviewable],
-            { notify_responders: @opts[:notify_responders], parent_post: @opts[:parent_post] },
-          )
-          if @post.reviewable_flag &&
-               SiteSetting.notify_users_after_responses_deleted_on_flagged_post
-            ignore(@post.reviewable_flag)
-          end
-        elsif reviewable = @post.reviewable_flag
-          if @opts[:defer_flags]
-            ignore(reviewable)
-          else
-            agree(reviewable) unless reviewable.potentially_illegal?
-          end
-        end
+        handle_reviewable_after_deletion
       end
     end
 
@@ -401,6 +386,34 @@ class PostDestroyer
   def ignore(reviewable)
     reviewable.perform_ignore_and_do_nothing(@user, post_was_deleted: true)
     reviewable.transition_to(:ignored, @user)
+  end
+
+  def handle_reviewable_after_deletion
+    if @opts[:reviewable]
+      handle_explicit_reviewable
+    elsif @post.reviewable_flag
+      handle_post_reviewable_flag
+    end
+  end
+
+  def handle_explicit_reviewable
+    notify_deletion(
+      @opts[:reviewable],
+      { notify_responders: @opts[:notify_responders], parent_post: @opts[:parent_post] },
+    )
+
+    return unless @post.reviewable_flag
+    return unless SiteSetting.notify_users_after_responses_deleted_on_flagged_post
+    return if @post.reviewable_flag.potentially_illegal?
+
+    ignore(@post.reviewable_flag)
+  end
+
+  def handle_post_reviewable_flag
+    return ignore(@post.reviewable_flag) if @opts[:defer_flags]
+    return if @post.reviewable_flag.potentially_illegal?
+
+    agree(@post.reviewable_flag)
   end
 
   def notify_deletion(reviewable, options = {})

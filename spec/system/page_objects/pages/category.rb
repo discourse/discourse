@@ -65,7 +65,6 @@ module PageObjects
 
       def save_settings
         find("#save-category").click
-        expect(page).to have_css("#save-category", text: I18n.t("js.category.save"))
         self
       end
 
@@ -74,7 +73,6 @@ module PageObjects
         self
       end
 
-      # Edit Category Page
       def has_form_template_enabled?
         find(".d-toggle-switch .toggle-template-type", visible: false)["aria-checked"] == "true"
       end
@@ -99,7 +97,7 @@ module PageObjects
       end
 
       def toggle_advanced_settings
-        find(".d-toggle-switch .d-toggle-switch__checkbox-slider").click
+        PageObjects::Components::DToggleSwitch.new(".d-toggle-switch__checkbox").toggle
         self
       end
 

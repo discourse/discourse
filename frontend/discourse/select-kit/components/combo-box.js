@@ -11,8 +11,8 @@ import {
 @classNames("combobox", "combo-box")
 @pluginApiIdentifiers(["combo-box"])
 @selectKitOptions({
-  caretUpIcon: "caret-up",
-  caretDownIcon: "caret-down",
+  caretUpIcon: "angle-up",
+  caretDownIcon: "angle-down",
   autoFilterable: "autoFilterable",
   clearable: false,
   headerComponent: ComboBoxHeader,
