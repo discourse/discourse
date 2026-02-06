@@ -493,7 +493,12 @@ module PrettyText
     return "" if html.blank?
 
     # TODO: properly fix this HACK in ExcerptParser without introducing XSS
-    doc = Nokogiri::HTML5.fragment(html)
+    doc =
+      begin
+        Nokogiri::HTML5.fragment(html)
+      rescue ArgumentError => e
+        return ""
+      end
     DiscourseEvent.trigger(:reduce_excerpt, doc, options)
     strip_image_wrapping(doc)
     strip_oneboxed_media(doc)
