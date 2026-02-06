@@ -1,13 +1,27 @@
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { trustHTML } from "@ember/template";
+import { modifier as modifierFn } from "ember-modifier";
 import FKBaseControl from "discourse/form-kit/components/fk/control/base";
 import { escapeExpression } from "discourse/lib/utilities";
 import DExpandingTextArea from "discourse/ui-kit/d-expanding-text-area";
+import dConcatClass from "discourse/ui-kit/helpers/d-concat-class";
 import dElement from "discourse/ui-kit/helpers/d-element";
 
 export default class FKControlTextarea extends FKBaseControl {
   static controlType = "textarea";
+
+  resizeObserver = modifierFn((element) => {
+    const observer = new ResizeObserver(() => {
+      this.args.onControlWidthChange?.(element.offsetWidth);
+    });
+
+    observer.observe(element);
+
+    return () => {
+      observer.disconnect();
+    };
+  });
 
   @action
   handleInput(event) {
@@ -50,6 +64,7 @@ export default class FKControlTextarea extends FKBaseControl {
     <this.textareaElement
       {{on "input" this.handleInput}}
       {{on "keydown" this.onKeyDown}}
+      {{this.resizeObserver}}
       style={{this.style}}
       disabled={{@field.disabled}}
       value={{@field.value}}
@@ -57,7 +72,10 @@ export default class FKControlTextarea extends FKBaseControl {
       name={{@field.name}}
       aria-invalid={{if @field.error "true"}}
       aria-describedby={{@field.describedBy}}
-      class="form-kit__control-textarea"
+      class={{dConcatClass
+        "form-kit__control-textarea"
+        (if @noResize "--no-resize")
+      }}
       ...attributes
     />
   </template>

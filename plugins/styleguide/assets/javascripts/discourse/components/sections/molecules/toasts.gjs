@@ -9,22 +9,37 @@ import withEventValue from "discourse/helpers/with-event-value";
 import DButton from "discourse/ui-kit/d-button";
 import DIconGridPicker from "discourse/ui-kit/d-icon-grid-picker";
 import DToggleSwitch from "discourse/ui-kit/d-toggle-switch";
-import DummyComponent from "discourse/plugins/styleguide/discourse/components/dummy-component";
 import StyleguideComponent from "discourse/plugins/styleguide/discourse/components/styleguide/component";
 import Controls from "discourse/plugins/styleguide/discourse/components/styleguide/controls";
 import Row from "discourse/plugins/styleguide/discourse/components/styleguide/controls/row";
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
+
+const ToastCustomComponent = <template>
+  <style>
+    .my-custom-component {
+      background-color: var(--secondary);
+      padding: var(--space-4);
+      border-radius: var(--d-border-radius-large);
+      box-shadow: var(--shadow-card);
+    }
+  </style>
+  <div class="my-custom-component" ...attributes>
+    My custom component with foo:
+    {{@toast.options.data.foo}}
+  </div>
+</template>;
 
 export default class Toasts extends Component {
   @service toasts;
 
   @tracked title = "Title";
   @tracked message = "Message";
-  @tracked duration = TOAST.options.duration;
+  @tracked duration = 3000;
   @tracked autoClose = TOAST.options.autoClose;
   @tracked showProgressBar = TOAST.options.showProgressBar;
   @tracked class;
   @tracked action = true;
+  @tracked cancel = false;
   @tracked icon;
 
   @action
@@ -33,7 +48,7 @@ export default class Toasts extends Component {
       duration: this.duration,
       autoClose: this.autoClose,
       class: this.class,
-      component: DummyComponent,
+      component: ToastCustomComponent,
       data: {
         foo: 1,
       },
@@ -42,18 +57,28 @@ export default class Toasts extends Component {
 
   @action
   showToast(theme) {
-    const actions = [];
+    let action;
 
     if (this.action) {
-      actions.push({
+      action = {
         label: "Ok",
-        class: "btn-primary",
-        action: (args) => {
+        onClick: () => {
           // eslint-disable-next-line no-alert
-          alert("Closing toast:" + args.data.title);
-          args.close();
+          alert("Closing toast:" + this.title);
         },
-      });
+      };
+    }
+
+    let cancel;
+
+    if (this.cancel) {
+      cancel = {
+        label: "Cancel",
+        onClick: () => {
+          // eslint-disable-next-line no-alert
+          alert("Cancelled toast");
+        },
+      };
     }
 
     this.toasts[theme]({
@@ -65,7 +90,8 @@ export default class Toasts extends Component {
         title: this.title,
         message: this.message,
         icon: this.icon,
-        actions,
+        action,
+        cancel,
       },
     });
   }
@@ -73,6 +99,11 @@ export default class Toasts extends Component {
   @action
   toggleAction() {
     this.action = !this.action;
+  }
+
+  @action
+  toggleCancel() {
+    this.cancel = !this.cancel;
   }
 
   @action
@@ -85,7 +116,13 @@ export default class Toasts extends Component {
     this.showProgressBar = !this.showProgressBar;
   }
 
+  @action
+  updateDuration(value) {
+    this.duration = parseInt(value, 10);
+  }
+
   <template>
+    {{! template-lint-disable no-potential-path-strings }}
     <StyleguideExample @title="Toasts service">
       <StyleguideComponent @tag="default">
         <:actions>
@@ -157,7 +194,7 @@ export default class Toasts extends Component {
         {{#if this.autoClose}}
           <Row @name="[@options.duration] ms">
             <input
-              {{on "input" (withEventValue (fn (mut this.duration)))}}
+              {{on "input" (withEventValue this.updateDuration)}}
               type="number"
               value={{this.duration}}
             />
@@ -197,6 +234,12 @@ export default class Toasts extends Component {
           <DToggleSwitch
             @state={{this.action}}
             {{on "click" this.toggleAction}}
+          />
+        </Row>
+        <Row @name="With a cancel">
+          <DToggleSwitch
+            @state={{this.cancel}}
+            {{on "click" this.toggleCancel}}
           />
         </Row>
       </Controls>

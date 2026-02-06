@@ -1,13 +1,23 @@
 import { tracked } from "@glimmer/tracking";
+import { trackedArray, trackedMap } from "@ember/reactive/collections";
 import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
-import { trackedArray } from "@ember/reactive/collections";
 import Service from "@ember/service";
 import DDefaultToast from "discourse/float-kit/components/d-default-toast";
 import DToastInstance from "discourse/float-kit/lib/d-toast-instance";
 
 export default class Toasts extends Service {
   @tracked activeToasts = trackedArray();
+  heights = trackedMap();
+  #stackOrderCounter = 0;
+
+  get frontToast() {
+    return this.activeToasts.filter((t) => !t.dismissed).slice(-1)[0];
+  }
+
+  get frontToastHeight() {
+    return this.heights.get(this.frontToast?.id) || 0;
+  }
 
   /**
    * Render a toast
@@ -29,6 +39,7 @@ export default class Toasts extends Service {
     });
 
     if (instance.isValidForView) {
+      instance.stackOrder = this.#stackOrderCounter++;
       this.activeToasts.push(instance);
     }
 
@@ -44,6 +55,7 @@ export default class Toasts extends Service {
    */
   @action
   default(options = {}) {
+    options.data ??= {};
     options.data.theme = "default";
 
     return this.show(options);
@@ -58,6 +70,7 @@ export default class Toasts extends Service {
    */
   @action
   success(options = {}) {
+    options.data ??= {};
     options.data.theme = "success";
     options.data.icon ??= "check";
 
@@ -73,6 +86,7 @@ export default class Toasts extends Service {
    */
   @action
   error(options = {}) {
+    options.data ??= {};
     options.data.theme = "error";
     options.data.icon ??= "triangle-exclamation";
 
@@ -88,6 +102,7 @@ export default class Toasts extends Service {
    */
   @action
   warning(options = {}) {
+    options.data ??= {};
     options.data.theme = "warning";
     options.data.icon ??= "circle-exclamation";
 
@@ -103,6 +118,7 @@ export default class Toasts extends Service {
    */
   @action
   info(options = {}) {
+    options.data ??= {};
     options.data.theme = "info";
     options.data.icon ??= "circle-info";
 
@@ -111,11 +127,15 @@ export default class Toasts extends Service {
 
   /**
    * Close a toast. Any object containing a valid `id` property can be used as a toast parameter.
+   *
+   * @param {Object} toast - The toast instance or an object with an `id` property
    */
   @action
   close(toast) {
-    this.activeToasts = trackedArray(
-      this.activeToasts.filter((activeToast) => activeToast.id !== toast.id)
-    );
+    const index = this.activeToasts.findIndex((t) => t.id === toast.id);
+
+    if (index !== -1) {
+      this.activeToasts.splice(index, 1);
+    }
   }
 }

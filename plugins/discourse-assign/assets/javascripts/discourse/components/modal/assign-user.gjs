@@ -46,6 +46,7 @@ export default class AssignUser extends Component {
   <template>
     <DModal class="assign" @title={{this.title}} @closeModal={{@closeModal}}>
       <:body>
+        ASSIGN USER
         <AssignUserForm
           @model={{this.model}}
           @onSubmit={{this.onSubmit}}
