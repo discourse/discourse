@@ -60,7 +60,7 @@ body:not(.d-toc-installed) {
     grid-template-columns: auto 8em;
 
     @media screen and (width <= 924px) {
-      grid-template-columns: auto auto;
+      grid-template-columns: auto;
     }
   }
 
