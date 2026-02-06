@@ -103,6 +103,28 @@ RSpec.describe(Tags::BulkCreate) do
       end
     end
 
+    context "when force_lowercase_tags is disabled" do
+      let(:tag_names) { ["CamelCase", "UPPERCASE", "Tag With Spaces"] }
+
+      before { SiteSetting.force_lowercase_tags = false }
+
+      it { is_expected.to run_successfully }
+
+      it "preserves case in tag names" do
+        result
+        expect(Tag.where(name: %w[CamelCase UPPERCASE Tag-With-Spaces]).count).to eq(3)
+      end
+
+      it "returns preserved-case names" do
+        expect(result.results[:created]).to contain_exactly(
+          "CamelCase",
+          "UPPERCASE",
+          "Tag-With-Spaces",
+        )
+        expect(result.results[:failed]).to be_empty
+      end
+    end
+
     context "when tag names are numbers" do
       let(:tag_names) { [123, 456, 789] }
 
