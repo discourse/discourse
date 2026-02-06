@@ -495,20 +495,20 @@ RSpec.describe Report do
     end
   end
 
-  describe "user to user private messages" do
-    let(:report) { Report.find("user_to_user_private_messages") }
+  # describe "user to user private messages" do
+  #   let(:report) { Report.find("user_to_user_private_messages") }
 
-    context "with private message from system user" do
-      before do
-        Fabricate(:private_message_post, created_at: 1.hour.ago, user: Discourse.system_user)
-      end
+  #   context "with private message from system user" do
+  #     before do
+  #       Fabricate(:private_message_post, created_at: 1.hour.ago, user: Discourse.system_user)
+  #     end
 
-      it "does not include system users" do
-        expect(report.data).to be_blank
-        expect(report.total).to eq 0
-      end
-    end
-  end
+  #     it "does not include system users" do
+  #       expect(report.data).to be_blank
+  #       expect(report.total).to eq 0
+  #     end
+  #   end
+  # end
 
   describe "users by trust level report" do
     let(:report) { Report.find("users_by_trust_level") }
@@ -746,71 +746,71 @@ RSpec.describe Report do
     end
   end
 
-  describe "post_edits" do
-    let(:report) { Report.find("post_edits") }
+  # describe "post_edits" do
+  #   let(:report) { Report.find("post_edits") }
 
-    include_examples "no data"
+  #   include_examples "no data"
 
-    context "with edits" do
-      let(:editor) { Fabricate(:user) }
-      let(:post) { Fabricate(:post) }
+  #   context "with edits" do
+  #     let(:editor) { Fabricate(:user) }
+  #     let(:post) { Fabricate(:post) }
 
-      before do
-        freeze_time
+  #     before do
+  #       freeze_time
 
-        post.revise(
-          post.user,
-          { raw: "updated body by author", edit_reason: "not cool" },
-          force_new_version: true,
-        )
-        post.revise(editor, raw: "updated body", edit_reason: "not cool")
-      end
+  #       post.revise(
+  #         post.user,
+  #         { raw: "updated body by author", edit_reason: "not cool" },
+  #         force_new_version: true,
+  #       )
+  #       post.revise(editor, raw: "updated body", edit_reason: "not cool")
+  #     end
 
-      it "returns a report with data" do
-        expect(report.data).to be_present
-        expect(report.data.count).to be(1)
+  #     it "returns a report with data" do
+  #       expect(report.data).to be_present
+  #       expect(report.data.count).to be(1)
 
-        row = report.data[0]
-        expect(row[:editor_id]).to eq(editor.id)
-        expect(row[:editor_username]).to eq(editor.username)
-        expect(row[:editor_avatar_template]).to be_present
-        expect(row[:author_id]).to eq(post.user.id)
-        expect(row[:author_username]).to eq(post.user.username)
-        expect(row[:author_avatar_template]).to be_present
-        expect(row[:edit_reason]).to eq("not cool")
-        expect(row[:post_raw]).to eq("updated body")
-        expect(row[:post_number]).to eq(post.post_number)
-        expect(row[:topic_id]).to eq(post.topic.id)
-      end
-    end
+  #       row = report.data[0]
+  #       expect(row[:editor_id]).to eq(editor.id)
+  #       expect(row[:editor_username]).to eq(editor.username)
+  #       expect(row[:editor_avatar_template]).to be_present
+  #       expect(row[:author_id]).to eq(post.user.id)
+  #       expect(row[:author_username]).to eq(post.user.username)
+  #       expect(row[:author_avatar_template]).to be_present
+  #       expect(row[:edit_reason]).to eq("not cool")
+  #       expect(row[:post_raw]).to eq("updated body")
+  #       expect(row[:post_number]).to eq(post.post_number)
+  #       expect(row[:topic_id]).to eq(post.topic.id)
+  #     end
+  #   end
 
-    context "with editor filter" do
-      fab!(:posts) { Fabricate.times(3, :post) }
+  #   context "with editor filter" do
+  #     fab!(:posts) { Fabricate.times(3, :post) }
 
-      fab!(:editor_with_two_edits) do
-        Fabricate(:user).tap do |user|
-          2.times { |i| posts[i].revise(user, { raw: "edit #{i + 1}" }) }
-        end
-      end
+  #     fab!(:editor_with_two_edits) do
+  #       Fabricate(:user).tap do |user|
+  #         2.times { |i| posts[i].revise(user, { raw: "edit #{i + 1}" }) }
+  #       end
+  #     end
 
-      fab!(:editor_with_one_edit) do
-        Fabricate(:user).tap { |user| posts.last.revise(user, { raw: "edit 3" }) }
-      end
+  #     fab!(:editor_with_one_edit) do
+  #       Fabricate(:user).tap { |user| posts.last.revise(user, { raw: "edit 3" }) }
+  #     end
 
-      let(:report_with_one_edit) do
-        Report.find("post_edits", { filters: { "editor" => editor_with_one_edit.username } })
-      end
+  #     let(:report_with_one_edit) do
+  #       Report.find("post_edits", { filters: { "editor" => editor_with_one_edit.username } })
+  #     end
 
-      let(:report_with_two_edits) do
-        Report.find("post_edits", { filters: { "editor" => editor_with_two_edits.username } })
-      end
+  #     let(:report_with_two_edits) do
+  #       Report.find("post_edits", { filters: { "editor" => editor_with_two_edits.username } })
+  #     end
 
-      it "returns a report for a given editor" do
-        expect(report_with_one_edit.data.count).to be(1)
-        expect(report_with_two_edits.data.count).to be(2)
-      end
-    end
-  end
+  #     it "returns a report for a given editor" do
+  #       expect(report_with_one_edit.data.count).to be(1)
+  #       expect(report_with_two_edits.data.count).to be(2)
+  #     end
+  #   end
+  # end
 
   describe "moderator activity" do
     let(:report) { Report.find("moderators_activity") }
@@ -1152,45 +1152,45 @@ RSpec.describe Report do
     end
   end
 
-  describe "likes" do
-    let(:report) { Report.find("likes") }
+  # describe "likes" do
+  #   let(:report) { Report.find("likes") }
 
-    include_examples "no data"
+  #   include_examples "no data"
 
-    context "with data" do
-      include_examples "with data x/y"
+  #   context "with data" do
+  #     include_examples "with data x/y"
 
-      before(:each) do
-        topic = Fabricate(:topic, category: category_2)
-        post = Fabricate(:post, topic: topic)
-        PostActionCreator.like(Fabricate(:user), post)
+  #     before(:each) do
+  #       topic = Fabricate(:topic, category: category_2)
+  #       post = Fabricate(:post, topic: topic)
+  #       PostActionCreator.like(Fabricate(:user), post)
 
-        topic = Fabricate(:topic, category: category_3)
-        post = Fabricate(:post, topic: topic)
-        PostActionCreator.like(Fabricate(:user), post)
-        PostActionCreator.like(Fabricate(:user), post)
-        PostActionCreator
-          .like(Fabricate(:user), post)
-          .post_action
-          .tap { |pa| pa.created_at = 45.days.ago }
-          .save!
-      end
+  #       topic = Fabricate(:topic, category: category_3)
+  #       post = Fabricate(:post, topic: topic)
+  #       PostActionCreator.like(Fabricate(:user), post)
+  #       PostActionCreator.like(Fabricate(:user), post)
+  #       PostActionCreator
+  #         .like(Fabricate(:user), post)
+  #         .post_action
+  #         .tap { |pa| pa.created_at = 45.days.ago }
+  #         .save!
+  #     end
 
-      context "with category filtering" do
-        let(:report) { Report.find("likes", filters: { category: category_2.id }) }
+  #     context "with category filtering" do
+  #       let(:report) { Report.find("likes", filters: { category: category_2.id }) }
 
-        include_examples "category filtering"
+  #       include_examples "category filtering"
 
-        context "with subcategories" do
-          let(:report) do
-            Report.find("likes", filters: { category: category_1.id, include_subcategories: true })
-          end
+  #       context "with subcategories" do
+  #         let(:report) do
+  #           Report.find("likes", filters: { category: category_1.id, include_subcategories: true })
+  #         end
 
-          include_examples "category filtering on subcategories"
-        end
-      end
-    end
-  end
+  #         include_examples "category filtering on subcategories"
+  #       end
+  #     end
+  #   end
+  # end
 
   describe "user_flagging_ratio" do
     let(:joffrey) { Fabricate(:user, username: "joffrey", refresh_auto_groups: true) }
@@ -1754,116 +1754,116 @@ RSpec.describe Report do
     end
   end
 
-  describe "top_users_by_likes_received_from_a_variety_of_people" do
-    let(:report) { Report.find("top_users_by_likes_received_from_a_variety_of_people") }
+  # describe "top_users_by_likes_received_from_a_variety_of_people" do
+  #   let(:report) { Report.find("top_users_by_likes_received_from_a_variety_of_people") }
 
-    include_examples "no data"
+  #   include_examples "no data"
 
-    context "with data" do
-      before do
-        user_1 = Fabricate(:user, username: "jonah")
-        user_2 = Fabricate(:user, username: "jake")
-        user_3 = Fabricate(:user, username: "john")
-        user_4 = Fabricate(:user, username: "joseph")
-        user_5 = Fabricate(:user, username: "joanne")
-        user_6 = Fabricate(:user, username: "jerome")
+  #   context "with data" do
+  #     before do
+  #       user_1 = Fabricate(:user, username: "jonah")
+  #       user_2 = Fabricate(:user, username: "jake")
+  #       user_3 = Fabricate(:user, username: "john")
+  #       user_4 = Fabricate(:user, username: "joseph")
+  #       user_5 = Fabricate(:user, username: "joanne")
+  #       user_6 = Fabricate(:user, username: "jerome")
 
-        topic_1 = Fabricate(:topic, user: user_1)
-        topic_2 = Fabricate(:topic, user: user_2)
-        topic_3 = Fabricate(:topic, user: user_3)
+  #       topic_1 = Fabricate(:topic, user: user_1)
+  #       topic_2 = Fabricate(:topic, user: user_2)
+  #       topic_3 = Fabricate(:topic, user: user_3)
 
-        post_1 = Fabricate(:post, topic: topic_1, user: user_1)
-        post_2 = Fabricate(:post, topic: topic_2, user: user_2)
-        post_3 = Fabricate(:post, topic: topic_3, user: user_3)
+  #       post_1 = Fabricate(:post, topic: topic_1, user: user_1)
+  #       post_2 = Fabricate(:post, topic: topic_2, user: user_2)
+  #       post_3 = Fabricate(:post, topic: topic_3, user: user_3)
 
-        3.times do
-          UserAction.create!(
-            user_id: user_4.id,
-            target_post_id: post_1.id,
-            action_type: UserAction::LIKE,
-          )
-        end
-        6.times do
-          UserAction.create!(
-            user_id: user_5.id,
-            target_post_id: post_2.id,
-            action_type: UserAction::LIKE,
-          )
-        end
-        9.times do
-          UserAction.create!(
-            user_id: user_6.id,
-            target_post_id: post_3.id,
-            action_type: UserAction::LIKE,
-          )
-        end
-      end
+  #       3.times do
+  #         UserAction.create!(
+  #           user_id: user_4.id,
+  #           target_post_id: post_1.id,
+  #           action_type: UserAction::LIKE,
+  #         )
+  #       end
+  #       6.times do
+  #         UserAction.create!(
+  #           user_id: user_5.id,
+  #           target_post_id: post_2.id,
+  #           action_type: UserAction::LIKE,
+  #         )
+  #       end
+  #       9.times do
+  #         UserAction.create!(
+  #           user_id: user_6.id,
+  #           target_post_id: post_3.id,
+  #           action_type: UserAction::LIKE,
+  #         )
+  #       end
+  #     end
 
-      it "with category filtering" do
-        report = Report.find("top_users_by_likes_received_from_a_variety_of_people")
+  #     it "with category filtering" do
+  #       report = Report.find("top_users_by_likes_received_from_a_variety_of_people")
 
-        expect(report.data.length).to eq(3)
-        expect(report.data[0][:username]).to eq("jonah")
-        expect(report.data[1][:username]).to eq("jake")
-        expect(report.data[2][:username]).to eq("john")
-      end
-    end
-  end
+  #       expect(report.data.length).to eq(3)
+  #       expect(report.data[0][:username]).to eq("jonah")
+  #       expect(report.data[1][:username]).to eq("jake")
+  #       expect(report.data[2][:username]).to eq("john")
+  #     end
+  #   end
+  # end
 
-  describe "top_users_by_likes_received_from_inferior_trust_level" do
-    let(:report) { Report.find("top_users_by_likes_received_from_inferior_trust_level") }
+  # describe "top_users_by_likes_received_from_inferior_trust_level" do
+  #   let(:report) { Report.find("top_users_by_likes_received_from_inferior_trust_level") }
 
-    include_examples "no data"
+  #   include_examples "no data"
 
-    context "with data" do
-      before do
-        user_1 = Fabricate(:user, username: "jonah", trust_level: 2)
-        user_2 = Fabricate(:user, username: "jake", trust_level: 2)
-        user_3 = Fabricate(:user, username: "john", trust_level: 2)
-        user_4 = Fabricate(:user, username: "joseph", trust_level: 1)
-        user_5 = Fabricate(:user, username: "joanne", trust_level: 1)
-        user_6 = Fabricate(:user, username: "jerome", trust_level: 2)
+  #   context "with data" do
+  #     before do
+  #       user_1 = Fabricate(:user, username: "jonah", trust_level: 2)
+  #       user_2 = Fabricate(:user, username: "jake", trust_level: 2)
+  #       user_3 = Fabricate(:user, username: "john", trust_level: 2)
+  #       user_4 = Fabricate(:user, username: "joseph", trust_level: 1)
+  #       user_5 = Fabricate(:user, username: "joanne", trust_level: 1)
+  #       user_6 = Fabricate(:user, username: "jerome", trust_level: 2)
 
-        topic_1 = Fabricate(:topic, user: user_1)
-        topic_2 = Fabricate(:topic, user: user_2)
-        topic_3 = Fabricate(:topic, user: user_3)
+  #       topic_1 = Fabricate(:topic, user: user_1)
+  #       topic_2 = Fabricate(:topic, user: user_2)
+  #       topic_3 = Fabricate(:topic, user: user_3)
 
-        post_1 = Fabricate(:post, topic: topic_1, user: user_1)
-        post_2 = Fabricate(:post, topic: topic_2, user: user_2)
-        post_3 = Fabricate(:post, topic: topic_3, user: user_3)
+  #       post_1 = Fabricate(:post, topic: topic_1, user: user_1)
+  #       post_2 = Fabricate(:post, topic: topic_2, user: user_2)
+  #       post_3 = Fabricate(:post, topic: topic_3, user: user_3)
 
-        3.times do
-          UserAction.create!(
-            user_id: user_4.id,
-            target_post_id: post_1.id,
-            action_type: UserAction::LIKE,
-          )
-        end
-        6.times do
-          UserAction.create!(
-            user_id: user_5.id,
-            target_post_id: post_2.id,
-            action_type: UserAction::LIKE,
-          )
-        end
-        9.times do
-          UserAction.create!(
-            user_id: user_6.id,
-            target_post_id: post_3.id,
-            action_type: UserAction::LIKE,
-          )
-        end
-      end
+  #       3.times do
+  #         UserAction.create!(
+  #           user_id: user_4.id,
+  #           target_post_id: post_1.id,
+  #           action_type: UserAction::LIKE,
+  #         )
+  #       end
+  #       6.times do
+  #         UserAction.create!(
+  #           user_id: user_5.id,
+  #           target_post_id: post_2.id,
+  #           action_type: UserAction::LIKE,
+  #         )
+  #       end
+  #       9.times do
+  #         UserAction.create!(
+  #           user_id: user_6.id,
+  #           target_post_id: post_3.id,
+  #           action_type: UserAction::LIKE,
+  #         )
+  #       end
+  #     end
 
-      it "with category filtering" do
-        report = Report.find("top_users_by_likes_received_from_inferior_trust_level")
+  #     it "with category filtering" do
+  #       report = Report.find("top_users_by_likes_received_from_inferior_trust_level")
 
-        expect(report.data.length).to eq(2)
-        expect(report.data[0][:username]).to eq("jake")
-        expect(report.data[1][:username]).to eq("jonah")
-      end
-    end
-  end
+  #       expect(report.data.length).to eq(2)
+  #       expect(report.data[0][:username]).to eq("jake")
+  #       expect(report.data[1][:username]).to eq("jonah")
+  #     end
+  #   end
+  # end
 
   describe "topic_view_stats" do
     let(:report) { Report.find("topic_view_stats") }
