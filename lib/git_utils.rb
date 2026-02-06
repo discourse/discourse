@@ -50,7 +50,7 @@ class GitUtils
   end
 
   private_class_method def self.rails_root
-    # Can't use `Rails.root` here because GitUtils is `require`'d before Rails is initialized'
+    # Can't use `Rails.root` here because GitUtils is `require`'d before Rails is initialized
     Pathname.new(File.expand_path("..", __dir__))
   end
 end
