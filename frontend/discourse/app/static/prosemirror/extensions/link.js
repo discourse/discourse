@@ -1,11 +1,10 @@
 // @ts-check
 
+import { ReplaceAroundStep, ReplaceStep } from "prosemirror-transform";
 import {
   getChangedRanges,
   markInputRule,
 } from "discourse/static/prosemirror/lib/plugin-utils";
-
-const REPLACE_STEPS = ["ReplaceStep", "ReplaceAroundStep"];
 
 /** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
@@ -184,7 +183,10 @@ const extension = {
           .filter((tr) => tr.docChanged && tr.getMeta("addToHistory") !== false)
           .flatMap((tr) => tr.steps)
           .forEach((step) => {
-            if (REPLACE_STEPS.includes(step.constructor.name)) {
+            if (
+              step instanceof ReplaceStep ||
+              step instanceof ReplaceAroundStep
+            ) {
               transaction.step(step);
             }
           });
