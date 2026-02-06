@@ -29,7 +29,7 @@ export function extractNodeViews(extensions, pluginParams) {
               node,
               view,
               getPos,
-              getContext: pluginParams.getContext,
+              pluginParams,
               component: nodeView.component,
               name: nodeView.name || name,
             });

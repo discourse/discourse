@@ -7,7 +7,7 @@ import { next } from "@ember/runloop";
  * @property {import("prosemirror-model").Node} node
  * @property {import("prosemirror-view").EditorView} view
  * @property {() => number} getPos
- * @property {() => import("discourse/lib/composer/rich-editor-extensions").PluginContext} getContext
+ * @property {import("discourse/lib/composer/rich-editor-extensions").PluginParams} pluginParams
  * @property {any} component
  * @property {string} name
  */
@@ -23,7 +23,7 @@ export default class GlimmerNodeView {
     node,
     view,
     getPos,
-    getContext,
+    pluginParams,
     component,
     name,
     hasContent = false,
@@ -31,10 +31,10 @@ export default class GlimmerNodeView {
     this.node = node;
     this.view = view;
     this.getPos = getPos;
-    this.getContext = getContext;
+    this.pluginParams = pluginParams;
     this.component = component;
 
-    getContext().addGlimmerNodeView(this);
+    pluginParams.getContext().addGlimmerNodeView(this);
 
     this.dom = document.createElement(node.isInline ? "span" : "div");
     this.dom.classList.add(`composer-${name}-node`);
@@ -83,6 +83,6 @@ export default class GlimmerNodeView {
     this.#componentInstance?.destroy?.();
     this.#componentInstance = null;
 
-    this.getContext().removeGlimmerNodeView(this);
+    this.pluginParams.getContext().removeGlimmerNodeView(this);
   }
 }
