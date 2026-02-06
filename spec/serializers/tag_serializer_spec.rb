@@ -29,4 +29,80 @@ RSpec.describe TagSerializer do
       expect(serialized[:topic_count]).to eq(2)
     end
   end
+
+  describe "localization" do
+    fab!(:localized_tag, :tag) { Fabricate(:tag, name: "cats", locale: "en") }
+    fab!(:localization) do
+      Fabricate(
+        :tag_localization,
+        tag: localized_tag,
+        locale: "ja",
+        name: "猫",
+        description: "猫についてのタグです",
+      )
+    end
+
+    def serialize(tag)
+      described_class.new(tag, scope: Guardian.new(user), root: false).as_json
+    end
+
+    describe "#name" do
+      it "returns localized name when conditions met" do
+        SiteSetting.content_localization_enabled = true
+        localized_tag.update!(locale: "en")
+        I18n.locale = "ja"
+
+        expect(serialize(localized_tag)[:name]).to eq("猫")
+      end
+
+      it "returns original name when localization disabled" do
+        SiteSetting.content_localization_enabled = false
+        I18n.locale = "ja"
+
+        expect(serialize(localized_tag)[:name]).to eq("cats")
+      end
+
+      it "returns original name when tag has no locale" do
+        SiteSetting.content_localization_enabled = true
+        localized_tag.update!(locale: nil)
+        I18n.locale = "ja"
+
+        expect(serialize(localized_tag)[:name]).to eq("cats")
+      end
+
+      it "returns original name when tag is in user locale" do
+        SiteSetting.content_localization_enabled = true
+        localized_tag.update!(locale: "ja")
+        I18n.locale = "ja"
+
+        expect(serialize(localized_tag)[:name]).to eq("cats")
+      end
+    end
+
+    describe "#description" do
+      it "returns localized description when conditions met" do
+        SiteSetting.content_localization_enabled = true
+        localized_tag.update!(locale: "en", description: "A tag about cats")
+        I18n.locale = "ja"
+
+        expect(serialize(localized_tag)[:description]).to eq("猫についてのタグです")
+      end
+
+      it "returns original description when localization disabled" do
+        SiteSetting.content_localization_enabled = false
+        localized_tag.update!(description: "A tag about cats")
+        I18n.locale = "ja"
+
+        expect(serialize(localized_tag)[:description]).to eq("A tag about cats")
+      end
+
+      it "returns original description when tag has no locale" do
+        SiteSetting.content_localization_enabled = true
+        localized_tag.update!(locale: nil, description: "A tag about cats")
+        I18n.locale = "ja"
+
+        expect(serialize(localized_tag)[:description]).to eq("A tag about cats")
+      end
+    end
+  end
 end

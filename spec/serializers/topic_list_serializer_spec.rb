@@ -44,6 +44,8 @@ RSpec.describe TopicListSerializer do
           Fabricate(:category_localization, category:, locale: "es", name: "Solicitudes")
         end
 
+        before { category.update!(locale: "en") }
+
         describe "when enabled" do
           it "returns localized category name and description when locale param is passed" do
             SiteSetting.content_localization_enabled = true

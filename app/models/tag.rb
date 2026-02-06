@@ -153,18 +153,33 @@ class Tag < ActiveRecord::Base
         end
       )
 
-    tag_names_with_counts = DB.query <<~SQL
-      SELECT tags.id as tag_id, tags.name as tag_name, tags.slug as tag_slug, SUM(stats.topic_count) AS sum_topic_count
+    tag_data = DB.query <<~SQL
+      SELECT tags.id, tags.name, tags.slug
         FROM category_tag_stats stats
         JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
        WHERE stats.category_id in (#{scope_category_ids.join(",")})
        #{filter_sql}
       GROUP BY tags.id
-      ORDER BY sum_topic_count DESC, tag_name ASC
+      ORDER BY SUM(stats.topic_count) DESC, tags.name ASC
       LIMIT #{limit}
     SQL
 
-    tag_names_with_counts.map { |row| { id: row.tag_id, name: row.tag_name, slug: row.tag_slug } }
+    return [] if tag_data.empty?
+
+    unless SiteSetting.content_localization_enabled
+      return tag_data.map { |row| { id: row.id, name: row.name, slug: row.slug } }
+    end
+
+    tags_by_id = Tag.where(id: tag_data.map(&:id)).includes(:localizations).index_by(&:id)
+    show_localized = !ContentLocalization.show_original?(guardian)
+
+    tag_data.filter_map do |row|
+      tag = tags_by_id[row.id]
+      next unless tag
+
+      name = show_localized ? (tag.get_localization&.name || tag.name) : tag.name
+      { id: tag.id, name: name, slug: tag.slug }
+    end
   end
 
   def self.topic_count_column(guardian)

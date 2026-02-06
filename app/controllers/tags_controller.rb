@@ -49,17 +49,22 @@ class TagsController < ::ApplicationController
     @title = @description_meta
 
     show_all_tags = guardian.can_admin_tags? && guardian.is_admin?
+    preload_localizations = SiteSetting.content_localization_enabled
 
     if SiteSetting.tags_listed_by_group
       ungrouped_tags = Tag.where("tags.id NOT IN (SELECT tag_id FROM tag_group_memberships)")
       ungrouped_tags = ungrouped_tags.used_tags_in_regular_topics(guardian) unless show_all_tags
       ungrouped_tags = ungrouped_tags.order(:id)
+      ungrouped_tags = ungrouped_tags.includes(:localizations) if preload_localizations
+
+      tag_group_includes =
+        preload_localizations ? { none_synonym_tags: :localizations } : :none_synonym_tags
 
       grouped_tag_counts =
         TagGroup
           .visible(guardian)
           .order("name ASC")
-          .includes(:none_synonym_tags)
+          .includes(tag_group_includes)
           .map do |tag_group|
             {
               id: tag_group.id,
@@ -74,6 +79,10 @@ class TagsController < ::ApplicationController
       tags = show_all_tags ? Tag.all : Tag.used_tags_in_regular_topics(guardian)
       tags = tags.order(:id)
       unrestricted_tags = DiscourseTagging.filter_visible(tags.where(target_tag_id: nil), guardian)
+      unrestricted_tags = unrestricted_tags.includes(:localizations) if preload_localizations
+
+      category_includes =
+        preload_localizations ? { none_synonym_tags: :localizations } : :none_synonym_tags
 
       categories =
         Category
@@ -81,7 +90,7 @@ class TagsController < ::ApplicationController
             "id IN (SELECT category_id FROM category_tags WHERE category_id IN (?))",
             guardian.allowed_category_ids,
           )
-          .includes(:none_synonym_tags)
+          .includes(category_includes)
           .order(:id)
 
       category_tag_counts =
@@ -135,6 +144,7 @@ class TagsController < ::ApplicationController
 
     tags_count = tags.count
     tags = tags.order("LOWER(tags.name) ASC").limit(LIST_LIMIT).offset(offset * LIST_LIMIT)
+    tags = tags.includes(:localizations) if SiteSetting.content_localization_enabled
 
     load_more_url = URI("/tags/list.json")
     load_more_url.query = URI.encode_www_form(load_more_query_params)
@@ -380,6 +390,13 @@ class TagsController < ::ApplicationController
     tags_with_counts, filter_result_context =
       DiscourseTagging.filter_allowed_tags(guardian, **filter_params, with_context: true)
 
+    if SiteSetting.content_localization_enabled && tags_with_counts.present?
+      ActiveRecord::Associations::Preloader.new(
+        records: tags_with_counts,
+        associations: :localizations,
+      ).call
+    end
+
     tags = self.class.tag_counts_json(tags_with_counts, guardian)
 
     json_response = { results: tags }
@@ -577,12 +594,21 @@ class TagsController < ::ApplicationController
 
         next if topic_count == 0 && t.pm_topic_count > 0 && !show_pm_tags
 
+        tag_name = t.name
+        tag_description = t.description
+
+        if ContentLocalization.show_translated_tag?(t, guardian)
+          localization = t.get_localization
+          tag_name = localization&.name || tag_name
+          tag_description = localization&.description || tag_description
+        end
+
         attrs = {
           id: t.id,
-          text: t.name,
-          name: t.name,
+          text: tag_name,
+          name: tag_name,
           slug: t.slug.presence || "#{t.id}-tag",
-          description: t.description,
+          description: tag_description,
           count: topic_count,
           pm_only: topic_count == 0 && t.pm_topic_count > 0,
           target_tag:

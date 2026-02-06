@@ -205,6 +205,50 @@ RSpec.describe Tag do
         )
       end
     end
+
+    context "with localization" do
+      let(:localized_tag) { Fabricate(:tag, name: "cats", locale: "en") }
+      let!(:localization) do
+        Fabricate(:tag_localization, tag: localized_tag, locale: "ja", name: "猫")
+      end
+      let!(:tagged_topic) { Fabricate(:topic, tags: [localized_tag]) }
+
+      it "returns original names when localization disabled" do
+        SiteSetting.content_localization_enabled = false
+        I18n.locale = "ja"
+
+        expect(Tag.top_tags).to include(
+          { id: localized_tag.id, name: "cats", slug: localized_tag.slug },
+        )
+      end
+
+      it "returns localized names when localization enabled and user not in tag locale" do
+        SiteSetting.content_localization_enabled = true
+        I18n.locale = "ja"
+
+        expect(Tag.top_tags).to include(
+          { id: localized_tag.id, name: "猫", slug: localized_tag.slug },
+        )
+      end
+
+      it "returns original name when tag is in user locale" do
+        SiteSetting.content_localization_enabled = true
+        I18n.locale = "en"
+
+        expect(Tag.top_tags).to include(
+          { id: localized_tag.id, name: "cats", slug: localized_tag.slug },
+        )
+      end
+
+      it "falls back to original name when no localization exists for user's locale" do
+        SiteSetting.content_localization_enabled = true
+        I18n.locale = "de"
+
+        expect(Tag.top_tags).to include(
+          { id: localized_tag.id, name: "cats", slug: localized_tag.slug },
+        )
+      end
+    end
   end
 
   describe "#pm_tags" do
