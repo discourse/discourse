@@ -76,6 +76,7 @@ module SvgSprite
         copy
         crosshairs
         cube
+        cubes
         desktop
         diagram-project
         discourse-amazon
@@ -109,6 +110,7 @@ module SvgSprite
         envelope
         eye
         eye-dropper
+        eye-slash
         fab-android
         fab-apple
         fab-chrome
