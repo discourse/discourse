@@ -55,7 +55,7 @@ function makeDebugCallback(fn) {
  * @param {boolean} isLoggingEnabled - Whether logging is enabled (unused, kept for API compatibility)
  * @param {Function} resolveBlockFn - Function to resolve block references to classes
  * @param {number} [depth=0] - Current nesting depth for recursion limit checking.
- * @returns {Array<{Component: import("ember-curry-component").CurriedComponent}>} Array of ghost components
+ * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, isGhost?: boolean, asGhost?: Function}>} Array of ghost component data
  */
 function createGhostChildren(
   childEntries,
@@ -83,6 +83,7 @@ function createGhostChildren(
       const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)?.(
         {
           name: resolvedBlock.name,
+          id: childEntry.id,
           Component: null,
           args: childEntry.args,
           containerArgs: childEntry.containerArgs,
@@ -107,12 +108,14 @@ function createGhostChildren(
     const blockName = blockMeta?.blockName || "unknown";
     const isChildContainer = blockMeta?.isContainer ?? false;
 
-    // Build container path for nested containers
+    // Build container path for nested containers.
+    // Use id if available (unique), otherwise fall back to index.
     let nestedContainerPath;
     if (isChildContainer) {
       const count = containerCounts.get(blockName) ?? 0;
       containerCounts.set(blockName, count + 1);
-      nestedContainerPath = `${containerPath}/${blockName}[${count}]`;
+      const suffix = childEntry.id ? `(#${childEntry.id})` : `[${count}]`;
+      nestedContainerPath = `${containerPath}/${blockName}${suffix}`;
     }
 
     // Recursively create ghost children for nested containers
@@ -136,6 +139,7 @@ function createGhostChildren(
     const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)?.(
       {
         name: blockName,
+        id: childEntry.id,
         Component: null,
         args: childEntry.args,
         containerArgs: childEntry.containerArgs,
@@ -166,15 +170,19 @@ function createGhostChildren(
  * following the same pattern as plugin-outlet-debug.
  */
 export function patchBlockRendering() {
-  // Callback for visual overlay - wraps blocks with debug info
+  // Callback for visual overlay and ghost blocks - wraps blocks with debug info
   debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData, context) => {
+    const showVisualOverlay = devToolsState.blockVisualOverlay;
+    const showGhostBlocks = devToolsState.blockGhostBlocks;
+
     // Check state at invocation time (devToolsState is captured in closure)
-    if (!devToolsState.blockVisualOverlay) {
+    if (!showVisualOverlay && !showGhostBlocks) {
       return blockData;
     }
 
     const {
       name,
+      id,
       Component,
       args,
       containerArgs,
@@ -187,13 +195,18 @@ export function patchBlockRendering() {
     const { outletName } = context;
     const owner = getOwnerWithFallback();
 
-    // If conditions failed, return a ghost block
+    // If conditions failed, return a ghost block (if ghost blocks enabled)
     if (conditionsPassed === false) {
+      if (!showGhostBlocks) {
+        return blockData;
+      }
+
       const ghostResult = {
         Component: curryComponent(
           GhostBlock,
           {
             blockName: name,
+            blockId: id,
             // Use debugLocation to avoid being overwritten by template's @outletName
             debugLocation: outletName,
             blockArgs: args,
@@ -213,12 +226,17 @@ export function patchBlockRendering() {
       return ghostResult;
     }
 
-    // Wrap the rendered block with debug info
+    // Wrap the rendered block with debug info (if visual overlay enabled)
+    if (!showVisualOverlay) {
+      return blockData;
+    }
+
     return {
       Component: curryComponent(
         BlockInfo,
         {
           blockName: name,
+          blockId: id,
           // Use debugLocation to avoid being overwritten by template's @outletName
           debugLocation: outletName,
           blockArgs: args,
@@ -241,6 +259,11 @@ export function patchBlockRendering() {
   debugHooks.setCallback(
     DEBUG_CALLBACK.VISUAL_OVERLAY,
     () => devToolsState.blockVisualOverlay
+  );
+  // Callback for ghost blocks
+  debugHooks.setCallback(
+    DEBUG_CALLBACK.GHOST_BLOCKS,
+    () => devToolsState.blockGhostBlocks
   );
   // Callback for outlet info component - returns the component when enabled, null otherwise.
   debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, () =>
@@ -294,16 +317,16 @@ export function patchBlockRendering() {
   // Callback for logging optional missing blocks
   debugHooks.setCallback(
     DEBUG_CALLBACK.OPTIONAL_MISSING_LOG,
-    makeDebugCallback((blockName, hierarchy) => {
-      blockDebugLogger.logOptionalMissing(blockName, hierarchy);
+    makeDebugCallback((blockName, blockId, hierarchy) => {
+      blockDebugLogger.logOptionalMissing(blockName, blockId, hierarchy);
     })
   );
 
   // Callback for starting a logging group
   debugHooks.setCallback(
     DEBUG_CALLBACK.START_GROUP,
-    makeDebugCallback((blockName, hierarchy) => {
-      blockDebugLogger.startGroup(blockName, hierarchy);
+    makeDebugCallback((blockName, blockId, hierarchy) => {
+      blockDebugLogger.startGroup(blockName, blockId, hierarchy);
     })
   );
 

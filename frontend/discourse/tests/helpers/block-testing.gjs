@@ -287,7 +287,7 @@ export { debugHooks };
  * - data-reason={failureReason}
  *
  * @param {Object} [options] - Configuration options.
- * @param {boolean} [options.enabled=true] - Whether visual overlay is enabled.
+ * @param {boolean} [options.enabled=true] - Whether ghost blocks are enabled.
  *   Set to false to test that ghosts aren't rendered when debug mode is disabled.
  * @returns {Array<{name: string, failureType: string, failureReason: string|undefined}>}
  *
@@ -300,7 +300,7 @@ export { debugHooks };
 export function setupGhostCapture({ enabled = true } = {}) {
   const capturedGhosts = [];
 
-  debugHooks.setCallback(DEBUG_CALLBACK.VISUAL_OVERLAY, () => enabled);
+  debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => enabled);
   debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
     if (blockData.conditionsPassed === false) {
       capturedGhosts.push({

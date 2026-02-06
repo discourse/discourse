@@ -17,6 +17,7 @@ import ConditionsTree from "./conditions-tree";
  * @typedef {Object} GhostBlockSignature
  * @property {Object} Args
  * @property {string} Args.blockName - The name of the hidden block.
+ * @property {string} [Args.blockId] - The block's unique ID (if set).
  * @property {string} Args.debugLocation - The hierarchy path where the block would render.
  * @property {Object} [Args.blockArgs] - Arguments that would have been passed to the block.
  * @property {Object} [Args.containerArgs] - Container arguments from parent container's childArgs.
@@ -121,6 +122,19 @@ export default class GhostBlock extends Component {
     return args != null && Object.keys(args).length > 0;
   }
 
+  /**
+   * Returns the display name for the block, including ID if set.
+   * Format: "blockName" or "blockName(#id)".
+   *
+   * @returns {string} The display name.
+   */
+  get displayName() {
+    if (this.args.blockId) {
+      return `${this.args.blockName}(#${this.args.blockId})`;
+    }
+    return this.args.blockName;
+  }
+
   <template>
     <div class="block-debug-ghost" data-block-name={{@blockName}}>
       <DTooltip
@@ -138,7 +152,7 @@ export default class GhostBlock extends Component {
           <span class="block-debug-ghost__badge">
             {{icon "cube"}}
             <span class="block-debug-ghost__name">
-              {{@blockName}}
+              {{this.displayName}}
             </span>
             <span class="block-debug-ghost__status">
               ({{i18n "js.blocks.ghost.hidden"}})
@@ -148,17 +162,19 @@ export default class GhostBlock extends Component {
         <:content>
           <div class="block-debug-tooltip --ghost">
             <div class="block-debug-tooltip__header --failed">
-              {{icon "cube"}}
-              <span class="block-debug-tooltip__title">
-                {{@blockName}}
-              </span>
-              <span class="block-debug-tooltip__outlet">
+              <div class="block-debug-tooltip__row">
+                {{icon "cube"}}
+                <span class="block-debug-tooltip__title">
+                  {{this.displayName}}
+                </span>
+                <span class="block-debug-tooltip__status">
+                  {{i18n "js.blocks.ghost.hidden"}}
+                </span>
+              </div>
+              <div class="block-debug-tooltip__location">
                 {{i18n "js.blocks.ghost.in_location"}}
                 {{@debugLocation}}
-              </span>
-              <span class="block-debug-tooltip__status">
-                {{i18n "js.blocks.ghost.hidden"}}
-              </span>
+              </div>
             </div>
 
             <div class="block-debug-tooltip__section">

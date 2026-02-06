@@ -24,6 +24,7 @@ export const DEBUG_CALLBACK = Object.freeze({
   BLOCK_DEBUG: "blockDebug",
   BLOCK_LOGGING: "blockLogging",
   VISUAL_OVERLAY: "visualOverlay",
+  GHOST_BLOCKS: "ghostBlocks",
   OUTLET_INFO_COMPONENT: "outletInfoComponent",
   CONDITION_LOG: "conditionLog",
   COMBINATOR_LOG: "combinatorLog",
@@ -122,6 +123,15 @@ class DebugHooks {
   }
 
   /**
+   * Returns whether ghost blocks are enabled.
+   *
+   * @returns {boolean} True if ghost blocks are enabled.
+   */
+  get isGhostBlocksEnabled() {
+    return this.#callbacks.get(DEBUG_CALLBACK.GHOST_BLOCKS)?.() ?? false;
+  }
+
+  /**
    * Returns the logger interface for conditions to use.
    * Convenience getter that invokes the loggerInterface callback.
    *
@@ -169,15 +179,17 @@ export function handleOptionalMissingBlock({
   if (isLoggingEnabled) {
     debugHooks.getCallback(DEBUG_CALLBACK.OPTIONAL_MISSING_LOG)?.(
       blockName,
+      entry.id,
       hierarchy
     );
   }
 
-  // Show ghost if visual overlay is enabled
+  // Show ghost if ghost blocks are enabled
   if (showGhosts) {
     const ghostData = createDebugGhost(
       {
         name: blockName,
+        id: entry.id,
         args: entry.args,
         conditions: entry.conditions,
         failureType: FAILURE_TYPE.OPTIONAL_MISSING,
@@ -194,19 +206,32 @@ export function handleOptionalMissingBlock({
  * Builds a container path for nested containers.
  *
  * Maintains a count map to ensure unique indices for containers of the same type.
- * For example, if there are two "group" containers, they get paths like:
+ * For example, if there are two "group" containers without ids, they get paths like:
  * - `baseHierarchy/group[0]`
  * - `baseHierarchy/group[1]`
  *
+ * If a block has an id, it replaces the index (since the id is unique):
+ * - `baseHierarchy/group(#my-id)`
+ *
  * @param {string} blockName - The block name.
+ * @param {string|null} blockId - The block's unique id (if set).
  * @param {string} baseHierarchy - The base hierarchy path.
  * @param {Map<string, number>} containerCounts - Map tracking container counts.
  * @returns {string} The full container path.
  */
-export function buildContainerPath(blockName, baseHierarchy, containerCounts) {
+export function buildContainerPath(
+  blockName,
+  blockId,
+  baseHierarchy,
+  containerCounts
+) {
+  // Always increment the counter for consistent indexing of blocks without ids.
   const count = containerCounts.get(blockName) ?? 0;
   containerCounts.set(blockName, count + 1);
-  return `${baseHierarchy}/${blockName}[${count}]`;
+
+  // Use id if available (unique), otherwise fall back to index.
+  const suffix = blockId ? `(#${blockId})` : `[${count}]`;
+  return `${baseHierarchy}/${blockName}${suffix}`;
 }
 
 /**
@@ -218,6 +243,7 @@ export function buildContainerPath(blockName, baseHierarchy, containerCounts) {
  *
  * @param {Object} blockData - Data describing the block to ghost.
  * @param {string} blockData.name - The block name.
+ * @param {string} [blockData.id] - The block's unique ID (if set).
  * @param {Object} [blockData.args] - Block arguments.
  * @param {Object} [blockData.containerArgs] - Container arguments.
  * @param {Array} [blockData.conditions] - Block conditions.
@@ -298,6 +324,7 @@ export function createGhostBlock({
   const ghostData = createDebugGhost(
     {
       name: blockName,
+      id: entry.id,
       args: entry.args,
       containerArgs: entry.containerArgs,
       conditions: entry.conditions,
@@ -316,17 +343,28 @@ export function createGhostBlock({
  * Ensures START_GROUP and END_GROUP callbacks are always paired.
  *
  * @param {string} blockName - The block name for the group label.
+ * @param {string|null} blockId - The block's unique ID (if set).
  * @param {string} hierarchy - The hierarchy path for context.
  * @param {boolean} isLoggingEnabled - Whether debug logging is active.
  * @param {() => boolean} fn - Function to execute that returns the condition result.
  * @returns {boolean} The result of the function execution.
  */
-export function withDebugGroup(blockName, hierarchy, isLoggingEnabled, fn) {
+export function withDebugGroup(
+  blockName,
+  blockId,
+  hierarchy,
+  isLoggingEnabled,
+  fn
+) {
   if (!isLoggingEnabled) {
     return fn();
   }
 
-  debugHooks.getCallback(DEBUG_CALLBACK.START_GROUP)?.(blockName, hierarchy);
+  debugHooks.getCallback(DEBUG_CALLBACK.START_GROUP)?.(
+    blockName,
+    blockId,
+    hierarchy
+  );
   const result = fn();
   debugHooks.getCallback(DEBUG_CALLBACK.END_GROUP)?.(result);
   return result;

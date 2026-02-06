@@ -13,7 +13,8 @@ import devToolsState from "../state";
 
 /**
  * Block debug button with dropdown menu.
- * Provides separate toggles for console logging, visual overlay, and outlet boundaries.
+ * Provides separate toggles for outlet boundaries, visual overlay, ghost blocks,
+ * and condition debugging.
  */
 export default class BlockDebugButton extends Component {
   /**
@@ -26,19 +27,20 @@ export default class BlockDebugButton extends Component {
     return (
       devToolsState.blockDebug ||
       devToolsState.blockVisualOverlay ||
+      devToolsState.blockGhostBlocks ||
       devToolsState.blockOutletBoundaries
     );
   }
 
   /**
-   * Toggles console logging for block condition evaluation.
-   * When enabled, logs detailed information about each block's condition checks.
+   * Toggles outlet boundary indicators around block outlets.
+   * When enabled, shows visual borders around each block outlet area.
    *
    * @param {Event} event - The checkbox change event.
    */
   @action
-  toggleConsoleLogging(event) {
-    devToolsState.blockDebug = /** @type {HTMLInputElement} */ (
+  toggleOutletBoundaries(event) {
+    devToolsState.blockOutletBoundaries = /** @type {HTMLInputElement} */ (
       event.target
     ).checked;
   }
@@ -57,14 +59,28 @@ export default class BlockDebugButton extends Component {
   }
 
   /**
-   * Toggles outlet boundary indicators around block outlets.
-   * When enabled, shows visual borders around each block outlet area.
+   * Toggles ghost blocks that show hidden blocks with dashed outlines.
+   * When enabled, shows placeholder outlines for blocks that weren't rendered
+   * (e.g., failed conditions, optional missing, no visible children).
    *
    * @param {Event} event - The checkbox change event.
    */
   @action
-  toggleOutletBoundaries(event) {
-    devToolsState.blockOutletBoundaries = /** @type {HTMLInputElement} */ (
+  toggleGhostBlocks(event) {
+    devToolsState.blockGhostBlocks = /** @type {HTMLInputElement} */ (
+      event.target
+    ).checked;
+  }
+
+  /**
+   * Toggles condition debugging for block condition evaluation.
+   * When enabled, logs detailed information about each block's condition checks.
+   *
+   * @param {Event} event - The checkbox change event.
+   */
+  @action
+  toggleConditionDebugging(event) {
+    devToolsState.blockDebug = /** @type {HTMLInputElement} */ (
       event.target
     ).checked;
   }
@@ -88,10 +104,10 @@ export default class BlockDebugButton extends Component {
           <label>
             <input
               type="checkbox"
-              checked={{devToolsState.blockDebug}}
-              {{on "change" this.toggleConsoleLogging}}
+              checked={{devToolsState.blockOutletBoundaries}}
+              {{on "change" this.toggleOutletBoundaries}}
             />
-            {{i18n "dev_tools.block_debug.console_logging"}}
+            {{i18n "dev_tools.block_debug.outlet_boundaries"}}
           </label>
           <label>
             <input
@@ -104,10 +120,18 @@ export default class BlockDebugButton extends Component {
           <label>
             <input
               type="checkbox"
-              checked={{devToolsState.blockOutletBoundaries}}
-              {{on "change" this.toggleOutletBoundaries}}
+              checked={{devToolsState.blockGhostBlocks}}
+              {{on "change" this.toggleGhostBlocks}}
             />
-            {{i18n "dev_tools.block_debug.outlet_boundaries"}}
+            {{i18n "dev_tools.block_debug.ghost_blocks"}}
+          </label>
+          <label>
+            <input
+              type="checkbox"
+              checked={{devToolsState.blockDebug}}
+              {{on "change" this.toggleConditionDebugging}}
+            />
+            {{i18n "dev_tools.block_debug.condition_debugging"}}
           </label>
         </div>
       </:content>

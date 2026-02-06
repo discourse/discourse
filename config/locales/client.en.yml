@@ -1,6 +1,18 @@
 en:
   js:
     blocks:
+      ghost:
+        # Section titles
+        status: "Status"
+        conditions: "Conditions"
+        arguments: "Arguments"
+        container_args: "Container Args"
+        in_location: "in"
+        # Status text (used in badge, header, and status section)
+        hidden: "hidden"
+        not_registered: "not registered"
+        no_visible_children: "no visible children"
+        failed: "failed"
       ghost_reasons:
         # Longer hint messages shown at bottom of ghost tooltip
         optional_missing_hint: "This optional block is not rendered because it's not registered."
@@ -373,9 +385,10 @@ en:
       toggle_plugin_outlet_debug: "Toggle plugin outlet debug"
       toggle_block_debug: "Toggle block debug"
       block_debug:
-        console_logging: "Console logging"
-        visual_overlay: "Visual overlay"
         outlet_boundaries: "Outlet boundaries"
+        visual_overlay: "Visual overlay"
+        ghost_blocks: "Ghost blocks"
+        condition_debugging: "Condition debugging"
       toggle_safe_mode: "Toggle safe mode"
       toggle_verbose_localization: "Toggle verbose localization"
       toggle_mobile_view: "Toggle mobile view"

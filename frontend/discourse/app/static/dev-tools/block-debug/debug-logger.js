@@ -35,7 +35,7 @@ class BlockDebugLogger {
   /**
    * Current evaluation group context.
    *
-   * @type {{blockName: string, hierarchy: string, logs: Array}|null}
+   * @type {{blockName: string, blockId: string|null, hierarchy: string, logs: Array}|null}
    */
   #currentGroup = null;
 
@@ -53,11 +53,12 @@ class BlockDebugLogger {
    * All subsequent logCondition calls will be collected in this group
    * until endGroup is called.
    *
-   * @param {string} blockName - The block being evaluated
-   * @param {string} hierarchy - The outlet/parent hierarchy path (e.g., "outlet-name/parent-block")
+   * @param {string} blockName - The block being evaluated.
+   * @param {string|null} blockId - The block's unique ID, or null if not set.
+   * @param {string} hierarchy - The outlet/parent hierarchy path (e.g., "outlet-name/parent-block").
    */
-  startGroup(blockName, hierarchy) {
-    this.#currentGroup = { blockName, hierarchy, logs: [] };
+  startGroup(blockName, blockId, hierarchy) {
+    this.#currentGroup = { blockName, blockId, hierarchy, logs: [] };
   }
 
   /**
@@ -211,7 +212,7 @@ class BlockDebugLogger {
       return;
     }
 
-    const { blockName, hierarchy, logs } = this.#currentGroup;
+    const { blockName, hierarchy, blockId, logs } = this.#currentGroup;
 
     if (logs.length === 0) {
       this.#currentGroup = null;
@@ -222,10 +223,13 @@ class BlockDebugLogger {
     const statusStyle = finalResult ? STYLES.passed : STYLES.failed;
     const icon = finalResult ? ICONS.passed : ICONS.failed;
 
-    // Format: [Blocks] {icon} {STATUS} {blockName} in {hierarchy}
+    // Format display name with ID if available: "blockName" or "blockName(#id)"
+    const displayName = blockId ? `${blockName}(#${blockId})` : blockName;
+
+    // Format: [Blocks] {icon} {STATUS} {displayName} in {hierarchy}
     // eslint-disable-next-line no-console
     console.groupCollapsed(
-      `[Blocks] %c${icon} ${status}%c %c${blockName}%c in ${hierarchy}`,
+      `[Blocks] %c${icon} ${status}%c %c${displayName}%c in ${hierarchy}`,
       statusStyle, // icon + status - same color
       "", // reset
       STYLES.blockName, // block name - bold
@@ -503,15 +507,19 @@ class BlockDebugLogger {
   /**
    * Log that an optional block was skipped because it's not registered.
    * Uses standalone log (no group needed since there are no conditions to show).
-   * Format matches endGroup header: `[Blocks] ✗ SKIPPED {blockName} in {hierarchy}`
+   * Format matches endGroup header: `[Blocks] ✗ SKIPPED {displayName} in {hierarchy}`
    *
    * @param {string} blockName - The name of the missing optional block.
+   * @param {string|null} blockId - The block's unique ID, or null if not set.
    * @param {string} hierarchy - The outlet/container hierarchy path.
    */
-  logOptionalMissing(blockName, hierarchy) {
+  logOptionalMissing(blockName, blockId, hierarchy) {
+    // Format display name with ID if available
+    const displayName = blockId ? `${blockName}(#${blockId})` : blockName;
+
     // eslint-disable-next-line no-console
     console.log(
-      `[Blocks] %c${ICONS.failed} SKIPPED%c %c${blockName}%c in ${hierarchy} %c(optional, not registered)`,
+      `[Blocks] %c${ICONS.failed} SKIPPED%c %c${displayName}%c in ${hierarchy} %c(optional, not registered)`,
       STYLES.failed,
       "",
       STYLES.blockName,

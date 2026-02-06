@@ -13,13 +13,14 @@ import ConditionsTree from "./conditions-tree";
  * Visual overlay component for rendered blocks.
  * Wraps a block with debug information including name badge and tooltip.
  *
- * @param {string} blockName - The name of the block
- * @param {string} debugLocation - The hierarchy path where the block is rendered
- * @param {Object} [blockArgs] - Arguments passed to the block
- * @param {Object} [containerArgs] - Container arguments passed from parent container's childArgs
- * @param {Object} [conditions] - Conditions that were evaluated
- * @param {Object} [outletArgs] - Outlet arguments available to the block
- * @param {Component} WrappedComponent - The actual block component to render
+ * @param {string} blockName - The name of the block.
+ * @param {string} [blockId] - The block's unique ID (if set).
+ * @param {string} debugLocation - The hierarchy path where the block is rendered.
+ * @param {Object} [blockArgs] - Arguments passed to the block.
+ * @param {Object} [containerArgs] - Container arguments passed from parent container's childArgs.
+ * @param {Object} [conditions] - Conditions that were evaluated.
+ * @param {Object} [outletArgs] - Outlet arguments available to the block.
+ * @param {Component} WrappedComponent - The actual block component to render.
  */
 export default class BlockInfo extends Component {
   /**
@@ -86,6 +87,19 @@ export default class BlockInfo extends Component {
     );
   }
 
+  /**
+   * Returns the display name for the block, including ID if set.
+   * Format: "blockName" or "blockName(#id)".
+   *
+   * @returns {string} The display name.
+   */
+  get displayName() {
+    if (this.args.blockId) {
+      return `${this.args.blockName}(#${this.args.blockId})`;
+    }
+    return this.args.blockName;
+  }
+
   <template>
     <div class="block-debug-info --rendered" data-block-name={{@blockName}}>
       <DTooltip
@@ -102,16 +116,22 @@ export default class BlockInfo extends Component {
         <:trigger>
           <span class="block-debug-badge">
             {{icon "cube"}}
-            <span class="block-debug-badge__name">{{@blockName}}</span>
+            <span class="block-debug-badge__name">{{this.displayName}}</span>
           </span>
         </:trigger>
         <:content>
           <div class="block-debug-tooltip">
             <div class="block-debug-tooltip__header">
-              {{icon "cube"}}
-              <span class="block-debug-tooltip__title">{{@blockName}}</span>
-              <span class="block-debug-tooltip__outlet">in
-                {{@debugLocation}}</span>
+              <div class="block-debug-tooltip__row">
+                {{icon "cube"}}
+                <span class="block-debug-tooltip__title">
+                  {{this.displayName}}
+                </span>
+              </div>
+              <div class="block-debug-tooltip__location">
+                in
+                {{@debugLocation}}
+              </div>
             </div>
 
             {{#if this.hasConditions}}

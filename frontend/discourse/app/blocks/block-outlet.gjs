@@ -224,6 +224,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
     const debugResult = debugCallback(
       {
         name: blockMeta?.blockName,
+        id,
         Component: wrappedComponent,
         args: argsWithDefaults,
         containerArgs,
@@ -259,6 +260,7 @@ function createChildBlock(entry, owner, debugContext = {}) {
       const ghostResult = createDebugGhost(
         {
           name: blockMeta?.blockName,
+          id,
           args: argsWithDefaults,
           containerArgs,
           conditions: debugContext.conditions,
@@ -460,13 +462,14 @@ export default class BlockOutlet extends Component {
   /**
    * Processes block entries and returns renderable components.
    *
-   * @returns {Promise<{rawChildren: Array<Object>, showGhosts: boolean, isLoggingEnabled: boolean}>|undefined}
+   * @returns {Promise<{rawChildren: Array<Object>, showGhosts: boolean, showVisualOverlay: boolean, isLoggingEnabled: boolean}>|undefined}
    */
   @cached
   get children() {
-    // we need to track the state outside the promise contexts to force the children to be rendered when
+    // We need to track the state outside the promise contexts to force the children to be rendered when
     // the user enables the debugging
-    const showGhosts = debugHooks.isVisualOverlayEnabled;
+    const showGhosts = debugHooks.isGhostBlocksEnabled;
+    const showVisualOverlay = debugHooks.isVisualOverlayEnabled;
     const isLoggingEnabled = debugHooks.isBlockLoggingEnabled;
 
     if (!this.validatedLayout) {
@@ -488,7 +491,7 @@ export default class BlockOutlet extends Component {
           return;
         }
 
-        return { rawChildren, showGhosts, isLoggingEnabled };
+        return { rawChildren, showGhosts, showVisualOverlay, isLoggingEnabled };
       })
       .catch((error) => {
         if (isTesting() || isRailsTesting()) {
@@ -586,6 +589,7 @@ export default class BlockOutlet extends Component {
               outletArgs=this.outletArgsWithDeprecations
               rawChildren=layout.rawChildren
               showGhosts=layout.showGhosts
+              showVisualOverlay=layout.showVisualOverlay
               isLoggingEnabled=layout.isLoggingEnabled
               createChildBlockFn=createChildBlock
             )

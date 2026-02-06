@@ -330,7 +330,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       let ghostBlockReceived = false;
 
-      debugHooks.setCallback(DEBUG_CALLBACK.VISUAL_OVERLAY, () => true);
+      debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => true);
       debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
         if (!blockData.conditionsPassed) {
           ghostBlockReceived = true;
@@ -1320,7 +1320,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
       let ghostBlockData = null;
 
-      debugHooks.setCallback(DEBUG_CALLBACK.VISUAL_OVERLAY, () => true);
+      debugHooks.setCallback(DEBUG_CALLBACK.GHOST_BLOCKS, () => true);
       debugHooks.setCallback(
         DEBUG_CALLBACK.BLOCK_DEBUG,
         (blockData, context) => {

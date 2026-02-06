@@ -115,6 +115,9 @@ export default class BlockOutletRootContainer extends Component {
       createChildBlockFn,
     } = this.args;
 
+    // force tracking the value
+    this.args.showVisualOverlay;
+
     if (!rawChildren?.length) {
       return [];
     }
@@ -209,11 +212,16 @@ export default class BlockOutletRootContainer extends Component {
       // This is the key reactive line - blocksService.evaluate() reads from router/discovery
       // services, and since we're in a tracked getter, Ember tracks these reads.
       const conditionsPassed = entryClone.conditions
-        ? withDebugGroup(blockName, baseHierarchy, isLoggingEnabled, () =>
-            blocksService.evaluate(entryClone.conditions, {
-              debug: isLoggingEnabled,
-              outletArgs,
-            })
+        ? withDebugGroup(
+            blockName,
+            entryClone.id,
+            baseHierarchy,
+            isLoggingEnabled,
+            () =>
+              blocksService.evaluate(entryClone.conditions, {
+                debug: isLoggingEnabled,
+                outletArgs,
+              })
           )
         : true;
 
@@ -221,14 +229,16 @@ export default class BlockOutletRootContainer extends Component {
       // This determines which children are visible before we check if container has any
       let hasVisibleChildren = true; // Non-containers always "have" visible children
       if (isContainer && entryClone.children?.length) {
-        // Recursively preprocess children - this computes their visibility
+        // Recursively preprocess children - this computes their visibility.
+        // Include the container's ID in the hierarchy for better debug identification.
+        const containerSuffix = entryClone.id ? `(#${entryClone.id})` : "";
         const processedChildren = this.#preprocessEntries(
           entryClone.children,
           outletArgs,
           blocksService,
           showGhosts,
           isLoggingEnabled,
-          `${baseHierarchy}/${blockName}`
+          `${baseHierarchy}/${blockName}${containerSuffix}`
         );
 
         hasVisibleChildren = processedChildren.some((child) => child.__visible);

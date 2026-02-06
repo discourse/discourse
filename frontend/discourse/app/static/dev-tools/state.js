@@ -15,6 +15,7 @@ class DevToolsState {
   @tracked _pluginOutletDebug;
   @tracked _blockDebug;
   @tracked _blockVisualOverlay;
+  @tracked _blockGhostBlocks;
   @tracked _blockOutletBoundaries;
 
   /**
@@ -26,6 +27,7 @@ class DevToolsState {
     this._pluginOutletDebug = persisted.pluginOutletDebug ?? false;
     this._blockDebug = persisted.blockDebug ?? false;
     this._blockVisualOverlay = persisted.blockVisualOverlay ?? false;
+    this._blockGhostBlocks = persisted.blockGhostBlocks ?? false;
     this._blockOutletBoundaries = persisted.blockOutletBoundaries ?? false;
   }
 
@@ -62,6 +64,7 @@ class DevToolsState {
           pluginOutletDebug: this._pluginOutletDebug,
           blockDebug: this._blockDebug,
           blockVisualOverlay: this._blockVisualOverlay,
+          blockGhostBlocks: this._blockGhostBlocks,
           blockOutletBoundaries: this._blockOutletBoundaries,
         })
       );
@@ -110,6 +113,20 @@ class DevToolsState {
 
   set blockVisualOverlay(value) {
     this._blockVisualOverlay = value;
+    this.#persistState();
+  }
+
+  /**
+   * Enable ghost blocks showing hidden blocks with dashed outlines.
+   *
+   * @type {boolean}
+   */
+  get blockGhostBlocks() {
+    return this._blockGhostBlocks;
+  }
+
+  set blockGhostBlocks(value) {
+    this._blockGhostBlocks = value;
     this.#persistState();
   }
 

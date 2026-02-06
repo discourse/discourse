@@ -326,6 +326,6 @@ export default class Blocks extends Service {
    * ```
    */
   get showGhosts() {
-    return debugHooks.isVisualOverlayEnabled;
+    return debugHooks.isGhostBlocksEnabled;
   }
 }

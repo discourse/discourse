@@ -26,7 +26,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     test("creates new group entry", function (assert) {
       assert.false(blockDebugLogger.hasActiveGroup());
 
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
 
       assert.true(blockDebugLogger.hasActiveGroup());
 
@@ -36,7 +36,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
 
   module("logCondition", function () {
     test("adds condition to current group", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.logCondition({
         type: "user",
         args: { loggedIn: true },
@@ -74,7 +74,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       // Simulates a simple condition tree:
       // AND (depth 0)
       //   user (depth 1)
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.logCondition({
         type: "AND",
         args: "2 conditions",
@@ -115,7 +115,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
 
   module("endGroup", function () {
     test("flushes logs to console", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.logCondition({
         type: "user",
         args: { loggedIn: true },
@@ -135,7 +135,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     });
 
     test("clears group after flush", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.logCondition({
         type: "user",
         args: {},
@@ -148,7 +148,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     });
 
     test("does nothing with empty logs", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.endGroup(true);
 
       assert.true(
@@ -158,7 +158,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     });
 
     test("shows RENDERED status for passing blocks", function (assert) {
-      blockDebugLogger.startGroup("my-block", "homepage-blocks");
+      blockDebugLogger.startGroup("my-block", null, "homepage-blocks");
       blockDebugLogger.logCondition({
         type: "user",
         args: {},
@@ -174,7 +174,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     });
 
     test("shows SKIPPED status for failing blocks", function (assert) {
-      blockDebugLogger.startGroup("my-block", "homepage-blocks");
+      blockDebugLogger.startGroup("my-block", null, "homepage-blocks");
       blockDebugLogger.logCondition({
         type: "user",
         args: {},
@@ -185,6 +185,32 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
 
       const [message] = this.consoleStub.groupCollapsed.firstCall.args;
       assert.true(message.includes("SKIPPED"));
+    });
+
+    test("includes block id in display name and shows hierarchy with parent id", function (assert) {
+      // Simulates a block with id "upcoming-events" inside a container with id "callouts"
+      blockDebugLogger.startGroup(
+        "theme:tactile:upcoming-events",
+        "upcoming-events",
+        "homepage-blocks/head(#callouts)"
+      );
+      blockDebugLogger.logCondition({
+        type: "user",
+        args: {},
+        result: true,
+        depth: 0,
+      });
+      blockDebugLogger.endGroup(true);
+
+      const [message] = this.consoleStub.groupCollapsed.firstCall.args;
+      assert.true(
+        message.includes("theme:tactile:upcoming-events(#upcoming-events)"),
+        "block name includes its own id"
+      );
+      assert.true(
+        message.includes("in homepage-blocks/head(#callouts)"),
+        "hierarchy includes parent container id"
+      );
     });
 
     test("does nothing when no group active", function (assert) {
@@ -204,7 +230,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       //   user (depth 1)
       //   OR (depth 1)
       //     route (depth 2)
-      blockDebugLogger.startGroup("outer-block", "outlet-name");
+      blockDebugLogger.startGroup("outer-block", null, "outlet-name");
 
       blockDebugLogger.logCondition({
         type: "AND",
@@ -261,7 +287,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
       //       param-group (depth 3)
       //       param-group (depth 3)
       //   setting (depth 1)
-      blockDebugLogger.startGroup("complex-block", "main-outlet");
+      blockDebugLogger.startGroup("complex-block", null, "main-outlet");
 
       // Top-level AND combinator
       blockDebugLogger.logCondition({
@@ -379,7 +405,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     });
 
     test("returns true when group is active", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       assert.true(blockDebugLogger.hasActiveGroup());
       blockDebugLogger.endGroup(true);
     });
@@ -387,7 +413,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
 
   module("logRouteState", function () {
     test("displays checkmark when URL matches", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
         args: { urls: ["/latest"] },
@@ -416,7 +442,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     });
 
     test("displays X when URL does not match", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
         args: { urls: ["/c/**"] },
@@ -445,7 +471,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     });
 
     test("includes actual and expected URLs in output", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
         args: { urls: ["/c/**"] },
@@ -477,7 +503,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     });
 
     test("includes excludeUrls in expected when using exclusion", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
         args: { excludeUrls: ["$HOMEPAGE"] },
@@ -508,7 +534,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     });
 
     test("logs page type and params as siblings when using pages", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
         args: { pages: ["TOPIC_PAGES"], params: { id: 123 } },
@@ -557,7 +583,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     });
 
     test("shows page type matched even when params do not match", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
         args: { pages: ["CATEGORY_PAGES"], params: { categoryId: 1 } },
@@ -609,7 +635,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     });
 
     test("shows actual page type when expected page type does not match", function (assert) {
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
       blockDebugLogger.logCondition({
         type: "route",
         args: { pages: ["CATEGORY_PAGES"], params: { categoryId: 1 } },
@@ -647,7 +673,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     test("logs params summary and OR combinator for { any: [...] }", function (assert) {
       // Simulates the logging structure for params: { any: [...] }
       // Both params summary and OR combinator should be logged
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
 
       // Route condition (parent)
       blockDebugLogger.logCondition({
@@ -731,7 +757,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     test("logs params summary and NOT combinator for { not: {...} }", function (assert) {
       // Simulates the logging structure for params: { not: {...} }
       // Both params summary and NOT combinator should be logged
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
 
       // Route condition (parent)
       blockDebugLogger.logCondition({
@@ -811,7 +837,7 @@ module("Unit | Lib | blocks/debug-logger", function (hooks) {
     test("params at depth 1 renders before OR at depth 2 in tree", function (assert) {
       // Verifies that params (depth 1) appears before OR (depth 2) in the log buffer
       // The tree structure should have params as parent of OR
-      blockDebugLogger.startGroup("test-block", "outlet-name");
+      blockDebugLogger.startGroup("test-block", null, "outlet-name");
 
       // Params at depth 1 (parent)
       const paramsSpec = { _isParams: true };

@@ -104,9 +104,11 @@ function getOrCreateLeafBlockComponent(
  * @property {Array<BlockEntry>} [children] - Nested block entries for containers.
  * @property {Object|Array<Object>} [conditions] - Conditions that must pass for block to render.
  * @property {string} [classNames] - Additional CSS classes for the block wrapper.
+ * @property {string} [id] - Unique identifier for BEM styling and targeting.
  * @property {boolean} __visible - Whether the block passed condition evaluation.
  * @property {number} __stableKey - Stable key assigned at registration time.
- * @property {string} [__failureReason] - Why the block is hidden (debug mode only).
+ * @property {string} [__failureType] - The failure type constant (debug mode only).
+ * @property {string} [__failureReason] - Custom failure reason message (debug mode only).
  *
  * @typedef {Object} ChildBlockResult
  * @property {import("ember-curry-component").CurriedComponent} Component - Curried component ready to render.
@@ -184,9 +186,10 @@ export function processBlockEntries({
     // are hidden/shown by conditions.
     const key = `${blockName}:${entry.__stableKey}`;
 
-    // For containers, build their full path for children's hierarchy
+    // For containers, build their full path for children's hierarchy.
+    // The id is included in the path for easier identification in debug tools.
     const containerPath = isContainer
-      ? buildContainerPath(blockName, baseHierarchy, containerCounts)
+      ? buildContainerPath(blockName, entry.id, baseHierarchy, containerCounts)
       : undefined;
 
     // For containers with children, recursively process children FIRST
