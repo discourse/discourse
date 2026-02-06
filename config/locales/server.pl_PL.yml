@@ -2605,7 +2605,7 @@ pl_PL:
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
     default_navigation_menu_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi menu nawigacji."
     experimental_new_new_view_groups: 'Włącz nową listę tematów, która łączy nieprzeczytane i nowe tematy i spraw, by łącze "Wszystko" na pasku bocznym prowadziło do niej.'
-    experimental_form_templates: "Włącz funkcję szablonów formularzy. Dzięki niej możesz wymusić ustrukturyzowany formularz z walidacją danych w ramach procesu tworzenia tematu."
+    enable_form_templates: "Włącz funkcję szablonów formularzy. Dzięki niej możesz wymusić ustrukturyzowany formularz z walidacją danych w ramach procesu tworzenia tematu."
     show_preview_for_form_templates: "Włącz podgląd funkcji szablonów formularzy"
     lazy_load_categories_groups: "Leniwie ładuj informacje o kategoriach tylko dla użytkowników z tych grup. Poprawia to wydajność w witrynach z wieloma kategoriami."
     experimental_auto_grid_images: "Automatycznie zawija obrazy w tagi [grid], gdy w kompozytorze zostanie przesłane 3 lub więcej obrazów."
