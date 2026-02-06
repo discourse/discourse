@@ -152,6 +152,7 @@ export default class PostVotingComment extends Component {
 
           <PostVotingCommentActions
             @id={{@comment.id}}
+            @topic={{@topic}}
             @updateComment={{this.expandEditor}}
             @removeComment={{@removeComment}}
             @comment={{@comment}}

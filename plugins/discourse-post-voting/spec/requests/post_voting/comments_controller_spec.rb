@@ -20,6 +20,48 @@ RSpec.describe PostVoting::CommentsController do
     comment_3
   end
 
+  describe "#show" do
+    it "returns 404 when comment does not exist" do
+      get "/post_voting/comments/-999999.json"
+
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 403 when user cannot see the post" do
+      category.update!(read_restricted: true)
+
+      get "/post_voting/comments/#{comment.id}.json"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns the comment with post and topic context" do
+      get "/post_voting/comments/#{comment.id}.json"
+
+      expect(response.status).to eq(200)
+      payload = response.parsed_body
+
+      expect(payload["comment"]["id"]).to eq(comment.id)
+      expect(payload["comment"]["cooked"]).to eq(comment.cooked)
+
+      expect(payload["post"]["id"]).to eq(answer.id)
+      expect(payload["post"]["post_number"]).to eq(answer.post_number)
+      expect(payload["post"]["cooked"]).to eq(answer.cooked)
+      expect(payload["post"]["username"]).to eq(answer.user.username)
+
+      expect(payload["topic"]["id"]).to eq(topic.id)
+      expect(payload["topic"]["title"]).to eq(topic.title)
+      expect(payload["topic"]["slug"]).to eq(topic.slug)
+
+      expect(payload["comments"].length).to eq(3)
+      expect(payload["comments"].map { |c| c["id"] }).to contain_exactly(
+        comment.id,
+        comment_2.id,
+        comment_3.id,
+      )
+    end
+  end
+
   describe "#load_comments" do
     it "returns the right response when user is not allowed to view post" do
       category.update!(read_restricted: true)

@@ -8,6 +8,62 @@ module PostVoting
     before_action :ensure_post_voting_enabled, only: %i[load_more_comments create]
     before_action :ensure_logged_in, only: %i[create destroy update]
 
+    def show
+      comment = PostVotingComment.includes(:user, :post).find_by(id: params[:id])
+      raise Discourse::NotFound if comment.blank?
+
+      post = comment.post
+      topic = post.topic
+
+      @guardian.ensure_can_see!(post)
+      raise Discourse::InvalidAccess if !post.is_post_voting_topic?
+
+      comments =
+        PostVotingComment
+          .includes(:user)
+          .where(post_id: post.id)
+          .where(deleted_at: nil)
+          .order(id: :asc)
+
+      comments_user_voted = {}
+      if current_user
+        PostVotingVote
+          .where(user: current_user, votable_type: "PostVotingComment")
+          .where(votable_id: comments.pluck(:id))
+          .pluck(:votable_id)
+          .each { |votable_id| comments_user_voted[votable_id] = true }
+      end
+
+      serialized_comments =
+        comments.map do |c|
+          serializer = PostVotingCommentSerializer.new(c, scope: guardian, root: false)
+          serializer.comments_user_voted = comments_user_voted
+          serializer.as_json
+        end
+
+      render json: {
+               comment:
+                 PostVotingCommentSerializer.new(comment, scope: guardian, root: false).as_json,
+               post: {
+                 id: post.id,
+                 post_number: post.post_number,
+                 cooked: post.cooked,
+                 username: post.user&.username,
+                 name: post.user&.name,
+                 avatar_template: post.user&.avatar_template,
+                 created_at: post.created_at,
+                 post_voting_vote_count: post.qa_vote_count,
+               },
+               comments: serialized_comments,
+               topic: {
+                 id: topic.id,
+                 title: topic.title,
+                 slug: topic.slug,
+                 url: topic.url,
+               },
+             }
+    end
+
     def load_more_comments
       @guardian.ensure_can_see!(@post)
       params.require(:last_comment_id)

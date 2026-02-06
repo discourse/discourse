@@ -134,7 +134,7 @@ describe PostVotingComment do
         Fabricate(:post_voting_comment, post: post, raw: "https://www.example.com")
 
       expect(post_voting_comment.cooked).to eq(
-        "<p><a href=\"https://www.example.com\" rel=\"noopener nofollow ugc\">https://www.example.com</a></p>",
+        "<p><a href=\"https://www.example.com\" class=\"onebox\" target=\"_blank\" rel=\"noopener nofollow ugc\">https://www.example.com</a></p>",
       )
     end
 
@@ -154,14 +154,14 @@ describe PostVotingComment do
       expect(post_voting_comment.cooked).to eq("<p>■■■■■■■</p>")
     end
 
-    it "removes newlines from raw as comments should only support a single paragraph" do
+    it "supports multiple paragraphs" do
       post_voting_comment = Fabricate(:post_voting_comment, post: post, raw: <<~RAW)
       line 1
 
       line 2
       RAW
 
-      expect(post_voting_comment.cooked).to eq("<p>line 1 line 2</p>")
+      expect(post_voting_comment.cooked).to eq("<p>line 1</p>\n<p>line 2</p>")
     end
   end
 end

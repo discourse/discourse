@@ -80,6 +80,7 @@ export default class PostVotingComments extends Component {
       {{#each this.comments as |comment|}}
         <PostVotingComment
           @comment={{comment}}
+          @topic={{@post.topic}}
           @removeComment={{this.removeComment}}
           @updateComment={{this.updateComment}}
           @vote={{this.vote}}

@@ -5,6 +5,8 @@ import DButton from "discourse/components/d-button";
 import FlagModal from "discourse/components/modal/flag";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import getURL from "discourse/lib/get-url";
+import { clipboardCopy } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import PostVotingFlag from "../lib/post-voting-flag";
 
@@ -13,8 +15,23 @@ export default class PostVotingCommentActions extends Component {
   @service modal;
   @service currentUser;
   @service site;
+  @service toasts;
 
   comment = this.args.comment;
+
+  get commentPermalinkUrl() {
+    const { protocol, host } = window.location;
+    const topic = this.args.topic;
+
+    if (!topic?.id || !topic?.slug) {
+      return null;
+    }
+
+    const path = getURL(
+      `/t/${topic.slug}/${topic.id}/comment/${this.comment.id}`
+    );
+    return `${protocol}//${host}${path}`;
+  }
 
   get hasPermission() {
     return (
@@ -68,9 +85,31 @@ export default class PostVotingCommentActions extends Component {
     });
   }
 
+  @action
+  copyLink() {
+    const url = this.commentPermalinkUrl;
+    if (!url) {
+      return;
+    }
+
+    clipboardCopy(url).then(() => {
+      this.toasts.success({
+        duration: 3000,
+        data: { message: i18n("post_voting.comment.permalink.link_copied") },
+      });
+    });
+  }
+
   <template>
-    {{#if this.canEdit}}
-      <span class="post-voting-comment-actions">
+    <span class="post-voting-comment-actions">
+      <DButton
+        @display="link"
+        class="post-voting-comment-actions-copy-link"
+        @action={{this.copyLink}}
+        @icon="link"
+        @title="post_voting.comment.permalink.copy_link"
+      />
+      {{#if this.canEdit}}
         <DButton
           @display="link"
           class="post-voting-comment-actions-edit-link"
@@ -83,15 +122,15 @@ export default class PostVotingCommentActions extends Component {
           @action={{this.deleteConfirm}}
           @icon="far-trash-can"
         />
-        {{#if this.canFlag}}
-          <DButton
-            @display="link"
-            class="post-voting-comment-actions-flag-link"
-            @action={{this.showFlag}}
-            @icon="flag"
-          />
-        {{/if}}
-      </span>
-    {{/if}}
+      {{/if}}
+      {{#if this.canFlag}}
+        <DButton
+          @display="link"
+          class="post-voting-comment-actions-flag-link"
+          @action={{this.showFlag}}
+          @icon="flag"
+        />
+      {{/if}}
+    </span>
   </template>
 }

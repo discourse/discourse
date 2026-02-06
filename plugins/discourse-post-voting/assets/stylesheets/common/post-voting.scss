@@ -125,9 +125,39 @@
   }
 
   .post-voting-comment-post {
+    flex: 1;
+    min-width: 0;
+
     .post-voting-comment-cooked {
-      p {
-        display: inline;
+      // Support full markdown content
+      p:first-child {
+        margin-top: 0;
+      }
+
+      p:last-child {
+        margin-bottom: 0.5em;
+      }
+
+      pre {
+        margin: 0.5em 0;
+      }
+
+      ul,
+      ol {
+        margin: 0.5em 0;
+        padding-left: 1.5em;
+      }
+
+      blockquote {
+        margin: 0.5em 0;
+        padding-left: 1em;
+        border-left: 3px solid var(--primary-low);
+      }
+
+      code {
+        background: var(--primary-very-low);
+        padding: 0.1em 0.3em;
+        border-radius: 3px;
       }
     }
 
@@ -148,6 +178,15 @@
     .post-voting-comment-actions {
       display: none;
       margin-left: 0.3em;
+
+      .post-voting-comment-actions-copy-link {
+        color: var(--primary-med-or-secondary-med);
+        margin-right: 0.25em;
+      }
+
+      .post-voting-comment-actions-copy-link:hover {
+        color: var(--primary);
+      }
 
       .post-voting-comment-actions-edit-link {
         color: var(--primary-med-or-secondary-med);
@@ -197,9 +236,48 @@
 .post-voting-comment-composer {
   width: 100%;
 
+  .hidden-upload-field {
+    display: none;
+  }
+
   .post-voting-comment-composer-textarea {
     width: 100%;
     margin: 0.5em 0;
+  }
+
+  .post-voting-comment-composer-editor {
+    margin: 0.5em 0;
+
+    // Hide the preview panel for comments
+    .d-editor-preview-wrapper {
+      display: none;
+    }
+
+    // Make editor take full width without preview
+    .d-editor-textarea-column,
+    .d-editor-container {
+      width: 100%;
+    }
+
+    // Smaller toolbar for comments
+    .d-editor-button-bar {
+      flex-wrap: wrap;
+
+      .btn {
+        padding: 0.35em 0.5em;
+      }
+    }
+
+    // Compact editor input
+    .d-editor-input {
+      min-height: 80px;
+      max-height: 300px;
+    }
+
+    // Hide rich editor toggle for comments
+    .toggle-switch {
+      display: none;
+    }
   }
 
   .post-voting-comment-composer-flash {
@@ -294,5 +372,138 @@
   .post-voting-post-toggle-voters {
     padding-top: 0;
     padding-bottom: 0;
+  }
+}
+
+// Comment permalink page styles
+.post-voting-comment-permalink {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 1em;
+
+  .post-voting-comment-permalink-header {
+    margin-bottom: 1.5em;
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      color: var(--primary-med-or-secondary-med);
+      margin-bottom: 0.5em;
+
+      &:hover {
+        color: var(--primary);
+      }
+
+      &::before {
+        content: "\2190";
+        margin-right: 0.5em;
+      }
+    }
+
+    .topic-title {
+      margin: 0;
+      font-size: var(--font-up-3);
+    }
+  }
+
+  .post-voting-comment-permalink-post {
+    background: var(--primary-very-low);
+    border: 1px solid var(--primary-low);
+    border-radius: 4px;
+    padding: 1em;
+    margin-bottom: 1.5em;
+
+    .post-voting-comment-permalink-post-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1em;
+
+      .post-avatar {
+        margin-right: 0.75em;
+
+        img {
+          width: 45px;
+          height: 45px;
+          border-radius: 50%;
+        }
+      }
+
+      .post-info {
+        .username {
+          font-weight: 600;
+          color: var(--primary);
+          margin-right: 0.5em;
+        }
+
+        .post-date {
+          color: var(--primary-med-or-secondary-med);
+          font-size: var(--font-down-1);
+        }
+      }
+    }
+
+    .post-voting-comment-permalink-post-content {
+      line-height: 1.5;
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+  .post-voting-comment-permalink-comments {
+    margin-bottom: 1.5em;
+
+    .comments-header {
+      font-size: var(--font-up-1);
+      margin-bottom: 1em;
+      padding-bottom: 0.5em;
+      border-bottom: 1px solid var(--primary-low);
+    }
+
+    .post-voting-comment-permalink-comment-wrapper {
+      padding: 0.5em;
+      border-bottom: 1px solid var(--primary-low);
+      transition: background-color 0.3s ease;
+
+      &.highlighted {
+        background-color: var(--highlight-bg);
+        border-left: 3px solid var(--tertiary);
+        animation: highlight-fade 3s ease-out;
+      }
+
+      .post-voting-comment {
+        margin: 0;
+        border: none;
+      }
+    }
+  }
+
+  .post-voting-comment-permalink-footer {
+    text-align: center;
+    padding-top: 1em;
+
+    .view-full-topic {
+      display: inline-block;
+      padding: 0.5em 1em;
+      background: var(--tertiary);
+      color: var(--secondary);
+      border-radius: 4px;
+
+      &:hover {
+        background: var(--tertiary-hover);
+      }
+    }
+  }
+}
+
+@keyframes highlight-fade {
+  0% {
+    background-color: var(--highlight-high);
+  }
+
+  100% {
+    background-color: var(--highlight-bg);
   }
 }

@@ -13,8 +13,7 @@ plugins:
     client: true
   post_voting_comment_max_raw_length:
     client: true
-    hidden: true
-    default: 600
+    default: 2000
   post_voting_enable_likes_on_answers:
     client: true
     default: false

@@ -4,8 +4,8 @@ class PostVotingComment < ActiveRecord::Base
   include Trashable
   include HasCustomFields
 
-  # Bump this when changing MARKDOWN_FEATURES or MARKDOWN_IT_RULES
-  COOKED_VERSION = 1
+  # Bump this when changing cook behavior
+  COOKED_VERSION = 2
 
   belongs_to :post
   belongs_to :user
@@ -26,13 +26,8 @@ class PostVotingComment < ActiveRecord::Base
 
   has_many :votes, class_name: "PostVotingVote", as: :votable, dependent: :delete_all
 
-  MARKDOWN_FEATURES = %w[censored emoji]
-
-  MARKDOWN_IT_RULES = %w[emphasis backticks linkify link]
-
   def self.cook(raw)
-    raw.gsub!(/(\n)+/, " ")
-    PrettyText.cook(raw, features_override: MARKDOWN_FEATURES, markdown_it_rules: MARKDOWN_IT_RULES)
+    PrettyText.cook(raw)
   end
 
   def url

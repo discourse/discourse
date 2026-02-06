@@ -43,6 +43,19 @@ en:
       one: answer
       other: answers
     post_voting:
+      comment:
+        permalink:
+          title: "Comment"
+          back_to_topic: "Back to discussion"
+          view_full_topic: "View full discussion"
+          comments_count:
+            one: "%{count} Comment"
+            other: "%{count} Comments"
+          votes:
+            one: "%{count} vote"
+            other: "%{count} votes"
+          copy_link: "Copy link"
+          link_copied: "Link copied!"
       post:
         post_voting_comment:
           composer:
