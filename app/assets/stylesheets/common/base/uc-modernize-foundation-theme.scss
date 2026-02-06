@@ -57,7 +57,8 @@
       .topic-map__likes-trigger,
       .topic-map__users-trigger,
       .notifications-tracking-btn,
-      .user-menu-tab
+      .user-menu-tab,
+      .--with-description
     ) {
       padding-block: 0;
       height: var(--button-height);
@@ -111,7 +112,7 @@
   // dropdown menu
   .dropdown-menu__item .btn,
   .dropdown-menu__item .sidebar-section-link {
-    &:not(.notifications-tracking-btn) {
+    &:not(.notifications-tracking-btn, .--with-description) {
       height: var(--d-sidebar-row-height) !important;
       padding-inline: var(--d-sidebar-row-horizontal-padding);
     }
