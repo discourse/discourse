@@ -404,10 +404,9 @@ module Jobs
           .where(post_action_type_id: post_action_type_view.types[:like])
           .order(:created_at)
 
-      post_ids = post_actions.pluck(:post_id).uniq
-      posts_by_id = Post.with_deleted.where(id: post_ids).index_by(&:id)
+      posts_by_id = Post.with_deleted.where(id: post_actions.select(:post_id)).index_by(&:id)
 
-      post_actions.each do |pa|
+      post_actions.find_each do |pa|
         post = posts_by_id[pa.post_id]
         yield(
           [
