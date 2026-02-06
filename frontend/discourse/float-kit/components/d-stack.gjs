@@ -48,7 +48,7 @@ const DStackSharedContent = <template>
       <DSheet.Backdrop
         class="d-stack__backdrop"
         @sheet={{@sheet}}
-        @travelAnimation={{hash opacity=(array 0 0.2)}}
+        @travelAnimation={{hash opacity=(array 0 0.4)}}
       />
       <DSheet.Content
         class="d-stack__content"
