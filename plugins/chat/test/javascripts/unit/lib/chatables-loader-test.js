@@ -1,146 +1,257 @@
 import { module, test } from "qunit";
 import { sortChatables } from "discourse/plugins/chat/discourse/components/chat/message-creator/lib/chatables-loader";
+import {
+  MATCH_QUALITY_EXACT,
+  MATCH_QUALITY_PARTIAL,
+  MATCH_QUALITY_PREFIX,
+} from "discourse/plugins/chat/discourse/lib/chat-constants";
 import ChatChatable from "discourse/plugins/chat/discourse/models/chat-chatable";
 
 module("Discourse Chat | Unit | lib | chatables-loader", function () {
-  function createUserChatable(username, has_chat_enabled = true) {
+  function createUserChatable(
+    username,
+    { has_chat_enabled = true, match_quality = MATCH_QUALITY_PARTIAL } = {}
+  ) {
     return ChatChatable.create({
       type: "user",
       identifier: `u-${username}`,
       model: { id: Math.random(), username, has_chat_enabled },
+      match_quality,
     });
   }
 
-  function createGroupChatable(name, can_chat = true) {
+  function createGroupChatable(
+    name,
+    { can_chat = true, match_quality = MATCH_QUALITY_PARTIAL } = {}
+  ) {
     return ChatChatable.create({
       type: "group",
       identifier: `g-${name}`,
       model: { id: Math.random(), name, can_chat },
+      match_quality,
     });
   }
 
-  function createChannelChatable(title, slug = null) {
+  function createDMChannelChatable(
+    title,
+    { match_quality = MATCH_QUALITY_PARTIAL } = {}
+  ) {
     return ChatChatable.create({
       type: "channel",
       identifier: `c-${title}`,
-      model: { id: Math.random(), title, slug: slug || title.toLowerCase() },
+      model: {
+        id: Math.random(),
+        title,
+        slug: title.toLowerCase(),
+        chatable_type: "DirectMessage",
+      },
+      match_quality,
     });
   }
 
-  test("exact matches come first", function (assert) {
+  function createCategoryChannelChatable(
+    title,
+    { match_quality = MATCH_QUALITY_PARTIAL } = {}
+  ) {
+    return ChatChatable.create({
+      type: "channel",
+      identifier: `c-${title}`,
+      model: {
+        id: Math.random(),
+        title,
+        slug: title.toLowerCase(),
+        chatable_type: "Category",
+      },
+      match_quality,
+    });
+  }
+
+  test("users come before DM channels", function (assert) {
     const chatables = [
-      createUserChatable("developer"),
-      createUserChatable("dev"),
-      createUserChatable("devops"),
+      createDMChannelChatable("david-chat", {
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
+      createUserChatable("david", { match_quality: MATCH_QUALITY_EXACT }),
     ];
 
-    const sorted = sortChatables(chatables, "dev");
+    const sorted = sortChatables(chatables);
+    assert.strictEqual(sorted[0].type, "user");
+    assert.strictEqual(sorted[1].type, "channel");
+  });
+
+  test("DM channels come before category channels", function (assert) {
+    const chatables = [
+      createCategoryChannelChatable("dev", {
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
+      createDMChannelChatable("dev-chat", {
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
+    ];
+
+    const sorted = sortChatables(chatables);
+    assert.strictEqual(sorted[0].model.chatableType, "DirectMessage");
+    assert.strictEqual(sorted[1].model.chatableType, "Category");
+  });
+
+  test("category channels come before groups", function (assert) {
+    const chatables = [
+      createGroupChatable("developers", { match_quality: MATCH_QUALITY_EXACT }),
+      createCategoryChannelChatable("dev", {
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
+    ];
+
+    const sorted = sortChatables(chatables);
+    assert.strictEqual(sorted[0].type, "channel");
+    assert.strictEqual(sorted[1].type, "group");
+  });
+
+  test("exact matches come before prefix matches within same type", function (assert) {
+    const chatables = [
+      createUserChatable("developer", { match_quality: MATCH_QUALITY_PREFIX }),
+      createUserChatable("dev", { match_quality: MATCH_QUALITY_EXACT }),
+      createUserChatable("devops", { match_quality: MATCH_QUALITY_PREFIX }),
+    ];
+
+    const sorted = sortChatables(chatables);
     assert.strictEqual(sorted[0].model.username, "dev");
   });
 
-  test("channels come before users with same match quality", function (assert) {
+  test("enabled users come before disabled users with same match quality", function (assert) {
     const chatables = [
-      createUserChatable("dev"),
-      createChannelChatable("Dev", "dev"),
+      createUserChatable("developer", {
+        has_chat_enabled: false,
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
+      createUserChatable("devops", {
+        has_chat_enabled: true,
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
     ];
 
-    const sorted = sortChatables(chatables, "dev");
-    assert.strictEqual(sorted[0].type, "channel");
-    assert.strictEqual(sorted[1].type, "user");
-  });
-
-  test("enabled users come before disabled users", function (assert) {
-    const chatables = [
-      createUserChatable("developer", false),
-      createUserChatable("devops", true),
-    ];
-
-    const sorted = sortChatables(chatables, "dev");
+    const sorted = sortChatables(chatables);
     assert.strictEqual(sorted[0].model.username, "devops");
     assert.strictEqual(sorted[1].model.username, "developer");
   });
 
-  test("starts-with matches come before contains matches", function (assert) {
+  test("chattable groups come before non-chattable groups with same match quality", function (assert) {
     const chatables = [
-      createUserChatable("mydev"),
-      createUserChatable("developer"),
+      createGroupChatable("large-group", {
+        can_chat: false,
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
+      createGroupChatable("small-group", {
+        can_chat: true,
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
     ];
 
-    const sorted = sortChatables(chatables, "dev");
+    const sorted = sortChatables(chatables);
+    assert.strictEqual(sorted[0].model.name, "small-group");
+    assert.strictEqual(sorted[1].model.name, "large-group");
+  });
+
+  test("prefix matches come before partial matches", function (assert) {
+    const chatables = [
+      createUserChatable("mydev", { match_quality: MATCH_QUALITY_PARTIAL }),
+      createUserChatable("developer", { match_quality: MATCH_QUALITY_PREFIX }),
+    ];
+
+    const sorted = sortChatables(chatables);
     assert.strictEqual(sorted[0].model.username, "developer");
     assert.strictEqual(sorted[1].model.username, "mydev");
   });
 
-  test("full prioritization order", function (assert) {
+  test("full prioritization order: match_quality > type > enabled", function (assert) {
     const chatables = [
-      createUserChatable("developer", false),
-      createUserChatable("devhelper", true),
-      createChannelChatable("Dev Talk", "dev-talk"),
-      createUserChatable("dev", true),
-      createChannelChatable("Dev", "dev"),
-      createGroupChatable("developers", true),
-      createUserChatable("superdev", false),
+      createGroupChatable("developers", {
+        match_quality: MATCH_QUALITY_PREFIX,
+      }),
+      createUserChatable("dev", {
+        has_chat_enabled: true,
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
+      createUserChatable("dev-disabled", {
+        has_chat_enabled: false,
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
+      createUserChatable("devhelper", {
+        has_chat_enabled: true,
+        match_quality: MATCH_QUALITY_PREFIX,
+      }),
+      createDMChannelChatable("dev-chat", {
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
+      createCategoryChannelChatable("dev-category", {
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
     ];
 
-    const sorted = sortChatables(chatables, "dev");
+    const sorted = sortChatables(chatables);
 
-    const firstChannelName = sorted[0].model.slug ?? sorted[0].model.title;
-    assert.strictEqual(firstChannelName, "dev", "exact match channel first");
+    assert.strictEqual(
+      sorted[0].model.username,
+      "dev",
+      "exact match enabled user first"
+    );
     assert.strictEqual(
       sorted[1].model.username,
-      "dev",
-      "exact match enabled user second"
+      "dev-disabled",
+      "exact match disabled user second"
     );
-    assert.strictEqual(sorted[2].type, "channel", "starts-with channel third");
     assert.strictEqual(
-      sorted[3].model.username,
+      sorted[2].model.chatableType,
+      "DirectMessage",
+      "exact match DM channel third"
+    );
+    assert.strictEqual(
+      sorted[3].model.chatableType,
+      "Category",
+      "exact match category channel fourth"
+    );
+    assert.strictEqual(
+      sorted[4].model.username,
       "devhelper",
-      "starts-with enabled user"
+      "prefix match user fifth"
     );
-    assert.strictEqual(
-      sorted[4].model.name,
-      "developers",
-      "starts-with enabled group"
-    );
-    assert.strictEqual(
-      sorted[5].model.username,
-      "developer",
-      "starts-with disabled user"
-    );
-    assert.strictEqual(
-      sorted[6].model.username,
-      "superdev",
-      "contains disabled user last"
-    );
+    assert.strictEqual(sorted[5].type, "group", "prefix match group last");
   });
 
-  test("case insensitive matching", function (assert) {
+  test("exact match group comes before prefix match user", function (assert) {
     const chatables = [
-      createUserChatable("DEV"),
-      createUserChatable("Dev"),
-      createUserChatable("dev"),
+      createUserChatable("devs", {
+        has_chat_enabled: true,
+        match_quality: MATCH_QUALITY_PREFIX,
+      }),
+      createGroupChatable("dev", {
+        can_chat: true,
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
     ];
 
-    const sorted = sortChatables(chatables, "DEV");
-
-    assert.strictEqual(sorted.length, 3);
-    sorted.forEach((chatable) => {
-      assert.strictEqual(
-        chatable.model.username.toLowerCase(),
-        "dev",
-        `${chatable.model.username} should match`
-      );
-    });
+    const sorted = sortChatables(chatables);
+    assert.strictEqual(sorted[0].type, "group");
+    assert.strictEqual(sorted[1].type, "user");
   });
 
-  test("disabled groups come after enabled users", function (assert) {
+  test("match quality determines order within same type", function (assert) {
     const chatables = [
-      createGroupChatable("devs", false),
-      createUserChatable("devs", true),
+      createDMChannelChatable("davidb-chat", {
+        match_quality: MATCH_QUALITY_PREFIX,
+      }),
+      createDMChannelChatable("david-chat", {
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
+      createDMChannelChatable("cvx-david", {
+        match_quality: MATCH_QUALITY_EXACT,
+      }),
     ];
 
-    const sorted = sortChatables(chatables, "devs");
-    assert.strictEqual(sorted[0].type, "user");
-    assert.strictEqual(sorted[1].type, "group");
+    const sorted = sortChatables(chatables);
+    assert.strictEqual(sorted[0].matchQuality, MATCH_QUALITY_EXACT);
+    assert.strictEqual(sorted[1].matchQuality, MATCH_QUALITY_EXACT);
+    assert.strictEqual(sorted[2].matchQuality, MATCH_QUALITY_PREFIX);
+    assert.strictEqual(sorted[2].model.title, "davidb-chat");
   });
 });

@@ -1,10 +1,15 @@
 # frozen_string_literal: true
 
 module Chat
-  # Returns a list of chatables (users, groups ,category channels, direct message channels) that can be chatted with.
+  # Searches for chatables (users, groups, category channels, direct message channels).
+  #
+  # Results include a `match_quality` field for ranking:
+  #   - MATCH_QUALITY_EXACT (1): name/username equals search term
+  #   - MATCH_QUALITY_PREFIX (2): name/username starts with search term
+  #   - MATCH_QUALITY_PARTIAL (3): name/username contains search term
   #
   # @example
-  #  Chat::SearchChatable.call(params: { term: "@bob" }, guardian: guardian)
+  #   Chat::SearchChatable.call(params: { term: "bob" }, guardian: guardian)
   #
   class SearchChatable
     include Service::Base
@@ -25,7 +30,7 @@ module Chat
       attribute :include_direct_message_channels, :boolean, default: true
       attribute :excluded_memberships_channel_id, :integer
 
-      after_validation { self.term = term&.downcase&.strip&.gsub(/^[@#]+/, "") }
+      after_validation { self.term = term&.downcase&.strip&.sub(/\A[@#]+/, "") }
     end
 
     model :memberships, optional: true
@@ -76,7 +81,7 @@ module Chat
       allowed_bot_user_ids =
         DiscoursePluginRegistry.apply_modifier(:chat_allowed_bot_user_ids, [], guardian)
 
-      user_search = user_search.real(allowed_bot_user_ids: allowed_bot_user_ids)
+      user_search = user_search.real(allowed_bot_user_ids:)
       user_search = user_search.includes(:user_option)
 
       if params.excluded_memberships_channel_id
@@ -87,20 +92,55 @@ module Chat
           )
       end
 
-      user_search
+      filter_term = params.term.to_s
+      like_term = User.sanitize_sql_like(filter_term)
+      escaped_exact = User.connection.quote(filter_term)
+      escaped_prefix = User.connection.quote("#{like_term}%")
+
+      select_sql = <<~SQL
+        users.*,
+        CASE
+          WHEN users.username_lower = #{escaped_exact} THEN #{ChannelFetcher::MATCH_QUALITY_EXACT}
+          WHEN users.username_lower LIKE #{escaped_prefix} THEN #{ChannelFetcher::MATCH_QUALITY_PREFIX}
+          ELSE #{ChannelFetcher::MATCH_QUALITY_PARTIAL}
+        END AS match_quality
+      SQL
+
+      # need to `reorder` to override the ordering applied in `UserSearch#search`
+      user_search.select(select_sql).reorder("match_quality ASC, users.username_lower ASC")
     end
 
     def search_groups(params, guardian)
       # NOTE: Do NOT eager load users here (e.g. `.includes(users: ...)`).
       # Groups can have 100k+ members and loading them causes request timeouts.
       # The serializer uses SQL COUNT queries instead.
+      filter_term = params.term.to_s
+      like_term = Group.sanitize_sql_like(filter_term)
+      escaped_exact = Group.connection.quote(filter_term)
+      escaped_prefix = Group.connection.quote("#{like_term}%")
+
+      select_sql = <<~SQL
+        groups.*,
+        CASE
+          WHEN LOWER(groups.name) = #{escaped_exact} THEN #{ChannelFetcher::MATCH_QUALITY_EXACT}
+          WHEN LOWER(groups.name) LIKE #{escaped_prefix} THEN #{ChannelFetcher::MATCH_QUALITY_PREFIX}
+          ELSE #{ChannelFetcher::MATCH_QUALITY_PARTIAL}
+        END AS match_quality
+      SQL
+
+      where_sql = <<~SQL
+        LOWER(groups.name) = :exact
+        OR LOWER(groups.name) LIKE :prefix
+        OR LOWER(groups.name) LIKE :partial
+        OR LOWER(groups.full_name) LIKE :partial
+      SQL
+
       Group
         .visible_groups(guardian.user)
         .members_visible_groups(guardian.user)
-        .where(
-          "groups.name ILIKE :term_like OR groups.full_name ILIKE :term_like",
-          term_like: "%#{params.term}%",
-        )
+        .where(where_sql, exact: filter_term, prefix: "#{like_term}%", partial: "%#{like_term}%")
+        .select(select_sql)
+        .order("match_quality ASC, groups.name ASC")
         .limit(SEARCH_RESULT_LIMIT)
     end
 
@@ -110,7 +150,6 @@ module Chat
         status: :open,
         filter: params.term,
         filter_on_category_name: false,
-        match_filter_on_starts_with: false,
         limit: SEARCH_RESULT_LIMIT,
       )
     end
@@ -121,7 +160,6 @@ module Chat
           guardian.user.id,
           guardian,
           filter: params.term,
-          match_filter_on_starts_with: false,
           limit: SEARCH_RESULT_LIMIT,
         ) || []
 
