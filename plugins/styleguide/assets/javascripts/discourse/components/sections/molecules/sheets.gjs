@@ -121,6 +121,7 @@ export default class Sheets extends Component {
                 placeholder="Focus to expand..."
                 {{on "focus" content.expand}}
               />
+
               <content.ScrollArea>
                 <ul>
                   {{#each this.scrollItems as |item|}}
