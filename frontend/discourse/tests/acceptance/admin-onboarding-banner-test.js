@@ -1,5 +1,6 @@
 import { click, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import sinon from "sinon";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
@@ -27,6 +28,14 @@ acceptance("Admin - Onboarding Banner", function (needs) {
         success: "OK",
       });
     });
+  });
+
+  needs.hooks.beforeEach(() => {
+    const mockClipboard = {
+      writeText: sinon.stub().resolves(true),
+      write: sinon.stub().resolves(true),
+    };
+    sinon.stub(window.navigator, "clipboard").get(() => mockClipboard);
   });
 
   const withStep = (id, assert) => {

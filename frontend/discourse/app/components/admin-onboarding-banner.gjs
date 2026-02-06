@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
 import { concat, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
