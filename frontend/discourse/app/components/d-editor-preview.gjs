@@ -44,6 +44,7 @@ export default class DEditorPreview extends Component {
     <div
       class="d-editor-preview-wrapper {{if @forcePreview 'force-preview'}}"
       {{on "click" this.handlePreviewClick}}
+      ...attributes
     >
       <DecoratedHtml
         @className="d-editor-preview"
