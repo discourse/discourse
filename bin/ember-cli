@@ -117,15 +117,7 @@ if ARGV.include?("-u") || ARGV.include?("--unicorn")
   end
 
   Thread.new do
-    system("pnpm", "--dir=frontend/discourse-types", "generate", exception: true)
-    Open3.popen2e(
-      pnpm_env,
-      "pnpm",
-      "ember-tsc",
-      "-b",
-      "--watch",
-      "--preserveWatchOutput",
-    ) do |i, oe, t|
+    Open3.popen2e(pnpm_env, "pnpm", "types:watch") do |i, oe, t|
       tsc_pid = t.pid
       puts "Ember TSC running on PID: #{tsc_pid}"
       oe.each { |line| puts "[ember-tsc] #{line}" }
