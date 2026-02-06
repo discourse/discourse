@@ -18,6 +18,7 @@ module Reports
           title:,
           description:,
           description_link: I18n.t("reports.#{type}.description_link", default: "").presence,
+          plugin: plugin_name,
         }
       end
 
@@ -40,6 +41,20 @@ module Reports
       def legacy?
         SiteSetting.use_legacy_pageviews &&
           type.in?(%w[consolidated_page_views consolidated_page_views_browser_detection])
+      end
+
+      def plugin_name
+        method_name = @name.to_s.start_with?("report_") ? @name : "report_#{@name}"
+        return nil unless Report.singleton_class.method_defined?(method_name)
+
+        source_path = Report.singleton_class.instance_method(method_name)&.source_location&.first
+        return nil unless source_path&.include?("/plugins/")
+
+        # Extract plugin name from path like /plugins/discourse-ai/...
+        match = source_path.match(%r{/plugins/([^/]+)/})
+        match[1] if match
+      rescue NameError
+        nil
       end
     end
 
