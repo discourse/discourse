@@ -12,7 +12,7 @@ import { i18n } from "discourse-i18n";
 import { isNotFullDayEvent } from "../lib/guess-best-date-format";
 
 export const DEFAULT_TIME_FORMAT = "LT";
-const DEFAULT_UPCOMING_DAYS = 1800;
+const DEFAULT_UPCOMING_DAYS = 180;
 const DEFAULT_COUNT = 8;
 
 function addToResult(date, item, result) {
