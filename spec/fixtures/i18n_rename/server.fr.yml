@@ -1,0 +1,23 @@
+fr:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM YYYY"
+  post_action_types:
+    inappropriate:
+      title: "Inapproprié"
+      description: "Ce message n'est pas approprié"
+    off_topic:
+      title: "Hors-sujet"
+      description: "Ce message est hors sujet"
+    spam:
+      title: "Pourriel"
+      long_description: |
+        Ce message est du pourriel
+        et devrait être supprimé
+      count:
+        one: "%{count} signalement"
+        other: "%{count} signalements"
+  education:
+    "new-topic": |
+      Merci de contribuer!
+  simple_key: "valeur simple"

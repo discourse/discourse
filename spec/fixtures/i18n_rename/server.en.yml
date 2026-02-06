@@ -1,0 +1,27 @@
+en:
+  dates:
+    short_date_no_year: "D MMM"
+    short_date: "D MMM, YYYY"
+  post_action_types:
+    inappropriate:
+      title: "Inappropriate"
+      description: "This post is not appropriate"
+    off_topic:
+      title: "Off-Topic"
+      description: "This post is off topic"
+    spam:
+      title: "Spam"
+      long_description: |
+        This post is spam
+        and should be removed
+      count:
+        one: "%{count} flag"
+        other: "%{count} flags"
+  education:
+    "new-topic": |
+      Thanks for contributing!
+
+      Please select a category.
+    "new-reply": |
+      Thanks for replying!
+  simple_key: "simple value"
