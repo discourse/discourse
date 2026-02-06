@@ -358,7 +358,10 @@ const extension = {
             const tr = view.state.tr;
             const dataURIMap = dataImageUploader.getState(view.state);
 
-            dataURIMap.get(dataURI)?.forEach((pos) => {
+            const positions = [...dataURIMap.get(dataURI)].sort(
+              (a, b) => b - a
+            );
+            positions.forEach((pos) => {
               const node = view.state.doc.nodeAt(pos);
               tr.replaceWith(
                 pos,
@@ -428,7 +431,10 @@ const extension = {
               const tr = view.state.tr;
               const dataURIMap = dataImageUploader.getState(view.state);
 
-              dataURIMap.get(dataURI)?.forEach((pos) => {
+              const positions = [...dataURIMap.get(dataURI)].sort(
+                (a, b) => b - a
+              );
+              positions.forEach((pos) => {
                 const node = view.state.doc.nodeAt(pos);
                 tr.replaceWith(
                   pos,
