@@ -4304,6 +4304,8 @@ hr:
       slug_placeholder: "(Neobavezno) spojene-riječi za url"
       creation_error: Dogodila se greška pri stvaranju kategorije.
       save_error: Dogodila se greška pri spremanju kategorije.
+      validations:
+        icon_required: "Odaberi ikonu."
       description: "Opis"
       logo_description: "Preporučeni omjer slike 1:1 s minimalnom veličinom od 200 px. Ako je ostavljeno prazno, slika neće biti prikazana."
       style: "Stil"

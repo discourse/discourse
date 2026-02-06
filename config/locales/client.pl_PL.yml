@@ -4731,6 +4731,7 @@ pl_PL:
         self_lockout: "Zamierzasz zmienić uprawnienia kategorii w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
       validations:
         emoji_required: "Wybierz emoji."
+        icon_required: "Wybierz ikonę."
       name: "Nazwa kategorii"
       untitled: "Kategoria bez tytułu"
       description: "Opis"

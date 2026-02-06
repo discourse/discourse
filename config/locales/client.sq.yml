@@ -3479,6 +3479,8 @@ sq:
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: Pati një gabim gjatë krijimit të kategorisë
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
+      validations:
+        icon_required: "Zgjidhni një ikonë."
       description: "Përshkrimi"
       icon: "Ikonë"
       emoji: "Emoji"

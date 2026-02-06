@@ -2756,6 +2756,8 @@ gl:
       slug_placeholder: "Inserir guións entre palabras para o url (opcional)"
       creation_error: Produciuse un erro durante a creación desta categoría.
       save_error: Produciuse un erro gardando a categoría.
+      validations:
+        icon_required: "Seleccionar unha icona."
       description: "Descrición"
       icon: "Icona"
       emoji: "Emoji"

@@ -3850,6 +3850,8 @@ ja:
       slug_placeholder: "(オプション) URL 用のダッシュ区切りの語"
       creation_error: カテゴリを作成中にエラーが発生しました。
       save_error: カテゴリを保存中にエラーが発生しました。
+      validations:
+        icon_required: "アイコンを選択する."
       description: "説明"
       logo_description: "推奨アスペクト比は 1:1、最小サイズは 200px です。空白のままにすると、画像は表示されません。"
       style: "スタイル"

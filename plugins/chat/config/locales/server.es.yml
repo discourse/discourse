@@ -135,6 +135,8 @@ es:
         disagree_and_restore:
           title: "No aceptar y restaurar el mensaje"
           description: "Restaura el mensaje para que todos los usuarios puedan verlo."
+        ignore:
+          title: "Ignorar reporte"
       direct_messages:
         transcript_title: "Transcripción de los mensajes anteriores en %{channel_name}"
         transcript_body: "Para darte más contexto, incluimos una transcripción de los mensajes anteriores de esta conversación (hasta diez):\n\n%{transcript}"

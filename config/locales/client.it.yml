@@ -4070,6 +4070,8 @@ it:
       slug_placeholder: "(Facoltativo) parole-sillabate per URL"
       creation_error: Si è verificato un errore nella creazione della categoria.
       save_error: Si è verificato un errore durante il salvataggio della categoria.
+      validations:
+        icon_required: "Seleziona un'icona."
       description: "Descrizione"
       logo_description: "Proporzioni consigliate 1:1 con dimensione minima di 200px. Se lasciato vuoto, non verrà mostrata alcuna immagine."
       style: "Stile"

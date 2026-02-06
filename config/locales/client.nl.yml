@@ -4072,6 +4072,8 @@ nl:
       slug_placeholder: "(Optioneel) met streepjes verbonden woorden voor URL"
       creation_error: Er is een fout opgetreden bij het maken van de categorie.
       save_error: Er is een fout opgetreden bij het opslaan van de categorie.
+      validations:
+        icon_required: "Selecteer een pictogram."
       description: "Beschrijving"
       logo_description: "Aanbevolen beeldverhouding 1:1 met een minimale bestandsgrootte van 200 pixels. Als dit leeg wordt gelaten, wordt er geen afbeelding weergegeven."
       style: "Stijl"

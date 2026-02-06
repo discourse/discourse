@@ -4263,6 +4263,7 @@ hu:
         self_lockout: "Olyan módon módosítja a kategóriaengedélyeket, amely eltávolítja a saját hozzáférését. Biztosan folytatja?"
       validations:
         emoji_required: "Válassz egy emojit."
+        icon_required: "Válasszon ikont."
       name: "Kategória neve"
       untitled: "Névtelen kategória"
       description: "Leírás"

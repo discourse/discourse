@@ -4095,6 +4095,8 @@ fr:
       slug_placeholder: "(Facultatif) mots séparés par des tirets pour l'URL"
       creation_error: Une erreur s'est produite lors de la création de la catégorie.
       save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
+      validations:
+        icon_required: "Sélectionner une icône."
       description: "Description"
       logo_description: "Format d'image recommandé de 1:1 avec une taille minimale de 200 px. Si ce champ est laissé vide, aucune image ne sera affichée."
       style: "Style"

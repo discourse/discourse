@@ -4073,6 +4073,8 @@ tr_TR:
       slug_placeholder: "(İsteğe bağlı) url için çizgiyle ayrılmış kelimeler"
       creation_error: Kategori oluşturulurken bir hata oluştu.
       save_error: Kategori kaydedilirken bir hata oluştu.
+      validations:
+        icon_required: "Simge seçin."
       description: "Açıklama"
       logo_description: "Önerilen 1:1 en boy oranı ve minimum 200 piksel boyut. Boş bırakılırsa hiçbir görüntü gösterilmez."
       style: "Stil"

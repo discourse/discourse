@@ -4710,6 +4710,8 @@ cs:
       save_error: Během ukládání kategorie nastala chyba.
       errors:
         self_lockout: "Chystáte se změnit oprávnění kategorie tak, že odeberete svůj vlastní přístup. Opravdu chcete pokračovat?"
+      validations:
+        icon_required: "Vyberte ikonu."
       name: "Název kategorie"
       untitled: "Nepojmenovaná kategorie"
       description: "Popis"

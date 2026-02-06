@@ -4033,6 +4033,8 @@ vi:
       save_error: Có lỗi xảy ra khi lưu chuyên mục
       errors:
         self_lockout: "Bạn sắp thay đổi quyền truy cập chuyên mục theo cách sẽ loại bỏ quyền truy cập của chính bạn. Bạn có chắc muốn tiếp tục?"
+      validations:
+        icon_required: "Chọn một biểu tượng."
       name: "Tên chuyên mục"
       untitled: "Chuyên mục chưa đặt tên"
       description: "Mô tả"

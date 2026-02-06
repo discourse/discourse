@@ -3681,6 +3681,8 @@ zh_TW:
       slug_placeholder: "(選填) 在 url 加上虛線"
       creation_error: 建立分類時發生錯誤。
       save_error: 儲存分類時發生錯誤。
+      validations:
+        icon_required: "選擇圖示."
       description: "描述"
       logo_description: "建議長寬比為 1:1，最小尺寸為 200px。如果留空，將不會顯示圖片。"
       icon: "圖示"
