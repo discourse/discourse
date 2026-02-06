@@ -75,7 +75,6 @@ export default class ChatComposer extends Component {
 
   @tracked isFocused = false;
   @tracked inProgressUploadsCount = 0;
-  @tracked presenceChannelName;
 
   get shouldRenderMessageDetails() {
     return (

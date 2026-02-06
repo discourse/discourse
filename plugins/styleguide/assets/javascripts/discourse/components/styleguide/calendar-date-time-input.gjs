@@ -10,11 +10,11 @@ import Row from "discourse/plugins/styleguide/discourse/components/styleguide/co
 import StyleguideExample from "discourse/plugins/styleguide/discourse/components/styleguide-example";
 
 export default class StyleguideCalendarDateTimeInput extends Component {
-  @tracked dateFormat = "YYYY-MM-DD";
-  @tracked timeFormat = "HH:mm:ss";
   @tracked date = null;
   @tracked time = null;
   @tracked minDate = null;
+  dateFormat = "YYYY-MM-DD";
+  timeFormat = "HH:mm:ss";
 
   @action
   changeDate(date) {

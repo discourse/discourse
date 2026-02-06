@@ -61,13 +61,11 @@ export default class EmojiPicker extends Component {
   @tracked filteredEmojis = null;
   @tracked scrollObserverEnabled = true;
   @tracked scrollDirection = "up";
-  @tracked emojis = null;
   @tracked visibleSections = DEFAULT_VISIBLE_SECTIONS;
   @tracked lastVisibleSection = DEFAULT_LAST_SECTION;
   @tracked term = this.args.term;
 
   prevYPosition = 0;
-
   scrollableNode;
 
   setupSectionsNavScroll = modifierFn((element) => {

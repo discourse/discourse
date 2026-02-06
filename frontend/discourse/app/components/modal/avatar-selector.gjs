@@ -23,7 +23,6 @@ export default class AvatarSelectorModal extends Component {
 
   @tracked gravatarRefreshDisabled = false;
   @tracked gravatarFailed = false;
-  @tracked uploading = false;
   @tracked _selected = null;
 
   get user() {
@@ -39,7 +38,7 @@ export default class AvatarSelectorModal extends Component {
   }
 
   get submitDisabled() {
-    return this.selected === "logo" || this.uploading;
+    return this.selected === "logo";
   }
 
   get selectableAvatars() {
@@ -299,7 +298,6 @@ export default class AvatarSelectorModal extends Component {
                 @user_id={{this.user.id}}
                 @uploadedAvatarTemplate={{this.user.custom_avatar_template}}
                 @uploadedAvatarId={{this.user.custom_avatar_upload_id}}
-                @uploading={{this.uploading}}
                 @id="avatar-uploader"
                 @done={{this.uploadComplete}}
                 class="avatar-uploader"

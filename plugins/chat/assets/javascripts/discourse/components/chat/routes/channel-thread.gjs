@@ -24,7 +24,6 @@ export default class ChatRoutesChannelThread extends Component {
         <Thread
           @thread={{thread}}
           @targetMessageId={{@targetMessageId}}
-          @includeHeader={{true}}
           @setFullTitle={{this.setFullTitle}}
         />
       {{/each}}

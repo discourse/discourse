@@ -8,7 +8,6 @@ import ConditionalLoadingSection from "discourse/components/conditional-loading-
 import DButton from "discourse/components/d-button";
 import DModal from "discourse/components/d-modal";
 import { debounce } from "discourse/lib/decorators";
-import { SECOND_FACTOR_METHODS } from "discourse/models/user";
 import { i18n } from "discourse-i18n";
 
 export default class SecondFactorBackupEdit extends Component {
@@ -21,7 +20,6 @@ export default class SecondFactorBackupEdit extends Component {
   remainingCodes =
     this.args.model.secondFactor.second_factor_remaining_backup_codes;
   @tracked backupCodes;
-  @tracked secondFactorMethod = SECOND_FACTOR_METHODS.TOTP;
 
   @action
   copyBackupCode(successful) {

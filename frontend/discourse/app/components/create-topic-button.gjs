@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import TopicDraftsDropdown from "discourse/components/topic-drafts-dropdown";
@@ -9,9 +8,13 @@ import { applyValueTransformer } from "discourse/lib/transformer";
 export default class CreateTopicButton extends Component {
   @service router;
 
-  @tracked label = this.args.label ?? "topic.create";
+  get label() {
+    return this.args.label ?? "topic.create";
+  }
 
-  btnId = this.args.btnId ?? "create-topic";
+  get btnId() {
+    return this.args.btnId ?? "create-topic";
+  }
 
   get btnTypeClass() {
     return this.args.btnTypeClass || "btn-default";

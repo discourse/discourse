@@ -4,7 +4,7 @@ import ChatThreadList from "discourse/plugins/chat/discourse/components/chat-thr
 const ChatRoutesChannelThreads = <template>
   <div class="c-routes --channel-threads">
     <ChatThreadListHeader @channel={{@channel}} />
-    <ChatThreadList @channel={{@channel}} @includeHeader={{true}} />
+    <ChatThreadList @channel={{@channel}} />
   </div>
 </template>;
 
