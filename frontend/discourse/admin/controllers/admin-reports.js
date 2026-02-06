@@ -7,4 +7,8 @@ export default class AdminReportsController extends Controller {
   get hideTabs() {
     return ["adminReports.show"].includes(this.router.currentRouteName);
   }
+
+  get showHeader() {
+    return this.router.currentRouteName === "adminReports.index";
+  }
 }
