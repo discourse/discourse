@@ -31,7 +31,6 @@ const BREAKPOINTS = Object.freeze(["sm", "md", "lg", "xl", "2xl"]);
  *
  * @param {string} [min] - Minimum breakpoint required (passes at this size and larger)
  * @param {string} [max] - Maximum breakpoint allowed (passes at this size and smaller)
- * @param {boolean} [mobile] - If true, passes only on mobile devices; if false, only on non-mobile
  * @param {boolean} [touch] - If true, passes only on touch devices; if false, only on non-touch
  *
  * @example
@@ -47,10 +46,6 @@ const BREAKPOINTS = Object.freeze(["sm", "md", "lg", "xl", "2xl"]);
  * { type: "viewport", min: "md", max: "xl" }
  *
  * @example
- * // Mobile devices only
- * { type: "viewport", mobile: true }
- *
- * @example
  * // Touch devices only
  * { type: "viewport", touch: true }
  */
@@ -59,11 +54,10 @@ const BREAKPOINTS = Object.freeze(["sm", "md", "lg", "xl", "2xl"]);
   args: {
     min: { type: "string", enum: BREAKPOINTS },
     max: { type: "string", enum: BREAKPOINTS },
-    mobile: { type: "boolean" },
     touch: { type: "boolean" },
   },
   constraints: {
-    atLeastOne: ["min", "max", "mobile", "touch"],
+    atLeastOne: ["min", "max", "touch"],
   },
   validate(args) {
     const { min, max } = args;
@@ -94,12 +88,7 @@ export default class BlockViewportCondition extends BlockCondition {
    * @returns {boolean} True if the condition passes.
    */
   evaluate(args) {
-    const { min, max, mobile, touch } = args;
-
-    // Check mobile device
-    if (mobile !== undefined && mobile !== this.capabilities.isMobileDevice) {
-      return false;
-    }
+    const { min, max, touch } = args;
 
     // Check touch capability
     if (touch !== undefined && touch !== this.capabilities.touch) {

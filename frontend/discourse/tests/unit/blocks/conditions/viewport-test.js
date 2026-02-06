@@ -51,12 +51,8 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
         null
       );
       assert.strictEqual(this.validateCondition({ min: "2xl" }), null);
-      assert.strictEqual(this.validateCondition({ mobile: true }), null);
       assert.strictEqual(this.validateCondition({ touch: true }), null);
-      assert.strictEqual(
-        this.validateCondition({ mobile: false, touch: false }),
-        null
-      );
+      assert.strictEqual(this.validateCondition({ touch: false }), null);
     });
 
     test("passes when min equals max", function (assert) {
@@ -76,11 +72,6 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
       assert.true(error?.message.includes("must be a string"));
     });
 
-    test("returns error when mobile is not a boolean (schema type validation)", function (assert) {
-      const error = this.validateCondition({ mobile: "true" });
-      assert.true(error?.message.includes("must be a boolean"));
-    });
-
     test("returns error when touch is not a boolean (schema type validation)", function (assert) {
       const error = this.validateCondition({ touch: 1 });
       assert.true(error?.message.includes("must be a boolean"));
@@ -90,7 +81,6 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
   module("evaluate", function (nestedHooks) {
     nestedHooks.beforeEach(function () {
       this.condition.capabilities = {
-        isMobileDevice: false,
         touch: false,
         viewport: {
           sm: true,
@@ -145,26 +135,6 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
       });
     });
 
-    module("mobile device condition", function () {
-      test("passes when mobile: true and device is mobile", function (assert) {
-        this.condition.capabilities.isMobileDevice = true;
-        assert.true(this.condition.evaluate({ mobile: true }));
-      });
-
-      test("fails when mobile: true and device is not mobile", function (assert) {
-        assert.false(this.condition.evaluate({ mobile: true }));
-      });
-
-      test("passes when mobile: false and device is not mobile", function (assert) {
-        assert.true(this.condition.evaluate({ mobile: false }));
-      });
-
-      test("fails when mobile: false and device is mobile", function (assert) {
-        this.condition.capabilities.isMobileDevice = true;
-        assert.false(this.condition.evaluate({ mobile: false }));
-      });
-    });
-
     module("touch device condition", function () {
       test("passes when touch: true and device has touch", function (assert) {
         this.condition.capabilities.touch = true;
@@ -187,35 +157,31 @@ module("Unit | Blocks | Condition | viewport", function (hooks) {
 
     module("combined conditions", function () {
       test("passes when all conditions are met", function (assert) {
-        this.condition.capabilities.isMobileDevice = true;
         this.condition.capabilities.touch = true;
         assert.true(
           this.condition.evaluate({
             min: "sm",
             max: "lg",
-            mobile: true,
             touch: true,
           })
         );
       });
 
       test("fails when breakpoint condition is not met", function (assert) {
-        this.condition.capabilities.isMobileDevice = true;
         this.condition.capabilities.touch = true;
         assert.false(
           this.condition.evaluate({
             min: "lg",
-            mobile: true,
             touch: true,
           })
         );
       });
 
-      test("fails when mobile condition is not met", function (assert) {
+      test("fails when touch condition is not met", function (assert) {
         assert.false(
           this.condition.evaluate({
             min: "sm",
-            mobile: true,
+            touch: true,
           })
         );
       });
