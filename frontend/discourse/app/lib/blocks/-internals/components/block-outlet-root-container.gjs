@@ -8,7 +8,10 @@ import { registerOutletContainerStyle } from "discourse/lib/blocks/-internals/cs
 import { withDebugGroup } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { processBlockEntries } from "discourse/lib/blocks/-internals/entry-processing";
-import { isOptionalMissing } from "discourse/lib/blocks/-internals/patterns";
+import {
+  FAILURE_TYPE,
+  isOptionalMissing,
+} from "discourse/lib/blocks/-internals/patterns";
 import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block";
 
 /**
@@ -99,7 +102,7 @@ export default class BlockOutletRootContainer extends Component {
    * (synchronously in a tracked getter), Ember establishes tracking
    * dependencies. Route changes trigger this getter to re-run.
    *
-   * @returns {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}>}
+   * @returns {Array<import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult>}
    */
   @cached
   get processedChildren() {
@@ -152,7 +155,7 @@ export default class BlockOutletRootContainer extends Component {
    * This method evaluates conditions for all blocks in the tree and adds
    * visibility metadata to each entry:
    * - `__visible`: Whether the block should be rendered
-   * - `__failureReason`: Why the block is hidden (debug mode only)
+   * - `__failureType`: The failure type constant (debug mode only)
    *
    * Container blocks have an implicit condition: they must have at least
    * one visible child. This is evaluated bottom-up (children first).
@@ -239,11 +242,13 @@ export default class BlockOutletRootContainer extends Component {
       const visible = conditionsPassed && hasVisibleChildren;
       entryClone.__visible = visible;
 
-      // In debug mode, record why the block is hidden for the ghost tooltip
+      // In debug mode, record why the block is hidden for the ghost tooltip.
+      // We store the failure type (a constant) for internal logic comparisons.
+      // Display messages are generated at render time in ghost-block.gjs.
       if (showGhosts && !visible) {
-        entryClone.__failureReason = !conditionsPassed
-          ? "condition-failed"
-          : "no-visible-children";
+        entryClone.__failureType = !conditionsPassed
+          ? FAILURE_TYPE.CONDITION_FAILED
+          : FAILURE_TYPE.NO_VISIBLE_CHILDREN;
       }
 
       // In production mode, filter out invisible blocks

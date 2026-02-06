@@ -1,5 +1,12 @@
 en:
   js:
+    blocks:
+      ghost_reasons:
+        # Longer hint messages shown at bottom of ghost tooltip
+        optional_missing_hint: "This optional block is not rendered because it's not registered."
+        no_visible_children_hint: "This container block is not rendered because none of its children are visible."
+        condition_failed_hint: "This block is not rendered because its conditions failed."
+        head_hidden_tail_hint: "This block is not rendered because another block was rendered first in the `head` container."
     carousel:
       go_to_slide: "Go to slide %{index}"
       previous: "Previous slide"

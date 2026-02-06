@@ -299,6 +299,7 @@
   background: var(--dev-tools-ghost-color);
   color: white;
   border-radius: 2px;
+  text-transform: uppercase;
 }
 
 .block-debug-tooltip__section {

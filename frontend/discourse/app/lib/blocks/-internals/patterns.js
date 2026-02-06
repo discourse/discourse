@@ -45,6 +45,26 @@ export const MAX_BLOCK_NAME_LENGTH = 100;
 export const OPTIONAL_MISSING = Symbol("optional-missing");
 
 /**
+ * Constants for failure type codes used by ghost blocks.
+ *
+ * These are internal codes for logic comparisons (e.g., determining which
+ * section to show in the ghost tooltip). Display messages are generated
+ * at render time in ghost-block.gjs based on these types.
+ *
+ * Custom failure reasons (like "hidden by priority" from the head block)
+ * don't need a type constant - they're passed as display strings directly
+ * via the `failureReason` field.
+ */
+export const FAILURE_TYPE = Object.freeze({
+  /** Block's conditions evaluated to false. */
+  CONDITION_FAILED: "condition-failed",
+  /** Container block has no children that passed their conditions. */
+  NO_VISIBLE_CHILDREN: "no-visible-children",
+  /** Block reference uses `?` suffix but isn't registered. */
+  OPTIONAL_MISSING: "optional-missing",
+});
+
+/**
  * Checks if a resolved block is an optional missing block marker.
  *
  * @param {*} resolvedBlock - The result from tryResolveBlock.

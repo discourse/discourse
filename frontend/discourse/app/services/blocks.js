@@ -1,6 +1,7 @@
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import Service from "@ember/service";
+import { debugHooks } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { evaluateConditions } from "discourse/lib/blocks/-internals/matching/condition-evaluator";
 import {
@@ -40,6 +41,10 @@ import { validateConditions } from "discourse/lib/blocks/-internals/validation/c
  * - Array of conditions: AND logic (all must pass)
  * - `{ any: [...] }`: OR logic (at least one must pass)
  * - `{ not: {...} }`: NOT logic (must fail)
+ *
+ * ## Debug Support
+ *
+ * - `showGhosts` - Check if visual overlay is enabled (for rendering ghost blocks)
  *
  * @experimental This API is under active development and may change or be removed
  * in future releases without prior notice. Use with caution in production environments.
@@ -299,5 +304,28 @@ export default class Blocks extends Service {
   getRegisteredConditionTypes() {
     this.#lazilyInitializeConditionInstances();
     return [...this.#conditionInstances.keys()];
+  }
+
+  /*
+   * Debug Methods
+   */
+
+  /**
+   * Returns whether the debug visual overlay is enabled.
+   *
+   * Container blocks can use this to conditionally render ghost blocks
+   * for children they choose not to display.
+   *
+   * @returns {boolean} True if the visual overlay (ghost blocks) is enabled.
+   *
+   * @example
+   * ```javascript
+   * if (this.blocks.showGhosts) {
+   *   // Render ghost blocks for hidden children
+   * }
+   * ```
+   */
+  get showGhosts() {
+    return debugHooks.isVisualOverlayEnabled;
   }
 }

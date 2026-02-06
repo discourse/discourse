@@ -33,6 +33,7 @@ import {
   DEBUG_CALLBACK,
   debugHooks,
 } from "discourse/lib/blocks/-internals/debug-hooks";
+import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
 import {
   _freezeBlockRegistry,
   _registerBlock,
@@ -253,6 +254,12 @@ export { isConditionTypeRegistryFrozen };
  */
 export { validateConditions };
 
+/**
+ * Constants for block failure types used in debug mode.
+ * Used to identify why a block didn't render (conditions failed, optional missing, etc.).
+ */
+export { FAILURE_TYPE };
+
 /*
  * Debug Utilities
  **/
@@ -268,6 +275,72 @@ export { DEBUG_CALLBACK };
  * Provides reactive getters and callback management.
  */
 export { debugHooks };
+
+/**
+ * Sets up debug callbacks to capture ghost blocks and render them with standard markup.
+ * Returns an array that will be populated with ghost data as blocks are processed.
+ *
+ * The rendered ghost blocks have:
+ * - class="ghost-block"
+ * - data-name={blockName}
+ * - data-type={failureType}
+ * - data-reason={failureReason}
+ *
+ * @param {Object} [options] - Configuration options.
+ * @param {boolean} [options.enabled=true] - Whether visual overlay is enabled.
+ *   Set to false to test that ghosts aren't rendered when debug mode is disabled.
+ * @returns {Array<{name: string, failureType: string, failureReason: string|undefined}>}
+ *
+ * @example
+ * const capturedGhosts = setupGhostCapture();
+ * // ... register blocks and render ...
+ * assert.dom('.ghost-block[data-name="my-block"]').exists();
+ * assert.strictEqual(capturedGhosts[0].name, "my-block");
+ */
+export function setupGhostCapture({ enabled = true } = {}) {
+  const capturedGhosts = [];
+
+  debugHooks.setCallback(DEBUG_CALLBACK.VISUAL_OVERLAY, () => enabled);
+  debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, (blockData) => {
+    if (blockData.conditionsPassed === false) {
+      capturedGhosts.push({
+        name: blockData.name,
+        failureType: blockData.failureType,
+        failureReason: blockData.failureReason,
+      });
+      return {
+        Component: <template>
+          <div
+            class="ghost-block"
+            data-name={{blockData.name}}
+            data-type={{blockData.failureType}}
+            data-reason={{blockData.failureReason}}
+          >Ghost: {{blockData.name}}</div>
+        </template>,
+        isGhost: true,
+        asGhost: () => null,
+      };
+    }
+    return { Component: blockData.Component };
+  });
+
+  return capturedGhosts;
+}
+
+/**
+ * Resets all debug callbacks to null.
+ * Use in afterEach hooks to clean up debug state between tests.
+ *
+ * @example
+ * hooks.afterEach(function () {
+ *   resetDebugCallbacks();
+ * });
+ */
+export function resetDebugCallbacks() {
+  for (const key of Object.values(DEBUG_CALLBACK)) {
+    debugHooks.setCallback(key, null);
+  }
+}
 
 /*
  * Reset Utilities

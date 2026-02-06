@@ -23,6 +23,7 @@ import BlockOutletInlineError from "discourse/lib/blocks/-internals/components/b
 /** @type {import("discourse/lib/blocks/-internals/components/block-outlet-root-container.gjs")} */
 import BlockOutletRootContainer from "discourse/lib/blocks/-internals/components/block-outlet-root-container";
 import {
+  createDebugGhost,
   DEBUG_CALLBACK,
   debugHooks,
 } from "discourse/lib/blocks/-internals/debug-hooks";
@@ -163,8 +164,8 @@ function resolveDecoratorClassNames(metadata, args) {
  * @param {Object} [debugContext.outletArgs] - Outlet args for debug display
  * @param {string} [debugContext.key] - Stable unique key for this block
  * @param {string} [debugContext.outletName] - The outlet name for wrapper class generation
- * @param {Array<{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}>} [debugContext.processedChildren] - Pre-processed children
- * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
+ * @param {Array<import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult>} [debugContext.processedChildren] - Pre-processed children
+ * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult}
  *   An object containing the curried block component, any containerArgs
  *   provided in the block entry, and a stable unique key for list rendering.
  *   The containerArgs are values required by the parent container's childArgs
@@ -239,7 +240,53 @@ function createChildBlock(entry, owner, debugContext = {}) {
     }
   }
 
-  return { Component: wrappedComponent, containerArgs, key: debugContext.key };
+  /** @type {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult} */
+  const result = {
+    Component: wrappedComponent,
+    containerArgs,
+    key: debugContext.key,
+    /**
+     * Returns a ghost version of this child with a custom failure reason.
+     *
+     * Used by container blocks (like head) that choose not to render some children
+     * but want to show them as ghosts in debug mode with an explanation.
+     *
+     * @param {string} reason - The failure reason to display in the ghost overlay.
+     * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult|null}
+     *   A ghost child block result, or null if debug mode is disabled.
+     */
+    asGhost(reason) {
+      const ghostResult = createDebugGhost(
+        {
+          name: blockMeta?.blockName,
+          args: argsWithDefaults,
+          containerArgs,
+          conditions: debugContext.conditions,
+          failureReason: reason,
+        },
+        {
+          outletName: debugContext.displayHierarchy,
+          outletArgs: debugContext.outletArgs,
+        }
+      );
+
+      if (ghostResult) {
+        /** @type {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult} */
+        const ghostChild = {
+          Component: ghostResult.Component,
+          containerArgs,
+          key: `${debugContext.key}:ghost`,
+          isGhost: true,
+          asGhost: () => ghostChild,
+        };
+        return ghostChild;
+      }
+
+      return null;
+    },
+  };
+
+  return result;
 }
 
 /**

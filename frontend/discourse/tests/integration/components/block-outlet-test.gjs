@@ -10,6 +10,7 @@ import { withPluginApi } from "discourse/lib/plugin-api";
 import {
   DEBUG_CALLBACK,
   debugHooks,
+  FAILURE_TYPE,
   registerBlock,
   registerBlockFactory,
   withTestBlockRegistration,
@@ -21,11 +22,6 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
 
   hooks.afterEach(function () {
     setupOnerror();
-    debugHooks.setCallback(DEBUG_CALLBACK.VISUAL_OVERLAY, null);
-    debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
-    debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_LOGGING, null);
-    debugHooks.setCallback(DEBUG_CALLBACK.OUTLET_INFO_COMPONENT, null);
-    debugHooks.setCallback(DEBUG_CALLBACK.START_GROUP, null);
   });
 
   module("basic rendering", function () {
@@ -1328,7 +1324,7 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
       debugHooks.setCallback(
         DEBUG_CALLBACK.BLOCK_DEBUG,
         (blockData, context) => {
-          if (blockData.optionalMissing) {
+          if (blockData.failureType === FAILURE_TYPE.OPTIONAL_MISSING) {
             ghostBlockData = { ...blockData, context };
             return {
               Component: <template>
@@ -1363,9 +1359,10 @@ module("Integration | Blocks | BlockOutlet", function (hooks) {
         "missing-optional-block",
         "ghost receives correct block name"
       );
-      assert.true(
-        ghostBlockData.optionalMissing,
-        "ghost receives optionalMissing flag"
+      assert.strictEqual(
+        ghostBlockData.failureType,
+        FAILURE_TYPE.OPTIONAL_MISSING,
+        "ghost receives failureType OPTIONAL_MISSING"
       );
       assert.deepEqual(
         ghostBlockData.args,

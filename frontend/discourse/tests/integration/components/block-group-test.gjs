@@ -14,10 +14,6 @@ import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 module("Integration | Blocks | BlockGroup", function (hooks) {
   setupRenderingTest(hooks);
 
-  hooks.afterEach(function () {
-    debugHooks.setCallback(DEBUG_CALLBACK.BLOCK_DEBUG, null);
-  });
-
   test("renders with BEM classes", async function (assert) {
     @block("group-child-1")
     class GroupChild1 extends Component {

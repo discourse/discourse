@@ -6,6 +6,7 @@ import {
 } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import {
+  FAILURE_TYPE,
   MAX_LAYOUT_DEPTH,
   OPTIONAL_MISSING,
 } from "discourse/lib/blocks/-internals/patterns";
@@ -47,7 +48,7 @@ function makeDebugCallback(fn) {
  * protection is validation-time depth checking in `validateLayout`, but this
  * provides additional safety during ghost rendering.
  *
- * @param {Array<Object>} childEntries - Child layout entries (already preprocessed with __visible and __failureReason)
+ * @param {Array<Object>} childEntries - Child layout entries (already preprocessed with __visible and __failureType)
  * @param {import("@ember/owner").default} owner - The application owner
  * @param {string} containerPath - The container's hierarchy path (e.g., "outlet/group[0]")
  * @param {Object} outletArgs - Outlet arguments for context
@@ -87,7 +88,7 @@ function createGhostChildren(
           containerArgs: childEntry.containerArgs,
           conditions: childEntry.conditions,
           conditionsPassed: false,
-          optionalMissing: true,
+          failureType: FAILURE_TYPE.OPTIONAL_MISSING,
         },
         { outletName: containerPath }
       );
@@ -119,7 +120,7 @@ function createGhostChildren(
     if (
       isChildContainer &&
       childEntry.children?.length &&
-      childEntry.__failureReason === "no-visible-children"
+      childEntry.__failureType === FAILURE_TYPE.NO_VISIBLE_CHILDREN
     ) {
       nestedGhostChildren = createGhostChildren(
         childEntry.children,
@@ -140,7 +141,8 @@ function createGhostChildren(
         containerArgs: childEntry.containerArgs,
         conditions: childEntry.conditions,
         conditionsPassed: false,
-        failureReason: childEntry.__failureReason,
+        failureType: childEntry.__failureType,
+        failureReason: childEntry.__failureReason, // Optional custom message
         children: nestedGhostChildren,
       },
       { outletName: containerPath }
@@ -178,16 +180,16 @@ export function patchBlockRendering() {
       containerArgs,
       conditions,
       conditionsPassed,
-      optionalMissing,
+      failureType,
       failureReason,
       children,
     } = blockData;
     const { outletName } = context;
     const owner = getOwnerWithFallback();
 
-    // If conditions failed or block is optional and missing, return a ghost block
-    if (conditionsPassed === false || optionalMissing) {
-      return {
+    // If conditions failed, return a ghost block
+    if (conditionsPassed === false) {
+      const ghostResult = {
         Component: curryComponent(
           GhostBlock,
           {
@@ -197,7 +199,7 @@ export function patchBlockRendering() {
             blockArgs: args,
             containerArgs,
             conditions,
-            optionalMissing,
+            failureType,
             failureReason,
             // Children are ghost components for container blocks with no visible children
             children,
@@ -205,7 +207,10 @@ export function patchBlockRendering() {
           owner
         ),
         isGhost: true,
+        // No-op: calling asGhost on a ghost returns itself
+        asGhost: () => ghostResult,
       };
+      return ghostResult;
     }
 
     // Wrap the rendered block with debug info

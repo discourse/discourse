@@ -46,8 +46,7 @@ import { shallowArgsEqual } from "discourse/lib/blocks/-internals/utils";
  * @param {Array<Object>} [debugContext.processedChildren] - Pre-processed children for container blocks.
  * @param {import("@ember/owner").default} owner - The application owner for service lookup.
  * @param {Function} createChildBlockFn - Function to create child block components (injected from block-outlet.gjs).
- * @returns {{Component: import("ember-curry-component").CurriedComponent, containerArgs: Object|undefined, key: string}}
- *   The cached or newly created component data with stable key for list rendering.
+ * @returns {ChildBlockResult} The cached or newly created component data with stable key for list rendering.
  */
 function getOrCreateLeafBlockComponent(
   cache,
@@ -113,6 +112,10 @@ function getOrCreateLeafBlockComponent(
  * @property {import("ember-curry-component").CurriedComponent} Component - Curried component ready to render.
  * @property {Object} [containerArgs] - Values for parent container's childArgs schema.
  * @property {string} key - Stable unique key for list rendering.
+ * @property {boolean} [isGhost] - True if this is a ghost block (debug mode only).
+ * @property {(reason: string) => ChildBlockResult|null} [asGhost] - Returns a ghost version of this child with the given reason.
+ *   For regular children, creates a new ghost component (or null if debug mode is disabled).
+ *   For ghost children, returns self (no-op).
  *
  * @param {Object} options - Rendering options.
  * @param {Array<BlockEntry>} options.entries - Pre-processed block entries with visibility metadata.

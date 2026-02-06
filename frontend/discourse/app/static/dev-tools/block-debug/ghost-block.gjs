@@ -4,27 +4,12 @@ import { array, hash } from "@ember/helper";
 /** @type {import("discourse/float-kit/components/d-tooltip.gjs").default} */
 import DTooltip from "discourse/float-kit/components/d-tooltip";
 import icon from "discourse/helpers/d-icon";
+import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
+import { i18n } from "discourse-i18n";
 /** @type {import("../shared/args-table.gjs").default} */
 import ArgsTable from "../shared/args-table";
 /** @type {import("./conditions-tree.gjs").default} */
 import ConditionsTree from "./conditions-tree";
-
-/**
- * Returns the appropriate hint message based on why the block is hidden.
- *
- * @param {boolean} optionalMissing - True if block is optional and not registered.
- * @param {string} failureReason - Why the block is hidden ("condition-failed" or "no-visible-children").
- * @returns {string} The hint message to display.
- */
-function getHintMessage(optionalMissing, failureReason) {
-  if (optionalMissing) {
-    return "This optional block is not rendered because it's not registered.";
-  }
-  if (failureReason === "no-visible-children") {
-    return "This container block is not rendered because none of its children are visible.";
-  }
-  return "This block is not rendered because its conditions failed.";
-}
 
 /**
  * Component signature for GhostBlock.
@@ -36,8 +21,8 @@ function getHintMessage(optionalMissing, failureReason) {
  * @property {Object} [Args.blockArgs] - Arguments that would have been passed to the block.
  * @property {Object} [Args.containerArgs] - Container arguments from parent container's childArgs.
  * @property {Object} [Args.conditions] - Conditions that failed evaluation.
- * @property {boolean} [Args.optionalMissing] - True if block uses `?` suffix but isn't registered.
- * @property {string} [Args.failureReason] - Why the block is hidden ("condition-failed" or "no-visible-children").
+ * @property {string} [Args.failureType] - The failure type constant (FAILURE_TYPE value).
+ * @property {string} [Args.failureReason] - Optional custom display message (overrides type-based default).
  * @property {Array<{Component: import("ember-curry-component").CurriedComponent}>} [Args.children] - Nested ghost children for containers.
  */
 
@@ -49,14 +34,93 @@ function getHintMessage(optionalMissing, failureReason) {
  * - **Optional missing**: Block reference uses `?` suffix but isn't registered
  * - **Conditions failed**: Block is registered but conditions evaluated to false
  * - **No visible children**: Container block has no children that pass their conditions
+ * - **Custom reason**: Container block chose not to render this child (e.g., head block's "hidden by priority")
  *
  * For container blocks hidden due to no visible children, nested ghost children
  * are rendered inside to show the full block tree structure.
  *
  * @extends {Component<GhostBlockSignature>}
  */
-// eslint-disable-next-line ember/no-empty-glimmer-component-classes -- Class required for TypeScript signature
-class GhostBlock extends Component {
+export default class GhostBlock extends Component {
+  /**
+   * Returns the appropriate hint message based on why the block is hidden.
+   * If a custom `failureReason` is provided, it is displayed directly.
+   * Otherwise, a default message is generated based on the `failureType`.
+   *
+   * @returns {string} The hint message to display.
+   */
+  get hintMessage() {
+    if (this.args.failureReason) {
+      return this.args.failureReason;
+    }
+    if (this.args.failureType === FAILURE_TYPE.OPTIONAL_MISSING) {
+      return i18n("js.blocks.ghost_reasons.optional_missing_hint");
+    }
+    if (this.args.failureType === FAILURE_TYPE.NO_VISIBLE_CHILDREN) {
+      return i18n("js.blocks.ghost_reasons.no_visible_children_hint");
+    }
+    return i18n("js.blocks.ghost_reasons.condition_failed_hint");
+  }
+
+  /**
+   * Returns the section title for the status/conditions section.
+   *
+   * @returns {string} Either "Status" or "Conditions".
+   */
+  get sectionTitle() {
+    if (
+      this.args.failureType === FAILURE_TYPE.OPTIONAL_MISSING ||
+      this.args.failureType === FAILURE_TYPE.NO_VISIBLE_CHILDREN ||
+      this.args.failureReason
+    ) {
+      return i18n("js.blocks.ghost.status");
+    }
+    return i18n("js.blocks.ghost.conditions");
+  }
+
+  /**
+   * Returns the status text shown in parentheses.
+   *
+   * @returns {string} The status text (e.g., "not registered", "failed").
+   */
+  get statusText() {
+    if (this.args.failureType === FAILURE_TYPE.OPTIONAL_MISSING) {
+      return i18n("js.blocks.ghost.not_registered");
+    }
+    if (this.args.failureType === FAILURE_TYPE.NO_VISIBLE_CHILDREN) {
+      return i18n("js.blocks.ghost.no_visible_children");
+    }
+    if (this.args.failureReason) {
+      return i18n("js.blocks.ghost.hidden");
+    }
+    return i18n("js.blocks.ghost.failed");
+  }
+
+  /**
+   * Determines if the conditions tree should be shown.
+   * Only shown when conditions actually failed (not for optional missing,
+   * no visible children, or custom reason).
+   *
+   * @returns {boolean} True if conditions tree should be rendered.
+   */
+  get showConditionsTree() {
+    return (
+      this.args.failureType !== FAILURE_TYPE.OPTIONAL_MISSING &&
+      this.args.failureType !== FAILURE_TYPE.NO_VISIBLE_CHILDREN &&
+      !this.args.failureReason
+    );
+  }
+
+  /**
+   * Checks if an args object has any entries.
+   *
+   * @param {Object} args - The arguments object to check.
+   * @returns {boolean} True if args is non-null and has at least one key.
+   */
+  hasArgs(args) {
+    return args != null && Object.keys(args).length > 0;
+  }
+
   <template>
     <div class="block-debug-ghost" data-block-name={{@blockName}}>
       <DTooltip
@@ -73,60 +137,60 @@ class GhostBlock extends Component {
         <:trigger>
           <span class="block-debug-ghost__badge">
             {{icon "cube"}}
-            <span class="block-debug-ghost__name">{{@blockName}}</span>
-            <span class="block-debug-ghost__status">(hidden)</span>
+            <span class="block-debug-ghost__name">
+              {{@blockName}}
+            </span>
+            <span class="block-debug-ghost__status">
+              ({{i18n "js.blocks.ghost.hidden"}})
+            </span>
           </span>
         </:trigger>
         <:content>
           <div class="block-debug-tooltip --ghost">
             <div class="block-debug-tooltip__header --failed">
               {{icon "cube"}}
-              <span class="block-debug-tooltip__title">{{@blockName}}</span>
-              <span class="block-debug-tooltip__outlet">in
-                {{@debugLocation}}</span>
-              <span class="block-debug-tooltip__status">HIDDEN</span>
+              <span class="block-debug-tooltip__title">
+                {{@blockName}}
+              </span>
+              <span class="block-debug-tooltip__outlet">
+                {{i18n "js.blocks.ghost.in_location"}}
+                {{@debugLocation}}
+              </span>
+              <span class="block-debug-tooltip__status">
+                {{i18n "js.blocks.ghost.hidden"}}
+              </span>
             </div>
 
-            {{#if @optionalMissing}}
-              <div class="block-debug-tooltip__section">
-                <div class="block-debug-tooltip__section-title">
-                  Status
-                  <span class="--failed">(not registered)</span>
-                </div>
+            <div class="block-debug-tooltip__section">
+              <div class="block-debug-tooltip__section-title">
+                {{this.sectionTitle}}
+                <span class="--failed">({{this.statusText}})</span>
               </div>
-            {{else if (isNoVisibleChildren @failureReason)}}
-              <div class="block-debug-tooltip__section">
-                <div class="block-debug-tooltip__section-title">
-                  Status
-                  <span class="--failed">(no visible children)</span>
-                </div>
-              </div>
-            {{else}}
-              <div class="block-debug-tooltip__section">
-                <div class="block-debug-tooltip__section-title">
-                  Conditions
-                  <span class="--failed">(failed)</span>
-                </div>
+              {{#if this.showConditionsTree}}
                 <ConditionsTree @conditions={{@conditions}} @passed={{false}} />
-              </div>
-            {{/if}}
+              {{/if}}
+            </div>
 
-            {{#if (hasArgs @blockArgs)}}
+            {{#if (this.hasArgs @blockArgs)}}
               <div class="block-debug-tooltip__section">
-                <div class="block-debug-tooltip__section-title">Arguments</div>
+                <div class="block-debug-tooltip__section-title">
+                  {{i18n "js.blocks.ghost.arguments"}}
+                </div>
                 <ArgsTable @args={{@blockArgs}} />
               </div>
             {{/if}}
 
-            {{#if (hasArgs @containerArgs)}}
+            {{#if (this.hasArgs @containerArgs)}}
               <div class="block-debug-tooltip__section">
-                <div class="block-debug-tooltip__section-title">Container Args</div>
+                <div class="block-debug-tooltip__section-title">
+                  {{i18n "js.blocks.ghost.container_args"}}
+                </div>
                 <ArgsTable @args={{@containerArgs}} />
               </div>
             {{/if}}
 
             <div class="block-debug-tooltip__hint">
-              {{getHintMessage @optionalMissing @failureReason}}
+              {{this.hintMessage}}
             </div>
           </div>
         </:content>
@@ -143,25 +207,3 @@ class GhostBlock extends Component {
     </div>
   </template>
 }
-
-/**
- * Helper to check if failure reason is "no-visible-children".
- *
- * @param {string} failureReason - The failure reason.
- * @returns {boolean} True if the reason is "no-visible-children".
- */
-function isNoVisibleChildren(failureReason) {
-  return failureReason === "no-visible-children";
-}
-
-/**
- * Helper to check if an args object has any entries.
- *
- * @param {Object} args - The arguments object to check.
- * @returns {boolean} True if args is non-null and has at least one key.
- */
-function hasArgs(args) {
-  return args != null && Object.keys(args).length > 0;
-}
-
-export default GhostBlock;

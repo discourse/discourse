@@ -14,6 +14,7 @@
  */
 
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
+import { FAILURE_TYPE } from "discourse/lib/blocks/-internals/patterns";
 
 /**
  * Callback key constants for the debug hooks registry.
@@ -153,7 +154,7 @@ export const debugHooks = new DebugHooks();
  * @param {boolean} options.isLoggingEnabled - Whether debug logging is enabled.
  * @param {boolean} options.showGhosts - Whether to show ghost components.
  * @param {string} options.key - Stable unique key for this block.
- * @returns {{Component: import("ember-curry-component").CurriedComponent, key: string}|null}
+ * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult|null}
  *   Ghost component data with key if showGhosts is true, null otherwise.
  */
 export function handleOptionalMissingBlock({
@@ -174,18 +175,16 @@ export function handleOptionalMissingBlock({
 
   // Show ghost if visual overlay is enabled
   if (showGhosts) {
-    const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)?.(
+    const ghostData = createDebugGhost(
       {
         name: blockName,
-        Component: null,
         args: entry.args,
         conditions: entry.conditions,
-        conditionsPassed: false,
-        optionalMissing: true,
+        failureType: FAILURE_TYPE.OPTIONAL_MISSING,
       },
       { outletName: hierarchy }
     );
-    return ghostData?.Component ? { ...ghostData, key } : null;
+    return ghostData ? { ...ghostData, key } : null;
   }
 
   return null;
@@ -211,6 +210,40 @@ export function buildContainerPath(blockName, baseHierarchy, containerCounts) {
 }
 
 /**
+ * Invokes the BLOCK_DEBUG callback to create a ghost component.
+ *
+ * This is the low-level helper that calls the debug callback with block data.
+ * Used by both `createGhostBlock` (entry-processing time) and `asGhost`
+ * (render time) to avoid duplicating the callback invocation logic.
+ *
+ * @param {Object} blockData - Data describing the block to ghost.
+ * @param {string} blockData.name - The block name.
+ * @param {Object} [blockData.args] - Block arguments.
+ * @param {Object} [blockData.containerArgs] - Container arguments.
+ * @param {Array} [blockData.conditions] - Block conditions.
+ * @param {string} [blockData.failureType] - Type of failure (from FAILURE_TYPE).
+ * @param {string} [blockData.failureReason] - Custom failure reason message.
+ * @param {Array} [blockData.children] - Ghost children for containers.
+ * @param {Object} context - Context for the ghost.
+ * @param {string} context.outletName - The outlet/hierarchy name for display.
+ * @param {Object} [context.outletArgs] - Outlet arguments.
+ * @returns {Object|null} Ghost data with Component property, or null if callback
+ *   not set or didn't return a component.
+ */
+export function createDebugGhost(blockData, context) {
+  const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)?.(
+    {
+      ...blockData,
+      Component: null,
+      conditionsPassed: false,
+    },
+    context
+  );
+
+  return ghostData?.Component ? ghostData : null;
+}
+
+/**
  * Creates a ghost component for an invisible block.
  *
  * Ghost components are shown in debug mode to visualize blocks that failed
@@ -227,7 +260,7 @@ export function buildContainerPath(blockName, baseHierarchy, containerCounts) {
  * @param {boolean} options.isLoggingEnabled - Whether debug logging is enabled.
  * @param {Function} options.resolveBlockFn - Function to resolve block references.
  * @param {string} options.key - Stable unique key for this block.
- * @returns {{Component: import("ember-curry-component").CurriedComponent, key: string}|null}
+ * @returns {import("discourse/lib/blocks/-internals/entry-processing").ChildBlockResult|null}
  *   Ghost component data with key if successful, null otherwise.
  */
 export function createGhostBlock({
@@ -248,7 +281,7 @@ export function createGhostBlock({
   if (
     isContainer &&
     entry.children?.length &&
-    entry.__failureReason === "no-visible-children"
+    entry.__failureType === FAILURE_TYPE.NO_VISIBLE_CHILDREN
   ) {
     ghostChildren = debugHooks.getCallback(
       DEBUG_CALLBACK.GHOST_CHILDREN_CREATOR
@@ -262,21 +295,20 @@ export function createGhostBlock({
     );
   }
 
-  const ghostData = debugHooks.getCallback(DEBUG_CALLBACK.BLOCK_DEBUG)?.(
+  const ghostData = createDebugGhost(
     {
       name: blockName,
-      Component: null,
       args: entry.args,
       containerArgs: entry.containerArgs,
       conditions: entry.conditions,
-      conditionsPassed: false,
+      failureType: entry.__failureType,
       failureReason: entry.__failureReason,
       children: ghostChildren,
     },
     { outletName: hierarchy }
   );
 
-  return ghostData?.Component ? { ...ghostData, key } : null;
+  return ghostData ? { ...ghostData, key } : null;
 }
 
 /**
