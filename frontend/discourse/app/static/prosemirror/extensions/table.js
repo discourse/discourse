@@ -246,6 +246,10 @@ const extension = {
       const maxColumns = findMaxColumns(tbody);
       const firstRow = tbody.firstChild;
 
+      if (!firstRow || maxColumns === 0) {
+        return tableNode;
+      }
+
       const header = schema.nodes.table_head.create(
         {},
         createHeaderRow(firstRow, maxColumns, schema)

@@ -341,5 +341,25 @@ describe "Composer - ProseMirror - Pasting content", type: :system do
 
       expect(composer).to have_value(markdown)
     end
+
+    it "handles tables with empty rows without crashing" do
+      cdp.allow_clipboard
+      open_composer
+
+      html = <<~HTML
+        <table>
+          <tbody>
+            <tr></tr>
+          </tbody>
+        </table>
+        <p>After table</p>
+      HTML
+
+      cdp.copy_paste(html, html: true)
+
+      composer.toggle_rich_editor
+
+      expect(composer).to have_value("|  |\n|----|\n\nAfter table")
+    end
   end
 end
