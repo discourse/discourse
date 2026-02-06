@@ -507,6 +507,11 @@ module ApplicationHelper
     @splash_screen_image_animated
   end
 
+  def splash_screen_inline_svg
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    @splash_screen_image_svg&.html_safe
+  end
+
   def splash_screen_image_data_uri(dark: false)
     build_splash_screen_image unless defined?(@splash_screen_image_svg)
     return nil if @splash_screen_image_svg.blank?
@@ -552,24 +557,20 @@ module ApplicationHelper
     svg = doc.at_css("svg")
     return unless svg
 
-    @splash_screen_image_animated =
-      svg.at_xpath(
-        ".//*[local-name()='animate' or local-name()='animateTransform' or local-name()='animateMotion' or local-name()='set']",
-      ).present? || svg.at_css("style")&.text&.include?("@keyframes")
+    @splash_screen_image_animated = svg.at_css("style")&.text&.include?("@keyframes")
+
+    # Strip SMIL animation elements, these run on the main thread and stutter.
+    # Only CSS transform/opacity animations are recommended.
+    svg.xpath(
+      ".//*[local-name()='animate' or local-name()='animateTransform' or local-name()='animateMotion' or local-name()='set']",
+    ).each(&:remove)
 
     has_scripts = svg.xpath("//script").present?
     has_event_handlers = svg.xpath("//@*[starts-with(name(), 'on')]").present?
-    # Avoid animations targeting href attributes
-    has_href_animations =
-      svg
-        .xpath(".//*[local-name()='animate' or local-name()='set']/@attributeName")
-        .any? { |attr| attr.value.downcase.include?("href") }
 
-    return if has_scripts || has_event_handlers || has_href_animations
+    return if has_scripts || has_event_handlers
 
-    @splash_screen_image_svg = content.dup
-
-    @splash_screen_image_svg.sub!(/^<\?xml[^>]*\?>\s*/, "")
+    @splash_screen_image_svg = svg.to_xml
   end
 
   public
