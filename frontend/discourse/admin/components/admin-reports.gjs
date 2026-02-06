@@ -201,7 +201,7 @@ export default class AdminReports extends Component {
           <:content as |filteredReports|>
             {{#each (this.groupReports filteredReports) as |group|}}
               <section class="admin-reports-group">
-                <h3 class="admin-reports-group__title">{{group.name}}</h3>
+                <h2 class="admin-reports-group__title">{{group.name}}</h2>
                 <AdminSectionLandingWrapper class="admin-reports-list">
                   {{#each group.reports as |report|}}
                     <AdminSectionLandingItem
