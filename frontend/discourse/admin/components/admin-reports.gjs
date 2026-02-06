@@ -120,11 +120,9 @@ export default class AdminReports extends Component {
     const groupedReports = [];
     const assignedReports = new Set();
 
-    // First, separate core reports from plugin reports
     const coreReports = reports.filter((report) => !report.plugin);
     const pluginReports = reports.filter((report) => report.plugin);
 
-    // Group core reports by category
     for (const [groupKey, groupConfig] of Object.entries(REPORT_GROUPS)) {
       const groupReports = coreReports.filter((report) =>
         groupConfig.reports.includes(report.type)
@@ -140,7 +138,6 @@ export default class AdminReports extends Component {
       }
     }
 
-    // Add any core reports that weren't assigned to a group
     const unassignedCoreReports = coreReports.filter(
       (report) => !assignedReports.has(report.type)
     );
@@ -157,7 +154,6 @@ export default class AdminReports extends Component {
       }
     }
 
-    // Group plugin reports by plugin name
     const pluginGroups = new Map();
     for (const report of pluginReports) {
       const pluginName = report.plugin;
@@ -167,7 +163,6 @@ export default class AdminReports extends Component {
       pluginGroups.get(pluginName).push(report);
     }
 
-    // Add plugin groups
     for (const [pluginName, pluginReportsList] of pluginGroups) {
       groupedReports.push({
         key: `plugin-${pluginName}`,
@@ -181,7 +176,6 @@ export default class AdminReports extends Component {
   }
 
   formatPluginName(pluginName) {
-    // Convert "discourse-ai" to "Discourse AI"
     return pluginName
       .replace(/^discourse-/, "")
       .split("-")
