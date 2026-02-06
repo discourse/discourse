@@ -135,6 +135,9 @@ pt_BR:
         disagree_and_restore:
           title: "Não concordar e restaurar mensagem"
           description: "Restaure a mensagem para que todos(as) os(as) usuários(as) possam vê-las."
+        ignore:
+          title: "Ignorar sinalizações"
+          description: "Remover da fila sem tomar nenhuma ação."
       direct_messages:
         transcript_title: "Transcrição de mensagens anteriores em %{channel_name}"
         transcript_body: "Para fornecer mais contexto, incluímos uma transcrição das mensagens anteriores nesta conversa (até dez):\n\n%{transcript}"

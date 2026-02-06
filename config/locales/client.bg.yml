@@ -2913,6 +2913,8 @@ bg:
       slug_placeholder: "(Опционално) пунктирани думи за url "
       creation_error: Възникна грешка при създаването на категория.
       save_error: Възникна грешка при запазването на категорията.
+      validations:
+        icon_required: "Изберете икона."
       description: "Описание"
       icon: "Икона"
       emoji: "Емотикони"

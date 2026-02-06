@@ -4027,6 +4027,7 @@ zh_CN:
         self_lockout: "如果改变此类别权限，您将丢失自己的访问权限，确定要继续吗？"
       validations:
         emoji_required: "选择一个表情符号。"
+        icon_required: "选择一个图标."
       name: "类别名称"
       untitled: "无标题类别"
       description: "描述"

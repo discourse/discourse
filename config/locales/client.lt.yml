@@ -3407,6 +3407,8 @@ lt:
       slug_placeholder: "(Pasirinktinai) brūkšniniai žodžiai skirti URL"
       creation_error: Įvyko klaida kuriant kategoriją.
       save_error: Įvyko klaida išsaugant kategoriją.
+      validations:
+        icon_required: "Pasirinkite piktogramą."
       description: "Aprašymas"
       icon: "Ikona"
       emoji: "Emoji"

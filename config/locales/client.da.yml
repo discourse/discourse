@@ -3476,6 +3476,8 @@ da:
       slug_placeholder: "(Valgfri) gennemstregede-ord for URL"
       creation_error: Der opstod en fejl under oprettelsen af kategorien.
       save_error: Der opstod en fejl da kategorien skulle gemmes.
+      validations:
+        icon_required: "Vælg et ikon."
       description: "Beskrivelse"
       style: "Stil"
       icon: "Ikon"

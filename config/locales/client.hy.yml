@@ -3140,6 +3140,8 @@ hy:
       slug_placeholder: "(Ընտրովի) գծիկավոր-բառեր url-ի համար"
       creation_error: 'Կատեգորիայի ստեղծման ժամանակ տեղի է ունեցել սխալ:'
       save_error: 'Կատեգորիան պահելիս տեղի է ունեցել սխալ:'
+      validations:
+        icon_required: "Ընտրեք պատկերակ."
       description: "Նկարագրույթուն"
       icon: "Պատկերակ"
       emoji: "Էմոջի"

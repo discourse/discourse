@@ -2519,6 +2519,8 @@ bs_BA:
       slug_placeholder: "(Opcionalno) isprekidane riječi za url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
+      validations:
+        icon_required: "Odaberi ikonu."
       description: "Description"
       icon: "Icon"
       emoji: "Emoji"

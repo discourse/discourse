@@ -3069,6 +3069,8 @@ ko:
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: 카테고리 생성 중에 오류가 발생했습니다.
       save_error: 카테고리 저장 중에 오류가 발생했습니다.
+      validations:
+        icon_required: "아이콘 선택."
       description: "설명"
       icon: "아이콘"
       emoji: "이모티콘"
