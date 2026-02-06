@@ -347,8 +347,8 @@ RSpec.describe Tag do
   describe "full_url" do
     let(:tag) { Fabricate(:tag, name: "🚀") }
 
-    it "percent encodes emojis" do
-      expect(tag.full_url).to eq("http://test.localhost/tag/%F0%9F%9A%80")
+    it "uses slug/id format" do
+      expect(tag.full_url).to eq("http://test.localhost/tag/#{tag.id}-tag/#{tag.id}")
     end
   end
 

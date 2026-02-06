@@ -220,42 +220,74 @@ export default function () {
   this.route("full-page-search", { path: "/search" });
 
   this.route("tag", function () {
-    this.route("show", { path: "/:tag_name" });
+    // untagged route (special case for "none")
+    this.route("none");
+    Site.currentProp("filters").forEach((filter) => {
+      this.route("none" + capitalize(filter), { path: "/none/l/" + filter });
+    });
 
+    // canonical tag route with slug/id
+    this.route("show", { path: "/:tag_slug/:tag_id" });
     Site.currentProp("filters").forEach((filter) => {
       this.route("show" + capitalize(filter), {
-        path: "/:tag_name/l/" + filter,
+        path: "/:tag_slug/:tag_id/l/" + filter,
       });
     });
+
+    // legacy route: /tag/:tag_name -> redirects to /tag/:slug/:id
+    this.route("legacyRedirect", { path: "/:tag_name" });
   });
 
   this.route("tags", function () {
+    // untagged routes (no tag selected) - must come BEFORE showCategory routes
+    // these handle URLs like /tags/c/feature/2/none meaning "category with no tag"
+    this.route("untaggedCategory", {
+      path: "/c/*category_slug_path_with_id/none",
+    });
+    this.route("untaggedCategoryAll", {
+      path: "/c/*category_slug_path_with_id/all/none",
+    });
+
+    // category + tag routes (with tag_slug/tag_id)
     this.route("showCategory", {
-      path: "/c/*category_slug_path_with_id/:tag_name",
+      path: "/c/*category_slug_path_with_id/:tag_slug/:tag_id",
     });
     this.route("showCategoryAll", {
-      path: "/c/*category_slug_path_with_id/all/:tag_name",
+      path: "/c/*category_slug_path_with_id/all/:tag_slug/:tag_id",
     });
     this.route("showCategoryNone", {
-      path: "/c/*category_slug_path_with_id/none/:tag_name",
+      path: "/c/*category_slug_path_with_id/none/:tag_slug/:tag_id",
     });
 
     Site.currentProp("filters").forEach((filter) => {
+      // untagged with filter
+      this.route("untaggedCategory" + capitalize(filter), {
+        path: "/c/*category_slug_path_with_id/none/l/" + filter,
+      });
+      this.route("untaggedCategoryAll" + capitalize(filter), {
+        path: "/c/*category_slug_path_with_id/all/none/l/" + filter,
+      });
+
+      // category + tag with filter
       this.route("showCategory" + capitalize(filter), {
-        path: "/c/*category_slug_path_with_id/:tag_name/l/" + filter,
+        path: "/c/*category_slug_path_with_id/:tag_slug/:tag_id/l/" + filter,
       });
       this.route("showCategoryAll" + capitalize(filter), {
-        path: "/c/*category_slug_path_with_id/all/:tag_name/l/" + filter,
+        path:
+          "/c/*category_slug_path_with_id/all/:tag_slug/:tag_id/l/" + filter,
       });
       this.route("showCategoryNone" + capitalize(filter), {
-        path: "/c/*category_slug_path_with_id/none/:tag_name/l/" + filter,
+        path:
+          "/c/*category_slug_path_with_id/none/:tag_slug/:tag_id/l/" + filter,
       });
     });
+
     this.route("intersection", {
       path: "intersection/:tag_name/*additional_tags",
     });
 
     // legacy route
+    // handles /tags/:tag_name -> redirects to /tag/:slug/:id
     this.route("legacyRedirect", { path: "/:tag_name" });
   });
 

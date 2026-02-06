@@ -25,7 +25,7 @@ class TagHashtagDataSource
 
     tag =
       Tag.new(
-        tag.slice(:id, :name, :description).merge(topic_count_column => tag[:count]),
+        tag.slice(:id, :name, :slug, :description).merge(topic_count_column => tag[:count]),
       ) if tag.is_a?(Hash)
 
     HashtagAutocompleteService::HashtagItem.new.tap do |item|

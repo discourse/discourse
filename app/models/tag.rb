@@ -207,13 +207,13 @@ class Tag < ActiveRecord::Base
   end
 
   def url
-    "#{Discourse.base_path}/tag/#{UrlHelper.encode_component(self.name)}"
+    "#{Discourse.base_path}/tag/#{slug_for_url}/#{id}"
   end
 
   alias_method :relative_url, :url
 
   def full_url
-    "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
+    "#{Discourse.base_url}/tag/#{slug_for_url}/#{id}"
   end
 
   def slug_for_url
