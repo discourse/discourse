@@ -2403,7 +2403,7 @@ zh_CN:
     enable_upcoming_changes: "启用即将到来的更改"
     fake_upcoming_change: "这是为测试目的即将进行的虚假更改。无需翻译此字符串。"
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动的 \"忽略... \"按钮，以方便用户访问，并腾出话题列表顶部的空间"
-    experimental_rename_faq_to_guidelines: "此更改将常见问题页面重命名为指南。常见问题页面仍可通过 /faq 访问。 'faq url' 的设置与以前一样有效。"
+    rename_faq_to_guidelines: "此更改将常见问题页面重命名为指南。常见问题页面仍可通过 /faq 访问。 'faq url' 的设置与以前一样有效。"
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面来简化类别创建流程。"
     enable_custom_splash_screen: "允许您使用自己的 SVG 图片自定义加载启动画面。通过“启动画面图片”设置上传图片。警告：这可能会对 LCP 分数和 Google 索引产生负面影响。"
     errors:

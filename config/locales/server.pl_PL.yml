@@ -2634,7 +2634,7 @@ pl_PL:
     enable_upcoming_changes: "Włącz nadchodzące zmiany"
     fake_upcoming_change: "Jest to fałszywa nadchodząca zmiana do celów testowych. Nie musisz tłumaczyć tego ciągu znaków."
     floating_dismiss_topics_on_mobile: "Wyświetla na urządzeniu mobilnym pływający przycisk „Odrzuć...” dla listy tematów, aby ułatwić dostęp i zwolnić miejsce u góry listy tematów"
-    experimental_rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie „faq url” działa jak poprzednio."
+    rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie „faq url” działa jak poprzednio."
     enable_simplified_category_creation: "Umożliwia uproszczony proces tworzenia kategorii z mniejszą liczbą opcji i bardziej przejrzystym interfejsem."
     enable_custom_splash_screen: "Umożliwia dostosowanie ekranu powitalnego ładowania za pomocą własnego obrazu SVG. Prześlij obraz za pomocą ustawienia „obraz ekranu powitalnego”. Uwaga: może to negatywnie wpłynąć na wyniki LCP i indeksowanie Google."
     errors:

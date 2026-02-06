@@ -2471,7 +2471,7 @@ hu:
     enable_upcoming_changes: "Közelgő változások engedélyezése"
     fake_upcoming_change: "Ez egy hamis, közelgő változás tesztelési célokra. Nem kell lefordítani ezt a karakterláncot."
     floating_dismiss_topics_on_mobile: "Megjelenít egy lebegő „Elvetés...” gombot mobilon a témalistához a könnyebb hozzáférés és a témalista tetején lévő hely felszabadítása érdekében."
-    experimental_rename_faq_to_guidelines: "Ez a módosítás a GYIK-oldalt „Irányelvek” névre nevezi át. A GYIK-oldal továbbra is elérhető marad a /faq útvonalon, a „faq url” beállítás pedig a megszokott módon működik tovább."
+    rename_faq_to_guidelines: "Ez a módosítás a GYIK-oldalt „Irányelvek” névre nevezi át. A GYIK-oldal továbbra is elérhető marad a /faq útvonalon, a „faq url” beállítás pedig a megszokott módon működik tovább."
     enable_simplified_category_creation: "Leegyszerűsített kategória-létrehozási folyamatot tesz lehetővé kevesebb opcióval és letisztultabb felülettel."
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."
