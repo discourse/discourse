@@ -299,16 +299,17 @@ end
 # Table name: tags
 #
 #  id                 :integer          not null, primary key
+#  description        :string(1000)
 #  locale             :string(20)
 #  name               :string           not null
-#  created_at         :datetime         not null
-#  updated_at         :datetime         not null
 #  pm_topic_count     :integer          default(0), not null
-#  target_tag_id      :integer
-#  description        :string(1000)
+#  post_count         :integer          default(0), not null
 #  public_topic_count :integer          default(0), not null
 #  slug               :string           default(""), not null
 #  staff_topic_count  :integer          default(0), not null
+#  created_at         :datetime         not null
+#  updated_at         :datetime         not null
+#  target_tag_id      :integer
 #
 # Indexes
 #

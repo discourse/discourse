@@ -321,28 +321,33 @@ end
 #
 # Table name: user_stats
 #
-#  user_id                  :integer          not null, primary key
-#  topics_entered           :integer          default(0), not null
-#  time_read                :integer          default(0), not null
-#  days_visited             :integer          default(0), not null
-#  posts_read_count         :integer          default(0), not null
-#  likes_given              :integer          default(0), not null
-#  likes_received           :integer          default(0), not null
-#  new_since                :datetime         not null
-#  read_faq                 :datetime
-#  first_post_created_at    :datetime
-#  post_count               :integer          default(0), not null
-#  topic_count              :integer          default(0), not null
-#  bounce_score             :float            default(0.0), not null
-#  reset_bounce_score_after :datetime
-#  flags_agreed             :integer          default(0), not null
-#  flags_disagreed          :integer          default(0), not null
-#  flags_ignored            :integer          default(0), not null
-#  first_unread_at          :datetime         not null
-#  distinct_badge_count     :integer          default(0), not null
-#  first_unread_pm_at       :datetime         not null
-#  digest_attempted_at      :datetime
-#  post_edits_count         :integer
-#  draft_count              :integer          default(0), not null
-#  pending_posts_count      :integer          default(0), not null
+#  amazon_posts_email_summary_attempted_at  :datetime
+#  bounce_score                             :float            default(0.0), not null
+#  days_visited                             :integer          default(0), not null
+#  digest_attempted_at                      :datetime
+#  distinct_badge_count                     :integer          default(0), not null
+#  draft_count                              :integer          default(0), not null
+#  first_post_created_at                    :datetime
+#  first_unread_at                          :datetime         not null
+#  first_unread_pm_at                       :datetime         not null
+#  flags_agreed                             :integer          default(0), not null
+#  flags_disagreed                          :integer          default(0), not null
+#  flags_ignored                            :integer          default(0), not null
+#  group_mention_email_summary_attempted_at :datetime
+#  likes_given                              :integer          default(0), not null
+#  likes_received                           :integer          default(0), not null
+#  mention_email_summary_attempted_at       :datetime
+#  new_since                                :datetime         not null
+#  pending_posts_count                      :integer          default(0), not null
+#  post_count                               :integer          default(0), not null
+#  post_edits_count                         :integer
+#  posts_read_count                         :integer          default(0), not null
+#  read_faq                                 :datetime
+#  reply_email_summary_attempted_at         :datetime
+#  reset_bounce_score_after                 :datetime
+#  time_read                                :integer          default(0), not null
+#  topic_count                              :integer          default(0), not null
+#  topics_entered                           :integer          default(0), not null
+#  watched_email_summary_attempted_at       :datetime
+#  user_id                                  :integer          not null, primary key
 #

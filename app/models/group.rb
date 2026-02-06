@@ -1301,6 +1301,7 @@ end
 #  id                                 :integer          not null, primary key
 #  allow_membership_requests          :boolean          default(FALSE), not null
 #  allow_unknown_sender_topic_replies :boolean          default(FALSE), not null
+#  assignable_level                   :integer          default(0), not null
 #  automatic                          :boolean          default(FALSE), not null
 #  automatic_membership_email_domains :text
 #  bio_cooked                         :text

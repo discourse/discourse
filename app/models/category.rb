@@ -1244,64 +1244,65 @@ end
 # Table name: categories
 #
 #  id                                        :integer          not null, primary key
-#  name                                      :string(50)       not null
-#  color                                     :string(6)        default("0088CC"), not null
-#  topic_id                                  :integer
-#  topic_count                               :integer          default(0), not null
-#  created_at                                :datetime         not null
-#  updated_at                                :datetime         not null
-#  user_id                                   :integer          not null
-#  topics_year                               :integer          default(0)
-#  topics_month                              :integer          default(0)
-#  topics_week                               :integer          default(0)
-#  slug                                      :string           not null
-#  description                               :text
-#  text_color                                :string(6)        default("FFFFFF"), not null
-#  read_restricted                           :boolean          default(FALSE), not null
+#  all_topics_wiki                           :boolean          default(FALSE), not null
+#  allow_badges                              :boolean          default(TRUE), not null
+#  allow_global_tags                         :boolean          default(FALSE), not null
+#  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
+#  auto_close_based_on_last_post             :boolean          default(FALSE)
 #  auto_close_hours                          :float
-#  post_count                                :integer          default(0), not null
-#  latest_post_id                            :integer
-#  latest_topic_id                           :integer
-#  position                                  :integer
-#  parent_category_id                        :integer
-#  posts_year                                :integer          default(0)
-#  posts_month                               :integer          default(0)
-#  posts_week                                :integer          default(0)
+#  color                                     :string(6)        default("0088CC"), not null
+#  contains_messages                         :boolean
+#  default_list_filter                       :string(20)       default("all")
+#  default_slow_mode_seconds                 :integer
+#  default_top_period                        :string(20)       default("all")
+#  default_view                              :string(50)
+#  description                               :text
 #  email_in                                  :string
 #  email_in_allow_strangers                  :boolean          default(FALSE)
-#  topics_day                                :integer          default(0)
-#  posts_day                                 :integer          default(0)
-#  allow_badges                              :boolean          default(TRUE), not null
-#  name_lower                                :string(50)       not null
-#  auto_close_based_on_last_post             :boolean          default(FALSE)
-#  topic_template                            :text
-#  contains_messages                         :boolean
-#  sort_order                                :string
-#  sort_ascending                            :boolean
-#  uploaded_logo_id                          :integer
-#  uploaded_background_id                    :integer
-#  topic_featured_link_allowed               :boolean          default(TRUE)
-#  all_topics_wiki                           :boolean          default(FALSE), not null
-#  show_subcategory_list                     :boolean          default(FALSE)
-#  num_featured_topics                       :integer          default(3)
-#  default_view                              :string(50)
-#  subcategory_list_style                    :string(50)       default("rows_with_featured_topics")
-#  default_top_period                        :string(20)       default("all")
-#  mailinglist_mirror                        :boolean          default(FALSE), not null
-#  minimum_required_tags                     :integer          default(0), not null
-#  navigate_to_first_post_after_read         :boolean          default(FALSE), not null
-#  search_priority                           :integer          default(0)
-#  allow_global_tags                         :boolean          default(FALSE), not null
-#  read_only_banner                          :string
-#  default_list_filter                       :string(20)       default("all")
-#  allow_unlimited_owner_edits_on_first_post :boolean          default(FALSE), not null
-#  default_slow_mode_seconds                 :integer
-#  uploaded_logo_dark_id                     :integer
-#  uploaded_background_dark_id               :integer
-#  style_type                                :integer          default("square"), not null
 #  emoji                                     :string
+#  global_filter_tags_category_stats         :jsonb            not null
 #  icon                                      :string
 #  locale                                    :string(20)
+#  mailinglist_mirror                        :boolean          default(FALSE), not null
+#  minimum_required_tags                     :integer          default(0), not null
+#  name                                      :string(50)       not null
+#  name_lower                                :string(50)       not null
+#  navigate_to_first_post_after_read         :boolean          default(FALSE), not null
+#  num_featured_topics                       :integer          default(3)
+#  position                                  :integer
+#  post_count                                :integer          default(0), not null
+#  posts_day                                 :integer          default(0)
+#  posts_month                               :integer          default(0)
+#  posts_week                                :integer          default(0)
+#  posts_year                                :integer          default(0)
+#  read_only_banner                          :string
+#  read_restricted                           :boolean          default(FALSE), not null
+#  search_priority                           :integer          default(0)
+#  show_subcategory_list                     :boolean          default(FALSE)
+#  slug                                      :string           not null
+#  sort_ascending                            :boolean
+#  sort_order                                :string
+#  style_type                                :integer          default("square"), not null
+#  subcategory_list_style                    :string(50)       default("rows_with_featured_topics")
+#  text_color                                :string(6)        default("FFFFFF"), not null
+#  topic_count                               :integer          default(0), not null
+#  topic_featured_link_allowed               :boolean          default(TRUE)
+#  topic_template                            :text
+#  topics_day                                :integer          default(0)
+#  topics_month                              :integer          default(0)
+#  topics_week                               :integer          default(0)
+#  topics_year                               :integer          default(0)
+#  created_at                                :datetime         not null
+#  updated_at                                :datetime         not null
+#  latest_post_id                            :integer
+#  latest_topic_id                           :integer
+#  parent_category_id                        :integer
+#  topic_id                                  :integer
+#  uploaded_background_dark_id               :integer
+#  uploaded_background_id                    :integer
+#  uploaded_logo_dark_id                     :integer
+#  uploaded_logo_id                          :integer
+#  user_id                                   :integer          not null
 #
 # Indexes
 #
