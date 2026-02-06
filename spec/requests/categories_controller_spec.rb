@@ -1851,7 +1851,7 @@ RSpec.describe CategoriesController do
     end
 
     it "returns the right categories when page param is present" do
-      stub_const(CategoriesController, "MAX_CATEGORIES_LIMIT", 1) do
+      stub_const(Category::HierarchicalSearch, "MAX_LIMIT", 1) do
         get "/categories/hierarchical_search.json", params: { page: 2 }
 
         expect(response.status).to eq(200)
