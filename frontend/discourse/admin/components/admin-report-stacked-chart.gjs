@@ -6,16 +6,16 @@ import Chart from "./chart";
 
 export default class AdminReportStackedChart extends Component {
   get chartConfig() {
-    const { model } = this.args;
+    const { model, options } = this.args;
 
-    const options = this.args.options || {};
-    options.hiddenLabels ??= [];
+    const chartOptions = options || {};
+    chartOptions.hiddenLabels ??= [];
 
     const chartData = makeArray(model.chartData || model.data).map(
       (series) => ({
         label: series.label,
         color: series.color,
-        data: Report.collapse(model, series.data),
+        data: Report.collapse(model, series.data, chartOptions.chartGrouping),
         req: series.req,
       })
     );
@@ -27,7 +27,7 @@ export default class AdminReportStackedChart extends Component {
         stack: "pageviews-stack",
         data: series.data,
         backgroundColor: series.color,
-        hidden: options.hiddenLabels.includes(series.req),
+        hidden: chartOptions.hiddenLabels.includes(series.req),
       })),
     };
 
@@ -85,7 +85,9 @@ export default class AdminReportStackedChart extends Component {
             grid: { display: false },
             type: "time",
             time: {
-              unit: Report.unitForDatapoints(data.labels.length),
+              unit: chartOptions.chartGrouping
+                ? Report.unitForGrouping(chartOptions.chartGrouping)
+                : Report.unitForDatapoints(data.labels.length),
             },
             ticks: {
               sampleSize: 5,

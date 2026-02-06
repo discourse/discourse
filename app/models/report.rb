@@ -138,7 +138,8 @@ class Report
                 :secondary_color,
                 :filters,
                 :available_filters,
-                :legacy
+                :legacy,
+                :default_group_by
 
   def self.default_days
     30
@@ -266,6 +267,7 @@ class Report
       json[:prev_period] = self.prev_period if self.prev_period
       json[:prev30Days] = self.prev30Days if self.prev30Days
       json[:limit] = self.limit if self.limit
+      json[:default_group_by] = self.default_group_by if self.default_group_by
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(
