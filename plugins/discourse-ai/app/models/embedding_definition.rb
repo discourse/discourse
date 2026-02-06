@@ -124,10 +124,13 @@ class EmbeddingDefinition < ActiveRecord::Base
     end
   end
 
+  belongs_to :ai_secret, optional: true
+
   validates :provider, presence: true, inclusion: provider_names
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer_class, presence: true, inclusion: tokenizer_names
-  validates :url, :api_key, :dimensions, :max_sequence_length, :pg_function, presence: true
+  validates :url, :dimensions, :max_sequence_length, :pg_function, presence: true
+  validate :api_key_or_secret_present
 
   after_create :create_indexes
 
@@ -185,12 +188,26 @@ class EmbeddingDefinition < ActiveRecord::Base
     if seeded?
       env_key = "DISCOURSE_AI_SEEDED_EMBEDDING_API_KEY"
       ENV[env_key] || self[:api_key]
+    elsif ai_secret.present?
+      ai_secret.secret
     else
       self[:api_key]
     end
   end
 
   private
+
+  def api_key_or_secret_present
+    return if seeded?
+    if ai_secret_id.present?
+      unless AiSecret.exists?(ai_secret_id)
+        errors.add(:ai_secret_id, I18n.t("discourse_ai.embeddings.secret_not_found"))
+      end
+      return
+    end
+    return if self[:api_key].present?
+    errors.add(:base, I18n.t("discourse_ai.embeddings.secret_required"))
+  end
 
   def strategy
     @strategy ||= DiscourseAi::Embeddings::Strategies::Truncation.new

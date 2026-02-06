@@ -12,7 +12,7 @@ export default class AiLlm extends RestModel {
       "max_prompt_tokens",
       "max_output_tokens",
       "url",
-      "api_key",
+      "ai_secret_id",
       "provider_params",
       "vision_enabled",
       "input_cost",

@@ -26,6 +26,12 @@ module DiscourseAi
                      DiscourseAi::Completions::Llm.tokenizer_names.map { |tn|
                        { id: tn, name: tn.split("::").last }
                      },
+                   ai_secrets:
+                     ActiveModel::ArraySerializer.new(
+                       AiSecret.all.order(:name),
+                       each_serializer: AiSecretSerializer,
+                       root: false,
+                     ).as_json,
                  },
                }
       end
@@ -210,6 +216,7 @@ module DiscourseAi
             :max_prompt_tokens,
             :max_output_tokens,
             :api_key,
+            :ai_secret_id,
             :vision_enabled,
             :input_cost,
             :cached_input_cost,

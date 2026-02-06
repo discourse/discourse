@@ -667,6 +667,26 @@ en:
           run: "Run test"
           result: "Test result"
 
+      secrets:
+        short_title: "Secrets"
+        description: "Manage API keys and secrets shared across LLMs and embeddings."
+        name: "Name"
+        secret: "Secret"
+        select_secret: "Select a secret..."
+        create_new: "New secret"
+        saved: "Secret saved"
+        confirm_delete: "Are you sure you want to delete this secret?"
+        delete_failed_in_use: "This secret is currently in use and cannot be deleted."
+        no_secrets: "No secrets yet"
+        new_title: "New secret"
+        edit_title: "Edit secret"
+        back: "Back"
+        save: "Save"
+        edit: "Edit"
+        delete: "Delete"
+        modal:
+          title: "Create new secret"
+
       llms:
         short_title: "LLMs"
         no_llms: "No LLMs yet"
