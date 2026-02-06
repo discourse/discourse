@@ -14,50 +14,6 @@ class Notification < ActiveRecord::Base
   validates :data, presence: true
   validates :notification_type, presence: true
 
-  scope :unread, lambda { where(read: false) }
-  scope :recent,
-        lambda { |n = nil|
-          n ||= 10
-          order("notifications.created_at desc").limit(n)
-        }
-  scope :visible,
-        lambda {
-          joins("LEFT JOIN topics ON notifications.topic_id = topics.id").where(
-            "topics.id IS NULL OR topics.deleted_at IS NULL",
-          )
-        }
-  scope :unread_type, ->(user, type, limit = 30) { unread_types(user, [type], limit) }
-  scope :unread_types,
-        ->(user, types, limit = 30) do
-          where(user_id: user.id, read: false, notification_type: types)
-            .visible
-            .includes(:topic)
-            .limit(limit)
-        end
-  scope :prioritized,
-        ->(deprioritized_types = []) do
-          scope = order("notifications.high_priority AND NOT notifications.read DESC")
-
-          if deprioritized_types.present?
-            scope =
-              scope.order(
-                DB.sql_fragment(
-                  "NOT notifications.read AND notifications.notification_type NOT IN (?) DESC",
-                  deprioritized_types,
-                ),
-              )
-          else
-            scope = scope.order("NOT notifications.read DESC")
-          end
-
-          scope.order("notifications.created_at DESC")
-        end
-
-  scope :for_user_menu,
-        ->(user_id, limit: 30) do
-          where(user_id: user_id).visible.prioritized.includes(:topic).limit(limit)
-        end
-
   attr_accessor :skip_send_email
 
   after_commit :refresh_notification_count, on: %i[create update destroy]
@@ -197,72 +153,10 @@ class Notification < ActiveRecord::Base
     query.update_all(read: true)
   end
 
-  def self.interesting_after(min_date)
-    result =
-      where("created_at > ?", min_date)
-        .includes(:topic)
-        .visible
-        .unread
-        .limit(20)
-        .order(
-          "CASE WHEN notification_type = #{Notification.types[:replied]} THEN 1
-                           WHEN notification_type = #{Notification.types[:mentioned]} THEN 2
-                           ELSE 3
-                      END, created_at DESC",
-        )
-        .to_a
-
-    # Remove any duplicates by type and topic
-    if result.present?
-      seen = {}
-      to_remove = Set.new
-
-      result.each do |r|
-        seen[r.notification_type] ||= Set.new
-        if seen[r.notification_type].include?(r.topic_id)
-          to_remove << r.id
-        else
-          seen[r.notification_type] << r.topic_id
-        end
-      end
-      result.reject! { |r| to_remove.include?(r.id) }
-    end
-
-    result
-  end
-
   # Clean up any notifications the user can no longer see. For example, if a topic was previously
   # public then turns private.
   def self.remove_for(user_id, topic_id)
     Notification.where(user_id: user_id, topic_id: topic_id).delete_all
-  end
-
-  def self.filter_inaccessible_topic_notifications(guardian, notifications)
-    topic_ids = notifications.map { |n| n.topic_id }.compact.uniq
-    accessible_topic_ids = guardian.can_see_topic_ids(topic_ids: topic_ids)
-    notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
-  end
-
-  def self.filter_disabled_badge_notifications(notifications)
-    return notifications if notifications.blank?
-
-    if !SiteSetting.enable_badges
-      return notifications.reject { |n| n.notification_type == types[:granted_badge] }
-    end
-
-    badge_ids =
-      notifications.filter_map do |n|
-        n.data_hash[:badge_id] if n.notification_type == types[:granted_badge]
-      end
-
-    return notifications if badge_ids.empty?
-
-    enabled_badge_ids = Badge.where(id: badge_ids, enabled: true).pluck(:id).to_set
-
-    notifications.reject do |n|
-      n.notification_type == types[:granted_badge] &&
-        !enabled_badge_ids.include?(n.data_hash[:badge_id])
-    end
   end
 
   # Be wary of calling this frequently. O(n) JSON parsing can suck.
@@ -284,102 +178,15 @@ class Notification < ActiveRecord::Base
 
   def post
     return if topic_id.blank? || post_number.blank?
-    Post.find_by(topic_id: topic_id, post_number: post_number)
+    Post.find_by(topic_id:, post_number:)
   end
 
-  # Update `index_notifications_user_menu_ordering_deprioritized_likes` index when updating this as this is used by
-  # `Notification.prioritized_list` to deprioritize like typed notifications. Also See
-  # `db/migrate/20240306063428_add_indexes_to_notifications.rb`.
   def self.like_types
     [
       Notification.types[:liked],
       Notification.types[:liked_consolidated],
       Notification.types[:reaction],
     ]
-  end
-
-  def self.prioritized_list(user, count: 30, types: [])
-    return [] if !user&.user_option
-
-    notifications =
-      user
-        .notifications
-        .includes(:topic)
-        .visible
-        .prioritized(types.present? ? [] : like_types)
-        .limit(count)
-
-    if types.present?
-      notifications = notifications.where(notification_type: types)
-    elsif user.user_option.like_notification_frequency ==
-          UserOption.like_notification_frequency_type[:never]
-      like_types.each do |notification_type|
-        notifications = notifications.where.not(notification_type:)
-      end
-    end
-    notifications.to_a
-  end
-
-  def self.recent_report(user, count = nil, types = [])
-    return unless user && user.user_option
-
-    count ||= 10
-    notifications = user.notifications.visible.recent(count).includes(:topic)
-
-    notifications = notifications.where(notification_type: types) if types.present?
-    if user.user_option.like_notification_frequency ==
-         UserOption.like_notification_frequency_type[:never]
-      [
-        Notification.types[:liked],
-        Notification.types[:liked_consolidated],
-      ].each { |notification_type| notifications = notifications.where.not(notification_type:) }
-    end
-
-    notifications = notifications.to_a
-
-    if notifications.present?
-      builder = DB.build(<<~SQL)
-         SELECT n.id FROM notifications n
-         /*where*/
-        ORDER BY n.id ASC
-        /*limit*/
-      SQL
-
-      builder.where(<<~SQL, user_id: user.id)
-        n.high_priority = TRUE AND
-        n.user_id = :user_id AND
-        NOT read
-      SQL
-      builder.where("notification_type IN (:types)", types: types) if types.present?
-      builder.limit(count.to_i)
-
-      ids = builder.query_single
-
-      if ids.length > 0
-        notifications +=
-          user
-            .notifications
-            .order("notifications.created_at DESC")
-            .where(id: ids)
-            .joins(:topic)
-            .limit(count)
-      end
-
-      notifications
-        .uniq(&:id)
-        .sort do |x, y|
-          if x.unread_high_priority? && !y.unread_high_priority?
-            -1
-          elsif y.unread_high_priority? && !x.unread_high_priority?
-            1
-          else
-            y.created_at <=> x.created_at
-          end
-        end
-        .take(count)
-    else
-      []
-    end
   end
 
   def self.populate_acting_user(notifications)

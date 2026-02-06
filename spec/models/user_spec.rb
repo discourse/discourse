@@ -2575,16 +2575,15 @@ RSpec.describe User do
 
   describe "#unread_notifications" do
     fab!(:user)
-    before { User.max_unread_notifications = 3 }
-
-    after { User.max_unread_notifications = nil }
 
     it "limits to MAX_UNREAD_NOTIFICATIONS" do
-      4.times do
-        Notification.create!(user_id: user.id, notification_type: 1, read: false, data: "{}")
-      end
+      stub_const(NotificationQuery, :MAX_UNREAD_NOTIFICATIONS, 3) do
+        4.times do
+          Notification.create!(user_id: user.id, notification_type: 1, read: false, data: "{}")
+        end
 
-      expect(user.unread_notifications).to eq(3)
+        expect(user.unread_notifications).to eq(3)
+      end
     end
 
     it "does not include high priority notifications" do

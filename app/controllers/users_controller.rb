@@ -2001,17 +2001,14 @@ class UsersController < ApplicationController
       raise Discourse::InvalidAccess.new("personal messages are disabled.")
     end
 
+    query = NotificationQuery.new(user: current_user, guardian:)
     unread_notifications =
-      Notification
-        .for_user_menu(current_user.id, limit: USER_MENU_LIST_LIMIT)
-        .unread
-        .where(
-          notification_type: [
-            Notification.types[:private_message],
-            Notification.types[:group_message_summary],
-          ],
-        )
-        .to_a
+      query.list(
+        limit: USER_MENU_LIST_LIMIT,
+        filter: :unread,
+        types: [Notification.types[:private_message], Notification.types[:group_message_summary]],
+        prioritized: true,
+      )
 
     if unread_notifications.size < USER_MENU_LIST_LIMIT
       exclude_topic_ids = unread_notifications.filter_map(&:topic_id).uniq
@@ -2023,19 +2020,21 @@ class UsersController < ApplicationController
           .list_private_messages_direct_and_groups(
             current_user,
             groups_messages_notification_level: :watching,
-          ) do |query|
+          ) do |topic_query|
             if exclude_topic_ids.present?
-              query.where.not(id: exclude_topic_ids)
+              topic_query.where.not(id: exclude_topic_ids)
             else
-              query
+              topic_query
             end
           end
 
       read_notifications =
-        Notification
-          .for_user_menu(current_user.id, limit: limit)
-          .where(read: true, notification_type: Notification.types[:group_message_summary])
-          .to_a
+        query.list(
+          limit:,
+          filter: :read,
+          types: [Notification.types[:group_message_summary]],
+          prioritized: true,
+        )
     end
 
     if unread_notifications.present?
