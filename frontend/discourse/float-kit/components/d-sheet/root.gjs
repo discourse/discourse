@@ -35,6 +35,9 @@ export default class Root extends Component {
   /** @type {import("discourse/float-kit/services/sheet-registry").default} */
   @service sheetRegistry;
 
+  /** @type {import("discourse/float-kit/services/sheet-layer-store").default} */
+  @service sheetLayerStore;
+
   /** @type {import("discourse/float-kit/services/sheet-stack-registry").default} */
   @service sheetStackRegistry;
 
@@ -98,13 +101,13 @@ export default class Root extends Component {
     }
 
     if (this.args.componentId) {
-      this.sheetRegistry.registerRoot(this.args.componentId, this);
+      this.sheetLayerStore.registerRoot(this.args.componentId, this);
     }
 
     registerDestructor(this, () => {
       this.#cleanupPendingOpen();
       if (this.args.componentId) {
-        this.sheetRegistry.unregisterRoot(this.args.componentId);
+        this.sheetLayerStore.unregisterRoot(this.args.componentId);
       }
       this.#cleanupCurrentSheet();
     });
@@ -202,11 +205,17 @@ export default class Root extends Component {
    *
    * @private
    */
-  #cleanupCurrentSheet() {
+  #cleanupCurrentSheet(focusOnDismiss = false) {
     if (this.sheet.stackId) {
       this.sheetStackRegistry.unregisterSheetFromStack(this.sheet);
     }
     this.sheetRegistry.unregister(this.sheet);
+
+    if (focusOnDismiss) {
+      this.sheetLayerStore.flushInertOutside();
+      this.sheet.executeAutoFocusOnDismiss();
+    }
+
     this.sheet.cleanup();
   }
 
@@ -259,6 +268,7 @@ export default class Root extends Component {
       themeColorManager: this.themeColorManager,
       sheetStackRegistry: this.sheetStackRegistry,
       sheetRegistry: this.sheetRegistry,
+      sheetLayerStore: this.sheetLayerStore,
     });
   }
 
@@ -364,7 +374,7 @@ export default class Root extends Component {
     const shouldReopen = this.#reopenAfterClose;
     this.#reopenAfterClose = false;
 
-    this.#cleanupCurrentSheet();
+    this.#cleanupCurrentSheet(true);
     this.createController();
     this.sheet.rootComponent = this;
 

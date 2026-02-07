@@ -54,6 +54,12 @@ export default class Trigger extends SheetActionBase {
     return this.targetRoot ?? this.sheet?.rootComponent;
   }
 
+  beforeExecuteAction(event) {
+    if (this.actionType === "present") {
+      this.sheet?.setPreviouslyFocusedElement(event.currentTarget);
+    }
+  }
+
   /**
    * Execute the configured action on the sheet.
    * Uses Root's present()/dismiss() methods for controlled/uncontrolled handling.

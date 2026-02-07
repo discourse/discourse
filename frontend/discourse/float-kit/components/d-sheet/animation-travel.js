@@ -218,6 +218,10 @@ export default class AnimationTravel {
         c.state.openness.completeAnimation();
         c.state.staging.advance();
       }
+      if (c.state.position.isFrontOpening || c.state.position.isFrontClosing) {
+        c.state.position.advance();
+        c.stackingAdapter?.notifyParentPositionMachineNext();
+      }
       return;
     }
 

@@ -15,8 +15,8 @@ import { processBehavior } from "discourse/float-kit/lib/behavior-handler";
  * @extends Component
  */
 export default class SheetActionBase extends Component {
-  /** @type {import("discourse/float-kit/services/sheet-registry").default} */
-  @service sheetRegistry;
+  /** @type {import("discourse/float-kit/services/sheet-layer-store").default} */
+  @service sheetLayerStore;
 
   /**
    * Handles click events with configurable behavior via the onPress arg.
@@ -39,6 +39,7 @@ export default class SheetActionBase extends Component {
       return;
     }
 
+    this.beforeExecuteAction(event);
     this.executeAction();
   };
 
@@ -53,13 +54,13 @@ export default class SheetActionBase extends Component {
   }
 
   /**
-   * Resolves the Root component via the forComponent arg using the sheet registry.
+   * Resolves the Root component via the forComponent arg using the layer store.
    *
    * @type {Object|undefined}
    */
   get targetRoot() {
     if (this.args.forComponent) {
-      return this.sheetRegistry.getRootByComponentId(this.args.forComponent);
+      return this.sheetLayerStore.getRootByComponentId(this.args.forComponent);
     }
     return undefined;
   }
@@ -126,6 +127,8 @@ export default class SheetActionBase extends Component {
   executeAction() {
     // Implemented by subclasses
   }
+
+  beforeExecuteAction() {}
 
   /**
    * Executes a step action on the sheet. Steps to a specific detent if
