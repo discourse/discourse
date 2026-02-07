@@ -1,5 +1,5 @@
 import { guidFor } from "@ember/object/internals";
-import Service, { service } from "@ember/service";
+import Service from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
 
 /**
@@ -9,8 +9,6 @@ import { TrackedMap } from "@ember-compat/tracked-built-ins";
  * sheets can animate based on stacking progress.
  */
 export default class SheetStackRegistry extends Service {
-  @service sheetLayerStore;
-
   /** @type {TrackedMap<string, Object>} */
   stacks = new TrackedMap();
 
@@ -48,7 +46,6 @@ export default class SheetStackRegistry extends Service {
     this.stacks.set(id, stackObject);
     this.stackSheets.set(id, []);
     this.stackStagingData.set(id, new Map());
-    this.sheetLayerStore.registerStack(stackObject);
     return id;
   }
 
@@ -62,7 +59,6 @@ export default class SheetStackRegistry extends Service {
     this.stackSheets.delete(stackId);
     this.stackingCounts.delete(stackId);
     this.stackStagingData.delete(stackId);
-    this.sheetLayerStore.unregisterStack(stackId);
   }
 
   /**
@@ -84,7 +80,6 @@ export default class SheetStackRegistry extends Service {
     sheets.push(controller);
     controller.stackId = stackId;
     controller.stackingIndex = sheets.length - 1;
-    this.sheetLayerStore.registerSheetWithStack(stackId, controller);
 
     this.updateBelowSheetsInStack(stackId);
   }
@@ -113,8 +108,6 @@ export default class SheetStackRegistry extends Service {
     if (index !== -1) {
       sheets.splice(index, 1);
     }
-
-    this.sheetLayerStore.unregisterSheetFromStack(stackId, controller.id);
 
     controller.stackId = null;
     controller.stackingIndex = -1;
@@ -170,7 +163,6 @@ export default class SheetStackRegistry extends Service {
     });
 
     this.updateSelfAndAboveTravelProgressSumInStack(stackId);
-    this.sheetLayerStore.syncStackSheets(stackId, sheets);
   }
 
   /**
@@ -223,7 +215,6 @@ export default class SheetStackRegistry extends Service {
     }
 
     controller.travelProgress = progress;
-    this.sheetLayerStore.updateSheetTravelProgress(controller, progress);
     this.updateSelfAndAboveTravelProgressSumInStack(controller.stackId);
   }
 
@@ -425,7 +416,6 @@ export default class SheetStackRegistry extends Service {
 
     stagingData.set(sheetId, staging);
     this.stackStagingData.set(stackId, new Map(stagingData));
-    this.sheetLayerStore.updateSheetStagingInStack(stackId, sheetId, staging);
   }
 
   /**
@@ -442,7 +432,6 @@ export default class SheetStackRegistry extends Service {
 
     stagingData.delete(sheetId);
     this.stackStagingData.set(stackId, new Map(stagingData));
-    this.sheetLayerStore.removeSheetStagingFromStack(stackId, sheetId);
   }
 
   /**
