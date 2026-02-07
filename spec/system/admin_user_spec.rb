@@ -264,6 +264,43 @@ describe "Admin User Page", type: :system do
     end
   end
 
+  describe "custom groups" do
+    fab!(:user)
+    fab!(:group)
+
+    it "saves and displays the added group" do
+      admin_user_page.visit(user)
+
+      group_chooser = admin_user_page.custom_groups_chooser
+      group_chooser.expand
+      group_chooser.select_row_by_value(group.id)
+
+      expect(admin_user_page).to have_custom_groups_save_button
+      admin_user_page.save_custom_groups
+      expect(admin_user_page).to have_no_custom_groups_save_button
+      expect(admin_user_page).to have_custom_group(group.name)
+
+      expect(GroupUser.exists?(user:, group:)).to eq(true)
+    end
+
+    it "saves and removes the group from the list" do
+      group.add(user)
+      admin_user_page.visit(user)
+      expect(admin_user_page).to have_custom_group(group.name)
+
+      group_chooser = admin_user_page.custom_groups_chooser
+      group_chooser.expand
+      group_chooser.unselect_by_name(group.name)
+
+      expect(admin_user_page).to have_custom_groups_save_button
+      admin_user_page.save_custom_groups
+      expect(admin_user_page).to have_no_custom_groups_save_button
+      expect(admin_user_page).to have_no_custom_group(group.name)
+
+      expect(GroupUser.exists?(user:, group:)).to eq(false)
+    end
+  end
+
   context "when logged in as a moderator" do
     fab!(:current_user, :moderator)
 
