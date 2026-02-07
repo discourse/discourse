@@ -113,7 +113,7 @@ export default class SheetRegistry extends Service {
   applyScrollLock() {
     if (this.scrollLockCount === 0) {
       this.savedScrollPosition = [window.scrollX, window.scrollY];
-      document.documentElement.style.setProperty("overflow", "hidden");
+      document.body.style.setProperty("overflow", "hidden");
 
       const handleResize = () => {
         clearTimeout(this.resizeTimeout);
@@ -151,7 +151,7 @@ export default class SheetRegistry extends Service {
     if (this.scrollLockCount > 0) {
       this.scrollLockCount--;
       if (this.scrollLockCount === 0) {
-        document.documentElement.style.removeProperty("overflow");
+        document.body.style.removeProperty("overflow");
         if (this.scrollLockCleanup) {
           this.scrollLockCleanup();
           this.scrollLockCleanup = null;
