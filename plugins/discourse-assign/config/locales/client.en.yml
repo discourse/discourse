@@ -77,6 +77,12 @@ en:
         suggestions: suggestions
       assign_post_modal:
         title: "Assign Post"
+      grouped_assigns:
+        count:
+          one: "%{count} assignment"
+          other: "%{count} assignments"
+        topic_level: "Topic"
+        post_number: "Post #%{number}"
       claim:
         title: "claim"
         help: "Assign topic to yourself"
