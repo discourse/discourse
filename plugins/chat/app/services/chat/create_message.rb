@@ -194,13 +194,21 @@ module Chat
       Chat::Draft.where(user: guardian.user, chat_channel: channel).destroy_all
     end
 
-    def post_process_thread(thread:, message_instance:, guardian:)
+    def post_process_thread(thread:, message_instance:, guardian:, channel:)
       return unless thread
 
       thread.update!(last_message: message_instance)
       thread.increment_replies_count_cache
-      thread.add(guardian.user).update!(last_read_message: message_instance)
-      thread.add(thread.original_message_user)
+
+      if channel.direct_message_channel? && !channel.threading_enabled
+        # Add all DM participants to threads so they have memberships
+        # for unread tracking and mark-as-read functionality
+        channel.chatable.users.each { |user| thread.add(user) }
+        thread.membership_for(guardian.user).update!(last_read_message: message_instance)
+      else
+        thread.add(thread.original_message_user)
+        thread.add(guardian.user).update!(last_read_message: message_instance)
+      end
     end
 
     def create_webhook_event(message_instance:)

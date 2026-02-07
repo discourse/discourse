@@ -370,4 +370,52 @@ describe Chat::ChannelUnreadsQuery do
       end
     end
   end
+
+  context "with direct message channel and reply messages" do
+    fab!(:other_user, :user)
+    fab!(:dm_channel) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
+    let(:channel_ids) { [dm_channel.id] }
+
+    it "counts reply messages in DM threads as unread_count" do
+      first_message = Fabricate(:chat_message, chat_channel: dm_channel, user: other_user)
+      dm_channel.membership_for(current_user).mark_read!(first_message.id)
+
+      Chat::CreateMessage.call(
+        guardian: Guardian.new(other_user),
+        params: {
+          chat_channel_id: dm_channel.id,
+          message: "This is a reply",
+          in_reply_to_id: first_message.id,
+        },
+      )
+
+      expect(query.first).to eq(
+        mention_count: 0,
+        unread_count: 1,
+        watched_threads_unread_count: 0,
+        channel_id: dm_channel.id,
+      )
+    end
+
+    it "does not count sender's own reply as unread" do
+      first_message = Fabricate(:chat_message, chat_channel: dm_channel, user: other_user)
+      dm_channel.membership_for(current_user).mark_read!(first_message.id)
+
+      Chat::CreateMessage.call(
+        guardian: Guardian.new(current_user),
+        params: {
+          chat_channel_id: dm_channel.id,
+          message: "This is my reply",
+          in_reply_to_id: first_message.id,
+        },
+      )
+
+      expect(query.first).to eq(
+        mention_count: 0,
+        unread_count: 0,
+        watched_threads_unread_count: 0,
+        channel_id: dm_channel.id,
+      )
+    end
+  end
 end
