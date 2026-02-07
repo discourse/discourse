@@ -4,6 +4,48 @@ import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import Chart from "./chart";
 
+function hexToRgba(hex, alpha) {
+  const r = parseInt(hex.slice(1, 3), 16);
+  const g = parseInt(hex.slice(3, 5), 16);
+  const b = parseInt(hex.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+const gradientPlugin = {
+  id: "gradientPlugin",
+  beforeDatasetsDraw(chart) {
+    const { ctx } = chart;
+    chart.data.datasets.forEach((dataset, datasetIndex) => {
+      if (!dataset._baseColor) {
+        return;
+      }
+      const meta = chart.getDatasetMeta(datasetIndex);
+      if (!meta.data.length) {
+        return;
+      }
+
+      const gradients = meta.data.map((bar) => {
+        const { x, y, width, base } = bar.getProps(
+          ["x", "y", "width", "base"],
+          true
+        );
+        // Diagonal gradient from top-left to bottom-right of each bar
+        const gradient = ctx.createLinearGradient(
+          x - width / 2,
+          y,
+          x + width / 2,
+          base
+        );
+        gradient.addColorStop(0, dataset._baseColor);
+        gradient.addColorStop(1, hexToRgba(dataset._baseColor, 0.7));
+        return gradient;
+      });
+
+      dataset.backgroundColor = gradients;
+    });
+  },
+};
+
 export default class AdminReportStackedChart extends Component {
   get chartConfig() {
     const { model, options } = this.args;
@@ -27,13 +69,17 @@ export default class AdminReportStackedChart extends Component {
         stack: "pageviews-stack",
         data: series.data,
         backgroundColor: series.color,
+        _baseColor: series.color, // Store for gradient plugin
         hidden: chartOptions.hiddenLabels.includes(series.req),
+        borderRadius: 2,
+        maxBarThickness: 30,
       })),
     };
 
     return {
       type: "bar",
       data,
+      plugins: [gradientPlugin],
       options: {
         responsive: true,
         maintainAspectRatio: false,
@@ -43,6 +89,31 @@ export default class AdminReportStackedChart extends Component {
           duration: 0,
         },
         plugins: {
+          legend: {
+            display: true,
+            position: "bottom",
+            labels: {
+              usePointStyle: true,
+              pointStyle: "rectRounded",
+              padding: 15,
+              boxWidth: 10,
+              boxHeight: 10,
+              generateLabels: (chart) => {
+                return chart.data.datasets.map((dataset, i) => {
+                  const isVisible = chart.isDatasetVisible(i);
+                  return {
+                    text: dataset.label,
+                    fillStyle: isVisible ? dataset._baseColor : "transparent",
+                    strokeStyle: dataset._baseColor,
+                    lineWidth: 2,
+                    hidden: false,
+                    datasetIndex: i,
+                    pointStyle: "rectRounded",
+                  };
+                });
+              },
+            },
+          },
           tooltip: {
             mode: "index",
             intersect: false,
@@ -76,7 +147,7 @@ export default class AdminReportStackedChart extends Component {
               callback: (label) => number(label),
               sampleSize: 5,
               maxRotation: 25,
-              minRotation: 25,
+              minRotation: 0,
             },
           },
           x: {
@@ -92,7 +163,7 @@ export default class AdminReportStackedChart extends Component {
             ticks: {
               sampleSize: 5,
               maxRotation: 50,
-              minRotation: 50,
+              minRotation: 0,
             },
           },
         },
