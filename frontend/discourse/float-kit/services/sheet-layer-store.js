@@ -8,12 +8,8 @@ export default class SheetLayerStore extends Service {
   controllers = new Map();
   sheetOrder = [];
   rootsByComponentId = new Map();
-  stacks = new Map();
-  stackSheetIds = new Map();
-  stackStaging = new Map();
   layers = new Map();
   layerFocusState = new Map();
-  inertRootElements = [];
   inertElements = new Set();
   rootElements = new Set();
   mutationObserver = null;
@@ -56,17 +52,6 @@ export default class SheetLayerStore extends Service {
     this.removeLayer(id);
     this.sheetOrder = this.sheetOrder.filter((sheetId) => sheetId !== id);
 
-    for (const [stackId, sheetIds] of this.stackSheetIds.entries()) {
-      this.stackSheetIds.set(
-        stackId,
-        sheetIds.filter((sheetId) => sheetId !== id)
-      );
-    }
-
-    for (const stagingBySheetId of this.stackStaging.values()) {
-      stagingBySheetId.delete(id);
-    }
-
     this.#syncGlobalListeners();
   }
 
@@ -98,104 +83,6 @@ export default class SheetLayerStore extends Service {
     return this.rootsByComponentId.get(componentId);
   }
 
-  registerStack(stack) {
-    const id = stack?.id;
-    if (!id) {
-      return;
-    }
-
-    this.stacks.set(id, {
-      id,
-      stackingIndex: stack.stackingIndex ?? -1,
-      travelProgress: stack.travelProgress ?? 0,
-    });
-    this.stackSheetIds.set(id, this.stackSheetIds.get(id) || []);
-    this.stackStaging.set(id, this.stackStaging.get(id) || new Map());
-  }
-
-  unregisterStack(stackId) {
-    if (!stackId) {
-      return;
-    }
-
-    this.stacks.delete(stackId);
-    this.stackSheetIds.delete(stackId);
-    this.stackStaging.delete(stackId);
-  }
-
-  registerSheetWithStack(stackId, controller) {
-    if (!stackId || !controller?.id) {
-      return;
-    }
-
-    const sheetIds = this.stackSheetIds.get(stackId) || [];
-    if (!sheetIds.includes(controller.id)) {
-      this.stackSheetIds.set(stackId, [...sheetIds, controller.id]);
-    }
-
-    this.updateSheet(controller);
-  }
-
-  unregisterSheetFromStack(stackId, controllerOrId) {
-    const id =
-      typeof controllerOrId === "string" ? controllerOrId : controllerOrId?.id;
-
-    if (!stackId || !id) {
-      return;
-    }
-
-    const sheetIds = this.stackSheetIds.get(stackId) || [];
-    this.stackSheetIds.set(
-      stackId,
-      sheetIds.filter((sheetId) => sheetId !== id)
-    );
-  }
-
-  syncStackSheets(stackId, controllers) {
-    if (!stackId) {
-      return;
-    }
-
-    const sheetIds = controllers.map((controller) => controller.id);
-    this.stackSheetIds.set(stackId, sheetIds);
-
-    for (const controller of controllers) {
-      this.updateSheet(controller);
-    }
-  }
-
-  updateSheetTravelProgress(controller, progress) {
-    if (!controller?.id) {
-      return;
-    }
-
-    controller.travelProgress = progress;
-    this.controllers.set(controller.id, controller);
-  }
-
-  updateSheetStagingInStack(stackId, sheetId, staging) {
-    if (!stackId || !sheetId) {
-      return;
-    }
-
-    const stagingBySheetId = this.stackStaging.get(stackId) || new Map();
-    stagingBySheetId.set(sheetId, staging);
-    this.stackStaging.set(stackId, stagingBySheetId);
-  }
-
-  removeSheetStagingFromStack(stackId, sheetId) {
-    if (!stackId || !sheetId) {
-      return;
-    }
-
-    const stagingBySheetId = this.stackStaging.get(stackId);
-    if (!stagingBySheetId) {
-      return;
-    }
-
-    stagingBySheetId.delete(sheetId);
-  }
-
   syncLayerFromSheet(controller) {
     if (!controller?.id) {
       return;
@@ -222,10 +109,6 @@ export default class SheetLayerStore extends Service {
     }
 
     this.layers.delete(sheetId);
-  }
-
-  syncInertRoots(rootElements) {
-    this.inertRootElements = [...rootElements];
   }
 
   recalculateInertOutside() {
@@ -259,7 +142,6 @@ export default class SheetLayerStore extends Service {
 
     this.inertElements = new Set();
     this.rootElements = new Set();
-    this.syncInertRoots(new Set());
   }
 
   consumeEscapeKey(event) {
@@ -507,14 +389,12 @@ export default class SheetLayerStore extends Service {
 
     const sheetsInOrder = this.#orderedControllers();
     for (const sheet of sheetsInOrder) {
-      this.updateSheet(sheet);
       this.syncLayerFromSheet(sheet);
     }
 
     const hasInertOutside = sheetsInOrder.some((sheet) => sheet.inertOutside);
 
     if (!hasInertOutside || sheetsInOrder.length === 0) {
-      this.syncInertRoots(new Set());
       return;
     }
 
@@ -539,7 +419,6 @@ export default class SheetLayerStore extends Service {
     this.rootElements = rootElements;
     this.#moveFocusIfNecessary(rootElements, sheetsInOrder);
     this.#applyInert(rootElements);
-    this.syncInertRoots(rootElements);
   }
 
   #moveFocusIfNecessary(rootElements, sheetsInOrder) {
