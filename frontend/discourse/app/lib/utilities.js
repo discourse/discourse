@@ -4,6 +4,7 @@ import * as AvatarUtils from "discourse/lib/avatar-utils";
 import deprecated from "discourse/lib/deprecated";
 import escape from "discourse/lib/escape";
 import getURL from "discourse/lib/get-url";
+import { processSelectionFragment } from "discourse/lib/selection/preserve-list-structure";
 import { parseAsync } from "discourse/lib/text";
 import toMarkdown from "discourse/lib/to-markdown";
 import { capabilities } from "discourse/services/capabilities";
@@ -146,7 +147,10 @@ export function selectedText() {
       // Treat it as though the entire onebox was quoted.
       div.append(oneboxTest.dataset.oneboxSrc);
     } else {
-      div.append(range.cloneContents());
+      const fragmentContainer = document.createElement("div");
+      fragmentContainer.append(range.cloneContents());
+      processSelectionFragment(fragmentContainer, range);
+      div.append(...fragmentContainer.childNodes);
     }
   }
 
