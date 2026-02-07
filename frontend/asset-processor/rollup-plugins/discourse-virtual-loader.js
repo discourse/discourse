@@ -1,22 +1,48 @@
 import rollupVirtualImports from "../rollup-virtual-imports";
 
-export default function discourseVirtualLoader({ themeBase, modules, opts }) {
+export default function discourseVirtualLoader({
+  basePath,
+  entrypoints,
+  opts,
+  isTheme,
+}) {
+  const availableVirtualImports = isTheme
+    ? rollupVirtualImports
+    : {
+        "virtual:entrypoint": rollupVirtualImports["virtual:entrypoint"],
+      };
+
   return {
     name: "discourse-virtual-loader",
     resolveId(source) {
-      if (rollupVirtualImports[source]) {
-        return `${themeBase}${source}`;
+      if (
+        availableVirtualImports[source] ||
+        source.startsWith("virtual:entrypoint:")
+      ) {
+        return `${basePath}${source}`;
       }
     },
     load(id) {
-      if (!id.startsWith(themeBase)) {
+      if (!id.startsWith(basePath)) {
         return;
       }
 
-      const fromBase = id.slice(themeBase.length);
+      const fromBase = id.slice(basePath.length);
 
-      if (rollupVirtualImports[fromBase]) {
-        return rollupVirtualImports[fromBase](modules, opts);
+      if (fromBase.startsWith("virtual:entrypoint:")) {
+        const entrypointName = fromBase.replace("virtual:entrypoint:", "");
+        const entrypointConfig = entrypoints[entrypointName];
+
+        return availableVirtualImports["virtual:entrypoint"](
+          entrypointConfig.modules,
+          opts,
+          {
+            basePath,
+            context: this,
+          }
+        );
+      } else if (availableVirtualImports[fromBase]) {
+        return availableVirtualImports[fromBase](opts);
       }
     },
   };

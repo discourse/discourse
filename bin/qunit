@@ -374,6 +374,7 @@ class QunitRunner
       if @dry_run
         puts "[dry-run] skipping unicorn startup"
       else
+        system("bin/rake assets:precompile:build_plugins", exception: true)
         unicorn_pid =
           Process.spawn(unicorn_env, File.join(rails_root, "bin", "unicorn"), pgroup: true)
       end

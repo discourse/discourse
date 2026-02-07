@@ -31,11 +31,20 @@ class ThemeJavascriptCompiler
       output =
         AssetProcessor.new.rollup(
           @input_tree.transform_keys { |k| k.sub(/\.js\.es6$/, ".js") },
-          { themeId: @theme_id, settings: @settings, minify: @minify && !@@terser_disabled },
+          {
+            themeId: @theme_id,
+            settings: @settings,
+            minify: @minify && !@@terser_disabled,
+            entrypoints: {
+              main: {
+                modules: @input_tree.keys,
+              },
+            },
+          },
         )
 
-      @content = output["code"]
-      @source_map = output["map"]
+      @content = output["main.js"]["code"]
+      @source_map = output["main.js"]["map"]
     end
     [@content, @source_map]
   rescue AssetProcessor::TranspileError => e

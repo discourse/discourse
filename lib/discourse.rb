@@ -452,15 +452,45 @@ module Discourse
 
     plugins = apply_asset_filters(plugins, :js, args[:request])
 
-    plugins.flat_map do |plugin|
-      assets = []
-      assets << "plugins/#{plugin.directory_name}" if plugin.js_asset_exists?
-      assets << "plugins/#{plugin.directory_name}_extra" if plugin.extra_js_asset_exists?
-      if args[:include_admin_asset] && plugin.admin_js_asset_exists?
-        assets << "plugins/#{plugin.directory_name}_admin"
+    assets = []
+
+    plugins.each do |plugin|
+      if plugin.js_asset_exists?
+        assets << {
+          name: "plugins/#{plugin.directory_name}/main",
+          plugin: plugin,
+          type_module: true,
+          importmap_name: "discourse/plugins/#{plugin.directory_name}",
+        }
       end
-      assets
+
+      if plugin.extra_js_asset_exists?
+        assets << {
+          name: "plugins/#{plugin.directory_name}_extra",
+          plugin: plugin,
+          type_module: false,
+        }
+      end
+
+      if args[:include_admin_asset] && plugin.admin_js_asset_exists?
+        assets << {
+          name: "plugins/#{plugin.directory_name}/admin",
+          plugin: plugin,
+          type_module: true,
+        }
+      end
+
+      if args[:include_test_assets_for]&.include?(plugin.directory_name) &&
+           plugin.test_js_asset_exists?
+        assets << {
+          name: "plugins/#{plugin.directory_name}/test",
+          plugin: plugin,
+          type_module: true,
+        }
+      end
     end
+
+    assets
   end
 
   def self.assets_digest
