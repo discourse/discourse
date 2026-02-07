@@ -60,6 +60,8 @@
     font-size: var(--font-down-2);
     font-weight: 400;
     color: var(--primary-700);
+    word-break: break-word;
+    line-height: var(--line-height-small);
   }
 
   &__footer {
