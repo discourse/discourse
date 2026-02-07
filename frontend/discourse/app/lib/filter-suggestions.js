@@ -1,4 +1,5 @@
 import { ajax } from "discourse/lib/ajax";
+import { removeAccents } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 const MAX_RESULTS = 20;
@@ -306,16 +307,17 @@ class FilterTypeValueSuggester {
 
   async getCategorySuggestions() {
     const categories = this.context.site?.categories || [];
-    const searchLower = this.searchTerm.toLowerCase();
+    const normalize = (str) => removeAccents(str.toLowerCase());
+    const searchNormalized = normalize(this.searchTerm);
 
     return categories
       .filter((cat) => {
-        const name = cat.name.toLowerCase();
-        const slug = cat.slug.toLowerCase();
+        const name = normalize(cat.name);
+        const slug = normalize(cat.slug);
         return (
-          !searchLower ||
-          name.includes(searchLower) ||
-          slug.includes(searchLower)
+          !searchNormalized ||
+          name.includes(searchNormalized) ||
+          slug.includes(searchNormalized)
         );
       })
       .slice(0, 10)

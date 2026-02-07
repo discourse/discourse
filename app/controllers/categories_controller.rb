@@ -403,7 +403,9 @@ class CategoriesController < ApplicationController
     categories = Category.secured(guardian)
 
     if term.present? && words = term.split
-      words.each { |word| categories = categories.where("name ILIKE ?", "%#{word}%") }
+      words.each do |word|
+        categories = categories.where("unaccent(name) ILIKE unaccent(?)", "%#{word}%")
+      end
     end
 
     categories =
@@ -441,7 +443,7 @@ class CategoriesController < ApplicationController
         .joins("LEFT JOIN topics t on t.id = categories.topic_id")
         .select("categories.*, t.slug topic_slug")
         .order(
-          "starts_with(lower(categories.name), #{ActiveRecord::Base.connection.quote(term)}) DESC",
+          "starts_with(lower(unaccent(categories.name)), lower(unaccent(#{ActiveRecord::Base.connection.quote(term)}))) DESC",
           "categories.parent_category_id IS NULL DESC",
           "categories.id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",
           "categories.parent_category_id IS NOT DISTINCT FROM #{ActiveRecord::Base.connection.quote(prioritized_category_id)} DESC",

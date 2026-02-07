@@ -87,6 +87,15 @@ RSpec.describe CategoryHierarchicalSearch do
     )
   end
 
+  it "matches categories with accented names using unaccented search term" do
+    Fabricate(:category, name: "Éditions spéciales")
+
+    context = described_class.call(guardian: Guardian.new, params: { term: "editions speciales" })
+
+    expect(context).to be_success
+    expect(context.categories.map(&:name)).to include("Éditions spéciales")
+  end
+
   it "returns categories with their ancestors that match the terms param in a hierarchical order" do
     context = described_class.call(guardian: Guardian.new, params: { term: "match" })
 
