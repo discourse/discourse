@@ -1305,6 +1305,24 @@ RSpec.describe SiteSettingExtension do
     end
   end
 
+  describe "disallowed_groups for group list settings" do
+    it "strips disallowed groups when setting a value" do
+      SiteSetting.whispers_allowed_groups = "0|1|2"
+      expect(SiteSetting.whispers_allowed_groups).to eq("1|2")
+
+      SiteSetting.whispers_allowed_groups = "0"
+      expect(SiteSetting.whispers_allowed_groups).to eq("")
+
+      SiteSetting.whispers_allowed_groups = "1|0|2|0"
+      expect(SiteSetting.whispers_allowed_groups).to eq("1|2")
+    end
+
+    it "is included in all_settings output" do
+      setting = SiteSetting.all_settings.find { |s| s[:setting] == :whispers_allowed_groups }
+      expect(setting[:disallowed_groups]).to eq("0")
+    end
+  end
+
   describe "requires_confirmation settings" do
     it "returns 'simple' for settings that require confirmation with 'simple' type" do
       expect(

@@ -138,6 +138,10 @@ module SiteSettingExtension
     @mandatory_values ||= {}
   end
 
+  def disallowed_groups
+    @disallowed_groups ||= {}
+  end
+
   def shadowed_settings
     @shadowed_settings ||= Set.new
   end
@@ -466,6 +470,7 @@ module SiteSettingExtension
             secret: secret_settings.include?(s),
             placeholder: placeholder(s),
             mandatory_values: mandatory_values[s],
+            disallowed_groups: disallowed_groups[s],
             requires_confirmation: requires_confirmation_settings[s],
             upcoming_change: only_upcoming_changes ? upcoming_change_metadata[s] : nil,
             themeable: themeable[s],
@@ -694,6 +699,11 @@ module SiteSettingExtension
     if mandatory_values[name.to_sym]
       sanitized_val =
         (mandatory_values[name.to_sym].split("|") | sanitized_val.to_s.split("|")).join("|")
+    end
+
+    if disallowed_groups[name.to_sym]
+      disallowed = disallowed_groups[name.to_sym].split("|")
+      sanitized_val = sanitized_val.to_s.split("|").reject { |v| disallowed.include?(v) }.join("|")
     end
 
     provider.save(name, sanitized_val, type)
@@ -1109,6 +1119,7 @@ module SiteSettingExtension
       defaults.load_setting(name, default, opts.delete(:locale_default))
 
       mandatory_values[name] = opts[:mandatory_values] if opts[:mandatory_values]
+      disallowed_groups[name] = opts[:disallowed_groups] if opts[:disallowed_groups]
 
       requires_confirmation_settings[name] = (
         if SiteSettings::TypeSupervisor::REQUIRES_CONFIRMATION_TYPES.values.include?(

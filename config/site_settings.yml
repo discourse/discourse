@@ -16,6 +16,9 @@
 #                         The key should be as the same as possible value of default_locale.
 # mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
 #                         in the UI.
+# disallowed_groups     - A list of group IDs (pipe-separated) that should be hidden from the group selector.
+#                         These groups cannot be selected and will be stripped if set via API.
+#                         Only applies to group_list type settings.
 # requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
 #                         Only valid value here is "simple" which will display a confirmation dialog when the setting
 #                         is changed.
@@ -446,6 +449,7 @@ basic:
     default: ""
     allow_any: false
     refresh: true
+    disallowed_groups: "0"
     area: "group_permissions"
   hidden_post_visible_groups:
     type: group_list
