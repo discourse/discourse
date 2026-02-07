@@ -1,0 +1,7 @@
+de:
+  dates:
+    short_date_no_year: "D MMM"
+  post_action_types:
+    inappropriate:
+      title: "Unangemessen"
+  basic_key: "einfacher Wert"
