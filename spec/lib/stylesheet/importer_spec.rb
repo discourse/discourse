@@ -19,17 +19,23 @@ RSpec.describe Stylesheet::Importer do
       base_font = DiscourseFonts.fonts[2]
       heading_font = DiscourseFonts.fonts[3]
 
-      SiteSetting.base_font = base_font[:key]
-      SiteSetting.heading_font = heading_font[:key]
+      theme = Fabricate(:theme)
+      Fabricate(:theme_site_setting_with_service, theme:, name: "base_font", value: base_font[:key])
+      Fabricate(
+        :theme_site_setting_with_service,
+        theme:,
+        name: "heading_font",
+        value: heading_font[:key],
+      )
 
-      expect(compile_css("color_definitions")).to include(
+      expect(compile_css("color_definitions", theme_id: theme.id)).to include(
         ":root{--font-family: #{base_font[:stack]}}",
       ).and include(":root{--heading-font-family: #{heading_font[:stack]}}")
 
       set_cdn_url("http://cdn.localhost")
 
       # uses CDN and includes cache-breaking param
-      expect(compile_css("color_definitions")).to include(
+      expect(compile_css("color_definitions", theme_id: theme.id)).to include(
         "http://cdn.localhost/fonts/#{base_font[:variants][0][:filename]}?v=#{DiscourseFonts::VERSION}",
       ).and include(
               "http://cdn.localhost/fonts/#{heading_font[:variants][0][:filename]}?v=#{DiscourseFonts::VERSION}",
