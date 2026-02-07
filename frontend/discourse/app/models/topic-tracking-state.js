@@ -3,6 +3,7 @@ import EmberObject, { get } from "@ember/object";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray, TrackedMap } from "@ember-compat/tracked-built-ins";
+import { ajax } from "discourse/lib/ajax";
 import { bind } from "discourse/lib/decorators";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { deepEqual, deepMerge } from "discourse/lib/object";
@@ -50,6 +51,10 @@ function hasMutedTags(topicTagIds, mutedTags, siteSettings) {
   );
 }
 
+// Minimum gap in MessageBus message IDs before triggering a resync.
+// Small gaps (1-2) are likely timing issues, not missed messages.
+const MESSAGE_GAP_THRESHOLD = 5;
+
 export default class TopicTrackingState extends EmberObject {
   @service currentUser;
   @service messageBus;
@@ -65,24 +70,29 @@ export default class TopicTrackingState extends EmberObject {
   states = new TrackedMap();
   stateChangeCallbacks = {};
   _trackedTopicLimit = 4000;
+  _lastSeenIds = {};
+  _channelCallbacks = {};
+  _isResyncing = false;
 
   willDestroy() {
     super.willDestroy(...arguments);
 
-    this.messageBus.unsubscribe("/latest", this._processChannelPayload);
-
-    if (this.currentUser) {
-      this.messageBus.unsubscribe("/new", this._processChannelPayload);
-      this.messageBus.unsubscribe(`/unread`, this._processChannelPayload);
-      this.messageBus.unsubscribe(
-        `/unread/${this.currentUser.id}`,
-        this._processChannelPayload
-      );
-    }
+    this._unsubscribeTrackingChannels();
 
     this.messageBus.unsubscribe("/delete", this.onDeleteMessage);
     this.messageBus.unsubscribe("/recover", this.onRecoverMessage);
     this.messageBus.unsubscribe("/destroy", this.onDestroyMessage);
+  }
+
+  /**
+   * Unsubscribe from all tracking channels (used during destroy and resync)
+   */
+  _unsubscribeTrackingChannels() {
+    for (const [channel, callback] of Object.entries(this._channelCallbacks)) {
+      this.messageBus.unsubscribe(channel, callback);
+    }
+    this._channelCallbacks = {};
+    this._lastSeenIds = {};
   }
 
   /**
@@ -99,32 +109,30 @@ export default class TopicTrackingState extends EmberObject {
     meta ??= {};
     const messageBusDefaultNewMessageId = -1;
 
-    this.messageBus.subscribe(
+    // Subscribe to tracking channels with gap detection
+    this._subscribeWithGapDetection(
       "/latest",
-      this._processChannelPayload,
       meta["/latest"] ?? messageBusDefaultNewMessageId
     );
 
     if (this.currentUser) {
-      this.messageBus.subscribe(
+      this._subscribeWithGapDetection(
         "/new",
-        this._processChannelPayload,
         meta["/new"] ?? messageBusDefaultNewMessageId
       );
 
-      this.messageBus.subscribe(
-        `/unread`,
-        this._processChannelPayload,
+      this._subscribeWithGapDetection(
+        "/unread",
         meta["/unread"] ?? messageBusDefaultNewMessageId
       );
 
-      this.messageBus.subscribe(
+      this._subscribeWithGapDetection(
         `/unread/${this.currentUser.id}`,
-        this._processChannelPayload,
         meta[`/unread/${this.currentUser.id}`] ?? messageBusDefaultNewMessageId
       );
     }
 
+    // These channels don't need gap detection - they're simple operations
     this.messageBus.subscribe(
       "/delete",
       this.onDeleteMessage,
@@ -142,6 +150,89 @@ export default class TopicTrackingState extends EmberObject {
       this.onDestroyMessage,
       meta["/destroy"] ?? messageBusDefaultNewMessageId
     );
+  }
+
+  /**
+   * Subscribe to a channel with gap detection. If a message is received
+   * with an unexpected ID (indicating missed messages), triggers a resync.
+   */
+  _subscribeWithGapDetection(channel, lastMessageId) {
+    this._lastSeenIds[channel] = lastMessageId;
+
+    const callback = (data, globalId, messageId) => {
+      const expectedId = this._lastSeenIds[channel] + 1;
+
+      // Check for gap in message sequence.
+      // Skip when expectedId <= 1 because that means we're still establishing
+      // a baseline (lastMessageId was -1 or 0, likely from initial preload).
+      // Only resync if gap exceeds threshold to avoid false positives from
+      // minor timing issues or race conditions.
+      const gap = messageId - expectedId;
+      if (gap > MESSAGE_GAP_THRESHOLD && expectedId > 1) {
+        // eslint-disable-next-line no-console
+        console.log(
+          `TopicTrackingState detected gap on ${channel} ` +
+            `(received ${messageId}, expected ${expectedId}, gap ${gap}), resyncing...`
+        );
+        // Process this message first, then resync in background to catch
+        // any messages we missed. Don't return early - we still want to
+        // handle this message even if we missed earlier ones.
+        this._resync();
+      }
+
+      this._lastSeenIds[channel] = messageId;
+      this._processChannelPayload(data);
+    };
+
+    this._channelCallbacks[channel] = callback;
+    this.messageBus.subscribe(channel, callback, lastMessageId);
+  }
+
+  /**
+   * Resync tracking state from the server. Called when a gap in MessageBus
+   * messages is detected, indicating missed updates.
+   */
+  async _resync() {
+    if (this._isResyncing) {
+      return;
+    }
+
+    this._isResyncing = true;
+
+    try {
+      // Unsubscribe from all tracking channels
+      this._unsubscribeTrackingChannels();
+
+      // Fetch fresh state from server
+      const username = this.currentUser?.username;
+      if (!username) {
+        // eslint-disable-next-line no-console
+        console.warn("TopicTrackingState: Cannot resync without current user");
+        return;
+      }
+
+      const response = await ajax(`/u/${username}/topic-tracking-state.json`);
+
+      // Clear existing states and reload from server
+      this.states.clear();
+      if (response && Array.isArray(response)) {
+        this.loadStates(response);
+      }
+
+      // Resubscribe with fresh message IDs from PreloadStore or defaults
+      const meta = PreloadStore.get("topicTrackingStateMeta") || {};
+      this.establishChannels(meta);
+
+      this._afterStateChange();
+
+      // eslint-disable-next-line no-console
+      console.log("TopicTrackingState: Resync complete");
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error("TopicTrackingState: Resync failed", error);
+    } finally {
+      this._isResyncing = false;
+    }
   }
 
   @bind
@@ -768,7 +859,9 @@ export default class TopicTrackingState extends EmberObject {
     const stateKey = this._stateKey(topic);
     const oldState = this.states.get(stateKey);
 
-    if (!oldState || JSON.stringify(oldState) !== JSON.stringify(data)) {
+    // Use deepEqual for reliable object comparison (JSON.stringify doesn't
+    // guarantee key ordering, which can cause false positives/negatives)
+    if (!oldState || !deepEqual(oldState, data)) {
       this.states.set(stateKey, data);
 
       if (!skipAfterStateChange) {
