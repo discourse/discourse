@@ -34,11 +34,11 @@ class CategoryHierarchicalSearch
       if query_params[:term].present?
         <<~SQL
           (
-            starts_with(LOWER(name), LOWER(:term))
+            starts_with(#{Category.normalize_sql("name")}, #{Category.normalize_sql(":term")})
             OR COALESCE(
               (
-                SELECT BOOL_AND(position(pattern IN LOWER(allowed_categories.name)) <> 0)
-                FROM unnest(regexp_split_to_array(LOWER(:term), '\\s+')) AS pattern
+                SELECT BOOL_AND(position(pattern IN #{Category.normalize_sql("allowed_categories.name")}) <> 0)
+                FROM unnest(regexp_split_to_array(#{Category.normalize_sql(":term")}, '\\s+')) AS pattern
               ),
               true
             )

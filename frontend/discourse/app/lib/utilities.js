@@ -338,12 +338,16 @@ export function clipboardHelpers(e, opts) {
   return { clipboard, types, canUpload, canPasteHtml };
 }
 
+export function removeAccents(string) {
+  return string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+}
+
 // Replace any accented characters with their ASCII equivalent
 // Return the string if it only contains ASCII printable characters,
 // otherwise use the fallback
 export function toAsciiPrintable(string, fallback) {
   if (typeof string.normalize === "function") {
-    string = string.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    string = removeAccents(string);
   }
 
   return /^[\040-\176]*$/.test(string) ? string : fallback;
