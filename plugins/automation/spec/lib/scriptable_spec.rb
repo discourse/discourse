@@ -148,10 +148,10 @@ describe DiscourseAutomation::Scriptable do
       context "when the report exists" do
         it "returns the data" do
           freeze_time DateTime.parse("2022-02-25")
-          Fabricate(:like, user: Fabricate(:user))
-          Fabricate(:like, user: Fabricate(:user))
+          Fabricate(:post)
+          Fabricate(:post)
 
-          expect(automation.scriptable.utils.fetch_report(:likes)).to eq(
+          expect(automation.scriptable.utils.fetch_report(:posts)).to eq(
             "\n|Day|Count|\n|-|-|\n|2022-02-25|2|\n",
           )
         end
@@ -176,9 +176,9 @@ describe DiscourseAutomation::Scriptable do
         context "with no filters specified" do
           it "replaces REPORT key" do
             freeze_time DateTime.parse("2022-02-22")
-            Fabricate(:like, user: Fabricate(:user))
-            Fabricate(:like, user: Fabricate(:user))
-            input = "hello %%REPORT=likes%%"
+            Fabricate(:post)
+            Fabricate(:post)
+            input = "hello %%REPORT=posts%%"
 
             output = automation.scriptable.utils.apply_placeholders(input, {})
             expect(output).to eq("hello \n|Day|Count|\n|-|-|\n|2022-02-22|2|\n")

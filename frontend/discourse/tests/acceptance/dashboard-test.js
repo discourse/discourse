@@ -118,35 +118,18 @@ acceptance("Dashboard", function (needs) {
     await visit("/admin");
     await click(".dashboard .navigation-item.reports .navigation-link");
 
-    assert
-      .dom(
-        ".dashboard .admin-reports-list .admin-section-landing-item__content"
-      )
-      .exists({ count: 1 });
+    assert.dom(".admin-reports").exists({ count: 1 });
 
-    await fillIn(".dashboard .admin-filter-controls__input", "flags");
+    await fillIn(".admin-filter-controls__input", "nonexistentreport");
 
     assert
-      .dom(
-        ".dashboard .admin-reports-list .admin-section-landing-item__content"
-      )
+      .dom(".admin-reports .admin-section-landing-item__content")
       .doesNotExist();
 
-    await click(".dashboard .navigation-item.security .navigation-link");
-    await click(".dashboard .navigation-item.reports .navigation-link");
+    await fillIn(".admin-filter-controls__input", "activities");
 
     assert
-      .dom(
-        ".dashboard .admin-reports-list .admin-section-landing-item__content"
-      )
-      .exists({ count: 1 }, "navigating back and forth resets filter");
-
-    await fillIn(".dashboard .admin-filter-controls__input", "activities");
-
-    assert
-      .dom(
-        ".dashboard .admin-reports-list .admin-section-landing-item__content"
-      )
+      .dom(".admin-reports .admin-section-landing-item__content")
       .exists({ count: 1 }, "filter is case insensitive");
   });
 

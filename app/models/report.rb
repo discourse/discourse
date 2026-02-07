@@ -54,7 +54,7 @@ class Report
   }
 
   include Reports::AssociatedAccountsByProvider
-  include Reports::Bookmarks
+  # include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests
   include Reports::ConsolidatedPageViews
   include Reports::ConsolidatedPageViewsBrowserDetection
@@ -64,21 +64,21 @@ class Report
   include Reports::Emails
   include Reports::Flags
   include Reports::FlagsStatus
-  include Reports::Likes
+  # include Reports::Likes
   include Reports::MobileVisits
-  include Reports::ModeratorWarningPrivateMessages
+  # include Reports::ModeratorWarningPrivateMessages
   include Reports::ModeratorsActivity
   include Reports::NewContributors
-  include Reports::NotifyModeratorsPrivateMessages
-  include Reports::NotifyUserPrivateMessages
-  include Reports::PostEdits
+  # include Reports::NotifyModeratorsPrivateMessages
+  # include Reports::NotifyUserPrivateMessages
+  # include Reports::PostEdits
   include Reports::Posts
-  include Reports::ProfileViews
+  # include Reports::ProfileViews
   include Reports::Signups
   include Reports::StaffLogins
   include Reports::StorageStats
   include Reports::SuspiciousLogins
-  include Reports::SystemPrivateMessages
+  # include Reports::SystemPrivateMessages
   include Reports::TimeToFirstResponse
   include Reports::TopIgnoredUsers
   include Reports::TopReferredTopics
@@ -86,15 +86,15 @@ class Report
   include Reports::TopTrafficSources
   include Reports::TopUploads
   include Reports::TopUsersByLikesReceived
-  include Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
-  include Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
+  # include Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
+  # include Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
   include Reports::Topics
   include Reports::TopicsWithNoResponse
   include Reports::TopicViewStats
   include Reports::TrendingSearch
   include Reports::TrustLevelGrowth
   include Reports::UserFlaggingRatio
-  include Reports::UserToUserPrivateMessages
+  # include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies
   include Reports::UsersByTrustLevel
   include Reports::UsersByType
