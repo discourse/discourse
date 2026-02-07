@@ -462,6 +462,22 @@ module Chat
       )
     end
 
+    def self.publish_pin!(chat_channel, chat_message, pin)
+      publish_to_channel!(
+        chat_channel,
+        {
+          type: :pin,
+          chat_message_id: chat_message.id,
+          pinned_at: pin.created_at.iso8601(3),
+          pinned_by_id: pin.pinned_by_id,
+        },
+      )
+    end
+
+    def self.publish_unpin!(chat_channel, chat_message)
+      publish_to_channel!(chat_channel, { type: :unpin, chat_message_id: chat_message.id })
+    end
+
     def self.publish_notice(user_id:, channel_id:, text_content: nil, type: nil, data: nil)
       # Notices are either plain text sent to the client, or a "type" with data. The
       # client will then translate that type and data into a front-end component.

@@ -31,6 +31,7 @@ module Chat
 
     transaction do
       step :trash_message
+      step :destroy_pin
       step :destroy_notifications
       step :update_last_message_ids
       step :update_tracking_state
@@ -54,6 +55,10 @@ module Chat
 
     def trash_message(message:, guardian:)
       message.trash!(guardian.user)
+    end
+
+    def destroy_pin(message:)
+      message.pinned_message&.destroy!
     end
 
     def destroy_notifications(message:)

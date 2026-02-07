@@ -28,6 +28,7 @@ module Chat
                class_name: "Chat::Message",
                foreign_key: :last_message_id,
                optional: true
+    has_many :pinned_messages, class_name: "Chat::PinnedMessage", foreign_key: :chat_channel_id
 
     def last_message
       super || NullMessage.new
@@ -146,6 +147,10 @@ module Chat
 
     def leave(user)
       self.remove(user)
+    end
+
+    def pinned_messages_count
+      pinned_messages.count
     end
 
     def url

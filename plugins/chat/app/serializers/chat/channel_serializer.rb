@@ -23,7 +23,8 @@ module Chat
                :memberships_count,
                :current_user_membership,
                :meta,
-               :threading_enabled
+               :threading_enabled,
+               :pinned_messages_count
 
     has_one :last_message, serializer: Chat::LastMessageSerializer, embed: :objects
 
@@ -44,6 +45,14 @@ module Chat
 
     def memberships_count
       object.user_count
+    end
+
+    def pinned_messages_count
+      object.pinned_messages.count
+    end
+
+    def include_pinned_messages_count?
+      SiteSetting.chat_pinned_messages
     end
 
     def chatable_url
