@@ -3,6 +3,13 @@ import { popupAjaxError } from "discourse/lib/ajax-error";
 import { iconHTML } from "discourse/lib/icon-library";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import richEditorExtension from "../../lib/rich-editor-extension";
+import { A } from "@ember/array";
+
+function setCheckboxState(checkbox, checked) {
+  checkbox.classList.toggle("checked", checked);
+  checkbox.classList.toggle("fa-square-o", !checked);
+  checkbox.classList.toggle("fa-square-check-o", checked);
+}
 
 function initializePlugin(api) {
   const siteSettings = api.container.lookup("service:site-settings");
@@ -10,6 +17,53 @@ function initializePlugin(api) {
   if (siteSettings.checklist_enabled) {
     api.decorateCookedElement(checklistSyntax);
     api.registerRichEditorExtension(richEditorExtension);
+
+    api.modifyClass(
+      "controller:topic",
+      (Superclass) =>
+        class extends Superclass {
+          onChecklistMessage({ post_id, checkbox_offset, checked }) {
+            const postArticle = document.querySelector(
+              `article[data-post-id="${post_id}"]`
+            );
+
+            if (!postArticle) {
+              return;
+            }
+
+            const checkbox = postArticle.querySelector(
+              `.chcklst-box[data-chk-off="${checkbox_offset}"]`
+            );
+
+            if (checkbox) {
+              setCheckboxState(checkbox, checked);
+              checkbox.classList.remove("hidden");
+              checkbox.nextElementSibling?.remove(); // remove spinner
+            }
+
+            // Remove readonly from all checkboxes in this post
+            postArticle
+              .querySelectorAll(".chcklst-box.readonly")
+              .forEach((box) => box.classList.remove("readonly"));
+          }
+
+          subscribe() {
+            super.subscribe(...arguments);
+            this.messageBus.subscribe(
+              `/checklist/${this.model.id}`,
+              this.onChecklistMessage
+            );
+          }
+
+          unsubscribe() {
+            super.unsubscribe(...arguments);
+            this.messageBus.unsubscribe(
+              `/checklist/${this.model.id}`,
+              this.onChecklistMessage
+            );
+          }
+        }
+    );
   }
 }
 
@@ -46,7 +100,7 @@ function addUlClasses(boxes) {
       parent.classList.add("has-checkbox");
       val.classList.add("list-item-checkbox");
       if (!val.nextSibling) {
-        val.insertAdjacentHTML("afterend", "&#8203;"); // Ensure otherwise empty <li> does not collapse height
+        val.insertAdjacentHTML("afterend", "&#8203;");
       }
     }
   });
@@ -62,100 +116,43 @@ export function checklistSyntax(elem, postDecorator) {
     return;
   }
 
-  boxes.forEach((val, idx) => {
-    val.onclick = async (event) => {
-      const box = event.currentTarget;
-      const classList = box.classList;
+  boxes.forEach((box) => {
+    box.onclick = async (event) => {
+      const target = event.currentTarget;
+      const classList = target.classList;
 
       if (classList.contains("permanent") || classList.contains("readonly")) {
         return;
       }
 
-      const newValue = classList.contains("checked") ? "[ ]" : "[x]";
-      const template = document.createElement("template");
-      template.innerHTML = iconHTML("spinner", {
-        class: "fa-spin list-item-checkbox",
-      });
-      box.insertAdjacentElement("afterend", template.content.firstChild);
-      box.classList.add("hidden");
-      boxes.forEach((e) => e.classList.add("readonly"));
+      const checkboxOffset = parseInt(target.dataset.chkOff, 10);
+      if (isNaN(checkboxOffset)) {
+        return;
+      }
+
+      const wasChecked = classList.contains("checked");
+      setCheckboxState(target, !wasChecked);
+
+      const spinner = document.createElement("span");
+      spinner.innerHTML = iconHTML("spinner", { class: "fa-spin" });
+      target.insertAdjacentElement("afterend", spinner);
+      target.classList.add("hidden");
+      boxes.forEach((b) => b.classList.add("readonly"));
 
       try {
-        const post = await ajax(`/posts/${postModel.id}`);
-        const blocks = [];
-
-        // Computing offsets where checkbox are not evaluated (i.e. inside
-        // code blocks).
-        [
-          // inline code
-          /`[^`\n]*\n?[^`\n]*`/gm,
-          // multi-line code
-          /^```[^]*?^```/gm,
-          // bbcode
-          /\[code\][^]*?\[\/code\]/gm,
-          // italic/bold
-          /_(?=\S).*?\S_/gm,
-          // strikethrough
-          /~~(?=\S).*?\S~~/gm,
-        ].forEach((regex) => {
-          let match;
-          while ((match = regex.exec(post.raw)) != null) {
-            blocks.push([match.index, match.index + match[0].length]);
-          }
+        await ajax("/checklist/toggle", {
+          type: "PUT",
+          data: {
+            post_id: postModel.id,
+            checkbox_offset: checkboxOffset,
+          },
         });
-
-        [
-          // italic/bold
-          /([^\[\n]|^)\*\S.+?\S\*(?=[^\]\n]|$)/gm,
-        ].forEach((regex) => {
-          let match;
-          while ((match = regex.exec(post.raw)) != null) {
-            // Simulate lookbehind - skip the first character
-            blocks.push([match.index + 1, match.index + match[0].length]);
-          }
-        });
-
-        // make the first run go to index = 0
-        let nth = -1;
-        let found = false;
-
-        const newRaw = post.raw.replace(
-          /\[( |x)?\]/gi,
-          (match, ignored, off) => {
-            if (found) {
-              return match;
-            }
-
-            // skip empty image URLs - "![](https://example.com/image.jpg)"
-            if (off > 0 && post.raw[off - 1] === "!") {
-              return match;
-            }
-
-            // skip escaped opening bracket - "\[x]"
-            if (off > 0 && post.raw[off - 1] === "\\") {
-              return match;
-            }
-
-            nth += blocks.every(
-              (b) => b[0] >= off + match.length || off > b[1]
-            );
-
-            if (nth === idx) {
-              found = true; // Do not replace any further matches
-              return newValue;
-            }
-
-            return match;
-          }
-        );
-
-        await postModel.save({ raw: newRaw });
       } catch (e) {
+        setCheckboxState(target, wasChecked);
+        spinner.remove();
+        target.classList.remove("hidden");
+        boxes.forEach((b) => b.classList.remove("readonly"));
         popupAjaxError(e);
-      } finally {
-        boxes.forEach((e) => e.classList.remove("readonly"));
-        box.classList.remove("hidden");
-        box.parentElement.querySelector(".fa-spin").remove();
       }
     };
   });
@@ -165,6 +162,6 @@ export default {
   name: "checklist",
 
   initialize() {
-    withPluginApi((api) => initializePlugin(api));
+    withPluginApi(initializePlugin);
   },
 };

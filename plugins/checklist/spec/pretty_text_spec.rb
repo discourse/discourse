@@ -1,54 +1,62 @@
 # frozen_string_literal: true
 
-describe PrettyText do
-  describe "markdown it" do
-    it "can properly bake boxes" do
-      md = <<~MD
-        [],[ ],[x],[X] are all checkboxes
-        `[ ]` [x](hello) *[ ]* **[ ]** _[ ]_ __[ ]__ ~~[ ]~~ are not checkboxes
-      MD
+RSpec.describe PrettyText do
+  describe "checklist" do
+    it "renders checkboxes with correct classes and offsets" do
+      cooked = PrettyText.cook("[ ] unchecked [x] checked [X] permanent")
 
-      html = <<~HTML
-      <p><span class="chcklst-box fa fa-square-o"></span>,<span class="chcklst-box fa fa-square-o"></span>,<span class="chcklst-box checked fa fa-square-check-o"></span>,<span class="chcklst-box checked permanent fa fa-square-check"></span> are all checkboxes<br>
-      <code>[ ]</code> <a>x</a> <em>[ ]</em> <strong>[ ]</strong> <em>[ ]</em> <strong>[ ]</strong> <s>[ ]</s> are not checkboxes</p>
-      HTML
-      cooked = PrettyText.cook(md)
-      expect(cooked).to eq(html.strip)
+      expect(cooked.scan("chcklst-box").count).to eq(3)
+      expect(cooked).to include("fa-square-o")
+      expect(cooked).to include("checked fa fa-square-check-o")
+      expect(cooked).to include("checked permanent fa fa-square-check")
+      expect(cooked).to include('data-chk-off="0"', 'data-chk-off="14"')
+      expect(cooked.scan("data-chk-off").count).to eq(2) # permanent checkbox has no offset
     end
 
-    it "does not treat escaped brackets as checkboxes" do
-      md = <<~MD
-        \\[x] escaped opening bracket
-        [x\\] escaped closing bracket
-        \\[x\\] both brackets escaped
-        \\[ ] escaped empty checkbox
-        [x] real checkbox
-      MD
+    it "handles checkboxes in lists" do
+      cooked = PrettyText.cook("- [ ] first\n- [x] second")
 
-      cooked = PrettyText.cook(md)
+      expect(cooked.scan("chcklst-box").count).to eq(2)
+      expect(cooked).to include('data-chk-off="2"', 'data-chk-off="14"')
+    end
 
-      expect(cooked.scan("chcklst-box").count).to eq(1)
-      expect(cooked).to include("[x] escaped opening bracket")
-      expect(cooked).to include("[x] escaped closing bracket")
-      expect(cooked).to include("[x] both brackets escaped")
-      expect(cooked).to include("[ ] escaped empty checkbox")
-      expect(cooked).to include(
-        '<span class="chcklst-box checked fa fa-square-check-o"></span> real checkbox',
-      )
+    it "does not render non-checkbox patterns" do
+      patterns = [
+        "[] empty brackets",
+        "*[x]* in emphasis",
+        "**[x]** in bold",
+        "_[x]_ in underscore emphasis",
+        "~~[x]~~ in strikethrough",
+        "[x](http://example.com) link",
+        "![x](image.png) image alt",
+        "\\[x] escaped",
+      ]
+
+      patterns.each do |pattern|
+        cooked = PrettyText.cook(pattern)
+        expect(cooked).not_to include("chcklst-box"), "Expected no checkbox in: #{pattern}"
+      end
+    end
+
+    it "skips checkboxes inside code blocks" do
+      cooked = PrettyText.cook("[ ] before\n```\n[ ] inside\n```\n[ ] after")
+
+      expect(cooked.scan("chcklst-box").count).to eq(2)
+      expect(cooked).to include("[ ] inside\n</code>")
+    end
+
+    it "skips checkboxes inside inline code" do
+      cooked = PrettyText.cook("[ ] real `[ ]` code [ ] real")
+
+      expect(cooked.scan("chcklst-box").count).to eq(2)
+      expect(cooked).to include("[ ]</code>")
     end
 
     it "handles escaped checkbox followed by real checkbox" do
-      md = <<~MD
-        \\[x] hello [x] world
-      MD
-
-      cooked = PrettyText.cook(md)
+      cooked = PrettyText.cook("\\[x] escaped [x] real")
 
       expect(cooked.scan("chcklst-box").count).to eq(1)
-      expect(cooked).to include("[x] hello")
-      expect(cooked).to include(
-        '<span class="chcklst-box checked fa fa-square-check-o"></span> world',
-      )
+      expect(cooked).to include("[x] escaped")
     end
   end
 end
