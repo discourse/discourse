@@ -228,13 +228,9 @@ export default class EventNodeView extends Component {
     if (!this.hasLocation) {
       return false;
     }
-    const location = this.eventData.location.trim();
-    return (
-      location.includes("://") ||
-      location.includes("mailto:") ||
-      location.startsWith("www.") ||
-      /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(location)
-    );
+    return this.args.pluginParams.utils
+      .getLinkify()
+      .test(this.eventData.location);
   }
 
   get locationIcon() {
