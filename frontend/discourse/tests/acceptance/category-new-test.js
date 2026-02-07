@@ -6,26 +6,29 @@ import { cloneJSON } from "discourse/lib/object";
 import DiscourseURL from "discourse/lib/url";
 import { fixturesByUrl } from "discourse/tests/helpers/create-pretender";
 import formKit from "discourse/tests/helpers/form-kit-helper";
-import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+import {
+  acceptance,
+  updateCurrentUser,
+} from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 import { i18n } from "discourse-i18n";
 
 acceptance("New category access for moderators", function (needs) {
   needs.user({ moderator: true, admin: false, trust_level: 1 });
 
-  test("Authorizes access based on site setting", async function (assert) {
-    this.siteSettings.moderators_manage_categories = false;
+  test("Prevents access when moderator cannot create categories", async function (assert) {
     await visit("/new-category");
-
     assert.strictEqual(currentURL(), "/404");
+  });
 
-    this.siteSettings.moderators_manage_categories = true;
+  test("Authorizes access when moderator can create categories", async function (assert) {
+    updateCurrentUser({ can_create_category: true });
     await visit("/new-category");
 
     assert.strictEqual(
       currentURL(),
       "/new-category",
-      "it allows access to new category when site setting is enabled"
+      "it allows access to new category"
     );
   });
 });
@@ -38,7 +41,7 @@ acceptance("New category access for non authorized users", function () {
 });
 
 acceptance("Category New", function (needs) {
-  needs.user();
+  needs.user({ can_create_category: true });
 
   test("Creating a new category", async function (assert) {
     await visit("/new-category");
@@ -119,7 +122,7 @@ acceptance("Category New", function (needs) {
 });
 
 acceptance("Category text color", function (needs) {
-  needs.user();
+  needs.user({ can_create_category: true });
   needs.pretender((server, helper) => {
     const category = cloneJSON(fixturesByUrl["/c/11/show.json"]).category;
 
@@ -155,7 +158,7 @@ acceptance("Category text color", function (needs) {
 });
 
 acceptance("New category preview", function (needs) {
-  needs.user({ admin: true });
+  needs.user({ admin: true, can_create_category: true });
 
   test("Category badge color appears and updates", async function (assert) {
     await visit("/new-category");
