@@ -1680,6 +1680,61 @@ RSpec.describe DiscourseTagging do
     end
   end
 
+  describe "tag_topic" do
+    fab!(:topic)
+    fab!(:tag1) { Fabricate(:tag, name: "tag1") }
+    fab!(:tag2) { Fabricate(:tag, name: "tag2") }
+
+    it "allows tagging topics by name" do
+      valid = DiscourseTagging.tag_topic(topic, Guardian.new(admin), %w[tag1 tag2])
+      expect(valid).to eq(true)
+      expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+    end
+
+    it "allows tagging topics by ids" do
+      valid =
+        DiscourseTagging.tag_topic(
+          topic,
+          Guardian.new(admin),
+          [{ id: tag1.id, name: "tHE wROnG nAme" }, { id: tag2.id, name: "tag2" }],
+        )
+      expect(valid).to eq(true)
+      expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+    end
+
+    it "allows tagging topics using new tags" do
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      valid =
+        DiscourseTagging.tag_topic(
+          topic,
+          Guardian.new(admin),
+          [{ name: "new-tag-a" }, { name: "new-tag-b" }],
+        )
+      expect(valid).to eq(true)
+      expect(topic.reload.tags.pluck(:name)).to contain_exactly("new-tag-a", "new-tag-b")
+    end
+
+    it "can tag topics using old and new tags" do
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      valid =
+        DiscourseTagging.tag_topic(
+          topic,
+          Guardian.new(admin),
+          [{ id: tag1.id, name: "tag1" }, { name: "brand-new" }],
+        )
+      expect(valid).to eq(true)
+      expect(topic.reload.tags.pluck(:name)).to contain_exactly("tag1", "brand-new")
+    end
+
+    it "clears tags when given blank input" do
+      topic.tags = [tag1]
+      topic.save!
+      valid = DiscourseTagging.tag_topic(topic, Guardian.new(admin), [])
+      expect(valid).to eq(true)
+      expect(topic.reload.tags).to be_empty
+    end
+  end
+
   describe "tag_topic_by_ids" do
     fab!(:topic)
     fab!(:tag1) { Fabricate(:tag, name: "tag1") }

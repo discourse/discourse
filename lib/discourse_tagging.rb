@@ -16,6 +16,32 @@ module DiscourseTagging
     @term_types ||= Enum.new(contains: 0, starts_with: 1)
   end
 
+  # Sets tags on for topic and allows new tags to be created if they do not exist.
+  #
+  # Accepts either an array of tag names (backward compatibility) or an array of hashes with :id and/or :name keys.
+  #
+  # @param topic [Topic] the topic to be tagged
+  # @param guardian [Guardian] the guardian of the user performing the action
+  # @param tags_param [Array<String>, Array<Hash>] an array of tag names or an array of
+  #  hashes with :id and/or :name keys (absence of id indicates new tag).
+  def self.tag_topic(topic, guardian, tags_param)
+    return tag_topic_by_names(topic, guardian, []) if tags_param.blank?
+
+    return tag_topic_by_names(topic, guardian, tags_param) if tags_param.first.is_a?(String)
+
+    tag_ids = tags_param.filter_map { |t| t[:id]&.to_i }
+    new_names = tags_param.select { |t| t[:id].blank? }.filter_map { |t| t[:name] }
+
+    if new_names.blank?
+      tag_topic_by_ids(topic, guardian, tag_ids)
+    elsif tag_ids.blank?
+      tag_topic_by_names(topic, guardian, new_names)
+    else
+      existing_names = Tag.where(id: tag_ids).pluck(:name)
+      tag_topic_by_names(topic, guardian, existing_names + new_names)
+    end
+  end
+
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
     if guardian.can_tag?(topic)
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []

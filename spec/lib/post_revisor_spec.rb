@@ -227,10 +227,13 @@ describe PostRevisor do
       expect { post_revisor.revise!(admin, tags: ["new-tag"]) }.not_to change { Post.count }
     end
 
-    it "accepts tags as integer IDs" do
+    it "edits a topic's tags" do
       tag = Fabricate(:tag)
-      post_revisor.revise!(admin, tags: [tag.id])
+      post_revisor.revise!(admin, tags: [{ id: tag.id, name: "outdated" }])
       expect(post.topic.reload.tags).to contain_exactly(tag)
+
+      post_revisor.revise!(admin, tags: ["a-whole-new-tag"])
+      expect(post.topic.reload.tags).to match_array([have_attributes(name: "a-whole-new-tag")])
     end
 
     describe "when `create_post_for_category_and_tag_changes` site setting is enabled" do
@@ -1070,16 +1073,16 @@ describe PostRevisor do
 
       post.topic.update!(tags: [tag1])
 
-      post_revisor.revise!(admin, tags: [tag2.id])
+      post_revisor.revise!(admin, tags: [{ id: tag2.id, name: tag2.name }])
 
       modifications = post.post_revisions.last.modifications
       expect(modifications["tags"]).to eq([["existing-tag"], ["another-tag"]])
     end
 
-    it "tracks tag changes from empty to tagged using IDs (integers)" do
+    it "tracks tag changes from empty to tagged using objects" do
       tag = Fabricate(:tag, name: "new-via-id")
 
-      post_revisor.revise!(admin, tags: [tag.id])
+      post_revisor.revise!(admin, tags: [{ id: tag.id, name: tag.name }])
 
       modifications = post.post_revisions.last.modifications
       expect(modifications["tags"]).to eq([[], ["new-via-id"]])
