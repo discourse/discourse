@@ -469,6 +469,7 @@ module SiteSettingExtension
             requires_confirmation: requires_confirmation_settings[s],
             upcoming_change: only_upcoming_changes ? upcoming_change_metadata[s] : nil,
             themeable: themeable[s],
+            depends_on: type_supervisor.dependencies[s],
           )
           opts.merge!(type_hash)
         end

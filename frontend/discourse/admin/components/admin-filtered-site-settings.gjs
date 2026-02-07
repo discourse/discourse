@@ -48,6 +48,7 @@ export default class AdminFilteredSiteSettings extends Component {
       {
         includeAllCategory: false,
         onlyOverridden: filterData.onlyOverridden,
+        dependsOn: filterData.dependsOn,
       }
     )[0]?.siteSettings;
     this.loading = false;
