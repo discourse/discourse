@@ -79,12 +79,13 @@ class CategoryHashtagDataSource
         .includes(:parent_category)
 
     if condition == HashtagAutocompleteService.search_conditions[:starts_with]
-      base_search = base_search.where("starts_with(LOWER(slug), LOWER(:term))", term: term)
+      base_search =
+        base_search.where("starts_with(lower(unaccent(slug)), lower(unaccent(:term)))", term:)
     elsif condition == HashtagAutocompleteService.search_conditions[:contains]
       base_search =
         base_search.where(
-          "position(LOWER(:term) IN LOWER(name)) <> 0 OR position(LOWER(:term) IN LOWER(slug)) <> 0",
-          term: term,
+          "position(lower(unaccent(:term)) IN lower(unaccent(name))) <> 0 OR position(lower(unaccent(:term)) IN lower(unaccent(slug))) <> 0",
+          term:,
         )
     else
       raise Discourse::InvalidParameters.new("Unknown search condition: #{condition}")
