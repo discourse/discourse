@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
@@ -13,6 +14,7 @@ export default class ChatHeaderIcon extends Component {
   @service currentUser;
   @service site;
   @service chatStateManager;
+  @service router;
 
   get showUnreadIndicator() {
     if (this.chatStateManager.isFullPageActive && this.site.desktopView) {
@@ -76,10 +78,37 @@ export default class ChatHeaderIcon extends Component {
     return getURL(this.chatStateManager.lastKnownChatURL || "/chat");
   }
 
+  @action
+  openChat() {
+    // If exiting full page chat, just navigate to app URL
+    if (
+      this.chatStateManager.isFullPageActive &&
+      !this.chatSeparateSidebarMode.never
+    ) {
+      this.router.transitionTo(this.chatStateManager.lastKnownAppURL || "/");
+      return;
+    }
+
+    // If drawer is already active, navigate to chat (will toggle/refresh)
+    if (this.chatStateManager.isDrawerActive) {
+      this.router.transitionTo("/chat");
+      return;
+    }
+
+    // Opening chat: explicitly set drawer preference before navigating
+    // This ensures the route's beforeModel respects drawer mode even on
+    // full page loads (e.g., after browser refresh)
+    if (this.chatStateManager.isDrawerPreferred) {
+      this.chatStateManager.prefersDrawer();
+    }
+    this.router.transitionTo(this.chatStateManager.lastKnownChatURL || "/chat");
+  }
+
   <template>
     {{#unless (and this.site.mobileView this.isActive)}}
       <li class="header-dropdown-toggle chat-header-icon">
         <DButton
+          @action={{this.openChat}}
           @href={{this.href}}
           tabindex="0"
           class={{concatClass "icon" "btn-flat" (if this.isActive "active")}}
