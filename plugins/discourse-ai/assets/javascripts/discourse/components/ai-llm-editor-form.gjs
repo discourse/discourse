@@ -19,6 +19,7 @@ import { eq, gt } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import AiLlmAttachmentTypes from "discourse/plugins/discourse-ai/discourse/components/ai-llm-attachment-types";
 import DurationSelector from "./ai-quota-duration-selector";
+import AiSecretSelector from "./ai-secret-selector";
 import AiLlmQuotaModal from "./modal/ai-llm-quota-modal";
 
 export default class AiLlmEditorForm extends Component {
@@ -72,7 +73,7 @@ export default class AiLlmEditorForm extends Component {
     return {
       max_prompt_tokens: model.max_prompt_tokens,
       max_output_tokens: model.max_output_tokens,
-      api_key: model.api_key,
+      ai_secret_id: model.ai_secret_id,
       tokenizer: model.tokenizer,
       url: model.url,
       display_name: model.display_name,
@@ -90,6 +91,10 @@ export default class AiLlmEditorForm extends Component {
       llm_quotas: model.llm_quotas,
       allowed_attachment_types: model.allowed_attachment_types || [],
     };
+  }
+
+  get availableSecrets() {
+    return this.args.llms.resultSetMeta?.ai_secrets || [];
   }
 
   get selectedProviders() {
@@ -364,12 +369,18 @@ export default class AiLlmEditorForm extends Component {
         {{/if}}
 
         <form.Field
-          @name="api_key"
+          @name="ai_secret_id"
           @title={{i18n "discourse_ai.llms.api_key"}}
           @format="large"
           as |field|
         >
-          <field.Password autocomplete="off" data-1p-ignore />
+          <field.Custom>
+            <AiSecretSelector
+              @value={{data.ai_secret_id}}
+              @secrets={{this.availableSecrets}}
+              @onChange={{field.set}}
+            />
+          </field.Custom>
         </form.Field>
 
         <form.Object @name="provider_params" as |object providerParamsData|>
@@ -396,6 +407,14 @@ export default class AiLlmEditorForm extends Component {
                   </field.Select>
                 {{else if (eq params.type "checkbox")}}
                   <field.Checkbox />
+                {{else if (eq params.type "secret")}}
+                  <field.Custom>
+                    <AiSecretSelector
+                      @value={{field.value}}
+                      @secrets={{this.availableSecrets}}
+                      @onChange={{field.set}}
+                    />
+                  </field.Custom>
                 {{else}}
                   <field.Input @type={{params.type}} />
                 {{/if}}

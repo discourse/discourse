@@ -14,6 +14,11 @@ export default {
       this.route("edit", { path: "/:id/edit" });
     });
 
+    this.route("discourse-ai-secrets", { path: "ai-secrets" }, function () {
+      this.route("new");
+      this.route("edit", { path: "/:id/edit" });
+    });
+
     this.route("discourse-ai-tools", { path: "ai-tools" }, function () {
       this.route("new");
       this.route("edit", { path: "/:id/edit" });

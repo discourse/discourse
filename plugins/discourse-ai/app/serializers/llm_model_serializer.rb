@@ -14,6 +14,7 @@ class LlmModelSerializer < ApplicationSerializer
              :max_output_tokens,
              :tokenizer,
              :api_key,
+             :ai_secret_id,
              :url,
              :provider_params,
              :vision_enabled,
