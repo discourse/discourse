@@ -352,6 +352,12 @@ export default class Controller {
   sheetRegistry = null;
 
   /**
+   * Reference to the sheet layer store.
+   * @type {Object|null}
+   */
+  sheetLayerStore = null;
+
+  /**
    * Reference to the theme color manager.
    * @type {Object|null}
    */
@@ -833,6 +839,7 @@ export default class Controller {
       "onSafeToUnmountChange",
       "sheetStackRegistry",
       "sheetRegistry",
+      "sheetLayerStore",
       "themeColorManager",
     ];
 
@@ -1361,6 +1368,7 @@ export default class Controller {
    * @private
    */
   handleClosing() {
+    this.focusManagement.captureFocusWasInsideOnClose();
     this.state.position.readyToGoOut();
     this.updateTravelStatus("travellingOut");
     this.stackingAdapter.notifyParentOfClosing();
@@ -1412,6 +1420,7 @@ export default class Controller {
       return;
     }
 
+    this.focusManagement.captureFocusWasInsideOnClose();
     this.state.beginImmediateClose(true);
     this.updateTravelStatus("travellingOut");
     this.state.skip.disableClosing();
@@ -1462,9 +1471,6 @@ export default class Controller {
     if (this.state.elements.isReady) {
       this.state.elements.reset();
     }
-
-    this.executeAutoFocusOnDismiss();
-    this.cleanup();
 
     // Reset travel state
     this.activeDetent = 0;
@@ -1617,7 +1623,7 @@ export default class Controller {
     this.resetViewStyles();
     this.calculateDimensionsIfReady();
     this.setupResizeObserver();
-    this.sheetRegistry?.recalculateInertOutside();
+    this.sheetLayerStore?.recalculateInertOutside();
     this.#notifyElementsRegisteredIfReady();
   }
 
@@ -1690,6 +1696,10 @@ export default class Controller {
    */
   executeAutoFocusOnDismiss() {
     this.focusManagement.executeAutoFocusOnDismiss();
+  }
+
+  setPreviouslyFocusedElement(element) {
+    this.focusManagement.setPreviouslyFocusedElement(element);
   }
 
   /**
@@ -2142,6 +2152,7 @@ export default class Controller {
    */
   @action
   open() {
+    this.focusManagement.capturePreviouslyFocusedElement();
     this.state.broadcastOpen();
   }
 

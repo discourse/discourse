@@ -131,13 +131,6 @@ export default class FocusManagement {
   controller;
 
   /**
-   * The element that was focused before the sheet opened.
-   *
-   * @type {HTMLElement|null}
-   */
-  #previouslyFocusedElement = null;
-
-  /**
    * Creates a new FocusManagement instance.
    *
    * @param {Object} controller - The sheet controller instance
@@ -155,13 +148,31 @@ export default class FocusManagement {
     return this.controller.view;
   }
 
+  get #layerStore() {
+    return this.controller.sheetRegistry?.sheetLayerStore;
+  }
+
+  setPreviouslyFocusedElement(element) {
+    this.#layerStore?.setLayerFocusedLastBeforeShowing(
+      this.controller.id,
+      element
+    );
+  }
+
+  captureFocusWasInsideOnClose() {
+    this.#layerStore?.captureLayerFocusWasInsideOnClose(
+      this.controller.id,
+      this.#view
+    );
+  }
+
   /**
    * Capture the currently focused element before the sheet opens.
    */
   capturePreviouslyFocusedElement() {
-    if (typeof document !== "undefined") {
-      this.#previouslyFocusedElement = document.activeElement;
-    }
+    this.#layerStore?.captureLayerFocusedLastBeforeShowingFromActive(
+      this.controller.id
+    );
   }
 
   /**
@@ -210,42 +221,17 @@ export default class FocusManagement {
    * Respects the onDismissAutoFocus behavior handler.
    */
   executeAutoFocusOnDismiss() {
-    const activeElement = document.activeElement;
-
-    if (
-      this.#view &&
-      !this.#view.contains(activeElement) &&
-      document.contains(activeElement)
-    ) {
-      this.#previouslyFocusedElement = null;
-      return;
-    }
-
-    const behavior = processBehavior({
-      nativeEvent: null,
-      defaultBehavior: { focus: true },
-      handler: this.controller.onDismissAutoFocus,
+    this.#layerStore?.executeLayerDismissAutoFocus({
+      sheetId: this.controller.id,
+      viewElement: this.#view,
+      onDismissAutoFocus: this.controller.onDismissAutoFocus,
     });
-
-    if (behavior.focus === false) {
-      this.#previouslyFocusedElement = null;
-      return;
-    }
-
-    const target =
-      this.#previouslyFocusedElement &&
-      document.contains(this.#previouslyFocusedElement)
-        ? this.#previouslyFocusedElement
-        : document.body;
-
-    target.focus({ preventScroll: true });
-    this.#previouslyFocusedElement = null;
   }
 
   /**
    * Clean up all resources and reset state.
    */
   cleanup() {
-    this.#previouslyFocusedElement = null;
+    this.#layerStore?.clearLayerFocusState(this.controller.id);
   }
 }

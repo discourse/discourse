@@ -29,18 +29,19 @@
  * });
  */
 export function processBehavior({ nativeEvent, defaultBehavior, handler }) {
-  let result = { ...defaultBehavior };
+  let result = defaultBehavior;
 
   if (handler) {
     if (typeof handler === "function") {
       const customEvent = {
-        ...result,
+        ...defaultBehavior,
         nativeEvent,
         changeDefault(changes) {
-          result = { ...result, ...changes };
+          result = { ...defaultBehavior, ...changes };
           Object.assign(this, changes);
         },
       };
+      customEvent.changeDefault = customEvent.changeDefault.bind(customEvent);
       handler(customEvent);
     } else {
       result = { ...defaultBehavior, ...handler };
@@ -49,4 +50,3 @@ export function processBehavior({ nativeEvent, defaultBehavior, handler }) {
 
   return result;
 }
-
