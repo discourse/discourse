@@ -50,7 +50,10 @@ export default class TopicNavigation extends Component {
       return;
     }
 
-    if (this.info.topicProgressExpanded) {
+    // Allow plugins to hide the timeline by setting hideTimeline on postStream
+    if (this.topic?.postStream?.hideTimeline) {
+      this.info.set("renderTimeline", false);
+    } else if (this.info.topicProgressExpanded) {
       this.info.set("renderTimeline", true);
     } else if (this.site.mobileView) {
       this.info.set("renderTimeline", false);
@@ -72,7 +75,9 @@ export default class TopicNavigation extends Component {
 
     this.info.set(
       "withTopicProgress",
-      !this.info.renderTimeline && this.topic.posts_count > 1
+      !this.info.renderTimeline &&
+        this.topic.posts_count > 1 &&
+        !this.topic?.postStream?.hideTimeline
     );
   }
 
@@ -231,7 +236,8 @@ export default class TopicNavigation extends Component {
     this.appEvents
       .on("topic:current-post-scrolled", this, this._topicScrolled)
       .on("topic:jump-to-post", this, this._collapseFullscreen)
-      .on("topic:keyboard-trigger", this, this.keyboardTrigger);
+      .on("topic:keyboard-trigger", this, this.keyboardTrigger)
+      .on("topic:view-mode-changed", this, this._checkSize);
 
     if (this.site.desktopView) {
       this._desktopListenersActive = true;
@@ -262,7 +268,8 @@ export default class TopicNavigation extends Component {
     this.appEvents
       .off("topic:current-post-scrolled", this, this._topicScrolled)
       .off("topic:jump-to-post", this, this._collapseFullscreen)
-      .off("topic:keyboard-trigger", this, this.keyboardTrigger);
+      .off("topic:keyboard-trigger", this, this.keyboardTrigger)
+      .off("topic:view-mode-changed", this, this._checkSize);
 
     $(window).off("click.hide-fullscreen");
 
