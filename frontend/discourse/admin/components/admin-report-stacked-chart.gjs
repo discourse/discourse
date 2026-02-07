@@ -4,6 +4,12 @@ import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import Chart from "./chart";
 
+function getCSSColor(varName) {
+  return getComputedStyle(document.documentElement)
+    .getPropertyValue(varName)
+    .trim();
+}
+
 function hexToRgba(hex, alpha) {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
@@ -99,10 +105,12 @@ export default class AdminReportStackedChart extends Component {
               boxWidth: 10,
               boxHeight: 10,
               generateLabels: (chart) => {
+                const textColor = getCSSColor("--primary-high");
                 return chart.data.datasets.map((dataset, i) => {
                   const isVisible = chart.isDatasetVisible(i);
                   return {
                     text: dataset.label,
+                    fontColor: textColor,
                     fillStyle: isVisible ? dataset._baseColor : "transparent",
                     strokeStyle: dataset._baseColor,
                     lineWidth: 2,
@@ -143,6 +151,10 @@ export default class AdminReportStackedChart extends Component {
           y: {
             stacked: true,
             display: true,
+
+            grid: {
+              color: getCSSColor("--primary-very-low"),
+            },
             ticks: {
               callback: (label) => number(label),
               sampleSize: 5,
@@ -153,6 +165,7 @@ export default class AdminReportStackedChart extends Component {
           x: {
             stacked: true,
             display: true,
+
             grid: { display: false },
             type: "time",
             time: {
