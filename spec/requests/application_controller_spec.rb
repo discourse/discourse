@@ -662,6 +662,40 @@ RSpec.describe ApplicationController do
     end
   end
 
+  describe "allow_embed_mode" do
+    fab!(:topic)
+
+    it "keeps X-Frame-Options when embed_mode param is missing" do
+      get("/t/#{topic.slug}/#{topic.id}")
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+
+    it "keeps X-Frame-Options when embed_mode is present but referer is invalid" do
+      get("/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" })
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+
+    it "strips X-Frame-Options when embed_mode is present and referer matches embeddable host" do
+      Fabricate(:embeddable_host, host: "example.com")
+      get(
+        "/t/#{topic.slug}/#{topic.id}",
+        params: {
+          embed_mode: "true",
+        },
+        headers: {
+          "HTTP_REFERER" => "https://example.com/page",
+        },
+      )
+      expect(response.headers).not_to include("X-Frame-Options")
+    end
+
+    it "strips X-Frame-Options when embed_mode is present and embed_any_origin is enabled" do
+      SiteSetting.embed_any_origin = true
+      get("/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" })
+      expect(response.headers).not_to include("X-Frame-Options")
+    end
+  end
+
   describe "setting `Cross-Origin-Opener-Policy` header" do
     describe "when `cross_origin_opener_policy_header` site setting is set to `same-origin`" do
       before { SiteSetting.cross_origin_opener_policy_header = "same-origin" }
