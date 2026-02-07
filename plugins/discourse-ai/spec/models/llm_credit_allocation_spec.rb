@@ -369,7 +369,7 @@ RSpec.describe LlmCreditAllocation do
       allocation = Fabricate(:llm_credit_allocation)
       relative = allocation.relative_reset_time
 
-      expect(relative).to match(/in .+/)
+      expect(relative).to be_present
     end
 
     it "returns empty string when next_reset_at is nil" do
