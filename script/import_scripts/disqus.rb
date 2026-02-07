@@ -101,7 +101,7 @@ class ImportScripts::Disqus < ImportScripts::Base
   private
 
   def get_post_as_user(username)
-    user = User.find_by_username_lower(username.downcase)
+    user = User.find_by_username(username)
     abort("No user found named: '#{username}'") if user.nil?
     user
   end

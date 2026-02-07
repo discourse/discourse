@@ -43,7 +43,7 @@ module Migrations::Importer
       @exact_reserved_usernames = Set.new
 
       if (here_mention = SiteSetting.here_mention.presence)
-        @exact_reserved_usernames << here_mention.unicode_normalize.downcase
+        @exact_reserved_usernames << User.normalize_username(here_mention)
       end
     end
   end

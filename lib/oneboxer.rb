@@ -415,9 +415,9 @@ module Oneboxer
   end
 
   def self.local_user_html(url, route)
-    username = route[:username] || ""
+    username = (route[:username] || "").encode("UTF-8")
 
-    if user = User.find_by(username_lower: username.downcase)
+    if user = User.find_by_username(username)
       name = user.name if SiteSetting.enable_names
 
       args = {

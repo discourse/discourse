@@ -22,9 +22,9 @@ class UserBadgesController < ApplicationController
     grant_count = nil
 
     if params[:username]
-      user_id = User.where(username_lower: params[:username].downcase).pick(:id)
-      user_badges = user_badges.where(user_id: user_id) if user_id
-      grant_count = badge.user_badges.where(user_id: user_id).count
+      user_id = User.where(username_lower: params[:username]).pick(:id)
+      user_badges = user_badges.where(user_id:) if user_id
+      grant_count = badge.user_badges.where(user_id:).count
     end
 
     offset = fetch_int_from_params(:offset, default: 0)
@@ -32,12 +32,7 @@ class UserBadgesController < ApplicationController
 
     user_badges_topic_ids = user_badges.map { |user_badge| user_badge.post&.topic_id }.compact
 
-    user_badges =
-      UserBadges.new(
-        user_badges: user_badges,
-        username: params[:username],
-        grant_count: grant_count,
-      )
+    user_badges = UserBadges.new(user_badges:, username: params[:username], grant_count:)
 
     render_serialized(
       user_badges,

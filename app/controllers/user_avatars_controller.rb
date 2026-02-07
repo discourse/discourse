@@ -11,7 +11,7 @@ class UserAvatarsController < ApplicationController
   before_action :apply_cdn_headers, only: %i[show show_letter show_proxy_letter]
 
   def refresh_gravatar
-    user = User.find_by(username_lower: params[:username].downcase)
+    user = User.find_by_username(params[:username])
     guardian.ensure_can_edit!(user)
 
     if user
@@ -95,7 +95,7 @@ class UserAvatarsController < ApplicationController
 
   def show_in_site(hostname)
     username = params[:username].to_s
-    return render_blank unless user = User.find_by(username_lower: username.downcase)
+    return render_blank unless user = User.find_by_username(username)
 
     upload_id, version = params[:version].split("_")
 

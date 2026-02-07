@@ -541,8 +541,8 @@ class Search
   end
 
   advanced_filter(/\Acreated:@(.*)\z/i) do |posts, match|
-    user_id = User.where(username_lower: match.downcase).pick(:id)
-    posts.where(user_id: user_id, post_number: 1)
+    user_id = User.where(username_lower: match).pick(:id)
+    posts.where(user_id:, post_number: 1)
   end
 
   advanced_filter(/\Ain:(watching|tracking)\z/i) do |posts, match|
@@ -747,7 +747,8 @@ class Search
     user_id =
       User
         .where(staged: false)
-        .where("username_lower = ? OR id = ?", match.downcase, match.to_i)
+        .where(id: match.to_i)
+        .or(User.where(staged: false).where(username_lower: match))
         .pick(:id)
     if user_id
       posts.where("posts.user_id = ?", user_id)
@@ -757,11 +758,9 @@ class Search
   end
 
   advanced_filter(/\A\@(\S+)\z/i) do |posts, match|
-    username = User.normalize_username(match)
+    user_id = User.not_staged.where(username_lower: match).pick(:id)
 
-    user_id = User.not_staged.where(username_lower: username).pick(:id)
-
-    user_id = @guardian.user&.id if !user_id && username == "me"
+    user_id = @guardian.user&.id if !user_id && User.normalize_username(match) == "me"
 
     if user_id
       posts.where("posts.user_id = ?", user_id)
@@ -1126,7 +1125,12 @@ class Search
         .where(active: true)
         .where(staged: false)
         .where("user_search_data.search_data @@ #{query}")
-        .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
+        .order(
+          DB.sql_fragment(
+            "CASE WHEN username_lower = ? THEN 0 ELSE 1 END",
+            User.normalize_username(@original_term),
+          ),
+        )
         .order("last_posted_at DESC")
         .limit(limit)
 
@@ -1249,7 +1253,7 @@ class Search
         posts = posts.joins("JOIN users u ON u.id = posts.user_id")
         posts =
           posts.where(
-            "posts.raw || ' ' || post_search_data.raw_data || ' ' || u.username || ' ' || COALESCE(u.name, '') ILIKE ?",
+            "posts.raw || ' ' || post_search_data.raw_data || ' ' || u.username_lower || ' ' || COALESCE(u.name, '') ILIKE ?",
             "%#{term_without_quote}%",
           )
       else

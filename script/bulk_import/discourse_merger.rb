@@ -141,9 +141,9 @@ class BulkImport::DiscourseMerger < BulkImport::Base
             # New user
             unless usernames_lower.add?(row["username_lower"])
               username = row["username"] + "_1"
-              username.next! until usernames_lower.add?(username.downcase)
+              username.next! until usernames_lower.add?(User.normalize_username(username))
               row["username"] = username
-              row["username_lower"] = row["username"].downcase
+              row["username_lower"] = User.normalize_username(row["username"])
             end
 
             row["id"] = (@last_user_id += 1)

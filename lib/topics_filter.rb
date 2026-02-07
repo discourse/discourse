@@ -682,8 +682,7 @@ class TopicsFilter
       names = names.map { |n| n == "me" ? @guardian.user.username_lower : n }
     end
 
-    if (user_ids = User.where("username_lower IN (?)", names.map(&:downcase)).pluck(:id)) &&
-         user_ids.any?
+    if (user_ids = User.where(username_lower: names).pluck(:id)).any?
       @scope = @scope.joins(:user).where(user_id: user_ids)
       return
     end

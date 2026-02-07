@@ -16,7 +16,7 @@ class UsernameValidator
   end
 
   def initialize(username, skip_length_validation: false, object: nil)
-    @username = username&.unicode_normalize
+    @username = User.normalize_value_for(:username, username)
     @skip_length_validation = skip_length_validation
     @object = object
     @errors = []

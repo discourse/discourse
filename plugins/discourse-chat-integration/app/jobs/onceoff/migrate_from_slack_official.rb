@@ -126,7 +126,7 @@ module Jobs
       end
 
       if !(slack_discourse_username = site_settings_value("slack_discourse_username")).nil?
-        username = User.find_by(username: slack_discourse_username.downcase)&.username
+        username = User.find_by_username(slack_discourse_username)&.username
         SiteSetting.chat_integration_discourse_username =
           (username || Discourse.system_user.username)
       end
