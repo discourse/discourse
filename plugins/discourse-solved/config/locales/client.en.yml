@@ -44,6 +44,10 @@ en:
         other: "Move posts"
       move_post_cancel: "Cancel"
       dont_show_again: "Got it, don't show me this again"
+      confirm_category_change_solution_title: "Solution will be removed"
+      confirm_category_change_solution: "The new category does not have solutions enabled. Changing the category will remove the accepted solution from this topic."
+      confirm_category_change_solution_confirm: "Change category"
+      confirm_category_change_solution_cancel: "Cancel"
 
       no_answer:
         title: Has your question been answered?
