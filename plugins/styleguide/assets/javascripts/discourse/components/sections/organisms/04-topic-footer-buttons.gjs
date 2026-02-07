@@ -35,7 +35,10 @@ import DButton from "discourse/components/d-button";
       @title="<TopicFooterButtons> - logged in"
       @code={{this.loggedInCode}}
     >
-      <TopicFooterButtons @topic={{@dummy.topic}} />
+      <TopicFooterButtons
+        @topic={{@dummy.topic}}
+        @replyToPost={{@replyToPost}}
+      />
     </StyleguideExample>
 
     <StyleguideExample

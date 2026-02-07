@@ -37,14 +37,56 @@ import modal from "../components/sections/organisms/modal";
 import moreTopics from "../components/sections/organisms/more-topics";
 import navigation from "../components/sections/organisms/navigation";
 import siteHeader from "../components/sections/organisms/site-header";
+import allPages from "../components/sections/pages/00-all-pages";
 import bem from "../components/sections/syntax/00-bem";
+import spacing from "../components/sections/tokens/00-spacing";
+import shadows from "../components/sections/tokens/01-shadows";
+import borderRadius from "../components/sections/tokens/02-border-radius";
+import semanticColors from "../components/sections/tokens/03-semantic-colors";
+import buttonColors from "../components/sections/tokens/04-button-colors";
+import codeColors from "../components/sections/tokens/05-code-colors";
+import socialColors from "../components/sections/tokens/06-social-colors";
 
 let _allCategories = null;
 let _sectionsById = {};
 
-export const CATEGORIES = ["syntax", "atoms", "molecules", "organisms"];
+export const CATEGORIES = [
+  "tokens",
+  "syntax",
+  "atoms",
+  "molecules",
+  "organisms",
+  "pages",
+];
 
 const SECTIONS = [
+  { component: spacing, category: "tokens", id: "spacing", priority: 0 },
+  { component: shadows, category: "tokens", id: "shadows", priority: 1 },
+  {
+    component: borderRadius,
+    category: "tokens",
+    id: "border-radius",
+    priority: 2,
+  },
+  {
+    component: semanticColors,
+    category: "tokens",
+    id: "semantic-colors",
+    priority: 3,
+  },
+  {
+    component: buttonColors,
+    category: "tokens",
+    id: "button-colors",
+    priority: 4,
+  },
+  { component: codeColors, category: "tokens", id: "code-colors", priority: 5 },
+  {
+    component: socialColors,
+    category: "tokens",
+    id: "social-colors",
+    priority: 6,
+  },
   { component: bem, category: "syntax", id: "bem", priority: 0 },
   { component: typography, category: "atoms", id: "typography", priority: 0 },
   { component: fontScale, category: "atoms", id: "font-scale", priority: 1 },
@@ -113,6 +155,7 @@ const SECTIONS = [
   { component: navigation, category: "organisms", id: "navigation" },
   { component: siteHeader, category: "organisms", id: "site-header" },
   { component: moreTopics, category: "organisms", id: "more-topics" },
+  { component: allPages, category: "pages", id: "key-paths", priority: 0 },
 ];
 
 export function addSection(section) {

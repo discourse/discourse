@@ -6,6 +6,8 @@ export default <template>
       <SectionComponent
         @dummy={{@controller.dummy}}
         @dummyAction={{@controller.dummyAction}}
+        @createTopic={{@controller.createTopic}}
+        @replyToPost={{@controller.replyToPost}}
         @siteSettings={{@controller.siteSettings}}
       />
     {{/let}}

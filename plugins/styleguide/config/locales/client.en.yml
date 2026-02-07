@@ -9,13 +9,35 @@ en:
       title: "Styleguide"
       welcome: "To get started, choose a section from the menu on the left."
 
+      css_editor:
+        reset_all: "Reset All"
+        export: "Export CSS"
+
       categories:
+        tokens: Design Tokens
         syntax: Syntax
         atoms: Atoms
         molecules: Molecules
         organisms: Organisms
+        pages: Pages
 
       sections:
+        spacing:
+          title: "Spacing"
+        shadows:
+          title: "Shadows"
+        border_radius:
+          title: "Border Radius"
+        semantic_colors:
+          title: "Semantic Colors"
+        button_colors:
+          title: "Button Colors"
+        code_colors:
+          title: "Code Colors"
+        social_colors:
+          title: "Social Colors"
+        key_paths:
+          title: "Key Paths"
         bem:
           title: "BEM"
         typography:

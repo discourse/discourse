@@ -39,7 +39,10 @@ import CategoriesAdminDropdown from "discourse/select-kit/components/categories-
 
             <div class="navigation-controls">
               <CategoriesAdminDropdown />
-              <CreateTopicButton @canCreateTopic={{true}} />
+              <CreateTopicButton
+                @canCreateTopic={{true}}
+                @action={{@createTopic}}
+              />
             </div>
           </section>
         </div>

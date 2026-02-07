@@ -1,0 +1,59 @@
+.shadow-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1.5rem;
+}
+
+.shadow-example {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  .shadow-card {
+    width: 100%;
+    height: 80px;
+    background-color: var(--secondary);
+    border-radius: var(--d-border-radius);
+  }
+
+  .shadow-name {
+    font-size: var(--font-down-1);
+    font-weight: 700;
+    text-align: center;
+  }
+}
+
+.shadow-card {
+  &.shadow-modal {
+    box-shadow: var(--shadow-modal);
+  }
+
+  &.shadow-composer {
+    box-shadow: var(--shadow-composer);
+  }
+
+  &.shadow-card {
+    box-shadow: var(--shadow-card);
+  }
+
+  &.shadow-dropdown {
+    box-shadow: var(--shadow-dropdown);
+  }
+
+  &.shadow-menu-panel {
+    box-shadow: var(--shadow-menu-panel);
+  }
+
+  &.shadow-header {
+    box-shadow: var(--shadow-header);
+  }
+
+  &.shadow-footer-nav {
+    box-shadow: var(--shadow-footer-nav);
+  }
+
+  &.shadow-focus-danger {
+    box-shadow: var(--shadow-focus-danger);
+  }
+}

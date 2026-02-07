@@ -1,4 +1,5 @@
 import NavItem from "discourse/models/nav-item";
+import Site from "discourse/models/site";
 
 let topicId = 2000000;
 let userId = 1000000;
@@ -33,7 +34,11 @@ export function createData(store) {
       slug: "beverages",
       read_restricted: true,
     },
-  ].map((c) => store.createRecord("category", c));
+  ].map((c) => {
+    const record = store.createRecord("category", c);
+    Site.current().updateCategory(c);
+    return record;
+  });
 
   let createUser = (attrs) => {
     userId++;
@@ -85,8 +90,23 @@ export function createData(store) {
     has_profile_background: true,
   });
 
+  const topicDates = [
+    "2026-02-05T17:00:00.000Z",
+    "2026-02-03T10:35:00.000Z",
+    "2026-01-27T13:10:00.000Z",
+    "2026-01-18T08:50:00.000Z",
+    "2026-01-06T16:20:00.000Z",
+    "2025-12-28T11:45:00.000Z",
+    "2025-12-14T14:30:00.000Z",
+    "2025-12-03T09:15:00.000Z",
+  ];
+  let topicIndex = 0;
+
   let createTopic = (attrs) => {
     topicId++;
+    let postsCount = ((topicId * 1234) % 100) + 1;
+    let createdAt = topicDates[topicIndex % topicDates.length];
+    topicIndex++;
     return store.createRecord(
       "topic",
       Object.assign(
@@ -95,10 +115,11 @@ export function createData(store) {
           title: `Example Topic Title ${topicId}`,
           fancy_title: `Example Topic Title ${topicId}`,
           slug: `example-topic-title-${topicId}`,
-          posts_count: ((topicId * 1234) % 100) + 1,
+          posts_count: postsCount,
+          highest_post_number: postsCount,
           views: ((topicId * 123) % 1000) + 1,
           like_count: topicId % 3,
-          created_at: `2017-03-${topicId % 30}T12:30:00.000Z`,
+          created_at: createdAt,
           visible: true,
           posters: [
             { extras: "latest", user },
@@ -113,7 +134,11 @@ export function createData(store) {
     );
   };
 
-  let topic = createTopic({ tags: ["example", "apple"] });
+  let topic = createTopic({
+    tags: ["example", "apple"],
+    category_id: categories[0].id,
+    last_read_post_number: 100,
+  });
   topic.details.updateFromJson({
     can_create_post: true,
     can_invite_to: false,
@@ -121,20 +146,44 @@ export function createData(store) {
     can_close_topic: false,
   });
   topic.setProperties({
-    category_id: categories[0].id,
     suggested_topics: [topic, topic, topic],
   });
 
-  let invisibleTopic = createTopic({ visible: false });
-  let closedTopic = createTopic({ closed: true });
-  closedTopic.set("category_id", categories[1].id);
-  let archivedTopic = createTopic({ archived: true });
-  let pinnedTopic = createTopic({ pinned: true });
+  let invisibleTopic = createTopic({
+    visible: false,
+    category_id: categories[1].id,
+  });
+  let closedTopic = createTopic({
+    closed: true,
+    category_id: categories[1].id,
+    last_read_post_number: 100,
+  });
+  let archivedTopic = createTopic({
+    archived: true,
+    category_id: categories[2].id,
+    last_read_post_number: 100,
+  });
+  let pinnedTopic = createTopic({
+    pinned: true,
+    category_id: categories[2].id,
+    last_read_post_number: 3,
+    unread_posts: 5,
+  });
   pinnedTopic.set("clearPin", () => pinnedTopic.set("pinned", "unpinned"));
   pinnedTopic.set("rePin", () => pinnedTopic.set("pinned", "pinned"));
-  pinnedTopic.set("category_id", categories[2].id);
-  let unpinnedTopic = createTopic({ unpinned: true });
-  let warningTopic = createTopic({ is_warning: true });
+  let unpinnedTopic = createTopic({
+    unpinned: true,
+    category_id: categories[0].id,
+    last_read_post_number: 100,
+  });
+  let warningTopic = createTopic({
+    is_warning: true,
+    category_id: categories[1].id,
+    unseen: true,
+    posts_count: 4,
+    highest_post_number: 4,
+    reply_count: 3,
+  });
   let pmTopic = createTopic({
     archetype: "private_message",
     related_messages: [topic, topic],
@@ -444,6 +493,239 @@ export function createData(store) {
     wiki: false,
   });
 
+  let replyUser1 = createUser({ username: "alice_dev", name: "Alice Chen" });
+  let replyUser2 = createUser({
+    username: "bob_designer",
+    name: "Bob Martinez",
+  });
+  let replyUser3 = createUser({
+    username: "carol_pm",
+    name: "Carol Thompson",
+  });
+
+  const replyWithLinksCooked = `<p>Great discussion! I found some helpful resources:</p>
+<ul>
+<li><a href="https://meta.discourse.org" rel="noopener nofollow ugc">Discourse Meta</a> has community discussions about this exact feature.</li>
+<li>The <a href="https://docs.discourse.org" rel="noopener nofollow ugc">official documentation</a> covers the architecture in detail.</li>
+</ul>
+<p>Also, <a class="mention" href="/u/${user.username}">@${user.username}</a> wrote about this in a <a href="https://blog.discourse.org/2024/01/example" rel="noopener nofollow ugc">blog post</a> last month. Worth reading if you haven't already.</p>
+<p>For the technical implementation, I'd suggest looking at <a href="https://github.com/discourse/discourse" rel="noopener nofollow ugc">the source code</a> — specifically the <code>app/services</code> directory.</p>`;
+
+  const replyWithImageCooked = `<p>Here's a screenshot showing the new layout in action:</p>
+<div class="lightbox-wrapper"><a class="lightbox" href="/plugins/styleguide/images/hubble-orion-nebula-bg.jpg" title="Screenshot of the new layout"><img src="/plugins/styleguide/images/hubble-orion-nebula-bg.jpg" alt="Screenshot of the new layout" width="690" height="388"><div class="meta"><svg class="fa d-icon d-icon-far-image svg-icon" aria-hidden="true"><use href="#far-image"></use></svg><span class="filename">layout-screenshot.png</span><span class="informations">1920×1080 420 KB</span></svg></div></a></div>
+<p>The sidebar now properly collapses on mobile. I tested on both iOS Safari and Chrome for Android.</p>`;
+
+  const replyWithOneboxCooked = `<p>For context, here is the relevant Wikipedia article about the project:</p>
+<aside class="onebox allowlistedgeneric" data-onebox-src="https://en.wikipedia.org/wiki/Discourse_(software)">
+  <header class="source">
+    <img src="https://en.wikipedia.org/static/favicon/wikipedia.ico" class="site-icon" width="16" height="16" />
+    <a href="https://en.wikipedia.org/wiki/Discourse_(software)" target="_blank" rel="noopener">en.wikipedia.org</a>
+  </header>
+  <article class="onebox-body">
+    <img src="/plugins/styleguide/images/hubble-orion-nebula-bg.jpg" class="thumbnail" width="200" height="200" />
+    <h3><a href="https://en.wikipedia.org/wiki/Discourse_(software)" target="_blank" rel="noopener">Discourse (software)</a></h3>
+    <p>Discourse is an open source Internet forum and mailing list management software application founded in 2013 by Jeff Atwood, Robin Ward, and Sam Saffron. It received funding from First Round Capital and Greylock Partners.</p>
+  </article>
+</aside>
+<p>The architecture section is particularly relevant to what we're discussing here. It explains the Ember.js frontend and the Ruby on Rails API backend.</p>`;
+
+  const createReplyPost = (id, postNumber, replyUser, cookedContent, attrs) =>
+    Object.assign(
+      {
+        id,
+        topic,
+        user: {
+          avatar_template: replyUser.avatar_template,
+          id: replyUser.id,
+          username: replyUser.username,
+          name: replyUser.name,
+        },
+        name: replyUser.name,
+        username: replyUser.username,
+        avatar_template: replyUser.avatar_template,
+        created_at: moment()
+          .subtract(3, "days")
+          .add(postNumber, "hours")
+          .toISOString(),
+        displayDate: moment().subtract(3, "days").add(postNumber, "hours"),
+        cooked: cookedContent,
+        post_number: postNumber,
+        post_type: 1,
+        updated_at: moment()
+          .subtract(2, "days")
+          .add(postNumber, "hours")
+          .toISOString(),
+        reply_count: 0,
+        reply_to_post_number: postNumber > 2 ? 1 : null,
+        quote_count: 0,
+        incoming_link_count: 0,
+        reads: 1,
+        readers_count: 0,
+        score: 0,
+        yours: false,
+        topic_id: topic.id,
+        topic_slug: topic.slug,
+        display_username: replyUser.name,
+        primary_group_name: null,
+        version: 1,
+        can_edit: true,
+        can_delete: true,
+        can_recover: true,
+        can_see_hidden_post: true,
+        can_wiki: true,
+        read: true,
+        user_title: "",
+        bookmarked: false,
+        actions_summary: [{ id: 2, can_act: true }],
+        moderator: false,
+        admin: false,
+        staff: false,
+        user_id: replyUser.id,
+        hidden: false,
+        trust_level: replyUser.trust_level,
+        deleted_at: null,
+        user_deleted: false,
+        edit_reason: null,
+        can_view_edit_history: true,
+        wiki: false,
+      },
+      attrs || {}
+    );
+
+  let replyUser4 = createUser({
+    username: "dave_ops",
+    name: "Dave Wilson",
+  });
+  let replyUser5 = createUser({
+    username: "eve_frontend",
+    name: "Eve Nakamura",
+  });
+  let replyUser6 = createUser({
+    username: "frank_docs",
+    name: "Frank Rivera",
+  });
+  let replyUser7 = createUser({
+    username: "grace_backend",
+    name: "Grace Liu",
+  });
+
+  const replyWithVideoCooked = `<p>Here's a walkthrough video of the new feature in action:</p>
+<div class="video-container">
+  <video width="690" preload="metadata" controls>
+    <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" />
+    Your browser does not support the video tag.
+  </video>
+</div>
+<p>You can see at the 0:15 mark how the transition animates smoothly. The key improvement is the reduced layout shift during loading.</p>`;
+
+  const replyWithGithubOneboxCooked = `<p>The related PR that fixes the rendering issue:</p>
+<aside class="onebox githubpullrequest" data-onebox-src="https://github.com/discourse/discourse/pull/1234">
+  <header class="source">
+    <a href="https://github.com/discourse/discourse/pull/1234" target="_blank" rel="noopener">github.com/discourse/discourse</a>
+  </header>
+  <article class="onebox-body">
+    <div class="github-row --gh-status-merged">
+      <div class="github-icon-container" title="Merged">
+        <svg width="60" height="60" class="github-icon" viewBox="0 0 12 16" aria-hidden="true"><path fill-rule="evenodd" d="M11 11.28V5c-.03-.78-.34-1.47-.94-2.06C9.46 2.35 8.78 2.03 8 2H7V0L4 3l3 3V4h1c.27.02.48.11.69.31.21.2.3.42.31.69v6.28A1.993 1.993 0 0 0 10 15a1.993 1.993 0 0 0 1-3.72zm-1 2.92c-.66 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2zM4 3c0-1.11-.89-2-2-2a1.993 1.993 0 0 0-1 3.72v6.56A1.993 1.993 0 0 0 2 15a1.993 1.993 0 0 0 1-3.72V4.72c.59-.34 1-.98 1-1.72zm-.8 10c0 .66-.55 1.2-1.2 1.2-.65 0-1.2-.55-1.2-1.2 0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2zM2 4.2C1.34 4.2.8 3.65.8 3c0-.65.55-1.2 1.2-1.2.65 0 1.2.55 1.2 1.2 0 .65-.55 1.2-1.2 1.2z"></path></svg>
+      </div>
+      <div class="github-info-container">
+        <h4><a href="https://github.com/discourse/discourse/pull/1234" target="_blank" rel="noopener">FIX: Resolve topic list rendering lag on mobile</a></h4>
+        <div class="branches"><code>discourse:main</code> ← <code>dave_ops:fix-mobile-render</code></div>
+        <div class="github-info">
+          <div class="date">merged Jan 28, 2026</div>
+          <div class="user"><img alt="" src="/images/avatar.png" class="onebox-avatar-inline" width="20" height="20" /> dave_ops</div>
+          <div class="lines"><span class="added">+67</span> <span class="removed">-31</span></div>
+        </div>
+      </div>
+    </div>
+  </article>
+</aside>
+<p>This should be included in the next release. It also fixes the related scroll jank issue on iOS.</p>`;
+
+  const replyWithDetailsCooked = `<p>I've compiled some notes from our last architecture meeting. Expand to see the full breakdown:</p>
+<details>
+  <summary>Meeting Notes — January 2026 Architecture Review</summary>
+  <h4>Agenda Items</h4>
+  <ul>
+    <li><strong>Frontend performance</strong>: We identified three components causing unnecessary re-renders. The fix involves memoizing computed properties and using tracked state more efficiently.</li>
+    <li><strong>API rate limiting</strong>: The current threshold of 60 requests per minute is too aggressive for power users. Proposal to increase to 120/min for TL3+ users.</li>
+    <li><strong>Database migrations</strong>: The upcoming column addition to the <code>posts</code> table needs to use <code>algorithm: :concurrently</code> given the table size in production.</li>
+  </ul>
+  <h4>Action Items</h4>
+  <ol>
+    <li>Profile the topic list rendering pipeline — assigned to frontend team</li>
+    <li>Draft RFC for new rate limiting tiers — assigned to API team</li>
+    <li>Benchmark migration on staging with production-sized dataset — assigned to SRE</li>
+  </ol>
+</details>
+<p>Let me know if I missed anything. I'll update the details section as we make progress on these items.</p>`;
+
+  const replyWithTableCooked = `<p>Here's a comparison of the performance metrics before and after the optimization:</p>
+<div class="md-table">
+  <table>
+    <thead>
+      <tr>
+        <th>Metric</th>
+        <th>Before</th>
+        <th>After</th>
+        <th>Change</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>First Contentful Paint</td>
+        <td>2.4s</td>
+        <td>1.1s</td>
+        <td><strong>-54%</strong></td>
+      </tr>
+      <tr>
+        <td>Time to Interactive</td>
+        <td>4.8s</td>
+        <td>2.3s</td>
+        <td><strong>-52%</strong></td>
+      </tr>
+      <tr>
+        <td>Largest Contentful Paint</td>
+        <td>3.6s</td>
+        <td>1.8s</td>
+        <td><strong>-50%</strong></td>
+      </tr>
+      <tr>
+        <td>Total Blocking Time</td>
+        <td>380ms</td>
+        <td>120ms</td>
+        <td><strong>-68%</strong></td>
+      </tr>
+      <tr>
+        <td>Cumulative Layout Shift</td>
+        <td>0.25</td>
+        <td>0.04</td>
+        <td><strong>-84%</strong></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+<p>The biggest wins came from lazy-loading below-the-fold components and deferring non-critical JavaScript. Full Lighthouse report is attached to the tracking issue.</p>`;
+
+  const topicPagePosts = [
+    transformedPost,
+    createReplyPost(3001, 2, replyUser1, replyWithLinksCooked),
+    createReplyPost(3002, 3, replyUser2, replyWithImageCooked, {
+      reply_to_post_number: 1,
+    }),
+    createReplyPost(3003, 4, replyUser3, replyWithOneboxCooked, {
+      reply_to_post_number: 2,
+    }),
+    createReplyPost(3004, 5, replyUser4, replyWithVideoCooked),
+    createReplyPost(3005, 6, replyUser5, replyWithGithubOneboxCooked, {
+      reply_to_post_number: 1,
+    }),
+    createReplyPost(3006, 7, replyUser6, replyWithDetailsCooked),
+    createReplyPost(3007, 8, replyUser7, replyWithTableCooked, {
+      reply_to_post_number: 5,
+    }),
+  ];
+
   const oneboxPosts = {
     wikipedia: createOneboxPost(2001, wikipediaOneboxCooked),
     githubPrOpen: createOneboxPost(2002, githubPrOpenCooked),
@@ -564,6 +846,7 @@ export function createData(store) {
     transformedPost,
     postModel,
     postList,
+    topicPagePosts,
     oneboxPosts,
 
     user,

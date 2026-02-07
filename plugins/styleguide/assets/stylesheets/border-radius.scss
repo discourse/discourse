@@ -1,0 +1,47 @@
+.border-radius-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+}
+
+.border-radius-example {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  .border-radius-box {
+    width: 80px;
+    height: 80px;
+    background-color: var(--tertiary);
+    border: 1px solid var(--primary-300);
+  }
+
+  .border-radius-name {
+    font-size: var(--font-down-1);
+    font-weight: 700;
+    text-align: center;
+  }
+}
+
+.border-radius-box {
+  &.d-border-radius {
+    border-radius: var(--d-border-radius);
+  }
+
+  &.d-border-radius-large {
+    border-radius: var(--d-border-radius-large);
+  }
+
+  &.d-nav-pill-border-radius {
+    border-radius: var(--d-nav-pill-border-radius);
+  }
+
+  &.d-input-border-radius {
+    border-radius: var(--d-input-border-radius);
+  }
+
+  &.d-button-border-radius {
+    border-radius: var(--d-button-border-radius);
+  }
+}

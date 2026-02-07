@@ -1,0 +1,103 @@
+.semantic-color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 1rem;
+}
+
+.semantic-color-example {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  .semantic-color-swatch {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--d-border-radius);
+    border: 1px solid var(--primary-300);
+    flex-shrink: 0;
+  }
+
+  .semantic-color-info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .semantic-color-var {
+    font-size: var(--font-down-1);
+    font-weight: 700;
+  }
+
+  .semantic-color-desc {
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+  }
+}
+
+.semantic-color-swatch {
+  &.d-link-color {
+    background-color: var(--d-link-color);
+  }
+
+  &.title-color {
+    background-color: var(--title-color);
+  }
+
+  &.title-color--read {
+    background-color: var(--title-color--read);
+  }
+
+  &.excerpt-color {
+    background-color: var(--excerpt-color);
+  }
+
+  &.metadata-color {
+    background-color: var(--metadata-color);
+  }
+
+  &.content-border-color {
+    background-color: var(--content-border-color);
+  }
+
+  &.input-border-color {
+    background-color: var(--input-border-color);
+  }
+
+  &.table-border-color {
+    background-color: var(--table-border-color);
+  }
+
+  &.mention-background-color {
+    background-color: var(--mention-background-color);
+  }
+
+  &.d-badge-card-background-color {
+    background-color: var(--d-badge-card-background-color);
+  }
+
+  &.d-selected {
+    background-color: var(--d-selected);
+  }
+
+  &.d-hover {
+    background-color: var(--d-hover);
+  }
+}
+
+.button-colors-row {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+
+  .button-colors-preview {
+    display: flex;
+    align-items: center;
+  }
+
+  .button-colors-swatches {
+    flex-wrap: wrap;
+  }
+}
+
+.code-colors-sample {
+  margin-bottom: 1rem;
+}

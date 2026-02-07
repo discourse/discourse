@@ -1,0 +1,87 @@
+.spacing-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.spacing-example {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-width: 200px;
+
+  .spacing-bar {
+    height: 1rem;
+    background-color: var(--tertiary);
+    border-radius: 2px;
+  }
+
+  .spacing-name {
+    font-size: var(--font-down-1);
+    font-weight: 700;
+    white-space: nowrap;
+  }
+}
+
+.spacing-bar {
+  &.space {
+    width: var(--space);
+  }
+
+  &.space-half {
+    width: var(--space-half);
+  }
+
+  &.space-1 {
+    width: var(--space-1);
+  }
+
+  &.space-2 {
+    width: var(--space-2);
+  }
+
+  &.space-3 {
+    width: var(--space-3);
+  }
+
+  &.space-4 {
+    width: var(--space-4);
+  }
+
+  &.space-5 {
+    width: var(--space-5);
+  }
+
+  &.space-6 {
+    width: var(--space-6);
+  }
+
+  &.space-7 {
+    width: var(--space-7);
+  }
+
+  &.space-8 {
+    width: var(--space-8);
+  }
+
+  &.space-9 {
+    width: var(--space-9);
+  }
+
+  &.space-10 {
+    width: var(--space-10);
+  }
+
+  &.space-11 {
+    width: var(--space-11);
+  }
+
+  &.space-12 {
+    width: var(--space-12);
+  }
+}
