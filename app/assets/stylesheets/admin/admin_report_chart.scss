@@ -1,4 +1,7 @@
 .admin-report-chart {
+  border: 1px solid var(--primary-50);
+  box-shadow: var(--shadow-card);
+  padding: var(--space-8) var(--space-4) var(--space-4);
   animation: fadein 2s;
 
   @media (prefers-reduced-motion) {
