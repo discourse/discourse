@@ -35,15 +35,17 @@ path.win32 = {
 
 globalThis.crypto = { getRandomValues };
 
-const oldInstantiate = WebAssembly.instantiate;
-WebAssembly.instantiate = async function (bytes, bindings) {
-  if (bytes === BindingsWasm) {
-    const mod = new WebAssembly.Module(bytes);
-    const instance = new WebAssembly.Instance(mod, bindings);
-    return instance;
-  } else {
-    return oldInstantiate(...arguments);
-  }
+globalThis.patchWebAssembly = function () {
+  const oldInstantiate = WebAssembly.instantiate;
+  WebAssembly.instantiate = async function (bytes, bindings) {
+    if (bytes === BindingsWasm) {
+      const mod = new WebAssembly.Module(bytes);
+      const instance = new WebAssembly.Instance(mod, bindings);
+      return instance;
+    } else {
+      return oldInstantiate(...arguments);
+    }
+  };
 };
 
 globalThis.fetch = function (url) {

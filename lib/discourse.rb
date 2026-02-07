@@ -978,7 +978,7 @@ module Discourse
     # working due to fork
     begin
       # Skip warmup in development mode - it makes boot take ~2s longer
-      PrettyText.cook("warm up **pretty text**") if !Rails.env.development?
+      PrettyText.cook("warm up **pretty text**") # if !Rails.env.development?
     rescue => e
       Rails.logger.error("Failed to warm up pretty text: #{e}\n#{e.backtrace.join("\n")}")
     end
@@ -1208,6 +1208,7 @@ module Discourse
       Thread.new { LetterAvatar.image_magick_version },
       Thread.new { SvgSprite.core_svgs },
       Thread.new { EmberCli.script_chunks },
+      Thread.new { AssetProcessor.raw_snapshot },
     ].each(&:join)
   ensure
     @preloaded_rails = true

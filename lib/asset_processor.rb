@@ -32,11 +32,29 @@ class AssetProcessor
     PROCESSOR_PATH
   end
 
+  def self.raw_snapshot
+    @raw_snapshot ||=
+      begin
+        source =
+          if Rails.env.production?
+            File.read(PROCESSOR_PATH)
+          else
+            build_asset_processor
+          end
+
+        MiniRacer::Snapshot.new(source).dump
+      end
+  end
+
   def self.create_new_context
     # timeout any eval that takes longer than 15 seconds
-    ctx = MiniRacer::Context.new(timeout: 15_000, ensure_gc_after_idle: 2000)
+    ctx =
+      MiniRacer::Context.new(
+        timeout: 15_000,
+        ensure_gc_after_idle: 2000,
+        snapshot: MiniRacer::Snapshot.load(raw_snapshot),
+      )
 
-    # General shims
     ctx.attach(
       "rails.logger.info",
       proc do |err|
@@ -58,15 +76,7 @@ class AssetProcessor
         nil
       end,
     )
-
-    source =
-      if Rails.env.production?
-        File.read(PROCESSOR_PATH)
-      else
-        @processor_mutex.synchronize { build_asset_processor }
-      end
-
-    ctx.eval(source, filename: "asset-processor.js")
+    ctx.eval("globalThis.patchWebAssembly();")
 
     ctx
   end

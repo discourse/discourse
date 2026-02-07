@@ -1,6 +1,4 @@
-import { Preprocessor } from "../content-tag";
-
-const preprocessor = new Preprocessor();
+import { getPreprocessor } from "../content-tag";
 
 export default function discourseGjs() {
   return {
@@ -13,7 +11,7 @@ export default function discourseGjs() {
         if (!id.endsWith(".gjs")) {
           return null;
         }
-        let { code, map } = preprocessor.process(input, {
+        let { code, map } = getPreprocessor().process(input, {
           filename: id,
         });
         return {
