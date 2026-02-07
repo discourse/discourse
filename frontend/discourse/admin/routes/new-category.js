@@ -21,17 +21,8 @@ export default class NewCategory extends DiscourseRoute {
   templateName = "edit-category.tabs";
 
   beforeModel() {
-    if (!this.currentUser) {
-      this.router.replaceWith("/404");
-      return;
-    }
-    if (!this.currentUser.admin) {
-      if (
-        !this.currentUser.moderator ||
-        this.siteSettings.moderators_manage_categories === false
-      ) {
-        this.router.replaceWith("/404");
-      }
+    if (!this.currentUser?.can_create_category) {
+      return this.router.replaceWith("/404");
     }
   }
 
