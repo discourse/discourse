@@ -1,3 +1,4 @@
+import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { and, notEmpty } from "@ember/object/computed";
@@ -24,8 +25,8 @@ export default class AdminUserIndexController extends Controller {
   @service siteSettings;
   @service modal;
 
+  @tracked customGroupIdsBuffer = null;
   originalPrimaryGroupId = null;
-  customGroupIdsBuffer = null;
   availableGroups = null;
   userTitleValue = null;
   ssoExternalEmail = null;
@@ -44,13 +45,14 @@ export default class AdminUserIndexController extends Controller {
 
   @fmt("model.username_lower", userPath("%@/preferences")) preferencesPath;
 
-  @discourseComputed("model.customGroups")
-  customGroupIds(customGroups) {
-    return customGroups.map((group) => group.id);
+  get customGroupIds() {
+    return this.model.customGroups.map((group) => group.id);
   }
 
-  @discourseComputed("customGroupIdsBuffer", "customGroupIds")
-  customGroupsDirty(buffer, original) {
+  get customGroupsDirty() {
+    const buffer = this.customGroupIdsBuffer;
+    const original = this.customGroupIds;
+
     if (buffer === null) {
       return false;
     }
@@ -60,9 +62,8 @@ export default class AdminUserIndexController extends Controller {
       : true;
   }
 
-  @discourseComputed("model.automaticGroups")
-  automaticGroups(automaticGroups) {
-    return automaticGroups
+  get automaticGroups() {
+    return this.model.automaticGroups
       .map((group) => {
         const name = htmlSafe(group.name);
         return `<a href="/g/${name}">${name}</a>`;
@@ -143,13 +144,13 @@ export default class AdminUserIndexController extends Controller {
   }
 
   groupAdded(added) {
-    this.model
+    return this.model
       .groupAdded(added)
       .catch(() => this.dialog.alert(i18n("generic_error")));
   }
 
   groupRemoved(groupId) {
-    this.model
+    return this.model
       .groupRemoved(groupId)
       .then(() => {
         if (groupId === this.originalPrimaryGroupId) {
@@ -588,27 +589,28 @@ export default class AdminUserIndexController extends Controller {
   }
 
   @action
-  saveCustomGroups() {
+  async saveCustomGroups() {
     const currentIds = this.customGroupIds;
     const bufferedIds = this.customGroupIdsBuffer;
     const availableGroups = this.availableGroups;
 
-    bufferedIds
-      .filter((id) => !currentIds.includes(id))
-      .forEach((id) =>
-        this.groupAdded(availableGroups.find((value) => value.id === id))
-      );
+    const addedIds = bufferedIds.filter((id) => !currentIds.includes(id));
+    for (const id of addedIds) {
+      await this.groupAdded(availableGroups.find((value) => value.id === id));
+    }
 
-    currentIds
-      .filter((id) => !bufferedIds.includes(id))
-      .forEach((id) => this.groupRemoved(id));
+    const removedIds = currentIds.filter((id) => !bufferedIds.includes(id));
+    for (const id of removedIds) {
+      await this.groupRemoved(id);
+    }
+
+    this.resetCustomGroups();
   }
 
   @action
   resetCustomGroups() {
-    this.set(
-      "customGroupIdsBuffer",
-      this.model.customGroups.map((group) => group.id)
+    this.customGroupIdsBuffer = this.model.customGroups.map(
+      (group) => group.id
     );
   }
 
