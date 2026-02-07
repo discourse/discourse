@@ -60,7 +60,9 @@ async function loadDraft(store, opts = {}) {
     if (draft && typeof draft === "string") {
       draft = JSON.parse(draft);
     }
-  } catch {
+  } catch (err) {
+    // eslint-disable-next-line no-console
+    console.debug("Failed to parse draft JSON", err, draft);
     draft = null;
     Draft.clear(draftKey, draftSequence);
   }
@@ -1697,7 +1699,7 @@ export default class ComposerService extends Service {
     cancel(this._saveDraftDebounce);
 
     return new Promise((resolve) => {
-      if (this.get("model.anyDirty")) {
+      if (this.shouldConfirmDiscard) {
         this.modal.show(DiscardDraftModal, {
           model: {
             onDestroyDraft: () => {
@@ -1715,7 +1717,6 @@ export default class ComposerService extends Service {
           },
         });
       } else {
-        // it is possible there is some sort of crazy draft with no body ... just give up on it
         this.destroyDraft()
           .then(() => {
             this.model.clearState();
@@ -1734,7 +1735,7 @@ export default class ComposerService extends Service {
   saveAndCloseComposer() {
     // Always save the draft if the user had typed something
     // or had started setting up a title/tags/category
-    if (this.model.anyDirty) {
+    if (this.model.anyContentToSave) {
       this.skipAutoSave = true;
       this._saveDraft(true);
       this.model.clearState();
@@ -1796,6 +1797,11 @@ export default class ComposerService extends Service {
           this._saveDraftPromise = null;
         });
     }
+  }
+
+  @discourseComputed("model.anyContentToSave")
+  shouldConfirmDiscard(anyContentToSave) {
+    return anyContentToSave;
   }
 
   @observes("model.reply", "model.title")
