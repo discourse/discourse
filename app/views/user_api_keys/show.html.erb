@@ -1,2 +1,23 @@
 <p><%= t("user_api_key.instructions", application_name: @application_name) %></p>
-<code><%= @payload %></code>
+<div class="user-api-key-display">
+  <code id="user-api-key-payload"><%= @payload %></code>
+</div>
+<div>
+  <button class="btn btn-primary" id="copy-api-key-btn">
+    <%= t("user_api_key.copy_key") %>
+  </button>
+</div>
+
+<script nonce="<%= csp_nonce_placeholder %>">
+  document.getElementById('copy-api-key-btn').addEventListener('click', function() {
+    const btn = this;
+    const payload = document.getElementById('user-api-key-payload').textContent.replace(/\s/g, '');
+    navigator.clipboard.writeText(payload).then(() => {
+      const originalText = btn.textContent;
+      btn.textContent = '<%= t("user_api_key.copied") %>';
+      setTimeout(() => {
+        btn.textContent = originalText;
+      }, 2000);
+    });
+  });
+</script>
