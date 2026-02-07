@@ -136,7 +136,7 @@
     "ember-test-selectors": "^7.1.0",
     "html-entities": "^2.6.0",
     "imports-loader": "^5.0.0",
-    "jquery": "^3.7.1",
+    "jquery": "^4.0.0",
     "js-yaml": "^4.1.1",
     "jsuites": "^5.13.3",
     "loader.js": "^4.7.0",
