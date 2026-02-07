@@ -27,6 +27,7 @@ export default class CreateInvite extends Component {
   @service currentUser;
   @service siteSettings;
   @service site;
+  @service appEvents;
 
   @tracked saving = false;
   @tracked displayAdvancedOptions = false;
@@ -147,6 +148,7 @@ export default class CreateInvite extends Component {
         }
         this.flashClass = "success";
       }
+      this.appEvents.trigger("create-invite:saved", this.invite);
     } catch (error) {
       this.flashText = sanitize(extractError(error));
       this.flashClass = "error";
