@@ -4,26 +4,44 @@
   "description": "Types only",
   "license": "GPL-2.0-only",
   "author": "Discourse",
+  "type": "module",
+  "files": [
+    "declarations",
+    "external-types",
+    "tsconfig-plugin.json"
+  ],
+  "scripts": {
+    "compile-dts-generator": "tsc dts-generator.ts --target esnext --moduleResolution nodenext --module nodenext",
+    "generate-external-types": "node generate-external-types.js",
+    "generate": "pnpm compile-dts-generator && pnpm generate-external-types"
+  },
   "exports": {
     "./tsconfig-plugin": "./tsconfig-plugin.json",
-    "./external-types": {
-      "types": "./external-types.d.ts"
-    },
     "./tests/*": {
       "types": "./declarations/tests/*.d.ts"
     },
     "./admin/*": {
       "types": "./declarations/admin/*.d.ts"
     },
+    "./dialog-holder/*": {
+      "types": "./declarations/dialog-holder/*.d.ts"
+    },
+    "./float-kit/*": {
+      "types": "./declarations/float-kit/*.d.ts"
+    },
+    "./select-kit/*": {
+      "types": "./declarations/select-kit/*.d.ts"
+    },
+    "./truth-helpers/*": {
+      "types": "./declarations/truth-helpers/*.d.ts"
+    },
     "./*": {
       "types": "./declarations/app/*.d.ts"
     }
   },
-  "dependencies": {
-    "ember-source": "~6.6.0",
-    "@types/@glimmer__component": "npm:@glimmer/component@^2.0.0",
-    "@types/@glint__ember-tsc": "npm:@glint/ember-tsc@^1.0.7",
-    "@types/@glint__template": "npm:@glint/template@^1.7.2"
+  "devDependencies": {
+    "@types/node": "^25.0.10",
+    "compare-versions": "^6.1.1"
   },
   "engines": {
     "node": ">= 18",
