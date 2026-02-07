@@ -97,6 +97,7 @@ export default class UpsertCategoryTags extends Component {
           (i18n "category.tags_allowed_tags" categoryName=@category.name)
           (i18n "category.tags_allowed_tags_new_category")
         }}
+        @optional={{true}}
       >
         <TagChooser
           @id="category-allowed-tags"
@@ -110,6 +111,8 @@ export default class UpsertCategoryTags extends Component {
       </@form.Container>
 
       <@form.Container
+        @direction="column"
+        @optional={{true}}
         @title={{if
           @category.id
           (i18n "category.tags_allowed_tag_groups" categoryName=@category.name)
@@ -121,9 +124,9 @@ export default class UpsertCategoryTags extends Component {
           @tagGroups={{this.allowedTagGroups}}
           @onChange={{this.onAllowedTagGroupsChange}}
         />
-        <LinkTo @route="tagGroups" class="manage-tag-groups">{{i18n
-            "category.manage_tag_groups_link"
-          }}</LinkTo>
+        <LinkTo @route="tagGroups" class="manage-tag-groups">
+          {{i18n "category.manage_tag_groups_link"}}
+        </LinkTo>
       </@form.Container>
 
       <@form.Field
