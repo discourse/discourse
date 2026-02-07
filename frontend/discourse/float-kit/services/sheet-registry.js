@@ -45,7 +45,6 @@ export default class SheetRegistry extends Service {
    */
   register(controller) {
     this.sheetLayerStore.registerSheet(controller);
-    this.sheetLayerStore.syncLayerFromSheet(controller);
 
     if (controller.inertOutside) {
       this.applyScrollLock();
@@ -105,8 +104,6 @@ export default class SheetRegistry extends Service {
       }
     }
 
-    this.sheetLayerStore.updateSheet(controller);
-    this.sheetLayerStore.syncLayerFromSheet(controller);
     this.sheetLayerStore.recalculateInertOutside();
   }
 
