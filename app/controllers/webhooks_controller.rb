@@ -38,7 +38,7 @@ class WebhooksController < ActionController::Base
         # so we set the error code to 5.1.2 which translates to permanent failure bad destination system address.
         error_code = "5.1.2" if !error_code && event["type"] == "blocked"
 
-        if error_code[Email::SMTP_STATUS_TRANSIENT_FAILURE]
+        if error_code&.[](Email::SMTP_STATUS_TRANSIENT_FAILURE)
           process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
         else
           process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
@@ -239,7 +239,7 @@ class WebhooksController < ActionController::Base
     # only handle soft bounces, because hard bounces are also handled
     # by the "dropped" event and we don't want to increase bounce score twice
     # for the same message
-    if event == "bounced" && params["error"][Email::SMTP_STATUS_TRANSIENT_FAILURE]
+    if event == "bounced" && params["error"]&.[](Email::SMTP_STATUS_TRANSIENT_FAILURE)
       process_bounce(message_id, to_address, SiteSetting.soft_bounce_score, error_code)
     elsif event == "dropped"
       process_bounce(message_id, to_address, SiteSetting.hard_bounce_score, error_code)
@@ -278,6 +278,8 @@ class WebhooksController < ActionController::Base
   def valid_sendgrid_signature?
     signature = request.headers["X-Twilio-Email-Event-Webhook-Signature"]
     timestamp = request.headers["X-Twilio-Email-Event-Webhook-Timestamp"]
+    return false if signature.blank? || timestamp.blank?
+
     request.body.rewind
     payload = request.body.read
 
@@ -295,11 +297,13 @@ class WebhooksController < ActionController::Base
   end
 
   def valid_mailjet_token?
+    return false if params[:t].blank?
     ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.mailjet_webhook_token)
   end
 
   def valid_mandrill_signature?
     signature = request.headers["X-Mandrill-Signature"]
+    return false if signature.blank?
 
     payload = "#{Discourse.base_url}/webhooks/mandrill"
     params
@@ -320,10 +324,12 @@ class WebhooksController < ActionController::Base
   end
 
   def valid_postmark_token?
+    return false if params[:t].blank?
     ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.postmark_webhook_token)
   end
 
   def valid_sparkpost_token?
+    return false if params[:t].blank?
     ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.sparkpost_webhook_token)
   end
 
