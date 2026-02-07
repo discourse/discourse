@@ -22,10 +22,10 @@ describe "Viewing sidebar preferences", type: :system do
       user_preferences_navigation_menu_page.visit(user)
 
       expect(user_preferences_navigation_menu_page).to have_navigation_menu_preference_checked(
-        "pref-show-count-new-items",
+        "sidebar_link_to_filtered_list",
       )
       expect(user_preferences_navigation_menu_page).to have_navigation_menu_preference_checked(
-        "pref-link-to-filtered-list",
+        "sidebar_show_count_of_new_items",
       )
     end
   end
