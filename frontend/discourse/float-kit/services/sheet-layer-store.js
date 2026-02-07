@@ -10,7 +10,6 @@ export default class SheetLayerStore extends Service {
   rootsByComponentId = new Map();
   layerFocusState = new Map();
   inertElements = new Set();
-  rootElements = new Set();
   mutationObserver = null;
   recalculateInertTimeout = null;
   clickOutsideCleanup = null;
@@ -103,7 +102,6 @@ export default class SheetLayerStore extends Service {
     }
 
     this.inertElements = new Set();
-    this.rootElements = new Set();
   }
 
   consumeEscapeKey(event) {
@@ -117,8 +115,6 @@ export default class SheetLayerStore extends Service {
         event,
       });
     }
-
-    return true;
   }
 
   consumeClickOutside(event) {
@@ -128,17 +124,17 @@ export default class SheetLayerStore extends Service {
 
     if (targetElement?.matches('[data-d-sheet~="pass-through"] *')) {
       this.pointerDownTarget = null;
-      return true;
+      return;
     }
 
     if (!target || !target.isConnected) {
       this.pointerDownTarget = null;
-      return true;
+      return;
     }
 
     if (target === document.body && this.pointerDownTarget !== document.body) {
       this.pointerDownTarget = null;
-      return true;
+      return;
     }
 
     const sheetsInOrder = this.#orderedControllers();
@@ -152,7 +148,6 @@ export default class SheetLayerStore extends Service {
     }
 
     this.pointerDownTarget = null;
-    return true;
   }
 
   setLayerFocusedLastBeforeShowing(sheetId, element) {
@@ -367,7 +362,6 @@ export default class SheetLayerStore extends Service {
       rootElements.add(el);
     });
 
-    this.rootElements = rootElements;
     this.#moveFocusIfNecessary(rootElements, sheetsInOrder);
     this.#applyInert(rootElements);
   }

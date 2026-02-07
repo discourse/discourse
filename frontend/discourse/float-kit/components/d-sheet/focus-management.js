@@ -78,11 +78,11 @@ function getFirstSafeElement(elements) {
  *
  * @param {HTMLElement} container - The container element to search within
  * @param {string[]} [additionalSkipSelectors] - Additional selectors for elements to skip
- * @returns {{ safelyFocusableElements: HTMLElement[], safelyTabbableElements: HTMLElement[] }} Object containing arrays of focusable and tabbable elements
+ * @returns {{ safelyTabbableElements: HTMLElement[] }} Object containing tabbable elements
  */
 function getFocusableElements(container, additionalSkipSelectors = []) {
   if (!container) {
-    return { safelyFocusableElements: [], safelyTabbableElements: [] };
+    return { safelyTabbableElements: [] };
   }
 
   const skipSelector = [
@@ -107,15 +107,11 @@ function getFocusableElements(container, additionalSkipSelectors = []) {
       ),
   }));
 
-  const safelyFocusableElements = elementsWithData
-    .filter((data) => !data.skippable)
-    .map((data) => data.element);
-
   const safelyTabbableElements = elementsWithData
     .filter((data) => data.tabbable && !data.skippable)
     .map((data) => data.element);
 
-  return { safelyFocusableElements, safelyTabbableElements };
+  return { safelyTabbableElements };
 }
 
 /**

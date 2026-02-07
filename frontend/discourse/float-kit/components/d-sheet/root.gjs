@@ -268,7 +268,6 @@ export default class Root extends Component {
       themeColorManager: this.themeColorManager,
       sheetStackRegistry: this.sheetStackRegistry,
       sheetRegistry: this.sheetRegistry,
-      sheetLayerStore: this.sheetLayerStore,
     });
   }
 
