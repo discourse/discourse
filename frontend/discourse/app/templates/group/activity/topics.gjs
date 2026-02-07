@@ -4,7 +4,11 @@ import LoadMore from "discourse/components/load-more";
 
 export default <template>
   <LoadMore @action={{@controller.loadMore}} class="paginated-topics-list">
-    <BasicTopicList @topicList={{@controller.model}} @showPosters={{true}} />
+    <BasicTopicList
+      @topicList={{@controller.model}}
+      @showPosters={{true}}
+      @listContext="group-activity"
+    />
     <ConditionalLoadingSpinner @condition={{@controller.model.loadingMore}} />
   </LoadMore>
 </template>

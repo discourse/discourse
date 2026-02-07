@@ -235,7 +235,7 @@ export default class Item extends Component {
     return applyValueTransformer(
       "topic-list-item-mobile-layout",
       this.site.mobileView,
-      { topic: this.args.topic }
+      { topic: this.args.topic, listContext: this.args.listContext }
     );
   }
 
@@ -243,6 +243,7 @@ export default class Item extends Component {
     return applyValueTransformer("topic-list-item-class", [], {
       topic: this.args.topic,
       index: this.args.index,
+      listContext: this.args.listContext,
     });
   }
 
@@ -250,6 +251,7 @@ export default class Item extends Component {
     const parts = applyValueTransformer("topic-list-item-style", [], {
       topic: this.args.topic,
       index: this.args.index,
+      listContext: this.args.listContext,
     });
 
     const safeParts = parts.filter(Boolean).filter((part) => {

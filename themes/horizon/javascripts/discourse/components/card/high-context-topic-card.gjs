@@ -20,6 +20,7 @@ import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { shortDateNoYear } from "discourse/lib/formatter";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import { getTopicStatusBadge } from "../../lib/topic-status-badge";
 
 export default class HighContextTopicCard extends Component {
   @service capabilities;
@@ -93,21 +94,7 @@ export default class HighContextTopicCard extends Component {
   }
 
   get statusBadge() {
-    if (this.args.topic.is_hot) {
-      return {
-        icon: "fire",
-        text: "topic_statuses.hot.title",
-        className: "--hot",
-      };
-    }
-    if (this.args.topic.pinned || this.args.topic.pinned_globally) {
-      return {
-        icon: "thumbtack",
-        text: "topic_statuses.pinned.title",
-        className: "--pinned",
-      };
-    }
-    return null;
+    return getTopicStatusBadge(this.args.topic);
   }
 
   get topicCreator() {

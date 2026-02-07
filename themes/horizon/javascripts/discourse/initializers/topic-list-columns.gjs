@@ -37,23 +37,22 @@ const TopicCreator = <template>
   </td>
 </template>;
 
-function isHighContextRoute(routeName) {
-  if (!routeName) {
-    return false;
-  }
+const TOPIC_CARD_CONTEXTS = [
+  "discovery",
+  "suggested",
+  "related",
+  "group-activity",
+  "user-activity",
+];
 
-  // Only show high context cards on public topic list routes
-  // Discovery routes: /latest, /new, /unread, /top, /hot, /c/:category
-  if (routeName.startsWith("discovery")) {
-    return true;
-  }
+const SIMPLE_CARD_CONTEXTS = ["suggested", "related"];
 
-  // Tag routes: /tag/:tag_name
-  if (routeName.startsWith("tag")) {
-    return true;
-  }
+function isTopicCardContext(listContext) {
+  return TOPIC_CARD_CONTEXTS.includes(listContext);
+}
 
-  return false;
+function isSimpleCardContext(listContext) {
+  return SIMPLE_CARD_CONTEXTS.includes(listContext);
 }
 
 const HighContextCard = <template>
@@ -69,9 +68,8 @@ const HighContextCard = <template>
 export default {
   name: "topic-list-customizations",
 
-  initialize(container) {
+  initialize() {
     const isHighContext = settings.topic_card_high_context;
-    const router = container.lookup("service:router");
 
     function applySimpleLayout(columns) {
       columns.add("topic-status", {
@@ -94,14 +92,12 @@ export default {
       columns.delete("views");
       columns.delete("replies");
 
-      if (!router.currentRouteName.includes("userPrivateMessages")) {
-        columns.add("topic-activity", {
-          item: TopicActivity,
-          after: "title",
-        });
-        columns.delete("posters");
-        columns.delete("activity");
-      }
+      columns.add("topic-activity", {
+        item: TopicActivity,
+        after: "title",
+      });
+      columns.delete("posters");
+      columns.delete("activity");
     }
 
     function applyHighContextLayout(columns) {
@@ -118,13 +114,26 @@ export default {
 
     withPluginApi((api) => {
       api.registerValueTransformer(
-        "topic-list-columns",
-        ({ value: columns }) => {
-          if (isHighContext && isHighContextRoute(router.currentRouteName)) {
-            applyHighContextLayout(columns);
-          } else {
-            applySimpleLayout(columns);
+        "topic-list-class",
+        ({ value: classes, context }) => {
+          if (isTopicCardContext(context.listContext)) {
+            classes.push("--d-topic-cards");
           }
+          return classes;
+        }
+      );
+
+      api.registerValueTransformer(
+        "topic-list-columns",
+        ({ value: columns, context }) => {
+          if (!isTopicCardContext(context.listContext)) {
+            return columns;
+          }
+
+          isHighContext && !isSimpleCardContext(context.listContext)
+            ? applyHighContextLayout(columns)
+            : applySimpleLayout(columns);
+
           return columns;
         }
       );
@@ -132,18 +141,16 @@ export default {
       api.registerValueTransformer(
         "topic-list-item-class",
         ({ value: classes, context }) => {
-          // has-replies is needed for grid layout on all routes (including PMs)
-          if (context.topic.replyCount > 1) {
-            classes.push("has-replies");
-          }
-
-          // The rest only applies to public topic list routes
-          if (!isHighContextRoute(router.currentRouteName)) {
+          if (!isTopicCardContext(context.listContext)) {
             return classes;
           }
 
-          if (isHighContext) {
+          if (isHighContext && !isSimpleCardContext(context.listContext)) {
             classes.push("--high-context");
+          }
+
+          if (context.topic.replyCount > 1) {
+            classes.push("--has-replies");
           }
 
           if (
@@ -158,19 +165,29 @@ export default {
         }
       );
 
-      // Force desktop layout on public topic lists for Horizon card styling.
-      // Return undefined on other routes to preserve default mobile/desktop behavior.
-      api.registerValueTransformer("topic-list-item-mobile-layout", () => {
-        if (isHighContextRoute(router.currentRouteName)) {
-          return false;
+      // Disable mobile layout for topic card contexts
+      api.registerValueTransformer(
+        "topic-list-item-mobile-layout",
+        ({ value, context }) => {
+          if (isTopicCardContext(context.listContext)) {
+            return false;
+          }
+          return value;
         }
-      });
+      );
 
       api.registerBehaviorTransformer(
         "topic-list-item-click",
         ({ context: { event }, next }) => {
-          if (!isHighContextRoute(router.currentRouteName)) {
-            return next(); // Use default behavior on non-public routes
+          // Check if we're on a topic card route or in a card list context
+          // Note: behavior transformer doesn't have listContext in context,
+          // so we check for the --d-topic-cards class on the table
+          const isCardList = event.target.closest(
+            ".topic-list.--d-topic-cards"
+          );
+
+          if (!isCardList) {
+            return next(); // Use default behavior on non-topic-card routes
           }
 
           if (event.target.closest("a, button, input")) {

@@ -195,6 +195,7 @@ export default class DiscoveryTopics extends Component {
         @category={{@category}}
         @topics={{@model.sharedDrafts}}
         @discoveryList={{true}}
+        @listContext="discovery"
         class="shared-drafts"
       />
     {{/if}}
@@ -273,6 +274,7 @@ export default class DiscoveryTopics extends Component {
           @topics={{@model.topics}}
           @discoveryList={{true}}
           @focusLastVisitedTopic={{true}}
+          @listContext="discovery"
         />
 
         <LoadMore @action={{this.loadMore}} />
