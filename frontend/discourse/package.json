@@ -39,7 +39,7 @@
     "@json-editor/json-editor": "2.15.2",
     "@jsquash/jpeg": "^1.6.0",
     "@jsquash/resize": "^2.1.0",
-    "ace-builds": "^1.43.5",
+    "ace-builds": "^1.43.6",
     "chart.js": "4.5.1",
     "chartjs-adapter-moment": "^1.0.1",
     "chartjs-plugin-datalabels": "2.2.0",
