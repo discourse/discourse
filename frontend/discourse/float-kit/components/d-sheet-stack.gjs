@@ -33,7 +33,7 @@ export default class Root extends Component {
     super(owner, args);
 
     // Register stack early so children can register
-    this.sheetStackRegistry.registerStack({ id: this.id }, null);
+    this.sheetStackRegistry.registerStack({ id: this.id });
 
     registerDestructor(this, () => {
       this.sheetStackRegistry.unregisterStack(this.id);

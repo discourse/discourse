@@ -352,12 +352,6 @@ export default class Controller {
   sheetRegistry = null;
 
   /**
-   * Reference to the sheet layer store.
-   * @type {Object|null}
-   */
-  sheetLayerStore = null;
-
-  /**
    * Reference to the theme color manager.
    * @type {Object|null}
    */
@@ -839,7 +833,6 @@ export default class Controller {
       "onSafeToUnmountChange",
       "sheetStackRegistry",
       "sheetRegistry",
-      "sheetLayerStore",
       "themeColorManager",
     ];
 
@@ -1623,7 +1616,7 @@ export default class Controller {
     this.resetViewStyles();
     this.calculateDimensionsIfReady();
     this.setupResizeObserver();
-    this.sheetLayerStore?.recalculateInertOutside();
+    this.sheetRegistry?.sheetLayerStore?.recalculateInertOutside();
     this.#notifyElementsRegisteredIfReady();
   }
 
