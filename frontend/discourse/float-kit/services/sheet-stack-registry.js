@@ -219,16 +219,6 @@ export default class SheetStackRegistry extends Service {
   }
 
   /**
-   * Get all sheets in a stack.
-   *
-   * @param {string} stackId
-   * @returns {Object[]}
-   */
-  getSheetsInStack(stackId) {
-    return this.stackSheets.get(stackId) || [];
-  }
-
-  /**
    * Get the previous (parent) sheet in stack relative to a given sheet.
    *
    * @param {string} stackId
@@ -261,28 +251,6 @@ export default class SheetStackRegistry extends Service {
       return null;
     }
     return sheets[sheets.length - 1];
-  }
-
-  /**
-   * Check if any sheet in the stack is currently animating (not in idle position).
-   *
-   * @param {string} stackId
-   * @returns {boolean}
-   */
-  isStackAnimating(stackId) {
-    const sheets = this.stackSheets.get(stackId);
-    if (!sheets) {
-      return false;
-    }
-
-    return sheets.some((sheet) => {
-      const positionState = sheet.state?.position?.current;
-      return (
-        positionState &&
-        positionState !== "out" &&
-        !positionState.endsWith(".idle")
-      );
-    });
   }
 
   /**
@@ -353,16 +321,6 @@ export default class SheetStackRegistry extends Service {
     } else if (positionState?.matches("covered.status:indeterminate")) {
       parentSheet.sendToPositionMachine("GOTO_front");
     }
-  }
-
-  /**
-   * Get the stack instance.
-   *
-   * @param {string} stackId
-   * @returns {Object|null}
-   */
-  getStack(stackId) {
-    return this.stacks.get(stackId) || null;
   }
 
   /**

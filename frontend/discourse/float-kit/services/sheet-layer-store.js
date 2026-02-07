@@ -8,7 +8,6 @@ export default class SheetLayerStore extends Service {
   controllers = new Map();
   sheetOrder = [];
   rootsByComponentId = new Map();
-  layers = new Map();
   layerFocusState = new Map();
   inertElements = new Set();
   rootElements = new Set();
@@ -49,18 +48,9 @@ export default class SheetLayerStore extends Service {
     }
 
     this.controllers.delete(id);
-    this.removeLayer(id);
     this.sheetOrder = this.sheetOrder.filter((sheetId) => sheetId !== id);
 
     this.#syncGlobalListeners();
-  }
-
-  updateSheet(controller) {
-    if (!controller?.id) {
-      return;
-    }
-
-    this.controllers.set(controller.id, controller);
   }
 
   registerRoot(componentId, rootComponent) {
@@ -81,34 +71,6 @@ export default class SheetLayerStore extends Service {
 
   getRootByComponentId(componentId) {
     return this.rootsByComponentId.get(componentId);
-  }
-
-  syncLayerFromSheet(controller) {
-    if (!controller?.id) {
-      return;
-    }
-
-    const focusState = this.layerFocusState.get(controller.id);
-
-    this.layers.set(controller.id, {
-      sheetId: controller.id,
-      inertOutside: controller.inertOutside ?? true,
-      viewElement: controller.view ?? null,
-      backdropElement: controller.backdrop ?? null,
-      scrollContainerElement: controller.scrollContainer ?? null,
-      contentElement: controller.content ?? null,
-      elementFocusedLastBeforeShowing:
-        focusState?.elementFocusedLastBeforeShowing ?? null,
-      focusWasInsideOnClose: focusState?.focusWasInsideOnClose ?? false,
-    });
-  }
-
-  removeLayer(sheetId) {
-    if (!sheetId) {
-      return;
-    }
-
-    this.layers.delete(sheetId);
   }
 
   recalculateInertOutside() {
@@ -201,7 +163,6 @@ export default class SheetLayerStore extends Service {
     const focusState = this.layerFocusState.get(sheetId) || {};
     focusState.elementFocusedLastBeforeShowing = element ?? null;
     this.layerFocusState.set(sheetId, focusState);
-    this.#syncLayerFocusStateToLayer(sheetId);
   }
 
   captureLayerFocusedLastBeforeShowingFromActive(sheetId) {
@@ -216,7 +177,6 @@ export default class SheetLayerStore extends Service {
 
     focusState.elementFocusedLastBeforeShowing = document.activeElement;
     this.layerFocusState.set(sheetId, focusState);
-    this.#syncLayerFocusStateToLayer(sheetId);
   }
 
   captureLayerFocusWasInsideOnClose(sheetId, viewElement) {
@@ -233,7 +193,6 @@ export default class SheetLayerStore extends Service {
       viewElement.contains(activeElement);
 
     this.layerFocusState.set(sheetId, focusState);
-    this.#syncLayerFocusStateToLayer(sheetId);
   }
 
   executeLayerDismissAutoFocus({ sheetId, viewElement, onDismissAutoFocus }) {
@@ -251,12 +210,10 @@ export default class SheetLayerStore extends Service {
 
     focusState.focusWasInsideOnClose = false;
     this.layerFocusState.set(sheetId, focusState);
-    this.#syncLayerFocusStateToLayer(sheetId);
 
     if (!focusWasInside && document.contains(activeElement)) {
       focusState.elementFocusedLastBeforeShowing = null;
       this.layerFocusState.set(sheetId, focusState);
-      this.#syncLayerFocusStateToLayer(sheetId);
       return;
     }
 
@@ -269,7 +226,6 @@ export default class SheetLayerStore extends Service {
     if (behavior.focus === false) {
       focusState.elementFocusedLastBeforeShowing = null;
       this.layerFocusState.set(sheetId, focusState);
-      this.#syncLayerFocusStateToLayer(sheetId);
       return;
     }
 
@@ -282,7 +238,6 @@ export default class SheetLayerStore extends Service {
     target.focus({ preventScroll: true });
     focusState.elementFocusedLastBeforeShowing = null;
     this.layerFocusState.set(sheetId, focusState);
-    this.#syncLayerFocusStateToLayer(sheetId);
   }
 
   clearLayerFocusState(sheetId) {
@@ -291,7 +246,6 @@ export default class SheetLayerStore extends Service {
     }
 
     this.layerFocusState.delete(sheetId);
-    this.#syncLayerFocusStateToLayer(sheetId);
   }
 
   #processEscapeOnLayer({ sheetsInOrder, layerIndex, event }) {
@@ -388,9 +342,6 @@ export default class SheetLayerStore extends Service {
     this.cleanupInert();
 
     const sheetsInOrder = this.#orderedControllers();
-    for (const sheet of sheetsInOrder) {
-      this.syncLayerFromSheet(sheet);
-    }
 
     const hasInertOutside = sheetsInOrder.some((sheet) => sheet.inertOutside);
 
@@ -605,21 +556,6 @@ export default class SheetLayerStore extends Service {
 
     this.#cleanupClickOutsideListener();
     this.#cleanupEscapeKeyListener();
-  }
-
-  #syncLayerFocusStateToLayer(sheetId) {
-    const layer = this.layers.get(sheetId);
-    if (!layer) {
-      return;
-    }
-
-    const focusState = this.layerFocusState.get(sheetId) || {};
-    this.layers.set(sheetId, {
-      ...layer,
-      elementFocusedLastBeforeShowing:
-        focusState.elementFocusedLastBeforeShowing ?? null,
-      focusWasInsideOnClose: focusState.focusWasInsideOnClose ?? false,
-    });
   }
 
 }
