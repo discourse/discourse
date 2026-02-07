@@ -4,6 +4,7 @@ import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import effect from "discourse/float-kit/helpers/effect";
 import concatClass from "discourse/helpers/concat-class";
+import { capabilities } from "discourse/services/capabilities";
 import Outlet from "./outlet";
 
 /**
@@ -38,6 +39,16 @@ export default class Backdrop extends Component {
   @tracked backdropElement = null;
 
   /**
+   * Override for the travel animation when theme color dimming takes over opacity.
+   * @type {Object|null}
+   */
+  @tracked _travelAnimationOverride = null;
+
+  _themeColorDimmingAlpha = 0;
+  _themeColorDimmingOverlay = null;
+  _themeColorDimmingTravelCleanup = null;
+
+  /**
    * Whether the backdrop responds to click/swipe interactions.
    * Defaults to true when the arg is not provided.
    *
@@ -45,6 +56,22 @@ export default class Backdrop extends Component {
    */
   get swipeable() {
     return this.args.swipeable ?? true;
+  }
+
+  /**
+   * Whether theme color dimming is effectively enabled.
+   * When set to "auto", checks WebKit capabilities.
+   *
+   * @type {boolean}
+   */
+  get effectiveThemeColorDimming() {
+    const dimming = this.args.themeColorDimming ?? false;
+    if (dimming === "auto") {
+      return (
+        capabilities.isWebKit && !capabilities.isStandaloneWithBlackTranslucent
+      );
+    }
+    return Boolean(dimming);
   }
 
   /**
@@ -71,6 +98,15 @@ export default class Backdrop extends Component {
   }
 
   /**
+   * Returns the override animation when dimming is active, otherwise the effective animation.
+   *
+   * @type {Object|null}
+   */
+  get activeTravelAnimation() {
+    return this._travelAnimationOverride ?? this.effectiveTravelAnimation;
+  }
+
+  /**
    * Stores the rendered backdrop element.
    *
    * @param {HTMLElement} element
@@ -87,19 +123,93 @@ export default class Backdrop extends Component {
    * @param {Object} sheet - The sheet controller instance
    * @param {HTMLElement} backdropElement - The backdrop DOM element
    * @param {boolean} swipeable - Whether the backdrop responds to interactions
-   * @param {Object|null} travelAnimation - The effective travel animation config
+   * @param {Object|null} travelAnimation - Tracked dependency for re-registration
    * @returns {Function|undefined} Cleanup function to unregister the backdrop
    */
   @action
   syncBackdrop(sheet, backdropElement, swipeable, travelAnimation) {
+    // travelAnimation is a tracked dependency that triggers re-registration
+    // when the animation override changes, but is not passed to the controller
+    void travelAnimation;
+
     if (!sheet || !backdropElement) {
       return;
     }
 
-    sheet.registerBackdrop(backdropElement, travelAnimation, swipeable);
+    sheet.registerBackdrop(backdropElement, swipeable);
 
     return () => {
       sheet.unregisterBackdrop(backdropElement);
+    };
+  }
+
+  /**
+   * Manages theme color dimming lifecycle, gated by long-running state.
+   * When active, registers an overlay and a travel animation that drives
+   * both backdrop opacity and the overlay alpha.
+   *
+   * @param {Object} sheet - The sheet controller instance
+   * @param {HTMLElement} backdropElement - The backdrop DOM element
+   * @param {boolean} effectiveThemeColorDimming - Whether dimming is enabled
+   * @param {boolean} longRunningActive - Whether long-running state is active
+   * @returns {Function|undefined} Cleanup function
+   */
+  @action
+  syncThemeColorDimming(
+    sheet,
+    backdropElement,
+    effectiveThemeColorDimming,
+    longRunningActive
+  ) {
+    if (
+      !sheet ||
+      !backdropElement ||
+      !effectiveThemeColorDimming ||
+      !longRunningActive
+    ) {
+      return;
+    }
+
+    const animation = this.effectiveTravelAnimation;
+    const opacityFn =
+      typeof animation?.opacity === "function"
+        ? animation.opacity
+        : ({ progress }) => Math.min(progress * 0.33, 0.33);
+
+    this._travelAnimationOverride = animation
+      ? { ...animation, opacity: "ignore" }
+      : { opacity: "ignore" };
+
+    const computedStyle = window.getComputedStyle(backdropElement);
+    const backgroundColor = computedStyle.backgroundColor || "rgb(0, 0, 0)";
+
+    this._themeColorDimmingOverlay =
+      sheet.themeColorAdapter.registerThemeColorDimmingOverlay({
+        color: backgroundColor,
+        alpha: this._themeColorDimmingAlpha,
+      });
+
+    this._themeColorDimmingTravelCleanup = sheet.registerTravelAnimation({
+      callback: (progress) => {
+        const opacity = opacityFn({ progress });
+        this._themeColorDimmingAlpha = opacity;
+        backdropElement.style.setProperty("opacity", opacity);
+
+        if (this._themeColorDimmingOverlay) {
+          this._themeColorDimmingOverlay.updateAlpha(opacity);
+        }
+      },
+    });
+
+    return () => {
+      this._themeColorDimmingTravelCleanup?.();
+      this._themeColorDimmingTravelCleanup = null;
+
+      this._themeColorDimmingOverlay?.remove?.();
+      this._themeColorDimmingOverlay = null;
+
+      this._themeColorDimmingAlpha = 0;
+      this._travelAnimationOverride = null;
     };
   }
 
@@ -110,11 +220,18 @@ export default class Backdrop extends Component {
         @sheet
         this.backdropElement
         this.swipeable
-        this.effectiveTravelAnimation
+        this.activeTravelAnimation
+      }}
+      {{effect
+        this.syncThemeColorDimming
+        @sheet
+        this.backdropElement
+        this.effectiveThemeColorDimming
+        @sheet.state.longRunning.isActive
       }}
       <Outlet
         @sheet={{@sheet}}
-        @travelAnimation={{this.effectiveTravelAnimation}}
+        @travelAnimation={{this.activeTravelAnimation}}
         @stackingAnimation={{@stackingAnimation}}
         data-d-sheet={{concatClass
           "backdrop"

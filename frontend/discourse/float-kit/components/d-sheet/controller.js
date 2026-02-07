@@ -370,24 +370,6 @@ export default class Controller {
   stackingAnimations = [];
 
   /**
-   * Theme color dimming overlay for backdrop.
-   * @type {{updateAlpha: Function, remove: Function}|null}
-   */
-  backdropThemeColorDimmingOverlay = null;
-
-  /**
-   * Cleanup function for backdrop theme color dimming travel animation.
-   * @type {Function|null}
-   */
-  backdropThemeColorDimmingTravelAnimationCleanup = null;
-
-  /**
-   * Current alpha value for backdrop theme color dimming.
-   * @type {number}
-   */
-  backdropThemeColorDimmingAlpha = 0;
-
-  /**
    * Callback invoked when travel status changes.
    * @type {Function|null}
    */
@@ -2020,67 +2002,17 @@ export default class Controller {
   }
 
   /**
-   * Register backdrop element with optional custom travel animation.
+   * Register backdrop element.
    *
    * @param {HTMLElement} backdrop - The backdrop element
-   * @param {Object|Function|null} travelAnimation - Travel animation config (used for theme color dimming)
    * @param {boolean} swipeable - Whether backdrop responds to swipe/click
    */
   @action
-  registerBackdrop(backdrop, travelAnimation = null, swipeable = true) {
+  registerBackdrop(backdrop, swipeable = true) {
     this.backdrop = backdrop;
     this.backdropSwipeable = swipeable;
     backdrop.style.opacity = 0;
     backdrop.style.willChange = "opacity";
-    this.#cleanupBackdropThemeColorDimming();
-
-    const isDisabled =
-      travelAnimation &&
-      typeof travelAnimation === "object" &&
-      travelAnimation.opacity === null;
-
-    if (!isDisabled && this.themeColorAdapter.effectiveThemeColorDimming) {
-      const opacityFn =
-        typeof travelAnimation === "function"
-          ? travelAnimation
-          : typeof travelAnimation?.opacity === "function"
-            ? travelAnimation.opacity
-            : ({ progress }) => Math.min(progress * 0.33, 0.33);
-
-      const computedStyle = window.getComputedStyle(backdrop);
-      const backgroundColor = computedStyle.backgroundColor || "rgb(0, 0, 0)";
-
-      this.backdropThemeColorDimmingOverlay =
-        this.themeColorAdapter.registerThemeColorDimmingOverlay({
-          color: backgroundColor,
-          alpha: this.backdropThemeColorDimmingAlpha,
-        });
-
-      this.backdropThemeColorDimmingTravelAnimationCleanup =
-        this.registerTravelAnimation({
-          callback: (progress) => {
-            const opacity = opacityFn({ progress });
-            this.backdropThemeColorDimmingAlpha = opacity;
-            backdrop.style.setProperty("opacity", opacity);
-
-            if (this.backdropThemeColorDimmingOverlay) {
-              this.backdropThemeColorDimmingOverlay.updateAlpha(opacity);
-            }
-          },
-        });
-    }
-  }
-
-  /**
-   * Clean up backdrop theme color dimming overlay and travel animation.
-   * @private
-   */
-  #cleanupBackdropThemeColorDimming() {
-    this.backdropThemeColorDimmingTravelAnimationCleanup?.();
-    this.backdropThemeColorDimmingTravelAnimationCleanup = null;
-
-    this.backdropThemeColorDimmingOverlay?.remove?.();
-    this.backdropThemeColorDimmingOverlay = null;
   }
 
   /**
@@ -2094,7 +2026,6 @@ export default class Controller {
       return;
     }
 
-    this.#cleanupBackdropThemeColorDimming();
     this.backdrop = null;
     this.backdropSwipeable = false;
   }
