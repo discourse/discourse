@@ -64,8 +64,7 @@ class StaticController < ApplicationController
       return redirect_to path("/login")
     end
 
-    rename_faq =
-      UpcomingChanges.enabled_for_user?(:experimental_rename_faq_to_guidelines, current_user)
+    rename_faq = UpcomingChanges.enabled_for_user?(:rename_faq_to_guidelines, current_user)
 
     if rename_faq
       redirect_paths = %w[/rules /conduct]
@@ -111,7 +110,7 @@ class StaticController < ApplicationController
       @title = "#{title_prefix} - #{SiteSetting.title}"
       @body = @topic.posts.first.cooked
       @faq_overridden = SiteSetting.faq_url.present?
-      @experimental_rename_faq_to_guidelines = rename_faq
+      @rename_faq_to_guidelines = rename_faq
 
       render :show, layout: !request.xhr?, formats: [:html]
       return

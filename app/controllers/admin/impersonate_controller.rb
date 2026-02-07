@@ -13,7 +13,7 @@ class Admin::ImpersonateController < Admin::AdminController
 
     StaffActionLogger.new(current_user).log_impersonate(user)
 
-    if UpcomingChanges.enabled_for_user?(:experimental_impersonation, current_user)
+    if UpcomingChanges.enabled_for_user?(:impersonate_without_logout, current_user)
       raise Discourse::InvalidAccess if current_user.is_impersonating
 
       start_impersonating_user(user)
@@ -25,7 +25,7 @@ class Admin::ImpersonateController < Admin::AdminController
   end
 
   def destroy
-    unless UpcomingChanges.enabled_for_user?(:experimental_impersonation, current_user)
+    unless UpcomingChanges.enabled_for_user?(:impersonate_without_logout, current_user)
       raise Discourse::NotFound
     end
 

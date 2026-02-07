@@ -5,7 +5,7 @@ RSpec.describe Admin::FormTemplatesController do
   fab!(:user)
   fab!(:form_template)
 
-  before { SiteSetting.experimental_form_templates = true }
+  before { SiteSetting.enable_form_templates = true }
 
   describe "#index" do
     context "when logged in as an admin" do
@@ -33,7 +33,7 @@ RSpec.describe Admin::FormTemplatesController do
     context "when experimental form templates is disabled" do
       before do
         sign_in(admin)
-        SiteSetting.experimental_form_templates = false
+        SiteSetting.enable_form_templates = false
       end
 
       it "should not work if you are an admin" do

@@ -189,7 +189,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
   end
 
   describe "#toggle_change" do
-    let(:setting_name) { "experimental_form_templates" }
+    let(:setting_name) { "enable_form_templates" }
 
     context "when logged in as non-admin" do
       before { sign_in(user) }
@@ -211,15 +211,15 @@ RSpec.describe Admin::Config::UpcomingChangesController do
       end
 
       it "toggles the setting from false to true" do
-        SiteSetting.experimental_form_templates = false
+        SiteSetting.enable_form_templates = false
 
         expect {
           put "/admin/config/upcoming-changes/toggle.json", params: { setting_name:, enabled: true }
-        }.to change { SiteSetting.experimental_form_templates }.from(false).to(true)
+        }.to change { SiteSetting.enable_form_templates }.from(false).to(true)
       end
 
       it "toggles the setting from true to false" do
-        SiteSetting.experimental_form_templates = true
+        SiteSetting.enable_form_templates = true
 
         expect {
           put "/admin/config/upcoming-changes/toggle.json",
@@ -227,7 +227,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
                 setting_name:,
                 enabled: false,
               }
-        }.to change { SiteSetting.experimental_form_templates }.from(true).to(false)
+        }.to change { SiteSetting.enable_form_templates }.from(true).to(false)
       end
 
       it "logs the change in staff action logs" do

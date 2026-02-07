@@ -14,9 +14,9 @@
 # via the UI and the UpcomingChanges::Toggle service.
 
 DiscourseEvent.on(:upcoming_change_enabled) do |setting_name|
-  # Respond to event here, e.g. if setting_name == :experimental_form_templates do X.
+  # Respond to event here, e.g. if setting_name == :enable_form_templates do X.
 end
 
 DiscourseEvent.on(:upcoming_change_disabled) do |setting_name|
-  # Respond to event here, e.g. if setting_name == :experimental_form_templates do X.
+  # Respond to event here, e.g. if setting_name == :enable_form_templates do X.
 end

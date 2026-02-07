@@ -199,10 +199,7 @@ export default class ComposerService extends Service {
 
   @computed("model.category", "skipFormTemplate")
   get formTemplateIds() {
-    if (
-      !this.siteSettings.experimental_form_templates ||
-      this.skipFormTemplate
-    ) {
+    if (!this.siteSettings.enable_form_templates || this.skipFormTemplate) {
       return null;
     }
 

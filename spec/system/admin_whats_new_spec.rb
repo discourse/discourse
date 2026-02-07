@@ -140,7 +140,7 @@ describe "Admin What's New Page", type: :system do
             "discourse_version" => "",
             "created_at" => "2023-11-10T02:52:41.462Z",
             "updated_at" => "2023-11-10T04:28:47.020Z",
-            "related_site_setting" => "experimental_form_templates",
+            "related_site_setting" => "enable_form_templates",
             "experiment" => false,
           },
         ],
@@ -155,7 +155,7 @@ describe "Admin What's New Page", type: :system do
       end
       expect(page).to have_content(I18n.t("admin_js.admin.dashboard.new_features.feature_enabled"))
       whats_new_page.visit
-      expect(SiteSetting.experimental_form_templates).to be true
+      expect(SiteSetting.enable_form_templates).to be true
       expect(whats_new_page.enable_item_toggle.checked?).to be_truthy
     end
   end
@@ -175,7 +175,7 @@ describe "Admin What's New Page", type: :system do
             "discourse_version" => "",
             "created_at" => "2023-11-10T02:52:41.462Z",
             "updated_at" => "2023-11-10T04:28:47.020Z",
-            "related_site_setting" => "experimental_form_templates",
+            "related_site_setting" => "enable_form_templates",
             "experiment" => false,
           },
         ],
@@ -198,7 +198,7 @@ describe "Admin What's New Page", type: :system do
             "discourse_version" => "",
             "created_at" => "2023-11-10T02:52:41.462Z",
             "updated_at" => "2023-11-10T04:28:47.020Z",
-            "related_site_setting" => "experimental_form_templates",
+            "related_site_setting" => "enable_form_templates",
             "experiment" => true,
           },
         ],
@@ -242,7 +242,7 @@ describe "Admin What's New Page", type: :system do
             "discourse_version" => "",
             "created_at" => "2023-11-10T02:52:41.462Z",
             "updated_at" => "2023-11-10T04:28:47.020Z",
-            "related_site_setting" => "experimental_form_templates",
+            "related_site_setting" => "enable_form_templates",
             "experiment" => true,
           },
           {

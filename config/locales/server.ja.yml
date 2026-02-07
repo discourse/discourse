@@ -2322,7 +2322,7 @@ ja:
     experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
     show_preview_for_form_templates: "フォームテンプレート機能のプレビューを有効にする"
     lazy_load_categories_groups: "これらのグループのユーザーに対してのみ、カテゴリ情報を遅延読み込みする。これにより、カテゴリ数の多いサイトのパフォーマンスが改善されます。"
-    experimental_auto_grid_images: "作成ツールに 3 つ以上の画像がアップロードされると、画像を自動的に [grid] タグで囲みます。"
+    enable_auto_grid_images: "作成ツールに 3 つ以上の画像がアップロードされると、画像を自動的に [grid] タグで囲みます。"
     page_loading_indicator: "Discourse 内のページナビゲーション中に表示される読み込みインジケーターを構成します。「スピナー」はページ全体のインジケーターです。「スライダー」は画面上部に細いバーを表示します。"
     show_user_menu_avatars: "ユーザーメニューにユーザーアバターを表示する"
     about_page_hidden_groups: "/about ページに特定のグループのメンバーを表示しない。"

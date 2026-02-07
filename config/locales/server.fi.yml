@@ -2397,7 +2397,7 @@ fi:
     experimental_new_new_view_groups: 'Ota käyttöön uusien ketjujen luettelo, joka yhdistää lukemattomat ja uudet ketjut, ja linkitä sivupalkin "Kaikki"-linkki siihen.'
     show_preview_for_form_templates: "Ota esikatselu käyttöön lomakkemalliominaisuudessa"
     lazy_load_categories_groups: "Käytä laiskaa latausta alueen tietoihin vain näiden ryhmien käyttäjille. Tämä parantaa suorituskykyä sivustoilla, joilla on useita alueita."
-    experimental_auto_grid_images: "Lisää automaattisesti kuvat [grid]-tunnisteisiin, kun 3 tai useampia kuvia ladataan kirjoitustilassa."
+    enable_auto_grid_images: "Lisää automaattisesti kuvat [grid]-tunnisteisiin, kun 3 tai useampia kuvia ladataan kirjoitustilassa."
     page_loading_indicator: "Määritä latausilmaisin, joka näkyy Discoursessa sivujen navigointien aikana. \"Spinner\" on koko sivun ilmaisin. \"Slider\" näyttää kapean palkin ruudun yläosassa."
     show_user_menu_avatars: "Näytä käyttäjien avatarit käyttäjävalikossa"
     about_page_hidden_groups: "Älä näytä tiettyjen ryhmien jäseniä /about-sivulla."

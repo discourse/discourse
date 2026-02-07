@@ -2400,7 +2400,7 @@ es:
     experimental_new_new_view_groups: 'Activa una nueva lista de temas que combine los no leídos y los nuevos y haz que el enlace «Todo» de la barra lateral enlace a ella.'
     show_preview_for_form_templates: "Activa la vista previa de las plantillas de formulario"
     lazy_load_categories_groups: "Carga lenta de la información de categoría solo para los usuarios de estos grupos. Esto mejora el rendimiento en sitios con muchas categorías."
-    experimental_auto_grid_images: "Envuelve automáticamente las imágenes en etiquetas [grid] al cargar 3 o más imágenes en el compositor."
+    enable_auto_grid_images: "Envuelve automáticamente las imágenes en etiquetas [grid] al cargar 3 o más imágenes en el compositor."
     page_loading_indicator: "Configura el indicador de carga que aparece durante la navegación por las páginas dentro de Discourse. «Spinner» es un indicador de página completa. «Slider» muestra una barra estrecha en la parte superior de la pantalla."
     show_user_menu_avatars: "Mostrar avatares de usuario en el menú de usuario"
     about_page_hidden_groups: "No mostrar a los miembros de determinados grupos en la página /about."
