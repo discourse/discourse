@@ -33,7 +33,7 @@ RSpec.describe "Chat Integration Rule Tags", type: :system do
       tags: ["support"],
     )
 
-    visit("/admin/plugins/chat-integration/discord")
+    visit("/admin/plugins/discourse-chat-integration/discord")
 
     within(".channel-details table tbody tr") do
       expect(page).to have_content("support")

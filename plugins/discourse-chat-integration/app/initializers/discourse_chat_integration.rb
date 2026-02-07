@@ -31,7 +31,7 @@ require_relative "../models/channel"
 require_relative "../serializers/channel_serializer"
 require_relative "../serializers/rule_serializer"
 
-require_relative "../controllers/chat_controller"
+require_relative "../controllers/discourse_chat_integration/chat_controller"
 require_relative "../controllers/public_controller"
 
 require_relative "../routes/discourse_chat_integration"
