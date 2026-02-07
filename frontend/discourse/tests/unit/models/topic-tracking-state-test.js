@@ -1115,3 +1115,94 @@ module("Unit | Model | topic-tracking-state | /new", function (hooks) {
     );
   });
 });
+
+module("Unit | Model | topic-tracking-state | gap detection", function (hooks) {
+  setupTest(hooks);
+
+  hooks.beforeEach(function () {
+    this.clock = fakeTime("2012-12-31 12:00");
+    this.store = getOwner(this).lookup("service:store");
+
+    const currentUser = User.create({
+      id: 1,
+      username: "test_user",
+    });
+
+    this.trackingState = this.store.createRecord("topic-tracking-state", {
+      messageBus: MessageBus,
+      currentUser,
+    });
+
+    // Establish channels with initial message ID of 100
+    this.trackingState.establishChannels({
+      "/latest": 100,
+    });
+  });
+
+  hooks.afterEach(function () {
+    this.clock.restore();
+  });
+
+  test("sequential messages are processed normally", async function (assert) {
+    const payload = {
+      topic_id: 1,
+      message_type: "latest",
+      payload: {
+        topic_id: 1,
+        highest_post_number: 1,
+        category_id: 5,
+      },
+    };
+
+    // Message 101 (expected after 100)
+    await publishToMessageBus("/latest", payload, 1, 101);
+
+    assert.strictEqual(
+      this.trackingState._lastSeenIds["/latest"],
+      101,
+      "last seen ID updated to 101"
+    );
+  });
+
+  test("gap in message sequence triggers resync", async function (assert) {
+    let resyncCalled = false;
+    this.trackingState._resync = async function () {
+      resyncCalled = true;
+    };
+
+    const payload = {
+      topic_id: 1,
+      message_type: "latest",
+      payload: {
+        topic_id: 1,
+        highest_post_number: 1,
+        category_id: 5,
+      },
+    };
+
+    // Message 107 instead of expected 101 (gap of 6, exceeds threshold of 5)
+    await publishToMessageBus("/latest", payload, 1, 107);
+
+    assert.true(resyncCalled, "resync was triggered due to gap");
+    // Message is still processed (lastSeenId updated) even when gap triggers resync
+    assert.strictEqual(
+      this.trackingState._lastSeenIds["/latest"],
+      107,
+      "last seen ID updated to received message ID"
+    );
+  });
+
+  test("_setState uses deepEqual for comparison", function (assert) {
+    // Create two objects with same content but potentially different key order
+    const data1 = { topic_id: 1, category_id: 5, tags: ["a", "b"] };
+    const data2 = { topic_id: 1, category_id: 5, tags: ["a", "b"] };
+
+    this.trackingState._setState({ topic: 1, data: data1 });
+    const firstSet = this.trackingState._setState({ topic: 1, data: data2 });
+
+    assert.false(
+      firstSet,
+      "_setState returns false when data is equal (no change)"
+    );
+  });
+});
