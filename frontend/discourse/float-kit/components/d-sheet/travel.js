@@ -595,6 +595,13 @@ export function executeSheetTravel(config) {
             }
           }
 
+          for (let i = 0; i < travelAnimations.length; i++) {
+            const anim = travelAnimations[i];
+            if (anim.callback && !anim.config) {
+              anim.callback(progress);
+            }
+          }
+
           if (onTravel) {
             onTravel({
               progress,
