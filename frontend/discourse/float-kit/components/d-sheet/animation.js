@@ -83,7 +83,7 @@ const STANDARD_EASINGS = {
  * @param {string} easing - Easing string (e.g., "cubic-bezier(0.1, 0.7, 1.0, 0.1)")
  * @returns {number[]|null} Array of 4 points or null if invalid
  */
-function parseCubicBezier(easing) {
+export function parseCubicBezier(easing) {
   const prefix = "cubic-bezier(";
   if (!easing.startsWith(prefix)) {
     return null;
@@ -218,7 +218,7 @@ function getTForX(x, x1, x2, sampleValues) {
  * @param {number} y2 - Second control point y
  * @returns {Function} Easing function that takes time (0-1) and returns progress (0-1)
  */
-function createCubicBezierEasing(x1, y1, x2, y2) {
+export function createCubicBezierEasing(x1, y1, x2, y2) {
   if (!(0 <= x1 && x1 <= 1 && 0 <= x2 && x2 <= 1)) {
     throw new Error("bezier x values must be in [0, 1] range");
   }

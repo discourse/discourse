@@ -1,4 +1,11 @@
 import Service from "@ember/service";
+import {
+  createCubicBezierEasing,
+  parseCubicBezier,
+} from "discourse/float-kit/components/d-sheet/animation";
+
+const DEFAULT_ANIMATION_EASING = "cubic-bezier(0.25, 0.1, 0.25, 1)";
+const DEFAULT_ANIMATION_DURATION = 500;
 
 export default class ThemeColorManager extends Service {
   themeColorMetaTag = null;
@@ -138,6 +145,52 @@ export default class ThemeColorManager extends Service {
   updateThemeColorDimmingOverlayAlphaValue(overlay, alpha) {
     overlay.alpha = alpha;
     this.setActualThemeColor();
+  }
+
+  #runAnimation(callback, { duration, cubicBezier }) {
+    const easingFn = createCubicBezierEasing(...cubicBezier);
+    let startTime = null;
+
+    const step = (time) => {
+      if (startTime === null) {
+        startTime = time;
+      }
+
+      const elapsed = time - startTime;
+      if (elapsed < duration) {
+        callback(easingFn(elapsed / duration));
+        requestAnimationFrame(step);
+      } else {
+        callback(1);
+      }
+    };
+
+    requestAnimationFrame(step);
+  }
+
+  animateDimmingOverlayOpacity(overlay, element, options) {
+    const { keyframes, duration, easing } = options;
+    const [start, end] = keyframes;
+    const interpolate = (progress) => start + (end - start) * progress;
+
+    const cubicBezier = parseCubicBezier(easing || DEFAULT_ANIMATION_EASING);
+    if (!cubicBezier) {
+      return;
+    }
+
+    this.#runAnimation(
+      (progress) => {
+        const value = interpolate(progress);
+        if (overlay) {
+          this.updateThemeColorDimmingOverlayAlphaValue(overlay, value);
+        }
+        element?.style.setProperty("opacity", value);
+      },
+      {
+        duration: duration ?? DEFAULT_ANIMATION_DURATION,
+        cubicBezier,
+      }
+    );
   }
 
   removeThemeColorDimmingOverlay(dimmingOverlayId) {
