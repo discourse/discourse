@@ -1,10 +1,88 @@
 .admin-report-chart {
-  border: 1px solid var(--primary-50);
-  box-shadow: var(--shadow-card);
   padding: var(--space-8) var(--space-4) var(--space-4);
   animation: fadein 2s;
 
   @media (prefers-reduced-motion) {
     animation-duration: 0s;
+  }
+}
+
+.chart {
+  &__wrapper {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__filters {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-4);
+
+    .group-filter .select-kit {
+      width: auto; // overrule for top level admin css
+    }
+
+    .chart-groupings {
+      display: flex;
+      gap: var(--space-2);
+      background-color: var(--primary-very-low);
+      border-radius: var(--d-border-radius-large);
+      padding: var(--space-1) var(--space-6);
+
+      .chart-grouping {
+        border-radius: var(--d-border-radius-large);
+        background: transparent;
+
+        &:hover {
+          background: transparent;
+          color: var(--primary);
+        }
+
+        &.active {
+          background: var(--secondary);
+          box-shadow: var(--shadow-card);
+        }
+      }
+    }
+  }
+
+  &__dates {
+    margin-left: auto;
+
+    .d-date-time-input-range {
+      display: flex;
+      gap: var(--space-2);
+
+      > * {
+        margin: 0;
+      }
+    }
+  }
+
+  &__actions {
+    display: flex;
+    gap: var(--space-4);
+    justify-content: flex-end;
+  }
+}
+
+.filters {
+  display: flex;
+  align-items: center;
+
+  .modes {
+    margin: 0 0 1em 0;
+    padding: 0;
+    list-style: none;
+
+    .mode {
+      display: inline-flex;
+      flex: 1 0 0px;
+
+      .mode-btn.is-current {
+        color: var(--tertiary);
+      }
+    }
   }
 }

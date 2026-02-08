@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, fn } from "@ember/helper";
+import { fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
@@ -623,7 +623,67 @@ export default class AdminReport extends Component {
               </div>
             {{/if}}
 
-            <div class="body">
+            <div class="chart__wrapper">
+              {{#if this.showFilteringUI}}
+                <div class="chart__filters">
+                  {{#if this.showModes}}
+                    <div class="modes">
+                      {{#each this.displayedModes as |displayedMode|}}
+                        <DButton
+                          @action={{fn this.onChangeMode displayedMode.mode}}
+                          @icon={{displayedMode.icon}}
+                          class={{displayedMode.cssClass}}
+                        />
+                      {{/each}}
+                    </div>
+                  {{/if}}
+
+                  {{#if this.isChartMode}}
+                    {{#if this.model.average}}
+                      <span class="average-chart">
+                        {{i18n "admin.dashboard.reports.average_chart_label"}}
+                      </span>
+                    {{/if}}
+                    <div class="chart-groupings">
+                      {{#each this.chartGroupings as |chartGrouping|}}
+                        <DButton
+                          @label={{chartGrouping.label}}
+                          @action={{fn this.changeGrouping chartGrouping.id}}
+                          @disabled={{chartGrouping.disabled}}
+                          class={{chartGrouping.class}}
+                        />
+                      {{/each}}
+                    </div>
+                  {{/if}}
+
+                  {{#if this.showDatesOptions}}
+                    <div class="chart__dates">
+                      <DateTimeInputRange
+                        @from={{this.startDate}}
+                        @to={{this.endDate}}
+                        @onChange={{this.onChangeDateRange}}
+                        @showFromTime={{false}}
+                        @showToTime={{false}}
+                      />
+
+                    </div>
+                  {{/if}}
+
+                  {{#each this.model.available_filters as |filter|}}
+                    <div class="chart__group">
+                      <div class="input">
+                        {{component
+                          (this.reportFilterComponent filter)
+                          model=this.model
+                          filter=filter
+                          applyFilter=this.applyFilter
+                        }}
+                      </div>
+                    </div>
+                  {{/each}}
+
+                </div>
+              {{/if}}
               <div class="main">
                 {{#if this.showError}}
                   {{#if this.showTimeoutError}}
@@ -691,105 +751,32 @@ export default class AdminReport extends Component {
                   {{/if}}
                 {{/if}}
               </div>
+              <div class="chart__actions">
+                <div class="control">
+                  <div class="input">
+                    <DButton
+                      @action={{this.exportCsv}}
+                      @label="admin.export_csv.button_text"
+                      @icon="download"
+                      class="btn-default export-csv-btn"
+                    />
+                  </div>
+                </div>
 
-              {{#if this.showFilteringUI}}
-                <div class="filters">
-                  {{#if this.showModes}}
-                    <div class="modes">
-                      {{#each this.displayedModes as |displayedMode|}}
-                        <DButton
-                          @action={{fn this.onChangeMode displayedMode.mode}}
-                          @icon={{displayedMode.icon}}
-                          class={{displayedMode.cssClass}}
-                        />
-                      {{/each}}
-                    </div>
-                  {{/if}}
-
-                  {{#if this.isChartMode}}
-                    {{#if this.model.average}}
-                      <span class="average-chart">
-                        {{i18n "admin.dashboard.reports.average_chart_label"}}
-                      </span>
-                    {{/if}}
-                    <div class="chart-groupings">
-                      {{#each this.chartGroupings as |chartGrouping|}}
-                        <DButton
-                          @label={{chartGrouping.label}}
-                          @action={{fn this.changeGrouping chartGrouping.id}}
-                          @disabled={{chartGrouping.disabled}}
-                          class={{chartGrouping.class}}
-                        />
-                      {{/each}}
-                    </div>
-                  {{/if}}
-
-                  {{#if this.showDatesOptions}}
-                    <div class="control">
-                      <span class="label">
-                        {{i18n "admin.dashboard.reports.dates"}}
-                      </span>
-
-                      <div class="input">
-                        <DateTimeInputRange
-                          @from={{this.startDate}}
-                          @to={{this.endDate}}
-                          @onChange={{this.onChangeDateRange}}
-                          @showFromTime={{false}}
-                          @showToTime={{false}}
-                        />
-                      </div>
-                    </div>
-                  {{/if}}
-
-                  {{#each this.model.available_filters as |filter|}}
-                    <div class="control">
-                      <span class="label">
-                        {{i18n
-                          (concat
-                            "admin.dashboard.reports.filters."
-                            filter.id
-                            ".label"
-                          )
-                        }}
-                      </span>
-
-                      <div class="input">
-                        {{component
-                          (this.reportFilterComponent filter)
-                          model=this.model
-                          filter=filter
-                          applyFilter=this.applyFilter
-                        }}
-                      </div>
-                    </div>
-                  {{/each}}
-
+                {{#if this.showRefresh}}
                   <div class="control">
                     <div class="input">
                       <DButton
-                        @action={{this.exportCsv}}
-                        @label="admin.export_csv.button_text"
-                        @icon="download"
-                        class="btn-default export-csv-btn"
+                        @action={{this.refreshReport}}
+                        @label="admin.dashboard.reports.refresh_report"
+                        @icon="arrows-rotate"
+                        class="refresh-report-btn btn-primary"
                       />
                     </div>
                   </div>
+                {{/if}}
+              </div>
 
-                  {{#if this.showRefresh}}
-                    <div class="control">
-                      <div class="input">
-                        <DButton
-                          @action={{this.refreshReport}}
-                          @label="admin.dashboard.reports.refresh_report"
-                          @icon="arrows-rotate"
-                          class="refresh-report-btn btn-primary"
-                        />
-                      </div>
-                    </div>
-                  {{/if}}
-                </div>
-              {{/if}}
             </div>
           </ConditionalLoadingSection>
         {{else}}
