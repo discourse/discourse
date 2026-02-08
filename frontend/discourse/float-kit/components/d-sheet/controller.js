@@ -976,6 +976,30 @@ export default class Controller {
   }
 
   /**
+   * Whether swipe interaction is fully disabled.
+   * True when swipe is off, browser doesn't support required features,
+   * or dismissal is disabled without detents.
+   *
+   * @type {boolean}
+   */
+  get swipeDisabled() {
+    if (this.swipe === false || !Controller.browserSupportsRequiredFeatures) {
+      return true;
+    }
+
+    const dismissalDisabled =
+      this.role === "alertdialog" || !this.swipeDismissal;
+    if (
+      dismissalDisabled &&
+      (this.detentsConfig === null || this.detentsConfig === undefined)
+    ) {
+      return true;
+    }
+
+    return false;
+  }
+
+  /**
    * Whether swipe-to-dismiss is disabled.
    * True when sheet has detents, dismissal is disabled, and sheet is open.
    *
@@ -1307,12 +1331,16 @@ export default class Controller {
    * @private
    */
   #setupIntersectionObserver() {
-    if (this.swipeOutDisabledWithDetent) {
+    if (this.swipeDisabled || this.swipeOutDisabledWithDetent) {
       return;
     }
 
     requestAnimationFrame(() => {
-      if (this.state.openness.isOpen && !this.swipeOutDisabledWithDetent) {
+      if (
+        this.state.openness.isOpen &&
+        !this.swipeDisabled &&
+        !this.swipeOutDisabledWithDetent
+      ) {
         this.setupIntersectionObserver();
       }
     });
@@ -1625,7 +1653,7 @@ export default class Controller {
     this.dimensions = this.#calculateDimensions();
 
     if (this.state.openness.isOpen) {
-      if (!this.swipeOutDisabledWithDetent) {
+      if (!this.swipeDisabled && !this.swipeOutDisabledWithDetent) {
         this.setupIntersectionObserver();
       } else {
         this.cleanupIntersectionObserver();

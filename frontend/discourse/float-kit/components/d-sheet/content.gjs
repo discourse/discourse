@@ -51,6 +51,7 @@ export default class Content extends Component {
         (concat "staging-" @sheet.state.staging.current)
         @sheet.effectiveSwipeTrapClass
         "scroll-trap-optimised"
+        (if @sheet.swipeDisabled "swipe-disabled")
         (if @sheet.swipeOutDisabledWithDetent "swipe-out-disabled")
         (unless @sheet.swipeOvershoot "overshoot-inactive")
         (if @sheet.scrollContainerShouldBePassThrough "no-pointer-events")

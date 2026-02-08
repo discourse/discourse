@@ -401,6 +401,10 @@
   user-select: none;
 }
 
+[data-d-sheet~="scroll-container"][data-d-sheet~="swipe-disabled"][data-d-sheet] {
+  overflow: hidden;
+}
+
 [data-d-sheet~="scroll-container"][data-d-sheet~="overscroll-contain"] {
   overscroll-behavior-y: contain;
 }
