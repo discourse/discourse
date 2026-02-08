@@ -25,34 +25,41 @@ div.poll-outer {
       display: inline-block;
       width: 100%;
     }
-    
+
     li[data-poll-option-id] {
       color: var(--primary);
       padding: 0.5em 0;
       word-break: break-word;
-
-      // FIX: ensure checkbox/marker and content (e.g. @mention pills)
-      // never overlap by giving the option a proper layout
-      display: flex;
-      align-items: flex-start;
-      gap: 0.5em;
-
+    
       button {
         background-color: transparent;
         border: none;
-        text-align: left;
         width: 100%;
         cursor: pointer;
-
-        // keep existing visual alignment logic
-        padding-left: 23px;
-        text-indent: -23px;
-
-        // ensure content (including mention pills) flows next to marker
+    
+        // Use a proper layout container instead of text-indent hacks.
+        // This prevents inline-block elements (e.g. @mention pills)
+        // from overlapping the option marker/checkbox.
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5em;
+        text-align: left;
+      }
+    
+      // The icon acts as the visual marker and should keep a fixed slot
+      button svg {
+        flex: 0 0 auto;
+        margin-top: 0.15em;
+      }
+    
+      // Allow option text (including mention pills) to wrap correctly
+      // without affecting the marker alignment
+      .option-text {
         flex: 1 1 auto;
         min-width: 0;
       }
     }
+
 
     .ranked-choice-poll-options {
       display: flex;
