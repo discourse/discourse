@@ -63,7 +63,10 @@ export default class ObserverManager {
       return;
     }
 
-    if (this.#controller.swipeOutDisabledWithDetent) {
+    if (
+      this.#controller.swipeDisabled ||
+      this.#controller.swipeOutDisabledWithDetent
+    ) {
       this.cleanupIntersectionObserver();
       return;
     }
