@@ -41,9 +41,6 @@ export default class Root extends Component {
   /** @type {import("discourse/float-kit/services/sheet-stack-registry").default} */
   @service sheetStackRegistry;
 
-  /** @type {import("discourse/float-kit/services/theme-color-manager").default} */
-  @service themeColorManager;
-
   /**
    * The sheet controller instance. Created immediately and replaced after each close cycle.
    *
@@ -265,7 +262,6 @@ export default class Root extends Component {
       onSafeToUnmountChange: this.args.onSafeToUnmountChange,
       role: this.args.role,
       inertOutside: this.args.inertOutside,
-      themeColorManager: this.themeColorManager,
       sheetStackRegistry: this.sheetStackRegistry,
       sheetRegistry: this.sheetRegistry,
     });
