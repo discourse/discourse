@@ -25,20 +25,32 @@ div.poll-outer {
       display: inline-block;
       width: 100%;
     }
-
+    
     li[data-poll-option-id] {
       color: var(--primary);
       padding: 0.5em 0;
       word-break: break-word;
 
+      // FIX: ensure checkbox/marker and content (e.g. @mention pills)
+      // never overlap by giving the option a proper layout
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5em;
+
       button {
         background-color: transparent;
         border: none;
         text-align: left;
-        padding-left: 23px;
-        text-indent: -23px;
         width: 100%;
         cursor: pointer;
+
+        // keep existing visual alignment logic
+        padding-left: 23px;
+        text-indent: -23px;
+
+        // ensure content (including mention pills) flows next to marker
+        flex: 1 1 auto;
+        min-width: 0;
       }
     }
 
