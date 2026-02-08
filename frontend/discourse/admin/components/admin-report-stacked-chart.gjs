@@ -35,7 +35,6 @@ const gradientPlugin = {
           ["x", "y", "width", "base"],
           true
         );
-        // Diagonal gradient from top-left to bottom-right of each bar
         const gradient = ctx.createLinearGradient(
           x - width / 2,
           y,
@@ -82,6 +81,21 @@ export default class AdminReportStackedChart extends Component {
       })),
     };
 
+    // max Y value so chart remains constant when data changes
+    const stackedTotals = [];
+    for (let i = 0; i < chartData[0].data.length; i++) {
+      let total = 0;
+      for (const value of chartData) {
+        total += value.data[i]?.y || 0;
+      }
+      stackedTotals.push(total);
+    }
+    const maxStackedValue = Math.max(...stackedTotals);
+
+    const prefersReducedMotion = window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
     return {
       type: "bar",
       data,
@@ -89,10 +103,9 @@ export default class AdminReportStackedChart extends Component {
       options: {
         responsive: true,
         maintainAspectRatio: false,
-        responsiveAnimationDuration: 0,
         hover: { mode: "index" },
         animation: {
-          duration: 0,
+          duration: prefersReducedMotion ? 0 : 300,
         },
         plugins: {
           legend: {
@@ -125,13 +138,25 @@ export default class AdminReportStackedChart extends Component {
           tooltip: {
             mode: "index",
             intersect: false,
+            backgroundColor: getCSSColor("--primary"),
+            titleMarginBottom: 16,
+            footerMarginTop: 16,
+            padding: {
+              left: 20,
+              right: 20,
+              top: 12,
+              bottom: 12,
+            },
+            bodySpacing: 8,
+            cornerRadius: 8,
+            boxPadding: 4,
             callbacks: {
               beforeFooter: (tooltipItem) => {
                 const total = tooltipItem.reduce(
                   (sum, item) => sum + parseInt(item.parsed.y || 0, 10),
                   0
                 );
-                return `= ${total}`;
+                return `Total: ${total}`;
               },
               title: (tooltipItem) =>
                 moment(tooltipItem[0].parsed.x).format("LL"),
@@ -151,7 +176,7 @@ export default class AdminReportStackedChart extends Component {
           y: {
             stacked: true,
             display: true,
-
+            max: maxStackedValue,
             grid: {
               color: getCSSColor("--primary-very-low"),
             },
