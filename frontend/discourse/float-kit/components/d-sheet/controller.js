@@ -352,12 +352,6 @@ export default class Controller {
   sheetRegistry = null;
 
   /**
-   * Reference to the theme color manager.
-   * @type {Object|null}
-   */
-  themeColorManager = null;
-
-  /**
    * Array of registered travel animations.
    * @type {Array<Object>}
    */
@@ -760,7 +754,7 @@ export default class Controller {
     /** @type {AnimationTravel} */
     this.animationTravel = new AnimationTravel(this);
     /** @type {ThemeColorAdapter} */
-    this.themeColorAdapter = new ThemeColorAdapter(this);
+    this.themeColorAdapter = new ThemeColorAdapter();
     this.setupSubscriptions();
   }
 
@@ -815,7 +809,6 @@ export default class Controller {
       "onSafeToUnmountChange",
       "sheetStackRegistry",
       "sheetRegistry",
-      "themeColorManager",
     ];
 
     for (const key of propsToAssign) {
@@ -1680,7 +1673,6 @@ export default class Controller {
     this.touchHandler.detach();
     this.observerManager.cleanup();
     this.unregisterBackdrop(this.backdrop);
-    this.themeColorAdapter.cleanup();
     this.domAttributes.cleanup();
     this.focusManagement.cleanup();
     this.state.cleanup();
@@ -1720,7 +1712,6 @@ export default class Controller {
   @action
   registerContent(content) {
     this.content = content;
-    this.themeColorAdapter.captureContentThemeColor();
     this.calculateDimensionsIfReady();
   }
 

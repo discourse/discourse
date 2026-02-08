@@ -1,35 +1,11 @@
 import Service from "@ember/service";
 
-/**
- * Service to manage the theme-color meta tag.
- * Handles stacking and dimming across multiple sheets.
- * Strictly follows the internal implementation for color logic.
- */
 export default class ThemeColorManager extends Service {
-  /**
-   * Stack of theme color ownership entries.
-   * Each entry: { controller, previousContent }
-   * @type {Array<{controller: Object, previousContent: string}>}
-   */
-  ownershipStack = [];
+  themeColorMetaTag = null;
+  underlyingThemeColor = null;
+  themeColorDimmingOverlays = [];
 
-  /**
-   * Global list of theme color dimming overlays.
-   * @type {Array<{controller: Object, color: number[], alpha: number}>}
-   */
-  dimmingOverlays = [];
-
-  /**
-   * Parses an RGB/RGBA string into an array of [r, g, b].
-   *
-   * @param {string} colorStr
-   * @returns {number[]|null}
-   */
   #parseRGB(colorStr) {
-    if (!colorStr) {
-      return null;
-    }
-
     return (colorStr.startsWith("rgb(") || colorStr.startsWith("rgba(")) &&
       colorStr.endsWith(")")
       ? colorStr
@@ -41,24 +17,18 @@ export default class ThemeColorManager extends Service {
       : null;
   }
 
-  /**
-   * Parses a color string (RGB, RGBA, or Hex) into an array of [r, g, b].
-   * Strictly follows the internal color parsing implementation.
-   *
-   * @param {string} colorStr
-   * @returns {number[]|null}
-   */
   #parseColor(colorStr) {
     if (!colorStr) {
       return null;
     }
 
-    let result = null;
     if (colorStr.startsWith("rgb(") || colorStr.startsWith("rgba(")) {
-      result = this.#parseRGB(colorStr);
-    } else if (colorStr.startsWith("#")) {
-      let hex = colorStr.replace(/^#/, "");
-      let normalizedHex =
+      return this.#parseRGB(colorStr);
+    }
+
+    if (colorStr.startsWith("#")) {
+      const hex = colorStr.replace(/^#/, "");
+      const normalized =
         hex.length === 3
           ? hex
               .split("")
@@ -66,351 +36,135 @@ export default class ThemeColorManager extends Service {
               .join("")
           : hex;
 
-      result = /^[0-9A-Fa-f]{6}$/.test(normalizedHex)
+      return /^[0-9A-Fa-f]{6}$/.test(normalized)
         ? [
-            parseInt(normalizedHex.slice(0, 2), 16),
-            parseInt(normalizedHex.slice(2, 4), 16),
-            parseInt(normalizedHex.slice(4, 6), 16),
+            parseInt(normalized.slice(0, 2), 16),
+            parseInt(normalized.slice(2, 4), 16),
+            parseInt(normalized.slice(4, 6), 16),
           ]
         : null;
     }
-    return result;
+
+    return null;
   }
 
-  /**
-   * Mixes a base color with multiple overlays.
-   *
-   * @param {number[]} baseColor - [r, g, b]
-   * @param {Array<{color: number[], alpha: number}>} overlays
-   * @returns {string} rgb() string
-   */
   #mixColors(baseColor, overlays) {
-    let result = [...baseColor];
+    const result = [...baseColor];
     for (let i = 0; i < overlays.length; i++) {
-      const overlay = overlays[i];
-      const alpha = overlay.alpha;
+      const alpha = overlays[i].alpha;
       for (let j = 0; j < 3; j++) {
-        result[j] = (1 - alpha) * result[j] + alpha * overlay.color[j];
+        result[j] = (1 - alpha) * result[j] + alpha * overlays[i].color[j];
       }
     }
     return `rgb(${result.join(",")})`;
   }
 
-  /**
-   * Check if a color string is usable for theme color.
-   *
-   * @param {string} colorStr - Color string to check
-   * @returns {boolean}
-   */
-  isUsableThemeColor(colorStr) {
-    return Boolean(this.#parseColor(colorStr));
-  }
+  storeThemeColorMetaTag() {
+    this.themeColorMetaTag =
+      typeof document !== "undefined"
+        ? document.querySelector('meta[name="theme-color"]')
+        : null;
 
-  // ============================================================================
-  // Meta Tag Management
-  // ============================================================================
-
-  /**
-   * Find the currently active theme-color meta tag.
-   * Prioritizes tags with matching media queries.
-   *
-   * @returns {HTMLMetaElement | null}
-   */
-  findActiveThemeColorMetaTag() {
-    if (typeof document === "undefined") {
-      return null;
-    }
-
-    const metaTags = document.querySelectorAll('meta[name="theme-color"]');
-
-    if (!metaTags.length) {
-      return null;
-    }
-
-    let fallback = null;
-
-    for (const meta of metaTags) {
-      if (!meta.media) {
-        fallback = fallback || meta;
-        continue;
-      }
-
-      try {
-        if (
-          typeof window === "undefined" ||
-          window.matchMedia(meta.media).matches
-        ) {
-          return meta;
-        }
-      } catch {
-        // Ignore invalid media queries
-      }
-    }
-
-    return fallback || metaTags[0];
-  }
-
-  /**
-   * Ensure a theme-color meta tag exists.
-   * Creates one if none exists.
-   *
-   * @param {Object} controller - The controller requesting the meta tag
-   * @returns {HTMLMetaElement | null}
-   */
-  ensureThemeColorMetaTag(controller) {
-    if (typeof document === "undefined") {
-      return null;
-    }
-
-    if (
-      controller.themeColorMetaTag &&
-      document.contains(controller.themeColorMetaTag)
-    ) {
-      return controller.themeColorMetaTag;
-    }
-
-    controller.themeColorMetaTag = this.findActiveThemeColorMetaTag();
-
-    if (!controller.themeColorMetaTag) {
+    if (!this.themeColorMetaTag) {
       const meta = document.createElement("meta");
       meta.name = "theme-color";
-      const fallback =
-        typeof window !== "undefined"
-          ? window.getComputedStyle(document.body)?.backgroundColor
-          : "#000000";
-      meta.setAttribute("content", fallback || "#000000");
+      meta.content = window.getComputedStyle(document.body).backgroundColor;
       document.head.appendChild(meta);
-      controller.themeColorMetaTag = meta;
+      this.themeColorMetaTag = meta;
     }
-
-    return controller.themeColorMetaTag;
   }
 
-  /**
-   * Check if a controller currently controls the theme color.
-   *
-   * @param {Object} controller - The controller to check
-   * @returns {boolean}
-   */
-  controlsThemeColor(controller) {
-    if (!controller.themeColorStackEntry) {
-      return false;
+  getAndStoreUnderlyingThemeColorAsRGBArray() {
+    if (this.themeColorDimmingOverlays.length > 0) {
+      return this.underlyingThemeColor;
     }
 
-    const topEntry = this.ownershipStack[this.ownershipStack.length - 1];
-    return topEntry?.controller === controller;
-  }
+    this.themeColorMetaTag || this.storeThemeColorMetaTag();
 
-  /**
-   * Acquire theme color ownership for a controller.
-   * Moves existing entry to top if already in stack.
-   *
-   * @param {Object} controller - The controller acquiring ownership
-   */
-  acquireThemeColorOwnership(controller) {
-    if (controller.themeColorStackEntry) {
-      if (this.controlsThemeColor(controller)) {
-        return;
-      }
-
-      const idx = this.ownershipStack.findIndex(
-        (entry) => entry === controller.themeColorStackEntry
+    const parsed = this.#parseColor(this.themeColorMetaTag?.content);
+    if (!parsed) {
+      // eslint-disable-next-line no-console
+      console.warn(
+        "`themeColorDimming` prop ignored: Only `theme-color` meta tag with a value in `rgb()`, `rgba()`, or hexadecimal format is supported."
       );
-      if (idx !== -1) {
-        this.ownershipStack.splice(idx, 1);
-      }
-      controller.themeColorStackEntry = null;
     }
 
-    const metaTag = this.ensureThemeColorMetaTag(controller);
-    if (!metaTag) {
-      return;
-    }
-
-    const entry = {
-      controller,
-      previousContent: metaTag.getAttribute("content"),
-    };
-
-    this.ownershipStack.push(entry);
-    controller.themeColorStackEntry = entry;
+    this.underlyingThemeColor = parsed;
+    return parsed;
   }
 
-  /**
-   * Release theme color ownership for a controller.
-   * Restores previous color if this was the top entry.
-   *
-   * @param {Object} controller - The controller releasing ownership
-   */
-  releaseThemeColorOwnership(controller) {
-    if (!controller.themeColorStackEntry) {
-      return;
+  updateUnderlyingThemeColor(color) {
+    const parsed = this.#parseColor(color);
+    if (!parsed) {
+      throw new Error(
+        "The color provided to `updateThemeColor` doesn't match `rgb()`, `rgba()`, or hexadecimal format."
+      );
     }
 
-    const idx = this.ownershipStack.findIndex(
-      (entry) => entry === controller.themeColorStackEntry
+    this.underlyingThemeColor = parsed;
+    this.setActualThemeColor();
+  }
+
+  setActualThemeColor() {
+    this.themeColorMetaTag || this.storeThemeColorMetaTag();
+    this.themeColorMetaTag?.setAttribute(
+      "content",
+      this.#mixColors(this.underlyingThemeColor, this.themeColorDimmingOverlays)
+    );
+  }
+
+  updateThemeColorDimmingOverlay(overlayData) {
+    const entry = overlayData.color
+      ? { ...overlayData, color: this.#parseRGB(overlayData.color) }
+      : overlayData;
+
+    const existing = this.themeColorDimmingOverlays.find(
+      (o) => o.dimmingOverlayId === entry.dimmingOverlayId
     );
 
-    if (idx === -1) {
-      controller.themeColorStackEntry = null;
-      return;
-    }
-
-    const wasTop = idx === this.ownershipStack.length - 1;
-    const [entry] = this.ownershipStack.splice(idx, 1);
-    controller.themeColorStackEntry = null;
-
-    const controllerOverlays = this.dimmingOverlays.filter(
-      (o) => o.controller === controller
-    );
-    for (const overlay of controllerOverlays) {
-      this.#removeOverlayDelayed(overlay, controller);
-    }
-
-    if (wasTop) {
-      const nextEntry = this.ownershipStack[this.ownershipStack.length - 1];
-
-      if (nextEntry) {
-        this.setActualThemeColor(nextEntry.controller);
-      } else if (entry.previousContent && controller.themeColorMetaTag) {
-        controller.themeColorMetaTag.setAttribute(
-          "content",
-          entry.previousContent
-        );
-      }
-    }
-  }
-
-  /**
-   * Update the theme color for a controller.
-   *
-   * @param {Object} controller - The controller updating the color
-   * @param {string} color - The new color
-   */
-  updateThemeColor(controller, color) {
-    if (!color) {
-      return;
-    }
-
-    this.acquireThemeColorOwnership(controller);
-    controller.underlyingThemeColor = color;
-    this.setActualThemeColor(controller);
-  }
-
-  /**
-   * Set the actual theme color meta tag content.
-   * Applies dimming overlays if present.
-   *
-   * @param {Object} controller - The controller setting the color
-   */
-  setActualThemeColor(controller) {
-    const metaTag = this.ensureThemeColorMetaTag(controller);
-    if (!metaTag || !this.controlsThemeColor(controller)) {
-      return;
-    }
-
-    // Capture existing color from DOM if we haven't stored one yet
-    if (!controller.underlyingThemeColor) {
-      controller.underlyingThemeColor = metaTag.getAttribute("content");
-    }
-
-    const baseColor = this.#parseColor(controller.underlyingThemeColor);
-    if (!baseColor) {
-      return;
-    }
-
-    const targetColorStr = this.#mixColors(baseColor, this.dimmingOverlays);
-    metaTag.setAttribute("content", targetColorStr);
-  }
-
-  /**
-   * Register a theme color dimming overlay for a controller.
-   *
-   * @param {Object} controller - The controller registering the overlay
-   * @param {Object} overlay - The overlay { color, alpha }
-   * @returns {{ updateAlpha: Function, remove: Function }}
-   */
-  registerThemeColorDimmingOverlay(controller, overlay) {
-    const existing = this.dimmingOverlays.find(
-      (o) => o.controller === controller
-    );
-
+    let result;
     if (existing) {
-      existing.abortRemoval = true;
-      existing.color = this.#parseColor(overlay.color) || [0, 0, 0];
-      existing.alpha = overlay.alpha;
-      this.setActualThemeColor(controller);
-      return this.#createOverlayHandle(existing, controller);
+      Object.assign(existing, entry);
+      result = existing;
+    } else {
+      result = entry;
+      this.themeColorDimmingOverlays.push(entry);
     }
 
-    const overlayEntry = {
-      ...overlay,
-      color: this.#parseColor(overlay.color) || [0, 0, 0],
-      controller,
-      abortRemoval: true,
-    };
-
-    this.dimmingOverlays.push(overlayEntry);
-    this.setActualThemeColor(controller);
-
-    return this.#createOverlayHandle(overlayEntry, controller);
+    this.setActualThemeColor();
+    return result;
   }
 
-  #createOverlayHandle(overlayEntry, controller) {
-    return {
-      updateAlpha: (alpha) => {
-        overlayEntry.alpha = alpha;
-        this.setActualThemeColor(controller);
-      },
-      remove: () => {
-        this.#removeOverlayDelayed(overlayEntry, controller);
-      },
-    };
+  updateThemeColorDimmingOverlayAlphaValue(overlay, alpha) {
+    overlay.alpha = alpha;
+    this.setActualThemeColor();
   }
 
-  #removeOverlayDelayed(overlayEntry, controller) {
-    overlayEntry.abortRemoval = false;
+  removeThemeColorDimmingOverlay(dimmingOverlayId) {
+    const overlay = this.themeColorDimmingOverlays.find(
+      (o) => o.dimmingOverlayId === dimmingOverlayId
+    );
+
+    if (!overlay) {
+      return;
+    }
+
+    overlay.abortRemoval = false;
 
     setTimeout(() => {
-      if (overlayEntry.abortRemoval) {
+      if (overlay.abortRemoval) {
         return;
       }
 
-      this.dimmingOverlays = this.dimmingOverlays.filter(
-        (o) => o !== overlayEntry
+      this.themeColorDimmingOverlays = this.themeColorDimmingOverlays.filter(
+        (o) => o.dimmingOverlayId !== dimmingOverlayId
       );
-      this.setActualThemeColor(controller);
+      this.setActualThemeColor();
 
-      if (this.dimmingOverlays.length === 0) {
-        controller.underlyingThemeColor = null;
-        controller.themeColorMetaTag = null;
+      if (this.themeColorDimmingOverlays.length === 0) {
+        this.underlyingThemeColor = null;
+        this.themeColorMetaTag = null;
       }
     }, 20);
-  }
-
-  /**
-   * Capture the theme color from content element's background.
-   *
-   * @param {Object} controller - The controller to capture for
-   */
-  captureContentThemeColor(controller) {
-    if (!controller.content || typeof window === "undefined") {
-      return;
-    }
-
-    const computedColor = window
-      .getComputedStyle(controller.content)
-      ?.getPropertyValue("background-color");
-
-    if (this.isUsableThemeColor(computedColor)) {
-      this.updateThemeColor(controller, computedColor);
-      return;
-    }
-
-    const fallback =
-      this.ensureThemeColorMetaTag(controller)?.getAttribute("content");
-    if (fallback) {
-      this.updateThemeColor(controller, fallback);
-    }
   }
 }
