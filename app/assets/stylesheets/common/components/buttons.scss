@@ -538,6 +538,12 @@
   &.--success {
     @include btn-colors("success");
   }
+
+  &.back-button {
+    color: var(--primary-medium);
+    padding-left: 0;
+    margin-bottom: var(--space-6);
+  }
 }
 
 .btn-mini-toggle {
