@@ -595,7 +595,7 @@ $mobile-breakpoint: 700px;
 }
 
 .admin-container {
-  margin-top: var(--space-4);
+  // margin-top: var(--space-4); // why we need this? we alrdy have main cont top apdding
   margin-bottom: var(--space-4);
 
   .admin-section {
