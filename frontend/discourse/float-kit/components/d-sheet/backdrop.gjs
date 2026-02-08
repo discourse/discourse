@@ -53,8 +53,16 @@ export default class Backdrop extends Component {
   get shouldUseThemeColorDimmingOverlay() {
     return (
       this.effectiveThemeColorDimming &&
+      this.args.sheet?.state.longRunning.isActive &&
       typeof this.effectiveTravelAnimation?.opacity === "function"
     );
+  }
+
+  get outletTravelAnimation() {
+    if (this.shouldUseThemeColorDimmingOverlay) {
+      return { ...this.effectiveTravelAnimation, opacity: "ignore" };
+    }
+    return this.effectiveTravelAnimation;
   }
 
   @action
@@ -137,7 +145,7 @@ export default class Backdrop extends Component {
       }}
       <Outlet
         @sheet={{@sheet}}
-        @travelAnimation={{this.effectiveTravelAnimation}}
+        @travelAnimation={{this.outletTravelAnimation}}
         @stackingAnimation={{@stackingAnimation}}
         data-d-sheet={{concatClass
           "backdrop"
