@@ -78,11 +78,6 @@
     }
   }
 
-  .body {
-    display: flex;
-    flex-direction: row;
-  }
-
   .main {
     flex: 1;
     min-width: 0; // allow chart.js to shrink below intrinsic width
@@ -129,62 +124,6 @@
     color: var(--primary-high);
     margin-bottom: 1em;
     line-height: var(--line-height-medium);
-  }
-
-  .filters {
-    display: flex;
-    margin-left: 1em;
-    flex-direction: column;
-    width: 220px;
-
-    .modes {
-      margin: 0 0 1em 0;
-      padding: 0;
-      list-style: none;
-
-      .mode {
-        display: inline-flex;
-        flex: 1 0 0px;
-
-        .mode-btn.is-current {
-          color: var(--tertiary);
-        }
-      }
-    }
-
-    .chart-groupings {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, 1fr);
-      gap: 0.5em;
-      margin-bottom: 1em;
-
-      .chart-grouping.active {
-        background: var(--tertiary);
-        color: var(--secondary);
-      }
-    }
-
-    .control {
-      margin-bottom: 1em;
-    }
-
-    .control .label {
-      font-weight: 700;
-      width: 100%;
-    }
-
-    .control .input,
-    .control .select-kit {
-      width: 100%;
-
-      .export-csv-btn {
-        width: 100%;
-      }
-
-      .refresh-report-btn {
-        width: 100%;
-      }
-    }
   }
 
   .d-page-subheader__title a {

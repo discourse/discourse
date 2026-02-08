@@ -1,5 +1,5 @@
 .admin-report-stacked-chart {
   .chart-canvas-container {
-    height: 250px;
+    height: clamp(200px, 50vh, 350px);
   }
 }
