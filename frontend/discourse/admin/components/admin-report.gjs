@@ -770,7 +770,7 @@ export default class AdminReport extends Component {
                         @action={{this.refreshReport}}
                         @label="admin.dashboard.reports.refresh_report"
                         @icon="arrows-rotate"
-                        class="refresh-report-btn btn-primary"
+                        class="refresh-report-btn btn-default"
                       />
                     </div>
                   </div>
