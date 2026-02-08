@@ -53,7 +53,6 @@ export default class Backdrop extends Component {
   get shouldUseThemeColorDimmingOverlay() {
     return (
       this.effectiveThemeColorDimming &&
-      this.args.sheet?.state.longRunning.isActive &&
       typeof this.effectiveTravelAnimation?.opacity === "function"
     );
   }
