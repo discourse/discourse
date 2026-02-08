@@ -101,7 +101,7 @@ export default class AdminReportStackedChart extends Component {
             labels: {
               usePointStyle: true,
               pointStyle: "rectRounded",
-              padding: 15,
+              padding: 25,
               boxWidth: 10,
               boxHeight: 10,
               generateLabels: (chart) => {
