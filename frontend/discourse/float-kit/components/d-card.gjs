@@ -29,6 +29,7 @@ class DCardContent extends Component {
         @sheet={{@sheet}}
         @contentPlacement="center"
         @tracks="top"
+        @bottomColorHint={{false}}
         @enteringAnimationSettings={{hash
           easing="spring"
           stiffness=260

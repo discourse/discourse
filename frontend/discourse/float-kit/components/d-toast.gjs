@@ -210,6 +210,7 @@ export default class DToast extends Component {
           @sheet={{sheet}}
           @contentPlacement={{this.contentPlacement}}
           @tracks={{this.tracks}}
+          @bottomColorHint={{false}}
           @inertOutside={{false}}
           @onClickOutside={{hash dismiss=false stopOverlayPropagation=false}}
           @onEscapeKeyDown={{this.handleEscapeKey}}
