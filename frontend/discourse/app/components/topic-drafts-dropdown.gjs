@@ -102,9 +102,9 @@ export default class TopicDraftsDropdown extends Component {
       class={{if @showDrafts "--has-menu"}}
       aria-label={{i18n "topic.create_group"}}
       ...attributes
-      as |Button Menu|
+      as |combo|
     >
-      <Button
+      <combo.Button
         @action={{@action}}
         @label={{@label}}
         @icon="far-pen-to-square"
@@ -113,7 +113,7 @@ export default class TopicDraftsDropdown extends Component {
       />
 
       {{#if @showDrafts}}
-        <Menu
+        <combo.Menu
           @identifier="topic-drafts-menu"
           @title={{i18n "drafts.dropdown.title"}}
           @onShow={{this.onShowMenu}}
@@ -154,7 +154,7 @@ export default class TopicDraftsDropdown extends Component {
               </dropdown.item>
             {{/if}}
           </DropdownMenu>
-        </Menu>
+        </combo.Menu>
       {{/if}}
     </DComboButton>
   </template>

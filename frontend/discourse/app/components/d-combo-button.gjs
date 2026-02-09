@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { hash } from "@ember/helper";
 import curryComponent from "ember-curry-component";
 import DButton from "discourse/components/d-button";
 import DMenu from "discourse/float-kit/components/d-menu";
@@ -33,7 +34,7 @@ class Menu extends Component {
 
 const DComboButton = <template>
   <div class="d-combo-button" role="group" ...attributes>
-    {{yield Button Menu}}
+    {{yield (hash Button=Button Menu=Menu)}}
   </div>
 </template>;
 
