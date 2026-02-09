@@ -1680,18 +1680,18 @@ RSpec.describe DiscourseTagging do
     end
   end
 
-  describe "tag_topic" do
+  describe ".tag_topic" do
     fab!(:topic)
     fab!(:tag1) { Fabricate(:tag, name: "tag1") }
     fab!(:tag2) { Fabricate(:tag, name: "tag2") }
 
-    it "allows tagging topics by name" do
+    it "allows tagging topics by an array of tag names" do
       valid = DiscourseTagging.tag_topic(topic, Guardian.new(admin), %w[tag1 tag2])
       expect(valid).to eq(true)
       expect(topic.reload.tags).to contain_exactly(tag1, tag2)
     end
 
-    it "allows tagging topics by ids" do
+    it "allows tagging topics by an array of hash with the id key" do
       valid =
         DiscourseTagging.tag_topic(
           topic,
@@ -1714,7 +1714,6 @@ RSpec.describe DiscourseTagging do
     end
 
     it "can tag topics using old and new tags" do
-      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       valid =
         DiscourseTagging.tag_topic(
           topic,

@@ -34,7 +34,7 @@ class TopicCreator
             input
           else
             ids = input.filter_map { |t| t[:id]&.to_i }
-            names = input.select { |t| t[:id].blank? }.filter_map { |t| t[:name] }
+            names = input.filter_map { |t| t[:id].blank? && t[:name].presence }
             Tag.where(id: ids).pluck(:name) + names
           end
         else
@@ -209,7 +209,7 @@ class TopicCreator
 
       if !valid_tags
         if @opts[:skip_validations]
-          all_names = tags.map { |t| t.is_a?(String) ? t : t[:name] }.compact
+          all_names = tags.filter_map { |t| t.is_a?(String) ? t : t[:name] }
           DiscourseTagging.add_or_create_tags_by_name(topic, all_names)
         else
           topic.errors.add(:base, :unable_to_tag)

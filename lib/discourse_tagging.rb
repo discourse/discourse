@@ -25,21 +25,16 @@ module DiscourseTagging
   # @param tags_param [Array<String>, Array<Hash>] an array of tag names or an array of
   #  hashes with :id and/or :name keys (absence of id indicates new tag).
   def self.tag_topic(topic, guardian, tags_param)
-    return tag_topic_by_names(topic, guardian, []) if tags_param.blank?
-
-    return tag_topic_by_names(topic, guardian, tags_param) if tags_param.first.is_a?(String)
+    if tags_param.blank? || tags_param.first.is_a?(String)
+      return tag_topic_by_names(topic, guardian, tags_param)
+    end
 
     tag_ids = tags_param.filter_map { |t| t[:id]&.to_i }
-    new_names = tags_param.select { |t| t[:id].blank? }.filter_map { |t| t[:name] }
+    new_names = tags_param.filter_map { |t| t[:id].blank? && t[:name].presence }
 
-    if new_names.blank?
-      tag_topic_by_ids(topic, guardian, tag_ids)
-    elsif tag_ids.blank?
-      tag_topic_by_names(topic, guardian, new_names)
-    else
-      existing_names = Tag.where(id: tag_ids).pluck(:name)
-      tag_topic_by_names(topic, guardian, existing_names + new_names)
-    end
+    tag_names = new_names
+    tag_names += Tag.where(id: tag_ids).pluck(:name) if tag_ids.present?
+    tag_topic_by_names(topic, guardian, tag_names)
   end
 
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
