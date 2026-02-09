@@ -68,12 +68,9 @@ acceptance("Admin - Onboarding Banner", function (needs) {
   test("it can end onboarding prematurely", async function (assert) {
     await visit("/");
     assert.dom(".admin-onboarding-banner").exists();
+
     await click(".admin-onboarding-banner .btn-close");
-
-    assert.dom(".dialog-body").exists();
-
     this.siteSettings.enable_site_owner_onboarding = false;
-    await click(".dialog-footer .btn-primary");
 
     assert.dom(".admin-onboarding-banner").doesNotExist();
   });
