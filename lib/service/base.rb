@@ -245,10 +245,7 @@ module Service
 
       def run_step
         contract =
-          class_name.new(
-            **default_values.merge(context[:params].slice(*attributes)),
-            options: context[:options],
-          )
+          class_name.new(**default_values.merge(context[:params]), options: context[:options])
         context[contract_name] = contract
         if contract.invalid?
           context[result_key].fail(errors: contract.errors, parameters: contract.raw_attributes)
@@ -271,11 +268,7 @@ module Service
       def default_values
         return {} unless default_values_from
         model = context[default_values_from]
-        (model.try(:attributes).try(:with_indifferent_access) || model).slice(*attributes)
-      end
-
-      def attributes
-        class_name.attribute_names.map(&:to_sym)
+        model.try(:attributes).try(:with_indifferent_access) || model
       end
     end
 
@@ -338,6 +331,18 @@ module Service
 
     # @!visibility private
     class TryStep < Step
+      module FilteredBacktrace
+        def filtered_backtrace
+          Array
+            .wrap(backtrace)
+            .chunk { _1.match?(%r{/(gems|lib/service|ruby)/}) }
+            .flat_map do |excluded, lines|
+              next "(#{lines.size} framework line(s) excluded)" if excluded
+              lines
+            end
+        end
+      end
+
       include StepsHelpers
 
       attr_reader :steps, :exceptions
@@ -356,6 +361,7 @@ module Service
         end
       rescue *exceptions => e
         raise e if e.is_a?(Failure)
+        e.singleton_class.prepend(FilteredBacktrace)
         context[@current_step.result_key].fail(raised_exception?: true, exception: e)
         context[result_key][:exception] = e
         context.fail!

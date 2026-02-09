@@ -110,16 +110,16 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/tags", () => {
     return response({
       tags: [
-        { id: "eviltrout", count: 1 },
+        { id: 123, name: "eviltrout", text: "eviltrout", count: 1 },
         {
-          id: "planned",
+          id: 234,
           name: "planned",
           text: "planned",
           count: 7,
           pm_only: false,
         },
         {
-          id: "private",
+          id: 345,
           name: "private",
           text: "private",
           count: 0,
@@ -198,17 +198,17 @@ export function applyDefaultHandlers(pretender) {
   pretender.get("/tags/filter/search", (request) => {
     const responseBody = {
       results: [
-        { id: "monkey", name: "monkey", count: 1 },
-        { id: "gazelle", name: "gazelle", count: 2 },
-        { id: "dog", name: "dog", count: 3 },
-        { id: "cat", name: "cat", count: 4 },
+        { id: 1, name: "monkey", slug: "monkey", count: 1 },
+        { id: 2, name: "gazelle", slug: "gazelle", count: 2 },
+        { id: 3, name: "dog", slug: "dog", count: 3 },
+        { id: 4, name: "cat", slug: "cat", count: 4 },
       ],
     };
 
     if (
       request.queryParams.categoryId === "1" &&
       request.queryParams.q === "" &&
-      !request.queryParams.selected_tags.includes("monkey")
+      !request.queryParams.selected_tag_ids?.includes("1")
     ) {
       responseBody["required_tag_group"] = {
         name: "monkey group",
@@ -560,6 +560,11 @@ export function applyDefaultHandlers(pretender) {
         errors: ["subcategory nested under another subcategory"],
       });
     }
+
+    // The request sends `permissions` as an object (e.g. {everyone: 1})
+    // but the real server never echoes it back. Remove it because the
+    // Category model expects `permissions` to be an array (@trackedArray).
+    delete category.permissions;
 
     return response({ category });
   });

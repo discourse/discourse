@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+he:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "פרטי"
+          public: "ציבורי"
+      reports:
+        reading_time:
+          title: זמן קריאה
+        assignments:
+          title: הקצאות
+        chat_usage:
+          messages: הודעות
+          status_online: "● מקוון"
+        invites:
+          title: הזמנות
+          invitee_posts: פוסטים שנוצרו
+          invitee_likes: לייקים שהוענקו
+          label_invitations_sent: "נשלחו הזמנות:"
+        new_user_interactions:
+          likes_given: לייקים שהוענקו
+          mentions: אזכורים
+        writing_analysis:
+          menu_other: אחר

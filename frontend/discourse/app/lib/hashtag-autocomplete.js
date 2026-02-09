@@ -28,7 +28,7 @@ import { CANCELLED_STATUS } from "discourse/modifiers/d-autocomplete";
  *  Can also include:
  *
  *  - treatAsTextarea - Whether to anchor the autocompletion to the start of the input and
- *                      ensure the popper is always on top.
+ *                      ensure the floating element is always on top.
  **/
 export function setupHashtagAutocomplete(
   contextualHashtagConfiguration,
@@ -43,8 +43,8 @@ export function setupHashtagAutocomplete(
   );
 }
 
-export async function hashtagTriggerRule({ inCodeBlock }) {
-  return !(await inCodeBlock());
+export async function hashtagTriggerRule({ inCodeBlock, inLink }) {
+  return !(await inCodeBlock()) && !(await inLink?.());
 }
 
 export function hashtagAutocompleteOptions(

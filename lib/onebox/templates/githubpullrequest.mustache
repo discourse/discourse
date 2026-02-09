@@ -62,7 +62,7 @@
 
     {{#pr}}
       <h4>
-        <a href="{{link}}" target="_blank" rel="noopener">{{title}}</a>
+        <a href="{{link}}" target="_blank" rel="noopener">{{title}} (#{{number}})</a>
       </h4>
     {{/pr}}
 
@@ -73,7 +73,7 @@
     {{#pr}}
       <div class="github-info">
         <div class="date">
-          {{i18n.opened}} <span class="discourse-local-date" data-format="ll" data-date="{{created_at_date}}" data-time="{{created_at_time}}" data-timezone="UTC">{{created_at}}</span>
+          {{i18n.status_date_label}} <span class="discourse-local-date" data-format="ll" data-date="{{status_date_date}}" data-time="{{status_date_time}}" data-timezone="UTC">{{status_date}}</span>
         </div>
 
         <div class="user">

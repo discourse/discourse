@@ -3,6 +3,7 @@
 @import "about";
 @import "activation";
 @import "alert";
+@import "authorize-api-key";
 @import "bbcode";
 @import "category-list";
 @import "code_highlighting";
@@ -16,6 +17,7 @@
 @import "directory";
 @import "discourse";
 @import "edit-category";
+@import "uc-simplified-category-setup-edit-categories";
 @import "edit-topic-timer-modal";
 @import "ember-select";
 @import "emoji";
@@ -66,3 +68,5 @@
 @import "user";
 @import "user-badges";
 @import "user-tips";
+@import "uc-dismiss";
+@import "uc-modernize-foundation-theme";

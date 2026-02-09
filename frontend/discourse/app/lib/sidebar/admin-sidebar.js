@@ -8,8 +8,13 @@ import PreloadStore from "discourse/lib/preload-store";
 import BaseCustomSidebarPanel from "discourse/lib/sidebar/base-custom-sidebar-panel";
 import BaseCustomSidebarSection from "discourse/lib/sidebar/base-custom-sidebar-section";
 import BaseCustomSidebarSectionLink from "discourse/lib/sidebar/base-custom-sidebar-section-link";
+import { getReviewBadgeText } from "discourse/lib/sidebar/helpers/review-badge-helper";
 import { ADMIN_PANEL } from "discourse/lib/sidebar/panels";
-import { escapeExpression } from "discourse/lib/utilities";
+import { applyValueTransformer } from "discourse/lib/transformer";
+import {
+  escapeExpression,
+  stripDiscoursePrefix,
+} from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
 let additionalAdminSidebarSectionLinks = {};
@@ -60,11 +65,12 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
   }
 
   get text() {
-    return this.adminSidebarNavLink.label
+    const text = this.adminSidebarNavLink.label
       ? i18n(this.adminSidebarNavLink.label, {
           translatedFallback: this.adminSidebarNavLink.text,
         })
       : this.adminSidebarNavLink.text;
+    return stripDiscoursePrefix(text);
   }
 
   get prefixType() {
@@ -104,20 +110,26 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
     );
   }
 
+  get badgeText() {
+    if (this.adminSidebarNavLink.name === "admin_review") {
+      return getReviewBadgeText(this.currentUser);
+    }
+  }
+
   get suffixType() {
-    if (this.#hasUnseenFeatures) {
+    if (this.#hasUnseenFeatures || this.#hasNewUpcomingChanges) {
       return "icon";
     }
   }
 
   get suffixValue() {
-    if (this.#hasUnseenFeatures) {
+    if (this.#hasUnseenFeatures || this.#hasNewUpcomingChanges) {
       return "circle";
     }
   }
 
   get suffixCSSClass() {
-    if (this.#hasUnseenFeatures) {
+    if (this.#hasUnseenFeatures || this.#hasNewUpcomingChanges) {
       return "admin-sidebar-nav-link__dot";
     }
   }
@@ -126,6 +138,13 @@ class SidebarAdminSectionLink extends BaseCustomSidebarSectionLink {
     return (
       this.adminSidebarNavLink.name === "admin_whats_new" &&
       this.currentUser.hasUnseenFeatures
+    );
+  }
+
+  get #hasNewUpcomingChanges() {
+    return (
+      this.adminSidebarNavLink.name === "admin_upcoming_changes" &&
+      this.currentUser.hasNewUpcomingChanges
     );
   }
 }
@@ -230,7 +249,7 @@ export function addAdminSidebarSectionLink(sectionName, link) {
 }
 
 function pluginAdminRouteLinks(router) {
-  return (PreloadStore.get("visiblePlugins") || [])
+  const pluginLinks = (PreloadStore.get("visiblePlugins") || [])
     .filter((plugin) => {
       if (!plugin.admin_route || !plugin.enabled) {
         return false;
@@ -286,11 +305,24 @@ function pluginAdminRouteLinks(router) {
           : [],
         label: plugin.admin_route.label,
         text: plugin.humanized_name,
-        icon: "gear",
+        icon: applyValueTransformer("admin-plugin-icon", "gear", {
+          pluginId: plugin.name,
+        }),
         description: plugin.description,
         links: pluginNavLinks,
       };
     });
+
+  return pluginLinks.sort((a, b) => {
+    const aText = stripDiscoursePrefix(
+      a.label ? i18n(a.label, { translatedFallback: a.text }) : a.text
+    );
+    const bText = stripDiscoursePrefix(
+      b.label ? i18n(b.label, { translatedFallback: b.text }) : b.text
+    );
+
+    return aText.localeCompare(bText) || a.name.localeCompare(b.name);
+  });
 }
 
 function installedPluginsLinkKeywords() {
@@ -392,23 +424,30 @@ export default class AdminSidebarPanel extends BaseCustomSidebarPanel {
         {
           name: "admin_customize_form_templates",
           route: "adminCustomizeFormTemplates",
-          label: "admin.form_templates.nav_title",
+          label: "admin.config.form_templates.title",
+          description: "admin.config.form_templates.header_description",
           icon: "list",
         },
       ]);
     }
 
     if (siteSettings.enable_upcoming_changes) {
-      this.adminNavManager.amendLinksToSection("root", [
-        {
-          name: "admin_upcoming_changes",
-          route: "adminConfig.upcomingChanges",
-          label: "admin.config.upcoming_changes.title",
-          description: "admin.config.upcoming_changes.header_description",
-          icon: "flask",
-          keywords: "admin.config.upcoming_changes.keywords",
-        },
-      ]);
+      const rootSection = this.adminNavManager.findSection("root");
+      const linkExists = rootSection?.links.some(
+        (link) => link.name === "admin_upcoming_changes"
+      );
+      if (!linkExists) {
+        this.adminNavManager.amendLinksToSection("root", [
+          {
+            name: "admin_upcoming_changes",
+            route: "adminConfig.upcomingChanges",
+            label: "admin.config.upcoming_changes.title",
+            description: "admin.config.upcoming_changes.header_description",
+            icon: "flask",
+            keywords: "admin.config.upcoming_changes.keywords",
+          },
+        ]);
+      }
     }
 
     for (const [sectionName, additionalLinks] of Object.entries(

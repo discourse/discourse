@@ -61,7 +61,6 @@ hu:
         description: Amikor egy téma címkéit megváltoztatják, az automatizálás aktiválódik
       topic:
         title: Téma
-        description: A társított szkript csak a megadott témában lesz használva, ez például az érvényesítést végző szkripteknél hasznos
       after_post_cook:
         title: Bejegyzés elkészítése után
         description: Amikor egy bejegyzés tartalma elkészül, az automatizálás aktiválódik
@@ -152,3 +151,5 @@ hu:
       random_assign:
         title: "Véletlenszerű hozzárendelés"
         description: "Véletlenszerűen rendeljen témákat egy csoporthoz"
+      set_topic_timer:
+        title: "Téma időzítőjének beállítása"

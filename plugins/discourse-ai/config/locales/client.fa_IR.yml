@@ -46,12 +46,6 @@ fa_IR:
               label: "توقف آگاه‌سازی‌ها"
             debug_mode:
               label: "حالت اشکال زدایی"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "مدل"
-            tool:
-              label: "ابزار"
         llm_triage:
           fields:
             search_for_text:
@@ -72,7 +66,7 @@ fa_IR:
         groups: "گروه‌ها:"
         no_persona: "تنظیم نشده"
         no_groups: "هیچ‌کدام"
-        edit: "ویرایش"
+        edit: "تنظیم"
         expand_list:
           one: "(%{count} مورد دیگر)"
           other: "(%{count} مورد دیگر)"
@@ -82,6 +76,9 @@ fa_IR:
           reset: "بازنشانی"
         search:
           name: "جستجو"
+        embeddings:
+          setting_groups:
+            related_topics: "موضوعات مرتبط"
         spam:
           name: "هرز‌نامه"
       modals:
@@ -116,6 +113,7 @@ fa_IR:
         model: "مدل"
         username: "نام‌کاربری"
         total_requests: "مجموع درخواست‌ها"
+        total: "مجموع"
         periods:
           last_day: "۲۴ ساعت گذشته"
           custom: "سفارشی..."

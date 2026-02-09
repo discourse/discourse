@@ -7,7 +7,7 @@ import { next } from "@ember/runloop";
  * @property {import("prosemirror-model").Node} node
  * @property {import("prosemirror-view").EditorView} view
  * @property {() => number} getPos
- * @property {() => import("discourse/lib/composer/rich-editor-extensions").PluginContext} getContext
+ * @property {import("discourse/lib/composer/rich-editor-extensions").PluginParams} pluginParams
  * @property {any} component
  * @property {string} name
  */
@@ -19,22 +19,43 @@ export default class GlimmerNodeView {
   /**
    * @param {GlimmerNodeViewArgs} args
    */
-  constructor({ node, view, getPos, getContext, component, name }) {
+  constructor({
+    node,
+    view,
+    getPos,
+    pluginParams,
+    getContext,
+    component,
+    name,
+    hasContent = false,
+  }) {
     this.node = node;
     this.view = view;
     this.getPos = getPos;
-    this.getContext = getContext;
+    this.pluginParams = pluginParams ?? { getContext };
     this.component = component;
 
-    getContext().addGlimmerNodeView(this);
+    this.pluginParams.getContext().addGlimmerNodeView(this);
 
-    this.dom = document.createElement("div");
+    this.dom = document.createElement(node.isInline ? "span" : "div");
     this.dom.classList.add(`composer-${name}-node`);
+    if (hasContent) {
+      this.contentDOM = document.createElement(node.isInline ? "span" : "div");
+      this.dom.appendChild(this.contentDOM);
+    }
   }
 
   @action
   setComponentInstance(instance) {
     this.#componentInstance = instance;
+
+    if (this.#componentInstance?.setSelection) {
+      this.setSelection = this.#componentInstance.setSelection.bind(
+        this.#componentInstance
+      );
+    } else {
+      this.setSelection = undefined;
+    }
   }
 
   update(node) {
@@ -51,22 +72,18 @@ export default class GlimmerNodeView {
     next(() => this.#componentInstance?.deselectNode?.());
   }
 
-  setSelection() {
-    this.#componentInstance?.setSelection?.(...arguments);
-  }
-
   stopEvent(event) {
     return this.#componentInstance?.stopEvent?.(event) ?? false;
   }
 
-  ignoreMutation() {
-    return this.#componentInstance?.ignoreMutation?.() ?? true;
+  ignoreMutation(mutation) {
+    return this.#componentInstance?.ignoreMutation?.(mutation) ?? true;
   }
 
   destroy() {
     this.#componentInstance?.destroy?.();
     this.#componentInstance = null;
 
-    this.getContext().removeGlimmerNodeView(this);
+    this.pluginParams.getContext().removeGlimmerNodeView(this);
   }
 }

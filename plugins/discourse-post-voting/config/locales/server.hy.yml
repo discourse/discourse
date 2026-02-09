@@ -23,8 +23,6 @@ hy:
           agree_and_silence:
             title: "Լռեցնել Օգտատիրոջը"
             description: "Ընդունել դրոշակը և սառեցնել օգտատիրոջը:"
-          disagree:
-            title: "Չընդունել"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

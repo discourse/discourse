@@ -144,7 +144,7 @@ class TagsController < ::ApplicationController
     define_method("show_#{filter}") do
       parent_tag_name =
         Tag
-          .where_name(params[:tag_id])
+          .where_name(params[:tag_name])
           .where.not(target_tag_id: nil)
           .joins(
             "JOIN tags parent_tags ON parent_tags.id = tags.target_tag_id AND tags.target_tag_id != tags.id",
@@ -152,24 +152,24 @@ class TagsController < ::ApplicationController
           .pick("parent_tags.name")
 
       if parent_tag_name
-        params[:tag_id] = parent_tag_name
+        params[:tag_name] = parent_tag_name
         return redirect_to url_for(params.to_unsafe_hash)
       end
 
-      @tag_id = params[:tag_id].force_encoding("UTF-8")
+      @tag_name = params[:tag_name].force_encoding("UTF-8")
       @additional_tags =
-        params[:additional_tag_ids].to_s.split("/").map { |t| t.force_encoding("UTF-8") }
+        params[:additional_tag_names].to_s.split("/").map { |t| t.force_encoding("UTF-8") }
 
       if @additional_tags.present?
         additional_tags_trimmed = @additional_tags.dup
-        additional_tags_trimmed.delete(@tag_id)
+        additional_tags_trimmed.delete(@tag_name)
         additional_tags_trimmed = additional_tags_trimmed&.uniq
 
         if additional_tags_trimmed != @additional_tags
           if additional_tags_trimmed.present?
-            params[:additional_tag_ids] = additional_tags_trimmed&.join("/")
+            params[:additional_tag_names] = additional_tags_trimmed&.join("/")
           else
-            params[:additional_tag_ids] = nil
+            params[:additional_tag_names] = nil
           end
 
           return redirect_to url_for(params.to_unsafe_hash)
@@ -193,13 +193,13 @@ class TagsController < ::ApplicationController
       @list.prev_topics_url = construct_url_with(:prev, list_opts)
       @rss = "tag"
       @title = I18n.t("rss_by_tag", tag: tag_params.join(" & "))
-      @description_meta = Tag.where(name: @tag_id).pick(:description) || @title
+      @description_meta = Tag.where(name: @tag_name).pick(:description) || @title
 
-      canonical_params = params.slice(:category_slug_path_with_id, :tag_id)
+      canonical_params = params.slice(:category_slug_path_with_id, :tag_name)
       canonical_method = url_method(canonical_params)
       canonical_url "#{Discourse.base_url_no_prefix}#{public_send(canonical_method, *(canonical_params.values.map { |t| t.force_encoding("UTF-8") }))}"
 
-      if @list.topics.size == 0 && params[:tag_id] != "none" && !Tag.where_name(@tag_id).exists?
+      if @list.topics.size == 0 && params[:tag_name] != "none" && !Tag.where_name(@tag_name).exists?
         raise Discourse::NotFound.new("tag not found", check_permalinks: true)
       else
         respond_with_list(@list)
@@ -216,23 +216,35 @@ class TagsController < ::ApplicationController
   end
 
   def update
-    tag = Tag.find_by_name(params[:tag_id])
+    if params[:tag][:id]
+      warning =
+        "Updating a tag name by `id` attribute is unsupported. Use the `name` attribute instead."
+      Discourse.deprecate(warning, since: "2025.12.0-latest", drop_from: "2026.2.0-latest")
+      return render_json_error(warning)
+    end
+    tag_name_param = params[:tag_name]
+
+    new_tag = params[:tag]
+    new_tag_name = new_tag[:name]
+    new_tag_description = new_tag[:description]
+
+    tag = Tag.find_by_name(tag_name_param)
     raise Discourse::NotFound if tag.nil?
 
     guardian.ensure_can_edit_tag!(tag)
 
-    if (params[:tag][:id].present?)
-      new_tag_name = DiscourseTagging.clean_tag(params[:tag][:id])
-      tag.name = new_tag_name
-    end
-    tag.description = params[:tag][:description] if params[:tag]&.has_key?(:description)
+    tag.name = DiscourseTagging.clean_tag(new_tag_name) if new_tag_name.present?
+    tag.description = new_tag_description if new_tag_description.present?
+
     if tag.save
-      StaffActionLogger.new(current_user).log_custom(
-        "renamed_tag",
-        previous_value: params[:tag_id],
-        new_value: new_tag_name,
-      )
-      render json: { tag: { id: tag.name, description: tag.description } }
+      if tag.name != tag_name_param
+        StaffActionLogger.new(current_user).log_custom(
+          "renamed_tag",
+          previous_value: tag_name_param,
+          new_value: tag.name,
+        )
+      end
+      render json: { tag: { id: tag.id, name: tag.name, description: tag.description } }
     else
       render_json_error tag.errors.full_messages
     end
@@ -273,6 +285,16 @@ class TagsController < ::ApplicationController
     end
   end
 
+  def bulk_create
+    Tags::BulkCreate.call(guardian: guardian, params: params.permit(tag_names: [])) do
+      on_success { |results:| render json: results }
+      on_failed_policy(:can_admin_tags) { raise Discourse::InvalidAccess }
+      on_failed_contract do |contract|
+        render_json_error(contract.errors.full_messages.first, status: :unprocessable_entity)
+      end
+    end
+  end
+
   def list_unused
     guardian.ensure_can_admin_tags!
     render json: { tags: Tag.unused.pluck(:name) }
@@ -288,7 +310,7 @@ class TagsController < ::ApplicationController
 
   def destroy
     guardian.ensure_can_admin_tags!
-    tag_name = params[:tag_id]
+    tag_name = params[:tag_name]
     tag = Tag.find_by_name(tag_name)
     raise Discourse::NotFound if tag.nil?
 
@@ -302,13 +324,13 @@ class TagsController < ::ApplicationController
   def tag_feed
     discourse_expires_in 1.minute
 
-    tag_id = params[:tag_id]
-    @link = "#{Discourse.base_url}/tag/#{tag_id}"
-    @description = I18n.t("rss_by_tag", tag: tag_id)
+    tag_name = params[:tag_name]
+    @link = "#{Discourse.base_url}/tag/#{tag_name}"
+    @description = I18n.t("rss_by_tag", tag: tag_name)
     @title = "#{SiteSetting.title} - #{@description}"
-    @atom_link = "#{Discourse.base_url}/tag/#{tag_id}.rss"
+    @atom_link = "#{Discourse.base_url}/tag/#{tag_name}.rss"
 
-    query = TopicQuery.new(current_user, tags: [tag_id])
+    query = TopicQuery.new(current_user, tags: [tag_name])
     latest_results = query.latest_results
     @topic_list = query.create_list(:by_tag, {}, latest_results)
 
@@ -316,9 +338,18 @@ class TagsController < ::ApplicationController
   end
 
   def search
+    if params[:selected_tags].present?
+      Discourse.deprecate(
+        "selected_tags param is deprecated, use selected_tag_ids instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+    end
+
     filter_params = {
       for_input: params[:filterForInput],
       selected_tags: params[:selected_tags],
+      selected_tag_ids: params[:selected_tag_ids],
       exclude_synonyms: params[:excludeSynonyms],
       exclude_has_synonyms: params[:excludeHasSynonyms],
     }
@@ -344,7 +375,7 @@ class TagsController < ::ApplicationController
 
     json_response = { results: tags }
 
-    if clean_name && !tags.find { |h| h[:id].downcase == clean_name.downcase } &&
+    if clean_name && !tags.find { |h| h[:name].downcase == clean_name.downcase } &&
          tag = Tag.where_name(clean_name).first
       # filter_allowed_tags determined that the tag entered is not allowed
       json_response[:forbidden] = params[:q]
@@ -392,16 +423,22 @@ class TagsController < ::ApplicationController
   end
 
   def notifications
-    tag = Tag.where_name(params[:tag_id]).first
+    tag = Tag.where_name(params[:tag_name]).first
     raise Discourse::NotFound unless tag
     level =
       tag.tag_users.where(user: current_user).first.try(:notification_level) ||
         TagUser.notification_levels[:regular]
-    render json: { tag_notification: { id: tag.name, notification_level: level.to_i } }
+    render json: {
+             tag_notification: {
+               id: tag.id,
+               name: tag.name,
+               notification_level: level.to_i,
+             },
+           }
   end
 
   def update_notifications
-    tag = Tag.find_by_name(params[:tag_id])
+    tag = Tag.find_by_name(params[:tag_name])
     raise Discourse::NotFound unless tag
     level = params[:tag_notification][:notification_level].to_i
     TagUser.change(current_user.id, tag.id, level)
@@ -420,16 +457,24 @@ class TagsController < ::ApplicationController
 
   def create_synonyms
     guardian.ensure_can_edit_tag!
-    value = DiscourseTagging.add_or_create_synonyms_by_name(@tag, params[:synonyms])
-    if value.is_a?(Array)
-      render json:
-               failed_json.merge(
-                 failed_tags:
-                   value.inject({}) do |h, t|
-                     h[t.name] = t.errors.full_messages.first
-                     h
-                   end,
-               )
+
+    # frontend uses form data
+    tags_param = params[:tags].try(:values) || params[:tags]
+    synonym_tag_ids = tags_param&.filter_map { |t| t[:id]&.to_i } || []
+    new_synonym_names = tags_param&.select { |t| t[:id].blank? }&.filter_map { |t| t[:name] } || []
+
+    if params[:synonyms].present? && tags_param.blank?
+      Discourse.deprecate(
+        "the synonyms param is deprecated, use tags array instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+      new_synonym_names = params[:synonyms]
+    end
+
+    value = DiscourseTagging.add_or_create_synonyms(@tag, synonym_tag_ids:, new_synonym_names:)
+    if value.is_a?(Hash)
+      render json: failed_json.merge(failed_tags: value)
     else
       render json: success_json
     end
@@ -452,7 +497,7 @@ class TagsController < ::ApplicationController
   private
 
   def fetch_tag
-    @tag = Tag.find_by_name(params[:tag_id].force_encoding("UTF-8"))
+    @tag = Tag.find_by_name(params[:tag_name].force_encoding("UTF-8"))
     raise Discourse::NotFound unless @tag
   end
 
@@ -461,7 +506,7 @@ class TagsController < ::ApplicationController
   end
 
   def ensure_visible
-    if DiscourseTagging.hidden_tag_names(guardian).include?(params[:tag_id])
+    if DiscourseTagging.hidden_tag_names(guardian).include?(params[:tag_name])
       raise Discourse::NotFound
     end
   end
@@ -477,7 +522,7 @@ class TagsController < ::ApplicationController
         next if topic_count == 0 && t.pm_topic_count > 0 && !show_pm_tags
 
         attrs = {
-          id: t.name,
+          id: t.id,
           text: t.name,
           name: t.name,
           description: t.description,
@@ -510,7 +555,7 @@ class TagsController < ::ApplicationController
       permalink = Permalink.find_by_url("c/#{params[:category_slug_path_with_id]}")
       if permalink.present? && permalink.category_id
         return(
-          redirect_to "#{Discourse.base_path}/tags#{permalink.target_url}/#{params[:tag_id]}",
+          redirect_to "#{Discourse.base_path}/tags#{permalink.target_url}/#{params[:tag_name]}",
                       status: :moved_permanently
         )
       end
@@ -606,7 +651,7 @@ class TagsController < ::ApplicationController
       params[:no_subcategories] == "true"
     options[:per_page] = params[:per_page].to_i.clamp(1, 30) if params[:per_page].present?
 
-    if params[:tag_id] == "none"
+    if params[:tag_name] == "none"
       options.delete(:tags)
       options[:no_tags] = true
     else

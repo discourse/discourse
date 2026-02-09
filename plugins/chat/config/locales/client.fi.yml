@@ -140,10 +140,8 @@ fi:
       send_shortcut:
         enter:
           label: "Lähetä painamalla Enter-näppäintä"
-          description: "Uusi rivi painamalla Vaihto + Enter"
         meta_enter:
           label: "Lähetä painamalla %{meta_key} + Enter"
-          description: "Uusi rivi painamalla Enter-näppäintä"
       enable: "Ota chat käyttöön"
       flag: "Liputa"
       emoji: "Lisää emoji"
@@ -185,12 +183,11 @@ fi:
       no_public_channels: "Et ole vielä liittynyt kanaville!"
       no_public_channels_cta: "Selaa kanavia"
       kicked_from_channel: "Et voi enää käyttää tätä kanavaa."
+      chat_notifications_title: "Chat-ilmoitukset"
       only_chat_push_notifications:
         title: "Lähetä vain chatin push-ilmoituksia"
-        description: "Estä kaikkien muiden kuin chatin push-ilmoitusten lähettäminen"
       ignore_channel_wide_mention:
         title: "Ohita kanavanlaajuiset maininnat"
-        description: "Älä lähetä ilmoituksia kanavanlaajuisista maininnoista (@here ja @all)"
       show_thread_title_prompts:
         title: "Näytä ketjun otsikkokehotteet"
         description: "Näytä kehotteita uusien viestiketjujen otsikon asettamiseksi"
@@ -446,6 +443,7 @@ fi:
           confirm_export: "Tämä vie kaikki viestit kaikilta kanavilta ja lähettää tuloksen sinulle henkilökohtaisena viestinä. Haluatko varmasti viedä?"
           export_has_started: "Vienti on alkanut. Saat yksityisviestin, kun se on valmis."
       search:
+        short_title: Haku
         no_results: "Ei tuloksia"
         sort:
           relevance: "Osuvuus"
@@ -665,7 +663,6 @@ fi:
           composer_bold: "%{shortcut} Lihavointi (vain tekstieditori)"
           composer_italic: "%{shortcut} Kursiivi (vain tekstieditori)"
           composer_code: "%{shortcut} Koodi (vain tekstieditori)"
-          drawer_open: "%{shortcut} Avaa chat-laatikko"
           drawer_close: "%{shortcut} Sulje chat-laatikko"
           mark_all_channels_read: "%{shortcut} Merkitse kaikki kanavat luetuiksi"
     topic_statuses:

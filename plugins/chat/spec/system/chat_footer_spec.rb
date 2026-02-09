@@ -22,7 +22,7 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
       chat_page.open_from_header
 
       expect(page).to have_css(".c-footer")
-      expect(page).to have_css(".c-footer__item", count: 2)
+      expect(page).to have_css(".c-footer__item", count: 3)
       expect(page).to have_css("#c-footer-direct-messages")
       expect(page).to have_css("#c-footer-channels")
     end
@@ -40,10 +40,16 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
       expect(page).to have_current_path("/chat/channels")
     end
 
-    context "when user is a member of at least one channel with threads" do
-      it "shows threads tab when user has threads" do
+    context "when user has viewable threads" do
+      before do
         SiteSetting.chat_threads_enabled = true
+        thread = Fabricate(:chat_thread, channel: channel, original_message: message)
+        thread.add(current_user)
+        Fabricate(:chat_message, chat_channel: channel, thread: thread, user: other_user)
+        thread.set_replies_count_cache(1, update_db: true)
+      end
 
+      it "shows threads tab when user has threads" do
         visit("/")
         chat_page.open_from_header
 
@@ -173,7 +179,11 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
         fab!(:thread) { Fabricate(:chat_thread, channel: channel, original_message: message) }
         fab!(:thread_message) { Fabricate(:chat_message, chat_channel: channel, thread: thread) }
 
-        before { SiteSetting.chat_threads_enabled = true }
+        before do
+          SiteSetting.chat_threads_enabled = true
+          thread.add(current_user)
+          thread.set_replies_count_cache(1, update_db: true)
+        end
 
         it "is unread" do
           visit("/")
@@ -219,7 +229,11 @@ RSpec.describe "Mobile Chat footer", type: :system, mobile: true do
           Fabricate(:chat_message, chat_channel: dm_channel, thread: dm_thread, user: other_user)
         end
 
-        before { SiteSetting.chat_threads_enabled = true }
+        before do
+          SiteSetting.chat_threads_enabled = true
+          dm_thread.add(current_user)
+          dm_thread.set_replies_count_cache(1, update_db: true)
+        end
 
         it "is unread" do
           visit("/")

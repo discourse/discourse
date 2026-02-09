@@ -1,6 +1,7 @@
 import { click, currentURL, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import Category from "discourse/models/category";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 import {
   acceptance,
   updateCurrentUser,
@@ -35,6 +36,50 @@ acceptance("Composer - Tags", function (needs) {
     assert.notStrictEqual(currentURL(), "/");
   });
 
+  test("filterTags filters out staff tags from URL parameters for non-staff users", async function (assert) {
+    updateCurrentUser({ moderator: false, admin: false });
+
+    pretender.get("/tags/list", () => {
+      return response({
+        list_tags: [
+          { id: "public", name: "public", staff: false },
+          { id: "staff", name: "staff", staff: true },
+        ],
+      });
+    });
+
+    await visit("/new-topic?tags=public,staff");
+
+    const tagChooser = selectKit(".mini-tag-chooser");
+    assert.strictEqual(
+      tagChooser.header().value(),
+      "public",
+      "staff tag is filtered out for non-staff user"
+    );
+  });
+
+  test("filterTags does not filter out staff tags for staff users", async function (assert) {
+    updateCurrentUser({ moderator: true, admin: false });
+
+    pretender.get("/tags/list", () => {
+      return response({
+        list_tags: [
+          { id: "public", name: "public", staff: false },
+          { id: "staff", name: "staff", staff: true },
+        ],
+      });
+    });
+
+    await visit("/new-topic?tags=public,staff");
+
+    const tagChooser = selectKit(".mini-tag-chooser");
+    assert.strictEqual(
+      tagChooser.header().value(),
+      "public,staff",
+      "staff tag is NOT filtered out for staff user"
+    );
+  });
+
   test("users do not bypass tag validation rule", async function (assert) {
     await visit("/");
     await click("#create-topic");
@@ -61,7 +106,7 @@ acceptance("Composer - Tags", function (needs) {
 
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
-    await tags.selectRowByValue("monkey");
+    await tags.selectRowByName("monkey");
 
     await click("#reply-control button.create");
     assert.notStrictEqual(currentURL(), "/");
@@ -95,7 +140,7 @@ acceptance("Composer - Tags", function (needs) {
 
     const tags = selectKit(".mini-tag-chooser");
     await tags.expand();
-    await tags.selectRowByValue("monkey");
+    await tags.selectRowByName("monkey");
 
     await click("#reply-control button.create");
     assert.notStrictEqual(currentURL(), "/");

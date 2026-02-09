@@ -42,18 +42,18 @@ hu:
             email_not_available: "Válaszd ki a Patreon tagot, és az oldal jobb alsó sarkában nézd meg a korábbi adományokat."
       donation_prompt:
         body: |
-          <h1>Üdvözlöm olvasó!</h1>
+          <h1>Kedves olvasó!</h1>
 
-          <p>Tetszik a weboldalunk? Szeretnél hozzájárulni egy jó ügyhöz?</p>
+          <p>Tetszik a weboldalunk? Szeretne hozzájárulni egy jó ügyhöz?</p>
 
           <p>
-            Ha hasznosnak találod weboldalunkat, és tetszik az általunk létrehozott közösség, örülnénk, ha adományoznál nekünk.
-            Az adományok biztosítják szolgáltatásaink zökkenőmentes működését, és biztosítják, hogy közösségünk hosszú éveken át működőképes legyen.
+            Ha hasznosnak találja a weboldalunkat, és tetszik az általunk létrehozott közösség, örülnénk, ha adományozna nekünk.
+            Az adományok biztosítják szolgáltatásaink zökkenőmentes működését, és a közösségünk hosszú éveken át tartó működőképességét.
             Minden dollár számít, és jó hasznát fogjuk venni.
           </p>
 
-          <p>Köszönjük a támogatásodat!</p>
+          <p>Köszönjük a támogatását!</p>
 
           <p>
-            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Légy te is támogató</a>
+            <a class="btn btn-large btn-danger" href="%{campaignUrl}">Legyen Ön is támogató</a>
           </p>

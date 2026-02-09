@@ -360,22 +360,22 @@ RSpec.describe PostsController do
   end
 
   describe "#destroy_many" do
-    include_examples "action requires login",
-                     :delete,
-                     "/posts/destroy_many.json",
-                     params: {
-                       post_ids: [123, 345],
-                     }
+    it_behaves_like "action requires login",
+                    :delete,
+                    "/posts/destroy_many.json",
+                    params: {
+                      post_ids: [123, 345],
+                    }
 
-    describe "when logged in" do
+    context "when logged in" do
       fab!(:poster, :moderator)
-      fab!(:post1) { Fabricate(:post, user: poster, post_number: 2) }
+      fab!(:post1) { Fabricate(:post, user: poster, post_number: 1) }
       fab!(:post2) do
         Fabricate(
           :post,
           topic: post1.topic,
           user: poster,
-          post_number: 3,
+          post_number: 2,
           reply_to_post_number: post1.post_number,
         )
       end
@@ -405,6 +405,7 @@ RSpec.describe PostsController do
         delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
         expect(response.status).to eq(200)
       end
+
       # bookmark
       it "triggers DiscourseEvent with :posts_destroyed and correct params" do
         sign_in(poster)
@@ -424,17 +425,19 @@ RSpec.describe PostsController do
         delete "/posts/destroy_many.json", params: { post_ids: [post1.id, post2.id] }
       end
 
-      describe "can delete replies" do
-        before { PostReply.create(post_id: post1.id, reply_post_id: post2.id) }
+      context "with replies" do
+        fab!(:post_reply) { PostReply.create(post: post1, reply: post2) }
+
+        before { sign_in(poster) }
 
         it "deletes the post and the reply to it" do
-          sign_in(poster)
-          PostDestroyer.any_instance.expects(:destroy).twice
-          delete "/posts/destroy_many.json",
-                 params: {
-                   post_ids: [post1.id],
-                   reply_post_ids: [post1.id],
-                 }
+          expect do
+            delete "/posts/destroy_many.json",
+                   params: {
+                     post_ids: [post1.id],
+                     reply_post_ids: [post1.id],
+                   }
+          end.to change { Post.count }.by(-2).and change { Topic.count }.by(-1)
         end
       end
 
@@ -642,6 +645,87 @@ RSpec.describe PostsController do
 
         expect(response.status).to eq(200)
         expect(post.topic.reload.bumped_at).to eq_time(created_at)
+      end
+
+      describe "bypass_bump parameter" do
+        fab!(:wiki_post) { Fabricate(:post, user:, wiki: true) }
+
+        before { wiki_post.topic.update!(bumped_at: 1.day.ago) }
+
+        it "prevents bumping when bypass_bump=true" do
+          expect {
+            put "/posts/#{wiki_post.id}.json",
+                params: {
+                  bypass_bump: true,
+                  post: {
+                    raw: "updated content",
+                  },
+                }
+          }.not_to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        it "accepts bypass_bump nested under post param" do
+          expect {
+            put "/posts/#{wiki_post.id}.json",
+                params: {
+                  post: {
+                    raw: "updated content",
+                    bypass_bump: true,
+                  },
+                }
+          }.not_to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        it "bumps the topic when bypass_bump is not provided" do
+          expect {
+            put "/posts/#{wiki_post.id}.json", params: { post: { raw: "updated content" } }
+          }.to change { wiki_post.topic.reload.bumped_at }
+          expect(response.status).to eq(200)
+        end
+
+        context "as TL4 user" do
+          fab!(:tl4_user, :trust_level_4)
+          before { sign_in(tl4_user) }
+
+          it "prevents bumping when bypass_bump=true" do
+            expect {
+              put "/posts/#{wiki_post.id}.json",
+                  params: {
+                    bypass_bump: true,
+                    post: {
+                      raw: "updated content",
+                    },
+                  }
+            }.not_to change { wiki_post.topic.reload.bumped_at }
+            expect(response.status).to eq(200)
+          end
+        end
+
+        context "as regular user" do
+          fab!(:old_wiki_post) do
+            Fabricate(:post, user:, wiki: true, last_version_at: 10.minutes.ago)
+          end
+
+          before do
+            sign_in(user)
+            old_wiki_post.topic.update!(bumped_at: 1.day.ago)
+          end
+
+          it "ignores bypass_bump (topic still bumps)" do
+            expect {
+              put "/posts/#{old_wiki_post.id}.json",
+                  params: {
+                    bypass_bump: true,
+                    post: {
+                      raw: "updated content",
+                    },
+                  }
+            }.to change { old_wiki_post.topic.reload.bumped_at }
+            expect(response.status).to eq(200)
+          end
+        end
       end
     end
 
@@ -1066,6 +1150,47 @@ RSpec.describe PostsController do
         expect(response.status).to eq(403)
       end
 
+      it "allows staff to create whispers with boolean parameter" do
+        post_1 = Fabricate(:post)
+        staff_key = ApiKey.create!(user: admin).key
+
+        post "/posts.json",
+             params: {
+               raw: "this is a staff whisper",
+               topic_id: post_1.topic.id,
+               reply_to_post_number: 1,
+               whisper: true,
+             }.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+               "HTTP_API_USERNAME" => admin.username,
+               "HTTP_API_KEY" => staff_key,
+             }
+
+        expect(response.status).to eq(200)
+        expect(Post.last.post_type).to eq(Post.types[:whisper])
+      end
+
+      it "allows staff to create whispers with string 'true' parameter" do
+        post_1 = Fabricate(:post)
+        staff_key = ApiKey.create!(user: admin).key
+
+        post "/posts.json",
+             params: {
+               raw: "this is a staff whisper with string param",
+               topic_id: post_1.topic.id,
+               reply_to_post_number: 1,
+               whisper: "true",
+             },
+             headers: {
+               HTTP_API_USERNAME: admin.username,
+               HTTP_API_KEY: staff_key,
+             }
+
+        expect(response.status).to eq(200)
+        expect(Post.last.post_type).to eq(Post.types[:whisper])
+      end
+
       it "does not advance draft" do
         Draft.set(user, Draft::NEW_TOPIC, 0, "test")
         user_key = ApiKey.create!(user: user).key
@@ -1478,6 +1603,27 @@ RSpec.describe PostsController do
         expect(json["errors"]).to be_present
       end
 
+      describe "tagging by name" do
+        it "can create a post with a tag when tagging is enabled" do
+          SiteSetting.tagging_enabled = true
+          tag = Fabricate(:tag)
+
+          logger =
+            track_log_messages do
+              post "/posts.json",
+                   params: {
+                     raw: "this is the test content",
+                     title: "this is the test title for the topic",
+                     tags: [tag.name],
+                   }
+            end
+
+          expect(response.status).to eq(200)
+          expect(Post.last.topic.tags.count).to eq(1)
+          expect(logger.warnings.join("\n")).to include("tag names as strings")
+        end
+      end
+
       it "can create a post with a tag when tagging is enabled" do
         SiteSetting.tagging_enabled = true
         tag = Fabricate(:tag)
@@ -1486,11 +1632,11 @@ RSpec.describe PostsController do
              params: {
                raw: "this is the test content",
                title: "this is the test title for the topic",
-               tags: [tag.name],
+               tags: [{ id: tag.id, name: tag.name }],
              }
 
         expect(response.status).to eq(200)
-        expect(Post.last.topic.tags.count).to eq(1)
+        expect(Post.last.topic.tags).to contain_exactly(tag)
       end
 
       it "creates the topic and post with the right attributes" do
@@ -1956,6 +2102,24 @@ RSpec.describe PostsController do
             expect(topic.category_id).to eq(shared_category.id)
             expect(topic.shared_draft.category_id).to eq(destination_category.id)
           end
+
+          it "accepts boolean true for shared_draft parameter" do
+            post "/posts.json",
+                 params: {
+                   raw: "this is the shared draft content",
+                   title: "this is the shared draft title with boolean",
+                   category: destination_category.id,
+                   shared_draft: true,
+                 }.to_json,
+                 headers: {
+                   "CONTENT_TYPE" => "application/json",
+                 }
+            expect(response.status).to eq(200)
+            result = response.parsed_body
+            topic = Topic.find(result["topic_id"])
+            expect(topic.category_id).to eq(shared_category.id)
+            expect(topic.shared_draft.category_id).to eq(destination_category.id)
+          end
         end
       end
     end
@@ -1982,6 +2146,20 @@ RSpec.describe PostsController do
 
           expect(new_topic.title).to eq("This is some post")
           expect(new_topic.is_official_warning?).to eq(true)
+        end
+
+        it "accepts string 'true' for is_warning parameter" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 archetype: "private_message",
+                 title: "this is some post with string param",
+                 target_recipients: user_2.username,
+                 is_warning: "true",
+               }
+
+          expect(response.status).to eq(200)
+          expect(Topic.last.is_official_warning?).to eq(true)
         end
 
         it "should be able to mark a topic as not a warning" do
@@ -2036,6 +2214,21 @@ RSpec.describe PostsController do
                  raw: "this is the test content",
                  topic_id: topic.id,
                  no_bump: true,
+               }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.bumped_at).to eq_time(original_bumped_at)
+        end
+
+        it "accepts string 'true' for no_bump parameter" do
+          original_bumped_at = 1.day.ago
+          topic = Fabricate(:topic, bumped_at: original_bumped_at)
+
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 topic_id: topic.id,
+                 no_bump: "true",
                }
 
           expect(response.status).to eq(200)

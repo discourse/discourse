@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
@@ -152,14 +152,6 @@ export default class DEditor extends Component {
     ).finally(() => {
       this.keyValueStore.remove("d-editor-prefers-rich-editor");
     });
-  }
-
-  @discourseComputed("placeholder")
-  placeholderTranslated(placeholder) {
-    if (placeholder) {
-      return i18n(placeholder);
-    }
-    return null;
   }
 
   @discourseComputed("siteSettings.rich_editor", "forceEditorMode")
@@ -526,6 +518,8 @@ export default class DEditor extends Component {
    * @property {function} addText - Adds text
    * @property {function} applyList - Applies a list format
    * @property {*} selected - The current selection
+   * @property {Object} commands - Available commands
+   * @property {Object} state - Current editor state (inWrap, inBold, etc.)
    */
 
   /**
@@ -540,6 +534,7 @@ export default class DEditor extends Component {
     });
     return {
       commands: this.textManipulation.commands,
+      state: this.textManipulation.state,
       selected,
       selectText: (from, length) =>
         this.textManipulation.selectText(from, length, { scroll: false }),
@@ -830,7 +825,7 @@ export default class DEditor extends Component {
             @markdownOptions={{this.markdownOptions}}
             @keymap={{this.keymap}}
             @value={{this.value}}
-            @placeholder={{this.placeholderTranslated}}
+            @placeholder={{@placeholder}}
             @disabled={{this.disabled}}
             @change={{this.onChange}}
             @focusIn={{this.handleFocusIn}}

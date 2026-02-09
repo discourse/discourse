@@ -73,6 +73,7 @@ de:
         closed: "Der Kanal ist geschlossen, es können keine Nachrichten bearbeitet oder gelöscht werden"
         read_only: "Der Kanal ist schreibgeschützt, es können keine Nachrichten bearbeitet oder gelöscht werden"
       user_cannot_send_message: "Du kannst derzeit keine Nachrichten senden."
+      user_not_in_channel: "Du musst Mitglied in diesem Kanal sein."
       rate_limit_exceeded: "Das Limit der Chat-Nachrichten, die innerhalb von 30 Sekunden gesendet werden können, wurde überschritten"
       auto_silence_from_flags: "Chat-Nachricht wurde mit einer Punktzahl markiert, die hoch genug ist, um den Benutzer stummzuschalten."
       channel_cannot_be_archived: "Der Kanal kann zu diesem Zeitpunkt nicht archiviert werden, er muss entweder geschlossen oder geöffnet sein."
@@ -107,9 +108,16 @@ de:
     reviewables:
       message_already_handled: "Danke, aber wir haben diese Nachricht bereits überprüft und festgestellt, dass sie nicht erneut markiert werden muss."
       actions:
+        message_actions:
+          bundle_title: "Was willst du mit der Nachricht machen?"
         no_action_message:
           title: "Keine Aktion"
+          description: "Nachricht unverändert lassen."
+        delete_message:
+          title: "Nachricht löschen"
+          description: "Nachricht endgültig löschen."
         restore_message:
+          title: "Nachricht wiederherstellen"
           description: "Nachricht wiederherstellen, damit Benutzer sie sehen können."
         agree:
           title: "Zustimmen …"
@@ -138,10 +146,11 @@ de:
           title: "Ablehnen und Nachricht wiederherstellen"
           description: "Nachricht wiederherstellen, damit alle Benutzer sie sehen können."
         disagree:
-          title: "Ablehnen"
+          title: "Nachricht behalten"
+          description: "Lehne die Meldung ab und lasse die Nachricht unverändert."
         ignore:
-          title: "Nichts tun"
-          description: "Ignoriere die Meldung, indem du sie aus der Warteschlange entfernst, ohne etwas zu unternehmen."
+          title: "Meldung ignorieren"
+          description: "Entferne es aus der Warteschlange, ohne weitere Maßnahmen zu ergreifen."
       direct_messages:
         transcript_title: "Transkript früherer Nachrichten in %{channel_name}"
         transcript_body: "Um dir mehr Kontext zu geben, haben wir ein Transkript der vorherigen Nachrichten in dieser Unterhaltung beigefügt (bis zu zehn):\n\n%{transcript}"
@@ -190,6 +199,7 @@ de:
         is_already_in_use: "wird bereits verwendet"
     bookmarkable:
       notification_title_channel: "Nachricht in %{channel_name}"
+      notification_title_direct_message: "Nachricht mit %{channel_name}"
     personal_chat: "persönlicher Chat"
     onebox:
       inline_to_message: "Nachricht #%{message_id} von %{username} – #%{chat_channel}"
@@ -269,6 +279,7 @@ de:
       view_more:
         one: "%{count} weitere Nachricht anzeigen"
         other: "%{count} weitere Nachrichten anzeigen"
+      your_chat_settings: "Chat-E-Mail-Einstellung"
   unsubscribe:
     chat_summary:
       never: Niemals

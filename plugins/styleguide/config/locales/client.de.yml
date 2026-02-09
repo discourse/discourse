@@ -38,6 +38,8 @@ de:
           title: "Schrift"
         colors:
           title: "Farben"
+        dialog:
+          title: "Dialog"
         icons:
           title: "Symbole"
           full_list: "Siehe vollständige Liste der „Font Awesome“-Symbole"
@@ -60,7 +62,7 @@ de:
         categories_list:
           title: "Kategorienliste"
         topic_link:
-          title: "Link zu Thema"
+          title: "Themenlink und -status"
         topic_list_item:
           title: "Element in Themenliste"
         topic_statuses:
@@ -69,8 +71,6 @@ de:
           title: "Themenliste"
         basic_topic_list:
           title: "Grundlegende Themenliste"
-        footer_message:
-          title: "Fußzeile"
         signup_cta:
           title: "Aufforderung zur Registrierung"
         topic_timer_info:
@@ -103,6 +103,8 @@ de:
           title: "Header-Symbole"
         spinners:
           title: "Spinner"
+        otp:
+          title: "Einmalpasswort (OTP)"
         empty_state:
           title: "Empty State"
         tooltips:

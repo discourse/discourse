@@ -3,11 +3,11 @@ import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import EmailGroupUserChooser from "discourse/select-kit/components/email-group-user-chooser";
 import { i18n } from "discourse-i18n";
 
-@classNames("assigned-to-filter")
+@tagName("")
 export default class AssignedToFilter extends Component {
   static shouldRender(args) {
     return args.additionalFilters;
@@ -25,26 +25,28 @@ export default class AssignedToFilter extends Component {
 
   @action
   updateAssignedTo(selected) {
-    this.set("outletArgs.additionalFilters.assigned_to", selected.firstObject);
+    this.set("outletArgs.additionalFilters.assigned_to", selected[0]);
   }
 
   <template>
-    <div class="reviewable-filter discourse-assign-assign-to-filter">
-      <label class="filter-label">
-        {{i18n "review.assigned_to"}}
-      </label>
+    <div class="assigned-to-filter" ...attributes>
+      <div class="reviewable-filter discourse-assign-assign-to-filter">
+        <label class="filter-label">
+          {{i18n "review.assigned_to"}}
+        </label>
 
-      <EmailGroupUserChooser
-        @value={{this.outletArgs.additionalFilters.assigned_to}}
-        @onChange={{this.updateAssignedTo}}
-        @options={{hash
-          maximum=1
-          fullWidthWrap=true
-          includeGroups=false
-          groupMembersOf=this.allowedGroups
-        }}
-        autocomplete="off"
-      />
+        <EmailGroupUserChooser
+          @value={{this.outletArgs.additionalFilters.assigned_to}}
+          @onChange={{this.updateAssignedTo}}
+          @options={{hash
+            maximum=1
+            fullWidthWrap=true
+            includeGroups=false
+            groupMembersOf=this.allowedGroups
+          }}
+          autocomplete="off"
+        />
+      </div>
     </div>
   </template>
 }

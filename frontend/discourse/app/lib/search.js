@@ -103,10 +103,12 @@ export function translateResults(results, opts) {
 
   results.tags = results.tags
     .map(function (tag) {
-      const tagName = escapeExpression(tag.name);
+      const id = tag.id;
+      const name = escapeExpression(tag.name);
       return EmberObject.create({
-        id: tagName,
-        url: getURL("/tag/" + tagName),
+        id,
+        name,
+        url: getURL("/tag/" + name),
       });
     })
     .filter((item) => item != null);
@@ -219,12 +221,25 @@ export function getSearchKey(args) {
   );
 }
 
+// Patterns that bypass minimum search term length because they
+// produce meaningful results on their own. Note: 't' (in:title) is
+// intentionally excluded - it modifies where to search but still
+// requires actual search terms.
+const MIN_LENGTH_BYPASS_PATTERN =
+  /^(l|r)$|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i;
+
 export function isValidSearchTerm(searchTerm, siteSettings) {
-  if (searchTerm) {
-    return searchTerm.trim().length >= siteSettings.min_search_term_length;
-  } else {
+  if (!searchTerm) {
     return false;
   }
+
+  const trimmed = searchTerm.trim();
+
+  if (MIN_LENGTH_BYPASS_PATTERN.test(trimmed)) {
+    return true;
+  }
+
+  return trimmed.length >= siteSettings.min_search_term_length;
 }
 
 export function applySearchAutocomplete(inputElement, siteSettings, owner) {

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
 import { cached, tracked } from "@glimmer/tracking";
 import { concat, fn, get } from "@ember/helper";
@@ -89,7 +90,7 @@ export default class AiEmbeddingEditor extends Component {
       };
     });
 
-    presets.unshiftObject({
+    presets.unshift({
       name: i18n("discourse_ai.embeddings.configure_manually"),
       id: "manual",
       provider: "fake",

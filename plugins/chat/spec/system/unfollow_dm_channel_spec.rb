@@ -1,12 +1,13 @@
 # frozen_string_literal: true
 
-RSpec.describe "Unfollow dm channel", type: :system do
+RSpec.describe "Unfollow DM channel", type: :system do
   fab!(:current_user, :user)
   fab!(:other_user, :user)
   fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user, other_user]) }
 
   let!(:chat_page) { PageObjects::Pages::Chat.new }
   let!(:channel_page) { PageObjects::Pages::ChatChannel.new }
+  let!(:chat_sidebar_page) { PageObjects::Pages::ChatSidebar.new }
 
   before do
     SiteSetting.navigation_menu = "sidebar"
@@ -17,10 +18,8 @@ RSpec.describe "Unfollow dm channel", type: :system do
   context "when receiving a message after unfollowing" do
     it "correctly shows the channel" do
       visit("/")
-      find(".channel-#{dm_channel_1.id}").hover
-      find(".channel-#{dm_channel_1.id} .sidebar-section-link-hover").click
-
-      expect(page).to have_no_css(".channel-#{dm_channel_1.id}")
+      chat_sidebar_page.remove_channel(dm_channel_1)
+      expect(chat_sidebar_page).to have_no_channel(dm_channel_1)
 
       using_session(:user_1) do
         text = "this is fine"
@@ -31,6 +30,40 @@ RSpec.describe "Unfollow dm channel", type: :system do
       end
 
       expect(page).to have_css(".channel-#{dm_channel_1.id} .urgent", wait: 25)
+    end
+
+    context "when channel was previously starred" do
+      let(:membership) { dm_channel_1.membership_for(current_user) }
+
+      before { membership.update!(starred: true) }
+
+      it "does not show the channel back in the starred section" do
+        visit("/")
+
+        within(chat_sidebar_page.starred_section) do
+          expect(page).to have_css(".channel-#{dm_channel_1.id}")
+        end
+
+        chat_sidebar_page.remove_channel(dm_channel_1)
+
+        within(chat_sidebar_page.dms_section) do
+          expect(page).to have_no_css(".channel-#{dm_channel_1.id}")
+        end
+
+        using_session(:user_1) do
+          text = "this is fine"
+          sign_in(other_user)
+          chat_page.visit_channel(dm_channel_1)
+          channel_page.send_message(text)
+          expect(channel_page.messages).to have_message(text: text)
+        end
+
+        expect(chat_sidebar_page).to have_no_starred_channels_section
+
+        within(chat_sidebar_page.dms_section) do
+          expect(page).to have_css(".channel-#{dm_channel_1.id} .urgent", wait: 25)
+        end
+      end
     end
   end
 end

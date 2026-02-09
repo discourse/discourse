@@ -5,3 +5,8 @@
 # https://translate.discourse.org/
 
 vi:
+  js:
+    login:
+      microsoft_office365:
+        name: "Microsoft"
+        title: "Đăng nhập bằng Microsoft"

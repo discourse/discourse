@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { fn } from "@ember/helper";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
@@ -22,14 +21,12 @@ const SCOPE_ICONS = {
 export default class ApiKeyItem extends Component {
   @service router;
 
-  @tracked apiKey = this.args.apiKey;
-
   get scopeIcon() {
-    return SCOPE_ICONS[this.apiKey.scope_mode];
+    return SCOPE_ICONS[this.args.apiKey.scope_mode];
   }
 
   get scopeName() {
-    return i18n(`admin.api.scopes.${this.apiKey.scope_mode}`);
+    return i18n(`admin.api.scopes.${this.args.apiKey.scope_mode}`);
   }
 
   @action
@@ -59,15 +56,15 @@ export default class ApiKeyItem extends Component {
 
   @action
   edit() {
-    this.router.transitionTo("adminApiKeys.show", this.apiKey);
+    this.router.transitionTo("adminApiKeys.show", this.args.apiKey.id);
   }
 
   <template>
     <tr class="d-table__row">
       <td class="d-table__cell --overview key">
         <div class="d-table__value-wrapper">
-          {{this.apiKey.truncatedKey}}
-          {{#if this.apiKey.revoked_at}}
+          {{@apiKey.truncatedKey}}
+          {{#if @apiKey.revoked_at}}
             <div class="status-label --inactive">
               <div class="status-label-indicator"></div>
               <div class="status-label-text">
@@ -81,13 +78,13 @@ export default class ApiKeyItem extends Component {
         <div class="d-table__mobile-label">{{i18n
             "admin.api.description"
           }}</div>
-        {{this.apiKey.shortDescription}}
+        {{@apiKey.shortDescription}}
       </td>
       <td class="d-table__cell --detail key-user">
         <div class="d-table__mobile-label">{{i18n "admin.api.user"}}</div>
-        {{#if this.apiKey.user}}
-          <LinkTo @route="adminUser" @model={{this.apiKey.user}}>
-            {{avatar this.apiKey.user imageSize="small"}}
+        {{#if @apiKey.user}}
+          <LinkTo @route="adminUser" @model={{@apiKey.user}}>
+            {{avatar @apiKey.user imageSize="small"}}
           </LinkTo>
         {{else}}
           {{i18n "admin.api.all_users"}}
@@ -96,10 +93,10 @@ export default class ApiKeyItem extends Component {
       <td class="d-table__cell --detail key-created">
         <div class="d-table__mobile-label">{{i18n "admin.api.created"}}</div>
         <div class="d-table__value-wrapper">
-          <LinkTo @route="adminUser" @model={{this.apiKey.createdBy}}>
-            {{avatar this.apiKey.createdBy imageSize="small"}}
+          <LinkTo @route="adminUser" @model={{@apiKey.createdBy}}>
+            {{avatar @apiKey.createdBy imageSize="small"}}
           </LinkTo>
-          {{formatDate this.apiKey.created_at}}
+          {{formatDate @apiKey.created_at}}
         </div>
       </td>
       <td class="d-table__cell --detail key-scope">
@@ -111,8 +108,8 @@ export default class ApiKeyItem extends Component {
       </td>
       <td class="d-table__cell --detail key-last-used">
         <div class="d-table__mobile-label">{{i18n "admin.api.last_used"}}</div>
-        {{#if this.apiKey.last_used_at}}
-          {{formatDate this.apiKey.last_used_at}}
+        {{#if @apiKey.last_used_at}}
+          {{formatDate @apiKey.last_used_at}}
         {{else}}
           {{i18n "admin.api.never_used"}}
         {{/if}}
@@ -134,10 +131,10 @@ export default class ApiKeyItem extends Component {
           >
             <:content>
               <DropdownMenu as |dropdown|>
-                {{#if this.apiKey.revoked_at}}
+                {{#if @apiKey.revoked_at}}
                   <dropdown.item>
                     <DButton
-                      @action={{fn this.undoRevokeKey this.apiKey}}
+                      @action={{fn this.undoRevokeKey @apiKey}}
                       @icon="arrow-rotate-left"
                       @label="admin.api_keys.undo_revoke"
                       @title="admin.api.undo_revoke"
@@ -146,7 +143,7 @@ export default class ApiKeyItem extends Component {
                 {{else}}
                   <dropdown.item>
                     <DButton
-                      @action={{fn this.revokeKey this.apiKey}}
+                      @action={{fn this.revokeKey @apiKey}}
                       @icon="xmark"
                       @label="admin.api_keys.revoke"
                       @title="admin.api.revoke"

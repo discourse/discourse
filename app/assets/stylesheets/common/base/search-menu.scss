@@ -45,6 +45,10 @@
     }
   }
 
+  .no-results {
+    padding: var(--space-2) var(--space-4) var(--space-3);
+  }
+
   .search-input {
     position: relative;
     flex-grow: 1;
@@ -217,7 +221,6 @@
       font-size: var(--font-up-1-rem);
       color: var(--tertiary);
       overflow-wrap: anywhere;
-      margin-right: var(--space-1);
     }
   }
 
@@ -458,8 +461,4 @@
       }
     }
   }
-}
-
-.no-results {
-  padding: var(--search-result-element-padding);
 }

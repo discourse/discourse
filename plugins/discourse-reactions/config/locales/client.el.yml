@@ -14,7 +14,7 @@ el:
     discourse_reactions:
       reactions_title: "Αντιδράσεις"
       state_panel:
-        more_users: "και %{count} ακόμη..."
+        more_users: "και %{count} ακόμα..."
       reaction:
         forbidden: "Αυτή η αντίδραση δημιουργήθηκε πολύ καιρό πριν. Δεν μπορεί πια να τροποποιηθεί ή να αφαιρεθεί."
       picker:
@@ -32,7 +32,7 @@ el:
         other: "αντέδρασε σε %{count} από τις αναρτήσεις σας"
       reaction_2_users: "%{username}, %{username2}"
       reaction_multiple_users:
-        one: "%{username} και %{count} ακόμη"
-        other: "%{username} και %{count} ακόμη"
+        one: "%{username} και %{count} ακόμα"
+        other: "%{username} και %{count} ακόμα"
       titles:
         reaction: "νέα αντίδραση"

@@ -3,9 +3,9 @@
 class StaticController < ApplicationController
   skip_before_action :check_xhr, :redirect_to_login_if_required, :redirect_to_profile_if_required
   skip_before_action :verify_authenticity_token,
-                     only: %i[cdn_asset enter favicon service_worker_asset]
-  skip_before_action :preload_json, only: %i[cdn_asset enter favicon service_worker_asset]
-  skip_before_action :handle_theme, only: %i[cdn_asset enter favicon service_worker_asset]
+                     only: %i[cdn_asset enter favicon llms_txt service_worker_asset]
+  skip_before_action :preload_json, only: %i[cdn_asset enter favicon llms_txt service_worker_asset]
+  skip_before_action :handle_theme, only: %i[cdn_asset enter favicon llms_txt service_worker_asset]
 
   before_action :apply_cdn_headers, only: %i[cdn_asset enter favicon service_worker_asset]
 
@@ -28,22 +28,23 @@ class StaticController < ApplicationController
   CUSTOM_PAGES = {} # Add via `#add_topic_static_page` in plugin API
 
   def extract_redirect_param
-    redirect_path = params[:redirect]
-    if redirect_path.present?
-      begin
-        forum_host = URI(Discourse.base_url).host
-        uri = URI(redirect_path)
+    return "/" if params[:redirect].blank?
 
-        if uri.path.present? && !uri.path.starts_with?(login_path) &&
-             (uri.host.blank? || uri.host == forum_host) && uri.path =~ %r{\A\/{1}[^\.\s]*\z}
-          return "#{uri.path}#{uri.query ? "?#{uri.query}" : ""}"
-        end
-      rescue URI::Error, ArgumentError
-        # If the URI is invalid, return "/" below
-      end
-    end
+    uri = URI(params[:redirect])
+    return "/" unless valid_redirect_uri?(uri)
 
+    uri.query ? "#{uri.path}?#{uri.query}" : uri.path
+  rescue URI::Error, ArgumentError
     "/"
+  end
+
+  def valid_redirect_uri?(uri)
+    return false if uri.path.blank?
+    return false if uri.path.starts_with?("#{Discourse.base_path}/login")
+    return false if uri.host.present? && uri.host != URI(Discourse.base_url).host
+    return false if !uri.path.match?(%r{\A/[^\.\s]*\z})
+
+    true
   end
 
   def show
@@ -63,7 +64,8 @@ class StaticController < ApplicationController
       return redirect_to path("/login")
     end
 
-    rename_faq = SiteSetting.experimental_rename_faq_to_guidelines
+    rename_faq =
+      UpcomingChanges.enabled_for_user?(:experimental_rename_faq_to_guidelines, current_user)
 
     if rename_faq
       redirect_paths = %w[/rules /conduct]
@@ -152,14 +154,15 @@ class StaticController < ApplicationController
 
     destination = extract_redirect_param
 
-    allow_other_hosts = false
+    allow_other_host = false
 
     if cookies[:sso_destination_url]
       destination = cookies.delete(:sso_destination_url)
-      allow_other_hosts = true
+      allow_other_host = true
     end
 
-    redirect_to(destination, allow_other_host: allow_other_hosts)
+    destination = path(destination) if destination == "/"
+    redirect_to(destination, allow_other_host:)
   end
 
   FAVICON = -"favicon"
@@ -218,6 +221,28 @@ class StaticController < ApplicationController
         response.headers["Last-Modified"] = Time.new(2000, 01, 01).httpdate
         render body: data, content_type: "image/png"
       end
+    end
+  end
+
+  def llms_txt
+    upload = SiteSetting.llms_txt
+    return head(:not_found) if upload.blank?
+
+    if Discourse.store.external?
+      content =
+        Discourse
+          .cache
+          .fetch("llms_txt_content:#{upload.sha1}") do
+            Discourse.store.download_safe(upload)&.path&.then { |path| File.read(path) }
+          end
+      return head(:not_found) if content.blank?
+
+      render plain: content, content_type: "text/plain"
+    else
+      path = Discourse.store.path_for(upload)
+      return head(:not_found) if path.blank? || !File.exist?(path)
+
+      send_file(path, type: "text/plain", disposition: "inline")
     end
   end
 

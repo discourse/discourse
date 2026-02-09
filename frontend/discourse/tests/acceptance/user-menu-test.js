@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-conditional-assertions */
 import { later } from "@ember/runloop";
 import {
   click,

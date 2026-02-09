@@ -15,10 +15,6 @@ RSpec.describe "Drawer - index", type: :system do
     drawer_page.open_chat_search
 
     expect(drawer_page).to have_open_chat_search
-
-    drawer_page.back
-
-    expect(drawer_page).to have_open_channels
   end
 
   it "can leave a direct message" do
@@ -35,7 +31,7 @@ RSpec.describe "Drawer - index", type: :system do
     expect(row).to be_non_existent
   end
 
-  it "can leave a group message" do
+  it "can close a group message and membership is retained" do
     channel =
       Fabricate(
         :direct_message_channel,
@@ -52,6 +48,8 @@ RSpec.describe "Drawer - index", type: :system do
     row.leave
 
     expect(row).to be_non_existent
+    expect(channel.membership_for(current_user)).to be_present
+    expect(channel.membership_for(current_user).following).to be_falsy
   end
 
   it "can open browse" do

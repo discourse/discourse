@@ -27,6 +27,18 @@ class Search
     %w[topic category user private_messages tags all_topics exclude_topics]
   end
 
+  # Patterns that bypass minimum search term length because they
+  # produce meaningful results on their own. Note: 't' (in:title) is
+  # intentionally excluded - it modifies where to search but still
+  # requires actual search terms.
+  MIN_LENGTH_BYPASS_PATTERN =
+    /\A[lr]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
+
+  def self.min_length_bypass?(term)
+    return false if term.blank?
+    MIN_LENGTH_BYPASS_PATTERN.match?(term)
+  end
+
   def self.ts_config(locale = SiteSetting.default_locale)
     # if adding a text search configuration, you should check PG beforehand:
     # SELECT cfgname FROM pg_ts_config;
@@ -328,12 +340,12 @@ class Search
       @results.search_log_id = search_log_id unless status == :error
     end
 
-    unless @filters.present? || @opts[:search_for_id]
-      min_length = min_search_term_length
-      terms = (@term || "").split(/\s(?=(?:[^"]|"[^"]*")*$)/).reject { |t| t.length < min_length }
+    is_topic_search = @search_context.present? && @search_context.is_a?(Topic)
 
-      if terms.blank?
-        @term = ""
+    if !@opts[:search_for_id] && !is_topic_search
+      @term = filter_short_terms(@term)
+
+      if @term.blank? && @filters.blank? && @order.blank?
         @valid = false
         return
       end
@@ -654,7 +666,8 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id = Tag.where_name(category_slug).pick(:id)
+      tag_id, target_tag_id = Tag.where_name(category_slug).pick(:id, :target_tag_id)
+      tag_id = target_tag_id || tag_id
       if (tag_id)
         posts.where(<<~SQL, tag_id)
           topics.id IN (
@@ -844,13 +857,17 @@ class Search
     type_filter: "all_topics"
   )
     if @order == :latest
-      if aggregate_search
+      if @in_title
+        posts = posts.order("topics.bumped_at DESC")
+      elsif aggregate_search
         posts = posts.order("MAX(posts.created_at) DESC")
       else
         posts = posts.reorder("posts.created_at DESC")
       end
     elsif @order == :oldest
-      if aggregate_search
+      if @in_title
+        posts = posts.order("topics.bumped_at ASC")
+      elsif aggregate_search
         posts = posts.order("MAX(posts.created_at) ASC")
       else
         posts = posts.reorder("posts.created_at ASC")
@@ -912,7 +929,7 @@ class Search
     modifier = positive ? "" : "NOT"
 
     if match.include?("+")
-      tags = match.split("+")
+      tags = resolve_tag_synonyms(match.split("+"))
 
       posts.where(
         "topics.id #{modifier} IN (
@@ -925,7 +942,7 @@ class Search
         Search.unaccent(tags.join("&")),
       )
     else
-      tags = match.split(",")
+      tags = resolve_tag_synonyms(match.split(","))
 
       posts.where(
         "topics.id #{modifier} IN (
@@ -936,6 +953,19 @@ class Search
         tags,
       )
     end
+  end
+
+  def resolve_tag_synonyms(tag_names)
+    synonym_map =
+      Tag
+        .where_name(tag_names)
+        .where.not(target_tag_id: nil)
+        .includes(:target_tag)
+        .to_h { |synonym| [synonym.name.downcase, synonym.target_tag.name.downcase] }
+
+    return tag_names if synonym_map.empty?
+
+    tag_names.map { |name| synonym_map[name] || name }
   end
 
   def process_advanced_search!(term)
@@ -1100,13 +1130,16 @@ class Search
   def user_search
     return if SiteSetting.hide_user_profiles_from_public && !@guardian.user
 
+    # Exclude B weight from search which is the weight `User#name` is indexed with in `SearchIndexer.update_users_index`
+    query = ts_query("simple", weight_filter: SiteSetting.enable_names ? nil : "AC")
+
     users =
       User
         .includes(:user_search_data)
         .references(:user_search_data)
         .where(active: true)
         .where(staged: false)
-        .where("user_search_data.search_data @@ #{ts_query("simple")}")
+        .where("user_search_data.search_data @@ #{query}")
         .order("CASE WHEN username_lower = '#{@original_term.downcase}' THEN 0 ELSE 1 END")
         .order("last_posted_at DESC")
         .limit(limit)
@@ -1225,13 +1258,12 @@ class Search
       if is_topic_search
         term_without_quote = @term
         term_without_quote = $1 if @term =~ /"(.+)"/
-
         term_without_quote = $1 if @term =~ /'(.+)'/
 
         posts = posts.joins("JOIN users u ON u.id = posts.user_id")
         posts =
           posts.where(
-            "posts.raw  || ' ' || u.username || ' ' || COALESCE(u.name, '') ilike ?",
+            "posts.raw || ' ' || post_search_data.raw_data || ' ' || u.username || ' ' || COALESCE(u.name, '') ILIKE ?",
             "%#{term_without_quote}%",
           )
       else
@@ -1241,7 +1273,7 @@ class Search
 
         exact_terms.each do |exact|
           posts =
-            posts.where("posts.raw ilike :exact OR topics.title ilike :exact", exact: "%#{exact}%")
+            posts.where("posts.raw ILIKE :exact OR topics.title ILIKE :exact", exact: "%#{exact}%")
         end
       end
     end
@@ -1268,16 +1300,14 @@ class Search
               .pluck(:id)
               .push(@search_context.id)
 
-          posts.where("topics.category_id in (?)", category_ids)
+          posts.where("topics.category_id IN (?)", category_ids)
         elsif is_topic_search
           posts = posts.where("topics.id = ?", @search_context.id)
           posts = posts.order("posts.post_number ASC") unless @order
           posts
         elsif @search_context.is_a?(Tag)
-          posts =
-            posts.joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id").joins(
-              "LEFT JOIN tags ON tags.id = topic_tags.tag_id",
-            )
+          posts = posts.joins("LEFT JOIN topic_tags ON topic_tags.topic_id = topics.id")
+          posts = posts.joins("LEFT JOIN tags ON tags.id = topic_tags.tag_id")
           posts.where("tags.id = ?", @search_context.id)
         end
       else
@@ -1299,14 +1329,8 @@ class Search
         end
     end
 
-    posts =
-      apply_order(
-        posts,
-        aggregate_search: aggregate_search,
-        allow_relevance_search: !is_topic_search,
-        type_filter: type_filter,
-      )
-
+    allow_relevance_search = !is_topic_search
+    posts = apply_order(posts, aggregate_search:, allow_relevance_search:, type_filter:)
     posts = posts.offset(offset)
     posts.limit(limit)
   end
@@ -1619,6 +1643,19 @@ class Search
   def log_query?(readonly_mode)
     SiteSetting.log_search_queries? && @opts[:search_type].present? && !readonly_mode &&
       @opts[:type_filter] != "exclude_topics"
+  end
+
+  def filter_short_terms(term_string)
+    return "" if term_string.blank?
+
+    min_length = min_search_term_length
+    # Split on spaces but respect quoted phrases
+    terms = term_string.split(/\s(?=(?:[^"]|"[^"]*")*$)/)
+
+    # Keep quoted phrases regardless of length, filter others by min_length
+    valid_terms = terms.select { |t| t.start_with?('"') || t.length >= min_length }
+
+    valid_terms.join(" ")
   end
 
   def min_search_term_length

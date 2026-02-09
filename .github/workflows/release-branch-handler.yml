@@ -1,0 +1,41 @@
+name: Release Branch Handler
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "The release branch, e.g. `release/2025.01`"
+        required: true
+        type: string
+  push:
+    branches:
+      - release/*
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  build:
+    name: run
+    runs-on: ubuntu-latest
+    if: github.repository == 'discourse/discourse'
+    container: discourse/discourse_test:slim
+    timeout-minutes: 10
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          filter: tree:0
+          fetch-depth: 0
+
+      - uses: ./.github/actions/setup-release-environment
+
+      - name: Maybe tag release
+        run: bin/rake release:maybe_tag_release[${{ github.sha }}]
+
+      - name: Maybe update release tags
+        run: bin/rake release:update_release_tags[${{ github.sha }}]

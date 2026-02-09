@@ -62,7 +62,7 @@ uk:
         categories_list:
           title: "Список категорій"
         topic_link:
-          title: "Посилання на тему"
+          title: "Посилання і статус теми"
         topic_list_item:
           title: "Тема у списку тем"
         topic_statuses:
@@ -71,8 +71,6 @@ uk:
           title: "Список тем"
         basic_topic_list:
           title: "Основний список тем"
-        footer_message:
-          title: "Повідомлення нижнього колонтитула"
         signup_cta:
           title: "Реєстрація CTA"
         topic_timer_info:

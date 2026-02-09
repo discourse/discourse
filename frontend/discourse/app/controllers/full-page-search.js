@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import Controller, { inject as controller } from "@ember/controller";
 import { action, computed } from "@ember/object";
 import { gt, or } from "@ember/object/computed";
@@ -376,7 +377,12 @@ export default class FullPageSearchController extends Controller {
 
     this.set("invalidSearch", false);
     const searchTerm = this.searchTerm;
-    if (!isValidSearchTerm(searchTerm, this.siteSettings)) {
+    // A non-zero sortOrder means user selected an order filter, which is valid even without a search term
+    const hasValidSortOrder = this.sortOrder > 0;
+    if (
+      !hasValidSortOrder &&
+      !isValidSearchTerm(searchTerm, this.siteSettings)
+    ) {
       this.set("invalidSearch", true);
       return;
     }

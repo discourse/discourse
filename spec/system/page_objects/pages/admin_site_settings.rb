@@ -158,6 +158,27 @@ module PageObjects
       def has_disabled_input?(setting_name)
         find_setting(setting_name).has_css?("input[disabled]")
       end
+
+      def has_visible_reorder_buttons?(setting_name)
+        has_css?("#{setting_row_selector(setting_name)} .shift-up-value-btn", visible: :visible) &&
+          has_css?("#{setting_row_selector(setting_name)} .shift-down-value-btn", visible: :visible)
+      end
+
+      def has_hidden_reorder_buttons?(setting_name)
+        has_css?("#{setting_row_selector(setting_name)} .shift-up-value-btn", visible: :hidden) &&
+          has_css?("#{setting_row_selector(setting_name)} .shift-down-value-btn", visible: :hidden)
+      end
+
+      def tag_list_setting(setting_name)
+        PageObjects::Components::SelectKit.new("#{setting_row_selector(setting_name)} .tag-chooser")
+      end
+
+      def has_tags_in_setting?(setting_name, tags)
+        tag_chooser = tag_list_setting(setting_name)
+        tag_names = tags.map(&:name).sort
+        selected_names = tag_chooser.value&.split(",")&.sort || []
+        tag_names == selected_names
+      end
     end
   end
 end

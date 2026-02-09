@@ -53,7 +53,7 @@ after_initialize do
           solved =
             DiscourseSolved::SolvedTopic.new(topic:, answer_post: post, accepter: acting_user)
 
-          unless acting_user.id == post.user_id
+          if acting_user.id != post.user_id && notify_solved?(recipient: post.user, acting_user:)
             Notification.create!(
               notification_type: Notification.types[:custom],
               user_id: post.user_id,
@@ -68,7 +68,8 @@ after_initialize do
             )
           end
 
-          if SiteSetting.notify_on_staff_accept_solved && acting_user.id != topic.user_id
+          if SiteSetting.notify_on_staff_accept_solved && acting_user.id != topic.user_id &&
+               notify_solved?(recipient: topic.user, acting_user:)
             Notification.create!(
               notification_type: Notification.types[:custom],
               user_id: topic.user_id,
@@ -133,6 +134,7 @@ after_initialize do
       topic ||= Topic.unscoped.find_by(id: post.topic_id)
       return if topic.nil?
       return if topic.solved.nil?
+      return if topic.solved.answer_post_id != post.id
 
       DistributedMutex.synchronize("discourse_solved_toggle_answer_#{topic.id}") do
         solved = topic.solved
@@ -158,6 +160,13 @@ after_initialize do
       end
     end
 
+    def self.notify_solved?(recipient:, acting_user:)
+      !UserCommScreener.new(
+        acting_user_id: acting_user.id,
+        target_user_ids: recipient.id,
+      ).ignoring_or_muting_actor?(recipient.id)
+    end
+
     def self.skip_db?
       defined?(GlobalSetting.skip_db?) && GlobalSetting.skip_db?
     end
@@ -171,6 +180,7 @@ after_initialize do
     ::Category.prepend(DiscourseSolved::CategoryExtension)
     ::PostSerializer.prepend(DiscourseSolved::PostSerializerExtension)
     ::UserSummary.prepend(DiscourseSolved::UserSummaryExtension)
+    ::TopicsController.prepend(DiscourseSolved::TopicsControllerExtension)
     ::Topic.attr_accessor(:accepted_answer_user_id)
     ::TopicPostersSummary.alias_method(:old_user_ids, :user_ids)
     ::TopicPostersSummary.prepend(DiscourseSolved::TopicPostersSummaryExtension)
@@ -293,7 +303,17 @@ after_initialize do
     old_allowed = Guardian.new.allow_accepted_answers?(category_id_changes[0], tag_changes[0])
     new_allowed = Guardian.new.allow_accepted_answers?(category_id_changes[1], tag_changes[1])
 
-    options[:refresh_stream] = true if old_allowed != new_allowed
+    if old_allowed != new_allowed
+      options[:refresh_stream] = true
+
+      if !new_allowed
+        topic = topic_changes.topic
+        if topic.solved.present?
+          post = topic.solved.answer_post
+          DiscourseSolved.unaccept_answer!(post, topic: topic) if post
+        end
+      end
+    end
   end
 
   query = <<~SQL

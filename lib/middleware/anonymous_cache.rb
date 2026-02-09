@@ -85,12 +85,16 @@ module Middleware
       end
 
       def blocked_crawler?
-        @request.get? && !@request.xhr? && !@request.path.ends_with?("robots.txt") &&
-          !@request.path.ends_with?("srv/status") &&
-          @request[Auth::DefaultCurrentUserProvider::API_KEY].nil? &&
-          @env[Auth::DefaultCurrentUserProvider::USER_API_KEY].nil? &&
-          @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY].nil? &&
-          CrawlerDetection.is_blocked_crawler?(crawler_identifier)
+        return false if !@request.get?
+        return false if @request.xhr?
+        return false if @request.path.ends_with?("robots.txt")
+        return false if @request.path.ends_with?("llms.txt")
+        return false if @request.path.ends_with?("srv/status")
+        return false if @request[Auth::DefaultCurrentUserProvider::API_KEY]
+        return false if @env[Auth::DefaultCurrentUserProvider::USER_API_KEY]
+        return false if @env[Auth::DefaultCurrentUserProvider::HEADER_API_KEY]
+
+        CrawlerDetection.is_blocked_crawler?(crawler_identifier)
       end
 
       # rubocop:disable Lint/BooleanSymbol
@@ -260,7 +264,7 @@ module Middleware
       ADP = "action_dispatch.request.parameters"
 
       def should_force_anonymous?
-        if (queue_time = @env["REQUEST_QUEUE_SECONDS"]) && get?
+        if (queue_time = @env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY]) && get?
           if queue_time > GlobalSetting.force_anonymous_min_queue_seconds
             return check_logged_in_rate_limit!
           elsif queue_time >= MIN_TIME_TO_CHECK
@@ -390,7 +394,8 @@ module Middleware
         helper.force_anonymous!
       end
 
-      if (env["HTTP_DISCOURSE_BACKGROUND"] == "true") && (queue_time = env["REQUEST_QUEUE_SECONDS"])
+      if (env["HTTP_DISCOURSE_BACKGROUND"] == "true") &&
+           (queue_time = env[Middleware::ProcessingRequest::REQUEST_QUEUE_SECONDS_ENV_KEY])
         max_time = GlobalSetting.background_requests_max_queue_length.to_f
         if max_time > 0 && queue_time.to_f > max_time
           return [

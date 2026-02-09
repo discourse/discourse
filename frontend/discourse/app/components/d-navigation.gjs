@@ -121,7 +121,7 @@ export default class DNavigation extends Component {
     return canEdit;
   }
 
-  @discourseComputed("additionalTags", "category", "tag.id")
+  @discourseComputed("additionalTags", "category", "tag.name")
   showToggleInfo(additionalTags, category, tagId) {
     return !additionalTags && !category && tagId !== "none";
   }
@@ -130,7 +130,7 @@ export default class DNavigation extends Component {
     "filterType",
     "category",
     "noSubcategories",
-    "tag.id",
+    "tag",
     "router.currentRoute.queryParams",
     "skipCategoriesNavItem"
   )
@@ -138,7 +138,7 @@ export default class DNavigation extends Component {
     filterType,
     category,
     noSubcategories,
-    tagId,
+    tag,
     currentRouteQueryParams,
     skipCategoriesNavItem
   ) {
@@ -146,7 +146,7 @@ export default class DNavigation extends Component {
       filterType,
       noSubcategories,
       currentRouteQueryParams,
-      tagId,
+      tag,
       siteSettings: this.siteSettings,
       skipCategoriesNavItem,
     });

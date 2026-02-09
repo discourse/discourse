@@ -24,8 +24,11 @@ export default class ThemeCard extends Component {
   @service toasts;
   @service dialog;
   @service router;
+  @service interfaceColor;
+  @service session;
 
   @tracked isUpdating = false;
+  @tracked showingDarkScreenshot = this.#shouldShowDarkByDefault();
 
   get themeCardClasses() {
     return [
@@ -46,6 +49,31 @@ export default class ThemeCard extends Component {
 
   get destroyDisabled() {
     return this.args.theme.default || this.args.theme.system;
+  }
+
+  get currentScreenshotUrl() {
+    return this.showingDarkScreenshot
+      ? this.args.theme.screenshot_dark_url
+      : this.args.theme.screenshot_light_url;
+  }
+
+  get screenshotToggleIcon() {
+    return this.showingDarkScreenshot ? "sun" : "moon";
+  }
+
+  get hasBothScreenshots() {
+    return (
+      this.args.theme.screenshot_light_url &&
+      this.args.theme.screenshot_dark_url
+    );
+  }
+
+  #shouldShowDarkByDefault() {
+    return (
+      this.interfaceColor.colorModeIsDark ||
+      window.matchMedia("(prefers-color-scheme: dark)").matches ||
+      this.session.defaultColorSchemeIsDark
+    );
   }
 
   get editUrl() {
@@ -145,6 +173,11 @@ export default class ThemeCard extends Component {
   }
 
   @action
+  toggleScreenshot() {
+    this.showingDarkScreenshot = !this.showingDarkScreenshot;
+  }
+
+  @action
   destroyTheme() {
     return this.dialog.deleteConfirm({
       title: i18n("admin.customize.delete_confirm", {
@@ -175,14 +208,21 @@ export default class ThemeCard extends Component {
       data-theme-id={{@theme.id}}
     >
       <:content>
-
         <div class="theme-card__image-wrapper">
-          {{#if @theme.screenshot_url}}
+          {{#if this.currentScreenshotUrl}}
             <img
               class="theme-card__image"
-              src={{@theme.screenshot_url}}
+              src={{this.currentScreenshotUrl}}
               alt={{@theme.name}}
             />
+            {{#if this.hasBothScreenshots}}
+              <DButton
+                @action={{this.toggleScreenshot}}
+                @icon={{this.screenshotToggleIcon}}
+                @preventFocus={{true}}
+                class="btn-flat theme-card__screenshot-toggle"
+              />
+            {{/if}}
           {{else}}
             <ThemesGridPlaceholder @theme={{@theme}} />
           {{/if}}
@@ -241,8 +281,7 @@ export default class ThemeCard extends Component {
               >
                 <:content>
                   <DropdownMenu as |dropdown|>
-                    {{! TODO: Jordan
-                      solutions for broken, disabled states }}
+                    {{! TODO: Jordan solutions for broken, disabled states }}
                     <dropdown.item>
                       <DButton
                         @action={{this.setDefault}}

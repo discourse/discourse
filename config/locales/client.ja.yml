@@ -130,7 +130,7 @@ ja:
       el:
         name: ギリシャ語
       en:
-        name: 英語 (米国)
+        name: 英語
       en_GB:
         name: 英語 (英国)
       es:
@@ -768,6 +768,10 @@ ja:
         reviewable_post:
           title: "投稿"
           noun: "投稿"
+        reviewable_ai_chat_message:
+          noun: "チャットメッセージ"
+        reviewable_ai_post:
+          noun: "投稿"
       flagged_as: "通報:"
       user_label: "ユーザー"
       moderator_actions: "モデレーターのアクション"
@@ -775,12 +779,12 @@ ja:
       timeline:
         target_created: "投稿を作成"
         target_created_by: "%{username} が投稿を作成 · %{relativeDate}"
+        target_deleted: "削除された投稿"
         flagged: "通報"
         flagged_as_by: "%{username} が%{flagReason}として通報 · %{relativeDate}"
         claimed: "引き受け"
         claimed_by: "%{username} が引き受け · %{relativeDate}"
         reviewed: "レビュー"
-        reviewed_by: "%{username} がレビュー · %{relativeDate}"
         view_conversation: "PM を見る"
         note_added: "モデレーターのメモ"
         note_added_by: "%{username} のモデレーターメモ · %{relativeDate}"
@@ -955,9 +959,7 @@ ja:
           notification: 通知
         email:
           title: "メール"
-          status: "IMAP 経由で %{old_emails} / %{total_emails} のメールを同期しました。"
           enable_smtp: "SMTP を有効化"
-          enable_imap: "IMAP を有効化"
           test_settings: "設定をテスト"
           save_settings: "設定を保存"
           last_updated: "最終更新:"
@@ -966,14 +968,7 @@ ja:
           smtp_settings_valid: "SMTP 設定は有効です。"
           smtp_title: "SMTP"
           smtp_instructions: "このグループで SMTP を有効化すると、グループの受信トレイから送信されるすべての送信メールは、フォーラムが送信するほかのメール用に構成されているメールサーバーではなく、ここで指定される SMTP 設定を介して送信されます。"
-          imap_title: "IMAP"
-          imap_additional_settings: "追加設定"
-          imap_instructions: 'このグループで IMAP を有効化すると、グループの受信トレイと指定された IMAP サーバーとメールボックスの間でメールが同期されます。IMAP を有効にする前に、テスト済みの有効な資格情報で SMTP を有効にする必要があります。SMTP に使用されるメールのユーザー名とパスワードが IMAP にも使用されます。詳細は、「<a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">Discourse Meta の機能に関するお知らせ</a>」をご覧ください。'
-          imap_alpha_warning: "警告: これはアルファステージの機能です。Gmail のみが公式にサポートされています。自己責任でご利用ください！"
-          imap_settings_valid: "IMAP の設定は有効です。"
-          smtp_disable_confirm: "SMTP を無効にすると、すべての SMTP と IMAP の設定がリセットされ、関連付けられている機能が無効になります。続行してもよろしいですか？"
-          imap_disable_confirm: "IMAP を無効にすると、すべての IMAP 設定がリセットされ、関連付けられている機能が無効になります。続行してもよろしいですか？"
-          imap_mailbox_not_selected: "この IMAP 構成のメールボックスを選択する必要があります。選択しない場合、メールボックスは同期されません！"
+          additional_settings: "追加設定"
           prefill:
             title: "次の設定で事前入力:"
             gmail: "Gmail"
@@ -988,9 +983,6 @@ ja:
             smtp_server: "SMTP サーバー"
             smtp_port: "SMTP ポート"
             smtp_ssl_mode: "SSL モード"
-            imap_server: "IMAP サーバー"
-            imap_port: "IMAP ポート"
-            imap_ssl: "IMAP に SSL を使用する"
             username: "ユーザー名"
             password: "パスワード"
           settings:
@@ -999,10 +991,6 @@ ja:
             allow_unknown_sender_topic_replies_hint: "不明な送信者がグループトピックに返信できるようにします。これが有効になっていない場合、トピックに招待されていないメールアドレスからの返信があった場合は、新しいトピックを作成します。"
             from_alias: "送信元のエイリアス"
             from_alias_hint: "グループ SMTP メールを送信する際に送信元アドレスとして使用するエイリアス。すべてのメールプロバイダーでサポートされているわけではなことにご注意ください。メールプロバイダーのドキュメントを参照してください。"
-          mailboxes:
-            synchronized: "同期メールボックス"
-            none_found: "このメールアカウントにはメールボックスが見つかりませんでした。"
-            disabled: "無効"
         membership:
           title: メンバーシップ
           access: アクセス
@@ -1256,6 +1244,9 @@ ja:
       new_private_message: "新規メッセージ"
       private_message: "メッセージ"
       private_messages: "メッセージ"
+      upcoming_changes:
+        for_user:
+          enabled: "有効ですか？"
       user_notifications:
         filters:
           filter_by: "フィルタ基準:"
@@ -1467,8 +1458,6 @@ ja:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> 有益な通報'
-        flagged_posts:
-          other: '<span class="%{className}">%{count}</span> 通報された投稿'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> 削除された投稿'
         silencings:
@@ -2147,7 +2136,6 @@ ja:
     form_kit:
       reset: リセット
       optional: オプション
-      errors_summary_title: "このフォームにはエラーがあります:"
       dirty_form: "変更を送信しませんでした！終了してもよろしいですか？"
       errors:
         starts_with: "%{prefix} で始まる必要があります"
@@ -2656,6 +2644,8 @@ ja:
       ulist_title: "箇条書き"
       list_item: "リスト項目"
       toggle_direction: "方向の切り替え"
+      wrap_modal:
+        apply: "適用"
       help: "Markdown 編集のヘルプ"
       exit_fullscreen_prompt: "<kbd>ESC</kbd> を押して全画面表示を終了"
       modal_ok: "OK"
@@ -2714,6 +2704,7 @@ ja:
         zoom_out: "画像を縮小"
         zoom_in: "画像を拡大"
         remove: "画像の削除"
+      image: "画像"
       image_scale_button: "画像の表示率を %{percent}% に変更"
       delete_image_button: 画像を削除
       toggle_image_grid: 画像グリッドを切り替える
@@ -2834,7 +2825,6 @@ ja:
         membership_request_consolidated: "新しいメンバーシップリクエスト"
         reaction: "新しいリアクション"
         votes_released: "投票がリリースされました"
-        new_features: "新しい Discourse 機能がリリースされました！"
         admin_problems: "サイトダッシュボードに関する新しいアドバイス"
     upload_selector:
       change: "変更"
@@ -3100,19 +3090,6 @@ ja:
           unread: "未読はありません... お見事！"
           new_new: "今のところ新着はありません... また後で確認してください！"
           new: "今のところ新着はありません... また後で確認してください！"
-      bottom:
-        latest: "最新のトピックは以上です。"
-        posted: "投稿のあるトピックは以上です。"
-        read: "既読のトピックは以上です。"
-        new: "新規トピックは以上です。"
-        unread: "未読のトピックは以上です。"
-        unseen: "その他の未読のトピックはありません。"
-        category: "%{category} のトピックは以上です。"
-        tag: "%{tag} のトピックは以上です。"
-        top: "人気のトピックは以上です。"
-        hot: "ホットなトピックは以上です。"
-        bookmarks: "ブックマーク済みのトピックは以上です。"
-        filter: "トピックは以上です。"
     topic_bulk_actions:
       dismiss:
         name: "閉じる"
@@ -3230,9 +3207,6 @@ ja:
         other: "%{count} 件の返信、最初の投稿にジャンプ"
       created_at: "作成日: %{date}"
       bumped_at: "最新: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>すべてのカテゴリを閲覧</a>するか、<a href='%{basePath}/latest'>最新のトピックを表示</a>するか、トップを見ます。"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>すべてのタグを閲覧</a>するか<a href='%{basePath}/latest'>最新のトピックを表示</a>します。"
       browse_latest_topics: "最新のトピックを閲覧する"
       suggest_create_topic: <a href>新しい会話を開始しますか？</a>
       jump_reply: "投稿の下の場所にジャンプする"
@@ -3261,8 +3235,6 @@ ja:
           12_hours: "12 時間"
           24_hours: "24 時間"
           custom: "カスタム期間"
-      slow_mode_notice:
-        duration: "このトピックでは次の投稿まで %{duration}お待ちください"
       topic_status_update:
         title: "トピックタイマー"
         save: "タイマーをセット"
@@ -3577,7 +3549,7 @@ ja:
       quote_edit: "編集"
       quote_edit_shortcut: "編集 (または e を押す)"
       quote_copy: "引用をコピー"
-      quote_copied_to_clibboard: "引用をクリップボードにコピーしました"
+      quote_copied_to_clipboard: "引用をクリップボードにコピーしました"
       quote_share: "共有"
       edit_reason: "理由: "
       post_number: "投稿 %{number}"
@@ -3848,6 +3820,7 @@ ja:
       back: "カテゴリに戻る"
       general: "一般"
       settings: "設定"
+      advanced: "高度"
       topic_template: "テンプレート"
       tags: "タグ"
       localizations: "ローカリゼーション"
@@ -3877,9 +3850,13 @@ ja:
       slug_placeholder: "(オプション) URL 用のダッシュ区切りの語"
       creation_error: カテゴリを作成中にエラーが発生しました。
       save_error: カテゴリを保存中にエラーが発生しました。
+      validations:
+        icon_required: "アイコンを選択する."
       description: "説明"
       logo_description: "推奨アスペクト比は 1:1、最小サイズは 200px です。空白のままにすると、画像は表示されません。"
       style: "スタイル"
+      icon: "アイコン"
+      emoji: "絵文字"
       background_color: "色"
       foreground_color: "テキストの色"
       color_validations:
@@ -3888,13 +3865,13 @@ ja:
         type: "スタイル"
         icon: "アイコン"
         emoji: "絵文字"
+        square: "正方形"
         options:
           square: "正方形"
           icon: "アイコン"
           emoji: "絵文字"
       color_used: "使用中の色"
       predefined_colors: "既定の色オプション"
-      name_placeholder: "簡単な名前にしてください"
       color_placeholder: "すべてのウェブ色"
       delete_confirm: "このカテゴリを削除してもよろしいですか？"
       delete_error: "カテゴリを削除中にエラーが発生しました。"
@@ -3902,6 +3879,7 @@ ja:
       no_description: "このカテゴリの説明を追加してください。"
       change_in_category_topic: "説明を編集する"
       already_used: "この色は他のカテゴリで使用されています。"
+      color_palette: "色パレット"
       security: "セキュリティ"
       security_add_group: "グループの追加"
       permissions:
@@ -3910,15 +3888,14 @@ ja:
         reply: "返信"
         create: "作成"
         no_groups_selected: "アクセスを許可されたグループはありません。このカテゴリはスタッフにのみ表示されます。"
-        everyone_has_access: 'このカテゴリは公開されており、全員が閲覧、返信、および投稿の作成を行えます。権限を制限するには、"全員" グループに付与されている 1 つ以上の権限を削除してください。'
+        everyone_full_access: 'このカテゴリは公開されており、全員が閲覧、返信、および投稿の作成を行えます。権限を制限するには、"全員" グループに付与されている 1 つ以上の権限を削除してください。'
         toggle_reply: "返信権限の切り替え"
         toggle_full: "作成権限の切り替え"
         inherited: 'この権限は "全員" から継承されます'
-      special_warning: "警告: このカテゴリは事前作成されたカテゴリであるため、セキュリティ設定を編集できません。このカテゴリを使用しない場合は、転用せずに削除してください。"
       uncategorized_security_warning: "このカテゴリは特殊です。カテゴリのないトピックを保存するために用意されているため、セキュリティを設定できません。"
       uncategorized_general_warning: 'このカテゴリは特殊です。カテゴリが選択されていない新しいトピックのデフォルトのカテゴリとして使用されます。この動作を適用せずにカテゴリの選択を強制するには、<a href="%{settingLink}">ここで設定を無効にしてください</a>。名前または説明を変更するには、<a href="%{customizeLink}">カスタマイズ/テキストコンテンツ</a>に移動してください。'
       pending_permission_change_alert: "このカテゴリに %{group} を追加していません。このボタンをクリックして追加してください。"
-      images: "画像"
+      images: "外観"
       email_in: "カスタム受信メールアドレス:"
       email_in_tooltip: "複数のメールアドレスは「|」文字で区切ることができます。"
       email_in_allow_strangers: "登録されていない匿名のユーザーからのメールを受け取る"
@@ -3940,6 +3917,11 @@ ja:
       position: "カテゴリページの位置:"
       position_disabled: "カテゴリはアクティビティの順に表示されます。リスト内のカテゴリの順を制御するには、<a href='%{url}'>'カテゴリの位置の固定'</a> 設定を有効にしてください。"
       minimum_required_tags: "トピックに必要なタグの最小数:"
+      none_subcategory_text: "なし"
+      visibility:
+        title: "表示状態"
+        public: "公開"
+        group_restricted: "非公開"
       num_auto_bump_daily: "毎日自動的にバンプするオープントピックの数:"
       auto_bump_cooldown_days: "同じトピックをもう一度バンプするまでの最低日数:"
       navigate_to_first_post_after_read: "トピックが読まれた後最初の投稿に移動する"
@@ -4221,6 +4203,7 @@ ja:
         this_month: "今月"
         this_week: "今週"
         today: "今日"
+        custom: "カスタム"
     custom_homepage:
       admin_message: 'テーマの 1 つで "custom_homepage" 修飾子が有効になっていますが、[custom-homepage] コネクタには何も出力されません。(このメッセージはサイト管理者にのみ表示されます。)'
     browser_update: '残念ながら、<a href="https://discourse.org/about#browser">あなたのブラウザはサポートされていません</a>。リッチコンテンツを表示するには<a href="https://browsehappy.com">サポートされているブラウザに切り替え</a>てから、ログインして返信してください。'
@@ -4442,6 +4425,7 @@ ja:
       upload_description: "csv ファイルをアップロードしてタグを一括作成します"
       upload_instructions: "1 行に 1 つ、オプションで 'タグ名,タググループ' の形式でタググループを使用します。"
       upload_successful: "タグを正常にアップロードしました"
+      bulk_create_button: "作成"
       delete_unused_confirmation:
         other: "%{count} 個のタグが削除されます: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -4588,7 +4572,6 @@ ja:
       tags_form_modal:
         title: "タグナビゲーションを編集する"
         filter_placeholder: "タグをフィルタする"
-        no_tags: "指定された用語に一致するタグはありません。"
         subtitle:
           text: "このサイトの上位タグを自動的に表示します"
       edit_navigation_modal_form:
@@ -4949,6 +4932,8 @@ ja:
         enabled_for_options:
           everyone: "全員"
           staff: "スタッフのみ"
+        statuses:
+          experimental: "実験的"
         impact_roles:
           admins: "管理者"
           moderators: "モデレーター"
@@ -4959,6 +4944,10 @@ ja:
           disabled: "無効"
           impact_type_feature: "機能"
           impact_type_other: "その他"
+          status_experimental: "実験的"
+          impact_role_admins: "管理者"
+          impact_role_moderators: "モデレーター"
+          impact_role_staff: "スタッフ"
       config:
         about:
           title: "サイトについて"
@@ -4995,6 +4984,11 @@ ja:
           sub_pages:
             common_settings:
               title: "設定"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "もっと読む"
         logo:
           title: "ロゴ"
           header_description: "サイト全体で使用されるロゴとアイコンを構成します"
@@ -5093,6 +5087,8 @@ ja:
               options:
                 above_topic_content: "トピックコンテンツの上"
                 below_site_header: "サイトヘッダーの下"
+            text_section:
+              locale_label: "言語"
             header_logged_in:
               placeholder: "%{preferred_display_name}、おかえりなさい！"
             header_anonymous:
@@ -5340,7 +5336,6 @@ ja:
         new_features:
           title: "新機能"
           subtitle: "新しい機能や改善機能は常にリリースされています。このページでは主な内容を説明していますが、'詳細' をクリックすると、さらに詳しく説明されたリリースノートをご覧いただけます。"
-          previous_announcements: "以前の新機能の発表は <a href='%{url}' target='_blank'>Discourse Meta</a> をご覧ください"
           learn_more: "もっと詳しく..."
           experimental: "実験的"
           only_experiments: "実験的機能のみを表示"
@@ -5431,7 +5426,9 @@ ja:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">検索ログ</a>'
             disabled: 'トレンド検索レポートは無効です。データを収集するには、<a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">ログ検索クエリ</a>を有効にしてください。'
-          average_chart_label: 平均
+          sort_button: "%{column} で並べ替え"
+          sort_ascending: "昇順"
+          sort_descending: "降順"
           filters:
             file_extension:
               label: ファイル拡張子
@@ -6160,8 +6157,6 @@ ja:
         delete: "削除"
         delete_confirm: '"%{theme_name}" を削除してもよろしいですか？'
         bulk_delete: "よろしいですか？"
-        bulk_themes_delete_confirm: "これにより次のテーマがアンインストールされ、サイト上のどのユーザーも使用できなくなります。"
-        bulk_components_delete_confirm: "これにより次のコンポーネントがアンインストールされ、サイト上のどのユーザーも使用できなくなります。"
         color: "色"
         opacity: "透明度"
         copy: "複製"
@@ -7127,7 +7122,6 @@ ja:
           button: "すべての投稿を削除する"
           progress:
             title: "投稿の削除状況"
-            description: "投稿を削除中…"
           confirmation:
             title: "@%{username} のすべての投稿を削除"
             description: |
@@ -7375,6 +7369,7 @@ ja:
           upload:
             label: "アップロード"
             title: "画像のアップロード"
+        download_file: "ダウンロード"
         selectable_avatars:
           title: "ユーザーが選択できるアバターのリスト"
         table_column_heading:
@@ -7436,16 +7431,12 @@ ja:
             prompt: "この設定を変更すると、サイトに広範に適用されるか意図しない結果が生じる可能性があります。続行してもよろしいですか？"
             confirm: "はい"
           min_password_length:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
           min_admin_password_length:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべての管理者のパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
           password_unique_charactes:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
           block_common_passwords:
-            prompt: "パスワードポリシーを変更しようとしています。これは、今後すべてのユーザーのパスワード変更に影響します。続行してもよろしいですか？"
             confirm: "はい。パスワードポリシーを更新します"
       badges:
         status: ステータス
@@ -7480,6 +7471,9 @@ ja:
         no_user_badges: "%{name} はバッジを付与されていません。"
         no_badges: 付与できるバッジがありません。
         none_selected: "開始するにはバッジを選択してください"
+        sections:
+          query: クエリ
+          settings: 設定
         usage_heading: 使用方法
         allow_title: バッジをタグラインとして使用することを許可する
         multiple_grant: 何度でも付与できる

@@ -5,3 +5,5 @@
 # https://translate.discourse.org/
 
 ug:
+  site_settings:
+    sign_in_with_apple_enabled: 'Apple بىلەن تىزىمغا كىرىشنى قوزغىتامدۇ؟'

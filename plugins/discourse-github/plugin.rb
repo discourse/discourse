@@ -16,6 +16,7 @@ require_relative "app/lib/github_linkback_access_token_setting_validator"
 
 enabled_site_setting :enable_discourse_github_plugin
 
+register_svg_icon "fab-github"
 register_asset "stylesheets/common/github-pr-status.scss"
 
 after_initialize do

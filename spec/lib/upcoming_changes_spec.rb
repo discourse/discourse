@@ -1,16 +1,19 @@
 # frozen_string_literal: true
 
 RSpec.describe UpcomingChanges do
-  let(:setting_name) { "enable_upload_debug_mode" }
+  let(:setting_name) { :enable_upload_debug_mode }
 
   before do
     mock_upcoming_change_metadata(
       {
         enable_upload_debug_mode: {
           impact: "other,developers",
-          status: :pre_alpha,
+          status: :experimental,
           impact_type: "other",
           impact_role: "developers",
+        },
+        conceptual_setting: {
+          status: :conceptual,
         },
         alpha_setting: {
           status: :alpha,
@@ -48,6 +51,14 @@ RSpec.describe UpcomingChanges do
         "images/upcoming_changes/#{setting_name}.png",
       )
     end
+
+    it "returns the correct path for plugin images" do
+      plugin_setting = :enable_experimental_sample_plugin_feature
+
+      expect(described_class.image_path(plugin_setting)).to eq(
+        "plugins/discourse-sample-plugin/images/upcoming_changes/#{plugin_setting}.png",
+      )
+    end
   end
 
   describe ".image_data" do
@@ -69,7 +80,7 @@ RSpec.describe UpcomingChanges do
       expect(metadata).to eq(
         {
           impact: "other,developers",
-          status: :pre_alpha,
+          status: :experimental,
           impact_type: "other",
           impact_role: "developers",
         },
@@ -85,18 +96,22 @@ RSpec.describe UpcomingChanges do
     it "accepts string setting names" do
       metadata = described_class.change_metadata(setting_name)
 
-      expect(metadata[:status]).to eq(:pre_alpha)
+      expect(metadata[:status]).to eq(:experimental)
     end
 
     it "accepts symbol setting names" do
       metadata = described_class.change_metadata(setting_name.to_sym)
 
-      expect(metadata[:status]).to eq(:pre_alpha)
+      expect(metadata[:status]).to eq(:experimental)
     end
   end
 
   describe ".not_yet_stable?" do
-    it "returns true for pre_alpha status" do
+    it "returns true for conceptual status" do
+      expect(described_class.not_yet_stable?("conceptual_setting")).to eq(true)
+    end
+
+    it "returns true for experimental status" do
       expect(described_class.not_yet_stable?(setting_name)).to eq(true)
     end
 
@@ -118,7 +133,11 @@ RSpec.describe UpcomingChanges do
   end
 
   describe ".stable_or_permanent?" do
-    it "returns false for pre_alpha status" do
+    it "returns false for conceptual status" do
+      expect(described_class.stable_or_permanent?("conceptual_setting")).to eq(false)
+    end
+
+    it "returns false for experimental status" do
       expect(described_class.stable_or_permanent?(setting_name)).to eq(false)
     end
 
@@ -140,7 +159,11 @@ RSpec.describe UpcomingChanges do
   end
 
   describe ".change_status_value" do
-    it "returns 0 for pre_alpha status" do
+    it "returns -100 for conceptual status" do
+      expect(described_class.change_status_value("conceptual_setting")).to eq(-100)
+    end
+
+    it "returns 0 for experimental status" do
       expect(described_class.change_status_value(setting_name)).to eq(0)
     end
 
@@ -162,8 +185,12 @@ RSpec.describe UpcomingChanges do
   end
 
   describe ".change_status" do
-    it "returns :pre_alpha for pre_alpha status" do
-      expect(described_class.change_status(setting_name)).to eq(:pre_alpha)
+    it "returns :conceptual for conceptual status" do
+      expect(described_class.change_status("conceptual_setting")).to eq(:conceptual)
+    end
+
+    it "returns :experimental for experimental status" do
+      expect(described_class.change_status(setting_name)).to eq(:experimental)
     end
 
     it "returns :alpha for alpha status" do
@@ -195,6 +222,66 @@ RSpec.describe UpcomingChanges do
     end
   end
 
+  describe ".previous_status_value" do
+    it "returns -100 for conceptual (lowest status)" do
+      expect(described_class.previous_status_value(:conceptual)).to eq(-100)
+    end
+
+    it "returns -100 for experimental" do
+      expect(described_class.previous_status_value(:experimental)).to eq(-100)
+    end
+
+    it "returns 0 for alpha" do
+      expect(described_class.previous_status_value(:alpha)).to eq(0)
+    end
+
+    it "returns 100 for beta" do
+      expect(described_class.previous_status_value(:beta)).to eq(100)
+    end
+
+    it "returns 200 for stable" do
+      expect(described_class.previous_status_value(:stable)).to eq(200)
+    end
+
+    it "returns 300 for permanent" do
+      expect(described_class.previous_status_value(:permanent)).to eq(300)
+    end
+
+    it "accepts string status names" do
+      expect(described_class.previous_status_value("stable")).to eq(200)
+    end
+  end
+
+  describe ".previous_status" do
+    it "returns :conceptual for conceptual (lowest status)" do
+      expect(described_class.previous_status(:conceptual)).to eq(:conceptual)
+    end
+
+    it "returns :conceptual for experimental" do
+      expect(described_class.previous_status(:experimental)).to eq(:conceptual)
+    end
+
+    it "returns :experimental for alpha" do
+      expect(described_class.previous_status(:alpha)).to eq(:experimental)
+    end
+
+    it "returns :alpha for beta" do
+      expect(described_class.previous_status(:beta)).to eq(:alpha)
+    end
+
+    it "returns :beta for stable" do
+      expect(described_class.previous_status(:stable)).to eq(:beta)
+    end
+
+    it "returns :stable for permanent" do
+      expect(described_class.previous_status(:permanent)).to eq(:stable)
+    end
+
+    it "accepts string status names" do
+      expect(described_class.previous_status("stable")).to eq(:beta)
+    end
+  end
+
   describe ".history_for" do
     fab!(:admin)
 
@@ -208,7 +295,7 @@ RSpec.describe UpcomingChanges do
       history = described_class.history_for(setting_name)
 
       expect(history.count).to eq(1)
-      expect(history.first.subject).to eq(setting_name)
+      expect(history.first.subject).to eq(setting_name.to_s)
       expect(history.first.action).to eq(UserHistory.actions[:upcoming_change_toggled])
     end
 
@@ -251,7 +338,7 @@ RSpec.describe UpcomingChanges do
       history = described_class.history_for(setting_name)
 
       expect(history.count).to eq(1)
-      expect(history.first.subject).to eq(setting_name)
+      expect(history.first.subject).to eq(setting_name.to_s)
     end
 
     it "returns only records with upcoming_change_toggled action" do
@@ -278,6 +365,100 @@ RSpec.describe UpcomingChanges do
 
       expect(history.count).to eq(0)
       expect(history).to be_a(ActiveRecord::Relation)
+    end
+  end
+
+  describe ".enabled_for_user?" do
+    context "for logged-in user" do
+      fab!(:user)
+
+      context "when the upcoming change is disabled" do
+        before { SiteSetting.enable_upload_debug_mode = false }
+
+        it "returns false" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(false)
+        end
+      end
+
+      context "when the upcoming change is enabled for everyone" do
+        before { SiteSetting.enable_upload_debug_mode = true }
+
+        it "returns true" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(true)
+        end
+      end
+
+      context "when the upcoming change is only enabled for certain groups" do
+        before do
+          SiteSetting.enable_upload_debug_mode = true
+          Fabricate(
+            :site_setting_group,
+            name: setting_name,
+            group_ids: Group::AUTO_GROUPS[:trust_level_4].to_s,
+          )
+        end
+
+        it "returns false" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(false)
+        end
+
+        context "when the user is in that group" do
+          before do
+            trust_level_4_group = Group.find_by(id: Group::AUTO_GROUPS[:trust_level_4])
+            trust_level_4_group.add(user)
+          end
+
+          it "returns true" do
+            expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(true)
+          end
+        end
+      end
+    end
+
+    context "for anonymous user" do
+      let(:user) { nil }
+
+      context "when the upcoming change is disabled" do
+        before { SiteSetting.enable_upload_debug_mode = false }
+
+        it "returns false" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(false)
+        end
+      end
+
+      context "when the upcoming change is enabled for everyone" do
+        before { SiteSetting.enable_upload_debug_mode = true }
+
+        it "returns true" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(true)
+        end
+      end
+
+      context "when the upcoming change is only enabled for certain groups" do
+        before do
+          SiteSetting.enable_upload_debug_mode = true
+          Fabricate(
+            :site_setting_group,
+            name: setting_name,
+            group_ids: Group::AUTO_GROUPS[:trust_level_4].to_s,
+          )
+        end
+
+        it "returns false" do
+          expect(UpcomingChanges.enabled_for_user?(setting_name, user)).to eq(false)
+        end
+      end
+    end
+  end
+
+  describe "conceptual status filtering" do
+    it "excludes conceptual changes from all_settings with only_upcoming_changes" do
+      settings =
+        SiteSetting
+          .all_settings(only_upcoming_changes: true, include_hidden: true)
+          .map { |s| s[:setting] }
+      expect(settings).not_to include(:conceptual_setting)
+      expect(settings).to include(:enable_upload_debug_mode)
     end
   end
 end

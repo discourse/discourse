@@ -20,8 +20,14 @@ lt:
         agree_and_silence:
           title: "Nutildyti narį"
           description: "Sutikti su pranešimu ir nutildyti narį."
+        delete_and_agree:
+          title: "Ignoruoti žymėjimą ir ištrinti pranešimą"
         disagree:
-          title: "Nesutinka"
+          title: "Išsaugoti pranešimą"
+          description: "Nesutinku su vėliavėle ir palikti pranešimą nepakeistą."
+        ignore:
+          title: "Ignoruoti vėliavėlę"
+          description: "Pašalinkite jį iš eilės nesiimdami jokių veiksmų."
     channel:
       dm_title:
         single_user: "%{username}"

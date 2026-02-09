@@ -15,6 +15,27 @@ describe TopicLocalizationsController do
     sign_in(user)
   end
 
+  describe "#show" do
+    fab!(:topic_localization) { Fabricate(:topic_localization, topic:, locale: "ja") }
+
+    it "returns the localization" do
+      get "/topic_localizations/#{topic.id}/ja.json"
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["title"]).to eq(topic_localization.title)
+      expect(response.parsed_body["locale"]).to eq("ja")
+    end
+
+    it "returns 404 for non-existent localization" do
+      get "/topic_localizations/#{topic.id}/fr.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 for non-existent topic" do
+      get "/topic_localizations/-1/ja.json"
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe "#create_or_update" do
     context "when localization does not exist" do
       it "creates a new localization" do

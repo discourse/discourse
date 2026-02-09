@@ -207,6 +207,37 @@ after_initialize do
 
       like_post_action.present? && !has_matching_reaction_user
     end
+
+    def self.op_reactions_data_for_topic(topic, scope)
+      return nil unless topic.first_post
+
+      post = topic.first_post
+      like_action =
+        (
+          if scope.user
+            PostAction.find_by(
+              user_id: scope.user.id,
+              post_id: post.id,
+              post_action_type_id: PostActionType.types[:like],
+            )
+          else
+            nil
+          end
+        )
+
+      {
+        id: post.id,
+        user_id: post.user_id,
+        yours: post.user_id == scope.current_user&.id,
+        reactions: reactions_for_post(post),
+        current_user_reaction: current_user_reaction_for_post(post, scope),
+        current_user_used_main_reaction: current_user_used_main_reaction_for_post(post, scope),
+        reaction_users_count: reaction_users_count_for_post(post) || 0,
+        likeAction: {
+          canToggle: like_action ? scope.can_delete_post_action?(like_action) : true,
+        },
+      }
+    end
   end
 
   add_to_serializer(:post, :reactions) { ReactionsSerializerHelpers.reactions_for_post(object) }
@@ -234,37 +265,20 @@ after_initialize do
           scope.user,
         )
     end,
-  ) do
-    return nil unless object.first_post
+  ) { ReactionsSerializerHelpers.op_reactions_data_for_topic(object, scope) }
 
-    post = object.first_post
-    like_action =
-      (
-        if scope.user
-          PostAction.find_by(
-            user_id: scope.user.id,
-            post_id: post.id,
-            post_action_type_id: PostActionType.types[:like],
-          )
-        else
-          nil
-        end
-      )
-
-    {
-      id: post.id,
-      user_id: post.user_id,
-      yours: post.user_id == scope.current_user&.id,
-      reactions: ReactionsSerializerHelpers.reactions_for_post(post),
-      current_user_reaction: ReactionsSerializerHelpers.current_user_reaction_for_post(post, scope),
-      current_user_used_main_reaction:
-        ReactionsSerializerHelpers.current_user_used_main_reaction_for_post(post, scope),
-      reaction_users_count: ReactionsSerializerHelpers.reaction_users_count_for_post(post) || 0,
-      likeAction: {
-        canToggle: like_action ? scope.can_delete_post_action?(like_action) : true,
-      },
-    }
-  end
+  add_to_serializer(
+    :suggested_topic,
+    :op_reactions_data,
+    include_condition: -> do
+      object.association(:first_post).loaded? &&
+        DiscoursePluginRegistry.apply_modifier(
+          :include_discourse_reactions_data_on_suggested_topics,
+          false,
+          scope.user,
+        )
+    end,
+  ) { ReactionsSerializerHelpers.op_reactions_data_for_topic(object, scope) }
 
   add_to_serializer(:topic_view, :valid_reactions) { DiscourseReactions::Reaction.valid_reactions }
 
@@ -285,6 +299,7 @@ after_initialize do
       {
         type: :number,
         property: :like_count,
+        title: main_id,
         html_title: PrettyText.unescape_emoji(CGI.escapeHTML(":#{main_id}:")),
       },
     ]
@@ -295,6 +310,7 @@ after_initialize do
       report.labels << {
         type: :number,
         property: "#{reaction}_count",
+        title: reaction,
         html_title: PrettyText.unescape_emoji(CGI.escapeHTML(":#{reaction}:")),
       }
     end

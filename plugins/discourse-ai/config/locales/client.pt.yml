@@ -80,7 +80,7 @@ pt:
         no_llm: "Nenhum LLM selecionado"
         no_persona: "Não definido"
         no_groups: "Nenhuma"
-        edit: "Editar"
+        edit: "Configurações"
         expand_list:
           one: "(%{count} mais)"
           other: "(%{count} mais)"
@@ -105,14 +105,15 @@ pt:
           hyde: "HyDE"
         discord:
           name: "Integração do Discord"
-          search: "Procura do Discord"
+          description: "Adiciona a capacidade para procurar canais no Discord"
+          search: "Procura no Discord"
         ai_helper:
           name: "Assistente"
           description: "Auxilia os utilizadores na interação com a comunidade, como criar tópicos, escrever artigos, e ler conteúdo"
           proofread: Rever texto
           title_suggestions: "Sugerir títulos"
           explain: "Explicar"
-          illustrate_post: "Ilustrar artigo"
+          illustrate_post: "Ilustrar publicação"
           smart_dates: "Datas inteligentes"
           translate: "Traduzir"
           markdown_tables: "Gerar tabela de Marcação"
@@ -126,6 +127,8 @@ pt:
         spam:
           name: "Lixo Eletrónico"
           inspect_posts: "Inspecionar publicações"
+        automation_reports:
+          name: "Relatórios automatizados"
       modals:
         select_option: "Selecione uma opção..."
       translations:
@@ -152,6 +155,7 @@ pt:
         last_seven_days: "Últimos 7 Dias"
         enable: "Ativar"
         test_modal:
+          llm: "LLM"
           spam: "Spam"
       usage:
         summary: "Resumo"
@@ -159,6 +163,7 @@ pt:
         all_features: "Todas as funcionalidades"
         username: "Nome de Utilizador"
         total_requests: "Total de pedidos"
+        total: "Total"
         periods:
           last_day: "Últimas 24 horas"
           custom: "Personalizar..."
@@ -282,6 +287,8 @@ pt:
       summarization:
         chat:
           summarize: "Resumir"
+        topic:
+          regenerate_summaries_option: "Resumos de tópico"
       discobot_discoveries:
         regular_results: "Tópicos"
         collapse: "Colapsar"

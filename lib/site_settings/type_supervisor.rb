@@ -23,6 +23,9 @@ class SiteSettings::TypeSupervisor
     schema
     requires_confirmation
     depends_on
+    depends_behavior
+    authorized_extensions
+    max_file_size_kb
   ].freeze
   VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema schema].freeze
 
@@ -64,6 +67,7 @@ class SiteSettings::TypeSupervisor
         objects: 28,
         locale_enum: 29,
         topic: 30,
+        datetime: 31,
       )
   end
 
@@ -100,6 +104,8 @@ class SiteSettings::TypeSupervisor
     @textareas = {}
     @json_schemas = {}
     @schemas = {}
+    @authorized_extensions = {}
+    @max_file_size_kb = {}
     @dependencies = SiteSettings::DependencyGraph.new
   end
 
@@ -109,6 +115,8 @@ class SiteSettings::TypeSupervisor
     name = name_arg.to_sym
 
     @textareas[name] = opts[:textarea] if opts[:textarea]
+    @authorized_extensions[name] = opts[:authorized_extensions] if opts[:authorized_extensions]
+    @max_file_size_kb[name] = opts[:max_file_size_kb] if opts[:max_file_size_kb]
 
     @json_schemas[name] = opts[:json_schema].constantize if opts[:json_schema]
     @schemas[name] = opts[:schema] if opts[:schema]
@@ -151,6 +159,7 @@ class SiteSettings::TypeSupervisor
     end
 
     @dependencies[name] = opts[:depends_on] || []
+    @dependencies.change_behavior(name, opts[:depends_behavior]) if opts[:depends_behavior]
   end
 
   def to_rb_value(name, value, override_type = nil)
@@ -170,7 +179,7 @@ class SiteSettings::TypeSupervisor
       nil
     when self.class.types[:enum]
       @defaults_provider[name].is_a?(Integer) ? value.to_i : value.to_s
-    when self.class.types[:string]
+    when self.class.types[:string], self.class.types[:datetime]
       value.to_s
     else
       return value if self.class.types[type]
@@ -191,7 +200,7 @@ class SiteSettings::TypeSupervisor
     list_type = get_list_type(name)
     result = { type: type.to_s }
 
-    if type == :enum || list_type == "locale"
+    if type == :enum || (type == :list && get_enum_class(name))
       if (klass = get_enum_class(name))
         result.merge!(valid_values: klass.values, translate_names: klass.translate_names?)
       else
@@ -219,6 +228,10 @@ class SiteSettings::TypeSupervisor
     result[:list_type] = @list_type[name] if @list_type.has_key? name
     result[:textarea] = @textareas[name] if @textareas.has_key? name
     result[:schema] = @schemas[name] if @schemas.has_key? name
+    result[:authorized_extensions] = @authorized_extensions[
+      name
+    ] if @authorized_extensions.has_key? name
+    result[:max_file_size_kb] = @max_file_size_kb[name] if @max_file_size_kb.has_key? name
 
     if @json_schemas.has_key?(name) && json_klass = json_schema_class(name)
       result[:json_schema] = json_klass.schema
@@ -240,7 +253,7 @@ class SiteSettings::TypeSupervisor
   end
 
   def validate_value(name, type, val)
-    if type == self.class.types[:enum] || get_list_type(name) == "locale"
+    if type == self.class.types[:enum] || (type == self.class.types[:list] && get_enum_class(name))
       if get_enum_class(name)
         unless get_enum_class(name).valid_value?(val)
           raise Discourse::InvalidParameters.new("Invalid value `#{val}` for `#{name}`")
@@ -355,6 +368,8 @@ class SiteSettings::TypeSupervisor
       HostListSettingValidator
     when self.class.types[:topic]
       TopicSettingValidator
+    when self.class.types[:datetime]
+      DatetimeSettingValidator
     else
       nil
     end

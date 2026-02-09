@@ -113,14 +113,6 @@ ar:
             persona_id:
               label: "الشخصية"
               description: "شخصية الذكاء الاصطناعي المستخدمة لإنشاء التقرير"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "النموذج"
-              description: "نموذج اللغة الافتراضي المستخدم لعمليات الفرز"
-            tool:
-              label: "أداة"
-              description: "الأداة المستخدمة في عمليات الفرز (يجب ألّا تحتوي الأداة على أي معلمات محددة)"
         llm_persona_triage:
           fields:
             persona:
@@ -207,7 +199,7 @@ ar:
         no_llm: "لم يتم تحديد نموذج اللغة الكبير (LLM)"
         no_persona: "غير معيَّن"
         no_groups: "لا يوجد"
-        edit: "تعديل"
+        edit: "الإعدادان"
         expand_list:
           zero: "(%{count} أكثر)"
           one: "(%{count} أكثر)"
@@ -242,6 +234,8 @@ ar:
           name: "التضمينات"
           description: "يدعم ميزات مثل الموضوعات ذات الصلة والبحث بالذكاء الاصطناعي عن طريق إنشاء تمثيلات دلالية للنصوص"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "الموضوعات ذات الصلة"
         discord:
           name: "التكامل مع Discord"
           description: "يُمكّن من إجراء عمليات البحث داخل قنوات Discord"
@@ -252,6 +246,8 @@ ar:
           generate_concepts: "استنتاج المفاهيم"
           match_concepts: "مطابقة المفاهيم"
           deduplicate_concepts: "إزالة التكرارات بين المفاهيم"
+          setting_groups:
+            personas: "الشخصيات"
         ai_helper:
           name: "المساعد"
           description: "يُسهم في دعم تفاعل المستخدمين في المجتمع، بما يشمل إنشاء الموضوعات، وكتابة المنشورات، وقراءة المحتوى"
@@ -266,6 +262,9 @@ ar:
           image_caption: "وضع تسميات توضيحية للصور"
           translator: "مترجم"
           post_illustrator: "مُوضِّح المنشورات"
+          setting_groups:
+            automation: "الأتمتة"
+            personas: "الشخصيات"
         translation:
           name: "ترجمة"
           description: "يترجم المحتوى إلى اللغات المدعومة"
@@ -273,6 +272,8 @@ ar:
           post_raw_translator: "مترجم المنشور الخام"
           topic_title_translator: "مترجم عنوان الموضوع"
           short_text_translator: "مترجم النصوص القصيرة"
+          setting_groups:
+            personas: "الشخصيات"
         spam:
           name: "عشوائي"
           description: "يحدِّد المحتوى العشوائي المُحتمَل باستخدام نموذج اللغة الكبير المُحدَّد، ويبلغ عنه مشرفو الموقع لفحصه في قائمة انتظار المراجعة"
@@ -345,6 +346,8 @@ ar:
           post_url_label: "عنوان URL أو مُعرِّف المنشور"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 أو مُعرِّف المنشور"
           result: "النتيجة"
+          llm: "نموذج اللغة الكبير"
+          system_prompt: "رسالة مطالبة النظام"
           scan_log: "سجل الفحص"
           run: "تشغيل الاختبار"
           spam: "عشوائي"
@@ -381,6 +384,7 @@ ar:
         no_users: "لم يتم العثور على بيانات استخدام المستخدم"
         no_models: "لم يتم العثور على بيانات استخدام نموذجية"
         no_features: "لم يتم العثور على بيانات استخدام الميزات"
+        total: "الإجمالي"
         subheader_description: "الرموز هي الوحدات الأساسية التي تستخدمها نماذج اللغة الكبيرة لفهم النصوص وتوليدها، وقد تؤثر بيانات الاستخدام في التكاليف"
         stat_tooltips:
           total_requests: "جميع الطلبات المُقدَّمة إلى نماذج اللغة الكبيرة من خلال Discourse"
@@ -572,7 +576,6 @@ ar:
         max_output_tokens: "الحد الأقصى لعدد الرموز في المخرجات"
         url: "عنوان URL لخدمة استضافة النموذج"
         api_key: "مفتاح API لخدمة استضافة النموذج"
-        enabled_chat_bot: "السماح بمحدِّد روبوت الذكاء الاصطناعي"
         vision_enabled: "تفعيل الرؤية"
         ai_bot_user: "مستخدم روبوت الذكاء الاصطناعي"
         cost_input: "تكلفة الإدخال"
@@ -625,17 +628,7 @@ ar:
           anthropic-claude-opus-4-5: "النموذج الأكثر ذكاءً لدى Anthropic"
           anthropic-claude-sonnet-4-5: "التوازن الأمثل بين السرعة والتكلفة"
           anthropic-claude-haiku-4-5: "سريع وفعَّال من حيث التكلفة"
-          google-gemini-2-5-pro: "نموذج كبير متعدد الوسائط قادر على أداء مجموعة واسعة من المهام"
-          google-gemini-2-5-flash: "خفيف وسريع وفعَّال من حيث التكلفة مع الاستدلال متعدد النماذج"
-          open_ai-gpt-5-mini: "يقدّم توازنًا بين الذكاء والسرعة والتكلفة، مما يجعله نموذجًا جذابًا للعديد من الاستخدامات."
-          open_ai-gpt-5-nano: "أسرع وأوفر نموذج GPT-5 من حيث التكلفة."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "نموذج متعدد اللغات خفيف وفعَّال"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "نموذج قوي متعدد الأغراض"
-          mistral-mistral-large-latest: "أقوى نموذج لدى Mistral"
-          mistral-pixtral-large-latest: "أقوى نموذج قادر على الرؤية لدى Mistral"
-          open_router-x-ai-grok-4: "أحدث نموذج لشركة xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "أحدث نموذج استدلال لشركة DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "نموذج متعدد اللغات عالي الكفاءة"
+          open_ai-gpt-5-nano: "أسرع وأوفر نموذج GPT-5 من حيث التكلفة"
         preseeded_model_description: "نموذج مفتوح المصدر تم تكوينه مسبقًا باستخدام %{model}"
         configured:
           title: "تم تكوين نماذج اللغة الكبيرة (LLM)"
@@ -659,7 +652,6 @@ ar:
           display_name: "الاسم المستخدم للإشارة إلى هذا النموذج في واجهة موقعك."
           name: "نُدرج هذا في استدعاء API لتحديد النموذج الذي سنستخدمه"
           vision_enabled: "إذا تم تفعيله، سيحاول الذكاء الاصطناعي فهم الصور. إنه يعتمد على النموذج المُستخدَم لدعم الرؤية. هذه الميزة مدعومة بأحدث النماذج من Anthropic وGoogle وOpenAI."
-          enabled_chat_bot: "إذا تم تفعيله، يمكن للمستخدمين تحديد هذا النموذج عند إنشاء الرسائل الخاصة باستخدام روبوت الذكاء الاصطناعي"
           cost_input: "تكلفة الإدخال لكل مليون رمز لهذا النموذج"
           cost_output: "تكلفة الإخراج لكل مليون رمز لهذا النموذج"
           cost_measure: "دولار لكل مليون رمز"
@@ -695,7 +687,6 @@ ar:
           reasoning_tokens: "عدد الرموز المستخدمة في الاستدلال"
           disable_temperature: "تعطيل ميزة الحرارة (بعض نماذج التفكير لا تدعم هذه الميزة)"
           disable_top_p: "تعطيل ميزة Top P (بعض نماذج التفكير لا تدعم هذه الميزة)"
-          enable_responses_api: "تفعيل API الخاصة بالاستجابات (مطلوب لبعض نماذج OpenAI)"
       related_topics:
         title: "الموضوعات ذات الصلة"
         pill: "ذات صلة"
@@ -934,6 +925,7 @@ ar:
         topic:
           title: "ملخص الموضوع"
           close: "إغلاق لوحة الملخص"
+          regenerate_summaries_option: "ملخصات الموضوع"
         topic_list_layout:
           button:
             compact: "مضغوط"

@@ -11,9 +11,10 @@ enabled_site_setting :data_explorer_enabled
 
 register_asset "stylesheets/explorer.scss"
 
-register_svg_icon "caret-down"
-register_svg_icon "caret-right"
-register_svg_icon "chevron-left"
+register_svg_icon "angle-down"
+register_svg_icon "angle-right"
+register_svg_icon "chart-line"
+register_svg_icon "angle-left"
 register_svg_icon "circle-exclamation"
 register_svg_icon "info"
 register_svg_icon "pencil"
@@ -131,7 +132,7 @@ after_initialize do
             )
             .each do |pm|
               begin
-                utils.send_pm(pm, automation_id: automation.id, prefers_encrypt: false)
+                utils.send_pm(pm, automation_id: automation.id)
               rescue ActiveRecord::RecordNotSaved => e
                 Rails.logger.warn "#{DiscourseDataExplorer::PLUGIN_NAME} - couldn't send PM for automation #{automation.id}: #{e.message}"
               end

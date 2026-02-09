@@ -137,9 +137,6 @@ fa_IR:
       send_shortcut:
         enter:
           label: "ارسال با Enter"
-          description: "خط جدید با Shift + Enter"
-        meta_enter:
-          description: "خط جدید توسط Enter"
       enable: "فعال کردن گفتگو"
       flag: "پرچم"
       emoji: "درج ایموجی"
@@ -299,6 +296,7 @@ fa_IR:
       admin:
         title: "گفتگو"
       search:
+        short_title: جستجو
         no_results: "چیزی یافت نشد"
         sort:
           relevance: "ارتباطات"
@@ -403,7 +401,6 @@ fa_IR:
         title: "گفتگو"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} تغییر کانال"
-          drawer_open: "%{shortcut} باز کردن کِشوی گفتگو"
           drawer_close: "%{shortcut} بستن کِشوی گفتگو"
     topic_statuses:
       chat:

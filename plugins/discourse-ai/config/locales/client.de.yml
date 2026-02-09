@@ -113,14 +113,13 @@ de:
             persona_id:
               label: "Persona"
               description: "KI Persona zur Berichtserstellung"
-        llm_tool_triage:
+        ai_tool_action:
           fields:
-            model:
-              label: "Modell"
-              description: "Das für die Sichtung verwendete Standard-Sprachmodell"
             tool:
-              label: "Tool"
-              description: "Tool für die Sichtung (das Tool darf keine Parameter definiert haben)"
+              label: "KI-Tool"
+              description: "Das KI-Tool, das ausgeführt wird, wenn die Automatisierung ausgelöst wird"
+            llm_model:
+              label: "LLM-Modell"
         llm_persona_triage:
           fields:
             persona:
@@ -224,6 +223,7 @@ de:
         short_title: "Funktionen"
         description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Personas und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
         back: "Zurück"
+        settings_save_error: "Einige Einstellungen konnten nicht gespeichert werden."
         disabled: "(deaktiviert)"
         persona:
           one: "Persona:"
@@ -235,7 +235,7 @@ de:
         no_llm: "Kein LLM ausgewählt"
         no_persona: "Nicht festgelegt"
         no_groups: "Keine"
-        edit: "Bearbeiten"
+        edit: "Einstellungen"
         expand_list:
           one: "(%{count} weitere)"
           other: "(%{count} weitere)"
@@ -244,6 +244,11 @@ de:
           bot: "Chatbot"
           name: "Bot"
           description: "Ein Chatbot, der Fragen beantworten und Benutzern in persönlichen Nachrichten, im Forum und im Chat helfen kann"
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
+            access_control: "Zugriffskontrolle"
+            ui_settings: "Oberflächen-Einstellungen"
+            integrations: "Integrationen"
         nav:
           configured: "Konfiguriert"
           unconfigured: "Nicht konfiguriert"
@@ -258,24 +263,42 @@ de:
           description: "Stellt eine Schaltfläche für Zusammenfassungen zur Verfügung, mit der Besucher Themen zusammenfassen können"
           topic_summaries: "Themenzusammenfassungen"
           gists: "Kurze Zusammenfassungen der Themenliste"
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
+            gists: "Zentrale Punkte"
+            backfill: "Rückwirkende Zusammenfassungen"
         search:
           name: "Suche"
           description: "Verbessert das Sucherlebnis durch KI-generierte Antworten auf Suchanfragen"
           discoveries: "Entdeckungen"
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
         embeddings:
           name: "Einbettungen"
           description: "Ermöglicht Funktionen wie „Verwandte Themen“ und „KI-Suche“ durch die Erstellung semantischer Textdarstellungen"
           hyde: "HyDE"
+          setting_groups:
+            model_settings: "Modelleinstellungen"
+            related_topics: "Verwandte Themen"
+            semantic_search: "Semantische Suche"
         discord:
           name: "Discord-Integration"
           description: "Fügt die Möglichkeit hinzu, Discord-Kanäle zu durchsuchen"
           search: "Discord-Suche"
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
+            discord_configuration: "Discord Konfiguration"
         inference:
           name: "Abgeleitete Konzepte"
           description: "Ordnet Themen und Beiträge in Interessensgebiete/Labels."
           generate_concepts: "Konzepterkennung"
           match_concepts: "Passende Konzepte"
           deduplicate_concepts: "Deduplizierung von Konzepten"
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
+            topic_criteria: "Kriterien für Themen"
+            post_criteria: "Kriterien für Beiträge"
+            personas: "Personas"
         ai_helper:
           name: "Helfer"
           description: "Unterstützt Benutzer bei der Interaktion in der Community, z. B. beim Erstellen von Themen, Verfassen von Beiträgen und Lesen von Inhalten"
@@ -290,6 +313,12 @@ de:
           image_caption: "Bildbeschriftungen"
           translator: "Übersetzer"
           post_illustrator: "Beitragsillustrator"
+          chat_thread_titles: "Titel von Chat-Threads"
+          setting_groups:
+            access_permissions: "Zugriff & Berechtigungen"
+            enabled_features: "Aktivierte Funktionen"
+            automation: "Automatisierung"
+            personas: "Personas"
         translation:
           name: "Übersetzen"
           description: "Übersetzt Inhalte in unterstützte Sprachen"
@@ -297,6 +326,10 @@ de:
           post_raw_translator: "Übersetzer für die Roheingabe des Beitrags"
           topic_title_translator: "Thementitel-Übersetzer"
           short_text_translator: "Kurztext-Übersetzer"
+          setting_groups:
+            settings: "Grundlegende Einstellungen"
+            personas: "Personas"
+            backfill_and_limits: "Rückwirkende Übersetzung & Grenzwerte"
         spam:
           name: "Spam"
           description: "Identifiziert potenziellen Spam mithilfe des ausgewählten LLMs und meldet ihn den Moderatoren der Website in der Warteschlange zur Überprüfung."
@@ -343,6 +376,8 @@ de:
             title: "Übersetzt diesen Beitrag in alle unterstützten Sprachen"
             confirm: "Dadurch werden alle vorhandenen Übersetzungen in diesem Beitrag aktualisiert. Bist du sicher?"
             success: "Der Beitrag wurde zur Übersetzung gesendet"
+        credit_limit_warning: "Die Übersetzungen sind pausiert, weil das Guthabenlimit erreicht wurde. Sie werden fortgesetzt, wenn das Guthaben um %{reset_time} zurückgesetzt wird."
+        credit_limit_warning_no_time: "Die Übersetzungen sind pausiert, weil das Guthabenlimit erreicht wurde. Sie werden fortgesetzt, wenn das Guthaben zurückgesetzt wird."
       spam:
         short_title: "Spam"
         title: "Spam-Behandlung konfigurieren"
@@ -368,6 +403,8 @@ de:
           post_url_label: "Beitrags-URL oder -ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 oder Beitrags-ID"
           result: "Ergebnis"
+          llm: "LLM"
+          system_prompt: "System-Eingabeaufforderung"
           scan_log: "Scan-Protokoll"
           run: "Test ausführen"
           spam: "Spam"
@@ -389,6 +426,7 @@ de:
         feature: "Funktion"
         usage_count: "Nutzungsanzahl"
         model: "Modell"
+        credits_remaining: "Verbleibendes Guthaben"
         models_breakdown: "Nutzung pro Modell"
         users_breakdown: "Nutzung pro Benutzer"
         all_features: "Alle Funktionen"
@@ -404,6 +442,7 @@ de:
         no_users: "Keine Benutzernutzungsdaten gefunden"
         no_models: "Keine Modellnutzungsdaten gefunden"
         no_features: "Keine Funktionsnutzungsdaten gefunden"
+        total: "Gesamt"
         subheader_description: "Token sind die Basiseinheiten, die LLM zum Verstehen und Generieren von Text verwenden. Nutzungsdaten können sich auf die Kosten auswirken"
         stat_tooltips:
           total_requests: "Alle Anfragen an LLMs über Discourse"
@@ -417,6 +456,7 @@ de:
           last_week: "Letzte Woche"
           last_month: "Letzter Monat"
           custom: "Benutzerdefiniert …"
+        credit_allocations: "Guthabenzuweisungen"
       ai_persona:
         ai_tools: "Tools"
         tool_strategies:
@@ -587,8 +627,9 @@ de:
         max_output_tokens: "Maximale Ausgabetoken"
         url: "URL des Dienstes, der das Modell hostet"
         api_key: "API-Schlüssel des Dienstes, der das Modell hostet"
-        enabled_chat_bot: "KI-Bot-Auswahl zulassen"
         vision_enabled: "Sehen aktiviert"
+        allowed_attachment_types: "Zulässige Anhänge"
+        attachment_types_placeholder: "Erweiterungen auswählen oder eingeben (z. B. pdf, txt, docx)"
         ai_bot_user: "KI-Bot-Benutzer"
         cost_input: "Eingabekosten"
         cost_cached_input: "Eingabekosten für Zwischengespeichertes"
@@ -619,6 +660,11 @@ de:
           max_tokens_required: "Muss gesetzt werden, wenn die maximale Nutzung nicht festgelegt ist"
           max_usages_help: "Die maximale Anzahl von Benutzern in dieser Gruppe, die das KI-Modell innerhalb der angegebenen Dauer nutzen können. Dieses Kontingent wird für jeden einzelnen Nutzer verfolgt und nicht für die ganze Gruppe."
           max_usages_required: "Muss gesetzt werden, wenn die maximale Anzahl an Tokens nicht gesetzt ist"
+        credit_allocation:
+          credits_remaining: "Verbleibendes Guthaben: %{remaining} von %{total} (%{percentage} %)"
+          soft_limit_warning: "Für dieses Modell sind heute noch %{percentage}% des KI-Guthabens übrig."
+          hard_limit_warning: "Du hast keine KI-Guthaben mehr für dieses Modell. Die KI-Funktionen, die dieses Modell nutzen, sind bis %{reset_date} nicht mehr verfügbar."
+          next_reset: "Guthaben wird am %{time} Uhr zurückgesetzt"
         usage:
           ai_bot: "KI-Bot"
           ai_helper: "Helfer (%{persona})"
@@ -636,21 +682,16 @@ de:
           anthropic-claude-opus-4-5: "Das intelligenteste Modell von Anthropic"
           anthropic-claude-sonnet-4-5: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
-          google-gemini-2-5-pro: "Großes multimodales Modell, das eine Vielzahl von Aufgaben bewältigen kann"
-          google-gemini-2-5-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation"
-          google-gemini-2-5-flash-image-preview: "Neuestes Bilderzeugungsmodell mit Bildverarbeitungsfunktionen"
-          open_ai-gpt-5-1: "Das Vorzeigemodell von OpenAI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
-          open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
-          open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Effizientes leichtgewichtiges mehrsprachiges Modell"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Leistungsstarkes Mehrzweckmodell"
-          mistral-mistral-large-latest: "Das leistungsstärkste Modell von Mistral"
-          mistral-pixtral-large-latest: "Das leistungsstärkste Modell von Mistral mit Sichtfunktion"
-          open_router-x-ai-grok-4: "Das neueste Modell von xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "DeepSeeks neuestes Argumentationsmodell"
-          open_router-meta-llama-3-3-70b-instruct: "Leistungsstarkes mehrsprachiges Modell"
-          groq-openai-gpt-oss-120b: "Hochmodernes Open-Weight-Modell von OpenAI"
-          groq-openai-gpt-oss-20b: "Leichtes, schnelles, offenes Modell von OpenAI"
+          google-gemini-3-flash: "Schnell und kosteneffizient mit multimodaler Argumentation"
+          open_ai-gpt-5-2: "Das Vorzeigemodell von OpenAI, gut geeignet für Problemlösungen in verschiedenen Bereichen"
+          open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten."
+          open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell"
+          open_router-deepseek-deepseek-v3-2: "DeepSeeks neuestes Hochleistungsmodell"
+          open_router-moonshotai-kimi-k2-5: "Moonshots multimodales Modell mit Bildverarbeitungsfunktionen"
+          open_router-x-ai-grok-4-fast: "Das Vorzeigemodell von xAI mit Bildverarbeitung"
+          open_router-minimax-minimax-m2-1: "Das multimodale Modell von MiniMax mit großem Kontext"
+          open_router-z-ai-glm-4-7: "Das multimodale Modell von Z-AI mit Bildverarbeitung"
+          open_router-arcee-ai-trinity-large-preview-free: "Kostenloses Open-Source-Modell von Arcee AI"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:
           title: "Konfigurierte LLMs"
@@ -675,7 +716,6 @@ de:
           display_name: "Der Name, der verwendet wird, um dieses Modell in der Benutzeroberfläche deiner Website zu referenzieren."
           name: "Wir fügen dies in den API-Aufruf ein, um anzugeben, welches Modell wir verwenden werden"
           vision_enabled: "Wenn diese Funktion aktiviert ist, versucht die KI, Bilder zu verstehen. Dafür wird ein Modell benötigt, das Sehen unterstützt. Verfügbar in den neuesten Modellen von Anthropic, Google und OpenAI."
-          enabled_chat_bot: "Wenn diese Option aktiviert ist, können Benutzer dieses Modell auswählen, wenn sie PN mit dem KI-Bot erstellen"
           cost_input: "Die Kosten für die Eingabe pro 1 Million Token für dieses Modell"
           cost_output: "Die Kosten für die Ausgabe pro 1 Million Token für dieses Modell"
           cost_measure: "$/1M Token"
@@ -712,7 +752,6 @@ de:
           reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"
           disable_top_p: "Top P deaktivieren (einige Denkmodelle unterstützen Top P nicht)"
-          enable_responses_api: "Aktiviere die Antwort-API (bei bestimmten OpenAI-Modellen erforderlich)"
       related_topics:
         title: "Verwandte Themen"
         pill: "Verwandt"
@@ -764,6 +803,13 @@ de:
           credits: "Beschriftet durch KI"
           save_caption: "Speichern"
         no_content_error: "Füge zuerst Inhalte hinzu, um KI-Aktionen darauf anzuwenden"
+      errors:
+        credit_limit_dialog:
+          title: "KI-Guthabenlimit erreicht"
+          message_user: "Diese Community hat ihr KI-Guthabenlimit für heute erreicht. Bitte versuche es erneut nach %{reset_time} oder kontaktiere deinen Website-Administrator für weitere Informationen."
+          message_without_time_user: "Diese Community hat ihr KI-Guthabenlimit für heute erreicht. Antworten sind wieder möglich, nachdem dein Guthaben zurückgesetzt wurde. Bitte kontaktiere deinen Website-Administrator für weitere Informationen."
+          message_admin: "Du hast das KI-Guthabenlimit deines Plans erreicht. Antworten sind wieder möglich, nachdem dein Guthaben um %{reset_time} zurückgesetzt wurde."
+          message_without_time_admin: "Du hast das KI-Guthabenlimit deines Plans erreicht. Antworten sind wieder möglich, nachdem dein Guthaben zurückgesetzt wurde."
       reviewables:
         model_used: "Verwendetes Modell:"
         accuracy: "Genauigkeit:"
@@ -939,12 +985,13 @@ de:
         topic:
           title: "Zusammenfassung des Themas"
           close: "Zusammenfassungspanel schließen"
-          regenerate: "Kurzzusammenfassung neu generieren"
-          regenerate_bulk: "Kurzzusammenfassungen neu generieren"
-          regenerate_success:
+          regenerate_ai_summaries: "KI-Zusammenfassungen neu generieren"
+          regenerate_gists_option: "Kurzzusammenfassungen (Zentrale Punkte)"
+          regenerate_summaries_option: "Themenzusammenfassungen"
+          regenerate_gists_success:
             one: "Kurzzusammenfassung erfolgreich neu generiert"
             other: "%{count} Kurzzusammenfassungen erfolgreich neu generiert"
-          regenerate_error:
+          regenerate_gists_error:
             one: "Kurzzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
         topic_list_layout:
@@ -960,6 +1007,7 @@ de:
         loading_convo: "Unterhaltung wird geladen"
         collapse: "Zuklappen"
         timed_out: "Discobot konnte keine Entdeckungen finden. Irgendetwas ist schief gelaufen."
+        user_setting: "KI-Suchentdeckungen aktivieren"
         tooltip:
           header: "KI-gestützte Suche"
           content: "Natürliche Sprachsuche unterstützt von %{model}"

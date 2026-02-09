@@ -4,6 +4,12 @@ class TagGroup < ActiveRecord::Base
   validates :name, length: { maximum: 100 }
   validates :name, uniqueness: { case_sensitive: false }
 
+  scope :where_name,
+        ->(name) do
+          name = Array(name).map(&:downcase)
+          where("lower(tag_groups.name) IN (?)", name)
+        end
+
   has_many :tag_group_memberships, dependent: :destroy
   has_many :tags, through: :tag_group_memberships
   has_many :none_synonym_tags,
@@ -25,8 +31,18 @@ class TagGroup < ActiveRecord::Base
 
   attr_reader :permissions
 
-  def tag_names=(tag_names_arg)
-    DiscourseTagging.add_or_create_tags_by_name(self, tag_names_arg, unlimited: true)
+  def tag_names=(tags_arg)
+    DiscourseTagging.add_or_create_tags_by_name(self, tags_arg, unlimited: true)
+  end
+
+  def tag_ids=(ids)
+    base_tags = Tag.where(id: ids)
+    synonyms = Tag.where(target_tag_id: base_tags.select(:id)).where.not(id: base_tags.select(:id))
+    self.tags = base_tags + synonyms
+  end
+
+  def parent_tag_id=(id)
+    self.parent_tag = id.present? ? Tag.find_by(id: id) : nil
   end
 
   def parent_tag_name=(tag_names_arg)
@@ -95,7 +111,7 @@ class TagGroup < ActiveRecord::Base
   end
 
   def self.visible(guardian)
-    if guardian.is_staff?
+    if guardian.is_admin?
       TagGroup
     else
       # (

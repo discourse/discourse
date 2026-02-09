@@ -18,9 +18,30 @@ module PageObjects
         find(".action-list li.insights").click
       end
 
-      def select_bundled_action(reviewable, value)
+      def select_bundled_action(reviewable, value, bundle_id = nil)
         within(reviewable_by_id(reviewable.id)) do
-          reviewable_action_dropdown.select_row_by_value(value)
+          if bundle_id
+            dropdown_selector = "#{REVIEWABLE_ACTION_DROPDOWN}.#{bundle_id.dasherize}"
+            dropdown = PageObjects::Components::SelectKit.new(dropdown_selector)
+            dropdown.expand
+            dropdown.select_row_by_value(value)
+          else
+            dropdown_count = all(REVIEWABLE_ACTION_DROPDOWN).count
+            dropdown_count.times do |index|
+              dropdown_selector = "#{REVIEWABLE_ACTION_DROPDOWN}:nth-of-type(#{index + 1})"
+              dropdown = PageObjects::Components::SelectKit.new(dropdown_selector)
+              dropdown.expand
+              if dropdown.expanded_component.has_css?(
+                   ".select-kit-row[data-value='#{value}']",
+                   wait: 0,
+                 )
+                dropdown.select_row_by_value(value)
+                break
+              else
+                dropdown.collapse
+              end
+            end
+          end
         end
       end
 
@@ -34,8 +55,20 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--rejected") }
       end
 
+      def has_rejected_item_in_timeline?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_text?("Rejected by") }
+      end
+
+      def has_reviewable_with_pending_status?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--pending") }
+      end
+
       def has_reviewable_with_approved_status?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--approved") }
+      end
+
+      def has_approved_item_in_timeline?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_text?("Approved by") }
       end
 
       def has_reviewable_with_ignored_status?(reviewable)
@@ -62,6 +95,10 @@ module PageObjects
 
       def click_edit_post_button
         find(".reviewable-action.edit").click
+      end
+
+      def click_scrub_user_button
+        find(".user-scrub").click
       end
 
       def fill_post_content(content)
@@ -112,6 +149,17 @@ module PageObjects
         find(".reviewable-claimed-topic .unclaim").click
       end
 
+      def has_context_question?(reviewable, text)
+        within(reviewable_by_id(reviewable.id)) do
+          page.has_css?(".review-item__aside-title", text: text)
+        end
+      end
+
+      def has_created_at_history_item?
+        expect(page).to have_css(".timeline-event__icon .d-icon-pen-to-square")
+        expect(page).to have_text("Post created by")
+      end
+
       def has_claimed_history_item?(user)
         expect(page).to have_css(".timeline-event__icon .d-icon-user-plus")
         expect(page).to have_text("Claimed by")
@@ -124,6 +172,12 @@ module PageObjects
 
       def has_history_items?(count:)
         expect(page).to have_css(".timeline-event", count: count)
+      end
+
+      def has_reviewables?(reviewables)
+        reviewable_ids = reviewables.map(&:id)
+        page.has_css?(".review-item", count: reviewables.size) &&
+          reviewable_ids.all? { |id| page.has_css?(".review-item[data-reviewable-id='#{id}']") }
       end
 
       private

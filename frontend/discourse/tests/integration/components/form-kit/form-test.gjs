@@ -371,4 +371,53 @@ module("Integration | Component | FormKit | Form", function (hooks) {
       0
     );
   });
+
+  test("clicking error link focuses the field input", async function (assert) {
+    await render(
+      <template>
+        <Form as |form|>
+          <form.Field
+            @name="foo"
+            @title="Foo"
+            @validation="required"
+            as |field|
+          >
+            <field.Input />
+          </form.Field>
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    await formKit().submit();
+
+    await click(".form-kit__errors-summary-list a");
+
+    assert.dom(document.activeElement).hasClass("form-kit__control-input");
+  });
+
+  test("error link has anchor href for fields without focusable elements", async function (assert) {
+    const validate = async (data, { addError }) => {
+      addError("foo", { title: "Foo", message: "error" });
+    };
+
+    await render(
+      <template>
+        <Form @validate={{validate}} as |form|>
+          <form.Field @name="foo" @title="Foo" as |field|>
+            <field.Custom>
+              <div class="not-focusable">Custom content</div>
+            </field.Custom>
+          </form.Field>
+          <form.Submit />
+        </Form>
+      </template>
+    );
+
+    await formKit().submit();
+
+    assert
+      .dom(".form-kit__errors-summary-list a")
+      .hasAttribute("href", "#control-foo");
+  });
 });

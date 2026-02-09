@@ -21,22 +21,20 @@ module DiscourseAi
 
         localization.raw = translated_raw
         localization.cooked = post.post_analyzer.cook(translated_raw, post.cooking_options || {})
+        localization.post_version = post.version
+        localization.localizer_user_id = Discourse::SYSTEM_USER_ID
+        localization.save!
 
         cooked_processor = LocalizedCookedPostProcessor.new(localization, post, {})
         begin
           cooked_processor.post_process
-          localization.cooked = cooked_processor.html
+          localization.update!(cooked: cooked_processor.html)
         rescue => e
           # Log but don't fail translation if post-processing (oneboxes, images) fails
           Rails.logger.warn(
             "Post-processing failed for localization of post #{post.id} to #{target_locale}: #{e.class} - #{e.message}",
           )
-          # Keep the cooked content without post-processing
         end
-
-        localization.post_version = post.version
-        localization.localizer_user_id = Discourse.system_user.id
-        localization.save!
         localization
       end
 

@@ -23,17 +23,15 @@ da:
         agree_and_suspend:
           title: "Suspendér Bruger"
         agree_and_silence:
-          title: "Ignorer Bruger"
+          title: "Ignorer bruger"
         agree_and_restore:
           title: "Gendan Besked"
           description: "Gendan meddelelsen, så brugerne kan se den."
         agree_and_delete:
           title: "Slet Besked"
           description: "Slet meddelelsen, så brugerne ikke kan se den."
-        disagree:
-          title: "Uenig"
         ignore:
-          title: "Gør ingenting"
+          title: "Ignorer flag"
     channel:
       archive:
         first_post_raw: "Dette emne er et arkiv af chatkanalen [%{channel_name}] (%{channel_url})."

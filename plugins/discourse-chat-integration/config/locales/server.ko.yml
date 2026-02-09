@@ -62,10 +62,8 @@ ko:
         create:
           created: "규칙이 성공적으로 생성되었습니다"
           updated: "규칙이 성공적으로 업데이트되었습니다"
-          error: "해당 규칙을 만드는 중 오류가 발생했습니다."
         delete:
           success: "규칙이 성공적으로 삭제되었습니다"
-          error: "해당 규칙을 삭제하는 중에 오류가 발생했습니다. 규칙 목록을 보려면`/ discourse status`를 실행하십시오."
         not_found:
           tag: "* %{name} * 태그를 찾을 수 없습니다."
           category: "* %{name} * 카테고리를 찾을 수 없습니다. 사용 가능한 카테고리 : * %{list} *"
@@ -93,10 +91,8 @@ ko:
         create:
           created: "규칙이 성공적으로 생성되었습니다"
           updated: "규칙이 성공적으로 업데이트되었습니다"
-          error: "해당 규칙을 만드는 중 오류가 발생했습니다."
         delete:
           success: "규칙이 성공적으로 삭제되었습니다"
-          error: "해당 규칙을 삭제하는 중에 오류가 발생했습니다. 규칙 목록을 보려면 <code>/status</code> 를 실행하십시오."
         not_found:
           tag: "<b>%{name}</b> 태그를 찾을 수 없습니다."
           category: "<b>%{name}</b> 카테고리를 찾을 수 없습니다. 사용 가능한 카테고리 : <b>%{list}</b>"
@@ -111,10 +107,8 @@ ko:
         create:
           created: "규칙이 성공적으로 생성되었습니다"
           updated: "규칙이 성공적으로 업데이트되었습니다"
-          error: "해당 규칙을 만드는 중 오류가 발생했습니다."
         delete:
           success: "규칙이 성공적으로 삭제되었습니다"
-          error: "해당 규칙을 삭제하는 중에 오류가 발생했습니다. 규칙 목록을 보려면`/ discourse status`를 실행하십시오."
         not_found:
           tag: "* %{name} * 태그를 찾을 수 없습니다."
           category: "* %{name} * 카테고리를 찾을 수 없습니다. 사용 가능한 카테고리 : * %{list} *"

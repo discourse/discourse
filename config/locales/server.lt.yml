@@ -52,6 +52,8 @@ lt:
   remove_posts_deleted_by_author: "Pašalinta autoriaus"
   redirect_warning: "Negalėjome patvirtinti, kad jūsų pasirinkta nuoroda buvo faktiškai paskelbta forume. Jei vis tiek norite tęsti, pasirinkite žemiau esančią nuorodą."
   on_another_topic: "Kitoje temoje"
+  topic_tag_changed:
+    added: "Pridėta %{added}"
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} nuo %{username}"
@@ -289,6 +291,7 @@ lt:
   read_full_topic: "Skaityti pilną temą"
   private_message_abbrev: "Žinutė"
   rss_description:
+    hot: "Karštos temos"
     latest: "Naujausios temos"
     top: "Top temos"
     top_all: "Visų laikų Top temos"
@@ -736,7 +739,6 @@ lt:
     pm_body: "Tema, kurioje yra atsarginių juodraščių"
   email_settings:
     pop3_authentication_error: "Iškilo problema dėl pateiktų POP3 prisijungimo duomenų, patikrinkite naudotojo vardą ir slaptažodį ir bandykite dar kartą."
-    imap_no_response_error: "Ryšio su IMAP serveriu metu įvyko klaida. %{message}"
     smtp_server_busy_error: "SMTP serveris šiuo metu užimtas, bandykite dar kartą vėliau."
     smtp_unhandled_error: "Bendraujant su SMTP serveriu įvyko neapdorota klaida. %{message}"
     connection_error: "Prisijungiant prie serverio kilo problema, patikrinkite serverio pavadinimą ir prievadą ir bandykite dar kartą."
@@ -808,11 +810,10 @@ lt:
       every_month: "kiekvieną mėnesį"
       every_six_months: "kas šešis mėnesius"
   user_api_key:
-    title: "Suteikite prieigą prie programos"
     authorize: "Leisti"
+    deny: "Atšaukti"
     read: "skaityti"
     read_write: "skaityti/rašyti"
-    description: '„%{application_name}“ prašo šios prieigos prie jūsų paskyros:'
     instructions: 'Ką tik sukūrėme naują vartotojo API raktą, kurį galėsite naudoti su „%{application_name}“, įklijuokite šį raktą į savo programą:'
     otp_description: 'Ar norite leisti „%{application_name}“ pasiekti šią svetainę?'
     otp_confirmation:
@@ -1301,16 +1302,6 @@ lt:
     tl3_requires_topics_viewed: "Temų, sukurtų per paskutines (tl3 laiko tarpsnio) dienas, procentas, kurį naudotojas turi peržiūrėti, kad galėtų būti paaukštintas iki 3 patikimumo lygio. (0–100)"
     tl3_requires_topics_viewed_cap: "Didžiausias reikalingas temų skaičius, peržiūrėtas per paskutines (tl3 laiko tarpas) dienas."
     tl3_requires_posts_read_all_time: "Minimalus bendras įrašų skaičius, kurį vartotojas turi perskaityti, kad atitiktų 3 patikimumo lygį."
-    min_trust_to_edit_wiki_post: "Minimalus patikimumo lygis, reikalingas norint redaguoti įrašą, pažymėtą kaip wiki."
-    min_trust_to_edit_post: "Minimalus patikimumo lygis, reikalingas norint redaguoti įrašus."
-    min_trust_to_allow_self_wiki: "Minimalus patikimumo lygis, kurio reikia norint sukurti vartotojo įrašą „wiki“."
-    min_trust_to_send_email_messages: "Minimalus patikimumo lygis, reikalingas asmeniniams pranešimams siųsti el. paštu."
-    min_trust_to_post_links: "Minimalus patikimumo lygis, reikalingas norint įtraukti nuorodas į pranešimus"
-    min_trust_to_post_embedded_media: "Minimalus patikimumo lygis, reikalingas medijos elementams įterpti į įrašą"
-    min_trust_level_to_allow_profile_background: "Minimalus patikimumo lygis, reikalingas profilio fonui įkelti"
-    min_trust_level_to_allow_user_card_background: "Minimalus patikimumo lygis, reikalingas vartotojo kortelės fonui įkelti"
-    min_trust_level_to_allow_invite: "Minimalus patikimumo lygis, reikalingas norint pakviesti vartotojus"
-    min_trust_level_to_allow_ignore: "Minimalus patikimumo lygis, reikalingas vartotojams ignoruoti"
     allowed_link_domains: "Domenai, kuriuos vartotojai gali susieti, net jei jie neturi tinkamo patikimumo lygio, kad galėtų skelbti nuorodas"
     newuser_max_links: "Kiek nuorodų naujas vartotojas gali pridėti prie įrašo."
     newuser_max_embedded_media: "Kiek įterptųjų medijos elementų naujas vartotojas gali pridėti prie įrašo."
@@ -1340,14 +1331,12 @@ lt:
     trim_incoming_emails: "Apkarpykite dalį gaunamų el. laiškų, kurie nėra svarbūs."
     relative_date_duration: "Dienų skaičius po paskelbimo, kai paskelbimo datos bus rodomos kaip santykinės (7 d.), o ne absoliučios (vasario 20 d.)."
     logout_redirect: "Vieta, į kurią reikia nukreipti naršyklę atsijungus (pvz., https://example.com/logout)"
-    allow_uploaded_avatars: "Leisti vartotojams įkelti pasirinktines profilio nuotraukas."
     default_avatars: "URL į avatarus, kurie bus naudojami pagal numatytuosius nustatymus naujiems vartotojams, kol jie juos pakeis."
     automatically_download_gravatars: "Atsisiųskite “Gravatars” vartotojams, sukūrus paskyrą arba pakeitus el. paštą."
     digest_topics: "Didžiausias populiarių temų skaičius, rodomas el. pašto suvestinėje."
     digest_posts: "Didžiausias populiarių įrašų, rodomų el. pašto suvestinėje, skaičius."
     digest_other_topics: "Didžiausias temų skaičius, rodomas el. laiškų santraukos skiltyje „Naujienos jūsų stebimose temose ir kategorijose“."
     show_inactive_accounts: "Leisti prisijungusiems vartotojams naršyti neaktyvių paskyrų profilius."
-    hide_suspension_reasons: "Nerodyti sustabdymo priežasčių viešai naudotojų profiliuose."
     user_selected_primary_groups: "Leiskite vartotojams nustatyti savo pagrindinę grupę"
     max_notifications_per_user: "Maksimalus vieno vartotojo pranešimų skaičius, jei šis skaičius viršijamas, senieji pranešimai bus ištrinti. Taikoma kas savaitę. Norėdami išjungti, nustatykite 0"
     header_dropdown_category_count: "Kiek kategorijų gali būti rodoma antraštės išskleidžiamajame meniu."
@@ -1382,11 +1371,9 @@ lt:
     allow_user_api_key_scopes: "Leidžiamų naudotojo API raktų apimčių sąrašas"
     allowed_user_api_auth_redirects: "Leidžiamas vartotojo API raktų autentifikavimo peradresavimo URL. Pakaitos simbolis * gali būti naudojamas norint atitikti bet kurią jo dalį (pvz., www.example.com/*)."
     allowed_user_api_push_urls: "Leidžiami serverio siuntimo naudotojui API URL adresai"
-    min_trust_to_create_tag: "Minimalus patikimumo lygis, reikalingas žymai sukurti."
     max_tag_length: "Maksimalus simbolių skaičius, kurį galima naudoti žymoje."
     max_tag_search_results: "Ieškant žymų, maksimalus rodomų rezultatų skaičius."
     tags_sort_alphabetically: "Rodyti žymas abėcėlės tvarka. Numatytasis rodymas pagal populiarumą."
-    min_trust_level_to_tag_topics: "Minimalus patikimumo lygis, reikalingas žymėti temas"
     suppress_overlapping_tags_in_list: "Jei žymos atitinka tikslius žodžius temų pavadinimuose, nerodykite jų"
     remove_muted_tags_from_latest: "Naujausiame temų sąraše nerodykite temų, pažymėtų tik nutildytomis žymomis."
     force_lowercase_tags: "Priversti visas naujas žymas rašyti mažosiomis raidėmis."
@@ -1627,6 +1614,7 @@ lt:
         Kai dalyvausite čia, mes su jumis susipažinsime ir bus panaikinti laikini naujų naudotojų apribojimai. Laikui bėgant įgysite [patikimumo lygius](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), kurie apima specialius gebėjimus, padėsiančius mums kartu valdyti bendruomenę.
     welcome_user:
       title: "Sveikas narį"
+      preview: "Sveiki atvykę į %{site_name}!"
       subject_template: "Sveiki atvykę į %{site_name}!"
       text_body_template: |
         Ačiū, kad prisijungėte prie %{site_name}ir sveiki atvykę!
@@ -1640,6 +1628,7 @@ lt:
       title: "Sveikas TL1 Narį"
       subject_template: "Dėkojeme jog praleidžiate laika su mumis"
     welcome_invite:
+      preview: "Sveiki atvykę į %{site_name}!"
       subject_template: "Sveiki atvykę į %{site_name}!"
       text_body_template: |
         Dėkojame, kad priėmėte kvietimą į %{site_name} – sveiki!
@@ -1778,6 +1767,7 @@ lt:
       subject_template: "Naujas naudotojo %{username} įrašas užblokuotas dėl pakartotinių nuorodų"
     unsilenced:
       title: "Nebenutildytas"
+      preview: "Paskyra nebesulaikyta."
       subject_template: "Paskyra nebesulaikyta"
       text_body_template: |
         Sveiki,
@@ -1800,7 +1790,6 @@ lt:
     Norėdami atsisakyti šių el. laiškų prenumeratos, [spustelėkite čia](%{unsubscribe_url}).
   subject_re: "Dar kartą:"
   subject_pm: "[AŽ]"
-  email_from: "%{user_name} per %{site_name}"
   user_notifications:
     previous_discussion: "Ankstesni atsakymai"
     in_reply_to: "Atsakant į"
@@ -2028,6 +2017,7 @@ lt:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Prisijungti per nuorodą"
+      preview: "Prisijungti per nuorodą."
       subject_template: "[%{email_prefix}] Prisijunk per nuorodą"
       text_body_template: |
         Čia yra jūsų nuoroda prisijungti adresu [%{site_name}] (%{base_url}).
@@ -2520,6 +2510,8 @@ lt:
     title: "Įeikite į saugųjį režimą"
     enter: "Įeikite į saugųjį režimą"
     must_select: "Norėdami įjungti saugųjį režimą, turite pasirinkti bent vieną parinktį."
+  dev_mode:
+    enter: "Įeiti"
   wizard:
     title: "Discourse sąranka"
     step:
@@ -2540,6 +2532,9 @@ lt:
   onebox:
     github:
       closed: "uždaryta"
+      status_date:
+        approved: "patvirtinta"
+        closed: "uždaryta"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} paminėjo tave "%{topic}" - %{site_title}'
@@ -2599,32 +2594,37 @@ lt:
         complete: "Įrašas ištrintas."
       delete_and_agree_replies:
         confirm: "Ar tikrai norite ištrinti ir įrašo atsakymus?"
-      disagree_and_restore:
-        description: "Atkurkite įrašą, kad visi vartotojai jį matytų."
-      disagree:
+      disagree_bundle:
         title: "Ne"
       ignore:
         title: "Ignoruoti"
+        description: "Pašalinkite jį iš eilės nesiimdami jokių veiksmų."
       ignore_and_do_nothing:
         title: "Nieko nedaryti"
       approve:
-        title: "Patvirtinti"
+        title: "Taip"
       approve_post:
-        title: "Patvirtinti įrašą"
+        title: "Taip"
       approve_post_closed:
-        title: "Patvirtinti įrašą"
+        title: "Taip"
         complete: "Įrašas patvirtintas."
+      reject_post_bundle:
+        title: "Ne"
       reject_post:
         title: "Atmesti įrašą"
       approve_user:
-        title: "Patvirtinti vartotoją"
+        title: "Taip"
       reject_user:
+        title: "Ne"
         delete:
           title: "Ištrinti vartotoją"
-          description: "Vartotojas bus pašalintas iš forumo."
           complete: "Naudotojas ištrintas."
         block:
           title: "Ištrinti ir blokuoti vartotoją"
+      confirm_spam:
+        title: "Taip"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Atmesti"
       reject_and_suspend:
@@ -2637,6 +2637,10 @@ lt:
         title: "Palikti įrašą ištrintą"
       scrub:
         title: Šveitimo įrašas
+      approve_and_restore:
+        title: "Taip"
+      approve_and_unhide:
+        title: "Taip"
       no_action_post:
         title: "Jokių veiksmų"
       delete_post:

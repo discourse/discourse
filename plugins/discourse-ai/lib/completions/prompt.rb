@@ -69,18 +69,26 @@ module DiscourseAi
       # this new api tries to create symmetry between responses and prompts
       # this means anything we get back from the model via endpoint can be easily appended
       def push_model_response(response)
-        response = [response] if !response.is_a? Array
+        pending_thinking = nil
 
-        thinking_text = nil
-        thinking_provider_info = {}
+        thinking_attrs =
+          lambda do
+            return {} unless pending_thinking
 
-        response.each do |message|
-          if message.is_a?(Thinking)
+            attrs = {
+              thinking: pending_thinking.message,
+              thinking_provider_info: pending_thinking.provider_info.presence,
+            }
+            pending_thinking = nil
+            attrs
+          end
+
+        Array(response).each do |message|
+          case message
+          when Thinking
             next if message.partial?
-            thinking_text = message.message if message.message.present?
-            thinking_provider_info =
-              Thinking.merge_provider_info(thinking_provider_info, message.provider_info)
-          elsif message.is_a?(ToolCall)
+            pending_thinking = message
+          when ToolCall
             next if message.partial?
             push(
               type: :tool_call,
@@ -88,18 +96,23 @@ module DiscourseAi
               id: message.id,
               name: message.name,
               provider_data: message.provider_data,
+              **thinking_attrs.call,
             )
-          elsif message.is_a?(String)
-            push(type: :model, content: message)
+          when String
+            if messages.last&.dig(:type) == :model
+              messages.last[:content] = messages.last[:content] + message
+            else
+              push(type: :model, content: message, **thinking_attrs.call)
+            end
+          when ToolResult
+            push(
+              type: :tool,
+              content: message.content,
+              id: message.tool_call.id,
+              name: message.tool_call.name,
+            )
           else
-            raise ArgumentError, "response must be an array of strings, ToolCalls, or Thinkings"
-          end
-        end
-
-        if thinking_text || thinking_provider_info.present?
-          messages.last[:thinking] = thinking_text if thinking_text
-          if thinking_provider_info.present?
-            messages.last[:thinking_provider_info] = thinking_provider_info
+            raise ArgumentError, "unexpected message type: #{message.class}"
           end
         end
       end
@@ -138,7 +151,7 @@ module DiscourseAi
         tools.present?
       end
 
-      def encoded_uploads(message)
+      def encoded_uploads(message, allow_documents: false, allowed_attachment_types: nil)
         if message[:content].is_a?(Array)
           upload_ids =
             message[:content]
@@ -147,23 +160,45 @@ module DiscourseAi
               end
               .compact
           if !upload_ids.empty?
-            return UploadEncoder.encode(upload_ids: upload_ids, max_pixels: max_pixels)
+            allowed_kinds = allow_documents ? %i[image document] : %i[image]
+            return(
+              UploadEncoder.encode(
+                upload_ids: upload_ids,
+                max_pixels: max_pixels,
+                allowed_kinds: allowed_kinds,
+                allowed_attachment_types: allowed_attachment_types,
+              )
+            )
           end
         end
 
         []
       end
 
-      def encode_upload(upload_id)
-        UploadEncoder.encode(upload_ids: [upload_id], max_pixels: max_pixels).first
+      def encode_upload(upload_id, allow_documents: false, allowed_attachment_types: nil)
+        allowed_kinds = allow_documents ? %i[image document] : %i[image]
+        UploadEncoder.encode(
+          upload_ids: [upload_id],
+          max_pixels: max_pixels,
+          allowed_kinds: allowed_kinds,
+          allowed_attachment_types: allowed_attachment_types,
+        ).first
       end
 
-      def content_with_encoded_uploads(content)
+      def content_with_encoded_uploads(
+        content,
+        allow_documents: false,
+        allowed_attachment_types: nil
+      )
         return [content] unless content.is_a?(Array)
 
         content.map do |c|
           if c.is_a?(Hash) && c.key?(:upload_id)
-            encode_upload(c[:upload_id])
+            encode_upload(
+              c[:upload_id],
+              allow_documents: allow_documents,
+              allowed_attachment_types: allowed_attachment_types,
+            )
           else
             c
           end

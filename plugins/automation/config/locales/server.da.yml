@@ -36,3 +36,5 @@ da:
         title: Luk emne
       append_last_checked_by:
         button_text: Færdig
+      set_topic_timer:
+        title: "Indstil timerfunktion for emne"

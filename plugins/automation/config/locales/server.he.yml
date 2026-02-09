@@ -8,6 +8,8 @@ he:
   site_settings:
     discourse_automation_enabled: "הפעלת תוסף discourse-automation"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(ריק)"
     models:
       automations:
         validations:
@@ -67,7 +69,6 @@ he:
         description: כאשר תגיות של נושא משתנות האוטומציה תוזנק
       topic:
         title: נושא
-        description: הסקריפט המשויך ישמש רק לנושא שצוין, חיוני לסקריפטים שמבצעים אימות למשל
       topic_closed:
         title: הנושא סגור
         description: מזניק סקריפט כשנושא נסגר.
@@ -161,3 +162,5 @@ he:
       random_assign:
         title: "הקצאה אקראית"
         description: "הקצאת נושאים לקבוצה באופן אקראי"
+      set_topic_timer:
+        title: "הגדרת שעון עצר לנושא"

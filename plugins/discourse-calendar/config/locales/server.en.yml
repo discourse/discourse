@@ -45,7 +45,7 @@ en:
     all_day_event_start_time: "Events that do not have a start time specified will start at this time. Format is HH:mm. For 6:00 am, enter 06:00"
     all_day_event_end_time: "Events that do not have a end time specified will end at this time. Format is HH:mm. For 6:00 pm, enter 18:00"
     all_day_event_time_error: "Invalid time. Format needs to be HH:mm (ex: 08:00)."
-    calendar_categories: "Display a calendar at the top of a category. Mandatory settings are categoryId and postId. eg: categoryId=6;postId=453\n Other valid settings: tzPicker, weekends and defaultView."
+    calendar_categories: "Display a calendar at the top of a category. categoryId is mandatory. eg: categoryId=6;weekends=false;defaultView=year;\n Other valid settings: weekends(true/false) and defaultView(day,week,month,year)."
     calendar_categories_outlet: "Allows to change which outlet should show the category calendar."
     working_days: "Set working days. You can display the availability of a group using the `timezones` tag in a post, eg: `[timezones group=admins][timezones]`"
     working_day_start_hour: "Start time of the working day hours."
@@ -74,7 +74,7 @@ en:
       ongoing_event_reminder: "%{title} is ongoing."
     errors:
       bulk_invite:
-        max_invitees: "First %{max_invittes} invitees have been created. Try splitting the file in smaller parts."
+        max_invitees: "First %{max_invitees} invitees have been created. Try splitting the file in smaller parts."
         error: "There was an error uploading that file. Please try again later."
       models:
         event:

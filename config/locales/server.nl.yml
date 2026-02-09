@@ -1040,12 +1040,9 @@ nl:
     no_log_search_queries: "Zoekopdrachtenlogs zijn momenteel uitgeschakeld (een beheerder kan ze inschakelen in de website-instellingen)."
   email_settings:
     pop3_authentication_error: "Er was een probleem met de opgegeven POP3-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw."
-    imap_authentication_error: "Er was een probleem met de opgegeven IMAP-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw."
-    imap_no_response_error: "Er is een fout opgetreden tijdens de communicatie met de IMAP-server. %{message}"
     smtp_authentication_error: "Er was een probleem met de opgegeven SMTP-aanmeldgegevens. Controleer de gebruikersnaam en het wachtwoord en probeer het opnieuw. %{message}"
     smtp_server_busy_error: "De SMTP-server is momenteel bezig, probeer het later opnieuw."
     smtp_unhandled_error: "Er is een onafgehandelde fout opgetreden tijdens de communicatie met de SMTP-server. %{message}"
-    imap_unhandled_error: "Er is een onafgehandelde fout opgetreden tijdens de communicatie met de IMAP-server. %{message}"
     connection_error: "Er was een probleem bij het verbinden met de server. Controleer de servernaam en -poort en probeer het opnieuw."
     timeout_error: "Er is een time-out opgetreden bij het verbinden met de server. Controleer de servernaam en -poort en probeer het opnieuw."
     unhandled_error: "Niet-afgehandelde fout bij het testen van e-mailinstellingen. %{message}"
@@ -1134,11 +1131,10 @@ nl:
       every_month: "maandelijks"
       every_six_months: "elke zes maanden"
   user_api_key:
-    title: "Toegang tot toepassingen autoriseren"
     authorize: "Autoriseren"
+    deny: "Annuleren"
     read: "lezen"
     read_write: "lezen/schrijven"
-    description: '''%{application_name}'' vraagt de volgende toegang tot je account:'
     instructions: 'We hebben zojuist een nieuwe API-gebruikerssleutel voor je gegenereerd voor gebruik met ''%{application_name}''. Plak de volgende link in je toepassing:'
     otp_description: 'Wil je ''%{application_name}'' toegang tot deze website geven?'
     otp_confirmation:
@@ -1696,7 +1692,6 @@ nl:
     manifest_icon: "Afbeelding die als logo/splashafbeelding op Android wordt gebruikt. Wordt automatisch verkleind naar 512 x 512. Bij leeg laten wordt large_icon gebruikt."
     manifest_screenshots: "Schermafbeeldingen die de eigenschappen en functies van je instantie tonen op de installatiepromptpagina. Alle afbeeldingen moeten lokale uploads zijn en dezelfde afmetingen hebben."
     favicon: "Een favicon voor je website, zie <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://nl.wikipedia.org/wiki/Favicon</a>.  Om goed via een CDN te werken, moet dit een png zijn. Wordt verkleind naar 32x32. Bij leeg laten wordt large_icon gebruikt."
-    apple_touch_icon: "Pictogram voor Apple touch-apparaten. Een doorzichtige achtergrond wordt niet aanbevolen. De grootte wordt automatisch aangepast naar 180x180. Bij leeg laten wordt large_icon gebruikt."
     opengraph_image: "Standaard opengraph-afbeelding, gebruikt wanneer de pagina geen andere geschikte afbeelding bevat. Bij leeg laten wordt large_icon gebruikt."
     x_summary_large_image: "Twitter-kaart 'grote samenvattingsafbeelding' (moet minimaal 280 breed en minimaal 150 hoog zijn, mag geen .svg zijn). Als dit leeg wordt gelaten, worden reguliere kaartmetagegevens gegenereerd met behulp van de opengraph_image, zolang dat niet ook een .svg is"
     notification_email: "Het Van:-e-mailadres adres dat wordt gebruikt voor het verzenden van alle essentiële systeem-e-mails. Het hier opgegeven domein moet goed ingestelde SPF-, DKIM- en reverse-PTR-records hebben om e-mails te doen aankomen."
@@ -1923,7 +1918,6 @@ nl:
     invite_link_max_redemptions_limit_users: "Het maximaal toegestane aantal verzilveringen van uitnodigingslinks gegenereerd door reguliere gebruikers mag niet hoger zijn dan deze waarde."
     alert_admins_if_errors_per_minute: "Aantal foutmeldingen per minuut waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
     alert_admins_if_errors_per_hour: "Aantal foutmeldingen per uur waarbij de beheerder een melding krijgt. Een waarde van 0 schakelt deze functie uit. OPMERKING: vereist herstart."
-    categories_topics: "Aantal topics dat op de pagina /categories wordt weergegeven. Als dit op 0 is ingesteld, wordt automatisch naar een waarde gezocht die de twee kolommen symmetrisch houdt (categorieën en topics)."
     suggested_topics: "Aantal uitgelichte topics onderaan een topic."
     limit_suggested_to_category: "Alleen topics van de huidige categorie weergeven in uitgelichte topics."
     suggested_topics_max_days_old: "Voorgestelde topics mogen niet meer dan n dagen oud zijn."
@@ -1991,35 +1985,22 @@ nl:
     tl3_requires_likes_given: "Het minimale aantal likes dat in de afgelopen (tl3 time period) dagen moet worden gegeven om voor promotie naar vertrouwensniveau 3 in aanmerking te komen."
     tl3_requires_likes_received: "Het minimale aantal likes dat in de afgelopen (tl3 time period) dagen moet worden ontvangen om voor promotie naar vertrouwensniveau 3 in aanmerking te komen."
     tl3_links_no_follow: "Verwijder rel=nofollow niet uit links die door gebruikers met vertrouwensniveau 3 zijn geplaatst."
-    tl4_delete_posts_and_topics: "Sta TL4-gebruikers toe berichten en topics te verwijderen die door andere gebruikers zijn gemaakt. TL4-gebruikers kunnen ook verwijderde topics en berichten zien."
     delete_all_posts_and_topics_allowed_groups: "Groepen mogen berichten en topics verwijderen die door andere gebruikers zijn gemaakt. Deze groepen kunnen ook verwijderde topics en berichten zien."
     edit_all_topic_groups: "Sta gebruikers in deze groep toe om topictitels, tags en categorieën van andere gebruikers te bewerken"
     edit_all_post_groups: "Sta gebruikers in deze groep toe berichten van andere gebruikers te bewerken"
-    min_trust_to_create_topic: "Het minimale vertrouwensniveau dat nodig is om een topic te maken."
     create_topic_allowed_groups: "Groepen die nieuwe topics kunnen maken. Beheerders en moderators kunnen altijd topics maken."
     allow_flagging_staff: "Wanneer ingeschakeld, kunnen gebruikers berichten van medewerkeraccounts markeren."
-    min_trust_to_edit_wiki_post: "Het minimale vertrouwensniveau dat nodig is om een bericht te bewerken dat als wiki is gemarkeerd."
     edit_wiki_post_allowed_groups: "Groepen die berichten gemarkeerd als wiki kunnen bewerken. Beheerders en moderators kunnen berichten gemarkeerd als wiki altijd bewerken."
-    min_trust_to_edit_post: "Het minimale vertrouwensniveau dat nodig is om berichten te bewerken."
     edit_post_allowed_groups: "Groepen die berichten kunnen bewerken. Beheerders en moderators kunnen berichten altijd bewerken."
-    min_trust_to_allow_self_wiki: "Het minimale vertrouwensniveau dat nodig is om een gebruiker een eigen bericht naar een wiki te laten omzetten."
     self_wiki_allowed_groups: "Sta gebruikers in deze groepen toe om hun eigen berichtenwiki te maken. Beheerders en moderators kunnen altijd hun eigen berichtenwiki maken."
     min_trust_to_send_messages: "VEROUDERD, gebruik in plaats daarvan de instelling 'groepen met persoonlijke berichten ingeschakeld'. Het minimale vertrouwensniveau dat vereist is om nieuwe persoonlijke berichten te maken."
-    min_trust_to_send_email_messages: "Het minimale vertrouwensniveau dat vereist is om persoonlijke berichten te sturen via e-mail."
     send_email_messages_allowed_groups: "Groepen die persoonlijke berichten kunnen sturen via e-mail. Beheerders en moderators kunnen altijd persoonlijke berichten sturen via e-mail."
-    min_trust_to_flag_posts: "Het minimale vertrouwensniveau dat nodig is om berichten te markeren"
     flag_post_allowed_groups: "Groepen die berichten kunnen markeren. Beheerders en moderators kunnen berichten altijd markeren."
-    min_trust_to_post_links: "Het minimale vertrouwensniveau dat nodig is om links op te nemen in berichten"
     post_links_allowed_groups: "Groepen die links kunnen opnemen in berichten. Beheerders en moderators kunnen altijd links opnemen in berichten."
-    min_trust_to_post_embedded_media: "Het minimale vertrouwensniveau dat nodig is om media-items in een bericht in te bedden"
     embedded_media_post_allowed_groups: "De gebruikers in deze groepen kunnen media-items insluiten in berichten. Beheerders en moderators kunnen altijd media-items insluiten."
-    min_trust_level_to_allow_profile_background: "Het minimale vertrouwensniveau dat nodig is om een profielachtergrond te uploaden"
     profile_background_allowed_groups: "Groepen die een profielachtergrond kunnen uploaden. Beheerders en moderators kunnen altijd een profielachtergrond uploaden."
-    min_trust_level_to_allow_user_card_background: "Het minimale vertrouwensniveau dat nodig is om een gebruikerskaartachtergrond te uploaden"
     user_card_background_allowed_groups: "Groepen die een gebruikerskaartachtergrond kunnen uploaden. Beheerders en moderators kunnen altijd een gebruikerskaartachtergrond uploaden."
-    min_trust_level_to_allow_invite: "Het minimale vertrouwensniveau dat nodig is om gebruikers uit te nodigen"
     invite_allowed_groups: "Groepen die gebruikers kunnen uitnodigen. Beheerders en moderators kunnen altijd gebruikers uitnodigen."
-    min_trust_level_to_allow_ignore: "Het minimale vertrouwensniveau dat nodig is om gebruikers te negeren"
     ignore_allowed_groups: "Groepen die andere gebruikers kunnen negeren. Beheerders en moderators kunnen andere gebruikers altijd negeren."
     allowed_link_domains: "Domeinen waar gebruikers naartoe mogen linken, ook als ze niet het juiste vertrouwensniveau hebben om links te plaatsen"
     newuser_max_links: "Hoeveel links een nieuwe gebruiker kan toevoegen aan een bericht."
@@ -2032,7 +2013,6 @@ nl:
     enable_mentions: "Staat gebruikers toe elkaar te taggen of naar elkaar te verwijzen in hun berichten met het '@'-symbool."
     here_mention: "De naam die wordt gebruikt voor een @vermelding zodat gemachtigde gebruikers maximaal 'max_here_mentioned' mensen die aan de topic deelnemen op de hoogte kunnen stellen. Mag geen bestaande gebruikersnaam zijn."
     max_here_mentioned: "Maximaal aantal genoemde personen door @hier."
-    min_trust_level_for_here_mention: "Het minimale vertrouwensniveau dat is toegestaan om @hier te vermelden."
     here_mention_allowed_groups: "Groepen die @here kunnen vermelden. Beheerders en moderators kunnen altijd @here vermelden."
     create_thumbnails: "Miniaturen maken voor lightbox-afbeeldingen die te groot zijn om in een bericht te passen."
     email_time_window_mins: "(n) minuten wachten met het verzenden van meldingen per e-mail, zodat gebruikers de kans hebben om hun berichten te bewerken en te voltooien."
@@ -2156,18 +2136,10 @@ nl:
     pop3_polling_delete_from_server: "Verwijder e-mails van de server. OPMERKING: als je dit uitschakelt, moet je je e-mail handmatig opschonen."
     log_mail_processing_failures: "Alle fouten van e-mailverwerking opslaan in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Sta gebruikers toe om nieuwe topics te plaatsen via e-mail. Na het inschakelen van deze instelling kun je inkomende e-mailadressen configureren voor groepen en categorieën."
-    email_in_min_trust: "Het minimale vertrouwensniveau dat een gebruiker moet hebben om nieuwe topics te kunnen plaatsen via e-mail."
     email_in_allowed_groups: "Groepen die nieuwe topics mogen plaatsen via e-mail. Beheerders en moderators kunnen altijd nieuwe topics plaatsen via e-mail."
     email_in_authserv_id: "De ID van de service die verificatiecontroles op inkomende e-mails uitvoert. Zie <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> voor instructies over het configureren hiervan."
     email_in_spam_header: "Selecteert de specifieke e-mailheader die moet worden gebruikt voor het identificeren van spam. Deze optie kan X-Spam-Flag, X-Spam-Status of X-SES-Spam-Verdict zijn. De e-mail wordt als spam geclassificeerd op basis van de waarde van de header. Als de gekozen instelling bijvoorbeeld X-Spam-Flag is, wordt een e-mail waarvoor deze headerwaarde is ingesteld op JA als spam geclassificeerd."
-    enable_imap: "IMAP inschakelen voor het synchroniseren van groepsberichten."
-    enable_imap_write: "IMAP-synchronisatie in twee richtingen inschakelen. Wanneer uitgeschakeld, zijn alle schrijfbewerkingen op IMAP-accounts uitgeschakeld."
-    enable_imap_idle: "IMAP IDLE-mechanisme gebruiken voor het wachten op nieuwe e-mails."
     enable_smtp: "SMTP inschakelen voor het sturen van meldingen voor groepsberichten."
-    imap_polling_period_mins: "De periode in minuten tussen het controleren van de IMAP-accounts op e-mail."
-    imap_polling_old_emails: "Het maximale aantal oude e-mails (verwerkt) dat telkens bij het pollen van een IMAP-postvak moet worden bijgewerkt (0 voor alle)."
-    imap_polling_new_emails: "Het maximale aantal nieuwe e-mails (onverwerkt) dat telkens bij het pollen van een IMAP-postvak moet worden bijgewerkt."
-    imap_batch_import_email: "Het minimale aantal nieuwe e-mails dat de importmodus activeert (schakelt berichtmeldingen uit)."
     email_prefix: "Het [label] dat in het onderwerp van e-mails wordt gebruikt. Als niets is ingevuld, wordt 'titel' gebruikt."
     email_site_title: "De titel van de website die als de afzender van e-mails van de website wordt gebruikt. Standaard wordt 'titel' gebruikt als niets is ingesteld. Gebruik deze instelling als je 'titel' tekens bevat die niet in tekenreeksen van e-mailafzenders zijn toegestaan."
     find_related_post_with_key: "Alleen de 'reply key' gebruiken om het beantwoorde bericht te vinden. WAARSCHUWING: uitschakelen hiervan staat imitatie van gebruikers op basis van e-mailadres toe."
@@ -2179,7 +2151,6 @@ nl:
     username_change_period: "Het maximale aantal dagen na registratie dat accounts hun gebruikersnamen kunnen wijzigen (0 om wijziging niet toe te staan)."
     email_editable: "Gebruikers mogen hun e-mailadres na registratie nog wijzigen."
     logout_redirect: "Locatie om browser naar om te leiden na afmelding (bv. https://example.com/logout)"
-    allow_uploaded_avatars: "Gebruikers mogen eigen profielafbeeldingen uploaden."
     uploaded_avatars_allowed_groups: "Geef aan welke groepen aangepaste profielfoto's mogen uploaden."
     default_avatars: "URL's naar standaard te gebruiken avatars voor nieuwe gebruikers, totdat ze deze wijzigen."
     automatically_download_gravatars: "Gravatars voor gebruikers downloaden bij accountaanmaak of wijziging van e-mailadres."
@@ -2212,8 +2183,6 @@ nl:
     delete_associated_accounts_on_password_reset: "Verwijder het aan de gebruiker gekoppelde account wanneer deze het wachtwoord wijzigt."
     allow_featured_topic_on_user_profiles: "Sta gebruikers toe een link naar een topic uit te lichten op hun gebruikerskaart en profiel."
     show_inactive_accounts: "Aangemelde gebruikers mogen profielen van inactieve accounts doorbladeren."
-    hide_silencing_reasons: "Dempingsredenen niet openbaar weergeven in gebruikersprofielen."
-    hide_suspension_reasons: "Schorsingsredenen niet openbaar weergeven op gebruikersprofielen."
     log_personal_messages_views: "PB-weergaven door beheerder voor andere gebruikers/groepen loggen."
     ignored_users_count_message_threshold: "Moderators inlichten als een bepaalde gebruiker door dit aantal andere gebruikers wordt genegeerd."
     ignored_users_message_gap_days: "Wachttijd voordat moderators opnieuw worden ingelicht over een gebruiker die door veel andere wordt genegeerd."
@@ -2226,7 +2195,6 @@ nl:
     dont_feed_the_trolls_threshold: "Aantal markeringen van andere gebruikers voordat er wordt gewaarschuwd."
     enable_mobile_theme: "Mobiele apparaten gebruiken een mobielvriendelijk thema, met de mogelijkheid om naar de volledige website over te schakelen. Schakel dit uit als je een eigen stylesheet wilt gebruiken dat volledig responsief is."
     dominating_topic_minimum_percent: "Het percentage berichten dat een gebruiker in een topic moet maken voordat deze aan het te veel domineren van een topic wordt herinnerd."
-    pm_warn_user_last_seen_months_ago: "Waarschuw gebruikers bij het maken van een nieuw PB wanneer de doelontvanger meer dan n maanden niet is gezien."
     suppress_uncategorized_badge: "De badge voor ongecategoriseerde topics niet in topiclijsten weergeven."
     header_dropdown_category_count: "Het aantal categorieën dat in het header-vervolgkeuzemenu kan worden weergegeven."
     permalink_normalizations: "De volgende reguliere expressie toepassen voordat permalinks worden verwerkt. Voorbeeld: /(topic.*)\\?.*/\\1 verwijdert querystrings uit topicroutes. Notatie is regex+strings, gebruik \\1 etc. voor deeluitdrukkingen."
@@ -2288,9 +2256,7 @@ nl:
     enable_inline_emoji_translation: "Schakelt vertaling voor inline emoji in (zonder voorafgaande spaties of interpunctie)"
     emoji_deny_list: "Deze emoji zijn niet beschikbaar voor gebruik in menu's of shortcodes."
     approve_post_count: "Het aantal berichten van een nieuwe of basisgebruiker dat moet worden goedgekeurd"
-    approve_unless_trust_level: "Berichten gemaakt door gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
     approve_unless_allowed_groups: "Berichten gemaakt door gebruikers die niet tot deze groepen behoren, moeten worden goedgekeurd. Berichten gemaakt door beheerders en moderators worden altijd goedgekeurd."
-    approve_new_topics_unless_trust_level: "Nieuwe topics gemaakt door gebruikers onder dit vertrouwensniveau moeten worden goedgekeurd"
     approve_new_topics_unless_allowed_groups: "Nieuwe topics gemaakt door gebruikers die niet tot deze groepen behoren, moeten worden goedgekeurd. Topics gemaakt door beheerders en moderators worden altijd goedgekeurd."
     approve_unless_staged: "Nieuwe topics en berichten gemaakt door gefaseerde gebruikers moeten worden goedgekeurd"
     notify_about_queued_posts_after: "Als er berichten zijn die meer dan dit aantal uren op beoordeling wachten, een melding naar alle moderators sturen. Stel dit in op 0 om deze meldingen uit te schakelen."
@@ -2306,7 +2272,6 @@ nl:
     new_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van nieuwe gebruikers te zien."
     returning_user_notice_tl: "Het minimale vertrouwensniveau dat nodig is om berichtmeldingen van terugkerende gebruikers te zien."
     returning_users_days: "Het aantal dagen dat voorbij moet gaan voordat een gebruiker als terugkerend wordt beschouwd."
-    review_media_unless_trust_level: "Medewerkers beoordelen berichten van gebruikers met een lager vertrouwensniveau als ze ingesloten media bevatten."
     skip_review_media_groups: "Van gebruikers die niet tot een van deze groepen behoren, worden de berichten ter beoordeling naar het personeel gestuurd als het bericht ingesloten media bevat. Berichten gemaakt door beheerders en moderators zijn altijd toegestaan."
     blur_tl0_flagged_posts_media: "Afbeeldingen van gemarkeerde berichten vervagen om mogelijke NVVW-inhoud te verbergen."
     enable_page_publishing: "Sta medewerkers toe om topics te publiceren naar nieuwe URL's met hun eigen stijl."
@@ -2358,9 +2323,6 @@ nl:
     revoke_api_keys_unused_days: "Aantal dagen sinds het laatste gebruik van een API-sleutel voordat deze automatisch wordt ingetrokken (0 voor nooit)"
     revoke_api_keys_maxlife_days: "Aantal dagen voordat een API-sleutel automatisch wordt ingetrokken (0 voor nooit)"
     allow_user_api_key_scopes: "Lijst van toegestane scopes voor API-sleutels van gebruiker"
-    min_trust_level_for_user_api_key: |
-      Vereist vertrouwensniveau voor het genereren van API-sleutels voor gebruikers.<br>
-      <b>WAARSCHUWING</b>: als je het vertrouwensniveau wijzigt, kunnen gebruikers met een lager vertrouwensniveau zich niet aanmelden via Discourse Hub
     user_api_key_allowed_groups: |
       Groepslidmaatschap vereist voor het genereren van gebruikers-API-sleutels.<br>
       <b>WAARSCHUWING</b>: wijziging van het vertrouwensniveau voorkomt dat gebruikers met een lager vertrouwensniveau zich aanmelden via Discourse Hub.<br>
@@ -2370,7 +2332,6 @@ nl:
     revoke_user_api_keys_unused_days: "Aantal dagen sinds het laatste gebruik van een gebruikers-API-sleutel voordat deze automatisch wordt ingetrokken (0 voor nooit)"
     revoke_user_api_keys_maxlife_days: "Aantal dagen voordat een gebruikers-API-sleutel automatisch wordt ingetrokken (0 voor nooit)"
     tagging_enabled: "Tags inschakelen voor topics? Zie de <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Beheerdersgids voor tags op Meta</a> voor meer informatie."
-    min_trust_to_create_tag: "Het minimale vertrouwensniveau dat nodig is om een tag te maken."
     create_tag_allowed_groups: "Groepen die tags kunnen maken. Beheerders en moderators kunnen altijd tags maken."
     edit_tags_allowed_groups: "Groepen die tags, tagbeschrijvingen en tagsynoniemen mogen bewerken."
     max_tags_per_topic: "De maximale tags die op een topic kunnen worden toegepast."
@@ -2383,7 +2344,6 @@ nl:
     tags_listed_by_group: "Tags vermelden op tag-groep op de <a href='%{base_path}/tags' target='_blank'>pagina Tags</a>."
     tag_style: "Bepaal het visuele uiterlijk van tagbadges op de site. Met deze instelling kun je aanpassen hoe tags visueel worden weergegeven op alle delen van de site, wat de consistentie van de lay-out en de toegankelijkheid voor gebruikers verbetert."
     pm_tags_allowed_for_groups: "Sta leden van opgenomen groepen toe om elk persoonlijk bericht te taggen"
-    min_trust_level_to_tag_topics: "Het minimale vertrouwensniveau dat nodig is om topics te taggen"
     tag_topic_allowed_groups: "Groepen die topics kunnen taggen. Beheerders en moderators kunnen topics altijd taggen."
     suppress_overlapping_tags_in_list: "Als tags exacte overeenkomsten met woorden in topictitels hebben, de tag niet weergeven"
     remove_muted_tags_from_latest: "Topics met alleen gedempte tags niet weergeven in de lijst van nieuwste topics."
@@ -2394,7 +2354,6 @@ nl:
     governing_law: "Geef het rechtsgebied op dat de juridische aspecten van de site beheerst, inclusief de Gebruiksvoorwaarden en het Privacybeleid. Dit is meestal het land of de staat waar het bedrijf dat de site beheert is geregistreerd of zaken doet."
     city_for_disputes: "Geef de plaats op die wordt gebruikt als rechtsgebied voor het oplossen van geschillen met betrekking tot het gebruik van dit forum. Deze informatie wordt meestal opgenomen in juridische documenten zoals de Gebruiksvoorwaarden van het forum."
     shared_drafts_category: "Schakel de functie Gedeelde concepten in door een categorie voor topicconcepten aan te geven. Topics in deze categorie worden onderdrukt in topiclijsten voor medewerkers."
-    shared_drafts_min_trust_level: "Gebruikers mogen gedeelde concepten zien en bewerken."
     shared_drafts_allowed_groups: "Sta gebruikers in deze groepen toe gedeelde concepten te bekijken en te bewerken."
     push_notifications_prompt: "Geef een toestemmingsbanner voor pushmeldingen weer. Deze instelling zorgt ervoor dat gebruikers om toestemming worden gevraagd voor het sturen van pushmeldingen. Deze vraag wordt alleen weergegeven als pushmeldingen nog niet zijn ingeschakeld, worden ondersteund door het apparaat van de gebruiker en de gebruiker een bericht heeft geplaatst of een progressieve webapp (PWA) gebruikt. De vraag wordt niet meer weergegeven als de gebruiker deze al heeft gesloten of toestemming heeft gegeven/geweigerd."
     push_notifications_icon: "Het badgepictogram dat in de meldingshoek wordt weergegeven. Een eenkleurige PNG van 96×96 met transparantie wordt aanbevolen."
@@ -2431,7 +2390,6 @@ nl:
     default_navigation_menu_categories: "De geselecteerde categorieën worden standaard weergegeven in de sectie Categorieën van het navigatiemenu."
     default_navigation_menu_tags: "De geselecteerde tags worden standaard weergegeven in de sectie Tags van het navigatiemenu."
     experimental_new_new_view_groups: 'Schakel een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en laat de link "Alles" in de zijbalk ernaartoe verwijzen.'
-    experimental_form_templates: "Schakel de functie Formuliersjablonen in. Beheer de sjablonen via <a href='%{base_path}/admin/customize/form-templates'>Aanpassen / Sjablonen</a>."
     show_preview_for_form_templates: "Schakel het voorbeeld voor formuliersjablonenfunctie in"
     lazy_load_categories_groups: "Laad categorie-informatie op luie wijze, alleen voor gebruikers van deze groepen. Dit verbetert de prestaties op sites met veel categorieën."
     experimental_auto_grid_images: "Afbeeldingen worden automatisch tussen [grid]-tags geplaatst wanneer er 3 of meer afbeeldingen worden geüpload in de editor."
@@ -2448,7 +2406,6 @@ nl:
     default_composition_mode: "Stel de standaardmodus in voor de editor van je community. De rich text modus biedt een modernere, vertrouwde schrijfervaring voor de meeste gebruikers, terwijl de Markdown-modus geschikter kan zijn voor een technischer publiek. Leden kunnen van modus wisselen met een schakelaar op de editorwerkbalk."
     reviewable_ui_refresh: "Groepen die de experimentele nieuwe gebruikersinterface in de beoordelingswachtrij kunnen gebruiken."
     content_localization_enabled: "Geeft gelokaliseerde content weer voor gebruikers op basis van hun browser- of taalvoorkeuren. Dergelijke content kan categorieën, tags, berichten en onderwerpen omvatten. Ondersteunde talen worden ingesteld in 'content localization supported locales'."
-    content_localization_supported_locales: "Lijst van ondersteunde talen waarnaar gebruikerscontent kan worden vertaald. Vereist 'content localization enabled'."
     content_localization_allowed_groups: "Groepen mogen gelokaliseerde content bijwerken. Vereist 'content localization enabled'."
     errors:
       invalid_css_color: "Ongeldige kleur. Voer een kleurnaam of hexadecimale waarde in."
@@ -3178,6 +3135,7 @@ nl:
         Terwijl je deelneemt hier, leren we je kennen en worden tijdelijke beperkingen voor nieuwe gebruikers opgeheven. Na verloop van tijd krijg je [vertrouwensniveaus](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) met speciale mogelijkheden om ons te helpen onze community samen te beheren.
     welcome_user:
       title: "Welkom gebruiker"
+      preview: "Welkom bij %{site_name}!"
       subject_template: "Welkom bij %{site_name}!"
       text_body_template: |
         Fijn dat je lid bent geworden van %{site_name}, en welkom!
@@ -3205,6 +3163,7 @@ nl:
         Met macht komt verantwoordelijkheid. Als modereren nieuw is voor je, raadpleeg dan de [Moderatiegids](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Welkomstuitnodiging"
+      preview: "Welkom bij %{site_name}!"
       subject_template: "Welkom bij %{site_name}!"
       text_body_template: |
         Bedankt voor het accepteren van de uitnodiging voor %{site_name} -- welkom!
@@ -3620,6 +3579,7 @@ nl:
         Dit kan worden gewijzigd via de website-instellingen `newuser_spam_host_threshold` en `allowed_spam_host_domains`. Overweeg %{domains} toe te voegen aan de toelatingslijst als deze moeten worden uitgezonderd.
     unsilenced:
       title: "Demping opgeheven"
+      preview: "Account niet meer geblokkeerd."
       subject_template: "Account niet meer geblokkeerd"
       text_body_template: |
         Hallo,
@@ -3668,8 +3628,6 @@ nl:
     [Klik hier](%{unsubscribe_url}) om je af te melden voor deze e-mails.
   subject_re: "Re:"
   subject_pm: "[PB]"
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Eerdere antwoorden"
     reached_limit:
@@ -4003,6 +3961,7 @@ nl:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Aanmelden via link"
+      preview: "Aanmelden via link."
       subject_template: "[%{email_prefix}] Aanmelden via link"
       text_body_template: |
         Dit is je link om je aan te melden bij [%{site_name}](%{base_url}).
@@ -4943,6 +4902,8 @@ nl:
     deprecation_error_label: Laat Javascript-deprecaties een foutmelding geven
     enter: "Veilige modus starten"
     must_select: "Je moet ten minste één optie selecteren om naar de veilige modus te gaan."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse instellen"
     step:
@@ -4998,6 +4959,10 @@ nl:
       review_by: "Review door"
       pr_summary: "%{commits} commits hebben %{changed_files} bestanden gewijzigd met %{additions} toevoegingen en %{deletions} verwijderingen"
       no_description: "Draag bij aan de ontwikkeling van %{repo} door een account te maken op GitHub."
+      status_date:
+        open: "geopend"
+        approved: "goedgekeurd"
+        closed: "gesloten"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} heeft je genoemd in ''%{topic}'' - %{site_title}'
@@ -5032,8 +4997,6 @@ nl:
     api_post_delete: "Verwijderd via API"
     reminder_deleted: "Vervangen door nieuwe herinnering"
     user_associated_posts_deleted: "Gebruiker is vernietigd"
-    imap_email_deleted: "E-mail is verwijderd op de IMAP-server"
-    imap_email_marked_as_spam: "E-mail is verplaatst naar spam op de IMAP-server"
     auto_deleted_hidden_posts: "Verborgen berichten automatisch vernietigd"
     seed_data_topic_updated: "Seeddatatopic bijgewerkt"
     seed_data_topic_deleted: "Seeddatatopic verwijderd"
@@ -5105,19 +5068,14 @@ nl:
         description: "Ga akkoord met de markering en verberg dit bericht, stuur de gebruiker automatisch een bericht waarin deze wordt aangespoord het gemarkeerde bericht te bewerken."
         complete: "Bericht verborgen, gebruiker is geïnformeerd."
       agree_and_edit:
-        title: "Akkoord en bericht bewerken"
         description: "Ga akkoord met de markering en open een editorvenster om het bericht te bewerken."
         complete: "Markering bevestigd, je kunt het bericht nu bewerken."
       delete:
         title: "Verwijderen"
         complete: "Bericht verwijderd."
       delete_and_ignore:
-        title: "Markering negeren en bericht verwijderen"
-        description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht. Als dit het eerste bericht is, wordt het topic ook verwijderd. "
         complete: "Bericht verwijderd."
       delete_and_ignore_replies:
-        title: "Markering negeren, bericht en antwoorden verwijderen"
-        description: "Negeer de markering door deze uit de wachtrij te verwijderen en verwijder het bericht en alle antwoorden. Als dit het eerste bericht is, wordt het topic ook verwijderd"
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       delete_and_agree:
@@ -5130,11 +5088,12 @@ nl:
         confirm: "Weet je zeker dat je de antwoorden op het bericht ook wilt verwijderen?"
         complete: "Berichten en reacties verwijderd."
       disagree_and_restore:
-        title: "Nee, bericht herstellen"
-        description: "Het bericht herstellen, zodat alle gebruikers het kunnen zien."
+        title: "Bericht herstellen"
         complete: "Bericht hersteld."
-      disagree:
+      disagree_bundle:
         title: "Nee"
+      disagree:
+        title: "Bericht behouden"
         complete: "Markering genegeerd."
       discard_post:
         title: "Bericht weggooien"
@@ -5149,31 +5108,36 @@ nl:
         description: "Negeer de vlag door deze uit de wachtrij te verwijderen zonder enige actie te ondernemen. Verborgen berichten blijven verborgen en worden afgehandeld door de automatische tools."
         complete: "Markering genegeerd."
       approve:
-        title: "Goedkeuren"
+        title: "Ja"
         complete: "Bericht goedgekeurd."
       approve_post:
-        title: "Bericht goedkeuren"
+        title: "Ja"
         complete: "Bericht goedgekeurd."
       approve_post_closed:
-        title: "Bericht goedkeuren"
+        title: "Ja"
         confirm: "Dit topic is gesloten. Wil je het bericht toch maken?"
         complete: "Bericht goedgekeurd."
+      reject_post_bundle:
+        title: "Nee"
       reject_post:
         title: "Bericht weigeren"
         complete: "Bericht afgekeurd."
       approve_user:
-        title: "Gebruiker goedkeuren"
+        title: "Ja"
         complete: "Gebruiker goedgekeurd."
       reject_user:
-        title: "Gebruiker verwijderen…"
+        title: "Nee"
         delete:
           title: "Gebruiker verwijderen"
-          description: "De gebruiker wordt van het forum verwijderd."
           complete: "Gebruiker verwijderd."
         block:
           title: "Gebruiker verwijderen en blokkeren"
           description: "De gebruiker wordt verwijderd, en het IP- en e-mailadres ervan geblokkeerd."
           complete: "Gebruiker verwijderd en geblokkeerd."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nee"
       reject:
         title: "Weigeren"
         bundle_title: "Weigeren…"
@@ -5192,10 +5156,10 @@ nl:
       scrub:
         title: Record scrubben
       approve_and_restore:
-        title: "Bericht goedkeuren en herstellen"
+        title: "Ja"
         complete: "Bericht goedgekeurd en hersteld."
       approve_and_unhide:
-        title: "Bericht goedkeuren en zichtbaar maken"
+        title: "Ja"
         complete: "Bericht goedgekeurd en zichtbaar gemaakt"
       no_action_post:
         title: "Geen actie"

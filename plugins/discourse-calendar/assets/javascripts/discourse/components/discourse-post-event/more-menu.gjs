@@ -13,7 +13,11 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { cook } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
-import { buildParams, replaceRaw } from "../../lib/raw-event-helper";
+import {
+  buildParams,
+  removeEvent,
+  replaceRaw,
+} from "../../lib/raw-event-helper";
 import PostEventBuilder from "../modal/post-event-builder";
 import PostEventBulkInvite from "../modal/post-event-bulk-invite";
 import PostEventInviteUserOrGroup from "../modal/post-event-invite-user-or-group";
@@ -190,6 +194,43 @@ export default class DiscoursePostEventMoreMenu extends Component {
     this.modal.show(PostEventBuilder, {
       model: {
         event: this.args.event,
+        onDelete: async (event) => {
+          const post = await this.store.find("post", event.id);
+          const raw = post.raw;
+          const newRaw = removeEvent(raw);
+
+          const props = {
+            raw: newRaw,
+            edit_reason: i18n("discourse_post_event.destroy_event"),
+          };
+
+          const cooked = await cook(newRaw);
+          props.cooked = cooked.string;
+
+          return await post.save(props);
+        },
+        onUpdate: async (startsAt, endsAt, event, siteSettings) => {
+          const post = await this.store.find("post", event.id);
+          const raw = post.raw;
+          const eventParams = buildParams(
+            startsAt,
+            endsAt,
+            event,
+            siteSettings
+          );
+          const newRaw = replaceRaw(eventParams, raw);
+          if (newRaw) {
+            const props = {
+              raw: newRaw,
+              edit_reason: i18n("discourse_post_event.edit_reason"),
+            };
+
+            const cooked = await cook(newRaw);
+            props.cooked = cooked.string;
+
+            return await post.save(props);
+          }
+        },
       },
     });
   }

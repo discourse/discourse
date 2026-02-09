@@ -160,6 +160,11 @@ const ROUTES = {
   },
   "chat.starred-channels": {
     name: ChatDrawerRoutesStarredChannels,
+    redirect: (context) => {
+      if (!context.chatChannelsManager.hasStarredChannels) {
+        return "/chat/channels";
+      }
+    },
   },
   "chat.threads": {
     name: ChatDrawerRoutesThreads,
@@ -285,7 +290,7 @@ export default class ChatDrawerRouter extends Service {
       return false;
     }
 
-    return this.chatChannelsManager.hasThreadedChannels;
+    return this.chatChannelsManager.shouldShowMyThreads;
   }
 
   get hasDirectMessages() {

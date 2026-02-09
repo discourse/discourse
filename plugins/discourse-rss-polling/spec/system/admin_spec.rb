@@ -26,7 +26,7 @@ RSpec.describe "Rss Polling - admin", type: :system do
     category.select_row_by_value(category_1.id)
     tag = PageObjects::Components::SelectKit.new(".rss-polling-feed-tag")
     tag.search(tag_1.name)
-    tag.select_row_by_value(tag_1.name)
+    tag.select_row_by_name(tag_1.name)
     find(".save-rss-polling-feed").click
 
     expect(DiscourseRssPolling::RssFeed.last).to have_attributes(

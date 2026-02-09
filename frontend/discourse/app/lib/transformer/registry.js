@@ -11,6 +11,7 @@ export const BEHAVIOR_TRANSFORMERS = Object.freeze([
 
 export const VALUE_TRANSFORMERS = Object.freeze([
   // use only lowercase names
+  "admin-plugin-icon",
   "admin-reports-show-query-params",
   "bulk-select-in-nav-controls",
   "category-available-views",
@@ -29,6 +30,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "composer-service-cannot-submit-post",
   "composer-toggles-class",
   "create-topic-label",
+  "create-topic-button-class",
   "flag-button-disabled-state",
   "flag-button-dynamic-class",
   "flag-button-render-decision",
@@ -73,6 +75,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "poster-name-class",
   "poster-name-icons",
   "poster-name-user-title",
+  "preferences-save-attributes",
   "quote-params",
   "small-user-attrs",
   "tag-separator",

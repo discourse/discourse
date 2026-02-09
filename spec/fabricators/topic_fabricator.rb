@@ -29,6 +29,10 @@ Fabricator(:private_message_topic, from: :topic) do
   end
 end
 
+Fabricator(:system_message_topic, from: :private_message_topic) do
+  subtype TopicSubtype.system_message
+end
+
 Fabricator(:group_private_message_topic, from: :topic) do
   transient :recipient_group
   category_id { nil }

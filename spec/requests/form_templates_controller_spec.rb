@@ -134,8 +134,14 @@ RSpec.describe FormTemplatesController do
           # It excludes synonyms
           expect(parsed_template[0]["choices"].count).to eq(2)
 
-          expect(parsed_template[0]["choices"]).to eq([tag1.name, tag3.name])
-          expect(parsed_template[1]["choices"]).to eq([tag2.name, tag4.name])
+          expect(parsed_template[0]["choices"]).to contain_exactly(
+            { "id" => tag1.id, "name" => tag1.name },
+            { "id" => tag3.id, "name" => tag3.name },
+          )
+          expect(parsed_template[1]["choices"]).to contain_exactly(
+            { "id" => tag2.id, "name" => tag2.name },
+            { "id" => tag4.id, "name" => tag4.name },
+          )
         end
 
         it "should return a single template with the correct data in order" do
@@ -149,7 +155,13 @@ RSpec.describe FormTemplatesController do
 
           current_template = json["form_template"]
           parsed_template = YAML.safe_load(current_template["template"])
-          expect(parsed_template[0]["choices"]).to eq([tag1.name, new_tag.name, tag3.name])
+          expect(parsed_template[0]["choices"]).to eq(
+            [
+              { "id" => tag1.id, "name" => tag1.name },
+              { "id" => new_tag.id, "name" => new_tag.name },
+              { "id" => tag3.id, "name" => tag3.name },
+            ],
+          )
         end
       end
     end

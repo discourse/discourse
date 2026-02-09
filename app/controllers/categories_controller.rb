@@ -34,6 +34,7 @@ class CategoriesController < ApplicationController
 
   SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR = 1.5
   MIN_CATEGORIES_TOPICS = 5
+  MAX_CATEGORIES_TOPICS = 100
   MAX_CATEGORIES_LIMIT = 25
 
   def redirect
@@ -135,9 +136,24 @@ class CategoriesController < ApplicationController
     render_serialized(@category, CategorySerializer)
   end
 
+  MAX_DESCRIPTION_PARAM_LENGTH = 1000
   def create
     guardian.ensure_can_create!(Category)
     position = category_params.delete(:position)
+
+    if category_params[:description].present? &&
+         category_params[:description].size > MAX_DESCRIPTION_PARAM_LENGTH
+      render json: {
+               errors: [
+                 I18n.t(
+                   "category.errors.description_too_long",
+                   count: MAX_DESCRIPTION_PARAM_LENGTH,
+                 ),
+               ],
+             },
+             status: :unprocessable_entity
+      return
+    end
 
     @category =
       begin
@@ -185,7 +201,7 @@ class CategoriesController < ApplicationController
       category_params[:minimum_required_tags] = 0 if category_params[:minimum_required_tags]&.blank?
 
       old_permissions = cat.permissions_params
-      old_permissions = { "everyone" => 1 } if old_permissions.empty?
+      old_permissions = { Group[:everyone].name => 1 } if old_permissions.empty?
 
       if result = cat.update(category_params)
         Category.preload_user_fields!(guardian, [cat])
@@ -322,62 +338,20 @@ class CategoriesController < ApplicationController
   def hierarchical_search
     term = params[:term].to_s.strip
     page = [1, params[:page].to_i].max
-    offset = params[:offset].to_i
-    parent_category_id = params[:parent_category_id].to_i if params[:parent_category_id].present?
-    only =
-      if params[:only].present?
-        Category.secured(guardian).where(id: params[:only].to_a.map(&:to_i))
-      else
-        Category.secured(guardian)
-      end
-    except_ids = params[:except].to_a.map(&:to_i)
-    include_uncategorized =
-      (
-        if params[:include_uncategorized].present?
-          ActiveModel::Type::Boolean.new.cast(params[:include_uncategorized])
-        else
-          true
-        end
-      )
-
-    except_ids << SiteSetting.uncategorized_category_id unless include_uncategorized
-
-    except = Category.where(id: except_ids) if except_ids.present?
-
-    limit =
-      (
-        if params[:limit].present?
-          params[:limit].to_i.clamp(1, MAX_CATEGORIES_LIMIT)
-        else
-          MAX_CATEGORIES_LIMIT
-        end
-      )
+    only_ids = params[:only].map(&:to_i) if params[:only].present?
+    except_ids = params[:except].map(&:to_i) if params[:except].present?
 
     categories =
-      Category
-        .secured(guardian)
-        .limited_categories_matching(only, except, parent_category_id, term)
-        .preload(
-          :uploaded_logo,
-          :uploaded_logo_dark,
-          :uploaded_background,
-          :uploaded_background_dark,
-          :tags,
-          :tag_groups,
-          :form_templates,
-          category_required_tag_groups: :tag_group,
-        )
-        .joins("LEFT JOIN topics t on t.id = categories.topic_id")
-        .select("categories.*, t.slug topic_slug")
-        .limit(limit)
-        .offset((page - 1) * limit + offset)
-        .to_a
-
-    if Site.preloaded_category_custom_fields.present?
-      Category.preload_custom_fields(categories, Site.preloaded_category_custom_fields)
-    end
-
-    Category.preload_user_fields!(guardian, categories)
+      CategoryHierarchicalSearch.call(
+        guardian: guardian,
+        params: {
+          term:,
+          only_ids:,
+          except_ids:,
+          limit: MAX_CATEGORIES_LIMIT,
+          offset: (page - 1) * MAX_CATEGORIES_LIMIT,
+        },
+      ).categories
 
     response = { categories: serialize_data(categories, SiteCategorySerializer, scope: guardian) }
 
@@ -498,12 +472,12 @@ class CategoriesController < ApplicationController
 
   private
 
-  def self.topics_per_page
+  def topics_per_page
     return SiteSetting.categories_topics if SiteSetting.categories_topics > 0
 
-    count = Category.where(parent_category: nil).count
+    count = Category.secured(guardian).where(parent_category: nil).count
     count = (SYMMETRICAL_CATEGORIES_TO_TOPICS_FACTOR * count).to_i
-    count > MIN_CATEGORIES_TOPICS ? count : MIN_CATEGORIES_TOPICS
+    count.clamp(MIN_CATEGORIES_TOPICS, MAX_CATEGORIES_TOPICS)
   end
 
   def categories_and_topics(topics_filter)
@@ -576,6 +550,7 @@ class CategoriesController < ApplicationController
           :slug,
           :allow_badges,
           :topic_template,
+          :description,
           :sort_order,
           :sort_ascending,
           :topic_featured_link_allowed,
@@ -684,7 +659,7 @@ class CategoriesController < ApplicationController
         SiteSetting.desktop_category_page_style
       end
 
-    topic_options = { per_page: CategoriesController.topics_per_page, no_definitions: true }
+    topic_options = { per_page: topics_per_page, no_definitions: true }
     topic_options.merge!(build_topic_list_options)
     topic_options[:order] = "created" if SiteSetting.desktop_category_page_style ==
       "categories_and_latest_topics_created_date"

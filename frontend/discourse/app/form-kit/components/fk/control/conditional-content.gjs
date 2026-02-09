@@ -24,11 +24,20 @@ const Contents = <template>
 </template>;
 
 export default class FKControlConditionalContent extends Component {
-  @tracked activeName = this.args.activeName;
+  @tracked manuallySetName = null;
+
+  get activeName() {
+    // If onChange is provided, parent controls state - always use @activeName
+    if (this.args.onChange) {
+      return this.args.activeName;
+    }
+    return this.manuallySetName ?? this.args.activeName;
+  }
 
   @action
   setCondition(name) {
-    this.activeName = name;
+    this.manuallySetName = name;
+    this.args.onChange?.(name);
   }
 
   <template>

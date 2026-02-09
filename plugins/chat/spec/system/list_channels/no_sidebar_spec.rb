@@ -133,7 +133,7 @@ RSpec.describe "List channels | no sidebar", type: :system do
       expect(chat).to have_direct_message_channels_section
     end
 
-    context "with drawer prefered" do
+    context "with drawer preferred" do
       before { chat.prefers_drawer }
 
       it "shows the create direct message button in the drawer" do

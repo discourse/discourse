@@ -1,0 +1,31 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+fr:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privé"
+          public: "Public"
+      reports:
+        reading_time:
+          title: Temps de lecture
+        assignments:
+          title: Affectations
+        chat_usage:
+          messages: messages directs
+          status_online: "● en ligne"
+        invites:
+          title: Invitations
+          invitee_posts: Messages créés
+          invitee_likes: '« J''aime » donnés'
+          label_invitations_sent: "Invitations envoyées:"
+        new_user_interactions:
+          likes_given: '« J''aime » donnés'
+          mentions: Mentions
+        writing_analysis:
+          menu_other: Autre

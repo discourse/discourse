@@ -93,7 +93,7 @@ const PostVotingSmallUserList = <template>
   {{#if @list}}
     <div class="post-voting-post-list-voters-wrapper">
       <span class="post-voting-post-list-icon">
-        {{icon (if (eq @direction "up") "caret-up" "caret-down")}}
+        {{icon (if (eq @direction "up") "angle-up" "angle-down")}}
       </span>
       <span class="post-voting-post-list-count">{{@list.length}}</span>
       <SmallUserList class="post-voting-post-list-voters" @users={{@list}} />

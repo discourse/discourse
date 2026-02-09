@@ -10,6 +10,7 @@ nl:
       logs:
         staff_actions:
           actions:
+            update_automation: automatisering bijwerken
             delete_automation: automatisering verwijderen
     discourse_automation:
       title: Automatisering
@@ -58,13 +59,17 @@ nl:
             label: Inhoud
           delay:
             label: Vertraging (minuten)
-          prefers_encrypt:
-            label: Versleutelt PB indien beschikbaar
         group:
           label: Groep
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorieën
+            tags:
+              label: Tags
         not_found: Kon trigger '%{trigger}' voor automatisering '%{automation}' niet vinden. Controleer of de bijbehorende plug-in is geïnstalleerd
         user_badge_granted:
           fields:
@@ -422,6 +427,8 @@ nl:
           fields:
             custom_field_name:
               label: "Naam aangepast gebruikersveld"
+        set_topic_timer:
+          title: Topictimer instellen
       unnamed_automation: "Naamloze automatisering"
       models:
         script:

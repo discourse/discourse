@@ -22,6 +22,7 @@ import { pluginApiIdentifiers, selectKitOptions } from "./select-kit";
   scopedCategoryId: null,
   prioritizedCategoryId: null,
   readOnlyCategoryId: null,
+  displayCategoryDescription: true,
 })
 @pluginApiIdentifiers(["category-chooser"])
 export default class CategoryChooser extends ComboBoxComponent {

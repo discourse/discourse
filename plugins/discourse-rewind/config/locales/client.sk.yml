@@ -1,0 +1,29 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+sk:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Súkromné"
+          public: "Verejné"
+      reports:
+        reading_time:
+          title: Doba čítania
+        chat_usage:
+          messages: správy
+          status_online: "● online"
+        invites:
+          title: Pozvánky
+          invitee_posts: Vytvorené príspevky
+          invitee_likes: Rozdaných 'páči sa mi'
+          label_invitations_sent: "Pozvánok bola odoslaných:"
+        new_user_interactions:
+          likes_given: Rozdaných 'páči sa mi'
+          mentions: Zmienky
+        writing_analysis:
+          menu_other: Ostatné

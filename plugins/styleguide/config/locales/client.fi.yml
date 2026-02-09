@@ -59,8 +59,6 @@ fi:
           title: "Pystynavigointi"
         categories_list:
           title: "Alueluettelo"
-        topic_link:
-          title: "Ketjun linkki"
         topic_list_item:
           title: "Ketjulistauksen osa"
         topic_statuses:
@@ -69,8 +67,6 @@ fi:
           title: "Ketjulistaus"
         basic_topic_list:
           title: "Tavallinen ketjulistaus"
-        footer_message:
-          title: "Alatunnisteen viesti"
         signup_cta:
           title: "Rekisteröitymisen CTA"
         topic_timer_info:

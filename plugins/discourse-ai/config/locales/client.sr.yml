@@ -39,7 +39,7 @@ sr:
         disabled: "(isključeno)"
         groups: "Grupe:"
         no_groups: "Ništa"
-        edit: "Izmeni"
+        edit: "Podešavanje"
         expand_list:
           one: "(još %{count} članova)"
           few: "(još %{count} člana)"
@@ -78,6 +78,7 @@ sr:
       usage:
         summary: "Rezime"
         username: "Korisničko Ime"
+        total: "Ukupno"
         periods:
           last_day: "Последња 24 сата"
       ai_persona:

@@ -714,6 +714,10 @@ class TopicView
       )
   end
 
+  def linkbacks_for(post)
+    link_counts[post.id]&.select { |l| l[:reflection] && l[:title].present? }
+  end
+
   def pm_params
     @pm_params ||= TopicQuery.new(@user).get_pm_params(topic)
   end

@@ -11,7 +11,7 @@ describe "Admin upcoming changes", type: :system do
       {
         enable_upload_debug_mode: {
           impact: "other,developers",
-          status: :pre_alpha,
+          status: :experimental,
           impact_type: "other",
           impact_role: "developers",
         },
@@ -24,6 +24,7 @@ describe "Admin upcoming changes", type: :system do
       },
     )
 
+    SiteSetting.about_page_extra_groups_show_description = false
     sign_in(current_user)
   end
 
@@ -38,6 +39,29 @@ describe "Admin upcoming changes", type: :system do
     expect(
       upcoming_changes_page.change_item(:about_page_extra_groups_show_description),
     ).to have_impact_role(:all_members)
+  end
+
+  it "does not show conceptual upcoming changes" do
+    mock_upcoming_change_metadata(
+      {
+        enable_upload_debug_mode: {
+          impact: "other,developers",
+          status: :experimental,
+          impact_type: "other",
+          impact_role: "developers",
+        },
+        about_page_extra_groups_show_description: {
+          impact: "feature,all_members",
+          status: :conceptual,
+          impact_type: "feature",
+          impact_role: "all_members",
+        },
+      },
+    )
+
+    upcoming_changes_page.visit
+    expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
+    expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
   end
 
   # NOTE (martin): Skipped for now because it is flaky on CI, it will be something to do with the
@@ -55,12 +79,7 @@ describe "Admin upcoming changes", type: :system do
 
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
-    expect(page).to have_content(
-      I18n.t(
-        "admin_js.admin.upcoming_changes.change_enabled_for_success",
-        enabledFor: I18n.t("admin_js.admin.upcoming_changes.enabled_for_options.everyone").downcase,
-      ),
-    )
+    expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
     expect(SiteSetting.enable_upload_debug_mode).to be_truthy
 
@@ -68,7 +87,7 @@ describe "Admin upcoming changes", type: :system do
     upcoming_changes_page.visit
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
-    expect(page).to have_content(I18n.t("admin_js.admin.upcoming_changes.change_disabled"))
+    expect(upcoming_changes_page).to have_disabled_success_toast
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
 
     expect(SiteSetting.enable_upload_debug_mode).to be_falsey
@@ -79,12 +98,11 @@ describe "Admin upcoming changes", type: :system do
 
     # Add a group to test clearing behavior
     SiteSetting.enable_upload_debug_mode = true
-    SiteSettingGroup.create!(
+    Fabricate(
+      :site_setting_group,
       name: "enable_upload_debug_mode",
       group_ids: Group::AUTO_GROUPS[:trust_level_4].to_s,
     )
-    SiteSetting.refresh_site_setting_group_ids!
-    SiteSetting.notify_changed!
 
     # Refresh after setting up the group
     upcoming_changes_page.visit
@@ -95,7 +113,7 @@ describe "Admin upcoming changes", type: :system do
 
     # Test 'no_one' option - should disable the change and clear groups
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("no_one")
-    expect(page).to have_content(I18n.t("admin_js.admin.upcoming_changes.change_disabled"))
+    expect(upcoming_changes_page).to have_disabled_success_toast
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_disabled
 
     upcoming_changes_page.visit
@@ -105,12 +123,7 @@ describe "Admin upcoming changes", type: :system do
 
     # Test 'everyone' option - should enable the change and clear groups
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("everyone")
-    expect(page).to have_content(
-      I18n.t(
-        "admin_js.admin.upcoming_changes.change_enabled_for_success",
-        enabledFor: I18n.t("admin_js.admin.upcoming_changes.enabled_for_options.everyone").downcase,
-      ),
-    )
+    expect(upcoming_changes_page).to have_enabled_for_success_toast("everyone")
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
 
     upcoming_changes_page.visit
@@ -119,12 +132,7 @@ describe "Admin upcoming changes", type: :system do
 
     # Test 'staff' option - should enable the change and set staff group
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("staff")
-    expect(page).to have_content(
-      I18n.t(
-        "admin_js.admin.upcoming_changes.change_enabled_for_success",
-        enabledFor: I18n.t("admin_js.admin.upcoming_changes.enabled_for_options.staff").downcase,
-      ),
-    )
+    expect(upcoming_changes_page).to have_enabled_for_success_toast("staff")
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
 
     upcoming_changes_page.visit
@@ -135,16 +143,12 @@ describe "Admin upcoming changes", type: :system do
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("groups")
     upcoming_changes_page.change_item(:enable_upload_debug_mode).add_group("trust_level_4")
     upcoming_changes_page.change_item(:enable_upload_debug_mode).save_groups
-    expect(page).to have_content(
-      I18n.t(
-        "admin_js.admin.upcoming_changes.change_enabled_for_success",
-        enabledFor:
-          I18n.t(
-            "admin_js.admin.upcoming_changes.enabled_for_options.specific_groups_with_group_names",
-            groupNames: "staff, trust_level_4",
-            count: 2,
-          ).downcase,
-      ),
+    expect(upcoming_changes_page).to have_enabled_for_success_toast(
+      "specific_groups_with_group_names",
+      translation_args: {
+        groupNames: "staff, trust_level_4",
+        count: 2,
+      },
     )
 
     upcoming_changes_page.visit
@@ -196,6 +200,17 @@ describe "Admin upcoming changes", type: :system do
 
     upcoming_changes_page.filter_controls.select_all_dropdown_option(dropdown_id: "type")
 
+    # Filter by impact role
+    upcoming_changes_page.filter_controls.select_dropdown_option(
+      "Developers",
+      dropdown_id: "impactRole",
+    )
+
+    expect(upcoming_changes_page).to have_change(:enable_upload_debug_mode)
+    expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
+
+    upcoming_changes_page.filter_controls.select_all_dropdown_option(dropdown_id: "impactRole")
+
     # Filter by enabled/disabled
     upcoming_changes_page.filter_controls.select_dropdown_option("Enabled", dropdown_id: "enabled")
 
@@ -203,5 +218,41 @@ describe "Admin upcoming changes", type: :system do
     expect(upcoming_changes_page).to have_no_change(:about_page_extra_groups_show_description)
 
     upcoming_changes_page.filter_controls.select_all_dropdown_option(dropdown_id: "enabled")
+  end
+
+  it "displays a notification dot on the sidebar and clears it when navigating to upcoming changes" do
+    sidebar = PageObjects::Components::NavigationMenu::Sidebar.new
+
+    UpcomingChangeEvent.create!(
+      event_type: :added,
+      upcoming_change_name: "enable_upload_debug_mode",
+    )
+
+    visit "/admin"
+    sidebar.toggle_all_sections
+
+    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_css(
+      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
+    )
+
+    sidebar.find_section_link("admin_upcoming_changes").click
+
+    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_no_css(
+      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
+    )
+  end
+
+  it "does not display a notification dot when there are no new added events" do
+    sidebar = PageObjects::Components::NavigationMenu::Sidebar.new
+
+    current_user.custom_fields["last_visited_upcoming_changes_at"] = Time.current.iso8601
+    current_user.save_custom_fields
+
+    visit "/admin"
+    sidebar.toggle_all_sections
+
+    expect(sidebar.find_section_link("admin_upcoming_changes")).to have_no_css(
+      ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
+    )
   end
 end

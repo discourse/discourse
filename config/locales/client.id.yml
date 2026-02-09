@@ -571,7 +571,13 @@ id:
         reviewable_post:
           title: "Postingan"
           noun: "postingan"
+        reviewable_ai_chat_message:
+          noun: "pesan obrolan"
+        reviewable_ai_post:
+          noun: "post"
       user_label: "Pengguna"
+      timeline:
+        target_deleted: "Pos dihapus"
       notes:
         delete: "Hapus"
       topic_label: "Topik"
@@ -715,9 +721,7 @@ id:
           notification: Pemberitahuan
         email:
           title: "Email"
-          status: "Sinkronisasi email %{old_emails} / %{total_emails} melalui IMAP."
           enable_smtp: "Aktifkan SMTP"
-          enable_imap: "Aktifkan IMAP"
           test_settings: "Pengaturan Tes"
           save_settings: "Simpan Pengaturan"
           last_updated: "Terakhir diperbarui:"
@@ -725,9 +729,7 @@ id:
           settings_required: "Semua pengaturan diperlukan, harap isi semua kolom sebelum validasi."
           smtp_settings_valid: "Pengaturan SMTP valid."
           smtp_title: "SMTP"
-          imap_title: "IMAP"
-          imap_additional_settings: "Pengaturan Tambahan"
-          imap_settings_valid: "Pengaturan IMAP valid."
+          additional_settings: "Pengaturan Tambahan"
           prefill:
             title: "Isi terlebih dahulu dengan pengaturan untuk:"
             gmail: "Gmail"
@@ -742,15 +744,10 @@ id:
             smtp_server: "Server SMTP"
             smtp_port: "Port SMTP"
             smtp_ssl_mode: "Mode SSL"
-            imap_server: "Server IMAP"
-            imap_port: "Port IMAP"
-            imap_ssl: "Gunakan SSL untuk IMAP"
             username: "Nama Pengguna"
             password: "Kata Sandi"
           settings:
             title: "Pengaturan"
-          mailboxes:
-            disabled: "Dinonaktifkan"
         membership:
           title: Keanggotaan
           access: Mengakses
@@ -966,6 +963,9 @@ id:
       new_private_message: "Pesan Baru"
       private_message: "pesan"
       private_messages: "Messages"
+      upcoming_changes:
+        for_user:
+          enabled: "Diaktifkan?"
       user_notifications:
         filters:
           filter_by: "Filter Menurut"
@@ -1113,8 +1113,6 @@ id:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> penanda yang membantu'
-        flagged_posts:
-          other: '<span class="%{className}">%{count}</span> post yang ditandai'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> post dihapus'
         suspensions:
@@ -1154,7 +1152,6 @@ id:
         tags: "Label"
         interface: "Antarmuka"
         apps: "Aplikasi"
-        navigation_menu: "Menu Navigasi"
       change_password:
         success: "(surel terkirim)"
         in_progress: "(mengirimkan surel)"
@@ -1658,6 +1655,8 @@ id:
       code_title: "Teks terformat"
       paste_code_text: "ketik atau tempel kode di sini"
       upload_title: "Unggah"
+      wrap_modal:
+        apply: "menerapkan"
       modal_ok: "OK"
       cant_send_pm: "Maaf, anda tidak dapat mengirim pesan kepada %{username}"
       create_message_error: "Maaf, ada kesalahan dalam membuat pesan tersebut. Silakan coba lagi."
@@ -1680,6 +1679,7 @@ id:
         shared_draft:
           label: "Konsep Bersama"
       ignore: "Abaikan"
+      image: "gambar"
       toggle_image_grid: Beralih kisi gambar
     notifications:
       tooltip:
@@ -1774,8 +1774,6 @@ id:
       none:
         new: "Anda tidak memiliki topik baru"
         filter: "Tidak ada topik."
-      bottom:
-        new: "Tidak ada topik baru lagi"
     topic_bulk_actions:
       dismiss:
         name: "Bubar"
@@ -1960,6 +1958,8 @@ id:
         remove: "Hapus"
       required_tag_group:
         delete: "Hapus"
+      validations:
+        icon_required: "Pilih ikon."
       description: "Deskripsi"
       color_validations:
         cant_be_empty: "tidak boleh kosong"
@@ -1968,6 +1968,10 @@ id:
         create: "Buat"
       email_in_tooltip: "Anda dapat memisahkan beberapa alamat email dengan karakter |."
       review_group_name: "nama grup"
+      none_subcategory_text: "Tidak ada"
+      visibility:
+        public: "Umum"
+        group_restricted: "Pribadi"
       notifications:
         watching:
           title: "Melihat"
@@ -2129,6 +2133,7 @@ id:
       description: "Deskripsi (maks 1000 karakter)"
       sort_by_count: "menghitung"
       sort_by_name: "nama"
+      bulk_create_button: "Buat"
       filters:
         without_category: "%{filter} %{tag} topik"
         with_category: "%{filter} %{tag} topik dalam %{category}"
@@ -2177,7 +2182,6 @@ id:
       tags_form_modal:
         title: "Edit navigasi tag"
         filter_placeholder: "Filter tag"
-        no_tags: "Tidak ada tag yang cocok dengan istilah yang diberikan."
         subtitle:
           text: "dan kami akan menampilkan tag teratas situs ini secara otomatis"
       edit_navigation_modal_form:
@@ -2325,6 +2329,8 @@ id:
           enabled: "Diaktifkan"
           disabled: "Dinonaktifkan"
           impact_type_other: "Lainnya"
+          impact_role_moderators: "Moderator"
+          impact_role_staff: "Staf"
       config:
         login:
           sub_pages:
@@ -2399,7 +2405,7 @@ id:
           all: "Semua"
           trending_search:
             disabled: 'Laporan pencarian sedang tren dinonaktifkan. Aktifkan <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kueri penelusuran log</a> untuk mengumpulkan data.'
-          average_chart_label: Rata-rata
+          sort_button: "Urutkan berdasarkan %{column}"
           filters:
             category:
               label: Kategori
@@ -2887,6 +2893,8 @@ id:
         revoke: Cabut
         reason: Alasan
         expand: Perluas &hellip;
+        sections:
+          settings: Pengaturan
         enabled: diaktifkan
         disabled: dinonaktifkan
         select_an_icon: "Pilih ikon"

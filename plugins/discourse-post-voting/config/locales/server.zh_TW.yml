@@ -49,8 +49,6 @@ zh_TW:
           agree_and_silence:
             title: "將使用者禁言"
             description: "同意檢舉並禁止使用者發文"
-          disagree:
-            title: "不同意"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

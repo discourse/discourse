@@ -1203,6 +1203,40 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_tag_and_tag2) { Fabricate(:topic, tags: [tag, tag2]) }
       fab!(:topic_with_tag2) { Fabricate(:topic, tags: [tag2]) }
       fab!(:topic_with_group_only_tag) { Fabricate(:topic, tags: [group_only_tag]) }
+      fab!(:tag_synonym) { Fabricate(:tag, name: "synonym1", target_tag_id: tag.id) }
+
+      describe "when filtering by a tag synonym" do
+        it "should return topics tagged with the target tag when query string is `tag:synonym1`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tag:synonym1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
+
+        it "should return topics tagged with the target tag or other tags when query string is `tags:synonym1,tag2`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:synonym1,#{tag2.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
+        end
+
+        it "should exclude topics tagged with the target tag when query string is `-tag:synonym1`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-tag:synonym1")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_without_tag.id,
+            topic_with_tag2.id,
+            topic_with_group_only_tag.id,
+          )
+        end
+      end
 
       it "should not filter any topics by tags when tagging is disabled" do
         SiteSetting.tagging_enabled = false
@@ -1492,6 +1526,31 @@ RSpec.describe TopicsFilter do
           ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
         end
       end
+
+      describe "when query string contains multiple tags with underscores" do
+        before do
+          tag.update!(name: "tag_one")
+          tag2.update!(name: "tag_two")
+        end
+
+        it "should return topics when filtering with comma-separated underscore tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:tag_one,tag_two")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
+        end
+
+        it "should return topics when filtering with plus-separated underscore tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:tag_one+tag_two")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag_and_tag2.id)
+        end
+      end
     end
 
     describe "when filtering by tag_groups" do
@@ -1558,6 +1617,88 @@ RSpec.describe TopicsFilter do
             .filter_from_query_string("tag_group:#{staff_tag_group.name}")
             .pluck(:id),
         ).to eq([])
+      end
+    end
+
+    describe "when filtering by tag_groups with special characters" do
+      fab!(:tag) { Fabricate(:tag, name: "special-tag") }
+      fab!(:tag_group_with_spaces) do
+        Fabricate(:tag_group, name: "My Tag Group", tag_names: [tag.name])
+      end
+      fab!(:tag_group_with_ampersand) do
+        Fabricate(:tag_group, name: "News & Updates", tag_names: [tag.name])
+      end
+      fab!(:tag_group_with_parens) do
+        Fabricate(:tag_group, name: "Group (Test)", tag_names: [tag.name])
+      end
+      fab!(:topic_with_tag) { Fabricate(:topic, tags: [tag]) }
+      fab!(:topic_without_tag, :topic)
+
+      it "should filter by tag group name with spaces using double quotes" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"My Tag Group"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should filter by tag group name with spaces using single quotes" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tag_group:'My Tag Group'")
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should filter by tag group name with ampersand" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"News & Updates"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should filter by tag group name with parentheses" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"Group (Test)"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should perform case-insensitive tag group lookup" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('tag_group:"MY TAG GROUP"')
+            .pluck(:id),
+        ).to contain_exactly(topic_with_tag.id)
+      end
+
+      it "should handle exclude prefix with quoted tag group names" do
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string('-tag_group:"My Tag Group"')
+            .pluck(:id),
+        ).to contain_exactly(topic_without_tag.id)
+      end
+
+      it "should maintain backward compatibility with unquoted tag group names" do
+        simple_tag = Fabricate(:tag, name: "simple-tag")
+        _simple_group = Fabricate(:tag_group, name: "simple", tag_names: [simple_tag.name])
+        topic_simple = Fabricate(:topic, tags: [simple_tag])
+
+        expect(
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("tag_group:simple")
+            .pluck(:id),
+        ).to contain_exactly(topic_simple.id)
       end
     end
 

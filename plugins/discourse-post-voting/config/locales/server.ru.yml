@@ -32,16 +32,16 @@ ru:
     post_voting_enable_likes_on_answers: "Включить лайки в ответах тем формата «Голосование по публикациям»"
     post_voting_undo_vote_action_window: "Количество минут, в течение которых пользователям разрешено отменять голоса в темах формата «Голосование по публикациям» (0 — не ограничивать время)"
     post_voting_comment_limit_per_post: "Максимальное количество комментариев к каждой публикации"
-    min_trust_to_flag_posts_voting_comments: "Минимальный уровень доверия для жалобы на комментарий в режиме «Голосование по публикациям»"
     flag_posts_voting_comments_allowed_groups: "Группам разрешено жаловаться на комментарии в режиме «Голосование по публикациям»"
     post_voting_comment_enabled: "Включить комментарии к публикациям в темах с голосованием за публикации"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:
+        comment_actions:
+          bundle_title: "Что вы хотите сделать с этим комментарием?"
         no_action_comment:
           title: "Нет действий"
+          description: "Оставить комментарий как есть."
         agree_and_keep_comment:
           title: "Сохранить комментарий"
           description: "Согласиться с жалобой, но оставить комментарий без изменений."
@@ -106,16 +106,10 @@ ru:
             title: "Удалить комментарий"
             description: "Удалить комментарий, чтобы пользователи не могли его видеть."
           delete_and_agree:
-            title: "Игнорировать жалобу и удалить комментарий"
             description: "Проигнорировать жалобу, удалив ее из очереди, и удалить комментарий."
           disagree_and_restore:
             title: "Отклонить жалобу и восстановить комментарий"
             description: "Восстановить комментарий, чтобы все пользователи могли его видеть."
-          disagree:
-            title: "Отклонить"
-          ignore:
-            title: "Ничего не делать"
-            description: "Проигнорировать жалобу, удалив ее из очереди, не предпринимая никаких действий."
         transcript:
           view: "Просмотр содержимого предыдущих комментариев"
       reviewable_score_types:

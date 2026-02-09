@@ -145,4 +145,25 @@ module("Unit | Model | post", function (hooks) {
 
     assert.strictEqual(post.likeAction, null, "likeAction was reset to null");
   });
+
+  test("updateFromPost updates localization properties", function (assert) {
+    const post = this.store.createRecord("post", {
+      id: 1,
+      is_localized: false,
+      language: null,
+      localization_outdated: false,
+    });
+
+    post.updateFromPost(
+      this.store.createRecord("post", {
+        is_localized: true,
+        language: "ja",
+        localization_outdated: true,
+      })
+    );
+
+    assert.true(post.is_localized);
+    assert.strictEqual(post.language, "ja");
+    assert.true(post.localization_outdated);
+  });
 });

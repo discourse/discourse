@@ -395,6 +395,13 @@ module ApplicationHelper
     end
   end
 
+  def discourse_track_view_session_tag
+    return if !SiteSetting.trigger_browser_pageview_events
+    <<~HTML.html_safe
+      <meta name="discourse-track-view-session-id" content="#{SecureRandom.base64(32)}">
+    HTML
+  end
+
   def gsub_emoji_to_unicode(str)
     Emoji.gsub_emoji_to_unicode(str)
   end
@@ -486,6 +493,87 @@ module ApplicationHelper
     # A bit basic for now but will be expanded later
     SiteSetting.splash_screen
   end
+
+  def custom_splash_screen_enabled?
+    return @custom_splash_screen_enabled if defined?(@custom_splash_screen_enabled)
+
+    @custom_splash_screen_enabled =
+      UpcomingChanges.enabled_for_user?(:enable_custom_splash_screen, current_user) &&
+        SiteSetting.splash_screen_image.is_a?(Upload)
+  end
+
+  def splash_screen_image_animated?
+    build_splash_screen_image unless defined?(@splash_screen_image_animated)
+    @splash_screen_image_animated
+  end
+
+  def splash_screen_inline_svg
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    @splash_screen_image_svg&.html_safe
+  end
+
+  def splash_screen_image_data_uri(dark: false)
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    return nil if @splash_screen_image_svg.blank?
+
+    # Replace CSS variable references with actual theme colors
+    svg_with_colors = @splash_screen_image_svg.dup
+
+    color_method = dark ? :dark_color_hex_for_name : :light_color_hex_for_name
+    primary = "##{public_send(color_method, "primary")}"
+    secondary = "##{public_send(color_method, "secondary")}"
+    tertiary = "##{public_send(color_method, "tertiary")}"
+
+    svg_with_colors.gsub!(/var\(\s*--primary\s*\)/, primary)
+    svg_with_colors.gsub!(/var\(\s*--secondary\s*\)/, secondary)
+    svg_with_colors.gsub!(/var\(\s*--tertiary\s*\)/, tertiary)
+
+    # Use base64 encoding for better compatibility with complex SVGs
+    "data:image/svg+xml;base64,#{Base64.strict_encode64(svg_with_colors)}"
+  end
+
+  private
+
+  def build_splash_screen_image
+    @splash_screen_image_svg = nil
+    @splash_screen_image_animated = false
+
+    upload = SiteSetting.splash_screen_image
+    return unless upload.is_a?(Upload)
+
+    content =
+      Discourse
+        .cache
+        .fetch("splash_screen_image_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
+          upload.content
+        rescue StandardError => e
+          Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+          nil
+        end
+
+    return if content.blank?
+
+    doc = Nokogiri.XML(content)
+    svg = doc.at_css("svg")
+    return unless svg
+
+    @splash_screen_image_animated = svg.at_css("style")&.text&.include?("@keyframes")
+
+    # Strip SMIL animation elements, these run on the main thread and stutter.
+    # Only CSS transform/opacity animations are recommended.
+    svg.xpath(
+      ".//*[local-name()='animate' or local-name()='animateTransform' or local-name()='animateMotion' or local-name()='set']",
+    ).each(&:remove)
+
+    has_scripts = svg.xpath("//script").present?
+    has_event_handlers = svg.xpath("//@*[starts-with(name(), 'on')]").present?
+
+    return if has_scripts || has_event_handlers
+
+    @splash_screen_image_svg = svg.to_xml
+  end
+
+  public
 
   def allow_plugins?
     !request.env[ApplicationController::NO_PLUGINS]
@@ -856,8 +944,18 @@ module ApplicationHelper
       setup_data[:mb_last_file_change_id] = MessageBus.last_id("/file-change")
     end
 
-    if Rails.env.test? && ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
-      setup_data[:capybara_playwright_debug_client_settled] = true
+    if Rails.env.test?
+      if ENV["CAPYBARA_PLAYWRIGHT_DEBUG_CLIENT_SETTLED"].present?
+        setup_data[:capybara_playwright_debug_client_settled] = true
+      end
+
+      # Allow controlling deprecation behavior in tests via environment variable
+      # Used to enforce or disable deprecation throwing for specific test runs
+      if ENV["EMBER_RAISE_ON_DEPRECATION"] == "1"
+        setup_data[:raise_on_deprecation] = true
+      elsif ENV["EMBER_RAISE_ON_DEPRECATION"] == "0"
+        setup_data[:raise_on_deprecation] = false
+      end
     end
 
     if guardian.can_enable_safe_mode? && params["safe_mode"]

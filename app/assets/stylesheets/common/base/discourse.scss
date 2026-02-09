@@ -70,6 +70,7 @@
   --topic-list-item-background-color--visited: var(--secondary);
   --list-container-padding-x: 0em;
   --d-topic-list-header-font-size: initial;
+  --skip-links-offset: -75px;
 }
 
 // Animation Keyframes
@@ -104,6 +105,30 @@
   100% {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+@keyframes dissolve-up {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes dissolve-down {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(10px);
   }
 }
 
@@ -380,7 +405,6 @@ input {
 
     &::-webkit-color-swatch {
       border: none;
-      border-radius: 0;
     }
   }
 
@@ -554,6 +578,11 @@ textarea {
 .radio.inline .radio.inline,
 .checkbox.inline .checkbox.inline {
   margin-left: 0.67em;
+}
+
+.dropdown,
+.multiselect {
+  position: relative;
 }
 
 .container {
@@ -840,6 +869,13 @@ form {
   grid-template-columns: 0 minmax(0, 1fr); // 0 column width needs to be set for CSS transitions
   gap: 0;
 
+  @include viewport.until(md) {
+    grid-template-areas:
+      "content"
+      "below-content";
+    grid-template-columns: minmax(0, 1fr);
+  }
+
   #main-outlet {
     grid-area: content;
   }
@@ -1018,13 +1054,25 @@ form {
     color: var(--primary-medium);
     margin-right: 0.2em;
 
+    --icon-size: 0.74em;
+
     .d-icon {
-      height: 0.74em;
-      width: 0.74em;
+      height: var(--icon-size);
+      width: var(--icon-size);
+    }
+
+    &:first-child {
+      .d-icon.d-icon-bookmark {
+        --bookmark-icon-size: 0.56em;
+        width: var(--bookmark-icon-size);
+
+        // we compensate for the width we lost on the right
+        padding-right: calc((var(--icon-size) - var(--bookmark-icon-size)) / 2);
+      }
     }
   }
 
-  .topic-status-warning .d-icon-envelope {
+  .topic-status.--warning .d-icon-envelope {
     color: var(--danger);
   }
 }
@@ -1071,8 +1119,7 @@ form {
 
 #skip-links__container {
   position: fixed;
-  top: -50px;
-  left: var(--space-4);
+  top: var(--skip-links-offset);
   z-index: z("header") + 1;
 }
 
@@ -1082,7 +1129,7 @@ a#skip-link,
 .skip-link {
   padding: var(--space-1) var(--space-2);
   position: fixed;
-  top: -50px;
+  top: var(--skip-links-offset);
   left: var(--space-4);
   color: var(--secondary);
   background: var(--tertiary);

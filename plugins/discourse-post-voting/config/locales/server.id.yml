@@ -23,11 +23,6 @@ id:
           agree_and_silence:
             title: "Senyapkan Pengguna"
             description: "Setuju dengan penanda dan senyapkan pengguna."
-          disagree:
-            title: "Tidak setuju"
-          ignore:
-            title: "Tidak Melakukan Apapun"
-            description: "Abaikan penanda tersebut dengan menghapusnya dari antrean tanpa mengambil tindakan apa pun."
       reviewable_score_types:
         needs_review:
           title: "Perlu Reviu"

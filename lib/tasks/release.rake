@@ -1,12 +1,38 @@
 # frozen_string_literal: true
 
+require "tty-prompt"
+
 module ReleaseUtils
+  PRIMARY_RELEASE_TAG = "release"
+  RELEASE_TAGS = [PRIMARY_RELEASE_TAG, "beta", "latest-release"].freeze
+  PRIMARY_ESR_TAG = "esr"
+  ESR_TAGS = [PRIMARY_ESR_TAG, "stable"].freeze
+  PR_LABEL = "release"
+
   def self.dry_run?
     !!ENV["DRY_RUN"]
   end
 
   def self.test_mode?
     ENV["RUNNING_RELEASE_IN_RSPEC_TESTS"] == "1"
+  end
+
+  def self.read_versions_json
+    ReleaseUtils.with_clean_worktree("main") { JSON.parse(File.read("versions.json")) }
+  end
+
+  def self.released_versions
+    read_versions_json
+      .select { |_version, info| info["released"] }
+      .keys
+      .sort_by { |v| Gem::Version.new(v) }
+  end
+
+  def self.released_esrs
+    read_versions_json
+      .select { |_version, info| info["released"] && info["esr"] }
+      .keys
+      .sort_by { |v| Gem::Version.new(v) }
   end
 
   def self.read_version_rb
@@ -24,6 +50,45 @@ module ReleaseUtils
     File.write("lib/version.rb", read_version_rb.sub(/STRING = ".*"/, "STRING = \"#{version}\""))
   end
 
+  def self.update_versions_json(new_version)
+    today_date = DateTime.now.utc.strftime("%Y-%m-%d")
+
+    version_year, version_month = new_version.split(".").map(&:to_i)
+    esr = [1, 7].include?(version_month)
+
+    support_period = esr ? 8.months : 2.months
+    support_end_date = (Date.new(version_year, version_month, 1) + support_period).strftime("%Y-%m")
+
+    new_version_info = {
+      new_version => {
+        developmentStartDate: today_date,
+        releaseDate: "#{version_year}-#{version_month.to_s.rjust(2, "0")}",
+        supportEndDate: support_end_date,
+        released: false,
+        esr: esr,
+        supported: true,
+      },
+    }
+
+    data = JSON.parse(File.read("versions.json"))
+    data.transform_values! do |v|
+      if !v["released"]
+        v["released"] = true
+        v["releaseDate"] = today_date
+      end
+
+      if v["supported"] &&
+           Date.parse(v["supportEndDate"] + "-01") < Date.new(version_year, version_month, 1)
+        v["supported"] = false
+        v["supportEndDate"] = today_date
+      end
+
+      v
+    end
+
+    File.write("versions.json", JSON.pretty_generate({ **new_version_info, **data }) + "\n")
+  end
+
   def self.git(*args, allow_failure: false, silent: false)
     puts "> git #{args.inspect}" unless silent
     stdout, stderr, status = Open3.capture3({ "LEFTHOOK" => "0" }, "git", *args)
@@ -33,6 +98,12 @@ module ReleaseUtils
     stdout
   end
 
+  def self.gh(*args)
+    puts "> gh #{args.inspect}"
+    return true if test_mode?
+    system "gh", *args
+  end
+
   def self.ref_exists?(ref)
     git "rev-parse", "--verify", ref
     true
@@ -40,19 +111,54 @@ module ReleaseUtils
     false
   end
 
-  def self.make_pr(base:, branch:)
+  def self.confirm(msg)
     return if test_mode?
+    prompt = TTY::Prompt.new
+    raise "Aborted" unless prompt.yes?(msg)
+  end
 
-    args = [
-      "--title",
-      git("log", "-1", branch, "--pretty=%s").strip,
-      "--body",
-      git("log", "-1", branch, "--pretty=%b").strip,
-    ]
+  def self.merge_pr(base:, branch:)
+    if dry_run?
+      puts "[DRY RUN] Skipping merge of #{branch}"
+      return
+    end
+
+    loop do
+      confirm "Ready to merge #{branch}?"
+
+      if test_mode?
+        git "push", "origin", "#{branch}:#{base}"
+        break
+      else
+        success = gh("pr", "merge", branch, "--rebase", "--delete-branch")
+        break if success
+        puts "Merge failed. Maybe the PR isn't approved yet, or there's a conflict."
+      end
+    end
+
+    puts "Merge successful"
+  end
+
+  def self.make_pr(base:, branch:, title: nil, body: nil, draft: false)
+    title ||= git("log", "-1", branch, "--pretty=%s").strip
+    body ||= git("log", "-1", branch, "--pretty=%b").strip
+
+    title_and_body = ["--title", title, "--body", body]
+    draft_flag = draft ? ["--draft"] : []
 
     success =
-      system("gh", "pr", "create", "--base", base, "--head", branch, *args) ||
-        system("gh", "pr", "edit", branch, *args)
+      gh(
+        "pr",
+        "create",
+        "--base",
+        base,
+        "--head",
+        branch,
+        *title_and_body,
+        *draft_flag,
+        "--label",
+        PR_LABEL,
+      ) || gh("pr", "edit", branch, *title_and_body, "--add-label", PR_LABEL)
 
     raise "Failed to create or update PR" unless success
   end
@@ -141,13 +247,6 @@ namespace :release do
 
     tag_name = "v#{current_version}"
 
-    existing_releases =
-      ReleaseUtils
-        .git("tag", "-l", "v*")
-        .lines
-        .map { |tag| Gem::Version.new(tag.strip.delete_prefix("v")) }
-        .sort
-
     if ReleaseUtils.ref_exists?(tag_name)
       puts "Tag #{tag_name} already exists, skipping"
     else
@@ -159,14 +258,66 @@ namespace :release do
       else
         ReleaseUtils.git "push", "origin", "refs/tags/#{tag_name}"
       end
+    end
 
-      if existing_releases.last && Gem::Version.new(current_version) > existing_releases.last
-        ReleaseUtils.git "tag", "-a", "release", "-m", "latest release"
-        if ReleaseUtils.dry_run?
-          puts "[DRY RUN] Skipping pushing 'release' tag to origin"
-        else
-          ReleaseUtils.git "push", "origin", "-f", "refs/tags/release"
-        end
+    puts "Done!"
+  end
+
+  desc "Update release/beta/latest-release tags to track latest release"
+  task "update_release_tags", [:check_ref] do |t, args|
+    check_ref = args[:check_ref]
+
+    current_version =
+      ReleaseUtils.with_clean_worktree("main") do
+        ReleaseUtils.git "checkout", check_ref.to_s
+        ReleaseUtils.parse_current_version
+      end
+
+    released_versions = ReleaseUtils.released_versions
+    current_minor = current_version.split(".").first(2).join(".") + ".0"
+    current_minor_version = Gem::Version.new(current_minor)
+
+    if released_versions.empty? || current_minor_version >= released_versions.last
+      ReleaseUtils::RELEASE_TAGS.each do |synonym_tag|
+        message =
+          if synonym_tag == ReleaseUtils::PRIMARY_RELEASE_TAG
+            "latest release"
+          else
+            "backwards-compatibility alias for `#{ReleaseUtils::PRIMARY_RELEASE_TAG}` tag"
+          end
+        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f"
+      end
+      if ReleaseUtils.dry_run?
+        puts "[DRY RUN] Skipping pushing #{ReleaseUtils::RELEASE_TAGS.inspect} tags to origin"
+      else
+        ReleaseUtils.git "push",
+                         "origin",
+                         "-f",
+                         *ReleaseUtils::RELEASE_TAGS.map { |tag| "refs/tags/#{tag}" }
+      end
+    else
+      puts "Current version #{current_version} is older than latest release #{released_versions.last}. Skipping."
+    end
+
+    # Update ESR tags if this version is in the latest released ESR series
+    released_esrs = ReleaseUtils.released_esrs
+    if released_esrs.any? && current_minor_version == released_esrs.last
+      ReleaseUtils::ESR_TAGS.each do |synonym_tag|
+        message =
+          if synonym_tag == ReleaseUtils::PRIMARY_ESR_TAG
+            "latest ESR release"
+          else
+            "backwards-compatibility alias for `#{ReleaseUtils::PRIMARY_ESR_TAG}` tag"
+          end
+        ReleaseUtils.git "tag", "-a", synonym_tag, "-m", message, "-f"
+      end
+      if ReleaseUtils.dry_run?
+        puts "[DRY RUN] Skipping pushing #{ReleaseUtils::ESR_TAGS.inspect} tags to origin"
+      else
+        ReleaseUtils.git "push",
+                         "origin",
+                         "-f",
+                         *ReleaseUtils::ESR_TAGS.map { |tag| "refs/tags/#{tag}" }
       end
     end
 
@@ -184,27 +335,36 @@ namespace :release do
 
       current_version = ReleaseUtils.parse_current_version
 
-      target_version_number = "#{Time.now.strftime("%Y.%m")}.0-latest"
+      target_version_number = "#{Time.now.strftime("%Y.%-m")}.0-latest"
 
       if Gem::Version.new(target_version_number) <= Gem::Version.new(current_version)
         puts "Target version #{current_version} is already >= #{target_version_number}. Incrementing instead."
         major, minor, patch_and_pre = current_version.split(".")
-        minor = (minor.to_i + 1).to_s.rjust(2, "0")
+        minor = (minor.to_i + 1).to_s
+
+        if minor.to_i > 12 && Time.now.month == 12
+          major = (major.to_i + 1).to_s
+          minor = "1"
+        end
+
         target_version_number = "#{major}.#{minor}.#{patch_and_pre}"
       end
 
       ReleaseUtils.write_version(target_version_number)
-      ReleaseUtils.git "add", "lib/version.rb"
+      ReleaseUtils.update_versions_json(target_version_number.split(".").first(2).join("."))
+      ReleaseUtils.git "add", "lib/version.rb", "versions.json"
       ReleaseUtils.git "commit",
                        "-m",
                        "DEV: Begin development of v#{target_version_number}\n\nMerging this will trigger the creation of a `release/#{current_version.sub(".0-latest", "")}` branch on the preceding commit."
     end
 
-    ReleaseUtils.git "push", "-f", "--set-upstream", "origin", pr_branch_name
-
-    ReleaseUtils.make_pr(base: branch, branch: pr_branch_name)
-
-    puts "Done! Branch #{pr_branch_name} has been pushed to origin and a pull request has been created."
+    if ReleaseUtils.dry_run?
+      puts "[DRY RUN] Skipping pushing & PR for branch #{pr_branch_name}"
+    else
+      ReleaseUtils.git "push", "-f", "--set-upstream", "origin", pr_branch_name
+      ReleaseUtils.make_pr(base: branch, branch: pr_branch_name)
+      puts "Done! Branch #{pr_branch_name} has been pushed to origin and a pull request has been created."
+    end
   end
 
   desc "Prepare version bump"
@@ -240,5 +400,115 @@ namespace :release do
     ReleaseUtils.make_pr(base: branch, branch: pr_branch_name)
 
     puts "Done! Branch #{pr_branch_name} has been pushed to origin and a pull request has been created."
+  end
+
+  desc <<~DESC
+    Stage security fixes from private-mirror PRs into a single branch for review/merge.
+    Fetches open PRs from private-mirror and presents an interactive selection.
+    e.g.
+      bin/rake "release:stage_security_fixes[main]"
+      bin/rake "release:stage_security_fixes[release/2025.11]"
+  DESC
+  task "stage_security_fixes", [:base] do |t, args|
+    base = args[:base]
+    if !base.start_with?("release/") && !%w[stable main].include?(base)
+      raise "Unknown base: #{base.inspect}"
+    end
+
+    fix_refs = ENV["SECURITY_FIX_REFS"]&.split(",")&.map(&:strip)
+    private_mirror_pr_numbers = []
+
+    if fix_refs.nil? || fix_refs.empty?
+      json_output, status =
+        Open3.capture2(
+          "gh",
+          "pr",
+          "list",
+          "--repo",
+          "discourse/discourse-private-mirror",
+          "--base",
+          base,
+          "--state",
+          "open",
+          "--json",
+          "number,title,headRefName",
+          "--limit",
+          "100",
+        )
+      raise "Failed to fetch PRs from private-mirror" if !status.success?
+
+      prs = JSON.parse(json_output)
+      raise "No open PRs found targeting #{base} on private-mirror" if prs.empty?
+
+      prompt = TTY::Prompt.new
+      choices =
+        prs.map do |pr|
+          { name: "##{pr["number"]}: #{pr["title"]}", value: pr.slice("number", "headRefName") }
+        end
+
+      selected =
+        prompt.multi_select(
+          "Select security fix PRs to include (space to toggle, enter to finish):",
+          choices,
+          default: [],
+          per_page: choices.size,
+        )
+      raise "No PRs selected" if selected.empty?
+
+      fix_refs = selected.map { |pr| "privatemirror/#{pr["headRefName"]}" }
+      private_mirror_pr_numbers = selected.map { |pr| pr["number"] }
+    end
+
+    puts "Staging security fixes for #{base} branch: #{fix_refs.inspect}"
+
+    branch = "security/#{base}-security-fixes"
+
+    ReleaseUtils.with_clean_worktree(base) do
+      ReleaseUtils.git "branch", "-D", branch if ReleaseUtils.ref_exists?(branch)
+      ReleaseUtils.git "checkout", "-b", branch
+
+      fix_refs.each do |ref|
+        origin, origin_branch = ref.split("/", 2)
+        ReleaseUtils.git "fetch", origin, origin_branch
+
+        first_commit_on_branch =
+          ReleaseUtils.git("log", "--format=%H", "origin/#{base}..#{ref}").lines.last.strip
+        ReleaseUtils.git "cherry-pick", "#{first_commit_on_branch}^..#{ref}"
+      end
+
+      puts "Finished merging commits into a locally-staged #{branch} branch. Git log is:"
+      puts ReleaseUtils.git("log", "origin/#{base}..#{branch}")
+
+      ReleaseUtils.confirm "Check the log above. Ready to push this branch to the origin and create a PR?"
+      ReleaseUtils.git("push", "-f", "--set-upstream", "origin", branch)
+
+      ReleaseUtils.make_pr(
+        base: base,
+        branch: branch,
+        title: "Security fixes for #{base}",
+        body: <<~MD,
+          > :warning: This PR should not be merged via the GitHub web interface
+          >
+          > It should only be merged using the associated `bin/rake release:stage_security_fixes` task.
+        MD
+        draft: true,
+      )
+      puts "Do not merge the PR via the GitHub web interface. Get it approved, then come back here to continue."
+      ReleaseUtils.merge_pr(base: base, branch: branch)
+    end
+
+    if private_mirror_pr_numbers.any?
+      puts "Closing associated PRs in private-mirror..."
+      private_mirror_pr_numbers.each do |pr_number|
+        ReleaseUtils.gh(
+          "pr",
+          "close",
+          pr_number.to_s,
+          "--repo",
+          "discourse/discourse-private-mirror",
+          "--delete-branch",
+        )
+      end
+    end
   end
 end

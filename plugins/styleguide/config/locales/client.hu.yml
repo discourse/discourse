@@ -38,6 +38,8 @@ hu:
           title: "Betűtípus rendszer"
         colors:
           title: "Színek"
+        dialog:
+          title: "Párbeszéd"
         icons:
           title: "Ikonok"
           full_list: "A Font Awesome ikonok teljes listájának megtekintése"
@@ -60,7 +62,7 @@ hu:
         categories_list:
           title: "Kategóriák listája"
         topic_link:
-          title: "Téma hivatkozás"
+          title: "Téma linkje és állapota"
         topic_list_item:
           title: "Témalista elem"
         topic_statuses:
@@ -69,8 +71,6 @@ hu:
           title: "Témalista"
         basic_topic_list:
           title: "Alapvető témakörlista"
-        footer_message:
-          title: "Lábléc üzenet"
         signup_cta:
           title: "Regisztrációs felhívás"
         topic_timer_info:
@@ -103,6 +103,8 @@ hu:
           title: "Fejléc ikonok"
         spinners:
           title: "Forgók"
+        otp:
+          title: "Egyszeri jelszó"
         empty_state:
           title: "Üres állapot"
         tooltips:

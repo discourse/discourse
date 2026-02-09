@@ -67,7 +67,6 @@ es:
         description: Cuando se cambien las etiquetas de un tema, se activará la automatización.
       topic:
         title: Tema
-        description: El script asociado solo se utilizará en el tema especificado. Por ejemplo, esto es útil para los scripts que hacen validaciones
       after_post_cook:
         title: Después de cocinar la publicación
         description: Cuando se cocine el contenido de una publicación se activará la automatización
@@ -158,3 +157,5 @@ es:
       random_assign:
         title: "Asignación aleatoria"
         description: "Asignar temas aleatoriamente a un grupo"
+      set_topic_timer:
+        title: "Establecer temporizador de tema"

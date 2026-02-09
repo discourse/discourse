@@ -1,0 +1,16 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+es:
+  site_settings:
+    discourse_rewind_enabled: "Habilita Discourse Rebobina para obtener un resumen divertido de fin de año sobre las actividades de los miembros en la comunidad."
+  discourse_rewind:
+    report_failed: "No se ha podido generar el informe de Discourse Rebobina."
+    invalid_year: "Rebobina sólo se puede generar en enero o diciembre."
+    user_not_found: "Usuario no encontrado o no se puede visualizar."
+    reports_not_cached: "Aún no se han generado los informes. Por favor, refresca la página."
+    report_not_found: "Informe no encontrado."
+    cannot_share_when_profile_hidden: "Para compartir Rebobina debes permitir que otros vean tu perfil público."

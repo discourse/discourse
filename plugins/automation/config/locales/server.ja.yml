@@ -67,7 +67,6 @@ ja:
         description: トピックのタグが変更されると、自動化がトリガーされます
       topic:
         title: トピック
-        description: 関連付けられたスクリプトは特定のトピックでのみ使用されます。これは、検証を行うスクリプトなどに役立ちます。
       after_post_cook:
         title: 投稿のクック処理後
         description: 投稿内容がクックされると、自動化がトリガーされます。
@@ -158,3 +157,5 @@ ja:
       random_assign:
         title: "ランダム割り当て"
         description: "グループにトピックをランダムに割り当てます"
+      set_topic_timer:
+        title: "トピックタイマーを設定"

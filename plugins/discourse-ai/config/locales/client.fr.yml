@@ -113,14 +113,6 @@ fr:
             persona_id:
               label: "Personnage"
               description: "Personnage IA à utiliser pour la génération de rapports"
-        llm_tool_triage:
-          fields:
-            model:
-              label: "Modèle"
-              description: "Le modèle linguistique par défaut utilisé pour le triage"
-            tool:
-              label: "Outil"
-              description: "Outil à utiliser pour le triage (l'outil ne doit avoir aucun paramètre défini)"
         llm_persona_triage:
           fields:
             persona:
@@ -199,7 +191,7 @@ fr:
         no_llm: "Aucun LLM sélectionné"
         no_persona: "Non défini"
         no_groups: "Aucun"
-        edit: "Modifier"
+        edit: "Paramètres"
         expand_list:
           one: "(%{count} autre)"
           other: "(%{count} autres)"
@@ -230,6 +222,8 @@ fr:
           name: "Intégrations"
           description: "Alimente des fonctionnalités telles que les sujets connexes et la recherche IA en générant des représentations sémantiques du texte"
           hyde: "HyDE"
+          setting_groups:
+            related_topics: "Sujets connexes"
         discord:
           name: "Intégration à Discord"
           description: "Ajoute la possibilité de rechercher des chaînes Discord"
@@ -240,6 +234,8 @@ fr:
           generate_concepts: "Inférence de concepts"
           match_concepts: "Correspondance de concepts"
           deduplicate_concepts: "Déduplication des concepts"
+          setting_groups:
+            personas: "Personnages"
         ai_helper:
           name: "Assistant"
           description: "Permet aux utilisateurs d'interagir avec la communauté, par exemple en créant des sujets, en rédigeant des articles et en lisant du contenu"
@@ -254,6 +250,9 @@ fr:
           image_caption: "Images de légende"
           translator: "Traducteur"
           post_illustrator: "Illustrateur de publications"
+          setting_groups:
+            automation: "Automatisation"
+            personas: "Personnages"
         translation:
           name: "Traduction"
           description: "Traduit le contenu dans les langues prises en charge"
@@ -261,6 +260,8 @@ fr:
           post_raw_translator: "Traducteur du contenu brut de la publication"
           topic_title_translator: "Traducteur de titre de sujet"
           short_text_translator: "Traducteur de textes courts"
+          setting_groups:
+            personas: "Personnages"
         spam:
           name: "Contenu indésirable"
           description: "Identifie les contenus indésirables potentiels à l'aide du LLM sélectionné et les signale aux modérateurs du site afin qu'ils les inspectent dans la file d'attente de révision"
@@ -317,6 +318,8 @@ fr:
           post_url_label: "URL ou ID de la publication"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 ou ID de la publication"
           result: "Résultat"
+          llm: "LLM "
+          system_prompt: "Invite du système"
           scan_log: "Journal d'analyse"
           run: "Lancer le test"
           spam: "Contenu indésirable"
@@ -353,6 +356,7 @@ fr:
         no_users: "Aucune donnée d'utilisation de l'utilisateur n'a été trouvée"
         no_models: "Aucune donnée d'utilisation du modèle n'a été trouvée"
         no_features: "Aucune donnée d'utilisation de la fonctionnalité n'a été trouvée"
+        total: "Total"
         subheader_description: "Les jetons sont les unités de base que les LLM utilisent pour comprendre et générer du texte. Les données d'utilisation peuvent affecter les coûts"
         stat_tooltips:
           total_requests: "Toutes les requêtes adressées aux LLM via Discourse"
@@ -536,7 +540,6 @@ fr:
         max_output_tokens: "Nombre maximum de jetons de sortie"
         url: "URL du service hébergeant le modèle"
         api_key: "Clé d'API du service hébergeant le modèle"
-        enabled_chat_bot: "Autoriser le sélecteur de robot IA"
         vision_enabled: "Vision activée"
         ai_bot_user: "Utilisateur robot IA"
         cost_input: "Coût des entrées"
@@ -585,17 +588,7 @@ fr:
           anthropic-claude-opus-4-5: "Le modèle le plus intelligent d'Anthropic"
           anthropic-claude-sonnet-4-5: "Équilibre optimal entre vitesse et coût"
           anthropic-claude-haiku-4-5: "Rapide et économique"
-          google-gemini-2-5-pro: "Grand modèle multimodal capable d'effectuer un large éventail de tâches"
-          google-gemini-2-5-flash: "Léger, rapide et économique avec raisonnement multimodal"
-          open_ai-gpt-5-mini: "Offre un équilibre entre intelligence, rapidité et coût, ce qui en fait un modèle attrayant pour de nombreux cas d'utilisation."
-          open_ai-gpt-5-nano: "Le modèle GPT-5 le plus rapide et le plus économique."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Modèle multilingue léger et efficace"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Modèle polyvalent et puissant"
-          mistral-mistral-large-latest: "Le modèle le plus puissant de Mistral"
-          mistral-pixtral-large-latest: "Le modèle de Mistral le plus performant en matière de vision"
-          open_router-x-ai-grok-4: "Le dernier modèle de xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "Le dernier modèle de raisonnement de DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "Modèle multilingue hautement performant"
+          open_ai-gpt-5-nano: "Le modèle GPT-5 le plus rapide et le plus économique"
         preseeded_model_description: "Modèle open source préconfiguré utilisant %{model}"
         configured:
           title: "LLM configurés"
@@ -619,7 +612,6 @@ fr:
           display_name: "Le nom utilisé pour faire référence à ce modèle dans l'interface de votre site."
           name: "Nous l'incluons dans l'appel d'API pour spécifier le modèle que nous allons utiliser"
           vision_enabled: "Si cette option est activée, l'IA tentera de comprendre les images. Cela dépend du modèle utilisé prenant en charge la vision. Pris en charge par les derniers modèles d'Anthropic, Google et OpenAI."
-          enabled_chat_bot: "Si cette option est activée, les utilisateurs peuvent sélectionner ce modèle lors de la création de MP avec le robot IA"
           cost_input: "Le coût d'entrée par million de jetons pour ce modèle"
           cost_output: "Le coût de sortie par million de jetons pour ce modèle"
           cost_measure: "$/million de jetons"
@@ -655,7 +647,6 @@ fr:
           reasoning_tokens: "Nombre de jetons utilisés pour le raisonnement"
           disable_temperature: "Désactiver la température (certains modèles ne prennent pas en charge la température)"
           disable_top_p: "Désactiver le top P (certains modèles ne prennent pas en charge le top P)"
-          enable_responses_api: "Activer l'API de réponses (obligatoire sur certains modèles OpenAI)"
       related_topics:
         title: "Sujets connexes"
         pill: "Lié"
@@ -882,6 +873,7 @@ fr:
         topic:
           title: "Résumé du sujet"
           close: "Fermer le panneau du résumé"
+          regenerate_summaries_option: "Résumés des sujets"
         topic_list_layout:
           button:
             compact: "Compact"

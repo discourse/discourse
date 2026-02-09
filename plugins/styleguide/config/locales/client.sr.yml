@@ -43,8 +43,6 @@ sr:
           title: "Složena navigacija"
         categories_list:
           title: "Lista Kategorija"
-        topic_link:
-          title: "Link za temu"
         topic_list_item:
           title: "Ставка листе тема"
         topic_statuses:
@@ -53,8 +51,6 @@ sr:
           title: "Lista tema"
         basic_topic_list:
           title: "Основна листа тема"
-        footer_message:
-          title: "Poruka u futeru"
         signup_cta:
           title: "ЦТА за регистрацију"
         topic_timer_info:

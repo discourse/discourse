@@ -757,8 +757,8 @@ da:
       short_description: "Bogmærk dette indlæg"
     like:
       title: "Like"
-      description: "Du 'Synes godt om' dette indlæg"
-      short_description: "Du 'synes godt om' dette indlæg"
+      description: "Synes godt om dette indlæg"
+      short_description: "Synes godt om dette indlæg"
   draft:
     sequence_conflict_error:
       title: "kladdefejl"
@@ -771,8 +771,6 @@ da:
     pm_body: "Emne, der indeholder backup-kladder"
   email_settings:
     pop3_authentication_error: "Der var et problem med de angivne POP3-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
-    imap_authentication_error: "Der var et problem med de leverede IMAP-legitimationsoplysninger, tjek brugernavnet og adgangskoden, og prøv igen."
-    imap_no_response_error: "Der opstod en fejl under kommunikation med IMAP-serveren. %{message}"
     smtp_server_busy_error: "SMTP-serveren er i øjeblikket optaget, prøv igen senere."
     smtp_unhandled_error: "Der opstod en uhåndteret fejl under kommunikation med SMTP-serveren. %{message}"
     connection_error: "Der var et problem med forbindelsen til serveren, tjek serverens navn og port og prøv igen."
@@ -853,11 +851,10 @@ da:
       every_month: "hver måned"
       every_six_months: "hver sjette måned"
   user_api_key:
-    title: "Autoriser venligst at applikationen kan få adgang"
     authorize: "Autoriser"
+    deny: "Annuller"
     read: "læst"
     read_write: "læse/skrive"
-    description: '"%{application_name}" anmoder om følgende adgang til din konto:'
     instructions: 'Vi har netop genereret en ny bruger-API-nøgle, som du kan bruge med "%{application_name}", indsæt venligst følgende nøgle i din applikation:'
     otp_description: 'Vil du tillade at "%{application_name}" får adgang til dette websted?'
     otp_confirmation:
@@ -1212,7 +1209,7 @@ da:
     top_ignored_users:
       title: "Top Ignorerede / Tavse Brugere"
       labels:
-        ignored_user: Ignoreret Bruger
+        ignored_user: Ignoreret bruger
         mutes_count: Tavsheds tæller
       description: "Brugere, der er gjort tavse og/eller ignoreret af mange andre brugere."
     top_users_by_likes_received:
@@ -1447,19 +1444,7 @@ da:
     tl3_requires_max_flagged: "Brugere må ikke have mere end x indlæg anmeldt af x forskellige brugere i løbet a de sidste (tl3 time period) dage for at kvalificere sig til forfremmelse til tillidsniveau 3. Hvor x er indstillingens værdi (0 eller mere)."
     tl3_promotion_min_duration: "Det mindste antal dage, som en forfremmelse til tillidsniveau 3 varer, før en bruger kan degraderes tilbage til tillidsniveau 2."
     tl3_links_no_follow: "Fjern ikke rel=nofollow fra links indsendt af tillidsniveau 3-brugere."
-    min_trust_to_create_topic: "Det mindste tillidsniveau der skal til for at oprette et nyt emne."
     allow_flagging_staff: "Hvis aktiveret, kan brugerne anmelde indlæg fra personalekonti."
-    min_trust_to_edit_wiki_post: "Det mindste tillidsniveau, der kræves for at redigere indlæg markeret som wiki."
-    min_trust_to_edit_post: "Det mindste tillidsniveau, der kræves for at redigere indlæg."
-    min_trust_to_allow_self_wiki: "Det mindste tillidsniveau, der kræves for at gøre brugerens egen post til wiki."
-    min_trust_to_send_email_messages: "Det mindste tillidsniveau, der kræves for at sende personlige beskeder via e-mail."
-    min_trust_to_flag_posts: "Det mindste tillidsniveau, der kræves for at anmelde indlæg"
-    min_trust_to_post_links: "Det mindste tillidsniveau, der kræves for at medtage links i indlæg"
-    min_trust_to_post_embedded_media: "Det mindste tillidsniveau, der kræves for at indlejre medieelementer i et indlæg"
-    min_trust_level_to_allow_profile_background: "Det mindste tillidsniveau, der kræves for at overføre en profilbaggrund"
-    min_trust_level_to_allow_user_card_background: "Det mindste tillidsniveau, der kræves for at overføre en brugerkort baggrund"
-    min_trust_level_to_allow_invite: "Det mindste tillidsniveau, der kræves for at invitere brugere"
-    min_trust_level_to_allow_ignore: "Det mindste tillidsniveau, der kræves for at ignorere brugere"
     allowed_link_domains: "Domæner, som brugere kan linke til, selvom de ikke har det rette tillidsniveau til at sende links"
     newuser_max_links: "Hvor mange links en ny bruger kan føje til et indlæg."
     newuser_max_embedded_media: "Hvor mange integrerede medieelementer en ny bruger kan føje til et indlæg."
@@ -1508,16 +1493,11 @@ da:
     pop3_polling_password: "Adgangskoden til POP3-kontoen til kontrol for e-mail."
     pop3_polling_delete_from_server: "Slet e-mails fra serveren. BEMÆRK: Hvis du deaktiverer dette, skal du manuelt rense din postindbakke"
     log_mail_processing_failures: "Log alle e-mail-behandlingsfejl til <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in_min_trust: "Det mindste tillidsniveau, som en bruger skal have, skal have for have lov til at oprette nye emner via e-mail."
-    enable_imap: "Aktiver IMAP til synkronisering af gruppemeddelelser."
-    enable_imap_write: "Aktiver to-vejs IMAP-synkronisering. Hvis deaktiveret, er alle skriveoperationer på IMAP-konti deaktiveret."
-    enable_imap_idle: "Brug IMAP-IDLE-mekanismen til at vente på nye e-mails."
     enable_smtp: "Aktiver SMTP for afsendelse af notifikationer for gruppemeddelelser."
     email_site_title: "Titlen på webstedet der bruges som afsender af e-mails fra webstedet. Standard er 'titel', hvis ikke angivet. Hvis din 'titel' indeholder tegn, der ikke er tilladt i e-mail-afsenderstrenge, så brug denne indstilling."
     delete_all_posts_max: "Det maksimale antal indlæg der kan slettes på én gang med “Slet alle indlæg”-knappen. Hvis en bruger har mere end dette antal indlæg, kan indlæggene ikke slettes på én gang og brugeren kan ikke slettes."
     email_editable: "Lad brugerne skifte deres e-mail-adresse efter oprettelsen."
     logout_redirect: "Placering at omdirigere browseren til efter logout (fx: https://example.dk/logud)"
-    allow_uploaded_avatars: "Tillad brugere at uploade brugerdefinerede profilbilleder."
     default_avatars: "URL'er til avatarer, der vil blive brugt som standard for nye brugere, indtil de ændrer dem."
     automatically_download_gravatars: "Download Gravatars til brugere ved oprettelse af konto eller ændring af e-mail."
     digest_topics: "Maximalt antal af populære emner vist i mails med sammendrag."
@@ -1532,7 +1512,6 @@ da:
     enable_group_directory: "Tilbyd en oversigt over grupper til gennemsyn"
     hide_user_profiles_from_public: "Deaktiver brugerkort, brugerprofiler og brugerkatalog for anonyme brugere."
     show_inactive_accounts: "Tillad brugere der er logget ind at gennemse profiler af inaktive konti."
-    hide_suspension_reasons: "Vis ikke suspensionsårsager offentligt på brugerprofiler."
     user_selected_primary_groups: "Tillad brugere at indstille deres egen primære gruppe"
     allow_profile_backgrounds: "Tillad brugere at uploade en profil baggrund."
     enable_mobile_theme: "Mobile enheder bruger et mobilvenligt tema, med mulighed for at skifte til det fulde site. Deaktivér dette hvis du ønsker at anvende et brugerdefineret stylesheet som er fuldstændigt responsivt."
@@ -1583,7 +1562,6 @@ da:
     remove_muted_tags_from_latest: "Vis ikke emner, der kun er tagget med tavse tags på den seneste emneliste."
     force_lowercase_tags: "Tving alle nye tags til at kun benytte små bogstaver."
     shared_drafts_category: "Aktiver funktionen Delte kladder ved at angive en kategori for emneudkast. Emner i denne kategori vil blive undertrykt fra emnelister for personalebrugere."
-    shared_drafts_min_trust_level: "Tillad brugere at se og redigere Delte kladder."
     shared_drafts_allowed_groups: "Tillad brugere i disse grupper at se og redigere delte kladder."
     push_notifications_icon: "Emblemikonet, der vises i meddelelseshjørnet. Et monokromatisk PNG på 96×96 med gennemsigtighed anbefales."
     allow_changing_staged_user_tracking: "Tillad, at en forhåndsoprettet brugers kategori- og mærke notifikationsindstillinger ændres af en administratorbruger."
@@ -1958,6 +1936,7 @@ da:
         Gennemse vores [fællesskabs-retningslinjer](%{base_url}/guidelines) for detaljer.
     welcome_user:
       title: "Velkomst til bruger"
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
       text_body_template: |
         Tak for din tilmelding til %{site_name}, og velkommen!
@@ -1985,6 +1964,7 @@ da:
         Med stor magt kommer stort ansvar. Hvis du er ny til at moderere, henvises til [Moderationsvejledningen](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Velkomst til inviterede brugere"
+      preview: "Velkommen til %{site_name}!"
       subject_template: "Velkommen til %{site_name}!"
       text_body_template: |
         Tak, fordi du accepterede din invitation til %{site_name} - velkommen!
@@ -2275,6 +2255,7 @@ da:
       title: "Spam-indlæg blokeret"
       subject_template: "Ny bruger %{username} indlæg blokeret på grund af gentagne links"
     unsilenced:
+      preview: "Konto ikke længere sat på hold."
       subject_template: "Konto ikke længere sat på hold"
       text_body_template: |
         Hej,
@@ -2606,6 +2587,7 @@ da:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Log ind via link"
+      preview: "Log ind via link."
       subject_template: "[%{email_prefix}] Log ind via link"
       text_body_template: |
         Her er dit link til at logge ind på [%{site_name}](%{base_url}).
@@ -3116,6 +3098,8 @@ da:
     title: "Gå ind i fejlsikret tilstand"
     enter: "Gå ind i fejlsikret tilstand"
     must_select: "Du skal vælge mindst én mulighed for at gå i fejlsikret tilstand."
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse Opsætning"
     step:
@@ -3136,6 +3120,9 @@ da:
   onebox:
     github:
       closed: "lukket"
+      status_date:
+        approved: "godkendt"
+        closed: "lukket"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} nævnte dig i "%{topic}" - %{site_title}'
@@ -3197,10 +3184,9 @@ da:
         complete: "Indlæg slettet."
       delete_and_agree_replies:
         confirm: "Er du sikker på, at du også vil slette svarene på indlægget?"
-      disagree_and_restore:
-        description: "Gendan indlægget, så alle brugere kan se det."
-      disagree:
+      disagree_bundle:
         title: "Nej"
+      disagree:
         complete: "Rapportering ignoreret."
       ignore:
         title: "Ignorér"
@@ -3209,32 +3195,41 @@ da:
         title: "Gøre ingenting"
         complete: "Rapportering ignoreret."
       approve:
-        title: "Godkend"
+        title: "Ja"
         complete: "Indlæg godkendt."
       approve_post:
-        title: "Godkend Indlæg"
+        title: "Ja"
         complete: "Indlæg godkendt."
       approve_post_closed:
-        title: "Godkend Indlæg"
+        title: "Ja"
         complete: "Indlæg godkendt."
+      reject_post_bundle:
+        title: "Nej"
       reject_post:
         title: "Afvis Indlæg"
         complete: "Indlæg afvist."
       approve_user:
-        title: "Godkend Bruger"
+        title: "Ja"
         complete: "Bruger godkendt."
       reject_user:
-        title: "Slet Bruger…"
+        title: "Nej"
         delete:
           title: "Slet Bruger"
-          description: "Brugeren vil blive slettet fra forummet."
           complete: "Bruger slettet."
         block:
           title: "Slet og Blokér Bruger"
           description: "Brugeren vil blive slettet, og vi vil blokere deres IP og e-mail-adresse."
+      confirm_spam:
+        title: "Ja"
+      not_spam:
+        title: "Nej"
       reject:
         title: "Afvis"
         bundle_title: "Afvis…"
+      approve_and_restore:
+        title: "Ja"
+      approve_and_unhide:
+        title: "Ja"
       no_action_post:
         title: "Ingen handling"
       delete_post:

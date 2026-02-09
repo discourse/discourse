@@ -67,7 +67,6 @@ fi:
         description: Kun ketjun tunnisteet muuttuvat, automaatio käynnistyy
       topic:
         title: Ketju
-        description: Tähän liittyvää skriptiä käytetään vain tietyssä ketjussa; tämä on hyödyllistä esimerkiksi validointia suorittavissa skripteissä
       after_post_cook:
         title: Viestin kirjoittamisen jälkeen
         description: Kun viestin sisältö luodaan, automaatio käynnistyy
@@ -158,3 +157,5 @@ fi:
       random_assign:
         title: "Satunnainen määritys"
         description: "Määritä ketjuja satunnaisesti ryhmälle"
+      set_topic_timer:
+        title: "Aseta ajastin ketjulle"

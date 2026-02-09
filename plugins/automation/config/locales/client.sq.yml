@@ -27,6 +27,12 @@ sq:
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categories
+            tags:
+              label: Etiketat
         user_badge_granted:
           fields:
             badge:
@@ -109,6 +115,8 @@ sq:
               label: ID e temës
             user:
               label: User
+        set_topic_timer:
+          title: Cakto kohëmatësin e temës
       models:
         trigger:
           name:

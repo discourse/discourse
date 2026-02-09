@@ -16,6 +16,7 @@ lt:
       topic_status_filter:
         all: "visi"
         solved: "išspresta"
+      move_post_cancel: "Atšaukti"
     discourse_automation:
       triggerables:
         first_accepted_solution:

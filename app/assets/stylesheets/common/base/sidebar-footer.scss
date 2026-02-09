@@ -4,12 +4,13 @@
   width: 100%;
   position: sticky;
   bottom: 0;
+  padding-inline: var(--space-2);
 
   .sidebar-footer-container {
     display: flex;
     align-items: stretch;
     position: relative;
-    padding: 0.5em 0.8em;
+    padding: var(--space-2) 0;
     padding-bottom: max(env(safe-area-inset-bottom), 0.5em);
 
     &::before {
@@ -59,7 +60,7 @@
       color: var(--d-sidebar-link-icon-color);
     }
 
-    &:focus,
+    &:focus-visible,
     &:hover {
       background: var(--d-sidebar-highlight-background);
 

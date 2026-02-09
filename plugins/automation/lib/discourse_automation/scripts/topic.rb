@@ -48,29 +48,24 @@ DiscourseAutomation::Scriptable.add(DiscourseAutomation::Scripts::TOPIC) do
 
     creator = User.find_by(username: creator_username)
     if !creator
-      Rails.logger.warn "[discourse-automation] creator with username: `#{creator_username}` was not found"
+      DiscourseAutomation::Logger.warn("creator with username: `#{creator_username}` was not found")
       next
     end
 
     category_id = fields.dig("category", "value")
     category = Category.find_by(id: category_id)
     if !category
-      Rails.logger.warn "[discourse-automation] category of id: `#{category_id}` was not found"
+      DiscourseAutomation::Logger.warn("category of id: `#{category_id}` was not found")
       next
     end
 
     tags = fields.dig("tags", "value") || []
-    begin
-      new_post =
-        PostCreator.new(
-          creator,
-          raw: topic_raw,
-          title: title,
-          category: category.id,
-          tags: tags,
-        ).create!
-    rescue StandardError => e
-      Rails.logger.warn "[discourse-automation] couldn't create post: #{e.message}"
+    post_creator = PostCreator.new(creator, raw: topic_raw, title:, category: category.id, tags:)
+    new_post = post_creator.create
+    if new_post.blank? || post_creator.errors.present?
+      DiscourseAutomation::Logger.error(
+        "Failed to create topic '#{title}': #{post_creator.errors.full_messages.join(", ")}",
+      )
       next
     end
 

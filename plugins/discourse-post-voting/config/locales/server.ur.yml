@@ -28,8 +28,6 @@ ur:
           agree_and_silence:
             title: "صارف خاموش کریں"
             description: "فلَیگ کے ساتھ اتفاق کریں اور صارف خاموش کریں۔"
-          disagree:
-            title: "اختلاف کریں"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

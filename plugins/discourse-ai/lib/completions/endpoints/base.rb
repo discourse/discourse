@@ -16,10 +16,11 @@ module DiscourseAi
         TIMEOUT = 360
 
         class << self
-          def endpoint_for(provider_name)
+          def endpoint_for(llm_model)
             endpoints = [
               DiscourseAi::Completions::Endpoints::AwsBedrock,
               DiscourseAi::Completions::Endpoints::OpenAi,
+              DiscourseAi::Completions::Endpoints::OpenAiResponses,
               DiscourseAi::Completions::Endpoints::HuggingFace,
               DiscourseAi::Completions::Endpoints::Gemini,
               DiscourseAi::Completions::Endpoints::Vllm,
@@ -35,11 +36,11 @@ module DiscourseAi
             endpoints << DiscourseAi::Completions::Endpoints::Fake if Rails.env.local?
 
             endpoints.detect(-> { raise DiscourseAi::Completions::Llm::UNKNOWN_MODEL }) do |ek|
-              ek.can_contact?(provider_name)
+              ek.can_contact?(llm_model)
             end
           end
 
-          def can_contact?(_model_provider)
+          def can_contact?(_llm_model)
             raise NotImplementedError
           end
         end
@@ -449,7 +450,7 @@ module DiscourseAi
 
         def track_failures(call_status)
           return if call_status == :cancelled
-          return if llm_model.blank? || llm_model.seeded?
+          return if llm_model.blank? || llm_model.seeded? || llm_model.new_record?
           key = "ai_llm_status_fast_fail:#{llm_model.id}"
 
           if call_status == :success
@@ -488,7 +489,7 @@ module DiscourseAi
             feature_name: feature_name,
             llm_id: llm_model&.id,
             language_model: llm_model.name,
-            feature_context: feature_context.present? ? feature_context.as_json : nil,
+            feature_context: feature_context.presence&.as_json,
           )
         end
 
@@ -533,6 +534,7 @@ module DiscourseAi
 
           # this is to keep stuff backwards compatible
           response_data = response_data.first if response_data.length == 1
+          response_data = "" if response_data.nil?
 
           response_data
         end

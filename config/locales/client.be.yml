@@ -214,7 +214,7 @@ be:
       el:
         name: Грэчаская
       en:
-        name: Англійская (ЗША)
+        name: Англійская
       en_GB:
         name: Англійская (Вялікабрытанія)
       es:
@@ -702,6 +702,8 @@ be:
         reviewable_post:
           title: "Паведамленне"
           noun: "пост"
+        reviewable_ai_post:
+          noun: "пост"
       user_label: "Карыстальнік"
       notes:
         delete: "выдаляць"
@@ -791,8 +793,6 @@ be:
             password: "Пароль"
           settings:
             title: "Налады"
-          mailboxes:
-            disabled: "Адключана"
         membership:
           access: Доступ
         categories:
@@ -1221,165 +1221,168 @@ be:
       other: адказаў
     signup_cta:
       sign_up: "Зарэгістравацца"
-      hide_forever: "няма дзякуй"
+      hide_forever: "не, дзякуй"
     summary:
       buttons:
-        regenerate: "Перагенераваць"
-      disable: "Усе паведамленні"
+        regenerate: "Перагенерыраваць"
+      disable: "Паказаць усе допісы"
     deleted_filter:
-      enabled_description: "Гэтая тэма ўтрымлівае выдаленыя паведамленні, якія былі схаваныя."
-      disabled_description: "Выдаленыя паведамленні ў гэтай тэме паказана."
-      enable: "Выдаленыя паведамленні ў гэтай тэме паказана...."
-      disable: "Паказаць выдаленыя паведамленні"
+      enabled_description: "Гэта тэма ўтрымлівае выдаленыя допісы, якія былі схаваныя."
+      disabled_description: "Выдаленыя допісы ў гэтай тэме паказваюцца."
+      enable: "Схаваць выдаленыя допісы"
+      disable: "Паказаць выдаленыя допісы"
     private_message_info:
-      title: "Паказаць выдаленыя паведамленні..."
-      remove_user: "выдаліць карыстальніка"
+      title: "Паведамленне"
+      remove_user: "Выдаліць карыстальніка"
     email: "Электронная пошта"
     username: "Імя карыстальніка"
-    last_seen: "заўважаны апошні раз"
+    last_seen: "быў(-ла)"
     created: "Створана"
     created_lowercase: "створана"
-    trust_level: "ўзровень даверу"
+    trust_level: "Узровень даверу"
     search_hint: "імя карыстальніка, email або IP-адрас"
     create_account:
-      header_title: "жаданы!"
-      title: "рэгістрацыя"
-      failed: "Нешта пайшло не так; хутчэй за ўсё, гэтую электронную пошту ўжо зарэгістравана, паспрабуйце спасылкі Забыўся пароль"
+      header_title: "Вітаем!"
+      title: "Рэгістрацыя"
+      failed: "Нешта пайшло не так. Магчыма, гэта электронная пошта ўжо зарэгістравана, паспрабуйце націснуць \"Забыўся пароль\""
       progress_bar:
-        signup: "рэгістрацыя"
-        approve: "ўхваляць"
+        signup: "Рэгістрацыя"
+        approve: "Ухваліць"
         login: "Увайсці"
     forgot_password:
       title: "Скід пароля"
-      action: "Я забыўся (а) пароль"
-      invite: "Калі ласка, увядзіце імя карыстальніка або адрас электроннай пошты, і мы вышлем Вам ліст для зьвяржэньня пароля."
-      reset: "скінуць пароль"
-      button_ok: "Добра"
+      action: "Забыўся(-лася) пароль"
+      invite: "Увядзіце імя карыстальніка або адрас электроннай пошты, і мы вышлем вам ліст для скіду пароля."
+      reset: "Скінуць пароль"
+      button_ok: "ОК"
     email_login:
-      confirm_title: Працягнуць да %{site_name}
+      confirm_title: Перайсці да %{site_name}
     login:
-      title: "Увайсці"
+      title: "Уваход"
       username: "Карыстальнік"
       password: "Пароль"
-      second_factor_backup_description: "Калі ласка, увядзіце адзін з рэзервовых кодаў:"
-      caps_lock_warning: "Caps Lock уключаны"
+      second_factor_backup_description: "Увядзіце адзін з рэзервовых кодаў:"
+      caps_lock_warning: "Уключаны Caps Lock"
       error: "Невядомая памылка"
-      reset_password: "скінуць пароль"
-      or: "або"
-      awaiting_activation: "Ваш рахунак чакае актывацыю. Для атрымання яшчэ аднаго актывацыйны лісты выкарыстоўвайце спасылкі Забыўся пароль."
-      awaiting_approval: "Ваш рахунак яшчэ не зацверджаны членам каманды. Калі ён будзе актываваны, Вы атрымаеце электронны ліст."
+      reset_password: "Скінуць пароль"
+      or: "Або"
+      awaiting_activation: "Уліковы запіс чакае актывацыі. Каб атрымаць яшчэ адзін ліст актывацыі, скарыстайце спасылку \"Забыўся(-лася) пароль\"."
+      awaiting_approval: "Уліковы запіс яшчэ не ўхвалены членам каманды. Калі ён будзе актываваны, вы атрымаеце электронны ліст."
       requires_invite: "Выбачайце, доступ да гэтага форуму - толькі па запрашэннях."
-      not_activated: "Вы яшчэ не можаце ўвайсці ў сістэму. Мы ўжо накіравалі Вам ліст для актывацыі на скрыню <b> %{sentTo}"
-      admin_not_allowed_from_ip_address: "Вы не можаце ўвайсці як адміністратар з гэтага IP-адрасу."
+      not_activated: "Вы пакуль не можаце ўвайсці. Мы адправілі вам ліст актывацыі на адрас <b>%{sentTo}</b>. Выконвайце інструкцыі ў гэтым лісце, каб актываваць уліковы запіс."
+      admin_not_allowed_from_ip_address: "Вы не можаце ўвайсці як адміністратар з гэтага IP-адраса."
       resend_activation_email: "Націсніце тут, каб атрымаць яшчэ адзін ліст з актывацыяй."
       activate_account: "Актываваць уліковы запіс"
-      resend_title: "Актываваць зноў"
-      sent_activation_email_again: "Мы накіравалі ў паштовую скрыню <b> %{currentEmail}"
-      to_continue: "Калі ласка Увайдзіце"
-      not_approved: "Ваш рахунак яшчэ не было прынята. Вы атрымаеце апавяшчэнне па электроннай пошце, калі зможаце ўвайсці ў сістэму."
+      resend_title: "Паўторна адправіць ліст актывацыі"
+      sent_activation_email_again: "Мы адправілі вам яшчэ адзін ліст актывацыі на адрас <b>%{currentEmail}</b>. Ён можа прыйсці праз некалькі хвілін; абавязкова праверце папку са спамам."
+      to_continue: "Увайдзіце ў сістэму"
+      not_approved: "Уліковы запіс яшчэ не ўхвалены. Вы атрымаеце апавяшчэнне па электроннай пошце, калі зможаце ўвайсці ў сістэму."
       google_oauth2:
         name: "Google"
       second_factor_toggle:
-        totp: "Выкарыстоўвайце прыкладанне аутентификационное замест"
-        backup_code: "Выкарыстоўваць рэзервовы код замест"
+        totp: "Выкарыстоўваць праграму аўтэнтыфікацыі"
+        backup_code: "Выкарыстоўваць рэзервовы код"
     invites:
-      welcome_to: "Сардэчна запрашаем да сайта %{site_name}!"
+      welcome_to: "Вітаем на %{site_name}!"
       name_label: "Назва"
       password_label: "Пароль"
     password_reset:
-      continue: "Працягваюць% {site_name}"
+      continue: "Перайсці да %{site_name}"
     category_page_style:
       categories_only: "Толькі катэгорыі"
-      categories_with_featured_topics: "Катэгорыі з Выбранымі Тэмамі"
-      categories_and_latest_topics: "Катэгорыі і Апошнія тэмы"
-      categories_and_top_topics: "Катэгорыі і асноўныя тэмы"
+      categories_with_featured_topics: "Катэгорыі з вартымі ўвагі тэмамі"
+      categories_and_latest_topics: "Катэгорыі і апошнія тэмы"
+      categories_and_top_topics: "Катэгорыі і папулярныя тэмы"
     full_name_requirement:
-      required_at_signup: "абавязковыя"
+      required_at_signup: "Абавязкова"
     welcome_banner_page_visibility:
-      homepage: "хатняя старонка"
+      homepage: "Галоўная старонка"
     select_kit:
       delete_item: "Выдаліць %{name}"
       components:
         bulk_select_topics_dropdown:
-          title: "масавыя дзеянні"
+          title: "Масавыя дзеянні"
         bulk_select_bookmarks_dropdown:
-          title: "масавыя дзеянні"
+          title: "Масавыя дзеянні"
     date_time_picker:
-      from: ад
-      to: да
+      from: Ад
+      to: Да
     emoji_picker:
-      flags: Пазначэнні
+      flags: Сцягі
     composer:
-      options: "Налады"
-      posting_not_on_topic: "На якую тэму Вы хочаце адказаць?"
+      options: "Параметры"
+      posting_not_on_topic: "У якой тэме вы хочаце адказаць?"
       saved_local_draft_tip: "захавана лакальна"
-      drafts_offline: "чарнавікі у афлайне"
+      drafts_offline: "чарнавікі па-за сеткай"
       error:
-        title_missing: "Загаловак неабходна"
-        category_missing: "Вы павінны выбраць катэгорыю"
-      save_edit: "захаваць змены"
+        title_missing: "Патрабуецца загаловак"
+        category_missing: "Неабходна выбраць катэгорыю"
+      save_edit: "Захаваць змены"
       reply: "Адказаць"
-      cancel: "Адмяніць"
-      create_topic: "Стварыць Тэму"
+      cancel: "Скасаваць"
+      create_topic: "Стварыць тэму"
       title_placeholder: "Пра што гэта абмеркаванне, у адным кароткім сказе?"
-      title_or_link_placeholder: "Увядзіце загаловак, альбо ўстаўце спасылку тут"
-      edit_reason_placeholder: "чаму Вы рэдагуеце паведамленне?"
-      reply_placeholder: "Увядзіце тэкст тут. Выкарыстоўвайце для фарматавання Markdown, BBCode або HTML. Перацягвайце або ўстаўляйце выявы."
-      reply_placeholder_no_images: "Увядзіце тэкст тут. Выкарыстоўвайце для фарматавання Markdown, BBCode або HTML."
-      view_new_post: "Праглядзець свой новы запіс."
-      saving: "захаванне"
+      title_or_link_placeholder: "Увядзіце загаловак, або ўстаўце тут спасылку"
+      edit_reason_placeholder: "прычына рэдагавання"
+      reply_placeholder: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML. Перацягвайце або ўстаўляйце відарысы."
+      reply_placeholder_no_images: "Увядзіце тэкст тут. Выкарыстоўвайце для фармаціравання Markdown, BBCode або HTML."
+      view_new_post: "Праглядзець новы допіс."
+      saving: "Захаванне"
       saved: "Захавана!"
-      quote_post_title: "Працытаваць увесь паведамленне цалкам"
-      bold_title: "моцнае вылучэнне"
-      bold_text: "Моцнае вылучэнне тэксту"
-      italic_title: "вылучэнне"
-      italic_text: "выдзялення тэксту"
+      quote_post_title: "Працытаваць увесь допіс"
+      bold_title: "Тоўсты"
+      bold_text: "тоўсты тэкст"
+      italic_title: "Курсіў"
+      italic_text: "курсіўны тэкст"
       link_title: "Спасылка"
       link_description: "увядзіце апісанне спасылкі"
-      blockquote_title: "цытата"
-      blockquote_text: "цытата"
-      code_title: "Папярэдне фарматаваны тэкст"
-      paste_code_text: "увядзіце ці ўстаўце код тут"
-      upload_title: "спампаваць"
-      upload_description: "увядзіце апісанне загрузкі"
-      list_item: "элемент спісу"
-      help: "Markdown Editing Help"
-      modal_ok: "Добра"
-      admin_options_title: "Неабавязковыя налады персаналу для гэтай тэмы"
+      blockquote_title: "Цытата"
+      blockquote_text: "Цытата"
+      code_title: "Папярэдне фармаціраваны тэкст"
+      paste_code_text: "Увядзіце або ўстаўце код"
+      upload_title: "Запампаваць"
+      upload_description: "Увядзіце апісанне запампоўкі"
+      list_item: "Элемент спіса"
+      wrap_modal:
+        apply: "Прымяніць"
+      help: "Даведка па рэдагаванні Markdown"
+      modal_ok: "ОК"
+      admin_options_title: "Неабавязковыя налады каманды для гэтай тэмы"
       composer_actions:
         reply: Адказаць
         edit: Рэдагаваць
         create_personal_message:
           label: "Новае паведамленне"
           desc: "Напісаць новае асабістае паведамленне"
-      ignore: "ігнараваць"
+      ignore: "Ігнараваць"
+      image: "відарыс"
     notifications:
-      watching_first_post_label: "Стварыць новую тэму"
-      admin_problems: "Новыя рэкамендацыі на вашым сайце прыборнай панэлі"
+      watching_first_post_label: "Новая тэма"
+      admin_problems: "Новая парада на панэлі кіравання сайта"
       dismiss_confirmation:
-        cancel: "Адмяніць"
+        cancel: "Скасаваць"
       popup:
-        mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'
-        group_mentioned: '% {Імя карыстальніка} згадаў вас у "% {} тэме" -% {SITE_TITLE}'
-        quoted: '% {Імя карыстальніка} працытаваў вас у "% {} тэме" -% {SITE_TITLE}'
-        replied: '% {Імя карыстальніка} адказаў вам у "% {} тэме" -% {SITE_TITLE}'
-        posted: '% {Імя карыстальніка} пісаў у "% {} тэме" -% {SITE_TITLE}'
-        linked: '% {Імя карыстальніка} звязана з вашай пасады ад "% {} тэме" -% {SITE_TITLE}'
-        watching_first_post: '% {Імя карыстальніка} стварыў новую тэму "% {тэма}" - {%} SITE_TITLE'
-        confirm_title: "Апавяшчэння ўключаная -% {SITE_TITLE}"
-        confirm_body: "Поспех! Паведамлення былі ўключаны."
-        custom: "Апавяшчэнне ад% {імя карыстальніка} на {%} SITE_TITLE"
+        mentioned: '%{username} згадаў(-ла) вас у "%{topic}" - %{site_title}'
+        group_mentioned: '%{username} згадаў(-ла) вас у "%{topic}" - %{site_title}'
+        quoted: '%{username} працытаваў(-ла) вас у "%{topic}" - %{site_title}'
+        replied: '%{username} адказаў(-ла) вам у "%{topic}" - %{site_title}'
+        posted: '%{username} апублікаваў(-ла) допіс у "%{topic}" - %{site_title}'
+        linked: '%{username} спаслаўся(-лася) на ваш допіс у "%{topic}" - %{site_title}'
+        watching_first_post: '%{username} стварыў(-ла) новую тэму "%{topic}" - %{site_title}'
+        confirm_title: "Апавяшчэнні ўключаны - %{site_title}"
+        confirm_body: "Гатова! Апавяшчэнні ўключаны."
+        custom: "Апавяшчэнне ад %{username} на %{site_title}"
       titles:
         watching_first_post: "новая тэма"
-        admin_problems: "новыя рэкамендацыі на вашым сайце прыборнай панэлі"
+        admin_problems: "новая парада на панэлі кіравання сайта"
     upload_selector:
-      delete: "выдаляць"
-      uploading: "загрузка"
-      default_image_alt_text: малюнак
+      delete: "Выдаліць"
+      uploading: "Запампоўванне"
+      default_image_alt_text: відарыс
     search:
-      sort_by: "сартаваць па"
-      latest_post: "апошняе паведамленне"
-      select_all: "выбраць усе"
+      sort_by: "Сартаваць па"
+      latest_post: "Апошні допіс"
+      select_all: "Выбраць усе"
       title: "Пошук"
       full_page_title: "Пошук"
       results: "вынікі"
@@ -1388,7 +1391,7 @@ be:
       search_google_button: "Google"
       search_button: "Пошук"
       categories: "Катэгорыі"
-      tags: "Цэтлікі"
+      tags: "Тэгі"
       type:
         users: "Карыстальнікі"
         categories: "Катэгорыі"
@@ -1397,43 +1400,43 @@ be:
         private_messages: "Пошук паведамленняў"
       advanced:
         posted_by:
-          label: апублікавана
+          label: Апублікаваў(-ла)
         in_group:
           label: У групе
         post:
           count:
-            label: Паведамленні
+            label: Допісы
           time:
-            before: перад
+            before: да
             after: пасля
         views:
-          label: прагляды
+          label: Прагляды
     new_item: "новы"
     go_back: "вярнуцца назад"
-    not_logged_in_user: "старонка карыстальніка з вынікам бягучай дзейнасці і наладамі"
-    current_user: "перайсці да Вашай старонкі карыстальніка"
+    not_logged_in_user: "старонка карыстальніка з вынікам бягучай актыўнасці і наладамі"
+    current_user: "перайсці да старонкі карыстальніка"
     user_menu:
       tabs:
         replies: "Адказы"
-        mentions: "згадкі"
-        likes: "сімпатыі"
-        bookmarks: "закладкі"
+        mentions: "Згадкі"
+        likes: "Падабайкі"
+        bookmarks: "Закладкі"
         profile: "Профіль"
     topics:
-      new_messages_marker: "апошні візыт"
+      new_messages_marker: "быў(-ла)"
       bulk:
-        select_all: "выбраць усе"
+        select_all: "Выбраць усе"
         delete: "Выдаліць тэмы"
         delete_topics_count:
           one: "Выдаліць тэму"
           few: "Выдаліць тэмы"
           many: "Выдаліць тэмы"
           other: "Выдаліць тэмы"
-        dismiss_read: "Пазначыць усе як прачытаныя"
-        dismiss_new: "Dismiss New"
+        dismiss_read: "Адхіліць усе непрачытаныя"
+        dismiss_new: "Адхіліць новыя"
         toggle: "перамыкач масавай дзеянні над тэмамі"
-        actions: "масавыя дзеянні"
-        close_topics: "Закрыць тэму"
+        actions: "Масавыя дзеянні"
+        close_topics: "Закрыць тэмы"
         archive_topics: "Заархіваваныя тэмы"
         move_messages_to_inbox: "Перамясціць у тэчцы Уваходныя"
       none:
@@ -1444,16 +1447,6 @@ be:
         bookmarks: "У вас пакуль няма тэмаў у закладках."
         category: "У катэгорыі %{category} няма тэм."
         top: "There are no top topics."
-      bottom:
-        latest: "Усе апошнія тэмы адлюстраваныя."
-        posted: "There are no more posted topics."
-        read: "Больш няма прачытаных тэм."
-        new: "Больш няма новых тэм."
-        unread: "Больш няма непрачытаных тэм."
-        category: "Больш няма тым у катэгорыі %{category}."
-        tag: "Больш няма тым у катэгорыі %{tag}."
-        top: "There are no more top topics."
-        bookmarks: "Тэмы ў закладках адсутнічаюць."
     topic_bulk_actions:
       close_topics:
         name: "зачыніць"
@@ -1644,6 +1637,8 @@ be:
       creation_error: Пры стварэнні катэгорыі адбылася памылка.
       save_error: У выпадку захавання катэгорыі адбылася памылка.
       description: "апісанне"
+      icon: "Абразка"
+      emoji: "Emoji"
       background_color: "колер"
       color_validations:
         cant_be_empty: "не можа быць пустым"
@@ -1653,7 +1648,6 @@ be:
         options:
           icon: "Абразка"
           emoji: "Emoji"
-      name_placeholder: "Не больш за аднаго-двух слоў"
       color_placeholder: "Любы вэб-колер"
       delete_confirm: "Вы ўпэўненыя, што жадаеце выдаліць гэтую катэгорыю?"
       delete_error: "Пры выдаленні катэгорыі адбылася памылка."
@@ -1664,11 +1658,14 @@ be:
         see: "бачыць"
         reply: "Адказаць"
         create: "Стварыць"
-      images: "Выява"
       email_in: "Custom incoming email address:"
       allow_badges_label: "Дазволіць ўзнагароджваць значкамі ў гэтай катэгорыі"
       review_group_name: "назва групы"
       this_year: "гэтага года"
+      none_subcategory_text: "Няма"
+      visibility:
+        public: "Публічная"
+        group_restricted: "Прыватная"
       notifications:
         watching:
           title: "сачыць"
@@ -1839,6 +1836,7 @@ be:
       sort_by: "Сартаваць па:"
       sort_by_count: "падлічваць"
       sort_by_name: "Імя"
+      bulk_create_button: "стварыць"
       notifications:
         watching:
           title: "Сачыць"
@@ -1996,6 +1994,9 @@ be:
           all: "Усе"
           disabled: "Адключана"
           impact_type_other: "Іншае"
+          impact_role_admins: "адміністратары"
+          impact_role_moderators: "Мадэратары"
+          impact_role_staff: "персанал"
       config:
         developer:
           title: "для распрацоўшчыкаў"
@@ -2736,6 +2737,7 @@ be:
         uploaded_image_list:
           upload:
             label: "Загрузіць"
+        download_file: "спампаваць"
         selectable_avatars:
           title: "Спіс аватараў карыстальнікі могуць выбраць"
         table_column_heading:
@@ -2792,6 +2794,8 @@ be:
         grant: Выдаць
         no_user_badges: " %{Name} не атрымліваў ні аднаго."
         no_badges: Тут няма значкоў, якія могуць быць прадастаўлены.
+        sections:
+          settings: Налады
         allow_title: Дазволіць выкарыстанне значкоў як званняў
         disabled: адключана
         icon: Абразка

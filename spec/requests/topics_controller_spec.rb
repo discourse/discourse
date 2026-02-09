@@ -200,6 +200,26 @@ RSpec.describe TopicsController do
           expect(Tag.all.pluck(:name)).to include("foo", "bar")
         end
 
+        it "moves posts to new topic with existing tags" do
+          tag1 = Fabricate(:tag, name: "existing-tag")
+          tag2 = Fabricate(:tag, name: "another-tag")
+
+          post "/t/#{topic.id}/move-posts.json",
+               params: {
+                 title: "Topic with tags",
+                 post_ids: [p2.id],
+                 category_id: category.id,
+                 tag_ids: [tag1.id, tag2.id],
+               }
+
+          expect(response.status).to eq(200)
+          result = response.parsed_body
+          expect(result["success"]).to eq(true)
+
+          new_topic = Topic.last
+          expect(new_topic.tags).to contain_exactly(tag1, tag2)
+        end
+
         describe "with freeze_original param" do
           it "duplicates post to new topic and keeps original post in place" do
             expect do
@@ -956,6 +976,29 @@ RSpec.describe TopicsController do
         end
       end
     end
+
+    describe "error handling" do
+      fab!(:p1) { Fabricate(:post, user: user) }
+      fab!(:topic) { p1.topic }
+
+      it "returns a JSON error when move_posts raises RecordInvalid" do
+        sign_in(moderator)
+
+        Topic
+          .any_instance
+          .stubs(:move_posts)
+          .raises(
+            ActiveRecord::RecordInvalid.new(
+              Post.new.tap { |p| p.errors.add(:base, "Something went wrong") },
+            ),
+          )
+
+        post "/t/#{topic.id}/merge-topic.json", params: { destination_topic_id: dest_topic.id }
+
+        expect(response.status).to eq(422)
+        expect(response.parsed_body["errors"]).to be_present
+      end
+    end
   end
 
   describe "#change_post_owners" do
@@ -1090,6 +1133,108 @@ RSpec.describe TopicsController do
           expect(topic.user.username).to eq(user_a.username)
           expect(p1.user.username).to eq(user_a.username)
           expect(p1.like_count).to eq(0)
+        end
+      end
+
+      context "with API key" do
+        let(:api_key) { Fabricate(:api_key, user: admin, created_by: admin) }
+
+        it "allows changing ownership with change_owner scope" do
+          ApiKeyScope.create!(resource: "topics", action: "change_owner", api_key_id: api_key.id)
+
+          post "/t/#{topic.id}/change-owner.json",
+               params: {
+                 username: user_a.username_lower,
+                 post_ids: [p1.id],
+               },
+               headers: {
+                 "HTTP_API_KEY" => api_key.key,
+                 "HTTP_API_USERNAME" => api_key.user.username,
+               }
+
+          expect(response.status).to eq(200)
+          expect(p1.reload.user).to eq(user_a)
+        end
+
+        it "denies access without change_owner scope" do
+          ApiKeyScope.create!(resource: "topics", action: "read", api_key_id: api_key.id)
+
+          post "/t/#{topic.id}/change-owner.json",
+               params: {
+                 username: user_a.username_lower,
+                 post_ids: [p1.id],
+               },
+               headers: {
+                 "HTTP_API_KEY" => api_key.key,
+                 "HTTP_API_USERNAME" => api_key.user.username,
+               }
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      describe "private messages" do
+        fab!(:private_category) do
+          Fabricate(
+            :private_category,
+            group: Fabricate(:group),
+            permission_type: CategoryGroup.permission_types[:full],
+          )
+        end
+        fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+        fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+        fab!(:pm_user, :user)
+        fab!(:pm_topic) { Fabricate(:private_message_topic, user: pm_user) }
+        fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: pm_user) }
+
+        describe "moderator signed in" do
+          before do
+            SiteSetting.moderators_change_post_ownership = true
+            sign_in(moderator)
+          end
+
+          it "returns 403 for topics in private categories the moderator cannot see" do
+            post "/t/#{private_topic.id}/change-owner.json",
+                 params: {
+                   username: user_a.username,
+                   post_ids: [private_post.id],
+                 }
+            expect(response.status).to eq(403)
+          end
+
+          it "returns 403 for private messages the moderator is not a participant of" do
+            post "/t/#{pm_topic.id}/change-owner.json",
+                 params: {
+                   username: user_a.username,
+                   post_ids: [pm_post.id],
+                 }
+            expect(response.status).to eq(403)
+          end
+        end
+
+        describe "admin signed in" do
+          before { sign_in(admin) }
+
+          it "can change ownership of posts in private messages" do
+            post "/t/#{pm_topic.id}/change-owner.json",
+                 params: {
+                   username: user_a.username,
+                   post_ids: [pm_post.id],
+                 }
+            expect(response.status).to eq(200)
+            expect(pm_post.reload.user).to eq(user_a)
+          end
+
+          it "can change ownership of posts in private categories" do
+            post "/t/#{private_topic.id}/change-owner.json",
+                 params: {
+                   username: user_a.username,
+                   post_ids: [private_post.id],
+                 }
+            expect(response.status).to eq(200)
+            expect(private_post.reload.user).to eq(user_a)
+          end
         end
       end
     end
@@ -1965,57 +2110,100 @@ RSpec.describe TopicsController do
         context "with tags" do
           before { SiteSetting.tagging_enabled = true }
 
-          it "can add a tag to topic" do
+          describe "tagging by name" do
+            it "can add a tag to topic" do
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [tag.name] }
+              end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+              expect(response.status).to eq(200)
+              expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+            end
+
+            it "can create a tag" do
+              SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: ["newtag"] }
+              end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+              expect(response.status).to eq(200)
+              expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
+            end
+
+            it "can change the category and create a new tag" do
+              SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json",
+                    params: {
+                      tags: ["newtag"],
+                      category_id: category.id,
+                    }
+              end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+              expect(response.status).to eq(200)
+              expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
+            end
+
+            it "can add a tag to wiki topic" do
+              SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
+              topic.first_post.update!(wiki: true)
+              sign_in(user_2)
+
+              expect do
+                put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] }
+              end.not_to change { topic.reload.first_post.revisions.count }
+
+              expect(response.status).to eq(403)
+              user_2.groups << Group.find_by(name: "trust_level_2")
+
+              expect do put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] } end.to change {
+                topic.reload.first_post.revisions.count
+              }.by(1)
+
+              expect(response.status).to eq(200)
+              expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+            end
+
+            it "can remove a tag" do
+              topic.tags << tag
+
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [""] }
+              end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+              expect(response.status).to eq(200)
+              expect(topic.tags).to eq([])
+            end
+
+            it "does not cause a revision when tags have not changed" do
+              topic.tags << tag
+
+              expect do
+                put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [tag.name] }
+              end.not_to change { topic.reload.first_post.revisions.count }
+
+              expect(response.status).to eq(200)
+            end
+          end
+
+          it "can update tags" do
             expect do
-              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [tag.name] }
+              put "/t/#{topic.id}/tags.json", params: { tags: [{ id: tag.id, name: tag.name }] }
             end.to change { topic.reload.first_post.revisions.count }.by(1)
 
             expect(response.status).to eq(200)
             expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
           end
 
-          it "can create a tag" do
+          it "can create a new tag" do
             SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
             expect do
-              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: ["newtag"] }
+              put "/t/#{topic.id}/tags.json", params: { tags: [{ name: "brand-new" }] }
             end.to change { topic.reload.first_post.revisions.count }.by(1)
 
             expect(response.status).to eq(200)
-            expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
-          end
-
-          it "can change the category and create a new tag" do
-            SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-            expect do
-              put "/t/#{topic.slug}/#{topic.id}.json",
-                  params: {
-                    tags: ["newtag"],
-                    category_id: category.id,
-                  }
-            end.to change { topic.reload.first_post.revisions.count }.by(1)
-
-            expect(response.status).to eq(200)
-            expect(topic.reload.tags.pluck(:name)).to contain_exactly("newtag")
-          end
-
-          it "can add a tag to wiki topic" do
-            SiteSetting.edit_wiki_post_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
-            topic.first_post.update!(wiki: true)
-            sign_in(user_2)
-
-            expect do
-              put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] }
-            end.not_to change { topic.reload.first_post.revisions.count }
-
-            expect(response.status).to eq(403)
-            user_2.groups << Group.find_by(name: "trust_level_2")
-
-            expect do put "/t/#{topic.id}/tags.json", params: { tags: [tag.name] } end.to change {
-              topic.reload.first_post.revisions.count
-            }.by(1)
-
-            expect(response.status).to eq(200)
-            expect(topic.tags.pluck(:id)).to contain_exactly(tag.id)
+            expect(topic.reload.tags.pluck(:name)).to contain_exactly("brand-new")
           end
 
           it "does not remove tag if no params is given" do
@@ -2028,25 +2216,48 @@ RSpec.describe TopicsController do
             expect(response.status).to eq(200)
           end
 
-          it "can remove a tag" do
-            topic.tags << tag
-
-            expect do
-              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [""] }
-            end.to change { topic.reload.first_post.revisions.count }.by(1)
-
-            expect(response.status).to eq(200)
-            expect(topic.tags).to eq([])
-          end
-
           it "does not cause a revision when tags have not changed" do
             topic.tags << tag
 
             expect do
-              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [tag.name] }
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    tags: [{ id: tag.id, name: tag.name }],
+                  }
             end.not_to change { topic.reload.first_post.revisions.count }
 
             expect(response.status).to eq(200)
+          end
+
+          it "can add a tag on topic update" do
+            SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+            topic.tags << tag
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    tags: [{ id: tag.id, name: tag.name }, { name: "new-tag" }],
+                  }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags.pluck(:name)).to contain_exactly(tag.name, "new-tag")
+          end
+
+          it "can remove a tag on topic update" do
+            tag2 = Fabricate(:tag)
+            topic.tags << tag
+            topic.tags << tag2
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json",
+                  params: {
+                    tags: [{ id: tag.id, name: tag.name }],
+                  }
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags).to contain_exactly(tag)
           end
         end
 
@@ -3971,6 +4182,44 @@ RSpec.describe TopicsController do
         expect(TopicUser.get(post1.topic, post1.user).last_read_post_number).to eq(2)
       end
 
+      it "can append tags" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        tag1 = Fabricate(:tag)
+        topic.update!(user:)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id],
+              operation: {
+                type: "append_tags",
+                tag_ids: [tag1.id],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.tags).to include(tag1)
+      end
+
+      it "can append tags with tag names for backward compatibility" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+        tag1 = Fabricate(:tag)
+        topic.update!(user:)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic.id],
+              operation: {
+                type: "append_tags",
+                tags: [tag1.name],
+              },
+            }
+
+        expect(response.status).to eq(200)
+        expect(topic.reload.tags).to include(tag1)
+      end
+
       context "with private message" do
         fab!(:group) do
           Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
@@ -4524,7 +4773,7 @@ RSpec.describe TopicsController do
 
         it "dismisses topics for tag" do
           TopicTrackingState.expects(:publish_dismiss_new).with(user.id, topic_ids: [tag_topic.id])
-          put "/topics/reset-new.json?tag_id=#{tag.name}"
+          put "/topics/reset-new.json?tag_name=#{tag.name}"
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq([tag_topic.id])
         end
 
@@ -4546,7 +4795,7 @@ RSpec.describe TopicsController do
             group.add(user)
             messages =
               MessageBus.track_publish do
-                put "/topics/reset-new.json", params: { tag_id: restricted_tag.name }
+                put "/topics/reset-new.json", params: { tag_name: restricted_tag.name }
               end
             expect(messages.size).to eq(1)
             expect(messages[0].data["payload"]["topic_ids"]).to contain_exactly(
@@ -4560,7 +4809,7 @@ RSpec.describe TopicsController do
           it "ignores the tag param and dismisses all topics if the user can't see the tag" do
             messages =
               MessageBus.track_publish do
-                put "/topics/reset-new.json", params: { tag_id: restricted_tag.name }
+                put "/topics/reset-new.json", params: { tag_name: restricted_tag.name }
               end
             expect(messages.size).to eq(1)
             expect(messages[0].data["payload"]["topic_ids"]).to contain_exactly(
@@ -4588,7 +4837,7 @@ RSpec.describe TopicsController do
             user.id,
             topic_ids: [tag_and_category_topic.id],
           )
-          put "/topics/reset-new.json?tag_id=#{tag.name}&category_id=#{category.id}"
+          put "/topics/reset-new.json?tag_name=#{tag.name}&category_id=#{category.id}"
           expect(DismissedTopicUser.where(user_id: user.id).pluck(:topic_id)).to eq(
             [tag_and_category_topic.id],
           )
@@ -4819,7 +5068,7 @@ RSpec.describe TopicsController do
                 dismiss_topics: true,
                 dismiss_posts: true,
                 untrack: true,
-                tag_id: tag.name,
+                tag_name: tag.name,
               }
 
           expect(response.status).to eq(200)
@@ -4926,6 +5175,12 @@ RSpec.describe TopicsController do
 
       it "raises an error when the user doesn't have permission to convert topic" do
         sign_in(user)
+        put "/t/#{topic.id}/convert-topic/public.json"
+        expect(response).to be_forbidden
+      end
+
+      it "raises an error when a moderator doesn't have permission to convert topic" do
+        sign_in(moderator)
         put "/t/#{topic.id}/convert-topic/public.json"
         expect(response).to be_forbidden
       end
@@ -5674,7 +5929,7 @@ RSpec.describe TopicsController do
       fab!(:page2_time) { 2.months.ago }
       fab!(:page3_time) { 1.month.ago }
 
-      fab!(:page_1_topics) do
+      fab!(:page_1_posts) do
         Fabricate.times(
           20,
           :post,
@@ -5685,7 +5940,7 @@ RSpec.describe TopicsController do
         )
       end
 
-      fab!(:page_2_topics) do
+      fab!(:page_2_posts) do
         Fabricate.times(
           20,
           :post,
@@ -5696,7 +5951,7 @@ RSpec.describe TopicsController do
         )
       end
 
-      fab!(:page_3_topics) do
+      fab!(:page_3_posts) do
         Fabricate.times(
           2,
           :post,
@@ -5738,6 +5993,8 @@ RSpec.describe TopicsController do
 
         get topic.relative_url + "?page=3", env: { "HTTP_USER_AGENT" => bot_user_agent }
         body = response.body
+
+        page_3_posts.each { |post| expect(body).to include(post.cooked) }
 
         expect(response.headers["Last-Modified"]).to eq(page3_time.httpdate)
         expect(body).to include('<link rel="prev" href="' + topic.relative_url + "?page=2")

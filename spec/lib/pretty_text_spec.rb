@@ -164,7 +164,7 @@ RSpec.describe PrettyText do
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji only-emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
-            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20">d​:wink: <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
+            <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20">d​<img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"> <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20">d<br>
             <img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"><img src="/images/emoji/twitter/wink.png?v=#{Emoji::EMOJI_VERSION}" title=":wink:" class="emoji" alt=":wink:" loading="lazy" width="20" height="20"></p>
           HTML
@@ -1200,6 +1200,21 @@ RSpec.describe PrettyText do
       expect(PrettyText.excerpt(nil, 100)).to eq("")
     end
 
+    it "returns empty string when Nokogiri hits tree depth limits" do
+      html = "<div>" * 10 + "Hello" + "</div>" * 10
+      stub_const(Nokogiri::Gumbo, "DEFAULT_MAX_TREE_DEPTH", 5) do
+        expect(PrettyText.excerpt(html, 100)).to eq("")
+      end
+    end
+
+    it "returns empty string when Nokogiri hits attribute limits" do
+      attrs = (1..10).map { |i| "data-a#{i}=\"v\"" }.join(" ")
+      html = "<div #{attrs}>Hello</div>"
+      stub_const(Nokogiri::Gumbo, "DEFAULT_MAX_ATTRIBUTES", 5) do
+        expect(PrettyText.excerpt(html, 100)).to eq("")
+      end
+    end
+
     it "handles custom bbcode excerpt" do
       raw = <<~MD
       [excerpt]
@@ -1905,11 +1920,17 @@ RSpec.describe PrettyText do
     ) do
       with_tag("span", with: { class: "hashtag-icon-placeholder" })
     end
+  end
 
-    # ensure it does not fight with the autolinker
+  it "does not fight with the autolinker" do
     expect(PrettyText.cook(" http://somewhere.com/#known")).not_to include("hashtag")
     expect(PrettyText.cook(" http://somewhere.com/?#known")).not_to include("hashtag")
     expect(PrettyText.cook(" http://somewhere.com/?abc#known")).not_to include("hashtag")
+  end
+
+  it "does not trigger when preceded with a slash" do
+    expect(PrettyText.cook("/#known")).not_to include("hashtag")
+    expect(PrettyText.cook("test/#known")).not_to include("hashtag")
   end
 
   it "can handle mixed lists" do
@@ -2815,7 +2836,7 @@ HTML
       .logger
       .expects(:warn)
       .once
-      .with("[PrettyText] Deprecation notice: Some deprecation message")
+      .with("[PrettyText] DEPRECATION NOTICE: Some deprecation message")
 
     PrettyText.v8.eval <<~JS
       require("discourse/lib/deprecated").default("Some deprecation message");

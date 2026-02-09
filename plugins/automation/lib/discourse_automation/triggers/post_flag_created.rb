@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+DiscourseAutomation::Triggerable.add(DiscourseAutomation::Triggers::POST_FLAG_CREATED) do
+  field :categories, component: :categories
+  field :tags, component: :tags
+
+  placeholder :topic_url
+  placeholder :topic_title
+  placeholder :post_url
+  placeholder :post_number
+  placeholder :flagger_username
+  placeholder :flagged_username
+  placeholder :flag_type
+  placeholder :category
+  placeholder :tags
+  placeholder :post_excerpt
+end

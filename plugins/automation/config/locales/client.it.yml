@@ -10,6 +10,7 @@ it:
       logs:
         staff_actions:
           actions:
+            update_automation: aggiorna automazione
             delete_automation: elimina automazione
     discourse_automation:
       title: Automazione
@@ -58,13 +59,17 @@ it:
             label: Corpo
           delay:
             label: Ritardo (minuti)
-          prefers_encrypt:
-            label: Applica crittografia ai MP se disponibile
         group:
           label: Gruppo
         text:
           label: Testo
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorie
+            tags:
+              label: Etichette
         not_found: 'Impossibile trovare l''azione di attivazione `%{trigger}` per l''automazione `%{automation}`: verifica che il plugin associato sia installato'
         user_badge_granted:
           fields:
@@ -422,6 +427,8 @@ it:
           fields:
             custom_field_name:
               label: "Nome campo personalizzato utente"
+        set_topic_timer:
+          title: Imposta il timer per l'argomento
       unnamed_automation: "Automazione senza nome"
       models:
         script:

@@ -19,7 +19,6 @@ export default class ChannelsListPublic extends Component {
   @service chatTrackingStateManager;
   @service site;
   @service router;
-  @service siteSettings;
 
   get inSidebar() {
     return this.args.inSidebar ?? false;
@@ -29,15 +28,16 @@ export default class ChannelsListPublic extends Component {
     return this.chatTrackingStateManager.hasUnreadThreads;
   }
 
-  get hasThreadedChannels() {
-    return this.chatChannelsManager.hasThreadedChannels;
+  get shouldShowMyThreads() {
+    return this.chatChannelsManager.shouldShowMyThreads;
   }
 
   get channelList() {
-    if (!this.inSidebar && this.siteSettings.star_chat_channels) {
+    if (this.inSidebar) {
       return this.chatChannelsManager.unstarredPublicMessageChannelsByActivity;
     }
-    return this.chatChannelsManager.publicMessageChannelsByActivity;
+    // In mobile/drawer, show all channels including starred, sorted by activity
+    return this.chatChannelsManager.allPublicChannelsByActivity;
   }
 
   @action
@@ -51,7 +51,7 @@ export default class ChannelsListPublic extends Component {
   }
 
   <template>
-    {{#if (and this.site.desktopView this.inSidebar this.hasThreadedChannels)}}
+    {{#if (and this.site.desktopView this.inSidebar this.shouldShowMyThreads)}}
       <LinkTo @route="chat.threads" class="chat-channel-row --threads">
         <span class="chat-channel-title">
           {{icon "discourse-threads" class="chat-user-threads__icon"}}
@@ -125,7 +125,6 @@ export default class ChannelsListPublic extends Component {
 
     <PluginOutlet
       @name="below-public-chat-channels"
-      @tagName=""
       @outletArgs={{lazyHash inSidebar=this.inSidebar}}
     />
   </template>

@@ -11,6 +11,7 @@ import BufferedProxy from "ember-buffered-proxy/proxy";
 import DButton from "discourse/components/d-button";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import PermissionType from "discourse/models/permission-type";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
@@ -25,7 +26,9 @@ export default class TagGroupsForm extends Component {
   @tracked model;
 
   // All but the "everyone" group
-  allGroups = this.site.groups.filter(({ id }) => id !== 0);
+  allGroups = this.site.groups.filter(
+    ({ id }) => id !== AUTO_GROUPS.everyone.id
+  );
 
   @cached
   @dependentKeyCompat
@@ -47,7 +50,10 @@ export default class TagGroupsForm extends Component {
       // JS object keys are always strings, so we need to convert them to integers
       const id = parseInt(groupId, 10);
 
-      if (id !== 0 && permission === PermissionType.FULL) {
+      if (
+        id !== AUTO_GROUPS.everyone.id &&
+        permission === PermissionType.FULL
+      ) {
         groupIds.push(id);
       }
     }
@@ -66,18 +72,26 @@ export default class TagGroupsForm extends Component {
   save() {
     const attrs = this.buffered.getProperties(
       "name",
-      "tag_names",
-      "parent_tag_name",
+      "tags",
+      "parent_tag",
       "one_per_topic",
       "permissions"
     );
+
+    if (attrs.tags) {
+      attrs.tags = attrs.tags.map(this.#serializeTag);
+    }
+
+    if (attrs.parent_tag) {
+      attrs.parent_tag = attrs.parent_tag.map(this.#serializeTag);
+    }
 
     if (isEmpty(attrs.name)) {
       this.dialog.alert("tagging.groups.cannot_save.empty_name");
       return false;
     }
 
-    if (isEmpty(attrs.tag_names)) {
+    if (isEmpty(attrs.tags)) {
       this.dialog.alert("tagging.groups.cannot_save.no_tags");
       return false;
     }
@@ -100,6 +114,12 @@ export default class TagGroupsForm extends Component {
     this.model.save(attrs).then(() => this.onSave?.());
   }
 
+  #serializeTag(t) {
+    return typeof t.id === "number"
+      ? { id: t.id, name: t.name }
+      : { name: t.name };
+  }
+
   @action
   destroyTagGroup() {
     return this.dialog.yesNoConfirm({
@@ -119,7 +139,7 @@ export default class TagGroupsForm extends Component {
     <section class="group-tags-list">
       <label>{{i18n "tagging.groups.tags_label"}}</label><br />
       <TagChooser
-        @tags={{this.buffered.tag_names}}
+        @tags={{this.buffered.tags}}
         @everyTag={{true}}
         @unlimitedTagCount={{true}}
         @excludeSynonyms={{true}}
@@ -134,7 +154,7 @@ export default class TagGroupsForm extends Component {
       <label>{{i18n "tagging.groups.parent_tag_label"}}</label>
       <div>
         <TagChooser
-          @tags={{this.buffered.parent_tag_name}}
+          @tags={{this.buffered.parent_tag}}
           @everyTag={{true}}
           @excludeSynonyms={{true}}
           @options={{hash

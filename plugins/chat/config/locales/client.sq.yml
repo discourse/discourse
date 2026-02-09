@@ -123,6 +123,7 @@ sq:
         history_label: "Historia"
         members_label: "Anëtarë"
       search:
+        short_title: Kërko
         no_results: "Nuk u gjet asnjë rezultat"
         sort:
           relevance: "Rëndësia"

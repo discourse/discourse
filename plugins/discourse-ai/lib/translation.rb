@@ -7,6 +7,10 @@ module DiscourseAi
         SiteSetting.content_localization_supported_locales.present?
     end
 
+    def self.locales
+      SiteSetting.content_localization_locales
+    end
+
     def self.has_llm_model?
       persona_ids = [
         SiteSetting.ai_translation_locale_detector_persona,
@@ -93,6 +97,10 @@ module DiscourseAi
           SiteSetting.ai_translation_post_raw_translator_persona,
         ],
       )
+    end
+
+    def self.credits_available_for_tag_localization?
+      credits_available_for_persona_ids?([SiteSetting.ai_translation_short_text_translator_persona])
     end
   end
 end

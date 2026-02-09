@@ -133,6 +133,3 @@ pl_PL:
     review:
       transcript:
         view: "Zobacz transkrypcję poprzednich wiadomości"
-      types:
-        reviewable_post_voting_comment:
-          title: "Oznaczono komentarz do głosowania na wpisy"

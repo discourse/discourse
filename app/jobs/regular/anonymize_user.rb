@@ -10,6 +10,7 @@ module Jobs
     def execute(args)
       @user_id = args[:user_id]
       @prev_email = args[:prev_email]
+      @prev_username = args[:prev_username]
       @anonymize_ip = args[:anonymize_ip]
 
       make_anonymous
@@ -17,6 +18,7 @@ module Jobs
 
     def make_anonymous
       anonymize_ips(@anonymize_ip) if @anonymize_ip
+      anonymize_username if @prev_username && !SiteSetting.log_anonymizer_details?
 
       Invite.where(email: @prev_email).destroy_all
       InvitedUser.where(user_id: @user_id).destroy_all
@@ -64,7 +66,28 @@ module Jobs
       user_field_ids.each do |field_id|
         user.custom_fields.delete("#{User::USER_FIELD_PREFIX}#{field_id}")
       end
+
       user.save!
+    end
+
+    def anonymize_username
+      pattern = "%#{UserHistory.sanitize_sql_like(@prev_username)}%"
+      reason = I18n.t("user.anonymized")
+
+      sql = <<~SQL
+        context = CASE WHEN context LIKE :pattern THEN :reason ELSE context END,
+        details = CASE WHEN details LIKE :pattern THEN :reason ELSE details END,
+        previous_value = CASE WHEN previous_value LIKE :pattern THEN :reason ELSE previous_value END,
+        new_value = CASE WHEN new_value LIKE :pattern THEN :reason ELSE new_value END
+      SQL
+
+      UserHistory
+        .where(target_user_id: @user_id)
+        .where(
+          "context LIKE :pattern OR details LIKE :pattern OR previous_value LIKE :pattern OR new_value LIKE :pattern",
+          pattern:,
+        )
+        .update_all([sql, { pattern:, reason: }])
     end
   end
 end

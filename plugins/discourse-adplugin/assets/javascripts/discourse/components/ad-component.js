@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { alias, or } from "@ember/object/computed";
 import { service } from "@ember/service";
@@ -32,6 +32,7 @@ export default class AdComponent extends Component {
     "router.currentRoute.parent.attributes.category.read_restricted"
   )
   isRestrictedCategory;
+  @alias("router.currentRoute.name") currentRouteName;
 
   _impressionId = null;
   _clickTracked = false;

@@ -14,11 +14,11 @@ hu:
     github_permalinks_enabled: "GitHub permalink felülírások engedélyezése"
     github_permalinks_exclude: "Fájlnév vagy könyvtár, amelyet ki kell zárni a permalink felülírásából. Csak a fájlnevet vagy a teljes elérési utat kell megadni: user/repository/optional-directory/filename"
     github_badges_enabled: "GitHub jelvények engedélyezése"
-    github_badges_repos: "A GitHub repók URL-címei a közreműködések és commitok kereséséhez"
+    github_badges_repos: "A közreműködések és véglegesítések kereséséhez használt GitHub-tárolók webcímei"
     github_silver_badge_min_commits: "Ezüst jelvény megszerzéséhez szükséges minimális commitok száma"
     github_gold_badge_min_commits: "Arany jelvény megszerzéséhez szükséges minimális commitok száma"
     errors:
-      invalid_badge_repo: "Meg kell adnia egy GitHub URL-címet vagy a tárhely nevét github_user/tárhely_neve formátumban."
+      invalid_badge_repo: "Meg kell adnia egy GitHub webcímet vagy a tároló nevét github_felhasználó/tárhely_neve formátumban"
       invalid_github_linkback_access_token: "Érvényes GitHub linkback hozzáférési tokent kell megadnia, amely hozzáféréssel rendelkezik a megadott jelvénytárhelyekhez."
   github_linkback:
     commit_template: |

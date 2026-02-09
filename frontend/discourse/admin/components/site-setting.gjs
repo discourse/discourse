@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-side-effects */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
@@ -27,6 +28,7 @@ import { i18n } from "discourse-i18n";
 
 const CUSTOM_TYPES = [
   "bool",
+  "datetime",
   "integer",
   "enum",
   "list",

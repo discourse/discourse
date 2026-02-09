@@ -436,7 +436,11 @@ th:
         reviewable_post:
           title: "โพสต์"
           noun: "โพส"
+        reviewable_ai_post:
+          noun: "โพส"
       user_label: "ผู้ใช้"
+      timeline:
+        target_deleted: "โพสต์ถูกลบ"
       notes:
         delete: "ลบ"
       topic_label: "หัวข้อ"
@@ -548,8 +552,6 @@ th:
             password: "รหัสผ่าน"
           settings:
             title: "การตั้งค่า"
-          mailboxes:
-            disabled: "ปิดใช้งานแล้ว"
         membership:
           title: การเป็นสมาชิก
           access: การเข้าถึง
@@ -723,6 +725,9 @@ th:
       new_private_message: "สร้างข้อความส่วนตัวใหม่"
       private_message: "ข้อความส่วนตัว"
       private_messages: "ข้อความ"
+      upcoming_changes:
+        for_user:
+          enabled: "เปิดใช้"
       user_notifications:
         filters:
           filter_by: "กรองโดย"
@@ -1421,6 +1426,8 @@ th:
       upload_title: "อัปโหลด"
       upload_description: "กรอกรายละเอียดการอัปโหลดที่นี่"
       list_item: "รายการ"
+      wrap_modal:
+        apply: "นำไปใช้"
       help: "ช่วยเหลือการจัดรูปแบบ"
       modal_ok: "ตกลง"
       cant_send_pm: "ขออภัย คุณไม่สามารถส่งข้อความหา %{username} ได้"
@@ -1444,6 +1451,7 @@ th:
         toggle_topic_bump:
           desc: "ตอบกลับโดยไม่เปลี่ยนวันที่ตอบกลับล่าสุด"
       ignore: "ไม่สนใจ"
+      image: "รูปภาพ"
     notifications:
       tooltip:
         regular:
@@ -1634,16 +1642,6 @@ th:
         bookmarks: "คุณยังไม่ได้บุ๊กมาร์กกระทู้ใดๆเลย"
         category: "ไม่มีกระทู้ในหมวด %{category}"
         top: "ไม่มีกระทู้ยอดนิยม"
-      bottom:
-        latest: "ไม่มีกระทู้ล่าสุดอีกแล้ว"
-        posted: "ไม่มีกระทู้ที่โพสต์อีกแล้ว"
-        read: "ไม่มีกระทู้ที่อ่านแล้วอีก"
-        new: "ไม่มีกระทู้ใหม่อีกแล้ว"
-        unread: "ไม่มีกระทู้ที่ยังไม่อ่านอีกแล้ว"
-        category: "ไม่มีกระทู้อื่นอีกใน %{category}"
-        tag: "ไม่มีกระทู้อื่นอีกใน %{tag}"
-        top: "ไม่มีกระทู้ยอดนิยมอีกแล้ว"
-        bookmarks: "ไม่มีกระทู้ที่บุ๊กมาร์กอีกแล้ว"
     topic_bulk_actions:
       dismiss:
         name: "ซ่อน"
@@ -2076,7 +2074,11 @@ th:
       create_long: "สร้างหมวดหมู่ใหม่"
       creation_error: มีข้อผิดพลาดขณะสร้างหมวดหมู่
       save_error: มีข้อผิดพลาดในการบันทึกหมวดหมู่
+      validations:
+        icon_required: "เลือกไอคอน."
       description: "รายละเอียด"
+      icon: "ไอคอน"
+      emoji: "Emoji"
       background_color: "สี"
       styles:
         icon: "ไอคอน"
@@ -2084,7 +2086,6 @@ th:
         options:
           icon: "ไอคอน"
           emoji: "Emoji"
-      name_placeholder: "สูงสุดหนึ่งหรือสองคำ"
       delete_confirm: "คุณแน่ใจหรือว่าจะลบหมวดหมู่นี้ออก"
       delete_error: "มีข้อผิดพลาดในการลบหมวดหมู่"
       no_description: "กรุณาเพิ่มรายละเอียดสำหรับหมวดหมู่นี้"
@@ -2096,7 +2097,6 @@ th:
         reply: "ตอบกลับ"
         create: "สร้าง"
       pending_permission_change_alert: "คุณยังไม่ได้เพิ่ม %{group} ไปยังหมวดหมู่นี้ คลิกปุ่มนี้เพื่อเพิ่ม"
-      images: "รูปภาพ"
       email_in: "ตั้งที่อยู่สำหรับอีเมลขาเข้า:"
       email_in_allow_strangers: "ยอมรับอีเมลจากผู้ใช้ที่ไม่ระบุชื่อและไม่มีบัญชี"
       review_group_name: "ชื่อกลุ่ม"
@@ -2104,6 +2104,10 @@ th:
       require_reply_approval: "คำตอบใหม่ทั้งหมดต้องผ่านการอนุมัติจากผู้ดูแลระบบ"
       this_year: "ปีนี้"
       minimum_required_tags: "จำนวนแท็กขั้นต่ำในกระทู้:"
+      none_subcategory_text: "ไม่มี"
+      visibility:
+        public: "สาธารณะ"
+        group_restricted: "ส่วนตัว"
       notifications:
         watching:
           title: "กำลังดู"
@@ -2387,6 +2391,7 @@ th:
       sort_by_name: "ชื่อ"
       upload: "อัปโหลดแท็ก"
       upload_successful: "แท็กถูกอัปโหลดสำเร็จแล้ว"
+      bulk_create_button: "สร้าง"
       delete_unused_confirmation:
         other: "%{count}แท็กจะถูกลบ: %{tags}"
       delete_unused_confirmation_more_tags:
@@ -2559,6 +2564,9 @@ th:
           all: "ทั้งหมด"
           disabled: "ปิดใช้งานแล้ว"
           impact_type_other: "อื่นๆ"
+          impact_role_admins: "แอดมิน"
+          impact_role_moderators: "ผู้ดูแลระบบ"
+          impact_role_staff: "ทีมงาน"
       config:
         developer:
           title: "นักพัฒนา"
@@ -2572,6 +2580,8 @@ th:
           sub_pages:
             common_settings:
               title: "การตั้งค่า"
+        discourse_id:
+          learn_more: "เรียนรู้เพิ่มเติม"
         logo:
           form:
             mobile: "โทรศัพท์"
@@ -3313,6 +3323,7 @@ th:
         uploaded_image_list:
           upload:
             label: "อัปโหลด"
+        download_file: "ดาวน์โหลด"
         table_column_heading:
           status: "สถานะ"
         categories:
@@ -3367,6 +3378,8 @@ th:
         revoke: เอาออก
         reason: เหตุผล
         edit_badges: แก้ไขเหรียญ
+        sections:
+          settings: การตั้งค่า
         disabled: ปิดใช้งานแล้ว
         icon: ไอคอน
         image: ภาพ

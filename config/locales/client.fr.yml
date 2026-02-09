@@ -158,7 +158,7 @@ fr:
       el:
         name: Grec
       en:
-        name: Anglais (États-Unis)
+        name: Anglais
       en_GB:
         name: Anglais (Royaume-Uni)
       es:
@@ -836,6 +836,10 @@ fr:
         reviewable_post:
           title: "Message"
           noun: "message"
+        reviewable_ai_chat_message:
+          noun: "message de discussion"
+        reviewable_ai_post:
+          noun: "message"
       flagged_as: "Signalé comme"
       user_label: "Utilisateur"
       moderator_actions: "Actions du modérateur"
@@ -843,12 +847,12 @@ fr:
       timeline:
         target_created: "Publication créée"
         target_created_by: "Publication créée par %{username} · %{relativeDate}"
+        target_deleted: "Publication supprimée"
         flagged: "Signalé"
         flagged_as_by: "Signalé comme %{flagReason} par %{username} · %{relativeDate}"
         claimed: "Réclamé"
         claimed_by: "Réclamé par %{username} · %{relativeDate}"
         reviewed: "Examiné"
-        reviewed_by: "Examiné par %{username} · %{relativeDate}"
         view_conversation: "voir PM"
         note_added: "Note du modérateur"
         note_added_by: "Note du modérateur par %{username} · %{relativeDate}"
@@ -1036,9 +1040,7 @@ fr:
           notification: Notification
         email:
           title: "E-mail"
-          status: "%{old_emails}/%{total_emails} e-mails synchronisés via IMAP."
           enable_smtp: "Activer le SMTP"
-          enable_imap: "Activer l'IMAP"
           test_settings: "Tester les paramètres"
           save_settings: "Enregistrer les paramètres"
           last_updated: "Dernière mise à jour :"
@@ -1047,14 +1049,7 @@ fr:
           smtp_settings_valid: "Paramètres SMTP valides."
           smtp_title: "SMTP"
           smtp_instructions: "Quand le SMTP est activé au niveau du groupe, tous les e-mails envoyés au nom de ce groupe seront expédiés en utilisant les paramètres SMTP indiqués ici plutôt qu'avec les paramètres SMTP globaux du site."
-          imap_title: "IMAP"
-          imap_additional_settings: "Paramètres additionnels"
-          imap_instructions: 'Quand l''IMAP est activé au niveau du groupe, les e-mails sont synchronisés entre la boîte de réception de ce groupe et la boîte de réception IMAP indiquée ici. Avant de pouvoir activer l''IMAP, le SMTP doit d''abord être activé, et des paramètres SMTP valides doivent être renseignés. L''identifiant et le mot de passe du serveur SMTP seront utilisés pour l''authentification auprès du serveur IMAP. Pour en savoir plus, consultez <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">l''annonce de cette fonctionnalité sur Discourse Meta</a> (en anglais).'
-          imap_alpha_warning: "Attention : cette fonctionnalité est en test alpha. Seul Gmail est pris en charge officiellement. Son utilisation se fait à vos risques et périls !"
-          imap_settings_valid: "Paramètres IMAP valides."
-          smtp_disable_confirm: "En désactivant le SMTP, tous les paramètres SMTP et IMAP seront réinitialisés et ces fonctionnalités seront désactivées. Souhaitez-vous continuer ?"
-          imap_disable_confirm: "En désactivant l'IMAP, tous les paramètres IMAP seront réinitialisés et cette fonctionnalité sera désactivée. Souhaitez-vous continuer ?"
-          imap_mailbox_not_selected: "Vous devez indiquer une boîte de réception dans ces paramètres IMAP, autrement aucune boîte de réception ne sera synchronisée !"
+          additional_settings: "Paramètres additionnels"
           prefill:
             title: "Renseigner les paramètres pour :"
             gmail: "Gmail"
@@ -1069,9 +1064,6 @@ fr:
             smtp_server: "Serveur SMTP"
             smtp_port: "Port SMTP"
             smtp_ssl_mode: "Mode SSL"
-            imap_server: "Serveur IMAP"
-            imap_port: "Port IMAP"
-            imap_ssl: "Utiliser SSL pour IMAP"
             username: "Nom d'utilisateur"
             password: "Mot de passe"
           settings:
@@ -1080,10 +1072,6 @@ fr:
             allow_unknown_sender_topic_replies_hint: "Permet aux expéditeurs inconnus de répondre aux sujets du groupe. Si cette option n'est pas activée, les réponses provenant d'adresses e-mail qui ne sont pas encore invitées dans le sujet créeront un nouveau sujet."
             from_alias: "Alias de l'expéditeur"
             from_alias_hint: "Alias à utiliser comme adresse d'expédition lors de l'envoi d'e-mails SMTP de groupe. Veuillez noter que cela peut ne pas être pris en charge par tous les prestataires de messagerie, nous vous invitons à consulter la documentation de votre prestataire."
-          mailboxes:
-            synchronized: "Boîte de réception à synchroniser"
-            none_found: "Aucune boîte de réception n'a été trouvée pour ce compte d'e-mail."
-            disabled: "Désactivée"
         membership:
           title: Adhésion
           access: Accès
@@ -1347,6 +1335,9 @@ fr:
       new_private_message: "Créer un message direct"
       private_message: "Message direct"
       private_messages: "Messages directs"
+      upcoming_changes:
+        for_user:
+          enabled: "Activé ?"
       user_notifications:
         filters:
           filter_by: "Filtrer par"
@@ -1559,9 +1550,6 @@ fr:
         flags_given:
           one: '<span class="%{className}">%{count}</span> signalement utile'
           other: '<span class="%{className}">%{count}</span> signalements utiles'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> message signalé'
-          other: '<span class="%{className}">%{count}</span> messages signalés'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> message supprimé'
           other: '<span class="%{className}">%{count}</span> messages supprimés'
@@ -2072,6 +2060,7 @@ fr:
               other {# jours}
             }.
           edit_link_options: "Modifiez les options du lien ou envoyez-le par e-mail."
+          edit_link_options_only: "Modifier les options de lien"
           show_advanced: "Afficher les options avancées"
           hide_advanced: "Masquer les options avancées"
           description: "Description"
@@ -2275,7 +2264,6 @@ fr:
     form_kit:
       reset: Réinitialiser
       optional: facultatif
-      errors_summary_title: "Ce formulaire contient des erreurs :"
       dirty_form: "Vous n'avez pas soumis vos modifications ! Voulez-vous vraiment partir ?"
       errors:
         starts_with: "Doit commencer par %{prefix}"
@@ -2811,6 +2799,8 @@ fr:
       ulist_title: "Liste à puces"
       list_item: "Élément"
       toggle_direction: "Basculer la section"
+      wrap_modal:
+        apply: "Appliquer"
       help: "Aide à l'édition Markdown"
       exit_fullscreen_prompt: "Appuyez sur <kbd>ÉCHAP</kbd> pour quitter le mode plein écran"
       modal_ok: "OK"
@@ -2869,6 +2859,7 @@ fr:
         zoom_out: "Réduire la taille de l'image"
         zoom_in: "Augmenter la taille de l'image"
         remove: "Supprimer l'image"
+      image: "image"
       image_scale_button: "Mettre l'image à l'échelle de %{percent} %"
       delete_image_button: Supprimer l'image
       toggle_image_grid: Activer/désactiver la grille des images
@@ -3002,8 +2993,7 @@ fr:
         post_approved: "message approuvé"
         membership_request_consolidated: "nouvelles demandes d'adhésion"
         reaction: "nouvelle réaction"
-        votes_released: "Le vote a été publié"
-        new_features: "De nouvelles fonctionnalités de Discourse ont été publiées !"
+        votes_released: "le vote a été publié"
         admin_problems: "de nouveaux conseils sur votre tableau de bord"
     upload_selector:
       change: "Modifier"
@@ -3289,19 +3279,6 @@ fr:
           unread: "Rien n'a été oublié... impressionnant !"
           new_new: "Rien de nouveau pour le moment... revenez bientôt !"
           new: "Rien de nouveau pour le moment... revenez bientôt !"
-      bottom:
-        latest: "Il n'y a pas d'autres sujets récents à consulter."
-        posted: "Il n'y a pas d'autres sujets publiés à consulter."
-        read: "Il n'y a pas d'autres sujets déjà lus à consulter."
-        new: "Il n'y a pas d'autres nouveaux sujets à consulter."
-        unread: "Il n'y a pas d'autres sujets non lus à consulter."
-        unseen: "Il n'y a pas d'autres sujets non lus à consulter."
-        category: "Il n'y a pas d'autres sujets à consulter dans %{category}."
-        tag: "Il n'y a pas d'autres sujets à consulter dans %{tag}."
-        top: "Il n'y a pas d'autres meilleurs sujets à consulter."
-        hot: "Il n'y a plus de sujets populaires."
-        bookmarks: "Il n'y a pas d'autres sujets enregistrés dans les signets."
-        filter: "Il n'y a plus de sujets."
     topic_bulk_actions:
       dismiss:
         name: "Rejeter"
@@ -3429,9 +3406,6 @@ fr:
         other: "%{count} réponses. Passer à la première publication"
       created_at: "Date de création : %{date}"
       bumped_at: "Plus récent : %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Parcourez toutes les catégories</a>, <a href='%{basePath}/latest'>consultez les derniers sujets</a> ou consultez les principaux sujets :"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Parcourez toutes les étiquettes</a> ou <a href='%{basePath}/latest'>consultez les derniers sujets</a>."
       browse_latest_topics: "Parcourir les sujets les plus récents"
       browse_new_topics: "Parcourir les nouveaux sujets"
       suggest_create_topic: Prêt à <a href>démarrer une nouvelle conversation ?</a>
@@ -3461,8 +3435,6 @@ fr:
           12_hours: "12 heures"
           24_hours: "24 heures"
           custom: "Durée personnalisée"
-      slow_mode_notice:
-        duration: "Patientez %{duration} avant de publier un nouveau message dans ce sujet"
       topic_status_update:
         title: "Planifier une action"
         save: "Planifier"
@@ -3779,8 +3751,6 @@ fr:
       deleted_by_author_simple: "(sujet supprimé par son auteur)"
       localizations:
         title_edit_warning:
-          message: "Ceci est un titre de sujet traduit.<br><br>Voulez-vous modifier le titre original en %{language} ou modifier cette traduction spécifique ?"
-          action_original: "Modifier le titre original du sujet"
           action_translation: "Modifier le titre du sujet traduit"
     post_list:
       title: "Dernières publications"
@@ -3801,7 +3771,7 @@ fr:
       quote_edit: "Modifier"
       quote_edit_shortcut: "Modifier (ou appuyer sur e)"
       quote_copy: "Copier la citation"
-      quote_copied_to_clibboard: "Citation copiée dans le presse-papiers"
+      quote_copied_to_clipboard: "Citation copiée dans le presse-papiers"
       quote_share: "Partager"
       edit_reason: "Raison : "
       post_number: "message %{number}"
@@ -4095,6 +4065,7 @@ fr:
       back: "Retour à la catégorie"
       general: "Général"
       settings: "Paramètres"
+      advanced: "Avancé"
       topic_template: "Modèle"
       tags: "Étiquettes"
       localizations: "Localisations"
@@ -4124,9 +4095,13 @@ fr:
       slug_placeholder: "(Facultatif) mots séparés par des tirets pour l'URL"
       creation_error: Une erreur s'est produite lors de la création de la catégorie.
       save_error: Une erreur s'est produite lors de l'enregistrement de la catégorie.
+      validations:
+        icon_required: "Sélectionner une icône."
       description: "Description"
       logo_description: "Format d'image recommandé de 1:1 avec une taille minimale de 200 px. Si ce champ est laissé vide, aucune image ne sera affichée."
-      style: "Styles"
+      style: "Style"
+      icon: "Icône"
+      emoji: "Émoji"
       background_color: "Couleur"
       foreground_color: "Couleur du texte"
       color_validations:
@@ -4135,13 +4110,13 @@ fr:
         type: "Style"
         icon: "Icône"
         emoji: "Émoji"
+        square: "Carré"
         options:
           square: "Carré"
           icon: "Icône"
           emoji: "Émoji"
       color_used: "Couleur en cours d'utilisation"
       predefined_colors: "Options de couleurs prédéfinies"
-      name_placeholder: "Un ou deux mots maximum"
       color_placeholder: "N'importe quelle couleur"
       delete_confirm: "Voulez-vous vraiment supprimer cette catégorie ?"
       delete_error: "Une erreur s'est produite lors de la suppression de la catégorie."
@@ -4149,6 +4124,7 @@ fr:
       no_description: "Veuillez ajouter une description pour cette catégorie."
       change_in_category_topic: "Modifier la description"
       already_used: "Cette couleur est déjà utilisée par une autre catégorie"
+      color_palette: "Palette de couleurs"
       security: "Sécurité"
       security_add_group: "Ajouter un groupe"
       permissions:
@@ -4157,15 +4133,14 @@ fr:
         reply: "Répondre"
         create: "Créer"
         no_groups_selected: "Aucun groupe n'a été autorisé à accéder ; cette catégorie ne sera visible que par les responsables."
-        everyone_has_access: 'Cette catégorie est publique, tout le monde peut voir, répondre et créer des messages. Pour restreindre les autorisations, supprimez une ou plusieurs des autorisations accordées au groupe « tout le monde ».'
+        everyone_full_access: 'Cette catégorie est publique, tout le monde peut voir, répondre et créer des messages. Pour restreindre les autorisations, supprimez une ou plusieurs des autorisations accordées au groupe « tout le monde ».'
         toggle_reply: "Modifier la permission de répondre"
         toggle_full: "Modifier la permission de créer"
         inherited: 'Cette autorisation est héritée de « tout le monde »'
-      special_warning: "Avertissement : cette catégorie est une catégorie préremplie et les réglages de sécurité ne peuvent pas être modifiés. Si vous ne souhaitez pas utiliser cette catégorie, supprimez-la au lieu de détourner sa fonction."
       uncategorized_security_warning: "Cette catégorie est spéciale. Elle sert à rassembler les sujets qui n'ont pas de catégorie ; vous ne pouvez pas modifier ses paramètres de sécurité."
       uncategorized_general_warning: 'Cette catégorie est spéciale. Elle sert de catégorie par défaut pour les nouveaux sujets qui ne sont pas liés à une catégorie. Si vous souhaitez modifier ce comportement et forcer la sélection de catégorie, <a href="%{settingLink}">veuillez désactiver ce paramètre</a>. Si vous voulez modifier son nom ou sa description, allez dans <a href="%{customizeLink}">Personnaliser/contenu</a>.'
       pending_permission_change_alert: "Vous n'avez pas ajouté %{group} à cette catégorie ; cliquez sur ce bouton pour l'ajouter."
-      images: "Images"
+      images: "Apparence"
       email_in: "Adresse e-mail entrant personnalisée :"
       email_in_tooltip: "Vous pouvez séparer plusieurs adresses e-mail avec le caractère | ."
       email_in_allow_strangers: "Accepter les e-mails d'utilisateurs anonymes sans compte"
@@ -4187,6 +4162,11 @@ fr:
       position: "Position sur la page des catégories :"
       position_disabled: "Les catégories seront affichées par ordre d'activité. Pour contrôler l'ordre des catégories dans les listes, activez le paramètre <a href='%{url}'>« positions de catégorie fixes »</a> ."
       minimum_required_tags: "Nombre minimal d'étiquettes requises dans un sujet :"
+      none_subcategory_text: "Jamais"
+      visibility:
+        title: "Visibilité"
+        public: "Public"
+        group_restricted: "Privé"
       num_auto_bump_daily: "Nombre de sujets ouverts à remonter dans la liste automatiquement et quotidiennement :"
       auto_bump_cooldown_days: "Nombre minimum de jours avant de revenir sur le même sujet :"
       navigate_to_first_post_after_read: "Naviguer vers le premier message après avoir lu un sujet"
@@ -4484,6 +4464,7 @@ fr:
         this_month: "Mois"
         this_week: "Semaine"
         today: "Aujourd'hui"
+        custom: "Personnalisé"
     custom_homepage:
       admin_message: 'L''un de vos thèmes a activé le modificateur « custom_homepage », mais il n''affiche rien dans le connecteur [custom-homepage]. (Ce message s''adresse uniquement aux administrateurs du site.)'
     browser_update: 'Malheureusement, <a href="https://discourse.org/about#browser">votre navigateur n''est pas pris en charge</a>. Merci de <a href="https://browsehappy.com">mettre à jour votre navigateur</a> pour afficher le contenu enrichi, vous connecter et répondre.'
@@ -4717,6 +4698,7 @@ fr:
       upload_description: "Téléverser un fichier CSV pour créer des étiquettes en bloc"
       upload_instructions: "Une par ligne, éventuellement avec un groupe d'étiquettes sous la forme « tag_name,tag_group »."
       upload_successful: "Étiquettes envoyées avec succès"
+      bulk_create_button: "Créer"
       delete_unused_confirmation:
         one: "%{count} étiquette sera supprimée : %{tags}"
         other: "%{count} étiquettes seront supprimées : %{tags}"
@@ -4867,7 +4849,6 @@ fr:
       tags_form_modal:
         title: "Modifier la navigation des étiquettes"
         filter_placeholder: "Filtrer les étiquettes"
-        no_tags: "Il n'y a pas d'étiquettes correspondant au terme donné."
         subtitle:
           text: "et nous afficherons automatiquement les meilleures étiquettes de ce site"
       edit_navigation_modal_form:
@@ -5238,6 +5219,8 @@ fr:
         enabled_for_options:
           everyone: "Tout le monde"
           staff: "Responsables seulement"
+        statuses:
+          experimental: "Expérimental"
         impact_roles:
           admins: "Administrateurs "
           moderators: "Modérateurs"
@@ -5248,6 +5231,10 @@ fr:
           disabled: "Désactivé"
           impact_type_feature: "Fonctionnalité"
           impact_type_other: "Autre"
+          status_experimental: "Expérimental"
+          impact_role_admins: "Administrateurs "
+          impact_role_moderators: "Modérateurs"
+          impact_role_staff: "Responsable"
       config:
         about:
           title: "À propos de votre site"
@@ -5284,6 +5271,11 @@ fr:
           sub_pages:
             common_settings:
               title: "Paramètres"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "En savoir plus…"
         logo:
           title: "Logo"
           header_description: "Configurez les logos et les icônes utilisés sur votre site"
@@ -5383,6 +5375,8 @@ fr:
               options:
                 above_topic_content: "Au-dessus du contenu du sujet"
                 below_site_header: "Sous l'en-tête du site"
+            text_section:
+              locale_label: "Langue "
             header_logged_in:
               placeholder: "Bienvenue, %{preferred_display_name} !"
             header_anonymous:
@@ -5636,7 +5630,6 @@ fr:
         new_features:
           title: "Quoi de neuf ?"
           subtitle: "Nous publions de nouvelles fonctionnalités et améliorations en permanence. Cette page présente les grandes lignes, mais vous pouvez cliquer sur « En savoir plus » pour accéder à des notes de mise à jour détaillées."
-          previous_announcements: "Vous pouvez voir les annonces précédentes de nouvelles fonctionnalités sur <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "En savoir plus…"
           experimental: "Expérimental"
           only_experiments: "Afficher uniquement les fonctionnalités expérimentales"
@@ -5723,7 +5716,9 @@ fr:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Journal des recherches</a>'
             disabled: 'Rapport sur les tendances de recherche désactivé. Activez la <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">journalisation des recherches</a> pour collecter des données.'
-          average_chart_label: Moyenne
+          sort_button: "Trier par %{column}"
+          sort_ascending: "croissant"
+          sort_descending: "décroissant"
           filters:
             file_extension:
               label: Extension de fichier
@@ -6459,8 +6454,6 @@ fr:
         delete: "Supprimer"
         delete_confirm: 'Voulez-vous vraiment supprimer « %{theme_name} » ?'
         bulk_delete: "Voulez-vous continuer ?"
-        bulk_themes_delete_confirm: "Cela désinstallera les thèmes suivants, ils ne pourront plus être utilisés par aucun utilisateur de votre site :"
-        bulk_components_delete_confirm: "Cela désinstallera les composants suivants, ils ne pourront plus être utilisés par aucun utilisateur de votre site :"
         color: "Couleur"
         opacity: "Opacité"
         copy: "Dupliquer"
@@ -7432,7 +7425,6 @@ fr:
           button: "Supprimer tous les messages"
           progress:
             title: "Progression de la suppression des messages"
-            description: "Suppression des messages…"
           confirmation:
             title: "Supprimer tous les messages de @%{username}"
             description: |
@@ -7689,6 +7681,7 @@ fr:
           upload:
             label: "Envoyer"
             title: "Téléverser des images"
+        download_file: "Télécharger"
         selectable_avatars:
           title: "Liste d'avatars que les utilisateurs peuvent choisir"
         table_column_heading:
@@ -7751,16 +7744,12 @@ fr:
             prompt: "La modification de ce paramètre peut avoir des conséquences importantes ou inattendues pour votre site. Voulez-vous vraiment continuer ?"
             confirm: "Oui, continuer"
           min_password_length:
-            prompt: "Vous êtes sur le point de modifier votre politique en matière de mots de passe. Cela affectera désormais tous les utilisateurs qui modifieront leur mot de passe. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
           min_admin_password_length:
-            prompt: "Vous êtes sur le point de modifier votre politique en matière de mots de passe. Cela affectera désormais tous les administrateurs qui modifieront leur mot de passe. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
           password_unique_charactes:
-            prompt: "Vous êtes sur le point de modifier votre politique en matière de mots de passe. Cela affectera désormais tous les utilisateurs qui modifieront leur mot de passe. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
           block_common_passwords:
-            prompt: "Vous êtes sur le point de modifier votre politique en matière de mots de passe. Cela affectera désormais tous les utilisateurs qui modifieront leur mot de passe. Voulez-vous vraiment continuer ?"
             confirm: "Oui, mettre à jour la politique relative aux mots de passe"
       badges:
         status: Statut
@@ -7795,6 +7784,9 @@ fr:
         no_user_badges: "%{name} ne s'est vu attribuer aucun badge."
         no_badges: Il n'y a aucun badge à attribuer.
         none_selected: "Sélectionnez un badge pour commencer"
+        sections:
+          query: Requête
+          settings: Paramètres
         usage_heading: Utilisation
         allow_title: Permettre d'utiliser ce badge comme titre sur le profil utilisateur
         multiple_grant: Peut être attribué plusieurs fois

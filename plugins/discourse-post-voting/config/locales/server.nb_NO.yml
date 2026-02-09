@@ -23,8 +23,6 @@ nb_NO:
           agree_and_silence:
             title: "Demp bruker"
             description: "Si deg enig med rapportering og demp bruker. "
-          disagree:
-            title: "Si deg uenig"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

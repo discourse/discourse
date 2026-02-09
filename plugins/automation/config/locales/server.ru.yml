@@ -8,6 +8,8 @@ ru:
   site_settings:
     discourse_automation_enabled: "Включить плагин «discourse-automation»"
   discourse_automation:
+    staff_action_logs:
+      empty_value: "(пустой)"
     models:
       automations:
         validations:
@@ -67,7 +69,6 @@ ru:
         description: При изменении тегов темы будет срабатывать автоматизация
       topic:
         title: Тема
-        description: Связанный скрипт будет использоваться только в указанной теме (например, это удобно для скриптов, выполняющих проверку)
       topic_closed:
         title: Тема закрыта
         description: Запускает скрипт при закрытии темы.
@@ -78,6 +79,21 @@ ru:
         title: После обновления пользователя
         description: При обновлении пользователем любой информации запускается автоматизация
     scriptables:
+      email_on_flagged_post:
+        default_template: |-
+          Пост был помечен.
+
+          тема: {{topic_title}} ({{topic_url}})
+          запись: {{post_url}} (#{{post_number}})
+          Тип флага: {{flag_type}}
+          Отмеченный пользователем: {{flagged_username}}
+          Отмечено автором {{flagger_username}}
+          Категория: {{category}}
+          Метки: {{tags}}
+
+          --------
+          Выдержка из сообщения:
+          {{post_excerpt}}
       post:
         title: Создать публикацию
         description: Создает публикацию на указанную тему
@@ -161,3 +177,5 @@ ru:
       random_assign:
         title: "Случайное назначение"
         description: "Случайным образом назначает темы по группам"
+      set_topic_timer:
+        title: "Установить таймер темы"

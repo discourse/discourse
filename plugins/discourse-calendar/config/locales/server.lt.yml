@@ -17,6 +17,8 @@ lt:
   system_messages:
     discourse_calendar_holiday_region_invalid: "Nurodytas švenčių regionas neegzistuoja."
     discourse_calendar_enable_holiday_failed: "Šios šventės negalėjo būti įjungtos, ji jau įjungta arba ji nėra išjungta."
+  site_settings:
+    calendar_categories: "Rodyti kalendorių kategorijos viršuje. categoryId yra privalomas. pvz.: categoryId=6;weekends=false;defaultView=year;\n Kiti galimi nustatymai: weekends(true/false) ir defaultView(day,week,month,year)."
   discourse_calendar:
     holiday_status:
       description: "Švenčių metu"

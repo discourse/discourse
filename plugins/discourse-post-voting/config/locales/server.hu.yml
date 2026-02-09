@@ -30,11 +30,8 @@ hu:
     post_voting_enable_likes_on_answers: "Tetszik gomb engedélyezése a hozzászólások szavazataival kapcsolatos témákban"
     post_voting_undo_vote_action_window: "A percek száma, ameddig a felhasználók visszavonhatják szavazataikat a Bejegyzés Szavazás témákban (0 megadásával nincs korlát)"
     post_voting_comment_limit_per_post: "Az egyes bejegyzésekhez engedélyezett hozzászólások maximális száma"
-    min_trust_to_flag_posts_voting_comments: "A hozzászólás szavazás bejelöléséhez szükséges minimális bizalmi szin"
     flag_posts_voting_comments_allowed_groups: "A hozzászólás szavazás bejelölésére jogosult csoportok"
     post_voting_comment_enabled: "Kommentek engedélyezése a bejegyzésen a Bejegyzés szavazás témákban"
-    keywords:
-      flag_posts_voting_comments_allowed_groups: "min_trust_to_flag_posts_voting_comments"
   discourse_post_voting:
     reviewables:
       actions:
@@ -102,16 +99,10 @@ hu:
             title: "Hozzászólás törlése"
             description: "Hozzászólás törlése, hogy a felhasználók ne láthassák."
           delete_and_agree:
-            title: "Jelzés figyelmen kívül hagyása és megjegyzés törlése"
             description: "A jelző figyelmen kívül hagyásához távolítsa el a sorból, és törölje a megjegyzést."
           disagree_and_restore:
             title: "Nem értek egyet, és visszaállítom a hozzászólást"
             description: "Állítsa vissza a megjegyzést, hogy minden felhasználó láthassa."
-          disagree:
-            title: "Elutasítás"
-          ignore:
-            title: "Ne csináljon semmit"
-            description: "Megjelölés figyelmen kívül hagyása annak a sorból való eltávolításával anélkül, hogy bármilyen intézkedést tenne."
         transcript:
           view: "Korábbi hozzászólások átiratának megtekintése"
       reviewable_score_types:

@@ -10,6 +10,7 @@ ro:
       logs:
         staff_actions:
           actions:
+            update_automation: actualizează automatizare
             delete_automation: șterge automatizarea
     discourse_automation:
       table_title: Automatizări
@@ -37,6 +38,12 @@ ro:
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorii
+            tags:
+              label: Etichete
         user_badge_granted:
           fields:
             badge:
@@ -196,6 +203,8 @@ ro:
               label: ID subiect
             user:
               label: Utilizator
+        set_topic_timer:
+          title: Setează cronometrul subiectului
       unnamed_automation: "Automatizare fără nume"
       models:
         trigger:

@@ -396,6 +396,31 @@ RSpec.describe StaticController do
         expect(response).to redirect_to("/")
       end
     end
+
+    context "with a subfolder" do
+      before { set_subfolder "/sub_test" }
+
+      context "without a redirect path" do
+        it "redirects to the subfolder root" do
+          post "/login.json"
+          expect(response).to redirect_to("/sub_test/")
+        end
+      end
+
+      context "when the redirect path is the login page" do
+        it "redirects to the subfolder root" do
+          post "/login.json", params: { redirect: "#{Discourse.base_path}/login" }
+          expect(response).to redirect_to("/sub_test/")
+        end
+      end
+
+      context "when the redirect path is invalid" do
+        it "redirects to the subfolder root" do
+          post "/login.json", params: { redirect: "test" }
+          expect(response).to redirect_to("/sub_test/")
+        end
+      end
+    end
   end
 
   describe "#service_worker_asset" do
@@ -404,6 +429,35 @@ RSpec.describe StaticController do
       expect(response.status).to eq(200)
       expect(response.content_type).to start_with("text/javascript")
       expect(response.body).to include("addEventListener")
+    end
+  end
+
+  describe "#llms_txt" do
+    it "returns 404 when no upload is set" do
+      get "/llms.txt"
+      expect(response.status).to eq(404)
+    end
+
+    context "with local store" do
+      it "returns content as plain text" do
+        SiteSetting.authorized_extensions = "txt"
+
+        file = Tempfile.new(%w[llms .txt])
+        file.write("# Test LLMs Content")
+        file.rewind
+
+        upload = UploadCreator.new(file, "llms.txt").create_for(Discourse.system_user.id)
+        SiteSetting.llms_txt = upload
+
+        get "/llms.txt"
+
+        expect(response.status).to eq(200)
+        expect(response.content_type).to start_with("text/plain")
+        expect(response.body).to eq("# Test LLMs Content")
+      ensure
+        file.close
+        file.unlink
+      end
     end
   end
 end

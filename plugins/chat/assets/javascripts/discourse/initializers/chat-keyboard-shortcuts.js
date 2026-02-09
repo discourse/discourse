@@ -24,7 +24,7 @@ export default {
     );
 
     const openQuickChannelSelector = (e) => {
-      if (isInputSelection(event.target) && !isChatComposer(event.target)) {
+      if (isInputSelection(e.target) && !isChatComposer(e.target)) {
         return;
       }
       e.preventDefault();
@@ -90,15 +90,19 @@ export default {
       });
     };
 
-    const openChatDrawer = (event) => {
+    const toggleChatDrawer = (event) => {
       if (isInputSelection(event.target)) {
         return;
       }
       event.preventDefault();
       event.stopPropagation();
 
-      chatStateManager.prefersDrawer();
-      router.transitionTo(chatStateManager.lastKnownChatURL || "chat");
+      if (chatStateManager.isDrawerActive) {
+        appEvents.trigger("chat:toggle-close", event);
+      } else {
+        chatStateManager.prefersDrawer();
+        router.transitionTo(chatStateManager.lastKnownChatURL || "chat");
+      }
     };
 
     const closeChat = (event) => {
@@ -250,11 +254,11 @@ export default {
           },
         }
       );
-      api.addKeyboardShortcut(`-`, (event) => openChatDrawer(event), {
+      api.addKeyboardShortcut(`-`, (event) => toggleChatDrawer(event), {
         global: true,
         help: {
           category: "chat",
-          name: "chat.keyboard_shortcuts.drawer_open",
+          name: "chat.keyboard_shortcuts.drawer_toggle",
           definition: {
             keys1: ["-"],
           },

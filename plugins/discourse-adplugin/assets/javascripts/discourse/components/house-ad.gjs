@@ -1,10 +1,7 @@
 import { htmlSafe } from "@ember/template";
 import { isBlank } from "@ember/utils";
-import {
-  attributeBindings,
-  classNameBindings,
-  classNames,
-} from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
+import concatClass from "discourse/helpers/concat-class";
 import discourseComputed from "discourse/lib/decorators";
 import AdComponent from "./ad-component";
 
@@ -16,9 +13,7 @@ const adIndex = {
   topic_list_between: null,
 };
 
-@classNames("house-creative")
-@classNameBindings("adUnitClass")
-@attributeBindings("colspanAttribute:colspan")
+@tagName("")
 export default class HouseAd extends AdComponent {
   adHtml = "";
   currentAd = null;
@@ -90,11 +85,25 @@ export default class HouseAd extends AdComponent {
     // filter out ads that should not be shown on the current page
     const filteredAds = adNames.filter((adName) => {
       const ad = houseAds.creatives[adName];
-      return (
-        ad &&
-        (!ad.category_ids?.length ||
-          ad.category_ids.includes(this.currentCategoryId))
-      );
+      if (!ad) {
+        return false;
+      }
+
+      const hasCategoryScope = ad.category_ids?.length > 0;
+      const hasRouteScope =
+        this.siteSettings.ad_plugin_routes_enabled && ad.routes?.length > 0;
+
+      // Global ad: no scopes
+      if (!hasCategoryScope && !hasRouteScope) {
+        return true;
+      }
+
+      // Scoped ad: match category or route
+      const matchesCategory =
+        hasCategoryScope && ad.category_ids.includes(this.currentCategoryId);
+      const matchesRoute =
+        hasRouteScope && ad.routes.includes(this.currentRouteName);
+      return matchesCategory || matchesRoute;
     });
     if (filteredAds.length > 0) {
       if (!adIndex[placement]) {
@@ -171,8 +180,14 @@ export default class HouseAd extends AdComponent {
   }
 
   <template>
-    {{#if this.showAd}}
-      {{htmlSafe this.adHtml}}
-    {{/if}}
+    <div
+      colspan={{this.colspanAttribute}}
+      class={{concatClass "house-creative" this.adUnitClass}}
+      ...attributes
+    >
+      {{#if this.showAd}}
+        {{htmlSafe this.adHtml}}
+      {{/if}}
+    </div>
   </template>
 }

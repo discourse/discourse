@@ -104,7 +104,7 @@ RSpec.describe Chat::Api::ChannelsController do
       context "with direct message channels" do
         fab!(:dm_channel_1) { Fabricate(:direct_message_channel, users: [current_user]) }
 
-        it "doesnt return direct message channels" do
+        it "doesn't return direct message channels" do
           get "/chat/api/channels"
           expect(response.parsed_body["channels"]).to be_blank
         end

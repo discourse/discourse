@@ -32,7 +32,6 @@ pl_PL:
     chat_preferred_index: "Preferowana zakładka podczas ładowania /chat."
     allow_chat_in_anonymous_mode: "Włącz to ustawienie, aby umożliwić użytkownikom, którzy przeglądają twoją stronę anonimowo, korzystanie z czatu. To ustawienie wymaga włączenia ustawienia `allow anonymous mode`."
     chat_search_enabled: "Włącz to ustawienie, aby umożliwić użytkownikom przeszukiwanie wiadomości na czacie."
-    star_chat_channels: "Włącz wyróżnianie kanałów czatu. Wyróżnione kanały będą znajdować się w osobnej sekcji na pasku bocznym, umożliwiając szybki dostęp."
     errors:
       chat_default_channel: "Domyślny kanał czatu musi być kanałem publicznym."
       direct_message_enabled_groups_invalid: "Musisz określić co najmniej jedną grupę dla tego ustawienia. Jeśli nie chcesz, aby ktokolwiek poza personelem wysyłał bezpośrednie wiadomości, wybierz grupę pracowników."
@@ -74,6 +73,7 @@ pl_PL:
         closed: "Kanał jest zamknięty, nie można edytować ani usuwać żadnych wiadomości"
         read_only: "Kanał jest tylko do odczytu, nie można edytować ani usuwać żadnych wiadomości"
       user_cannot_send_message: "W tej chwili nie możesz wysyłać wiadomości."
+      user_not_in_channel: "Musisz być członkiem tego kanału."
       rate_limit_exceeded: "Przekroczono limit wiadomości na czacie, które można wysłać w ciągu 30 sekund"
       auto_silence_from_flags: "Wiadomość na czacie oflagowana z wynikiem wystarczającym do wyciszenia użytkownika."
       channel_cannot_be_archived: "Kanał nie może być w tej chwili zarchiwizowany, musi być zamknięty lub otwarty do archiwizacji."
@@ -152,10 +152,11 @@ pl_PL:
           title: "Nie zgadzam się i przywracam wiadomość"
           description: "Przywróć wiadomość, aby wszyscy użytkownicy mogli ją zobaczyć."
         disagree:
-          title: "Wycofaj"
+          title: "Zachowaj wiadomość"
+          description: "Nie zgódź się z flagą i pozostaw wiadomość bez zmian."
         ignore:
-          title: "Nic nie rób"
-          description: "Zignoruj flagę usuwając ją z kolejki bez podejmowania jakichkolwiek działań."
+          title: "Ignoruj flagę"
+          description: "Usuń z kolejki bez podejmowania żadnych działań."
       direct_messages:
         transcript_title: "Transkrypcja poprzednich wiadomości w %{channel_name}"
         transcript_body: "Aby dać Ci więcej kontekstu, zamieściliśmy transkrypcję poprzednich wiadomości w tej rozmowie (do dziesięciu):\n\n%{transcript}"

@@ -619,7 +619,6 @@ RSpec.describe Guardian do
       end
 
       it "is false if user has not met minimum trust level" do
-        SiteSetting.min_trust_to_create_topic = 1
         SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_1]
         expect(
           Guardian.new(Fabricate(:user, trust_level: 0)).can_create?(Topic, plain_category),
@@ -1430,7 +1429,6 @@ RSpec.describe Guardian do
     end
 
     it "returns false for user with insufficient trust level" do
-      SiteSetting.min_trust_to_create_topic = 3
       SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_3]
       expect(Guardian.new(user).can_create_topic?(topic)).to eq(false)
     end
@@ -2208,8 +2206,12 @@ RSpec.describe Guardian do
         expect(Guardian.new(user).can_edit_email?(user)).to be_truthy
       end
 
-      it "is true for moderators" do
-        expect(Guardian.new(moderator).can_edit_email?(user)).to be_truthy
+      it "is true for moderators to edit their own email" do
+        expect(Guardian.new(moderator).can_edit_email?(moderator)).to be_truthy
+      end
+
+      it "is false for moderators to edit another user's email" do
+        expect(Guardian.new(moderator).can_edit_email?(user)).to be_falsey
       end
 
       it "is true for admins" do
@@ -2446,7 +2448,7 @@ RSpec.describe Guardian do
       end
     end
 
-    context "when ignorer is not in requred trust level group" do
+    context "when ignorer is not in required trust level group" do
       let(:guardian) { Guardian.new(trust_level_0) }
       it "does not allow ignoring user" do
         expect(guardian.can_ignore_user?(another_user)).to eq(false)
@@ -2618,7 +2620,7 @@ RSpec.describe Guardian do
     context "when post is older than post_edit_time_limit" do
       let(:old_post) { Fabricate(:post, user: trust_level_2, created_at: 6.minutes.ago) }
       before do
-        SiteSetting.min_trust_to_allow_self_wiki = 2
+        SiteSetting.self_wiki_allowed_groups = "1|2|12"
         SiteSetting.tl2_post_edit_time_limit = 5
       end
 
@@ -2989,6 +2991,32 @@ RSpec.describe Guardian do
     end
   end
 
+  describe "#can_see_user_status?" do
+    it "returns true for non-silenced users" do
+      expect(Guardian.new.can_see_user_status?(user)).to eq(true)
+    end
+
+    context "with a silenced user" do
+      before { user.update!(silenced_till: 1.year.from_now) }
+
+      it "returns false to anonymous users" do
+        expect(Guardian.new.can_see_user_status?(user)).to eq(false)
+      end
+
+      it "returns false to other users" do
+        expect(Guardian.new(another_user).can_see_user_status?(user)).to eq(false)
+      end
+
+      it "returns true to the silenced user themselves" do
+        expect(Guardian.new(user).can_see_user_status?(user)).to eq(true)
+      end
+
+      it "returns true to staff" do
+        expect(Guardian.new(moderator).can_see_user_status?(user)).to eq(true)
+      end
+    end
+  end
+
   describe "#can_remove_allowed_users?" do
     context "with staff users" do
       it "should be true" do
@@ -3177,7 +3205,6 @@ RSpec.describe Guardian do
     end
 
     it "works with trust levels" do
-      SiteSetting.min_trust_level_for_here_mention = 2
       SiteSetting.here_mention_allowed_groups = Group::AUTO_GROUPS[:trust_level_2]
 
       expect(trust_level_0.guardian.can_mention_here?).to eq(false)
@@ -3190,7 +3217,6 @@ RSpec.describe Guardian do
     end
 
     it "works with staff" do
-      SiteSetting.min_trust_level_for_here_mention = "staff"
       SiteSetting.here_mention_allowed_groups = Group::AUTO_GROUPS[:staff]
 
       expect(trust_level_4.guardian.can_mention_here?).to eq(false)
@@ -3199,7 +3225,6 @@ RSpec.describe Guardian do
     end
 
     it "works with admin or moderator" do
-      SiteSetting.min_trust_level_for_here_mention = "admin"
       SiteSetting.here_mention_allowed_groups = Group::AUTO_GROUPS[:admins]
 
       expect(trust_level_4.guardian.can_mention_here?).to eq(false)

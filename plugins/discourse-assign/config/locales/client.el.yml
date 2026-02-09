@@ -7,6 +7,7 @@
 el:
   js:
     discourse_assign:
+      sidebar_name_filter_placeholder: "Όνομα/Όνομα χρήστη"
       group_everyone: "Όλοι"
       assigned_to: "Ανατέθηκε σε"
       reassign:
@@ -27,20 +28,30 @@ el:
     user:
       notification_level_when_assigned:
         do_nothing: "Μην κάνετε τίποτα"
+      no_assignments_title: "Δεν έχετε καμία ανάθεση ακόμη"
+      dismiss_assigned_tooltip: "Σήμανση όλων των αδιάβαστων ειδοποιήσεων ανάθεσης ως διαβασμένων"
       assignment_description:
         topic: "%{topic_title}"
     admin:
       web_hooks:
         assign_event:
-          group_name: "Ανάθεση εκδηλώσεων"
-          assigned: "Όταν ένας χρήστης αναθέτει ένα θέμα"
-          unassigned: "Όταν ένας χρήστης αναιρεί την ανάθεση ενός θέματος"
+          group_name: "Συμβάντα αναθέσεων"
     search:
       advanced:
+        in:
+          assigned: "έχουν ανατεθεί"
+          unassigned: "δεν έχουν ανατεθεί"
         assigned:
           label: "Ανατέθηκε σε"
     notifications:
       assigned: "<span>%{username}</span> %{description}"
+      titles:
+        assigned: "Ανατέθηκες"
+      dismiss_confirmation:
+        body:
+          assigns:
+            one: "Σίγουρα; Έχετε %{count} αδιάβασταση ειδοποίηση ανάθεσης."
+            other: "Σίγουρα; Έχετε %{count} αδιάβαστες ειδοποιήσεις ανάθεσης."
     edit_assignments_modal:
       topic: "Θέμα"
       post: "Ανάρτηση"

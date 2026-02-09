@@ -253,7 +253,7 @@ table.group-manage-logs {
     align-items: center;
   }
 
-  .uploaded-image-preview {
+  .file-uploader__preview {
     height: 75px;
     width: 275px;
   }
@@ -317,8 +317,7 @@ table.group-category-permissions {
   }
 }
 
-.group-smtp-email-settings,
-.group-imap-email-settings {
+.group-smtp-email-settings {
   background-color: var(--primary-very-low);
   padding: 1em;
   margin: 1em 0;

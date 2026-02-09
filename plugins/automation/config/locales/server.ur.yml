@@ -18,3 +18,5 @@ ur:
         title: ٹاپک بند کریں
       append_last_checked_by:
         button_text: مکمل
+      set_topic_timer:
+        title: "ٹاپک ٹائمر مقرر کریں"

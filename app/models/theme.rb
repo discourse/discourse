@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 100
+  BASE_COMPILER_VERSION = 101
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
@@ -402,9 +402,21 @@ class Theme < ActiveRecord::Base
     end
   end
 
-  def screenshot_url
+  def screenshot_dark_url
     theme_fields
-      .find { |field| field.type_id == ThemeField.types[:theme_screenshot_upload_var] }
+      .find do |field|
+        field.type_id == ThemeField.types[:theme_screenshot_upload_var] &&
+          field.name == "screenshot_dark"
+      end
+      &.upload_url
+  end
+
+  def screenshot_light_url
+    theme_fields
+      .find do |field|
+        field.type_id == ThemeField.types[:theme_screenshot_upload_var] &&
+          field.name == "screenshot_light"
+      end
       &.upload_url
   end
 

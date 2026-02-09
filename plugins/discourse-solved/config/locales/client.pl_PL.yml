@@ -42,6 +42,19 @@ pl_PL:
       no_solved_topics_title_others: "%{username} nie rozwiązał jeszcze żadnych tematów"
       no_solved_topics_body: "Gdy udzielisz pomocnej odpowiedzi na dany temat, Twoja odpowiedź może zostać wybrana jako rozwiązanie przez właściciela tematu lub personel."
       marked_solved_by: "Oznaczono jako rozwiązane przez %{user}"
+      confirm_move_solution_title: "Przenieś wpis z rozwiązaniem"
+      confirm_move_solution:
+        one: "Wybrany wpis jest oznaczony jako rozwiązanie tego tematu. Jeśli go przeniesiesz, temat zostanie zaktualizowany do nierozwiązanego."
+        few: "Jeden z wybranych wpisów jest oznaczony jako rozwiązanie tego tematu. Jeśli je przeniesiesz, temat zostanie zaktualizowany do nierozwiązanego."
+        many: "Jeden z wybranych wpisów jest oznaczony jako rozwiązanie tego tematu. Jeśli je przeniesiesz, temat zostanie zaktualizowany do nierozwiązanego."
+        other: "Jeden z wybranych wpisów jest oznaczony jako rozwiązanie tego tematu. Jeśli je przeniesiesz, temat zostanie zaktualizowany do nierozwiązanego."
+      move_post_confirm:
+        one: "Przenieś wpis"
+        few: "Przenieś wpisy"
+        many: "Przenieś wpisy"
+        other: "Przenieś wpisy"
+      move_post_cancel: "Anuluj"
+      dont_show_again: "Rozumiem, nie pokazuj mi tego ponownie"
       no_answer:
         title: Czy odpowiedź na twoje pytanie została udzielona?
         description: "Podświetl odpowiedź i pomóż innym, korzystając z przycisku rozwiązania pod prawidłową odpowiedzią."

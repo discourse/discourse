@@ -127,6 +127,13 @@ module DiscourseAi
               DiscourseAi::Configuration::Module::AI_HELPER_ID,
               DiscourseAi::Configuration::Module::AI_HELPER,
             ),
+            new(
+              "chat_thread_titles",
+              "ai_helper_chat_thread_title_persona",
+              DiscourseAi::Configuration::Module::AI_HELPER_ID,
+              DiscourseAi::Configuration::Module::AI_HELPER,
+              enabled_by_setting: "ai_helper_automatic_chat_thread_title",
+            ),
           ]
         end
 
@@ -177,7 +184,10 @@ module DiscourseAi
         end
 
         def lookup_bot_llms
-          LlmModel.where(enabled_chat_bot: true).to_a
+          persona_llms = AiPersona.where(id: lookup_bot_persona_ids).pluck(:default_llm_id)
+          enabled_chat_bot_llm_ids = LlmModel.enabled_chat_bot_ids
+
+          LlmModel.where(id: (persona_llms + enabled_chat_bot_llm_ids).uniq).to_a
         end
 
         def translation_features

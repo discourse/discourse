@@ -1,0 +1,215 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+uk:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          discourse_rewind: "Перемотка"
+  js:
+    discourse_rewind:
+      placeholder: Перемотка
+      title: Перемотай назад.
+      loading: "Збирання сплайнів..."
+      viewing_other_user: "Ви переглядаєте <strong>%{username}</strong> звіт \"Перемотування дискурсу\"."
+      cannot_view_rewind_gibberish: >
+        [ACCESS DENIED::REWIND MAINFRAME SUBROUTINE FAILURE]<br><br> Журнал аномалій завантаження...<br><br> &nbsp;&nbsp;>> недоповнення квантового буфера ⧛<br> &nbsp;&nbsp;>> міжвузловий дрейф парності (Δ=004.33)<br> &nbsp;&nbsp;>> фрагмент пакету ϟ зі зміщенням ∇47<br> &nbsp;&nbsp;>> Час очікування для відповідей на запити Flux Conduit<br><br>
+      cannot_view_rewind: >
+        Ви не можете переглянути цей звіт Discourse Rewind. Можливо, власник не опублікував його?<br><br> $> _<br><br>
+      preferences:
+        enable_rewind: "Увімкнути перемотування дискусії. Це відображає зведення активності за кінець року у вашому профілі та на вашому аватарі."
+        share_publicly: "Поділіться підсумковим звітом \"Перемотування дискурсу\" з іншими учасниками форуму. Будь-який учасник форуму зможе переглянути ваш звіт \"Перемотування дискурсу\"."
+        cannot_share_when_profile_hidden: "Щоб поділитися \"Перемотуванням дискурсу\", ви повинні дозволити іншим переглядати ваш публічний профіль."
+      profile_link: "Перегляньте свій %{rewindYear} Перемотка дискурсу"
+      share:
+        toggle_label:
+          private: "Приватні"
+          public: "Публічні"
+        confirm: "Переконайтеся, що ви переглянули свій звіт \"Перемотування дискурсу\" перед тим, як ділитися ним, оскільки він може містити дані з особистих повідомлень. Ви можете зробити його знову приватним у будь-який час."
+        confirm_button:
+          enable: "Зробити публічним"
+          disable: "Зберегти особистим"
+        enabled_success: "Тепер перемотка доступна з іншими учасниками форуму."
+        disabled_success: "Ваше перемотування тепер приватне."
+      reports:
+        activity_calendar:
+          title: Календар активностей
+          cell_title:
+            visited_no_posts: "Ви відвідували та стежили за %{date}, але не публікували жодних постів."
+            visited_with_posts:
+              one: "Ви зробили %{count} публікацію на %{date}."
+              few: "Ви зробили %{count} публікації на %{date}."
+              many: "Ви зробили %{count} публікацій на %{date}."
+              other: "Ви зробили %{count} публікацій на %{date}."
+            no_activity: "Вас не було на %{date}."
+        top_words:
+          title: Використання слів
+        reading_time:
+          title: Час читання
+        post_used_reactions:
+          title: Найчастіше використовувані реакції в темах
+          total_number: "Загальна кількість реакцій: %{count}"
+        post_received_reactions:
+          title: Найбільше отриманих реакцій у темах
+        fbff:
+          title: Ваш FBFF (перший форум найкращого друга)
+        most_viewed_categories:
+          title:
+            one: Ваша найпопулярніша категорія
+            few: Ваші %{count} найпопулярніші категорії
+            many: Ваші %{count} найпопулярніших категорій
+            other: Ваші %{count} найпопулярніших категорій
+        most_viewed_tags:
+          title:
+            one: Ваш найпопулярніший тег
+            few: Ваші %{count} найпопулярніші теги
+            many: Ваші %{count} найпопулярніших тегів
+            other: Ваші %{count} найпопулярніші теги
+        best_topics:
+          view_topic: Переглянути тему
+          title:
+            one: Ваша найкраща тема
+            few: Ваші %{count} найкращі теми
+            many: Ваші %{count} найкращі теми
+            other: Ваші %{count} найкращі теми
+        best_posts:
+          view_post: Переглянути публікацію
+          title:
+            one: Ваш найкращий допис
+            few: Ваші %{count} найкращі дописи
+            many: Ваші %{count} найкращих дописи
+            other: Ваші %{count} найкращі дописи
+        ai_usage:
+          title: Використання ШІ
+          total_requests: Всього запитів
+          total_tokens: Всього токенів
+          success_rate: Коефіцієнт успіху
+          favorite_features: Найчастіше використовувані функції
+          favorite_models: Найбільш використовувані моделі штучного інтелекту
+          wake_up: "Прокинься, %{username}..."
+          system_title: "ВИЯВЛЕНО ВИКОРИСТАННЯ ШІ"
+          section_features: "ГОЛОВНІ ОСОБЛИВОСТІ"
+          section_models: "ТОП-МОДЕЛІ"
+        assignments:
+          title: Призначення
+          total_assigned: Призначено мені
+          completed: Призначення виконані
+          pending: Завдання очікують на розгляд
+          assigned_by_user: Вручено призначень
+          completion_rate: Показник завершених
+        chat_usage:
+          title: Активність в чаті
+          total_messages: Всього повідомлень
+          dm_messages: Особисті повідомлення
+          unique_dm_channels: Розмови в особистих повідомленнях
+          reactions_received: Отримані реакції
+          avg_message_length: Середня довжина повідомлення
+          favorite_channels: Улюблені канали
+          messages: повідомлення
+          bot_name: XxRewindBotxX
+          channel_title: "#chat-activity"
+          status_online: "● онлайн"
+          reply_1: "лол, круто B-)"
+          reply_2: "круто :D"
+          reply_3: "r0fl rAwr 8-)"
+          message_4: "Середня довжина вашого повідомлення становила <strong>%{length}</strong> символів"
+          message_5: "Ваші улюблені канали:"
+          dancing_baby_alt: "Танцююча дитина"
+        favorite_gifs:
+          title:
+            one: Ваш улюблений GIF
+            few: Ваші %{count} улюблені GIF
+            many: Ваші %{count} улюблені GIF
+            other: Ваші %{count} улюблені GIF
+          total_usage:
+            one: Використано %{count} раз
+            few: Використано %{count} разів
+            many: Використано %{count} разів
+            other: Використано %{count} разів
+        invites:
+          title: Запрошення
+          total_invites: Всього надіслано запрошень
+          redeemed: Прийняті запрошення
+          redemption_rate: Коефіцієнт прийняття
+          avg_trust_level: Середній рівень довіри
+          invitee_impact: Вплив ваших запрошених
+          invitee_posts: Дописів створено
+          invitee_topics: Розпочаті теми
+          invitee_likes: Вподобані
+          most_active_invitee: Найактивніші запрошення
+          guest_book_title: Гостьова книга
+          guest_book_subtitle: Ваші запрошення до спільноти
+          label_invitations_sent: "Запрошення надіслані:"
+          label_guests_joined: "Запрошення прийнято:"
+          label_acceptance_rate: "Коефіцієнт прийняття:"
+          section_contributions: Внески запрошених
+          label_posts_written: "Написані дописи:"
+          label_topics_started: "Розпочаті теми:"
+          label_likes_given: "Вподобайки:"
+          section_most_active: Найактивніший гість
+        new_user_interactions:
+          title: Наставництво для нових користувачів
+          subtitle:
+            one: Ви допомогли %{count} новому користувачеві цього року
+            few: Ви допомогли %{count} новим користувачам цього року
+            many: Ви допомогли %{count} новим користувачам цього року
+            other: Ви допомогли %{count} новим користувачам цього року
+          new_member:
+            one: "%{count} новий учасник"
+            few: "%{count} нові учасники"
+            many: "%{count} нові учасники"
+            other: "%{count} нові учасники"
+          total_interactions: Загальна кількість взаємодій
+          unique_new_users: Унікальні нові користувачі
+          likes_given: Вподобані
+          replies: Відповіді на дописи
+          mentions: Згадки
+          topics_with_new_users: Теми з новими користувачами
+        time_of_day_activity:
+          title: Ритм щоденної активності
+          play_button: Відтворіть свою діяльність як звук
+          stop_button: Зупинити відтворення аудіо
+        writing_analysis:
+          title: Аналіз письма
+          menu_file: Файл
+          menu_other: Інше
+          menu_additional: Додатково
+          menu_opening: ВІДКРИТТЯ
+          help_text: Натисніть F1 для отримання довідки
+          app_name: DiscoStar Professional
+          release_info: Реліз %{rewindYear} від CDCK
+          total_words: Всього слів
+          total_posts: Всього повідомлень
+          avg_post_length: Середня довжина повідомлення
+          readability_score_label: Оцінка читабельності
+          readability_level: Рівень читабельності
+          readability_score:
+            over_80:
+              1: "Ернест Гемінґвей"
+              2: "Реймонд Карвер"
+              3: "Майкл Крайтон"
+              4: "Роальд Даль"
+            over_60:
+              1: "К.С. Льюїс"
+              2: "Стівен Кінг"
+              3: "Агата Крісті"
+              4: "Джордж Р.Р. Мартін"
+            over_40:
+              1: "Джордж Орвелл"
+              2: "Френсіс Скотт Фіцджеральд"
+              3: "Олдос Гакслі"
+              4: "Джоан Дідіон"
+            over_20:
+              1: "Кормак Маккарті"
+              2: "Вільям Фолкнер"
+              3: "Вірджіна Вульф"
+              4: "Габріель Гарсія Маркес"
+            over_0:
+              1: "Джеймс Джойс"
+              2: "Thomas Pynchon"
+              3: "David Foster Wallace"
+              4: "Федір Достоєвський"

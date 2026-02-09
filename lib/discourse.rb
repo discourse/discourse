@@ -4,6 +4,7 @@ require "cache"
 require "open3"
 require "plugin/instance"
 require "version"
+require "version_compatibility"
 require "git_utils"
 
 module Discourse
@@ -1050,7 +1051,7 @@ module Discourse
 
   def self.deprecate(warning, drop_from: nil, since: nil, raise_error: false, output_in_test: false)
     location = caller_locations[1].yield_self { |l| "#{l.path}:#{l.lineno}:in \`#{l.label}\`" }
-    warning = ["Deprecation notice:", warning]
+    warning = ["DEPRECATION NOTICE:", warning]
     warning << "(deprecated since Discourse #{since})" if since
     warning << "(removal in Discourse #{drop_from})" if drop_from
     warning << "\nAt #{location}"
@@ -1078,12 +1079,12 @@ module Discourse
 
   SIDEKIQ_NAMESPACE = "sidekiq"
 
-  def self.sidekiq_redis_config(old: false)
+  def self.sidekiq_redis_config
     GlobalSetting
       .redis_config
       .dup
       .except(:client_implementation, :custom)
-      .tap { |config| config.merge!(db: config[:db].to_i + 1) unless old }
+      .tap { |config| config.merge!(db: config[:db].to_i + 1) }
   end
 
   def self.static_doc_topic_ids

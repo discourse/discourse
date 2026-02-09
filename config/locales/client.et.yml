@@ -455,7 +455,11 @@ et:
         reviewable_post:
           title: "Postitus"
           noun: "postitus"
+        reviewable_ai_post:
+          noun: "postitus"
       user_label: "Kasutaja"
+      timeline:
+        target_deleted: "Postitus kustutatud"
       notes:
         delete: "Kustuta"
       topic_label: "Teema"
@@ -582,8 +586,6 @@ et:
             password: "Parool"
           settings:
             title: "Seaded"
-          mailboxes:
-            disabled: "Välja lülitatud"
         membership:
           title: Liikmesus
           access: Juurdepääs
@@ -802,6 +804,9 @@ et:
       new_private_message: "Uus sõnum"
       private_message: "Sõnum"
       private_messages: "Sõnumid"
+      upcoming_changes:
+        for_user:
+          enabled: "Sisse lülitatud?"
       user_notifications:
         filters:
           all: "Kõik"
@@ -1491,6 +1496,8 @@ et:
       upload_title: "Laadi üles"
       upload_description: "sisesta üleslaaditu kirjeldus siia"
       list_item: "Loendi element"
+      wrap_modal:
+        apply: "Rakenda"
       help: "Markdowni redigeerimisspikker"
       modal_ok: "Sobib"
       cant_send_pm: "Kahjuks ei saa sa kasutajale %{username} sõnumit saata."
@@ -1509,6 +1516,7 @@ et:
         shared_draft:
           label: "Jagatud mustand"
       ignore: "Ignoreeri"
+      image: "pilt"
     notifications:
       tooltip:
         regular:
@@ -1695,16 +1703,6 @@ et:
         bookmarks: "Sul ei ole veel ühtegi järjehoidjaga teemat."
         category: "Kategoorias %{category} teemad puuduvad."
         top: "Tippteemad puuduvad."
-      bottom:
-        latest: "Rohkem värskeid teemasid pole."
-        posted: "Rohkem uute postitustega teemasid pole."
-        read: "Rohkem loetud teemasid pole."
-        new: "Rohkem uusi teemasid pole."
-        unread: "Rohkem lugemata teemasid pole."
-        category: "Kategoorias %{category} rohkem teemasid pole."
-        tag: "Rohkem teemasid sildiga %{tag} pole."
-        top: "Rohkem tippteemasid pole."
-        bookmarks: "Rohkem järjehoidjaga teemasid pole."
     topic_bulk_actions:
       dismiss:
         name: "Ignoreeri"
@@ -2201,7 +2199,11 @@ et:
       slug_placeholder: "(Valikulised) sidekriipsuga-sõnad url-i jaoks"
       creation_error: Kategooria loomisel tekkis viga.
       save_error: Kategooria salvestamisel tekkis viga.
+      validations:
+        icon_required: "Vali ikoon."
       description: "Kirjeldus"
+      icon: "Ikoon"
+      emoji: "Emotikon"
       background_color: "Värv"
       color_validations:
         cant_be_empty: "ei tohi olla tühi"
@@ -2211,7 +2213,6 @@ et:
         options:
           icon: "Ikoon"
           emoji: "Emotikon"
-      name_placeholder: "Maksimaalselt üks või kaks sõna"
       color_placeholder: "Mis tahes veebivärv"
       delete_confirm: "Kas oled kindel, et soovid selle kategooria kustutada?"
       delete_error: "Kategooria kustutamisel tekkis viga."
@@ -2224,13 +2225,11 @@ et:
         reply: "Vasta"
         create: "Loo"
         no_groups_selected: "Ühele rühmale pole juurdepääsu antud; see kategooria on nähtav ainult meeskonnaliikmetele."
-        everyone_has_access: 'See kategooria on avalik, kõik saavad seda vaadata, vastata ja siia postitusi lisada. Õiguste piiramiseks eemalda õiguseid rühmalt "kõik".'
+        everyone_full_access: 'See kategooria on avalik, kõik saavad seda vaadata, vastata ja siia postitusi lisada. Õiguste piiramiseks eemalda õiguseid rühmalt "kõik".'
         toggle_reply: "Lülita vastamine sisse/välja"
         toggle_full: "Lülita loomine sisse/välja"
         inherited: 'Need õigused on päritud rühmalt "kõik"'
-      special_warning: "Hoiatus: See on eelseadistatud kategooria, mille turvasätteid muuta ei saa. Kui sa seda kategooriat kasutada ei soovi, kustuta see ümberkohandamise asemel."
       uncategorized_security_warning: "See kategooria on eriline. Siin on teemad, millel ei ole kategooriat; sellele kategooriale ei saa eraldi õiguseid määrata."
-      images: "Pildid"
       email_in: "Sissetuleva meili individuaalne aadress:"
       email_in_allow_strangers: "Aktsepteeri meile kontota anonüümsetelt kasutajatelt"
       show_subcategory_list: "Näita selles kategoorias alamkategooriate nimekirja teemadest üleval pool."
@@ -2246,6 +2245,11 @@ et:
       this_year: "sel aastal"
       position: "Asukoht kategooriate lehel:"
       minimum_required_tags: "Minimaalne nõutud siltide arv teemas:"
+      none_subcategory_text: "Pole"
+      visibility:
+        title: "Nähtavus"
+        public: "Avalik"
+        group_restricted: "Privaatne"
       num_auto_bump_daily: "Avatud teemade arv, mida iga päev automaatselt tõsta:"
       navigate_to_first_post_after_read: "Ava pärast teemade läbi lugemist esimene sõnum"
       notifications:
@@ -2450,6 +2454,7 @@ et:
         this_month: "Kuu"
         this_week: "Nädal"
         today: "Täna"
+        custom: "Individuaalne"
     permission_types:
       full: "Loo / vasta / vaata"
       create_post: "Vasta / vaata"
@@ -2547,6 +2552,7 @@ et:
       sort_by_name: "nimi"
       manage_groups: "Halda sildirühmi"
       manage_groups_description: "Määra siltide organiseerimiseks rühmad"
+      bulk_create_button: "Loo"
       filters:
         without_category: "%{filter} %{tag} teemat"
         with_category: "%{filter} teemad sildiga %{tag} kategoorias %{category}"
@@ -2736,6 +2742,9 @@ et:
           enabled: "Sisse lülitatud"
           disabled: "Välja lülitatud"
           impact_type_other: "Muu"
+          impact_role_admins: "Adminnid"
+          impact_role_moderators: "Moderaatorid"
+          impact_role_staff: "Meeskond"
       config:
         developer:
           title: "Arendaja"
@@ -2751,6 +2760,8 @@ et:
           sub_pages:
             common_settings:
               title: "Seaded"
+        discourse_id:
+          learn_more: "Uuri veel"
         logo:
           form:
             mobile: "Mobiil"
@@ -2896,6 +2907,8 @@ et:
           weekly: Iganädalaselt
           groups: "Kõik rühmad"
           no_data: "Pole andmeid, mida näidata."
+          sort_ascending: "ülenev"
+          sort_descending: "alanev"
           filters:
             group:
               label: Rühm
@@ -3734,6 +3747,7 @@ et:
         uploaded_image_list:
           upload:
             label: "Laadi üles"
+        download_file: "Laadi alla"
         table_column_heading:
           status: "Staatus"
         categories:
@@ -3798,6 +3812,8 @@ et:
         no_user_badges: "%{name} ei ole saanud veel ühtegi märgist."
         no_badges: Ei ole ühtegi märgist, mida saaks anda.
         none_selected: "Vali märgis, et alustada"
+        sections:
+          settings: Seaded
         allow_title: Luba märgise kasutamist tiitlina
         multiple_grant: Võib olla määratud mitmeid kordi
         visibility_heading: Nähtavus

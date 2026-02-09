@@ -10,6 +10,8 @@ da:
       logs:
         staff_actions:
           actions:
+            create_automation: opret automatisering
+            update_automation: opdater automatisering
             delete_automation: slet automatisering
     discourse_automation:
       title: Automatisering
@@ -49,13 +51,17 @@ da:
             label: Brødtekst
           delay:
             label: Forsinkelse (minutter)
-          prefers_encrypt:
-            label: Krypterer PM hvis tilgængelig
         group:
           label: Gruppe
         text:
           label: Tekst
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Kategorier
+            tags:
+              label: Mærker
         user_badge_granted:
           fields:
             badge:
@@ -301,6 +307,8 @@ da:
             user:
               label: Bruger
               description: "Brugeren, der lukker emnet (standard: system)"
+        set_topic_timer:
+          title: Indstil timerfunktion for emne
       unnamed_automation: "Unavngiven automatisering"
       models:
         script:

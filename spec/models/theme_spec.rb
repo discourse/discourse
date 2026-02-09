@@ -1012,12 +1012,12 @@ HTML
       theme.save!
     end
 
-    it "returns the value of the setting when given a string represeting the setting name" do
+    it "returns the value of the setting when given a string representing the setting name" do
       expect(theme.get_setting("enabled")).to eq(false)
       expect(theme.get_setting("some_value")).to eq("hello")
     end
 
-    it "returns the value of the setting when given a symbol represeting the setting name" do
+    it "returns the value of the setting when given a symbol representing the setting name" do
       expect(theme.get_setting(:enabled)).to eq(false)
       expect(theme.get_setting(:some_value)).to eq("hello")
     end
@@ -1676,21 +1676,29 @@ HTML
     end
   end
 
-  describe "#screenshot_url" do
-    it "returns nil when no screenshot is set" do
-      expect(theme.screenshot_url).to be_nil
+  describe "#screenshot_light_url & #screenshot_dark_url" do
+    it "returns nil when no screenshots are set" do
+      expect(theme.screenshot_light_url).to be_nil
+      expect(theme.screenshot_dark_url).to be_nil
     end
 
-    it "returns the upload URL when screenshot is set" do
+    it "returns the upload URL when screenshots are set" do
       upload = UploadCreator.new(file_from_fixtures("logo.png"), "logo.png").create_for(-1)
       theme.set_field(
         target: :common,
-        name: "screenshot",
+        name: "screenshot_dark",
+        upload_id: upload.id,
+        type: :theme_screenshot_upload_var,
+      )
+      theme.set_field(
+        target: :common,
+        name: "screenshot_light",
         upload_id: upload.id,
         type: :theme_screenshot_upload_var,
       )
       theme.save!
-      expect(theme.screenshot_url).to eq(upload.url)
+      expect(theme.screenshot_light_url).to eq(upload.url)
+      expect(theme.screenshot_dark_url).to eq(upload.url)
     end
   end
 

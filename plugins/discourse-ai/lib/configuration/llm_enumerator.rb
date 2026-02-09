@@ -9,10 +9,7 @@ module DiscourseAi
         rval = Hash.new { |h, k| h[k] = [] }
 
         if SiteSetting.ai_bot_enabled
-          LlmModel
-            .where("enabled_chat_bot = ?", true)
-            .pluck(:id)
-            .each { |llm_id| rval[llm_id] << { type: :ai_bot } }
+          LlmModel.enabled_chat_bot_ids.each { |llm_id| rval[llm_id] << { type: :ai_bot } }
         end
 
         # this is unconditional, so it is clear that we always signal configuration
@@ -101,6 +98,8 @@ module DiscourseAi
 
       # returns an array of hashes (id: , name:, vision_enabled:)
       def self.values_for_serialization
+        return [] unless table_exists?
+
         DB.query_hash(<<~SQL).map(&:symbolize_keys)
           SELECT id, display_name AS name, vision_enabled
           FROM llm_models
@@ -108,10 +107,19 @@ module DiscourseAi
       end
 
       def self.values
+        return [] unless table_exists?
+
         DB.query_hash(<<~SQL).map(&:symbolize_keys)
           SELECT display_name AS name, id AS value
           FROM llm_models
         SQL
+      end
+
+      def self.table_exists?
+        DB.exec("SELECT 1 FROM llm_models LIMIT 0")
+        true
+      rescue StandardError
+        false
       end
     end
   end

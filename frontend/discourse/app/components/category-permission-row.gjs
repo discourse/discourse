@@ -1,12 +1,13 @@
 import Component from "@glimmer/component";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
+import PluginOutlet from "discourse/components/plugin-outlet";
 import concatClass from "discourse/helpers/concat-class";
+import lazyHash from "discourse/helpers/lazy-hash";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import getURL from "discourse/lib/get-url";
 import PermissionType from "discourse/models/permission-type";
 import { i18n } from "discourse-i18n";
-
-const EVERYONE = "everyone";
 
 export default class CategoryPermissionRow extends Component {
   get everyonePermissionType() {
@@ -41,7 +42,7 @@ export default class CategoryPermissionRow extends Component {
   }
 
   get isEveryoneGroup() {
-    return this.args.groupName === EVERYONE;
+    return this.args.groupId === AUTO_GROUPS.everyone.id;
   }
 
   get replyDisabled() {
@@ -137,30 +138,54 @@ export default class CategoryPermissionRow extends Component {
       <span class="options actionable">
         <DButton @icon="square-check" @disabled={{true}} class="btn-flat see" />
 
-        <DButton
-          @icon={{this.canReplyIcon}}
-          @action={{this.setPermissionReply}}
-          @translatedTitle={{this.replyTooltip}}
-          @disabled={{this.replyDisabled}}
-          class={{concatClass
-            "btn btn-flat reply-toggle"
-            this.replyGrantedClass
+        <PluginOutlet
+          @name="category-security-permissions-row-actions"
+          @outletArgs={{lazyHash
+            groupName=@groupName
+            groupId=@groupId
+            category=@category
+            canReplyIcon=this.canReplyIcon
+            canCreateIcon=this.canCreateIcon
+            replyTooltip=this.replyTooltip
+            createTooltip=this.createTooltip
+            replyDisabled=this.replyDisabled
+            createDisabled=this.createDisabled
+            replyGrantedClass=this.replyGrantedClass
+            createGrantedClass=this.createGrantedClass
+            setPermissionReply=this.setPermissionReply
+            setPermissionFull=this.setPermissionFull
+            removeRow=this.removeRow
           }}
-        />
+          @defaultGlimmer={{true}}
+        >
+          <DButton
+            @icon={{this.canReplyIcon}}
+            @action={{this.setPermissionReply}}
+            @translatedTitle={{this.replyTooltip}}
+            @disabled={{this.replyDisabled}}
+            class={{concatClass
+              "btn btn-flat reply-toggle"
+              this.replyGrantedClass
+            }}
+          />
 
-        <DButton
-          @icon={{this.canCreateIcon}}
-          @action={{this.setPermissionFull}}
-          @translatedTitle={{this.createTooltip}}
-          @disabled={{this.createDisabled}}
-          class={{concatClass "btn-flat create-toggle" this.createGrantedClass}}
-        />
+          <DButton
+            @icon={{this.canCreateIcon}}
+            @action={{this.setPermissionFull}}
+            @translatedTitle={{this.createTooltip}}
+            @disabled={{this.createDisabled}}
+            class={{concatClass
+              "btn-flat create-toggle"
+              this.createGrantedClass
+            }}
+          />
 
-        <DButton
-          class="remove-permission btn-flat"
-          @action={{this.removeRow}}
-          @icon="trash-can"
-        />
+          <DButton
+            class="remove-permission btn-flat"
+            @action={{this.removeRow}}
+            @icon="trash-can"
+          />
+        </PluginOutlet>
       </span>
     </div>
   </template>

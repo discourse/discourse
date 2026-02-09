@@ -405,7 +405,7 @@ RSpec.describe SearchController do
         SearchIndexer.index(awesome_topic, force: true)
       end
 
-      it "works for user with tag group permision" do
+      it "works for user with tag group permission" do
         sign_in(admin)
         get "/search.json",
             params: {

@@ -8,6 +8,9 @@ import {
 import { acceptance, selectDate } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
 
+const IN_OPTIONS_SELECTOR =
+  ".search-advanced-options .select-kit#search-in-options";
+
 let searchResultClickTracked = false;
 
 acceptance("Search - Full Page", function (needs) {
@@ -198,45 +201,65 @@ acceptance("Search - Full Page", function (needs) {
   });
 
   test("update in:title filter through advanced search UI", async function (assert) {
-    await visit("/search");
-    await fillIn(".search-query", "none");
-    await click(".search-advanced-options .in-title");
+    const inSelector = selectKit(IN_OPTIONS_SELECTOR);
 
-    assert
-      .dom(".search-advanced-options .in-title")
-      .isChecked('has "in title" populated');
+    await visit("/search");
+    await click(".advanced-filters > summary");
+    await fillIn(".search-query", "none");
+    await inSelector.expand();
+    await inSelector.selectRowByValue("title");
+
+    assert.strictEqual(
+      inSelector.header().value(),
+      "title",
+      'has "in title" selected'
+    );
     assert
       .dom(".search-query")
       .hasValue("none in:title", 'has updated search term to "none in:title"');
 
     await fillIn(".search-query", "none in:titleasd");
 
-    assert
-      .dom(".search-advanced-options .in-title")
-      .isNotChecked("does not populate title only checkbox");
+    assert.strictEqual(
+      inSelector.header().value(),
+      null,
+      "does not have title selected for invalid filter"
+    );
   });
 
   test("update in:likes filter through advanced search UI", async function (assert) {
-    await visit("/search");
-    await fillIn(".search-query", "none");
-    await click(".search-advanced-options .in-likes");
+    const inSelector = selectKit(IN_OPTIONS_SELECTOR);
 
-    assert
-      .dom(".search-advanced-options .in-likes")
-      .isChecked('has "I liked" populated');
+    await visit("/search");
+    await click(".advanced-filters > summary");
+    await fillIn(".search-query", "none");
+    await inSelector.expand();
+    await inSelector.selectRowByValue("likes");
+
+    assert.strictEqual(
+      inSelector.header().value(),
+      "likes",
+      'has "I liked" selected'
+    );
     assert
       .dom(".search-query")
       .hasValue("none in:likes", 'has updated search term to "none in:likes"');
   });
 
   test("update in:messages filter through advanced search UI", async function (assert) {
-    await visit("/search");
-    await fillIn(".search-query", "none");
-    await click(".search-advanced-options .in-private");
+    const inSelector = selectKit(IN_OPTIONS_SELECTOR);
 
-    assert
-      .dom(".search-advanced-options .in-private")
-      .isChecked('has "are in my messages" populated');
+    await visit("/search");
+    await click(".advanced-filters > summary");
+    await fillIn(".search-query", "none");
+    await inSelector.expand();
+    await inSelector.selectRowByValue("messages");
+
+    assert.strictEqual(
+      inSelector.header().value(),
+      "messages",
+      'has "In my messages" selected'
+    );
 
     assert
       .dom(".search-query")
@@ -247,19 +270,27 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "none in:personal-direct");
 
-    assert
-      .dom(".search-advanced-options .in-private")
-      .isNotChecked("does not populate messages checkbox");
+    assert.strictEqual(
+      inSelector.header().value(),
+      null,
+      "does not have messages selected for personal-direct filter"
+    );
   });
 
   test("update in:seen filter through advanced search UI", async function (assert) {
-    await visit("/search");
-    await fillIn(".search-query", "none");
-    await click(".search-advanced-options .in-seen");
+    const inSelector = selectKit(IN_OPTIONS_SELECTOR);
 
-    assert
-      .dom(".search-advanced-options .in-seen")
-      .isChecked("it should check the right checkbox");
+    await visit("/search");
+    await click(".advanced-filters > summary");
+    await fillIn(".search-query", "none");
+    await inSelector.expand();
+    await inSelector.selectRowByValue("seen");
+
+    assert.strictEqual(
+      inSelector.header().value(),
+      "seen",
+      "has seen selected"
+    );
 
     assert
       .dom(".search-query")
@@ -267,13 +298,15 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "none in:seenasdan");
 
-    assert
-      .dom(".search-advanced-options .in-seen")
-      .isNotChecked("does not populate seen checkbox");
+    assert.strictEqual(
+      inSelector.header().value(),
+      null,
+      "does not have seen selected for invalid filter"
+    );
   });
 
   test("update in filter through advanced search UI", async function (assert) {
-    const inSelector = selectKit(".search-advanced-options .select-kit#in");
+    const inSelector = selectKit(IN_OPTIONS_SELECTOR);
 
     await visit("/search");
 
@@ -283,9 +316,9 @@ acceptance("Search - Full Page", function (needs) {
     await inSelector.selectRowByValue("bookmarks");
 
     assert.strictEqual(
-      inSelector.header().label(),
-      "I bookmarked",
-      'has "I bookmarked" populated'
+      inSelector.header().value(),
+      "bookmarks",
+      'has "I bookmarked" selected'
     );
     assert
       .dom(".search-query")
@@ -293,6 +326,34 @@ acceptance("Search - Full Page", function (needs) {
         "none in:bookmarks",
         'has updated search term to "none in:bookmarks"'
       );
+  });
+
+  test("selecting multiple in: filters through advanced search UI", async function (assert) {
+    const inSelector = selectKit(IN_OPTIONS_SELECTOR);
+
+    await visit("/search?expanded=true");
+    await fillIn(".search-query", "none");
+    await inSelector.expand();
+    await inSelector.selectRowByValue("title");
+    await inSelector.selectRowByValue("likes");
+
+    assert.true(
+      inSelector.header().value().includes("title"),
+      "has title selected"
+    );
+    assert.true(
+      inSelector.header().value().includes("likes"),
+      "has likes selected"
+    );
+    assert
+      .dom(".search-query")
+      .hasValue("none in:title in:likes", "has both filters in search term");
+
+    await inSelector.deselectItemByValue("title");
+
+    assert
+      .dom(".search-query")
+      .hasValue("none in:likes", "removes deselected filter from search term");
   });
 
   test("update status through advanced search UI", async function (assert) {
@@ -338,7 +399,7 @@ acceptance("Search - Full Page", function (needs) {
   });
 
   test("doesn't update in filter header if wrong value entered through searchbox", async function (assert) {
-    const inSelector = selectKit(".search-advanced-options .select-kit#in");
+    const inSelector = selectKit(IN_OPTIONS_SELECTOR);
 
     await visit("/search");
 
@@ -346,9 +407,9 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "in:none");
 
     assert.strictEqual(
-      inSelector.header().label(),
-      "any",
-      'has "any" populated'
+      inSelector.header().value(),
+      null,
+      "has no filters selected"
     );
   });
 
@@ -423,12 +484,17 @@ acceptance("Search - Full Page", function (needs) {
   });
 
   test("validate advanced search when initially empty", async function (assert) {
-    await visit("/search?expanded=true");
-    await click(".search-advanced-options .in-likes");
+    const inSelector = selectKit(IN_OPTIONS_SELECTOR);
 
-    assert
-      .dom(".search-advanced-options .in-likes")
-      .isChecked('has "I liked" populated');
+    await visit("/search?expanded=true");
+    await inSelector.expand();
+    await inSelector.selectRowByValue("likes");
+
+    assert.strictEqual(
+      inSelector.header().value(),
+      "likes",
+      'has "I liked" selected'
+    );
 
     assert
       .dom(".search-query")
@@ -436,9 +502,11 @@ acceptance("Search - Full Page", function (needs) {
 
     await fillIn(".search-query", "in:likesasdas");
 
-    assert
-      .dom(".search-advanced-options .in-likes")
-      .isNotChecked("does not populate the likes checkbox");
+    assert.strictEqual(
+      inSelector.header().value(),
+      null,
+      "does not have likes selected for invalid filter"
+    );
   });
 
   test("all tags checkbox only visible for two or more tags", async function (assert) {
@@ -447,11 +515,11 @@ acceptance("Search - Full Page", function (needs) {
     const tagSelector = selectKit("#search-with-tags");
 
     await tagSelector.expand();
-    await tagSelector.selectRowByValue("monkey");
+    await tagSelector.selectRowByName("monkey");
 
     assert.dom("input.all-tags").isNotVisible("all tags checkbox not visible");
 
-    await tagSelector.selectRowByValue("gazelle");
+    await tagSelector.selectRowByName("gazelle");
     assert.dom("input.all-tags").isVisible("all tags checkbox is visible");
   });
 

@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-private-routing-service */
+/* eslint-disable ember/no-jquery, ember/no-private-routing-service */
 import EmberObject from "@ember/object";
 import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
@@ -503,14 +503,19 @@ export function prefixProtocol(url) {
     return `https:${url}`;
   }
 
-  if (url.startsWith("/") || url.includes("://") || url.startsWith("mailto:")) {
+  if (
+    url.startsWith("/") ||
+    url.includes("://") ||
+    url.startsWith("mailto:") ||
+    url.startsWith("#")
+  ) {
     return url;
   }
 
   return `https://${url}`;
 }
 
-export function getCategoryAndTagUrl(category, subcategories, tag) {
+export function getCategoryAndTagUrl(category, subcategories, tagName) {
   let url;
 
   if (category) {
@@ -526,10 +531,10 @@ export function getCategoryAndTagUrl(category, subcategories, tag) {
     }
   }
 
-  if (tag) {
+  if (tagName) {
     url = url
-      ? "/tags" + url + "/" + tag.toLowerCase()
-      : "/tag/" + tag.toLowerCase();
+      ? "/tags" + url + "/" + tagName.toLowerCase()
+      : "/tag/" + tagName.toLowerCase();
   }
 
   return getURL(url || "/");

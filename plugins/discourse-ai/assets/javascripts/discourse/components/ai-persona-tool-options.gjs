@@ -86,11 +86,13 @@ export default class AiPersonaToolOptions extends Component {
                               @value={{field.value}}
                               @llms={{@llms}}
                               @onChange={{field.set}}
-                              @class="ai-persona-tool-option-editor__llms"
+                              class="ai-persona-tool-option-editor__llms"
                             />
                           </field.Custom>
                         {{else if (eq optionMeta.type "boolean")}}
                           <field.Checkbox />
+                        {{else if (eq optionMeta.type "text")}}
+                          <field.Textarea />
                         {{else}}
                           <field.Input />
                         {{/if}}

@@ -23,8 +23,6 @@ ca:
           agree_and_silence:
             title: "Silencia l'usuari"
             description: "D'acord amb la bandera i silencia l'usuari. "
-          disagree:
-            title: "En desacord"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

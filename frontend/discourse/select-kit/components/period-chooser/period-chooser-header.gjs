@@ -8,7 +8,7 @@ import DropdownSelectBoxHeaderComponent from "discourse/select-kit/components/dr
 export default class PeriodChooserHeader extends DropdownSelectBoxHeaderComponent {
   @discourseComputed("selectKit.isExpanded")
   caretIcon(isExpanded) {
-    return isExpanded ? "caret-up" : "caret-down";
+    return isExpanded ? "angle-up" : "angle-down";
   }
 
   <template>
@@ -17,9 +17,11 @@ export default class PeriodChooserHeader extends DropdownSelectBoxHeaderComponen
         this.value
         showDateRange=true
         fullDay=this.selectKit.options.fullDay
+        startDate=this.selectKit.options.startDate
+        endDate=this.selectKit.options.endDate
       }}
     </h2>
 
-    {{icon this.caretIcon class="caret-icon"}}
+    {{icon this.caretIcon class="angle-icon"}}
   </template>
 }

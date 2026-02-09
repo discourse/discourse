@@ -10,6 +10,7 @@ ug:
       logs:
         staff_actions:
           actions:
+            update_automation: ئاپتوماتلاشتۇرۇشنى يېڭىلا
             delete_automation: ئاپتوماتلاشتۇرۇشنى ئۆچۈر
     discourse_automation:
       title: ئاپتوماتلاشتۇرۇش
@@ -58,13 +59,17 @@ ug:
             label: مەزمۇن
           delay:
             label: كېچىكىش (مىنۇت)
-          prefers_encrypt:
-            label: ئەگەر ئىشلەتكىلى بولسا شەخسىي ئۇچۇرنى شىفىرلايدۇ
         group:
           label: گۇرۇپپا
         text:
           label: تېكىست
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: سەھىپە
+            tags:
+              label: بەلگە
         not_found: ئاپتوماتلاشتۇرۇشقا ئىشلىتىدىغان «%{automation}» نىڭ قوزغاتقۇچ «%{trigger}» نى تاپالمىدى، مۇناسىۋەتلىك قىستۇرمىنىڭ ئورنىتىلغانلىقىنى جەزملەڭ.
         user_badge_granted:
           fields:
@@ -422,6 +427,8 @@ ug:
           fields:
             custom_field_name:
               label: "ئىشلەتكۈچى ئىختىيارى بۆلەك ئىسمى"
+        set_topic_timer:
+          title: تېما ۋاقىت خاتىرىلىگۈچ تەڭشىكى
       unnamed_automation: "ئاتسىز ئاپتوماتلاشتۇرۇش"
       models:
         script:

@@ -33,14 +33,24 @@ export default class WelcomeBanner extends Component {
   @service search;
 
   checkViewport = modifier((element) => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        this.search.welcomeBannerSearchInViewport = entry.isIntersecting;
-      },
-      { threshold: 1.0 }
-    );
+    const checkVisibility = () => {
+      // Use getBoundingClientRect for reliable visibility detection.
+      // IntersectionObserver's isIntersecting can return stale values during
+      // SPA navigation, but getBoundingClientRect is always accurate.
+      const { top, bottom } = element.getBoundingClientRect();
+      const isFullyVisible = top >= 0 && bottom <= window.innerHeight;
+      this.search.welcomeBannerSearchInViewport = isFullyVisible;
+    };
 
+    // Use IntersectionObserver only as a trigger for when to check visibility,
+    // not to determine actual visibility state.
+    const threshold = 1.0;
+    const observer = new IntersectionObserver(checkVisibility, { threshold });
     observer.observe(element);
+
+    // Set to true immediately when the modifier sets up, since the welcome banner
+    // is always rendered at the top of the page.
+    this.search.welcomeBannerSearchInViewport = true;
 
     return () => {
       observer.disconnect();
@@ -88,22 +98,30 @@ export default class WelcomeBanner extends Component {
   }
 
   get headerText() {
+    const site_name = this.siteSettings.title || "";
+
+    let key, args;
+
     if (!this.currentUser) {
-      return i18n("welcome_banner.header.anonymous_members", {
-        site_name: this.siteSettings.title,
-      });
+      key = "welcome_banner.header.anonymous_members";
+      args = { site_name };
+    } else {
+      const isNewUser = !this.currentUser.previous_visit_at;
+      key = isNewUser
+        ? "welcome_banner.header.new_members"
+        : "welcome_banner.header.logged_in_members";
+      args = {
+        site_name,
+        preferred_display_name: sanitize(
+          prioritizeNameFallback(
+            this.currentUser.name,
+            this.currentUser.username
+          )
+        ),
+      };
     }
 
-    const isNewUser = !this.currentUser.previous_visit_at;
-    const key = isNewUser
-      ? "welcome_banner.header.new_members"
-      : "welcome_banner.header.logged_in_members";
-
-    return i18n(key, {
-      preferred_display_name: sanitize(
-        prioritizeNameFallback(this.currentUser.name, this.currentUser.username)
-      ),
-    });
+    return i18n(key, args);
   }
 
   get subheaderText() {

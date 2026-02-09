@@ -16,7 +16,6 @@ es:
       settings: "Ajustes"
       no_providers: "Necesitas habilitar algún proveedor en los ajustes del plugin"
       channels_with_errors: "Algunos canales de este proveedor fallaron la última vez que se enviaron mensajes. Haz clic en los iconos de error para obtener más información."
-      channel_exception: "Se produjo un error desconocido la última vez que se envió un mensaje a este canal."
       group_mention_template: "Menciones de: @%{name}"
       group_message_template: "Mensajes a: @%{name}"
       choose_group: "(elige un grupo)"
@@ -33,7 +32,6 @@ es:
         topic: "Tema"
         send: "Enviar mensaje de prueba"
         close: "Cerrar"
-        error: "Se ha producido un error desconocido al enviar el mensaje. Comprueba los registros del sitio para obtener más información."
         success: "Mensaje enviado correctamente."
       type:
         normal: Normal

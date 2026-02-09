@@ -649,11 +649,10 @@ zh_TW:
       every_month: "每個月"
       every_six_months: "每半年"
   user_api_key:
-    title: "授權應用訪問"
     authorize: "授權"
+    deny: "取消"
     read: "閲讀"
     read_write: "讀/寫"
-    description: '“%{application_name}”要求存取您帳號中的以下權限：'
     instructions: '系統熱騰騰產生了新的使用者API鑰匙給您使用，請將以下API鑰匙貼到您的應用程式裡。'
     otp_description: '你要允許進入%{application_name}這個網站嗎？'
     otp_confirmation:
@@ -1242,13 +1241,7 @@ zh_TW:
     tl3_requires_likes_given: "要升到信任等級3所需要的，在最近考察時間段內使用者必須要給出的贊（設置為 0 或更高）"
     tl3_requires_likes_received: "要升到信任等級3所需要的，在最近考察時間段內使用者必須要收到的贊（設置為 0 或更高）"
     tl3_links_no_follow: "禁止從信任等級 3 之使用者所發表的連結中刪除 rel=nofollow 標籤"
-    min_trust_to_create_topic: "建立話題最低所需的信任等級"
     allow_flagging_staff: "如果設定為已啟用，使用者可以標記具有管理權限的帳戶中的話題。"
-    min_trust_to_edit_wiki_post: "編輯被標示為維基的貼文所需之最低信任等級。"
-    min_trust_to_edit_post: "能編輯貼文的最小信任等級。"
-    min_trust_to_allow_self_wiki: "使用者將自己的貼文設置為維基模式的最低信任等級。"
-    min_trust_to_flag_posts: "投訴話題所需的最低信任等級"
-    min_trust_to_post_links: "在貼文中加入連結的最低信任等級需求"
     allowed_link_domains: "使用者可能會連結到的網域（Domains），即使他們沒有適當的信任等級來發布貼文連結"
     newuser_max_links: "新使用者可添加多少連結於一篇貼文中"
     newuser_max_attachments: "新使用者可添加多少附件於一篇貼文中"
@@ -1331,7 +1324,6 @@ zh_TW:
     pop3_polling_password: "POP3 帳戶用來輪詢電子郵件的密碼。"
     pop3_polling_delete_from_server: "從Server端刪除電子郵件。注意：如果禁用此功能，則需要手動清理收件匣。"
     log_mail_processing_failures: "將所有電子郵件處理失敗記錄到<a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in_min_trust: "能使用 EMail 發表新話題的最低的使用者信任等級"
     email_prefix: "EMail主題中使用的 [ 標籤 ]，留空將預設使用 'title'"
     email_site_title: "郵件發送人站點標題。如果沒有設置，預設為“title”。如果標題包含了任何不允許的字元，使用這個設置。"
     find_related_post_with_key: "只使用「回覆按鈕」尋找回覆貼文。 警告：禁用此功能，允許使用者基於電子郵件地址進行模擬。"
@@ -1342,7 +1334,6 @@ zh_TW:
     username_change_period: "使用者帳戶註冊後，可以更改其使用者名稱的最大天數（0表示不允許更改使用者名稱）。"
     email_editable: "允許使用者在註冊後改變他們的 EMail"
     logout_redirect: "登出後，將瀏覽器導向到別的網址（例如：https://example.com/logout）"
-    allow_uploaded_avatars: "允許使用者上傳自定義個人頭像。"
     default_avatars: "新使用者將會使用的默認頭像的網址。"
     automatically_download_gravatars: "當使用者註冊或更改EMail時下載 Gravatars 圖片"
     digest_topics: "郵件摘要中顯示的熱門主題的數目上限。"
@@ -1364,7 +1355,6 @@ zh_TW:
     anonymous_account_duration_minutes: "為了匿名性，為每個使用者每 N 分鐘創建一個匿名帳號。例如：如果設置為 600，只要發帖後 600 分鐘到了，並且使用者切換至了匿名模式，就會創建一個新的匿名帳號。"
     hide_user_profiles_from_public: "不對來訪使用者顯示使用者信息卡、使用者資料和使用者目錄。"
     show_inactive_accounts: "允許登入使用者瀏覽未啟用帳戶的使用者個人檔案。"
-    hide_suspension_reasons: "不要在使用者個人檔案上公開顯示暫停原因。"
     log_personal_messages_views: "管理員記錄其他使用者或群組的個人資訊畫面"
     ignored_users_count_message_threshold: "如果特定使用者被這麽多的其他使用者忽略，則通知版主。"
     ignored_users_message_gap_days: "被許多使用者忽略的使用者，再次通知版主此事件需要等待的時間。"
@@ -1428,14 +1418,12 @@ zh_TW:
     allow_user_api_key_scopes: "使用者API授權範圍列表"
     allowed_user_api_auth_redirects: "允許身份驗證URL用於導向使用者API 密鑰（Keys），使用星號「*」將代入所有字詞，並找到最適合的配對（例如：www.example.com/*）。"
     allowed_user_api_push_urls: "允許使用伺服器推送至使用者 API 的 URL"
-    min_trust_to_create_tag: "建立標籤所需的最低信任等級。"
     max_tags_per_topic: "主題最多允許有多少個標籤。"
     max_tag_length: "標籤允許的最大字元數。"
     max_tag_search_results: "當搜索標籤時，顯示的結果數上限。"
     max_tags_in_filter_list: "過濾下拉選單中顯示的標籤數上限。優先顯示最常用的標籤。"
     tags_sort_alphabetically: "按照字母順序顯示標籤。預設按流行度顯示。"
     tags_listed_by_group: "按<a href='%{base_path}/tags' target='_blank'>標籤頁面</a>上的標籤群組列出標籤（Tags）。"
-    min_trust_level_to_tag_topics: "給主題加標籤的最小信任等級"
     suppress_overlapping_tags_in_list: "如果標籤匹配了主題標題中的詞，不顯示該標籤"
     force_lowercase_tags: "強制所有新標籤完全小寫"
     shared_drafts_category: "通過為討論話題的草稿以指定一個類別，來啟用「共用草稿」功能。此類別中的話題將從工作人員使用者的主題清單中取消。"
@@ -1758,6 +1746,7 @@ zh_TW:
         只要你參與，我們將更瞭解你，並且新使用者的臨時限制將被移除。隨着時間，你會提供[信任等級](https://meta.discourse.org/t/what-do-user-trust-levels-do/4924)，這將提供一些特殊功能來幫助我們更好地管理社群。
     welcome_user:
       title: "歡迎使用者"
+      preview: "歡迎來到 %{site_name}！"
       subject_template: "歡迎來到 %{site_name}！"
       text_body_template: |
         感謝你加入%{site_name}，歡迎！
@@ -1776,6 +1765,7 @@ zh_TW:
         我們很高興你與我們一起共度時光，我們想知道更多關於你的事情。花一點時間來[填寫你的個人資料](%{base_url}/my/preferences/profile), 或著隨意 [發表一篇新的討論話題](%{base_url}/categories)，讓更多人看到吧！
     welcome_invite:
       title: "歡迎邀請"
+      preview: "歡迎來到 %{site_name}！"
       subject_template: "歡迎來到 %{site_name}！"
       text_body_template: |
         感謝你接受邀請加入 %{site_name} — 歡迎！
@@ -2053,6 +2043,7 @@ zh_TW:
       subject_template: "新用戶 %{username} 由於重複貼連結，文章已被封鎖"
     unsilenced:
       title: "解除禁言"
+      preview: "帳號已解除封鎖."
       subject_template: "帳號已解除封鎖"
       text_body_template: |
         你好，
@@ -2100,7 +2091,6 @@ zh_TW:
     要退訂這些郵件，[請點擊這裡](%{unsubscribe_url})。
   subject_re: "回覆："
   subject_pm: "[私訊]"
-  email_from: "%{user_name}透過%{site_name}"
   user_notifications:
     previous_discussion: "之前的回覆"
     reached_limit:
@@ -2346,6 +2336,7 @@ zh_TW:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "透過連結登入"
+      preview: "透過連結登入."
       subject_template: "[%{email_prefix}] 透過連結登入"
       text_body_template: |
         有人嘗試登入你在[%{site_name}](%{base_url})的帳號。
@@ -2775,6 +2766,8 @@ zh_TW:
     title: "進入安全模式"
     enter: "進入安全模式"
     must_select: "您必須至少選擇一個選項才能進入安全模式。"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse 安裝"
     step:
@@ -2802,6 +2795,10 @@ zh_TW:
     github:
       opened: "已打開"
       closed: "不公開"
+      status_date:
+        open: "已開啟"
+        approved: "已同意"
+        closed: "已關閉"
   discourse_push_notifications:
     popup:
       mentioned: '%{username}在"%{topic}"提及您 - %{site_title}'
@@ -2851,10 +2848,9 @@ zh_TW:
         confirm: "您確定要刪除對該貼文的留言嗎？"
       delete_and_agree_replies:
         confirm: "您確定要刪除對該貼文的留言嗎？"
-      disagree_and_restore:
-        description: "將話題變更為對所有人顯示。"
-      disagree:
+      disagree_bundle:
         title: "否"
+      disagree:
         complete: "檢舉已忽略."
       ignore:
         title: "忽略"
@@ -2863,29 +2859,39 @@ zh_TW:
         title: "不做任何動作"
         complete: "檢舉已忽略."
       approve:
-        title: "批准"
+        title: "是"
         complete: "帖文已批准."
       approve_post:
-        title: "批准貼文"
+        title: "是"
         complete: "帖文已批准."
       approve_post_closed:
-        title: "批准貼文"
+        title: "是"
         complete: "帖文已批准."
+      reject_post_bundle:
+        title: "否"
       reject_post:
         title: "否決貼文"
         complete: "貼文被拒絕."
       approve_user:
-        title: "批准使用者"
+        title: "是"
         complete: "使用者已核准."
       reject_user:
+        title: "否"
         delete:
           title: "刪除使用者"
-          description: "該使用者將從論壇中刪除。"
         block:
           title: "刪除並阻擋使用者"
           description: "這個使用者將被刪除，我們將阻擋他們的IP及郵件地址。"
+      confirm_spam:
+        title: "是"
+      not_spam:
+        title: "否"
       reject:
         title: "拒絕"
+      approve_and_restore:
+        title: "是"
+      approve_and_unhide:
+        title: "是"
       no_action_post:
         title: "沒有動作"
       delete_post:

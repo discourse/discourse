@@ -11,6 +11,7 @@ import { propertyNotEqual, setting } from "discourse/lib/computed";
 import discourseComputed from "discourse/lib/decorators";
 import { exportUserArchive } from "discourse/lib/export-csv";
 import getURL from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { findAll } from "discourse/models/login-method";
 import { i18n } from "discourse-i18n";
@@ -40,15 +41,15 @@ export default class AccountController extends Controller {
 
   init() {
     super.init(...arguments);
-
-    this.saveAttrNames = [
-      "name",
-      "title",
-      "primary_group_id",
-      "flair_group_id",
-      "status",
-    ];
     this.set("revoking", {});
+  }
+
+  get saveAttrNames() {
+    return applyValueTransformer(
+      "preferences-save-attributes",
+      ["name", "title", "primary_group_id", "flair_group_id", "status"],
+      { page: "account" }
+    );
   }
 
   reset() {

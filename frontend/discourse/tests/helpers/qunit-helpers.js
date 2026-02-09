@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { run } from "@ember/runloop";
 import {
   find,
@@ -20,6 +21,7 @@ import {
   cleanUpComposerUploadMarkdownResolver,
   cleanUpComposerUploadPreProcessor,
 } from "discourse/components/composer-editor";
+import { clearPluginDocumentTitleCounters } from "discourse/components/d-document";
 import { clearToolbarCallbacks } from "discourse/components/d-editor";
 import { resetHtmlDecorators } from "discourse/components/decorated-html";
 import { clearExtraHeaderButtons as clearExtraGlimmerHeaderButtons } from "discourse/components/header";
@@ -32,6 +34,7 @@ import { resetQuickSearchRandomTips } from "discourse/components/search-menu/res
 import { resetOnKeyUpCallbacks } from "discourse/components/search-menu/search-term";
 import { resetUserMenuProfileTabItems } from "discourse/components/user-menu/profile-tab-content";
 import { resetCustomPostMessageCallbacks } from "discourse/controllers/topic";
+import { resetCustomUserNavMessagesDropdownRows } from "discourse/controllers/user-private-messages";
 import { clearHTMLCache } from "discourse/helpers/custom-html";
 import { resetUsernameDecorators } from "discourse/helpers/decorate-username-selector";
 import { resetBeforeAuthCompleteCallbacks } from "discourse/instance-initializers/auth-complete";
@@ -226,6 +229,7 @@ export function testCleanup(container, app) {
   clearTopicFooterDropdowns();
   clearTopicFooterButtons();
   clearDesktopNotificationHandlers();
+  clearPluginDocumentTitleCounters();
   cleanUpHashtagTypeClasses();
   resetLastEditNotificationClick();
   clearAuthMethods();
@@ -265,6 +269,7 @@ export function testCleanup(container, app) {
   resetGroupPostSmallActionCodes();
   enableClearA11yAnnouncementsInTests();
   resetHtmlDecorators();
+  resetCustomUserNavMessagesDropdownRows();
 }
 
 function cleanupCssGeneratorTags() {

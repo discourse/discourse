@@ -55,12 +55,10 @@ import { i18n } from "discourse-i18n";
         {{/if}}
 
         <div class="reviewable-topic-link__details-tags">
-          <ReviewableTags @tags={{@reviewable.topic_tags}} @tagName="" />
+          <ReviewableTags @tags={{@reviewable.topic_tags}} />
         </div>
       </div>
-    {{else if (has-block)}}
-      {{yield}}
-    {{else}}
+    {{else if @reviewable.removed_topic_id}}
       <span class="title-text">
         {{i18n "review.topics.deleted"}}
         <LinkTo
@@ -68,6 +66,8 @@ import { i18n } from "discourse-i18n";
           @models={{array "-" @reviewable.removed_topic_id}}
         >{{i18n "review.topics.original"}}</LinkTo>
       </span>
+    {{else if (has-block)}}
+      {{yield}}
     {{/if}}
   </div>
 </template>

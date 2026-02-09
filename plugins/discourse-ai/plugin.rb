@@ -19,6 +19,8 @@ register_asset "stylesheets/common/ai-blinking-animation.scss"
 register_asset "stylesheets/common/ai-user-settings.scss"
 register_asset "stylesheets/common/ai-features.scss"
 
+register_asset "stylesheets/admin/ai-features-editor.scss"
+
 register_asset "stylesheets/modules/translation/common/admin-translations.scss"
 
 register_asset "stylesheets/modules/ai-helper/common/ai-helper.scss"
@@ -79,7 +81,7 @@ after_initialize do
   # do not autoload this cause we may have no namespace
   require_relative "discourse_automation/llm_triage"
   require_relative "discourse_automation/llm_report"
-  require_relative "discourse_automation/llm_tool_triage"
+  require_relative "discourse_automation/ai_tool_action"
   require_relative "discourse_automation/llm_persona_triage"
   require_relative "discourse_automation/llm_tagger"
 
@@ -112,10 +114,7 @@ after_initialize do
     end
   end
 
-  if Rails.env.test?
-    require_relative "spec/support/embeddings_generation_stubs"
-    require_relative "spec/support/stable_diffusion_stubs"
-  end
+  require_relative "spec/support/embeddings_generation_stubs" if Rails.env.test?
 
   reloadable_patch do |plugin|
     Guardian.prepend DiscourseAi::GuardianExtensions

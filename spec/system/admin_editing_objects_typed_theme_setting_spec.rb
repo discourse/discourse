@@ -97,7 +97,7 @@ RSpec.describe "Admin editing objects type", type: :system do
       expect(admin_objects_theme_setting_editor).to have_setting_field("name", "section 1")
     end
 
-    it "displays the validation errors when an admin tries to save the settting with an invalid value" do
+    it "displays the validation errors when an admin tries to save the setting with an invalid value" do
       visit("/admin/customize/themes/#{theme.id}")
 
       admin_objects_theme_setting_editor =

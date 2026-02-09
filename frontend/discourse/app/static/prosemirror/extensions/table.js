@@ -1,17 +1,25 @@
-// It makes sense to use prosemirror-tables for some of the table functionality,
-// but it has some differences from our structure (e.g. no thead/tbody).
-//
-// The main missing part of this extension for now is a UI companion
-
-// Example:
+// Markdown Table Example:
 //
 // | Left-aligned | Center-aligned | Right-aligned |
 // | :---         |     :---:      |          ---: |
 // | git status   | git status     | git status    |
 // | git diff     | git diff       | git diff      |
 
-/** @type {RichEditorExtension} */
+class TableNodeView {
+  constructor() {
+    const div = document.createElement("div");
+    div.classList.add("md-table");
+    const table = document.createElement("table");
+    div.appendChild(table);
+
+    this.dom = div;
+    this.contentDOM = table;
+  }
+}
+
+/** @type {import("discourse/lib/composer/rich-editor-extensions").RichEditorExtension} */
 const extension = {
+  nodeViews: { table: TableNodeView },
   nodeSpec: {
     table: {
       content: "table_head? table_body",
@@ -178,52 +186,108 @@ const extension = {
     table_header_cell() {},
     table_cell() {},
   },
-  plugins({ pmState: { Plugin }, pmModel: { Slice } }) {
+  plugins({ pmState: { Plugin }, pmModel: { Slice, Fragment } }) {
+    function findMaxColumns(tbody) {
+      let maxColumns = 0;
+      tbody.forEach((row) => {
+        maxColumns = Math.max(maxColumns, row.childCount);
+      });
+      return maxColumns;
+    }
+
+    function createHeaderRow(firstRow, maxColumns, schema) {
+      const headerCells = [];
+      for (let i = 0; i < maxColumns; i++) {
+        if (i < firstRow.childCount) {
+          const cell = firstRow.child(i);
+          headerCells.push(
+            schema.nodes.table_header_cell.create(cell.attrs, cell.content)
+          );
+        } else {
+          headerCells.push(schema.nodes.table_header_cell.create());
+        }
+      }
+      return schema.nodes.table_row.create({}, headerCells);
+    }
+
+    function createBodyRows(tbody, maxColumns, schema) {
+      const bodyRows = [];
+      tbody.content.content.slice(1).forEach((row) => {
+        const cells = [];
+        for (let i = 0; i < maxColumns; i++) {
+          if (i < row.childCount) {
+            cells.push(row.child(i));
+          } else {
+            cells.push(schema.nodes.table_cell.create());
+          }
+        }
+        bodyRows.push(schema.nodes.table_row.create({}, cells));
+      });
+      return bodyRows;
+    }
+
+    function normalizeTable(tableNode, schema) {
+      let tbody, thead;
+      tableNode.descendants((node) => {
+        if (node.type.name === "table_body") {
+          tbody = node;
+          return false;
+        }
+        if (node.type.name === "table_head") {
+          thead = node;
+          return false;
+        }
+      });
+
+      if (thead || !tbody) {
+        return tableNode;
+      }
+
+      const maxColumns = findMaxColumns(tbody);
+      const firstRow = tbody.firstChild;
+
+      if (!firstRow || maxColumns === 0) {
+        return tableNode;
+      }
+
+      const header = schema.nodes.table_head.create(
+        {},
+        createHeaderRow(firstRow, maxColumns, schema)
+      );
+
+      const body = schema.nodes.table_body.create(
+        {},
+        createBodyRows(tbody, maxColumns, schema)
+      );
+
+      return schema.nodes.table.create({}, [header, body]);
+    }
+
     return new Plugin({
       props: {
         transformPasted(paste, view) {
-          let updatedPaste = paste;
-          paste.content.descendants((child, tableIndex) => {
-            if (child.type.name === "table") {
-              let tbody, thead;
-              child.descendants((node) => {
-                if (node.type.name === "table_body") {
-                  tbody = node;
-                  return false;
-                }
+          const schema = view.state.schema;
 
-                if (node.type.name === "table_head") {
-                  thead = node;
-                  return false;
-                }
-              });
-
-              if (!thead && tbody) {
-                thead = view.state.schema.nodes.table_head.create(
-                  {},
-                  tbody.firstChild
-                );
-
-                tbody = view.state.schema.nodes.table_body.create(
-                  {},
-                  tbody.content.content.slice(1)
-                );
-
-                const newTableContent = view.state.schema.nodes.table.create(
-                  {},
-                  [thead, tbody]
-                );
-
-                updatedPaste = new Slice(
-                  paste.content.replaceChild(tableIndex, newTableContent),
-                  paste.openStart,
-                  paste.openEnd
-                );
-              }
+          function transformNode(node) {
+            if (node.type.name === "table") {
+              return normalizeTable(node, schema);
             }
-          });
 
-          return updatedPaste;
+            if (node.content?.size > 0) {
+              const newChildren = node.content.content.map(transformNode);
+              return node.type.create(node.attrs, newChildren, node.marks);
+            }
+
+            return node;
+          }
+
+          const transformedContent = paste.content.content.map(transformNode);
+
+          return new Slice(
+            Fragment.from(transformedContent),
+            paste.openStart,
+            paste.openEnd
+          );
         },
       },
     });

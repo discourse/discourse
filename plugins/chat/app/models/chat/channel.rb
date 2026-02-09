@@ -8,7 +8,7 @@ module Chat
 
     # TODO (martin) Remove once we are using last_message instead,
     # should be around August 2023.
-    self.ignored_columns = %w[last_message_sent_at]
+    self.ignored_columns = %w[last_message_sent_at icon_upload_id]
     self.table_name = "chat_channels"
 
     belongs_to :chatable, polymorphic: true
@@ -28,7 +28,6 @@ module Chat
                class_name: "Chat::Message",
                foreign_key: :last_message_id,
                optional: true
-    has_one :icon_upload, class_name: "Upload", foreign_key: :id, primary_key: :icon_upload_id
 
     def last_message
       super || NullMessage.new
@@ -274,6 +273,7 @@ module Chat
           chat_channel_name: self.name,
           previous_value: status_previously_was,
           new_value: status,
+          category_id: category_channel? ? self.chatable_id : nil,
         },
       )
 
@@ -311,7 +311,6 @@ end
 #  messages_count              :integer          default(0), not null
 #  threading_enabled           :boolean          default(FALSE), not null
 #  last_message_id             :bigint
-#  icon_upload_id              :integer
 #  emoji                       :string
 #
 # Indexes

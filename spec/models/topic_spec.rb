@@ -771,7 +771,7 @@ RSpec.describe Topic do
         expect(Topic.similar_to("unrelated term", "1 2 3 poddle")).to eq([])
       end
 
-      it "doesnt match numbered lists against numbers in Post#raw" do
+      it "doesn't match numbered lists against numbers in Post#raw" do
         post.update!(raw: <<~RAW)
         Internet Explorer 11+ Oct 2013 Google Chrome 32+ Jan 2014 Firefox 27+ Feb 2014 Safari 6.1+ Jul 2012 Safari, iOS 8+ Oct 2014
         RAW
@@ -942,9 +942,7 @@ RSpec.describe Topic do
 
           freeze_time(start + 5.minutes)
 
-          expect { topic.invite(topic.user, user1.username) }.not_to raise_error(
-            RateLimiter::LimitExceeded,
-          )
+          expect { topic.invite(topic.user, user1.username) }.not_to raise_error
         end
       end
     end
@@ -2606,6 +2604,19 @@ RSpec.describe Topic do
         topic,
       )
     end
+
+    it "excludes uncategorized topics when `include_uncategorized` kwarg is false" do
+      uncategorized_topic =
+        Fabricate(:topic, category_id: nil, archetype: Archetype.private_message)
+
+      categorized_topic = Fabricate(:topic, category: Fabricate(:category))
+
+      expect(uncategorized_topic.reload.category_id).to eq(nil)
+
+      result = Topic.secured(Guardian.new(user), include_uncategorized: false)
+
+      expect(result.pluck(:id)).to contain_exactly(categorized_topic.id)
+    end
   end
 
   describe "all_allowed_users" do
@@ -3376,6 +3387,48 @@ RSpec.describe Topic do
     end
   end
 
+  describe ".reset_highest" do
+    fab!(:topic)
+    fab!(:first_post) { Fabricate(:post, topic:, post_number: 1) }
+    fab!(:second_post) { Fabricate(:post, topic:, post_number: 2) }
+    fab!(:third_post) { Fabricate(:post, topic:, post_number: 3) }
+
+    it "returns the highest post number" do
+      expect(Topic.reset_highest(topic.id)).to eq(3)
+    end
+
+    it "excludes deleted posts from the highest post number" do
+      third_post.update!(deleted_at: 1.hour.ago)
+
+      expect(Topic.reset_highest(topic.id)).to eq(2)
+    end
+
+    it "excludes whisper posts from the highest post number" do
+      third_post.update!(post_type: Post.types[:whisper])
+
+      expect(Topic.reset_highest(topic.id)).to eq(2)
+    end
+  end
+
+  describe "#update_statistics!" do
+    fab!(:topic)
+
+    it "updates the in-memory highest_post_number" do
+      Fabricate(:post, topic:, post_number: 1)
+      Fabricate(:post, topic:, post_number: 2)
+      Fabricate(:post, topic:, post_number: 3)
+
+      topic.update_column(:highest_post_number, 1)
+      topic.reload
+
+      expect(topic.highest_post_number).to eq(1)
+
+      topic.update_statistics!
+
+      expect(topic.highest_post_number).to eq(3)
+    end
+  end
+
   describe "#access_topic_via_group" do
     let(:open_group) { Fabricate(:group, public_admission: true) }
     let(:request_group) do
@@ -3495,7 +3548,7 @@ RSpec.describe Topic do
     fab!(:group) do
       Fabricate(
         :group,
-        smtp_server: "imap.gmail.com",
+        smtp_server: "smtp.gmail.com",
         smtp_port: 587,
         email_username: "discourse@example.com",
         email_password: "discourse@example.com",

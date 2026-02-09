@@ -21,8 +21,8 @@ describe "Review filters", type: :system do
 
         visit("/review?claimed_by=#{moderator.username}")
 
-        expect(page).to have_css(".reviewable-item", count: 1)
-        expect(page).to have_css(".reviewable-item[data-reviewable-id='#{flagged_post_1.id}']")
+        expect(page).to have_css(".review-item", count: 1)
+        expect(page).to have_css(".review-item[data-reviewable-id='#{flagged_post_1.id}']")
       end
 
       it "shows no reviewables when filtering by a user who has not claimed any" do
@@ -60,7 +60,7 @@ describe "Review filters", type: :system do
 
     it "allows to filter review claimed by category group moderators" do
       visit("/review")
-      expect(page).to have_css(".reviewable-item", count: 3)
+      expect(page).to have_css(".review-item", count: 3)
 
       review_index_page.expand_filters
 
@@ -70,8 +70,8 @@ describe "Review filters", type: :system do
 
       review_index_page.submit_filters
 
-      expect(page).to have_css(".reviewable-item", count: 1)
-      expect(page).to have_css(".reviewable-item[data-reviewable-id='#{flagged_post_1.id}']")
+      expect(page).to have_css(".review-item", count: 1)
+      expect(page).to have_css(".review-item[data-reviewable-id='#{flagged_post_1.id}']")
     end
   end
 end

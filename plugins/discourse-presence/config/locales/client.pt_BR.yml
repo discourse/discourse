@@ -13,6 +13,9 @@ pt_BR:
       editing:
         one: "editando"
         other: "editando"
+      translating:
+        one: "traduzindo"
+        other: "traduzindo"
       replying_to_topic:
         one: "respondendo"
         other: "respondendo"

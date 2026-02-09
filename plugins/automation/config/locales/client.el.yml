@@ -10,6 +10,7 @@ el:
       logs:
         staff_actions:
           actions:
+            update_automation: ενημέρωση αυτοματισμού
             delete_automation: διαγραφή αυτοματισμού
     discourse_automation:
       title: Αυτοματισμός
@@ -30,7 +31,7 @@ el:
         fields_section:
           title: Επιλογές σεναρίου
       destroy_automation:
-        confirm: "Είστε βέβαιοι ότι θέλετε να διαγράψετε το `%{name}`;"
+        confirm: "Σίγουρα θέλετε να διαγράψετε το `%{name}`;"
       fields:
         key_value:
           label_without_count: "Διαμόρφωση"
@@ -45,6 +46,7 @@ el:
           raw:
             label: Κύριο μέρος
         pms:
+          no_pm_created: Δεν έχετε δημιουργήσει ακόμη κανένα προσωπικό μήνυμα. Τα προσωπικά μηνύματα θα σταλούν μόλις πυροδοτηθεί ο αυτοματισμός σας.
           title:
             label: Τίτλος
           raw:
@@ -56,6 +58,12 @@ el:
         text:
           label: Κείμενο
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Κατηγορίες
+            tags:
+              label: Ετικέτες
         user_badge_granted:
           fields:
             badge:
@@ -130,6 +138,10 @@ el:
               label: Κατηγορίες
             restricted_archetype:
               description: Προαιρετικά, να επιτρέπεται το έναυσμα μόνο σε θέματα ή προσωπικά μηνύματα
+            first_post_only:
+              label: Πρώτη ανάρτηση μόνο
+            first_topic_only:
+              label: Πρώτο θέμα μόνο
           created: Δημιουργήθηκε
           topics: Όλα τα θέματα
           personal_messages: Προσωπικά μηνύματα
@@ -185,6 +197,12 @@ el:
             restricted_tags:
               label: Ετικέτες
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Πρότυπο email
+            recipients:
+              label: Παραλήπτες
         zapier_webhook:
           fields:
             webhook_url:
@@ -249,7 +267,7 @@ el:
               label: Ομάδα
             remove_members_without_badge:
               label: Αφαίρεση υπαρχόντων μελών χωρίς παράσημο
-              description: Προαιρετικό, αφαίρεση υπαρχόντων μελών ομάδας χωρίς το καθορισμένο σήμα
+              description: Προαιρετικό, αφαίρεση υπαρχόντων μελών ομάδας χωρίς το καθορισμένο παράσημο
             badge:
               label: Παράσημο
               description: Επιλογή παρασήμου
@@ -303,6 +321,11 @@ el:
             user:
               label: Χρήστης
               description: "Ο χρήστης που κλείνει το θέμα (προεπιλογή: σύστημα)"
+        set_topic_timer:
+          title: Ορισμός Χρονοδιακόπτη Θέματος
+          fields:
+            duration:
+              label: Διάρκεια Χρονομέτρου
       unnamed_automation: "Ανώνυμος αυτοματισμός"
       models:
         trigger:

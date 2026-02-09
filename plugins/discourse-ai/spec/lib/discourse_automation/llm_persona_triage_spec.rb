@@ -6,7 +6,7 @@ describe DiscourseAi::Automation::LlmPersonaTriage do
   fab!(:user)
   fab!(:bot_user, :user)
 
-  fab!(:llm_model) { Fabricate(:anthropic_model, name: "claude-3-opus", enabled_chat_bot: true) }
+  fab!(:llm_model) { Fabricate(:anthropic_model, name: "claude-3-opus") }
 
   fab!(:ai_persona) do
     persona =
@@ -83,7 +83,7 @@ describe DiscourseAi::Automation::LlmPersonaTriage do
 
     log = AiApiAuditLog.last
     expect(log).to be_present
-    expect(log.user_id).to eq(post.user_id)
+    expect(log.user_id).to eq(Discourse.system_user.id)
     expect(log.feature_name).to eq("automation - #{automation.name}")
 
     topic = post.topic.reload

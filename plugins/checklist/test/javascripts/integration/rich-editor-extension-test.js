@@ -21,9 +21,9 @@ module(
     });
 
     const checked =
-      '<span class="chcklst-box checked fa fa-square-check-o fa-fw" contenteditable="false" draggable="true"></span>';
+      '<span class="chcklst-box checked fa fa-square-check-o" contenteditable="false" draggable="true"></span>';
     const unchecked =
-      '<span class="chcklst-box fa fa-square-o fa-fw" contenteditable="false" draggable="true"></span>';
+      '<span class="chcklst-box fa fa-square-o" contenteditable="false" draggable="true"></span>';
 
     Object.entries({
       "renders unchecked checkbox correctly": [
@@ -50,6 +50,21 @@ module(
         "[ ] *italics* and [x] **bold**",
         `<p>${unchecked} <em>italics</em> and ${checked} <strong>bold</strong></p>`,
         "[ ] *italics* and [x] **bold**",
+      ],
+      "does not render escaped opening bracket as checkbox": [
+        "\\[x] not a checkbox",
+        "<p>[x] not a checkbox</p>",
+        "\\[x\\] not a checkbox",
+      ],
+      "does not render escaped closing bracket as checkbox": [
+        "[x\\] not a checkbox",
+        "<p>[x] not a checkbox</p>",
+        "\\[x\\] not a checkbox",
+      ],
+      "handles escaped checkbox followed by real checkbox": [
+        "\\[x] escaped [x] real",
+        `<p>[x] escaped ${checked} real</p>`,
+        "\\[x\\] escaped [x] real",
       ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {

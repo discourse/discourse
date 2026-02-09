@@ -3,6 +3,7 @@
 describe "RemoveUploadMarkupFromDeletedPosts" do
   fab!(:topic)
   fab!(:upload)
+  fab!(:nameless_upload, :upload)
 
   fab!(:filename) { "small.pdf" }
   fab!(:file) { file_from_fixtures(filename, "pdf") }
@@ -11,12 +12,24 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       Discourse.system_user.id,
     )
   end
+
   let!(:raw) do
-    "Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a #{upload.to_markdown} #{file_upload.to_markdown}"
+    "![](#{nameless_upload.short_url}) Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a #{upload.to_markdown} #{file_upload.to_markdown}"
+  end
+
+  let!(:expected_raw) do
+    " Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a"
   end
 
   let!(:post) { Fabricate(:post, topic: topic, raw: raw) }
   let!(:deleted_post) { Fabricate(:post, topic: topic, raw: raw, deleted_at: 1.month.ago) }
+
+  let!(:nameless_upload_reference) do
+    Fabricate(:upload_reference, upload: nameless_upload, target: post)
+  end
+  let!(:deleted_nameless_upload_reference) do
+    Fabricate(:upload_reference, upload: nameless_upload, target: deleted_post)
+  end
 
   let!(:upload_reference) { Fabricate(:upload_reference, upload: upload, target: post) }
   let!(:deleted_upload_reference) do
@@ -43,9 +56,7 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       expect {
         automation.trigger!
         deleted_post.reload
-      }.to change { deleted_post.raw }.from(raw).to(
-        "Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a",
-      )
+      }.to change { deleted_post.raw }.from(raw).to(expected_raw)
 
       expect(post.raw).to eq(raw)
     end
@@ -57,9 +68,7 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       expect {
         automation.trigger!
         deleted_post.reload
-      }.to change { deleted_post.raw }.from(raw).to(
-        "Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a",
-      )
+      }.to change { deleted_post.raw }.from(raw).to(expected_raw)
     end
 
     it "does not remove uploads from non-deleted posts" do
@@ -71,6 +80,61 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
       expect(post.custom_fields["uploads_removed_at"]).to be_nil
       expect(upload_reference.reload).to be_present
       expect(file_upload_reference.reload).to be_present
+    end
+
+    it "does not remove uploads from flagged posts that are hidden and deleted but still pending review" do
+      flagged_hidden_deleted_post =
+        Fabricate(
+          :post,
+          topic: topic,
+          raw: raw,
+          hidden: true,
+          hidden_at: 1.month.ago,
+          deleted_at: 1.month.ago,
+        )
+      Fabricate(:upload_reference, upload: upload, target: flagged_hidden_deleted_post)
+
+      Fabricate(
+        :reviewable_flagged_post,
+        topic: topic,
+        target: flagged_hidden_deleted_post,
+        status: Reviewable.statuses[:pending],
+      )
+
+      expect {
+        automation.trigger!
+        flagged_hidden_deleted_post.reload
+      }.to_not change { flagged_hidden_deleted_post.raw }
+
+      expect(flagged_hidden_deleted_post.custom_fields["uploads_removed_at"]).to be_nil
+    end
+
+    it "removes uploads from deleted posts after reviewable is resolved" do
+      deleted_post_with_resolved_reviewable =
+        Fabricate(:post, topic: topic, raw: raw, deleted_at: 1.month.ago)
+      Fabricate(:upload_reference, upload: upload, target: deleted_post_with_resolved_reviewable)
+      Fabricate(
+        :upload_reference,
+        upload: nameless_upload,
+        target: deleted_post_with_resolved_reviewable,
+      )
+      Fabricate(
+        :upload_reference,
+        upload: file_upload,
+        target: deleted_post_with_resolved_reviewable,
+      )
+
+      Fabricate(
+        :reviewable_flagged_post,
+        topic: topic,
+        target: deleted_post_with_resolved_reviewable,
+        status: Reviewable.statuses[:approved],
+      )
+
+      expect {
+        automation.trigger!
+        deleted_post_with_resolved_reviewable.reload
+      }.to change { deleted_post_with_resolved_reviewable.raw }.from(raw).to(expected_raw)
     end
 
     it "adds a timestamp to the custom field uploads_removed_at" do
@@ -155,9 +219,7 @@ describe "RemoveUploadMarkupFromDeletedPosts" do
         expect {
           Jobs::DiscourseAutomation::Tracker.new.execute
           deleted_post.reload
-        }.to change { deleted_post.raw }.from(raw).to(
-          "Hey it is a regular post with a link to [Discourse](https://www.discourse.org) and a",
-        )
+        }.to change { deleted_post.raw }.from(raw).to(expected_raw)
 
         expect(post.raw).to eq(raw)
       end

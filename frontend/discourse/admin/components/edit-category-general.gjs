@@ -1,11 +1,10 @@
 import Component from "@glimmer/component";
 import { cached } from "@glimmer/tracking";
-import { fn, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import ColorInput from "discourse/admin/components/color-input";
-import ColorPicker from "discourse/components/color-picker";
+import DecoratedHtml from "discourse/components/decorated-html";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import categoryBadge from "discourse/helpers/category-badge";
 import { categoryBadgeHTML } from "discourse/helpers/category-link";
@@ -126,25 +125,16 @@ export default class EditCategoryGeneral extends Component {
   }
 
   @action
-  updateColor(field, newColor) {
-    const color = newColor.replace("#", "");
+  setBackgroundColor(value, { set }) {
+    const color = value?.replace(/^#/, "") ?? "";
 
-    if (color === field.value) {
-      return;
-    }
+    set("color", color);
 
-    if (field.name === "color") {
-      const whiteDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[0]);
-      const blackDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[1]);
-      const colorIndex = whiteDiff > blackDiff ? 0 : 1;
+    const whiteDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[0]);
+    const blackDiff = this.colorDifference(color, CATEGORY_TEXT_COLORS[1]);
+    const colorIndex = whiteDiff > blackDiff ? 0 : 1;
 
-      this.args.form.setProperties({
-        color,
-        text_color: CATEGORY_TEXT_COLORS[colorIndex],
-      });
-    } else {
-      field.set(color);
-    }
+    set("text_color", CATEGORY_TEXT_COLORS[colorIndex]);
   }
 
   @action
@@ -204,7 +194,7 @@ export default class EditCategoryGeneral extends Component {
       return htmlSafe(this.args.category.description);
     }
 
-    return i18n("category.no_description");
+    return htmlSafe(i18n("category.no_description"));
   }
 
   get canSelectParentCategory() {
@@ -298,7 +288,10 @@ export default class EditCategoryGeneral extends Component {
 
       {{#if this.showDescription}}
         <@form.Section @title={{i18n "category.description"}}>
-          <span class="readonly-field">{{this.categoryDescription}}</span>
+          <DecoratedHtml
+            @html={{this.categoryDescription}}
+            @className="readonly-field"
+          />
 
           {{#if @category.topic_url}}
             <@form.Container>
@@ -359,28 +352,13 @@ export default class EditCategoryGeneral extends Component {
           @format="full"
           @validate={{this.validateColor}}
           @validation="required"
+          @onSet={{this.setBackgroundColor}}
           as |field|
         >
-          <field.Custom>
-            <div class="category-color-editor">
-              <div class="colorpicker-wrapper edit-background-color">
-                <ColorInput
-                  @hexValue={{readonly field.value}}
-                  @valid={{@category.colorValid}}
-                  @ariaLabelledby="background-color-label"
-                  @onChangeColor={{fn this.updateColor field}}
-                  @skipNormalize={{true}}
-                />
-                <ColorPicker
-                  @colors={{this.backgroundColors}}
-                  @usedColors={{this.usedBackgroundColors}}
-                  @value={{readonly field.value}}
-                  @ariaLabel={{i18n "category.predefined_colors"}}
-                  @onSelectColor={{fn this.updateColor field}}
-                />
-              </div>
-            </div>
-          </field.Custom>
+          <field.Color
+            @colors={{this.backgroundColors}}
+            @usedColors={{this.usedBackgroundColors}}
+          />
         </@form.Field>
 
         <@form.Field
@@ -391,24 +369,7 @@ export default class EditCategoryGeneral extends Component {
           @validation="required"
           as |field|
         >
-          <field.Custom>
-            <div class="category-color-editor">
-              <div class="colorpicker-wrapper edit-text-color">
-                <ColorInput
-                  @hexValue={{readonly field.value}}
-                  @ariaLabelledby="foreground-color-label"
-                  @onChangeColor={{fn this.updateColor field}}
-                  @skipNormalize={{true}}
-                />
-                <ColorPicker
-                  @colors={{CATEGORY_TEXT_COLORS}}
-                  @value={{readonly field.value}}
-                  @ariaLabel={{i18n "category.predefined_colors"}}
-                  @onSelectColor={{fn this.updateColor field}}
-                />
-              </div>
-            </div>
-          </field.Custom>
+          <field.Color @colors={{CATEGORY_TEXT_COLORS}} />
         </@form.Field>
       </@form.Section>
     </div>

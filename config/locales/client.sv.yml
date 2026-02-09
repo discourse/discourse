@@ -137,6 +137,11 @@ sv:
       placeholder: datum
       from_placeholder: "från-datum"
       to_placeholder: "till-datum"
+    languages:
+      ur:
+        name: Urdu
+      vi:
+        name: Vietnamesiska
     share:
       topic_html: 'Ämne: <span class="topic-title">%{topicTitle}</span>'
       post: "inlägg #%{postNumber} av %{username}"
@@ -315,6 +320,9 @@ sv:
         posts:
           one: "%{formatted_number} inlägg"
           other: "%{formatted_number} inlägg"
+        sign_ups:
+          one: "%{formatted_number} registrering"
+          other: "%{formatted_number} registreringar"
         likes:
           one: "%{formatted_number} gillning"
           other: "%{formatted_number} gillningar"
@@ -334,6 +342,7 @@ sv:
         unbookmark_with_reminder: "Klicka för att ta bort alla bokmärken och påminnelser i detta ämne"
     bookmarks:
       bookmarked_success: "Bokmärkt!"
+      deleted_bookmark_success: "Bokmärke borttaget!"
       created: "Du har bokmärkt detta inlägg. %{name}"
       created_generic: "Du har bokmärkt detta. %{name}"
       create: "Skapa bokmärke"
@@ -627,7 +636,13 @@ sv:
         reviewable_post:
           title: "Inlägg"
           noun: "inlägg"
+        reviewable_ai_chat_message:
+          noun: "chattmeddelande"
+        reviewable_ai_post:
+          noun: "inlägg"
       user_label: "Användare"
+      timeline:
+        target_deleted: "Inlägg raderat"
       notes:
         delete: "Radera"
       topic_label: "Ämne"
@@ -781,9 +796,7 @@ sv:
           notification: Notifikation
         email:
           title: "E-post"
-          status: "Synkroniserat %{old_emails}/ %{total_emails} e-post genom IMAP."
           enable_smtp: "Aktivera SMTP"
-          enable_imap: "Aktivera IMAP"
           test_settings: "Testa inställningar"
           save_settings: "Spara inställningar"
           last_updated: "Senast uppdaterat:"
@@ -792,14 +805,7 @@ sv:
           smtp_settings_valid: "SMTP-inställningar är giltiga."
           smtp_title: "SMTP"
           smtp_instructions: "När du aktiverar SMTP för gruppen skickas alla utgående e-postmeddelanden från gruppens inkorg via de SMTP-inställningar som anges här istället för e-postservern som konfigurerats för andra e-postmeddelanden från ditt forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Ytterligare inställningar"
-          imap_instructions: 'När du aktiverar IMAP för gruppen synkroniseras e-post mellan gruppinkorgen och den medföljande IMAP-servern och brevlådan. SMTP måste aktiveras med giltiga och testade autentiseringsuppgifter innan IMAP kan aktiveras. Det användarnamn och lösenord som används för SMTP kommer att användas för IMAP. Mer information finns i <a target="_blank" href="https://meta.discourse.org/t/imap-support-for-group-inboxes/160588">funktionsmeddelande på Discourse Meta</a>.'
-          imap_alpha_warning: "Varning: Detta är en alfafunktion. Endast Gmail stöds officiellt. Använd på egen risk!"
-          imap_settings_valid: "IMAP-inställningar är giltiga."
-          smtp_disable_confirm: "Om du inaktiverar SMTP återställs alla SMTP- och IMAP-inställningar och tillhörande funktioner inaktiveras. Är du säker på att du vill fortsätta?"
-          imap_disable_confirm: "Om du inaktiverar IMAP återställs alla IMAP-inställningar och tillhörande funktioner inaktiveras. Är du säker på att du vill fortsätta?"
-          imap_mailbox_not_selected: "Du måste välja en brevlåda för den här IMAP-konfigurationen, annars synkroniseras inga brevlådor!"
+          additional_settings: "Ytterligare inställningar"
           prefill:
             title: "Förfyll med inställningar för:"
             gmail: "Gmail"
@@ -809,9 +815,6 @@ sv:
             title: "Kontouppgifter"
             smtp_server: "SMTP Server"
             smtp_port: "SMTP Port"
-            imap_server: "IMAP Server"
-            imap_port: "IMAP Port"
-            imap_ssl: "Använd SSL för IMAP"
             username: "Användarnamn"
             password: "Lösenord"
           settings:
@@ -820,10 +823,6 @@ sv:
             allow_unknown_sender_topic_replies_hint: "Tillåter okända avsändare att svara på gruppämnen. Om detta inte har aktiverats leder svar från e-postadresser som inte redan bjudits in till ämnet till att det skapas ett nytt ämne."
             from_alias: "Från alias"
             from_alias_hint: "Alias att använda som från adress när du skickar grupp SMTP e-post. Observera att detta kanske inte stöds av alla e-postleverantörer, vänligen konsultera dokumentationen från din e-postleverantör."
-          mailboxes:
-            synchronized: "Synkroniserad brevlåda"
-            none_found: "Inga brevlådor hittades för detta e-postkonto."
-            disabled: "Inaktiverad"
         membership:
           title: Medlemskap
           access: Tillgång
@@ -1077,6 +1076,9 @@ sv:
       new_private_message: "Nytt meddelande"
       private_message: "Meddelande"
       private_messages: "Meddelanden"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktiverad?"
       user_notifications:
         filters:
           filter_by: "Filtrera efter"
@@ -1272,9 +1274,6 @@ sv:
         flags_given:
           one: '<span class="%{className}">%{count}</span> hjälpsam flagga'
           other: '<span class="%{className}">%{count}</span> hjälpsamma flaggor'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> flaggat inlägg'
-          other: '<span class="%{className}">%{count}</span> flaggade inlägg'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> raderat inlägg'
           other: '<span class="%{className}">%{count}</span> raderade inlägg'
@@ -1323,7 +1322,6 @@ sv:
         tags: "Taggar"
         interface: "Gränssnitt"
         apps: "Appar"
-        navigation_menu: "Navigeringsmeny"
       change_password:
         success: "(e-post skickat)"
         in_progress: "(skickar e-post)"
@@ -2277,6 +2275,8 @@ sv:
       upload_title: "Bild"
       upload_description: "skriv en bildbeskrivning här"
       list_item: "Listobjekt"
+      wrap_modal:
+        apply: "Tillämpa"
       help: "Markdown-redigeringshjälp"
       exit_fullscreen_prompt: "Tryck på <kbd>ESC</kbd> för att lämna helskärmsläget"
       modal_ok: "OK"
@@ -2325,6 +2325,7 @@ sv:
       ignore: "Ignorera"
       image_alt_text:
         aria_label: Alternativ text för bild
+      image: "bild"
       delete_image_button: Radera bild
       toggle_image_grid: Växla bildrutnät
       link_toolbar:
@@ -2446,8 +2447,7 @@ sv:
         post_approved: "inlägg godkänt"
         membership_request_consolidated: "ny begäran om medlemskap"
         reaction: "ny reaktion"
-        votes_released: "Röstningen släpptes"
-        new_features: "Nya Discourse-funktioner har släppts!"
+        votes_released: "röstningen släpptes"
         admin_problems: "nytt råd på din webbplats översiktspanel"
     upload_selector:
       delete: "Radera"
@@ -2711,19 +2711,6 @@ sv:
         top: "Det finns inga toppämnen."
         hot: "Det finns inga heta ämnen."
         filter: "Det finns inga ämnen."
-      bottom:
-        latest: "Det finns inga fler senaste ämnen."
-        posted: "Det finns inga fler postade ämnen."
-        read: "Det finns inga fler lästa ämnen."
-        new: "Det finns inga fler nya ämnen."
-        unread: "Det finns inga fler olästa ämnen."
-        unseen: "Det finns inga fler osedda ämnen."
-        category: "Det finns inga fler ämnen i %{category}."
-        tag: "Det finns inga fler %{tag}-ämnen."
-        top: "Det finns inga fler toppämnen."
-        hot: "Det finns inte fler heta ämnen."
-        bookmarks: "Inga fler bokmärkta ämnen hittades."
-        filter: "Det finns inga fler ämnen."
     topic_bulk_actions:
       dismiss:
         name: "Avfärda"
@@ -2829,9 +2816,6 @@ sv:
         }
       created_at: "Skapad: %{date}"
       bumped_at: "Senaste: %{date}"
-      browse_all_categories_latest: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
-      browse_all_categories_latest_or_top: "<a href='%{basePath}/categories'>Bläddra bland alla kategorier</a>, <a href='%{basePath}/latest'>visa senaste ämnen</a> eller se toppämnen:"
-      browse_all_tags_or_latest: "<a href='%{basePath}/tags'>Bläddra bland alla taggar</a> eller <a href='%{basePath}/latest'>visa senaste ämnen</a>."
       suggest_create_topic: Redo att <a href>starta ett nytt samtal?</a>
       jump_reply: "Hoppa till inläggets ursprungliga plats"
       jump_reply_aria: "Hoppa till @%{username}s inlägg på dess ursprungliga plats"
@@ -2858,8 +2842,6 @@ sv:
           12_hours: "12 timmar"
           24_hours: "24 timmar"
           custom: "Anpassad varaktighet"
-      slow_mode_notice:
-        duration: "Vi ber dig vänta %{duration} mellan inläggen i det här ämnet"
       topic_status_update:
         title: "Ämnestidtagning"
         save: "Ställ in timer"
@@ -3183,7 +3165,7 @@ sv:
       quote_edit: "Redigera"
       quote_edit_shortcut: "Redigera (eller tryck på e)"
       quote_copy: "Kopiera citat"
-      quote_copied_to_clibboard: "Citatet har kopierats till urklipp"
+      quote_copied_to_clipboard: "Citatet har kopierats till urklipp"
       quote_share: "Dela"
       edit_reason: "Anledning: "
       post_number: "inlägg %{number}"
@@ -3440,6 +3422,7 @@ sv:
       back: "Tillbaka till kategorin"
       general: "Allmänt"
       settings: "Inställningar"
+      advanced: "Avancerat"
       topic_template: "Mall"
       tags: "Taggar"
       localization:
@@ -3463,7 +3446,11 @@ sv:
       slug_placeholder: "(Valfritt) streckade ord för url"
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
       save_error: Ett fel inträffade då kategorin skulle sparas.
+      validations:
+        icon_required: "Välj en ikon."
       description: "Beskrivning"
+      icon: "Ikon"
+      emoji: "Emoji"
       background_color: "Färg"
       color_validations:
         cant_be_empty: "kan inte vara tomt"
@@ -3473,7 +3460,6 @@ sv:
         options:
           icon: "Ikon"
           emoji: "Emoji"
-      name_placeholder: "Ett eller två ord max"
       color_placeholder: "Någon webbfärg"
       delete_confirm: "Är du säker på att du vill radera den kategorin?"
       delete_error: "Ett fel inträffade vid borttagning av kategorin."
@@ -3487,15 +3473,14 @@ sv:
         reply: "Svara"
         create: "Skapa"
         no_groups_selected: "Inga grupper har beviljats åtkomst; denna kategori kommer endast att vara synlig för personalen."
-        everyone_has_access: 'Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”.'
+        everyone_full_access: 'Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”.'
         toggle_reply: "Slå på/av behörighet att svara"
         toggle_full: "Slå på/av behörighet att skapa"
         inherited: 'Denna behörighet ärvs från "alla"'
-      special_warning: "Varning: Den här kategorin är en förutbestämd kategori och säkerhetsinställningarna kan inte ändras. Om du inte vill använda kategorin tar du bort den istället för att återanvända den."
       uncategorized_security_warning: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som saknar kategori. Den kan inte ha säkerhetsinställningar."
       uncategorized_general_warning: 'Denna kategori är speciell. Den används som standardkategori för nya ämnen som inte har en vald kategori. Om du vill förhindra detta beteende och tvinga val av kategori <a href="%{settingLink}">inaktiverar du inställningen här</a>. Om du vill ändra namn eller beskrivning går du till <a href="%{customizeLink}">Anpassa / Textinnehåll</a>.'
       pending_permission_change_alert: "Du har inte lagt till %{group} för denna kategori. Klicka på följande knapp för att lägga till den."
-      images: "Bilder"
+      images: "Utseende"
       email_in: "Egenvald inkommande e-postadress:"
       email_in_tooltip: "Du kan skilja på flera e-postadresser med tecknet |."
       email_in_allow_strangers: "Ta emot e-post från anonyma användare utan konton"
@@ -3517,6 +3502,11 @@ sv:
       position: "Position på kategorisidan:"
       position_disabled: "Kategorier kommer att visas i aktivitetsordning. För att styra ordningen på kategorier i listor, aktivera inställningen <a href='%{url}'>'fasta kategoripositioner'</a>."
       minimum_required_tags: "Minsta antalet taggar som krävs för ett ämne:"
+      none_subcategory_text: "Ingen"
+      visibility:
+        title: "Synlighet"
+        public: "Offentligt"
+        group_restricted: "Privat"
       num_auto_bump_daily: "Antalet öppnade ämnen för att dagligen automatiskt knuffa ett ämne:"
       auto_bump_cooldown_days: "Minsta antal dagar innan samma ämne får knuffas:"
       navigate_to_first_post_after_read: "Navigera till första inlägget efter att ämnen är lästa"
@@ -3773,6 +3763,7 @@ sv:
         this_month: "Månad"
         this_week: "Vecka"
         today: "Idag"
+        custom: "Anpassad"
     permission_types:
       full: "Skapa / svara / se"
       create_post: "Svara / se"
@@ -3975,6 +3966,7 @@ sv:
       upload_description: "Ladda upp en csv-fil för att skapa taggar på bulk."
       upload_instructions: "En per rad, alternativt med en tagg-grupp i formatet 'tag_name,tag_group'."
       upload_successful: "Lyckad uppladdning av taggar"
+      bulk_create_button: "Skapa"
       delete_unused_confirmation:
         one: "%{count} tagg kommer att raderas: %{tags}"
         other: "%{count} taggar kommer att raderas: %{tags}"
@@ -4118,7 +4110,6 @@ sv:
       tags_form_modal:
         title: "Redigera taggnavigering"
         filter_placeholder: "Filtrera taggar"
-        no_tags: "Det finns inga taggar som matchar den angivna termen."
         subtitle:
           text: "så visar vi automatiskt den här webbplatsens topptaggar"
       edit_navigation_modal_form:
@@ -4399,6 +4390,9 @@ sv:
           enabled: "Aktiverad"
           disabled: "Inaktiverad"
           impact_type_other: "Övrigt"
+          impact_role_admins: "Administratörer"
+          impact_role_moderators: "Moderatorer"
+          impact_role_staff: "Personal"
       config:
         about:
           title: "Om din webbplats"
@@ -4416,6 +4410,8 @@ sv:
           sub_pages:
             common_settings:
               title: "Inställningar"
+        discourse_id:
+          learn_more: "Läs mer"
         logo:
           form:
             logo:
@@ -4435,6 +4431,8 @@ sv:
           form:
             location:
               label: "Plats"
+            text_section:
+              locale_label: "Språk"
             header_anonymous:
               placeholder: "Välkommen till %{site_name}!"
         navigation:
@@ -4535,7 +4533,6 @@ sv:
         problems_found: "Några förslag baserat på dina nuvarande webbplatsinställningar"
         dismiss_notice: "Avfärda"
         new_features:
-          previous_announcements: "Du kan se tidigare meddelanden om nya funktioner på <a href='%{url}' target='_blank'>Discourse Meta</a>"
           learn_more: "Läs mer..."
         last_checked: "Senast kollad"
         refresh_problems: "Uppdatera"
@@ -4602,7 +4599,9 @@ sv:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Sökloggar</a>'
             disabled: 'Trendsökrapporten är inaktiverad. Aktivera <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">sökfrågor för loggar</a> för att samla data.'
-          average_chart_label: Genomsnitt
+          sort_button: "Sortera efter %{column}"
+          sort_ascending: "stigande"
+          sort_descending: "fallande"
           filters:
             file_extension:
               label: Filändelse
@@ -5141,8 +5140,6 @@ sv:
         delete: "Radera"
         delete_confirm: 'Är du säker på att du vill radera "%{theme_name}"?'
         bulk_delete: "Är du säker?"
-        bulk_themes_delete_confirm: "Detta kommer att avinstallera följande teman, som inte längre kommer att kunna användas av användare på din webbplats:"
-        bulk_components_delete_confirm: "Detta kommer att avinstallera följande komponenter, som inte längre kommer att kunna användas av användare på din webbplats:"
         color: "Färg"
         opacity: "Opacitet"
         copy: "Duplicera"
@@ -5894,7 +5891,6 @@ sv:
           button: "Radera alla inlägg"
           progress:
             title: "Förlopp för radering av inlägg"
-            description: "Raderar inlägg…"
           confirmation:
             title: "Radera alla inlägg av @%{username}"
             description: |
@@ -6107,6 +6103,7 @@ sv:
           empty: "Det finns inga bilder ännu. Ladda upp en."
           upload:
             label: "Ladda upp"
+        download_file: "Ladda ner"
         selectable_avatars:
           title: "Lista på avatarer som användare kan välja från"
         table_column_heading:
@@ -6187,6 +6184,9 @@ sv:
         no_user_badges: "%{name} har inte beviljats några utmärkelser."
         no_badges: Det finns inga utmärkelser som kan utfärdas.
         none_selected: "Välj en utmärkelse för att komma igång"
+        sections:
+          query: Sökning
+          settings: Inställningar
         allow_title: Tillåt att utmärkelse används som titel
         multiple_grant: Kan utfärdas flera gånger
         visibility_heading: Synlighet

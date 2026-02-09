@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import EmberObject from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { equal } from "@ember/object/computed";
@@ -340,11 +341,6 @@ export default class Group extends RestModel {
       smtp_port: this.smtp_port,
       smtp_ssl_mode: this.smtp_ssl_mode,
       smtp_enabled: this.smtp_enabled,
-      imap_server: this.imap_server,
-      imap_port: this.imap_port,
-      imap_ssl: this.imap_ssl,
-      imap_mailbox_name: this.imap_mailbox_name,
-      imap_enabled: this.imap_enabled,
       email_username: this.email_username,
       email_from_alias: this.email_from_alias,
       email_password: this.email_password,

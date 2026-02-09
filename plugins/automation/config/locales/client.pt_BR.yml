@@ -10,6 +10,8 @@ pt_BR:
       logs:
         staff_actions:
           actions:
+            create_automation: criar automação
+            update_automation: atualizar automação
             delete_automation: excluir automação
     discourse_automation:
       title: Automação
@@ -58,13 +60,17 @@ pt_BR:
             label: Corpo
           delay:
             label: Atraso (minutos)
-          prefers_encrypt:
-            label: Criptografa PM, se disponível
         group:
           label: Grupo
         text:
           label: Texto
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categorias
+            tags:
+              label: Etiquetas
         not_found: Não foi possível encontrar o acionador `%{trigger}` para automação `%{automation}`. Verifique se o plugin associado está instalado
         user_badge_granted:
           fields:
@@ -422,6 +428,8 @@ pt_BR:
           fields:
             custom_field_name:
               label: "Nome do campo personalizado do(a) usuário(a)"
+        set_topic_timer:
+          title: Definir timer do tópico
       unnamed_automation: "Automação sem nome"
       models:
         script:

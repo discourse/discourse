@@ -250,26 +250,20 @@ module DiscourseAutomation
         "[quote=#{params.join(", ")}]\n#{post.raw.strip}\n[/quote]\n\n"
       end
 
-      def self.send_pm(
-        pm,
-        sender: Discourse.system_user.username,
-        delay: nil,
-        automation_id: nil,
-        prefers_encrypt: true
-      )
+      def self.send_pm(pm, sender: Discourse.system_user.username, delay: nil, automation_id: nil)
         pm = pm.symbolize_keys
-        prefers_encrypt = prefers_encrypt && !!defined?(EncryptedPostCreator)
 
         if delay && delay.to_i > 0 && automation_id
           pm[:execute_at] = delay.to_i.minutes.from_now
           pm[:sender] = sender
           pm[:automation_id] = automation_id
-          pm[:prefers_encrypt] = prefers_encrypt
           DiscourseAutomation::PendingPm.create!(pm)
         else
           sender = User.find_by(username: sender)
           if !sender
-            Rails.logger.warn "[discourse-automation] Did not send PM #{pm[:title]} - sender does not exist: `#{sender}`"
+            DiscourseAutomation::Logger.warn(
+              "Did not send PM #{pm[:title]} - sender does not exist: `#{sender}`",
+            )
             return
           end
 
@@ -308,7 +302,6 @@ module DiscourseAutomation
             end
           end
 
-          post_created = false
           pm = pm.merge(archetype: Archetype.private_message)
           pm[:target_usernames] = pm[:target_usernames].join(",")
           pm[:target_group_names] = pm[:target_group_names].join(",")
@@ -316,16 +309,26 @@ module DiscourseAutomation
 
           if pm[:target_usernames].blank? && pm[:target_group_names].blank? &&
                pm[:target_emails].blank?
-            Rails.logger.warn "[discourse-automation] Did not send PM #{pm[:title]} - no valid targets exist"
+            DiscourseAutomation::Logger.warn(
+              "Did not send PM #{pm[:title]} - no valid targets exist",
+            )
             return
           elsif non_existing_targets.any?
-            Rails.logger.warn "[discourse-automation] Did not send PM #{pm[:title]} to all users - some do not exist: `#{non_existing_targets.join(",")}`"
+            DiscourseAutomation::Logger.warn(
+              "Did not send PM #{pm[:title]} to all users - some do not exist: `#{non_existing_targets.join(",")}`",
+            )
           end
 
-          post_created = EncryptedPostCreator.new(sender, pm).create if prefers_encrypt
-
           pm[:acting_user] = Discourse.system_user
-          PostCreator.new(sender, pm).create! if !post_created
+          creator = PostCreator.new(sender, pm)
+          post = creator.create
+          if post.blank? || creator.errors.present?
+            error_message = creator.errors.full_messages.join(", ")
+            DiscourseAutomation::Logger.error(
+              "Failed to send PM '#{pm[:title]}' - #{error_message}",
+            )
+            raise ActiveRecord::RecordNotSaved.new(error_message)
+          end
         end
       end
     end

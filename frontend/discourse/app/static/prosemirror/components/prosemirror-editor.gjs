@@ -227,7 +227,7 @@ export default class ProsemirrorEditor extends Component {
           // When !authorizesOneOrMoreExtensions, we don't ComposerUpload#setup,
           // which is originally responsible for preventDefault.
           if (
-            event.clipboardData.files &&
+            event.clipboardData.files.length > 0 &&
             !authorizesOneOrMoreExtensions(
               this.currentUser.staff,
               this.siteSettings
@@ -363,15 +363,16 @@ export default class ProsemirrorEditor extends Component {
       {{forceScrollingElementPosition}}
     ></div>
     {{#each this.glimmerNodeViews key="dom" as |nodeView|}}
-      {{#in-element nodeView.dom insertBefore=null}}
+      {{~#in-element nodeView.dom insertBefore=null~}}
         <nodeView.component
           @node={{nodeView.node}}
           @view={{nodeView.view}}
           @getPos={{nodeView.getPos}}
           @dom={{nodeView.dom}}
+          @pluginParams={{nodeView.pluginParams}}
           @onSetup={{nodeView.setComponentInstance}}
         />
-      {{/in-element}}
+      {{~/in-element~}}
     {{/each}}
   </template>
 }

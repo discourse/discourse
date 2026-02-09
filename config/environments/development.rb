@@ -39,10 +39,11 @@ Discourse::Application.configure do
 
   config.action_mailer.smtp_settings =
     if GlobalSetting.try(:use_smtp_environment_in_development)
-      GlobalSetting.smtp_settings || { address: "localhost", port: 1025 }
+      GlobalSetting.smtp_settings ||
+        { address: "localhost", port: ENV["DISCOURSE_LOCAL_EMAIL_PORT"] || 1025 }
     else
       # we recommend you use mailpit: https://github.com/axllent/mailpit/
-      { address: "localhost", port: 1025 }
+      { address: "localhost", port: ENV["DISCOURSE_LOCAL_EMAIL_PORT"] || 1025 }
     end
 
   config.action_mailer.raise_delivery_errors = true
@@ -110,5 +111,6 @@ Discourse::Application.configure do
     end
   end
 
+  # This is a NGINX specific header
   config.action_dispatch.x_sendfile_header = nil
 end

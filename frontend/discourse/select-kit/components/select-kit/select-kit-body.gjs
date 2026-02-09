@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { computed } from "@ember/object";
 import { next } from "@ember/runloop";
@@ -16,7 +16,6 @@ export default class SelectKitBody extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    this.element.style.position = "relative";
     document.addEventListener("click", this.handleClick, true);
     this.selectKit
       .mainElement()

@@ -191,10 +191,54 @@ export default class Forms extends Component {
         <radioGroup.Radio @value="false" as |radio|>
           <radio.Title>No</radio.Title>
           <radio.Description>
-            Choosing no, will make you inelligible for the contest.
+            Choosing no, will make you ineligible for the contest.
           </radio.Description>
         </radioGroup.Radio>
       </field.RadioGroup>
+    </form.Field>
+  </Form>
+</template>`;
+  }
+
+  get colorCode() {
+    return `import Form from "discourse/components/form";
+
+<template>
+  <Form as |form|>
+    <form.Field @title="Color" @name="color" as |field|>
+      <field.Color placeholder="RRGGBB" />
+    </form.Field>
+  </Form>
+</template>`;
+  }
+
+  get colorWithSwatchesCode() {
+    return `import { array } from "@ember/helper";
+import Form from "discourse/components/form";
+
+const COLORS = ["FF0000", "00FF00", "0000FF", "FFFF00", "FF00FF", "00FFFF"];
+const USED_COLORS = ["00FF00"];
+
+<template>
+  <Form as |form|>
+    <form.Field @title="Color" @name="color" as |field|>
+      <field.Color
+        @colors={{COLORS}}
+        @usedColors={{USED_COLORS}}
+        placeholder="RRGGBB"
+      />
+    </form.Field>
+  </Form>
+</template>`;
+  }
+
+  get colorNamedCode() {
+    return `import Form from "discourse/components/form";
+
+<template>
+  <Form as |form|>
+    <form.Field @title="Color" @name="color" as |field|>
+      <field.Color @allowNamedColors={{true}} placeholder="red, FF0000" />
     </form.Field>
   </Form>
 </template>`;
@@ -328,7 +372,7 @@ import Form from "discourse/components/form";
       </row.Col>
 
       <row.Col @size={{12}}>
-        <form.Field @title="Adress" @name="adress" as |field|>
+        <form.Field @title="Address" @name="address" as |field|>
           <field.Input />
         </form.Field>
       </row.Col>
@@ -508,10 +552,51 @@ import Form from "discourse/components/form";
             <radioGroup.Radio @value="false" as |radio|>
               <radio.Title>No</radio.Title>
               <radio.Description>
-                Choosing no, will make you inelligible for the contest.
+                Choosing no, will make you ineligible for the contest.
               </radio.Description>
             </radioGroup.Radio>
           </field.RadioGroup>
+        </form.Field>
+      </Form>
+    </StyleguideExample>
+
+    <StyleguideExample @title="Color" @code={{this.colorCode}}>
+      <Form as |form|>
+        <form.Field @title="Color" @name="color" as |field|>
+          <field.Color placeholder="RRGGBB" />
+        </form.Field>
+      </Form>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title="Color with swatches"
+      @code={{this.colorWithSwatchesCode}}
+    >
+      <Form as |form|>
+        <form.Field @title="Color" @name="color" as |field|>
+          <field.Color
+            @colors={{array
+              "FF0000"
+              "00FF00"
+              "0000FF"
+              "FFFF00"
+              "FF00FF"
+              "00FFFF"
+            }}
+            @usedColors={{array "00FF00"}}
+            placeholder="RRGGBB"
+          />
+        </form.Field>
+      </Form>
+    </StyleguideExample>
+
+    <StyleguideExample
+      @title="Color with named colors"
+      @code={{this.colorNamedCode}}
+    >
+      <Form as |form|>
+        <form.Field @title="Color" @name="color" as |field|>
+          <field.Color @allowNamedColors={{true}} placeholder="red, FF0000" />
         </form.Field>
       </Form>
     </StyleguideExample>
@@ -628,7 +713,7 @@ import Form from "discourse/components/form";
           </row.Col>
 
           <row.Col @size={{12}}>
-            <form.Field @title="Adress" @name="adress" as |field|>
+            <form.Field @title="Address" @name="address" as |field|>
               <field.Input />
             </form.Field>
           </row.Col>

@@ -86,6 +86,7 @@ be:
         history_label: "гісторыя"
         members_label: "Удзельнікі"
       search:
+        short_title: Пошук
         no_results: "Няма вынікаў"
         sort:
           latest: "апошняя"

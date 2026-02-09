@@ -59,8 +59,6 @@ tr_TR:
           title: "Gezinti Yığılı"
         categories_list:
           title: "Kategori Listesi"
-        topic_link:
-          title: "Konu Bağlantısı"
         topic_list_item:
           title: "Konu Listesi Ögesi"
         topic_statuses:
@@ -69,8 +67,6 @@ tr_TR:
           title: "Konu Listesi"
         basic_topic_list:
           title: "Temel Konu Listesi"
-        footer_message:
-          title: "Alt Bilgi Mesajı"
         signup_cta:
           title: "CTA'ya kaydolun"
         topic_timer_info:

@@ -1,3 +1,4 @@
+/* eslint-disable ember/route-path-style, ember/routes-segments-snake-case */
 import { capitalize } from "@ember/string";
 import Site from "discourse/models/site";
 
@@ -219,43 +220,43 @@ export default function () {
   this.route("full-page-search", { path: "/search" });
 
   this.route("tag", function () {
-    this.route("show", { path: "/:tag_id" });
+    this.route("show", { path: "/:tag_name" });
 
     Site.currentProp("filters").forEach((filter) => {
       this.route("show" + capitalize(filter), {
-        path: "/:tag_id/l/" + filter,
+        path: "/:tag_name/l/" + filter,
       });
     });
   });
 
   this.route("tags", function () {
     this.route("showCategory", {
-      path: "/c/*category_slug_path_with_id/:tag_id",
+      path: "/c/*category_slug_path_with_id/:tag_name",
     });
     this.route("showCategoryAll", {
-      path: "/c/*category_slug_path_with_id/all/:tag_id",
+      path: "/c/*category_slug_path_with_id/all/:tag_name",
     });
     this.route("showCategoryNone", {
-      path: "/c/*category_slug_path_with_id/none/:tag_id",
+      path: "/c/*category_slug_path_with_id/none/:tag_name",
     });
 
     Site.currentProp("filters").forEach((filter) => {
       this.route("showCategory" + capitalize(filter), {
-        path: "/c/*category_slug_path_with_id/:tag_id/l/" + filter,
+        path: "/c/*category_slug_path_with_id/:tag_name/l/" + filter,
       });
       this.route("showCategoryAll" + capitalize(filter), {
-        path: "/c/*category_slug_path_with_id/all/:tag_id/l/" + filter,
+        path: "/c/*category_slug_path_with_id/all/:tag_name/l/" + filter,
       });
       this.route("showCategoryNone" + capitalize(filter), {
-        path: "/c/*category_slug_path_with_id/none/:tag_id/l/" + filter,
+        path: "/c/*category_slug_path_with_id/none/:tag_name/l/" + filter,
       });
     });
     this.route("intersection", {
-      path: "intersection/:tag_id/*additional_tags",
+      path: "intersection/:tag_name/*additional_tags",
     });
 
     // legacy route
-    this.route("legacyRedirect", { path: "/:tag_id" });
+    this.route("legacyRedirect", { path: "/:tag_name" });
   });
 
   this.route("tagGroups", { path: "/tag_groups" }, function () {

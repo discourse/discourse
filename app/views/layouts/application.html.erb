@@ -30,31 +30,34 @@
 
     <%= preload_script 'browser-detect' %>
 
+    <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
+    <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
+    <%- if ExtraLocalesController.client_overrides_exist? %>
+      <%= preload_script_url ExtraLocalesController.url("overrides"), type_module: true %>
+    <%- end %>
+    <%- if staff? %>
+      <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
+    <%- end %>
+    <%- if admin? %>
+      <%= preload_script_url ExtraLocalesController.url("wizard"), type_module: true %>
+    <%- end %>
+    <%- unless customization_disabled? %>
+      <%= theme_translations_lookup %>
+    <%- end %>
+
     <%= preload_script "vendor" %>
     <%= preload_script "discourse" %>
     <%- Discourse.find_plugin_js_assets(include_official: allow_plugins?, include_unofficial: allow_third_party_plugins?, request: request, include_admin_asset: staff?).each do |file| %>
       <%= preload_script file %>
     <%- end %>
 
-    <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
-    <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
-    <%- if ExtraLocalesController.client_overrides_exist? %>
-      <%= preload_script_url ExtraLocalesController.url("overrides"), type_module: true %>
-    <%- end %>
-
     <%- if staff? %>
-      <%= preload_script_url ExtraLocalesController.url("admin"), type_module: true %>
       <% EmberCli.script_chunks["chunk.admin"]&.each do |script_name| %>
         <link rel="preload" href="<%= script_asset_path(script_name) %>" as="script" nonce="<%= csp_nonce_placeholder %>" data-discourse-entrypoint="admin">
       <% end %>
     <%- end %>
 
-    <%- if admin? %>
-      <%= preload_script_url ExtraLocalesController.url("wizard"), type_module: true %>
-    <%- end %>
-
     <%- unless customization_disabled? %>
-      <%= theme_translations_lookup %>
       <%= theme_js_lookup %>
       <%= theme_lookup("head_tag") %>
     <%- end %>

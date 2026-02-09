@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers */
 import Component from "@ember/component";
 import { concat } from "@ember/helper";
 import { action } from "@ember/object";
@@ -7,7 +7,7 @@ import { LinkTo } from "@ember/routing";
 import { later } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import { classNameBindings } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
@@ -21,7 +21,7 @@ import formatCurrency from "../helpers/format-currency";
 
 const SIDEBAR_BODY_CLASS = "subscription-campaign-sidebar";
 
-@classNameBindings("isGoalMet:goal-met")
+@tagName("")
 export default class CampaignBanner extends Component {
   @service router;
 
@@ -222,89 +222,158 @@ export default class CampaignBanner extends Component {
   }
 
   <template>
-    {{#if this.shouldShow}}
-      <div
-        class="campaign-banner"
-        style={{htmlSafe (concat "box-shadow: 5px 5px #" this.dropShadowColor)}}
-      >
-        <DButton @icon="xmark" @action={{this.dismissBanner}} class="close" />
-
+    <div class={{if this.isGoalMet "goal-met"}} ...attributes>
+      {{#if this.shouldShow}}
         <div
-          class="campaign-banner-info"
-          style={{htmlSafe this.bannerInfoStyle}}
+          class="campaign-banner"
+          style={{htmlSafe
+            (concat "box-shadow: 5px 5px #" this.dropShadowColor)
+          }}
         >
-          {{#if this.isGoalMet}}
-            <h2 class="campaign-banner-info-header">
-              {{i18n "discourse_subscriptions.campaign.success_title"}}
-            </h2>
+          <DButton @icon="xmark" @action={{this.dismissBanner}} class="close" />
 
-            <p class="campaign-banner-info-description">
-              {{i18n "discourse_subscriptions.campaign.success_body"}}
-            </p>
-          {{else}}
-            <h2 class="campaign-banner-info-header">
-              {{i18n "discourse_subscriptions.campaign.title"}}
-            </h2>
+          <div
+            class="campaign-banner-info"
+            style={{htmlSafe this.bannerInfoStyle}}
+          >
+            {{#if this.isGoalMet}}
+              <h2 class="campaign-banner-info-header">
+                {{i18n "discourse_subscriptions.campaign.success_title"}}
+              </h2>
 
-            <p class="campaign-banner-info-description">
-              {{i18n "discourse_subscriptions.campaign.body"}}
-            </p>
-
-            {{#if this.product}}
-              <LinkTo
-                @route="subscribe.show"
-                @model={{this.product}}
-                @disabled={{this.product.subscribed}}
-                class="btn btn-primary campaign-banner-info-button"
-              >
-                {{icon "far-heart"}}
-                {{icon "heart" class="hover-heart"}}
-                {{i18n "discourse_subscriptions.campaign.button"}}
-              </LinkTo>
+              <p class="campaign-banner-info-description">
+                {{i18n "discourse_subscriptions.campaign.success_body"}}
+              </p>
             {{else}}
-              <LinkTo
-                @route={{this.subscribeRoute}}
-                class="btn btn-primary campaign-banner-info-button"
-              >
-                {{icon "far-heart"}}
-                {{icon "heart" class="hover-heart"}}
-                {{i18n "discourse_subscriptions.campaign.button"}}
-              </LinkTo>
+              <h2 class="campaign-banner-info-header">
+                {{i18n "discourse_subscriptions.campaign.title"}}
+              </h2>
+
+              <p class="campaign-banner-info-description">
+                {{i18n "discourse_subscriptions.campaign.body"}}
+              </p>
+
+              {{#if this.product}}
+                <LinkTo
+                  @route="subscribe.show"
+                  @model={{this.product}}
+                  @disabled={{this.product.subscribed}}
+                  class="btn btn-primary campaign-banner-info-button"
+                >
+                  {{icon "far-heart"}}
+                  {{icon "heart" class="hover-heart"}}
+                  {{i18n "discourse_subscriptions.campaign.button"}}
+                </LinkTo>
+              {{else}}
+                <LinkTo
+                  @route={{this.subscribeRoute}}
+                  class="btn btn-primary campaign-banner-info-button"
+                >
+                  {{icon "far-heart"}}
+                  {{icon "heart" class="hover-heart"}}
+                  {{i18n "discourse_subscriptions.campaign.button"}}
+                </LinkTo>
+              {{/if}}
             {{/if}}
-          {{/if}}
-        </div>
+          </div>
 
-        <div class="campaign-banner-progress">
-          {{#if this.isGoalMet}}
-            <div class="fireworks">
-              <div class="before"></div>
-              <div class="after"></div>
-            </div>
+          <div class="campaign-banner-progress">
+            {{#if this.isGoalMet}}
+              <div class="fireworks">
+                <div class="before"></div>
+                <div class="after"></div>
+              </div>
 
-            <div class="campaign-banner-progress-success"></div>
+              <div class="campaign-banner-progress-success"></div>
 
-            {{#if this.subscriberGoal}}
-              <p class="campaign-banner-progress-description">
-                {{htmlSafe
-                  (i18n
-                    "discourse_subscriptions.campaign.goal_comparison"
-                    current=this.subscribers
-                    goal=this.goalTarget
-                  )
-                }}
-                {{i18n "discourse_subscriptions.campaign.subscribers"}}
-              </p>
+              {{#if this.subscriberGoal}}
+                <p class="campaign-banner-progress-description">
+                  {{htmlSafe
+                    (i18n
+                      "discourse_subscriptions.campaign.goal_comparison"
+                      current=this.subscribers
+                      goal=this.goalTarget
+                    )
+                  }}
+                  {{i18n "discourse_subscriptions.campaign.subscribers"}}
+                </p>
+              {{else}}
+                <p class="campaign-banner-progress-description">
+                  {{htmlSafe
+                    (i18n
+                      "discourse_subscriptions.campaign.goal_comparison"
+                      current=(formatCurrency this.currency this.amountRaised)
+                      goal=(formatCurrency this.currency this.goalTarget)
+                    )
+                  }}
+                  {{i18n "discourse_subscriptions.campaign.raised"}}
+                </p>
+
+                {{#if this.showContributors}}
+                  <ConditionalLoadingSpinner
+                    @condition={{this.loading}}
+                    @size="small"
+                  >
+                    <div class="campaign-banner-progress-users">
+                      <p class="campaign-banner-progress-users-title">
+                        <strong>
+                          {{i18n
+                            "discourse_subscriptions.campaign.recent_contributors"
+                          }}
+                        </strong>
+                      </p>
+
+                      <div class="campaign-banner-progress-users-avatars">
+                        {{#each this.contributors as |contributor|}}
+                          {{avatar
+                            contributor
+                            avatarTemplatePath="avatar_template"
+                            usernamePath="username"
+                            namePath="name"
+                            imageSize="small"
+                          }}
+                        {{/each}}
+                      </div>
+                    </div>
+                  </ConditionalLoadingSpinner>
+                {{/if}}
+              {{/if}}
             {{else}}
-              <p class="campaign-banner-progress-description">
-                {{htmlSafe
-                  (i18n
-                    "discourse_subscriptions.campaign.goal_comparison"
-                    current=(formatCurrency this.currency this.amountRaised)
-                    goal=(formatCurrency this.currency this.goalTarget)
-                  )
-                }}
-                {{i18n "discourse_subscriptions.campaign.raised"}}
-              </p>
+              {{#if this.subscriberGoal}}
+                <progress
+                  class="campaign-banner-progress-bar"
+                  value={{this.subscribers}}
+                  max={{this.siteSettings.discourse_subscriptions_campaign_goal}}
+                ></progress>
+
+                <p class="campaign-banner-progress-description">
+                  {{htmlSafe
+                    (i18n
+                      "discourse_subscriptions.campaign.goal_comparison"
+                      current=this.subscribers
+                      goal=this.goalTarget
+                    )
+                  }}
+                  {{i18n "discourse_subscriptions.campaign.subscribers"}}
+                </p>
+              {{else}}
+                <progress
+                  class="campaign-banner-progress-bar"
+                  value={{this.amountRaised}}
+                  max={{this.siteSettings.discourse_subscriptions_campaign_goal}}
+                ></progress>
+
+                <p class="campaign-banner-progress-description">
+                  {{htmlSafe
+                    (i18n
+                      "discourse_subscriptions.campaign.goal_comparison"
+                      current=(formatCurrency this.currency this.amountRaised)
+                      goal=(formatCurrency this.currency this.goalTarget)
+                    )
+                  }}
+                  {{i18n "discourse_subscriptions.campaign.raised"}}
+                </p>
+              {{/if}}
 
               {{#if this.showContributors}}
                 <ConditionalLoadingSpinner
@@ -335,74 +404,9 @@ export default class CampaignBanner extends Component {
                 </ConditionalLoadingSpinner>
               {{/if}}
             {{/if}}
-          {{else}}
-            {{#if this.subscriberGoal}}
-              <progress
-                class="campaign-banner-progress-bar"
-                value={{this.subscribers}}
-                max={{this.siteSettings.discourse_subscriptions_campaign_goal}}
-              ></progress>
-
-              <p class="campaign-banner-progress-description">
-                {{htmlSafe
-                  (i18n
-                    "discourse_subscriptions.campaign.goal_comparison"
-                    current=this.subscribers
-                    goal=this.goalTarget
-                  )
-                }}
-                {{i18n "discourse_subscriptions.campaign.subscribers"}}
-              </p>
-            {{else}}
-              <progress
-                class="campaign-banner-progress-bar"
-                value={{this.amountRaised}}
-                max={{this.siteSettings.discourse_subscriptions_campaign_goal}}
-              ></progress>
-
-              <p class="campaign-banner-progress-description">
-                {{htmlSafe
-                  (i18n
-                    "discourse_subscriptions.campaign.goal_comparison"
-                    current=(formatCurrency this.currency this.amountRaised)
-                    goal=(formatCurrency this.currency this.goalTarget)
-                  )
-                }}
-                {{i18n "discourse_subscriptions.campaign.raised"}}
-              </p>
-            {{/if}}
-
-            {{#if this.showContributors}}
-              <ConditionalLoadingSpinner
-                @condition={{this.loading}}
-                @size="small"
-              >
-                <div class="campaign-banner-progress-users">
-                  <p class="campaign-banner-progress-users-title">
-                    <strong>
-                      {{i18n
-                        "discourse_subscriptions.campaign.recent_contributors"
-                      }}
-                    </strong>
-                  </p>
-
-                  <div class="campaign-banner-progress-users-avatars">
-                    {{#each this.contributors as |contributor|}}
-                      {{avatar
-                        contributor
-                        avatarTemplatePath="avatar_template"
-                        usernamePath="username"
-                        namePath="name"
-                        imageSize="small"
-                      }}
-                    {{/each}}
-                  </div>
-                </div>
-              </ConditionalLoadingSpinner>
-            {{/if}}
-          {{/if}}
+          </div>
         </div>
-      </div>
-    {{/if}}
+      {{/if}}
+    </div>
   </template>
 }

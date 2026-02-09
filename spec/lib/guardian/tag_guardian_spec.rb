@@ -9,15 +9,31 @@ RSpec.describe TagGuardian do
   fab!(:trust_level_2)
   fab!(:trust_level_3)
 
-  ###### VISIBILITY ######
-
   describe "#can_see_tag?" do
-    it "returns true for everyone" do
-      expect(Guardian.new(nil).can_see_tag?(anything)).to be_truthy
+    it "returns false when tagging is disabled" do
+      SiteSetting.tagging_enabled = false
+
+      expect(Guardian.new(admin).can_see_tag?(tag)).to be_falsey
+    end
+
+    it "returns true for a visible tag" do
+      expect(Guardian.new(nil).can_see_tag?(tag)).to be_truthy
+      expect(Guardian.new(user).can_see_tag?(tag)).to be_truthy
+    end
+
+    it "returns false for a hidden tag when user is not in permitted group" do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+
+      expect(Guardian.new(nil).can_see_tag?(tag)).to be_falsey
+      expect(Guardian.new(user).can_see_tag?(tag)).to be_falsey
+    end
+
+    it "returns true for a hidden tag when user is staff" do
+      Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: [tag.name])
+
+      expect(Guardian.new(admin).can_see_tag?(tag)).to be_truthy
     end
   end
-
-  ###### CREATION ######
 
   describe "#can_create_tag?" do
     it "returns false when tagging is disabled" do
@@ -34,8 +50,6 @@ RSpec.describe TagGuardian do
       expect(Guardian.new(trust_level_3).can_create_tag?).to be_truthy
     end
   end
-
-  ###### EDITING ######
 
   describe "#can_edit_tag?" do
     it "returns false when tagging is disabled" do
@@ -54,8 +68,6 @@ RSpec.describe TagGuardian do
       expect(Guardian.new(trust_level_3).can_edit_tag?(tag)).to be_truthy
     end
   end
-
-  ###### TAGGING ######
 
   describe "#can_tag_topics?" do
     it "returns false when tagging is disabled" do
@@ -102,8 +114,6 @@ RSpec.describe TagGuardian do
       expect(Guardian.new(trust_level_1).can_tag_pms?).to be_truthy
     end
   end
-
-  ###### ADMIN ######
 
   describe "#can_admin_tags?" do
     it "returns false when tagging is disabled" do

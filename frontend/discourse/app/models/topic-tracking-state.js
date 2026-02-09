@@ -37,15 +37,16 @@ function isUnseen(topic) {
   return !topic.is_seen;
 }
 
-function hasMutedTags(topicTags, mutedTags, siteSettings) {
-  if (!mutedTags || !topicTags) {
+function hasMutedTags(topicTagIds, mutedTags, siteSettings) {
+  if (!mutedTags || !topicTagIds) {
     return false;
   }
+  const mutedTagIds = mutedTags.map((t) => t.id);
   return (
     (siteSettings.remove_muted_tags_from_latest === "always" &&
-      topicTags.some((topicTag) => mutedTags.includes(topicTag))) ||
+      topicTagIds.some((tagId) => mutedTagIds.includes(tagId))) ||
     (siteSettings.remove_muted_tags_from_latest === "only_muted" &&
-      topicTags.every((topicTag) => mutedTags.includes(topicTag)))
+      topicTagIds.every((tagId) => mutedTagIds.includes(tagId)))
   );
 }
 
@@ -58,7 +59,8 @@ export default class TopicTrackingState extends EmberObject {
   @tracked incomingCount = 0;
   @tracked newIncoming;
   @tracked filterCategory;
-  @tracked filterTag;
+  @tracked filterTagName;
+  @tracked filterTagId;
   @tracked filter;
   states = new TrackedMap();
   stateChangeCallbacks = {};
@@ -263,7 +265,6 @@ export default class TopicTrackingState extends EmberObject {
 
     const filter = this.filter;
     const filterCategory = this.filterCategory;
-    const filterTag = this.filterTag;
     const categoryId = data.payload && data.payload.category_id;
 
     // if we have a filter category currently and it is not the
@@ -279,7 +280,10 @@ export default class TopicTrackingState extends EmberObject {
       }
     }
 
-    if (filterTag && !data.payload.tags?.includes(filterTag)) {
+    if (
+      this.filterTagId &&
+      !data.payload.tags?.some((t) => t.id === this.filterTagId)
+    ) {
       return;
     }
 
@@ -367,11 +371,13 @@ export default class TopicTrackingState extends EmberObject {
    *                          filters e.g. latest, unread, new. As well as this
    *                          specific category and tag URLs like tag/test/l/latest,
    *                          c/cat/sub-cat/6/l/latest or tags/c/cat/sub-cat/6/test/l/latest.
+   * @param {Object} opts
+   * @param {Number} opts.tagId - The ID of the tag to filter by.
    */
-  trackIncoming(filter) {
+  trackIncoming(filter, { tagId } = {}) {
     this.newIncoming = new TrackedArray();
 
-    let category, tag;
+    let category, tagName;
 
     if (filter.startsWith("c/") || filter.startsWith("tags/c/")) {
       const categoryId = filter.match(/\/(\d*)\//);
@@ -379,7 +385,7 @@ export default class TopicTrackingState extends EmberObject {
       const split = filter.split("/");
 
       if (filter.startsWith("tags/c/")) {
-        tag = split[split.indexOf(categoryId[1]) + 1];
+        tagName = split[split.indexOf(categoryId[1]) + 1];
       }
 
       if (split.length >= 4) {
@@ -388,11 +394,12 @@ export default class TopicTrackingState extends EmberObject {
     } else if (filter.startsWith("tag/")) {
       const split = filter.split("/");
       filter = split[split.length - 1];
-      tag = split[1];
+      tagName = split[1];
     }
 
     this.filterCategory = category;
-    this.filterTag = tag;
+    this.filterTagName = tagName;
+    this.filterTagId = tagId;
     this.filter = filter;
     this.incomingCount = 0;
   }
@@ -604,7 +611,7 @@ export default class TopicTrackingState extends EmberObject {
         return false;
       }
 
-      if (tagId && !topic.tags?.includes(tagId)) {
+      if (tagId && !topic.tags?.some((t) => t.id === tagId)) {
         return false;
       }
 
@@ -671,66 +678,13 @@ export default class TopicTrackingState extends EmberObject {
     });
   }
 
-  /**
-   * Using the array of tags provided, tallies up all topics via forEachTracked
-   * that we are tracking, separated into new/unread/total.
-   *
-   * Total is only counted if opts.includeTotal is specified.
-   *
-   * Output (from input ["pending", "bug"]):
-   *
-   * {
-   *   pending: { unreadCount: 6, newCount: 1, totalCount: 10 },
-   *   bug: { unreadCount: 0, newCount: 4, totalCount: 20 }
-   * }
-   *
-   * @method countTags
-   * @param opts - Valid options:
-   *                 * includeTotal - When true, a totalCount is incremented for
-   *                                all topics matching a tag.
-   */
-  countTags(tags, opts = {}) {
-    let counts = {};
-
-    tags.forEach((tag) => {
-      counts[tag] = { unreadCount: 0, newCount: 0 };
-      if (opts.includeTotal) {
-        counts[tag].totalCount = 0;
-      }
-    });
-
-    this.forEachTracked(
-      (topic, newTopic, unreadTopic) => {
-        if (topic.tags && topic.tags.length > 0) {
-          tags.forEach((tag) => {
-            if (topic.tags.includes(tag)) {
-              if (unreadTopic) {
-                counts[tag].unreadCount++;
-              }
-              if (newTopic) {
-                counts[tag].newCount++;
-              }
-
-              if (opts.includeTotal) {
-                counts[tag].totalCount++;
-              }
-            }
-          });
-        }
-      },
-      { includeAll: opts.includeTotal }
-    );
-
-    return counts;
-  }
-
   countCategory(category_id, tagId) {
     let sum = 0;
     for (let topic of this.states.values()) {
       if (
         topic.category_id === category_id &&
         !topic.deleted &&
-        (!tagId || topic.tags?.includes(tagId))
+        (!tagId || topic.tags?.some((t) => t.id === tagId))
       ) {
         sum +=
           topic.last_read_post_number === null ||
@@ -1008,7 +962,7 @@ export default class TopicTrackingState extends EmberObject {
     if (["new_topic", "latest"].includes(data.message_type)) {
       if (
         hasMutedTags(
-          data.payload.tags,
+          data.payload.tags?.map((t) => t.id),
           this.currentUser?.muted_tags,
           this.siteSettings
         )
@@ -1021,11 +975,6 @@ export default class TopicTrackingState extends EmberObject {
 
     if (data.message_type === "latest") {
       this.notifyIncoming(data);
-
-      if (old.tags !== data.payload.tags) {
-        this.modifyStateProp(data, "tags", data.payload.tags);
-        this.messageCount++;
-      }
     }
 
     if (data.message_type === "dismiss_new") {

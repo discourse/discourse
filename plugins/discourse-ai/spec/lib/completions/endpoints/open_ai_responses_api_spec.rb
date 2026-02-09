@@ -1,17 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe DiscourseAi::Completions::Endpoints::OpenAi do
+RSpec.describe DiscourseAi::Completions::Endpoints::OpenAiResponses do
   subject(:endpoint) { described_class.new(model) }
 
   fab!(:model) do
-    Fabricate(
-      :llm_model,
-      provider: "open_ai",
-      url: "https://api.openai.com/v1/responses",
-      provider_params: {
-        enable_responses_api: true,
-      },
-    )
+    Fabricate(:llm_model, provider: "open_ai", url: "https://api.openai.com/v1/responses")
   end
 
   let(:prompt_with_tools) do
@@ -247,6 +240,12 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     expect(partials.first.name).to eq("echo")
     expect(partials.first.parameters).to eq({ string: "hello" })
     expect(partials.first.id).to eq("call_TQyfNmFnKblzXl5rlcGeIsg5")
+    expect(partials.first.provider_data).to include(
+      open_ai_responses: {
+        id: "fc_684910c8b68881a3b43610e1d57ef00702d35c1819a50f63",
+        call_id: "call_TQyfNmFnKblzXl5rlcGeIsg5",
+      },
+    )
   end
 
   it "can handle non streaming tool calls" do
@@ -336,5 +335,38 @@ data: {"type":"response.reasoning_summary_part.added","sequence_number":3,"item_
     expect(result.name).to eq("echo")
     expect(result.parameters).to eq({ string: "sam" })
     expect(result.id).to eq("call_UdxBpinIVc5nRZ0VnWJIgneA")
+    expect(result.provider_data).to include(
+      open_ai_responses: {
+        id: "fc_68491ed75e0c819f87462ff642c58d2e08901d75ebf6c66e",
+        call_id: "call_UdxBpinIVc5nRZ0VnWJIgneA",
+      },
+    )
+  end
+
+  it "uses reasoning object format for responses API" do
+    model.update!(provider_params: { reasoning_effort: "minimal" })
+
+    parsed_body = nil
+    stub_request(:post, "https://api.openai.com/v1/responses").with(
+      body:
+        proc do |req_body|
+          parsed_body = JSON.parse(req_body, symbolize_names: true)
+          true
+        end,
+    ).to_return(status: 200, body: { output: [] }.to_json)
+
+    prompt =
+      DiscourseAi::Completions::Prompt.new(
+        "You are a bot",
+        messages: [type: :user, content: "hello"],
+      )
+
+    dialect = DiscourseAi::Completions::Dialects::OpenAiResponses.new(prompt, model)
+
+    endpoint.perform_completion!(dialect, Discourse.system_user)
+
+    expect(parsed_body[:reasoning]).to include(effort: "minimal", summary: "auto")
+    expect(parsed_body).not_to have_key(:reasoning_effort)
+    expect(parsed_body).to have_key(:input)
   end
 end

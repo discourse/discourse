@@ -1,3 +1,5 @@
+@use "sass:math";
+
 $solved-color: var(--success);
 
 .select-kit {
@@ -64,6 +66,10 @@ aside.quote.accepted-answer {
     align-items: flex-start;
   }
 
+  &.accepted-answer--has-excerpt > .title {
+    cursor: pointer;
+  }
+
   &:not(.accepted-answer--has-excerpt) {
     > .title {
       padding: 0.8em;
@@ -109,8 +115,74 @@ aside.quote.accepted-answer {
   display: block;
 }
 
-.topic-statuses .topic-status.solved {
+.topic-statuses .topic-status.--solved {
   .d-icon {
     color: $solved-color;
+  }
+}
+
+aside.quote.accepted-answer[data-expanded="false"] {
+  > blockquote {
+    position: relative;
+    max-height: 20em;
+    overflow: hidden;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 3em;
+      background: linear-gradient(transparent, var(--secondary));
+      pointer-events: none;
+    }
+  }
+}
+
+.solved-confetti {
+  position: fixed;
+  top: 200px;
+  right: 200px;
+  width: 0;
+  height: 0;
+  z-index: z("header") + 1;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.solved-confetti-particle {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  animation: solved-confetti-burst 1.5s ease-out forwards;
+
+  @for $i from 1 through 50 {
+    &:nth-child(#{$i}) {
+      --angle: #{math.random(360)}deg;
+      --distance: #{80 + math.random(150)}px;
+      --rotation: #{math.random(720) - 360}deg;
+      --delay: #{math.random(250) * 0.001}s;
+      --color: #{hsl(math.random(360), 80%, 60%)};
+      background-color: var(--color);
+      animation-delay: var(--delay);
+    }
+  }
+}
+
+@keyframes solved-confetti-burst {
+  0% {
+    transform: translate(-50%, -50%) rotate(0deg);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translate(
+        calc(-50% + cos(var(--angle)) * var(--distance)),
+        calc(-50% + sin(var(--angle)) * var(--distance) + 50px)
+      )
+      rotate(var(--rotation));
+    opacity: 0;
   }
 }

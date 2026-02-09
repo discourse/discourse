@@ -58,6 +58,7 @@ ug:
       cancel: "ۋاز كەچ"
       cancel_reply: "جاۋابتىن ۋازكەچ"
       chat_channels: "قانال"
+      starred: "يۇلتۇزلانغان"
       browse_all_channels: "بارلىق قانالغا كۆز يۈگۈرتىدۇ"
       see_in: "قاراڭ"
       move_to_channel:
@@ -140,10 +141,8 @@ ug:
       send_shortcut:
         enter:
           label: "Enter بېسىلسا يوللايدۇ"
-          description: "Shift + Enter بېسىلسا يېڭى قۇردىن باشلايدۇ"
         meta_enter:
           label: "%{meta_key} + Enter بېسىلسا يوللايدۇ"
-          description: "Enter بېسىلسا يېڭى قۇردىن باشلايدۇ"
       enable: "سۆھبەتنى قوزغات"
       flag: "پاش قىل"
       emoji: "چىراي ئىپادە قىستۇر"
@@ -238,12 +237,11 @@ ug:
       no_public_channels: "سىز تېخى ھېچقانداق قانالغا قاتناشمىدىڭىز!"
       no_public_channels_cta: "قانالغا كۆز يۈگۈرت"
       kicked_from_channel: "ئەمدى بۇ قانالنى زىيارەت قىلالمايسىز."
+      chat_notifications_title: "سۆھبەت ئۇقتۇرۇشى"
       only_chat_push_notifications:
         title: "پەقەت سۆھبەت تارقىتىش ئۇقتۇرۇشىنىلا ئەۋەتىدۇ"
-        description: "بارلىق سۆھبەت بولمىغان تارقىتىش ئۇقتۇرۇشى يوللاشنى توسىدۇ"
       ignore_channel_wide_mention:
         title: "قانال دائىرىسىدە ئاتاشقا پەرۋا قىلمايدۇ"
-        description: "قانال دائىرىسىدە ئاتاش (@here ۋە @all) ئۇقتۇرۇشى يوللىمايدۇ"
       show_thread_title_prompts:
         title: "سۆزلىشىش ماۋزۇ ئەسكەرتىشىنى كۆرسەت"
         description: "يېڭى سۆزلىشىش ماۋزۇسىنىڭ ئەسكەرتىشىنى كۆرسەت"
@@ -301,6 +299,7 @@ ug:
         one: "%{count} ھۆججەت"
         other: "%{count} ھۆججەت"
       you_flagged: "بۇ ئۇچۇرنى پاش قىلدىڭىز"
+      exit: "سۆھبەتتىن چېكىن"
       channel_status:
         read_only_header: "قانال پەقەت ئوقۇلىدۇ"
         read_only: "پەقەت ئوقۇلىدۇ"
@@ -498,6 +497,9 @@ ug:
           confirm_export: "بارلىق قاناللاردىن ھەممە ئۇچۇرنى چىقىرىپ نەتىجىسىنى شەخسىي ئۇچۇردا سىزگە يوللايدۇ. راستتىنلا چىقىرامسىز؟"
           export_has_started: "چىقىرىش باشلاندى. چىقىرىش تەييار بولغاندا بىر شەخسىي ئۇچۇر تاپشۇرۇۋالىسىز."
       search:
+        short_title: ئىزدە
+        title: سۆھبەت ئىزدە
+        aria_label: "سۆھبەت ئىزدەشكە يۆتكەل"
         no_results: "ھېچقانداق نەتىجە تېپىلمىدى"
         sort:
           relevance: "مۇناسىۋىتى"
@@ -713,10 +715,10 @@ ug:
           switch_channel_arrows: "%{shortcut} قانال ئالماشتۇر"
           switch__unread_channel_arrows: "%{shortcut} ئوقۇلمىغان قانالغا ئالماشتۇرىدۇ"
           open_quick_channel_selector: "%{shortcut} تېز قانال تاللىغۇچنى ئاچ"
+          open_insert_link_modal: "%{shortcut} ئۇلانما قىستۇر (تەھرىرلىگۈچلا)"
           composer_bold: "%{shortcut} توم (كىرگۈزۈش كۆزنىكىلا)"
           composer_italic: "%{shortcut} يانتۇ (كىرگۈزۈش كۆزنىكىلا)"
           composer_code: "%{shortcut} كود (كىرگۈزۈش كۆزنىكىلا)"
-          drawer_open: "%{shortcut} سۆھبەت تارتمىسىنى ئاچ"
           drawer_close: "%{shortcut} سۆھبەت تارتمىسىنى ياپ"
           mark_all_channels_read: "%{shortcut} ھەممە قانالغا ئوقۇلدى بەلگىسى سال"
     topic_statuses:
@@ -743,6 +745,7 @@ ug:
           title: سۆھبەت
     sidebar:
       start_new_dm:
+        text: يېڭى بىۋاسىتە ئۇچۇر باشلا
         title: شەخسىي سۆھبەت قۇر
       panels:
         chat:

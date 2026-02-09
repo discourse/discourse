@@ -48,6 +48,8 @@ et:
   disable_remote_images_download_reason: "Väliste piltide allalaadimine keelati, kuna polnud polnud piisavalt vaba ruumi."
   anonymous: "Anonüümne"
   remove_posts_deleted_by_author: "Autori poolt kustutatud"
+  topic_tag_changed:
+    removed: "Eemaldatud %{removed}"
   inline_oneboxer:
     topic_page_title_post_number_by_user: "postituse nr%{post_number} tegi %{username}"
   components:
@@ -505,8 +507,8 @@ et:
       every_month: "iga kuu"
       every_six_months: "iga kuue kuu tagant"
   user_api_key:
-    title: "Autoriseeri rakenduse ligipääs"
     authorize: "Autoriseeri"
+    deny: "Loobu"
     read: "lugemine"
     read_write: "lugemine ja kirjutamine"
     otp_confirmation:
@@ -765,13 +767,11 @@ et:
     maximum_staged_users_per_email: "Ettevalmistamisel olevate kasutajate maksimaalne arv sai sissetuleva meili töötlemisel täis."
     dominating_topic_minimum_percent: "Mitu protsenti teema postitustest peab kasutaja tegema, et talle saadetaks meeldetuletus teema liigse domineerimise kohta."
     embed_post_limit: "Maksimaalne postituste arv, mida sängitada."
-    min_trust_to_create_tag: "Sildi lisamiseks nõutav minimaalne usaldustase."
     max_tags_per_topic: "Teemale liidetavate siltide maksimaalne arv."
     max_tag_length: "Sildis kasutatavate tähemärkide maksimaalne arv."
     max_tag_search_results: "Siltide otsimisel maksimaalselt kuvatavate tulemuste arv."
     max_tags_in_filter_list: "Filtri rippmenüüs kuvatavate siltide maksimaalne arv. Kuvatakse enimkasutatud sildid."
     tags_sort_alphabetically: "Kuva sildid tähestikulises järjekorras. Vaikimisi kuvatakse need populaarsuse järjekorras."
-    min_trust_level_to_tag_topics: "Teemade sildistamiseks on nõutav minimaalne usaldustase"
     suppress_overlapping_tags_in_list: "Ära näita silti, kui see ühtib täpselt sõnaga teema päses"
     errors:
       invalid_integer: "Väärtuseks peab olema täisarv."
@@ -803,8 +803,10 @@ et:
     queued_by_staff:
       title: "Postitus vajab kinnitust"
     welcome_user:
+      preview: "Tere tulemast saidile %{site_name}!"
       subject_template: "Tere tulemast %{site_name}!"
     welcome_invite:
+      preview: "Tere tulemast saidile %{site_name}!"
       subject_template: "Tere tulemast %{site_name}!"
     backup_failed:
       subject_template: "Varundamine ebaõnnestus"
@@ -1035,6 +1037,9 @@ et:
   onebox:
     github:
       closed: "suletud"
+      status_date:
+        approved: "heakskiidetud"
+        closed: "suletud"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mainis Sind teemas "%{topic}" - %{site_title}'
@@ -1064,22 +1069,37 @@ et:
         complete: "Postitus kustutatud."
       delete_and_agree:
         complete: "Postitus kustutatud."
-      disagree:
+      disagree_bundle:
         title: "Ei"
       ignore:
         title: "Ignoreeri"
       ignore_and_do_nothing:
         title: "Ära tee midagi"
       approve:
-        title: "Kinnita"
+        title: "Jah"
+      approve_post:
+        title: "Jah"
+      approve_post_closed:
+        title: "Jah"
+      reject_post_bundle:
+        title: "Ei"
       approve_user:
-        title: "Kiida kasutaja heaks"
+        title: "Jah"
       reject_user:
+        title: "Ei"
         delete:
           title: "Kustuta kasutaja"
           complete: "Kasutaja kustutatud."
+      confirm_spam:
+        title: "Jah"
+      not_spam:
+        title: "Ei"
       reject:
         title: "Lükka tagasi"
+      approve_and_restore:
+        title: "Jah"
+      approve_and_unhide:
+        title: "Jah"
       no_action_post:
         title: "Tegevust pole"
       delete_post:

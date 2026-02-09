@@ -13,19 +13,30 @@ class DiscourseAi::Evals::PromptEvaluator
       args.flat_map do |test|
         bump_progress.call
 
-        prompts, messages, followups, output_thinking, stream, temperature, tools =
-          symbolize_test_args(test)
+        prompts = test[:prompts] || [test[:prompt]]
+        messages = test[:messages] || [test[:message]]
+        followups = symbolize_followups(test)
+        output_thinking = test[:output_thinking] || false
+        stream = test[:stream] || false
+        temperature = test[:temperature]
+        tools = symbolize_tools(test[:tools])
+        tool_results = test[:tool_results]
+        chain_length = test[:chain_length] || 1
+        max_tool_calls = test[:max_tool_calls]
 
         prompts.flat_map do |prompt|
           messages.map do |message|
             runner.run_single_test(
-              prompt,
-              message,
-              followups,
-              output_thinking,
-              stream,
-              temperature,
-              tools,
+              prompt:,
+              message:,
+              followups:,
+              output_thinking:,
+              stream:,
+              temperature:,
+              tools:,
+              tool_results:,
+              chain_length:,
+              max_tool_calls:,
             )
           end
         end
@@ -34,17 +45,6 @@ class DiscourseAi::Evals::PromptEvaluator
   end
 
   private
-
-  def symbolize_test_args(args)
-    prompts = args[:prompts] || [args[:prompt]]
-    messages = args[:messages] || [args[:message]]
-    followups = symbolize_followups(args)
-    output_thinking = args[:output_thinking] || false
-    stream = args[:stream] || false
-    temperature = args[:temperature]
-    tools = symbolize_tools(args[:tools])
-    [prompts, messages, followups, output_thinking, stream, temperature, tools]
-  end
 
   def symbolize_followups(args)
     return nil if args[:followups].nil? && args[:followup].nil?

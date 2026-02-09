@@ -1,0 +1,29 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+it:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privato"
+          public: "Pubblico"
+      reports:
+        reading_time:
+          title: Tempo di lettura
+        chat_usage:
+          messages: messaggi
+          status_online: "● online"
+        invites:
+          title: Inviti
+          invitee_posts: Messaggi Creati
+          invitee_likes: Mi piace - Assegnati
+          label_invitations_sent: "Inviti inviati:"
+        new_user_interactions:
+          likes_given: Mi piace - Assegnati
+          mentions: Menzioni
+        writing_analysis:
+          menu_other: Altri

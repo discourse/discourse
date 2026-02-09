@@ -2,6 +2,7 @@
 
 describe "Content localization language switcher", type: :system do
   SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
+  TOGGLE_LOCALIZE_BUTTON_SELECTOR = "button.btn-toggle-localized-content"
 
   let(:topic_list) { PageObjects::Components::TopicList.new }
   let(:switcher) { PageObjects::Components::DMenu.new(SWITCHER_SELECTOR) }
@@ -52,7 +53,7 @@ describe "Content localization language switcher", type: :system do
 
     page.refresh
     switcher.expand
-    expect(switcher).to have_content("English (US)")
+    expect(switcher).to have_content("English")
     expect(switcher).to have_content("Japanese (日本語)")
     expect(switcher).to have_content("Spanish (Español)")
 
@@ -91,6 +92,19 @@ describe "Content localization language switcher", type: :system do
     expect(page).to have_css(SWITCHER_SELECTOR)
   end
 
+  it "displays the current language code on the trigger button" do
+    SiteSetting.content_localization_language_switcher = "all"
+
+    visit("/")
+    expect(page.find(SWITCHER_SELECTOR)).to have_content("EN")
+
+    select_language("ja")
+    expect(page.find(SWITCHER_SELECTOR)).to have_content("JA")
+
+    select_language("es")
+    expect(page.find(SWITCHER_SELECTOR)).to have_content("ES")
+  end
+
   it "shows localized content when switching languages (anon, logged in)" do
     SiteSetting.content_localization_language_switcher = "all"
 
@@ -118,6 +132,53 @@ describe "Content localization language switcher", type: :system do
     I18n.with_locale("es") do
       expect(page.find("#navigation-bar")).to have_content(I18n.t("js.filters.latest.title"))
     end
+  end
+
+  it "resets localized content toggle after changing languages" do
+    SiteSetting.content_localization_language_switcher = "all"
+
+    visit("/t/#{topic.id}")
+
+    select_language("ja")
+
+    expect(topic_list).to have_content("孫子兵法からの人生戦略")
+    expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+      I18n.t("js.content_localization.toggle_localized.translated"),
+    )
+
+    page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
+    expect(topic_list).to have_content("Life strategies from The Art of War")
+    expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+      I18n.t("js.content_localization.toggle_localized.not_translated"),
+    )
+
+    select_language("es")
+
+    expect(topic_list).to have_content("Estrategias de vida de El arte de la guerra")
+    I18n.with_locale("es") do
+      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        I18n.t("js.content_localization.toggle_localized.translated"),
+      )
+    end
+  end
+
+  it "marks the current language as selected in the dropdown" do
+    SiteSetting.content_localization_language_switcher = "all"
+
+    visit("/")
+    switcher.expand
+
+    expect(page).to have_css("[data-menu-option-id='en'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='ja'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
+
+    switcher.collapse
+    select_language("ja")
+    switcher.expand
+
+    expect(page).to have_css("[data-menu-option-id='ja'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='en'].--selected")
+    expect(page).to have_no_css("[data-menu-option-id='es'].--selected")
   end
 
   def select_language(locale)

@@ -799,11 +799,10 @@ gl:
       every_month: "cada mes"
       every_six_months: "cada seis meses"
   user_api_key:
-    title: "Autorizar acceso á aplicación"
     authorize: "Autorizar"
+    deny: "Cancelar"
     read: "lectura"
     read_write: "lectura/escritura"
-    description: '"%{application_name}" está a solicitar o seguinte acceso á súa conta:'
     instructions: 'Acabamos de xerar unha nova chave API de usuario para que utilice con "%{application_name}"; pegue a seguinte chave na súa aplicación:'
     otp_description: 'Gustaríalle darlle permiso a "%{application_name}" para acceder a este sitio?'
     otp_confirmation:
@@ -1415,7 +1414,6 @@ gl:
     invite_link_max_redemptions_limit_users: "O máximo de ofrecementos permitidos para enviar ligazóns de convite xerados por usuarios regulares non poden superar este valor."
     alert_admins_if_errors_per_minute: "Número de erros por minuto para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre rearrancar."
     alert_admins_if_errors_per_hour: "Número de erros por hora para activar unha alerta aos administradores. O valor 0 desactiva esta funcionalidade. Nota: cómpre rearrancar."
-    categories_topics: "Número de temas que se mostran na páxina de /categorías. Se se estabelece en 0, automaticamente tentará atopar un valor para manter as dúas columnas simétricas (categorías e temas)."
     suggested_topics: "Número de temas suxeridos que se mostran na parte inferior do tema."
     limit_suggested_to_category: "Mostrar só temas da categoría actual nos temas suxeridos."
     suggested_topics_max_days_old: "Os temas suxeridos non deben ter máis de n días de antigüidade."
@@ -1468,18 +1466,7 @@ gl:
     tl3_requires_likes_given: "Número mínimo de gústame que un usuario debe dar nos últimos (período nc3) días para poder ser promovido ao nivel de confianza 3."
     tl3_requires_likes_received: "Número mínimo de gústame que un usuario debe recibir nos últimos (período nc3) días para poder ser promovido ao nivel de confianza 3."
     tl3_links_no_follow: "Non retirar rel=nofollow das ligazóns publicadas por usuarios con nivel de confianza 3."
-    min_trust_to_create_topic: "O nivel de confianza mínimo requirido para crear un novo tema."
     allow_flagging_staff: "De estar activado, os usuarios poden denunciar publicacións feitas desde contas do equipo."
-    min_trust_to_edit_wiki_post: "O nivel de confianza mínimo requirido para editar unha publicación marcada como wiki."
-    min_trust_to_edit_post: "O nivel de confianza mínimo requirido para editar publicacións."
-    min_trust_to_allow_self_wiki: "O nivel de confianza mínimo requirido para facer que un usuario converta as súas publicacións a wiki."
-    min_trust_to_flag_posts: "O nivel de confianza mínimo requirido para denunciar publicacións"
-    min_trust_to_post_links: "O nivel de confianza mínimo requirido para incluír ligazóns nas publicacións"
-    min_trust_to_post_embedded_media: "O nivel de confianza mínimo requirido para incorporar elementos multimedia a unha publicación"
-    min_trust_level_to_allow_profile_background: "O nivel de confianza mínimo requirido para cargar un fondo de perfil"
-    min_trust_level_to_allow_user_card_background: "O nivel de confianza mínimo requirido para cargar un fondo de tarxeta de usuario"
-    min_trust_level_to_allow_invite: "O nivel de confianza mínimo requirido para invitar usuarios"
-    min_trust_level_to_allow_ignore: "O nivel de confianza mínimo requirido para ignorar usuarios"
     allowed_link_domains: "Dominios que os usuarios poden vincular mesmo se non teñen o nivel de confianza apropiado para publicar ligazóns"
     newuser_max_links: "Número de ligazóns que un novo usuario pode engadir nunha publicación."
     newuser_max_embedded_media: "Cantos elementos multimedia incorporados pode engadir un novo usuario a unha publicación."
@@ -1577,16 +1564,8 @@ gl:
     pop3_polling_password: "O contrasinal da conta POP3 na que recoller o correo."
     pop3_polling_delete_from_server: "Eliminar correos do servidor. NOTA: se desactiva isto, deberá limpar manualmente a caixa de entrada"
     log_mail_processing_failures: "Rexistrar todos os erros de procesamento do correo en <a href='%{base_path}/logs' target='_blank'>/logs</a>"
-    email_in_min_trust: "O nivel de confianza mínimo requirido para poder publicar vía correo electrónico."
     email_in_authserv_id: "O identificador do servizo que realiza revisións de autenticación no correo entrante. Revisa <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> para obter instrucións sobre como configurar isto."
-    enable_imap: "Activar IMAP para sincronizar mensaxes de grupo."
-    enable_imap_write: "Activar a sincronización IMAP bidireccional. Se está desactivada, todas as operacións de escritura das contas IMAP están desactivadas."
-    enable_imap_idle: "Utilice o mecanismo IMAP IDLE para agardar por novos correos electrónicos."
     enable_smtp: "Active SMTP para enviar notificacións de mensaxes de grupo."
-    imap_polling_period_mins: "Período en minutos entre revisións das contas IMAP para correos electrónicos."
-    imap_polling_old_emails: "Número máximo de correos electrónicos antigos (procesados) que se actualizarán cada vez que se recolla unha caixa de correo IMAP (0 para todos)."
-    imap_polling_new_emails: "Número máximo de correos electrónicos novos (sen procesar) que se actualizarán cada vez que se recolla unha caixa de correo IMAP."
-    imap_batch_import_email: "O número mínimo de correos electrónicos novos que disparan o modo de importación (desactiva as alertas de publicación)."
     email_prefix: "A [label] utilizada no asunto dos correos. Será «título» se non se define."
     email_site_title: "O título do sitio utilizado como remitente de correos electrónicos do sitio. Será o de «título» se non se estabelece. Se o seu «título» contén caracteres que non están permitidos nas cadeas do remitente de correo electrónico, utilice este axuste."
     find_related_post_with_key: "Utilice só a «clave de resposta» para atopar a publicación respondida. AVISO: desactivar isto permite a suplantación de identidade do usuario baseada no enderezo de correo electrónico."
@@ -1598,7 +1577,6 @@ gl:
     username_change_period: "Número máximo de días, despois do rexistro, durante os que se pode mudar de nome de usuario (0 para desactivar o cambio de nome de usuario)."
     email_editable: "Permitir que os usuarios cambien o seu enderezo electrónico despois de se rexistraren."
     logout_redirect: "Localización a onde redirixir o navegador despois de pechar sesión (ex.: https://example.com/logout)"
-    allow_uploaded_avatars: "Permitir que os usuarios suban imaxes de perfil personalizadas."
     default_avatars: "URL dos avatares que se utilizarán para os usuarios novos ata que estes os cambien."
     automatically_download_gravatars: "Descargar Gravatars para os usuarios ao crear unha conta ou cambiar de correo electrónico."
     digest_topics: "Número máximo de publicacións destacadas que se amosan no correo electrónico de resumo."
@@ -1624,7 +1602,6 @@ gl:
     allow_users_to_hide_profile: "Permitirlles aos usuarios agochar o seu perfil e presenza"
     allow_featured_topic_on_user_profiles: "Permitir aos usuarios salientar unha ligazón a un tema da súa tarxeta de usuario e perfil."
     show_inactive_accounts: "Permitir aos usuarios coa sesión iniciada ver os perfís de contas inactivas."
-    hide_suspension_reasons: "Non amosar publicamente os motivos de suspensión nos perfís dos usuarios."
     log_personal_messages_views: "Rexistra as visualizacións de mensaxes persoais por parte do administrador para outros usuarios/grupos."
     ignored_users_count_message_threshold: "Notificar aos moderadores se un usuario en particular é ignorado por moitos outros."
     ignored_users_message_gap_days: "Tempo de espera antes de lles volver notificar aos moderadores que un usuario é ignorado por moitos outros."
@@ -1675,7 +1652,6 @@ gl:
     new_user_notice_tl: "Nivel de confianza mínimo requirido para ver avisos de novos usuarios."
     returning_user_notice_tl: "Nivel de confianza mínimo requirido para ver avisos de usuarios que volven."
     returning_users_days: "Número de días que deben transcorrer para considerar que un usuario está de volta."
-    review_media_unless_trust_level: "O equipo revisará as publicacións de usuarios con niveis de confianza máis baixos se conteñen elementos multimedia inseridos."
     blur_tl0_flagged_posts_media: "Desenfocar imaxes con publicacións sinaladas para agochar contido potencialmente inapropiado (NSFW)."
     enable_page_publishing: "Permitirlles aos membros do equipo publicar temas en novos URL co seu propio estilo."
     show_published_pages_login_required: "Os usuarios anónimos poden ver as páxinas publicadas, aínda que se pida iniciar sesión."
@@ -1713,19 +1689,16 @@ gl:
     allow_user_api_key_scopes: "Listaxe de ámbitos permitidos para as chaves API de usuario"
     allowed_user_api_auth_redirects: "URL permitido para redireccionar a autenticación das chaves API de usuario. O símbolo do comodín pódese utilizar para que coincida calquera parte súa (ex.: www.exemplo.com/*)."
     allowed_user_api_push_urls: "Enderezos URL permitidos para que servidor envíe á API de usuario"
-    min_trust_to_create_tag: "O nivel de confianza mínimo para crear unha etiqueta."
     max_tags_per_topic: "O número máximo de etiquetas aplicables a un tema."
     max_tag_length: "O número máximo de caracteres que se poden utilizar nunha etiqueta."
     max_tag_search_results: "Nas buscas por etiquetas, o número máximo de resultados que se mostran."
     max_tags_in_filter_list: "Número máximo de etiquetas que se mostran na listaxe despregable do filtro. Móstranse primeiro as etiquetas máis usadas."
     tags_sort_alphabetically: "Mostrar etiquetas en orde alfabética. Por defecto móstranse segundo a súa popularidade."
     tags_listed_by_group: "Listar etiquetas por grupos de etiquetas na <a href='%{base_path}/tags' target='_blank'>páxina de etiquetas</a>."
-    min_trust_level_to_tag_topics: "O nivel de confianza mínimo requirido para etiquetar temas"
     suppress_overlapping_tags_in_list: "Se unha etiqueta coincide con palabras exactas do título dun tema, non se mostrará"
     remove_muted_tags_from_latest: "Non mostrar na listaxe de temas máis recentes aqueles etiquetados unicamente con etiquetas silenciadas."
     force_lowercase_tags: "Forzar que todas as etiquetas estean integramente en minúsculas."
     shared_drafts_category: "Active a funcionalidade Borradores compartidos designando unha categoría para os borradores de temas. Os temas desta categoría suprimiranse das listaxes de temas para os usuarios do equipo."
-    shared_drafts_min_trust_level: "Permitir que os usuarios vexan e editen borradores compartidos."
     push_notifications_icon: "A icona da insignia aparece na esquina da notificación. Recoméndase un PNG monocromático de 96x96 con transparencia."
     base_font: "Tipo de letra base para empregar na maioría dos textos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--font-family»."
     heading_font: "Tipo de letra para usar nos títulos do sitio. Os temas poden sobrescribilo a través da propiedade personalizada CSS «--heading-font-family»."
@@ -2182,6 +2155,7 @@ gl:
         A medida que participe aquí, irémolo coñecendo e as limitacións temporais como novo usuario irán desaparecendo. Co tempo gañará [niveis de confianza] (https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) que inclúen funcionalidades especiais para axudarnos a xestionar xuntos esta comunidade.
     welcome_user:
       title: "Benvida ao usuario"
+      preview: "Dámoslle a benvida a %{site_name}!"
       subject_template: "Dámoslle a benvida a %{site_name}!"
       text_body_template: |
         Grazas por se unir a %{site_name} e benvido/a!
@@ -2209,6 +2183,7 @@ gl:
         Canda o poder vén a responsabilidade. Se non ten experiencia moderando, visite a [Guía de moderación](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Convite de benvida"
+      preview: "Dámoslle a benvida a %{site_name}!"
       subject_template: "Dámoslle a benvida a %{site_name}!"
       text_body_template: |
         Grazas por aceptar a invitación a %{site_name} -- dámoslle a benvida!
@@ -2551,6 +2526,7 @@ gl:
         Isto pode modificarse nos axustes do sitio `newuser_spam_host_threshold` e `white_listed_spam_host_domains`. Considere a opción de engadir %{domains} á listaxe de permitidos se quere estabelecer unha excepción con eles.
     unsilenced:
       title: "Sen silenciar"
+      preview: "Conta restabelecida."
       subject_template: "Conta restabelecida"
       text_body_template: |
         Ola,
@@ -2599,7 +2575,6 @@ gl:
     Para se dar de baixa destes correos electrónicos, [prema aquí](%{unsubscribe_url}).
   subject_re: "Re: "
   subject_pm: "[MP] "
-  email_from: "%{user_name} vía %{site_name}"
   user_notifications:
     previous_discussion: "Respostas anteriores"
     reached_limit:
@@ -2900,6 +2875,7 @@ gl:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Iniciar sesión vía ligazón"
+      preview: "Iniciar sesión vía ligazón."
       subject_template: "[%{email_prefix}] Iniciar sesión vía ligazón"
       text_body_template: |
         Velaquí a súa ligazón para iniciar sesión en [%{site_name}](%{base_url}).
@@ -3424,6 +3400,8 @@ gl:
     title: "Entrar en modo seguro"
     enter: "Entrar en modo seguro"
     must_select: "Debe seleccionar polo menos unha opción para entrar no modo seguro."
+  dev_mode:
+    enter: "Intro"
   wizard:
     title: "Configuración de Discourse"
     step:
@@ -3443,6 +3421,9 @@ gl:
   onebox:
     github:
       closed: "pechado"
+      status_date:
+        approved: "aprobado"
+        closed: "pechado"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} mencionouno en "%{topic}" - %{site_title}'
@@ -3506,35 +3487,43 @@ gl:
         complete: "Publicación eliminada."
       delete_and_agree_replies:
         confirm: "Confirma que quere eliminar as respostas desta publicación tamén?"
-      disagree_and_restore:
-        description: "Restaurar a publicación para que todos os usuarios a poidan ver."
-      disagree:
+      disagree_bundle:
         title: "Non"
       ignore:
         title: "Ignorar"
       ignore_and_do_nothing:
         title: "Non facer nada"
       approve:
-        title: "Aprobar"
+        title: "Si"
       approve_post:
-        title: "Aprobar publicación"
+        title: "Si"
       approve_post_closed:
-        title: "Aprobar publicación"
+        title: "Si"
         confirm: "Este tema está pechado. Gustaríalle crear a publicación igualmente?"
+      reject_post_bundle:
+        title: "Non"
       reject_post:
         title: "Rexeitar a publicación"
       approve_user:
-        title: "Aprobar usuario"
+        title: "Si"
       reject_user:
+        title: "Non"
         delete:
           title: "Eliminar usuario"
-          description: "O usuario será eliminado do foro."
           complete: "Usuario eliminado."
         block:
           title: "Eliminar e bloquear usuario"
           description: "O usuario será eliminado e bloquearase a súa IP e enderezo electrónico."
+      confirm_spam:
+        title: "Si"
+      not_spam:
+        title: "Non"
       reject:
         title: "Rexeitar"
+      approve_and_restore:
+        title: "Si"
+      approve_and_unhide:
+        title: "Si"
       no_action_post:
         title: "Sen acción"
       delete_post:

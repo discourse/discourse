@@ -2,12 +2,14 @@ import { tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
 import { action, getProperties } from "@ember/object";
 import { and } from "@ember/object/computed";
+import { next } from "@ember/runloop";
 import { service } from "@ember/service";
-import { underscore } from "@ember/string";
 import { popupAjaxError } from "discourse/lib/ajax-error";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import DiscourseURL from "discourse/lib/url";
+import { defaultHomepage } from "discourse/lib/utilities";
 import Category from "discourse/models/category";
 import { i18n } from "discourse-i18n";
 
@@ -22,17 +24,45 @@ const FIELD_LIST = [
   "emoji",
   "icon",
   "localizations",
+  "position",
+  "num_featured_topics",
+  "search_priority",
+  "allow_badges",
+  "topic_featured_link_allowed",
+  "navigate_to_first_post_after_read",
+  "all_topics_wiki",
+  "allow_unlimited_owner_edits_on_first_post",
+  "moderating_group_ids",
+  "auto_close_hours",
+  "auto_close_based_on_last_post",
+  "default_view",
+  "default_top_period",
+  "sort_order",
+  "sort_ascending",
+  "default_list_filter",
+  "show_subcategory_list",
+  "subcategory_list_style",
+  "read_only_banner",
+  "email_in",
+  "email_in_allow_strangers",
+  "mailinglist_mirror",
 ];
 
+const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
+
 export default class EditCategoryTabsController extends Controller {
+  @service currentUser;
   @service dialog;
   @service site;
   @service router;
+  @service keyValueStore;
 
   @tracked breadcrumbCategories = this.site.get("categoriesList");
+  @tracked
+  showAdvancedTabs =
+    this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
+  @tracked selectedTab = "general";
   @trackedArray panels = [];
-
-  selectedTab = "general";
   saving = false;
   deleting = false;
   showTooltip = false;
@@ -48,23 +78,10 @@ export default class EditCategoryTabsController extends Controller {
     const data = getProperties(this.model, ...FIELD_LIST);
 
     if (!this.model.styleType) {
-      data.style_type = "square";
+      data.style_type = "icon";
     }
 
     return data;
-  }
-
-  @action
-  canSaveForm(transientData) {
-    if (!transientData.name) {
-      return false;
-    }
-
-    if (this.saving || this.deleting) {
-      return true;
-    }
-
-    return true;
   }
 
   @discourseComputed("saving", "deleting")
@@ -86,18 +103,57 @@ export default class EditCategoryTabsController extends Controller {
     return id ? "category.save" : "category.create";
   }
 
-  @discourseComputed("model.id", "model.name")
-  title(id, name) {
-    return id
-      ? i18n("category.edit_dialog_title", {
-          categoryName: name,
-        })
-      : i18n("category.create");
+  get baseTitle() {
+    if (this.model.id) {
+      return i18n("category.edit_dialog_title", {
+        categoryName: this.model.name,
+      });
+    }
+
+    return i18n("category.create");
   }
 
-  @discourseComputed("selectedTab")
-  selectedTabTitle(tab) {
-    return i18n(`category.${underscore(tab)}`);
+  @action
+  setSelectedTab(tab) {
+    this.selectedTab = tab;
+    this.showAdvancedTabs = this.showAdvancedTabs || tab !== "general";
+  }
+
+  @action
+  validateForm(data, { addError }) {
+    if (this.selectedTab === "general") {
+      return;
+    }
+
+    let hasGeneralTabErrors = false;
+
+    if (!data.name) {
+      hasGeneralTabErrors = true;
+      addError("name", {
+        title: i18n("category.name"),
+        message: i18n("form_kit.errors.required"),
+      });
+    }
+
+    if (data.style_type === "emoji" && !data.emoji) {
+      hasGeneralTabErrors = true;
+      addError("emoji", {
+        title: i18n("category.emoji"),
+        message: i18n("category.validations.emoji_required"),
+      });
+    }
+
+    if (data.style_type === "icon" && !data.icon) {
+      hasGeneralTabErrors = true;
+      addError("icon", {
+        title: i18n("category.icon"),
+        message: i18n("category.validations.icon_required"),
+      });
+    }
+
+    if (hasGeneralTabErrors) {
+      this.selectedTab = "general";
+    }
   }
 
   @action
@@ -110,39 +166,79 @@ export default class EditCategoryTabsController extends Controller {
     return !transition.targetName.startsWith("editCategory.tabs");
   }
 
+  _wouldLoseAccess(category = this.model) {
+    if (this.currentUser.admin) {
+      return false;
+    }
+
+    const permissions = category.permissions;
+    if (!permissions?.length) {
+      return false;
+    }
+
+    const userGroupIds = new Set(this.currentUser.groups.map((g) => g.id));
+
+    return !permissions.some(
+      (p) =>
+        p.group_id === AUTO_GROUPS.everyone.id || userGroupIds.has(p.group_id)
+    );
+  }
+
   @action
-  saveCategory(data) {
+  async saveCategory(data) {
     if (this.validators.some((validator) => validator())) {
       return;
     }
 
     this.model.setProperties(data);
+
+    // If permissions is empty or not set, ensure it's an empty array (public category)
+    if (!this.model.permissions || this.model.permissions.length === 0) {
+      this.model.set("permissions", []);
+    }
+
+    const lostAccess = this._wouldLoseAccess();
+
+    if (lostAccess) {
+      const confirmed = await this.dialog.yesNoConfirm({
+        message: i18n("category.errors.self_lockout"),
+      });
+
+      if (!confirmed) {
+        return;
+      }
+    }
+
     this.set("saving", true);
 
-    this.model
-      .save()
-      .then((result) => {
-        const updatedModel = this.site.updateCategory(result.category);
-        updatedModel.setupGroupsAndPermissions();
+    try {
+      const result = await this.model.save();
+      const updatedModel = this.site.updateCategory(result.category);
+      updatedModel.setupGroupsAndPermissions();
 
-        if (!this.model.id) {
-          this.router.transitionTo(
-            "editCategory",
-            Category.slugFor(updatedModel)
-          );
-        }
-        // ensure breadcrumbs contain the updated category model
-        this.breadcrumbCategories = this.site.categoriesList.map((c) =>
-          c.id === this.model.id ? updatedModel : c
+      if (lostAccess) {
+        this.router.transitionTo(`discovery.${defaultHomepage()}`);
+        return;
+      }
+
+      this.set("saving", false);
+
+      if (!this.model.id) {
+        this.router.transitionTo(
+          "editCategory",
+          Category.slugFor(updatedModel)
         );
-      })
-      .catch((error) => {
-        popupAjaxError(error);
-        this.model.set("parent_category_id", undefined);
-      })
-      .finally(() => {
-        this.set("saving", false);
-      });
+      }
+
+      // ensure breadcrumbs contain the updated category model
+      this.breadcrumbCategories = this.site.categoriesList.map((c) =>
+        c.id === this.model.id ? updatedModel : c
+      );
+    } catch (error) {
+      this.set("saving", false);
+      popupAjaxError(error);
+      this.model.set("parent_category_id", undefined);
+    }
   }
 
   @action
@@ -175,5 +271,21 @@ export default class EditCategoryTabsController extends Controller {
   @action
   goBack() {
     DiscourseURL.routeTo(this.model.url);
+  }
+
+  @action
+  toggleAdvancedTabs() {
+    this.showAdvancedTabs = !this.showAdvancedTabs;
+
+    // Save preference to localStorage
+    this.keyValueStore.setItem(
+      SHOW_ADVANCED_TABS_KEY,
+      this.showAdvancedTabs.toString()
+    );
+
+    // Always ensure we're on general tab after toggling
+    next(() => {
+      this.selectedTab = "general";
+    });
   }
 }

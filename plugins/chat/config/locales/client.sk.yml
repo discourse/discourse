@@ -148,10 +148,8 @@ sk:
       send_shortcut:
         enter:
           label: "Odoslať cez Enter"
-          description: "Nový riadok pomocou Shift + Enter"
         meta_enter:
           label: "Odoslať pomocou %{meta_key} + Enter"
-          description: "Nový riadok pomocou Enter"
       enable: "Povoliť chat"
       flag: "Označenie"
       emoji: "Vložte emotikon"
@@ -254,12 +252,11 @@ sk:
       no_public_channels: "Zatiaľ ste sa nepripojili k žiadnemu kanálu!"
       no_public_channels_cta: "Prehľadávanie kanálov"
       kicked_from_channel: "K tomuto kanálu už nemáte prístup."
+      chat_notifications_title: "Oznámenia chatu"
       only_chat_push_notifications:
         title: "Odosielajte iba upozornenia na chat"
-        description: "Blokovanie odosielania všetkých push oznámení, ktoré nie sú súčasťou chatu"
       ignore_channel_wide_mention:
         title: "Ignorovať zmienky v rámci celého kanála"
-        description: "Neposielať upozornenia na zmienky v rámci celého kanála (@tu a @všetci)"
       show_thread_title_prompts:
         title: "Zobraziť výzvy na názov vlákna"
         description: "Zobraziť výzvy na nastavenie názvu pre nové vlákna"
@@ -552,6 +549,7 @@ sk:
           confirm_export: "Týmto spôsobom sa exportujú všetky správy zo všetkých kanálov a výsledok sa vám odošle v osobnej správe. Ste si istí, že chcete exportovať?"
           export_has_started: "Export sa začal. Keď bude hotový, budeme Vás informovať cez súkromnú správu."
       search:
+        short_title: Hľadať
         sort:
           relevance: "Relevancia"
           latest: "Najnovšie"
@@ -787,7 +785,6 @@ sk:
           composer_bold: "%{shortcut} Tučné (iba skladateľ)"
           composer_italic: "%{shortcut} Kurzíva (iba skladateľ)"
           composer_code: "%{shortcut} Kód (iba skladateľ)"
-          drawer_open: "%{shortcut} Otvoriť zásuvku chatu"
           drawer_close: "%{shortcut} Zatvoriť zásuvku chatu"
           mark_all_channels_read: "%{shortcut} Označiť všetky kanály ako prečítané"
     topic_statuses:

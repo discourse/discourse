@@ -10,6 +10,9 @@ de:
       sort_options:
         votes: "Stimmen"
     topic_voting:
+      notification_label:
+        vote_released: "Stimme zurückgegeben"
+      title: "Themenabstimmung"
       reached_limit: "Du hast keine Stimmen mehr. Entferne eine bestehende Stimme!"
       list_votes: "Deine Stimmen auflisten"
       votes_nav_help: "Themen mit den meisten Stimmen"
@@ -20,6 +23,8 @@ de:
       voted_title: "Abgestimmt"
       voting_closed_title: "Geschlossen"
       voting_limit: "Limit"
+      locked: "Gesperrt"
+      locked_description: "Erhöhe deine Vertrauensstufe, um abzustimmen"
       votes:
         one: "%{count} Stimme"
         other: "%{count} Stimmen"

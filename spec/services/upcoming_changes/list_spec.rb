@@ -14,7 +14,7 @@ RSpec.describe UpcomingChanges::List do
         {
           enable_upload_debug_mode: {
             impact: "other,developers",
-            status: :pre_alpha,
+            status: :experimental,
             impact_type: "other",
             impact_role: "developers",
           },
@@ -46,7 +46,7 @@ RSpec.describe UpcomingChanges::List do
           impact: "other,developers",
           impact_role: "developers",
           impact_type: "other",
-          status: :pre_alpha,
+          status: :experimental,
         )
       end
 
@@ -128,6 +128,36 @@ RSpec.describe UpcomingChanges::List do
           mock_setting = results.find { |change| change[:setting] == :enable_upload_debug_mode }
 
           expect(mock_setting[:upcoming_change][:enabled_for]).to eq("groups")
+        end
+      end
+
+      it "updates the user's last_visited_upcoming_changes_at custom field" do
+        expect { result }.to change {
+          admin.reload.custom_fields["last_visited_upcoming_changes_at"]
+        }.to be_present
+        expect(
+          Time.zone.parse(admin.custom_fields["last_visited_upcoming_changes_at"]),
+        ).to be_within(1.minute).of(Time.current)
+      end
+
+      context "when guardian is the system user" do
+        let(:guardian) { Discourse.system_user.guardian }
+
+        it "does not update the custom field" do
+          expect { result }.not_to change {
+            Discourse.system_user.reload.custom_fields["last_visited_upcoming_changes_at"]
+          }
+        end
+      end
+
+      context "when guardian is a bot" do
+        fab!(:bot)
+        let(:guardian) { bot.guardian }
+
+        it "does not update the custom field" do
+          expect { result }.not_to change {
+            bot.reload.custom_fields["last_visited_upcoming_changes_at"]
+          }
         end
       end
     end

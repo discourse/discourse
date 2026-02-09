@@ -965,12 +965,9 @@ ja:
     no_log_search_queries: "検索クエリログは現在無効になっています (管理者はサイト設定で有効にできます)。"
   email_settings:
     pop3_authentication_error: "指定された POP3 の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
-    imap_authentication_error: "指定された IMAP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。"
-    imap_no_response_error: "IMAP サーバーとの通信中にエラーが発生しました。%{message}"
     smtp_authentication_error: "指定された SMTP の資格情報に問題がありました。ユーザー名とパスワードを確認して、もう一度お試しください。%{message}"
     smtp_server_busy_error: "SMTP サーバーは現在ビジー状態です。後でもう一度お試しください。"
     smtp_unhandled_error: "SMTP サーバーとの通信中に未処理のエラーが発生しました。%{message}"
-    imap_unhandled_error: "IMAP サーバーとの通信中に未処理のエラーが発生しました。%{message}"
     connection_error: "サーバーとの接続に問題が発生しました。サーバー名とポートを確認して、もう一度お試しください。"
     timeout_error: "サーバーへの接続がタイムアウトしました。サーバー名とポートを確認して、もう一度お試しください。"
     unhandled_error: "メールの設定をテスト中に未処理のエラーが発生しました。%{message}"
@@ -1059,11 +1056,10 @@ ja:
       every_month: "毎月"
       every_six_months: "6 か月毎"
   user_api_key:
-    title: "アプリケーションアクセスの承認"
     authorize: "承認"
+    deny: "キャンセル"
     read: "読み取り"
     read_write: "読み取り/書き込み"
-    description: '"%{application_name}" があなたのアカウントへの次のアクセス権を要求しています:'
     instructions: '"%{application_name}" で使用できる新しいユーザー API キーを生成しました。次のキーをアプリケーションに貼り付けてください。'
     otp_description: '"%{application_name}" にこのサイトへのアクセスを許可しますか？'
     otp_confirmation:
@@ -1626,7 +1622,6 @@ ja:
     manifest_icon: "Android でロゴ/スプラッシュ画像として使用される画像。自動的に 512 × 512 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
     manifest_screenshots: "インストールプロンプトページでインスタンスの特徴と機能を紹介するスクリーンショット。すべての画像はローカルアップロードであり、同じサイズである必要があります。"
     favicon: "サイトのファビコン。<a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> をご覧ください。CDN で正しく動作させるには、png である必要があります。32 x 32 にサイズ変更されます。空のままにすると、large_icon が使用されます。"
-    apple_touch_icon: "Apple タッチデバイスに使用されるアイコン。透明な背景は推奨されません。自動的に 180x180 にサイズ変更されます。空白のままにすると、large_icon が使用されます。"
     opengraph_image: "デフォルトの opengraph 画像。ページにほかの適切な画像がない場合に使用されます。空のままにすると、large_icon が使用されます"
     x_summary_large_image: "Twitter カードの 'summary large image' (幅 280 以上、高さ 150 以上である必要があり、.svg を使用できません)。空のままにすると、.svg でない限り opengraph_image を使って通常のカードメタデータが生成されます。"
     notification_email: "システムからの重要なメール送信に使用する from: メールアドレス。メールが届くように、ここに指定されたドメインは SPF、DKIM、逆引き PTR レコードが正しく設定されている必要があります。"
@@ -1853,7 +1848,6 @@ ja:
     invite_link_max_redemptions_limit_users: "通常のユーザーが生成した招待リンクに許可される最大引き換え数はこの値を超えることはできません。"
     alert_admins_if_errors_per_minute: "管理者アラートをトリガーするための 1 分あたりのエラー数。値 0 はこの機能を無効にします。注意: 再起動が必要です。"
     alert_admins_if_errors_per_hour: "管理者アラートをトリガーするための 1 時間あたりのエラー数。値 0 はこの機能を無効にします。注意: 再起動が必要です。"
-    categories_topics: "/categories ページに表示するトピック数。0 に設定すると、2 つの列 (カテゴリとトピック) を対称に維持するための値が自動的に求められます。"
     suggested_topics: "トピックの下に表示される推奨トピックの数"
     limit_suggested_to_category: "推奨トピックには現在参照しているカテゴリのトピックのみを表示する。"
     suggested_topics_max_days_old: "投稿されて n 日経過したものを推奨トピックにしない。"
@@ -1921,35 +1915,22 @@ ja:
     tl3_requires_likes_given: "信頼レベル 3 への昇格資格を満たす上で、ユーザーが過去 (tl3 time period) 日間で与える必要のある「いいね！」の最小数。"
     tl3_requires_likes_received: "信頼レベル 3 への昇格資格を満たす上で、ユーザーが過去 (tl3 time period) 日間で得る必要のある「いいね！」の最小数。"
     tl3_links_no_follow: "信頼レベル 3 のユーザーが投稿したリンクから rel=nofolow を削除しない。"
-    tl4_delete_posts_and_topics: "TL4 ユーザーが他のユーザーによって作成された投稿とトピックを削除できるようにします。TL4 ユーザーは、削除されたトピックと投稿も表示できるようになります。"
     delete_all_posts_and_topics_allowed_groups: "他のユーザーが作成した投稿とトピックを作成できるグループ。これらのグループは、削除されたトピックと投稿の表示も可能です。"
     edit_all_topic_groups: "このグループのユーザーが他のユーザーのトピックタイトル、タグ、およびカテゴリを編集することを許可する"
     edit_all_post_groups: "このグループのユーザーが他のユーザーの投稿を編集することを許可する"
-    min_trust_to_create_topic: "新規トピックを作成するために必要な最低信頼レベル。"
     create_topic_allowed_groups: "新しいトピックを作成できるグループ。管理者とモデレーターはトピックをいつでも作成できます。"
     allow_flagging_staff: "有効にすると、ユーザーはスタッフアカウントの投稿を通報できるようになります。"
-    min_trust_to_edit_wiki_post: "ウィキとしてマークされた投稿を編集するために必要な最低信頼レベル。"
     edit_wiki_post_allowed_groups: "Wiki としてマークされた投稿を編集できるグループ。管理者とモデレーターは Wiki としてマークされた投稿をいつでも編集できます。"
-    min_trust_to_edit_post: "投稿を編集するために必要な最低信頼レベル。"
     edit_post_allowed_groups: "投稿を編集できるグループ。管理者とモデレーターは投稿をいつでも編集できます。"
-    min_trust_to_allow_self_wiki: "ユーザー自身の投稿をウィキにするために必要な最低信頼レベル。"
     self_wiki_allowed_groups: "これらのグループのユーザーが自分の投稿を Wiki に設定できるようにします。管理者とモデレーターは自分の投稿をいつでも Wiki に設定できます。"
     min_trust_to_send_messages: "非推奨。代わりに '個人メッセージが有効なグループ' 設定を使用してください。新しい個人メッセージを作成するのに必要な最低限の信頼レベルです。"
-    min_trust_to_send_email_messages: "メールで個人メッセージを送信するために必要な最低信頼レベル。"
     send_email_messages_allowed_groups: "メールで個人メッセージを送信できるグループ。管理者とモデレーターはいつでもメールで個人メッセージを送信できます。"
-    min_trust_to_flag_posts: "投稿を通報するために必要な最低信頼レベル"
     flag_post_allowed_groups: "投稿を通報できるグループ。管理者とモデレーターは投稿をいつでも通報できます。"
-    min_trust_to_post_links: "投稿にリンクを含めるために必要な最低信頼レベル"
     post_links_allowed_groups: "投稿にリンクを含められるグループ。管理者とモデレーターはいつでもリンクを投稿できます。"
-    min_trust_to_post_embedded_media: "投稿にメディア項目を埋め込むために必要な最低信頼レベル"
     embedded_media_post_allowed_groups: "これらのグループのユーザーは投稿にメディアアイテムを埋め込むことができます。管理者とモデレーターはメディアアイテムをいつでも埋め込むことができます。"
-    min_trust_level_to_allow_profile_background: "プロファイルの背景をアップロードするために必要な最低信頼レベル"
     profile_background_allowed_groups: "プロファイルの背景をアップロードできるグループ。管理者とモデレーターはプロファイル背景をいつでもアップロードできます。"
-    min_trust_level_to_allow_user_card_background: "ユーザーカードの背景をアップロードするために必要な最低信頼レベル"
     user_card_background_allowed_groups: "ユーザーカードの背景をアップロードできるグループ。管理者とモデレーターはユーザーカード背景をいつでもアップロードできます。"
-    min_trust_level_to_allow_invite: "ユーザーを招待するために必要な最低信頼レベル"
     invite_allowed_groups: "ユーザーを招待できるグループ。管理者とモデレーターはタグをいつでもユーザーを招待できます。"
-    min_trust_level_to_allow_ignore: "ユーザーを無視するために必要な最低信頼レベル"
     ignore_allowed_groups: "他のユーザーを無視できるグループ。管理者とモデレーターはタグをいつでも他のユーザーを無視できます。"
     allowed_link_domains: "リンクを投稿するための適切な信頼レベルに達していなくてもリンクできるドメイン"
     newuser_max_links: "新規ユーザーが投稿に追加できるリンクの数"
@@ -1962,7 +1943,6 @@ ja:
     enable_mentions: "ユーザーが投稿内で '@' 記号を使用して互いをタグ付けするか参照できるようにします。"
     here_mention: "特権ユーザーが最大 'max_here_mentioned' 人のトピック参加者に通知できるようにする、@メンションに使用される名前。既存のユーザー名は使用できません。"
     max_here_mentioned: "@here でメンションされるユーザーの最大数です。"
-    min_trust_level_for_here_mention: "@here をメンションできる最低信頼レベルです。"
     here_mention_allowed_groups: "@here をメンションできるグループ。管理者とモデレーターは @here をいつでもメンションできます。"
     create_thumbnails: "大きすぎて投稿に収まらないが画像のサムネイルを作成し、ライトボックスにします。"
     email_time_window_mins: "ユーザーが投稿を最終編集できるよう、(n) 分待機してから通知メールを送信する。"
@@ -2086,18 +2066,10 @@ ja:
     pop3_polling_delete_from_server: "サーバーからメールを削除する。注意: これを無効にした場合、メールの受信トレイを手動でクリーンアップする必要があります"
     log_mail_processing_failures: "すべてのメール処理の失敗を <a href='%{base_path}/logs' target='_blank'>/logs</a> に記録する"
     email_in: "ユーザーがメール経由で新規トピックを作成できるようにします。この設定を有効にすると、グループとカテゴリの受信メールアドレスを構成できるようになります。"
-    email_in_min_trust: "メールでのトピック作成を許可する最低信頼レベル"
     email_in_allowed_groups: "メールで新規トピックを投稿できるグループ。管理者とモデレーターはいつでもメールで新規トピックを投稿できます。"
     email_in_authserv_id: "受信メールに認証チェックを実行するサービスの識別子。この構成方法については、<a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> をご覧ください。"
     email_in_spam_header: "迷惑投稿を識別するために使用するを特定のメールヘッダーを選択します。このオプションは X-Spam-Flag、X-Spam-Status、または X-SES-Spam-Verdict のいずれかで、このヘッダー値が YES に設定されたメールは迷惑投稿として分類されます。"
-    enable_imap: "グループメッセージを同期するために IMAP を有効にする。"
-    enable_imap_write: "双方向の IMAP 同期を有効にする。無効にすると、IMAP アカウントのすべての書き込み操作が無効になります。"
-    enable_imap_idle: "IMAP IDLE メカニズムを使用して新規メールを待機する。"
     enable_smtp: "グループメッセージの通知を送信するための SMTP を有効にする。"
-    imap_polling_period_mins: "IMAP アカウントでメールを確認する間隔 (分)。"
-    imap_polling_old_emails: "IMAP ボックスがポーリングされるたびに更新される古いメール (処理済み) の最大数 (すべての場合は 0)。"
-    imap_polling_new_emails: "IMAP ボックスがポーリングされるたびに更新される新しいメール (未処理) の最大数。"
-    imap_batch_import_email: "インポートモードをトリガーする新しいメールの最低数 (投稿アラートを無効にします)。"
     email_prefix: "メールの件名に使用される [label]。空白の場合、'title' がデフォルトで使用されます。"
     email_site_title: "サイトからのメールの送信者として使用されるサイトのタイトル。 空白の場合、'title' がデフォルトで使用されます。'title' にメールの送信者として使用できない文字列が含まれている場合、この設定を使用します。"
     find_related_post_with_key: "'reply key' のみを使って返信先の投稿を検索する。警告: これを無効にすると、メールアドレスに基づいてユーザー代理操作が可能になります。"
@@ -2109,7 +2081,6 @@ ja:
     username_change_period: "アカウントがユーザー名を変更できる、登録後の最大日数 (0 に設定すると、ユーザー名の変更を禁止にします)。"
     email_editable: "登録後、ユーザーにメールアドレスの変更を許可します。"
     logout_redirect: "ログアウト後のブラウザのリダイレクト先 (例: https://example.com/logout)"
-    allow_uploaded_avatars: "ユーザーにカスタムプロファイル画像のアップロードを許可します。"
     uploaded_avatars_allowed_groups: "カスタムのプロファイル写真をアップロードできるグループを指定します。"
     default_avatars: "新規ユーザーが変更するまで使用されるデフォルトのアバターの URL です。"
     automatically_download_gravatars: "アカウントの作成時またはメールアドレスの変更時にユーザーの Gravatar をダウンロードします。"
@@ -2142,8 +2113,6 @@ ja:
     delete_associated_accounts_on_password_reset: "ユーザーがパスワードを変更すると、ユーザーに関連付けられたアカウントを削除します。"
     allow_featured_topic_on_user_profiles: "ユーザーがトピックへのリンクをユーザーカードとプロファイルに掲載することを許可する。"
     show_inactive_accounts: "ログインユーザーが非アクティブアカウントのプロファイルを閲覧することを許可する。"
-    hide_silencing_reasons: "ユーザープロファイルに投稿禁止理由を公開しない。"
-    hide_suspension_reasons: "ユーザープロファイルに凍結理由を公開しない。"
     log_personal_messages_views: "管理者による他のユーザー/グループの個人メッセージビューをログに記録する。"
     ignored_users_count_message_threshold: "特定のユーザーがこの数のユーザーに無視された場合、モデレーターに通知する。"
     ignored_users_message_gap_days: "多数のユーザーによって無視されたユーザーについてモデレーターに再通知するまでの時間。"
@@ -2156,7 +2125,6 @@ ja:
     dont_feed_the_trolls_threshold: "警告を受けるまでの他のユーザーからの通報数。"
     enable_mobile_theme: "モバイルデバイスにモバイル対応のテーマを使用します (デスクトップサイトに切り替え可能)。完全にレスポンシブなカスタムスタイルシートを使用する場合はこの設定を無効にしてください。"
     dominating_topic_minimum_percent: "ユーザーがトピックを過度に占領していることを通知する、トピック内のユーザーの投稿率。"
-    pm_warn_user_last_seen_months_ago: "新しい PM を作成するときに、対象の受信者 n か月以上もアクセスしていないことをユーザーに警告します。"
     suppress_uncategorized_badge: "トピックリストに未分類のトピックのバッジを表示しない"
     header_dropdown_category_count: "ヘッダードロップダウンメニューに表示できるカテゴリ数。"
     permalink_normalizations: "パーマリンクを照合する前に、次の正規表現を適用する。例: /(topic.*)\\?.*/\\1 はトピックルートからクエリ文字列を削除します。形式は正規表現+文字列です。キャプチャにアクセスするには \\1 などを使用します"
@@ -2218,9 +2186,7 @@ ja:
     enable_inline_emoji_translation: "インライン絵文字の翻訳を有効にする (前にスペースや句読点を使用しない)"
     emoji_deny_list: "これらの絵文字はメニューやショートコードで使用できません。"
     approve_post_count: "承認が必要な新規またはベーシックユーザーの投稿数"
-    approve_unless_trust_level: "この信頼レベル以下のユーザーが作成した投稿には承認が必要"
     approve_unless_allowed_groups: "これらのグループに属していないユーザーが作成した投稿には承認が必要です。管理者とモデレーターが作成する投稿は必ず承認されます。"
-    approve_new_topics_unless_trust_level: "この信頼レベル以下のユーザーが作成した新規トピックには承認が必要"
     approve_new_topics_unless_allowed_groups: "これらのグループに属していないユーザーが作成した新規トピックには承認が必要です。管理者とモデレーターが作成するトピックは必ず承認されます。"
     approve_unless_staged: "ステージングユーザーが作成した新規トピックと投稿には承認が必要"
     notify_about_queued_posts_after: "この時間以上レビュー待ち状態の投稿がある場合、すべてのモデレーターに通知を送信する。0 に設定するとこれらの通知が無効になります。"
@@ -2236,7 +2202,6 @@ ja:
     new_user_notice_tl: "新しいユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_user_notice_tl: "リピートユーザーの投稿通知を閲覧するために必要な最低信頼レベル。"
     returning_users_days: "ユーザーがリピートとみなされる経過日数。"
-    review_media_unless_trust_level: "スタッフは、信頼レベルの低いユーザーの投稿に埋め込みメディアが含まれているかどうかをレビューします。"
     skip_review_media_groups: "これらのグループのいずれにも属さないユーザーの投稿は、埋め込みメディアが含まれる場合、スタッフにレビュー目的で送信されます。管理者とモデレーターが作成する投稿は必ず許可されます。"
     blur_tl0_flagged_posts_media: "通報された投稿の画像をぼかして、潜在的に NSFW のコンテンツを非表示にする。"
     enable_page_publishing: "スタッフメンバーが独自のスタイルを使ったトピックを新しい URL に公開することを許可する。"
@@ -2288,9 +2253,6 @@ ja:
     revoke_api_keys_unused_days: "API キーが最後に使用されてから自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     revoke_api_keys_maxlife_days: "API キーが自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     allow_user_api_key_scopes: "ユーザー API キーに許可されるスコープのリスト"
-    min_trust_level_for_user_api_key: |
-      ユーザー API キーの生成に必要な信頼レベル。<br>
-      <b>警告</b>: 信頼レベルを変更すると、それより低い信頼レベルのユーザーは DiscourseHub からログインできなくなります。
     user_api_key_allowed_groups: |
       ユーザー API キーの生成に必要なグループメンバーシップ。<br>
       <b>警告</b>: 信頼レベルを変更すると、それより低い信頼レベルのユーザーは Discourse Hub 経由でログインできなくなります。<br>
@@ -2300,7 +2262,6 @@ ja:
     revoke_user_api_keys_unused_days: "ユーザー API キーが最後に使用されてから自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     revoke_user_api_keys_maxlife_days: "ユーザー API キーが自動的に取り消されるまでの日数 (取り消さない場合は 0)"
     tagging_enabled: "トピックでタグを有効にしますか？詳細については、「<a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>Meta のタグに関する管理者ガイド</a>」をご覧ください。"
-    min_trust_to_create_tag: "タグを作成するために必要な最低信頼レベル。"
     create_tag_allowed_groups: "タグを作成できるグループ。管理者とモデレーターはタグをいつでも作成できます。"
     edit_tags_allowed_groups: "タグ、タグの説明、およびタグの同義語を編集できるグループ。"
     max_tags_per_topic: "トピックに適用できる最大タグ数。"
@@ -2313,7 +2274,6 @@ ja:
     tags_listed_by_group: "<a href='%{base_path}/tags' target='_blank'>タグページ</a>にタググループごとにタグをリストする。"
     tag_style: "サイトのタグバッジの外観を定義します。この設定により、サイトのすべてのエリアでのタグの外観をカスタマイズできるため、レイアウトの一貫性とユーザーアクセシビリティを強化できます。"
     pm_tags_allowed_for_groups: "含まれるグループのメンバーが任意の個人メッセージにタグ付けすることを許可する"
-    min_trust_level_to_tag_topics: "トピックのタグ付けに必要な最低信頼レベル"
     tag_topic_allowed_groups: "トピックにタグ付けできるグループ。管理者とモデレーターはトピックにいつでもタグ付けできます。"
     suppress_overlapping_tags_in_list: "タグがトピックタイトルの語に完全に一致する場合、タグを表示しない"
     remove_muted_tags_from_latest: "ミュートされたタグのみがタグ付けされたトピックを最新のトピックリストに表示しない。"
@@ -2324,7 +2284,6 @@ ja:
     governing_law: "利用規約やプライバシーポリシーなど、サイトの法的な側面を管理する管轄を指定します。これは通常、サイトを運営する会社が登録している国または州、または事業を行っている国または州です。"
     city_for_disputes: "このフォーラムの使用に関連する紛争を解決するための管轄として使用される都市を指定します。この情報は通常、フォーラムの利用規約などの法的文書に含まれます。"
     shared_drafts_category: "トピック下書き用のカテゴリを指定して、共有下書き機能を有効にする。このカテゴリのトピックは、スタッフユーザーのトピックリストから除外されます。"
-    shared_drafts_min_trust_level: "ユーザーが共有下書きを閲覧して編集することを許可する。"
     shared_drafts_allowed_groups: "これらのグループのユーザーが共有下書きを閲覧して編集することを許可します。"
     push_notifications_prompt: "プッシュ通知のユーザー同意バナーを表示します。この設定によって、プッシュ通知を送信する許可をユーザーに求めるプロンプトがトリガーされます。プッシュ通知がまだ有効になっていない場合、ユーザーのデバイスがサポートしている場合、およびユーザーが投稿を行ったかプログレッシブウェブアプリ (PWA) を使用している場合にのみ表示されます。このプロンプトをユーザーがすでに閉じた場合、または許可を付与/拒否した場合には、再度表示されることはありません。"
     push_notifications_icon: "通知コーナーに表示されるバッジアイコン。透明度が適用された 96x96 のモノクロ PNG が推奨されます。"
@@ -2361,7 +2320,6 @@ ja:
     default_navigation_menu_categories: "選択されたカテゴリは、デフォルトでナビゲーションメニューのカテゴリセクションに表示されます。"
     default_navigation_menu_tags: "選択されたタグは、デフォルトでナビゲーションメニューのタグセクションに表示されます。"
     experimental_new_new_view_groups: '未読のトピックと新規トピックを合わせた新しいトピックリストを有効にし、サイドバーの「すべて」リンクをそのリストにリンクする。'
-    experimental_form_templates: "フォームのテンプレート機能を有効にします。テンプレートは <a href='%{base_path}/admin/customize/form-templates'>Customize / Templates</a> で管理できます。"
     show_preview_for_form_templates: "フォームテンプレート機能のプレビューを有効にする"
     lazy_load_categories_groups: "これらのグループのユーザーに対してのみ、カテゴリ情報を遅延読み込みする。これにより、カテゴリ数の多いサイトのパフォーマンスが改善されます。"
     experimental_auto_grid_images: "作成ツールに 3 つ以上の画像がアップロードされると、画像を自動的に [grid] タグで囲みます。"
@@ -2378,7 +2336,6 @@ ja:
     default_composition_mode: "コミュニティーの作成ツールのデフォルトモードを設定する。リッチテキストモードでは、よりモダンでほとんどのユーザーが使い慣れた書き心地を得られます。Markdown モードはより技術的な知識を持つユーザーに適しています。メンバーは作成ツールのツールバーにあるトグルでモードを切り替えられます。"
     reviewable_ui_refresh: "レビューキューで実験的な新しい UI を使用できるグループ。"
     content_localization_enabled: "ユーザーのブラウザまたはユーザの言語設定に基づいて、ローカライズされたコンテンツを表示します。コンテンツには、カテゴリ、タグ、投稿、トピックが含まれる場合があります。サポートされているロケールは、'content localization supported locales' に設定されているロケールです。"
-    content_localization_supported_locales: "ユーザーコンテンツを翻訳できるサポートされたロケールのリスト。'content localization enabled' が必要です。"
     content_localization_allowed_groups: "ローカライズされたコンテンツの更新を許可されたグループ。'content localization enabled' が必要です。"
     errors:
       invalid_css_color: "無効な色です。色名または 16 進数値を入力してください。"
@@ -3075,6 +3032,7 @@ ja:
         ここで参加すると、あなたのことを知れるようになり、新規ユーザーの制限が一時的に解除されます。時間が経つにつれ、共にコミュニティーを管理するための特別な機能が含まれた[信頼レベル](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/)を獲得できるようになります。
     welcome_user:
       title: "ようこそ"
+      preview: "%{site_name} へようこそ！"
       subject_template: "%{site_name} へようこそ！"
       text_body_template: |
         %{site_name} に参加していただきありがとうございます！
@@ -3102,6 +3060,7 @@ ja:
         偉大な力には大きな責任が伴います。介入に新しい方は、[介入ガイド](https://meta.discourse.org/t/discourse-moderation-guide/63116)をご覧ください。
     welcome_invite:
       title: "ようこそ - 招待"
+      preview: "%{site_name} へようこそ！"
       subject_template: "%{site_name} へようこそ！"
       text_body_template: |
         %{site_name} への招待を承諾していただき、ありがとうございます -- ようこそ！
@@ -3519,6 +3478,7 @@ ja:
         これは、`newuser_spam_host_threshold` および `allowed_spam_host_domains` サイト設定から変更できます。例外である場合は、ホワイトリストに %{domains} を追加することを検討してください。
     unsilenced:
       title: "投稿禁止が解除されました"
+      preview: "アカウントは保留状態でなくなりました."
       subject_template: "アカウントは保留状態でなくなりました"
       text_body_template: |
         こんにちは。
@@ -3565,8 +3525,6 @@ ja:
     メールの購読を解除するには、[こちらをクリック](%{unsubscribe_url})してください。
   subject_re: "Re: "
   subject_pm: "[PM] "
-  email_from: "%{site_name} 経由の %{user_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "以前の返信"
     reached_limit:
@@ -3898,6 +3856,7 @@ ja:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "リンク経由のログイン"
+      preview: "リンク経由のログイン."
       subject_template: "[%{email_prefix}] リンク経由のログイン"
       text_body_template: |
         これは、[%{site_name}](%{base_url}) にログインするためのリンクです。
@@ -4815,6 +4774,8 @@ ja:
     deprecation_error_label: JavaScript の非推奨設定でエラーを発生させる
     enter: "セーフモードを開始"
     must_select: "セーフモードを開始するには、少なくとも 1 つのオプションを選択する必要があります。"
+  dev_mode:
+    enter: "Enter"
   wizard:
     title: "Discourse のセットアップ"
     step:
@@ -4870,6 +4831,10 @@ ja:
       review_by: "レビュー担当者"
       pr_summary: "%{commits} 個のコミットにより %{changed_files} 個のファイルが変更されました。%{additions} 個が追加され、%{deletions} 個が削除されました。"
       no_description: "GitHub でアカウントを作成して %{repo} の開発に貢献してください。"
+      status_date:
+        open: "オープン"
+        approved: "承認"
+        closed: "閉鎖"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} が「%{topic}」であなたをメンションしました - %{site_title}'
@@ -4902,8 +4867,6 @@ ja:
     api_post_delete: "API で削除されました"
     reminder_deleted: "新しいリマインダーに置き換えられました"
     user_associated_posts_deleted: "ユーザーは破棄されました"
-    imap_email_deleted: "メールは IMAP サーバー上で削除されました"
-    imap_email_marked_as_spam: "メールは IMAP サーバー上で迷惑メールに移動されました"
     auto_deleted_hidden_posts: "非表示の投稿は自動的に破棄されました"
     seed_data_topic_updated: "シードデータのトピックが更新されました"
     seed_data_topic_deleted: "シードデータのトピックが削除されました"
@@ -4974,19 +4937,14 @@ ja:
         description: "通報に同意し、この投稿を非表示にします。さらに、ユーザーに編集を求めるメッセージを自動送信します。"
         complete: "投稿は非表示になり、ユーザーに通知されました。"
       agree_and_edit:
-        title: "同意して投稿を編集"
         description: "通報に同意し、コンポーザーウィンドウを開いて投稿を編集します。"
         complete: "通報が承認され、投稿を編集できるようになりました。"
       delete:
         title: "削除"
         complete: "投稿は削除されました。"
       delete_and_ignore:
-        title: "通報を無視して投稿を削除する"
-        description: "通報をキューから削除して通報を無視し、投稿を削除します。最初の投稿である場合は、トピックも削除します。 "
         complete: "投稿は削除されました。"
       delete_and_ignore_replies:
-        title: "通報を無視し、投稿と返信を削除する"
-        description: "通報をキューから削除して通報を無視し、投稿とそのすべての返信を削除します。最初の投稿である場合は、トピックも削除します。"
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       delete_and_agree:
@@ -4999,11 +4957,12 @@ ja:
         confirm: "投稿への返信も削除してよろしいですか？"
         complete: "投稿と返信を削除しました。"
       disagree_and_restore:
-        title: "いいえ。投稿を復元する"
-        description: "すべてのユーザーが閲覧できるように投稿を復元します。"
+        title: "投稿を復元する"
         complete: "投稿を復元しました。"
-      disagree:
+      disagree_bundle:
         title: "いいえ"
+      disagree:
+        title: "投稿を維持する"
         complete: "通報は無視されました。"
       discard_post:
         title: "投稿を破棄"
@@ -5018,31 +4977,36 @@ ja:
         description: "何もアクションを起こさずにキューから通報を削除して、通報を無視します。非表示の投稿は非表示のままになり、自動ツールによって処理されます。"
         complete: "通報は無視されました。"
       approve:
-        title: "承認"
+        title: "はい"
         complete: "投稿は承認されました。"
       approve_post:
-        title: "投稿の承認"
+        title: "はい"
         complete: "投稿は承認されました。"
       approve_post_closed:
-        title: "投稿の承認"
+        title: "はい"
         confirm: "このトピックはクローズされています。それでも投稿を作成しますか？"
         complete: "投稿は承認されました。"
+      reject_post_bundle:
+        title: "いいえ"
       reject_post:
         title: "投稿の拒否"
         complete: "投稿は拒否されました。"
       approve_user:
-        title: "ユーザーの承認"
+        title: "はい"
         complete: "ユーザーは承認されました。"
       reject_user:
-        title: "ユーザーを削除…"
+        title: "いいえ"
         delete:
           title: "ユーザーの削除"
-          description: "ユーザーはフォーラムから削除されます。"
           complete: "ユーザーは削除されました。"
         block:
           title: "ユーザーの削除とブロック"
           description: "ユーザーは削除され、その IP とメールアドレスはブロックされます。"
           complete: "ユーザーを削除してブロックしました。"
+      confirm_spam:
+        title: "はい"
+      not_spam:
+        title: "いいえ"
       reject:
         title: "却下"
         bundle_title: "拒否…"
@@ -5061,10 +5025,10 @@ ja:
       scrub:
         title: レコードを削除
       approve_and_restore:
-        title: "投稿の承認と復元"
+        title: "はい"
         complete: "投稿を承認して復元しました。"
       approve_and_unhide:
-        title: "投稿を承認して非表示を解除"
+        title: "はい"
         complete: "投稿を承認して非表示状態を解除しました"
       no_action_post:
         title: "未対応"

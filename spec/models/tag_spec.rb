@@ -95,7 +95,9 @@ RSpec.describe Tag do
       let!(:tags) { make_some_tags(tag_a_topic: true) }
 
       it "returns all tags" do
-        expect(Tag.top_tags.sort).to eq(tags.map(&:name).sort)
+        expect(Tag.top_tags).to contain_exactly(
+          *tags.map { |t| { id: t.id, name: t.name, slug: t.slug } },
+        )
       end
     end
 
@@ -117,20 +119,30 @@ RSpec.describe Tag do
       end
 
       it "works correctly" do
-        expect(Tag.top_tags(category: category1).sort).to eq([tags[0].name].sort)
-        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin))).sort).to eq(
-          [tags[0].name, tags[1].name, tags[2].name].sort,
+        expect(Tag.top_tags(category: category1)).to eq(
+          [{ id: tags[0].id, name: tags[0].name, slug: tags[0].slug }],
+        )
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to contain_exactly(
+          { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
+          { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
+          { id: tags[2].id, name: tags[2].name, slug: tags[2].slug },
         )
         expect(
-          Tag.top_tags(category: private_category, guardian: Guardian.new(Fabricate(:admin))).sort,
-        ).to eq([tags[2].name].sort)
+          Tag.top_tags(category: private_category, guardian: Guardian.new(Fabricate(:admin))),
+        ).to eq([{ id: tags[2].id, name: tags[2].name, slug: tags[2].slug }])
 
-        expect(Tag.top_tags.sort).to eq([tags[0].name, tags[1].name].sort)
+        expect(Tag.top_tags).to contain_exactly(
+          { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
+          { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
+        )
         expect(Tag.top_tags(category: private_category)).to be_empty
 
         sub_category = Fabricate(:category, parent_category_id: category1.id)
         Fabricate(:topic, category: sub_category, tags: [tags[1]])
-        expect(Tag.top_tags(category: category1).sort).to eq([tags[0].name, tags[1].name].sort)
+        expect(Tag.top_tags(category: category1)).to contain_exactly(
+          { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
+          { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
+        )
       end
     end
 
@@ -147,15 +159,24 @@ RSpec.describe Tag do
       end
 
       it "for category with restricted tags, lists those tags" do
-        expect(Tag.top_tags(category: category1)).to eq([tags[0].name])
+        expect(Tag.top_tags(category: category1)).to eq(
+          [{ id: tags[0].id, name: tags[0].name, slug: tags[0].slug }],
+        )
       end
 
       it "for category without tags, lists allowed tags" do
-        expect(Tag.top_tags(category: category2).sort).to eq([tags[1].name, tags[2].name].sort)
+        expect(Tag.top_tags(category: category2)).to contain_exactly(
+          { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
+          { id: tags[2].id, name: tags[2].name, slug: tags[2].slug },
+        )
       end
 
       it "for no category arg, lists all tags" do
-        expect(Tag.top_tags.sort).to eq([tags[0].name, tags[1].name, tags[2].name].sort)
+        expect(Tag.top_tags).to contain_exactly(
+          { id: tags[2].id, name: tags[2].name, slug: tags[2].slug },
+          { id: tags[0].id, name: tags[0].name, slug: tags[0].slug },
+          { id: tags[1].id, name: tags[1].name, slug: tags[1].slug },
+        )
       end
     end
 
@@ -167,16 +188,20 @@ RSpec.describe Tag do
       let!(:topic2) { Fabricate(:topic, tags: [tag, hidden_tag]) }
 
       it "returns all tags to staff" do
-        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to include(hidden_tag.name)
+        expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:admin)))).to include(
+          { id: hidden_tag.id, name: hidden_tag.name, slug: hidden_tag.slug },
+        )
       end
 
       it "doesn't return hidden tags to anon" do
-        expect(Tag.top_tags).to_not include(hidden_tag.name)
+        expect(Tag.top_tags).to_not include(
+          { id: hidden_tag.id, name: hidden_tag.name, slug: hidden_tag.slug },
+        )
       end
 
       it "doesn't return hidden tags to non-staff" do
         expect(Tag.top_tags(guardian: Guardian.new(Fabricate(:user)))).to_not include(
-          hidden_tag.name,
+          { id: hidden_tag.id, name: hidden_tag.name, slug: hidden_tag.slug },
         )
       end
     end
@@ -211,7 +236,7 @@ RSpec.describe Tag do
       SiteSetting.pm_tags_allowed_for_groups = "1|2|3"
       tags = Tag.pm_tags(guardian: Guardian.new(admin), allowed_user: regular_user)
       expect(tags.length).to eq(2)
-      expect(tags.map { |t| t[:id] }).to contain_exactly("tag-0", "tag-1")
+      expect(tags.map { |t| t[:name] }).to contain_exactly("tag-0", "tag-1")
     end
   end
 
@@ -266,7 +291,7 @@ RSpec.describe Tag do
       [
         Fabricate(
           :tag,
-          name: "used_publically",
+          name: "used_publicly",
           staff_topic_count: 2,
           public_topic_count: 2,
           pm_topic_count: 0,
@@ -394,6 +419,84 @@ RSpec.describe Tag do
       SiteSetting.include_secure_categories_in_tag_counts = true
 
       expect(Tag.topic_count_column(Guardian.new(user))).to eq("staff_topic_count")
+    end
+  end
+
+  describe "slug" do
+    it "generates slug from name on create" do
+      tag = Fabricate(:tag, name: "Hello World")
+      expect(tag.slug).to eq("hello-world")
+    end
+
+    it "uses empty slug for numeric-only names" do
+      tag = Fabricate(:tag, name: "123")
+      expect(tag.slug).to eq("")
+    end
+
+    it "removes apostrophes from names" do
+      tag = Fabricate(:tag, name: "Ruby's Best")
+      expect(tag.slug).to eq("rubys-best")
+    end
+
+    it "converts special characters to dashes" do
+      tag = Fabricate(:tag, name: "hello@world!")
+      expect(tag.slug).to eq("hello-world")
+    end
+
+    it "handles unicode by converting to dashes" do
+      tag = Fabricate(:tag, name: "hello字world")
+      expect(tag.slug).to eq("hello-world")
+    end
+
+    it "uses empty slug for unicode-only names" do
+      tag = Fabricate(:tag, name: "字")
+      expect(tag.slug).to eq("")
+    end
+
+    it "resolves conflicts by setting slug to empty" do
+      tag1 = Fabricate(:tag, name: "test")
+      tag2 = Fabricate(:tag, name: "Test!")
+
+      expect(tag1.slug).to eq("test")
+      expect(tag2.slug).to eq("")
+    end
+
+    it "preserves existing slug when name unchanged" do
+      tag = Fabricate(:tag, name: "original")
+      original_slug = tag.slug
+      tag.update!(description: "new description")
+      expect(tag.slug).to eq(original_slug)
+    end
+
+    it "regenerates slug when name changes" do
+      tag = Fabricate(:tag, name: "original")
+      tag.update!(name: "new-name")
+      expect(tag.slug).to eq("new-name")
+    end
+
+    it "squeezes consecutive dashes and spaces" do
+      tag = Fabricate(:tag, name: "hello   world--test")
+      expect(tag.slug).to eq("hello-world-test")
+    end
+
+    it "trims leading and trailing dashes" do
+      tag = Fabricate(:tag, name: "--hello--")
+      expect(tag.slug).to eq("hello")
+    end
+  end
+
+  describe "#slug_for_url" do
+    it "returns slug when present" do
+      tag = Fabricate(:tag, name: "test")
+      expect(tag.slug_for_url).to eq("test")
+    end
+
+    it "returns id-tag when slug is empty" do
+      Fabricate(:tag, name: "test")
+      tag = Fabricate(:tag, name: "Test!")
+
+      expect(tag.slug).to eq("")
+      expect(tag.slug_for_url).to eq("#{tag.id}-tag")
     end
   end
 

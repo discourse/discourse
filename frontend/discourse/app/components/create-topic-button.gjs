@@ -8,6 +8,7 @@ import DComboButton from "discourse/components/d-combo-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
 import concatClass from "discourse/helpers/concat-class";
 import DiscourseURL from "discourse/lib/url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
   NEW_TOPIC_KEY,
@@ -20,6 +21,7 @@ const DRAFTS_LIMIT = 4;
 export default class CreateTopicButton extends Component {
   @service currentUser;
   @service composer;
+  @service router;
 
   @tracked drafts = [];
   @tracked loading = false;
@@ -106,6 +108,25 @@ export default class CreateTopicButton extends Component {
     }
   }
 
+  get btnClasses() {
+    const additionalClasses = applyValueTransformer(
+      "create-topic-button-class",
+      [],
+      {
+        disabled: this.args.disabled,
+        canCreateTopic: this.args.canCreateTopic,
+        category: this.router.currentRoute?.attributes?.category,
+        tag: this.router.currentRoute?.attributes?.tag,
+      }
+    );
+
+    return concatClass(
+      this.args.btnClass,
+      this.btnTypeClass,
+      ...additionalClasses
+    );
+  }
+
   <template>
     {{#if @canCreateTopic}}
       <DComboButton ...attributes as |Button Menu|>
@@ -114,7 +135,7 @@ export default class CreateTopicButton extends Component {
           @label={{this.label}}
           @icon="far-pen-to-square"
           id={{this.btnId}}
-          class={{concatClass @btnClass this.btnTypeClass}}
+          class={{this.btnClasses}}
         />
 
         {{#if @showDrafts}}

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
@@ -105,7 +106,7 @@ export default class IpLookup extends Component {
     try {
       await clipboardCopy(text.trim());
       this.toasts.success({
-        duration: 3000,
+        duration: "short",
         data: {
           message: i18n("ip_lookup.copied"),
         },

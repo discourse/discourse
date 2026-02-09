@@ -23,8 +23,6 @@ be:
           agree_and_silence:
             title: "Silence Карыстальнік"
             description: "Пагадзіцеся са сцягамі і маўчанне карыстальніка."
-          disagree:
-            title: "не згаджацца"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

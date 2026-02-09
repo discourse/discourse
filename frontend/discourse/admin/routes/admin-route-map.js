@@ -1,3 +1,4 @@
+/* eslint-disable ember/route-path-style */
 export default function () {
   this.route("admin", function () {
     this.route("dashboard", { path: "/" }, function () {
@@ -246,6 +247,7 @@ export default function () {
           });
           this.route("authenticators");
           this.route("discourseconnect");
+          this.route("discourse-id");
           // Lets plugins register routes via register_admin_config_login_route
           this.route("plugin-tab", {
             path: "/*wildcard",

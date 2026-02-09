@@ -18,8 +18,6 @@ sw:
           agree_and_silence:
             title: "Nyamazisha Mtumiaji"
             description: "Kubaliana na bendera na nyamazisha mtumiaji."
-          disagree:
-            title: "Kataa"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

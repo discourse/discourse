@@ -12,6 +12,11 @@ uk:
         max_prompt_tokens: "Контекстне вікно"
   dashboard:
     problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> потребує уваги. За останню годину він не зміг відповісти %{failed_calls} з %{total_calls} разів."
+        few: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> потребує уваги. За останні %{count} години він не зміг відповісти %{failed_calls} з %{total_calls} разів."
+        many: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> потребує уваги. За останні %{count} годин він не зміг відповісти %{failed_calls} з %{total_calls} разів."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> потребує уваги. За %{count} годин він не зміг відповісти %{failed_calls} з %{total_calls} разів."
       ai_credit_soft_limit: "%{model_name} залишилося лише %{percentage_remaining}% кредитів. Кредити буде обнулено %{reset_date}. <a href='%{url}'>Перегляд моделей ШІ</a>"
       ai_credit_hard_limit: "Ви вичерпали кредити ШІ на %{model_name}. Функції ШІ будуть недоступні до %{reset_date}. <a href='%{url}'>Переглянути моделі ШІ</a>"
   discourse_automation:
@@ -24,9 +29,9 @@ uk:
         spam: "Позначити як спам і приховати повідомлення"
         spam_silence: "Позначити як спам, приховати публікацію та вимкнути користувача"
     scriptables:
-      llm_tool_triage:
-        title: Сортування постів за допомогою інструмента штучного інтелекту
-        description: "Сортування постів за допомогою спеціальної логіки в інструменті штучного інтелекту"
+      ai_tool_action:
+        title: Дія інструменту ШІ
+        description: Запустити інструмент ШІ, коли спрацьовує автоматизація
       llm_persona_triage:
         title: Сортування постів за допомогою ШІ Persona
         description: "Відповідайте на дописи, використовуючи певну персону ШІ"
@@ -83,20 +88,18 @@ uk:
     ai_nsfw_flag_threshold_sexy: "Поріг для зображення, класифікованого як сексуальне, щоб вважатися NSFW."
     ai_nsfw_models: "Моделі для використання NSFW умов."
     ai_spam_detection_enabled: "Увімкнути модуль виявлення спаму зі штучним інтелектом"
+    ai_spam_detection_max_post_count: "Максимальна кількість публікацій, які може мати користувач, перш ніж його перестануть перевіряти на спам"
+    ai_spam_detection_max_trust_level: "Максимальний рівень довіри користувачів для сканування на спам"
     ai_openai_api_key: "Ключ API для OpenAI API. Використовується ТІЛЬКИ для створення та редагування зображень. Для GPT використовуйте вкладку конфігурації LLM."
-    ai_openai_image_generation_url: "URL-адреса API генерації зображень OpenAI"
-    ai_openai_image_edit_url: "URL-адреса для API редагування зображень OpenAI"
     ai_helper_enabled: "Увімкнути помічника ШІ."
     composer_ai_helper_allowed_groups: "Користувачі цих груп бачитимуть кнопку помічника ШІ в композиторі."
     ai_helper_allowed_in_pm: "Увімкнути Помічник ШІ в особистих повідомленнях."
-    ai_helper_model: "Модель для помічника ШІ."
     ai_helper_automatic_chat_thread_title_delay: "Затримка в хвилинах перед тим, як ШІ-помічник автоматично встановить заголовок теми чату."
     ai_helper_automatic_chat_thread_title: "Автоматично встановлювати заголовки тем чату на основі вмісту теми."
-    ai_helper_illustrate_post_model: "Модель, яка використовується для ілюстративної функції помічника композитора зі ШІ"
     ai_helper_enabled_features: "Оберіть функції для активації в ШІ-помічнику."
     post_ai_helper_allowed_groups: "Групи користувачів, яким дозволено доступ до функцій ШІ-помічника в публікаціях"
-    ai_helper_image_caption_model: "Виберіть модель для генерації підписів до зображень"
     ai_helper_post_illustrator_persona: "Персона, яка використовуватиметься для функції ілюстрації публікацій помічника ШІ. Примітка: для роботи цієї функції також потрібно створити інструмент генерації зображень (Адміністратор > Плагіни > Discourse AI > Інструменти)."
+    ai_helper_chat_thread_title_persona: "Персона, яка використовується для створення заголовків гілок чату."
     ai_embeddings_selected_model: "Використовуйте обрану модель для генерації вбудовувань."
     ai_embeddings_generate_for_pms: "Створюйте вбудовування для особистих повідомлень."
     ai_embeddings_semantic_related_topics_enabled: "Використовуйте семантичний пошук для пов’язаних тем."
@@ -108,18 +111,15 @@ uk:
     ai_embeddings_semantic_related_include_closed_topics: "Включити закриті теми в результати семантичного пошуку"
     ai_embeddings_semantic_related_age_penalty: "Застосовувати експоненціальне вікове обмеження до тем у результатах семантичного пошуку. 0.0 = без обмеження, 0.3 = легке упередження до нещодавно активного контенту, 1.0+ = сильне упередження до новизни."
     ai_embeddings_semantic_related_age_time_scale: "Часова шкала в днях для розрахунку вікового штрафу. Теми, неактивні стільки днів, отримують штраф ~50% зі штрафом = 1.0. Використовуйте 365 для річної шкали, 90 для квартальної шкали."
-    ai_embeddings_semantic_search_hyde_model: "Модель, що використовується для розширення ключових слів для отримання кращих результатів під час семантичного пошуку"
     ai_embeddings_per_post_enabled: Згенерувати вкладення для кожного повідомлення
     ai_summarization_enabled: "Увімкнути функцію підсумовування"
-    ai_summarization_model: "Модель для узагальнення"
     ai_summarization_persona: "Персона для використання у функції підсумовування"
-    ai_custom_summarization_allowed_groups: "Групи, яким дозволено створювати нові зведення."
     ai_pm_summarization_allowed_groups: "Групи дозволили створювати та переглядати підсумки в особистих повідомленнях."
     ai_summary_gists_enabled: "Автоматично генерувати короткі зведення останніх відповідей у темах"
-    ai_summary_gists_allowed_groups: "Групи, яким дозволено бачити суть у списку гарячих тем."
     ai_summary_backfill_maximum_topics_per_hour: "Кількість підсумків тем для заповнення на годину."
     ai_bot_enabled: "Увімкніть модуль AI Bot."
-    ai_bot_enable_chat_warning: "Відображати попередження, коли починається чат ПП. Можна змінити, відредагувавши рядок перекладу: discourse_ai.ai_bot.pm_warning"
+    ai_bot_enabled_llms: "LLM доступні для вибору для бесід з AI-ботами"
+    ai_bot_enable_chat_warning: "Відображати попередження, коли ініційовано чат особистих повідомлень. Можна змінити, відредагувавши рядок перекладу: discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "Коли GPT-бот отримає доступ до ПП, він відповідатиме членам цих груп."
     ai_bot_debugging_allowed_groups: "Дозвольте цим групам бачити кнопку налагодження в публікаціях, яка відображає необроблений запит і відповідь ШІ"
     ai_bot_public_sharing_allowed_groups: "Дозвольте цим групам ділитися особистими повідомленнями ШІ з громадськістю за унікальним загальнодоступним посиланням. Примітка: якщо ваш сайт вимагає входу, то для доступу до публікацій також потрібно буде ввійти."
@@ -128,9 +128,6 @@ uk:
     ai_bot_github_access_token: "Токен доступу до GitHub для використання з інструментами штучного інтелекту GitHub (необхідний для підтримки пошуку)"
     ai_discover_enabled: "Увімкнути функцію пошуку виявлення"
     ai_discover_persona: "Персона для використання у функції пошуку за допомогою Discovery"
-    ai_stability_api_key: "Ключ API для API Stability.ai"
-    ai_stability_engine: "Механізм створення зображень для API Stability.ai"
-    ai_stability_api_url: "URL для API Stability.ai"
     ai_google_custom_search_api_key: "Ключ API для Google Custom Search API див. за посиланням: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX для API для пошуку Google"
     ai_discord_search_enabled: "Вмикає функцію пошуку в Discord"
@@ -140,12 +137,14 @@ uk:
     ai_discord_search_persona: "Персона, яку слід використовувати для пошуку Discord."
     ai_discord_allowed_guilds: "Гільдії Discord (сервери), де боту дозволено шукати"
     ai_translation_enabled: "Увімкнути функцію перекладу за допомогою штучного інтелекту"
-    ai_translation_model: "Модель, яка використовуватиметься для перекладу. Ця модель має підтримувати переклад. Персони можуть перевизначити цей параметр."
     ai_translation_backfill_limit_to_public_content: "Якщо ввімкнено, перекладатиметься лише контент із загальнодоступних категорій. Якщо вимкнено, на переклад також надсилатиметься контент із особистих повідомлень групи та приватних категорій."
+    ai_translation_include_bot_content: "Якщо увімкнено, контент, написаний ботами (ідентифікатор користувача менше 0), також буде надіслано на переклад."
     ai_translation_max_post_length: "Максимальна кількість символів для перекладу допису. Дописи, довші за цю кількість, не будуть перекладені."
     ai_translation_backfill_max_age_days: "Максимальний вік допису та теми, які потрібно перекласти. Дописи та теми, старіші за цей вік, не будуть перекладені. 0 вимикає зворотне заповнення, але не вимикає переклад нових дописів."
     ai_translation_backfill_hourly_rate: "Кількість дописів і тем для перекладу на годину під час операцій заповнення. Встановіть значення 0, щоб вимкнути автоматичне заповнення перекладів для наявного вмісту."
     ai_translation_max_tokens_multiplier: "Множник для визначення максимальної кількості токенів, які можна використовувати для перекладу. За замовчуванням ми встановлюємо максимальну кількість токенів приблизно в два-п'ять разів більшу за кількість символів у публікації. Цей множник можна налаштувати, щоб врахувати моделі мислення або міркування, які використовуватимуть більше токенів."
+    ai_usage_rollup_after_days: "Кількість днів для зберігання статистики використання ШІ для кожного запиту перед її перетворенням на щоденні зведені дані. Встановіть значення 0, щоб вимкнути зведення."
+    ai_audit_logs_purge_after_days: "Видалити журнали аудиту AI API, старіші за цю кількість днів. За замовчуванням – приблизно 6 місяців. Встановіть значення 0, щоб зберігати необмежений термін."
   reviewables:
     reasons:
       flagged_by_toxicity: Плагін ШІ позначив його, класифікувавши як токсичний.
@@ -275,6 +274,10 @@ uk:
           name: "OpenAI"
         image_generation_gemini:
           name: "Nano Banana"
+        image_generation_flux:
+          name: "FLUX 1.1 Pro"
+        image_generation_flux2:
+          name: "FLUX 2 Pro"
         empty_tool:
           name: "Почніть з чистого аркуша..."
       name:
@@ -282,8 +285,6 @@ uk:
     ai_helper:
       errors:
         completion_request_failed: "Щось пішло не так під час спроби надати пропозиції. Будь ласка, спробуйте ще раз."
-        credit_limit_exceeded_user: "Ви досягли ліміту кредитів ШІ для вашого плану. Відповіді будуть недоступні, доки ваш ліміт не буде скинуто %{reset_time}."
-        credit_limit_exceeded_bot: "Відповіді ШІ наразі недоступні через обмеження кредитів. Будь ласка, спробуйте ще раз %{reset_time}."
         no_illustrator_persona: "Персонаж Post Illustrator не налаштовано. Перевірте налаштування вашого сайту."
         no_image_generation_tool: "Персона Post Illustrator має мати підключений інструмент генерації зображень. Будь ласка, налаштуйте інструмент генерації зображень для цієї персони в панелі адміністратора."
         no_image_generated: "Не вдалося згенерувати зображення. Спробуйте ще раз або перевірте конфігурацію вашого інструменту."
@@ -315,14 +316,14 @@ uk:
       flag_reason: "Позначено як спам за допомогою <a href='%{url}'>Discourse AI</a>"
       silence_reason: "Користувач автоматично заблокований <a href='%{url}'>Discourse AI</a>"
       invalid_error_type: "Наданий невірний тип помилки"
-      unexpected: "Сталася неочікувана помилка"
+      unexpected: "Сталась непередбачена помилка"
       bot_user_update_failed: "Не вдалося оновити користувача бота для сканування спаму"
       configuration_missing: "Конфігурація виявлення спаму AI відсутня. Додайте конфігурацію в розділі «Адміністратор > Плагіни > Discourse AI > Спам» перед увімкненням."
       logging_subject: "Виявлення спаму"
     ai_bot:
       reply_error: "Вибачте, схоже, наша система зіткнулася з несподіваною проблемою під час спроби відповісти.\n\n[details='Деталі помилки']\n%{details}\n[/details]"
       default_pm_prefix: "[ПП від ШІ-бота без назви]"
-      thinking: "Думаю..."
+      thinking: "Мислення"
       personas:
         default_llm_required: "Перед увімкненням чату потрібно встановити модель LLM за замовчуванням"
         cannot_delete_system_persona: "Системні персони не можуть бути видалені, замість цього, будь ласка, вимкніть їх"
@@ -430,6 +431,9 @@ uk:
         discover:
           name: "Відкриття"
           description: "Персона за замовчуванням, що використовується у функції «Відкриття» (безкоштовний пошук)"
+        chat_thread_titler:
+          name: "Заголовок теми чату"
+          description: "Персона за замовчуванням, що забезпечує автоматичне створення заголовків тем чату"
       topic_not_found: "Всього недоступно, тема не знайдена!"
       summarizing: "Підведення підсумків теми"
       searching: "Пошук: '%{query}'"
@@ -482,6 +486,10 @@ uk:
           base_query:
             name: "Базовий пошуковий запит"
             description: "Базовий запит для пошуку. Приклад: \"#urgent\" додасть \"#urgent\" до пошукового запиту і знайде лише теми з категорією або тегом \"терміново\"."
+        flag_post:
+          flag_type:
+            name: "Тип прапора"
+            description: "Контролює, чи буде повідомлення переглянуто, приховано, видалено або віднесено до спаму."
       tool_summary:
         read_artifact: "Читати артефакти"
         update_artifact: "Оновлення веб-артефакту"
@@ -490,9 +498,10 @@ uk:
         github_search_files: "Пошук файлів на GitHub"
         github_search_code: "Пошук коду на GitHub"
         github_file_content: "Вміст файлу GitHub"
-        github_pull_request_diff: "Порівняння змін GitHub pull request diff"
+        github_diff: "GitHub diff"
         random_picker: "Випадковий вибір"
         categories: "Список категорій"
+        flag_post: "Поскаржитися"
         search: "Пошук"
         tags: "Список тегів"
         time: "Час"
@@ -518,9 +527,10 @@ uk:
         github_search_code: "Пошук коду в репозиторії GitHub"
         github_search_files: "Пошук файлів у репозиторії GitHub"
         github_file_content: "Отримати вміст файлів з репозиторію GitHub"
-        github_pull_request_diff: "Отримати порівняння змін у запиті на GitHub"
+        github_diff: "Отримати запит на злиття GitHub або зафіксувати різницю"
         random_picker: "Виберіть випадкове число або випадковий елемент списку"
         categories: "Список усіх категорій для публічного перегляду на форумі"
+        flag_post: "Позначити поточну публікацію для перевірки персоналом"
         search: "Пошук у всіх публічних темах на форумі"
         tags: "Список всіх тегів на форумі"
         time: "Знайти час в різних часових поясах"
@@ -544,9 +554,10 @@ uk:
         web_browser: "Читання <a href='%{url}'>%{url}</a>"
         github_search_files: "Шукав «%{keywords}» в %{repo}/%{branch}"
         github_search_code: "Шукав '%{query}' у %{repo}"
-        github_pull_request_diff: "<a href='%{url}'>%{repo} %{pull_id}</a>"
+        github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Отриманий вміст %{file_paths} з %{repo_name}@%{branch}"
         random_picker: "Вибір із %{options}, вибрано: %{result}"
+        flag_post: "Позначення допису %{post_id} (flag_post: %{flag_post})"
         read: "Читання: <a href='%{url}'>%{title}</a>"
         time: "Час у %{timezone} %{time}"
         summarize: "Підсумок <a href='%{url}'>%{title}</a>"
@@ -600,6 +611,15 @@ uk:
         continue_conversation:
           title: "Розмова про відкриття: Пошук за запитом %{query}"
           raw: "У моєму пошуку %{query}ви показали мені таку інформацію:\n\n%{context}\n\nПродовжимо розмову."
+      flag_post:
+        errors:
+          no_context: "Контекст допису недоступний для позначення."
+          no_reason: "Для позначення публікації потрібна причина."
+          invalid_flag_type: "Невірний тип прапорця."
+        skipped: "Вердикт був помилковим, прапор не був створений."
+        already_flagged: "Допис вже позначений для перегляду."
+        flagged: "Публікацію позначено для перевірки."
+        reason: "Штучний інтелект позначив цю публікацію.\n\nПричина: %{reason}"
     summarization:
       configuration_hint:
         one: "Спочатку налаштуйте параметр `%{setting}`."
@@ -665,6 +685,10 @@ uk:
     translation:
       errors:
         disabled: "Функція перекладу ШІ не повністю налаштована."
+        all_posts_translated: "Усі повідомлення в цій темі вже перекладені."
+    llm_credit_allocation:
+      limit_exceeded_user: "Ця спільнота досягла ліміту кредитів ШІ на сьогодні. Будь ласка, спробуйте ще раз після %{reset_time} або зверніться до адміністратора сайту для отримання додаткової інформації."
+      limit_exceeded_admin: "Ви досягли ліміту кредитів ШІ. Будь ласка, спробуйте ще раз після %{reset_time}."
     errors:
       quota_exceeded: "Ви перевищили квоту для цієї моделі. Будь ласка, спробуйте ще раз через %{relative_time}."
       quota_required: "Ви повинні вказати максимальну кількість токенів або варіантів використання для цієї моделі"

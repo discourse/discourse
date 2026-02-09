@@ -112,14 +112,14 @@ lt:
               description: "Viršutinė P, naudojama LLM, padidinkite, kad padidėtų atsitiktinumas (palikite tuščią, jei norite naudoti numatytuosius modelio parametrus)"
             persona_id:
               label: "Persona"
-        llm_tool_triage:
+        ai_tool_action:
           fields:
-            model:
-              label: "Modelis"
-              description: "Numatytasis kalbos modelis, naudojamas triažui"
             tool:
-              label: "Įrankis"
-              description: "Įrankis, naudojamas triažui (įrankis negali turėti apibrėžtų parametrų)"
+              label: "Dirbtinio intelekto įrankis"
+              description: "Dirbtinio intelekto įrankis, kuris vykdomas, kai suveikia automatizavimas"
+            llm_model:
+              label: "LLM modelis"
+              description: "Kalbos modelis įrankiams, kurie naudoja llm.generate() (neprivaloma)"
         llm_persona_triage:
           fields:
             persona:
@@ -147,24 +147,52 @@ lt:
       title: "AI"
       features:
         back: "Atgal"
+        settings_save_error: "Kai kurių nustatymų išsaugoti nepavyko."
         disabled: "(uždrausta)"
         groups: "Grupės:"
         no_groups: "Nieko"
-        edit: "Redaguoti"
+        edit: "Nustatymai"
         expand_list:
           one: "(%{count} daugiau)"
           few: "(%{count}daugiau)"
           many: "(%{count}daugiau)"
           other: "(%{count} daugiau)"
         collapse_list: "(rodyti mažiau)"
+        bot:
+          setting_groups:
+            settings: "Pagrindiniai nustatymai"
+            access_control: "Prieigos kontrolė"
+            ui_settings: "Vartotojo sąsajos nustatymai"
+            integrations: "Integracijos"
         filters:
           all: "Visi"
           reset: "Atstatyti"
+        summarization:
+          setting_groups:
+            settings: "Pagrindiniai nustatymai"
+            gists: "Gistai"
+            backfill: "Užpildymas"
         search:
           name: "Paieška"
+          setting_groups:
+            settings: "Pagrindiniai nustatymai"
+        embeddings:
+          setting_groups:
+            model_settings: "Modelio nustatymai"
+            related_topics: "Susijusios temos"
+            semantic_search: "Semantinė paieška"
+        discord:
+          setting_groups:
+            settings: "Pagrindiniai nustatymai"
+            discord_configuration: "Nesantaikos konfigūracija"
         inference:
           match_concepts: "Sąvokų atitikimas"
           deduplicate_concepts: "Sąvokų deduplikacija"
+          setting_groups:
+            settings: "Pagrindiniai nustatymai"
+            topic_criteria: "Temos kriterijai"
+            post_criteria: "Įrašo kriterijai"
+            personas: "Personos"
         ai_helper:
           name: "Padėjėjas"
           description: "Padeda vartotojams bendrauti bendruomenėje, pavyzdžiui, kurti temas, rašyti įrašus ir skaityti turinį"
@@ -177,6 +205,11 @@ lt:
           markdown_tables: "Sukurti Markdown lentelę"
           custom_prompt: "Pasirinktinis raginimas"
           image_caption: "Antraštės vaizdai"
+          setting_groups:
+            access_permissions: "Prieiga ir leidimai"
+            enabled_features: "Įjungtos funkcijos"
+            automation: "Automatizavimas"
+            personas: "Personos"
         translation:
           name: "Vertimai"
           description: "Verčia turinį į palaikomas kalbas"
@@ -184,6 +217,10 @@ lt:
           post_raw_translator: "Neapdoroto įrašo vertėjas"
           topic_title_translator: "Temos pavadinimo vertėjas"
           short_text_translator: "Trumpų tekstų vertėjas"
+          setting_groups:
+            settings: "Pagrindiniai nustatymai"
+            personas: "Personos"
+            backfill_and_limits: "Užpildymas ir apribojimai"
         spam:
           name: "Šlamštas"
           description: "Naudodamas pasirinktą LLM, identifikuoja galimą šlamštą ir pažymi jį svetainės moderatoriams, kad jie galėtų jį patikrinti peržiūros eilėje."
@@ -242,6 +279,7 @@ lt:
           post_url_label: "Įrašo URL arba ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 arba įrašo ID"
           result: "Rezultatas"
+          system_prompt: "Sistemos pranešimas"
           scan_log: "Nuskaitymo žurnalas"
           spam: "Šlamštas"
       usage:
@@ -249,6 +287,7 @@ lt:
         model: "Modelis"
         username: "Naudotojo vardas"
         total_requests: "Visos užklausos"
+        total: "Viso"
         periods:
           last_day: "Paskutinės 24 valandos"
           custom: "Pasirinktinis..."

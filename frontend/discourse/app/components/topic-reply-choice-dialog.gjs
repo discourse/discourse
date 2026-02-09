@@ -8,30 +8,30 @@ import discourseTags from "discourse/helpers/discourse-tags";
 import { eq } from "discourse/truth-helpers";
 
 const TopicLabelButton = <template>
-  <DButton class={{@class}} @action={{@action}}>
+  <DButton @action={{@action}} ...attributes>
     <div class="topic-title">
       <div class="topic-title__top-line">
         <span class="topic-statuses">
           {{#if (eq @topic.archetype "private_message")}}
-            <span class="topic-status">
+            <span class="topic-status --private-message">
               {{icon "envelope"}}
             </span>
           {{/if}}
 
           {{#if @topic.bookmarked}}
-            <span class="topic-status">
+            <span class="topic-status --bookmarked">
               {{icon "bookmark"}}
             </span>
           {{/if}}
 
           {{#if @topic.closed}}
-            <span class="topic-status">
+            <span class="topic-status --closed">
               {{icon "topic.closed"}}
             </span>
           {{/if}}
 
           {{#if @topic.pinned}}
-            <span class="topic-status">
+            <span class="topic-status --pinned">
               {{icon "thumbtack"}}
             </span>
           {{/if}}
@@ -62,15 +62,15 @@ export default class TopicReplyChoiceDialog extends Component {
 
   <template>
     <TopicLabelButton
-      @class="btn-primary btn-reply-where btn-reply-on-original"
       @action={{this.replyOnOriginal}}
       @topic={{@model.originalTopic}}
+      class="btn-primary btn-reply-where btn-reply-on-original"
     />
 
     <TopicLabelButton
-      @class="btn-reply-where btn-reply-here"
       @action={{this.replyOnCurrent}}
       @topic={{@model.currentTopic}}
+      class="btn-reply-where btn-reply-here"
     />
   </template>
 }

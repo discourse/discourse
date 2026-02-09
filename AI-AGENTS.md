@@ -23,17 +23,19 @@ Discourse is large with long history. Understand context before changes.
 - Use FormKit for forms: https://meta.discourse.org/t/discourse-toolkit-to-render-forms/326439 (`app/assets/javascripts/discourse/app/form-kit`)
 
 ### JSDoc
-- Required for classes, methods, members (except `@service` members, constructors)
-- Multiline format only
-- Components: `@component` name, list params (`this.args` or `@paramname`)
-- Methods: no `@returns` for `@action`, use `@returns` for getters (not `@type`)
-- Members: specify `@type`
+- Do not add JSDoc to any new code you write.
+- If JSDoc already exists, ensure any changes you make keep it accurate and up to date.
 
 ## Testing
 - Do not write unnecessary comments in tests, every single assertion doesn't need a comment
 - Don't test functionality handled by other classes/components
 - Don't write obvious tests
-- Ruby: use `fab!()` over `let()`, system tests for UI (`spec/system`), use page objects for system spec finders (`spec/system/page_objects`)
+- Ruby: use `fab!` over `let()`, system tests for UI (`spec/system`), use page objects for system spec finders (`spec/system/page_objects`)
+
+### fab! Syntax
+- `fab!(:user)` - creates object using Fabricator defaults (name matches fabricator)
+- `fab!(:user_1, :user)` - preferred when variable name differs from fabricator, no custom attributes
+- `fab!(:user) { Fabricate(:user, username: "some_username") }` - with block for custom attributes
 
 ### Page Objects (System Specs)
 - Located in `spec/system/page_objects/pages/`, inherit from `PageObjects::Pages::Base`
@@ -43,16 +45,33 @@ Discourse is large with long history. Understand context before changes.
 - Don't assert immediate UI feedback after clicks (tests browser, not app logic)
 
 ### Commands
-```bash
-# Ruby tests
-bin/rspec [spec/path/file_spec.rb[:123]]
-LOAD_PLUGINS=1 bin/rspec  # Plugin tests
 
+#### Ruby RSpec tests
+
+To run all RSpec examples in file use `bin/rspec <path>`. Example:
+
+```bash
+bin/rspec spec/path/file_spec.rb
+```
+
+To run one or more RSpec examples or groups, append the line number to the path. `bin/rspec <path>:<line_number>`. Example:
+
+```bash
+bin/rspec spec/path/file_spec.rb:123
+```
+
+#### JavaScript Tests
+
+```bash
 # JavaScript tests - bin/qunit
 bin/qunit --help # detailed help
 bin/qunit path/to/test-file.js  # Run all tests in file
 bin/qunit path/to/tests/directory # Run all tests in directory
+```
 
+#### Linting
+
+```bash
 # Linting
 bin/lint path/to/file path/to/another/file
 bin/lint --fix path/to/file path/to/another/file

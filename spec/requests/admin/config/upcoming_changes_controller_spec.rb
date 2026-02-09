@@ -4,13 +4,15 @@ RSpec.describe Admin::Config::UpcomingChangesController do
   fab!(:admin)
   fab!(:user)
 
+  before { SiteSetting.enable_upcoming_changes = true }
+
   describe "#index" do
     before do
       mock_upcoming_change_metadata(
         {
           enable_upload_debug_mode: {
             impact: "other,developers",
-            status: :pre_alpha,
+            status: :experimental,
             impact_type: "other",
             impact_role: "developers",
           },
@@ -53,7 +55,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
             "impact" => "other,developers",
             "impact_role" => "developers",
             "impact_type" => "other",
-            "status" => "pre_alpha",
+            "status" => "experimental",
             "enabled_for" => "no_one",
           },
         )
@@ -233,8 +235,9 @@ RSpec.describe Admin::Config::UpcomingChangesController do
           put "/admin/config/upcoming-changes/toggle.json", params: { setting_name:, enabled: true }
         }.to change {
           UserHistory.where(
-            action: UserHistory.actions[:change_site_setting],
+            action: UserHistory.actions[:upcoming_change_toggled],
             subject: setting_name,
+            context: I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled"),
           ).count
         }.by(1)
       end

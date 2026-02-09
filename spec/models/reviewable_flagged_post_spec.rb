@@ -171,8 +171,9 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
 
     describe "with reviewable claiming enabled" do
       fab!(:claimed) { Fabricate(:reviewable_claimed_topic, topic: post.topic, user: moderator) }
+
+      before { SiteSetting.reviewable_claiming = "required" }
       it "clears the claimed topic on resolve" do
-        SiteSetting.reviewable_claiming = "required"
         reviewable.perform(moderator, :agree_and_keep)
         expect(reviewable).to be_approved
         expect(score.reload).to be_agreed
@@ -187,6 +188,38 @@ RSpec.describe ReviewableFlaggedPost, type: :model do
             .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
             .size,
         ).to eq(1)
+      end
+
+      it "does not log unclaimed history when topic was not claimed" do
+        claimed.destroy!
+        reviewable.perform(moderator, :agree_and_keep)
+        expect(reviewable).to be_approved
+        expect(score.reload).to be_agreed
+        expect(
+          post
+            .topic
+            .reviewables
+            .first
+            .history
+            .where(reviewable_history_type: ReviewableHistory.types[:unclaimed])
+            .size,
+        ).to eq(0)
+      end
+
+      it "publishes reviewable_claimed message with user data when claim is removed" do
+        messages =
+          MessageBus.track_publish("/reviewable_claimed") do
+            reviewable.perform(moderator, :agree_and_keep)
+          end
+
+        expect(messages.size).to eq(1)
+        message = messages.first
+
+        expect(message.data[:topic_id]).to eq(post.topic.id)
+        expect(message.data[:claimed]).to eq(false)
+        expect(message.data[:user]).to be_present
+        expect(message.data[:user][:id]).to eq(moderator.id)
+        expect(message.data[:user][:username]).to eq(moderator.username)
       end
     end
 

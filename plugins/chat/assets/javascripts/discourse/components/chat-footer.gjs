@@ -20,17 +20,14 @@ export default class ChatFooter extends Component {
   @service chatStateManager;
 
   get includeStarred() {
-    return (
-      this.siteSettings.star_chat_channels &&
-      this.chatChannelsManager.hasStarredChannels
-    );
+    return this.chatChannelsManager.hasStarredChannels;
   }
 
   get includeThreads() {
     if (!this.siteSettings.chat_threads_enabled) {
       return false;
     }
-    return this.chatChannelsManager.hasThreadedChannels;
+    return this.chatChannelsManager.shouldShowMyThreads;
   }
 
   get directMessagesEnabled() {
@@ -66,7 +63,7 @@ export default class ChatFooter extends Component {
           <DButton
             @route="chat.starred-channels"
             @icon="star"
-            @translatedLabel={{i18n "chat.starred"}}
+            @label="chat.starred"
             aria-label={{i18n "chat.starred"}}
             id="c-footer-starred"
             class={{concatClass
@@ -82,7 +79,7 @@ export default class ChatFooter extends Component {
         <DButton
           @route="chat.channels"
           @icon="comments"
-          @translatedLabel={{i18n "chat.channel_list.title"}}
+          @label="chat.channel_list.title"
           aria-label={{i18n "chat.channel_list.aria_label"}}
           id="c-footer-channels"
           class={{concatClass
@@ -98,7 +95,7 @@ export default class ChatFooter extends Component {
           <DButton
             @route="chat.direct-messages"
             @icon="users"
-            @translatedLabel={{i18n "chat.direct_messages.title"}}
+            @label="chat.direct_messages.title"
             aria-label={{i18n "chat.direct_messages.aria_label"}}
             id="c-footer-direct-messages"
             class={{concatClass
@@ -115,7 +112,7 @@ export default class ChatFooter extends Component {
           <DButton
             @route="chat.threads"
             @icon="discourse-threads"
-            @translatedLabel={{i18n "chat.my_threads.title"}}
+            @label="chat.my_threads.title"
             aria-label={{i18n "chat.my_threads.aria_label"}}
             id="c-footer-threads"
             class={{concatClass
@@ -126,6 +123,21 @@ export default class ChatFooter extends Component {
           >
             <UnreadThreadsIndicator />
           </DButton>
+        {{/if}}
+
+        {{#if this.siteSettings.chat_search_enabled}}
+          <DButton
+            @route="chat.search"
+            @icon="magnifying-glass"
+            @label="chat.search.short_title"
+            aria-label={{i18n "chat.search.aria_label"}}
+            id="c-footer-search"
+            class={{concatClass
+              "btn-transparent"
+              "c-footer__item"
+              (if (eq this.currentRouteName "chat.search") "--active")
+            }}
+          />
         {{/if}}
       </nav>
     {{/if}}

@@ -155,7 +155,7 @@ da:
       el:
         name: Græsk
       en:
-        name: Engelsk (US)
+        name: Engelsk
       en_GB:
         name: Engelsk (UK)
       es:
@@ -778,6 +778,10 @@ da:
         reviewable_post:
           title: "Indlæg"
           noun: "indlæg"
+        reviewable_ai_chat_message:
+          noun: "chatbesked"
+        reviewable_ai_post:
+          noun: "indlæg"
       flagged_as: "Anmeldt som"
       user_label: "Bruger"
       moderator_actions: "Moderatorhandlinger"
@@ -785,12 +789,12 @@ da:
       timeline:
         target_created: "Indlæg oprettet"
         target_created_by: "Indlæg oprettet af %{username} · %{relativeDate}"
+        target_deleted: "Indlæg slettet"
         flagged: "Anmeldt"
         flagged_as_by: "Anmeldt som %{flagReason} af %{username} · %{relativeDate}"
         claimed: "Påstået"
         claimed_by: "Påstået af %{username} · %{relativeDate}"
         reviewed: "Gennemgået"
-        reviewed_by: "Gennemgået af %{username} · %{relativeDate}"
         note_added: "Moderator note"
       notes:
         add_note_button: "Tilføj note"
@@ -958,9 +962,7 @@ da:
           notification: Notifikation
         email:
           title: "Email"
-          status: "Synkroniserede %{old_emails} / %{total_emails} e-mails via IMAP."
           enable_smtp: "Aktivér SMTP"
-          enable_imap: "Aktivér IMAP"
           test_settings: "Test indstillinger"
           save_settings: "Gem indstillinger"
           last_updated: "Sidst opdateret:"
@@ -969,11 +971,7 @@ da:
           smtp_settings_valid: "SMTP-indstillinger er gyldige."
           smtp_title: "SMTP"
           smtp_instructions: "Når du aktiverer SMTP for gruppen, sendes alle udgående e-mails, der sendes fra gruppens indbakke, via de SMTP-indstillinger, der er angivet her, i stedet for den mailserver, der er konfigureret til andre e-mails, der sendes af dit forum."
-          imap_title: "IMAP"
-          imap_additional_settings: "Yderligere indstillinger"
-          imap_settings_valid: "IMAP-indstillinger er gyldige."
-          smtp_disable_confirm: "Hvis du deaktiverer SMTP, vil alle SMTP og IMAP indstillinger blive nulstillet, og den tilknyttede funktionalitet vil blive deaktiveret. Er du sikker på, at du vil fortsætte?"
-          imap_disable_confirm: "Hvis du deaktiverer IMAP, vil alle IMAP-indstillinger blive nulstillet, og den tilknyttede funktion vil blive deaktiveret. Er du sikker på, at du vil fortsætte?"
+          additional_settings: "Yderligere indstillinger"
           prefill:
             title: "Forudfyld med indstillinger for:"
             gmail: "Gmail"
@@ -988,19 +986,12 @@ da:
             smtp_server: "SMTP-server"
             smtp_port: "SMTP-port"
             smtp_ssl_mode: "SSL- Tilstand"
-            imap_server: "IMAP-server"
-            imap_port: "IMAP-port"
-            imap_ssl: "Brug SSL til IMAP"
             username: "Brugernavn"
             password: "Adgangskode"
           settings:
             title: "Indstillinger"
             allow_unknown_sender_topic_replies: "Tillad emnesvar fra ukendte afsendere"
             from_alias: "Fra Alias"
-          mailboxes:
-            synchronized: "Synkroniseret postkasse"
-            none_found: "Ingen postkasser blev fundet i denne e-mail-konto."
-            disabled: "Deaktiveret"
         membership:
           title: Medlemskab
           access: Adgang
@@ -1264,6 +1255,9 @@ da:
       new_private_message: "Ny Besked"
       private_message: "Besked"
       private_messages: "Beskeder"
+      upcoming_changes:
+        for_user:
+          enabled: "Aktiveret?"
       user_notifications:
         filters:
           filter_by: "Filtrer efter"
@@ -1271,7 +1265,7 @@ da:
           read: "Læste"
           unread: "Ulæste"
           unseen: "Usete"
-        ignore_duration_title: "Ignorer Bruger"
+        ignore_duration_title: "Ignorer bruger"
         ignore_duration_username: "Brugernavn"
         ignore_duration_when: "Varighed:"
         ignore_duration_save: "Ignorér"
@@ -1492,7 +1486,6 @@ da:
         tags: "Tags"
         interface: "Grænseflade"
         apps: "Apps"
-        navigation_menu: "Navigationsmenu"
       change_password:
         success: "(e-mail sendt)"
         in_progress: "(sender e-mail)"
@@ -2439,6 +2432,8 @@ da:
       ulist_title: "Punktopstilling"
       list_item: "Listepunkt"
       toggle_direction: "Skift retning"
+      wrap_modal:
+        apply: "Anvend"
       help: "Hjælp til Markdown-redigering"
       exit_fullscreen_prompt: "Tryk på <kbd>ESC</kbd> for at afslutte fuld skærm"
       modal_ok: "OK"
@@ -2487,6 +2482,7 @@ da:
         title: "Tilføj billedbeskrivelse"
       image_toolbar:
         alt_text: "Tilføj billedbeskrivelse"
+      image: "billede"
       image_scale_button: "Skaler billedet til %{percent}%"
       delete_image_button: Slet Billede
       link_toolbar:
@@ -2593,7 +2589,7 @@ da:
         post_approved: "indlæg godkendt"
         membership_request_consolidated: "nye anmodninger om medlemskab"
         reaction: "ny reaktion"
-        votes_released: "Afstemningen blev frigivet"
+        votes_released: "afstemningen blev frigivet"
     upload_selector:
       change: "Skift"
       delete: "Slet"
@@ -2800,18 +2796,6 @@ da:
         category: "Der er ingen emner i kategorien %{category}."
         top: "Der er ingen top emner"
         filter: "Der er ingen emner."
-      bottom:
-        latest: "Der er ikke flere populære emner."
-        posted: "Der er ikke flere emner."
-        read: "Der er ikke flere læste emner."
-        new: "Der er ikke flere nye emner."
-        unread: "Der er ikke flere ulæste emner."
-        unseen: "Der er ikke flere usete emner."
-        category: "Der er ikke flere emner i kategorien %{category}."
-        tag: "Der er ikke flere %{tag} emner."
-        top: "Der er ikke flere top emner"
-        bookmarks: "Der er ikke flere bogmærkede emner."
-        filter: "Der er ikke flere emner."
     topic_bulk_actions:
       dismiss:
         name: "Ignorer Alle"
@@ -2912,8 +2896,6 @@ da:
           12_hours: "12 Timer"
           24_hours: "24 Timer"
           custom: "Brugerdefineret Varighed"
-      slow_mode_notice:
-        duration: "Vent venligst %{duration} mellem indlæg i dette emne"
       topic_status_update:
         title: "Emne Timer"
         save: "Indstil timerfunktion"
@@ -3471,6 +3453,7 @@ da:
       back: "Tilbage til kategori"
       general: "Overordnet"
       settings: "Indstillinger"
+      advanced: "Avanceret"
       topic_template: "Skabelon"
       tags: "Tags"
       localization:
@@ -3493,7 +3476,12 @@ da:
       slug_placeholder: "(Valgfri) gennemstregede-ord for URL"
       creation_error: Der opstod en fejl under oprettelsen af kategorien.
       save_error: Der opstod en fejl da kategorien skulle gemmes.
+      validations:
+        icon_required: "Vælg et ikon."
       description: "Beskrivelse"
+      style: "Stil"
+      icon: "Ikon"
+      emoji: "Humørikon"
       background_color: "Farve"
       foreground_color: "Tekst farve"
       color_validations:
@@ -3506,7 +3494,6 @@ da:
           icon: "Ikon"
           emoji: "Humørikon"
       color_used: "Farve i brug"
-      name_placeholder: "Et eller to ord maksimalt"
       color_placeholder: "Enhver webfarve"
       delete_confirm: "Er du sikker på, at du vil slette denne kategori?"
       delete_error: "Der opstod en fejl under sletningen af kategorien."
@@ -3521,15 +3508,14 @@ da:
         reply: "Svar"
         create: "Opret"
         no_groups_selected: "Ingen grupper har fået adgang; denne kategori vil kun være synlig for personalet."
-        everyone_has_access: 'Denne kategori er offentlig, alle kan se, besvare og oprette indlæg. Hvis du vil begrænse tilladelserne, skal du fjerne en eller flere af de tilladelser, der er tildelt gruppen "alle".'
+        everyone_full_access: 'Denne kategori er offentlig, alle kan se, besvare og oprette indlæg. Hvis du vil begrænse tilladelserne, skal du fjerne en eller flere af de tilladelser, der er tildelt gruppen "alle".'
         toggle_reply: "Slå Svar tilladelse til/ fra"
         toggle_full: "Slå Opret tilladelse til/fra"
         inherited: 'Denne tilladelse er arvet fra "alle"'
-      special_warning: "Advarsel: Denne kategori er forud-seedet og sikkerhedsindstillingerne kan ikke redigeres. Hvis du ikke ønsker at bruge denne kategori, bør du slette den snarere end at genbruge den til et andet formål."
       uncategorized_security_warning: "Denne kategori er speciel. Det er beregnet som et opholdsområde for emner, der ikke har nogen kategori; denkan ikke have sikkerheds indstillinger."
       uncategorized_general_warning: 'Denne kategori er speciel. Den bruges som standard kategori for nye emner, der ikke har valgt en kategori. Hvis du vil forhindre denne opførsel og tvinge valg af kategori, <a href="%{settingLink}">skal du deaktivere indstillingen her</a> . Hvis du vil ændre navn eller beskrivelse, skal du gå til <a href="%{customizeLink}">Tilpas / tekst indhold</a> .'
       pending_permission_change_alert: "Du har ikke tilføjet %{group} til denne kategori. Klik på denne knap for at tilføje dem."
-      images: "Billeder"
+      images: "Udseende"
       email_in: "Brugerindstillet ingående email adresse:"
       email_in_allow_strangers: "Accepter emails fra ikke oprettede brugere"
       mailinglist_mirror: "Kategori spejler en mailing liste"
@@ -3547,6 +3533,11 @@ da:
       this_year: "dette år"
       position: "Placering på kategorisiden:"
       minimum_required_tags: "Minimum antal tags krævet i et emne:"
+      none_subcategory_text: "Ingen"
+      visibility:
+        title: "Synlighed"
+        public: "Offentlig"
+        group_restricted: "Privat"
       num_auto_bump_daily: "Antal åbne emner, der automatisk 'bump'es dagligt:"
       navigate_to_first_post_after_read: "Navigér til det første indlæg, når emnerne er læst"
       notifications:
@@ -3790,6 +3781,7 @@ da:
         this_month: "Måned"
         this_week: "Uge"
         today: "I dag"
+        custom: "Tilpasset"
     permission_types:
       full: "Opret / Besvar / Se"
       create_post: "Besvar / Se"
@@ -3995,6 +3987,7 @@ da:
       upload_description: "Overfør en csv-fil for at masseoprette tags"
       upload_instructions: "Én pr. linje, eventuelt med en mærkegruppe i formatet 'mærkenavn, mærkegruppe'"
       upload_successful: "Vellykket overførsel af tags"
+      bulk_create_button: "Opret"
       delete_unused_confirmation:
         one: "%{count}tag vil blive slettet: %{tags}"
         other: "%{count} tags bliver slettet: %{tags}"
@@ -4360,6 +4353,8 @@ da:
         enabled_for_options:
           everyone: "Alle"
           staff: "Kun personale"
+        statuses:
+          experimental: "Eksperimentel"
         impact_roles:
           admins: "Admins"
           moderators: "Moderatorer"
@@ -4369,6 +4364,10 @@ da:
           enabled: "Aktiveret"
           disabled: "Deaktiveret"
           impact_type_other: "Andre"
+          status_experimental: "Eksperimentel"
+          impact_role_admins: "Admins"
+          impact_role_moderators: "Moderatorer"
+          impact_role_staff: "Personale"
       config:
         about:
           title: "Om dit websted"
@@ -4391,6 +4390,11 @@ da:
           sub_pages:
             common_settings:
               title: "Indstillinger"
+            discourse_id:
+              title: "Discourse ID"
+        discourse_id:
+          title: "Discourse ID"
+          learn_more: "Lær mere"
         logo:
           title: "Logo"
           form:
@@ -4431,6 +4435,8 @@ da:
                 all_pages: "Alle sider"
             location:
               label: "Sted"
+            text_section:
+              locale_label: "Sprog"
             header_logged_in:
               placeholder: "Velkommen tilbage, %{preferred_display_name}!"
             header_anonymous:
@@ -4639,7 +4645,9 @@ da:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Søgninger</a>'
             disabled: 'Rapport over søge tendenser er deaktiveret. Aktivér <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log søgeforespørgelser for</a> at indsamle data.'
-          average_chart_label: Gennemsnit
+          sort_button: "Sorter efter %{column}"
+          sort_ascending: "stigende"
+          sort_descending: "faldende"
           filters:
             file_extension:
               label: Filtypenavn
@@ -5900,7 +5908,6 @@ da:
           button: "Slet alle indlæg"
           progress:
             title: "Fremskridt med sletning af indlæg"
-            description: "Sletter indlæg…"
           confirmation:
             title: "Slet alle indlæg af @%{username}"
             text: "slet indlæg af @%{username}"
@@ -6109,6 +6116,7 @@ da:
           upload:
             label: "Overfør"
             title: "Overfør billeder"
+        download_file: "Download"
         selectable_avatars:
           title: "Liste over avatarer, som brugere kan vælge imellem"
         table_column_heading:
@@ -6204,6 +6212,9 @@ da:
         no_user_badges: "%{name} er ikke blevet tildelt nogen emblemer."
         no_badges: Der er ikke nogen emblemer, der kan tildeles.
         none_selected: "Vælg et emblem for at komme igang"
+        sections:
+          query: Forespørgsel
+          settings: Indstillinger
         allow_title: Tillad at bruge dette emblem som titel
         multiple_grant: Kan tildeles flere gange
         visibility_heading: Synlighed

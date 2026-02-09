@@ -58,6 +58,9 @@ hu:
       cancel: "Mégse"
       cancel_reply: "Válasz elvetése"
       chat_channels: "Csatornák"
+      starred: "Csillagozott"
+      starred_channels: "Csillagozott csatornák"
+      starred_channels_empty: "Még nem csillagozott meg egyetlen csatornát sem. Csillagozd meg a csatornákat, hogy itt lásd őket a gyors hozzáférés érdekében."
       browse_all_channels: "Összes csatorna tallózása"
       see_in: "Lásd itt"
       move_to_channel:
@@ -74,6 +77,8 @@ hu:
         title: "Csatornabeállítások"
         edit: "Szerkesztés"
         add: "Hozzáadás"
+        star_channel: "Csillagcsatorna"
+        unstar_channel: "Csillag eltávolítása a csatornáról"
         close_channel: "Csatorna bezárása"
         open_channel: "Csatorna megnyitása"
         archive_channel: "Csatorna archiválása"
@@ -128,6 +133,7 @@ hu:
       email_frequency:
         description: "Csak akkor küldünk e-mailt, ha az elmúlt 15 percben nem láttuk."
         never: "Soha"
+        title: "E-mailt kérek, ha közvetlen csevegési üzenetet vagy csoportos csevegést kapok"
         when_away: "Csak ha távol van"
       header_indicator_preference:
         title: "Aktivitásjelző megjelenítése a fejlécben"
@@ -138,12 +144,11 @@ hu:
       separate_sidebar_mode:
         title: "Külön oldalsávos módok megjelenítése a fórum és a chat számára"
       send_shortcut:
+        title: "Parancsikon küldése"
         enter:
           label: "Küldés Enterrel"
-          description: "Új sor Shift + Enterrel"
         meta_enter:
           label: "Küldés %{meta_key} + Enterrel"
-          description: "Új sor Enterrel"
       enable: "Csevegés engedélyezése"
       flag: "Megjelölés"
       emoji: "Emodzsi beszúrása"
@@ -185,12 +190,12 @@ hu:
       no_public_channels: "Még nem csatlakozott egyetlen csatornához sem!"
       no_public_channels_cta: "Csatornák böngészése"
       kicked_from_channel: "Ezt a csatornát már nem tudja elérni."
+      chat_notifications_title: "Csevegési értesítések"
       only_chat_push_notifications:
         title: "Csak csevegési leküldéses értesítések küldése"
-        description: "Az összes nem csevegési leküldéses értesítés elküldésének letiltása"
+      personalization_title: "Személyre szabás"
       ignore_channel_wide_mention:
         title: "A csatornaszintű említések figyelmen kívül hagyása"
-        description: "Ne küldjön értesítést a csatornaszintű említésekről (@here és @all)"
       show_thread_title_prompts:
         title: "Szál címének megjelenítése"
         description: "Javaslatok az új szálak címének megadásához."
@@ -274,6 +279,10 @@ hu:
         yesterday: Tegnap
       search_view:
         filter_placeholder: Üzenetek keresése
+        message_result_label: "Csevegésüzenet innen: %{username}: %{preview} %{threadInfo}"
+        in_thread: "%{title} témában"
+        sr_instructions: "Az üzenet megnyitásához nyomja meg az Enter vagy a Space billentyűt. A találatok közötti navigáláshoz használja a Tab billentyűt."
+        results_list_label: "Csevegési üzenetek keresési eredményei"
       members_view:
         filter_placeholder: Tagok keresése
         add_member: Tag hozzáadása
@@ -316,6 +325,8 @@ hu:
         slug_description: Az URL-ben a csatornanév helyett egy csatorna azonosító szerepel
         name: Csatorna neve
         slug: Csatornaazonosító (nem kötelező)
+        emoji: Csatorna emoji (opcionális)
+        reset_emoji: Emoji visszaállítása
       channel_edit_description_modal:
         title: Leírás szerkesztése
         input_placeholder: Leírás hozzáadása
@@ -380,6 +391,9 @@ hu:
         types:
           category: "Kategória"
           topic: "Téma"
+        emoji:
+          label: "Csatorna emoji (opcionális)"
+          reset: "Emoji visszaállítása"
       reviewable:
         type: "Csevegőüzenet"
         message_in_channel: "Csatorna"
@@ -446,6 +460,9 @@ hu:
           confirm_export: "Ez az összes üzenetet exportálja az összes csatornáról, és az eredményt személyes üzenetben elküldi Önnek. Biztos, hogy exportálni szeretne?"
           export_has_started: "Az export megkezdődött. Kapni fog egy PÜ-t, ha elkészült."
       search:
+        short_title: Keresés
+        title: Csevegés keresése
+        aria_label: "Váltás csevegéskeresésre"
         no_results: "Nincs találat"
         sort:
           relevance: "Relevancia"
@@ -665,7 +682,6 @@ hu:
           composer_bold: "%{shortcut} Félkövér (csak a szerkesztőben)"
           composer_italic: "%{shortcut} Dőlt (csak a szerkesztőben)"
           composer_code: "%{shortcut} Kód (csak a szerkesztőben)"
-          drawer_open: "%{shortcut} Csevegési fiók megnyitása"
           drawer_close: "%{shortcut} Csevegési fiók bezárása"
           mark_all_channels_read: "%{shortcut} Összes csatorna megjelölése olvasottként"
     topic_statuses:

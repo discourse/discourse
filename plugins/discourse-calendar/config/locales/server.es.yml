@@ -49,7 +49,6 @@ es:
     all_day_event_start_time: "Los eventos que no tienen una hora de inicio especificada comenzarán a esta hora. El formato es HH:mm. Para las 6:00 am, introduce 06:00"
     all_day_event_end_time: "Los eventos que no tienen una hora de finalización especificada terminarán a esta hora. El formato es HH:mm. Para las 6:00 pm, introduce 18:00"
     all_day_event_time_error: "Hora no válida. El formato debe ser HH:mm (por ejemplo: 08:00)."
-    calendar_categories: "Muestra un calendario en la parte superior de una categoría. Las configuraciones obligatorias son categoryId y postId. por ejemplo: categoryId = 6; postId = 453\n Otras configuraciones válidas: tzPicker, fines de semana y defaultView."
     calendar_categories_outlet: "Permite cambiar qué salida debe mostrar el calendario de categorías."
     working_days: "Establecer días laborables. Puede mostrar la disponibilidad de un grupo usando la etiqueta `timezones` en una publicación, por ejemplo: `[timezones group = admins][timezones]`"
     working_day_start_hour: "Hora de inicio de la jornada laboral."
@@ -76,7 +75,7 @@ es:
       ongoing_event_reminder: "%{title} está en curso."
     errors:
       bulk_invite:
-        max_invitees: "Las primeras %{max_invittes} invitaciones se han enviado. Intenta dividir el archivo en partes más pequeñas."
+        max_invitees: "Las primeras %{max_invitees} invitaciones se han enviado. Intenta dividir el archivo en partes más pequeñas."
         error: "Se produjo un error al subir este archivo. Inténtalo de nuevo más tarde."
       models:
         event:
@@ -86,6 +85,7 @@ es:
           raw_invitees:
             only_group: "Un evento acepta solo nombres de grupos."
           ends_at_before_starts_at: "Un evento no puede terminar antes de que comience."
+          max_attendees_reached: "Este evento está completo."
           start_must_be_present_and_a_valid_date: "Un evento requiere una fecha de inicio válida."
           end_must_be_a_valid_date: "La fecha de finalización debe ser una fecha válida."
           invalid_recurrence: "La recurrencia debe ser una de las siguientes: cada mes, cada semana, cada dos semanas, cada cuatro semanas, cada día, cada día de la semana."

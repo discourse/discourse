@@ -161,6 +161,8 @@ class Notification < ActiveRecord::Base
         admin_problems: 38,
         linked_consolidated: 39,
         chat_watched_thread: 40,
+        upcoming_change_available: 41,
+        upcoming_change_automatically_promoted: 42,
         following: 800, # Used by https://github.com/discourse/discourse-follow
         following_created_topic: 801, # Used by https://github.com/discourse/discourse-follow
         following_replied: 802, # Used by https://github.com/discourse/discourse-follow
@@ -239,6 +241,28 @@ class Notification < ActiveRecord::Base
     topic_ids = notifications.map { |n| n.topic_id }.compact.uniq
     accessible_topic_ids = guardian.can_see_topic_ids(topic_ids: topic_ids)
     notifications.select { |n| n.topic_id.blank? || accessible_topic_ids.include?(n.topic_id) }
+  end
+
+  def self.filter_disabled_badge_notifications(notifications)
+    return notifications if notifications.blank?
+
+    if !SiteSetting.enable_badges
+      return notifications.reject { |n| n.notification_type == types[:granted_badge] }
+    end
+
+    badge_ids =
+      notifications.filter_map do |n|
+        n.data_hash[:badge_id] if n.notification_type == types[:granted_badge]
+      end
+
+    return notifications if badge_ids.empty?
+
+    enabled_badge_ids = Badge.where(id: badge_ids, enabled: true).pluck(:id).to_set
+
+    notifications.reject do |n|
+      n.notification_type == types[:granted_badge] &&
+        !enabled_badge_ids.include?(n.data_hash[:badge_id])
+    end
   end
 
   # Be wary of calling this frequently. O(n) JSON parsing can suck.

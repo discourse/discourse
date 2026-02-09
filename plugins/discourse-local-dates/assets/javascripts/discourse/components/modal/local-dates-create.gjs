@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers */
 import Component from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
@@ -6,6 +6,7 @@ import EmberObject, { action } from "@ember/object";
 import { notEmpty } from "@ember/object/computed";
 import { schedule } from "@ember/runloop";
 import { htmlSafe } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import { observes } from "@ember-decorators/object";
 import CalendarDateTimeInput from "discourse/components/calendar-date-time-input";
 import DButton from "discourse/components/d-button";
@@ -23,6 +24,7 @@ import TimezoneInput from "discourse/select-kit/components/timezone-input";
 import { i18n } from "discourse-i18n";
 import generateDateMarkup from "discourse/plugins/discourse-local-dates/lib/local-date-markup-generator";
 
+@tagName("")
 export default class LocalDatesCreate extends Component {
   timeFormat = "HH:mm:ss";
   dateFormat = "YYYY-MM-DD";
@@ -127,7 +129,7 @@ export default class LocalDatesCreate extends Component {
     }
 
     let format = options.format;
-    if (timeInferred && this.formats.includes(format)) {
+    if (timeInferred && (format === "LLL" || format === "LLLL")) {
       format = "LL";
     }
 
@@ -160,7 +162,7 @@ export default class LocalDatesCreate extends Component {
     }
 
     let format = options.format;
-    if (timeInferred && this.formats.includes(format)) {
+    if (timeInferred && (format === "LLL" || format === "LLLL")) {
       format = "LL";
     }
 

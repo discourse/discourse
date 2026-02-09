@@ -361,7 +361,7 @@ class Topic < ActiveRecord::Base
   scope :exclude_scheduled_bump_topics, -> { where.not(id: TopicTimer.scheduled_bump_topics) }
 
   scope :secured,
-        lambda { |guardian = nil|
+        lambda { |guardian = nil, include_uncategorized: true|
           ids = guardian.secure_category_ids if guardian
 
           # Query conditions
@@ -372,8 +372,10 @@ class Topic < ActiveRecord::Base
               ["NOT read_restricted"]
             end
 
+          uncategorized_condition = "topics.category_id IS NULL OR" if include_uncategorized
+
           where(
-            "topics.category_id IS NULL OR topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})",
+            "#{uncategorized_condition} topics.category_id IN (SELECT id FROM categories WHERE #{condition[0]})",
             condition[1],
           )
         }
@@ -994,7 +996,7 @@ class Topic < ActiveRecord::Base
     post_type =
       archetype == Archetype.private_message ? " AND post_type <> #{Post.types[:small_action]}" : ""
 
-    result = DB.query_single(<<~SQL, topic_id: topic_id)
+    result = DB.query_single(<<~SQL, topic_id:)
       UPDATE topics
       SET
         highest_staff_post_number = (
@@ -1043,17 +1045,16 @@ class Topic < ActiveRecord::Base
       RETURNING highest_post_number
     SQL
 
-    highest_post_number = result.first.to_i
+    highest = result.first.to_i
 
-    # Update the forum topic user records
-    DB.exec(<<~SQL, highest: highest_post_number, topic_id: topic_id)
+    DB.exec(<<~SQL, highest:, topic_id:)
       UPDATE topic_users
-      SET last_read_post_number = CASE
-                                  WHEN last_read_post_number > :highest THEN :highest
-                                  ELSE last_read_post_number
-                                  END
-      WHERE topic_id = :topic_id
+         SET last_read_post_number = :highest
+       WHERE topic_id = :topic_id
+         AND last_read_post_number > :highest
     SQL
+
+    highest
   end
 
   cattr_accessor :update_featured_topics
@@ -1149,6 +1150,7 @@ class Topic < ActiveRecord::Base
         topic_id: self.id,
         silent: opts[:silent],
         skip_validations: true,
+        skip_guardian: opts[:skip_guardian],
         custom_fields: opts[:custom_fields],
         import_mode: opts[:import_mode],
       )
@@ -1207,13 +1209,14 @@ class Topic < ActiveRecord::Base
       topic_user = topic_allowed_users.find_by(user_id: user.id)
 
       if topic_user
+        topic_user.destroy
+
         if user.id == removed_by&.id
-          add_small_action(removed_by, "user_left", user.username)
+          add_small_action(removed_by, "user_left", user.username, skip_guardian: true)
         else
-          add_small_action(removed_by, "removed_user", user.username)
+          add_small_action(removed_by, "removed_user", user.username, skip_guardian: true)
         end
 
-        topic_user.destroy
         MessageBus.publish("/topic/#{id}", { type: "remove_allowed_user" }, user_ids: [user.id])
         return true
       end
@@ -1356,17 +1359,22 @@ class Topic < ActiveRecord::Base
 
       topic
     elsif opts[:title]
-      post_mover.to_new_topic(opts[:title], opts[:category_id], opts[:tags])
+      post_mover.to_new_topic(
+        opts[:title],
+        opts[:category_id],
+        tag_ids: opts[:tag_ids],
+        tags: opts[:tags],
+      )
     end
   end
 
   # Updates the denormalized statistics of a topic including featured posters. They shouldn't
   # go out of sync unless you do something drastic live move posts from one topic to another.
   # this recalculates everything.
-  def update_statistics
+  def update_statistics!
     feature_topic_users
     update_action_counts
-    Topic.reset_highest(id)
+    self.highest_post_number = Topic.reset_highest(id)
   end
 
   def update_action_counts
@@ -2303,6 +2311,7 @@ end
 #  idxtopicslug                            (slug) WHERE ((deleted_at IS NULL) AND (slug IS NOT NULL))
 #  index_topics_on_bannered_until          (bannered_until) WHERE (bannered_until IS NOT NULL)
 #  index_topics_on_bumped_at_public        (bumped_at) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
+#  index_topics_on_category_id             (category_id) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_created_at_and_visible  (created_at,visible) WHERE ((deleted_at IS NULL) AND ((archetype)::text <> 'private_message'::text))
 #  index_topics_on_external_id             (external_id) UNIQUE WHERE (external_id IS NOT NULL)
 #  index_topics_on_id_and_deleted_at       (id,deleted_at)

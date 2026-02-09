@@ -124,6 +124,10 @@ $mobile-breakpoint: 700px;
     padding: 8px;
   }
 
+  td {
+    overflow-wrap: break-word;
+  }
+
   tr.selected {
     background-color: var(--primary-low);
   }
@@ -1238,22 +1242,6 @@ a.inline-editable-field {
   cursor: pointer;
 }
 
-.desktop-view .emoji-value-list {
-  .value {
-    .shift-up-value-btn,
-    .shift-down-value-btn {
-      display: none;
-    }
-
-    &:hover {
-      .shift-up-value-btn,
-      .shift-down-value-btn {
-        display: block;
-      }
-    }
-  }
-}
-
 // Styles for subtabs in admin
 @import "admin/dashboard";
 @import "admin/sidebar";
@@ -1298,3 +1286,4 @@ a.inline-editable-field {
 @import "admin/admin_config_color_palettes";
 @import "admin/admin_config_components";
 @import "admin/upcoming-changes";
+@import "admin/discourse_id";

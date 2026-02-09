@@ -42,9 +42,6 @@ class TopicTrackingState
   def self.publish_new(topic)
     return unless topic.regular?
 
-    tag_ids, tags = nil
-    tag_ids, tags = topic.tags.pluck(:id, :name).transpose if include_tags_in_report?
-
     payload = {
       last_read_post_number: nil,
       highest_post_number: 1,
@@ -54,10 +51,7 @@ class TopicTrackingState
       created_in_new_period: true,
     }
 
-    if tags
-      payload[:tags] = tags
-      payload[:topic_tag_ids] = tag_ids
-    end
+    payload[:tags] = topic.tags.pluck(:id).map { |id| { id: id } } if include_tags_in_report?
 
     message = { topic_id: topic.id, message_type: NEW_TOPIC_MESSAGE_TYPE, payload: payload }
 
@@ -70,23 +64,15 @@ class TopicTrackingState
   def self.publish_latest(topic, whisper = false)
     return unless topic.regular?
 
-    tag_ids, tags = nil
-    tag_ids, tags = topic.tags.pluck(:id, :name).transpose if include_tags_in_report?
-
-    message = {
-      topic_id: topic.id,
-      message_type: LATEST_MESSAGE_TYPE,
-      payload: {
-        bumped_at: topic.bumped_at,
-        category_id: topic.category_id,
-        archetype: topic.archetype,
-      },
+    payload = {
+      bumped_at: topic.bumped_at,
+      category_id: topic.category_id,
+      archetype: topic.archetype,
     }
 
-    if tags
-      message[:payload][:tags] = tags
-      message[:payload][:topic_tag_ids] = tag_ids
-    end
+    payload[:tags] = topic.tags.pluck(:id).map { |id| { id: id } } if include_tags_in_report?
+
+    message = { topic_id: topic.id, message_type: LATEST_MESSAGE_TYPE, payload: payload }
 
     group_ids =
       if whisper
@@ -141,14 +127,17 @@ class TopicTrackingState
     return unless post.topic.regular?
     # TODO at high scale we are going to have to defer this,
     #   perhaps cut down to users that are around in the last 7 days as well
-    tags = nil
-    tag_ids = nil
-    tag_ids, tags = post.topic.tags.pluck(:id, :name).transpose if include_tags_in_report?
 
     # We don't need to publish unread to the person who just made the post,
     # this is why they are excluded from the initial scope.
     scope =
       TopicUser.tracking(post.topic_id).includes(user: :user_stat).where.not(user_id: post.user_id)
+    scope =
+      DiscoursePluginRegistry.apply_modifier(
+        :topic_tracking_state_publish_unread_scope,
+        scope,
+        post,
+      )
 
     group_ids =
       if post.post_type == Post.types[:whisper]
@@ -176,10 +165,7 @@ class TopicTrackingState
       archetype: post.topic.archetype,
     }
 
-    if tags
-      payload[:tags] = tags
-      payload[:topic_tag_ids] = tag_ids
-    end
+    payload[:tags] = post.topic.tags.pluck(:id).map { |id| { id: id } } if include_tags_in_report?
 
     message = { topic_id: post.topic_id, message_type: UNREAD_MESSAGE_TYPE, payload: payload }
 
@@ -344,9 +330,10 @@ class TopicTrackingState
           #{sql}
         )
         SELECT *, (
-          SELECT ARRAY_AGG(name) from topic_tags
-             JOIN tags on tags.id = topic_tags.tag_id
-             WHERE topic_id = tags_included_cte.topic_id
+          SELECT JSON_AGG(JSON_BUILD_OBJECT('id', tags.id, 'name', tags.name, 'slug', tags.slug))
+          FROM topic_tags
+          JOIN tags ON tags.id = topic_tags.tag_id
+          WHERE topic_id = tags_included_cte.topic_id
           ) tags
         FROM tags_included_cte
       SQL
@@ -470,6 +457,24 @@ class TopicTrackingState
       end
     end
 
+    exclude_muted_categories =
+      # If we're only gathering topics with unread posts, we've already included the condition
+      # (topic_users.last_read_post_number < topics.highest_post_number), but the muted categories conditions
+      # attempts to exclude rows where (topic_users.last_read_post_number IS NULL) but both can never be true
+      if !custom_state_filter && skip_new && !skip_unread
+        "1=1"
+      else
+        <<~SQL
+          NOT (
+            #{(skip_new && skip_unread) ? "" : "tu.last_read_post_number IS NULL AND"}
+            (
+              topics.category_id IN (#{CategoryUser.muted_category_ids_query(user, include_direct: true).select("categories.id").to_sql})
+              AND tu.notification_level <= #{TopicUser.notification_levels[:regular]}
+            )
+          )
+        SQL
+      end
+
     sql = +<<~SQL
       SELECT #{select_sql}
       FROM topics
@@ -487,13 +492,7 @@ class TopicTrackingState
             #{tags_filter}
             topics.deleted_at IS NULL AND
             #{category_filter}
-            NOT (
-              #{(skip_new && skip_unread) ? "" : "last_read_post_number IS NULL AND"}
-              (
-                topics.category_id IN (#{CategoryUser.muted_category_ids_query(user, include_direct: true).select("categories.id").to_sql})
-                AND tu.notification_level <= #{TopicUser.notification_levels[:regular]}
-              )
-            )
+            #{exclude_muted_categories}
     SQL
 
     sql << " AND topics.id = :topic_id" if topic_id

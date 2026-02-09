@@ -58,7 +58,9 @@ RSpec.describe TopicListItemSerializer do
     it "returns hidden tag to staff" do
       json = TopicListItemSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
 
-      expect(json[:tags]).to eq([hidden_tag.name])
+      expect(json[:tags]).to eq(
+        [{ id: hidden_tag.id, name: hidden_tag.name, slug: hidden_tag.slug }],
+      )
     end
 
     it "trucates description" do
@@ -205,6 +207,11 @@ RSpec.describe TopicListItemSerializer do
       expect(json[:first_post_id]).to eq(first_post.id)
     ensure
       DiscoursePluginRegistry.unregister_modifier(plugin, modifier, &proc)
+    end
+
+    it "serializes op_like_count" do
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
+      expect(json[:op_like_count]).to eq(first_post.like_count)
     end
   end
 

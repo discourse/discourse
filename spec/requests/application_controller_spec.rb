@@ -1591,6 +1591,36 @@ RSpec.describe ApplicationController do
         end
       end
     end
+
+    context "with content localization enabled" do
+      def banner_html
+        preloaded = Nokogiri::HTML5.fragment(response.body).css("#data-preloaded").first
+        JSON.parse(JSON.parse(preloaded["data-preloaded"])["banner"])["html"]
+      end
+
+      before do
+        SiteSetting.allow_user_locale = true
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.content_localization_enabled = true
+        SiteSetting.login_required = false
+        p1.update!(locale: "en")
+        p1.topic.update!(locale: "en")
+        Fabricate(:post_localization, post: p1, locale: "de", cooked: "<p>German banner</p>")
+        Fabricate(:post_localization, post: p1, locale: "zh_CN", cooked: "<p>Chinese banner</p>")
+        ApplicationLayoutPreloader.banner_json_cache.clear
+      end
+
+      it "caches banner separately per locale to prevent cache poisoning" do
+        get "/login", headers: { Cookie: "locale=de" }
+        expect(banner_html).to eq("<p>German banner</p>")
+
+        get "/login", headers: { Cookie: "locale=zh_CN" }
+        expect(banner_html).to eq("<p>Chinese banner</p>")
+
+        get "/login"
+        expect(banner_html).to eq("<p>A banner topic</p>")
+      end
+    end
   end
 
   describe "Early hint header" do
@@ -1664,6 +1694,7 @@ RSpec.describe ApplicationController do
             "activatedThemes",
             "#{TopicList.new("latest", Fabricate(:anonymous), []).preload_key}",
             "themeSiteSettingOverrides",
+            "upcomingChanges",
           ],
         )
       end
@@ -1692,6 +1723,7 @@ RSpec.describe ApplicationController do
             "themeSiteSettingOverrides",
             "topicTrackingStates",
             "topicTrackingStateMeta",
+            "upcomingChanges",
           ],
         )
       end
@@ -1722,6 +1754,7 @@ RSpec.describe ApplicationController do
             "topicTrackingStateMeta",
             "fontMap",
             "visiblePlugins",
+            "upcomingChanges",
           ],
         )
       end
@@ -1992,6 +2025,84 @@ RSpec.describe ApplicationController do
       expect(response.body).to include(
         '<meta name="google-site-verification" content="verification_token">',
       )
+    end
+  end
+
+  describe "when authorizing mini_profiler" do
+    mini_profiler_stub = Class.new { def self.authorize_request = nil }
+
+    around do |example|
+      stub_const(ApplicationController, :MINI_PROFILER_CLASS, mini_profiler_stub) { example.run }
+    end
+
+    fab!(:developer) { Fabricate(:admin).tap { |u| Developer.create!(user_id: u.id) } }
+    fab!(:user)
+    fab!(:admin)
+
+    before { allow(mini_profiler_stub).to receive(:authorize_request) }
+    after { Developer.rebuild_cache }
+
+    it "authorizes mini_profiler for developer user" do
+      sign_in(developer)
+
+      get "/latest"
+
+      expect(mini_profiler_stub).to have_received(:authorize_request)
+    end
+
+    it "does not authorize mini_profiler for non-developer user" do
+      sign_in(admin)
+
+      get "/latest"
+
+      expect(mini_profiler_stub).not_to have_received(:authorize_request)
+    end
+
+    describe "using the mini_profiler auth cookie" do
+      def set_mini_profiler_auth_cookie(user, issued_at: Time.now.to_i)
+        data = { user_id: user.id, issued_at: issued_at }
+        jar = ActionDispatch::Cookies::CookieJar.build(ActionDispatch::TestRequest.create, {})
+        jar.encrypted[:_mp_auth] = { value: data }
+        cookies[:_mp_auth] = jar[:_mp_auth]
+      end
+
+      it "authorizes mini_profiler for anon user with valid cookie" do
+        set_mini_profiler_auth_cookie(developer)
+
+        get "/latest"
+
+        expect(mini_profiler_stub).to have_received(:authorize_request)
+      end
+
+      it "does not authorize with expired cookie" do
+        set_mini_profiler_auth_cookie(
+          developer,
+          issued_at:
+            (ApplicationController::MINI_PROFILER_AUTH_COOKIE_EXPIRES_IN + 1.hour).ago.to_i,
+        )
+
+        get "/latest"
+
+        expect(mini_profiler_stub).not_to have_received(:authorize_request)
+      end
+
+      it "does not authorize if user no longer exists" do
+        set_mini_profiler_auth_cookie(developer)
+        developer.destroy!
+
+        get "/latest"
+
+        expect(mini_profiler_stub).not_to have_received(:authorize_request)
+      end
+
+      it "does not authorize if user is no longer a developer" do
+        set_mini_profiler_auth_cookie(developer)
+        Developer.find_by(user_id: developer.id).destroy!
+
+        get "/latest"
+
+        expect(mini_profiler_stub).not_to have_received(:authorize_request)
+      end
     end
   end
 end

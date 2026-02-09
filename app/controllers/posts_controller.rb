@@ -279,6 +279,14 @@ class PostsController < ApplicationController
       opts[:skip_validations] = true
     end
 
+    if params.key?(:bypass_bump) || params[:post]&.key?(:bypass_bump)
+      if guardian.can_update_bumped_at?
+        opts[:bypass_bump] = ActiveModel::Type::Boolean.new.cast(
+          params[:bypass_bump].presence || params.dig(:post, :bypass_bump),
+        )
+      end
+    end
+
     topic = post.topic
     topic = Topic.with_deleted.find(post.topic_id) if guardian.is_staff?
 
@@ -416,8 +424,7 @@ class PostsController < ApplicationController
     posts = Post.where(id: post_ids_including_replies).order(:id)
     raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
 
-    # Make sure we can delete the posts
-    posts.each { |p| guardian.ensure_can_delete!(p) }
+    posts.each { |p| guardian.ensure_can_delete_post_or_topic!(p) }
 
     Post.transaction do
       posts.each_with_index do |p, i|
@@ -717,6 +724,7 @@ class PostsController < ApplicationController
 
     guardian.ensure_can_unhide!(post)
 
+    post.acting_user = current_user
     post.unhide!
 
     render body: nil
@@ -929,23 +937,23 @@ class PostsController < ApplicationController
     # Staff are allowed to pass `is_warning`
     if current_user.staff?
       params.permit(:is_warning)
-      result[:is_warning] = (params[:is_warning] == "true")
+      result[:is_warning] = ActiveModel::Type::Boolean.new.cast(params[:is_warning])
     else
       result[:is_warning] = false
     end
 
-    if params[:no_bump] == "true"
+    if ActiveModel::Type::Boolean.new.cast(params[:no_bump])
       raise Discourse::InvalidParameters.new(:no_bump) unless guardian.can_skip_bump?
       result[:no_bump] = true
     end
 
-    if params[:shared_draft] == "true"
+    if ActiveModel::Type::Boolean.new.cast(params[:shared_draft])
       raise Discourse::InvalidParameters.new(:shared_draft) unless guardian.can_create_shared_draft?
 
       result[:shared_draft] = true
     end
 
-    if params[:whisper] == "true"
+    if ActiveModel::Type::Boolean.new.cast(params[:whisper])
       unless guardian.can_create_whisper?
         raise Discourse::InvalidAccess.new(
                 "invalid_whisper_access",
@@ -960,6 +968,14 @@ class PostsController < ApplicationController
     PostRevisor.tracked_topic_fields.each_key do |f|
       params.permit(f => [])
       result[f] = params[f] if params.has_key?(f)
+    end
+
+    if result[:tags].present? && result[:tags].first.is_a?(String)
+      Discourse.deprecate(
+        "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
     end
 
     # Stuff we can use in spam prevention plugins

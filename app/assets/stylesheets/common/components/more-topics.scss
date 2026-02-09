@@ -10,19 +10,34 @@
 
     li {
       .btn {
-        color: var(--primary);
-        background-color: transparent;
+        color: var(--d-nav-color);
+        background-color: var(--d-nav-bg-color);
         padding: var(--d-topic-list-header-data-padding-y) 0.8em;
         border: none;
         border-radius: 0;
         font-size: var(--d-topic-list-data-font-size);
         line-height: var(--line-height-medium);
 
-        .d-icon,
-        &:hover .d-icon,
-        &:active .d-icon {
+        .d-icon {
           color: var(--primary-high);
-          opacity: 1;
+        }
+
+        &:focus-visible,
+        &:hover {
+          color: var(--d-nav-color--hover);
+          background: var(--d-nav-bg-color--hover);
+
+          .d-icon {
+            color: currentcolor;
+          }
+        }
+
+        &.active {
+          color: var(--d-nav-color--active);
+
+          .d-icon {
+            color: currentcolor;
+          }
         }
       }
     }

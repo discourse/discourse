@@ -7,21 +7,25 @@ import { action } from "@ember/object";
 import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import icon from "discourse/helpers/d-icon";
 import { ajax } from "discourse/lib/ajax";
+import { removeValueFromArray } from "discourse/lib/array-tools";
 import discourseDebounce from "discourse/lib/debounce";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import UppyUpload from "discourse/lib/uppy/uppy-upload";
 import { i18n } from "discourse-i18n";
 import RagUploadProgress from "./rag-upload-progress";
 
+@tagName("")
 export default class RagUploader extends Component {
   @service appEvents;
 
   @tracked term = null;
   @tracked filteredUploads = null;
   @tracked ragIndexingStatuses = null;
-  @tracked ragUploads = null;
+  @trackedArray ragUploads = null;
 
   uppyUpload = new UppyUpload(getOwner(this), {
     id: "discourse-ai-rag-uploader",
@@ -34,7 +38,7 @@ export default class RagUploader extends Component {
       const newUpload = uploadedFile.upload;
       newUpload.status = "uploaded";
       newUpload.statusText = i18n("discourse_ai.rag.uploads.uploaded");
-      this.ragUploads.pushObject(newUpload);
+      this.ragUploads.push(newUpload);
       this.debouncedSearch();
     },
   });
@@ -119,14 +123,14 @@ export default class RagUploader extends Component {
 
   @action
   removeUpload(upload) {
-    this.ragUploads.removeObject(upload);
+    removeValueFromArray(this.ragUploads, upload);
     this.onRemove(upload);
 
     this.debouncedSearch();
   }
 
   <template>
-    <div class="rag-uploader">
+    <div class="rag-uploader" ...attributes>
       {{#if @allowImages}}
         <p>{{i18n "discourse_ai.rag.uploads.description_with_images"}}</p>
       {{else}}

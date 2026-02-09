@@ -7,12 +7,23 @@ export default {
 
   initialize() {
     withPluginApi((api) => {
+      api.registerNotificationTypeRenderer(
+        "votes_released",
+        (NotificationTypeBase) => {
+          return class extends NotificationTypeBase {
+            get label() {
+              return i18n("topic_voting.notification_label.vote_released");
+            }
+          };
+        }
+      );
+
       const siteSettings = api.container.lookup("service:site-settings");
       if (siteSettings.topic_voting_enabled) {
         const pageSearchController = api.container.lookup(
           "controller:full-page-search"
         );
-        pageSearchController.sortOrders.pushObject({
+        pageSearchController.sortOrders.push({
           name: i18n("search.most_votes"),
           id: 5,
           term: "order:votes",

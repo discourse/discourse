@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers, ember/no-side-effects */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
@@ -48,6 +49,8 @@ import Composer, {
 import Draft from "discourse/models/draft";
 import PostLocalization from "discourse/models/post-localization";
 import TopicLocalization from "discourse/models/topic-localization";
+import WrapAttributesModal from "discourse/static/prosemirror/components/wrap-attributes-modal";
+import { parseAttributesString } from "discourse/static/prosemirror/lib/wrap-utils";
 import { i18n } from "discourse-i18n";
 
 async function loadDraft(store, opts = {}) {
@@ -468,11 +471,24 @@ export default class ComposerService extends Service {
         })
       );
 
-      return options.concat(
-        customPopupMenuOptions
-          .map((option) => this._setupPopupMenuOption({ ...option }))
-          .filter((o) => o)
-      );
+      const secondaryOptions = [
+        this._setupPopupMenuOption({
+          name: "toggle-wrap",
+          action: this.toggleWrap,
+          icon: "right-to-bracket",
+          label: "composer.apply_wrap_title",
+          showActiveIcon: true,
+          active: ({ state }) => state?.inWrap,
+        }),
+      ];
+
+      return options
+        .concat(
+          customPopupMenuOptions
+            .map((option) => this._setupPopupMenuOption({ ...option }))
+            .filter((o) => o)
+        )
+        .concat(secondaryOptions);
     }
   }
 
@@ -828,6 +844,40 @@ export default class ComposerService extends Service {
       model: {
         toolbarEvent: this.toolbarEvent,
         tableTokens: null,
+      },
+    });
+  }
+
+  @action
+  toggleWrap(toolbarEvent) {
+    const initialAttributes = toolbarEvent.state?.inWrap
+      ? toolbarEvent.state.wrapAttributes || ""
+      : "";
+
+    this.modal.show(WrapAttributesModal, {
+      model: {
+        initialAttributes,
+        onApply: (attributesString) => {
+          if (toolbarEvent.state?.inWrap) {
+            toolbarEvent.commands?.updateWrap(attributesString);
+          } else if (toolbarEvent.commands?.insertWrap) {
+            toolbarEvent.commands.insertWrap(
+              parseAttributesString(attributesString)
+            );
+          } else {
+            const wrapTag = attributesString.trim()
+              ? `[wrap ${attributesString}]`
+              : "[wrap]";
+            toolbarEvent.applySurround(
+              `${wrapTag}\n`,
+              "\n[/wrap]",
+              "wrap_text"
+            );
+          }
+        },
+        onRemove: toolbarEvent.state?.inWrap
+          ? () => toolbarEvent.commands?.removeWrap()
+          : undefined,
       },
     });
   }
@@ -1514,7 +1564,7 @@ export default class ComposerService extends Service {
       });
     }
 
-    return tags
+    return tags.content
       .filter((t) => !t.staff)
       .map((t) => t.name)
       .join(",");

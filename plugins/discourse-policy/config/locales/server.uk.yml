@@ -8,6 +8,7 @@ uk:
   site_settings:
     policy_enabled: "Дозволити політики?"
     policy_restrict_to_staff_posts: "Політики можуть з'являтися лише на статтях персоналу"
+    create_policy_allowed_groups: "Для додавання правил до публікацій потрібне членство в групі"
     policy_easy_revoke: "Показувати кнопки \"Приймаю\" і \"відкликати\" одночасно,"
   discourse_policy:
     errors:

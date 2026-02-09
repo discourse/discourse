@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+ca:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "Privat"
+          public: "Públic"
+      reports:
+        reading_time:
+          title: Temps de lectura.
+        chat_usage:
+          messages: missatges
+        invites:
+          title: Invitacions
+          invitee_posts: Publicacions creades
+          invitee_likes: '''M''agrada'' donats'
+        new_user_interactions:
+          likes_given: '''M''agrada'' donats'
+          mentions: Mencions
+        writing_analysis:
+          menu_other: Altres

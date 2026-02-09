@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { computed, get, getProperties } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
@@ -19,6 +20,7 @@ import {
 } from "discourse/lib/array-tools";
 import { url } from "discourse/lib/computed";
 import {
+  AUTO_GROUPS,
   INTERFACE_COLOR_MODES,
   USER_OPTION_COMPOSITION_MODES,
 } from "discourse/lib/constants";
@@ -316,6 +318,11 @@ export default class User extends RestModel.extend(Evented) {
     return this.staff && this.get("has_unseen_features");
   }
 
+  @computed("has_new_upcoming_changes")
+  get hasNewUpcomingChanges() {
+    return this.staff && this.get("has_new_upcoming_changes");
+  }
+
   destroySession() {
     return ajax(`/session/${this.username}`, { type: "DELETE" });
   }
@@ -566,7 +573,13 @@ export default class User extends RestModel.extend(Evented) {
       "watching_first_post_tags",
     ].forEach((prop) => {
       if (fields === undefined || fields.includes(prop)) {
-        data[prop] = this.get(prop) ? this.get(prop).join(",") : "";
+        const tags = this.get(prop);
+        if (tags) {
+          const names = tags.map((t) => (typeof t === "object" ? t.name : t));
+          data[prop] = names.join(",");
+        } else {
+          data[prop] = "";
+        }
       }
     });
 
@@ -777,7 +790,7 @@ export default class User extends RestModel.extend(Evented) {
     const groups = this.groups || [];
 
     return groups.filter((group) => {
-      return !group.automatic || group.name === "moderators";
+      return !group.automatic || group.name === AUTO_GROUPS.moderators.name;
     });
   }
 

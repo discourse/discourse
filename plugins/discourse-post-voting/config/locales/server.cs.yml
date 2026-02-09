@@ -23,11 +23,6 @@ cs:
           agree_and_silence:
             title: "Ztišení uživatele"
             description: "Schválit nahlášení a ztišit uživatele."
-          disagree:
-            title: "Neschvaluji"
-          ignore:
-            title: "Nedělat nic"
-            description: "Ignorovat nahlášení odstraněním z fronty bez jakékoli akce."
       reviewable_score_types:
         needs_review:
           title: "Potřebuje revizi"

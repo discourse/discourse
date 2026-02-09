@@ -459,7 +459,7 @@
     background-color: var(--success);
   }
 
-  .flagged-posts {
+  .flags {
     background-color: #e49735;
   }
 
@@ -771,6 +771,12 @@
     }
   }
 
+  #control-chat_quick_reactions_custom .form-kit__control-custom {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-2);
+  }
+
   .category-selector,
   .tag-chooser,
   textarea,
@@ -970,7 +976,8 @@
   }
 
   .pref-passkeys,
-  .pref-auth-tokens {
+  .pref-auth-tokens,
+  .pref-user-api-keys {
     .row {
       border-top: 1px solid var(--content-border-color);
       padding: 0.5em 0;
@@ -1014,9 +1021,59 @@
     }
   }
 
+  .pref-user-api-keys {
+    .user-api-key {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 0.5em;
+    }
+
+    .user-api-key__info {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .user-api-key__name {
+      font-size: 1.1em;
+      font-weight: bold;
+    }
+
+    .user-api-key__dates {
+      color: var(--primary-medium);
+    }
+
+    .user-api-key__scopes-toggle {
+      width: 100%;
+      margin-top: 0.5em;
+
+      a {
+        color: var(--tertiary);
+        cursor: pointer;
+
+        .d-icon {
+          margin-right: 0.25em;
+        }
+      }
+    }
+
+    .user-api-key__scopes-list {
+      width: 100%;
+      margin: 0.5em 0 0 1.5em;
+      padding: 0;
+      list-style: disc;
+      color: var(--primary-medium);
+    }
+  }
+
   .pref-second-factor {
     margin-top: 0.5em;
   }
+}
+
+.user-upcoming-changes-table {
+  margin-top: var(--space-4);
+  width: 100%;
 }
 
 .paginated-topics-list {

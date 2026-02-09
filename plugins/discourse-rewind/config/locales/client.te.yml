@@ -1,0 +1,27 @@
+# WARNING: Never edit this file.
+# It will be overwritten when translations are pulled from Crowdin.
+#
+# To work with us on translations, join this project:
+# https://translate.discourse.org/
+
+te:
+  js:
+    discourse_rewind:
+      share:
+        toggle_label:
+          private: "అంతరంగికం"
+          public: "బహిరంగం"
+      reports:
+        reading_time:
+          title: చదివే సమయం
+        chat_usage:
+          messages: సందేశాలు
+        invites:
+          title: ఆహ్వానాలు
+          invitee_posts: పోస్ట్‌లు సృష్టించబడ్డాయి
+          invitee_likes: ఇచ్చిన ఇష్టాలు
+        new_user_interactions:
+          likes_given: ఇచ్చిన ఇష్టాలు
+          mentions: ప్రస్తావనలు
+        writing_analysis:
+          menu_other: ఇతర

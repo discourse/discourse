@@ -3,7 +3,6 @@
 module DiscourseAi
   module AiModeration
     class SpamScanner
-      POSTS_TO_SCAN = 3
       MINIMUM_EDIT_DIFFERENCE = 10
       EDIT_DELAY_MINUTES = 10
       MAX_AGE_TO_SCAN = 1.day
@@ -14,8 +13,13 @@ module DiscourseAi
       def self.new_post(post)
         return if !enabled?
         return if !should_scan_post?(post)
+        return if approved_from_review_queue?(post)
 
         flag_post_for_scanning(post)
+      end
+
+      def self.approved_from_review_queue?(post)
+        ReviewableQueuedPost.approved.exists?(target: post)
       end
 
       def self.ensure_flagging_user!
@@ -67,6 +71,9 @@ module DiscourseAi
         return if !post.custom_fields[SHOULD_SCAN_POST_CUSTOM_FIELD]
         return if post.updated_at < MAX_AGE_TO_SCAN.ago
 
+        editor = post.last_editor
+        return if editor && (editor.staff? || editor.bot?)
+
         last_scan = AiSpamLog.where(post_id: post.id).order(created_at: :desc).first
 
         if last_scan && last_scan.created_at > EDIT_DELAY_MINUTES.minutes.ago
@@ -105,17 +112,18 @@ module DiscourseAi
 
       def self.should_scan_post?(post)
         return false if !post.present?
-        return false if post.user.trust_level > TrustLevel[1]
+        return false if post.user.trust_level > SiteSetting.ai_spam_detection_max_trust_level
         return false if post.topic.private_message?
         return false if post.user.bot?
         return false if post.user.staff?
 
+        max_post_count = SiteSetting.ai_spam_detection_max_post_count
         if Post
              .where(user_id: post.user_id)
              .joins(:topic)
              .where(topic: { archetype: Archetype.default })
-             .limit(4)
-             .count > 3
+             .limit(max_post_count + 1)
+             .count > max_post_count
           return false
         end
         true

@@ -173,4 +173,27 @@ RSpec.describe ProblemCheck do
       end
     end
   end
+
+  describe "#cleanup_trackers" do
+    before do
+      ProblemCheckTracker.create!(identifier: "multi_target_check", target: "foo")
+      ProblemCheckTracker.create!(identifier: "multi_target_check", target: "bar")
+      ProblemCheckTracker.create!(identifier: "multi_target_check", target: "baz")
+    end
+
+    it "deletes trackers with non-existing targets" do
+      expect { multi_target_check.cleanup_trackers }.to change {
+        ProblemCheckTracker.pluck(:target)
+      }.from(contain_exactly("foo", "bar", "baz")).to(contain_exactly("foo", "bar"))
+    end
+
+    context "when targets returns an empty array" do
+      before { MultiTargetCheck.targets = -> { [] } }
+      after { MultiTargetCheck.targets = -> { %w[foo bar] } }
+
+      it "does not delete any trackers" do
+        expect { multi_target_check.cleanup_trackers }.not_to change { ProblemCheckTracker.count }
+      end
+    end
+  end
 end

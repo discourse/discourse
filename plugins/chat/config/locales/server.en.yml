@@ -26,7 +26,6 @@ en:
     chat_preferred_index: "Preferred tab when loading /chat."
     allow_chat_in_anonymous_mode: "Enable this setting to allow users who are browsing your site anonymously to use chat. This setting requires the `allow anonymous mode` setting to be enabled."
     chat_search_enabled: "Enable this setting to allow users to search chat messages."
-    star_chat_channels: "Enable starring of chat channels. Starred channels will be in their own dedicated section on the sidebar for quick access."
     errors:
       chat_default_channel: "The default chat channel must be a public channel."
       direct_message_enabled_groups_invalid: "You must specify at least one group for this setting. If you do not want anyone except staff to send direct messages, choose the staff group."
@@ -69,6 +68,7 @@ en:
         closed: "The channel is closed, no messages can be edited or deleted"
         read_only: "The channel is read only, no messages can be edited or deleted"
       user_cannot_send_message: "You cannot send messages at this time."
+      user_not_in_channel: "You must be a member of this channel."
       rate_limit_exceeded: "Exceeded the limit of chat messages that can be sent within 30 seconds"
       auto_silence_from_flags: "Chat message flagged with score high enough to silence user."
       channel_cannot_be_archived: "The channel cannot be archived at this time, it must be either closed or open to archive."
@@ -135,16 +135,17 @@ en:
           title: "Delete Message"
           description: "Delete the message so that users cannot see it."
         delete_and_agree:
-          title: "Ignore Flag and Delete Message"
+          title: "Ignore flag and delete message"
           description: "Ignore the flag by removing it from the queue and delete the message."
         disagree_and_restore:
           title: "Disagree and Restore Message"
           description: "Restore the message so that all users can see it."
         disagree:
-          title: "Disagree"
+          title: "Keep message"
+          description: "Disagree with flag and leave message unchanged."
         ignore:
-          title: "Do Nothing"
-          description: "Ignore the flag by removing it from the queue without taking any action."
+          title: "Ignore flag"
+          description: "Remove it from the queue without taking action."
       direct_messages:
         transcript_title: "Transcript of previous messages in %{channel_name}"
         transcript_body: "To give you more context, we included a transcript of the previous messages in this conversation (up to ten):\n\n%{transcript}"

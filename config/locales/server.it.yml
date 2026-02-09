@@ -1040,12 +1040,9 @@ it:
     no_log_search_queries: "I log delle query di ricerca sono attualmente disabilitati (possono essere abilitati da un amministratore nelle impostazioni del sito)."
   email_settings:
     pop3_authentication_error: "Si è verificato un problema con le credenziali POP3 fornite. Controlla il nome utente e la password e riprova."
-    imap_authentication_error: "Si è verificato un problema con le credenziali IMAP fornite. Controlla il nome utente e la password e riprova."
-    imap_no_response_error: "Si è verificato un errore durante la comunicazione con il server IMAP. %{message}"
     smtp_authentication_error: "Si è verificato un problema con le credenziali SMTP fornite. Controlla nome utente e password, quindi riprova. %{message}"
     smtp_server_busy_error: "Il server SMTP è attualmente occupato. Riprova più tardi."
     smtp_unhandled_error: "Si è verificato un errore non gestito durante la comunicazione con il server SMTP. %{message}"
-    imap_unhandled_error: "Si è verificato un errore non gestito durante la comunicazione con il server IMAP. %{message}"
     connection_error: "Si è verificato un problema durante la connessione con il server. Controlla il nome e la porta del server e riprova."
     timeout_error: "Connessione al server scaduta. Controlla il nome e la porta del server e riprova."
     unhandled_error: "Errore non gestito durante il test delle impostazioni e-mail. %{message}"
@@ -1134,11 +1131,10 @@ it:
       every_month: "ogni mese"
       every_six_months: "ogni sei mesi"
   user_api_key:
-    title: "Autorizza accesso dell'applicazione"
     authorize: "Autorizza"
+    deny: "Annulla"
     read: "lettura"
     read_write: "lettura/scrittura"
-    description: '"%{application_name}" richiede il seguente accesso al tuo account:'
     instructions: 'Abbiamo appena generato una nuova chiave API utente da usare con "%{application_name}", incolla la seguente chiave nella tua applicazione:'
     otp_description: 'Vuoi consentire a "%{application_name}" l''accesso al sito?'
     otp_confirmation:
@@ -1696,7 +1692,6 @@ it:
     manifest_icon: "Immagine utilizzata come immagine logo / splash su Android. Verrà automaticamente ridimensionato a 512 × 512. Se lasciato vuoto, verrà utilizzato large_icon."
     manifest_screenshots: "Schermate che mostrano le caratteristiche e le funzionalità nella pagina di installazione. Tutte le immagini devono essere caricate in locale e delle stesse dimensioni."
     favicon: "Una favicon per il tuo sito, vedi <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://en.wikipedia.org/wiki/Favicon</a> . Per funzionare correttamente su un CDN deve essere un'immagine PNG. Verrà ridimensionata a 32x32. Se lasciato vuoto, verrà usato large_icon."
-    apple_touch_icon: "Icona utilizzata per i dispositivi touch Apple. Si sconsiglia l'uso di sfondi trasparenti.Verrà automaticamente ridimensionata a 180x180. Se lasciata vuota, verrà usato il formato large_icon."
     opengraph_image: "Immagine opengraph predefinita, utilizzata quando la pagina non ha altre immagini adatte. Se lasciato vuoto, verrà usato large_icon"
     x_summary_large_image: "Opzione 'Summary large image' di una scheda Twitter (deve misurare almeno 280 di larghezza e almeno 150 di altezza e non può essere un'imagine .svg). Se lasciato vuoto, i normali metadati delle schede vengono generati utilizzando l'opzione opengraph_image, a meno che l'immagine non sia un file .svg."
     notification_email: "L'indirizzo presente nel campo from: usato per inviare tutte le email essenziali di sistema. Il dominio indicato deve avere i record SPF, DKIM e reverse PTR impostati correttamente perché l'email arrivi."
@@ -1923,7 +1918,6 @@ it:
     invite_link_max_redemptions_limit_users: "Il numero massimo di riscatti consentiti per i link di invito generati da utenti regolari non può superare questo valore."
     alert_admins_if_errors_per_minute: "Soglia di errori al minuto che attiva un allarme agli amministratori. Un valore pari a 0 disabilita questa funzione. NOTA: richiede un riavvio."
     alert_admins_if_errors_per_hour: "Soglia di errori all'ora che attiva un allarme agli amministratori. Un valore pari a 0 disabilita questa funzione. NOTA: richiede un riavvio."
-    categories_topics: "Numero di argomenti da mostrare in /categories page. Se impostato su 0, il sistema proverà automaticamente a trovare un valore per mantenere simmetriche le due colonne (categorie e argomenti)."
     suggested_topics: "Numero di argomenti suggeriti mostrati in fondo ad un argomento."
     limit_suggested_to_category: "Negli argomenti suggeriti, mostra soltanto argomenti della categoria corrente. "
     suggested_topics_max_days_old: "Gli argomenti suggeriti non dovrebbero essere più vecchi di n giorni."
@@ -1991,35 +1985,22 @@ it:
     tl3_requires_likes_given: "Numero minimo di mi piace che devono essere dati negli ultimi (tl3 time period) giorni per essere idonei alla promozione al livello di attendibilità 3."
     tl3_requires_likes_received: "Numero minimo di mi piace che devono essere ricevuti negli ultimi (tl3 time period) giorni per essere idonei alla promozione al livello di attendibilità 3."
     tl3_links_no_follow: "Non rimuovere rel=nofollow dai collegamenti pubblicati da utenti con livello di attendibilità 3."
-    tl4_delete_posts_and_topics: "Consenti agli utenti TL4 di eliminare messaggi e argomenti creati da altri utenti. Gli utenti TL4 potranno anche vedere argomenti e messaggi eliminati."
     delete_all_posts_and_topics_allowed_groups: "I gruppi sono autorizzati a eliminare messaggi e argomenti creati da altri utenti. Questi gruppi potranno anche vedere argomenti e messaggi eliminati."
     edit_all_topic_groups: "Consenti agli utenti di questo gruppo di modificare i titoli, i tag e le categorie degli argomenti di altri utenti"
     edit_all_post_groups: "Consenti agli utenti di questo gruppo di modificare i post di altri utenti"
-    min_trust_to_create_topic: "Livello minimo richiesto per creare un nuovo argomento."
     create_topic_allowed_groups: "Gruppi a cui è consentito creare nuovi argomenti. Ad amministratori e moderatori è sempre consentito creare argomenti."
     allow_flagging_staff: "Se abilitato, gli utenti possono segnalare i messaggi dagli account dello staff."
-    min_trust_to_edit_wiki_post: "Livello minimo richiesto per modificare un argomento segnato come wiki."
     edit_wiki_post_allowed_groups: "Gruppi a cui è consentito modificare i messaggi contrassegnati come wiki. Ad amministratori e moderatori è sempre consentito modificare i messaggi contrassegnati come wiki."
-    min_trust_to_edit_post: "Il livello di attendibilità minimo richiesto per modificare i messaggi."
     edit_post_allowed_groups: "Gruppi a cui è consentito modificare i messaggi. Ad amministratori e moderatori è sempre consentito modificare messaggi."
-    min_trust_to_allow_self_wiki: "Il livello di attendibilità minimo richiesto per consentire agli utenti di pubblicare una propria wiki."
     self_wiki_allowed_groups: "Consenti agli utenti di questi gruppi di creare i propri post nella wiki. Amministratori e moderatori possono sempre creare i propri post sulla wiki."
     min_trust_to_send_messages: "Impostazione DEPRECATA, usare l'impostazione \"Gruppi abilitati per messaggi personali\" al suo posto. Il livello di attendibilità minimo richiesto per creare nuovi messaggi personali."
-    min_trust_to_send_email_messages: "Il livello di attendibilità minimo richiesto per inviare messaggi personali via email."
     send_email_messages_allowed_groups: "Gruppi a cui è consentito inviare messaggi personali via email. Ad amministratori e moderatori è sempre consentito inviare messaggi personali via email."
-    min_trust_to_flag_posts: "Il livello di attendibilità minimo richiesto per segnalare messaggi"
     flag_post_allowed_groups: "Gruppi a cui è consentito segnalare i messaggi. Ad amministratori e moderatori è sempre consentito segnalare i messaggi."
-    min_trust_to_post_links: "Il livello di attendibilità minimo richiesto per includere link nei messaggi"
     post_links_allowed_groups: "Gruppi a cui è consentito includere collegamenti nei messaggi. Ad amministratori e moderatori è sempre consentito includere collegamenti nei messaggi."
-    min_trust_to_post_embedded_media: "Il livello di attendibilità minimo richiesto per incorporare elementi multimediali in un messaggio"
     embedded_media_post_allowed_groups: "Agli utenti di questi gruppi è consentito incorporare elementi multimediali in un messaggio. Ad amministratori e moderatori è sempre consentito incorporare elementi multimediali nei messaggi."
-    min_trust_level_to_allow_profile_background: "Il livello di attendibilità minimo richiesto per caricare uno sfondo del profilo"
     profile_background_allowed_groups: "Gruppi a cui è consentito caricare uno sfondo del profilo. Ad amministratori e moderatori è sempre consentito caricare uno sfondo del profilo."
-    min_trust_level_to_allow_user_card_background: "Il livello di attendibilità minimo richiesto per caricare uno sfondo nella scheda utente"
     user_card_background_allowed_groups: "Gruppi a cui è consentito caricare uno sfondo della scheda utente. Ad amministratori e moderatori è sempre consentito caricare uno sfondo della scheda utente."
-    min_trust_level_to_allow_invite: "Il livello di attendibilità minimo richiesto per invitare gli utenti"
     invite_allowed_groups: "Gruppi a cui è consentito invitare utenti. Ad amministratori e moderatori è sempre consentito invitare utenti."
-    min_trust_level_to_allow_ignore: "Il livello di attendibilità minimo richiesto per ignorare utenti"
     ignore_allowed_groups: "Gruppi a cui è consentito ignorare altri utenti. Ad amministratori e moderatori è sempre consentito ignorare altri utenti."
     allowed_link_domains: "Domini che gli utenti possono collegare nei messaggi anche se non hanno il livello di attendibilità appropriato per pubblicare link"
     newuser_max_links: "Quanti collegamenti può aggiungere a un messaggio un nuovo utente ."
@@ -2032,7 +2013,6 @@ it:
     enable_mentions: "Consente agli utenti di etichettarsi o menzionarsi a vicenda nei messaggi col simbolo \"@\"."
     here_mention: "Nome utilizzato per una @menzione per consentire agli utenti privilegiati di avvisare fino a \"max_here_member\" persone che partecipano all'argomento. Non deve essere un nome utente esistente."
     max_here_mentioned: "Numero massimo di persone menzionate da @here."
-    min_trust_level_for_here_mention: "Il livello di attendibilità minimo richiesto per menzionare @here."
     here_mention_allowed_groups: "Gruppi a cui è consentito menzionare @here. Ad amministratori e moderatori è sempre consentito menzionare @here."
     create_thumbnails: "Crea anteprime e lightbox delle immagini che sono troppo grandi per essere contenute in un messaggio."
     email_time_window_mins: "Aspetta (n) minuti prima di inviare email di notifica, per dare agli utenti la possibilità di modificare e completare i loro messaggi."
@@ -2156,18 +2136,10 @@ it:
     pop3_polling_delete_from_server: "Elimina email dal server. NOTA: se disabiliti questa opzione, devi pulire manualmente la tua casella di posta"
     log_mail_processing_failures: "Registra tutti gli errori di elaborazione della posta elettronica in <a href='%{base_path}/logs' target='_blank'>/logs</a>"
     email_in: "Consenti agli utenti di pubblicare nuovi argomenti via email. Dopo aver abilitato questa impostazione, sarai in grado di configurare gli indirizzi email in entrata per gruppi e categorie."
-    email_in_min_trust: "Livello di attendibilità minimo necessario affinché un utente possa pubblicare nuovi argomenti via email."
     email_in_allowed_groups: "Gruppi a cui è consentito pubblicare nuovi argomenti via email. Ad amministratori e moderatori è sempre consentito pubblicare nuovi argomenti via email."
     email_in_authserv_id: "L'identificatore del servizio che esegue i controlli di autenticazione sulle e-mail in arrivo. Consulta <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> per istruzioni su come configurare questa opzione."
     email_in_spam_header: "Selezione l'intestazione di email da utilizzare per individuare lo spam. L'opzione può essere X-Spam-Flag, X-Spam-Status o X-SES-Spam-Verdict. L'email verrà contrassegnata come spam in base al valore della sua intestazione. Per esempio, se l'impostazione selezionata è X-Spam-Flag, un'email con intestazione impostata sul valore YES verrà classificata come spam."
-    enable_imap: "Abilita IMAP per la sincronizzazione dei messaggi di gruppo."
-    enable_imap_write: "Abilita la sincronizzazione IMAP bidirezionale. Se l'opzione è disabilitata, tutte le operazioni di scrittura sugli account IMAP sono disabilitate."
-    enable_imap_idle: "Usa il meccanismo IMAP IDLE per attendere nuove email."
     enable_smtp: "Abilita SMTP per l'invio di notifiche per i messaggi di gruppo."
-    imap_polling_period_mins: "Intervallo in minuti per il controllo degli account IMAP tra un' e-mail e l'altra."
-    imap_polling_old_emails: "Il numero massimo di vecchie email (elaborate) da aggiornare ogni volta che viene interrogata una casella IMAP (0 indica tutte le e-mail)."
-    imap_polling_new_emails: "Il numero massimo di nuove e-mail (non elaborate) da aggiornare ogni volta che viene interrogata una casella IMAP."
-    imap_batch_import_email: "Il numero minimo di nuove e-mail che attivano la modalità di importazione (disabilita gli avvisi di messaggi importati)."
     email_prefix: "[Etichetta] utilizzata nell'oggetto delle email. Se non impostata sarà 'titolo'."
     email_site_title: "Il titolo del sito utilizzato come mittente delle email dal sito. Impostazione di default a 'titolo' se non impostata. Se il tuo 'titolo' contiene caratteri non consentiti nelle stringhe del mittente email, utilizza questa impostazione."
     find_related_post_with_key: "Utilizza solo la 'reply key' per trovare il messaggio inviato. ATTENZIONE: la disattivazione di questa funzione consente di impersonare l'utente in base all'indirizzo email."
@@ -2179,7 +2151,6 @@ it:
     username_change_period: "Il numero massimo di giorni dopo la registrazione entro i quali gli account possono cambiare il loro nome utente (0 per disabilitare la modifica del nome utente)."
     email_editable: "Permetti agli utenti di cambiare l'indirizzo email dopo la registrazione."
     logout_redirect: "URL al quale reindirizzare il browser dopo la disconnessione (ad es. Https://example.com/logout)"
-    allow_uploaded_avatars: "Permetti agli utenti di caricare immagini di profilo personalizzate."
     uploaded_avatars_allowed_groups: "Specifica i gruppi autorizzati a caricare immagini di profilo personalizzate."
     default_avatars: "URL degli avatar che verranno utilizzati come predefiniti per i nuovi utenti, fintanto che non li cambieranno esplicitamente."
     automatically_download_gravatars: "Scarica i Gravatars per gli utenti quando viene creato l'account o quando viene modificata l'email."
@@ -2212,8 +2183,6 @@ it:
     delete_associated_accounts_on_password_reset: "Elimina l'account associato all'utente quando l'utente modifica la password."
     allow_featured_topic_on_user_profiles: "Permetti agli utenti di aggiungere un link a un argomento nella scheda utente e nel profilo."
     show_inactive_accounts: "Consenti agli utenti registrati di consultare i profili degli account inattivi."
-    hide_silencing_reasons: "Non mostrare pubblicamente i motivi del silenziamento sui profili utente."
-    hide_suspension_reasons: "Non visualizzare pubblicamente i motivi della sospensione sui profili utente."
     log_personal_messages_views: "Registra le visualizzazioni fatte da Amministratore dei messaggi personali di altri utenti/gruppi ."
     ignored_users_count_message_threshold: "Informare i moderatori se un determinato utente viene ignorato da molti altri utenti."
     ignored_users_message_gap_days: "Quanto a lungo attendere prima di informare nuovamente i moderatori di un utente che è stato ignorato da molti altri."
@@ -2226,7 +2195,6 @@ it:
     dont_feed_the_trolls_threshold: "Numero di segnalazioni da parte di altri utenti prima di essere avvisati."
     enable_mobile_theme: "I dispositivi mobili usano un tema apposito, con possibilità di passare alla visualizzazione completa. Disabilita questa opzione se vuoi usare un foglio di stile personalizzato che sia completamente reattivo."
     dominating_topic_minimum_percent: "Quale percentuale di messaggi un utente deve pubblicare in un argomento prima di essere avvertito che sta intervenendo eccessivamente nell'argomento."
-    pm_warn_user_last_seen_months_ago: "Quando si crea un nuovo MP, il sistema avvisa gli utenti quando il destinatario non si fa vedere lì da più di n mesi."
     suppress_uncategorized_badge: "Non mostrare il distintivo per gli argomenti senza categoria nell'elenco degli argomenti."
     header_dropdown_category_count: "Quante categorie possono essere visualizzate nel menu a discesa dell'intestazione."
     permalink_normalizations: "Applicare il seguente regex prima di accedere ai permalink, ad esempio: /(topic.*)\\?.*/\\1 eliminerà le stringhe query dalla route degli argomenti. Il formato è regex+string use \\1 ecc. per accedere alle acquisizioni"
@@ -2288,9 +2256,7 @@ it:
     enable_inline_emoji_translation: "Abilita la traduzione per gli emoji in linea (senza spazio o punteggiatura precedente)"
     emoji_deny_list: "Queste emoji non saranno disponibili per l'uso nei menu o nei codici brevi."
     approve_post_count: "La quantità di messaggi di un utente nuovo o di base che deve essere approvata"
-    approve_unless_trust_level: "I messaggi di utenti al di sotto di questo livello di attendibilità devono essere approvati"
     approve_unless_allowed_groups: "I messaggi di utenti non appartenenti a questi gruppi devono essere approvati. I messaggi di amministratori e moderatori sono sempre approvati."
-    approve_new_topics_unless_trust_level: "I nuovi argomenti di utenti al di sotto di questo livello di attendibilità devono essere approvati"
     approve_new_topics_unless_allowed_groups: "I nuovi argomenti di utenti non appartenenti a questi gruppi devono essere approvati. Gli argomenti creati da amministratori e moderatori sono sempre approvati."
     approve_unless_staged: "Nuovi argomenti e messaggi di utenti temporanei devono essere approvati"
     notify_about_queued_posts_after: "Se ci sono messaggi che sono in attesa di essere revisionati per più di questo numero di ore, invia una notifica a tutti i moderatori. Impostare su 0 per disabilitare queste notifiche."
@@ -2306,7 +2272,6 @@ it:
     new_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le nuove notifiche dei messaggi utente."
     returning_user_notice_tl: "Livello di attendibilità minimo richiesto per vedere le notifiche dei messaggi di utenti che ritornano."
     returning_users_days: "Quanti giorni devono trascorrere prima che un utente venga considerato ritornato."
-    review_media_unless_trust_level: "Lo staff esaminerà i messaggi degli utenti con livelli di attendibilità più bassi se hanno contenuti multimediali incorporati."
     skip_review_media_groups: "I messaggi degli utenti che non appartengono ad alcuno di questi gruppi verranno inviati allo staff per la revisione se presentano contenuti multimediali incorporati. I messaggi di amministratori e moderatori sono sempre consentiti."
     blur_tl0_flagged_posts_media: "Oscura le immagini dei post segnalati per nascondere i contenuti potenzialmente NSFW."
     enable_page_publishing: "Permetti allo staff di pubblicare gli argomenti su nuovi URL in modo personalizzato."
@@ -2358,9 +2323,6 @@ it:
     revoke_api_keys_unused_days: "Numero di giorni trascorsi dall'ultimo utilizzo di una chiave API prima che venga revocata automaticamente (0 per mai)"
     revoke_api_keys_maxlife_days: "Numero di giorni prima che una chiave API sia revocata automaticamente (0 per mai)"
     allow_user_api_key_scopes: "Elenco di ambiti consentiti per le chiavi API utente"
-    min_trust_level_for_user_api_key: |
-      Livello di attendibilità richiesto per la generazione di chiavi API utente.<br>
-      <b>AVVISO</b>: la modifica del livello di attendibilità impedirà agli utenti con un livello di attendibilità inferiore di accedere tramite Discourse Hub
     user_api_key_allowed_groups: |
       La generazione di chiavi API utente richiede l'appartenenza al gruppo.<br>
       <b>AVVISO</b>: modificando il livello di attendibilità, impedirai a utenti con un livello di attendibilità inferiore di accedere tramite Discourse Hub.<br>
@@ -2370,7 +2332,6 @@ it:
     revoke_user_api_keys_unused_days: "Numero di giorni trascorsi dall'ultimo utilizzo di una chiave API utente prima che venga revocata automaticamente (0 per mai)"
     revoke_user_api_keys_maxlife_days: "Numero di giorni prima che una chiave API utente venga revocata automaticamente (0 per mai)"
     tagging_enabled: "Vuoi abilitare le etichette per gli argomenti? Per ulteriori informazioni, consulta <a href='https://meta.discourse.org/t/admin-guide-to-tags-in-discourse/121041'>la guida alle etichette per amministratori su Meta</a>."
-    min_trust_to_create_tag: "Il livello di attendibilità minimo per creare un'etichetta."
     create_tag_allowed_groups: "Gruppi a cui è consentito creare etichette. Ad amministratori e moderatori è sempre consentito creare etichette."
     edit_tags_allowed_groups: "Gruppi a cui è consentito modificare etichette, descrizioni di etichette e sinonimi di etichette."
     max_tags_per_topic: "Il numero massimo di etichette che si possono applicare ad un argomento."
@@ -2383,7 +2344,6 @@ it:
     tags_listed_by_group: "Elenca le Etichette per gruppo di Etichette nella <a href='%{base_path}/tags' target='_blank'>pagina delle Etichette</a> ."
     tag_style: "Definisci l'aspetto visivo dei distintivi relativi alle etichette sul sito. Questa impostazione consente di personalizzare come appaiono le etichette in tutte le aree del sito, per un layout più coesivo e una migliore accessibilità utente."
     pm_tags_allowed_for_groups: "Consenti ai membri dei gruppi inclusi di etichettare qualsiasi messaggio personale"
-    min_trust_level_to_tag_topics: "Livello di attendibilità minimo richiesto per etichettare argomenti"
     tag_topic_allowed_groups: "Gruppi a cui è consentito etichettare gli argomenti. Ad amministratori e moderatori è sempre consentito etichettare gli argomenti."
     suppress_overlapping_tags_in_list: "Se le etichette corrispondono alle esatte parole nei titoli degli argomenti, non mostrare l'etichetta"
     remove_muted_tags_from_latest: "Non mostrare argomenti etichettati solo con etichette silenziate nell'elenco degli argomenti più recenti."
@@ -2394,7 +2354,6 @@ it:
     governing_law: "Specifica la giurisdizione competente che disciplina gli aspetti legali del sito, inclusi i Termini di servizio e l'Informativa sulla privacy. Solitamente essa corrisponde alla giurisdizione del paese o stato in cui la società che gestisce il sito è registrata o svolge le sue attività."
     city_for_disputes: "Specifica la città della giurisdizione a cui fare riferimento per la risoluzione di eventuali dispute in relazione all'uso del forum. Queste informazioni vengono solitamente incluse nella documentazione legale come i Termini di servizio del forum."
     shared_drafts_category: "Abilita la funzione Bozze Condivise designando una categoria per le bozze di argomento. Gli argomenti in questa categoria verranno eliminati dagli elenchi di argomenti per gli utenti dello staff."
-    shared_drafts_min_trust_level: "Consenti agli utenti di visualizzare e modificare le bozze condivise."
     shared_drafts_allowed_groups: "Consenti agli utenti in questi gruppi di visualizzare e modificare le bozze condivise."
     push_notifications_prompt: "Mostra all'utente un banner per il consenso alle notifiche push. Questa impostazione attiva un prompt che chiede all'utente il permesso per inviare le notifiche push. Il prompt appare solo se le notifiche push non sono già abilitate, se sono supportate dal dispositivo in uso e se l'utente ha creato un messaggio o ha usato una Progressive Web App (PWA). Una vota dato/negato il consenso o ignorato, il prompt non comparirà più."
     push_notifications_icon: "L'icona del distintivo che appare nell'angolo delle notifiche. Si consiglia un'immagine PNG monocromatica 96×96 con trasparenza."
@@ -2430,7 +2389,6 @@ it:
     default_navigation_menu_categories: "Le categorie selezionate appariranno, per impostazione predefinita, nella sezione Categorie del menu di navigazione."
     default_navigation_menu_tags: "Le etichette selezionate appariranno, per impostazione predefinita, nella sezione Etichette del menu di navigazione."
     experimental_new_new_view_groups: 'Abilita un nuovo elenco di argomenti che combini argomenti non letti e nuovi e crea il link "Tutto" nella barra laterale a esso.'
-    experimental_form_templates: "Abilita la funzionalità dei modelli di modulo. Gestisci i modelli in <a href='%{base_path}/admin/customize/form-templates'>Personalizza / Modelli</a>."
     show_preview_for_form_templates: "Abilita la funzionalità di anteprima per i modelli di modulo"
     lazy_load_categories_groups: "Caricamento lazy delle informazioni di categoria solo per gli utenti di questi gruppi. Migliora le prestazioni sui siti con numerose categorie."
     experimental_auto_grid_images: "Inserisce automaticamente le immagini nell'etichetta [grid] quando vengono caricate 3 o più immagini nel compositore."
@@ -2447,7 +2405,6 @@ it:
     default_composition_mode: "Imposta la modalità predefinita per il compositore della tua community. La modalità Rich Text offre un'esperienza di scrittura più moderna e familiare per la maggior parte degli utenti, mentre la modalità Markdown potrebbe essere adatta a un pubblico più tecnico. I membri possono utilizzare un interruttore nella barra degli strumenti del compositore per passare da una modalità all'altra."
     reviewable_ui_refresh: "Gruppi che possono utilizzare la nuova interfaccia utente sperimentale nella coda di revisione."
     content_localization_enabled: "Mostra contenuti localizzati per gli utenti in base alle preferenze del browser o della lingua. Tali contenuti possono includere categorie, tag, post e argomenti. Le impostazioni locali supportate sono impostate in \"Impostazioni locali supportate per la localizzazione dei contenuti\"."
-    content_localization_supported_locales: "Elenco delle lingue supportate in cui è possibile tradurre i contenuti utente. Richiede \"localizzazione dei contenuti abilitata\"."
     content_localization_allowed_groups: "Gruppi autorizzati ad aggiornare i contenuti localizzati. Richiede \"localizzazione dei contenuti abilitata\"."
     errors:
       invalid_css_color: "Colore non valido. Immettere un nome o un valore esadecimale per il colore."
@@ -3120,6 +3077,7 @@ it:
         Partecipando ti conosceremo meglio, e le limitazioni temporanee per i nuovi utenti saranno rimosse. Col tempo incrementerai il tuo [livello di attendibilità](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/), sbloccando ulteriori funzionalità che ci aiuteranno a gestire insieme la comunità.
     welcome_user:
       title: "Benvenuto Utente"
+      preview: "Ti diamo il benvenuto su %{site_name}!"
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |
         Grazie per esserti unito a %{site_name}, e benvenuto!
@@ -3144,6 +3102,7 @@ it:
         Da un grande potere derivano grandi responsabilità. Se non hai mai svolto attività di moderatore, puoi consultare la nostra [Guida per moderatori](https://meta.discourse.org/t/discourse-moderation-guide/63116).
     welcome_invite:
       title: "Invito di Benvenuto"
+      preview: "Ti diamo il benvenuto su %{site_name}!"
       subject_template: "Benvenuto su %{site_name}!"
       text_body_template: |
         Grazie per aver accettato l'invito a %{site_name} -- benvenuto!
@@ -3511,6 +3470,7 @@ it:
       text_body_template: "Questo è un messaggio automatico.\n\nIl nuovo utente [%{username}](%{user_url}) ha provato a creare numerosi messaggi contenenti link a %{domains}, ma quei messaggi sono stati bloccati per evitare fenomeni di spam. L'utente è ancora in grado di creare nuovi messaggi purché non contengano link a %{domains}. \n\nPer favore [controlla l'utente](%{user_url}). \n\nQuesto comportamento può essere modificato agendo sulle impostazioni del sito `newuser_spam_host_threshold` e `allowed_spam_host_domains`. Puoi anche aggiungere %{domains} alla lista dei consentiti se vuoi ammettere tali link.\n"
     unsilenced:
       title: "Non silenziato"
+      preview: "Account non più sospeso."
       subject_template: "Account non più sospeso"
       text_body_template: |
         Ciao,
@@ -3556,8 +3516,6 @@ it:
     Per annullare l'iscrizione a queste email, [clicca qui](%{unsubscribe_url}).
   subject_re: "R:"
   subject_pm: "[MP]"
-  email_from: "%{user_name} via %{site_name}"
-  email_from_without_site: "%{group_name}"
   user_notifications:
     previous_discussion: "Risposte Precedenti"
     reached_limit:
@@ -3891,6 +3849,7 @@ it:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Accedi tramite collegamento"
+      preview: "Accedi tramite collegamento."
       subject_template: "[%{email_prefix}] Accedi tramite collegamento"
       text_body_template: "Ecco il collegamento per accedere a [%{site_name}](%{base_url}). \n\nSe non hai richiesto questo collegamento, puoi tranquillamente ignorare questa email. \n\nClicca sul seguente collegamento per accedere:\n %{base_url}/session/email-login/%{email_token}\n"
     set_password:
@@ -4547,6 +4506,8 @@ it:
     deprecation_error_label: Fai in modo che le deprecazioni di Javascript generino un errore
     enter: "Avvia Modalità Sicura"
     must_select: "È necessario selezionare almeno un'opzione per accedere alla modalità sicura."
+  dev_mode:
+    enter: "Invio"
   wizard:
     title: "Configurazione Discourse"
     step:
@@ -4602,6 +4563,10 @@ it:
       review_by: "Revisione di"
       pr_summary: "%{commits} commit, %{changed_files} file modificati con %{additions} aggiunte e %{deletions} eliminazioni"
       no_description: "Contribuisci allo sviluppo di %{repo} creando un account su GitHub."
+      status_date:
+        open: "aperto"
+        approved: "approvato"
+        closed: "chiuso"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} ti ha menzionato in ''%{topic}'' - %{site_title}'
@@ -4636,8 +4601,6 @@ it:
     api_post_delete: "Eliminato tramite API"
     reminder_deleted: "Sostituito da un nuovo promemoria"
     user_associated_posts_deleted: "L'utente è stato distrutto"
-    imap_email_deleted: "L'e-mail è stata eliminata sul server IMAP"
-    imap_email_marked_as_spam: "L'e-mail è stata spostata nello spam sul server IMAP"
     auto_deleted_hidden_posts: "Messaggi nascosti distrutti automaticamente"
     seed_data_topic_updated: "Dati seed dell'argomento aggiornati"
     seed_data_topic_deleted: "Dati seed dell'argomento eliminati"
@@ -4709,19 +4672,14 @@ it:
         description: "Accetta la segnalazione, nascondi il messaggio e invia automaticamente all'utente un messaggio privato che lo invita a modificarlo."
         complete: "Messaggio nascosto, l'utente è stato avvisato."
       agree_and_edit:
-        title: "Accetta e modifica messaggio"
         description: "Accetta segnalazione e apri la finestra di modifica per emendare il messaggio."
         complete: "Segnalazione riconosciuta, ora puoi modificare il messaggio."
       delete:
         title: "Elimina"
         complete: "Messaggio eliminato."
       delete_and_ignore:
-        title: "Ignora segnalazione ed elimina post"
-        description: "Ignora segnalazione rimuovendola dalla coda ed elimina il messaggio; se è li primo messaggio, elimina anche l'argomento. "
         complete: "Messaggio eliminato."
       delete_and_ignore_replies:
-        title: "Ignora segnalazione, elimina messaggio e risposte"
-        description: "Ignora segnalazione rimuovendola dalla coda ed elimina il messaggio e tutte le sue risposte; se è li primo messaggio, elimina anche l'argomento"
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
         complete: "Messaggi e risposte eliminati."
       delete_and_agree:
@@ -4734,11 +4692,12 @@ it:
         confirm: "Sei sicuro di voler eliminare anche le risposte al messaggio?"
         complete: "Messaggi e risposte eliminati."
       disagree_and_restore:
-        title: "No, ripristina messaggio"
-        description: "Ripristina il messaggio in modo che tutti gli utenti possano vederlo."
+        title: "Ripristina messaggio"
         complete: "Messaggio ripristinato."
-      disagree:
+      disagree_bundle:
         title: "No"
+      disagree:
+        title: "Mantieni il messaggio"
         complete: "Segnalazione ignorata."
       discard_post:
         title: "Annulla messaggio"
@@ -4753,31 +4712,36 @@ it:
         description: "Ignora segnalazione rimuovendola dalla coda senza intraprendere alcuna azione. I messaggi nascosti rimarranno nascosti e saranno gestiti dagli strumenti automatici."
         complete: "Segnalazione ignorata."
       approve:
-        title: "Approva"
+        title: "Sì"
         complete: "Messaggio approvato."
       approve_post:
-        title: "Approva Messaggio"
+        title: "Sì"
         complete: "Messaggio approvato."
       approve_post_closed:
-        title: "Approva messaggio"
+        title: "Sì"
         confirm: "Questo argomento è chiuso. Vuoi creare un messaggio comunque?"
         complete: "Messaggio approvato."
+      reject_post_bundle:
+        title: "No"
       reject_post:
         title: "Rifiuta Messaggio"
         complete: "Messaggio rifiutato."
       approve_user:
-        title: "Approva Utente"
+        title: "Sì"
         complete: "Utente approvato."
       reject_user:
-        title: "Elimina utente…"
+        title: "No"
         delete:
           title: "Cancella utente"
-          description: "L'utente sarà eliminato dal forum."
           complete: "Utente eliminato."
         block:
           title: "Elimina e blocca Utente"
           description: "L'utente sarà eliminato, e ne bloccheremo l'IP e l'indirizzo email."
           complete: "Utente eliminato e bloccato."
+      confirm_spam:
+        title: "Sì"
+      not_spam:
+        title: "No"
       reject:
         title: "Rifiuta"
         bundle_title: "Rifiuta…"
@@ -4796,10 +4760,10 @@ it:
       scrub:
         title: Cancella il record
       approve_and_restore:
-        title: "Approva e ripristina il messaggio"
+        title: "Sì"
         complete: "Messaggio approvato e ripristinato."
       approve_and_unhide:
-        title: "Approva e mostra il messaggio"
+        title: "Sì"
         complete: "Messaggio approvato e reso visibile"
       no_action_post:
         title: "Nessuna azione"

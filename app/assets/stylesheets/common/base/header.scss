@@ -128,7 +128,6 @@
   .header-buttons {
     display: flex;
     align-items: center;
-    margin-top: 0.2em;
     white-space: nowrap;
 
     .auth-buttons {
@@ -147,7 +146,7 @@
 .header-dropdown-toggle,
 .drop-down,
 .panel-body {
-  .flagged-posts,
+  .flags,
   .reviewables {
     background: var(--danger);
     min-width: 6px;
@@ -179,7 +178,7 @@
     }
 
     .discourse-no-touch &:hover,
-    .discourse-no-touch &:focus {
+    .discourse-no-touch &:focus-visible {
       background-color: var(--d-hover);
     }
   }
@@ -246,16 +245,53 @@
     left: auto;
     right: 25px;
   }
+
+  .language-switcher {
+    &__locale {
+      color: var(--header_primary-high);
+      font-size: var(--font-down-1);
+    }
+
+    &-trigger {
+      border: 1px solid var(--header_primary-low-mid);
+      margin-right: var(--space-2);
+      gap: var(--space-1);
+      align-self: center;
+      padding: var(--space-1) var(--space-2);
+
+      html.anon & {
+        // improves alignment with log in button
+        padding: var(--space-2);
+        font-size: var(--font-down-1);
+      }
+
+      .d-icon {
+        font-size: var(--font-down-2);
+        width: 1em;
+        color: var(--header_primary-high);
+      }
+
+      .discourse-no-touch & {
+        &:hover {
+          border: 1px solid var(--header_primary-medium);
+
+          .language-switcher__locale {
+            color: var(--header_primary);
+          }
+
+          .d-icon {
+            color: var(--header_primary-high);
+          }
+        }
+      }
+    }
+  }
 }
 
+.language-switcher-content,
 .fk-d-menu.interface-color-selector-content.-expanded {
   margin-top: -0.75em;
   z-index: z("header");
-  box-shadow: var(--shadow-dropdown);
-
-  .fk-d-menu__inner-content {
-    border-color: transparent;
-  }
 }
 
 .header-sidebar-toggle {
@@ -268,7 +304,7 @@
     height: 2.2857em;
     padding: 0.2143em;
 
-    &:focus,
+    &:focus-visible,
     .discourse-no-touch & {
       &:hover {
         background-color: var(--primary-low);
@@ -276,7 +312,6 @@
     }
 
     .d-icon {
-      width: 100%;
       font-size: var(--font-up-4);
       line-height: var(--line-height-large);
       display: inline-block;

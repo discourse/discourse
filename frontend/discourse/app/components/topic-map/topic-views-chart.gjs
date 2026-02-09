@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import loadChartJS from "discourse/lib/load-chart-js";
@@ -6,12 +7,10 @@ import I18n, { i18n } from "discourse-i18n";
 
 const oneDay = 86400000; // day in milliseconds
 
-const now = new Date();
-const startOfDay = Date.UTC(
-  now.getUTCFullYear(),
-  now.getUTCMonth(),
-  now.getUTCDate()
-);
+function getStartOfDayUTC() {
+  const now = new Date();
+  return Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate());
+}
 
 function fillMissingDates(data) {
   const filledData = [];
@@ -55,6 +54,8 @@ function predictTodaysViews(data) {
   const movingAvg = weightedMovingAverage(data);
   const lastMovingAvg = movingAvg[movingAvg.length - 1];
   const currentViews = data[data.length - 1].y;
+  const now = new Date();
+  const startOfDay = getStartOfDayUTC();
   const currentTimeUTC = Date.now() + now.getTimezoneOffset() * 60 * 1000;
   const elapsedTime = (currentTimeUTC - startOfDay) / oneDay; // amount of day passed
   let adjustedPrediction = lastMovingAvg;
@@ -71,12 +72,13 @@ function predictTodaysViews(data) {
 }
 
 export default class TopicViewsChart extends Component {
+  @tracked noData = false;
   chart = null;
-  noData = false;
 
   @action
   async renderChart(element) {
     const Chart = await loadChartJS();
+    const startOfDay = getStartOfDayUTC();
 
     if (!this.args.views?.stats || this.args.views?.stats?.length === 0) {
       this.noData = true;

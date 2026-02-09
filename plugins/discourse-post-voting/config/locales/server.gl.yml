@@ -23,8 +23,6 @@ gl:
           agree_and_silence:
             title: "Silenciar o usuario"
             description: "De acordo con esta denuncia e silenciar o usuario."
-          disagree:
-            title: "Discrepar"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

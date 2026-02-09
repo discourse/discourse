@@ -38,7 +38,7 @@ class PostMover
     topic
   end
 
-  def to_new_topic(title, category_id = nil, tags = nil)
+  def to_new_topic(title, category_id = nil, tag_ids: nil, tags: nil)
     @move_type = PostMover.move_types[:new_topic]
     @creating_new_topic = true
 
@@ -56,7 +56,11 @@ class PostMover
             created_at: post.created_at,
             archetype: archetype,
           )
-        DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
+        if tag_ids.present?
+          DiscourseTagging.tag_topic_by_ids(new_topic, Guardian.new(user), tag_ids)
+        elsif tags.present?
+          DiscourseTagging.tag_topic_by_names(new_topic, Guardian.new(user), tags)
+        end
         move_posts_to new_topic
         watch_new_topic
         update_topic_excerpt new_topic
@@ -75,6 +79,7 @@ class PostMover
   def move_posts_to(topic)
     Guardian.new(user).ensure_can_see! topic
     @destination_topic = topic
+    ensure_acting_user_is_allowed_in_destination
 
     # when a topic contains some posts after moving posts to another topic we shouldn't close it
     # two types of posts should prevent a topic from closing:
@@ -128,6 +133,16 @@ class PostMover
       original_topic_id: original_topic.id,
     )
     destination_topic
+  end
+
+  def ensure_acting_user_is_allowed_in_destination
+    return if !@move_to_pm
+    return if destination_topic.archetype != Archetype.private_message
+    return if user.id.blank? || user.bot?
+    return if destination_topic.topic_allowed_users.exists?(user_id: user.id)
+
+    destination_topic.topic_allowed_users.create!(user_id: user.id)
+    destination_topic.notifier.watch!(user.id)
   end
 
   def create_temp_table
@@ -626,8 +641,8 @@ class PostMover
   end
 
   def update_statistics
-    destination_topic.update_statistics
-    original_topic.update_statistics
+    destination_topic.update_statistics!
+    original_topic.update_statistics!
     TopicUser.update_post_action_cache(
       topic_id: [original_topic.id, destination_topic.id],
       post_id: @post_ids,

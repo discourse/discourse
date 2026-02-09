@@ -18,8 +18,6 @@ sl:
           agree_and_silence:
             title: "Utišaj uporabnika"
             description: "Potrdi prijavo in utišaj uporabnika"
-          disagree:
-            title: "Se ne strinjam"
       reviewable_score_types:
         notify_user:
           comment_pm_body: "%{link}\n\n%{comment}"

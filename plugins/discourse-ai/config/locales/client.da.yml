@@ -47,7 +47,7 @@ da:
         disabled: "(deaktiveret)"
         groups: "Grupper:"
         no_groups: "Ingen"
-        edit: "Rediger"
+        edit: "Indstillinger"
         expand_list:
           one: "(%{count} mere)"
           other: "(%{count} mere)"
@@ -92,6 +92,7 @@ da:
         summary: "Statistik"
         username: "Brugernavn"
         total_requests: "Total antal anmodninger"
+        total: "Total"
         periods:
           last_day: "Seneste 24 timer"
           custom: "Tilpasset..."

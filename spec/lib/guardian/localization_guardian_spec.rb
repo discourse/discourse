@@ -34,6 +34,32 @@ describe LocalizationGuardian do
       expect(Guardian.new(user).can_localize_post?(post)).to eq(false)
     end
 
+    context "when user cannot see the post" do
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:private_post) { Fabricate(:post, topic: private_topic) }
+
+      before do
+        SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+      end
+
+      it "returns false for posts in private categories the user cannot access" do
+        expect(Guardian.new(user).can_localize_post?(private_post)).to eq(false)
+        expect(Guardian.new(user).can_localize_post?(private_post.id)).to eq(false)
+      end
+
+      it "returns false for posts in private messages the user is not part of" do
+        pm = Fabricate(:private_message_topic)
+        pm_post = Fabricate(:post, topic: pm)
+        expect(Guardian.new(user).can_localize_post?(pm_post)).to eq(false)
+        expect(Guardian.new(user).can_localize_post?(pm_post.id)).to eq(false)
+      end
+
+      it "returns false for non-existent posts" do
+        expect(Guardian.new(user).can_localize_post?(999_999_999)).to eq(false)
+      end
+    end
+
     context "when user is in allowed groups" do
       before { SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:admins]}" }
 
@@ -91,6 +117,30 @@ describe LocalizationGuardian do
     it "returns false when content localization is disabled" do
       SiteSetting.content_localization_enabled = false
       expect(Guardian.new(user).can_localize_topic?(topic)).to eq(false)
+    end
+
+    context "when user cannot see the topic" do
+      fab!(:private_category) { Fabricate(:private_category, group: Fabricate(:group)) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+
+      before do
+        SiteSetting.content_localization_allowed_groups = "#{Group::AUTO_GROUPS[:everyone]}"
+      end
+
+      it "returns false for topics in private categories the user cannot access" do
+        expect(Guardian.new(user).can_localize_topic?(private_topic)).to eq(false)
+        expect(Guardian.new(user).can_localize_topic?(private_topic.id)).to eq(false)
+      end
+
+      it "returns false for private messages the user is not part of" do
+        pm = Fabricate(:private_message_topic)
+        expect(Guardian.new(user).can_localize_topic?(pm)).to eq(false)
+        expect(Guardian.new(user).can_localize_topic?(pm.id)).to eq(false)
+      end
+
+      it "returns false for non-existent topics" do
+        expect(Guardian.new(user).can_localize_topic?(999_999_999)).to eq(false)
+      end
     end
 
     context "when user is in allowed groups" do

@@ -54,13 +54,19 @@ en:
             label: Body
           delay:
             label: Delay (minutes)
-          prefers_encrypt:
-            label: Encrypts PM if available
         group:
           label: Group
         text:
           label: Text
       triggerables:
+        post_flag_created:
+          fields:
+            categories:
+              label: Categories
+              description: Only trigger when the flagged topic is in these categories
+            tags:
+              label: Tags
+              description: Only trigger when the flagged topic has any of these tags
         not_found: Couldn’t find trigger `%{trigger}` for automation `%{automation}`, ensure the associated plugin is installed
         user_badge_granted:
           fields:
@@ -271,6 +277,14 @@ en:
               label: Tags
               description: Optional, will trigger only if the post has any of these tags
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Email template
+              description: Supports automation placeholders
+            recipients:
+              label: Recipients
+              description: Users or email addresses to notify
         not_found: Couldn’t find script `%{script}` for automation `%{automation}`, ensure the associated plugin is installed
         zapier_webhook:
           fields:
@@ -418,6 +432,13 @@ en:
           fields:
             custom_field_name:
               label: "User Custom Field name"
+        set_topic_timer:
+          title: Set Topic Timer
+          fields:
+            type: 
+              label: Timer Type
+            duration:
+              label: Timer Duration
       unnamed_automation: "Unnamed automation"
 
       models:
@@ -431,6 +452,9 @@ en:
           runs_today: "%{count} today"
           runs_this_week: "%{count} this week"
           runs_this_month: "%{count} this month"
+          recent_errors:
+            one: "%{count} error recently"
+            other: "%{count} errors recently"
           runs:
             label: Runs
           name:

@@ -230,7 +230,7 @@ hr:
 
       <p>U suprotnom molimo <a href="%{base_url}/password-reset">Ponovno postavite zaporku</a>.</p>
     disabled_errors:
-      invalid_access: "Nemate dopuštenje za pregled traženog izvora."
+      invalid_access: "Pristup pozivnicama vam nije dopušten."
   bulk_invite:
     error: "Dogodila se greška pri učitavanju te datoteke. Molimo kasnije pokušajte ponovno."
   invite_link:
@@ -246,7 +246,7 @@ hr:
   invalid_params: "Zahtjevu ste dostavili nevažeće parametre: %{message}"
   not_logged_in: "Morate biti prijavljeni da to napravite."
   not_found: "Zatraženi URL ili izvor nije moguće pronaći."
-  invalid_access: "Nemate dopuštenje za pregled traženog izvora."
+  invalid_access: "Odaberite ispravnu potkategoriju."
   authenticator_not_found: "Metoda provjere autentičnosti ne postoji ili je onemogućena."
   authenticator_no_connect: "Ovaj pružatelj provjere autentičnosti ne dopušta povezivanje s postojećim forumskim računom."
   invalid_api_credentials: "Nemate dopuštenje za pregled traženog izvora. API korisničko ime ili ključ je nevažeći."
@@ -831,11 +831,10 @@ hr:
       every_month: "svaki mjesec"
       every_six_months: "svakih šest mjeseci"
   user_api_key:
-    title: "Odobrite pristup aplikaciji"
     authorize: "Odobriti"
+    deny: "Odustani"
     read: "pročitano"
     read_write: "čitati/pisati"
-    description: '"%{application_name}" zahtijeva sljedeći pristup vašem računu:'
     instructions: 'Upravo smo generirali novi korisnički API ključ za korištenje s "%{application_name}", zalijepite sljedeći ključ u svoju aplikaciju:'
     otp_description: 'Želite li dopustiti "%{application_name}" pristup ovoj stranici?'
     otp_confirmation:
@@ -1390,16 +1389,8 @@ hr:
     pop3_polling_password: "Lozinka za POP3 račun za anketu za e-poštu."
     pop3_polling_delete_from_server: "Izbrišite e-poštu s poslužitelja. NAPOMENA: Ako ovo onemogućite, trebali biste ručno očistiti svoj poštanski sandučić"
     log_mail_processing_failures: "Zabilježite sve pogreške obrade e-pošte na <a href='%{base_path}/logs' target='_blank'>/zapisi</a>"
-    email_in_min_trust: "Minimalna razina povjerenja koju korisnik mora imati da bi mu se omogućilo objavljivanje novih tema putem e-pošte."
     email_in_authserv_id: "Identifikator usluge koja vrši provjeru autentičnosti dolazne e-pošte. Pogledajte <a href='https://meta.discourse.org/t/134358'>https://meta.discourse.org/t/134358</a> za upute o tome kako to konfigurirati."
-    enable_imap: "Omogućite IMAP za sinkronizaciju grupnih poruka."
-    enable_imap_write: "Omogućite dvosmjernu IMAP sinkronizaciju. Ako je onemogućeno, sve operacije pisanja na IMAP računima su onemogućene."
-    enable_imap_idle: "Koristite IMAP IDLE mehanizam za čekanje novih e-poruka."
     enable_smtp: "Omogućite SMTP za slanje obavijesti za grupne poruke."
-    imap_polling_period_mins: "Razdoblje u minutama između provjere IMAP računa za e-poštu."
-    imap_polling_old_emails: "Maksimalan broj starih e-poruka (obrađenih) koje će se ažurirati svaki put kada se IMAP pretinac ispita (0 za sve)."
-    imap_polling_new_emails: "Maksimalan broj novih e-poruka (neobrađenih) koje će se ažurirati svaki put kada se traži IMAP okvir."
-    imap_batch_import_email: "Najmanji broj novih poruka e-pošte koji pokreću način uvoza (onemogućuje obavijesti za uvezene objave)."
     email_prefix: "[label] koji se koristi u predmetu e-pošte. Zadano će biti \"naslov\" ako nije postavljen."
     email_site_title: "Naslov stranice koja se koristi kao pošiljatelj e-pošte s stranice. Zadano je 'title' ako nije postavljeno. Ako vaš 'naslov' sadrži znakove koji nisu dopušteni u nizovima pošiljatelja e-pošte, koristite ovu postavku."
     find_related_post_with_key: "Koristite samo 'tipku za odgovor' da biste pronašli objavu na koju ste odgovorili. UPOZORENJE: onemogućivanje ovoga dopušta lažno predstavljanje korisnika na temelju adrese e-pošte."
@@ -1411,7 +1402,6 @@ hr:
     username_change_period: "Maksimalan broj dana nakon registracije u kojem računi mogu promijeniti svoje korisničko ime (0 za onemogućavanje promjene korisničkog imena)."
     email_editable: "Omogućite korisnicima promjenu svoje e-mail adrese nakon registracije."
     logout_redirect: "Lokacija za preusmjeravanje preglednika nakon odjave (npr.: https://example.com/logout)"
-    allow_uploaded_avatars: "Dopustite korisnicima da učitaju prilagođene profilne slike."
     default_avatars: "URL-ovi avatara koji će se prema zadanim postavkama koristiti za nove korisnike dok ih ne promijene."
     automatically_download_gravatars: "Preuzmite Gravatare za korisnike nakon izrade računa ili promjene e-pošte."
     digest_topics: "Najveći broj popularnih tema za prikaz u sažetku e-pošte."
@@ -1458,17 +1448,14 @@ hr:
     new_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o novim objavama korisnika."
     returning_user_notice_tl: "Minimalna razina povjerenja potrebna da biste vidjeli obavijesti o objavama korisnika koji se vraćaju."
     returning_users_days: "Koliko dana treba proći prije nego što se smatra da se korisnik vraća."
-    review_media_unless_trust_level: "Osoblje će pregledati objave korisnika s nižim razinama povjerenja ako sadrže ugrađene medije."
     blur_tl0_flagged_posts_media: "Zamutite slike označenih objava kako biste sakrili potencijalno NSFW sadržaj."
     enable_page_publishing: "Dopustite članovima osoblja da objavljuju teme na novim URL-ovima s vlastitim stilom."
     show_published_pages_login_required: "Anonimni korisnici mogu vidjeti objavljene stranice, čak i kada je potrebna prijava."
     default_other_skip_new_user_tips: "Preskočite savjete i značke za uvođenje novih korisnika."
-    min_trust_level_to_tag_topics: "Minimalna razina povjerenja potrebna za označavanje tema"
     suppress_overlapping_tags_in_list: "Ako oznake odgovaraju točnim riječima u naslovima tema, nemojte prikazivati oznaku"
     remove_muted_tags_from_latest: "Ne prikazuj teme označene samo prigušenim oznakama na najnovijem popisu tema."
     force_lowercase_tags: "Prisilno navedite da sve nove oznake budu ispisane malim slovima."
     shared_drafts_category: "Omogućite značajku Dijeljene skice određivanjem kategorije za skice tema. Teme u ovoj kategoriji bit će potisnute s popisa tema za korisnike osoblja."
-    shared_drafts_min_trust_level: "Dopustite korisnicima da vide i uređuju dijeljene skice."
     push_notifications_prompt: "Prikaži banner pristanka korisnika za push obavijesti. Ova postavka pokreće upit koji od korisnika traži dopuštenje za slanje push obavijesti. Pojavljuje se samo kada push obavijesti nisu već omogućene, podržava ih korisnikov uređaj i korisnik je ili objavio objavu ili koristi progresivnu web-aplikaciju (PWA). Upit se neće ponovno prikazati ako ga je korisnik već odbacio ili dao/odbio dopuštenje."
     push_notifications_icon: "Ikona značke koja se pojavljuje u kutu obavijesti. Preporučuje se monokromatski PNG s prozirnošću veličine 96×96."
     enable_desktop_push_notifications: "Aktiviraj push obavijesti za sučelje radne površine. Ova značajka omogućuje upozorenja u stvarnom vremenu sa stranice izravno na vašu radnu površinu, povećavajući angažman i osiguravajući da su korisnici uvijek ažurirani. Međutim, učinkovitost ove značajke ovisi o podršci preglednika za push obavijesti."
@@ -1936,6 +1923,7 @@ hr:
         Kako ovdje sudjelujete, upoznavat ćemo vas i privremena ograničenja za nove korisnike bit će ukinuta. S vremenom ćete steći [razine povjerenja](https://blog.discourse.org/2018/06/understanding-discourse-trust-levels/) koje uključuju posebne sposobnosti koje će nam pomoći u zajedničkom upravljanju našom zajednicom.
     welcome_user:
       title: "Dobrodošli"
+      preview: "Dobrodošli na %{site_name}"
       subject_template: "Dobrodošli na %{site_name}"
       text_body_template: |
         Hvala što ste se pridružili %{site_name}i dobrodošli!
@@ -1954,6 +1942,7 @@ hr:
 
         S velikom moći dolazi i velika odgovornost. Ako ste novi u moderiranju, pogledajte [Vodič za moderiranje](https://meta.discourse.org/t/discourse-moderation-guide/63116) ili se obratite osoblju foruma za pomoć.
     welcome_invite:
+      preview: "Dobrodošli na %{site_name}"
       subject_template: "Dobrodošli na %{site_name}"
       text_body_template: |
         Hvala što ste prihvatili pozivnicu za %{site_name} -- dobrodošli!
@@ -2305,6 +2294,7 @@ hr:
         %{base_url}/u/password-reset/%{email_token}
     email_login:
       title: "Prijavite se putem poveznice"
+      preview: "Prijavite se putem poveznice."
       subject_template: "[%{email_prefix}] Prijavite se putem poveznice"
       text_body_template: |
         Ovdje je vaša poveznica za prijavu na [%{site_name}](%{base_url}).
@@ -2761,6 +2751,8 @@ hr:
       help: "Za početak registrirajte novi korisnički račun."
     resend_email:
       title: "Ponovno pošaljite e-poštu za aktivaciju"
+  dev_mode:
+    enter: "Unesi"
   wizard:
     step:
       setup:
@@ -2780,6 +2772,9 @@ hr:
   onebox:
     github:
       closed: "zatvoreno"
+      status_date:
+        approved: "odobrio/la"
+        closed: "zatvoreno"
   discourse_push_notifications:
     popup:
       mentioned: '%{username} vas je spomenuo u "%{topic}" - %{site_title}'
@@ -2817,8 +2812,9 @@ hr:
         complete: "Post izbrisan."
       delete_and_agree:
         complete: "Post izbrisan."
-      disagree:
+      disagree_bundle:
         title: "Ne"
+      disagree:
         complete: "Zastava zanemarena."
       ignore:
         title: "Zanemari"
@@ -2827,25 +2823,38 @@ hr:
         title: "Ne radi ništa"
         complete: "Zastava zanemarena."
       approve:
-        title: "Odobri"
+        title: "Da"
         complete: "Objava odobrena."
       approve_post:
+        title: "Da"
         complete: "Objava odobrena."
       approve_post_closed:
+        title: "Da"
         complete: "Objava odobrena."
+      reject_post_bundle:
+        title: "Ne"
       reject_post:
         complete: "Objava je odbijena."
       approve_user:
-        title: "Odobri korisnika"
+        title: "Da"
         complete: "Korisnik odobren."
       reject_user:
+        title: "Ne"
         delete:
           title: "Obriši korisnika"
           complete: "Korisnik izbrisan."
+      confirm_spam:
+        title: "Da"
+      not_spam:
+        title: "Ne"
       reject:
         title: "Odbij"
       scrub:
         title: Obriši zapis
+      approve_and_restore:
+        title: "Da"
+      approve_and_unhide:
+        title: "Da"
       no_action_post:
         title: "Nema akcije"
       delete_post:

@@ -48,13 +48,33 @@ RSpec.describe "Admin AI features configuration", type: :system do
     expect(ai_features_page).to have_feature_groups("topic_summaries", [group_1.name, group_2.name])
   end
 
-  it "shows edit page with settings" do
+  it "shows edit page with grouped settings" do
     ai_features_page.visit
 
     ai_features_page.click_edit_module("summarization")
 
     expect(page).to have_current_path("/admin/plugins/discourse-ai/ai-features/1/edit")
 
-    expect(page).to have_css(".setting")
+    expect(page).to have_css(".ai-feature-editor")
+    expect(page).to have_css(".form-kit__section")
+    expect(page).to have_css(".form-kit__field")
+  end
+
+  it "displays LLM names in compact_list settings" do
+    llm1 = Fabricate(:llm_model, display_name: "Test LLM Alpha")
+    llm2 = Fabricate(:llm_model, display_name: "Test LLM Beta")
+
+    SiteSetting.ai_bot_enabled = true
+    SiteSetting.ai_bot_enabled_llms = "#{llm1.id}|#{llm2.id}"
+
+    page.visit(
+      "/admin/plugins/discourse-ai/ai-features/#{DiscourseAi::Configuration::Module::BOT_ID}/edit",
+    )
+
+    expect(page).to have_css(".ai-feature-editor")
+
+    field = form.field("ai_bot_enabled_llms")
+    expect(field.component).to have_content("Test LLM Alpha")
+    expect(field.component).to have_content("Test LLM Beta")
   end
 end
