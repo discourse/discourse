@@ -136,6 +136,51 @@ after_initialize do
     post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
   end
 
+  on(:post_moved) do |new_post, _original_topic_id, old_post|
+    next if old_post.blank? || new_post.id == old_post.id
+
+    polls = old_post.polls.includes(poll_options: :poll_votes).to_a
+    next if polls.empty?
+
+    Poll.transaction do
+      polls.each do |old_poll|
+        next if Poll.exists?(post_id: new_post.id, name: old_poll.name)
+
+        new_poll =
+          Poll.create!(old_poll.attributes.except("id", "post_id").merge("post_id" => new_post.id))
+
+        option_id_map = {}
+        old_poll.poll_options.each do |old_option|
+          new_option =
+            PollOption.create!(
+              old_option.attributes.except("id", "poll_id").merge("poll_id" => new_poll.id),
+            )
+          option_id_map[old_option.id] = new_option.id
+        end
+
+        votes_to_insert =
+          old_poll
+            .poll_options
+            .flat_map(&:poll_votes)
+            .filter_map do |vote|
+              new_option_id = option_id_map[vote.poll_option_id]
+              next if new_option_id.nil?
+
+              {
+                poll_id: new_poll.id,
+                poll_option_id: new_option_id,
+                user_id: vote.user_id,
+                rank: vote.rank,
+                created_at: vote.created_at,
+                updated_at: vote.updated_at,
+              }
+            end
+
+        PollVote.insert_all(votes_to_insert) if votes_to_insert.present?
+      end
+    end
+  end
+
   on(:merging_users) do |source_user, target_user|
     DB.exec(<<-SQL, source_user_id: source_user.id, target_user_id: target_user.id)
       DELETE FROM poll_votes
