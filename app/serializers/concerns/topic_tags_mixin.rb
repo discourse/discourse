@@ -13,7 +13,7 @@ module TopicTagsMixin
   end
 
   def tags
-    all_tags.map { |tag| { id: tag.id, name: tag.name, slug: tag.slug } }
+    all_tags.map { |tag| { id: tag.id, name: tag.name, slug: tag.slug_for_url } }
   end
 
   def tags_descriptions

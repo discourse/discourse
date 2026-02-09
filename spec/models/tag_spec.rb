@@ -205,6 +205,18 @@ RSpec.describe Tag do
         )
       end
     end
+
+    context "with numeric-only tag names" do
+      it "uses id-tag fallback for empty slugs" do
+        numeric_tag = Fabricate(:tag, name: "1")
+        Fabricate(:topic, tags: [numeric_tag])
+        expect(numeric_tag.slug).to eq("")
+
+        result = Tag.top_tags
+        entry = result.find { |t| t[:id] == numeric_tag.id }
+        expect(entry[:slug]).to eq("#{numeric_tag.id}-tag")
+      end
+    end
   end
 
   describe "#pm_tags" do

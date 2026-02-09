@@ -164,7 +164,10 @@ class Tag < ActiveRecord::Base
       LIMIT #{limit}
     SQL
 
-    tag_names_with_counts.map { |row| { id: row.tag_id, name: row.tag_name, slug: row.tag_slug } }
+    tag_names_with_counts.map do |row|
+      slug = row.tag_slug.presence || "#{row.tag_id}-tag"
+      { id: row.tag_id, name: row.tag_name, slug: slug }
+    end
   end
 
   def self.topic_count_column(guardian)
