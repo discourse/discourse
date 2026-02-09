@@ -3710,6 +3710,7 @@ en:
         other: "%{count} posts in topic"
       create: "New Topic"
       create_long: "Create a new topic"
+      create_group: "New topic and drafts"
       open_draft: "Open Draft"
       private_message: "Start a message"
       archive_message:

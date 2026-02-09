@@ -32,7 +32,7 @@ class Menu extends Component {
 }
 
 const DComboButton = <template>
-  <div class="d-combo-button" ...attributes>
+  <div class="d-combo-button" role="group" ...attributes>
     {{yield Button Menu}}
   </div>
 </template>;
