@@ -350,7 +350,9 @@ module VideoConversion
       client_options = { region: SiteSetting.s3_region }
       client_options[:endpoint] = endpoint if endpoint.present?
 
-      if !SiteSetting.s3_use_iam_profile
+      # Only set credentials if both are provided
+      # If neither provided, AWS SDK will auto-discover (IAM roles, instance profile, etc.)
+      if SiteSetting.s3_access_key_id.present? && SiteSetting.s3_secret_access_key.present?
         client_options[:credentials] = Aws::Credentials.new(
           SiteSetting.s3_access_key_id,
           SiteSetting.s3_secret_access_key,

@@ -9,6 +9,7 @@ module SiteSettings::DeprecatedSettings
     ["min_first_post_typing_time", "fast_typing_threshold", false, "3.4"],
     ["twitter_summary_large_image", "x_summary_large_image", false, "3.4"],
     ["external_system_avatars_enabled", "external_system_avatars_url", false, "3.5"],
+    ["s3_use_iam_profile", "s3_use_iam_profile", false, "3.6"],
   ]
 
   def setup_deprecated_methods
