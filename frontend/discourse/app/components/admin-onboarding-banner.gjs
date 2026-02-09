@@ -7,7 +7,6 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import SiteSetting from "discourse/admin/models/site-setting";
 import DButton from "discourse/components/d-button";
 import CreateInvite from "discourse/components/modal/create-invite";
-import bodyClass from "discourse/helpers/body-class";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopy, defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -48,7 +47,7 @@ class OnboardingStep extends Component {
   }
 
   <template>
-    <div class={{"onboarding-step"}} id={{this.name}}>
+    <div class="onboarding-step" id={{this.name}}>
       <div class="onboarding-step__checkbox">
         <span
           class={{if
@@ -69,7 +68,7 @@ class OnboardingStep extends Component {
       <div class="onboarding-step__action">
         <DButton
           @icon={{this.icon}}
-          @label={{(concat this.i18nKey this.name ".action")}}
+          @label={{concat this.i18nKey this.name ".action"}}
           @action={{this.performAction}}
           class="btn btn-default"
         />
@@ -181,8 +180,6 @@ export default class AdminOnboardingBanner extends Component {
     );
   }
 
-  get bodyClasses() {}
-
   get shouldDisplay() {
     if (!this.currentUser) {
       return false;
@@ -234,11 +231,10 @@ export default class AdminOnboardingBanner extends Component {
   }
 
   <template>
-    {{bodyClass this.bodyClasses}}
     {{#if this.shouldDisplay}}
-      <div class={{"admin-onboarding-banner"}}>
-        <div class={{"admin-onboarding-banner__wrap"}}>
-          <div class={{"admin-onboarding-banner__header"}}>
+      <div class="admin-onboarding-banner">
+        <div class="admin-onboarding-banner__wrap">
+          <div class="admin-onboarding-banner__header">
             <h2>
               {{i18n
                 "admin_onboarding_banner.launch_in_easy_steps"
@@ -251,8 +247,8 @@ export default class AdminOnboardingBanner extends Component {
               class="btn no-text btn-transparent btn-close"
             />
           </div>
-          <div class={{"admin-onboarding-banner__content"}}>
-            <div class={{"admin-onboarding-banner__steps"}}>
+          <div class="admin-onboarding-banner__content">
+            <div class="admin-onboarding-banner__steps">
               {{#each STEPS as |Step|}}
                 <Step />
               {{/each}}
