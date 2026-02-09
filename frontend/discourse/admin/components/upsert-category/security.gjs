@@ -4,10 +4,13 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import UpsertCategoryPermissionRow from "discourse/admin/components/upsert-category/permission-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategorySecurity extends Component {
@@ -19,12 +22,64 @@ export default class UpsertCategorySecurity extends Component {
     );
   }
 
+  get parentCategoryId() {
+    return (
+      this.args.transientData?.parent_category_id ??
+      this.args.category.parent_category_id
+    );
+  }
+
+  get parentCategory() {
+    const parentId = this.parentCategoryId;
+    if (!parentId) {
+      return null;
+    }
+    return Category.findById(parentId);
+  }
+
+  get parentPermissions() {
+    const parent = this.parentCategory;
+    if (!parent) {
+      return null;
+    }
+    // Try permissions first (set up by setupGroupsAndPermissions),
+    // fall back to group_permissions (raw data from server)
+    return parent.permissions?.length
+      ? parent.permissions
+      : parent.group_permissions;
+  }
+
+  get isParentRestricted() {
+    const parentPerms = this.parentPermissions;
+    if (!parentPerms?.length) {
+      return false;
+    }
+
+    return !parentPerms.some((p) => p.group_id === AUTO_GROUPS.everyone.id);
+  }
+
   get availableGroups() {
     const permissions = this.permissions || [];
     const permissionGroupIds = new Set(permissions.map((p) => p.group_id));
-    return this.site.groups
-      .filter((g) => !permissionGroupIds.has(g.id))
-      .map((g) => g.name);
+
+    let groups = this.site.groups.filter((g) => !permissionGroupIds.has(g.id));
+
+    if (this.isParentRestricted) {
+      const parentGroupIds = new Set(
+        this.parentPermissions.map((p) => p.group_id)
+      );
+      groups = groups.filter((g) => parentGroupIds.has(g.id));
+    }
+
+    return groups;
+  }
+
+  get hasAvailableGroups() {
+    return this.availableGroups.length > 0;
+  }
+
+  get allParentGroupsUsed() {
+    return this.isParentRestricted && !this.hasAvailableGroups;
   }
 
   get everyonePermission() {
@@ -33,22 +88,19 @@ export default class UpsertCategorySecurity extends Component {
     );
   }
 
-  get everyoneGrantedFull() {
-    return (
-      this.everyonePermission &&
-      this.everyonePermission.permission_type === PermissionType.FULL
-    );
+  get everyoneAccessMessageKey() {
+    const permissionType = this.everyonePermission?.permission_type;
+    if (permissionType === PermissionType.FULL) {
+      return "category.permissions.everyone_full_access";
+    } else if (permissionType === PermissionType.CREATE_POST) {
+      return "category.permissions.everyone_reply_access";
+    } else {
+      return "category.permissions.everyone_see_access";
+    }
   }
 
   get minimumPermission() {
-    return this.everyonePermission
-      ? this.everyonePermission.permission_type
-      : PermissionType.READONLY;
-  }
-
-  get panelClass() {
-    const isActive = this.args.selectedTab === "security" ? "active" : "";
-    return `edit-category-tab edit-category-tab-security ${isActive}`;
+    return this.everyonePermission?.permission_type ?? PermissionType.READONLY;
   }
 
   #setFormPermissions(permissions) {
@@ -56,13 +108,13 @@ export default class UpsertCategorySecurity extends Component {
   }
 
   @action
-  onSelectGroup(group_name) {
-    const group = this.site.groups.find((g) => g.name === group_name);
+  onSelectGroup(groupId) {
+    const group = this.site.groups.find((g) => g.id === groupId);
     const newPermissions = [
       ...(this.permissions || []),
       {
-        group_name,
-        group_id: group?.id,
+        group_name: group?.name,
+        group_id: groupId,
         permission_type: this.minimumPermission,
       },
     ];
@@ -70,17 +122,17 @@ export default class UpsertCategorySecurity extends Component {
   }
 
   @action
-  onRemovePermission(groupName) {
+  onRemovePermission(groupId) {
     const newPermissions = (this.permissions || []).filter(
-      (p) => p.group_name !== groupName
+      (p) => p.group_id !== groupId
     );
     this.#setFormPermissions(newPermissions);
   }
 
   @action
-  onUpdatePermission(groupName, permissionType) {
+  onUpdatePermission(groupId, permissionType) {
     const newPermissions = (this.permissions || []).map((p) =>
-      p.group_name === groupName ? { ...p, permission_type: permissionType } : p
+      p.group_id === groupId ? { ...p, permission_type: permissionType } : p
     );
     this.#setFormPermissions(newPermissions);
   }
@@ -102,7 +154,13 @@ export default class UpsertCategorySecurity extends Component {
   }
 
   <template>
-    <div class={{this.panelClass}}>
+    <@form.Section
+      class={{concatClass
+        "edit-category-tab"
+        "edit-category-tab-security"
+        (if (eq @selectedTab "security") "active")
+      }}
+    >
       {{#if @category.is_special}}
         {{#if @category.isUncategorizedCategory}}
           <@form.Alert @type="warning">
@@ -147,7 +205,7 @@ export default class UpsertCategorySecurity extends Component {
               </div>
             {{/unless}}
 
-            {{#if this.availableGroups}}
+            {{#if this.hasAvailableGroups}}
               <PluginOutlet
                 @name="category-security-permissions-add-group"
                 @outletArgs={{lazyHash
@@ -163,8 +221,8 @@ export default class UpsertCategorySecurity extends Component {
                       @content={{this.availableGroups}}
                       @onChange={{this.onSelectGroup}}
                       @value={{null}}
-                      @valueProperty={{null}}
-                      @nameProperty={{null}}
+                      @valueProperty="id"
+                      @nameProperty="name"
                       @options={{hash none="category.security_add_group"}}
                       class="available-groups"
                     />
@@ -174,22 +232,26 @@ export default class UpsertCategorySecurity extends Component {
             {{/if}}
           </div>
 
-          {{#if this.everyoneGrantedFull}}
+          {{#if this.allParentGroupsUsed}}
             <@form.Alert @type="warning">
-              {{i18n "category.permissions.everyone_has_access"}}
-            </@form.Alert>
-          {{else}}
-            <@form.Alert @type="warning">
-              {{i18n "category.permissions.specific_groups_have_access"}}
+              {{i18n "category.permissions.all_parent_groups_used"}}
             </@form.Alert>
           {{/if}}
+
+          <@form.Alert @type="warning">
+            {{#if this.everyonePermission}}
+              {{i18n this.everyoneAccessMessageKey}}
+            {{else}}
+              {{i18n "category.permissions.specific_groups_have_access"}}
+            {{/if}}
+          </@form.Alert>
         </@form.Container>
       {{/unless}}
 
       <PluginOutlet
         @name="category-custom-security"
-        @outletArgs={{lazyHash category=@category}}
+        @outletArgs={{lazyHash category=@category form=@form}}
       />
-    </div>
+    </@form.Section>
   </template>
 }

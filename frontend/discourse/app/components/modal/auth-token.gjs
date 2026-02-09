@@ -72,7 +72,7 @@ export default class AuthTokenComponent extends Component {
               {{! when this.fetchActivity is called, the modal focus is reset }}
               {{! allowing you to tab behind the modal, so we need to refocus }}
               <a href {{on "click" this.toggleExpanded}} {{autoFocus}}>
-                {{icon (if this.expanded "caret-up" "caret-down")}}
+                {{icon (if this.expanded "angle-up" "angle-down")}}
               </a>
             </h3>
             {{#if this.expanded}}

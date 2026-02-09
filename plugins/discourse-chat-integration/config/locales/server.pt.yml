@@ -46,10 +46,8 @@ pt:
         create:
           created: "Regra criada com sucesso"
           updated: "Regra atualizada com sucesso"
-          error: "Desculpe, ocorreu um erro enquanto criava a regra."
         delete:
           success: "Regra eliminada com sucesso"
-          error: "Desculpe, ocorreu um erro enquanto eliminava a regra. Execute `/discourse status` para uma lista de regras."
         not_found:
           tag: "Não é possível encontrar a etiqueta \"%{name}\"."
           category: "Não foi possível encontrar a categoria *%{name}*. Categorias disponíveis: *%{list}*"
@@ -75,7 +73,6 @@ pt:
         create:
           created: "Regra criada com sucesso"
           updated: "Regra atualizada com sucesso"
-          error: "Desculpe, ocorreu um erro enquanto criava a regra."
         delete:
           success: "Regra eliminada com sucesso"
         not_found:
@@ -91,10 +88,8 @@ pt:
         create:
           created: "Regra criada com sucesso"
           updated: "Regra atualizada com sucesso"
-          error: "Desculpe, ocorreu um erro enquanto criava a regra."
         delete:
           success: "Regra eliminada com sucesso"
-          error: "Desculpe, ocorreu um erro enquanto eliminava a regra. Execute `/discourse status` para uma lista de regras."
         not_found:
           tag: "Não é possível encontrar a etiqueta \"%{name}\"."
           category: "Não foi possível encontrar a categoria *%{name}*. Categorias disponíveis: *%{list}*"

@@ -16,10 +16,6 @@ cs:
       title: Ohlédnutí
       loading: "Probíhá výpočet, nepropadejte panice..."
       viewing_other_user: "Prohlížíte si zprávu <strong>%{username}od</strong> Discourse Ohlédnutí."
-      cannot_view_rewind_gibberish: >
-        [PŘÍSTUP ZAMÍTNUT::NÁVRATOVÁ SMYČKA JÁDRA SELHALA]<br><br> Inicializační protokol anomálií…<br><br> &nbsp;&nbsp;>> kvantový buffer se vyprázdnil příliš brzy<br> &nbsp;&nbsp;>> uzlová parita se rozchází (Δ=004.33)<br> &nbsp;&nbsp;>> paket ϟ se rozpadl na offsetu ∇47<br> &nbsp;&nbsp;>> handshake tokového kanálu nedorazil včas<br><br>
-      cannot_view_rewind: >
-        Tuto zprávu Discourse Ohlédnutí si nemůžete prohlédnout. Možná ji vlastník nesdílel veřejně?<br><br> $> _<br><br>
       preferences:
         enable_rewind: "Povolit Diskuse Ohlédnutí. To zobrazuje shrnutí aktivity na konci roku ve vašem profilu a na vašem avataru."
         share_publicly: "Sdílejte shrnutí Discourse Ohlédnutí s ostatními členy fóra. Vaše shrnutí Discourse Ohlédnutí si bude moci prohlédnout kterýkoli člen fóra."
@@ -50,7 +46,6 @@ cs:
           title: Použití slov
         reading_time:
           title: Čas čtení
-          book_comparison: "Strávil/a jsi <code>%{readingTime}</code> čtením na našich stránkách! Tolik času by ti trvalo přečíst <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Nejčastěji používané reakce v tématech
           total_number: "Celkový počet reakcí: %{count}"
@@ -112,8 +107,6 @@ cs:
           favorite_channels: Oblíbené kanály
           messages: zprávy
           bot_name: XxRewindBotxX
-          author: Vy
-          author_others: "%{username}"
           channel_title: "#aktivita-chatu"
           status_online: "● online"
           reply_1: "lol úžasné B-)"
@@ -172,7 +165,6 @@ cs:
           replies: Odpovědi na příspěvky
           mentions: Zmínky
           topics_with_new_users: Témata s novými uživateli
-          contributions_helped: tvé příspěvky pomohly
         time_of_day_activity:
           title: Denní rytmus činnosti
           play_button: Přehraj si aktivitu jako zvuk

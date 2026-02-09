@@ -62,5 +62,15 @@ RSpec.describe "AI Bot sidebar navigation" do
       expect(page).to have_no_css(".sidebar-sections")
       expect(page).to have_no_css(".channels-list")
     end
+
+    it "preserves admin sidebar when navigating from AI bot to admin" do
+      ai_pm_homepage.visit
+
+      expect(page).to have_css(".sidebar-sections.ai-conversations-panel")
+
+      visit("/admin")
+
+      expect(page).to have_css(".sidebar-sections.admin-panel")
+    end
   end
 end

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
@@ -27,9 +28,9 @@ export default class OneTable extends Component {
         {{on "click" this.toggleOpen}}
       >
         {{#if this.open}}
-          {{icon "caret-down"}}
+          {{icon "angle-down"}}
         {{else}}
-          {{icon "caret-right"}}
+          {{icon "angle-right"}}
         {{/if}}
         {{@table.name}}
       </div>

@@ -456,8 +456,6 @@ zh_CN:
           runs_today: "%{count} 今天"
           runs_this_week: "%{count} 本周"
           runs_this_month: "%{count} 本月"
-          recent_errors:
-            other: "最近发生 %{count} 个错误"
           runs:
             label: 运行
           name:

@@ -1530,7 +1530,7 @@ class UsersController < ApplicationController
 
     %W[
       number_of_deleted_posts
-      number_of_flagged_posts
+      number_of_flags
       number_of_flags_given
       number_of_silencings
       number_of_suspensions

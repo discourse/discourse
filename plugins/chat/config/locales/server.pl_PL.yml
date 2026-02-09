@@ -73,6 +73,7 @@ pl_PL:
         closed: "Kanał jest zamknięty, nie można edytować ani usuwać żadnych wiadomości"
         read_only: "Kanał jest tylko do odczytu, nie można edytować ani usuwać żadnych wiadomości"
       user_cannot_send_message: "W tej chwili nie możesz wysyłać wiadomości."
+      user_not_in_channel: "Musisz być członkiem tego kanału."
       rate_limit_exceeded: "Przekroczono limit wiadomości na czacie, które można wysłać w ciągu 30 sekund"
       auto_silence_from_flags: "Wiadomość na czacie oflagowana z wynikiem wystarczającym do wyciszenia użytkownika."
       channel_cannot_be_archived: "Kanał nie może być w tej chwili zarchiwizowany, musi być zamknięty lub otwarty do archiwizacji."

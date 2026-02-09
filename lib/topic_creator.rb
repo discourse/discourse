@@ -28,10 +28,17 @@ class TopicCreator
     category = find_category
     if category.present? && guardian.can_tag?(topic)
       tags =
-        if @opts[:tag_ids].present?
-          Tag.where(id: @opts[:tag_ids]).pluck(:name)
+        if @opts[:tags].present?
+          input = @opts[:tags]
+          if input.first.is_a?(String)
+            input
+          else
+            ids = input.filter_map { |t| t[:id]&.to_i }
+            names = input.filter_map { |t| t[:id].blank? && t[:name].presence }
+            Tag.where(id: ids).pluck(:name) + names
+          end
         else
-          @opts[:tags].presence || []
+          []
         end
 
       # adds topic.errors
@@ -195,22 +202,15 @@ class TopicCreator
   end
 
   def setup_tags(topic)
-    if @opts[:tag_ids].present?
-      valid_tags = DiscourseTagging.tag_topic_by_ids(topic, @guardian, @opts[:tag_ids])
+    if @opts[:tags].present?
+      tags = @opts[:tags]
+
+      valid_tags = DiscourseTagging.tag_topic(topic, @guardian, tags)
+
       if !valid_tags
         if @opts[:skip_validations]
-          tag_names = Tag.where(id: @opts[:tag_ids]).pluck(:name)
-          DiscourseTagging.add_or_create_tags_by_name(topic, tag_names)
-        else
-          topic.errors.add(:base, :unable_to_tag)
-          rollback_from_errors!(topic)
-        end
-      end
-    elsif @opts[:tags].present?
-      valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
-      if !valid_tags
-        if @opts[:skip_validations]
-          DiscourseTagging.add_or_create_tags_by_name(topic, @opts[:tags])
+          all_names = tags.filter_map { |t| t.is_a?(String) ? t : t[:name] }
+          DiscourseTagging.add_or_create_tags_by_name(topic, all_names)
         else
           topic.errors.add(:base, :unable_to_tag)
           rollback_from_errors!(topic)

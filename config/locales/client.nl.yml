@@ -1543,9 +1543,6 @@ nl:
         flags_given:
           one: '<span class="%{className}">%{count}</span> nuttige markering'
           other: '<span class="%{className}">%{count}</span> nuttige markeringen'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> gemarkeerd bericht'
-          other: '<span class="%{className}">%{count}</span> gemarkeerde berichten'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> verwijderd bericht'
           other: '<span class="%{className}">%{count}</span> verwijderde berichten'
@@ -2255,7 +2252,6 @@ nl:
     form_kit:
       reset: Resetten
       optional: optioneel
-      errors_summary_title: "Dit formulier bevat fouten:"
       dirty_form: "Je hebt je wijzigingen niet verzonden! Weet je zeker dat je wilt verlaten?"
       errors:
         starts_with: "Moet beginnen met %{prefix}"
@@ -3754,7 +3750,7 @@ nl:
       quote_edit: "Bewerken"
       quote_edit_shortcut: "Bewerken (of druk op e)"
       quote_copy: "Citaat kopiëren"
-      quote_copied_to_clibboard: "Citaat gekopieerd naar klembord"
+      quote_copied_to_clipboard: "Citaat gekopieerd naar klembord"
       quote_share: "Delen"
       edit_reason: "Reden: "
       post_number: "bericht %{number}"
@@ -4076,6 +4072,8 @@ nl:
       slug_placeholder: "(Optioneel) met streepjes verbonden woorden voor URL"
       creation_error: Er is een fout opgetreden bij het maken van de categorie.
       save_error: Er is een fout opgetreden bij het opslaan van de categorie.
+      validations:
+        icon_required: "Selecteer een pictogram."
       description: "Beschrijving"
       logo_description: "Aanbevolen beeldverhouding 1:1 met een minimale bestandsgrootte van 200 pixels. Als dit leeg wordt gelaten, wordt er geen afbeelding weergegeven."
       style: "Stijl"
@@ -4112,11 +4110,10 @@ nl:
         reply: "Antwoorden"
         create: "Maken"
         no_groups_selected: "Er is geen toegang verleend aan groepen; deze categorie is alleen zichtbaar voor medewerkers."
-        everyone_has_access: 'Deze categorie is openbaar; iedereen kan berichten zien, beantwoorden en maken. Verwijder een of meer van de verleende toestemmingen voor de groep ''iedereen'' om toestemmingen te beperken.'
+        everyone_full_access: 'Deze categorie is openbaar; iedereen kan berichten zien, beantwoorden en maken. Verwijder een of meer van de verleende toestemmingen voor de groep ''iedereen'' om toestemmingen te beperken.'
         toggle_reply: "Toestemming Antwoorden in-/uitschakelen"
         toggle_full: "Toestemming Maken in-/uitschakelen"
         inherited: 'Deze toestemming is overgenomen van ''iedereen'''
-      special_warning: "Waarschuwing: deze categorie is een vooraf geseede categorie, de beveiligingsinstellingen kunnen niet worden bewerkt. Als je deze categorie niet wilt gebruiken, verwijder deze dan in plaats van het doel ervan te wijzigen."
       uncategorized_security_warning: "Deze categorie is speciaal. Hij is bedoeld als wachtruimte voor topics die geen categorie hebben en kan geen beveiligingsinstellingen hebben."
       uncategorized_general_warning: 'Deze categorie is bijzonder. Hij wordt gebruikt als de standaardcategorie voor nieuwe topics waarvoor geen categorie is selecteerd. Als je dit gedrag wilt voorkomen en categorieselectie wilt afdwingen, <a href="%{settingLink}">schakel de instelling dan hier uit</a>. Als je de naam of beschrijving wilt wijzigen, ga dan naar <a href="%{customizeLink}">Aanpassen / Tekstinhoud</a>.'
       pending_permission_change_alert: "Je hebt %{group} niet toegevoegd aan deze categorie. Klik op deze knop om de groep toe te voegen."
@@ -4144,7 +4141,7 @@ nl:
       minimum_required_tags: "Minimale aantal tags vereist in een topic:"
       none_subcategory_text: "Geen"
       visibility:
-        title: "Toegang"
+        title: "Zichtbaarheid"
         public: "Openbaar"
         group_restricted: "Privé"
       num_auto_bump_daily: "Aantal open topics dat dagelijks automatisch omhoog wordt geplaatst:"
@@ -6434,8 +6431,6 @@ nl:
         delete: "Verwijderen"
         delete_confirm: 'Weet je zeker dat je ''%{theme_name}'' wilt verwijderen?'
         bulk_delete: "Weet je het zeker?"
-        bulk_themes_delete_confirm: "Hierdoor worden de volgende thema's verwijderd en kunnen ze niet meer door gebruikers op je site worden gebruikt:"
-        bulk_components_delete_confirm: "Hierdoor worden de volgende onderdelen verwijderd en kunnen ze niet meer door gebruikers op je site worden gebruikt:"
         color: "Kleur"
         opacity: "Ondoorzichtigheid"
         copy: "Dupliceren"

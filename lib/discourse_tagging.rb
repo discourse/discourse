@@ -16,6 +16,27 @@ module DiscourseTagging
     @term_types ||= Enum.new(contains: 0, starts_with: 1)
   end
 
+  # Sets tags for topic and allows new tags to be created if they do not exist.
+  #
+  # Accepts either an array of tag names (backward compatibility) or an array of hashes with :id and/or :name keys.
+  #
+  # @param topic [Topic] the topic to be tagged
+  # @param guardian [Guardian] the guardian of the user performing the action
+  # @param tags_param [Array<String>, Array<Hash>] an array of tag names or an array of
+  #  hashes with :id and/or :name keys (absence of id indicates new tag).
+  def self.tag_topic(topic, guardian, tags_param)
+    if tags_param.blank? || tags_param.first.is_a?(String)
+      return tag_topic_by_names(topic, guardian, tags_param)
+    end
+
+    tag_ids = tags_param.filter_map { |t| t[:id]&.to_i }
+    new_names = tags_param.filter_map { |t| t[:id].blank? && t[:name].presence }
+
+    tag_names = new_names
+    tag_names += Tag.where(id: tag_ids).pluck(:name) if tag_ids.present?
+    tag_topic_by_names(topic, guardian, tag_names)
+  end
+
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
     if guardian.can_tag?(topic)
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
@@ -807,6 +828,16 @@ module DiscourseTagging
 
     saving_tags = opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]
     DiscoursePluginRegistry.apply_modifier(:tags_for_saving, saving_tags, tag_names, guardian, opts)
+  end
+
+  def self.find_or_create_tags!(tag_names, guardian)
+    tag_names = tags_for_saving(tag_names, guardian) || []
+    return [] if tag_names.empty?
+
+    existing_tag_names = Tag.where_name(tag_names).pluck(:name)
+    new_tag_names = tag_names - existing_tag_names
+    new_tag_names.each { |name| Tag.create!(name: name) }
+    Tag.where_name(tag_names).all
   end
 
   def self.add_or_create_tags_by_name(taggable, tag_names_arg, opts = {})

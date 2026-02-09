@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { set } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
@@ -325,7 +326,8 @@ export default class Composer extends RestModel {
 
   @discourseComputed("privateMessage", "archetype.hasOptions")
   showCategoryChooser(isPrivateMessage, hasOptions) {
-    const manyCategories = this.site.categories.length > 1;
+    const manyCategories =
+      this.site.lazy_load_categories || this.site.categories.length > 1;
     return !isPrivateMessage && (hasOptions || manyCategories);
   }
 
@@ -927,7 +929,8 @@ export default class Composer extends RestModel {
     if (opts.post) {
       this.setProperties({
         post: opts.post,
-        whisper: opts.post.post_type === this.site.post_types.whisper,
+        whisper:
+          opts.whisper ?? opts.post.post_type === this.site.post_types.whisper,
       });
 
       if (!this.topic) {
@@ -986,6 +989,7 @@ export default class Composer extends RestModel {
     if (isEdit(opts.action) && this.post) {
       const topicProps = this.serialize(_edit_topic_serializer);
       topicProps.loading = true;
+      topicProps.tags = this.topic.tags;
 
       // When editing a shared draft, use its category
       if (opts.action === EDIT_SHARED_DRAFT && opts.destinationCategoryId) {

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DModal from "discourse/components/d-modal";
@@ -14,14 +13,8 @@ export default class UserNotesModal extends Component {
   @service dialog;
   @service store;
 
-  @tracked userId = this.args.model.userId;
-  postId = this.args.model.postId;
-  callback = this.args.model.callback;
-
   #refreshCount() {
-    if (this.callback) {
-      this.callback(this.args.model.note.length);
-    }
+    this.args.model.callback?.(this.args.model.note.length);
   }
 
   get subtitle() {
@@ -48,15 +41,14 @@ export default class UserNotesModal extends Component {
   @action
   async onSubmit(data) {
     const note = this.store.createRecord("user-note");
-    const userId = parseInt(this.userId, 10);
 
     const args = {
       raw: data.content,
-      user_id: userId,
+      user_id: parseInt(this.args.model.userId, 10),
     };
 
-    if (this.postId) {
-      args.post_id = parseInt(this.postId, 10);
+    if (this.args.model.postId) {
+      args.post_id = parseInt(this.args.model.postId, 10);
     }
 
     try {

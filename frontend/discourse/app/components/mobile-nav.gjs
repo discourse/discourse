@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/require-tagless-components */
 import Component from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -86,7 +86,7 @@ export default class MobileNav extends Component {
         <li>
           <a href {{on "click" this.toggleExpanded}} class="expander">
             <span class="selection">{{htmlSafe this.selectedHtml}}</span>
-            {{icon "caret-down"}}
+            {{icon "angle-down"}}
           </a>
         </li>
       {{/if}}

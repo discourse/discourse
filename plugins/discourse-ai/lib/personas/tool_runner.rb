@@ -213,7 +213,11 @@ module DiscourseAi
             return this.editTopic(topic_id, { tags: tags }, options);
           },
           getCustomField: function(type, id, key) {
-            return _discourse_get_custom_field(type, id, key);
+            const result = _discourse_get_custom_field(type, id, key);
+            if (result && result.error) {
+              throw new Error(result.error);
+            }
+            return result;
           },
           setCustomField: function(type, id, key, value) {
             const result = _discourse_set_custom_field(type, id, key, value);
@@ -884,6 +888,11 @@ module DiscourseAi
               user = resolve_user(username)
               return { error: "User not found: #{username}" } if user.nil?
 
+              guardian = Guardian.new(user)
+              unless guardian.can_edit?(post)
+                return { error: "User is not allowed to edit this post" }
+              end
+
               revisor = PostRevisor.new(post)
               if revisor.revise!(user, { raw: raw, edit_reason: edit_reason })
                 { success: true, post_id: post.id }
@@ -978,6 +987,7 @@ module DiscourseAi
           "_discourse_get_custom_field",
           ->(type, id, key) do
             in_attached_function do
+              return { error: "Invalid type: #{type}" } unless CUSTOM_FIELD_MODELS.key?(type)
               model = find_model_by_type(type, id)
               return nil if model.nil?
               model.custom_fields[key]

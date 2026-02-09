@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 hy:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "Կիրառել"
-      insert_modal:
-        insert: "Մուտքագրել"

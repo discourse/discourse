@@ -85,8 +85,6 @@ ar:
           invalid: "غير صالح"
           no_such_category: "لا توجد فئة بهذا الاسم"
           no_such_group: "لا توجد مجموعة بهذا الاسم"
-          invalid_date: "%{date} هو تاريخ غير صالح"
-          invalid_time: "%{time} هو وقت غير صالح"
     group:
       reports: "التقارير"
     admin:

@@ -1200,6 +1200,21 @@ RSpec.describe PrettyText do
       expect(PrettyText.excerpt(nil, 100)).to eq("")
     end
 
+    it "returns empty string when Nokogiri hits tree depth limits" do
+      html = "<div>" * 10 + "Hello" + "</div>" * 10
+      stub_const(Nokogiri::Gumbo, "DEFAULT_MAX_TREE_DEPTH", 5) do
+        expect(PrettyText.excerpt(html, 100)).to eq("")
+      end
+    end
+
+    it "returns empty string when Nokogiri hits attribute limits" do
+      attrs = (1..10).map { |i| "data-a#{i}=\"v\"" }.join(" ")
+      html = "<div #{attrs}>Hello</div>"
+      stub_const(Nokogiri::Gumbo, "DEFAULT_MAX_ATTRIBUTES", 5) do
+        expect(PrettyText.excerpt(html, 100)).to eq("")
+      end
+    end
+
     it "handles custom bbcode excerpt" do
       raw = <<~MD
       [excerpt]

@@ -736,8 +736,8 @@ class GroupsController < ApplicationController
 
         settings.delete(:ssl_mode)
 
-        if params[:ssl_mode].blank? || !Group.smtp_ssl_modes.values.include?(params[:ssl_mode].to_i)
-          raise Discourse::InvalidParameters.new("SSL mode must be present and valid")
+        if Group.smtp_ssl_modes.values.exclude?(params[:ssl_mode].to_i)
+          raise Discourse::InvalidParameters.new("SSL mode must be valid")
         end
 
         final_settings =
@@ -883,7 +883,7 @@ class GroupsController < ApplicationController
 
     if should_clear_smtp
       attributes[:smtp_server] = nil
-      attributes[:smtp_ssl_mode] = false
+      attributes[:smtp_ssl_mode] = Group.smtp_ssl_modes[:none]
       attributes[:smtp_port] = nil
       attributes[:email_username] = nil
       attributes[:email_password] = nil

@@ -87,20 +87,16 @@ en:
     ai_spam_detection_max_trust_level: "Maximum trust level of users to scan for spam"
 
     ai_openai_api_key: "API key for OpenAI API. ONLY used for Image creation and edits. For GPT use the LLM config tab"
-    ai_openai_image_generation_url: "URL for OpenAI image generation API"
-    ai_openai_image_edit_url: "URL for OpenAI image edit API"
 
     ai_helper_enabled: "Enable the AI helper."
     composer_ai_helper_allowed_groups: "Users on these groups will see the AI helper button in the composer."
     ai_helper_allowed_in_pm: "Enable the composer's AI helper in PMs."
-    ai_helper_model: "Model to use for the AI helper."
     ai_helper_automatic_chat_thread_title_delay: "Delay in minutes before the AI helper automatically sets the chat thread title."
     ai_helper_automatic_chat_thread_title: "Automatically set the chat thread titles based on thread contents."
-    ai_helper_illustrate_post_model: "Model to use for the composer AI helper's illustrate post feature"
     ai_helper_enabled_features: "Select the features to enable in the AI helper."
     post_ai_helper_allowed_groups: "User groups allowed to access AI Helper features in posts"
-    ai_helper_image_caption_model: "Select the model to use for generating image captions"
     ai_helper_post_illustrator_persona: "The persona to use for the AI helper's illustrate post feature. Note: you must also create an image generation tool (Admin > Plugins > Discourse AI > Tools) for this feature to work."
+    ai_helper_chat_thread_title_persona: "The persona to use for generating chat thread titles."
 
     ai_embeddings_selected_model: "Use the selected model for generating embeddings."
     ai_embeddings_generate_for_pms: "Generate embeddings for personal messages."
@@ -113,16 +109,12 @@ en:
     ai_embeddings_semantic_related_include_closed_topics: "Include closed topics in semantic search results"
     ai_embeddings_semantic_related_age_penalty: "Apply exponential age penalty to topics in semantic search results. 0.0 = no penalty, 0.3 = gentle bias toward recently active content, 1.0+ = strong recency bias."
     ai_embeddings_semantic_related_age_time_scale: "Time scale in days for age penalty calculation. Topics inactive this many days receive ~50% penalty with penalty=1.0. Use 365 for yearly scale, 90 for quarterly scale."
-    ai_embeddings_semantic_search_hyde_model: "Model used to expand keywords to get better results during a semantic search"
     ai_embeddings_per_post_enabled: Generate embeddings for each post
 
     ai_summarization_enabled: "Enable the summarize feature"
-    ai_summarization_model: "Model to use for summarization"
     ai_summarization_persona: "Persona to use for summarize feature"
-    ai_custom_summarization_allowed_groups: "Groups allowed to use create new summaries."
     ai_pm_summarization_allowed_groups: "Groups allowed to create and view summaries in PMs."
     ai_summary_gists_enabled: "Generate brief summaries of latest replies in topics automatically"
-    ai_summary_gists_allowed_groups: "Groups allowed to see gists in the hot topics list."
     ai_summary_backfill_maximum_topics_per_hour: "Number of topic summaries to backfill per hour."
 
     ai_bot_enabled: "Enable the AI Bot module."
@@ -138,10 +130,6 @@ en:
     ai_discover_enabled: "Enable the discovery search feature"
     ai_discover_persona: "Persona to use for discovery search feature"
 
-    ai_stability_api_key: "API key for the stability.ai API"
-    ai_stability_engine: "Image generation engine to use for the stability.ai API"
-    ai_stability_api_url: "URL for the stability.ai API"
-
     ai_google_custom_search_api_key: "API key for the Google Custom Search API see: https://developers.google.com/custom-search"
     ai_google_custom_search_cx: "CX for Google Custom Search API"
 
@@ -153,7 +141,6 @@ en:
     ai_discord_allowed_guilds: "Discord guilds (servers) where the bot is allowed to search"
 
     ai_translation_enabled: "Enable the AI translation feature"
-    ai_translation_model: "The model to use for translation. This model must support translation. Personas can override this setting."
     ai_translation_backfill_limit_to_public_content: "When enabled, only content in public categories will be translated. When disabled, content in group PMs and private categories will also be sent for translation."
     ai_translation_include_bot_content: "When enabled, content written by bots (user IDs below 0) will also be sent for translation."
     ai_translation_max_post_length: "The maximum number of characters for a post to be translated. Posts longer than this will not be translated."
@@ -453,6 +440,9 @@ en:
         discover:
           name: "Discover"
           description: "Default persona used in the discoveries feature (complimentary search)"
+        chat_thread_titler:
+          name: "Chat Thread Titler"
+          description: "Default persona powering automatic chat thread title generation"
 
       topic_not_found: "Summary unavailable, topic not found!"
       summarizing: "Summarizing topic"

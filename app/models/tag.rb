@@ -312,7 +312,8 @@ end
 #
 # Indexes
 #
-#  index_tags_on_lower_name  (lower((name)::text)) UNIQUE
-#  index_tags_on_name        (name) UNIQUE
-#  index_tags_on_slug        (slug) WHERE ((slug)::text <> ''::text)
+#  index_tags_on_lower_name     (lower((name)::text)) UNIQUE
+#  index_tags_on_name           (name) UNIQUE
+#  index_tags_on_slug           (slug) WHERE ((slug)::text <> ''::text)
+#  index_tags_on_target_tag_id  (target_tag_id) WHERE (target_tag_id IS NOT NULL)
 #
