@@ -8,6 +8,10 @@ module PageObjects
         PageObjects::Components::SelectKit.new(".tag-chooser")
       end
 
+      def category_selector
+        PageObjects::Components::SelectKit.new(".category-chooser")
+      end
+
       def click_bulk_topics_confirm
         find("#bulk-topics-confirm").click
       end

@@ -161,6 +161,26 @@ describe PostRevisor do
       )
     end
 
+    it "allows staff to move a topic with tags not allowed in the new category" do
+      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+      SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+      tag1 = Fabricate(:tag)
+      tag2 = Fabricate(:tag)
+      tag_group = Fabricate(:tag_group, tags: [tag1])
+      tag_group2 = Fabricate(:tag_group, tags: [tag2])
+
+      old_category = Fabricate(:category, tag_groups: [tag_group])
+      new_category = Fabricate(:category, tag_groups: [tag_group2])
+
+      post = create_post(category: old_category, tags: [tag1.name])
+      topic = post.topic
+
+      post.revise(Fabricate(:admin), category_id: new_category.id)
+      expect(topic.reload.category).to eq(new_category)
+      expect(topic.tags.map(&:name)).to contain_exactly(tag1.name)
+    end
+
     it "returns an error if the topic is missing tags required from a tag group in the new category" do
       SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]

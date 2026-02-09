@@ -287,16 +287,15 @@ module DiscourseTagging
   end
 
   def self.validate_min_required_tags_for_category(guardian, model, category, tags = [])
-    if !guardian.is_staff? && category && category.minimum_required_tags > 0 &&
-         tags.length < category.minimum_required_tags
-      model.errors.add(
-        :base,
-        I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags),
-      )
-      false
-    else
-      true
-    end
+    return true if guardian.is_staff?
+    return true if category.nil?
+    return true if tags.length >= category.minimum_required_tags
+
+    model.errors.add(
+      :base,
+      I18n.t("tags.minimum_required_tags", count: category.minimum_required_tags),
+    )
+    false
   end
 
   def self.validate_required_tags_from_group(guardian, model, category, tags = [])
@@ -324,6 +323,7 @@ module DiscourseTagging
   end
 
   def self.validate_category_restricted_tags(guardian, model, category, tags = [])
+    return true if guardian.is_staff?
     return true if tags.blank? || category.blank?
 
     tags = tags.map(&:name) if Tag === tags[0]
