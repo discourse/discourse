@@ -1958,6 +1958,8 @@ id:
         remove: "Hapus"
       required_tag_group:
         delete: "Hapus"
+      validations:
+        icon_required: "Pilih ikon."
       description: "Deskripsi"
       color_validations:
         cant_be_empty: "tidak boleh kosong"

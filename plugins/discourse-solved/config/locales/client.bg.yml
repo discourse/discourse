@@ -16,6 +16,7 @@ bg:
       accepted_answer_post_number: "публикация %{post_number} "
       topic_status_filter:
         all: "всички подкатегории"
+      move_post_cancel: "Отмени"
     discourse_automation:
       triggerables:
         first_accepted_solution:

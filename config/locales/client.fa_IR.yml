@@ -3838,6 +3838,8 @@ fa_IR:
       slug_placeholder: "(اختیاری) کلمه با - جدا شده برای پیوند"
       creation_error: خطایی در ساخت این دسته بروز کرد.
       save_error: خطایی در ذخیره‌ی این دسته‌بندی روی داد.
+      validations:
+        icon_required: "یک آیکون را انتخاب کنید."
       name: "نام دسته‌بندی"
       untitled: "دسته‌بندی بدون‌عنوان"
       description: "توضیحات"

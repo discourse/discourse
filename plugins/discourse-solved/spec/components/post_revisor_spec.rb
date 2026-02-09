@@ -31,6 +31,68 @@ describe PostRevisor do
     expect(messages.first.data[:refresh_stream]).to eq(true)
   end
 
+  describe "Unaccepting answer on category change" do
+    fab!(:topic) { Fabricate(:topic, category: category_solved) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic, post_number: 2) }
+
+    before do
+      SiteSetting.solved_enabled = true
+      DiscourseSolved.accept_answer!(reply, admin)
+      topic.reload
+    end
+
+    it "unaccepts the answer when category changes from solved to unsolved" do
+      described_class.new(post).revise!(admin, { category_id: category.id })
+      expect(topic.reload.solved).to be_nil
+    end
+
+    it "keeps the answer when category changes to another solved category" do
+      another_solved =
+        Fabricate(:category_with_definition).tap do |c|
+          c.upsert_custom_fields("enable_accepted_answers" => "true")
+        end
+
+      DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
+
+      described_class.new(post).revise!(admin, { category_id: another_solved.id })
+      topic.reload
+
+      expect(topic.solved).to be_present
+      expect(topic.solved.answer_post_id).to eq(reply.id)
+    end
+
+    it "keeps the answer when allow_solved_on_all_topics is true" do
+      SiteSetting.allow_solved_on_all_topics = true
+
+      described_class.new(post).revise!(admin, { category_id: category.id })
+      topic.reload
+
+      expect(topic.solved).to be_present
+      expect(topic.solved.answer_post_id).to eq(reply.id)
+    end
+  end
+
+  describe "Unaccepting answer on tag change" do
+    before do
+      SiteSetting.solved_enabled = true
+      SiteSetting.tagging_enabled = true
+    end
+
+    fab!(:solved_tag, :tag)
+    fab!(:topic) { Fabricate(:topic, tags: [solved_tag]) }
+    fab!(:post) { Fabricate(:post, topic: topic) }
+    fab!(:reply) { Fabricate(:post, topic: topic, post_number: 2) }
+
+    it "unaccepts the answer when the solved tag is removed" do
+      SiteSetting.enable_solved_tags = solved_tag.name
+      DiscourseSolved.accept_answer!(reply, admin)
+
+      described_class.new(post).revise!(admin, tags: [])
+      expect(topic.reload.solved).to be_nil
+    end
+  end
+
   describe "Allowing solved via tags" do
     before do
       SiteSetting.solved_enabled = true

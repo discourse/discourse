@@ -54,6 +54,9 @@ hu:
           reset: "Alaphelyzetbe állítás"
         search:
           name: "Keresés"
+        embeddings:
+          setting_groups:
+            related_topics: "Kapcsolódó témák"
         spam:
           name: "Kéretlen tartalom"
       modals:

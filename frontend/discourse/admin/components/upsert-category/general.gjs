@@ -145,8 +145,9 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   get categoryVisibility() {
-    if (this.categoryVisibilityState) {
-      return this.categoryVisibilityState;
+    const state = this.categoryVisibilityState;
+    if (state && state.categoryId === this.args.category.id) {
+      return state.value;
     }
 
     if (this.isParentRestricted) {
@@ -193,7 +194,10 @@ export default class UpsertCategoryGeneral extends Component {
       }));
     }
 
-    this.categoryVisibilityState = value;
+    this.categoryVisibilityState = {
+      categoryId: this.args.category.id,
+      value,
+    };
 
     if (value === "public") {
       this.#setFormPermissions([EVERYONE_FULL_PERMISSION]);
@@ -275,6 +279,16 @@ export default class UpsertCategoryGeneral extends Component {
       addError(name, {
         title: i18n("category.emoji"),
         message: i18n("category.validations.emoji_required"),
+      });
+    }
+  }
+
+  @action
+  validateIcon(name, value, { addError, data }) {
+    if (data.style_type === "icon" && !value) {
+      addError(name, {
+        title: i18n("category.icon"),
+        message: i18n("category.validations.icon_required"),
       });
     }
   }
@@ -392,6 +406,7 @@ export default class UpsertCategoryGeneral extends Component {
                   @title={{i18n "category.icon"}}
                   @showTitle={{false}}
                   @format="large"
+                  @validate={{this.validateIcon}}
                   as |field|
                 >
                   <field.Custom>

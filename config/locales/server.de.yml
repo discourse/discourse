@@ -2473,6 +2473,7 @@ de:
     content_localization_allow_author_localization: "Ermögliche es Autoren, die Lokalisierungen ihrer eigenen Themen und Beiträge über das Beitragsmenü zu aktualisieren."
     enable_upcoming_changes: "Aktiviere bevorstehende Änderungen"
     fake_upcoming_change: "Dies ist keine echte bevorstehende Änderung. Sie dient zu Testzwecken und muss nicht übersetzt werden."
+    enable_custom_splash_screen: "Ermöglicht die Anpassung des Ladebildschirms mit einem eigenen SVG-Bild. Lade ein Bild über die Einstellung \"Splash Screen Image\" hoch. Achtung! Dies kann sich negativ auf die LCP-Bewertung und die Google-Indexierung auswirken."
     errors:
       invalid_css_color: "Ungültige Farbe. Gib einen Farbnamen oder einen Hexadezimalwert ein."
       invalid_datetime: "Ungültiges Datums-/Uhrzeitformat. Bitte stelle sicher, dass du ein gültiges Datum und eine gültige Uhrzeit eingegeben hast."

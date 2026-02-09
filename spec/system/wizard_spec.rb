@@ -82,5 +82,18 @@ describe "Wizard", type: :system do
         ".wizard-container__radio-choice[data-choice-id='#{choice_id}'].--selected",
       )
     end
+
+    it "keeps arrow key navigation within same radio group" do
+      wizard_page.go_to_step("setup")
+
+      login_required_field = wizard_page.find_field("radio", "login-required")
+      private_radio =
+        login_required_field.find("[data-choice-id='private'] input[type='radio']", visible: :all)
+
+      private_radio.click
+      private_radio.send_keys(:right)
+
+      expect(login_required_field).to have_css("input[type='radio']:focus", visible: :all)
+    end
   end
 end

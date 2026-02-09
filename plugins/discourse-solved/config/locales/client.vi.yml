@@ -39,6 +39,7 @@ vi:
       no_solved_topics_title_others: "%{username} chưa giải quyết chủ đề nào"
       no_solved_topics_body: "Khi bạn đưa ra câu trả lời hữu ích cho một chủ đề, câu trả lời của bạn có thể được người tạo chủ đề hoặc BQT chọn làm giải pháp."
       marked_solved_by: "Xác nhận bởi %{user}"
+      move_post_cancel: "Hủy"
       no_answer:
         title: Câu hỏi của bạn đã được giải đáp chưa?
         description: "Hãy đánh dấu câu trả lời và giúp đỡ người khác bằng cách sử dụng nút \"Giải pháp\" bên dưới câu trả lời đúng."

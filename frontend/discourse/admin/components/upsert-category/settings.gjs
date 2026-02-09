@@ -11,7 +11,6 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import withEventValue from "discourse/helpers/with-event-value";
 import { SEARCH_PRIORITIES } from "discourse/lib/constants";
 import getUrl from "discourse/lib/get-url";
-import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import { eq } from "discourse/truth-helpers";
@@ -29,68 +28,6 @@ export default class UpsertCategorySettings extends Component {
     return this.siteSettings.fixed_category_positions;
   }
 
-  get isParentCategory() {
-    const parentCategoryId =
-      this.args.transientData?.parent_category_id ??
-      this.args.category.parent_category_id;
-    return this.args.category.isParent || !parentCategoryId;
-  }
-
-  get availableSubcategoryListStyles() {
-    return [
-      { name: i18n("category.subcategory_list_styles.rows"), value: "rows" },
-      {
-        name: i18n(
-          "category.subcategory_list_styles.rows_with_featured_topics"
-        ),
-        value: "rows_with_featured_topics",
-      },
-      {
-        name: i18n("category.subcategory_list_styles.boxes"),
-        value: "boxes",
-      },
-      {
-        name: i18n(
-          "category.subcategory_list_styles.boxes_with_featured_topics"
-        ),
-        value: "boxes_with_featured_topics",
-      },
-    ];
-  }
-
-  get availableViews() {
-    const views = [
-      { name: i18n("filters.hot.title"), value: "hot" },
-      { name: i18n("filters.latest.title"), value: "latest" },
-      { name: i18n("filters.top.title"), value: "top" },
-    ];
-
-    const context = {
-      categoryId: this.args.category.id,
-      customFields: this.args.category.custom_fields,
-    };
-
-    return applyMutableValueTransformer(
-      "category-available-views",
-      views,
-      context
-    );
-  }
-
-  get availableTopPeriods() {
-    return ["all", "yearly", "quarterly", "monthly", "weekly", "daily"].map(
-      (p) => {
-        return { name: i18n(`filters.top.${p}.title`), value: p };
-      }
-    );
-  }
-
-  get availableListFilters() {
-    return ["all", "none"].map((p) => {
-      return { name: i18n(`category.list_filters.${p}`), value: p };
-    });
-  }
-
   get searchPrioritiesOptions() {
     const options = [];
 
@@ -104,39 +41,6 @@ export default class UpsertCategorySettings extends Component {
     });
 
     return options;
-  }
-
-  get availableSorts() {
-    return applyMutableValueTransformer("category-sort-orders", [
-      "likes",
-      "op_likes",
-      "views",
-      "posts",
-      "activity",
-      "posters",
-      "category",
-      "created",
-    ])
-      .map((s) => ({ name: i18n("category.sort_options." + s), value: s }))
-      .toSorted((a, b) => a.name.localeCompare(b.name));
-  }
-
-  get sortAscendingOption() {
-    const sortAscending = this.args.transientData?.sort_ascending;
-    if (sortAscending === "false") {
-      return false;
-    }
-    if (sortAscending === "true") {
-      return true;
-    }
-    return sortAscending;
-  }
-
-  get sortAscendingOptions() {
-    return [
-      { name: i18n("category.sort_ascending"), value: true },
-      { name: i18n("category.sort_descending"), value: false },
-    ];
   }
 
   get hiddenRelativeIntervals() {
@@ -237,20 +141,17 @@ export default class UpsertCategorySettings extends Component {
         (if (eq @selectedTab "settings") "active")
       }}
     >
-      {{! This field is removed from edit-category-general when the UC is active }}
-      {{#if this.siteSettings.enable_simplified_category_creation}}
-        <@form.Field
-          @name="slug"
-          @title={{i18n "category.slug"}}
-          @format="large"
-          as |field|
-        >
-          <field.Input
-            placeholder={{i18n "category.slug_placeholder"}}
-            @maxlength="255"
-          />
-        </@form.Field>
-      {{/if}}
+      <@form.Field
+        @name="slug"
+        @title={{i18n "category.slug"}}
+        @format="large"
+        as |field|
+      >
+        <field.Input
+          placeholder={{i18n "category.slug_placeholder"}}
+          @maxlength="255"
+        />
+      </@form.Field>
 
       {{#if this.showPositionInput}}
         <@form.Field
@@ -454,7 +355,7 @@ export default class UpsertCategorySettings extends Component {
           <PluginOutlet
             @name="category-email-in"
             @connectorTagName="div"
-            @outletArgs={{lazyHash category=@category}}
+            @outletArgs={{lazyHash category=@category form=@form}}
           />
         {{else}}
           <@form.Alert @type="info">

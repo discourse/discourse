@@ -1609,6 +1609,9 @@ de:
       undo_revoke_access: "Zugriffsrecht wiederherstellen"
       api_approved: "Genehmigt:"
       api_last_used_at: "Zuletzt benutzt am:"
+      api_show_permissions:
+        one: "Berechtigung erteilt (%{count})"
+        other: "Berechtigungen erteilt (%{count})"
       theme: "Theme"
       save_to_change_theme: 'Das Theme wird aktualisiert, nachdem du auf „%{save_text}“ geklickt hast.'
       home: "Standard-Startseite"
@@ -1617,6 +1620,9 @@ de:
         flags_given:
           one: '<span class="%{className}">%{count}</span> hilfreiche Meldung'
           other: '<span class="%{className}">%{count}</span> hilfreiche Meldungen'
+        flags:
+          one: '<span class="%{className}">%{count}</span> Meldung'
+          other: '<span class="%{className}">%{count}</span> Meldungen'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> gelöschter Beitrag'
           other: '<span class="%{className}">%{count}</span> gelöschte Beiträge'
@@ -2407,6 +2413,7 @@ de:
         } überschritten.
     learn_more: "Mehr erfahren …"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Mehr erfahren …</a>"
+    feedback_with_link: "<a href='%{url}' target='_blank'>Feedback…</a>"
     mute: Stummschalten
     unmute: Stummschaltung aufheben
     last_post: Geschrieben
@@ -3308,6 +3315,7 @@ de:
         deleted_post: "(gelöschter Beitrag)"
         post_number_with_topic_title: "Beitrag #%{post_number} – %{title}"
         new_post_in_topic: "neuer Beitrag in %{title}"
+        new_post_in_deleted_topic: "neuer Beitrag in einem gelöschten Thema"
         user_requires_approval: "%{username} erfordert eine Genehmigung"
         default_item: "Element zur Überprüfung #%{reviewable_id}"
     topics:
@@ -4215,6 +4223,7 @@ de:
       general: "Allgemeines"
       settings: "Einstellungen"
       advanced: "Erweitert "
+      show_advanced: "Erweiterte Einstellungen"
       topic_template: "Vorlage"
       tags: "Schlagwörter"
       localizations: "Lokalisierungen"
@@ -4253,6 +4262,7 @@ de:
         self_lockout: "Du bist dabei, die Berechtigungen für diese Kategorie so zu ändern, dass du selbst nicht länger Zugriff darauf hast. Bist du sicher, dass du fortfahren willst?"
       validations:
         emoji_required: "Wähle ein Emoji."
+        icon_required: "Wähle ein Symbol."
       name: "Name der Kategorie"
       untitled: "Unbenannte Kategorie"
       description: "Beschreibung"
@@ -4298,9 +4308,13 @@ de:
         create: "Erstellen"
         no_groups_selected: "Es wurde keinen Gruppen Zugriff gewährt. Diese Kategorie ist nur für das Team sichtbar."
         everyone_full_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen, beantworten und erstellen. Entferne eine oder mehrere der Berechtigungen, die der Gruppe „Jeder“ erteilt wurden, um die Berechtigungen einzuschränken.'
+        everyone_reply_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen und auf Themen antworten. Entferne die Gruppe „Jeder“, um die Berechtigungen einzuschränken.'
+        everyone_see_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen. Entferne die Gruppe „Jeder“, um die Berechtigungen einzuschränken.'
+        all_parent_groups_used: "Alle Gruppen aus der übergeordneten Kategorie sind hinzugefügt worden. Um weitere Gruppen hinzuzufügen, füge sie zuerst der übergeordneten Kategorie hinzu."
         toggle_reply: "Antwortberechtigung umschalten"
         toggle_full: "Erstellungsberechtigung umschalten"
         inherited: 'Diese Berechtigung wird von „Jeder“ vererbt'
+      special_warning: "Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen, anstatt sie für andere Zwecke zu verwenden."
       uncategorized_security_warning: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und besitzt keine Sicherheitseinstellungen."
       uncategorized_general_warning: 'Diese Kategorie ist etwas Spezielles. Sie wird als Standard-Kategorie für neue Themen genutzt, für die keine Kategorie ausgewählt wurde. Deaktiviere <a href="%{settingLink}">diese Einstellung</a>, wenn dieses Verhalten verhindert und eine Kategoriewahl erzwungen werden soll. Der Name und die Beschreibung können unter <a href="%{customizeLink}">Anpassen/Textinhalte</a> geändert werden.'
       pending_permission_change_alert: "Du hast %{group} nicht zu dieser Kategorie hinzugefügt; klicke diese Schaltfläche, um sie zuzufügen."
@@ -4340,6 +4354,8 @@ de:
         all_members: "Alle Mitglieder"
         group_restricted: "Privat"
         which_groups_can_access: "Welche Gruppen sollen diese Kategorie sehen und in ihr Beiträge erstellen können?"
+        more_options_hint: "Weitere Berechtigungen sind in den <a href>erweiterten Einstellungen</a> verfügbar."
+        inherited_from_parent: "Die Berechtigungen werden von der übergeordneten Kategorie übernommen. Um sie zu verfeinern, besuche die <a href>erweiterten Einstellungen</a>."
       num_auto_bump_daily: "Anzahl der offenen Themen, die automatisch täglich nach oben verschoben werden:"
       auto_bump_cooldown_days: "Mindestanzahl an Tagen, bevor das gleiche Thema erneut angesprochen wird:"
       navigate_to_first_post_after_read: "Gehe zum ersten Beitrag, nachdem Themen gelesen wurden"
@@ -5524,6 +5540,7 @@ de:
           keywords: "Gebietsschema|Sprachvariante|Sprache|Zeitzone|unicode|ltr|Umlaute"
         upcoming_changes:
           title: "Bevorstehende Änderungen"
+          header_description: "Eine Liste bevorstehender Änderungen an Discourse, die sich auf deine Webseite auswirken können, sowie experimentelle Funktionen, die du aktivieren kannst. Du kannst nach Rollen, auf die sich die Änderung auswirkt, Änderungstyp und Status filtern.\n\nDie gruppenweise Aktivierung kann verwendet werden, um einer bestimmten Benutzergruppe zu ermöglichen, eine Änderung zu testen, bevor sie für alle veröffentlicht wird. Sobald eine Änderung den Status „dauerhaft“ erreicht, spielen diese Gruppen keine Rolle mehr."
         login:
           title: "Anmeldung und Authentifizierung"
           header_description: "Konfiguriere, wie sich Benutzer anmelden und authentifizieren, Geheimnisse und Schlüssel, OAuth2-Anbieter und mehr"
@@ -8169,6 +8186,8 @@ de:
         no_user_badges: "%{name} wurden keine Abzeichen verliehen."
         no_badges: Es gibt keine Abzeichen, die verliehen werden können.
         none_selected: "Wähle ein Abzeichen aus, um loszulegen"
+        filter_placeholder: "Abzeichen filtern..."
+        no_badges_found: "Keine Abzeichen gefunden"
         sections:
           design: Design
           query: Anfrage

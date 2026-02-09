@@ -3446,6 +3446,8 @@ sv:
       slug_placeholder: "(Valfritt) streckade ord för url"
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
       save_error: Ett fel inträffade då kategorin skulle sparas.
+      validations:
+        icon_required: "Välj en ikon."
       description: "Beskrivning"
       icon: "Ikon"
       emoji: "Emoji"

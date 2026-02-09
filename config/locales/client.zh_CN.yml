@@ -1537,6 +1537,8 @@ zh_CN:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> 个有用的举报'
+        flags:
+          other: '<span class="%{className}">%{count}</span> 个举报'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> 篇删除的帖子'
         silencings:
@@ -3984,7 +3986,6 @@ zh_CN:
       edit_dialog_title: "编辑: %{categoryName}"
       view: "查看类别中的话题"
       back: "返回类别"
-      single_page: "单页"
       general: "常规"
       settings: "设置"
       advanced: "高级"
@@ -4027,6 +4028,7 @@ zh_CN:
         self_lockout: "如果改变此类别权限，您将丢失自己的访问权限，确定要继续吗？"
       validations:
         emoji_required: "选择一个表情符号。"
+        icon_required: "选择一个图标."
       name: "类别名称"
       untitled: "无标题类别"
       description: "描述"
@@ -7895,6 +7897,8 @@ zh_CN:
         no_user_badges: "%{name} 尚未被授予任何徽章。"
         no_badges: 没有可供授予的徽章。
         none_selected: "选择一个徽章以开始"
+        filter_placeholder: "筛选徽章……"
+        no_badges_found: "未找到徽章"
         sections:
           design: 设计
           query: 查询

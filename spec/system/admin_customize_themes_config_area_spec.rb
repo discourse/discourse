@@ -20,16 +20,16 @@ describe "Admin Customize Themes Config Area Page", type: :system do
     config_area.visit
 
     install_modal = config_area.click_install_button
-    expect(install_modal.popular_options.first).to have_text("Air")
+    expect(install_modal.popular_options.first).to have_text("Graceful")
   end
 
   it "opens an install modal when coming from the install theme button on Meta" do
     config_area.visit(
-      { "repoName" => "discourse-air", "repoUrl" => "https://github.com/discourse/discourse-air" },
+      { "repoName" => "graceful", "repoUrl" => "https://github.com/discourse/graceful" },
     )
 
     expect(install_modal).to be_open
-    expect(install_modal).to have_content("github.com/discourse/discourse-air")
+    expect(install_modal).to have_content("github.com/discourse/graceful")
 
     install_modal.close
 

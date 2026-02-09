@@ -4220,7 +4220,6 @@ hu:
       edit_dialog_title: "Szerkesztés: %{categoryName}"
       view: "Témák megjelenítése a kategóriában"
       back: "Vissza a kategóriához"
-      single_page: "Egyetlen oldal"
       general: "Általános"
       settings: "Beállítások"
       advanced: "Speciális"
@@ -4263,6 +4262,7 @@ hu:
         self_lockout: "Olyan módon módosítja a kategóriaengedélyeket, amely eltávolítja a saját hozzáférését. Biztosan folytatja?"
       validations:
         emoji_required: "Válassz egy emojit."
+        icon_required: "Válasszon ikont."
       name: "Kategória neve"
       untitled: "Névtelen kategória"
       description: "Leírás"

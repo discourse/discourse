@@ -49,7 +49,7 @@ export default class UpsertCategorySecurity extends Component {
       : parent.group_permissions;
   }
 
-  get parentIsRestricted() {
+  get isParentRestricted() {
     const parentPerms = this.parentPermissions;
     if (!parentPerms?.length) {
       return false;
@@ -64,7 +64,7 @@ export default class UpsertCategorySecurity extends Component {
 
     let groups = this.site.groups.filter((g) => !permissionGroupIds.has(g.id));
 
-    if (this.parentIsRestricted) {
+    if (this.isParentRestricted) {
       const parentGroupIds = new Set(
         this.parentPermissions.map((p) => p.group_id)
       );
@@ -79,7 +79,7 @@ export default class UpsertCategorySecurity extends Component {
   }
 
   get allParentGroupsUsed() {
-    return this.parentIsRestricted && !this.hasAvailableGroups;
+    return this.isParentRestricted && !this.hasAvailableGroups;
   }
 
   get everyonePermission() {

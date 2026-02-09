@@ -4537,7 +4537,6 @@ en:
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
-      single_page: "Single Page"
       general: "General"
       settings: "Settings"
       advanced: "Advanced"
@@ -4580,6 +4579,7 @@ en:
         self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       validations:
         emoji_required: "Select an emoji."
+        icon_required: "Select an icon."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
