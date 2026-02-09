@@ -47,13 +47,7 @@ class PostRevisor
       prev_tags = topic.tags.map(&:name)
       return if tag_value.blank? && prev_tags.blank?
 
-      by_ids = tag_value.first.is_a?(Integer)
-      success =
-        if by_ids
-          DiscourseTagging.tag_topic_by_ids(topic, guardian, tag_value)
-        else
-          DiscourseTagging.tag_topic_by_names(topic, guardian, tag_value)
-        end
+      success = DiscourseTagging.tag_topic(topic, guardian, tag_value)
 
       unless success
         check_result(false)
