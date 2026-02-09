@@ -309,6 +309,10 @@ export default class DNavigation extends Component {
         @canCreateTopic={{this.canCreateTopic}}
         @action={{this.clickCreateTopicButton}}
         @label={{this.createTopicLabel}}
+        @btnTypeClass={{if
+          this.siteSettings.modernize_foundation_theme
+          "btn-primary"
+        }}
         @showDrafts={{if (gt this.draftCount 0) true false}}
       />
 

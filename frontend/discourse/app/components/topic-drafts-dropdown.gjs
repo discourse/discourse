@@ -6,7 +6,6 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DComboButton from "discourse/components/d-combo-button";
 import DropdownMenu from "discourse/components/dropdown-menu";
-import concatClass from "discourse/helpers/concat-class";
 import DiscourseURL from "discourse/lib/url";
 import {
   NEW_PRIVATE_MESSAGE_KEY,
@@ -121,7 +120,7 @@ export default class TopicDraftsDropdown extends Component {
           @onRegisterApi={{this.onRegisterApi}}
           @modalForMobile={{true}}
           aria-label={{i18n "drafts.dropdown.title"}}
-          class={{concatClass "btn-default" @btnTypeClass}}
+          class={{@btnTypeClass}}
         >
           <DropdownMenu as |dropdown|>
             {{#each this.drafts as |draft|}}

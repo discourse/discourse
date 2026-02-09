@@ -265,17 +265,6 @@
     font-size: var(--d-topic-list-data-font-size);
   }
 
-  #create-topic {
-    --d-button-default-border: 1px solid var(--tertiary);
-    --d-button-default-border--hover: 1px solid var(--tertiary-hover);
-    --d-button-default-bg-color: var(--tertiary);
-    --d-button-default-bg-color--hover: var(--tertiary-hover);
-    --d-button-default-text-color: var(--secondary);
-    --d-button-default-icon-color: var(--secondary);
-    --d-button-default-text-color--hover: var(--secondary);
-    --d-button-default-icon-color--hover: var(--secondary);
-  }
-
   // Select Kit
   .select-kit .select-kit-header:not(.btn),
   .d-date-input .date-picker {
