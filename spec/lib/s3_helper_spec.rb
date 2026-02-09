@@ -401,3 +401,82 @@ RSpec.describe "S3Helper" do
     end
   end
 end
+
+describe GlobalAwsCredentials do
+  before { GlobalAwsCredentials.instance_variable_set(:@instance, nil) }
+
+  context "when S3 role assumption is configured" do
+    it "creates AssumeRoleCredentials" do
+      GlobalSetting.stubs(:s3_access_key_id).returns("test-key")
+      GlobalSetting.stubs(:s3_secret_access_key).returns("test-secret")
+      GlobalSetting.stubs(:s3_role_arn).returns("arn:aws:iam::123456789012:role/test-role")
+      GlobalSetting.stubs(:s3_role_session_name).returns("file-uploads")
+      GlobalSetting.stubs(:s3_region).returns("us-west-2")
+
+      stub_request(:post, "https://sts.us-west-2.amazonaws.com/").with(
+        body: hash_including("Action" => "AssumeRole"),
+      ).to_return(status: 200, body: <<~XML)
+            <AssumeRoleResponse xmlns="https://sts.amazonaws.com/doc/2011-06-15/">
+              <AssumeRoleResult>
+                <Credentials>
+                  <AccessKeyId>ASIATESTACCESSKEY</AccessKeyId>
+                  <SecretAccessKey>TestSecretKey</SecretAccessKey>
+                  <SessionToken>TestSessionToken</SessionToken>
+                  <Expiration>2099-12-31T23:59:59Z</Expiration>
+                </Credentials>
+              </AssumeRoleResult>
+            </AssumeRoleResponse>
+          XML
+
+      options = GlobalAwsCredentials.to_sdk_options
+
+      expect(options[:credentials]).to be_a(Aws::AssumeRoleCredentials)
+      expect(options).not_to have_key(:access_key_id)
+      expect(options).not_to have_key(:secret_access_key)
+    end
+  end
+
+  context "when S3 credentials are provided" do
+    it "includes credentials in options" do
+      GlobalSetting.stubs(:s3_access_key_id).returns("test-key")
+      GlobalSetting.stubs(:s3_secret_access_key).returns("test-secret")
+      GlobalSetting.stubs(:s3_role_arn).returns(nil)
+      GlobalSetting.stubs(:s3_role_session_name).returns(nil)
+      GlobalSetting.stubs(:s3_region).returns("us-west-2")
+
+      options = GlobalAwsCredentials.to_sdk_options
+
+      expect(options[:credentials]).to be_a(Aws::Credentials)
+      expect(options[:credentials].access_key_id).to eq("test-key")
+      expect(options[:credentials].secret_access_key).to eq("test-secret")
+    end
+  end
+
+  context "when S3 credentials are not provided" do
+    it "omits credentials to allow AWS SDK auto-discovery" do
+      GlobalSetting.stubs(:s3_access_key_id).returns(nil)
+      GlobalSetting.stubs(:s3_secret_access_key).returns(nil)
+      GlobalSetting.stubs(:s3_role_session_name).returns(nil)
+      GlobalSetting.stubs(:s3_region).returns("us-west-2")
+
+      options = GlobalAwsCredentials.to_sdk_options
+
+      expect(options).not_to have_key(:credentials)
+      expect(options).not_to have_key(:access_key_id)
+      expect(options).not_to have_key(:secret_access_key)
+    end
+
+    it "omits credentials when either key is blank" do
+      GlobalSetting.stubs(:s3_access_key_id).returns("")
+      GlobalSetting.stubs(:s3_secret_access_key).returns("test-secret")
+      GlobalSetting.stubs(:s3_role_session_name).returns(nil)
+      GlobalSetting.stubs(:s3_region).returns("us-west-2")
+
+      options = GlobalAwsCredentials.to_sdk_options
+
+      expect(options).not_to have_key(:credentials)
+      expect(options).not_to have_key(:access_key_id)
+      expect(options).not_to have_key(:secret_access_key)
+    end
+  end
+end

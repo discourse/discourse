@@ -2216,8 +2216,6 @@ files:
   enable_s3_transfer_acceleration:
     default: false
     hidden: true
-  s3_use_iam_profile:
-    default: false
   s3_access_key_id:
     default: ""
     secret: true
@@ -2234,6 +2232,10 @@ files:
   s3_secret_access_key:
     default: ""
     secret: true
+  s3_role_session_name:
+    default: ""
+  s3_role_arn:
+    default: ""
   s3_region:
     default: "us-east-1"
     enum: "S3RegionSiteSetting"
