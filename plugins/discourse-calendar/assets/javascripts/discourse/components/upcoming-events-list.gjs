@@ -12,7 +12,7 @@ import { i18n } from "discourse-i18n";
 import { isNotFullDayEvent } from "../lib/guess-best-date-format";
 
 export const DEFAULT_TIME_FORMAT = "LT";
-const DEFAULT_UPCOMING_DAYS = 180;
+const DEFAULT_UPCOMING_DAYS = 1800;
 const DEFAULT_COUNT = 8;
 
 function addToResult(date, item, result) {
@@ -160,18 +160,18 @@ export default class UpcomingEventsList extends Component {
     const start = moment(event.starts_at);
     const end = moment(event.ends_at);
 
-    // Different years - use full format with en-dash
-    if (start.year() !== end.year()) {
-      return `${start.format("LL")}–${end.format("LL")}`;
-    }
-
-    // Same month and year - drop redundant month and year
-    if (start.month() === end.month()) {
+    // Same month and year - use en-dash (number–number looks good)
+    if (start.month() === end.month() && start.year() === end.year()) {
       return `${start.format("MMMM D")}–${end.format("D, YYYY")}`;
     }
 
-    // Different months, same year - drop redundant year
-    return `${start.format("MMMM D")}–${end.format("MMMM D, YYYY")}`;
+    // Different months, same year - use hyphen (month day - month day, year looks good)
+    if (start.year() === end.year()) {
+      return `${start.format("MMMM D")} - ${end.format("MMMM D, YYYY")}`;
+    }
+
+    // Different years - use hyphen with full format
+    return `${start.format("LL")} - ${end.format("LL")}`;
   }
 
   groupByMonthAndDay(data) {
