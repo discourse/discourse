@@ -21,3 +21,6 @@ de:
     other: "%{count} Antworten"
   theme_metadata:
     description: "Ein einfaches, schönes Theme, das die standardmäßige Benutzererfahrung für Discourse-Seiten verbessert."
+    settings:
+      topic_card_high_context:
+        description: "Wenn diese Option aktiviert ist, werden zusätzliche Kontextinformationen in den Themenkarten angezeigt; darunter Schlagwörter, Auszüge, Lösungsstatus, zugeordnete Benutzer und die Anzahl der Stimmen (experimentell)."

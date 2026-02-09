@@ -119,6 +119,7 @@ el:
       spam:
         short_title: "Ανεπιθύμητα"
         last_seven_days: "Τελευταίες 7 ημέρες"
+        false_positives: "Λανθασμένη αναφορά"
         enable: "Ενεργοποίηση"
         save_button: "Αποθήκευση αλλαγών"
         test_modal:
@@ -267,3 +268,9 @@ el:
         tooltip:
           actions:
             disable: "Απενεργοποίηση"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Αναφερόμενη από AI ανάρτηση"
+        reviewable_ai_chat_message:
+          title: "Αναφερόμενο από AI μήνυμα συνομιλίας"
