@@ -218,7 +218,6 @@
 [data-d-sheet~="backdrop"] {
   z-index: -1 !important;
   position: absolute !important;
-  user-select: none;
 }
 
 [data-d-sheet~="backdrop"][data-d-sheet~="no-pointer-events"] {
@@ -234,6 +233,10 @@
 }
 
 [data-d-sheet~="content"]:has(:where([data-d-sheet~="bleeding-background"])) {
+  background-color: initial;
+}
+
+[data-d-sheet~="no-bleeding-background"] {
   background-color: initial;
 }
 
@@ -255,6 +258,11 @@
   height: 100% !important;
 }
 
+[data-d-sheet~="bleeding-background"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="right"],
+[data-d-sheet~="bleeding-background"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="left"] {
+  width: 100% !important;
+}
+
 [data-d-sheet~="bleeding-background"][data-d-sheet~="right"] {
   top: 0 !important;
   right: 0 !important;
@@ -270,6 +278,11 @@
 [data-d-sheet~="bleeding-background"][data-d-sheet~="end"] {
   height: calc(100% + var(--d-sheet-max-overshoot-distance)) !important;
   width: 100% !important;
+}
+
+[data-d-sheet~="bleeding-background"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="start"],
+[data-d-sheet~="bleeding-background"][data-d-sheet~="overshoot-inactive"][data-d-sheet~="end"] {
+  height: 100% !important;
 }
 
 [data-d-sheet~="bleeding-background"][data-d-sheet~="start"] {
