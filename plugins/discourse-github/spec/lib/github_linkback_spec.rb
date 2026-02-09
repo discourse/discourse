@@ -200,6 +200,15 @@ describe GithubLinkback do
   end
 
   describe "#create" do
+    let(:github_api_headers) do
+      {
+        "Authorization" => "token abcdef",
+        "Content-Type" => "application/json",
+        "Host" => "api.github.com",
+        "User-Agent" => "Discourse-Github-Linkback",
+      }
+    end
+
     before { SiteSetting.github_linkback_projects = "discourse/discourse|discourse/*" }
 
     it "returns an empty array without an access token" do
@@ -207,13 +216,11 @@ describe GithubLinkback do
     end
 
     context "with an access token" do
-      let(:headers) do
-        {
-          "Authorization" => "token abcdef",
-          "Content-Type" => "application/json",
-          "Host" => "api.github.com",
-          "User-Agent" => "Discourse-Github-Linkback",
-        }
+      let(:empty_json_response) do
+        { status: 200, body: "[]", headers: { "Content-Type" => "application/json" } }
+      end
+      let(:empty_body_json_response) do
+        { status: 200, body: '{"body":""}', headers: { "Content-Type" => "application/json" } }
       end
 
       before do
@@ -222,22 +229,34 @@ describe GithubLinkback do
         stub_request(
           :post,
           "https://api.github.com/repos/discourse/discourse/commits/76981605fa10975e2e7af457e2f6a31909e0c811/comments",
-        ).with(headers: headers).to_return(status: 200, body: "", headers: {})
+        ).with(headers: github_api_headers).to_return(status: 200, body: "", headers: {})
 
         stub_request(
           :post,
           "https://api.github.com/repos/discourse/discourse/issues/123/comments",
-        ).with(headers: headers).to_return(status: 200, body: "", headers: {})
+        ).with(headers: github_api_headers).to_return(status: 200, body: "", headers: {})
 
         stub_request(
           :post,
           "https://api.github.com/repos/discourse/discourse/issues/701/comments",
-        ).with(headers: headers).to_return(status: 200, body: "", headers: {})
+        ).with(headers: github_api_headers).to_return(status: 200, body: "", headers: {})
 
         stub_request(
           :post,
           "https://api.github.com/repos/discourse/discourse-github-linkback/issues/3/comments",
-        ).with(headers: headers).to_return(status: 200, body: "", headers: {})
+        ).with(headers: github_api_headers).to_return(status: 200, body: "", headers: {})
+
+        stub_request(:get, %r{https://api\.github\.com/repos/.+/commits/.+/comments}).to_return(
+          empty_json_response,
+        )
+
+        stub_request(:get, %r{https://api\.github\.com/repos/.+/issues/\d+$}).to_return(
+          empty_body_json_response,
+        )
+
+        stub_request(:get, %r{https://api\.github\.com/repos/.+/issues/\d+/comments}).to_return(
+          empty_json_response,
+        )
       end
 
       it "returns the URLs it linked to and creates custom fields" do
@@ -280,6 +299,198 @@ describe GithubLinkback do
         post = Fabricate(:post, raw: "#{github_pr_link} #{github_pr_link} #{github_pr_link}")
         links = GithubLinkback.new(post).create
         expect(links.size).to eq(1)
+      end
+    end
+
+    context "when topic is already linked on GitHub" do
+      let(:pr_post) { Fabricate(:post, raw: github_pr_link) }
+      let(:issue_post) { Fabricate(:post, raw: github_issue_link) }
+      let(:commit_post) { Fabricate(:post, raw: github_commit_link) }
+
+      before { SiteSetting.github_linkback_access_token = "abcdef" }
+
+      it "skips linkback when the PR description already contains a link to the topic" do
+        topic_url = "#{Discourse.base_url}/t/#{pr_post.topic.slug}/#{pr_post.topic_id}"
+
+        stub_request(:get, "https://api.github.com/repos/discourse/discourse/issues/701").with(
+          headers: github_api_headers,
+        ).to_return(
+          status: 200,
+          body: { body: "This PR implements #{topic_url}" }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse/issues/701/comments?per_page=100",
+        ).with(headers: github_api_headers).to_return(
+          status: 200,
+          body: [].to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+        links = GithubLinkback.new(pr_post).create
+        expect(links.size).to eq(1)
+
+        expect(
+          a_request(:post, "https://api.github.com/repos/discourse/discourse/issues/701/comments"),
+        ).not_to have_been_made
+      end
+
+      it "skips linkback when an existing comment contains a link to the topic" do
+        topic_url = "#{Discourse.base_url}/t/#{issue_post.topic_id}/3"
+
+        stub_request(:get, "https://api.github.com/repos/discourse/discourse/issues/123").with(
+          headers: github_api_headers,
+        ).to_return(
+          status: 200,
+          body: { body: "Some unrelated description" }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse/issues/123/comments?per_page=100",
+        ).with(headers: github_api_headers).to_return(
+          status: 200,
+          body: [{ body: "Already discussed at #{topic_url}" }].to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+        links = GithubLinkback.new(issue_post).create
+        expect(links.size).to eq(1)
+
+        expect(
+          a_request(:post, "https://api.github.com/repos/discourse/discourse/issues/123/comments"),
+        ).not_to have_been_made
+      end
+
+      it "skips linkback for commits when an existing comment links to the topic" do
+        topic_url = "#{Discourse.base_url}/t/#{commit_post.topic_id}"
+
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse/commits/76981605fa10975e2e7af457e2f6a31909e0c811/comments?per_page=100",
+        ).with(headers: github_api_headers).to_return(
+          status: 200,
+          body: [{ body: "Discussed in #{topic_url}" }].to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+        links = GithubLinkback.new(commit_post).create
+        expect(links.size).to eq(1)
+
+        expect(
+          a_request(
+            :post,
+            "https://api.github.com/repos/discourse/discourse/commits/76981605fa10975e2e7af457e2f6a31909e0c811/comments",
+          ),
+        ).not_to have_been_made
+      end
+    end
+
+    context "when topic is not already linked on GitHub" do
+      let(:pr_post) { Fabricate(:post, raw: github_pr_link) }
+      let(:commit_post) { Fabricate(:post, raw: github_commit_link) }
+
+      before { SiteSetting.github_linkback_access_token = "abcdef" }
+
+      it "posts linkback when existing links point to a different topic" do
+        different_topic_url = "#{Discourse.base_url}/t/some-other-topic/999999"
+
+        stub_request(:get, "https://api.github.com/repos/discourse/discourse/issues/701").with(
+          headers: github_api_headers,
+        ).to_return(
+          status: 200,
+          body: { body: "See #{different_topic_url}" }.to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse/issues/701/comments?per_page=100",
+        ).with(headers: github_api_headers).to_return(
+          status: 200,
+          body: [].to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+        stub_request(
+          :post,
+          "https://api.github.com/repos/discourse/discourse/issues/701/comments",
+        ).with(headers: github_api_headers).to_return(status: 200, body: "", headers: {})
+
+        links = GithubLinkback.new(pr_post).create
+        expect(links.size).to eq(1)
+
+        expect(
+          a_request(:post, "https://api.github.com/repos/discourse/discourse/issues/701/comments"),
+        ).to have_been_made.once
+      end
+
+      it "posts linkback when the GitHub API check fails (fail open)" do
+        stub_request(:get, "https://api.github.com/repos/discourse/discourse/issues/701").with(
+          headers: github_api_headers,
+        ).to_return(status: 404, body: "", headers: {})
+
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse/issues/701/comments?per_page=100",
+        ).with(headers: github_api_headers).to_return(status: 404, body: "", headers: {})
+
+        stub_request(
+          :post,
+          "https://api.github.com/repos/discourse/discourse/issues/701/comments",
+        ).with(headers: github_api_headers).to_return(status: 200, body: "", headers: {})
+
+        links = GithubLinkback.new(pr_post).create
+        expect(links.size).to eq(1)
+
+        expect(
+          a_request(:post, "https://api.github.com/repos/discourse/discourse/issues/701/comments"),
+        ).to have_been_made.once
+      end
+
+      it "posts linkback for commits when no existing comment links to the topic" do
+        stub_request(
+          :get,
+          "https://api.github.com/repos/discourse/discourse/commits/76981605fa10975e2e7af457e2f6a31909e0c811/comments?per_page=100",
+        ).with(headers: github_api_headers).to_return(
+          status: 200,
+          body: [{ body: "Some unrelated comment" }].to_json,
+          headers: {
+            "Content-Type" => "application/json",
+          },
+        )
+
+        stub_request(
+          :post,
+          "https://api.github.com/repos/discourse/discourse/commits/76981605fa10975e2e7af457e2f6a31909e0c811/comments",
+        ).with(headers: github_api_headers).to_return(status: 200, body: "", headers: {})
+
+        links = GithubLinkback.new(commit_post).create
+        expect(links.size).to eq(1)
+
+        expect(
+          a_request(
+            :post,
+            "https://api.github.com/repos/discourse/discourse/commits/76981605fa10975e2e7af457e2f6a31909e0c811/comments",
+          ),
+        ).to have_been_made.once
       end
     end
   end
