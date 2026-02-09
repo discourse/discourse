@@ -12,6 +12,14 @@
   overscroll-behavior: contain !important;
 }
 
+[data-d-sheet~="swipe-trap-horizontal"] {
+  overscroll-behavior-x: contain !important;
+}
+
+[data-d-sheet~="swipe-trap-vertical"] {
+  overscroll-behavior-y: contain !important;
+}
+
 :where([data-d-sheet~="scroll-trap-root"]:not([data-d-sheet~="fixed"])) {
   --d-sheet-defaults: initial;
   position: var(--d-sheet-defaults, relative);
@@ -68,6 +76,12 @@
 [data-d-sheet~="view"]:not([data-d-sheet~="staging-none"])
   [data-d-sheet~="scroll-container"][data-d-sheet] {
   overflow: hidden;
+}
+
+[data-d-sheet~="view"]:not([data-d-sheet~="staging-none"])
+  [data-d-scroll~="scroll-container"] {
+  overflow-anchor: none;
+  overflow: hidden !important;
 }
 
 [data-d-sheet~="view"][data-d-sheet~="animating"]

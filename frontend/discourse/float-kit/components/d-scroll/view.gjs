@@ -4,6 +4,7 @@ import { registerDestructor } from "@ember/destroyable";
 import { action } from "@ember/object";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
+import { isKeyboardVisible } from "discourse/lib/utilities";
 import { capabilities } from "discourse/services/capabilities";
 import GestureTrapHandler from "./gesture-trap-handler";
 import isTextInput from "./is-text-input";
@@ -293,13 +294,13 @@ export default class DScrollView extends Component {
         Object.assign(defaultBehavior, this.args.onScrollStart);
       }
 
-      // Don't dismiss keyboard if scroll was triggered by focus event
       if (
         defaultBehavior.dismissKeyboard &&
         !this.keyboardHandler?.scrollTriggeredByFocus &&
-        document.activeElement
+        isKeyboardVisible() &&
+        this.viewElement
       ) {
-        document.activeElement.blur();
+        this.viewElement.focus({ preventScroll: true });
       }
     }
   }
@@ -516,10 +517,15 @@ export default class DScrollView extends Component {
    * @returns {string|undefined}
    */
   get computedTabIndex() {
+    const hasOverflow =
+      this.controller?.overflowX || this.controller?.overflowY;
+    if (hasOverflow) {
+      return "0";
+    }
     if (this.shouldPreventNativeFocus) {
       return "-1";
     }
-    return "0";
+    return undefined;
   }
 
   /**
