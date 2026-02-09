@@ -216,6 +216,9 @@
         "post_count": {
           "type": "integer"
         },
+        "topic_count": {
+          "type": "integer"
+        },
         "can_be_deleted": {
           "type": "boolean"
         },
@@ -915,6 +918,7 @@
         "can_upload_profile_header",
         "can_upload_user_card_background",
         "post_count",
+        "topic_count",
         "can_be_deleted",
         "can_delete_all_posts",
         "locale",
