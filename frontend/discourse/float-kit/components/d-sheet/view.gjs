@@ -56,9 +56,7 @@ export default class View extends Component {
   });
 
   get showBottomColorHint() {
-    return (
-      this.args.sheet?.contentPlacement === "bottom" && capabilities.isWebKit
-    );
+    return (this.args.bottomColorHint ?? true) && capabilities.isWebKit;
   }
 
   /**
@@ -172,10 +170,10 @@ export default class View extends Component {
         }}
         {{scrollTrapModifier true}}
       ></div>
-      {{!-- {{#if this.showBottomColorHint}} --}}
-      <div data-d-sheet="bottom-color-fade"></div>
-      <div data-d-sheet="bottom-color-border"></div>
-      {{!-- {{/if}} --}}
+      {{#if this.showBottomColorHint}}
+        <div data-d-sheet="bottom-color-fade"></div>
+        <div data-d-sheet="bottom-color-border"></div>
+      {{/if}}
     </div>
   </template>
 }
