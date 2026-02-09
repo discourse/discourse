@@ -5,6 +5,7 @@ import { action } from "@ember/object";
 import { modifier as modifierFn } from "ember-modifier";
 import effect from "discourse/float-kit/helpers/effect";
 import concatClass from "discourse/helpers/concat-class";
+import { capabilities } from "discourse/services/capabilities";
 import { or } from "discourse/truth-helpers";
 import Backdrop from "./backdrop";
 import Content from "./content";
@@ -53,6 +54,12 @@ export default class View extends Component {
   registerView = modifierFn((element, [sheet]) => {
     sheet.registerView(element);
   });
+
+  get showBottomColorHint() {
+    return (
+      this.args.sheet?.contentPlacement === "bottom" && capabilities.isWebKit
+    );
+  }
 
   /**
    * Configure the Controller with behavioral options.
@@ -165,6 +172,10 @@ export default class View extends Component {
         }}
         {{scrollTrapModifier true}}
       ></div>
+      {{!-- {{#if this.showBottomColorHint}} --}}
+      <div data-d-sheet="bottom-color-fade"></div>
+      <div data-d-sheet="bottom-color-border"></div>
+      {{!-- {{/if}} --}}
     </div>
   </template>
 }
