@@ -122,23 +122,24 @@ class ExpandableView extends Component {
  */
 const BottomSheetInnerContent = <template>
   <DSheet.Backdrop @sheet={{@sheet}} />
-  <DSheet.Content
-    class={{concatClass
-      "bottom-sheet__content"
-      (if @expandable "--expandable")
-    }}
-    @sheet={{@sheet}}
-  >
-    <DSheet.BleedingBackground
-      @sheet={{@sheet}}
-      class="bottom-sheet__bleeding-background"
-    />
-    <DSheet.Handle
-      class="bottom-sheet__handle"
-      @sheet={{@sheet}}
-      @action={{@handleAction}}
-    />
-    {{yield}}
+  <DSheet.Content @sheet={{@sheet}} as |ContentTag|>
+    <ContentTag
+      class={{concatClass
+        "bottom-sheet__content"
+        (if @expandable "--expandable")
+      }}
+    >
+      <DSheet.BleedingBackground
+        @sheet={{@sheet}}
+        class="bottom-sheet__bleeding-background"
+      />
+      <DSheet.Handle
+        class="bottom-sheet__handle"
+        @sheet={{@sheet}}
+        @action={{@handleAction}}
+      />
+      {{yield}}
+    </ContentTag>
   </DSheet.Content>
 </template>;
 

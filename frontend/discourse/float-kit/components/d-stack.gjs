@@ -51,20 +51,24 @@ const DStackSharedContent = <template>
         @travelAnimation={{hash opacity=(array 0 0.4)}}
       />
       <DSheet.Content
-        class="d-stack__content"
         @sheet={{@sheet}}
         @stackingAnimation={{@stackingAnimation}}
+        as |ContentTag|
       >
-        <div class="d-stack__inner-content">
-          {{yield
-            (hash
-              sheet=@sheet
-              Trigger=(component DSheet.Trigger sheet=@sheet)
-              Stack=(component DStackNested stackRoot=@stackRoot tracks=@tracks)
-              dismiss=@sheet.close
-            )
-          }}
-        </div>
+        <ContentTag class="d-stack__content">
+          <div class="d-stack__inner-content">
+            {{yield
+              (hash
+                sheet=@sheet
+                Trigger=(component DSheet.Trigger sheet=@sheet)
+                Stack=(component
+                  DStackNested stackRoot=@stackRoot tracks=@tracks
+                )
+                dismiss=@sheet.close
+              )
+            }}
+          </div>
+        </ContentTag>
       </DSheet.Content>
     </DSheet.View>
   </DSheet.Portal>

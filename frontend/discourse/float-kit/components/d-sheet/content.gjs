@@ -1,10 +1,12 @@
 import Component from "@glimmer/component";
-import { concat, hash } from "@ember/helper";
+import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { getOwner } from "@ember/owner";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { htmlSafe } from "@ember/template";
+import curryComponent from "ember-curry-component";
 import concatClass from "discourse/helpers/concat-class";
-import outletAnimationModifier from "./outlet-animation-modifier";
+import ContentTag from "./content-tag";
 import scrollListenerModifier from "./scroll-listener-modifier";
 
 /**
@@ -20,7 +22,6 @@ import scrollListenerModifier from "./scroll-listener-modifier";
  *   Supports: opacity, visibility, transforms (translate, scale, rotate, skew variants),
  *   and any CSS property
  * @param {Record<string, [number, number] | ((params: { progress: number, tween: Function }) => string) | string | null>} [stackingAnimation] - Custom stacking animation config (same format as travelAnimation)
- * @param {boolean} [asChild] - When true, skips rendering the content div and yields attributes for child to apply
  */
 export default class Content extends Component {
   /**
@@ -39,6 +40,18 @@ export default class Content extends Component {
     );
   }
 
+  get contentTag() {
+    return curryComponent(
+      ContentTag,
+      {
+        sheet: this.args.sheet,
+        travelAnimation: this.args.travelAnimation,
+        stackingAnimation: this.args.stackingAnimation,
+      },
+      getOwner(this)
+    );
+  }
+
   <template>
     <div
       data-d-sheet={{concatClass
@@ -47,7 +60,7 @@ export default class Content extends Component {
         "scroll-trap-marker"
         "scroll-behavior-smooth"
         @sheet.tracks
-        @sheet.contentPlacementCssClass
+        @sheet.contentPlacementAttribute
         (concat "staging-" @sheet.state.staging.current)
         @sheet.effectiveSwipeTrapClass
         "scroll-trap-optimised"
@@ -70,7 +83,7 @@ export default class Content extends Component {
       <div
         data-d-sheet={{concatClass
           "content-wrapper"
-          @sheet.contentPlacementCssClass
+          @sheet.contentPlacementAttribute
           (concat "staging-" @sheet.state.staging.current)
           (if @sheet.swipeOvershoot "overshoot-active" "overshoot-inactive")
           (if @sheet.swipeOutDisabledWithDetent "swipe-out-disabled")
@@ -83,41 +96,7 @@ export default class Content extends Component {
         }}
         {{didInsert @sheet.registerContentWrapper}}
       >
-        {{#if @asChild}}
-          {{yield
-            (hash
-              dataDSheet=(concatClass
-                "content"
-                @sheet.contentPlacementCssClass
-                @sheet.tracks
-                (if
-                  @sheet.scrollContainerShouldBePassThrough "no-pointer-events"
-                )
-              )
-              registerContent=@sheet.registerContent
-              travelAnimation=@travelAnimation
-              stackingAnimation=@stackingAnimation
-            )
-          }}
-        {{else}}
-          <div
-            data-d-sheet={{concatClass
-              "content"
-              @sheet.contentPlacementCssClass
-              @sheet.tracks
-              (if @sheet.scrollContainerShouldBePassThrough "no-pointer-events")
-            }}
-            {{didInsert @sheet.registerContent}}
-            {{outletAnimationModifier
-              @sheet
-              @travelAnimation
-              @stackingAnimation
-            }}
-            ...attributes
-          >
-            {{yield}}
-          </div>
-        {{/if}}
+        {{yield this.contentTag}}
       </div>
 
       <div data-d-sheet={{concatClass "back-spacer" @sheet.tracks}}>

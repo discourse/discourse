@@ -40,13 +40,13 @@ function normalizeTrack(track) {
 }
 
 /**
- * Convert API placement value to CSS class.
+ * Convert API placement value to data-d-sheet attribute token.
  * Uses "start"/"end" for vertical, "left"/"right" for horizontal, "center" for centered.
  *
  * @param {"top" | "bottom" | "left" | "right" | "center"} placement - Placement value
- * @returns {"start" | "end" | "left" | "right" | "center"} CSS class value
+ * @returns {"start" | "end" | "left" | "right" | "center"} Attribute token
  */
-export function placementToCssClass(placement) {
+export function placementToAttribute(placement) {
   switch (placement) {
     case "top":
       return "start";

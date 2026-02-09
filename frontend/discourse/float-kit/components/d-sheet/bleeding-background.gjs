@@ -10,7 +10,7 @@ const BleedingBackground = <template>
   <div
     data-d-sheet={{concatClass
       "bleeding-background"
-      @sheet.contentPlacementCssClass
+      @sheet.contentPlacementAttribute
       @sheet.tracks
       @sheet.stagingAttribute
     }}
