@@ -44,8 +44,7 @@ describe PostRevisor do
 
     it "unaccepts the answer when category changes from solved to unsolved" do
       described_class.new(post).revise!(admin, { category_id: category.id })
-      topic.reload
-      expect(topic.solved).to be_nil
+      expect(topic.reload.solved).to be_nil
     end
 
     it "keeps the answer when category changes to another solved category" do
@@ -53,10 +52,12 @@ describe PostRevisor do
         Fabricate(:category_with_definition).tap do |c|
           c.upsert_custom_fields("enable_accepted_answers" => "true")
         end
+
       DiscourseSolved::AcceptedAnswerCache.reset_accepted_answer_cache
 
       described_class.new(post).revise!(admin, { category_id: another_solved.id })
       topic.reload
+
       expect(topic.solved).to be_present
       expect(topic.solved.answer_post_id).to eq(reply.id)
     end
@@ -66,6 +67,7 @@ describe PostRevisor do
 
       described_class.new(post).revise!(admin, { category_id: category.id })
       topic.reload
+
       expect(topic.solved).to be_present
       expect(topic.solved.answer_post_id).to eq(reply.id)
     end
@@ -85,11 +87,9 @@ describe PostRevisor do
     it "unaccepts the answer when the solved tag is removed" do
       SiteSetting.enable_solved_tags = solved_tag.name
       DiscourseSolved.accept_answer!(reply, admin)
-      topic.reload
 
       described_class.new(post).revise!(admin, tags: [])
-      topic.reload
-      expect(topic.solved).to be_nil
+      expect(topic.reload.solved).to be_nil
     end
   end
 
