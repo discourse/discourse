@@ -30,7 +30,7 @@ export default class AiSecretSelector extends Component {
     this.modal.show(AiSecretCreateModal, {
       model: {
         onSave: (newSecret) => {
-          this.args.secrets?.pushObject?.(newSecret);
+          this.args.secrets?.push(newSecret);
           this.args.onChange?.(newSecret.id);
         },
       },
