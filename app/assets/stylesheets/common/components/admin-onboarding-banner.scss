@@ -5,13 +5,14 @@
   @include viewport.until(sm) {
     display: none;
   }
+  color: dark-light-choose($secondary, $primary);
 
   &__wrap {
     box-sizing: border-box;
     position: relative;
     padding: var(--space-6) var(--space-3);
     border-radius: var(--d-border-radius-large);
-    background: var(--accent-color);
+    background: var(--accent-color, var(--tertiary-high));
 
     @include viewport.until(md) {
       padding: var(--space-4) 8px var(--space-5);
@@ -31,10 +32,6 @@
     justify-content: space-between;
     padding: 0 var(--space-4);
     margin-bottom: var(--space);
-
-    .btn-transparent:hover {
-      color: var(--primary-high);
-    }
   }
 
   &__content {
@@ -64,7 +61,7 @@
         border-radius: var(--d-border-radius);
 
         svg {
-          color: var(--primary-medium);
+          color: dark-light-choose($secondary-medium, $primary-medium);
         }
       }
 

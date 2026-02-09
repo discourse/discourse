@@ -1,7 +1,7 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import A11ySkipLinks from "discourse/components/a11y/skip-links";
-import AdminOnboardingBanner from "discourse/components/admin-onboarding-banner";
+import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
 import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
 import CustomHtml from "discourse/components/custom-html";
@@ -99,9 +99,6 @@ export default <template>
       <div id="main-outlet">
         <PluginOutlet @name="above-main-container" @connectorTagName="div" />
 
-        {{!
-          TODO: Maybe this could go somewhere else?
-         }}
         {{#if @controller.siteSettings.enable_site_owner_onboarding}}
           <AdminOnboardingBanner />
         {{/if}}

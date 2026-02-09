@@ -1,81 +1,16 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat, hash } from "@ember/helper";
+import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import SiteSetting from "discourse/admin/models/site-setting";
+import OnboardingStep from "discourse/components/admin-onboarding/step";
 import DButton from "discourse/components/d-button";
 import CreateInvite from "discourse/components/modal/create-invite";
 import { getAbsoluteURL } from "discourse/lib/get-url";
 import { clipboardCopy, defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-
-class OnboardingStep extends Component {
-  static name() {
-    throw new Error("Name is required for OnboardingStep");
-  }
-
-  @service keyValueStore;
-  @service appEvents;
-
-  @tracked
-  completed = this.keyValueStore.get(`onboarding_step_${this.name}`) || false;
-
-  i18nKey = "admin_onboarding_banner.";
-
-  get name() {
-    return this.constructor.name;
-  }
-
-  get icon() {
-    throw new Error("Icon is required for OnboardingStep");
-  }
-
-  @action
-  performAction() {
-    throw new Error("performAction is required for OnboardingStep");
-  }
-
-  markAsCompleted() {
-    this.keyValueStore.set({
-      key: `onboarding_step_${this.name}`,
-      value: true,
-    });
-    this.completed = true;
-    this.appEvents.trigger(`onboarding-step:completed`, this.name);
-  }
-
-  <template>
-    <div class="onboarding-step" id={{this.name}}>
-      <div class="onboarding-step__checkbox">
-        <span
-          class={{if
-            this.completed
-            "chcklst-box checked fa fa-square-check-o"
-            "chcklst-box fa fa-square-o"
-          }}
-        />
-        <span>{{i18n (concat this.i18nKey this.name ".title")}}</span>
-      </div>
-
-      <div class="onboarding-step__description">
-        <span>
-          {{i18n (concat this.i18nKey this.name ".description")}}
-        </span>
-      </div>
-
-      <div class="onboarding-step__action">
-        <DButton
-          @icon={{this.icon}}
-          @label={{concat this.i18nKey this.name ".action"}}
-          @action={{this.performAction}}
-          class="btn btn-default"
-        />
-      </div>
-    </div>
-  </template>
-}
 
 const STEPS = [
   class StartPosting extends OnboardingStep {
@@ -85,14 +20,20 @@ const STEPS = [
     @service appEvents;
 
     icon = "comments";
+    icebreaker_topics = [
+      "fun_facts",
+      "coolest_thing_you_have_seen_today",
+      "introduce_yourself",
+      "what_is_your_favorite_food",
+    ];
 
     constructor() {
       super(...arguments);
       this.appEvents.on("topic:created", this, this.checkIfPosted);
     }
 
-    willDestroyElement() {
-      super.willDestroyElement(...arguments);
+    willDestroy() {
+      super.willDestroy(...arguments);
       this.appEvents.off("topic:created", this, this.checkIfPosted);
     }
 
@@ -102,9 +43,18 @@ const STEPS = [
 
     @action
     async performAction() {
+      const randomTopic =
+        this.icebreaker_topics[
+          Math.floor(Math.random() * this.icebreaker_topics.length)
+        ];
+
       this.composer.openNewTopic({
-        title: i18n("admin_onboarding_banner.start_posting.icebreaker_title"),
-        body: i18n("admin_onboarding_banner.start_posting.icebreaker_post"),
+        title: i18n(
+          `admin_onboarding_banner.start_posting.icebreakers.${randomTopic}.title`
+        ),
+        body: i18n(
+          `admin_onboarding_banner.start_posting.icebreakers.${randomTopic}.body`
+        ),
       });
     }
   },
@@ -122,8 +72,8 @@ const STEPS = [
       this.appEvents.on("create-invite:saved", this, this.markAsCompleted);
     }
 
-    willDestroyElement() {
-      super.willDestroyElement(...arguments);
+    willDestroy() {
+      super.willDestroy(...arguments);
       this.appEvents.off("create-invite:saved", this, this.markAsCompleted);
     }
 
@@ -136,6 +86,7 @@ const STEPS = [
   },
   class SpreadTheWord extends OnboardingStep {
     static name = "spread_the_word";
+    @service toasts;
 
     @tracked icon = "copy";
 
@@ -143,10 +94,13 @@ const STEPS = [
     performAction() {
       clipboardCopy(getAbsoluteURL("/"));
 
-      this.icon = "check";
-      setTimeout(() => {
-        this.icon = "copy";
-      }, 2000);
+      this.toasts.success({
+        data: {
+          message: i18n(
+            "admin_onboarding_banner.spread_the_word.copied_to_clipboard"
+          ),
+        },
+      });
 
       this.markAsCompleted();
     }
@@ -158,7 +112,6 @@ export default class AdminOnboardingBanner extends Component {
   @service currentUser;
   @service appEvents;
   @service keyValueStore;
-  @service dialog;
   @service router;
   @service toasts;
 
@@ -171,8 +124,8 @@ export default class AdminOnboardingBanner extends Component {
     );
   }
 
-  willDestroyElement() {
-    super.willDestroyElement(...arguments);
+  willDestroy() {
+    super.willDestroy(...arguments);
     this.appEvents.off(
       "onboarding-step:completed",
       this,
@@ -203,30 +156,25 @@ export default class AdminOnboardingBanner extends Component {
     );
 
     if (allStepsAreDone) {
-      this.endOnboarding({ showConfirmation: false });
-      this.toasts.success({
-        duration: "short",
-        data: {
-          message: i18n("admin_onboarding_banner.congrats_onboarding_complete"),
-        },
-      });
+      this.endOnboarding({ skipped: false });
     }
   }
 
   @action
-  async endOnboarding({ showConfirmation = true } = {}) {
-    if (showConfirmation) {
-      const confirmed = await this.dialog.yesNoConfirm({
-        message: i18n("admin_onboarding_banner.confirm_cancel_onboarding"),
-      });
-      if (!confirmed) {
-        return;
-      }
-    }
-
+  async endOnboarding({ skipped = true } = {}) {
     await SiteSetting.update("enable_site_owner_onboarding", false);
     STEPS.forEach((Step) => {
       this.keyValueStore.remove(`onboarding_step_${Step.name}`);
+    });
+
+    const label = skipped
+      ? "admin_onboarding_banner.skipped"
+      : "admin_onboarding_banner.congrats_onboarding_complete";
+
+    this.toasts.success({
+      data: {
+        message: i18n(label),
+      },
     });
   }
 

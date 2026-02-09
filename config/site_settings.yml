@@ -3793,6 +3793,7 @@ uncategorized:
   enable_site_owner_onboarding:
     client: true
     default: false
+    hidden: true
     area: "site_admin"
 
   enable_welcome_banner:

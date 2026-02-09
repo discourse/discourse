@@ -32,7 +32,15 @@ class Admin::SiteSettingsController < Admin::AdminController
       settings = [{ setting_name: id, value: params[id], backfill: }]
     end
 
-    SiteSetting::Update.call(params: { settings: }, guardian:) do
+    SiteSetting::Update.call(
+      guardian:,
+      params: {
+        settings:,
+      },
+      options: {
+        allow_changing_hidden: %i[enable_site_owner_onboarding],
+      },
+    ) do
       on_success { head :no_content }
       on_exceptions { |e| raise Discourse::InvalidParameters, e }
       on_failed_policy(:settings_are_not_deprecated) do |policy|
