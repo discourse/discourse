@@ -186,5 +186,14 @@ RSpec.describe ProblemCheck do
         ProblemCheckTracker.pluck(:target)
       }.from(contain_exactly("foo", "bar", "baz")).to(contain_exactly("foo", "bar"))
     end
+
+    context "when targets returns an empty array" do
+      before { MultiTargetCheck.targets = -> { [] } }
+      after { MultiTargetCheck.targets = -> { %w[foo bar] } }
+
+      it "does not delete any trackers" do
+        expect { multi_target_check.cleanup_trackers }.not_to change { ProblemCheckTracker.count }
+      end
+    end
   end
 end
