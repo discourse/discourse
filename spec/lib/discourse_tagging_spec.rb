@@ -1703,7 +1703,6 @@ RSpec.describe DiscourseTagging do
     end
 
     it "allows tagging topics using new tags" do
-      SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
       valid =
         DiscourseTagging.tag_topic(
           topic,

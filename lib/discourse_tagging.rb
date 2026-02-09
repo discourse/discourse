@@ -16,7 +16,7 @@ module DiscourseTagging
     @term_types ||= Enum.new(contains: 0, starts_with: 1)
   end
 
-  # Sets tags on for topic and allows new tags to be created if they do not exist.
+  # Sets tags for topic and allows new tags to be created if they do not exist.
   #
   # Accepts either an array of tag names (backward compatibility) or an array of hashes with :id and/or :name keys.
   #
