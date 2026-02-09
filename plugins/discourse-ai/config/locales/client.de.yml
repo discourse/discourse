@@ -985,6 +985,8 @@ de:
         topic:
           title: "Zusammenfassung des Themas"
           close: "Zusammenfassungspanel schließen"
+          regenerate_ai_summaries: "KI-Zusammenfassungen neu generieren"
+          regenerate_gists_option: "Kurzzusammenfassungen (Zentrale Punkte)"
           regenerate_summaries_option: "Themenzusammenfassungen"
           regenerate_gists_success:
             one: "Kurzzusammenfassung erfolgreich neu generiert"
@@ -1005,6 +1007,7 @@ de:
         loading_convo: "Unterhaltung wird geladen"
         collapse: "Zuklappen"
         timed_out: "Discobot konnte keine Entdeckungen finden. Irgendetwas ist schief gelaufen."
+        user_setting: "KI-Suchentdeckungen aktivieren"
         tooltip:
           header: "KI-gestützte Suche"
           content: "Natürliche Sprachsuche unterstützt von %{model}"

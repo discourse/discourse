@@ -41,6 +41,9 @@ de:
       no_solved_topics_body: "Wenn du eine hilfreiche Antwort auf ein Thema gibst, kann es sein, dass deine Antwort vom Themenersteller oder einem Team-Mitglied als Lösung ausgewählt wird."
       marked_solved_by: "Als gelöst markiert von %{user}"
       confirm_move_solution_title: "Lösungsbeitrag verschieben"
+      confirm_move_solution:
+        one: "Der Beitrag ist als Lösung für dieses Thema ausgewählt. Wenn du ihn verschiebst, wird das Thema wieder als ungelöst markiert."
+        other: "Einer der Beiträge ist als Lösung für dieses Thema ausgewählt. Wenn du ihn verschiebst, wird das Thema wieder als ungelöst markiert."
       move_post_confirm:
         one: "Beitrag verschieben"
         other: "Beiträge verschieben"

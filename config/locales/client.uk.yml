@@ -4693,7 +4693,6 @@ uk:
       edit_dialog_title: "Редагувати:%{categoryName}"
       view: "Переглянути теми, що належать до розділу"
       back: "Повернутися до розділу"
-      single_page: "Одна сторінка"
       general: "Основне"
       settings: "Налаштування"
       advanced: "Розширений"

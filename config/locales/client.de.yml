@@ -4223,6 +4223,7 @@ de:
       general: "Allgemeines"
       settings: "Einstellungen"
       advanced: "Erweitert "
+      show_advanced: "Erweiterte Einstellungen"
       topic_template: "Vorlage"
       tags: "Schlagwörter"
       localizations: "Lokalisierungen"
