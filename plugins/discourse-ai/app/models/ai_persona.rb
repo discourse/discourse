@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
 class AiPersona < ActiveRecord::Base
+  # TODO remove tool_details from ignored_columns 01-02-2027
+  self.ignored_columns = %i[tool_details]
+
   # places a hard limit, so per site we cache a maximum of 500 classes
   MAX_PERSONAS_PER_SITE = 500
 
