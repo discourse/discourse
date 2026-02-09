@@ -208,10 +208,18 @@ describe "Simplified Category Creation" do
 
   describe "Tags Tab" do
     fab!(:tag1) { Fabricate(:tag, name: "tag1") }
+    fab!(:tag_group) { Fabricate(:tag_group, name: "My Group") }
 
     let(:allowed_tags_chooser) { PageObjects::Components::SelectKit.new("#category-allowed-tags") }
+    let(:allowed_tag_groups_chooser) do
+      PageObjects::Components::SelectKit.new("#category-allowed-tag-groups")
+    end
 
-    before { SiteSetting.tagging_enabled = true }
+    before do
+      SiteSetting.tagging_enabled = true
+      tag_group.tags = [tag1]
+      tag_group.save!
+    end
 
     it "restricts allowed tags" do
       category_page.visit_tags(category)
@@ -222,6 +230,10 @@ describe "Simplified Category Creation" do
       category_page.save_settings
 
       expect(category.reload.tags.map(&:name)).to include("tag1")
+
+      category_page.visit_tags(category)
+
+      expect(allowed_tags_chooser).to have_selected_names("tag1")
     end
 
     it "sets minimum required tags" do
@@ -231,6 +243,21 @@ describe "Simplified Category Creation" do
       category_page.save_settings
 
       expect(category.reload.minimum_required_tags).to eq(2)
+    end
+
+    it "sets required tag groups" do
+      category_page.visit_tags(category)
+
+      allowed_tag_groups_chooser.expand
+      allowed_tag_groups_chooser.select_row_by_name("My Group")
+      allowed_tag_groups_chooser.collapse
+      category_page.save_settings
+
+      expect(category.reload.tag_groups.map(&:name)).to include("My Group")
+
+      category_page.visit_tags(category)
+
+      expect(allowed_tag_groups_chooser).to have_selected_names("My Group")
     end
   end
 end
