@@ -134,7 +134,7 @@ export default class View extends Component {
         data-d-sheet={{concatClass
           "primary-scroll-trap"
           "scroll-trap-root"
-          (if @sheet.isHorizontalTrack "scroll-horizontal" "scroll-vertical")
+          @sheet.primaryScrollTrapAxisClass
           @sheet.tracks
           (unless @sheet.inertOutside "no-pointer-events")
           (if @sheet.scrollContainerShouldBePassThrough "pass-through")

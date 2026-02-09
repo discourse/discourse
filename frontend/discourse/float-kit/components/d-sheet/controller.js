@@ -886,8 +886,7 @@ export default class Controller {
    * @type {boolean}
    */
   get isScrollTrapActive() {
-    const trapValue = this.inertOutside ? true : this.swipeTrap;
-    return trapValue !== false && trapValue !== null && trapValue !== "none";
+    return this.resolvedSwipeTrap !== "none";
   }
 
   /**
@@ -896,21 +895,81 @@ export default class Controller {
    * @type {string|null}
    */
   get effectiveSwipeTrapClass() {
+    const resolved = this.resolvedSwipeTrap;
+    switch (resolved) {
+      case "both":
+        return "swipe-trap-both";
+      case "horizontal":
+        return "swipe-trap-horizontal";
+      case "vertical":
+        return "swipe-trap-vertical";
+      default:
+        return null;
+    }
+  }
+
+  /**
+   * @type {string}
+   */
+  get resolvedSwipeTrap() {
     const trapValue = this.inertOutside ? true : this.swipeTrap;
 
-    if (!trapValue) {
-      return null;
+    let n;
+    if (typeof trapValue === "boolean") {
+      n = { x: trapValue, y: trapValue };
+    } else if (trapValue && typeof trapValue === "object") {
+      n = { x: trapValue.x, y: trapValue.y };
+    } else {
+      n = { x: false, y: false };
     }
 
-    if (trapValue === true) {
-      return "swipe-trap-both";
+    let a, r;
+    const travelAxis = this.isHorizontalTrack ? "horizontal" : "vertical";
+
+    if (travelAxis === "vertical") {
+      a = n.x;
+      r = n.y !== false && n.y !== null && n.y !== undefined ? n.y : true;
+    } else if (travelAxis === "horizontal") {
+      r = n.y;
+      a = n.x !== false && n.x !== null && n.x !== undefined ? n.x : true;
     }
 
-    if (typeof trapValue === "object" && trapValue.x && trapValue.y) {
-      return "swipe-trap-both";
+    if (a && !r) {
+      return "horizontal";
+    } else if (!a && r) {
+      return "vertical";
+    } else if (a && r) {
+      return "both";
     }
+    return "none";
+  }
 
-    return null;
+  /**
+   * Whether the ancestor primary swipe trap is active on the Y axis.
+   * Used by nested DScroll to determine keyboard-related trap behavior.
+   *
+   * @type {boolean}
+   */
+  get ancestorPrimarySwipeTrapActiveOnYAxis() {
+    const resolved = this.resolvedSwipeTrap;
+    return resolved === "vertical" || resolved === "both";
+  }
+
+  /**
+   * @type {string}
+   */
+  get primaryScrollTrapAxisClass() {
+    const resolved = this.resolvedSwipeTrap;
+    switch (resolved) {
+      case "horizontal":
+        return "scroll-horizontal";
+      case "vertical":
+        return "scroll-vertical";
+      case "both":
+        return "scroll-both";
+      default:
+        return "scroll-vertical";
+    }
   }
 
   /**
