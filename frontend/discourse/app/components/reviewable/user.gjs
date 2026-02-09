@@ -1,13 +1,155 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import LegacyReviewableUser from "../reviewable-user";
+import { concat } from "@ember/helper";
+import { action } from "@ember/object";
+import { service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
+import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
+import ReviewableField from "discourse/components/reviewable-field";
+import rawDate from "discourse/helpers/raw-date";
+import { ajax } from "discourse/lib/ajax";
+import { popupAjaxError } from "discourse/lib/ajax-error";
+import discourseComputed, { bind } from "discourse/lib/decorators";
+import getUrl from "discourse/lib/get-url";
+import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class ReviewableUser extends Component {
+  @service modal;
+  @service store;
+
+  @discourseComputed("reviewable.user_fields")
+  userFields(fields) {
+    return this.site.collectUserFields(fields);
+  }
+
+  @discourseComputed("reviewable.payload")
+  isScrubbed(payload) {
+    return !!payload?.scrubbed_by;
+  }
+
+  @action
+  showScrubRejectedUserModal() {
+    this.modal.show(ScrubRejectedUserModal, {
+      model: {
+        confirmScrub: this.scrubRejectedUser,
+      },
+    });
+  }
+
+  @bind
+  async scrubRejectedUser(reason) {
+    try {
+      await ajax({
+        url: `/review/${this.reviewable.id}/scrub`,
+        type: "PUT",
+        data: { reason },
+      });
+      this.store.find("reviewable", this.reviewable.id);
+    } catch (e) {
+      popupAjaxError(e);
+    }
+  }
+
   <template>
     <div class="review-item__meta-content">
-      <LegacyReviewableUser @reviewable={{@reviewable}}>
+      <div class="reviewable-user-info">
+        <div class="reviewable-user-fields">
+          {{#if this.isScrubbed}}
+            <ReviewableField
+              @classes="reviewable-user-details reject-reason"
+              @name={{i18n "review.user.scrubbed_reject_reason"}}
+              @value={{this.reviewable.reject_reason}}
+            />
+
+            <ReviewableField
+              @classes="reviewable-user-details scrubbed-by"
+              @name={{i18n "review.user.scrubbed_by"}}
+              @value={{this.reviewable.payload.scrubbed_by}}
+            />
+
+            <ReviewableField
+              @classes="reviewable-user-details scrubbed-reason"
+              @name={{i18n "review.user.scrubbed_reason"}}
+              @value={{this.reviewable.payload.scrubbed_reason}}
+            />
+
+            <ReviewableField
+              @classes="reviewable-user-details scrubbed-at"
+              @name={{i18n "review.user.scrubbed_at"}}
+              @value={{rawDate this.reviewable.payload.scrubbed_at}}
+            />
+          {{else}}
+            <div class="reviewable-user-details username">
+              <div class="name">{{i18n "review.user.username"}}</div>
+              <div class="value">
+                {{#if this.reviewable.link_admin}}
+                  <a
+                    href={{getUrl
+                      (concat
+                        "/admin/users/"
+                        this.reviewable.user.id
+                        "/"
+                        this.reviewable.payload.username
+                      )
+                    }}
+                  >
+                    {{this.reviewable.payload.username}}
+                  </a>
+                {{else}}
+                  {{this.reviewable.payload.username}}
+                {{/if}}
+              </div>
+            </div>
+            <ReviewableField
+              @classes="reviewable-user-details name"
+              @name={{i18n "review.user.name"}}
+              @value={{this.reviewable.payload.name}}
+            />
+
+            <ReviewableField
+              @classes="reviewable-user-details email"
+              @name={{i18n "review.user.email"}}
+              @value={{this.reviewable.payload.email}}
+            />
+
+            <ReviewableField
+              @classes="reviewable-user-details bio"
+              @name={{i18n "review.user.bio"}}
+              @value={{this.reviewable.payload.bio}}
+            />
+
+            {{#if this.reviewable.payload.website}}
+              <div class="reviewable-user-details website">
+                <div class="name">{{i18n "review.user.website"}}</div>
+                <div class="value">
+                  <a
+                    href={{this.reviewable.payload.website}}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >{{this.reviewable.payload.website}}</a>
+                </div>
+              </div>
+            {{/if}}
+
+            <ReviewableField
+              @classes="reviewable-user-details reject-reason"
+              @name={{i18n "review.user.reject_reason"}}
+              @value={{this.reviewable.reject_reason}}
+            />
+
+            {{#each this.userFields as |f|}}
+              <ReviewableField
+                @classes="reviewable-user-details user-field"
+                @name={{f.name}}
+                @value={{f.value}}
+              />
+            {{/each}}
+          {{/if}}
+        </div>
+
         {{yield}}
-      </LegacyReviewableUser>
+      </div>
     </div>
   </template>
 }
