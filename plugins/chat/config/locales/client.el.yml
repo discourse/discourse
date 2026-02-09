@@ -561,7 +561,7 @@ el:
     review:
       types:
         chat_reviewable_message:
-          title: "Αναφερόμενο Μήνυμα Συνομιλίας"
+          title: "Αναφερόμενο μήνυμα συνομιλίας"
         reviewable_chat_message:
           title: "Αναφερόμενο μήνυμα συνομιλίας"
           noun: "μήνυμα συνομιλίας"

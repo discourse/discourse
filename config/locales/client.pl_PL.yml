@@ -4688,7 +4688,6 @@ pl_PL:
       edit_dialog_title: "Edytuj: %{categoryName}"
       view: "Pokaż Tematy w Kategorii"
       back: "Powrót do kategorii"
-      single_page: "Pojedyncza strona"
       general: "Ogólne"
       settings: "Ustawienia"
       advanced: "Zaawansowane"

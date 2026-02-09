@@ -20,6 +20,22 @@ el:
       topic:
         title: Θέμα
     scriptables:
+      email_on_flagged_post:
+        subject: "Αναφερόμενη ανάρτηση: %{topic_title} (%{flagger_username})"
+        default_template: |-
+          Έχει γίνει αναφορά ανάρτησης
+
+          Θέμα: {{topic_title}} ({{topic_url}})
+          Ανάρτηση: {{post_url}} (#{{post_number}})
+          Είδος αναφοράς: {{flag_type}}
+          Αναφορά προς χρήστη: {{flagged_username}}
+          Αναφορά από χρήστη: {{flagger_username}}
+          Κατηγορία: {{category}}
+          Ετικέτες: {{tags}}
+
+          --------
+          Απόσπασμα ανάρτησης:
+          {{post_excerpt}}
       topic:
         title: Δημιουργήστε ένα θέμα
       flag_post_on_words:

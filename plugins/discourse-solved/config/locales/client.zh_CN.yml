@@ -39,7 +39,13 @@ zh_CN:
       no_solved_topics_title_others: "%{username} 还没有解决任何话题"
       no_solved_topics_body: "当您对某个话题提供有用的回复时，您的回复可能会被话题所有者或管理人员选为解决方案。"
       marked_solved_by: "由 %{user} 标记为已解决"
+      confirm_move_solution_title: "移动解决方案帖子"
+      confirm_move_solution:
+        other: "您选择的其中一篇文章被标记为该话题的解决方案。如果你移动它们，话题将更新为未解决。"
+      move_post_confirm:
+        other: "移动帖子"
       move_post_cancel: "取消"
+      dont_show_again: "明白了，别再给我看这个了。"
       no_answer:
         title: 您的问题是否已被解答？
         description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"
