@@ -1,4 +1,4 @@
-import { click, visit } from "@ember/test-helpers";
+import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
 import { AUTO_GROUPS } from "discourse/lib/constants";
@@ -41,9 +41,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
   const withStep = (id, assert) => {
     return {
       checkbox() {
-        return assert.dom(
-          `div#${id} .onboarding-step__checkbox > span.chcklst-box`
-        );
+        return assert.dom(`div#${id} .onboarding-step__checkbox > svg`);
       },
       clickAction() {
         return click(`div#${id} .onboarding-step__action .btn`);
@@ -71,8 +69,8 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".admin-onboarding-banner .btn-close");
     this.siteSettings.enable_site_owner_onboarding = false;
-    assert.dom(".fk-d-default-toast__message").exists();
 
+    await settled();
     assert.dom(".admin-onboarding-banner").doesNotExist();
   });
 

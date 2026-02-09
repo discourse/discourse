@@ -5,7 +5,7 @@
   @include viewport.until(sm) {
     display: none;
   }
-  color: dark-light-choose($secondary, $primary);
+  color: dark-light-choose(var(--secondary), var(--primary));
 
   &__wrap {
     box-sizing: border-box;
@@ -61,17 +61,17 @@
         border-radius: var(--d-border-radius);
 
         svg {
-          color: dark-light-choose($secondary-medium, $primary-medium);
+          color: dark-light-choose(
+            var(--secondary-medium),
+            var(--primary-medium)
+          );
         }
       }
 
       &__checkbox {
         gap: var(--space-2);
-
-        .chcklst-box {
-          pointer-events: none;
-          margin-bottom: var(--space-half);
-        }
+        display: flex;
+        align-items: center;
       }
     }
   }
