@@ -1,6 +1,8 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { array } from "@ember/helper";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import avatar from "discourse/helpers/avatar";
@@ -34,10 +36,6 @@ export default class PostVotingCommentPermalinkTemplate extends Component {
 
   get comment() {
     return this.args.controller.comment;
-  }
-
-  get postUrl() {
-    return `${this.topic?.url}/${this.post?.post_number}`;
   }
 
   get disabled() {
@@ -101,9 +99,13 @@ export default class PostVotingCommentPermalinkTemplate extends Component {
   <template>
     <div class="post-voting-comment-permalink">
       <div class="post-voting-comment-permalink-header">
-        <a href={{this.postUrl}} class="back-link">
+        <LinkTo
+          @route="topic.fromParamsNear"
+          @models={{array this.topic.slug this.topic.id this.post.post_number}}
+          class="back-link"
+        >
           {{i18n "post_voting.comment.permalink.back_to_topic"}}
-        </a>
+        </LinkTo>
 
         <h1 class="topic-title">{{this.topic.title}}</h1>
       </div>
@@ -181,9 +183,13 @@ export default class PostVotingCommentPermalinkTemplate extends Component {
       </div>
 
       <div class="post-voting-comment-permalink-footer">
-        <a href={{this.postUrl}} class="view-full-topic">
+        <LinkTo
+          @route="topic.fromParamsNear"
+          @models={{array this.topic.slug this.topic.id this.post.post_number}}
+          class="view-full-topic"
+        >
           {{i18n "post_voting.comment.permalink.view_full_topic"}}
-        </a>
+        </LinkTo>
       </div>
     </div>
   </template>
