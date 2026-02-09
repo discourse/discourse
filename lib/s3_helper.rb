@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "aws-sdk-s3"
+require "aws_credentials"
 
 class S3Helper
   FIFTEEN_MEGABYTES = 15 * 1024 * 1024
@@ -45,19 +46,15 @@ class S3Helper
   end
 
   def self.build_from_config(use_db_s3_config: false, for_backup: false, s3_client: nil)
-    setting_klass = use_db_s3_config ? SiteSetting : GlobalSetting
-    options = S3Helper.s3_options(setting_klass)
+    creds = use_db_s3_config ? SiteAwsCredentials.instance : GlobalAwsCredentials.instance
+
+    options = creds.to_sdk_options
     options[:client] = s3_client if s3_client.present?
     options[:use_accelerate_endpoint] = !for_backup &&
       SiteSetting.Upload.enable_s3_transfer_acceleration
     options[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
 
-    bucket =
-      if for_backup
-        setting_klass.s3_backup_bucket
-      else
-        use_db_s3_config ? SiteSetting.s3_upload_bucket : GlobalSetting.s3_bucket
-      end
+    bucket = for_backup ? creds.backup_bucket : creds.bucket
 
     S3Helper.new(bucket.downcase, "", options)
   end
@@ -270,21 +267,6 @@ class S3Helper
     s3_bucket.object(get_path_for_s3_upload(path))
   end
 
-  def self.s3_options(obj)
-    opts = { region: obj.s3_region }
-
-    opts[:endpoint] = SiteSetting.s3_endpoint if SiteSetting.s3_endpoint.present?
-    opts[:http_continue_timeout] = SiteSetting.s3_http_continue_timeout
-    opts[:use_dualstack_endpoint] = SiteSetting.Upload.use_dualstack_endpoint
-
-    unless obj.s3_use_iam_profile
-      opts[:access_key_id] = obj.s3_access_key_id
-      opts[:secret_access_key] = obj.s3_secret_access_key
-    end
-
-    opts
-  end
-
   def download_file(filename, destination_path, failure_message = nil)
     object(filename).download_file(destination_path)
   rescue => err
@@ -417,12 +399,10 @@ class S3Helper
   end
 
   def default_s3_options
-    if SiteSetting.enable_s3_uploads?
-      options = self.class.s3_options(SiteSetting)
-      check_missing_site_options
-      options
-    elsif GlobalSetting.use_s3?
-      self.class.s3_options(GlobalSetting)
+    if GlobalAwsCredentials.configured?
+      GlobalAwsCredentials.to_sdk_options
+    elsif SiteAwsCredentials.configured?
+      SiteAwsCredentials.instance.tap(&:validate!).to_sdk_options
     else
       {}
     end
@@ -456,12 +436,5 @@ class S3Helper
         bucket.create unless bucket.exists?
         bucket
       end
-  end
-
-  def check_missing_site_options
-    unless SiteSetting.s3_use_iam_profile
-      raise SettingMissing.new("access_key_id") if SiteSetting.s3_access_key_id.blank?
-      raise SettingMissing.new("secret_access_key") if SiteSetting.s3_secret_access_key.blank?
-    end
   end
 end

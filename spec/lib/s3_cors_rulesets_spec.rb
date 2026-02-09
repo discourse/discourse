@@ -15,7 +15,6 @@ RSpec.describe S3CorsRulesets do
     context "when S3 is set up with global settings" do
       let(:use_db_s3_config) { false }
       before do
-        global_setting :s3_use_iam_profile, true
         global_setting :s3_bucket, "s3-upload-bucket"
         global_setting :s3_backup_bucket, "s3-backup-upload-bucket"
         global_setting :s3_region, "us-west-2"
@@ -119,7 +118,6 @@ RSpec.describe S3CorsRulesets do
       def setup_backups
         SiteSetting.enable_backups = true
         SiteSetting.s3_backup_bucket = "s3-backup-upload-bucket"
-        SiteSetting.s3_use_iam_profile = true
         SiteSetting.backup_location = BackupLocationSiteSetting::S3
       end
     end
