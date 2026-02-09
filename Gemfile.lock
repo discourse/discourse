@@ -165,7 +165,7 @@ GEM
     fabrication (3.0.0)
     faker (3.5.3)
       i18n (>= 1.8.11, < 2)
-    faraday (2.14.0)
+    faraday (2.14.1)
       faraday-net_http (>= 2.0, < 3.5)
       json
       logger
@@ -992,7 +992,7 @@ CHECKSUMS
   extralite-bundle (2.13) sha256=0d00338dd3b348f44a02bb9e93db3714231e7240a48320f1ee3a1db5197db3cc
   fabrication (3.0.0) sha256=a6a0bfad9071348ad3cb1701df788524b888c0cdd044b988893e7509f7463be3
   faker (3.5.3) sha256=b961482dc0bb15ccb9a98ea7878b925669e9ae8f5e59b607da540b768137d765
-  faraday (2.14.0) sha256=8699cfe5d97e55268f2596f9a9d5a43736808a943714e3d9a53e6110593941cd
+  faraday (2.14.1) sha256=a43cceedc1e39d188f4d2cdd360a8aaa6a11da0c407052e426ba8d3fb42ef61c
   faraday-multipart (1.1.1) sha256=77a18ff40149030fd1aef55bb4fc7a67ce46419a8a3fcd010e28c2526e8d8903
   faraday-net_http (3.4.2) sha256=f147758260d3526939bf57ecf911682f94926a3666502e24c69992765875906c
   faraday-retry (2.3.2) sha256=2402d2029032ebd238a2046221e67f6ef0da78c5a8ce8cd4f8b9c62e4d6451d1
