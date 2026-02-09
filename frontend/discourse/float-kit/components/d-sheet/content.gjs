@@ -118,9 +118,6 @@ export default class Content extends Component {
             {{yield}}
           </div>
         {{/if}}
-        <div
-          data-d-sheet={{concatClass "touch-target-expander" @sheet.tracks}}
-        ></div>
       </div>
 
       <div data-d-sheet={{concatClass "back-spacer" @sheet.tracks}}>

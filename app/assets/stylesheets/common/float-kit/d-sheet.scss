@@ -643,54 +643,6 @@
   top: var(--d-sheet-content-wrapper-overshoot-offset);
 }
 
-[data-d-sheet~="touch-target-expander"] {
-  position: absolute;
-  pointer-events: auto;
-  user-select: none;
-}
-
-[data-d-sheet~="touch-target-expander"][data-d-sheet~="bottom"] {
-  top: -20px;
-  left: 0;
-  right: 0;
-  height: 40px;
-}
-
-[data-d-sheet~="touch-target-expander"][data-d-sheet~="top"] {
-  bottom: -20px;
-  left: 0;
-  right: 0;
-  height: 40px;
-}
-
-[data-d-sheet~="touch-target-expander"][data-d-sheet~="left"] {
-  right: -20px;
-  top: 0;
-  bottom: 0;
-  width: 40px;
-}
-
-[data-d-sheet~="touch-target-expander"][data-d-sheet~="right"] {
-  left: -20px;
-  top: 0;
-  bottom: 0;
-  width: 40px;
-}
-
-[data-d-sheet~="touch-target-expander"][data-d-sheet~="horizontal"] {
-  left: -20px;
-  right: -20px;
-  top: 0;
-  bottom: 0;
-}
-
-[data-d-sheet~="touch-target-expander"][data-d-sheet~="vertical"] {
-  top: -20px;
-  bottom: -20px;
-  left: 0;
-  right: 0;
-}
-
 [data-d-sheet~="content"][data-d-sheet~="start"],
 [data-d-sheet~="content"][data-d-sheet~="end"],
 [data-d-sheet~="content"][data-d-sheet~="center"][data-d-sheet~="top"],
