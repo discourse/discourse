@@ -44,15 +44,17 @@ class DCardContent extends Component {
         />
         <DSheet.Content
           @travelAnimation={{hash scale=(array 0.8 1)}}
-          class="d-card-content"
           @sheet={{@sheet}}
+          as |ContentTag|
         >
-          {{yield
-            (hash
-              Trigger=(component DSheet.Trigger sheet=@sheet)
-              dismiss=@sheet.close
-            )
-          }}
+          <ContentTag class="d-card-content">
+            {{yield
+              (hash
+                Trigger=(component DSheet.Trigger sheet=@sheet)
+                dismiss=@sheet.close
+              )
+            }}
+          </ContentTag>
         </DSheet.Content>
       </DSheet.View>
     </DSheet.Portal>

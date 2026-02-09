@@ -252,10 +252,10 @@ export default class DToast extends Component<DToastSignature> {
           }}
           style={{this.toastStyles}}
         >
-          <DSheet.Content @sheet={{sheet}} @asChild={{true}} as |contentAttrs|>
+          <DSheet.Content @sheet={{sheet}} as |ContentTag|>
             <DSheet.SpecialWrapper.Root
               @sheet={{sheet}}
-              @contentAttrs={{contentAttrs}}
+              @tag={{ContentTag}}
               class="d-toast__content"
             >
               <DSheet.SpecialWrapper.Content

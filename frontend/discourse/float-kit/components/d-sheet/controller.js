@@ -6,7 +6,7 @@ import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { capabilities } from "discourse/services/capabilities";
 import AnimationTravel from "./animation-travel";
 import {
-  placementToCssClass,
+  placementToAttribute,
   resolveTracksAndPlacement,
 } from "./config-normalizer";
 import DetentManager from "./detent-manager";
@@ -1140,12 +1140,12 @@ export default class Controller {
   }
 
   /**
-   * Get the CSS class for content placement.
+   * Get the data-d-sheet attribute token for content placement.
    *
    * @type {string}
    */
-  get contentPlacementCssClass() {
-    return placementToCssClass(this.contentPlacement);
+  get contentPlacementAttribute() {
+    return placementToAttribute(this.contentPlacement);
   }
 
   /**
