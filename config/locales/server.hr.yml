@@ -230,7 +230,7 @@ hr:
 
       <p>U suprotnom molimo <a href="%{base_url}/password-reset">Ponovno postavite zaporku</a>.</p>
     disabled_errors:
-      invalid_access: "Nemate dopuštenje za pregled traženog izvora."
+      invalid_access: "Pristup pozivnicama vam nije dopušten."
   bulk_invite:
     error: "Dogodila se greška pri učitavanju te datoteke. Molimo kasnije pokušajte ponovno."
   invite_link:
@@ -246,7 +246,7 @@ hr:
   invalid_params: "Zahtjevu ste dostavili nevažeće parametre: %{message}"
   not_logged_in: "Morate biti prijavljeni da to napravite."
   not_found: "Zatraženi URL ili izvor nije moguće pronaći."
-  invalid_access: "Nemate dopuštenje za pregled traženog izvora."
+  invalid_access: "Odaberite ispravnu potkategoriju."
   authenticator_not_found: "Metoda provjere autentičnosti ne postoji ili je onemogućena."
   authenticator_no_connect: "Ovaj pružatelj provjere autentičnosti ne dopušta povezivanje s postojećim forumskim računom."
   invalid_api_credentials: "Nemate dopuštenje za pregled traženog izvora. API korisničko ime ili ključ je nevažeći."
