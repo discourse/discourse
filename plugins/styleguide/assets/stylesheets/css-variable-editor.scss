@@ -121,6 +121,48 @@
   }
 }
 
+.css-editor-variable-group {
+  &__base {
+    display: flex;
+    align-items: flex-start;
+
+    > .css-editor-variable {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+
+  &__toggle {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
+    padding: 0.35rem 0.5rem 0.35rem 0;
+    cursor: pointer;
+    color: var(--primary-medium);
+    border: none;
+    background: none;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+
+  &__derivative-count {
+    font-size: var(--font-down-2);
+  }
+
+  &__derivatives {
+    padding-left: 1rem;
+    border-left: 2px solid var(--primary-low);
+    margin-left: 1rem;
+
+    .css-editor-variable__name {
+      color: var(--primary-medium);
+    }
+  }
+}
+
 .css-editor-variable {
   padding: 0.35rem 1rem;
 

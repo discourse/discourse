@@ -66,160 +66,42 @@ const CSS_VARIABLES = [
   { name: "--d-selected", category: "Semantic Colors", type: "color" },
   { name: "--d-hover", category: "Semantic Colors", type: "color" },
 
-  // Spacing
-  { name: "--space", category: "Spacing", type: "size" },
-  { name: "--space-half", category: "Spacing", type: "size" },
-  { name: "--space-1", category: "Spacing", type: "size" },
-  { name: "--space-2", category: "Spacing", type: "size" },
-  { name: "--space-3", category: "Spacing", type: "size" },
-  { name: "--space-4", category: "Spacing", type: "size" },
-  { name: "--space-5", category: "Spacing", type: "size" },
-  { name: "--space-6", category: "Spacing", type: "size" },
-  { name: "--space-7", category: "Spacing", type: "size" },
-  { name: "--space-8", category: "Spacing", type: "size" },
-  { name: "--space-9", category: "Spacing", type: "size" },
-  { name: "--space-10", category: "Spacing", type: "size" },
-  { name: "--space-11", category: "Spacing", type: "size" },
-  { name: "--space-12", category: "Spacing", type: "size" },
-
-  // Shadows
-  { name: "--shadow-modal", category: "Shadows", type: "shadow" },
-  { name: "--shadow-composer", category: "Shadows", type: "shadow" },
-  { name: "--shadow-card", category: "Shadows", type: "shadow" },
-  { name: "--shadow-dropdown", category: "Shadows", type: "shadow" },
-  { name: "--shadow-menu-panel", category: "Shadows", type: "shadow" },
-  { name: "--shadow-header", category: "Shadows", type: "shadow" },
-  { name: "--shadow-footer-nav", category: "Shadows", type: "shadow" },
-  { name: "--shadow-focus-danger", category: "Shadows", type: "shadow" },
-
-  // Border Radius
-  { name: "--d-border-radius", category: "Border Radius", type: "radius" },
+  // Styling
+  { name: "--space", category: "Styling", type: "size" },
+  { name: "--space-half", category: "Styling", type: "size" },
+  { name: "--space-1", category: "Styling", type: "size" },
+  { name: "--space-2", category: "Styling", type: "size" },
+  { name: "--space-3", category: "Styling", type: "size" },
+  { name: "--space-4", category: "Styling", type: "size" },
+  { name: "--space-5", category: "Styling", type: "size" },
+  { name: "--space-6", category: "Styling", type: "size" },
+  { name: "--space-7", category: "Styling", type: "size" },
+  { name: "--space-8", category: "Styling", type: "size" },
+  { name: "--space-9", category: "Styling", type: "size" },
+  { name: "--space-10", category: "Styling", type: "size" },
+  { name: "--space-11", category: "Styling", type: "size" },
+  { name: "--space-12", category: "Styling", type: "size" },
+  { name: "--d-border-radius", category: "Styling", type: "radius" },
   {
     name: "--d-border-radius-large",
-    category: "Border Radius",
+    category: "Styling",
     type: "radius",
   },
   {
     name: "--d-nav-pill-border-radius",
-    category: "Border Radius",
+    category: "Styling",
     type: "radius",
   },
   {
     name: "--d-input-border-radius",
-    category: "Border Radius",
+    category: "Styling",
     type: "radius",
   },
   {
     name: "--d-button-border-radius",
-    category: "Border Radius",
+    category: "Styling",
     type: "radius",
   },
-
-  // Button Colors
-  {
-    name: "--d-button-default-text-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-default-bg-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-default-icon-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-default-hover-text-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-default-hover-bg-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-default-hover-icon-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-primary-text-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-primary-bg-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-primary-icon-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-primary-hover-text-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-primary-hover-bg-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-primary-hover-icon-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-danger-text-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-danger-bg-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-danger-icon-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-danger-hover-text-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-danger-hover-bg-color",
-    category: "Button Colors",
-    type: "color",
-  },
-  {
-    name: "--d-button-danger-hover-icon-color",
-    category: "Button Colors",
-    type: "color",
-  },
-
-  // Code Highlighting
-  { name: "--hljs-bg", category: "Code Highlighting", type: "color" },
-  { name: "--hljs-color", category: "Code Highlighting", type: "color" },
-  { name: "--hljs-keyword", category: "Code Highlighting", type: "color" },
-  { name: "--hljs-string", category: "Code Highlighting", type: "color" },
-  { name: "--hljs-title", category: "Code Highlighting", type: "color" },
-  { name: "--hljs-comment", category: "Code Highlighting", type: "color" },
-  { name: "--hljs-number", category: "Code Highlighting", type: "color" },
-  { name: "--hljs-literal", category: "Code Highlighting", type: "color" },
-  { name: "--hljs-tag", category: "Code Highlighting", type: "color" },
-  { name: "--hljs-attr", category: "Code Highlighting", type: "color" },
-  { name: "--hljs-symbol", category: "Code Highlighting", type: "color" },
-  { name: "--hljs-builtin", category: "Code Highlighting", type: "color" },
 ];
 
 export function getCssVariableCategories() {
