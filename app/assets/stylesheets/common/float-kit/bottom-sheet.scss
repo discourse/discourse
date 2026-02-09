@@ -54,13 +54,3 @@
   height: 35px;
   padding-inline: var(--space-4);
 }
-
-.bottom-sheet__view {
-  [data-d-sheet~="bottom-color-fade"] {
-    background-color: var(--secondary);
-  }
-
-  [data-d-sheet~="bottom-color-border"] {
-    border-top-color: var(--primary-low);
-  }
-}
