@@ -56,7 +56,7 @@ export default class ThemeColorManager extends Service {
         result[j] = (1 - alpha) * result[j] + alpha * overlays[i].color[j];
       }
     }
-    return `rgb(${result.join(",")})`;
+    return `rgb(${Math.round(result[0])},${Math.round(result[1])},${Math.round(result[2])})`;
   }
 
   storeThemeColorMetaTag() {
@@ -82,6 +82,7 @@ export default class ThemeColorManager extends Service {
     this.themeColorMetaTag || this.storeThemeColorMetaTag();
 
     const parsed = this.#parseColor(this.themeColorMetaTag?.content);
+
     if (!parsed) {
       // eslint-disable-next-line no-console
       console.warn(
