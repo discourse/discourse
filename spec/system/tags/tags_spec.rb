@@ -53,6 +53,35 @@ describe "Tags", type: :system do
     let(:user_private_messages_page) { PageObjects::Pages::UserPrivateMessages.new }
     let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
+    it "uses correct tag slug in URL when selecting a searched tag from tag drop" do
+      rare_tag = Fabricate(:tag, name: "rare-tag")
+      popular_tag = Fabricate(:tag, name: "popular-tag")
+      category_for_tags = Fabricate(:category)
+
+      2.times do
+        Fabricate(:topic, category: category_for_tags, tags: [popular_tag]).tap do |t|
+          Fabricate(:post, topic: t)
+        end
+      end
+      Fabricate(:topic, category: category_for_tags, tags: [rare_tag]).tap do |t|
+        Fabricate(:post, topic: t)
+      end
+      CategoryTagStat.update_topic_counts
+
+      SiteSetting.max_tags_in_filter_list = 1
+
+      sign_in(user_tl1)
+      category_page.visit(category_for_tags)
+
+      discovery.tag_drop.expand
+      discovery.tag_drop.search(rare_tag.name)
+      discovery.tag_drop.select_row_by_name(rare_tag.name)
+
+      expect(page).to have_current_path(
+        "/tags/c/#{category_for_tags.slug}/#{category_for_tags.id}/#{rare_tag.slug}/#{rare_tag.id}",
+      )
+    end
+
     it "displays tags on topics in topic lists" do
       sign_in(user_tl1)
 
