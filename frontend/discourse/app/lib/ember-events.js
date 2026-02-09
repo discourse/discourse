@@ -187,6 +187,14 @@ function setupComponentEventListeners(component, allEventMethods) {
 
   for (const method of Object.keys(allEventMethods)) {
     if (component.has(method)) {
+      if (!element) {
+        // eslint-disable-next-line no-console
+        console.error(
+          `You can not define "${method}" function(s) to handle DOM events in the '${component}' tagless component since it doesn't have any DOM element.`
+        );
+        continue;
+      }
+
       const event = allEventMethods[method];
 
       if (eventListeners === undefined) {
