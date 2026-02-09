@@ -626,24 +626,8 @@ export default class AdminReport extends Component {
             <div class="chart__wrapper">
               {{#if this.showFilteringUI}}
                 <div class="chart__filters">
-                  {{#if this.showModes}}
-                    <div class="modes">
-                      {{#each this.displayedModes as |displayedMode|}}
-                        <DButton
-                          @action={{fn this.onChangeMode displayedMode.mode}}
-                          @icon={{displayedMode.icon}}
-                          class={{displayedMode.cssClass}}
-                        />
-                      {{/each}}
-                    </div>
-                  {{/if}}
-
                   {{#if this.isChartMode}}
-                    {{#if this.model.average}}
-                      <span class="average-chart">
-                        {{i18n "admin.dashboard.reports.average_chart_label"}}
-                      </span>
-                    {{/if}}
+
                     <div class="chart-groupings">
                       {{#each this.chartGroupings as |chartGrouping|}}
                         <DButton
@@ -665,26 +649,32 @@ export default class AdminReport extends Component {
                         @showFromTime={{false}}
                         @showToTime={{false}}
                       />
-
                     </div>
                   {{/if}}
 
-                  {{#each this.model.available_filters as |filter|}}
-                    <div class="chart__group">
-                      <div class="input">
-                        {{component
-                          (this.reportFilterComponent filter)
-                          model=this.model
-                          filter=filter
-                          applyFilter=this.applyFilter
-                        }}
+                  <div class="chart__additional-filters">
+                    {{#each this.model.available_filters as |filter|}}
+                      <div class="chart__group">
+                        <div class="input">
+                          {{component
+                            (this.reportFilterComponent filter)
+                            model=this.model
+                            filter=filter
+                            applyFilter=this.applyFilter
+                          }}
+                        </div>
                       </div>
-                    </div>
-                  {{/each}}
+                    {{/each}}
+                  </div>
 
                 </div>
               {{/if}}
-              <div class="main">
+              <div class="chart__body">
+                {{#if this.model.average}}
+                  <div class="average-chart">
+                    {{i18n "admin.dashboard.reports.average_chart_label"}}
+                  </div>
+                {{/if}}
                 {{#if this.showError}}
                   {{#if this.showTimeoutError}}
                     <div class="alert alert-error report-alert timeout">
@@ -752,6 +742,17 @@ export default class AdminReport extends Component {
                 {{/if}}
               </div>
               <div class="chart__actions">
+                {{#if this.showModes}}
+                  <div class="chart__modes">
+                    {{#each this.displayedModes as |displayedMode|}}
+                      <DButton
+                        @action={{fn this.onChangeMode displayedMode.mode}}
+                        @icon={{displayedMode.icon}}
+                        class={{displayedMode.cssClass}}
+                      />
+                    {{/each}}
+                  </div>
+                {{/if}}
                 <div class="control">
                   <div class="input">
                     <DButton
