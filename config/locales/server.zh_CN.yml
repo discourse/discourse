@@ -2369,7 +2369,7 @@ zh_CN:
     welcome_banner_page_visibility: "确定哪些页面会显示欢迎横幅。"
     welcome_banner_text_color: "配置 “欢迎横幅图片” 设置后，使用此设置更改横幅文字颜色，以确保其可读性。当留空或未上传任何图像时，则颜色由当前主题控制。"
     splash_screen: "在加载网站资源时显示临时加载屏幕"
-    splash_screen_image: "网站加载时在启动画面显示的 SVG 图片。支持动画 SVG。您可以在 SVG 中使用 `--primary`、`--secondary` 和 `--tertiary` 来引用主题颜色。"
+    splash_screen_image: "网站加载时在启动画面上显示的 SVG 图像。动画 SVG 只能使用 CSS 变换或不透明动画。为 CSS 类和关键帧使用唯一的名称。你可以使用 var (--primary)、var (--secondary) 和 var (--terriary) 来引用主题颜色。"
     navigation_menu: "指定边栏或标题下拉菜单作为网站的主导航菜单。推荐使用边栏。"
     default_navigation_menu_categories: "所选类别默认将显示在导航菜单的“类别”版块下。"
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
@@ -2406,6 +2406,7 @@ zh_CN:
     experimental_rename_faq_to_guidelines: "此更改将常见问题页面重命名为指南。常见问题页面仍可通过 /faq 访问。 'faq url' 的设置与以前一样有效。"
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面来简化类别创建流程。"
     enable_custom_splash_screen: "允许您使用自己的 SVG 图片自定义加载启动画面。通过“启动画面图片”设置上传图片。警告：这可能会对 LCP 分数和 Google 索引产生负面影响。"
+    modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题进行了设计修改。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_datetime: "日期时间格式无效。请确保您输入的日期和时间有效。"

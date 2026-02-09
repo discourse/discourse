@@ -197,6 +197,12 @@ el:
             restricted_tags:
               label: Ετικέτες
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: Πρότυπο email
+            recipients:
+              label: Παραλήπτες
         zapier_webhook:
           fields:
             webhook_url:

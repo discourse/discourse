@@ -3992,7 +3992,6 @@ vi:
       edit_dialog_title: "Chỉnh sửa: %{categoryName}"
       view: "Xem Chủ đề trong Chuyên mục"
       back: "Quay lại chuyên mục"
-      single_page: "Trang đơn"
       general: "Chung"
       settings: "Cấu hình"
       advanced: "Nâng cao"
