@@ -71,6 +71,7 @@ acceptance("Admin - Onboarding Banner", function (needs) {
 
     await click(".admin-onboarding-banner .btn-close");
     this.siteSettings.enable_site_owner_onboarding = false;
+    assert.dom(".fk-d-default-toast__message").exists();
 
     assert.dom(".admin-onboarding-banner").doesNotExist();
   });
