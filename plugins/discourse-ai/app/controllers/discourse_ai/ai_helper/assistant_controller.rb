@@ -170,7 +170,7 @@ module DiscourseAi
 
         raise Discourse::InvalidParameters.new(:mode) if params[:mode].blank?
         if params[:mode] == DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST
-          return suggest_thumbnails(input)
+          return suggest_thumbnails(text)
         end
 
         if params[:mode] == DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT
