@@ -1,4 +1,4 @@
-import AiTranslations from "../../../../discourse/components/ai-translations";
+import AiTranslations from "../../../components/ai-translations";
 
 export default <template>
   <AiTranslations @model={{@controller.model}} />

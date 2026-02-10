@@ -1,3 +1,3 @@
-import AiUsage from "../../../../discourse/components/ai-usage";
+import AiUsage from "../../../components/ai-usage";
 
 export default <template><AiUsage @model={{@controller.model}} /></template>

@@ -1,4 +1,4 @@
-import AiEmbeddingsListEditor from "../../../../../discourse/components/ai-embeddings-list-editor";
+import AiEmbeddingsListEditor from "../../../../components/ai-embeddings-list-editor";
 
 export default <template>
   <AiEmbeddingsListEditor
