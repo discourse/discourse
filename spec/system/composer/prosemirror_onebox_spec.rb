@@ -195,15 +195,14 @@ describe "Composer - ProseMirror - Oneboxing", type: :system do
       )
     end
 
-    it "does not onebox watched word links" do
+    it "does not apply watched word links to the raw content" do
       visit "/t/#{topic.slug}/#{topic.id}"
       find(".post-action-menu__edit").click
       expect(composer).to be_opened
       composer.focus
 
-      expect(rich).to have_css("a[href='https://example.com/x']", text: "discourse")
-      expect(rich).to have_no_css("a.inline-onebox")
-      expect(rich).to have_no_css(".inline-onebox-loading")
+      expect(rich).to have_content("discourse")
+      expect(rich).to have_no_css("a[href='https://example.com/x']")
 
       composer.toggle_rich_editor
 
