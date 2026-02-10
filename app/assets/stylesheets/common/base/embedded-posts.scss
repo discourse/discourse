@@ -1,0 +1,382 @@
+@use "lib/viewport";
+
+// nested replies in topics
+.embedded-posts {
+  @include viewport.until(sm) {
+    position: relative;
+    padding: 0.75em 0.5em 0.75em 0;
+    max-width: 100%;
+    margin-left: 0;
+  }
+
+  @include viewport.from(sm) {
+    border: 1px solid var(--content-border-color);
+  }
+
+  .collapse-up {
+    color: var(--primary-high);
+    background: var(--primary-low);
+    z-index: 1;
+
+    .archetype-private_message & {
+      display: flex;
+    }
+
+    @include viewport.until(sm) {
+      position: relative;
+      padding: 6px;
+      transform: translate(25%, -30%);
+      box-shadow: 0 0 0 1px var(--primary-300);
+
+      .d-icon {
+        transform: scale(0.871);
+      }
+
+      &:hover,
+      &:focus {
+        background: var(--primary-300);
+
+        .d-icon {
+          color: var(--primary);
+        }
+      }
+    }
+
+    @include viewport.from(sm) {
+      transform: translate(-50%, -164%);
+      border: 1px solid var(--primary-300);
+      padding: var(--space-2);
+      left: 32px;
+      bottom: calc(-1 * var(--space-12));
+    }
+  }
+
+  @include viewport.until(sm) {
+    > div {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 1.5em;
+
+      .row {
+        // Main reply line
+        &::before {
+          content: "";
+          position: absolute;
+          top: calc(-2px - 0.75em);
+          width: 1px;
+          height: calc(100% + 1.5em + 5px);
+          background: var(--primary-300);
+          left: 24px;
+        }
+      }
+
+      .topic-avatar {
+        position: sticky;
+        top: calc(var(--header-offset) + 0.5em);
+        margin-right: 15px;
+      }
+
+      .topic-body {
+        display: flex;
+        flex-direction: column;
+        max-width: calc(100% - 32px);
+        margin-left: auto;
+        gap: 0.25em 0;
+        padding-bottom: 1.5em;
+
+        .topic-meta-data.embedded-reply {
+          margin-left: 0;
+
+          h5 a {
+            margin-left: 10px;
+          }
+
+          .names {
+            margin-bottom: 0.25em;
+
+            .user-title {
+              display: none;
+            }
+
+            .second {
+              flex-basis: auto;
+            }
+          }
+
+          .post-link-arrow {
+            position: absolute;
+            bottom: 0;
+
+            .post-info.arrow {
+              padding: 0.5em 0;
+              margin-right: 0;
+              color: var(--primary-med-or-secondary-high);
+              line-height: 1;
+
+              &:hover,
+              &:focus {
+                color: var(--primary-high);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .load-more-replies {
+      font-size: var(--font-down-1);
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%, 150%);
+      padding: 0.35em 0.5em;
+    }
+  }
+
+  @include viewport.from(sm) {
+    h1,
+    h2,
+    h3 {
+      margin: 10px 0;
+    }
+
+    .topic-body {
+      box-sizing: border-box;
+      width: calc(100% - 70px); // [100% - .topic-avatar width]
+      // WARNING: overflow hide is required for quoted / embedded images
+      // which expect "normal" post width, but expansions are narrower
+      overflow: hidden;
+    }
+
+    // this is covered by .topic-body .regular on a normal post
+    // but no such class structure exists for an embedded, expanded post
+    .cooked {
+      margin-top: 15px;
+    }
+
+    .topic-avatar {
+      padding-left: 25px;
+      padding-top: 15px;
+    }
+
+    .collapse-down,
+    .collapse-up {
+      position: absolute;
+      color: var(--primary-medium);
+      background: var(--secondary);
+      border: 1px solid var(--content-border-color);
+      padding: 6px 9px 8px;
+      z-index: 99; // Needs to be higher than topic-avatar
+
+      .d-icon {
+        color: currentcolor;
+      }
+
+      .discourse-no-touch & {
+        &:hover {
+          background: var(--primary-low);
+          color: var(--primary-high);
+
+          .d-icon {
+            color: currentcolor;
+          }
+        }
+      }
+    }
+
+    // bottom means "reply expansion" below a post
+    &.bottom {
+      position: relative;
+      max-width: calc(100% - 66px);
+      margin-bottom: 30px;
+      border: none;
+
+      > div {
+        position: relative;
+
+        &:last-of-type {
+          margin-bottom: 0;
+
+          .row {
+            // Main reply line
+            &::before {
+              content: "";
+              position: absolute;
+              top: calc(-1 * var(--space-6));
+              width: 1px;
+              height: calc(100% + var(--space-5));
+              background: var(--primary-300);
+              left: 32px;
+            }
+          }
+        }
+
+        .row {
+          padding-bottom: var(--space-2);
+
+          // Main reply line
+          &::before {
+            content: "";
+            position: absolute;
+            top: calc(-1 * var(--space-6));
+            width: 1px;
+            height: calc(100% + var(--space-6));
+            background: var(--primary-300);
+            left: 32px;
+          }
+
+          .topic-avatar {
+            border-top: none;
+            padding-left: 9px;
+            position: relative;
+          }
+
+          .topic-body {
+            border-top: none;
+            padding-bottom: calc(var(--space-8) + var(--space-2));
+
+            .topic-meta-data {
+              position: unset;
+
+              .post-link-arrow {
+                position: absolute;
+                bottom: var(--space-3);
+
+                .archetype-private_message & {
+                  bottom: 0;
+                }
+
+                .post-info.arrow {
+                  display: block;
+                  margin-right: 0;
+
+                  .d-icon {
+                    margin-left: 0;
+                  }
+
+                  &:hover,
+                  &:focus {
+                    color: var(--primary-high);
+                  }
+                }
+              }
+            }
+
+            .cooked {
+              margin-top: var(--space-1);
+              padding-top: var(--space-2);
+            }
+          }
+        }
+
+        &.hidden {
+          display: block;
+          opacity: 0;
+        }
+      }
+
+      .collapse-up {
+        .d-icon {
+          transform: scale(0.871);
+        }
+
+        .discourse-no-touch & {
+          &:hover,
+          &:focus {
+            color: var(--primary);
+            background: var(--primary-300);
+          }
+        }
+      }
+
+      .load-more-replies {
+        font-size: var(--font-down-1);
+        position: absolute;
+        left: 55%;
+        transform: translate(-50%, 50%);
+        padding: var(--space-1) var(--space-2);
+      }
+
+      .topic-avatar {
+        padding-left: var(--space-4);
+      }
+    }
+
+    // top means "in reply to expansion" above a post
+    &.top {
+      margin-left: 0;
+      border: none;
+      width: calc(
+        var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+          var(--topic-avatar-width) - (var(--topic-avatar-width) + 2px)
+      ); // 2px accounts for left and right borders
+
+      .collapse-down {
+        transform: translate(17%, 230%);
+        z-index: 1;
+      }
+
+      .row {
+        .topic-body,
+        .topic-avatar {
+          border-top: none;
+        }
+
+        .topic-avatar {
+          padding-left: 0;
+        }
+
+        .topic-body {
+          overflow: visible;
+
+          &::before {
+            content: "";
+            position: absolute;
+            top: var(--space-6);
+            width: 1px;
+            height: calc(100% + var(--space-6));
+            background: var(--primary-300);
+            left: -22px;
+          }
+        }
+      }
+    }
+
+    &.top.topic-body {
+      padding: 0;
+    }
+
+    .post-date {
+      color: var(--primary-med-or-secondary-high);
+    }
+
+    .d-icon-arrow-up,
+    .d-icon-arrow-down {
+      margin-left: var(--space-1);
+    }
+
+    .reply:first-of-type .row {
+      border-top: none;
+    }
+
+    .topic-meta-data {
+      position: relative;
+    }
+
+    .topic-meta-data h5 {
+      position: absolute;
+      z-index: z("base");
+      font-size: var(--font-down-1);
+
+      a {
+        font-weight: bold;
+        color: var(--primary-low-mid-or-secondary-high);
+      }
+    }
+
+    .arrow {
+      color: var(--primary-med-or-secondary-high);
+    }
+  }
+}
