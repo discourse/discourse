@@ -39,6 +39,9 @@ en:
             create_ai_embedding: "Create AI embedding"
             update_ai_embedding: "Update AI embedding"
             delete_ai_embedding: "Delete AI embedding"
+            create_ai_secret: "Create AI secret"
+            update_ai_secret: "Update AI secret"
+            delete_ai_secret: "Delete AI secret"
             update_ai_spam_settings: "Update AI spam settings"
 
   js:
@@ -670,6 +673,31 @@ en:
           title: "Test AI tool"
           run: "Run test"
           result: "Test result"
+
+      secrets:
+        short_title: "Credentials"
+        description: "Manage authentication credentials shared across LLMs and embeddings."
+        name: "Name"
+        secret: "Value"
+        select_secret: "Select a credential..."
+        create_new: "New credential"
+        add_secret: "Add credential"
+        saved: "Credential saved"
+        confirm_delete: "Are you sure you want to delete this credential?"
+        delete_failed_in_use: "This credential is currently in use and cannot be deleted."
+        no_secrets: "No credentials yet"
+        new_title: "New credential"
+        edit_title: "Edit credential"
+        back: "Back"
+        save: "Save"
+        edit: "Edit"
+        delete: "Delete"
+        used_by: "Used by"
+        not_used: "Not in use"
+        embedding: "Embedding"
+        cannot_delete_in_use: "This credential cannot be deleted because it is in use by:"
+        modal:
+          title: "Create new credential"
 
       llms:
         short_title: "LLMs"

@@ -2,6 +2,7 @@
 
 RSpec.describe "Managing LLM configurations", type: :system do
   fab!(:admin)
+  fab!(:ai_secret) { Fabricate(:ai_secret, name: "Test API Key", secret: "abcd") }
 
   let(:page_header) { PageObjects::Components::DPageHeader.new }
   let(:form) { PageObjects::Components::FormKit.new("form") }
@@ -16,13 +17,18 @@ RSpec.describe "Managing LLM configurations", type: :system do
     visit "/admin/plugins/discourse-ai/ai-llms"
 
     find("[data-llm-id='anthropic-claude-opus-4-5'] button").click()
-    form.field("api_key").fill_in("abcd")
+
+    secret_selector = PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
+    secret_selector.expand
+    secret_selector.select_row_by_value(ai_secret.id)
+
     form.submit
 
     expect(page).to have_current_path(%r{/admin/plugins/discourse-ai/ai-llms/\d+/edit})
 
     llm = LlmModel.order(:id).last
 
+    expect(llm.ai_secret_id).to eq(ai_secret.id)
     expect(llm.api_key).to eq("abcd")
 
     preset = DiscourseAi::Completions::Llm.presets.find { |p| p[:id] == "anthropic" }
@@ -50,7 +56,11 @@ RSpec.describe "Managing LLM configurations", type: :system do
     form.field("display_name").fill_in("Self-hosted LLM")
     form.field("name").fill_in("llava-hf/llava-v1.6-mistral-7b-hf")
     form.field("url").fill_in("srv://self-hostest.test")
-    form.field("api_key").fill_in("1234")
+
+    secret_selector = PageObjects::Components::SelectKit.new(".ai-secret-selector__dropdown")
+    secret_selector.expand
+    secret_selector.select_row_by_value(ai_secret.id)
+
     form.field("max_prompt_tokens").fill_in(8000)
     form.field("provider").select("vllm")
     form.field("tokenizer").select("DiscourseAi::Tokenizer::Llama3Tokenizer")
@@ -70,7 +80,10 @@ RSpec.describe "Managing LLM configurations", type: :system do
     # should go to llm list and see the llms correctly configured
     page.go_back
 
-    expect(page).to have_selector(".ai-llms-list-editor__configured .ai-llm-list__row", count: 1)
+    expect(page).to have_selector(
+      ".ai-llms-list-editor__configured .ai-llm-list__row",
+      text: "Self-hosted LLM",
+    )
 
     llm.reload
     expect(llm.display_name).to eq("Self-hosted LLM")
@@ -81,6 +94,7 @@ RSpec.describe "Managing LLM configurations", type: :system do
     expect(llm.provider).to eq("vllm")
     expect(llm.max_output_tokens.to_i).to eq(2001)
     expect(llm.vision_enabled).to eq(true)
+    expect(llm.ai_secret_id).to eq(ai_secret.id)
 
     expect(LlmModel.count).to eq(llm_count + 1)
   end
