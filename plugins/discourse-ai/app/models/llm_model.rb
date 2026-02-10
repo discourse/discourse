@@ -19,12 +19,14 @@ class LlmModel < ActiveRecord::Base
   has_one :llm_credit_allocation, dependent: :destroy
   has_many :llm_feature_credit_costs, dependent: :destroy
   belongs_to :user
+  belongs_to :ai_secret, optional: true
 
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer, presence: true, inclusion: DiscourseAi::Completions::Llm.tokenizer_names
   validates :provider, presence: true, inclusion: DiscourseAi::Completions::Llm.provider_names
   validates :url, presence: true, unless: -> { provider == BEDROCK_PROVIDER_NAME }
-  validates :name, :api_key, presence: true
+  validates :name, presence: true
+  validate :api_key_or_secret_present
   validates :max_prompt_tokens, numericality: { greater_than: 0 }
   validates :input_cost,
             :cached_input_cost,
@@ -53,7 +55,7 @@ class LlmModel < ActiveRecord::Base
   def self.provider_params
     {
       aws_bedrock: {
-        access_key_id: :text,
+        access_key_id: :secret,
         role_arn: :text,
         region: :text,
         disable_native_tools: :checkbox,
@@ -233,7 +235,16 @@ class LlmModel < ActiveRecord::Base
   end
 
   def lookup_custom_param(key)
-    provider_params&.dig(key)
+    value = provider_params&.dig(key)
+    return value if value.nil?
+
+    param_def = self.class.provider_params.dig(provider&.to_sym, key.to_sym)
+    if param_def == :secret && value.to_s =~ /\A\d+\z/
+      resolved = AiSecret.find_by(id: value.to_i)
+      return resolved&.secret if resolved
+    end
+
+    value
   end
 
   def seeded?
@@ -244,6 +255,8 @@ class LlmModel < ActiveRecord::Base
     if seeded?
       env_key = "DISCOURSE_AI_SEEDED_LLM_API_KEY_#{id.abs}"
       ENV[env_key] || self[:api_key]
+    elsif ai_secret.present?
+      ai_secret.secret
     else
       self[:api_key]
     end
@@ -279,6 +292,18 @@ class LlmModel < ActiveRecord::Base
   end
 
   private
+
+  def api_key_or_secret_present
+    return if seeded?
+    if ai_secret_id.present?
+      unless AiSecret.exists?(ai_secret_id)
+        errors.add(:ai_secret_id, I18n.t("discourse_ai.llm_models.secret_not_found"))
+      end
+      return
+    end
+    return if self[:api_key].present?
+    errors.add(:base, I18n.t("discourse_ai.llm_models.secret_required"))
+  end
 
   def required_provider_params
     return if provider != BEDROCK_PROVIDER_NAME
@@ -317,5 +342,10 @@ end
 #  vision_enabled           :boolean          default(FALSE), not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  ai_secret_id             :bigint
 #  user_id                  :integer
+#
+# Indexes
+#
+#  index_llm_models_on_ai_secret_id  (ai_secret_id)
 #

@@ -124,10 +124,13 @@ class EmbeddingDefinition < ActiveRecord::Base
     end
   end
 
+  belongs_to :ai_secret, optional: true
+
   validates :provider, presence: true, inclusion: provider_names
   validates :display_name, presence: true, length: { maximum: 100 }
   validates :tokenizer_class, presence: true, inclusion: tokenizer_names
-  validates :url, :api_key, :dimensions, :max_sequence_length, :pg_function, presence: true
+  validates :url, :dimensions, :max_sequence_length, :pg_function, presence: true
+  validate :api_key_or_secret_present
 
   after_create :create_indexes
 
@@ -185,12 +188,26 @@ class EmbeddingDefinition < ActiveRecord::Base
     if seeded?
       env_key = "DISCOURSE_AI_SEEDED_EMBEDDING_API_KEY"
       ENV[env_key] || self[:api_key]
+    elsif ai_secret.present?
+      ai_secret.secret
     else
       self[:api_key]
     end
   end
 
   private
+
+  def api_key_or_secret_present
+    return if seeded?
+    if ai_secret_id.present?
+      unless AiSecret.exists?(ai_secret_id)
+        errors.add(:ai_secret_id, I18n.t("discourse_ai.embeddings.secret_not_found"))
+      end
+      return
+    end
+    return if self[:api_key].present?
+    errors.add(:base, I18n.t("discourse_ai.embeddings.secret_required"))
+  end
 
   def strategy
     @strategy ||= DiscourseAi::Embeddings::Strategies::Truncation.new
@@ -227,20 +244,25 @@ end
 # Table name: embedding_definitions
 #
 #  id                    :bigint           not null, primary key
-#  display_name          :string           not null
+#  api_key               :string
 #  dimensions            :integer          not null
+#  display_name          :string           not null
+#  embed_prompt          :string           default(""), not null
+#  matryoshka_dimensions :boolean          default(FALSE), not null
 #  max_sequence_length   :integer          not null
-#  version               :integer          default(1), not null
 #  pg_function           :string           not null
 #  provider              :string           not null
+#  provider_params       :jsonb
+#  search_prompt         :string           default(""), not null
+#  seeded                :boolean          default(FALSE), not null
 #  tokenizer_class       :string           not null
 #  url                   :string           not null
-#  api_key               :string
-#  seeded                :boolean          default(FALSE), not null
-#  provider_params       :jsonb
+#  version               :integer          default(1), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  embed_prompt          :string           default(""), not null
-#  search_prompt         :string           default(""), not null
-#  matryoshka_dimensions :boolean          default(FALSE), not null
+#  ai_secret_id          :bigint
+#
+# Indexes
+#
+#  index_embedding_definitions_on_ai_secret_id  (ai_secret_id)
 #

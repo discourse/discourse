@@ -30,6 +30,11 @@ export default {
           description: "discourse_ai.llms.preconfigured.description",
         },
         {
+          label: "discourse_ai.secrets.short_title",
+          route: "adminPlugins.show.discourse-ai-secrets",
+          description: "discourse_ai.secrets.description",
+        },
+        {
           label: "discourse_ai.ai_persona.short_title",
           route: "adminPlugins.show.discourse-ai-personas",
           description: "discourse_ai.ai_persona.persona_description",
