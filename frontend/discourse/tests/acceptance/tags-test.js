@@ -215,13 +215,13 @@ acceptance("Tags listed by group", function (needs) {
 
     assert
       .dom(".tag-list .tag-box:nth-of-type(1) .discourse-tag")
-      .hasAttribute("href", "/tag/focus");
+      .hasAttribute("href", "/tag/focus/457");
     assert
       .dom(".tag-list .tag-box:nth-of-type(2) .discourse-tag")
       .hasAttribute(
         "href",
-        "/tag/escort",
-        "uses a lowercase URL for a mixed case tag"
+        "/tag/escort/456",
+        "uses the canonical slug/id URL"
       );
 
     assert
