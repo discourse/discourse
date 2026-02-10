@@ -34,6 +34,8 @@ sq:
             canned_reply:
               label: "Përgjigju"
     discourse_ai:
+      llm_selector:
+        none: "Asnjë"
       features:
         back: "Kthehu mbrapa"
         disabled: "(e çaktivizuar)"

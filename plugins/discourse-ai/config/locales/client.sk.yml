@@ -172,6 +172,8 @@ sk:
               description: "Ak je zadané, nastavuje hornú hranicu maximálneho počtu tokenov, ktoré môže model vygenerovať. Rešpektuje limit maximálneho počtu výstupných tokenov LLM."
     discourse_ai:
       title: "AI"
+      llm_selector:
+        none: "Žiadny"
       features:
         short_title: "Funkcie"
         description: "Ide o funkcie AI, ktoré sú k dispozícii návštevníkom vášho webu. Možno ich nakonfigurovať tak, aby používali konkrétne persóny a LLM, a prístup k nim možno riadiť podľa skupín."

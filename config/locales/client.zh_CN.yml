@@ -273,6 +273,8 @@ zh_CN:
     software_update_prompt:
       message: "我们更新了网站，<span>请刷新</span>以保持网站顺利运行。"
       dismiss: "忽略"
+    notifications_tracking:
+      tooltip: "通知级别： %{level}"
     back_button: "返回"
     welcome_banner:
       header:
@@ -5186,6 +5188,7 @@ zh_CN:
         no_changes_to_save: "没有要保存的更改"
         select_groups: "选择群组…"
         opt_in_groups: "选择加入的群组"
+        show_related_settings: "显示相关设置..."
         opt_in_groups_instructions: "“选择加入的群组”可以用于让特定用户在正式变更发布前进行测试。请注意，当变更进入稳定状态后，所有用户都会适用于变更。"
         enabled_for_throttle: "您太频繁地修改该功能对哪些用户启用了，请等待几秒后重试。"
         change_enabled_for_success: "您已为 %{enabledFor} 启用此更改"

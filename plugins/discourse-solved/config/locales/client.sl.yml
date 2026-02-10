@@ -36,6 +36,7 @@ sl:
       no_solved_topics_title_others: "%{username} še ni rešil nobene teme"
       no_solved_topics_body: "Ko podate koristen odgovor na temo, lahko lastnik teme ali osebje izbere vaš odgovor kot rešitev."
       move_post_cancel: "Prekliči"
+      confirm_category_change_solution_cancel: "Prekliči"
       no_answer:
         title: Ste dobili odgovor na vaše vprašanje?
         description: "Z izbiro gumba za potrditev pod ustrezno objavo izpostavite odgovor in s tem pomagajte drugim."

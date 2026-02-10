@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 it:
+  js:
+    footnote:
+      add: "Aggiungi nota a piè di pagina"

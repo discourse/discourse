@@ -34,6 +34,8 @@ sw:
             canned_reply:
               label: "Jibu"
     discourse_ai:
+      llm_selector:
+        none: "Hakuna"
       features:
         back: "Iliyopita"
         disabled: "(imezuiwa)"

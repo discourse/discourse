@@ -16,6 +16,8 @@ da:
           title: Læsetid
         chat_usage:
           messages: beskeder
+          author: Dig
+          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Invitationer

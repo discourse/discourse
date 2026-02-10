@@ -55,6 +55,10 @@ uk:
         other: "Перемістити дописи"
       move_post_cancel: "Скасувати"
       dont_show_again: "Зрозуміло, більше не показувати."
+      confirm_category_change_solution_title: "Розчин буде видалено"
+      confirm_category_change_solution: "У новій категорії немає рішень. Зміна категорії видалить прийняте рішення з цієї теми."
+      confirm_category_change_solution_confirm: "Змінити категорію"
+      confirm_category_change_solution_cancel: "Скасувати"
       no_answer:
         title: Чи було отримано відповідь на ваше запитання?
         description: "Виділіть відповідь та допоможіть іншим, використовуючи кнопку рішення під правильною відповіддю."

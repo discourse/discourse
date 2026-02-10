@@ -46,6 +46,8 @@ ug:
             canned_reply:
               label: "جاۋاب"
     discourse_ai:
+      llm_selector:
+        none: "يوق"
       features:
         back: "كەينى"
         disabled: "(چەكلەندى)"

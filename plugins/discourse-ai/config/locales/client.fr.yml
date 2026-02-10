@@ -176,6 +176,8 @@ fr:
       default_llm:
         title: "Modèle LLM par défaut"
         description: "Le modèle LLM par défaut à utiliser pour toutes les fonctionnalités d'IA. Cela sera utilisé si aucun LLM n'est spécifié dans la configuration des fonctionnalités ou dans le personnage. Si aucun LLM par défaut n'est spécifié, le dernier LLM créé sera utilisé."
+      llm_selector:
+        none: "Jamais"
       features:
         short_title: "Fonctionnalités"
         description: "Il s'agit des fonctionnalités d'IA disponibles pour les visiteurs de votre site. Elles peuvent être configurées pour utiliser des personnages IA et des LLM spécifiques, et leur accès peut être contrôlé par des groupes."

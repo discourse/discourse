@@ -32,6 +32,7 @@ zh_TW:
       no_solved_topics_title_others: "%{username} 尚未解決任何主題"
       no_solved_topics_body: "當您對某個主題提供有用的回覆時，主題擁有者或工作人員可能會選取您的回覆作為解決方案。"
       move_post_cancel: "取消"
+      confirm_category_change_solution_cancel: "取消"
       no_answer:
         title: 您的問題已得到解答嗎？
         description: "在正確的回覆下方按下解答按鈕以突顯解決方案來幫助他人。"

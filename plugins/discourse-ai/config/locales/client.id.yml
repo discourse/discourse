@@ -84,6 +84,8 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      llm_selector:
+        none: "Tidak ada"
       features:
         back: "Kembali"
         disabled: "(dinonaktifkan)"

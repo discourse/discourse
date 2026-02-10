@@ -41,6 +41,7 @@ pt_BR:
       no_solved_topics_body: "Quando você fornecer uma resposta útil a um tópico, ela poderá ser selecionada como uma solução pelo(a) proprietário(a) ou equipe do tópico."
       marked_solved_by: "Marcado como resolvido por %{user}"
       move_post_cancel: "Cancelar"
+      confirm_category_change_solution_cancel: "Cancelar"
       no_answer:
         title: Sua pergunta foi respondida?
         description: "Destaque a resposta e ajude as outras pessoas ao usar o botão de solução abaixo para responder corretamente."

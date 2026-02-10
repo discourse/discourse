@@ -34,6 +34,8 @@ be:
             canned_reply:
               label: "Адказаць"
     discourse_ai:
+      llm_selector:
+        none: "Няма"
       features:
         back: "Назад"
         disabled: "(адключана)"

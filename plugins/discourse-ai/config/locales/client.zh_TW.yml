@@ -36,6 +36,8 @@ zh_TW:
             canned_reply:
               label: "回覆"
     discourse_ai:
+      llm_selector:
+        none: "無"
       features:
         back: "上一步"
         disabled: "(停用)"

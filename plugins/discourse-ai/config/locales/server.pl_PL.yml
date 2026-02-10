@@ -652,6 +652,7 @@ pl_PL:
         invalid_seeded_model: "Nie można używać tego modelu z tą funkcją"
         invalid_persona_response_format: "Wybrana osoba musi mieć format odpowiedzi z polem logicznym o nazwie „spam”"
         must_select_model: "Najpierw musisz wybrać LLM"
+        invalid_llm_id: "Wybrany model LLM jest nieprawidłowy"
       endpoints:
         not_configured: "%{display_name} (nie skonfigurowano)"
         configuration_hint:

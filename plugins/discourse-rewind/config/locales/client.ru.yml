@@ -15,6 +15,8 @@ ru:
       placeholder: Перемотка Discourse
       title: Rewind
       viewing_other_user: "Вы просматриваете отчет <strong>%{username}'s</strong> Discourse Rewind."
+      cannot_view_rewind: >
+        Вы не можете просмотреть этот отчет Discourse Rewind. Возможно, владелец не опубликовал его публично?<br><br> $> _<br><br>
       preferences:
         enable_rewind: "Включите функцию Discourse Rewind. Это позволит отображать сводку событий за конец года в вашем профиле и на вашем аватаре."
         share_publicly: "Поделитесь сводкой Discourse Rewind с другими участниками форума. Любой участник форума сможет просмотреть вашу сводку Discourse Rewind."
@@ -39,6 +41,7 @@ ru:
           title: Использование слов
         reading_time:
           title: Время на прочтение
+          book_comparison: "Вы потратили <code>%{readingTime}</code> времени на чтение нашего сайта! Это время потребовалось бы, чтобы прочитать <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Наиболее часто используемые реакции в темах
           total_number: "Общее количество реакций: %{count}"
@@ -62,14 +65,16 @@ ru:
         assignments:
           title: Назначения
           total_assigned: Назначен мне
+          total_assigned_others: "Назначен(а) группе %{username}"
           completed: Задания выполнены
           pending: Задания в процессе выполнения
           assigned_by_user: Выданные задания
         chat_usage:
           title: Активность в чате
           total_messages: Всего сообщений
-          dm_messages: Сообщений DM
           messages: сообщений
+          author: Вы
+          author_others: "%{username}"
           status_online: "● онлайн"
         invites:
           title: Приглашения

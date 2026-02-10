@@ -23,6 +23,7 @@ et:
         all: "kõik"
         solved: "lahendatud"
       move_post_cancel: "Loobu"
+      confirm_category_change_solution_cancel: "Loobu"
     topic_statuses:
       solved:
         help: "ellel teemal on lahendus"

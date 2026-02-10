@@ -2071,6 +2071,7 @@ de:
         redeemed_tab_with_count: "Angenommen (%{count})"
         invited_via: "Einladung"
         invited_via_link: "Link %{key} (%{count}/%{max} angenommen)"
+        generating_link: "Link wird generiert..."
         groups: "Gruppen"
         topic: "Thema"
         sent: "Erstellt/Zuletzt gesendet"

@@ -38,6 +38,8 @@ hu:
             canned_reply:
               label: "Válasz"
     discourse_ai:
+      llm_selector:
+        none: "Egyik sem"
       features:
         back: "Vissza"
         disabled: "(kikapcsolva)"

@@ -26,6 +26,7 @@ hr:
         solved: "riješeno"
       no_solved_topics_title_others: "%{username} još nije riješio/la nijednu temu"
       move_post_cancel: "Odustani"
+      confirm_category_change_solution_cancel: "Odustani"
       no_answer:
         title: Je li odgovoreno na vaše pitanje?
         description: "Označite odgovor i pomozite drugima pomoću gumba za rješenje ispod točnog odgovora."

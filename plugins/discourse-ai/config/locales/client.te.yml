@@ -36,6 +36,8 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
+      llm_selector:
+        none: "ఏదీ లేదు"
       features:
         back: "వెనుకకు"
         no_persona: "సెట్ చేయబడలేదు"

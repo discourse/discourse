@@ -34,6 +34,8 @@ nb_NO:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      llm_selector:
+        none: "Ingen"
       features:
         back: "Forrige"
         disabled: "(deaktivert)"

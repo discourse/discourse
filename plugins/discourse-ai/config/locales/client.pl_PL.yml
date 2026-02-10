@@ -225,6 +225,9 @@ pl_PL:
       default_llm:
         title: "Domyślny model LLM"
         description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub osobowości nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
+      llm_selector:
+        none: "Brak"
+        saved: "Domyślny model LLM został pomyślnie zaktualizowany"
       features:
         short_title: "Cechy"
         description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych person i LLM, a dostęp do nich może być kontrolowany przez grupy."

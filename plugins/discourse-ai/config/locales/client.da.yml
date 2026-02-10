@@ -42,6 +42,8 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      llm_selector:
+        none: "Ingen"
       features:
         back: "Tilbage"
         disabled: "(deaktiveret)"

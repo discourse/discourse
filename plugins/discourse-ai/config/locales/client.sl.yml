@@ -34,6 +34,8 @@ sl:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      llm_selector:
+        none: "Brez"
       features:
         back: "Nazaj"
         disabled: "(onemogočeno)"

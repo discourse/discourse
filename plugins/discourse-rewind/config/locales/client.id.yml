@@ -16,6 +16,8 @@ id:
           title: Waktu bacaan
         chat_usage:
           messages: pesan
+          author: Anda
+          author_others: "%{username}"
         invites:
           title: Undangan
           invitee_likes: Likes Diberikan

@@ -16,6 +16,8 @@ nb_NO:
           title: Lesetid
         chat_usage:
           messages: meldinger
+          author: Du
+          author_others: "%{username}"
         invites:
           title: invitasjoner
           invitee_posts: Innlegg skrevet

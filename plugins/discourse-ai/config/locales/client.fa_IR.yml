@@ -60,6 +60,8 @@ fa_IR:
               label: "پاسخ کاربر"
     discourse_ai:
       title: "هوش مصنوعی"
+      llm_selector:
+        none: "هیچ‌کدام"
       features:
         back: "بازگشت"
         disabled: "(غیرفعال)"

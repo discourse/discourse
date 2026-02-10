@@ -14,8 +14,12 @@ ja:
       reports:
         reading_time:
           title: 閲覧時間
+        assignments:
+          total_assigned_others: "が %{username} に割り当てました"
         chat_usage:
           messages: メッセージ
+          author: あなた
+          author_others: "%{username}"
           status_online: "● オンライン"
         invites:
           title: 招待

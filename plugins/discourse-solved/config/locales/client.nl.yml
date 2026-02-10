@@ -39,6 +39,7 @@ nl:
       no_solved_topics_title_others: "%{username} heeft nog geen topics opgelost"
       no_solved_topics_body: "Als je een nuttig antwoord geeft op een topic, kan je antwoord door de eigenaar van het topic of door een medewerker als oplossing worden gekozen."
       move_post_cancel: "Annuleren"
+      confirm_category_change_solution_cancel: "Annuleren"
       no_answer:
         title: Is je vraag beantwoord?
         description: "Markeer het antwoord en help anderen door de oplossingsknop onder het juiste antwoord te gebruiken."

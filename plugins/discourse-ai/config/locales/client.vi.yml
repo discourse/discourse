@@ -34,6 +34,8 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      llm_selector:
+        none: "Không"
       features:
         back: "Quay lại"
         disabled: "(vô hiệu hóa)"
