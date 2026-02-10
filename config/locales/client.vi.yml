@@ -1330,7 +1330,7 @@ vi:
           all: "Tất cả"
           read: "Đã đọc"
           unread: "Chưa đọc"
-          unseen: "Không nhìn thấy"
+          unseen: "Chưa xem"
         ignore_duration_title: "Bỏ qua người dùng"
         ignore_duration_username: "Tên đăng nhập"
         ignore_duration_when: "Thời hạn:"
@@ -1535,8 +1535,6 @@ vi:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> báo cáo hữu ích'
-        flagged_posts:
-          other: '<span class="%{className}">%{count}</span> tút bị báo cáo'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> tút đã xóa'
         silencings:
@@ -3994,7 +3992,6 @@ vi:
       edit_dialog_title: "Chỉnh sửa: %{categoryName}"
       view: "Xem Chủ đề trong Chuyên mục"
       back: "Quay lại chuyên mục"
-      single_page: "Trang đơn"
       general: "Chung"
       settings: "Cấu hình"
       advanced: "Nâng cao"
@@ -4035,6 +4032,8 @@ vi:
       save_error: Có lỗi xảy ra khi lưu chuyên mục
       errors:
         self_lockout: "Bạn sắp thay đổi quyền truy cập chuyên mục theo cách sẽ loại bỏ quyền truy cập của chính bạn. Bạn có chắc muốn tiếp tục?"
+      validations:
+        icon_required: "Chọn một biểu tượng."
       name: "Tên chuyên mục"
       untitled: "Chuyên mục chưa đặt tên"
       description: "Mô tả"
@@ -4081,12 +4080,11 @@ vi:
         reply: "Trả lời"
         create: "Tạo"
         no_groups_selected: "Không có nhóm nào được cấp quyền truy cập; chuyên mục này sẽ chỉ hiển thị cho BQT."
-        everyone_has_access: 'Chuyên mục này là công khai, mọi người đều có thể xem, trả lời và tạo tút Để hạn chế quyền, hãy xóa một hoặc nhiều quyền được cấp cho nhóm "mọi người".'
+        everyone_full_access: 'Chuyên mục này là công khai, mọi người đều có thể xem, trả lời và tạo tút Để hạn chế quyền, hãy xóa một hoặc nhiều quyền được cấp cho nhóm "mọi người".'
         specific_groups_have_access: "Chuyên mục này là riêng tư, chỉ các nhóm được chọn mới có thể xem, trả lời và tạo tút."
         toggle_reply: "Chuyển đổi quyền Trả lời"
         toggle_full: "Chuyển đổi quyền Tạo"
         inherited: 'Sự cho phép này được thừa hưởng từ “tất cả mọi người”'
-      special_warning: "Cảnh báo: Đây là chuyên mục có sẵn nên bạn không thể chỉnh sửa các thiết lập bảo mật. Nếu bạn muốn sử dụng chuyên mục này, hãy xóa nó thay vì tái sử dụng."
       uncategorized_security_warning: "Chuyên mục này là đặc biệt. Nó được thiết kế như một khu vực tổ chức cho các chủ đề không có chuyên mục; nó không thể có cài đặt bảo mật."
       uncategorized_general_warning: 'Chuyên mục này là đặc biệt. Nó được sử dụng làm chuyên mục mặc định cho các chủ đề mới chưa chọn chuyên mục. Nếu bạn muốn ngăn hành vi này và buộc lựa chọn chuyên mục, <a href="%{settingLink}">vui lòng tắt cài đặt tại đây</a>. Nếu bạn muốn thay đổi tên hoặc mô tả, hãy chuyển đến <a href="%{customizeLink}">Tùy chỉnh / Nội dung Văn bản</a>.'
       pending_permission_change_alert: "Bạn chưa thêm %{group} vào chuyên mục này; nhấn vào nút này để thêm chúng."
@@ -4129,8 +4127,6 @@ vi:
         group_restricted: "Riêng tư"
         who_can_see: "Ai có thể xem chuyên mục này"
         who_can_post: "Ai có thể đăng tút trong chuyên mục này"
-        more_options_hint: "Có thêm nhiều quyền hạn khác ở đây"
-        more_options_hint_link: "cài đặt nâng cao."
       num_auto_bump_daily: "Số lượng chủ đề đẩy tự động hàng ngày:"
       auto_bump_cooldown_days: "Số ngày tối thiểu trước khi đẩy lại cùng một chủ đề:"
       navigate_to_first_post_after_read: "Chuyển đến tút đầu tiên sau khi chủ đề được đọc"
@@ -5277,7 +5273,6 @@ vi:
           keywords: "locale|language|timezone|unicode|ltr"
         upcoming_changes:
           title: "Các thay đổi sắp tới"
-          header_description: "Danh sách các thay đổi sắp tới trên Discourse có thể ảnh hưởng đến trang web của bạn, cùng với các tính năng thử nghiệm mà bạn có thể tham gia. Bạn có thể lọc theo mức độ ảnh hưởng, loại thay đổi và trạng thái.\n\nNhóm tham gia thử nghiệm có thể được sử dụng để cho phép một nhóm người dùng nhất định thử nghiệm một thay đổi trước khi nó được phát hành cho tất cả mọi người, tuy nhiên các nhóm này sẽ không còn liên quan một khi thay đổi đó tiến tới trạng thái Ổn định."
         login:
           title: "Đăng nhập và xác thực"
           header_description: "Cấu hình cách người dùng đăng nhập và xác thực, thông tin bí mật và khóa, nhà cung cấp OAuth2, và nhiều hơn nữa."

@@ -2332,6 +2332,8 @@ lv:
       create_long: "Izveidot jaunu sadaļu"
       creation_error: Izveidojot šo sadaļu, notika kļūda.
       save_error: Saglabājot šo sadaļu, notika kļūda.
+      validations:
+        icon_required: "Izvēlieties ikonu."
       description: "Apraksts"
       icon: "Ikona"
       emoji: "Smaidiņi"
@@ -2353,7 +2355,6 @@ lv:
         see: "Skatīt"
         reply: "Atbildēt"
         create: "Izveidot"
-      special_warning: "Brīdinājums: šī sadaļa ir automātiski izveidota un tās drošības uzstādījumi nav maināmi. Ja jūs nevēlaties šo sadaļu izmantot, izdzēsiet to, nevis pielietojiet citiem mērķiem."
       email_in: "Īpašas ienākošā e-pasta adreses:"
       email_in_allow_strangers: "Pieņemt e-pastus no anonīmiem lietotājiem bez profiliem"
       show_subcategory_list: "Rādīt apakšsadaļu sarakstu virs tēmām šai sadaļā."

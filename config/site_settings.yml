@@ -1716,21 +1716,21 @@ posting:
     max: 255
     area: "posts_and_topics"
     depends_on:
-      - "experimental_form_templates"
+      - "enable_form_templates"
     depends_behavior: "hidden"
   max_form_template_content_length:
     default: 5000
     max: 150000
     area: "posts_and_topics"
     depends_on:
-      - "experimental_form_templates"
+      - "enable_form_templates"
     depends_behavior: "hidden"
   show_preview_for_form_templates:
     client: true
     default: true
     area: "posts_and_topics"
     depends_on:
-      - "experimental_form_templates"
+      - "enable_form_templates"
     depends_behavior: "hidden"
   group_pm_user_limit:
     default: 1000
@@ -3825,6 +3825,16 @@ uncategorized:
     default: "top_menu_pages"
     area: "interface"
 
+  modernize_foundation_theme:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      impact: "feature,all_members"
+      status: "experimental"
+      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
+
 user_preferences:
   default_email_digest_frequency:
     enum: "DigestEmailSiteSetting"
@@ -4199,7 +4209,7 @@ dashboard:
     client: true
 
 experimental:
-  experimental_auto_grid_images:
+  enable_auto_grid_images:
     default: false
     client: true
     area: "experimental"
@@ -4207,7 +4217,7 @@ experimental:
       status: "experimental"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/394784"
-  experimental_rename_faq_to_guidelines:
+  rename_faq_to_guidelines:
     default: false
     hidden: true
     client: true
@@ -4221,7 +4231,7 @@ experimental:
     client: true
     hidden: true
     area: "experimental"
-  experimental_form_templates:
+  enable_form_templates:
     client: true
     default: false
     hidden: true
@@ -4230,7 +4240,7 @@ experimental:
       status: "experimental"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/278631"
-  experimental_impersonation:
+  impersonate_without_logout:
     default: false
     hidden: true
     area: "experimental"

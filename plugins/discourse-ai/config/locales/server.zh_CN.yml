@@ -96,6 +96,7 @@ zh_CN:
     ai_helper_enabled_features: "选择要在 AI 助手中启用的功能。"
     post_ai_helper_allowed_groups: "能够在帖子中访问 AI 助手功能的用户群组"
     ai_helper_post_illustrator_persona: "用于 AI 助手“帖子插图”功能的角色。注意：要使此功能生效，您还必须创建一个图像生成工具（Admin > Plugins > Discourse AI > Tools）。"
+    ai_helper_chat_thread_title_persona: "用于生成聊天主题标题的角色。"
     ai_embeddings_selected_model: "使用所选模型生成嵌入向量。"
     ai_embeddings_generate_for_pms: "为个人消息生成嵌入向量。"
     ai_embeddings_semantic_related_topics_enabled: "将语义搜索用于相关话题。"
@@ -115,6 +116,7 @@ zh_CN:
     ai_summary_backfill_maximum_topics_per_hour: "每小时回填的话题摘要数。"
     ai_bot_enabled: "启用 AI 机器人模块。"
     ai_bot_enabled_llms: "用于选择 AI bot 对话的 LLM"
+    ai_bot_enable_chat_warning: "启动私信聊天时显示警告。可以通过编辑翻译字符串进行覆盖：discourse_ai.ai_bot.pm_warning"
     ai_bot_allowed_groups: "当 GPT 机器人可以访问私信时，它将回复这些群组的成员。"
     ai_bot_debugging_allowed_groups: "允许这些群组在帖子上看到显示原始 AI 请求和回答的调试按钮"
     ai_bot_public_sharing_allowed_groups: "允许这些群组通过唯一的公开链接与公众分享 AI 个人消息。注意：如果您的站点需要登录，分享时也需要登录。"
@@ -308,6 +310,7 @@ zh_CN:
       flag_reason: "被 <a href='%{url}'>Discourse AI</a> 标记为垃圾信息"
       silence_reason: "用户被 <a href='%{url}'>Discourse AI</a> 自动禁言"
       invalid_error_type: "提供的错误类型无效"
+      unexpected: "发生意外错误"
       bot_user_update_failed: "无法更新垃圾信息扫描机器人用户"
       configuration_missing: "缺少 AI 垃圾信息检测配置。请先在“管理 > 插件 > Discourse AI > 垃圾信息”中添加配置，然后再启用。"
       logging_subject: "垃圾信息检测"
@@ -422,6 +425,9 @@ zh_CN:
         discover:
           name: "发现"
           description: "发现功能中使用的默认 Persona（免费搜索）"
+        chat_thread_titler:
+          name: "聊天主题标题"
+          description: "自动生成聊天主题标题的默认角色"
       topic_not_found: "总结不可用，找不到话题！"
       summarizing: "正在总结话题"
       searching: "搜索：'%{query}'"

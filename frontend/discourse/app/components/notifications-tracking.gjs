@@ -42,13 +42,17 @@ class NotificationsTrackingTrigger extends Component {
     );
   }
 
+  get tooltip() {
+    return i18n("notifications_tracking.tooltip", { level: this.title });
+  }
+
   <template>
     <button
       class={{concatClass
         "btn btn-default"
         (if this.showFullTitle "btn-icon-text" "no-text")
       }}
-      title={{i18n "user.preferences_nav.tracking"}}
+      title={{this.tooltip}}
       ...attributes
     >
       {{icon @selectedLevel.icon}}
@@ -112,6 +116,7 @@ export default class NotificationsTracking extends Component {
       @modalForMobile={{true}}
       @triggerClass={{concatClass
         "btn-default"
+        "btn-icon"
         "notifications-tracking-trigger-btn"
         @triggerClass
       }}

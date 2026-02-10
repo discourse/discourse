@@ -27,14 +27,16 @@ class Search
     %w[topic category user private_messages tags all_topics exclude_topics]
   end
 
-  # Patterns that indicate a valid search even without meeting minimum term length
-  # Includes shortcuts (l, r, t) and advanced filter syntax
-  VALID_SEARCH_SHORTCUT_PATTERN =
-    /\A[lrt]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
+  # Patterns that bypass minimum search term length because they
+  # produce meaningful results on their own. Note: 't' (in:title) is
+  # intentionally excluded - it modifies where to search but still
+  # requires actual search terms.
+  MIN_LENGTH_BYPASS_PATTERN =
+    /\A[lr]\z|order:|category:|categories:|tags?:|before:|after:|status:|user:|group:|badge:|in:|with:|#|@/i
 
-  def self.valid_search_shortcut?(term)
+  def self.min_length_bypass?(term)
     return false if term.blank?
-    VALID_SEARCH_SHORTCUT_PATTERN.match?(term)
+    MIN_LENGTH_BYPASS_PATTERN.match?(term)
   end
 
   def self.ts_config(locale = SiteSetting.default_locale)
@@ -664,7 +666,8 @@ class Search
       posts.where("topics.category_id IN (?)", category_ids)
     else
       # try a possible tag match
-      tag_id = Tag.where_name(category_slug).pick(:id)
+      tag_id, target_tag_id = Tag.where_name(category_slug).pick(:id, :target_tag_id)
+      tag_id = target_tag_id || tag_id
       if (tag_id)
         posts.where(<<~SQL, tag_id)
           topics.id IN (
@@ -926,7 +929,7 @@ class Search
     modifier = positive ? "" : "NOT"
 
     if match.include?("+")
-      tags = match.split("+")
+      tags = resolve_tag_synonyms(match.split("+"))
 
       posts.where(
         "topics.id #{modifier} IN (
@@ -939,7 +942,7 @@ class Search
         Search.unaccent(tags.join("&")),
       )
     else
-      tags = match.split(",")
+      tags = resolve_tag_synonyms(match.split(","))
 
       posts.where(
         "topics.id #{modifier} IN (
@@ -950,6 +953,19 @@ class Search
         tags,
       )
     end
+  end
+
+  def resolve_tag_synonyms(tag_names)
+    synonym_map =
+      Tag
+        .where_name(tag_names)
+        .where.not(target_tag_id: nil)
+        .includes(:target_tag)
+        .to_h { |synonym| [synonym.name.downcase, synonym.target_tag.name.downcase] }
+
+    return tag_names if synonym_map.empty?
+
+    tag_names.map { |name| synonym_map[name] || name }
   end
 
   def process_advanced_search!(term)

@@ -2600,7 +2600,7 @@ pl_PL:
     welcome_banner_page_visibility: "Określa, na których stronach będzie wyświetlany baner powitalny."
     welcome_banner_text_color: "Po skonfigurowaniu ustawienia „Obraz baneru powitalnego” użyj tego ustawienia, aby zmienić kolor tekstu baneru i zapewnić jego czytelność. Jeśli pole pozostanie puste lub nie zostanie przesłany żaden obraz, kolor będzie kontrolowany przez aktywny motyw."
     splash_screen: "Wyświetla tymczasowy ekran ładowania podczas ładowania zasobów witryny"
-    splash_screen_image: "Obraz SVG do wyświetlania na ekranie powitalnym podczas ładowania strony. Obsługuje animowane pliki SVG. W plikach SVG można używać atrybutów var(--primary), var(--secondary i var(--tertiary), aby odwołać się do kolorów motywu."
+    splash_screen_image: "Obraz SVG do wyświetlania na ekranie powitalnym podczas ładowania witryny. Animowane pliki SVG powinny wykorzystywać wyłącznie animacje transformacji CSS lub krycia. Używaj unikalnych nazw dla klas CSS i klatek kluczowych. Możesz używać var(--primary), var(--secondary i var(--tertiary) do odwoływania się do kolorów motywu."
     navigation_menu: "Określ pasek boczny lub menu rozwijane nagłówka jako główne menu nawigacyjne witryny. Zalecany jest pasek boczny."
     default_navigation_menu_categories: "Wybrane kategorie będą domyślnie wyświetlane w sekcji kategorie menu nawigacji."
     default_navigation_menu_tags: "Wybrane tagi będą domyślnie wyświetlane w sekcji Tagi menu nawigacji."
@@ -2637,6 +2637,7 @@ pl_PL:
     experimental_rename_faq_to_guidelines: "Ta zmiana zmienia nazwę strony FAQ na Wytyczne. Strona FAQ będzie nadal dostępna pod adresem /faq. Ustawienie „faq url” działa jak poprzednio."
     enable_simplified_category_creation: "Umożliwia uproszczony proces tworzenia kategorii z mniejszą liczbą opcji i bardziej przejrzystym interfejsem."
     enable_custom_splash_screen: "Umożliwia dostosowanie ekranu powitalnego ładowania za pomocą własnego obrazu SVG. Prześlij obraz za pomocą ustawienia „obraz ekranu powitalnego”. Uwaga: może to negatywnie wpłynąć na wyniki LCP i indeksowanie Google."
+    modernize_foundation_theme: "Zmiana ta wprowadza modyfikacje projektowe do motywu Foundation w Discourse."
     errors:
       invalid_css_color: "Nieprawidłowy kolor. Wpisz nazwę koloru lub wartość szesnastkową."
       invalid_datetime: "Nieprawidłowy format daty i godziny. Upewnij się, że wprowadzono prawidłową datę i godzinę."

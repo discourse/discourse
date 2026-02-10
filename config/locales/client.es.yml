@@ -1580,9 +1580,6 @@ es:
         flags_given:
           one: '<span class="%{className}">%{count}</span> denuncia útil'
           other: '<span class="%{className}">%{count}</span> denuncias útiles'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> publicación denunciada'
-          other: '<span class="%{className}">%{count}</span> publicaciones denunciadas'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> publicación eliminada'
           other: '<span class="%{className}">%{count}</span> publicaciones eliminadas'
@@ -4151,6 +4148,8 @@ es:
       save_error: Se produjo un error al guardar la categoría
       errors:
         self_lockout: "Estás a punto de cambiar los permisos de la categoría de una forma que perderías tu propio acceso. ¿De verdad quieres continuar?"
+      validations:
+        icon_required: "Selecciona un icono."
       name: "Nombre de la categoría"
       untitled: "Categoría sin nombre"
       description: "Descripción"
@@ -4195,11 +4194,10 @@ es:
         reply: "Responder"
         create: "Crear"
         no_groups_selected: "Ningún grupo tiene acceso. Esta categoría solo será visible por el personal."
-        everyone_has_access: 'Esta categoría es pública. Todo el mundo puede ver, responder y crear temas. Para restringir permisos, quita uno o varios permisos del grupo «todos».'
+        everyone_full_access: 'Esta categoría es pública. Todo el mundo puede ver, responder y crear temas. Para restringir permisos, quita uno o varios permisos del grupo «todos».'
         toggle_reply: "Alternar el permiso para responder"
         toggle_full: "Alternar el permiso para crear temas"
         inherited: 'Este permiso está heredado de «todos»'
-      special_warning: "Aviso: esta categoría se ajusta por defecto y las opciones de seguridad no se pueden editar. Si no deseas utilizarla, elimínala en vez de reutilizarla."
       uncategorized_security_warning: "Esta categoría es especial: se usa para temas que no tienen una categoría asignada y no puede tener ajustes de seguridad."
       uncategorized_general_warning: 'Esta categoría es especial. Se utiliza como la categoría predeterminada para los temas nuevos que no tienen una categoría seleccionada. Si deseas evitar este comportamiento y forzar la selección de categorías, <a href="%{settingLink}">desactiva la opción aquí</a>. Si deseas cambiar el nombre o la descripción, ve a <a href="%{customizeLink}">Personalizar / Contenido de texto</a>.'
       pending_permission_change_alert: "No has añadido a %{group} a esta categoría. Haz clic en este botón para añadirlos."

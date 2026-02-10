@@ -1113,8 +1113,6 @@ id:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> penanda yang membantu'
-        flagged_posts:
-          other: '<span class="%{className}">%{count}</span> post yang ditandai'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> post dihapus'
         suspensions:
@@ -1960,6 +1958,8 @@ id:
         remove: "Hapus"
       required_tag_group:
         delete: "Hapus"
+      validations:
+        icon_required: "Pilih ikon."
       description: "Deskripsi"
       color_validations:
         cant_be_empty: "tidak boleh kosong"

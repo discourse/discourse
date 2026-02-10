@@ -32,6 +32,7 @@ da:
       no_solved_topics_title_others: "%{username} har endnu ikke løst nogen emner"
       no_solved_topics_body: "Når du giver et nyttigt svar på et emne, kan dit svar blive udvalgt som løsningen af emneejeren eller personalet."
       marked_solved_by: "Markeret som løst af %{user}"
+      move_post_cancel: "Annuller"
       no_answer:
         title: Er dit spørgsmål blevet besvaret?
         description: "Fremhæv svaret og hjælp andre ved at bruge løsningsknappen under det korrekte svar."

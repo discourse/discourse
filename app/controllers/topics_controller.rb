@@ -447,9 +447,22 @@ class TopicsController < ApplicationController
     changes.delete(:title) if topic.title == changes[:title]
     changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
 
-    if Tag.include_tags?
-      topic_tags = topic.tags.map(&:name).sort
-      changes.delete(:tags) if changes[:tags]&.sort == topic_tags
+    if Tag.include_tags? && changes[:tags].present?
+      incoming = changes[:tags]
+
+      if incoming.first.is_a?(String)
+        Discourse.deprecate(
+          "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+          since: "2026.01",
+          drop_from: "2026.07",
+        )
+        changes.delete(:tags) if incoming.sort == topic.tags.map(&:name).sort
+      else
+        has_new = incoming.any? { |t| t[:id].blank? }
+        if !has_new && incoming.filter_map { |t| t[:id]&.to_i }.sort == topic.tags.pluck(:id).sort
+          changes.delete(:tags)
+        end
+      end
     end
 
     success = true
@@ -475,18 +488,15 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
 
-    tags =
-      if params[:tag_ids].present?
-        params[:tag_ids].map(&:to_i)
-      else
-        params.require(:tags)
-        Discourse.deprecate(
-          "the tags param is deprecated, use tag_ids instead",
-          since: "2026.01",
-          drop_from: "2026.07",
-        )
-        params[:tags]
-      end
+    tags = params[:tags] || []
+
+    if tags.present? && tags.first.is_a?(String)
+      Discourse.deprecate(
+        "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+    end
 
     success =
       PostRevisor.new(topic.first_post, topic).revise!(
@@ -904,6 +914,8 @@ class TopicsController < ApplicationController
     hijack(info: "merging topic #{topic_id.inspect} into #{destination_topic_id.inspect}") do
       destination_topic = topic.move_posts(acting_user, topic.posts.pluck(:id), args)
       render_topic_changes(destination_topic)
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved => ex
+      render_json_error(ex)
     end
   end
 

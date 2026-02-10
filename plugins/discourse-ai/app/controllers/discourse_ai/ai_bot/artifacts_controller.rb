@@ -38,6 +38,7 @@ module DiscourseAi
 
       def build_untrusted_html(artifact, name)
         js = prepare_javascript(artifact.js)
+        sanitized_css = artifact.css.to_s.gsub(%r{</style}i, '<\/style')
 
         <<~HTML
           <!DOCTYPE html>
@@ -46,7 +47,7 @@ module DiscourseAi
               <meta charset="UTF-8">
               <title>#{ERB::Util.html_escape(name)}</title>
               <style>
-                #{artifact.css}
+                #{sanitized_css}
               </style>
               #{build_iframe_javascript}
             </head>

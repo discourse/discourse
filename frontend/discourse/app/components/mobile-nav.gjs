@@ -86,7 +86,7 @@ export default class MobileNav extends Component {
         <li>
           <a href {{on "click" this.toggleExpanded}} class="expander">
             <span class="selection">{{htmlSafe this.selectedHtml}}</span>
-            {{icon "caret-down"}}
+            {{icon "angle-down"}}
           </a>
         </li>
       {{/if}}

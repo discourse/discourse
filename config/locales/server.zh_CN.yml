@@ -19,7 +19,7 @@ zh_CN:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    -
+    - null
     - 1 月
     - 2 月
     - 3 月
@@ -1533,6 +1533,7 @@ zh_CN:
       email_polling_errored_recently:
         other: "电子邮件轮询在过去 24 小时内产生了 %{count} 个错误。查看<a href='%{base_path}/logs' target='_blank'>日志</a>了解更多详细信息。"
       missing_mailgun_api_key: "服务器被配置为通过 Mailgun 发送电子邮件，但是您尚未提供用于验证网络钩子消息的 API 密钥。"
+      qq_mail_smtp: "您的 SMTP 服务器 (%{smtp_address}) 已知会导致 Discourse 发送重复邮件。QQ 邮件无法返回正确的确认信息，导致 Discourse 重试已成功发送的邮件。 <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>请参阅推荐的替代方案</a>。"
       bad_favicon_url: "网站图标无法加载。检查<a href='%{base_path}/admin/site_settings'>网站设置</a>中的网站图标设置。"
       poll_pop3_timeout: "连接到 POP3 服务器超时。无法检索收到的电子邮件。请检查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>和服务提供商。"
       poll_pop3_auth_error: "连接到 POP3 服务器失败，出现身份验证错误。请检查您的 <a href='%{base_path}/admin/site_settings/category/email'>POP3 设置</a>。"
@@ -1644,6 +1645,7 @@ zh_CN:
     manifest_icon: "在 Android 上用作徽标/初始屏幕图片的图片。将自动调整为 512 × 512。如果留空，将使用 large_icon。"
     manifest_screenshots: "在安装提示页面上展示您的实例特色和功能的屏幕截图。所有图片均应为本地上传且尺寸相同。"
     favicon: "您的网站的网站图标，请参阅 <a href='https://en.wikipedia.org/wiki/Favicon' target='_blank'>https://zh.wikipedia.org/wiki/Favicon</a>。如果要正确地通过 CDN 分发，它必须是 png 图片。将调整为 32x32。如果留空，将使用 large_icon。"
+    apple_touch_icon: "用于 Apple 触摸设备的图标。不推荐透明背景。将自动调整为 180x180。如果留空，将使用 large_icon。"
     opengraph_image: "默认 OpenGraph 图片，当页面没有其他合适的图片时使用。如果留空，将使用 large_icon。"
     x_summary_large_image: "Twitter 卡片 'summary large image'（宽度至少应为 280，高度至少为 150，不能为 .svg）。如果留空，则使用 opengraph_image（前提是也不能为 .svg）生成常规卡片元数据。"
     notification_email: "发送所有重要系统电子邮件时使用的 from: 电子邮件地址。此处指定的网域必须正确设置 SPF、DKIM 和反向 PTR 记录才能收到电子邮件。"
@@ -2156,6 +2158,8 @@ zh_CN:
     delete_associated_accounts_on_password_reset: "当用户更改密码时，删除用户关联帐户。"
     allow_featured_topic_on_user_profiles: "允许用户在他们的用户卡片和个人资料上添加指向某个话题的链接。"
     show_inactive_accounts: "允许登录用户浏览闲置帐户的个人资料。"
+    hide_silencing_reasons: "不在用户个人资料中公开显示禁言原因。"
+    hide_suspension_reasons: "不在用户个人资料中公开显示封禁原因。"
     log_personal_messages_views: "管理员为其他用户/群组记录个人消息浏览。"
     ignored_users_count_message_threshold: "如果某个特定用户被此数量的其他用户忽略，则通知版主。"
     ignored_users_message_gap_days: "当一个用户被多个用户忽略时，再次通知版主前需要等待的天数。"
@@ -2169,6 +2173,7 @@ zh_CN:
     dont_feed_the_trolls_threshold: "被警告前来自其他用户的举报数量。"
     enable_mobile_theme: "移动设备使用适合移动设备的主题，并且可以切换到完整网站。如果您想使用完全自适应的自定义样式表，请禁用此选项。"
     dominating_topic_minimum_percent: "在被提醒过度主导某个话题之前，用户必须在某个话题中发布的帖子所占的百分比。"
+    pm_warn_user_last_seen_months_ago: "在创建新的私信时，如果目标接收者已经超过 n 个月前无活动，则警告用户。"
     suppress_uncategorized_badge: "不在话题列表中显示未分类话题的徽章。"
     header_dropdown_category_count: "标题下拉菜单中可以显示的类别数量。"
     permalink_normalizations: "在匹配永久链接之前应用以下正则表达式，例如：/(topic.*)\\?.*/\\1 将从话题路由中去除查询字符串。格式为正则表达式+字符串。使用 \\1 等访问捕获"
@@ -2364,13 +2369,16 @@ zh_CN:
     welcome_banner_page_visibility: "确定哪些页面会显示欢迎横幅。"
     welcome_banner_text_color: "配置 “欢迎横幅图片” 设置后，使用此设置更改横幅文字颜色，以确保其可读性。当留空或未上传任何图像时，则颜色由当前主题控制。"
     splash_screen: "在加载网站资源时显示临时加载屏幕"
+    splash_screen_image: "网站加载时在启动画面上显示的 SVG 图像。动画 SVG 只能使用 CSS 变换或不透明动画。为 CSS 类和关键帧使用唯一的名称。你可以使用 var (--primary)、var (--secondary) 和 var (--terriary) 来引用主题颜色。"
     navigation_menu: "指定边栏或标题下拉菜单作为网站的主导航菜单。推荐使用边栏。"
     default_navigation_menu_categories: "所选类别默认将显示在导航菜单的“类别”版块下。"
     default_navigation_menu_tags: "所选标签默认将显示在导航菜单的“标签”版块下。"
     experimental_new_new_view_groups: '启用新的话题列表，将未读话题与新话题合并，并使边栏中的“一切”链接指向该列表。'
+    experimental_form_templates: "表单模板允许您在主题创建流程中强制执行结构化表单和数据验证。"
     show_preview_for_form_templates: "启用表单模板预览功能"
     lazy_load_categories_groups: "只为这些群组的用户延迟加载类别信息。这可以提升有许多类别的网站的性能。"
     experimental_auto_grid_images: "在编辑器中上传 3 张或更多图片后，自动将图像包装在 [grid] 标记中。"
+    experimental_impersonation: "无需注销管理员帐户即可模拟用户。"
     experimental_impersonation_time_limit_minutes: "模拟会话需要多长时间才能自动结束。"
     page_loading_indicator: "配置在 Discourse 中进行页面导航时出现的加载指示器。“旋转的图标”是整页指示器。“滑块”会在屏幕顶部显示一个窄条。"
     show_user_menu_avatars: "在用户菜单中显示用户头像"
@@ -2397,6 +2405,8 @@ zh_CN:
     floating_dismiss_topics_on_mobile: "在移动设备上为话题列表显示一个浮动的 \"忽略... \"按钮，以方便用户访问，并腾出话题列表顶部的空间"
     experimental_rename_faq_to_guidelines: "此更改将常见问题页面重命名为指南。常见问题页面仍可通过 /faq 访问。 'faq url' 的设置与以前一样有效。"
     enable_simplified_category_creation: "使用更少的选项和更简洁的界面来简化类别创建流程。"
+    enable_custom_splash_screen: "允许您使用自己的 SVG 图片自定义加载启动画面。通过“启动画面图片”设置上传图片。警告：这可能会对 LCP 分数和 Google 索引产生负面影响。"
+    modernize_foundation_theme: "此次更改对 Discourse 中的 Foundation 主题进行了设计修改。"
     errors:
       invalid_css_color: "颜色无效。输入颜色名称或十六进制值。"
       invalid_datetime: "日期时间格式无效。请确保您输入的日期和时间有效。"

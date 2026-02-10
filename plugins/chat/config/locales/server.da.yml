@@ -30,6 +30,8 @@ da:
         agree_and_delete:
           title: "Slet Besked"
           description: "Slet meddelelsen, så brugerne ikke kan se den."
+        ignore:
+          title: "Ignorer flag"
     channel:
       archive:
         first_post_raw: "Dette emne er et arkiv af chatkanalen [%{channel_name}] (%{channel_url})."

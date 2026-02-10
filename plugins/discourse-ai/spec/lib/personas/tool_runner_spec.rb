@@ -197,6 +197,28 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       expect(post.reload.last_editor_id).to eq(other_user.id)
     end
 
+    it "denies editing a post when the user lacks permission" do
+      post_author = Fabricate(:user)
+      unprivileged_user = Fabricate(:user)
+      post = Fabricate(:post, user: post_author)
+      original_raw = post.raw
+      tool.update!(
+        script:
+          "function invoke(params) { return discourse.editPost(params.post_id, 'hacked content', { username: '#{unprivileged_user.username}' }); }",
+      )
+      runner =
+        described_class.new(
+          parameters: {
+            post_id: post.id,
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      expect { runner.invoke }.to raise_error(/Permission denied|not allowed to edit/)
+      expect(post.reload.raw).to eq(original_raw)
+    end
+
     it "can generate JSON from LLM" do
       tool.update!(script: "function invoke() { return llm.generate('test', { json: true }); }")
 
@@ -578,10 +600,19 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
         expect(result).to eq("true")
       end
 
-      it "throws error for invalid type" do
+      it "throws error for invalid type in setCustomField" do
         tool.update!(
           script:
             "function invoke(params) { return discourse.setCustomField('invalid', 1, 'key', 'val'); }",
+        )
+        runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+        expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Invalid type/)
+      end
+
+      it "throws error for invalid type in getCustomField" do
+        tool.update!(
+          script:
+            "function invoke(params) { return discourse.getCustomField('invalid', 1, 'key'); }",
         )
         runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
         expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Invalid type/)

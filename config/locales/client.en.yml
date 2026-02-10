@@ -324,6 +324,9 @@ en:
       message: "We've updated this site, <span>please refresh</span> to keep things working smoothly."
       dismiss: "Dismiss"
 
+    notifications_tracking:
+      tooltip: "Notification level: %{level}"
+
     back_button: "Back"
 
     welcome_banner:
@@ -4537,7 +4540,6 @@ en:
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
-      single_page: "Single Page"
       general: "General"
       settings: "Settings"
       advanced: "Advanced"
@@ -4580,6 +4582,7 @@ en:
         self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       validations:
         emoji_required: "Select an emoji."
+        icon_required: "Select an icon."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -5850,6 +5853,7 @@ en:
         no_changes_to_save: "No changes to save"
         select_groups: "Select groups…"
         opt_in_groups: "Opt-in groups"
+        show_related_settings: "Show related settings..."
         opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
         enabled_for_throttle: "You have modified who this change is enabled for too quickly. Please wait a few seconds before trying again."
         change_enabled_for_success: "You have enabled this change for %{enabledFor}"
@@ -8667,6 +8671,8 @@ en:
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
         none_selected: "Select a badge to get started"
+        filter_placeholder: "Filter badges..."
+        no_badges_found: "No badges found"
         sections:
           design: Design
           query: Query

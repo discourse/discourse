@@ -906,6 +906,26 @@ acceptance(`Composer`, function (needs) {
       .exists("toggle whisper is available when reply to topic");
   });
 
+  test("Composer restores whisper state from draft", async function (assert) {
+    pretender.get("/drafts/topic_9.json", function () {
+      return response(200, {
+        draft: JSON.stringify({
+          reply: "draft with whisper",
+          action: "reply",
+          whisper: true,
+        }),
+        draft_sequence: 1,
+      });
+    });
+
+    await visit("/t/this-is-a-test-topic/9");
+    await click(".topic-post[data-post-number='2'] button.reply");
+
+    assert
+      .dom("#reply-control.composing-whisper")
+      .exists("composer shows whisper styling from draft");
+  });
+
   test("Composer draft with dirty reply can toggle to edit", async function (assert) {
     await visit("/t/this-is-a-test-topic/9");
 

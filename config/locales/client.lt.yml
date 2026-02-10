@@ -3407,6 +3407,8 @@ lt:
       slug_placeholder: "(Pasirinktinai) brūkšniniai žodžiai skirti URL"
       creation_error: Įvyko klaida kuriant kategoriją.
       save_error: Įvyko klaida išsaugant kategoriją.
+      validations:
+        icon_required: "Pasirinkite piktogramą."
       description: "Aprašymas"
       icon: "Ikona"
       emoji: "Emoji"
@@ -3432,9 +3434,8 @@ lt:
         reply: "Atsakyti"
         create: "Sukurti"
         no_groups_selected: "Prieiga nebuvo suteikta jokiai grupei; šią kategoriją matys tik darbuotojai."
-        everyone_has_access: 'Ši kategorija yra vieša, visi gali matyti, atsakyti ir kurti įrašus. Jei norite apriboti leidimus, pašalinkite vieną ar kelis grupei „visi“ suteiktus leidimus.'
+        everyone_full_access: 'Ši kategorija yra vieša, visi gali matyti, atsakyti ir kurti įrašus. Jei norite apriboti leidimus, pašalinkite vieną ar kelis grupei „visi“ suteiktus leidimus.'
         toggle_reply: "Perjungti atsakymo leidimą"
-      special_warning: "Įspėjimas: Ši kategorija yra iš anksto numatyta kategorija ir saugumo nustatymai negali būti keičiami. Jeigu nenorite naudoti šios kategorijos, ištrinkie ją vietoj pakartotino naudojimo."
       uncategorized_security_warning: "Ši kategorija yra ypatinga. Jis skirta temoms, kurios neturi kategorijos, laikyti; ji negali turėti saugos nustatymų."
       pending_permission_change_alert: "Jūs nepridėjote %{group} į šią kategoriją; spustelėkite šį mygtuką, norėdami juos pridėti."
       images: "išvaizda"

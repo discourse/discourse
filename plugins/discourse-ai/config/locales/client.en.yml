@@ -226,6 +226,10 @@ en:
         title: "Default LLM model"
         description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or persona. If no default LLM is specified, the last created LLM will be used."
 
+      llm_selector:
+        none: "None"
+        saved: "Default LLM model updated successfully"
+
       features:
         short_title: "Features"
         description: "These are the AI features available to visitors on your site. These can be configured to use specific personas and LLMs, and can be access controlled by groups."
@@ -323,6 +327,7 @@ en:
           image_caption: "Caption images"
           translator: "Translator"
           post_illustrator: "Post illustrator"
+          chat_thread_titles: "Chat thread titles"
           setting_groups:
             access_permissions: "Access & Permissions"
             enabled_features: "Enabled Features"
@@ -737,22 +742,16 @@ en:
           anthropic-claude-sonnet-4-5: "Optimal balance of speed and cost"
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
           google-gemini-3-pro: "Google's most intelligent model"
-          google-gemini-2-5-pro: "Large multimodal model capable of a wide range of tasks"
-          google-gemini-2-5-flash: "Lightweight, fast, and cost-efficient with multimodal reasoning"
-          google-gemini-2-5-flash-lite: "Google's smallest and most cost-effective model"
-          google-gemini-2-5-flash-image-preview: "Latest image generation model with vision capabilities"
-          open_ai-gpt-5-1: "OpenAI's flagship model. It is well suited for problem solving across domains"
-          open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost that makes it an attractive model for many use cases."
-          open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Efficient lightweight multilingual model"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Powerful multipurpose model"
-          mistral-mistral-large-latest: "Mistral's most powerful model"
-          mistral-pixtral-large-latest: "Mistral's most powerful vision capable model"
-          open_router-x-ai-grok-4: "xAI's latest model"
-          open_router-deepseek-deepseek-r1-0528-free: "DeepSeek's latest reasoning model"
-          open_router-meta-llama-3-3-70b-instruct: "Highly capable multilingual model"
-          groq-openai-gpt-oss-120b: "State of the art open-weight model by OpenAI"
-          groq-openai-gpt-oss-20b: "Lightweigh, fast, open-weight model by OpenAI"
+          google-gemini-3-flash: "Fast and cost-efficient with multimodal reasoning"
+          open_ai-gpt-5-2: "OpenAI's flagship model, well suited for problem solving across domains"
+          open_ai-gpt-5-mini: "Provides a balance between intelligence, speed, and cost"
+          open_ai-gpt-5-nano: "Fastest, most cost-effective GPT-5 model"
+          open_router-deepseek-deepseek-v3-2: "DeepSeek's latest high-performance model"
+          open_router-moonshotai-kimi-k2-5: "Moonshot's multimodal model with vision capabilities"
+          open_router-x-ai-grok-4-fast: "xAI's flagship model with vision"
+          open_router-minimax-minimax-m2-1: "MiniMax's multimodal model with large context"
+          open_router-z-ai-glm-4-7: "Z-AI's multimodal model with vision"
+          open_router-arcee-ai-trinity-large-preview-free: "Free open-source model from Arcee AI"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
 

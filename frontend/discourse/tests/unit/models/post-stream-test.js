@@ -1022,4 +1022,17 @@ module("Unit | Model | post-stream", function (hooks) {
 
     assert.strictEqual(postStream.progressIndexOfPostId(post), 5);
   });
+
+  test("loadIntoIdentityMap re-throws non-403 errors", async function (assert) {
+    const postStream = buildStream.call(this, 9999);
+
+    pretender.get("/t/9999/posts.json", () => {
+      return response(500, { error: "Internal Server Error" });
+    });
+
+    await assert.rejects(
+      postStream.loadIntoIdentityMap([1]),
+      (error) => error.jqXHR && error.jqXHR.status === 500
+    );
+  });
 });

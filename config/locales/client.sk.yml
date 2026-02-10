@@ -1608,11 +1608,6 @@ sk:
           few: '<span class="%{className}">%{count}</span> užitočných označení'
           many: '<span class="%{className}">%{count}</span> užitočných označení'
           other: '<span class="%{className}">%{count}</span> užitočné označena'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> označený príspevok'
-          few: '<span class="%{className}">%{count}</span> označených príspevkov'
-          many: '<span class="%{className}">%{count}</span> označených príspevkov'
-          other: '<span class="%{className}">%{count}</span> označené príspevky'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> odstránený príspevok'
           few: '<span class="%{className}">%{count}</span> odstránených príspevkov'
@@ -4399,6 +4394,8 @@ sk:
       slug_placeholder: "(Voliteľné) pomlčkou-prerušované-slová pre url"
       creation_error: Nastala chyba počas vytvárania kategórie.
       save_error: Nastala chyba počas ukladania kategórie
+      validations:
+        icon_required: "Vyberte ikonu."
       description: "Popis"
       logo_description: "Odporúčaný pomer strán 1:1 s minimálnou veľkosťou 200px. Ak zostane prázdny, nezobrazí sa žiadny obrázok."
       style: "Štýl"
@@ -4435,11 +4432,10 @@ sk:
         reply: "Odpovedať"
         create: "Vytvoriť:"
         no_groups_selected: "Žiadnym skupinám nebolo udelené oprávnenie; táto kategória bude viditeľná iba pre personál."
-        everyone_has_access: 'Táto kategória je verejná, každý ju môže vidieť, odpovedať na ňu a vytvárať príspevky. Ak chcete obmedziť oprávnenia, odstráňte jedno alebo viacero oprávnení udelených skupine "každý".'
+        everyone_full_access: 'Táto kategória je verejná, každý ju môže vidieť, odpovedať na ňu a vytvárať príspevky. Ak chcete obmedziť oprávnenia, odstráňte jedno alebo viacero oprávnení udelených skupine "každý".'
         toggle_reply: "Prepnite povolenie Odpovedať"
         toggle_full: "Prepnúť Vytvoriť povolenie"
         inherited: 'Toto povolenie sa zdedí od „všetkých“'
-      special_warning: "Upozornenie: Toto je preddefinovaná kategória a jej bezpečnostné nastavenia sa nedajú upraviť. Pokiaľ si neželáte použiť túto kategóriu, neupravujte ju, ale zmažte."
       uncategorized_security_warning: "Táto kategória je špeciálna. Je určená na uchovávanie tém, ktoré nemajú žiadnu kategóriu; nemôže mať bezpečnostné nastavenia."
       uncategorized_general_warning: 'Táto kategória je špeciálna. Používa sa ako predvolená kategória pre nové témy, ktoré nemajú zvolenú kategóriu. Ak chcete zabrániť tomuto správaniu a vynútiť výber kategórie, <a href="%{settingLink}">vypnite toto nastavenie tu</a>. Ak chcete zmeniť názov alebo popis, prejdite do časti <a href="%{customizeLink}">Prispôsobiť / Obsah textu</a>.'
       pending_permission_change_alert: "Do tejto kategórie ste nepridali %{group} ; kliknutím na toto tlačidlo ich pridáte."

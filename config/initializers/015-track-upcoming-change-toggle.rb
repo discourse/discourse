@@ -14,7 +14,7 @@
 # via the UI and the UpcomingChanges::Toggle service.
 
 DiscourseEvent.on(:upcoming_change_enabled) do |setting_name|
-  # Respond to event here, e.g. if setting_name == :experimental_form_templates do X.
+  # Respond to event here, e.g. if setting_name == :enable_form_templates do X.
   if setting_name == "simple_email_subject"
     SiteSetting.email_subject = "%{site_name}: %{topic_title}"
     SiteSetting.refresh!
@@ -23,7 +23,7 @@ DiscourseEvent.on(:upcoming_change_enabled) do |setting_name|
 end
 
 DiscourseEvent.on(:upcoming_change_disabled) do |setting_name|
-  # Respond to event here, e.g. if setting_name == :experimental_form_templates do X.
+  # Respond to event here, e.g. if setting_name == :enable_form_templates do X.
   if setting_name == "simple_email_subject"
     SiteSetting.email_subject = SiteSetting.defaults.get(:email_subject)
     SiteSetting.refresh!

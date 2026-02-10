@@ -27,6 +27,7 @@ pt:
       topic_status_filter:
         all: "todos"
         solved: "resolvido"
+      move_post_cancel: "Cancelar"
     topic_statuses:
       solved:
         help: "Este tópico tem uma solução"

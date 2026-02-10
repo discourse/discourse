@@ -1543,6 +1543,13 @@ RSpec.describe Search do
 
         expect(search.valid?).to eq(false)
       end
+
+      it "marks 't' alone as an invalid search" do
+        search = Search.new("t", type_filter: "topic")
+        search.execute
+
+        expect(search.valid?).to eq(false)
+      end
     end
 
     context "with security" do
@@ -2824,6 +2831,46 @@ RSpec.describe Search do
         expect(Search.execute("#food tags:lunch order:likes").posts.map(&:id)).to eq(
           [post7.id, post8.id],
         )
+      end
+
+      context "with tag synonyms" do
+        fab!(:synonym_tag) { Fabricate(:tag, name: "brunch", target_tag: tag1) }
+        fab!(:topic_with_synonym_target_tag) do
+          Fabricate(:topic, tags: [synonym_tag.target_tag, tag2])
+        end
+        fab!(:post_in_topic_with_synonym_target_tag) do
+          indexed_post(topic: topic_with_synonym_target_tag)
+        end
+
+        it "can find posts by tag synonym using comma syntax" do
+          results = Search.execute("tags:brunch")
+          expect(results.posts.map(&:id)).to include(post_in_topic_with_synonym_target_tag.id)
+        end
+
+        it "can find posts with mixed synonym and regular tag using comma syntax" do
+          results = Search.execute("tags:brunch,sandwiches")
+          expect(results.posts.map(&:id)).to include(post_in_topic_with_synonym_target_tag.id)
+        end
+
+        it "can exclude posts by tag synonym using negation with comma syntax" do
+          results = Search.execute("tags:eggs -tags:brunch")
+          expect(results.posts.map(&:id)).not_to include(post_in_topic_with_synonym_target_tag.id)
+        end
+
+        it "can find posts by tag synonym using plus syntax" do
+          results = Search.execute("tags:brunch+eggs")
+          expect(results.posts.map(&:id)).to include(post_in_topic_with_synonym_target_tag.id)
+        end
+
+        it "can exclude posts by tag synonym using negation with plus syntax" do
+          results = Search.execute("tags:eggs -tags:brunch+sandwiches")
+          expect(results.posts.map(&:id)).not_to include(post4.id)
+        end
+
+        it "can find posts by tag synonym using hashtag syntax" do
+          results = Search.execute("#brunch")
+          expect(results.posts.map(&:id)).to include(post_in_topic_with_synonym_target_tag.id)
+        end
       end
     end
 

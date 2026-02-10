@@ -4,9 +4,11 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
 import withEventValue from "discourse/helpers/with-event-value";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryTags extends Component {
@@ -27,11 +29,6 @@ export default class UpsertCategoryTags extends Component {
     const allowedTagGroupsEmpty =
       !this.allowedTagGroups || this.allowedTagGroups.length === 0;
     return allowedTagsEmpty && allowedTagGroupsEmpty;
-  }
-
-  get panelClass() {
-    const isActive = this.args.selectedTab === "tags" ? "active" : "";
-    return `edit-category-tab edit-category-tab-tags ${isActive}`;
   }
 
   @action
@@ -78,7 +75,13 @@ export default class UpsertCategoryTags extends Component {
   }
 
   <template>
-    <div class={{this.panelClass}}>
+    <@form.Section
+      class={{concatClass
+        "edit-category-tab"
+        "edit-category-tab-tags"
+        (if (eq @selectedTab "tags") "active")
+      }}
+    >
       <@form.Field
         @name="minimum_required_tags"
         @title={{i18n "category.minimum_required_tags"}}
@@ -94,6 +97,7 @@ export default class UpsertCategoryTags extends Component {
           (i18n "category.tags_allowed_tags" categoryName=@category.name)
           (i18n "category.tags_allowed_tags_new_category")
         }}
+        @optional={{true}}
       >
         <TagChooser
           @id="category-allowed-tags"
@@ -107,6 +111,8 @@ export default class UpsertCategoryTags extends Component {
       </@form.Container>
 
       <@form.Container
+        @direction="column"
+        @optional={{true}}
         @title={{if
           @category.id
           (i18n "category.tags_allowed_tag_groups" categoryName=@category.name)
@@ -118,9 +124,9 @@ export default class UpsertCategoryTags extends Component {
           @tagGroups={{this.allowedTagGroups}}
           @onChange={{this.onAllowedTagGroupsChange}}
         />
-        <LinkTo @route="tagGroups" class="manage-tag-groups">{{i18n
-            "category.manage_tag_groups_link"
-          }}</LinkTo>
+        <LinkTo @route="tagGroups" class="manage-tag-groups">
+          {{i18n "category.manage_tag_groups_link"}}
+        </LinkTo>
       </@form.Container>
 
       <@form.Field
@@ -169,6 +175,6 @@ export default class UpsertCategoryTags extends Component {
           class="btn-default add-required-tag-group"
         />
       </@form.Section>
-    </div>
+    </@form.Section>
   </template>
 }

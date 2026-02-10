@@ -929,7 +929,8 @@ export default class Composer extends RestModel {
     if (opts.post) {
       this.setProperties({
         post: opts.post,
-        whisper: opts.post.post_type === this.site.post_types.whisper,
+        whisper:
+          opts.whisper ?? opts.post.post_type === this.site.post_types.whisper,
       });
 
       if (!this.topic) {
@@ -988,6 +989,7 @@ export default class Composer extends RestModel {
     if (isEdit(opts.action) && this.post) {
       const topicProps = this.serialize(_edit_topic_serializer);
       topicProps.loading = true;
+      topicProps.tags = this.topic.tags;
 
       // When editing a shared draft, use its category
       if (opts.action === EDIT_SHARED_DRAFT && opts.destinationCategoryId) {

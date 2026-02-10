@@ -2519,6 +2519,8 @@ bs_BA:
       slug_placeholder: "(Opcionalno) isprekidane riječi za url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
+      validations:
+        icon_required: "Odaberi ikonu."
       description: "Description"
       icon: "Icon"
       emoji: "Emoji"
@@ -2540,7 +2542,6 @@ bs_BA:
         see: "Vidi"
         reply: "Odgovori"
         create: "napravi"
-      special_warning: "Upozorenje: Ova kategorija je pre-seeded kategorija i sigurnosne postavke se ne mogu uređivati. Ako ne želite koristiti ovu kategoriju, izbrišite je umjesto da je prenamijenite."
       images: "Izgled"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"

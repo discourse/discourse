@@ -1795,11 +1795,6 @@ cs:
           few: '<span class="%{className}">%{count}</span> užitečná nahlášení'
           many: '<span class="%{className}">%{count}</span> užitečných nahlášení'
           other: '<span class="%{className}">%{count}</span> užitečných nahlášení'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> nahlášený příspěvek'
-          few: '<span class="%{className}">%{count}</span> nahlášené příspěvky'
-          many: '<span class="%{className}">%{count}</span> nahlášených příspěvků'
-          other: '<span class="%{className}">%{count}</span> nahlášených příspěvků'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> smazaný příspěvek'
           few: '<span class="%{className}">%{count}</span> smazané příspěvky'
@@ -4715,6 +4710,8 @@ cs:
       save_error: Během ukládání kategorie nastala chyba.
       errors:
         self_lockout: "Chystáte se změnit oprávnění kategorie tak, že odeberete svůj vlastní přístup. Opravdu chcete pokračovat?"
+      validations:
+        icon_required: "Vyberte ikonu."
       name: "Název kategorie"
       untitled: "Nepojmenovaná kategorie"
       description: "Popis"
@@ -4759,11 +4756,10 @@ cs:
         reply: "Odpovědět"
         create: "Vytvořit"
         no_groups_selected: "Nebyl udělen přístup žádným skupinám; tato kategorie bude viditelná pouze pro redaktory."
-        everyone_has_access: 'Tato kategorie je veřejná, každý může vidět, odpovídat a vytvářet příspěvky. Chcete-li omezit oprávnění, odeberte jedno nebo více oprávnění přidělených skupině "everyone",'
+        everyone_full_access: 'Tato kategorie je veřejná, každý může vidět, odpovídat a vytvářet příspěvky. Chcete-li omezit oprávnění, odeberte jedno nebo více oprávnění přidělených skupině "everyone",'
         toggle_reply: "Přepnout oprávnění Odpovědět"
         toggle_full: "Přepnout oprávnění Vytvořit"
         inherited: 'Toto povolení je zděděno od „everyone“'
-      special_warning: "Varování: Tato kategorie je přednastavená a její nastavení bezpečnosti nelze změnit. Pokud tuto kategorii nechcete používat, nesnažte se ji měnit, ale odstraňte ji."
       uncategorized_security_warning: "Toto je speciální kategorie, která je určena pro témata, která nemají žádnou kategorii a nemůže mít nastavení zabezpečení."
       uncategorized_general_warning: 'Toto je speciální kategorie. Používá se jako výchozí kategorie pro nová témata, u kterých není vybrána žádná kategorie. Pokud chcete tomuto chování zabránit a vynutit si výběr kategorie, <a href="%{settingLink}">, zakažte prosím toto nastavení</a>. Pokud chcete změnit název nebo popis, přejděte na <a href="%{customizeLink}">Přizpůsobení/Textový obsah</a>.'
       pending_permission_change_alert: "Do této kategorie jste nepřidali %{group} ; kliknutím na toto tlačítko je přidejte."
@@ -6083,7 +6079,6 @@ cs:
           keywords: "locale|language|timezone|unicode|ltr|jazyk|časová|zóna"
         upcoming_changes:
           title: "Nadcházející změny"
-          header_description: "Seznam chystaných změn ve službě Discourse, které mohou mít vliv na váš web, a experimentální funkce, ke kterým se můžete přihlásit. Můžete filtrovat podle dopadu, typu změny a stavu.\n\nOpt-in skupiny lze použít k tomu, aby určitá skupina uživatelů mohla testovat změnu předtím, než bude uvolněna pro všechny. Tyto skupiny se stanou irelevantními, jakmile změna přejde do stavu stabilní."
         login:
           title: "Přihlášení a ověřování"
           header_description: "Nakonfigurujte, jak se uživatelé přihlašují a ověřují, secrets a klíče, poskytovatele OAuth2 a další"

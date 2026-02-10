@@ -1528,6 +1528,8 @@ zh_CN:
       undo_revoke_access: "撤消访问权限撤消操作"
       api_approved: "已批准："
       api_last_used_at: "最后使用时间："
+      api_show_permissions:
+        other: "已授予权限 (%{count})"
       theme: "主题"
       save_to_change_theme: '主题会在您点击“%{save_text}”后更新。'
       home: "默认首页"
@@ -1535,8 +1537,8 @@ zh_CN:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> 个有用的举报'
-        flagged_posts:
-          other: '<span class="%{className}">%{count}</span> 篇被举报的帖子'
+        flags:
+          other: '<span class="%{className}">%{count}</span> 个举报'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> 篇删除的帖子'
         silencings:
@@ -2224,6 +2226,8 @@ zh_CN:
     form_kit:
       reset: 重置
       optional: 可选
+      errors_summary_title:
+        other: "修复这些错误以继续"
       dirty_form: "您没有提交更改！确定要离开吗？"
       errors:
         starts_with: "必须以 %{prefix} 开头"
@@ -2241,6 +2245,10 @@ zh_CN:
           other: "最多只能为 %{count} 个字符"
         too_short:
           other: "必须至少为 %{count} 个字符"
+      color:
+        available_presets: "可用预设"
+        already_used: "已使用"
+        edit_presets: "编辑颜色预设"
     close: "关闭"
     assets_changed_confirm: "此网站刚刚收到软件更新。是否立即获取最新版本？"
     logout: "您已退出。"
@@ -2265,6 +2273,7 @@ zh_CN:
         }</a>超过了 { limit, plural,other { # 个错误/分钟}}的网站设置上限。
     learn_more: "了解详情…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>了解详情…</a>"
+    feedback_with_link: "<a href='%{url}' target='_blank'>反馈…</a>"
     mute: 免打扰
     unmute: 取消免打扰
     last_post: 发布时间
@@ -3128,6 +3137,7 @@ zh_CN:
         deleted_post: "（已删除的帖子）"
         post_number_with_topic_title: "帖子 #%{post_number} - %{title}"
         new_post_in_topic: "%{title} 中的新帖子"
+        new_post_in_deleted_topic: "在已删除的主题中发布新帖"
         user_requires_approval: "%{username} 需要审批"
         default_item: "可审核条目 #%{reviewable_id}"
     topics:
@@ -3976,7 +3986,6 @@ zh_CN:
       edit_dialog_title: "编辑: %{categoryName}"
       view: "查看类别中的话题"
       back: "返回类别"
-      single_page: "单页"
       general: "常规"
       settings: "设置"
       advanced: "高级"
@@ -4017,6 +4026,9 @@ zh_CN:
       save_error: 保存类别时出错。
       errors:
         self_lockout: "如果改变此类别权限，您将丢失自己的访问权限，确定要继续吗？"
+      validations:
+        emoji_required: "选择一个表情符号。"
+        icon_required: "选择一个图标."
       name: "类别名称"
       untitled: "无标题类别"
       description: "描述"
@@ -4063,12 +4075,15 @@ zh_CN:
         reply: "回复"
         create: "创建"
         no_groups_selected: "没有群组被授予访问权限；此类别仅对管理人员可见。"
-        everyone_has_access: '此类别是公开的，任何人都可以查看、回复和创建帖子。要限制权限，请移除授予“所有人”组的一个或多个权限。'
+        everyone_full_access: '此类别是公开的，任何人都可以查看、回复和创建帖子。要限制权限，请移除授予“所有人”组的一个或多个权限。'
+        everyone_reply_access: '此分类为公开分类，所有人都可以查看和回复主题。如需限制权限，请移除“所有人”组。'
+        everyone_see_access: '此分类为公开分类，所有人都可以查看帖子。如需限制权限，请移除“所有人”分组。'
         specific_groups_have_access: "此类别是私密的，只有选定的组才能看见、回复和创建帖子。"
+        all_parent_groups_used: "父类别下的所有分组已添加。要添加更多分组，请先将其添加到父类别。"
         toggle_reply: "切换回复权限"
         toggle_full: "切换创建权限"
         inherited: '此权限继承自“所有人”'
-      special_warning: "警告：此类别是一个预设类别，无法编辑安全性设置。如果您不想使用此类别，请将其删除，而不是重新调整用途。"
+      special_warning: "这是一个预先设置好的分类，安全设置无法编辑。如果您不想使用此分类，请将其删除，而不是重新用于其他用途。"
       uncategorized_security_warning: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能有安全性设置。"
       uncategorized_general_warning: '此类别比较特殊。它用作未选择类别的新话题的默认类别。如果您想要避免此行为并强制选择类别，<a href="%{settingLink}">请在此处禁用该设置</a>。如果您想要更改其名称或描述，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
       pending_permission_change_alert: "您还没有将 %{group} 添加到此类别；点击此按钮添加它们。"
@@ -4111,8 +4126,9 @@ zh_CN:
         group_restricted: "不公开"
         who_can_see: "谁可以查看此类别"
         who_can_post: "谁可以在此类别中发帖"
-        more_options_hint: "更多可用权限"
-        more_options_hint_link: "高级设置."
+        which_groups_can_access: "哪些群组可以查看和发布此类别的内容"
+        more_options_hint: "更多权限可在 <a href>高级设置</a>中找到。"
+        inherited_from_parent: "权限继承自父类别。要进行细化，请访问 <a href>高级设置</a>。"
       num_auto_bump_daily: "每天自动顶贴的开放话题的数量："
       auto_bump_cooldown_days: "再次顶帖同一话题之前的最短天数。"
       navigate_to_first_post_after_read: "阅读话题后导航到第一个帖子"
@@ -5614,6 +5630,9 @@ zh_CN:
         embedding:
           title: "嵌入"
           header_description: "Discourse 能够使用创建 IFRAME 的 Javascript API 在远程网站中嵌入话题的评论"
+        form_templates:
+          title: "表单模板"
+          header_description: "表单模板允许您在主题创建流程中强制执行结构化表单和数据验证。"
       theme_site_settings:
         setting: "设置"
         overridden_by: "覆盖者"
@@ -6499,6 +6518,8 @@ zh_CN:
         delete: "删除"
         delete_confirm: '确定要删除“%{theme_name}”吗？'
         bulk_delete: "确定吗？"
+        bulk_themes_delete_confirm: "这将卸载以下主题，您网站上的任何用户将无法再使用它们："
+        bulk_components_delete_confirm: "这将卸载以下主题组件，您网站上的任何用户将无法再使用它们："
         color: "颜色"
         opacity: "不透明度"
         copy: "复制"
@@ -7876,6 +7897,8 @@ zh_CN:
         no_user_badges: "%{name} 尚未被授予任何徽章。"
         no_badges: 没有可供授予的徽章。
         none_selected: "选择一个徽章以开始"
+        filter_placeholder: "筛选徽章……"
+        no_badges_found: "未找到徽章"
         sections:
           design: 设计
           query: 查询

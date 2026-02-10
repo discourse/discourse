@@ -1623,9 +1623,6 @@ hu:
         flags_given:
           one: '<span class="%{className}">%{count}</span> hasznos jelentés'
           other: '<span class="%{className}">%{count}</span> hasznos jelentés'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> jelentett bejegyzés'
-          other: '<span class="%{className}">%{count}</span> jelentett bejegyzés'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> törölt bejegyzés'
           other: '<span class="%{className}">%{count}</span> törölt bejegyzés'
@@ -4223,7 +4220,6 @@ hu:
       edit_dialog_title: "Szerkesztés: %{categoryName}"
       view: "Témák megjelenítése a kategóriában"
       back: "Vissza a kategóriához"
-      single_page: "Egyetlen oldal"
       general: "Általános"
       settings: "Beállítások"
       advanced: "Speciális"
@@ -4266,6 +4262,7 @@ hu:
         self_lockout: "Olyan módon módosítja a kategóriaengedélyeket, amely eltávolítja a saját hozzáférését. Biztosan folytatja?"
       validations:
         emoji_required: "Válassz egy emojit."
+        icon_required: "Válasszon ikont."
       name: "Kategória neve"
       untitled: "Névtelen kategória"
       description: "Leírás"
@@ -4312,12 +4309,11 @@ hu:
         reply: "Válasz"
         create: "Létrehozás"
         no_groups_selected: "Egyetlen csoport sem kapott hozzáférést; ez a kategória csak a stáb számára lesz látható."
-        everyone_has_access: 'Ez a kategória nyilvános, mindenki láthatja, válaszolhat és hozzászólásokat hozhat létre. A jogosultságok korlátozásához távolítson el egy vagy több, a "mindenki" csoportnak megadott jogosultságot.'
+        everyone_full_access: 'Ez a kategória nyilvános, mindenki láthatja, válaszolhat és hozzászólásokat hozhat létre. A jogosultságok korlátozásához távolítson el egy vagy több, a "mindenki" csoportnak megadott jogosultságot.'
         specific_groups_have_access: "Ez a kategória privát, csak a kiválasztott csoportok tagjai láthatják, válaszolhatnak rá és hozhatnak létre bejegyzéseket."
         toggle_reply: "Válasz engedély bekapcsolása"
         toggle_full: "Készítés engedély bekapcsolása"
         inherited: 'Ez a jogosultság a "mindenki"-től örökölhető'
-      special_warning: "Figyelmeztetés: Ez a kategória egy előre beírt kategória, és a biztonsági beállítások nem szerkeszthetők. Ha nem kívánja használni ezt a kategóriát, az újrahasznosítás helyett törölje."
       uncategorized_security_warning: "Ez a kategória különleges. Célja, hogy olyan témákat tartson meg, amelyeknek nincs kategóriája; nem rendelkezhet biztonsági beállításokkal."
       uncategorized_general_warning: 'Ez a kategória különleges. Alapértelmezett kategóriaként használatos az új témákhoz, amelyeknél nincs kategória kiválasztva. Ha meg akarja akadályozni ezt a viselkedést, és ki akarja kényszeríteni a kategória kiválasztását, <a href="%{settingLink}">kapcsolja ki a beállítást itt</a>. Ha meg szeretné változtatni a nevet vagy a leírást, menjen a <a href="%{customizeLink}">Testreszabás / Szövegtartalom</a> menüpontba.'
       pending_permission_change_alert: "Még nem adta hozzá a %{group} címet ehhez a kategóriához; katt ide a hozzáadáshoz."
@@ -4360,8 +4356,6 @@ hu:
         group_restricted: "Privát"
         who_can_see: "Ki láthatja ezt a kategóriát"
         who_can_post: "Kik posztolhatnak ebben a kategóriában"
-        more_options_hint: "További engedélyek érhetők el itt:"
-        more_options_hint_link: "speciális beállítások."
       num_auto_bump_daily: "A naponta automatikusan előrehozandó nyitott témák száma:"
       auto_bump_cooldown_days: "Minimum napok száma, mielőtt újra feldobná ugyanazt a témát:"
       navigate_to_first_post_after_read: "A témák elolvasása után navigáljon az első hozzászóláshoz"
@@ -5555,7 +5549,6 @@ hu:
           keywords: "\nhely|területi beállítás|nyelv|időzóna|unicode|ltr"
         upcoming_changes:
           title: "Közelgő változások"
-          header_description: "A Discourse webhelyedet esetleg érintő, közelgő változásainak, valamint a kísérleti funkcióknak a listája, amelyekhez feliratkozhatsz. Szűrhetsz hatás, változástípus és állapot szerint.\n\nA feliratkozási csoportok segítségével lehetővé teheted, hogy egy bizonyos felhasználói csoport tesztelje a változást, mielőtt az mindenki számára elérhetővé válna, bár ezek a csoportok irrelevánsak lesznek, amint a változás stabil állapotba kerül."
         login:
           title: "Bejelentkezés és hitelesítés"
           header_description: "Konfigurálja a felhasználók bejelentkezési és hitelesítési módját, a titkokat és kulcsokat, az OAuth2-szolgáltatókat stb"

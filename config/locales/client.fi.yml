@@ -1543,9 +1543,6 @@ fi:
         flags_given:
           one: '<span class="%{className}">%{count}</span> hyödyllinen liputus'
           other: '<span class="%{className}">%{count}</span> hyödyllistä liputusta'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> merkitty julkaisu'
-          other: '<span class="%{className}">%{count}</span> merkittyä julkaisua'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> poistettu julkaisu'
           other: '<span class="%{className}">%{count}</span> poistettua julkaisua'
@@ -4076,6 +4073,8 @@ fi:
       slug_placeholder: "(Valinnainen) väliviivoilla erotettuja sanoja URL-osoitetta varten"
       creation_error: Alueen luonnissa tapahtui virhe.
       save_error: Alueen tallennuksessa tapahtui virhe.
+      validations:
+        icon_required: "Valitse kuvake."
       description: "Kuvaus"
       logo_description: "Suositeltu kuvasuhde on 1:1 ja vähimmäiskoko 200 pikseliä. Jos tämä jätetään tyhjäksi, kuvaa ei näytetä."
       style: "Tyyli"
@@ -4112,11 +4111,10 @@ fi:
         reply: "Vastaus"
         create: "Aloitus"
         no_groups_selected: "Millekään ryhmällä ei ole myönnetty pääsyä; alue näkyy vain henkilökunnalle."
-        everyone_has_access: 'Tämä alue on julkinen: kaikki voivat lukea, vastata ja luoda viestejä. Voit rajoittaa oikeuksia poistamalla yhden tai useamman ryhmälle "kaikki" annetuista oikeuksista.'
+        everyone_full_access: 'Tämä alue on julkinen: kaikki voivat lukea, vastata ja luoda viestejä. Voit rajoittaa oikeuksia poistamalla yhden tai useamman ryhmälle "kaikki" annetuista oikeuksista.'
         toggle_reply: "Muuta vastausoikeutta"
         toggle_full: "Muuta aloitusoikeutta"
         inherited: 'Tämä oikeus periytyy ryhmältä "kaikki"'
-      special_warning: "Varoitus: Tämä on asennusvaiheessa luotu alue, eikä sen turvallisuusasetuksia voi muuttaa. Jos et halua käyttää tätä aluetta, älä muuta sen käyttötarkoitusta, vaan poista se."
       uncategorized_security_warning: "Tämä alue on erityinen. Se on tarkoitettu säilytyspaikaksi ketjuille, joilla ei ole aluetta; sille ei voi määritellä turvallisuusasetuksia."
       uncategorized_general_warning: 'Tämä alue on erityinen. Se on oletusalue uusille ketjuille, joille ei ole valittu aluetta. Jos et kaipaa tätä ja haluat mieluummin pakottaa valitsemaan alueen, <a href="%{settingLink}">poista asetus käytöstä täällä</a>. Jos haluat vaihtaa nimeä tai kuvasta, siirry kohtaan <a href="%{customizeLink}">Mukauta / Tekstisisältö</a>.'
       pending_permission_change_alert: "Et ole lisännyt ryhmää %{group} tälle alueelle; lisää klikkaamalla tätä painiketta."
