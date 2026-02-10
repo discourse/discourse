@@ -13,82 +13,57 @@
   }
 }
 
-.admin-report.sentiment-analysis .chart__wrapper {
-  display: flex;
-  gap: 1rem;
+.admin-report.sentiment-analysis {
+  --d-sentiment-report-positive-rgb: 46, 204, 112;
+  --d-sentiment-report-neutral-rgb: 149, 166, 167;
+  --d-sentiment-report-negative-rgb: 231, 77, 60;
 
-  .chart__filters {
-    .control:nth-of-type(-n + 4) {
-      flex: 1;
+  .chart {
+    &__wrapper {
+      display: flex;
+      gap: 1rem;
     }
 
-    // Hides tag selector when showing subcategories selector
-    .control:nth-of-type(6):nth-last-of-type(3) {
-      display: none;
+    &__body {
+      display: flex;
+      flex-flow: row wrap;
+      align-items: flex-start;
+      position: relative;
     }
 
-    .control:last-child {
-      align-self: flex-end;
-    }
-
-    .control:has(.export-csv-btn) {
-      display: none;
+    &__filters {
+      // Hides tag selector when showing subcategories selector
+      .chart__filter.--include_subcategories ~ .chart__filter.--tag {
+        display: none;
+      }
     }
   }
 
-  .chart__additional-filters {
-    gap: var(--space-2);
+  .control:has(.export-csv-btn) {
+    display: none;
+  }
+
+  .doughnut-chart-title {
+    @include ellipsis;
+    margin: 0 auto;
+    margin-top: 1rem;
+    text-align: center;
+    font-size: var(--font-up-2);
+  }
+
+  .admin-report-doughnut {
+    .chart-canvas-container {
+      width: 300px;
+      height: 300px;
+    }
   }
 }
 
 .admin-report-sentiment-analysis {
-  flex: 2;
-  display: flex;
-  gap: 2rem 1rem;
-  justify-content: space-evenly;
-  align-items: center;
-  flex-flow: row wrap;
-  padding-inline: 0;
-  padding-block: 1.5rem;
-
-  .admin-report-doughnut {
-    padding: 0.25rem;
-  }
-
-  &__chart-wrapper {
-    height: fit-content;
-    position: relative;
-    transition:
-      transform 0.25s ease,
-      box-shadow 0.25s ease;
-    border-radius: var(--d-border-radius);
-
-    .doughnut-chart-title {
-      @include ellipsis;
-      margin: 0 auto;
-      margin-top: 1rem;
-      text-align: center;
-    }
-
-    &:hover {
-      box-shadow: var(--shadow-card);
-      transform: translateY(-0.5rem);
-      cursor: pointer;
-    }
-  }
-
   &__selected-chart {
     border: 1px solid var(--primary-low);
     border-radius: var(--d-border-radius);
     padding: 1rem;
-
-    .doughnut-chart-title {
-      font-size: var(--font-up-2);
-      margin: 0 auto;
-      text-align: center;
-      margin-top: 0.3rem;
-      padding-top: 2rem;
-    }
   }
 
   &__selected-chart-actions {
@@ -107,13 +82,10 @@
   }
 }
 
-:root {
-  --d-sentiment-report-positive-rgb: 46, 204, 112;
-  --d-sentiment-report-neutral-rgb: 149, 166, 167;
-  --d-sentiment-report-negative-rgb: 231, 77, 60;
-}
-
 .admin-report-sentiment-analysis-details {
+  border: 1px solid var(--primary-low);
+  border-radius: var(--d-border-radius);
+  padding: 1rem;
   flex: 1 1 300px;
   min-width: 300px;
   margin-left: 1rem;
@@ -197,10 +169,8 @@
       height: 100%;
     }
   }
-}
 
-.admin-reports.admin-contents .sentiment-analysis {
-  .horizontal-overflow-nav {
+  nav.horizontal-overflow-nav {
     background: var(--secondary);
     position: sticky;
     top: 0;
@@ -224,16 +194,8 @@
 }
 
 .sentiment-analysis-table {
-  margin: 1rem;
-
-  &__total-score {
-    font-weight: bold;
-    font-size: var(--font-up-1);
-  }
-
-  &__row {
-    cursor: pointer;
-  }
+  font-weight: bold;
+  font-size: var(--font-up-1);
 }
 
 .sentiment-horizontal-bar {
