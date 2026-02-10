@@ -472,10 +472,8 @@ describe "Topic bulk select", type: :system do
       topic_bulk_actions_modal.category_selector.select_row_by_value(destination_category.id)
       topic_bulk_actions_modal.click_bulk_topics_confirm
 
-      # Should show warning toast (not success)
       expect(toasts).to have_warning("could not be completed")
 
-      # Topic should not have moved
       expect(topics.first.reload.category).to eq(original_category)
     end
   end
