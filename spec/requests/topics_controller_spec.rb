@@ -1974,6 +1974,13 @@ RSpec.describe TopicsController do
         end
       end
 
+      it "does not allow a regular user to change archetype to banner" do
+        put "/t/#{topic.id}.json", params: { archetype: Archetype.banner }
+
+        topic.reload
+        expect(topic.archetype).to eq(Archetype.default)
+      end
+
       describe "without permission" do
         it "raises an exception when the user doesn't have permission to update the topic" do
           topic.update!(archived: true)

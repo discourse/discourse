@@ -1024,11 +1024,11 @@ describe PostRevisor do
       expect(post_revisor.raw_changed?).to eq(false)
     end
 
-    it "revises and tracks changes of topic archetypes" do
+    it "revises and tracks changes of topic archetypes for staff" do
       new_archetype = Archetype.banner
       result =
         post_revisor.revise!(
-          post.user,
+          admin,
           { archetype: new_archetype },
           revised_at: post.updated_at + 10.minutes,
         )
@@ -1038,6 +1038,19 @@ describe PostRevisor do
       expect(post.topic.archetype).to eq(new_archetype)
       expect(post.revisions.first.modifications["archetype"][1]).to eq(new_archetype)
       expect(post_revisor.raw_changed?).to eq(false)
+    end
+
+    it "does not allow regular users to change topic archetype to banner" do
+      result =
+        post_revisor.revise!(
+          post.user,
+          { archetype: Archetype.banner },
+          revised_at: post.updated_at + 10.minutes,
+        )
+
+      expect(result).to eq(false)
+      post.reload
+      expect(post.topic.archetype).to eq(Archetype.default)
     end
 
     it "revises and tracks changes of topic tags" do

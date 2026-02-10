@@ -78,7 +78,11 @@ class PostRevisor
   end
 
   track_topic_field(:archetype) do |topic_changes, attribute|
-    track_and_revise topic_changes, :archetype, attribute
+    if topic_changes.guardian.can_change_archetype?(topic_changes.topic, attribute)
+      track_and_revise topic_changes, :archetype, attribute
+    else
+      topic_changes.check_result(false)
+    end
   end
 
   track_topic_field(:category_id) do |tc, new_category_id, fields|
