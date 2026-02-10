@@ -398,4 +398,49 @@ module DiscoursePostEvent
       end
     end
   end
+
+  describe "anonymous access to InviteesController" do
+    before do
+      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_post_event_enabled = true
+    end
+
+    fab!(:admin_user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: admin_user) }
+    fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
+    fab!(:event) { Fabricate(:event, post: post_1) }
+    fab!(:invitee_user, :user)
+    fab!(:invitee) do
+      DiscoursePostEvent::Invitee.create!(
+        post_id: post_1.id,
+        user_id: invitee_user.id,
+        status: DiscoursePostEvent::Invitee.statuses[:going],
+      )
+    end
+
+    it "requires login for create" do
+      post "/discourse-post-event/events/#{event.id}/invitees.json",
+           params: {
+             invitee: {
+               status: "going",
+             },
+           }
+      expect(response.status).to eq(403)
+    end
+
+    it "requires login for update" do
+      put "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json",
+          params: {
+            invitee: {
+              status: "interested",
+            },
+          }
+      expect(response.status).to eq(403)
+    end
+
+    it "requires login for destroy" do
+      delete "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json"
+      expect(response.status).to eq(403)
+    end
+  end
 end

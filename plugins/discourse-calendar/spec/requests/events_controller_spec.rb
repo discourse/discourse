@@ -541,4 +541,39 @@ module DiscoursePostEvent
       expect(event.invitees.with_status(:going).count).to be <= 1
     end
   end
+
+  describe "anonymous access to EventsController" do
+    before do
+      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_post_event_enabled = true
+    end
+
+    fab!(:admin_user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: admin_user) }
+    fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
+    fab!(:event) { Fabricate(:event, post: post_1) }
+
+    it "requires login for invite" do
+      post "/discourse-post-event/events/#{event.id}/invite.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "requires login for destroy" do
+      delete "/discourse-post-event/events/#{event.id}.json"
+      expect(response.status).to eq(403)
+    end
+
+    it "requires login for bulk_invite" do
+      post "/discourse-post-event/events/#{event.id}/bulk-invite.json",
+           params: {
+             invitees: [{ "identifier" => "bob", "attendance" => "going" }],
+           }
+      expect(response.status).to eq(403)
+    end
+
+    it "requires login for csv_bulk_invite" do
+      post "/discourse-post-event/events/#{event.id}/csv-bulk-invite.json"
+      expect(response.status).to eq(403)
+    end
+  end
 end
