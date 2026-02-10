@@ -18,6 +18,7 @@ import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-inje
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
 
+import { DEBUG } from "@glimmer/env";
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import require from "require";
@@ -53,6 +54,8 @@ async function loadThemeFromModulePreload(link) {
   }
 }
 
+let dialogContent;
+
 async function loadPluginFromModulePreload(link) {
   const pluginName = link.dataset.pluginName;
   try {
@@ -67,6 +70,29 @@ async function loadPluginFromModulePreload(link) {
       `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
       error
     );
+
+    if (DEBUG) {
+      if (!dialogContent) {
+        const dialog = document.createElement("dialog");
+        dialog.style = "background: black; color: red; border-radius: 30px;";
+
+        // TODO
+        // const tomster = document.createElement("img");
+        // tomster.src =
+        //   "https://emberjs.com/images/tomsters/fishy750w-728a43c8184a89cf79959533be6c8ccc.webp";
+        // tomster.style = "width: 250px; margin-bottom: 20px;";
+        // dialog.append(tomster);
+
+        dialogContent = document.createElement("div");
+        dialog.append(dialogContent);
+
+        document.body.append(dialog);
+        dialog.showModal();
+      }
+
+      dialogContent.innerText += `Failed to load plugin ${link.dataset.pluginName} from ${link.href}\n${error.message}\n\n`;
+    }
+
     //fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
   }
 }
