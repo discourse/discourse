@@ -2878,4 +2878,32 @@ RSpec.describe GroupsController do
       end
     end
   end
+
+  describe "requires_login for state-changing actions" do
+    fab!(:group)
+
+    it "returns not_logged_in error for anonymous add_members request" do
+      put "/groups/#{group.id}/members.json", params: { usernames: "bob" }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+
+    it "returns not_logged_in error for anonymous add_owners request" do
+      put "/groups/#{group.id}/owners.json", params: { usernames: "bob" }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+
+    it "returns not_logged_in error for anonymous remove_member request" do
+      delete "/groups/#{group.id}/members.json", params: { username: "bob" }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+
+    it "returns not_logged_in error for anonymous handle_membership_request" do
+      put "/groups/#{group.id}/handle_membership_request.json", params: { user_id: 1 }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+  end
 end
