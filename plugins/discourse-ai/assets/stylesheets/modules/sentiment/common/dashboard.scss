@@ -13,20 +13,11 @@
   }
 }
 
-@mixin report-container-box() {
-  border: 1px solid var(--primary-low);
-  border-radius: var(--d-border-radius);
-  padding: 1rem;
-}
-
 .admin-report.sentiment-analysis .chart__wrapper {
   display: flex;
-  flex-flow: row wrap;
   gap: 1rem;
 
   .chart__filters {
-    @include report-container-box;
-    order: 1;
     width: 100%;
     margin-left: 0;
     flex-flow: row wrap;
@@ -67,7 +58,6 @@
 }
 
 .admin-report-sentiment-analysis {
-  @include report-container-box;
   flex: 2;
   display: flex;
   gap: 2rem 1rem;
@@ -140,7 +130,6 @@
 }
 
 .admin-report-sentiment-analysis-details {
-  @include report-container-box;
   flex: 1 1 300px;
   min-width: 300px;
   margin-left: 1rem;
