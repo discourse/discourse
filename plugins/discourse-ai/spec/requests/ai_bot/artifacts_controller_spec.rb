@@ -80,6 +80,23 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
       end
     end
 
+    it "sanitizes CSS to prevent style tag breakout" do
+      sign_in(user)
+      malicious_css = '</style><script>alert("XSS from CSS")</script><style>'
+      artifact.update!(css: malicious_css)
+
+      get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
+      expect(response.status).to eq(200)
+
+      untrusted_html = parse_srcdoc(response.body)
+      doc = Nokogiri.HTML5(untrusted_html)
+      script_contents = doc.css("script").map(&:text)
+      script_contents.each { |s| expect(s).not_to include("alert") }
+
+      style_tag = doc.at_css("style")
+      expect(style_tag.text).to include("alert")
+    end
+
     it "removes security headers and disables crawling" do
       sign_in(user)
       get "/discourse-ai/ai-bot/artifacts/#{artifact.id}"
