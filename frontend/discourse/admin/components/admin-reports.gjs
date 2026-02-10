@@ -10,84 +10,63 @@ import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 const REPORT_GROUPS = {
-  engagement: {
-    name: "Engagement",
-    reports: [
-      "daily_engaged_users",
-      "dau_by_mau",
-      "mobile_visits",
-      "new_contributors",
-      "signups",
-      "topic_view_stats",
-      "visits",
-    ],
-  },
-  traffic: {
-    name: "Traffic & Engagement",
-    reports: [
-      "consolidated_page_views",
-      "consolidated_page_views_browser_detection",
-      "page_view_anon_browser_reqs",
-      "page_view_anon_reqs",
-      "page_view_crawler_reqs",
-      "page_view_legacy_total_reqs",
-      "page_view_logged_in_reqs",
-      "page_view_logged_in_browser_reqs",
-      "page_view_total_reqs",
-      "site_traffic",
-      "top_traffic_sources",
-    ],
-  },
-  users: {
-    name: "Members",
-    reports: [
-      "top_ignored_users",
-      "top_referrers",
-      "top_users_by_likes_received",
-      "trust_level_growth",
-      "users_by_trust_level",
-      "users_by_type",
-    ],
-  },
-  content: {
-    name: "Content & Health",
-    reports: [
-      "posts",
-      "time_to_first_response",
-      "top_referred_topics",
-      "top_uploads",
-      "topics",
-      "topics_with_no_response",
-      "trending_search",
-      "user_to_user_private_messages_with_replies",
-    ],
-  },
-  moderation: {
-    name: "Moderation",
-    reports: [
-      "flags",
-      "flags_status",
-      "moderators_activity",
-      "user_flagging_ratio",
-    ],
-  },
-  security: {
-    name: "Security",
-    reports: [
-      "associated_accounts_by_provider",
-      "consolidated_api_requests",
-      "emails",
-      "staff_logins",
-      "storage_stats",
-      "suspicious_logins",
-      "web_crawlers",
-      "web_hook_events_daily_aggregate",
-    ],
-  },
-  other: {
-    name: "Other",
-    reports: [],
-  },
+  engagement: [
+    "daily_engaged_users",
+    "dau_by_mau",
+    "mobile_visits",
+    "new_contributors",
+    "signups",
+    "topic_view_stats",
+    "visits",
+  ],
+  traffic: [
+    "consolidated_page_views",
+    "consolidated_page_views_browser_detection",
+    "page_view_anon_browser_reqs",
+    "page_view_anon_reqs",
+    "page_view_crawler_reqs",
+    "page_view_legacy_total_reqs",
+    "page_view_logged_in_reqs",
+    "page_view_logged_in_browser_reqs",
+    "page_view_total_reqs",
+    "site_traffic",
+    "top_traffic_sources",
+  ],
+  members: [
+    "top_ignored_users",
+    "top_referrers",
+    "top_users_by_likes_received",
+    "trust_level_growth",
+    "users_by_trust_level",
+    "users_by_type",
+  ],
+  content: [
+    "posts",
+    "time_to_first_response",
+    "top_referred_topics",
+    "top_uploads",
+    "topics",
+    "topics_with_no_response",
+    "trending_search",
+    "user_to_user_private_messages_with_replies",
+  ],
+  moderation: [
+    "flags",
+    "flags_status",
+    "moderators_activity",
+    "user_flagging_ratio",
+  ],
+  security: [
+    "associated_accounts_by_provider",
+    "consolidated_api_requests",
+    "emails",
+    "staff_logins",
+    "storage_stats",
+    "suspicious_logins",
+    "web_crawlers",
+    "web_hook_events_daily_aggregate",
+  ],
+  other: [],
 };
 
 export default class AdminReports extends Component {
@@ -123,15 +102,15 @@ export default class AdminReports extends Component {
     const coreReports = reports.filter((report) => !report.plugin);
     const pluginReports = reports.filter((report) => report.plugin);
 
-    for (const [groupKey, groupConfig] of Object.entries(REPORT_GROUPS)) {
+    for (const [groupKey, groupReportTypes] of Object.entries(REPORT_GROUPS)) {
       const groupReports = coreReports.filter((report) =>
-        groupConfig.reports.includes(report.type)
+        groupReportTypes.includes(report.type)
       );
 
       if (groupReports.length > 0) {
         groupedReports.push({
           key: groupKey,
-          name: groupConfig.name,
+          name: i18n(`admin.reports.group_${groupKey}`),
           reports: groupReports,
         });
         groupReports.forEach((r) => assignedReports.add(r.type));
@@ -148,7 +127,7 @@ export default class AdminReports extends Component {
       } else {
         groupedReports.push({
           key: "other",
-          name: "Other",
+          name: i18n("admin.reports.group_other"),
           reports: unassignedCoreReports,
         });
       }
@@ -166,21 +145,12 @@ export default class AdminReports extends Component {
     for (const [pluginName, pluginReportsList] of pluginGroups) {
       groupedReports.push({
         key: `plugin-${pluginName}`,
-        name: this.formatPluginName(pluginName),
+        name: pluginReportsList[0].plugin_display_name || pluginName,
         reports: pluginReportsList,
-        isPlugin: true,
       });
     }
 
     return groupedReports;
-  }
-
-  formatPluginName(pluginName) {
-    return pluginName
-      .replace(/^discourse-/, "")
-      .split("-")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
   }
 
   <template>

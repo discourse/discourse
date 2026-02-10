@@ -134,6 +134,7 @@ RSpec.describe Reports::ListQuery do
 
       it "includes reports when the source plugin is enabled" do
         plugin.stubs(:enabled?).returns(true)
+        plugin.stubs(:humanized_name).returns("Test Plugin")
 
         formatted = Reports::ListQuery::FormattedReport.new(:report_test_plugin_report)
         formatted.stubs(:resolve_plugin_name).returns("test-plugin")
@@ -141,6 +142,7 @@ RSpec.describe Reports::ListQuery do
         result = formatted.to_h(admin: true)
         expect(result).to be_present
         expect(result[:plugin]).to eq("test-plugin")
+        expect(result[:plugin_display_name]).to eq("Test Plugin")
       end
     end
   end

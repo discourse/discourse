@@ -20,6 +20,7 @@ module Reports
           description:,
           description_link: I18n.t("reports.#{type}.description_link", default: "").presence,
           plugin: plugin_name,
+          plugin_display_name: plugin_display_name,
         }
       end
 
@@ -63,9 +64,18 @@ module Reports
         nil
       end
 
+      def plugin_instance
+        return unless plugin_name
+        Discourse.plugins_by_name[plugin_name]
+      end
+
+      def plugin_display_name
+        plugin_instance&.humanized_name
+      end
+
       def plugin_disabled?
         return false unless plugin_name
-        !Discourse.plugins_by_name[plugin_name]&.enabled?
+        !plugin_instance&.enabled?
       end
     end
 
