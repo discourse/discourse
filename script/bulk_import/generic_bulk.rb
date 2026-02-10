@@ -1523,7 +1523,7 @@ class BulkImport::Generic < BulkImport::Base
 
   def import_bookmarks
     unless @source_db.get_first_value(
-             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='bookmarks'"
+             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='bookmarks'",
            )
       return
     end
@@ -1538,8 +1538,7 @@ class BulkImport::Generic < BulkImport::Base
        ORDER BY user_id, bookmarkable_id
     SQL
 
-    existing_bookmarks =
-      Bookmark.pluck(:user_id, :bookmarkable_type, :bookmarkable_id).to_set
+    existing_bookmarks = Bookmark.pluck(:user_id, :bookmarkable_type, :bookmarkable_id).to_set
 
     create_bookmarks(bookmarks) do |row|
       user_id = user_id_from_imported_id(row["user_id"])
@@ -1551,9 +1550,7 @@ class BulkImport::Generic < BulkImport::Base
       if bookmarkable_type == "Topic"
         topic_id = topic_id_from_imported_id(bookmarkable_id)
         next unless topic_id
-        unless existing_bookmarks.add?([user_id, bookmarkable_type, topic_id])
-          next
-        end
+        next unless existing_bookmarks.add?([user_id, bookmarkable_type, topic_id])
 
         {
           user_id: user_id,
@@ -1566,14 +1563,12 @@ class BulkImport::Generic < BulkImport::Base
           auto_delete_preference: row["auto_delete_preference"]&.to_i,
           pinned: row["pinned"].present? ? to_boolean(row["pinned"]) : false,
           created_at: to_datetime(row["created_at"]),
-          updated_at: to_datetime(row["updated_at"])
+          updated_at: to_datetime(row["updated_at"]),
         }
       elsif bookmarkable_type == "Post"
         post_id = post_id_from_imported_id(bookmarkable_id)
         next unless post_id
-        unless existing_bookmarks.add?([user_id, bookmarkable_type, post_id])
-          next
-        end
+        next unless existing_bookmarks.add?([user_id, bookmarkable_type, post_id])
 
         {
           user_id: user_id,
@@ -1586,7 +1581,7 @@ class BulkImport::Generic < BulkImport::Base
           auto_delete_preference: row["auto_delete_preference"]&.to_i,
           pinned: row["pinned"].present? ? to_boolean(row["pinned"]) : false,
           created_at: to_datetime(row["created_at"]),
-          updated_at: to_datetime(row["updated_at"])
+          updated_at: to_datetime(row["updated_at"]),
         }
       else
         next
