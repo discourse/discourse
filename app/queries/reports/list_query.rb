@@ -45,15 +45,20 @@ module Reports
       end
 
       def plugin_name
-        method_name = @name.to_s.start_with?("report_") ? @name : "report_#{@name}"
-        return nil unless Report.singleton_class.method_defined?(method_name)
+        return @plugin_name if defined?(@plugin_name)
 
-        source_path = Report.singleton_class.instance_method(method_name)&.source_location&.first
-        return nil unless source_path&.include?("/plugins/")
+        @plugin_name = resolve_plugin_name
+      end
+
+      def resolve_plugin_name
+        return unless Report.singleton_class.method_defined?(@name)
+
+        source_path = Report.method(@name).source_location.first
+        return unless source_path&.include?("/plugins/")
 
         # Extract plugin name from path like /plugins/discourse-ai/...
         match = source_path.match(%r{/plugins/([^/]+)/})
-        @plugin_name = match[1] if match
+        match[1] if match
       rescue NameError
         nil
       end

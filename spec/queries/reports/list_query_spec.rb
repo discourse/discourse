@@ -97,5 +97,51 @@ RSpec.describe Reports::ListQuery do
         expect(result.map { |r| r[:type] }).not_to include(*Report::ADMIN_ONLY_REPORTS)
       end
     end
+
+    it "does not include plugin name for core reports" do
+      topics_report = result.find { |r| r[:type] == "topics" }
+      expect(topics_report[:plugin]).to be_nil
+    end
+
+    context "with a plugin report" do
+      let(:plugin) { Plugin::Instance.new }
+
+      before do
+        Report.add_report("test_plugin_report") { |report| }
+        Discourse.plugins_by_name["test-plugin"] = plugin
+
+        I18n.backend.store_translations(
+          :en,
+          { reports: { test_plugin_report: { title: "Test Plugin Report" } } },
+        )
+      end
+
+      after do
+        if Report.singleton_class.method_defined?(:report_test_plugin_report)
+          Report.singleton_class.remove_method(:report_test_plugin_report)
+        end
+        Discourse.plugins_by_name.delete("test-plugin")
+      end
+
+      it "excludes reports when the source plugin is disabled" do
+        plugin.stubs(:enabled?).returns(false)
+
+        formatted = Reports::ListQuery::FormattedReport.new(:report_test_plugin_report)
+        formatted.stubs(:resolve_plugin_name).returns("test-plugin")
+
+        expect(formatted.to_h(admin: true)).to be_nil
+      end
+
+      it "includes reports when the source plugin is enabled" do
+        plugin.stubs(:enabled?).returns(true)
+
+        formatted = Reports::ListQuery::FormattedReport.new(:report_test_plugin_report)
+        formatted.stubs(:resolve_plugin_name).returns("test-plugin")
+
+        result = formatted.to_h(admin: true)
+        expect(result).to be_present
+        expect(result[:plugin]).to eq("test-plugin")
+      end
+    end
   end
 end
