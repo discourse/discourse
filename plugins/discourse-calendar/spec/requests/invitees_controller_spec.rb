@@ -191,6 +191,7 @@ module DiscoursePostEvent
             expect(response.status).to eq(404)
           end
         end
+
         context "when changing status" do
           it "sets tracking of the topic" do
             invitee = post_event_2.invitees.first
