@@ -65,8 +65,8 @@ module Reports
       end
 
       def plugin_instance
-        return unless plugin_name
-        Discourse.plugins_by_name[plugin_name]
+        return @plugin_instance if defined?(@plugin_instance)
+        @plugin_instance = plugin_name && Discourse.plugins_by_name[plugin_name]
       end
 
       def plugin_display_name

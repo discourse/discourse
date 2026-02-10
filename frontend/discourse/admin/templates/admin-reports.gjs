@@ -8,7 +8,6 @@ export default <template>
       @titleLabel={{i18n "admin.config.reports.title"}}
       @descriptionLabel={{i18n "admin.config.reports.header_description"}}
       @learnMoreUrl="https://meta.discourse.org/t/-/240233"
-      @hideTabs={{@controller.hideTabs}}
     >
       <:breadcrumbs>
         <DBreadcrumbsItem @path="/admin" @label={{i18n "admin_title"}} />

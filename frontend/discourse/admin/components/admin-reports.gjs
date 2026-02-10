@@ -61,7 +61,6 @@ const REPORT_GROUPS = {
     "consolidated_api_requests",
     "emails",
     "staff_logins",
-    "storage_stats",
     "suspicious_logins",
     "web_crawlers",
     "web_hook_events_daily_aggregate",
