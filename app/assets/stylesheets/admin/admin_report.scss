@@ -1,9 +1,15 @@
 @use "lib/viewport";
 
 .admin-report {
-  .select-kit.category-chooser {
-    width: auto;
-    max-width: 250px;
+  .select-kit {
+    @include viewport.from(sm) {
+      width: auto;
+      max-width: 250px;
+    }
+
+    @include viewport.until(sm) {
+      width: 100% !important;
+    }
   }
 
   .conditional-loading-section {
@@ -16,7 +22,6 @@
     display: flex;
     align-items: center;
     margin-bottom: 0.5em;
-    padding-bottom: 0.5em;
   }
 
   .header .breadcrumb {
