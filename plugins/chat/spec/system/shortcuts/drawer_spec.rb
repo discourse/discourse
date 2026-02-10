@@ -20,6 +20,7 @@ RSpec.describe "Shortcuts | drawer", type: :system do
 
     context "when pressing dash" do
       it "opens the drawer" do
+        expect(chat_page).to have_css("#site-logo")
         page.send_keys("-")
 
         expect(chat_page).to have_drawer
