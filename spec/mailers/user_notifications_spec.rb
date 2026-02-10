@@ -852,6 +852,27 @@ RSpec.describe UserNotifications do
         )
       expect(mail.subject).to match(/Super cool topic/)
     end
+
+    it "uses post author username when original_username is missing from notification data" do
+      SiteSetting.enable_names = false
+
+      notification_data = {
+        topic_title: topic.title,
+        original_post_id: response.id,
+        original_post_type: response.post_type,
+        display_username: I18n.t("embed.replies", count: 7),
+      }
+
+      mail =
+        UserNotifications.user_posted(
+          user,
+          post: response,
+          notification_type: Notification.types[:posted],
+          notification_data_hash: notification_data,
+        )
+
+      expect(mail.header["X-Discourse-Sender"].value).to eq(response_by_user.username)
+    end
   end
 
   describe ".user_private_message" do

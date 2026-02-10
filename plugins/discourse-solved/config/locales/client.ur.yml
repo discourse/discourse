@@ -30,6 +30,7 @@ ur:
         solved: "حل شدہ"
         unsolved: "غیر حل شدہ"
       move_post_cancel: "منسوخ کریں"
+      confirm_category_change_solution_cancel: "منسوخ کریں"
     topic_statuses:
       solved:
         help: "اِس ٹاپک کا حل ہے"

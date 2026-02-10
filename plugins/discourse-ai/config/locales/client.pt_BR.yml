@@ -185,6 +185,8 @@ pt_BR:
       default_llm:
         title: "Modelo de LLM padrão"
         description: "O modelo de LLM padrão a ser usado para todos os recursos de IA. Será usado se nenhum LLM for especificado na persona ou configuração de recurso. Se nenhum LLM for especificado, será usado o LLM criado mais recentemente."
+      llm_selector:
+        none: "Nenhum"
       features:
         short_title: "Recursos"
         description: "Estes recursos de IA estão disponíveis para quem acessar o seu site. Podem ser configurados para usar LLMs e personas específicas, além de poder ter o acesso controlado por grupos."

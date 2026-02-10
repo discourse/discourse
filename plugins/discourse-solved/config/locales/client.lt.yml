@@ -17,6 +17,7 @@ lt:
         all: "visi"
         solved: "išspresta"
       move_post_cancel: "Atšaukti"
+      confirm_category_change_solution_cancel: "Atšaukti"
     discourse_automation:
       triggerables:
         first_accepted_solution:

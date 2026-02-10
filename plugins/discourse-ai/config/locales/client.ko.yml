@@ -38,6 +38,8 @@ ko:
             canned_reply:
               label: "댓글쓰기"
     discourse_ai:
+      llm_selector:
+        none: "없음"
       features:
         back: "뒤로"
         disabled: "(비활성)"

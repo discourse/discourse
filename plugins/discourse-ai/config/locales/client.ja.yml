@@ -176,6 +176,8 @@ ja:
       default_llm:
         title: "デフォルトの LLM モデル"
         description: "すべての AI 機能に使用するデフォルトの LLM モデル。これは、機能の構成またはペルソナで LLM が指定されていない場合に使用されます。デフォルトの LLM が指定されていない場合、最後に作成された LLM が使用されます。"
+      llm_selector:
+        none: "なし"
       features:
         short_title: "機能"
         description: "これらは、サイトの訪問者が使用できる AI 機能です。これらは、特定のペルソナと LLM を使用するために構成することができ、グループごとにアクセスを制御できます。"

@@ -4438,6 +4438,11 @@ RSpec.describe TopicsController do
   end
 
   describe "#remove_bookmarks" do
+    it "requires the user to be logged in" do
+      put "/t/1/remove_bookmarks.json"
+      expect(response.status).to eq(403)
+    end
+
     it "should remove bookmarks properly from non first post" do
       sign_in(user)
 
@@ -6165,6 +6170,24 @@ RSpec.describe TopicsController do
             # breadcrumbs
             expect(response.body).to include(ja_category.name)
             expect(response.body).to include(ja_subcategory.name)
+          end
+
+          it "does not persist localized fancy_title to the database when topic fancy_title is null" do
+            topic.update_column(:fancy_title, nil)
+
+            get topic.relative_url,
+                env: {
+                  "HTTP_USER_AGENT" => bot_user_agent,
+                },
+                params: {
+                  tl: "ja",
+                }
+
+            expect(response.status).to eq(200)
+
+            db_fancy_title = Topic.where(id: topic.id).pick(:fancy_title)
+            localized_fancy_title = Topic.fancy_title(ja_topic.title)
+            expect(db_fancy_title).not_to eq(localized_fancy_title)
           end
         end
 

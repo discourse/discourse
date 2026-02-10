@@ -46,6 +46,10 @@ zh_CN:
         other: "移动帖子"
       move_post_cancel: "取消"
       dont_show_again: "明白了，别再给我看这个了。"
+      confirm_category_change_solution_title: "解决方案将被删除"
+      confirm_category_change_solution: "新类别尚未启用解决方案。更改类别将会移除此主题中已接受的解决方案。"
+      confirm_category_change_solution_confirm: "更改类别"
+      confirm_category_change_solution_cancel: "取消"
       no_answer:
         title: 您的问题是否已被解答？
         description: "在正确回复下方使用解决方案按钮高亮显示回答并帮助他人。"

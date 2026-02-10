@@ -75,6 +75,8 @@ el:
               label: "Αναφορά ανάρτησης"
               description: "Αναφέρει την ανάρτηση (είτε ως ανεπιθύμητη είτε για έλεγχο)"
     discourse_ai:
+      llm_selector:
+        none: "Κανένα"
       features:
         back: "Πίσω"
         settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."

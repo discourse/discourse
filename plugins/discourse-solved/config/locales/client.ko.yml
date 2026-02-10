@@ -27,6 +27,7 @@ ko:
         solved: "해결됨"
         unsolved: "미해결"
       move_post_cancel: "취소"
+      confirm_category_change_solution_cancel: "취소"
     topic_statuses:
       solved:
         help: "이 토픽에는 해결책이 있습니다"

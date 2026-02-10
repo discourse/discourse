@@ -176,6 +176,8 @@ it:
       default_llm:
         title: "Modello LLM predefinito"
         description: "Modello LLM predefinito da utilizzare per tutte le funzionalità IA. Verrà utilizzato se non è specificato alcun LLM nella configurazione della funzionalità o del personaggio. Se non è specificato alcun LLM predefinito, verrà utilizzato l'ultimo LLM creato."
+      llm_selector:
+        none: "Nessuna"
       features:
         short_title: "Funzionalità"
         description: "Le funzionalità IA a disposizione dei visitatori del tuo sito web. Possono essere configurate utilizzando personaggi e LLM specifici. I gruppi possono controllarne l'accesso."

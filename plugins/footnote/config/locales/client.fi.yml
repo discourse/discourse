@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 fi:
+  js:
+    footnote:
+      add: "Lisää alaviite"

@@ -145,6 +145,8 @@ lt:
               label: "Slėpti temą"
     discourse_ai:
       title: "AI"
+      llm_selector:
+        none: "Nieko"
       features:
         back: "Atgal"
         settings_save_error: "Kai kurių nustatymų išsaugoti nepavyko."
