@@ -530,7 +530,8 @@ class UserNotifications < ActionMailer::Base
 
     allow_reply_by_email = opts[:allow_reply_by_email] unless user.suspended?
     original_username =
-      notification_data[:original_username] || notification_data[:display_username]
+      notification_data[:original_username] || post&.user&.username ||
+        notification_data[:display_username]
 
     if user.staged && post
       original_subject =
