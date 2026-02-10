@@ -172,10 +172,12 @@ module DiscoursePostEvent
             end
           end
 
+          context "when acting user can't act on invitee" do
             let(:lurker) { Fabricate(:user) }
 
             before { sign_in(lurker) }
 
+            it "doesn't destroy the invitee" do
               invitee = post_event_2.invitees.first
               delete "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json"
               expect(Invitee.where(id: invitee.id).length).to eq(1)
@@ -228,7 +230,7 @@ module DiscoursePostEvent
         end
       end
 
-      context "when an invitee doesn’t exist" do
+      context "when an invitee doesn't exist" do
         let(:post_event_2) { Fabricate(:event, post: post_1) }
 
         it "creates an invitee" do
