@@ -11,7 +11,6 @@ import { i18n } from "discourse-i18n";
 export default class AdminConfigColorPalettesIndexController extends Controller {
   @service router;
   @service modal;
-  @service store;
   @service dialog;
   @service toasts;
   @service session;
@@ -243,10 +242,14 @@ export default class AdminConfigColorPalettesIndexController extends Controller 
         previewMode = "none";
       }
 
-      this.defaultTheme = await setDefaultColorScheme(scheme, this.store, {
-        previewMode,
-        mode,
-      });
+      this.defaultTheme = await setDefaultColorScheme(
+        scheme,
+        this.defaultTheme,
+        {
+          previewMode,
+          mode,
+        }
+      );
 
       if (!this.canPreviewColorScheme(mode)) {
         const schemeName = scheme.description || scheme.name;
