@@ -342,7 +342,7 @@ end
 #  vision_enabled           :boolean          default(FALSE), not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
-#  ai_secret_id             :integer
+#  ai_secret_id             :bigint
 #  user_id                  :integer
 #
 # Indexes

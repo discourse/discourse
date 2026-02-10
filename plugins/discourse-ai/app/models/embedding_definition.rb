@@ -260,7 +260,7 @@ end
 #  version               :integer          default(1), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  ai_secret_id          :integer
+#  ai_secret_id          :bigint
 #
 # Indexes
 #
