@@ -2537,7 +2537,7 @@ sk:
     experimental_new_new_view_groups: 'Povoľte nový zoznam tém, ktorý kombinuje neprečítané a nové témy, a vytvorte naň odkaz "Všetko" v bočnom paneli.'
     show_preview_for_form_templates: "Povolenie funkcie náhľadu pre šablóny formulárov"
     lazy_load_categories_groups: "Lenivé načítanie informácií o kategórii len pre používateľov týchto skupín. To zlepšuje výkon na stránkach s mnohými kategóriami."
-    enable_auto_grid_images: "Automatické zabalenie obrázkov do značiek [grid], keď sú v kompozitore nahrané 3 alebo viac obrázkov."
+    experimental_auto_grid_images: "Automatické zabalenie obrázkov do značiek [grid], keď sú v kompozitore nahrané 3 alebo viac obrázkov."
     page_loading_indicator: "Nakonfigurujte indikátor načítania, ktorý sa zobrazí počas navigácie po stránkach v rámci Discourse. „Spinner“ je indikátor celej strany. „Posuvník“ zobrazuje úzky pruh v hornej časti obrazovky."
     show_user_menu_avatars: "Zobraziť používateľské avatary v používateľskej ponuke"
     about_page_hidden_groups: "Nezobrazujte členov konkrétnych skupín na stránke /o nás."

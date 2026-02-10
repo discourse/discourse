@@ -2398,7 +2398,7 @@ fr:
     experimental_new_new_view_groups: 'Activez une nouvelle liste de sujets qui combine les sujets non lus et nouveaux, et faites en sorte que le lien « Tout » dans la barre latérale renvoie vers celle-ci.'
     show_preview_for_form_templates: "Activer la fonctionnalité d'aperçu des modèles de formulaires"
     lazy_load_categories_groups: "Chargez en différé les informations de catégorie uniquement pour les utilisateurs de ces groupes. Cela permet d'améliorer les performances sur les sites comportant de nombreuses catégories."
-    enable_auto_grid_images: "Encapsule automatiquement les images dans des balises [grid] lorsque 3 images ou plus sont téléversées dans l'éditeur."
+    experimental_auto_grid_images: "Encapsule automatiquement les images dans des balises [grid] lorsque 3 images ou plus sont téléversées dans l'éditeur."
     page_loading_indicator: "Configurer l'indicateur de chargement qui apparaît lors de la navigation dans Discourse. « Spinner » est un indicateur de pleine page. Le « curseur » affiche une barre étroite en haut de l'écran."
     show_user_menu_avatars: "Afficher les avatars des utilisateurs dans le menu utilisateur"
     about_page_hidden_groups: "N'affichez pas les membres de groupes spécifiques sur la page /about."

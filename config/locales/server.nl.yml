@@ -2392,7 +2392,7 @@ nl:
     experimental_new_new_view_groups: 'Schakel een nieuwe topicslijst in die ongelezen en nieuwe topics combineert en laat de link "Alles" in de zijbalk ernaartoe verwijzen.'
     show_preview_for_form_templates: "Schakel het voorbeeld voor formuliersjablonenfunctie in"
     lazy_load_categories_groups: "Laad categorie-informatie op luie wijze, alleen voor gebruikers van deze groepen. Dit verbetert de prestaties op sites met veel categorieën."
-    enable_auto_grid_images: "Afbeeldingen worden automatisch tussen [grid]-tags geplaatst wanneer er 3 of meer afbeeldingen worden geüpload in de editor."
+    experimental_auto_grid_images: "Afbeeldingen worden automatisch tussen [grid]-tags geplaatst wanneer er 3 of meer afbeeldingen worden geüpload in de editor."
     page_loading_indicator: "Configureer de laadindicator die wordt weergegeven tijdens paginanavigatie binnen Discourse. 'Spinner' is een indicator voor een volledige pagina. 'Slider' geeft een smalle balk weer bovenaan het scherm."
     show_user_menu_avatars: "Gebruikersavatars weergeven in het gebruikersmenu"
     about_page_hidden_groups: "Geef leden van specifieke groepen niet weer op de over/-pagina."

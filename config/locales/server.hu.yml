@@ -2446,7 +2446,7 @@ hu:
     experimental_new_new_view_groups: 'Engedélyezzen egy új témalistát, amely egyesíti az olvasatlan és új témákat, és az oldalsávon lévő "Minden" hivatkozást jelölje be.'
     show_preview_for_form_templates: "Az űrlapsablonok előnézetének engedélyezése"
     lazy_load_categories_groups: "Lusta betöltés alkalmazása a kategória információkra a kiválasztott csoportok felhasználói számára. Ez javítja a teljesítményt olyan webhelyeken, ahol sok kategória van."
-    enable_auto_grid_images: "Automatikusan [grid] címkékbe csomagolja a képeket, ha 3 vagy több képet töltöttek fel a komponálóba."
+    experimental_auto_grid_images: "Automatikusan [grid] címkékbe csomagolja a képeket, ha 3 vagy több képet töltöttek fel a komponálóba."
     experimental_impersonation_time_limit_minutes: "Mennyi idő múlva ér véget automatikusan a megszemélyesítési munkamenet."
     page_loading_indicator: "A Discourse-on belüli oldalnavigációk során megjelenő betöltési jelző konfigurálása. A 'Spinner' egy teljes oldalas jelző. A 'Slider' egy keskeny sávot jelenít meg a képernyő tetején."
     show_user_menu_avatars: "Felhasználói avatarok megjelenítése a felhasználói menüben"
@@ -2471,7 +2471,7 @@ hu:
     enable_upcoming_changes: "Közelgő változások engedélyezése"
     fake_upcoming_change: "Ez egy hamis, közelgő változás tesztelési célokra. Nem kell lefordítani ezt a karakterláncot."
     floating_dismiss_topics_on_mobile: "Megjelenít egy lebegő „Elvetés...” gombot mobilon a témalistához a könnyebb hozzáférés és a témalista tetején lévő hely felszabadítása érdekében."
-    rename_faq_to_guidelines: "Ez a módosítás a GYIK-oldalt „Irányelvek” névre nevezi át. A GYIK-oldal továbbra is elérhető marad a /faq útvonalon, a „faq url” beállítás pedig a megszokott módon működik tovább."
+    experimental_rename_faq_to_guidelines: "Ez a módosítás a GYIK-oldalt „Irányelvek” névre nevezi át. A GYIK-oldal továbbra is elérhető marad a /faq útvonalon, a „faq url” beállítás pedig a megszokott módon működik tovább."
     enable_simplified_category_creation: "Leegyszerűsített kategória-létrehozási folyamatot tesz lehetővé kevesebb opcióval és letisztultabb felülettel."
     errors:
       invalid_css_color: "Érvénytelen szín. Adjon meg egy színnevet vagy hexaértéket."

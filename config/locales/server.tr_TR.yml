@@ -2398,7 +2398,7 @@ tr_TR:
     experimental_new_new_view_groups: 'Okunmamış ve yeni konuları birleştiren bir yeni konular listesi etkinleştirin ve kenar çubuğundaki "Her şey" bağlantısını buna bağlayın.'
     show_preview_for_form_templates: "Form şablonları özelliği için ön izlemeyi etkinleştirin"
     lazy_load_categories_groups: "Kategori bilgilerini yalnızca bu gruplardaki kullanıcılar için tembel olarak yükleyin. Bu, çok sayıda kategoriye sahip sitelerde performansı artırır."
-    enable_auto_grid_images: "Bestecide 3 veya daha fazla görüntü yüklendiğinde görüntüleri otomatik olarak [grid] etiketlerine sarar."
+    experimental_auto_grid_images: "Bestecide 3 veya daha fazla görüntü yüklendiğinde görüntüleri otomatik olarak [grid] etiketlerine sarar."
     page_loading_indicator: "Discourse içinde sayfa geçişleri sırasında görünen yükleme göstergesini yapılandırın. \"Spinner\" bir tam sayfa göstergesidir. \"Slider\" ekranın üst kısmındaki dar bir çubuğu gösterir."
     show_user_menu_avatars: "Kullanıcı menüsünde kullanıcı avatarlarını göster"
     about_page_hidden_groups: "Belirli grupların üyelerini /about (hakkında) sayfasında göstermeyin."

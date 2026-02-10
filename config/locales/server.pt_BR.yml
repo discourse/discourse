@@ -2393,7 +2393,7 @@ pt_BR:
     experimental_new_new_view_groups: 'Ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
     show_preview_for_form_templates: "Ativar a pré-visualização para o recurso de modelos de formulário"
     lazy_load_categories_groups: "Carregue informações de forma ociosa apenas para os(as) usuários(as) destes grupos. Melhora o desempenho em sites com várias categorias."
-    enable_auto_grid_images: "Envolve automaticamente as imagens em tags [grid] quando três ou mais imagens são carregadas no compositor."
+    experimental_auto_grid_images: "Envolve automaticamente as imagens em tags [grid] quando três ou mais imagens são carregadas no compositor."
     page_loading_indicator: "Configure o indicador de carregamento mostrado durante as navegações da página no Discourse. O \"Controle giratório\" é um indicador de página completo. O \"Controle deslizante\" mostra uma barra estreita no topo da tela."
     show_user_menu_avatars: "Mostrar avatadores de usuário(a) no menu do(a) usuário(a)"
     about_page_hidden_groups: "Não mostre membros de grupos específicos na página /about."
