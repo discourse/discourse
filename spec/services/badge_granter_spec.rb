@@ -572,6 +572,51 @@ RSpec.describe BadgeGranter do
     end
   end
 
+  describe ".queue_badge_grant" do
+    it "includes both post_id and related_post_id for PostAction triggers" do
+      post_action = Struct.new(:post_id, :related_post_id).new(1, 2)
+
+      BadgeGranter.queue_badge_grant(Badge::Trigger::PostAction, post_action:)
+      raw = Discourse.redis.lpop(BadgeGranter.queue_key)
+      parsed = JSON.parse(raw)
+
+      expect(parsed["post_ids"]).to contain_exactly(1, 2)
+    end
+  end
+
+  describe ".process_queue!" do
+    fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+
+    it "continues processing other badges when one badge fails to backfill" do
+      query = <<~SQL
+        SELECT p.user_id, p.id post_id, p.updated_at granted_at
+        FROM badge_posts p
+        WHERE p.raw LIKE '%Give Me A Badge%'
+        AND (:backfill OR p.id IN (:post_ids))
+      SQL
+
+      broken_badge =
+        Fabricate(
+          :badge,
+          query: "broken",
+          trigger: Badge::Trigger::PostRevision,
+          target_posts: true,
+        )
+      good_badge =
+        Fabricate(:badge, query:, trigger: Badge::Trigger::PostRevision, target_posts: true)
+
+      create_post(user:, raw: "Give Me A Badge")
+
+      allow(BadgeGranter).to receive(:backfill).and_wrap_original do |method, badge, opts|
+        raise BadgeGranter::GrantError, "broken query" if badge.id == broken_badge.id
+        method.call(badge, opts)
+      end
+
+      expect { BadgeGranter.process_queue! }.not_to raise_error
+      expect(UserBadge.exists?(user:, badge: good_badge)).to eq(true)
+    end
+  end
+
   describe "update_badges" do
     fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
     fab!(:liker) { Fabricate(:user, refresh_auto_groups: true) }
