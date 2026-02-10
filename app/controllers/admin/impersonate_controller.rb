@@ -25,7 +25,7 @@ class Admin::ImpersonateController < Admin::AdminController
   end
 
   def destroy
-    unless UpcomingChanges.enabled_for_user?(:impersonate_without_logout, current_user)
+    unless UpcomingChanges.enabled_for_user?(:impersonate_without_logout, impersonation_acting_user)
       raise Discourse::NotFound
     end
 

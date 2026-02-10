@@ -296,6 +296,10 @@ class Auth::DefaultCurrentUserProvider
     @env.delete(CURRENT_USER_KEY)
   end
 
+  def impersonation_acting_user
+    @user_token.acting_user
+  end
+
   def set_auth_cookie!(unhashed_auth_token, user, cookie_jar)
     data = {
       token: unhashed_auth_token,
