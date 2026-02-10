@@ -619,6 +619,7 @@ zh_CN:
         invalid_seeded_model: "您无法在此模型中使用此功能"
         invalid_persona_response_format: "所选角色必须具有带有布尔字段名称“spam”的回答格式"
         must_select_model: "必须先选择一个 LLM"
+        invalid_llm_id: "所选的LLM模型无效"
       endpoints:
         not_configured: "%{display_name}（未配置）"
         configuration_hint:

@@ -16,6 +16,8 @@ ko:
           title: 읽은 시간
         chat_usage:
           messages: 메시지
+          author: 사용자님
+          author_others: "%{username}"
         invites:
           title: 초대
           invitee_posts: 글 수

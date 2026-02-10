@@ -28,6 +28,7 @@ pt:
         all: "todos"
         solved: "resolvido"
       move_post_cancel: "Cancelar"
+      confirm_category_change_solution_cancel: "Cancelar"
     topic_statuses:
       solved:
         help: "Este tópico tem uma solução"
