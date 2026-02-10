@@ -2326,7 +2326,14 @@ class BulkImport::Base
 
   def normalize_text(text)
     return nil if text.blank?
-    @html_entities.decode(normalize_charset(text.presence || "").scrub)
+    text = normalize_charset(text.presence || "").scrub
+    # Escape HTML-encoded UTF-16 surrogates (e.g. &#56256;) so they pass through
+    # as literal text instead of crashing the HTML entity decoder.
+    text.gsub!(/&#(x?)(\h+);/) do
+      cp = $1.empty? ? $2.to_i : $2.to_i(16)
+      (0xD800..0xDFFF).cover?(cp) ? "&amp;##{$1}#{$2};" : $&
+    end
+    @html_entities.decode(text)
   end
 
   def normalize_charset(text)
