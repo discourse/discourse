@@ -1,4 +1,4 @@
-import { click, render } from "@ember/test-helpers";
+import { click, render, settled } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import NotificationsList from "discourse/components/user-menu/notifications-list";
 import { cloneJSON } from "discourse/lib/object";
@@ -117,6 +117,18 @@ module(
       assert
         .dom(".panel-body-bottom .btn.notifications-dismiss")
         .doesNotExist("dismiss button is not shown");
+    });
+
+    test("refreshes the list when notifications:changed appEvent is triggered", async function (assert) {
+      await render(<template><NotificationsList /></template>);
+      assert.strictEqual(notificationsFetches, 1);
+      this.owner.lookup("service:app-events").trigger("notifications:changed");
+      await settled();
+      assert.strictEqual(
+        notificationsFetches,
+        2,
+        "notifications list is re-fetched"
+      );
     });
 
     test("all notifications tab shows pending reviewables and sorts them with unread notifications based on their creation date", async function (assert) {
