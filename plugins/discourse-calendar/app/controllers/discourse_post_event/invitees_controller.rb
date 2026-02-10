@@ -52,7 +52,7 @@ module DiscoursePostEvent
     end
 
     def update
-      invitee = Invitee.find_by(id: params[:invitee_id], post_id: params[:event_id])
+      invitee = Invitee.find_by!(id: params[:invitee_id], post_id: params[:event_id])
       guardian.ensure_can_act_on_invitee!(invitee)
       begin
         invitee.update_attendance!(invitee_params[:status])
@@ -102,8 +102,8 @@ module DiscoursePostEvent
     end
 
     def destroy
-      event = Event.find_by(id: params[:post_id])
-      invitee = event.invitees.find_by(id: params[:id])
+      event = Event.find(params[:post_id])
+      invitee = event.invitees.find(params[:id])
       guardian.ensure_can_act_on_invitee!(invitee)
       invitee.destroy!
       event.publish_update!
