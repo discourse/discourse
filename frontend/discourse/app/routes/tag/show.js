@@ -157,14 +157,29 @@ export default class TagShowRoute extends DiscourseRoute {
       }
     );
 
-    if (list.topic_list.tags && list.topic_list.tags.length === 1) {
-      // update tag properties from API response
-      tag.setProperties({
-        id: list.topic_list.tags[0].id,
-        name: list.topic_list.tags[0].name,
-        slug: list.topic_list.tags[0].slug,
-        staff: list.topic_list.tags[0].staff,
-      });
+    if (list.topic_list.tags && list.topic_list.tags.length >= 1) {
+      const mainTagData = list.topic_list.tags.find(
+        (t) => t.name.toLowerCase() === slug.toLowerCase() || t.slug === slug
+      );
+      if (mainTagData) {
+        tag.setProperties({
+          id: mainTagData.id,
+          name: mainTagData.name,
+          slug: mainTagData.slug,
+          staff: mainTagData.staff,
+        });
+      }
+
+      if (additionalTags) {
+        additionalTags = additionalTags.map((additionalSlug) => {
+          const tagData = list.topic_list.tags.find(
+            (t) =>
+              t.name.toLowerCase() === additionalSlug.toLowerCase() ||
+              t.slug === additionalSlug
+          );
+          return tagData ? tagData.name : additionalSlug;
+        });
+      }
     }
 
     return {

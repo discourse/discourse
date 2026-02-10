@@ -65,4 +65,49 @@ describe "Tags intersection", type: :system do
 
     expect(page).to have_current_path("/tags/intersection/sour/sweet")
   end
+
+  context "with capitalized tag names" do
+    fab!(:cap_tag) { Fabricate(:tag, name: "Spicy") }
+    fab!(:cap_tag2) { Fabricate(:tag, name: "Bitter") }
+    fab!(:cap_tag3) { Fabricate(:tag, name: "Savory") }
+
+    fab!(:cap_tagged_topic) { Fabricate(:topic, tags: [cap_tag, cap_tag2, cap_tag3]) }
+    fab!(:cap_the_topic) { Fabricate(:topic, category:, tags: [cap_tag, cap_tag2, cap_tag3]) }
+
+    it "displays tag names in the chooser and shows correct topics when adding and removing tags" do
+      visit("/tags/intersection/#{cap_tag.slug}/#{cap_tag2.slug}")
+
+      chooser = PageObjects::Components::SelectKit.new(".tags-intersection-chooser")
+      expect(chooser).to have_selected_names("Spicy", "Bitter")
+      expect(discovery.topic_list).to have_topics(count: 2)
+      expect(discovery.topic_list).to have_topic(cap_tagged_topic)
+      expect(discovery.topic_list).to have_topic(cap_the_topic)
+
+      chooser.expand
+      chooser.select_row_by_name("Savory")
+
+      expect(page).to have_current_path("/tags/intersection/Spicy/Bitter/Savory")
+      expect(chooser).to have_selected_names("Spicy", "Bitter", "Savory")
+      expect(discovery.topic_list).to have_topics(count: 2)
+      expect(discovery.topic_list).to have_topic(cap_tagged_topic)
+      expect(discovery.topic_list).to have_topic(cap_the_topic)
+
+      chooser.unselect_by_name("Bitter")
+
+      expect(page).to have_current_path("/tags/intersection/Spicy/Savory")
+      expect(chooser).to have_selected_names("Spicy", "Savory")
+      expect(discovery.topic_list).to have_topics(count: 2)
+    end
+
+    it "navigates to canonical tag URL when removing tags down to one" do
+      visit("/tags/intersection/#{cap_tag.slug}/#{cap_tag2.slug}")
+
+      chooser = PageObjects::Components::SelectKit.new(".tags-intersection-chooser")
+      chooser.unselect_by_name("Bitter")
+
+      expect(page).to have_current_path("/tag/#{cap_tag.slug}/#{cap_tag.id}")
+      expect(discovery.topic_list).to have_topic(cap_tagged_topic)
+      expect(discovery.topic_list).to have_topic(cap_the_topic)
+    end
+  end
 end
