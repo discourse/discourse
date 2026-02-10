@@ -145,6 +145,10 @@
     padding: var(--space-1);
   }
 
+  .sidebar-section-link-wrapper .sidebar-section-link-prefix .prefix-square {
+    border-radius: var(--d-border-radius);
+  }
+
   .dropdown-menu__item .btn {
     display: inline-flex;
     gap: var(--d-sidebar-section-link-prefix-margin-right);
