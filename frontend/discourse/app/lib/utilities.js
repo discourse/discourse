@@ -690,6 +690,13 @@ export function findTableRegex() {
   return /((\r?){2}|^)(^\|[^\r\n]*(\r?\n)?)+(?=(\r?\n){2}|$)/gm;
 }
 
+export function replaceTableRaw(raw, lineRange, newTableRaw) {
+  const lines = raw.split("\n");
+  const before = lines.slice(0, lineRange[0]);
+  const after = lines.slice(lineRange[1]);
+  return [...before, ...newTableRaw.trimEnd().split("\n"), ...after].join("\n");
+}
+
 export function tokenRange(tokens, start, end) {
   const contents = [];
   let startPushing = false;
