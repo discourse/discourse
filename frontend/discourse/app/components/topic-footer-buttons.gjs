@@ -66,7 +66,7 @@ export default class TopicFooterButtons extends Component {
     );
   }
 
-  @computed("topic")
+  @computed("topic.bookmarked")
   get topicBookmarkManager() {
     return new TopicBookmarkManager(getOwner(this), this.topic);
   }
