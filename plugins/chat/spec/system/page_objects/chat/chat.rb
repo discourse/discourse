@@ -52,6 +52,7 @@ module PageObjects
       end
 
       def open_new_message(ensure_open: true)
+        expect(self).to have_css("#site-logo") # wait for the page
         send_keys([PLATFORM_KEY_MODIFIER, "k"])
         find(".chat-modal-new-message") if ensure_open
       end
