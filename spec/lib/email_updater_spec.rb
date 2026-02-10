@@ -303,6 +303,22 @@ RSpec.describe EmailUpdater do
           expect(user.reload.user_emails.pluck(:email)).to contain_exactly(old_email, new_email)
         end
       end
+
+      context "when resending confirmation for the same email" do
+        it "does not create a duplicate email change request" do
+          expect(EmailChangeRequest.where(user_id: user.id, new_email: new_email).count).to eq(1)
+
+          expect_enqueued_with(
+            job: :critical_user_email,
+            args: {
+              type: :confirm_new_email,
+              to_address: new_email,
+            },
+          ) { updater.change_to(new_email, add: true) }
+
+          expect(EmailChangeRequest.where(user_id: user.id, new_email: new_email).count).to eq(1)
+        end
+      end
     end
 
     context "with max_allowed_secondary_emails" do

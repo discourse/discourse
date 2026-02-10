@@ -50,7 +50,7 @@ class EmailUpdater
     @change_req =
       EmailChangeRequest.find_or_initialize_by(
         user_id: @user.id,
-        old_email: @user.email,
+        old_email: add ? nil : @user.email,
         new_email: email,
       )
 
