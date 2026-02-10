@@ -1023,8 +1023,8 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     );
   });
 
-  test("categories section header shows dropdown with new and edit actions for admin user", async function (assert) {
-    updateCurrentUser({ admin: true });
+  test("categories section header shows dropdown with new and edit actions for user who can create categories", async function (assert) {
+    updateCurrentUser({ admin: true, can_create_category: true });
 
     await visit("/");
 
@@ -1044,7 +1044,7 @@ acceptance("Sidebar - Logged on user - Categories Section", function (needs) {
     assert.strictEqual(currentURL(), "/new-category");
   });
 
-  test("categories section header shows single edit button for non-admin user", async function (assert) {
+  test("categories section header shows single edit button for user who cannot create categories", async function (assert) {
     await visit("/");
 
     const categoriesSection =
@@ -1366,7 +1366,7 @@ acceptance(
 acceptance(
   "Sidebar - Admin - Categories Section - Header Dropdown Mode",
   function (needs) {
-    needs.user({ admin: true });
+    needs.user({ admin: true, can_create_category: true });
     needs.settings({ navigation_menu: "header dropdown" });
 
     test("edit action shows 'Edit nav categories' text", async function (assert) {

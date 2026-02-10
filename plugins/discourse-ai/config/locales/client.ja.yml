@@ -582,17 +582,6 @@ ja:
           anthropic-claude-opus-4-5: "Anthropic の最もインテリジェントなモデル"
           anthropic-claude-sonnet-4-5: "速度とコストの最適なバランス"
           anthropic-claude-haiku-4-5: "高速でコスト効率に優れています"
-          google-gemini-2-5-pro: "広範なタスクに対応できる大規模マルチモーダルモデル"
-          google-gemini-2-5-flash: "マルチモーダル推論による軽量・高速で、コスト効率に優れています"
-          open_ai-gpt-5-mini: "インテリジェンス、速度、コストのバランスが取れており、多くのユースケースに魅力的なモデル。"
-          open_ai-gpt-5-nano: "最速かつ最もコスト効率の良い GPT-5 モデル。"
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "効率的な軽量多言語モデル"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "強力な多目的モデル"
-          mistral-mistral-large-latest: "Mistral の最も強力なモデル"
-          mistral-pixtral-large-latest: "Mistral の最も強力なビジョン対応モデル"
-          open_router-x-ai-grok-4: "xAI の最新モデル"
-          open_router-deepseek-deepseek-r1-0528-free: "DeepSeek の最新の推論モデル"
-          open_router-meta-llama-3-3-70b-instruct: "高機能多言語モデル"
         preseeded_model_description: "%{model} を利用する事前構成済みのオープンソースモデル"
         configured:
           title: "構成済みの LLM"
@@ -874,6 +863,7 @@ ja:
         topic:
           title: "トピックの要約"
           close: "要約パネルを閉じる"
+          regenerate_summaries_option: "トピックの要約"
         topic_list_layout:
           button:
             compact: "コンパクト"

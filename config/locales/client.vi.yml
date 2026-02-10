@@ -1330,7 +1330,7 @@ vi:
           all: "Tất cả"
           read: "Đã đọc"
           unread: "Chưa đọc"
-          unseen: "Không nhìn thấy"
+          unseen: "Chưa xem"
         ignore_duration_title: "Bỏ qua người dùng"
         ignore_duration_username: "Tên đăng nhập"
         ignore_duration_when: "Thời hạn:"
@@ -1535,8 +1535,6 @@ vi:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> báo cáo hữu ích'
-        flagged_posts:
-          other: '<span class="%{className}">%{count}</span> tút bị báo cáo'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> tút đã xóa'
         silencings:
@@ -2031,6 +2029,7 @@ vi:
                 other {# ngày}
             }.
           edit_link_options: "Chỉnh sửa tùy chọn link hoặc gửi qua email."
+          edit_link_options_only: "Chỉnh sửa tùy chọn link"
           show_advanced: "Hiển thị các tùy chọn nâng cao"
           hide_advanced: "Ẩn các tùy chọn nâng cao"
           description: "Mô tả"
@@ -2223,7 +2222,6 @@ vi:
     form_kit:
       reset: Cài lại
       optional: tùy chọn
-      errors_summary_title: "Biểu mẫu này có lỗi:"
       dirty_form: "Bạn chưa gửi các thay đổi của mình! Bạn có chắc muốn thoát?"
       errors:
         starts_with: "Phải bắt đầu bằng %{prefix}"
@@ -2903,8 +2901,10 @@ vi:
       upcoming_changes:
         available:
           title: "Các thay đổi sắp tới"
+          description: "'%{changeName}' hiện có sẵn để xem trước"
         automatically_promoted:
           title: "Các thay đổi sắp tới"
+          description: "'%{changeName}' đã được kích hoạt tự động"
       dismiss_confirmation:
         body:
           default:
@@ -2957,7 +2957,10 @@ vi:
         membership_request_consolidated: "Yêu cầu đăng ký thành viên mới"
         reaction: "Phản ứng mới"
         votes_released: "đã trả lượt bình chọn"
+        new_features: "tính năng mới của Discourse đã ra mắt"
         admin_problems: "Lời khuyên mới trên bảng điều khiển"
+        upcoming_change_available: "thay đổi mới sắp tới '%{changeName}' hiện đã có sẵn"
+        upcoming_change_automatically_promoted: "thay đổi sắp tới '%{changeName}' đã được kích hoạt tự động"
     upload_selector:
       change: "Thay đổi"
       delete: "Xóa"
@@ -3710,7 +3713,7 @@ vi:
       quote_edit: "Sửa"
       quote_edit_shortcut: "Chỉnh sửa (hoặc nhấn phím e)"
       quote_copy: "Sao chép Trích dẫn"
-      quote_copied_to_clibboard: "Trích dẫn đã được sao chép vào clipboard"
+      quote_copied_to_clipboard: "Trích dẫn đã được sao chép vào clipboard"
       quote_share: "Chia sẻ"
       edit_reason: "Lý do: "
       post_number: "tút %{number}"
@@ -3992,6 +3995,7 @@ vi:
       general: "Chung"
       settings: "Cấu hình"
       advanced: "Nâng cao"
+      show_advanced: "Cài đặt nâng cao"
       topic_template: "Template"
       tags: "Thẻ"
       localizations: "Bản địa hóa"
@@ -4028,6 +4032,8 @@ vi:
       save_error: Có lỗi xảy ra khi lưu chuyên mục
       errors:
         self_lockout: "Bạn sắp thay đổi quyền truy cập chuyên mục theo cách sẽ loại bỏ quyền truy cập của chính bạn. Bạn có chắc muốn tiếp tục?"
+      validations:
+        icon_required: "Chọn một biểu tượng."
       name: "Tên chuyên mục"
       untitled: "Chuyên mục chưa đặt tên"
       description: "Mô tả"
@@ -4039,6 +4045,7 @@ vi:
       style: "Phong cách"
       icon: "Biểu tượng"
       emoji: "Emoji"
+      select_emoji: "Chọn biểu tượng cảm xúc"
       background_color: "Màu sắc"
       foreground_color: "Màu chữ"
       color_validations:
@@ -4056,6 +4063,7 @@ vi:
           emoji: "Emoji"
       color_used: "Màu đang được sử dụng"
       predefined_colors: "Các tùy chọn màu sắc có sẵn"
+      name_placeholder: "Một hoặc hai từ được đề xuất"
       color_placeholder: "Bất cứ màu nào"
       delete_confirm: "Bạn có chắc sẽ xóa chuyên mục này chứ?"
       delete_error: "Có lỗi xảy ra khi xóa chuyên mục này"
@@ -4072,11 +4080,11 @@ vi:
         reply: "Trả lời"
         create: "Tạo"
         no_groups_selected: "Không có nhóm nào được cấp quyền truy cập; chuyên mục này sẽ chỉ hiển thị cho BQT."
-        everyone_has_access: 'Chuyên mục này là công khai, mọi người đều có thể xem, trả lời và tạo tút Để hạn chế quyền, hãy xóa một hoặc nhiều quyền được cấp cho nhóm "mọi người".'
+        everyone_full_access: 'Chuyên mục này là công khai, mọi người đều có thể xem, trả lời và tạo tút Để hạn chế quyền, hãy xóa một hoặc nhiều quyền được cấp cho nhóm "mọi người".'
+        specific_groups_have_access: "Chuyên mục này là riêng tư, chỉ các nhóm được chọn mới có thể xem, trả lời và tạo tút."
         toggle_reply: "Chuyển đổi quyền Trả lời"
         toggle_full: "Chuyển đổi quyền Tạo"
         inherited: 'Sự cho phép này được thừa hưởng từ “tất cả mọi người”'
-      special_warning: "Cảnh báo: Đây là chuyên mục có sẵn nên bạn không thể chỉnh sửa các thiết lập bảo mật. Nếu bạn muốn sử dụng chuyên mục này, hãy xóa nó thay vì tái sử dụng."
       uncategorized_security_warning: "Chuyên mục này là đặc biệt. Nó được thiết kế như một khu vực tổ chức cho các chủ đề không có chuyên mục; nó không thể có cài đặt bảo mật."
       uncategorized_general_warning: 'Chuyên mục này là đặc biệt. Nó được sử dụng làm chuyên mục mặc định cho các chủ đề mới chưa chọn chuyên mục. Nếu bạn muốn ngăn hành vi này và buộc lựa chọn chuyên mục, <a href="%{settingLink}">vui lòng tắt cài đặt tại đây</a>. Nếu bạn muốn thay đổi tên hoặc mô tả, hãy chuyển đến <a href="%{customizeLink}">Tùy chỉnh / Nội dung Văn bản</a>.'
       pending_permission_change_alert: "Bạn chưa thêm %{group} vào chuyên mục này; nhấn vào nút này để thêm chúng."
@@ -4109,12 +4117,16 @@ vi:
       position_disabled: "Các chuyên mục sẽ được hiển thị theo thứ tự hoạt động. Để kiểm soát thứ tự các chuyên mục trong danh sách, hãy bật cài đặt <a href='%{url}'>'cố định vị trí chuyên mục'</a> ."
       minimum_required_tags: "Số lượng thẻ tối thiểu được yêu cầu trong một chủ đề:"
       default_slow_mode: 'Bật "Chế độ chậm" cho các chủ đề mới trong chuyên mục này.'
+      subcategory_of: "Chuyên mục phụ của..."
       none_subcategory_text: "Không"
+      subcategory_permissions_warning: "Một chuyên mục phụ của một chuyên mục riêng tư không thể là công khai."
       visibility:
-        title: "Truy cập"
+        title: "Khả năng hiển thị"
         public: "Công khai"
         all_members: "Tất cả thành viên"
         group_restricted: "Riêng tư"
+        who_can_see: "Ai có thể xem chuyên mục này"
+        who_can_post: "Ai có thể đăng tút trong chuyên mục này"
       num_auto_bump_daily: "Số lượng chủ đề đẩy tự động hàng ngày:"
       auto_bump_cooldown_days: "Số ngày tối thiểu trước khi đẩy lại cùng một chủ đề:"
       navigate_to_first_post_after_read: "Chuyển đến tút đầu tiên sau khi chủ đề được đọc"
@@ -4461,6 +4473,7 @@ vi:
         back: "%{shortcut} Quay lại"
         up_down: "%{shortcut} Di chuyển lựa chọn &uarr; &darr;"
         open: "%{shortcut} Mở chủ đề đã chọn"
+        open_new_window: "%{shortcut} Mở chủ đề đã chọn trong tab/cửa sổ mới"
         next_prev: "%{shortcut} Phần tiếp theo/trước đó"
         go_to_unread_post: "%{shortcut} Đi đến tút chưa đọc đầu tiên"
       application:
@@ -5180,6 +5193,7 @@ vi:
         change_enabled_for_success: "Bạn đã kích hoạt thay đổi này cho %{enabledFor}"
         change_disabled: "Bạn đã chọn không tham gia thay đổi này"
         permanent_notice: "Thay đổi này hiện đã trở thành vĩnh viễn và sẽ sớm bị gỡ bỏ. Bạn không còn có thể từ chối tham gia."
+        permanent_soon_notice: "Thay đổi này sẽ sớm có hiệu lực vĩnh viễn. Bạn sẽ không còn có thể từ chối tham gia nữa."
         permanent_no_group_selection: "Không áp dụng, các thay đổi vĩnh viễn áp dụng cho tất cả các nhóm."
         no_changes: "Hiện tại không có thay đổi nào sắp diễn ra."
         preview: "Xem trước"
@@ -5206,13 +5220,16 @@ vi:
           search_placeholder: "Lọc theo tên, mô tả hoặc plugin..."
           no_results: "Không có thay đổi sắp tới nào phù hợp với bộ lọc của bạn"
           all: "Tất cả"
-          enabled_all: "Đã bật hoặc đã tắt"
+          enabled_all: "Tất cả trạng thái được kích hoạt"
           enabled: "Đã bật"
+          enabled_for_staff: "Đã kích hoạt cho nhân viên"
+          enabled_for_specific_groups: "Đã kích hoạt cho các nhóm cụ thể"
           disabled: "Vô hiệu hóa"
           impact_type_all: "Tất cả loại tác động"
           impact_type_feature: "Tính năng"
           impact_type_other: "Khác"
           status_all: "Tất cả trạng thái"
+          status_conceptual: "Khái niệm"
           status_experimental: "Thử nghiệm"
           status_alpha: "Alpha"
           status_beta: "Beta"
@@ -5256,7 +5273,6 @@ vi:
           keywords: "locale|language|timezone|unicode|ltr"
         upcoming_changes:
           title: "Các thay đổi sắp tới"
-          header_description: "Danh sách các thay đổi sắp tới trên Discourse có thể ảnh hưởng đến trang web của bạn, cùng với các tính năng thử nghiệm mà bạn có thể tham gia. Bạn có thể lọc theo mức độ ảnh hưởng, loại thay đổi và trạng thái.\n\nNhóm tham gia thử nghiệm có thể được sử dụng để cho phép một nhóm người dùng nhất định thử nghiệm một thay đổi trước khi nó được phát hành cho tất cả mọi người, tuy nhiên các nhóm này sẽ không còn liên quan một khi thay đổi đó tiến tới trạng thái Ổn định."
         login:
           title: "Đăng nhập và xác thực"
           header_description: "Cấu hình cách người dùng đăng nhập và xác thực, thông tin bí mật và khóa, nhà cung cấp OAuth2, và nhiều hơn nữa."
@@ -5399,9 +5415,11 @@ vi:
               locale_label: "Ngôn ngữ"
             header_new_members:
               label: "Thông báo dành cho thành viên mới"
+              description: "Các biến có sẵn: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Chào mừng, %{preferred_display_name}!"
             header_logged_in:
               label: "Thông báo dành cho thành viên đã đăng nhập"
+              description: "Các biến có sẵn: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Chào mừng %{preferred_display_name} trở lại!"
             header_anonymous:
               label: "Thông báo dành cho khách ghé thăm ẩn danh"
@@ -5746,6 +5764,7 @@ vi:
           daily: hằng ngày
           monthly: Hàng tháng
           weekly: Hàng tuần
+          value_so_far: "%{value} (cho đến nay)"
           dates: "Ngày (theo mốc giờ UTC)"
           groups: "Các nhóm"
           disabled: "Báo cáo này đã bị vô hiệu hóa"
@@ -5756,7 +5775,9 @@ vi:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">tìm kiếm logs</a>'
             disabled: 'Báo cáo tìm kiếm thịnh hành bị tắt. Bật <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">log truy vấn tìm kiếm</a> số liệu thu thập.'
+          average_chart_label: Hiển thị giá trị trung bình, không phải tổng
           sort_button: "Sắp xếp theo %{column}"
+          sort_button_current: "Sắp xếp theo %{column}, %{direction}"
           sort_ascending: "tăng dần"
           sort_descending: "giảm dần"
           filters:
@@ -6495,8 +6516,6 @@ vi:
         delete: "Xóa"
         delete_confirm: 'Bạn có chắc chắn muốn xóa "%{theme_name}" không?'
         bulk_delete: "Bạn có chắc không?"
-        bulk_themes_delete_confirm: "Điều này sẽ gỡ cài đặt các chủ đề sau đây, chúng sẽ không còn khả dụng cho bất kỳ người dùng nào trên trang web của bạn:"
-        bulk_components_delete_confirm: "Điều này sẽ gỡ cài đặt các thành phần sau, chúng sẽ không còn khả dụng cho bất kỳ người dùng nào trên trang web của bạn:"
         color: "Màu sắc"
         opacity: "Độ mờ"
         copy: "Nhân bản"
@@ -7108,6 +7127,7 @@ vi:
             change_theme_site_setting: "thay đổi cài đặt chủ đề"
             stop_impersonating: "ngừng mạo danh"
             upcoming_change_toggled: "baajt/tắt thay đổi sắp tới"
+            upcoming_change_available: "Thay đổi sắp tới có sẵn"
             change_site_setting_groups: "thay đổi nhóm cài đặt trang web"
             discourse_id_regenerate_credentials: "tạo lại thông tin đăng nhập Discourse ID"
         screened_emails:
@@ -7247,6 +7267,7 @@ vi:
           upload: "Tải lên một tệp"
           multiselect: "Nhiều lựa chọn"
           tagchooser: "Chọn nhóm thẻ"
+          composer: "Trả lời bằng Markdown"
         validations_modal:
           button_title: "Xác thực"
           modal_title: "Tùy chọn xác thực"
@@ -7759,6 +7780,9 @@ vi:
             label: "Tải lên"
             title: "Tải lên hình ảnh"
         download_file: "Tải xuống"
+        upload_restrictions:
+          extensions: "Chấp nhận: %{extensions}"
+          max_size: "Tối đa: %{size}"
         selectable_avatars:
           title: "Danh sách ảnh đại diện mà người dùng có thể chọn"
         table_column_heading:

@@ -53,7 +53,6 @@ da:
         archive_channel: "Arkivér kanal"
         delete_channel: "Slet kanal"
         leave_channel: "Forlad kanal"
-        notification_settings_context: "Notifikationer"
         join: "Tilslut"
         leave: "Forlad"
       channel_archive:

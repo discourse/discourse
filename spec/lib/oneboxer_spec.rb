@@ -643,6 +643,126 @@ RSpec.describe Oneboxer do
 
       expect(Oneboxer.external_onebox("https://its.me")[:onebox]).to be_present
     end
+
+    context "with ignore_redirects for YouTube URLs" do
+      let(:youtube_html) { <<~HTML }
+        <html>
+        <head>
+          <meta property="og:title" content="Test YouTube Video">
+          <meta property="og:description" content="A test video description">
+          <meta property="og:image" content="https://i.ytimg.com/vi/abc123/maxresdefault.jpg">
+        </head>
+        <body>
+           <p>body</p>
+        </body>
+        <html>
+      HTML
+
+      let(:youtube_oembed) do
+        {
+          title: "Test YouTube Video",
+          author_name: "Test Channel",
+          thumbnail_url: "https://i.ytimg.com/vi/abc123/hqdefault.jpg",
+        }.to_json
+      end
+
+      before { Discourse.cache.clear }
+
+      it "resolves youtu.be URLs without following redirects to youtube.com" do
+        youtu_be_url = "https://youtu.be/abc123"
+        youtube_full_url = "https://www.youtube.com/watch?v=abc123"
+
+        head_stub =
+          stub_request(:head, youtu_be_url).to_return(
+            status: 301,
+            body: "",
+            headers: {
+              "location" => youtube_full_url,
+            },
+          )
+
+        stub_request(:get, youtu_be_url).to_return(status: 200, body: youtube_html)
+
+        stub_request(:get, "https://www.youtube.com/oembed?url=#{youtu_be_url}").to_return(
+          status: 200,
+          body: youtube_oembed,
+        )
+
+        stub_request(:any, "https://youtu.be/embed/abc123").to_return(status: 403, body: nil)
+
+        redirect_stub = stub_request(:any, youtube_full_url)
+
+        result = Oneboxer.external_onebox(youtu_be_url)
+
+        expect(result[:onebox]).to be_present
+        expect(result[:onebox]).to include("abc123")
+        expect(result[:onebox]).to include("youtube.com/embed/abc123")
+
+        expect(head_stub).not_to have_been_requested
+        expect(redirect_stub).not_to have_been_requested
+      end
+
+      it "resolves youtube.com URLs without following redirects" do
+        youtube_url = "https://www.youtube.com/watch?v=xyz789"
+        redirect_url = "https://www.youtube.com/watch?v=xyz789&feature=share"
+
+        head_stub =
+          stub_request(:head, youtube_url).to_return(
+            status: 301,
+            body: "",
+            headers: {
+              "location" => redirect_url,
+            },
+          )
+
+        stub_request(:get, youtube_url).to_return(status: 200, body: youtube_html)
+
+        stub_request(:get, "https://www.youtube.com/oembed?url=#{youtube_url}").to_return(
+          status: 200,
+          body: youtube_oembed,
+        )
+
+        stub_request(:any, "https://www.youtube.com/embed/xyz789").to_return(status: 403, body: nil)
+
+        redirect_stub = stub_request(:any, redirect_url)
+
+        result = Oneboxer.external_onebox(youtube_url)
+
+        expect(result[:onebox]).to be_present
+        expect(result[:onebox]).to include("xyz789")
+        expect(result[:onebox]).to include("youtube.com/embed/xyz789")
+
+        expect(head_stub).not_to have_been_requested
+        expect(redirect_stub).not_to have_been_requested
+      end
+
+      it "follows redirects for domains not in ignore_redirects list" do
+        other_url = "https://other-site.com/video"
+        redirect_url = "https://other-site.com/video/actual"
+
+        head_stub =
+          stub_request(:head, other_url).to_return(
+            status: 301,
+            body: "",
+            headers: {
+              "location" => redirect_url,
+            },
+          )
+
+        redirect_head_stub =
+          stub_request(:head, redirect_url).to_return(status: 200, body: "", headers: {})
+
+        stub_request(:get, redirect_url).to_return(status: 200, body: html)
+
+        result = Oneboxer.external_onebox(other_url)
+
+        expect(result[:onebox]).to be_present
+        expect(result[:onebox]).to include("Cats")
+
+        expect(head_stub).to have_been_requested
+        expect(redirect_head_stub).to have_been_requested
+      end
+    end
   end
 
   describe "onebox custom user agent" do

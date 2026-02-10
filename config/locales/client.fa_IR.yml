@@ -1421,9 +1421,6 @@ fa_IR:
         flags_given:
           one: '<span class="%{className}">%{count}</span> پرچم مفید'
           other: '<span class="%{className}">%{count}</span> پرچم مفید'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> پست پرچم‌گذاری شده'
-          other: '<span class="%{className}">%{count}</span> پست پرچم‌گذاری شده'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> پست حذف شده'
           other: '<span class="%{className}">%{count}</span> پست حذف شده'
@@ -2121,7 +2118,6 @@ fa_IR:
     form_kit:
       reset: بازنشانی
       optional: اختیاری
-      errors_summary_title: "این فرم حاوی خطاهایی است:"
       dirty_form: "شما تغییرات خود را ارسال نکرده‌اید! آیا مطمئنید می‌خواهید بروید؟"
       errors:
         required: "مورد نیاز"
@@ -3536,7 +3532,7 @@ fa_IR:
       quote_edit: "ویرایش"
       quote_edit_shortcut: "ویرایش (یا e را فشار دهید)"
       quote_copy: "رونوشت نقل قول"
-      quote_copied_to_clibboard: "نقل قول در کلیپ بورد کپی شد"
+      quote_copied_to_clipboard: "نقل قول در کلیپ بورد کپی شد"
       quote_share: "اشتراک‌گذاری"
       edit_reason: "دلیل:"
       post_number: "نوشته %{number}"
@@ -3842,6 +3838,8 @@ fa_IR:
       slug_placeholder: "(اختیاری) کلمه با - جدا شده برای پیوند"
       creation_error: خطایی در ساخت این دسته بروز کرد.
       save_error: خطایی در ذخیره‌ی این دسته‌بندی روی داد.
+      validations:
+        icon_required: "یک آیکون را انتخاب کنید."
       name: "نام دسته‌بندی"
       untitled: "دسته‌بندی بدون‌عنوان"
       description: "توضیحات"
@@ -3873,11 +3871,10 @@ fa_IR:
         reply: "پاسخ"
         create: "ایجاد"
         no_groups_selected: "به هیچ گروهی اجازه دسترسی داده نشده است. این دسته فقط برای کارکنان قابل مشاهده خواهد بود."
-        everyone_has_access: 'این دسته عمومی است. همه می توانند ببینند، پاسخ دهند و پست ایجاد کنند. برای محدود کردن مجوزها، یک یا چند مورد از مجوزهای داده شده به گروه "همه" را حذف کنید.'
+        everyone_full_access: 'این دسته عمومی است. همه می توانند ببینند، پاسخ دهند و پست ایجاد کنند. برای محدود کردن مجوزها، یک یا چند مورد از مجوزهای داده شده به گروه "همه" را حذف کنید.'
         toggle_reply: "مجوز پاسخ را تغییر دهید"
         toggle_full: "مجوز ایجاد را تغییر دهید"
         inherited: 'این مجوز از "همه" به ارث رسیده است'
-      special_warning: "اخطار: این دسته‌بندی از پیش تعریف شده است و تنظیمات امینتی آن قابل تغییر نیست. اگر شما نمی‌خواهید از این دسته‌بندی استفاده کنید، به جای تغییر کاربرد حذفش کنید."
       uncategorized_security_warning: "این دسته خاص است و به عنوان محل نگهداری موضوعاتی در نظر گرفته شده است که دسته‌بندی ندارند. این دسته نمی‌تواند تنظیمات امنیتی داشته باشد."
       uncategorized_general_warning: 'این دسته، دسته‌ای خاص است و به عنوان دسته پیش‌فرض برای موضوعات جدیدی که دسته‌بندی آن‌ها انتخاب نشده، استفاده می‌شود. اگر می‌خواهید از این رفتار جلوگیری کنید و انتخاب دسته را اجباری کنید، لطفاً <a href="%{settingLink}"> تنظیمات را در اینجا غیرفعال کنید</a>. اگر می‌خواهید نام یا توضیحات را تغییر دهید، به قسمت <a href="%{customizeLink}">Customize / Text Content</a>بروید.'
       pending_permission_change_alert: "شما %{group} را به این دسته اضافه نکرده‌اید. برای افزودن آنها روی این دکمه کلیک کنید."
@@ -3905,7 +3902,7 @@ fa_IR:
       minimum_required_tags: "حداقل تعداد برچسب‌های مورد نیاز در یک تاپیک:"
       none_subcategory_text: "هیچ‌کدام"
       visibility:
-        title: "دسترسی"
+        title: "قابل مشاهده"
         public: "عمومی"
         group_restricted: "خصوصی"
       auto_bump_cooldown_days: "حداقل روزها قبل از بالا آوردن دوباره یک موضوع واحد"
@@ -5863,8 +5860,6 @@ fa_IR:
         delete: "پاک کردن"
         delete_confirm: 'آیا از حذف "%{theme_name}" مطمئن هستید؟ '
         bulk_delete: "مطمئنید؟"
-        bulk_themes_delete_confirm: "با این کار پوسته‌های زیر حذف نصب می‌شوند و دیگر برای هیچ‌کدام از کاربران سایت شما قابل استفاده نخواهند بود:"
-        bulk_components_delete_confirm: "با این کار اجزای زیر حذف نصب خواهند شد و دیگر برای هیچ یک از کاربران سایت شما قابل استفاده نخواهند بود:"
         color: "رنگ"
         opacity: "تاری"
         copy: "تکراری"

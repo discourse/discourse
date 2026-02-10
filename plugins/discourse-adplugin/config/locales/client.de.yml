@@ -27,6 +27,8 @@ de:
               label: "Name der Eigenanzeige"
             ad_placement:
               label: "Platzierung der Anzeige"
+            user_type:
+              label: "Benutzertyp"
       adplugin:
         house_ads:
           title: "Eigenanzeigen"

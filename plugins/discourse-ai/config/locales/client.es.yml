@@ -596,17 +596,7 @@ es:
           anthropic-claude-opus-4-5: "El modelo antrópico más inteligente"
           anthropic-claude-sonnet-4-5: "Equilibrio óptimo entre velocidad y coste"
           anthropic-claude-haiku-4-5: "Rápido y rentable"
-          google-gemini-2-5-pro: "Modelo multimodal de tamaño grande capaz de realizar una amplia gama de tareas"
-          google-gemini-2-5-flash: "Ligero, rápido y rentable con razonamiento multimodal"
-          open_ai-gpt-5-mini: "Proporciona un equilibrio entre inteligencia, velocidad y coste que lo convierte en un modelo atractivo para muchos casos de uso."
-          open_ai-gpt-5-nano: "El modelo GPT-5 más rápido y rentable."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Modelo multilingüe, ligero y eficaz"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Potente modelo polivalente"
-          mistral-mistral-large-latest: "El modelo más potente de Mistral"
-          mistral-pixtral-large-latest: "El modelo más potente de Mistral con capacidad de visión"
-          open_router-x-ai-grok-4: "El último modelo de xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "El último modelo de razonamiento de DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "Modelo multilingüe de gran capacidad"
+          open_ai-gpt-5-nano: "El modelo GPT-5 más rápido y rentable"
         preseeded_model_description: "Modelo de código abierto preconfigurado que utiliza %{model}"
         configured:
           title: "LLM configurados"
@@ -891,6 +881,7 @@ es:
         topic:
           title: "Resumen del tema"
           close: "Cerrar panel de resumen"
+          regenerate_summaries_option: "Resúmenes de temas"
         topic_list_layout:
           button:
             compact: "Compacto"

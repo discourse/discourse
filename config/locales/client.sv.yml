@@ -1274,9 +1274,6 @@ sv:
         flags_given:
           one: '<span class="%{className}">%{count}</span> hjälpsam flagga'
           other: '<span class="%{className}">%{count}</span> hjälpsamma flaggor'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> flaggat inlägg'
-          other: '<span class="%{className}">%{count}</span> flaggade inlägg'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> raderat inlägg'
           other: '<span class="%{className}">%{count}</span> raderade inlägg'
@@ -3168,7 +3165,7 @@ sv:
       quote_edit: "Redigera"
       quote_edit_shortcut: "Redigera (eller tryck på e)"
       quote_copy: "Kopiera citat"
-      quote_copied_to_clibboard: "Citatet har kopierats till urklipp"
+      quote_copied_to_clipboard: "Citatet har kopierats till urklipp"
       quote_share: "Dela"
       edit_reason: "Anledning: "
       post_number: "inlägg %{number}"
@@ -3449,6 +3446,8 @@ sv:
       slug_placeholder: "(Valfritt) streckade ord för url"
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
       save_error: Ett fel inträffade då kategorin skulle sparas.
+      validations:
+        icon_required: "Välj en ikon."
       description: "Beskrivning"
       icon: "Ikon"
       emoji: "Emoji"
@@ -3474,11 +3473,10 @@ sv:
         reply: "Svara"
         create: "Skapa"
         no_groups_selected: "Inga grupper har beviljats åtkomst; denna kategori kommer endast att vara synlig för personalen."
-        everyone_has_access: 'Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”.'
+        everyone_full_access: 'Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”.'
         toggle_reply: "Slå på/av behörighet att svara"
         toggle_full: "Slå på/av behörighet att skapa"
         inherited: 'Denna behörighet ärvs från "alla"'
-      special_warning: "Varning: Den här kategorin är en förutbestämd kategori och säkerhetsinställningarna kan inte ändras. Om du inte vill använda kategorin tar du bort den istället för att återanvända den."
       uncategorized_security_warning: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som saknar kategori. Den kan inte ha säkerhetsinställningar."
       uncategorized_general_warning: 'Denna kategori är speciell. Den används som standardkategori för nya ämnen som inte har en vald kategori. Om du vill förhindra detta beteende och tvinga val av kategori <a href="%{settingLink}">inaktiverar du inställningen här</a>. Om du vill ändra namn eller beskrivning går du till <a href="%{customizeLink}">Anpassa / Textinnehåll</a>.'
       pending_permission_change_alert: "Du har inte lagt till %{group} för denna kategori. Klicka på följande knapp för att lägga till den."
@@ -3506,7 +3504,7 @@ sv:
       minimum_required_tags: "Minsta antalet taggar som krävs för ett ämne:"
       none_subcategory_text: "Ingen"
       visibility:
-        title: "Tillgång"
+        title: "Synlighet"
         public: "Offentligt"
         group_restricted: "Privat"
       num_auto_bump_daily: "Antalet öppnade ämnen för att dagligen automatiskt knuffa ett ämne:"
@@ -5142,8 +5140,6 @@ sv:
         delete: "Radera"
         delete_confirm: 'Är du säker på att du vill radera "%{theme_name}"?'
         bulk_delete: "Är du säker?"
-        bulk_themes_delete_confirm: "Detta kommer att avinstallera följande teman, som inte längre kommer att kunna användas av användare på din webbplats:"
-        bulk_components_delete_confirm: "Detta kommer att avinstallera följande komponenter, som inte längre kommer att kunna användas av användare på din webbplats:"
         color: "Färg"
         opacity: "Opacitet"
         copy: "Duplicera"

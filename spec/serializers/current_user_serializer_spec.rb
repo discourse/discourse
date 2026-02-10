@@ -75,9 +75,9 @@ RSpec.describe CurrentUserSerializer do
       )
     end
 
-    it "includes muted tag ids" do
+    it "includes muted tags" do
       payload = serializer.as_json
-      expect(payload[:muted_tags]).to eq([tag.id])
+      expect(payload[:muted_tags]).to eq([{ id: tag.id, name: tag.name }])
     end
   end
 
@@ -328,6 +328,44 @@ RSpec.describe CurrentUserSerializer do
         end.count
 
       expect(initial_count).to eq(final_count)
+    end
+  end
+
+  describe "#can_create_category" do
+    let(:payload) { serializer.as_json }
+
+    context "when user is an admin" do
+      let(:user) { Fabricate(:admin) }
+
+      it "returns true" do
+        expect(payload[:can_create_category]).to eq(true)
+      end
+    end
+
+    context "when user is a moderator and moderators_manage_categories is enabled" do
+      let(:user) { Fabricate(:moderator) }
+
+      before { SiteSetting.moderators_manage_categories = true }
+
+      it "returns true" do
+        expect(payload[:can_create_category]).to eq(true)
+      end
+    end
+
+    context "when user is a moderator and moderators_manage_categories is disabled" do
+      let(:user) { Fabricate(:moderator) }
+
+      before { SiteSetting.moderators_manage_categories = false }
+
+      it "is not included" do
+        expect(payload).not_to have_key(:can_create_category)
+      end
+    end
+
+    context "when user is a regular user" do
+      it "is not included" do
+        expect(payload).not_to have_key(:can_create_category)
+      end
     end
   end
 

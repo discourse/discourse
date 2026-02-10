@@ -224,6 +224,14 @@ module PageObjects
         within_topic_footer_buttons { has_no_css?(".bookmark-menu-trigger.bookmarked") }
       end
 
+      def has_topic_status_bookmark?
+        has_css?("#topic-title .topic-status.--bookmarked")
+      end
+
+      def has_no_topic_status_bookmark?
+        has_no_css?("#topic-title .topic-status.--bookmarked")
+      end
+
       def click_reply_button
         within_topic_footer_buttons { find(".create").click }
         has_expanded_composer?

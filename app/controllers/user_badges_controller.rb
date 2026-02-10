@@ -4,6 +4,7 @@ class UserBadgesController < ApplicationController
   MAX_BADGES = 96 # This was limited in PR#2360 to make it divisible by 8
 
   before_action :ensure_badges_enabled
+  before_action :ensure_logged_in, only: %i[create destroy toggle_favorite]
 
   def index
     params.permit %i[granted_before offset username]

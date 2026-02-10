@@ -1150,6 +1150,47 @@ RSpec.describe PostsController do
         expect(response.status).to eq(403)
       end
 
+      it "allows staff to create whispers with boolean parameter" do
+        post_1 = Fabricate(:post)
+        staff_key = ApiKey.create!(user: admin).key
+
+        post "/posts.json",
+             params: {
+               raw: "this is a staff whisper",
+               topic_id: post_1.topic.id,
+               reply_to_post_number: 1,
+               whisper: true,
+             }.to_json,
+             headers: {
+               "CONTENT_TYPE" => "application/json",
+               "HTTP_API_USERNAME" => admin.username,
+               "HTTP_API_KEY" => staff_key,
+             }
+
+        expect(response.status).to eq(200)
+        expect(Post.last.post_type).to eq(Post.types[:whisper])
+      end
+
+      it "allows staff to create whispers with string 'true' parameter" do
+        post_1 = Fabricate(:post)
+        staff_key = ApiKey.create!(user: admin).key
+
+        post "/posts.json",
+             params: {
+               raw: "this is a staff whisper with string param",
+               topic_id: post_1.topic.id,
+               reply_to_post_number: 1,
+               whisper: "true",
+             },
+             headers: {
+               HTTP_API_USERNAME: admin.username,
+               HTTP_API_KEY: staff_key,
+             }
+
+        expect(response.status).to eq(200)
+        expect(Post.last.post_type).to eq(Post.types[:whisper])
+      end
+
       it "does not advance draft" do
         Draft.set(user, Draft::NEW_TOPIC, 0, "test")
         user_key = ApiKey.create!(user: user).key
@@ -1562,6 +1603,27 @@ RSpec.describe PostsController do
         expect(json["errors"]).to be_present
       end
 
+      describe "tagging by name" do
+        it "can create a post with a tag when tagging is enabled" do
+          SiteSetting.tagging_enabled = true
+          tag = Fabricate(:tag)
+
+          logger =
+            track_log_messages do
+              post "/posts.json",
+                   params: {
+                     raw: "this is the test content",
+                     title: "this is the test title for the topic",
+                     tags: [tag.name],
+                   }
+            end
+
+          expect(response.status).to eq(200)
+          expect(Post.last.topic.tags.count).to eq(1)
+          expect(logger.warnings.join("\n")).to include("tag names as strings")
+        end
+      end
+
       it "can create a post with a tag when tagging is enabled" do
         SiteSetting.tagging_enabled = true
         tag = Fabricate(:tag)
@@ -1570,11 +1632,11 @@ RSpec.describe PostsController do
              params: {
                raw: "this is the test content",
                title: "this is the test title for the topic",
-               tags: [tag.name],
+               tags: [{ id: tag.id, name: tag.name }],
              }
 
         expect(response.status).to eq(200)
-        expect(Post.last.topic.tags.count).to eq(1)
+        expect(Post.last.topic.tags).to contain_exactly(tag)
       end
 
       it "creates the topic and post with the right attributes" do
@@ -2040,6 +2102,24 @@ RSpec.describe PostsController do
             expect(topic.category_id).to eq(shared_category.id)
             expect(topic.shared_draft.category_id).to eq(destination_category.id)
           end
+
+          it "accepts boolean true for shared_draft parameter" do
+            post "/posts.json",
+                 params: {
+                   raw: "this is the shared draft content",
+                   title: "this is the shared draft title with boolean",
+                   category: destination_category.id,
+                   shared_draft: true,
+                 }.to_json,
+                 headers: {
+                   "CONTENT_TYPE" => "application/json",
+                 }
+            expect(response.status).to eq(200)
+            result = response.parsed_body
+            topic = Topic.find(result["topic_id"])
+            expect(topic.category_id).to eq(shared_category.id)
+            expect(topic.shared_draft.category_id).to eq(destination_category.id)
+          end
         end
       end
     end
@@ -2066,6 +2146,20 @@ RSpec.describe PostsController do
 
           expect(new_topic.title).to eq("This is some post")
           expect(new_topic.is_official_warning?).to eq(true)
+        end
+
+        it "accepts string 'true' for is_warning parameter" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 archetype: "private_message",
+                 title: "this is some post with string param",
+                 target_recipients: user_2.username,
+                 is_warning: "true",
+               }
+
+          expect(response.status).to eq(200)
+          expect(Topic.last.is_official_warning?).to eq(true)
         end
 
         it "should be able to mark a topic as not a warning" do
@@ -2120,6 +2214,21 @@ RSpec.describe PostsController do
                  raw: "this is the test content",
                  topic_id: topic.id,
                  no_bump: true,
+               }
+
+          expect(response.status).to eq(200)
+          expect(topic.reload.bumped_at).to eq_time(original_bumped_at)
+        end
+
+        it "accepts string 'true' for no_bump parameter" do
+          original_bumped_at = 1.day.ago
+          topic = Fabricate(:topic, bumped_at: original_bumped_at)
+
+          post "/posts.json",
+               params: {
+                 raw: "this is the test content",
+                 topic_id: topic.id,
+                 no_bump: "true",
                }
 
           expect(response.status).to eq(200)

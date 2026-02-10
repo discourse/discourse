@@ -186,6 +186,7 @@ RSpec.describe UserBadgesController do
 
   describe "#create" do
     it "requires username to be specified" do
+      sign_in(admin)
       post "/user_badges.json", params: { badge_id: badge.id }
       expect(response.status).to eq(400)
     end
@@ -381,6 +382,18 @@ RSpec.describe UserBadgesController do
         granted_by: Discourse.system_user,
         granted_at: Time.now,
       )
+    end
+
+    it "requires the user to be logged in" do
+      put "/user_badges/#{user_badge.id}/toggle_favorite.json"
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(I18n.t("not_logged_in"))
+    end
+
+    it "returns 403 for anonymous users even with nonexistent user_badge_id" do
+      put "/user_badges/#{user_badge.id + 999}/toggle_favorite.json"
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(I18n.t("not_logged_in"))
     end
 
     it "checks that the user is authorized to favorite the badge" do

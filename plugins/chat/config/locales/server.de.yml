@@ -73,6 +73,7 @@ de:
         closed: "Der Kanal ist geschlossen, es können keine Nachrichten bearbeitet oder gelöscht werden"
         read_only: "Der Kanal ist schreibgeschützt, es können keine Nachrichten bearbeitet oder gelöscht werden"
       user_cannot_send_message: "Du kannst derzeit keine Nachrichten senden."
+      user_not_in_channel: "Du musst Mitglied in diesem Kanal sein."
       rate_limit_exceeded: "Das Limit der Chat-Nachrichten, die innerhalb von 30 Sekunden gesendet werden können, wurde überschritten"
       auto_silence_from_flags: "Chat-Nachricht wurde mit einer Punktzahl markiert, die hoch genug ist, um den Benutzer stummzuschalten."
       channel_cannot_be_archived: "Der Kanal kann zu diesem Zeitpunkt nicht archiviert werden, er muss entweder geschlossen oder geöffnet sein."

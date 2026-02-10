@@ -650,21 +650,7 @@ ru:
           anthropic-claude-opus-4-5: "Самая интеллектуальная модель Anthropic"
           anthropic-claude-sonnet-4-5: "Оптимальный баланс скорости и стоимости"
           anthropic-claude-haiku-4-5: "Быстрая и экономически эффективная модель"
-          google-gemini-2-5-pro: "Большая мультимодальная модель, способная выполнять широкий спектр задач"
-          google-gemini-2-5-flash: "Облегченная, быстрая и экономически эффективная модель с поддержкой мультимодальных рассуждений"
-          google-gemini-2-5-flash-image-preview: "Новейшая модель генерации изображений с возможностями визуализации"
-          open_ai-gpt-5-1: "Флагманская модель Open AI. Она отлично подходит для решения задач в различных областях."
-          open_ai-gpt-5-mini: "Обеспечивает баланс между интеллектом, скоростью и стоимостью, что делает ее привлекательной моделью для многих вариантов использования."
-          open_ai-gpt-5-nano: "Самая быстрая и экономичная модель GPT-5."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Эффективная облегченная многоязычная модель"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Мощная многофункциональная модель"
-          mistral-mistral-large-latest: "Самая мощная модель Mistral"
-          mistral-pixtral-large-latest: "Самая мощная модель Mistral, поддерживающая обработку изображений"
-          open_router-x-ai-grok-4: "Последняя модель xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "Новейшая модель DeepSeek с поддержкой рассуждений"
-          open_router-meta-llama-3-3-70b-instruct: "Высокоэффективная многоязычная модель"
-          groq-openai-gpt-oss-120b: "Современная модель открытого веса от OpenAI"
-          groq-openai-gpt-oss-20b: "Легкая, быстрая и открытая модель от OpenAI"
+          open_ai-gpt-5-nano: "Самая быстрая и экономичная модель GPT-5"
         preseeded_model_description: "Предварительно настроенная модель с открытым исходным кодом, использующая %{model}"
         configured:
           title: "Настроенные LLM"
@@ -956,8 +942,7 @@ ru:
         topic:
           title: "Сводка по теме"
           close: "Закрыть панель сводки"
-          regenerate: "Регенерация краткое содержание"
-          regenerate_bulk: "Регенерируй краткие резюме"
+          regenerate_summaries_option: "Сводки по темам"
         topic_list_layout:
           button:
             compact: "Компактная"

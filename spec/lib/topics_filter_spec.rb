@@ -1203,6 +1203,40 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_tag_and_tag2) { Fabricate(:topic, tags: [tag, tag2]) }
       fab!(:topic_with_tag2) { Fabricate(:topic, tags: [tag2]) }
       fab!(:topic_with_group_only_tag) { Fabricate(:topic, tags: [group_only_tag]) }
+      fab!(:tag_synonym) { Fabricate(:tag, name: "synonym1", target_tag_id: tag.id) }
+
+      describe "when filtering by a tag synonym" do
+        it "should return topics tagged with the target tag when query string is `tag:synonym1`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tag:synonym1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
+
+        it "should return topics tagged with the target tag or other tags when query string is `tags:synonym1,tag2`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:synonym1,#{tag2.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
+        end
+
+        it "should exclude topics tagged with the target tag when query string is `-tag:synonym1`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-tag:synonym1")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_without_tag.id,
+            topic_with_tag2.id,
+            topic_with_group_only_tag.id,
+          )
+        end
+      end
 
       it "should not filter any topics by tags when tagging is disabled" do
         SiteSetting.tagging_enabled = false
@@ -1490,6 +1524,31 @@ RSpec.describe TopicsFilter do
               .filter_from_query_string("tags:#{tag.name}")
               .pluck(:id),
           ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
+      end
+
+      describe "when query string contains multiple tags with underscores" do
+        before do
+          tag.update!(name: "tag_one")
+          tag2.update!(name: "tag_two")
+        end
+
+        it "should return topics when filtering with comma-separated underscore tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:tag_one,tag_two")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
+        end
+
+        it "should return topics when filtering with plus-separated underscore tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:tag_one+tag_two")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag_and_tag2.id)
         end
       end
     end

@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-conditional-assertions */
 import { click, fillIn, find, render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import ComposerEditor from "discourse/components/composer-editor";

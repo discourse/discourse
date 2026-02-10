@@ -20,6 +20,7 @@ export default class AdminSiteSettingsController extends Controller {
       const queryParams = {
         filter: filterData.filter || undefined,
         onlyOverridden: filterData.onlyOverridden || undefined,
+        dependsOn: filterData.dependsOn || undefined,
       };
 
       const paramsChanged =

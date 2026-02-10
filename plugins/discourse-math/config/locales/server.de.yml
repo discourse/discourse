@@ -8,4 +8,3 @@ de:
   site_settings:
     discourse_math_enabled: "Aktiviere das Discourse-Math-Plug-in (fügt spezielle Bearbeitungsschritte für $- und $$-Blöcke hinzu)"
     discourse_math_provider: "Standard-Math-Rendering-Provider"
-    discourse_math_enable_asciimath: "Aktiviere asciimath (fügt spezielle Bearbeitungsschritte für durch % getrennte Eingabe hinzu; nur bei Verwendung von MathJax unterstützt)"

@@ -54,6 +54,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     params.require(:site_setting_id)
     id = params[:site_setting_id]
     raise Discourse::NotFound unless id.start_with?("default_")
+    raise Discourse::NotFound unless SiteSetting.has_setting?(id)
     new_value = value_or_default(params[id])
 
     raise_access_hidden_setting(id)

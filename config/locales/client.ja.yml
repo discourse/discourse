@@ -1458,8 +1458,6 @@ ja:
       staff_counters:
         flags_given:
           other: '<span class="%{className}">%{count}</span> 有益な通報'
-        flagged_posts:
-          other: '<span class="%{className}">%{count}</span> 通報された投稿'
         deleted_posts:
           other: '<span class="%{className}">%{count}</span> 削除された投稿'
         silencings:
@@ -2138,7 +2136,6 @@ ja:
     form_kit:
       reset: リセット
       optional: オプション
-      errors_summary_title: "このフォームにはエラーがあります:"
       dirty_form: "変更を送信しませんでした！終了してもよろしいですか？"
       errors:
         starts_with: "%{prefix} で始まる必要があります"
@@ -3552,7 +3549,7 @@ ja:
       quote_edit: "編集"
       quote_edit_shortcut: "編集 (または e を押す)"
       quote_copy: "引用をコピー"
-      quote_copied_to_clibboard: "引用をクリップボードにコピーしました"
+      quote_copied_to_clipboard: "引用をクリップボードにコピーしました"
       quote_share: "共有"
       edit_reason: "理由: "
       post_number: "投稿 %{number}"
@@ -3853,6 +3850,8 @@ ja:
       slug_placeholder: "(オプション) URL 用のダッシュ区切りの語"
       creation_error: カテゴリを作成中にエラーが発生しました。
       save_error: カテゴリを保存中にエラーが発生しました。
+      validations:
+        icon_required: "アイコンを選択する."
       description: "説明"
       logo_description: "推奨アスペクト比は 1:1、最小サイズは 200px です。空白のままにすると、画像は表示されません。"
       style: "スタイル"
@@ -3889,11 +3888,10 @@ ja:
         reply: "返信"
         create: "作成"
         no_groups_selected: "アクセスを許可されたグループはありません。このカテゴリはスタッフにのみ表示されます。"
-        everyone_has_access: 'このカテゴリは公開されており、全員が閲覧、返信、および投稿の作成を行えます。権限を制限するには、"全員" グループに付与されている 1 つ以上の権限を削除してください。'
+        everyone_full_access: 'このカテゴリは公開されており、全員が閲覧、返信、および投稿の作成を行えます。権限を制限するには、"全員" グループに付与されている 1 つ以上の権限を削除してください。'
         toggle_reply: "返信権限の切り替え"
         toggle_full: "作成権限の切り替え"
         inherited: 'この権限は "全員" から継承されます'
-      special_warning: "警告: このカテゴリは事前作成されたカテゴリであるため、セキュリティ設定を編集できません。このカテゴリを使用しない場合は、転用せずに削除してください。"
       uncategorized_security_warning: "このカテゴリは特殊です。カテゴリのないトピックを保存するために用意されているため、セキュリティを設定できません。"
       uncategorized_general_warning: 'このカテゴリは特殊です。カテゴリが選択されていない新しいトピックのデフォルトのカテゴリとして使用されます。この動作を適用せずにカテゴリの選択を強制するには、<a href="%{settingLink}">ここで設定を無効にしてください</a>。名前または説明を変更するには、<a href="%{customizeLink}">カスタマイズ/テキストコンテンツ</a>に移動してください。'
       pending_permission_change_alert: "このカテゴリに %{group} を追加していません。このボタンをクリックして追加してください。"
@@ -3921,7 +3919,7 @@ ja:
       minimum_required_tags: "トピックに必要なタグの最小数:"
       none_subcategory_text: "なし"
       visibility:
-        title: "アクセス"
+        title: "表示状態"
         public: "公開"
         group_restricted: "非公開"
       num_auto_bump_daily: "毎日自動的にバンプするオープントピックの数:"
@@ -6159,8 +6157,6 @@ ja:
         delete: "削除"
         delete_confirm: '"%{theme_name}" を削除してもよろしいですか？'
         bulk_delete: "よろしいですか？"
-        bulk_themes_delete_confirm: "これにより次のテーマがアンインストールされ、サイト上のどのユーザーも使用できなくなります。"
-        bulk_components_delete_confirm: "これにより次のコンポーネントがアンインストールされ、サイト上のどのユーザーも使用できなくなります。"
         color: "色"
         opacity: "透明度"
         copy: "複製"

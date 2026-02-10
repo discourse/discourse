@@ -2,6 +2,7 @@
 
 module DiscoursePostEvent
   class EventsController < DiscoursePostEventController
+    requires_login except: %i[index show]
     skip_before_action :check_xhr, only: [:index], if: :ics_request?
 
     def index

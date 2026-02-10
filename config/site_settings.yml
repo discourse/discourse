@@ -1716,21 +1716,21 @@ posting:
     max: 255
     area: "posts_and_topics"
     depends_on:
-      - "experimental_form_templates"
+      - "enable_form_templates"
     depends_behavior: "hidden"
   max_form_template_content_length:
     default: 5000
     max: 150000
     area: "posts_and_topics"
     depends_on:
-      - "experimental_form_templates"
+      - "enable_form_templates"
     depends_behavior: "hidden"
   show_preview_for_form_templates:
     client: true
     default: true
     area: "posts_and_topics"
     depends_on:
-      - "experimental_form_templates"
+      - "enable_form_templates"
     depends_behavior: "hidden"
   group_pm_user_limit:
     default: 1000
@@ -3757,6 +3757,25 @@ uncategorized:
     default: true
     area: "interface"
 
+  enable_custom_splash_screen:
+    default: false
+    client: true
+    hidden: true
+    area: "interface"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/395100"
+
+  splash_screen_image:
+    default: ""
+    type: upload
+    authorized_extensions: "svg"
+    area: "interface"
+    depends_on:
+      - "enable_custom_splash_screen"
+    depends_behavior: "hidden"
+
   suggest_weekends_in_date_pickers:
     client: true
     default: true
@@ -3797,6 +3816,16 @@ uncategorized:
     enum: "WelcomeBannerPageVisibility"
     default: "top_menu_pages"
     area: "interface"
+
+  modernize_foundation_theme:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      impact: "feature,all_members"
+      status: "experimental"
+      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
 
 user_preferences:
   default_email_digest_frequency:
@@ -4172,15 +4201,15 @@ dashboard:
     client: true
 
 experimental:
-  experimental_auto_grid_images:
+  enable_auto_grid_images:
     default: false
     client: true
     area: "experimental"
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/automatically-apply-grids-to-image-uploads/394784"
-  experimental_rename_faq_to_guidelines:
+      learn_more_url: "https://meta.discourse.org/t/-/394784"
+  rename_faq_to_guidelines:
     default: false
     hidden: true
     client: true
@@ -4188,12 +4217,13 @@ experimental:
     upcoming_change:
       impact: "feature,all_members"
       status: "experimental"
+      learn_more_url: "https://meta.discourse.org/t/-/395099"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
     hidden: true
     area: "experimental"
-  experimental_form_templates:
+  enable_form_templates:
     client: true
     default: false
     hidden: true
@@ -4201,15 +4231,15 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/introducing-experimental-form-templates/278631"
-  experimental_impersonation:
+      learn_more_url: "https://meta.discourse.org/t/-/278631"
+  impersonate_without_logout:
     default: false
     hidden: true
     area: "experimental"
     upcoming_change:
       status: "experimental"
       impact: "feature,staff"
-      learn_more_url: "https://meta.discourse.org/t/impersonate-a-user-and-returning-to-admin-user/119683"
+      learn_more_url: "https://meta.discourse.org/t/-/119683"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
@@ -4257,6 +4287,7 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/387322"
   enable_simplified_category_creation:
     default: false
     hidden: true
@@ -4264,3 +4295,4 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/394971"

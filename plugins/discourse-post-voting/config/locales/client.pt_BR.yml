@@ -119,6 +119,3 @@ pt_BR:
     review:
       transcript:
         view: "Ver transcrição de mensagens anteriores"
-      types:
-        reviewable_post_voting_comment:
-          title: "Comentário de votação em postagem sinalizado"

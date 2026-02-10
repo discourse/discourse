@@ -213,67 +213,69 @@ export default class BookmarkList extends Component {
       <LoadMore @action={{this.loadMore}}>
         <table class="topic-list bookmark-list">
           <thead class="topic-list-header">
-            {{#if this.site.desktopView}}
-              <PluginOutlet @name="bookmark-list-table-header">
-                {{#if this.bulkSelectEnabled}}
-                  <th class="bulk-select topic-list-data">
-                    <DButton
-                      @action={{this.toggleBulkSelect}}
-                      class="bulk-select btn-flat"
-                      @icon="list-check"
-                      @title="bookmarks.bulk.toggle"
-                    />
-                  </th>
-                {{/if}}
-                <th class="topic-list-data">
-
+            <tr>
+              {{#if this.site.desktopView}}
+                <PluginOutlet @name="bookmark-list-table-header">
                   {{#if this.bulkSelectEnabled}}
-                    <span class="bulk-select-topics">
-                      {{~#if this.canDoBulkActions}}
-                        <div class="bulk-select-bookmarks-dropdown">
-                          <span class="bulk-select-bookmark-dropdown__count">
-                            {{i18n
-                              "bookmarks.bulk.selected_count"
-                              count=this.selectedCount
-                            }}
-                          </span>
-                          <BulkSelectBookmarksDropdown
-                            @bulkSelectHelper={{this.bulkSelectHelper}}
-                          />
-                        </div>
+                    <th class="bulk-select topic-list-data">
+                      <DButton
+                        @action={{this.toggleBulkSelect}}
+                        class="bulk-select btn-flat"
+                        @icon="list-check"
+                        @title="bookmarks.bulk.toggle"
+                      />
+                    </th>
+                  {{/if}}
+                  <th class="topic-list-data">
 
-                      {{/if~}}
+                    {{#if this.bulkSelectEnabled}}
+                      <span class="bulk-select-topics">
+                        {{~#if this.canDoBulkActions}}
+                          <div class="bulk-select-bookmarks-dropdown">
+                            <span class="bulk-select-bookmark-dropdown__count">
+                              {{i18n
+                                "bookmarks.bulk.selected_count"
+                                count=this.selectedCount
+                              }}
+                            </span>
+                            <BulkSelectBookmarksDropdown
+                              @bulkSelectHelper={{this.bulkSelectHelper}}
+                            />
+                          </div>
+
+                        {{/if~}}
+                        <DButton
+                          @action={{this.selectAll}}
+                          class="btn btn-default bulk-select-all"
+                          @label="bookmarks.bulk.select_all"
+                        />
+                        <DButton
+                          @action={{this.clearAll}}
+                          class="btn btn-default bulk-clear-all"
+                          @label="bookmarks.bulk.clear_all"
+                        />
+                      </span>
+                    {{else}}
                       <DButton
-                        @action={{this.selectAll}}
-                        class="btn btn-default bulk-select-all"
-                        @label="bookmarks.bulk.select_all"
+                        @action={{this.toggleBulkSelect}}
+                        class="btn-flat bulk-select"
+                        @icon="list-check"
+                        @title="bookmarks.bulk.toggle"
                       />
-                      <DButton
-                        @action={{this.clearAll}}
-                        class="btn btn-default bulk-clear-all"
-                        @label="bookmarks.bulk.clear_all"
-                      />
-                    </span>
-                  {{else}}
-                    <DButton
-                      @action={{this.toggleBulkSelect}}
-                      class="btn-flat bulk-select"
-                      @icon="list-check"
-                      @title="bookmarks.bulk.toggle"
-                    />
-                    {{i18n "topic.title"}}
-                  {{/if~}}
-                </th>
-                <th class="topic-list-data">&nbsp;</th>
-                <th class="post-metadata topic-list-data">{{i18n
-                    "post.bookmarks.updated"
-                  }}</th>
-                <th class="post-metadata topic-list-data">{{i18n
-                    "activity"
-                  }}</th>
-                <th>&nbsp;</th>
-              </PluginOutlet>
-            {{/if}}
+                      {{i18n "topic.title"}}
+                    {{/if~}}
+                  </th>
+                  <th class="topic-list-data">&nbsp;</th>
+                  <th class="post-metadata topic-list-data">{{i18n
+                      "post.bookmarks.updated"
+                    }}</th>
+                  <th class="post-metadata topic-list-data">{{i18n
+                      "activity"
+                    }}</th>
+                  <th>&nbsp;</th>
+                </PluginOutlet>
+              {{/if}}
+            </tr>
           </thead>
           <tbody class="topic-list-body">
             {{#each this.content as |bookmark|}}

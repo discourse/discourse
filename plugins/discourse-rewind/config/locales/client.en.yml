@@ -118,8 +118,8 @@ en:
         chat_usage:
           title: Chat Activity
           total_messages: Total Messages
-          dm_messages: DM Messages
-          unique_dm_channels: DM Conversations
+          dm_messages: Direct Messages
+          unique_dm_channels: Direct Message Conversations
           reactions_received: Reactions Received
           avg_message_length: Avg Message Length
           favorite_channels: Favorite Channels

@@ -40,6 +40,7 @@ class UsersController < ApplicationController
                    reset_recent_searches
                    user_menu_bookmarks
                    user_menu_messages
+                   toggle_anon
                  ]
 
   skip_before_action :check_xhr,
@@ -1530,7 +1531,7 @@ class UsersController < ApplicationController
 
     %W[
       number_of_deleted_posts
-      number_of_flagged_posts
+      number_of_flags
       number_of_flags_given
       number_of_silencings
       number_of_suspensions

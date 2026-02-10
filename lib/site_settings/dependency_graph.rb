@@ -21,6 +21,21 @@ class SiteSettings::DependencyGraph
     dependencies[setting]
   end
 
+  def reverse_dependencies
+    @reverse_dependencies ||=
+      begin
+        rev = {}
+        dependencies.each do |setting, deps|
+          Array(deps).each { |dep| (rev[dep.to_s] ||= []) << setting }
+        end
+        rev
+      end
+  end
+
+  def dependents(setting)
+    reverse_dependencies.fetch(setting.to_s, [])
+  end
+
   def change_behavior(setting, behavior)
     behavior = behavior.to_sym
     raise ArgumentError.new("Behavior must be :hidden") unless behavior == :hidden

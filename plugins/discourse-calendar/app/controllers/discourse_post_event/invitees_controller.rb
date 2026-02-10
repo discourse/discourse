@@ -2,6 +2,8 @@
 
 module DiscoursePostEvent
   class InviteesController < DiscoursePostEventController
+    requires_login except: %i[index]
+
     def index
       event = Event.find(params[:post_id])
       guardian.ensure_can_see!(event.post)
@@ -9,7 +11,12 @@ module DiscoursePostEvent
       filter = params[:filter].downcase if params[:filter]
 
       event_invitees = event.invitees
-      event_invitees = event_invitees.with_status(params[:type].to_sym) if params[:type]
+      if params[:type]
+        unless Invitee.statuses.valid?(params[:type].to_sym)
+          raise Discourse::InvalidParameters.new(:type)
+        end
+        event_invitees = event_invitees.with_status(params[:type].to_sym)
+      end
 
       suggested_users = []
       if filter.present? && guardian.can_act_on_discourse_post_event?(event)
@@ -50,7 +57,7 @@ module DiscoursePostEvent
     end
 
     def update
-      invitee = Invitee.find_by(id: params[:invitee_id], post_id: params[:event_id])
+      invitee = Invitee.find_by!(id: params[:invitee_id], post_id: params[:event_id])
       guardian.ensure_can_act_on_invitee!(invitee)
       begin
         invitee.update_attendance!(invitee_params[:status])
@@ -100,8 +107,8 @@ module DiscoursePostEvent
     end
 
     def destroy
-      event = Event.find_by(id: params[:post_id])
-      invitee = event.invitees.find_by(id: params[:id])
+      event = Event.find(params[:post_id])
+      invitee = event.invitees.find(params[:id])
       guardian.ensure_can_act_on_invitee!(invitee)
       invitee.destroy!
       event.publish_update!
