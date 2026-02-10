@@ -71,6 +71,10 @@
     align-items: center;
   }
 
+  .select-kit .select-kit-header .selected-name {
+    @include ellipsis;
+  }
+
   .header-dropdown-toggle .btn.icon {
     height: 2em !important;
     width: 2em !important;
