@@ -86,6 +86,36 @@ module(
         },
         "![Alt text](https://example.com/image.png) after",
       ],
+      "ruby annotation round-trip": [
+        "<ruby>漢字<rp>(</rp><rt>かんじ</rt><rp>)</rp></ruby>",
+        "<p><ruby>漢字<rp>(</rp><rt>かんじ</rt><rp>)</rp></ruby> </p>",
+        "<ruby>漢字<rp>(</rp><rt>かんじ</rt><rp>)</rp></ruby> ",
+      ],
+      "span with lang attribute": [
+        '<span lang="ja">日本語</span>',
+        '<p><span lang="ja">日本語</span> </p>',
+        '<span lang="ja">日本語</span> ',
+      ],
+      "br tag converts to hard break": [
+        "Line1<br>Line2",
+        "<p>Line1<br>Line2</p>",
+        "Line1\nLine2",
+      ],
+      "self-closing br tag converts to hard break": [
+        "Line1<br/>Line2",
+        "<p>Line1<br>Line2</p>",
+        "Line1\nLine2",
+      ],
+      "self-closing br tag with space converts to hard break": [
+        "Line1<br />Line2",
+        "<p>Line1<br>Line2</p>",
+        "Line1\nLine2",
+      ],
+      "br tag with attributes converts to hard break": [
+        'Line1<br class="x">Line2',
+        "<p>Line1<br>Line2</p>",
+        "Line1\nLine2",
+      ],
     }).forEach(([name, [markdown, html, expectedMarkdown]]) => {
       test(name, async function (assert) {
         this.siteSettings.rich_editor = true;

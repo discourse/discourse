@@ -17,7 +17,48 @@ const ALLOWED_INLINE = [
   "del",
   "ins",
   "mark",
+  "ruby",
+  "rb",
+  "rt",
+  "rp",
+  "span",
 ];
+
+const ALLOWED_TAG_ATTRS = {
+  span: ["lang"],
+  ruby: ["lang"],
+  rb: ["lang"],
+  rt: ["lang"],
+};
+
+function extractHtmlAttrs(element, tagName) {
+  const allowed = ALLOWED_TAG_ATTRS[tagName];
+  if (!allowed) {
+    return null;
+  }
+  const attrs = {};
+  let hasAny = false;
+  for (const attr of allowed) {
+    const value = element.getAttribute(attr);
+    if (value != null) {
+      attrs[attr] = value;
+      hasAny = true;
+    }
+  }
+  return hasAny ? attrs : null;
+}
+
+function serializeHtmlAttrs(htmlAttrs) {
+  if (!htmlAttrs) {
+    return "";
+  }
+  return Object.entries(htmlAttrs)
+    .map(
+      ([k, v]) =>
+        ` ${k}="${v.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;")}"`
+    )
+    .join("");
+}
 
 const ALL_ALLOWED_TAGS = [...Object.keys(HTML_INLINE_MARKS), ...ALLOWED_INLINE];
 
@@ -29,22 +70,35 @@ const extension = {
       inline: true,
       defining: true,
       content: "inline*",
-      attrs: { tag: {} },
+      attrs: { tag: {}, htmlAttrs: { default: null } },
       parseDOM: ALLOWED_INLINE.map((tag) => ({
         tag,
-        getAttrs: () => ({ tag }),
+        getAttrs: (element) => ({
+          tag,
+          htmlAttrs: extractHtmlAttrs(element, tag),
+        }),
       })),
-      toDOM: (node) => [node.attrs.tag, 0],
+      toDOM: (node) => {
+        const domAttrs = node.attrs.htmlAttrs
+          ? { ...node.attrs.htmlAttrs }
+          : {};
+        return [node.attrs.tag, domAttrs, 0];
+      },
     },
   },
   parse: {
     html_inline: (state, token) => {
-      const openMatch = token.content.match(/^<([a-z]+)(\s[^>]*)?>/i);
+      const openMatch = token.content.match(/^<([a-z]+)(\s[^>]*)?\/?>$/i);
       const closeMatch = token.content.match(/^<\/([a-z]+)>$/i);
 
       if (openMatch) {
         const tagName = openMatch[1].toLowerCase();
         const hasAttributes = openMatch[2];
+
+        if (tagName === "br") {
+          state.addNode(state.schema.nodes.hard_break);
+          return;
+        }
 
         if (hasAttributes) {
           const parser = new DOMParser();
@@ -72,6 +126,15 @@ const extension = {
                 height: element.height || null,
               };
               state.addNode(state.schema.nodes.image, attrs);
+              return;
+            }
+
+            if (ALLOWED_INLINE.includes(tagName)) {
+              const htmlAttrs = extractHtmlAttrs(element, tagName);
+              state.openNode(state.schema.nodes.html_inline, {
+                tag: tagName,
+                htmlAttrs,
+              });
               return;
             }
           }
@@ -114,7 +177,8 @@ const extension = {
   },
   serializeNode: {
     html_inline(state, node) {
-      state.write(`<${node.attrs.tag}>`);
+      const attrsStr = serializeHtmlAttrs(node.attrs.htmlAttrs);
+      state.write(`<${node.attrs.tag}${attrsStr}>`);
       state.renderInline(node);
       state.write(`</${node.attrs.tag}>`);
     },
