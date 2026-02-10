@@ -4438,6 +4438,11 @@ RSpec.describe TopicsController do
   end
 
   describe "#remove_bookmarks" do
+    it "requires the user to be logged in" do
+      put "/t/1/remove_bookmarks.json"
+      expect(response.status).to eq(403)
+    end
+
     it "should remove bookmarks properly from non first post" do
       sign_in(user)
 

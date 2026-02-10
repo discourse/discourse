@@ -27,6 +27,7 @@ class TopicsController < ApplicationController
                    move_to_inbox
                    convert_topic
                    bookmark
+                   remove_bookmarks
                    publish
                    reset_bump_date
                    set_slow_mode
