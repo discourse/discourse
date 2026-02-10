@@ -18,7 +18,6 @@
   --d-topic-list-data-font-size: var(--font-down-1);
   --d-topic-list-header-text-color: var(--primary-900);
   --metadata-color: var(--primary-900);
-  --topic-title-font-weight: 500;
   --d-sidebar-active-background: var(--primary-100);
   --d-content-background: var(--secondary);
   --category-badge-border-radius: calc(var(--d-border-radius) / 2);
@@ -31,7 +30,10 @@
   --d-sidebar-link-color: var(--primary-800);
   --d-sidebar-link-icon-color: var(--primary-800);
   --d-sidebar-active-font-weight: 600;
-  --title-color--read: var(--primary-700);
+
+  // --title-color--read: var(--primary-700);
+  --topic-title-font-weight: 500;
+  --topic-title-font-weight--visited: 500;
 
   // new variables
   --webkit-font-smoothing: antialiased;
@@ -258,7 +260,7 @@
 
   .topic-list .num .badge-posts,
   .topic-list .heatmap-high {
-    font-weight: 400;
+    font-weight: 500;
   }
 
   .topic-list-header .topic-list-data:first-of-type {
