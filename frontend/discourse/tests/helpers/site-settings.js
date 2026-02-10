@@ -34,11 +34,6 @@ export function mergeSettings(other) {
 }
 
 export function resetSettings() {
-  ORIGINAL_CLIENT_SITE_SETTINGS ??= {
-    ...window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS, // loaded in test-load-dynamic-js
-    ...CLIENT_SETTING_TEST_OVERRIDES,
-  };
-
   siteSettings = createSiteSettingsFromPreloaded(ORIGINAL_CLIENT_SITE_SETTINGS);
   return siteSettings;
 }
