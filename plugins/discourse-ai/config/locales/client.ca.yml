@@ -34,6 +34,8 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      llm_selector:
+        none: "Cap"
       features:
         back: "Enrere"
         disabled: "(desactivat)"

@@ -180,6 +180,8 @@ es:
       default_llm:
         title: "Modelo LLM por defecto"
         description: "El modelo LLM por defecto a utilizar para todas las características de IA. Se usará si no se especifica ningún LLM en la configuración de características o en la persona. Si no se especifica ningún LLM por defecto, se usará el último LLM creado."
+      llm_selector:
+        none: "Ninguna"
       features:
         short_title: "Características"
         description: "Estas son las características de IA disponibles para los visitantes de tu sitio. Se pueden configurar para usar personas y LLM específicos, y los grupos pueden controlar su acceso."

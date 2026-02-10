@@ -2391,7 +2391,7 @@ it:
     experimental_new_new_view_groups: 'Abilita un nuovo elenco di argomenti che combini argomenti non letti e nuovi e crea il link "Tutto" nella barra laterale a esso.'
     show_preview_for_form_templates: "Abilita la funzionalità di anteprima per i modelli di modulo"
     lazy_load_categories_groups: "Caricamento lazy delle informazioni di categoria solo per gli utenti di questi gruppi. Migliora le prestazioni sui siti con numerose categorie."
-    experimental_auto_grid_images: "Inserisce automaticamente le immagini nell'etichetta [grid] quando vengono caricate 3 o più immagini nel compositore."
+    enable_auto_grid_images: "Inserisce automaticamente le immagini nell'etichetta [grid] quando vengono caricate 3 o più immagini nel compositore."
     page_loading_indicator: "Configura l'indicatore di caricamento che appare durante la navigazione delle pagine all'interno di Discourse. 'Spinner' come un indicatore a pagina intera. 'Slider' mostra una barra stretta nella parte superiore dello schermo."
     show_user_menu_avatars: "Mostra gli avatar utente nel menu utente"
     about_page_hidden_groups: "Non mostrare i membri di gruppi specifici nella pagina /about."

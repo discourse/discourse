@@ -36,6 +36,8 @@ sv:
             canned_reply:
               label: "Svara"
     discourse_ai:
+      llm_selector:
+        none: "Ingen"
       features:
         back: "Tillbaka"
         disabled: "(inaktiverad)"

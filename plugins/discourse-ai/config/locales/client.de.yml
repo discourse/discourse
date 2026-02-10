@@ -219,6 +219,8 @@ de:
       default_llm:
         title: "Standard-LLM-Modell"
         description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder Persona kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
+      llm_selector:
+        none: "Keiner"
       features:
         short_title: "Funktionen"
         description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Personas und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."

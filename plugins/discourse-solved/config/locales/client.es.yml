@@ -39,6 +39,7 @@ es:
       no_solved_topics_title_others: "%{username} no ha resuelto ningún tema todavía"
       no_solved_topics_body: "Cuando proporcionas una respuesta útil a un tema, el propietario del tema o el personal pueden seleccionar tu respuesta como la solución."
       move_post_cancel: "Cancelar"
+      confirm_category_change_solution_cancel: "Cancelar"
       no_answer:
         title: '¿Se ha respondido a tu pregunta?'
         description: "Destaca la respuesta y ayuda a los demás utilizando el botón de solución que hay debajo de la respuesta correcta."

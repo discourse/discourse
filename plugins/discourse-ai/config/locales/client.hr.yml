@@ -36,6 +36,8 @@ hr:
             canned_reply:
               label: "Odgovor"
     discourse_ai:
+      llm_selector:
+        none: "Ništa"
       features:
         back: "Natrag"
         disabled: "(onemogućeno)"

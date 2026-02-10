@@ -225,6 +225,9 @@ zh_CN:
       default_llm:
         title: "默认 LLM 模型"
         description: "所有 AI 功能使用的默认 LLM 模型。如果功能配置或角色中未指定 LLM，将使用此模型。如果未指定默认 LLM，将使用最后创建的 LLM。"
+      llm_selector:
+        none: "无"
+        saved: "默认LLM模型已成功更新"
       features:
         short_title: "功能"
         description: "这些是您网站的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的角色和 LLM，并按群组控制访问权限。"
