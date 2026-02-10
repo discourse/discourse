@@ -38,7 +38,7 @@ class Admin::SiteSettingsController < Admin::AdminController
         settings:,
       },
       options: {
-         # TODO: remove once the site setting is no longer hidden
+        # TODO: remove once the site setting is no longer hidden
         allow_changing_hidden: %i[enable_site_owner_onboarding],
       },
     ) do
