@@ -41,7 +41,7 @@ en:
       test_modal:
         title: "Send a test message"
         topic: "Topic"
-        send: "Send Test Message"
+        send: "Send test message"
         close: "Close"
         error: "An unknown error occurred while sending the message. Check the site logs for more information."
         success: "Message sent successfully"

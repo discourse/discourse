@@ -33,9 +33,9 @@ RSpec.describe "Chat Integration Rule Tags", type: :system do
       tags: ["support"],
     )
 
-    visit("/admin/plugins/discourse-chat-integration/discord")
+    visit("/admin/plugins/discourse-chat-integration/providers/discord")
 
-    within(".channel-details table tbody tr") do
+    within(".d-admin-table.channel-rules-table .d-admin-row__content") do
       expect(page).to have_content("support")
       find(".edit").click
     end
@@ -49,6 +49,7 @@ RSpec.describe "Chat Integration Rule Tags", type: :system do
     expect(tag_chooser.component).to have_content("support")
     expect(tag_chooser.component).to have_content("bug")
 
+    tag_chooser.collapse
     find("#save-rule").click
 
     expect(rule_modal).to be_closed

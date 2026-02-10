@@ -17,6 +17,9 @@ RSpec.describe "Create channel", type: :system do
     sign_in(admin)
   end
 
+  # TODO (martin) Fix this "new discord" form to use the
+  # new inline formkit form which has the webhook URL that
+  # Regis added
   it "creates and displays a new channel" do
     visit("/admin/plugins/discourse-chat-integration/providers/discord")
 
@@ -24,11 +27,9 @@ RSpec.describe "Create channel", type: :system do
 
     click_button(I18n.t("js.chat_integration.create_channel"))
 
-    within("#chat-integration-edit-channel-modal") do
-      find("input[name='name']").fill_in(with: "bloop")
-      find("input[name='webhook_url']").fill_in(with: "https://discord.com/api/webhooks/bloop")
-      click_button(I18n.t("js.chat_integration.edit_channel_modal.save"))
-    end
+    find(".chat-integration-add-first-channel__input").fill_in(with: "bloop")
+    find("input[name='webhook_url']").fill_in(with: "https://discord.com/api/webhooks/bloop")
+    click_button(I18n.t("js.chat_integration.edit_channel_modal.save"))
 
     expect(page).to have_css(".channel-details")
     expect(find(".channel-details")).to have_content("bloop")
