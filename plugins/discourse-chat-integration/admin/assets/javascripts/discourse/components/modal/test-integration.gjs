@@ -1,6 +1,7 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
 import { action } from "@ember/object";
+import { isBlank } from "@ember/utils";
 import ChooseTopic from "discourse/components/choose-topic";
 import DModal from "discourse/components/d-modal";
 import Form from "discourse/components/form";
@@ -38,7 +39,7 @@ export default class TestIntegration extends Component {
   }
 
   get canSend() {
-    return this.topicId !== null;
+    return !isBlank(this.topicId);
   }
 
   <template>

@@ -16,13 +16,11 @@ acceptance("Chat Integration", function (needs) {
   needs.pretender((server) => {
     server.get("/admin/plugins/discourse-chat-integration.json", () => {
       return jsonResponse({
-        admin_plugin: {
-          id: "discourse-chat-integration",
-          name: "discourse-chat-integration",
-          about: "Test plugin",
-          version: "1.0.0",
-          enabled: true,
-        },
+        id: "discourse-chat-integration",
+        name: "discourse-chat-integration",
+        about: "Test plugin",
+        version: "1.0.0",
+        enabled: true,
       });
     });
 
@@ -106,8 +104,8 @@ acceptance("Chat Integration", function (needs) {
       .exists("it shows the table of rules");
 
     assert
-      .dom("#admin-plugin-chat .d-admin-table tr td")
-      .hasText("All posts and replies", "rule displayed");
+      .dom("#admin-plugin-chat .d-admin-table .d-admin-row__detail.rule-filter")
+      .hasText(/All posts and replies/, "rule displayed");
   });
 
   test("Create channel works", async function (assert) {

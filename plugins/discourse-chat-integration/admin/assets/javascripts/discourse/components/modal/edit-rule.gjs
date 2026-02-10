@@ -17,8 +17,8 @@ export default class EditRule extends Component {
 
   @tracked type = this.args.model.rule.type || "normal";
   @tracked filter = this.args.model.rule.filter || "watch";
-  @tracked category_id = this.args.model.rule.category_id;
-  @tracked group_id = this.args.model.rule.group_id;
+  @tracked category_id = this.args.model.rule.category_id || null;
+  @tracked group_id = this.args.model.rule.group_id || null;
   @tracked tags = this.args.model.rule.tags || [];
 
   get isNormalType() {
@@ -58,7 +58,9 @@ export default class EditRule extends Component {
       filter: this.filter,
       category_id: this.type === "normal" ? this.category_id : null,
       group_id: this.type !== "normal" ? this.group_id : null,
-      tags: this.tags,
+      // TODO (martin) This is a hack to get the tags working. We need to update
+      // the server-side to accept an array of tag IDs or the tag objects.
+      tags: this.tags.map((tag) => tag.name),
     });
 
     try {
