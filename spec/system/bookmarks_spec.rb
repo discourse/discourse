@@ -119,6 +119,21 @@ describe "Bookmarking posts and topics", type: :system do
       )
     end
 
+    it "updates the topic status and footer button when using the keyboard shortcut" do
+      topic_page.visit_topic(topic)
+      expect(topic_page).to have_no_topic_status_bookmark
+      expect(topic_page).to have_no_bookmarks(topic)
+
+      send_keys("b")
+      expect(bookmark_modal).to be_open
+      send_keys(:enter)
+      expect(bookmark_modal).to be_closed
+
+      expect(topic_page).to have_topic_status_bookmark
+      expect(topic_page).to have_topic_bookmarked(topic)
+      expect(Bookmark.exists?(bookmarkable: topic, user: current_user)).to eq(true)
+    end
+
     it "bookmark button is topic specific" do
       topic_page.visit_topic(topic_2)
       topic_page.click_topic_bookmark_button
