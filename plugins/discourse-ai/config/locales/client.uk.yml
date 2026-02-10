@@ -113,6 +113,14 @@ uk:
             persona_id:
               label: "Персона"
               description: "Персона AI для створення звітів"
+        ai_tool_action:
+          fields:
+            tool:
+              label: "Інструмент ШІ"
+              description: "Інструмент штучного інтелекту, який запускається, коли спрацьовує автоматизація"
+            llm_model:
+              label: "Модель LLM"
+              description: "Мовна модель для інструментів, що використовують llm.generate() (необов'язково)"
         llm_persona_triage:
           fields:
             persona:
@@ -317,6 +325,7 @@ uk:
           image_caption: "Зображення підписів"
           translator: "Перекладач"
           post_illustrator: "Ілюстратор постів"
+          chat_thread_titles: "Назви тем чату"
           setting_groups:
             access_permissions: "Доступ та дозволи"
             enabled_features: "Увімкнені функції"
@@ -727,22 +736,16 @@ uk:
           anthropic-claude-sonnet-4-5: "Оптимальний баланс швидкості та витрат"
           anthropic-claude-haiku-4-5: "Швидко та економічно ефективно"
           google-gemini-3-pro: "Найрозумніша модель Google"
-          google-gemini-2-5-pro: "Велика мультимодальна модель, здатна виконувати широкий спектр завдань"
-          google-gemini-2-5-flash: "Легкий, швидкий та економічний з мультимодальними міркуваннями"
-          google-gemini-2-5-flash-lite: "Найменша та найекономічніша модель від Google"
-          google-gemini-2-5-flash-image-preview: "Найновіша модель генерації зображень з можливостями зору"
-          open_ai-gpt-5-1: "Флагманська модель OpenAI. Вона добре підходить для вирішення проблем у різних сферах."
-          open_ai-gpt-5-mini: "Забезпечує баланс між інтелектом, швидкістю та вартістю, що робить його привабливою моделлю для багатьох випадків використання."
-          open_ai-gpt-5-nano: "Найшвидша та найекономічніша модель GPT-5."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Ефективна легка багатомовна модель"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Потужна багатофункціональна модель"
-          mistral-mistral-large-latest: "Найпотужніша модель Mistral"
-          mistral-pixtral-large-latest: "Найпотужніша модель Mistral з функцією бачення"
-          open_router-x-ai-grok-4: "Найновіша модель xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "Найновіша модель міркувань DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "Високопродуктивна багатомовна модель"
-          groq-openai-gpt-oss-120b: "Найсучасніша відкрита модель від OpenAI"
-          groq-openai-gpt-oss-20b: "Легка, швидка, відкрита модель від OpenAI"
+          google-gemini-3-flash: "Швидко та економічно ефективно з мультимодальним мисленням"
+          open_ai-gpt-5-2: "Флагманська модель OpenAI, добре підходить для вирішення проблем у різних доменах"
+          open_ai-gpt-5-mini: "Забезпечує баланс між інтелектом, швидкістю та вартістю"
+          open_ai-gpt-5-nano: "Найшвидша та найекономічніша модель GPT-5"
+          open_router-deepseek-deepseek-v3-2: "Остання високопродуктивна модель DeepSeek"
+          open_router-moonshotai-kimi-k2-5: "Мультимодальна модель Moonshot з можливостями технічного зору"
+          open_router-x-ai-grok-4-fast: "Флагманська модель xAI з функцією бачення"
+          open_router-minimax-minimax-m2-1: "Мультимодальна модель MiniMax з широким контекстом"
+          open_router-z-ai-glm-4-7: "Мультимодальна модель Z-AI із баченням"
+          open_router-arcee-ai-trinity-large-preview-free: "Безкоштовна модель з відкритим вихідним кодом від Arcee AI"
         preseeded_model_description: "Попередньо налаштована модель з відкритим кодом, що використовує %{model}"
         configured:
           title: "Налаштовані LLM"
@@ -1054,18 +1057,31 @@ uk:
         topic:
           title: "Підсумок теми"
           close: "Закрити панель підсумків"
-          regenerate: "Згенерувати короткий зміст"
-          regenerate_bulk: "Згенерувати короткі резюме повторно"
-          regenerate_success:
+          regenerate_ai_summaries: "Регенерувати підсумок ШІ"
+          regen_modal_description: "Виберіть, який тип зведення ШІ потрібно перегенерувати для цієї теми."
+          bulk_regen_description: "Виберіть, який тип резюме ШІ перегенерувати для вибраних тем."
+          regenerate_gists_option: "Короткі резюме (гісти)"
+          regenerate_summaries_option: "Підсумки тем"
+          regenerate_gists_success:
             one: "Короткий підсумок успішно регенеровано"
             few: "%{count} Коротких змістів успішно перегенеровано"
             many: "%{count} Коротких змістів успішно перегенеровано"
             other: "%{count} Коротких змістів успішно перегенеровано"
-          regenerate_error:
+          regenerate_gists_error:
             one: "Не вдалося створити короткий зміст"
             few: "Не вдалося створити %{count} коротких змісти"
             many: "Не вдалося створити %{count} коротких змістів"
             other: "Не вдалося створити %{count} коротких змістів"
+          regenerate_topic_summary_success:
+            one: "Короткий зміст теми успішно згенеровано"
+            few: "Короткий зміст %{count} тем успішно згенеровано"
+            many: "Короткий зміст %{count} тем успішно згенеровано"
+            other: "Короткий зміст %{count} тем успішно згенеровано"
+          regenerate_topic_summary_error:
+            one: "Не вдалося повторно створити короткий зміст теми"
+            few: "Не вдалося повторно створити короткий зміст %{count} тем"
+            many: "Не вдалося повторно створити короткий зміст %{count} тем"
+            other: "Не вдалося повторно створити короткий зміст %{count} тем"
         topic_list_layout:
           button:
             compact: "Компактний"

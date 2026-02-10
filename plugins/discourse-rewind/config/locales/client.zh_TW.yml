@@ -16,8 +16,6 @@ zh_TW:
           title: 閱讀時間
         chat_usage:
           messages: 訊息
-          author: 你
-          author_others: "%{username}"
           status_online: "● 線上"
         invites:
           title: 邀請

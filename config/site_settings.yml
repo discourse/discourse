@@ -25,6 +25,10 @@
 #                          - status: experimental | alpha | beta | stable
 #                          - impact: two parts separated by comma - feature|other , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
+# depends_on            - One or more boolean settings that must be true for this setting to take effect.
+# depends_behavior      - The behavior of the dependent setting. Only currently supported behaviour is "hidden"
+#                         to hide the setting if the dependent setting is false. If left blank, no special behavior
+#                         is applied and the setting is shown as normal.
 #
 #
 #
@@ -1700,7 +1704,8 @@ posting:
     default: false
     area: "posts_and_topics"
   max_draft_length:
-    default: 400_000
+    default: 150_000
+    max: 150_000
     hidden: true
   max_drafts_per_user:
     default: 10_000
@@ -1710,10 +1715,23 @@ posting:
     min: 5
     max: 255
     area: "posts_and_topics"
+    depends_on:
+      - "enable_form_templates"
+    depends_behavior: "hidden"
   max_form_template_content_length:
     default: 5000
     max: 150000
     area: "posts_and_topics"
+    depends_on:
+      - "enable_form_templates"
+    depends_behavior: "hidden"
+  show_preview_for_form_templates:
+    client: true
+    default: true
+    area: "posts_and_topics"
+    depends_on:
+      - "enable_form_templates"
+    depends_behavior: "hidden"
   group_pm_user_limit:
     default: 1000
     type: integer
@@ -2799,6 +2817,9 @@ onebox:
     list_type: compact
   enable_inline_onebox_on_all_domains:
     default: true
+  inline_onebox_user_agent:
+    default: ""
+    hidden: true
   onebox_user_agent:
     default: ""
     hidden: true
@@ -3736,6 +3757,25 @@ uncategorized:
     default: true
     area: "interface"
 
+  enable_custom_splash_screen:
+    default: false
+    client: true
+    hidden: true
+    area: "interface"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/395100"
+
+  splash_screen_image:
+    default: ""
+    type: upload
+    authorized_extensions: "svg"
+    area: "interface"
+    depends_on:
+      - "enable_custom_splash_screen"
+    depends_behavior: "hidden"
+
   suggest_weekends_in_date_pickers:
     client: true
     default: true
@@ -3776,6 +3816,16 @@ uncategorized:
     enum: "WelcomeBannerPageVisibility"
     default: "top_menu_pages"
     area: "interface"
+
+  modernize_foundation_theme:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      impact: "feature,all_members"
+      status: "experimental"
+      learn_more_url: "https://meta.discourse.org/t/modernizing-the-foundation-theme/395331"
 
 user_preferences:
   default_email_digest_frequency:
@@ -4151,11 +4201,15 @@ dashboard:
     client: true
 
 experimental:
-  experimental_auto_grid_images:
+  enable_auto_grid_images:
     default: false
     client: true
     area: "experimental"
-  experimental_rename_faq_to_guidelines:
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/394784"
+  rename_faq_to_guidelines:
     default: false
     hidden: true
     client: true
@@ -4163,26 +4217,32 @@ experimental:
     upcoming_change:
       impact: "feature,all_members"
       status: "experimental"
+      learn_more_url: "https://meta.discourse.org/t/-/395099"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
     hidden: true
     area: "experimental"
-  experimental_form_templates:
+  enable_form_templates:
     client: true
-    default: false
-    area: "experimental"
-  experimental_impersonation:
     default: false
     hidden: true
     area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/278631"
+  impersonate_without_logout:
+    default: false
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/119683"
   experimental_impersonation_time_limit_minutes:
     default: 15
     hidden: true
-    area: "experimental"
-  show_preview_for_form_templates:
-    client: true
-    default: true
     area: "experimental"
   experimental_new_new_view_groups:
     client: true
@@ -4227,3 +4287,12 @@ experimental:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
+      learn_more_url: "https://meta.discourse.org/t/-/387322"
+  enable_simplified_category_creation:
+    default: false
+    hidden: true
+    client: true
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/394971"

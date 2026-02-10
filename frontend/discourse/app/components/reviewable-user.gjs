@@ -4,6 +4,7 @@ import { concat } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
 import ScrubRejectedUserModal from "discourse/admin/components/modal/scrub-rejected-user";
 import ReviewableField from "discourse/components/reviewable-field";
 import rawDate from "discourse/helpers/raw-date";
@@ -14,6 +15,7 @@ import getUrl from "discourse/lib/get-url";
 import { REJECTED } from "discourse/models/reviewable";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class ReviewableUser extends Component {
   @service currentUser;
   @service modal;
@@ -153,7 +155,6 @@ export default class ReviewableUser extends Component {
               @classes="reviewable-user-details user-field"
               @name={{f.name}}
               @value={{f.value}}
-              @tagName=""
             />
           {{/each}}
         {{/if}}
@@ -161,6 +162,7 @@ export default class ReviewableUser extends Component {
 
       {{yield}}
     </div>
+
     {{#if this.canScrubRejectedUser}}
       <div class="scrub-rejected-user">
         <button

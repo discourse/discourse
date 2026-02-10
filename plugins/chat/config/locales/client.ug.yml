@@ -82,7 +82,6 @@ ug:
         join_channel: "قانالغا قوشۇلۇڭ"
         leave_channel: "قانالدىن ئايرىل"
         leave_groupchat_info: "بۇ گۇرۇپپا سۆھبىتىدىن ئايرىلسىڭىز، ئەمدى ئۇنى زىيارەت قىلالمايسىز ھەمدە ئۇنىڭغا ئائىت ئۇقتۇرۇشلارنى تاپشۇرۇۋالمايسىز. گۇرۇپپىغا قايتا قوشۇلۇش ئۈچۈن، سۆھبەت گۇرۇپپىسىنىڭ ئەزاسى سىزگە قايتا تەكلىپ ئەۋەتىشى كېرەك."
-        notification_settings_context: "ئۇقتۇرۇش"
         join: "قوشۇل"
         leave: "ئايرىل"
         save_label:
@@ -720,7 +719,6 @@ ug:
           composer_bold: "%{shortcut} توم (كىرگۈزۈش كۆزنىكىلا)"
           composer_italic: "%{shortcut} يانتۇ (كىرگۈزۈش كۆزنىكىلا)"
           composer_code: "%{shortcut} كود (كىرگۈزۈش كۆزنىكىلا)"
-          drawer_open: "%{shortcut} سۆھبەت تارتمىسىنى ئاچ"
           drawer_close: "%{shortcut} سۆھبەت تارتمىسىنى ياپ"
           mark_all_channels_read: "%{shortcut} ھەممە قانالغا ئوقۇلدى بەلگىسى سال"
     topic_statuses:

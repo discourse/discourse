@@ -1771,11 +1771,6 @@ he:
           two: '<span class="%{className}">%{count}</span> סימונים מועילים'
           many: '<span class="%{className}">%{count}</span> סימונים מועילים'
           other: '<span class="%{className}">%{count}</span> סימונים מועילים'
-        flagged_posts:
-          one: 'פוסט <span class="%{className}">%{count}</span> מסומן'
-          two: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
-          many: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
-          other: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
         deleted_posts:
           one: 'פוסט <span class="%{className}">%{count}</span> נמחק'
           two: '<span class="%{className}">%{count}</span> פוסטים נמחקו'
@@ -2559,7 +2554,6 @@ he:
     form_kit:
       reset: איפוס
       optional: רשות
-      errors_summary_title: "הטופס הזה מכיל שגיאות:"
       dirty_form: "לא הגשת את השינויים שלך! לצאת?"
       errors:
         starts_with: "חייב להיפתח בקידומת %{prefix}"
@@ -4285,7 +4279,7 @@ he:
       quote_edit: "עריכה"
       quote_edit_shortcut: "עריכה (או בלחיצה על e)"
       quote_copy: "העתקת ציטוט"
-      quote_copied_to_clibboard: "הציטוט הועתק ללוח הגזירים"
+      quote_copied_to_clipboard: "הציטוט הועתק ללוח הגזירים"
       quote_share: "שיתוף"
       edit_reason: "סיבה: "
       post_number: "פוסט %{number}"
@@ -4628,6 +4622,7 @@ he:
       back: "חזרה לקטגוריה"
       general: "כללי"
       settings: "הגדרות"
+      advanced: "מתקדם"
       topic_template: "תבנית"
       tags: "תגיות"
       localizations: "תרגומים"
@@ -4658,9 +4653,12 @@ he:
       create_long: "יצירת קטגוריה חדשה"
       save: "שמירת קטגוריה"
       slug: "כתובת ייצוגית לקטגוריה"
+      parent: "קטגוריית הורה"
       slug_placeholder: "(רשות) מילים-מחוברות-במקפים-ככתובת"
       creation_error: ארעה שגיאה במהלך יצירת הקטגוריה הזו.
       save_error: ארעה שגיאה בשמירת הקטגוריה הזו
+      validations:
+        icon_required: "נא לבחור סמל."
       name: "שם קטגוריה"
       untitled: "קטגוריה ללא שם"
       description: "תיאור"
@@ -4669,7 +4667,9 @@ he:
       logo_description: "מומלץ יחס תצוגה של 1:1 בגודל של 200 פיקסלים לכל הפחות. אם האפשרות נשארת ריקה לא תופיע תמונה."
       background_image: "תמונת רקע לקטגוריה"
       background_image_dark: "תמונת רקע כהה לקטגוריה"
-      style: "סגנונות"
+      style: "סגנון"
+      icon: "סמל"
+      emoji: "אמוג׳י"
       background_color: "צבע"
       foreground_color: "צבע הטקסט"
       color_validations:
@@ -4680,13 +4680,13 @@ he:
         type: "סגנון"
         icon: "סמל"
         emoji: "אמוג׳י"
+        square: "מרובע"
         options:
           square: "מרובע"
           icon: "סמל"
           emoji: "אמוג׳י"
       color_used: "צבע בשימוש"
       predefined_colors: "אפשרויות צבע מוגדרות מראש"
-      name_placeholder: "מילה או שתיים לכל היותר"
       color_placeholder: "כל צבע אינטרנטי"
       delete_confirm: "האם שברצונך להסיר את הקטגוריה הזו?"
       delete_error: "ארעה שגיאה במחיקת הקטגוריה."
@@ -4694,6 +4694,7 @@ he:
       no_description: "אנא הוסיפו תיאור לקטגוריה זו."
       change_in_category_topic: "עריכת תיאור"
       already_used: "הצבע הזה בשימוש על ידי קטגוריה אחרת"
+      color_palette: "ערכת צבעים"
       security: "אבטחה"
       security_add_group: "הוספת קבוצה"
       permissions:
@@ -4702,15 +4703,14 @@ he:
         reply: "להגיב"
         create: "ליצור"
         no_groups_selected: "אף קבוצה לא קיבלה גישה; קטגוריה זו תהיה גלויה רק לסגל."
-        everyone_has_access: 'קטגוריה זו היא ציבורית, כולם יכולים לצפות, להגיב וליצור פוסטים. די להגביל את ההרשאות, יש להסיר הרשאה אחת או יותר מאלו שהוענקו לקבוצה „כולם”.'
+        everyone_full_access: 'קטגוריה זו היא ציבורית, כולם יכולים לצפות, להגיב וליצור פוסטים. די להגביל את ההרשאות, יש להסיר הרשאה אחת או יותר מאלו שהוענקו לקבוצה „כולם”.'
         toggle_reply: "החלפת הרשאות תגובה"
         toggle_full: "החלפת הרשאות יצירה"
         inherited: 'הרשאה זו התקבלה בירושה מתוך „כולם”'
-      special_warning: "אזהרה: קטגוריה זו הגיעה מראש והגדרות האבטחה שלה אינן ניתנות לשינוי. אם אתם מעוניינים להשתמש בקטגוריה זו, מחקו אותה במקום להשתמש בה מחדש."
       uncategorized_security_warning: "קטגוריה זו היא מיוחדת. היא מיועדת להחזקת מגוון של נושאים שאין להם קטגוריה, לא יכולות להיות לקבוצה זו הגדרות אבטחה."
       uncategorized_general_warning: 'קטגוריה זו היא מיוחדת. היא משמשת כקטגוריית בררת המחדל לנושאים חדשים שלא נבחרה עבורם קטגוריה. כדי למנוע את ההתנהגות הזאת ולאלץ בחירת קטגוריה, <a href="%{settingLink}">נא להשבית את ההגדרה הזאת כאן</a>. אם מעניין אותך לשנות את השם או את התיאור, עליך לגשת אל <a href="%{customizeLink}">התאמה אישית / תוכן טקסט</a>.'
       pending_permission_change_alert: "לא הוספת %{group} לקטגוריה הזאת, יש ללחוץ על הכפתור הזה כדי להוסיף אותן."
-      images: "תמונות"
+      images: "מראה"
       email_in: "כתובת דואר נכנס מותאמת אישית:"
       email_in_tooltip: "אפשר להפריד בין כתובות דוא״ל עם התו |."
       email_in_allow_strangers: "קבלת דוא״ל ממשתמשים אלמוניים ללא חשבונות במערכת הפורומים"
@@ -4739,7 +4739,12 @@ he:
       position_disabled: "הקטגוריות יוצגו לפי סדר הפעילות. כדי לשלוט בסדר הקטגוריות ברשימות, יש להפעיל את ההגדרה <a href='%{url}'>‚מיקומי קטגוריה קבועים’</a>."
       minimum_required_tags: "מספר התגיות המזערי הנדרש לנושא:"
       default_slow_mode: 'להפעיל „מצב איטי” לנושאים חדשים בקטגוריה הזאת.'
-      parent: "קטגוריית הורה"
+      none_subcategory_text: "ללא"
+      visibility:
+        title: "חשיפה"
+        public: "ציבורי"
+        all_members: "כל החברים"
+        group_restricted: "פרטי"
       num_auto_bump_daily: "מספר הנושאים הפתוחים להקפצה מדי יום:"
       auto_bump_cooldown_days: "כמות הימים המזערית להקפצת אותו הנושא שוב:"
       navigate_to_first_post_after_read: "ניווט לפוסט הראשוני לאחר שהנושאים נקראו"
@@ -5956,7 +5961,6 @@ he:
           search_placeholder: "סינון לפי שם, תיאור או תוסף…"
           no_results: "אין שינויים עתידיים שתואמים את המסנן שלך"
           all: "הכול"
-          enabled_all: "מופעל או מושבת"
           enabled: "פעיל"
           disabled: "כבוי"
           impact_type_all: "כל סוגי ההשפעה"
@@ -6527,7 +6531,9 @@ he:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">חיפוש ביומנים</a>'
             disabled: 'דוח מגמות חיפושים מושבת. יש להפעיל <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">שאילתות חיפוש ביומן</a> כדי לאסוף נתונים.'
-          average_chart_label: ממוצע
+          sort_button: "מיון לפי %{column}"
+          sort_ascending: "בסדר עולה"
+          sort_descending: "בסדר יורד"
           filters:
             file_extension:
               label: סיומת קובץ
@@ -7283,8 +7289,6 @@ he:
         delete: "מחיקה"
         delete_confirm: 'למחוק את „%{theme_name}”?'
         bulk_delete: "להמשיך?"
-        bulk_themes_delete_confirm: "פעולה זו תסיר את ערכות העיצוב הבאות, הן לא תהיינה זמינות לשימוש על ידי משתמשים באתר שלך:"
-        bulk_components_delete_confirm: "פעולה זו תסיר את הרכיבים הבאים, הם לא יהיו זמינים לשימוש על ידי משתמשים באתר שלך:"
         color: "צבע"
         opacity: "שקיפות"
         copy: "שכפול"
@@ -7914,6 +7918,7 @@ he:
             delete_associated_accounts: "מחיקת חשבונות משויכים"
             change_theme_site_setting: "שנוי הגדרות ערכת עיצוב של האתר"
             stop_impersonating: "הפסקת התחזות"
+            change_site_setting_groups: "שינוי קבוצות הגדרות אתר"
         screened_emails:
           title: "הודעות דוא״ל מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."

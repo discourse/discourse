@@ -32,7 +32,12 @@ end
 
 check_client_connection false
 
-before_fork { |server| Discourse.redis.close }
+before_fork do |server|
+  Discourse.redis.close
+
+  throttle_time = Float(ENV["APP_SERVER_FORK_THROTTLE"], exception: false) || 1
+  sleep(throttle_time) if !Rails.env.development?
+end
 
 after_mold_fork do |server, mold|
   if mold.generation.zero?

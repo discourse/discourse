@@ -1543,9 +1543,6 @@ fi:
         flags_given:
           one: '<span class="%{className}">%{count}</span> hyödyllinen liputus'
           other: '<span class="%{className}">%{count}</span> hyödyllistä liputusta'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> merkitty julkaisu'
-          other: '<span class="%{className}">%{count}</span> merkittyä julkaisua'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> poistettu julkaisu'
           other: '<span class="%{className}">%{count}</span> poistettua julkaisua'
@@ -2256,7 +2253,6 @@ fi:
     form_kit:
       reset: Palauta
       optional: valinnainen
-      errors_summary_title: "Tämä lomake sisältää virheitä:"
       dirty_form: "Et lähettänyt muutoksiasi! Oletko varma, että haluat poistua?"
       errors:
         starts_with: "Täytyy alkaa %{prefix}"
@@ -3755,7 +3751,7 @@ fi:
       quote_edit: "Muokkaa"
       quote_edit_shortcut: "Muokkaa (tai paina e)"
       quote_copy: "Kopioi lainaus"
-      quote_copied_to_clibboard: "Lainaus kopioitiin leikepöydälle"
+      quote_copied_to_clipboard: "Lainaus kopioitiin leikepöydälle"
       quote_share: "Jaa"
       edit_reason: "Syy: "
       post_number: "viesti %{number}"
@@ -4047,6 +4043,7 @@ fi:
       back: "Takaisin alueelle"
       general: "Yleistä"
       settings: "Asetukset"
+      advanced: "Lisäasetukset"
       topic_template: "Malli"
       tags: "Tunnisteet"
       localizations: "Lokalisoinnit"
@@ -4076,9 +4073,13 @@ fi:
       slug_placeholder: "(Valinnainen) väliviivoilla erotettuja sanoja URL-osoitetta varten"
       creation_error: Alueen luonnissa tapahtui virhe.
       save_error: Alueen tallennuksessa tapahtui virhe.
+      validations:
+        icon_required: "Valitse kuvake."
       description: "Kuvaus"
       logo_description: "Suositeltu kuvasuhde on 1:1 ja vähimmäiskoko 200 pikseliä. Jos tämä jätetään tyhjäksi, kuvaa ei näytetä."
-      style: "Tyylit"
+      style: "Tyyli"
+      icon: "Kuvake"
+      emoji: "Emojit"
       background_color: "Väri"
       foreground_color: "Tekstin väri"
       color_validations:
@@ -4087,13 +4088,13 @@ fi:
         type: "Tyyli"
         icon: "Kuvake"
         emoji: "Emojit"
+        square: "Neliö"
         options:
           square: "Neliö"
           icon: "Kuvake"
           emoji: "Emojit"
       color_used: "Väri käytössä"
       predefined_colors: "Ennalta määritetyt värivaihtoehdot"
-      name_placeholder: "Enintään yksi tai kaksi sanaa"
       color_placeholder: "Mikä tahansa verkkoväri"
       delete_confirm: "Oletko varma, että haluat poistaa tämän alueen?"
       delete_error: "Alueen poistossa tapahtui virhe."
@@ -4101,6 +4102,7 @@ fi:
       no_description: "Lisää alueelle kuvaus."
       change_in_category_topic: "Muokkaa kuvausta"
       already_used: "Tämä väri on jo käytössä toisella alueella"
+      color_palette: "Väripaletti"
       security: "Turvallisuus"
       security_add_group: "Lisää ryhmä"
       permissions:
@@ -4109,15 +4111,14 @@ fi:
         reply: "Vastaus"
         create: "Aloitus"
         no_groups_selected: "Millekään ryhmällä ei ole myönnetty pääsyä; alue näkyy vain henkilökunnalle."
-        everyone_has_access: 'Tämä alue on julkinen: kaikki voivat lukea, vastata ja luoda viestejä. Voit rajoittaa oikeuksia poistamalla yhden tai useamman ryhmälle "kaikki" annetuista oikeuksista.'
+        everyone_full_access: 'Tämä alue on julkinen: kaikki voivat lukea, vastata ja luoda viestejä. Voit rajoittaa oikeuksia poistamalla yhden tai useamman ryhmälle "kaikki" annetuista oikeuksista.'
         toggle_reply: "Muuta vastausoikeutta"
         toggle_full: "Muuta aloitusoikeutta"
         inherited: 'Tämä oikeus periytyy ryhmältä "kaikki"'
-      special_warning: "Varoitus: Tämä on asennusvaiheessa luotu alue, eikä sen turvallisuusasetuksia voi muuttaa. Jos et halua käyttää tätä aluetta, älä muuta sen käyttötarkoitusta, vaan poista se."
       uncategorized_security_warning: "Tämä alue on erityinen. Se on tarkoitettu säilytyspaikaksi ketjuille, joilla ei ole aluetta; sille ei voi määritellä turvallisuusasetuksia."
       uncategorized_general_warning: 'Tämä alue on erityinen. Se on oletusalue uusille ketjuille, joille ei ole valittu aluetta. Jos et kaipaa tätä ja haluat mieluummin pakottaa valitsemaan alueen, <a href="%{settingLink}">poista asetus käytöstä täällä</a>. Jos haluat vaihtaa nimeä tai kuvasta, siirry kohtaan <a href="%{customizeLink}">Mukauta / Tekstisisältö</a>.'
       pending_permission_change_alert: "Et ole lisännyt ryhmää %{group} tälle alueelle; lisää klikkaamalla tätä painiketta."
-      images: "Kuvat"
+      images: "Ulkoasu"
       email_in: "Mukautettu saapuvan postin sähköpostiosoite:"
       email_in_tooltip: "Voit erottaa useita sähköpostiosoitteita |-merkillä."
       email_in_allow_strangers: "Hyväksy sähköpostit anonyymeiltä käyttäjiltä, joilla ei ole tiliä"
@@ -4139,6 +4140,11 @@ fi:
       position: "Sijoitus aluesivulla:"
       position_disabled: "Alueet näytetään aktiivisuusjärjestyksessä. Voit hallita alueiden järjestystä luetteloissa ottamalla käyttöön <a href='%{url}'>\"fixed category positions\"</a> -asetuksen."
       minimum_required_tags: "Ketjussa vaadittavien tunnisteiden vähimmäismäärä:"
+      none_subcategory_text: "Ei valittu"
+      visibility:
+        title: "Näkyvyys"
+        public: "Julkinen"
+        group_restricted: "Yksityinen"
       num_auto_bump_daily: "Päivittäin nostettavien avointen ketjujen määrä:"
       auto_bump_cooldown_days: "Vähimmäismäärä päiviä ennen kuin sama ketju nostetaan uudelleen:"
       navigate_to_first_post_after_read: "Siirry ensimmäiseen viestiin, kun ketjut on luettu"
@@ -5696,7 +5702,9 @@ fi:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Hakulokit</a>'
             disabled: 'Suosittujen hakujen raportti ei ole käytössä. Kerää dataa ottamalla käyttöön asetus <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">kirjaa hakukyselyitä</a>.'
-          average_chart_label: Keskiverto
+          sort_button: "Lajitteluperuste: %{column}"
+          sort_ascending: "nouseva"
+          sort_descending: "laskeva"
           filters:
             file_extension:
               label: Tiedostomuoto
@@ -6432,8 +6440,6 @@ fi:
         delete: "Poista"
         delete_confirm: 'Haluatko varmasti poistaa teeman "%{theme_name}"?'
         bulk_delete: "Oletko varma?"
-        bulk_themes_delete_confirm: "Tämä poistaa seuraavat teemat, eivätkä sivustosi käyttäjät voi enää käyttää niitä:"
-        bulk_components_delete_confirm: "Tämä poistaa seuraavat komponentit, eivätkä sivustosi käyttäjät voi enää käyttää niitä:"
         color: "Väri"
         opacity: "Läpinäkyvyys"
         copy: "Monista"

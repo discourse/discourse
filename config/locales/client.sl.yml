@@ -2982,7 +2982,11 @@ sl:
       slug_placeholder: "(neobvezno) besede-s-črtico za URL"
       creation_error: Prišlo je do napake pri kreiranju kategorije.
       save_error: Prišlo je do napake pri shranjevanju kategorije.
+      validations:
+        icon_required: "Izberite ikono."
       description: "Opis"
+      icon: "Ikona"
+      emoji: "Emoji"
       background_color: "Barva"
       styles:
         icon: "Ikona"
@@ -2990,7 +2994,6 @@ sl:
         options:
           icon: "Ikona"
           emoji: "Emoji"
-      name_placeholder: "Največ ena ali dve besede"
       color_placeholder: "Katerakoli spletna barva"
       delete_confirm: "Ste prepričani da želite izbrisati kategorijo?"
       delete_error: "Prišlo je do napake pri brisanju kategorije."
@@ -3004,15 +3007,14 @@ sl:
         reply: "Odgovori"
         create: "Ustvari"
         no_groups_selected: "Dostop ni bil odobren nobeni skupini; ta kategorija bo vidna samo osebju."
-        everyone_has_access: 'Ta kategorija je javna, vsi lahko vidijo, odgovarjajo in ustvarjajo objave. Če želite omejiti dovoljenja, odstranite eno ali več dovoljenj, dodeljenih skupini »vsi«.'
+        everyone_full_access: 'Ta kategorija je javna, vsi lahko vidijo, odgovarjajo in ustvarjajo objave. Če želite omejiti dovoljenja, odstranite eno ali več dovoljenj, dodeljenih skupini »vsi«.'
         toggle_reply: "Preklopi dovoljenje za odgovor"
         toggle_full: "Preklopi dovoljenje za ustvarjanje"
         inherited: 'To dovoljenje je podedovano od "vsi"'
-      special_warning: "Ta kategorija je prednastavljena, zato varnostnih nastavitev ni mogoče urejati. Če ne želite uporabljati te kategorije jo raje izbrišite kot uporabljajte v drug namen."
       uncategorized_security_warning: "Ta kategorija je posebna. Namenjena je shranjevanju tem, ki nimajo kategorije, zato ne more imeti varnostnih nastavitev."
       uncategorized_general_warning: 'Ta kategorija je posebna. Uporablja se kot privzeta kategorija za nove teme, ki nimajo izbrane kategorije. Če želite onemogočiti takšen način in vsiliti obvezno izbiro kategorije, <a href="%{settingLink}">potem onemogočite nastavitev tukaj</a>. Če želite spremeniti ime ali opis, pojdite <a href="%{customizeLink}">Prilagodi / Vsebina besedila</a>.'
       pending_permission_change_alert: "Niste dodali %{group} v to kategorijo; kliknite ta gumb za dodajanje."
-      images: "Slike"
+      images: "Videz"
       email_in: "Dohodni e-naslov po meri:"
       email_in_allow_strangers: "Dovoli e-sporočila od anonimnih uporabnikov brez računa"
       mailinglist_mirror: "Kategorija zrcali poštni seznam"
@@ -3028,6 +3030,11 @@ sl:
       this_year: "to leto"
       position: "Položaj na strani kategorij:"
       minimum_required_tags: "Najmanjše število oznak zahtevanih na temi:"
+      none_subcategory_text: "Brez"
+      visibility:
+        title: "Vidljivost"
+        public: "Javni"
+        group_restricted: "Zasebni"
       num_auto_bump_daily: "Število odprtih tem, ki se samodejno izpostavijo vsak dan:"
       navigate_to_first_post_after_read: "Premakni se na prvi prispevek ko so vse teme prebrane"
       notifications:
@@ -3924,6 +3931,9 @@ sl:
           no_data: "Ni podatkov za prikaz."
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Dnevnik iskanj</a>'
+          sort_button: "Razvrsti po %{column}"
+          sort_ascending: "naraščajoče"
+          sort_descending: "padajoče"
           filters:
             file_extension:
               label: Pripona datoteke

@@ -1795,11 +1795,6 @@ cs:
           few: '<span class="%{className}">%{count}</span> užitečná nahlášení'
           many: '<span class="%{className}">%{count}</span> užitečných nahlášení'
           other: '<span class="%{className}">%{count}</span> užitečných nahlášení'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> nahlášený příspěvek'
-          few: '<span class="%{className}">%{count}</span> nahlášené příspěvky'
-          many: '<span class="%{className}">%{count}</span> nahlášených příspěvků'
-          other: '<span class="%{className}">%{count}</span> nahlášených příspěvků'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> smazaný příspěvek'
           few: '<span class="%{className}">%{count}</span> smazané příspěvky'
@@ -2579,7 +2574,6 @@ cs:
     form_kit:
       reset: obnovit výchozí
       optional: volitelné
-      errors_summary_title: "Tento formulář obsahuje chyby:"
       dirty_form: "Neodeslali jste změny! Opravdu chcete odejít?"
       errors:
         starts_with: "Musí začínat na %{prefix}"
@@ -4336,7 +4330,7 @@ cs:
       quote_edit: "Upravit"
       quote_edit_shortcut: "Upravit (nebo stiskněte e)"
       quote_copy: "Kopírovat citaci"
-      quote_copied_to_clibboard: "Citace byla zkopírována do schránky"
+      quote_copied_to_clipboard: "Citace byla zkopírována do schránky"
       quote_share: "Sdílet"
       edit_reason: "Důvod: "
       post_number: "příspěvek č. %{number}"
@@ -4679,6 +4673,7 @@ cs:
       back: "Zpět na kategorii"
       general: "Obecné"
       settings: "Nastavení"
+      advanced: "Pokročilé"
       topic_template: "Šablona"
       tags: "Štítky"
       localizations: "Lokalizace"
@@ -4709,11 +4704,14 @@ cs:
       create_long: "Vytvořit novou kategorii"
       save: "Uložit kategorii"
       slug: "URL kategorie"
+      parent: "Nadřazená kategorie"
       slug_placeholder: "(Nepovinné) slova s pomlčkou pro URL"
       creation_error: Během vytváření nové kategorie nastala chyba.
       save_error: Během ukládání kategorie nastala chyba.
       errors:
         self_lockout: "Chystáte se změnit oprávnění kategorie tak, že odeberete svůj vlastní přístup. Opravdu chcete pokračovat?"
+      validations:
+        icon_required: "Vyberte ikonu."
       name: "Název kategorie"
       untitled: "Nepojmenovaná kategorie"
       description: "Popis"
@@ -4722,7 +4720,9 @@ cs:
       logo_description: "Doporučený poměr stran 1:1 s minimální velikostí 200 pixelů. Pokud ponecháte prázdné, nezobrazí se žádný obrázek."
       background_image: "Obrázek pozadí kategorie"
       background_image_dark: "Obrázek pozadí kategorie (tmavý režim)"
-      style: "Styly"
+      style: "Styl"
+      icon: "Ikona"
+      emoji: "Emotikon"
       background_color: "Barva"
       foreground_color: "Barva textu"
       color_validations:
@@ -4733,13 +4733,13 @@ cs:
         type: "Styl"
         icon: "Ikona"
         emoji: "Smajlíky :)"
+        square: "Čtverec"
         options:
           square: "Čtverec"
           icon: "Ikona"
           emoji: "Emoji"
       color_used: "Používaná barva"
       predefined_colors: "Předdefinované možnosti barev"
-      name_placeholder: "Měl by být krátký a výstižný."
       color_placeholder: "Jakákoliv webová barva"
       delete_confirm: "Opravdu chcete odstranit tuto kategorii?"
       delete_error: "Nastala chyba při odstraňování kategorie."
@@ -4747,6 +4747,7 @@ cs:
       no_description: "Doplňte prosím popis této kategorie."
       change_in_category_topic: "Úprava popisu"
       already_used: "Tato barva je již použita jinou kategorií"
+      color_palette: "Barevná paleta"
       security: "Zabezpečení"
       security_add_group: "Přidat skupinu"
       permissions:
@@ -4755,15 +4756,14 @@ cs:
         reply: "Odpovědět"
         create: "Vytvořit"
         no_groups_selected: "Nebyl udělen přístup žádným skupinám; tato kategorie bude viditelná pouze pro redaktory."
-        everyone_has_access: 'Tato kategorie je veřejná, každý může vidět, odpovídat a vytvářet příspěvky. Chcete-li omezit oprávnění, odeberte jedno nebo více oprávnění přidělených skupině "everyone",'
+        everyone_full_access: 'Tato kategorie je veřejná, každý může vidět, odpovídat a vytvářet příspěvky. Chcete-li omezit oprávnění, odeberte jedno nebo více oprávnění přidělených skupině "everyone",'
         toggle_reply: "Přepnout oprávnění Odpovědět"
         toggle_full: "Přepnout oprávnění Vytvořit"
         inherited: 'Toto povolení je zděděno od „everyone“'
-      special_warning: "Varování: Tato kategorie je přednastavená a její nastavení bezpečnosti nelze změnit. Pokud tuto kategorii nechcete používat, nesnažte se ji měnit, ale odstraňte ji."
       uncategorized_security_warning: "Toto je speciální kategorie, která je určena pro témata, která nemají žádnou kategorii a nemůže mít nastavení zabezpečení."
       uncategorized_general_warning: 'Toto je speciální kategorie. Používá se jako výchozí kategorie pro nová témata, u kterých není vybrána žádná kategorie. Pokud chcete tomuto chování zabránit a vynutit si výběr kategorie, <a href="%{settingLink}">, zakažte prosím toto nastavení</a>. Pokud chcete změnit název nebo popis, přejděte na <a href="%{customizeLink}">Přizpůsobení/Textový obsah</a>.'
       pending_permission_change_alert: "Do této kategorie jste nepřidali %{group} ; kliknutím na toto tlačítko je přidejte."
-      images: "Obrázky"
+      images: "Vzhled"
       email_in: "Vlastní příchozí emailová adresa:"
       email_in_tooltip: "Více e-mailových adres můžete oddělit znakem |."
       email_in_allow_strangers: "Přijímat emaily i od neregistrovaných uživatelů"
@@ -4792,7 +4792,12 @@ cs:
       position_disabled: "Kategorie se zobrazí v pořadí podle aktivity. Chcete-li ovlivnit pořadí kategorií v seznamech, povolte nastavení <a href='%{url}'>\"pevné pozice kategorií\"</a> ."
       minimum_required_tags: "Nejmenší počet požadovaných štítků pro téma:"
       default_slow_mode: 'Povolit "Pomalý režim" pro nová témata v této kategorii.'
-      parent: "Nadřazená kategorie"
+      none_subcategory_text: "Žádná"
+      visibility:
+        title: "Viditelnost"
+        public: "Veřejná"
+        all_members: "Všichni členové"
+        group_restricted: "Soukromá"
       num_auto_bump_daily: "Počet otevřených témat, která mají být denně automaticky pošťouchnuta:"
       auto_bump_cooldown_days: "Minimální počet dní před opětovným \"pošťouchnutím\" stejného tématu:"
       navigate_to_first_post_after_read: "Přesunout na první příspěvek, jakmile jsou přečtena témata"
@@ -6025,7 +6030,6 @@ cs:
           search_placeholder: "Filtrovat podle názvu, popisu nebo pluginu..."
           no_results: "Vašemu filtru neodpovídají žádné nadcházející změny."
           all: "Vše"
-          enabled_all: "Povoleno nebo zakázáno"
           enabled: "Zapnuto"
           disabled: "Vypnuto"
           impact_type_all: "Všechny typy dopadů"
@@ -6075,7 +6079,6 @@ cs:
           keywords: "locale|language|timezone|unicode|ltr|jazyk|časová|zóna"
         upcoming_changes:
           title: "Nadcházející změny"
-          header_description: "Seznam chystaných změn ve službě Discourse, které mohou mít vliv na váš web, a experimentální funkce, ke kterým se můžete přihlásit. Můžete filtrovat podle dopadu, typu změny a stavu.\n\nOpt-in skupiny lze použít k tomu, aby určitá skupina uživatelů mohla testovat změnu předtím, než bude uvolněna pro všechny. Tyto skupiny se stanou irelevantními, jakmile změna přejde do stavu stabilní."
         login:
           title: "Přihlášení a ověřování"
           header_description: "Nakonfigurujte, jak se uživatelé přihlašují a ověřují, secrets a klíče, poskytovatele OAuth2 a další"
@@ -6608,7 +6611,9 @@ cs:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Protokol vyhledávání</a>'
             disabled: 'Přehled trendů vyhledávání je zakázán. Pro shromažďování dat povolte <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dotazy na protokol</a>.'
-          average_chart_label: Průměr
+          sort_button: "Seřadit podle %{column}"
+          sort_ascending: "vzestupně"
+          sort_descending: "sestupně"
           filters:
             file_extension:
               label: Přípona souboru
@@ -7366,8 +7371,6 @@ cs:
         delete: "Smazat"
         delete_confirm: 'Opravdu chcete odstranit "%{theme_name}"?'
         bulk_delete: "Jste si jisti?"
-        bulk_themes_delete_confirm: "Tímto se odinstalují následující motivy. Nebudou již použitelné žádnými uživateli na vašem webu:"
-        bulk_components_delete_confirm: "Tímto se odinstalují následující komponenty. Nebudou již použitelné žádnými uživateli na vašem webu:"
         color: "Barva"
         opacity: "Neprůhlednost"
         copy: "Duplikovat"

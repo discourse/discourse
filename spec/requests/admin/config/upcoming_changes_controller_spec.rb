@@ -4,6 +4,8 @@ RSpec.describe Admin::Config::UpcomingChangesController do
   fab!(:admin)
   fab!(:user)
 
+  before { SiteSetting.enable_upcoming_changes = true }
+
   describe "#index" do
     before do
       mock_upcoming_change_metadata(
@@ -187,7 +189,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
   end
 
   describe "#toggle_change" do
-    let(:setting_name) { "experimental_form_templates" }
+    let(:setting_name) { "enable_form_templates" }
 
     context "when logged in as non-admin" do
       before { sign_in(user) }
@@ -209,15 +211,15 @@ RSpec.describe Admin::Config::UpcomingChangesController do
       end
 
       it "toggles the setting from false to true" do
-        SiteSetting.experimental_form_templates = false
+        SiteSetting.enable_form_templates = false
 
         expect {
           put "/admin/config/upcoming-changes/toggle.json", params: { setting_name:, enabled: true }
-        }.to change { SiteSetting.experimental_form_templates }.from(false).to(true)
+        }.to change { SiteSetting.enable_form_templates }.from(false).to(true)
       end
 
       it "toggles the setting from true to false" do
-        SiteSetting.experimental_form_templates = true
+        SiteSetting.enable_form_templates = true
 
         expect {
           put "/admin/config/upcoming-changes/toggle.json",
@@ -225,7 +227,7 @@ RSpec.describe Admin::Config::UpcomingChangesController do
                 setting_name:,
                 enabled: false,
               }
-        }.to change { SiteSetting.experimental_form_templates }.from(true).to(false)
+        }.to change { SiteSetting.enable_form_templates }.from(true).to(false)
       end
 
       it "logs the change in staff action logs" do
@@ -233,8 +235,9 @@ RSpec.describe Admin::Config::UpcomingChangesController do
           put "/admin/config/upcoming-changes/toggle.json", params: { setting_name:, enabled: true }
         }.to change {
           UserHistory.where(
-            action: UserHistory.actions[:change_site_setting],
+            action: UserHistory.actions[:upcoming_change_toggled],
             subject: setting_name,
+            context: I18n.t("staff_action_logs.upcoming_changes.log_manually_toggled"),
           ).count
         }.by(1)
       end

@@ -4009,7 +4009,7 @@ export default {
     chunk_size: 20,
     bookmarked: null,
     bookmarks: [],
-    tags: ["foo"],
+    tags: [{ id: 1, name: "foo", slug: "foo" }],
   },
   "/t/9/1.json": {
     post_stream: {
@@ -5805,7 +5805,10 @@ export default {
         avatar_template: "/images/avatar.png",
       },
     },
-    tags: ["foo", "baz"],
+    tags: [
+      { id: 1, name: "foo", slug: "foo" },
+      { id: 2, name: "baz", slug: "baz" },
+    ],
   },
   "/t/2481/1.json": {
     post_stream: {

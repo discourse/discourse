@@ -1,0 +1,129 @@
+@use "lib/viewport";
+
+.uc-enable-simplified-category-creation {
+  .select-kit.multi-select.group-chooser {
+    width: var(--form-kit-large-input);
+
+    @include viewport.until(sm) {
+      width: 100%;
+    }
+  }
+
+  div.edit-category {
+    display: block;
+
+    .add-required-tag-group {
+      align-self: start;
+    }
+
+    .form-kit__control-icon {
+      .select-kit-row .d-icon,
+      .select-kit-header .d-icon,
+      .select-kit-header-wrapper .d-icon:first-of-type {
+        color: var(--icon-color, currentColor);
+      }
+
+      .select-kit-header-wrapper {
+        gap: var(--space-2);
+      }
+    }
+
+    .form-kit__control-icon .formatted-selection {
+      display: flex !important; // overrides another important
+      flex: 0 1 auto;
+    }
+
+    #control-emoji {
+      &.form-kit__field .form-kit__container-content {
+        width: auto;
+      }
+    }
+
+    .edit-category-title-bar {
+      box-sizing: border-box;
+      width: 100%;
+      flex-wrap: wrap;
+    }
+
+    .edit-category-title {
+      flex: 1 1 auto;
+
+      h2 {
+        margin-top: 0;
+      }
+
+      .btn-back {
+        margin-top: -0.5em;
+        margin-left: -0.5em;
+        margin-bottom: 0.5em;
+      }
+    }
+
+    .edit-category-nav {
+      border-bottom: 1px solid var(--content-border-color);
+    }
+
+    .edit-category-content {
+      margin-top: 2em;
+      grid-area: unset;
+    }
+  }
+
+  .edit-category-tab-security {
+    .form-kit__container-content {
+      width: 100%;
+    }
+  }
+
+  .edit-category-title-text {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+
+    .edit-category-static-title {
+      transition: font-size 0.2s ease-in-out;
+    }
+
+    &:has(.badge-category__wrapper) {
+      .edit-category-static-title {
+        position: absolute;
+        font-size: var(--font-down-3);
+      }
+    }
+
+    .badge-category__wrapper {
+      font-weight: normal;
+      font-size: var(--font-up-2);
+      margin-top: var(--space-5);
+    }
+  }
+
+  .category-permissions-table {
+    width: 100%;
+  }
+
+  .form-kit__errors-summary {
+    margin-top: var(--space-4);
+
+    + .form-kit__section.edit-category-content {
+      margin-top: 0;
+    }
+  }
+
+  .form-kit__conditional-display {
+    .badge-category__wrapper {
+      min-height: 2.6em;
+      top: var(--space-1);
+    }
+
+    .form-kit__container-content:has(.is-disabled) {
+      // select-kit has pointer-events disabled, so we need to style the parent
+      cursor: not-allowed;
+    }
+  }
+
+  .edit-category .edit-category-footer {
+    padding: 0;
+    margin-bottom: var(--space-4);
+  }
+}

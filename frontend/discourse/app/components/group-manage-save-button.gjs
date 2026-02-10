@@ -2,6 +2,7 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import GroupFlairVisibilityWarning from "discourse/components/group-flair-visibility-warning";
 import GroupDefaultNotificationsModal from "discourse/components/modal/group-default-notifications";
@@ -12,6 +13,7 @@ import { defaultHomepage } from "discourse/lib/utilities";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
+@tagName("")
 export default class GroupManageSaveButton extends Component {
   @service currentUser;
   @service dialog;
@@ -115,18 +117,20 @@ export default class GroupManageSaveButton extends Component {
   }
 
   <template>
-    <GroupFlairVisibilityWarning @model={{this.model}} />
+    <div ...attributes>
+      <GroupFlairVisibilityWarning @model={{this.model}} />
 
-    <div class="control-group buttons group-manage-save-button">
-      <DButton
-        @action={{this.save}}
-        @disabled={{or this.disabled this.saving}}
-        @translatedLabel={{this.savingText}}
-        class="btn-primary group-manage-save"
-      />
-      {{#if this.saved}}
-        <span>{{i18n "saved"}}</span>
-      {{/if}}
+      <div class="control-group buttons group-manage-save-button">
+        <DButton
+          @action={{this.save}}
+          @disabled={{or this.disabled this.saving}}
+          @translatedLabel={{this.savingText}}
+          class="btn-primary group-manage-save"
+        />
+        {{#if this.saved}}
+          <span>{{i18n "saved"}}</span>
+        {{/if}}
+      </div>
     </div>
   </template>
 }

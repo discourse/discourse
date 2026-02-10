@@ -316,6 +316,7 @@ zh_CN:
           image_caption: "标题图片"
           translator: "翻译器"
           post_illustrator: "帖子插图创建器"
+          chat_thread_titles: "聊天主题标题"
           setting_groups:
             access_permissions: "访问 & 权限"
             enabled_features: "已启用功能"
@@ -702,22 +703,16 @@ zh_CN:
           anthropic-claude-sonnet-4-5: "速度与成本的最佳平衡"
           anthropic-claude-haiku-4-5: "快速、经济高效"
           google-gemini-3-pro: "谷歌最智能的模型"
-          google-gemini-2-5-pro: "能够执行多种任务的大型多模态模型"
-          google-gemini-2-5-flash: "轻量、快速、经济高效，具有多模态推理能力"
-          google-gemini-2-5-flash-lite: "谷歌最小、性价比最高的机型"
-          google-gemini-2-5-flash-image-preview: "具备视觉能力的最新图像生成模型"
-          open_ai-gpt-5-1: "OpenAI 的旗舰模型。它非常适合跨领域解决问题"
-          open_ai-gpt-5-mini: "在智能、速度和成本之间实现平衡，使其成为适合许多用例的极具吸引力的模型。"
+          google-gemini-3-flash: "快速高效且经济实惠，并具备多模态推理能力"
+          open_ai-gpt-5-2: "OpenAI 的旗舰模型，非常适合跨领域问题解决"
+          open_ai-gpt-5-mini: "在智能、速度和成本之间取得平衡"
           open_ai-gpt-5-nano: "最快、最具成本效益的 GPT-5 模型。"
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "高效的轻量级多语言模型"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "强大的多用途模型"
-          mistral-mistral-large-latest: "Mistral 最强大的模型"
-          mistral-pixtral-large-latest: "Mistral 最强大的视觉模型"
-          open_router-x-ai-grok-4: "xAI 的最新模型"
-          open_router-deepseek-deepseek-r1-0528-free: "DeepSeek 的最新推理模型"
-          open_router-meta-llama-3-3-70b-instruct: "功能强大的多语言模式"
-          groq-openai-gpt-oss-120b: "OpenAI 最先进的开放权重模型"
-          groq-openai-gpt-oss-20b: "OpenAI 的轻量级、快速、开放权重模型"
+          open_router-deepseek-deepseek-v3-2: "DeepSeek 最新高性能模型"
+          open_router-moonshotai-kimi-k2-5: "具有视觉功能的 Moonshot 多模态模型"
+          open_router-x-ai-grok-4-fast: "xAI 的旗舰视觉模型"
+          open_router-minimax-minimax-m2-1: "MiniMax 带大上下文的多模态模型"
+          open_router-z-ai-glm-4-7: "Z-AI 的多模态视觉模型"
+          open_router-arcee-ai-trinity-large-preview-free: "来自 Arcee AI 的免费开源模型"
         preseeded_model_description: "利用 %{model} 的预配置开源模型"
         configured:
           title: "配置的 LLM"
@@ -1020,12 +1015,19 @@ zh_CN:
         topic:
           title: "话题摘要"
           close: "关闭摘要面板"
-          regenerate: "重新生成简短摘要"
-          regenerate_bulk: "重新生成简短摘要"
-          regenerate_success:
+          regenerate_ai_summaries: "重新生成 AI 摘要"
+          regen_modal_description: "选择要为此话题重新生成的 AI 摘要类型。"
+          bulk_regen_description: "选择要为所选话题重新生成的 AI 摘要类型。"
+          regenerate_gists_option: "简短摘要（要点）"
+          regenerate_summaries_option: "话题总结"
+          regenerate_gists_success:
             other: "%{count} 条简短摘要已成功重新生成"
-          regenerate_error:
+          regenerate_gists_error:
             other: "无法重新生成 %{count} 条简短摘要"
+          regenerate_topic_summary_success:
+            other: "%{count} 个话题摘要已成功重新生成"
+          regenerate_topic_summary_error:
+            other: "未能重新生成 %{count} 个话题摘要"
         topic_list_layout:
           button:
             compact: "紧凑"

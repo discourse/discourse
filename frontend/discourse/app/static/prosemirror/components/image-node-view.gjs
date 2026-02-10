@@ -655,14 +655,13 @@ async function openLightbox(editorElement, currentImage) {
       appendTo: "root",
       html: "",
       onInit: (caption, pswp) => {
+        const titleEl = document.createElement("div");
+        titleEl.className = "pswp__caption-title";
+        caption.appendChild(titleEl);
+
         pswp.on("change", () => {
           const slideData = pswp.getItemData(pswp.currIndex);
-          const alt = slideData?.alt;
-          if (alt) {
-            caption.innerHTML = `<div class='pswp__caption-title'>${alt}</div>`;
-          } else {
-            caption.innerHTML = "";
-          }
+          titleEl.textContent = slideData?.alt || "";
         });
       },
     });

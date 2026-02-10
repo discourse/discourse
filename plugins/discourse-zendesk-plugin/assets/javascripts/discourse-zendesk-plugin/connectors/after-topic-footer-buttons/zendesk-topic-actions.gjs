@@ -1,13 +1,12 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
-import { classNames, tagName } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import { ajax } from "discourse/lib/ajax";
 import { i18n } from "discourse-i18n";
 
-@tagName("span")
-@classNames("after-topic-footer-buttons-outlet", "zendesk-topic-actions")
+@tagName("")
 export default class ZendeskTopicActions extends Component {
   init() {
     super.init(...arguments);
@@ -41,29 +40,34 @@ export default class ZendeskTopicActions extends Component {
   }
 
   <template>
-    {{#if this.currentUser.staff}}
-      {{#if this.valid_zendesk_credential}}
-        {{#if this.zendesk_id}}
-          <a
-            href={{this.zendesk_url}}
-            target="_blank"
-            class="btn-primary btn"
-            rel="noopener noreferrer"
-          >
-            <i class="fa fa-clone"></i>
-            {{i18n "topic.view_zendesk_issue"}}
-          </a>
+    <span
+      class="after-topic-footer-buttons-outlet zendesk-topic-actions"
+      ...attributes
+    >
+      {{#if this.currentUser.staff}}
+        {{#if this.valid_zendesk_credential}}
+          {{#if this.zendesk_id}}
+            <a
+              href={{this.zendesk_url}}
+              target="_blank"
+              class="btn-primary btn"
+              rel="noopener noreferrer"
+            >
+              <i class="fa fa-clone"></i>
+              {{i18n "topic.view_zendesk_issue"}}
+            </a>
+          {{else}}
+            <DButton
+              class="btn-primary"
+              @action={{this.createZendeskIssue}}
+              @label="topic.create_zendesk_issue"
+              @disabled={{this.dirty}}
+            />
+          {{/if}}
         {{else}}
-          <DButton
-            class="btn-primary"
-            @action={{this.createZendeskIssue}}
-            @label="topic.create_zendesk_issue"
-            @disabled={{this.dirty}}
-          />
+          <p>{{i18n "zendesk.credentials_not_setup"}}</p>
         {{/if}}
-      {{else}}
-        <p>{{i18n "zendesk.credentials_not_setup"}}</p>
       {{/if}}
-    {{/if}}
+    </span>
   </template>
 }

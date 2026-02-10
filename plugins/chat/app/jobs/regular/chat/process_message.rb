@@ -28,7 +28,7 @@ module Jobs
             )
           end
 
-          # we dont process mentions when creating/updating message so we always have to do it
+          # we don't process mentions when creating/updating message so we always have to do it
           chat_message.upsert_mentions
 
           # extract external links for webhook-based rebaking

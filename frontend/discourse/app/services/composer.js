@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers, ember/no-side-effects */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
@@ -198,10 +199,7 @@ export default class ComposerService extends Service {
 
   @computed("model.category", "skipFormTemplate")
   get formTemplateIds() {
-    if (
-      !this.siteSettings.experimental_form_templates ||
-      this.skipFormTemplate
-    ) {
+    if (!this.siteSettings.enable_form_templates || this.skipFormTemplate) {
       return null;
     }
 

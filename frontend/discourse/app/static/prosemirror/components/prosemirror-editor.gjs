@@ -371,6 +371,7 @@ export default class ProsemirrorEditor extends Component {
           @view={{nodeView.view}}
           @getPos={{nodeView.getPos}}
           @dom={{nodeView.dom}}
+          @pluginParams={{nodeView.pluginParams}}
           @onSetup={{nodeView.setComponentInstance}}
         />
       {{~/in-element~}}

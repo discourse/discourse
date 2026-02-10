@@ -5,8 +5,9 @@
   --wizard-primary-100: #f4f2fc;
   --wizard-primary-300: #b8a4ff;
   --wizard-primary-400: #8b6df8;
-  --wizard-bg-color: #f9f8fc;
-  --wizard-bg-color-2: #e1d5ff;
+  --wizard-primary-800: #3a275e;
+  --wizard-bg-color: light-dark(#f9f8fc, var(--background-color));
+  --wizard-bg-color-2: light-dark(#e1d5ff, var(--wizard-primary-800));
   --wizard-input-radius: 8px;
   --wizard-button-radius: 6.25em;
 }
@@ -103,7 +104,7 @@ body.wizard {
   position: relative;
   z-index: 11;
   background-color: var(--secondary);
-  box-shadow: 0 10px 30px rgb(123, 95, 226, 0.15);
+  box-shadow: light-dark(0 10px 30px rgb(123, 95, 226, 0.15), none);
   box-sizing: border-box;
   margin: 1em auto;
   border-radius: 16px;
@@ -344,11 +345,14 @@ body.wizard {
 
     &.--selected {
       .wizard-container__label {
-        background-color: var(--wizard-primary-100);
+        background-color: light-dark(
+          var(--wizard-primary-100),
+          var(--wizard-primary-900)
+        );
         border-color: var(--wizard-primary);
         border-width: 2px;
         margin: 0;
-        color: var(--wizard-primary);
+        color: light-dark(var(--wizard-primary), var(--primary));
         font-weight: bold;
       }
     }
@@ -470,7 +474,7 @@ body.wizard {
 
     &.btn-primary {
       background-color: var(--wizard-primary);
-      color: var(--secondary);
+      color: light-dark(var(--secondary), var(--primary));
       display: inline-block;
       padding: 0.75em 2em;
       border-radius: var(--wizard-button-radius);
@@ -488,10 +492,6 @@ body.wizard {
       &:active {
         background-color: var(--wizard-primary);
       }
-    }
-
-    &primary:active {
-      background-color: var(--tertiary-high);
     }
 
     &:disabled {

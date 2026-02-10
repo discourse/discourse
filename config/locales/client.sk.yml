@@ -1608,11 +1608,6 @@ sk:
           few: '<span class="%{className}">%{count}</span> užitočných označení'
           many: '<span class="%{className}">%{count}</span> užitočných označení'
           other: '<span class="%{className}">%{count}</span> užitočné označena'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> označený príspevok'
-          few: '<span class="%{className}">%{count}</span> označených príspevkov'
-          many: '<span class="%{className}">%{count}</span> označených príspevkov'
-          other: '<span class="%{className}">%{count}</span> označené príspevky'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> odstránený príspevok'
           few: '<span class="%{className}">%{count}</span> odstránených príspevkov'
@@ -2385,7 +2380,6 @@ sk:
     form_kit:
       reset: Resetovať
       optional: nepovinné
-      errors_summary_title: "Tento formulár obsahuje chyby:"
       dirty_form: "Neodoslali ste svoje zmeny! Naozaj chcete odísť?"
       errors:
         starts_with: "Musí začínať s %{prefix}"
@@ -4038,7 +4032,7 @@ sk:
       quote_edit: "Upraviť"
       quote_edit_shortcut: "Upraviť (alebo stlačte e)"
       quote_copy: "Kopírovať citát"
-      quote_copied_to_clibboard: "Citácia skopírovaná do schránky"
+      quote_copied_to_clipboard: "Citácia skopírovaná do schránky"
       quote_share: "Zdieľaj"
       edit_reason: "Dôvod:"
       post_number: "príspevok %{number}"
@@ -4372,6 +4366,7 @@ sk:
       back: "Späť na kategóriu"
       general: "Všeobecné"
       settings: "Nastavenia"
+      advanced: "Pokročilé"
       topic_template: "Šablóna"
       tags: "Značky"
       localizations: "Lokalizácie"
@@ -4399,9 +4394,13 @@ sk:
       slug_placeholder: "(Voliteľné) pomlčkou-prerušované-slová pre url"
       creation_error: Nastala chyba počas vytvárania kategórie.
       save_error: Nastala chyba počas ukladania kategórie
+      validations:
+        icon_required: "Vyberte ikonu."
       description: "Popis"
       logo_description: "Odporúčaný pomer strán 1:1 s minimálnou veľkosťou 200px. Ak zostane prázdny, nezobrazí sa žiadny obrázok."
-      style: "Štýly"
+      style: "Štýl"
+      icon: "Ikona"
+      emoji: "Emoji"
       background_color: "Farba"
       foreground_color: "Farba textu"
       color_validations:
@@ -4410,13 +4409,13 @@ sk:
         type: "Štýl"
         icon: "Ikona"
         emoji: "Emoji"
+        square: "Štvorec"
         options:
           square: "Štvorec"
           icon: "Ikona"
           emoji: "Emoji"
       color_used: "Používaná farba"
       predefined_colors: "Preddefinované možnosti farieb"
-      name_placeholder: "Maximálne jedno dve slová"
       color_placeholder: "Ľubovoľná farba stránky"
       delete_confirm: "Ste si istý že chcete zmazať túto kategóriu?"
       delete_error: "Nastala chyba počas mazania kategórie"
@@ -4424,6 +4423,7 @@ sk:
       no_description: "Prosím, pridajte popis k tejto kategórii."
       change_in_category_topic: "Upraviť popis"
       already_used: "Táto farba je už použitá inou kategóriou"
+      color_palette: "Paleta farieb"
       security: "Bezpečnosť"
       security_add_group: "Pridať skupinu"
       permissions:
@@ -4432,15 +4432,14 @@ sk:
         reply: "Odpovedať"
         create: "Vytvoriť:"
         no_groups_selected: "Žiadnym skupinám nebolo udelené oprávnenie; táto kategória bude viditeľná iba pre personál."
-        everyone_has_access: 'Táto kategória je verejná, každý ju môže vidieť, odpovedať na ňu a vytvárať príspevky. Ak chcete obmedziť oprávnenia, odstráňte jedno alebo viacero oprávnení udelených skupine "každý".'
+        everyone_full_access: 'Táto kategória je verejná, každý ju môže vidieť, odpovedať na ňu a vytvárať príspevky. Ak chcete obmedziť oprávnenia, odstráňte jedno alebo viacero oprávnení udelených skupine "každý".'
         toggle_reply: "Prepnite povolenie Odpovedať"
         toggle_full: "Prepnúť Vytvoriť povolenie"
         inherited: 'Toto povolenie sa zdedí od „všetkých“'
-      special_warning: "Upozornenie: Toto je preddefinovaná kategória a jej bezpečnostné nastavenia sa nedajú upraviť. Pokiaľ si neželáte použiť túto kategóriu, neupravujte ju, ale zmažte."
       uncategorized_security_warning: "Táto kategória je špeciálna. Je určená na uchovávanie tém, ktoré nemajú žiadnu kategóriu; nemôže mať bezpečnostné nastavenia."
       uncategorized_general_warning: 'Táto kategória je špeciálna. Používa sa ako predvolená kategória pre nové témy, ktoré nemajú zvolenú kategóriu. Ak chcete zabrániť tomuto správaniu a vynútiť výber kategórie, <a href="%{settingLink}">vypnite toto nastavenie tu</a>. Ak chcete zmeniť názov alebo popis, prejdite do časti <a href="%{customizeLink}">Prispôsobiť / Obsah textu</a>.'
       pending_permission_change_alert: "Do tejto kategórie ste nepridali %{group} ; kliknutím na toto tlačidlo ich pridáte."
-      images: "Obrázky"
+      images: "Vzhľad"
       email_in: "Vlastná e-mailová adresa pre príchodziu poštu:"
       email_in_tooltip: "Viacero e-mailových adries môžete oddeliť pomocou znaku |."
       email_in_allow_strangers: "Prijímať emaily od anonymných používateľov bez účtu"
@@ -4462,6 +4461,11 @@ sk:
       position: "Pozícia na stránke kategórií:"
       position_disabled: "Kategórie sa zobrazia v poradí podľa aktivity. Ak chcete kontrolovať poradie kategórií v zoznamoch, povoľte nastavenie <a href='%{url}'>\"pevné pozície kategórií</a> \"."
       minimum_required_tags: "Minimálny počet značiek požadovaných v téme:"
+      none_subcategory_text: "Žiadny"
+      visibility:
+        title: "Viditeľnosť"
+        public: "Verejné"
+        group_restricted: "Súkromné"
       num_auto_bump_daily: "Počet otvorených tém, ktoré sa majú automaticky denne vypisovať:"
       auto_bump_cooldown_days: "Minimálny počet dní pred opätovným otvorením tej istej témy:"
       navigate_to_first_post_after_read: "Prejsť na prvý príspevok po prečítaní tém"
@@ -6116,7 +6120,9 @@ sk:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">V denníkoch vyhľadávania</a>'
             disabled: 'Prehľad trendov vo vyhľadávaní je zakázaný. Povoľte <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">denníkové vyhľadávacie dopyty</a> na zhromažďovanie údajov.'
-          average_chart_label: Priemer
+          sort_button: "Zoradiť podľa %{column}"
+          sort_ascending: "vzostupne"
+          sort_descending: "zostupne"
           filters:
             file_extension:
               label: Prípona súboru
@@ -6866,8 +6872,6 @@ sk:
         delete: "Odstrániť"
         delete_confirm: 'Naozaj chcete odstrániť „%{theme_name}“?'
         bulk_delete: "Ste si istý?"
-        bulk_themes_delete_confirm: "Odinštalujú sa nasledujúce témy, ktoré už nebudú môcť používať žiadni používatelia na vašom webe:"
-        bulk_components_delete_confirm: "Odinštalujú sa nasledujúce komponenty, ktoré už nebudú môcť používať žiadni používatelia na vašom webe:"
         color: "Farba"
         opacity: "Nepriesvitnosť"
         copy: "Duplikát"

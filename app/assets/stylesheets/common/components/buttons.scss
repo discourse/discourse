@@ -470,10 +470,6 @@
       color: var(--primary);
     }
   }
-
-  &.back-button {
-    margin-bottom: 1em;
-  }
 }
 
 @mixin btn-colors($btn-type) {
@@ -520,7 +516,7 @@
     }
   }
 
-  /* The full classname is the dld way of combining transparent buttons with colours – no longer use like this 
+  /* The full classname is the old way of combining transparent buttons with colours – no longer use like this 
   Use the --modifiers approach instead
   */
 
@@ -537,6 +533,13 @@
   &.btn-success,
   &.--success {
     @include btn-colors("success");
+  }
+
+  &.back-button {
+    --d-button-transparent-text-color: var(--tertiary);
+    --d-button-transparent-icon-color: var(--tertiary);
+    margin-bottom: 1em;
+    padding-left: 0;
   }
 }
 

@@ -81,7 +81,6 @@ fa_IR:
         join_channel: "پیوستن به کانال"
         leave_channel: "ترک کانال"
         leave_groupchat_info: "با ترک این چت گروهی، دیگر به آن دسترسی نخواهید داشت و اعلان های مربوط به آن را دریافت نخواهید کرد. برای پیوستن مجدد، باید دوباره توسط یکی از اعضای چت گروهی دعوت شوید."
-        notification_settings_context: "اعلان‌ها"
         join: "عضو شدن"
         leave: "ترک کردن"
         save_label:
@@ -402,7 +401,6 @@ fa_IR:
         title: "گفتگو"
         keyboard_shortcuts:
           switch_channel_arrows: "%{shortcut} تغییر کانال"
-          drawer_open: "%{shortcut} باز کردن کِشوی گفتگو"
           drawer_close: "%{shortcut} بستن کِشوی گفتگو"
     topic_statuses:
       chat:

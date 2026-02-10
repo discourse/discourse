@@ -14,12 +14,8 @@ it:
       reports:
         reading_time:
           title: Tempo di lettura
-        assignments:
-          total_assigned_others: "Assegnato a %{username}"
         chat_usage:
           messages: messaggi
-          author: Tu
-          author_others: "%{username}"
           status_online: "● online"
         invites:
           title: Inviti

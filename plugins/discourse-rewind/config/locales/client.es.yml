@@ -16,8 +16,6 @@ es:
       title: Rebobinar
       loading: "Reticulando splines..."
       viewing_other_user: "Estás viendo el informe de Discourse Rebobina de <strong>%{username}</strong> ."
-      cannot_view_rewind: >
-        No puedes ver este reporte de Discourse Rebobina. Quizás su propietario no lo ha compartido públicamente? <br><br> $> _<br><br>
       preferences:
         enable_rewind: "Activa Discourse Rebobina. Esto muestra el resumen de actividades de fin de año en tu perfil y en tu avatar."
         share_publicly: "Comparte el resumen de Discourse Rebobina con otros miembros del foro. Cualquier miembro del foro podrá ver tu resumen de Discourse Rebobina."
@@ -46,7 +44,6 @@ es:
           title: Uso de palabras
         reading_time:
           title: Tiempo de lectura
-          book_comparison: "¡Pasaste <code>%{readingTime}</code> leyendo nuestra comunidad! Ese es el tiempo que te llevaría leer <i>%{bookTitle}</i>"
         post_used_reactions:
           title: Reacciones más utilizadas en los temas
           total_number: "Número total de reacciones: %{count}"
@@ -86,7 +83,6 @@ es:
         assignments:
           title: Tareas
           total_assigned: Asignado a mí
-          total_assigned_others: "Asignada a %{username}"
           completed: Tareas completadas
           pending: Tareas pendientes
           assigned_by_user: Tareas asignadas
@@ -100,15 +96,10 @@ es:
           avg_message_length: Longitud media de los mensajes
           favorite_channels: Canales favoritos
           messages: mensajes
-          author: Tú
-          author_others: "%{username}"
           channel_title: "#actividad-en-el-chat"
           status_online: "● en línea"
-          message_1: "¡Enviaste <strong>%{count}</strong> mensajes este año!"
           reply_1: "lol impresionante B-)"
-          message_2: "Tuviste <strong>%{dm_count}</strong> conversaciones privadas con <strong>%{channel_count}</strong> personas o grupos diferentes"
           reply_2: "MOo0oLa :D"
-          message_3: "¡A la gente le encantaron tus mensajes! Recibiste <strong>%{count}</strong> reacciones ❤️"
           message_4: "La longitud media de tus mensajes fue de <strong>%{length}</strong> caracteres"
           message_5: "Tus canales favoritos:"
         favorite_gifs:
@@ -153,7 +144,6 @@ es:
           replies: Respuestas a las publicaciones
           mentions: Menciones
           topics_with_new_users: Temas con nuevos usuarios
-          contributions_helped: tus contribuciones ayudaron a
         time_of_day_activity:
           title: Ritmo de actividad diaria
           play_button: Reproduce tu actividad como sonido

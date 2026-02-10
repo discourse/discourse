@@ -6,9 +6,6 @@ module Chat
     include TypeMappable
     include HasCustomFields
 
-    # TODO (martin) Remove once we are using last_message instead,
-    # should be around August 2023.
-    self.ignored_columns = %w[last_message_sent_at icon_upload_id]
     self.table_name = "chat_channels"
 
     belongs_to :chatable, polymorphic: true
@@ -273,6 +270,7 @@ module Chat
           chat_channel_name: self.name,
           previous_value: status_previously_was,
           new_value: status,
+          category_id: category_channel? ? self.chatable_id : nil,
         },
       )
 

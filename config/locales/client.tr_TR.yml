@@ -1543,9 +1543,6 @@ tr_TR:
         flags_given:
           one: '<span class="%{className}">%{count}</span> faydalı bayrak'
           other: '<span class="%{className}">%{count}</span> faydalı bayrak'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> bayrak eklenmiş gönderi'
-          other: '<span class="%{className}">%{count}</span> bayrak eklenmiş gönderi'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> silinmiş gönderi'
           other: '<span class="%{className}">%{count}</span> silinmiş gönderi'
@@ -2256,7 +2253,6 @@ tr_TR:
     form_kit:
       reset: Sıfırla
       optional: i̇steğe bağlı
-      errors_summary_title: "Bu form hatalar içeriyor:"
       dirty_form: "Değişikliklerinizi göndermediniz! Ayrılmak istediğinizden emin misiniz?"
       errors:
         starts_with: "%{prefix} ile başlamalı"
@@ -3755,7 +3751,7 @@ tr_TR:
       quote_edit: "Düzenle"
       quote_edit_shortcut: "Düzenle (veya e tuşuna basın)"
       quote_copy: "Alıntıyı Kopyala"
-      quote_copied_to_clibboard: "Alıntı panoya kopyalandı"
+      quote_copied_to_clipboard: "Alıntı panoya kopyalandı"
       quote_share: "Paylaş"
       edit_reason: "Sebep: "
       post_number: "%{number}. gönderi"
@@ -4047,6 +4043,7 @@ tr_TR:
       back: "Kategoriye dön"
       general: "Genel"
       settings: "Ayarlar"
+      advanced: "Gelişmiş"
       topic_template: "Şablon"
       tags: "Etiketler"
       localizations: "Yerelleştirmeler"
@@ -4076,9 +4073,13 @@ tr_TR:
       slug_placeholder: "(İsteğe bağlı) url için çizgiyle ayrılmış kelimeler"
       creation_error: Kategori oluşturulurken bir hata oluştu.
       save_error: Kategori kaydedilirken bir hata oluştu.
+      validations:
+        icon_required: "Simge seçin."
       description: "Açıklama"
       logo_description: "Önerilen 1:1 en boy oranı ve minimum 200 piksel boyut. Boş bırakılırsa hiçbir görüntü gösterilmez."
-      style: "Stiller"
+      style: "Stil"
+      icon: "Simge"
+      emoji: "Emoji"
       background_color: "Renk"
       foreground_color: "Metin rengi"
       color_validations:
@@ -4087,13 +4088,13 @@ tr_TR:
         type: "Stil"
         icon: "Simge"
         emoji: "Emoji"
+        square: "Kare"
         options:
           square: "Kare"
           icon: "Simge"
           emoji: "Emoji"
       color_used: "Kullanılan renk"
       predefined_colors: "Önceden tanımlanmış renk seçenekleri"
-      name_placeholder: "En fazla bir veya iki kelime"
       color_placeholder: "Herhangi bir web rengi"
       delete_confirm: "Bu kategoriyi silmek istediğinizden emin misiniz?"
       delete_error: "Kategori silinirken bir hata oluştu."
@@ -4101,6 +4102,7 @@ tr_TR:
       no_description: "Lütfen bu kategori için bir açıklama ekleyin."
       change_in_category_topic: "Açıklamayı düzenle"
       already_used: "Bu renk başka bir kategori tarafından kullanılmış."
+      color_palette: "Renk paleti"
       security: "Güvenlik"
       security_add_group: "Grup ekle"
       permissions:
@@ -4109,15 +4111,14 @@ tr_TR:
         reply: "Yanıtla"
         create: "Oluştur"
         no_groups_selected: "Hiçbir gruba erişim izni verilmedi; bu kategori yalnızca personel tarafından görülebilir."
-        everyone_has_access: 'Bu kategori herkese açık, herkes gönderileri görebilir, yanıtlayabilir ve oluşturabilir. İzinleri kısıtlamak için "herkes" grubuna verilen izinlerden birini veya birkaçını kaldırın.'
+        everyone_full_access: 'Bu kategori herkese açık, herkes gönderileri görebilir, yanıtlayabilir ve oluşturabilir. İzinleri kısıtlamak için "herkes" grubuna verilen izinlerden birini veya birkaçını kaldırın.'
         toggle_reply: "Yanıtlama iznini aç/kapat"
         toggle_full: "Oluşturma iznini aç/kapat"
         inherited: 'Bu izin "herkesten" devralınır'
-      special_warning: "Uyarı: Bu kategori önceden oluşturulmuş bir kategoridir ve güvenlik ayarları düzenlenemez. Bu kategoriyi kullanmak istemiyorsanız yeniden kullanmak yerine silin."
       uncategorized_security_warning: "Bu kategori özeldir. Kategorisi olmayan konular için tutma alanı olarak tasarlanmıştır; güvenlik ayarlarına sahip olamaz."
       uncategorized_general_warning: 'Bu kategori özeldir. Kategori seçilmeyen yeni konular için varsayılan kategori olarak kullanılır. Bu davranışı önlemek ve kategori seçimini zorlamak isterseniz <a href="%{settingLink}">lütfen buradaki ayarı devre dışı bırakın</a>. Adı veya açıklamayı değiştirmek isterseniz <a href="%{customizeLink}">Özelleştir / Metin İçeriği</a>''ne gidin.'
       pending_permission_change_alert: "Bu kategoriye %{group} eklemediniz; eklemek için bu düğmeye tıklayın."
-      images: "Resimler"
+      images: "Görünüm"
       email_in: "Kişiselleştirilmiş gelen e-posta adresi:"
       email_in_tooltip: "Birden fazla e-posta adresini | karakteri ile ayırabilirsiniz."
       email_in_allow_strangers: "Hesabı olmayan anonim kullanıcılardan gelen e-postaları kabul edin"
@@ -4139,6 +4140,11 @@ tr_TR:
       position: "Kategoriler sayfasındaki pozisyon:"
       position_disabled: "Kategoriler aktivite sırasına göre görüntülenir. Listelerdeki kategorilerin sırasını kontrol etmek için <a href='%{url}'>\"sabit kategori pozisyonları\"</a> ayarını etkinleştirin."
       minimum_required_tags: "Bir konuda gerekli minimum etiket sayısı:"
+      none_subcategory_text: "Hiçbiri"
+      visibility:
+        title: "Görünürlük"
+        public: "Genel"
+        group_restricted: "Özel"
       num_auto_bump_daily: "Günlük olarak otomatik olarak üste çıkacak açık konu sayısı:"
       auto_bump_cooldown_days: "Aynı konuyu tekrar açmadan önce geçmesi gereken gün sayısı:"
       navigate_to_first_post_after_read: "Konular okunduktan sonra ilk gönderiye gidin"
@@ -5688,7 +5694,9 @@ tr_TR:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Arama günlükleri</a>'
             disabled: 'Trend olan arama raporu devre dışı bırakıldı. Veri toplamak için <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">günlük arama sorgularını</a> etkinleştirin.'
-          average_chart_label: Ortalama
+          sort_button: "%{column} kriterine göre sırala"
+          sort_ascending: "artan"
+          sort_descending: "azalan"
           filters:
             file_extension:
               label: Dosya uzantısı
@@ -6424,8 +6432,6 @@ tr_TR:
         delete: "Sil"
         delete_confirm: '"%{theme_name}" adlı temayı silmek istediğinizden emin misiniz?'
         bulk_delete: "Emin misiniz?"
-        bulk_themes_delete_confirm: "Bu işlem aşağıdaki temaları kaldıracak ve artık bu temalar sitenizdeki hiçbir kullanıcı tarafından kullanılamayacak:"
-        bulk_components_delete_confirm: "Bu işlem aşağıdaki bileşenleri kaldıracak ve artık bu bileşenler sitenizdeki hiçbir kullanıcı tarafından kullanılamayacak:"
         color: "Renk"
         opacity: "Opaklık"
         copy: "Eş Kopya"

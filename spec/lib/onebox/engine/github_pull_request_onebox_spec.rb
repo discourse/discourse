@@ -13,6 +13,10 @@ RSpec.describe Onebox::Engine::GithubPullRequestOnebox do
   it_behaves_like "an engine"
 
   describe "#to_html" do
+    it "includes pull request title with number" do
+      expect(html).to include("Add audio onebox (#1253)")
+    end
+
     it "includes pull request author" do
       expect(html).to include("jamesaanderson")
     end

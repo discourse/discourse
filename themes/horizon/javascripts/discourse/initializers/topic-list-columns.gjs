@@ -70,7 +70,7 @@ export default {
   name: "topic-list-customizations",
 
   initialize(container) {
-    const isHighContext = settings.topic_card_context === "high_context";
+    const isHighContext = settings.topic_card_high_context;
     const router = container.lookup("service:router");
 
     function applySimpleLayout(columns) {

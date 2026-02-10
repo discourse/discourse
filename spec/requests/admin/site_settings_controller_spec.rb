@@ -58,6 +58,12 @@ RSpec.describe Admin::SiteSettingsController do
     context "when logged in as an admin" do
       before { sign_in(admin) }
 
+      it "returns 404 when site_setting_id is not a valid site setting" do
+        put "/admin/site_settings/default_scopes/user_count.json", params: { default_scopes: "" }
+
+        expect(response.status).to eq(404)
+      end
+
       it "should return correct user count for default categories change" do
         category_id = Fabricate(:category).id
 

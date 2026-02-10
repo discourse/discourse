@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
 import { tracked } from "@glimmer/tracking";
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
@@ -243,14 +243,18 @@ export default class ComposerEditor extends Component {
 
   @action
   _composerEditorInitPreview(elem) {
-    const preview = elem.querySelector(".d-editor-preview-wrapper");
+    const preview = elem.classList.contains("d-editor-preview-wrapper")
+      ? elem
+      : elem.querySelector(".d-editor-preview-wrapper");
     this._registerImageAltTextButtonClick(preview);
     this._editorInitPreview = true;
   }
 
   @action
   _composerEditorDestroyPreview(elem) {
-    const preview = elem.querySelector(".d-editor-preview-wrapper");
+    const preview = elem.classList.contains("d-editor-preview-wrapper")
+      ? elem
+      : elem.querySelector(".d-editor-preview-wrapper");
 
     if (preview) {
       preview.removeEventListener(
@@ -968,9 +972,53 @@ export default class ComposerEditor extends Component {
     this._refreshOneboxes(preview);
     this._expandShortUrls(preview);
 
+    // Only apply image size adjustments for form template previews
+    // Regular composer handles this through ProseMirror
+    if (this.composer.formTemplateIds?.length > 0) {
+      this._applyImageSizes(preview);
+    }
+
     this._decorateCookedElement(preview, helper);
 
     this.composer.afterRefresh(preview);
+  }
+
+  _applyImageSizes(preview) {
+    // Apply sizing to images to match regular composer behavior
+    // where percentage scales are relative to the max_image_width site setting
+    // not the original image dimensions
+    const maxImageWidth = this.siteSettings.max_image_width;
+
+    const images = preview.querySelectorAll("img.resizable[width][height]");
+
+    images.forEach((img) => {
+      const processImage = () => {
+        const width = parseInt(img.getAttribute("width"), 10);
+        const height = parseInt(img.getAttribute("height"), 10);
+        const naturalWidth = img.naturalWidth;
+
+        if (!naturalWidth || naturalWidth === 0) {
+          return;
+        }
+
+        if (width && height) {
+          const percentage = width / naturalWidth;
+
+          const constrainedBase = Math.min(naturalWidth, maxImageWidth);
+          const displayWidth = Math.round(constrainedBase * percentage);
+          const displayHeight = Math.round(height * (displayWidth / width));
+
+          img.setAttribute("width", displayWidth);
+          img.setAttribute("height", displayHeight);
+        }
+      };
+
+      if (img.complete && img.naturalWidth > 0) {
+        processImage();
+      } else {
+        img.addEventListener("load", processImage, { once: true });
+      }
+    });
   }
 
   @computed("composer.formTemplateIds")
@@ -1008,6 +1056,8 @@ export default class ComposerEditor extends Component {
       this.composer.selectedFormTemplate,
       false
     );
+
+    this.composer.model.set("reply", formTemplateData);
 
     this.preview = await this.cachedCookAsync(
       formTemplateData,
