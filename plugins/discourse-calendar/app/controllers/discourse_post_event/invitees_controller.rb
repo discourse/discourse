@@ -11,7 +11,12 @@ module DiscoursePostEvent
       filter = params[:filter].downcase if params[:filter]
 
       event_invitees = event.invitees
-      event_invitees = event_invitees.with_status(params[:type].to_sym) if params[:type]
+      if params[:type]
+        unless Invitee.statuses.valid?(params[:type].to_sym)
+          raise Discourse::InvalidParameters.new(:type)
+        end
+        event_invitees = event_invitees.with_status(params[:type].to_sym)
+      end
 
       suggested_users = []
       if filter.present? && guardian.can_act_on_discourse_post_event?(event)

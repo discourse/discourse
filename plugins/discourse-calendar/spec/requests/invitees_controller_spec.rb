@@ -108,6 +108,14 @@ module DiscoursePostEvent
           filteredInvitees = response.parsed_body["invitees"]
           expect(filteredInvitees.count).to eq(2)
         end
+
+        it "returns 400 when filtering by an invalid type" do
+          get "/discourse-post-event/events/#{post_event_1.id}/invitees.json",
+              params: {
+                type: "nonexistent",
+              }
+          expect(response.status).to eq(400)
+        end
       end
     end
 
