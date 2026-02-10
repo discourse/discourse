@@ -4688,7 +4688,6 @@ pl_PL:
       edit_dialog_title: "Edytuj: %{categoryName}"
       view: "Pokaż Tematy w Kategorii"
       back: "Powrót do kategorii"
-      single_page: "Pojedyncza strona"
       general: "Ogólne"
       settings: "Ustawienia"
       advanced: "Zaawansowane"
@@ -4731,6 +4730,7 @@ pl_PL:
         self_lockout: "Zamierzasz zmienić uprawnienia kategorii w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
       validations:
         emoji_required: "Wybierz emoji."
+        icon_required: "Wybierz ikonę."
       name: "Nazwa kategorii"
       untitled: "Kategoria bez tytułu"
       description: "Opis"

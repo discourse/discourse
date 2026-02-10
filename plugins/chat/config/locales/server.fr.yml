@@ -135,6 +135,8 @@ fr:
         disagree_and_restore:
           title: "Refuser et restaurer le message"
           description: "Restaurer le message pour que tous les utilisateurs puissent le voir."
+        ignore:
+          title: "Ignorer le signalement"
       direct_messages:
         transcript_title: "Transcription des messages précédents dans le canal %{channel_name}"
         transcript_body: "Pour vous donner plus de contexte, nous avons inclus une transcription des messages précédents de cette conversation (jusqu'à dix) :\n\n%{transcript}"

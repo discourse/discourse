@@ -324,6 +324,9 @@ en:
       message: "We've updated this site, <span>please refresh</span> to keep things working smoothly."
       dismiss: "Dismiss"
 
+    notifications_tracking:
+      tooltip: "Notification level: %{level}"
+
     back_button: "Back"
 
     welcome_banner:
@@ -4537,7 +4540,6 @@ en:
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
-      single_page: "Single Page"
       general: "General"
       settings: "Settings"
       advanced: "Advanced"

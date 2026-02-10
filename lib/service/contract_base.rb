@@ -6,7 +6,7 @@ class Service::ContractBase
   include ActiveModel::AttributeMethods
   include ActiveModel::Validations::Callbacks
 
-  delegate :slice, :merge, to: :to_hash
+  delegate :slice, :merge, :except, to: :to_hash
 
   class << self
     def attribute(name, cast_type = nil, **options, &block)

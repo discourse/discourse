@@ -46,6 +46,8 @@ const FIELD_LIST = [
   "email_in",
   "email_in_allow_strangers",
   "mailinglist_mirror",
+  "allowed_tag_groups",
+  "allowed_tags",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";

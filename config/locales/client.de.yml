@@ -4223,6 +4223,7 @@ de:
       general: "Allgemeines"
       settings: "Einstellungen"
       advanced: "Erweitert "
+      show_advanced: "Erweiterte Einstellungen"
       topic_template: "Vorlage"
       tags: "Schlagwörter"
       localizations: "Lokalisierungen"
@@ -4261,6 +4262,7 @@ de:
         self_lockout: "Du bist dabei, die Berechtigungen für diese Kategorie so zu ändern, dass du selbst nicht länger Zugriff darauf hast. Bist du sicher, dass du fortfahren willst?"
       validations:
         emoji_required: "Wähle ein Emoji."
+        icon_required: "Wähle ein Symbol."
       name: "Name der Kategorie"
       untitled: "Unbenannte Kategorie"
       description: "Beschreibung"

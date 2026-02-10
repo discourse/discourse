@@ -99,6 +99,7 @@ pl_PL:
     ai_helper_enabled_features: "Wybierz funkcje, które chcesz włączyć w pomocniku AI."
     post_ai_helper_allowed_groups: "Grupy użytkowników uprawnione do dostępu do funkcji pomocnika AI w postach"
     ai_helper_post_illustrator_persona: "Osobowość do wykorzystania w funkcji ilustrowania wpisów przez pomocnika AI. Uwaga: aby ta funkcja działała, musisz również utworzyć narzędzie do generowania obrazów (Administrator > Wtyczki > Discourse AI > Narzędzia)."
+    ai_helper_chat_thread_title_persona: "Persona używana do generowania tytułów wątków czatu."
     ai_embeddings_selected_model: "Użyj wybranego modelu do generowania osadzeń."
     ai_embeddings_generate_for_pms: "Generuj osadzenia dla wiadomości osobistych."
     ai_embeddings_semantic_related_topics_enabled: "Użyj wyszukiwania semantycznego dla powiązanych tematów."
@@ -430,6 +431,9 @@ pl_PL:
         discover:
           name: "Odkrywaj"
           description: "Domyślna osobowość używana w funkcji odkrywania (bezpłatne wyszukiwanie)"
+        chat_thread_titler:
+          name: "Tytułowanie wątku czatu"
+          description: "Domyślna persona umożliwiająca automatyczne generowanie tytułów wątków czatu"
       topic_not_found: "Podsumowanie niedostępne, nie znaleziono tematu!"
       summarizing: "Podsumowanie tematu"
       searching: "Wyszukiwanie: '%{query}'"

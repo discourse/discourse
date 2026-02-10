@@ -3866,6 +3866,8 @@ pt:
       slug_placeholder: "(Opcional) palavras com travessão no URL"
       creation_error: Ocorreu um erro durante a criação da categoria.
       save_error: Ocorreu um erro ao guardar a categoria.
+      validations:
+        icon_required: "Selecione um ícone."
       description: "Descrição"
       style: "Estilo"
       icon: "Ícone"

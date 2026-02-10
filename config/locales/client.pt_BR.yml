@@ -4116,6 +4116,8 @@ pt_BR:
       slug_placeholder: "(Opcional) palavras hifenizadas para url"
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
+      validations:
+        icon_required: "Selecione um ícone."
       description: "Descrição"
       logo_description: "Proporção de tela recomendada 1:1 com tamanho mínimo de 200px. Se deixada em branco, nenhuma imagem será exibida."
       style: "Estilo"

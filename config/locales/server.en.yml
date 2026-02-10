@@ -2720,7 +2720,7 @@ en:
     welcome_banner_text_color: "When the 'Welcome banner image' setting has been configured, use this setting to change the banner text color to ensure it remains readable. When left blank or when no image has been uploaded, the active theme controls the color."
 
     splash_screen: "Displays a temporary loading screen while site assets load"
-    splash_screen_image: "An SVG image to display on the splash screen while the site loads. Supports animated SVGs. You can use var(--primary), var(--secondary), and var(--tertiary) in your SVG to reference theme colors."
+    splash_screen_image: "An SVG image to display on the splash screen while the site loads. Animated SVGs should only use CSS transform or opacity animations. Use unique names for CSS classes and keyframes. You can use var(--primary), var(--secondary), and var(--tertiary) to reference theme colors."
     navigation_menu: "Specify sidebar or header dropdown as the main navigation menu for your site. Sidebar is recommended."
     default_navigation_menu_categories: "Selected categories will be displayed under Navigation Menu's Categories section by default."
     default_navigation_menu_tags: "Selected tags will be displayed under Navigation Menu's Tags section by default."
@@ -2757,6 +2757,7 @@ en:
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     enable_custom_splash_screen: "Allows customizing the loading splash screen with your own SVG image. Upload an image via the 'splash screen image' setting. Warning: This may negatively impact LCP scores and Google indexing."
+    modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."
