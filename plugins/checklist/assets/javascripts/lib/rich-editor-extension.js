@@ -71,14 +71,155 @@ const extension = {
     const startsWithCheck = (node) =>
       node?.isTextblock && node.firstChild?.type === checkType;
 
-    const inBulletListItem = (doc, pos) => {
-      const $pos = doc.resolve(pos);
-      for (let depth = $pos.depth; depth > 0; depth--) {
-        if ($pos.node(depth).type === listItemType) {
-          return $pos.node(depth - 1)?.type === bulletListType;
+    const findBulletListContext = ($from) => {
+      for (let depth = $from.depth; depth > 0; depth--) {
+        if ($from.node(depth).type === listItemType) {
+          if ($from.node(depth - 1)?.type === bulletListType) {
+            return { bulletListDepth: depth - 1, listItemDepth: depth };
+          }
+          return null;
         }
       }
-      return false;
+      return null;
+    };
+
+    const inBulletListItem = (doc, pos) =>
+      findBulletListContext(doc.resolve(pos)) !== null;
+
+    const ensureSpaceAfterChecks = (tr, oldState, newState) => {
+      const positionsToInsert = [];
+
+      changedDescendants(oldState.doc, newState.doc, (node, pos) => {
+        if (!startsWithCheck(node) || !inBulletListItem(newState.doc, pos)) {
+          return;
+        }
+
+        const secondChild = node.childCount > 1 ? node.child(1) : null;
+        const hasSpaceAfter =
+          secondChild?.isText && secondChild.text?.[0] === " ";
+
+        if (!hasSpaceAfter) {
+          positionsToInsert.push(pos + 1 + node.firstChild.nodeSize);
+        }
+      });
+
+      for (let i = positionsToInsert.length - 1; i >= 0; i--) {
+        tr.insert(positionsToInsert[i], schema.text(" "));
+      }
+    };
+
+    const exitChecklist = (tr, ctx) => {
+      const { bulletListDepth, listItemDepth } = ctx;
+      const { selection } = tr;
+      const { $from } = selection;
+      const bulletList = $from.node(bulletListDepth);
+      const listItemIndex = $from.index(bulletListDepth);
+      const prevListItem = bulletList.child(listItemIndex - 1);
+      const bulletListStart = $from.before(bulletListDepth);
+
+      tr.delete($from.before(listItemDepth), $from.after(listItemDepth));
+
+      let prevOffset = 1;
+      for (let i = 0; i < listItemIndex - 1; i++) {
+        prevOffset += bulletList.child(i).nodeSize;
+      }
+      const prevItemStart = tr.mapping.map(bulletListStart + prevOffset);
+      tr.delete(prevItemStart, prevItemStart + prevListItem.nodeSize);
+
+      const mappedListStart = tr.mapping.map(bulletListStart);
+      const listAfter = tr.doc.nodeAt(mappedListStart);
+
+      if (listAfter && listAfter.childCount > 0) {
+        const listEnd = mappedListStart + listAfter.nodeSize;
+        tr.insert(listEnd, schema.nodes.paragraph.create());
+        tr.setSelection(
+          selection.constructor.near(tr.doc.resolve(listEnd + 1))
+        );
+      } else {
+        tr.replaceWith(
+          mappedListStart,
+          mappedListStart + (listAfter?.nodeSize || 0),
+          schema.nodes.paragraph.create()
+        );
+        tr.setSelection(
+          selection.constructor.near(tr.doc.resolve(mappedListStart + 1))
+        );
+      }
+      return tr;
+    };
+
+    const handleChecklistContinuation = (tr, transactions) => {
+      if (!transactions.some((t) => t.docChanged)) {
+        return null;
+      }
+
+      const { selection } = tr;
+      const { $from } = selection;
+
+      if (!selection.empty) {
+        return null;
+      }
+
+      const parent = $from.parent;
+      if (!parent.isTextblock || parent.content.size !== 0) {
+        return null;
+      }
+
+      const ctx = findBulletListContext($from);
+      if (!ctx) {
+        return null;
+      }
+
+      const bulletList = $from.node(ctx.bulletListDepth);
+      const listItemIndex = $from.index(ctx.bulletListDepth);
+      if (listItemIndex === 0) {
+        return null;
+      }
+
+      const prevParagraph = bulletList.child(listItemIndex - 1).firstChild;
+      if (!startsWithCheck(prevParagraph)) {
+        return null;
+      }
+
+      if (prevParagraph.content.size > 2) {
+        const checkNode = checkType.create({ checked: false });
+        tr.insert($from.pos, [checkNode, schema.text(" ")]);
+        tr.setSelection(
+          selection.constructor.near(tr.doc.resolve($from.pos + 2))
+        );
+        return tr;
+      }
+
+      return exitChecklist(tr, ctx);
+    };
+
+    const adjustCursorPosition = (tr) => {
+      const { doc, selection } = tr;
+      const { $from } = selection;
+
+      if (!selection.empty) {
+        return null;
+      }
+
+      const parent = $from.parent;
+      if (!startsWithCheck(parent) || !inBulletListItem(doc, $from.pos)) {
+        return null;
+      }
+
+      const checkSize = parent.firstChild.nodeSize;
+      const secondChild = parent.childCount > 1 ? parent.child(1) : null;
+      const hasSpaceAfter =
+        secondChild?.isText && secondChild.text?.[0] === " ";
+      const minPos = hasSpaceAfter ? checkSize + 1 : checkSize;
+
+      if ($from.parentOffset < minPos) {
+        tr.setSelection(
+          selection.constructor.near(doc.resolve($from.start() + minPos))
+        );
+        return tr;
+      }
+
+      return null;
     };
 
     return [
@@ -116,19 +257,15 @@ const extension = {
             }
 
             if (event.key === "Backspace") {
-              let listItemDepth = null;
-              for (let depth = $from.depth; depth > 0; depth--) {
-                if ($from.node(depth).type === listItemType) {
-                  listItemDepth = depth;
-                  break;
-                }
-              }
+              const ctx = findBulletListContext($from);
 
               const checkStart = $from.start();
               let tr = state.tr.delete(checkStart, checkStart + 2);
 
-              if (listItemDepth !== null) {
-                const listItemPos = tr.mapping.map($from.before(listItemDepth));
+              if (ctx) {
+                const listItemPos = tr.mapping.map(
+                  $from.before(ctx.listItemDepth)
+                );
                 const $listItem = tr.doc.resolve(listItemPos);
 
                 if ($listItem.nodeBefore?.type === listItemType) {
@@ -169,158 +306,13 @@ const extension = {
           }
 
           const tr = newState.tr;
-          let modified = false;
+          ensureSpaceAfterChecks(tr, oldState, newState);
 
-          // 1. Ensure space after check nodes
-          const positionsToInsert = [];
-          changedDescendants(oldState.doc, newState.doc, (node, pos) => {
-            if (
-              !startsWithCheck(node) ||
-              !inBulletListItem(newState.doc, pos)
-            ) {
-              return;
-            }
-
-            const secondChild = node.childCount > 1 ? node.child(1) : null;
-            const hasSpaceAfter =
-              secondChild?.isText && secondChild.text?.[0] === " ";
-
-            if (!hasSpaceAfter) {
-              positionsToInsert.push(pos + 1 + node.firstChild.nodeSize);
-            }
-          });
-
-          for (let i = positionsToInsert.length - 1; i >= 0; i--) {
-            tr.insert(positionsToInsert[i], schema.text(" "));
-            modified = true;
-          }
-
-          // 2. Checklist continuation: add check to new empty list items, or exit on double-Enter
-          const docChanged = transactions.some((t) => t.docChanged);
-          if (docChanged) {
-            const currentDoc = modified ? tr.doc : newState.doc;
-            const { selection: currentSelection } = modified ? tr : newState;
-
-            if (currentSelection.empty) {
-              const $from = modified
-                ? currentDoc.resolve(currentSelection.$from.pos)
-                : currentSelection.$from;
-              const parent = $from.parent;
-
-              if (parent.isTextblock && parent.content.size === 0) {
-                let bulletListDepth = null;
-                let listItemDepth = null;
-                for (let depth = $from.depth; depth > 0; depth--) {
-                  if ($from.node(depth).type === listItemType) {
-                    listItemDepth = depth;
-                    if ($from.node(depth - 1)?.type === bulletListType) {
-                      bulletListDepth = depth - 1;
-                    }
-                    break;
-                  }
-                }
-
-                if (bulletListDepth !== null && listItemDepth !== null) {
-                  const bulletList = $from.node(bulletListDepth);
-                  const listItemIndex = $from.index(bulletListDepth);
-
-                  if (listItemIndex > 0) {
-                    const prevListItem = bulletList.child(listItemIndex - 1);
-                    const prevParagraph = prevListItem.firstChild;
-                    if (startsWithCheck(prevParagraph)) {
-                      if (prevParagraph.content.size > 2) {
-                        // Previous item has check with content - add check to new item
-                        const checkNode = checkType.create({ checked: false });
-                        tr.insert($from.pos, [checkNode, schema.text(" ")]);
-                        tr.setSelection(
-                          currentSelection.constructor.near(
-                            tr.doc.resolve($from.pos + 2)
-                          )
-                        );
-                        return tr;
-                      } else {
-                        // Previous item is empty check - exit the checklist
-                        const bulletListStart = $from.before(bulletListDepth);
-                        const currentItemStart = $from.before(listItemDepth);
-                        const currentItemEnd = $from.after(listItemDepth);
-
-                        tr.delete(currentItemStart, currentItemEnd);
-
-                        let prevOffset = 1;
-                        for (let i = 0; i < listItemIndex - 1; i++) {
-                          prevOffset += bulletList.child(i).nodeSize;
-                        }
-                        const prevItemStart = tr.mapping.map(
-                          bulletListStart + prevOffset
-                        );
-                        tr.delete(
-                          prevItemStart,
-                          prevItemStart + prevListItem.nodeSize
-                        );
-
-                        const mappedListStart = tr.mapping.map(bulletListStart);
-                        const listAfter = tr.doc.nodeAt(mappedListStart);
-
-                        if (listAfter && listAfter.childCount > 0) {
-                          const listEnd = mappedListStart + listAfter.nodeSize;
-                          tr.insert(listEnd, schema.nodes.paragraph.create());
-                          tr.setSelection(
-                            currentSelection.constructor.near(
-                              tr.doc.resolve(listEnd + 1)
-                            )
-                          );
-                        } else {
-                          tr.replaceWith(
-                            mappedListStart,
-                            mappedListStart + (listAfter?.nodeSize || 0),
-                            schema.nodes.paragraph.create()
-                          );
-                          tr.setSelection(
-                            currentSelection.constructor.near(
-                              tr.doc.resolve(mappedListStart + 1)
-                            )
-                          );
-                        }
-                        return tr;
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          }
-
-          // 3. Cursor positioning: prevent cursor before check node
-          const doc = modified ? tr.doc : newState.doc;
-          const { selection } = modified ? tr : newState;
-
-          if (!selection.empty) {
-            return modified ? tr : null;
-          }
-
-          const $from = modified
-            ? doc.resolve(selection.$from.pos)
-            : selection.$from;
-          const parent = $from.parent;
-
-          if (!startsWithCheck(parent) || !inBulletListItem(doc, $from.pos)) {
-            return modified ? tr : null;
-          }
-
-          const checkSize = parent.firstChild.nodeSize;
-          const secondChild = parent.childCount > 1 ? parent.child(1) : null;
-          const hasSpaceAfter =
-            secondChild?.isText && secondChild.text?.[0] === " ";
-          const minPos = hasSpaceAfter ? checkSize + 1 : checkSize;
-
-          if ($from.parentOffset < minPos) {
-            tr.setSelection(
-              selection.constructor.near(doc.resolve($from.start() + minPos))
-            );
-            return tr;
-          }
-
-          return modified ? tr : null;
+          return (
+            handleChecklistContinuation(tr, transactions) ??
+            adjustCursorPosition(tr) ??
+            (tr.docChanged ? tr : null)
+          );
         },
       }),
 

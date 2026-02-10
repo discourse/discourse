@@ -185,6 +185,8 @@ export class ToolbarBase {
  * Standard editor toolbar with default buttons
  */
 export default class Toolbar extends ToolbarBase {
+  #listOptions;
+
   constructor(opts) {
     super(opts);
 
@@ -364,47 +366,45 @@ export default class Toolbar extends ToolbarBase {
   }
 
   getListPopupMenuOptions() {
-    if (!this._listOptions) {
-      this._listOptions = [
-        {
-          name: "list-bullet",
-          icon: "list-ul",
-          label: "composer.ulist_title",
-          shortcut: "Shift+8",
-          showActiveIcon: true,
-          active: ({ state }) => state?.inBulletList,
-          action: (toolbarEvent) => {
-            if (
-              !toolbarEvent.commands?.toggleBulletList ||
-              !toolbarEvent.commands.toggleBulletList()
-            ) {
-              toolbarEvent.applyList("* ", "list_item");
-            }
-          },
+    this.#listOptions ??= [
+      {
+        name: "list-bullet",
+        icon: "list-ul",
+        label: "composer.ulist_title",
+        shortcut: "Shift+8",
+        showActiveIcon: true,
+        active: ({ state }) => state?.inBulletList,
+        action: (toolbarEvent) => {
+          if (
+            !toolbarEvent.commands?.toggleBulletList ||
+            !toolbarEvent.commands.toggleBulletList()
+          ) {
+            toolbarEvent.applyList("* ", "list_item");
+          }
         },
-        {
-          name: "list-ordered",
-          icon: "list-ol",
-          label: "composer.olist_title",
-          shortcut: "Shift+7",
-          showActiveIcon: true,
-          active: ({ state }) => state?.inOrderedList,
-          action: (toolbarEvent) => {
-            if (
-              !toolbarEvent.commands?.toggleOrderedList ||
-              !toolbarEvent.commands.toggleOrderedList()
-            ) {
-              toolbarEvent.applyList(
-                (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
-                "list_item"
-              );
-            }
-          },
+      },
+      {
+        name: "list-ordered",
+        icon: "list-ol",
+        label: "composer.olist_title",
+        shortcut: "Shift+7",
+        showActiveIcon: true,
+        active: ({ state }) => state?.inOrderedList,
+        action: (toolbarEvent) => {
+          if (
+            !toolbarEvent.commands?.toggleOrderedList ||
+            !toolbarEvent.commands.toggleOrderedList()
+          ) {
+            toolbarEvent.applyList(
+              (i) => (!i ? "1. " : `${parseInt(i, 10) + 1}. `),
+              "list_item"
+            );
+          }
         },
-        ...customPopupMenuOptions.filter((option) => option.menu === "list"),
-      ];
-    }
+      },
+      ...customPopupMenuOptions.filter((option) => option.menu === "list"),
+    ];
 
-    return this._listOptions;
+    return this.#listOptions;
   }
 }
