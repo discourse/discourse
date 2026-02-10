@@ -6,7 +6,6 @@ import { LinkTo } from "@ember/routing";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import withEventValue from "discourse/helpers/with-event-value";
-import TagChooser from "discourse/select-kit/components/tag-chooser";
 import TagGroupChooser from "discourse/select-kit/components/tag-group-chooser";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
@@ -29,11 +28,6 @@ export default class UpsertCategoryTags extends Component {
     const allowedTagGroupsEmpty =
       !this.allowedTagGroups || this.allowedTagGroups.length === 0;
     return allowedTagsEmpty && allowedTagGroupsEmpty;
-  }
-
-  @action
-  onAllowedTagsChange(tags) {
-    this.args.form.set("allowed_tags", tags);
   }
 
   @action
@@ -91,24 +85,23 @@ export default class UpsertCategoryTags extends Component {
         <field.Input type="number" min="0" id="category-minimum-tags" />
       </@form.Field>
 
-      <@form.Container
+      <@form.Field
+        @name="allowed_tags"
         @title={{if
           @category.id
           (i18n "category.tags_allowed_tags" categoryName=@category.name)
           (i18n "category.tags_allowed_tags_new_category")
         }}
-        @optional={{true}}
+        @format="large"
+        as |field|
       >
-        <TagChooser
-          @id="category-allowed-tags"
-          @tags={{this.allowedTags}}
+        <field.TagChooser
           @everyTag={{true}}
           @excludeSynonyms={{true}}
           @unlimitedTagCount={{true}}
-          @onChange={{this.onAllowedTagsChange}}
-          @options={{hash filterPlaceholder="category.tags_placeholder"}}
+          @filterPlaceholder="category.tags_placeholder"
         />
-      </@form.Container>
+      </@form.Field>
 
       <@form.Container
         @direction="column"
