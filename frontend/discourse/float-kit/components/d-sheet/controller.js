@@ -657,16 +657,6 @@ export default class Controller {
       },
     },
     {
-      machine: "openness",
-      state: "open.swipe:ended",
-      guard: () => typeof this.onTravelStatusChange === "function",
-      callback: () => {
-        if (this.state.openness.isOpen) {
-          this.onTravelStatusChange("idleInside");
-        }
-      },
-    },
-    {
       machine: "staging",
       state: "none",
       timing: "immediate",
@@ -1831,6 +1821,7 @@ export default class Controller {
     if (!this.state.stuck.isFront && !this.state.stuck.isBack) {
       if (!this.state.openness.isSwipeOngoing) {
         this.state.openness.swipeStart();
+        this.updateTravelStatus("stepping");
       }
       if (!this.state.openness.isMoveOngoing) {
         this.state.openness.moveStart();
@@ -1881,6 +1872,9 @@ export default class Controller {
         if (matches) {
           this.state.openness.scrollEnd();
           this.state.openness.swipeEnd();
+          if (this.state.openness.isOpen) {
+            this.updateTravelStatus("idleInside");
+          }
           break;
         }
       }
@@ -2012,6 +2006,7 @@ export default class Controller {
    */
   onTouchGestureStart() {
     this.state.openness.swipeStart();
+    this.updateTravelStatus("stepping");
   }
 
   /**
@@ -2021,6 +2016,9 @@ export default class Controller {
    */
   onTouchGestureEnd() {
     this.state.openness.swipeEnd();
+    if (this.state.openness.isOpen) {
+      this.updateTravelStatus("idleInside");
+    }
 
     if (
       this.edgeAlignedNoOvershoot &&
