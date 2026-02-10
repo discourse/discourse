@@ -10,6 +10,7 @@ export default class SiteSettingFilter {
   filterSettings(filter, opts = {}) {
     opts.maxResults ??= 100;
     opts.onlyOverridden ??= false;
+    opts.dependsOn ??= null;
 
     return this.performSearch(filter, opts);
   }
@@ -63,6 +64,13 @@ export default class SiteSettingFilter {
 
           if (opts.onlyOverridden && !siteSetting.get("overridden")) {
             return false;
+          }
+
+          if (opts.dependsOn) {
+            return (
+              siteSetting.get("depends_on") &&
+              siteSetting.get("depends_on").includes(opts.dependsOn)
+            );
           }
 
           if (pluginFilter && siteSetting.plugin !== pluginFilter) {

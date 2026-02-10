@@ -40,7 +40,16 @@ class UpcomingChanges::List
       .map do |setting|
         # We don't need to return all the other setting metadata for
         # endpoints that use this.
-        setting.slice(:setting, :humanized_name, :description, :value, :upcoming_change, :plugin)
+        setting.slice(
+          :setting,
+          :humanized_name,
+          :description,
+          :value,
+          :upcoming_change,
+          :plugin,
+        ).merge(
+          dependents: SiteSetting.type_supervisor.dependencies.dependents(setting[:setting].to_s),
+        )
       end
   end
 
