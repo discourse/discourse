@@ -36,8 +36,8 @@
   --webkit-font-smoothing: antialiased;
   --welcome-banner-text-align: center;
   --welcome-banner-search-menu-margin-inline: auto;
-  --search-input-height: var(--space-8);
-  --button-height: var(--space-8);
+  --search-input-height: var(--space-9);
+  --button-height: var(--space-9);
   -webkit-font-smoothing: var(--webkit-font-smoothing);
 
   // Buttons & Actions
@@ -47,7 +47,8 @@
   .btn-danger,
   .btn-primary,
   .btn.no-text,
-  .view-all-drafts {
+  .view-all-drafts,
+  .discourse-reactions-counter .reactions-counter {
     &:not(
       .sidebar-footer-actions-button,
       #search-button,
@@ -55,16 +56,28 @@
       .topic-map__views-trigger,
       .topic-map__likes-trigger,
       .topic-map__users-trigger,
+      .topic-map__links-trigger,
       .notifications-tracking-btn,
       .user-menu-tab,
       .--with-description
     ) {
       padding-block: 0;
       height: var(--button-height);
+      padding-inline: var(--space-2);
     }
   }
 
-  .header-dropdown-toggle .btn.icon {
+  .discourse-reactions-counter .reactions-counter {
+    align-items: center;
+  }
+
+  .select-kit .select-kit-header .selected-name .name {
+    @include ellipsis;
+    max-width: 15ch;
+    display: inline-block;
+  }
+
+  .d-header-icons .btn.icon {
     height: 2em !important;
     width: 2em !important;
     padding: 0.2143em !important;
@@ -73,11 +86,6 @@
   .c-footer button {
     padding-block: 0.75rem !important;
     height: unset !important;
-  }
-
-  .btn-text,
-  .btn-icon-text {
-    padding-inline: var(--space-3);
   }
 
   .menu-tabs-container {
@@ -146,7 +154,7 @@
   }
 
   .sidebar-section-link-wrapper .sidebar-section-link-prefix .prefix-square {
-    border-radius: var(--d-border-radius);
+    border-radius: calc(var(--d-border-radius) / 2);
   }
 
   .dropdown-menu__item .btn {
@@ -190,27 +198,6 @@
 
   .welcome-banner__wrap .search-menu {
     margin-inline: var(--welcome-banner-search-menu-margin-inline);
-  }
-
-  .welcome-banner__wrap
-    .search-menu-container
-    .results
-    .search-random-quick-tip {
-    padding-top: var(--space-2);
-  }
-
-  .search-menu .results .heading,
-  .search-menu-container .results .heading {
-    padding-left: var(--space-2);
-  }
-
-  .search-menu .search-link,
-  .search-menu-container .search-link {
-    padding-left: var(--space-2);
-  }
-
-  .search-random-quick-tip {
-    padding: var(--space-2) var(--space-3);
   }
 
   .search-menu .search-input,
