@@ -710,6 +710,13 @@ describe DiscourseDataExplorer::QueryController do
         get "/data-explorer/queries/#{query.id}/run.json"
         expect(response.status).to eq(404)
       end
+
+      it "returns 404 when the query has no group assignments" do
+        query = make_query("SELECT 1 as value", {}, [])
+
+        get "/data-explorer/queries/#{query.id}/run.json"
+        expect(response.status).to eq(404)
+      end
     end
   end
 
