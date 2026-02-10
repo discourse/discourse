@@ -73,10 +73,16 @@ const extension = {
       attrs: { tag: {}, htmlAttrs: { default: null } },
       parseDOM: ALLOWED_INLINE.map((tag) => ({
         tag,
-        getAttrs: (element) => ({
-          tag,
-          htmlAttrs: extractHtmlAttrs(element, tag),
-        }),
+        getAttrs: (element) => {
+          if (tag === "span") {
+            const htmlAttrs = extractHtmlAttrs(element, tag);
+            if (!htmlAttrs) {
+              return false;
+            }
+            return { tag, htmlAttrs };
+          }
+          return { tag, htmlAttrs: extractHtmlAttrs(element, tag) };
+        },
       })),
       toDOM: (node) => {
         const domAttrs = node.attrs.htmlAttrs
