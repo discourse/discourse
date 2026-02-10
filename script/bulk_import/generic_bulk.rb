@@ -38,6 +38,11 @@ class BulkImport::Generic < BulkImport::Base
 
     puts "running 'import:ensure_consistency' rake task."
     Rake::Task["import:ensure_consistency"].invoke
+
+    # Force refresh directory items to sync user stats
+    # This is needed even when enable_user_directory is false
+    puts "", "Refreshing directory items and syncing user stats..."
+    refresh_directory_items
   end
 
   def execute
@@ -109,6 +114,7 @@ class BulkImport::Generic < BulkImport::Base
 
     import_topic_users
     update_topic_users
+    import_bookmarks
 
     import_user_stats
 
@@ -142,6 +148,23 @@ class BulkImport::Generic < BulkImport::Base
 
     @source_db.close
     @uploads_db.close if @uploads_db
+  end
+
+  def refresh_directory_items
+    start_time = Time.now
+
+    # Force refresh all directory periods - this works even when
+    # enable_user_directory site setting is disabled
+    DirectoryItem.period_types.each_key do |period|
+      puts "  Refreshing directory items for period: #{period}"
+      DirectoryItem.refresh_period!(period, force: true)
+    end
+
+    UserStat.ensure_consistency!
+    Discourse.cache.clear
+    Site.clear_cache
+
+    puts "  Refreshed directory items in #{(Time.now - start_time).to_i} seconds."
   end
 
   def enable_required_plugins
@@ -1496,6 +1519,85 @@ class BulkImport::Generic < BulkImport::Base
     SQL
 
     puts "  Updated topic users in #{(Time.now - start_time).to_i} seconds."
+  end
+
+  def import_bookmarks
+    unless @source_db.get_first_value(
+             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='bookmarks'",
+           )
+      return
+    end
+
+    puts "", "Importing bookmarks..."
+
+    bookmarks = query(<<~SQL)
+      SELECT id, user_id, bookmarkable_id, bookmarkable_type, name,
+             reminder_at, reminder_set_at, reminder_last_sent_at,
+             auto_delete_preference, pinned, created_at, updated_at
+        FROM bookmarks
+       ORDER BY user_id, bookmarkable_id
+    SQL
+
+    existing_bookmarks = Bookmark.pluck(:user_id, :bookmarkable_type, :bookmarkable_id).to_set
+
+    create_bookmarks(bookmarks) do |row|
+      user_id = user_id_from_imported_id(row["user_id"])
+      next unless user_id
+
+      bookmarkable_type = row["bookmarkable_type"].to_s
+      bookmarkable_id = row["bookmarkable_id"]
+
+      if bookmarkable_type == "Topic"
+        topic_id = topic_id_from_imported_id(bookmarkable_id)
+        next unless topic_id
+        next unless existing_bookmarks.add?([user_id, bookmarkable_type, topic_id])
+
+        {
+          user_id: user_id,
+          bookmarkable_id: topic_id,
+          bookmarkable_type: bookmarkable_type,
+          name: row["name"],
+          reminder_at: to_datetime(row["reminder_at"]),
+          reminder_set_at: to_datetime(row["reminder_set_at"]),
+          reminder_last_sent_at: to_datetime(row["reminder_last_sent_at"]),
+          auto_delete_preference: row["auto_delete_preference"]&.to_i,
+          pinned: row["pinned"].present? ? to_boolean(row["pinned"]) : false,
+          created_at: to_datetime(row["created_at"]),
+          updated_at: to_datetime(row["updated_at"]),
+        }
+      elsif bookmarkable_type == "Post"
+        post_id = post_id_from_imported_id(bookmarkable_id)
+        next unless post_id
+        next unless existing_bookmarks.add?([user_id, bookmarkable_type, post_id])
+
+        {
+          user_id: user_id,
+          bookmarkable_id: post_id,
+          bookmarkable_type: bookmarkable_type,
+          name: row["name"],
+          reminder_at: to_datetime(row["reminder_at"]),
+          reminder_set_at: to_datetime(row["reminder_set_at"]),
+          reminder_last_sent_at: to_datetime(row["reminder_last_sent_at"]),
+          auto_delete_preference: row["auto_delete_preference"]&.to_i,
+          pinned: row["pinned"].present? ? to_boolean(row["pinned"]) : false,
+          created_at: to_datetime(row["created_at"]),
+          updated_at: to_datetime(row["updated_at"]),
+        }
+      else
+        next
+      end
+    end
+
+    bookmarks.close
+
+    puts "  Updating topic_users.bookmarked from bookmarks..."
+    DB.exec(<<~SQL)
+      INSERT INTO topic_users (user_id, topic_id, bookmarked)
+      SELECT b.user_id, b.bookmarkable_id, TRUE
+        FROM bookmarks b
+       WHERE b.bookmarkable_type = 'Topic'
+      ON CONFLICT (user_id, topic_id) DO UPDATE SET bookmarked = TRUE
+    SQL
   end
 
   def import_user_stats
