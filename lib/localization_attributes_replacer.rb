@@ -15,8 +15,17 @@ module LocalizationAttributesReplacer
   def self.replace_topic_attributes(topic, crawl_locale)
     if loc = get_localization(topic, crawl_locale)
       # assigning directly to title would commit the change to the database
-      # due to the setter method defined in the Topic model
-      topic.send(:write_attribute, :title, loc.title) if loc.title.present?
+      # due to the setter method defined in the Topic model.
+      # fancy_title must also be set to prevent the lazy DB write in
+      # Topic#fancy_title from persisting a localized value when fancy_title is NULL.
+      if loc.title.present?
+        topic.send(:write_attribute, :title, loc.title)
+        topic.send(
+          :write_attribute,
+          :fancy_title,
+          loc.fancy_title.presence || Topic.fancy_title(loc.title),
+        )
+      end
       topic.excerpt = loc.excerpt if loc.excerpt.present?
     end
 
