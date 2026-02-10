@@ -185,6 +185,12 @@
   z-index: z("base");
   margin-bottom: 1em;
 
+  @include viewport.until(sm) {
+    z-index: z("base") + 1;
+    margin: 0;
+    padding: 0 0 1em;
+  }
+
   .title-wrapper {
     display: flex;
     flex-wrap: wrap;
@@ -389,8 +395,13 @@
 }
 
 .post-links-container {
-  @include unselectable;
   clear: both;
+
+  @include unselectable;
+
+  @include viewport.from(sm) {
+    margin-left: var(--topic-body-width-padding);
+  }
 
   .post-links {
     margin-top: 1em;
