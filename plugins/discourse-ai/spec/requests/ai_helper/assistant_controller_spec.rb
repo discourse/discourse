@@ -60,6 +60,68 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
       expect(last_message.data[:done]).to eq(true)
     end
 
+    context "when mode is illustrate_post" do
+      let(:image_tool) do
+        AiTool.create!(
+          name: "Test Image Generator",
+          tool_name: "test_image_generator",
+          description: "Generates test images",
+          summary: "Test image generation",
+          parameters: [{ name: "prompt", type: "string", required: true }],
+          script: <<~JS,
+            function invoke(params) {
+              const image = upload.create("test.png", "base64data");
+              chain.setCustomRaw(`![test](${image.short_url})`);
+              return { result: "success" };
+            }
+          JS
+          created_by_id: user.id,
+          enabled: true,
+          is_image_generation_tool: true,
+        )
+      end
+
+      let(:upload) do
+        Fabricate(
+          :upload,
+          sha1: Upload.sha1_from_short_url("upload://test123"),
+          original_filename: "test.png",
+        )
+      end
+
+      let(:post_illustrator_persona) do
+        AiPersona.find_by(id: SiteSetting.ai_helper_post_illustrator_persona)
+      end
+
+      before do
+        image_tool
+        post_illustrator_persona.update_columns(system: false)
+        post_illustrator_persona.update!(tools: [["custom-#{image_tool.id}", nil, true]])
+
+        allow_any_instance_of(DiscourseAi::Personas::Bot).to receive(
+          :reply,
+        ) do |_bot, _context, &block|
+          block.call("", "![test](#{upload.short_url})", :partial_invoke)
+        end
+      end
+
+      it "suggests thumbnails" do
+        sign_in(user)
+
+        post "/discourse-ai/ai-helper/stream_suggestion.json",
+             params: {
+               text: "A beautiful sunset",
+               location: "composer",
+               mode: DiscourseAi::AiHelper::Assistant::ILLUSTRATE_POST,
+             }
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["thumbnails"]).to be_present
+        expect(response.parsed_body["thumbnails"].length).to eq(1)
+        expect(response.parsed_body["thumbnails"].first["id"]).to eq(upload.id)
+      end
+    end
+
     it "is able to stream suggestions to composer" do
       sign_in(user)
       channel = nil
