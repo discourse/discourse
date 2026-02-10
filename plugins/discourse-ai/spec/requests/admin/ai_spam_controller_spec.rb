@@ -277,6 +277,16 @@ RSpec.describe DiscourseAi::Admin::AiSpamController do
       expect(parsed["reason"]).to eq("because apples")
     end
 
+    it "rejects llm_id that is not a valid LlmModel" do
+      post "/admin/plugins/discourse-ai/ai-spam/test.json",
+           params: {
+             post_url: spam_post.id.to_s,
+             llm_id: -999,
+           }
+
+      expect(response.status).to eq(422)
+    end
+
     it "returns proper spam test results" do
       freeze_time DateTime.parse("2000-01-01")
 
