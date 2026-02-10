@@ -512,7 +512,9 @@ export default class User extends RestModel.extend(Evented) {
         this.set("unconfirmed_emails", []);
       }
 
-      this.unconfirmed_emails.push(email);
+      if (!this.unconfirmed_emails.includes(email)) {
+        this.unconfirmed_emails.push(email);
+      }
     });
   }
 
