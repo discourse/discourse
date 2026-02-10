@@ -285,8 +285,8 @@ GEM
     matrix (0.4.3)
     maxminddb (0.1.22)
     memory_profiler (1.1.0)
-    message_bus (4.4.1)
-      rack (>= 1.1.3)
+    message_bus (4.5.1)
+      rack (> 2, < 4)
     messageformat-wrapper (1.1.0)
       mini_racer (>= 0.6.3)
     method_source (1.1.0)
@@ -1059,7 +1059,7 @@ CHECKSUMS
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   maxminddb (0.1.22) sha256=50933be438fbed9dceabef4163eab41884bd8830d171fdb8f739bee769c4907e
   memory_profiler (1.1.0) sha256=79a17df7980a140c83c469785905409d3027ca614c42c086089d128b805aa8f8
-  message_bus (4.4.1) sha256=719ec5c3167e6571030dee0f43eafa99dbf68ae67fca6fd63c265ff55c0c2adb
+  message_bus (4.5.1) sha256=e004e4ad42a0e333c74b180e41c98bff5e73c90e9431a4033b1e6501608c5f25
   messageformat-wrapper (1.1.0) sha256=ecea879626e412d1bc841c457dacfcbb1a62cf88ca83573e4ea34bb371f160bc
   method_source (1.1.0) sha256=181301c9c45b731b4769bc81e8860e72f9161ad7d66dd99103c9ab84f560f5c5
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
