@@ -21,7 +21,6 @@
   --d-sidebar-active-background: var(--primary-100);
   --d-content-background: var(--secondary);
   --category-badge-border-radius: calc(var(--d-border-radius) / 2);
-  --category-badge-title-color: var(--primary);
   --category-boxes-description-text-color: var(--primary-700);
   --d-category-boxes-gap: var(--space-4);
   --d-category-border-box-width: 1px;
@@ -358,6 +357,7 @@
 
   .category-boxes .category-box,
   .category-boxes-with-topics .category-box {
+    --category-badge-title-color: var(--primary);
     --category-badge-color: var(--content-border-color) !important;
   }
 
