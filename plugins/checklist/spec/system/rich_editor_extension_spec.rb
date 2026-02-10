@@ -4,6 +4,7 @@ describe "Composer - ProseMirror editor - Checklist extension", type: :system do
   fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
   let(:composer) { PageObjects::Components::Composer.new }
   let(:rich) { composer.rich_editor }
+  let(:checklist) { PageObjects::Components::RichChecklist.new(rich) }
 
   before do
     sign_in(user)
@@ -27,10 +28,10 @@ describe "Composer - ProseMirror editor - Checklist extension", type: :system do
       rich.click
 
       rich.send_keys("[ ] Item 1")
-      expect(rich).to have_css(".chcklst-box.fa.fa-square-o", count: 1)
+      expect(checklist).to have_unchecked(count: 1)
 
-      rich.find(".chcklst-box").click
-      expect(rich).to have_css(".chcklst-box.checked.fa.fa-square-check-o", count: 1)
+      checklist.click_checkbox
+      expect(checklist).to have_checked(count: 1)
     end
 
     it "shows checklist option in toolbar" do
@@ -51,8 +52,8 @@ describe "Composer - ProseMirror editor - Checklist extension", type: :system do
       click_checklist_toolbar_option
       rich.send_keys("First item")
 
-      expect(rich).to have_css("ul li", count: 1)
-      expect(rich).to have_css(".chcklst-box", count: 1)
+      expect(checklist).to have_items(count: 1)
+      expect(checklist).to have_checkboxes(count: 1)
     end
 
     it "continues checklist on Enter" do
@@ -63,9 +64,8 @@ describe "Composer - ProseMirror editor - Checklist extension", type: :system do
       rich.send_keys("First item")
       rich.send_keys(:enter)
 
-      # Should create second list item with checkbox
-      expect(rich).to have_css("ul li", count: 2)
-      expect(rich).to have_css(".chcklst-box", count: 2)
+      expect(checklist).to have_items(count: 2)
+      expect(checklist).to have_checkboxes(count: 2)
     end
 
     it "allows double-Enter to escape checklist" do
@@ -75,11 +75,13 @@ describe "Composer - ProseMirror editor - Checklist extension", type: :system do
       click_checklist_toolbar_option
       rich.send_keys("First item")
       rich.send_keys(:enter)
+
+      expect(checklist).to have_checkboxes(count: 2)
+
       rich.send_keys(:enter)
 
-      # Double-Enter should escape the list
-      expect(rich).to have_css(".chcklst-box", count: 1)
-      expect(rich).to have_css("ul li", count: 1)
+      expect(checklist).to have_checkboxes(count: 1)
+      expect(checklist).to have_items(count: 1)
     end
   end
 
@@ -93,14 +95,13 @@ describe "Composer - ProseMirror editor - Checklist extension", type: :system do
       rich.send_keys(:enter)
       rich.send_keys("Second item")
 
-      expect(rich).to have_css(".chcklst-box", count: 2)
-      expect(rich).to have_css("li", count: 2)
+      expect(checklist).to have_checkboxes(count: 2)
+      expect(checklist).to have_items(count: 2)
 
       rich.send_keys(:home)
-
       rich.send_keys(:backspace)
 
-      expect(rich).to have_css(".chcklst-box", count: 1)
+      expect(checklist).to have_checkboxes(count: 1)
       expect(rich).to have_text("First itemSecond item")
     end
 
@@ -112,11 +113,11 @@ describe "Composer - ProseMirror editor - Checklist extension", type: :system do
       rich.send_keys("First item")
       rich.send_keys(:enter)
 
-      expect(rich).to have_css(".chcklst-box", count: 2)
+      expect(checklist).to have_checkboxes(count: 2)
 
       rich.send_keys(:backspace)
 
-      expect(rich).to have_css(".chcklst-box", count: 1)
+      expect(checklist).to have_checkboxes(count: 1)
       expect(rich).to have_text("First item")
     end
 
@@ -127,15 +128,13 @@ describe "Composer - ProseMirror editor - Checklist extension", type: :system do
       click_checklist_toolbar_option
       rich.send_keys("Only item")
 
-      expect(rich).to have_css(".chcklst-box", count: 1)
-      expect(rich).to have_css("li", count: 1)
+      expect(checklist).to have_checkboxes(count: 1)
+      expect(checklist).to have_items(count: 1)
 
-      # Move cursor to start of content (after checkbox+space)
       rich.send_keys(:home)
-
       rich.send_keys(:backspace)
 
-      expect(rich).to have_no_css(".chcklst-box")
+      expect(checklist).to have_no_checkboxes
       expect(rich).to have_text("Only item")
     end
   end
