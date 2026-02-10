@@ -40,6 +40,8 @@ sk:
       no_solved_topics_title: "Ešte ste nevyriešili žiadnu tému"
       no_solved_topics_title_others: "%{username} zatiaľ nevyriešil žiadne témy"
       no_solved_topics_body: "Keď poskytnete užitočnú odpoveď na tému, môže byť vaša odpoveď vybraná ako riešenie vlastníkom témy alebo zamestnancami."
+      move_post_cancel: "Zrušiť"
+      confirm_category_change_solution_cancel: "Zrušiť"
       no_answer:
         title: Bola vaša otázka zodpovedaná?
         description: "Zvýraznite odpoveď a pomôžte ostatným pomocou tlačidla riešenia pod správnou odpoveďou."

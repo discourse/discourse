@@ -185,6 +185,8 @@ pt_BR:
       default_llm:
         title: "Modelo de LLM padrão"
         description: "O modelo de LLM padrão a ser usado para todos os recursos de IA. Será usado se nenhum LLM for especificado na persona ou configuração de recurso. Se nenhum LLM for especificado, será usado o LLM criado mais recentemente."
+      llm_selector:
+        none: "Nenhum"
       features:
         short_title: "Recursos"
         description: "Estes recursos de IA estão disponíveis para quem acessar o seu site. Podem ser configurados para usar LLMs e personas específicas, além de poder ter o acesso controlado por grupos."
@@ -619,17 +621,7 @@ pt_BR:
           anthropic-claude-opus-4-5: "Modelo mais inteligente da Anthropic"
           anthropic-claude-sonnet-4-5: "Equilíbrio ideal entre custo e velocidade"
           anthropic-claude-haiku-4-5: "Rápido e econômico"
-          google-gemini-2-5-pro: "Modelo multimodal grande capaz de executar uma ampla variedade de tarefas"
-          google-gemini-2-5-flash: "Modelo leve, rápido e econômico com raciocínio multimodal"
-          open_ai-gpt-5-mini: "Proporciona equilíbrio entre inteligência, velocidade e custo, tornando-se um modelo atraente para muitos casos de uso."
-          open_ai-gpt-5-nano: "O modelo do GPT-5 mais rápido e econômico."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Modelo multi-idioma leve e eficiente"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Modelo multifinalidade poderoso"
-          mistral-mistral-large-latest: "Modelo mais poderoso da Mistral"
-          mistral-pixtral-large-latest: "Modelo mais poderoso com capacidade de visão da Mistral"
-          open_router-x-ai-grok-4: "O modelo mais recente da xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "Modelo de raciocínio mais recente do DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "Modelo mulilíngue de alta capacidade"
+          open_ai-gpt-5-nano: "O modelo do GPT-5 mais rápido e econômico"
         preseeded_model_description: "Modelo de código aberto pré-configurado que utiliza %{model}"
         configured:
           title: "LLMs configurados"
@@ -914,6 +906,7 @@ pt_BR:
         topic:
           title: "Resumo do tópico"
           close: "Fechar painel de resumo"
+          regenerate_summaries_option: "Resumos de tópicos"
         topic_list_layout:
           button:
             compact: "Compactar"

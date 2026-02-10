@@ -37,6 +37,7 @@ export default class MessagesDropdown extends Component {
       @title={{i18n "user.messages.all"}}
       @identifier="messages-dropdown"
       @onRegisterApi={{this.onRegisterApi}}
+      @class="btn-default"
     >
       <:trigger>
         {{#if this.currentSelection.showUnreadIcon}}

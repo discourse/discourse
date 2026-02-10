@@ -135,8 +135,8 @@ pl_PL:
         chat_usage:
           title: Aktywność czatu
           total_messages: Łączna liczba wiadomości
-          dm_messages: Wiadomości PW
-          unique_dm_channels: Rozmowy PW
+          dm_messages: Wiadomości bezpośrednie
+          unique_dm_channels: Rozmowy z wiadomościami bezpośrednimi
           reactions_received: Otrzymane reakcje
           avg_message_length: Średnia długość wiadomości
           favorite_channels: Ulubione kanały

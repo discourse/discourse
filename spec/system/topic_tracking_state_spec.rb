@@ -59,7 +59,6 @@ describe "Topic tracking state", type: :system do
 
       muted_topic = publish_new_topic([muted_tag])
       normal_topic = publish_new_topic([])
-      puts "Published topics: #{muted_topic.id} (muted), #{normal_topic.id} (normal)"
 
       try_until_success(reason: "relies on MessageBus updates") do
         expect(page).to have_css(".show-more", text: /1.*new/)

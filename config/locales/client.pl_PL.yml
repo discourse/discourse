@@ -357,6 +357,8 @@ pl_PL:
     software_update_prompt:
       message: "Zaktualizowaliśmy tę witrynę, <span>odśwież</span>, aby wszystko działało sprawnie."
       dismiss: "Odrzuć"
+    notifications_tracking:
+      tooltip: "Poziom powiadomienia: %{level}"
     back_button: "Poprzednia"
     welcome_banner:
       header:
@@ -1781,6 +1783,11 @@ pl_PL:
       undo_revoke_access: "Cofnij zablokowanie dostępu"
       api_approved: "Zatwierdzony:"
       api_last_used_at: "Ostatnio użyto:"
+      api_show_permissions:
+        one: "Przyznano uprawnienia (%{count})"
+        few: "Przyznano uprawnienia (%{count})"
+        many: "Przyznano uprawnienia (%{count})"
+        other: "Przyznano uprawnienia (%{count})"
       theme: "Motyw"
       save_to_change_theme: 'Motyw zostanie zaktualizowany po kliknięciu "%{save_text}”'
       home: "Domyślna strona główna"
@@ -1791,11 +1798,11 @@ pl_PL:
           few: '<span class="%{className}">%{count}</span> pomocne flagi'
           many: '<span class="%{className}">%{count}</span> pomocne flagi'
           other: '<span class="%{className}">%{count}</span> pomocne flagi'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> oflagowany wpis'
-          few: '<span class="%{className}">%{count}</span> oflagowane wpisy'
-          many: '<span class="%{className}">%{count}</span> oflagowanych wpisów'
-          other: '<span class="%{className}">%{count}</span> oflagowanych wpisów'
+        flags:
+          one: '<span class="%{className}">%{count}</span> flaga'
+          few: '<span class="%{className}">%{count}</span> flagi'
+          many: '<span class="%{className}">%{count}</span> flag'
+          other: '<span class="%{className}">%{count}</span> flag'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> usunięty post'
           few: '<span class="%{className}">%{count}</span> usunięte posty'
@@ -2579,7 +2586,11 @@ pl_PL:
     form_kit:
       reset: Przywróć
       optional: opcjonalnie
-      errors_summary_title: "Ten formularz zawiera błędy:"
+      errors_summary_title:
+        one: "Napraw ten błąd, aby kontynuować"
+        few: "Napraw te błędy, aby kontynuować"
+        many: "Napraw te błędy, aby kontynuować"
+        other: "Napraw te błędy, aby kontynuować"
       dirty_form: "Nie przesłano zmian. Czy na pewno chcesz wyjść?"
       errors:
         starts_with: "Musi zaczynać się od %{prefix}"
@@ -2603,6 +2614,10 @@ pl_PL:
           few: "Musi zawierać co najmniej %{count} znaki"
           many: "Musi zawierać co najmniej %{count} znaków"
           other: "Musi zawierać co najmniej %{count} znaków"
+      color:
+        available_presets: "Dostępne ustawienia wstępne"
+        already_used: "Już używane"
+        edit_presets: "Edytuj ustawienia wstępne kolorów"
     close: "Zamknij"
     assets_changed_confirm: "Ta strona właśnie otrzymała aktualizację oprogramowania. Pobrać najnowszą wersję teraz?"
     logout: "Nastąpiło wylogowanie."
@@ -2665,6 +2680,7 @@ pl_PL:
         }.
     learn_more: "Dowiedz się więcej…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Dowiedz się więcej…</a>"
+    feedback_with_link: "<a href='%{url}' target='_blank'>Informacja zwrotna…</a>"
     mute: Wycisz
     unmute: Wyłącz wyciszenie
     last_post: Opublikowano
@@ -3436,7 +3452,8 @@ pl_PL:
         votes_released: "głos został opublikowany"
         new_features: "wydano nowe funkcje discourse"
         admin_problems: "nowe porady w panelu administratora"
-        upcoming_change_available: "dostępna jest nowa nadchodząca zmiana"
+        upcoming_change_available: "dostępna jest nowa nadchodząca zmiana '%{changeName}'"
+        upcoming_change_automatically_promoted: "nadchodząca zmiana '%{changeName}' została automatycznie włączona"
     upload_selector:
       change: "Zmień"
       delete: "Usuń"
@@ -3647,6 +3664,7 @@ pl_PL:
         deleted_post: "(usunięty post)"
         post_number_with_topic_title: "wpis #%{post_number} - %{title}"
         new_post_in_topic: "nowy wpis w %{title}"
+        new_post_in_deleted_topic: "nowy wpis w usuniętym temacie"
         user_requires_approval: "%{username} wymaga zatwierdzenia"
         default_item: "pozycja do sprawdzenia #%{reviewable_id}"
     topics:
@@ -4330,7 +4348,7 @@ pl_PL:
       quote_edit: "Edytuj"
       quote_edit_shortcut: "Edytuj (lub naciśnij e)"
       quote_copy: "Skopiuj cytat"
-      quote_copied_to_clibboard: "Cytat skopiowany do schowka"
+      quote_copied_to_clipboard: "Cytat skopiowany do schowka"
       quote_share: "Udostępnij"
       edit_reason: "Powód"
       post_number: "wpis %{number}"
@@ -4675,6 +4693,7 @@ pl_PL:
       general: "Ogólne"
       settings: "Ustawienia"
       advanced: "Zaawansowane"
+      show_advanced: "Ustawienia zaawansowane"
       topic_template: "Szablon"
       tags: "Tagi"
       localizations: "Języki"
@@ -4711,6 +4730,9 @@ pl_PL:
       save_error: Podczas zapisywania tej kategorii wystąpił błąd.
       errors:
         self_lockout: "Zamierzasz zmienić uprawnienia kategorii w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
+      validations:
+        emoji_required: "Wybierz emoji."
+        icon_required: "Wybierz ikonę."
       name: "Nazwa kategorii"
       untitled: "Kategoria bez tytułu"
       description: "Opis"
@@ -4722,6 +4744,7 @@ pl_PL:
       style: "Styl"
       icon: "Ikona"
       emoji: "Emoji"
+      select_emoji: "Wybierz emoji"
       background_color: "Kolor"
       foreground_color: "Kolor tekstu"
       color_validations:
@@ -4739,6 +4762,7 @@ pl_PL:
           emoji: "Emoji"
       color_used: "Kolor w użyciu"
       predefined_colors: "Predefiniowane opcje kolorów"
+      name_placeholder: "Zalecane jedno lub dwa słowa"
       color_placeholder: "Dowolny kolor sieciowy"
       delete_confirm: "Czy na pewno chcesz usunąć tę kategorię?"
       delete_error: "Podczas próby usunięcia tej kategorii wystąpił błąd."
@@ -4755,11 +4779,15 @@ pl_PL:
         reply: "Odpowiedz"
         create: "Utwórz"
         no_groups_selected: "Żadnej grupie nie przyznano dostępu; ta kategoria będzie widoczna tylko dla personelu."
-        everyone_has_access: 'Ta kategoria jest publiczna, każdy może wyświetlać, odpowiadać i tworzyć posty. Aby ograniczyć uprawnienia, usuń jedno lub więcej uprawnień przyznanych grupie "wszyscy".'
+        everyone_full_access: 'Ta kategoria jest publiczna – każdy może widzieć, odpowiadać i tworzyć wpisy. Aby ograniczyć uprawnienia, usuń jedno lub więcej uprawnień przyznanych grupie „wszyscy”.'
+        everyone_reply_access: 'Ta kategoria jest publiczna, każdy może widzieć tematy i odpowiadać na nie. Aby ograniczyć uprawnienia, usuń grupę „wszyscy”.'
+        everyone_see_access: 'Ta kategoria jest publiczna i każdy może zobaczyć wpisy. Aby ograniczyć uprawnienia, usuń grupę „wszyscy”.'
+        specific_groups_have_access: "Ta kategoria jest prywatna, tylko wybrane grupy mogą widzieć, odpowiadać i tworzyć wpisy."
+        all_parent_groups_used: "Dodano wszystkie grupy z kategorii nadrzędnej. Aby dodać więcej grup, najpierw dodaj je do kategorii nadrzędnej."
         toggle_reply: "Przełącz uprawnienie do odpowiedzi"
         toggle_full: "Przełącz uprawnienie do tworzenia"
         inherited: 'To uprawnienie jest dziedziczone po "wszystkich"'
-      special_warning: "Uwaga: Ta kategoria jest generowana automatycznie i jej ustawienia bezpieczeństwa nie mogą być edytowane. Jeśli nie zamierzasz jej używać, skasuj ją, zamiast zmieniać jej przeznaczenie."
+      special_warning: "Ta kategoria jest wstępnie zdefiniowana i ustawień zabezpieczeń nie można edytować. Jeśli nie chcesz używać tej kategorii, usuń ją zamiast używać jej ponownie."
       uncategorized_security_warning: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nie przypisanych do żadnej kategorii i jako taka nie może mieć ustawień bezpieczeństwa."
       uncategorized_general_warning: 'Ta kategoria jest wyjątkowa. Jest używana jako domyślna kategoria dla nowych tematów, które nie mają wybranej kategorii. Jeśli chcesz zapobiec temu zachowaniu i wymusić wybór kategorii, <a href="%{settingLink}">wyłącz to ustawienie tutaj</a>. Jeśli chcesz zmienić nazwę lub opis, przejdź do <a href="%{customizeLink}">Dostosuj / Treść tekstowa</a>.'
       pending_permission_change_alert: "Nie dodałeś/łaś %{group} do tej kategorii; kliknij ten przycisk, aby je dodać."
@@ -4792,12 +4820,19 @@ pl_PL:
       position_disabled: "Kategorie będą wyświetlane w kolejności aktywności. Aby kontrolować kolejność kategorii na listach, włącz ustawienie <a href='%{url}'>'fixed category positions'</a>."
       minimum_required_tags: "Minimalna liczba tagów wymaganych w temacie:"
       default_slow_mode: 'Włącz „Tryb powolny” dla nowych tematów w tej kategorii.'
+      subcategory_of: "Podkategoria..."
       none_subcategory_text: "Brak"
+      subcategory_permissions_warning: "Podkategoria kategorii prywatnej nie może być publiczna."
       visibility:
-        title: "Dostęp"
+        title: "Widoczność"
         public: "Publiczny"
         all_members: "Wszyscy członkowie"
         group_restricted: "Prywatny"
+        who_can_see: "Kto może zobaczyć tę kategorię"
+        who_can_post: "Kto może tworzyć wpisy w tej kategorii"
+        which_groups_can_access: "Które grupy mogą widzieć i publikować w tej kategorii"
+        more_options_hint: "Więcej uprawnień jest dostępnych w <a href>ustawieniach zaawansowanych</a>."
+        inherited_from_parent: "Uprawnienia są dziedziczone z kategorii nadrzędnej. Aby je doprecyzować, przejdź do <a href>ustawień zaawansowanych</a>."
       num_auto_bump_daily: "Liczba otwartych tematów do automatycznego podbicia każdego dnia"
       auto_bump_cooldown_days: "Minimalna liczba dni przed ponownym podbiciem tego samego tematu:"
       navigate_to_first_post_after_read: "Przejdź do pierwszego postu po przeczytaniu tematów"
@@ -5985,11 +6020,13 @@ pl_PL:
         no_changes_to_save: "Brak zmian do zapisania"
         select_groups: "Wybierz grupy…"
         opt_in_groups: "Grupy opt-in"
+        show_related_settings: "Pokaż powiązane ustawienia..."
         opt_in_groups_instructions: "Grupy opt-in można wykorzystać, aby umożliwić określonej grupie użytkowników przetestowanie zmiany przed jej udostępnieniem wszystkim. Należy pamiętać, że grupy te staną się nieistotne, gdy zmiana osiągnie status stabilnej."
         enabled_for_throttle: "Zbyt szybko zmodyfikowano, dla kogo ta zmiana jest włączona. Odczekaj kilka sekund, zanim spróbujesz ponownie."
         change_enabled_for_success: "Włączono tę zmianę dla %{enabledFor}"
         change_disabled: "Zrezygnowałeś z tej zmiany"
         permanent_notice: "Ta zmiana jest teraz trwała i wkrótce zostanie usunięta. Nie możesz już zrezygnować."
+        permanent_soon_notice: "Ta zmiana wkrótce stanie się trwała. Nie będzie już możliwości rezygnacji."
         permanent_no_group_selection: "Nie dotyczy, stałe zmiany dotyczą wszystkich grup."
         no_changes: "W tej chwili nie ma żadnych nadchodzących zmian."
         preview: "Podgląd"
@@ -6019,8 +6056,10 @@ pl_PL:
           search_placeholder: "Filtruj według nazwy, opisu lub wtyczki..."
           no_results: "Brak nadchodzących zmian odpowiadających wybranemu filtrowi"
           all: "Wszystkie"
-          enabled_all: "Włączone lub wyłączone"
+          enabled_all: "Wszystkie włączone stany"
           enabled: "Włączona"
+          enabled_for_staff: "Włączone dla personelu"
+          enabled_for_specific_groups: "Włączone dla określonych grup"
           disabled: "Wyłączone"
           impact_type_all: "Wszystkie rodzaje uderzeń"
           impact_type_feature: "Funkcja"
@@ -6070,7 +6109,7 @@ pl_PL:
           keywords: "ustawienia regionalne|strefa czasowa|unicode|ltr"
         upcoming_changes:
           title: "Nadchodzące zmiany"
-          header_description: "Lista nadchodzących zmian w Discourse, które mogą mieć wpływ na Twoją witrynę, oraz funkcji eksperymentalnych, na które możesz wyrazić zgodę. Możesz filtrować według wpływu, typu zmiany i statusu. Grupy z opcją zgody (\n\n) mogą być używane, aby umożliwić określonej grupie użytkowników przetestowanie zmiany przed jej udostępnieniem wszystkim użytkownikom. Grupy te będą jednak nieistotne, gdy zmiana osiągnie status stabilnej."
+          header_description: "Lista nadchodzących zmian w Discourse, które mogą wpłynąć na Twoją witrynę, oraz funkcji eksperymentalnych, na które możesz wyrazić zgodę. Możesz filtrować według wpływu, typu i statusu.\n\nGrupy z opcją zgody mogą być używane, aby umożliwić określonej grupie użytkowników przetestowanie zmiany przed jej udostępnieniem wszystkim użytkownikom. Grupy te będą jednak nieistotne, gdy zmiana uzyska status „Stała”."
         login:
           title: "Logowanie i uwierzytelnianie"
           header_description: "Skonfiguruj sposób logowania i uwierzytelniania użytkowników, sekrety i klucze, dostawców OAuth2 i nie tylko."
@@ -6432,6 +6471,9 @@ pl_PL:
         embedding:
           title: "Osadzanie"
           header_description: "Discourse ma możliwość osadzania komentarzy z tematu w zdalnej witrynie za pomocą interfejsu API Javascript, który tworzy IFRAME"
+        form_templates:
+          title: "Szablony formularzy"
+          header_description: "Szablony formularzy umożliwiają wprowadzenie ustrukturyzowanego formularza z weryfikacją danych jako części procesu tworzenia tematu"
       theme_site_settings:
         setting: "Ustawienie"
         overridden_by: "Zastąpione przez"
@@ -6595,6 +6637,7 @@ pl_PL:
           daily: Dziennie
           monthly: Miesięcznie
           weekly: Tygodniowo
+          value_so_far: "%{value} (jak dotąd)"
           dates: "Daty (UTC)"
           groups: "Wszystkie grupy"
           disabled: "Ten raport jest nieaktywny"
@@ -6605,7 +6648,9 @@ pl_PL:
           trending_search:
             more: '<a href="%{basePath}/admin/logs/search_logs">Logi wyszukiwania</a>'
             disabled: 'Raport wyszukiwań zyskujących popularność jest wyłączony. Włącz <a href="%{basePath}/admin/site_settings/category/all_results?filter=log%20search%20queries">dziennik zapytań wyszukiwarki</a>, aby zbierać dane.'
+          average_chart_label: Wyświetlanie średnich, a nie sum
           sort_button: "Sortuj według %{column}"
+          sort_button_current: "Posortowane według %{column}, %{direction}"
           sort_ascending: "rosnąco"
           sort_descending: "malejąco"
           filters:
@@ -7365,8 +7410,8 @@ pl_PL:
         delete: "Usuń"
         delete_confirm: 'Czy na pewno chcesz usunąć "%{theme_name}"?'
         bulk_delete: "Jesteś pewny/a?"
-        bulk_themes_delete_confirm: "Spowoduje to odinstalowanie następujących motywów. Nie będą już dostępne dla żadnego użytkownika w Twojej witrynie:"
-        bulk_components_delete_confirm: "Spowoduje to odinstalowanie następujących komponentów. Nie będą już dostępne dla żadnego użytkownika w Twojej witrynie:"
+        bulk_themes_delete_confirm: "Spowoduje to odinstalowanie następujących motywów. Nie będą one już dostępne dla użytkowników Twojej witryny:"
+        bulk_components_delete_confirm: "Spowoduje to odinstalowanie następujących komponentów, z których żaden użytkownik Twojej witryny nie będzie mógł już korzystać:"
         color: "Kolor"
         opacity: "Widoczność"
         copy: "Powiel"
@@ -8820,6 +8865,8 @@ pl_PL:
         no_user_badges: "%{name} nie otrzymał żadnych odznak."
         no_badges: Nie ma odznak, które można by było przyznać.
         none_selected: "Wybierz odznakę, aby rozpocząć"
+        filter_placeholder: "Filtruj odznaki..."
+        no_badges_found: "Nie znaleziono odznak"
         sections:
           design: Projekt
           query: Zapytanie

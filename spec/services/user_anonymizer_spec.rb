@@ -486,5 +486,72 @@ RSpec.describe UserAnonymizer do
       expect(user.email).not_to eq("test@example.com")
       expect(Invite.exists?(id: invite.id)).to eq(false)
     end
+
+    it "destroys invites matching secondary email addresses" do
+      user = Fabricate(:user)
+      invite = Fabricate(:invite, email: "secondary@example.com")
+      Fabricate(:secondary_email, user: user, email: "secondary@example.com")
+
+      Jobs.run_immediately!
+      described_class.make_anonymous(user, admin)
+
+      expect(Invite.exists?(id: invite.id)).to eq(false)
+    end
+
+    it "destroys invites matching associated account emails" do
+      user = Fabricate(:user)
+      invite = Fabricate(:invite, email: "oauth@example.com")
+      UserAssociatedAccount.create!(
+        user: user,
+        provider_name: "google_oauth2",
+        provider_uid: "12345",
+        info: {
+          email: "oauth@example.com",
+        },
+      )
+
+      Jobs.run_immediately!
+      described_class.make_anonymous(user, admin)
+
+      expect(Invite.exists?(id: invite.id)).to eq(false)
+    end
+
+    it "deletes incoming emails from associated account addresses" do
+      user = Fabricate(:user)
+      UserAssociatedAccount.create!(
+        user: user,
+        provider_name: "google_oauth2",
+        provider_uid: "12345",
+        info: {
+          email: "oauth@example.com",
+        },
+      )
+      incoming = Fabricate(:incoming_email, from_address: "oauth@example.com", error: "some error")
+
+      Jobs.run_immediately!
+      described_class.make_anonymous(user, admin)
+
+      expect(IncomingEmail.exists?(id: incoming.id)).to eq(false)
+    end
+
+    it "anonymizes screened email IPs for associated account emails" do
+      old_ip = "1.2.3.4"
+      anon_ip = "0.0.0.0"
+      user = Fabricate(:user, ip_address: old_ip)
+      UserAssociatedAccount.create!(
+        user: user,
+        provider_name: "google_oauth2",
+        provider_uid: "12345",
+        info: {
+          email: "oauth@example.com",
+        },
+      )
+      screened = ScreenedEmail.create!(email: "oauth@example.com", ip_address: old_ip)
+
+      Jobs.run_immediately!
+      described_class.make_anonymous(user, admin, anonymize_ip: anon_ip)
+
+      expect(screened.reload.ip_address).to eq(anon_ip)
+    end
   end
 end

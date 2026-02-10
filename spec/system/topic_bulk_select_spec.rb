@@ -97,9 +97,9 @@ describe "Topic bulk select", type: :system do
 
       topic_bulk_actions_modal.tag_selector.expand
       topic_bulk_actions_modal.tag_selector.search(tag1.name)
-      topic_bulk_actions_modal.tag_selector.select_row_by_value(tag1.name)
+      topic_bulk_actions_modal.tag_selector.select_row_by_name(tag1.name)
       topic_bulk_actions_modal.tag_selector.search(tag2.name)
-      topic_bulk_actions_modal.tag_selector.select_row_by_value(tag2.name)
+      topic_bulk_actions_modal.tag_selector.select_row_by_name(tag2.name)
 
       topic_bulk_actions_modal.click_bulk_topics_confirm
 
@@ -149,9 +149,9 @@ describe "Topic bulk select", type: :system do
 
         topic_bulk_actions_modal.tag_selector.expand
         topic_bulk_actions_modal.tag_selector.search(restricted_tag.name)
-        topic_bulk_actions_modal.tag_selector.select_row_by_value(restricted_tag.name)
+        topic_bulk_actions_modal.tag_selector.select_row_by_name(restricted_tag.name)
         topic_bulk_actions_modal.tag_selector.search(tag1.name)
-        topic_bulk_actions_modal.tag_selector.select_row_by_value(tag1.name)
+        topic_bulk_actions_modal.tag_selector.select_row_by_name(tag1.name)
 
         topic_bulk_actions_modal.click_bulk_topics_confirm
 
@@ -446,6 +446,35 @@ describe "Topic bulk select", type: :system do
 
       expect(topic_list).to have_no_topic(topics.first)
       expect(topic_list).to have_no_topic(topics.second)
+    end
+  end
+
+  context "when changing category" do
+    fab!(:destination_category, :category)
+    fab!(:restricted_tag, :tag)
+
+    let(:toasts) { PageObjects::Components::Toasts.new }
+
+    before do
+      SiteSetting.tagging_enabled = true
+      topics.first.update!(tags: [restricted_tag])
+      topics.first.category.update!(tags: [restricted_tag])
+    end
+
+    it "shows a warning when some topics cannot be moved due to tag restrictions" do
+      original_category = topics.first.category
+      sign_in(admin)
+      visit("/latest")
+
+      open_bulk_actions_modal([topics.first], "update-category")
+
+      topic_bulk_actions_modal.category_selector.expand
+      topic_bulk_actions_modal.category_selector.select_row_by_value(destination_category.id)
+      topic_bulk_actions_modal.click_bulk_topics_confirm
+
+      expect(toasts).to have_warning("could not be completed")
+
+      expect(topics.first.reload.category).to eq(original_category)
     end
   end
 end

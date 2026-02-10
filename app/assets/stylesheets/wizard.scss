@@ -494,10 +494,6 @@ body.wizard {
       }
     }
 
-    &primary:active {
-      background-color: var(--tertiary-high);
-    }
-
     &:disabled {
       background-color: var(--tertiary-low);
     }

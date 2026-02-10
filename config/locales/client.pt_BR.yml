@@ -1580,9 +1580,6 @@ pt_BR:
         flags_given:
           one: '<span class="%{className}">%{count}</span> etiqueta útil'
           other: '<span class="%{className}">%{count}</span> etiquetas úteis'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> postagem com sinalização'
-          other: '<span class="%{className}">%{count}</span> postagens com sinalização'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> postagem excluída'
           other: '<span class="%{className}">%{count}</span> postagens excluídas'
@@ -2294,7 +2291,6 @@ pt_BR:
     form_kit:
       reset: Redefinir
       optional: opcional
-      errors_summary_title: "Este formulário contém erros:"
       dirty_form: "Você não enviou as alterações! Deseja mesmo sair?"
       errors:
         starts_with: "Deve começar com %{prefix}"
@@ -3798,7 +3794,7 @@ pt_BR:
       quote_edit: "Editar"
       quote_edit_shortcut: "Editar (ou apertar e)"
       quote_copy: "Copiar citação"
-      quote_copied_to_clibboard: "Citação copiada para área de transferência"
+      quote_copied_to_clipboard: "Citação copiada para área de transferência"
       quote_share: "Compartilhar"
       edit_reason: "Motivo:"
       post_number: "postagem %{number}"
@@ -4120,6 +4116,8 @@ pt_BR:
       slug_placeholder: "(Opcional) palavras hifenizadas para url"
       creation_error: Houve um erro durante a criação da categoria.
       save_error: Houve um erro ao salvar a categoria.
+      validations:
+        icon_required: "Selecione um ícone."
       description: "Descrição"
       logo_description: "Proporção de tela recomendada 1:1 com tamanho mínimo de 200px. Se deixada em branco, nenhuma imagem será exibida."
       style: "Estilo"
@@ -4156,11 +4154,10 @@ pt_BR:
         reply: "Responder"
         create: "Criar"
         no_groups_selected: "Nenhum grupo recebeu acesso, esta categoria será visível apenas para a equipe."
-        everyone_has_access: 'Esta categoria é pública, todos(as) podem ver, responder e criar postagens. Para restringir permissões, remova uma ou mais permissões concedidas para o grupo "todos(as)".'
+        everyone_full_access: 'Esta categoria é pública, todos(as) podem ver, responder e criar postagens. Para restringir permissões, remova uma ou mais permissões concedidas para o grupo "todos(as)".'
         toggle_reply: "Alternar permissão de resposta"
         toggle_full: "Alternar criação de permissão"
         inherited: 'Esta permissão é herdada de "todos(as)"'
-      special_warning: "Atenção: esta categoria é uma categoria pré-propagada, e as configurações de segurança não podem ser editadas. Se você não quer usar esta categoria, exclua em vez de reaproveitar."
       uncategorized_security_warning: "Esta categoria é especial. É destinada para tópicos que não têm categoria e não pode ter configurações de segurança."
       uncategorized_general_warning: 'Esta categoria é especial. Ela é usada como a categoria padrão para novos tópicos que não têm uma categoria selecionada. Se quiser evitar este comportamento e forçar a seleção da categoria, <a href="%{settingLink}">desative a configuração aqui</a>. Se você quiser alterar o nome ou a descrição, vá para <a href="%{customizeLink}">Personalização/Conteúdo de texto</a>.'
       pending_permission_change_alert: "Você não adicionou %{group} a esta categoria. Clique neste botão para adicionar."
@@ -4188,7 +4185,7 @@ pt_BR:
       minimum_required_tags: "Número mínimo de etiquetas exigidas em um tópico:"
       none_subcategory_text: "Nenhum"
       visibility:
-        title: "Acesso"
+        title: "Visibilidade"
         public: "Público"
         group_restricted: "Privado"
       num_auto_bump_daily: "Número de tópicos em aberto para promover automaticamente:"
@@ -6478,8 +6475,6 @@ pt_BR:
         delete: "Excluir"
         delete_confirm: 'Você tem certeza de que deseja excluir "%{theme_name}"?'
         bulk_delete: "Tem certeza?"
-        bulk_themes_delete_confirm: "Os temas a seguir serão desinstalados e não poderão mais ser usados pelos(as) usuários(as) no seu site:"
-        bulk_components_delete_confirm: "Os componentes a seguir serão desinstalados e não poderão mais ser usados pelos(as) usuários(as) no seu site:"
         color: "Cor"
         opacity: "Opacidade"
         copy: "Duplicado"

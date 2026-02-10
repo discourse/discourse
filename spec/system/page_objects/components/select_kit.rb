@@ -66,6 +66,11 @@ module PageObjects
         component.find(".selected-choice[data-name='#{name}']")
       end
 
+      def has_selected_names?(*names)
+        selected = component.find(".formatted-selection").text.split(", ")
+        names.map(&:to_s).sort == selected.sort
+      end
+
       def has_option_name?(name)
         component.find(".select-kit-collection li[data-name='#{name}']")
       end
@@ -123,6 +128,10 @@ module PageObjects
 
       def unselect_by_name(name)
         expanded_component.find(".selected-choice[data-name='#{name}']").click
+      end
+
+      def clear
+        expanded_component.all(".selected-choice").each(&:click)
       end
     end
   end

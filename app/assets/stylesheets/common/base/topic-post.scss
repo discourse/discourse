@@ -56,6 +56,12 @@
   display: flex;
 }
 
+@include viewport.until(sm) {
+  .placeholder .topic-body {
+    width: 100%;
+  }
+}
+
 .names {
   flex: 1 1 auto;
   overflow: hidden;
@@ -64,6 +70,10 @@
     display: flex;
     align-items: baseline;
     font-weight: bold;
+
+    &.new-user:not(.staff) a {
+      color: var(--primary-low-mid);
+    }
   }
 
   > span {
@@ -93,7 +103,7 @@
   .new_user a,
   .user-title,
   .user-title a {
-    color: var(--primary-med-or-secondary-med);
+    color: var(--primary-medium);
   }
 }
 
@@ -105,6 +115,10 @@
 
   video {
     max-width: 100%;
+
+    @include viewport.from(sm) {
+      max-height: 500px;
+    }
   }
 
   img:not(.thumbnail, .ytp-thumbnail-image, .emoji) {
@@ -270,8 +284,76 @@
   display: flex;
   align-items: flex-start;
 
+  @include viewport.until(sm) {
+    margin-left: 50px;
+    font-size: var(--font-down-1);
+  }
+
+  @include viewport.from(sm) {
+    align-items: center;
+    padding: 0 var(--topic-body-width-padding) var(--space-1)
+      var(--topic-body-width-padding);
+
+    &::after {
+      visibility: hidden;
+      display: block;
+      font-size: 0;
+      content: " ";
+      clear: both;
+      height: 0;
+    }
+  }
+
   .names {
     margin-right: auto;
+    display: flex;
+
+    @include viewport.from(sm) {
+      align-items: center;
+    }
+
+    @include viewport.until(sm) {
+      line-height: var(--line-height-medium);
+      flex-wrap: wrap;
+
+      .full-name {
+        font-weight: bold;
+      }
+
+      .first {
+        order: 1;
+      }
+
+      .poster-icon {
+        order: 2;
+      }
+
+      .user-status-message-wrap {
+        order: 2;
+      }
+
+      .second {
+        order: 3;
+        flex-basis: 100%;
+      }
+
+      .user-title {
+        order: 4;
+        flex-basis: 100%;
+      }
+
+      .user-badge-buttons {
+        order: 5;
+
+        .user-badge {
+          padding-top: 0;
+        }
+      }
+
+      span {
+        margin-right: 0.26em;
+      }
+    }
 
     .first {
       flex-shrink: 0;
@@ -329,10 +411,42 @@ nav.post-controls {
   color: var(--d-post-control-text-color);
   user-select: none;
 
+  .fade-out {
+    .discourse-no-touch & {
+      opacity: 0.7;
+      transition:
+        background 0.25s,
+        opacity 0.7s ease-in-out;
+    }
+
+    .discourse-touch & {
+      opacity: 1;
+    }
+  }
+
+  @include viewport.until(sm) {
+    --control-space: 0.58em;
+    --control-space-small: calc(var(--control-space) / 2);
+    --control-space-large: calc(var(--control-space) * 1.3);
+    overflow-x: auto;
+  }
+
   .actions {
     display: inline-flex;
     text-align: right;
     margin-left: auto;
+
+    @include viewport.until(sm) {
+      // using an auto margin on first-child instead of justify-content on the parent
+      // because justify-content breaks overflow scrolling
+      :first-child {
+        margin-left: auto;
+      }
+    }
+
+    @include viewport.from(sm) {
+      gap: var(--space-1);
+    }
 
     .post-action-menu__double-button {
       .discourse-no-touch & {
@@ -388,6 +502,21 @@ nav.post-controls {
         }
 
         &.button-count {
+          @include viewport.until(sm) {
+            padding: var(--control-space);
+
+            + .toggle-like,
+            + .create-flag {
+              padding: var(--control-space) var(--control-space-large)
+                var(--control-space) var(--control-space-small);
+            }
+
+            &.regular-likes {
+              padding: var(--control-space) var(--control-space-small)
+                var(--control-space) var(--control-space-large);
+            }
+          }
+
           // Like count button
           &:not(.my-likes) {
             padding-right: 0;
@@ -430,6 +559,17 @@ nav.post-controls {
     }
 
     button {
+      &.expand-post {
+        @include viewport.until(sm) {
+          margin: var(--control-space) 0 var(--control-space) 0;
+        }
+
+        @include viewport.from(sm) {
+          margin-top: var(--space-3);
+          margin-left: var(--topic-body-width-padding);
+        }
+      }
+
       .discourse-no-touch & {
         &:hover,
         &:focus-visible,
@@ -477,6 +617,51 @@ nav.post-controls {
     font-size: inherit;
     padding: 10px;
     color: var(--primary-medium);
+    display: flex;
+    align-items: center;
+    border-radius: var(--d-button-border-radius);
+
+    @include viewport.until(sm) {
+      padding: 9px;
+
+      &[aria-expanded="true"] {
+        background: var(--primary-low);
+        color: var(--primary-high);
+        box-shadow: 0 0 0 1px var(--primary-300);
+        z-index: 1;
+        margin-left: 1px;
+
+        .d-icon {
+          color: var(--primary-high);
+        }
+      }
+    }
+
+    @include viewport.from(sm) {
+      margin-left: 0;
+      white-space: nowrap;
+
+      .topic-post & {
+        margin-right: var(--space-2);
+      }
+
+      &[aria-expanded="true"] {
+        background: var(--primary-low);
+        color: var(--primary-high);
+        box-shadow: 0 0 0 1px var(--primary-300);
+        z-index: 1;
+
+        .d-icon {
+          color: var(--primary-high);
+        }
+
+        &:hover,
+        &:focus {
+          background: var(--primary-300);
+          color: var(--primary);
+        }
+      }
+    }
 
     .discourse-no-touch & {
       &:hover,
@@ -489,11 +674,43 @@ nav.post-controls {
 
     .d-icon {
       font-size: var(--font-down-1);
+
+      @include viewport.until(sm) {
+        padding-left: var(--control-space);
+        margin-left: 0 !important;
+      }
     }
 
     .d-button-label + .d-icon {
       margin-left: 0.45em;
       margin-right: 0;
+    }
+  }
+
+  @include viewport.until(sm) {
+    .reply .d-icon {
+      color: var(--primary-high);
+    }
+
+    &.replies-button-visible {
+      display: flex;
+      align-items: center;
+
+      .show-replies {
+        display: flex;
+
+        + .reply {
+          margin-left: 0;
+        }
+
+        .d-icon {
+          padding-left: var(--control-space);
+        }
+      }
+
+      .actions {
+        flex-grow: 2;
+      }
     }
   }
 }
@@ -665,6 +882,27 @@ aside.quote {
         color: var(--primary-medium);
       }
     }
+
+    .onebox-result {
+      background-color: var(--primary-very-low);
+    }
+  }
+
+  // nested quotes
+  aside {
+    .quote,
+    .title,
+    blockquote,
+    .onebox,
+    .onebox-result {
+      background: var(--primary-very-low);
+      border-left: 5px solid var(--primary-low);
+    }
+
+    aside.quote > blockquote,
+    aside.quote > .title {
+      border-left: 0;
+    }
   }
 }
 
@@ -699,8 +937,32 @@ aside.quote {
   font-style: italic;
 }
 
+.post-actions {
+  text-align: right;
+  margin-bottom: var(--space-2);
+
+  @include viewport.until(sm) {
+    margin-top: var(--space-2);
+  }
+
+  .post-action {
+    display: inline-block;
+    margin-left: var(--space-2);
+  }
+}
+
 .post-action {
   color: var(--primary-medium);
+
+  @include viewport.from(sm) {
+    .relative-date {
+      margin-left: var(--space-1);
+    }
+
+    .avatar {
+      margin-right: var(--space-half);
+    }
+  }
 
   .undo-action,
   .act-action {
@@ -749,6 +1011,10 @@ aside.quote {
 
   &.visible {
     display: flex;
+
+    @include viewport.until(sm) {
+      z-index: z("tooltip");
+    }
   }
 
   .buttons {
@@ -773,28 +1039,6 @@ aside.quote {
     width: 100%;
   }
 
-  .fast-edit-container {
-    display: flex;
-    padding: 0.5em;
-    padding-top: 0;
-    flex-direction: column;
-    align-items: flex-start;
-
-    #fast-edit-input {
-      margin: 0;
-      width: 300px;
-      height: 90px;
-    }
-
-    .save-fast-edit {
-      margin-top: 0.5em;
-    }
-  }
-
-  .insert-quote + .quote-sharing {
-    border-left: 1px solid rgb(255, 255, 255, 0.3);
-  }
-
   .btn-flat {
     &:hover {
       .d-icon {
@@ -806,59 +1050,10 @@ aside.quote {
       white-space: nowrap;
     }
   }
+}
 
-  .quote-sharing {
-    vertical-align: middle;
-    display: inline-flex;
-    align-items: center;
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-    }
-
-    .quote-share-label {
-      opacity: 1;
-      transition: opacity 0.3s ease-in-out;
-    }
-
-    &:hover {
-      .quote-share-label {
-        background: transparent;
-        opacity: 0;
-        max-width: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-
-      .quote-share-label + .quote-share-buttons {
-        max-width: 10em;
-        opacity: 1;
-        transition: opacity 0.3s ease-in-out;
-      }
-
-      // this pseudo element creates a transition buffer zone
-      // without it, the width change on hover can cause transition jitter
-      // the width is roughly wide enough to cover long translations of "share"
-      &::after {
-        content: "";
-        position: absolute;
-        display: block;
-        background: transparent;
-        height: 100%;
-        padding: 0.5em 4em;
-        z-index: -1; // below the buttons
-      }
-    }
-
-    .quote-share-label + .quote-share-buttons {
-      opacity: 0;
-      overflow: hidden;
-      max-width: 0;
-      display: inline-flex;
-      transition: opacity 0.3s ease-in-out;
-    }
-  }
+#fast-edit-input {
+  resize: block;
 }
 
 .post-avatar,
@@ -925,11 +1120,40 @@ aside.quote {
 }
 
 .topic-body {
-  // this is necessary for ANYTHING that extends past the right edge of
+  @include viewport.from(sm) {
+    width: calc(
+      var(--topic-body-width) + (var(--topic-body-width-padding) * 2)
+    );
+    float: left;
+    min-width: 0; // prevents some elements, like <pre>, from blowing out the width
+    position: relative;
+    border-top: 1px solid var(--content-border-color);
+    padding: var(--space-3) 0 0 0;
+
+    &:first-of-type {
+      border-top: none;
+    }
+
+    a.expand-hidden {
+      padding-left: var(--topic-body-width-padding);
+    }
+
+    &:hover .actions .fade-out,
+    .selected .actions .fade-out {
+      opacity: 1;
+    }
+  }
+
+  // hiding overflow is necessary for ANYTHING that extends past the right edge of
   // the post body, such as an image in a deeply nested list, image in
   // a deeply nested blockquote, and so on.. you get the idea.
   .cooked {
     overflow: hidden;
+
+    @include viewport.from(sm) {
+      padding: var(--space-4) var(--topic-body-width-padding) var(--space-1)
+        var(--topic-body-width-padding);
+    }
 
     .button-wrapper {
       display: none;
@@ -939,6 +1163,11 @@ aside.quote {
   .group-request {
     border-top: 1px solid var(--content-border-color);
     padding-top: 0.5em;
+
+    @include viewport.from(sm) {
+      padding: var(space-2) var(--topic-body-width-padding) 0
+        var(--topic-body-width-padding);
+    }
   }
 }
 
@@ -972,6 +1201,12 @@ aside.quote {
   .wiki,
   .last-wiki-edit {
     color: var(--wiki);
+  }
+
+  @include viewport.from(sm) {
+    a.wiki {
+      color: var(--wiki);
+    }
   }
 
   &.via-email {
@@ -1063,6 +1298,33 @@ pre {
       margin-right: 0;
     }
   }
+
+  @include viewport.until(sm) {
+    code {
+      padding-right: 2.75em;
+    }
+  }
+
+  @include viewport.from(sm) {
+    &:hover {
+      .copy-cmd,
+      .fullscreen-cmd {
+        opacity: 0.7;
+        visibility: visible;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
+    }
+
+    .copy-cmd:not(.action-complete),
+    .fullscreen-cmd:not(.action-complete) {
+      opacity: 0;
+      transition: 0.2s;
+      visibility: hidden;
+    }
+  }
 }
 
 kbd {
@@ -1111,18 +1373,33 @@ blockquote .post__contents-cooked-quote {
 }
 
 .gap {
-  padding: 0.25em 0 0.5em
-    calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
+  box-sizing: border-box;
   color: var(--primary-med-or-secondary-high);
   cursor: pointer;
   text-transform: uppercase;
   font-weight: bold;
   font-size: var(--font-down-1);
+  padding: 0.25em 0 0.5em
+    calc(var(--topic-avatar-width) + var(--topic-body-width-padding));
+
+  @include viewport.until(sm) {
+    padding: 0.25em 0;
+  }
 }
 
 .who-liked,
 .who-read {
   transition: height 0.5s;
+
+  @include viewport.from(sm) {
+    margin-bottom: 0;
+    width: 100%;
+    text-align: right;
+
+    &.--expanded {
+      margin-top: var(--space-5);
+    }
+  }
 
   a {
     margin: 0 0.25em 0.5em 0;
@@ -1372,21 +1649,36 @@ span.mention {
   }
 }
 
-/* below standard tablet portrait ----------- */
-.reply-to-tab {
+a.reply-to-tab {
   display: flex;
   align-items: center;
   margin-right: 2em;
   max-width: 400px;
   overflow: hidden;
+  gap: var(--space-1);
 
-  img {
-    margin: 0 0.25em;
+  @include viewport.from(sm) {
+    z-index: z("base") + 1;
+    color: var(--primary-med-or-secondary-med);
+  }
+
+  .d-icon {
+    color: var(--primary-medium);
+  }
+
+  .avarar {
+    margin-left: var(--space-1);
   }
 }
 
-// Select posts
 .topic-post {
+  @include viewport.until(sm) {
+    > article {
+      border-top: 1px solid var(--content-border-color);
+      padding: 15px 0 8px 0;
+    }
+  }
+
   &.selected {
     article.boxed {
       .select-posts {
@@ -1420,6 +1712,62 @@ span.mention {
         background-color: var(--primary-low);
         color: var(--primary);
         box-shadow: var(--shadow-dropdown);
+      }
+    }
+  }
+}
+
+.selected-posts {
+  @include viewport.until(sm) {
+    padding: 0.1em 0.7em;
+  }
+
+  @include viewport.from(sm) {
+    width: 200px;
+    position: fixed;
+    z-index: z("dropdown") + 1; // 1 higher than .select-posts
+    box-shadow: var(--shadow-card);
+    padding: var(--space-3);
+    margin-bottom: var(--space-1);
+    right: 10px;
+
+    @include viewport.from(xl) {
+      right: auto;
+      margin-left: 330px;
+      left: 50%;
+    }
+
+    button {
+      width: 100%;
+      margin: 4px auto;
+      display: inline-block;
+      text-align: left;
+    }
+
+    &.hidden {
+      display: none;
+    }
+
+    .controls {
+      margin-top: 10px;
+    }
+
+    p {
+      font-size: var(--font-down-1);
+      margin: 0 0 10px 0;
+    }
+
+    p.cancel {
+      margin: 10px 0 0 0;
+    }
+
+    h3 {
+      font-size: var(--font-up-4);
+      color: var(--primary);
+      margin-bottom: 5px;
+
+      .d-icon {
+        margin-right: 7px;
       }
     }
   }
@@ -1498,10 +1846,12 @@ span.mention {
   border-top: 1px solid var(--content-border-color);
   display: flex;
   width: 100%;
-  max-width: 100%;
+  max-width: calc(
+    var(--topic-body-width) + (var(--topic-body-width-padding) * 2) +
+      var(--topic-avatar-width)
+  );
   padding: var(--space-2) var(--space-4);
   font-size: var(--font-down-1-rem);
-  border-radius: var(--d-border-radius);
   gap: var(--space-2);
   box-sizing: border-box;
 
@@ -1549,6 +1899,15 @@ iframe {
   text-align: left;
   bottom: -2px;
   right: 15px;
+
+  @include viewport.until(sm) {
+    bottom: -50px;
+    left: 135px;
+  }
+
+  @media screen and (width <= 374px) {
+    left: 50px;
+  }
 }
 
 .posts-filtered-notice {
@@ -1567,8 +1926,31 @@ iframe {
       var(--topic-avatar-width)
   );
 
+  @include viewport.until(sm) {
+    padding-right: 8.5em;
+    padding-bottom: max(1em, env(safe-area-inset-bottom));
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    margin: 1em -9px;
+    z-index: 101;
+
+    .filtered-replies-viewing {
+      text-align: left;
+      width: 100%;
+    }
+  }
+
   .filtered-avatar {
     margin: 0 0.5em;
+
+    @include viewport.until(sm) {
+      margin-left: 0;
+
+      img.avatar {
+        width: 20px;
+        height: 20px;
+      }
+    }
 
     + .names {
       flex: inherit;
@@ -1577,11 +1959,25 @@ iframe {
 
   .filtered-replies-show-all {
     margin-left: 1em;
+
+    @include viewport.until(sm) {
+      position: absolute;
+      right: 1em;
+    }
   }
 
   .filtered-user-row {
     @include ellipsis;
   }
+}
+
+.posts-wrapper {
+  position: relative;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+span.highlighted {
+  background-color: var(--highlight-bg);
 }
 
 .pausable-animated-image {
@@ -1644,6 +2040,27 @@ iframe {
   }
 }
 
+.btn-group {
+  position: relative;
+
+  @include viewport.until(sm) {
+    margin-top: 25px;
+  }
+}
+
+.dropdown-toggle {
+  float: left;
+  position: relative;
+}
+
+.deleted-user-avatar {
+  font-size: var(--font-up-6);
+
+  @include viewport.until(sm) {
+    font-size: var(--font-up-5);
+  }
+}
+
 .open-popup-link {
   display: inline;
   margin-inline: 0.25em;
@@ -1652,6 +2069,11 @@ iframe {
   opacity: 0%;
   white-space: nowrap;
   transition: 0.25s ease-in-out opacity;
+
+  @include viewport.until(sm) {
+    opacity: 100%;
+    margin-bottom: 1rem;
+  }
 }
 
 .fullscreen-table-wrapper {
@@ -1713,6 +2135,17 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
   color: var(--tertiary-medium);
   right: 0;
   font-size: 0.571em;
+
+  @include viewport.until(sm) {
+    // contained within the padding to prevent vertical overflow
+    max-width: var(--d-wrap-padding-x);
+    right: calc(var(--d-wrap-padding-x) * -1);
+    font-size: 6px; // static size to avoid overflow issues
+
+    svg {
+      right: -2px;
+    }
+  }
 
   &.read {
     visibility: hidden;
@@ -1776,5 +2209,180 @@ html.discourse-no-touch .fullscreen-table-wrapper:hover {
     width: var(--liked-users-list-avatar-size);
     border-radius: var(--d-button-border-radius);
     height: var(--liked-users-list-avatar-size);
+  }
+}
+
+.time-gap + .topic-post .topic-body,
+.time-gap + .topic-post .topic-avatar {
+  border-top: none;
+}
+
+.time-gap + .topic-post .embedded-posts.top {
+  border-bottom: none;
+}
+
+span.post-count {
+  background: var(--primary);
+  color: var(--secondary);
+  opacity: 0.8;
+}
+
+@include viewport.until(sm) {
+  topic-post-visited {
+    + .topic-post > article {
+      border-top: none;
+    }
+  }
+
+  span.btn-text {
+    display: none;
+  }
+
+  span.badge-posts {
+    margin-right: 5px;
+  }
+
+  .topic-avatar {
+    float: left;
+    margin-right: var(--space-2);
+  }
+
+  .topic-post .boxed .contents {
+    clear: both;
+  }
+
+  .time-gap {
+    + .topic-post article {
+      border-top: none;
+    }
+
+    .topic-avatar {
+      display: none;
+    }
+  }
+
+  // hide the full set of selection buttons on mobile
+  .select-posts button {
+    display: none;
+  }
+
+  // unhide the simple "select just this post" button
+  button.select-post {
+    display: inline-block;
+  }
+}
+
+@include viewport.from(sm) {
+  .staff {
+    .topic-post:first-child {
+      nav.post-controls .post-admin-menu {
+        bottom: -125px;
+      }
+    }
+  }
+
+  .topic-avatar {
+    border-top: 1px solid var(--content-border-color);
+    padding-top: var(--space-4);
+    width: var(--topic-avatar-width);
+    float: left;
+    z-index: z("base") + 1;
+    height: 100%;
+    overflow-anchor: none;
+  }
+
+  .video {
+    // Height determined by aspect-ratio
+    max-height: 500px;
+
+    > video {
+      max-height: unset;
+    }
+  }
+
+  .post-select {
+    float: right;
+    margin-right: 20px;
+    margin-top: -20px;
+  }
+
+  .info-line {
+    margin: 10px 0;
+    color: var(--primary);
+  }
+
+  .topic-post-visited {
+    + .topic-post {
+      .topic-avatar,
+      .topic-body {
+        border-top: none;
+      }
+    }
+  }
+
+  .topic-area > .loading-container {
+    // loader needs to be same width as posts
+    // the extra 1px is to account for the left transparent border set to
+    // .topic_post in `keyboard_shortcuts.scss`
+    width: calc(
+      var(--topic-body-width) + var(--topic-avatar-width) +
+        (var(--topic-body-width-padding) * 2) + 1px
+    );
+    max-width: 100%;
+  }
+
+  .caret {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+    border-top: 4px solid var(--primary);
+    border-right: 4px solid transparent;
+    border-left: 4px solid transparent;
+    content: "";
+    margin-left: 5px;
+  }
+
+  .topic-post.sticky-avatar {
+    > article > .row > .topic-avatar {
+      position: sticky;
+      top: calc(var(--header-offset) - var(--space-1));
+      margin-bottom: 25px;
+    }
+  }
+
+  a.attachment::before {
+    display: inline-block;
+    margin-right: 4px;
+
+    // ideally, the SVG used here should be in HTML and reference the SVG sprite
+    content: svg-uri(
+      '<svg xmlns="http://www.w3.org/2000/svg" width="14px" height="16px" viewBox="0 0 512 512" fill="#{$tertiary}"><path d="M216 0h80c13.3 0 24 10.7 24 24v168h87.7c17.8 0 26.7 21.5 14.1 34.1L269.7 378.3c-7.5 7.5-19.8 7.5-27.3 0L90.1 226.1c-12.6-12.6-3.7-34.1 14.1-34.1H192V24c0-13.3 10.7-24 24-24zm296 376v112c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24V376c0-13.3 10.7-24 24-24h146.7l49 49c20.1 20.1 52.5 20.1 72.6 0l49-49H488c13.3 0 24 10.7 24 24zm-124 88c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20zm64 0c0-11-9-20-20-20s-20 9-20 20 9 20 20 20 20-9 20-20z"></path></svg>'
+    );
+    vertical-align: middle;
+  }
+
+  /* Tablet (portrait) ----------- */
+
+  @media all and (width <= 790px) {
+    .topic-avatar {
+      width: 45px;
+    }
+
+    .topic-post .reply-to-tab {
+      right: 15%;
+    }
+
+    .topic-body {
+      box-sizing: border-box;
+      width: calc(100% - 47px); // 100% - [width of .topic-avatar + 2px]
+    }
+
+    .embedded-posts {
+      // top means "in reply to expansion" above a post
+      &.top {
+        width: calc(100% - 56px); // [100% - margin-left]
+      }
+    }
   }
 }

@@ -804,6 +804,12 @@ RSpec.describe UsersController do
   end
 
   describe "#toggle_anon" do
+    it "requires login" do
+      post "/u/toggle-anon.json"
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+
     it "allows you to toggle anon if enabled" do
       SiteSetting.allow_anonymous_mode = true
 
@@ -8029,7 +8035,7 @@ RSpec.describe UsersController do
 
         %i[
           number_of_deleted_posts
-          number_of_flagged_posts
+          number_of_flags
           number_of_flags_given
           number_of_silencings
           number_of_suspensions

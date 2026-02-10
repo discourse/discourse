@@ -38,6 +38,8 @@ cs:
             canned_reply:
               label: "Odpověď"
     discourse_ai:
+      llm_selector:
+        none: "Žádná"
       features:
         back: "Zpět"
         disabled: "(vypnuto)"

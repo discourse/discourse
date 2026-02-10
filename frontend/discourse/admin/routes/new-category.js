@@ -2,6 +2,7 @@ import { service } from "@ember/service";
 import { Promise } from "rsvp";
 import { AUTO_GROUPS, SEARCH_PRIORITIES } from "discourse/lib/constants";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import PermissionType from "discourse/models/permission-type";
 import DiscourseRoute from "discourse/routes/discourse";
 import { i18n } from "discourse-i18n";
 
@@ -20,17 +21,8 @@ export default class NewCategory extends DiscourseRoute {
   templateName = "edit-category.tabs";
 
   beforeModel() {
-    if (!this.currentUser) {
-      this.router.replaceWith("/404");
-      return;
-    }
-    if (!this.currentUser.admin) {
-      if (
-        !this.currentUser.moderator ||
-        this.siteSettings.moderators_manage_categories === false
-      ) {
-        this.router.replaceWith("/404");
-      }
+    if (!this.currentUser?.can_create_category) {
+      return this.router.replaceWith("/404");
     }
   }
 
@@ -69,6 +61,7 @@ export default class NewCategory extends DiscourseRoute {
     super.setupController(...arguments);
 
     controller.selectedTab = "general";
+    controller.parentParams = {};
   }
 
   titleToken() {
@@ -84,10 +77,9 @@ export default class NewCategory extends DiscourseRoute {
   defaultGroupPermissions() {
     return [
       {
-        group_name: this.site.groups.find(
-          (g) => g.id === AUTO_GROUPS.everyone.id
-        ).name,
-        permission_type: 1,
+        group_id: AUTO_GROUPS.everyone.id,
+        group_name: AUTO_GROUPS.everyone.name,
+        permission_type: PermissionType.FULL,
       },
     ];
   }

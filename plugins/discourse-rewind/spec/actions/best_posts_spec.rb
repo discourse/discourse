@@ -81,7 +81,7 @@ RSpec.describe DiscourseRewind::Action::BestPosts do
       end
     end
 
-    context "when a post is  in a private category" do
+    context "when a post is in a private category" do
       fab!(:private_category) { Fabricate(:category, read_restricted: true) }
       fab!(:private_topic) { Fabricate(:topic, category: private_category, user: user) }
       fab!(:private_category_post) do

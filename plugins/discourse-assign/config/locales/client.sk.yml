@@ -129,8 +129,6 @@ sk:
       web_hooks:
         assign_event:
           group_name: "Priradenie udalostí"
-          assigned: "Keď používateľ priradí tému"
-          unassigned: "Keď používateľ zruší priradenie témy"
     search:
       advanced:
         in:

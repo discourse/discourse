@@ -85,7 +85,7 @@ export default class AiTagSuggester extends Component {
 
       if (this.tagSelectorHasValues) {
         this.suggestions = this.suggestions.filter(
-          (s) => !this.model.get("tags").includes(s.name)
+          (s) => !model.get("tags").some((t) => t.id === s.id)
         );
       }
 
@@ -117,7 +117,7 @@ export default class AiTagSuggester extends Component {
     const tags = this.model.get("tags");
 
     if (!tags) {
-      this.model.set("tags", [suggestion.name]);
+      this.model.set("tags", [suggestion]);
       this.#removeAppliedTag(suggestion);
       return;
     }
@@ -134,7 +134,8 @@ export default class AiTagSuggester extends Component {
       });
     }
 
-    this.model.set("tags", [...tags, suggestion.name]);
+    tags.push(suggestion);
+    this.model.set("tags", [...tags]);
     suggestion.disabled = true;
     this.#removeAppliedTag(suggestion);
   }
@@ -183,7 +184,7 @@ export default class AiTagSuggester extends Component {
                     data-value={{index}}
                     title={{suggestion.name}}
                     @translatedLabel={{suggestion.name}}
-                    @disabled={{this.isDisabled suggestion}}
+                    @disabled={{suggestion.disabled}}
                     @action={{fn this.applySuggestion suggestion}}
                   >
                     {{discourseTag

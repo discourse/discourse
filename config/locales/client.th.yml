@@ -2074,6 +2074,8 @@ th:
       create_long: "สร้างหมวดหมู่ใหม่"
       creation_error: มีข้อผิดพลาดขณะสร้างหมวดหมู่
       save_error: มีข้อผิดพลาดในการบันทึกหมวดหมู่
+      validations:
+        icon_required: "เลือกไอคอน."
       description: "รายละเอียด"
       icon: "ไอคอน"
       emoji: "Emoji"
@@ -2104,7 +2106,6 @@ th:
       minimum_required_tags: "จำนวนแท็กขั้นต่ำในกระทู้:"
       none_subcategory_text: "ไม่มี"
       visibility:
-        title: "การเข้าถึง"
         public: "สาธารณะ"
         group_restricted: "ส่วนตัว"
       notifications:

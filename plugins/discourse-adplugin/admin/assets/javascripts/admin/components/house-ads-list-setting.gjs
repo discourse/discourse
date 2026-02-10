@@ -1,12 +1,12 @@
 import { action } from "@ember/object";
 import { mapBy } from "@ember/object/computed";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import { makeArray } from "discourse/lib/helpers";
 import HouseAdsChooser from "./house-ads-chooser";
 import HouseAdsSetting from "./house-ads-setting";
 
-@classNames("house-ads-setting house-ads-list-setting")
+@tagName("")
 export default class HouseAdsListSetting extends HouseAdsSetting {
   @mapBy("allAds", "name") adNames;
 
@@ -17,18 +17,20 @@ export default class HouseAdsListSetting extends HouseAdsSetting {
   }
 
   <template>
-    <label for={{this.name}}>{{this.title}}</label>
-    <HouseAdsChooser
-      @settingValue={{this.adValue}}
-      @choices={{this.adNames}}
-      @onChange={{this.changeAdValue}}
-    />
-    <div class="setting-controls">
-      {{#if this.changed}}
-        <DButton class="ok" @action={{this.save}} @icon="check" />
-        <DButton class="cancel" @action={{this.cancel}} @icon="xmark" />
-      {{/if}}
+    <div class="house-ads-setting house-ads-list-setting" ...attributes>
+      <label for={{this.name}}>{{this.title}}</label>
+      <HouseAdsChooser
+        @settingValue={{this.adValue}}
+        @choices={{this.adNames}}
+        @onChange={{this.changeAdValue}}
+      />
+      <div class="setting-controls">
+        {{#if this.changed}}
+          <DButton class="ok" @action={{this.save}} @icon="check" />
+          <DButton class="cancel" @action={{this.cancel}} @icon="xmark" />
+        {{/if}}
+      </div>
+      <p class="help">{{this.help}}</p>
     </div>
-    <p class="help">{{this.help}}</p>
   </template>
 }

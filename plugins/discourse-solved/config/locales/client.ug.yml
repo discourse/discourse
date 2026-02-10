@@ -14,6 +14,8 @@ ug:
       accepted_answer_post_number: "%{post_number} يازما"
       topic_status_filter:
         all: "ھەممىسى"
+      move_post_cancel: "ۋاز كەچ"
+      confirm_category_change_solution_cancel: "ۋاز كەچ"
     topic_statuses:
       solved:
         help: "بۇ تېمىنىڭ ھەل قىلىش چارىسى بار"

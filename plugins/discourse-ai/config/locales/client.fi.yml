@@ -176,6 +176,8 @@ fi:
       default_llm:
         title: "Oletusarvoinen LLM-malli"
         description: "Oletusarvoinen LLM-malli, jota käytetään kaikissa tekoälyominaisuuksissa. Tätä käytetään, jos LLM:ää ei ole määritetty ominaisuuden määrityksissä tai persoonassa. Jos oletusarvoista LLM:ää ei ole määritetty, viimeksi luotua LLM:ää käytetääb."
+      llm_selector:
+        none: "Ei valittu"
       features:
         short_title: "Ominaisuudet"
         description: "Nämä ovat sivustosi kävijöiden käytettävissä olevat tekoälyominaisuudet. Ne voidaan määrittää käyttämään tiettyjä persoonia ja LLM:iä, ja niiden käyttöoikeuksia voi hallita ryhmäkohtaisesti."
@@ -588,17 +590,7 @@ fi:
           anthropic-claude-opus-4-5: "Anthropicin älykkäin malli"
           anthropic-claude-sonnet-4-5: "Optimaalinen tasapaino nopeuden ja kustannusten välillä"
           anthropic-claude-haiku-4-5: "Nopea ja kustannustehokas"
-          google-gemini-2-5-pro: "Suuri multimodaalinen malli, joka pystyy suorittamaan monenlaisia tehtäviä"
-          google-gemini-2-5-flash: "Kevyt, nopea ja kustannustehokas multimodaalisella päättelyllä"
-          open_ai-gpt-5-mini: "Tarjoaa tasapainon älykkyyden, nopeuden ja kustannusten välillä, mikä tekee siitä houkuttelevan mallin moniin käyttötarkoituksiin."
-          open_ai-gpt-5-nano: "Nopein ja kustannustehokkain GPT-5-malli."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Tehokas kevyt monikielinen malli"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Tehokas monikäyttöinen malli"
-          mistral-mistral-large-latest: "Mistralin tehokkain malli"
-          mistral-pixtral-large-latest: "Mistralin tehokkain näkökykyinen malli"
-          open_router-x-ai-grok-4: "xAI:n uusin malli"
-          open_router-deepseek-deepseek-r1-0528-free: "DeepSeekin uusin päättelymalli"
-          open_router-meta-llama-3-3-70b-instruct: "Erittäin kyvykäs monikielinen malli"
+          open_ai-gpt-5-nano: "Nopein ja kustannustehokkain GPT-5-malli"
         preseeded_model_description: "Ennalta määritetty avoimen lähdekoodin malli, joka käyttää mallia %{model}"
         configured:
           title: "Määritetyt LLM:t"
@@ -883,6 +875,7 @@ fi:
         topic:
           title: "Ketjun yhteenveto"
           close: "Sulje yhteenvetopaneeli"
+          regenerate_summaries_option: "Ketjujen yhteenvedot"
         topic_list_layout:
           button:
             compact: "Kompakti"

@@ -1261,6 +1261,16 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(tag2.name)
         expect(response.parsed_body["required_tag_group"]).to eq(nil)
+
+        get "/tags/filter/search.json",
+            params: {
+              q: "",
+              categoryId: category.id,
+              filterForInput: true,
+              selected_tag_ids: [tag1.id],
+            }
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(tag2.name)
       end
     end
   end
@@ -1305,7 +1315,7 @@ RSpec.describe TagsController do
           [
             Fabricate(
               :tag,
-              name: "used_publically",
+              name: "used_publicly",
               public_topic_count: 2,
               staff_topic_count: 2,
               pm_topic_count: 0,
@@ -1351,7 +1361,7 @@ RSpec.describe TagsController do
           expect { delete "/tags/unused.json" }.to change { Tag.count }.by(-2) &
             change { UserHistory.count }.by(1)
           expect(Tag.pluck(:name)).to contain_exactly(
-            "used_publically",
+            "used_publicly",
             "used_privately",
             "used_everywhere",
           )
@@ -1473,7 +1483,40 @@ RSpec.describe TagsController do
     context "when signed in as admin" do
       before { sign_in(admin) }
 
-      it "can make a tag a synonym of another tag" do
+      it "can make an existing tag a synonym using tags array with id" do
+        tag2 = Fabricate(:tag)
+        expect {
+          post "/tag/#{tag.name}/synonyms.json",
+               params: {
+                 tags: [{ id: tag2.id, name: tag2.name }],
+               }
+        }.to_not change { Tag.count }
+        expect(response.status).to eq(200)
+        expect(tag2.reload.target_tag).to eq(tag)
+      end
+
+      it "can create new tags using tags array without id" do
+        expect {
+          post "/tag/#{tag.name}/synonyms.json", params: { tags: [{ name: "new-synonym" }] }
+        }.to change { Tag.count }.by(1)
+        expect(response.status).to eq(200)
+        expect(Tag.find_by_name("new-synonym")&.target_tag).to eq(tag)
+      end
+
+      it "can use both existing and new tags together in tags array" do
+        tag2 = Fabricate(:tag)
+        expect {
+          post "/tag/#{tag.name}/synonyms.json",
+               params: {
+                 tags: [{ id: tag2.id, name: tag2.name }, { name: "new-synonym" }],
+               }
+        }.to change { Tag.count }.by(1)
+        expect(response.status).to eq(200)
+        expect(tag2.reload.target_tag).to eq(tag)
+        expect(Tag.find_by_name("new-synonym")&.target_tag).to eq(tag)
+      end
+
+      it "can make a tag a synonym of another tag (deprecated synonyms param)" do
         tag2 = Fabricate(:tag)
         expect {
           post "/tag/#{tag.name}/synonyms.json", params: { synonyms: [tag2.name] }
@@ -1482,7 +1525,7 @@ RSpec.describe TagsController do
         expect(tag2.reload.target_tag).to eq(tag)
       end
 
-      it "can create new tags at the same time" do
+      it "can create new tags at the same time (deprecated synonyms param)" do
         expect {
           post "/tag/#{tag.name}/synonyms.json", params: { synonyms: ["synonym"] }
         }.to change { Tag.count }.by(1)
@@ -1493,7 +1536,7 @@ RSpec.describe TagsController do
       it "can return errors" do
         _tag2 = Fabricate(:tag, target_tag: tag)
         tag3 = Fabricate(:tag)
-        post "/tag/#{tag3.name}/synonyms.json", params: { synonyms: [tag.name] }
+        post "/tag/#{tag3.name}/synonyms.json", params: { tags: [{ id: tag.id, name: tag.name }] }
         expect(response.status).to eq(200)
         expect(response.parsed_body["failed"]).to be_present
         expect(response.parsed_body.dig("failed_tags", tag.name)).to be_present
@@ -1566,7 +1609,7 @@ RSpec.describe TagsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["watched_tags"]).to eq([])
       expect(response.parsed_body["watching_first_post_tags"]).to eq([])
-      expect(response.parsed_body["tracked_tags"]).to eq([tag.name])
+      expect(response.parsed_body["tracked_tags"]).to eq([{ "id" => tag.id, "name" => tag.name }])
       expect(response.parsed_body["muted_tags"]).to eq([])
       expect(response.parsed_body["regular_tags"]).to eq([])
 
@@ -1587,7 +1630,7 @@ RSpec.describe TagsController do
         expect(response.parsed_body["watched_tags"]).to eq([])
         expect(response.parsed_body["watching_first_post_tags"]).to eq([])
         expect(response.parsed_body["tracked_tags"]).to eq([])
-        expect(response.parsed_body["muted_tags"]).to eq([tag.name])
+        expect(response.parsed_body["muted_tags"]).to eq([{ "id" => tag.id, "name" => tag.name }])
         expect(response.parsed_body["regular_tags"]).to eq([])
       end.to change { user.tag_users.count }.by(1)
 

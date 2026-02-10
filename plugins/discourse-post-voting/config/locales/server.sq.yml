@@ -5,13 +5,6 @@
 # https://translate.discourse.org/
 
 sq:
-  discourse_post_voting:
-    reviewables:
-      actions:
-        agree_and_suspend:
-          description: "Kliko tek shënimi dhe bllokoni përdoruesin."
-        agree_and_silence:
-          description: "Kliko tek shënimi dhe blloko përdoruesin."
   post_action_types:
     vote:
       title: "Voto"

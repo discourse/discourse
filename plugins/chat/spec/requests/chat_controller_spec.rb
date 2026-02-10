@@ -206,7 +206,7 @@ RSpec.describe Chat::ChatController do
       expect(response.status).to eq(400)
     end
 
-    it "creates a membership when reacting to channel without a membership record" do
+    it "errors when reacting to channel without a membership record" do
       sign_in(user)
 
       expect {
@@ -215,8 +215,9 @@ RSpec.describe Chat::ChatController do
               emoji: ":heart:",
               react_action: "add",
             }
-      }.to change { Chat::UserChatChannelMembership.count }.by(1)
-      expect(response.status).to eq(200)
+      }.not_to change { Chat::UserChatChannelMembership.count }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(I18n.t("chat.errors.user_not_in_channel"))
     end
 
     it "errors when user tries to react to private channel they can't access" do

@@ -2,9 +2,11 @@
 import Component from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import discourseComputed from "discourse/lib/decorators";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
 
+@tagName("")
 export default class TagList extends Component {
   @discourseComputed("value")
   selectedTags(value) {
@@ -13,16 +15,18 @@ export default class TagList extends Component {
 
   @action
   changeSelectedTags(tags) {
-    this.set("value", tags.join("|"));
+    this.set("value", tags.map((t) => t.name).join("|"));
   }
 
   <template>
-    <TagChooser
-      @tags={{this.selectedTags}}
-      @onChange={{this.changeSelectedTags}}
-      @everyTag={{true}}
-      @unlimitedTagCount={{true}}
-      @options={{hash allowAny=false disabled=@disabled}}
-    />
+    <div ...attributes>
+      <TagChooser
+        @tags={{this.selectedTags}}
+        @onChange={{this.changeSelectedTags}}
+        @everyTag={{true}}
+        @unlimitedTagCount={{true}}
+        @options={{hash allowAny=false disabled=@disabled}}
+      />
+    </div>
   </template>
 }

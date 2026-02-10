@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { action, computed } from "@ember/object";
 import { classNames } from "@ember-decorators/component";
 import $ from "jquery";

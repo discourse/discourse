@@ -14,6 +14,8 @@ sq:
       accepted_answer_post_number: "postimi %{post_number}"
       topic_status_filter:
         all: "të gjitha"
+      move_post_cancel: "Anulo"
+      confirm_category_change_solution_cancel: "Anulo"
     discourse_automation:
       triggerables:
         first_accepted_solution:

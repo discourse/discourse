@@ -37,6 +37,7 @@ export default class BulkTopicActions extends Component {
   @tracked errors;
   @tracked notifyUsers = false;
   @tracked closeNote = null;
+  @tracked failedTopicCount = 0;
 
   @tracked notificationLevelId = null;
 
@@ -191,10 +192,16 @@ export default class BulkTopicActions extends Component {
         );
         break;
       case "append-tags":
-        this.performAndRefresh({ type: "append_tags", tags: this.tags });
+        this.performAndRefresh({
+          type: "append_tags",
+          tag_ids: this.tags?.map((t) => t.id),
+        });
         break;
       case "replace-tags":
-        this.performAndRefresh({ type: "change_tags", tags: this.tags });
+        this.performAndRefresh({
+          type: "change_tags",
+          tag_ids: this.tags?.map((t) => t.id),
+        });
         break;
       case "remove-tags":
         this.performAndRefresh({ type: "remove_tags" });
@@ -241,6 +248,15 @@ export default class BulkTopicActions extends Component {
         duration: "short",
         data: { message: i18n("generic_error") },
       });
+    } else if (this.failedTopicCount > 0) {
+      this.toasts.warning({
+        duration: "short",
+        data: {
+          message: htmlSafe(
+            i18n("topics.bulk.not_completed", { count: this.failedTopicCount })
+          ),
+        },
+      });
     } else {
       this.toasts.success({
         duration: "short",
@@ -251,10 +267,12 @@ export default class BulkTopicActions extends Component {
 
   @action
   async forEachPerformed(operation, cb) {
+    const selectedCount = this.model.bulkSelectHelper.selected.length;
     const topics = await this.perform(operation);
 
     if (topics) {
       topics.forEach(cb);
+      this.failedTopicCount = selectedCount - topics.length;
       this.model.refreshClosure?.();
       this.args.closeModal();
       this.model.bulkSelectHelper.toggleBulkSelect();
@@ -264,8 +282,10 @@ export default class BulkTopicActions extends Component {
 
   @action
   async performAndRefresh(operation) {
-    await this.perform(operation);
+    const selectedCount = this.model.bulkSelectHelper.selected.length;
+    const topics = await this.perform(operation);
 
+    this.failedTopicCount = topics ? selectedCount - topics.length : 0;
     this.model.refreshClosure?.().then(() => {
       this.args.closeModal();
       this.model.bulkSelectHelper.toggleBulkSelect();

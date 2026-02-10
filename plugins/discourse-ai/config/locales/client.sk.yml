@@ -172,6 +172,8 @@ sk:
               description: "Ak je zadané, nastavuje hornú hranicu maximálneho počtu tokenov, ktoré môže model vygenerovať. Rešpektuje limit maximálneho počtu výstupných tokenov LLM."
     discourse_ai:
       title: "AI"
+      llm_selector:
+        none: "Žiadny"
       features:
         short_title: "Funkcie"
         description: "Ide o funkcie AI, ktoré sú k dispozícii návštevníkom vášho webu. Možno ich nakonfigurovať tak, aby používali konkrétne persóny a LLM, a prístup k nim možno riadiť podľa skupín."
@@ -594,17 +596,7 @@ sk:
           anthropic-claude-opus-4-5: "Najinteligentnejší model spoločnosti Anthropic"
           anthropic-claude-sonnet-4-5: "Optimálna rovnováha medzi rýchlosťou a cenou"
           anthropic-claude-haiku-4-5: "Rýchle a cenovo výhodné"
-          google-gemini-2-5-pro: "Veľký multimodálny model schopný širokej škály úloh"
-          google-gemini-2-5-flash: "Ľahké, rýchle a nákladovo efektívne multimodálne uvažovanie"
-          open_ai-gpt-5-mini: "Poskytuje rovnováhu medzi inteligenciou, rýchlosťou a nákladmi, ktorá z neho robí atraktívny model pre mnohé prípady použitia."
-          open_ai-gpt-5-nano: "Najrýchlejší, cenovo najefektívnejší model GPT-5."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Efektívny ľahký viacjazyčný model"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Výkonný viacúčelový model"
-          mistral-mistral-large-latest: "Najvýkonnejší model spoločnosti Mistral"
-          mistral-pixtral-large-latest: "Najvýkonnejší model spoločnosti Mistral schopný vidieť"
-          open_router-x-ai-grok-4: "Najnovší model xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "Najnovší model uvažovania spoločnosti DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "Vysoko výkonný viacjazyčný model"
+          open_ai-gpt-5-nano: "Najrýchlejší, cenovo najefektívnejší model GPT-5"
         preseeded_model_description: "Predkonfigurovaný model s otvoreným zdrojovým kódom využívajúci %{model}"
         configured:
           title: "Nakonfigurované LLM"
@@ -894,6 +886,7 @@ sk:
         topic:
           title: "Zhrnutie témy"
           close: "Zatvoriť panel súhrnu"
+          regenerate_summaries_option: "Zhrnutia tém"
         topic_list_layout:
           button:
             compact: "Kompaktné"

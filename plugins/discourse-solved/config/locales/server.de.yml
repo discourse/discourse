@@ -36,6 +36,10 @@ de:
     no_solutions:
       self: "Du hast noch keine akzeptierte Lösung."
       others: "Keine akzeptierten Lösungen."
+    filter:
+      description:
+        solved: "Themen anzeigen, die gelöst sind"
+        unsolved: "Themen anzeigen, die noch nicht gelöst sind"
   badges:
     solved_1:
       name: "Gelöst!"

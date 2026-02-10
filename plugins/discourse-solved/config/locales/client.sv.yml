@@ -33,6 +33,8 @@ sv:
       no_solved_topics_title: "Du har inte löst några ämnen än"
       no_solved_topics_title_others: "%{username} har inte löst några ämnen ännu"
       no_solved_topics_body: "När du ger ett användbart svar på ett ämne kan ditt svar väljas som lösningen av ämnesägaren eller personalen."
+      move_post_cancel: "Avbryt"
+      confirm_category_change_solution_cancel: "Avbryt"
       no_answer:
         title: Har din fråga besvarats?
         description: "Markera svaret och hjälp andra genom att använda lösningsknappen under det korrekta svaret."

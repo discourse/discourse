@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import $ from "jquery";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { i18n } from "discourse-i18n";
@@ -17,7 +18,7 @@ function initializeDetails(api) {
         { multiline: false }
       );
     },
-    icon: "caret-right",
+    icon: "angle-right",
     label: "details.title",
   });
 

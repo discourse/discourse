@@ -225,6 +225,9 @@ pl_PL:
       default_llm:
         title: "Domyślny model LLM"
         description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub osobowości nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
+      llm_selector:
+        none: "Brak"
+        saved: "Domyślny model LLM został pomyślnie zaktualizowany"
       features:
         short_title: "Cechy"
         description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych person i LLM, a dostęp do nich może być kontrolowany przez grupy."
@@ -325,6 +328,7 @@ pl_PL:
           image_caption: "Obrazy z podpisami"
           translator: "Tłumacz"
           post_illustrator: "Ilustrator postów"
+          chat_thread_titles: "Tytuły wątków czatu"
           setting_groups:
             access_permissions: "Dostęp i uprawnienia"
             enabled_features: "Włączone funkcje"
@@ -735,22 +739,16 @@ pl_PL:
           anthropic-claude-sonnet-4-5: "Optymalna równowaga między szybkością a kosztami"
           anthropic-claude-haiku-4-5: "Szybki i opłacalny"
           google-gemini-3-pro: "Najinteligentniejszy model Google"
-          google-gemini-2-5-pro: "Duży model multimodalny zdolny do realizacji szerokiego zakresu zadań"
-          google-gemini-2-5-flash: "Lekki, szybki i ekonomiczny z multimodalnym rozumowaniem"
-          google-gemini-2-5-flash-lite: "Najmniejszy i najbardziej opłacalny model Google"
-          google-gemini-2-5-flash-image-preview: "Najnowszy model generowania obrazu z funkcjami wizyjnymi"
-          open_ai-gpt-5-1: "Flagowy model OpenAI. Doskonale nadaje się do rozwiązywania problemów w różnych domenach."
-          open_ai-gpt-5-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami, co czyni go atrakcyjnym modelem do wielu zastosowań."
-          open_ai-gpt-5-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Wydajny, lekki model wielojęzyczny"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Wydajny model wielofunkcyjny"
-          mistral-mistral-large-latest: "Najpotężniejszy model Mistral"
-          mistral-pixtral-large-latest: "Najpotężniejszy model Mistral zdolny do widzenia"
-          open_router-x-ai-grok-4: "Najnowszy model xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "Najnowszy model wnioskowania DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "Wysoce wydajny model wielojęzyczny"
-          groq-openai-gpt-oss-120b: "Najnowocześniejszy model open-weight opracowany przez OpenAI"
-          groq-openai-gpt-oss-20b: "Lekki, szybki i otwarty model OpenAI"
+          google-gemini-3-flash: "Szybki i ekonomiczny dzięki rozumowaniu multimodalnemu"
+          open_ai-gpt-5-2: "Flagowy model OpenAI, doskonale nadający się do rozwiązywania problemów w różnych domenach"
+          open_ai-gpt-5-mini: "Zapewnia równowagę między inteligencją, szybkością i kosztami"
+          open_ai-gpt-5-nano: "Najszybszy i najbardziej ekonomiczny model GPT-5"
+          open_router-deepseek-deepseek-v3-2: "Najnowszy, wysokowydajny model firmy DeepSeek"
+          open_router-moonshotai-kimi-k2-5: "Multimodalny model Moonshot z funkcjami wizyjnymi"
+          open_router-x-ai-grok-4-fast: "Flagowy model xAI z wizją"
+          open_router-minimax-minimax-m2-1: "Multimodalny model MiniMax z dużym kontekstem"
+          open_router-z-ai-glm-4-7: "Multimodalny model Z-AI z wizją"
+          open_router-arcee-ai-trinity-large-preview-free: "Darmowy model open-source od Arcee AI"
         preseeded_model_description: "Wstępnie skonfigurowany model open-source wykorzystujący %{model}"
         configured:
           title: "Skonfigurowane LLM"
@@ -1062,18 +1060,31 @@ pl_PL:
         topic:
           title: "Podsumowanie tematu"
           close: "Zamknij panel podsumowania"
-          regenerate: "Wygeneruj krótkie podsumowanie"
-          regenerate_bulk: "Wygeneruj krótkie podsumowania"
-          regenerate_success:
-            one: "Krótkie podsumowanie zostało pomyślnie wygenerowane"
-            few: "%{count} krótkie podsumowania zostały pomyślnie wygenerowane"
-            many: "%{count} krótkich podsumowań zostało pomyślnie wygenerowanych"
-            other: "%{count} krótkich podsumowań zostało pomyślnie wygenerowanych"
-          regenerate_error:
+          regenerate_ai_summaries: "Regeneruj podsumowania AI"
+          regen_modal_description: "Wybierz typ podsumowania AI, który chcesz wygenerować dla tego tematu."
+          bulk_regen_description: "Wybierz typ podsumowania AI, który chcesz wygenerować dla wybranych tematów."
+          regenerate_gists_option: "Krótkie podsumowania (gisty)"
+          regenerate_summaries_option: "Podsumowania tematów"
+          regenerate_gists_success:
+            one: "Krótkie podsumowanie tematu pomyślnie wygenerowano"
+            few: "%{count} krótkie podsumowania tematów pomyślnie wygenerowano"
+            many: "%{count} krótkich podsumowań tematów pomyślnie wygenerowano"
+            other: "%{count} krótkich podsumowań tematów pomyślnie wygenerowano"
+          regenerate_gists_error:
             one: "Nie udało się wygenerować krótkiego podsumowania"
             few: "Nie udało się wygenerować %{count} krótkich podsumowań"
             many: "Nie udało się wygenerować %{count} krótkich podsumowań"
             other: "Nie udało się wygenerować %{count} krótkich podsumowań"
+          regenerate_topic_summary_success:
+            one: "Podsumowanie tematu pomyślnie wygenerowano"
+            few: "Podsumowania %{count} tematów pomyślnie wygenerowano"
+            many: "Podsumowania %{count} tematów pomyślnie wygenerowano"
+            other: "Podsumowania %{count} tematów pomyślnie wygenerowano"
+          regenerate_topic_summary_error:
+            one: "Nie udało się ponownie wygenerować podsumowania tematu"
+            few: "Nie udało się ponownie wygenerować podsumowań %{count} tematów"
+            many: "Nie udało się ponownie wygenerować podsumowań %{count} tematów"
+            other: "Nie udało się ponownie wygenerować podsumowań %{count} tematów"
         topic_list_layout:
           button:
             compact: "Kompaktowy"

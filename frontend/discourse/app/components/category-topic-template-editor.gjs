@@ -66,7 +66,7 @@ export default class CategoryTopicTemplateEditor extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.experimental_form_templates}}
+    {{#if this.siteSettings.enable_form_templates}}
       <div class="control-group">
         <DToggleSwitch
           class="toggle-template-type"

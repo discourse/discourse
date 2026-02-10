@@ -216,6 +216,8 @@ he:
       default_llm:
         title: "מודל LLM/מש״ג ברירת מחדל"
         description: "מודל המש״ג (LLM) לשימוש כברירת מחדל לכל יכולות הבינה המלאכותית. אם לא צוין מש״ג בהגדרות היכולת או הדמות ייעשה שימוש בזה. אם לא צוין מש״ג כברירת מחדל, ייעשה שימוש במש״ג האחרון שנוצר."
+      llm_selector:
+        none: "ללא"
       features:
         short_title: "יכולות"
         description: "אלו יכולות בינה מלאכותית שזמינות למבקרים באתר שלך. אפשר להגדיר אותן להשתמש בדמויות וב־LLMים (מש״גים) מסוימים ואפשר לשלוט בגישה אליהן על ידי קבוצות."
@@ -672,21 +674,7 @@ he:
           anthropic-claude-sonnet-4-5: "איזון מיטבי בין מהירות לעלות"
           anthropic-claude-haiku-4-5: "מהיר וחסכוני"
           google-gemini-3-pro: "המודל החכם ביותר של Google"
-          google-gemini-2-5-pro: "מודל גדול רב־נדבכים שבנוי למגוון רחב של משימות"
-          google-gemini-2-5-flash: "קליל, מהיר וחסכוני עם עיבוד מרובה נדבכים"
-          google-gemini-2-5-flash-lite: "המודל הקטן והחסכוני ביותר של Google"
-          open_ai-gpt-5-1: "מודל הדגל של OpenAI. מותאם לפתרון בעיות בתחומים שונים"
-          open_ai-gpt-5-mini: "מספק איזון בין בינה, מהירות ועלות, מה שהופך אותו למודל שמעורר משיכה עבור מקרי שימוש רבים."
-          open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "דגם רב־לשוני, קליל ויעיל"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "מודל רב־תכליתי חזק"
-          mistral-mistral-large-latest: "המודל החזק ביותר של Mistral"
-          mistral-pixtral-large-latest: "המודל החזק ביותר של Mistral שבנוי לעיבוד חזותי"
-          open_router-x-ai-grok-4: "המודל האחרון של xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "מודל ההנמקה העדכני ביותר של DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "מודל רב־לשוני עם יכולות גבוהות"
-          groq-openai-gpt-oss-120b: "מודל משקל פתוח מהשורה הראשונה מבית OpenAI"
-          groq-openai-gpt-oss-20b: "מודל קל משקל, מהיר ופתוח של OpenAI"
+          open_ai-gpt-5-nano: "מודל GPT-5 החסכוני והמהיר ביותר"
         preseeded_model_description: "מודל קוד פתוח שהוגדר מראש ומשתמש ב־%{model}"
         configured:
           title: "LLMs (מודלי שפה גדולים) מוגדרים"
@@ -976,14 +964,13 @@ he:
         topic:
           title: "תקציר הנושא"
           close: "סגירת חלונית תקציר"
-          regenerate: "לסכם בקצרה מחדש"
-          regenerate_bulk: "לסכם תקצירים מחדש"
-          regenerate_success:
+          regenerate_summaries_option: "תקצירי נושאים."
+          regenerate_gists_success:
             one: "התקציר הקצר נוצר מחדש בהצלחה"
             two: "שני תקצירים קצרים נוצרו מחדש בהצלחה"
             many: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
             other: "%{count} תקצירים קצרים נוצרו מחדש בהצלחה"
-          regenerate_error:
+          regenerate_gists_error:
             one: "יצירת תקציר מחדש נכשלה"
             two: "יצירת שני תקצירים מחדש נכשלה"
             many: "יצירת %{count} תקצירים מחדש נכשלה"

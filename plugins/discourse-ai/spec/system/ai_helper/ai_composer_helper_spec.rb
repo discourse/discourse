@@ -333,6 +333,19 @@ RSpec.describe "AI Composer helper", type: :system do
 
       expect(page).to have_css(".category-chooser summary[data-name='#{suggestion}']")
     end
+
+    it "shows an error toast and closes the dropdown when no suggestions are returned" do
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:categories).returns([])
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+      ai_suggestion_dropdown.click_suggest_category_button
+
+      expect(ai_suggestion_dropdown).to have_no_dropdown
+      expect(toasts).to have_error(
+        I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
+      )
+    end
   end
 
   context "when suggesting the tags with AI tag suggester" do
@@ -345,9 +358,8 @@ RSpec.describe "AI Composer helper", type: :system do
       response =
         Tag
           .take(7)
-          .pluck(:name)
-          .map { |s| { name: s, score: rand(0.0...45.0) } }
-          .sort { |h| h[:score] }
+          .map { |t| { id: t.id, name: t.name, score: rand(0.0...45.0) } }
+          .sort_by { |h| h[:score] }
       DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
 
       visit("/latest")
@@ -368,9 +380,8 @@ RSpec.describe "AI Composer helper", type: :system do
       response =
         Tag
           .take(7)
-          .pluck(:name)
-          .map { |s| { name: s, score: rand(0.0...45.0) } }
-          .sort { |h| h[:score] }
+          .map { |t| { id: t.id, name: t.name, score: rand(0.0...45.0) } }
+          .sort_by { |h| h[:score] }
       DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
 
       topic_page.visit_topic(topic)
@@ -381,6 +392,37 @@ RSpec.describe "AI Composer helper", type: :system do
 
       expect(page).to have_no_css(tag1_css)
       expect(page).to have_no_css(tag2_css)
+    end
+
+    it "removes applied tag suggestions from the dropdown" do
+      response = [cloud, feedback, review].map { |t| { id: t.id, name: t.name, score: 1.0 } }
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns(response)
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      ai_suggestion_dropdown.click_suggest_tags_button
+      wait_for { ai_suggestion_dropdown.has_dropdown? }
+
+      ai_suggestion_dropdown.select_suggestion_by_name(cloud.name)
+
+      expect(page).to have_css(".mini-tag-chooser summary[data-name='#{cloud.name}']")
+      expect(page).to have_no_css(".ai-suggestions-menu button[data-name='#{cloud.name}']")
+    end
+
+    it "shows an error toast when no suggestions are returned" do
+      DiscourseAi::AiHelper::SemanticCategorizer.any_instance.stubs(:tags).returns([])
+
+      visit("/latest")
+      page.find("#create-topic").click
+      composer.fill_content(input)
+
+      ai_suggestion_dropdown.click_suggest_tags_button
+
+      expect(toasts).to have_error(
+        I18n.t("js.discourse_ai.ai_helper.suggest_errors.no_suggestions"),
+      )
     end
   end
 

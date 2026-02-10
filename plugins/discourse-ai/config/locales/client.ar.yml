@@ -176,6 +176,8 @@ ar:
       default_llm:
         title: "نموذج اللغة الكبير الافتراضي"
         description: "نموذج اللغة الكبير الافتراضي المستخدم لجميع ميزات الذكاء الاصطناعي. سيتم استخدامه إذا لم يتم تحديد نموذج آخر في إعدادات الميزة أو الشخصية. وإذا لم يُحدد نموذج افتراضي، سيتم استخدام آخر نموذج تم إنشاؤه."
+      llm_selector:
+        none: "لا يوجد"
       features:
         short_title: "الميزات"
         description: "هذه الميزات تمثل وظائف الذكاء الاصطناعي المتاحة للزوار على موقعك. يمكن تكوينها لاستخدام شخصيات ونماذج لغة كبيرة محددة، كما يمكن التحكم في الوصول إليها حسب المجموعات."
@@ -628,17 +630,7 @@ ar:
           anthropic-claude-opus-4-5: "النموذج الأكثر ذكاءً لدى Anthropic"
           anthropic-claude-sonnet-4-5: "التوازن الأمثل بين السرعة والتكلفة"
           anthropic-claude-haiku-4-5: "سريع وفعَّال من حيث التكلفة"
-          google-gemini-2-5-pro: "نموذج كبير متعدد الوسائط قادر على أداء مجموعة واسعة من المهام"
-          google-gemini-2-5-flash: "خفيف وسريع وفعَّال من حيث التكلفة مع الاستدلال متعدد النماذج"
-          open_ai-gpt-5-mini: "يقدّم توازنًا بين الذكاء والسرعة والتكلفة، مما يجعله نموذجًا جذابًا للعديد من الاستخدامات."
-          open_ai-gpt-5-nano: "أسرع وأوفر نموذج GPT-5 من حيث التكلفة."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "نموذج متعدد اللغات خفيف وفعَّال"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "نموذج قوي متعدد الأغراض"
-          mistral-mistral-large-latest: "أقوى نموذج لدى Mistral"
-          mistral-pixtral-large-latest: "أقوى نموذج قادر على الرؤية لدى Mistral"
-          open_router-x-ai-grok-4: "أحدث نموذج لشركة xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "أحدث نموذج استدلال لشركة DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "نموذج متعدد اللغات عالي الكفاءة"
+          open_ai-gpt-5-nano: "أسرع وأوفر نموذج GPT-5 من حيث التكلفة"
         preseeded_model_description: "نموذج مفتوح المصدر تم تكوينه مسبقًا باستخدام %{model}"
         configured:
           title: "تم تكوين نماذج اللغة الكبيرة (LLM)"
@@ -935,6 +927,7 @@ ar:
         topic:
           title: "ملخص الموضوع"
           close: "إغلاق لوحة الملخص"
+          regenerate_summaries_option: "ملخصات الموضوع"
         topic_list_layout:
           button:
             compact: "مضغوط"

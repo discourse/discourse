@@ -28,6 +28,8 @@ bs_BA:
         all: "sve"
         solved: "riješeno"
         unsolved: "nije riješeno"
+      move_post_cancel: "Odustani"
+      confirm_category_change_solution_cancel: "Odustani"
     topic_statuses:
       solved:
         help: "Ova tema ima riješenje"

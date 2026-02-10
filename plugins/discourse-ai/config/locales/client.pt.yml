@@ -69,6 +69,8 @@ pt:
       title: "IA"
       default_llm:
         title: "Modelo de LLM Predefinido"
+      llm_selector:
+        none: "Nenhuma"
       features:
         short_title: "Funcionalidades"
         back: "Voltar"
@@ -287,6 +289,8 @@ pt:
       summarization:
         chat:
           summarize: "Resumir"
+        topic:
+          regenerate_summaries_option: "Resumos de tópico"
       discobot_discoveries:
         regular_results: "Tópicos"
         collapse: "Colapsar"

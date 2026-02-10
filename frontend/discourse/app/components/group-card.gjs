@@ -41,7 +41,6 @@ const GroupCard = <template>
 
       <div class="group-membership">
         <GroupMembershipButton
-          @tagName=""
           @model={{@group}}
           @showLogin={{routeAction "showLogin"}}
         >

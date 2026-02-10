@@ -3,33 +3,29 @@
 .form-kit__control-color {
   display: flex;
   flex-direction: column;
-  gap: 0.5em;
+  gap: var(--space-2);
   width: 100%;
 }
 
 .form-kit__control-color-input {
-  --color-button-height: var(--space-8);
-  --color-button-width: var(--space-8);
+  --color-button-height: var(--space-9);
+  --color-button-width: var(--space-9);
   display: flex;
   align-items: center;
-  gap: 0.25em;
-
-  @include viewport.until(sm) {
-    --color-button-height: var(--space-9);
-  }
+  gap: var(--space-1);
 }
 
 .form-kit__control-color-input-prefix {
   border: 1px solid var(--primary-low-mid);
   border-right: 0;
-  padding-inline: 0.5em;
-  height: 2em;
+  padding-inline: var(--space-2);
   box-sizing: border-box;
   background: var(--primary-low);
   display: flex;
   align-items: center;
   margin-right: -0.25em;
   border-radius: var(--d-input-border-radius) 0 0 var(--d-input-border-radius);
+  align-self: stretch;
 }
 
 .form-kit__control-color-input-hex {
@@ -75,10 +71,11 @@
 }
 
 .form-kit__control-color-input-picker[type="color"] {
+  --color-input-border-width: 1px;
   width: var(--color-button-width);
   height: var(--color-button-height);
   padding: 0;
-  border: 1px solid var(--primary-low-mid);
+  border: var(--color-input-border-width) solid var(--primary-low-mid);
   border-radius: var(--d-button-border-radius);
   cursor: pointer;
 
@@ -88,12 +85,16 @@
 
   &::-webkit-color-swatch {
     border: none;
-    border-radius: var(--d-button-border-radius);
+    border-radius: calc(
+      var(--d-button-border-radius) - var(--color-input-border-width)
+    );
   }
 
   &::-moz-color-swatch {
     border: none;
-    border-radius: var(--d-button-border-radius);
+    border-radius: calc(
+      var(--d-button-border-radius) - var(--color-input-border-width)
+    );
   }
 
   &:focus,
@@ -122,11 +123,26 @@
   flex-wrap: wrap;
   gap: 0.25em;
 
-  /* Will show 8 swatches in a row, see color-swatch width and gap */
-  max-width: calc((var(--space) * 7) + (var(--space-5) * 8));
+  @include viewport.from(sm) {
+    // 10 swatches per row on larger screens
+    max-width: calc((var(--space) * 9) + (var(--space-5) * 10));
+  }
+
+  &-label {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+  }
 
   .color-swatches-menu-content & {
     padding: var(--space-2);
+  }
+}
+
+.color-swatches-menu-content {
+  .fk-d-menu__inner-content {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -140,23 +156,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
-  .d-icon {
-    display: none;
-    font-size: var(--font-down-2);
-  }
-
-  &.is-used .d-icon {
-    display: inline-flex;
-  }
-
-  &.--is-light .d-icon {
-    color: black;
-  }
-
-  &.--is-dark .d-icon {
-    color: white;
-  }
 
   &:hover {
     transform: scale(1.1);

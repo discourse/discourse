@@ -133,6 +133,3 @@ uk:
     review:
       transcript:
         view: "Показати попередні повідомлення"
-      types:
-        reviewable_post_voting_comment:
-          title: "Позначений коментар до голосування"

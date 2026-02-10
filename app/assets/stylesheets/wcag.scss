@@ -253,7 +253,7 @@ html {
     color: var(--primary);
   }
 
-  .user-main .flagged-posts {
+  .user-main .flags {
     color: dark-light-choose($primary, $secondary);
   }
 
@@ -353,4 +353,48 @@ html {
   .sidebar-section-link-suffix.icon.unread
   svg {
   color: var(--tertiary);
+}
+
+// Modernize Foundation Theme specific WCAG overrides
+html.discourse-no-touch .uc-modernize-foundation-theme {
+  .btn-default {
+    .d-icon {
+      color: var(--d-button-default-icon-color);
+    }
+
+    &:hover,
+    &.btn-hover,
+    &:focus {
+      .d-icon {
+        color: var(--d-button-default-icon-color--hover);
+      }
+    }
+  }
+
+  // Create topic button - ensure icon matches text color
+  #create-topic .d-icon {
+    color: var(--d-button-default-icon-color);
+  }
+
+  // Composer button bar icons should match the modernize theme
+  .d-editor-button-bar .btn-icon.btn-default .d-icon {
+    color: var(--d-button-default-icon-color);
+
+    &:hover {
+      color: var(--d-button-default-icon-color--hover);
+    }
+  }
+}
+
+html .uc-modernize-foundation-theme {
+  // Header icons with modernize theme colors
+  .d-header-icons .d-icon,
+  .header-sidebar-toggle button .d-icon {
+    color: var(--d-sidebar-link-icon-color);
+  }
+
+  // Topic list header consistency
+  table th {
+    color: var(--d-topic-list-header-text-color);
+  }
 }

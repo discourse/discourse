@@ -1356,9 +1356,6 @@ sq:
         flags_given:
           one: '<span class="%{className}">%{count}</span> flamur i dobishëm'
           other: '<span class="%{className}">%{count}</span> flamuj të dobishëm'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> postim me flamur'
-          other: '<span class="%{className}">%{count}</span> postime me flamur'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> postimi i fshirë'
           other: '<span class="%{className}">%{count}</span> postime të fshira'
@@ -2051,7 +2048,6 @@ sq:
     form_kit:
       reset: Rivendosni
       optional: opsionale
-      errors_summary_title: "Ky formular përmban gabime:"
       dirty_form: "Nuk i keni dorëzuar ndryshimet tuaja! Jeni të sigurt që dëshironi të largoheni?"
       errors:
         required: "E nevojshme"
@@ -3483,6 +3479,8 @@ sq:
       slug_placeholder: "(Optional) dashed-words for url"
       creation_error: Pati një gabim gjatë krijimit të kategorisë
       save_error: Pati një gabim gjatë ruajtjes së kategorisë
+      validations:
+        icon_required: "Zgjidhni një ikonë."
       description: "Përshkrimi"
       icon: "Ikonë"
       emoji: "Emoji"
@@ -3505,7 +3503,6 @@ sq:
         group: "Grupi"
         see: "Shiko"
         reply: "Përgjigju"
-      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Prano emaila nga anëtarë anonimë pa llogari në faqe"
       allow_badges_label: "Lejo të jepen stemat në këtë kategori"
@@ -3513,7 +3510,6 @@ sq:
       this_year: "këtë vit"
       none_subcategory_text: "Asnjë"
       visibility:
-        title: "Lejimi"
         public: "Publike"
         group_restricted: "Private"
       notifications:

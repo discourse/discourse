@@ -1,8 +1,10 @@
+/* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -82,6 +84,12 @@ export default class UpcomingChangeItem extends Component {
     return (
       this.args.change.upcoming_change.status === "permanent" ||
       this.savingEnabledFor
+    );
+  }
+
+  get showDependentSettingsLink() {
+    return (
+      this.args.change.dependents.length && this.bufferedEnabledFor !== "no_one"
     );
   }
 
@@ -294,7 +302,7 @@ export default class UpcomingChangeItem extends Component {
                 <span class="upcoming-change__learn-more">
                   {{htmlSafe
                     (i18n
-                      "learn_more_with_link"
+                      "feedback_with_link"
                       url=@change.upcoming_change.learn_more_url
                     )
                   }}
@@ -383,9 +391,21 @@ export default class UpcomingChangeItem extends Component {
         >
           {{#each this.enabledForOptions as |option|}}
             <select.Option @value={{option.value}}>
-              {{option.label}}</select.Option>
+              {{option.label}}
+            </select.Option>
           {{/each}}
         </DSelect>
+
+        {{#if this.showDependentSettingsLink}}
+          <div class="upcoming-change__dependents">
+            <LinkTo
+              @route="adminSiteSettings"
+              @query={{hash filter="all_results" dependsOn=@change.setting}}
+            >
+              {{i18n "admin.upcoming_changes.show_related_settings"}}
+            </LinkTo>
+          </div>
+        {{/if}}
 
         {{#if (eq this.bufferedEnabledFor "groups")}}
           <div class="upcoming-change__group-selection-wrapper">

@@ -91,8 +91,10 @@ module DiscourseAi
           .then do |tags|
             models = Tag.where(name: tags.map { _1[:name] }).index_by(&:name)
             tags.map do |tag|
-              tag[:id] = models.dig(tag[:name])&.id
-              tag[:count] = models.dig(tag[:name])&.public_send(count_column) || 0
+              model = models.dig(tag[:name])
+              tag[:id] = model&.id
+              tag[:slug] = model&.slug
+              tag[:count] = model&.public_send(count_column) || 0
               tag
             end
           end

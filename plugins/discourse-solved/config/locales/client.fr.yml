@@ -38,6 +38,8 @@ fr:
       no_solved_topics_title: "Vous n'avez encore résolu aucun sujet"
       no_solved_topics_title_others: "%{username} n'a encore résolu aucun sujet."
       no_solved_topics_body: "Lorsque vous fournissez une réponse utile à un sujet, votre réponse peut être sélectionnée comme solution par le ou la propriétaire ou responsable du sujet."
+      move_post_cancel: "Annuler"
+      confirm_category_change_solution_cancel: "Annuler"
       no_answer:
         title: Votre question a-t-elle reçu une réponse ?
         description: "Mettez la réponse en surbrillance et aidez les autres utilisateurs en utilisant le bouton de solution sous la réponse adéquate."

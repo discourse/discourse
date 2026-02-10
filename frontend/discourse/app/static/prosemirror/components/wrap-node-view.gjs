@@ -14,10 +14,6 @@ export default class WrapNodeView extends Component {
     this.args.onSetup?.(this);
   }
 
-  willDestroy() {
-    super.willDestroy(...arguments);
-  }
-
   get isInline() {
     return this.args.node.type.name === "wrap_inline";
   }

@@ -14,6 +14,8 @@ te:
       accepted_answer_post_number: "పోస్ట్ %{post_number}"
       topic_status_filter:
         all: "అన్నీ"
+      move_post_cancel: "రద్దుచేయండి"
+      confirm_category_change_solution_cancel: "రద్దుచేయండి"
     discourse_automation:
       triggerables:
         first_accepted_solution:

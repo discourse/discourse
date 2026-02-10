@@ -74,8 +74,6 @@ ug:
         chat_usage:
           title: سۆھبەت پائالىيىتى
           total_messages: جەمئىي ئۇچۇر
-          dm_messages: بىۋاسىتە ئۇچۇر
-          unique_dm_channels: بىۋاسىتە ئۇچۇر سۆھبىتى
           reactions_received: تاپشۇرۇۋالغان ئىنكاس
           avg_message_length: ئوتتۇرىچە ئۇچۇر ئۇزۇنلۇقى
           favorite_channels: ياقتۇرىدىغان قانال

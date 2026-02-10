@@ -25,6 +25,8 @@ th:
       topic_status_filter:
         all: "ทั้งหมด"
         solved: "แก้ไขแล้ว"
+      move_post_cancel: "ยกเลิก"
+      confirm_category_change_solution_cancel: "ยกเลิก"
     discourse_automation:
       triggerables:
         first_accepted_solution:

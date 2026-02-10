@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers */
 import { observer } from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import { CREATE_TOPIC } from "discourse/models/composer";

@@ -62,6 +62,8 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      llm_selector:
+        none: "کوئی نہیں"
       features:
         back: "واپس"
         disabled: "(غیر فعال)"

@@ -34,6 +34,8 @@ hy:
             canned_reply:
               label: "Պատասխանել"
     discourse_ai:
+      llm_selector:
+        none: "Ոչ մի"
       features:
         back: "Ետ"
         disabled: "(անջատված)"

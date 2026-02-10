@@ -36,6 +36,8 @@ gl:
             canned_reply:
               label: "Responder"
     discourse_ai:
+      llm_selector:
+        none: "Ningunha"
       features:
         back: "Volver"
         disabled: "(desactivado)"

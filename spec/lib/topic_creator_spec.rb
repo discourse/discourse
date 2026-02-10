@@ -122,11 +122,36 @@ RSpec.describe TopicCreator do
       end
 
       context "with regular tags" do
-        it "user can add tags to topic" do
+        it "can add tag names to topic" do
           topic =
             TopicCreator.create(user, Guardian.new(user), valid_attrs.merge(tags: [tag1.name]))
           expect(topic).to be_valid
           expect(topic.tags.length).to eq(1)
+        end
+
+        it "can add tags to topic" do
+          topic =
+            TopicCreator.create(
+              user,
+              Guardian.new(user),
+              valid_attrs.merge(
+                tags: [{ id: tag1.id, name: tag1.name }, { id: tag2.id, name: tag2.name }],
+              ),
+            )
+          expect(topic).to be_valid
+          expect(topic.tags).to contain_exactly(tag1, tag2)
+        end
+
+        it "can create new tags" do
+          SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
+          topic =
+            TopicCreator.create(
+              user,
+              Guardian.new(user),
+              valid_attrs.merge(tags: [{ id: tag1.id, name: tag1.name }, { name: "brand-new" }]),
+            )
+          expect(topic).to be_valid
+          expect(topic.tags).to contain_exactly(have_attributes(name: "brand-new"), tag1)
         end
       end
 

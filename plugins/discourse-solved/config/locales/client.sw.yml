@@ -21,6 +21,8 @@ sw:
       topic_status_filter:
         all: "Zote"
         solved: "imetatuliwa"
+      move_post_cancel: "Batili"
+      confirm_category_change_solution_cancel: "Batili"
     topic_statuses:
       solved:
         help: "Hii mada ina suluhisho"

@@ -5,7 +5,7 @@
 # upcoming change is available for them to opt-in to, based on certain criteria
 # that are explained in the Action classes.
 #
-# Called from the TrackingInitializer in the config/initializers/015-track-upcoming-changes.rb file.
+# Called from the Jobs::Scheduled::CheckUpcomingChanges job.
 class UpcomingChanges::Track
   include Service::Base
 

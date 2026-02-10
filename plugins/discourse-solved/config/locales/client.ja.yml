@@ -37,6 +37,8 @@ ja:
       no_solved_topics_title: "まだトピックを解決していません。"
       no_solved_topics_title_others: "%{username} はまだトピックを解決していません"
       no_solved_topics_body: "トピックに有益な返信を提供すると、その返信がトピックオーナーまたはスタッフによって解決策として選択される場合があります。"
+      move_post_cancel: "キャンセル"
+      confirm_category_change_solution_cancel: "キャンセル"
       no_answer:
         title: 質問の回答は得られましたか？
         description: "適切な返信の下にある解決策ボタンを使って回答をハイライトし、他のユーザーを助けましょう。"

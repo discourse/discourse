@@ -176,6 +176,8 @@ nl:
       default_llm:
         title: "Standaard LLM-model"
         description: "Het standaard LLM-model dat voor alle AI-functies wordt gebruikt. Dit model wordt gebruikt als er geen LLM is opgegeven in de functieconfiguratie of persona. Als er geen standaard-LLM is opgegeven, wordt de laatst gemaakte LLM gebruikt."
+      llm_selector:
+        none: "Geen"
       features:
         short_title: "Functies"
         description: "Dit zijn de AI-functies die beschikbaar zijn voor bezoekers van je site. Deze kunnen worden geconfigureerd voor specifieke persona's en LLM's en de toegang kan per groep worden beheerd."
@@ -588,17 +590,7 @@ nl:
           anthropic-claude-opus-4-5: "Het intelligentste model van Antropic"
           anthropic-claude-sonnet-4-5: "Optimale balans tussen snelheid en kosten"
           anthropic-claude-haiku-4-5: "Snel en kosteneffectief"
-          google-gemini-2-5-pro: "Groot multimodaal model dat een groot aantal taken kan uitvoeren"
-          google-gemini-2-5-flash: "Lichtgewicht, snel en kostenefficiënt met multimodale redenering"
-          open_ai-gpt-5-mini: "Biedt een balans tussen intelligentie, snelheid en kosten, waardoor het een aantrekkelijk model is voor veel gebruikssituaties."
-          open_ai-gpt-5-nano: "Snelste en meest kostenefficiënte GPT-5-model."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Efficiënt lichtgewicht meertalig model"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Krachtig multifunctioneel model"
-          mistral-mistral-large-latest: "Het krachtigste model van Mistral"
-          mistral-pixtral-large-latest: "Het krachtigste model met zichtcapaciteit van Mistral"
-          open_router-x-ai-grok-4: "Het nieuwste model van xAI"
-          open_router-deepseek-deepseek-r1-0528-free: "Het nieuwste redeneringsmodel van DeepSeek"
-          open_router-meta-llama-3-3-70b-instruct: "Zeer capabel meertalig model"
+          open_ai-gpt-5-nano: "Snelste en meest kostenefficiënte GPT-5-model"
         preseeded_model_description: "Voorgeconfigureerd open-source model met %{model}"
         configured:
           title: "Geconfigureerde LLM's"
@@ -883,6 +875,7 @@ nl:
         topic:
           title: "Topicsamenvatting"
           close: "Samenvattingspaneel sluiten"
+          regenerate_summaries_option: "Topicsamenvattingen"
         topic_list_layout:
           button:
             compact: "Compact"

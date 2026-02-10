@@ -324,6 +324,9 @@ en:
       message: "We've updated this site, <span>please refresh</span> to keep things working smoothly."
       dismiss: "Dismiss"
 
+    notifications_tracking:
+      tooltip: "Notification level: %{level}"
+
     back_button: "Back"
 
     welcome_banner:
@@ -450,6 +453,39 @@ en:
       title: "New & Unread Topics"
       pill: "Suggested"
       pm_title: "Suggested Messages"
+
+    admin_onboarding_banner:
+      launch_in_easy_steps: "Launch in %{step_count} easy steps"
+      skipped: "The admin onboarding checklist has now been skipped. If you would like to re-enable it, look for `enable site owner onboarding` in the site settings."
+      congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
+      invite_collaborators:
+        title: "Invite Collaborators"
+        description: "Early members help bring your community to life"
+        action: "Create invite"
+      start_posting:
+        title: "Start Posting"
+        description: "Give people something to talk about together"
+        action: "Icebreaker ideas"
+        icebreakers:
+          fun_facts:
+            title: "What are some fun facts about you?"
+            body: "Hi everyone! I'm excited to start this new community. To kick things off, let's share a fun fact about ourselves. I'll go first: I love hiking and exploring new trails! What's something interesting about you?"
+          coolest_thing_you_have_seen_today:
+            title: "What's the coolest thing you've seen today?"
+            body: "What's the coolest thing you've seen or experienced today? It could be anything from a beautiful sunset to a random act of kindness. I'll start: I saw a dog helping an elderly person cross the street!"
+          introduce_yourself:
+            title: "Introduce yourself"
+            body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
+          what_is_your_favorite_food:
+            title: "What is your favorite food?"
+            body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
+
+
+      spread_the_word:
+        title: "Spread the Word!"
+        description: "Share a link with everyone in your network"
+        action: "Copy link"
+        copied_to_clipboard: "Link copied to clipboard!"
 
     about:
       edit: "Edit this page"
@@ -1706,6 +1742,9 @@ en:
       undo_revoke_access: "Undo Revoke Access"
       api_approved: "Approved:"
       api_last_used_at: "Last used at:"
+      api_show_permissions:
+        one: "Permissions granted (%{count})"
+        other: "Permissions granted (%{count})"
       theme: "Theme"
       save_to_change_theme: 'Theme will be updated after you click "%{save_text}"'
       home: "Default Home Page"
@@ -1715,9 +1754,9 @@ en:
         flags_given:
           one: '<span class="%{className}">%{count}</span> helpful flag'
           other: '<span class="%{className}">%{count}</span> helpful flags'
-        flagged_posts:
-          one: '<span class="%{className}">%{count}</span> flagged post'
-          other: '<span class="%{className}">%{count}</span> flagged posts'
+        flags:
+          one: '<span class="%{className}">%{count}</span> flag'
+          other: '<span class="%{className}">%{count}</span> flags'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> deleted post'
           other: '<span class="%{className}">%{count}</span> deleted posts'
@@ -2528,6 +2567,10 @@ en:
         too_short:
           one: "Must be at least %{count} character"
           other: "Must be at least %{count} characters"
+      color:
+        available_presets: "Available presets"
+        already_used: "Already used"
+        edit_presets: "Edit color presets"
 
     close: "Close"
     assets_changed_confirm: "This site just received a software update. Get the latest version now?"
@@ -2584,6 +2627,7 @@ en:
 
     learn_more: "Learn more…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Learn more…</a>"
+    feedback_with_link: "<a href='%{url}' target='_blank'>Feedback…</a>"
 
     mute: Mute
     unmute: Unmute
@@ -3552,6 +3596,7 @@ en:
         deleted_post: "(deleted post)"
         post_number_with_topic_title: "post #%{post_number} - %{title}"
         new_post_in_topic: "new post in %{title}"
+        new_post_in_deleted_topic: "new post in a deleted topic"
         user_requires_approval: "%{username} requires approval"
         default_item: "reviewable item #%{reviewable_id}"
 
@@ -3637,6 +3682,9 @@ en:
         notify: "Notify users of this change."
         performing: "Performing bulk operations, please wait…"
         completed: "Bulk operations completed successfully!"
+        not_completed:
+          one: "Bulk operation could not be completed for <strong>%{count}</strong> topic"
+          other: "Bulk operation could not be completed for <strong>%{count}</strong> topics"
 
       none:
         unread: "You have no unread topics."
@@ -4203,7 +4251,7 @@ en:
       quote_edit: "Edit"
       quote_edit_shortcut: "Edit (or press e)"
       quote_copy: "Copy Quote"
-      quote_copied_to_clibboard: "Quote copied to clipboard"
+      quote_copied_to_clipboard: "Quote copied to clipboard"
       quote_share: "Share"
       edit_reason: "Reason: "
       post_number: "post %{number}"
@@ -4528,7 +4576,6 @@ en:
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
-      single_page: "Single Page"
       general: "General"
       settings: "Settings"
       advanced: "Advanced"
@@ -4571,6 +4618,7 @@ en:
         self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       validations:
         emoji_required: "Select an emoji."
+        icon_required: "Select an icon."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -4617,12 +4665,15 @@ en:
         reply: "Reply"
         create: "Create"
         no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
-        everyone_has_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
+        everyone_full_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
+        everyone_reply_access: 'This category is public, everyone can see and reply to topics. To restrict permissions, remove the "everyone" group.'
+        everyone_see_access: 'This category is public, everyone can see posts. To restrict permissions, remove the "everyone" group.'
         specific_groups_have_access: "This category is private, only the selected groups can see, reply and create posts."
+        all_parent_groups_used: "All groups from the parent category have been added. To add more groups, first add them to the parent category."
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
         inherited: 'This permission is inherited from "everyone"'
-      special_warning: "Warning: This category is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
+      special_warning: "This is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
       pending_permission_change_alert: "You haven't added %{group} to this category; click this button to add them."
@@ -4659,14 +4710,15 @@ en:
       none_subcategory_text: "None"
       subcategory_permissions_warning: "A subcategory of a private category can not be public."
       visibility:
-        title: "Access"
+        title: "Visibility"
         public: "Public"
         all_members: "All members"
         group_restricted: "Private"
         who_can_see: "Who can see this category"
         who_can_post: "Who can post in this category"
-        more_options_hint: "More permissions available in"
-        more_options_hint_link: "advanced settings."
+        which_groups_can_access: "Which groups can see and post in this category"
+        more_options_hint: "More permissions available in <a href>advanced settings</a>."
+        inherited_from_parent: "Permissions are inherited from the parent category. To refine, visit <a href>advanced settings</a>."
       num_auto_bump_daily: "Number of open topics to automatically bump daily:"
       auto_bump_cooldown_days: "Minimum days before bumping the same topic again:"
       navigate_to_first_post_after_read: "Navigate to first post after topics are read"
@@ -5837,6 +5889,7 @@ en:
         no_changes_to_save: "No changes to save"
         select_groups: "Select groups…"
         opt_in_groups: "Opt-in groups"
+        show_related_settings: "Show related settings..."
         opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
         enabled_for_throttle: "You have modified who this change is enabled for too quickly. Please wait a few seconds before trying again."
         change_enabled_for_success: "You have enabled this change for %{enabledFor}"
@@ -5924,7 +5977,7 @@ en:
           keywords: "locale|language|timezone|unicode|ltr"
         upcoming_changes:
           title: "Upcoming changes"
-          header_description: "A list of upcoming changes to Discourse that may affect your site, and experimental features that you may opt-in to. You can filter by impact, change type, and status.\n\nOpt-in groups can be used to let a certain group of users to test a change before it is released to everyone, though these groups will be irrelevant once a change progresses to the Stable status."
+          header_description: "A list of upcoming changes to Discourse that may affect your site, and experimental features that you may opt-in to. You can filter by impact, type, and status.\n\nOpt-in groups can be used to let a certain group of users to test a change before it is released to everyone, though these groups will be irrelevant once a change progresses to the Permanent status."
         login:
           title: "Login & authentication"
           header_description: "Configure how users log in and authenticate, secrets and keys, OAuth2 providers, and more"
@@ -6286,6 +6339,9 @@ en:
         embedding:
           title: "Embedding"
           header_description: "Discourse has the ability to embed the comments from a topic in a remote site using a Javascript API that creates an IFRAME"
+        form_templates:
+          title: "Form templates"
+          header_description: "Form templates allow you to enforce a structured form with data validation as part of the topic creation flow"
 
       theme_site_settings:
         setting: "Setting"
@@ -7209,8 +7265,8 @@ en:
         delete: "Delete"
         delete_confirm: 'Are you sure you want to delete "%{theme_name}"?'
         bulk_delete: "Are you sure?"
-        bulk_themes_delete_confirm: "This will uninstall the following themes, they will no longer be useable by any users on your site:"
-        bulk_components_delete_confirm: "This will uninstall the following components, they will no longer be useable by any users on your site:"
+        bulk_themes_delete_confirm: "This will uninstall the following themes, they will no longer be usable by any users on your site:"
+        bulk_components_delete_confirm: "This will uninstall the following components, they will no longer be usable by any users on your site:"
         color: "Color"
         opacity: "Opacity"
         copy: "Duplicate"
@@ -8651,6 +8707,8 @@ en:
         no_user_badges: "%{name} has not been granted any badges."
         no_badges: There are no badges that can be granted.
         none_selected: "Select a badge to get started"
+        filter_placeholder: "Filter badges..."
+        no_badges_found: "No badges found"
         sections:
           design: Design
           query: Query

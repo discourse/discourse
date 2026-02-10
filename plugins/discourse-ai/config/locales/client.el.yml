@@ -75,8 +75,11 @@ el:
               label: "Αναφορά ανάρτησης"
               description: "Αναφέρει την ανάρτηση (είτε ως ανεπιθύμητη είτε για έλεγχο)"
     discourse_ai:
+      llm_selector:
+        none: "Κανένα"
       features:
         back: "Πίσω"
+        settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."
         disabled: "(απενεργοποιημένο)"
         groups: "Ομάδες:"
         no_persona: "Δεν έχει οριστεί"
@@ -89,6 +92,7 @@ el:
         filters:
           all: "Όλα"
           reset: "Επαναφορά"
+        no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
         search:
           name: "Αναζήτηση"
         ai_helper:
@@ -117,6 +121,7 @@ el:
       spam:
         short_title: "Ανεπιθύμητα"
         last_seven_days: "Τελευταίες 7 ημέρες"
+        false_positives: "Λανθασμένη αναφορά"
         enable: "Ενεργοποίηση"
         save_button: "Αποθήκευση αλλαγών"
         test_modal:
@@ -160,6 +165,7 @@ el:
         back: "Πίσω"
         export: "Εξαγωγή"
         import: "Εισαγωγή"
+        no_tools: "Δεν έχετε δημιουργήσει κανένα εργαλείο ακόμη"
         name: "Όνομα"
         description: "Περιγραφή"
         summary: "Περίληψη"
@@ -169,6 +175,7 @@ el:
         edit: "Επεξεργασία"
         delete: "Σβήσιμο"
       llms:
+        no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
         save: "Αποθήκευση"
         edit: "Επεξεργασία"
@@ -188,8 +195,6 @@ el:
         usage:
           ai_summarization: "Συνοψίστε"
           ai_spam: "Ανεπιθύμητα"
-        model_description:
-          open_router-x-ai-grok-4: "Τελευταίο μοντέλο της xAI"
         next:
           title: "Επόμενο"
         tests:
@@ -207,6 +212,7 @@ el:
           copy: "Αντιγραφή"
           copied: "Αντιγράφηκε!"
           cancel: "Άκυρο"
+          insert_footnote: "Προσθήκη υποσημείωσης"
         thumbnail_suggestions:
           select: "Επιλογή"
           selected: "Επιλεγμένα"
@@ -224,6 +230,7 @@ el:
         providers:
           google: "Google"
           fake: "Προσαρμοσμένο"
+        semantic_search_loading: "Γίνεται αναζήτηση περισσότερων αποτελεσμάτων χρησιμοποιώντας AI"
       ai_bot:
         llm: "Μοντέλο"
         try_again: "Δοκιμάστε ξανά"
@@ -261,3 +268,9 @@ el:
         tooltip:
           actions:
             disable: "Απενεργοποίηση"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Αναφερόμενη από AI ανάρτηση"
+        reviewable_ai_chat_message:
+          title: "Αναφερόμενο από AI μήνυμα συνομιλίας"

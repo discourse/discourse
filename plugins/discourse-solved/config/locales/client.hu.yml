@@ -40,6 +40,8 @@ hu:
       no_solved_topics_title_others: "%{username} még nem oldott meg témát"
       no_solved_topics_body: "Ha hasznos választ ad egy témára, előfordulhat, hogy a téma tulajdonosa vagy a stáb az Ön válaszát választják megoldásként."
       marked_solved_by: "%{user} felhasználó megoldottnak jelölte"
+      move_post_cancel: "Mégse"
+      confirm_category_change_solution_cancel: "Mégse"
       no_answer:
         title: Megválaszolták a kérdését?
         description: "Emelje ki a választ, és segítsen másoknak is a helyes válasz alatti megoldás gomb segítségével."

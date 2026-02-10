@@ -30,6 +30,8 @@ ro:
         all: "tot"
         solved: "rezolvat"
         unsolved: "nerezolvat"
+      move_post_cancel: "Anulează"
+      confirm_category_change_solution_cancel: "Anulează"
     topic_statuses:
       solved:
         help: "Acest subiect are o soluție"

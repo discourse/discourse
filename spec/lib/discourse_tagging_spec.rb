@@ -1680,6 +1680,85 @@ RSpec.describe DiscourseTagging do
     end
   end
 
+  describe ".tag_topic" do
+    fab!(:topic)
+    fab!(:tag1) { Fabricate(:tag, name: "tag1") }
+    fab!(:tag2) { Fabricate(:tag, name: "tag2") }
+
+    it "allows tagging topics by an array of tag names" do
+      valid = DiscourseTagging.tag_topic(topic, Guardian.new(admin), %w[tag1 tag2])
+      expect(valid).to eq(true)
+      expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+    end
+
+    it "allows tagging topics by an array of hash with the id key" do
+      valid =
+        DiscourseTagging.tag_topic(
+          topic,
+          Guardian.new(admin),
+          [{ id: tag1.id, name: "tHE wROnG nAme" }, { id: tag2.id, name: "tag2" }],
+        )
+      expect(valid).to eq(true)
+      expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+    end
+
+    it "allows tagging topics using new tags" do
+      valid =
+        DiscourseTagging.tag_topic(
+          topic,
+          Guardian.new(admin),
+          [{ name: "new-tag-a" }, { name: "new-tag-b" }],
+        )
+      expect(valid).to eq(true)
+      expect(topic.reload.tags.pluck(:name)).to contain_exactly("new-tag-a", "new-tag-b")
+    end
+
+    it "can tag topics using old and new tags" do
+      valid =
+        DiscourseTagging.tag_topic(
+          topic,
+          Guardian.new(admin),
+          [{ id: tag1.id, name: "tag1" }, { name: "brand-new" }],
+        )
+      expect(valid).to eq(true)
+      expect(topic.reload.tags.pluck(:name)).to contain_exactly("tag1", "brand-new")
+    end
+
+    it "clears tags when given blank input" do
+      topic.tags = [tag1]
+      topic.save!
+      valid = DiscourseTagging.tag_topic(topic, Guardian.new(admin), [])
+      expect(valid).to eq(true)
+      expect(topic.reload.tags).to be_empty
+    end
+  end
+
+  describe "tag_topic_by_ids" do
+    fab!(:topic)
+    fab!(:tag1) { Fabricate(:tag, name: "tag1") }
+    fab!(:tag2) { Fabricate(:tag, name: "tag2") }
+
+    it "tags a topic using tag IDs" do
+      valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [tag1.id, tag2.id])
+      expect(valid).to eq(true)
+      expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+    end
+
+    it "returns false for non-existent IDs" do
+      valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [-1])
+      expect(valid).to eq(true) # succeeds but with no tags
+      expect(topic.reload.tags).to be_empty
+    end
+
+    it "clears tags when given empty array" do
+      topic.tags = [tag1]
+      topic.save!
+      valid = DiscourseTagging.tag_topic_by_ids(topic, Guardian.new(admin), [])
+      expect(valid).to eq(true)
+      expect(topic.reload.tags).to be_empty
+    end
+  end
+
   describe "#tags_for_saving" do
     it "returns empty array if input is nil" do
       expect(described_class.tags_for_saving(nil, guardian)).to eq([])
@@ -1879,10 +1958,22 @@ RSpec.describe DiscourseTagging do
     end
   end
 
-  describe "#add_or_create_synonyms_by_name" do
+  describe "#add_or_create_synonyms" do
     it "can add an existing tag" do
       expect {
-        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name])).to eq(true)
+        expect(DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name])).to eq(
+          true,
+        )
+      }.to_not change { Tag.count }
+      expect_same_tag_names(tag1.reload.synonyms, [tag2])
+      expect(tag2.reload.target_tag).to eq(tag1)
+    end
+
+    it "can add an existing tag by ID" do
+      expect {
+        expect(DiscourseTagging.add_or_create_synonyms(tag1, synonym_tag_ids: [tag2.id])).to eq(
+          true,
+        )
       }.to_not change { Tag.count }
       expect_same_tag_names(tag1.reload.synonyms, [tag2])
       expect(tag2.reload.target_tag).to eq(tag1)
@@ -1891,7 +1982,9 @@ RSpec.describe DiscourseTagging do
     it "can add an existing tag when both tags added to same topic" do
       topic = Fabricate(:topic, tags: [tag1, tag2, tag3])
       expect {
-        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name])).to eq(true)
+        expect(DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name])).to eq(
+          true,
+        )
       }.to_not change { Tag.count }
       expect_same_tag_names(tag1.reload.synonyms, [tag2])
       expect_same_tag_names(topic.reload.tags, [tag1, tag3])
@@ -1900,19 +1993,33 @@ RSpec.describe DiscourseTagging do
 
     it "can add existing tag with wrong case" do
       expect {
-        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name.upcase])).to eq(
-          true,
-        )
+        expect(
+          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name.upcase]),
+        ).to eq(true)
       }.to_not change { Tag.count }
       expect_same_tag_names(tag1.reload.synonyms, [tag2])
       expect(tag2.reload.target_tag).to eq(tag1)
     end
 
-    it "removes target tag name from synonyms if present " do
+    it "removes target tag name from synonyms if present" do
       expect {
-        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag1.name, tag2.name])).to eq(
-          true,
-        )
+        expect(
+          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag1.name, tag2.name]),
+        ).to eq(true)
+      }.to_not change { Tag.count }
+      expect_same_tag_names(tag1.reload.synonyms, [tag2])
+      expect(tag2.reload.target_tag).to eq(tag1)
+    end
+
+    it "ignores target tag ID passed in synonym_tag_ids" do
+      expect {
+        expect(
+          DiscourseTagging.add_or_create_synonyms(
+            tag1,
+            synonym_tag_ids: [tag1.id, tag2.id],
+            new_synonym_names: [],
+          ),
+        ).to eq(true)
       }.to_not change { Tag.count }
       expect_same_tag_names(tag1.reload.synonyms, [tag2])
       expect(tag2.reload.target_tag).to eq(tag1)
@@ -1922,9 +2029,9 @@ RSpec.describe DiscourseTagging do
       tag4, tag5 = 2.times.collect { Fabricate(:tag) }
       topic = Fabricate(:topic, tags: [tag2, tag3, tag4])
       expect {
-        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name, tag3.name])).to eq(
-          true,
-        )
+        expect(
+          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name, tag3.name]),
+        ).to eq(true)
       }.to_not change { Tag.count }
       expect_same_tag_names(tag1.reload.synonyms, [tag2, tag3])
       expect_same_tag_names(topic.reload.tags, [tag1, tag4])
@@ -1933,7 +2040,9 @@ RSpec.describe DiscourseTagging do
 
     it "can create new tags" do
       expect {
-        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, ["synonym1"])).to eq(true)
+        expect(
+          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: ["synonym1"]),
+        ).to eq(true)
       }.to change { Tag.count }.by(1)
       s = Tag.where_name("synonym1").first
       expect_same_tag_names(tag1.reload.synonyms, [s])
@@ -1943,7 +2052,23 @@ RSpec.describe DiscourseTagging do
     it "can add existing and new tags" do
       expect {
         expect(
-          DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name, "synonym1"]),
+          DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name, "synonym1"]),
+        ).to eq(true)
+      }.to change { Tag.count }.by(1)
+      s = Tag.where_name("synonym1").first
+      expect_same_tag_names(tag1.reload.synonyms, [tag2, s])
+      expect(s.target_tag).to eq(tag1)
+      expect(tag2.reload.target_tag).to eq(tag1)
+    end
+
+    it "can add existing tags by ID and new tags by name" do
+      expect {
+        expect(
+          DiscourseTagging.add_or_create_synonyms(
+            tag1,
+            synonym_tag_ids: [tag2.id],
+            new_synonym_names: ["synonym1"],
+          ),
         ).to eq(true)
       }.to change { Tag.count }.by(1)
       s = Tag.where_name("synonym1").first
@@ -1955,7 +2080,9 @@ RSpec.describe DiscourseTagging do
     it "can change a synonym's target tag" do
       synonym = Fabricate(:tag, name: "synonym1", target_tag: tag1)
       expect {
-        expect(DiscourseTagging.add_or_create_synonyms_by_name(tag2, [synonym.name])).to eq(true)
+        expect(
+          DiscourseTagging.add_or_create_synonyms(tag2, new_synonym_names: [synonym.name]),
+        ).to eq(true)
       }.to_not change { Tag.count }
       expect_same_tag_names(tag2.reload.synonyms, [synonym])
       expect(tag1.reload.synonyms.count).to eq(0)
@@ -1964,17 +2091,18 @@ RSpec.describe DiscourseTagging do
 
     it "doesn't allow tags that have synonyms to become synonyms" do
       tag2.synonyms << Fabricate(:tag)
-      value = DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name])
-      expect(value).to be_a(Array)
-      expect(value.size).to eq(1)
-      expect(value.first.errors[:target_tag_id]).to be_present
+      value = DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name])
+      expect(value).to be_a(Hash)
+      expect(value).to have_key(tag2.name)
       expect(tag1.reload.synonyms.count).to eq(0)
       expect(tag2.reload.synonyms.count).to eq(1)
     end
 
     it "changes tag of topics" do
       topic = Fabricate(:topic, tags: [tag2])
-      expect(DiscourseTagging.add_or_create_synonyms_by_name(tag1, [tag2.name])).to eq(true)
+      expect(DiscourseTagging.add_or_create_synonyms(tag1, new_synonym_names: [tag2.name])).to eq(
+        true,
+      )
       expect_same_tag_names(topic.reload.tags, [tag1])
 
       tag1.reload
@@ -1986,6 +2114,28 @@ RSpec.describe DiscourseTagging do
 
       expect(tag2.public_topic_count).to eq(0)
       expect(tag2.staff_topic_count).to eq(0)
+    end
+
+    it "returns true for empty inputs" do
+      expect(DiscourseTagging.add_or_create_synonyms(tag1)).to eq(true)
+      expect(
+        DiscourseTagging.add_or_create_synonyms(tag1, synonym_tag_ids: [], new_synonym_names: []),
+      ).to eq(true)
+      expect(tag1.reload.synonyms.count).to eq(0)
+    end
+
+    it "deduplicates when same tag passed as both ID and name" do
+      expect {
+        expect(
+          DiscourseTagging.add_or_create_synonyms(
+            tag1,
+            synonym_tag_ids: [tag2.id],
+            new_synonym_names: [tag2.name],
+          ),
+        ).to eq(true)
+      }.to_not change { Tag.count }
+      expect_same_tag_names(tag1.reload.synonyms, [tag2])
+      expect(tag2.reload.target_tag).to eq(tag1)
     end
   end
 end

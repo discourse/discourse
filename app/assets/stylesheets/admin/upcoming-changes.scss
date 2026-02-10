@@ -21,6 +21,10 @@
     width: 35%;
   }
 
+  &__dependents {
+    margin-top: var(--space-2);
+  }
+
   &__opt-in-groups-label {
     display: block;
     font-size: var(--font-down-1);
@@ -79,7 +83,7 @@
   }
 
   &__description-details {
-    display: inline;
+    display: inline-block;
   }
 
   &__save-groups {

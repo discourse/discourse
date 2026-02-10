@@ -66,6 +66,7 @@ RSpec.describe WebHookUserSerializer do
       :system_avatar_template,
       :time_read,
       :title,
+      :topic_count,
       :tracked_category_ids,
       :tracked_tags,
       :trust_level,

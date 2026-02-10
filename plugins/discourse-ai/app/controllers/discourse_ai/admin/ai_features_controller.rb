@@ -37,7 +37,8 @@ module DiscourseAi
       def serialize_feature(feature)
         {
           name: feature.name,
-          personas: feature.persona_ids.map { |id| serialize_persona(persona_id_obj_hash[id]) },
+          personas:
+            feature.persona_ids.map { |id| serialize_persona(persona_id_obj_hash[id]) }.compact,
           llm_models:
             feature.llm_models.map do |llm_model|
               { id: llm_model.id, name: llm_model.display_name }

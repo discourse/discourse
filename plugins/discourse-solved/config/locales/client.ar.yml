@@ -42,6 +42,8 @@ ar:
       no_solved_topics_title: "لم تحل أي موضوعات بعد"
       no_solved_topics_title_others: "لم يحل %{username} أي موضوعات حتى الآن"
       no_solved_topics_body: "عندما تقدِّم ردًا مفيدًا على أحد الموضوعات، فقد يحدِّد مالك الموضوع أو فريق العمل ردك على أنه الحل."
+      move_post_cancel: "ألغِ"
+      confirm_category_change_solution_cancel: "ألغِ"
       no_answer:
         title: هل تمت الإجابة على سؤالك؟
         description: "ميِّز الإجابة وساعد الآخرين عن طريق استخدام زر الحل أسفل الرد الصحيح."

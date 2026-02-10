@@ -232,6 +232,50 @@ acceptance("Tags listed by group", function (needs) {
       );
   });
 
+  test("can sort tags by name", async function (assert) {
+    await visit("/tags");
+
+    assert.dom(".tag-sort-count").hasClass("active", "sort by count is active");
+    assert
+      .dom(".tag-sort-name")
+      .doesNotHaveClass("active", "sort by name is not active");
+    assert.deepEqual(
+      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map(
+        (el) => el.innerText
+      ),
+      ["focus", "Escort"],
+      "tags are sorted by count initially"
+    );
+
+    await click(".tag-sort-name a");
+
+    assert
+      .dom(".tag-sort-count")
+      .doesNotHaveClass("active", "sort by count is no longer active");
+    assert.dom(".tag-sort-name").hasClass("active", "sort by name is active");
+    assert.deepEqual(
+      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map(
+        (el) => el.innerText
+      ),
+      ["Escort", "focus"],
+      "tags are sorted alphabetically by name"
+    );
+
+    await click(".tag-sort-count a");
+
+    assert.dom(".tag-sort-count").hasClass("active", "sort by count is active");
+    assert
+      .dom(".tag-sort-name")
+      .doesNotHaveClass("active", "sort by name is not active");
+    assert.deepEqual(
+      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map(
+        (el) => el.innerText
+      ),
+      ["focus", "Escort"],
+      "tags are sorted by count again"
+    );
+  });
+
   test("new topic button works when viewing staff-only tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
@@ -248,6 +292,32 @@ acceptance("Tags listed by group", function (needs) {
 
     await visit("/tag/staff-only-tag");
     assert.dom("#create-topic").isEnabled();
+  });
+});
+
+acceptance("Tags sorted alphabetically by default", function (needs) {
+  needs.user();
+  needs.settings({
+    tags_listed_by_group: true,
+    tags_sort_alphabetically: true,
+  });
+
+  test("tags are sorted alphabetically when tags_sort_alphabetically is enabled", async function (assert) {
+    await visit("/tags");
+
+    assert
+      .dom(".tag-sort-name")
+      .hasClass("active", "sort by name is active by default");
+    assert
+      .dom(".tag-sort-count")
+      .doesNotHaveClass("active", "sort by count is not active");
+    assert.deepEqual(
+      [...queryAll(".tag-list:nth-of-type(1) .discourse-tag")].map(
+        (el) => el.innerText
+      ),
+      ["Escort", "focus"],
+      "tags are sorted alphabetically by name"
+    );
   });
 });
 
@@ -616,25 +686,6 @@ acceptance("Tag info", function (needs) {
   });
 });
 
-acceptance(
-  "Tag show - topic list with `more_topics_url` present",
-  function (needs) {
-    needs.pretender((server, helper) => {
-      server.get("/tag/:tagName/l/latest.json", () =>
-        helper.response({
-          users: [],
-          primary_groups: [],
-          topic_list: {
-            topics: [],
-            more_topics_url: "...",
-          },
-        })
-      );
-      server.put("/topics/bulk", () => helper.response({}));
-    });
-  }
-);
-
 acceptance("Tag show - create topic", function (needs) {
   needs.user();
   needs.site({ can_tag_topics: true });
@@ -693,21 +744,6 @@ acceptance("Tag show - create topic", function (needs) {
     await visit("/tag/planters");
     await click("#create-topic");
     assert.deepEqual(composer.model.tags, ["planters"]);
-  });
-});
-
-acceptance("Tag show - topic list without `more_topics_url`", function (needs) {
-  needs.pretender((server, helper) => {
-    server.get("/tag/:tagName/l/latest.json", () =>
-      helper.response({
-        users: [],
-        primary_groups: [],
-        topic_list: {
-          topics: [],
-        },
-      })
-    );
-    server.put("/topics/bulk", () => helper.response({}));
   });
 });
 

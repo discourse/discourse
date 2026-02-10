@@ -176,6 +176,8 @@ tr_TR:
       default_llm:
         title: "Varsayılan LLM modeli"
         description: "Tüm YZ özellikleri için kullanılacak varsayılan LLM modeli. Özellik yapılandırmasında veya kişilikte herhangi bir LLM belirtilmemişse bu model kullanılır. Varsayılan bir LLM belirtilmemişse en son oluşturulan LLM modeli kullanılır."
+      llm_selector:
+        none: "Hiçbiri"
       features:
         short_title: "Özellikler"
         description: "Bunlar, sitenizdeki ziyaretçilerin kullanımına sunulan YZ özellikleridir. Bunlar, belirli kişileri ve LLM'leri kullanacak şekilde yapılandırılabilir ve gruplar tarafından erişim kontrolü sağlanabilir."
@@ -588,17 +590,7 @@ tr_TR:
           anthropic-claude-opus-4-5: "Antropic'in en akıllı modeli"
           anthropic-claude-sonnet-4-5: "Hız ve maliyetin optimum dengesi"
           anthropic-claude-haiku-4-5: "Hızlı ve uygun maliyetli"
-          google-gemini-2-5-pro: "Çok çeşitli görevleri yerine getirebilen büyük çok modlu model"
-          google-gemini-2-5-flash: "Çok modlu muhakeme ile hafif, hızlı ve uygun maliyetli"
-          open_ai-gpt-5-mini: "Zekâ, hız ve maliyet arasında bir denge sağlar ve bu da onu birçok kullanım durumu için cazip bir model hâline getirir."
-          open_ai-gpt-5-nano: "En hızlı ve en uygun maliyetli GPT-5 modeli."
-          samba_nova-Meta-Llama-3-1-8B-Instruct: "Verimli hafif çok dilli model"
-          samba_nova-Meta-Llama-3-3-70B-Instruct": "Güçlü çok amaçlı model"
-          mistral-mistral-large-latest: "Mistral'in en güçlü modeli"
-          mistral-pixtral-large-latest: "Mistral'in en güçlü görüş yeteneğine sahip modeli"
-          open_router-x-ai-grok-4: "xAI'ın en son modeli"
-          open_router-deepseek-deepseek-r1-0528-free: "DeepSeek'in en son muhakeme modeli"
-          open_router-meta-llama-3-3-70b-instruct: "Son derece yetenekli çok dilli model"
+          open_ai-gpt-5-nano: "En hızlı ve en uygun maliyetli GPT-5 modeli"
         preseeded_model_description: "%{model} kullanan önceden yapılandırılmış açık kaynaklı model"
         configured:
           title: "Yapılandırılmış LLM'ler"
@@ -883,6 +875,7 @@ tr_TR:
         topic:
           title: "Konu özeti"
           close: "Özet panelini kapatın"
+          regenerate_summaries_option: "Konu özetleri"
         topic_list_layout:
           button:
             compact: "Kompakt"

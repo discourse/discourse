@@ -66,6 +66,7 @@ class TopicsBulkAction
         else
           UserArchivedMessage.move_to_inbox!(@user.id, t)
         end
+        @changed_ids << t.id
       end
     end
   end
@@ -79,6 +80,7 @@ class TopicsBulkAction
         else
           UserArchivedMessage.archive!(@user.id, t)
         end
+        @changed_ids << t.id
       end
     end
   end
@@ -134,27 +136,18 @@ class TopicsBulkAction
   def change_category
     updatable_topics = topics.where.not(category_id: @operation[:category_id])
 
-    if SiteSetting.create_revision_on_bulk_topic_moves
-      opts = {
-        bypass_bump: true,
-        validate_post: false,
-        bypass_rate_limiter: true,
-        silent: @operation[:silent],
-      }
+    opts = {
+      bypass_bump: true,
+      validate_post: false,
+      bypass_rate_limiter: true,
+      silent: @operation[:silent],
+      skip_revision: !SiteSetting.create_revision_on_bulk_topic_moves,
+    }
 
-      updatable_topics.each do |t|
-        if guardian.can_edit?(t)
-          changes = { category_id: @operation[:category_id] }
-          @changed_ids << t.id if t.first_post.revise(@user, changes, opts)
-        end
-      end
-    else
-      updatable_topics.each do |t|
-        if guardian.can_edit?(t)
-          if t.change_category_to_id(@operation[:category_id], silent: @operation[:silent])
-            @changed_ids << t.id
-          end
-        end
+    updatable_topics.each do |t|
+      if guardian.can_edit?(t)
+        changes = { category_id: @operation[:category_id] }
+        @changed_ids << t.id if t.first_post.revise(@user, changes, opts)
       end
     end
   end
@@ -242,13 +235,14 @@ class TopicsBulkAction
   end
 
   def change_tags
-    tags = @operation[:tags]
-    tags = DiscourseTagging.tags_for_saving(tags, guardian) if tags.present?
+    tag_ids, tag_names = extract_tag_params
 
     topics.each do |t|
       if guardian.can_edit?(t)
-        if tags.present?
-          DiscourseTagging.tag_topic_by_names(t, guardian, tags)
+        if tag_ids.present?
+          DiscourseTagging.tag_topic_by_ids(t, guardian, tag_ids)
+        elsif tag_names.present?
+          DiscourseTagging.tag_topic_by_names(t, guardian, tag_names)
         else
           t.tags = []
         end
@@ -258,14 +252,33 @@ class TopicsBulkAction
   end
 
   def append_tags
-    tags = @operation[:tags]
-    tags = DiscourseTagging.tags_for_saving(tags, guardian) if tags.present?
+    tag_ids, tag_names = extract_tag_params
 
     topics.each do |t|
       if guardian.can_edit?(t)
-        DiscourseTagging.tag_topic_by_names(t, guardian, tags, append: true) if tags.present?
+        if tag_ids.present?
+          DiscourseTagging.tag_topic_by_ids(t, guardian, tag_ids, append: true)
+        elsif tag_names.present?
+          DiscourseTagging.tag_topic_by_names(t, guardian, tag_names, append: true)
+        end
         @changed_ids << t.id
       end
+    end
+  end
+
+  def extract_tag_params
+    if @operation[:tag_ids].present?
+      [@operation[:tag_ids], nil]
+    elsif @operation[:tags].present?
+      Discourse.deprecate(
+        "the tags param for bulk actions is deprecated, use tag_ids instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+      tag_names = @operation[:tags]
+      [nil, tag_names]
+    else
+      [nil, nil]
     end
   end
 

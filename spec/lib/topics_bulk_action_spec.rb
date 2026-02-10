@@ -312,6 +312,78 @@ RSpec.describe TopicsBulkAction do
         expect(topic.reload.category).to eq(original_category)
       end
     end
+
+    context "when destination category does not allow the topic's tags" do
+      fab!(:destination_category, :category)
+      fab!(:other_tag) { Fabricate(:tag, name: "other-tag") }
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:source_category) { Fabricate(:category, tags: [restricted_tag]) }
+      fab!(:admin)
+      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [restricted_tag]) }
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+
+      before { destination_category.update!(tags: [other_tag]) }
+
+      it "does not change category" do
+        original_category = topic_with_tag.category
+
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_tag.reload.category).to eq(original_category)
+      end
+    end
+
+    context "when destination category has the same tag group as source" do
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [restricted_tag]) }
+      fab!(:source_category) { Fabricate(:category, tag_groups: [tag_group]) }
+      fab!(:destination_category) { Fabricate(:category, tag_groups: [tag_group]) }
+      fab!(:admin)
+      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [restricted_tag]) }
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+
+      it "changes category successfully" do
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([topic_with_tag.id])
+        expect(topic_with_tag.reload.category).to eq(destination_category)
+      end
+    end
+
+    context "when destination category has allow_global_tags enabled" do
+      fab!(:global_tag) { Fabricate(:tag, name: "global-tag") }
+      fab!(:source_category, :category)
+      fab!(:destination_category) { Fabricate(:category, allow_global_tags: true) }
+      fab!(:admin)
+      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [global_tag]) }
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+
+      it "changes category successfully for unrestricted tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([topic_with_tag.id])
+        expect(topic_with_tag.reload.category).to eq(destination_category)
+      end
+    end
   end
 
   describe "destroy_post_timing" do
@@ -456,43 +528,24 @@ RSpec.describe TopicsBulkAction do
     end
 
     context "when the user can edit the topic" do
-      context "when permitted to create new tags" do
-        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
+      fab!(:tag3, :tag)
 
-        it "changes tags and creates new ones" do
-          topic_ids =
-            TopicsBulkAction.new(
-              topic.user,
-              [topic.id],
-              type: "change_tags",
-              tags: ["newtag", tag1.name],
-            ).perform!
+      it "changes tags to specified tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_tags",
+            tag_ids: [tag1.id, tag3.id],
+          ).perform!
 
-          expect(topic_ids).to eq([topic.id])
-          expect(topic.reload.tags.map(&:name)).to contain_exactly("newtag", tag1.name)
-        end
-      end
-
-      context "when not permitted to create new tags" do
-        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
-
-        it "changes to existing tags only" do
-          topic_ids =
-            TopicsBulkAction.new(
-              topic.user,
-              [topic.id],
-              type: "change_tags",
-              tags: ["newtag", tag1.name],
-            ).perform!
-
-          expect(topic_ids).to eq([topic.id])
-          expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name)
-        end
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.tags).to contain_exactly(tag1, tag3)
       end
 
       it "removes all tags with empty array" do
         topic_ids =
-          TopicsBulkAction.new(topic.user, [topic.id], type: "change_tags", tags: []).perform!
+          TopicsBulkAction.new(topic.user, [topic.id], type: "change_tags", tag_ids: []).perform!
 
         expect(topic_ids).to eq([topic.id])
         expect(topic.reload.tags).to be_empty
@@ -500,6 +553,8 @@ RSpec.describe TopicsBulkAction do
     end
 
     context "when the user can't edit the topic" do
+      fab!(:tag3, :tag)
+
       it "doesn't change the tags" do
         Guardian.any_instance.expects(:can_edit?).returns(false)
 
@@ -508,11 +563,11 @@ RSpec.describe TopicsBulkAction do
             topic.user,
             [topic.id],
             type: "change_tags",
-            tags: ["newtag", tag1.name],
+            tag_ids: [tag3.id],
           ).perform!
 
         expect(topic_ids).to eq([])
-        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
     end
   end
@@ -529,51 +584,25 @@ RSpec.describe TopicsBulkAction do
     end
 
     context "when the user can edit the topic" do
-      context "when permitted to create new tags" do
-        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_0] }
+      it "appends existing tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "append_tags",
+            tag_ids: [tag3.id],
+          ).perform!
 
-        it "appends new and existing tags" do
-          topic_ids =
-            TopicsBulkAction.new(
-              topic.user,
-              [topic.id],
-              type: "append_tags",
-              tags: [tag1.name, tag3.name, "newtag"],
-            ).perform!
-
-          expect(topic_ids).to eq([topic.id])
-          expect(topic.reload.tags.map(&:name)).to contain_exactly(
-            tag1.name,
-            tag2.name,
-            tag3.name,
-            "newtag",
-          )
-        end
-      end
-
-      context "when not permitted to create new tags" do
-        before { SiteSetting.create_tag_allowed_groups = Group::AUTO_GROUPS[:trust_level_4] }
-
-        it "appends only existing tags" do
-          topic_ids =
-            TopicsBulkAction.new(
-              topic.user,
-              [topic.id],
-              type: "append_tags",
-              tags: [tag3.name, "newtag"],
-            ).perform!
-
-          expect(topic_ids).to eq([topic.id])
-          expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name, tag3.name)
-        end
+        expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2, tag3)
       end
 
       it "keeps existing tags when appending empty array" do
         topic_ids =
-          TopicsBulkAction.new(topic.user, [topic.id], type: "append_tags", tags: []).perform!
+          TopicsBulkAction.new(topic.user, [topic.id], type: "append_tags", tag_ids: []).perform!
 
         expect(topic_ids).to eq([topic.id])
-        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
     end
 
@@ -586,11 +615,11 @@ RSpec.describe TopicsBulkAction do
             topic.user,
             [topic.id],
             type: "append_tags",
-            tags: ["newtag", tag3.name],
+            tag_ids: [tag3.id],
           ).perform!
 
         expect(topic_ids).to eq([])
-        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
     end
   end

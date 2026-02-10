@@ -1,8 +1,10 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
 import { action } from "@ember/object";
+import { tagName } from "@ember-decorators/component";
 import SimpleList from "discourse/admin/components/simple-list";
 
+@tagName("")
 export default class SiteSettingSimpleList extends Component {
   inputDelimiter = "|";
 
@@ -12,12 +14,14 @@ export default class SiteSettingSimpleList extends Component {
   }
 
   <template>
-    <SimpleList
-      @values={{this.value}}
-      @inputDelimiter={{this.inputDelimiter}}
-      @onChange={{this.onChange}}
-      @choices={{this.setting.choices}}
-      @allowAny={{this.setting.allow_any}}
-    />
+    <div ...attributes>
+      <SimpleList
+        @values={{this.value}}
+        @inputDelimiter={{this.inputDelimiter}}
+        @onChange={{this.onChange}}
+        @choices={{this.setting.choices}}
+        @allowAny={{this.setting.allow_any}}
+      />
+    </div>
   </template>
 }
