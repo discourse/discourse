@@ -2,6 +2,8 @@
 
 .uc-modernize-foundation-theme {
   --d-logo-height: 2.3em;
+  --sidebar-section-wrapper-padding: var(--space-3) var(--space-2)
+    var(--space-4);
   --d-nav-underline-height: var(--space-half);
   --d-button-default-bg-color: transparent;
   --input-border-color: var(--primary-200);
