@@ -138,6 +138,17 @@ module DiscoursePostEvent
             expect(invitee.status).to eq(1)
             expect(invitee.post_id).to eq(post_1.id)
           end
+
+          it "returns 404 when invitee does not exist" do
+            put "/discourse-post-event/events/#{post_event_2.id}/invitees/999999.json",
+                params: {
+                  invitee: {
+                    status: "interested",
+                  },
+                }
+
+            expect(response.status).to eq(404)
+          end
         end
 
         describe "destroying invitee" do
@@ -161,17 +172,23 @@ module DiscoursePostEvent
             end
           end
 
-          context "when acting user can’t act on discourse event" do
+          context "when acting user can't act on invitee" do
             let(:lurker) { Fabricate(:user) }
 
             before { sign_in(lurker) }
 
-            it "doesn’t destroy the invitee" do
+            it "doesn't destroy the invitee" do
               invitee = post_event_2.invitees.first
               delete "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json"
               expect(Invitee.where(id: invitee.id).length).to eq(1)
               expect(response.status).to eq(403)
             end
+          end
+
+          it "returns 404 when invitee does not exist" do
+            delete "/discourse-post-event/events/#{post_event_2.id}/invitees/999999.json"
+
+            expect(response.status).to eq(404)
           end
         end
 
@@ -214,7 +231,7 @@ module DiscoursePostEvent
         end
       end
 
-      context "when an invitee doesn’t exist" do
+      context "when an invitee doesn't exist" do
         let(:post_event_2) { Fabricate(:event, post: post_1) }
 
         it "creates an invitee" do
