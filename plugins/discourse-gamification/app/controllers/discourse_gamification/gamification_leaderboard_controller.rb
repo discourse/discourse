@@ -26,14 +26,14 @@ module DiscourseGamification
         LeaderboardViewSerializer,
         root: false,
       )
-    rescue LeaderboardCachedView::NotReadyError => e
+    rescue LeaderboardCachedView::NotReadyError
       Jobs.enqueue(Jobs::GenerateLeaderboardPositions, leaderboard_id: leaderboard.id)
 
       render json:
                LeaderboardSerializer
                  .new(leaderboard)
                  .as_json
-                 .merge({ users: [], reason: e.message }),
+                 .merge({ users: [], reason: I18n.t("errors.leaderboard_positions_not_ready") }),
              status: :accepted
     end
   end
