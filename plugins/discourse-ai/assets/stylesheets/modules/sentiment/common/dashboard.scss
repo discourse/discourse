@@ -19,12 +19,12 @@
   padding: 1rem;
 }
 
-.admin-report.sentiment-analysis .body {
+.admin-report.sentiment-analysis .chart__wrapper {
   display: flex;
   flex-flow: row wrap;
   gap: 1rem;
 
-  .filters {
+  .chart__filters {
     @include report-container-box;
     order: 1;
     width: 100%;
@@ -238,8 +238,7 @@
 
 .showing-sentiment-analysis-chart
   .admin-report.sentiment-analysis
-  .body
-  .filters {
+  .chart__filters {
   // Hide elements 2 - 6 when showing selected chart
   // as they're not supported being changed in this view
   .control:first-of-type {

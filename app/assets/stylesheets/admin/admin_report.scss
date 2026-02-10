@@ -1,6 +1,11 @@
 @use "lib/viewport";
 
 .admin-report {
+  .select-kit.category-chooser {
+    width: auto;
+    max-width: 250px;
+  }
+
   .conditional-loading-section {
     &.is-loading {
       margin: 0;
@@ -76,54 +81,6 @@
       font-size: var(--font-up-1);
       font-weight: 700;
     }
-  }
-
-  .main {
-    flex: 1;
-    min-width: 0; // allow chart.js to shrink below intrinsic width
-  }
-
-  .main .report-alert {
-    margin: 0;
-    text-align: center;
-    padding: 3em;
-    border: 1px solid transparent;
-
-    a {
-      color: var(--primary-high);
-    }
-
-    .d-icon {
-      color: var(--primary-medium);
-      font-size: var(--font-up-5);
-      display: block;
-      margin: 0.25em auto;
-    }
-
-    &.no-data,
-    &.rate-limited {
-      background: var(--secondary);
-      border-color: var(--primary-low);
-      color: var(--primary);
-    }
-
-    &.rate-limited .d-icon {
-      color: var(--danger);
-    }
-
-    &.timeout,
-    &.exception {
-      border-color: var(--danger-low);
-      color: var(--danger);
-    }
-  }
-
-  .average-chart {
-    font-style: italic;
-    text-align: center;
-    color: var(--primary-high);
-    margin-bottom: 1em;
-    line-height: var(--line-height-medium);
   }
 
   .d-page-subheader__title a {
