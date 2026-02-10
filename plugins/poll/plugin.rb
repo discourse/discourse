@@ -138,46 +138,58 @@ after_initialize do
 
   on(:post_moved) do |new_post, _original_topic_id, old_post|
     next if old_post.blank? || new_post.id == old_post.id
-
-    polls = old_post.polls.includes(poll_options: :poll_votes).to_a
-    next if polls.empty?
+    next unless Poll.exists?(post_id: old_post.id)
 
     Poll.transaction do
-      polls.each do |old_poll|
-        next if Poll.exists?(post_id: new_post.id, name: old_poll.name)
+      DB.exec(<<~SQL, old_post_id: old_post.id, new_post_id: new_post.id)
+        INSERT INTO polls (post_id, name, close_at, type, status, results, visibility,
+                           min, max, step, anonymous_voters, chart_type, dynamic, title,
+                           created_at, updated_at)
+        SELECT :new_post_id, name, close_at, type, status, results, visibility,
+               min, max, step, anonymous_voters, chart_type, dynamic, title,
+               created_at, updated_at
+        FROM polls
+        WHERE polls.post_id = :old_post_id
+          AND NOT EXISTS (
+            SELECT 1 FROM polls np
+            WHERE np.post_id = :new_post_id AND np.name = polls.name
+          )
+      SQL
 
-        new_poll =
-          Poll.create!(old_poll.attributes.except("id", "post_id").merge("post_id" => new_post.id))
+      DB.exec(<<~SQL, old_post_id: old_post.id, new_post_id: new_post.id)
+        INSERT INTO poll_options (poll_id, digest, html, anonymous_votes, created_at, updated_at)
+        SELECT new_polls.id, old_options.digest, old_options.html, old_options.anonymous_votes,
+               old_options.created_at, old_options.updated_at
+        FROM poll_options old_options
+        JOIN polls old_polls ON old_options.poll_id = old_polls.id
+        JOIN polls new_polls ON new_polls.post_id = :new_post_id
+                            AND new_polls.name = old_polls.name
+        WHERE old_polls.post_id = :old_post_id
+          AND NOT EXISTS (
+            SELECT 1 FROM poll_options existing
+            WHERE existing.poll_id = new_polls.id AND existing.digest = old_options.digest
+          )
+      SQL
 
-        option_id_map = {}
-        old_poll.poll_options.each do |old_option|
-          new_option =
-            PollOption.create!(
-              old_option.attributes.except("id", "poll_id").merge("poll_id" => new_poll.id),
-            )
-          option_id_map[old_option.id] = new_option.id
-        end
-
-        votes_to_insert =
-          old_poll
-            .poll_options
-            .flat_map(&:poll_votes)
-            .filter_map do |vote|
-              new_option_id = option_id_map[vote.poll_option_id]
-              next if new_option_id.nil?
-
-              {
-                poll_id: new_poll.id,
-                poll_option_id: new_option_id,
-                user_id: vote.user_id,
-                rank: vote.rank,
-                created_at: vote.created_at,
-                updated_at: vote.updated_at,
-              }
-            end
-
-        PollVote.insert_all(votes_to_insert) if votes_to_insert.present?
-      end
+      DB.exec(<<~SQL, old_post_id: old_post.id, new_post_id: new_post.id)
+        INSERT INTO poll_votes (poll_id, poll_option_id, user_id, rank, created_at, updated_at)
+        SELECT new_polls.id, new_options.id, old_votes.user_id, old_votes.rank,
+               old_votes.created_at, old_votes.updated_at
+        FROM poll_votes old_votes
+        JOIN poll_options old_options ON old_votes.poll_option_id = old_options.id
+        JOIN polls old_polls ON old_votes.poll_id = old_polls.id
+        JOIN polls new_polls ON new_polls.post_id = :new_post_id
+                            AND new_polls.name = old_polls.name
+        JOIN poll_options new_options ON new_options.poll_id = new_polls.id
+                                    AND new_options.digest = old_options.digest
+        WHERE old_polls.post_id = :old_post_id
+          AND NOT EXISTS (
+            SELECT 1 FROM poll_votes existing
+            WHERE existing.poll_id = new_polls.id
+              AND existing.poll_option_id = new_options.id
+              AND existing.user_id = old_votes.user_id
+          )
+      SQL
     end
   end
 
