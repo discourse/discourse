@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 .admin-report-chart {
   animation: fadein 2s;
 
@@ -62,11 +64,12 @@
   &__filters {
     display: flex;
     align-items: flex-start; // aligned to top to provide alignment when subcat checkbox is in play
-    gap: var(--space-4);
+    gap: var(--space-2);
     margin-bottom: var(--space-4);
 
-    .group-filter .select-kit {
-      width: auto; // overrule for top level admin css
+    @include viewport.until(sm) {
+      flex-direction: column;
+      align-items: stretch;
     }
 
     .chart-groupings {
@@ -75,11 +78,18 @@
       background-color: var(--primary-very-low);
       border-radius: var(--d-border-radius-large);
       padding: var(--space-1) var(--space-2);
-      margin-right: auto;
+
+      @include viewport.from(sm) {
+        margin-right: auto;
+      }
 
       .chart-grouping {
         border-radius: var(--d-border-radius-large);
         background: transparent;
+
+        @include viewport.until(sm) {
+          flex-grow: 1;
+        }
 
         &:hover {
           background: transparent;
@@ -99,11 +109,11 @@
   }
 
   &__additional-filters {
-    .sentiment-analysis & {
-      display: flex;
-      align-items: center;
-      gap: var(--space-2);
-      flex-wrap: wrap;
+    display: flex;
+    gap: var(--space-2);
+
+    @include viewport.until(sm) {
+      flex-direction: column;
     }
   }
 
@@ -114,6 +124,12 @@
 
       > * {
         margin: 0;
+      }
+    }
+
+    .d-date-time-input {
+      @include viewport.until(sm) {
+        flex-grow: 1;
       }
     }
   }
@@ -140,7 +156,7 @@
   }
 }
 
-.filters {
-  display: flex;
-  align-items: center;
-}
+// .filters {
+//   display: flex;
+//   align-items: center;
+// }
