@@ -648,6 +648,7 @@ en:
         invalid_seeded_model: "You can't use this model with this feature"
         invalid_persona_response_format: "The selected persona must have a response format with a boolean field names \"spam\""
         must_select_model: "You must select a LLM first"
+        invalid_llm_id: "The selected LLM model is not valid"
       endpoints:
         not_configured: "%{display_name} (not configured)"
         configuration_hint:
