@@ -23,24 +23,12 @@ module ::Patreon
   PLUGIN_NAME = "discourse-patreon"
 end
 
-require_relative "lib/discourse_patreon/engine"
+Rails.autoloaders.main.push_dir(File.join(__dir__, "lib"), namespace: Patreon)
+Rails.autoloaders.main.ignore(File.join(__dir__, "lib/validators"))
+
+require_relative "lib/engine"
 
 after_initialize do
-  require_dependency "admin_constraint"
-
-  require_relative "app/controllers/patreon/patreon_admin_controller"
-  require_relative "app/controllers/patreon/patreon_webhook_controller"
-  require_relative "app/jobs/regular/sync_patron_groups"
-  require_relative "app/jobs/scheduled/patreon_sync_patrons_to_groups"
-  require_relative "app/jobs/scheduled/patreon_update_tokens"
-  require_relative "app/services/problem_check/access_token_invalid"
-  require_relative "lib/api"
-  require_relative "lib/seed"
-  require_relative "lib/campaign"
-  require_relative "lib/pledge"
-  require_relative "lib/patron"
-  require_relative "lib/tokens"
-
   Discourse::Application.routes.prepend { mount Patreon::Engine, at: "/patreon" }
 
   add_admin_route "patreon.title", "patreon"
@@ -56,42 +44,58 @@ after_initialize do
   end
 
   on(:user_created) do |user|
-    filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters")
-    patreon_id = Patreon::Patron.all.key(user.email)
+    next unless SiteSetting.patreon_enabled
 
-    if filters.present? && patreon_id.present?
+    patron = PatreonPatron.where("LOWER(email) = ?", user.email.downcase).first
+
+    if patron.present? && PatreonGroupRewardFilter.exists?
       begin
-        reward_id =
-          Patreon::RewardUser.all.except("0").detect { |_k, v| v.include? patreon_id }&.first
+        patron_reward_ids = patron.patreon_rewards.pluck(:id)
 
-        group_ids = filters.select { |_k, v| v.include?(reward_id) || v.include?("0") }.keys
+        group_ids =
+          PatreonGroupRewardFilter
+            .where(patreon_reward_id: patron_reward_ids)
+            .or(
+              PatreonGroupRewardFilter.where(patreon_reward: PatreonReward.where(patreon_id: "0")),
+            )
+            .pluck(:group_id)
+            .uniq
 
         Group.where(id: group_ids).each { |group| group.add user }
 
-        Patreon::Patron.update_local_user(user, patreon_id, true)
+        Patreon::Patron.update_local_user(user, patron.patreon_id, true)
       rescue => e
         Rails.logger.warn(
-          "Patreon group membership callback failed for new user #{self.id} with error: #{e}.\n\n #{e.backtrace.join("\n")}",
+          "Patreon group membership callback failed for new user #{user.id} with error: #{e}.\n\n #{e.backtrace.join("\n")}",
         )
       end
     end
   end
+
+  AdminDetailedUserSerializer.define_method(:patreon_patron_record) do
+    @patreon_patron_record ||= Patreon::Patron.patron_for_user(object)
+  end
+  AdminDetailedUserSerializer.send(:private, :patreon_patron_record)
 
   Patreon::USER_DETAIL_FIELDS.each do |attribute|
     add_to_serializer(
       :admin_detailed_user,
       "patreon_#{attribute}".to_sym,
       include_condition: -> do
-        Patreon::Patron.attr(attribute, object).present? &&
+        SiteSetting.patreon_enabled &&
+          Patreon::Patron.attr(attribute, object, patreon_patron_record).present? &&
           (attribute != "amount_cents" || scope.is_admin?)
       end,
-    ) { Patreon::Patron.attr(attribute, object) }
+    ) { Patreon::Patron.attr(attribute, object, patreon_patron_record) }
   end
 
   add_to_serializer(
     :admin_detailed_user,
     :patreon_email_exists,
-    include_condition: -> { Patreon::Patron.attr("email", object).present? },
+    include_condition: -> do
+      SiteSetting.patreon_enabled &&
+        Patreon::Patron.attr("email", object, patreon_patron_record).present?
+    end,
   ) { true }
 
   add_to_serializer(:current_user, :show_donation_prompt?) do

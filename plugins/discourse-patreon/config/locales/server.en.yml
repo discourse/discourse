@@ -23,3 +23,7 @@ en:
   patreon:
     error:
       invalid_response: "Invalid response from Patreon API"
+      group_not_found: "Group not found"
+      missing_rewards: "Rewards are required"
+      unknown_rewards: "Unknown reward IDs: %{ids}"
+      sync_failed: "Group synchronization failed. Check the logs for details."

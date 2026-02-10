@@ -39,6 +39,11 @@ class Patreon::PatreonWebhookController < ApplicationController
     pledge_data = JSON.parse(request.body.read)
     patreon_id = Patreon::Pledge.get_patreon_id(pledge_data)
 
+    if patreon_id.blank?
+      render_json_error("Could not extract patron ID from payload", status: 422)
+      return
+    end
+
     if SiteSetting.patreon_verbose_log
       Rails.logger.warn(
         "Patreon verbose log for Webhook:\n  Event = #{event}\n Id = #{patreon_id}\n  Data = #{pledge_data.inspect}",
@@ -70,10 +75,15 @@ class Patreon::PatreonWebhookController < ApplicationController
   private
 
   def valid_signature?
-    signature = request.headers["X-Patreon-Signature"]
-    digest = OpenSSL::Digest.new("MD5")
+    secret = SiteSetting.patreon_webhook_secret
+    return false if secret.blank?
 
-    signature ==
-      OpenSSL::HMAC.hexdigest(digest, SiteSetting.patreon_webhook_secret, request.raw_post)
+    signature = request.headers["X-Patreon-Signature"]
+    return false if signature.blank?
+
+    digest = OpenSSL::Digest.new("MD5")
+    expected = OpenSSL::HMAC.hexdigest(digest, secret, request.raw_post)
+
+    ActiveSupport::SecurityUtils.secure_compare(signature, expected)
   end
 end

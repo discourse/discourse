@@ -8,42 +8,67 @@ module Patreon
       return unless Patreon::Campaign.update!
       sync_groups
 
-      rewards = Patreon.get("rewards")
-      ::MessageBus.publish "/patreon/background_sync", rewards
+      ::MessageBus.publish "/patreon/background_sync", PatreonReward.to_hash
+    end
+
+    def self.filters_by_group
+      PatreonGroupRewardFilter
+        .includes(:patreon_reward)
+        .group_by(&:group_id)
+        .transform_values { |records| records.map { |r| r.patreon_reward.patreon_id } }
     end
 
     def self.sync_groups
-      filters = Patreon.get("filters") || {}
+      filters = filters_by_group
       return if filters.blank?
 
-      local_users = get_local_users
-      reward_users = Patreon::RewardUser.all
-      declined_users = Patreon::Pledge::Decline.all
       declined_pledges_grace_period_days = SiteSetting.patreon_declined_pledges_grace_period_days
 
-      filters.each_pair do |group_id, rewards|
-        group = Group.find_by(id: group_id)
+      # Pre-index local users: patreon_id -> Array of user_ids
+      users_by_patreon_id =
+        get_local_users.each_with_object({}) do |(user_id, patreon_id), h|
+          next if patreon_id.blank?
+          (h[patreon_id] ||= []) << user_id
+        end
 
+      # Precompute: reward_patreon_id -> Set of patron_patreon_ids
+      reward_patron_map =
+        PatreonPatronReward
+          .joins(:patreon_reward, :patreon_patron)
+          .pluck("patreon_rewards.patreon_id", "patreon_patrons.patreon_id")
+          .each_with_object({}) do |(reward_pid, patron_pid), h|
+            (h[reward_pid] ||= Set.new) << patron_pid
+          end
+
+      # Precompute: all declined patrons
+      declined_patrons =
+        PatreonPatron.where.not(declined_since: nil).pluck(:patreon_id, :declined_since).to_h
+
+      # Precompute: patreon_ids past grace period (ineligible)
+      today = Time.zone.today
+      ineligible_patreon_ids =
+        declined_patrons
+          .select do |_, declined_since|
+            (today - declined_since.to_date) > declined_pledges_grace_period_days
+          end
+          .keys
+          .to_set
+
+      filters.each_pair do |group_id, reward_patreon_ids|
+        group = Group.find_by(id: group_id)
         next if group.nil?
 
-        patron_ids = rewards.map { |id| reward_users[id] }.compact.flatten.uniq
+        # Union of patron_ids across all reward tiers for this filter
+        patron_ids =
+          reward_patreon_ids.each_with_object(Set.new) do |rpid, set|
+            set.merge(reward_patron_map[rpid]) if reward_patron_map[rpid]
+          end
 
-        next if patron_ids.blank?
+        # Remove ineligible (declined past grace period)
+        eligible_patron_ids = patron_ids - ineligible_patreon_ids
 
-        user_ids =
-          local_users
-            .select do |_, patreon_id|
-              is_declined = false
-              declined_since = declined_users[patreon_id]
-
-              if declined_since.present?
-                declined_days_count = Time.now.to_date - declined_since.to_date
-                is_declined = declined_days_count > declined_pledges_grace_period_days
-              end
-
-              patreon_id.present? && patron_ids.include?(patreon_id) && !is_declined
-            end
-            .pluck(0)
+        # Map eligible patron patreon_ids to local user_ids
+        user_ids = eligible_patron_ids.flat_map { |pid| users_by_patreon_id[pid] || [] }
 
         group_user_ids = GroupUser.where(group: group).pluck(:user_id)
 
@@ -54,45 +79,50 @@ module Patreon
     end
 
     def self.sync_groups_by(patreon_id:)
-      filters = Patreon.get("filters") || {}
+      filters = filters_by_group
       return if filters.blank?
 
       user = get_local_user(patreon_id)
       return if user.blank?
 
-      reward_users = Patreon::RewardUser.all
-      declined_since = Patreon::Pledge::Decline.all[patreon_id]
+      patron = PatreonPatron.find_by(patreon_id: patreon_id)
       declined_pledges_grace_period_days = SiteSetting.patreon_declined_pledges_grace_period_days
       is_member = true
 
-      if declined_since.present?
-        declined_days_count = Time.now.to_date - declined_since.to_date
+      if patron&.declined_since.present?
+        declined_days_count = Time.zone.today - patron.declined_since.to_date
         is_member = false if declined_days_count > declined_pledges_grace_period_days
       end
 
-      filters.each_pair do |group_id, rewards|
+      # Get the reward patreon_ids this patron belongs to
+      patron_reward_patreon_ids =
+        if patron
+          PatreonPatronReward
+            .joins(:patreon_reward)
+            .where(patreon_patron_id: patron.id)
+            .pluck("patreon_rewards.patreon_id")
+        else
+          []
+        end
+
+      filters.each_pair do |group_id, reward_patreon_ids|
         group = Group.find_by(id: group_id)
         next if group.blank?
 
-        if is_member
-          patron_ids = rewards.map { |id| reward_users[id] }.compact.flatten.uniq
-          next if patron_ids.blank?
-
-          is_member = false if patron_ids.exclude?(patreon_id)
-        end
+        member_of_filter = is_member && (reward_patreon_ids & patron_reward_patreon_ids).present?
 
         is_existing_member = GroupUser.exists?(group: group, user: user)
 
-        if is_member && !is_existing_member
+        if member_of_filter && !is_existing_member
           group.add user
-        elsif !is_member && is_existing_member
+        elsif !member_of_filter && is_existing_member
           group.remove user
         end
       end
     end
 
     def self.all
-      Patreon.get("users") || {}
+      PatreonPatron.where.not(email: nil).pluck(:patreon_id, :email).to_h
     end
 
     def self.update_local_user(user, patreon_id, skip_save = false)
@@ -104,24 +134,28 @@ module Patreon
       user
     end
 
-    def self.attr(name, user)
+    def self.patron_for_user(user)
+      id = user.custom_fields["patreon_id"]
+      return if id.blank?
+      PatreonPatron.find_by(patreon_id: id)
+    end
+
+    def self.attr(name, user, patron = :not_provided)
       id = user.custom_fields["patreon_id"]
       return if id.blank?
 
+      patron = patron_for_user(user) if patron == :not_provided
+
       case name
       when "email"
-        all[id]
+        patron&.email
       when "amount_cents"
-        Patreon::Pledge.all[id]
+        patron&.amount_cents
       when "rewards"
-        reward_users = Patreon::RewardUser.all
-        Patreon::Reward
-          .all
-          .map { |i, r| r["title"] if reward_users[i].include?(id) }
-          .compact
-          .join(", ")
+        return unless patron
+        patron.patreon_rewards.order(:title).pluck(:title).join(", ")
       when "declined_since"
-        Patreon::Pledge::Decline.all[id]
+        patron&.declined_since
       else
         id
       end
@@ -132,28 +166,32 @@ module Patreon
         User.joins(
           "INNER JOIN user_custom_fields cf ON cf.user_id = users.id AND cf.name = 'patreon_id'",
         ).pluck("users.id, cf.value")
-      patrons = all.slice!(*users.pluck(1))
+
+      known_patreon_ids = users.map { |_, pid| pid }
+      remaining_patron_data = all.reject { |pid, _| known_patreon_ids.include?(pid) }
 
       oauth_users = UserAssociatedAccount.includes(:user).where(provider_name: "patreon")
-      oauth_users = oauth_users.where("provider_uid IN (?)", patrons.keys) if patrons.present?
+      if remaining_patron_data.present?
+        oauth_users = oauth_users.where(provider_uid: remaining_patron_data.keys)
+      end
 
-      users +=
-        oauth_users.map do |o|
-          patrons = patrons.slice!(o.provider_uid)
-          update_local_user(o.user, o.provider_uid)
-          [o.user_id, o.provider_uid]
+      oauth_users.each do |o|
+        remaining_patron_data.delete(o.provider_uid)
+        update_local_user(o.user, o.provider_uid)
+        users << [o.user_id, o.provider_uid]
+      end
+
+      patreon_id_by_email =
+        remaining_patron_data.each_with_object({}) { |(pid, email), h| h[email.downcase] = pid }
+      UserEmail
+        .includes(:user)
+        .where(email: patreon_id_by_email.keys)
+        .each do |u|
+          patreon_id = patreon_id_by_email[u.email.downcase]
+          next unless patreon_id
+          update_local_user(u.user, patreon_id)
+          users << [u.user_id, patreon_id]
         end
-
-      emails = patrons.values.map { |e| e.downcase }
-      users +=
-        UserEmail
-          .includes(:user)
-          .where(email: emails)
-          .map do |u|
-            patreon_id = patrons.key(u.email)
-            update_local_user(u.user, patreon_id)
-            [u.user_id, patreon_id]
-          end
 
       users.compact
     end
@@ -175,7 +213,15 @@ module Patreon
             provider_uid: patreon_id,
           },
         )
-      user ||= User.joins(:user_emails).find_by(user_emails: { email: all[patreon_id] })
+
+      patron = PatreonPatron.find_by(patreon_id: patreon_id)
+      if patron&.email.present?
+        user ||=
+          User
+            .joins(:user_emails)
+            .where("LOWER(user_emails.email) = ?", patron.email.downcase)
+            .first
+      end
       return if user.blank?
 
       update_local_user(user, patreon_id)

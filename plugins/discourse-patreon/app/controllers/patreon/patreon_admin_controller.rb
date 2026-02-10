@@ -11,66 +11,73 @@ class Patreon::PatreonAdminController < Admin::AdminController
   end
 
   def list
-    filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters") || {}
-    rewards = Patreon::Reward.all
-    last_sync = Patreon.get("last_sync") || {}
+    filters =
+      PatreonGroupRewardFilter
+        .includes(:patreon_reward)
+        .group_by(&:group_id)
+        .transform_values { |records| records.map { |r| r.patreon_reward.patreon_id } }
 
-    groups = ::Group.all.pluck(:id)
+    last_sync_at = PatreonSyncLog.maximum(:synced_at)
 
-    valid_filters = filters.select { |k| groups.include?(k.to_i) }
-
-    render json: { filters: valid_filters, rewards: rewards, last_sync_at: last_sync["at"] }
+    render json: { filters: filters, rewards: serialize_rewards, last_sync_at: last_sync_at }
   end
 
   def rewards
-    rewards = Patreon::Reward.all
-
-    render json: rewards
-  end
-
-  def is_number?(string)
-    begin
-      true if Float(string)
-    rescue StandardError
-      false
-    end
+    render json: serialize_rewards
   end
 
   def edit
-    if params[:rewards_ids].nil? || !is_number?(params[:group_id])
-      return render json: { message: "Error" }, status: :internal_server_error
+    group = find_group
+    return if group.nil?
+
+    if params[:rewards_ids].nil?
+      return(
+        render json: failed_json.merge(message: I18n.t("patreon.error.missing_rewards")),
+               status: :unprocessable_entity
+      )
     end
 
-    filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters") || {}
+    reward_patreon_ids = Array(params[:rewards_ids]).map(&:to_s).uniq
+    rewards = PatreonReward.where(patreon_id: reward_patreon_ids).index_by(&:patreon_id)
+    unknown_ids = reward_patreon_ids - rewards.keys
 
-    filters[params[:group_id]] = params[:rewards_ids]
+    if unknown_ids.present?
+      return(
+        render json:
+                 failed_json.merge(
+                   message: I18n.t("patreon.error.unknown_rewards", ids: unknown_ids.join(", ")),
+                 ),
+               status: :unprocessable_entity
+      )
+    end
 
-    PluginStore.set(Patreon::PLUGIN_NAME, "filters", filters)
+    ActiveRecord::Base.transaction do
+      PatreonGroupRewardFilter.where(group: group).destroy_all
+
+      rewards.each_value do |reward|
+        PatreonGroupRewardFilter.create!(group: group, patreon_reward: reward)
+      end
+    end
 
     render json: success_json
   end
 
   def delete
-    unless is_number?(params[:group_id])
-      return render json: { message: "Error" }, status: :internal_server_error
-    end
+    group = find_group
+    return if group.nil?
 
-    filters = PluginStore.get(Patreon::PLUGIN_NAME, "filters")
-
-    filters.delete(params[:group_id])
-
-    PluginStore.set(Patreon::PLUGIN_NAME, "filters", filters)
+    PatreonGroupRewardFilter.where(group: group).destroy_all
 
     render json: success_json
   end
 
   def sync_groups
-    begin
-      Patreon::Patron.sync_groups
-      render json: success_json
-    rescue => e
-      render json: { message: e.message }, status: :internal_server_error
-    end
+    Patreon::Patron.sync_groups
+    render json: success_json
+  rescue StandardError => e
+    Rails.logger.error("Patreon group sync failed: #{e.message}\n#{e.backtrace.join("\n")}")
+    render json: failed_json.merge(message: I18n.t("patreon.error.sync_failed")),
+           status: :unprocessable_entity
   end
 
   def update_data
@@ -89,6 +96,8 @@ class Patreon::PatreonAdminController < Admin::AdminController
     render json: { email: Patreon::Patron.attr("email", user) }
   end
 
+  private
+
   def patreon_tokens_present?
     if SiteSetting.patreon_creator_access_token.blank?
       raise Discourse::SiteSettingMissing.new("patreon_creator_access_token")
@@ -96,5 +105,18 @@ class Patreon::PatreonAdminController < Admin::AdminController
     if SiteSetting.patreon_creator_refresh_token.blank?
       raise Discourse::SiteSettingMissing.new("patreon_creator_refresh_token")
     end
+  end
+
+  def serialize_rewards
+    PatreonReward.to_hash
+  end
+
+  def find_group
+    group = Group.find_by(id: params[:group_id])
+    if group.nil?
+      render json: failed_json.merge(message: I18n.t("patreon.error.group_not_found")),
+             status: :not_found
+    end
+    group
   end
 end

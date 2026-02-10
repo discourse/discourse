@@ -6,30 +6,26 @@ RSpec.describe Patreon::Patron do
     user
   end
 
-  let(:patrons) do
-    { "111111" => "foo@bar.com", "111112" => "boo@far.com", "111113" => "roo@aar.com" }
+  fab!(:all_patrons_reward) do
+    Fabricate(:patreon_reward, patreon_id: "0", title: "All Patrons", amount_cents: 0)
   end
-  let(:pledges) { { "111111" => "100", "111112" => "500" } }
-  let(:rewards) do
-    {
-      "0" => {
-        title: "All Patrons",
-        amount_cents: "0",
-      },
-      "4589" => {
-        title: "Sponsors",
-        amount_cents: "1000",
-      },
-    }
+  fab!(:sponsors_reward) do
+    Fabricate(:patreon_reward, patreon_id: "4589", title: "Sponsors", amount_cents: 1000)
   end
-  let(:reward_users) { { "0" => %w[111111 111112], "4589" => ["111112"] } }
-  let(:titles) { { "111111" => "All Patrons", "111112" => "All Patrons, Sponsors" } }
+  fab!(:patron1) do
+    Fabricate(:patreon_patron, patreon_id: "111111", email: "foo@bar.com", amount_cents: 100)
+  end
+  fab!(:patron2) do
+    Fabricate(:patreon_patron, patreon_id: "111112", email: "boo@far.com", amount_cents: 500)
+  end
+  fab!(:patron3) do
+    Fabricate(:patreon_patron, patreon_id: "111113", email: "roo@aar.com", amount_cents: nil)
+  end
 
   before do
-    Patreon.set("users", patrons)
-    Patreon.set("pledges", pledges)
-    Patreon.set("rewards", rewards)
-    Patreon.set("reward-users", reward_users)
+    Fabricate(:patreon_patron_reward, patreon_patron: patron1, patreon_reward: all_patrons_reward)
+    Fabricate(:patreon_patron_reward, patreon_patron: patron2, patreon_reward: all_patrons_reward)
+    Fabricate(:patreon_patron_reward, patreon_patron: patron2, patreon_reward: sponsors_reward)
   end
 
   it "should find local users matching Patreon user info" do
@@ -41,19 +37,60 @@ RSpec.describe Patreon::Patron do
 
     local_users.each do |user_id, patreon_id|
       user = User.find(user_id)
-      expect(described_class.attr("email", user)).to eq(patrons[patreon_id])
-      expect(described_class.attr("amount_cents", user)).to eq(pledges[patreon_id])
-      expect(described_class.attr("rewards", user)).to eq(titles[patreon_id])
+      patron = PatreonPatron.find_by(patreon_id: patreon_id)
+      expect(described_class.attr("email", user)).to eq(patron.email)
+      expect(described_class.attr("amount_cents", user)).to eq(patron.amount_cents)
+
+      expected_titles =
+        if patreon_id == "111111"
+          "All Patrons"
+        else
+          "All Patrons, Sponsors"
+        end
+      expect(described_class.attr("rewards", user)).to eq(expected_titles)
     end
   end
 
   it "should find local users matching email address without case-sensitivity" do
-    patrons["111111"] = "Foo@bar.com"
-    Patreon.set("users", patrons)
+    patron1.update!(email: "Foo@bar.com")
     Fabricate(:user, email: "foo@bar.com")
 
     local_users = described_class.get_local_users
     expect(local_users.count).to eq(1)
+  end
+
+  describe ".attr" do
+    it "returns declined_since for a patron" do
+      declined_time = 3.days.ago
+      patron1.update!(declined_since: declined_time)
+      user = Fabricate(:user, email: "foo@bar.com")
+      user.custom_fields["patreon_id"] = "111111"
+      user.save_custom_fields
+
+      result = described_class.attr("declined_since", user)
+      expect(result).to be_within(1.second).of(declined_time)
+    end
+
+    it "returns nil for declined_since when patron has not declined" do
+      user = Fabricate(:user, email: "foo@bar.com")
+      user.custom_fields["patreon_id"] = "111111"
+      user.save_custom_fields
+
+      expect(described_class.attr("declined_since", user)).to be_nil
+    end
+
+    it "returns the patreon_id for the default 'id' attribute" do
+      user = Fabricate(:user, email: "foo@bar.com")
+      user.custom_fields["patreon_id"] = "111111"
+      user.save_custom_fields
+
+      expect(described_class.attr("id", user)).to eq("111111")
+    end
+
+    it "returns nil when user has no patreon_id custom field" do
+      user = Fabricate(:user)
+      expect(described_class.attr("email", user)).to be_nil
+    end
   end
 
   describe "sync groups" do
@@ -62,8 +99,9 @@ RSpec.describe Patreon::Patron do
     let(:group2) { Fabricate(:group) }
 
     before do
-      filters = { group1.id.to_s => ["0"], group2.id.to_s => ["4589"] }
-      Patreon.set("filters", filters)
+      SiteSetting.patreon_declined_pledges_grace_period_days = 7
+      Fabricate(:patreon_group_reward_filter, group: group1, patreon_reward: all_patrons_reward)
+      Fabricate(:patreon_group_reward_filter, group: group2, patreon_reward: sponsors_reward)
     end
 
     it "should sync all Patreon users" do
@@ -77,6 +115,87 @@ RSpec.describe Patreon::Patron do
       described_class.sync_groups_by(patreon_id: patreon_user_info.provider_uid)
       expect(group1.users.to_a).to eq([patreon_user_info.user])
       expect(group2.users.to_a).to eq([patreon_user_info.user])
+    end
+
+    it "should remove user from group when patron is no longer eligible" do
+      user = patreon_user_info.user
+      group1.add(user)
+      expect(group1.users).to include(user)
+
+      PatreonPatronReward.where(
+        patreon_patron: patron2,
+        patreon_reward: all_patrons_reward,
+      ).delete_all
+      PatreonPatronReward.where(patreon_patron: patron2, patreon_reward: sponsors_reward).delete_all
+
+      described_class.sync_groups
+      expect(group1.reload.users).not_to include(user)
+      expect(group2.reload.users).not_to include(user)
+    end
+
+    it "should remove stale members when tier has zero patrons" do
+      user = patreon_user_info.user
+      group2.add(user)
+      expect(group2.users).to include(user)
+
+      PatreonPatronReward.where(patreon_reward: sponsors_reward).delete_all
+
+      described_class.sync_groups
+      expect(group2.reload.users).not_to include(user)
+    end
+
+    it "should remove user from group when pledge is declined beyond grace period" do
+      user = patreon_user_info.user
+      group1.add(user)
+
+      patron2.update!(declined_since: 10.days.ago)
+
+      described_class.sync_groups
+      expect(group1.reload.users).not_to include(user)
+    end
+
+    it "should keep user in group when pledge is declined within grace period" do
+      user = patreon_user_info.user
+
+      patron2.update!(declined_since: 3.days.ago)
+
+      described_class.sync_groups
+      expect(group1.reload.users).to include(user)
+    end
+
+    describe "sync_groups_by" do
+      it "should remove user when pledge is declined beyond grace period" do
+        user = patreon_user_info.user
+        group1.add(user)
+        group2.add(user)
+
+        patron2.update!(declined_since: 10.days.ago)
+
+        described_class.sync_groups_by(patreon_id: "111112")
+        expect(group1.reload.users).not_to include(user)
+        expect(group2.reload.users).not_to include(user)
+      end
+
+      it "should keep user when pledge is declined within grace period" do
+        user = patreon_user_info.user
+        patron2.update!(declined_since: 3.days.ago)
+
+        described_class.sync_groups_by(patreon_id: "111112")
+        expect(group1.reload.users).to include(user)
+      end
+
+      it "should remove user from group when no longer in matching rewards" do
+        user = patreon_user_info.user
+        group2.add(user)
+
+        PatreonPatronReward.where(
+          patreon_patron: patron2,
+          patreon_reward: sponsors_reward,
+        ).delete_all
+
+        described_class.sync_groups_by(patreon_id: "111112")
+        expect(group2.reload.users).not_to include(user)
+      end
     end
   end
 end

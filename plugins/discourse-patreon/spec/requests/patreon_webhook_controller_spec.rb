@@ -14,14 +14,14 @@ RSpec.describe Patreon::PatreonWebhookController do
   describe "index" do
     describe "header checking" do
       it "returns a 403 error without header params" do
-        expect_not_enqueued_with(job: :patreon_sync_patrons_to_groups) { post "/patreon/webhook" }
+        expect_not_enqueued_with(job: :sync_patron_groups) { post "/patreon/webhook" }
 
         expect(response.status).to eq(403)
         expect(response.parsed_body["errors"]).to contain_exactly("Missing event header")
       end
 
       it "returns a 403 error with unknown event" do
-        expect_not_enqueued_with(job: :patreon_sync_patrons_to_groups) do
+        expect_not_enqueued_with(job: :sync_patron_groups) do
           post "/patreon/webhook",
                headers: {
                  "X-Patreon-Event": "foo:bar",
@@ -34,7 +34,9 @@ RSpec.describe Patreon::PatreonWebhookController do
       end
 
       it "returns a 403 error with invalid signature" do
-        expect_not_enqueued_with(job: :patreon_sync_patrons_to_groups) do
+        SiteSetting.patreon_webhook_secret = "WEBHOOK SECRET"
+
+        expect_not_enqueued_with(job: :sync_patron_groups) do
           post "/patreon/webhook",
                headers: {
                  "X-Patreon-Event": "pledges:create",
@@ -45,6 +47,31 @@ RSpec.describe Patreon::PatreonWebhookController do
         expect(response.status).to eq(403)
         expect(response.parsed_body["errors"]).to contain_exactly("Invalid signature")
       end
+
+      it "returns a 403 error when webhook secret is not configured" do
+        SiteSetting.patreon_webhook_secret = ""
+
+        expect_not_enqueued_with(job: :sync_patron_groups) do
+          post "/patreon/webhook",
+               params: "{}",
+               headers: {
+                 "X-Patreon-Event": "pledges:create",
+                 "X-Patreon-Signature": "anything",
+               }
+        end
+
+        expect(response.status).to eq(403)
+      end
+
+      it "returns a 403 error when signature header is missing" do
+        SiteSetting.patreon_webhook_secret = "WEBHOOK SECRET"
+
+        expect_not_enqueued_with(job: :sync_patron_groups) do
+          post "/patreon/webhook", headers: { "X-Patreon-Event": "pledges:create" }
+        end
+
+        expect(response.status).to eq(403)
+      end
     end
 
     describe "enqueue job" do
@@ -53,17 +80,8 @@ RSpec.describe Patreon::PatreonWebhookController do
       let(:secret) { SiteSetting.patreon_webhook_secret = "WEBHOOK SECRET" }
 
       before do
-        Patreon.set(
-          "rewards",
-          "0": {
-            title: "All Patrons",
-            amount_cents: 0,
-          },
-          "999999": {
-            title: "Premium",
-            amount_cents: 1000,
-          },
-        )
+        Fabricate(:patreon_reward, patreon_id: "0", title: "All Patrons", amount_cents: 0)
+        Fabricate(:patreon_reward, patreon_id: "999999", title: "Premium", amount_cents: 1000)
       end
 
       def add_pledge
@@ -85,13 +103,12 @@ RSpec.describe Patreon::PatreonWebhookController do
       it "for event pledge:create" do
         user = Fabricate(:user, email: "roo@aar.com")
         group = Fabricate(:group)
-        Patreon.set("filters", group.id.to_s => ["0"])
+        all_patrons_reward = PatreonReward.find_by(patreon_id: "0")
+        Fabricate(:patreon_group_reward_filter, group: group, patreon_reward: all_patrons_reward)
 
-        expect { post_request(body, "create") }.to change { Patreon::Pledge.all.keys.count }.by(
-          1,
-        ).and change { Patreon::Patron.all.keys.count }.by(1).and change {
-                      Patreon::RewardUser.all.keys.count
-                    }.by(2)
+        expect { post_request(body, "create") }.to change { PatreonPatron.count }.by(1).and change {
+                PatreonPatronReward.count
+              }
 
         expect(group.users).to include(user)
       end
@@ -100,13 +117,12 @@ RSpec.describe Patreon::PatreonWebhookController do
         body = get_patreon_response("member.json")
         user = Fabricate(:user, email: "roo@aar.com")
         group = Fabricate(:group)
-        Patreon.set("filters", group.id.to_s => ["0"])
+        all_patrons_reward = PatreonReward.find_by(patreon_id: "0")
+        Fabricate(:patreon_group_reward_filter, group: group, patreon_reward: all_patrons_reward)
 
         expect { post_request(body, "create", "members:pledge") }.to change {
-          Patreon::Pledge.all.keys.count
-        }.by(1).and change { Patreon::Patron.all.keys.count }.by(1).and change {
-                      Patreon::RewardUser.all.keys.count
-                    }.by(2)
+          PatreonPatron.count
+        }.by(1)
 
         expect(group.users).to include(user)
       end
@@ -118,21 +134,20 @@ RSpec.describe Patreon::PatreonWebhookController do
         patron_id = pledge["relationships"]["patron"]["data"]["id"]
         pledge_data = JSON.pretty_generate(pledge_data)
 
-        expect(Patreon.get("pledges")[patron_id]).to eq(250)
+        expect(PatreonPatron.find_by(patreon_id: patron_id).amount_cents).to eq(250)
         post_request(pledge_data, "update")
-        expect(Patreon.get("pledges")[patron_id]).to eq(987)
+        expect(PatreonPatron.find_by(patreon_id: patron_id).amount_cents).to eq(987)
       end
 
       it "for event pledge:delete" do
         pledge_data = add_pledge
         patron_id = pledge_data["data"]["relationships"]["patron"]["data"]["id"]
-        reward_id = pledge_data["data"]["relationships"]["reward"]["data"]["id"]
 
-        expect { post_request(body, "delete") }.to change { Patreon::Pledge.all.keys.count }.by(
-          -1,
-        ).and change { Patreon::Patron.all.keys.count }.by(-1).and change {
-                      Patreon::RewardUser.all[reward_id].count
-                    }.by(-1)
+        expect(PatreonPatron.find_by(patreon_id: patron_id)).to be_present
+
+        expect { post_request(body, "delete") }.to change { PatreonPatron.count }.by(-1)
+
+        expect(PatreonPatron.find_by(patreon_id: patron_id)).to be_nil
       end
     end
   end
