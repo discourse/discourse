@@ -23,33 +23,16 @@ export default class ChatRetentionReminderText extends Component {
 
   get text() {
     const opts = { chatSettingsLink: this.#chatSettingsLink };
+    const count = this.#countForChannelType;
 
-    if (this.args.channel.isDirectMessageChannel) {
-      if (this.#countForChannelType > 0) {
-        return htmlSafe(
-          i18n(`chat.retention_reminders.${this.type}`, {
-            ...opts,
-            count: this.siteSettings.chat_dm_retention_days,
-          })
-        );
-      } else {
-        return htmlSafe(
-          i18n(`chat.retention_reminders.indefinitely_${this.type}`, opts)
-        );
-      }
+    if (count > 0) {
+      return htmlSafe(
+        i18n(`chat.retention_reminders.${this.type}`, { ...opts, count })
+      );
     } else {
-      if (this.#countForChannelType > 0) {
-        return htmlSafe(
-          i18n(`chat.retention_reminders.${this.type}`, {
-            ...opts,
-            count: this.siteSettings.chat_channel_retention_days,
-          })
-        );
-      } else {
-        return htmlSafe(
-          i18n(`chat.retention_reminders.indefinitely_${this.type}`, opts)
-        );
-      }
+      return htmlSafe(
+        i18n(`chat.retention_reminders.indefinitely_${this.type}`, opts)
+      );
     }
   }
 
