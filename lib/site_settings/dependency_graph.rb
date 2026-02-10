@@ -24,14 +24,16 @@ class SiteSettings::DependencyGraph
   def reverse_dependencies
     @reverse_dependencies ||=
       begin
-        rev = Hash.new { |h, k| h[k] = [] }
-        dependencies.each { |setting, deps| Array(deps).each { |dep| rev[dep] << setting } }
+        rev = {}
+        dependencies.each do |setting, deps|
+          Array(deps).each { |dep| (rev[dep.to_s] ||= []) << setting }
+        end
         rev
       end
   end
 
   def dependents(setting)
-    reverse_dependencies[setting] || []
+    reverse_dependencies.fetch(setting.to_s, [])
   end
 
   def change_behavior(setting, behavior)

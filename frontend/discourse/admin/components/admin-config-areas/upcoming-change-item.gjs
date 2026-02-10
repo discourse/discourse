@@ -1,9 +1,10 @@
 /* eslint-disable ember/no-tracked-properties-from-args */
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { concat } from "@ember/helper";
+import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import { LinkTo } from "@ember/routing";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -18,11 +19,10 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import { bind } from "discourse/lib/decorators";
-import getUrl from "discourse/lib/get-url";
 import discourseLater from "discourse/lib/later";
 import lightbox from "discourse/lib/lightbox";
 import Group from "discourse/models/group";
-import { and, eq } from "discourse/truth-helpers";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeItem extends Component {
@@ -84,6 +84,12 @@ export default class UpcomingChangeItem extends Component {
     return (
       this.args.change.upcoming_change.status === "permanent" ||
       this.savingEnabledFor
+    );
+  }
+
+  get showDependentSettingsLink() {
+    return (
+      this.args.change.dependents.length && this.bufferedEnabledFor !== "no_one"
     );
   }
 
@@ -390,18 +396,14 @@ export default class UpcomingChangeItem extends Component {
           {{/each}}
         </DSelect>
 
-        {{#if (and @change.dependents (eq this.bufferedEnabledFor "everyone"))}}
+        {{#if this.showDependentSettingsLink}}
           <div class="upcoming-change__dependents">
-            <a
-              href={{getUrl
-                (concat
-                  "/admin/site_settings/category/all_results?dependsOn="
-                  @change.setting
-                )
-              }}
+            <LinkTo
+              @route="adminSiteSettings"
+              @query={{hash filter="all_results" dependsOn=@change.setting}}
             >
               {{i18n "admin.upcoming_changes.show_related_settings"}}
-            </a>
+            </LinkTo>
           </div>
         {{/if}}
 
