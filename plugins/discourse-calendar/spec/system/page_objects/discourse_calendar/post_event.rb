@@ -13,6 +13,7 @@ module PageObjects
         end
 
         def going
+          sleep 2.5 # FIXME
           find(".going-button").click
           self
         end
