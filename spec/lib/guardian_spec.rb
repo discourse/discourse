@@ -505,6 +505,28 @@ RSpec.describe Guardian do
         expect(Guardian.new(admin).can_banner_topic?(topic)).to be_truthy
       end
 
+      describe "#can_change_archetype?" do
+        fab!(:topic)
+
+        it "allows staff to change archetype to banner" do
+          expect(Guardian.new(admin).can_change_archetype?(topic, Archetype.banner)).to eq(true)
+          expect(Guardian.new(moderator).can_change_archetype?(topic, Archetype.banner)).to eq(true)
+        end
+
+        it "does not allow regular users to change archetype to banner" do
+          expect(Guardian.new(user).can_change_archetype?(topic, Archetype.banner)).to eq(false)
+        end
+
+        it "does not allow regular users to change archetype from banner" do
+          topic.update!(archetype: Archetype.banner)
+          expect(Guardian.new(user).can_change_archetype?(topic, Archetype.default)).to eq(false)
+        end
+
+        it "returns true when archetype is unchanged" do
+          expect(Guardian.new(user).can_change_archetype?(topic, topic.archetype)).to eq(true)
+        end
+      end
+
       it "respects category group moderator settings" do
         group_user = Fabricate(:group_user)
         user_gm = group_user.user
