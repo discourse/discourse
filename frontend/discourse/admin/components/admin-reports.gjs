@@ -10,7 +10,7 @@ import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 const REPORT_GROUPS = {
-  Engagement: {
+  engagement: {
     name: "Engagement",
     reports: [
       "daily_engaged_users",
