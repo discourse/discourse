@@ -218,7 +218,7 @@ describe "Composer Form Templates", type: :system do
   let(:cdp) { PageObjects::CDP.new }
 
   before do
-    SiteSetting.experimental_form_templates = true
+    SiteSetting.enable_form_templates = true
     SiteSetting.authorized_extensions = "*"
     sign_in user
   end

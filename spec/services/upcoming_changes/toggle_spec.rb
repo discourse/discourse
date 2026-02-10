@@ -11,7 +11,7 @@ RSpec.describe UpcomingChanges::Toggle do
     fab!(:admin)
     let(:params) { { setting_name:, enabled: } }
     let(:enabled) { true }
-    let(:setting_name) { :experimental_form_templates }
+    let(:setting_name) { :enable_form_templates }
     let(:dependencies) { { guardian: } }
     let(:options) { {} }
     let(:guardian) { admin.guardian }
@@ -188,17 +188,17 @@ RSpec.describe UpcomingChanges::Toggle do
           context "when enabling the setting" do
             let(:enabled) { true }
 
-            before { SiteSetting.experimental_form_templates = false }
+            before { SiteSetting.enable_form_templates = false }
 
             it "enables the specified setting" do
-              expect { result }.to change { SiteSetting.experimental_form_templates }.to(true)
+              expect { result }.to change { SiteSetting.enable_form_templates }.to(true)
             end
 
             it "creates an entry in the staff action logs with correct context" do
               expect { result }.to change {
                 UserHistory.where(
                   action: UserHistory.actions[:upcoming_change_toggled],
-                  subject: "experimental_form_templates",
+                  subject: "enable_form_templates",
                 ).count
               }.by(1)
 
@@ -211,7 +211,7 @@ RSpec.describe UpcomingChanges::Toggle do
               expect { result }.to change {
                 UpcomingChangeEvent.where(
                   event_type: :manual_opt_in,
-                  upcoming_change_name: "experimental_form_templates",
+                  upcoming_change_name: "enable_form_templates",
                 ).count
               }.by(1)
             end
@@ -229,17 +229,17 @@ RSpec.describe UpcomingChanges::Toggle do
           context "when disabling the setting" do
             let(:enabled) { false }
 
-            before { SiteSetting.experimental_form_templates = true }
+            before { SiteSetting.enable_form_templates = true }
 
             it "disables the specified setting" do
-              expect { result }.to change { SiteSetting.experimental_form_templates }.to(false)
+              expect { result }.to change { SiteSetting.enable_form_templates }.to(false)
             end
 
             it "creates an entry in the staff action logs with correct context" do
               expect { result }.to change {
                 UserHistory.where(
                   action: UserHistory.actions[:upcoming_change_toggled],
-                  subject: "experimental_form_templates",
+                  subject: "enable_form_templates",
                 ).count
               }.by(1)
 
@@ -252,7 +252,7 @@ RSpec.describe UpcomingChanges::Toggle do
               expect { result }.to change {
                 UpcomingChangeEvent.where(
                   event_type: :manual_opt_out,
-                  upcoming_change_name: "experimental_form_templates",
+                  upcoming_change_name: "enable_form_templates",
                 ).count
               }.by(1)
             end
@@ -274,17 +274,17 @@ RSpec.describe UpcomingChanges::Toggle do
           context "when enabling the setting" do
             let(:enabled) { true }
 
-            before { SiteSetting.experimental_form_templates = false }
+            before { SiteSetting.enable_form_templates = false }
 
             it "enables the specified setting" do
-              expect { result }.to change { SiteSetting.experimental_form_templates }.to(true)
+              expect { result }.to change { SiteSetting.enable_form_templates }.to(true)
             end
 
             it "does not create an entry in the staff action logs" do
               expect { result }.not_to change {
                 UserHistory.where(
                   action: UserHistory.actions[:upcoming_change_toggled],
-                  subject: "experimental_form_templates",
+                  subject: "enable_form_templates",
                 ).count
               }
             end
@@ -306,17 +306,17 @@ RSpec.describe UpcomingChanges::Toggle do
           context "when disabling the setting" do
             let(:enabled) { false }
 
-            before { SiteSetting.experimental_form_templates = true }
+            before { SiteSetting.enable_form_templates = true }
 
             it "disables the specified setting" do
-              expect { result }.to change { SiteSetting.experimental_form_templates }.to(false)
+              expect { result }.to change { SiteSetting.enable_form_templates }.to(false)
             end
 
             it "does not create an entry in the staff action logs" do
               expect { result }.not_to change {
                 UserHistory.where(
                   action: UserHistory.actions[:upcoming_change_toggled],
-                  subject: "experimental_form_templates",
+                  subject: "enable_form_templates",
                 ).count
               }
             end
