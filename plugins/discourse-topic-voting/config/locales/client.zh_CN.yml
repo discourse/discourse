@@ -10,6 +10,8 @@ zh_CN:
       sort_options:
         votes: "投票"
     topic_voting:
+      notification_label:
+        vote_released: "投票已返还"
       title: "投票话题"
       reached_limit: "您无法再投票了，请移除现有投票！"
       list_votes: "列出您的投票"

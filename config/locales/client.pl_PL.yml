@@ -1796,6 +1796,11 @@ pl_PL:
           few: '<span class="%{className}">%{count}</span> pomocne flagi'
           many: '<span class="%{className}">%{count}</span> pomocne flagi'
           other: '<span class="%{className}">%{count}</span> pomocne flagi'
+        flags:
+          one: '<span class="%{className}">%{count}</span> flaga'
+          few: '<span class="%{className}">%{count}</span> flagi'
+          many: '<span class="%{className}">%{count}</span> flag'
+          other: '<span class="%{className}">%{count}</span> flag'
         deleted_posts:
           one: '<span class="%{className}">%{count}</span> usunięty post'
           few: '<span class="%{className}">%{count}</span> usunięte posty'
@@ -2673,6 +2678,7 @@ pl_PL:
         }.
     learn_more: "Dowiedz się więcej…"
     learn_more_with_link: "<a href='%{url}' target='_blank'>Dowiedz się więcej…</a>"
+    feedback_with_link: "<a href='%{url}' target='_blank'>Informacja zwrotna…</a>"
     mute: Wycisz
     unmute: Wyłącz wyciszenie
     last_post: Opublikowano
@@ -3656,6 +3662,7 @@ pl_PL:
         deleted_post: "(usunięty post)"
         post_number_with_topic_title: "wpis #%{post_number} - %{title}"
         new_post_in_topic: "nowy wpis w %{title}"
+        new_post_in_deleted_topic: "nowy wpis w usuniętym temacie"
         user_requires_approval: "%{username} wymaga zatwierdzenia"
         default_item: "pozycja do sprawdzenia #%{reviewable_id}"
     topics:
@@ -4681,7 +4688,6 @@ pl_PL:
       edit_dialog_title: "Edytuj: %{categoryName}"
       view: "Pokaż Tematy w Kategorii"
       back: "Powrót do kategorii"
-      single_page: "Pojedyncza strona"
       general: "Ogólne"
       settings: "Ustawienia"
       advanced: "Zaawansowane"
@@ -4724,6 +4730,7 @@ pl_PL:
         self_lockout: "Zamierzasz zmienić uprawnienia kategorii w sposób, który spowoduje utratę Twojego dostępu. Czy na pewno chcesz kontynuować?"
       validations:
         emoji_required: "Wybierz emoji."
+        icon_required: "Wybierz ikonę."
       name: "Nazwa kategorii"
       untitled: "Kategoria bez tytułu"
       description: "Opis"
@@ -4770,11 +4777,15 @@ pl_PL:
         reply: "Odpowiedz"
         create: "Utwórz"
         no_groups_selected: "Żadnej grupie nie przyznano dostępu; ta kategoria będzie widoczna tylko dla personelu."
-        everyone_full_access: 'Ta kategoria jest publiczna, każdy może wyświetlać, odpowiadać i tworzyć posty. Aby ograniczyć uprawnienia, usuń jedno lub więcej uprawnień przyznanych grupie "wszyscy".'
+        everyone_full_access: 'Ta kategoria jest publiczna – każdy może widzieć, odpowiadać i tworzyć wpisy. Aby ograniczyć uprawnienia, usuń jedno lub więcej uprawnień przyznanych grupie „wszyscy”.'
+        everyone_reply_access: 'Ta kategoria jest publiczna, każdy może widzieć tematy i odpowiadać na nie. Aby ograniczyć uprawnienia, usuń grupę „wszyscy”.'
+        everyone_see_access: 'Ta kategoria jest publiczna i każdy może zobaczyć wpisy. Aby ograniczyć uprawnienia, usuń grupę „wszyscy”.'
         specific_groups_have_access: "Ta kategoria jest prywatna, tylko wybrane grupy mogą widzieć, odpowiadać i tworzyć wpisy."
+        all_parent_groups_used: "Dodano wszystkie grupy z kategorii nadrzędnej. Aby dodać więcej grup, najpierw dodaj je do kategorii nadrzędnej."
         toggle_reply: "Przełącz uprawnienie do odpowiedzi"
         toggle_full: "Przełącz uprawnienie do tworzenia"
         inherited: 'To uprawnienie jest dziedziczone po "wszystkich"'
+      special_warning: "Ta kategoria jest wstępnie zdefiniowana i ustawień zabezpieczeń nie można edytować. Jeśli nie chcesz używać tej kategorii, usuń ją zamiast używać jej ponownie."
       uncategorized_security_warning: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nie przypisanych do żadnej kategorii i jako taka nie może mieć ustawień bezpieczeństwa."
       uncategorized_general_warning: 'Ta kategoria jest wyjątkowa. Jest używana jako domyślna kategoria dla nowych tematów, które nie mają wybranej kategorii. Jeśli chcesz zapobiec temu zachowaniu i wymusić wybór kategorii, <a href="%{settingLink}">wyłącz to ustawienie tutaj</a>. Jeśli chcesz zmienić nazwę lub opis, przejdź do <a href="%{customizeLink}">Dostosuj / Treść tekstowa</a>.'
       pending_permission_change_alert: "Nie dodałeś/łaś %{group} do tej kategorii; kliknij ten przycisk, aby je dodać."
@@ -4818,6 +4829,8 @@ pl_PL:
         who_can_see: "Kto może zobaczyć tę kategorię"
         who_can_post: "Kto może tworzyć wpisy w tej kategorii"
         which_groups_can_access: "Które grupy mogą widzieć i publikować w tej kategorii"
+        more_options_hint: "Więcej uprawnień jest dostępnych w <a href>ustawieniach zaawansowanych</a>."
+        inherited_from_parent: "Uprawnienia są dziedziczone z kategorii nadrzędnej. Aby je doprecyzować, przejdź do <a href>ustawień zaawansowanych</a>."
       num_auto_bump_daily: "Liczba otwartych tematów do automatycznego podbicia każdego dnia"
       auto_bump_cooldown_days: "Minimalna liczba dni przed ponownym podbiciem tego samego tematu:"
       navigate_to_first_post_after_read: "Przejdź do pierwszego postu po przeczytaniu tematów"
@@ -6093,6 +6106,7 @@ pl_PL:
           keywords: "ustawienia regionalne|strefa czasowa|unicode|ltr"
         upcoming_changes:
           title: "Nadchodzące zmiany"
+          header_description: "Lista nadchodzących zmian w Discourse, które mogą wpłynąć na Twoją witrynę, oraz funkcji eksperymentalnych, na które możesz wyrazić zgodę. Możesz filtrować według wpływu, typu i statusu.\n\nGrupy z opcją zgody mogą być używane, aby umożliwić określonej grupie użytkowników przetestowanie zmiany przed jej udostępnieniem wszystkim użytkownikom. Grupy te będą jednak nieistotne, gdy zmiana uzyska status „Stała”."
         login:
           title: "Logowanie i uwierzytelnianie"
           header_description: "Skonfiguruj sposób logowania i uwierzytelniania użytkowników, sekrety i klucze, dostawców OAuth2 i nie tylko."
@@ -8848,6 +8862,8 @@ pl_PL:
         no_user_badges: "%{name} nie otrzymał żadnych odznak."
         no_badges: Nie ma odznak, które można by było przyznać.
         none_selected: "Wybierz odznakę, aby rozpocząć"
+        filter_placeholder: "Filtruj odznaki..."
+        no_badges_found: "Nie znaleziono odznak"
         sections:
           design: Projekt
           query: Zapytanie

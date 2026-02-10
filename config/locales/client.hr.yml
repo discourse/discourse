@@ -4304,6 +4304,8 @@ hr:
       slug_placeholder: "(Neobavezno) spojene-riječi za url"
       creation_error: Dogodila se greška pri stvaranju kategorije.
       save_error: Dogodila se greška pri spremanju kategorije.
+      validations:
+        icon_required: "Odaberi ikonu."
       description: "Opis"
       logo_description: "Preporučeni omjer slike 1:1 s minimalnom veličinom od 200 px. Ako je ostavljeno prazno, slika neće biti prikazana."
       style: "Stil"
@@ -5513,12 +5515,18 @@ hr:
           title: "Lokalizacija"
           header_description: "Konfigurirajte jezik sučelja svoje zajednice i ostale opcije lokalizacije za svoje članove"
           keywords: "lokacija|jezik|vremenska zona|unicode|ltr"
+        upcoming_changes:
+          title: "Nadolazeće promjene"
         login:
           title: "Prijava i autentifikacija"
           header_description: "Konfigurirajte način na koji se korisnici prijavljuju i autentificiraju, tajne i ključeve, pružatelje usluga OAuth2 i još mnogo toga"
           sub_pages:
             common_settings:
               title: "Postavke"
+            authenticators:
+              title: "Prijave na društvene mreže"
+            discourseconnect:
+              title: "Discourse Connect"
             discourse_id:
               title: "Discourse ID"
         discourse_id:
@@ -5584,10 +5592,14 @@ hr:
               help_text: "Koristite sliku širokog pravokutnika. Nemojte koristiti SVG sliku."
             opengraph_image:
               title: "OpenGraph slika"
+              description: "Zadana opengraph slika, koristi se kada stranica nema drugu prikladnu sliku. Ako je ostavljeno prazno, koristit će se large_icon."
             x_summary_large_image:
+              title: "X sažetak velike slike"
+              description: "X kartica 'sažetak velike slike'. Ako se ostavi prazno, generiraju se uobičajeni metapodaci kartice pomoću OpenGraph_image, sve dok to nije ujedno i .svg."
               help_text: "ivjeli"
         fonts:
           title: "Fontovi"
+          header_description: "Konfigurirajte fontove koji se koriste na cijeloj stranici, uključujući osnovni font, font naslova i zadanu veličinu teksta"
           form:
             more_fonts: "Više fontova"
             fewer_fonts: "Manje fontova"
@@ -5601,8 +5613,14 @@ hr:
               description: "Ovu veličinu svaki korisnik može naknadno prilagoditi prema svojim željama."
           backfill_modal:
             title: "Primijenite nove zadane postavke teksta?"
+            description:
+              one: "Ažurirali ste zadanu veličinu teksta. Želite li primijeniti ovu promjenu na %{count} postojećeg korisnika?"
+              few: "Ažurirali ste zadanu veličinu teksta. Želite li primijeniti ovu promjenu na %{count} postojeća korisnika?"
+              other: "Ažurirali ste zadanu veličinu teksta. Želite li primijeniti ovu promjenu na %{count} postojećih korisnika?"
             modal_yes: "Da"
+            modal_no: "Ne, samo ubuduće primijeni promjenu"
         welcome_banner:
+          title: "Banner dobrodošlice"
           header_description: "Konfigurirajte banner koji sadrži traku za pretraživanje koja se prikazuje posjetiteljima vaše stranice."
           form:
             text_color:

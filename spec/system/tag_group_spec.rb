@@ -37,7 +37,7 @@ describe "Tag Groups", type: :system do
   describe "creating a new tag group" do
     fab!(:existing_tag_group) { Fabricate(:tag_group, name: "Existing Group") }
 
-    it "can create a tag group and see it after refresh" do
+    it "can create a tag group with existing and brand-new tags" do
       tag_groups_page.visit
 
       expect(tag_groups_page).to have_tag_group_in_sidebar("Existing Group")
@@ -48,8 +48,10 @@ describe "Tag Groups", type: :system do
       tag_groups_page.tags_chooser.expand
       tag_groups_page.tags_chooser.search("cats")
       tag_groups_page.tags_chooser.select_row_by_name("cats")
-      tag_groups_page.tags_chooser.search("bats")
-      tag_groups_page.tags_chooser.select_row_by_name("bats")
+      tag_groups_page.tags_chooser.search("new-tag-one")
+      tag_groups_page.tags_chooser.select_row_by_value("new-tag-one")
+      tag_groups_page.tags_chooser.search("new-tag-two")
+      tag_groups_page.tags_chooser.select_row_by_value("new-tag-two")
       tag_groups_page.tags_chooser.collapse
 
       tag_groups_page.parent_tag_chooser.expand
@@ -68,7 +70,8 @@ describe "Tag Groups", type: :system do
       tag_groups_page.click_tag_group("New Test Group")
 
       expect(tag_groups_page).to have_tag_in_group("cats")
-      expect(tag_groups_page).to have_tag_in_group("bats")
+      expect(tag_groups_page).to have_tag_in_group("new-tag-one")
+      expect(tag_groups_page).to have_tag_in_group("new-tag-two")
       expect(page).to have_css(".parent-tag-section .tag-chooser", text: "parent-tag")
       expect(tag_groups_page).to have_visible_permission_checked
     end
@@ -78,7 +81,7 @@ describe "Tag Groups", type: :system do
     fab!(:tag3) { Fabricate(:tag, name: "rats") }
     fab!(:tag_group) { Fabricate(:tag_group, name: "Animals", tags: [tag1, tag2]) }
 
-    it "can edit a tag group's tags and permissions" do
+    it "can swap existing tags and add brand-new tags" do
       tag_groups_page.visit
       tag_groups_page.click_tag_group("Animals")
 
@@ -89,6 +92,10 @@ describe "Tag Groups", type: :system do
       tag_groups_page.tags_chooser.unselect_by_name("bats")
       tag_groups_page.tags_chooser.search("rats")
       tag_groups_page.tags_chooser.select_row_by_name("rats")
+      tag_groups_page.tags_chooser.search("new-animal-one")
+      tag_groups_page.tags_chooser.select_row_by_value("new-animal-one")
+      tag_groups_page.tags_chooser.search("new-animal-two")
+      tag_groups_page.tags_chooser.select_row_by_value("new-animal-two")
       tag_groups_page.tags_chooser.collapse
 
       tag_groups_page.select_visible_permission
@@ -100,6 +107,8 @@ describe "Tag Groups", type: :system do
       expect(tag_groups_page).to have_tag_in_group("cats")
       expect(tag_groups_page).to have_tag_in_group("rats")
       expect(tag_groups_page).to have_no_tag_in_group("bats")
+      expect(tag_groups_page).to have_tag_in_group("new-animal-one")
+      expect(tag_groups_page).to have_tag_in_group("new-animal-two")
       expect(tag_groups_page).to have_visible_permission_checked
     end
   end

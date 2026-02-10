@@ -66,7 +66,6 @@ export default <template>
         class="edit-category-content edit-category-tab-{{@controller.selectedTab}}"
       >
         {{#if @controller.siteSettings.enable_simplified_category_creation}}
-
           {{#let
             (componentFor
               (concat "edit-category-" @controller.selectedTab)

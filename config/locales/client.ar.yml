@@ -4973,6 +4973,8 @@ ar:
       slug_placeholder: "(اختياري) كلمات مفصولة بشرطة لعنوان URL"
       creation_error: حدث خطأ في أثناء إنشاء الفئة.
       save_error: حدث خطأ في أثناء حفظ الفئة.
+      validations:
+        icon_required: "تحديد أيقونة."
       name: "اسم الفئة"
       untitled: "فئة بلا عنوان"
       description: "الوصف"

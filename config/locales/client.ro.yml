@@ -3155,6 +3155,8 @@ ro:
       slug_placeholder: "(Opțional) cuvinte-punctate pentru url"
       creation_error: A apărut o eroare în timpul creării categoriei.
       save_error: A apărut o eroare in timpul salvării categoriei.
+      validations:
+        icon_required: "Alege o pictogramă."
       description: "Descriere"
       style: "Stil"
       icon: "Icon"
