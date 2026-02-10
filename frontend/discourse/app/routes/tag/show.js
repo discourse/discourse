@@ -43,7 +43,7 @@ export default class TagShowRoute extends DiscourseRoute {
   async model(params, transition) {
     // support both canonical (tag_slug/tag_id) and legacy (tag_name) params
     let slug = params.tag_slug || params.tag_name;
-    let id = params.tag_id;
+    let id = parseInt(params.tag_id, 10);
 
     if (!slug) {
       slug = NONE;
