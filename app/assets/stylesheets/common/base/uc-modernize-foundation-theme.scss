@@ -36,8 +36,8 @@
   --webkit-font-smoothing: antialiased;
   --welcome-banner-text-align: center;
   --welcome-banner-search-menu-margin-inline: auto;
-  --search-input-height: var(--space-8);
-  --button-height: var(--space-8);
+  --search-input-height: var(--space-9);
+  --button-height: var(--space-9);
   -webkit-font-smoothing: var(--webkit-font-smoothing);
 
   // Buttons & Actions
@@ -47,7 +47,8 @@
   .btn-danger,
   .btn-primary,
   .btn.no-text,
-  .view-all-drafts {
+  .view-all-drafts,
+  .discourse-reactions-counter .reactions-counter {
     &:not(
       .sidebar-footer-actions-button,
       #search-button,
@@ -55,13 +56,19 @@
       .topic-map__views-trigger,
       .topic-map__likes-trigger,
       .topic-map__users-trigger,
+      .topic-map__links-trigger,
       .notifications-tracking-btn,
       .user-menu-tab,
       .--with-description
     ) {
       padding-block: 0;
       height: var(--button-height);
+      padding-inline: var(--space-2);
     }
+  }
+
+  .discourse-reactions-counter .reactions-counter {
+    align-items: center;
   }
 
   .header-dropdown-toggle .btn.icon {
