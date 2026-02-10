@@ -122,6 +122,19 @@ RSpec.describe Admin::ImpersonateController do
   describe "#destroy" do
     before { sign_in(admin) }
 
+    it "checks if experimental impersonation is allowed for the acting user" do
+      SiteSetting.impersonate_without_logout = true
+      SiteSettingGroup.create!(name: "impersonate_without_logout", group_ids: "1|2")
+      SiteSetting.refresh!
+
+      post "/admin/impersonate.json", params: { username_or_email: user.username }
+
+      delete "/admin/impersonate.json"
+
+      expect(response.status).to eq(200)
+      expect(session[:current_user_id]).to eq(admin.id)
+    end
+
     it "raises a not found error when experimental impersonation is disabled" do
       SiteSetting.impersonate_without_logout = false
 
@@ -132,7 +145,6 @@ RSpec.describe Admin::ImpersonateController do
 
     it "does not pass routing constraint when current user is not impersonating" do
       SiteSetting.impersonate_without_logout = true
-      User.any_instance.stubs(:is_impersonating).returns(false)
 
       delete "/admin/impersonate.json"
 
@@ -141,11 +153,12 @@ RSpec.describe Admin::ImpersonateController do
 
     it "stops impersonating" do
       SiteSetting.impersonate_without_logout = true
-      User.any_instance.stubs(:is_impersonating).returns(true)
 
+      post "/admin/impersonate.json", params: { username_or_email: user.username }
       delete "/admin/impersonate.json"
 
       expect(response.status).to eq(200)
+      expect(session[:current_user_id]).to eq(admin.id)
     end
   end
 end
