@@ -2211,8 +2211,7 @@ class BulkImport::Base
     name.gsub!(/[^A-Za-z0-9]+$/, "")
     name.gsub!(/([-_.]{2,})/) { $1.first }
     name.strip!
-    name.truncate(60)
-    name
+    name.truncate(60, omission: "")
   end
 
   def random_username
