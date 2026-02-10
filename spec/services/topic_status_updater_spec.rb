@@ -279,4 +279,43 @@ RSpec.describe TopicStatusUpdater do
       expect(TopicHotScore.find_by(topic_id: topic.id)).to be_nil
     end
   end
+
+  describe "tracking state notifications on visibility change" do
+    it "publishes delete when topic becomes invisible" do
+      topic = Fabricate(:topic)
+
+      messages =
+        MessageBus.track_publish("/delete") do
+          TopicStatusUpdater.new(topic, admin).update!("visible", false)
+        end
+
+      expect(messages.length).to eq(1)
+      expect(messages.first.data["topic_id"]).to eq(topic.id)
+      expect(messages.first.data["message_type"]).to eq(TopicTrackingState::DELETE_MESSAGE_TYPE)
+    end
+
+    it "publishes recover when topic becomes visible again" do
+      topic = Fabricate(:topic, visible: false)
+
+      messages =
+        MessageBus.track_publish("/recover") do
+          TopicStatusUpdater.new(topic, admin).update!("visible", true)
+        end
+
+      expect(messages.length).to eq(1)
+      expect(messages.first.data["topic_id"]).to eq(topic.id)
+      expect(messages.first.data["message_type"]).to eq(TopicTrackingState::RECOVER_MESSAGE_TYPE)
+    end
+
+    it "does not publish for non-regular topics" do
+      topic = Fabricate(:private_message_topic)
+
+      messages =
+        MessageBus.track_publish("/delete") do
+          TopicStatusUpdater.new(topic, admin).update!("visible", false)
+        end
+
+      expect(messages.length).to eq(0)
+    end
+  end
 end

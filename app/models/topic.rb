@@ -1109,6 +1109,10 @@ class Topic < ActiveRecord::Base
         # category is private. this is only done if the category
         # has actually changed to avoid noise.
         DB.after_commit { Jobs.enqueue(:update_topic_upload_security, topic_id: self.id) }
+
+        # Notify tracking state of category change so users who lost access
+        # have the topic removed from their tracking state
+        DB.after_commit { TopicTrackingState.publish_category_change(self, old_category) }
       end
 
       Category.where(id: new_category.id).update_all("topic_count = topic_count + 1")
