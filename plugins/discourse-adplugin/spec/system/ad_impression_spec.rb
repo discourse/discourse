@@ -22,9 +22,11 @@ describe "AdPlugin::AdImpression", type: :system do
     it "records the impression appropriately" do
       visit "/latest"
 
-      impression = AdPlugin::AdImpression.last
-
-      expect(impression.house_ad).to eq(house_ad)
+      try_until_success do
+        impression = AdPlugin::AdImpression.last
+        expect(impression).to_not be_nil
+        expect(impression.house_ad).to eq(house_ad)
+      end
     end
   end
 
