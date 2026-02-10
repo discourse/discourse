@@ -3647,8 +3647,8 @@ en:
         performing: "Performing bulk operations, please wait…"
         completed: "Bulk operations completed successfully!"
         not_completed:
-          one: "Bulk operation could not be completed for <strong>%{count}</strong> topic."
-          other: "Bulk operation could not be completed for <strong>%{count}</strong> topics."
+          one: "Bulk operation could not be completed for <strong>%{count}</strong> topic"
+          other: "Bulk operation could not be completed for <strong>%{count}</strong> topics"
 
       none:
         unread: "You have no unread topics."
