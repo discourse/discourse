@@ -52,6 +52,30 @@ module PageObjects
         find(".btn-danger.unsilence-user").click
       end
 
+      def custom_groups_chooser
+        PageObjects::Components::SelectKit.new(".admin-user__custom-groups .group-chooser")
+      end
+
+      def save_custom_groups
+        find(".admin-user__custom-groups .ok").click
+      end
+
+      def has_custom_groups_save_button?
+        has_css?(".admin-user__custom-groups .ok")
+      end
+
+      def has_no_custom_groups_save_button?
+        has_no_css?(".admin-user__custom-groups .ok")
+      end
+
+      def has_custom_group?(name)
+        has_css?(".admin-user__custom-groups .formatted-selection", text: name)
+      end
+
+      def has_no_custom_group?(name)
+        has_no_css?(".admin-user__custom-groups .formatted-selection", text: name)
+      end
+
       def similar_users_warning
         find(".penalty-similar-users .alert-warning")["innerHTML"]
       end
