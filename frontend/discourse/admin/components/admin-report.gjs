@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { concat, fn } from "@ember/helper";
 import EmberObject, { action } from "@ember/object";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { next } from "@ember/runloop";
@@ -654,7 +654,12 @@ export default class AdminReport extends Component {
 
                   <div class="chart__additional-filters">
                     {{#each this.model.available_filters as |filter|}}
-                      <div class="chart__group">
+                      <div
+                        class={{concatClass
+                          "chart__filter"
+                          (concat "--" filter.id)
+                        }}
+                      >
                         <div class="input">
                           {{component
                             (this.reportFilterComponent filter)

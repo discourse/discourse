@@ -6446,7 +6446,7 @@ en:
           all: "All"
           view_table: "table"
           view_graph: "graph"
-          refresh_report: "Refresh Report"
+          refresh_report: "Refresh"
           daily: Daily
           monthly: Monthly
           weekly: Weekly

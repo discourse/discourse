@@ -1,5 +1,4 @@
 .admin-report-chart {
-  padding: var(--space-8) var(--space-4) var(--space-4);
   animation: fadein 2s;
 
   @media (prefers-reduced-motion) {
@@ -13,9 +12,56 @@
     flex-direction: column;
   }
 
+  &__body {
+    margin-block: var(--space-4);
+    flex: 1;
+    min-width: 0; // allow chart.js to shrink below intrinsic width
+
+    .report-alert {
+      margin: 0;
+      text-align: center;
+      padding: 3em;
+      border: 1px solid transparent;
+
+      a {
+        color: var(--primary-high);
+      }
+
+      .d-icon {
+        color: var(--primary-medium);
+        font-size: var(--font-up-5);
+        display: block;
+        margin: 0.25em auto;
+      }
+
+      &.no-data,
+      &.rate-limited {
+        background: var(--secondary);
+        border-color: var(--primary-low);
+        color: var(--primary);
+      }
+
+      &.rate-limited .d-icon {
+        color: var(--danger);
+      }
+
+      &.timeout,
+      &.exception {
+        border-color: var(--danger-low);
+        color: var(--danger);
+      }
+    }
+
+    .average-chart {
+      font-style: italic;
+      color: var(--primary-high);
+      text-align: right;
+    }
+  }
+
   &__filters {
     display: flex;
-    align-items: center;
+    align-items: flex-start; // aligned to top to provide alignment when subcat checkbox is in play
     gap: var(--space-4);
     margin-bottom: var(--space-4);
 
@@ -28,7 +74,7 @@
       gap: var(--space-2);
       background-color: var(--primary-very-low);
       border-radius: var(--d-border-radius-large);
-      padding: var(--space-1) var(--space-6);
+      padding: var(--space-1) var(--space-2);
 
       .chart-grouping {
         border-radius: var(--d-border-radius-large);
@@ -45,6 +91,10 @@
         }
       }
     }
+  }
+
+  &__filter-label {
+    margin-top: var(--space-1);
   }
 
   &__dates {
@@ -64,17 +114,12 @@
     display: flex;
     gap: var(--space-4);
     justify-content: flex-end;
+    margin-top: var(--space-4);
   }
-}
 
-.filters {
-  display: flex;
-  align-items: center;
-
-  .modes {
-    margin: 0 0 1em 0;
-    padding: 0;
+  &__modes {
     list-style: none;
+    margin-right: auto;
 
     .mode {
       display: inline-flex;
@@ -85,4 +130,9 @@
       }
     }
   }
+}
+
+.filters {
+  display: flex;
+  align-items: center;
 }
