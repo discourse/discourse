@@ -18,14 +18,6 @@ describe "User tips", type: :system do
 
       expect(tooltip).to be_not_present
     end
-
-    it "does not show the boostrapping tip to an admin user" do
-      SiteSetting.bootstrap_mode_enabled = true
-      sign_in(admin)
-      visit("/")
-
-      expect(tooltip).to be_not_present
-    end
   end
 
   context "when user tips are enabled" do

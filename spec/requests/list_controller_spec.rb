@@ -366,7 +366,6 @@ RSpec.describe ListController do
     context "when login required" do
       before do
         SiteSetting.login_required = true
-        SiteSetting.bootstrap_mode_enabled = false
         SiteSetting.has_login_hint = false
       end
 

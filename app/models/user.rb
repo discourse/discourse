@@ -172,8 +172,6 @@ class User < ActiveRecord::Base
   before_save :match_primary_group_changes
   before_save :check_if_title_is_badged_granted
   before_save :apply_watched_words, unless: :should_skip_user_fields_validation?
-  before_save :check_qualification_for_users_directory,
-              if: Proc.new { SiteSetting.bootstrap_mode_enabled }
   after_create :create_email_token
   after_create :create_user_stat
   after_create :create_user_option
@@ -197,8 +195,6 @@ class User < ActiveRecord::Base
   after_save :badge_grant
   after_save :index_search
   after_save :check_site_contact_username
-  after_save :add_to_user_directory,
-             if: Proc.new { SiteSetting.bootstrap_mode_enabled && @qualified_for_users_directory }
 
   after_save do
     if saved_change_to_uploaded_avatar_id?

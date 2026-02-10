@@ -3621,17 +3621,6 @@ uncategorized:
     hidden: true
     client: true
 
-  bootstrap_mode_min_users:
-    default: 50
-    client: true
-    max: 5000
-    area: "site_admin"
-
-  bootstrap_mode_enabled:
-    default: false
-    client: true
-    hidden: true
-
   automatically_unpin_topics:
     default: true
     client: true
