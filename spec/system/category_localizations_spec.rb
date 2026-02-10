@@ -12,6 +12,7 @@ describe "Category Localizations", type: :system do
       topic_count: 1234,
       subcategory_list_style: "boxes",
       show_subcategory_list: true,
+      locale: "en",
     )
   end
   let(:category_page) { PageObjects::Pages::Category.new }
@@ -159,6 +160,7 @@ describe "Category Localizations", type: :system do
           name: "Subcategory",
           description: "A",
           parent_category: category,
+          locale: "en",
         ).tap do |category|
           Fabricate(
             :category_localization,

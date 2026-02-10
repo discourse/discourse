@@ -9,12 +9,26 @@ class TagSerializer < ApplicationSerializer
     object.slug_for_url
   end
 
+  def name
+    translated =
+      (object.get_localization&.name if ContentLocalization.show_translated_tag?(object, scope))
+    translated || object.name
+  end
+
+  def description
+    translated =
+      if ContentLocalization.show_translated_tag?(object, scope)
+        object.get_localization&.description
+      end
+    translated || object.description
+  end
+
   def topic_count
     object.public_send(Tag.topic_count_column(scope))
   end
 
   def staff
-    DiscourseTagging.staff_tag_names.include?(name)
+    DiscourseTagging.staff_tag_names.include?(object.name)
   end
 
   def include_localizations?
