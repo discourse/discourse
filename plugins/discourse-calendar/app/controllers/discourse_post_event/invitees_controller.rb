@@ -2,6 +2,8 @@
 
 module DiscoursePostEvent
   class InviteesController < DiscoursePostEventController
+    requires_login except: %i[index]
+
     def index
       event = Event.find(params[:post_id])
       guardian.ensure_can_see!(event.post)
