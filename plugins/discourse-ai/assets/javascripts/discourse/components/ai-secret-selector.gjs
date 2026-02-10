@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -9,8 +10,10 @@ import AiSecretCreateModal from "./modal/ai-secret-create-modal";
 export default class AiSecretSelector extends Component {
   @service modal;
 
+  @tracked addedSecrets = [];
+
   get secretOptions() {
-    return (this.args.secrets || []).map((s) => ({
+    return [...(this.args.secrets || []), ...this.addedSecrets].map((s) => ({
       id: s.id,
       name: s.name,
     }));
@@ -30,7 +33,7 @@ export default class AiSecretSelector extends Component {
     this.modal.show(AiSecretCreateModal, {
       model: {
         onSave: (newSecret) => {
-          this.args.secrets?.push(newSecret);
+          this.addedSecrets = [...this.addedSecrets, newSecret];
           this.args.onChange?.(newSecret.id);
         },
       },

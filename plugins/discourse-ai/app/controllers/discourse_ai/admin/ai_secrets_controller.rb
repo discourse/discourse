@@ -34,6 +34,7 @@ module DiscourseAi
         secret.created_by_id = current_user.id
 
         if secret.save
+          log_ai_secret_creation(secret)
           render json: AiSecretSerializer.new(secret), status: :created
         else
           render_json_error secret
@@ -42,11 +43,12 @@ module DiscourseAi
 
       def update
         secret = AiSecret.find(params[:id])
+        initial_attributes = secret.attributes.dup
 
         attrs = ai_secret_params
-        attrs.delete(:secret) if attrs[:secret] == "********"
 
         if secret.update(attrs)
+          log_ai_secret_update(secret, initial_attributes)
           render json: AiSecretSerializer.new(secret)
         else
           render_json_error secret
@@ -62,7 +64,10 @@ module DiscourseAi
           )
         end
 
+        secret_details = { secret_id: secret.id, display_name: secret.name, name: secret.name }
+
         secret.destroy!
+        log_ai_secret_deletion(secret_details)
         head :no_content
       end
 
@@ -70,6 +75,34 @@ module DiscourseAi
 
       def ai_secret_params
         params.require(:ai_secret).permit(:name, :secret)
+      end
+
+      def ai_secret_logger_fields
+        { name: {}, secret: { type: :sensitive } }
+      end
+
+      def log_ai_secret_creation(secret)
+        logger = DiscourseAi::Utils::AiStaffActionLogger.new(current_user)
+        entity_details = { secret_id: secret.id, subject: secret.name }
+        logger.log_creation("secret", secret, ai_secret_logger_fields, entity_details)
+      end
+
+      def log_ai_secret_update(secret, initial_attributes)
+        logger = DiscourseAi::Utils::AiStaffActionLogger.new(current_user)
+        entity_details = { secret_id: secret.id, subject: secret.name }
+        logger.log_update(
+          "secret",
+          secret,
+          initial_attributes,
+          ai_secret_logger_fields,
+          entity_details,
+        )
+      end
+
+      def log_ai_secret_deletion(secret_details)
+        logger = DiscourseAi::Utils::AiStaffActionLogger.new(current_user)
+        secret_details[:subject] = secret_details[:display_name]
+        logger.log_deletion("secret", secret_details)
       end
     end
   end

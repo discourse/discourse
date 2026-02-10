@@ -244,20 +244,25 @@ end
 # Table name: embedding_definitions
 #
 #  id                    :bigint           not null, primary key
-#  display_name          :string           not null
+#  api_key               :string
 #  dimensions            :integer          not null
+#  display_name          :string           not null
+#  embed_prompt          :string           default(""), not null
+#  matryoshka_dimensions :boolean          default(FALSE), not null
 #  max_sequence_length   :integer          not null
-#  version               :integer          default(1), not null
 #  pg_function           :string           not null
 #  provider              :string           not null
+#  provider_params       :jsonb
+#  search_prompt         :string           default(""), not null
+#  seeded                :boolean          default(FALSE), not null
 #  tokenizer_class       :string           not null
 #  url                   :string           not null
-#  api_key               :string
-#  seeded                :boolean          default(FALSE), not null
-#  provider_params       :jsonb
+#  version               :integer          default(1), not null
 #  created_at            :datetime         not null
 #  updated_at            :datetime         not null
-#  embed_prompt          :string           default(""), not null
-#  search_prompt         :string           default(""), not null
-#  matryoshka_dimensions :boolean          default(FALSE), not null
+#  ai_secret_id          :integer
+#
+# Indexes
+#
+#  index_embedding_definitions_on_ai_secret_id  (ai_secret_id)
 #

@@ -342,5 +342,10 @@ end
 #  vision_enabled           :boolean          default(FALSE), not null
 #  created_at               :datetime         not null
 #  updated_at               :datetime         not null
+#  ai_secret_id             :integer
 #  user_id                  :integer
+#
+# Indexes
+#
+#  index_llm_models_on_ai_secret_id  (ai_secret_id)
 #

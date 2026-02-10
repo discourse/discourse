@@ -47,6 +47,10 @@ export default class AiSecretEditorForm extends Component {
 
     try {
       const dataToSave = { ...data };
+      // Don't send the masked placeholder back to the server
+      if (dataToSave.secret === "********") {
+        delete dataToSave.secret;
+      }
       await this.args.model.save(dataToSave);
 
       if (isNew) {

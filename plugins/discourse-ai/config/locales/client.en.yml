@@ -39,6 +39,9 @@ en:
             create_ai_embedding: "Create AI embedding"
             update_ai_embedding: "Update AI embedding"
             delete_ai_embedding: "Delete AI embedding"
+            create_ai_secret: "Create AI secret"
+            update_ai_secret: "Update AI secret"
+            delete_ai_secret: "Delete AI secret"
             update_ai_spam_settings: "Update AI spam settings"
 
   js:

@@ -86,13 +86,12 @@ RSpec.describe DiscourseAi::Admin::AiSecretsController do
       expect(ai_secret.secret).to eq("new-secret-value")
     end
 
-    it "does not update secret when masked value is sent" do
+    it "does not update secret when secret param is omitted" do
       original_secret = ai_secret.secret
       put "/admin/plugins/discourse-ai/ai-secrets/#{ai_secret.id}.json",
           params: {
             ai_secret: {
               name: "Updated Name",
-              secret: "********",
             },
           }
 

@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 class AiSecret < ActiveRecord::Base
+  belongs_to :created_by, class_name: "User", optional: true
+
   validates :name, presence: true, uniqueness: true, length: { maximum: 100 }
-  validates :secret, presence: true
+  validates :secret, presence: true, length: { maximum: 10_000 }
 
   has_many :llm_models, dependent: :nullify
   has_many :embedding_definitions, dependent: :nullify
@@ -55,8 +57,12 @@ end
 #
 #  id            :bigint           not null, primary key
 #  name          :string(100)      not null
-#  secret        :string           not null
-#  created_by_id :integer
+#  secret        :string(10000)    not null
 #  created_at    :datetime         not null
 #  updated_at    :datetime         not null
+#  created_by_id :integer
+#
+# Indexes
+#
+#  index_ai_secrets_on_name  (name) UNIQUE
 #
