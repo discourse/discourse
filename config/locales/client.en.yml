@@ -454,6 +454,39 @@ en:
       pill: "Suggested"
       pm_title: "Suggested Messages"
 
+    admin_onboarding_banner:
+      launch_in_easy_steps: "Launch in %{step_count} easy steps"
+      skipped: "The admin onboarding checklist has now been skipped. If you would like to re-enable it, look for `enable site owner onboarding` in the site settings."
+      congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
+      invite_collaborators:
+        title: "Invite Collaborators"
+        description: "Early members help bring your community to life"
+        action: "Create invite"
+      start_posting:
+        title: "Start Posting"
+        description: "Give people something to talk about together"
+        action: "Icebreaker ideas"
+        icebreakers:
+          fun_facts:
+            title: "What are some fun facts about you?"
+            body: "Hi everyone! I'm excited to start this new community. To kick things off, let's share a fun fact about ourselves. I'll go first: I love hiking and exploring new trails! What's something interesting about you?"
+          coolest_thing_you_have_seen_today:
+            title: "What's the coolest thing you've seen today?"
+            body: "What's the coolest thing you've seen or experienced today? It could be anything from a beautiful sunset to a random act of kindness. I'll start: I saw a dog helping an elderly person cross the street!"
+          introduce_yourself:
+            title: "Introduce yourself"
+            body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
+          what_is_your_favorite_food:
+            title: "What is your favorite food?"
+            body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
+
+
+      spread_the_word:
+        title: "Spread the Word!"
+        description: "Share a link with everyone in your network"
+        action: "Copy link"
+        copied_to_clipboard: "Link copied to clipboard!"
+
     about:
       edit: "Edit this page"
       simple_title: "About"
