@@ -138,59 +138,7 @@ after_initialize do
 
   on(:post_moved) do |new_post, _original_topic_id, old_post|
     next if old_post.blank? || new_post.id == old_post.id
-    next unless Poll.exists?(post_id: old_post.id)
-
-    Poll.transaction do
-      DB.exec(<<~SQL, old_post_id: old_post.id, new_post_id: new_post.id)
-        INSERT INTO polls (post_id, name, close_at, type, status, results, visibility,
-                           min, max, step, anonymous_voters, chart_type, dynamic, title,
-                           created_at, updated_at)
-        SELECT :new_post_id, name, close_at, type, status, results, visibility,
-               min, max, step, anonymous_voters, chart_type, dynamic, title,
-               created_at, updated_at
-        FROM polls
-        WHERE polls.post_id = :old_post_id
-          AND NOT EXISTS (
-            SELECT 1 FROM polls np
-            WHERE np.post_id = :new_post_id AND np.name = polls.name
-          )
-      SQL
-
-      DB.exec(<<~SQL, old_post_id: old_post.id, new_post_id: new_post.id)
-        INSERT INTO poll_options (poll_id, digest, html, anonymous_votes, created_at, updated_at)
-        SELECT new_polls.id, old_options.digest, old_options.html, old_options.anonymous_votes,
-               old_options.created_at, old_options.updated_at
-        FROM poll_options old_options
-        JOIN polls old_polls ON old_options.poll_id = old_polls.id
-        JOIN polls new_polls ON new_polls.post_id = :new_post_id
-                            AND new_polls.name = old_polls.name
-        WHERE old_polls.post_id = :old_post_id
-          AND NOT EXISTS (
-            SELECT 1 FROM poll_options existing
-            WHERE existing.poll_id = new_polls.id AND existing.digest = old_options.digest
-          )
-      SQL
-
-      DB.exec(<<~SQL, old_post_id: old_post.id, new_post_id: new_post.id)
-        INSERT INTO poll_votes (poll_id, poll_option_id, user_id, rank, created_at, updated_at)
-        SELECT new_polls.id, new_options.id, old_votes.user_id, old_votes.rank,
-               old_votes.created_at, old_votes.updated_at
-        FROM poll_votes old_votes
-        JOIN poll_options old_options ON old_votes.poll_option_id = old_options.id
-        JOIN polls old_polls ON old_votes.poll_id = old_polls.id
-        JOIN polls new_polls ON new_polls.post_id = :new_post_id
-                            AND new_polls.name = old_polls.name
-        JOIN poll_options new_options ON new_options.poll_id = new_polls.id
-                                    AND new_options.digest = old_options.digest
-        WHERE old_polls.post_id = :old_post_id
-          AND NOT EXISTS (
-            SELECT 1 FROM poll_votes existing
-            WHERE existing.poll_id = new_polls.id
-              AND existing.poll_option_id = new_options.id
-              AND existing.user_id = old_votes.user_id
-          )
-      SQL
-    end
+    Poll.where(post_id: old_post.id).update_all(post_id: new_post.id)
   end
 
   on(:merging_users) do |source_user, target_user|

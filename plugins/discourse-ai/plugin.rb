@@ -154,6 +154,29 @@ after_initialize do
   ]
   plugin_icons.each { |icon| register_svg_icon(icon) }
 
+  on(:post_moved) do |new_post, _original_topic_id, old_post|
+    next if old_post.blank? || new_post.id == old_post.id
+
+    ActiveRecord::Base.transaction do
+      AiApiAuditLog.where(post_id: old_post.id).update_all(post_id: new_post.id)
+      AiSpamLog.where(post_id: old_post.id).update_all(post_id: new_post.id)
+      AiArtifact.where(post_id: old_post.id).update_all(post_id: new_post.id)
+      PostCustomPrompt.where(post_id: old_post.id).update_all(post_id: new_post.id)
+      InferredConceptPost.where(post_id: old_post.id).update_all(post_id: new_post.id)
+      ClassificationResult.where(target_type: "Post", target_id: old_post.id).update_all(
+        target_id: new_post.id,
+      )
+      AiSummary.where(target_type: "Post", target_id: old_post.id).update_all(
+        target_id: new_post.id,
+      )
+      DB.exec(
+        "UPDATE ai_posts_embeddings SET post_id = :new_id WHERE post_id = :old_id",
+        new_id: new_post.id,
+        old_id: old_post.id,
+      )
+    end
+  end
+
   add_model_callback(DiscourseAutomation::Automation, :after_save) do
     DiscourseAi::Configuration::Feature.feature_cache.flush!
   end

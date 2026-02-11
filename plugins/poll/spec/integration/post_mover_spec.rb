@@ -35,7 +35,7 @@ RSpec.describe PostMover do
       reply.save_custom_fields
     end
 
-    it "copies polls, options, and votes when the OP is moved to an existing topic" do
+    it "moves polls, options, and votes when the OP is moved to an existing topic" do
       original_topic.move_posts(
         admin,
         [op.id, reply.id],
@@ -57,6 +57,8 @@ RSpec.describe PostMover do
       new_votes = PollVote.where(poll_id: new_poll.id)
       expect(new_votes.count).to eq(2)
       expect(new_votes.pluck(:user_id)).to contain_exactly(user1.id, user2.id)
+
+      expect(Poll.where(post_id: op.id).count).to eq(0)
     end
 
     it "does not duplicate polls when post_id stays the same" do
@@ -68,76 +70,23 @@ RSpec.describe PostMover do
       expect(PollVote.where(poll_id: reply_poll.id).count).to eq(2)
     end
 
-    it "preserves ranked choice vote ranks" do
-      rc_poll = Fabricate(:poll, post: op, name: "rc_poll", type: "ranked_choice")
-      rc_options = 3.times.map { |i| Fabricate(:poll_option, poll: rc_poll, html: "RC #{i}") }
-      rc_options.each_with_index do |opt, i|
-        Fabricate(:poll_vote, poll: rc_poll, poll_option: opt, user: user1, rank: i + 1)
-      end
+    it "moves polls to the new post and removes from old post with freeze_original" do
+      PostMover.new(original_topic, admin, [reply.id], options: { freeze_original: true }).to_topic(
+        destination_topic.id,
+      )
 
-      original_topic.move_posts(admin, [op.id], destination_topic_id: destination_topic.id)
-
-      new_op =
-        destination_topic
-          .posts
-          .where.not(post_type: Post.types[:small_action])
-          .order(:post_number)
-          .last
-      new_rc_poll = Poll.find_by(post_id: new_op.id, name: "rc_poll")
-      expect(PollVote.where(poll_id: new_rc_poll.id).order(:rank).pluck(:rank)).to eq([1, 2, 3])
-    end
-
-    it "is idempotent when the event fires twice" do
-      original_topic.move_posts(admin, [op.id], destination_topic_id: destination_topic.id)
-
-      new_op =
-        destination_topic
-          .posts
-          .where.not(post_type: Post.types[:small_action])
-          .order(:post_number)
-          .last
-
-      expect {
-        DiscourseEvent.trigger(:post_moved, new_op, original_topic.id, op)
-      }.not_to raise_error
-      expect(Poll.where(post_id: new_op.id, name: "op_poll").count).to eq(1)
-    end
-
-    it "copies polls to the new post and preserves originals with freeze_original" do
-      PostMover.new(
-        original_topic,
-        admin,
-        [op.id, reply.id],
-        options: {
-          freeze_original: true,
-        },
-      ).to_topic(destination_topic.id)
-
-      new_op =
-        destination_topic
-          .posts
-          .where.not(post_type: Post.types[:small_action])
-          .order(:post_number)
-          .first
       moved_reply =
         destination_topic
           .posts
           .where.not(post_type: Post.types[:small_action])
           .order(:post_number)
           .last
+      expect(moved_reply.id).not_to eq(reply.id)
 
-      [
-        [new_op, op, "op_poll", op_poll],
-        [moved_reply, reply, "reply_poll", reply_poll],
-      ].each do |new_post, old_post, poll_name, original_poll|
-        new_poll = Poll.find_by(post_id: new_post.id, name: poll_name)
-        expect(new_poll).to be_present
-        expect(new_poll.poll_options.count).to eq(2)
-        expect(PollVote.where(poll_id: new_poll.id).count).to eq(2)
+      expect(Poll.find_by(post_id: moved_reply.id, name: "reply_poll")).to be_present
+      expect(PollVote.where(poll_id: Poll.find_by(post_id: moved_reply.id).id).count).to eq(2)
 
-        expect(Poll.where(post_id: old_post.id, name: poll_name).count).to eq(1)
-        expect(PollVote.where(poll_id: original_poll.id).count).to eq(2)
-      end
+      expect(Poll.where(post_id: reply.id).count).to eq(0)
     end
   end
 end

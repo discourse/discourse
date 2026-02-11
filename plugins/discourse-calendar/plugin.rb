@@ -325,6 +325,32 @@ after_initialize do
     CalendarEvent.where(post_id: post.id).destroy_all
   end
 
+  on(:post_moved) do |new_post, _original_topic_id, old_post|
+    next if old_post.blank? || new_post.id == old_post.id
+
+    ActiveRecord::Base.transaction do
+      CalendarEvent.where(post_id: old_post.id).update_all(post_id: new_post.id)
+
+      if DiscoursePostEvent::Event.exists?(id: old_post.id)
+        # :post_created may have already created a duplicate event on new_post
+        DiscoursePostEvent::Invitee.unscoped.where(post_id: new_post.id).delete_all
+        DiscoursePostEvent::EventDate.where(event_id: new_post.id).delete_all
+        DB.exec("DELETE FROM discourse_post_event_events WHERE id = :id", id: new_post.id)
+
+        DiscoursePostEvent::Invitee
+          .unscoped
+          .where(post_id: old_post.id)
+          .update_all(post_id: new_post.id)
+        DiscoursePostEvent::EventDate.where(event_id: old_post.id).update_all(event_id: new_post.id)
+        DB.exec(
+          "UPDATE discourse_post_event_events SET id = :new_id WHERE id = :old_id",
+          new_id: new_post.id,
+          old_id: old_post.id,
+        )
+      end
+    end
+  end
+
   validate(:post, :validate_calendar) do |force = nil|
     return unless self.raw_changed? || force
 

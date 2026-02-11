@@ -47,7 +47,7 @@ describe PostMover do
     expect(new_post.reactions_user.count).to eq(0)
   end
 
-  xit "should add old post's reactions to new post when a topic's first post is moved" do
+  it "should move old post's reactions to new post when a topic's first post is moved" do
     expect(post_1.reactions).to contain_exactly(reaction_1, reaction_2)
     expect(topic_2.posts.count).to eq(0)
 
@@ -65,6 +65,9 @@ describe PostMover do
     reaction_user_ids = new_post.reactions_user.pluck(:user_id)
     expect(reaction_user_ids.count).to eq(2)
     expect(reaction_user_ids).to match_array([user_reaction_1.user_id, user_reaction_2.user_id])
+
+    expect(DiscourseReactions::Reaction.where(post_id: post_1.id).count).to eq(0)
+    expect(DiscourseReactions::ReactionUser.where(post_id: post_1.id).count).to eq(0)
   end
 
   it "should retain existing reactions after moving a post" do
@@ -76,12 +79,28 @@ describe PostMover do
 
     new_post = topic_3.first_post
 
-    # reaction id does not change as post is updated (unlike first post in topic)
     expect(new_post.reactions.count).to eq(2)
     expect(new_post.reactions).to match_array([reaction_3, reaction_4])
 
-    # reaction_user id does not change as post is updated (unlike first post in topic)
     expect(new_post.reactions_user.count).to eq(2)
     expect(new_post.reactions_user).to match_array([user_reaction_3, user_reaction_4])
+  end
+
+  it "should move reactions with freeze_original" do
+    Jobs.run_immediately!
+
+    post_mover =
+      PostMover.new(topic_1, Discourse.system_user, [post_2.id], options: { freeze_original: true })
+    post_mover.to_topic(topic_3)
+
+    moved_post =
+      topic_3.posts.where.not(post_type: Post.types[:small_action]).order(:post_number).last
+    expect(moved_post.id).not_to eq(post_2.id)
+
+    expect(moved_post.reactions.count).to eq(2)
+    expect(moved_post.reactions_user.count).to eq(2)
+
+    expect(DiscourseReactions::Reaction.where(post_id: post_2.id).count).to eq(0)
+    expect(DiscourseReactions::ReactionUser.where(post_id: post_2.id).count).to eq(0)
   end
 end
