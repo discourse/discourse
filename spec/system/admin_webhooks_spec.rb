@@ -2,11 +2,13 @@
 
 describe "Admin Webhooks Page", type: :system do
   fab!(:admin)
+  fab!(:tag)
 
   let(:webhooks_page) { PageObjects::Pages::AdminWebhooks.new }
   let(:dialog) { PageObjects::Components::Dialog.new }
 
   before do
+    SiteSetting.tagging_enabled = true
     Fabricate(:web_hook, payload_url: "https://www.example.com/1")
 
     sign_in(admin)
@@ -35,6 +37,24 @@ describe "Admin Webhooks Page", type: :system do
     webhooks_page.edit_payload_url("https://www.example.com/3")
 
     expect(webhooks_page).to have_webhook_listed("https://www.example.com/3")
+  end
+
+  it "can add a webhook with a tag filter" do
+    tag_chooser = PageObjects::Components::SelectKit.new(".tag-chooser")
+
+    webhooks_page.visit_page
+    webhooks_page.click_add
+
+    expect(tag_chooser).to be_visible
+
+    tag_chooser.expand
+    tag_chooser.search(tag.name)
+    tag_chooser.select_row_by_name(tag.name)
+
+    webhooks_page.fill_payload_url("https://www.example.com/4")
+    webhooks_page.click_save
+
+    expect(webhooks_page).to have_webhook_details("https://www.example.com/4")
   end
 
   it "can delete webhooks" do

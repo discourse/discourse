@@ -210,7 +210,6 @@ describe "Simplified Category Creation" do
     fab!(:tag1) { Fabricate(:tag, name: "tag1") }
     fab!(:tag_group) { Fabricate(:tag_group, name: "My Group") }
 
-    let(:allowed_tags_chooser) { PageObjects::Components::SelectKit.new("#category-allowed-tags") }
     let(:allowed_tag_groups_chooser) do
       PageObjects::Components::SelectKit.new("#category-allowed-tag-groups")
     end
@@ -224,16 +223,14 @@ describe "Simplified Category Creation" do
     it "restricts allowed tags" do
       category_page.visit_tags(category)
 
-      allowed_tags_chooser.expand
-      allowed_tags_chooser.select_row_by_name("tag1")
-      allowed_tags_chooser.collapse
+      form.field("allowed_tags").select("tag1")
       category_page.save_settings
 
       expect(category.reload.tags.map(&:name)).to include("tag1")
 
       category_page.visit_tags(category)
 
-      expect(allowed_tags_chooser).to have_selected_names("tag1")
+      expect(form.field("allowed_tags")).to have_selected_names("tag1")
     end
 
     it "sets minimum required tags" do
