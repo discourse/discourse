@@ -50,7 +50,7 @@ jobs:
       DOCS_CATEGORY_ID: 56
       DOCS_DATA_EXPLORER_QUERY_ID: 2111
       DOCS_TARGET: https://meta.discourse.org
-      DOCS_API_KEY: ${{ secrets.DISCOURSE_API_KEY }}
+      DOCS_API_KEY: ${{ secrets.META_DOCS_API_KEY }}
 
     defaults:
       run:
