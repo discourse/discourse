@@ -25,9 +25,10 @@ export default class AdminEmailTemplatesEditController extends Controller {
 
   @computed("buffered.body", "buffered.subject")
   get saveDisabled() {
+    // TODO (devxp) we need a buffered proxy that works with tracked properties
     return (
-      this.emailTemplate.body === this.buffered?.body &&
-      this.emailTemplate.subject === this.buffered?.subject
+      this.emailTemplate.body === this.get("buffered.body") &&
+      this.emailTemplate.subject === this.get("buffered.subject")
     );
   }
 

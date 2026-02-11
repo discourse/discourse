@@ -25,7 +25,7 @@ export default class AdminSiteTextEdit extends Controller {
 
   @computed("buffered.value", "siteText.value")
   get saveDisabled() {
-    return this.siteText.value === this.buffered?.value;
+    return this.siteText.value === this.get("buffered.value"); // TODO (devxp) we need a buffered proxy that works with tracked properties
   }
 
   @computed("siteText.status")

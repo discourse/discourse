@@ -39,15 +39,14 @@ export default class TagGroupsForm extends Component {
 
   @computed("buffered.permissions")
   get selectedGroupIds() {
-    if (!this.buffered?.permissions) {
+    const permissions = this.get("buffered.permissions"); // TODO (devxp) we need a buffered proxy that works with tracked properties
+    if (!permissions) {
       return [];
     }
 
     let groupIds = [];
 
-    for (const [groupId, permission] of Object.entries(
-      this.buffered?.permissions
-    )) {
+    for (const [groupId, permission] of Object.entries(permissions)) {
       // JS object keys are always strings, so we need to convert them to integers
       const id = parseInt(groupId, 10);
 
