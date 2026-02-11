@@ -784,6 +784,29 @@ RSpec.describe SiteSettingExtension do
           expect(settings.all_settings.find { |s| s[:setting] == :cool_thing_image }).to be_blank
         end
       end
+
+      context "when the setting is also explicitly hidden" do
+        before do
+          settings.setting(:enable_cool_thing, true)
+          settings.refresh!
+        end
+
+        it "remains hidden even when depends_on settings are true" do
+          settings.setting(
+            :hidden_cool_thing_image,
+            nil,
+            hidden: true,
+            depends_on: [:enable_cool_thing],
+            depends_behavior: :hidden,
+          )
+          settings.refresh!
+
+          expect(settings.hidden_settings).to include(:hidden_cool_thing_image)
+          expect(
+            settings.all_settings.find { |s| s[:setting] == :hidden_cool_thing_image },
+          ).to be_blank
+        end
+      end
     end
   end
 
