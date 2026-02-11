@@ -140,7 +140,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   protected
 
   def render_auth_result_failure
-    flash[:error] = @auth_result.failed_reason.html_safe
+    flash[:error] = @auth_result.failed_reason
     render "failure"
   end
 
