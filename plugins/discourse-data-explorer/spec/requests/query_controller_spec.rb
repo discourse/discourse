@@ -123,6 +123,13 @@ describe DiscourseDataExplorer::QueryController do
       end
     end
 
+    describe "#destroy" do
+      it "returns 404 when query does not exist" do
+        delete "/admin/plugins/explorer/queries/999999.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
     describe "#run" do
       def run_query(id, params = {}, explain = false)
         params = Hash[params.map { |a| [a[0], a[1].to_s] }]

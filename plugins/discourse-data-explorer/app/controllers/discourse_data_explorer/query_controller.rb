@@ -120,7 +120,13 @@ module DiscourseDataExplorer
     end
 
     def destroy
-      query = Query.where(id: params[:id]).first_or_initialize
+      query = Query.find_by(id: params[:id])
+
+      if query.nil?
+        raise Discourse::NotFound unless Queries.default[params[:id].to_s]
+        query = Query.new(id: params[:id])
+      end
+
       query.update!(hidden: true)
 
       render json: { success: true, errors: [] }
