@@ -97,6 +97,17 @@ RSpec.describe TopicListItemSerializer do
 
       expect(json[:posters].length).to eq(1)
     end
+
+    it "uses slug_for_url for tags with empty slugs" do
+      numeric_tag = Fabricate(:tag, name: "7")
+      expect(numeric_tag.slug).to eq("")
+
+      topic.tags << numeric_tag
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
+      entry = json[:tags].find { |t| t[:id] == numeric_tag.id }
+
+      expect(entry[:slug]).to eq("#{numeric_tag.id}-tag")
+    end
   end
 
   describe "correctly serializes op_likes data" do

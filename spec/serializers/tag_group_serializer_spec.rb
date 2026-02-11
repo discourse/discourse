@@ -23,4 +23,28 @@ RSpec.describe TagGroupSerializer do
     serialized = TagGroupSerializer.new(tag_group, root: false).as_json
     expect(serialized[:tags]).to contain_exactly({ id: tag.id, name: tag.name, slug: tag.slug })
   end
+
+  it "uses slug_for_url for tags with empty slugs" do
+    numeric_tag = Fabricate(:tag, name: "42")
+    expect(numeric_tag.slug).to eq("")
+
+    tag_group = Fabricate(:tag_group, tags: [numeric_tag])
+    serialized = TagGroupSerializer.new(tag_group, root: false).as_json
+
+    expect(serialized[:tags]).to contain_exactly(
+      { id: numeric_tag.id, name: numeric_tag.name, slug: "#{numeric_tag.id}-tag" },
+    )
+  end
+
+  it "uses slug_for_url for parent_tag with empty slug" do
+    parent = Fabricate(:tag, name: "99")
+    expect(parent.slug).to eq("")
+
+    tag_group = Fabricate(:tag_group, parent_tag: parent)
+    serialized = TagGroupSerializer.new(tag_group, root: false).as_json
+
+    expect(serialized[:parent_tag]).to eq(
+      [{ id: parent.id, name: parent.name, slug: "#{parent.id}-tag" }],
+    )
+  end
 end

@@ -28,7 +28,7 @@ module("Unit | Model | nav-item", function (hooks) {
     href(
       "latest",
       { tag: { id: 1, name: "bar", slug: "bar" } },
-      "/tag/bar/l/latest",
+      "/tag/bar/1/l/latest",
       "latest with tag"
     );
     href(
@@ -37,7 +37,7 @@ module("Unit | Model | nav-item", function (hooks) {
         tag: { id: 1, name: "bar", slug: "bar" },
         category: Category.findBySlugPath(["foo"]),
       },
-      "/tags/c/foo/123/bar/l/latest",
+      "/tags/c/foo/123/bar/1/l/latest",
       "latest with tag and category"
     );
   });

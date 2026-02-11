@@ -13,13 +13,13 @@ acceptance("Tags", function (needs) {
   needs.user();
 
   needs.pretender((server, helper) => {
-    server.get("/tag/test/notifications", () =>
+    server.get("/tag/42/notifications.json", () =>
       helper.response({
         tag_notification: { id: 42, name: "test", notification_level: 2 },
       })
     );
 
-    server.get("/tag/test/l/unread.json", () =>
+    server.get("/tag/42/l/unread.json", () =>
       helper.response({
         users: [
           {
@@ -79,7 +79,7 @@ acceptance("Tags", function (needs) {
 
     server.put("/topics/bulk", () => helper.response({}));
 
-    server.get("/tags/c/faq/4/test/l/latest.json", () => {
+    server.get("/tags/c/faq/4/test/42/l/latest.json", () => {
       return helper.response({
         users: [],
         primary_groups: [],
@@ -91,8 +91,9 @@ acceptance("Tags", function (needs) {
           per_page: 30,
           tags: [
             {
-              id: 1,
-              name: "planters",
+              id: 42,
+              name: "test",
+              slug: "test",
               topic_count: 1,
             },
           ],
@@ -110,14 +111,14 @@ acceptance("Tags", function (needs) {
   });
 
   test("dismiss notifications", async function (assert) {
-    await visit("/tag/test/l/unread");
+    await visit("/tag/test/42/l/unread");
     await click("button.dismiss-read");
     await click(".dismiss-read-modal button.btn-primary");
     assert.dom(".dismiss-read-modal").doesNotExist();
   });
 
   test("hide tag notifications menu", async function (assert) {
-    await visit("/tags/c/faq/4/test");
+    await visit("/tags/c/faq/4/test/42");
     assert.dom(".tag-notifications-tracking").doesNotExist();
   });
 });
@@ -128,13 +129,13 @@ acceptance("Tags listed by group", function (needs) {
     tags_listed_by_group: true,
   });
   needs.pretender((server, helper) => {
-    server.get("/tag/regular-tag/notifications", () =>
+    server.get("/tag/1/notifications.json", () =>
       helper.response({
         tag_notification: { id: 1, name: "regular-tag", notification_level: 1 },
       })
     );
 
-    server.get("/tag/regular-tag/l/latest.json", () =>
+    server.get("/tag/1/l/latest.json", () =>
       helper.response({
         users: [],
         primary_groups: [],
@@ -156,17 +157,17 @@ acceptance("Tags listed by group", function (needs) {
       })
     );
 
-    server.get("/tag/staff-only-tag/notifications", () =>
+    server.get("/tag/2/notifications.json", () =>
       helper.response({
         tag_notification: {
-          id: 1,
+          id: 2,
           name: "staff-only-tag",
           notification_level: 1,
         },
       })
     );
 
-    server.get("/tag/staff-only-tag/l/latest.json", () =>
+    server.get("/tag/2/l/latest.json", () =>
       helper.response({
         users: [],
         primary_groups: [],
@@ -178,7 +179,7 @@ acceptance("Tags listed by group", function (needs) {
           per_page: 30,
           tags: [
             {
-              id: 1,
+              id: 2,
               name: "staff-only-tag",
               topic_count: 1,
               staff: true,
@@ -214,13 +215,13 @@ acceptance("Tags listed by group", function (needs) {
 
     assert
       .dom(".tag-list .tag-box:nth-of-type(1) .discourse-tag")
-      .hasAttribute("href", "/tag/focus");
+      .hasAttribute("href", "/tag/focus/457");
     assert
       .dom(".tag-list .tag-box:nth-of-type(2) .discourse-tag")
       .hasAttribute(
         "href",
-        "/tag/escort",
-        "uses a lowercase URL for a mixed case tag"
+        "/tag/escort/456",
+        "uses the canonical slug/id URL"
       );
 
     assert
@@ -279,18 +280,18 @@ acceptance("Tags listed by group", function (needs) {
   test("new topic button works when viewing staff-only tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
-    await visit("/tag/regular-tag");
+    await visit("/tag/regular-tag/1");
     assert.dom("#create-topic").isEnabled();
 
-    await visit("/tag/staff-only-tag");
+    await visit("/tag/staff-only-tag/2");
     assert.dom("#create-topic").isEnabled();
 
     updateCurrentUser({ moderator: true });
 
-    await visit("/tag/regular-tag");
+    await visit("/tag/regular-tag/1");
     assert.dom("#create-topic").isEnabled();
 
-    await visit("/tag/staff-only-tag");
+    await visit("/tag/staff-only-tag/2");
     assert.dom("#create-topic").isEnabled();
   });
 });
@@ -327,18 +328,18 @@ acceptance("Tag info", function (needs) {
     tags_listed_by_group: true,
   });
   needs.pretender((server, helper) => {
-    server.get("/tag/:tag_name/notifications", (request) => {
-      return helper.response({
+    server.get("/tag/12/notifications.json", () =>
+      helper.response({
         tag_notification: {
-          id: 1,
-          name: request.params.tag_name,
+          id: 12,
+          name: "planters",
           notification_level: 1,
         },
-      });
-    });
+      })
+    );
 
-    server.get("/tag/:tag_name/l/latest.json", (request) => {
-      return helper.response({
+    server.get("/tag/12/l/latest.json", () =>
+      helper.response({
         users: [],
         primary_groups: [],
         topic_list: {
@@ -349,21 +350,88 @@ acceptance("Tag info", function (needs) {
           per_page: 30,
           tags: [
             {
-              id: 1,
-              name: request.params.tag_name,
+              id: 12,
+              name: "planters",
+              slug: "planters",
               topic_count: 1,
             },
           ],
           topics: [],
         },
-      });
-    });
+      })
+    );
+
+    server.get("/tag/13/notifications.json", () =>
+      helper.response({
+        tag_notification: {
+          id: 13,
+          name: "happy-monkey",
+          notification_level: 1,
+        },
+      })
+    );
+
+    server.get("/tag/13/l/latest.json", () =>
+      helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 13,
+              name: "happy-monkey",
+              slug: "happy-monkey",
+              topic_count: 1,
+            },
+          ],
+          topics: [],
+        },
+      })
+    );
+
+    server.get("/tag/14/notifications.json", () =>
+      helper.response({
+        tag_notification: {
+          id: 14,
+          name: "happy-monkey2",
+          notification_level: 1,
+        },
+      })
+    );
+
+    server.get("/tag/14/l/latest.json", () =>
+      helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 14,
+              name: "happy-monkey2",
+              slug: "happy-monkey2",
+              topic_count: 1,
+            },
+          ],
+          topics: [],
+        },
+      })
+    );
 
     [
-      "/tags/c/faq/4/planters/l/latest.json",
-      "/tags/c/feature/2/planters/l/latest.json",
-      "/tags/c/feature/2/planters/l/hot.json",
-      "/tags/c/feature/2/none/planters/l/latest.json",
+      "/tags/c/faq/4/planters/12/l/latest.json",
+      "/tags/c/feature/2/planters/12/l/latest.json",
+      "/tags/c/feature/2/planters/12/l/hot.json",
+      "/tags/c/feature/2/none/planters/12/l/latest.json",
     ].forEach((url) => {
       server.get(url, () => {
         return helper.response({
@@ -377,8 +445,9 @@ acceptance("Tag info", function (needs) {
             per_page: 30,
             tags: [
               {
-                id: 1,
+                id: 12,
                 name: "planters",
+                slug: "planters",
                 topic_count: 1,
               },
             ],
@@ -403,12 +472,13 @@ acceptance("Tag info", function (needs) {
       });
     });
 
-    server.get("/tag/planters/info", () => {
+    server.get("/tag/12/info.json", () => {
       return helper.response({
         __rest_serializer: "1",
         tag_info: {
           id: 12,
           name: "planters",
+          slug: "planters",
           topic_count: 1,
           staff: false,
           synonyms: [
@@ -445,18 +515,20 @@ acceptance("Tag info", function (needs) {
         ],
       });
     });
-    server.put("/tag/happy-monkey", (request) => {
+    server.put("/tag/13.json", (request) => {
       const data = helper.parsePostData(request.requestBody);
+      // ID stays the same when renaming - use 13 (original tag ID)
       return helper.response({
-        tag: { id: data.tag.id, name: data.tag.name },
+        tag: { id: 13, name: data.tag.name, slug: data.tag.name },
       });
     });
 
-    server.get("/tag/happy-monkey/info", () => {
+    server.get("/tag/13/info.json", () => {
       return helper.response({
         tag_info: {
           id: 13,
           name: "happy-monkey",
+          slug: "happy-monkey",
           description: "happy monkey description",
           topic_count: 1,
           staff: false,
@@ -468,23 +540,18 @@ acceptance("Tag info", function (needs) {
       });
     });
 
-    server.get("/tag/happy-monkey2/info", () => {
-      return helper.response({
-        tag_info: {
-          id: 13,
-          name: "happy-monkey2",
-          description: "happy monkey description",
-          topic_count: 1,
-          staff: false,
-          synonyms: [],
-          tag_group_names: [],
-          category_ids: [],
+    server.get("/tag/13/l/latest.json", () =>
+      helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          topics: [],
+          tags: [{ id: 13, name: "happy-monkey", slug: "happy-monkey" }],
         },
-        categories: [],
-      });
-    });
+      })
+    );
 
-    server.delete("/tag/planters/synonyms/containers", () =>
+    server.delete("/tag/12/synonyms/22.json", () =>
       helper.response({ success: true })
     );
 
@@ -502,7 +569,7 @@ acceptance("Tag info", function (needs) {
   test("tag info can show synonyms", async function (assert) {
     updateCurrentUser({ moderator: false, admin: false });
 
-    await visit("/tag/planters");
+    await visit("/tag/planters/12");
     assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
@@ -522,7 +589,7 @@ acceptance("Tag info", function (needs) {
   test("tag info hides only current tag in synonyms dropdown", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
 
-    await visit("/tag/happy-monkey");
+    await visit("/tag/happy-monkey/13");
     assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
@@ -544,7 +611,7 @@ acceptance("Tag info", function (needs) {
   test("edit tag is showing input for name and description", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
 
-    await visit("/tag/happy-monkey");
+    await visit("/tag/happy-monkey/13");
     assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
@@ -563,20 +630,24 @@ acceptance("Tag info", function (needs) {
 
     await fillIn("#edit-description", "new description");
     await click(".submit-edit");
-    assert.strictEqual(currentURL(), "/tag/happy-monkey", "doesn't change URL");
+    assert.strictEqual(
+      currentURL(),
+      "/tag/happy-monkey/13",
+      "doesn't change URL"
+    );
 
     await click(".edit-tag");
     await fillIn("#edit-name", "happy-monkey2");
     await click(".submit-edit");
     assert.strictEqual(
       currentURL(),
-      "/tag/happy-monkey2",
+      "/tag/happy-monkey2/13",
       "changes URL to new tag path"
     );
   });
 
   test("tag info hides when tag filter removed", async function (assert) {
-    await visit("/tag/happy-monkey");
+    await visit("/tag/happy-monkey/13");
 
     await click("#show-tag-info");
     assert.dom(".tag-info .tag-name").exists();
@@ -587,30 +658,30 @@ acceptance("Tag info", function (needs) {
   });
 
   test("can filter tags page by category", async function (assert) {
-    await visit("/tag/planters");
+    await visit("/tag/planters/12");
 
     await click(".category-breadcrumb .category-drop-header");
     await click(`.category-breadcrumb .category-row[data-name="faq"]`);
 
-    assert.strictEqual(currentURL(), "/tags/c/faq/4/planters");
+    assert.strictEqual(currentURL(), "/tags/c/faq/4/planters/12");
   });
 
   test("can switch between all/none subcategories", async function (assert) {
-    await visit("/tag/planters");
+    await visit("/tag/planters/12");
 
     await click(".category-breadcrumb .category-drop-header");
     await click(`.category-breadcrumb .category-row[data-name="feature"]`);
-    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters");
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/12");
 
     await click(".category-breadcrumb li:nth-of-type(2) .category-drop-header");
     await click(
       `.category-breadcrumb li:nth-of-type(2) .category-row[data-value="no-categories"]`
     );
-    assert.strictEqual(currentURL(), "/tags/c/feature/2/none/planters");
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/none/planters/12");
   });
 
   test("sets document title correctly", async function (assert) {
-    await visit("/tag/planters");
+    await visit("/tag/planters/12");
     assert.strictEqual(
       document.title,
       i18n("tagging.filters.without_category", {
@@ -621,7 +692,7 @@ acceptance("Tag info", function (needs) {
 
     await click(".category-breadcrumb .category-drop-header");
     await click(`.category-breadcrumb .category-row[data-name="feature"]`);
-    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters");
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/12");
     assert.strictEqual(
       document.title,
       i18n("tagging.filters.with_category", {
@@ -644,19 +715,19 @@ acceptance("Tag info", function (needs) {
   });
 
   test("can visit show-category-latest routes", async function (assert) {
-    await visit("/tags/c/feature/2/planters");
+    await visit("/tags/c/feature/2/planters/12");
 
     await click(".nav-item_latest a[href]");
-    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/l/latest");
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/12/l/latest");
 
     await click(".nav-item_hot a[href]");
-    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/l/hot");
+    assert.strictEqual(currentURL(), "/tags/c/feature/2/planters/12/l/hot");
   });
 
   test("admin can manage tags", async function (assert) {
     updateCurrentUser({ moderator: false, admin: true, can_edit_tags: true });
 
-    await visit("/tag/planters");
+    await visit("/tag/planters/12");
     assert.dom("#show-tag-info").exists();
 
     await click("#show-tag-info");
@@ -679,7 +750,7 @@ acceptance("Tag info", function (needs) {
   });
 
   test("composer will not set tags if user cannot create them", async function (assert) {
-    await visit("/tag/planters");
+    await visit("/tag/planters/12");
     await click("#create-topic");
     let composer = this.owner.lookup("service:composer");
     assert.deepEqual(composer.get("model").tags, []);
@@ -694,16 +765,16 @@ acceptance("Tag show - create topic", function (needs) {
     tags_listed_by_group: true,
   });
   needs.pretender((server, helper) => {
-    server.get("/tag/:tag_name/notifications", (request) => {
+    server.get("/tag/0/notifications.json", () => {
       return helper.response({
         tag_notification: {
-          id: 1,
-          name: request.params.tag_name,
+          id: 0,
+          name: "none",
           notification_level: 1,
         },
       });
     });
-    server.get("/tag/:tag_name/l/latest.json", (request) => {
+    server.get("/tag/0/l/latest.json", () => {
       return helper.response({
         users: [],
         primary_groups: [],
@@ -715,8 +786,71 @@ acceptance("Tag show - create topic", function (needs) {
           per_page: 30,
           tags: [
             {
-              id: 1,
-              name: request.params.tag_name,
+              id: 0,
+              name: "none",
+              slug: "none",
+              topic_count: 1,
+            },
+          ],
+          topics: [],
+        },
+      });
+    });
+    server.get("/tag/99/notifications.json", () => {
+      return helper.response({
+        tag_notification: {
+          id: 99,
+          name: "all",
+          notification_level: 1,
+        },
+      });
+    });
+    server.get("/tag/99/l/latest.json", () => {
+      return helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 99,
+              name: "all",
+              slug: "all",
+              topic_count: 1,
+            },
+          ],
+          topics: [],
+        },
+      });
+    });
+    server.get("/tag/12/notifications.json", () => {
+      return helper.response({
+        tag_notification: {
+          id: 12,
+          name: "planters",
+          notification_level: 1,
+        },
+      });
+    });
+    server.get("/tag/12/l/latest.json", () => {
+      return helper.response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft: null,
+          draft_key: "new_topic",
+          draft_sequence: 1,
+          per_page: 30,
+          tags: [
+            {
+              id: 12,
+              name: "planters",
+              slug: "planters",
               topic_count: 1,
             },
           ],
@@ -729,11 +863,11 @@ acceptance("Tag show - create topic", function (needs) {
   test("composer will not set tags with all/none tags when creating topic", async function (assert) {
     const composer = this.owner.lookup("service:composer");
 
-    await visit("/tag/none");
+    await visit("/tag/none/0");
     await click("#create-topic");
     assert.deepEqual(composer.model.tags, []);
 
-    await visit("/tag/all");
+    await visit("/tag/all/99");
     await click("#create-topic");
     assert.deepEqual(composer.model.tags, []);
   });
@@ -741,7 +875,7 @@ acceptance("Tag show - create topic", function (needs) {
   test("composer will set tags from selected tag", async function (assert) {
     const composer = this.owner.lookup("service:composer");
 
-    await visit("/tag/planters");
+    await visit("/tag/planters/12");
     await click("#create-topic");
     assert.deepEqual(composer.model.tags, ["planters"]);
   });

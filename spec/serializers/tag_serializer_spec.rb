@@ -14,6 +14,14 @@ RSpec.describe TagSerializer do
       serialized = described_class.new(tag, scope: Guardian.new(user), root: false).as_json
       expect(serialized[:slug]).to eq(tag.slug)
     end
+
+    it "uses slug_for_url when slug is empty" do
+      numeric_tag = Fabricate(:tag, name: "123")
+      expect(numeric_tag.slug).to eq("")
+
+      serialized = described_class.new(numeric_tag, scope: Guardian.new(user), root: false).as_json
+      expect(serialized[:slug]).to eq("#{numeric_tag.id}-tag")
+    end
   end
 
   describe "#topic_count" do

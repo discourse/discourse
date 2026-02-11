@@ -199,6 +199,7 @@ export default class TagDrop extends ComboBoxComponent {
       .sort((a, b) => a.name > b.name)
       .map((r) => {
         const content = this.defaultItem(r.id, r.name);
+        content.slug = r.slug;
         if (!this.currentCategory) {
           content.count = r.count;
         }
@@ -209,18 +210,18 @@ export default class TagDrop extends ComboBoxComponent {
 
   @action
   onChange(value, tag) {
-    let tagName;
+    let tagArg;
 
     if (value === NO_TAG_ID) {
-      tagName = NONE_TAG;
+      tagArg = NONE_TAG;
     } else if (value === ALL_TAGS_ID) {
-      tagName = null;
-    } else if (tag && tag.name) {
-      tagName = tag.name;
+      tagArg = null;
+    } else if (tag) {
+      tagArg = tag;
     }
 
     DiscourseURL.routeToUrl(
-      getCategoryAndTagUrl(this.currentCategory, !this.noSubcategories, tagName)
+      getCategoryAndTagUrl(this.currentCategory, !this.noSubcategories, tagArg)
     );
   }
 }
