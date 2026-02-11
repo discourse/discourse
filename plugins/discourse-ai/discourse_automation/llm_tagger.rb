@@ -7,7 +7,7 @@ if defined?(DiscourseAutomation)
 
     placeholder :post
 
-    triggerables %i[post_created_edited]
+    triggerables %i[post_created_edited stalled_topic]
 
     field :tagger_persona,
           component: :choices,
@@ -54,7 +54,9 @@ if defined?(DiscourseAutomation)
 
     script do |context, fields|
       post = context["post"]
-      next if post&.user&.bot? && !fields.dig("allow_system_posts", "value")
+      post ||= context["topic"]&.posts&.find_by(post_number: 1)
+      next if post.blank?
+      next if post.user&.bot? && !fields.dig("allow_system_posts", "value")
 
       next if post.post_number != 1
 
