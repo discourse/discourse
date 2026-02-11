@@ -231,7 +231,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
                     as |field|
                   >
                     <field.TagChooser
-                      @everyTag={{true}}
+                      @showAllTags={{true}}
                       @excludeSynonyms={{true}}
                     />
                   </form.Field>

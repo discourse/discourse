@@ -96,10 +96,10 @@ export default class UpsertCategoryTags extends Component {
         as |field|
       >
         <field.TagChooser
-          @everyTag={{true}}
+          @showAllTags={{true}}
           @excludeSynonyms={{true}}
-          @unlimitedTagCount={{true}}
-          @filterPlaceholder="category.tags_placeholder"
+          @unlimited={{true}}
+          @placeholder="category.tags_placeholder"
         />
       </@form.Field>
 

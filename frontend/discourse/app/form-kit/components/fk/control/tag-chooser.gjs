@@ -15,16 +15,13 @@ export default class FKControlTagChooser extends Component {
     <TagChooser
       @tags={{@field.value}}
       @onChange={{this.handleChange}}
-      @everyTag={{@everyTag}}
+      @everyTag={{@showAllTags}}
       @excludeSynonyms={{@excludeSynonyms}}
-      @excludeHasSynonyms={{@excludeHasSynonyms}}
-      @unlimitedTagCount={{@unlimitedTagCount}}
+      @excludeHasSynonyms={{@excludeTagsWithSynonyms}}
+      @unlimitedTagCount={{@unlimited}}
       @categoryId={{@categoryId}}
       @allowCreate={{@allowCreate}}
-      @options={{hash
-        disabled=@field.disabled
-        filterPlaceholder=@filterPlaceholder
-      }}
+      @options={{hash disabled=@field.disabled filterPlaceholder=@placeholder}}
       class="form-kit__control-tag-chooser"
     />
   </template>
