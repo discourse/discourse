@@ -1753,6 +1753,7 @@ RSpec.describe Report do
       end
     end
   end
+
   describe "top_users_by_likes_received_from_a_variety_of_people" do
     let(:report) { Report.find("top_users_by_likes_received_from_a_variety_of_people") }
 
