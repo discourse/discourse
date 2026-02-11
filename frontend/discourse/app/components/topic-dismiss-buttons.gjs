@@ -23,6 +23,16 @@ export default class TopicDismissButtons extends Component {
     });
   }
 
+  get dismissUnreadLabel() {
+    if (this.args.selectedTopics.length === 0) {
+      return i18n("topics.bulk.dismiss_unread");
+    }
+
+    return i18n("topics.bulk.dismiss_unread_with_selected", {
+      count: this.args.selectedTopics.length,
+    });
+  }
+
   get dismissNewLabel() {
     if (this.currentUser?.new_new_view_enabled) {
       return i18n("topics.bulk.dismiss_button");
@@ -56,7 +66,8 @@ export default class TopicDismissButtons extends Component {
         {{~#if @showDismissRead~}}
           <DButton
             @action={{this.dismissReadPosts}}
-            @translatedLabel={{this.dismissLabel}}
+            @icon="check"
+            @translatedLabel={{this.dismissUnreadLabel}}
             @title="topics.bulk.dismiss_tooltip"
             id="dismiss-topics-{{@position}}"
             class="btn-default dismiss-read"
@@ -65,8 +76,9 @@ export default class TopicDismissButtons extends Component {
         {{~#if @showResetNew~}}
           <DButton
             @action={{@resetNew}}
-            @translatedLabel={{this.dismissNewLabel}}
             @icon="check"
+            @translatedLabel={{this.dismissNewLabel}}
+            @title="topics.bulk.dismiss_tooltip"
             id="dismiss-new-{{@position}}"
             class="btn-default dismiss-read"
           />
