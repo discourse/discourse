@@ -164,6 +164,18 @@ export default class Forms extends Component {
 </template>`;
   }
 
+  get tagChooserCode() {
+    return `import Form from "discourse/components/form";
+
+<template>
+  <Form as |form|>
+    <form.Field @title="Tags" @name="tags" as |field|>
+      <field.TagChooser />
+    </form.Field>
+  </Form>
+</template>`;
+  }
+
   get menuCode() {
     return `import Form from "discourse/components/form";
 
@@ -528,6 +540,14 @@ import Form from "discourse/components/form";
       <Form as |form|>
         <form.Field @title="Icon" @name="icon" as |field|>
           <field.Icon />
+        </form.Field>
+      </Form>
+    </StyleguideExample>
+
+    <StyleguideExample @title="TagChooser" @code={{this.tagChooserCode}}>
+      <Form as |form|>
+        <form.Field @title="Tags" @name="tags" as |field|>
+          <field.TagChooser />
         </form.Field>
       </Form>
     </StyleguideExample>

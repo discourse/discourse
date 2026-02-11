@@ -20,12 +20,19 @@ module PageObjects
         page.has_css?(summary_selector, text: url)
       end
 
-      def add_webhook(payload_url:)
+      def click_add
         page.find(header_actions_selector, text: I18n.t("admin_js.admin.web_hooks.add")).click
+        self
+      end
 
-        form = page.find(form_selector)
-        form.find(payload_url_field_selector).fill_in(with: payload_url)
+      def fill_payload_url(payload_url)
+        page.find(form_selector).find(payload_url_field_selector).fill_in(with: payload_url)
+        self
+      end
 
+      def add_webhook(payload_url:)
+        click_add
+        fill_payload_url(payload_url)
         click_save
       end
 
