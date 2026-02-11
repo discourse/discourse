@@ -101,7 +101,7 @@ module DiscourseAi
 
       def test
         @ai_tool.assign_attributes(ai_tool_params) if params[:ai_tool]
-        parameters = params[:parameters].to_unsafe_h
+        parameters = params[:parameters]&.to_unsafe_h || {}
 
         # we need an llm so we have a tokenizer
         # but will do without if none is available
