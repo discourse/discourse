@@ -53,8 +53,22 @@ class Report
     yellow: "#FFCD56",
   }
 
+  LEGACY_REPORTS = %w[
+    bookmarks
+    likes
+    moderator_warning_private_messages
+    notify_moderators_private_messages
+    notify_user_private_messages
+    post_edits
+    profile_views
+    system_private_messages
+    top_users_by_likes_received_from_inferior_trust_level
+    top_users_by_likes_received_from_a_variety_of_people
+    user_to_user_private_messages
+  ]
+
   include Reports::AssociatedAccountsByProvider
-  # include Reports::Bookmarks
+  include Reports::Bookmarks
   include Reports::ConsolidatedApiRequests
   include Reports::ConsolidatedPageViews
   include Reports::ConsolidatedPageViewsBrowserDetection
@@ -64,21 +78,21 @@ class Report
   include Reports::Emails
   include Reports::Flags
   include Reports::FlagsStatus
-  # include Reports::Likes
+  include Reports::Likes
   include Reports::MobileVisits
-  # include Reports::ModeratorWarningPrivateMessages
+  include Reports::ModeratorWarningPrivateMessages
   include Reports::ModeratorsActivity
   include Reports::NewContributors
-  # include Reports::NotifyModeratorsPrivateMessages
-  # include Reports::NotifyUserPrivateMessages
-  # include Reports::PostEdits
+  include Reports::NotifyModeratorsPrivateMessages
+  include Reports::NotifyUserPrivateMessages
+  include Reports::PostEdits
   include Reports::Posts
-  # include Reports::ProfileViews
+  include Reports::ProfileViews
   include Reports::Signups
   include Reports::StaffLogins
   include Reports::StorageStats
   include Reports::SuspiciousLogins
-  # include Reports::SystemPrivateMessages
+  include Reports::SystemPrivateMessages
   include Reports::TimeToFirstResponse
   include Reports::TopIgnoredUsers
   include Reports::TopReferredTopics
@@ -86,15 +100,15 @@ class Report
   include Reports::TopTrafficSources
   include Reports::TopUploads
   include Reports::TopUsersByLikesReceived
-  # include Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
-  # include Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
+  include Reports::TopUsersByLikesReceivedFromAVarietyOfPeople
+  include Reports::TopUsersByLikesReceivedFromInferiorTrustLevel
   include Reports::Topics
   include Reports::TopicsWithNoResponse
   include Reports::TopicViewStats
   include Reports::TrendingSearch
   include Reports::TrustLevelGrowth
   include Reports::UserFlaggingRatio
-  # include Reports::UserToUserPrivateMessages
+  include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies
   include Reports::UsersByTrustLevel
   include Reports::UsersByType
@@ -123,7 +137,8 @@ class Report
                 :primary_color,
                 :secondary_color,
                 :filters,
-                :available_filters
+                :available_filters,
+                :legacy
 
   def self.default_days
     30
@@ -243,6 +258,7 @@ class Report
       percent: self.percent,
       higher_is_better: self.higher_is_better,
       modes: self.modes,
+      legacy: self.legacy,
     }.tap do |json|
       json[:icon] = self.icon if self.icon
       json[:error] = self.error if self.error
@@ -283,6 +299,8 @@ class Report
     report.percent = opts[:percent] if opts[:percent]
     report.filters = opts[:filters] if opts[:filters]
     report.labels = Report.default_labels
+
+    report.legacy = LEGACY_REPORTS.include?(type)
 
     report
   end

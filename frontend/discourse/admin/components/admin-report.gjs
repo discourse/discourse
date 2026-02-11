@@ -544,6 +544,12 @@ export default class AdminReport extends Component {
       {{#unless this.isHidden}}
         {{#if this.isEnabled}}
           <ConditionalLoadingSection @isLoading={{this.isLoading}}>
+            {{#if this.model.legacy}}
+              <div class="alert alert-info">
+                {{icon "triangle-exclamation"}}
+                <span>{{i18n "admin.reports.legacy_warning"}}</span>
+              </div>
+            {{/if}}
             {{#if this.showHeader}}
               <div class="header">
                 {{#if this.showTitle}}

@@ -5874,6 +5874,7 @@ en:
         group_moderation: "Moderation"
         group_security: "Security"
         group_other: "Other"
+        legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
 
       config_sections:
         account:

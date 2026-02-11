@@ -13,6 +13,7 @@ module Reports
       def to_h(admin:)
         return if Report.hidden?(type, admin:)
         return if plugin_disabled?
+        return if Report::LEGACY_REPORTS.include?(type)
 
         {
           type:,
