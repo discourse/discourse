@@ -8,10 +8,10 @@ class LocalDoc
                 :content,
                 :topic_id,
                 :first_post_id,
-                :remote_content,
                 :remote_title,
                 :remote_deleted,
                 :assets
+  attr_reader :remote_content
 
   def initialize(**kwargs)
     kwargs.each { |k, v| send("#{k}=", v) }
@@ -64,7 +64,7 @@ class LocalDoc
 
       ---
 
-      <small>This document is version controlled - suggest changes [on github](https://github.com/discourse/discourse-developer-docs/blob/main/docs/#{path}).</small>
+      <small>This document is version controlled - suggest changes [on github](https://github.com/discourse/discourse/blob/main/docs/developer-guides/docs/#{path}).</small>
     MD
 
     if assets.size == 0
@@ -85,9 +85,9 @@ class LocalDoc
         {
           local_path: asset.local_path,
           local_sha1: asset.local_sha1,
-          remote_short_url: asset.remote_short_url
+          remote_short_url: asset.remote_short_url,
         }
-      end
+      end,
     )
   end
 

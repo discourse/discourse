@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require "bundler/inline"
 require "yaml"
 gemfile do
@@ -43,7 +45,7 @@ raw.each_line do |line|
 
     upload_i = 1
     raw =
-      raw.gsub(%r{![^\]]+\]\((upload://[^)]+)\)}) do |match|
+      raw.gsub(%r{![^\]]+\]\((upload://[^)]+)\)}) do |upload_match|
         filename_with_protocol = $1
         filename = $1.sub("upload://", "")
         # puts "Filename is ", filename
@@ -52,7 +54,7 @@ raw.each_line do |line|
         response = Faraday.get(url)
         if response.status != 302
           puts "failed"
-          next match
+          next upload_match
         end
         # raise "unexpected status #{response.status}" if response.status != 302
         url = response.headers["Location"]
@@ -64,7 +66,7 @@ raw.each_line do |line|
 
         File.write(local_name, data)
         puts " done"
-        match.gsub(filename_with_protocol, "/#{local_name}")
+        upload_match.gsub(filename_with_protocol, "/#{local_name}")
       end
 
     doc_id = slugify(short_title)[0..45]
@@ -93,5 +95,5 @@ end
 
 File.write(
   "#{__dir__}/scrape_map.csv",
-  id_map.map { |id, topic_id| "#{id},#{topic_id}" }.join("\n")
+  id_map.map { |id, topic_id| "#{id},#{topic_id}" }.join("\n"),
 )

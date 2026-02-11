@@ -44,10 +44,10 @@ Dir
 puts "Validating local docs..."
 docs
   .group_by { |doc| doc.external_id }
-  .each do |id, docs|
-    if docs.size > 1
+  .each do |id, grouped_docs|
+    if grouped_docs.size > 1
       puts "- duplicate external_id '#{id}' found in:"
-      docs.each { |doc| puts "- #{doc.path}" }
+      grouped_docs.each { |doc| puts "- #{doc.path}" }
       exit 1
     end
   end

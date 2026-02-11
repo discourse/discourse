@@ -1,13 +1,15 @@
-# Discourse Developer Docs - Source Repository
+# Discourse Developer Docs
 
 > [!TIP]
-> This repository is for creating/editing documentation. If you just want to browse the existing docs, head over to https://meta.discourse.org/c/documentation/10
+> If you just want to browse the existing docs, head over to https://meta.discourse.org/c/documentation/10
 
-This repository contains the the source files for Discourse's developer documentation. The `main` branch of the repository is automatically published in Discourse at https://meta.discourse.org/c/documentation/10
+This directory contains the source files for Discourse's developer documentation. Changes to the `main` branch are automatically published to https://meta.discourse.org/c/documentation/10
+
+This was originally a separate repository at [discourse/discourse-developer-docs](https://github.com/discourse/discourse-developer-docs), which has since been archived and merged into core.
 
 ## Overview
 
-This repository contains a script (`./sync_docs`) which takes the markdown files under `docs/` and uses the Discourse API to mirror them to a Discourse category.
+This directory contains a script (`./sync_docs`) which takes the markdown files under `docs/` and uses the Discourse API to mirror them to a Discourse category.
 
 The same script can be used to provide a live preview of docs in your own non-production Discourse environment.
 
@@ -15,7 +17,7 @@ The same script can be used to provide a live preview of docs in your own non-pr
 
 Each doc is represented by a markdown file under `docs/**/*.md`. Directory/file names are only visible in the git repository, and are not synchronised to Discourse.
 
-When synchronizing, directories/files are sorted lexographically, so we can use two-digit numbers to define the order in which sections/topics will appear in the Discourse sidebar.
+When synchronizing, directories/files are sorted lexicographically, so we can use two-digit numbers to define the order in which sections/topics will appear in the Discourse sidebar.
 
 `assets/` contains images which can be referenced by the docs.
 

@@ -14,7 +14,7 @@ module API
                        retry_block: ->(env:, options:, retry_count:, exception:, will_retry_in:) do
                          puts "Rate limited... will retry in #{will_retry_in}s"
                        end,
-                       exceptions: [Faraday::TooManyRequestsError]
+                       exceptions: [Faraday::TooManyRequestsError],
                      }
         conn.response :json, content_type: "application/json"
         conn.response :raise_error
@@ -29,12 +29,7 @@ module API
       return
     end
 
-    params = {
-      post: {
-        raw: raw,
-        edit_reason: "Synced from github.com/discourse/discourse-developer-docs"
-      }
-    }
+    params = { post: { raw: raw, edit_reason: "Synced from github.com/discourse/discourse" } }
     params[:title] = title if title
     params[:category] = category if category
     client.put("/posts/#{post_id}", params)
@@ -61,7 +56,7 @@ module API
     result =
       client.post(
         "/admin/plugins/explorer/queries/#{DATA_EXPLORER_QUERY_ID}/run",
-        { params: { category_id: CATEGORY_ID.to_s }.to_json }
+        { params: { category_id: CATEGORY_ID.to_s }.to_json },
       ).body
 
     raise "Data explorer query failed" if result["success"] != true
@@ -78,7 +73,7 @@ module API
         title: row[3],
         raw: row[4],
         deleted_at: row[5],
-        is_index_topic: row[6]
+        is_index_topic: row[6],
       }
     end
   end
@@ -102,7 +97,7 @@ module API
 
     client.post(
       "/uploads.json",
-      { type: "composer", synchronous: true, file: Faraday::UploadIO.new(path, "image/png") }
+      { type: "composer", synchronous: true, file: Faraday::UploadIO.new(path, "image/png") },
     ).body
   end
 

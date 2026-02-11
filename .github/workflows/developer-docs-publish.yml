@@ -1,0 +1,68 @@
+name: Developer Docs Publish
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/developer-guides/**"
+      - ".github/workflows/developer-docs-publish.yml"
+  pull_request:
+    paths:
+      - "docs/developer-guides/**"
+      - ".github/workflows/developer-docs-publish.yml"
+
+concurrency:
+  group: developer-docs-publish-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  dry_run:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    defaults:
+      run:
+        working-directory: docs/developer-guides
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: docs/developer-guides
+
+      - run: bundle exec ./sync_docs --dry-run
+
+  publish:
+    if: github.ref == 'refs/heads/main'
+    needs: dry_run
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      DOCS_CATEGORY_ID: 56
+      DOCS_DATA_EXPLORER_QUERY_ID: 2111
+      DOCS_TARGET: https://meta.discourse.org
+      DOCS_API_KEY: ${{ secrets.DISCOURSE_API_KEY }}
+
+    defaults:
+      run:
+        working-directory: docs/developer-guides
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.3"
+          bundler-cache: true
+          working-directory: docs/developer-guides
+
+      - run: bundle exec ./sync_docs
