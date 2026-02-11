@@ -553,7 +553,7 @@ RSpec.describe CategoriesController do
           expect(category.category_groups.map { |g| [g.group_id, g.permission_type] }.sort).to eq(
             [[Group[:everyone].id, readonly], [Group[:staff].id, create_post]],
           )
-          expect(UserHistory.count).to eq(5)
+          expect(UserHistory.count).to eq(1)
         end
 
         it "creates category with description containing markdown" do
@@ -862,7 +862,7 @@ RSpec.describe CategoriesController do
                 },
               }
           expect(response.status).to eq(200)
-          expect(UserHistory.count).to eq(6)
+          expect(UserHistory.count).to eq(2)
         end
 
         it "does not log false permission changes when everyone group name is localized" do
