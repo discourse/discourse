@@ -2298,18 +2298,6 @@ class User < ActiveRecord::Base
   def validate_status!(status)
     UserStatus.new(status).validate!
   end
-
-  def check_qualification_for_users_directory
-    if (!self.active_was && self.active) || (!self.approved_was && self.approved) ||
-         (self.id_was.nil? && self.id.present?)
-      @qualified_for_users_directory = true
-    end
-  end
-
-  def add_to_user_directory
-    DirectoryItem.add_missing_users_all_periods
-    @qualified_for_users_directory = false
-  end
 end
 
 # == Schema Information
