@@ -148,7 +148,7 @@ module PageObjects
         page.has_content?(
           I18n.t(
             "js.category.permissions.everyone_full_access",
-            everyone_group: Group[:everyone].name,
+            everyone_group: ::Group[:everyone].name,
           ),
         )
       end
@@ -157,7 +157,7 @@ module PageObjects
         page.has_no_content?(
           I18n.t(
             "js.category.permissions.everyone_full_access",
-            everyone_group: Group[:everyone].name,
+            everyone_group: ::Group[:everyone].name,
           ),
         )
       end
