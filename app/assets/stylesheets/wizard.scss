@@ -104,7 +104,7 @@ body.wizard {
   position: relative;
   z-index: 11;
   background-color: var(--secondary);
-  box-shadow: light-dark(0 10px 30px rgb(123, 95, 226, 0.15), none);
+  box-shadow: 0 10px 30px light-dark(rgb(123, 95, 226, 0.15), transparent);
   box-sizing: border-box;
   margin: 1em auto;
   border-radius: 16px;
