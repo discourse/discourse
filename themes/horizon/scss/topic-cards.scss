@@ -18,6 +18,10 @@
   );
 }
 
+.topic-list.--d-topic-cards .topic-list-header .topic-list-data {
+  max-width: unset;
+}
+
 .topic-list .topic-list-item-separator {
   display: none;
 }

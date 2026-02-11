@@ -1,4 +1,5 @@
 import { settings } from "virtual:theme";
+import HeaderTopicCell from "discourse/components/topic-list/header/topic-cell";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import HighContextTopicCard from "../components/card/high-context-topic-card";
 import TopicActivityColumn from "../components/card/topic-activity-column";
@@ -6,6 +7,22 @@ import TopicCategoryColumn from "../components/card/topic-category-column";
 import TopicCreatorColumn from "../components/card/topic-creator-column";
 import TopicRepliesColumn from "../components/card/topic-replies-column";
 import TopicStatusColumn from "../components/card/topic-status-column";
+
+const TOPIC_CARD_CONTEXTS = [
+  "discovery",
+  "suggested",
+  "related",
+  "group-activity",
+  "user-activity",
+];
+
+const SIMPLE_CARD_CONTEXTS = ["suggested", "related"];
+
+const isTopicCardContext = (listContext) =>
+  TOPIC_CARD_CONTEXTS.includes(listContext);
+
+const isSimpleCardContext = (listContext) =>
+  SIMPLE_CARD_CONTEXTS.includes(listContext);
 
 const TopicActivity = <template>
   <td class="topic-activity-data">
@@ -36,24 +53,6 @@ const TopicCreator = <template>
     <TopicCreatorColumn @topic={{@topic}} />
   </td>
 </template>;
-
-const TOPIC_CARD_CONTEXTS = [
-  "discovery",
-  "suggested",
-  "related",
-  "group-activity",
-  "user-activity",
-];
-
-const SIMPLE_CARD_CONTEXTS = ["suggested", "related"];
-
-function isTopicCardContext(listContext) {
-  return TOPIC_CARD_CONTEXTS.includes(listContext);
-}
-
-function isSimpleCardContext(listContext) {
-  return SIMPLE_CARD_CONTEXTS.includes(listContext);
-}
 
 const HighContextCard = <template>
   <HighContextTopicCard
@@ -101,13 +100,13 @@ export default {
     }
 
     function applyHighContextLayout(columns) {
-      columns.delete("bulk-select");
       columns.delete("topic");
       columns.delete("posters");
       columns.delete("replies");
       columns.delete("views");
       columns.delete("activity");
       columns.add("high-context-card", {
+        header: HeaderTopicCell,
         item: HighContextCard,
       });
     }
@@ -178,16 +177,9 @@ export default {
 
       api.registerBehaviorTransformer(
         "topic-list-item-click",
-        ({ context: { event }, next }) => {
-          // Check if we're on a topic card route or in a card list context
-          // Note: behavior transformer doesn't have listContext in context,
-          // so we check for the --d-topic-cards class on the table
-          const isCardList = event.target.closest(
-            ".topic-list.--d-topic-cards"
-          );
-
-          if (!isCardList) {
-            return next(); // Use default behavior on non-topic-card routes
+        ({ context: { event, listContext }, next }) => {
+          if (!isTopicCardContext(listContext)) {
+            return next();
           }
 
           if (event.target.closest("a, button, input")) {

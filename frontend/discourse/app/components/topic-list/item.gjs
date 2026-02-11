@@ -216,6 +216,7 @@ export default class Item extends Component {
       {
         event,
         topic: this.args.topic,
+        listContext: this.args.listContext,
         navigateToTopic: this.navigateToTopic,
       }
     );
