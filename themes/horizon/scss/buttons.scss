@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 :root {
   --d-button-border-radius: 6.25rem;
 }
@@ -12,6 +14,12 @@
       border-radius: var(--d-button-border-radius) 0 0
         var(--d-button-border-radius);
     }
+  }
+}
+
+@include viewport.until(md) {
+  #create-topic.btn {
+    border-radius: var(--d-button-border-radius);
   }
 }
 
