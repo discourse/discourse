@@ -1379,6 +1379,30 @@ RSpec.describe Guardian do
       Fabricate(:category_moderation_group, category: topic.category, group:)
       expect(Guardian.new(user).can_close_topic?(topic)).to eq(true)
     end
+
+    context "with TL4 users" do
+      it "returns true for visible topic" do
+        expect(Guardian.new(trust_level_4).can_close_topic?(topic)).to eq(true)
+      end
+
+      it "returns false for private category topic" do
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category)
+        expect(Guardian.new(trust_level_4).can_close_topic?(private_topic)).to eq(false)
+      end
+
+      it "returns false for private message" do
+        pm_topic = Fabricate(:private_message_topic)
+        expect(Guardian.new(trust_level_4).can_close_topic?(pm_topic)).to eq(false)
+      end
+
+      it "returns true with access to private category" do
+        group.add(trust_level_4)
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category)
+        expect(Guardian.new(trust_level_4).can_close_topic?(private_topic)).to eq(true)
+      end
+    end
   end
 
   describe "#can_archive_topic?" do
@@ -1399,6 +1423,56 @@ RSpec.describe Guardian do
       GroupUser.create!(group_id: group.id, user_id: user.id)
       Fabricate(:category_moderation_group, category: topic.category, group:)
       expect(Guardian.new(user).can_archive_topic?(topic)).to eq(true)
+    end
+
+    context "with TL4 users" do
+      it "returns true for visible topic" do
+        expect(Guardian.new(trust_level_4).can_archive_topic?(topic)).to eq(true)
+      end
+
+      it "returns false for private category topic" do
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category)
+        expect(Guardian.new(trust_level_4).can_archive_topic?(private_topic)).to eq(false)
+      end
+
+      it "returns false for private message" do
+        pm_topic = Fabricate(:private_message_topic)
+        expect(Guardian.new(trust_level_4).can_archive_topic?(pm_topic)).to eq(false)
+      end
+
+      it "returns true with access to private category" do
+        group.add(trust_level_4)
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category)
+        expect(Guardian.new(trust_level_4).can_archive_topic?(private_topic)).to eq(true)
+      end
+    end
+  end
+
+  describe "#can_pin_unpin_topic?" do
+    context "with TL4 users" do
+      it "returns true for visible topic" do
+        expect(Guardian.new(trust_level_4).can_pin_unpin_topic?(topic)).to eq(true)
+      end
+
+      it "returns false for private category topic" do
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category)
+        expect(Guardian.new(trust_level_4).can_pin_unpin_topic?(private_topic)).to eq(false)
+      end
+
+      it "returns true with access to private category" do
+        group.add(trust_level_4)
+        private_category = Fabricate(:private_category, group: group)
+        private_topic = Fabricate(:topic, category: private_category)
+        expect(Guardian.new(trust_level_4).can_pin_unpin_topic?(private_topic)).to eq(true)
+      end
+
+      it "returns false for private message" do
+        pm_topic = Fabricate(:private_message_topic)
+        expect(Guardian.new(trust_level_4).can_pin_unpin_topic?(pm_topic)).to eq(false)
+      end
     end
   end
 

@@ -339,6 +339,7 @@ module TopicGuardian
   def can_perform_action_available_to_group_moderators?(topic)
     return false if anonymous? || topic.nil?
     return true if is_staff?
+    return false if !can_see_topic?(topic)
     return true if @user.has_trust_level?(TrustLevel[4])
 
     is_category_group_moderator?(topic.category)
