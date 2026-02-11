@@ -166,11 +166,24 @@ export default class HouseAd extends AdComponent {
         // filter out ads that should not be shown on the current page
         const filteredAds = adNames.filter((adName) => {
           const ad = houseAds.creatives[adName];
-          return (
-            ad &&
-            (!ad.category_ids?.length ||
-              ad.category_ids.includes(this.currentCategoryId))
-          );
+          if (!ad) {
+            return false;
+          }
+
+          const hasCategoryScope = ad.category_ids?.length > 0;
+          const hasRouteScope =
+            this.siteSettings.ad_plugin_routes_enabled && ad.routes?.length > 0;
+
+          if (!hasCategoryScope && !hasRouteScope) {
+            return true;
+          }
+
+          const matchesCategory =
+            hasCategoryScope &&
+            ad.category_ids.includes(this.currentCategoryId);
+          const matchesRoute =
+            hasRouteScope && ad.routes.includes(this.currentRouteName);
+          return matchesCategory || matchesRoute;
         });
         adIndex[placement] = Math.floor(Math.random() * filteredAds.length);
       });
