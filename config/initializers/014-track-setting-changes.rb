@@ -108,7 +108,7 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
           has_event_handlers = svg.xpath("//@*[starts-with(name(), 'on')]").present?
 
           if has_scripts || has_event_handlers
-            SiteSetting.set("splash_screen_image", "")
+            SiteSetting.splash_screen_image = ""
           else
             svg.xpath(
               ".//*[local-name()='animate' or local-name()='animateTransform' or local-name()='animateMotion' or local-name()='set']",
