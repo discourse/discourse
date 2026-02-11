@@ -19,9 +19,75 @@ describe AdPlugin::HouseAdsController do
   before { enable_current_plugin }
   before { SiteSetting.ad_plugin_routes_enabled = true }
 
+  describe "#create" do
+    context "when used by admins" do
+      before { sign_in(admin) }
+
+      it "strips script tags from html on create" do
+        post "/admin/plugins/pluginad/house_creatives.json",
+             params: {
+               name: "XSS Ad",
+               html: '<div>Ad</div><script>alert("xss")</script>',
+               visible_to_anons: "true",
+               visible_to_logged_in_users: "true",
+             }
+        expect(response.status).to eq(200)
+
+        created_ad = AdPlugin::HouseAd.find_by(name: "XSS Ad")
+        expect(created_ad.html).not_to include("<script>")
+        expect(created_ad.html).to include("<div>Ad</div>")
+      end
+
+      it "strips event handler attributes from html on create" do
+        post "/admin/plugins/pluginad/house_creatives.json",
+             params: {
+               name: "Event Ad",
+               html:
+                 '<img src="x" onerror="alert(1)"><a onclick="alert(1)" href="https://example.com">Click</a>',
+               visible_to_anons: "true",
+               visible_to_logged_in_users: "true",
+             }
+        expect(response.status).to eq(200)
+
+        created_ad = AdPlugin::HouseAd.find_by(name: "Event Ad")
+        expect(created_ad.html).not_to include("onerror")
+        expect(created_ad.html).not_to include("onclick")
+      end
+    end
+  end
+
   describe "#update" do
     context "when used by admins" do
       before { sign_in(admin) }
+
+      it "strips script tags from html on update" do
+        put "/admin/plugins/pluginad/house_creatives/#{ad.id}.json",
+            params: {
+              name: ad.name,
+              html: '<div>Safe</div><script>fetch("/admin/users/1/grant_admin")</script>',
+              visible_to_anons: "true",
+              visible_to_logged_in_users: "false",
+            }
+        expect(response.status).to eq(200)
+
+        ad.reload
+        expect(ad.html).not_to include("<script>")
+        expect(ad.html).to include("<div>Safe</div>")
+      end
+
+      it "strips event handler attributes from html on update" do
+        put "/admin/plugins/pluginad/house_creatives/#{ad.id}.json",
+            params: {
+              name: ad.name,
+              html: '<img src="x" onerror="alert(document.cookie)">',
+              visible_to_anons: "true",
+              visible_to_logged_in_users: "false",
+            }
+        expect(response.status).to eq(200)
+
+        ad.reload
+        expect(ad.html).not_to include("onerror")
+      end
 
       it "updates an existing ad" do
         put "/admin/plugins/pluginad/house_creatives/#{ad.id}.json",
