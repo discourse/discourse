@@ -145,11 +145,21 @@ module PageObjects
       end
 
       def has_public_access_message?
-        page.has_content?(I18n.t("js.category.permissions.everyone_full_access"))
+        page.has_content?(
+          I18n.t(
+            "js.category.permissions.everyone_full_access",
+            everyone_group: Group[:everyone].name,
+          ),
+        )
       end
 
       def has_no_public_access_message?
-        page.has_no_content?(I18n.t("js.category.permissions.everyone_full_access"))
+        page.has_no_content?(
+          I18n.t(
+            "js.category.permissions.everyone_full_access",
+            everyone_group: Group[:everyone].name,
+          ),
+        )
       end
 
       def has_setting_tab?(tab_name)
