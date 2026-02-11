@@ -720,14 +720,11 @@ class PostAlerter
   end
 
   def expand_here_mention(post, exclude_ids: nil)
-    posts = Post.where(topic_id: post.topic_id)
-    posts = posts.where.not(user_id: exclude_ids) if exclude_ids.present?
+    post_type = [Post.types[:regular], Post.types[:moderator_action]]
+    post_type << Post.types[:whisper] if post.user.staff?
 
-    if post.user.staff?
-      posts = posts.where(post_type: [Post.types[:regular], Post.types[:whisper]])
-    else
-      posts = posts.where(post_type: Post.types[:regular])
-    end
+    posts = Post.where(topic_id: post.topic_id, post_type:)
+    posts = posts.where.not(user_id: exclude_ids) if exclude_ids.present?
 
     User.real.where(id: posts.select(:user_id)).limit(SiteSetting.max_here_mentioned)
   end
