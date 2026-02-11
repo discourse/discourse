@@ -1302,6 +1302,8 @@ class BulkImport::Base
     end
 
     @users[user[:imported_id].to_i] = user[:id] = @last_user_id += 1
+    @emails[user[:email]] = user[:id] if user[:email].present?
+    @external_ids[user[:external_id]] = user[:id] if user[:external_id].present?
 
     imported_username = user[:original_username].presence || user[:username].dup
 
