@@ -2,7 +2,7 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import { isEmpty } from "@ember/utils";
@@ -12,7 +12,6 @@ import DButton from "discourse/components/d-button";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
 import { AUTO_GROUPS } from "discourse/lib/constants";
-import discourseComputed from "discourse/lib/decorators";
 import PermissionType from "discourse/models/permission-type";
 import GroupChooser from "discourse/select-kit/components/group-chooser";
 import TagChooser from "discourse/select-kit/components/tag-chooser";
@@ -38,15 +37,17 @@ export default class TagGroupsForm extends Component {
     });
   }
 
-  @discourseComputed("buffered.permissions")
-  selectedGroupIds(permissions) {
-    if (!permissions) {
+  @computed("buffered.permissions")
+  get selectedGroupIds() {
+    if (!this.buffered?.permissions) {
       return [];
     }
 
     let groupIds = [];
 
-    for (const [groupId, permission] of Object.entries(permissions)) {
+    for (const [groupId, permission] of Object.entries(
+      this.buffered?.permissions
+    )) {
       // JS object keys are always strings, so we need to convert them to integers
       const id = parseInt(groupId, 10);
 

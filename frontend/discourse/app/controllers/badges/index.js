@@ -1,5 +1,5 @@
 import Controller from "@ember/controller";
-import discourseComputed from "discourse/lib/decorators";
+import { computed } from "@ember/object";
 
 function badgeKey(badge) {
   let pos = badge.get("badge_grouping.position");
@@ -9,9 +9,11 @@ function badgeKey(badge) {
 }
 
 export default class IndexController extends Controller {
-  @discourseComputed("model")
-  badgeGroups(model) {
-    let sorted = model.sort((a, b) => badgeKey(a).localeCompare(badgeKey(b)));
+  @computed("model")
+  get badgeGroups() {
+    let sorted = this.model.sort((a, b) =>
+      badgeKey(a).localeCompare(badgeKey(b))
+    );
     let grouped = [];
     let group = [];
     let groupId;

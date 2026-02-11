@@ -1,7 +1,7 @@
 /* eslint-disable ember/no-observers */
 import { cached, tracked } from "@glimmer/tracking";
 import Controller from "@ember/controller";
-import EmberObject, { action } from "@ember/object";
+import EmberObject, { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { alias, and, not, or } from "@ember/object/computed";
 import { next, schedule } from "@ember/runloop";
@@ -27,7 +27,7 @@ import {
 } from "discourse/lib/array-tools";
 import { BookmarkFormData } from "discourse/lib/bookmark-form-data";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
-import discourseComputed, { bind } from "discourse/lib/decorators";
+import { bind } from "discourse/lib/decorators";
 import { isTesting } from "discourse/lib/environment";
 import { wantsNewWindow } from "discourse/lib/intercept-click";
 import discourseLater from "discourse/lib/later";
@@ -176,19 +176,19 @@ export default class TopicController extends Controller {
     }
   }
 
-  @discourseComputed("model.postStream.loaded", "model.is_shared_draft")
-  showSharedDraftControls(loaded, isSharedDraft) {
-    return loaded && isSharedDraft;
+  @computed("model.postStream.loaded", "model.is_shared_draft")
+  get showSharedDraftControls() {
+    return this.model?.postStream?.loaded && this.model?.is_shared_draft;
   }
 
-  @discourseComputed("site.mobileView", "model.posts_count")
-  showSelectedPostsAtBottom(mobileView, postsCount) {
-    return mobileView && postsCount > 3;
+  @computed("site.mobileView", "model.posts_count")
+  get showSelectedPostsAtBottom() {
+    return this.site?.mobileView && this.model?.posts_count > 3;
   }
 
-  @discourseComputed("model")
-  pmPath(topic) {
-    return this.currentUser && this.currentUser.pmPath(topic);
+  @computed("model")
+  get pmPath() {
+    return this.currentUser && this.currentUser.pmPath(this.model);
   }
 
   _showRevision(postNumber, revision) {
@@ -209,18 +209,21 @@ export default class TopicController extends Controller {
     DiscourseURL.routeTo(url);
   }
 
-  @discourseComputed
-  selectedQuery() {
+  @computed
+  get selectedQuery() {
     return (post) => this.postSelected(post);
   }
 
-  @discourseComputed("model.isPrivateMessage", "model.category.id")
-  canEditTopicFeaturedLink(isPrivateMessage, categoryId) {
+  @computed("model.isPrivateMessage", "model.category.id")
+  get canEditTopicFeaturedLink() {
     if (this.currentUser && this.currentUser.trust_level === 0) {
       return false;
     }
 
-    if (!this.siteSettings.topic_featured_link_enabled || isPrivateMessage) {
+    if (
+      !this.siteSettings.topic_featured_link_enabled ||
+      this.model?.isPrivateMessage
+    ) {
       return false;
     }
 
@@ -230,50 +233,53 @@ export default class TopicController extends Controller {
     return (
       categoryIds === undefined ||
       !categoryIds.length ||
-      categoryIds.includes(categoryId)
+      categoryIds.includes(this.model?.category?.id)
     );
   }
 
-  @discourseComputed("model")
-  featuredLinkDomain(topic) {
-    return extractLinkMeta(topic).domain;
+  @computed("model")
+  get featuredLinkDomain() {
+    return extractLinkMeta(this.model).domain;
   }
 
-  @discourseComputed("model.isPrivateMessage")
-  canEditTags(isPrivateMessage) {
+  @computed("model.isPrivateMessage")
+  get canEditTags() {
     return (
       this.site.get("can_tag_topics") &&
-      (!isPrivateMessage || this.site.get("can_tag_pms"))
+      (!this.model?.isPrivateMessage || this.site.get("can_tag_pms"))
     );
   }
 
-  @discourseComputed("currentUser.can_send_private_messages")
-  canSendPms() {
+  @computed("currentUser.can_send_private_messages")
+  get canSendPms() {
     return this.currentUser?.can_send_private_messages;
   }
 
-  @discourseComputed("buffered.category_id")
-  minimumRequiredTags(categoryId) {
-    return Category.findById(categoryId)?.minimumRequiredTags || 0;
+  @computed("buffered.category_id")
+  get minimumRequiredTags() {
+    return (
+      Category.findById(this.buffered?.category_id)?.minimumRequiredTags || 0
+    );
   }
 
-  @discourseComputed(
+  @computed(
     "model.postStream.posts",
     "model.word_count",
     "model.postStream.loadingFilter"
   )
-  showBottomTopicMap(posts, wordCount, loading) {
+  get showBottomTopicMap() {
     // filter out small posts, because they're short
     const postsCount =
-      posts?.filter((post) => post.post_type !== 3).length || 0;
+      this.model?.postStream?.posts?.filter((post) => post.post_type !== 3)
+        ?.length || 0;
 
     const minWordCount = isTesting
       ? true
-      : wordCount > MIN_BOTTOM_MAP_WORD_COUNT;
+      : this.model?.word_count > MIN_BOTTOM_MAP_WORD_COUNT;
 
     return (
       this.siteSettings.show_bottom_topic_map &&
-      !loading &&
+      !this.model?.postStream?.loadingFilter &&
       postsCount > MIN_POSTS_COUNT &&
       minWordCount
     );
@@ -1716,9 +1722,9 @@ export default class TopicController extends Controller {
     }
   }
 
-  @discourseComputed("selectedAllPosts", "model.postStream.isMegaTopic")
-  canSelectAll(selectedAllPosts, isMegaTopic) {
-    return isMegaTopic ? false : !selectedAllPosts;
+  @computed("selectedAllPosts", "model.postStream.isMegaTopic")
+  get canSelectAll() {
+    return this.model?.postStream?.isMegaTopic ? false : !this.selectedAllPosts;
   }
 
   @dependentKeyCompat
@@ -1732,29 +1738,25 @@ export default class TopicController extends Controller {
     );
   }
 
-  @discourseComputed("model.details.can_move_posts", "selectedPostsCount")
-  canMergeTopic(canMovePosts, selectedPostsCount) {
-    return canMovePosts && selectedPostsCount > 0;
+  @computed("model.details.can_move_posts", "selectedPostsCount")
+  get canMergeTopic() {
+    return this.model?.details?.can_move_posts && this.selectedPostsCount > 0;
   }
 
-  @discourseComputed(
+  @computed(
     "currentUser.admin",
     "currentUser.staff",
     "siteSettings.moderators_change_post_ownership",
     "selectedPostsCount",
     "selectedPostsUsername"
   )
-  canChangeOwner(
-    isAdmin,
-    isStaff,
-    modChangePostOwner,
-    selectedPostsCount,
-    selectedPostsUsername
-  ) {
+  get canChangeOwner() {
     return (
-      (isAdmin || (modChangePostOwner && isStaff)) &&
-      selectedPostsCount > 0 &&
-      selectedPostsUsername !== undefined
+      (this.currentUser?.admin ||
+        (this.siteSettings?.moderators_change_post_ownership &&
+          this.currentUser?.staff)) &&
+      this.selectedPostsCount > 0 &&
+      this.selectedPostsUsername !== undefined
     );
   }
 
@@ -1777,8 +1779,8 @@ export default class TopicController extends Controller {
     return this.selectedAllPost || this.selectedPostIds.includes(post.id);
   }
 
-  @discourseComputed
-  loadingHTML() {
+  @computed
+  get loadingHTML() {
     return spinnerHTML;
   }
 

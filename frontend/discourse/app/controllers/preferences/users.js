@@ -3,7 +3,6 @@ import { action, computed } from "@ember/object";
 import { and } from "@ember/object/computed";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { uniqueItemsFromArray } from "discourse/lib/array-tools";
-import discourseComputed from "discourse/lib/decorators";
 import { makeArray } from "discourse/lib/helpers";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
@@ -68,9 +67,9 @@ export default class UsersController extends Controller {
     );
   }
 
-  @discourseComputed("model.user_option.allow_private_messages")
-  disableAllowPmUsersSetting(allowPrivateMessages) {
-    return !allowPrivateMessages;
+  @computed("model.user_option.allow_private_messages")
+  get disableAllowPmUsersSetting() {
+    return !this.model?.user_option?.allow_private_messages;
   }
 
   @action

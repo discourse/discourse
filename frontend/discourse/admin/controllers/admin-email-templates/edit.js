@@ -1,11 +1,10 @@
 import { cached, tracked } from "@glimmer/tracking";
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { dependentKeyCompat } from "@ember/object/compat";
 import { service } from "@ember/service";
 import BufferedProxy from "ember-buffered-proxy/proxy";
 import { popupAjaxError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import { isObject } from "discourse/lib/object";
 import { i18n } from "discourse-i18n";
 
@@ -24,28 +23,29 @@ export default class AdminEmailTemplatesEditController extends Controller {
     });
   }
 
-  @discourseComputed("buffered.body", "buffered.subject")
-  saveDisabled(body, subject) {
+  @computed("buffered.body", "buffered.subject")
+  get saveDisabled() {
     return (
-      this.emailTemplate.body === body && this.emailTemplate.subject === subject
+      this.emailTemplate.body === this.buffered?.body &&
+      this.emailTemplate.subject === this.buffered?.subject
     );
   }
 
-  @discourseComputed("buffered")
-  hasMultipleSubjects(buffered) {
-    if (buffered.getProperties("subject")["subject"]) {
+  @computed("buffered")
+  get hasMultipleSubjects() {
+    if (this.buffered.getProperties("subject")["subject"]) {
       return false;
     } else {
-      return buffered.getProperties("id")["id"];
+      return this.buffered.getProperties("id")["id"];
     }
   }
 
-  @discourseComputed("buffered")
-  hasMultipleBodyTemplates(buffered) {
-    if (!isObject(buffered.getProperties("body")["body"])) {
+  @computed("buffered")
+  get hasMultipleBodyTemplates() {
+    if (!isObject(this.buffered.getProperties("body")["body"])) {
       return false;
     } else {
-      return buffered.getProperties("id")["id"];
+      return this.buffered.getProperties("id")["id"];
     }
   }
 

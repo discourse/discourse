@@ -1,10 +1,9 @@
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { equal, gt } from "@ember/object/computed";
 import { service } from "@ember/service";
 import { camelize } from "@ember/string";
 import { isEmpty } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
-import discourseComputed from "discourse/lib/decorators";
 import { escapeExpression } from "discourse/lib/utilities";
 import {
   CREATE_SHARED_DRAFT,
@@ -47,27 +46,21 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
   @equal("action", EDIT) isEditing;
   @gt("topic.slow_mode_seconds", 0) isInSlowMode;
 
-  @discourseComputed("isEditing", "action", "whisper", "noBump", "isInSlowMode")
-  iconForComposerAction(
-    isEditing,
-    composerAction,
-    whisper,
-    noBump,
-    isInSlowMode
-  ) {
-    if (composerAction === CREATE_TOPIC) {
+  @computed("isEditing", "action", "whisper", "noBump", "isInSlowMode")
+  get iconForComposerAction() {
+    if (this.action === CREATE_TOPIC) {
       return "plus";
-    } else if (composerAction === PRIVATE_MESSAGE) {
+    } else if (this.action === PRIVATE_MESSAGE) {
       return "envelope";
-    } else if (composerAction === CREATE_SHARED_DRAFT) {
+    } else if (this.action === CREATE_SHARED_DRAFT) {
       return "far-clipboard";
-    } else if (whisper) {
+    } else if (this.whisper) {
       return "far-eye-slash";
-    } else if (noBump) {
+    } else if (this.noBump) {
       return "anchor";
-    } else if (isInSlowMode) {
+    } else if (this.isInSlowMode) {
       return "hourglass-start";
-    } else if (isEditing) {
+    } else if (this.isEditing) {
       return "pencil";
     } else {
       return "share";
@@ -114,8 +107,8 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     return {};
   }
 
-  @discourseComputed("seq")
-  content() {
+  @computed("seq")
+  get content() {
     let items = [];
 
     if (

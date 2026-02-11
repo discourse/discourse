@@ -1,8 +1,7 @@
-import EmberObject from "@ember/object";
+import EmberObject, { computed } from "@ember/object";
 import { alias, none } from "@ember/object/computed";
 import { Promise } from "rsvp";
 import { ajax } from "discourse/lib/ajax";
-import discourseComputed from "discourse/lib/decorators";
 import getURL from "discourse/lib/get-url";
 import BadgeGrouping from "discourse/models/badge-grouping";
 import RestModel from "discourse/models/rest";
@@ -71,8 +70,8 @@ export default class Badge extends RestModel {
 
   @alias("image_url") image;
 
-  @discourseComputed
-  url() {
+  @computed
+  get url() {
     return getURL(`/badges/${this.id}/${this.slug}`);
   }
 
@@ -89,9 +88,9 @@ export default class Badge extends RestModel {
     }
   }
 
-  @discourseComputed("badge_type.name")
-  badgeTypeClassName(type) {
-    type = type || "";
+  @computed("badge_type.name")
+  get badgeTypeClassName() {
+    const type = this.badge_type?.name || "";
     return `badge-type-${type.toLowerCase()}`;
   }
 

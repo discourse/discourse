@@ -1,23 +1,22 @@
-import EmberObject from "@ember/object";
-import discourseComputed from "discourse/lib/decorators";
+import EmberObject, { computed } from "@ember/object";
 
 export default class Tl3Requirements extends EmberObject {
-  @discourseComputed("days_visited", "time_period")
-  days_visited_percent(daysVisited, timePeriod) {
-    return Math.round((daysVisited * 100) / timePeriod);
+  @computed("days_visited", "time_period")
+  get days_visited_percent() {
+    return Math.round((this.days_visited * 100) / this.time_period);
   }
 
-  @discourseComputed("min_days_visited", "time_period")
-  min_days_visited_percent(minDaysVisited, timePeriod) {
-    return Math.round((minDaysVisited * 100) / timePeriod);
+  @computed("min_days_visited", "time_period")
+  get min_days_visited_percent() {
+    return Math.round((this.min_days_visited * 100) / this.time_period);
   }
 
-  @discourseComputed("num_topics_replied_to", "min_topics_replied_to")
-  capped_topics_replied_to(numReplied, minReplied) {
-    return numReplied > minReplied;
+  @computed("num_topics_replied_to", "min_topics_replied_to")
+  get capped_topics_replied_to() {
+    return this.num_topics_replied_to > this.min_topics_replied_to;
   }
 
-  @discourseComputed(
+  @computed(
     "days_visited",
     "min_days_visited",
     "num_topics_replied_to",
@@ -38,8 +37,7 @@ export default class Tl3Requirements extends EmberObject {
     "min_likes_given",
     "num_likes_received",
     "min_likes_received",
-    "num_likes_received",
-    "min_likes_received",
+
     "num_likes_received_days",
     "min_likes_received_days",
     "num_likes_received_users",
@@ -48,7 +46,7 @@ export default class Tl3Requirements extends EmberObject {
     "penalty_counts.silenced",
     "penalty_counts.suspended"
   )
-  met() {
+  get met() {
     return {
       days_visited: this.days_visited >= this.min_days_visited,
       topics_replied_to:

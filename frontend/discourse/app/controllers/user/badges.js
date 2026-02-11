@@ -1,7 +1,6 @@
 import Controller, { inject as controller } from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { alias, filterBy, sort } from "@ember/object/computed";
-import discourseComputed from "discourse/lib/decorators";
 
 export default class UserBadgesController extends Controller {
   @controller user;
@@ -12,9 +11,9 @@ export default class UserBadgesController extends Controller {
 
   badgeSortOrder = ["badge.badge_type.sort_order:desc", "badge.name"];
 
-  @discourseComputed("favoriteBadges.length")
-  canFavoriteMoreBadges(favoriteBadgesCount) {
-    return favoriteBadgesCount < this.siteSettings.max_favorite_badges;
+  @computed("favoriteBadges.length")
+  get canFavoriteMoreBadges() {
+    return this.favoriteBadges?.length < this.siteSettings.max_favorite_badges;
   }
 
   @action

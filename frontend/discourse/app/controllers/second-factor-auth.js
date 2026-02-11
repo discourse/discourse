@@ -1,9 +1,8 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { equal, readOnly } from "@ember/object/computed";
 import { ajax } from "discourse/lib/ajax";
 import { extractError } from "discourse/lib/ajax-error";
-import discourseComputed from "discourse/lib/decorators";
 import DiscourseURL from "discourse/lib/url";
 import { getWebauthnCredential } from "discourse/lib/webauthn";
 import { SECOND_FACTOR_METHODS } from "discourse/models/user";
@@ -32,43 +31,38 @@ export default class SecondFactorAuthController extends Controller {
   @equal("shownSecondFactorMethod", SECURITY_KEY) showSecurityKeyForm;
   @equal("shownSecondFactorMethod", BACKUP_CODE) showBackupCodesForm;
 
-  @discourseComputed("allowedMethods.[]", "totpEnabled")
-  totpAvailable() {
+  @computed("allowedMethods.[]", "totpEnabled")
+  get totpAvailable() {
     return this.totpEnabled && this.allowedMethods.includes(TOTP);
   }
 
-  @discourseComputed("allowedMethods.[]", "backupCodesEnabled")
-  backupCodesAvailable() {
+  @computed("allowedMethods.[]", "backupCodesEnabled")
+  get backupCodesAvailable() {
     return this.backupCodesEnabled && this.allowedMethods.includes(BACKUP_CODE);
   }
 
-  @discourseComputed("allowedMethods.[]", "securityKeysEnabled")
-  securityKeysAvailable() {
+  @computed("allowedMethods.[]", "securityKeysEnabled")
+  get securityKeysAvailable() {
     return (
       this.securityKeysEnabled && this.allowedMethods.includes(SECURITY_KEY)
     );
   }
 
-  @discourseComputed(
+  @computed(
     "userSelectedMethod",
     "securityKeysAvailable",
     "totpAvailable",
     "backupCodesAvailable"
   )
-  shownSecondFactorMethod(
-    userSelectedMethod,
-    securityKeysAvailable,
-    totpAvailable,
-    backupCodesAvailable
-  ) {
-    if (userSelectedMethod !== null) {
-      return userSelectedMethod;
+  get shownSecondFactorMethod() {
+    if (this.userSelectedMethod !== null) {
+      return this.userSelectedMethod;
     } else {
-      if (securityKeysAvailable) {
+      if (this.securityKeysAvailable) {
         return SECURITY_KEY;
-      } else if (totpAvailable) {
+      } else if (this.totpAvailable) {
         return TOTP;
-      } else if (backupCodesAvailable) {
+      } else if (this.backupCodesAvailable) {
         return BACKUP_CODE;
       } else {
         throw new Error("unexpected state of user 2fa settings!");
@@ -76,20 +70,18 @@ export default class SecondFactorAuthController extends Controller {
     }
   }
 
-  @discourseComputed(
+  @computed(
     "shownSecondFactorMethod",
     "securityKeysAvailable",
     "totpAvailable",
     "backupCodesAvailable"
   )
-  alternativeMethods(
-    shownSecondFactorMethod,
-    securityKeysAvailable,
-    totpAvailable,
-    backupCodesAvailable
-  ) {
+  get alternativeMethods() {
     const alts = [];
-    if (securityKeysAvailable && shownSecondFactorMethod !== SECURITY_KEY) {
+    if (
+      this.securityKeysAvailable &&
+      this.shownSecondFactorMethod !== SECURITY_KEY
+    ) {
       alts.push({
         id: SECURITY_KEY,
         translationKey: "login.second_factor_toggle.security_key",
@@ -97,7 +89,7 @@ export default class SecondFactorAuthController extends Controller {
       });
     }
 
-    if (totpAvailable && shownSecondFactorMethod !== TOTP) {
+    if (this.totpAvailable && this.shownSecondFactorMethod !== TOTP) {
       alts.push({
         id: TOTP,
         translationKey: "login.second_factor_toggle.totp",
@@ -105,7 +97,10 @@ export default class SecondFactorAuthController extends Controller {
       });
     }
 
-    if (backupCodesAvailable && shownSecondFactorMethod !== BACKUP_CODE) {
+    if (
+      this.backupCodesAvailable &&
+      this.shownSecondFactorMethod !== BACKUP_CODE
+    ) {
       alts.push({
         id: BACKUP_CODE,
         translationKey: "login.second_factor_toggle.backup_code",
@@ -116,9 +111,9 @@ export default class SecondFactorAuthController extends Controller {
     return alts;
   }
 
-  @discourseComputed("shownSecondFactorMethod")
-  secondFactorTitle(shownSecondFactorMethod) {
-    switch (shownSecondFactorMethod) {
+  @computed("shownSecondFactorMethod")
+  get secondFactorTitle() {
+    switch (this.shownSecondFactorMethod) {
       case TOTP:
         return i18n("login.second_factor_title");
       case SECURITY_KEY:
@@ -128,9 +123,9 @@ export default class SecondFactorAuthController extends Controller {
     }
   }
 
-  @discourseComputed("shownSecondFactorMethod")
-  secondFactorDescription(shownSecondFactorMethod) {
-    switch (shownSecondFactorMethod) {
+  @computed("shownSecondFactorMethod")
+  get secondFactorDescription() {
+    switch (this.shownSecondFactorMethod) {
       case TOTP:
         return i18n("login.second_factor_description");
       case SECURITY_KEY:
@@ -140,20 +135,20 @@ export default class SecondFactorAuthController extends Controller {
     }
   }
 
-  @discourseComputed("messageIsError")
-  alertClass(messageIsError) {
-    if (messageIsError) {
+  @computed("messageIsError")
+  get alertClass() {
+    if (this.messageIsError) {
       return "alert-error";
     } else {
       return "alert-success";
     }
   }
 
-  @discourseComputed("showTotpForm", "showBackupCodesForm")
-  inputFormClass(showTotpForm, showBackupCodesForm) {
-    if (showTotpForm) {
+  @computed("showTotpForm", "showBackupCodesForm")
+  get inputFormClass() {
+    if (this.showTotpForm) {
       return "totp-token";
-    } else if (showBackupCodesForm) {
+    } else if (this.showBackupCodesForm) {
       return "backup-code-token";
     }
   }
@@ -229,9 +224,9 @@ export default class SecondFactorAuthController extends Controller {
     );
   }
 
-  @discourseComputed("secondFactorToken")
-  isSecondFactorTokenValid(secondFactorToken) {
-    return secondFactorToken?.length > 0;
+  @computed("secondFactorToken")
+  get isSecondFactorTokenValid() {
+    return this.secondFactorToken?.length > 0;
   }
 
   @action

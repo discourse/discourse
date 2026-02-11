@@ -1,8 +1,7 @@
 import Controller from "@ember/controller";
-import { action } from "@ember/object";
+import { action, computed } from "@ember/object";
 import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
-import discourseComputed from "discourse/lib/decorators";
 
 export default class CategoriesController extends Controller {
   @service router;
@@ -10,8 +9,8 @@ export default class CategoriesController extends Controller {
 
   @reads("currentUser.staff") canEdit;
 
-  @discourseComputed
-  isCategoriesRoute() {
+  @computed
+  get isCategoriesRoute() {
     return this.router.currentRouteName === "discovery.categories";
   }
 

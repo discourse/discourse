@@ -1,5 +1,6 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
+import { computed } from "@ember/object";
 import { gt } from "@ember/object/computed";
 import { tagName } from "@ember-decorators/component";
 import UserLink from "discourse/components/user-link";
@@ -7,22 +8,21 @@ import avatar from "discourse/helpers/avatar";
 import icon from "discourse/helpers/d-icon";
 import formatDate from "discourse/helpers/format-date";
 import reviewableStatus from "discourse/helpers/reviewable-status";
-import discourseComputed from "discourse/lib/decorators";
 
 @tagName("")
 export default class ReviewableScore extends Component {
   @gt("rs.status", 0) showStatus;
 
-  @discourseComputed("rs.score_type.title", "reviewable.target_created_by")
-  title(title, targetCreatedBy) {
-    if (title && targetCreatedBy) {
-      return title.replace(
+  @computed("rs.score_type.title", "reviewable.target_created_by")
+  get title() {
+    if (this.rs?.score_type?.title && this.reviewable?.target_created_by) {
+      return this.rs?.score_type?.title?.replace(
         /{{username}}|%{username}/,
-        targetCreatedBy.username
+        this.reviewable?.target_created_by?.username
       );
     }
 
-    return title;
+    return this.rs?.score_type?.title;
   }
 
   <template>

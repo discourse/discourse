@@ -3,7 +3,6 @@ import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import { module, test } from "qunit";
 import { rollbackAllPrepends } from "discourse/lib/class-prepend";
-import discourseComputed from "discourse/lib/decorators";
 import { withPluginApi } from "discourse/lib/plugin-api";
 
 module("Unit | Utility | plugin-api", function (hooks) {
@@ -35,8 +34,8 @@ module("Unit | Utility | plugin-api", function (hooks) {
 
   test("modifyClass works with native class Ember objects", function (assert) {
     class NativeTestThingy extends EmberObject {
-      @discourseComputed
-      prop() {
+      @computed
+      get prop() {
         return "howdy";
       }
     }
