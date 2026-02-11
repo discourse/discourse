@@ -345,10 +345,7 @@ body.wizard {
 
     &.--selected {
       .wizard-container__label {
-        background-color: light-dark(
-          var(--wizard-primary-100),
-          var(--wizard-primary-900)
-        );
+        background-color: light-dark(var(--wizard-primary-100), transparent);
         border-color: var(--wizard-primary);
         border-width: 2px;
         margin: 0;
