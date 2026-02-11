@@ -5868,7 +5868,7 @@ en:
         sidebar_title: "Reports"
         back: "Back to all reports"
         group_engagement: "Engagement"
-        group_traffic: "Traffic & Engagement"
+        group_traffic: "Traffic"
         group_members: "Members"
         group_content: "Content & Health"
         group_moderation: "Moderation"
