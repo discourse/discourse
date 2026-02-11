@@ -6,6 +6,10 @@
 
 ur:
   js:
+    carousel:
+      go_to_slide: "سلائیڈ %{index}پر جائیں"
+      previous: "گزشتہ سلائیڈ"
+      next: "اگلی سلائیڈ"
     number:
       format:
         separator: "."
@@ -287,6 +291,7 @@ ur:
     skip_to_main_content: "مرکزی مواد پر جائیں"
     skip_links_label: "نیویگیشن لنکس چھوڑیں"
     skip_to_post: "پوسٹ پر جائیں %{post_number}"
+    skip_to_where_you_left_off: "وہاں جائیں جہاں چھوڑا تھا (پوسٹ %{post_number})"
     skip_to_where_you_left_off_last: "جہاں چھوڑا تھا آپ وہیں جاؤ (آخری جواب، پوسٹ %{post_number})"
     skip_to_last_reply: "آخری جواب پر جائیں۔"
     skip_to_top: "اوپر جائیں"
@@ -642,6 +647,7 @@ ur:
       show_more: "مزید دکھائیں"
       show_less: "کم دکھائیں"
       back_to_queue: "قطار پر واپس جائیں"
+      editing_post: "پوسٹ میں ترمیم جاری…"
       order_by: "کے حساب سے آرڈر"
       date_filter: "کے درمیان پوسٹ کیا گیا"
       in_reply_to: "کے جواب میں"
@@ -793,6 +799,8 @@ ur:
           low: "کم"
           medium: "درمیانی"
           high: "زیادہ"
+        active_filters: "فعال فلٹرز:"
+        clear_filter: "%{filter} ہٹائیں"
       conversation:
         view_full: "مکمل گفتگو دیکھیں"
       scores:
@@ -835,6 +843,10 @@ ur:
         is_this_post: "کیا یہ %{reviewable_type} %{reviewable_human_score_types}ہے؟"
         delimiter: "یا"
         something_else_wrong: "کیا اس%{reviewable_type} میں کچھ گڑبڑ ہے ؟"
+        approve_user: "اس صارف کو منظور کریں؟"
+        suspect_user: "کیا یہ صارف سپیم ہے؟"
+        approve_post: "اس پوسٹ کو منظور کریں؟"
+        approve_topic: "اس موضوع کو منظور کریں؟"
       types:
         reviewable_flagged_post:
           title: "فلَیگ کردہ پوسٹ"
@@ -853,27 +865,43 @@ ur:
           title: "دھاگہ"
           noun: "پوسٹ"
         reviewable_ai_chat_message:
+          title: "اے آئی کا نشان زدہ چیٹ پیغام"
           noun: "گپ شپ کا پیغام"
         reviewable_ai_post:
+          title: "اے آئی کی نشان زدہ پوسٹ"
           noun: "دھاگہ"
+        reviewable_post_voting_comment:
+          title: "نشان زدہ تبصرہ"
+          noun: "تبصرہ"
       flagged_as: "کے طور پرفلَیگ"
+      post_flagged_as: "پوسٹ نشان زدہ ہوئی بطور"
+      chat_flagged_as: "چیٹ فلیگ زدہ بطور"
+      queued_post_label: "قطار شدہ پوسٹ"
+      queued_topic_label: "قطار شدہ موضوع"
       user_label: "رکن"
+      assigned_to: "تفویض کردہ پوسٹ منجانب"
       moderator_actions: "ناظم کی کاروائیاں"
       timeline_and_notes: "ٹائم لائن اور نوٹس"
       timeline:
         target_created: "دھاگہ بنایا گیا"
         target_created_by: "%{relativeDate}پر %{username}نےدھاگہ بنایا"
         target_deleted: "دھاگہ مٹا دیا"
+        target_deleted_by: "حذف کردہ پوسٹ منجانب %{username} · %{relativeDate}"
         flagged: "نشان دہی کی"
         flagged_as_by: "%{username} نے%{relativeDate}پر %{flagReason} کے طور پر فلیگ کیا گیا"
         claimed: "دعویٰ کیا"
         claimed_by: "%{username} نے %{relativeDate}پر دعویٰ کیا"
+        unclaimed_by: "غیر دعویٰ شدہ منجانب %{username} · %{relativeDate}"
         reviewed: "جائزہ لیا گیا"
+        approved_by: "منظور شدہ منجانب %{username} · %{relativeDate}"
+        rejected_by: "مسترد شدہ منجانب %{username} · %{relativeDate}"
+        ignored_by: "نظر انداز شدہ منجانب %{username} · %{relativeDate}"
         view_conversation: "ذاتی پیغام دیکھیں"
         note_added: "نگران کا نوٹ"
         note_added_by: "نگران کا نوٹ بذریعہ %{username} · %{relativeDate}"
         no_events: "ظاہر کرنے کے لیے کوئی ٹائم لائن ایونٹس نہیں"
       notes:
+        add_note_description: "دیگر ماڈریٹرز کو سیاق و سباق فراہم کرنے کے لیے ایک نوٹ شامل کریں۔"
         add_note_button: "نوٹ کا اضافہ"
         placeholder: "اپنا نوٹ یہاں لکھیں۔۔۔"
         chars_remaining: "%{count} حروف باقی ہیں"
@@ -886,6 +914,7 @@ ur:
       review_user: "صارف"
       need_help: "مدد۔ضرورت؟"
       copy_link: "رابطہ کاپی کریں"
+      copy_permalink_title: "اس قابل جائزہ آئٹم کا لنک کلپ بورڈ پرکاپی کریں"
       copy_link_feedback: "رابطہ کاپی ہو گیا"
       view_source: "ماخذ دیکھیں"
       insights:
@@ -894,15 +923,28 @@ ur:
         flagged_by_users:
           one: "%{count} منفرد رکن کے ذریعے نشان دہی"
           other: "%{count} منفرد اراکین کے ذریعے نشان دہی"
+        similar_posts: "گزشتہ خلاف ورزیاں"
+        flagged_in_timeframe:
+          one: "%{count} مصدقہ نشان زدگی"
+          other: "%{count} مصدقہ نشان زدگیاں"
+        user_activity: "صارف کی معلومات"
         activities:
+          joined_on: "شمولیتی تاریخ: %{joinDate}"
           trust_level: "فعالیت کا درجہ: %{trustLevelName}"
           posts:
             one: "%{count} دھاگہ"
             other: "%{count} دھاگے"
+        moderation_history:
+          label: "ماڈریشن ہسٹری"
+          silenced: "خاموش: %{count}"
+          suspended: "معطل: %{count}"
+          rejected_posts: "مسترد شدہ پوسٹس: %{count}"
         solution_marked: "حل ہوا"
         topic_has_solution: "اس موضوع میں حل ہے"
         visibility: "نموداری"
+        topic_unlisted: "یہ موضوع غیر مندرج ہے اور صرف براہ راست ربط کے ذریعے قابل رسائی ہے۔"
       help:
+        community_moderation_guide: "اس کمیونٹی کی ماڈریشن گائیڈ"
         moderation_guide: "گفتگو کے اعتدال کی رہنمائی"
         flag_priorities: "رکن کی ساکھ اور نشان دہی کی ترجیحات کا انتظام"
         spam_detection: "سپیم کا پتہ لگانا"
@@ -1051,6 +1093,7 @@ ur:
           title: تعامل
           posting: پوسٹ کرنا
           notification: اطلاع
+          self_lockout: "آپ گروپ کی روئیت کو تبدیل کرنے والے ہیں جس سے آپ کی اپنی رسائی ختم ہو جائے گی۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
         email:
           title: "ای میل"
           enable_smtp: "SMTP فعال کریں"
@@ -1063,6 +1106,7 @@ ur:
           smtp_title: "SMTP"
           smtp_instructions: "جب آپ گروپ کے لیے SMTP کو فعال کرتے ہیں، تو گروپ کے ان باکس سے بھیجے گئے تمام آؤٹ باؤنڈ ای میلز آپ کے فورم کے ذریعے بھیجے گئے دیگر ای میلز کے لیے ترتیب کردہ میل سرور کے بجائے یہاں بیان کردہ SMTP سیٹنگز کے ذریعے بھیجے جائیں گے۔"
           additional_settings: "اضافی ترتیبات"
+          smtp_disable_confirm: "اگر آپ SMTP کو غیر فعال کرتے ہیں، تو تمام SMTP ترتیبات دوبارہ ترتیب دی جائیں گی اور متعلقہ فعالیت کو غیر فعال کر دیا جائے گا۔ کیا آپ واقعی جاری رکھنا چاہتے ہیں؟"
           prefill:
             title: "ترتیبات کے ساتھ پہلے سے بھریں:"
             gmail: "Gmail"
