@@ -138,9 +138,7 @@ export default class ChatemojiReactions {
 
   get canReply() {
     return (
-      this.canInteractWithMessage &&
-      this.context !== MESSAGE_CONTEXT_THREAD &&
-      this.message?.channel?.isFollowing
+      this.canInteractWithMessage && this.context !== MESSAGE_CONTEXT_THREAD
     );
   }
 

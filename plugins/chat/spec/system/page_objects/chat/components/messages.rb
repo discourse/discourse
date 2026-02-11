@@ -67,7 +67,7 @@ module PageObjects
         end
 
         def has_actions_container?(message)
-          page.has_css?("#{ACTIONS_SELECTOR}")
+          page.has_css?("#{ACTIONS_SELECTOR}[data-id='#{message.id}']")
         end
 
         def expand(**args)
@@ -111,19 +111,19 @@ module PageObjects
         end
 
         def has_reply_btn?(message)
-          page.has_css?("#{ACTIONS_SELECTOR} .reply-btn")
+          page.has_css?("#{ACTIONS_SELECTOR}[data-id='#{message.id}'] .reply-btn")
         end
 
         def has_no_reply_btn?(message)
-          page.has_no_css?("#{ACTIONS_SELECTOR} .reply-btn")
+          page.has_no_css?("#{ACTIONS_SELECTOR}[data-id='#{message.id}'] .reply-btn")
         end
 
         def has_reaction_buttons?(message)
-          page.has_css?("#{ACTIONS_SELECTOR} .react-btn")
+          page.has_css?("#{ACTIONS_SELECTOR}[data-id='#{message.id}'] .react-btn")
         end
 
         def has_no_reaction_buttons?(message)
-          page.has_no_css?("#{ACTIONS_SELECTOR} .react-btn")
+          page.has_no_css?("#{ACTIONS_SELECTOR}[data-id='#{message.id}'] .react-btn")
         end
 
         private
