@@ -41,6 +41,7 @@ export const REPORT_MODES = {
   counters: "counters",
   inline_table: "inline_table",
   storage_stats: "storage_stats",
+  donut_chart: "donut_chart",
 };
 
 export const USER_FIELD_FLAGS = [

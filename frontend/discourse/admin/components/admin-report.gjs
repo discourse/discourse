@@ -9,6 +9,7 @@ import { htmlSafe } from "@ember/template";
 import { isPresent } from "@ember/utils";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
 import AdminReportCounters from "discourse/admin/components/admin-report-counters";
+import AdminReportDonutChart from "discourse/admin/components/admin-report-donut-chart";
 import AdminReportInlineTable from "discourse/admin/components/admin-report-inline-table";
 import AdminReportRadar from "discourse/admin/components/admin-report-radar";
 import AdminReportStackedChart from "discourse/admin/components/admin-report-stacked-chart";
@@ -191,12 +192,27 @@ export default class AdminReport extends Component {
   }
 
   get isChartMode() {
-    return this.currentMode === REPORT_MODES.chart;
+    return (
+      this.currentMode === REPORT_MODES.chart ||
+      this.currentMode === REPORT_MODES.stacked_chart ||
+      this.currentMode === REPORT_MODES.stacked_line_chart ||
+      this.currentMode === REPORT_MODES.donut_chart
+    );
+  }
+
+  get additionalFilters() {
+    return makeArray(this.model?.available_filters).filter(
+      (f) => f.display !== "buttons"
+    );
   }
 
   @action
   changeGrouping(grouping) {
-    this.refreshReport({ chartGrouping: grouping });
+    if (this.options?.filterId) {
+      this.applyFilter(this.options.filterId, grouping);
+    } else {
+      this.refreshReport({ chartGrouping: grouping });
+    }
   }
 
   get displayedModes() {
@@ -248,6 +264,8 @@ export default class AdminReport extends Component {
         return AdminReportRadar;
       case REPORT_MODES.storage_stats:
         return AdminReportStorageStats;
+      case REPORT_MODES.donut_chart:
+        return AdminReportDonutChart;
       default:
         if (reportModeComponent(reportMode)) {
           return reportModeComponent(reportMode);
@@ -289,6 +307,14 @@ export default class AdminReport extends Component {
 
   get chartGroupings() {
     const chartGrouping = this.options?.chartGrouping;
+
+    if (this.options?.chartGroupings) {
+      return this.options.chartGroupings.map((g) => ({
+        ...g,
+        class: `chart-grouping ${chartGrouping === g.id ? "active" : "inactive"}`,
+      }));
+    }
+
     const options = ["daily", "weekly", "monthly"];
 
     return options.map((id) => {
@@ -501,6 +527,20 @@ export default class AdminReport extends Component {
     } else if (mode === REPORT_MODES.stacked_chart) {
       return this.args.reportOptions?.stackedChart || {};
     }
+
+    const filter = report.available_filters?.find(
+      (f) => f.display === "buttons"
+    );
+    if (filter) {
+      return EmberObject.create({
+        chartGrouping: filter.default,
+        chartGroupings: filter.choices.map((c) => ({
+          id: c.id,
+          translatedLabel: c.name,
+        })),
+        filterId: filter.id,
+      });
+    }
   }
 
   _loadReport(jsonReport) {
@@ -608,8 +648,64 @@ export default class AdminReport extends Component {
               </div>
             {{/if}}
 
-            <div class="body">
-              <div class="main">
+            <div class="chart__wrapper">
+              {{#if this.showFilteringUI}}
+                <div class="chart__filters">
+                  {{#if this.isChartMode}}
+
+                    <div class="chart-groupings">
+                      {{#each this.chartGroupings as |chartGrouping|}}
+                        <DButton
+                          @label={{chartGrouping.label}}
+                          @translatedLabel={{chartGrouping.translatedLabel}}
+                          @action={{fn this.changeGrouping chartGrouping.id}}
+                          @disabled={{chartGrouping.disabled}}
+                          class={{chartGrouping.class}}
+                        />
+                      {{/each}}
+                    </div>
+                  {{/if}}
+
+                  {{#if this.showDatesOptions}}
+                    <div class="chart__dates">
+                      <DateTimeInputRange
+                        @from={{this.startDate}}
+                        @to={{this.endDate}}
+                        @onChange={{this.onChangeDateRange}}
+                        @showFromTime={{false}}
+                        @showToTime={{false}}
+                      />
+                    </div>
+                  {{/if}}
+
+                  <div class="chart__additional-filters">
+                    {{#each this.additionalFilters as |filter|}}
+                      <div
+                        class={{concatClass
+                          "chart__filter"
+                          (concat "--" filter.id)
+                        }}
+                      >
+                        <div class="input">
+                          {{component
+                            (this.reportFilterComponent filter)
+                            model=this.model
+                            filter=filter
+                            applyFilter=this.applyFilter
+                          }}
+                        </div>
+                      </div>
+                    {{/each}}
+                  </div>
+
+                </div>
+              {{/if}}
+              <div class="chart__body">
+                {{#if this.model.average}}
+                  <div class="average-chart">
+                    {{i18n "admin.dashboard.reports.average_chart_label"}}
+                  </div>
+                {{/if}}
                 {{#if this.showError}}
                   {{#if this.showTimeoutError}}
                     <div class="alert alert-error report-alert timeout">
