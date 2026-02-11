@@ -40,6 +40,9 @@ import { i18n } from "discourse-i18n";
  * @property {boolean} Args.disabled
  * @property {boolean} Args.preventFocus
  *
+ * // Display mode
+ * @property {"link"} [Args.display]
+ *
  * // Display / icon
  * @property {string} Args.icon
  * @property {boolean} Args.ellipsis
