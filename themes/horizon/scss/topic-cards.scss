@@ -166,11 +166,34 @@
     box-shadow: 0 0 12px 1px var(--topic-card-shadow);
   }
 
-  .bulk-select-enabled & {
-    grid-template-areas:
-      "bulk-select creator title title title status"
-      "bulk-select category category activity likes-replies likes-replies "
-      " bulk-select excerpt excerpt excerpt excerpt excerpt";
+  &.excerpt-expanded {
+    @include viewport.until(sm) {
+      .topic-excerpt,
+      .link-bottom-line {
+        display: none;
+      }
+    }
+
+    @include viewport.from(sm) {
+      grid-template-areas:
+        "creator title title title status"
+        ". category activity activity . "
+        ". excerpt excerpt excerpt excerpt";
+
+      &.has-replies {
+        grid-template-areas:
+          "creator title title title status"
+          ". category likes-replies activity ."
+          ". excerpt excerpt excerpt excerpt";
+      }
+
+      .bulk-select-enabled & {
+        grid-template-areas:
+          "bulk-select creator title title title status"
+          "bulk-select category category activity likes-replies likes-replies "
+          " bulk-select excerpt excerpt excerpt excerpt excerpt";
+      }
+    }
   }
 
   .link-top-line {
