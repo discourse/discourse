@@ -15,10 +15,8 @@ module DiscourseDataExplorer
     def index
       queries = Query.where(hidden: false).order(:last_run_at, :name).includes(:groups).to_a
 
-      database_queries_ids = Query.pluck(:id)
       Queries.default.each do |params|
         attributes = params.last
-        next if database_queries_ids.include?(attributes["id"])
         query = Query.new
         query.id = attributes["id"]
         query.sql = attributes["sql"]
@@ -121,14 +119,7 @@ module DiscourseDataExplorer
 
     def destroy
       query = Query.find_by(id: params[:id])
-
-      if query.nil?
-        raise Discourse::NotFound unless Queries.default[params[:id].to_s]
-        query = Query.new(id: params[:id])
-      end
-
       query.update!(hidden: true)
-
       render json: { success: true, errors: [] }
     end
 

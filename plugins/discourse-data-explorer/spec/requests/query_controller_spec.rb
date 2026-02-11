@@ -128,6 +128,15 @@ describe DiscourseDataExplorer::QueryController do
         delete "/admin/plugins/explorer/queries/999999.json"
         expect(response.status).to eq(404)
       end
+
+      it "hides the query" do
+        query = make_query("SELECT 1 as value")
+
+        delete "/admin/plugins/explorer/queries/#{query.id}.json"
+
+        expect(response.status).to eq(200)
+        expect(query.reload.hidden).to eq(true)
+      end
     end
 
     describe "#run" do
