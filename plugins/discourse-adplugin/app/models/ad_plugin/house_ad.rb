@@ -2,11 +2,15 @@
 
 module AdPlugin
   class HouseAd < ActiveRecord::Base
-    include HasSanitizableFields
-
     self.table_name = "ad_plugin_house_ads"
 
     NAME_REGEX = /\A[[:alnum:]\s\.,'!@#$%&\*\-\+\=:]*\z/i
+
+    URI_ATTRIBUTES =
+      Set.new(%w[action cite data formaction href longdesc poster src xlink:href]).freeze
+    DANGEROUS_TAGS = Set.new(%w[script noscript base]).freeze
+    JAVASCRIPT_PROTOCOL_RE = /\Ajavascript:/i
+    PROTOCOL_SEPARATOR_RE = /[\x00-\x20\x7f-\xa0]+/n
 
     has_many :impressions,
              class_name: "AdPlugin::AdImpression",
@@ -76,8 +80,33 @@ module AdPlugin
 
     private
 
+    # Hygiene: strip JS from house ads so admins use proper patterns for scripting.
+    # This is not a security boundary — admins can already inject JS via themes
+    # and components, and CSP blocks inline JS anyway.
     def sanitize_html
-      self.html = sanitize_field(self.html) if html_changed?
+      return unless html_changed?
+
+      fragment = Loofah.html5_fragment(self.html)
+
+      scrubber =
+        Loofah::Scrubber.new do |node|
+          if DANGEROUS_TAGS.include?(node.name)
+            node.remove
+            next
+          end
+
+          node.attribute_nodes.each do |attr|
+            if attr.name.start_with?("on")
+              attr.remove
+            elsif URI_ATTRIBUTES.include?(attr.name)
+              cleaned = attr.value.gsub(PROTOCOL_SEPARATOR_RE, "")
+              attr.remove if cleaned.match?(JAVASCRIPT_PROTOCOL_RE)
+            end
+          end
+        end
+
+      fragment.scrub!(scrubber)
+      self.html = fragment.to_html
     end
 
     def clear_cache
