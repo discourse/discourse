@@ -2228,6 +2228,11 @@ span.post-count {
 }
 
 @include viewport.until(sm) {
+  .topic-avatar {
+    // puts avatar above self-background in PMs
+    z-index: z("base") + 1;
+  }
+
   topic-post-visited {
     + .topic-post > article {
       border-top: none;
