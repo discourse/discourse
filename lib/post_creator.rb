@@ -49,7 +49,9 @@ class PostCreator
   #     is_warning            - Is the topic a warning?
   #     category              - Category to assign to topic
   #     target_usernames      - comma delimited list of usernames for membership (private message)
+  #     target_user_ids       - array of user IDs for membership (private message, alternative to target_usernames)
   #     target_group_names    - comma delimited list of groups for membership (private message)
+  #     target_emails         - comma delimited list of emails for membership (private message)
   #     created_at            - Topic creation time (optional)
   #     pinned_at             - Topic pinned time (optional)
   #     pinned_globally       - Is the topic pinned globally (optional)
@@ -100,13 +102,25 @@ class PostCreator
       return false
     end
 
-    if @opts[:target_usernames].present? && !skip_validations? && !@user.staff?
-      names = @opts[:target_usernames].split(",").flatten.map(&:downcase)
+    if @opts[:target_usernames].present? && @opts[:target_user_ids].present?
+      raise ArgumentError, "Cannot specify both target_usernames and target_user_ids"
+    end
 
-      # Make sure max_allowed_message_recipients setting is respected
+    if (@opts[:target_usernames].present? || @opts[:target_user_ids].present?) &&
+         !skip_validations? && !@user.staff?
+      if @opts[:target_user_ids].present?
+        ids = Array.wrap(@opts[:target_user_ids])
+        target_users = User.where(id: ids).pluck(:id, :username).to_h
+        recipient_count = ids.length
+      else
+        names = @opts[:target_usernames].split(",").flatten.map(&:downcase)
+        target_users = User.where(username_lower: names).pluck(:id, :username).to_h
+        recipient_count = names.length
+      end
+
       max_allowed_message_recipients = SiteSetting.max_allowed_message_recipients
 
-      if names.length > max_allowed_message_recipients
+      if recipient_count > max_allowed_message_recipients
         errors.add(
           :base,
           I18n.t(:max_pm_recipients, recipients_limit: max_allowed_message_recipients),
@@ -115,9 +129,6 @@ class PostCreator
         return false
       end
 
-      # Make sure none of the users have muted or ignored the creator or prevented
-      # PMs from being sent to them
-      target_users = User.where(username_lower: names.map(&:downcase)).pluck(:id, :username).to_h
       UserCommScreener
         .new(acting_user: @user, target_user_ids: target_users.keys)
         .preventing_actor_communication

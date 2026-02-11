@@ -95,7 +95,8 @@ describe "SendPms" do
 
       pending_pm = DiscourseAutomation::PendingPm.last
       expect(pending_pm.title).to eq("Delayed")
-      expect(pending_pm.target_usernames).to eq([user.username])
+      expect(pending_pm.sender_id).to eq(Discourse.system_user.id)
+      expect(pending_pm.target_user_ids).to eq([user.id])
       expect(pending_pm.execute_at).to be_within(1.minute).of(5.minutes.from_now)
     end
   end
