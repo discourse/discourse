@@ -131,7 +131,7 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
                 existing = Upload.find_by(sha1: new_sha1)
 
                 if existing && existing.id != upload.id
-                  SiteSetting.set("splash_screen_image", existing.id)
+                  SiteSetting = splash_screen_image = existing.id
                 else
                   old_path = Discourse.store.get_path_for_upload(upload)
                   old_url = upload.url
