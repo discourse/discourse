@@ -14,6 +14,7 @@ module DiscourseAi
       def translate
         post = Post.find_by(id: params[:post_id])
         raise ActiveRecord::RecordNotFound unless post
+        guardian.ensure_can_see!(post)
 
         if DiscourseAi::Translation.enabled?
           Jobs.enqueue(:detect_translate_post, post_id: post.id, force: true)

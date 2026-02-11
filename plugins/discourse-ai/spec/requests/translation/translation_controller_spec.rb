@@ -44,6 +44,12 @@ describe DiscourseAi::Translation::TranslationController do
         expect(response.status).to eq(404)
       end
 
+      it "returns a 403 when user cannot see the post" do
+        pm = Fabricate(:private_message_post)
+        post "/discourse-ai/translate/posts/#{pm.id}"
+        expect(response.status).to eq(403)
+      end
+
       it "successfully enqueues post translation job when user can edit" do
         admin_post = Fabricate(:post, user: admin)
 
