@@ -648,11 +648,12 @@ class PostRevisor
     end
     # should probably do this before saving the post!
     if revision.modifications.empty?
+      hidden = revision.hidden
       revision.destroy
       @post.last_editor_id =
         PostRevision.where(post_id: @post.id).order(number: :desc).pick(:user_id) || @post.user_id
       @post.version -= 1
-      @post.public_version -= 1
+      @post.public_version -= 1 unless hidden
       @post.save(validate: @validate_post)
     else
       revision.save

@@ -1459,6 +1459,21 @@ describe PostRevisor do
               expect(post.public_version).to eq(1)
             end
 
+            it "doesn't decrement public_version when hidden revision is destroyed" do
+              original_tags = topic.tags.map(&:name)
+              post_revisor.revise!(admin, raw: post.raw, tags: original_tags + ["secret"])
+              post.reload
+              expect(post.version).to eq(2)
+              expect(post.public_version).to eq(1)
+              expect(post.revisions.count).to eq(1)
+
+              post_revisor.revise!(admin, raw: post.raw, tags: original_tags)
+              post.reload
+              expect(post.version).to eq(1)
+              expect(post.public_version).to eq(1)
+              expect(post.revisions.count).to eq(0)
+            end
+
             it "increments public_version when hidden tag added with other visible changes" do
               post_revisor.revise!(
                 admin,
