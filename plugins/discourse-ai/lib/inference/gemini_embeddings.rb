@@ -17,7 +17,7 @@ module DiscourseAi
         url = "#{embedding_url}\?key\=#{api_key}"
         body = { content: { parts: [{ text: content }] } }
         if !@dimensions.nil?
-          body.merge!({ embedding_config: { output_dimensionality: @dimensions } })
+          body.merge!(outputDimensionality: @dimensions)
         end
 
         conn = Faraday.new { |f| f.adapter FinalDestination::FaradayAdapter }
