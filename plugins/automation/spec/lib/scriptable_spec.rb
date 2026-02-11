@@ -293,7 +293,7 @@ describe DiscourseAutomation::Scriptable do
       let(:user) { Fabricate(:user) }
 
       context "when pm is delayed" do
-        it "creates a pending pm" do
+        it "creates a pending pm with user IDs" do
           expect {
             DiscourseAutomation::Scriptable::Utils.send_pm(
               {
@@ -305,6 +305,10 @@ describe DiscourseAutomation::Scriptable do
               automation_id: automation.id,
             )
           }.to change { DiscourseAutomation::PendingPm.count }.by(1)
+
+          pending_pm = DiscourseAutomation::PendingPm.last
+          expect(pending_pm.sender_id).to eq(Discourse.system_user.id)
+          expect(pending_pm.target_user_ids).to eq([user.id])
         end
       end
 

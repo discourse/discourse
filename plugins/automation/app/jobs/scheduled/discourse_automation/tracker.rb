@@ -37,8 +37,12 @@ module Jobs
           next if !::DiscourseAutomation::PendingPm.exists?(pending_pm.id)
 
           ::DiscourseAutomation::Scriptable::Utils.send_pm(
-            pending_pm.attributes.slice("target_usernames", "title", "raw"),
-            sender: pending_pm.sender,
+            {
+              "target_user_ids" => pending_pm.target_user_ids,
+              "title" => pending_pm.title,
+              "raw" => pending_pm.raw,
+            },
+            sender: pending_pm.sender_id,
           )
 
           pending_pm.destroy!

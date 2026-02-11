@@ -1328,6 +1328,38 @@ RSpec.describe PostCreator do
     end
   end
 
+  describe "private message with target_user_ids" do
+    fab!(:target_user1) { coding_horror }
+    fab!(:target_user2, :moderator)
+
+    it "creates a PM targeting users by ID" do
+      post =
+        PostCreator.create!(
+          user,
+          title: "PM via user IDs",
+          raw: "this is a PM sent using target_user_ids",
+          archetype: Archetype.private_message,
+          target_user_ids: [target_user1.id, target_user2.id],
+        )
+
+      expect(post.topic.archetype).to eq(Archetype.private_message)
+      expect(post.topic.allowed_users).to include(target_user1, target_user2, user)
+    end
+
+    it "raises when both target_usernames and target_user_ids are provided" do
+      expect {
+        PostCreator.create!(
+          user,
+          title: "PM with both",
+          raw: "this should fail",
+          archetype: Archetype.private_message,
+          target_usernames: target_user1.username,
+          target_user_ids: [target_user2.id],
+        )
+      }.to raise_error(ArgumentError, /Cannot specify both/)
+    end
+  end
+
   describe "private message to group" do
     fab!(:target_user1) { coding_horror }
     fab!(:target_user2, :moderator)
