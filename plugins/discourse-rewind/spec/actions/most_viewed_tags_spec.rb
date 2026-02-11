@@ -50,10 +50,10 @@ RSpec.describe DiscourseRewind::Action::MostViewedTags do
 
       expect(result[:data]).to match_array(
         [
-          { tag_id: tag_1.id, name: "ruby" },
-          { tag_id: tag_2.id, name: "javascript" },
-          { tag_id: tag_3.id, name: "python" },
-          { tag_id: tag_4.id, name: "golang" },
+          { tag_id: tag_1.id, slug: "ruby", name: "ruby" },
+          { tag_id: tag_2.id, slug: "javascript", name: "javascript" },
+          { tag_id: tag_3.id, slug: "python", name: "python" },
+          { tag_id: tag_4.id, slug: "golang", name: "golang" },
         ],
       )
     end
