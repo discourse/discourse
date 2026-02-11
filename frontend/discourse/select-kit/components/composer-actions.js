@@ -287,9 +287,10 @@ export default class ComposerActions extends DropdownSelectBoxComponent {
     });
   }
 
-  _replyFromExisting(options, post, topic) {
-    this.composer.closeComposer();
-    this.composer.open({
+  async _replyFromExisting(options, post, topic) {
+    await this.composer.destroyDraft();
+    this.composer.close();
+    await this.composer.open({
       ...options,
       prependText: this._continuedFromText(post, topic),
     });
