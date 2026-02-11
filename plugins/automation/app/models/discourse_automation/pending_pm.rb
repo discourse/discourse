@@ -20,6 +20,8 @@ end
 #  execute_at       :datetime         not null
 #  raw              :string
 #  sender           :string
+#  sender_id        :bigint
+#  target_user_ids  :bigint           is an Array
 #  target_usernames :string           is an Array
 #  title            :string
 #  created_at       :datetime         not null
