@@ -118,7 +118,7 @@ module DiscourseDataExplorer
     end
 
     def destroy
-      query = Query.find_by(id: params[:id])
+      query = Query.find(params[:id])
       query.update!(hidden: true)
       render json: { success: true, errors: [] }
     end
