@@ -3792,7 +3792,7 @@ uncategorized:
 
   enable_site_owner_onboarding:
     client: true
-    default: true
+    default: false
     hidden: true
     area: "site_admin"
 
