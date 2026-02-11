@@ -20,6 +20,10 @@ $padding-pills-small: var(--space-half) var(--space-2);
     opacity: 0.9;
   }
 
+  &.bulk-selecting {
+    display: flex;
+  }
+
   &.bulk-selected {
     background: var(--tertiary-low);
     border-color: var(--tertiary);
@@ -39,10 +43,6 @@ $padding-pills-small: var(--space-half) var(--space-2);
   }
 
   .bulk-select-enabled & {
-    &.bulk-selected {
-      background: var(--secondary);
-    }
-
     > .bulk-select {
       display: none;
     }
@@ -167,8 +167,13 @@ $padding-pills-small: var(--space-half) var(--space-2);
   &__bulk-select {
     display: inline-flex;
     align-items: center;
-    margin-right: var(--space-2);
+    justify-content: center;
+    padding-inline: var(--space-3) 0;
     cursor: pointer;
+
+    input {
+      margin: 0;
+    }
   }
 
   &__title {
@@ -204,6 +209,7 @@ $padding-pills-small: var(--space-half) var(--space-2);
       -webkit-box-orient: vertical;
       overflow: hidden;
       font-size: var(--font-0);
+      width: 100%;
     }
   }
 

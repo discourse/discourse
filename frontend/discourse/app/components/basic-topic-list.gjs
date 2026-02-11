@@ -105,6 +105,7 @@ export default class BasicTopicList extends Component {
           @order={{this.order}}
           @ascending={{this.ascending}}
           @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+          @listContext={{this.listContext}}
         />
       {{else}}
         {{#unless this.loadingMore}}

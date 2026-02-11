@@ -18,6 +18,7 @@ import { QUERY_PARAMS } from "discourse/routes/user-topic-list";
 // Lists of topics on a user's page.
 export default class UserTopicsListController extends Controller {
   @tracked model;
+  @tracked listContext = "user-activity";
 
   hideCategory = false;
   showPosters = false;
