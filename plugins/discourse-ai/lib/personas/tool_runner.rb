@@ -48,14 +48,15 @@ module DiscourseAi
         if username.present?
           User.find_by(username: username)
         else
-          @bot_user
+          @bot_user || Discourse.system_user
         end
       end
 
       def resolve_guardian(username)
         user = resolve_user(username)
         return nil, nil if user.nil?
-        [user, Guardian.new(user)]
+        guardian = user.staged? ? system_guardian : Guardian.new(user)
+        [user, guardian]
       end
 
       def resolve_category(category_id_or_name)
@@ -594,7 +595,7 @@ module DiscourseAi
               return { error: "Missing required parameter: message" } if message.blank?
 
               user, guardian = resolve_guardian(username)
-              return { error: "User not found" } if user.nil?
+              return { error: "User not found: #{username}" } if user.nil?
 
               channel = Chat::Channel.find_by(name: channel_name)
               channel ||= Chat::Channel.find_by(slug: channel_name.parameterize)
@@ -677,7 +678,7 @@ module DiscourseAi
               return { error: "Missing required parameter: raw" } if raw.blank?
 
               user, guardian = resolve_guardian(username)
-              return { error: "User not found" } if user.nil?
+              return { error: "User not found: #{username}" } if user.nil?
 
               category = resolve_category(category_id.presence || category_name)
               return { error: "Category not found" } if category.nil?
@@ -730,7 +731,7 @@ module DiscourseAi
               return { error: "Missing required parameter: raw" } if raw.blank?
 
               user, guardian = resolve_guardian(username)
-              return { error: "User not found" } if user.nil?
+              return { error: "User not found: #{username}" } if user.nil?
 
               topic = Topic.find_by(id: topic_id)
               return { error: "Topic not found" } if topic.nil?
@@ -882,7 +883,7 @@ module DiscourseAi
               edit_reason = options["edit_reason"]
 
               user, guardian = resolve_guardian(options["username"])
-              return { error: "User not found" } if user.nil?
+              return { error: "User not found: #{options["username"]}" } if user.nil?
               return { error: "Permission denied" } unless guardian.can_edit?(post)
 
               revisor = PostRevisor.new(post)
@@ -906,7 +907,7 @@ module DiscourseAi
               options ||= {}
 
               user, guardian = resolve_guardian(options["username"])
-              return { error: "User not found" } if user.nil?
+              return { error: "User not found: #{options["username"]}" } if user.nil?
               return { error: "Permission denied" } unless guardian.can_see?(topic)
 
               # Handle category change
