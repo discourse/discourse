@@ -1306,6 +1306,13 @@ pre {
   }
 
   @include viewport.from(sm) {
+    .copy-cmd:not(.action-complete),
+    .fullscreen-cmd:not(.action-complete) {
+      opacity: 0;
+      transition: 0.2s;
+      visibility: hidden;
+    }
+
     &:hover {
       .copy-cmd,
       .fullscreen-cmd {
@@ -1316,13 +1323,6 @@ pre {
           opacity: 1;
         }
       }
-    }
-
-    .copy-cmd:not(.action-complete),
-    .fullscreen-cmd:not(.action-complete) {
-      opacity: 0;
-      transition: 0.2s;
-      visibility: hidden;
     }
   }
 }
