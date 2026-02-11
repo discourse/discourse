@@ -1435,8 +1435,8 @@ en:
       title: "User Statistics"
       description: "Number of users grouped by trust level or type."
       types:
-        trust_level: "Trust Level"
-        type: "Type"
+        role: "Role"
+        status: "Status"
     users_by_trust_level:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
@@ -1456,6 +1456,8 @@ en:
         moderator: Moderator
         suspended: Suspended
         silenced: Silenced
+        regular_user: Regular User
+        active: Active
       description: "Number of users grouped by admin, moderator, suspended, and silenced."
     trending_search:
       title: Trending Search Terms
