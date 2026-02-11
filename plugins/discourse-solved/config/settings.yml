@@ -8,6 +8,11 @@ discourse_solved:
   allow_solved_on_all_topics:
     default: false
     client: true
+  allow_solved_in_groups:
+    type: group_list
+    default: ""
+    allow_any: false
+    refresh: true
   accept_all_solutions_trust_level:
     default: 4
     client: true

@@ -4,6 +4,7 @@ en:
   site_settings:
     solved_enabled: "Enable solved plugin, allow users to select solutions for topics"
     allow_solved_on_all_topics: "Allow users to select solutions on all topics (when unchecked, solutions can be enabled per category or tag)"
+    allow_solved_in_groups: "Allow marking solutions in group messages for these groups."
     accept_all_solutions_trust_level: "Minimum trust level required to accept solutions on any topic (even when not OP)"
     accept_all_solutions_allowed_groups: "Groups that are allowed to accept solutions on any topic (even when not OP). Admins and moderators are always allowed."
     empty_box_on_unsolved: "Display an empty box next to unsolved topics"

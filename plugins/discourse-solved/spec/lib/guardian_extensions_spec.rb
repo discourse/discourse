@@ -24,9 +24,51 @@ describe DiscourseSolved::GuardianExtensions do
       expect(guardian.can_accept_answer?(topic, post)).to eq(false)
     end
 
-    it "returns false for private messages" do
-      topic.update!(user:, category_id: nil, archetype: Archetype.private_message)
-      expect(guardian.can_accept_answer?(topic, post)).to eq(false)
+    it "returns false for regular private messages" do
+      pm = Fabricate(:private_message_topic, user: user)
+      pm_post = Fabricate(:post, topic: pm, user: other_user)
+      expect(guardian.can_accept_answer?(pm, pm_post)).to eq(false)
+    end
+
+    context "with group messages" do
+      fab!(:group)
+      fab!(:pm_topic) do
+        Fabricate(:group_private_message_topic, user: user, recipient_group: group)
+      end
+      fab!(:pm_op) { Fabricate(:post, topic: pm_topic, user: user) }
+      fab!(:pm_post) { Fabricate(:post, topic: pm_topic, user: other_user) }
+
+      before { SiteSetting.allow_solved_on_all_topics = false }
+
+      it "returns false when allow_solved_in_groups is empty" do
+        SiteSetting.allow_solved_in_groups = ""
+        expect(guardian.can_accept_answer?(pm_topic, pm_post)).to eq(false)
+      end
+
+      it "returns false when the group is not in allow_solved_in_groups" do
+        other_group = Fabricate(:group)
+        SiteSetting.allow_solved_in_groups = other_group.id.to_s
+        expect(guardian.can_accept_answer?(pm_topic, pm_post)).to eq(false)
+      end
+
+      it "returns true for topic author when the group is in allow_solved_in_groups" do
+        SiteSetting.allow_solved_in_groups = group.id.to_s
+        SiteSetting.accept_solutions_topic_author = true
+        expect(guardian.can_accept_answer?(pm_topic, pm_post)).to eq(true)
+      end
+
+      it "returns true for staff when the group is in allow_solved_in_groups" do
+        SiteSetting.allow_solved_in_groups = group.id.to_s
+        admin = Fabricate(:admin, refresh_auto_groups: true)
+        expect(Guardian.new(admin).can_accept_answer?(pm_topic, pm_post)).to eq(true)
+      end
+
+      it "returns false for non-author non-staff users" do
+        SiteSetting.allow_solved_in_groups = group.id.to_s
+        non_author = Fabricate(:user, refresh_auto_groups: true)
+        SiteSetting.accept_all_solutions_allowed_groups = Fabricate(:group).id
+        expect(Guardian.new(non_author).can_accept_answer?(pm_topic, pm_post)).to eq(false)
+      end
     end
 
     it "returns false if accepted answers are not allowed" do
