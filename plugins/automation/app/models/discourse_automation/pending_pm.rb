@@ -16,13 +16,13 @@ end
 #
 # Table name: discourse_automation_pending_pms
 #
-#  id               :bigint           not null, primary key
-#  execute_at       :datetime         not null
-#  raw              :string
-#  sender           :string
-#  target_usernames :string           is an Array
-#  title            :string
-#  created_at       :datetime         not null
-#  updated_at       :datetime         not null
-#  automation_id    :bigint           not null
+#  id              :bigint           not null, primary key
+#  execute_at      :datetime         not null
+#  raw             :string
+#  target_user_ids :bigint           is an Array
+#  title           :string
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  automation_id   :bigint           not null
+#  sender_id       :bigint
 #
