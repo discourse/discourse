@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
-import CategoryChangeSolvedConfirmationModal from "../components/modal/category-change-solved-confirmation";
+import SolvedRemovalConfirmationModal from "../components/modal/solved-removal-confirmation";
 
 const STORAGE_KEY = "discourse-solved-hide-category-change-confirmation";
 
@@ -14,34 +14,59 @@ export default {
         "controller:topic",
         (Superclass) =>
           class extends Superclass {
+            _solvedEnabled(categoryId, tags) {
+              if (this.siteSettings.allow_solved_on_all_topics) {
+                return true;
+              }
+
+              if (this.siteSettings.enable_solved_tags && tags?.length) {
+                const solvedTags =
+                  this.siteSettings.enable_solved_tags.split("|");
+                const names = tags.map((t) =>
+                  typeof t === "string" ? t : t.name
+                );
+                if (names.some((n) => solvedTags.includes(n))) {
+                  return true;
+                }
+              }
+
+              return (
+                Category.findById(categoryId)?.enable_accepted_answers ?? false
+              );
+            }
+
             @action
             async finishedEditingTopic() {
               if (!this.editingTopic) {
                 return;
               }
 
-              let isSolved = (id) =>
-                Category.findById(id)?.enable_accepted_answers;
-
               const props = this.get("buffered.buffer");
               let solvedStateChanged = false;
 
-              if (
-                props.category_id !== undefined &&
-                !this.siteSettings.allow_solved_on_all_topics
-              ) {
-                const oldSolved = isSolved(this.model.category_id);
-                const newSolved = isSolved(props.category_id);
+              if (props.category_id !== undefined || props.tags !== undefined) {
+                const oldCategoryId = this.model.category_id;
+                const newCategoryId =
+                  props.category_id !== undefined
+                    ? props.category_id
+                    : this.model.category_id;
 
-                solvedStateChanged = oldSolved !== newSolved;
+                const oldTags = this.model.tags || [];
+                const newTags =
+                  props.tags !== undefined ? props.tags : this.model.tags || [];
 
-                if (this.model.accepted_answer && oldSolved && !newSolved) {
+                const oldAllowed = this._solvedEnabled(oldCategoryId, oldTags);
+                const newAllowed = this._solvedEnabled(newCategoryId, newTags);
+
+                solvedStateChanged = oldAllowed !== newAllowed;
+
+                if (this.model.accepted_answer && oldAllowed && !newAllowed) {
                   const showConfirmation =
                     localStorage.getItem(STORAGE_KEY) !== "true";
 
                   if (showConfirmation) {
                     const result = await this.modal.show(
-                      CategoryChangeSolvedConfirmationModal
+                      SolvedRemovalConfirmationModal
                     );
 
                     if (!result?.confirmed) {
