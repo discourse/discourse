@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 RSpec.describe ExportCsvController do
+  context "when not logged in" do
+    it "denies anonymous access to export_entity with a 403" do
+      post "/export_csv/export_entity.json", params: { entity: "user_archive" }
+      expect(response.status).to eq(403)
+    end
+
+    it "denies anonymous access to latest_user_archive with a 403" do
+      get "/export_csv/latest_user_archive/1.json"
+      expect(response.status).to eq(403)
+    end
+  end
+
   context "while logged in as normal user" do
     fab!(:user)
     fab!(:user2, :user)
