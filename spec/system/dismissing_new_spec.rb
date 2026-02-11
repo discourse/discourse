@@ -190,7 +190,7 @@ RSpec.describe "Dismissing New", type: :system do
       it "works on tag routes" do
         sign_in(user)
 
-        visit("/tag/#{tag.name}/l/new")
+        visit("/tag/#{tag.slug}/#{tag.id}/l/new")
 
         expect(topic_list).to have_topics(count: 1)
         expect(topic_list).to have_topic(tagged_first_post.topic)
@@ -207,7 +207,7 @@ RSpec.describe "Dismissing New", type: :system do
       it "works on regular routes after visiting tagged route" do
         sign_in(user)
 
-        visit("/tag/#{tag.name}/l/new")
+        visit("/tag/#{tag.slug}/#{tag.id}/l/new")
 
         expect(topic_list).to have_topics(count: 1)
 

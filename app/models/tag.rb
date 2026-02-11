@@ -164,7 +164,10 @@ class Tag < ActiveRecord::Base
       LIMIT #{limit}
     SQL
 
-    tag_names_with_counts.map { |row| { id: row.tag_id, name: row.tag_name, slug: row.tag_slug } }
+    tag_names_with_counts.map do |row|
+      slug = row.tag_slug.presence || "#{row.tag_id}-tag"
+      { id: row.tag_id, name: row.tag_name, slug: slug }
+    end
   end
 
   def self.topic_count_column(guardian)
@@ -207,13 +210,13 @@ class Tag < ActiveRecord::Base
   end
 
   def url
-    "#{Discourse.base_path}/tag/#{UrlHelper.encode_component(self.name)}"
+    "#{Discourse.base_path}/tag/#{slug_for_url}/#{id}"
   end
 
   alias_method :relative_url, :url
 
   def full_url
-    "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
+    "#{Discourse.base_url}/tag/#{slug_for_url}/#{id}"
   end
 
   def slug_for_url

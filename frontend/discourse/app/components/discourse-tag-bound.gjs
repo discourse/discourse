@@ -7,14 +7,19 @@ import getURL from "discourse/lib/get-url";
 
 @tagName("")
 export default class DiscourseTagBound extends Component {
-  @discourseComputed("tagRecord.id")
-  tagClass(tagRecordId) {
-    return "tag-" + tagRecordId;
+  @discourseComputed("tagRecord.name")
+  tagClass(name) {
+    return "tag-" + name;
   }
 
-  @discourseComputed("tagRecord.id")
-  href(tagRecordId) {
-    return getURL("/tag/" + tagRecordId);
+  @discourseComputed("tagRecord.slug", "tagRecord.id")
+  href(slug, id) {
+    if (id) {
+      const slugForUrl = slug || `${id}-tag`;
+      return getURL(`/tag/${slugForUrl}/${id}`);
+    }
+    // fallback for tags without id
+    return getURL("/tag/" + this.tagRecord.name);
   }
 
   <template>
@@ -22,6 +27,6 @@ export default class DiscourseTagBound extends Component {
       href={{this.href}}
       class={{concatClass "discourse-tag" this.style this.tagClass}}
       ...attributes
-    >{{this.tagRecord.id}}</a>
+    >{{this.tagRecord.name}}</a>
   </template>
 }

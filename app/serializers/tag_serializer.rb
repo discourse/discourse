@@ -5,6 +5,10 @@ class TagSerializer < ApplicationSerializer
 
   has_many :localizations, serializer: TagLocalizationSerializer, embed: :objects
 
+  def slug
+    object.slug_for_url
+  end
+
   def topic_count
     object.public_send(Tag.topic_count_column(scope))
   end

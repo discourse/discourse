@@ -433,8 +433,8 @@ RSpec.describe TagsController do
     it "should handle synonyms" do
       synonym = Fabricate(:tag, target_tag: tag)
       get "/tag/#{synonym.name}/l/top.json?period=daily"
-      expect(response.status).to eq(302)
-      expect(response.redirect_url).to match(%r{/tag/#{tag.name}/l/top.json\?period=daily})
+      expect(response.status).to eq(301)
+      expect(response.redirect_url).to match(%r{/tag/test/#{tag.id}/l/top\.json\?period=daily})
     end
 
     it "is not creating infinite redirect loop when tag is a synonym of itself" do
@@ -452,7 +452,7 @@ RSpec.describe TagsController do
 
       sign_in(admin)
 
-      get "/tag/test"
+      get "/tag/#{tag.slug}/#{tag.id}"
       expect(response.status).to eq(200)
     end
 
@@ -480,7 +480,7 @@ RSpec.describe TagsController do
 
     it "puts the tag description in the meta description" do
       described_tag = Fabricate(:tag, name: "test2", description: "This is a description")
-      get "/tag/#{described_tag.name}"
+      get "/tag/#{described_tag.slug}/#{described_tag.id}"
 
       expect(response.status).to eq(200)
 
@@ -490,7 +490,7 @@ RSpec.describe TagsController do
     end
 
     it "has a default description for tags without a description" do
-      get "/tag/test"
+      get "/tag/#{tag.slug}/#{tag.id}"
 
       expect(response.status).to eq(200)
 
@@ -857,7 +857,7 @@ RSpec.describe TagsController do
       end
 
       it "can render a topic list from the latest endpoint" do
-        get "/tag/#{tag.name}/l/latest"
+        get "/tag/#{tag.slug}/#{tag.id}/l/latest"
         expect(response.status).to eq(200)
         expect(response.body).to include("topic-list")
       end
@@ -1545,7 +1545,7 @@ RSpec.describe TagsController do
   end
 
   describe "#destroy_synonym" do
-    subject(:destroy_synonym) { delete("/tag/#{tag.name}/synonyms/#{synonym.name}.json") }
+    subject(:destroy_synonym) { delete("/tag/#{tag.id}/synonyms/#{synonym.id}.json") }
 
     fab!(:tag)
     fab!(:synonym) { Fabricate(:tag, target_tag: tag, name: "synonym") }
@@ -1572,13 +1572,15 @@ RSpec.describe TagsController do
       end
 
       it "returns error if tag isn't a synonym" do
-        delete "/tag/#{Fabricate(:tag).name}/synonyms/#{synonym.name}.json"
+        other_tag = Fabricate(:tag)
+        delete "/tag/#{other_tag.id}/synonyms/#{synonym.id}.json"
         expect(response.status).to eq(400)
         expect_same_tag_names(tag.reload.synonyms, [synonym])
       end
 
       it "returns error if synonym not found" do
-        delete "/tag/#{Fabricate(:tag).name}/synonyms/nope.json"
+        other_tag = Fabricate(:tag)
+        delete "/tag/#{other_tag.id}/synonyms/-1.json"
         expect(response.status).to eq(404)
         expect_same_tag_names(tag.reload.synonyms, [synonym])
       end
