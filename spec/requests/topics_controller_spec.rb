@@ -1488,6 +1488,51 @@ RSpec.describe TopicsController do
       end
     end
 
+    describe "when logged in as TL4 user" do
+      before { sign_in(trust_level_4) }
+
+      it "allows TL4 to close visible topics" do
+        put "/t/#{topic.id}/status.json", params: { status: "closed", enabled: "true" }
+        expect(response.status).to eq(200)
+        expect(topic.reload.closed).to eq(true)
+      end
+
+      it "prevents TL4 from closing restricted category topics" do
+        staff_topic = Fabricate(:topic, category: staff_category)
+        put "/t/#{staff_topic.id}/status.json", params: { status: "closed", enabled: "true" }
+        expect(response.status).to eq(403)
+        expect(staff_topic.reload.closed).to eq(false)
+      end
+
+      it "prevents TL4 from closing private messages" do
+        pm = Fabricate(:private_message_topic)
+        put "/t/#{pm.id}/status.json", params: { status: "closed", enabled: "true" }
+        expect(response.status).to eq(403)
+        expect(pm.reload.closed).to eq(false)
+      end
+
+      it "prevents TL4 from archiving restricted topics" do
+        staff_topic = Fabricate(:topic, category: staff_category)
+        put "/t/#{staff_topic.id}/status.json", params: { status: "archived", enabled: "true" }
+        expect(response.status).to eq(403)
+        expect(staff_topic.reload.archived).to eq(false)
+      end
+
+      it "prevents TL4 from pinning restricted topics" do
+        staff_topic = Fabricate(:topic, category: staff_category)
+        put "/t/#{staff_topic.id}/status.json", params: { status: "pinned", enabled: "true" }
+        expect(response.status).to eq(403)
+        expect(staff_topic.reload.pinned_at).to eq(nil)
+      end
+
+      it "prevents TL4 from toggling visibility of restricted topics" do
+        staff_topic = Fabricate(:topic, category: staff_category)
+        put "/t/#{staff_topic.id}/status.json", params: { status: "visible", enabled: "false" }
+        expect(response.status).to eq(403)
+        expect(staff_topic.reload.visible).to eq(true)
+      end
+    end
+
     context "with API key" do
       let(:api_key) { Fabricate(:api_key, user: moderator, created_by: moderator) }
 
