@@ -2,7 +2,16 @@
 
 class Admin::WebHooksController < Admin::AdminController
   before_action :fetch_web_hook,
-                only: %i[show update destroy list_events bulk_events ping redeliver_failed_events]
+                only: %i[
+                  show
+                  update
+                  destroy
+                  list_events
+                  bulk_events
+                  ping
+                  redeliver_event
+                  redeliver_failed_events
+                ]
 
   def index
     limit = 50
@@ -130,16 +139,13 @@ class Admin::WebHooksController < Admin::AdminController
   end
 
   def redeliver_event
-    web_hook_event = WebHookEvent.find_by(id: params[:event_id])
+    web_hook_event = @web_hook.web_hook_events.find_by(id: params[:event_id])
 
-    if web_hook_event
-      web_hook = web_hook_event.web_hook
-      emitter = WebHookEmitter.new(web_hook, web_hook_event)
-      emitter.emit!(headers: MultiJson.load(web_hook_event.headers), body: web_hook_event.payload)
-      render_serialized(web_hook_event, AdminWebHookEventSerializer, root: "web_hook_event")
-    else
-      render json: failed_json
-    end
+    return render_json_error(I18n.t("not_found"), status: 404) if web_hook_event.blank?
+
+    emitter = WebHookEmitter.new(@web_hook, web_hook_event)
+    emitter.emit!(headers: MultiJson.load(web_hook_event.headers), body: web_hook_event.payload)
+    render_serialized(web_hook_event, AdminWebHookEventSerializer, root: "web_hook_event")
   end
 
   def redeliver_failed_events

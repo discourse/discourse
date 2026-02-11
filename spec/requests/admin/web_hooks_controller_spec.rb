@@ -335,6 +335,18 @@ RSpec.describe Admin::WebHooksController do
       expect(parsed_event["response_body"]).to eq(nil)
     end
 
+    it "returns a 404 when the event does not belong to the specified webhook" do
+      other_web_hook = Fabricate(:web_hook, payload_url: "https://other.example.com")
+
+      post "/admin/api/web_hooks/#{other_web_hook.id}/events/#{web_hook_event.id}/redeliver.json"
+      expect(response.status).to eq(404)
+    end
+
+    it "returns a 404 when the web_hook_id does not exist" do
+      post "/admin/api/web_hooks/#{WebHook.maximum(:id).to_i + 1}/events/#{web_hook_event.id}/redeliver.json"
+      expect(response.status).to eq(404)
+    end
+
     context "with web_hook_event_headers_for_redelivery modifier registered" do
       let(:modifier_block) do
         Proc.new do |headers, _, _|
