@@ -26,6 +26,7 @@ class Report
     counters: :counters,
     inline_table: :inline_table,
     storage_stats: :storage_stats,
+    donut_chart: :donut_chart,
   }
 
   HIDDEN_PAGEVIEW_REPORTS = %w[site_traffic page_view_legacy_total_reqs]
@@ -123,6 +124,7 @@ class Report
   include Reports::UserFlaggingRatio
   include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies
+  include Reports::UserStats
   include Reports::UsersByTrustLevel
   include Reports::UsersByType
   include Reports::Visits

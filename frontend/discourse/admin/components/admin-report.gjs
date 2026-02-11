@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { isPresent } from "@ember/utils";
 import AdminReportChart from "discourse/admin/components/admin-report-chart";
 import AdminReportCounters from "discourse/admin/components/admin-report-counters";
+import AdminReportDonutChart from "discourse/admin/components/admin-report-donut-chart";
 import AdminReportInlineTable from "discourse/admin/components/admin-report-inline-table";
 import AdminReportLegacy from "discourse/admin/components/admin-report-legacy";
 import AdminReportNew from "discourse/admin/components/admin-report-new";
@@ -179,39 +180,50 @@ export default class AdminReport extends Component {
     return (
       this.currentMode === REPORT_MODES.chart ||
       this.currentMode === REPORT_MODES.stacked_chart ||
-      this.currentMode === REPORT_MODES.stacked_line_chart
+      this.currentMode === REPORT_MODES.stacked_line_chart ||
+      this.currentMode === REPORT_MODES.donut_chart
+    );
+  }
+
+  get additionalFilters() {
+    return makeArray(this.model?.available_filters).filter(
+      (f) => f.display !== "buttons"
     );
   }
 
   @action
   changeGrouping(grouping) {
-    const options = { chartGrouping: grouping };
+    if (this.options?.filterId) {
+      this.applyFilter(this.options.filterId, grouping);
+    } else {
+      const options = { chartGrouping: grouping };
 
-    if (this.siteSettings.reporting_improvements && !this.userHasCustomDates) {
-      const endDate = moment().endOf("day");
-      let startDate;
+      if (this.siteSettings.reporting_improvements && !this.userHasCustomDates) {
+        const endDate = moment().endOf("day");
+        let startDate;
 
-      switch (grouping) {
-        case "daily":
-          startDate = moment().subtract(1, "month").startOf("day");
-          break;
-        case "weekly":
-          startDate = moment().subtract(3, "months").startOf("day");
-          break;
-        case "monthly":
-          startDate = moment().subtract(12, "months").startOf("day");
-          break;
+        switch (grouping) {
+          case "daily":
+            startDate = moment().subtract(1, "month").startOf("day");
+            break;
+          case "weekly":
+            startDate = moment().subtract(3, "months").startOf("day");
+            break;
+          case "monthly":
+            startDate = moment().subtract(12, "months").startOf("day");
+            break;
+        }
+
+        if (startDate) {
+          this.dateRangeFrom = startDate;
+          this.dateRangeTo = endDate;
+          options.startDate = startDate;
+          options.endDate = endDate;
+        }
       }
 
-      if (startDate) {
-        this.dateRangeFrom = startDate;
-        this.dateRangeTo = endDate;
-        options.startDate = startDate;
-        options.endDate = endDate;
-      }
+      this.refreshReport(options);
     }
-
-    this.refreshReport(options);
   }
 
   get displayedModes() {
@@ -263,6 +275,8 @@ export default class AdminReport extends Component {
         return AdminReportRadar;
       case REPORT_MODES.storage_stats:
         return AdminReportStorageStats;
+      case REPORT_MODES.donut_chart:
+        return AdminReportDonutChart;
       default:
         if (reportModeComponent(reportMode)) {
           return reportModeComponent(reportMode);
@@ -304,6 +318,14 @@ export default class AdminReport extends Component {
 
   get chartGroupings() {
     const chartGrouping = this.options?.chartGrouping;
+
+    if (this.options?.chartGroupings) {
+      return this.options.chartGroupings.map((g) => ({
+        ...g,
+        class: `chart-grouping ${chartGrouping === g.id ? "active" : "inactive"}`,
+      }));
+    }
+
     const options = ["daily", "weekly", "monthly"];
 
     const dataLength = Array.isArray(this.model.chartData?.[0]?.data)
@@ -533,6 +555,20 @@ export default class AdminReport extends Component {
           Report.groupingForDatapoints(firstSeriesData.length),
       });
     }
+
+    const filter = report.available_filters?.find(
+      (f) => f.display === "buttons"
+    );
+    if (filter) {
+      return EmberObject.create({
+        chartGrouping: filter.default,
+        chartGroupings: filter.choices.map((c) => ({
+          id: c.id,
+          translatedLabel: c.name,
+        })),
+        filterId: filter.id,
+      });
+    }
   }
 
   _loadReport(jsonReport) {
@@ -569,7 +605,7 @@ export default class AdminReport extends Component {
   }
 
   <template>
-    {{#if this.siteSettings.reporting_improvements}}
+{{#if this.siteSettings.reporting_improvements}}
       <AdminReportNew @report={{this}} @filters={{@filters}} />
     {{else}}
       <AdminReportLegacy @report={{this}} @filters={{@filters}} />
