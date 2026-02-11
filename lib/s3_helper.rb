@@ -118,6 +118,8 @@ class S3Helper
       options = options.except(:apply_metadata_to_destination).merge(metadata_directive: "REPLACE")
     end
 
+    options[:tagging_directive] = "REPLACE" if options[:tagging]
+
     destination = get_path_for_s3_upload(destination)
     source_object =
       if !Rails.configuration.multisite || source.include?(multisite_upload_path) ||
