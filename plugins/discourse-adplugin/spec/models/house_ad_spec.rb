@@ -191,6 +191,143 @@ describe AdPlugin::HouseAd do
     end
   end
 
+  describe "sanitize_html" do
+    it "removes script tags" do
+      ad =
+        AdPlugin::HouseAd.create!(
+          valid_attrs.merge(html: "<div>Hello</div><script>alert(1)</script>"),
+        )
+      expect(ad.html).to eq("<div>Hello</div>")
+    end
+
+    it "removes noscript tags" do
+      ad =
+        AdPlugin::HouseAd.create!(
+          valid_attrs.merge(html: '<div>Hello</div><noscript><img src="x"></noscript>'),
+        )
+      expect(ad.html).to eq("<div>Hello</div>")
+    end
+
+    it "removes base tags" do
+      ad =
+        AdPlugin::HouseAd.create!(
+          valid_attrs.merge(html: '<base href="https://evil.com"><div>Hello</div>'),
+        )
+      expect(ad.html).to eq("<div>Hello</div>")
+    end
+
+    it "removes on* event handler attributes" do
+      ad =
+        AdPlugin::HouseAd.create!(
+          valid_attrs.merge(
+            html:
+              '<img src="x.png" onerror="alert(1)"><a onclick="alert(1)" href="https://example.com">Click</a>',
+          ),
+        )
+      expect(ad.html).not_to include("onerror")
+      expect(ad.html).not_to include("onclick")
+      expect(ad.html).to include('href="https://example.com"')
+      expect(ad.html).to include('src="x.png"')
+    end
+
+    it "removes javascript: protocol in href" do
+      ad =
+        AdPlugin::HouseAd.create!(
+          valid_attrs.merge(html: '<a href="javascript:alert(1)">Click</a>'),
+        )
+      expect(ad.html).not_to include("javascript:")
+    end
+
+    it "removes javascript: protocol with mixed case" do
+      ad =
+        AdPlugin::HouseAd.create!(
+          valid_attrs.merge(html: '<a href="JaVaScRiPt:alert(1)">Click</a>'),
+        )
+      expect(ad.html).not_to include("JaVaScRiPt:")
+    end
+
+    it "removes javascript: protocol with control character evasion" do
+      ad =
+        AdPlugin::HouseAd.create!(
+          valid_attrs.merge(html: "<a href=\"java\tscript:alert(1)\">Click</a>"),
+        )
+      expect(ad.html).not_to include("javascript:")
+    end
+
+    it "removes javascript: protocol in src attributes" do
+      ad =
+        AdPlugin::HouseAd.create!(
+          valid_attrs.merge(html: '<iframe src="javascript:alert(1)"></iframe>'),
+        )
+      expect(ad.html).not_to include("javascript:")
+    end
+
+    it "preserves id attributes" do
+      ad = AdPlugin::HouseAd.create!(valid_attrs.merge(html: '<div id="my-ad">Hello</div>'))
+      expect(ad.html).to include('id="my-ad"')
+    end
+
+    it "preserves data-* attributes" do
+      ad =
+        AdPlugin::HouseAd.create!(
+          valid_attrs.merge(html: '<div data-campaign="spring">Hello</div>'),
+        )
+      expect(ad.html).to include('data-campaign="spring"')
+    end
+
+    it "preserves style attributes" do
+      ad = AdPlugin::HouseAd.create!(valid_attrs.merge(html: '<div style="color: red">Hello</div>'))
+      expect(ad.html).to include('style="color: red"')
+    end
+
+    it "preserves target and rel attributes" do
+      ad =
+        AdPlugin::HouseAd.create!(
+          valid_attrs.merge(
+            html: '<a href="https://example.com" target="_blank" rel="noopener">Link</a>',
+          ),
+        )
+      expect(ad.html).to include('target="_blank"')
+      expect(ad.html).to include('rel="noopener"')
+    end
+
+    it "preserves table elements" do
+      html =
+        "<table><thead><tr><th>Header</th></tr></thead><tbody><tr><td>Cell</td></tr></tbody></table>"
+      ad = AdPlugin::HouseAd.create!(valid_attrs.merge(html: html))
+      expect(ad.html).to include("<table>")
+      expect(ad.html).to include("<th>Header</th>")
+      expect(ad.html).to include("<td>Cell</td>")
+    end
+
+    it "preserves iframe with non-JS src" do
+      ad =
+        AdPlugin::HouseAd.create!(
+          valid_attrs.merge(html: '<iframe src="https://example.com/embed" width="100%"></iframe>'),
+        )
+      expect(ad.html).to include("<iframe")
+      expect(ad.html).to include('src="https://example.com/embed"')
+    end
+
+    it "preserves video/audio/source elements" do
+      html = '<video controls><source src="video.mp4" type="video/mp4"></video>'
+      ad = AdPlugin::HouseAd.create!(valid_attrs.merge(html: html))
+      expect(ad.html).to include("<video")
+      expect(ad.html).to include("<source")
+    end
+
+    it "preserves semantic elements" do
+      html =
+        "<section><header><nav>Menu</nav></header><article><footer>Footer</footer></article></section>"
+      ad = AdPlugin::HouseAd.create!(valid_attrs.merge(html: html))
+      expect(ad.html).to include("<section>")
+      expect(ad.html).to include("<header>")
+      expect(ad.html).to include("<nav>")
+      expect(ad.html).to include("<article>")
+      expect(ad.html).to include("<footer>")
+    end
+  end
+
   describe "routes" do
     let(:ad) { AdPlugin::HouseAd.create(valid_attrs) }
 
