@@ -2,6 +2,8 @@
 
 module AdPlugin
   class HouseAd < ActiveRecord::Base
+    include HasSanitizableFields
+
     self.table_name = "ad_plugin_house_ads"
 
     NAME_REGEX = /\A[[:alnum:]\s\.,'!@#$%&\*\-\+\=:]*\z/i
@@ -28,6 +30,8 @@ module AdPlugin
 
     validates :name, presence: true, uniqueness: true, format: { with: NAME_REGEX }
     validates :html, presence: true
+
+    before_save :sanitize_html
 
     scope :for_anons, -> { where(visible_to_anons: true) }
     scope :for_logged_in, -> { where(visible_to_logged_in_users: true) }
@@ -71,6 +75,10 @@ module AdPlugin
     end
 
     private
+
+    def sanitize_html
+      self.html = sanitize_field(self.html) if html_changed?
+    end
 
     def clear_cache
       Site.clear_anon_cache!

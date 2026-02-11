@@ -73,7 +73,7 @@ describe AdPlugin::HouseAdSetting do
       Fabricate(
         :house_ad,
         name: "anon-ad",
-        html: "<whatever-anon>",
+        html: "<div>anon ad</div>",
         visible_to_anons: true,
         visible_to_logged_in_users: false,
       )
@@ -83,7 +83,7 @@ describe AdPlugin::HouseAdSetting do
       Fabricate(
         :house_ad,
         name: "logged-in-ad",
-        html: "<whatever-logged-in>",
+        html: "<div>logged-in ad</div>",
         visible_to_anons: false,
         visible_to_logged_in_users: true,
       )
@@ -100,7 +100,7 @@ describe AdPlugin::HouseAdSetting do
 
       expect(anon_message.data[:creatives]).to match(
         "anon-ad" => {
-          html: "<whatever-anon>",
+          html: "<div>anon ad</div>",
           category_ids: [],
           id: a_kind_of(Integer),
           routes: [],
@@ -111,7 +111,7 @@ describe AdPlugin::HouseAdSetting do
 
       expect(logged_in_message.data[:creatives]).to match(
         "logged-in-ad" => {
-          html: "<whatever-logged-in>",
+          html: "<div>logged-in ad</div>",
           category_ids: [],
           id: a_kind_of(Integer),
           routes: [],
