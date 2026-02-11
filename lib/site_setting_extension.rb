@@ -362,7 +362,7 @@ module SiteSettingExtension
       .select do |setting_name, _|
         is_hidden = current_hidden_settings.include?(setting_name)
 
-        if type_supervisor.dependencies[setting_name].present? &&
+        if !is_hidden && type_supervisor.dependencies[setting_name].present? &&
              type_supervisor.dependencies.behaviors[setting_name] == :hidden
           # Hidden if any of the dependent settings are not true. Use the getter so upcoming
           # change settings use their resolved value (promotion status, admin override, etc.).
