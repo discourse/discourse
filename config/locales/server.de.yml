@@ -2833,6 +2833,7 @@ de:
         updating_user_ids: "Benutzer-IDs aktualisieren …"
         deleting_source_user: "Quellbenutzer löschen …"
   user:
+    anonymized: "[Entfernt aufgrund der Anonymisierung des Benutzers]"
     deactivated: "Wurde aufgrund zu vieler unzustellbarer E-Mails an „%{email}“ deaktiviert."
     deactivated_by_staff: "Deaktiviert vom Team"
     deactivated_by_inactivity:
@@ -4028,6 +4029,12 @@ de:
     account_second_factor_disabled:
       title: "Zwei-Faktor-Authentifizierung deaktiviert"
       subject_template: "[%{email_prefix}] Zwei-Faktor-Authentifizierung deaktiviert"
+      text_body_template: |
+        Die Zwei-Faktor-Authentifizierung deines Benutzerkontos bei %{site_name} wurde deaktiviert. Du kannst dich nun allein mit deinem Passwort anmelden. Ein zusätzlicher Code ist nicht mehr erforderlich.
+
+        Wenn du die Zwei-Faktor-Authentifizierung (2FA) nicht selbst deaktiviert hast, hat jemand dein Benutzerkonto kompromittiert.
+
+        Wenn du Fragen hast, [wende dich an unser freundliches Team](%{base_url}/about).
     digest:
       why: "Eine kurze Zusammenfassung von %{site_link} seit %{since}"
       since_last_visit: "Seit deinem letzten Besuch"
@@ -4239,6 +4246,7 @@ de:
     search_title: "Versuche stattdessen zu suchen?"
     search_button: "Suche"
     home: "Zurück zur Startseite"
+    placeholder: "Themen basierend auf Titel oder Stichworten suchen…"
   offline:
     title: "App kann nicht geladen werden"
     offline_page_message: "Sieht so aus, als wärst du offline! Bitte überprüfe deine Netzwerkverbindung und probiere es noch einmal."
