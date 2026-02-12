@@ -159,7 +159,10 @@ export default class TagShowRoute extends DiscourseRoute {
 
     if (list.topic_list.tags && list.topic_list.tags.length >= 1) {
       const mainTagData = list.topic_list.tags.find(
-        (t) => t.name.toLowerCase() === slug.toLowerCase() || t.slug === slug
+        (t) =>
+          t.id === id ||
+          (!id &&
+            (t.name.toLowerCase() === slug.toLowerCase() || t.slug === slug))
       );
       if (mainTagData) {
         tag.setProperties({
@@ -168,6 +171,24 @@ export default class TagShowRoute extends DiscourseRoute {
           slug: mainTagData.slug,
           staff: mainTagData.staff,
         });
+      } else if (!additionalTags) {
+        // tag was a synonym, redirect to canonical tag URL
+        const canonicalTag = list.topic_list.tags[0];
+        const routeName = transition.to.name;
+        if (params.category_slug_path_with_id) {
+          return this.router.replaceWith(
+            routeName,
+            params.category_slug_path_with_id,
+            canonicalTag.slug,
+            canonicalTag.id
+          );
+        } else {
+          return this.router.replaceWith(
+            routeName,
+            canonicalTag.slug,
+            canonicalTag.id
+          );
+        }
       }
 
       if (additionalTags) {
