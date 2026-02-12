@@ -1593,6 +1593,22 @@ RSpec.describe CategoriesController do
           "Notfoo",
         )
       end
+
+      it "matches categories with accented names using unaccented search term" do
+        accented_category = Fabricate(:category, name: "Éditions")
+
+        post "/categories/search.json", params: { term: "editions" }
+
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to include("Éditions")
+      end
+
+      it "matches categories with unaccented names using accented search term" do
+        Fabricate(:category, name: "Editions")
+
+        post "/categories/search.json", params: { term: "Éditions" }
+
+        expect(response.parsed_body["categories"].map { |c| c["name"] }).to include("Editions")
+      end
     end
 
     context "with parent_category_id" do
