@@ -946,7 +946,13 @@ class TopicView
   def find_topic(topic_or_topic_id)
     return topic_or_topic_id if topic_or_topic_id.is_a?(Topic)
     # with_deleted covered in #check_and_raise_exceptions
-    Topic.with_deleted.includes(:category).find_by(id: topic_or_topic_id)
+    tags_include =
+      if SiteSetting.tagging_enabled && SiteSetting.content_localization_enabled
+        { tags: :localizations }
+      elsif SiteSetting.tagging_enabled
+        :tags
+      end
+    Topic.with_deleted.includes(:category, tags_include).find_by(id: topic_or_topic_id)
   end
 
   def find_post_replies_ids(post_id)
