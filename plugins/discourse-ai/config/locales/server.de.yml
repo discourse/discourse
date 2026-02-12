@@ -20,6 +20,7 @@ de:
         review: "Beitrag zur Warteschlange zur Überprüfung hinzufügen"
         review_hide: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag verstecken"
         review_delete: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag löschen"
+        review_delete_silence: "Beitrag zur Überprüfungswarteschlange hinzufügen, Beitrag löschen und Benutzer stummschalten"
         spam: "Als Spam markieren und Beitrag verbergen"
         spam_silence: "Als Spam melden, Beitrag ausblenden und Benutzer stummschalten"
     scriptables:
@@ -78,6 +79,7 @@ de:
     ai_nsfw_flag_threshold_sexy: "Schwellenwert, ab dem ein Bild, das als sexy eingestuft wird, als NSFW gilt."
     ai_nsfw_models: "Modelle, die für NSFW-Inferenz verwendet werden."
     ai_spam_detection_enabled: "Aktiviere das KI-Spamerkennungsmodul"
+    ai_spam_detection_max_post_count: "Maximale Anzahl an Beiträgen, die ein Benutzer veröffentlichen kann, bevor diese nicht mehr auf Spam überprüft werden."
     ai_spam_detection_max_trust_level: "Maximale Vertrauensstufe, für die eine Spam-Prüfung erfolgt"
     ai_openai_api_key: "API-Schlüssel für OpenAI-API. Wird NUR für Bilderstellung und -bearbeitung verwendet. Für GPT verwende die Registerkarte für die LLM-Konfiguration"
     ai_openai_image_generation_url: "URL für die OpenAI-Bilderstellungs-API"
@@ -283,6 +285,7 @@ de:
         no_illustrator_persona: "Die Beitragsillustrator-Persona ist nicht konfiguriert. Bitte überprüfe deine Website-Einstellungen."
         no_image_generated: "Das Bild konnte nicht erstellt werden. Bitte versuche es erneut oder überprüfe die Konfiguration deines Tools."
         llm_model_not_configured: "Es ist kein Sprachmodell für die Bilderzeugung konfiguriert. Bitte konfiguriere ein Standard-Sprachmodell in deinen Website-Einstellungen."
+        unknown_error: "Beim Erzeugen der Vorschaubilder ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut."
       prompts:
         translate: Übersetzen in %{language}
         generate_titles: Thementitel vorschlagen
@@ -383,6 +386,7 @@ de:
           description: "Standard-Persona für die „Generiere Markdown-Tabelle“-Funktion des Helfers"
         post_illustrator:
           name: "Beitragsillustrator"
+          description: "Erzeugt Bilder zur Illustration von Beiträgen mithilfe verfügbarer Bilderzeugungstools"
         proofreader:
           name: "Korrekturleser"
           description: "Standard-Persona für die „Korrekturlesen“-Funktion des Helfers"
