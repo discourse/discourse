@@ -466,6 +466,18 @@ en:
         title: "Start Posting"
         description: "Give people something to talk about together"
         action: "Icebreaker ideas"
+        choose_option: "How would you like to start?"
+        choose_option_description: "Choose whether you'd like to use one of our pre-written discussion starters or get AI-generated ideas"
+        predefined_topics: "Use Predefined Topics"
+        predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
+        use_predefined: "Use Predefined Topics"
+        ai_generation: "AI-Generated Ideas"
+        ai_generation_description: "Let AI help generate custom category ideas and topics for your community"
+        use_ai: "Use AI"
+        select_topic: "Select"
+        back: "Back"
+        ai_chat: "AI Assistant"
+        ai_chat_mock_message: "Chat with AI to generate ideas for your community"
         icebreakers:
           fun_facts:
             title: "What are some fun facts about you?"
@@ -479,7 +491,6 @@ en:
           what_is_your_favorite_food:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
-
 
       spread_the_word:
         title: "Spread the Word!"

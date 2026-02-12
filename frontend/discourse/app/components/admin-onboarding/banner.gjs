@@ -5,6 +5,9 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import SiteSetting from "discourse/admin/models/site-setting";
+import InlineAiChat from "discourse/components/admin-onboarding/modal/inline-ai-chat";
+import PredefinedTopicOptions from "discourse/components/admin-onboarding/modal/pre-defined-topic-options";
+import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
 import DButton from "discourse/components/d-button";
 import CreateInvite from "discourse/components/modal/create-invite";
@@ -18,6 +21,7 @@ const STEPS = [
 
     @service composer;
     @service appEvents;
+    @service modal;
 
     icon = "comments";
     icebreaker_topics = [
@@ -41,21 +45,42 @@ const STEPS = [
       this.markAsCompleted();
     }
 
-    @action
-    async performAction() {
-      const randomTopic =
-        this.icebreaker_topics[
-          Math.floor(Math.random() * this.icebreaker_topics.length)
-        ];
+    showStartPostingOptions() {
+      this.modal.show(StartPostingOptions, {
+        model: {
+          onSelectPredefined: () => this.showPredefinedOptions(),
+          onSelectAi: () =>
+            this.modal.show(InlineAiChat, {
+              model: { personaName: "Community Kickstarter" },
+            }),
+        },
+      });
+    }
 
+    showPredefinedOptions() {
+      this.modal.show(PredefinedTopicOptions, {
+        model: {
+          topics: this.icebreaker_topics,
+          onSelectTopic: (topic) => this.openTopic(topic),
+          onBack: () => this.showStartPostingOptions(),
+        },
+      });
+    }
+
+    openTopic(topicKey) {
       this.composer.openNewTopic({
         title: i18n(
-          `admin_onboarding_banner.start_posting.icebreakers.${randomTopic}.title`
+          `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.title`
         ),
         body: i18n(
-          `admin_onboarding_banner.start_posting.icebreakers.${randomTopic}.body`
+          `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.body`
         ),
       });
+    }
+
+    @action
+    async performAction() {
+      this.showStartPostingOptions();
     }
   },
   class InviteCollaborators extends OnboardingStep {
