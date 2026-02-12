@@ -1655,6 +1655,16 @@ RSpec.describe Search do
       expect(search.posts).to eq([ignored_category.topic.first_post])
     end
 
+    it "matches categories with accented names using category: filter" do
+      accented_category =
+        Fabricate(:category_with_definition, name: "Éditions", slug: "publications")
+      topic_in_accented = Fabricate(:topic, category: accented_category)
+      post_in_accented = Fabricate(:post, topic: topic_in_accented, raw: "snow monkey")
+
+      search = Search.execute("monkey category:Editions")
+      expect(search.posts.map(&:id)).to include(post_in_accented.id)
+    end
+
     describe "with child categories" do
       let!(:child_of_ignored_category) do
         Fabricate(

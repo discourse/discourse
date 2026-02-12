@@ -232,6 +232,10 @@ class Category < ActiveRecord::Base
 
   enum :style_type, { square: 0, icon: 1, emoji: 2 }
 
+  def self.normalize_sql(expr)
+    "lower(unaccent(#{expr}))"
+  end
+
   def self.preload_user_fields!(guardian, categories)
     category_ids = categories.map(&:id)
 

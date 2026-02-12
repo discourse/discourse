@@ -608,8 +608,8 @@ class Search
           categories c
       JOIN
           unnest(ARRAY[:matches]) AS term ON
-          c.slug ILIKE term OR
-          c.name ILIKE term OR
+          #{Category.normalize_sql("c.slug")} ILIKE #{Category.normalize_sql("term")} OR
+          #{Category.normalize_sql("c.name")} ILIKE #{Category.normalize_sql("term")} OR
           (term ~ '^[0-9]{1,10}$' AND c.id = term::int)
       SQL
 
@@ -645,15 +645,24 @@ class Search
     category_id =
       if subcategory_slug
         Category
-          .where("lower(slug) = ?", subcategory_slug.downcase)
+          .where(
+            "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")}",
+            subcategory_slug,
+          )
           .where(
             parent_category_id:
-              Category.where("lower(slug) = ?", category_slug.downcase).select(:id),
+              Category.where(
+                "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")}",
+                category_slug,
+              ).select(:id),
           )
           .pick(:id)
       else
         Category
-          .where("lower(slug) = ?", category_slug.downcase)
+          .where(
+            "#{Category.normalize_sql("slug")} = #{Category.normalize_sql("?")}",
+            category_slug,
+          )
           .order("case when parent_category_id is null then 0 else 1 end")
           .pick(:id)
       end

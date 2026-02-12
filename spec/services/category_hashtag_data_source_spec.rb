@@ -138,6 +138,21 @@ RSpec.describe CategoryHashtagDataSource do
       expect(result.slug).to eq("books")
     end
 
+    it "finds categories with accented names using unaccented search term" do
+      Fabricate(:category, name: "Cinéma", slug: "films", topic_count: 10)
+
+      result = described_class.search(guardian, "cinema", 5)
+      expect(result.map(&:text)).to include("Cinéma")
+    end
+
+    it "finds categories with accented slugs using unaccented search term" do
+      SiteSetting.slug_generation_method = "none"
+      Fabricate(:category, name: "Cinéma", slug: "cinéma", topic_count: 10)
+
+      result = described_class.search(guardian, "cinema", 5)
+      expect(result.map(&:text)).to include("Cinéma")
+    end
+
     it "does not find categories the user cannot access" do
       expect(described_class.search(guardian, "secret", 5).first).to eq(nil)
       group.add(user)
