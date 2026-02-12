@@ -35,6 +35,7 @@ export default class PostStream extends Component {
   @tracked cloakAbove;
   @tracked cloakBelow;
   @tracked keyboardSelection;
+  @tracked suppressLoadAbove = false;
 
   viewportTracker = new PostStreamViewportTracker();
 
@@ -175,6 +176,13 @@ export default class PostStream extends Component {
       post,
       captureAnchor: () => {
         anchorTop = anchorElement?.getBoundingClientRect().top;
+        // Suppress the load-more sentinel until the scroll compensation completes.
+        // Without this, the sentinel could re-appear between loadingAbove=false
+        // (spinner removed) and scrollBy (position compensated), triggering
+        // another load before the user's viewport is restored.
+        if (anchorTop != null) {
+          this.suppressLoadAbove = true;
+        }
       },
       refresh: () => {
         if (anchorTop == null) {
@@ -184,7 +192,7 @@ export default class PostStream extends Component {
         // After new posts are prepended above, the anchor element shifts down.
         // We compensate by scrolling by the exact pixel difference to keep it
         // at the same viewport position the user last saw. This should provide
-        //  a smoother scrolling UX
+        // a smoother scrolling UX
         const shift = anchorElement.getBoundingClientRect().top - anchorTop;
         if (shift !== 0) {
           window.scrollBy(0, shift);
@@ -200,6 +208,7 @@ export default class PostStream extends Component {
           if (renderShift !== 0) {
             window.scrollBy(0, renderShift);
           }
+          this.suppressLoadAbove = false;
         });
       },
     });
@@ -269,7 +278,13 @@ export default class PostStream extends Component {
         topicId=@topic.id
       }}
     >
-      {{#if (and (not @postStream.loadingAbove) @postStream.canPrependMore)}}
+      {{#if
+        (and
+          @postStream.canPrependMore
+          (not @postStream.loadingAbove)
+          (not this.suppressLoadAbove)
+        )
+      }}
         <PostLoadMoreAccessible
           @action={{fn this.loadMoreAbove this.firstAvailablePost}}
           @canLoadMore={{@postStream.canPrependMore}}
