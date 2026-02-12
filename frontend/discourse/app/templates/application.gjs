@@ -84,7 +84,9 @@ export default <template>
       }}
     />
 
-    <BlockOutlet @name="hero-blocks" />
+    {{#unless @controller.isCurrentAdminRoute}}
+      <BlockOutlet @name="hero-blocks" />
+    {{/unless}}
 
     <div id="main-outlet-wrapper" class="wrap" role="main">
       {{#if @controller.sidebarEnabled}}
@@ -100,7 +102,9 @@ export default <template>
 
       <div id="main-outlet">
         <PluginOutlet @name="above-main-container" @connectorTagName="div" />
-        <BlockOutlet @name="main-outlet-blocks" />
+        {{#unless @controller.isCurrentAdminRoute}}
+          <BlockOutlet @name="main-outlet-blocks" />
+        {{/unless}}
 
         {{#if
           (eq

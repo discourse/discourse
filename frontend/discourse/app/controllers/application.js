@@ -13,8 +13,7 @@ const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 
 export default class ApplicationController extends Controller {
   @service footer;
-  // eslint-disable-next-line discourse/no-unused-services
-  @service router; // used in the route template
+  @service router;
   @service sidebarState;
   @service siteSettings;
 
@@ -26,6 +25,10 @@ export default class ApplicationController extends Controller {
   showSiteHeader = true;
 
   @tracked _showSidebar;
+
+  get isCurrentAdminRoute() {
+    return this.router.currentRouteName?.startsWith("admin");
+  }
 
   get upcomingChangeBodyClasses() {
     if (!this.siteSettings.currentUserUpcomingChanges) {
