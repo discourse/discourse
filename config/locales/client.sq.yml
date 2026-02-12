@@ -295,6 +295,10 @@ sq:
       title: "Tema të reja dhe të palexuara"
       pill: "Sugjeruar"
       pm_title: "Mesazhet e sugjeruara"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Kopjoni lidhjen"
+        copied_to_clipboard: "Linku u kopjua në memo!"
     about:
       edit: "Modifiko këtë faqe"
       simple_title: "Rreth Faqes"

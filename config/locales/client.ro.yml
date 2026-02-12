@@ -436,6 +436,9 @@ ro:
       title: "Subiecte noi și necitite"
       pill: "Sugerate"
       pm_title: "Mesaje sugerate"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Copiază legătură"
     about:
       edit: "Editează această pagină"
       simple_title: "Despre"

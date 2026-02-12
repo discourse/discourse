@@ -81,6 +81,7 @@ fi:
         join_channel: "Liity kanavalle"
         leave_channel: "Poistu kanavalta"
         leave_groupchat_info: "Kun poistut tästä ryhmäkeskustelusta, sinulla ei ole enää pääsyä siihen etkä saa siihen liittyviä ilmoituksia. Jotta voit liittyä uudelleen, ryhmäkeskustelun jäsenen täytyy kutsua sinut uudelleen."
+        notification_settings_context: "Ilmoitukset"
         join: "Liity"
         leave: "Poistu"
         save_label:
@@ -525,13 +526,9 @@ fi:
           other: "%{commaSeparatedUsernames} ja %{count} muuta kirjoittavat"
       retention_reminders:
         indefinitely_short: "toistaiseksi"
-        indefinitely_long: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit pysyvästi."
         short:
           one: "%{count} päivä"
           other: "%{count} päivää"
-        long:
-          one: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit %{count} päivän ajan."
-          other: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit %{count} päivän ajan."
       flags:
         off_topic: "Tämä viesti ei liity nykyiseen keskusteluun kanavan otsikon mukaan, ja se pitäisi todennäköisesti siirtää muualle."
         inappropriate: "Tämä viesti sisältää sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href=\"%{basePath}/guidelines\">yhteisömme ohjeiden vastaisena</a>."

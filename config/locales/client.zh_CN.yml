@@ -384,6 +384,36 @@ zh_CN:
       title: "新话题和未读话题"
       pill: "推荐"
       pm_title: "建议的消息"
+    admin_onboarding_banner:
+      launch_in_easy_steps: "启动只需 %{step_count} 个简单步骤"
+      skipped: "管理员入职培训清单现已跳过。如果您想重新启用该清单，请在网站设置中查找 ``enable site owner onboarding` 选项。"
+      congrats_onboarding_complete: "恭喜您完成入职流程！"
+      invite_collaborators:
+        title: "邀请合作者"
+        description: "早期成员有助于让您的社区充满活力。"
+        action: "创建邀请"
+      start_posting:
+        title: "开始发帖"
+        description: "给人们一些共同谈论的话题"
+        action: "破冰创意"
+        icebreakers:
+          fun_facts:
+            title: "关于你，有哪些有趣的小事？"
+            body: "大家好！很高兴能加入这个新社区。首先，让我们分享一下自己的趣事。我先来：我喜欢徒步旅行和探索新的路径！你有什么有趣的事情？"
+          coolest_thing_you_have_seen_today:
+            title: "你今天看到的最酷的东西是什么？"
+            body: "你今天看到或经历的最酷的事情是什么？可以是美丽的日落，也可以是偶然的善举。我先说：我看到一只狗在帮助一位老人过马路！"
+          introduce_yourself:
+            title: "自我介绍"
+            body: "欢迎来到社区！让我们互相认识一下。请介绍一下自己，并谈谈你的兴趣爱好。我先来：我对技术充满热情，喜欢教别人！"
+          what_is_your_favorite_food:
+            title: "你最喜欢吃什么？"
+            body: "与社区分享您最喜爱的食物！我先说：我喜欢披萨，尤其是加了奶酪和意大利辣香肠的披萨。"
+      spread_the_word:
+        title: "广而告之！"
+        description: "将链接分享给你社交网络中的所有人"
+        action: "复制链接"
+        copied_to_clipboard: "链接已复制到剪贴板!"
     about:
       edit: "编辑此页面"
       simple_title: "关于"
@@ -3211,6 +3241,8 @@ zh_CN:
         notify: "将此更新通知用户"
         performing: "正在执行批量操作，请稍候…"
         completed: "批量操作成功完成！"
+        not_completed:
+          other: "对 <strong>%{count}</strong> 个主题的批量操作无法完成。"
       none:
         unread: "您没有未读话题。"
         unseen: "您没有未读话题。"
@@ -4077,14 +4109,14 @@ zh_CN:
         reply: "回复"
         create: "创建"
         no_groups_selected: "没有群组被授予访问权限；此类别仅对管理人员可见。"
-        everyone_full_access: '此类别是公开的，任何人都可以查看、回复和创建帖子。要限制权限，请移除授予“所有人”组的一个或多个权限。'
-        everyone_reply_access: '此分类为公开分类，所有人都可以查看和回复主题。如需限制权限，请移除“所有人”组。'
-        everyone_see_access: '此分类为公开分类，所有人都可以查看帖子。如需限制权限，请移除“所有人”分组。'
+        everyone_full_access: '此类别是公开的，任何人都可以查看、回复和创建帖子。要限制权限，请移除授予 "%{everyone_group}" 组的一个或多个权限。'
+        everyone_reply_access: '此分类为公开分类，所有人都可以查看和回复主题。如需限制权限，请移除 "%{everyone_group}" 组。'
+        everyone_see_access: '此分类为公开分类，所有人都可以查看帖子。如需限制权限，请移除 "%{everyone_group}" 分组。'
         specific_groups_have_access: "此类别是私密的，只有选定的组才能看见、回复和创建帖子。"
         all_parent_groups_used: "父类别下的所有分组已添加。要添加更多分组，请先将其添加到父类别。"
         toggle_reply: "切换回复权限"
         toggle_full: "切换创建权限"
-        inherited: '此权限继承自“所有人”'
+        inherited: '此权限继承自 "%{everyone_group}"'
       special_warning: "这是一个预先设置好的分类，安全设置无法编辑。如果您不想使用此分类，请将其删除，而不是重新用于其他用途。"
       uncategorized_security_warning: "此类别比较特殊。它旨在作为没有类别的话题的存放区域；不能有安全性设置。"
       uncategorized_general_warning: '此类别比较特殊。它用作未选择类别的新话题的默认类别。如果您想要避免此行为并强制选择类别，<a href="%{settingLink}">请在此处禁用该设置</a>。如果您想要更改其名称或描述，请转到<a href="%{customizeLink}">自定义/文本内容</a>。'
