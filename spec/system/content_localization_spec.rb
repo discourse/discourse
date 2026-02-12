@@ -537,10 +537,12 @@ describe "Content Localization" do
 
       it "displays localized tag names in the composer tag chooser" do
         SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
         mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
 
         sign_in(japanese_user)
         visit("/new-topic")
+        expect(composer).to be_opened
         mini_tag_chooser.expand
         mini_tag_chooser.search("戦")
         expect(mini_tag_chooser).to have_option_name("戦略")
