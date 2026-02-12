@@ -19,6 +19,7 @@ export default {
     }
 
     const moduleFilenamesSet = new Set(moduleFilenames);
+    const exportedModules = new Set();
 
     let i = 1;
     for (const moduleFilename of moduleFilenames) {
@@ -55,6 +56,12 @@ export default {
       const importPath = filenameWithoutExtension.match(IS_CONNECTOR_REGEX)
         ? moduleFilename
         : filenameWithoutExtension;
+
+      if (exportedModules.has(importPath)) {
+        continue;
+      }
+      exportedModules.add(importPath);
+
       output += `import * as Mod${i} from "./${importPath}";\n`;
       output += `compatModules["${compatModuleName}"] = Mod${i};\n\n`;
 
