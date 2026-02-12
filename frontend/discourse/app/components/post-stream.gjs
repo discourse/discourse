@@ -10,7 +10,6 @@ import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
-import offsetCalculator from "discourse/lib/offset-calculator";
 import { Placeholder } from "discourse/models/post-stream";
 import PostStreamViewportTracker from "discourse/modifiers/post-stream-viewport-tracker";
 import { and, not } from "discourse/truth-helpers";
@@ -163,40 +162,43 @@ export default class PostStream extends Component {
 
   @action
   loadMoreAbove(post) {
+    const anchorElement =
+      this.viewportTracker.postsOnScreen[post.post_number]?.element;
+
+    // anchorTop is captured by the captureAnchor callback, which is called
+    // inside prependMore after the fetch completes (when the loading spinner is
+    // visible) but before new posts are inserted into the DOM.
+    let anchorTop;
+
     this.args.topVisibleChanged({
       post,
+      captureAnchor: () => {
+        anchorTop = anchorElement?.getBoundingClientRect().top;
+      },
       refresh: () => {
-        const refreshedElem =
-          this.viewportTracker.postsOnScreen[post.post_number]?.element;
-
-        if (!refreshedElem) {
+        if (anchorTop == null) {
           return;
         }
 
-        // The getOffsetTop function calculates the total offset distance of an element from the top of the document.
-        // Unlike `element.offsetTop` which only returns the offset relative to its nearest positioned ancestor, this
-        // function recursively accumulates the offsetTop of an element and all of its offset parents(ancestors).
-        // This ensures the total distance is measured from the very top of the document, accounting for any nested
-        // elements and their respective offsets.
-        const getOffsetTop = (element) => {
-          if (!element) {
-            return 0;
-          }
-          return element.offsetTop + getOffsetTop(element.offsetParent);
-        };
-
-        window.scrollTo({
-          top: getOffsetTop(refreshedElem) - offsetCalculator(),
-        });
+        // After new posts are prepended above, the anchor element shifts down.
+        // We compensate by scrolling by the exact pixel difference to keep it
+        // at the same viewport position the user last saw. This should provide
+        //  a smoother scrolling UX
+        const shift = anchorElement.getBoundingClientRect().top - anchorTop;
+        if (shift !== 0) {
+          window.scrollBy(0, shift);
+        }
 
         // This seems weird, but somewhat infrequently a rerender
         // will cause the browser to scroll to the top of the document
         // in Chrome. This makes sure the scroll works correctly if that
         // happens.
         schedule("afterRender", () => {
-          window.scrollTo({
-            top: getOffsetTop(refreshedElem) - offsetCalculator(),
-          });
+          const renderShift =
+            anchorElement.getBoundingClientRect().top - anchorTop;
+          if (renderShift !== 0) {
+            window.scrollBy(0, renderShift);
+          }
         });
       },
     });

@@ -626,7 +626,7 @@ export default class TopicController extends Controller {
   // Called when the topmost visible post on the page changes.
   @action
   async topVisibleChanged(event) {
-    const { post, refresh } = event;
+    const { post, captureAnchor, refresh } = event;
     if (!post) {
       return;
     }
@@ -639,7 +639,7 @@ export default class TopicController extends Controller {
     }
 
     if (firstLoadedPost && firstLoadedPost === post) {
-      await postStream.prependMore();
+      await postStream.prependMore({ beforePrepend: captureAnchor });
       refresh?.();
     }
   }
