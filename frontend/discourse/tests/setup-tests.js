@@ -35,7 +35,6 @@ import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-cou
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 import {
   applyPretender,
-  exists,
   resetSite,
   testCleanup,
   testsInitialized,
@@ -44,7 +43,6 @@ import {
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
 import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import deprecated from "discourse/lib/deprecated";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { buildResolver } from "discourse/resolver";
