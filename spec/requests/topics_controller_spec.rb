@@ -5677,6 +5677,25 @@ RSpec.describe TopicsController do
         topic_timer = TopicTimer.last
         expect(topic_timer.status_type).to eq(TopicTimer.types[:delete_replies])
       end
+
+      it "raises an error when publishing to a staff-only category" do
+        user.update!(trust_level: TrustLevel[4])
+        sign_in(user)
+
+        staff_category = Fabricate(:category)
+        staff_category.set_permissions(staff: :full)
+        staff_category.save!
+
+        post "/t/#{topic.id}/timer.json",
+             params: {
+               time: 24,
+               status_type: "publish_to_category",
+               category_id: staff_category.id,
+             }
+
+        expect(response.status).to eq(403)
+        expect(response.parsed_body["error_type"]).to eq("invalid_access")
+      end
     end
   end
 
