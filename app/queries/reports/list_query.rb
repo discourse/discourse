@@ -76,7 +76,8 @@ module Reports
 
       def plugin_disabled?
         return false unless plugin_name
-        !plugin_instance&.enabled?
+        return true unless plugin_instance
+        !plugin_instance.enabled?
       end
     end
 

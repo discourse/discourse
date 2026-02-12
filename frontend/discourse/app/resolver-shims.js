@@ -148,6 +148,7 @@ export default {
   "route:subscribe-index": "route:subscribe.index",
   "controller:admin-dashboard-moderation":
     "controller:admin.dashboard-moderation",
+  "route:admin-dashboard-reports": "route:admin.dashboard-reports",
   "controller:admin-email-logs-sent": "controller:admin-email-logs.sent",
   "route:admin-email-logs-sent": "route:admin-email-logs.sent",
   "controller:admin-email-logs-skipped": "controller:admin-email-logs.skipped",
