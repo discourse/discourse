@@ -1,0 +1,46 @@
+name: Developer Docs Lint
+
+on:
+  pull_request:
+    paths:
+      - "docs/developer-guides/**"
+      - ".github/workflows/developer-docs-lint.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "docs/developer-guides/**"
+      - ".github/workflows/developer-docs-lint.yml"
+
+concurrency:
+  group: developer-docs-lint-${{ format('{0}-{1}', github.head_ref || github.run_number, github.job) }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  prettier:
+    if: github.event_name == 'pull_request' || github.repository != 'discourse/discourse-private-mirror'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    defaults:
+      run:
+        working-directory: docs/developer-guides
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          cache: "pnpm"
+          cache-dependency-path: docs/developer-guides/pnpm-lock.yaml
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
