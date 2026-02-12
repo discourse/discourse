@@ -1,6 +1,6 @@
 import { withPluginApi } from "discourse/lib/plugin-api";
-import { optionalRequire } from "discourse/lib/utilities";
 import AdminReportEmotion from "../components/admin-report-emotion";
+import AdminReportSentimentAnalysis from "../components/admin-report-sentiment-analysis";
 
 export default {
   name: "discourse-ai-admin-reports",
@@ -10,10 +10,6 @@ export default {
     if (!currentUser || !currentUser.staff) {
       return;
     }
-
-    const AdminReportSentimentAnalysis = optionalRequire(
-      "discourse/plugins/discourse-ai/discourse/components/admin-report-sentiment-analysis"
-    );
 
     withPluginApi((api) => {
       api.registerReportModeComponent("emotion", AdminReportEmotion);

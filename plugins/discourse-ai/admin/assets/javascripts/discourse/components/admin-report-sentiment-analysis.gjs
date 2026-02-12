@@ -25,8 +25,8 @@ import Category from "discourse/models/category";
 import Post from "discourse/models/post";
 import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import DoughnutChart from "discourse/plugins/discourse-ai/discourse/components/doughnut-chart";
-import AiSentimentHorizontalBar from "../components/ai-sentiment-horizontal-bar";
+import AiSentimentHorizontalBar from "./ai-sentiment-horizontal-bar";
+import DoughnutChart from "./doughnut-chart";
 
 export default class AdminReportSentimentAnalysis extends Component {
   @service router;
