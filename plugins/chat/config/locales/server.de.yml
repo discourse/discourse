@@ -282,6 +282,7 @@ de:
       your_chat_settings: "Chat-E-Mail-Einstellung"
   unsubscribe:
     chat_summary:
+      select_title: "Häufigkeit von Chat-Zusammenfassungs-E-Mails festlegen auf:"
       never: Niemals
       when_away: Nur bei Abwesenheit
   category:

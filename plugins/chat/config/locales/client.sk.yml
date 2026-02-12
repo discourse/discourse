@@ -87,6 +87,7 @@ sk:
         join_channel: "Pripojte sa ku kanálu"
         leave_channel: "Opustiť kanál"
         leave_groupchat_info: "Keď opustíte tento skupinový čet, už k nemu nebudete mať prístup a nebudete dostávať súvisiace upozornenia. Ak sa chcete znova pripojiť, musíte byť znova pozvaní členom skupinového rozhovoru."
+        notification_settings_context: "Upozornenia"
         join: "Pridať sa"
         leave: "Opustiť"
         save_label:
@@ -638,17 +639,11 @@ sk:
           other: "%{commaSeparatedUsernames} a %{count} ďalší píšu"
       retention_reminders:
         indefinitely_short: "na dobu neurčitú"
-        indefinitely_long: "Nastavenia chatu boli nastavené tak, aby uchovávali správy kanálov na neurčito."
         short:
           one: "%{count} deň"
           few: "%{count} dni"
           many: "%{count} dní"
           other: "%{count} dní"
-        long:
-          one: "Nastavenia četu boli nastavené tak, aby sa správy kanála uchovávali %{count} deň."
-          few: "Nastavenia chatu boli nastavené tak, aby sa správy z kanálov uchovávali na %{count} dni."
-          many: "Nastavenia četu boli nastavené tak, aby sa správy kanála uchovávali %{count} dní."
-          other: "Nastavenia četu boli nastavené tak, aby sa správy kanála uchovávali %{count} dní."
       flags:
         off_topic: "Táto správa nie je relevantná pre aktuálnu diskusiu definovanú názvom kanála a mala by byť pravdepodobne presunutá inam."
         inappropriate: "Táto správa obsahuje obsah, ktorý by rozumná osoba považovala za urážlivý, urážlivý alebo za porušenie <a href=\"%{basePath}/guidelines\">našich pokynov pre komunitu</a>."

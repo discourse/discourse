@@ -535,6 +535,15 @@ sk:
           title: "Testovací nástroj AI"
           run: "Spustiť test"
           result: "Výsledok testu"
+      secrets:
+        short_title: "Poverenia"
+        name: "Meno"
+        secret: "Hodnota"
+        back: "Späť"
+        save: "Uložiť"
+        edit: "Upraviť"
+        delete: "Odstrániť"
+        embedding: "Vkladám"
       llms:
         short_title: "LLM"
         no_llms: "Zatiaľ žiadne LLM"

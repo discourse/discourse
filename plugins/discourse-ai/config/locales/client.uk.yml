@@ -667,6 +667,15 @@ uk:
           title: "Тест інструменту ШІ"
           run: "Запустити тест"
           result: "Результат тесту"
+      secrets:
+        short_title: "Дані доступу"
+        name: "Імʼя"
+        secret: "Значення"
+        back: "Назад"
+        save: "Зберегти"
+        edit: "Редагувати"
+        delete: "Видалити"
+        embedding: "Взаємодія"
       llms:
         short_title: "LLMs"
         no_llms: "Ще немає LLM"

@@ -530,6 +530,15 @@ tr_TR:
           title: "YZ aracını test edin"
           run: "Testi çalıştır"
           result: "Test sonucu"
+      secrets:
+        short_title: "Kimlik bilgileri"
+        name: "Ad"
+        secret: "Değer"
+        back: "Geri"
+        save: "Kaydet"
+        edit: "Düzenle"
+        delete: "Sil"
+        embedding: "Gömme"
       llms:
         short_title: "LLM'ler"
         no_llms: "Henüz LLM yok"

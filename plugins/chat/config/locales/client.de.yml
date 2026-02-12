@@ -63,6 +63,7 @@ de:
       starred_channels_empty: "Du hast noch keine Kanäle mit einem Sternchen versehen. Markiere Kanäle mit einem Sternchen, um sie hier für schnellen Zugriff zu sehen."
       browse_all_channels: "Alle Kanäle durchsuchen"
       see_in: "Ansehen in"
+      open_channel_menu: "Kanalmenü öffnen"
       move_to_channel:
         title: "Nachrichten in Kanal verschieben"
         instructions:
@@ -86,6 +87,8 @@ de:
         join_channel: "Kanal beitreten"
         leave_channel: "Kanal verlassen"
         leave_groupchat_info: "Wenn du den Gruppenchat verlässt, hast du keinen Zugriff mehr darauf und erhältst keine Benachrichtigungen mehr. Um wieder teilzunehmen, musst du von einem Mitglied des Gruppenchats erneut eingeladen werden."
+        notification_settings: "Benachrichtigungseinstellungen"
+        notification_settings_context: "Benachrichtigungen"
         join: "Beitreten"
         leave: "Verlassen"
         save_label:
@@ -489,6 +492,7 @@ de:
         follow: "Beitreten"
         followed: "Beigetreten"
         mute: "Kanal stummschalten"
+        unmute: "Stummschaltung des Kanals aufgeben"
         threading_enabled: "Aktiviert"
         threading_disabled: "Deaktiviert"
         muted_on: "An"
@@ -597,13 +601,9 @@ de:
           other: "%{commaSeparatedUsernames} und %{count} andere Personen schreiben"
       retention_reminders:
         indefinitely_short: "unbestimmt"
-        indefinitely_long: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten auf unbestimmte Zeit gespeichert werden."
         short:
           one: "%{count} Tag"
           other: "%{count} Tage"
-        long:
-          one: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tag aufbewahrt werden."
-          other: "Die Chat-Einstellungen wurden so eingestellt, dass Kanalnachrichten für %{count} Tage aufbewahrt werden."
       flags:
         off_topic: "Diese Nachricht ist für die aktuelle Diskussion im Sinne des Kanaltitels nicht relevant und sollte wahrscheinlich an eine andere Stelle verschoben werden."
         inappropriate: "Diese Nachricht enthält Inhalte, die eine vernünftige Person als anstößig, beleidigend oder als Verstoß gegen <a href=\"%{basePath}/guidelines\">unsere Community-Richtlinien</a> ansehen würde."
@@ -735,6 +735,7 @@ de:
           composer_bold: "%{shortcut} Fett (nur Composer)"
           composer_italic: "%{shortcut} Kursiv (nur Composer)"
           composer_code: "%{shortcut} Code (nur Composer)"
+          drawer_toggle: "%{shortcut} Chat-Bereich öffnen/schließen"
           drawer_close: "%{shortcut} Chat-Bereich schließen"
           mark_all_channels_read: "%{shortcut} Alle Kanäle als gelesen markieren"
     topic_statuses:

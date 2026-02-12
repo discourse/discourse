@@ -435,6 +435,9 @@ hr:
       title: "Nove i nepročitane teme"
       pill: "Predloženo"
       pm_title: "Predložene poruke"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Kopirajte poveznicu"
     about:
       edit: "Uredi ovu stranicu"
       simple_title: "O nama"
@@ -4339,10 +4342,8 @@ hr:
         reply: "Odgovor"
         create: "Kreiraj"
         no_groups_selected: "Nijedna grupa nije dobila pristup; ova će kategorija biti vidljiva samo osoblju."
-        everyone_full_access: 'Ova je kategorija javna, svi mogu vidjeti, odgovarati i stvarati postove. Da biste ograničili dopuštenja, uklonite jedno ili više dopuštenja dodijeljenih grupi "svi".'
         toggle_reply: "Uključi / isključi dozvolu za odgovor"
         toggle_full: "Uključi / isključi dozvolu za stvaranje"
-        inherited: 'Ovo je dopuštenje naslijeđeno od "svih"'
       uncategorized_security_warning: "Ova kategorija je posebna. Namijenjen je kao prostor za čuvanje tema koje nemaju kategoriju; ne može imati sigurnosne postavke."
       uncategorized_general_warning: 'Ova kategorija je posebna. Koristi se kao zadana kategorija za nove teme za koje nije odabrana kategorija. Ako želite spriječiti ovo ponašanje i prisiliti odabir kategorije, <a href="%{settingLink}">onemogućite postavku ovdje</a>. Ako želite promijeniti naziv ili opis, idite na <a href="%{customizeLink}">Prilagodi / Tekstualni sadržaj</a>.'
       pending_permission_change_alert: "Niste dodali %{group} ovoj kategoriji; kliknite ovaj gumb da biste ih dodali."

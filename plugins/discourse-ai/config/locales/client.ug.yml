@@ -139,6 +139,15 @@ ug:
         delete: "ئۆچۈر"
         test_modal:
           run: "سىناقنى ئىجرا قىل"
+      secrets:
+        short_title: "ئىسپاتنامە"
+        name: "ئىسمى"
+        secret: "قىممەت"
+        back: "كەينى"
+        save: "ساقلا"
+        edit: "تەھرىر"
+        delete: "ئۆچۈر"
+        embedding: "سىڭدۈرمە"
       llms:
         display_name: "ئىسمى"
         save: "ساقلا"

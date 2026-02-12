@@ -1099,6 +1099,7 @@ el:
       poll_pop3_timeout: "Το χρονικό όριο σύνδεσης με τον διακομιστή POP3 έληξε. Τα εισερχόμενα email δεν μπορούν να ανακτηθούν. Παρακαλώ ελέγξτε τις <a href='%{base_path}/admin/site_settings/category/email'>POP3 ρυθμίσεις σας</a> και τον πάροχο υπηρεσιών."
       poll_pop3_auth_error: "Υπήρξε σφάλμα ελεχγου ταυτότητας κατά την σύνδεση με τον διακομιστή POP3. Παρακαλώ όπως ελέξετε τις <a href='%{base_path}/admin/site_settings/category/email'> POP3 ρυθμίσεις σας.</a> "
       force_https: "Ο ιστότοπός σας χρησιμοποιεί SSL. Ωστόσο, η επιλογή `<a href='%{base_path}/admin/site_settings/category/all_results?filter=force_https'>force_https</a>` δεν είναι ακόμη ενεργοποιημένη στις ρυθμίσεις του ιστότοπού σας."
+      google_analytics_version: "Το Discourse σας χρησιμοποιεί αυτήν τη στιγμή το Google Analytics 3, το οποίο δεν θα υποστηρίζεται πλέον μετά τον Ιούλιο του 2023. <a href='https://meta.discourse.org/t/260498'>Αναβαθμίστε σε Google Analytics 4</a> τώρα για να συνεχίσετε να λαμβάνετε πολύτιμες πληροφορίες και αναλυτικά στοιχεία για την απόδοση του ιστότοπού σας."
       admin_sidebar_deprecation: "Η παλιά διάταξη διαχειριστή έχει καταργηθεί υπέρ της νέας <a href='https://meta.discourse.org/t/-/289281'>διάταξης πλαϊνής γραμμής</a> και θα καταργηθεί στην επόμενη έκδοση. Μπορείτε να <a href='%{base_path}/admin/config/navigation?filter=admin%20sidebar'>διαμορφώσετε</a> τη νέα διάταξη πλαϊνής γραμμής τώρα για να επιλέξετε να συμμετάσχετε πριν από αυτό."
     back_from_logster_text: "Πίσω στον ιστότοπο"
   site_settings:

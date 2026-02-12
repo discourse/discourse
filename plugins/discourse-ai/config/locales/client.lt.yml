@@ -328,6 +328,15 @@ lt:
         parameter_required: "Privalomi"
         edit: "Redaguoti"
         delete: "Pašalinti"
+      secrets:
+        short_title: "Įgaliojimai"
+        name: "Vardas"
+        secret: "Reikšmė"
+        back: "Atgal"
+        save: "Saugoti"
+        edit: "Redaguoti"
+        delete: "Pašalinti"
+        embedding: "Įterpimai"
       llms:
         display_name: "Vardas"
         save: "Saugoti"

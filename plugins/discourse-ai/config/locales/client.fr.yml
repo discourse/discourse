@@ -530,6 +530,15 @@ fr:
           title: "Tester l'outil d'IA"
           run: "Lancer le test"
           result: "Résultat du test"
+      secrets:
+        short_title: "Identifiants"
+        name: "Nom"
+        secret: "Valeur"
+        back: "Retour"
+        save: "Enregistrer"
+        edit: "Modifier"
+        delete: "Supprimer"
+        embedding: "Intégration"
       llms:
         short_title: "LLM"
         no_llms: "Pas encore de LLM"

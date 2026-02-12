@@ -401,6 +401,10 @@ fr:
       title: "Sujets nouveaux et non lus"
       pill: "Suggérés"
       pm_title: "Messages suggérés"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Copier le lien"
+        copied_to_clipboard: "Lien copié dans le presse-papiers!"
     about:
       edit: "Modifier cette page"
       simple_title: "À propos"
@@ -4133,10 +4137,8 @@ fr:
         reply: "Répondre"
         create: "Créer"
         no_groups_selected: "Aucun groupe n'a été autorisé à accéder ; cette catégorie ne sera visible que par les responsables."
-        everyone_full_access: 'Cette catégorie est publique, tout le monde peut voir, répondre et créer des messages. Pour restreindre les autorisations, supprimez une ou plusieurs des autorisations accordées au groupe « tout le monde ».'
         toggle_reply: "Modifier la permission de répondre"
         toggle_full: "Modifier la permission de créer"
-        inherited: 'Cette autorisation est héritée de « tout le monde »'
       uncategorized_security_warning: "Cette catégorie est spéciale. Elle sert à rassembler les sujets qui n'ont pas de catégorie ; vous ne pouvez pas modifier ses paramètres de sécurité."
       uncategorized_general_warning: 'Cette catégorie est spéciale. Elle sert de catégorie par défaut pour les nouveaux sujets qui ne sont pas liés à une catégorie. Si vous souhaitez modifier ce comportement et forcer la sélection de catégorie, <a href="%{settingLink}">veuillez désactiver ce paramètre</a>. Si vous voulez modifier son nom ou sa description, allez dans <a href="%{customizeLink}">Personnaliser/contenu</a>.'
       pending_permission_change_alert: "Vous n'avez pas ajouté %{group} à cette catégorie ; cliquez sur ce bouton pour l'ajouter."

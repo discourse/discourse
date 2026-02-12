@@ -671,12 +671,18 @@ pl_PL:
     embeddings:
       delete_failed: "Ten model jest obecnie używany. Najpierw zaktualizuj „wybrany model osadzania sztucznej inteligencji”."
       cannot_edit_builtin: "Nie możesz edytować wbudowanego modelu."
+      secret_required: "Należy wybrać poświadczenie"
+      secret_not_found: "Wybrane poświadczenie nie istnieje"
       configuration:
         disable_embeddings: "Najpierw musisz wyłączyć opcję „włączone osadzanie sztucznej inteligencji”."
         choose_model: "Najpierw ustaw „osadzenia sztucznej inteligencji wybrane modele”."
         model_test_failed: "Nie udało nam się wygenerować testowego osadzenia z tym modelem. Sprawdź, czy jest poprawnie skonfigurowany."
+    secrets:
+      delete_failed_in_use: "To poświadczenie jest obecnie używane przez co najmniej jeden program LLM lub osadzenia i nie można go usunąć."
     llm_models:
       missing_provider_param: "%{param} nie może być pusty"
+      secret_required: "Należy wybrać poświadczenie"
+      secret_not_found: "Wybrane poświadczenie nie istnieje"
       bedrock_invalid_url: "Wypełnij wszystkie pola, aby korzystać z tego modelu."
       bedrock_missing_auth: "AWS Bedrock wymaga skonfigurowania Access Key ID lub Role ARN"
     ai_staff_action_logger:

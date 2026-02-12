@@ -610,6 +610,15 @@ he:
           title: "כלי בדיקת בינה מלאכותית"
           run: "הרצת בדיקה"
           result: "תוצאת הבדיקה"
+      secrets:
+        short_title: "פרטי גישה"
+        name: "שם"
+        secret: "ערך"
+        back: "חזרה"
+        save: "שמירה"
+        edit: "עריכה"
+        delete: "מחיקה"
+        embedding: "שילוב (embedding)"
       llms:
         short_title: "LLMים"
         no_llms: "אין LLMים עדיין"

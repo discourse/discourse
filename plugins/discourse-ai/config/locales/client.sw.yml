@@ -104,6 +104,14 @@ sw:
         parameter_required: "Muhimu na Inahitajika"
         edit: "Hariri"
         delete: "Futa"
+      secrets:
+        name: "Jina"
+        secret: "Thamani"
+        back: "Iliyopita"
+        save: "Hifadhi"
+        edit: "Hariri"
+        delete: "Futa"
+        embedding: "Ambatanisha"
       llms:
         display_name: "Jina"
         provider: "Mkimu"

@@ -12,6 +12,8 @@ de:
     github_linkback_access_token: 'Ein gültiges Zugriffstoken für den Benutzer, der den Linkback veröffentlicht, und für das Zählen von Commits/Beiträgen, um Abzeichen zu vergeben. Siehe <a href="https://meta.discourse.org/t/99895">hier</a> für Anweisungen, wie du ein Token bekommst.'
     github_linkback_maximum_links: "Maximale Anzahl von Linkbacks, die aus einem einzigen Beitrag erstellt werden können. Wenn ein Beitrag mehr Links enthält, werden keine erstellt."
     github_permalinks_enabled: "Überschreiben von GitHub-Permalinks aktivieren"
+    github_pr_status_enabled: "Zeige den GitHub-Pull-Request-Status in der Onebox an (Entwurf, offen, genehmigt, merged, geschlossen)"
+    github_webhook_secret: "Geheimes Token zur Überprüfung der GitHub-Webhook-Signatur. Konfiguriere diesen Wert in deinen GitHub-Webhook-Einstellungen."
     github_permalinks_exclude: "Dateiname oder Verzeichnis, der/das vom Überschreiben von Permalinks ausgeschlossen werden soll. Gib nur den Dateinamen oder den vollständigen Pfad an: user/repository/optional-directory/filename"
     github_badges_enabled: "GitHub-Abzeichen aktivieren"
     github_badges_repos: "URLs der GitHub-Repos, die nach Beiträgen und Commits durchsucht werden sollen"

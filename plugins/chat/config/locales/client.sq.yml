@@ -55,6 +55,7 @@ sq:
       channel_settings:
         edit: "Redakto"
         add: "Shto"
+        notification_settings_context: "Njoftimet"
       close: "Mbyll"
       remove: "Hiq"
       delete: "Fshij"

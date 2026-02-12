@@ -11,6 +11,7 @@ de:
         draft: "Entwurf"
         open: "Offen"
         approved: "Genehmigt"
+        merged: "Merged"
         closed: "Geschlossen"
   admin_js:
     admin:

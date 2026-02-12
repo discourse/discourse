@@ -110,6 +110,14 @@ et:
         parameter_required: "Nõutud"
         edit: "Muuda"
         delete: "Kustuta"
+      secrets:
+        name: "Nimi"
+        secret: "Väärtus"
+        back: "Tagasi"
+        save: "Salvesta"
+        edit: "Muuda"
+        delete: "Kustuta"
+        embedding: "Sängitamine"
       llms:
         display_name: "Nimi"
         provider: "Teenusepakkuja"

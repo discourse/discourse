@@ -632,12 +632,18 @@ zh_CN:
     embeddings:
       delete_failed: "此模型目前正在使用中。请先更新 `ai embeddings selected model`。"
       cannot_edit_builtin: "您无法编辑内置模型。"
+      secret_required: "必须选择一种凭证。"
+      secret_not_found: "所选凭证不存在"
       configuration:
         disable_embeddings: "您必须先禁用 'ai embeddings enabled'。"
         choose_model: "首先设置 'ai embeddings selected model'。"
         model_test_failed: "我们无法使用此模型生成测试嵌入向量。请检查设置是否正确。"
+    secrets:
+      delete_failed_in_use: "此凭证目前正被一个或多个LLM或嵌入使用，无法删除。"
     llm_models:
       missing_provider_param: "%{param}不能为空"
+      secret_required: "必须选择一种凭证。"
+      secret_not_found: "所选凭证不存在"
       bedrock_invalid_url: "请填写所有字段以使用此模型。"
       bedrock_missing_auth: "AWS Bedrock 需要配置访问密钥 ID 或角色 ARN。"
     ai_staff_action_logger:

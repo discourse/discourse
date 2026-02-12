@@ -2363,6 +2363,7 @@ zh_CN:
     suggest_weekends_in_date_pickers: "在日期选择器建议中包括周末（周六和周日）（如果您仅在工作日（周一至周五）使用 Discourse，请禁用此选项）。"
     show_bottom_topic_map: "当话题有 10 条或更多回复时，在话题底部显示话题地图。"
     show_topic_map_in_topics_without_replies: "即使话题没有回复也显示话题地图。"
+    enable_site_owner_onboarding: "在主页上向新管理员显示面板以帮助他们开始。重新启用此设置以再次查看登临步骤。"
     enable_welcome_banner: "在主要话题列表页面上显示横幅，以欢迎成员并允许他们搜索站点内容"
     welcome_banner_image: "设置在欢迎横幅背景中显示的图片。"
     welcome_banner_location: "确定欢迎横幅在页面上的显示位置。"

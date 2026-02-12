@@ -561,6 +561,15 @@ pt_BR:
           title: "Ferramenta de IA de teste"
           run: "Executar teste"
           result: "Resultado do teste"
+      secrets:
+        short_title: "Credenciais"
+        name: "Nome"
+        secret: "Valor"
+        back: "Voltar"
+        save: "Salvar"
+        edit: "Editar"
+        delete: "Excluir"
+        embedding: "Incorporar"
       llms:
         short_title: "LLMs"
         no_llms: "Nenhum LLM ainda"

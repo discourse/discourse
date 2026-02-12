@@ -113,6 +113,15 @@ sq:
         parameter_required: "E nevojshme"
         edit: "Redaktoni"
         delete: "Fshij"
+      secrets:
+        short_title: "Kredencialet"
+        name: "Emri"
+        secret: "Vlera"
+        back: "Kthehu mbrapa"
+        save: "Ruani"
+        edit: "Redaktoni"
+        delete: "Fshij"
+        embedding: "Embedding"
       llms:
         display_name: "Emri"
         save: "Ruani"
