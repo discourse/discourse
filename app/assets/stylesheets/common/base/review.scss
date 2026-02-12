@@ -6,6 +6,12 @@
   gap: var(--space-4) 0;
   align-items: flex-start;
   margin-bottom: var(--space-8);
+  position: relative;
+  z-index: z("base");
+
+  &:has(.select-kit.is-expanded) {
+    z-index: z("dropdown");
+  }
 
   @include viewport.until(sm) {
     border: 1px solid var(--content-border-color);
