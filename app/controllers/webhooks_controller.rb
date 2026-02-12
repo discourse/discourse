@@ -222,8 +222,10 @@ class WebhooksController < ActionController::Base
     return false if (Time.at(timestamp.to_i) - Time.now).abs > 12.hours.to_i
 
     # check the signature
-    signature ==
-      OpenSSL::HMAC.hexdigest("SHA256", SiteSetting.mailgun_api_key, "#{timestamp}#{token}")
+    ActiveSupport::SecurityUtils.secure_compare(
+      signature,
+      OpenSSL::HMAC.hexdigest("SHA256", SiteSetting.mailgun_api_key, "#{timestamp}#{token}"),
+    )
   end
 
   def handle_mailgun_legacy(params)
