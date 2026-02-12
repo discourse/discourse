@@ -3,11 +3,11 @@ const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
 export default {
-  "virtual:main": (tree, { themeId }) => {
+  "virtual:entrypoint:main": (tree, { themeId }) => {
     let output = cleanMultiline(`
       import "virtual:init-settings";
 
-      const themeCompatModules = {};
+      const compatModules = {};
     `);
 
     let i = 1;
@@ -46,12 +46,12 @@ export default {
         ? moduleFilename
         : filenameWithoutExtension;
       output += `import * as Mod${i} from "./${importPath}";\n`;
-      output += `themeCompatModules["${compatModuleName}"] = Mod${i};\n\n`;
+      output += `compatModules["${compatModuleName}"] = Mod${i};\n\n`;
 
       i += 1;
     }
 
-    output += "export default themeCompatModules;\n";
+    output += "export default compatModules;\n";
 
     return output;
   },

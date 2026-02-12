@@ -254,7 +254,7 @@ HTML
       expect(baked).to include(javascript_cache.url)
 
       expect(javascript_cache.content).to include(
-        "themeCompatModules[\"discourse/initializers/theme-field-#{field.id}-mobile-html-script-1\"]",
+        "compatModules[\"discourse/initializers/theme-field-#{field.id}-mobile-html-script-1\"]",
       )
       expect(javascript_cache.content).to include("getObjectForTheme(#{field.theme_id});")
       expect(javascript_cache.content).to include(
@@ -404,7 +404,7 @@ HTML
         });
       JS
       expect(theme_field.javascript_cache.content).to include(
-        "themeCompatModules[\"discourse/initializers/theme-field-#{theme_field.id}-common-html-script-1\"]",
+        "compatModules[\"discourse/initializers/theme-field-#{theme_field.id}-common-html-script-1\"]",
       )
       expect(theme_field.javascript_cache.content).to include(
         "name: \"theme-field-#{theme_field.id}-common-html-script-1\",",
