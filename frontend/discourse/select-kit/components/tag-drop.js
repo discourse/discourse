@@ -204,6 +204,9 @@ export default class TagDrop extends ComboBoxComponent {
           content.count = r.count;
         }
         content.pmCount = r.pm_count;
+        if (r.target_tag) {
+          content.targetTag = r.target_tag;
+        }
         return content;
       });
   }
@@ -216,6 +219,8 @@ export default class TagDrop extends ComboBoxComponent {
       tagArg = NONE_TAG;
     } else if (value === ALL_TAGS_ID) {
       tagArg = null;
+    } else if (tag?.targetTag) {
+      tagArg = tag.targetTag;
     } else if (tag) {
       tagArg = tag;
     }
