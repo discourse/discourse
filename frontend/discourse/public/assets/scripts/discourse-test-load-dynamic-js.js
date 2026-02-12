@@ -18,11 +18,6 @@ const target = params.get("target") || "core";
 
   window._discourseQunitPluginNames = pluginTestInfo.all_plugins;
 
-  window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS = {
-    ...JSON.parse(pluginTestInfo.site_settings_json),
-    ...JSON.parse(pluginTestInfo.theme_site_settings_json),
-  };
-
   for (const element of dynamicJsTemplate.content.childNodes) {
     if (
       element.tagName === "SCRIPT" &&
