@@ -24,9 +24,9 @@ export default class EditCategoryTab extends Component {
     return "edit-category-" + tab;
   }
 
-  @discourseComputed("tab")
-  title(tab) {
-    return i18n(`category.${underscore(tab)}`);
+  @discourseComputed("tab", "tabTitle")
+  title(tab, tabTitle) {
+    return tabTitle ?? i18n(`category.${underscore(tab)}`);
   }
 
   didInsertElement() {
