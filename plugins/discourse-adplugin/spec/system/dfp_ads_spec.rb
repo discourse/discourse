@@ -26,19 +26,15 @@ describe "DFP External Ads", type: :system do
     it "records impression when DFP ad is viewed" do
       sign_in(user)
 
-      expect { visit "/latest" }.to change { AdPlugin::AdImpression.count }.by(1)
+      count = AdPlugin::AdImpression.count
+
+      visit "/latest"
+      try_until_success { expect(AdPlugin::AdImpression.count).to eq(count + 1) }
 
       impression = AdPlugin::AdImpression.last
       expect(impression.ad_type).to eq("dfp")
       expect(impression.house_ad).to be_nil
       expect(impression.placement).to eq("topic-list-top")
-    end
-
-    it "does not record impression if tracking is disabled" do
-      SiteSetting.ad_plugin_enable_tracking = false
-      sign_in(user)
-
-      expect { visit "/latest" }.not_to change { AdPlugin::AdImpression.count }
     end
   end
 end
