@@ -6,6 +6,10 @@
 
 nl:
   js:
+    carousel:
+      go_to_slide: "Ga naar dia %{index}"
+      previous: "Vorige dia"
+      next: "Volgende dia"
     number:
       format:
         separator: ","
@@ -285,6 +289,7 @@ nl:
       forwarded: "Heeft de bovenstaande e-mail doorgestuurd"
     topic_admin_menu: "topicacties"
     skip_to_main_content: "Overslaan naar hoofdinhoud"
+    skip_links_label: "Navigatielinks overslaan"
     skip_user_nav: "Overslaan naar profielcontent"
     emails_are_disabled: "Alle uitgaande e-mail is uitgeschakeld door een beheerder. Er wordt geen enkele e-mailmelding gestuurd."
     emails_are_disabled_non_staff: "Uitgaande e-mail is uitgeschakeld voor niet-medewerkers."
@@ -294,6 +299,7 @@ nl:
     back_button: "Terug"
     welcome_banner:
       header:
+        new_members: "Welkom, %{preferred_display_name}!"
         logged_in_members: "Welkom terug, %{preferred_display_name}!"
         anonymous_members: "Welkom bij %{site_name}!"
       search_placeholder: "Zoeken"
@@ -559,6 +565,9 @@ nl:
       resume: "Hervatten"
       remove: "Verwijderen"
       remove_confirmation: "Weet je zeker dat je dit concept wilt verwijderen?"
+      bulk_delete_message:
+        one: "Weet je zeker dat je dit concept wilt verwijderen?"
+        other: "Weet je zeker dat je deze %{count} concepten wilt verwijderen?"
       new_topic: "Nieuw topicconcept"
       new_private_message: "Nieuw privéberichtconcept"
       edit_topic: "Topicconcept bewerken"
@@ -874,6 +883,9 @@ nl:
         flagged_by_users:
           one: "Gemarkeerd door %{count} unieke gebruiker"
           other: "Gemarkeerd door %{count} unieke gebruikers"
+        flagged_in_timeframe:
+          one: "%{count} bevestigde markering"
+          other: "%{count} bevestigde markeringen"
         activities:
           trust_level: "vertrouwensniveau: %{trustLevelName}"
           posts:
@@ -1288,6 +1300,7 @@ nl:
         one: "Categorieën (nog %{count})…"
         other: "Categorieën (nog %{count})…"
     ip_lookup:
+      title: IP-adres
       hostname: Hostnaam
       location: Locatie
       location_not_found: (onbekend)
@@ -2252,6 +2265,10 @@ nl:
       no_results: "Geen resultaten"
       search: "Zoeken…"
       label: "Selecteer opties"
+    d_otp:
+      screen_reader:
+        one: Vul een getal in
+        other: Vul %{count} getallen in
     form_kit:
       reset: Resetten
       optional: optioneel
@@ -2477,6 +2494,7 @@ nl:
       admin_not_allowed_from_ip_address: "Je kunt je niet aanmelden als beheerder vanaf dat IP-adres."
       resend_activation_email: "Klik hier om de activerings-e-mail opnieuw te sturen."
       omniauth_disallow_totp: "Tweeledige verificatie is ingeschakeld voor je account. Meld je aan met je wachtwoord."
+      works_with: "Werkt met"
       activate_account: "Account activeren"
       resend_title: "Activerings-e-mail opnieuw sturen"
       change_email: "E-mailadres wijzigen"
@@ -3194,6 +3212,9 @@ nl:
         delete_topics_count:
           one: "Topic verwijderen"
           other: "Topics verwijderen"
+        delete_posts_confirmation:
+          one: "Weet je zeker dat je %{count} bericht wilt verwijderen?"
+          other: "Weet je zeker dat je %{count} berichten wilt verwijderen?"
         dismiss: "Negeren"
         dismiss_read: "Alle ongelezen negeren"
         dismiss_read_with_selected:
@@ -3271,6 +3292,7 @@ nl:
           unread: "Niets ongelezen gelaten... indrukwekkend!"
           new_new: "Momenteel niets nieuws. Kom snel terug!"
           new: "Momenteel niets nieuws. Kom snel terug!"
+          generic: "Niets om te zien hier...kom snel terug!"
     topic_bulk_actions:
       dismiss:
         name: "Sluiten"
@@ -3405,6 +3427,7 @@ nl:
       jump_reply_button: "Naar bericht"
       deleted: "Het topic is verwijderd"
       slow_mode_update:
+        title: "Langzame modus"
         select: "Gebruikers mogen slechts een bericht in dit topic plaatsen per:"
         description: "Om een doordachte discussie in snel bewegende of controversiële discussies te stimuleren, moeten gebruikers wachten voordat ze opnieuw een bericht in dit topic kunnen plaatsen."
         enable: "Inschakelen"
@@ -3426,6 +3449,8 @@ nl:
           12_hours: "12 uur"
           24_hours: "24 uur"
           custom: "Aangepaste duur"
+      slow_mode_notice:
+        duration: "Wacht %{duration} tussen jouw berichten in dit topic"
       topic_status_update:
         title: "Topictimer"
         save: "Timer instellen"

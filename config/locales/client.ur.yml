@@ -723,6 +723,7 @@ ur:
       filtered_topic: "آپ نے ایک موضوع میں قابل تجدید مواد کو فِلٹر کر دیا ہے۔"
       filtered_user: "نشان۔زدہ صارف"
       filtered_reviewed_by: "نے جائزہ لیا"
+      filtered_claimed_by: "نشان زدگی کلیم از طرف"
       show_all_topics: "تمام موضوعات دکھائیں"
       deleted_post: "(دھاگہ مٹا دیا)"
       deleted_user: "(رکن مٹادیا گیا)"
@@ -1225,6 +1226,8 @@ ur:
         make_owner_description: "اِس گروپ پر <b>%{username}</b> کو مالک بنائیں"
         remove_owner: "مالک کے طور پر ہٹائیں"
         remove_owner_description: "اِس گروپ پر سے <b>%{username}</b> کو مالک کے طور پر ہٹائیں"
+        remove_member_self_lockout: "خود کو اس گروپ سے ہٹانے سے اس کا انتظام کرنے کے لیے آپ کی رسائی منسوخ ہو جائے گی۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
+        remove_owner_self_lockout: "خود کو اس گروپ سے بطور اونر ہٹانے سے اس کا انتظام کرنے کے لیے آپ کی رسائی منسوخ ہو جائے گی۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
         make_primary: "پرائمری بنائیں"
         make_primary_description: "<b>%{username}</b> کا بنیادی گروپ بنائیں"
         remove_primary: "پرائمری حذف کریں"
@@ -1352,12 +1355,16 @@ ur:
         one: "زمرہ جات (%{count} مزید)۔۔۔"
         other: "زمرہ جات (%{count} مزید)۔۔۔"
     ip_lookup:
+      title: IP ایڈریس
       hostname: ہوسٹ کا نام
       location: محل وقوع
       location_not_found: (نامعلوم)
       organisation: ادارہ
       phone: فون
       other_accounts: "اسی IP ایڈریس والے دوسرے اکاؤنٹس:"
+      other_accounts_with_ip:
+        one: "اسی IP ایڈریس کے ساتھ %{count} دیگر اکاؤنٹ"
+        other: "اسی IP ایڈریس کے ساتھ %{count} دیگر اکاؤنٹس"
       delete_other_accounts:
         one: "%{count} حذف کریں"
         other: "%{count} حذف کریں"
@@ -1393,8 +1400,16 @@ ur:
       private_message: "پیغام"
       private_messages: "پیغامات"
       upcoming_changes:
+        title: "آنے والی تبدیلیاں"
         for_user:
+          upcoming_change: "آنے والی تبدیلی"
           enabled: "فعال؟"
+          why: "کیوں؟"
+        why_reasons:
+          not_in_specific_groups: "صارف اس تبدیلی کے لیے درکار مخصوص گروپس میں نہیں ہے۔"
+          in_specific_groups: "صارف اس تبدیلی کے لیے درکار مخصوص گروپس میں شامل ہے"
+          enabled_for_everyone: "یہ تبدیلی تمام اراکین کے لیے فعال ہے"
+          enabled_for_no_one: "یہ تبدیلی تمام اراکین کے لیے غیر فعال ہے"
       user_notifications:
         filters:
           filter_by: "فلٹر بذریعہ"
@@ -1718,6 +1733,7 @@ ur:
         interface: "انٹرفیس"
         apps: "اَیپس"
         navigation_menu: "نیویگیشن مینو"
+        upcoming_changes: "آنے والی تبدیلیاں"
       change_password:
         success: "(ای میل بھیج دی گئی)"
         in_progress: "(ای میل بھیجی جا رہی ہے)"
@@ -1730,6 +1746,7 @@ ur:
         verify_identity: "جاری رکھنے کے لیے، براہ کرم اپنی شناخت کی تصدیق کریں۔"
         title: "پاسورڈ رِی سَیٹ"
         remove: "پاس ورڈ کو ہٹائیں"
+        remove_disabled: "پاس ورڈ کو ہٹانے سے پہلے اکاؤنٹ کو کم از کم ایک دوسرے لاگ ان طریقہ (مثلاً پاس کی یا منسلک بیرونی اکاؤنٹ) کی ضرورت ہے۔"
         remove_detail: "آپ کا اکاؤنٹ پاس ورڈ کے ساتھ مزید قابل رسائی نہیں رہے گا جب تک کہ آپ اسے دوبارہ ترتیب نہ دیں۔"
       second_factor_backup:
         title: "دو عنصری بیک اپ کوڈز"
@@ -1996,6 +2013,7 @@ ur:
         first_time_and_daily: "پہلی بار دھاگہ کو پسند کیا گیا اور روزانہ"
         first_time: "پہلی بار دھاگہ کو پسند کیا گیا"
         never: "کبھی نہیں"
+      notify_on_linked_posts: "جب کوئی میری کسی پوسٹ کا لنک شیئر کرے تو مطلع کریں"
       email_previous_replies:
         title: "ای میلز کے نیچے پچھلے جوابات شامل کریں"
         unless_emailed: "اگر ماضی میں بھیجا گیا ہو، تو نہیں"
@@ -2055,6 +2073,7 @@ ur:
         redeemed_tab_with_count: "فائدہ اٹھا لیا گیا (%{count})"
         invited_via: "دعوت نامہ"
         invited_via_link: "رابطہ %{key} (%{count} / %{max} مخلصی)"
+        generating_link: "لنک تیار ہو رہا ہے..."
         groups: "گروپس"
         topic: "موضوع"
         sent: "تخلیق کی گذار/آخری ارسال"
@@ -2121,6 +2140,7 @@ ur:
               other {# دنوں}
             } میں ختم ہو جائے گا۔
           edit_link_options: "رابطہ کے اختیارات میں ترمیم کریں یا ای میل کے ذریعے بھیجیں۔"
+          edit_link_options_only: "لنک کے اختیارات میں ترمیم کریں"
           show_advanced: "ایڈوانس آپشنز دکھائیں"
           hide_advanced: "ایڈوانس آپشنز چھپائیں"
           description: "تفصیل"
@@ -2317,6 +2337,10 @@ ur:
       no_results: "کوئی نتائج نہیں"
       search: "تلاش۔۔۔"
       label: "اختیارات کا انتخاب"
+    d_otp:
+      screen_reader:
+        one: نمبر درج کریں
+        other: '%{count} نمبرز درج کریں'
     form_kit:
       reset: رِی سَیٹ
       optional: اختیاری
@@ -2753,7 +2777,13 @@ ur:
         title: "ترجمہ پوسٹ"
         select: "ترجمہ کا انتخاب"
         save: "ترجمہ محفوظ"
+        original_content: "اصل پوسٹ"
+        translation_preview: "ترجمہ کا پیش نظارہ"
+        original: "اصل"
+        translation: "ترجمہ"
+        no_translation_yet: "ترجمہ کا پیش نظارہ دیکھنے کے لیے ٹائپ کرنا شروع کریں..."
         placeholder: "پوسٹ کا ترجمہ یہاں درج کریں۔۔۔"
+        show_raw_markdown: "ادھورا دکھائیں"
       group_mentioned_limit:
         one: "<b>انتباہ!</b> آپ نے <a href='%{group_link}'>%{group}</a>کا تذکرہ کیا، تاہم اس گروپ میں منتظمین کی تشکیل کردہ ذکر کی حد %{count} رکن سے زیادہ ہے۔ کسی کو اطلاع نہیں دی جائے گی۔"
         other: "<b>انتباہ!</b> آپ نے <a href='%{group_link}'>%{group}</a>کا تذکرہ کیا، تاہم اس گروپ میں منتظمین کی تشکیل کردہ ذکر کی حد %{count} اراکین سے زیادہ ہے۔ کسی کو اطلاع نہیں دی جائے گی۔"
@@ -2865,6 +2895,7 @@ ur:
       ulist_title: "گولیوں والی فہرست"
       list_item: "فہرست آئٹم"
       toggle_direction: "سمت ٹوگل کریں"
+      apply_wrap_title: "رَیپ اپلائی کریں"
       wrap_modal:
         apply: "لاگو کریں"
       help: "مارکڈائون ترمیم میں مدد"

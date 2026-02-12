@@ -4139,7 +4139,9 @@ nl:
     page_title: "Pagina niet gevonden"
     title: "Oeps! Die pagina bestaat niet of is privé."
     see_more: "Meer"
+    search_title: "In plaats daarvan zoeken?"
     search_button: "Zoeken"
+    home: "Ga naar de startpagina"
   offline:
     title: "Kan app niet laden"
     offline_page_message: "Het lijkt erop dat je offline bent! Controleer je netwerkverbinding en probeer het opnieuw."

@@ -89,6 +89,7 @@ el:
         collapse_list: "(δείξε λιγότερα)"
         filters:
           all: "Όλα"
+          no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
           reset: "Επαναφορά"
         no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
         search:
@@ -155,6 +156,7 @@ el:
             key_title: "Κλειδί"
         filters:
           reset: "Επαναφορά"
+          no_results: "Καμία περσόνα δεν αντιστοιχεί με τα φίλτρα σας."
       rag:
         uploads:
           title: "Μεταφορτώσεις"

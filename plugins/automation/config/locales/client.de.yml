@@ -69,8 +69,10 @@ de:
           fields:
             categories:
               label: Kategorien
+              description: Wird nur ausgelöst, wenn das gemeldete Thema in einer dieser Kategorien ist
             tags:
               label: Schlagwörter
+              description: Wird nur ausgelöst, wenn das gemeldete Thema eines dieser Schlagwörter aufweist.
         not_found: Konnte den Auslöser `%{trigger}` für die Automatisierung `%{automation}` nicht finden. Stelle sicher, dass das zugehörige Plug-in installiert ist
         user_badge_granted:
           fields:
@@ -281,6 +283,14 @@ de:
               label: Schlagwörter
               description: Optional. Wird nur ausgelöst, wenn der Beitrag eines dieser Schlagwörter enthält
       scriptables:
+        email_on_flagged_post:
+          fields:
+            email_template:
+              label: E-Mail-Vorlage
+              description: Unterstützt Automatisierungsplatzhalter
+            recipients:
+              label: Empfänger
+              description: Benutzer oder E-Mail-Adressen, die benachrichtigt werden sollen
         not_found: Konnte das Skript `%{script}` für die Automatisierung `%{automation}` nicht finden. Stelle sicher, dass das zugehörige Plug-in installiert ist
         zapier_webhook:
           fields:
@@ -430,6 +440,11 @@ de:
               label: "Name des benutzerdefinierten Benutzerfelds"
         set_topic_timer:
           title: Themen-Timer einstellen
+          fields:
+            type:
+              label: Timer-Typ
+            duration:
+              label: Dauer des Timers
       unnamed_automation: "Automatisierung ohne Titel"
       models:
         script:
@@ -442,6 +457,9 @@ de:
           runs_today: "%{count} heute"
           runs_this_week: "%{count} diese Woche"
           runs_this_month: "%{count} diesen Monat"
+          recent_errors:
+            one: "%{count} Fehler in letzter Zeit"
+            other: "%{count} Fehler in letzter Zeit"
           runs:
             label: Ausführungen
           name:

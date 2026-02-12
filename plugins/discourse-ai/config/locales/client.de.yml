@@ -120,6 +120,7 @@ de:
               description: "Das KI-Tool, das ausgeführt wird, wenn die Automatisierung ausgelöst wird"
             llm_model:
               label: "LLM-Modell"
+              description: "Sprachmodell für Werkzeuge, die llm.generate() verwenden (optional)"
         llm_persona_triage:
           fields:
             persona:
@@ -189,10 +190,11 @@ de:
         llm_tagger:
           tag_mode:
             manual: "Spezifische Schlagwort-Liste verwenden (unten konfiguriert)"
-            discover: "Lassen die KI beliebige Schlagworte auf der Website entdecken und verwenden"
+            discover: "Lassen die KI beliebige Schlagwörter auf der Website entdecken und verwenden"
           fields:
             tagger_persona:
               label: "KI-Persona"
+              description: "Die KI-Persona, die Themen analysiert und Schlagwörter hinzufügt"
             tag_mode:
               label: "Schlagwort-Auswahlmodus"
               description: "Wähle, wie die KI Schlagwörter auswählt"
@@ -214,6 +216,9 @@ de:
             max_posts_for_context:
               label: "Maximale Beiträge für Kontext"
               description: "Maximale Anzahl von Beiträgen aus dem Thema, die in den Analysekontext einbezogen werden sollen (Standard: 5)"
+            allow_system_posts:
+              label: "Systembeiträge zulassen"
+              description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
       default_llm:
@@ -325,6 +330,11 @@ de:
           post_raw_translator: "Übersetzer für die Roheingabe des Beitrags"
           topic_title_translator: "Thementitel-Übersetzer"
           short_text_translator: "Kurztext-Übersetzer"
+          schedule_untranslated: "Übersetzungen planen"
+          schedule_topic_success:
+            one: "Geplante Übersetzung für %{count} unübersetzten Beitrag."
+            other: "Geplante Übersetzung für %{count} unübersetzte Beiträge."
+          schedule_topic_error: "Übersetzungen konnten nicht geplant werden. Bitte versuche es erneut."
           setting_groups:
             settings: "Grundlegende Einstellungen"
             personas: "Personas"
@@ -348,12 +358,14 @@ de:
         title: "Übersetzungen"
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
         supported_locales: "Unterstützte Sprachen"
+        supported_locales_description: "Diese Website-Einstellung ermöglicht es auch Besuchern, Übersetzungen von Beiträgen beizutragen."
         admin_actions:
           translation_settings: "Übersetzungseinstellungen"
           localization_settings: "Lokalisierungseinstellungen"
           enable_translations: "Automatische Übersetzungen aktivieren"
         stats:
           title: "Übersetzungsstatistiken"
+          backfill_disabled: "Rückwirkende Übersetzung ist deaktiviert; nur neue Beiträge werden übersetzt."
           eta_minutes:
             one: "%{count} Minute"
             other: "%{count} Minuten"
@@ -681,9 +693,11 @@ de:
           anthropic-claude-opus-4-5: "Das intelligenteste Modell von Anthropic"
           anthropic-claude-sonnet-4-5: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
+          google-gemini-3-pro: "Googles intelligentestes Modell"
           google-gemini-2-5-pro: "Großes multimodales Modell, das eine Vielzahl von Aufgaben bewältigen kann"
           google-gemini-2-5-flash: "Leicht, schnell und kosteneffizient mit multimodaler Argumentation"
-          google-gemini-2-5-flash-image-preview: "Neuestes Bilderzeugungsmodell mit Bildverarbeitungsfunktionen"
+          google-gemini-2-5-flash-lite: "Googles kleinstes und kostengünstigstes Modell"
+          google-gemini-2-5-flash-image-preview: "Neuestes Bilderstellungsmodell mit Bildverarbeitungsfunktionen"
           open_ai-gpt-5-1: "Das Vorzeigemodell von OpenAI. Es ist gut geeignet für Problemlösungen in verschiedenen Bereichen"
           open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten, was es zu einem attraktiven Modell für viele Anwendungsfälle macht."
           open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell."
@@ -720,6 +734,7 @@ de:
           display_name: "Der Name, der verwendet wird, um dieses Modell in der Benutzeroberfläche deiner Website zu referenzieren."
           name: "Wir fügen dies in den API-Aufruf ein, um anzugeben, welches Modell wir verwenden werden"
           vision_enabled: "Wenn diese Funktion aktiviert ist, versucht die KI, Bilder zu verstehen. Dafür wird ein Modell benötigt, das Sehen unterstützt. Verfügbar in den neuesten Modellen von Anthropic, Google und OpenAI."
+          allowed_attachment_types: "Lege fest, welche Arten von Anhängen an das Modell weitergeleitet werden. Lass das Feld leer, um Anhänge nicht zuzulassen. Bilder werden über \"Sehen\" kontrolliert."
           cost_input: "Die Kosten für die Eingabe pro 1 Million Token für dieses Modell"
           cost_output: "Die Kosten für die Ausgabe pro 1 Million Token für dieses Modell"
           cost_measure: "$/1M Token"
@@ -741,6 +756,7 @@ de:
           fake: "Benutzerdefiniert"
         provider_fields:
           access_key_id: "AWS-Bedrock-Zugangsschlüssel-ID"
+          role_arn: "AWS Bedrock-Rollen-ARN"
           region: "AWS-Bedrock-Region"
           organization: "Optionale OpenAI-Organisations-ID"
           disable_system_prompt: "Systemmeldung in Eingabeaufforderungen deaktivieren"
@@ -756,6 +772,7 @@ de:
           reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"
           disable_top_p: "Top P deaktivieren (einige Denkmodelle unterstützen Top P nicht)"
+          effort: "Anstrengungsgrad (nur Claude Opus 4.5)"
       related_topics:
         title: "Verwandte Themen"
         pill: "Verwandt"
@@ -990,6 +1007,8 @@ de:
           title: "Zusammenfassung des Themas"
           close: "Zusammenfassungspanel schließen"
           regenerate_ai_summaries: "KI-Zusammenfassungen neu generieren"
+          regen_modal_description: "Wähle aus, welche Art von KI-Zusammenfassung für dieses Thema neu erstellt werden soll."
+          bulk_regen_description: "Wähle aus, welche Art von KI-Zusammenfassung für die ausgewählten Themen neu erstellt werden soll."
           regenerate_gists_option: "Kurzzusammenfassungen (Zentrale Punkte)"
           regenerate_summaries_option: "Themenzusammenfassungen"
           regenerate_gists_success:
@@ -998,6 +1017,12 @@ de:
           regenerate_gists_error:
             one: "Kurzzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
+          regenerate_topic_summary_success:
+            one: "Themenzusammenfassung erfolgreich neu generiert"
+            other: "%{count} Themenzusammenfassungen erfolgreich neu generiert"
+          regenerate_topic_summary_error:
+            one: "Themenzusammenfassung konnte nicht neu generiert werden"
+            other: "%{count} Themenzusammenfassungen konnten nicht neu generiert werden"
         topic_list_layout:
           button:
             compact: "Kompakt"
