@@ -926,12 +926,15 @@ class BulkImport::Generic < BulkImport::Base
       SQL
 
       poll_details.each do |poll|
-        if (placeholder = poll_mapping[poll["id"]])
+        if (placeholder = poll_mapping.delete(poll["id"]))
           raw.gsub!(placeholder, poll_bbcode(poll))
         end
       end
 
       poll_details.close
+
+      # Remove placeholders for polls without options
+      poll_mapping.each_value { |placeholder| raw.gsub!(placeholder, "") }
     end
 
     if (mentions = placeholders&.fetch("mentions", nil))
