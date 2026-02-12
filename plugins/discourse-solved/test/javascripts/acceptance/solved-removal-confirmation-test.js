@@ -44,6 +44,7 @@ acceptance("Discourse Solved | Solved Removal Confirmation", function (needs) {
   });
 
   needs.site({
+    can_tag_topics: true,
     categories: [
       {
         id: 100,
@@ -247,8 +248,9 @@ acceptance("Discourse Solved | Solved Removal Confirmation", function (needs) {
 
     await click("#topic-title .d-icon-pencil");
 
-    const tagChooser = selectKit(".title-wrapper .mini-tag-chooser");
-    await tagChooser.deselectItemByName("solved-tag");
+    await click(
+      ".title-wrapper .mini-tag-chooser .selected-choice[data-name='solved-tag']"
+    );
     await click("#topic-title .submit-edit");
 
     assert
@@ -261,8 +263,9 @@ acceptance("Discourse Solved | Solved Removal Confirmation", function (needs) {
 
     await click("#topic-title .d-icon-pencil");
 
-    const tagChooser = selectKit(".title-wrapper .mini-tag-chooser");
-    await tagChooser.deselectItemByName("solved-tag");
+    await click(
+      ".title-wrapper .mini-tag-chooser .selected-choice[data-name='solved-tag']"
+    );
     await click("#topic-title .submit-edit");
 
     assert
