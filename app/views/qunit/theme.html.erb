@@ -16,8 +16,6 @@
       <%= preload_script "test-support" %>
       <%= preload_script "discourse" %>
       <%= preload_script "test" %>
-      <%= preload_script_url ExtraLocalesController.url("main") %>
-      <%= preload_script_url ExtraLocalesController.url("mf") %>
       <%= render "layouts/plugin_js", 
         opts: {
           include_disabled: true,
