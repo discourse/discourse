@@ -768,9 +768,10 @@ task "import:rebake_uncooked_posts", [:threads] => :environment do |_task, args|
   thread_count = (args[:threads] || 1).to_i
   thread_count = 1 if thread_count < 1
 
-  max_threads = ActiveRecord::Base.connection_pool.size - 1
+  # Reserve 2 connections: 1 for the main thread, 1 for the producer thread
+  max_threads = ActiveRecord::Base.connection_pool.size - 2
   if thread_count > max_threads
-    puts "Warning: thread count #{thread_count} exceeds connection pool size minus 1 (#{max_threads}). Capping to #{max_threads}."
+    puts "Warning: thread count #{thread_count} exceeds available connection pool slots (#{max_threads}). Capping to #{max_threads}."
     thread_count = max_threads
   end
 
@@ -780,7 +781,7 @@ task "import:rebake_uncooked_posts", [:threads] => :environment do |_task, args|
   total +=
     import_rebake_posts(
       Post.where("EXISTS (SELECT 1 FROM polls WHERE polls.post_id = posts.id)"),
-      thread_count: thread_count,
+      thread_count:,
     )
 
   begin
@@ -790,14 +791,14 @@ task "import:rebake_uncooked_posts", [:threads] => :environment do |_task, args|
         Post.where(
           "EXISTS (SELECT 1 FROM discourse_post_event_events WHERE discourse_post_event_events.id = posts.id)",
         ),
-        thread_count: thread_count,
+        thread_count:,
       )
   rescue ActiveRecord::StatementInvalid
     puts "  Skipped (discourse_post_event_events table does not exist)"
   end
 
   puts "\nRebaking uncooked posts with quotes..."
-  total += import_rebake_posts(Post.where("raw LIKE '%[quote=%'"), thread_count: thread_count)
+  total += import_rebake_posts(Post.where("raw LIKE '%[quote=%'"), thread_count:)
 
   puts "\nRebaking uncooked posts with uploads..."
   total +=
@@ -805,11 +806,11 @@ task "import:rebake_uncooked_posts", [:threads] => :environment do |_task, args|
       Post.where(
         "EXISTS (SELECT 1 FROM upload_references WHERE upload_references.target_type = 'Post' AND upload_references.target_id = posts.id)",
       ),
-      thread_count: thread_count,
+      thread_count:,
     )
 
   puts "\nRebaking remaining uncooked posts..."
-  total += import_rebake_posts(Post.all, thread_count: thread_count)
+  total += import_rebake_posts(Post.all, thread_count:)
 
   log "Done! #{total} posts rebaked."
 end
@@ -905,6 +906,8 @@ def import_rebake_posts(posts, thread_count: 1)
 
     thread_count.times do
       threads << Thread.new do
+        Jobs.run_immediately!
+
         while (id = queue.pop)
           begin
             post =
