@@ -163,6 +163,11 @@ after_initialize do
     end
   end
 
+  on(:post_moved) do |new_post, _original_topic_id, old_post|
+    next if old_post.blank? || new_post.id == old_post.id
+    PostPolicy.where(post_id: old_post.id).update_all(post_id: new_post.id)
+  end
+
   add_to_serializer(:current_user, :can_create_policy) do
     object.in_any_groups?(SiteSetting.create_policy_allowed_groups_map)
   end

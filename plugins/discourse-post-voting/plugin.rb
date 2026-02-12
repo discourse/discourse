@@ -242,6 +242,16 @@ after_initialize do
     end
   end
 
+  on(:post_moved) do |new_post, _original_topic_id, old_post|
+    next if old_post.blank? || new_post.id == old_post.id
+    ActiveRecord::Base.transaction do
+      PostVotingComment.where(post_id: old_post.id).update_all(post_id: new_post.id)
+      PostVotingVote.where(votable_type: "Post", votable_id: old_post.id).update_all(
+        votable_id: new_post.id,
+      )
+    end
+  end
+
   register_user_destroyer_on_content_deletion_callback(
     Proc.new do |user|
       post_voting_comment_ids = PostVotingComment.where(user_id: user.id).pluck(:id)

@@ -280,6 +280,13 @@ after_initialize do
 
   on(:post_destroyed) { |post| DiscourseSolved.unaccept_answer!(post) }
 
+  on(:post_moved) do |new_post, _original_topic_id, old_post|
+    next if old_post.blank? || new_post.id == old_post.id
+    DiscourseSolved::SolvedTopic.where(answer_post_id: old_post.id).update_all(
+      answer_post_id: new_post.id,
+    )
+  end
+
   on(:filter_auto_bump_topics) do |_category, filters|
     filters.push(
       ->(r) do

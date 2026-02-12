@@ -501,31 +501,11 @@ after_initialize do
     query.where(where_clause)
   end
 
-  on(:first_post_moved) do |target_post, original_post|
-    id_map = {}
+  on(:post_moved) do |new_post, _original_topic_id, old_post|
+    next if old_post.blank? || new_post.id == old_post.id
     ActiveRecord::Base.transaction do
-      reactions = DiscourseReactions::Reaction.where(post_id: original_post.id)
-      next if !reactions.any?
-
-      reactions_attributes =
-        reactions.map { |reaction| reaction.attributes.except("id").merge(post_id: target_post.id) }
-
-      DiscourseReactions::Reaction
-        .insert_all(reactions_attributes)
-        .each_with_index { |entry, index| id_map[reactions[index].id] = entry["id"] }
-
-      reaction_users = DiscourseReactions::ReactionUser.where(post_id: original_post.id)
-      next if !reaction_users.any?
-
-      reaction_users_attributes =
-        reaction_users.map do |reaction_user|
-          reaction_user
-            .attributes
-            .except("id")
-            .merge(post_id: target_post.id, reaction_id: id_map[reaction_user.reaction_id])
-        end
-
-      DiscourseReactions::ReactionUser.insert_all(reaction_users_attributes)
+      DiscourseReactions::Reaction.where(post_id: old_post.id).update_all(post_id: new_post.id)
+      DiscourseReactions::ReactionUser.where(post_id: old_post.id).update_all(post_id: new_post.id)
     end
   end
 

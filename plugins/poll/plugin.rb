@@ -136,6 +136,11 @@ after_initialize do
     post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
   end
 
+  on(:post_moved) do |new_post, _original_topic_id, old_post|
+    next if old_post.blank? || new_post.id == old_post.id
+    Poll.where(post_id: old_post.id).update_all(post_id: new_post.id)
+  end
+
   on(:merging_users) do |source_user, target_user|
     DB.exec(<<-SQL, source_user_id: source_user.id, target_user_id: target_user.id)
       DELETE FROM poll_votes
