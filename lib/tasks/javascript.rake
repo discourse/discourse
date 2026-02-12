@@ -20,7 +20,7 @@ task "javascript:update_constants" => :environment do
 
   auto_groups =
     Group::AUTO_GROUPS.inject({}) do |result, (group_name, group_id)|
-      result.merge(group_name => { id: group_id, automatic: true })
+      result.merge(group_name => { id: group_id, automatic: true, name: group_name })
     end
 
   MAIN_FONT_KEYS = %w[helvetica inter lato montserrat open_sans poppins roboto merriweather mukta]
