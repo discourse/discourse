@@ -51,6 +51,11 @@
     position: relative;
     line-height: normal;
 
+    &:has(:focus-visible) {
+      outline: 1px solid var(--d-input-focused-color);
+      border: 1px solid var(--d-input-focused-color);
+    }
+
     &.--disabled {
       color: var(--primary-medium);
       cursor: not-allowed;
