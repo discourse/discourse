@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { service } from "@ember/service";
 import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import Chart from "./chart";
@@ -51,14 +52,18 @@ export const gradientPlugin = {
 };
 
 export default class AdminReportDonutChart extends Component {
+  @service capabilities;
+
   get chartConfig() {
     const { model } = this.args;
     const rows = makeArray(model.data);
 
     const labelProperty = model.labels?.[0]?.property || "key";
-    const labels = rows.map((row) =>
-      String(row[labelProperty] ?? row.key ?? row.x)
-    );
+    const labels = rows.map((row) => {
+      const labelText = String(row[labelProperty] ?? row.key ?? row.x);
+      const value = row.y;
+      return `${labelText} (${value})`;
+    });
     const values = rows.map((row) => row.y);
     const colors = rows.map((row) => row.color);
 
@@ -80,20 +85,29 @@ export default class AdminReportDonutChart extends Component {
       options: {
         responsive: true,
         maintainAspectRatio: false,
+        onResize: (chart) => {
+          if (this.capabilities.viewport.sm) {
+            chart.options.plugins.legend.position = "right";
+          } else {
+            chart.options.plugins.legend.position = "bottom";
+          }
+        },
         animation: {
           duration: prefersReducedMotion ? 0 : 300,
         },
         plugins: {
           legend: {
             display: true,
-            position: "bottom",
+            align: "left",
             labels: {
-              usePointStyle: true,
-              pointStyle: "rectRounded",
+              usePointStyle: false,
               padding: 25,
-              boxWidth: 10,
-              boxHeight: 10,
+              boxWidth: 16,
+              boxHeight: 16,
+              useBorderRadius: true,
+              borderRadius: 4,
               color: getCSSColor("--primary-high"),
+              filter: () => true, // Show all legend items, even with 0 values
             },
           },
           tooltip: {
@@ -108,6 +122,7 @@ export default class AdminReportDonutChart extends Component {
             cornerRadius: 8,
             boxPadding: 4,
             callbacks: {
+              title: () => null, // Hide the tooltip title
               label: (tooltipItem) => {
                 const value = tooltipItem.parsed;
                 const total = tooltipItem.dataset.data.reduce(
@@ -115,7 +130,7 @@ export default class AdminReportDonutChart extends Component {
                   0
                 );
                 const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                return ` ${tooltipItem.label}: ${number(value)} (${pct}%)`;
+                return `${tooltipItem.label}: ${number(value)} (${pct}%)`;
               },
             },
           },
