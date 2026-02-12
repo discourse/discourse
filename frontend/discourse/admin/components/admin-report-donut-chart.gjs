@@ -79,6 +79,7 @@ export default class AdminReportDonutChart extends Component {
           {
             data: values,
             backgroundColor: colors,
+            hoverOffset: prefersReducedMotion ? 0 : 16,
           },
         ],
       },
