@@ -880,6 +880,7 @@ class TopicsController < ApplicationController
       end
 
     topic = Topic.find(params[:topic_id].to_i)
+    guardian.ensure_can_see!(topic)
     TopicUser.change(user, topic.id, notification_level: params[:notification_level].to_i)
     render json: success_json
   end
