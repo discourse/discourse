@@ -1,3 +1,9 @@
-import buildPluginAdapter from "discourse/admin/adapters/build-plugin";
+import { optionalRequire } from "discourse/lib/utilities";
 
-export default buildPluginAdapter("explorer").extend({});
+const buildPluginAdapter = optionalRequire(
+  "discourse/admin/adapters/build-plugin"
+);
+
+export default buildPluginAdapter
+  ? buildPluginAdapter("explorer").extend({})
+  : null; // Not logged in as admin, the adapter isn't needed
