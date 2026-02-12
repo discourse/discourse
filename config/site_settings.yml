@@ -2100,6 +2100,7 @@ email:
     default: true
     client: true
     area: "email"
+    hidden: true
   view_raw_email_allowed_groups:
     type: group_list
     list_type: compact
