@@ -237,7 +237,10 @@ after_initialize do
 
   add_to_class(:topic, :event_starts_at) do
     @event_starts_at ||=
-      Time.zone.parse(custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_STARTS_AT].to_s)
+      begin
+        value = custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_STARTS_AT].to_s
+        Time.find_zone("UTC").parse(value) if value.present?
+      end
   end
 
   add_to_serializer(
@@ -263,7 +266,10 @@ after_initialize do
 
   add_to_class(:topic, :event_ends_at) do
     @event_ends_at ||=
-      Time.zone.parse(custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_ENDS_AT].to_s)
+      begin
+        value = custom_fields[DiscoursePostEvent::TOPIC_POST_EVENT_ENDS_AT].to_s
+        Time.find_zone("UTC").parse(value) if value.present?
+      end
   end
 
   add_to_serializer(
@@ -274,6 +280,26 @@ after_initialize do
         SiteSetting.display_post_event_date_on_topic_title && object.event_ends_at
     end,
   ) { object.event_ends_at }
+
+  add_to_serializer(
+    :topic_view,
+    :event_timezone,
+    include_condition: -> do
+      SiteSetting.discourse_post_event_enabled &&
+        SiteSetting.display_post_event_date_on_topic_title &&
+        object.topic.first_post&.event&.timezone.present?
+    end,
+  ) { object.topic.first_post.event.timezone }
+
+  add_to_serializer(
+    :topic_view,
+    :event_show_local_time,
+    include_condition: -> do
+      SiteSetting.discourse_post_event_enabled &&
+        SiteSetting.display_post_event_date_on_topic_title &&
+        object.topic.first_post&.event.present?
+    end,
+  ) { object.topic.first_post.event.show_local_time }
 
   # DISCOURSE CALENDAR
 
