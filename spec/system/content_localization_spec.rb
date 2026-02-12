@@ -485,6 +485,56 @@ describe "Content Localization" do
         expect(post_1_obj).to have_cooked_content(jap_post.cooked)
       end
     end
+
+    context "for tags" do
+      SWITCHER_SELECTOR = "button[data-identifier='language-switcher']"
+
+      let(:discovery) { PageObjects::Pages::Discovery.new }
+      let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
+      let(:switcher) { PageObjects::Components::DMenu.new(SWITCHER_SELECTOR) }
+
+      fab!(:tag) { Fabricate(:tag, name: "strategy", locale: "en") }
+      fab!(:tag_localization) { Fabricate(:tag_localization, tag:, locale: "ja", name: "戦略") }
+      fab!(:topic_tag) { Fabricate(:topic_tag, topic:, tag:) }
+
+      before do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.navigation_menu = "sidebar"
+        SiteSetting.default_navigation_menu_tags = tag.name
+        SiteSetting.set_locale_from_cookie = true
+        SiteSetting.content_localization_language_switcher = "all"
+      end
+
+      it "displays localized tag names in sidebar, topic list, tag dropdown, and topic view" do
+        sign_in(japanese_user)
+
+        visit("/")
+
+        expect(sidebar).to have_section_link("戦略")
+        expect(topic_list).to have_topic_tag(topic, "戦略")
+
+        discovery.tag_drop.expand
+        expect(discovery.tag_drop).to have_option_name("戦略")
+        discovery.tag_drop.collapse
+
+        topic_list.visit_topic_with_title("孫子兵法からの人生戦略")
+        expect(page).to have_css(".title-wrapper .discourse-tag", text: "戦略")
+
+        switcher.expand
+        switcher.option("[data-menu-option-id='en']").click
+
+        visit("/")
+        expect(sidebar).to have_section_link("strategy")
+        expect(topic_list).to have_topic_tag(topic, "strategy")
+
+        discovery.tag_drop.expand
+        expect(discovery.tag_drop).to have_option_name("strategy")
+        discovery.tag_drop.collapse
+
+        topic_list.visit_topic_with_title("Life strategies from The Art of War")
+        expect(page).to have_css(".title-wrapper .discourse-tag", text: "strategy")
+      end
+    end
   end
 
   context "with author localization" do
