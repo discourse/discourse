@@ -559,7 +559,7 @@ export default class AdminBadgesShow extends Component {
 
         <PluginOutlet
           @name="admin-above-badge-buttons"
-          @outletArgs={{lazyHash badge=this.buffered form=form}}
+          @outletArgs={{lazyHash badge=@badge form=form}}
         />
 
         <form.Actions>
