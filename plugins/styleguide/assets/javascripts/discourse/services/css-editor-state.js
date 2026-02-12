@@ -1,8 +1,16 @@
 import { tracked } from "@glimmer/tracking";
 import Service from "@ember/service";
 import { TrackedMap } from "@ember-compat/tracked-built-ins";
-import { cssToHex, darkLightDiff, getDerivativeMap } from "../lib/color-math";
-import { getAllCssVariables } from "../lib/css-variables-registry";
+import {
+  cssToHex,
+  darkLightDiff,
+  getDerivativeMap,
+  getHorizonDerivativeMap,
+} from "../lib/color-math";
+import {
+  getAllCssVariables,
+  getBaseColors,
+} from "../lib/css-variables-registry";
 
 function toFullHex(value) {
   // Handle rgb() and rgba() — including modern space-separated syntax
@@ -40,8 +48,22 @@ function toFullHex(value) {
   return value;
 }
 
+function brightness(hex) {
+  hex = hex.replace(/^#/, "");
+  if (hex.length === 3) {
+    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+  }
+  const r = parseInt(hex.substring(0, 2), 16);
+  const g = parseInt(hex.substring(2, 4), 16);
+  const b = parseInt(hex.substring(4, 6), 16);
+  return (r * 299 + g * 587 + b * 114) / 1000;
+}
+
+const BASE_COLOR_NAMES = new Set(getBaseColors().map((c) => c.name));
+
 export default class CssEditorState extends Service {
   @tracked isOpen = false;
+  @tracked isDark = false;
 
   overrides = new TrackedMap();
   originalValues = new Map();
@@ -54,9 +76,29 @@ export default class CssEditorState extends Service {
     this.initialized = true;
 
     const computedStyle = getComputedStyle(document.documentElement);
+
+    // Capture all CSS variables (base + semantic + styling)
     for (const variable of getAllCssVariables()) {
       const value = computedStyle.getPropertyValue(variable.name).trim();
       this.originalValues.set(variable.name, value);
+    }
+
+    // Also capture base colors that might not be in the CSS_VARIABLES list
+    for (const baseColor of getBaseColors()) {
+      if (!this.originalValues.has(baseColor.name)) {
+        const value = computedStyle.getPropertyValue(baseColor.name).trim();
+        this.originalValues.set(baseColor.name, value);
+      }
+    }
+
+    this._updateIsDark();
+  }
+
+  _updateIsDark() {
+    const primaryHex = this._resolveHex("--primary");
+    const secondaryHex = this._resolveHex("--secondary");
+    if (primaryHex && secondaryHex) {
+      this.isDark = brightness(primaryHex) > brightness(secondaryHex);
     }
   }
 
@@ -90,23 +132,41 @@ export default class CssEditorState extends Service {
   _updateDerivatives(name) {
     const derivativeMap = getDerivativeMap();
     const entry = derivativeMap[name];
-    if (!entry) {
+    if (entry) {
+      const baseHex = this._resolveHex(name);
+      const comparisonHex = this._resolveHex(entry.comparison);
+      if (baseHex && comparisonHex) {
+        for (const [derivName, lightRatio, darkRatio] of entry.derivatives) {
+          const computed = darkLightDiff(
+            baseHex,
+            comparisonHex,
+            lightRatio,
+            darkRatio
+          );
+          this.overrides.set(derivName, computed);
+          document.documentElement.style.setProperty(derivName, computed);
+        }
+      }
+    }
+
+    this._updateHorizonDerivatives(name);
+  }
+
+  _updateHorizonDerivatives(name) {
+    const horizonMap = getHorizonDerivativeMap();
+    const horizonEntries = horizonMap[name];
+    if (!horizonEntries) {
       return;
     }
 
     const baseHex = this._resolveHex(name);
-    const comparisonHex = this._resolveHex(entry.comparison);
-    if (!baseHex || !comparisonHex) {
+    const secondaryHex = this._resolveHex("--secondary");
+    if (!baseHex) {
       return;
     }
 
-    for (const [derivName, lightRatio, darkRatio] of entry.derivatives) {
-      const computed = darkLightDiff(
-        baseHex,
-        comparisonHex,
-        lightRatio,
-        darkRatio
-      );
+    for (const { name: derivName, compute } of horizonEntries) {
+      const computed = compute(baseHex, secondaryHex, this.isDark);
       this.overrides.set(derivName, computed);
       document.documentElement.style.setProperty(derivName, computed);
     }
@@ -115,6 +175,11 @@ export default class CssEditorState extends Service {
   setVariable(name, value) {
     this.overrides.set(name, value);
     document.documentElement.style.setProperty(name, value);
+
+    if (name === "--primary" || name === "--secondary") {
+      this._updateIsDark();
+    }
+
     this._updateDerivatives(name);
   }
 
@@ -122,7 +187,7 @@ export default class CssEditorState extends Service {
     this.overrides.delete(name);
     document.documentElement.style.removeProperty(name);
 
-    // Also reset any derivatives that were auto-computed
+    // Reset standard derivatives
     const derivativeMap = getDerivativeMap();
     const entry = derivativeMap[name];
     if (entry) {
@@ -131,6 +196,20 @@ export default class CssEditorState extends Service {
         document.documentElement.style.removeProperty(derivName);
       }
     }
+
+    // Reset Horizon derivatives
+    const horizonMap = getHorizonDerivativeMap();
+    const horizonEntries = horizonMap[name];
+    if (horizonEntries) {
+      for (const { name: derivName } of horizonEntries) {
+        this.overrides.delete(derivName);
+        document.documentElement.style.removeProperty(derivName);
+      }
+    }
+
+    if (name === "--primary" || name === "--secondary") {
+      this._updateIsDark();
+    }
   }
 
   resetAll() {
@@ -138,20 +217,42 @@ export default class CssEditorState extends Service {
       document.documentElement.style.removeProperty(name);
     }
     this.overrides.clear();
+    this._updateIsDark();
   }
 
   get hasOverrides() {
     return this.overrides.size > 0;
   }
 
-  get exportCSS() {
-    if (this.overrides.size === 0) {
+  getBaseColorOverrides() {
+    const result = [];
+    for (const [name, value] of this.overrides) {
+      if (BASE_COLOR_NAMES.has(name)) {
+        result.push([name, value]);
+      }
+    }
+    return result;
+  }
+
+  getCssVariableOverrides() {
+    const result = [];
+    for (const [name, value] of this.overrides) {
+      if (!BASE_COLOR_NAMES.has(name)) {
+        result.push([name, value]);
+      }
+    }
+    return result;
+  }
+
+  generateThemeCSS() {
+    const cssOverrides = this.getCssVariableOverrides();
+    if (cssOverrides.length === 0) {
       return "";
     }
 
     let css = ":root {\n";
-    for (const [name, value] of this.overrides) {
-      css += `  ${name}: ${value};\n`;
+    for (const [name, value] of cssOverrides) {
+      css += `  ${name}: ${value} !important;\n`;
     }
     css += "}";
     return css;

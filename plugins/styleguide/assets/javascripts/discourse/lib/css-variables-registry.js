@@ -1,3 +1,19 @@
+// The 12 editable Discourse base colors
+const BASE_COLORS = [
+  { name: "--primary", type: "color" },
+  { name: "--secondary", type: "color" },
+  { name: "--tertiary", type: "color" },
+  { name: "--quaternary", type: "color" },
+  { name: "--header_background", type: "color" },
+  { name: "--header_primary", type: "color" },
+  { name: "--highlight", type: "color" },
+  { name: "--d-selected", type: "color" },
+  { name: "--d-hover", type: "color" },
+  { name: "--danger", type: "color" },
+  { name: "--success", type: "color" },
+  { name: "--love", type: "color" },
+];
+
 const CSS_VARIABLES = [
   // Base Colors
   { name: "--primary", category: "Base Colors", type: "color" },
@@ -66,6 +82,48 @@ const CSS_VARIABLES = [
   { name: "--d-selected", category: "Semantic Colors", type: "color" },
   { name: "--d-hover", category: "Semantic Colors", type: "color" },
 
+  // Horizon Theme Colors
+  { name: "--accent-color", category: "Horizon Colors", type: "color" },
+  { name: "--background-color", category: "Horizon Colors", type: "color" },
+  {
+    name: "--d-content-background",
+    category: "Horizon Colors",
+    type: "color",
+  },
+  {
+    name: "--d-sidebar-border-color",
+    category: "Horizon Colors",
+    type: "color",
+  },
+  {
+    name: "--d-sidebar-link-color",
+    category: "Horizon Colors",
+    type: "color",
+  },
+  {
+    name: "--d-sidebar-active-color",
+    category: "Horizon Colors",
+    type: "color",
+  },
+  {
+    name: "--d-sidebar-suffix-color",
+    category: "Horizon Colors",
+    type: "color",
+  },
+  { name: "--d-nav-color--active", category: "Horizon Colors", type: "color" },
+  { name: "--d-nav-color--hover", category: "Horizon Colors", type: "color" },
+  { name: "--link-color", category: "Horizon Colors", type: "color" },
+  { name: "--link-color-hover", category: "Horizon Colors", type: "color" },
+  { name: "--tertiary-hover", category: "Horizon Colors", type: "color" },
+  { name: "--search-color", category: "Horizon Colors", type: "color" },
+  { name: "--button-box-shadow", category: "Horizon Colors", type: "color" },
+  { name: "--d-input-bg-color", category: "Horizon Colors", type: "color" },
+  {
+    name: "--d-sidebar-highlight-color",
+    category: "Horizon Colors",
+    type: "color",
+  },
+
   // Styling
   { name: "--space", category: "Styling", type: "size" },
   { name: "--space-half", category: "Styling", type: "size" },
@@ -103,6 +161,10 @@ const CSS_VARIABLES = [
     type: "radius",
   },
 ];
+
+export function getBaseColors() {
+  return BASE_COLORS;
+}
 
 export function getCssVariableCategories() {
   const categories = new Map();

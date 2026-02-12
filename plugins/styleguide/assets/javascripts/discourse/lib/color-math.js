@@ -211,3 +211,115 @@ const DERIVATIVE_MAP = {
 export function getDerivativeMap() {
   return DERIVATIVE_MAP;
 }
+
+// Horizon theme derivative map: maps base CSS variables to Horizon-specific
+// variables with JS-based HSL approximations of the oklch transforms from
+// themes/horizon/common/color_definitions.scss
+const HORIZON_DERIVATIVE_MAP = {
+  "--tertiary": [
+    { name: "--accent-color", compute: (t) => t },
+    {
+      name: "--background-color",
+      compute: (t, _s, isDark) =>
+        isDark ? scaleColorLightness(t, -0.9) : scaleColorLightness(t, 0.92),
+    },
+    {
+      name: "--header_primary-low-mid",
+      compute: (t, _s, isDark) =>
+        isDark ? scaleColorLightness(t, -0.2) : scaleColorLightness(t, 0.4),
+    },
+    {
+      name: "--header_primary-medium",
+      compute: (t, _s, isDark) =>
+        isDark ? scaleColorLightness(t, 0.1) : scaleColorLightness(t, 0.15),
+    },
+    {
+      name: "--d-sidebar-border-color",
+      compute: (t, _s, isDark) =>
+        isDark ? scaleColorLightness(t, -0.3) : scaleColorLightness(t, 0.75),
+    },
+    {
+      name: "--d-sidebar-link-color",
+      compute: (t, _s, isDark) =>
+        isDark ? scaleColorLightness(t, 0.3) : scaleColorLightness(t, -0.15),
+    },
+    {
+      name: "--d-sidebar-suffix-color",
+      compute: (t) => t,
+    },
+    {
+      name: "--d-selected",
+      compute: (t, _s, isDark) =>
+        isDark ? scaleColorLightness(t, -0.3) : scaleColorLightness(t, 0.85),
+    },
+    {
+      name: "--d-nav-color--active",
+      compute: (t, _s, isDark) => (isDark ? scaleColorLightness(t, 0.15) : t),
+    },
+    {
+      name: "--d-nav-color--hover",
+      compute: (t, _s, isDark) => (isDark ? scaleColorLightness(t, 0.15) : t),
+    },
+    {
+      name: "--link-color",
+      compute: (t, _s, isDark) => (isDark ? scaleColorLightness(t, -0.05) : t),
+    },
+    {
+      name: "--link-color-hover",
+      compute: (t, _s, isDark) => (isDark ? scaleColorLightness(t, 0.3) : t),
+    },
+    { name: "--tertiary-hover", compute: (t) => t },
+    {
+      name: "--search-color",
+      compute: (t, _s, isDark) => (isDark ? scaleColorLightness(t, 0.3) : t),
+    },
+    {
+      name: "--button-box-shadow",
+      compute: (t, _s, isDark) =>
+        isDark ? scaleColorLightness(t, -0.25) : scaleColorLightness(t, 0.35),
+    },
+  ],
+  "--secondary": [
+    {
+      name: "--d-content-background",
+      compute: (s) => s,
+    },
+    {
+      name: "--d-input-bg-color",
+      compute: (s) => s,
+    },
+  ],
+  "--primary": [
+    {
+      name: "--d-sidebar-active-color",
+      compute: (p) => p,
+    },
+    {
+      name: "--d-sidebar-highlight-color",
+      compute: (p) => p,
+    },
+  ],
+};
+
+export function getHorizonDerivativeMap() {
+  return HORIZON_DERIVATIVE_MAP;
+}
+
+const CSS_VAR_TO_COLOR_SCHEME = {
+  "--primary": "primary",
+  "--secondary": "secondary",
+  "--tertiary": "tertiary",
+  "--quaternary": "quaternary",
+  "--header_background": "header_background",
+  "--header_primary": "header_primary",
+  "--highlight": "highlight",
+  "--d-selected": "selected",
+  "--d-hover": "hover",
+  "--danger": "danger",
+  "--success": "success",
+  "--love": "love",
+};
+
+export function cssVarToColorSchemeName(varName) {
+  return CSS_VAR_TO_COLOR_SCHEME[varName] || null;
+}

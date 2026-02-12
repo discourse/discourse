@@ -86,6 +86,21 @@
   }
 }
 
+.css-editor-unsaved-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--highlight-bg);
+  border-bottom: 1px solid var(--highlight);
+  color: var(--primary);
+  font-size: var(--font-down-1);
+
+  .d-icon {
+    color: var(--danger);
+  }
+}
+
 .css-editor-category {
   &__header {
     display: flex;
@@ -104,6 +119,14 @@
 
     &:hover {
       background: var(--primary-low);
+    }
+
+    &--static {
+      cursor: default;
+
+      &:hover {
+        background: var(--primary-very-low);
+      }
     }
   }
 
@@ -170,6 +193,15 @@
     background-color: var(--highlight-bg);
   }
 
+  &.is-readonly {
+    opacity: 0.8;
+    padding: 0.25rem 1rem;
+
+    .css-editor-variable__name {
+      font-size: var(--font-down-3);
+    }
+  }
+
   &__name {
     font-size: var(--font-down-2);
     font-weight: 600;
@@ -194,6 +226,23 @@
     flex-shrink: 0;
   }
 
+  &__color-swatch {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border: 1px solid var(--primary-300);
+    border-radius: var(--d-border-radius);
+    flex-shrink: 0;
+  }
+
+  &__value {
+    font-size: var(--font-down-2);
+    color: var(--primary-medium);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
   &__text-input {
     flex: 1;
     font-size: var(--font-down-2);
@@ -210,5 +259,34 @@
     &:hover {
       color: var(--danger);
     }
+  }
+}
+
+.apply-changes-modal {
+  &__section {
+    margin-bottom: 1rem;
+  }
+
+  &__label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+  }
+
+  &__input {
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 0.25rem;
+  }
+
+  &__summary {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+  }
+
+  &__note {
+    font-size: var(--font-down-1);
+    color: var(--primary-medium);
+    font-style: italic;
   }
 }

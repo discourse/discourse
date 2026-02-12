@@ -11,7 +11,20 @@ en:
 
       css_editor:
         reset_all: "Reset All"
-        export: "Export CSS"
+        apply_changes: "Apply Changes"
+        unsaved_changes: "You are previewing unsaved styling changes"
+        modal:
+          title: "Apply Styling Changes"
+          description: "This will create the following resources on your site:"
+          palette_name: "Color palette name"
+          component_name: "Theme component name"
+          palette_summary:
+            one: "Color palette with %{count} base color override"
+            other: "Color palette with %{count} base color overrides"
+          component_summary: "Theme component with CSS variable overrides"
+          component_note: "The component will be added to all default and user-selectable themes."
+          apply: "Apply"
+          cancel: "Cancel"
 
       categories:
         tokens: Design Tokens

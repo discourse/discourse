@@ -8,8 +8,14 @@ import icon from "discourse/helpers/d-icon";
 import { loadColorSchemeStylesheet } from "discourse/lib/color-scheme-picker";
 import { currentThemeId } from "discourse/lib/theme-selector";
 import { not } from "discourse/truth-helpers";
-import { getCssVariableCategories } from "../lib/css-variables-registry";
+import { i18n } from "discourse-i18n";
+import {
+  getBaseColors,
+  getCssVariableCategories,
+} from "../lib/css-variables-registry";
 import CssEditorCategory from "./css-editor-category";
+import CssEditorVariable from "./css-editor-variable";
+import ApplyChangesModal from "./modal/apply-changes";
 
 const DARK = "dark";
 const LIGHT = "light";
@@ -52,6 +58,7 @@ function colorSchemeOverride(type) {
 
 export default class CssVariableEditor extends Component {
   @service cssEditorState;
+  @service modal;
   @service site;
 
   @tracked searchQuery = "";
@@ -78,6 +85,18 @@ export default class CssVariableEditor extends Component {
     return window.matchMedia("(prefers-color-scheme: dark)").matches
       ? DARK
       : LIGHT;
+  }
+
+  get baseColors() {
+    return getBaseColors();
+  }
+
+  get filteredBaseColors() {
+    const query = this.searchQuery?.toLowerCase();
+    if (!query) {
+      return this.baseColors;
+    }
+    return this.baseColors.filter((v) => v.name.toLowerCase().includes(query));
   }
 
   get categories() {
@@ -113,11 +132,10 @@ export default class CssVariableEditor extends Component {
   }
 
   @action
-  async exportCSS() {
-    const css = this.cssEditorState.exportCSS;
-    if (css) {
-      await navigator.clipboard.writeText(css);
-    }
+  openApplyModal() {
+    this.modal.show(ApplyChangesModal, {
+      model: { cssEditorState: this.cssEditorState },
+    });
   }
 
   <template>
@@ -143,6 +161,13 @@ export default class CssVariableEditor extends Component {
           </button>
         </div>
 
+        {{#if this.cssEditorState.hasOverrides}}
+          <div class="css-editor-unsaved-banner">
+            {{icon "triangle-exclamation"}}
+            <span>{{i18n "styleguide.css_editor.unsaved_changes"}}</span>
+          </div>
+        {{/if}}
+
         <div class="css-variable-editor__toolbar">
           {{#if this.canToggleColorMode}}
             <DButton
@@ -166,8 +191,8 @@ export default class CssVariableEditor extends Component {
               class="btn-default btn-small"
             />
             <DButton
-              @label="styleguide.css_editor.export"
-              @action={{this.exportCSS}}
+              @label="styleguide.css_editor.apply_changes"
+              @action={{this.openApplyModal}}
               @disabled={{not this.cssEditorState.hasOverrides}}
               class="btn-primary btn-small"
             />
@@ -175,11 +200,37 @@ export default class CssVariableEditor extends Component {
         </div>
 
         <div class="css-variable-editor__body">
+          {{#if this.filteredBaseColors.length}}
+            <div class="css-editor-category">
+              <div
+                class="css-editor-category__header css-editor-category__header--static"
+              >
+                <span class="css-editor-category__title">Base Colors</span>
+                <span
+                  class="css-editor-category__count"
+                >{{this.filteredBaseColors.length}}</span>
+              </div>
+              <div class="css-editor-category__body">
+                {{#each this.filteredBaseColors as |variable|}}
+                  <div class="css-editor-variable-group">
+                    <div class="css-editor-variable-group__base">
+                      <CssEditorVariable
+                        @variable={{variable}}
+                        @editable={{true}}
+                      />
+                    </div>
+                  </div>
+                {{/each}}
+              </div>
+            </div>
+          {{/if}}
+
           {{#each this.categoryEntries as |entry|}}
             <CssEditorCategory
               @categoryName={{entry.name}}
               @variables={{entry.variables}}
               @searchQuery={{this.searchQuery}}
+              @editable={{false}}
             />
           {{/each}}
         </div>

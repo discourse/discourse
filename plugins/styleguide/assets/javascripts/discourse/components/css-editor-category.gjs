@@ -23,6 +23,10 @@ export default class CssEditorCategory extends Component {
   @tracked isExpanded = false;
   @tracked expandedGroups = new Set();
 
+  get editable() {
+    return this.args.editable !== false;
+  }
+
   get filteredVariables() {
     const query = this.args.searchQuery?.toLowerCase();
     if (!query) {
@@ -97,7 +101,10 @@ export default class CssEditorCategory extends Component {
             {{#each this.variableGroups as |group|}}
               <div class="css-editor-variable-group">
                 <div class="css-editor-variable-group__base">
-                  <CssEditorVariable @variable={{group.base}} />
+                  <CssEditorVariable
+                    @variable={{group.base}}
+                    @editable={{this.editable}}
+                  />
                   {{#if group.hasDerivatives}}
                     <button
                       type="button"
@@ -121,7 +128,10 @@ export default class CssEditorCategory extends Component {
                 {{#if group.isExpanded}}
                   <div class="css-editor-variable-group__derivatives">
                     {{#each group.derivatives as |derivative|}}
-                      <CssEditorVariable @variable={{derivative}} />
+                      <CssEditorVariable
+                        @variable={{derivative}}
+                        @editable={{this.editable}}
+                      />
                     {{/each}}
                   </div>
                 {{/if}}
