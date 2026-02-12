@@ -25,12 +25,6 @@ module Reports::UserStats
       color_keys = report.colors.keys
 
       if type_filter == "role"
-        report.labels = [
-          { property: :x, title: I18n.t("reports.users_by_type.labels.type") },
-          { property: :y, type: :number, title: I18n.t("reports.default.labels.count") },
-        ]
-
-        # Trust levels (excluding admins and moderators)
         User
           .real
           .where(admin: false, moderator: false)
@@ -38,37 +32,31 @@ module Reports::UserStats
           .count
           .sort
           .each do |level, count|
-            if count > 0
-              report.data << {
-                key: TrustLevel.levels.key(level.to_i),
-                x: I18n.t("js.trust_levels.names.#{TrustLevel.levels[level.to_i]}"),
-                y: count,
-                color: report.colors[color_keys[report.data.size % color_keys.size]],
-              }
-            end
+            report.data << {
+              key: TrustLevel.levels.key(level.to_i),
+              x: I18n.t("js.trust_levels.names.#{TrustLevel.levels[level.to_i]}"),
+              y: count,
+              color: report.colors[color_keys[report.data.size % color_keys.size]],
+            }
           end
 
         admins = User.real.admins.count
-        if admins > 0
-          report.data << {
-            icon: "shield-halved",
-            key: "admins",
-            x: I18n.t("reports.users_by_type.xaxis_labels.admin"),
-            y: admins,
-            color: report.colors[color_keys[report.data.size % color_keys.size]],
-          }
-        end
+        report.data << {
+          icon: "shield-halved",
+          key: "admins",
+          x: I18n.t("reports.users_by_type.xaxis_labels.admin"),
+          y: admins,
+          color: report.colors[color_keys[report.data.size % color_keys.size]],
+        }
 
         moderators = User.real.moderators.count
-        if moderators > 0
-          report.data << {
-            icon: "shield-halved",
-            key: "moderators",
-            x: I18n.t("reports.users_by_type.xaxis_labels.moderator"),
-            y: moderators,
-            color: report.colors[color_keys[report.data.size % color_keys.size]],
-          }
-        end
+        report.data << {
+          icon: "shield-halved",
+          key: "moderators",
+          x: I18n.t("reports.users_by_type.xaxis_labels.moderator"),
+          y: moderators,
+          color: report.colors[color_keys[report.data.size % color_keys.size]],
+        }
       elsif type_filter == "status"
         report.labels = [
           { property: :x, title: I18n.t("reports.users_by_type.labels.type") },
@@ -76,37 +64,31 @@ module Reports::UserStats
         ]
 
         suspended = User.real.suspended.count
-        if suspended > 0
-          report.data << {
-            icon: "ban",
-            key: "suspended",
-            x: I18n.t("reports.users_by_type.xaxis_labels.suspended"),
-            y: suspended,
-            color: report.colors[color_keys[report.data.size % color_keys.size]],
-          }
-        end
+        report.data << {
+          icon: "ban",
+          key: "suspended",
+          x: I18n.t("reports.users_by_type.xaxis_labels.suspended"),
+          y: suspended,
+          color: report.colors[color_keys[report.data.size % color_keys.size]],
+        }
 
         silenced = User.real.silenced.count
-        if silenced > 0
-          report.data << {
-            icon: "ban",
-            key: "silenced",
-            x: I18n.t("reports.users_by_type.xaxis_labels.silenced"),
-            y: silenced,
-            color: report.colors[color_keys[report.data.size % color_keys.size]],
-          }
-        end
+        report.data << {
+          icon: "ban",
+          key: "silenced",
+          x: I18n.t("reports.users_by_type.xaxis_labels.silenced"),
+          y: silenced,
+          color: report.colors[color_keys[report.data.size % color_keys.size]],
+        }
 
         active = User.real.not_suspended.not_silenced.count
-        if active > 0
-          report.data << {
-            icon: "check",
-            key: "active",
-            x: I18n.t("reports.users_by_type.xaxis_labels.active"),
-            y: active,
-            color: report.colors[color_keys[report.data.size % color_keys.size]],
-          }
-        end
+        report.data << {
+          icon: "check",
+          key: "active",
+          x: I18n.t("reports.users_by_type.xaxis_labels.active"),
+          y: active,
+          color: report.colors[color_keys[report.data.size % color_keys.size]],
+        }
       end
     end
   end
