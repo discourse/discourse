@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require "tty-prompt"
+require_relative "../release_utils/version"
 
 module ReleaseUtils
   PRIMARY_RELEASE_TAG = "release"
@@ -37,13 +38,6 @@ module ReleaseUtils
 
   def self.read_version_rb
     File.read("lib/version.rb")
-  end
-
-  def self.parse_current_version
-    version = read_version_rb[/STRING = "(.*)"/, 1]
-    raise "Unable to parse current version" if version.nil?
-    puts "Parsed current version: #{version.inspect}"
-    version
   end
 
   def self.write_version(version)
@@ -183,43 +177,38 @@ namespace :release do
   task "maybe_cut_branch", [:check_ref] do |t, args|
     check_ref = args[:check_ref]
 
-    new_branch_name = nil
     new_version = nil
     previous_version = nil
 
     ReleaseUtils.with_clean_worktree("main") do
       ReleaseUtils.git("checkout", check_ref.to_s)
-      new_version = ReleaseUtils.parse_current_version
+      new_version = ReleaseUtils::Version.current
 
       ReleaseUtils.git("checkout", "#{check_ref}^1")
-      previous_version = ReleaseUtils.parse_current_version
+      previous_version = ReleaseUtils::Version.current
     end
 
-    next "version has not changed" if new_version == previous_version
+    raise "Unexpected previous version" if !previous_version.development?
+    raise "Unexpected new version" if !new_version.development?
 
-    raise "Unexpected previous version" if !previous_version.ends_with? "-latest"
-    raise "Unexpected new version" if !new_version.ends_with? "-latest"
-    if Gem::Version.new(new_version) < Gem::Version.new(previous_version)
-      raise "New version is smaller than old version"
-    end
+    next "version has not changed" if new_version.same_development_cycle?(previous_version)
 
-    parts = previous_version.split(".")
-    new_branch_name = "release/#{parts[0]}.#{parts[1]}"
+    raise "New version is smaller than old version" if new_version < previous_version
 
-    ReleaseUtils.git("branch", new_branch_name, "#{check_ref}^1")
-    puts "Created new branch #{new_branch_name}"
+    ReleaseUtils.git("branch", previous_version.branch_name, "#{check_ref}^1")
+    puts "Created new branch #{previous_version.branch_name}"
 
     File.write(
       ENV["GITHUB_OUTPUT"] || "/dev/null",
-      "new_branch_name=#{new_branch_name}\n",
+      "new_branch_name=#{previous_version.branch_name}\n",
       mode: "a",
     )
 
     if ReleaseUtils.dry_run?
-      puts "[DRY RUN] Skipping pushing branch #{new_branch_name} to origin"
+      puts "[DRY RUN] Skipping pushing branch #{previous_version.branch_name} to origin"
     else
-      ReleaseUtils.git("push", "--set-upstream", "origin", new_branch_name)
-      puts "Pushed branch #{new_branch_name} to origin"
+      ReleaseUtils.git("push", "--set-upstream", "origin", previous_version.branch_name)
+      puts "Pushed branch #{previous_version.branch_name} to origin"
     end
 
     puts "Done!"
@@ -242,21 +231,20 @@ namespace :release do
           next
         end
 
-        ReleaseUtils.parse_current_version
+        ReleaseUtils::Version.current
       end
+    next unless current_version
 
-    tag_name = "v#{current_version}"
-
-    if ReleaseUtils.ref_exists?(tag_name)
-      puts "Tag #{tag_name} already exists, skipping"
+    if ReleaseUtils.ref_exists?(current_version.tag_name)
+      puts "Tag #{current_version.tag_name} already exists, skipping"
     else
-      puts "Tagging release #{tag_name}"
-      ReleaseUtils.git "tag", "-a", tag_name, "-m", "version #{current_version}"
+      puts "Tagging release #{current_version.tag_name}"
+      ReleaseUtils.git "tag", "-a", current_version.tag_name, "-m", "version #{current_version}"
 
       if ReleaseUtils.dry_run?
         puts "[DRY RUN] Skipping pushing tag to origin"
       else
-        ReleaseUtils.git "push", "origin", "refs/tags/#{tag_name}"
+        ReleaseUtils.git "push", "origin", "refs/tags/#{current_version.tag_name}"
       end
     end
 
@@ -270,14 +258,12 @@ namespace :release do
     current_version =
       ReleaseUtils.with_clean_worktree("main") do
         ReleaseUtils.git "checkout", check_ref.to_s
-        ReleaseUtils.parse_current_version
+        ReleaseUtils::Version.current
       end
 
-    released_versions = ReleaseUtils.released_versions
-    current_minor = current_version.split(".").first(2).join(".") + ".0"
-    current_minor_version = Gem::Version.new(current_minor)
+    released_versions = ReleaseUtils.released_versions.map(&ReleaseUtils::Version.method(:new))
 
-    if released_versions.empty? || current_minor_version >= released_versions.last
+    if released_versions.empty? || current_version >= released_versions.last
       ReleaseUtils::RELEASE_TAGS.each do |synonym_tag|
         message =
           if synonym_tag == ReleaseUtils::PRIMARY_RELEASE_TAG
@@ -300,8 +286,8 @@ namespace :release do
     end
 
     # Update ESR tags if this version is in the latest released ESR series
-    released_esrs = ReleaseUtils.released_esrs
-    if released_esrs.any? && current_minor_version == released_esrs.last
+    released_esrs = ReleaseUtils.released_esrs.map(&ReleaseUtils::Version.method(:new))
+    if released_esrs.any? && current_version.same_series?(released_esrs.last)
       ReleaseUtils::ESR_TAGS.each do |synonym_tag|
         message =
           if synonym_tag == ReleaseUtils::PRIMARY_ESR_TAG
@@ -333,29 +319,15 @@ namespace :release do
       ReleaseUtils.git "branch", "-D", pr_branch_name if ReleaseUtils.ref_exists?(pr_branch_name)
       ReleaseUtils.git "checkout", "-b", pr_branch_name
 
-      current_version = ReleaseUtils.parse_current_version
+      current_version = ReleaseUtils::Version.current
+      target_version = ReleaseUtils::Version.next
 
-      target_version_number = "#{Time.now.strftime("%Y.%-m")}.0-latest"
-
-      if Gem::Version.new(target_version_number) <= Gem::Version.new(current_version)
-        puts "Target version #{current_version} is already >= #{target_version_number}. Incrementing instead."
-        major, minor, patch_and_pre = current_version.split(".")
-        minor = (minor.to_i + 1).to_s
-
-        if minor.to_i > 12 && Time.now.month == 12
-          major = (major.to_i + 1).to_s
-          minor = "1"
-        end
-
-        target_version_number = "#{major}.#{minor}.#{patch_and_pre}"
-      end
-
-      ReleaseUtils.write_version(target_version_number)
-      ReleaseUtils.update_versions_json(target_version_number.split(".").first(2).join("."))
+      ReleaseUtils.write_version(target_version)
+      ReleaseUtils.update_versions_json(target_version.series)
       ReleaseUtils.git "add", "lib/version.rb", "versions.json"
       ReleaseUtils.git "commit",
                        "-m",
-                       "DEV: Begin development of v#{target_version_number}\n\nMerging this will trigger the creation of a `release/#{current_version.sub(".0-latest", "")}` branch on the preceding commit."
+                       "DEV: Begin development of v#{target_version}\n\nMerging this will trigger the creation of a `#{current_version.branch_name}` branch on the preceding commit."
     end
 
     if ReleaseUtils.dry_run?
@@ -365,41 +337,6 @@ namespace :release do
       ReleaseUtils.make_pr(base: branch, branch: pr_branch_name)
       puts "Done! Branch #{pr_branch_name} has been pushed to origin and a pull request has been created."
     end
-  end
-
-  desc "Prepare version bump"
-  task "prepare_next_version_branch", [:branch] do |t, args|
-    branch = args[:branch]
-
-    raise "Expected branch to start with 'release/'" if !branch.starts_with?("release/")
-
-    pr_branch_name = "version-bump/#{args[:branch]}"
-
-    ReleaseUtils.with_clean_worktree(branch) do
-      ReleaseUtils.git "branch", "-D", pr_branch_name if ReleaseUtils.ref_exists?(pr_branch_name)
-      ReleaseUtils.git "checkout", "-b", pr_branch_name
-
-      current_version = ReleaseUtils.parse_current_version
-      target_version_number =
-        if current_version.end_with?("-latest")
-          current_version.sub("-latest", "")
-        else
-          parts = current_version.split(".")
-          "#{parts[0]}.#{parts[1]}.#{parts[2].to_i + 1}"
-        end
-
-      ReleaseUtils.write_version(target_version_number)
-      ReleaseUtils.git "add", "lib/version.rb"
-      ReleaseUtils.git "commit",
-                       "-m",
-                       "DEV: Bump version on `#{branch}` to `v#{target_version_number}`"
-    end
-
-    ReleaseUtils.git "push", "-f", "--set-upstream", "origin", pr_branch_name
-
-    ReleaseUtils.make_pr(base: branch, branch: pr_branch_name)
-
-    puts "Done! Branch #{pr_branch_name} has been pushed to origin and a pull request has been created."
   end
 
   desc <<~DESC
@@ -474,6 +411,13 @@ namespace :release do
         first_commit_on_branch =
           ReleaseUtils.git("log", "--format=%H", "origin/#{base}..#{ref}").lines.last.strip
         ReleaseUtils.git "cherry-pick", "#{first_commit_on_branch}^..#{ref}"
+      end
+
+      if base == "main"
+        new_version = ReleaseUtils::Version.current.next_revision
+        ReleaseUtils.write_version(new_version)
+        ReleaseUtils.git "add", "lib/version.rb"
+        ReleaseUtils.git "commit", "-m", "DEV: Bump development branch to v#{new_version}"
       end
 
       puts "Finished merging commits into a locally-staged #{branch} branch. Git log is:"
