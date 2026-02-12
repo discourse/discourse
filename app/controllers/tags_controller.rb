@@ -569,7 +569,7 @@ class TagsController < ::ApplicationController
 
   def self.tag_counts_json(tags, guardian)
     show_pm_tags = guardian.can_tag_pms?
-    target_tags = Tag.where(id: tags.map(&:target_tag_id).compact.uniq).select(:id, :name)
+    target_tags = Tag.where(id: tags.map(&:target_tag_id).compact.uniq).select(:id, :name, :slug)
 
     tags
       .map do |t|
@@ -586,7 +586,10 @@ class TagsController < ::ApplicationController
           count: topic_count,
           pm_only: topic_count == 0 && t.pm_topic_count > 0,
           target_tag:
-            t.target_tag_id ? target_tags.find { |x| x.id == t.target_tag_id }&.name : nil,
+            if t.target_tag_id
+              target = target_tags.find { |x| x.id == t.target_tag_id }
+              target ? { id: target.id, name: target.name, slug: target.slug } : nil
+            end,
         }
 
         if show_pm_tags && SiteSetting.display_personal_messages_tag_counts
