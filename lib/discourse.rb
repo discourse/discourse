@@ -469,7 +469,7 @@ module Discourse
 
       if args[:include_test_assets_for]&.include?(plugin.directory_name) &&
            plugin.test_js_asset_exists?
-        assets << { name: "plugins/#{plugin.directory_name}_tests", plugin: plugin }
+        assets << { name: "plugins/test/#{plugin.directory_name}_tests", plugin: plugin }
       end
     end
 

@@ -9,18 +9,18 @@ const target = params.get("target") || "core";
   const response = await fetch(
     `${rootUrl}bootstrap/plugin-test-info.json?target=${target}`
   );
-  const data = await response.json();
+  const pluginTestInfo = await response.json();
 
   dynamicJsTemplate.content.firstElementChild.insertAdjacentHTML(
     "beforebegin",
-    data.html
+    pluginTestInfo.html
   );
 
-  window._discourseQunitPluginNames = data.all_plugins;
+  window._discourseQunitPluginNames = pluginTestInfo.all_plugins;
 
   window.CLIENT_SITE_SETTINGS_WITH_DEFAULTS = {
-    ...JSON.parse(data.site_settings_json),
-    ...JSON.parse(data.theme_site_settings_json),
+    ...JSON.parse(pluginTestInfo.site_settings_json),
+    ...JSON.parse(pluginTestInfo.theme_site_settings_json),
   };
 
   for (const element of dynamicJsTemplate.content.childNodes) {
@@ -35,20 +35,22 @@ const target = params.get("target") || "core";
     }
 
     if (element.type === "importmap") {
-      // For some reason, adding the cloned version of the importmap doesn't work properly.
-      // Re-creating from scratch does the trick.
       const importmap = document.createElement("script");
       importmap.type = "importmap";
       importmap.textContent = element.textContent;
       outputNode.append(importmap);
       continue;
+    } else if (element.tagName === "SCRIPT") {
+      const script = document.createElement("script");
+      script.src = element.src;
+      script.dataset = element.dataset;
+      script.defer = element.defer;
+      script.async = false; // Weirdly, this is true by default when programmatically creating script tags
+      outputNode.append(script);
+      continue;
     }
 
     const clone = element.cloneNode(true);
-
-    if (clone.tagName === "SCRIPT") {
-      clone.async = false;
-    }
 
     outputNode.appendChild(clone);
 
