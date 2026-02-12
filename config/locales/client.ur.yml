@@ -6,6 +6,10 @@
 
 ur:
   js:
+    carousel:
+      go_to_slide: "سلائیڈ %{index}پر جائیں"
+      previous: "گزشتہ سلائیڈ"
+      next: "اگلی سلائیڈ"
     number:
       format:
         separator: "."
@@ -287,6 +291,7 @@ ur:
     skip_to_main_content: "مرکزی مواد پر جائیں"
     skip_links_label: "نیویگیشن لنکس چھوڑیں"
     skip_to_post: "پوسٹ پر جائیں %{post_number}"
+    skip_to_where_you_left_off: "وہاں جائیں جہاں چھوڑا تھا (پوسٹ %{post_number})"
     skip_to_where_you_left_off_last: "جہاں چھوڑا تھا آپ وہیں جاؤ (آخری جواب، پوسٹ %{post_number})"
     skip_to_last_reply: "آخری جواب پر جائیں۔"
     skip_to_top: "اوپر جائیں"
@@ -409,6 +414,10 @@ ur:
       title: "نئے اور بغیر پڑھے موضوعات"
       pill: "تجویز کردہ"
       pm_title: "تجویز کردہ پیغامات"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "رابطہ کاپی کریں"
+        copied_to_clipboard: "رابطہ کلپ بورڈ پر کاپی ہوا!"
     about:
       edit: "اِس صفحہ میں ترمیم کریں"
       simple_title: "بارے میں"
@@ -642,6 +651,7 @@ ur:
       show_more: "مزید دکھائیں"
       show_less: "کم دکھائیں"
       back_to_queue: "قطار پر واپس جائیں"
+      editing_post: "پوسٹ میں ترمیم جاری…"
       order_by: "کے حساب سے آرڈر"
       date_filter: "کے درمیان پوسٹ کیا گیا"
       in_reply_to: "کے جواب میں"
@@ -717,6 +727,7 @@ ur:
       filtered_topic: "آپ نے ایک موضوع میں قابل تجدید مواد کو فِلٹر کر دیا ہے۔"
       filtered_user: "نشان۔زدہ صارف"
       filtered_reviewed_by: "نے جائزہ لیا"
+      filtered_claimed_by: "نشان زدگی کلیم از طرف"
       show_all_topics: "تمام موضوعات دکھائیں"
       deleted_post: "(دھاگہ مٹا دیا)"
       deleted_user: "(رکن مٹادیا گیا)"
@@ -793,6 +804,8 @@ ur:
           low: "کم"
           medium: "درمیانی"
           high: "زیادہ"
+        active_filters: "فعال فلٹرز:"
+        clear_filter: "%{filter} ہٹائیں"
       conversation:
         view_full: "مکمل گفتگو دیکھیں"
       scores:
@@ -835,6 +848,10 @@ ur:
         is_this_post: "کیا یہ %{reviewable_type} %{reviewable_human_score_types}ہے؟"
         delimiter: "یا"
         something_else_wrong: "کیا اس%{reviewable_type} میں کچھ گڑبڑ ہے ؟"
+        approve_user: "اس صارف کو منظور کریں؟"
+        suspect_user: "کیا یہ صارف سپیم ہے؟"
+        approve_post: "اس پوسٹ کو منظور کریں؟"
+        approve_topic: "اس موضوع کو منظور کریں؟"
       types:
         reviewable_flagged_post:
           title: "فلَیگ کردہ پوسٹ"
@@ -853,27 +870,43 @@ ur:
           title: "دھاگہ"
           noun: "پوسٹ"
         reviewable_ai_chat_message:
+          title: "اے آئی کا نشان زدہ چیٹ پیغام"
           noun: "گپ شپ کا پیغام"
         reviewable_ai_post:
+          title: "اے آئی کی نشان زدہ پوسٹ"
           noun: "دھاگہ"
+        reviewable_post_voting_comment:
+          title: "نشان زدہ تبصرہ"
+          noun: "تبصرہ"
       flagged_as: "کے طور پرفلَیگ"
+      post_flagged_as: "پوسٹ نشان زدہ ہوئی بطور"
+      chat_flagged_as: "چیٹ فلیگ زدہ بطور"
+      queued_post_label: "قطار شدہ پوسٹ"
+      queued_topic_label: "قطار شدہ موضوع"
       user_label: "رکن"
+      assigned_to: "تفویض کردہ پوسٹ منجانب"
       moderator_actions: "ناظم کی کاروائیاں"
       timeline_and_notes: "ٹائم لائن اور نوٹس"
       timeline:
         target_created: "دھاگہ بنایا گیا"
         target_created_by: "%{relativeDate}پر %{username}نےدھاگہ بنایا"
         target_deleted: "دھاگہ مٹا دیا"
+        target_deleted_by: "حذف کردہ پوسٹ منجانب %{username} · %{relativeDate}"
         flagged: "نشان دہی کی"
         flagged_as_by: "%{username} نے%{relativeDate}پر %{flagReason} کے طور پر فلیگ کیا گیا"
         claimed: "دعویٰ کیا"
         claimed_by: "%{username} نے %{relativeDate}پر دعویٰ کیا"
+        unclaimed_by: "غیر دعویٰ شدہ منجانب %{username} · %{relativeDate}"
         reviewed: "جائزہ لیا گیا"
+        approved_by: "منظور شدہ منجانب %{username} · %{relativeDate}"
+        rejected_by: "مسترد شدہ منجانب %{username} · %{relativeDate}"
+        ignored_by: "نظر انداز شدہ منجانب %{username} · %{relativeDate}"
         view_conversation: "ذاتی پیغام دیکھیں"
         note_added: "نگران کا نوٹ"
         note_added_by: "نگران کا نوٹ بذریعہ %{username} · %{relativeDate}"
         no_events: "ظاہر کرنے کے لیے کوئی ٹائم لائن ایونٹس نہیں"
       notes:
+        add_note_description: "دیگر ماڈریٹرز کو سیاق و سباق فراہم کرنے کے لیے ایک نوٹ شامل کریں۔"
         add_note_button: "نوٹ کا اضافہ"
         placeholder: "اپنا نوٹ یہاں لکھیں۔۔۔"
         chars_remaining: "%{count} حروف باقی ہیں"
@@ -886,6 +919,7 @@ ur:
       review_user: "صارف"
       need_help: "مدد۔ضرورت؟"
       copy_link: "رابطہ کاپی کریں"
+      copy_permalink_title: "اس قابل جائزہ آئٹم کا لنک کلپ بورڈ پرکاپی کریں"
       copy_link_feedback: "رابطہ کاپی ہو گیا"
       view_source: "ماخذ دیکھیں"
       insights:
@@ -894,15 +928,28 @@ ur:
         flagged_by_users:
           one: "%{count} منفرد رکن کے ذریعے نشان دہی"
           other: "%{count} منفرد اراکین کے ذریعے نشان دہی"
+        similar_posts: "گزشتہ خلاف ورزیاں"
+        flagged_in_timeframe:
+          one: "%{count} مصدقہ نشان زدگی"
+          other: "%{count} مصدقہ نشان زدگیاں"
+        user_activity: "صارف کی معلومات"
         activities:
+          joined_on: "شمولیتی تاریخ: %{joinDate}"
           trust_level: "فعالیت کا درجہ: %{trustLevelName}"
           posts:
             one: "%{count} دھاگہ"
             other: "%{count} دھاگے"
+        moderation_history:
+          label: "ماڈریشن ہسٹری"
+          silenced: "خاموش: %{count}"
+          suspended: "معطل: %{count}"
+          rejected_posts: "مسترد شدہ پوسٹس: %{count}"
         solution_marked: "حل ہوا"
         topic_has_solution: "اس موضوع میں حل ہے"
         visibility: "نموداری"
+        topic_unlisted: "یہ موضوع غیر مندرج ہے اور صرف براہ راست ربط کے ذریعے قابل رسائی ہے۔"
       help:
+        community_moderation_guide: "اس کمیونٹی کی ماڈریشن گائیڈ"
         moderation_guide: "گفتگو کے اعتدال کی رہنمائی"
         flag_priorities: "رکن کی ساکھ اور نشان دہی کی ترجیحات کا انتظام"
         spam_detection: "سپیم کا پتہ لگانا"
@@ -1051,6 +1098,7 @@ ur:
           title: تعامل
           posting: پوسٹ کرنا
           notification: اطلاع
+          self_lockout: "آپ گروپ کی روئیت کو تبدیل کرنے والے ہیں جس سے آپ کی اپنی رسائی ختم ہو جائے گی۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
         email:
           title: "ای میل"
           enable_smtp: "SMTP فعال کریں"
@@ -1063,6 +1111,7 @@ ur:
           smtp_title: "SMTP"
           smtp_instructions: "جب آپ گروپ کے لیے SMTP کو فعال کرتے ہیں، تو گروپ کے ان باکس سے بھیجے گئے تمام آؤٹ باؤنڈ ای میلز آپ کے فورم کے ذریعے بھیجے گئے دیگر ای میلز کے لیے ترتیب کردہ میل سرور کے بجائے یہاں بیان کردہ SMTP سیٹنگز کے ذریعے بھیجے جائیں گے۔"
           additional_settings: "اضافی ترتیبات"
+          smtp_disable_confirm: "اگر آپ SMTP کو غیر فعال کرتے ہیں، تو تمام SMTP ترتیبات دوبارہ ترتیب دی جائیں گی اور متعلقہ فعالیت کو غیر فعال کر دیا جائے گا۔ کیا آپ واقعی جاری رکھنا چاہتے ہیں؟"
           prefill:
             title: "ترتیبات کے ساتھ پہلے سے بھریں:"
             gmail: "Gmail"
@@ -1181,6 +1230,8 @@ ur:
         make_owner_description: "اِس گروپ پر <b>%{username}</b> کو مالک بنائیں"
         remove_owner: "مالک کے طور پر ہٹائیں"
         remove_owner_description: "اِس گروپ پر سے <b>%{username}</b> کو مالک کے طور پر ہٹائیں"
+        remove_member_self_lockout: "خود کو اس گروپ سے ہٹانے سے اس کا انتظام کرنے کے لیے آپ کی رسائی منسوخ ہو جائے گی۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
+        remove_owner_self_lockout: "خود کو اس گروپ سے بطور اونر ہٹانے سے اس کا انتظام کرنے کے لیے آپ کی رسائی منسوخ ہو جائے گی۔ کیا آپ واقعی آگے بڑھنا چاہتے ہیں؟"
         make_primary: "پرائمری بنائیں"
         make_primary_description: "<b>%{username}</b> کا بنیادی گروپ بنائیں"
         remove_primary: "پرائمری حذف کریں"
@@ -1308,12 +1359,16 @@ ur:
         one: "زمرہ جات (%{count} مزید)۔۔۔"
         other: "زمرہ جات (%{count} مزید)۔۔۔"
     ip_lookup:
+      title: IP ایڈریس
       hostname: ہوسٹ کا نام
       location: محل وقوع
       location_not_found: (نامعلوم)
       organisation: ادارہ
       phone: فون
       other_accounts: "اسی IP ایڈریس والے دوسرے اکاؤنٹس:"
+      other_accounts_with_ip:
+        one: "اسی IP ایڈریس کے ساتھ %{count} دیگر اکاؤنٹ"
+        other: "اسی IP ایڈریس کے ساتھ %{count} دیگر اکاؤنٹس"
       delete_other_accounts:
         one: "%{count} حذف کریں"
         other: "%{count} حذف کریں"
@@ -1349,8 +1404,16 @@ ur:
       private_message: "پیغام"
       private_messages: "پیغامات"
       upcoming_changes:
+        title: "آنے والی تبدیلیاں"
         for_user:
+          upcoming_change: "آنے والی تبدیلی"
           enabled: "فعال؟"
+          why: "کیوں؟"
+        why_reasons:
+          not_in_specific_groups: "صارف اس تبدیلی کے لیے درکار مخصوص گروپس میں نہیں ہے۔"
+          in_specific_groups: "صارف اس تبدیلی کے لیے درکار مخصوص گروپس میں شامل ہے"
+          enabled_for_everyone: "یہ تبدیلی تمام اراکین کے لیے فعال ہے"
+          enabled_for_no_one: "یہ تبدیلی تمام اراکین کے لیے غیر فعال ہے"
       user_notifications:
         filters:
           filter_by: "فلٹر بذریعہ"
@@ -1671,6 +1734,7 @@ ur:
         interface: "انٹرفیس"
         apps: "اَیپس"
         navigation_menu: "نیویگیشن مینو"
+        upcoming_changes: "آنے والی تبدیلیاں"
       change_password:
         success: "(ای میل بھیج دی گئی)"
         in_progress: "(ای میل بھیجی جا رہی ہے)"
@@ -1683,6 +1747,7 @@ ur:
         verify_identity: "جاری رکھنے کے لیے، براہ کرم اپنی شناخت کی تصدیق کریں۔"
         title: "پاسورڈ رِی سَیٹ"
         remove: "پاس ورڈ کو ہٹائیں"
+        remove_disabled: "پاس ورڈ کو ہٹانے سے پہلے اکاؤنٹ کو کم از کم ایک دوسرے لاگ ان طریقہ (مثلاً پاس کی یا منسلک بیرونی اکاؤنٹ) کی ضرورت ہے۔"
         remove_detail: "آپ کا اکاؤنٹ پاس ورڈ کے ساتھ مزید قابل رسائی نہیں رہے گا جب تک کہ آپ اسے دوبارہ ترتیب نہ دیں۔"
       second_factor_backup:
         title: "دو عنصری بیک اپ کوڈز"
@@ -1949,6 +2014,7 @@ ur:
         first_time_and_daily: "پہلی بار دھاگہ کو پسند کیا گیا اور روزانہ"
         first_time: "پہلی بار دھاگہ کو پسند کیا گیا"
         never: "کبھی نہیں"
+      notify_on_linked_posts: "جب کوئی میری کسی پوسٹ کا لنک شیئر کرے تو مطلع کریں"
       email_previous_replies:
         title: "ای میلز کے نیچے پچھلے جوابات شامل کریں"
         unless_emailed: "اگر ماضی میں بھیجا گیا ہو، تو نہیں"
@@ -2008,6 +2074,7 @@ ur:
         redeemed_tab_with_count: "فائدہ اٹھا لیا گیا (%{count})"
         invited_via: "دعوت نامہ"
         invited_via_link: "رابطہ %{key} (%{count} / %{max} مخلصی)"
+        generating_link: "لنک تیار ہو رہا ہے..."
         groups: "گروپس"
         topic: "موضوع"
         sent: "تخلیق کی گذار/آخری ارسال"
@@ -2074,6 +2141,7 @@ ur:
               other {# دنوں}
             } میں ختم ہو جائے گا۔
           edit_link_options: "رابطہ کے اختیارات میں ترمیم کریں یا ای میل کے ذریعے بھیجیں۔"
+          edit_link_options_only: "لنک کے اختیارات میں ترمیم کریں"
           show_advanced: "ایڈوانس آپشنز دکھائیں"
           hide_advanced: "ایڈوانس آپشنز چھپائیں"
           description: "تفصیل"
@@ -2270,6 +2338,10 @@ ur:
       no_results: "کوئی نتائج نہیں"
       search: "تلاش۔۔۔"
       label: "اختیارات کا انتخاب"
+    d_otp:
+      screen_reader:
+        one: نمبر درج کریں
+        other: '%{count} نمبرز درج کریں'
     form_kit:
       reset: رِی سَیٹ
       optional: اختیاری
@@ -2705,7 +2777,13 @@ ur:
         title: "ترجمہ پوسٹ"
         select: "ترجمہ کا انتخاب"
         save: "ترجمہ محفوظ"
+        original_content: "اصل پوسٹ"
+        translation_preview: "ترجمہ کا پیش نظارہ"
+        original: "اصل"
+        translation: "ترجمہ"
+        no_translation_yet: "ترجمہ کا پیش نظارہ دیکھنے کے لیے ٹائپ کرنا شروع کریں..."
         placeholder: "پوسٹ کا ترجمہ یہاں درج کریں۔۔۔"
+        show_raw_markdown: "ادھورا دکھائیں"
       group_mentioned_limit:
         one: "<b>انتباہ!</b> آپ نے <a href='%{group_link}'>%{group}</a>کا تذکرہ کیا، تاہم اس گروپ میں منتظمین کی تشکیل کردہ ذکر کی حد %{count} رکن سے زیادہ ہے۔ کسی کو اطلاع نہیں دی جائے گی۔"
         other: "<b>انتباہ!</b> آپ نے <a href='%{group_link}'>%{group}</a>کا تذکرہ کیا، تاہم اس گروپ میں منتظمین کی تشکیل کردہ ذکر کی حد %{count} اراکین سے زیادہ ہے۔ کسی کو اطلاع نہیں دی جائے گی۔"
@@ -2817,6 +2895,7 @@ ur:
       ulist_title: "گولیوں والی فہرست"
       list_item: "فہرست آئٹم"
       toggle_direction: "سمت ٹوگل کریں"
+      apply_wrap_title: "رَیپ اپلائی کریں"
       wrap_modal:
         apply: "لاگو کریں"
       help: "مارکڈائون ترمیم میں مدد"
@@ -4147,10 +4226,8 @@ ur:
         reply: "جواب"
         create: "بنائیں"
         no_groups_selected: "کسی گروپ کو رسائی نہیں دی گئی ہے؛ یہ زمرہ صرف عملے کو نظر آئے گا."
-        everyone_full_access: 'یہ زمرہ عوامی ہے، ہر کوئی دیکھ سکتا ہے، جواب دے سکتا ہے اور پوسٹس بنا سکتا ہے۔ اجازتوں کو محدود کرنے کے لیے، "ہر ایک" گروپ کو دی گئی اجازتوں میں سے ایک یا زیادہ کو ہٹا دیں۔'
         toggle_reply: "جواب کی اجازت ٹوگل کریں"
         toggle_full: "تخلیق کی اجازت کو ٹوگل کریں"
-        inherited: 'یہ اجازت "ہر ایک" سے وراثت میں ملی ہے'
       uncategorized_security_warning: "یہ زمرہ خاص ہے۔ اِس کا مقصد بغیر زمرہ والے موضوعات کیلئے جگہ فراہم کرنا ہے؛ اِس میں سیکورٹی کی ترتیبات نہیں ہو سکتیں۔"
       uncategorized_general_warning: 'یہ زمرہ خاص ہے۔ یہ نئے موضوعات کے لیے پہلے سے طے شدہ زمرہ کے طور پر استعمال ہوتا ہے جن میں کوئی زمرہ منتخب نہیں ہوتا ہے۔ اگر آپ اس رویے کو روکنا چاہتے ہیں اور زمرہ کے انتخاب پر مجبور کرنا چاہتے ہیں تو، <a href="%{settingLink}">براہ کرم یہاں ترتیب کو غیر فعال کریں</a>۔ اگر آپ نام یا تفصیل کو تبدیل کرنا چاہتے ہیں تو <a href="%{customizeLink}">Customize / Text Content</a>پر جائیں۔'
       pending_permission_change_alert: "آپ نے اِس زمرہ میں %{group} کو شامل نہیں کیا ہے؛ اِن کو شامل کرنے کیلئے اِس بٹن پر کلک کریں۔"

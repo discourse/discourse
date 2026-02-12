@@ -530,6 +530,15 @@ it:
           title: "Prova lo strumento IA"
           run: "Esegui test"
           result: "Risultato del test"
+      secrets:
+        short_title: "Credenziali"
+        name: "Nome"
+        secret: "Valore"
+        back: "Indietro"
+        save: "Salva"
+        edit: "Modifica"
+        delete: "Elimina"
+        embedding: "Integrazione"
       llms:
         short_title: "LLM"
         no_llms: "Ancora nessun LLM"

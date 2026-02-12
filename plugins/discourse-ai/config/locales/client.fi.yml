@@ -530,6 +530,15 @@ fi:
           title: "Testaa tekoälytyökalua"
           run: "Suorita testi"
           result: "Testin tulos"
+      secrets:
+        short_title: "Tunnistetiedot"
+        name: "Nimi"
+        secret: "Arvo"
+        back: "Takaisin"
+        save: "Tallenna"
+        edit: "Muokkaa"
+        delete: "Poista"
+        embedding: "Upottaminen"
       llms:
         short_title: "LLM:t"
         no_llms: "LLM:iä ei ole vielä"
