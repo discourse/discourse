@@ -602,7 +602,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_emails(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
-      next if user_id && existing_user_ids.include?(user_id)
+      next unless user_id && existing_user_ids.add?(user_id)
 
       if row["anonymized"] == 1
         username = username_from_id(user_id)
@@ -628,7 +628,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_profiles(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
-      next if user_id && existing_user_ids.include?(user_id)
+      next unless user_id && existing_user_ids.add?(user_id)
 
       if row["anonymized"] == 1
         row["bio"] = nil
@@ -659,7 +659,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_user_options(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
-      next if user_id && existing_user_ids.include?(user_id)
+      next unless user_id && existing_user_ids.add?(user_id)
 
       {
         user_id: user_id,
@@ -755,7 +755,7 @@ class BulkImport::Generic < BulkImport::Base
 
     create_single_sign_on_records(users) do |row|
       user_id = user_id_from_imported_id(row["id"])
-      next if user_id && existing_user_ids.include?(user_id)
+      next unless user_id && existing_user_ids.add?(user_id)
 
       sso_record = JSON.parse(row["sso_record"], symbolize_names: true)
       sso_record[:user_id] = user_id
@@ -949,12 +949,15 @@ class BulkImport::Generic < BulkImport::Base
       SQL
 
       poll_details.each do |poll|
-        if (placeholder = poll_mapping[poll["id"]])
+        if (placeholder = poll_mapping.delete(poll["id"]))
           raw.gsub!(placeholder, poll_bbcode(poll))
         end
       end
 
       poll_details.close
+
+      # Remove placeholders for polls without options
+      poll_mapping.each_value { |placeholder| raw.gsub!(placeholder, "") }
     end
 
     if (mentions = placeholders&.fetch("mentions", nil))
