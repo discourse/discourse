@@ -792,7 +792,7 @@ export default class User extends RestModel.extend(Evented) {
     const groups = this.groups || [];
 
     return groups.filter((group) => {
-      return !group.automatic || group.name === AUTO_GROUPS.moderators.name;
+      return !group.automatic || group.id === AUTO_GROUPS.moderators.id;
     });
   }
 

@@ -26,6 +26,7 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeItem extends Component {
+  @service site;
   @service toasts;
 
   @tracked bufferedGroups = this.args.change.groups;
@@ -246,7 +247,7 @@ export default class UpcomingChangeItem extends Component {
       await this.toggleChange(isEnabled, newValue);
 
       if (newValue === "staff") {
-        this.groupsChanged(AUTO_GROUPS.staff.name);
+        this.groupsChanged(this.site.groupsById[AUTO_GROUPS.staff.id].name);
       } else if (newValue === "everyone" || newValue === "no_one") {
         this.groupsChanged("");
       }
