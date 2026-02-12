@@ -391,10 +391,9 @@ class TagsController < ::ApplicationController
       DiscourseTagging.filter_allowed_tags(guardian, **filter_params, with_context: true)
 
     if SiteSetting.content_localization_enabled && tags_with_counts.present?
-      ActiveRecord::Associations::Preloader.new(
-        records: tags_with_counts,
-        associations: :localizations,
-      ).call
+      tag_ids = tags_with_counts.map(&:id)
+      tags_by_id = Tag.where(id: tag_ids).includes(:localizations).index_by(&:id)
+      tags_with_counts = tag_ids.filter_map { |id| tags_by_id[id] }
     end
 
     tags = self.class.tag_counts_json(tags_with_counts, guardian)

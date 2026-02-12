@@ -1272,6 +1272,39 @@ RSpec.describe TagsController do
         expect(response.status).to eq(200)
         expect(response.parsed_body["results"].map { |t| t["name"] }).to contain_exactly(tag2.name)
       end
+
+      context "with content_localization_enabled" do
+        fab!(:japanese_user) { Fabricate(:user, locale: "ja") }
+
+        before do
+          SiteSetting.content_localization_enabled = true
+          sign_in(japanese_user)
+        end
+
+        it "returns localized tag names when localizations exist for the user's locale" do
+          tag = Fabricate(:tag, name: "strategy", locale: "en", public_topic_count: 1)
+          Fabricate(:tag_localization, tag: tag, locale: "ja", name: "戦略")
+
+          get "/tags/filter/search.json", params: { q: "strat" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["results"]).to include(
+            include("name" => "戦略", "id" => tag.id),
+          )
+        end
+
+        it "returns original tag names when no localization matches the user's locale" do
+          tag = Fabricate(:tag, name: "strategy", locale: "en", public_topic_count: 1)
+          Fabricate(:tag_localization, tag: tag, locale: "de", name: "stratégie")
+
+          get "/tags/filter/search.json", params: { q: "strat" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["results"]).to include(
+            include("name" => "strategy", "id" => tag.id),
+          )
+        end
+      end
     end
   end
 

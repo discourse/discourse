@@ -534,6 +534,17 @@ describe "Content Localization" do
         topic_list.visit_topic_with_title("Life strategies from The Art of War")
         expect(page).to have_css(".title-wrapper .discourse-tag", text: "strategy")
       end
+
+      it "displays localized tag names in the composer tag chooser" do
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+
+        sign_in(japanese_user)
+        visit("/new-topic")
+        mini_tag_chooser.expand
+        mini_tag_chooser.search("戦")
+        expect(mini_tag_chooser).to have_option_name("戦略")
+      end
     end
   end
 

@@ -70,14 +70,16 @@ class TagHashtagDataSource
         order_search_results: true,
       )
 
+    if SiteSetting.content_localization_enabled && tags_with_counts.present?
+      tag_ids = tags_with_counts.map(&:id)
+      tags_by_id = Tag.where(id: tag_ids).includes(:localizations).index_by(&:id)
+      tags_with_counts = tag_ids.filter_map { |id| tags_by_id[id] }
+    end
+
     TagsController
       .tag_counts_json(tags_with_counts, guardian)
       .take(limit)
-      .map do |tag|
-        # We want the actual ID here not the `name` as tag_counts_json gives us.
-        tag[:id] = tags_with_counts.find { |t| t.name == tag[:name] }.id
-        tag_to_hashtag_item(tag, guardian)
-      end
+      .map { |tag| tag_to_hashtag_item(tag, guardian) }
   end
 
   def self.search_sort(search_results, _)
@@ -93,6 +95,12 @@ class TagHashtagDataSource
         order_popularity: true,
         excluded_tag_names: DiscourseTagging.muted_tags(guardian.user),
       )
+
+    if SiteSetting.content_localization_enabled && tags_with_counts.present?
+      tag_ids = tags_with_counts.map(&:id)
+      tags_by_id = Tag.where(id: tag_ids).includes(:localizations).index_by(&:id)
+      tags_with_counts = tag_ids.filter_map { |id| tags_by_id[id] }
+    end
 
     TagsController
       .tag_counts_json(tags_with_counts, guardian)
