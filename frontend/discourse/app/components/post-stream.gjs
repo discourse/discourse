@@ -8,6 +8,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import PluginOutlet from "discourse/components/plugin-outlet";
 import PostFilteredNotice from "discourse/components/post/filtered-notice";
 import concatClass from "discourse/helpers/concat-class";
+import hideScrollableContent from "discourse/helpers/hide-scrollable-content";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { bind } from "discourse/lib/decorators";
 import { Placeholder } from "discourse/models/post-stream";
@@ -253,6 +254,9 @@ export default class PostStream extends Component {
   }
 
   <template>
+    {{#if @postStream.firstPostNotLoaded}}
+      {{hideScrollableContent "above"}}
+    {{/if}}
     <ConditionalLoadingSpinner @condition={{@postStream.loadingAbove}} />
     <div
       class="post-stream"
@@ -418,5 +422,8 @@ export default class PostStream extends Component {
       {{/if}}
     </div>
     <ConditionalLoadingSpinner @condition={{@postStream.loadingBelow}} />
+    {{#if @postStream.lastPostNotLoaded}}
+      {{hideScrollableContent "below"}}
+    {{/if}}
   </template>
 }

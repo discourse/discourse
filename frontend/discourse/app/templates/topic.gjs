@@ -71,28 +71,32 @@ export default <template>
       />
       <AddTopicStatusClasses @topic={{@controller.model}} />
       {{bodyClass (concat "archetype-" @controller.model.archetype)}}
-      <div class="container">
-        <DiscourseBanner
-          @overlay={{@controller.hasScrolled}}
-          @hide={{@controller.model.errorLoading}}
+      {{#unless @controller.shouldHideScrollableContentAbove}}
+        <div class="container">
+          <DiscourseBanner
+            @overlay={{@controller.hasScrolled}}
+            @hide={{@controller.model.errorLoading}}
+          />
+        </div>
+      {{/unless}}
+    {{/if}}
+
+    {{#unless @controller.shouldHideScrollableContentAbove}}
+      {{#if @controller.showSharedDraftControls}}
+        <SharedDraftControls @topic={{@controller.model}} />
+      {{/if}}
+
+      <span>
+        <PluginOutlet
+          @name="topic-above-post-stream"
+          @connectorTagName="div"
+          @outletArgs={{lazyHash
+            model=@controller.model
+            editFirstPost=@controller.editFirstPost
+          }}
         />
-      </div>
-    {{/if}}
-
-    {{#if @controller.showSharedDraftControls}}
-      <SharedDraftControls @topic={{@controller.model}} />
-    {{/if}}
-
-    <span>
-      <PluginOutlet
-        @name="topic-above-post-stream"
-        @connectorTagName="div"
-        @outletArgs={{lazyHash
-          model=@controller.model
-          editFirstPost=@controller.editFirstPost
-        }}
-      />
-    </span>
+      </span>
+    {{/unless}}
 
     {{#if @controller.model.postStream.loaded}}
       {{#if @controller.model.postStream.firstPostPresent}}

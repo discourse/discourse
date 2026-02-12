@@ -78,6 +78,7 @@ export default class TopicController extends Controller {
   @service modal;
   @service router;
   @service screenTrack;
+  @service scrollState;
   @service site;
   @service siteSettings;
 
@@ -147,6 +148,10 @@ export default class TopicController extends Controller {
   @dependentKeyCompat
   get selectedPostsCount() {
     return this.selectedPostIds.length;
+  }
+
+  get shouldHideScrollableContentAbove() {
+    return this.scrollState.shouldHideContentAbove;
   }
 
   get titleIsVisibleOnHeader() {
