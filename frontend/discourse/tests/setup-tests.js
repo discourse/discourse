@@ -251,20 +251,6 @@ export default function setupTests(config) {
     window.Logster = { enabled: false };
   }
 
-  Object.defineProperty(window, "exists", {
-    get() {
-      deprecated(
-        "Accessing the global function `exists` is deprecated. Import it instead.",
-        {
-          since: "2.6.0.beta.4",
-          dropFrom: "2.6.0",
-          id: "discourse.qunit.global-exists",
-        }
-      );
-      return exists;
-    },
-  });
-
   let setupData;
   const setupDataElement = document.getElementById("data-discourse-setup");
   if (setupDataElement) {
