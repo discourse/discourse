@@ -70,11 +70,7 @@ class TagHashtagDataSource
         order_search_results: true,
       )
 
-    if SiteSetting.content_localization_enabled && tags_with_counts.present?
-      tag_ids = tags_with_counts.map(&:id)
-      tags_by_id = Tag.where(id: tag_ids).includes(:localizations).index_by(&:id)
-      tags_with_counts = tag_ids.filter_map { |id| tags_by_id[id] }
-    end
+    tags_with_counts = Tag.with_localizations(tags_with_counts)
 
     TagsController
       .tag_counts_json(tags_with_counts, guardian)
@@ -96,11 +92,7 @@ class TagHashtagDataSource
         excluded_tag_names: DiscourseTagging.muted_tags(guardian.user),
       )
 
-    if SiteSetting.content_localization_enabled && tags_with_counts.present?
-      tag_ids = tags_with_counts.map(&:id)
-      tags_by_id = Tag.where(id: tag_ids).includes(:localizations).index_by(&:id)
-      tags_with_counts = tag_ids.filter_map { |id| tags_by_id[id] }
-    end
+    tags_with_counts = Tag.with_localizations(tags_with_counts)
 
     TagsController
       .tag_counts_json(tags_with_counts, guardian)

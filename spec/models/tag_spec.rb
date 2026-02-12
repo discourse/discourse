@@ -478,6 +478,42 @@ RSpec.describe Tag do
     end
   end
 
+  describe ".with_localizations" do
+    fab!(:tag1) { Fabricate(:tag, name: "strategy", locale: "en") }
+    fab!(:tag2) { Fabricate(:tag, name: "design", locale: "en") }
+
+    it "returns tags unchanged when content_localization is disabled" do
+      SiteSetting.content_localization_enabled = false
+      tags = [tag1, tag2]
+      expect(Tag.with_localizations(tags)).to eq(tags)
+    end
+
+    it "returns empty input unchanged" do
+      SiteSetting.content_localization_enabled = true
+      expect(Tag.with_localizations([])).to eq([])
+    end
+
+    it "returns Tag AR instances with localizations preloaded" do
+      SiteSetting.content_localization_enabled = true
+      Fabricate(:tag_localization, tag: tag1, locale: "ja", name: "戦略")
+
+      result = Tag.with_localizations([tag1, tag2])
+
+      expect(result.map(&:id)).to eq([tag1.id, tag2.id])
+      expect(result.all? { |t| t.is_a?(Tag) }).to eq(true)
+      expect(result.first.localizations).to be_loaded
+      expect(result.first.localizations.first.name).to eq("戦略")
+    end
+
+    it "preserves order of input tags" do
+      SiteSetting.content_localization_enabled = true
+
+      result = Tag.with_localizations([tag2, tag1])
+
+      expect(result.map(&:id)).to eq([tag2.id, tag1.id])
+    end
+  end
+
   describe "slug" do
     it "generates slug from name on create" do
       tag = Fabricate(:tag, name: "Hello World")

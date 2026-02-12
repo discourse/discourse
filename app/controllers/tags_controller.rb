@@ -390,11 +390,7 @@ class TagsController < ::ApplicationController
     tags_with_counts, filter_result_context =
       DiscourseTagging.filter_allowed_tags(guardian, **filter_params, with_context: true)
 
-    if SiteSetting.content_localization_enabled && tags_with_counts.present?
-      tag_ids = tags_with_counts.map(&:id)
-      tags_by_id = Tag.where(id: tag_ids).includes(:localizations).index_by(&:id)
-      tags_with_counts = tag_ids.filter_map { |id| tags_by_id[id] }
-    end
+    tags_with_counts = Tag.with_localizations(tags_with_counts)
 
     tags = self.class.tag_counts_json(tags_with_counts, guardian)
 
