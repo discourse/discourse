@@ -1870,7 +1870,7 @@ email:
     client: true
     hidden: true
     upcoming_change:
-      status: "alpha"
+      status: "experimental"
       impact: "feature,all_members"
       learn_more_url: "https://meta.discourse.org/t/-/-"
   reply_by_email_enabled:
