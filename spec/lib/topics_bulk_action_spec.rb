@@ -312,6 +312,78 @@ RSpec.describe TopicsBulkAction do
         expect(topic.reload.category).to eq(original_category)
       end
     end
+
+    context "when destination category does not allow the topic's tags" do
+      fab!(:destination_category, :category)
+      fab!(:other_tag) { Fabricate(:tag, name: "other-tag") }
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:source_category) { Fabricate(:category, tags: [restricted_tag]) }
+      fab!(:admin)
+      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [restricted_tag]) }
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+
+      before { destination_category.update!(tags: [other_tag]) }
+
+      it "does not change category" do
+        original_category = topic_with_tag.category
+
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_tag.reload.category).to eq(original_category)
+      end
+    end
+
+    context "when destination category has the same tag group as source" do
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [restricted_tag]) }
+      fab!(:source_category) { Fabricate(:category, tag_groups: [tag_group]) }
+      fab!(:destination_category) { Fabricate(:category, tag_groups: [tag_group]) }
+      fab!(:admin)
+      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [restricted_tag]) }
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+
+      it "changes category successfully" do
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([topic_with_tag.id])
+        expect(topic_with_tag.reload.category).to eq(destination_category)
+      end
+    end
+
+    context "when destination category has allow_global_tags enabled" do
+      fab!(:global_tag) { Fabricate(:tag, name: "global-tag") }
+      fab!(:source_category, :category)
+      fab!(:destination_category) { Fabricate(:category, allow_global_tags: true) }
+      fab!(:admin)
+      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [global_tag]) }
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+
+      it "changes category successfully for unrestricted tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([topic_with_tag.id])
+        expect(topic_with_tag.reload.category).to eq(destination_category)
+      end
+    end
   end
 
   describe "destroy_post_timing" do

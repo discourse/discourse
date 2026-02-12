@@ -20,6 +20,7 @@ hy:
       channel_settings:
         edit: "Խմբագրել"
         add: "Ավելացնել"
+        notification_settings_context: "Ծանուցումներ"
         join: "Միանալ"
         leave: "Լքել"
       close: "Փակել"

@@ -538,6 +538,15 @@ es:
           title: "Probar la herramienta de IA"
           run: "Ejecutar prueba"
           result: "Resultado de la prueba"
+      secrets:
+        short_title: "Credenciales"
+        name: "Nombre"
+        secret: "Valor"
+        back: "Atrás"
+        save: "Guardar"
+        edit: "Editar"
+        delete: "Eliminar"
+        embedding: "Incrustado"
       llms:
         short_title: "LLM"
         no_llms: "Aún no hay LLM"

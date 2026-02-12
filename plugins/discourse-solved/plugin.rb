@@ -300,8 +300,8 @@ after_initialize do
     category_id_changes = topic_changes.diff["category_id"].to_a
     tag_changes = topic_changes.diff["tags"].to_a
 
-    old_allowed = Guardian.new.allow_accepted_answers?(category_id_changes[0], tag_changes[0])
-    new_allowed = Guardian.new.allow_accepted_answers?(category_id_changes[1], tag_changes[1])
+    old_allowed = Guardian.new.solved_enabled_for_category?(category_id_changes[0], tag_changes[0])
+    new_allowed = Guardian.new.solved_enabled_for_category?(category_id_changes[1], tag_changes[1])
 
     if old_allowed != new_allowed
       options[:refresh_stream] = true

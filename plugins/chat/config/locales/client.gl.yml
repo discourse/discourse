@@ -20,6 +20,7 @@ gl:
       channel_settings:
         edit: "Editar"
         add: "Engadir"
+        notification_settings_context: "Notificacións"
         join: "Participar"
         leave: "Abandonar"
       close: "Pechar"

@@ -515,7 +515,7 @@ export function prefixProtocol(url) {
   return `https://${url}`;
 }
 
-export function getCategoryAndTagUrl(category, subcategories, tagName) {
+export function getCategoryAndTagUrl(category, subcategories, tag) {
   let url;
 
   if (category) {
@@ -531,10 +531,18 @@ export function getCategoryAndTagUrl(category, subcategories, tagName) {
     }
   }
 
-  if (tagName) {
-    url = url
-      ? "/tags" + url + "/" + tagName.toLowerCase()
-      : "/tag/" + tagName.toLowerCase();
+  if (tag) {
+    // tag can be string "none" (special filter) or object with {id, name, slug}
+    if (typeof tag === "string") {
+      // special case: "none" filter
+      url = url ? "/tags" + url + "/" + tag : "/tag/" + tag;
+    } else {
+      if (url) {
+        url = "/tags" + url + "/" + tag.slug + "/" + tag.id;
+      } else {
+        url = "/tag/" + tag.slug + "/" + tag.id;
+      }
+    }
   }
 
   return getURL(url || "/");

@@ -2594,6 +2594,7 @@ pl_PL:
     suggest_weekends_in_date_pickers: "Uwzględnij weekendy (sobota i niedziela) w sugestiach selektora dat (wyłącz tę opcję, jeśli używasz Discourse tylko w dni powszednie, od poniedziałku do piątku)."
     show_bottom_topic_map: "Wyświetla mapę tematu u dołu tematu, gdy ma on 10 lub więcej odpowiedzi."
     show_topic_map_in_topics_without_replies: "Wyświetla mapę tematu, nawet jeśli temat nie ma odpowiedzi."
+    enable_site_owner_onboarding: "Pokazuje nowym administratorom panel na stronie głównej, który ułatwia im rozpoczęcie pracy. Włącz to ustawienie ponownie, aby ponownie zobaczyć kroki wdrażania."
     enable_welcome_banner: "Wyświetlaj baner na głównych stronach z listą tematów, aby powitać członków i umożliwić im przeszukiwanie zawartości witryny."
     welcome_banner_image: "Ustaw obraz, który będzie wyświetlany w tle baneru powitalnego."
     welcome_banner_location: "Określa, w którym miejscu strony pojawi się baner powitalny."

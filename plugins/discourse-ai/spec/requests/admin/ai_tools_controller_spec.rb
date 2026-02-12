@@ -385,6 +385,13 @@ RSpec.describe DiscourseAi::Admin::AiToolsController do
       expect(response.status).to eq(404)
     end
 
+    it "handles missing parameters gracefully" do
+      post "/admin/plugins/discourse-ai/ai-tools/#{ai_tool.id}/test.json", params: {}
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["output"]).to eq({})
+    end
+
     it "handles exceptions during tool execution" do
       ai_tool.update!(script: "function invoke(params) { throw new Error('Test error'); }")
 

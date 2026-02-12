@@ -361,8 +361,8 @@ RSpec.describe Site do
       it "returns localized category names when enabled" do
         SiteSetting.content_localization_enabled = true
 
-        localization = Fabricate(:category_localization)
-        category = localization.category
+        category = Fabricate(:category, locale: "en")
+        localization = Fabricate(:category_localization, category:)
         locale = localization.locale.to_sym
 
         I18n.locale = locale
@@ -437,6 +437,24 @@ RSpec.describe Site do
         expect(Discourse.redis.get("site_json_ja")).to eq(json_ja)
 
         expect(json_en).not_to eq(json_ja)
+      end
+
+      it "returns localized tag names for anonymous users based on locale" do
+        SiteSetting.tagging_enabled = true
+        tag = Fabricate(:tag, name: "cats", locale: "en")
+        Fabricate(:tag_localization, tag:, locale: "ja", name: "猫")
+        Fabricate(:topic, tags: [tag])
+
+        I18n.locale = :en
+        Discourse.redis.flushdb
+        json_en = Site.json_for(anon_guardian)
+
+        I18n.locale = :ja
+        json_ja = Site.json_for(anon_guardian)
+
+        expect(json_en).to include("cats")
+        expect(json_en).not_to include("猫")
+        expect(json_ja).to include("猫")
       end
     end
   end

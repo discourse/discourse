@@ -19,6 +19,7 @@ import {
 } from "discourse/lib/array-tools";
 import { eq, not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import AiSecretSelector from "./ai-secret-selector";
 
 export default class AiEmbeddingEditor extends Component {
   @service toasts;
@@ -56,6 +57,10 @@ export default class AiEmbeddingEditor extends Component {
     this._originalFormData = originalData;
 
     return originalData;
+  }
+
+  get availableSecrets() {
+    return this.args.embeddings?.resultSetMeta?.ai_secrets || [];
   }
 
   get selectedProviders() {
@@ -389,14 +394,19 @@ export default class AiEmbeddingEditor extends Component {
         </form.Field>
 
         <form.Field
-          @name="api_key"
+          @name="ai_secret_id"
           @title={{i18n "discourse_ai.embeddings.api_key"}}
-          @validation="required"
           @format="large"
           class="ai-embedding-editor__api-key"
           as |field|
         >
-          <field.Password />
+          <field.Custom>
+            <AiSecretSelector
+              @value={{data.ai_secret_id}}
+              @secrets={{this.availableSecrets}}
+              @onChange={{field.set}}
+            />
+          </field.Custom>
         </form.Field>
 
         <form.Field

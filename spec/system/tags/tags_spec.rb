@@ -53,6 +53,35 @@ describe "Tags", type: :system do
     let(:user_private_messages_page) { PageObjects::Pages::UserPrivateMessages.new }
     let(:sidebar) { PageObjects::Components::NavigationMenu::Sidebar.new }
 
+    it "uses correct tag slug in URL when selecting a searched tag from tag drop" do
+      rare_tag = Fabricate(:tag, name: "rare-tag")
+      popular_tag = Fabricate(:tag, name: "popular-tag")
+      category_for_tags = Fabricate(:category)
+
+      2.times do
+        Fabricate(:topic, category: category_for_tags, tags: [popular_tag]).tap do |t|
+          Fabricate(:post, topic: t)
+        end
+      end
+      Fabricate(:topic, category: category_for_tags, tags: [rare_tag]).tap do |t|
+        Fabricate(:post, topic: t)
+      end
+      CategoryTagStat.update_topic_counts
+
+      SiteSetting.max_tags_in_filter_list = 1
+
+      sign_in(user_tl1)
+      category_page.visit(category_for_tags)
+
+      discovery.tag_drop.expand
+      discovery.tag_drop.search(rare_tag.name)
+      discovery.tag_drop.select_row_by_name(rare_tag.name)
+
+      expect(page).to have_current_path(
+        "/tags/c/#{category_for_tags.slug}/#{category_for_tags.id}/#{rare_tag.slug}/#{rare_tag.id}",
+      )
+    end
+
     it "displays tags on topics in topic lists" do
       sign_in(user_tl1)
 
@@ -66,18 +95,20 @@ describe "Tags", type: :system do
       expect(discovery.topic_list).to have_no_topic_tags(topic_with_no_tags)
       expect(discovery.tag_drop).to have_selected_name("tags") # unselected
 
-      # /latest -> /tag/tag-one (by clicking tag on topic)
+      # /latest -> /tag/tag-one/id (by clicking tag on topic)
       discovery.topic_list.click_topic_tag(topic_with_one_tag, "tag-one")
-      expect(page).to have_current_path("/tag/tag-one")
+      expect(page).to have_current_path("/tag/#{tag_one.slug}/#{tag_one.id}")
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
 
       # /c/category
       category_page.visit(category)
       expect(discovery.topic_list).to have_topic_tag(topic_in_category_with_tag, "tag-three")
 
-      # /c/category -> /tags/c/category-slug/category-id/tag-name
+      # /c/category -> /tags/c/category-slug/category-id/tag-slug/tag-id
       discovery.tag_drop.select_row_by_name("tag-three")
-      expect(page).to have_current_path("/tags/c/#{category.slug}/#{category.id}/tag-three")
+      expect(page).to have_current_path(
+        "/tags/c/#{category.slug}/#{category.id}/#{tag_three.slug}/#{tag_three.id}",
+      )
       expect(discovery.tag_drop).to have_selected_name("tag-three")
       expect(discovery.topic_list).to have_topic(topic_in_category_with_tag)
 
@@ -88,9 +119,9 @@ describe "Tags", type: :system do
       expect(discovery.topic_list).to have_no_topic(topic_with_no_tags)
       expect(discovery.topic_list).to have_topic_tag(topic_with_one_tag, "tag-one")
 
-      # -> /tag/tag-one to /tag/tag-two
+      # -> /tag/tag-one/id to /tag/tag-two/id
       discovery.topic_list.click_topic_tag(topic_with_two_tags, "tag-two")
-      expect(page).to have_current_path("/tag/tag-two")
+      expect(page).to have_current_path("/tag/#{tag_two.slug}/#{tag_two.id}")
       expect(discovery.topic_list).to have_topic(topic_with_two_tags)
       expect(discovery.topic_list).to have_no_topic(topic_with_one_tag)
 
@@ -114,7 +145,7 @@ describe "Tags", type: :system do
       ## Sidebar
       expect(sidebar).to have_tag_section_links([tag_one, tag_three, tag_two])
       sidebar.click_section_link(tag_one.name)
-      expect(page).to have_current_path("/tag/tag-one")
+      expect(page).to have_current_path("/tag/#{tag_one.slug}/#{tag_one.id}")
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
     end
   end

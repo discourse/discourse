@@ -1,17 +1,6 @@
-.post-actions {
-  @include unselectable;
-  clear: both;
-  text-align: right;
-  margin-bottom: 10px;
-
-  .post-action {
-    display: inline-block;
-    margin-left: 10px;
-    margin-top: 10px;
-  }
-}
-
 .post-menu-area {
+  position: relative;
+  padding-left: var(--topic-body-width-padding);
   margin: 20px 0;
 }
 

@@ -20,6 +20,7 @@ sw:
       channel_settings:
         edit: "Hariri"
         add: "ongeza"
+        notification_settings_context: "Taarifa"
         join: "Jiunge"
         leave: "Ondoka"
       close: "Funga"

@@ -628,14 +628,15 @@ en:
           other: "%{commaSeparatedUsernames} and %{count} others are typing"
 
       retention_reminders:
+        chat_settings: "Chat settings"
         indefinitely_short: "indefinitely"
-        indefinitely_long: "Chat settings have been set to retain channel messages indefinitely."
+        indefinitely_long: "%{chatSettingsLink} have been set to retain channel messages indefinitely."
         short:
           one: "%{count} day"
           other: "%{count} days"
         long:
-          one: "Chat settings have been set to retain channel messages for %{count} day."
-          other: "Chat settings have been set to retain channel messages for %{count} days."
+          one: "%{chatSettingsLink} have been set to retain channel messages for %{count} day."
+          other: "%{chatSettingsLink} have been set to retain channel messages for %{count} days."
 
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."

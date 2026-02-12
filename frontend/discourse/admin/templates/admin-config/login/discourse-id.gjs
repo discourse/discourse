@@ -5,6 +5,8 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import DToggleSwitch from "discourse/components/d-toggle-switch";
+import PluginOutlet from "discourse/components/plugin-outlet";
+import lazyHash from "discourse/helpers/lazy-hash";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { i18n } from "discourse-i18n";
@@ -78,10 +80,18 @@ class DiscourseIdAdmin extends Component {
             <h3 class="admin-config-area-card__title">
               {{i18n "admin.config.discourse_id.title"}}
             </h3>
-            <DToggleSwitch
-              @state={{this.enabled}}
-              {{on "click" this.toggleEnabled}}
-            />
+            <PluginOutlet
+              @name="discourse-id-toggle"
+              @outletArgs={{lazyHash
+                enabled=this.enabled
+                toggleEnabled=this.toggleEnabled
+              }}
+            >
+              <DToggleSwitch
+                @state={{this.enabled}}
+                {{on "click" this.toggleEnabled}}
+              />
+            </PluginOutlet>
           </div>
 
           <p class="admin-config-area-card__description">

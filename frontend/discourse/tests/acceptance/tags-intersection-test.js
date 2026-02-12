@@ -34,6 +34,43 @@ acceptance("Tags intersection", function (needs) {
       .hasText("first, second", "populates the tags when clicking 'New topic'");
   });
 
+  test("displays tag names from API, not URL slugs", async function (assert) {
+    pretender.get("/tags/intersection/my-slug/other-slug.json", () => {
+      return response({
+        users: [],
+        primary_groups: [],
+        topic_list: {
+          can_create_topic: true,
+          draft_key: "new_topic",
+          topics: [{ id: 16, posters: [] }],
+          tags: [
+            {
+              id: 10,
+              name: "My Tag Name",
+              slug: "my-slug",
+              topic_count: 1,
+            },
+            {
+              id: 11,
+              name: "Other Tag Name",
+              slug: "other-slug",
+              topic_count: 1,
+            },
+          ],
+        },
+      });
+    });
+
+    await visit("/tags/intersection/my-slug/other-slug");
+
+    assert
+      .dom(".tags-intersection-chooser .formatted-selection")
+      .hasText(
+        "My Tag Name, Other Tag Name",
+        "displays API tag names, not URL slugs"
+      );
+  });
+
   test("correctly passes the category filter", async function (assert) {
     pretender.get("/tags/intersection/sour/tangy.json", (request) => {
       assert.deepEqual(request.queryParams, { category: "fruits" });

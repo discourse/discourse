@@ -288,6 +288,18 @@ RSpec.describe ComposerController do
       end
     end
 
+    context "with invalid allowed_names parameter" do
+      it "returns 400 when allowed_names is not an array" do
+        get "/composer/mentions.json",
+            params: {
+              names: [user.username],
+              allowed_names: "not_an_array",
+            }
+
+        expect(response.status).to eq(400)
+      end
+    end
+
     context "with an invalid topic" do
       it "returns an error" do
         get "/composer/mentions.json",

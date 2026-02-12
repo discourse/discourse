@@ -287,6 +287,9 @@ class BulkImport::Base
     puts "Loading post actions indexes..."
     @last_post_action_id = last_id(PostAction)
 
+    puts "Loading bookmark indexes..."
+    @last_bookmark_id = last_id(Bookmark)
+
     puts "Loading upload indexes..."
     @uploads_mapping = load_index(MAPPING_TYPES[:upload])
     @uploads_by_sha1 = Upload.pluck(:sha1, :id).to_h
@@ -369,6 +372,11 @@ class BulkImport::Base
     end
     if @last_post_action_id > 0
       @raw_connection.exec("SELECT setval('#{PostAction.sequence_name}', #{@last_post_action_id})")
+    end
+    if @last_bookmark_id > 0
+      @raw_connection.exec(
+        "SELECT setval(pg_get_serial_sequence('bookmarks', 'id'), #{@last_bookmark_id})",
+      )
     end
     if @last_user_avatar_id > 0
       @raw_connection.exec("SELECT setval('#{UserAvatar.sequence_name}', #{@last_user_avatar_id})")
@@ -753,6 +761,21 @@ class BulkImport::Base
     total_msecs_viewed
   ]
 
+  BOOKMARK_COLUMNS = %i[
+    id
+    user_id
+    bookmarkable_id
+    bookmarkable_type
+    name
+    reminder_at
+    reminder_set_at
+    reminder_last_sent_at
+    auto_delete_preference
+    pinned
+    created_at
+    updated_at
+  ]
+
   TAG_USER_COLUMNS = %i[tag_id user_id notification_level created_at updated_at]
 
   UPLOAD_COLUMNS = %i[
@@ -1096,6 +1119,10 @@ class BulkImport::Base
 
   def create_topic_users(rows, &block)
     create_records(rows, "topic_user", TOPIC_USER_COLUMNS, &block)
+  end
+
+  def create_bookmarks(rows, &block)
+    create_records(rows, "bookmark", BOOKMARK_COLUMNS, &block)
   end
 
   def create_tag_users(rows, &block)
@@ -1641,6 +1668,14 @@ class BulkImport::Base
 
   def process_topic_user(topic_user)
     topic_user
+  end
+
+  def process_bookmark(bookmark)
+    bookmark[:id] ||= @last_bookmark_id += 1
+    bookmark[:auto_delete_preference] ||= 0
+    bookmark[:created_at] ||= NOW
+    bookmark[:updated_at] ||= bookmark[:created_at]
+    bookmark
   end
 
   def process_tag_user(tag_user)

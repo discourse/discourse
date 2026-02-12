@@ -153,7 +153,7 @@ class Tag < ActiveRecord::Base
         end
       )
 
-    tag_names_with_counts = DB.query <<~SQL
+    tag_data = DB.query <<~SQL
       SELECT tags.id as tag_id, tags.name as tag_name, tags.slug as tag_slug, SUM(stats.topic_count) AS sum_topic_count
         FROM category_tag_stats stats
         JOIN tags ON stats.tag_id = tags.id AND stats.topic_count > 0
@@ -164,7 +164,28 @@ class Tag < ActiveRecord::Base
       LIMIT #{limit}
     SQL
 
-    tag_names_with_counts.map { |row| { id: row.tag_id, name: row.tag_name, slug: row.tag_slug } }
+    return [] if tag_data.empty?
+
+    unless SiteSetting.content_localization_enabled
+      return(
+        tag_data.map do |row|
+          slug = row.tag_slug.presence || "#{row.tag_id}-tag"
+          { id: row.tag_id, name: row.tag_name, slug: }
+        end
+      )
+    end
+
+    tags_by_id = Tag.where(id: tag_data.map(&:tag_id)).includes(:localizations).index_by(&:id)
+    show_localized = !ContentLocalization.show_original?(guardian)
+
+    tag_data.filter_map do |row|
+      tag = tags_by_id[row.tag_id]
+      next unless tag
+
+      name = show_localized ? (tag.get_localization&.name || tag.name) : tag.name
+      slug = row.tag_slug.presence || "#{row.tag_id}-tag"
+      { id: tag.id, name:, slug: }
+    end
   end
 
   def self.topic_count_column(guardian)
@@ -207,13 +228,13 @@ class Tag < ActiveRecord::Base
   end
 
   def url
-    "#{Discourse.base_path}/tag/#{UrlHelper.encode_component(self.name)}"
+    "#{Discourse.base_path}/tag/#{slug_for_url}/#{id}"
   end
 
   alias_method :relative_url, :url
 
   def full_url
-    "#{Discourse.base_url}/tag/#{UrlHelper.encode_component(self.name)}"
+    "#{Discourse.base_url}/tag/#{slug_for_url}/#{id}"
   end
 
   def slug_for_url

@@ -200,7 +200,7 @@ export default class BreadCrumbs extends Component {
           <li>
             <TagsIntersectionChooser
               @currentCategory={{this.category}}
-              @mainTag={{this.tag.name}}
+              @mainTag={{this.tag}}
               @additionalTags={{this.additionalTags}}
               @options={{hash categoryId=this.category.id}}
             />

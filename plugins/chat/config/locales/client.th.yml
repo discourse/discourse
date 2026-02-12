@@ -20,6 +20,7 @@ th:
       channel_settings:
         edit: "แก้ไข"
         add: "เพิ่ม"
+        notification_settings_context: "การแจ้งเตือน"
         join: "เข้าร่วม"
         leave: "ออก"
       close: "ปิด"

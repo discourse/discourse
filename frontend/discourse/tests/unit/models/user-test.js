@@ -5,6 +5,7 @@ import { module, test } from "qunit";
 import sinon from "sinon";
 import PreloadStore from "discourse/lib/preload-store";
 import User from "discourse/models/user";
+import pretender, { response } from "discourse/tests/helpers/create-pretender";
 
 module("Unit | Model | user", function (hooks) {
   setupTest(hooks);
@@ -184,6 +185,20 @@ module("Unit | Model | user", function (hooks) {
       user.hasOwnProperty("_clearStatusTimerId"),
       "_clearStatusTimerId wasn't set"
     );
+  });
+
+  test("addEmail does not add duplicate unconfirmed emails", async function (assert) {
+    pretender.post("/u/eviltrout/preferences/email", () => response({}));
+
+    const store = getOwner(this).lookup("service:store");
+    const user = store.createRecord("user", {
+      id: 1,
+      username: "eviltrout",
+      unconfirmed_emails: ["new@example.com"],
+    });
+
+    await user.addEmail("new@example.com");
+    assert.deepEqual(user.unconfirmed_emails, ["new@example.com"]);
   });
 
   test("pmPath", function (assert) {
