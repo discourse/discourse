@@ -2,20 +2,23 @@
 @import "common/foundation/mixins";
 
 .admin-onboarding-banner {
+  margin-bottom: 1em;
+  color: var(--secondary);
+
   @include viewport.until(sm) {
     display: none;
   }
-  color: dark-light-choose(var(--secondary), var(--primary));
 
   &__wrap {
     box-sizing: border-box;
     position: relative;
-    padding: var(--space-6) var(--space-3);
+    padding: var(--space-5) var(--space-8);
     border-radius: var(--d-border-radius-large);
-    background: var(--accent-color, var(--tertiary-high));
+    background: var(--accent-color, var(--tertiary-low));
+    color: var(--accent-text-color, var(--primary));
 
     @include viewport.until(md) {
-      padding: var(--space-4) 8px var(--space-5);
+      padding: var(--space-4) var(--space-5);
       margin-top: var(--space-2);
     }
 
@@ -24,19 +27,31 @@
       padding: var(--space-2);
       margin-top: 0;
     }
+
+    .btn-close {
+      position: absolute;
+      top: var(--space-1);
+      right: var(--space-1);
+
+      .d-icon {
+        color: var(--accent-text-color, var(--primary));
+      }
+    }
   }
 
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 var(--space-4);
     margin-bottom: var(--space);
+
+    @include viewport.until(md) {
+      font-size: var(--font-down-1);
+    }
   }
 
   &__content {
     text-align: center;
-    padding: 0 var(--space-4);
 
     @include viewport.until(md) {
       margin-top: var(--space-3);
@@ -44,34 +59,46 @@
   }
 
   &__steps {
-    display: flex;
+    margin-bottom: var(--space-2);
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
     flex-direction: row;
     align-items: center;
-    gap: var(--space-6);
+    gap: var(--space-2) var(--space-12);
+    text-wrap: pretty;
+
+    @include viewport.until(md) {
+      font-size: var(--font-down-1);
+    }
 
     .onboarding-step {
-      display: flex;
-      justify-content: center;
+      display: grid;
+      grid-template-rows: subgrid;
+      grid-row: span 3;
+      justify-content: start;
       flex-direction: column;
       align-items: flex-start;
       text-align: left;
       gap: var(--space-2);
 
-      .btn-default {
-        border-radius: var(--d-border-radius);
-
-        svg {
-          color: dark-light-choose(
-            var(--secondary-medium),
-            var(--primary-medium)
-          );
-        }
-      }
-
       &__checkbox {
         gap: var(--space-2);
         display: flex;
-        align-items: center;
+        align-items: baseline;
+        font-weight: bold;
+
+        .d-icon {
+          position: relative;
+          top: var(--space-half);
+        }
+      }
+
+      &__text {
+        max-width: 16em;
+      }
+
+      button {
+        margin-top: var(--space-2);
       }
     }
   }
