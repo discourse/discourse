@@ -3089,6 +3089,8 @@ en:
       csrf_detected: "Sorry, the authorization timed out, or you have switched browsers. Please try again."
       request_error: "Sorry, an error occurred when starting the authorization. Please try again."
       invalid_iat: "Sorry, we are unable to verify the authorization token due to server clock differences. Please try again."
+      unauthorized: "Sorry, the login provider did not authorize your request. Please try again or contact an administrator."
+
     omniauth_error_unknown: "Something went wrong processing your login, please try again."
     omniauth_confirm_title: "Log in using %{provider}"
     omniauth_confirm_button: "Continue"
