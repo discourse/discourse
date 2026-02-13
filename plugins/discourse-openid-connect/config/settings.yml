@@ -18,6 +18,9 @@ discourse_openid_connect:
   openid_connect_rp_initiated_logout_redirect:
     default: ""
     area: "oidc"
+  openid_connect_rp_initiated_logout_include_client_id:
+    default: false
+    area: "oidc"
   openid_connect_allow_association_change:
     default: false
     area: "oidc"
