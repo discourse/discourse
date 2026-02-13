@@ -692,19 +692,19 @@ RSpec.describe TagsController do
 
     it "returns 404 if tag not found" do
       sign_in(admin)
-      get "/tag/test-tag/9999999/settings.json"
+      get "/tag/9999999/settings.json"
       expect(response.status).to eq(404)
     end
 
     it "returns 404 if user cannot edit tags" do
       sign_in(user)
-      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      get "/tag/#{tag.id}/settings.json"
       expect(response.status).to eq(404)
     end
 
     it "returns tag settings for admin" do
       sign_in(admin)
-      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      get "/tag/#{tag.id}/settings.json"
       expect(response.status).to eq(200)
 
       settings = response.parsed_body["tag_settings"]
@@ -718,7 +718,7 @@ RSpec.describe TagsController do
 
     it "includes synonyms in the response" do
       sign_in(admin)
-      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      get "/tag/#{tag.id}/settings.json"
       expect(response.status).to eq(200)
 
       settings = response.parsed_body["tag_settings"]
@@ -728,7 +728,7 @@ RSpec.describe TagsController do
     it "includes category restrictions when present" do
       category.update!(tags: [tag])
       sign_in(admin)
-      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      get "/tag/#{tag.id}/settings.json"
       expect(response.status).to eq(200)
 
       settings = response.parsed_body["tag_settings"]
@@ -741,7 +741,7 @@ RSpec.describe TagsController do
       SiteSetting.tags_listed_by_group = true
       tag_group = Fabricate(:tag_group, tags: [tag])
       sign_in(admin)
-      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      get "/tag/#{tag.id}/settings.json"
       expect(response.status).to eq(200)
 
       settings = response.parsed_body["tag_settings"]
@@ -752,7 +752,7 @@ RSpec.describe TagsController do
       SiteSetting.tags_listed_by_group = true
       tag_group = Fabricate(:tag_group, tags: [tag])
       sign_in(admin)
-      get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+      get "/tag/#{tag.id}/settings.json"
       expect(response.status).to eq(200)
 
       settings = response.parsed_body["tag_settings"]
@@ -768,7 +768,7 @@ RSpec.describe TagsController do
       it "includes localizations in the response" do
         Fabricate(:tag_localization, tag: tag, locale: "zh_CN", name: "测试标签")
         sign_in(admin)
-        get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+        get "/tag/#{tag.id}/settings.json"
         expect(response.status).to eq(200)
 
         settings = response.parsed_body["tag_settings"]
@@ -783,7 +783,7 @@ RSpec.describe TagsController do
 
       it "allows access for users in allowed groups" do
         sign_in(regular_user)
-        get "/tag/#{tag.slug}/#{tag.id}/settings.json"
+        get "/tag/#{tag.id}/settings.json"
         expect(response.status).to eq(200)
 
         settings = response.parsed_body["tag_settings"]
@@ -798,13 +798,13 @@ RSpec.describe TagsController do
 
     it "returns 404 if tag not found" do
       sign_in(admin)
-      put "/tag/test-tag/9999999/settings.json", params: { tag_settings: { name: "new-name" } }
+      put "/tag/9999999/settings.json", params: { tag_settings: { name: "new-name" } }
       expect(response.status).to eq(404)
     end
 
     it "returns 404 if user cannot edit tags" do
       sign_in(user)
-      put "/tag/#{tag.slug}/#{tag.id}/settings.json", params: { tag_settings: { name: "new-name" } }
+      put "/tag/#{tag.id}/settings.json", params: { tag_settings: { name: "new-name" } }
       expect(response.status).to eq(404)
     end
 
@@ -812,12 +812,7 @@ RSpec.describe TagsController do
       before { sign_in(admin) }
 
       it "updates the tag name" do
-        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
-            params: {
-              tag_settings: {
-                name: "updated-name",
-              },
-            }
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { name: "updated-name" } }
         expect(response.status).to eq(200)
 
         settings = response.parsed_body["tag_settings"]
@@ -826,12 +821,7 @@ RSpec.describe TagsController do
       end
 
       it "updates the tag slug" do
-        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
-            params: {
-              tag_settings: {
-                slug: "custom-slug",
-              },
-            }
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { slug: "custom-slug" } }
         expect(response.status).to eq(200)
 
         settings = response.parsed_body["tag_settings"]
@@ -840,7 +830,7 @@ RSpec.describe TagsController do
       end
 
       it "updates the tag description" do
-        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
+        put "/tag/#{tag.id}/settings.json",
             params: {
               tag_settings: {
                 description: "new description",
@@ -854,12 +844,7 @@ RSpec.describe TagsController do
       end
 
       it "can clear the description" do
-        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
-            params: {
-              tag_settings: {
-                description: "",
-              },
-            }
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { description: "" } }
         expect(response.status).to eq(200)
 
         settings = response.parsed_body["tag_settings"]
@@ -869,12 +854,7 @@ RSpec.describe TagsController do
 
       it "logs staff action when renaming a tag" do
         expect {
-          put "/tag/#{tag.slug}/#{tag.id}/settings.json",
-              params: {
-                tag_settings: {
-                  name: "renamed-tag",
-                },
-              }
+          put "/tag/#{tag.id}/settings.json", params: { tag_settings: { name: "renamed-tag" } }
         }.to change { UserHistory.where(action: UserHistory.actions[:custom_staff]).count }.by(1)
 
         log = UserHistory.last
@@ -885,7 +865,7 @@ RSpec.describe TagsController do
 
       it "does not log staff action when not changing name" do
         expect {
-          put "/tag/#{tag.slug}/#{tag.id}/settings.json",
+          put "/tag/#{tag.id}/settings.json",
               params: {
                 tag_settings: {
                   description: "just updating description",
@@ -895,12 +875,7 @@ RSpec.describe TagsController do
       end
 
       it "cleans the tag name" do
-        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
-            params: {
-              tag_settings: {
-                name: "New Tag Name",
-              },
-            }
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { name: "New Tag Name" } }
         expect(response.status).to eq(200)
 
         settings = response.parsed_body["tag_settings"]
@@ -909,24 +884,19 @@ RSpec.describe TagsController do
 
       it "ignores empty name param" do
         original_name = tag.name
-        put "/tag/#{tag.slug}/#{tag.id}/settings.json", params: { tag_settings: { name: "" } }
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { name: "" } }
         expect(response.status).to eq(200)
         expect(tag.reload.name).to eq(original_name)
       end
 
       it "returns errors for duplicate tag name" do
         other_tag = Fabricate(:tag, name: "existing-tag")
-        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
-            params: {
-              tag_settings: {
-                name: other_tag.name,
-              },
-            }
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { name: other_tag.name } }
         expect(response.status).to eq(422)
       end
 
       it "supports unicode tag names" do
-        put "/tag/#{tag.slug}/#{tag.id}/settings.json", params: { tag_settings: { name: "日本語タグ" } }
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { name: "日本語タグ" } }
         expect(response.status).to eq(200)
 
         settings = response.parsed_body["tag_settings"]
@@ -939,12 +909,7 @@ RSpec.describe TagsController do
 
       it "allows updating for users in allowed groups" do
         sign_in(regular_user)
-        put "/tag/#{tag.slug}/#{tag.id}/settings.json",
-            params: {
-              tag_settings: {
-                name: "user-updated",
-              },
-            }
+        put "/tag/#{tag.id}/settings.json", params: { tag_settings: { name: "user-updated" } }
         expect(response.status).to eq(200)
         expect(tag.reload.name).to eq("user-updated")
       end
