@@ -4220,6 +4220,31 @@ RSpec.describe TopicsController do
         expect(topic.reload.tags).to include(tag1)
       end
 
+      it "includes errors in the response when operations partially fail" do
+        sign_in(Fabricate(:admin))
+
+        restricted_tag = Fabricate(:tag, name: "restricted-tag")
+        source_category = Fabricate(:category, tags: [restricted_tag])
+        destination_category = Fabricate(:category, tags: [Fabricate(:tag, name: "other-tag")])
+        topic_with_tag = Fabricate(:topic, category: source_category, tags: [restricted_tag])
+        Fabricate(:post, topic: topic_with_tag)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic_with_tag.id],
+              operation: {
+                type: "change_category",
+                category_id: destination_category.id,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["topic_ids"]).to eq([])
+        expect(json["errors"]).to be_present
+        expect(json["errors"].values.sum).to eq(1)
+      end
+
       context "with private message" do
         fab!(:group) do
           Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap do |g|
