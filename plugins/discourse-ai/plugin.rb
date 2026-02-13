@@ -138,6 +138,21 @@ after_initialize do
     { update_personas: { actions: %w[discourse_ai/admin/ai_personas#update] } },
   )
 
+  add_api_key_scope(
+    :discourse_ai,
+    {
+      manage_artifacts: {
+        actions: %w[
+          discourse_ai/admin/ai_artifacts#index
+          discourse_ai/admin/ai_artifacts#show
+          discourse_ai/admin/ai_artifacts#create
+          discourse_ai/admin/ai_artifacts#update
+          discourse_ai/admin/ai_artifacts#destroy
+        ],
+      },
+    },
+  )
+
   plugin_icons = %w[
     chart-column
     spell-check

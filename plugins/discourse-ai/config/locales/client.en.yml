@@ -8,6 +8,7 @@ en:
               search: "Allows AI search"
               stream_completion: "Allows streaming AI persona completions"
               update_personas: "Allows updating AI personas"
+              manage_artifacts: "Allows managing AI artifacts (list, view, create, update, delete)"
 
       site_settings:
         categories:
