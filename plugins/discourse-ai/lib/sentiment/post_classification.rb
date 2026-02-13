@@ -5,7 +5,7 @@ module DiscourseAi
     class PostClassification
       def self.backfill_query(from_post_id: nil, max_age_days: nil)
         available_classifier_names =
-          DiscourseAi::Sentiment::SentimentSiteSettingJsonSchema.values.map { _1.model_name }
+          DiscourseAi::Sentiment::SentimentSiteSettingJsonSchema.values.map { it.model_name }
 
         queries =
           available_classifier_names.map do |classifier_name|

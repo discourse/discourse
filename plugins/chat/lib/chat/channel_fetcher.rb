@@ -246,7 +246,7 @@ module Chat
           UserField.all.pluck(:id).map { |fid| "#{User::USER_FIELD_PREFIX}#{fid}" }
 
       User.preload_custom_fields(
-        channels.flat_map { _1.chatable.direct_message_users.map(&:user).compact },
+        channels.flat_map { it.chatable.direct_message_users.map(&:user).compact },
         preload_fields,
       )
 

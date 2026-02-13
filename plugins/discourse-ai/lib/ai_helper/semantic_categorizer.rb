@@ -89,7 +89,7 @@ module DiscourseAi
           .sort_by { |c| -c[:score] }
           .take(7)
           .then do |tags|
-            models = Tag.where(name: tags.map { _1[:name] }).index_by(&:name)
+            models = Tag.where(name: tags.map { it[:name] }).index_by(&:name)
             tags.map do |tag|
               model = models.dig(tag[:name])
               tag[:id] = model&.id

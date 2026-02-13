@@ -268,19 +268,19 @@ RSpec.describe PostCreator do
         p = nil
         messages = MessageBus.track_publish { p = creator.create }
 
-        expect(messages.find { _1.channel == "/latest" }).not_to eq(nil)
-        expect(messages.find { _1.channel == "/new" }).not_to eq(nil)
-        expect(messages.find { _1.channel == "/unread/#{p.user_id}" }).not_to eq(nil)
-        expect(messages.find { _1.channel == "/user-drafts/#{p.user_id}" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/latest" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/new" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/unread/#{p.user_id}" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/user-drafts/#{p.user_id}" }).not_to eq(nil)
 
-        user_action = messages.find { _1.channel == "/u/#{p.user.username}" }
+        user_action = messages.find { it.channel == "/u/#{p.user.username}" }
         expect(user_action).to eq(nil)
 
         topics_stats =
           messages.find { |m| m.channel == "/topic/#{p.topic.id}" && m.data[:type] == :stats }
         expect(topics_stats).to eq(nil)
 
-        expect(messages.filter { _1.channel != "/distributed_hash" }.size).to eq(6)
+        expect(messages.filter { it.channel != "/distributed_hash" }.size).to eq(6)
       end
 
       it "extracts links from the post" do

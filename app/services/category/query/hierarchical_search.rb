@@ -7,7 +7,7 @@ class Category::Query::HierarchicalSearch
   end
 
   def call
-    build_relation.tap { prepend_allowed_categories_cte(_1) }.to_a
+    build_relation.tap { prepend_allowed_categories_cte(it) }.to_a
   end
 
   private

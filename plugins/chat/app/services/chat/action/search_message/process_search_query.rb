@@ -104,9 +104,9 @@ module Chat
 
         def filtered_messages
           messages
-            .then { apply_username_filters(_1) }
-            .then { apply_channel_filters(_1) }
-            .then { apply_ts_query(_1) }
+            .then { apply_username_filters(it) }
+            .then { apply_channel_filters(it) }
+            .then { apply_ts_query(it) }
         end
 
         def apply_ts_query(messages)
