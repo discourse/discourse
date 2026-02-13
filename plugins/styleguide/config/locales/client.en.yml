@@ -9,6 +9,38 @@ en:
       title: "Styleguide"
       welcome: "To get started, choose a section from the menu on the left."
 
+      theme_builder:
+        title: "Theme Builder"
+        toggle: "Theme Builder"
+        compiling: "Compiling…"
+        save_as_theme: "Save as Theme"
+        update: "Update"
+        reset: "Reset"
+        reset_confirm: "This will delete the theme and its color palettes. Are you sure?"
+        tabs:
+          light_colors: "Light"
+          dark_colors: "Dark"
+          css: "CSS"
+          color_definitions: "Color Definitions"
+        colors:
+          primary: "Primary"
+          secondary: "Secondary"
+          tertiary: "Tertiary"
+          selected: "Selected"
+          hover: "Hover"
+          quaternary: "Quaternary"
+          header_background: "Header BG"
+          header_primary: "Header Primary"
+          highlight: "Highlight"
+          danger: "Danger"
+          success: "Success"
+          love: "Love"
+        save_dialog:
+          title: "Save as Theme"
+          name_label: "Theme name:"
+          name_placeholder: "My custom theme"
+          save: "Save"
+
       categories:
         syntax: Syntax
         atoms: Atoms

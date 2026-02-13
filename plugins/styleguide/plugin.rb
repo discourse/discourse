@@ -7,6 +7,7 @@
 # author: Robin Ward
 
 register_asset "stylesheets/styleguide.scss"
+register_asset "stylesheets/theme-builder.scss"
 enabled_site_setting :styleguide_enabled
 
 module ::Styleguide

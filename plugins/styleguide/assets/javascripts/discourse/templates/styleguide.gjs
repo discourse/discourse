@@ -1,12 +1,14 @@
 import { concat } from "@ember/helper";
 import { i18n } from "discourse-i18n";
 import StyleguideLink from "discourse/plugins/styleguide/discourse/components/styleguide-link";
+import ThemeBuilderToggleButton from "discourse/plugins/styleguide/discourse/components/theme-builder/toggle-button";
 import ToggleColorMode from "discourse/plugins/styleguide/discourse/components/toggle-color-mode";
 
 export default <template>
   <section class="styleguide">
     <section class="styleguide-menu">
       <ToggleColorMode />
+      <ThemeBuilderToggleButton />
 
       {{#each @controller.categories as |c|}}
         <ul>
