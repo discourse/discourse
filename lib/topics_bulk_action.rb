@@ -1,11 +1,14 @@
 # frozen_string_literal: true
 
 class TopicsBulkAction
+  attr_reader :errors
+
   def initialize(user, topic_ids, operation, options = {})
     @user = user
     @topic_ids = topic_ids
     @operation = operation
     @changed_ids = []
+    @errors = Hash.new(0)
     @options = options
   end
 
@@ -39,8 +42,17 @@ class TopicsBulkAction
     if TopicsBulkAction.operations.exclude?(@operation[:type])
       raise Discourse::InvalidParameters.new(:operation)
     end
+
     # careful these are private methods, we need send
     send(@operation[:type])
+
+    if @errors.present?
+      error_details = @errors.map { |msg, count| "- #{msg} (#{count} topics)" }.join("\n")
+      Rails.logger.warn(
+        "Bulk '#{@operation[:type]}' by @#{@user.username} (id=#{@user.id}) failed for #{@errors.values.sum} topics:\n#{error_details}",
+      )
+    end
+
     @changed_ids.sort
   end
 
@@ -147,7 +159,11 @@ class TopicsBulkAction
     updatable_topics.each do |t|
       if guardian.can_edit?(t)
         changes = { category_id: @operation[:category_id] }
-        @changed_ids << t.id if t.first_post.revise(@user, changes, opts)
+        if t.first_post.revise(@user, changes, opts)
+          @changed_ids << t.id
+        else
+          t.errors.full_messages.each { |msg| @errors[msg] += 1 }
+        end
       end
     end
   end
@@ -239,14 +255,21 @@ class TopicsBulkAction
 
     topics.each do |t|
       if guardian.can_edit?(t)
-        if tag_ids.present?
-          DiscourseTagging.tag_topic_by_ids(t, guardian, tag_ids)
-        elsif tag_names.present?
-          DiscourseTagging.tag_topic_by_names(t, guardian, tag_names)
+        success =
+          if tag_ids.present?
+            DiscourseTagging.tag_topic_by_ids(t, guardian, tag_ids)
+          elsif tag_names.present?
+            DiscourseTagging.tag_topic_by_names(t, guardian, tag_names)
+          else
+            t.tags = []
+            true
+          end
+
+        if success
+          @changed_ids << t.id
         else
-          t.tags = []
+          t.errors.full_messages.each { |msg| @errors[msg] += 1 }
         end
-        @changed_ids << t.id
       end
     end
   end
@@ -256,12 +279,20 @@ class TopicsBulkAction
 
     topics.each do |t|
       if guardian.can_edit?(t)
-        if tag_ids.present?
-          DiscourseTagging.tag_topic_by_ids(t, guardian, tag_ids, append: true)
-        elsif tag_names.present?
-          DiscourseTagging.tag_topic_by_names(t, guardian, tag_names, append: true)
+        success =
+          if tag_ids.present?
+            DiscourseTagging.tag_topic_by_ids(t, guardian, tag_ids, append: true)
+          elsif tag_names.present?
+            DiscourseTagging.tag_topic_by_names(t, guardian, tag_names, append: true)
+          else
+            true
+          end
+
+        if success
+          @changed_ids << t.id
+        else
+          t.errors.full_messages.each { |msg| @errors[msg] += 1 }
         end
-        @changed_ids << t.id
       end
     end
   end

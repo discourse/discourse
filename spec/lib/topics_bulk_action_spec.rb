@@ -338,6 +338,31 @@ RSpec.describe TopicsBulkAction do
         expect(topic_ids).to eq([])
         expect(topic_with_tag.reload.category).to eq(original_category)
       end
+
+      it "logs a warning with error details" do
+        Rails.logger.expects(:warn).with(includes("restricted-tag"))
+
+        TopicsBulkAction.new(
+          admin,
+          [topic_with_tag.id],
+          type: "change_category",
+          category_id: destination_category.id,
+        ).perform!
+      end
+
+      it "exposes errors via attr_reader" do
+        operator =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          )
+        operator.perform!
+
+        expect(operator.errors).to be_present
+        expect(operator.errors.values.sum).to eq(1)
+      end
     end
 
     context "when destination category has the same tag group as source" do
@@ -552,6 +577,27 @@ RSpec.describe TopicsBulkAction do
       end
     end
 
+    context "when tagging fails due to tag restrictions" do
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:tag_group) do
+        Fabricate(:tag_group, tags: [restricted_tag], permissions: { staff: :full })
+      end
+
+      it "does not include the topic in changed_ids and logs a warning" do
+        Rails.logger.expects(:warn).with(includes("restricted-tag"))
+
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_tags",
+            tag_ids: [restricted_tag.id],
+          ).perform!
+
+        expect(topic_ids).to eq([])
+      end
+    end
+
     context "when the user can't edit the topic" do
       fab!(:tag3, :tag)
 
@@ -602,6 +648,28 @@ RSpec.describe TopicsBulkAction do
           TopicsBulkAction.new(topic.user, [topic.id], type: "append_tags", tag_ids: []).perform!
 
         expect(topic_ids).to eq([topic.id])
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+      end
+    end
+
+    context "when tagging fails due to tag restrictions" do
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:tag_group) do
+        Fabricate(:tag_group, tags: [restricted_tag], permissions: { staff: :full })
+      end
+
+      it "does not include the topic in changed_ids and logs a warning" do
+        Rails.logger.expects(:warn).with(includes("restricted-tag"))
+
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "append_tags",
+            tag_ids: [restricted_tag.id],
+          ).perform!
+
+        expect(topic_ids).to eq([])
         expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
     end

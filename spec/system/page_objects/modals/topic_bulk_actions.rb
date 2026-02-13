@@ -43,6 +43,14 @@ module PageObjects
           has_no_css?(PageObjects::Components::CategoryBadge.new.category_selector(category))
         end
       end
+
+      def has_errors?(text = nil)
+        if text
+          has_css?("#{MODAL_SELECTOR}__errors", text: text)
+        else
+          has_css?("#{MODAL_SELECTOR}__errors")
+        end
+      end
     end
   end
 end
