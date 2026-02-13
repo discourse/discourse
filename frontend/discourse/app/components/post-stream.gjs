@@ -237,10 +237,26 @@ export default class PostStream extends Component {
   @action
   updateKeyboardSelectedPostNumber({ selectedArticle: element }) {
     next(() => {
+      const postNumber = parseInt(element.dataset.postNumber, 10);
       this.keyboardSelection = {
         topicId: this.args.topic.id,
-        postNumber: parseInt(element.dataset.postNumber, 10),
+        postNumber,
       };
+
+      // When keyboard navigation reaches a boundary post, trigger loading
+      // more posts in that direction. Double-loading is prevented by the
+      // existing canPrependMore/canAppendMore guards in the model.
+      if (
+        this.firstAvailablePost?.post_number === postNumber &&
+        this.args.postStream.canPrependMore
+      ) {
+        this.loadMoreAbove(this.firstAvailablePost);
+      } else if (
+        this.lastAvailablePost?.post_number === postNumber &&
+        this.args.postStream.canAppendMore
+      ) {
+        this.loadMoreBelow(this.lastAvailablePost);
+      }
     });
   }
 
