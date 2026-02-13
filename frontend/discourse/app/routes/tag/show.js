@@ -127,6 +127,8 @@ export default class TagShowRoute extends DiscourseRoute {
           transition.to.queryParams["category"]
         );
       }
+    } else if (slug === NONE) {
+      filter = `tag/${NONE}/l/${topicFilter}`;
     } else {
       // use ID-only format for API calls
       filter = `tag/${id}/l/${topicFilter}`;

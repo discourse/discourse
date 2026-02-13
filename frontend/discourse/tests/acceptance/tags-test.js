@@ -774,7 +774,7 @@ acceptance("Tag show - create topic", function (needs) {
         },
       });
     });
-    server.get("/tag/0/l/latest.json", () => {
+    server.get("/tag/none/l/latest.json", () => {
       return helper.response({
         users: [],
         primary_groups: [],
