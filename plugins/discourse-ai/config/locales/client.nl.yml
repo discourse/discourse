@@ -530,6 +530,15 @@ nl:
           title: "AI-tool testen"
           run: "Test uitvoeren"
           result: "Testresultaat"
+      secrets:
+        short_title: "Aanmeldgegevens"
+        name: "Naam"
+        secret: "Waarde"
+        back: "Terug"
+        save: "Opslaan"
+        edit: "Bewerken"
+        delete: "Verwijderen"
+        embedding: "Insluiting"
       llms:
         short_title: "LLM's"
         no_llms: "Nog geen LLM's"

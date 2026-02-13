@@ -169,6 +169,15 @@ ro:
         delete: "Șterge"
         test_modal:
           run: "Rulează test"
+      secrets:
+        short_title: "Date de conectare"
+        name: "Nume"
+        secret: "Valoare"
+        back: "Înapoi"
+        save: "Salvează"
+        edit: "Editează"
+        delete: "Șterge"
+        embedding: "Înglobare"
       llms:
         display_name: "Nume"
         provider: "Furnizor"

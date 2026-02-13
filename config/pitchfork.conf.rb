@@ -30,6 +30,11 @@ else
   timeout(ENV["UNICORN_TIMEOUT"] && ENV["UNICORN_TIMEOUT"].to_i || 60)
 end
 
+# On some really constrained environments, the mold process can take a long
+# time to spawn workers. This is a safety valve to prevent the mold process
+# from giving up too early.
+spawn_timeout(Integer(ENV["APP_SERVER_SPAWN_TIMEOUT"], exception: false) || 60)
+
 check_client_connection false
 
 before_fork do |server|

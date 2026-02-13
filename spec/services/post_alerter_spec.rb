@@ -792,6 +792,15 @@ RSpec.describe PostAlerter do
             ).by(1).and change(post3.user.notifications, :count).by(1)
     end
 
+    it "notifies users who posted with staff colour" do
+      post2 = Fabricate(:post, topic: topic, post_type: Post.types[:moderator_action])
+
+      expect { post }.to change(other_post.user.notifications, :count).by(1).and change(
+              post2.user.notifications,
+              :count,
+            ).by(1)
+    end
+
     it "notifies only last max_here_mentioned users" do
       SiteSetting.max_here_mentioned = 2
       3.times { Fabricate(:post, topic: topic) }

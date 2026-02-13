@@ -65,6 +65,7 @@ cs:
       starred_channels_empty: "Zatím jste neoznačili žádné kanály jako oblíbené. Ty se zde objeví pro rychlejší přístup."
       browse_all_channels: "Procházet všechny kanály"
       see_in: "Zobrazit v"
+      open_channel_menu: "Otevřít nabídku kanálu"
       move_to_channel:
         title: "Přesunout zprávy do kanálu"
         instructions:
@@ -92,6 +93,8 @@ cs:
         join_channel: "Připojit se k kanálu"
         leave_channel: "Opustit kanál"
         leave_groupchat_info: "Opuštěním této skupinové konverzace k ní již nebudete mít přístup a nebudete dostávat s ní spojená upozornění. Chcete-li se do ní znovu připojit, musíte být znovu pozváni některým ze členů skupinové konverzace."
+        notification_settings: "Nastavení oznámení"
+        notification_settings_context: "Upozornění"
         join: "Přidat se ke skupině"
         leave: "Opustit"
         save_label:
@@ -543,6 +546,7 @@ cs:
         follow: "Přidat se ke skupině"
         followed: "Účet vytvořen"
         mute: "Ztlumit kanál"
+        unmute: "Zrušit ztlumení kanálu"
         threading_enabled: "Zapnuto"
         threading_disabled: "Vypnuto"
         muted_on: "Zapnuto"
@@ -659,17 +663,11 @@ cs:
           other: "%{commaSeparatedUsernames} a %{count} dalších píší"
       retention_reminders:
         indefinitely_short: "navždy"
-        indefinitely_long: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly po neomezenou dobu."
         short:
           one: "%{count} den"
           few: "%{count} dny"
           many: "%{count} dní"
           other: "%{count} dní"
-        long:
-          one: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} den."
-          few: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dny."
-          many: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dní."
-          other: "Chat byl nastaven tak, aby se zprávy kanálu uchovávaly %{count} dní."
       flags:
         off_topic: "Tato zpráva není relevantní pro aktuální diskusi, definovanou názvem kanálu, a pravděpodobně by měla být přesunuta jinam."
         inappropriate: "Tato zpráva obsahuje obsah, který by rozumný člověk mohl považovat za urážlivý, zneužívající nebo porušující <a href=\"%{basePath}/guidelines\">naše pravidla komunity</a>."

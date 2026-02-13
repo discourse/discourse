@@ -3749,6 +3749,7 @@ en:
         other: "%{count} posts in topic"
       create: "New Topic"
       create_long: "Create a new topic"
+      create_group: "New topic and drafts"
       open_draft: "Open Draft"
       private_message: "Start a message"
       archive_message:
@@ -4665,14 +4666,14 @@ en:
         reply: "Reply"
         create: "Create"
         no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
-        everyone_full_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
-        everyone_reply_access: 'This category is public, everyone can see and reply to topics. To restrict permissions, remove the "everyone" group.'
-        everyone_see_access: 'This category is public, everyone can see posts. To restrict permissions, remove the "everyone" group.'
+        everyone_full_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "%{everyone_group}" group.'
+        everyone_reply_access: 'This category is public, everyone can see and reply to topics. To restrict permissions, remove the "%{everyone_group}" group.'
+        everyone_see_access: 'This category is public, everyone can see posts. To restrict permissions, remove the "%{everyone_group}" group.'
         specific_groups_have_access: "This category is private, only the selected groups can see, reply and create posts."
         all_parent_groups_used: "All groups from the parent category have been added. To add more groups, first add them to the parent category."
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
-        inherited: 'This permission is inherited from "everyone"'
+        inherited: 'This permission is inherited from "%{everyone_group}"'
       special_warning: "This is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'

@@ -162,6 +162,13 @@ id:
         remove_parameter: "Hapus"
         edit: "Ubah"
         delete: "Hapus"
+      secrets:
+        short_title: "Kredensial"
+        name: "Nama"
+        back: "Kembali"
+        save: "Simpan"
+        edit: "Ubah"
+        delete: "Hapus"
       llms:
         display_name: "Nama"
         save: "Simpan"

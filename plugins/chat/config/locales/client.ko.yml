@@ -45,6 +45,7 @@ ko:
         delete_channel: "채널 삭제"
         join_channel: "채널 참여"
         leave_channel: "채널 나가기"
+        notification_settings_context: "알림"
         join: "가입"
         leave: "나가기"
       channel_archive:
@@ -304,8 +305,6 @@ ko:
       retention_reminders:
         short:
           other: "%{count}일"
-        long:
-          other: "채팅 설정이 채널 메시지를 %{count} 일 동안 보관하도록 설정되어 있습니다."
       flagging:
         action: "신고 메시지"
       emoji_picker:

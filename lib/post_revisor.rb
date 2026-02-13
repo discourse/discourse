@@ -386,7 +386,15 @@ class PostRevisor
     return false if @skip_revision
     # topic-only changes (without post content changes) should always create a new version
     # since the grace period concept doesn't apply to metadata changes like tags
-    return true if topic_changed? && !post_changed?
+    if topic_changed? && !post_changed?
+      # Allow hidden tag-only changes to update a previous hidden revision
+      # so that reverting hidden tag changes collapses the revisions
+      if only_hidden_tags_changed? &&
+           PostRevision.where(post_id: @post.id, number: @post.version).pick(:hidden)
+        return false
+      end
+      return true
+    end
     edited_by_another_user? || flagged? || !grace_period_edit? || owner_changed? ||
       force_new_version? || edit_reason_specified?
   end
@@ -648,11 +656,12 @@ class PostRevisor
     end
     # should probably do this before saving the post!
     if revision.modifications.empty?
+      hidden = revision.hidden
       revision.destroy
       @post.last_editor_id =
         PostRevision.where(post_id: @post.id).order(number: :desc).pick(:user_id) || @post.user_id
       @post.version -= 1
-      @post.public_version -= 1
+      @post.public_version -= 1 unless hidden
       @post.save(validate: @validate_post)
     else
       revision.save

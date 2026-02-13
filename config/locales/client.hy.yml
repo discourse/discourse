@@ -291,6 +291,9 @@ hy:
       title: "Նոր և Չկարդացված Թեմաներ"
       pill: "Առաջարկվում է"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Պատճենել հղումը"
     about:
       edit: "Խմբագրել այս էջը"
       simple_title: "Մեր Մասին"
