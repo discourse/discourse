@@ -2112,8 +2112,6 @@ de:
     num_flaggers_to_close_topic: "Mindestzahl unabhängiger Mitglieder, die ein Thema melden, damit es automatisch für eine Prüfung pausiert wird."
     num_hours_to_close_topic: "Anzahl der Stunden, um ein Thema für eine Intervention zu pausieren."
     auto_respond_to_flag_actions: "Automatische Antwort auf abgearbeitete Meldungen aktivieren."
-    min_first_post_typing_time: "Zeit, die ein Benutzer mindestens aufwenden muss, um einen Beitrag zu schreiben. Wenn diese Zeit unterschritten wird, wird der Beitrag automatisch in die Warteschlange für freizuschaltende Beiträge verschoben. Setze diesen Wert auf 0, um dieses Verhalten zu deaktivieren (nicht empfohlen)."
-    fast_typing_threshold: "Die Mindestzeit in Millisekunden, für die ein Benutzer für seinen ersten Beitrag etwas eingeben muss. Wenn der Schwellenwert nicht erreicht wird, wird der Beitrag automatisch in die Überprüfungswarteschlange gestellt. „Low“ ist 1 Sekunde, „standard“ sind 3 Sekunden, „high“ sind 5 Sekunden."
     auto_silence_fast_typers_on_first_post: "Automatisches Stummschalten von Benutzern, die `fast typing threshold` nicht erreichen"
     auto_silence_fast_typers_max_trust_level: "Maximale Vertrauensstufe, um „Schnelltipper“ stummzuschalten."
     auto_silence_first_post_regex: "Regex ohne Berücksichtigung der Groß-/Kleinschreibung, die bei Erfolg dazu führt, dass der erste Beitrag des Benutzers stummgeschaltet und an die Genehmigungswarteschlange gesendet wird. Beispiel: wüten|a[bc]a wird dazu führen, dass alle Beiträge, die „wüten“ oder „aba“ oder „aca“ enthalten, stummgeschaltet werden. Gilt nur für den ersten Beitrag. VERALTET: Verwende stattdessen „Beobachtete Wörter stummschalten“."
