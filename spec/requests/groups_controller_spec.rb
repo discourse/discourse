@@ -620,7 +620,6 @@ RSpec.describe GroupsController do
       get "/groups/#{group.name}/mentions.json"
 
       expect(response.status).to eq(200)
-
       expect(response.parsed_body["posts"].map { |p| p["id"] }).to contain_exactly(visible_post.id)
     end
   end
