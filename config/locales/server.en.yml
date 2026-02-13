@@ -1433,7 +1433,7 @@ en:
       description: "Number of new topics and posts bookmarked."
     user_stats:
       title: "User Statistics"
-      description: "Number of users grouped by trust level or type."
+      description: "Number of users grouped by trust level or role."
       types:
         role: "Role"
         status: "Status"
