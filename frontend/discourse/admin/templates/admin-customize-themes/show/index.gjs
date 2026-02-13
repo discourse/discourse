@@ -41,6 +41,13 @@ export default <template>
             />
           {{/if}}
 
+          <DButton
+            @action={{@controller.changeSource}}
+            @icon="rotate"
+            @label="admin.customize.theme.change_source.button"
+            class="btn-default"
+          />
+
           <span class="status-message">
             {{#if @controller.updatingRemote}}
               {{i18n "admin.customize.theme.updating"}}
