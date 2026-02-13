@@ -86,6 +86,8 @@ export default class TagSettings extends Component {
     return this.args.tag.category_restricted;
   }
 
+  // safe to build HTML here - tag names have <> stripped by TAGS_FILTER_REGEXP,
+  // descriptions are sanitized in the backend
   get descriptionHtml() {
     const parts = [];
 
