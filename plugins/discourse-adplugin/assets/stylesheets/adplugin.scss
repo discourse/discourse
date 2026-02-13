@@ -217,17 +217,9 @@
 }
 
 .adplugin-mgmt {
-  .house-ad-name {
-    width: 100%;
-  }
+  margin-top: 1.5em;
 
-  .house-ads-actions {
-    .btn {
-      margin-right: 8px;
-    }
-  }
-
-  .house-ads-list {
+  .house-ads-table {
     margin-top: 1em;
   }
 
@@ -257,47 +249,6 @@
 
   .house-ads-list-setting {
     margin-bottom: 1.5em;
-  }
-
-  .content-body {
-    padding-left: 2%;
-
-    .visibility-settings {
-      margin-bottom: 1em;
-
-      .description {
-        color: var(--primary-medium);
-        font-size: $font-down-1;
-      }
-
-      .category-selector,
-      .group-chooser,
-      .route-selector {
-        margin-top: 1em;
-        margin-bottom: 0.2em;
-      }
-    }
-
-    .controls {
-      margin-bottom: 1em;
-    }
-
-    .delete-button {
-      float: right;
-    }
-
-    .ace-wrapper {
-      position: relative;
-      height: 270px;
-
-      .ace_editor {
-        position: absolute;
-        left: 0;
-        right: 0;
-        top: 0;
-        bottom: 0;
-      }
-    }
   }
 }
 

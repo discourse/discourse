@@ -16,10 +16,14 @@ export default class AdminPluginsHouseAdsShow extends DiscourseRoute {
         (item) => item.id === parseInt(params.id, 10)
       );
 
+      if (!houseAd) {
+        return this.replaceWith("adminPlugins.houseAds.index");
+      }
+
       if (houseAd.groups && Array.isArray(houseAd.groups)) {
-        houseAd.groups = houseAd.groups.map((g) => {
-          return g.id;
-        });
+        houseAd.groups = houseAd.groups.map((g) =>
+          typeof g === "object" && g !== null ? g.id : g
+        );
       }
 
       return new TrackedObject(houseAd);
