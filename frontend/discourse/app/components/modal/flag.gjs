@@ -275,7 +275,7 @@ export default class Flag extends Component {
           @action={{this.createFlag}}
           @disabled={{not this.submitEnabled}}
           @title="flagging.submit_tooltip"
-          @icon={{if this.selected.is_custom_flag "envelope" "flag"}}
+          @icon={{if this.selected.require_message "envelope" "flag"}}
           @label={{this.submitLabel}}
         />
 
