@@ -255,7 +255,7 @@
   }
 
   // Select Kit
-  .select-kit .select-kit-header:not(.btn),
+  .select-kit .select-kit-header,
   .d-date-input .date-picker {
     height: var(--button-height);
     border: var(--d-button-default-border);
