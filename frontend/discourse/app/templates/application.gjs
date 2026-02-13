@@ -148,23 +148,23 @@ export default <template>
       {{/if}}
     </div>
 
+    <PluginOutlet
+      @name="above-footer"
+      @connectorTagName="div"
+      @outletArgs={{lazyHash showFooter=@controller.showFooter}}
+    />
     {{#if @controller.showFooter}}
-      <PluginOutlet
-        @name="above-footer"
-        @connectorTagName="div"
-        @outletArgs={{lazyHash showFooter=@controller.showFooter}}
-      />
       <CustomHtml
         @name="footer"
         @triggerAppEvent={{true}}
         class="custom-footer-content"
       />
-      <PluginOutlet
-        @name="below-footer"
-        @connectorTagName="div"
-        @outletArgs={{lazyHash showFooter=@controller.showFooter}}
-      />
     {{/if}}
+    <PluginOutlet
+      @name="below-footer"
+      @connectorTagName="div"
+      @outletArgs={{lazyHash showFooter=@controller.showFooter}}
+    />
 
     <ModalContainer />
     <DialogHolder />
