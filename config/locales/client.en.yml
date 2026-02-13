@@ -5640,11 +5640,11 @@ en:
 
     trust_levels:
       names:
-        newuser: "new user"
-        basic: "basic user"
-        member: "member"
-        regular: "regular"
-        leader: "leader"
+        newuser: "New user"
+        basic: "Basic user"
+        member: "Member"
+        regular: "Regular"
+        leader: "Leader"
       detailed_name: "%{level}: %{name}"
 
     pick_files_button:
