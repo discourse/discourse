@@ -5838,6 +5838,8 @@ en:
       toggle_localized:
         translated: "Page is machine-translated. Click to view original."
         not_translated: "Page is not translated. Click to translate."
+        translations_enabled: "Translations enabled"
+        translations_disabled: "Translations disabled"
     language_switcher:
       title: "Change site language"
 
