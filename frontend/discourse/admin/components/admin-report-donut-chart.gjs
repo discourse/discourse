@@ -96,6 +96,9 @@ export default class AdminReportDonutChart extends Component {
         animation: {
           duration: prefersReducedMotion ? 0 : 300,
         },
+        layout: {
+          padding: 16,
+        },
         plugins: {
           legend: {
             display: true,
