@@ -6,6 +6,7 @@ module Patreon
   class Engine < ::Rails::Engine
     engine_name PLUGIN_NAME
     isolate_namespace Patreon
+    config.autoload_paths << File.join(config.root, "lib")
   end
 
   def self.show_donation_prompt_to_user?(user)

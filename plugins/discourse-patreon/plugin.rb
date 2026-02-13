@@ -17,16 +17,13 @@ register_svg_icon "fab-patreon"
 register_svg_icon "patreon-new"
 
 # Site setting validators must be loaded before initialize
-require_relative "lib/validators/patreon_login_enabled_validator"
+require_relative "lib/patreon/validators/patreon_login_enabled_validator"
 
 module ::Patreon
   PLUGIN_NAME = "discourse-patreon"
 end
 
-Rails.autoloaders.main.push_dir(File.join(__dir__, "lib"), namespace: Patreon)
-Rails.autoloaders.main.ignore(File.join(__dir__, "lib/validators"))
-
-require_relative "lib/engine"
+require_relative "lib/patreon/engine"
 
 after_initialize do
   Discourse::Application.routes.prepend { mount Patreon::Engine, at: "/patreon" }
