@@ -811,6 +811,7 @@ cs:
           composer_bold: "%{shortcut} Tučné (pouze editor)"
           composer_italic: "%{shortcut} Kurzíva (pouze editor)"
           composer_code: "%{shortcut} Kód (pouze editor)"
+          drawer_toggle: "%{shortcut} Přepnout okénko chatu"
           drawer_close: "%{shortcut} Zavření okénka chatu"
           mark_all_channels_read: "%{shortcut} Označit všechny kanály jako přečtené"
     topic_statuses:

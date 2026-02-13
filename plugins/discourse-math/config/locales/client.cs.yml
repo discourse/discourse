@@ -7,7 +7,17 @@
 cs:
   js:
     discourse_math:
+      edit_math: "Upravit matematické výrazy"
       edit_modal:
+        title: "Upravit matematické výrazy"
+        label: "Matematické výrazy"
         apply: "Použít"
+      composer:
+        insert_math: "Vložit matematické výrazy"
       insert_modal:
+        title_inline: "Vložit matematický výraz na řádce"
+        title_block: "Vložit matematický výraz v bloku"
+        label: "LaTeX"
+        placeholder: "E=mc^2"
         insert: "Vložit"
+        block_mode: "Blokový režim (zobrazená rovnice)"
