@@ -98,8 +98,8 @@ class Report
   include Reports::UserToUserPrivateMessages
   include Reports::UserToUserPrivateMessagesWithReplies
   include Reports::UserStats
-  include Reports::UsersByTrustLevel
-  include Reports::UsersByType
+  # include Reports::UsersByTrustLevel
+  # include Reports::UsersByType
   include Reports::Visits
   include Reports::WebCrawlers
   include Reports::WebHookEventsDailyAggregate
