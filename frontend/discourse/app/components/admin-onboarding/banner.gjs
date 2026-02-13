@@ -5,7 +5,6 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import SiteSetting from "discourse/admin/models/site-setting";
-import InlineAiChat from "discourse/components/admin-onboarding/modal/inline-ai-chat";
 import PredefinedTopicOptions from "discourse/components/admin-onboarding/modal/pre-defined-topic-options";
 import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
@@ -22,9 +21,10 @@ const STEPS = [
     @service composer;
     @service appEvents;
     @service modal;
+    @service siteSettings;
 
     icon = "comments";
-    icebreaker_topics = [
+    icebreakerTopics = [
       "fun_facts",
       "coolest_thing_you_have_seen_today",
       "introduce_yourself",
@@ -46,23 +46,34 @@ const STEPS = [
     }
 
     showStartPostingOptions() {
+      // if Discourse AI is not enabled, we can skip the options and go straight to the showPredefinedOptions flow
+      if (!this.siteSettings.discourse_ai_enabled) {
+        return this.showPredefinedOptions();
+      }
+
       this.modal.show(StartPostingOptions, {
         model: {
           onSelectPredefined: () => this.showPredefinedOptions(),
-          onSelectAi: () =>
-            this.modal.show(InlineAiChat, {
-              model: { personaName: "Community Kickstarter" },
-            }),
+          onSelectAi: () => this.startCommunityKickstarter(),
         },
+      });
+    }
+
+    async startCommunityKickstarter() {
+      this.appEvents.trigger("admin-onboarding:select-ai", {
+        close: () => this.modal.close(),
       });
     }
 
     showPredefinedOptions() {
       this.modal.show(PredefinedTopicOptions, {
         model: {
-          topics: this.icebreaker_topics,
+          topics: this.icebreakerTopics,
           onSelectTopic: (topic) => this.openTopic(topic),
-          onBack: () => this.showStartPostingOptions(),
+          onBack: () =>
+            this.siteSettings.discourse_ai_enabled
+              ? this.showStartPostingOptions()
+              : this.modal.close(),
         },
       });
     }
