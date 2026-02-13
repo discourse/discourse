@@ -21,75 +21,67 @@ module Reports::UserStats
         ],
       )
 
-      report.data = []
+      report.data_role = []
+      report.data_status = []
       color_keys = report.colors.keys
 
-      if type_filter == "role"
-        User
-          .real
-          .where(admin: false, moderator: false)
-          .group("trust_level")
-          .count
-          .sort
-          .each do |level, count|
-            report.data << {
-              key: TrustLevel.levels.key(level.to_i),
-              x: I18n.t("js.trust_levels.names.#{TrustLevel.levels[level.to_i]}"),
-              y: count,
-              color: report.colors[color_keys[report.data.size % color_keys.size]],
-            }
-          end
+      User
+        .real
+        .where(admin: false, moderator: false)
+        .group("trust_level")
+        .count
+        .sort
+        .each do |level, count|
+          next unless TrustLevel.levels.key(level.to_i)
 
-        admins = User.real.admins.count
-        report.data << {
-          icon: "shield-halved",
-          key: "admins",
-          x: I18n.t("reports.users_by_type.xaxis_labels.admin"),
-          y: admins,
-          color: report.colors[color_keys[report.data.size % color_keys.size]],
-        }
+          report.data_role << {
+            x: I18n.t("js.trust_levels.names.#{TrustLevel.levels.key(level.to_i)}"),
+            y: count,
+            color: report.colors[color_keys[report.data_role.size % color_keys.size]],
+          }
+        end
 
-        moderators = User.real.moderators.count
-        report.data << {
-          icon: "shield-halved",
-          key: "moderators",
-          x: I18n.t("reports.users_by_type.xaxis_labels.moderator"),
-          y: moderators,
-          color: report.colors[color_keys[report.data.size % color_keys.size]],
-        }
-      elsif type_filter == "status"
-        report.labels = [
-          { property: :x, title: I18n.t("reports.users_by_type.labels.type") },
-          { property: :y, type: :number, title: I18n.t("reports.default.labels.count") },
-        ]
+      admins = User.real.admins.count
+      report.data_role << {
+        x: I18n.t("reports.users_by_type.xaxis_labels.admin"),
+        y: admins,
+        color: report.colors[color_keys[report.data_role.size % color_keys.size]],
+      }
 
-        suspended = User.real.suspended.count
-        report.data << {
-          icon: "ban",
-          key: "suspended",
-          x: I18n.t("reports.users_by_type.xaxis_labels.suspended"),
-          y: suspended,
-          color: report.colors[color_keys[report.data.size % color_keys.size]],
-        }
+      moderators = User.real.moderators.count
+      report.data_role << {
+        x: I18n.t("reports.users_by_type.xaxis_labels.moderator"),
+        y: moderators,
+        color: report.colors[color_keys[report.data_role.size % color_keys.size]],
+      }
 
-        silenced = User.real.silenced.count
-        report.data << {
-          icon: "ban",
-          key: "silenced",
-          x: I18n.t("reports.users_by_type.xaxis_labels.silenced"),
-          y: silenced,
-          color: report.colors[color_keys[report.data.size % color_keys.size]],
-        }
+      report.labels = [
+        { property: :x, title: I18n.t("reports.users_by_type.labels.type") },
+        { property: :y, type: :number, title: I18n.t("reports.default.labels.count") },
+      ]
 
-        active = User.real.not_suspended.not_silenced.count
-        report.data << {
-          icon: "check",
-          key: "active",
-          x: I18n.t("reports.users_by_type.xaxis_labels.active"),
-          y: active,
-          color: report.colors[color_keys[report.data.size % color_keys.size]],
-        }
-      end
+      suspended = User.real.suspended.count
+      report.data_status << {
+        x: I18n.t("reports.users_by_type.xaxis_labels.suspended"),
+        y: suspended,
+        color: report.colors[color_keys[report.data_status.size % color_keys.size]],
+      }
+
+      silenced = User.real.silenced.count
+      report.data_status << {
+        x: I18n.t("reports.users_by_type.xaxis_labels.silenced"),
+        y: silenced,
+        color: report.colors[color_keys[report.data_status.size % color_keys.size]],
+      }
+
+      active = User.real.not_suspended.not_silenced.count
+      report.data_status << {
+        x: I18n.t("reports.users_by_type.xaxis_labels.active"),
+        y: active,
+        color: report.colors[color_keys[report.data_status.size % color_keys.size]],
+      }
+
+      report.data = type_filter == "status" ? report.data_status : report.data_role
     end
   end
 end

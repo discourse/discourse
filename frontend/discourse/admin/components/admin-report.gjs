@@ -53,7 +53,8 @@ export default class AdminReport extends Component {
   @tracked options = null;
   @tracked dateRangeFrom = null;
   @tracked dateRangeTo = null;
-  @tracked userHasCustomDates = false;
+@tracked userHasCustomDates = false;
+  @tracked currentFilterType = null;
 
   showHeader = this.args.showHeader ?? true;
   showFilteringUI = this.args.showFilteringUI ?? false;
@@ -193,7 +194,13 @@ export default class AdminReport extends Component {
 
   @action
   changeGrouping(grouping) {
-    if (this.options?.filterId) {
+    if (
+      this.currentMode === REPORT_MODES.donut_chart &&
+      this.options?.filterId
+    ) {
+      // For donut charts, update filter locally without refreshing => exerimental, could apply everywhere?
+      this.currentFilterType = grouping;
+    } else if (this.options?.filterId) {
       this.applyFilter(this.options.filterId, grouping);
     } else {
       const options = { chartGrouping: grouping };
@@ -301,7 +308,7 @@ export default class AdminReport extends Component {
       isTesting() ? "end" : formattedEndDate.replace(/-/g, ""),
       "[:prev_period]",
       this.args.reportOptions?.table?.limit,
-      // Convert all filter values to strings to ensure unique serialization
+
       this.args.filters?.customFilters
         ? JSON.stringify(this.args.filters?.customFilters, (k, v) =>
             k ? `${v}` : v
@@ -317,7 +324,11 @@ export default class AdminReport extends Component {
   }
 
   get chartGroupings() {
-    const chartGrouping = this.options?.chartGrouping;
+    // For donut charts, use currentFilterType instead of options.chartGrouping => experimental, could apply everywhere?
+    const chartGrouping =
+      this.currentMode === REPORT_MODES.donut_chart
+        ? this.currentFilterType
+        : this.options?.chartGrouping;
 
     if (this.options?.chartGroupings) {
       return this.options.chartGroupings.map((g) => ({
@@ -472,6 +483,10 @@ export default class AdminReport extends Component {
     this.model = report;
     this.currentMode = currentMode;
     this.options = this._buildOptions(currentMode, report);
+
+    if (currentMode === REPORT_MODES.donut_chart) {
+      this.currentFilterType = this.options?.chartGrouping || "role";
+    }
   }
 
   @bind
@@ -605,7 +620,7 @@ export default class AdminReport extends Component {
   }
 
   <template>
-{{#if this.siteSettings.reporting_improvements}}
+    {{#if this.siteSettings.reporting_improvements}}
       <AdminReportNew @report={{this}} @filters={{@filters}} />
     {{else}}
       <AdminReportLegacy @report={{this}} @filters={{@filters}} />

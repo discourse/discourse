@@ -133,6 +133,8 @@ class Report
 
   attr_accessor :type,
                 :data,
+                :data_role,
+                :data_status,
                 :total,
                 :prev30Days,
                 :start_date,
@@ -287,6 +289,9 @@ class Report
       json[:limit] = self.limit if self.limit
       json[:default_group_by] = self.default_group_by if self.default_group_by
       json[:y_axis_title] = self.y_axis_title if self.y_axis_title
+
+      json[:data_role] = self.data_role if self.respond_to?(:data_role) && self.data_role
+      json[:data_status] = self.data_status if self.respond_to?(:data_status) && self.data_status
 
       if type == "page_view_crawler_reqs"
         json[:related_report] = Report.find(
