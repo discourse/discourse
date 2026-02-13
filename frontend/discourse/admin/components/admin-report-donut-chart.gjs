@@ -54,9 +54,15 @@ export const gradientPlugin = {
 export default class AdminReportDonutChart extends Component {
   @service capabilities;
 
+  get currentData() {
+    const { model, filterType = "role" } = this.args;
+    const data = filterType === "status" ? model.data_status : model.data_role;
+    return data || model.data || [];
+  }
+
   get chartConfig() {
     const { model } = this.args;
-    const rows = makeArray(model.data);
+    const rows = makeArray(this.currentData);
 
     const labelProperty = model.labels?.[0]?.property || "key";
     const labels = rows.map((row) => {
@@ -126,7 +132,7 @@ export default class AdminReportDonutChart extends Component {
             cornerRadius: 8,
             boxPadding: 4,
             callbacks: {
-              title: () => null, // Hide the tooltip title
+              title: () => null,
               label: (tooltipItem) => {
                 const value = tooltipItem.parsed;
                 const total = tooltipItem.dataset.data.reduce(
