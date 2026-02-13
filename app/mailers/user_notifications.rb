@@ -882,6 +882,6 @@ class UserNotifications < ActionMailer::Base
         .not_suspended
         .where("created_at > ?", date)
         .count
-        .tap { Discourse.redis.setex(key, 1.day, _1) }
+        .tap { Discourse.redis.setex(key, 1.day, it) }
   end
 end

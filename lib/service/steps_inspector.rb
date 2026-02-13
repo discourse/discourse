@@ -119,7 +119,7 @@ class Service::StepsInspector
     def steps
       [
         self,
-        *step.steps.map { Step.for(_1, result, nesting_level: nesting_level + 1, color:).steps },
+        *step.steps.map { Step.for(it, result, nesting_level: nesting_level + 1, color:).steps },
       ]
     end
 
@@ -160,7 +160,7 @@ class Service::StepsInspector
       [
         self,
         *step.steps.map do
-          Step.for(_1, result, nesting_level: nesting_level + 1, color: skipped_color).steps
+          Step.for(it, result, nesting_level: nesting_level + 1, color: skipped_color).steps
         end,
       ]
     end
@@ -190,7 +190,7 @@ class Service::StepsInspector
   attr_reader :steps, :result
 
   def initialize(result)
-    @steps = result.__steps__.map { Step.for(_1, result).steps }.flatten
+    @steps = result.__steps__.map { Step.for(it, result).steps }.flatten
     @result = result
   end
 

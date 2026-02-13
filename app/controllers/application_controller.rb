@@ -759,7 +759,7 @@ class ApplicationController < ActionController::Base
   NO_DESTINATION_COOKIE = %w[/login /signup /session/ /auth/ /uploads/].freeze
 
   def is_valid_destination_url?(url)
-    url.present? && url != path("/") && NO_DESTINATION_COOKIE.none? { url.start_with? path(_1) }
+    url.present? && url != path("/") && NO_DESTINATION_COOKIE.none? { url.start_with? path(it) }
   end
 
   def destination_url

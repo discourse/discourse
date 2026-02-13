@@ -7,11 +7,11 @@ module DiscourseGamification
     belongs_to :user
 
     def self.enabled_scorables
-      Scorable.subclasses.filter { _1.enabled? }
+      Scorable.subclasses.filter { it.enabled? }
     end
 
     def self.scorables_queries
-      enabled_scorables.map { "( #{_1.query} )" }.join(" UNION ALL ")
+      enabled_scorables.map { "( #{it.query} )" }.join(" UNION ALL ")
     end
 
     def self.calculate_scores(since_date: Date.today, only_subclass: nil)

@@ -213,9 +213,9 @@ after_initialize do
 
     topics.each do |topic|
       if assignments = assignments_map[topic.id]
-        topic_assignments, post_assignments = assignments.partition { _1.target_type == "Topic" }
+        topic_assignments, post_assignments = assignments.partition { it.target_type == "Topic" }
 
-        direct_assignment = topic_assignments.find { _1.target_id == topic.id }
+        direct_assignment = topic_assignments.find { it.target_id == topic.id }
 
         indirectly_assigned_to = {}
 
@@ -270,8 +270,8 @@ after_initialize do
 
     results.posts.each do |post|
       if topic_assignments = assignments[post.topic_id]
-        direct_assignment = topic_assignments.find { _1.target_type == "Topic" }
-        indirect_assignments = topic_assignments.select { _1.target_type == "Post" }
+        direct_assignment = topic_assignments.find { it.target_type == "Topic" }
+        indirect_assignments = topic_assignments.select { it.target_type == "Post" }
       end
 
       if indirect_assignments.present?

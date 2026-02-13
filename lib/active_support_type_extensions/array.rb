@@ -21,7 +21,7 @@ module ActiveSupportTypeExtensions
         value.map { |item| Integer(item, exception: false) || item }
       else
         ::Array.wrap(value)
-      end.tap { _1.compact_blank! if compact_blank }
+      end.tap { it.compact_blank! if compact_blank }
     end
   end
 end

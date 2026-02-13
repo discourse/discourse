@@ -3291,7 +3291,7 @@ RSpec.describe Search do
 
       before do
         described_class.advanced_order(:chars, enabled: method(:enabled?)) do
-          _1.reorder("MAX(LENGTH(posts.raw)) DESC")
+          it.reorder("MAX(LENGTH(posts.raw)) DESC")
         end
       end
 

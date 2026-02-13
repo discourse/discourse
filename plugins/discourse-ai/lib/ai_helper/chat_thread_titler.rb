@@ -63,7 +63,7 @@ module DiscourseAi
           .split("\n")
           .first
           .to_s
-          .then { _1.match?(/^(["']).*\1$/) ? _1[1..-2] : _1 }
+          .then { it.match?(/^(["']).*\1$/) ? it[1..-2] : it }
           .truncate(100, separator: " ")
       end
 

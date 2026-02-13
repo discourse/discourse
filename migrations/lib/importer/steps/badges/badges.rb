@@ -7,7 +7,7 @@ module Migrations::Importer::Steps
     VALID_TRIGGERS =
       Badge::Trigger
         .constants(false)
-        .filter_map { Badge::Trigger.const_get(_1) unless _1 == :DeprecatedPostProcessed }
+        .filter_map { Badge::Trigger.const_get(it) unless it == :DeprecatedPostProcessed }
         .to_set
         .freeze
 

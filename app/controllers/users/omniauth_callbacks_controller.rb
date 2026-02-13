@@ -105,7 +105,7 @@ class Users::OmniauthCallbacksController < ApplicationController
     true
   end
 
-  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat unauthorized].index_by { _1 }
+  ALLOWED_FAILURE_ERRORS = %w[csrf_detected request_error invalid_iat unauthorized].index_by { it }
 
   def failure
     error_name = params[:message].to_s.gsub(/[^\w-]/, "").presence
@@ -113,7 +113,7 @@ class Users::OmniauthCallbacksController < ApplicationController
 
     if error == "generic"
       provider_name = params[:provider].presence || params[:strategy].presence
-      provider = Discourse.enabled_authenticators.find { _1.name == provider_name }&.display_name
+      provider = Discourse.enabled_authenticators.find { it.name == provider_name }&.display_name
 
       if provider.blank? && Discourse.enabled_authenticators.one?
         provider = Discourse.enabled_authenticators[0].display_name

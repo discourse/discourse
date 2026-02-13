@@ -101,7 +101,7 @@ class Service::Runner
       condition: ->(*exceptions) do
         next unless result["result.try.default"]&.exception
         next true if exceptions.empty?
-        exceptions.any? { result["result.try.default"].exception.is_a?(_1) }
+        exceptions.any? { result["result.try.default"].exception.is_a?(it) }
       end,
       key: %w[result try],
       name: "default",
@@ -165,7 +165,7 @@ class Service::Runner
           result[
             [*action[:key], action[:name] || args.first || action[:default_name]].join(".")
           ].public_send(action[:property] || :itself),
-          **result.slice(*block.parameters.filter_map { _1.last if _1.first == :keyreq }),
+          **result.slice(*block.parameters.filter_map { it.last if it.first == :keyreq }),
           &block
         )
       end,
