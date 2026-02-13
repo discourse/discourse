@@ -662,12 +662,19 @@ cs:
           many: "%{commaSeparatedUsernames} a %{count} dalších píší"
           other: "%{commaSeparatedUsernames} a %{count} dalších píší"
       retention_reminders:
+        chat_settings: "Nastavení chatu"
         indefinitely_short: "navždy"
+        indefinitely_long: "%{chatSettingsLink} bylo nastaveno tak, aby uchovávalo zprávy kanálu na dobu neurčitou."
         short:
           one: "%{count} den"
           few: "%{count} dny"
           many: "%{count} dní"
           other: "%{count} dní"
+        long:
+          one: "%{chatSettingsLink} bylo nastaveno tak, aby uchovávalo zprávy kanálu po dobu %{count} dne."
+          few: "%{chatSettingsLink} bylo nastaveno tak, aby uchovávalo zprávy kanálu po dobu %{count} dnů."
+          many: "%{chatSettingsLink} bylo nastaveno tak, aby uchovávalo zprávy kanálu po dobu %{count} dnů."
+          other: "%{chatSettingsLink} bylo nastaveno tak, aby uchovávalo zprávy kanálu po dobu %{count} dnů."
       flags:
         off_topic: "Tato zpráva není relevantní pro aktuální diskusi, definovanou názvem kanálu, a pravděpodobně by měla být přesunuta jinam."
         inappropriate: "Tato zpráva obsahuje obsah, který by rozumný člověk mohl považovat za urážlivý, zneužívající nebo porušující <a href=\"%{basePath}/guidelines\">naše pravidla komunity</a>."
@@ -805,6 +812,7 @@ cs:
           composer_bold: "%{shortcut} Tučné (pouze editor)"
           composer_italic: "%{shortcut} Kurzíva (pouze editor)"
           composer_code: "%{shortcut} Kód (pouze editor)"
+          drawer_toggle: "%{shortcut} Přepnout okénko chatu"
           drawer_close: "%{shortcut} Zavření okénka chatu"
           mark_all_channels_read: "%{shortcut} Označit všechny kanály jako přečtené"
     topic_statuses:

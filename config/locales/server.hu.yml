@@ -2114,8 +2114,6 @@ hu:
     num_flaggers_to_close_topic: "A téma beavatkozás céljából történő automatikus szüneteltetéséhez szükséges egyedi megjelölők minimális száma"
     num_hours_to_close_topic: "Egy téma szüneteltetésének óraszáma beavatkozás céljából."
     auto_respond_to_flag_actions: "Automatikus válasz bekapcsolása a megjelölés elvetéséhez."
-    min_first_post_typing_time: "Minimális idő ezredmásodpercben, amennyit egy felhasználónak gépelnie kell az első bejegyzése során. Ha nem éri el a küszöbértéket, a bejegyzés automatikusan a jóváhagyásra váró sorba kerül. Állítsa 0-ra a kikapcsoláshoz (nem ajánlott)."
-    fast_typing_threshold: "Minimális idő ezredmásodpercben, amennyit egy felhasználónak gépelnie kell az első bejegyzése során. Ha nem éri el a küszöböt, a bejegyzés automatikusan az ellenőrzési sorba kerül. Az alacsony érték 1 másodperc, a normál 3 másodperc, a legmagasabb pedig 5 másodperc."
     auto_silence_fast_typers_on_first_post: "Automatikusan elnémítja azokat a felhasználókat, akik nem érik el a \"gyors gépelési küszöböt\"."
     auto_silence_fast_typers_max_trust_level: "Maximális bizalmi szint a gyors gépelők automatikus elnémításához"
     auto_silence_first_post_regex: "Kis- és nagybetűre nem érzékeny reguláris kifejezés, amely ha teljesül, az első felhasználói bejegyzést elnémítja és a jóváhagyási sorba küldi. Például: raging|a[bc]a , minden olyan bejegyzést elnémít, amely tartalmazza a raging vagy aba vagy aca kifejezést az első alkalommal. Csak az első bejegyzésre vonatkozik. ELAVULT: Használja helyette a Figyelt Szavak Elnémítása funkciót."
