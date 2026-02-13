@@ -5488,7 +5488,7 @@ de:
         enabled_for_options:
           no_one: "Keinen"
           everyone: "Jeden"
-          staff: "Nur Team-Mitglieder"
+          staff: "Nur %{staffGroupName}"
           specific_groups: "Bestimmte Gruppe(n)"
           specific_groups_with_group_names:
             one: "die Gruppe %{groupNames}"

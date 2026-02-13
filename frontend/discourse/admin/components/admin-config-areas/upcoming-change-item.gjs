@@ -7,6 +7,7 @@ import { action } from "@ember/object";
 import { LinkTo } from "@ember/routing";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
+import { capitalize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { modifier } from "ember-modifier";
 import DButton from "discourse/components/d-button";
@@ -73,8 +74,8 @@ export default class UpcomingChangeItem extends Component {
     if (!this.args.change.upcoming_change.disallow_enabled_for_groups) {
       options.push(
         {
-          label: i18n("admin.upcoming_changes.enabled_for_options.staff"),
-          value: "staff",
+          label: capitalize(this.staffGroupName),
+          value: this.staffGroupName,
         },
         {
           label: i18n(
@@ -86,6 +87,10 @@ export default class UpcomingChangeItem extends Component {
     }
 
     return options;
+  }
+
+  get staffGroupName() {
+    return this.site.groups.find((g) => g.id === AUTO_GROUPS.staff.id).name;
   }
 
   get enabledForDisabled() {
@@ -190,9 +195,10 @@ export default class UpcomingChangeItem extends Component {
       enabledForLabel = i18n(
         "admin.upcoming_changes.enabled_for_options.everyone"
       );
-    } else if (enabledFor === "staff") {
+    } else if (enabledFor === this.staffGroupName) {
       enabledForLabel = i18n(
-        "admin.upcoming_changes.enabled_for_options.staff"
+        "admin.upcoming_changes.enabled_for_options.staff",
+        { staffGroupName: capitalize(this.staffGroupName) }
       );
     } else if (enabledFor === "groups") {
       const groupNames = this.bufferedGroups.split(",");
@@ -246,8 +252,8 @@ export default class UpcomingChangeItem extends Component {
     try {
       await this.toggleChange(isEnabled, newValue);
 
-      if (newValue === "staff") {
-        this.groupsChanged(this.site.groupsById[AUTO_GROUPS.staff.id].name);
+      if (newValue === this.staffGroupName) {
+        this.groupsChanged(this.staffGroupName);
       } else if (newValue === "everyone" || newValue === "no_one") {
         this.groupsChanged("");
       }
