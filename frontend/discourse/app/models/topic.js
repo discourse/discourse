@@ -20,6 +20,7 @@ import PreloadStore from "discourse/lib/preload-store";
 import { emojiUnescape } from "discourse/lib/text";
 import { fancyTitle } from "discourse/lib/topic-fancy-title";
 import { trackedArray } from "discourse/lib/tracked-tools";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL, { userPath } from "discourse/lib/url";
 import ActionSummary from "discourse/models/action-summary";
 import Bookmark from "discourse/models/bookmark";
@@ -552,7 +553,10 @@ export default class Topic extends RestModel {
     if (postNumber > 0) {
       url += `/${postNumber}`;
     }
-    return url;
+    return applyValueTransformer("topic-url-for-post-number", url, {
+      topic: this,
+      postNumber,
+    });
   }
 
   @discourseComputed("unread_posts", "new_posts")

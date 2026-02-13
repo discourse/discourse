@@ -86,6 +86,7 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "topic-list-item-expand-pinned",
   "topic-list-item-mobile-layout",
   "topic-list-item-style",
+  "topic-url-for-post-number",
   "user-field-components",
   "user-menu-notification-item-acting-user-avatar",
   "user-notes-modal-subtitle",
