@@ -331,7 +331,9 @@
 
   .header-sidebar-toggle button .d-icon,
   .d-header-icons .d-icon {
-    font-size: var(--font-up-3);
+    &:not(.d-icon-discourse-dnd) {
+      font-size: var(--font-up-3);
+    }
   }
 
   .d-header-icons .icon img.avatar {
