@@ -627,13 +627,15 @@ class PostRevisor
     end
 
     @post_revision =
-      PostRevision.create!(
+      PostRevision.new(
         user_id: @post.last_editor_id,
         post_id: @post.id,
         number: @post.version,
         modifications:,
         hidden: @hidden_revision,
       )
+    @post_revision.silent = @silent
+    @post_revision.save!
   end
 
   def update_revision
