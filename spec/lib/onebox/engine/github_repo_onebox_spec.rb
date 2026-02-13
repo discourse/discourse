@@ -46,9 +46,9 @@ RSpec.describe Onebox::Engine::GithubRepoOnebox do
 
     context "when the repo has no description" do
       let(:response) do
-        resp = onebox_response(described_class.onebox_name)
+        resp = MultiJson.load(onebox_response(described_class.onebox_name))
         resp["description"] = ""
-        resp
+        MultiJson.dump(resp)
       end
 
       it "includes a message about contributing to the repo" do
