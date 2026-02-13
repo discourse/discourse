@@ -37,5 +37,9 @@ cs:
       query_user: "Vytvořil/a"
       reset_params: "obnovit výchozí"
       search_placeholder: "Hledat…"
+      form:
+        errors:
+          invalid_date: "%{date} je neplatné datum"
+          invalid_time: "%{time} je neplatný čas"
     group:
       reports: "Sestav"

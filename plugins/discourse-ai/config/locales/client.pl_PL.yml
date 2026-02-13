@@ -14,6 +14,7 @@ pl_PL:
               search: "Umożliwia wyszukiwanie AI"
               stream_completion: "Umożliwia strumieniowe uzupełnianie osobowości AI"
               update_personas: "Umożliwia aktualizację osobowości AI"
+              manage_artifacts: "Umożliwia zarządzanie artefaktami AI (listowanie, przeglądanie, tworzenie, aktualizowanie, usuwanie)"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"

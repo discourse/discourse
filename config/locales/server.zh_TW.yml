@@ -1288,7 +1288,6 @@ zh_TW:
     num_flaggers_to_close_topic: "要自動終止一個主題的討論並介入時所需的最小數量的獨立標記者"
     num_hours_to_close_topic: "暫停討論話題以進行干預的小時數。"
     auto_respond_to_flag_actions: "啟用自動回覆當加入一個標籤。"
-    min_first_post_typing_time: "使用者發表第一帖時打字的最小時間（以毫秒計），如果沒有達到該閾值，貼文將自動進入需要批准隊列。設置為 0 禁用（不推薦）"
     auto_silence_fast_typers_max_trust_level: "自動封鎖輸入過於快速的使用者的最高信任等級"
     reviewable_claiming: "是否需要審核內容後，才能對其進行操作？"
     reviewable_default_topics: "預設值為顯示按討論話題分類的已審核內容"

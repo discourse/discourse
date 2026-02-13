@@ -19,7 +19,7 @@ zh_CN:
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     month_names:
-    - null
+    -
     - 1 月
     - 2 月
     - 3 月
@@ -2038,8 +2038,6 @@ zh_CN:
     num_flaggers_to_close_topic: "自动暂停话题以进行干预所需的最小唯一举报次数"
     num_hours_to_close_topic: "暂停话题以进行干预的小时数。"
     auto_respond_to_flag_actions: "处理举报时启用自动回复。"
-    min_first_post_typing_time: "用户在第一次发帖时必须输入的最短时间（以毫秒为单位），如果未达到阈值，发布将自动进入需求审批队列。设置为 0 将禁用（不推荐）"
-    fast_typing_threshold: "发布第一个帖子时，用户必须输入的最短时间（以毫秒为单位）。如果未达到该阈值，帖子将自动进入审核队列。最短时间为 1 秒，标准时间为 3 秒，最长时间为 5 秒。"
     auto_silence_fast_typers_on_first_post: "自动禁言未达到 `fast typing threshold` 的用户"
     auto_silence_fast_typers_max_trust_level: "自动禁言输入过快的用户的最高信任级别"
     auto_silence_first_post_regex: "检查用户第一个帖子的大小写不相关的正则表达式。如匹配，用户将被禁言并送至审核队列。示例：raging|a[bc]a 将匹配包含 raging、aba 或者 aca 的所有帖子，因此该用户将被禁言。只对第一个帖子有效。已弃用：改用“禁言关注词”。"

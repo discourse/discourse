@@ -1665,7 +1665,6 @@ fa_IR:
     num_flaggers_to_close_topic: "Minimum number of unique flaggers that is required to automatically pause a topic for intervention"
     num_hours_to_close_topic: "زمان توقف مورد نیاز برای مداخله در یک موضوع"
     auto_respond_to_flag_actions: "فعال کردن پاسخ خودکار برای زمانی که پرچم‌گذاری دفع می شود."
-    min_first_post_typing_time: "حداقل زمان تایپ برای اولین نوشته کاربر به واحد میلی ثانیه، اگر این زمان رعایت نشود نوشته نیازمند تایید خواهد بود. 0 برای غیر فعال (توصیه نمی‌شود)"
     reply_by_email_address: "نمونه برای پاسخ به ایمیل، آدرس‌های ایمیل آمده برای مثال: %%{reply_key}@reply.example.com یا replies+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "لیست قالب‌های مشابه برای پاسخ به ایمیل‌های دریافتی. مثال:\n%%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "محروم کردن تصاویر از ایمیل‌هایی با حجم کمتر از 2800 بایت"

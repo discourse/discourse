@@ -39,7 +39,7 @@ cs:
               label: "Odpověď"
     discourse_ai:
       llm_selector:
-        none: "Žádná"
+        none: "Žádný"
       features:
         back: "Zpět"
         disabled: "(vypnuto)"
@@ -150,8 +150,8 @@ cs:
         test_modal:
           run: "Spustit test"
       secrets:
-        short_title: "Údaje"
-        name: "Jméno"
+        short_title: "Pověření"
+        name: "Název"
         secret: "Hodnota"
         back: "Zpět"
         save: "Uložit"

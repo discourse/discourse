@@ -2075,8 +2075,6 @@ fr:
     num_flaggers_to_close_topic: "Nombre minimal de signalements uniques requis pour suspendre automatiquement un sujet pour intervention"
     num_hours_to_close_topic: "Nombre d'heures de fermeture d'un sujet pour intervention."
     auto_respond_to_flag_actions: "Activer la réponse automatique lors du traitement d'un signalement."
-    min_first_post_typing_time: "Durée minimale en millisecondes qu'un utilisateur doit passer à saisir son premier message, si le seuil n'est pas atteint, le message rejoindra automatiquement la file d'attente pour approbation. Mettre à 0 pour désactiver (non recommandé)"
-    fast_typing_threshold: "Durée minimale en millisecondes pendant laquelle un utilisateur doit saisir son premier message. Si le seuil n'est pas atteint, le message entrera automatiquement dans la file d'attente de révision. La durée minimale est de 1 seconde, la durée standard de 3 secondes et la durée maximale de 5 secondes."
     auto_silence_fast_typers_on_first_post: "Mettre en sourdine automatiquement les utilisateurs qui n'ont pas respecté le « fast typing threshold »"
     auto_silence_fast_typers_max_trust_level: "Niveau de confiance maximal pour automatiquement mettre en sourdine les utilisateurs rédigeant des messages trop rapidement."
     auto_silence_first_post_regex: "Expression régulière non sensible à la casse qui, si elle est détectée, déclenchera la mise en sourdine du premier message de tout utilisateur et ajoutera ce message à la liste des messages à valider. Exemple : « rageux|a[bc]a » mettra en sourdine les premiers messages contenant « rageux » ou « aba » ou « aca ». DÉPRÉCIÉ : utilisez la fonctionnalité « Mettre en sourdine » à la place."

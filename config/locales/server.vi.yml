@@ -1241,7 +1241,6 @@ vi:
     max_age_unmatched_ips: "Xóa các IP hiển thị không khớp sau (N) ngày."
     num_flaggers_to_close_topic: "Số lượng tối thiểu đánh dấu độc nhất để tự động tạm dừng một chủ đề để can thiệp."
     auto_respond_to_flag_actions: "Kích hoạt tính năng trả lời tự động khi xử lý một đánh dấu."
-    min_first_post_typing_time: "Số lượng thời gian tối thiểu theo phần ngàn giây mà thành viên phải nhập trong bài viết đầu tiên, nếu ngưỡng không được đáp ứng sẽ tự động nhập vào hàng chờ duyệt. Đặt là 0 để tắt (không khuyến nghị)"
     reply_by_email_address: "Mẫu để trả lời cho các địa chỉ email đến, ví dụ: %%{reply_key}@reply.example.com hoặc replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Tất cả các ảnh từ email phải có kích cỡ nhỏ hơn 2800 Bytes"
     display_name_on_email_from: "Hiển thị tên đầy đủ trên email từ trường"

@@ -42,7 +42,22 @@ cs:
       no_solved_topics_title_others: "%{username} zatím nevyřešil/a žádná témata"
       no_solved_topics_body: "Pokud na téma poskytnete užitečnou odpověď, vaše odpověď může být zvolena jako řešení vlastníkem tématu nebo redakcí."
       marked_solved_by: "Označeno jako vyřešené uživatelem %{user}"
+      confirm_move_solution_title: "Přesunout příspěvek s řešením"
+      confirm_move_solution:
+        one: "Vybraný příspěvek je označen jako řešení tohoto tématu. Pokud jej přesunete, téma bude aktualizováno na nevyřešené."
+        few: "Jeden z vybraných příspěvků je označen jako řešení tohoto tématu. Pokud jej přesunete, téma bude aktualizováno na nevyřešené."
+        many: "Jeden z vybraných příspěvků je označen jako řešení tohoto tématu. Pokud jej přesunete, téma bude aktualizováno na nevyřešené."
+        other: "Jeden z vybraných příspěvků je označen jako řešení tohoto tématu. Pokud jej přesunete, téma bude aktualizováno na nevyřešené."
+      move_post_confirm:
+        one: "Přesunout příspěvek"
+        few: "Přesunout příspěvky"
+        many: "Přesunout příspěvky"
+        other: "Přesunout příspěvky"
       move_post_cancel: "Zrušit"
+      dont_show_again: "Rozumím, už mi to nezobrazujte."
+      confirm_category_change_solution_title: "Řešení bude odstraněno"
+      confirm_category_change_solution: "Nová kategorie nemá povolená řešení. Změnou kategorie se z tohoto tématu odstraní přijaté řešení."
+      confirm_category_change_solution_confirm: "Změnit kategorii"
       confirm_category_change_solution_cancel: "Zrušit"
       no_answer:
         title: Byla vaše otázka zodpovězena?

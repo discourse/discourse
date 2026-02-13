@@ -2075,8 +2075,6 @@ fi:
     num_flaggers_to_close_topic: "Kuinka monta eri merkitsijää tarvitaan, jotta ketju voi mennä tauolle puuttumistoimia odottamaan"
     num_hours_to_close_topic: "Kuinka moneksi tunniksi ketju menee tauolle puuttumistoimia odottamaan."
     auto_respond_to_flag_actions: "Ota käyttöön automaattinen vastaus merkintää poistettaessa."
-    min_first_post_typing_time: "Minimimäärä aikaa millisekunneissa, joka käyttäjän täytyy kirjoittaa ensimmäistä viestiään. Jos rajaa ei saavuteta, viesti lisätään automaattisesti hyväksyttävien jonoon. Aseta 0 poistaaksesi käytöstä (ei suositella)."
-    fast_typing_threshold: "Vähimmäisaika millisekunteina, joka käyttäjän täytyy kirjoittaa ensimmäistä viestiään. Jos rajaa ei saavuteta, viesti siirtyy automaattisesti tarkastusjonoon. Matala on 1 sekunti, normaali on 3 sekuntia, korkea on 5 sekuntia."
     auto_silence_fast_typers_on_first_post: "Hiljennä automaattisesti käyttäjät, jotka eivät täytä \"fast typing threshold\" -rajaa"
     auto_silence_fast_typers_max_trust_level: "Enimmäisluottamustaso, jolla nopea kirjoittaja voidaan hiljentää automaattisesti"
     auto_silence_first_post_regex: "Isoista ja pienistä kirjaimista riippumaton säännöllinen lauseke, joka osuessaan aiheuttaa käyttäjän ensimmäisen viestin hiljennyksen ja viestin lähettämiseen hyväksyntäjonoon. Esimerkki: hemmetti|a[bc]a aiheuttaa hiljennyksen, jos viesti sisältää sanan \"hemmetti\", \"aba\" tai \"aca\". Koskee vain käyttäjän ensimmäistä viestiä. VANHENTUNUT: käytä tämän sijaan tarkkailtujen sanojen hiljennystä."
