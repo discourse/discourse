@@ -39,6 +39,7 @@ import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import hideScrollableContent from "discourse/helpers/hide-scrollable-content";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
@@ -426,6 +427,10 @@ export default <template>
                 />
               </span>
 
+              {{#if @controller.model.postStream.firstPostNotLoaded}}
+                {{hideScrollableContent "above"}}
+              {{/if}}
+
               {{#unless @controller.model.postStream.loadingFilter}}
                 <PostStream
                   @postStream={{@controller.model.postStream}}
@@ -484,6 +489,10 @@ export default <template>
                   @topic={{@controller.model}}
                 />
               {{/unless}}
+
+              {{#if @controller.model.postStream.lastPostNotLoaded}}
+                {{hideScrollableContent "below"}}
+              {{/if}}
             </div>
             <div id="topic-bottom"></div>
 
