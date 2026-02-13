@@ -972,7 +972,7 @@ acceptance("Tag settings page", function (needs) {
       })
     );
 
-    server.get("/tag/test-tag/100/settings.json", () =>
+    server.get("/tag/100/settings.json", () =>
       helper.response({
         tag_settings: {
           id: 100,

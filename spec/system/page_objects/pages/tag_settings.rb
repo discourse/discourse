@@ -148,7 +148,7 @@ module PageObjects
       def add_synonym(name)
         synonyms_chooser.expand
         synonyms_chooser.search(name)
-        synonyms_chooser.select_row_by_value(name)
+        synonyms_chooser.select_row_by_name(name)
         synonyms_chooser.collapse
         self
       end
