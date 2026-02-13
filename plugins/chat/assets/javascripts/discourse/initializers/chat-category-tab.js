@@ -12,9 +12,7 @@ export default {
         name: i18n("chat.edit_category.tab_title"),
         component: CategoryChat,
         condition: ({ category, siteSettings }) =>
-          siteSettings.chat_enabled &&
-          !!category.id &&
-          !!category.has_chat_channels,
+          siteSettings.chat_enabled && category.id,
       });
     });
   },

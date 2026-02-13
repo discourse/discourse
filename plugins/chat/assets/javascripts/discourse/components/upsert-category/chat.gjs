@@ -64,7 +64,7 @@ export default class EditCategoryChat extends Component {
             </thead>
             <tbody>
               {{#each this.channels as |channel|}}
-                <tr class="d-table__row">
+                <tr class="d-table__row" data-channel-id={{channel.id}}>
                   <td class="d-table__cell edit-category-chat__channel-name">
                     <span
                       class="chat-channel-icon --icon"

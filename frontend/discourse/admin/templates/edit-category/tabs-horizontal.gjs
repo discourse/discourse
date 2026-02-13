@@ -36,6 +36,7 @@ export default class EditCategoryTabsHorizontalTemplate extends Component {
 
       <:actions>
         <DToggleSwitch
+          class="category-show-advanced-tabs-toggle"
           @label="category.show_advanced"
           @state={{@controller.showAdvancedTabs}}
           {{on "click" @controller.toggleAdvancedTabs}}

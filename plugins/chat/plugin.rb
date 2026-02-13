@@ -293,7 +293,7 @@ after_initialize do
     :category,
     :has_chat_channels,
     include_condition: -> { SiteSetting.chat_enabled },
-  ) { Chat::Channel.exists?(chatable_id: object.id, chatable_type: "Category") }
+  ) { object.category_channels.exists? }
 
   on(:site_setting_changed) do |name, old_value, new_value|
     user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]
