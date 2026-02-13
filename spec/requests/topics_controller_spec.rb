@@ -6514,6 +6514,31 @@ RSpec.describe TopicsController do
         )
       end
     end
+
+    it "does not allow a regular user to set notifications on a private message they cannot see" do
+      sign_in(user)
+
+      post "/t/#{pm.id}/notifications.json",
+           params: {
+             notification_level: NotificationLevels.topic_levels[:watching],
+           }
+
+      expect(response.status).to eq(403)
+      expect(TopicUser.find_by(user: user, topic: pm)).to be_blank
+    end
+
+    it "does not allow a regular user to set notifications on a topic in a restricted category" do
+      restricted_topic = Fabricate(:topic, category: staff_category)
+      sign_in(user)
+
+      post "/t/#{restricted_topic.id}/notifications.json",
+           params: {
+             notification_level: NotificationLevels.topic_levels[:watching],
+           }
+
+      expect(response.status).to eq(403)
+      expect(TopicUser.find_by(user: user, topic: restricted_topic)).to be_blank
+    end
   end
 
   describe ".defer_topic_view" do
