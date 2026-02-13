@@ -39,7 +39,7 @@ class MigratePatreonPluginStoreToTables < ActiveRecord::Migration[7.2]
         VALUES #{reward_rows.map { "(?::varchar, ?::varchar, ?::integer, ?::timestamp, ?::timestamp)" }.join(", ")}
         ON CONFLICT (patreon_id) DO NOTHING
       SQL
-        reward_rows
+        *reward_rows
           .map { |r| [r[:patreon_id], r[:title], r[:amount_cents], r[:created_at], r[:updated_at]] }
           .flatten,
       )
@@ -65,16 +65,27 @@ class MigratePatreonPluginStoreToTables < ActiveRecord::Migration[7.2]
       end
 
     patron_rows.each_slice(500) do |batch|
-      values =
-        batch.map do |r|
-          "(#{DB.param_encoder.encode(r[:patreon_id])}, #{DB.param_encoder.encode(r[:email])}, #{r[:amount_cents].nil? ? "NULL" : r[:amount_cents]}, #{r[:declined_since].nil? ? "NULL" : DB.param_encoder.encode(r[:declined_since].to_s) + "::timestamp"}, #{DB.param_encoder.encode(r[:created_at].iso8601)}::timestamp, #{DB.param_encoder.encode(r[:updated_at].iso8601)}::timestamp)"
-        end
+      next if batch.empty?
 
-      DB.exec(<<~SQL) if values.present?
+      DB.exec(
+        <<~SQL,
         INSERT INTO patreon_patrons (patreon_id, email, amount_cents, declined_since, created_at, updated_at)
-        VALUES #{values.join(", ")}
+        VALUES #{batch.map { "(?::varchar, ?::varchar, ?::integer, ?::timestamp, ?::timestamp, ?::timestamp)" }.join(", ")}
         ON CONFLICT (patreon_id) DO NOTHING
       SQL
+        *batch
+          .map do |r|
+            [
+              r[:patreon_id],
+              r[:email],
+              r[:amount_cents],
+              r[:declined_since],
+              r[:created_at],
+              r[:updated_at],
+            ]
+          end
+          .flatten,
+      )
     end
 
     # 3. Migrate reward-users (join table)
