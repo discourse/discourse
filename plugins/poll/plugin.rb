@@ -136,6 +136,26 @@ after_initialize do
     post.publish_message!("/polls/#{post.topic_id}", post_id: post.id, polls: polls)
   end
 
+  on(:post_moved) do |new_post, _original_topic_id, old_post|
+    next if old_post.blank? || new_post.id == old_post.id
+
+    ActiveRecord::Base.transaction do
+      # Remove empty polls auto-created by PostCreator on the new post
+      # so the originals (with votes) can be moved without a unique constraint violation.
+      new_polls = Poll.where(post_id: new_post.id)
+      if new_polls.exists?
+        PollVote.where(poll_id: new_polls.select(:id)).delete_all
+        PollOption.where(poll_id: new_polls.select(:id)).delete_all
+        new_polls.delete_all
+      end
+
+      Poll.where(post_id: old_post.id).update_all(post_id: new_post.id)
+    end
+
+    DiscoursePoll::PollsUpdater.update_post_custom_fields(new_post)
+    DiscoursePoll::PollsUpdater.update_post_custom_fields(old_post)
+  end
+
   on(:merging_users) do |source_user, target_user|
     DB.exec(<<-SQL, source_user_id: source_user.id, target_user_id: target_user.id)
       DELETE FROM poll_votes
