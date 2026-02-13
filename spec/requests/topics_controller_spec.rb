@@ -6171,6 +6171,13 @@ RSpec.describe TopicsController do
         put "/t/#{max_id + 1}/reset-bump-date.json"
         expect(response.status).to eq(404)
       end
+
+      it "denies access for TL4 user on a topic in a restricted category" do
+        restricted_topic = Fabricate(:topic, category: staff_category)
+        sign_in(trust_level_4)
+        put "/t/#{restricted_topic.id}/reset-bump-date.json"
+        expect(response.status).to eq(403)
+      end
     end
 
     %i[admin moderator trust_level_4].each do |user|

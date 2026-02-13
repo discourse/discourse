@@ -1230,6 +1230,8 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:id])
     raise Discourse::NotFound.new unless topic
 
+    guardian.ensure_can_see!(topic)
+
     topic.reset_bumped_at(params[:post_id])
     render body: nil
   end
