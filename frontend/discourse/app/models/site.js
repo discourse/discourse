@@ -303,20 +303,3 @@ export default class Site extends RestModel {
     }
   }
 }
-
-if (typeof Discourse !== "undefined") {
-  let warned = false;
-  // eslint-disable-next-line no-undef
-  Object.defineProperty(Discourse, "Site", {
-    get() {
-      if (!warned) {
-        deprecated("Import the Site class instead of using Discourse.Site", {
-          since: "2.4.0",
-          id: "discourse.globals.site",
-        });
-        warned = true;
-      }
-      return Site;
-    },
-  });
-}

@@ -11,33 +11,6 @@ let moduleSuffixTrie = null;
 
 const DEPRECATED_MODULES = new Map(
   Object.entries({
-    "controller:discovery.categoryWithID": {
-      newName: "controller:discovery.category",
-      since: "2.6.0",
-    },
-    "controller:discovery.parentCategory": {
-      newName: "controller:discovery.category",
-      since: "2.6.0",
-    },
-    "controller:tags-show": { newName: "controller:tag-show", since: "2.6.0" },
-    "controller:tags.show": { newName: "controller:tag.show", since: "2.6.0" },
-    "controller:tagsShow": { newName: "controller:tagShow", since: "2.6.0" },
-    "route:discovery.categoryWithID": {
-      newName: "route:discovery.category",
-      since: "2.6.0",
-    },
-    "route:discovery.parentCategory": {
-      newName: "route:discovery.category",
-      since: "2.6.0",
-    },
-    "route:tags-show": { newName: "route:tag-show", since: "2.6.0" },
-    "route:tags.show": { newName: "route:tag.show", since: "2.6.0" },
-    "route:tagsShow": { newName: "route:tagShow", since: "2.6.0" },
-    "app-events:main": {
-      newName: "service:app-events",
-      since: "2.4.0",
-      dropFrom: "2.9.0.beta1",
-    },
     // Deprecations below are silenced because they're in widespread use, and upgrading
     // themes/plugins right now would break their compatibility with the stable branch.
     // These should be unsilenced for the release of 2.9.0 stable.

@@ -4,7 +4,6 @@ import { dependentKeyCompat } from "@ember/object/compat";
 import { reads } from "@ember/object/computed";
 import { service } from "@ember/service";
 import discourseComputed from "discourse/lib/decorators";
-import deprecated from "discourse/lib/deprecated";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import getURL from "discourse/lib/get-url";
 import { deepMerge } from "discourse/lib/object";
@@ -119,16 +118,6 @@ export default class NavItem extends EmberObject {
       args.category = category;
     }
 
-    if (!args.siteSettings) {
-      deprecated("You must supply `buildList` with a `siteSettings` object", {
-        since: "2.6.0",
-        dropFrom: "2.7.0",
-        id: "discourse.nav-item.built-list-site-settings",
-      });
-      args.siteSettings = getOwnerWithFallback(this).lookup(
-        "service:site-settings"
-      );
-    }
     let items = args.siteSettings.top_menu.split("|");
 
     const user = getOwnerWithFallback(this).lookup("service:current-user");

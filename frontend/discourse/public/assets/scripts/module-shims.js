@@ -15,14 +15,3 @@ define("I18n", [
     return I18n.default.t(...arguments);
   };
 });
-
-define("ember-addons/ember-computed-decorators", [
-  "discourse/lib/decorators",
-  "discourse/lib/deprecated",
-], function (decorators, deprecated) {
-  deprecated.default(
-    "ember-addons/ember-computed-decorators is deprecated. Use discourse/lib/decorators instead.",
-    { since: "2.4", dropFrom: "3.0" }
-  );
-  return decorators;
-});

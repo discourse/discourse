@@ -1,5 +1,3 @@
-import deprecated from "discourse/lib/deprecated";
-
 const pluses = /\+/g;
 
 function parseCookieValue(s) {
@@ -74,28 +72,6 @@ export function removeCookie(key, options) {
   // Must not alter options, thus extending a fresh object...
   cookie(key, "", { ...(options || {}), expires: -1 });
   return !cookie(key);
-}
-
-if (window && window.$) {
-  const depOpts = {
-    since: "2.6.0",
-    dropFrom: "2.7.0",
-    id: "discourse.jquery-cookie",
-  };
-  window.$.cookie = function () {
-    deprecated(
-      "$.cookie is being removed from Discourse. Please import our cookie module and use that instead.",
-      depOpts
-    );
-    return cookie(...arguments);
-  };
-  window.$.removeCookie = function () {
-    deprecated(
-      "$.removeCookie is being removed from Discourse. Please import our cookie module and use that instead.",
-      depOpts
-    );
-    return removeCookie(...arguments);
-  };
 }
 
 export default cookie;
