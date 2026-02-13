@@ -8,6 +8,7 @@ import {
   readOnly,
 } from "@ember/object/computed";
 import { service } from "@ember/service";
+import ChangeThemeSourceModal from "discourse/admin/components/modal/change-theme-source";
 import ThemeSettingsEditor from "discourse/admin/components/theme-settings-editor";
 import SiteSetting from "discourse/admin/models/site-setting";
 import { COMPONENTS, THEMES } from "discourse/admin/models/theme";
@@ -279,6 +280,18 @@ export default class AdminCustomizeThemesShowIndexController extends Controller 
       .finally(() => {
         this.set("updatingRemote", false);
       });
+  }
+
+  @action
+  changeSource() {
+    this.modal.show(ChangeThemeSourceModal, {
+      model: {
+        theme: this.model,
+        onSuccess: () => {
+          this.send("routeRefreshModel");
+        },
+      },
+    });
   }
 
   @action
