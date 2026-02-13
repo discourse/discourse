@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { service } from "@ember/service";
-import { number } from "discourse/lib/formatter";
 import { makeArray } from "discourse/lib/helpers";
 import Chart from "./chart";
 
@@ -8,6 +7,31 @@ function getCSSColor(varName) {
   return getComputedStyle(document.documentElement)
     .getPropertyValue(varName)
     .trim();
+}
+
+function buildLegendIcon(color, isVisible, size = 16) {
+  const canvas = document.createElement("canvas");
+  canvas.width = size;
+  canvas.height = size;
+  const ctx = canvas.getContext("2d");
+
+  const borderWidth = 2;
+  const half = borderWidth / 2;
+  ctx.strokeStyle = color;
+  ctx.lineWidth = borderWidth;
+  ctx.beginPath();
+  ctx.roundRect(half, half, size - borderWidth, size - borderWidth, 4);
+  ctx.stroke();
+
+  if (isVisible) {
+    const inset = 4;
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.roundRect(inset, inset, size - inset * 2, size - inset * 2, 2);
+    ctx.fill();
+  }
+
+  return canvas;
 }
 
 function hexToRgba(hex, alpha) {
@@ -110,14 +134,28 @@ export default class AdminReportDonutChart extends Component {
             display: true,
             align: "left",
             labels: {
-              usePointStyle: false,
+              generateLabels: (chart) => {
+                const dataset = chart.data.datasets[0];
+                const textColor = getCSSColor("--primary-high");
+                return chart.data.labels.map((label, i) => {
+                  const isVisible = chart.getDataVisibility(i);
+                  const color = dataset.backgroundColor[i];
+                  return {
+                    text: label,
+                    fontColor: textColor,
+                    pointStyle: buildLegendIcon(color, isVisible),
+                    hidden: false,
+                    index: i,
+                  };
+                });
+              },
+              usePointStyle: true,
               padding: 25,
               boxWidth: 16,
               boxHeight: 16,
-              useBorderRadius: true,
-              borderRadius: 4,
-              color: getCSSColor("--primary-high"),
-              filter: () => true, // Show all legend items, even with 0 values
+              font: {
+                size: 16,
+              },
             },
           },
           tooltip: {
@@ -140,7 +178,7 @@ export default class AdminReportDonutChart extends Component {
                   0
                 );
                 const pct = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                return `${tooltipItem.label}: ${number(value)} (${pct}%)`;
+                return `${tooltipItem.label} – ${pct}%`;
               },
             },
           },
