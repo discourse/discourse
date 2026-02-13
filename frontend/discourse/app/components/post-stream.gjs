@@ -188,19 +188,24 @@ export default class PostStream extends Component {
           return;
         }
 
-        // After new posts are prepended above, the anchor element shifts down.
-        // We compensate by scrolling by the exact pixel difference to keep it
-        // at the same viewport position the user last saw. This should provide
-        // a smoother scrolling UX
+        // Chrome and Firefox natively support scroll anchoring (overflow-anchor)
+        // which should keep the viewport stable when posts are prepended above.
+        // From the major Browsers, currently only Safari won't support it.
+        // We compensate manually as a fallback — the code is browser-agnostic
+        // because themes or plugins can inadvertently break native anchoring by
+        // styling elements in the post-stream, and the shift check ensures this
+        // is a no-op when anchoring works correctly.
         const shift = anchorElement.getBoundingClientRect().top - anchorTop;
         if (shift !== 0) {
           window.scrollBy(0, shift);
         }
 
-        // This seems weird, but somewhat infrequently a rerender
-        // will cause the browser to scroll to the top of the document
-        // in Chrome. This makes sure the scroll works correctly if that
-        // happens.
+        // The primary scrollBy above compensates for newly prepended posts,
+        // but `prependMore` also sets `loadingAbove = false` which removes
+        // the loading spinner. Since Ember renders that change asynchronously,
+        // the spinner is still in the DOM during the primary compensation.
+        // Once Ember removes it in the next render pass, the layout shifts
+        // again. This afterRender pass catches that secondary shift.
         schedule("afterRender", () => {
           const renderShift =
             anchorElement.getBoundingClientRect().top - anchorTop;
