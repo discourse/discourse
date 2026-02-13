@@ -349,6 +349,7 @@ export default class TagSettings extends Component {
                 @onChange={{this.handleSynonymChange}}
                 @options={{hash
                   everyTag=true
+                  allowAny=false
                   blockedTags=this.blockedTags
                   filterPlaceholder="tagging.settings.add_synonym_placeholder"
                   maximum=200

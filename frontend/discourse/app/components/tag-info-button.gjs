@@ -84,8 +84,8 @@ export default class TagInfoButton extends Component {
       {{#if this.canEditTags}}
         <DButton
           @icon="wrench"
-          @ariaLabel={{i18n "tagging.edit"}}
-          @title={{i18n "tagging.edit"}}
+          @ariaLabel="tagging.edit"
+          @title="tagging.edit"
           @action={{this.handleClick}}
           id="show-tag-info"
           class="btn-default"
@@ -95,8 +95,8 @@ export default class TagInfoButton extends Component {
           <:trigger>
             <DButton
               @icon="circle-info"
-              @ariaLabel={{i18n "tagging.info"}}
-              @title={{i18n "tagging.info"}}
+              @ariaLabel="tagging.info"
+              @title="tagging.info"
               id="show-tag-info"
               class="btn-default"
             />

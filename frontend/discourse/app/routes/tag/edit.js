@@ -32,7 +32,7 @@ export default class TagEditRoute extends DiscourseRoute {
     const tagId = params.tag_id;
     const tagSlug = params.tag_slug;
 
-    const tag = await this.store.find("tag-settings", `${tagSlug}/${tagId}`);
+    const tag = await this.store.find("tag-settings", tagId);
     if (tagSlug !== tag.slug) {
       return this.router.replaceWith("tag.edit", tag.slug, tag.id);
     }
