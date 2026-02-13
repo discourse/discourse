@@ -330,10 +330,8 @@
   }
 
   .header-sidebar-toggle button .d-icon,
-  .d-header-icons .d-icon {
-    &:not(.d-icon-discourse-dnd) {
-      font-size: var(--font-up-3);
-    }
+  .d-header-icons .header-dropdown-toggle:not(.user-menu-panel) .d-icon {
+    font-size: var(--font-up-3);
   }
 
   .d-header-icons .icon img.avatar {
