@@ -44,7 +44,7 @@ module DiscourseAi
           end
           .map do |c|
             # Note: <#> returns the negative inner product since Postgres only supports ASC order index scans on operators
-            c[:score] = (c[:score] + 1).abs if @vector.vdef.pg_function = "<#>"
+            c[:score] = (c[:score] + 1).abs if @vector.vdef.pg_function == "<#>"
 
             c[:score] = 1 / (c[:score] + 1) # inverse of the distance
             c
@@ -79,7 +79,7 @@ module DiscourseAi
           .flat_map { |c| c[:tags].map { |t| { name: t, score: c[:score] } } }
           .map do |c|
             # Note: <#> returns the negative inner product since Postgres only supports ASC order index scans on operators
-            c[:score] = (c[:score] + 1).abs if @vector.vdef.pg_function = "<#>"
+            c[:score] = (c[:score] + 1).abs if @vector.vdef.pg_function == "<#>"
 
             c[:score] = 1 / (c[:score] + 1) # inverse of the distance
             c
