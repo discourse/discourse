@@ -118,6 +118,37 @@ module("Unit | Lib | FormKit | Validator", function (hooks) {
       [],
       "it returns no errors when the value is an integer"
     );
+
+    errors = await new Validator("", { integer: {} }).validate();
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no errors when the value is an empty string"
+    );
+
+    errors = await new Validator(undefined, { integer: {} }).validate();
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no errors when the value is undefined"
+    );
+
+    errors = await new Validator(null, { integer: {} }).validate();
+    assert.deepEqual(errors, [], "it returns no errors when the value is null");
+
+    errors = await new Validator("5", { integer: {} }).validate();
+    assert.deepEqual(
+      errors,
+      [],
+      "it returns no errors when the string value represents an integer"
+    );
+
+    errors = await new Validator("5.5", { integer: {} }).validate();
+    assert.deepEqual(
+      errors,
+      [i18n("form_kit.errors.not_an_integer")],
+      "it returns an error when the string value represents a non-integer"
+    );
   });
 
   test("number", async function (assert) {

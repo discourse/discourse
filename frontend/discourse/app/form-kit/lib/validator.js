@@ -46,6 +46,10 @@ export default class Validator {
   }
 
   integerValidator(value) {
+    if (isBlank(value)) {
+      return;
+    }
+
     if (!Number.isInteger(Number(value))) {
       return i18n("form_kit.errors.not_an_integer");
     }
