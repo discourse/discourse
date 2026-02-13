@@ -28,6 +28,8 @@ class TagsController < ::ApplicationController
                   personal_messages
                   info
                   list
+                  settings
+                  update_settings
                 ]
 
   before_action :fetch_tag,
@@ -231,6 +233,43 @@ class TagsController < ::ApplicationController
 
   def info
     render_serialized(@tag, DetailedTagSerializer, rest_serializer: true, root: :tag_info)
+  end
+
+  def settings
+    includes = %i[tag_groups synonyms]
+    includes << :localizations if SiteSetting.content_localization_enabled
+    tag = Tag.includes(includes).find_by(id: params[:tag_id])
+    raise Discourse::NotFound unless tag && guardian.can_edit_tag?(tag)
+
+    render_serialized(tag, TagSettingsSerializer, rest_serializer: true, root: :tag_settings)
+  end
+
+  def update_settings
+    tag = Tag.find_by(id: params[:tag_id])
+    raise Discourse::NotFound unless tag && guardian.can_edit_tag?(tag)
+
+    updater_params =
+      params.require(:tag_settings).permit(
+        :name,
+        :slug,
+        :description,
+        removed_synonym_ids: [],
+        new_synonyms: [:id],
+        localizations: %i[locale name description],
+      )
+
+    updater = TagSettingsUpdater.new(tag, current_user)
+
+    if updater.update(updater_params)
+      render_serialized(
+        updater.updated_tag,
+        TagSettingsSerializer,
+        rest_serializer: true,
+        root: :tag_settings,
+      )
+    else
+      render_json_error updater.errors
+    end
   end
 
   def update
