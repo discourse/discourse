@@ -3732,7 +3732,7 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body.has_key?("suggested_topics")).to eq(false)
-        expect(response.parsed_body["categories"].map { _1["id"] }).to contain_exactly(
+        expect(response.parsed_body["categories"].map { it["id"] }).to contain_exactly(
           topic.category_id,
         )
 
@@ -3740,7 +3740,7 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body.has_key?("suggested_topics")).to eq(true)
-        expect(response.parsed_body["categories"].map { _1["id"] }).to contain_exactly(
+        expect(response.parsed_body["categories"].map { it["id"] }).to contain_exactly(
           topic.category_id,
           dest_topic.category_id,
         )
