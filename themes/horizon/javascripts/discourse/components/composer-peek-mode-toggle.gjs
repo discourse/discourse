@@ -13,7 +13,9 @@ export default class ComposerPeekModeToggle extends Component {
   peekModeActive = this.keyValueStore.getItem("peekModeActive") === "true";
 
   get bodyCssClass() {
-    return this.peekModeActive ? "peek-mode-active" : "";
+    return this.peekModeActive && !this.composer.isPreviewVisible
+      ? "peek-mode-active"
+      : "";
   }
 
   @action
