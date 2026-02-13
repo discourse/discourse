@@ -147,3 +147,9 @@ after_worker_timeout do |server, worker, timeout_info|
 
   Rails.logger.error(message)
 end
+
+if RUBY_PLATFORM.include?("darwin") && ENV["RAILS_ENV"] != "production"
+  # macOS doesn't support the default :SOCK_SEQPACKET
+  # So we override it to avoid the warning
+  Pitchfork.instance_variable_set(:@socket_type, :SOCK_STREAM)
+end
