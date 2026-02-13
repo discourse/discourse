@@ -10,6 +10,7 @@ import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { actionDescriptionHtml } from "discourse/components/post-action-description";
 import TopicAdminMenu from "discourse/components/topic-admin-menu";
+import TopicLocalizedContentToggle from "discourse/components/topic-localized-content-toggle";
 import UserTip from "discourse/components/user-tip";
 import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import categoryLink from "discourse/helpers/category-link";
@@ -160,6 +161,13 @@ export default class TopicTimelineScrollArea extends Component {
 
   get canCreatePost() {
     return this.args.model.details?.can_create_post;
+  }
+
+  get showTimelineControls() {
+    return (
+      !this.args.fullscreen &&
+      (this.currentUser || this.args.model.has_localized_content)
+    );
   }
 
   get topicTitle() {
@@ -535,7 +543,7 @@ export default class TopicTimelineScrollArea extends Component {
       </div>
     {{/if}}
 
-    {{#if (and (not @fullscreen) this.currentUser)}}
+    {{#if this.showTimelineControls}}
       <div class="timeline-controls">
         <PluginOutlet
           @name="timeline-controls-before"
@@ -558,6 +566,10 @@ export default class TopicTimelineScrollArea extends Component {
           @convertToPublicTopic={{@convertToPublicTopic}}
           @convertToPrivateMessage={{@convertToPrivateMessage}}
         />
+
+        {{#if @model.has_localized_content}}
+          <TopicLocalizedContentToggle @topic={{@model}} />
+        {{/if}}
       </div>
     {{/if}}
 
