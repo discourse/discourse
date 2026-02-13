@@ -683,7 +683,7 @@ RSpec.describe Admin::UsersController do
         expect(response.parsed_body["can_be_merged"]).to eq(true)
         expect(response.parsed_body["can_be_deleted"]).to eq(true)
         expect(response.parsed_body["can_be_anonymized"]).to eq(true)
-        expect(response.parsed_body["can_delete_all_posts"]).to eq(true)
+        expect(response.parsed_body["can_delete_all_posts"]).to eq(false)
       end
     end
 
