@@ -10,12 +10,15 @@ const sandboxDisabled =
     (process.env.DISCOURSE_DISABLE_BROWSER_SANDBOX || "").toLowerCase()
   );
 
+console.log("Running testem.js ");
+
 class Reporter extends TapReporter {
   failReports = [];
   deprecationCounts = new Map();
   deprecationCountsByOrigin = new Map();
 
   constructor() {
+    console.log("Reporter initialized");
     super(...arguments);
 
     // Colors are enabled automatically in dev env, just need to toggle them on in GH
@@ -240,6 +243,8 @@ module.exports = {
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
+      "--enable-logging",
+      "--v=1",
     ].filter(Boolean),
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container or when explicitly requested

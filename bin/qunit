@@ -253,7 +253,8 @@ class QunitRunner
     if @qunit_path
       run_theme_build(unless_build_reused: reuse_build)
       env["THEME_TEST_PAGES"] = build_theme_test_pages(query)
-      args += %w[pnpm testem ci -f testem.js]
+      puts "Launching testem"
+      args += %w[pnpm testem ci -f testem.js -d]
       args += ["--parallel", parallel.to_s] if parallel
     else
       args = %w[pnpm ember exam]
@@ -428,7 +429,7 @@ class QunitRunner
       "DISCOURSE_SKIP_CSS_WATCHER" => "1",
       "UNICORN_LISTENER" => "127.0.0.1:#{unicorn_port}",
       "LOGSTASH_UNICORN_URI" => nil,
-      "UNICORN_WORKERS" => "1",
+      "UNICORN_WORKERS" => "3",
       "UNICORN_TIMEOUT" => "90",
     }
 
@@ -447,7 +448,8 @@ class QunitRunner
 
     deadline = Time.now + 60
     begin
-      Net::HTTP.get(uri)
+      res = Net::HTTP.get_response(uri)
+      puts "HTTP #{res.code}"
     rescue Errno::ECONNREFUSED,
            Errno::EADDRNOTAVAIL,
            Net::ReadTimeout,
