@@ -68,6 +68,10 @@
     }
   }
 
+  .btn.no-text.btn-icon {
+    width: var(--button-height);
+  }
+
   .discourse-reactions-counter .reactions-counter {
     align-items: center;
   }
