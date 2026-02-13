@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { Input } from "@ember/component";
 import { fn, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { action } from "@ember/object";
 import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
@@ -27,21 +28,72 @@ import lazyHash from "discourse/helpers/lazy-hash";
 import loadingSpinner from "discourse/helpers/loading-spinner";
 import discourseDebounce from "discourse/lib/debounce";
 import { bind } from "discourse/lib/decorators";
+import PostLocalization from "discourse/models/post-localization";
 import grippieDragResize from "discourse/modifiers/grippie-drag-resize";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
+import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import MiniTagChooser from "discourse/select-kit/components/mini-tag-chooser";
 import { and, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class ComposerContainer extends Component {
   @service composer;
+  @service languageNameLookup;
   @service site;
+  @service siteSettings;
   @service appEvents;
   @service keyValueStore;
 
   willDestroy() {
     super.willDestroy(...arguments);
     cancel(this.composerResizeDebounceHandler);
+  }
+
+  get availableContentLocalizationLocales() {
+    const originalPostLocale = this.composer.model?.post?.locale;
+
+    return this.siteSettings.available_content_localization_locales
+      .filter(({ value }) => value !== originalPostLocale)
+      .map(({ value }) => ({
+        name: this.languageNameLookup.getLanguageName(value),
+        value,
+      }));
+  }
+
+  @action
+  async updateSelectedTranslationLocale(locale) {
+    this.composer.selectedTranslationLocale = locale;
+
+    let currentLocalization;
+    try {
+      const { post_localizations } = await PostLocalization.find(
+        this.composer.model.post.id
+      );
+      currentLocalization = post_localizations.find(
+        (localization) => localization.locale === locale
+      );
+    } catch {}
+
+    if (currentLocalization) {
+      this.composer.model.setProperties({
+        reply: currentLocalization.raw,
+        originalText: currentLocalization.raw,
+      });
+
+      if (currentLocalization?.topic_localization) {
+        this.composer.model.setProperties({
+          title: currentLocalization.topic_localization.title,
+          originalTitle: currentLocalization.topic_localization.title,
+        });
+      }
+    } else {
+      this.composer.model.setProperties({
+        reply: "",
+        title: "",
+        originalText: "",
+        originalTitle: "",
+      });
+    }
   }
 
   @bind
@@ -153,6 +205,25 @@ export default class ComposerContainer extends Component {
                     @canWhisper={{this.composer.canWhisper}}
                     @canUnlistTopic={{this.composer.canUnlistTopic}}
                   />
+
+                  {{#if this.composer.showTranslationSelector}}
+                    <DropdownSelectBox
+                      @nameProperty="name"
+                      @valueProperty="value"
+                      @value={{this.composer.selectedTranslationLocale}}
+                      @content={{this.availableContentLocalizationLocales}}
+                      @onChange={{this.updateSelectedTranslationLocale}}
+                      @options={{hash
+                        icon="language"
+                        showCaret=true
+                        filterable=true
+                        disabled=this.composer.loading
+                        placement="bottom-start"
+                        translatedNone=(i18n "composer.translations.select")
+                      }}
+                      class="translation-selector-dropdown btn-small"
+                    />
+                  {{/if}}
 
                   <PluginOutlet
                     @name="composer-action-after"

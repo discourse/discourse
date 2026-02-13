@@ -332,10 +332,6 @@ export default <template>
             }}
           />
 
-          {{#if @controller.model.has_localized_content}}
-            <TopicLocalizedContentToggle @topic={{@controller.model}} />
-          {{/if}}
-
           {{#if info.renderTimeline}}
             <TopicTimeline
               @info={{info}}
@@ -397,6 +393,9 @@ export default <template>
                 @convertToPublicTopic={{@controller.convertToPublicTopic}}
                 @convertToPrivateMessage={{@controller.convertToPrivateMessage}}
               />
+              {{#if @controller.model.has_localized_content}}
+                <TopicLocalizedContentToggle @topic={{@controller.model}} />
+              {{/if}}
             </TopicProgress>
           {{/if}}
 
