@@ -1386,7 +1386,7 @@ class BulkImport::Base
     # unique email
     user_email[:email] = random_email until EmailAddressValidator.valid_value?(
       user_email[:email],
-    ) && !@emails.has_key?(user_email[:email])
+    ) && (!@emails.has_key?(user_email[:email]) || @emails[user_email[:email]] == user_email[:user_id])
 
     user_email
   end
