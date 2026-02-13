@@ -304,6 +304,10 @@
     height: 3.25em;
   }
 
+  .d-header {
+    --search-input-height: var(--space-8);
+  }
+
   .d-header .title {
     @include viewport.from(sm) {
       --d-logo-height: 2.3em;
