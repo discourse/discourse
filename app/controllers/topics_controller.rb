@@ -1101,7 +1101,9 @@ class TopicsController < ApplicationController
     operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])
     hijack(info: "topics bulk action #{operation[:type]}") do
       changed_topic_ids = operator.perform!
-      render_json_dump topic_ids: changed_topic_ids
+      result = { topic_ids: changed_topic_ids }
+      result[:errors] = operator.errors if operator.errors.present?
+      render_json_dump result
     end
   end
 
