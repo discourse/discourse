@@ -253,12 +253,14 @@ class TagsController < ::ApplicationController
     tag = Tag.find_by(id: params[:tag_id])
     raise Discourse::NotFound unless tag && guardian.can_edit_tag?(tag)
 
-    tag_params = params.require(:tag_settings).permit(:name, :slug, :description)
     updater_params =
-      tag_params.to_h.merge(
-        removed_synonym_ids: params[:tag_settings][:removed_synonym_ids] || [],
-        new_synonyms: params[:tag_settings][:new_synonyms] || [],
-        localizations: params[:tag_settings][:localizations] || [],
+      params.require(:tag_settings).permit(
+        :name,
+        :slug,
+        :description,
+        removed_synonym_ids: [],
+        new_synonyms: [:id],
+        localizations: %i[locale name description],
       )
 
     updater = TagSettingsUpdater.new(tag, current_user)
