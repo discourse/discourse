@@ -2897,7 +2897,15 @@ ur:
       toggle_direction: "سمت ٹوگل کریں"
       apply_wrap_title: "رَیپ اپلائی کریں"
       wrap_modal:
+        title: "ریپ میں ترمیم کریں"
+        name_label: "ریپ کا نام"
+        attributes_label: "خصوصیات"
+        add_attribute: "خصوصیت شامل کریں"
+        remove_attribute: "خصوصیت ہٹا دیں"
         apply: "لاگو کریں"
+        unwrap: "اَن ریپ کریں"
+        no_attributes: "ابھی تک کوئی خصوصیات شامل نہیں کی گئیں۔"
+      wrap_text: "ریپ کا مواد"
       help: "مارکڈائون ترمیم میں مدد"
       collapse: "کمپوزر پینل کو مختصر کریں"
       open: "کمپوزر پینل کھولیں"
@@ -2954,6 +2962,7 @@ ur:
           desc: "تازہ ترین جواب کی تاریخ تبدیل کیے بغیر جواب دیں"
         toggle_unlisted:
           label: غیر مندرج ٹوگل
+          desc: "غیر اندراج شدہ عنوانات صرف براہ راست لنک سے قابل رسائی ہیں"
       reload: "دوبارہ لوڈ"
       ignore: "نظر انداز کریں"
       image_alt_text:
@@ -2964,7 +2973,12 @@ ur:
         zoom_out: "تصویر کا سائز کم کریں"
         zoom_in: "تصویر کا سائز بڑھائیں"
         remove: "تصویر کو ہٹا دیں"
+        add_to_grid: "گرڈ میں شامل کریں"
+        move_outside_grid: "گرڈ سے باہر منتقل کریں"
       image: "تصویر"
+      grid_label: "یہ ایک گرڈ کے طور پر دکھایا جائے گا"
+      grid_mode_grid: "گرڈ"
+      grid_mode_carousel: "کیروسل"
       image_scale_button: "تصویر کو %{percent}% اسکیل کریں"
       delete_image_button: تصویر کو حذف کریں
       toggle_image_grid: تصویری گرڈ کو ٹوگل کریں
