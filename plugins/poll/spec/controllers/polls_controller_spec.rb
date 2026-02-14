@@ -494,5 +494,43 @@ RSpec.describe DiscoursePoll::PollsController do
 
       expect(json["voters"][first].size).to eq(1)
     end
+
+    context "with private category polls" do
+      fab!(:group)
+      fab!(:private_category) { Fabricate(:private_category, group: group) }
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+      fab!(:poll_creator) { Fabricate(:admin).tap { |u| group.add(u) } }
+      fab!(:private_poll) do
+        Fabricate(
+          :post,
+          topic: private_topic,
+          user: poll_creator,
+          raw: "[poll public=true]\n- A\n- B\n[/poll]",
+        )
+      end
+      fab!(:user_in_group) { Fabricate(:user).tap { |u| group.add(u) } }
+      fab!(:user_outside_group, :user)
+
+      before { DiscoursePoll::Poll.vote(user_in_group, private_poll.id, "poll", [first]) }
+
+      it "prevents users without permission from seeing voters" do
+        log_in_user(user_outside_group)
+
+        get :voters, params: { post_id: private_poll.id, poll_name: "poll" }, format: :json
+
+        expect(response.status).to eq(403)
+      end
+
+      it "allows users with permission to see voters" do
+        log_in_user(user_in_group)
+
+        get :voters, params: { post_id: private_poll.id, poll_name: "poll" }, format: :json
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["voters"][first].size).to eq(1)
+        expect(json["voters"][first][0]["id"]).to eq(user_in_group.id)
+      end
+    end
   end
 end

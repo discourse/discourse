@@ -48,10 +48,16 @@ class DiscoursePoll::PollsController < ::ApplicationController
     poll_name = params.require(:poll_name)
     opts = params.permit(:limit, :page, :option_id)
 
-    raise Discourse::InvalidParameters.new(:post_id) if !Post.where(id: post_id).exists?
+    poll = Poll.includes(:post).find_by(post_id: post_id, name: poll_name)
 
-    poll = Poll.find_by(post_id: post_id, name: poll_name)
-    raise Discourse::InvalidParameters.new(:poll_name) if !poll&.can_see_voters?(current_user)
+    if !poll
+      raise Discourse::InvalidParameters.new(:post_id) if !Post.where(id: post_id).exists?
+      raise Discourse::InvalidParameters.new(:poll_name)
+    end
+
+    guardian.ensure_can_see!(poll.post)
+
+    raise Discourse::InvalidParameters.new(:poll_name) if !poll.can_see_voters?(current_user)
 
     render json: { voters: DiscoursePoll::Poll.serialized_voters(poll, opts) }
   end
