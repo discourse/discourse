@@ -19,6 +19,32 @@ class TopicView
     @preload.each { |preload| preload.call(topic_view) } if @preload
   end
 
+  # Replaces the loaded posts and clears all memoized state that was derived
+  # from the previous post set. Call this when you need to re-seat a TopicView
+  # with a different collection of posts (e.g. a plugin that builds its own
+  # post tree but still wants to run through TopicView's serialization pipeline
+  # and preload hooks).
+  #
+  # After calling this you will typically want to repopulate custom fields and
+  # call `TopicView.preload(self)` to re-run plugin preload hooks.
+  def reset_posts!(posts)
+    @posts = posts
+
+    %i[
+      @all_post_actions
+      @reviewable_counts
+      @post_custom_fields
+      @user_custom_fields
+      @category_group_moderator_user_ids
+      @mentioned_users
+      @link_counts
+      @read_posts_set
+      @group_names
+      @post_user_badges
+      @last_post
+    ].each { |ivar| remove_instance_variable(ivar) if instance_variable_defined?(ivar) }
+  end
+
   attr_reader(
     :topic,
     :posts,

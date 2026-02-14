@@ -28,6 +28,65 @@ RSpec.describe TopicView do
     end
   end
 
+  describe "#reset_posts!" do
+    fab!(:post1) { Fabricate(:post, topic: topic) }
+    fab!(:post2) { Fabricate(:post, topic: topic) }
+    fab!(:post3) { Fabricate(:post, topic: topic) }
+
+    it "replaces the posts collection" do
+      tv = TopicView.new(topic.id, evil_trout)
+      original_posts = tv.posts.to_a
+
+      new_posts = [post3]
+      tv.reset_posts!(new_posts)
+
+      expect(tv.posts).to eq(new_posts)
+      expect(tv.posts).not_to eq(original_posts)
+    end
+
+    it "clears memoized state derived from the previous posts" do
+      tv = TopicView.new(topic.id, evil_trout)
+
+      # Force memoization of caches that depend on @posts
+      tv.all_post_actions
+      tv.reviewable_counts
+      tv.mentioned_users
+      tv.category_group_moderator_user_ids
+      tv.primary_group_names
+      tv.last_post
+
+      tv.reset_posts!([post2])
+
+      # After reset, memoized values should recompute from the new posts.
+      # all_post_actions recomputes from the new post set
+      expect(tv.all_post_actions).to be_a(Hash)
+
+      # last_post should reflect the new set
+      expect(tv.last_post).to eq(post2)
+
+      # mentioned_users recomputes (post2 has no mentions)
+      expect(tv.mentioned_users).to eq({})
+
+      # primary_group_names recomputes
+      expect(tv.primary_group_names).to be_a(Hash)
+    end
+
+    it "allows preload hooks to run on the new posts" do
+      tv = TopicView.new(topic.id, evil_trout)
+      preloaded_post_ids = nil
+      preloader = lambda { |view| preloaded_post_ids = view.posts.map(&:id) }
+
+      TopicView.on_preload(&preloader)
+
+      tv.reset_posts!([post2, post3])
+      TopicView.preload(tv)
+
+      expect(preloaded_post_ids).to contain_exactly(post2.id, post3.id)
+    ensure
+      TopicView.cancel_preload(&preloader)
+    end
+  end
+
   it "raises a not found error if the topic doesn't exist" do
     expect { TopicView.new(1_231_232, evil_trout) }.to raise_error(Discourse::NotFound)
   end
