@@ -116,6 +116,28 @@ module Migrations::CLI
       puts "✓ Added #{table_name} to ignored.rb".green
     end
 
+    desc "diff", "Show differences between configuration and database"
+    def diff
+      load_rails!
+      Schema.ensure_ready!
+
+      result = Schema.diff
+      display_diff(result)
+    end
+
+    desc "scaffold TABLE", "Create a config file for a new table"
+    def scaffold(table_name)
+      load_rails!
+      Schema.ensure_ready!
+
+      path = Schema.scaffold(table_name)
+      puts "✓ Created #{path}".green
+      puts
+      puts "Next steps:"
+      puts "  1. Edit the file to configure columns"
+      puts "  2. Run 'bin/cli schema validate'"
+    end
+
     desc "detect-plugins", "Regenerate the plugin manifest"
     method_option :force, type: :boolean, default: false, desc: "Force regeneration"
     def detect_plugins
@@ -134,50 +156,6 @@ module Migrations::CLI
         puts "Plugin manifest is up to date"
         puts "  Use --force to regenerate"
       end
-    end
-
-    desc "migrate_config", "Convert YAML config to DSL format"
-    method_option :yaml_path,
-                  type: :string,
-                  desc: "Path to YAML config file",
-                  default: nil,
-                  banner: "path"
-    method_option :output_path,
-                  type: :string,
-                  desc: "Output directory for DSL files",
-                  default: nil,
-                  banner: "path"
-    def migrate_config
-      yaml_path =
-        options[:yaml_path] || File.join(::Migrations.root_path, "config", "intermediate_db.yml")
-      output_path = options[:output_path] || Schema.config_path
-
-      unless File.exist?(yaml_path)
-        puts "Error: YAML config not found at #{yaml_path}".red
-        exit 1
-      end
-
-      if Dir.exist?(output_path) && Dir.glob(File.join(output_path, "**/*.rb")).any?
-        puts "Error: Output directory already has config files: #{output_path}".red
-        puts "       Remove them first or specify a different --output-path"
-        exit 1
-      end
-
-      puts "Migrating YAML config to DSL format..."
-      puts "  From: #{yaml_path}"
-      puts "  To:   #{output_path}"
-      puts
-
-      Schema::DSL::ConfigMigrator.new(yaml_path, output_path).migrate!
-
-      puts
-      puts "Migration complete!".green
-      puts
-      puts "Next steps:"
-      puts "  1. Review the generated files"
-      puts "  2. Run 'bin/cli schema validate' to check for issues"
-      puts "  3. Run 'bin/cli schema generate' to test generation"
-      puts "  4. Delete the old YAML config"
     end
 
     private
@@ -250,6 +228,60 @@ module Migrations::CLI
       end
 
       puts "  Auto-ignore plugin columns: #{table.ignore_plugin_columns?}"
+    end
+
+    def display_diff(result)
+      has_changes = false
+
+      if result.unknown_tables.any?
+        has_changes = true
+        puts "Unknown tables (add to tables/ or ignored.rb):"
+        result.unknown_tables.each do |t|
+          plugin_info = t.plugin ? " [#{t.plugin}]" : ""
+          puts "  + #{t.name}#{plugin_info}"
+        end
+        puts
+      end
+
+      if result.missing_tables.any?
+        has_changes = true
+        puts "Missing tables (configured but not in database):"
+        result.missing_tables.each { |t| puts "  - #{t.name}" }
+        puts
+      end
+
+      if result.stale_ignored_tables.any?
+        has_changes = true
+        puts "Stale ignored tables (no longer in database):"
+        result.stale_ignored_tables.each { |t| puts "  ~ #{t.name}" }
+        puts
+      end
+
+      if result.table_diffs.any?
+        has_changes = true
+        puts "Column differences:"
+        result.table_diffs.each do |table_diff|
+          puts "  #{table_diff.table_name}:"
+
+          table_diff.unknown_columns.each do |c|
+            plugin_info = c.plugin ? " [#{c.plugin}]" : ""
+            puts "    + #{c.name}#{plugin_info}"
+          end
+
+          table_diff.missing_columns.each { |c| puts "    - #{c.name}" }
+
+          table_diff.stale_ignored_columns.each { |c| puts "    ~ #{c.name} (ignored but gone)" }
+        end
+        puts
+      end
+
+      if has_changes
+        puts "Suggested actions:"
+        puts "  bin/cli schema scaffold <table>    Create config for a new table"
+        puts "  bin/cli schema ignore <table>      Add table to ignored.rb"
+      else
+        puts "✓ No differences found".green
+      end
     end
   end
 end

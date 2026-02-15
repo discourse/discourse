@@ -280,6 +280,16 @@ module Migrations::Database
       DSL::Generator.new(self).generate
     end
 
+    def self.diff
+      ensure_ready!
+      DSL::Differ.new(self).diff
+    end
+
+    def self.scaffold(table_name)
+      ensure_ready!
+      DSL::Scaffolder.new(self, table_name).scaffold!
+    end
+
     # --- Lifecycle Methods ---
 
     def self.ensure_ready!

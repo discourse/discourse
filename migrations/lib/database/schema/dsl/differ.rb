@@ -1,0 +1,169 @@
+# frozen_string_literal: true
+
+module Migrations::Database::Schema::DSL
+  TableInfo = Data.define(:name, :plugin)
+  ColumnInfo = Data.define(:name, :plugin)
+  TableDiff = Data.define(:table_name, :unknown_columns, :missing_columns, :stale_ignored_columns)
+  DiffResult = Data.define(:unknown_tables, :missing_tables, :stale_ignored_tables, :table_diffs)
+
+  class Differ
+    def initialize(schema_module)
+      @schema = schema_module
+    end
+
+    def diff
+      ActiveRecord::Base.with_connection do |connection|
+        @db = connection
+        @db_table_names = @db.tables.to_set
+
+        unknown_tables = find_unknown_tables
+        missing_tables = find_missing_tables
+        stale_ignored = find_stale_ignored_tables
+        table_diffs = find_table_diffs
+
+        DiffResult.new(
+          unknown_tables:,
+          missing_tables:,
+          stale_ignored_tables: stale_ignored,
+          table_diffs:,
+        )
+      end
+    end
+
+    private
+
+    def find_unknown_tables
+      configured = @schema.tables.keys.map(&:to_s).to_set
+      ignored = ignored_table_name_set
+
+      unknown = @db_table_names - configured - ignored
+      unknown.sort.map { |name| TableInfo.new(name:, plugin: plugin_for_table(name)) }
+    end
+
+    def find_missing_tables
+      missing = []
+
+      @schema.tables.each_value do |table_def|
+        source = table_def.source_table_name.to_s
+        if @db_table_names.exclude?(source)
+          missing << TableInfo.new(name: table_def.name.to_s, plugin: nil)
+        end
+      end
+
+      missing.sort_by(&:name)
+    end
+
+    def find_stale_ignored_tables
+      ignored = @schema.ignored_tables
+      return [] unless ignored
+
+      stale = []
+      ignored.entries.each do |entry|
+        if @db_table_names.exclude?(entry.name.to_s)
+          stale << TableInfo.new(name: entry.name.to_s, plugin: nil)
+        end
+      end
+
+      stale.sort_by(&:name)
+    end
+
+    def find_table_diffs
+      diffs = []
+
+      @schema.tables.each_value do |table_def|
+        source = table_def.source_table_name.to_s
+        next if @db_table_names.exclude?(source)
+
+        table_diff = diff_table(table_def, source)
+        diffs << table_diff if table_diff
+      end
+
+      diffs.sort_by(&:table_name)
+    end
+
+    def diff_table(table_def, source_table)
+      db_column_names = @db.columns(source_table).map(&:name).to_set
+      configured_columns = effective_column_names(table_def, db_column_names)
+
+      unknown = find_unknown_columns(table_def, db_column_names, configured_columns)
+      missing = find_missing_columns(table_def, db_column_names)
+      stale = find_stale_ignored_columns(table_def, db_column_names)
+
+      return nil if unknown.empty? && missing.empty? && stale.empty?
+
+      TableDiff.new(
+        table_name: table_def.name.to_s,
+        unknown_columns: unknown,
+        missing_columns: missing,
+        stale_ignored_columns: stale,
+      )
+    end
+
+    def find_unknown_columns(table_def, db_column_names, configured_columns)
+      ignored = table_def.ignored_column_names.map(&:to_s).to_set
+      globally_ignored = globally_ignored_columns
+
+      unknown = db_column_names - configured_columns - ignored - globally_ignored
+      table_name = table_def.name.to_s
+      unknown.sort.map { |name| ColumnInfo.new(name:, plugin: plugin_for_column(table_name, name)) }
+    end
+
+    def find_missing_columns(table_def, db_column_names)
+      return [] unless table_def.included_column_names
+
+      missing = table_def.included_column_names.map(&:to_s).to_set - db_column_names
+      missing.sort.map { |name| ColumnInfo.new(name:, plugin: nil) }
+    end
+
+    def find_stale_ignored_columns(table_def, db_column_names)
+      stale = []
+      table_def.ignored_columns_map.each_key do |col_name|
+        if db_column_names.exclude?(col_name.to_s)
+          stale << ColumnInfo.new(name: col_name.to_s, plugin: nil)
+        end
+      end
+      stale.sort_by(&:name)
+    end
+
+    def effective_column_names(table_def, db_column_names)
+      if table_def.included_column_names
+        names = table_def.included_column_names.map(&:to_s).to_set
+      else
+        ignored = table_def.ignored_column_names.map(&:to_s).to_set
+        names = db_column_names - ignored - globally_ignored_columns
+      end
+
+      added = table_def.added_columns.map { |c| c.name.to_s }
+      names + added.to_set
+    end
+
+    def globally_ignored_columns
+      @globally_ignored_columns ||=
+        begin
+          conventions = @schema.conventions_config
+          return Set.new unless conventions
+          conventions.ignored_columns.map(&:to_s).to_set
+        end
+    end
+
+    def ignored_table_name_set
+      ignored = @schema.ignored_tables
+      return Set.new unless ignored
+      ignored.table_names.map(&:to_s).to_set
+    end
+
+    def plugin_for_table(name)
+      manifest = @schema.plugin_manifest
+      manifest.fresh? ? manifest.plugin_for_table(name) : nil
+    rescue StandardError
+      nil
+    end
+
+    def plugin_for_column(table_name, col_name)
+      manifest = @schema.plugin_manifest
+      manifest.fresh? ? manifest.plugin_for_column(table_name, col_name) : nil
+    rescue StandardError
+      nil
+    end
+  end
+end
