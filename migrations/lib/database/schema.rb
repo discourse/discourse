@@ -199,5 +199,88 @@ module Migrations::Database
     rescue StandardError
       raise "Failed to run `bundle exec stree write '#{glob_pattern}'`"
     end
+
+    # --- DSL Registration Methods ---
+
+    def self.configure(&block)
+      builder = DSL::ConfigBuilder.new
+      builder.instance_eval(&block)
+      registry.register_config(builder.build)
+    end
+
+    def self.conventions(&block)
+      builder = DSL::ConventionsBuilder.new
+      builder.instance_eval(&block)
+      registry.register_conventions(builder.build)
+    end
+
+    def self.table(name, &block)
+      builder = DSL::TableBuilder.new(name)
+      builder.instance_eval(&block) if block
+      registry.register_table(name, builder.build)
+    end
+
+    def self.enum(name, &block)
+      builder = DSL::EnumBuilder.new(name)
+      builder.instance_eval(&block)
+      registry.register_enum(name, builder.build)
+    end
+
+    def self.ignored(&block)
+      builder = DSL::IgnoredBuilder.new
+      builder.instance_eval(&block)
+      registry.register_ignored(builder.build)
+    end
+
+    # --- Accessor Methods ---
+
+    def self.tables
+      registry.tables
+    end
+
+    def self.enums
+      registry.enums
+    end
+
+    def self.config
+      registry.config
+    end
+
+    def self.conventions_config
+      registry.conventions_config
+    end
+
+    def self.ignored_tables
+      registry.ignored_tables
+    end
+
+    def self.plugin_manifest
+      @plugin_manifest ||=
+        DSL::PluginManifest.new(manifest_path: File.join(config_path, "plugin_manifest.yml"))
+    end
+
+    # --- Lifecycle Methods ---
+
+    def self.ensure_ready!
+      return if @ready
+      DSL::Loader.new(config_path).load!
+      registry.freeze!
+      @ready = true
+    end
+
+    def self.config_path
+      File.join(Migrations.root_path, "config", "schema")
+    end
+
+    def self.reset!
+      @registry = nil
+      @ready = nil
+      @plugin_manifest = nil
+    end
+
+    def self.registry
+      @registry ||= DSL::Registry.new
+    end
+    private_class_method :registry
   end
 end
