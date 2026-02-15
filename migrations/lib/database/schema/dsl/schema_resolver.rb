@@ -1,0 +1,197 @@
+# frozen_string_literal: true
+
+module Migrations::Database::Schema::DSL
+  class SchemaResolver
+    def initialize(schema_module)
+      @schema = schema_module
+      @conventions = schema_module.conventions_config
+      @enums_by_name = schema_module.enums.transform_values { |e| resolve_enum(e) }
+    end
+
+    def resolve
+      tables = resolve_tables
+      enums = @enums_by_name.values
+
+      Migrations::Database::Schema::Definition.new(tables:, enums:)
+    end
+
+    private
+
+    def resolve_tables
+      ActiveRecord::Base.with_connection do |connection|
+        @db = connection
+        @schema.tables.map { |_name, table_def| resolve_table(table_def) }
+      end
+    end
+
+    def resolve_table(table_def)
+      source_table = table_def.source_table_name.to_s
+
+      db_columns = @db.columns(source_table).index_by(&:name)
+      db_primary_keys = @db.primary_keys(source_table)
+
+      primary_key_columns = table_def.primary_key_columns&.map(&:to_s) || db_primary_keys
+
+      columns = resolve_included_columns(table_def, db_columns, primary_key_columns)
+      columns += resolve_added_columns(table_def, primary_key_columns)
+
+      indexes = resolve_indexes(table_def)
+      constraints = resolve_constraints(table_def)
+
+      Migrations::Database::Schema::TableDefinition.new(
+        name: table_def.name.to_s,
+        columns:,
+        indexes:,
+        primary_key_column_names: primary_key_columns,
+        constraints:,
+      )
+    end
+
+    def resolve_included_columns(table_def, db_columns, primary_key_columns)
+      column_names = determine_included_columns(table_def, db_columns)
+
+      column_names.filter_map do |col_name|
+        col_name_str = col_name.to_s
+        db_col = db_columns[col_name_str]
+        next unless db_col
+
+        options = table_def.column_options_for(col_name)
+
+        resolve_column(
+          db_col,
+          primary_key_columns:,
+          type_override: options&.type,
+          required_override: options&.required,
+          max_length_override: options&.max_length,
+        )
+      end
+    end
+
+    def determine_included_columns(table_def, db_columns)
+      if table_def.included_column_names
+        table_def.included_column_names
+      else
+        # nil means "all DB columns" minus globally ignored and per-table ignored
+        all_names = db_columns.keys.map(&:to_sym)
+        ignored = table_def.ignored_column_names.to_set
+        globally_ignored =
+          @conventions ? @conventions.ignored_columns.map(&:to_sym).to_set : Set.new
+        all_names.reject { |n| ignored.include?(n) || globally_ignored.include?(n) }
+      end
+    end
+
+    def resolve_column(
+      db_col,
+      primary_key_columns:,
+      type_override: nil,
+      required_override: nil,
+      max_length_override: nil
+    )
+      col_name = db_col.name
+
+      effective_name = @conventions&.effective_name(col_name) || col_name.to_sym
+
+      raw_type =
+        type_override || @conventions&.convention_for(col_name)&.type_override || db_col.type
+
+      datatype = normalize_datatype(raw_type)
+
+      enum = nil
+      if type_override && @enums_by_name.key?(type_override)
+        enum = @enums_by_name[type_override]
+        datatype = enum.datatype
+      end
+
+      nullable =
+        if required_override == true
+          false
+        elsif @conventions&.required?(col_name)
+          false
+        else
+          db_col.null || db_col.default.present?
+        end
+
+      max_length = (max_length_override || db_col.limit if datatype == :text)
+
+      is_primary_key = primary_key_columns.include?(col_name)
+
+      Migrations::Database::Schema::ColumnDefinition.new(
+        name: effective_name.to_s,
+        datatype:,
+        nullable:,
+        max_length:,
+        is_primary_key:,
+        enum:,
+      )
+    end
+
+    def resolve_added_columns(table_def, primary_key_columns)
+      table_def.added_columns.map do |added_col|
+        effective_name = added_col.name.to_s
+
+        enum = added_col.enum ? @enums_by_name[added_col.enum] : nil
+        datatype = enum ? enum.datatype : added_col.type
+
+        Migrations::Database::Schema::ColumnDefinition.new(
+          name: effective_name,
+          datatype: normalize_datatype(datatype),
+          nullable: !added_col.required,
+          max_length: nil,
+          is_primary_key: primary_key_columns.include?(effective_name),
+          enum:,
+        )
+      end
+    end
+
+    def resolve_indexes(table_def)
+      table_def.indexes.map do |idx|
+        resolved_columns =
+          idx.column_names.map do |col_name|
+            @conventions&.effective_name(col_name)&.to_s || col_name.to_s
+          end
+
+        Migrations::Database::Schema::IndexDefinition.new(
+          name: idx.name.to_s,
+          column_names: resolved_columns,
+          unique: idx.unique,
+          condition: idx.condition,
+        )
+      end
+    end
+
+    def resolve_constraints(table_def)
+      table_def.constraints.map do |constraint|
+        Migrations::Database::Schema::ConstraintDefinition.new(
+          name: constraint.name.to_s,
+          type: constraint.type,
+          condition: constraint.condition,
+        )
+      end
+    end
+
+    def resolve_enum(enum_def)
+      Migrations::Database::Schema::EnumDefinition.new(
+        name: enum_def.name.to_s,
+        values: enum_def.values,
+        datatype: enum_def.datatype,
+      )
+    end
+
+    def normalize_datatype(type)
+      type = type.to_sym
+
+      case type
+      when :binary
+        :blob
+      when :string, :enum, :uuid
+        :text
+      when :jsonb
+        :json
+      when :boolean, :date, :datetime, :float, :inet, :integer, :numeric, :json, :text, :blob
+        type
+      else
+        type
+      end
+    end
+  end
+end

@@ -259,6 +259,18 @@ module Migrations::Database
         DSL::PluginManifest.new(manifest_path: File.join(config_path, "plugin_manifest.yml"))
     end
 
+    # --- Resolution & Generation ---
+
+    def self.resolve
+      ensure_ready!
+      DSL::SchemaResolver.new(self).resolve
+    end
+
+    def self.generate
+      ensure_ready!
+      DSL::Generator.new(self).generate
+    end
+
     # --- Lifecycle Methods ---
 
     def self.ensure_ready!
