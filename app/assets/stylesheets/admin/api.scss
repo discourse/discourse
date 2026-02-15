@@ -121,7 +121,7 @@
 
   .generated-api-key {
     flex: 1;
-    padding: 0.5em 0.75em;
+    padding: var(--space-2) var(--space-3);
     font-family: var(--d-font-family--monospace);
     font-size: var(--font-down-1);
     background: var(--primary-very-low);
