@@ -238,6 +238,10 @@ module Migrations::Database
       registry.tables
     end
 
+    def self.find_table(name)
+      registry.table(name)
+    end
+
     def self.enums
       registry.enums
     end
