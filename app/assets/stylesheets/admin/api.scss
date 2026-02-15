@@ -96,7 +96,7 @@
   .generated-api-key__scope-badges {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.25em;
+       gap: var(--space-1);
   }
 
   .generated-api-key__scope-badge {
