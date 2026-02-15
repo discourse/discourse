@@ -77,8 +77,8 @@
   .generated-api-key__details {
     display: flex;
     flex-direction: column;
-    gap: 0.5em;
-    padding: 0.75em 1em;
+    gap: var(--space-2);
+    padding: var(--space-3) var(--space-4);
     background: var(--primary-very-low);
     border-radius: var(--d-border-radius);
   }
