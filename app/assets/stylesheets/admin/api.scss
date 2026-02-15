@@ -67,7 +67,7 @@
   .generated-api-key-container {
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: var(--space-4)
   }
 
   .generated-api-key-container .alert {
