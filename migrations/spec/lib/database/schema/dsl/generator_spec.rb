@@ -60,6 +60,12 @@ RSpec.describe Migrations::Database::Schema::DSL::Generator do
           end
         end
 
+        validation_result =
+          Migrations::Database::Schema::DSL::ValidationResult.new(errors: [], warnings: [])
+        validator = instance_double(Migrations::Database::Schema::DSL::Validator)
+        allow(validator).to receive(:validate).and_return(validation_result)
+        allow(Migrations::Database::Schema::DSL::Validator).to receive(:new).and_return(validator)
+
         resolver = instance_double(Migrations::Database::Schema::DSL::SchemaResolver)
         allow(resolver).to receive(:resolve).and_return(resolved_definition)
         allow(Migrations::Database::Schema::DSL::SchemaResolver).to receive(:new).and_return(

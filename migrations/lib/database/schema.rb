@@ -259,7 +259,12 @@ module Migrations::Database
         DSL::PluginManifest.new(manifest_path: File.join(config_path, "plugin_manifest.yml"))
     end
 
-    # --- Resolution & Generation ---
+    # --- Validation, Resolution & Generation ---
+
+    def self.validate
+      ensure_ready!
+      DSL::Validator.new(self).validate
+    end
 
     def self.resolve
       ensure_ready!

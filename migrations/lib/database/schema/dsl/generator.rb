@@ -11,7 +11,9 @@ module Migrations::Database::Schema::DSL
     end
 
     def generate
+      validate_dsl!
       resolved = resolve_schema
+      validate_resolved_schema!(resolved)
       generate_sql(resolved)
       generate_enums(resolved)
       generate_models(resolved)
@@ -21,8 +23,28 @@ module Migrations::Database::Schema::DSL
 
     private
 
+    def validate_dsl!
+      result = Validator.new(@schema).validate
+
+      if result.errors.any?
+        message = "DSL validation failed with #{result.errors.size} error(s):\n"
+        message += result.errors.map { |e| "  - #{e}" }.join("\n")
+        raise GenerationError, message
+      end
+    end
+
     def resolve_schema
       SchemaResolver.new(@schema).resolve
+    end
+
+    def validate_resolved_schema!(resolved)
+      errors = ResolvedSchemaValidator.new(resolved).validate
+
+      if errors.any?
+        message = "Resolved schema validation failed with #{errors.size} error(s):\n"
+        message += errors.map { |e| "  - #{e}" }.join("\n")
+        raise GenerationError, message
+      end
     end
 
     def generate_sql(resolved)
