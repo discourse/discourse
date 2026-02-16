@@ -245,6 +245,46 @@ RSpec.describe FileStore::BaseStore do
     end
   end
 
+  describe "#cache_file" do
+    let(:store) { FileStore::BaseStore.new }
+    let(:cache_dir) { FileStore::BaseStore::CACHE_DIR }
+
+    before { FileUtils.rm_rf(cache_dir) }
+
+    after { FileUtils.rm_rf(cache_dir) }
+
+    it "evicts oldest files in batch when over the cache limit" do
+      FileUtils.mkdir_p(cache_dir)
+
+      stub_const(FileStore::BaseStore, "CACHE_MAXIMUM_SIZE", 5) do
+        stub_const(FileStore::BaseStore, "CACHE_EVICT_COUNT", 2) do
+          6.times do |i|
+            file = Tempfile.new("test_cache_#{i}")
+            file.write("data_#{i}")
+            file.rewind
+            store.cache_file(file, "cached_#{i}.tmp")
+            path = store.get_cache_path_for("cached_#{i}.tmp")
+            FileUtils.touch(path, mtime: Time.now - (10 - i).hours)
+            file.close!
+          end
+
+          trigger = Tempfile.new("trigger")
+          trigger.write("trigger")
+          trigger.rewind
+          store.cache_file(trigger, "trigger.tmp")
+          trigger.close!
+        end
+      end
+
+      remaining = Dir.glob("#{cache_dir}*")
+      expect(remaining.length).to eq(5)
+      expect(File.exist?(store.get_cache_path_for("cached_0.tmp"))).to eq(false)
+      expect(File.exist?(store.get_cache_path_for("cached_1.tmp"))).to eq(false)
+      expect(File.exist?(store.get_cache_path_for("cached_5.tmp"))).to eq(true)
+      expect(File.exist?(store.get_cache_path_for("trigger.tmp"))).to eq(true)
+    end
+  end
+
   describe "#download_safe" do
     before do
       setup_s3
