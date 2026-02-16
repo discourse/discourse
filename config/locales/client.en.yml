@@ -3682,9 +3682,18 @@ en:
         notify: "Notify users of this change."
         performing: "Performing bulk operations, please wait…"
         completed: "Bulk operations completed successfully!"
+        completed_count:
+          one: "<b>%{count}</b> topic was updated."
+          other: "<b>%{count}</b> topics were updated."
         not_completed:
-          one: "Bulk operation could not be completed for <strong>%{count}</strong> topic"
-          other: "Bulk operation could not be completed for <strong>%{count}</strong> topics"
+          one: "<b>%{count}</b> topic could not be updated:"
+          other: "<b>%{count}</b> topics could not be updated:"
+        skipped_count:
+          one: "<b>%{count}</b> topic was already up to date."
+          other: "<b>%{count}</b> topics were already up to date."
+        error_topic_count:
+          one: "%{count} topic"
+          other: "%{count} topics"
 
       none:
         unread: "You have no unread topics."
@@ -5829,6 +5838,8 @@ en:
       toggle_localized:
         translated: "Page is machine-translated. Click to view original."
         not_translated: "Page is not translated. Click to translate."
+        translations_enabled: "Translations enabled"
+        translations_disabled: "Translations disabled"
     language_switcher:
       title: "Change site language"
 

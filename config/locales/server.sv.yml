@@ -1785,7 +1785,6 @@ sv:
     num_flaggers_to_close_topic: "Minsta antal unika flaggare som krävs för att automatiskt pausa ett ämne för ingripande"
     num_hours_to_close_topic: "Antal timmar ett ämne ska pausas för ingripande."
     auto_respond_to_flag_actions: "Aktivera automatiskt svar vid hantering av en flagga."
-    min_first_post_typing_time: "Minsta tid i millisekunder en användare måste skriva vid redigeringen av sitt första inlägg. Om gränsen inte är uppnådd så kommer inlägget automatiskt att hamna i kön av saker som behöver granskas. Ange 0 för att inaktivera (rekommenderas ej)"
     auto_silence_fast_typers_max_trust_level: "Högsta förtroendenivå för att automatiskt tysta snabba författare"
     auto_silence_first_post_regex: "Skiftlägesokänsligt reguljärt uttryck som, om det godkänns, leder till att användarens första inlägg tystas och skickas till godkännandekön. Till exempel kommer rasande|a[bc]a att tysta alla inlägg som innehåller rasande eller aba eller aca i första inlägget. Gäller bara första inlägget. UTFASAT: Använd Tystnad bevakade ord istället."
     reviewable_claiming: "Måste det göras anspråk på granskningsbart innehåll innan det kan ageras?"
