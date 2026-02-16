@@ -88,6 +88,20 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
 
   Theme.expire_site_cache! if name == :default_theme_id
 
+  if name == :splash_screen_image && new_value.present?
+    SiteSetting::SplashScreenImageChanged.call(
+      upload_id: new_value,
+      guardian: Discourse.system_user.guardian,
+    ) do |result|
+      on_model_not_found(:upload) { Rails.logger.error("Upload not found for #{name} change") }
+      on_model_not_found(:svg) do
+        Rails.logger.error("SVG could not be parsed from upload #{new_value} when updating #{name}")
+      end
+      on_success { Rails.logger.info("Successfully updated #{name} SVG") }
+      on_failure { Rails.logger.error("Failed to update #{name} SVG") }
+    end
+  end
+
   if name == :content_localization_enabled && new_value == true
     %i[post_menu post_menu_hidden_items].each do |setting_name|
       current_items = SiteSetting.get(setting_name).split("|")
