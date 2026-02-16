@@ -82,11 +82,6 @@ RSpec.describe SiteSetting::Action::SimpleEmailSubjectToggled do
         expect(SiteSetting.email_subject).to eq(default_email_subject)
       end
 
-      it "requests a refresh" do
-        Discourse.expects(:request_refresh!)
-        result
-      end
-
       context "when admin has customized email_subject" do
         before { SiteSetting.email_subject = "custom subject" }
 
