@@ -138,7 +138,8 @@ module Migrations::Database::Schema::DSL
       return if configured_primary_keys.empty?
 
       if table_def.source_table_name
-        missing_in_db = configured_primary_keys.to_set - db_column_names
+        added_names = table_def.added_columns.map { |c| c.name.to_s }.to_set
+        missing_in_db = configured_primary_keys.to_set - db_column_names - added_names
         if missing_in_db.any?
           pk_message =
             "Table '#{table_def.name}': primary key references columns " \
