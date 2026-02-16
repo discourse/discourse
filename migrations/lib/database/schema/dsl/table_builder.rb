@@ -19,6 +19,7 @@ module Migrations::Database::Schema::DSL
       :ignored_columns_map,
       :ignore_plugin_columns,
       :plugin_name,
+      :model_mode,
     ) do
       def column_options_for(col)
         column_options[col.to_sym]
@@ -37,6 +38,8 @@ module Migrations::Database::Schema::DSL
       end
     end
 
+  VALID_MODEL_MODES = %i[extended manual].freeze
+
   class TableBuilder
     def initialize(name)
       @name = name.to_sym
@@ -50,6 +53,7 @@ module Migrations::Database::Schema::DSL
       @ignored_columns = {}
       @ignore_plugin_columns = false
       @plugin_name = nil
+      @model_mode = nil
     end
 
     def copy_structure_from(table)
@@ -120,6 +124,15 @@ module Migrations::Database::Schema::DSL
       @ignore_plugin_columns = true
     end
 
+    def model(mode)
+      mode = mode.to_sym
+      if VALID_MODEL_MODES.exclude?(mode)
+        raise Migrations::Database::Schema::ConfigError,
+              "Invalid model mode :#{mode} for table :#{@name}. Valid: #{VALID_MODEL_MODES.join(", ")}"
+      end
+      @model_mode = mode
+    end
+
     def build
       TableDef.new(
         name: @name,
@@ -133,6 +146,7 @@ module Migrations::Database::Schema::DSL
         ignored_columns_map: @ignored_columns.freeze,
         ignore_plugin_columns: @ignore_plugin_columns,
         plugin_name: @plugin_name,
+        model_mode: @model_mode,
       )
     end
 

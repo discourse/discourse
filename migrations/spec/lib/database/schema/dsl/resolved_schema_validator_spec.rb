@@ -24,7 +24,8 @@ RSpec.describe Migrations::Database::Schema::DSL::ResolvedSchemaValidator do
     columns: [],
     indexes: [],
     primary_key_column_names: [],
-    constraints: []
+    constraints: [],
+    model_mode: nil
   )
     Migrations::Database::Schema::TableDefinition.new(
       name:,
@@ -32,6 +33,7 @@ RSpec.describe Migrations::Database::Schema::DSL::ResolvedSchemaValidator do
       indexes:,
       primary_key_column_names:,
       constraints:,
+      model_mode:,
     )
   end
 

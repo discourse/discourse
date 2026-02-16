@@ -72,6 +72,9 @@ module Migrations::Database::Schema::DSL
       end
     end
 
+    CUSTOM_CODE_START = "# -- custom code --"
+    CUSTOM_CODE_END = "# -- end custom code --"
+
     def generate_models(resolved)
       models_dir = File.expand_path(@output_config.models_directory, Migrations.root_path)
       FileUtils.mkdir_p(models_dir)
@@ -86,8 +89,32 @@ module Migrations::Database::Schema::DSL
       resolved.tables.each do |table|
         filename = Migrations::Database::Schema::ModelWriter.filename_for(table)
         path = File.join(models_dir, filename)
-        File.open(path, "w") { |f| writer.output_table(table, f) }
+
+        case table.model_mode
+        when :manual
+          next
+        when :extended
+          custom_code = extract_custom_code(path) || ""
+          File.open(path, "w") { |f| writer.output_table(table, f, custom_code:) }
+        else
+          File.open(path, "w") { |f| writer.output_table(table, f) }
+        end
       end
+    end
+
+    def extract_custom_code(path)
+      return nil unless File.exist?(path)
+
+      content = File.read(path)
+      start_idx = content.index(CUSTOM_CODE_START)
+      end_idx = content.index(CUSTOM_CODE_END)
+      return nil unless start_idx && end_idx
+
+      after_start = content.index("\n", start_idx)
+      return nil unless after_start
+
+      custom = content[(after_start + 1)...end_idx]
+      custom&.strip.presence
     end
 
     def format_ruby_files!
@@ -104,8 +131,9 @@ module Migrations::Database::Schema::DSL
     end
 
     def file_header
+      db_label = @output_config.models_namespace.split("::").last
       @file_header ||= <<~HEADER
-          This file is auto-generated from the IntermediateDB schema. To make changes,
+          This file is auto-generated from the #{db_label} schema. To make changes,
           update the configuration files in "config/schema/" and then run
           `bin/cli schema generate` to regenerate this file.
         HEADER

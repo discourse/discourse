@@ -4,7 +4,14 @@ module Migrations::Database
   module Schema
     Definition = Data.define(:tables, :enums)
     TableDefinition =
-      Data.define(:name, :columns, :indexes, :primary_key_column_names, :constraints) do
+      Data.define(
+        :name,
+        :columns,
+        :indexes,
+        :primary_key_column_names,
+        :constraints,
+        :model_mode,
+      ) do
         def sorted_columns
           columns.sort_by { |c| [c.is_primary_key ? 0 : 1, c.name] }
         end

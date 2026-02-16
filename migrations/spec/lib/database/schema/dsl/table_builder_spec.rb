@@ -168,6 +168,41 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
       expect(table.ignore_plugin_columns?).to eq(true)
     end
 
+    it "defaults model_mode to nil" do
+      Migrations::Database::Schema.table :users do
+        primary_key :id
+      end
+
+      table = Migrations::Database::Schema.tables[:users]
+      expect(table.model_mode).to be_nil
+    end
+
+    it "supports model :extended" do
+      Migrations::Database::Schema.table :uploads do
+        model :extended
+      end
+
+      table = Migrations::Database::Schema.tables[:uploads]
+      expect(table.model_mode).to eq(:extended)
+    end
+
+    it "supports model :manual" do
+      Migrations::Database::Schema.table :log_entries do
+        model :manual
+      end
+
+      table = Migrations::Database::Schema.tables[:log_entries]
+      expect(table.model_mode).to eq(:manual)
+    end
+
+    it "raises on invalid model mode" do
+      expect do
+        Migrations::Database::Schema.table :users do
+          model :invalid
+        end
+      end.to raise_error(Migrations::Database::Schema::ConfigError, /Invalid model mode :invalid/)
+    end
+
     it "raises on duplicate table name" do
       Migrations::Database::Schema.table(:users) {}
 

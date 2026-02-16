@@ -47,6 +47,7 @@ module Migrations::Database::Schema::DSL
         indexes:,
         primary_key_column_names: resolved_pk_names,
         constraints:,
+        model_mode: table_def.model_mode,
       )
     end
 

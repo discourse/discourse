@@ -15,7 +15,7 @@ module Migrations::Database::Schema
       "#{table.name.singularize}.rb"
     end
 
-    def output_table(table, output_stream)
+    def output_table(table, output_stream, custom_code: nil)
       module_name = ::Migrations::Database::Schema.to_singular_classname(table.name)
       columns = table.sorted_columns
 
@@ -35,11 +35,19 @@ module Migrations::Database::Schema
       output_stream.puts "    SQL"
       output_stream.puts "    private_constant :SQL"
       output_stream.puts
+
+      unless custom_code.nil?
+        output_stream.puts "    # -- custom code --"
+        output_stream.puts custom_code if custom_code.present?
+        output_stream.puts "    # -- end custom code --"
+        output_stream.puts
+      end
+
       output_stream.puts method_documentation(table.name, columns)
       output_stream.puts "    def self.create("
       output_stream.puts method_parameters(columns)
       output_stream.puts "    )"
-      output_stream.puts "      ::Migrations::Database::IntermediateDB.insert("
+      output_stream.puts "      #{@model_namespace}.insert("
       output_stream.puts "        SQL,"
       output_stream.puts insertion_arguments(columns)
       output_stream.puts "      )"
