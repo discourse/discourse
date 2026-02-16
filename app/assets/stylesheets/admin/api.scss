@@ -67,56 +67,11 @@
   .generated-api-key-container {
     display: flex;
     flex-direction: column;
-    gap: var(--space-4)
+    gap: var(--space-4);
   }
 
   .generated-api-key-container .alert {
     margin-bottom: 0;
-  }
-
-  .generated-api-key__details {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-    padding: var(--space-3) var(--space-4);
-    background: var(--primary-very-low);
-    border-radius: var(--d-border-radius);
-  }
-
-  .generated-api-key__detail-row {
-    display: flex;
-    gap: var(--space-2);
-
-    .generated-api-key__label {
-      font-weight: bold;
-      min-width: 8em;
-    }
-  }
-
-  .generated-api-key__scope-badges {
-    display: flex;
-    flex-wrap: wrap;
-       gap: var(--space-1);
-  }
-
-  .generated-api-key__scope-badge {
-    display: inline-block;
-    padding: 0.15em 0.5em;
-    font-family: var(--d-font-family--monospace);
-    font-size: var(--font-down-1);
-    background: var(--primary-very-low);
-    border: 1px solid var(--primary-low);
-    border-radius: var(--d-border-radius);
-  }
-
-  .generated-api-key__scope-param {
-    color: var(--primary-medium);
-  }
-
-  .generated-api-key__key-row {
-    display: flex;
-    align-items: center;
-    gap: var(--space-2);
   }
 
   .generated-api-key {
@@ -129,6 +84,51 @@
     border-radius: var(--d-border-radius);
     user-select: all;
     word-break: break-all;
+
+    &__details {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-2);
+      padding: var(--space-3) var(--space-4);
+      background: var(--primary-very-low);
+      border-radius: var(--d-border-radius);
+    }
+
+    &__detail-row {
+      display: flex;
+      gap: var(--space-2);
+    }
+
+    &__label {
+      font-weight: bold;
+      min-width: 8em;
+    }
+
+    &__scope-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-1);
+    }
+
+    &__scope-badge {
+      display: inline-block;
+      padding: 0.15em 0.5em;
+      font-family: var(--d-font-family--monospace);
+      font-size: var(--font-down-1);
+      background: var(--primary-very-low);
+      border: 1px solid var(--primary-low);
+      border-radius: var(--d-border-radius);
+    }
+
+    &__scope-param {
+      color: var(--primary-medium);
+    }
+
+    &__key-row {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+    }
   }
 
   .api-key {
