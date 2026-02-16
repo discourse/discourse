@@ -53,10 +53,10 @@ module Migrations::Database::Schema::DSL
       if indexes.any?
         lines << ""
         indexes.each do |idx|
-          cols = idx.columns.map { |c| ":#{c}" }.join(", ")
+          cols = idx.columns.map { |c| c.to_s.inspect }.join(", ")
           opts = []
-          opts << "name: :#{idx.name}"
-          opts << "where: \"#{idx.where}\"" if idx.where
+          opts << "name: #{idx.name.to_s.inspect}"
+          opts << "where: #{idx.where.to_s.inspect}" if idx.where
 
           method = idx.unique ? "unique_index" : "index"
           lines << "  #{method} #{cols}, #{opts.join(", ")}"

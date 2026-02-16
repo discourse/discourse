@@ -40,11 +40,36 @@ RSpec.describe Migrations::Database::Schema::DSL::ConfigBuilder do
       )
     end
 
+    it "raises when other output fields are missing" do
+      expect do
+        Migrations::Database::Schema.configure { output { schema_file "db/schema.sql" } }
+      end.to raise_error(
+        Migrations::Database::Schema::ConfigError,
+        /models_directory.*models_namespace.*enums_directory.*enums_namespace/,
+      )
+    end
+
     it "raises on duplicate configure calls" do
-      Migrations::Database::Schema.configure { output { schema_file "db/schema.sql" } }
+      Migrations::Database::Schema.configure do
+        output do
+          schema_file "db/schema.sql"
+          models_directory "lib/models"
+          models_namespace "Test::Models"
+          enums_directory "lib/enums"
+          enums_namespace "Test::Enums"
+        end
+      end
 
       expect do
-        Migrations::Database::Schema.configure { output { schema_file "db/other.sql" } }
+        Migrations::Database::Schema.configure do
+          output do
+            schema_file "db/other.sql"
+            models_directory "lib/models"
+            models_namespace "Test::Models"
+            enums_directory "lib/enums"
+            enums_namespace "Test::Enums"
+          end
+        end
       end.to raise_error(Migrations::Database::Schema::ConfigError, /already registered/)
     end
   end

@@ -197,7 +197,53 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
         path = described_class.new(schema, :users).scaffold!
 
         content = File.read(path)
-        expect(content).to include("unique_index :username, name: :idx_users_username")
+        expect(content).to include('unique_index "username", name: "idx_users_username"')
+      end
+    end
+
+    it "escapes index names and where clauses as Ruby string literals" do
+      Dir.mktmpdir do |tmpdir|
+        config_path = File.join(tmpdir, "schema")
+        allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
+          config_path,
+        )
+
+        where_clause = 'name != "x\"y"'
+        idx =
+          mock_index(
+            name: "idx-users-name",
+            columns: %w[username],
+            unique: false,
+            where: where_clause,
+          )
+
+        stub_database(
+          connection,
+          db_tables: %i[users],
+          table_columns: {
+            users: {
+              id: {
+                type: :integer,
+              },
+              username: {
+                type: :text,
+              },
+            },
+          },
+          primary_keys: {
+            users: ["id"],
+          },
+          indexes: {
+            users: [idx],
+          },
+        )
+
+        schema = Migrations::Database::Schema
+        path = described_class.new(schema, :users).scaffold!
+
+        content = File.read(path)
+        expect(content).to include('index "username", name: "idx-users-name"')
+        expect(content).to include("where: #{where_clause.inspect}")
       end
     end
 

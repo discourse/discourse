@@ -62,10 +62,20 @@ module Migrations::Database::Schema::DSL
     end
 
     def build
-      unless @schema_file
-        raise Migrations::Database::Schema::ConfigError,
-              "Output configuration must include `schema_file`."
+      missing_fields = []
+      missing_fields << "schema_file" if missing?(@schema_file)
+      missing_fields << "models_directory" if missing?(@models_directory)
+      missing_fields << "models_namespace" if missing?(@models_namespace)
+      missing_fields << "enums_directory" if missing?(@enums_directory)
+      missing_fields << "enums_namespace" if missing?(@enums_namespace)
+
+      if missing_fields.any?
+        raise(
+          Migrations::Database::Schema::ConfigError,
+          "Output configuration missing required fields: #{missing_fields.join(", ")}.",
+        )
       end
+
       OutputConfig.new(
         schema_file: @schema_file,
         models_directory: @models_directory,
@@ -73,6 +83,12 @@ module Migrations::Database::Schema::DSL
         enums_directory: @enums_directory,
         enums_namespace: @enums_namespace,
       )
+    end
+
+    private
+
+    def missing?(value)
+      value.nil? || value.to_s.strip.empty?
     end
   end
 end

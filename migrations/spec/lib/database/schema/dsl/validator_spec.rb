@@ -259,6 +259,70 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       expect(result.errors).to include(match(/references unknown enum 'nonexistent_enum'/))
     end
 
+    it "detects column type overrides referencing unknown enums" do
+      schema =
+        build_schema(
+          tables: {
+            users:
+              proc do
+                include :id, :status
+                column :status, :missing_enum
+              end,
+          },
+        )
+
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: {
+            id: {
+              type: :integer,
+            },
+            status: {
+              type: :text,
+            },
+          },
+        },
+      )
+
+      result = described_class.new(schema).validate
+      expect(result.errors).to include(
+        match(/column 'status' type 'missing_enum' references unknown enum/),
+      )
+    end
+
+    it "allows known type overrides for columns" do
+      schema =
+        build_schema(
+          tables: {
+            users:
+              proc do
+                include :id, :status
+                column :status, :integer
+              end,
+          },
+        )
+
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: {
+            id: {
+              type: :integer,
+            },
+            status: {
+              type: :text,
+            },
+          },
+        },
+      )
+
+      result = described_class.new(schema).validate
+      expect(result.errors).to be_empty
+    end
+
     it "warns about stale ignored columns" do
       schema =
         build_schema(

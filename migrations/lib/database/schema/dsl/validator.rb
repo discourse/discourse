@@ -158,9 +158,10 @@ module Migrations::Database::Schema::DSL
     def validate_enum_references(table_def)
       table_def.column_options.each do |col_name, options|
         next unless options.type
-        if @schema.enums.key?(options.type)
-          # valid enum reference — ok
-        end
+        next if known_type_override?(options.type)
+        next if @schema.enums.key?(options.type)
+
+        @errors << "Table '#{table_def.name}': column '#{col_name}' type '#{options.type}' references unknown enum"
       end
     end
 
@@ -249,6 +250,26 @@ module Migrations::Database::Schema::DSL
 
     def sort_and_join(values)
       values.sort.join(", ")
+    end
+
+    def known_type_override?(type)
+      %i[
+        binary
+        blob
+        boolean
+        date
+        datetime
+        enum
+        float
+        inet
+        integer
+        json
+        jsonb
+        numeric
+        string
+        text
+        uuid
+      ].include?(type.to_sym)
     end
   end
 end
