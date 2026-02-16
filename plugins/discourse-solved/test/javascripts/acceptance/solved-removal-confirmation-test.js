@@ -85,7 +85,7 @@ acceptance("Discourse Solved | Solved Removal Confirmation", function (needs) {
         solvedTopicFixture({
           id: 52,
           category_id: 200,
-          tags: ["solved-tag"],
+          tags: [{ id: 1, name: "solved-tag", slug: "solved-tag" }],
         })
       )
     );
@@ -94,7 +94,7 @@ acceptance("Discourse Solved | Solved Removal Confirmation", function (needs) {
         solvedTopicFixture({
           id: 53,
           category_id: 100,
-          tags: ["solved-tag"],
+          tags: [{ id: 1, name: "solved-tag", slug: "solved-tag" }],
         })
       )
     );
