@@ -1,4 +1,4 @@
-import ReviewablePost from "discourse/components/reviewable-refresh/post";
+import ReviewablePost from "discourse/components/reviewable/post";
 import { i18n } from "discourse-i18n";
 import ModelAccuracies from "../model-accuracies";
 
