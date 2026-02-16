@@ -12,17 +12,19 @@ module Migrations::CLI
 
       result = Schema.validate
 
-      result.warnings.each { |w| puts "⚠ #{w}".yellow }
-      result.errors.each { |e| puts "✗ #{e}".red }
+      result.warnings.each { |w| puts I18n.t("schema.validate.warning", message: w).yellow }
+      result.errors.each { |e| puts I18n.t("schema.validate.error", message: e).red }
 
       has_issues = result.errors.any? || (options[:strict] && result.warnings.any?)
 
       if has_issues
         puts
-        puts "#{result.errors.size} error(s), #{result.warnings.size} warning(s)"
+        errors_str = I18n.t("schema.validate.summary", count: result.errors.size)
+        warnings_str = I18n.t("schema.validate.warning_summary", count: result.warnings.size)
+        puts "#{errors_str}, #{warnings_str}"
         exit 1
       else
-        puts "✓ Schema valid".green
+        puts I18n.t("schema.validate.valid").green
       end
     end
 
@@ -33,7 +35,9 @@ module Migrations::CLI
       resolved = Schema.generate
 
       puts
-      puts "✓ Generated #{resolved.tables.size} table(s), #{resolved.enums.size} enum(s)".green
+      tables_str = I18n.t("schema.generate.tables", count: resolved.tables.size)
+      enums_str = I18n.t("schema.generate.enums", count: resolved.enums.size)
+      puts I18n.t("schema.generate.success", tables: tables_str, enums: enums_str).green
     end
 
     desc "resolve", "Show the resolved schema (for debugging)"
@@ -42,16 +46,16 @@ module Migrations::CLI
 
       resolved = Schema.resolve
 
-      puts "Resolved Schema"
-      puts "==============="
+      puts I18n.t("schema.resolve.title")
+      puts I18n.t("schema.resolve.separator")
       puts
-      puts "Tables (#{resolved.tables.size}):"
+      puts I18n.t("schema.resolve.tables_header", count: resolved.tables.size)
       resolved.tables.each do |table|
         pk = table.primary_key_column_names&.join(", ") || "id"
         puts "  #{table.name} (PK: #{pk}, #{table.columns.size} columns)"
       end
       puts
-      puts "Enums (#{resolved.enums.size}):"
+      puts I18n.t("schema.resolve.enums_header", count: resolved.enums.size)
       resolved.enums.each do |enum|
         puts "  #{enum.name}: #{enum.values.size} values (#{enum.datatype})"
       end
@@ -66,16 +70,16 @@ module Migrations::CLI
       ignored = Schema.ignored_tables
       enums = Schema.enums
 
-      puts "Configured tables (#{tables.size}):"
+      puts I18n.t("schema.list.configured_tables", count: tables.size)
       tables.keys.sort.each { |t| puts "  #{t}" }
       puts
 
-      puts "Enums (#{enums.size}):"
+      puts I18n.t("schema.list.enums", count: enums.size)
       enums.keys.sort.each { |e| puts "  #{e}" }
       puts
 
       ignored_count = ignored ? ignored.table_names.size : 0
-      puts "Ignored tables: #{ignored_count}"
+      puts I18n.t("schema.list.ignored_tables", count: ignored_count)
     end
 
     desc "show TABLE", "Show configuration details for a table"
@@ -86,9 +90,9 @@ module Migrations::CLI
       table = Schema.find_table(table_name)
 
       unless table
-        puts "Table '#{table_name}' not found in configuration.".red
+        puts I18n.t("schema.show.table_not_found", name: table_name).red
         puts
-        puts "Available tables:"
+        puts I18n.t("schema.show.available_tables")
         Schema.tables.keys.sort.each { |t| puts "  #{t}" }
         exit 1
       end
@@ -113,7 +117,7 @@ module Migrations::CLI
       content.sub!(/(\nend\s*)\z/, "\n#{new_entry}\\1")
 
       File.write(ignored_path, content)
-      puts "✓ Added #{table_name} to ignored.rb".green
+      puts I18n.t("schema.ignore.success", table: table_name).green
     end
 
     desc "diff", "Show differences between configuration and database"
@@ -131,11 +135,11 @@ module Migrations::CLI
       Schema.ensure_ready!
 
       path = Schema.scaffold(table_name)
-      puts "✓ Created #{path}".green
+      puts I18n.t("schema.scaffold.success", path:).green
       puts
-      puts "Next steps:"
-      puts "  1. Edit the file to configure columns"
-      puts "  2. Run 'bin/cli schema validate'"
+      puts I18n.t("schema.scaffold.next_steps")
+      puts "  #{I18n.t("schema.scaffold.step_edit")}"
+      puts "  #{I18n.t("schema.scaffold.step_validate")}"
     end
 
     desc "detect-plugins", "Regenerate the plugin manifest"
@@ -146,15 +150,15 @@ module Migrations::CLI
       manifest = Schema.plugin_manifest
 
       if options[:force] || !manifest.fresh?
-        puts "Detecting plugin tables and columns..."
+        puts I18n.t("schema.detect_plugins.detecting")
         manifest.regenerate!
-        puts "✓ Plugin manifest updated".green
-        puts "  Tables: #{manifest.table_count}"
-        puts "  Columns: #{manifest.column_count}"
-        puts "  Plugins: #{manifest.all_plugin_names.join(", ")}"
+        puts I18n.t("schema.detect_plugins.updated").green
+        puts "  #{I18n.t("schema.detect_plugins.tables", count: manifest.table_count)}"
+        puts "  #{I18n.t("schema.detect_plugins.columns", count: manifest.column_count)}"
+        puts "  #{I18n.t("schema.detect_plugins.plugins", names: manifest.all_plugin_names.join(", "))}"
       else
-        puts "Plugin manifest is up to date"
-        puts "  Use --force to regenerate"
+        puts I18n.t("schema.detect_plugins.up_to_date")
+        puts "  #{I18n.t("schema.detect_plugins.use_force")}"
       end
     end
 
@@ -165,18 +169,20 @@ module Migrations::CLI
     end
 
     def display_table(table)
-      puts "Table: #{table.name}"
-      puts "  Source: #{table.source_table_name}" if table.source_table_name != table.name
-      puts "  Plugin: #{table.plugin_name}" if table.plugin_name
+      puts I18n.t("schema.show.table_name", name: table.name)
+      if table.source_table_name != table.name
+        puts "  #{I18n.t("schema.show.source", name: table.source_table_name)}"
+      end
+      puts "  #{I18n.t("schema.show.plugin", name: table.plugin_name)}" if table.plugin_name
       puts
 
       if table.primary_key_columns
-        puts "  Primary Key: #{table.primary_key_columns.join(", ")}"
+        puts "  #{I18n.t("schema.show.primary_key", columns: table.primary_key_columns.join(", "))}"
         puts
       end
 
       if table.included_column_names
-        puts "  Included Columns (#{table.included_column_names.size}):"
+        puts "  #{I18n.t("schema.show.included_columns", count: table.included_column_names.size)}"
         table.included_column_names.sort.each do |col|
           opts = table.column_options_for(col)
           extra = []
@@ -186,12 +192,12 @@ module Migrations::CLI
           puts "    #{col}#{extra_str}"
         end
       else
-        puts "  Columns: all (no explicit include list)"
+        puts "  #{I18n.t("schema.show.all_columns")}"
       end
       puts
 
       if table.added_columns.any?
-        puts "  Added Columns (#{table.added_columns.size}):"
+        puts "  #{I18n.t("schema.show.added_columns", count: table.added_columns.size)}"
         table.added_columns.each do |col|
           extra = []
           extra << "enum: #{col.enum}" if col.enum
@@ -203,7 +209,7 @@ module Migrations::CLI
       end
 
       if table.ignored_column_names.any?
-        puts "  Ignored Columns (#{table.ignored_column_names.size}):"
+        puts "  #{I18n.t("schema.show.ignored_columns", count: table.ignored_column_names.size)}"
         table.ignored_column_names.sort.each do |col|
           reason = table.ignore_reason_for(col)
           puts "    #{col}: #{reason}"
@@ -212,7 +218,7 @@ module Migrations::CLI
       end
 
       if table.indexes.any?
-        puts "  Indexes (#{table.indexes.size}):"
+        puts "  #{I18n.t("schema.show.indexes", count: table.indexes.size)}"
         table.indexes.each do |idx|
           unique_str = idx.unique ? "UNIQUE " : ""
           where_str = idx.condition ? " WHERE #{idx.condition}" : ""
@@ -222,12 +228,12 @@ module Migrations::CLI
       end
 
       if table.constraints.any?
-        puts "  Constraints (#{table.constraints.size}):"
+        puts "  #{I18n.t("schema.show.constraints", count: table.constraints.size)}"
         table.constraints.each { |c| puts "    #{c.name}: #{c.condition}" }
         puts
       end
 
-      puts "  Auto-ignore plugin columns: #{table.ignore_plugin_columns?}"
+      puts "  #{I18n.t("schema.show.auto_ignore_plugins", value: table.ignore_plugin_columns?)}"
     end
 
     def display_diff(result)
@@ -235,7 +241,7 @@ module Migrations::CLI
 
       if result.unknown_tables.any?
         has_changes = true
-        puts "Unknown tables (add to tables/ or ignored.rb):"
+        puts I18n.t("schema.diff.unknown_tables")
         result.unknown_tables.each do |t|
           plugin_info = t.plugin ? " [#{t.plugin}]" : ""
           puts "  + #{t.name}#{plugin_info}"
@@ -245,21 +251,21 @@ module Migrations::CLI
 
       if result.missing_tables.any?
         has_changes = true
-        puts "Missing tables (configured but not in database):"
+        puts I18n.t("schema.diff.missing_tables")
         result.missing_tables.each { |t| puts "  - #{t.name}" }
         puts
       end
 
       if result.stale_ignored_tables.any?
         has_changes = true
-        puts "Stale ignored tables (no longer in database):"
+        puts I18n.t("schema.diff.stale_ignored")
         result.stale_ignored_tables.each { |t| puts "  ~ #{t.name}" }
         puts
       end
 
       if result.table_diffs.any?
         has_changes = true
-        puts "Column differences:"
+        puts I18n.t("schema.diff.column_diffs")
         result.table_diffs.each do |table_diff|
           puts "  #{table_diff.table_name}:"
 
@@ -270,17 +276,19 @@ module Migrations::CLI
 
           table_diff.missing_columns.each { |c| puts "    - #{c.name}" }
 
-          table_diff.stale_ignored_columns.each { |c| puts "    ~ #{c.name} (ignored but gone)" }
+          table_diff.stale_ignored_columns.each do |c|
+            puts "    ~ #{I18n.t("schema.diff.stale_ignored_column", name: c.name)}"
+          end
         end
         puts
       end
 
       if has_changes
-        puts "Suggested actions:"
-        puts "  bin/cli schema scaffold <table>    Create config for a new table"
-        puts "  bin/cli schema ignore <table>      Add table to ignored.rb"
+        puts I18n.t("schema.diff.suggested_actions")
+        puts "  #{I18n.t("schema.diff.action_scaffold")}"
+        puts "  #{I18n.t("schema.diff.action_ignore")}"
       else
-        puts "✓ No differences found".green
+        puts I18n.t("schema.diff.no_differences").green
       end
     end
   end
