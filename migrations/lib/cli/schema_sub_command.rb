@@ -4,13 +4,20 @@ module Migrations::CLI
   class SchemaSubCommand < Thor
     Schema = ::Migrations::Database::Schema
 
+    class_option :database,
+                 type: :string,
+                 default: "intermediate_db",
+                 desc: "Database configuration to use"
+
     desc "validate", "Validate schema configuration against the database"
     method_option :strict, type: :boolean, default: false, desc: "Treat warnings as errors (for CI)"
     def validate
       load_rails!
-      Schema.ensure_ready!
 
-      result = Schema.validate
+      database = options[:database]
+      Schema.ensure_ready!(database:)
+
+      result = Schema.validate(database:)
 
       result.warnings.each { |w| puts I18n.t("schema.validate.warning", message: w).yellow }
       result.errors.each { |e| puts I18n.t("schema.validate.error", message: e).red }
@@ -32,7 +39,7 @@ module Migrations::CLI
     def generate
       load_rails!
 
-      resolved = Schema.generate
+      resolved = Schema.generate(database: options[:database])
 
       puts
       tables_str = I18n.t("schema.generate.tables", count: resolved.tables.size)
@@ -44,7 +51,7 @@ module Migrations::CLI
     def resolve
       load_rails!
 
-      resolved = Schema.resolve
+      resolved = Schema.resolve(database: options[:database])
 
       puts I18n.t("schema.resolve.title")
       puts I18n.t("schema.resolve.separator")
@@ -64,7 +71,7 @@ module Migrations::CLI
     desc "list", "List all configured, ignored tables and enums"
     def list
       load_rails!
-      Schema.ensure_ready!
+      Schema.ensure_ready!(database: options[:database])
 
       tables = Schema.tables
       ignored = Schema.ignored_tables
@@ -85,7 +92,7 @@ module Migrations::CLI
     desc "show TABLE", "Show configuration details for a table"
     def show(table_name)
       load_rails!
-      Schema.ensure_ready!
+      Schema.ensure_ready!(database: options[:database])
 
       table = Schema.find_table(table_name)
 
@@ -105,7 +112,7 @@ module Migrations::CLI
     def ignore(table_name)
       reason = options[:reason]
 
-      ignored_path = File.join(Schema.config_path, "ignored.rb")
+      ignored_path = File.join(Schema.config_path(options[:database]), "ignored.rb")
 
       unless File.exist?(ignored_path)
         raise Schema::ConfigError, "ignored.rb not found at #{ignored_path}"
@@ -123,18 +130,22 @@ module Migrations::CLI
     desc "diff", "Show differences between configuration and database"
     def diff
       load_rails!
-      Schema.ensure_ready!
 
-      result = Schema.diff
+      database = options[:database]
+      Schema.ensure_ready!(database:)
+
+      result = Schema.diff(database:)
       display_diff(result)
     end
 
     desc "scaffold TABLE", "Create a config file for a new table"
     def scaffold(table_name)
       load_rails!
-      Schema.ensure_ready!
 
-      path = Schema.scaffold(table_name)
+      database = options[:database]
+      Schema.ensure_ready!(database:)
+
+      path = Schema.scaffold(table_name, database:)
       puts I18n.t("schema.scaffold.success", path:).green
       puts
       puts I18n.t("schema.scaffold.next_steps")
@@ -147,7 +158,7 @@ module Migrations::CLI
     def detect_plugins
       load_rails!
 
-      manifest = Schema.plugin_manifest
+      manifest = Schema.plugin_manifest(database: options[:database])
 
       if options[:force] || !manifest.fresh?
         puts I18n.t("schema.detect_plugins.detecting")

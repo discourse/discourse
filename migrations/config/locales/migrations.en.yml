@@ -31,6 +31,8 @@ en:
       badge: "Badge"
 
   schema:
+    unknown_database: "Unknown database '%{name}'. Available: %{available}"
+
     validate:
       warning: "⚠ %{message}"
       error: "✗ %{message}"

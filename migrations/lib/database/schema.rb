@@ -258,49 +258,66 @@ module Migrations::Database
       registry.ignored_tables
     end
 
-    def self.plugin_manifest
-      @plugin_manifest ||=
-        DSL::PluginManifest.new(manifest_path: File.join(config_path, "plugin_manifest.yml"))
+    def self.plugin_manifest(database: :intermediate_db)
+      @plugin_manifest ||= {}
+      @plugin_manifest[database.to_sym] ||= DSL::PluginManifest.new(
+        manifest_path: File.join(config_path(database), "plugin_manifest.yml"),
+      )
     end
 
     # --- Validation, Resolution & Generation ---
 
-    def self.validate
-      ensure_ready!
+    def self.validate(database: :intermediate_db)
+      ensure_ready!(database:)
       DSL::Validator.new(self).validate
     end
 
-    def self.resolve
-      ensure_ready!
+    def self.resolve(database: :intermediate_db)
+      ensure_ready!(database:)
       DSL::SchemaResolver.new(self).resolve
     end
 
-    def self.generate
-      ensure_ready!
+    def self.generate(database: :intermediate_db)
+      ensure_ready!(database:)
       DSL::Generator.new(self).generate
     end
 
-    def self.diff
-      ensure_ready!
+    def self.diff(database: :intermediate_db)
+      ensure_ready!(database:)
       DSL::Differ.new(self).diff
     end
 
-    def self.scaffold(table_name)
-      ensure_ready!
+    def self.scaffold(table_name, database: :intermediate_db)
+      ensure_ready!(database:)
       DSL::Scaffolder.new(self, table_name).scaffold!
     end
 
     # --- Lifecycle Methods ---
 
-    def self.ensure_ready!
-      return if @ready
-      DSL::Loader.new(config_path).load!
+    def self.ensure_ready!(database: :intermediate_db)
+      db_key = database.to_sym
+      path = config_path(database)
+
+      unless File.directory?(path)
+        available = available_databases.join(", ")
+        raise ConfigError, I18n.t("schema.unknown_database", name: database, available:)
+      end
+
+      return if @ready == db_key
+
+      reset! if @ready
+      DSL::Loader.new(path).load!
       registry.freeze!
-      @ready = true
+      @ready = db_key
     end
 
-    def self.config_path
-      File.join(Migrations.root_path, "config", "schema")
+    def self.config_path(database = :intermediate_db)
+      File.join(Migrations.root_path, "config", "schema", database.to_s)
+    end
+
+    def self.available_databases
+      dir = File.join(Migrations.root_path, "config", "schema")
+      Dir.children(dir).select { |d| File.directory?(File.join(dir, d)) }.sort
     end
 
     def self.reset!
