@@ -7,7 +7,6 @@ export default <template>
     @label="admin.adplugin.house_ads.back"
   />
 
-  {{log @controller.houseAds}}
   <HouseAdForm
     @model={{@controller.model}}
     @houseAds={{@controller.houseAds}}

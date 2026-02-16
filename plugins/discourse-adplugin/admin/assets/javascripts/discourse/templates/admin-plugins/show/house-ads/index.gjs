@@ -5,7 +5,6 @@ import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-ar
 import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
-import routeAction from "discourse/helpers/route-action";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import HouseAdsListSetting from "../../../../../admin/components/house-ads-list-setting";
@@ -56,12 +55,7 @@ const HouseAdsIndex = <template>
             {{#each @controller.houseAds as |ad|}}
               <tr class="d-admin-row__content" data-house-ad-id={{ad.id}}>
                 <td class="d-admin-row__overview">
-                  <LinkTo
-                    @route="adminPlugins.show.houseAds.show"
-                    @model={{ad.id}}
-                  >
-                    <strong>{{ad.name}}</strong>
-                  </LinkTo>
+                  {{ad.name}}
                 </td>
                 <td class="d-admin-row__controls">
                   <LinkTo
@@ -113,7 +107,7 @@ const HouseAdsIndex = <template>
             <DButton
               @label="admin.adplugin.house_ads.more_settings"
               @icon="gear"
-              @action={{routeAction "moreSettings"}}
+              @action={{@controller.moreSettings}}
               class="btn-default"
             />
           </form>
@@ -123,7 +117,7 @@ const HouseAdsIndex = <template>
       <AdminConfigAreaEmptyList
         @emptyLabel="admin.adplugin.house_ads.get_started"
         @ctaLabel="admin.adplugin.house_ads.new"
-        @ctaRoute="adminPlugins.houseAds.show"
+        @ctaRoute="adminPlugins.show.houseAds.show"
         @ctaRouteModels="new"
       />
     {{/if}}

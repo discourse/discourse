@@ -55,6 +55,7 @@ after_initialize do
       put "/house-ads/:id" => "ad_plugin/house_ads#update", :format => false
       delete "/house-ads/:id" => "ad_plugin/house_ads#destroy", :format => false
       post "/house-ads" => "ad_plugin/house_ads#create", :format => false
+      put "/house-settings/:id" => "ad_plugin/house_ad_settings#update", :format => false
     end
   end
 

@@ -1,8 +1,6 @@
-import Controller, { inject as controller } from "@ember/controller";
-import { alias } from "@ember/object/computed";
+import { tracked } from "@glimmer/tracking";
+import Controller from "@ember/controller";
 
-export default class adminPluginsHouseAdsShow extends Controller {
-  @controller("adminPlugins.houseAds") houseAdsController;
-
-  @alias("houseAdsController.model") houseAds;
+export default class AdminPluginsShowHouseAdsShowController extends Controller {
+  @tracked houseAds;
 }

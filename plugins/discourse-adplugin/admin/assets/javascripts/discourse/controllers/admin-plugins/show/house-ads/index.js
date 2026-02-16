@@ -1,18 +1,29 @@
 import { tracked } from "@glimmer/tracking";
-import Controller, { inject as controller } from "@ember/controller";
+import Controller from "@ember/controller";
 import { action } from "@ember/object";
-import { alias } from "@ember/object/computed";
+import { service } from "@ember/service";
 
-export default class AdminPluginsHouseAdsIndexController extends Controller {
-  @controller("adminPlugins.houseAds") adminPluginsHouseAds;
+export default class AdminPluginsShowHouseAdsIndexController extends Controller {
+  @service router;
 
   @tracked currentTab = "ads";
-  @alias("adminPluginsHouseAds.model") houseAds;
-  @alias("adminPluginsHouseAds.houseAdsSettings") adSettings;
+
+  get houseAds() {
+    return this.model.houseAds;
+  }
+
+  get adSettings() {
+    return this.model.houseAdsSettings;
+  }
 
   @action
   onTabChange(tab, event) {
     event.preventDefault();
     this.currentTab = tab;
+  }
+
+  @action
+  moreSettings() {
+    this.router.transitionTo("adminSiteSettingsCategory", "ad_plugin");
   }
 }
