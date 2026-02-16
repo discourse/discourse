@@ -41,6 +41,11 @@ module DiscourseAi
       end
 
       def retry_response
+        raise Discourse::InvalidAccess unless SiteSetting.ai_bot_enabled
+        unless current_user.in_any_groups?(SiteSetting.ai_bot_allowed_groups_map)
+          raise Discourse::InvalidAccess
+        end
+
         post = Post.find(params[:post_id])
         guardian.ensure_can_see!(post)
 
