@@ -15,24 +15,18 @@ export default {
         (Superclass) =>
           class extends Superclass {
             _solvedEnabled(categoryId, tags) {
-              if (this.siteSettings.allow_solved_on_all_topics) {
+              if (
+                this.siteSettings.allow_solved_on_all_topics ||
+                Category.findById(categoryId)?.enable_accepted_answers
+              ) {
                 return true;
               }
 
-              if (this.siteSettings.enable_solved_tags && tags?.length) {
-                const solvedTags =
-                  this.siteSettings.enable_solved_tags.split("|");
-                const names = tags.map((t) =>
-                  typeof t === "string" ? t : t.name
-                );
-                if (names.some((n) => solvedTags.includes(n))) {
-                  return true;
-                }
-              }
+              const solvedTags = this.siteSettings.enable_solved_tags
+                .split("|")
+                .filter(Boolean);
 
-              return (
-                Category.findById(categoryId)?.enable_accepted_answers ?? false
-              );
+              return tags.some((t) => solvedTags.includes(t.name));
             }
 
             @action
@@ -44,16 +38,11 @@ export default {
               const props = this.get("buffered.buffer");
               let solvedStateChanged = false;
 
-              if (props.category_id !== undefined || props.tags !== undefined) {
+              if (["category_id", "tags"].some((key) => key in props)) {
                 const oldCategoryId = this.model.category_id;
-                const newCategoryId =
-                  props.category_id !== undefined
-                    ? props.category_id
-                    : this.model.category_id;
-
-                const oldTags = this.model.tags || [];
-                const newTags =
-                  props.tags !== undefined ? props.tags : this.model.tags || [];
+                const newCategoryId = props.category_id ?? oldCategoryId;
+                const oldTags = this.model.tags;
+                const newTags = props.tags ?? oldTags;
 
                 const oldAllowed = this._solvedEnabled(oldCategoryId, oldTags);
                 const newAllowed = this._solvedEnabled(newCategoryId, newTags);
