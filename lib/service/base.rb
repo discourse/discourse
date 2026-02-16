@@ -104,7 +104,7 @@ module Service
         base_class: Service::ContractBase,
         &block
       )
-        contract_class = Class.new(base_class).tap { _1.class_eval(&block) if block }
+        contract_class = Class.new(base_class).tap { it.class_eval(&block) if block }
         const_set("#{name.to_s.classify.sub("Default", "")}Contract", contract_class)
         steps << ContractStep.new(name, class_name: contract_class, default_values_from:)
       end
@@ -126,7 +126,7 @@ module Service
       end
 
       def options(&block)
-        klass = Class.new(Service::OptionsBase).tap { _1.class_eval(&block) }
+        klass = Class.new(Service::OptionsBase).tap { it.class_eval(&block) }
         const_set("Options", klass)
         steps << OptionsStep.new(:default, class_name: klass)
       end
@@ -172,11 +172,11 @@ module Service
       def run_step
         object = class_name&.new(context)
         method = object&.method(:call) || instance.method(method_name)
-        if !object && method.parameters.any? { _1[0] != :keyreq }
+        if !object && method.parameters.any? { it[0] != :keyreq }
           raise DefaultValuesNotAllowed,
                 "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a params or options block?"
         end
-        args = context.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
+        args = context.slice(*method.parameters.select { it[0] == :keyreq }.map(&:last))
         context[result_key][:object] = object if object
         instance.instance_exec(**args, &method)
       end
@@ -335,7 +335,7 @@ module Service
         def filtered_backtrace
           Array
             .wrap(backtrace)
-            .chunk { _1.match?(%r{/(gems|lib/service|ruby)/}) }
+            .chunk { it.match?(%r{/(gems|lib/service|ruby)/}) }
             .flat_map do |excluded, lines|
               next "(#{lines.size} framework line(s) excluded)" if excluded
               lines

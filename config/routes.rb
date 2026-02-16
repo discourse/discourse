@@ -359,7 +359,7 @@ Discourse::Application.routes.draw do
           resources :web_hooks, only: %i[index create show edit update destroy]
           get "web_hook_events/:id" => "web_hooks#list_events", :as => :web_hook_events
           get "web_hooks/:id/events/bulk" => "web_hooks#bulk_events"
-          post "web_hooks/:web_hook_id/events/:event_id/redeliver" => "web_hooks#redeliver_event"
+          post "web_hooks/:id/events/:event_id/redeliver" => "web_hooks#redeliver_event"
           post "web_hooks/:id/events/failed_redeliver" => "web_hooks#redeliver_failed_events"
           post "web_hooks/:id/ping" => "web_hooks#ping"
         end
@@ -1673,6 +1673,8 @@ Discourse::Application.routes.draw do
       get "/info" => "tags#info", :as => "tag_info"
       get "/notifications" => "tags#notifications", :as => "tag_notifications"
       put "/notifications" => "tags#update_notifications"
+      get "/settings" => "tags#settings"
+      put "/settings" => "tags#update_settings"
       put "/" => "tags#update", :as => "tag_update"
       delete "/" => "tags#destroy", :as => "tag_destroy"
       post "/synonyms" => "tags#create_synonyms", :as => "tag_synonyms"
@@ -1685,6 +1687,8 @@ Discourse::Application.routes.draw do
 
     scope "/tag/:tag_slug/:tag_id", constraints: { tag_id: /\d+/, format: :json } do
       get "/" => "tags#show", :as => "tag_show_with_slug"
+      get "/edit" => "tags#show"
+      get "/edit/:tab" => "tags#show"
 
       Discourse.filters.each do |filter|
         get "/l/#{filter}" => "tags#show_#{filter}", :as => "tag_show_#{filter}_with_slug"

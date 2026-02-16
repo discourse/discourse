@@ -148,6 +148,19 @@ describe "Tags", type: :system do
       expect(page).to have_current_path("/tag/#{tag_one.slug}/#{tag_one.id}")
       expect(discovery.topic_list).to have_topic(topic_with_one_tag)
     end
+
+    it "filters to untagged topics when selecting 'no tags' from tag drop" do
+      sign_in(user_tl1)
+      visit "/latest"
+
+      discovery.tag_drop.expand
+      discovery.tag_drop.select_row_by_value("no-tags")
+
+      expect(page).to have_current_path("/tag/none")
+      expect(discovery.topic_list).to have_topic(topic_with_no_tags)
+      expect(discovery.topic_list).to have_no_topic(topic_with_one_tag)
+      expect(discovery.topic_list).to have_no_topic(topic_with_two_tags)
+    end
   end
 
   describe "create/edit topics and PMs with tags" do

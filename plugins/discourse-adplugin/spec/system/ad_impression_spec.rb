@@ -22,9 +22,11 @@ describe "AdPlugin::AdImpression", type: :system do
     it "records the impression appropriately" do
       visit "/latest"
 
-      impression = AdPlugin::AdImpression.last
-
-      expect(impression.house_ad).to eq(house_ad)
+      try_until_success do
+        impression = AdPlugin::AdImpression.last
+        expect(impression).to_not be_nil
+        expect(impression.house_ad).to eq(house_ad)
+      end
     end
   end
 
@@ -50,11 +52,12 @@ describe "AdPlugin::AdImpression", type: :system do
     it "does not record impression before scrolling into view" do
       visit "/latest"
 
+      expect(page).to have_css("#site-logo")
       expect(AdPlugin::AdImpression.count).to eq(0)
 
       page.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-      wait_for { AdPlugin::AdImpression.count == 1 }
+      try_until_success { expect(AdPlugin::AdImpression.count).to eq(1) }
 
       impression = AdPlugin::AdImpression.last
       expect(impression.house_ad).to eq(house_ad)
@@ -87,7 +90,7 @@ describe "AdPlugin::AdImpression", type: :system do
       Fabricate(
         :house_ad,
         html:
-          '<a href="https://example.com/product" id="test-ad-link">Click here for great deals!</a>',
+          '<a href="https://example.com/product" class="test-ad-link">Click here for great deals!</a>',
       )
     end
 
@@ -128,7 +131,7 @@ describe "AdPlugin::AdImpression", type: :system do
 
       expect(impression.clicked_at).to be_nil
 
-      find("#test-ad-link").click
+      find(".test-ad-link").click
       wait_for { impression.reload.clicked_at.present? }
 
       expect(impression.clicked?).to eq(true)
@@ -137,7 +140,7 @@ describe "AdPlugin::AdImpression", type: :system do
 
     it "does not track clicks on non-link elements in house ads" do
       house_ad_with_text =
-        Fabricate(:house_ad, html: '<div id="test-ad-div">Just text, no link</div>')
+        Fabricate(:house_ad, html: '<div class="test-ad-div">Just text, no link</div>')
 
       PluginStoreRow.find_by(
         plugin_name: "discourse-adplugin",
@@ -147,7 +150,7 @@ describe "AdPlugin::AdImpression", type: :system do
       visit "/latest"
 
       impression = wait_for_impression
-      find("#test-ad-div").click
+      find(".test-ad-div").click
 
       impression.reload
       expect(impression.clicked_at).to be_nil
@@ -159,14 +162,14 @@ describe "AdPlugin::AdImpression", type: :system do
       impression = wait_for_impression
       prevent_link_navigation
 
-      expect(page).to have_css("#test-ad-link")
+      expect(page).to have_css(".test-ad-link")
 
-      find("#test-ad-link").click
+      find(".test-ad-link").click
       wait_for { impression.reload.clicked_at.present? }
 
       first_click_time = impression.clicked_at
 
-      find("#test-ad-link").click
+      find(".test-ad-link").click
 
       impression.reload
       expect(impression.clicked_at).to eq_time(first_click_time)
@@ -181,7 +184,7 @@ describe "AdPlugin::AdImpression", type: :system do
 
       prevent_link_navigation
 
-      find("#test-ad-link").click
+      find(".test-ad-link").click
 
       expect(AdPlugin::AdImpression.count).to eq(0)
     end

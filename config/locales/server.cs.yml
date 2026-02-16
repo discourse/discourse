@@ -2248,7 +2248,6 @@ cs:
     num_flaggers_to_close_topic: "Minimální počet unikátních nahlašovatelů potřebný k automatickému pozastavení tématu za účelem intervence"
     num_hours_to_close_topic: "Počet hodin, po které má být téma pozastaveno kvůli intervenci."
     auto_respond_to_flag_actions: "Povolit automatickou odpověď při odebírání příznaku nahlášení."
-    fast_typing_threshold: "Minimální doba v milisekundách, po kterou musí uživatel psát pro svůj první příspěvek. Pokud není prahové hodnoty dosaženo, příspěvek se automaticky zařadí do fronty pro revizi. Nízká hodnota je 1 sekunda, standardní je 3 sekundy, vysoká je 5 sekund."
     auto_silence_fast_typers_on_first_post: "Automatické ztišení uživatelů, kteří nesplňují práh rychlého psaní `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximální úroveň důvěry pro automatické ztišení rychle píšících"
     auto_silence_first_post_regex: "Regex nerozlišující velká a malá písmena, který po zadání způsobí, že první příspěvek uživatele bude umlčen a odeslán do fronty na schválení. Příklad: raging|a[bc]a , způsobí, že všechny příspěvky obsahující raging nebo aba nebo aca budou umlčeny jako první. Platí pouze pro první příspěvek. ZRUŠENO: Místo toho použijte Umlčet sledovaná slova."

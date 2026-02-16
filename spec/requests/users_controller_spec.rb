@@ -4552,7 +4552,7 @@ RSpec.describe UsersController do
 
         links = response.parsed_body["user_summary"]["links"]
 
-        expect(links.map { _1["url"] }).to contain_exactly(
+        expect(links.map { it["url"] }).to contain_exactly(
           "https://visible-link.com",
           "https://another-visible-link.com",
         )

@@ -125,6 +125,15 @@ RSpec.describe UsersEmailController do
   end
 
   describe "#create" do
+    it "requires you to be logged in" do
+      post "/u/#{user.username}/preferences/email.json",
+           params: {
+             email: "bubblegum@adventuretime.ooo",
+           }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(I18n.t("not_logged_in"))
+    end
+
     it "has an email token" do
       sign_in(user)
 

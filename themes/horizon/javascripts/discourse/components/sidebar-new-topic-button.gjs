@@ -84,22 +84,19 @@ export default class SidebarNewTopicButton extends Component {
   <template>
     {{#if this.shouldRender}}
       {{bodyClass "horizon-new-topic-button-enabled"}}
-      <div
-        class="sidebar-new-topic-button__wrapper"
+      <CreateTopicButton
         {{didInsert this.getCategoryAndTag}}
         {{didUpdate this.getCategoryAndTag this.router.currentRoute}}
         {{didInsert this.watchForComposer}}
         {{willDestroy this.stopWatchingForComposer}}
-      >
-        <CreateTopicButton
-          @canCreateTopic={{this.canCreateTopic}}
-          @action={{this.createNewTopic}}
-          @label="topic.create"
-          @btnClass="sidebar-new-topic-button"
-          @btnTypeClass="btn-primary"
-          @showDrafts={{gt this.draftCount 0}}
-        />
-      </div>
+        @canCreateTopic={{this.canCreateTopic}}
+        @action={{this.createNewTopic}}
+        @label="topic.create"
+        @btnClass="sidebar-new-topic-button"
+        @btnTypeClass="btn-primary"
+        @showDrafts={{gt this.draftCount 0}}
+        class="sidebar-new-topic-button__wrapper"
+      />
     {{/if}}
   </template>
 }

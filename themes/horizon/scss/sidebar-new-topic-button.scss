@@ -22,7 +22,7 @@
     &:focus-visible,
     &:hover {
       .discourse-no-touch & {
-        background-color: var(--accent-color);
+        background-color: var(--button-box-shadow);
         box-shadow: 0 0 0 4px var(--button-box-shadow);
         color: var(--accent-text-color);
 
@@ -38,14 +38,6 @@
 
     &:has(.topic-drafts-menu-trigger) {
       .sidebar-new-topic-button {
-        border-radius: var(--d-button-border-radius) 0 0
-          var(--d-button-border-radius);
-        border-right: 1px solid
-          light-dark(
-            oklch(from var(--primary-300) l c h),
-            oklch(from var(--primary-700) l c h)
-          ) !important;
-
         &:focus-visible,
         &:hover {
           .discourse-no-touch & {

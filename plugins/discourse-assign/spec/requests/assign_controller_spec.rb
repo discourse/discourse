@@ -123,12 +123,75 @@ RSpec.describe DiscourseAssign::AssignController do
     end
   end
 
+  describe "#unassign" do
+    include_context "with group that is allowed to assign"
+
+    it "returns 404 when the acting user cannot see the target topic" do
+      restricted_group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: restricted_group)
+      private_topic = Fabricate(:topic, category: private_category)
+      Fabricate(
+        :topic_assignment,
+        target: private_topic,
+        assigned_to: admin,
+        assigned_by_user: admin,
+      )
+
+      sign_in(allowed_user)
+
+      put "/assign/unassign.json", params: { target_id: private_topic.id, target_type: "Topic" }
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when the acting user cannot see the target PM" do
+      pm_topic = Fabricate(:private_message_topic)
+      Fabricate(:topic_assignment, target: pm_topic, assigned_to: admin, assigned_by_user: admin)
+
+      sign_in(allowed_user)
+
+      put "/assign/unassign.json", params: { target_id: pm_topic.id, target_type: "Topic" }
+      expect(response.status).to eq(404)
+    end
+  end
+
   describe "#assign" do
     include_context "with group that is allowed to assign"
 
     before do
       sign_in(admin)
       SiteSetting.enable_assign_status = true
+    end
+
+    it "returns 404 when the acting user cannot see the target topic" do
+      restricted_group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: restricted_group)
+      private_topic = Fabricate(:topic, category: private_category)
+      add_to_assign_allowed_group(allowed_user)
+
+      sign_in(allowed_user)
+
+      put "/assign/assign.json",
+          params: {
+            target_id: private_topic.id,
+            target_type: "Topic",
+            username: admin.username,
+          }
+      expect(response.status).to eq(404)
+    end
+
+    it "returns 404 when the acting user cannot see the target PM" do
+      pm_topic = Fabricate(:private_message_topic)
+      add_to_assign_allowed_group(allowed_user)
+
+      sign_in(allowed_user)
+
+      put "/assign/assign.json",
+          params: {
+            target_id: pm_topic.id,
+            target_type: "Topic",
+            username: admin.username,
+          }
+      expect(response.status).to eq(404)
     end
 
     it "assigns topic to a user" do

@@ -152,5 +152,62 @@ describe ContentLocalization do
 
       expect(ContentLocalization.show_translated_category?(category, scope)).to be false
     end
+
+    it "returns false when category locale is nil" do
+      SiteSetting.content_localization_enabled = true
+      category.update!(locale: nil)
+      I18n.locale = "de"
+      scope = create_scope
+
+      expect(ContentLocalization.show_translated_category?(category, scope)).to be false
+    end
+  end
+
+  describe ".show_translated_tag?" do
+    fab!(:tag)
+
+    it "returns true when criteria met" do
+      SiteSetting.content_localization_enabled = true
+      tag.update!(locale: "ja")
+      I18n.locale = "de"
+      scope = create_scope
+
+      expect(ContentLocalization.show_translated_tag?(tag, scope)).to be true
+    end
+
+    context "when criteria not met" do
+      before do
+        SiteSetting.content_localization_enabled = true
+        tag.update!(locale: "ja")
+        I18n.locale = "de"
+      end
+
+      it "returns false when content_localization_enabled is false" do
+        SiteSetting.content_localization_enabled = false
+        scope = create_scope
+
+        expect(ContentLocalization.show_translated_tag?(tag, scope)).to be false
+      end
+
+      it "returns false when tag locale is nil" do
+        tag.update!(locale: nil)
+        scope = create_scope
+
+        expect(ContentLocalization.show_translated_tag?(tag, scope)).to be false
+      end
+
+      it "returns false when tag is in user locale" do
+        tag.update!(locale: I18n.locale)
+        scope = create_scope
+
+        expect(ContentLocalization.show_translated_tag?(tag, scope)).to be false
+      end
+
+      it "returns false when show_original? is true" do
+        scope = create_scope(cookie: ContentLocalization::SHOW_ORIGINAL_COOKIE)
+
+        expect(ContentLocalization.show_translated_tag?(tag, scope)).to be false
+      end
+    end
   end
 end

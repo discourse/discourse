@@ -109,6 +109,64 @@ RSpec.describe Chat::Api::ChannelsController do
           expect(response.parsed_body["channels"]).to be_blank
         end
       end
+
+      context "when filtering by chatable_id and chatable_type (Category)" do
+        fab!(:category_1, :category)
+        fab!(:category_2, :category)
+        fab!(:channel_1) { Fabricate(:category_channel, chatable: category_1) }
+        fab!(:channel_2) { Fabricate(:category_channel, chatable: category_2) }
+
+        it "returns only channels for the given category" do
+          get "/chat/api/channels",
+              params: {
+                chatable_id: category_1.id,
+                chatable_type: "Category",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |c| c["id"] }).to eq([channel_1.id])
+        end
+
+        it "returns empty when the category has no channels" do
+          category_without_channel = Fabricate(:category)
+
+          get "/chat/api/channels",
+              params: {
+                chatable_id: category_without_channel.id,
+                chatable_type: "Category",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"]).to be_blank
+        end
+
+        it "does not filter when chatable type and id are not found" do
+          get "/chat/api/channels", params: { chatable_id: -999, chatable_type: "Category" }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |c| c["id"] }).to contain_exactly(
+            channel_1.id,
+            channel_2.id,
+          )
+        end
+
+        it "does not filter when user cannot access the chatable" do
+          private_category = Fabricate(:private_category, group: Fabricate(:group))
+          Fabricate(:category_channel, chatable: private_category)
+
+          get "/chat/api/channels",
+              params: {
+                chatable_id: private_category.id,
+                chatable_type: "Category",
+              }
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["channels"].map { |c| c["id"] }).to contain_exactly(
+            channel_1.id,
+            channel_2.id,
+          )
+        end
+      end
     end
   end
 

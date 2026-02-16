@@ -15,7 +15,15 @@ describe "Content localization language switcher", type: :system do
       :post,
       topic:,
       locale: "en",
-      raw: "The masterpiece isn’t just about military strategy",
+      raw: "The masterpiece isn't just about military strategy",
+    )
+  end
+  fab!(:post_2) do
+    Fabricate(
+      :post,
+      topic:,
+      locale: "en",
+      raw: "The greatest victory is that which requires no battle",
     )
   end
 
