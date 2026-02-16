@@ -89,66 +89,16 @@ DiscourseEvent.on(:site_setting_changed) do |name, old_value, new_value|
   Theme.expire_site_cache! if name == :default_theme_id
 
   if name == :splash_screen_image && new_value.present?
-    upload = Upload.find_by(id: new_value)
-
-    if upload&.extension == "svg"
-      content =
-        begin
-          upload.content
-        rescue StandardError
-          nil
-        end
-
-      if content.present?
-        doc = Nokogiri.XML(content)
-        svg = doc.at_css("svg")
-
-        if svg.present?
-          has_scripts = svg.xpath("//script").present?
-          has_event_handlers = svg.xpath("//@*[starts-with(name(), 'on')]").present?
-
-          if has_scripts || has_event_handlers
-            SiteSetting.splash_screen_image = ""
-          else
-            svg.xpath(
-              ".//*[local-name()='animate' or local-name()='animateTransform' or local-name()='animateMotion' or local-name()='set']",
-            ).each(&:remove)
-
-            # Remove explicit dimensions so the SVG scales via viewBox
-            if svg["viewBox"].present?
-              svg.remove_attribute("width")
-              svg.remove_attribute("height")
-            end
-
-            cleaned_svg = svg.to_xml
-
-            if cleaned_svg != content
-              Tempfile.open(%w[splash_screen .svg]) do |tmp|
-                tmp.write(cleaned_svg)
-                tmp.rewind
-
-                new_sha1 = Upload.generate_digest(tmp.path)
-                existing = Upload.find_by(sha1: new_sha1)
-
-                if existing && existing.id != upload.id
-                  SiteSetting = splash_screen_image = existing.id
-                else
-                  old_path = Discourse.store.get_path_for_upload(upload)
-                  old_url = upload.url
-                  upload.sha1 = new_sha1
-                  upload.filesize = tmp.size
-                  upload.url = Discourse.store.store_upload(tmp, upload)
-                  upload.save!(validate: false)
-
-                  Discourse.store.remove_file(old_url, old_path) if upload.url != old_url
-                end
-              end
-            end
-          end
-        end
+    SiteSetting::SplashScreenImageChanged.call(
+      upload_id: new_value,
+      guardian: Discourse.system_user.guardian,
+    ) do |result|
+      on_model_not_found(:upload) { Rails.logger.error("Upload not found for #{name} change") }
+      on_model_not_found(:svg) do
+        Rails.logger.error("SVG could not be parsed from upload #{new_value} when updating #{name}")
       end
-
-      Discourse.cache.delete("splash_screen_svg_#{upload.id}_#{upload.sha1}")
+      on_success { Rails.logger.info("Successfully updated #{name} SVG") }
+      on_failure { Rails.logger.error("Failed to update #{name} SVG") }
     end
   end
 

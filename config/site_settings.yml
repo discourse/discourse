@@ -3778,6 +3778,7 @@ uncategorized:
     depends_on:
       - "enable_custom_splash_screen"
     depends_behavior: "hidden"
+    validator: "UploadSettingValidator"
 
   suggest_weekends_in_date_pickers:
     client: true
