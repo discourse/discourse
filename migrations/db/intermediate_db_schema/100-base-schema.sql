@@ -156,11 +156,27 @@ CREATE TABLE "groups"
 );
 
 
+CREATE TABLE log_entries
+(
+    created_at DATETIME  NOT NULL,
+    details    JSON_TEXT,
+    exception  TEXT,
+    message    TEXT      NOT NULL,
+    type       ENUM_TEXT NOT NULL
+);
+
+
 CREATE TABLE muted_users
 (
     created_at    DATETIME,
     muted_user_id NUMERIC  NOT NULL,
     user_id       NUMERIC  NOT NULL
+);
+
+
+CREATE TABLE permalink_normalizations
+(
+    normalization TEXT NOT NULL PRIMARY KEY
 );
 
 
@@ -184,9 +200,9 @@ CREATE TABLE tag_group_memberships
 
 CREATE TABLE tag_group_permissions
 (
+    tag_group_id    NUMERIC  NOT NULL,
     group_id        NUMERIC  NOT NULL,
     permission_type INTEGER  NOT NULL,
-    tag_group_id    NUMERIC  NOT NULL,
     created_at      DATETIME,
     PRIMARY KEY (tag_group_id, group_id, permission_type)
 );
@@ -199,6 +215,13 @@ CREATE TABLE tag_groups
     name          TEXT     NOT NULL,
     one_per_topic BOOLEAN,
     parent_tag_id NUMERIC
+);
+
+
+CREATE TABLE tag_synonyms
+(
+    synonym_tag_id NUMERIC NOT NULL PRIMARY KEY,
+    target_tag_id  NUMERIC NOT NULL
 );
 
 
@@ -225,8 +248,8 @@ CREATE TABLE tags
 
 CREATE TABLE topic_allowed_groups
 (
-    group_id NUMERIC NOT NULL,
     topic_id NUMERIC NOT NULL,
+    group_id NUMERIC NOT NULL,
     PRIMARY KEY (topic_id, group_id)
 );
 
@@ -242,8 +265,8 @@ CREATE TABLE topic_allowed_users
 
 CREATE TABLE topic_tags
 (
-    tag_id     NUMERIC  NOT NULL,
     topic_id   NUMERIC  NOT NULL,
+    tag_id     NUMERIC  NOT NULL,
     created_at DATETIME,
     PRIMARY KEY (topic_id, tag_id)
 );
@@ -293,10 +316,24 @@ CREATE TABLE topics
 
 CREATE INDEX index_topics_on_archetype ON topics (archetype);
 
+CREATE TABLE uploads
+(
+    id          TEXT         NOT NULL PRIMARY KEY,
+    data        BLOB,
+    description TEXT,
+    filename    TEXT         NOT NULL,
+    origin      TEXT,
+    path        TEXT,
+    type        ENUM_INTEGER,
+    url         TEXT,
+    user_id     NUMERIC
+);
+
+
 CREATE TABLE user_associated_accounts
 (
-    provider_name TEXT      NOT NULL,
     user_id       NUMERIC   NOT NULL,
+    provider_name TEXT      NOT NULL,
     created_at    DATETIME,
     info          JSON_TEXT,
     last_used     DATETIME,
@@ -307,8 +344,8 @@ CREATE TABLE user_associated_accounts
 
 CREATE TABLE user_custom_fields
 (
-    name       TEXT     NOT NULL,
     user_id    NUMERIC  NOT NULL,
+    name       TEXT     NOT NULL,
     value      TEXT     NOT NULL,
     created_at DATETIME,
     PRIMARY KEY (user_id, name, value)
@@ -317,8 +354,8 @@ CREATE TABLE user_custom_fields
 
 CREATE TABLE user_emails
 (
-    email      TEXT     NOT NULL,
     user_id    NUMERIC  NOT NULL,
+    email      TEXT     NOT NULL,
     created_at DATETIME,
     "primary"  BOOLEAN,
     PRIMARY KEY (user_id, email)
@@ -435,6 +472,17 @@ CREATE TABLE user_options
     title_count_mode_key                 INTEGER,
     topics_unread_when_closed            BOOLEAN,
     watched_precedence_over_muted        BOOLEAN
+);
+
+
+CREATE TABLE user_suspensions
+(
+    user_id         NUMERIC  NOT NULL,
+    suspended_at    DATETIME NOT NULL,
+    reason          TEXT,
+    suspended_by_id NUMERIC,
+    suspended_till  DATETIME,
+    PRIMARY KEY (user_id, suspended_at)
 );
 
 

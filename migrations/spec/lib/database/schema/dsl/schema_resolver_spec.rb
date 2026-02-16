@@ -532,6 +532,119 @@ RSpec.describe Migrations::Database::Schema::DSL::SchemaResolver do
       expect(col.nullable).to eq(true)
     end
 
+    it "resolves a table with synthetic! using only add_columns" do
+      schema =
+        build_schema(
+          tables: {
+            log_entries:
+              proc do
+                synthetic!
+                add_column :created_at, :datetime, required: true
+                add_column :type, :text, required: true
+                add_column :message, :text, required: true
+                add_column :exception, :text
+                add_column :details, :json
+              end,
+          },
+        )
+
+      stub_database(connection, table_columns: {}, primary_keys: {})
+
+      result = described_class.new(schema).resolve
+      table = result.tables.first
+
+      expect(table.name).to eq("log_entries")
+      expect(table.columns.size).to eq(5)
+      expect(table.primary_key_column_names).to eq([])
+
+      created_at = table.columns.find { |c| c.name == "created_at" }
+      expect(created_at.datatype).to eq(:datetime)
+      expect(created_at.nullable).to eq(false)
+
+      details = table.columns.find { |c| c.name == "details" }
+      expect(details.datatype).to eq(:json)
+      expect(details.nullable).to eq(true)
+    end
+
+    it "resolves primary keys for nil source tables without convention renames" do
+      schema =
+        build_schema(
+          tables: {
+            uploads:
+              proc do
+                synthetic!
+                primary_key :id
+                add_column :id, :text, required: true
+                add_column :filename, :text, required: true
+              end,
+          },
+          conventions:
+            proc do
+              column :id do
+                rename_to :original_id
+                type :numeric
+              end
+            end,
+        )
+
+      stub_database(connection, table_columns: {}, primary_keys: {})
+
+      result = described_class.new(schema).resolve
+      table = result.tables.first
+
+      expect(table.primary_key_column_names).to eq(["id"])
+
+      id_col = table.columns.find { |c| c.name == "id" }
+      expect(id_col.datatype).to eq(:text)
+      expect(id_col.is_primary_key).to eq(true)
+    end
+
+    it "resolves composite primary keys for nil source tables" do
+      schema =
+        build_schema(
+          tables: {
+            user_suspensions:
+              proc do
+                synthetic!
+                primary_key :user_id, :suspended_at
+                add_column :user_id, :numeric, required: true
+                add_column :suspended_at, :datetime, required: true
+                add_column :reason, :text
+              end,
+          },
+        )
+
+      stub_database(connection, table_columns: {}, primary_keys: {})
+
+      result = described_class.new(schema).resolve
+      table = result.tables.first
+
+      expect(table.primary_key_column_names).to eq(%w[user_id suspended_at])
+      expect(table.columns.find { |c| c.name == "user_id" }.is_primary_key).to eq(true)
+      expect(table.columns.find { |c| c.name == "suspended_at" }.is_primary_key).to eq(true)
+      expect(table.columns.find { |c| c.name == "reason" }.is_primary_key).to eq(false)
+    end
+
+    it "passes model_mode through for nil source tables" do
+      schema =
+        build_schema(
+          tables: {
+            uploads:
+              proc do
+                model :manual
+                synthetic!
+                primary_key :id
+                add_column :id, :text, required: true
+              end,
+          },
+        )
+
+      stub_database(connection, table_columns: {}, primary_keys: {})
+
+      result = described_class.new(schema).resolve
+      expect(result.tables.first.model_mode).to eq(:manual)
+    end
+
     it "excludes globally ignored columns when no include list specified" do
       schema =
         build_schema(tables: { users: proc {} }, conventions: proc { ignore_columns :secret_token })

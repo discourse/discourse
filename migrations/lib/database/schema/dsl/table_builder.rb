@@ -60,6 +60,10 @@ module Migrations::Database::Schema::DSL
       @source_table_name = table.to_sym
     end
 
+    def synthetic!
+      @source_table_name = nil
+    end
+
     def primary_key(*cols)
       @primary_key_cols = cols.flatten.map(&:to_sym)
     end

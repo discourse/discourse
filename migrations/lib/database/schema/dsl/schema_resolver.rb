@@ -25,10 +25,14 @@ module Migrations::Database::Schema::DSL
     end
 
     def resolve_table(table_def)
-      source_table = table_def.source_table_name.to_s
-
-      db_columns = @db.columns(source_table).index_by(&:name)
-      db_primary_keys = @db.primary_keys(source_table)
+      if table_def.source_table_name
+        source_table = table_def.source_table_name.to_s
+        db_columns = @db.columns(source_table).index_by(&:name)
+        db_primary_keys = @db.primary_keys(source_table)
+      else
+        db_columns = {}
+        db_primary_keys = []
+      end
 
       primary_key_columns = table_def.primary_key_columns&.map(&:to_s) || db_primary_keys
 
@@ -160,9 +164,13 @@ module Migrations::Database::Schema::DSL
       resolved_column_names = resolved_columns.map(&:name).to_set
 
       primary_key_columns.filter_map do |pk_col|
-        options = table_def.column_options_for(pk_col)
-        rename_to = options&.rename_to
-        resolved_name = (rename_to || @conventions&.effective_name(pk_col) || pk_col.to_sym).to_s
+        if table_def.source_table_name
+          options = table_def.column_options_for(pk_col)
+          rename_to = options&.rename_to
+          resolved_name = (rename_to || @conventions&.effective_name(pk_col) || pk_col.to_sym).to_s
+        else
+          resolved_name = pk_col.to_s
+        end
         resolved_name if resolved_column_names.include?(resolved_name)
       end
     end

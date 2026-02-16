@@ -8,8 +8,8 @@ module Migrations::Database::IntermediateDB
   module TopicAllowedGroup
     SQL = <<~SQL
       INSERT INTO topic_allowed_groups (
-        group_id,
-        topic_id
+        topic_id,
+        group_id
       )
       VALUES (
         ?, ?
@@ -19,12 +19,12 @@ module Migrations::Database::IntermediateDB
 
     # Creates a new `topic_allowed_groups` record in the IntermediateDB.
     #
-    # @param group_id   [Integer, String]
     # @param topic_id   [Integer, String]
+    # @param group_id   [Integer, String]
     #
     # @return [void]
-    def self.create(group_id:, topic_id:)
-      ::Migrations::Database::IntermediateDB.insert(SQL, group_id, topic_id)
+    def self.create(topic_id:, group_id:)
+      ::Migrations::Database::IntermediateDB.insert(SQL, topic_id, group_id)
     end
   end
 end

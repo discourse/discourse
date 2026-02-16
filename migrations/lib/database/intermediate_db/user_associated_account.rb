@@ -8,8 +8,8 @@ module Migrations::Database::IntermediateDB
   module UserAssociatedAccount
     SQL = <<~SQL
       INSERT INTO user_associated_accounts (
-        provider_name,
         user_id,
+        provider_name,
         created_at,
         info,
         last_used,
@@ -23,8 +23,8 @@ module Migrations::Database::IntermediateDB
 
     # Creates a new `user_associated_accounts` record in the IntermediateDB.
     #
-    # @param provider_name   [String]
     # @param user_id         [Integer, String]
+    # @param provider_name   [String]
     # @param created_at      [Time, nil]
     # @param info            [Object, nil]
     # @param last_used       [Time, nil]
@@ -32,8 +32,8 @@ module Migrations::Database::IntermediateDB
     #
     # @return [void]
     def self.create(
-      provider_name:,
       user_id:,
+      provider_name:,
       created_at: nil,
       info: nil,
       last_used: nil,
@@ -41,8 +41,8 @@ module Migrations::Database::IntermediateDB
     )
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
-        provider_name,
         user_id,
+        provider_name,
         ::Migrations::Database.format_datetime(created_at),
         ::Migrations::Database.to_json(info),
         ::Migrations::Database.format_datetime(last_used),

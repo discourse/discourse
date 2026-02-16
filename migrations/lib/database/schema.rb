@@ -13,7 +13,8 @@ module Migrations::Database
         :model_mode,
       ) do
         def sorted_columns
-          columns.sort_by { |c| [c.is_primary_key ? 0 : 1, c.name] }
+          pk_position = primary_key_column_names.each_with_index.to_h
+          columns.sort_by { |c| [c.is_primary_key ? 0 : 1, pk_position.fetch(c.name, 0), c.name] }
         end
       end
     ColumnDefinition = Data.define(:name, :datatype, :nullable, :max_length, :is_primary_key, :enum)

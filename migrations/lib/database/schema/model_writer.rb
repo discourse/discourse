@@ -47,7 +47,7 @@ module Migrations::Database::Schema
       output_stream.puts "    def self.create("
       output_stream.puts method_parameters(columns)
       output_stream.puts "    )"
-      output_stream.puts "      #{@model_namespace}.insert("
+      output_stream.puts "      ::#{@model_namespace}.insert("
       output_stream.puts "        SQL,"
       output_stream.puts insertion_arguments(columns)
       output_stream.puts "      )"

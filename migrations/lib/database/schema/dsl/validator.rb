@@ -40,15 +40,18 @@ module Migrations::Database::Schema::DSL
     end
 
     def validate_table(table_def)
-      source_table = table_def.source_table_name.to_s
+      if table_def.source_table_name
+        source_table = table_def.source_table_name.to_s
 
-      # Check source table exists
-      if @db_table_names.exclude?(source_table)
-        @errors << "Table '#{table_def.name}': source table '#{source_table}' does not exist in database"
-        return
+        if @db_table_names.exclude?(source_table)
+          @errors << "Table '#{table_def.name}': source table '#{source_table}' does not exist in database"
+          return
+        end
+
+        db_column_names = @db.columns(source_table).map(&:name).to_set
+      else
+        db_column_names = Set.new
       end
-
-      db_column_names = @db.columns(source_table).map(&:name).to_set
 
       validate_included_columns(table_def, db_column_names)
       validate_column_options(table_def, db_column_names)

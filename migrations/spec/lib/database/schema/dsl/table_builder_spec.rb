@@ -34,6 +34,16 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
       expect(table.source_table_name).to eq(:users)
     end
 
+    it "supports synthetic! for tables without a PG source" do
+      Migrations::Database::Schema.table :log_entries do
+        synthetic!
+        add_column :message, :text, required: true
+      end
+
+      table = Migrations::Database::Schema.tables[:log_entries]
+      expect(table.source_table_name).to be_nil
+    end
+
     it "supports column options via keyword arguments" do
       Migrations::Database::Schema.table :users do
         column :email, :text, required: true, max_length: 255

@@ -8,8 +8,8 @@ module Migrations::Database::IntermediateDB
   module TopicTag
     SQL = <<~SQL
       INSERT INTO topic_tags (
-        tag_id,
         topic_id,
+        tag_id,
         created_at
       )
       VALUES (
@@ -20,16 +20,16 @@ module Migrations::Database::IntermediateDB
 
     # Creates a new `topic_tags` record in the IntermediateDB.
     #
-    # @param tag_id       [Integer, String]
     # @param topic_id     [Integer, String]
+    # @param tag_id       [Integer, String]
     # @param created_at   [Time, nil]
     #
     # @return [void]
-    def self.create(tag_id:, topic_id:, created_at: nil)
+    def self.create(topic_id:, tag_id:, created_at: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
-        tag_id,
         topic_id,
+        tag_id,
         ::Migrations::Database.format_datetime(created_at),
       )
     end

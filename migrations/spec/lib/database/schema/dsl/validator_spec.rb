@@ -312,6 +312,25 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       )
     end
 
+    it "validates a table with synthetic! and only add_columns" do
+      schema =
+        build_schema(
+          tables: {
+            log_entries:
+              proc do
+                synthetic!
+                add_column :created_at, :datetime, required: true
+                add_column :message, :text, required: true
+              end,
+          },
+        )
+
+      stub_database(connection, db_tables: [], table_columns: {})
+
+      result = described_class.new(schema).validate
+      expect(result.errors).to be_empty
+    end
+
     it "validates copy_structure_from source table" do
       schema =
         build_schema(

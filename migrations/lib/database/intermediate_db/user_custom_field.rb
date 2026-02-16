@@ -8,8 +8,8 @@ module Migrations::Database::IntermediateDB
   module UserCustomField
     SQL = <<~SQL
       INSERT INTO user_custom_fields (
-        name,
         user_id,
+        name,
         value,
         created_at
       )
@@ -21,17 +21,17 @@ module Migrations::Database::IntermediateDB
 
     # Creates a new `user_custom_fields` record in the IntermediateDB.
     #
-    # @param name         [String]
     # @param user_id      [Integer, String]
+    # @param name         [String]
     # @param value        [String]
     # @param created_at   [Time, nil]
     #
     # @return [void]
-    def self.create(name:, user_id:, value:, created_at: nil)
+    def self.create(user_id:, name:, value:, created_at: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
-        name,
         user_id,
+        name,
         value,
         ::Migrations::Database.format_datetime(created_at),
       )
