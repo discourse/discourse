@@ -4,12 +4,12 @@ module PageObjects
   module Pages
     class AdminHouseAds < PageObjects::Pages::Base
       def visit_page
-        page.visit "/admin/plugins/pluginad/house_creatives"
+        page.visit "/admin/plugins/discourse-adplugin/house-ads"
         self
       end
 
       def visit_new
-        page.visit "/admin/plugins/pluginad/house_creatives/new"
+        page.visit "/admin/plugins/discourse-adplugin/house-ads/new"
         self
       end
 

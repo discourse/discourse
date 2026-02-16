@@ -10,7 +10,7 @@
 register_asset "stylesheets/adplugin.scss"
 register_svg_icon "rectangle-ad"
 
-add_admin_route "admin.adplugin.house_ads.title", "houseAds"
+add_admin_route "admin.adplugin.house_ads.title", "discourse-adplugin", use_new_show_route: true
 
 enabled_site_setting :discourse_adplugin_enabled
 
@@ -47,6 +47,12 @@ after_initialize do
     post "/ad_plugin/ad_impressions" => "ad_plugin/ad_impressions#create"
 
     mount AdPlugin::Engine, at: "/admin/plugins/pluginad", constraints: AdminConstraint.new
+
+    # HTML routes for admin SPA (full page refresh support)
+    scope "/admin/plugins/discourse-adplugin", constraints: AdminConstraint.new do
+      get "/house-ads" => "admin/admin#index", :format => false
+      get "/house-ads/:id" => "admin/admin#index", :format => false
+    end
   end
 
   add_to_serializer :site, :house_creatives do

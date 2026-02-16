@@ -98,7 +98,7 @@ export default class HouseAdForm extends Component {
         };
         houseAds.push(newAd);
         this.router.transitionTo(
-          "adminPlugins.houseAds.show",
+          "adminPlugins.show.houseAds.show",
           result.house_ad.id
         );
       } else {
@@ -126,7 +126,7 @@ export default class HouseAdForm extends Component {
   @action
   delete() {
     if (this.isNew) {
-      this.router.transitionTo("adminPlugins.houseAds.index");
+      this.router.transitionTo("adminPlugins.show.houseAds.index");
       return;
     }
 
@@ -143,7 +143,7 @@ export default class HouseAdForm extends Component {
             this.args.houseAds,
             this.args.houseAds.find((ad) => ad.id === this.args.model.id)
           );
-          this.router.transitionTo("adminPlugins.houseAds.index");
+          this.router.transitionTo("adminPlugins.show.houseAds.index");
         } catch (error) {
           popupAjaxError(error);
         }
