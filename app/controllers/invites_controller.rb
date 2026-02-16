@@ -5,6 +5,8 @@ require "csv"
 class InvitesController < ApplicationController
   requires_login only: %i[
                    create
+                   create_multiple
+                   update
                    retrieve
                    destroy
                    destroy_all_expired

@@ -414,6 +414,10 @@ hu:
       title: "Új és olvasatlan témák"
       pill: "Ajánlott"
       pm_title: "Ajánlott üzenetek"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Hivatkozás másolása"
+        copied_to_clipboard: "Hivatkozás vágólapra másolva!"
     about:
       edit: "Lap szerkesztése"
       simple_title: "Névjegy"
@@ -4309,11 +4313,9 @@ hu:
         reply: "Válasz"
         create: "Létrehozás"
         no_groups_selected: "Egyetlen csoport sem kapott hozzáférést; ez a kategória csak a stáb számára lesz látható."
-        everyone_full_access: 'Ez a kategória nyilvános, mindenki láthatja, válaszolhat és hozzászólásokat hozhat létre. A jogosultságok korlátozásához távolítson el egy vagy több, a "mindenki" csoportnak megadott jogosultságot.'
         specific_groups_have_access: "Ez a kategória privát, csak a kiválasztott csoportok tagjai láthatják, válaszolhatnak rá és hozhatnak létre bejegyzéseket."
         toggle_reply: "Válasz engedély bekapcsolása"
         toggle_full: "Készítés engedély bekapcsolása"
-        inherited: 'Ez a jogosultság a "mindenki"-től örökölhető'
       uncategorized_security_warning: "Ez a kategória különleges. Célja, hogy olyan témákat tartson meg, amelyeknek nincs kategóriája; nem rendelkezhet biztonsági beállításokkal."
       uncategorized_general_warning: 'Ez a kategória különleges. Alapértelmezett kategóriaként használatos az új témákhoz, amelyeknél nincs kategória kiválasztva. Ha meg akarja akadályozni ezt a viselkedést, és ki akarja kényszeríteni a kategória kiválasztását, <a href="%{settingLink}">kapcsolja ki a beállítást itt</a>. Ha meg szeretné változtatni a nevet vagy a leírást, menjen a <a href="%{customizeLink}">Testreszabás / Szövegtartalom</a> menüpontba.'
       pending_permission_change_alert: "Még nem adta hozzá a %{group} címet ehhez a kategóriához; katt ide a hozzáadáshoz."

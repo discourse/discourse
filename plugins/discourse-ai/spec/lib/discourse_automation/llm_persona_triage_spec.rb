@@ -97,6 +97,27 @@ describe DiscourseAi::Automation::LlmPersonaTriage do
     expect(last_post.post_type).to eq(Post.types[:regular]) # Not a whisper
   end
 
+  it "can trigger via stalled_topic with topic context" do
+    post = Fabricate(:post, raw: "This is a stalled topic that needs triage")
+    response_text = "I noticed this topic has been stalled."
+
+    DiscourseAi::Completions::Llm.with_prepared_responses([response_text]) do
+      automation.running_in_background!
+      automation.trigger!(
+        "kind" => DiscourseAutomation::Triggers::STALLED_TOPIC,
+        "topic" => post.topic,
+        "placeholders" => {
+          "topic_url" => post.topic.url,
+        },
+      )
+    end
+
+    topic = post.topic.reload
+    last_post = topic.posts.order(:post_number).last
+    expect(last_post.user_id).to eq(bot_user.id)
+    expect(last_post.raw).to eq(response_text)
+  end
+
   it "hides thinking output when the persona is configured to do so" do
     post = Fabricate(:post, raw: "This is a test post that needs triage")
 

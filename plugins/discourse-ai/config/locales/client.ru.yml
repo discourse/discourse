@@ -590,6 +590,15 @@ ru:
           title: "Тест AI-инструмента"
           run: "Выполнить тест"
           result: "Результат теста"
+      secrets:
+        short_title: "Учётные данные"
+        name: "Название"
+        secret: "Значение"
+        back: "Назад"
+        save: "Сохранить"
+        edit: "Изменить"
+        delete: "Удалить"
+        embedding: "Встраивание"
       llms:
         short_title: "Большие языковые модели"
         no_llms: "Еще нет LLM"

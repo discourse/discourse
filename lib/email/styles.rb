@@ -381,7 +381,7 @@ module Email
       style
         .split(";")
         .select(&:present?)
-        .map { _1.split(":", 2).map(&:strip) }
+        .map { it.split(":", 2).map(&:strip) }
         .each do |k, v|
           next if k.blank? || v.blank?
           next if styles[k]&.end_with?("!important") && !v.end_with?("!important")

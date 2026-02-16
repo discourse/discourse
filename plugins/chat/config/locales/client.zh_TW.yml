@@ -57,6 +57,7 @@ zh_TW:
         delete_channel: "刪除頻道"
         join_channel: "加入頻道"
         leave_channel: "離開頻道"
+        notification_settings_context: "通知"
         join: "加入"
         leave: "離開"
         save_label:

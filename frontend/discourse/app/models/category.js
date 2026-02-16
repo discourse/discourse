@@ -18,6 +18,7 @@ import { MultiCache } from "discourse/lib/multi-cache";
 import { NotificationLevels } from "discourse/lib/notification-levels";
 import { trackedArray } from "discourse/lib/tracked-tools";
 import { applyValueTransformer } from "discourse/lib/transformer";
+import { removeAccents } from "discourse/lib/utilities";
 import PermissionType from "discourse/models/permission-type";
 import RestModel from "discourse/models/rest";
 import Site from "discourse/models/site";
@@ -353,8 +354,10 @@ export default class Category extends RestModel {
     const emptyTerm = term === "";
     let slugTerm = term;
 
+    const normalize = (str) => removeAccents(str.toLowerCase());
+
     if (!emptyTerm) {
-      term = term.toLowerCase();
+      term = normalize(term);
       slugTerm = term;
       term = term.replace(/-/g, " ");
     }
@@ -380,8 +383,8 @@ export default class Category extends RestModel {
       if (
         ((emptyTerm && !category.get("parent_category_id")) ||
           (!emptyTerm &&
-            (category.get("name").toLowerCase().startsWith(term) ||
-              category.get("slug").toLowerCase().startsWith(slugTerm)))) &&
+            (normalize(category.get("name")).startsWith(term) ||
+              normalize(category.get("slug")).startsWith(slugTerm)))) &&
         validCategoryParent(category)
       ) {
         data.push(category);
@@ -393,9 +396,8 @@ export default class Category extends RestModel {
         const category = categories[i];
 
         if (
-          ((!emptyTerm &&
-            category.get("name").toLowerCase().indexOf(term) > 0) ||
-            category.get("slug").toLowerCase().indexOf(slugTerm) > 0) &&
+          ((!emptyTerm && normalize(category.get("name")).indexOf(term) > 0) ||
+            normalize(category.get("slug")).indexOf(slugTerm) > 0) &&
           validCategoryParent(category)
         ) {
           if (!data.includes(category)) {

@@ -154,5 +154,10 @@ Discourse::Application.routes.draw do
               only: %i[index edit],
               path: "ai-features",
               controller: "discourse_ai/admin/ai_features"
+
+    resources :ai_secrets,
+              only: %i[index show new create edit update destroy],
+              path: "ai-secrets",
+              controller: "discourse_ai/admin/ai_secrets"
   end
 end

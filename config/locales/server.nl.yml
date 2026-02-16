@@ -2069,8 +2069,6 @@ nl:
     num_flaggers_to_close_topic: "Minimale aantal unieke melders dat nodig is om automatisch een topic te pauzeren voor interventie."
     num_hours_to_close_topic: "Aantal uren om een topic te pauzeren voor interventie."
     auto_respond_to_flag_actions: "Automatisch antwoord inschakelen bij weggooien van een markering."
-    min_first_post_typing_time: "Minimale tijd in milliseconden dat een gebruiker moet typen tijdens een eerste bericht. Als de drempelwaarde niet wordt bereikt, wordt het bericht automatisch in de wachtrij voor goedkeuring gezet. Stel dit in op 0 om uit te schakelen (niet aanbevolen)."
-    fast_typing_threshold: "De minimale tijd in milliseconden die een gebruiker moet typen voor het eerste bericht. Als de drempel niet wordt gehaald, komt het bericht automatisch in de beoordelingswachtrij terecht. Laag is 1 seconde, standaard is 3 seconden, hoog is 5 seconden."
     auto_silence_fast_typers_on_first_post: "Demp automatisch gebruikers die niet aan `fast typing threshold` voldoen"
     auto_silence_fast_typers_max_trust_level: "Maximale vertrouwensniveau om snelle typers automatisch te dempen"
     auto_silence_first_post_regex: "Hoofdletterongevoelige reguliere expressie die bij een overeenkomst het eerste bericht van een gebruiker dempt en in de goedkeuringswachtrij plaatst. Voorbeeld: bizar|a[bc]a zorgt ervoor dat alle eerste berichten die bizar, aba of aca bevatten worden gedempt. Alleen van toepassing op het eerste bericht."
@@ -4134,7 +4132,9 @@ nl:
     page_title: "Pagina niet gevonden"
     title: "Oeps! Die pagina bestaat niet of is privé."
     see_more: "Meer"
+    search_title: "In plaats daarvan zoeken?"
     search_button: "Zoeken"
+    home: "Ga naar de startpagina"
   offline:
     title: "Kan app niet laden"
     offline_page_message: "Het lijkt erop dat je offline bent! Controleer je netwerkverbinding en probeer het opnieuw."

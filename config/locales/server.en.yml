@@ -2298,8 +2298,8 @@ en:
     num_hours_to_close_topic: "Number of hours to pause a topic for intervention."
 
     auto_respond_to_flag_actions: "Enable automatic reply when disposing a flag."
-    min_first_post_typing_time: "Minimum amount of time in milliseconds a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
-    fast_typing_threshold: "Minimum amount of time in milliseconds a user must type for their first post. If the threshold is not met, the post will automatically enter the review queue. Low is 1 second, standard is 3 seconds, high is 5 seconds."
+    min_first_post_typing_time: "Minimum amount of time a user must type during first post, if threshold is not met post will automatically enter the needs approval queue. Set to 0 to disable (not recommended)"
+    fast_typing_threshold: "Minimum amount of time a user must type for their first post. If the threshold is not met, the post will automatically enter the review queue. Low is 1 second, standard is 3 seconds, high is 5 seconds."
     auto_silence_fast_typers_on_first_post: "Automatically silence users that do not meet `fast typing threshold`"
     auto_silence_fast_typers_max_trust_level: "Maximum trust level to auto silence fast typers"
     auto_silence_first_post_regex: "Case insensitive regex that if passed will cause first post by user to be silenced and sent to approval queue. Example: raging|a[bc]a , will cause all posts containing raging or aba or aca to be silenced on first. Only applies to first post. DEPRECATED: Use Silence Watched Words instead."
@@ -2713,6 +2713,7 @@ en:
     suggest_weekends_in_date_pickers: "Include weekends (Saturday and Sunday) in date picker suggestions (disable this if you use Discourse only on weekdays, Monday through Friday)."
     show_bottom_topic_map: "Shows the topic map at the bottom of the topic when it has 10 replies or more."
     show_topic_map_in_topics_without_replies: "Shows the topic map even if the topic has no replies."
+    enable_site_owner_onboarding: "Shows a panel on the homepage to new admins to help them get started. Re-enable this setting to see the onboarding steps again."
     enable_welcome_banner: "Display a banner on your main topic list pages to welcome members and allow them to search site content"
     welcome_banner_image: "Set an image to display in the background of the welcome banner."
     welcome_banner_location: "Determines where on the page the welcome banner will appear."
@@ -3088,6 +3089,8 @@ en:
       csrf_detected: "Sorry, the authorization timed out, or you have switched browsers. Please try again."
       request_error: "Sorry, an error occurred when starting the authorization. Please try again."
       invalid_iat: "Sorry, we are unable to verify the authorization token due to server clock differences. Please try again."
+      unauthorized: "Sorry, the login provider did not authorize your request. Please try again or contact an administrator."
+
     omniauth_error_unknown: "Something went wrong processing your login, please try again."
     omniauth_confirm_title: "Log in using %{provider}"
     omniauth_confirm_button: "Continue"

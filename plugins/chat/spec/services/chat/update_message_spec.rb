@@ -178,7 +178,7 @@ RSpec.describe Chat::UpdateMessage do
             },
           )
         end
-      expect(events.map { _1[:event_name] }).to include(:chat_message_edited)
+      expect(events.map { it[:event_name] }).to include(:chat_message_edited)
     end
 
     it "publishes updated message to message bus" do

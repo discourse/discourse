@@ -118,6 +118,8 @@
 }
 
 .container.posts .topic-navigation {
+  --border-offset: -1px;
+
   @media screen and (width <= 924px) {
     // at 925px viewport width and above the timeline is visible (see topic-navigation.js)
     display: flex;
@@ -126,6 +128,7 @@
     grid-area: posts;
     grid-row: 3;
     width: auto;
+    margin-top: var(--border-offset);
 
     .btn-toggle-localized-content,
     .topic-admin-menu-trigger {
@@ -134,8 +137,8 @@
       border: 1px solid var(--primary-low);
     }
 
-    .btn-toggle-localized-content {
-      height: 100%;
+    .topic-admin-menu-trigger + .btn-toggle-localized-content {
+      margin-left: var(--border-offset);
     }
   }
 }

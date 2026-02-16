@@ -5,12 +5,14 @@ import { service } from "@ember/service";
 import DButton from "discourse/components/d-button";
 import concatClass from "discourse/helpers/concat-class";
 import cookie, { removeCookie } from "discourse/lib/cookie";
+import { i18n } from "discourse-i18n";
 
 const SHOW_ORIGINAL_COOKIE = "content-localization-show-original";
 const SHOW_ORIGINAL_COOKIE_EXPIRY = 30;
 
 export default class TopicLocalizedContentToggle extends Component {
   @service router;
+  @service toasts;
 
   @tracked showingOriginal = false;
 
@@ -30,6 +32,10 @@ export default class TopicLocalizedContentToggle extends Component {
       });
     }
 
+    const toastKey = this.showingOriginal
+      ? "content_localization.toggle_localized.translations_enabled"
+      : "content_localization.toggle_localized.translations_disabled";
+
     const postStream = this.args.topic?.postStream;
     if (postStream) {
       const currentURL = this.router.currentURL;
@@ -43,6 +49,11 @@ export default class TopicLocalizedContentToggle extends Component {
         this.router.replaceWith(currentURL);
       }
     }
+
+    this.toasts.success({
+      duration: "short",
+      data: { message: i18n(toastKey) },
+    });
   }
 
   get title() {

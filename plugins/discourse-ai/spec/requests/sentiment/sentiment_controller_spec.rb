@@ -35,5 +35,26 @@ RSpec.describe DiscourseAi::Sentiment::SentimentController do
         expect(post["sentiment"]).to match(/positive|negative|neutral/)
       end
     end
+
+    it "excludes posts from soft-deleted topics" do
+      deleted_topic = Fabricate(:topic, category: category, deleted_at: Time.current)
+      deleted_topic_post = Fabricate(:post, user: admin, topic: deleted_topic)
+      Fabricate(:sentiment_classification, target: deleted_topic_post)
+
+      live_topic_post = Fabricate(:post, user: admin, topic: topic)
+      Fabricate(:sentiment_classification, target: live_topic_post)
+
+      get "/discourse-ai/sentiment/posts",
+          params: {
+            group_by: "category",
+            group_value: category.name,
+          }
+
+      expect(response).to be_successful
+
+      post_ids = JSON.parse(response.body)["posts"].map { |p| p["post_id"] }
+      expect(post_ids).to include(live_topic_post.id)
+      expect(post_ids).not_to include(deleted_topic_post.id)
+    end
   end
 end

@@ -2075,8 +2075,6 @@ tr_TR:
     num_flaggers_to_close_topic: "Bir konuyu müdahale için otomatik olarak duraklatmak üzere gereken minimum benzersiz bayrak ekleyen kişi sayısı"
     num_hours_to_close_topic: "Müdahale amacıyla bir konuyu duraklatmak için saat sayısı."
     auto_respond_to_flag_actions: "Bir bayrağı kaldırırken otomatik yanıtı etkinleştirin."
-    min_first_post_typing_time: "Bir kullanıcının ilk gönderi sırasında yazması gereken milisaniye cinsinden minimum süre, eşik karşılanmazsa gönderi otomatik olarak onay gerekiyor kuyruğuna girer. Devre dışı bırakmak için 0 olarak ayarlayın (önerilmez)"
-    fast_typing_threshold: "Bir kullanıcının ilk gönderisi için yazması gereken milisaniye cinsinden minimum süre. Eşik karşılanmazsa gönderi otomatik olarak değerlendirme kuyruğuna girer. Düşük 1 saniye, standart 3 saniye, yüksek 5 saniyedir."
     auto_silence_fast_typers_on_first_post: "`fast typing threshold`u karşılamayan kullanıcıları otomatik olarak susturun"
     auto_silence_fast_typers_max_trust_level: "Hızlı yazanları otomatik olarak susturmak için maksimum güven seviyesi"
     auto_silence_first_post_regex: "Büyük/küçük harfe duyarlı olmayan regex, geçilirse kullanıcının ilk gönderisinin susturulmasına ve onay kuyruğuna gönderilmesine neden olur. Örnek: raging|a[bc]a , raging veya aba veya aca içeren tüm gönderilerin ilk önce susturulmasına neden olur. Sadece ilk gönderi için geçerlidir. DEVRE DIŞI BIRAKILDI: Bunun yerine İzlenen Kelimeleri Sessize Al'ı kullanın."
