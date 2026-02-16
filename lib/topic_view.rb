@@ -396,11 +396,19 @@ class TopicView
   end
 
   def image_upload
-    if @post_number == 1
-      @topic.image_upload
-    else
-      desired_post&.image_upload
-    end
+    @image_upload ||= @post_number == 1 ? @topic.image_upload : desired_post&.image_upload
+  end
+
+  def image_width
+    image_upload&.width
+  end
+
+  def image_height
+    image_upload&.height
+  end
+
+  def image_type
+    MiniMime.lookup_by_extension(image_upload&.extension)&.content_type
   end
 
   def filter_posts(opts = {})
