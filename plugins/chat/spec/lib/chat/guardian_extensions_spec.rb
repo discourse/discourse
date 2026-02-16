@@ -926,4 +926,14 @@ RSpec.describe Chat::GuardianExtensions do
       end
     end
   end
+
+  describe "#can_export_entity?" do
+    fab!(:moderator)
+
+    it "only allows admins to export chat_message" do
+      expect(Guardian.new(user).can_export_entity?("chat_message")).to eq(false)
+      expect(Guardian.new(moderator).can_export_entity?("chat_message")).to eq(false)
+      expect(staff_guardian.can_export_entity?("chat_message")).to eq(true)
+    end
+  end
 end
