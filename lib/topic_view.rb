@@ -4,6 +4,20 @@ class TopicView
   MEGA_TOPIC_POSTS_COUNT = 10_000
   MIN_POST_READ_TIME = 4.0
 
+  include PostDependentCache
+
+  memoize_for_posts :all_post_actions
+  memoize_for_posts :reviewable_counts
+  memoize_for_posts :post_custom_fields
+  memoize_for_posts :user_custom_fields
+  memoize_for_posts :category_group_moderator_user_ids
+  memoize_for_posts :mentioned_users
+  memoize_for_posts :link_counts
+  memoize_for_posts :read_posts_set
+  memoize_for_posts :primary_group_names, :@group_names
+  memoize_for_posts :post_user_badges
+  memoize_for_posts :last_post
+
   def self.on_preload(&blk)
     (@preload ||= Set.new) << blk
   end
@@ -17,32 +31,6 @@ class TopicView
 
   def self.preload(topic_view)
     @preload.each { |preload| preload.call(topic_view) } if @preload
-  end
-
-  # Replaces the loaded posts and clears all memoized state that was derived
-  # from the previous post set. Call this when you need to re-seat a TopicView
-  # with a different collection of posts (e.g. a plugin that builds its own
-  # post tree but still wants to run through TopicView's serialization pipeline
-  # and preload hooks).
-  #
-  # After calling this you will typically want to repopulate custom fields and
-  # call `TopicView.preload(self)` to re-run plugin preload hooks.
-  def reset_posts!(posts)
-    @posts = posts
-
-    %i[
-      @all_post_actions
-      @reviewable_counts
-      @post_custom_fields
-      @user_custom_fields
-      @category_group_moderator_user_ids
-      @mentioned_users
-      @link_counts
-      @read_posts_set
-      @group_names
-      @post_user_badges
-      @last_post
-    ].each { |ivar| remove_instance_variable(ivar) if instance_variable_defined?(ivar) }
   end
 
   attr_reader(
@@ -157,21 +145,27 @@ class TopicView
 
     @page = @page.to_i > 1 ? @page.to_i : calculate_page
 
-    setup_filtered_posts
-    @filtered_posts = apply_default_scope(@filtered_posts)
-    filter_posts(options)
+    if @skip_post_loading
+      @filtered_posts = @topic.posts.none
+      @predelete_filtered_posts = @filtered_posts
+      @posts = []
+    else
+      setup_filtered_posts
+      @filtered_posts = apply_default_scope(@filtered_posts)
+      filter_posts(options)
 
-    if @posts && !@skip_custom_fields
-      if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
-        @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
+      if @posts && !@skip_custom_fields
+        if (added_fields = User.allowed_user_custom_fields(@guardian)).present?
+          @user_custom_fields = User.custom_fields_for_ids(@posts.map(&:user_id), added_fields)
+        end
+
+        if (allowed_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
+          @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), allowed_fields)
+        end
       end
 
-      if (allowed_fields = TopicView.allowed_post_custom_fields(@user, @topic)).present?
-        @post_custom_fields = Post.custom_fields_for_ids(@posts.map(&:id), allowed_fields)
-      end
+      TopicView.preload(self)
     end
-
-    TopicView.preload(self)
 
     @draft_key = @topic.draft_key
     @draft_sequence = DraftSequence.current(@user, @draft_key)
