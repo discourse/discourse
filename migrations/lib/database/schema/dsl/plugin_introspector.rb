@@ -11,57 +11,59 @@ module Migrations::Database::Schema::DSL
     def introspect
       original_config = ActiveRecord::Base.connection_db_config.configuration_hash.dup
       db = TemporaryDb.new
+      real_stderr = $stderr
 
       suppress_output do
         begin
           db.start
-          ActiveRecord::Base.establish_connection(
-            adapter: "postgresql",
-            database: "discourse",
-            port: db.pg_port,
-            host: "localhost",
-          )
 
-          run_core_migrations
+          db.with_env do
+            ActiveRecord::Base.establish_connection(
+              adapter: "postgresql",
+              database: "discourse",
+              port: db.pg_port,
+              host: "localhost",
+            )
 
-          plugins = discover_plugins
-          plugin_data = {}
+            run_core_migrations
+            load_plugin_rake_tasks
 
-          plugins.keys.sort.each do |plugin_name|
-            migration_paths = plugins[plugin_name]
-            snapshot_before = snapshot_schema
+            plugins = discover_plugins
+            plugin_data = {}
 
-            begin
-              run_plugin_migrations(migration_paths)
-            rescue StandardError => e
-              Rails.logger.warn(
-                "Plugin manifest: skipping '#{plugin_name}' — migration failed: #{e.message}",
-              )
-              next
+            plugins.keys.sort.each do |plugin_name|
+              migration_paths = plugins[plugin_name]
+              snapshot_before = snapshot_schema
+
+              begin
+                run_plugin_migrations(migration_paths)
+              rescue StandardError => e
+                real_stderr.puts "  Warning: '#{plugin_name}' migration error: #{e.message}"
+              end
+
+              snapshot_after = snapshot_schema
+
+              new_tables = (snapshot_after[:tables] - snapshot_before[:tables]).sort
+              new_table_set = new_tables.to_set
+
+              # Only track columns added to tables the plugin doesn't own
+              new_columns = {}
+              snapshot_after[:columns].each do |table, cols|
+                next if new_table_set.include?(table)
+                before_cols = snapshot_before[:columns].fetch(table, Set.new)
+                added = (cols - before_cols).sort
+                new_columns[table] = added if added.any?
+              end
+
+              if new_tables.any? || new_columns.any?
+                plugin_data[plugin_name] = { "tables" => new_tables, "columns" => new_columns }
+              end
             end
 
-            snapshot_after = snapshot_schema
+            checksums = compute_all_checksums
 
-            new_tables = (snapshot_after[:tables] - snapshot_before[:tables]).sort
-            new_table_set = new_tables.to_set
-
-            # Only track columns added to tables the plugin doesn't own
-            new_columns = {}
-            snapshot_after[:columns].each do |table, cols|
-              next if new_table_set.include?(table)
-              before_cols = snapshot_before[:columns].fetch(table, Set.new)
-              added = (cols - before_cols).sort
-              new_columns[table] = added if added.any?
-            end
-
-            if new_tables.any? || new_columns.any?
-              plugin_data[plugin_name] = { "tables" => new_tables, "columns" => new_columns }
-            end
+            { "plugins" => plugin_data, "migration_state" => checksums }
           end
-
-          checksums = compute_all_checksums
-
-          { "plugins" => plugin_data, "migration_state" => checksums }
         ensure
           ActiveRecord::Base.establish_connection(original_config)
           db.stop
@@ -125,6 +127,11 @@ module Migrations::Database::Schema::DSL
       paths = core_migration_paths.select { |p| File.directory?(p) }
       return if paths.empty?
       ActiveRecord::MigrationContext.new(paths).migrate
+    end
+
+    def load_plugin_rake_tasks
+      Rake::Task.define_task(:environment) unless Rake::Task.task_defined?(:environment)
+      Dir[File.join(@plugins_path, "*/lib/tasks/**/*.rake")].sort.each { |f| load f }
     end
 
     def run_plugin_migrations(paths)

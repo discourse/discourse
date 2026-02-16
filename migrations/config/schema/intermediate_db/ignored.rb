@@ -180,6 +180,7 @@ Migrations::Database::Schema.ignored do
          :message_bus,
          :moved_posts,
          :notifications,
+         :oauth2_user_infos,
          :onceoff_logs,
          :optimized_images,
          :optimized_videos,
