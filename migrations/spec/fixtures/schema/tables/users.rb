@@ -9,7 +9,7 @@ Migrations::Database::Schema.table :users do
 
   add_column :existing_id, :numeric
 
-  ignore :admin_notes, "Not needed for migration"
+  ignore :admin_notes, reason: "Not needed for migration"
 
   index :username, unique: true
   check :email_format, "email LIKE '%@%'"

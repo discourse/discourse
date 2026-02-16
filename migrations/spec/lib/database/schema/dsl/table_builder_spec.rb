@@ -17,7 +17,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
       expect(table.included_column_names).to eq(%i[id username email])
     end
 
-    it "registers a table without a block (empty table uses all DB columns)" do
+    it "registers a table without a block (include_all implied)" do
       Migrations::Database::Schema.table :badge_groupings
 
       table = Migrations::Database::Schema.tables[:badge_groupings]
@@ -25,8 +25,30 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
       expect(table.included_column_names).to be_nil
     end
 
+    it "supports include_all to explicitly include all columns" do
+      Migrations::Database::Schema.table :badge_groupings do
+        include_all
+      end
+
+      table = Migrations::Database::Schema.tables[:badge_groupings]
+      expect(table.name).to eq(:badge_groupings)
+      expect(table.included_column_names).to be_nil
+    end
+
+    it "raises when block has no include, include_all, ignore, or synthetic!" do
+      expect do
+        Migrations::Database::Schema.table :badge_groupings do
+          primary_key :id
+        end
+      end.to raise_error(
+        Migrations::Database::Schema::ConfigError,
+        /must use `include_all`, `include`, or `ignore`/,
+      )
+    end
+
     it "supports copy_structure_from" do
       Migrations::Database::Schema.table :user_archive do
+        include_all
         copy_structure_from :users
       end
 
@@ -46,6 +68,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "supports column options via keyword arguments" do
       Migrations::Database::Schema.table :users do
+        include_all
         column :email, :text, required: true, max_length: 255
       end
 
@@ -58,6 +81,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "supports column options via block" do
       Migrations::Database::Schema.table :users do
+        include_all
         column :email do
           type :text
           required
@@ -74,6 +98,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "supports rename_to via keyword arguments" do
       Migrations::Database::Schema.table :posts do
+        include_all
         column :user_id, rename_to: :author_id
       end
 
@@ -84,6 +109,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "supports rename_to via block" do
       Migrations::Database::Schema.table :posts do
+        include_all
         column :user_id do
           rename_to :author_id
           type :numeric
@@ -98,6 +124,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "supports required: false to force nullable" do
       Migrations::Database::Schema.table :users do
+        include_all
         column :created_at, required: false
       end
 
@@ -108,6 +135,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "supports adding synthetic columns" do
       Migrations::Database::Schema.table :users do
+        include_all
         add_column :existing_id, :numeric
         add_column :status, :integer, required: true
       end
@@ -122,8 +150,8 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "supports ignoring columns with reasons" do
       Migrations::Database::Schema.table :users do
-        ignore :admin_notes, "Not needed for migration"
-        ignore :legacy_flag, "Deprecated column"
+        ignore :admin_notes, reason: "Not needed for migration"
+        ignore :legacy_flag, reason: "Deprecated column"
       end
 
       table = Migrations::Database::Schema.tables[:users]
@@ -131,18 +159,29 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
       expect(table.ignore_reason_for(:admin_notes)).to eq("Not needed for migration")
     end
 
-    it "allows ignoring without a reason" do
+    it "allows batch ignoring columns" do
       Migrations::Database::Schema.table :users do
-        ignore :admin_notes
+        ignore :admin_notes, :legacy_flag, :old_col
       end
 
       table = Migrations::Database::Schema.tables[:users]
-      expect(table.ignored_column_names).to eq(%i[admin_notes])
-      expect(table.ignore_reason_for(:admin_notes)).to be_nil
+      expect(table.ignored_column_names).to eq(%i[admin_notes legacy_flag old_col])
+    end
+
+    it "allows batch ignoring with a shared reason" do
+      Migrations::Database::Schema.table :users do
+        ignore :admin_notes, :legacy_flag, reason: "Deprecated"
+      end
+
+      table = Migrations::Database::Schema.tables[:users]
+      expect(table.ignored_column_names).to eq(%i[admin_notes legacy_flag])
+      expect(table.ignore_reason_for(:admin_notes)).to eq("Deprecated")
+      expect(table.ignore_reason_for(:legacy_flag)).to eq("Deprecated")
     end
 
     it "supports indexes" do
       Migrations::Database::Schema.table :users do
+        include_all
         index :username, unique: true
         index %i[first_name last_name], name: :idx_full_name
         unique_index :email, where: "email IS NOT NULL"
@@ -159,6 +198,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "supports check constraints" do
       Migrations::Database::Schema.table :users do
+        include_all
         check :email_format, "email LIKE '%@%'"
       end
 
@@ -171,6 +211,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "supports plugin ownership" do
       Migrations::Database::Schema.table :poll_votes do
+        include_all
         plugin "poll"
         ignore_plugin_columns!
       end
@@ -182,6 +223,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "defaults model_mode to nil" do
       Migrations::Database::Schema.table :users do
+        include_all
         primary_key :id
       end
 
@@ -191,6 +233,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "supports model :extended" do
       Migrations::Database::Schema.table :uploads do
+        include_all
         model :extended
       end
 
@@ -200,6 +243,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
     it "supports model :manual" do
       Migrations::Database::Schema.table :log_entries do
+        include_all
         model :manual
       end
 
@@ -216,9 +260,9 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
     end
 
     it "raises on duplicate table name" do
-      Migrations::Database::Schema.table(:users) {}
+      Migrations::Database::Schema.table(:users) { include_all }
 
-      expect do Migrations::Database::Schema.table(:users) {} end.to raise_error(
+      expect do Migrations::Database::Schema.table(:users) { include_all } end.to raise_error(
         Migrations::Database::Schema::ConfigError,
         /already registered/,
       )

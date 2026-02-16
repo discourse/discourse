@@ -224,7 +224,11 @@ module Migrations::Database
 
     def self.table(name, &block)
       builder = DSL::TableBuilder.new(name)
-      builder.instance_eval(&block) if block
+      if block
+        builder.instance_eval(&block)
+      else
+        builder.include_all
+      end
       registry.register_table(name, builder.build)
     end
 

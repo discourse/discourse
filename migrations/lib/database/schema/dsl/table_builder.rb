@@ -46,6 +46,7 @@ module Migrations::Database::Schema::DSL
       @source_table_name = @name
       @primary_key_cols = nil
       @included_columns = nil
+      @include_all = false
       @column_options = {}
       @added_columns = []
       @indexes = []
@@ -73,6 +74,10 @@ module Migrations::Database::Schema::DSL
       @included_columns.concat(cols.flatten.map(&:to_sym))
     end
 
+    def include_all
+      @include_all = true
+    end
+
     def column(name, type = nil, **opts, &block)
       name = name.to_sym
       if block
@@ -93,8 +98,8 @@ module Migrations::Database::Schema::DSL
       @added_columns << AddedColumn.new(name: name.to_sym, type: type.to_sym, required:, enum:)
     end
 
-    def ignore(col, reason = nil)
-      @ignored_columns[col.to_sym] = reason
+    def ignore(*cols, reason: nil)
+      cols.flatten.each { |col| @ignored_columns[col.to_sym] = reason }
     end
 
     def index(*cols, name: nil, unique: false, where: nil)
@@ -134,6 +139,11 @@ module Migrations::Database::Schema::DSL
     end
 
     def build
+      if @source_table_name && @included_columns.nil? && !@include_all && @ignored_columns.empty?
+        raise Migrations::Database::Schema::ConfigError,
+              "Table :#{@name} must use `include_all`, `include`, or `ignore` to specify which columns to include"
+      end
+
       TableDef.new(
         name: @name,
         source_table_name: @source_table_name,

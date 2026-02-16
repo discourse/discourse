@@ -173,7 +173,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
 
       Migrations::Database::Schema.table(:users) do
         include :id, :username
-        ignore :old_column, "removed in migration"
+        ignore :old_column, reason: "removed in migration"
       end
 
       stub_database(connection, db_tables: %i[users], table_columns: { users: %i[id username] })
@@ -225,7 +225,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
 
       Migrations::Database::Schema.table(:users) do
         include :id, :username
-        ignore :legacy_col, "deprecated"
+        ignore :legacy_col, reason: "deprecated"
       end
 
       stub_database(
@@ -241,10 +241,10 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
       expect(result.table_diffs).to be_empty
     end
 
-    it "handles tables with no explicit include (all columns mode)" do
+    it "handles tables with include_all (all columns mode)" do
       stub_plugin_manifest_unavailable
 
-      Migrations::Database::Schema.table(:users) {}
+      Migrations::Database::Schema.table(:users) { include_all }
 
       stub_database(
         connection,

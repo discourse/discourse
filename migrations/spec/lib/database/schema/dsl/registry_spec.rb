@@ -7,7 +7,11 @@ RSpec.describe Migrations::Database::Schema::DSL::Registry do
   let(:conventions) do
     Migrations::Database::Schema::DSL::ConventionsConfig.new(conventions: [], ignored_columns: [])
   end
-  let(:table_def) { Migrations::Database::Schema::DSL::TableBuilder.new(:users).build }
+  let(:table_def) do
+    builder = Migrations::Database::Schema::DSL::TableBuilder.new(:users)
+    builder.include_all
+    builder.build
+  end
   let(:enum_def) do
     builder = Migrations::Database::Schema::DSL::EnumBuilder.new(:status)
     builder.value(:active, 0)

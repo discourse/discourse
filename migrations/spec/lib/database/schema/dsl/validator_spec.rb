@@ -74,7 +74,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
     end
 
     it "detects unconfigured tables in database" do
-      schema = build_schema(tables: { users: proc {} })
+      schema = build_schema(tables: { users: proc { include_all } })
 
       stub_database(
         connection,
@@ -94,7 +94,12 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
 
     it "does not report ignored tables as unconfigured" do
       schema =
-        build_schema(tables: { users: proc {} }, ignored: proc { table :posts, "not needed" })
+        build_schema(
+          tables: {
+            users: proc { include_all },
+          },
+          ignored: proc { table :posts, "not needed" },
+        )
 
       stub_database(
         connection,
@@ -113,7 +118,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
     end
 
     it "detects source table not existing in database" do
-      schema = build_schema(tables: { users: proc {} })
+      schema = build_schema(tables: { users: proc { include_all } })
 
       stub_database(connection, db_tables: [], table_columns: {})
 
@@ -261,7 +266,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
             users:
               proc do
                 include :id
-                ignore :gone_column, "was removed"
+                ignore :gone_column, reason: "was removed"
               end,
           },
         )
@@ -289,7 +294,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       schema =
         build_schema(
           tables: {
-            users: proc {},
+            users: proc { include_all },
           },
           ignored: proc { table :deleted_table, "no longer exists" },
         )
@@ -455,7 +460,12 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
 
       schema =
-        build_schema(tables: { users: proc {} }, ignored: proc { plugin :chat, "Not migrating" })
+        build_schema(
+          tables: {
+            users: proc { include_all },
+          },
+          ignored: proc { plugin :chat, "Not migrating" },
+        )
 
       stub_database(
         connection,

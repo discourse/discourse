@@ -47,7 +47,7 @@ RSpec.describe Migrations::Database::Schema::DSL::SchemaResolver do
 
   describe "#resolve" do
     it "resolves a simple table with all DB columns" do
-      schema = build_schema(tables: { users: proc {} })
+      schema = build_schema(tables: { users: proc { include_all } })
 
       stub_database(
         connection,
@@ -687,7 +687,12 @@ RSpec.describe Migrations::Database::Schema::DSL::SchemaResolver do
 
     it "excludes globally ignored columns when no include list specified" do
       schema =
-        build_schema(tables: { users: proc {} }, conventions: proc { ignore_columns :secret_token })
+        build_schema(
+          tables: {
+            users: proc { include_all },
+          },
+          conventions: proc { ignore_columns :secret_token },
+        )
 
       stub_database(
         connection,

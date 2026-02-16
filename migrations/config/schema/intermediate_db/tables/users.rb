@@ -6,15 +6,16 @@ Migrations::Database::Schema.table :users do
 
   column :created_at, required: true
 
-  ignore :flag_level
-  ignore :last_emailed_at
-  ignore :last_posted_at
-  ignore :last_seen_reviewable_id
-  ignore :previous_visit_at
-  ignore :required_fields_version
-  ignore :secure_identifier
-  ignore :seen_notification_id
-  ignore :suspended_at
-  ignore :suspended_till
-  ignore :username_lower
+  ignore :flag_level,
+         :last_emailed_at,
+         :last_posted_at,
+         :last_seen_reviewable_id,
+         :previous_visit_at,
+         :required_fields_version,
+         :secure_identifier,
+         :seen_notification_id,
+         :username_lower,
+         reason: "Calculated columns"
+
+  ignore :suspended_at, :suspended_till, reason: "We have the `user_suspensions` table for this"
 end

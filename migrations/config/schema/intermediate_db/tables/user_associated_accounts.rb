@@ -5,7 +5,5 @@ Migrations::Database::Schema.table :user_associated_accounts do
 
   column :last_used, required: false
 
-  ignore :id
-  ignore :credentials
-  ignore :extra
+  ignore :credentials, :extra, :id
 end
