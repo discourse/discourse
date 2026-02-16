@@ -90,7 +90,7 @@ export default class UpcomingChangeItem extends Component {
   }
 
   get staffGroupName() {
-    return this.site.groups.find((g) => g.id === AUTO_GROUPS.staff.id).name;
+    return this.site.groupsById[AUTO_GROUPS.staff.id].name;
   }
 
   get enabledForDisabled() {
