@@ -191,6 +191,7 @@ module FileStore
 
     CACHE_DIR = "#{Rails.root}/tmp/download_cache/"
     CACHE_MAXIMUM_SIZE = 500
+    CACHE_EVICT_COUNT = 100
 
     def get_cache_path_for(filename)
       "#{CACHE_DIR}#{filename}"
@@ -207,18 +208,11 @@ module FileStore
       FileUtils.mkdir_p(dir) unless Dir.exist?(dir)
       FileUtils.cp(file.path, path)
 
-      # Remove all but CACHE_MAXIMUM_SIZE most recent files
-      files = Dir.glob("#{CACHE_DIR}*")
-      files.sort_by! do |f|
-        begin
-          File.mtime(f)
-        rescue Errno::ENOENT
-          Time.new(0)
-        end
-      end
-      files.pop(CACHE_MAXIMUM_SIZE)
-
-      FileUtils.rm(files, force: true)
+      DiskCacheEviction.evict(
+        dir: CACHE_DIR,
+        max_entries: CACHE_MAXIMUM_SIZE,
+        evict_count: CACHE_EVICT_COUNT,
+      )
     end
 
     private
