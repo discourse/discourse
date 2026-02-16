@@ -61,7 +61,6 @@ class WordWatcher
 
   # This regexp is run in miniracer, and the client JS app
   # Make sure it is compatible with major browsers when changing
-  # hint: non-chrome browsers do not support 'lookbehind'
   def self.compiled_regexps_for_action(action, engine: :ruby, raise_errors: false)
     words = cached_words_for_action(action)
     return [] if words.blank?
@@ -283,13 +282,28 @@ class WordWatcher
 
   private_class_method :censor_text_with_regexp
 
-  # Returns a regexp that transforms a regular expression into a regular
-  # expression that matches a whole word.
+  SPACELESS_SCRIPTS = {
+    "Han" => "\\u4E00-\\u9FFF\\u3400-\\u4DBF",
+    "Hiragana" => "\\u3040-\\u309F",
+    "Katakana" => "\\u30A0-\\u30FF",
+    "Hangul" => "\\uAC00-\\uD7AF",
+    "Thai" => "\\u0E00-\\u0E7F",
+    "Lao" => "\\u0E80-\\u0EFF",
+    "Myanmar" => "\\u1000-\\u109F",
+    "Khmer" => "\\u1780-\\u17FF",
+    "Tibetan" => "\\u0F00-\\u0FFF",
+  }.values.join
+
   def self.match_word_regexp(regexp, engine: :ruby)
+    s = SPACELESS_SCRIPTS
     if engine == :js
-      "(?:\\P{L}|^)(#{regexp})(?=\\P{L}|$)"
+      leading = "(?:[\\P{L}#{s}]|^|(?=[#{s}]))"
+      trailing = "(?:(?=[\\P{L}#{s}]|$)|(?<=[#{s}]))"
+      "#{leading}(#{regexp})#{trailing}"
     elsif engine == :ruby
-      "(?:[^[:word:]]|^)(#{regexp})(?=[^[:word:]]|$)"
+      leading = "(?:(?<![[:word:]&&[^#{s}]])|(?=[#{s}]))"
+      trailing = "(?:(?![[:word:]&&[^#{s}]])|(?<=[#{s}]))"
+      "#{leading}(#{regexp})#{trailing}"
     else
       raise "unknown regexp engine: #{engine}"
     end
