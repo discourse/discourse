@@ -13,7 +13,9 @@ RSpec.describe Migrations::Database::Schema::DSL::Registry do
     builder.value(:active, 0)
     builder.build
   end
-  let(:ignored) { Migrations::Database::Schema::DSL::IgnoredConfig.new(entries: []) }
+  let(:ignored) do
+    Migrations::Database::Schema::DSL::IgnoredConfig.new(entries: [], plugin_entries: [])
+  end
 
   describe "#register_config" do
     it "stores configuration" do

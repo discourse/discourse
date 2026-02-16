@@ -96,6 +96,9 @@ en:
       plugins: "Plugins: %{names}"
       up_to_date: "Plugin manifest is up to date"
       use_force: "Use --force to regenerate"
+      auto_detecting: "Plugin manifest outdated, regenerating... "
+      auto_done: "Detected %{tables} plugin tables, %{columns} plugin columns."
+      auto_failed: "Skipped — %{error} (use 'schema detect-plugins --force' to retry)"
 
     diff:
       unknown_tables: "Unknown tables (add to tables/ or ignored.rb):"
@@ -103,6 +106,7 @@ en:
       stale_ignored: "Stale ignored tables (no longer in database):"
       column_diffs: "Column differences:"
       stale_ignored_column: "%{name} (ignored but gone)"
+      auto_ignored_column: "  %{name} [%{plugin}] (auto-ignored from plugin)"
       suggested_actions: "Suggested actions:"
       action_scaffold: "bin/cli schema scaffold <table>    Create config for a new table"
       action_ignore: "bin/cli schema ignore <table>      Add table to ignored.rb"

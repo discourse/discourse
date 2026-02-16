@@ -27,6 +27,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
   def stub_plugin_manifest_unavailable
     manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
     allow(manifest).to receive(:fresh?).and_return(false)
+    allow(manifest).to receive(:available?).and_return(false)
     allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
   end
 
@@ -254,6 +255,98 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
 
       expect(result.table_diffs).to be_empty
       expect(result.missing_tables.size).to eq(1)
+    end
+
+    it "excludes tables from ignored plugins" do
+      manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
+      allow(manifest).to receive(:available?).and_return(true)
+      allow(manifest).to receive(:tables_for_plugin).with("chat").and_return(
+        %w[chat_channels chat_messages],
+      )
+      allow(manifest).to receive(:columns_for_plugin).and_return([])
+      allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
+
+      Migrations::Database::Schema.table(:users) { include :id }
+      Migrations::Database::Schema.ignored { plugin :chat, "Not migrating" }
+
+      stub_database(
+        connection,
+        db_tables: %i[users chat_channels chat_messages],
+        table_columns: {
+          users: %i[id],
+        },
+      )
+
+      result = described_class.new(Migrations::Database::Schema).diff
+
+      expect(result.unknown_tables).to be_empty
+    end
+
+    it "auto-ignores columns from ignored plugins without ignore_plugin_columns!" do
+      manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
+      allow(manifest).to receive(:available?).and_return(true)
+      allow(manifest).to receive(:tables_for_plugin).and_return([])
+      allow(manifest).to receive(:columns_for_plugin).with("chat", table: "users").and_return(
+        %w[chat_enabled chat_sound],
+      )
+      allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
+
+      Migrations::Database::Schema.table(:users) { include :id, :username }
+      Migrations::Database::Schema.ignored { plugin :chat, "Not migrating" }
+
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: %i[id username chat_enabled chat_sound],
+        },
+      )
+
+      result = described_class.new(Migrations::Database::Schema).diff
+
+      expect(result.table_diffs.size).to eq(1)
+      diff = result.table_diffs.first
+      expect(diff.unknown_columns).to be_empty
+      expect(diff.auto_ignored_columns.map(&:name)).to contain_exactly("chat_enabled", "chat_sound")
+    end
+
+    it "ignore_plugin_columns! additionally ignores columns from non-ignored plugins" do
+      manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
+      allow(manifest).to receive(:available?).and_return(true)
+      allow(manifest).to receive(:tables_for_plugin).and_return([])
+      allow(manifest).to receive(:all_plugin_names).and_return(%w[chat polls])
+      allow(manifest).to receive(:columns_for_plugin).with("chat", table: "users").and_return(
+        %w[chat_enabled],
+      )
+      allow(manifest).to receive(:columns_for_plugin).with("polls", table: "users").and_return(
+        %w[polls_enabled],
+      )
+      allow(manifest).to receive(:plugin_for_column).and_return(nil)
+      allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
+
+      Migrations::Database::Schema.table(:users) do
+        include :id, :username
+        ignore_plugin_columns!
+      end
+      Migrations::Database::Schema.ignored { plugin :chat, "Not migrating" }
+
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: %i[id username chat_enabled polls_enabled],
+        },
+      )
+
+      result = described_class.new(Migrations::Database::Schema).diff
+
+      expect(result.table_diffs.size).to eq(1)
+      diff = result.table_diffs.first
+      expect(diff.unknown_columns).to be_empty
+      expect(diff.auto_ignored_columns.map(&:name)).to contain_exactly(
+        "chat_enabled",
+        "polls_enabled",
+      )
     end
   end
 end

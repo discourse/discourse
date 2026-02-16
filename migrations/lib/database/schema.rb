@@ -270,6 +270,7 @@ module Migrations::Database
       @plugin_manifest ||= {}
       @plugin_manifest[database.to_sym] ||= DSL::PluginManifest.new(
         manifest_path: File.join(config_path(database), "plugin_manifest.yml"),
+        plugins_path: File.join(Rails.root, "plugins"),
       )
     end
 
@@ -317,6 +318,21 @@ module Migrations::Database
       DSL::Loader.new(path).load!
       registry.freeze!
       @ready = db_key
+
+      manifest = plugin_manifest(database:)
+      unless manifest.fresh?
+        begin
+          $stdout.write(I18n.t("schema.detect_plugins.auto_detecting"))
+          manifest.regenerate!
+          puts I18n.t(
+                 "schema.detect_plugins.auto_done",
+                 tables: manifest.table_count,
+                 columns: manifest.column_count,
+               )
+        rescue StandardError => e
+          puts I18n.t("schema.detect_plugins.auto_failed", error: e.message)
+        end
+      end
     end
 
     def self.config_path(database = :intermediate_db)

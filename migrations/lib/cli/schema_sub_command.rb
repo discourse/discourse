@@ -158,7 +158,10 @@ module Migrations::CLI
     def detect_plugins
       load_rails!
 
-      manifest = Schema.plugin_manifest(database: options[:database])
+      database = options[:database]
+      Schema.ensure_ready!(database:)
+
+      manifest = Schema.plugin_manifest(database:)
 
       if options[:force] || !manifest.fresh?
         puts I18n.t("schema.detect_plugins.detecting")
@@ -289,6 +292,10 @@ module Migrations::CLI
 
           table_diff.stale_ignored_columns.each do |c|
             puts "    ~ #{I18n.t("schema.diff.stale_ignored_column", name: c.name)}"
+          end
+
+          table_diff.auto_ignored_columns.each do |c|
+            puts "    #{I18n.t("schema.diff.auto_ignored_column", name: c.name, plugin: c.plugin)}"
           end
         end
         puts

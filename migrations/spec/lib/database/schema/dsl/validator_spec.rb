@@ -386,5 +386,32 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       result = described_class.new(schema).validate
       expect(result.errors).to be_empty
     end
+
+    it "does not report plugin-ignored tables as unconfigured" do
+      manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
+      allow(manifest).to receive(:available?).and_return(true)
+      allow(manifest).to receive(:tables_for_plugin).with("chat").and_return(
+        %w[chat_channels chat_messages],
+      )
+      allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
+
+      schema =
+        build_schema(tables: { users: proc {} }, ignored: proc { plugin :chat, "Not migrating" })
+
+      stub_database(
+        connection,
+        db_tables: %i[users chat_channels chat_messages],
+        table_columns: {
+          users: {
+            id: {
+              type: :integer,
+            },
+          },
+        },
+      )
+
+      result = described_class.new(schema).validate
+      expect(result.errors).to be_empty
+    end
   end
 end

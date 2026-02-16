@@ -157,7 +157,17 @@ module Migrations::Database::Schema::DSL
     def ignored_table_name_set
       ignored = @schema.ignored_tables
       return Set.new unless ignored
-      ignored.table_names.map(&:to_s).to_set
+
+      names = ignored.table_names.map(&:to_s).to_set
+
+      manifest = @schema.plugin_manifest
+      if manifest.available?
+        ignored.ignored_plugin_names.each do |plugin_name|
+          manifest.tables_for_plugin(plugin_name.to_s).each { |t| names << t.to_s }
+        end
+      end
+
+      names
     end
 
     def sort_and_join(values)

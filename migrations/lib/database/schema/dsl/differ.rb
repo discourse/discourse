@@ -3,7 +3,14 @@
 module Migrations::Database::Schema::DSL
   TableInfo = Data.define(:name, :plugin)
   ColumnInfo = Data.define(:name, :plugin)
-  TableDiff = Data.define(:table_name, :unknown_columns, :missing_columns, :stale_ignored_columns)
+  TableDiff =
+    Data.define(
+      :table_name,
+      :unknown_columns,
+      :missing_columns,
+      :stale_ignored_columns,
+      :auto_ignored_columns,
+    )
   DiffResult = Data.define(:unknown_tables, :missing_tables, :stale_ignored_tables, :table_diffs)
 
   class Differ
@@ -85,25 +92,30 @@ module Migrations::Database::Schema::DSL
       db_column_names = @db.columns(source_table).map(&:name).to_set
       configured_columns = effective_column_names(table_def, db_column_names)
 
-      unknown = find_unknown_columns(table_def, db_column_names, configured_columns)
+      auto_ignored = find_auto_ignored_columns(table_def)
+      unknown = find_unknown_columns(table_def, db_column_names, configured_columns, auto_ignored)
       missing = find_missing_columns(table_def, db_column_names)
       stale = find_stale_ignored_columns(table_def, db_column_names)
 
-      return nil if unknown.empty? && missing.empty? && stale.empty?
+      has_changes = unknown.any? || missing.any? || stale.any? || auto_ignored.any?
+      return nil unless has_changes
 
       TableDiff.new(
         table_name: table_def.name.to_s,
         unknown_columns: unknown,
         missing_columns: missing,
         stale_ignored_columns: stale,
+        auto_ignored_columns: auto_ignored,
       )
     end
 
-    def find_unknown_columns(table_def, db_column_names, configured_columns)
+    def find_unknown_columns(table_def, db_column_names, configured_columns, auto_ignored)
       ignored = table_def.ignored_column_names.map(&:to_s).to_set
       globally_ignored = globally_ignored_columns
+      auto_ignored_names = auto_ignored.map(&:name).to_set
 
-      unknown = db_column_names - configured_columns - ignored - globally_ignored
+      unknown =
+        db_column_names - configured_columns - ignored - globally_ignored - auto_ignored_names
       table_name = table_def.name.to_s
       unknown.sort.map { |name| ColumnInfo.new(name:, plugin: plugin_for_column(table_name, name)) }
     end
@@ -149,19 +161,57 @@ module Migrations::Database::Schema::DSL
     def ignored_table_name_set
       ignored = @schema.ignored_tables
       return Set.new unless ignored
-      ignored.table_names.map(&:to_s).to_set
+
+      names = ignored.table_names.map(&:to_s).to_set
+
+      manifest = @schema.plugin_manifest
+      if manifest.available?
+        ignored.ignored_plugin_names.each do |plugin_name|
+          manifest.tables_for_plugin(plugin_name.to_s).each { |t| names << t.to_s }
+        end
+      end
+
+      names
+    end
+
+    def find_auto_ignored_columns(table_def)
+      source_table = table_def.source_table_name.to_s
+      ignored = @schema.ignored_tables
+      return [] unless ignored
+
+      manifest = @schema.plugin_manifest
+      return [] unless manifest.available?
+
+      auto_ignored = []
+
+      # Always auto-ignore columns from plugins listed in `plugin` declarations
+      ignored.ignored_plugin_names.each do |plugin_name|
+        cols = manifest.columns_for_plugin(plugin_name.to_s, table: source_table)
+        cols.each { |col| auto_ignored << ColumnInfo.new(name: col, plugin: plugin_name.to_s) }
+      end
+
+      # ignore_plugin_columns! additionally ignores columns from ALL plugins
+      if table_def.ignore_plugin_columns?
+        manifest.all_plugin_names.each do |plugin_name|
+          next if ignored.plugin_ignored?(plugin_name.to_sym)
+          cols = manifest.columns_for_plugin(plugin_name, table: source_table)
+          cols.each { |col| auto_ignored << ColumnInfo.new(name: col, plugin: plugin_name) }
+        end
+      end
+
+      auto_ignored.uniq(&:name).sort_by(&:name)
     end
 
     def plugin_for_table(name)
       manifest = @schema.plugin_manifest
-      manifest.fresh? ? manifest.plugin_for_table(name) : nil
+      manifest.available? ? manifest.plugin_for_table(name) : nil
     rescue StandardError
       nil
     end
 
     def plugin_for_column(table_name, col_name)
       manifest = @schema.plugin_manifest
-      manifest.fresh? ? manifest.plugin_for_column(table_name, col_name) : nil
+      manifest.available? ? manifest.plugin_for_column(table_name, col_name) : nil
     rescue StandardError
       nil
     end
