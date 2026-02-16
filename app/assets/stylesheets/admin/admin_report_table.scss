@@ -9,7 +9,6 @@
 
     .table .admin-report-table-cell:last-child,
     .table .admin-report-table-header:last-child {
-      width: 80%;
       text-align: right;
     }
   }
@@ -102,6 +101,10 @@
   .admin-report-table-header.topic_title {
     width: 80%;
   }
+
+  .admin-report-table-cell.number {
+    width: 6ch;
+  }
 }
 
 .admin-report.trending-search {
@@ -115,6 +118,16 @@
 
   .admin-report-table-cell.term {
     @include ellipsis;
+  }
+
+  .admin-report-table-cell.percent {
+    width: 5ch;
+    text-align: right;
+  }
+
+  .admin-report-table-cell.number.searches {
+    width: 6ch;
+    text-align: right;
   }
 }
 
