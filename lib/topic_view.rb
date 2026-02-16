@@ -395,6 +395,14 @@ class TopicView
     desired_post&.image_url
   end
 
+  def image_upload
+    if @post_number == 1
+      @topic.image_upload
+    else
+      desired_post&.image_upload
+    end
+  end
+
   def filter_posts(opts = {})
     if opts[:post_number].present?
       filter_posts_near(opts[:post_number].to_i)
