@@ -1874,7 +1874,8 @@ email:
     upcoming_change:
       status: "experimental"
       impact: "feature,all_members"
-      learn_more_url: "https://meta.discourse.org/t/-/-"
+      disallow_enabled_for_groups: true
+      learn_more_url: "https://meta.discourse.org/t/-/395927"
   reply_by_email_enabled:
     default: false
     validator: "ReplyByEmailEnabledValidator"
