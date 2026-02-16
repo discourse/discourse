@@ -4,7 +4,7 @@ Migrations::Database::Schema.table :uploads do
   model :manual
   synthetic!
   primary_key :id
-  add_column :id, :text, required: true
+  add_column :id, :text
   add_column :filename, :text, required: true
   add_column :path, :text
   add_column :data, :blob

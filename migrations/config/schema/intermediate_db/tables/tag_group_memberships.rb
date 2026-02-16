@@ -3,5 +3,5 @@
 Migrations::Database::Schema.table :tag_group_memberships do
   primary_key :tag_group_id, :tag_id
 
-  ignore :id, "TODO: add reason"
+  ignore :id
 end

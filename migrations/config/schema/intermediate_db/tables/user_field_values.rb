@@ -6,8 +6,8 @@ Migrations::Database::Schema.table :user_field_values do
   add_column :field_id, :numeric, required: true
   add_column :is_multiselect_field, :boolean
 
-  ignore :id, "TODO: add reason"
-  ignore :name, "TODO: add reason"
+  ignore :id
+  ignore :name
 
   unique_index %i[user_id field_id value],
                name: :user_field_values_multiselect_index,

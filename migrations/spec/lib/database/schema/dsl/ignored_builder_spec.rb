@@ -25,17 +25,15 @@ RSpec.describe Migrations::Database::Schema::DSL::IgnoredBuilder do
       expect(ignored.reason_for(:old_logs)).to eq("Legacy tables")
     end
 
-    it "raises when reason is missing" do
-      expect do Migrations::Database::Schema.ignored { table :bad_table, "" } end.to raise_error(
-        Migrations::Database::Schema::ConfigError,
-        /reason/,
-      )
-    end
+    it "allows tables without a reason" do
+      Migrations::Database::Schema.ignored do
+        table :temp_data
+        tables :a, :b
+      end
 
-    it "raises when batch reason is missing" do
-      expect do
-        Migrations::Database::Schema.ignored { tables :a, :b, reason: "" }
-      end.to raise_error(Migrations::Database::Schema::ConfigError, /reason/)
+      ignored = Migrations::Database::Schema.ignored_tables
+      expect(ignored.table_names).to eq(Set[:temp_data, :a, :b])
+      expect(ignored.reason_for(:temp_data)).to be_nil
     end
   end
 

@@ -5,5 +5,5 @@ Migrations::Database::Schema.table :user_custom_fields do
 
   column :value, required: true
 
-  ignore :id, "TODO: add reason"
+  ignore :id
 end

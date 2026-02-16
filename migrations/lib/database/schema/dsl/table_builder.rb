@@ -93,11 +93,7 @@ module Migrations::Database::Schema::DSL
       @added_columns << AddedColumn.new(name: name.to_sym, type: type.to_sym, required:, enum:)
     end
 
-    def ignore(col, reason)
-      if reason.nil? || reason.strip.empty?
-        raise Migrations::Database::Schema::ConfigError,
-              "Ignored column :#{col} in table :#{@name} must have a reason."
-      end
+    def ignore(col, reason = nil)
       @ignored_columns[col.to_sym] = reason
     end
 

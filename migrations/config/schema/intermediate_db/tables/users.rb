@@ -6,15 +6,15 @@ Migrations::Database::Schema.table :users do
 
   column :created_at, required: true
 
-  ignore :flag_level, "TODO: add reason"
-  ignore :last_emailed_at, "TODO: add reason"
-  ignore :last_posted_at, "TODO: add reason"
-  ignore :last_seen_reviewable_id, "TODO: add reason"
-  ignore :previous_visit_at, "TODO: add reason"
-  ignore :required_fields_version, "TODO: add reason"
-  ignore :secure_identifier, "TODO: add reason"
-  ignore :seen_notification_id, "TODO: add reason"
-  ignore :suspended_at, "TODO: add reason"
-  ignore :suspended_till, "TODO: add reason"
-  ignore :username_lower, "TODO: add reason"
+  ignore :flag_level
+  ignore :last_emailed_at
+  ignore :last_posted_at
+  ignore :last_seen_reviewable_id
+  ignore :previous_visit_at
+  ignore :required_fields_version
+  ignore :secure_identifier
+  ignore :seen_notification_id
+  ignore :suspended_at
+  ignore :suspended_till
+  ignore :username_lower
 end

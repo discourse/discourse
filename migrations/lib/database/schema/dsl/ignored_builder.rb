@@ -33,18 +33,11 @@ module Migrations::Database::Schema::DSL
       @plugin_entries = []
     end
 
-    def table(name, reason)
-      if reason.nil? || reason.strip.empty?
-        raise Migrations::Database::Schema::ConfigError,
-              "Ignored table :#{name} must have a reason."
-      end
+    def table(name, reason = nil)
       @entries << IgnoredEntry.new(name: name.to_sym, reason:)
     end
 
-    def tables(*names, reason:)
-      if reason.nil? || reason.strip.empty?
-        raise Migrations::Database::Schema::ConfigError, "Ignored tables must have a reason."
-      end
+    def tables(*names, reason: nil)
       names.flatten.each { |name| @entries << IgnoredEntry.new(name: name.to_sym, reason:) }
     end
 

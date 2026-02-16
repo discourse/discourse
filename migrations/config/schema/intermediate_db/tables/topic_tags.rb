@@ -3,5 +3,5 @@
 Migrations::Database::Schema.table :topic_tags do
   primary_key :topic_id, :tag_id
 
-  ignore :id, "TODO: add reason"
+  ignore :id
 end

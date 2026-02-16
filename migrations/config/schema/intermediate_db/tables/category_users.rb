@@ -3,5 +3,5 @@
 Migrations::Database::Schema.table :category_users do
   primary_key :category_id, :user_id
 
-  ignore :id, "TODO: add reason"
+  ignore :id
 end

@@ -24,7 +24,6 @@ Migrations::Database::Schema.ignored do
   plugin :poll, "Not migrated yet"
 
   # Core tables excluded from the intermediate database
-  # TODO: Add reasons for each table or group
 
   tables :user_actions,
          :user_api_key_client_scopes,
@@ -53,8 +52,7 @@ Migrations::Database::Schema.ignored do
          :user_statuses,
          :user_uploads,
          :user_visits,
-         :user_warnings,
-         reason: "TODO: add reason"
+         :user_warnings
 
   tables :post_action_types,
          :post_actions,
@@ -67,8 +65,7 @@ Migrations::Database::Schema.ignored do
          :post_revisions,
          :post_search_data,
          :post_stats,
-         :post_timings,
-         reason: "TODO: add reason"
+         :post_timings
 
   tables :topic_custom_fields,
          :topic_embeds,
@@ -82,8 +79,7 @@ Migrations::Database::Schema.ignored do
          :topic_thumbnails,
          :topic_timers,
          :topic_view_stats,
-         :topic_views,
-         reason: "TODO: add reason"
+         :topic_views
 
   tables :category_featured_topics,
          :category_form_templates,
@@ -94,8 +90,7 @@ Migrations::Database::Schema.ignored do
          :category_settings,
          :category_tag_groups,
          :category_tag_stats,
-         :category_tags,
-         reason: "TODO: add reason"
+         :category_tags
 
   tables :group_archived_messages,
          :group_associated_groups,
@@ -104,8 +99,7 @@ Migrations::Database::Schema.ignored do
          :group_histories,
          :group_mentions,
          :group_requests,
-         :group_tag_notification_defaults,
-         reason: "TODO: add reason"
+         :group_tag_notification_defaults
 
   tables :theme_fields,
          :theme_modifier_sets,
@@ -113,28 +107,21 @@ Migrations::Database::Schema.ignored do
          :theme_settings_migrations,
          :theme_site_settings,
          :theme_svg_sprites,
-         :theme_translation_overrides,
-         reason: "TODO: add reason"
+         :theme_translation_overrides
 
-  tables :incoming_domains,
-         :incoming_emails,
-         :incoming_links,
-         :incoming_referers,
-         reason: "TODO: add reason"
+  tables :incoming_domains, :incoming_emails, :incoming_links, :incoming_referers
 
   tables :reviewable_action_logs,
          :reviewable_claimed_topics,
          :reviewable_histories,
          :reviewable_notes,
-         :reviewable_scores,
-         reason: "TODO: add reason"
+         :reviewable_scores
 
   tables :web_hook_event_types,
          :web_hook_event_types_hooks,
          :web_hook_events,
          :web_hook_events_daily_aggregates,
-         :web_hooks,
-         reason: "TODO: add reason"
+         :web_hooks
 
   tables :admin_notices,
          :allowed_pm_users,
@@ -224,6 +211,5 @@ Migrations::Database::Schema.ignored do
          :uploads,
          :watched_word_groups,
          :watched_words,
-         :web_crawler_requests,
-         reason: "TODO: add reason"
+         :web_crawler_requests
 end

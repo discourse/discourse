@@ -131,12 +131,14 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
       expect(table.ignore_reason_for(:admin_notes)).to eq("Not needed for migration")
     end
 
-    it "raises when ignoring without a reason" do
-      expect do
-        Migrations::Database::Schema.table :users do
-          ignore :admin_notes, ""
-        end
-      end.to raise_error(Migrations::Database::Schema::ConfigError, /reason/)
+    it "allows ignoring without a reason" do
+      Migrations::Database::Schema.table :users do
+        ignore :admin_notes
+      end
+
+      table = Migrations::Database::Schema.tables[:users]
+      expect(table.ignored_column_names).to eq(%i[admin_notes])
+      expect(table.ignore_reason_for(:admin_notes)).to be_nil
     end
 
     it "supports indexes" do

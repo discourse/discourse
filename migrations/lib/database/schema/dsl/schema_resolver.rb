@@ -131,6 +131,7 @@ module Migrations::Database::Schema::DSL
       max_length = (max_length_override || db_col.limit if datatype == :text)
 
       is_primary_key = primary_key_columns.include?(col_name)
+      nullable = false if is_primary_key
 
       Migrations::Database::Schema::ColumnDefinition.new(
         name: effective_name.to_s,
@@ -149,12 +150,14 @@ module Migrations::Database::Schema::DSL
         enum = added_col.enum ? @enums_by_name[added_col.enum] : nil
         datatype = enum ? enum.datatype : added_col.type
 
+        is_pk = primary_key_columns.include?(effective_name)
+
         Migrations::Database::Schema::ColumnDefinition.new(
           name: effective_name,
           datatype: normalize_datatype(datatype),
-          nullable: !added_col.required,
+          nullable: is_pk ? false : !added_col.required,
           max_length: nil,
-          is_primary_key: primary_key_columns.include?(effective_name),
+          is_primary_key: is_pk,
           enum:,
         )
       end

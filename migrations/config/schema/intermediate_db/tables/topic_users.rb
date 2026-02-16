@@ -3,8 +3,8 @@
 Migrations::Database::Schema.table :topic_users do
   primary_key :topic_id, :user_id
 
-  ignore :id, "TODO: add reason"
-  ignore :bookmarked, "TODO: add reason"
-  ignore :liked, "TODO: add reason"
-  ignore :posted, "TODO: add reason"
+  ignore :id
+  ignore :bookmarked
+  ignore :liked
+  ignore :posted
 end
