@@ -190,6 +190,16 @@ describe "Composer - ProseMirror - Input rules", type: :system do
     expect(rich).to have_no_css("code", text: "and this, not code")
   end
 
+  it "does not convert emoji shortcuts when enable_emoji_shortcuts is disabled" do
+    SiteSetting.enable_emoji_shortcuts = false
+    open_composer
+
+    composer.type_content(":) ")
+
+    expect(rich).to have_no_css("img.emoji")
+    expect(rich).to have_content(":)")
+  end
+
   it "doesn't apply input rules immediately after a single backtick" do
     open_composer
     composer.type_content("`**not bold**\n`:tada:")
