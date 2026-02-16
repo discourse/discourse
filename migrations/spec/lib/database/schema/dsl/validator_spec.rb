@@ -28,9 +28,13 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
     end
   end
 
-  def stub_database(connection, db_tables: [], table_columns: {})
+  def stub_database(connection, db_tables: [], table_columns: {}, primary_keys: {})
     allow(ActiveRecord::Base).to receive(:with_connection).and_yield(connection)
     allow(connection).to receive(:tables).and_return(db_tables.map(&:to_s))
+
+    allow(connection).to receive(:primary_keys) do |table_name|
+      primary_keys.fetch(table_name.to_sym) { primary_keys.fetch(table_name.to_s, []) }
+    end
 
     table_columns.each do |table_name, columns|
       allow(connection).to receive(:columns).with(table_name.to_s).and_return(
@@ -134,6 +138,33 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
 
       result = described_class.new(schema).validate
       expect(result.errors).to include(match(/included columns do not exist.*nonexistent/))
+    end
+
+    it "detects database columns that are not configured or ignored" do
+      schema = build_schema(tables: { users: proc { include :id, :username } })
+
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: {
+            id: {
+              type: :integer,
+            },
+            username: {
+              type: :text,
+            },
+            email: {
+              type: :text,
+            },
+          },
+        },
+      )
+
+      result = described_class.new(schema).validate
+      expect(result.errors).to include(
+        match(/database columns are not configured or ignored.*email/),
+      )
     end
 
     it "detects column options referencing missing columns" do
@@ -387,12 +418,40 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       expect(result.errors).to be_empty
     end
 
+    it "detects when primary key columns are not configured" do
+      schema = build_schema(tables: { users: proc { include :username } })
+
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: {
+            id: {
+              type: :integer,
+              null: false,
+            },
+            username: {
+              type: :text,
+              null: false,
+            },
+          },
+        },
+        primary_keys: {
+          users: ["id"],
+        },
+      )
+
+      result = described_class.new(schema).validate
+      expect(result.errors).to include(match(/primary key columns are not configured.*id/))
+    end
+
     it "does not report plugin-ignored tables as unconfigured" do
       manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
       allow(manifest).to receive(:available?).and_return(true)
       allow(manifest).to receive(:tables_for_plugin).with("chat").and_return(
         %w[chat_channels chat_messages],
       )
+      allow(manifest).to receive(:columns_for_plugin).with("chat", table: "users").and_return([])
       allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
 
       schema =

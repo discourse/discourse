@@ -51,6 +51,8 @@ module Migrations::Database::Schema::DSL
       missing = []
 
       @schema.tables.each_value do |table_def|
+        next unless table_def.source_table_name
+
         source = table_def.source_table_name.to_s
         if @db_table_names.exclude?(source)
           missing << TableInfo.new(name: table_def.name.to_s, plugin: nil)
@@ -78,6 +80,8 @@ module Migrations::Database::Schema::DSL
       diffs = []
 
       @schema.tables.each_value do |table_def|
+        next unless table_def.source_table_name
+
         source = table_def.source_table_name.to_s
         next if @db_table_names.exclude?(source)
 

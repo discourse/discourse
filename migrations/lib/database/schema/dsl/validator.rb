@@ -49,14 +49,18 @@ module Migrations::Database::Schema::DSL
         end
 
         db_column_names = @db.columns(source_table).map(&:name).to_set
+        db_primary_keys = @db.primary_keys(source_table).map(&:to_s)
       else
         db_column_names = Set.new
+        db_primary_keys = []
       end
 
       validate_included_columns(table_def, db_column_names)
       validate_column_options(table_def, db_column_names)
       validate_added_columns(table_def, db_column_names)
       validate_ignored_columns(table_def, db_column_names)
+      validate_unknown_columns(table_def, db_column_names)
+      validate_primary_key_columns(table_def, db_column_names, db_primary_keys)
       validate_index_columns(table_def, db_column_names)
       validate_enum_references(table_def)
     end
@@ -73,7 +77,10 @@ module Migrations::Database::Schema::DSL
     def validate_column_options(table_def, db_column_names)
       table_def.column_options.each_key do |col_name|
         if db_column_names.exclude?(col_name.to_s)
-          @errors << "Table '#{table_def.name}': column option for '#{col_name}' references a column that does not exist in database"
+          missing_column_message =
+            "Table '#{table_def.name}': column option for '#{col_name}' " \
+              "references a column that does not exist in database"
+          @errors << missing_column_message
         end
       end
     end
@@ -104,8 +111,46 @@ module Migrations::Database::Schema::DSL
       table_def.indexes.each do |idx|
         missing = idx.column_names.map(&:to_s).to_set - configured_columns
         if missing.any?
-          @errors << "Table '#{table_def.name}': index '#{idx.name}' references columns not in configuration: #{sort_and_join(missing)}"
+          index_message =
+            "Table '#{table_def.name}': index '#{idx.name}' " \
+              "references columns not in configuration: #{sort_and_join(missing)}"
+          @errors << index_message
         end
+      end
+    end
+
+    def validate_unknown_columns(table_def, db_column_names)
+      return unless table_def.source_table_name
+
+      configured_columns = effective_column_names(table_def, db_column_names)
+      ignored_columns = table_def.ignored_column_names.map(&:to_s).to_set
+      unknown =
+        db_column_names - configured_columns - ignored_columns - globally_ignored_columns -
+          auto_ignored_column_names(table_def)
+
+      if unknown.any?
+        @errors << "Table '#{table_def.name}': database columns are not configured or ignored: #{sort_and_join(unknown)}"
+      end
+    end
+
+    def validate_primary_key_columns(table_def, db_column_names, db_primary_keys)
+      configured_primary_keys = table_def.primary_key_columns&.map(&:to_s) || db_primary_keys
+      return if configured_primary_keys.empty?
+
+      if table_def.source_table_name
+        missing_in_db = configured_primary_keys.to_set - db_column_names
+        if missing_in_db.any?
+          pk_message =
+            "Table '#{table_def.name}': primary key references columns " \
+              "that do not exist in database: #{sort_and_join(missing_in_db)}"
+          @errors << pk_message
+        end
+      end
+
+      configured_columns = effective_column_names(table_def, db_column_names)
+      missing_in_config = configured_primary_keys.to_set - configured_columns
+      if missing_in_config.any?
+        @errors << "Table '#{table_def.name}': primary key columns are not configured: #{sort_and_join(missing_in_config)}"
       end
     end
 
@@ -164,6 +209,37 @@ module Migrations::Database::Schema::DSL
       if manifest.available?
         ignored.ignored_plugin_names.each do |plugin_name|
           manifest.tables_for_plugin(plugin_name.to_s).each { |t| names << t.to_s }
+        end
+      end
+
+      names
+    end
+
+    def auto_ignored_column_names(table_def)
+      return Set.new unless table_def.source_table_name
+
+      ignored = @schema.ignored_tables
+      return Set.new unless ignored
+
+      manifest = @schema.plugin_manifest
+      return Set.new unless manifest.available?
+
+      table_name = table_def.source_table_name.to_s
+      names = Set.new
+
+      ignored.ignored_plugin_names.each do |plugin_name|
+        manifest
+          .columns_for_plugin(plugin_name.to_s, table: table_name)
+          .each { |column_name| names << column_name.to_s }
+      end
+
+      if table_def.ignore_plugin_columns?
+        manifest.all_plugin_names.each do |plugin_name|
+          next if ignored.plugin_ignored?(plugin_name.to_sym)
+
+          manifest
+            .columns_for_plugin(plugin_name, table: table_name)
+            .each { |column_name| names << column_name.to_s }
         end
       end
 

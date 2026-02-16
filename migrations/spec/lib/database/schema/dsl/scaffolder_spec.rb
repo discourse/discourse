@@ -48,7 +48,9 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
     it "generates a table config file" do
       Dir.mktmpdir do |tmpdir|
         config_path = File.join(tmpdir, "schema")
-        allow(Migrations::Database::Schema).to receive(:config_path).and_return(config_path)
+        allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
+          config_path,
+        )
 
         stub_database(
           connection,
@@ -85,10 +87,51 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
       end
     end
 
+    it "writes to the selected database config path" do
+      Dir.mktmpdir do |tmpdir|
+        allow(Migrations::Database::Schema).to receive(
+          :config_path,
+        ) do |database = :intermediate_db|
+          File.join(tmpdir, "schema", database.to_s)
+        end
+
+        stub_database(
+          connection,
+          db_tables: %i[users],
+          table_columns: {
+            users: {
+              id: {
+                type: :integer,
+              },
+              username: {
+                type: :text,
+              },
+            },
+          },
+          primary_keys: {
+            users: ["id"],
+          },
+          indexes: {
+            users: [],
+          },
+        )
+
+        schema = Migrations::Database::Schema
+        path = described_class.new(schema, :users, database: :archive_db).scaffold!
+
+        expect(path).to include("/schema/archive_db/tables/users.rb")
+        expect(
+          File.exist?(File.join(tmpdir, "schema", "intermediate_db", "tables", "users.rb")),
+        ).to be(false)
+      end
+    end
+
     it "includes composite primary keys" do
       Dir.mktmpdir do |tmpdir|
         config_path = File.join(tmpdir, "schema")
-        allow(Migrations::Database::Schema).to receive(:config_path).and_return(config_path)
+        allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
+          config_path,
+        )
 
         stub_database(
           connection,
@@ -122,7 +165,9 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
     it "includes indexes" do
       Dir.mktmpdir do |tmpdir|
         config_path = File.join(tmpdir, "schema")
-        allow(Migrations::Database::Schema).to receive(:config_path).and_return(config_path)
+        allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
+          config_path,
+        )
 
         idx =
           mock_index(name: "idx_users_username", columns: %w[username], unique: true, where: nil)
@@ -173,7 +218,9 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
         FileUtils.mkdir_p(tables_dir)
         File.write(File.join(tables_dir, "users.rb"), "existing")
 
-        allow(Migrations::Database::Schema).to receive(:config_path).and_return(config_path)
+        allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
+          config_path,
+        )
 
         stub_database(
           connection,
@@ -204,7 +251,9 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
     it "excludes globally ignored columns" do
       Dir.mktmpdir do |tmpdir|
         config_path = File.join(tmpdir, "schema")
-        allow(Migrations::Database::Schema).to receive(:config_path).and_return(config_path)
+        allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
+          config_path,
+        )
 
         Migrations::Database::Schema.conventions { ignore_columns :updated_at }
 

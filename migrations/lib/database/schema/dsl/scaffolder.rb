@@ -2,9 +2,10 @@
 
 module Migrations::Database::Schema::DSL
   class Scaffolder
-    def initialize(schema_module, table_name)
+    def initialize(schema_module, table_name, database: :intermediate_db)
       @schema = schema_module
       @table_name = table_name.to_s
+      @database = database
     end
 
     def scaffold!
@@ -67,7 +68,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def write_file(content)
-      tables_dir = File.join(Migrations::Database::Schema.config_path, "tables")
+      tables_dir = File.join(Migrations::Database::Schema.config_path(@database), "tables")
       FileUtils.mkdir_p(tables_dir)
 
       path = File.join(tables_dir, "#{@table_name}.rb")

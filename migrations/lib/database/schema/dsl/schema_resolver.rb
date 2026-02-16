@@ -181,9 +181,7 @@ module Migrations::Database::Schema::DSL
     def resolve_indexes(table_def)
       table_def.indexes.map do |idx|
         resolved_columns =
-          idx.column_names.map do |col_name|
-            @conventions&.effective_name(col_name)&.to_s || col_name.to_s
-          end
+          idx.column_names.map { |col_name| resolve_index_column_name(table_def, col_name) }
 
         Migrations::Database::Schema::IndexDefinition.new(
           name: idx.name.to_s,
@@ -192,6 +190,13 @@ module Migrations::Database::Schema::DSL
           condition: idx.condition,
         )
       end
+    end
+
+    def resolve_index_column_name(table_def, col_name)
+      return col_name.to_s unless table_def.source_table_name
+
+      options = table_def.column_options_for(col_name)
+      (options&.rename_to || @conventions&.effective_name(col_name) || col_name.to_sym).to_s
     end
 
     def resolve_constraints(table_def)

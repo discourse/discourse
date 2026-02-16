@@ -267,11 +267,9 @@ module Migrations::Database
     end
 
     def self.plugin_manifest(database: :intermediate_db)
-      @plugin_manifest ||= {}
-      @plugin_manifest[database.to_sym] ||= DSL::PluginManifest.new(
-        manifest_path: File.join(config_path(database), "plugin_manifest.yml"),
-        plugins_path: File.join(Rails.root, "plugins"),
-      )
+      database.to_sym # keep keyword API stable; manifest is shared for all schema outputs
+      @plugin_manifest ||=
+        DSL::PluginManifest.new(manifest_path:, plugins_path: File.join(Rails.root, "plugins"))
     end
 
     # --- Validation, Resolution & Generation ---
@@ -298,7 +296,7 @@ module Migrations::Database
 
     def self.scaffold(table_name, database: :intermediate_db)
       ensure_ready!(database:)
-      DSL::Scaffolder.new(self, table_name).scaffold!
+      DSL::Scaffolder.new(self, table_name, database:).scaffold!
     end
 
     # --- Lifecycle Methods ---
@@ -337,6 +335,10 @@ module Migrations::Database
 
     def self.config_path(database = :intermediate_db)
       File.join(Migrations.root_path, "config", "schema", database.to_s)
+    end
+
+    def self.manifest_path
+      File.join(Migrations.root_path, "config", "schema", "plugin_manifest.yml")
     end
 
     def self.available_databases

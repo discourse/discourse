@@ -235,6 +235,46 @@ RSpec.describe Migrations::Database::Schema::DSL::SchemaResolver do
       expect(idx.column_names).to eq(["original_id"])
     end
 
+    it "resolves indexes with per-table rename_to overrides" do
+      schema =
+        build_schema(
+          tables: {
+            posts:
+              proc do
+                include :id, :user_id
+                column :user_id, rename_to: :author_id
+                index :user_id, name: :idx_posts_user_id
+              end,
+          },
+        )
+
+      stub_database(
+        connection,
+        table_columns: {
+          posts: {
+            id: {
+              type: :integer,
+              null: false,
+            },
+            user_id: {
+              type: :integer,
+              null: false,
+            },
+          },
+        },
+        primary_keys: {
+          posts: ["id"],
+        },
+      )
+
+      result = described_class.new(schema).resolve
+      table = result.tables.first
+      idx = table.indexes.first
+
+      expect(idx.name).to eq("idx_posts_user_id")
+      expect(idx.column_names).to eq(["author_id"])
+    end
+
     it "resolves constraints" do
       schema =
         build_schema(

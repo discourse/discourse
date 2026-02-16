@@ -110,7 +110,17 @@ module Migrations::CLI
     desc "ignore TABLE", "Add a table to ignored.rb"
     method_option :reason, type: :string, required: true, desc: "Reason for ignoring the table"
     def ignore(table_name)
+      table_name = table_name.to_s
       reason = options[:reason]
+
+      unless /\A[a-z0-9_]+\z/.match?(table_name)
+        raise(
+          Schema::ConfigError,
+          "Invalid table name '#{table_name}'. Use lowercase letters, numbers, and underscores.",
+        )
+      end
+
+      raise Schema::ConfigError, "A non-empty reason is required." if reason.blank?
 
       ignored_path = File.join(Schema.config_path(options[:database]), "ignored.rb")
 
@@ -120,8 +130,9 @@ module Migrations::CLI
 
       content = File.read(ignored_path)
 
-      new_entry = "  table :#{table_name}, \"#{reason}\"\n"
-      content.sub!(/(\nend\s*)\z/, "\n#{new_entry}\\1")
+      new_entry = "  table :#{table_name}, #{reason.inspect}\n"
+      inserted = content.sub!(/(\nend\s*)\z/, "\n#{new_entry}\\1")
+      raise Schema::ConfigError, "Could not find trailing `end` in #{ignored_path}" unless inserted
 
       File.write(ignored_path, content)
       puts I18n.t("schema.ignore.success", table: table_name).green

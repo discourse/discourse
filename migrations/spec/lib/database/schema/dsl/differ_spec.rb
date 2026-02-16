@@ -100,6 +100,21 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
       expect(names).to contain_exactly("posts")
     end
 
+    it "does not report synthetic tables as missing" do
+      stub_plugin_manifest_unavailable
+
+      Migrations::Database::Schema.table(:log_entries) do
+        synthetic!
+        add_column :created_at, :datetime
+      end
+
+      stub_database(connection, db_tables: [])
+
+      result = described_class.new(Migrations::Database::Schema).diff
+
+      expect(result.missing_tables).to be_empty
+    end
+
     it "detects stale ignored tables" do
       stub_plugin_manifest_unavailable
 
