@@ -37,7 +37,7 @@ export default class HouseAdsSetting extends Component {
 
     try {
       await ajax(
-        `/admin/plugins/pluginad/house_settings/${this.get("name")}.json`,
+        `/admin/plugins/discourse-adplugin/house-settings/${this.get("name")}.json`,
         {
           type: "PUT",
           data: { value: this.get("adValue") },

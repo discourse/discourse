@@ -7,12 +7,14 @@ export default class AdminPluginsHouseAds extends DiscourseRoute {
   settings = null;
 
   model() {
-    return ajax("/admin/plugins/pluginad/house_creatives.json").then((data) => {
-      this.set("settings", EmberObject.create(data.settings));
-      return new TrackedArray(
-        data.house_ads.map((ad) => EmberObject.create(ad))
-      );
-    });
+    return ajax("/admin/plugins/discourse-adplugin/house-ads.json").then(
+      (data) => {
+        this.set("settings", EmberObject.create(data.settings));
+        return new TrackedArray(
+          data.house_ads.map((ad) => EmberObject.create(ad))
+        );
+      }
+    );
   }
 
   setupController(controller, model) {

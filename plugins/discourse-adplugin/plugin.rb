@@ -50,8 +50,11 @@ after_initialize do
 
     # HTML routes for admin SPA (full page refresh support)
     scope "/admin/plugins/discourse-adplugin", constraints: AdminConstraint.new do
-      get "/house-ads" => "admin/admin#index", :format => false
-      get "/house-ads/:id" => "admin/admin#index", :format => false
+      get "/house-ads" => "ad_plugin/house_ads#index", :format => false
+      get "/house-ads/:id" => "ad_plugin/house_ads#show", :format => false
+      put "/house-ads/:id" => "ad_plugin/house_ads#update", :format => false
+      delete "/house-ads/:id" => "ad_plugin/house_ads#destroy", :format => false
+      post "/house-ads" => "ad_plugin/house_ads#create", :format => false
     end
   end
 

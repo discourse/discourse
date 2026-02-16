@@ -67,8 +67,8 @@ export default class HouseAdForm extends Component {
     try {
       const result = await ajax(
         isNew
-          ? `/admin/plugins/pluginad/house_creatives`
-          : `/admin/plugins/pluginad/house_creatives/${data.id}`,
+          ? `/admin/plugins/discourse-adplugin/house-ads`
+          : `/admin/plugins/discourse-adplugin/house-ads/${data.id}`,
         {
           type: isNew ? "POST" : "PUT",
           data: payload,
@@ -136,7 +136,7 @@ export default class HouseAdForm extends Component {
       didConfirm: async () => {
         try {
           await ajax(
-            `/admin/plugins/pluginad/house_creatives/${this.args.model.id}`,
+            `/admin/plugins/discourse-adplugin/house-ads/${this.args.model.id}`,
             { type: "DELETE" }
           );
           removeValueFromArray(
