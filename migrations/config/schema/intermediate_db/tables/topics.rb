@@ -30,6 +30,4 @@ Migrations::Database::Schema.table :topics do
          :spam_count,
          :word_count,
          reason: "Calculated columns"
-
-  index [:archetype], name: :index_topics_on_archetype
 end

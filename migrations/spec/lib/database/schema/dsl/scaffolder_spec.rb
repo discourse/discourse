@@ -44,47 +44,122 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
     end
   end
 
-  describe "#scaffold!" do
-    it "generates a table config file" do
-      Dir.mktmpdir do |tmpdir|
-        config_path = File.join(tmpdir, "schema")
-        allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
-          config_path,
-        )
+  def scaffold_table(table_name, database: :intermediate_db, &setup)
+    Dir.mktmpdir do |tmpdir|
+      config_path = File.join(tmpdir, "schema")
+      allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
+        config_path,
+      )
 
-        stub_database(
-          connection,
-          db_tables: %i[users],
-          table_columns: {
-            users: {
-              id: {
-                type: :integer,
-              },
-              username: {
-                type: :text,
-              },
-              email: {
-                type: :text,
-              },
+      yield if setup
+
+      schema = Migrations::Database::Schema
+      path = described_class.new(schema, table_name, database:).scaffold!
+      [path, File.read(path)]
+    end
+  end
+
+  describe "#scaffold!" do
+    it "generates a table config file with DSL reference and include_all" do
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: {
+            id: {
+              type: :integer,
+            },
+            username: {
+              type: :text,
+            },
+            email: {
+              type: :text,
             },
           },
-          primary_keys: {
-            users: ["id"],
+        },
+        primary_keys: {
+          users: ["id"],
+        },
+        indexes: {
+          users: [],
+        },
+      )
+
+      path, content = scaffold_table(:users)
+
+      expect(path).to end_with("/tables/users.rb")
+      expect(content).to include("# Schema DSL Reference:")
+      expect(content).to include("table :users do")
+      expect(content).to include("include_all")
+      expect(content).to include("# TODO: Configure columns.")
+      expect(content).not_to include("include :id")
+    end
+
+    it "includes source table metadata as comments" do
+      stub_database(
+        connection,
+        db_tables: %i[posts],
+        table_columns: {
+          posts: {
+            id: {
+              type: :integer,
+            },
+            title: {
+              type: :text,
+            },
           },
-          indexes: {
-            users: [],
+        },
+        primary_keys: {
+          posts: ["id"],
+        },
+        indexes: {
+          posts: [
+            mock_index(name: "index_posts_on_slug", columns: %w[slug], unique: true),
+            mock_index(name: "index_posts_on_user_id", columns: %w[user_id]),
+            mock_index(name: "index_posts_on_topic_id", columns: %w[topic_id]),
+          ],
+        },
+      )
+
+      _path, content = scaffold_table(:posts)
+
+      expect(content).to include("# Source table: posts")
+      expect(content).to include("#   Primary key: id")
+      expect(content).to include("#   Unique indexes: index_posts_on_slug (slug)")
+      expect(content).to include(
+        "#   Indexes: index_posts_on_user_id (user_id), index_posts_on_topic_id (topic_id)",
+      )
+    end
+
+    it "does not emit active index or unique_index DSL calls" do
+      idx = mock_index(name: "idx_users_username", columns: %w[username], unique: true, where: nil)
+
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: {
+            id: {
+              type: :integer,
+            },
+            username: {
+              type: :text,
+            },
           },
-        )
+        },
+        primary_keys: {
+          users: ["id"],
+        },
+        indexes: {
+          users: [idx],
+        },
+      )
 
-        schema = Migrations::Database::Schema
-        path = described_class.new(schema, :users).scaffold!
+      _path, content = scaffold_table(:users)
 
-        expect(File.exist?(path)).to be true
-
-        content = File.read(path)
-        expect(content).to include("table :users do")
-        expect(content).to include("include :id, :username, :email")
-      end
+      expect(content).not_to match(/^\s+unique_index\b/)
+      expect(content).not_to match(/^\s+index\b/)
+      expect(content).to include("#   Unique indexes: idx_users_username (username)")
     end
 
     it "writes to the selected database config path" do
@@ -127,124 +202,30 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
     end
 
     it "includes composite primary keys" do
-      Dir.mktmpdir do |tmpdir|
-        config_path = File.join(tmpdir, "schema")
-        allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
-          config_path,
-        )
-
-        stub_database(
-          connection,
-          db_tables: %i[topic_tags],
-          table_columns: {
-            topic_tags: {
-              topic_id: {
-                type: :integer,
-              },
-              tag_id: {
-                type: :integer,
-              },
+      stub_database(
+        connection,
+        db_tables: %i[topic_tags],
+        table_columns: {
+          topic_tags: {
+            topic_id: {
+              type: :integer,
+            },
+            tag_id: {
+              type: :integer,
             },
           },
-          primary_keys: {
-            topic_tags: %w[topic_id tag_id],
-          },
-          indexes: {
-            topic_tags: [],
-          },
-        )
+        },
+        primary_keys: {
+          topic_tags: %w[topic_id tag_id],
+        },
+        indexes: {
+          topic_tags: [],
+        },
+      )
 
-        schema = Migrations::Database::Schema
-        path = described_class.new(schema, :topic_tags).scaffold!
+      _path, content = scaffold_table(:topic_tags)
 
-        content = File.read(path)
-        expect(content).to include("primary_key :topic_id, :tag_id")
-      end
-    end
-
-    it "includes indexes" do
-      Dir.mktmpdir do |tmpdir|
-        config_path = File.join(tmpdir, "schema")
-        allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
-          config_path,
-        )
-
-        idx =
-          mock_index(name: "idx_users_username", columns: %w[username], unique: true, where: nil)
-
-        stub_database(
-          connection,
-          db_tables: %i[users],
-          table_columns: {
-            users: {
-              id: {
-                type: :integer,
-              },
-              username: {
-                type: :text,
-              },
-            },
-          },
-          primary_keys: {
-            users: ["id"],
-          },
-          indexes: {
-            users: [idx],
-          },
-        )
-
-        schema = Migrations::Database::Schema
-        path = described_class.new(schema, :users).scaffold!
-
-        content = File.read(path)
-        expect(content).to include('unique_index "username", name: "idx_users_username"')
-      end
-    end
-
-    it "escapes index names and where clauses as Ruby string literals" do
-      Dir.mktmpdir do |tmpdir|
-        config_path = File.join(tmpdir, "schema")
-        allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
-          config_path,
-        )
-
-        where_clause = 'name != "x\"y"'
-        idx =
-          mock_index(
-            name: "idx-users-name",
-            columns: %w[username],
-            unique: false,
-            where: where_clause,
-          )
-
-        stub_database(
-          connection,
-          db_tables: %i[users],
-          table_columns: {
-            users: {
-              id: {
-                type: :integer,
-              },
-              username: {
-                type: :text,
-              },
-            },
-          },
-          primary_keys: {
-            users: ["id"],
-          },
-          indexes: {
-            users: [idx],
-          },
-        )
-
-        schema = Migrations::Database::Schema
-        path = described_class.new(schema, :users).scaffold!
-
-        content = File.read(path)
-        expect(content).to include('index "username", name: "idx-users-name"')
-        expect(content).to include("where: #{where_clause.inspect}")
-      end
+      expect(content).to include("primary_key :topic_id, :tag_id")
     end
 
     it "raises when table does not exist" do
@@ -294,46 +275,32 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
       end
     end
 
-    it "excludes globally ignored columns" do
-      Dir.mktmpdir do |tmpdir|
-        config_path = File.join(tmpdir, "schema")
-        allow(Migrations::Database::Schema).to receive(:config_path).with(any_args).and_return(
-          config_path,
-        )
-
-        Migrations::Database::Schema.conventions { ignore_columns :updated_at }
-
-        stub_database(
-          connection,
-          db_tables: %i[users],
-          table_columns: {
-            users: {
-              id: {
-                type: :integer,
-              },
-              username: {
-                type: :text,
-              },
-              updated_at: {
-                type: :datetime,
-              },
+    it "shows multi-column indexes in metadata comments" do
+      stub_database(
+        connection,
+        db_tables: %i[posts],
+        table_columns: {
+          posts: {
+            id: {
+              type: :integer,
             },
           },
-          primary_keys: {
-            users: ["id"],
-          },
-          indexes: {
-            users: [],
-          },
-        )
+        },
+        primary_keys: {
+          posts: ["id"],
+        },
+        indexes: {
+          posts: [
+            mock_index(name: "index_posts_on_user_id_and_topic_id", columns: %w[user_id topic_id]),
+          ],
+        },
+      )
 
-        schema = Migrations::Database::Schema
-        path = described_class.new(schema, :users).scaffold!
+      _path, content = scaffold_table(:posts)
 
-        content = File.read(path)
-        expect(content).to include(":id, :username")
-        expect(content).not_to include("updated_at")
-      end
+      expect(content).to include(
+        "#   Indexes: index_posts_on_user_id_and_topic_id (user_id, topic_id)",
+      )
     end
   end
 end

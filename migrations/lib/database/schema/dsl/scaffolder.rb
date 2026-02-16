@@ -2,6 +2,20 @@
 
 module Migrations::Database::Schema::DSL
   class Scaffolder
+    DSL_REFERENCE = <<~COMMENT
+      # Schema DSL Reference:
+      #
+      #   include_all                                - Include all source columns (implied by `ignore`)
+      #   include :col1, :col2                       - Include only these columns
+      #   ignore :col1, :col2, reason: "..."         - Ignore columns (implies include_all)
+      #   primary_key :col1, :col2                   - Override primary key
+      #   column :name, required: true               - Set column options (required, type, max_length, rename_to)
+      #   add_column :name, :type                    - Add a column not in the source table
+      #   copy_structure_from :other_table           - Use another table as the source
+      #   synthetic!                                 - Table has no source (only add_column allowed)
+      #   ignore_plugin_columns!                     - Auto-ignore columns from ignored plugins
+    COMMENT
+
     def initialize(schema_module, table_name, database: :intermediate_db)
       @schema = schema_module
       @table_name = table_name.to_s
@@ -30,12 +44,12 @@ module Migrations::Database::Schema::DSL
       primary_keys = @db.primary_keys(@table_name)
       indexes = @db.indexes(@table_name)
 
-      column_names = columns.map(&:name)
-      globally_ignored = globally_ignored_columns
-      included_names = column_names.reject { |c| globally_ignored.include?(c) }
-
       lines = []
       lines << "# frozen_string_literal: true"
+      lines << ""
+      lines << DSL_REFERENCE.chomp
+      lines << "#"
+      lines.concat(source_metadata_lines(primary_keys, indexes))
       lines << ""
       lines << "Migrations::Database::Schema.table :#{@table_name} do"
 
@@ -45,26 +59,35 @@ module Migrations::Database::Schema::DSL
         lines << ""
       end
 
-      if included_names.any?
-        cols = included_names.map { |c| ":#{c}" }.join(", ")
-        lines << "  include #{cols}"
-      end
-
-      if indexes.any?
-        lines << ""
-        indexes.each do |idx|
-          cols = idx.columns.map { |c| c.to_s.inspect }.join(", ")
-          opts = []
-          opts << "name: #{idx.name.to_s.inspect}"
-          opts << "where: #{idx.where.to_s.inspect}" if idx.where
-
-          method = idx.unique ? "unique_index" : "index"
-          lines << "  #{method} #{cols}, #{opts.join(", ")}"
-        end
-      end
-
+      lines << "  include_all"
+      lines << ""
+      lines << "  # TODO: Configure columns. Run `schema validate` to check."
+      lines << '  # ignore :col1, :col2, reason: "..."'
       lines << "end"
       lines.join("\n") + "\n"
+    end
+
+    def source_metadata_lines(primary_keys, indexes)
+      lines = []
+      lines << "# Source table: #{@table_name}"
+
+      pk_display = primary_keys.any? ? primary_keys.join(", ") : "(none)"
+      lines << "#   Primary key: #{pk_display}"
+
+      unique_indexes = indexes.select(&:unique)
+      regular_indexes = indexes.reject(&:unique)
+
+      if unique_indexes.any?
+        entries = unique_indexes.map { |idx| "#{idx.name} (#{idx.columns.join(", ")})" }
+        lines << "#   Unique indexes: #{entries.join(", ")}"
+      end
+
+      if regular_indexes.any?
+        entries = regular_indexes.map { |idx| "#{idx.name} (#{idx.columns.join(", ")})" }
+        lines << "#   Indexes: #{entries.join(", ")}"
+      end
+
+      lines
     end
 
     def write_file(content)
