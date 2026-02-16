@@ -58,7 +58,8 @@ module Migrations::CLI
       puts
       puts I18n.t("schema.resolve.tables_header", count: resolved.tables.size)
       resolved.tables.each do |table|
-        pk = table.primary_key_column_names&.join(", ") || "id"
+        pk_names = table.primary_key_column_names
+        pk = pk_names&.any? ? pk_names.join(", ") : "none"
         puts "  #{table.name} (PK: #{pk}, #{table.columns.size} columns)"
       end
       puts
@@ -139,6 +140,7 @@ module Migrations::CLI
     end
 
     desc "diff", "Show differences between configuration and database"
+    method_option :verbose, type: :boolean, default: false, desc: "Show auto-ignored plugin columns"
     def diff
       load_rails!
 
@@ -146,7 +148,7 @@ module Migrations::CLI
       Schema.ensure_ready!(database:)
 
       result = Schema.diff(database:)
-      display_diff(result)
+      display_diff(result, verbose: options[:verbose])
     end
 
     desc "scaffold TABLE", "Create a config file for a new table"
@@ -261,7 +263,7 @@ module Migrations::CLI
       puts "  #{I18n.t("schema.show.auto_ignore_plugins", value: table.ignore_plugin_columns?)}"
     end
 
-    def display_diff(result)
+    def display_diff(result, verbose: false)
       has_changes = false
 
       if result.unknown_tables.any?
@@ -288,10 +290,12 @@ module Migrations::CLI
         puts
       end
 
-      if result.table_diffs.any?
+      table_diffs = filter_table_diffs(result.table_diffs, verbose:)
+
+      if table_diffs.any?
         has_changes = true
         puts I18n.t("schema.diff.column_diffs")
-        result.table_diffs.each do |table_diff|
+        table_diffs.each do |table_diff|
           puts "  #{table_diff.table_name}:"
 
           table_diff.unknown_columns.each do |c|
@@ -305,8 +309,10 @@ module Migrations::CLI
             puts "    ~ #{I18n.t("schema.diff.stale_ignored_column", name: c.name)}"
           end
 
-          table_diff.auto_ignored_columns.each do |c|
-            puts "    #{I18n.t("schema.diff.auto_ignored_column", name: c.name, plugin: c.plugin)}"
+          if verbose
+            table_diff.auto_ignored_columns.each do |c|
+              puts "    #{I18n.t("schema.diff.auto_ignored_column", name: c.name, plugin: c.plugin)}"
+            end
           end
         end
         puts
@@ -318,6 +324,14 @@ module Migrations::CLI
         puts "  #{I18n.t("schema.diff.action_ignore")}"
       else
         puts I18n.t("schema.diff.no_differences").green
+      end
+    end
+
+    def filter_table_diffs(table_diffs, verbose:)
+      return table_diffs if verbose
+
+      table_diffs.select do |td|
+        td.unknown_columns.any? || td.missing_columns.any? || td.stale_ignored_columns.any?
       end
     end
   end
