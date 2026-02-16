@@ -91,6 +91,55 @@ RSpec.describe ReviewableNotesController do
       end
     end
 
+    context "when user is a category group moderator" do
+      fab!(:group)
+      fab!(:category_a, :category)
+      fab!(:category_b, :category)
+      fab!(:reviewable_in_a) do
+        Fabricate(
+          :reviewable_flagged_post,
+          category: category_a,
+          topic: Fabricate(:topic, category: category_a),
+        )
+      end
+      fab!(:reviewable_in_b) do
+        Fabricate(
+          :reviewable_flagged_post,
+          category: category_b,
+          topic: Fabricate(:topic, category: category_b),
+        )
+      end
+
+      before do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: category_a, group:)
+        group.add(user)
+        sign_in(user)
+      end
+
+      it "can create notes on reviewables in their moderated category" do
+        post "/review/#{reviewable_in_a.id}/notes.json",
+             params: {
+               reviewable_note: {
+                 content: "Note on my category",
+               },
+             }
+
+        expect(response.status).to eq(200)
+      end
+
+      it "cannot create notes on reviewables in other categories" do
+        post "/review/#{reviewable_in_b.id}/notes.json",
+             params: {
+               reviewable_note: {
+                 content: "Should not work",
+               },
+             }
+
+        expect(response.status).to eq(404)
+      end
+    end
+
     context "when user is not staff" do
       before { sign_in(user) }
 
