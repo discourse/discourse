@@ -289,6 +289,12 @@ after_initialize do
     object.chat_quick_reactions_custom
   end
 
+  add_to_serializer(
+    :category,
+    :has_chat_channels,
+    include_condition: -> { SiteSetting.chat_enabled },
+  ) { object.category_channels.exists? }
+
   on(:site_setting_changed) do |name, old_value, new_value|
     user_option_field = Chat::RETENTION_SETTINGS_TO_USER_OPTION_FIELDS[name.to_sym]
     begin

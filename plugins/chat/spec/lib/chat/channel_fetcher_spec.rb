@@ -296,6 +296,46 @@ describe Chat::ChannelFetcher do
       ).to be_empty
     end
 
+    context "when filtering by chatable (Category)" do
+      fab!(:other_category, :category)
+      fab!(:other_channel) { Fabricate(:category_channel, chatable: other_category) }
+
+      it "returns only channels for the given category when user can see the category" do
+        expect(
+          described_class.secured_public_channels(
+            guardian,
+            following: following,
+            chatable_id: category.id,
+            chatable_type: "Category",
+          ).map(&:id),
+        ).to eq([category_channel.id])
+      end
+
+      it "does not filter when chatable type and id are not found" do
+        expect(
+          described_class.secured_public_channels(
+            guardian,
+            following: following,
+            chatable_id: -999,
+            chatable_type: "Category",
+          ).map(&:id),
+        ).to contain_exactly(category_channel.id, other_channel.id)
+      end
+
+      it "does not filter when user cannot access the chatable" do
+        Fabricate(:category_channel, chatable: private_category)
+
+        expect(
+          described_class.secured_public_channels(
+            guardian,
+            following: following,
+            chatable_id: private_category.id,
+            chatable_type: "Category",
+          ).map(&:id),
+        ).to contain_exactly(category_channel.id, other_channel.id)
+      end
+    end
+
     context "when scoping to the user's channel memberships" do
       let(:following) { true }
 

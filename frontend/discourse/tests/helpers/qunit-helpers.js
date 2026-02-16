@@ -45,6 +45,7 @@ import { rollbackAllPrepends } from "discourse/lib/class-prepend";
 import { clearPopupMenuOptions } from "discourse/lib/composer/custom-popup-menu-options";
 import deprecated from "discourse/lib/deprecated";
 import { clearDesktopNotificationHandlers } from "discourse/lib/desktop-notifications";
+import { clearRegisteredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { restoreBaseUri } from "discourse/lib/get-url";
 import { cleanUpHashtagTypeClasses } from "discourse/lib/hashtag-type-registry";
@@ -265,6 +266,7 @@ export function testCleanup(container, app) {
   clearAboutPageActivities();
   clearPluginHeaderActionComponents();
   clearRegisteredTabs();
+  clearRegisteredEditCategoryTabs();
   clearAddedTrackedPostProperties();
   resetGroupPostSmallActionCodes();
   enableClearA11yAnnouncementsInTests();

@@ -111,6 +111,17 @@ module Chat
 
       channels = channels.where(status: options[:status]) if options[:status].present?
 
+      if options[:chatable_id].present? && options[:chatable_type].present?
+        filter_chatable = options[:chatable_type].constantize&.find_by_id(options[:chatable_id])
+        if filter_chatable.present? && guardian.can_see_chatable?(filter_chatable)
+          channels =
+            channels.where(
+              chatable_id: options[:chatable_id],
+              chatable_type: options[:chatable_type],
+            )
+        end
+      end
+
       if options[:filter].present?
         category_filter =
           (options[:filter_on_category_name] ? "OR categories.name ILIKE :filter" : "")

@@ -963,6 +963,10 @@ class Category < ActiveRecord::Base
     end
   end
 
+  def slug_url_without_id
+    "#{Discourse.base_path}/c/#{slug_path.join("/")}"
+  end
+
   alias_method :relative_url, :url
 
   # If the name changes, try and update the category definition topic too if it's an exact match

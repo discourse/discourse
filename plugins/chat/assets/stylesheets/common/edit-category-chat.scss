@@ -1,0 +1,12 @@
+.edit-category-chat {
+  &__channel-name {
+    .chat-channel-icon {
+      font-size: var(--font-up-1);
+      display: inline;
+    }
+  }
+
+  &__empty {
+    color: var(--primary-medium);
+  }
+}

@@ -5,11 +5,13 @@ class Chat::Api::ChannelsController < Chat::ApiController
   CATEGORY_CHANNEL_EDITABLE_PARAMS = %i[auto_join_users allow_channel_wide_mentions]
 
   def index
-    permitted = params.permit(:filter, :limit, :offset, :status)
+    permitted = params.permit(:filter, :limit, :offset, :status, :chatable_id, :chatable_type)
 
     options = { filter: permitted[:filter], limit: (permitted[:limit] || 25).to_i }
     options[:offset] = permitted[:offset].to_i
     options[:status] = Chat::Channel.statuses[permitted[:status]] ? permitted[:status] : nil
+    options[:chatable_id] = permitted[:chatable_id]
+    options[:chatable_type] = permitted[:chatable_type]
 
     memberships = Chat::ChannelMembershipManager.all_for_user(current_user)
     channels = Chat::ChannelFetcher.secured_public_channels(guardian, options)
