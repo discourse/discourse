@@ -109,11 +109,10 @@ export default class UpsertCategorySecurity extends Component {
 
   @action
   onSelectGroup(groupId) {
-    const group = this.site.groups.find((g) => g.id === groupId);
     const newPermissions = [
       ...(this.permissions || []),
       {
-        group_name: group?.name,
+        group_name: this.site.groupsById[groupId]?.name,
         group_id: groupId,
         permission_type: this.minimumPermission,
       },

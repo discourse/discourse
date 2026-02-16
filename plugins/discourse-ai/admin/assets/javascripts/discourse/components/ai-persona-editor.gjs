@@ -33,6 +33,7 @@ import RagUploader from "./rag-uploader";
 
 export default class PersonaEditor extends Component {
   @service router;
+  @service site;
   @service dialog;
   @service toasts;
   @service siteSettings;
@@ -108,10 +109,7 @@ export default class PersonaEditor extends Component {
       (g) => g.id === AUTO_GROUPS.everyone.id
     );
     if (!hasEveryoneGroup) {
-      groups.push({
-        id: AUTO_GROUPS.everyone.id,
-        name: AUTO_GROUPS.everyone.name,
-      });
+      groups.push(this.site.groupsById[AUTO_GROUPS.everyone.id]);
     }
 
     this.allGroups = groups;

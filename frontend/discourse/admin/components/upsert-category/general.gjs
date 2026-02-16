@@ -22,12 +22,6 @@ import IconPicker from "discourse/select-kit/components/icon-picker";
 import { eq, or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
-const EVERYONE_FULL_PERMISSION = {
-  group_id: AUTO_GROUPS.everyone.id,
-  group_name: AUTO_GROUPS.everyone.name,
-  permission_type: PermissionType.FULL,
-};
-
 export default class UpsertCategoryGeneral extends Component {
   @service site;
   @service siteSettings;
@@ -43,6 +37,15 @@ export default class UpsertCategoryGeneral extends Component {
   );
 
   #previousPermissions = null;
+
+  // This needs to be dynamic because the name of the everyone group can be changed by admins
+  get #everyoneFullPermission() {
+    return {
+      group_id: AUTO_GROUPS.everyone.id,
+      group_name: this.site.groupsById[AUTO_GROUPS.everyone.id].name,
+      permission_type: PermissionType.FULL,
+    };
+  }
 
   get isParentRestricted() {
     const parentId = this.args.transientData.parent_category_id;
@@ -101,10 +104,9 @@ export default class UpsertCategoryGeneral extends Component {
   @action
   onChangeAccessGroups(groupIds) {
     const newPermissions = groupIds.map((groupId) => {
-      const group = this.site.groups.find((g) => g.id === groupId);
       return {
         group_id: groupId,
-        group_name: group?.name,
+        group_name: this.site.groupsById[groupId]?.name,
         permission_type: PermissionType.FULL,
       };
     });
@@ -200,7 +202,7 @@ export default class UpsertCategoryGeneral extends Component {
     };
 
     if (value === "public") {
-      this.#setFormPermissions([EVERYONE_FULL_PERMISSION]);
+      this.#setFormPermissions([this.#everyoneFullPermission]);
     } else if (value === "group_restricted") {
       if (this.#previousPermissions?.length) {
         this.#setFormPermissions(this.#previousPermissions);
@@ -214,7 +216,7 @@ export default class UpsertCategoryGeneral extends Component {
   async onParentCategoryChange(parentCategoryId) {
     if (!parentCategoryId) {
       this.categoryVisibilityState = null;
-      this.#setFormPermissions([EVERYONE_FULL_PERMISSION]);
+      this.#setFormPermissions([this.#everyoneFullPermission]);
       return;
     }
 
@@ -239,7 +241,7 @@ export default class UpsertCategoryGeneral extends Component {
 
           this.#setFormPermissions(newPermissions);
         } else {
-          this.#setFormPermissions([EVERYONE_FULL_PERMISSION]);
+          this.#setFormPermissions([this.#everyoneFullPermission]);
         }
       }
     } catch (error) {

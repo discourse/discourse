@@ -2,33 +2,34 @@ import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import UserAvatarFlair from "discourse/components/user-avatar-flair";
 import { resetFlair } from "discourse/lib/avatar-flair";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
 function setupSiteGroups(that) {
   that.site.groups = [
     {
-      id: 1,
+      id: AUTO_GROUPS.admins.id,
       name: "admins",
       flair_url: "bars",
       flair_bg_color: "CC000A",
       flair_color: "FFFFFA",
     },
     {
-      id: 2,
+      id: AUTO_GROUPS.staff.id,
       name: "staff",
       flair_url: "bars",
       flair_bg_color: "CC0005",
       flair_color: "FFFFF5",
     },
     {
-      id: 3,
+      id: AUTO_GROUPS.trust_level_1.id,
       name: "trust_level_1",
       flair_url: "dice-one",
       flair_bg_color: "CC0001",
       flair_color: "FFFFF1",
     },
     {
-      id: 4,
+      id: AUTO_GROUPS.trust_level_2.id,
       name: "trust_level_2",
       flair_url: "dice-two",
       flair_bg_color: "CC0002",

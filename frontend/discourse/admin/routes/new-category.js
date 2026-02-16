@@ -78,7 +78,7 @@ export default class NewCategory extends DiscourseRoute {
     return [
       {
         group_id: AUTO_GROUPS.everyone.id,
-        group_name: AUTO_GROUPS.everyone.name,
+        group_name: this.site.groupsById[AUTO_GROUPS.everyone.id].name,
         permission_type: PermissionType.FULL,
       },
     ];
