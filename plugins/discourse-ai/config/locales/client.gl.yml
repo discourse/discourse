@@ -36,6 +36,8 @@ gl:
             canned_reply:
               label: "Responder"
     discourse_ai:
+      llm_selector:
+        none: "Ningunha"
       features:
         back: "Volver"
         disabled: "(desactivado)"
@@ -116,6 +118,15 @@ gl:
         parameter_required: "Obrigatorio"
         edit: "Editar"
         delete: "Eliminar"
+      secrets:
+        short_title: "Acreditacións"
+        name: "Nome"
+        secret: "Valor"
+        back: "Volver"
+        save: "Gardar"
+        edit: "Editar"
+        delete: "Eliminar"
+        embedding: "Incorporando"
       llms:
         display_name: "Nome"
         provider: "Fornecedor"

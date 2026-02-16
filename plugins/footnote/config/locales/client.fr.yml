@@ -5,3 +5,6 @@
 # https://translate.discourse.org/
 
 fr:
+  js:
+    footnote:
+      add: "Ajouter une note de bas de page"

@@ -53,6 +53,7 @@ class CurrentUserSerializer < BasicUserSerializer
              :primary_group_id,
              :flair_group_id,
              :can_create_topic,
+             :can_create_category,
              :can_create_group,
              :link_posting_access,
              :external_id,
@@ -127,8 +128,16 @@ class CurrentUserSerializer < BasicUserSerializer
     scope.can_create_topic?(nil)
   end
 
+  def can_create_category
+    true
+  end
+
+  def include_can_create_category?
+    scope.can_create_category?
+  end
+
   def can_create_group
-    scope.can_create_group?
+    true
   end
 
   def include_can_create_group?
@@ -189,7 +198,7 @@ class CurrentUserSerializer < BasicUserSerializer
   end
 
   def can_invite_to_forum
-    scope.can_invite_to_forum?
+    true
   end
 
   def include_can_invite_to_forum?
@@ -204,12 +213,12 @@ class CurrentUserSerializer < BasicUserSerializer
     !object.has_password?
   end
 
-  def include_can_delete_account?
-    scope.can_delete_user?(object)
-  end
-
   def can_delete_account
     true
+  end
+
+  def include_can_delete_account?
+    scope.can_delete_user?(object)
   end
 
   def custom_fields

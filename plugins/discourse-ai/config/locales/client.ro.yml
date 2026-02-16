@@ -57,6 +57,8 @@ ro:
       default_llm:
         title: "Model LLM implicit"
         description: "Modelul LLM implicit de utilizat pentru toate funcțiile IA. Acesta va fi utilizat dacă nu este specificat niciun LLM în configurația funcționalității sau în personaj. Dacă nu este specificat niciun LLM implicit, se va utiliza ultimul LLM creat."
+      llm_selector:
+        none: "Nimic"
       features:
         back: "Înapoi"
         disabled: "(dezactivat)"
@@ -167,6 +169,15 @@ ro:
         delete: "Șterge"
         test_modal:
           run: "Rulează test"
+      secrets:
+        short_title: "Date de conectare"
+        name: "Nume"
+        secret: "Valoare"
+        back: "Înapoi"
+        save: "Salvează"
+        edit: "Editează"
+        delete: "Șterge"
+        embedding: "Înglobare"
       llms:
         display_name: "Nume"
         provider: "Furnizor"

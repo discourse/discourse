@@ -76,8 +76,8 @@ RSpec.describe TagGroupsController do
         results = JSON.parse(response.body, symbolize_names: true).fetch(:results)
 
         expect(results).to contain_exactly(
-          { name: tag_group.name, tags: [{ id: tag.id, name: tag.name }] },
-          { name: tag_group2.name, tags: [{ id: tag.id, name: tag.name }] },
+          { name: tag_group.name, tags: [{ id: tag.id, name: tag.name, slug: tag.slug }] },
+          { name: tag_group2.name, tags: [{ id: tag.id, name: tag.name, slug: tag.slug }] },
         )
       end
 

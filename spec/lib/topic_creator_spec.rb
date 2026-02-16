@@ -736,4 +736,29 @@ RSpec.describe TopicCreator do
       end
     end
   end
+
+  describe "private message with target_user_ids" do
+    it "creates a PM targeting users by ID" do
+      topic =
+        TopicCreator.create(
+          admin,
+          Guardian.new(admin),
+          pm_valid_attrs.except(:target_usernames).merge(target_user_ids: [moderator.id]),
+        )
+
+      expect(topic).to be_valid
+      expect(topic.archetype).to eq(Archetype.private_message)
+      expect(topic.topic_allowed_users.map(&:user_id)).to include(moderator.id)
+    end
+
+    it "raises when both target_usernames and target_user_ids are provided" do
+      expect {
+        TopicCreator.create(
+          admin,
+          Guardian.new(admin),
+          pm_valid_attrs.merge(target_user_ids: [moderator.id]),
+        )
+      }.to raise_error(ArgumentError, /Cannot specify both/)
+    end
+  end
 end

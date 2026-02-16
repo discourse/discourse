@@ -43,7 +43,7 @@ class User::Silence
   end
 
   def can_silence_all_users(guardian:, users:)
-    users.all? { guardian.can_silence_user?(_1) }
+    users.all? { guardian.can_silence_user?(it) }
   end
 
   def silence(guardian:, users:, params:)

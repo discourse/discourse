@@ -240,7 +240,10 @@ export default class UpsertCategorySecurity extends Component {
 
           <@form.Alert @type="warning">
             {{#if this.everyonePermission}}
-              {{i18n this.everyoneAccessMessageKey}}
+              {{i18n
+                this.everyoneAccessMessageKey
+                everyone_group=this.everyonePermission.group_name
+              }}
             {{else}}
               {{i18n "category.permissions.specific_groups_have_access"}}
             {{/if}}

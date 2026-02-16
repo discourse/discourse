@@ -514,7 +514,7 @@ module DiscourseTagging
       end
 
     sql << <<~SQL
-      SELECT #{distinct_clause} t.id, t.name, t.#{topic_count_column}, t.pm_topic_count, t.description,
+      SELECT #{distinct_clause} t.id, t.name, t.slug, t.#{topic_count_column}, t.pm_topic_count, t.description,
         tgr.tgm_id as tgm_id, tgr.tag_group_id as tag_group_id, tgr.parent_tag_id as parent_tag_id,
         tgr.one_per_topic as one_per_topic, t.target_tag_id
       FROM tags t
@@ -912,7 +912,13 @@ module DiscourseTagging
       now = Time.current
       rows =
         names_to_create.map do |n|
-          { name: n, target_tag_id: target_tag.id, created_at: now, updated_at: now }
+          {
+            name: n,
+            slug: Slug.for(n, ""),
+            target_tag_id: target_tag.id,
+            created_at: now,
+            updated_at: now,
+          }
         end
       valid_ids += Tag.insert_all(rows, returning: :id).pluck("id")
     end

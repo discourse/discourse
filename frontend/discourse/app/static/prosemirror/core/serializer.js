@@ -8,7 +8,8 @@ export default class Serializer {
 
   constructor(extensions, pluginParams, includeDefault = true) {
     this.nodes = includeDefault ? { ...defaultMarkdownSerializer.nodes } : {};
-    this.nodes.hard_break = (state) => state.write("\n");
+    this.nodes.hard_break = (state) =>
+      state.write(state.inTable ? "<br>" : "\n");
 
     this.marks = includeDefault ? { ...defaultMarkdownSerializer.marks } : {};
 

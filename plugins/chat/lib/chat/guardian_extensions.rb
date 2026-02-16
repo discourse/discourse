@@ -133,16 +133,20 @@ module Chat
       is_staff? || @user.has_trust_level?(TrustLevel[4])
     end
 
-    def can_preview_chat_channel?(chat_channel)
-      return false if !chat_channel&.chatable
-
-      if chat_channel.direct_message_channel?
-        chat_channel.chatable.user_can_access?(@user)
-      elsif chat_channel.category_channel?
-        can_see_category?(chat_channel.chatable)
+    def can_see_chatable?(chatable)
+      case chatable
+      when Category
+        can_see_category?(chatable)
+      when Chat::DirectMessage
+        chatable.user_can_access?(@user)
       else
         true
       end
+    end
+
+    def can_preview_chat_channel?(chat_channel)
+      return false if !chat_channel&.chatable
+      can_see_chatable?(chat_channel.chatable)
     end
 
     def can_join_chat_channel?(chat_channel, post_allowed_category_ids: nil)

@@ -13,7 +13,7 @@ import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import {
   arrayToTable,
-  findTableRegex,
+  replaceTableRaw,
   tokenRange,
 } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
@@ -199,6 +199,8 @@ export default class SpreadsheetEditor extends Component {
   }
 
   buildPopulatedTable(tableTokens) {
+    const tableOpen = tableTokens.find((t) => t.type === "table_open");
+    this.tableLineRange = tableOpen?.map;
     const contentRows = tokenRange(tableTokens, "tr_open", "tr_close");
     const rows = [];
     let headings;
@@ -255,16 +257,10 @@ export default class SpreadsheetEditor extends Component {
   }
 
   buildUpdatedPost(tableIndex, raw, newRaw) {
-    const tableToEdit = raw.match(findTableRegex());
-    let editedTable;
-
-    if (tableToEdit.length) {
-      editedTable = raw.replace(tableToEdit[tableIndex], newRaw);
-    } else {
+    if (!this.tableLineRange) {
       return raw;
     }
-
-    // replace null characters
+    let editedTable = replaceTableRaw(raw, this.tableLineRange, newRaw);
     editedTable = editedTable.replace(/\0/g, "\ufffd");
     return editedTable;
   }

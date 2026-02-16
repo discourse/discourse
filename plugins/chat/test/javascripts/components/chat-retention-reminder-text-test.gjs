@@ -23,7 +23,7 @@ module(
 
       assert
         .dom(".chat-retention-reminder-text")
-        .includesText(i18n("chat.retention_reminders.indefinitely_long"));
+        .includesText("retain channel messages indefinitely");
 
       await render(
         <template>
@@ -48,7 +48,7 @@ module(
 
       assert
         .dom(".chat-retention-reminder-text")
-        .includesText(i18n("chat.retention_reminders.long", { count: 10 }));
+        .includesText("retain channel messages for 10 days");
 
       await render(
         <template>
@@ -73,7 +73,7 @@ module(
 
       assert
         .dom(".chat-retention-reminder-text")
-        .includesText(i18n("chat.retention_reminders.long", { count: 10 }));
+        .includesText("retain channel messages for 10 days");
 
       await render(
         <template>
@@ -84,6 +84,36 @@ module(
       assert
         .dom(".chat-retention-reminder-text")
         .includesText(i18n("chat.retention_reminders.short", { count: 10 }));
+    });
+
+    test("links to chat settings for admins", async function (assert) {
+      this.currentUser.admin = true;
+      this.channel = new ChatFabricators(getOwner(this)).channel();
+      this.siteSettings.chat_channel_retention_days = 0;
+
+      await render(
+        <template>
+          <ChatRetentionReminderText @channel={{this.channel}} />
+        </template>
+      );
+
+      assert
+        .dom(".chat-retention-reminder-text a")
+        .hasAttribute("href", "/admin/site_settings/category/chat");
+    });
+
+    test("does not link to chat settings for non-admins", async function (assert) {
+      this.currentUser.admin = false;
+      this.channel = new ChatFabricators(getOwner(this)).channel();
+      this.siteSettings.chat_channel_retention_days = 0;
+
+      await render(
+        <template>
+          <ChatRetentionReminderText @channel={{this.channel}} />
+        </template>
+      );
+
+      assert.dom(".chat-retention-reminder-text a").doesNotExist();
     });
   }
 );

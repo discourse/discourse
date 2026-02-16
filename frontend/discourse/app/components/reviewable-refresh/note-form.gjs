@@ -32,11 +32,6 @@ export default class ReviewableNoteForm extends Component {
     this.formApi = api;
   }
 
-  @action
-  handleInput(setFn, event) {
-    setFn(event.target.value);
-  }
-
   @bind
   onDirtyCheck() {
     return !isEmpty(this.formApi.get("content"));

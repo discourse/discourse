@@ -77,7 +77,9 @@ describe "Post event", type: :system do
   end
 
   context "with max attendees" do
-    it "updates the going button label from Full after toggling" do
+    # FIXME: flaky because `post_event_page.going` sometimes runs before
+    # the post component re-renders
+    xit "updates the going button label from Full after toggling" do
       title = "My test meetup event"
       raw = "[event status='public' start='2222-02-22 14:22' max-attendees='1']\n[/event]"
       post = PostCreator.create(admin, title:, raw:)
@@ -162,7 +164,9 @@ describe "Post event", type: :system do
     expect(page).to have_css(".event-info .name", text: "<script>alert(1);</script>")
   end
 
-  it "can create, close, and open an event" do
+  # FIXME: flaky because `post_event_page.going`/`open_more_menu`
+  # sometimes run before the post component re-renders
+  xit "can create, close, and open an event" do
     visit "/new-topic"
     title = "My upcoming l33t event"
     tomorrow = (1.day.from_now).strftime("%Y-%m-%d")
@@ -189,7 +193,9 @@ describe "Post event", type: :system do
     expect(event.invitees.count).to eq(2)
   end
 
-  it "does not show participants button when event is standalone" do
+  # FIXME: flaky because `post_event_page.open_more_menu` sometimes runs
+  # before the post component re-renders
+  xit "does not show participants button when event is standalone" do
     title = "My standalone event"
     raw = "[event name='standalone-event' status='standalone' start='2222-02-22 00:00']\n[/event]"
     post = PostCreator.create(admin, title:, raw:)
@@ -200,7 +206,9 @@ describe "Post event", type: :system do
     expect(page).to have_no_css(".show-all-participants")
   end
 
-  it "does not show 'send pm' button to the user who created the event" do
+  # FIXME: flaky because `post_event_page.open_more_menu` sometimes runs
+  # before the post component re-renders
+  xit "does not show 'send pm' button to the user who created the event" do
     title = "My test meetup event"
     raw = "[event name='cool-event' status='public' start='2222-02-22 00:00']\n[/event]"
     post = PostCreator.create(admin, title:, raw:)

@@ -454,6 +454,39 @@ en:
       pill: "Suggested"
       pm_title: "Suggested Messages"
 
+    admin_onboarding_banner:
+      launch_in_easy_steps: "Launch in %{step_count} easy steps"
+      skipped: "The admin onboarding checklist has now been skipped. If you would like to re-enable it, look for `enable site owner onboarding` in the site settings."
+      congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
+      invite_collaborators:
+        title: "Invite Collaborators"
+        description: "Early members help bring your community to life"
+        action: "Create invite"
+      start_posting:
+        title: "Start Posting"
+        description: "Give people something to talk about together"
+        action: "Icebreaker ideas"
+        icebreakers:
+          fun_facts:
+            title: "What are some fun facts about you?"
+            body: "Hi everyone! I'm excited to start this new community. To kick things off, let's share a fun fact about ourselves. I'll go first: I love hiking and exploring new trails! What's something interesting about you?"
+          coolest_thing_you_have_seen_today:
+            title: "What's the coolest thing you've seen today?"
+            body: "What's the coolest thing you've seen or experienced today? It could be anything from a beautiful sunset to a random act of kindness. I'll start: I saw a dog helping an elderly person cross the street!"
+          introduce_yourself:
+            title: "Introduce yourself"
+            body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
+          what_is_your_favorite_food:
+            title: "What is your favorite food?"
+            body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
+
+
+      spread_the_word:
+        title: "Spread the Word!"
+        description: "Share a link with everyone in your network"
+        action: "Copy link"
+        copied_to_clipboard: "Link copied to clipboard!"
+
     about:
       edit: "Edit this page"
       simple_title: "About"
@@ -3649,6 +3682,18 @@ en:
         notify: "Notify users of this change."
         performing: "Performing bulk operations, please wait…"
         completed: "Bulk operations completed successfully!"
+        completed_count:
+          one: "<b>%{count}</b> topic was updated."
+          other: "<b>%{count}</b> topics were updated."
+        not_completed:
+          one: "<b>%{count}</b> topic could not be updated:"
+          other: "<b>%{count}</b> topics could not be updated:"
+        skipped_count:
+          one: "<b>%{count}</b> topic was already up to date."
+          other: "<b>%{count}</b> topics were already up to date."
+        error_topic_count:
+          one: "%{count} topic"
+          other: "%{count} topics"
 
       none:
         unread: "You have no unread topics."
@@ -3713,6 +3758,7 @@ en:
         other: "%{count} posts in topic"
       create: "New Topic"
       create_long: "Create a new topic"
+      create_group: "New topic and drafts"
       open_draft: "Open Draft"
       private_message: "Start a message"
       archive_message:
@@ -4629,14 +4675,14 @@ en:
         reply: "Reply"
         create: "Create"
         no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
-        everyone_full_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
-        everyone_reply_access: 'This category is public, everyone can see and reply to topics. To restrict permissions, remove the "everyone" group.'
-        everyone_see_access: 'This category is public, everyone can see posts. To restrict permissions, remove the "everyone" group.'
+        everyone_full_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "%{everyone_group}" group.'
+        everyone_reply_access: 'This category is public, everyone can see and reply to topics. To restrict permissions, remove the "%{everyone_group}" group.'
+        everyone_see_access: 'This category is public, everyone can see posts. To restrict permissions, remove the "%{everyone_group}" group.'
         specific_groups_have_access: "This category is private, only the selected groups can see, reply and create posts."
         all_parent_groups_used: "All groups from the parent category have been added. To add more groups, first add them to the parent category."
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
-        inherited: 'This permission is inherited from "everyone"'
+        inherited: 'This permission is inherited from "%{everyone_group}"'
       special_warning: "This is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
@@ -5792,6 +5838,8 @@ en:
       toggle_localized:
         translated: "Page is machine-translated. Click to view original."
         not_translated: "Page is not translated. Click to translate."
+        translations_enabled: "Translations enabled"
+        translations_disabled: "Translations disabled"
     language_switcher:
       title: "Change site language"
 

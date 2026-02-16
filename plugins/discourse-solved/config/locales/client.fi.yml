@@ -39,6 +39,7 @@ fi:
       no_solved_topics_title_others: "%{username} ei ole vielä ratkaissut ketjuja"
       no_solved_topics_body: "Kun annat hyödyllisen vastauksen ketjuun, aiheen omistaja tai henkilökunta saattaa valita vastauksesi ratkaisuksi."
       move_post_cancel: "Peruuta"
+      confirm_category_change_solution_cancel: "Peruuta"
       no_answer:
         title: Onko kysymykseesi vastattu?
         description: "Korosta vastaus ja auta muita käyttämällä oikean vastauksen alla olevaa ratkaisupainiketta."

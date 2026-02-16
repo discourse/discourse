@@ -414,6 +414,15 @@ de:
       title: "Neue und ungelesene Themen"
       pill: "Empfohlen"
       pm_title: "Vorgeschlagene Nachrichten"
+    admin_onboarding_banner:
+      start_posting:
+        icebreakers:
+          fun_facts:
+            body: "Hallo zusammen! Ich freue mich, diese neue Community hier zu starten. Zum Auftakt lasst uns doch eine interessante Kleinigkeit über uns teilen. Ich mache den Anfang: Ich liebe es, zu wandern und neue Wege zu erkunden! Was ist eine interessante Kleinigkeit über dich?"
+      spread_the_word:
+        description: "Teile einen Link mit deinem Netzwerk"
+        action: "Link kopieren"
+        copied_to_clipboard: "Link in die Zwischenablage kopiert!"
     about:
       edit: "Diese Seite bearbeiten"
       simple_title: "Über uns"
@@ -865,8 +874,10 @@ de:
           title: "Beitrag"
           noun: "Beitrag"
         reviewable_ai_chat_message:
+          title: "von KI gemeldete Chatnachricht"
           noun: "Chat-Nachricht"
         reviewable_ai_post:
+          title: "von KI gemeldeter Beitrag"
           noun: "Beitrag"
         reviewable_post_voting_comment:
           title: "Gemeldeter Kommentar"
@@ -884,6 +895,7 @@ de:
         target_created: "Beitrag erstellt"
         target_created_by: "Beitrag erstellt von %{username} · %{relativeDate}"
         target_deleted: "Beitrag gelöscht"
+        target_deleted_by: "Beitrag gelöscht von %{username} · %{relativeDate}"
         flagged: "Gemeldet"
         flagged_as_by: "Gemeldet als %{flagReason} von %{username} · %{relativeDate}"
         claimed: "Übernommen"
@@ -1103,6 +1115,7 @@ de:
           smtp_title: "SMTP"
           smtp_instructions: "Wenn du SMTP für die Gruppe aktivierst, werden alle ausgehenden E-Mails, die aus dem Posteingang der Gruppe gesendet werden, über die hier angegebenen SMTP-Einstellungen anstelle des E-Mail-Servers gesendet, der für andere von deinem Forum gesendete E-Mails konfiguriert ist."
           additional_settings: "Weitere Einstellungen"
+          smtp_disable_confirm: "Wenn du SMTP deaktivierst, werden alle SMTP-Einstellungen zurückgesetzt und die zugehörigen Funktionen deaktiviert. Bist du sicher, dass du fortfahren möchtest?"
           prefill:
             title: "Vorbefüllen mit Einstellungen für:"
             gmail: "Gmail"
@@ -2071,6 +2084,7 @@ de:
         redeemed_tab_with_count: "Angenommen (%{count})"
         invited_via: "Einladung"
         invited_via_link: "Link %{key} (%{count}/%{max} angenommen)"
+        generating_link: "Link wird generiert..."
         groups: "Gruppen"
         topic: "Thema"
         sent: "Erstellt/Zuletzt gesendet"
@@ -3120,6 +3134,7 @@ de:
         membership_request_consolidated: "Neue Mitgliedschaftsanfragen"
         reaction: "neue Reaktion"
         votes_released: "Abstimmung wurde freigegeben"
+        new_features: "neue Discourse-Funktionen wurden veröffentlicht"
         admin_problems: "neue Ratschläge auf deinem Website-Dashboard"
         upcoming_change_available: "neue bevorstehende Änderung '%{changeName}' ist verfügbar"
         upcoming_change_automatically_promoted: "bevorstehende Änderung '%{changeName}' wurde automatisch aktiviert"
@@ -3417,6 +3432,7 @@ de:
           unread: "Nichts ungelesen … beeindruckend!"
           new_new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
           new: "Im Moment gibt es nichts Neues … Schau bald wieder vorbei!"
+          generic: "Hier gibt es nichts zu sehen... Schau bald wieder vorbei!"
     topic_bulk_actions:
       dismiss:
         name: "Verwerfen"
@@ -3898,7 +3914,7 @@ de:
       deleted_by_author_simple: "(Thema vom Verfasser gelöscht)"
       localizations:
         title_edit_warning:
-          message: "Dies ist ein übersetzter Thementitel.<br><br>Willst du die <b>ursprüngliche</b> Kategorie, die Schlagworte und den Titel in %{language} oder diese spezielle <b>Übersetzung</b> bearbeiten?"
+          message: "Dies ist ein übersetzter Thementitel.<br><br>Willst du die <b>ursprüngliche</b> Kategorie, die Schlagwörter und den Titel in %{language} oder diese spezielle <b>Übersetzung</b> bearbeiten?"
           action_original: "Original bearbeiten"
           action_translation: "Übersetzten Thementitel bearbeiten"
     post_list:
@@ -4274,6 +4290,7 @@ de:
       style: "Stil"
       icon: "Symbol"
       emoji: "Emojis"
+      select_emoji: "Wähle ein Emoji"
       background_color: "Farbe"
       foreground_color: "Textfarbe"
       color_validations:
@@ -4291,6 +4308,7 @@ de:
           emoji: "Emoji"
       color_used: "Verwendete Farbe"
       predefined_colors: "Vordefinierte Farboptionen"
+      name_placeholder: "Ein oder zwei Wörter werden empfohlen"
       color_placeholder: "Beliebige Web-Farbe"
       delete_confirm: "Möchtest du wirklich diese Kategorie löschen?"
       delete_error: "Beim Löschen der Kategorie ist ein Fehler aufgetreten."
@@ -4307,13 +4325,10 @@ de:
         reply: "Antworten"
         create: "Erstellen"
         no_groups_selected: "Es wurde keinen Gruppen Zugriff gewährt. Diese Kategorie ist nur für das Team sichtbar."
-        everyone_full_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen, beantworten und erstellen. Entferne eine oder mehrere der Berechtigungen, die der Gruppe „Jeder“ erteilt wurden, um die Berechtigungen einzuschränken.'
-        everyone_reply_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen und auf Themen antworten. Entferne die Gruppe „Jeder“, um die Berechtigungen einzuschränken.'
-        everyone_see_access: 'Diese Kategorie ist öffentlich, jeder kann Beiträge sehen. Entferne die Gruppe „Jeder“, um die Berechtigungen einzuschränken.'
+        specific_groups_have_access: "Diese Kategorie ist privat. Nur die ausgewählten Gruppen können Beiträge sehen, beantworten und erstellen."
         all_parent_groups_used: "Alle Gruppen aus der übergeordneten Kategorie sind hinzugefügt worden. Um weitere Gruppen hinzuzufügen, füge sie zuerst der übergeordneten Kategorie hinzu."
         toggle_reply: "Antwortberechtigung umschalten"
         toggle_full: "Erstellungsberechtigung umschalten"
-        inherited: 'Diese Berechtigung wird von „Jeder“ vererbt'
       special_warning: "Diese Kategorie wurde bei der Installation angelegt. Die Sicherheitseinstellungen können daher nicht verändert werden. Wenn du diese Kategorie nicht benötigst, dann solltest du sie löschen, anstatt sie für andere Zwecke zu verwenden."
       uncategorized_security_warning: "Diese Kategorie ist etwas Spezielles. Sie dient als Bereich für Themen, die keine Kategorie haben und besitzt keine Sicherheitseinstellungen."
       uncategorized_general_warning: 'Diese Kategorie ist etwas Spezielles. Sie wird als Standard-Kategorie für neue Themen genutzt, für die keine Kategorie ausgewählt wurde. Deaktiviere <a href="%{settingLink}">diese Einstellung</a>, wenn dieses Verhalten verhindert und eine Kategoriewahl erzwungen werden soll. Der Name und die Beschreibung können unter <a href="%{customizeLink}">Anpassen/Textinhalte</a> geändert werden.'
@@ -4347,12 +4362,16 @@ de:
       position_disabled: "Die Kategorien werden in der Reihenfolge ihrer Aktivität angezeigt. Um die Reihenfolge der Kategorien in den Listen zu kontrollieren, aktiviere die Einstellung <a href='%{url}'>„fixed category positions“</a>."
       minimum_required_tags: "Mindestanzahl an Schlagwörtern, die ein Thema erfordert"
       default_slow_mode: '„Langsamer Modus“ für neue Themen in dieser Kategorie aktivieren.'
+      subcategory_of: "Unterkategorie von..."
       none_subcategory_text: "Keiner"
+      subcategory_permissions_warning: "Eine Unterkategorie einer privaten Kategorie kann nicht öffentlich sein."
       visibility:
         title: "Sichtbarkeit"
         public: "Öffentlich"
         all_members: "Alle Mitglieder"
         group_restricted: "Privat"
+        who_can_see: "Wer kann diese Kategorie sehen"
+        who_can_post: "Wer kann in dieser Kategorie Beiträge verfassen"
         which_groups_can_access: "Welche Gruppen sollen diese Kategorie sehen und in ihr Beiträge erstellen können?"
         more_options_hint: "Weitere Berechtigungen sind in den <a href>erweiterten Einstellungen</a> verfügbar."
         inherited_from_parent: "Die Berechtigungen werden von der übergeordneten Kategorie übernommen. Um sie zu verfeinern, besuche die <a href>erweiterten Einstellungen</a>."
@@ -4714,6 +4733,7 @@ de:
         back: "%{shortcut} Zurück"
         up_down: "%{shortcut} Auswahl bewegen &uarr; &darr;"
         open: "%{shortcut} Ausgewähltes Thema öffnen"
+        open_new_window: "%{shortcut} Ausgewähltes Thema in neuem Tab/Fenster öffnen"
         next_prev: "%{shortcut} Nächster/Vorheriger Abschnitt"
         go_to_unread_post: "%{shortcut} Zum ersten ungelesenen Beitrag springen"
       application:
@@ -5150,6 +5170,7 @@ de:
           header_action_title: "Bearbeite die Kategorien in deiner Seitenleiste"
           header_action_new: "Neue Kategorie"
           header_action_edit_sidebar: "Angezeigte Kategorien ändern"
+          header_action_edit_header_dropdown: "Kategorien im Navigationsmenü bearbeiten"
           configure_defaults: "Standardeinstellungen konfigurieren"
         community:
           edit_section:
@@ -5408,6 +5429,7 @@ de:
     type_to_filter: "Zum Filtern hier eingeben …"
     settings: "Einstellungen"
     reset_filter: "Zurücksetzen"
+    toggle_filters: "Dropdowns zum Filtern anzeigen/ ausblenden"
     admin:
       title: "Discourse-Administrator"
       moderator: "Moderator"
@@ -5559,10 +5581,11 @@ de:
             total_users: "Benutzer insgesamt"
             signups_30_days: "Anmeldungen (30 Tage)"
             logins_30_days: "Anmeldungen (30 Tage)"
+          regenerate_credentials: "Anmeldedaten neu generieren"
           regenerate_confirm: "Bist du sicher, dass du deine Discourse ID-Anmeldedaten neu generieren willst? Dadurch wird ein neues Client-Geheimnis generiert. Die Erneuerung der Anmeldedaten ist normalerweise nicht erforderlich, kann aber für mehr Sicherheit nützlich sein."
           description: "Discourse ID ist einen Single-Sign-On-Dienst, der es Benutzern ermöglicht, sich mit einem einzigen Konto bei mehreren Discourse-Seiten anzumelden. Gängige Social-Login-Anbieter wie Google, Facebook, Apple und GitHub werden ohne zusätzliche Konfiguration unterstützt."
           learn_more: "Mehr erfahren"
-          regenerate_success: "Die Anmeldeinformationen wurden erfolgreich neu generiert."
+          regenerate_success: "Die Anmeldedaten wurden erfolgreich neu generiert."
         logo:
           title: "Logo"
           header_description: "Konfiguriere die Logos und Symbole, die auf deiner Website verwendet werden"
@@ -5683,9 +5706,11 @@ de:
               locale_label: "Sprache"
             header_new_members:
               label: "Kopfzeile für neue Mitglieder"
+              description: "Verfügbare Variablen: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Willkommen, %{preferred_display_name}!"
             header_logged_in:
               label: "Kopfzeile für eingeloggte Mitglieder"
+              description: "Verfügbare Variablen: <code>&percnt;{site_name}</code>, <code>&percnt;{preferred_display_name}</code>"
               placeholder: "Willkommen zurück, %{preferred_display_name}!"
             header_anonymous:
               label: "Kopfzeile für anonyme Besucher"
@@ -5910,6 +5935,7 @@ de:
         help: "Das Theme, das du derzeit verwendest, ist <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>%{currentTheme}</a>. Gehe auf die <a href='%{basePath}/admin/customize/themes/%{currentThemeId}'>Theme-Konfigurationsseite</a>, um die Theme-spezifischen Website-Einstellungen zu ändern, oder klicke auf ein verlinktes Theme in der Tabelle unten, um seine Einstellungen zu bearbeiten."
         filter: "Filtere die Theme-spezifischen Website-Einstellungen nach Einstellungsname, Beschreibung oder Themename …"
         filter_no_results: "Keine Theme-spezifische Website-Einstellung passt zu deinem Filter"
+        site_setting_warning: 'Diese Einstellung wird vom Standard-Theme für deine Website verwaltet (%{defaultThemeName}). Du kannst sie auf der <a href="%{basePath}/admin/customize/themes/%{defaultThemeId}">Bearbeitungsseite des Themes</a> ändern.'
       search:
         modal_title: "Durchsuche alles im Adminbereich"
         title: "Suche"
@@ -5957,6 +5983,7 @@ de:
         new_features:
           title: "Was ist neu?"
           subtitle: "Wir veröffentlichen laufend neue Funktionen und Verbesserungen. Auf dieser Seite findest du die wichtigsten Neuerungen, aber du kannst auch auf „Mehr erfahren“ klicken, um ausführliche Versionshinweise zu lesen."
+          no_new_features_found: "Es gab einen Fehler beim Laden des Feeds. Du kannst frühere Ankündigungen neuer Funktionen in der <a href='%{url}' target='_blank'>Discourse Meta Community</a> sehen."
           learn_more: "Mehr erfahren …"
           experimental: "Experimentell"
           only_experiments: "Nur experimentelle Funktionen anzeigen"
@@ -7559,6 +7586,7 @@ de:
           upload: "Eine Datei hochladen"
           multiselect: "Mehrfachauswahl"
           tagchooser: "Schlagwortgruppen-Auswahl"
+          composer: "Markdown-Antwort"
         validations_modal:
           button_title: "Validierungen"
           modal_title: "Validierungsoptionen"
@@ -7721,6 +7749,16 @@ de:
         penalty_post_delete: "Beitrag löschen"
         penalty_post_delete_replies: "Den Beitrag und etwaige Antworten löschen"
         penalty_post_delete_all: "Alle Themen des Benutzers + alle Antworten löschen"
+        penalty_post_delete_all_confirmation_MF: |
+          <span>Dies wird
+          { TOPICS, plural,
+              one {# Thema}
+            other {# Themen}
+          } und
+          { REPLIES, plural,
+              one {# Beitrag}
+            other {# Beiträge}
+          } löschen. <b>Dies kann nicht rückgängig gemacht werden!</b> Bist du sicher das du das tun willst?</span>
         penalty_post_edit: "Beitrag bearbeiten"
         penalty_post_none: "Nichts tun"
         penalty_count: "Anzahl der Strafen"
@@ -7821,6 +7859,7 @@ de:
             text: "Beiträge von @%{username} löschen"
             delete: "Beiträge von @%{username} löschen"
             cancel: "Abbrechen"
+          all_enqueued: "Alle Beiträge von @%{username} wurden in die Warteschlange zum Löschen aufgenommen."
         merge:
           button: "Zusammenführen"
           prompt:
@@ -8073,6 +8112,9 @@ de:
             label: "Hochladen"
             title: "Bilder hochladen"
         download_file: "Herunterladen"
+        upload_restrictions:
+          extensions: "Akzeptiert: %{extensions}"
+          max_size: "Max: %{size}"
         selectable_avatars:
           title: "Liste von Avataren, aus der Benutzer wählen können."
         table_column_heading:

@@ -89,8 +89,9 @@ export default class TagInfo extends Component {
       return;
     }
     this.set("loading", true);
+    const findArgs = this.tag.id || this.tag.name;
     return this.store
-      .find("tag-info", this.tag.name)
+      .find("tag-info", findArgs)
       .then((result) => {
         this.set("tagInfo", result);
         this.set(
@@ -119,12 +120,13 @@ export default class TagInfo extends Component {
   }
 
   @action
-  unlinkSynonym(tag, event) {
+  unlinkSynonym(synonym, event) {
     event?.preventDefault();
-    ajax(`/tag/${this.tagInfo.name}/synonyms/${tag.name}`, {
+    const id = this.tagInfo.id;
+    ajax(`/tag/${id}/synonyms/${synonym.id}.json`, {
       type: "DELETE",
     })
-      .then(() => removeValueFromArray(this.tagInfo.synonyms, tag))
+      .then(() => removeValueFromArray(this.tagInfo.synonyms, synonym))
       .catch(popupAjaxError);
   }
 
@@ -161,6 +163,7 @@ export default class TagInfo extends Component {
     this.newTagDescription = this.newTagDescription?.replaceAll("\n", "<br>");
     this.tag
       .update({
+        slug: this.tag.slug,
         name: this.newTagName,
         description: this.newTagDescription,
       })
@@ -174,7 +177,8 @@ export default class TagInfo extends Component {
             description: this.newTagDescription,
           });
           if (oldTagName !== updatedTag.name) {
-            this.router.transitionTo("tag.show", updatedTag.name);
+            const slugForUrl = updatedTag.slug || `${updatedTag.id}-tag`;
+            this.router.transitionTo("tag.show", slugForUrl, updatedTag.id);
           }
         }
       })
@@ -222,7 +226,8 @@ export default class TagInfo extends Component {
         })
       ),
       didConfirm: () => {
-        return ajax(`/tag/${this.tagInfo.name}/synonyms`, {
+        const id = this.tagInfo.id;
+        return ajax(`/tag/${id}/synonyms.json`, {
           type: "POST",
           data: {
             tags: this.newSynonyms.map((t) =>

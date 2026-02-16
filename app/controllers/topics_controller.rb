@@ -27,6 +27,7 @@ class TopicsController < ApplicationController
                    move_to_inbox
                    convert_topic
                    bookmark
+                   remove_bookmarks
                    publish
                    reset_bump_date
                    set_slow_mode
@@ -879,6 +880,7 @@ class TopicsController < ApplicationController
       end
 
     topic = Topic.find(params[:topic_id].to_i)
+    guardian.ensure_can_see!(topic)
     TopicUser.change(user, topic.id, notification_level: params[:notification_level].to_i)
     render json: success_json
   end
@@ -1100,7 +1102,9 @@ class TopicsController < ApplicationController
     operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])
     hijack(info: "topics bulk action #{operation[:type]}") do
       changed_topic_ids = operator.perform!
-      render_json_dump topic_ids: changed_topic_ids
+      result = { topic_ids: changed_topic_ids }
+      result[:errors] = operator.errors if operator.errors.present?
+      render_json_dump result
     end
   end
 

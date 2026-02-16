@@ -25,6 +25,8 @@
 #                          - status: experimental | alpha | beta | stable
 #                          - impact: two parts separated by comma - feature|other , staff|admins|moderators|all_members|developers
 #                          - learn_more_url: a url for more information
+#                          - disallow_enabled_for_groups: true (optional) - restricts "Enabled for"
+#                            to only "Everyone" and "No One", removing group-based options.
 # depends_on            - One or more boolean settings that must be true for this setting to take effect.
 # depends_behavior      - The behavior of the dependent setting. Only currently supported behaviour is "hidden"
 #                         to hide the setting if the dependent setting is false. If left blank, no special behavior
@@ -2108,6 +2110,7 @@ email:
     default: true
     client: true
     area: "email"
+    hidden: true
   view_raw_email_allowed_groups:
     type: group_list
     list_type: compact
@@ -3783,6 +3786,7 @@ uncategorized:
     depends_on:
       - "enable_custom_splash_screen"
     depends_behavior: "hidden"
+    validator: "UploadSettingValidator"
 
   suggest_weekends_in_date_pickers:
     client: true
@@ -3797,6 +3801,12 @@ uncategorized:
     client: true
     default: true
     area: "posts_and_topics"
+
+  enable_site_owner_onboarding:
+    client: true
+    default: false
+    hidden: true
+    area: "site_admin"
 
   enable_welcome_banner:
     client: true

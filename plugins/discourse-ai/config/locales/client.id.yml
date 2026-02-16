@@ -84,6 +84,8 @@ id:
               label: "Balas"
     discourse_ai:
       title: "AI"
+      llm_selector:
+        none: "Tidak ada"
       features:
         back: "Kembali"
         disabled: "(dinonaktifkan)"
@@ -158,6 +160,13 @@ id:
         summary: "Ringkasan"
         save: "Simpan"
         remove_parameter: "Hapus"
+        edit: "Ubah"
+        delete: "Hapus"
+      secrets:
+        short_title: "Kredensial"
+        name: "Nama"
+        back: "Kembali"
+        save: "Simpan"
         edit: "Ubah"
         delete: "Hapus"
       llms:

@@ -36,6 +36,8 @@ te:
             canned_reply:
               label: "ప్రత్యుత్తరం ఇవ్వండి"
     discourse_ai:
+      llm_selector:
+        none: "ఏదీ లేదు"
       features:
         back: "వెనుకకు"
         no_persona: "సెట్ చేయబడలేదు"
@@ -108,6 +110,15 @@ te:
         parameter_required: "అవసరం"
         edit: "సవరించండి"
         delete: "తొలగించండి"
+      secrets:
+        short_title: "ఆధారాలు"
+        name: "పేరు"
+        secret: "విలువ"
+        back: "వెనుకకు"
+        save: "సేవ్ చేయండి"
+        edit: "సవరించండి"
+        delete: "తొలగించు"
+        embedding: "పొందుపరచడం"
       llms:
         display_name: "పేరు"
         save: "సేవ్ చేయండి"

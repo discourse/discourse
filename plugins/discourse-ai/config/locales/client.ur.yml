@@ -62,6 +62,8 @@ ur:
             hide_topic:
               label: "موضوع چھپائیں"
     discourse_ai:
+      llm_selector:
+        none: "کوئی نہیں"
       features:
         back: "واپس"
         disabled: "(غیر فعال)"
@@ -157,6 +159,15 @@ ur:
         parameter_required: "درکار"
         edit: "ترمیم کریں"
         delete: "مٹائیں"
+      secrets:
+        short_title: "شہادت"
+        name: "نام"
+        secret: "وَیلِیو"
+        back: "واپس"
+        save: "محفوظ"
+        edit: "ترمیم کریں"
+        delete: "مٹائیں"
+        embedding: "اَیمبَیڈ کرنا"
       llms:
         display_name: "نام"
         provider: "پرووَائیڈر"

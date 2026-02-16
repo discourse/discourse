@@ -15,6 +15,7 @@ lv:
       topic_status_filter:
         all: "Viss"
       move_post_cancel: "Atcelt"
+      confirm_category_change_solution_cancel: "Atcelt"
     discourse_automation:
       triggerables:
         first_accepted_solution:

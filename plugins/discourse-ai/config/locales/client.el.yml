@@ -75,6 +75,8 @@ el:
               label: "Αναφορά ανάρτησης"
               description: "Αναφέρει την ανάρτηση (είτε ως ανεπιθύμητη είτε για έλεγχο)"
     discourse_ai:
+      llm_selector:
+        none: "Κανένα"
       features:
         back: "Πίσω"
         settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."
@@ -89,6 +91,7 @@ el:
         collapse_list: "(δείξε λιγότερα)"
         filters:
           all: "Όλα"
+          no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
           reset: "Επαναφορά"
         no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
         search:
@@ -155,6 +158,7 @@ el:
             key_title: "Κλειδί"
         filters:
           reset: "Επαναφορά"
+          no_results: "Καμία περσόνα δεν αντιστοιχεί με τα φίλτρα σας."
       rag:
         uploads:
           title: "Μεταφορτώσεις"
@@ -172,6 +176,15 @@ el:
         parameter_required: "Απαιτείται"
         edit: "Επεξεργασία"
         delete: "Σβήσιμο"
+      secrets:
+        short_title: "Διαπιστευτήρια"
+        name: "Όνομα"
+        secret: "Τιμή"
+        back: "Πίσω"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        delete: "Σβήσιμο"
+        embedding: "Ενσωμάτωση"
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"

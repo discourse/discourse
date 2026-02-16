@@ -24,6 +24,7 @@ nb_NO:
         all: "alle"
         solved: "løst"
       move_post_cancel: "Avbryt"
+      confirm_category_change_solution_cancel: "Avbryt"
     topic_statuses:
       solved:
         help: "Dette emnet har en løsning"

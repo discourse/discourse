@@ -39,6 +39,7 @@ tr_TR:
       no_solved_topics_title_others: "%{username} henüz hiçbir konuyu çözmedi"
       no_solved_topics_body: "Bir konuya yararlı bir yanıt verdiğinizde, yanıtınız konu sahibi veya personel tarafından çözüm olarak seçilebilir."
       move_post_cancel: "İptal et"
+      confirm_category_change_solution_cancel: "İptal et"
       no_answer:
         title: Sorunuz yanıtlandı mı?
         description: "Yanıtı vurgulayın ve doğru cevabın altındaki çözüm düğmesini kullanarak başkalarına yardımcı olun."
