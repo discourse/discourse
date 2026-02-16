@@ -400,6 +400,15 @@ class SessionController < ApplicationController
 
     user = User.where(id: security_key.user_id, active: true).first
 
+    if login_not_approved_for?(user)
+      render json: login_not_approved
+      return
+    end
+
+    if payload = login_error_check(user)
+      return render json: payload
+    end
+
     if user.email_confirmed?
       login(user, passkey_login: true)
     else
