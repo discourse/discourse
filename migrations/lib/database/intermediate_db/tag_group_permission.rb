@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # This file is auto-generated from the IntermediateDB schema. To make changes,
-# update the "config/intermediate_db.yml" configuration file and then run
+# update the configuration files in "config/schema/" and then run
 # `bin/cli schema generate` to regenerate this file.
 
 module Migrations::Database::IntermediateDB
@@ -22,7 +22,7 @@ module Migrations::Database::IntermediateDB
     # Creates a new `tag_group_permissions` record in the IntermediateDB.
     #
     # @param group_id          [Integer, String]
-    # @param permission_type   [Integer, nil]
+    # @param permission_type   [Integer]
     # @param tag_group_id      [Integer, String]
     # @param created_at        [Time, nil]
     #

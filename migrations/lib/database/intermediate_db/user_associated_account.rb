@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # This file is auto-generated from the IntermediateDB schema. To make changes,
-# update the "config/intermediate_db.yml" configuration file and then run
+# update the configuration files in "config/schema/" and then run
 # `bin/cli schema generate` to regenerate this file.
 
 module Migrations::Database::IntermediateDB
@@ -24,7 +24,7 @@ module Migrations::Database::IntermediateDB
     # Creates a new `user_associated_accounts` record in the IntermediateDB.
     #
     # @param provider_name   [String]
-    # @param user_id         [Integer, String, nil]
+    # @param user_id         [Integer, String]
     # @param created_at      [Time, nil]
     # @param info            [Object, nil]
     # @param last_used       [Time, nil]

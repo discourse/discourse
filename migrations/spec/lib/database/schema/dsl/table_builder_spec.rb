@@ -62,6 +62,40 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
       expect(opts.max_length).to eq(255)
     end
 
+    it "supports rename_to via keyword arguments" do
+      Migrations::Database::Schema.table :posts do
+        column :user_id, rename_to: :author_id
+      end
+
+      table = Migrations::Database::Schema.tables[:posts]
+      opts = table.column_options_for(:user_id)
+      expect(opts.rename_to).to eq(:author_id)
+    end
+
+    it "supports rename_to via block" do
+      Migrations::Database::Schema.table :posts do
+        column :user_id do
+          rename_to :author_id
+          type :numeric
+        end
+      end
+
+      table = Migrations::Database::Schema.tables[:posts]
+      opts = table.column_options_for(:user_id)
+      expect(opts.rename_to).to eq(:author_id)
+      expect(opts.type).to eq(:numeric)
+    end
+
+    it "supports required: false to force nullable" do
+      Migrations::Database::Schema.table :users do
+        column :created_at, required: false
+      end
+
+      table = Migrations::Database::Schema.tables[:users]
+      opts = table.column_options_for(:created_at)
+      expect(opts.required).to eq(false)
+    end
+
     it "supports adding synthetic columns" do
       Migrations::Database::Schema.table :users do
         add_column :existing_id, :numeric

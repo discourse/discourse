@@ -38,11 +38,14 @@ module Migrations::Database::Schema::DSL
       indexes = resolve_indexes(table_def)
       constraints = resolve_constraints(table_def)
 
+      # Map PK column names through renames, preserving the original order
+      resolved_pk_names = resolve_primary_key_names(primary_key_columns, table_def, columns)
+
       Migrations::Database::Schema::TableDefinition.new(
         name: table_def.name.to_s,
         columns:,
         indexes:,
-        primary_key_column_names: primary_key_columns,
+        primary_key_column_names: resolved_pk_names,
         constraints:,
       )
     end
@@ -63,6 +66,7 @@ module Migrations::Database::Schema::DSL
           type_override: options&.type,
           required_override: options&.required,
           max_length_override: options&.max_length,
+          rename_to_override: options&.rename_to,
         )
       end
     end
@@ -85,11 +89,13 @@ module Migrations::Database::Schema::DSL
       primary_key_columns:,
       type_override: nil,
       required_override: nil,
-      max_length_override: nil
+      max_length_override: nil,
+      rename_to_override: nil
     )
       col_name = db_col.name
 
-      effective_name = @conventions&.effective_name(col_name) || col_name.to_sym
+      effective_name =
+        rename_to_override || @conventions&.effective_name(col_name) || col_name.to_sym
 
       raw_type =
         type_override || @conventions&.convention_for(col_name)&.type_override || db_col.type
@@ -102,11 +108,17 @@ module Migrations::Database::Schema::DSL
         datatype = enum.datatype
       end
 
+      convention_required = @conventions&.convention_for(col_name)&.required
+
       nullable =
         if required_override == true
           false
-        elsif @conventions&.required?(col_name)
+        elsif required_override == false
+          true
+        elsif convention_required == true
           false
+        elsif convention_required == false
+          true
         else
           db_col.null || db_col.default.present?
         end
@@ -140,6 +152,17 @@ module Migrations::Database::Schema::DSL
           is_primary_key: primary_key_columns.include?(effective_name),
           enum:,
         )
+      end
+    end
+
+    def resolve_primary_key_names(primary_key_columns, table_def, resolved_columns)
+      resolved_column_names = resolved_columns.map(&:name).to_set
+
+      primary_key_columns.filter_map do |pk_col|
+        options = table_def.column_options_for(pk_col)
+        rename_to = options&.rename_to
+        resolved_name = (rename_to || @conventions&.effective_name(pk_col) || pk_col.to_sym).to_s
+        resolved_name if resolved_column_names.include?(resolved_name)
       end
     end
 

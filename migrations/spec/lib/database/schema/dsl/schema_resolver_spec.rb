@@ -370,6 +370,168 @@ RSpec.describe Migrations::Database::Schema::DSL::SchemaResolver do
       expect(types["jsonb_col"]).to eq(:json)
     end
 
+    it "applies per-table rename_to override" do
+      schema =
+        build_schema(
+          tables: {
+            posts:
+              proc do
+                include :id, :user_id
+                column :user_id, rename_to: :author_id
+              end,
+          },
+        )
+
+      stub_database(
+        connection,
+        table_columns: {
+          posts: {
+            id: {
+              type: :integer,
+              null: false,
+            },
+            user_id: {
+              type: :integer,
+              null: false,
+            },
+          },
+        },
+        primary_keys: {
+          posts: ["id"],
+        },
+      )
+
+      result = described_class.new(schema).resolve
+      table = result.tables.first
+      col = table.columns.find { |c| c.name == "author_id" }
+
+      expect(col).not_to be_nil
+      expect(table.columns.none? { |c| c.name == "user_id" }).to eq(true)
+    end
+
+    it "per-table rename_to takes precedence over conventions" do
+      schema =
+        build_schema(
+          tables: {
+            posts:
+              proc do
+                include :id
+                column :id, rename_to: :post_original_id
+              end,
+          },
+          conventions:
+            proc do
+              column :id do
+                rename_to :original_id
+              end
+            end,
+        )
+
+      stub_database(
+        connection,
+        table_columns: {
+          posts: {
+            id: {
+              type: :integer,
+              null: false,
+            },
+          },
+        },
+        primary_keys: {
+          posts: ["id"],
+        },
+      )
+
+      result = described_class.new(schema).resolve
+      table = result.tables.first
+      col = table.columns.find { |c| c.name == "post_original_id" }
+
+      expect(col).not_to be_nil
+      expect(table.columns.none? { |c| c.name == "original_id" }).to eq(true)
+    end
+
+    it "applies required: false to force nullable" do
+      schema =
+        build_schema(
+          tables: {
+            users:
+              proc do
+                include :id, :created_at
+                column :created_at, required: false
+              end,
+          },
+        )
+
+      stub_database(
+        connection,
+        table_columns: {
+          users: {
+            id: {
+              type: :integer,
+              null: false,
+            },
+            created_at: {
+              type: :datetime,
+              null: false,
+            },
+          },
+        },
+        primary_keys: {
+          users: ["id"],
+        },
+      )
+
+      result = described_class.new(schema).resolve
+      table = result.tables.first
+      col = table.columns.find { |c| c.name == "created_at" }
+
+      expect(col.nullable).to eq(true)
+    end
+
+    it "required: false overrides conventions required" do
+      schema =
+        build_schema(
+          tables: {
+            users:
+              proc do
+                include :id, :created_at
+                column :created_at, required: false
+              end,
+          },
+          conventions:
+            proc do
+              column :created_at do
+                required
+              end
+            end,
+        )
+
+      stub_database(
+        connection,
+        table_columns: {
+          users: {
+            id: {
+              type: :integer,
+              null: false,
+            },
+            created_at: {
+              type: :datetime,
+              null: false,
+            },
+          },
+        },
+        primary_keys: {
+          users: ["id"],
+        },
+      )
+
+      result = described_class.new(schema).resolve
+      table = result.tables.first
+      col = table.columns.find { |c| c.name == "created_at" }
+
+      expect(col.nullable).to eq(true)
+    end
+
     it "excludes globally ignored columns when no include list specified" do
       schema =
         build_schema(tables: { users: proc {} }, conventions: proc { ignore_columns :secret_token })

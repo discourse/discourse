@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # This file is auto-generated from the IntermediateDB schema. To make changes,
-# update the "config/intermediate_db.yml" configuration file and then run
+# update the configuration files in "config/schema/" and then run
 # `bin/cli schema generate` to regenerate this file.
 
 module Migrations::Database::IntermediateDB::Enums
@@ -37,5 +37,7 @@ module Migrations::Database::IntermediateDB::Enums
     FILE_SIZE_RESTRICTION = 27
     OBJECTS = 28
     LOCALE_ENUM = 29
+    TOPIC = 30
+    DATETIME = 31
   end
 end

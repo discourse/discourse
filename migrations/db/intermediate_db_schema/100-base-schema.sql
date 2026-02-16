@@ -1,5 +1,5 @@
 -- This file is auto-generated from the IntermediateDB schema. To make changes,
--- update the "config/intermediate_db.yml" configuration file and then run
+-- update the configuration files in "config/schema/" and then run
 -- `bin/cli schema generate` to regenerate this file.
 
 CREATE TABLE badge_groupings
@@ -10,6 +10,7 @@ CREATE TABLE badge_groupings
     name        TEXT     NOT NULL,
     position    INTEGER  NOT NULL
 );
+
 
 CREATE TABLE badges
 (
@@ -34,6 +35,7 @@ CREATE TABLE badges
     target_posts        BOOLEAN,
     "trigger"           INTEGER
 );
+
 
 CREATE TABLE categories
 (
@@ -85,6 +87,7 @@ CREATE TABLE categories
     user_id                                   NUMERIC  NOT NULL
 );
 
+
 CREATE TABLE category_custom_fields
 (
     category_id NUMERIC NOT NULL,
@@ -93,12 +96,14 @@ CREATE TABLE category_custom_fields
     PRIMARY KEY (category_id, name)
 );
 
+
 CREATE TABLE category_moderation_groups
 (
-    category_id NUMERIC,
-    group_id    NUMERIC,
+    category_id NUMERIC NOT NULL,
+    group_id    NUMERIC NOT NULL,
     PRIMARY KEY (category_id, group_id)
 );
+
 
 CREATE TABLE category_users
 (
@@ -109,6 +114,7 @@ CREATE TABLE category_users
     PRIMARY KEY (category_id, user_id)
 );
 
+
 CREATE TABLE group_users
 (
     group_id           NUMERIC  NOT NULL,
@@ -118,6 +124,7 @@ CREATE TABLE group_users
     owner              BOOLEAN,
     PRIMARY KEY (group_id, user_id)
 );
+
 
 CREATE TABLE "groups"
 (
@@ -148,12 +155,14 @@ CREATE TABLE "groups"
     visibility_level                   INTEGER
 );
 
+
 CREATE TABLE muted_users
 (
     created_at    DATETIME,
     muted_user_id NUMERIC  NOT NULL,
     user_id       NUMERIC  NOT NULL
 );
+
 
 CREATE TABLE site_settings
 (
@@ -163,6 +172,7 @@ CREATE TABLE site_settings
     value           TEXT
 );
 
+
 CREATE TABLE tag_group_memberships
 (
     tag_group_id NUMERIC  NOT NULL,
@@ -171,14 +181,16 @@ CREATE TABLE tag_group_memberships
     PRIMARY KEY (tag_group_id, tag_id)
 );
 
+
 CREATE TABLE tag_group_permissions
 (
     group_id        NUMERIC  NOT NULL,
-    permission_type INTEGER,
+    permission_type INTEGER  NOT NULL,
     tag_group_id    NUMERIC  NOT NULL,
     created_at      DATETIME,
     PRIMARY KEY (tag_group_id, group_id, permission_type)
 );
+
 
 CREATE TABLE tag_groups
 (
@@ -189,6 +201,7 @@ CREATE TABLE tag_groups
     parent_tag_id NUMERIC
 );
 
+
 CREATE TABLE tag_users
 (
     tag_id             NUMERIC  NOT NULL,
@@ -197,6 +210,7 @@ CREATE TABLE tag_users
     notification_level INTEGER  NOT NULL,
     PRIMARY KEY (tag_id, user_id)
 );
+
 
 CREATE TABLE tags
 (
@@ -208,12 +222,14 @@ CREATE TABLE tags
     slug        TEXT     NOT NULL
 );
 
+
 CREATE TABLE topic_allowed_groups
 (
     group_id NUMERIC NOT NULL,
     topic_id NUMERIC NOT NULL,
     PRIMARY KEY (topic_id, group_id)
 );
+
 
 CREATE TABLE topic_allowed_users
 (
@@ -223,6 +239,7 @@ CREATE TABLE topic_allowed_users
     PRIMARY KEY (topic_id, user_id)
 );
 
+
 CREATE TABLE topic_tags
 (
     tag_id     NUMERIC  NOT NULL,
@@ -230,6 +247,7 @@ CREATE TABLE topic_tags
     created_at DATETIME,
     PRIMARY KEY (topic_id, tag_id)
 );
+
 
 CREATE TABLE topic_users
 (
@@ -247,6 +265,7 @@ CREATE TABLE topic_users
     total_msecs_viewed       INTEGER,
     PRIMARY KEY (topic_id, user_id)
 );
+
 
 CREATE TABLE topics
 (
@@ -277,7 +296,7 @@ CREATE INDEX index_topics_on_archetype ON topics (archetype);
 CREATE TABLE user_associated_accounts
 (
     provider_name TEXT      NOT NULL,
-    user_id       NUMERIC,
+    user_id       NUMERIC   NOT NULL,
     created_at    DATETIME,
     info          JSON_TEXT,
     last_used     DATETIME,
@@ -285,14 +304,16 @@ CREATE TABLE user_associated_accounts
     PRIMARY KEY (user_id, provider_name)
 );
 
+
 CREATE TABLE user_custom_fields
 (
     name       TEXT     NOT NULL,
     user_id    NUMERIC  NOT NULL,
-    value      TEXT,
+    value      TEXT     NOT NULL,
     created_at DATETIME,
     PRIMARY KEY (user_id, name, value)
 );
+
 
 CREATE TABLE user_emails
 (
@@ -303,6 +324,7 @@ CREATE TABLE user_emails
     PRIMARY KEY (user_id, email)
 );
 
+
 CREATE TABLE user_field_options
 (
     user_field_id NUMERIC  NOT NULL,
@@ -310,6 +332,7 @@ CREATE TABLE user_field_options
     created_at    DATETIME,
     PRIMARY KEY (user_field_id, value)
 );
+
 
 CREATE TABLE user_field_values
 (
@@ -340,6 +363,7 @@ CREATE TABLE user_fields
     show_on_signup    BOOLEAN,
     show_on_user_card BOOLEAN
 );
+
 
 CREATE TABLE user_options
 (
@@ -413,6 +437,7 @@ CREATE TABLE user_options
     watched_precedence_over_muted        BOOLEAN
 );
 
+
 CREATE TABLE users
 (
     original_id               NUMERIC   NOT NULL PRIMARY KEY,
@@ -444,4 +469,5 @@ CREATE TABLE users
     username                  TEXT      NOT NULL,
     views                     INTEGER
 );
+
 

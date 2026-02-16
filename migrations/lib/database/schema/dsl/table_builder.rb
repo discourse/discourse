@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 module Migrations::Database::Schema::DSL
-  ColumnOptions = Data.define(:type, :required, :max_length)
+  ColumnOptions = Data.define(:type, :required, :max_length, :rename_to)
   AddedColumn = Data.define(:name, :type, :required, :enum)
   IndexConfig = Data.define(:column_names, :name, :unique, :condition)
   ConstraintConfig = Data.define(:name, :type, :condition)
@@ -76,6 +76,7 @@ module Migrations::Database::Schema::DSL
           type: type&.to_sym || opts[:type]&.to_sym,
           required: opts[:required],
           max_length: opts[:max_length],
+          rename_to: opts[:rename_to]&.to_sym,
         )
       end
     end
@@ -148,6 +149,7 @@ module Migrations::Database::Schema::DSL
       @type = nil
       @required = nil
       @max_length = nil
+      @rename_to = nil
     end
 
     def type(value)
@@ -162,8 +164,17 @@ module Migrations::Database::Schema::DSL
       @max_length = value
     end
 
+    def rename_to(value)
+      @rename_to = value.to_sym
+    end
+
     def build
-      ColumnOptions.new(type: @type, required: @required, max_length: @max_length)
+      ColumnOptions.new(
+        type: @type,
+        required: @required,
+        max_length: @max_length,
+        rename_to: @rename_to,
+      )
     end
   end
 end
