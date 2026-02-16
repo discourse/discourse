@@ -5,7 +5,7 @@ import { gt } from "discourse/truth-helpers";
 const TopicRepliesColumn = <template>
   {{#if (gt @topic.replyCount 1)}}
     <span class="topic-replies">{{icon "reply"}}{{number
-        @topic.posts_count
+        @topic.replyCount
       }}</span>
   {{/if}}
 </template>;
