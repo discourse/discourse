@@ -2540,8 +2540,6 @@ en:
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to -1 to never delete. Set to 0 to immediately delete."
 
-    bootstrap_mode_min_users: 'Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours). See <a target="_blank" href="https://meta.discourse.org/t/-/322876">the bootstrap mode topic on Meta</a> for details.'
-
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
     secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in personal messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
     secure_uploads_allow_embed_images_in_emails: "Allows embedding secure images that would normally be redacted in emails, if their size is smaller than the 'secure uploads max email embed image size kb' setting."
