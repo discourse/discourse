@@ -49,7 +49,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Generator do
 
   def stub_validation_and_resolution(definition)
     validator = instance_double(Migrations::Database::Schema::DSL::Validator)
-    allow(validator).to receive(:validate).and_return(Struct.new(:errors, :warnings).new([], []))
+    allow(validator).to receive(:validate).and_return([])
     allow(Migrations::Database::Schema::DSL::Validator).to receive(:new).and_return(validator)
 
     resolver = instance_double(Migrations::Database::Schema::DSL::SchemaResolver)

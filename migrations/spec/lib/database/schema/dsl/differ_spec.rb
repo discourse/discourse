@@ -409,5 +409,42 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
         "polls_enabled",
       )
     end
+
+    it "ignore_plugin_columns! with specific plugin names only ignores those plugins" do
+      manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
+      allow(manifest).to receive(:available?).and_return(true)
+      allow(manifest).to receive(:tables_for_plugin).and_return([])
+      allow(manifest).to receive(:all_plugin_names).and_return(%w[polls discourse_ai])
+      allow(manifest).to receive(:columns_for_plugin).with("polls", table: "users").and_return(
+        %w[polls_enabled],
+      )
+      allow(manifest).to receive(:columns_for_plugin).with(
+        "discourse_ai",
+        table: "users",
+      ).and_return(%w[ai_summary])
+      allow(manifest).to receive(:plugin_for_column).and_return(nil)
+      allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
+
+      Migrations::Database::Schema.table(:users) do
+        include :id, :username
+        ignore_plugin_columns! :polls
+      end
+      Migrations::Database::Schema.ignored { table :unused_table, "placeholder" }
+
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: %i[id username polls_enabled ai_summary],
+        },
+      )
+
+      result = described_class.new(Migrations::Database::Schema).diff
+
+      expect(result.table_diffs.size).to eq(1)
+      diff = result.table_diffs.first
+      expect(diff.auto_ignored_columns.map(&:name)).to contain_exactly("polls_enabled")
+      expect(diff.unknown_columns.map(&:name)).to contain_exactly("ai_summary")
+    end
   end
 end

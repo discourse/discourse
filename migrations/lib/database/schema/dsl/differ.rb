@@ -161,11 +161,13 @@ module Migrations::Database::Schema::DSL
     end
 
     def effective_column_names(table_def, db_column_names)
+      forced = table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
+
       if table_def.included_column_names
         names = table_def.included_column_names.map(&:to_s).to_set
       else
         ignored = table_def.ignored_column_names.map(&:to_s).to_set
-        names = db_column_names - ignored - globally_ignored_columns
+        names = db_column_names - ignored - (globally_ignored_columns - forced)
       end
 
       added = table_def.added_columns.map { |c| c.name.to_s }
@@ -213,10 +215,13 @@ module Migrations::Database::Schema::DSL
         cols.each { |col| auto_ignored << ColumnInfo.new(name: col, plugin: plugin_name.to_s) }
       end
 
-      # ignore_plugin_columns! additionally ignores columns from ALL plugins
+      # ignore_plugin_columns! additionally ignores columns from non-ignored plugins
       if table_def.ignore_plugin_columns?
+        plugin_filter = table_def.ignore_plugin_names&.map(&:to_s)&.to_set
+
         manifest.all_plugin_names.each do |plugin_name|
           next if ignored.plugin_ignored?(plugin_name.to_sym)
+          next if plugin_filter && plugin_filter.exclude?(plugin_name.to_s)
           cols = manifest.columns_for_plugin(plugin_name, table: source_table)
           cols.each { |col| auto_ignored << ColumnInfo.new(name: col, plugin: plugin_name) }
         end

@@ -24,11 +24,11 @@ module Migrations::Database::Schema::DSL
     private
 
     def validate_dsl!
-      result = Validator.new(@schema).validate
+      errors = Validator.new(@schema).validate
 
-      if result.errors.any?
-        message = "DSL validation failed with #{result.errors.size} error(s):\n"
-        message += result.errors.map { |e| "  - #{e}" }.join("\n")
+      if errors.any?
+        message = "DSL validation failed with #{errors.size} error(s):\n"
+        message += errors.map { |e| "  - #{e}" }.join("\n")
         raise GenerationError, message
       end
     end

@@ -85,7 +85,10 @@ module Migrations::Database::Schema::DSL
         ignored = table_def.ignored_column_names.to_set
         globally_ignored =
           @conventions ? @conventions.ignored_columns.map(&:to_sym).to_set : Set.new
-        all_names.reject { |n| ignored.include?(n) || globally_ignored.include?(n) }
+        forced = table_def.forced_column_names&.to_set || Set.new
+        all_names.reject do |n|
+          ignored.include?(n) || (globally_ignored.include?(n) && forced.exclude?(n))
+        end
       end
     end
 

@@ -34,15 +34,11 @@ en:
     unknown_database: "Unknown database '%{name}'. Available: %{available}"
 
     validate:
-      warning: "⚠ %{message}"
       error: "✗ %{message}"
       valid: "✓ Schema valid"
       summary:
         one: "%{count} error"
         other: "%{count} errors"
-      warning_summary:
-        one: "%{count} warning"
-        other: "%{count} warnings"
 
     generate:
       tables:

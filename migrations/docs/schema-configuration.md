@@ -72,6 +72,17 @@ Migrations::Database::Schema.table :users do
 end
 ```
 
+#### `include!`
+
+Include columns that are globally ignored (via conventions) or auto-ignored (via plugin). Regular `include` will produce a validation error for such columns; use `include!` to explicitly override.
+
+```ruby
+Migrations::Database::Schema.table :users do
+  include :id, :username
+  include! :updated_at  # override global ignore from conventions
+end
+```
+
 #### `ignore`
 
 Exclude specific columns; all others are included (implies `include_all`). You should provide a reason.
@@ -184,7 +195,8 @@ check :positive_score, "score >= 0"
 ```ruby
 Migrations::Database::Schema.table :users do
   include_all
-  ignore_plugin_columns!   # auto-ignore columns from ignored plugins
+  ignore_plugin_columns!                       # auto-ignore columns from ALL non-ignored plugins
+  # ignore_plugin_columns! :polls, :discourse_ai  # auto-ignore only from these specific plugins
 end
 
 Migrations::Database::Schema.table :chat_messages do
@@ -192,6 +204,8 @@ Migrations::Database::Schema.table :chat_messages do
   include_all
 end
 ```
+
+Note: Columns from plugins listed in `ignored.rb` are always auto-ignored automatically. `ignore_plugin_columns!` is for non-ignored plugins whose columns you don't want in the intermediate schema.
 
 ### Model mode
 

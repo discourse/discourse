@@ -7,13 +7,14 @@ module Migrations::Database::Schema::DSL
       #
       #   include_all                                - Include all source columns (implied by `ignore`)
       #   include :col1, :col2                       - Include only these columns
+      #   include! :col1, :col2                      - Include columns, overriding global/plugin ignores
       #   ignore :col1, :col2, reason: "..."         - Ignore columns (implies include_all)
       #   primary_key :col1, :col2                   - Override primary key
       #   column :name, required: true               - Set column options (required, type, max_length, rename_to)
       #   add_column :name, :type                    - Add a column not in the source table
       #   copy_structure_from :other_table           - Use another table as the source
       #   synthetic!                                 - Table has no source (only add_column allowed)
-      #   ignore_plugin_columns!                     - Auto-ignore columns from ignored plugins
+      #   ignore_plugin_columns!                     - Auto-ignore columns from all (or specific) non-ignored plugins
     COMMENT
 
     def initialize(schema_module, table_name, database: :intermediate_db)

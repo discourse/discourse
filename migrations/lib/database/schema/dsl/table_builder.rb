@@ -12,12 +12,14 @@ module Migrations::Database::Schema::DSL
       :source_table_name,
       :primary_key_columns,
       :included_column_names,
+      :forced_column_names,
       :column_options,
       :added_columns,
       :indexes,
       :constraints,
       :ignored_columns_map,
       :ignore_plugin_columns,
+      :ignore_plugin_names,
       :plugin_name,
       :model_mode,
     ) do
@@ -52,7 +54,9 @@ module Migrations::Database::Schema::DSL
       @indexes = []
       @constraints = []
       @ignored_columns = {}
+      @forced_columns = []
       @ignore_plugin_columns = false
+      @ignore_plugin_names = nil
       @plugin_name = nil
       @model_mode = nil
     end
@@ -76,6 +80,10 @@ module Migrations::Database::Schema::DSL
 
     def include_all
       @include_all = true
+    end
+
+    def include!(*cols)
+      @forced_columns.concat(cols.flatten.map(&:to_sym))
     end
 
     def column(name, type = nil, **opts, &block)
@@ -126,8 +134,9 @@ module Migrations::Database::Schema::DSL
       @plugin_name = name.to_s
     end
 
-    def ignore_plugin_columns!
+    def ignore_plugin_columns!(*plugin_names)
       @ignore_plugin_columns = true
+      @ignore_plugin_names = plugin_names.flatten.map(&:to_sym) if plugin_names.any?
     end
 
     def model(mode)
@@ -145,17 +154,32 @@ module Migrations::Database::Schema::DSL
               "Table :#{@name} must use `include_all`, `include`, or `ignore` to specify which columns to include"
       end
 
+      if @source_table_name.nil? && (@included_columns || @include_all)
+        raise Migrations::Database::Schema::ConfigError,
+              "Table :#{@name} is synthetic and cannot use `include` or `include_all`"
+      end
+
+      if @included_columns && @ignored_columns.any?
+        overlap = @included_columns & @ignored_columns.keys
+        if overlap.any?
+          raise Migrations::Database::Schema::ConfigError,
+                "Table :#{@name} has columns that are both included and ignored: #{overlap.join(", ")}"
+        end
+      end
+
       TableDef.new(
         name: @name,
         source_table_name: @source_table_name,
         primary_key_columns: @primary_key_cols,
         included_column_names: @included_columns,
+        forced_column_names: @forced_columns.empty? ? nil : @forced_columns.freeze,
         column_options: @column_options.freeze,
         added_columns: @added_columns.freeze,
         indexes: @indexes.freeze,
         constraints: @constraints.freeze,
         ignored_columns_map: @ignored_columns.freeze,
         ignore_plugin_columns: @ignore_plugin_columns,
+        ignore_plugin_names: @ignore_plugin_names&.freeze,
         plugin_name: @plugin_name,
         model_mode: @model_mode,
       )

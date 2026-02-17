@@ -10,25 +10,19 @@ module Migrations::CLI
                  desc: "Database configuration to use"
 
     desc "validate", "Validate schema configuration against the database"
-    method_option :strict, type: :boolean, default: false, desc: "Treat warnings as errors (for CI)"
     def validate
       load_rails!
 
       database = options[:database]
       Schema.ensure_ready!(database:)
 
-      result = Schema.validate(database:)
+      errors = Schema.validate(database:)
 
-      result.warnings.each { |w| puts I18n.t("schema.validate.warning", message: w).yellow }
-      result.errors.each { |e| puts I18n.t("schema.validate.error", message: e).red }
+      errors.each { |e| puts I18n.t("schema.validate.error", message: e).red }
 
-      has_issues = result.errors.any? || (options[:strict] && result.warnings.any?)
-
-      if has_issues
+      if errors.any?
         puts
-        errors_str = I18n.t("schema.validate.summary", count: result.errors.size)
-        warnings_str = I18n.t("schema.validate.warning_summary", count: result.warnings.size)
-        puts "#{errors_str}, #{warnings_str}"
+        puts I18n.t("schema.validate.summary", count: errors.size)
         exit 1
       else
         puts I18n.t("schema.validate.valid").green

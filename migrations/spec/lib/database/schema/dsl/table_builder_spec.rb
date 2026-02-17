@@ -269,6 +269,74 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
       end.to raise_error(Migrations::Database::Schema::ConfigError, /Invalid model mode :invalid/)
     end
 
+    it "supports include! to override global ignores" do
+      Migrations::Database::Schema.table :users do
+        include :id, :updated_at
+        include! :updated_at
+      end
+
+      table = Migrations::Database::Schema.tables[:users]
+      expect(table.forced_column_names).to eq(%i[updated_at])
+    end
+
+    it "supports ignore_plugin_columns! with specific plugin names" do
+      Migrations::Database::Schema.table :users do
+        include_all
+        ignore_plugin_columns! :polls, :discourse_ai
+      end
+
+      table = Migrations::Database::Schema.tables[:users]
+      expect(table.ignore_plugin_columns?).to eq(true)
+      expect(table.ignore_plugin_names).to eq(%i[polls discourse_ai])
+    end
+
+    it "sets ignore_plugin_names to nil when no plugins specified" do
+      Migrations::Database::Schema.table :users do
+        include_all
+        ignore_plugin_columns!
+      end
+
+      table = Migrations::Database::Schema.tables[:users]
+      expect(table.ignore_plugin_columns?).to eq(true)
+      expect(table.ignore_plugin_names).to be_nil
+    end
+
+    it "raises when synthetic table uses include" do
+      expect do
+        Migrations::Database::Schema.table :log_entries do
+          synthetic!
+          include :id
+        end
+      end.to raise_error(
+        Migrations::Database::Schema::ConfigError,
+        /synthetic and cannot use `include` or `include_all`/,
+      )
+    end
+
+    it "raises when synthetic table uses include_all" do
+      expect do
+        Migrations::Database::Schema.table :log_entries do
+          synthetic!
+          include_all
+        end
+      end.to raise_error(
+        Migrations::Database::Schema::ConfigError,
+        /synthetic and cannot use `include` or `include_all`/,
+      )
+    end
+
+    it "raises when columns are both included and ignored" do
+      expect do
+        Migrations::Database::Schema.table :users do
+          include :id, :email
+          ignore :email, reason: "duplicate"
+        end
+      end.to raise_error(
+        Migrations::Database::Schema::ConfigError,
+        /both included and ignored.*email/,
+      )
+    end
+
     it "raises on duplicate table name" do
       Migrations::Database::Schema.table(:users) { include_all }
 
