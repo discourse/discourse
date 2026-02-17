@@ -13,6 +13,31 @@ import { clipboardCopy, defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
 const STEPS = [
+  class InviteCollaborators extends OnboardingStep {
+    static name = "invite_collaborators";
+
+    @service modal;
+    @service appEvents;
+
+    icon = "paper-plane";
+
+    constructor() {
+      super(...arguments);
+      this.appEvents.on("create-invite:saved", this, this.markAsCompleted);
+    }
+
+    willDestroy() {
+      super.willDestroy(...arguments);
+      this.appEvents.off("create-invite:saved", this, this.markAsCompleted);
+    }
+
+    @action
+    performAction() {
+      this.modal.show(CreateInvite, {
+        model: { invites: new TrackedArray() },
+      });
+    }
+  },
   class StartPosting extends OnboardingStep {
     static name = "start_posting";
 
@@ -55,32 +80,6 @@ const STEPS = [
         body: i18n(
           `admin_onboarding_banner.start_posting.icebreakers.${randomTopic}.body`
         ),
-      });
-    }
-  },
-  class InviteCollaborators extends OnboardingStep {
-    static name = "invite_collaborators";
-
-    @service modal;
-    @service appEvents;
-
-    step = this.name;
-    icon = "paper-plane";
-
-    constructor() {
-      super(...arguments);
-      this.appEvents.on("create-invite:saved", this, this.markAsCompleted);
-    }
-
-    willDestroy() {
-      super.willDestroy(...arguments);
-      this.appEvents.off("create-invite:saved", this, this.markAsCompleted);
-    }
-
-    @action
-    performAction() {
-      this.modal.show(CreateInvite, {
-        model: { invites: new TrackedArray() },
       });
     }
   },
