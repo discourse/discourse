@@ -23,6 +23,7 @@ module PostVoting
 
     def can_flag_post_voting_comment?(comment)
       return false if !authenticated? || !comment || comment.trashed? || !comment.user
+      return false if !can_see?(comment.post)
       return false if comment.user.staff? && !SiteSetting.allow_flagging_staff
       return false if comment.user_id == @user.id
 
