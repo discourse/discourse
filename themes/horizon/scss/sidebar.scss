@@ -5,6 +5,7 @@
     var(--space-4);
 }
 
+body.has-full-page-chat .sidebar-wrapper,
 .sidebar-wrapper,
 .sidebar-hamburger-dropdown {
   @include viewport.until(lg) {
