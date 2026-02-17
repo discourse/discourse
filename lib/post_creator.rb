@@ -151,10 +151,11 @@ class PostCreator
       end
 
       if guardian.affected_by_slow_mode?(@topic)
-        tu = TopicUser.find_by(user: @user, topic: @topic)
+        last_posted_at =
+          @topic.posts.where(user_id: @user.id).order(created_at: :desc).pick(:created_at)
 
-        if tu&.last_posted_at
-          threshold = tu.last_posted_at + @topic.slow_mode_seconds.seconds
+        if last_posted_at
+          threshold = last_posted_at + @topic.slow_mode_seconds.seconds
 
           if DateTime.now < threshold
             errors.add(:base, I18n.t(:slow_mode_enabled))

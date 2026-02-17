@@ -1007,7 +1007,7 @@ RSpec.describe PostCreator do
       end
 
       it "fails if the user recently posted in this topic" do
-        TopicUser.create!(user: user, topic: topic, last_posted_at: 10.minutes.ago)
+        Fabricate(:post, topic: topic, user: user, created_at: 10.minutes.ago)
 
         post = creator.create
 
@@ -1017,7 +1017,7 @@ RSpec.describe PostCreator do
       end
 
       it "creates the topic if the user last post is older than the slow mode interval" do
-        TopicUser.create!(user: user, topic: topic, last_posted_at: 5.days.ago)
+        Fabricate(:post, topic: topic, user: user, created_at: 5.days.ago)
 
         post = creator.create
 
@@ -1028,7 +1028,7 @@ RSpec.describe PostCreator do
       it "creates the topic if the user is a staff member" do
         post_creator =
           PostCreator.new(admin, raw: "test reply", topic_id: topic.id, reply_to_post_number: 4)
-        TopicUser.create!(user: admin, topic: topic, last_posted_at: 10.minutes.ago)
+        Fabricate(:post, topic: topic, user: admin, created_at: 10.minutes.ago)
 
         post = post_creator.create
 
