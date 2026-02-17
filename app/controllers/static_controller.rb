@@ -271,7 +271,7 @@ class StaticController < ApplicationController
     path = File.expand_path(Rails.root + "public/assets/#{params[:path]}#{suffix}")
 
     # SECURITY what if path has /../
-    raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets")
+    raise Discourse::NotFound unless path.start_with?(Rails.root.to_s + "/public/assets/")
 
     response.headers["Expires"] = 1.year.from_now.httpdate
     response.headers["Access-Control-Allow-Origin"] = params[:origin] if params[:origin]
