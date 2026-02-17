@@ -1,5 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
+import { cancel } from "@ember/runloop";
 import { service } from "@ember/service";
 import TopicNavigationPopup from "discourse/components/topic-navigation-popup";
 import { isTesting } from "discourse/lib/environment";
@@ -33,10 +34,7 @@ export default class NoAnswer extends Component {
       this.hidePopup
     );
 
-    discourseLater(() => {
-      if (this.isDestroying) {
-        return;
-      }
+    this._delayTimer = discourseLater(() => {
       const topic = this.args.outletArgs.topic;
       const currentUser = this.currentUser;
 
@@ -61,6 +59,8 @@ export default class NoAnswer extends Component {
 
   willDestroy() {
     super.willDestroy(...arguments);
+
+    cancel(this._delayTimer);
 
     this.appEvents.off(
       "discourse-solved:solution-toggled",
