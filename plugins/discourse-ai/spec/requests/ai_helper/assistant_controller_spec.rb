@@ -16,6 +16,27 @@ RSpec.describe DiscourseAi::AiHelper::AssistantController do
       SiteSetting.composer_ai_helper_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
     end
 
+    it "returns 403 when user cannot see the post" do
+      sign_in(user)
+
+      group = Fabricate(:group)
+      private_category = Fabricate(:private_category, group: group)
+      topic = Fabricate(:topic, category: private_category)
+      private_post = Fabricate(:post, topic: topic)
+
+      post "/discourse-ai/ai-helper/stream_suggestion.json",
+           params: {
+             text: "hello wrld",
+             location: "post",
+             client_id: "1234",
+             post_id: private_post.id,
+             custom_prompt: "Translate to Spanish",
+             mode: DiscourseAi::AiHelper::Assistant::CUSTOM_PROMPT,
+           }
+
+      expect(response.status).to eq(403)
+    end
+
     it "is able to stream suggestions to helper" do
       sign_in(user)
 
