@@ -39,8 +39,12 @@
         }
       }
 
-      .name-wrapper .name {
-        @include ellipsis;
+      .name-wrapper {
+        min-width: 0;
+
+        .name {
+          @include ellipsis;
+        }
       }
 
       // When name should appear first (site setting)
