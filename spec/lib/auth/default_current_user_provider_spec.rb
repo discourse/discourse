@@ -789,11 +789,5 @@ RSpec.describe Auth::DefaultCurrentUserProvider do
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:staff]])).to eq(true)
       expect(user.in_any_groups?([Group::AUTO_GROUPS[:admins]])).to eq(true)
     end
-
-    it "runs the job to enable bootstrap mode" do
-      @provider = provider("/")
-      @provider.log_on_user(user, {}, @provider.cookie_jar)
-      expect_job_enqueued(job: :enable_bootstrap_mode, args: { user_id: user.id })
-    end
   end
 end

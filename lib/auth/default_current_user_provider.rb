@@ -273,8 +273,8 @@ class Auth::DefaultCurrentUserProvider
 
     set_auth_cookie!(@user_token.unhashed_auth_token, user, cookie_jar)
     user.unstage!
+
     make_developer_admin(user)
-    enable_bootstrap_mode(user)
 
     UserAuthToken.enforce_session_count_limit!(user.id)
 
@@ -332,14 +332,6 @@ class Auth::DefaultCurrentUserProvider
       user.admin = true
       user.save
       Group.refresh_automatic_groups!(:staff, :admins)
-    end
-  end
-
-  def enable_bootstrap_mode(user)
-    return if SiteSetting.bootstrap_mode_enabled
-
-    if user.admin && user.last_seen_at.nil? && user.is_singular_admin?
-      Jobs.enqueue(:enable_bootstrap_mode, user_id: user.id)
     end
   end
 

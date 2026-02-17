@@ -2,7 +2,9 @@ import { render, triggerEvent } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import DStatTiles from "discourse/components/d-stat-tiles";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
-import { i18n } from "discourse-i18n";
+
+const content = "This is a tooltip";
+const label = "Stat Label";
 
 module("Integration | Component | DStatTiles", function (hooks) {
   setupRenderingTest(hooks);
@@ -11,7 +13,7 @@ module("Integration | Component | DStatTiles", function (hooks) {
     await render(
       <template>
         <DStatTiles as |tiles|>
-          <tiles.Tile @value="12555999" @label={{i18n "bootstrap_mode"}} />
+          <tiles.Tile @value="12555999" @label={{label}} />
         </DStatTiles>
       </template>
     );
@@ -28,32 +30,26 @@ module("Integration | Component | DStatTiles", function (hooks) {
     await render(
       <template>
         <DStatTiles as |tiles|>
-          <tiles.Tile @value="12555999" @label={{i18n "bootstrap_mode"}} />
+          <tiles.Tile @value="12555999" @label={{label}} />
         </DStatTiles>
       </template>
     );
 
-    assert
-      .dom(".d-stat-tiles .d-stat-tile .d-stat-tile__label")
-      .hasText(i18n("bootstrap_mode"));
+    assert.dom(".d-stat-tiles .d-stat-tile .d-stat-tile__label").hasText(label);
   });
 
   test("renders the optional @tooltip", async function (assert) {
     await render(
       <template>
         <DStatTiles as |tiles|>
-          <tiles.Tile
-            @value="12555999"
-            @label={{i18n "bootstrap_mode"}}
-            @tooltip={{i18n "bootstrap_mode"}}
-          />
+          <tiles.Tile @value="12555999" @label={{label}} @tooltip={{content}} />
         </DStatTiles>
       </template>
     );
 
     assert.dom(".d-stat-tile__tooltip").exists();
     await triggerEvent(".fk-d-tooltip__trigger", "pointermove");
-    assert.dom(".fk-d-tooltip__content").hasText(i18n("bootstrap_mode"));
+    assert.dom(".fk-d-tooltip__content").hasText(content);
   });
 
   test("wraps the value in a link if @url is provided", async function (assert) {
@@ -62,7 +58,7 @@ module("Integration | Component | DStatTiles", function (hooks) {
         <DStatTiles as |tiles|>
           <tiles.Tile
             @value="12555999"
-            @label={{i18n "bootstrap_mode"}}
+            @label={{label}}
             @url="https://meta.discourse.org"
           />
         </DStatTiles>
