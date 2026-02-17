@@ -139,6 +139,21 @@ RSpec.describe PostsController do
           expect(response).to be_forbidden
         end
 
+        it "rejects access for a category group moderator" do
+          SiteSetting.enable_category_group_moderation = true
+          group = Fabricate(:group)
+          category_moderator = Fabricate(:user, groups: [group])
+          Fabricate(
+            :category_moderation_group,
+            category: post_with_revisions.topic.category,
+            group:,
+          )
+
+          sign_in(category_moderator)
+          get "/posts/#{post_with_revisions.id}.json?version=1"
+          expect(response).to be_forbidden
+        end
+
         it "allows access for staff" do
           sign_in(admin)
           get "/posts/#{post_with_revisions.id}.json?version=1"
@@ -2967,6 +2982,38 @@ RSpec.describe PostsController do
         sign_in(Fabricate(:user, trust_level: 4))
         get "/posts/#{post_revision.post_id}/revisions/#{post_revision.number}.json"
         expect(response.status).to eq(403)
+      end
+
+      context "with a category group moderator" do
+        fab!(:group)
+        fab!(:category_moderator) { Fabricate(:user, groups: [group]) }
+
+        before do
+          SiteSetting.enable_category_group_moderation = true
+          sign_in(category_moderator)
+        end
+
+        it "ensures they can see the revisions in their moderated category" do
+          Fabricate(:category_moderation_group, category: post.topic.category, group:)
+
+          get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
+          expect(response.status).to eq(200)
+        end
+
+        it "ensures they cannot see the revisions in other categories" do
+          Fabricate(:category_moderation_group, category: Fabricate(:category), group:)
+
+          get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
+          expect(response).to be_forbidden
+        end
+
+        it "ensures they cannot see hidden revisions in their moderated category" do
+          Fabricate(:category_moderation_group, category: post.topic.category, group:)
+          post_revision.update!(hidden: true)
+
+          get "/posts/#{post.id}/revisions/#{post_revision.number}.json"
+          expect(response).to be_forbidden
+        end
       end
     end
 
