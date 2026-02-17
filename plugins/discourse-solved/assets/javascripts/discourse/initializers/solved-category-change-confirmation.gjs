@@ -38,7 +38,7 @@ export default {
               const props = this.get("buffered.buffer");
               let solvedStateChanged = false;
 
-              if (["category_id", "tags"].some((key) => key in props)) {
+              if ("category_id" in props || "tags" in props) {
                 const oldCategoryId = this.model.category_id;
                 const newCategoryId = props.category_id ?? oldCategoryId;
                 const oldTags = this.model.tags;
