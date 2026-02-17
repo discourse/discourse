@@ -182,7 +182,7 @@ class BaseBookmarkable
   # @param [Guardian] guardian The guardian for the user which is creating the bookmark.
   # @param [Model] bookmarkable The ActiveRecord model which is acting as the bookmarkable for the new bookmark.
   def self.validate_before_create(guardian, bookmarkable)
-    # noop
+    raise NotImplementedError
   end
 
   ##
