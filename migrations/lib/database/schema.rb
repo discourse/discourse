@@ -305,7 +305,7 @@ module Migrations::Database
 
     # --- Lifecycle Methods ---
 
-    def self.ensure_ready!(database: :intermediate_db)
+    def self.ensure_ready!(database: :intermediate_db, refresh_manifest: true)
       db_key = database.to_sym
       path = config_path(database)
 
@@ -327,23 +327,27 @@ module Migrations::Database
         raise
       end
 
-      manifest = plugin_manifest(database:)
-      unless manifest.checksums_fresh?
-        begin
-          $stdout.write(I18n.t("schema.detect_plugins.auto_detecting"))
-          manifest.regenerate!
-          if manifest.incomplete?
-            failed_plugins = manifest.failed_plugins.join(", ").presence || "(unknown)"
-            puts I18n.t("schema.detect_plugins.auto_incomplete", failed_plugins:)
-          else
-            puts I18n.t(
-                   "schema.detect_plugins.auto_done",
-                   tables: manifest.table_count,
-                   columns: manifest.column_count,
-                 )
+      if refresh_manifest
+        manifest = plugin_manifest(database:)
+        unless manifest.checksums_fresh?
+          begin
+            $stdout.write(I18n.t("schema.detect_plugins.auto_detecting"))
+            manifest.regenerate!
+            if manifest.incomplete?
+              failed_plugins = manifest.failed_plugins.join(", ").presence || "(unknown)"
+              puts I18n.t("schema.detect_plugins.auto_incomplete", failed_plugins:)
+            else
+              puts I18n.t(
+                     "schema.detect_plugins.auto_done",
+                     tables: manifest.table_count,
+                     columns: manifest.column_count,
+                   )
+            end
+          rescue StandardError => e
+            message = I18n.t("schema.detect_plugins.auto_failed", error: e.message)
+            puts message
+            raise ConfigError, message
           end
-        rescue StandardError => e
-          puts I18n.t("schema.detect_plugins.auto_failed", error: e.message)
         end
       end
     end

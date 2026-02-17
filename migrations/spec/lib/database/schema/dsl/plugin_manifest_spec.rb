@@ -335,4 +335,41 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
       expect(build_manifest.column_count).to eq(3)
     end
   end
+
+  describe "#regenerate!" do
+    it "does not rewrite generated_at when manifest content is unchanged" do
+      stable_data = {
+        "plugins" => {
+          "chat" => {
+            "tables" => ["chat_channels"],
+            "columns" => {
+              "users" => ["chat_enabled"],
+            },
+          },
+        },
+        "migration_state" => {
+          "core" => "abc",
+          "plugins" => {
+            "chat" => "def",
+          },
+        },
+        "failed_plugins" => [],
+        "incomplete" => false,
+      }
+
+      write_manifest({ "generated_at" => "2026-02-16T00:00:00Z" }.merge(stable_data))
+      before = File.read(manifest_path)
+
+      introspector = instance_double(Migrations::Database::Schema::DSL::PluginIntrospector)
+      allow(introspector).to receive(:introspect).and_return(stable_data)
+      allow(Migrations::Database::Schema::DSL::PluginIntrospector).to receive(:new).and_return(
+        introspector,
+      )
+
+      build_manifest.regenerate!
+
+      after = File.read(manifest_path)
+      expect(after).to eq(before)
+    end
+  end
 end

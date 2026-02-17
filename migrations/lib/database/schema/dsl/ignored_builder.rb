@@ -23,7 +23,8 @@ module Migrations::Database::Schema::DSL
       end
 
       def plugin_ignored?(name)
-        plugin_entries.any? { |e| e.name == name.to_sym }
+        normalized = name.to_s.tr("_", "-").to_sym
+        plugin_entries.any? { |e| e.name == normalized }
       end
     end
 
@@ -46,11 +47,17 @@ module Migrations::Database::Schema::DSL
         raise Migrations::Database::Schema::ConfigError,
               "Ignored plugin :#{name} must have a reason."
       end
-      @plugin_entries << IgnoredPluginEntry.new(name: name.to_sym, reason:)
+      @plugin_entries << IgnoredPluginEntry.new(name: normalize_plugin_name(name), reason:)
     end
 
     def build
       IgnoredConfig.new(entries: @entries.freeze, plugin_entries: @plugin_entries.freeze)
+    end
+
+    private
+
+    def normalize_plugin_name(name)
+      name.to_s.tr("_", "-").to_sym
     end
   end
 end

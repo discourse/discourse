@@ -202,6 +202,14 @@ RSpec.describe Migrations::Database::Schema::DSL::ResolvedSchemaValidator do
       expect(errors).to include(match(/invalid datatype 'float'/))
     end
 
+    it "detects enums with values that do not match datatype" do
+      enum = build_enum(values: { "active" => "active" }, datatype: :integer)
+      schema = build_schema(enums: [enum])
+
+      errors = described_class.new(schema).validate
+      expect(errors).to include(match(/do not match datatype 'integer'/))
+    end
+
     it "accepts all valid datatypes" do
       valid_types = %i[blob boolean date datetime float inet integer json numeric text]
       columns = valid_types.map { |t| build_column(name: "col_#{t}", datatype: t) }

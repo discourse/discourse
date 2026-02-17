@@ -81,6 +81,35 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
         expect(content).to include("table :users\n")
       end
     end
+
+    it "inserts table entry before the ignored block end even with trailing comments" do
+      Dir.mktmpdir do |tmpdir|
+        ignored_path = File.join(tmpdir, "ignored.rb")
+        File.write(ignored_path, <<~RUBY)
+            Migrations::Database::Schema.ignored do
+            end
+
+            # trailing comment
+          RUBY
+
+        allow(Migrations::Database::Schema).to receive(:available_databases).and_return(
+          %w[intermediate_db],
+        )
+        allow(Migrations::Database::Schema).to receive(:config_path).with(
+          "intermediate_db",
+        ).and_return(tmpdir)
+        allow(I18n).to receive(:t).and_call_original
+        allow(I18n).to receive(:t).with("schema.ignore.success", table: "users").and_return("ok")
+        allow(command).to receive(:puts)
+        allow(command).to receive(:options).and_return({ database: "intermediate_db" })
+
+        command.ignore("users")
+
+        content = File.read(ignored_path)
+        expect(content).to include("Migrations::Database::Schema.ignored do\n  table :users\nend\n")
+        expect(content).to include("# trailing comment")
+      end
+    end
   end
 
   describe "#detect_plugins" do
@@ -97,9 +126,13 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
       allow(command).to receive(:load_rails!)
       allow(command).to receive(:options).and_return({ database: "intermediate_db", force: false })
       allow(command).to receive(:puts)
+      allow(Migrations::Database::Schema).to receive(:available_databases).and_return(
+        %w[intermediate_db],
+      )
 
       allow(Migrations::Database::Schema).to receive(:ensure_ready!).with(
         database: "intermediate_db",
+        refresh_manifest: false,
       )
       allow(Migrations::Database::Schema).to receive(:plugin_manifest).with(
         database: "intermediate_db",
@@ -121,6 +154,25 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
       command.detect_plugins
 
       expect(command).to have_received(:puts).with("updated_incomplete")
+    end
+  end
+
+  describe "#resolve" do
+    it "fails fast when validation errors are present" do
+      allow(command).to receive(:load_rails!)
+      allow(command).to receive(:options).and_return({ database: "intermediate_db" })
+      allow(command).to receive(:puts)
+      allow(Migrations::Database::Schema).to receive(:available_databases).and_return(
+        %w[intermediate_db],
+      )
+      allow(Migrations::Database::Schema).to receive(:validate).with(
+        database: "intermediate_db",
+      ).and_return(["bad config"])
+      allow(Migrations::Database::Schema).to receive(:resolve)
+      allow(I18n).to receive(:t).and_call_original
+
+      expect { command.resolve }.to raise_error(SystemExit)
+      expect(Migrations::Database::Schema).not_to have_received(:resolve)
     end
   end
 end

@@ -77,5 +77,14 @@ RSpec.describe Migrations::Database::Schema::DSL::IgnoredBuilder do
       expect(ignored.table_names).to eq(Set[:schema_migrations])
       expect(ignored.ignored_plugin_names).to eq(%i[chat])
     end
+
+    it "normalizes underscored plugin names to hyphenated names" do
+      Migrations::Database::Schema.ignored { plugin :discourse_ai, "Not migrating" }
+
+      ignored = Migrations::Database::Schema.ignored_tables
+      expect(ignored.ignored_plugin_names).to eq([:"discourse-ai"])
+      expect(ignored.plugin_ignored?(:discourse_ai)).to be true
+      expect(ignored.plugin_ignored?(:"discourse-ai")).to be true
+    end
   end
 end

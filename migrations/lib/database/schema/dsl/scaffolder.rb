@@ -104,11 +104,5 @@ module Migrations::Database::Schema::DSL
       File.write(path, content)
       path
     end
-
-    def globally_ignored_columns
-      conventions = @schema.conventions_config
-      return Set.new unless conventions
-      conventions.ignored_columns.map(&:to_s).to_set
-    end
   end
 end

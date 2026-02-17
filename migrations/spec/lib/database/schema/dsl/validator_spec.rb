@@ -651,6 +651,39 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       expect(errors).to include(match(/belongs to ignored plugin 'chat'/))
     end
 
+    it "normalizes underscored ignored plugin names for plugin-owned source tables" do
+      manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
+      allow(manifest).to receive(:available?).and_return(true)
+      allow(manifest).to receive(:tables_for_plugin).with("discourse-ai").and_return(%w[ai_tools])
+      allow(manifest).to receive(:plugin_for_table).with("ai_tools").and_return("discourse-ai")
+      allow(manifest).to receive(:columns_for_plugin).and_return([])
+      allow(manifest).to receive(:all_plugin_names).and_return(%w[discourse-ai])
+      allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
+
+      schema =
+        build_schema(
+          tables: {
+            ai_tools: proc { include_all },
+          },
+          ignored: proc { plugin :discourse_ai, "Not migrating" },
+        )
+
+      stub_database(
+        connection,
+        db_tables: %i[ai_tools],
+        table_columns: {
+          ai_tools: {
+            id: {
+              type: :integer,
+            },
+          },
+        },
+      )
+
+      errors = described_class.new(schema).validate
+      expect(errors).to include(match(/belongs to ignored plugin 'discourse-ai'/))
+    end
+
     it "detects column options on excluded columns" do
       schema =
         build_schema(

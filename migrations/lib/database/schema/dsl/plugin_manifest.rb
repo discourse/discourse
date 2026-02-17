@@ -44,8 +44,18 @@ module Migrations::Database::Schema::DSL
     def regenerate!
       introspector = build_introspector
       result = introspector.introspect
+      existing_data =
+        File.exist?(@manifest_path) ? (YAML.safe_load_file(@manifest_path) || empty_data) : nil
 
-      @data = { "generated_at" => Time.now.utc.iso8601 }.merge(result)
+      new_data = { "generated_at" => Time.now.utc.iso8601 }.merge(result)
+      if existing_data && comparable_data(existing_data) == comparable_data(new_data)
+        @data = existing_data
+        @table_to_plugin = nil
+        @column_to_plugin = nil
+        return @data
+      end
+
+      @data = new_data
       @table_to_plugin = nil
       @column_to_plugin = nil
 
@@ -135,6 +145,10 @@ module Migrations::Database::Schema::DSL
         "failed_plugins" => [],
         "incomplete" => false,
       }
+    end
+
+    def comparable_data(data)
+      data.reject { |key, _| key == "generated_at" }
     end
 
     def format_yaml(data)

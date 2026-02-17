@@ -233,15 +233,11 @@ module Migrations::Database::Schema::DSL
     def plugin_for_table(name)
       manifest = @schema.plugin_manifest
       manifest.available? ? manifest.plugin_for_table(name) : nil
-    rescue StandardError
-      nil
     end
 
     def plugin_for_column(table_name, col_name)
       manifest = @schema.plugin_manifest
       manifest.available? ? manifest.plugin_for_column(table_name, col_name) : nil
-    rescue StandardError
-      nil
     end
   end
 end

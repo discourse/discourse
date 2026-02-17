@@ -76,5 +76,27 @@ RSpec.describe Migrations::Database::Schema do
         expect(manifest).not_to have_received(:regenerate!)
       end
     end
+
+    it "raises when stale manifest regeneration fails" do
+      Dir.mktmpdir do |tmpdir|
+        write_minimal_config(tmpdir)
+
+        manifest =
+          instance_double(
+            Migrations::Database::Schema::DSL::PluginManifest,
+            checksums_fresh?: false,
+          )
+        allow(manifest).to receive(:regenerate!).and_raise(StandardError, "boom")
+        allow(described_class).to receive(:plugin_manifest).with(database: :test_db).and_return(
+          manifest,
+        )
+        allow(Migrations).to receive(:root_path).and_return(tmpdir)
+
+        expect { described_class.ensure_ready!(database: :test_db) }.to raise_error(
+          described_class::ConfigError,
+          /Skipped/,
+        )
+      end
+    end
   end
 end

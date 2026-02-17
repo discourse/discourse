@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "prism"
+
 module Migrations::Database::Schema::DSL
   class Generator
     class GenerationError < StandardError
@@ -106,6 +108,30 @@ module Migrations::Database::Schema::DSL
       return nil unless File.exist?(path)
 
       content = File.read(path)
+      extract_custom_code_with_prism(content) || extract_custom_code_with_markers(content)
+    end
+
+    def extract_custom_code_with_prism(content)
+      result = Prism.parse(content)
+      return nil unless result.success?
+
+      comments = result.comments
+      start_comment = comments.find { |comment| comment.slice == CUSTOM_CODE_START }
+      return nil unless start_comment
+
+      end_comment =
+        comments.find do |comment|
+          comment.slice == CUSTOM_CODE_END &&
+            comment.location.start_offset > start_comment.location.start_offset
+        end
+      return nil unless end_comment
+
+      start_offset = line_end_offset(content, start_comment.location.start_offset)
+      custom = content[start_offset...end_comment.location.start_offset]
+      custom&.strip.presence
+    end
+
+    def extract_custom_code_with_markers(content)
       start_idx = content.index(CUSTOM_CODE_START)
       end_idx = content.index(CUSTOM_CODE_END)
       return nil unless start_idx && end_idx
@@ -115,6 +141,11 @@ module Migrations::Database::Schema::DSL
 
       custom = content[(after_start + 1)...end_idx]
       custom&.strip.presence
+    end
+
+    def line_end_offset(content, start_offset)
+      line_end = content.index("\n", start_offset)
+      line_end ? line_end + 1 : content.length
     end
 
     def format_ruby_files!

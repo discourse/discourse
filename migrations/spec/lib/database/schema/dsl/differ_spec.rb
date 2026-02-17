@@ -446,5 +446,39 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
       expect(diff.auto_ignored_columns.map(&:name)).to contain_exactly("polls_enabled")
       expect(diff.unknown_columns.map(&:name)).to contain_exactly("ai_summary")
     end
+
+    it "normalizes underscored plugin filters for ignore_plugin_columns!" do
+      manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
+      allow(manifest).to receive(:available?).and_return(true)
+      allow(manifest).to receive(:tables_for_plugin).and_return([])
+      allow(manifest).to receive(:all_plugin_names).and_return(%w[discourse-ai])
+      allow(manifest).to receive(:columns_for_plugin).with(
+        "discourse-ai",
+        table: "users",
+      ).and_return(%w[ai_summary])
+      allow(manifest).to receive(:plugin_for_column).and_return(nil)
+      allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
+
+      Migrations::Database::Schema.table(:users) do
+        include :id, :username
+        ignore_plugin_columns! :discourse_ai
+      end
+      Migrations::Database::Schema.ignored { table :unused_table, "placeholder" }
+
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: %i[id username ai_summary],
+        },
+      )
+
+      result = described_class.new(Migrations::Database::Schema).diff
+
+      expect(result.table_diffs.size).to eq(1)
+      diff = result.table_diffs.first
+      expect(diff.auto_ignored_columns.map(&:name)).to contain_exactly("ai_summary")
+      expect(diff.unknown_columns).to be_empty
+    end
   end
 end

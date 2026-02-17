@@ -69,5 +69,28 @@ RSpec.describe Migrations::Database::Schema::DSL::EnumBuilder do
         Migrations::Database::Schema.enum(:status) { value :inactive, 1 }
       end.to raise_error(Migrations::Database::Schema::ConfigError, /already registered/)
     end
+
+    it "raises when enum values mix strings and integers" do
+      expect do
+        Migrations::Database::Schema.enum :mixed do
+          value :a, 0
+          string_value :b, "b"
+        end
+      end.to raise_error(
+        Migrations::Database::Schema::ConfigError,
+        /all be Strings or all Integers/,
+      )
+    end
+
+    it "raises when enum values are neither strings nor integers" do
+      expect do
+        Migrations::Database::Schema.enum :bad_values do
+          value :a, true
+        end
+      end.to raise_error(
+        Migrations::Database::Schema::ConfigError,
+        /values must be Strings or Integers/,
+      )
+    end
   end
 end

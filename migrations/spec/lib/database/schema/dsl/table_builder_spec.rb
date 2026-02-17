@@ -287,7 +287,7 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
 
       table = Migrations::Database::Schema.tables[:users]
       expect(table.ignore_plugin_columns?).to eq(true)
-      expect(table.ignore_plugin_names).to eq(%i[polls discourse_ai])
+      expect(table.ignore_plugin_names).to eq([:polls, :"discourse-ai"])
     end
 
     it "sets ignore_plugin_names to nil when no plugins specified" do
@@ -334,6 +334,18 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
       end.to raise_error(
         Migrations::Database::Schema::ConfigError,
         /both included and ignored.*email/,
+      )
+    end
+
+    it "raises when both include and include_all are used" do
+      expect do
+        Migrations::Database::Schema.table :users do
+          include :id
+          include_all
+        end
+      end.to raise_error(
+        Migrations::Database::Schema::ConfigError,
+        /both `include` and `include_all`/,
       )
     end
 

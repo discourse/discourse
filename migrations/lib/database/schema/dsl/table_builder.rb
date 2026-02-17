@@ -136,7 +136,8 @@ module Migrations::Database::Schema::DSL
 
     def ignore_plugin_columns!(*plugin_names)
       @ignore_plugin_columns = true
-      @ignore_plugin_names = plugin_names.flatten.map(&:to_sym) if plugin_names.any?
+      @ignore_plugin_names =
+        plugin_names.flatten.map { |name| normalize_plugin_name(name) } if plugin_names.any?
     end
 
     def model(mode)
@@ -167,6 +168,11 @@ module Migrations::Database::Schema::DSL
         end
       end
 
+      if @included_columns && @include_all
+        raise Migrations::Database::Schema::ConfigError,
+              "Table :#{@name} cannot use both `include` and `include_all`"
+      end
+
       TableDef.new(
         name: @name,
         source_table_name: @source_table_name,
@@ -190,6 +196,10 @@ module Migrations::Database::Schema::DSL
     def generate_index_name(cols, unique)
       prefix = unique ? "idx_unique" : "idx"
       :"#{prefix}_#{@name}_#{cols.join("_")}"
+    end
+
+    def normalize_plugin_name(name)
+      name.to_s.tr("_", "-").to_sym
     end
   end
 

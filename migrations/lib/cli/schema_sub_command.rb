@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "prism"
+
 module Migrations::CLI
   class SchemaSubCommand < Thor
     Schema = ::Migrations::Database::Schema
@@ -13,8 +15,7 @@ module Migrations::CLI
     def validate
       load_rails!
 
-      database = options[:database]
-      Schema.ensure_ready!(database:)
+      database = selected_database
 
       errors = Schema.validate(database:)
 
@@ -33,7 +34,8 @@ module Migrations::CLI
     def generate
       load_rails!
 
-      resolved = Schema.generate(database: options[:database])
+      database = selected_database
+      resolved = Schema.generate(database:)
 
       puts
       tables_str = I18n.t("schema.generate.tables", count: resolved.tables.size)
@@ -45,7 +47,17 @@ module Migrations::CLI
     def resolve
       load_rails!
 
-      resolved = Schema.resolve(database: options[:database])
+      database = selected_database
+
+      errors = Schema.validate(database:)
+      if errors.any?
+        errors.each { |e| puts I18n.t("schema.validate.error", message: e).red }
+        puts
+        puts I18n.t("schema.validate.summary", count: errors.size)
+        exit 1
+      end
+
+      resolved = Schema.resolve(database:)
 
       puts I18n.t("schema.resolve.title")
       puts I18n.t("schema.resolve.separator")
@@ -66,7 +78,8 @@ module Migrations::CLI
     desc "list", "List all configured, ignored tables and enums"
     def list
       load_rails!
-      Schema.ensure_ready!(database: options[:database])
+      database = selected_database
+      Schema.ensure_ready!(database:)
 
       tables = Schema.tables
       ignored = Schema.ignored_tables
@@ -87,7 +100,8 @@ module Migrations::CLI
     desc "show TABLE", "Show configuration details for a table"
     def show(table_name)
       load_rails!
-      Schema.ensure_ready!(database: options[:database])
+      database = selected_database
+      Schema.ensure_ready!(database:)
 
       table = Schema.find_table(table_name)
 
@@ -106,10 +120,8 @@ module Migrations::CLI
     method_option :reason, type: :string, desc: "Optional reason for ignoring the table"
     def ignore(table_name)
       table_name = table_name.to_s
-      database = options[:database].to_s
+      database = selected_database
       reason = options[:reason]
-
-      validate_database_option!(database)
 
       unless /\A[a-z0-9_]+\z/.match?(table_name)
         raise(
@@ -125,15 +137,9 @@ module Migrations::CLI
       end
 
       content = File.read(ignored_path)
-
-      new_entry =
-        if reason.present?
-          "  table :#{table_name}, #{reason.inspect}\n"
-        else
-          "  table :#{table_name}\n"
-        end
-      inserted = content.sub!(/(\nend\s*)\z/, "\n#{new_entry}\\1")
-      raise Schema::ConfigError, "Could not find trailing `end` in #{ignored_path}" unless inserted
+      new_entry = build_ignored_table_entry(table_name, reason)
+      insert_at = ignored_block_end_offset(content, path: ignored_path)
+      content.insert(insert_at, new_entry)
 
       File.write(ignored_path, content)
       puts I18n.t("schema.ignore.success", table: table_name).green
@@ -144,7 +150,7 @@ module Migrations::CLI
     def diff
       load_rails!
 
-      database = options[:database]
+      database = selected_database
       Schema.ensure_ready!(database:)
 
       result = Schema.diff(database:)
@@ -155,7 +161,7 @@ module Migrations::CLI
     def scaffold(table_name)
       load_rails!
 
-      database = options[:database]
+      database = selected_database
       Schema.ensure_ready!(database:)
 
       path = Schema.scaffold(table_name, database:)
@@ -171,8 +177,8 @@ module Migrations::CLI
     def detect_plugins
       load_rails!
 
-      database = options[:database]
-      Schema.ensure_ready!(database:)
+      database = selected_database
+      Schema.ensure_ready!(database:, refresh_manifest: false)
 
       manifest = Schema.plugin_manifest(database:)
 
@@ -208,6 +214,57 @@ module Migrations::CLI
         Schema::ConfigError,
         I18n.t("schema.unknown_database", name: database, available: available.join(", ")),
       )
+    end
+
+    def selected_database
+      database = options[:database].to_s
+      validate_database_option!(database)
+      database
+    end
+
+    def build_ignored_table_entry(table_name, reason)
+      return "  table :#{table_name}, #{reason.inspect}\n" if reason.present?
+
+      "  table :#{table_name}\n"
+    end
+
+    def ignored_block_end_offset(content, path:)
+      result = Prism.parse(content)
+      unless result.success?
+        details = result.errors.map(&:message).join(", ")
+        raise Schema::ConfigError, "Could not parse #{path}: #{details}"
+      end
+
+      offset = find_ignored_block_end_offset(result.value)
+      if offset.nil?
+        raise Schema::ConfigError,
+              "Could not find `Migrations::Database::Schema.ignored do ... end` in #{path}"
+      end
+
+      offset
+    end
+
+    def find_ignored_block_end_offset(node)
+      if node.is_a?(Prism::CallNode) && ignored_call_with_block?(node)
+        return node.block.closing_loc.start_offset
+      end
+
+      node.compact_child_nodes.each do |child|
+        offset = find_ignored_block_end_offset(child)
+        return offset unless offset.nil?
+      end
+
+      nil
+    end
+
+    def ignored_call_with_block?(node)
+      return false unless node.message == "ignored"
+      return false unless node.block
+
+      receiver = node.receiver
+      return false unless receiver.is_a?(Prism::ConstantPathNode)
+
+      receiver.full_name.to_s.sub(/\A::/, "") == "Migrations::Database::Schema"
     end
 
     def display_table(table)
