@@ -324,6 +324,21 @@ describe "User preferences | Interface", type: :system do
 
     context "when changing another user's preferences as an admin" do
       fab!(:admin)
+      fab!(:user_selectable_theme) { Fabricate(:theme, user_selectable: true) }
+      fab!(:user_selectable_color_scheme) do
+        Fabricate(
+          :color_scheme,
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Light"],
+          user_selectable: true,
+        )
+      end
+      fab!(:user_selectable_dark_color_scheme) do
+        Fabricate(
+          :color_scheme,
+          base_scheme_id: ColorScheme::NAMES_TO_ID_MAP["Dark"],
+          user_selectable: true,
+        )
+      end
 
       before do
         sign_in(admin)
@@ -333,6 +348,43 @@ describe "User preferences | Interface", type: :system do
           color_scheme: ColorScheme.first,
           dark_color_scheme: ColorScheme.last,
         )
+      end
+
+      it "shows the target user's theme, color palette, and text size, not the admin's" do
+        admin.user_option.update!(
+          theme_ids: [SiteSetting.default_theme_id],
+          color_scheme_id: nil,
+          dark_scheme_id: nil,
+          text_size: :normal,
+        )
+        user.user_option.update!(
+          theme_ids: [user_selectable_theme.id],
+          color_scheme_id: user_selectable_color_scheme.id,
+          dark_scheme_id: user_selectable_dark_color_scheme.id,
+          text_size: :larger,
+        )
+
+        user_preferences_interface_page.visit(user)
+
+        expect(user_preferences_interface_page.theme_dropdown).to have_selected_value(
+          user_selectable_theme.id,
+        ),
+        "the theme dropdown should show the target user's theme"
+
+        expect(user_preferences_interface_page.light_scheme_dropdown).to have_selected_value(
+          user_selectable_color_scheme.id,
+        ),
+        "the light color palette dropdown should show the target user's color scheme"
+
+        expect(user_preferences_interface_page.dark_scheme_dropdown).to have_selected_value(
+          user_selectable_dark_color_scheme.id,
+        ),
+        "the dark color palette dropdown should show the target user's dark color scheme"
+
+        expect(user_preferences_interface_page.text_size_dropdown).to have_selected_name(
+          I18n.t("js.user.text_size.larger"),
+        ),
+        "the text size dropdown should show the target user's text size"
       end
 
       it "doesn't affect the viewing admin preferences and changes the target user's default preference for all devices" do

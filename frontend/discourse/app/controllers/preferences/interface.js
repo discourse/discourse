@@ -52,12 +52,6 @@ export default class InterfaceController extends Controller {
   @propertyEqual("model.id", "currentUser.id") isViewingOwnProfile;
   subpageTitle = i18n("user.preferences_nav.interface");
 
-  init() {
-    super.init(...arguments);
-    this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
-    this.set("selectedColorSchemeId", this.getSelectedColorSchemeId());
-  }
-
   @discourseComputed("makeThemeDefault")
   saveAttrNames(makeThemeDefault) {
     let attrs = [
@@ -147,6 +141,10 @@ export default class InterfaceController extends Controller {
 
   @discourseComputed("themeId")
   themeIdChanged(themeId) {
+    if (!this.isViewingOwnProfile) {
+      return false;
+    }
+
     if (this.currentThemeId === -1) {
       this.set("currentThemeId", themeId);
       return false;
@@ -182,11 +180,19 @@ export default class InterfaceController extends Controller {
 
   @discourseComputed("model.user_option.theme_ids", "themeId")
   showThemeSetDefault(userOptionThemes, selectedTheme) {
+    if (!this.isViewingOwnProfile) {
+      return false;
+    }
+
     return !userOptionThemes || userOptionThemes[0] !== selectedTheme;
   }
 
   @discourseComputed("model.user_option.text_size", "textSize")
   showTextSetDefault(userOptionTextSize, selectedTextSize) {
+    if (!this.isViewingOwnProfile) {
+      return false;
+    }
+
     return userOptionTextSize !== selectedTextSize;
   }
 
@@ -413,40 +419,40 @@ export default class InterfaceController extends Controller {
       .then(() => {
         this.set("saved", true);
 
-        if (makeThemeDefault) {
-          setLocalTheme([]);
-        } else {
-          setLocalTheme(
-            [this.themeId],
-            this.get("model.user_option.theme_key_seq")
-          );
-        }
-        if (makeTextSizeDefault) {
-          this.model.updateTextSizeCookie(null);
-        } else {
-          this.model.updateTextSizeCookie(this.textSize);
-        }
+        if (this.isViewingOwnProfile) {
+          if (makeThemeDefault) {
+            setLocalTheme([]);
+          } else {
+            setLocalTheme(
+              [this.themeId],
+              this.get("model.user_option.theme_key_seq")
+            );
+          }
+          if (makeTextSizeDefault) {
+            this.model.updateTextSizeCookie(null);
+          } else {
+            this.model.updateTextSizeCookie(this.textSize);
+          }
 
-        if (this.makeColorSchemeDefault) {
-          updateColorSchemeCookie(null);
-          updateColorSchemeCookie(null, { dark: true });
-        } else {
-          updateColorSchemeCookie(this.selectedColorSchemeId);
-
-          if (
-            this.defaultDarkSchemeId > 0 &&
-            this.selectedDarkColorSchemeId === this.defaultDarkSchemeId
-          ) {
+          if (this.makeColorSchemeDefault) {
+            updateColorSchemeCookie(null);
             updateColorSchemeCookie(null, { dark: true });
           } else {
-            updateColorSchemeCookie(this.selectedDarkColorSchemeId, {
-              dark: true,
-            });
-          }
-        }
+            updateColorSchemeCookie(this.selectedColorSchemeId);
 
-        if (this.selectedInterfaceColorModeId) {
-          if (this.isViewingOwnProfile) {
+            if (
+              this.defaultDarkSchemeId > 0 &&
+              this.selectedDarkColorSchemeId === this.defaultDarkSchemeId
+            ) {
+              updateColorSchemeCookie(null, { dark: true });
+            } else {
+              updateColorSchemeCookie(this.selectedDarkColorSchemeId, {
+                dark: true,
+              });
+            }
+          }
+
+          if (this.selectedInterfaceColorModeId) {
             const modeId = this.selectedInterfaceColorModeId;
             if (modeId === INTERFACE_COLOR_MODES.AUTO) {
               this.interfaceColor.useAutoMode();
@@ -456,13 +462,16 @@ export default class InterfaceController extends Controller {
               this.interfaceColor.forceDarkMode();
             }
           }
-          this.selectedInterfaceColorModeId = null;
+
+          this.homeChanged();
+
+          if (this.themeId && this.themeId !== this.currentThemeId) {
+            reload();
+          }
         }
 
-        this.homeChanged();
-
-        if (this.themeId && this.themeId !== this.currentThemeId) {
-          reload();
+        if (this.selectedInterfaceColorModeId) {
+          this.selectedInterfaceColorModeId = null;
         }
       })
       .catch(popupAjaxError);
@@ -470,19 +479,22 @@ export default class InterfaceController extends Controller {
 
   @action
   selectTextSize(newSize) {
-    const classList = document.documentElement.classList;
+    if (this.isViewingOwnProfile) {
+      const classList = document.documentElement.classList;
 
-    TEXT_SIZES.forEach((name) => {
-      const className = `text-size-${name}`;
-      if (newSize === name) {
-        classList.add(className);
-      } else {
-        classList.remove(className);
-      }
-    });
+      TEXT_SIZES.forEach((name) => {
+        const className = `text-size-${name}`;
+        if (newSize === name) {
+          classList.add(className);
+        } else {
+          classList.remove(className);
+        }
+      });
 
-    // Force refresh when leaving this screen
-    this.session.requiresRefresh = true;
+      // Force refresh when leaving this screen
+      this.session.requiresRefresh = true;
+    }
+
     this.set("textSize", newSize);
   }
 
