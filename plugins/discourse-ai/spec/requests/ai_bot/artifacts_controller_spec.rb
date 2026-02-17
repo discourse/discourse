@@ -70,6 +70,39 @@ RSpec.describe DiscourseAi::AiBot::ArtifactsController do
       end
     end
 
+    context "with non-PM artifact" do
+      fab!(:regular_topic) { Fabricate(:topic, user: user) }
+      fab!(:regular_post) { Fabricate(:post, user: user, topic: regular_topic) }
+      fab!(:regular_artifact) do
+        AiArtifact.create!(
+          user: user,
+          post: regular_post,
+          name: "Regular Topic Artifact",
+          html: "<div>Regular</div>",
+          css: "",
+          js: "",
+          metadata: {
+            public: false,
+          },
+        )
+      end
+
+      it "shows artifact to user who can see the post" do
+        sign_in(user)
+        get "/discourse-ai/ai-bot/artifacts/#{regular_artifact.id}"
+        expect(response.status).to eq(200)
+        expect(parse_srcdoc(response.body)).to include(regular_artifact.html)
+      end
+
+      it "returns 404 when user cannot see the post" do
+        other_user = Fabricate(:user)
+        regular_topic.update!(category: Fabricate(:private_category, group: Fabricate(:group)))
+        sign_in(other_user)
+        get "/discourse-ai/ai-bot/artifacts/#{regular_artifact.id}"
+        expect(response.status).to eq(404)
+      end
+    end
+
     context "with public artifact" do
       before { artifact.update!(metadata: { public: true }) }
 
