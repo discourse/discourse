@@ -451,6 +451,55 @@ RSpec.describe TopicsController do
       end
     end
 
+    describe "moving to an existing topic in a read-only category as TL4" do
+      fab!(:readonly_category) do
+        Fabricate(:category).tap do |c|
+          c.set_permissions(everyone: :readonly, staff: :full)
+          c.save!
+        end
+      end
+      fab!(:source_topic, :topic)
+      fab!(:source_post) { Fabricate(:post, topic: source_topic, user: trust_level_4) }
+      fab!(:dest_topic_in_readonly) { Fabricate(:topic, category: readonly_category) }
+
+      before { sign_in(trust_level_4) }
+
+      it "is forbidden" do
+        post "/t/#{source_topic.id}/move-posts.json",
+             params: {
+               post_ids: [source_post.id],
+               destination_topic_id: dest_topic_in_readonly.id,
+             }
+
+        expect(response).to be_forbidden
+      end
+    end
+
+    describe "moving to an existing topic in a category with restricted write permissions as TL4" do
+      fab!(:group)
+      fab!(:restricted_write_category) do
+        Fabricate(:category).tap do |c|
+          c.set_permissions(group => :full, :everyone => :readonly)
+          c.save!
+        end
+      end
+      fab!(:source_topic, :topic)
+      fab!(:source_post) { Fabricate(:post, topic: source_topic, user: trust_level_4) }
+      fab!(:dest_topic_restricted) { Fabricate(:topic, category: restricted_write_category) }
+
+      before { sign_in(trust_level_4) }
+
+      it "is forbidden" do
+        post "/t/#{source_topic.id}/move-posts.json",
+             params: {
+               post_ids: [source_post.id],
+               destination_topic_id: dest_topic_restricted.id,
+             }
+
+        expect(response).to be_forbidden
+      end
+    end
+
     describe "moving chronologically to an existing topic" do
       before { sign_in(moderator) }
 
