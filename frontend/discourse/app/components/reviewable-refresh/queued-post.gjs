@@ -1,9 +1,7 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import CookText from "discourse/components/cook-text";
 import RawEmailModal from "discourse/components/modal/raw-email";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import ReviewableCreatedBy from "discourse/components/reviewable-refresh/created-by";
@@ -35,7 +33,7 @@ export default class ReviewableQueuedPost extends Component {
       <div class="review-item__meta-topic-title">
         <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="">
           <div class="title-text">
-            {{highlightWatchedWords @reviewable.payload.title @reviewable}}
+            {{highlightWatchedWords @reviewable.fancy_title @reviewable}}
           </div>
           {{categoryBadge @reviewable.category}}
           <ReviewableTags @tags={{@reviewable.payload.tags}} @tagName="" />
@@ -56,14 +54,9 @@ export default class ReviewableQueuedPost extends Component {
 
     <div class="review-item__post">
       <div class="review-item__post-content">
-        <CookText
-          class="post-body"
-          @rawText={{highlightWatchedWords @reviewable.payload.raw @reviewable}}
-          @categoryId={{@reviewable.category_id}}
-          @topicId={{@reviewable.topic_id}}
-          @paintOneboxes={{false}}
-          @opts={{hash removeMissing=true}}
-        />
+        <div class="post-body">
+          {{highlightWatchedWords @reviewable.cooked @reviewable}}
+        </div>
 
         <span>
           <PluginOutlet
