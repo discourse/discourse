@@ -5129,6 +5129,25 @@ RSpec.describe TopicsController do
       json = response.parsed_body
       expect(json["banner_count"]).to eq(1)
     end
+
+    it "does not count topics in read-restricted categories for anonymous users" do
+      restricted_category = Fabricate(:category, read_restricted: true)
+      Fabricate(
+        :topic,
+        category: restricted_category,
+        pinned_at: 1.hour.ago,
+        pinned_globally: false,
+      )
+      Fabricate(:topic, category: restricted_category, pinned_at: 1.hour.ago, pinned_globally: true)
+      Fabricate(:topic, category: restricted_category, archetype: Archetype.banner)
+
+      get "/topics/feature_stats.json", params: { category_id: restricted_category.id }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["pinned_in_category_count"]).to eq(0)
+      expect(json["pinned_globally_count"]).to eq(0)
+      expect(json["banner_count"]).to eq(0)
+    end
   end
 
   describe "#excerpts" do
