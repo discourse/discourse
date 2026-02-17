@@ -10,12 +10,13 @@ Migrations::Database::Schema.table :user_field_values do
   unique_index :user_id,
                :field_id,
                :value,
-               name: :user_field_values_multiselect_index,
-               where: "is_multiselect_field = TRUE"
+               where: "is_multiselect_field = TRUE",
+               name: "idx_unique_user_field_values_multiselect"
+
   unique_index :user_id,
                :field_id,
-               name: :user_field_values_not_multiselect_index,
-               where: "is_multiselect_field = FALSE"
+               where: "is_multiselect_field = FALSE",
+               name: "idx_unique_user_field_values_not_multiselect"
 
   ignore :id, :name
 end
