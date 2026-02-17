@@ -230,22 +230,8 @@ module.exports = {
     maxHttpBufferSize: 1e8, // 100MB
   },
   browser_start_timeout: 120,
+  debug: true,
   browser_args: {
-    Chromium: [
-      // --no-sandbox is needed when running Chromium inside a container or when explicitly requested
-      sandboxDisabled ? "--no-sandbox" : null,
-      process.env.QUNIT_HEADLESS === "0" ? null : "--headless=new",
-      "--disable-dev-shm-usage",
-      "--disable-software-rasterizer",
-      "--disable-search-engine-choice-screen",
-      "--mute-audio",
-      "--remote-debugging-port=4201",
-      "--window-size=1440,900",
-      "--enable-precise-memory-info",
-      "--js-flags=--max_old_space_size=4096",
-      "--enable-logging",
-      "--v=1",
-    ].filter(Boolean),
     Chrome: [
       // --no-sandbox is needed when running Chrome inside a container or when explicitly requested
       sandboxDisabled ? "--no-sandbox" : null,
@@ -258,8 +244,9 @@ module.exports = {
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
+      "--enable-logging",
+      "--v=1"
     ].filter(Boolean),
-    Firefox: ["-headless", "--width=1440", "--height=900"],
   },
   reporter: Reporter,
 };
