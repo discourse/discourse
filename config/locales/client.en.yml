@@ -6623,6 +6623,8 @@ en:
         save: "Save"
         cancel: "Cancel"
         continue: "Continue"
+        copy_key: "Copy"
+        key_copied_to_clipboard: "API key copied to clipboard"
         back: "Back to API keys"
         revoke: "Revoke"
         undo_revoke: "Undo revoke"
