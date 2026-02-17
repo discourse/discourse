@@ -97,8 +97,28 @@ module("Unit | Utility | highlight-watched-words", function (hooks) {
 
     assert.strictEqual(
       highlighted.toString(),
-      '<mark class="watched-word-highlight">This</mark> is some <mark class="watched-word-highlight">தமிழ் & русский</mark> text to <mark class="watched-word-highlight">highlight</mark>',
+      '<mark class="watched-word-highlight">This</mark> is some <mark class="watched-word-highlight">தமிழ் &amp; русский</mark> text to <mark class="watched-word-highlight">highlight</mark>',
       "it should highlight the term correctly"
+    );
+  });
+
+  test("highlights watched words in cooked content", function (assert) {
+    const text = "<b>cooked content</b>";
+    const reviewable = {
+      reviewable_scores: [
+        {
+          reason_type: "watched_word",
+          reason_data: ["cooked"],
+        },
+      ],
+    };
+
+    const highlighted = highlightWatchedWords(text, reviewable);
+
+    assert.strictEqual(
+      highlighted.toString(),
+      '<b><mark class="watched-word-highlight">cooked</mark> content</b>',
+      "it should preserve HTML in cooked content and highlight watched words"
     );
   });
 });
