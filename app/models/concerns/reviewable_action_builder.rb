@@ -60,14 +60,6 @@ module ReviewableActionBuilder
     end
   end
 
-  def perform_no_action_user(performed_by, args)
-    create_result(:success, :ignored)
-  end
-
-  def perform_no_action_post(performed_by, args)
-    create_result(:success, :ignored)
-  end
-
   def perform_silence_user(performed_by, args)
     create_result(:success, :rejected)
   end
@@ -95,8 +87,6 @@ module ReviewableActionBuilder
   end
 
   def perform_hide_post(performed_by, _args)
-    # TODO (reviewable-refresh): This hard-coded post action type needs to make use of the
-    # original flag type. See ReviewableFlaggedPost::perform_agree_and_hide for reference.
     target_post.hide!(PostActionType.types[:inappropriate])
     create_result(:success, :rejected, [created_by_id], false)
   end
@@ -115,11 +105,6 @@ module ReviewableActionBuilder
   def perform_edit_post(performed_by, _args)
     # This is handled client-side, just transition the state
     create_result(:success, :approved, [created_by_id], false)
-  end
-
-  def perform_convert_to_pm(performed_by, _args)
-    # TODO (reviewable-refresh): Implement convert to PM logic
-    create_result(:success, :rejected, [created_by_id], false)
   end
 
   private
