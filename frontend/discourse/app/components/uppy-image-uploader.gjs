@@ -50,12 +50,9 @@ export default class UppyImageUploader extends Component {
     },
   });
 
-  applyLightbox = modifier(() =>
-    lightbox(
-      document.querySelector(`#${this.args.id}.file-uploader`),
-      this.siteSettings
-    )
-  );
+  applyLightbox = modifier((element) => {
+    lightbox(element.closest(".file-uploader"), this.siteSettings);
+  });
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -140,7 +137,7 @@ export default class UppyImageUploader extends Component {
   }
 
   @action
-  toggleLightbox() {
+  async toggleLightbox() {
     if (this.isVideoFile) {
       return;
     }
@@ -151,7 +148,7 @@ export default class UppyImageUploader extends Component {
       return;
     }
 
-    lightbox(lightboxImage);
+    await lightbox(lightboxImage.closest(".file-uploader"), this.siteSettings);
     lightboxImage.click();
   }
 
