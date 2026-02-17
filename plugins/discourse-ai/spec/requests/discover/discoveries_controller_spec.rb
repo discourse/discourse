@@ -82,6 +82,26 @@ RSpec.describe DiscourseAi::Discover::DiscoveriesController do
         expect(response.parsed_body["errors"]).to include("context")
       end
 
+      it "does not allow suspended users to create conversations" do
+        user.update!(suspended_till: 1.year.from_now, suspended_at: Time.zone.now)
+
+        expect {
+          post "/discourse-ai/discoveries/continue-convo", params: { query:, context: }
+        }.not_to change { Topic.count }
+
+        expect(response.status).to eq(403)
+      end
+
+      it "does not allow silenced users to create conversations" do
+        user.update!(silenced_till: 1.year.from_now)
+
+        expect {
+          post "/discourse-ai/discoveries/continue-convo", params: { query:, context: }
+        }.not_to change { Topic.count }
+
+        expect(response.status).to eq(403)
+      end
+
       describe "group-based restrictions" do
         fab!(:staff_group) { Group[:staff] }
 
