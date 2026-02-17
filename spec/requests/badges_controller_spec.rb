@@ -15,6 +15,74 @@ RSpec.describe BadgesController do
       expect(parsed["badges"].length).to eq(Badge.enabled.count)
       expect(response.headers["X-Robots-Tag"]).to eq("noindex")
     end
+
+    it "does not expose disabled badges via XHR requests" do
+      disabled_badge = Fabricate(:badge, enabled: false)
+
+      get "/badges.json", headers: { "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest" }
+
+      expect(response.status).to eq(200)
+      badge_ids = response.parsed_body["badges"].map { |b| b["id"] }
+      expect(badge_ids).not_to include(disabled_badge.id)
+    end
+
+    it "does not expose non-listable badges via XHR requests" do
+      non_listable_badge = Fabricate(:badge, listable: false)
+
+      get "/badges.json", headers: { "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest" }
+
+      expect(response.status).to eq(200)
+      badge_ids = response.parsed_body["badges"].map { |b| b["id"] }
+      expect(badge_ids).not_to include(non_listable_badge.id)
+    end
+
+    it "allows staff to see disabled and non-listable badges via XHR requests" do
+      admin = Fabricate(:admin)
+      disabled_badge = Fabricate(:badge, enabled: false)
+      non_listable_badge = Fabricate(:badge, listable: false)
+
+      sign_in(admin)
+      get "/badges.json", headers: { "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest" }
+
+      expect(response.status).to eq(200)
+      badge_ids = response.parsed_body["badges"].map { |b| b["id"] }
+      expect(badge_ids).to include(disabled_badge.id)
+      expect(badge_ids).to include(non_listable_badge.id)
+    end
+
+    it "filters disabled and non-listable badges for staff on non-XHR requests" do
+      admin = Fabricate(:admin)
+      disabled_badge = Fabricate(:badge, enabled: false)
+      non_listable_badge = Fabricate(:badge, listable: false)
+
+      sign_in(admin)
+      get "/badges.json"
+
+      expect(response.status).to eq(200)
+      badge_ids = response.parsed_body["badges"].map { |b| b["id"] }
+      expect(badge_ids).not_to include(disabled_badge.id)
+      expect(badge_ids).not_to include(non_listable_badge.id)
+    end
+
+    it "filters disabled and non-listable badges for staff when only_listable param is true" do
+      admin = Fabricate(:admin)
+      disabled_badge = Fabricate(:badge, enabled: false)
+      non_listable_badge = Fabricate(:badge, listable: false)
+
+      sign_in(admin)
+      get "/badges.json",
+          params: {
+            only_listable: "true",
+          },
+          headers: {
+            "HTTP_X_REQUESTED_WITH" => "XMLHttpRequest",
+          }
+
+      expect(response.status).to eq(200)
+      badge_ids = response.parsed_body["badges"].map { |b| b["id"] }
+      expect(badge_ids).not_to include(disabled_badge.id)
+      expect(badge_ids).not_to include(non_listable_badge.id)
+    end
   end
 
   describe "#show" do
