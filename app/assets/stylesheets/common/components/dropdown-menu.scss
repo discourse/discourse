@@ -28,7 +28,7 @@
       background: var(--d-selected);
 
       &:hover,
-      :focus-visible {
+      &:focus-visible {
         background: var(--d-selected-hover);
       }
     }
