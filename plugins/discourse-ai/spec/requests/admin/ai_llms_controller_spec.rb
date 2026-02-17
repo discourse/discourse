@@ -463,7 +463,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
     end
   end
 
-  describe "GET #test" do
+  describe "POST #test" do
     let(:test_attrs) do
       {
         name: "llama3",
@@ -475,10 +475,17 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
       }
     end
 
+    it "does not route via GET to prevent CSRF" do
+      DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
+        get "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
+        expect(response.status).to eq(404)
+      end
+    end
+
     context "when we can contact the model" do
       it "returns a success true flag" do
         DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
-          get "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
+          post "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
 
           expect(response).to be_successful
           expect(response.parsed_body["success"]).to eq(true)
@@ -498,7 +505,7 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
           DiscourseAi::Completions::Endpoints::Base::CompletionFailed.new(error_message.to_json)
 
         DiscourseAi::Completions::Llm.with_prepared_responses([error]) do
-          get "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
+          post "/admin/plugins/discourse-ai/ai-llms/test.json", params: { ai_llm: test_attrs }
 
           expect(response).to be_successful
           expect(response.parsed_body["success"]).to eq(false)
@@ -509,10 +516,10 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
     context "when config is invalid" do
       it "returns a success false with the validation error" do
-        get "/admin/plugins/discourse-ai/ai-llms/test.json",
-            params: {
-              ai_llm: test_attrs.except(:max_prompt_tokens),
-            }
+        post "/admin/plugins/discourse-ai/ai-llms/test.json",
+             params: {
+               ai_llm: test_attrs.except(:max_prompt_tokens),
+             }
 
         expect(response).to be_successful
         expect(response.parsed_body["success"]).to eq(false)
@@ -527,12 +534,12 @@ RSpec.describe DiscourseAi::Admin::AiLlmsController do
 
       it "tests the existing model directly instead of using params" do
         DiscourseAi::Completions::Llm.with_prepared_responses(["a response"]) do
-          get "/admin/plugins/discourse-ai/ai-llms/test.json",
-              params: {
-                ai_llm: {
-                  id: seeded_llm.id,
-                },
-              }
+          post "/admin/plugins/discourse-ai/ai-llms/test.json",
+               params: {
+                 ai_llm: {
+                   id: seeded_llm.id,
+                 },
+               }
 
           expect(response).to be_successful
           expect(response.parsed_body["success"]).to eq(true)
