@@ -1228,6 +1228,11 @@
     margin-right: 1em;
   }
 
+  .user-profile-location,
+  .user-profile-website {
+    @include ellipsis;
+  }
+
   @include viewport.until(md) {
     justify-content: center;
   }
