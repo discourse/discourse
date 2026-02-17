@@ -99,7 +99,20 @@ after_initialize do
       fragment
         .css(".poll, [data-poll-name]")
         .each do |poll|
-          poll.replace "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
+          html = +""
+
+          if title = poll.at_css(".poll-title")
+            html << title.to_html
+          end
+
+          if container = poll.at_css(".poll-container")
+            container.css("li").each { |li| li.remove_attribute("data-poll-option-id") }
+            html << container.inner_html
+          end
+
+          html << "<p><a href='#{post_url}'>#{I18n.t("poll.email.link_to_poll")}</a></p>"
+
+          poll.replace(html)
         end
     end
   end
@@ -107,14 +120,11 @@ after_initialize do
   on(:reduce_excerpt) do |doc, options|
     post = options[:post]
 
-    replacement =
-      (
-        if post&.url.present?
-          "<a href='#{UrlHelper.normalized_encode(post.url)}'>#{I18n.t("poll.poll")}</a>"
-        else
-          I18n.t("poll.poll")
-        end
-      )
+    if post&.url.present?
+      replacement = "<a href='#{UrlHelper.normalized_encode(post.url)}'>#{I18n.t("poll.poll")}</a>"
+    else
+      replacement = I18n.t("poll.poll")
+    end
 
     doc.css("div.poll").each { |poll| poll.replace(replacement) }
   end
