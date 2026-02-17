@@ -14,6 +14,9 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
         allow(Migrations::Database::Schema).to receive(:config_path).with(
           "intermediate_db",
         ).and_return(tmpdir)
+        allow(Migrations::Database::Schema).to receive(:available_databases).and_return(
+          %w[intermediate_db],
+        )
         allow(I18n).to receive(:t).and_call_original
         allow(I18n).to receive(:t).with("schema.ignore.success", table: "users").and_return("ok")
         allow(command).to receive(:puts)
@@ -31,6 +34,9 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
     end
 
     it "raises when table name is invalid" do
+      allow(Migrations::Database::Schema).to receive(:available_databases).and_return(
+        %w[intermediate_db],
+      )
       allow(command).to receive(:options).and_return(
         { reason: "not needed", database: "intermediate_db" },
       )
@@ -51,6 +57,29 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
         Migrations::Database::Schema::ConfigError,
         /Unknown database/,
       )
+    end
+
+    it "allows adding ignored tables without a reason" do
+      Dir.mktmpdir do |tmpdir|
+        ignored_path = File.join(tmpdir, "ignored.rb")
+        File.write(ignored_path, "Migrations::Database::Schema.ignored do\nend\n")
+
+        allow(Migrations::Database::Schema).to receive(:available_databases).and_return(
+          %w[intermediate_db],
+        )
+        allow(Migrations::Database::Schema).to receive(:config_path).with(
+          "intermediate_db",
+        ).and_return(tmpdir)
+        allow(I18n).to receive(:t).and_call_original
+        allow(I18n).to receive(:t).with("schema.ignore.success", table: "users").and_return("ok")
+        allow(command).to receive(:puts)
+        allow(command).to receive(:options).and_return({ database: "intermediate_db" })
+
+        command.ignore("users")
+
+        content = File.read(ignored_path)
+        expect(content).to include("table :users\n")
+      end
     end
   end
 end

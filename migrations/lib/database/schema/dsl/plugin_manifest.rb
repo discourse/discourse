@@ -16,6 +16,8 @@ module Migrations::Database::Schema::DSL
       load_data
       stored_state = @data["migration_state"]
       return false unless stored_state
+      return false if @data["incomplete"]
+      return false if failed_plugins.any?
 
       introspector = build_introspector
       current = introspector.compute_all_checksums
@@ -88,6 +90,11 @@ module Migrations::Database::Schema::DSL
       plugins.sum { |_, data| (data["columns"] || {}).sum { |_, cols| cols.size } }
     end
 
+    def failed_plugins
+      load_data
+      Array(@data["failed_plugins"])
+    end
+
     private
 
     # Plugin directory names use hyphens (discourse-ai), but Ruby symbols
@@ -110,7 +117,17 @@ module Migrations::Database::Schema::DSL
     end
 
     def empty_data
-      { "plugins" => {}, "migration_state" => { "core" => nil, "plugins" => {} } }
+      {
+        "plugins" => {
+        },
+        "migration_state" => {
+          "core" => nil,
+          "plugins" => {
+          },
+        },
+        "failed_plugins" => [],
+        "incomplete" => false,
+      }
     end
 
     def format_yaml(data)

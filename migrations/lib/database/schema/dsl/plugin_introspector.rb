@@ -30,6 +30,7 @@ module Migrations::Database::Schema::DSL
 
             plugins = discover_plugins
             plugin_data = {}
+            failed_plugins = []
 
             plugins.keys.sort.each do |plugin_name|
               migration_paths = plugins[plugin_name]
@@ -38,6 +39,7 @@ module Migrations::Database::Schema::DSL
               begin
                 run_plugin_migrations(migration_paths)
               rescue StandardError => e
+                failed_plugins << plugin_name
                 real_stderr.puts "  Warning: '#{plugin_name}' migration error: #{e.message}"
               end
 
@@ -62,7 +64,12 @@ module Migrations::Database::Schema::DSL
 
             checksums = compute_all_checksums
 
-            { "plugins" => plugin_data, "migration_state" => checksums }
+            {
+              "plugins" => plugin_data,
+              "migration_state" => checksums,
+              "failed_plugins" => failed_plugins.sort,
+              "incomplete" => failed_plugins.any?,
+            }
           end
         ensure
           ActiveRecord::Base.establish_connection(original_config)

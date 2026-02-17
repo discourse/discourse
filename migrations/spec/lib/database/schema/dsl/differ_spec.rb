@@ -66,6 +66,21 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
       expect(names).to contain_exactly("comments", "posts")
     end
 
+    it "does not report copy_structure_from source tables as unknown" do
+      stub_plugin_manifest_unavailable
+
+      Migrations::Database::Schema.table :user_archive do
+        copy_structure_from :users
+        include :id
+      end
+
+      stub_database(connection, db_tables: %i[users], table_columns: { users: %i[id] })
+
+      result = described_class.new(Migrations::Database::Schema).diff
+
+      expect(result.unknown_tables).to be_empty
+    end
+
     it "excludes ignored tables from unknown" do
       stub_plugin_manifest_unavailable
 
@@ -156,6 +171,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
     it "uses source table name when attributing unknown columns for copied tables" do
       manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
       allow(manifest).to receive(:available?).and_return(true)
+      allow(manifest).to receive(:plugin_for_table).and_return(nil)
       allow(manifest).to receive(:plugin_for_column).with("users", "chat_enabled").and_return(
         "chat",
       )

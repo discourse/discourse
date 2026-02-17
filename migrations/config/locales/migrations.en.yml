@@ -109,5 +109,5 @@ en:
       auto_ignored_column: "  %{name} [%{plugin}] (auto-ignored from plugin)"
       suggested_actions: "Suggested actions:"
       action_scaffold: "bin/cli schema scaffold <table>    Create config for a new table"
-      action_ignore: "bin/cli schema ignore <table>      Add table to ignored.rb"
+      action_ignore: "bin/cli schema ignore <table> [--reason \"...\"]  Add table to ignored.rb"
       no_differences: "✓ No differences found"

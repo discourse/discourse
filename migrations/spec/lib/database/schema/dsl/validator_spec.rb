@@ -470,6 +470,37 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       expect(result.errors).to include(match(/source table 'users' does not exist/))
     end
 
+    it "does not report copy_structure_from source tables as unconfigured" do
+      schema =
+        build_schema(
+          tables: {
+            user_archive:
+              proc do
+                copy_structure_from :users
+                include :id
+              end,
+          },
+        )
+
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: {
+            id: {
+              type: :integer,
+            },
+          },
+        },
+        primary_keys: {
+          users: ["id"],
+        },
+      )
+
+      result = described_class.new(schema).validate
+      expect(result.errors).to be_empty
+    end
+
     it "validates enums have values" do
       empty_enum = proc {}
 

@@ -49,7 +49,13 @@ RSpec.describe Migrations::Database::Schema::DSL::Loader do
       Dir.mktmpdir do |dir|
         File.write(File.join(dir, "config.rb"), <<~RUBY)
             Migrations::Database::Schema.configure do
-              output { schema_file "db/schema.sql" }
+              output do
+                schema_file "db/schema.sql"
+                models_directory "lib/models"
+                models_namespace "Test::Models"
+                enums_directory "lib/enums"
+                enums_namespace "Test::Enums"
+              end
             end
           RUBY
 

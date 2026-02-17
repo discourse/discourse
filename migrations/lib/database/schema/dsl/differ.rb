@@ -40,7 +40,12 @@ module Migrations::Database::Schema::DSL
     private
 
     def find_unknown_tables
-      configured = @schema.tables.keys.map(&:to_s).to_set
+      configured =
+        @schema
+          .tables
+          .each_value
+          .filter_map { |table_def| table_def.source_table_name&.to_s }
+          .to_set
       ignored = ignored_table_name_set
 
       unknown = @db_table_names - configured - ignored

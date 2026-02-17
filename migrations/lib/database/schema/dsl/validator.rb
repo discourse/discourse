@@ -26,7 +26,12 @@ module Migrations::Database::Schema::DSL
     private
 
     def validate_tables
-      configured_table_names = @schema.tables.keys.map(&:to_s).to_set
+      configured_table_names =
+        @schema
+          .tables
+          .each_value
+          .filter_map { |table_def| table_def.source_table_name&.to_s }
+          .to_set
       ignored_table_names = ignored_table_name_set
 
       # Check for unconfigured tables in database
