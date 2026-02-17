@@ -6467,6 +6467,34 @@ RSpec.describe TopicsController do
 
       expect(body["group_name"]).to eq(group.name)
     end
+
+    it "rejects a user who is not a participant of the message" do
+      sign_in(user_2)
+
+      put "/t/#{group_message.id}/archive-message.json"
+      expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#move_to_inbox" do
+    fab!(:group) do
+      Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user) }
+    end
+
+    fab!(:group_message) do
+      create_post(
+        user: user,
+        target_group_names: [group.name],
+        archetype: Archetype.private_message,
+      ).topic
+    end
+
+    it "rejects a user who is not a participant of the message" do
+      sign_in(user_2)
+
+      put "/t/#{group_message.id}/move-to-inbox.json"
+      expect(response.status).to eq(403)
+    end
   end
 
   describe "#set_notifications" do

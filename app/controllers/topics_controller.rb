@@ -667,6 +667,7 @@ class TopicsController < ApplicationController
 
   def toggle_archive_message(archive)
     topic = Topic.find(params[:id].to_i)
+    guardian.ensure_can_see!(topic)
 
     group_id = nil
 
