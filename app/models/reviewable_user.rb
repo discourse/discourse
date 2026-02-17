@@ -50,30 +50,6 @@ class ReviewableUser < Reviewable
     super
   end
 
-  # TODO (reviewable-refresh): Move to build_actions when fully migrated to new UI
-  def build_new_separated_actions
-    bundle_actions = {}
-    if status == "pending"
-      bundle_actions[:approve_user] = {} if target_user && !target_user.approved? &&
-        guardian.can_approve?(target_user)
-
-      if @guardian.can_delete_user?(target_user)
-        bundle_actions[:delete_user] = {}
-        bundle_actions[:delete_user_block] = {}
-      end
-    end
-    if status == "rejected" && !payload["scrubbed_by"]
-      bundle_actions[:scrub] = { client_action: "scrub" }
-    end
-
-    build_bundle(
-      "#{id}-user-actions",
-      "reviewables.actions.user_actions.bundle_title",
-      bundle_actions,
-      source: "core",
-    )
-  end
-
   def perform_approve_user(performed_by, args)
     ReviewableUser.set_approved_fields!(target, performed_by)
     target.save!

@@ -93,12 +93,6 @@ class ReviewablePost < Reviewable
     end
   end
 
-  # TODO (reviewable-refresh): Merge this method into build_actions when fully migrated to new UI
-  def build_new_separated_actions
-    build_post_actions_bundle
-    build_user_actions_bundle
-  end
-
   # TODO (reviewable-refresh): Remove combined actions below when fully migrated to new UI
   def perform_approve(performed_by, _args)
     create_result(:success, :approved, [created_by_id], false)

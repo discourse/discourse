@@ -148,12 +148,6 @@ class ReviewableFlaggedPost < Reviewable
     end
   end
 
-  # TODO (reviewable-refresh): Merge into build_actions post rollout.
-  def build_new_separated_actions
-    build_post_actions_bundle
-    build_user_actions_bundle
-  end
-
   def perform_ignore(performed_by, args)
     perform_ignore_and_do_nothing(performed_by, args)
   end

@@ -110,18 +110,6 @@ module ReviewableActionBuilder
     raise NotImplementedError, "Including class must implement #build_combined_actions"
   end
 
-  # Build new separated actions for the reviewable.
-  #
-  # Classes that include this module should implement this method to define
-  # the new separated actions for their specific reviewable type.
-  #
-  # @TODO (reviewable-refresh) Remove this method once the new UI is fully implemented.
-  #
-  # @return [void]
-  def build_new_separated_actions
-    raise NotImplementedError, "Including class must implement #build_new_separated_actions"
-  end
-
   # Build a bundle of actions and add it to the provided actions list.
   #
   # @param id [String] ID for the bundle, used to derive I18n keys.
