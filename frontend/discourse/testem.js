@@ -244,7 +244,7 @@ module.exports = {
       "--window-size=1440,900",
       "--enable-precise-memory-info",
       "--js-flags=--max_old_space_size=4096",
-      "--enable-logging",
+      "--enable-logging=stderr",
       "--v=1"
     ].filter(Boolean),
   },
