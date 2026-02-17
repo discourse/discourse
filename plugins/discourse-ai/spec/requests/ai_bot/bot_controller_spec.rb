@@ -135,6 +135,7 @@ RSpec.describe DiscourseAi::AiBot::BotController do
     before do
       Group.refresh_automatic_groups!
       SiteSetting.ai_bot_enabled = true
+      SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:trust_level_0].to_s
       AiPersona.persona_cache.flush!
 
       tl0_group =
@@ -147,6 +148,22 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       unless pm_topic.topic_allowed_users.exists?(user: bot_user)
         pm_topic.topic_allowed_users.create!(user: bot_user)
       end
+    end
+
+    it "returns 403 when ai_bot_enabled is false" do
+      SiteSetting.ai_bot_enabled = false
+
+      post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+
+      expect(response.status).to eq(403)
+    end
+
+    it "returns 403 when user is not in ai_bot_allowed_groups" do
+      SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:admins].to_s
+
+      post "/discourse-ai/ai-bot/post/#{reply_post.id}/retry"
+
+      expect(response.status).to eq(403)
     end
 
     it "streams a replacement into the existing bot reply" do
