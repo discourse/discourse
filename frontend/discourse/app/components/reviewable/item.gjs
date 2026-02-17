@@ -158,7 +158,6 @@ export default class ReviewableItem extends Component {
     "claimOptional",
     "claimRequired",
     "reviewable.claimed_by",
-    "siteSettings.reviewable_old_moderator_actions",
     "isAiReviewable"
   )
   displayContextQuestion(

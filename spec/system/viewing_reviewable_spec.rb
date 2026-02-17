@@ -314,8 +314,6 @@ describe "Viewing reviewable item", type: :system do
       end
 
       it "Allow to delete and scrub user" do
-        SiteSetting.reviewable_old_moderator_actions = true
-
         reviewable = ReviewableUser.find_by_target_id(user.id)
 
         refreshed_review_page.visit_reviewable(reviewable)
