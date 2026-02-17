@@ -1221,10 +1221,16 @@
 
 .user-profile__location-and-website {
   display: flex;
+  flex-wrap: wrap;
   max-width: 100%;
 
   .user-profile-location {
     margin-right: 1em;
+  }
+
+  .user-profile-location,
+  .user-profile-website {
+    @include ellipsis;
   }
 
   @include viewport.until(md) {
