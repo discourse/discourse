@@ -8,6 +8,10 @@ module Migrations
       rescue ClassFilter::UnknownClassNamesError => e
         handle_unknown_class_names_error(e)
         exit(1)
+      rescue Migrations::Database::Schema::ConfigError,
+             Migrations::Database::Schema::DSL::Generator::GenerationError => e
+        puts e.message.red
+        exit(1)
       rescue => e
         puts "An error occurred: #{e.message}".red
         puts e.backtrace.join("\n")
