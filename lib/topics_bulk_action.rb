@@ -140,8 +140,10 @@ class TopicsBulkAction
 
   def destroy_post_timing
     topics.each do |t|
-      PostTiming.destroy_last_for(@user, topic: t)
-      @changed_ids << t.id
+      if guardian.can_see?(t)
+        PostTiming.destroy_last_for(@user, topic: t)
+        @changed_ids << t.id
+      end
     end
   end
 

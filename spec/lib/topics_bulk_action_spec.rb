@@ -422,6 +422,18 @@ RSpec.describe TopicsBulkAction do
       expect { topic_ids = tba.perform! }.to change { PostTiming.count }.by(-1)
       expect(topic_ids).to contain_exactly(topic.id)
     end
+
+    it "skips topics the user cannot see" do
+      pm = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: pm)
+      PostTiming.process_timings(pm.user, pm.id, 10, [[1, 10]])
+
+      other_user = Fabricate(:user)
+      tba = TopicsBulkAction.new(other_user, [pm.id], type: "destroy_post_timing")
+      topic_ids = nil
+      expect { topic_ids = tba.perform! }.not_to change { PostTiming.count }
+      expect(topic_ids).to eq([])
+    end
   end
 
   describe "delete" do

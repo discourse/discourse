@@ -326,6 +326,8 @@ class TopicsController < ApplicationController
 
   def destroy_timings
     topic_id = params[:topic_id].to_i
+    topic = Topic.find_by(id: topic_id)
+    guardian.ensure_can_see!(topic)
 
     if params[:last].to_s == "1"
       PostTiming.destroy_last_for(current_user, topic_id: topic_id)
@@ -1023,6 +1025,9 @@ class TopicsController < ApplicationController
     topic_id = allowed_params[:topic_id].to_i
     topic_time = allowed_params[:topic_time].to_i
     timings = allowed_params[:timings].to_h || {}
+
+    topic = Topic.find_by(id: topic_id)
+    guardian.ensure_can_see!(topic)
 
     # ensure we capture current user for the block
     user = current_user

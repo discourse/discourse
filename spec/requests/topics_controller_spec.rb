@@ -1586,6 +1586,28 @@ RSpec.describe TopicsController do
       [TopicUser, PostTiming].map { |klass| klass.where(user: user, topic: topic).count }
     end
 
+    it "rejects destroy_timings for a topic the user cannot see" do
+      pm = Fabricate(:private_message_topic)
+      pm_post = Fabricate(:post, topic: pm)
+      sign_in(user)
+
+      original_reads = pm_post.reload.reads
+
+      delete "/t/#{pm.id}/timings.json"
+      expect(response.status).to eq(403)
+
+      expect(pm_post.reload.reads).to eq(original_reads)
+    end
+
+    it "rejects destroy_timings with last=1 for a topic the user cannot see" do
+      pm = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: pm)
+      sign_in(user)
+
+      delete "/t/#{pm.id}/timings.json?last=1"
+      expect(response.status).to eq(403)
+    end
+
     context "for last post only" do
       it "should allow you to retain topic timing but remove last post only" do
         freeze_time
@@ -5325,6 +5347,17 @@ RSpec.describe TopicsController do
       expect(post_timing.topic).to eq(topic)
       expect(post_timing.user).to eq(user)
       expect(post_timing.msecs).to eq(2)
+    end
+
+    it "rejects timings for a topic the user cannot see" do
+      sign_in(user)
+      pm = Fabricate(:private_message_topic)
+      Fabricate(:post, topic: pm)
+
+      post "/topics/timings.json", params: { topic_id: pm.id, topic_time: 5, timings: { 1 => 100 } }
+
+      expect(response.status).to eq(403)
+      expect(PostTiming.where(topic_id: pm.id, user_id: user.id).count).to eq(0)
     end
 
     it "caps post read time at the max integer value (2^31 - 1)" do
