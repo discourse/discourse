@@ -113,12 +113,10 @@ describe Chat::ReviewQueue do
       end
 
       it "ignores the cooldown window when the message is edited" do
-        Chat::UpdateMessage.call(
-          guardian: Guardian.new(message.user),
-          params: {
-            message_id: message.id,
-            message: "I'm editing this message. Please flag it.",
-          },
+        update_message!(
+          message,
+          user: message.user,
+          text: "I'm editing this message. Please flag it.",
         )
 
         expect(second_flag_result).to include success: true

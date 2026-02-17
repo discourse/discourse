@@ -201,6 +201,22 @@ RSpec.describe Chat::Api::ChannelMessagesController do
           expect(response.status).to eq(422)
         end
       end
+
+      context "when message belongs to a different channel" do
+        fab!(:other_channel, :category_channel)
+        fab!(:other_message) { Fabricate(:chat_message, chat_channel: other_channel) }
+
+        it "returns a 404" do
+          put "/chat/api/channels/#{channel.id}/messages/#{other_message.id}",
+              params: {
+                message: "probe",
+              }
+
+          # Without channel_id scoping, the service finds the message in the
+          # wrong channel and returns a non-404 status, leaking its existence
+          expect(response.status).to eq(404)
+        end
+      end
     end
   end
 end
