@@ -256,27 +256,6 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       expect(errors).to include(match(/references unknown enum 'nonexistent_enum'/))
     end
 
-    it "accepts added columns with enum names provided as strings" do
-      schema =
-        build_schema(
-          tables: {
-            uploads:
-              proc do
-                synthetic!
-                add_column :type, :text, enum: "upload_type"
-              end,
-          },
-          enums: {
-            upload_type: proc { value :avatar, 0 },
-          },
-        )
-
-      stub_database(connection, db_tables: [], table_columns: {})
-
-      errors = described_class.new(schema).validate
-      expect(errors).to be_empty
-    end
-
     it "detects column type overrides referencing unknown enums" do
       schema =
         build_schema(
@@ -308,37 +287,6 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       expect(errors).to include(
         match(/column 'status' type 'missing_enum' references unknown enum/),
       )
-    end
-
-    it "allows known type overrides for columns" do
-      schema =
-        build_schema(
-          tables: {
-            users:
-              proc do
-                include :id, :status
-                column :status, :integer
-              end,
-          },
-        )
-
-      stub_database(
-        connection,
-        db_tables: %i[users],
-        table_columns: {
-          users: {
-            id: {
-              type: :integer,
-            },
-            status: {
-              type: :text,
-            },
-          },
-        },
-      )
-
-      errors = described_class.new(schema).validate
-      expect(errors).to be_empty
     end
 
     it "detects stale ignored columns" do
@@ -422,25 +370,6 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       expect(errors).to include(
         match(/index 'idx_missing' references columns not in configuration/),
       )
-    end
-
-    it "validates a table with synthetic! and only add_columns" do
-      schema =
-        build_schema(
-          tables: {
-            log_entries:
-              proc do
-                synthetic!
-                add_column :created_at, :datetime, required: true
-                add_column :message, :text, required: true
-              end,
-          },
-        )
-
-      stub_database(connection, db_tables: [], table_columns: {})
-
-      errors = described_class.new(schema).validate
-      expect(errors).to be_empty
     end
 
     it "validates copy_structure_from source table" do

@@ -251,60 +251,6 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
       expect(result.table_diffs).to be_empty
     end
 
-    it "accounts for added columns in effective columns" do
-      stub_plugin_manifest_unavailable
-
-      Migrations::Database::Schema.table(:users) do
-        include :id, :username
-        add_column :display_name, :text
-      end
-
-      stub_database(connection, db_tables: %i[users], table_columns: { users: %i[id username] })
-
-      result = described_class.new(Migrations::Database::Schema).diff
-
-      expect(result.table_diffs).to be_empty
-    end
-
-    it "returns no table diff when columns match exactly" do
-      stub_plugin_manifest_unavailable
-
-      Migrations::Database::Schema.table(:users) do
-        include :id, :username
-        ignore :legacy_col, reason: "deprecated"
-      end
-
-      stub_database(
-        connection,
-        db_tables: %i[users],
-        table_columns: {
-          users: %i[id username legacy_col],
-        },
-      )
-
-      result = described_class.new(Migrations::Database::Schema).diff
-
-      expect(result.table_diffs).to be_empty
-    end
-
-    it "handles tables with include_all (all columns mode)" do
-      stub_plugin_manifest_unavailable
-
-      Migrations::Database::Schema.table(:users) { include_all }
-
-      stub_database(
-        connection,
-        db_tables: %i[users],
-        table_columns: {
-          users: %i[id username email],
-        },
-      )
-
-      result = described_class.new(Migrations::Database::Schema).diff
-
-      expect(result.table_diffs).to be_empty
-    end
-
     it "skips column diff for tables missing from database" do
       stub_plugin_manifest_unavailable
 

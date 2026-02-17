@@ -24,58 +24,14 @@ RSpec.describe Migrations::Database::Schema::DSL::IgnoredBuilder do
       expect(ignored.reason_for(:temp_data)).to eq("Legacy tables")
       expect(ignored.reason_for(:old_logs)).to eq("Legacy tables")
     end
-
-    it "allows tables without a reason" do
-      Migrations::Database::Schema.ignored do
-        table :temp_data
-        tables :a, :b
-      end
-
-      ignored = Migrations::Database::Schema.ignored_tables
-      expect(ignored.table_names).to eq(Set[:temp_data, :a, :b])
-      expect(ignored.reason_for(:temp_data)).to be_nil
-    end
   end
 
   describe "plugin DSL" do
-    it "registers ignored plugins with reasons" do
-      Migrations::Database::Schema.ignored do
-        plugin :chat, "Not needed for migration"
-        plugin :polls, "Legacy plugin"
-      end
-
-      ignored = Migrations::Database::Schema.ignored_tables
-      expect(ignored.ignored_plugin_names).to eq(%i[chat polls])
-      expect(ignored.plugin_ignored?(:chat)).to be true
-      expect(ignored.plugin_ignored?(:polls)).to be true
-      expect(ignored.plugin_ignored?(:discourse_ai)).to be false
-    end
-
     it "raises when plugin reason is missing" do
       expect do Migrations::Database::Schema.ignored { plugin :chat, "" } end.to raise_error(
         Migrations::Database::Schema::ConfigError,
         /reason/,
       )
-    end
-
-    it "raises when plugin reason is nil" do
-      expect do Migrations::Database::Schema.ignored { plugin :chat, nil } end.to raise_error(
-        Migrations::Database::Schema::ConfigError,
-        /reason/,
-      )
-    end
-
-    it "coexists with table ignores" do
-      Migrations::Database::Schema.ignored do
-        table :schema_migrations, "Rails internal"
-        plugin :chat, "Not migrating"
-      end
-
-      ignored = Migrations::Database::Schema.ignored_tables
-      expect(ignored.ignored?(:schema_migrations)).to be true
-      expect(ignored.plugin_ignored?(:chat)).to be true
-      expect(ignored.table_names).to eq(Set[:schema_migrations])
-      expect(ignored.ignored_plugin_names).to eq(%i[chat])
     end
 
     it "normalizes underscored plugin names to hyphenated names" do

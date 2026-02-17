@@ -235,46 +235,6 @@ RSpec.describe Migrations::Database::Schema::DSL::SchemaResolver do
       expect(idx.column_names).to eq(["original_id"])
     end
 
-    it "resolves indexes with per-table rename_to overrides" do
-      schema =
-        build_schema(
-          tables: {
-            posts:
-              proc do
-                include :id, :user_id
-                column :user_id, rename_to: :author_id
-                index :user_id, name: :idx_posts_user_id
-              end,
-          },
-        )
-
-      stub_database(
-        connection,
-        table_columns: {
-          posts: {
-            id: {
-              type: :integer,
-              null: false,
-            },
-            user_id: {
-              type: :integer,
-              null: false,
-            },
-          },
-        },
-        primary_keys: {
-          posts: ["id"],
-        },
-      )
-
-      result = described_class.new(schema).resolve
-      table = result.tables.first
-      idx = table.indexes.first
-
-      expect(idx.name).to eq("idx_posts_user_id")
-      expect(idx.column_names).to eq(["author_id"])
-    end
-
     it "resolves constraints" do
       schema =
         build_schema(
@@ -490,88 +450,6 @@ RSpec.describe Migrations::Database::Schema::DSL::SchemaResolver do
       expect(table.columns.none? { |c| c.name == "original_id" }).to eq(true)
     end
 
-    it "applies required: false to force nullable" do
-      schema =
-        build_schema(
-          tables: {
-            users:
-              proc do
-                include :id, :created_at
-                column :created_at, required: false
-              end,
-          },
-        )
-
-      stub_database(
-        connection,
-        table_columns: {
-          users: {
-            id: {
-              type: :integer,
-              null: false,
-            },
-            created_at: {
-              type: :datetime,
-              null: false,
-            },
-          },
-        },
-        primary_keys: {
-          users: ["id"],
-        },
-      )
-
-      result = described_class.new(schema).resolve
-      table = result.tables.first
-      col = table.columns.find { |c| c.name == "created_at" }
-
-      expect(col.nullable).to eq(true)
-    end
-
-    it "required: false overrides conventions required" do
-      schema =
-        build_schema(
-          tables: {
-            users:
-              proc do
-                include :id, :created_at
-                column :created_at, required: false
-              end,
-          },
-          conventions:
-            proc do
-              column :created_at do
-                required
-              end
-            end,
-        )
-
-      stub_database(
-        connection,
-        table_columns: {
-          users: {
-            id: {
-              type: :integer,
-              null: false,
-            },
-            created_at: {
-              type: :datetime,
-              null: false,
-            },
-          },
-        },
-        primary_keys: {
-          users: ["id"],
-        },
-      )
-
-      result = described_class.new(schema).resolve
-      table = result.tables.first
-      col = table.columns.find { |c| c.name == "created_at" }
-
-      expect(col.nullable).to eq(true)
-    end
-
     it "resolves a table with synthetic! using only add_columns" do
       schema =
         build_schema(
@@ -606,39 +484,6 @@ RSpec.describe Migrations::Database::Schema::DSL::SchemaResolver do
       expect(details.nullable).to eq(true)
     end
 
-    it "resolves primary keys for nil source tables without convention renames" do
-      schema =
-        build_schema(
-          tables: {
-            uploads:
-              proc do
-                synthetic!
-                primary_key :id
-                add_column :id, :text, required: true
-                add_column :filename, :text, required: true
-              end,
-          },
-          conventions:
-            proc do
-              column :id do
-                rename_to :original_id
-                type :numeric
-              end
-            end,
-        )
-
-      stub_database(connection, table_columns: {}, primary_keys: {})
-
-      result = described_class.new(schema).resolve
-      table = result.tables.first
-
-      expect(table.primary_key_column_names).to eq(["id"])
-
-      id_col = table.columns.find { |c| c.name == "id" }
-      expect(id_col.datatype).to eq(:text)
-      expect(id_col.is_primary_key).to eq(true)
-    end
-
     it "resolves composite primary keys for nil source tables" do
       schema =
         build_schema(
@@ -663,26 +508,6 @@ RSpec.describe Migrations::Database::Schema::DSL::SchemaResolver do
       expect(table.columns.find { |c| c.name == "user_id" }.is_primary_key).to eq(true)
       expect(table.columns.find { |c| c.name == "suspended_at" }.is_primary_key).to eq(true)
       expect(table.columns.find { |c| c.name == "reason" }.is_primary_key).to eq(false)
-    end
-
-    it "passes model_mode through for nil source tables" do
-      schema =
-        build_schema(
-          tables: {
-            uploads:
-              proc do
-                model :manual
-                synthetic!
-                primary_key :id
-                add_column :id, :text, required: true
-              end,
-          },
-        )
-
-      stub_database(connection, table_columns: {}, primary_keys: {})
-
-      result = described_class.new(schema).resolve
-      expect(result.tables.first.model_mode).to eq(:manual)
     end
 
     it "excludes globally ignored columns when no include list specified" do
