@@ -1,13 +1,12 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
-import { LinkTo } from "@ember/routing";
 import AdminConfigAreaEmptyList from "discourse/admin/components/admin-config-area-empty-list";
-import DButton from "discourse/components/d-button";
 import DPageSubheader from "discourse/components/d-page-subheader";
 import HorizontalOverflowNav from "discourse/components/horizontal-overflow-nav";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import HouseAdsListSetting from "../../../../../admin/components/house-ads-list-setting";
+import HouseAdsList from "../../../../../admin/components/house-ads-list";
+import HouseAdsSettingsPanel from "../../../../../admin/components/house-ads-settings-panel";
 
 const HouseAdsIndex = <template>
   <div class="discourse-adplugin__house-ads admin-detail">
@@ -44,74 +43,13 @@ const HouseAdsIndex = <template>
       </HorizontalOverflowNav>
 
       {{#if (eq @controller.currentTab "ads")}}
-        <table class="d-admin-table house-ads-table">
-          <thead>
-            <tr>
-              <th>{{i18n "admin.adplugin.house_ads.name"}}</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            {{#each @controller.houseAds as |ad|}}
-              <tr class="d-admin-row__content" data-house-ad-id={{ad.id}}>
-                <td class="d-admin-row__overview">
-                  {{ad.name}}
-                </td>
-                <td class="d-admin-row__controls">
-                  <LinkTo
-                    @route="adminPlugins.show.houseAds.show"
-                    @model={{ad.id}}
-                    class="btn btn-small btn-default"
-                  >
-                    {{i18n "admin.adplugin.house_ads.edit"}}
-                  </LinkTo>
-                </td>
-              </tr>
-            {{/each}}
-          </tbody>
-        </table>
+        <HouseAdsList @houseAds={{@controller.houseAds}} />
       {{else}}
-        <section class="house-ads-settings">
-          <form class="form-horizontal">
-            <HouseAdsListSetting
-              @name="topic_list_top"
-              @value={{@controller.adSettings.topic_list_top}}
-              @allAds={{@controller.houseAds}}
-              @adSettings={{@controller.adSettings}}
-            />
-            <HouseAdsListSetting
-              @name="topic_above_post_stream"
-              @value={{@controller.adSettings.topic_above_post_stream}}
-              @allAds={{@controller.houseAds}}
-              @adSettings={{@controller.adSettings}}
-            />
-            <HouseAdsListSetting
-              @name="topic_above_suggested"
-              @value={{@controller.adSettings.topic_above_suggested}}
-              @allAds={{@controller.houseAds}}
-              @adSettings={{@controller.adSettings}}
-            />
-            <HouseAdsListSetting
-              @name="post_bottom"
-              @value={{@controller.adSettings.post_bottom}}
-              @allAds={{@controller.houseAds}}
-              @adSettings={{@controller.adSettings}}
-            />
-            <HouseAdsListSetting
-              @name="topic_list_between"
-              @value={{@controller.adSettings.topic_list_between}}
-              @allAds={{@controller.houseAds}}
-              @adSettings={{@controller.adSettings}}
-            />
-
-            <DButton
-              @label="admin.adplugin.house_ads.more_settings"
-              @icon="gear"
-              @action={{@controller.moreSettings}}
-              class="btn-default"
-            />
-          </form>
-        </section>
+        <HouseAdsSettingsPanel
+          @adSettings={{@controller.adSettings}}
+          @houseAds={{@controller.houseAds}}
+          @onMoreSettings={{@controller.moreSettings}}
+        />
       {{/if}}
     {{else}}
       <AdminConfigAreaEmptyList

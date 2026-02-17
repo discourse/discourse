@@ -39,9 +39,11 @@ describe "Admin House Ad", type: :system do
 
       expect(toasts).to have_success(I18n.t("js.saved"))
       ad = AdPlugin::HouseAd.last
-      expect(ad.name).to eq("My Test Ad")
-      expect(ad.visible_to_logged_in_users).to eq(true)
-      expect(ad.visible_to_anons).to eq(false)
+      expect(ad).to have_attributes(
+        name: "My Test Ad",
+        visible_to_logged_in_users: true,
+        visible_to_anons: false,
+      )
 
       # Navigate back to list, verify ad appears
       house_ads_page.click_back

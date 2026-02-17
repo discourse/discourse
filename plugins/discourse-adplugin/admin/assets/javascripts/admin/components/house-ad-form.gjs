@@ -37,6 +37,10 @@ export default class HouseAdForm extends Component {
     return i18n("admin.adplugin.house_ads.category_chooser_description");
   }
 
+  previewDisabled(data) {
+    return !data.html;
+  }
+
   get formData() {
     const model = this.args.model;
     return {
@@ -258,6 +262,7 @@ export default class HouseAdForm extends Component {
         <form.Submit @label="admin.adplugin.house_ads.save" />
         <form.Button
           @action={{fn this.openPreview data}}
+          @disabled={{this.previewDisabled data}}
           @label="admin.adplugin.house_ads.preview"
         />
         {{#unless this.isNew}}
