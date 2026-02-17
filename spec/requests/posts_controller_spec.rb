@@ -1942,6 +1942,43 @@ RSpec.describe PostsController do
         end
       end
 
+      context "when topic is in slow mode" do
+        fab!(:slow_topic) { Fabricate(:topic, slow_mode_seconds: 86_400) }
+
+        it "enforces slow mode even when auto_track is false" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the first reply in slow mode",
+                 topic_id: slow_topic.id,
+                 auto_track: false,
+               }
+
+          expect(response.status).to eq(200)
+
+          post "/posts.json",
+               params: {
+                 raw: "this is the second reply in slow mode bypassing",
+                 topic_id: slow_topic.id,
+                 auto_track: false,
+               }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(I18n.t(:slow_mode_enabled))
+        end
+
+        it "does not create a TopicUser record when auto_track is false" do
+          post "/posts.json",
+               params: {
+                 raw: "this is a reply with auto_track false",
+                 topic_id: slow_topic.id,
+                 auto_track: false,
+               }
+
+          expect(response.status).to eq(200)
+          expect(TopicUser.find_by(user: user, topic: slow_topic)).to be_nil
+        end
+      end
+
       context "when `enable_user_status` site setting is enabled" do
         fab!(:user_to_mention, :user)
 
