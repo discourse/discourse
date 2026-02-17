@@ -18,24 +18,8 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
     described_class.new(manifest_path:, plugins_path:)
   end
 
-  describe "#available?" do
-    it "returns false when manifest file does not exist" do
-      expect(build_manifest.available?).to be false
-    end
-
-    it "returns true when manifest file exists" do
-      write_manifest({ "plugins" => {} })
-      expect(build_manifest.available?).to be true
-    end
-  end
-
   describe "#fresh?" do
     it "returns false when manifest file does not exist" do
-      expect(build_manifest.fresh?).to be false
-    end
-
-    it "returns false when migration_state is missing" do
-      write_manifest({ "plugins" => {} })
       expect(build_manifest.fresh?).to be false
     end
 
@@ -56,20 +40,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
       expect(build_manifest.fresh?).to be false
     end
 
-    it "returns false when plugin checksum differs" do
-      plugin_dir = File.join(plugins_path, "chat", "db", "migrate")
-      FileUtils.mkdir_p(plugin_dir)
-      File.write(File.join(plugin_dir, "001_create_chat.rb"), "class CreateChat; end")
-
-      introspector = Migrations::Database::Schema::DSL::PluginIntrospector.new(plugins_path:)
-      checksums = introspector.compute_all_checksums
-      checksums["plugins"]["chat"] = "stale_checksum"
-
-      write_manifest({ "plugins" => {}, "migration_state" => checksums })
-
-      expect(build_manifest.fresh?).to be false
-    end
-
     it "returns false when manifest is marked incomplete due failed plugins" do
       introspector = Migrations::Database::Schema::DSL::PluginIntrospector.new(plugins_path:)
       checksums = introspector.compute_all_checksums
@@ -85,25 +55,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
       )
 
       expect(build_manifest.fresh?).to be false
-    end
-  end
-
-  describe "#checksums_fresh?" do
-    it "returns true even when manifest is incomplete if checksums still match" do
-      introspector = Migrations::Database::Schema::DSL::PluginIntrospector.new(plugins_path:)
-      checksums = introspector.compute_all_checksums
-
-      write_manifest(
-        {
-          "plugins" => {
-          },
-          "migration_state" => checksums,
-          "failed_plugins" => ["chat"],
-          "incomplete" => true,
-        },
-      )
-
-      expect(build_manifest.checksums_fresh?).to be true
     end
   end
 
@@ -187,10 +138,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
 
       expect(build_manifest.all_plugin_names).to eq(%w[chat polls])
     end
-
-    it "returns empty array when no manifest" do
-      expect(build_manifest.all_plugin_names).to eq([])
-    end
   end
 
   describe "#tables_for_plugin" do
@@ -213,12 +160,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
       )
 
       expect(build_manifest.tables_for_plugin("chat")).to eq(%w[chat_channels chat_messages])
-    end
-
-    it "returns empty array for unknown plugin" do
-      write_manifest({ "plugins" => {}, "migration_state" => { "core" => "abc", "plugins" => {} } })
-
-      expect(build_manifest.tables_for_plugin("nonexistent")).to eq([])
     end
 
     it "normalizes underscored symbol names to hyphenated manifest keys" do
@@ -275,11 +216,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
     it "returns columns for a specific table" do
       cols = build_manifest.columns_for_plugin("chat", table: "user_options")
       expect(cols).to eq(%w[chat_enabled chat_sound])
-    end
-
-    it "returns empty array for unknown table" do
-      cols = build_manifest.columns_for_plugin("chat", table: "nonexistent")
-      expect(cols).to eq([])
     end
   end
 

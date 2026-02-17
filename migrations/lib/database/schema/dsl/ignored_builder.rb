@@ -32,14 +32,16 @@ module Migrations::Database::Schema::DSL
     def initialize
       @entries = []
       @plugin_entries = []
+      @entry_names = {}
+      @plugin_entry_names = {}
     end
 
     def table(name, reason = nil)
-      @entries << IgnoredEntry.new(name: name.to_sym, reason:)
+      add_table_entry(name, reason)
     end
 
     def tables(*names, reason: nil)
-      names.flatten.each { |name| @entries << IgnoredEntry.new(name: name.to_sym, reason:) }
+      names.flatten.each { |name| add_table_entry(name, reason) }
     end
 
     def plugin(name, reason)
@@ -47,7 +49,15 @@ module Migrations::Database::Schema::DSL
         raise Migrations::Database::Schema::ConfigError,
               "Ignored plugin :#{name} must have a reason."
       end
-      @plugin_entries << IgnoredPluginEntry.new(name: normalize_plugin_name(name), reason:)
+
+      normalized_name = normalize_plugin_name(name)
+      if @plugin_entry_names.key?(normalized_name)
+        raise Migrations::Database::Schema::ConfigError,
+              "Ignored plugin :#{normalized_name} is already declared."
+      end
+
+      @plugin_entry_names[normalized_name] = true
+      @plugin_entries << IgnoredPluginEntry.new(name: normalized_name, reason:)
     end
 
     def build
@@ -55,6 +65,17 @@ module Migrations::Database::Schema::DSL
     end
 
     private
+
+    def add_table_entry(name, reason)
+      normalized_name = name.to_sym
+      if @entry_names.key?(normalized_name)
+        raise Migrations::Database::Schema::ConfigError,
+              "Ignored table :#{normalized_name} is already declared."
+      end
+
+      @entry_names[normalized_name] = true
+      @entries << IgnoredEntry.new(name: normalized_name, reason:)
+    end
 
     def normalize_plugin_name(name)
       name.to_s.tr("_", "-").to_sym

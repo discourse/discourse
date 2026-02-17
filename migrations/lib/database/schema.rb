@@ -309,6 +309,10 @@ module Migrations::Database
       db_key = database.to_sym
       path = config_path(database)
 
+      unless File.directory?(schema_root_path)
+        raise ConfigError, I18n.t("schema.config_root_not_found", path: schema_root_path)
+      end
+
       unless File.directory?(path)
         available = available_databases.join(", ")
         raise ConfigError, I18n.t("schema.unknown_database", name: database, available:)
@@ -320,40 +324,45 @@ module Migrations::Database
       begin
         DSL::Loader.new(path).load!
         registry.freeze!
+
+        if refresh_manifest
+          manifest = plugin_manifest(database:)
+          unless manifest.checksums_fresh?
+            begin
+              $stdout.write(I18n.t("schema.detect_plugins.auto_detecting"))
+              manifest.regenerate!
+              if manifest.incomplete?
+                failed_plugins = manifest.failed_plugins.join(", ").presence || "(unknown)"
+                puts I18n.t("schema.detect_plugins.auto_incomplete", failed_plugins:)
+              else
+                puts I18n.t(
+                       "schema.detect_plugins.auto_done",
+                       tables: manifest.table_count,
+                       columns: manifest.column_count,
+                     )
+              end
+            rescue StandardError => e
+              message = I18n.t("schema.detect_plugins.auto_failed", error: e.message)
+              puts message
+              raise ConfigError, message
+            end
+          end
+        end
+
         @ready = db_key
       rescue StandardError
-        # Avoid keeping partially loaded DSL state after a loader failure.
+        # Avoid keeping partially loaded DSL state after loader/refresh failures.
         reset!
         raise
       end
+    end
 
-      if refresh_manifest
-        manifest = plugin_manifest(database:)
-        unless manifest.checksums_fresh?
-          begin
-            $stdout.write(I18n.t("schema.detect_plugins.auto_detecting"))
-            manifest.regenerate!
-            if manifest.incomplete?
-              failed_plugins = manifest.failed_plugins.join(", ").presence || "(unknown)"
-              puts I18n.t("schema.detect_plugins.auto_incomplete", failed_plugins:)
-            else
-              puts I18n.t(
-                     "schema.detect_plugins.auto_done",
-                     tables: manifest.table_count,
-                     columns: manifest.column_count,
-                   )
-            end
-          rescue StandardError => e
-            message = I18n.t("schema.detect_plugins.auto_failed", error: e.message)
-            puts message
-            raise ConfigError, message
-          end
-        end
-      end
+    def self.schema_root_path
+      File.join(Migrations.root_path, "config", "schema")
     end
 
     def self.config_path(database = :intermediate_db)
-      File.join(Migrations.root_path, "config", "schema", database.to_s)
+      File.join(schema_root_path, database.to_s)
     end
 
     def self.manifest_path
@@ -361,7 +370,9 @@ module Migrations::Database
     end
 
     def self.available_databases
-      dir = File.join(Migrations.root_path, "config", "schema")
+      dir = schema_root_path
+      return [] unless File.directory?(dir)
+
       Dir.children(dir).select { |d| File.directory?(File.join(dir, d)) }.sort
     end
 

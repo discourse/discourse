@@ -137,8 +137,13 @@ module Migrations::CLI
       end
 
       content = File.read(ignored_path)
+      ignored_data = ignored_block_data(content, path: ignored_path)
+      if ignored_data[:ignored_table_names].include?(table_name)
+        raise Schema::ConfigError, I18n.t("schema.ignore.already_ignored", table: table_name)
+      end
+
       new_entry = build_ignored_table_entry(table_name, reason)
-      insert_at = ignored_block_end_offset(content, path: ignored_path)
+      insert_at = ignored_data[:end_offset]
       content.insert(insert_at, new_entry)
 
       File.write(ignored_path, content)
@@ -207,6 +212,13 @@ module Migrations::CLI
     end
 
     def validate_database_option!(database)
+      unless File.directory?(Schema.schema_root_path)
+        raise(
+          Schema::ConfigError,
+          I18n.t("schema.config_root_not_found", path: Schema.schema_root_path),
+        )
+      end
+
       available = Schema.available_databases
       return if available.include?(database)
 
@@ -228,43 +240,62 @@ module Migrations::CLI
       "  table :#{table_name}\n"
     end
 
-    def ignored_block_end_offset(content, path:)
+    def ignored_block_data(content, path:)
       result = Prism.parse(content)
       unless result.success?
         details = result.errors.map(&:message).join(", ")
         raise Schema::ConfigError, "Could not parse #{path}: #{details}"
       end
 
-      offset = find_ignored_block_end_offset(result.value)
-      if offset.nil?
+      ignored_call = find_ignored_call(result.value)
+      if ignored_call.nil?
         raise Schema::ConfigError,
               "Could not find `Migrations::Database::Schema.ignored do ... end` in #{path}"
       end
 
-      offset
+      {
+        end_offset: ignored_call.block.closing_loc.start_offset,
+        ignored_table_names: extract_ignored_table_names(ignored_call.block),
+      }
     end
 
-    def find_ignored_block_end_offset(node)
-      if node.is_a?(Prism::CallNode) && ignored_call_with_block?(node)
-        return node.block.closing_loc.start_offset
-      end
+    def find_ignored_call(node)
+      return node if node.is_a?(Prism::CallNode) && ignored_call_with_block?(node)
 
       node.compact_child_nodes.each do |child|
-        offset = find_ignored_block_end_offset(child)
-        return offset unless offset.nil?
+        ignored_call = find_ignored_call(child)
+        return ignored_call unless ignored_call.nil?
       end
 
       nil
     end
 
     def ignored_call_with_block?(node)
-      return false unless node.message == "ignored"
+      return false unless node.message.to_s == "ignored"
       return false unless node.block
 
       receiver = node.receiver
       return false unless receiver.is_a?(Prism::ConstantPathNode)
 
       receiver.full_name.to_s.sub(/\A::/, "") == "Migrations::Database::Schema"
+    end
+
+    def extract_ignored_table_names(block_node)
+      names = Set.new
+      body = block_node&.body
+      return names unless body.is_a?(Prism::StatementsNode)
+
+      body.body.each do |statement|
+        next unless statement.is_a?(Prism::CallNode)
+
+        message = statement.message.to_s
+        next unless message == "table" || message == "tables"
+
+        args = statement.arguments&.arguments || []
+        args.each { |arg| names << arg.unescaped if arg.is_a?(Prism::SymbolNode) }
+      end
+
+      names
     end
 
     def display_table(table)

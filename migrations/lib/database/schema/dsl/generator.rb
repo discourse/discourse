@@ -128,7 +128,7 @@ module Migrations::Database::Schema::DSL
 
       start_offset = line_end_offset(content, start_comment.location.start_offset)
       custom = content[start_offset...end_comment.location.start_offset]
-      custom&.strip.presence
+      preserve_custom_code(custom)
     end
 
     def extract_custom_code_with_markers(content)
@@ -140,12 +140,19 @@ module Migrations::Database::Schema::DSL
       return nil unless after_start
 
       custom = content[(after_start + 1)...end_idx]
-      custom&.strip.presence
+      preserve_custom_code(custom)
     end
 
     def line_end_offset(content, start_offset)
       line_end = content.index("\n", start_offset)
       line_end ? line_end + 1 : content.length
+    end
+
+    def preserve_custom_code(custom)
+      return nil if custom.nil?
+      return nil if custom.strip.empty?
+
+      custom
     end
 
     def format_ruby_files!

@@ -31,6 +31,7 @@ en:
       badge: "Badge"
 
   schema:
+    config_root_not_found: "Schema configuration directory not found: %{path}"
     unknown_database: "Unknown database '%{name}'. Available: %{available}"
 
     validate:
@@ -76,6 +77,7 @@ en:
       auto_ignore_plugins: "Auto-ignore plugin columns: %{value}"
 
     ignore:
+      already_ignored: "Table %{table} is already ignored"
       success: "✓ Added %{table} to ignored.rb"
 
     scaffold:
