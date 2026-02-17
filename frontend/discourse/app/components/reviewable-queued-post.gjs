@@ -1,10 +1,9 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
+import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import { service } from "@ember/service";
-import CookText from "discourse/components/cook-text";
 import DButton from "discourse/components/d-button";
 import RawEmailModal from "discourse/components/modal/raw-email";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
@@ -52,8 +51,8 @@ export default class ReviewableQueuedPost extends Component {
   }
 
   @action
-  setPostBodyHeight(offsetHeight) {
-    this.postBodyHeight = offsetHeight;
+  setPostBodyHeight(element) {
+    this.postBodyHeight = element.offsetHeight;
 
     if (this.postBodyHeight > this.maxPostHeight) {
       this.isCollapsed = true;
@@ -68,7 +67,7 @@ export default class ReviewableQueuedPost extends Component {
     <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="">
       <div class="title-text">
         {{icon "square-plus" title="review.new_topic"}}
-        {{highlightWatchedWords @reviewable.payload.title @reviewable}}
+        {{highlightWatchedWords @reviewable.fancy_title @reviewable}}
       </div>
       {{categoryBadge @reviewable.category}}
       <ReviewableTags @tags={{@reviewable.payload.tags}} />
@@ -89,15 +88,12 @@ export default class ReviewableQueuedPost extends Component {
           @tagName=""
         />
 
-        <CookText
+        <div
           class="post-body {{if this.isCollapsed 'is-collapsed'}}"
-          @rawText={{highlightWatchedWords @reviewable.payload.raw @reviewable}}
-          @categoryId={{@reviewable.category_id}}
-          @topicId={{@reviewable.topic_id}}
-          @paintOneboxes={{false}}
-          @opts={{hash removeMissing=true}}
-          @onOffsetHeightCalculated={{this.setPostBodyHeight}}
-        />
+          {{didInsert this.setPostBodyHeight}}
+        >
+          {{highlightWatchedWords @reviewable.cooked @reviewable}}
+        </div>
 
         {{#if this.isLongPost}}
           <DButton
