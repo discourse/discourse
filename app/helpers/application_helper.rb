@@ -328,6 +328,9 @@ module ApplicationHelper
         result << tag(:meta, property: "og:image:width", content: opts[:image_width])
         result << tag(:meta, property: "og:image:height", content: opts[:image_height])
       end
+      if opts[:image_type].present?
+        result << tag(:meta, property: "og:image:type", content: opts[:image_type])
+      end
     end
 
     %i[url title description].each do |property|
