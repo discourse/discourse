@@ -1221,6 +1221,7 @@
 
 .user-profile__location-and-website {
   display: flex;
+  flex-wrap: wrap;
   max-width: 100%;
 
   .user-profile-location {
