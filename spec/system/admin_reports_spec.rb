@@ -23,6 +23,7 @@ describe "Admin Reports", type: :system do
   end
 
   context "with legacy reports" do
+    before { SiteSetting.reporting_improvements = true }
     it "does not list bookmarks on the index page but allows direct access with a warning" do
       visit "/admin/reports"
 

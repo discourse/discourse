@@ -71,7 +71,7 @@ export default <template>
 
       {{#if @controller.isReportsTabVisible}}
         <li class="navigation-item reports">
-          <LinkTo @route="adminReports" class="navigation-link">
+          <LinkTo @route="admin.dashboardReports" class="navigation-link">
             {{i18n "admin.dashboard.reports_tab"}}
           </LinkTo>
         </li>

@@ -258,8 +258,8 @@ class Report
       percent: self.percent,
       higher_is_better: self.higher_is_better,
       modes: self.modes,
-      legacy: self.legacy,
     }.tap do |json|
+      json[:legacy] = self.legacy if self.legacy
       json[:icon] = self.icon if self.icon
       json[:error] = self.error if self.error
       json[:total] = self.total if self.total
@@ -300,7 +300,7 @@ class Report
     report.filters = opts[:filters] if opts[:filters]
     report.labels = Report.default_labels
 
-    report.legacy = LEGACY_REPORTS.include?(type)
+    report.legacy = LEGACY_REPORTS.include?(type) if SiteSetting.reporting_improvements
 
     report
   end

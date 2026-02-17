@@ -12,17 +12,25 @@ module Reports
 
       def to_h(admin:)
         return if Report.hidden?(type, admin:)
-        return if plugin_disabled?
-        return if Report::LEGACY_REPORTS.include?(type)
 
-        {
+        if SiteSetting.reporting_improvements
+          return if plugin_disabled?
+          return if Report::LEGACY_REPORTS.include?(type)
+        end
+
+        result = {
           type:,
           title:,
           description:,
           description_link: I18n.t("reports.#{type}.description_link", default: "").presence,
-          plugin: plugin_name,
-          plugin_display_name: plugin_display_name,
         }
+
+        if SiteSetting.reporting_improvements
+          result[:plugin] = plugin_name
+          result[:plugin_display_name] = plugin_display_name
+        end
+
+        result
       end
 
       private

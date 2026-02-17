@@ -2759,6 +2759,7 @@ en:
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     enable_custom_splash_screen: "Allows customizing the loading splash screen with your own SVG image. Upload an image via the 'splash screen image' setting. Warning: This may negatively impact LCP scores and Google indexing."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
+    reporting_improvements: "Improvements to navigation, design, and usability for Discourse's admin reports."
 
     errors:
       invalid_css_color: "Invalid color. Enter a color name or hex value."

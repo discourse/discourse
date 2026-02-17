@@ -162,21 +162,34 @@ export default class AdminReports extends Component {
           @noResultsMessage={{i18n "admin.filter_reports_no_results"}}
         >
           <:content as |filteredReports|>
-            {{#each (this.groupReports filteredReports) as |group|}}
-              <section class="admin-reports-group">
-                <h2 class="admin-reports-group__title">{{group.name}}</h2>
-                <AdminSectionLandingWrapper class="admin-reports-list">
-                  {{#each group.reports as |report|}}
-                    <AdminSectionLandingItem
-                      @titleLabelTranslated={{report.title}}
-                      @descriptionLabelTranslated={{report.description}}
-                      @titleRoute="adminReports.show"
-                      @titleRouteModel={{report.type}}
-                    />
-                  {{/each}}
-                </AdminSectionLandingWrapper>
-              </section>
-            {{/each}}
+            {{#if this.siteSettings.reporting_improvements}}
+              {{#each (this.groupReports filteredReports) as |group|}}
+                <section class="admin-reports-group">
+                  <h2 class="admin-reports-group__title">{{group.name}}</h2>
+                  <AdminSectionLandingWrapper class="admin-reports-list">
+                    {{#each group.reports as |report|}}
+                      <AdminSectionLandingItem
+                        @titleLabelTranslated={{report.title}}
+                        @descriptionLabelTranslated={{report.description}}
+                        @titleRoute="adminReports.show"
+                        @titleRouteModel={{report.type}}
+                      />
+                    {{/each}}
+                  </AdminSectionLandingWrapper>
+                </section>
+              {{/each}}
+            {{else}}
+              <AdminSectionLandingWrapper class="admin-reports-list">
+                {{#each filteredReports as |report|}}
+                  <AdminSectionLandingItem
+                    @titleLabelTranslated={{report.title}}
+                    @descriptionLabelTranslated={{report.description}}
+                    @titleRoute="adminReports.show"
+                    @titleRouteModel={{report.type}}
+                  />
+                {{/each}}
+              </AdminSectionLandingWrapper>
+            {{/if}}
           </:content>
         </AdminFilterControls>
       </:content>
