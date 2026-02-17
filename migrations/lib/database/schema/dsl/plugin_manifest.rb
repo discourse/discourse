@@ -11,13 +11,15 @@ module Migrations::Database::Schema::DSL
     end
 
     def fresh?
+      checksums_fresh? && !incomplete?
+    end
+
+    def checksums_fresh?
       return false unless File.exist?(@manifest_path)
 
       load_data
       stored_state = @data["migration_state"]
       return false unless stored_state
-      return false if @data["incomplete"]
-      return false if failed_plugins.any?
 
       introspector = build_introspector
       current = introspector.compute_all_checksums
@@ -32,6 +34,11 @@ module Migrations::Database::Schema::DSL
 
     def available?
       File.exist?(@manifest_path)
+    end
+
+    def incomplete?
+      load_data
+      @data["incomplete"] || failed_plugins.any?
     end
 
     def regenerate!

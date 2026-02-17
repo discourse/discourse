@@ -91,6 +91,7 @@ en:
     detect_plugins:
       detecting: "Detecting plugin tables and columns..."
       updated: "✓ Plugin manifest updated"
+      updated_incomplete: "Plugin manifest updated with warnings (failed plugins: %{failed_plugins})"
       tables: "Tables: %{count}"
       columns: "Columns: %{count}"
       plugins: "Plugins: %{names}"
@@ -98,6 +99,7 @@ en:
       use_force: "Use --force to regenerate"
       auto_detecting: "Plugin manifest outdated, regenerating... "
       auto_done: "Detected %{tables} plugin tables, %{columns} plugin columns."
+      auto_incomplete: "Detected plugin changes, but some plugin migrations failed: %{failed_plugins}"
       auto_failed: "Skipped — %{error} (use 'schema detect-plugins --force' to retry)"
 
     diff:

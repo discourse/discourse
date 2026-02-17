@@ -31,7 +31,7 @@ migrations/config/schema/intermediate_db/
 | `schema generate` | Generate SQL schema, Ruby models, and enum files |
 | `schema list` | List all configured and ignored tables |
 | `schema show TABLE` | Show configuration details for a table |
-| `schema ignore TABLE --reason "..."` | Add a table to `ignored.rb` |
+| `schema ignore TABLE [--reason "..."]` | Add a table to `ignored.rb` |
 | `schema detect-plugins` | Regenerate the plugin manifest |
 
 All commands accept `--database NAME` (default: `intermediate_db`).

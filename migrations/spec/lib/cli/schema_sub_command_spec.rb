@@ -3,9 +3,9 @@
 require "thor"
 
 RSpec.describe Migrations::CLI::SchemaSubCommand do
-  describe "#ignore" do
-    let(:command) { described_class.new }
+  let(:command) { described_class.new }
 
+  describe "#ignore" do
     it "writes reason as a safe Ruby literal" do
       Dir.mktmpdir do |tmpdir|
         ignored_path = File.join(tmpdir, "ignored.rb")
@@ -80,6 +80,47 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
         content = File.read(ignored_path)
         expect(content).to include("table :users\n")
       end
+    end
+  end
+
+  describe "#detect_plugins" do
+    it "reports incomplete manifest regeneration" do
+      manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
+      allow(manifest).to receive(:fresh?).and_return(false)
+      allow(manifest).to receive(:regenerate!)
+      allow(manifest).to receive(:incomplete?).and_return(true)
+      allow(manifest).to receive(:failed_plugins).and_return(%w[chat])
+      allow(manifest).to receive(:table_count).and_return(1)
+      allow(manifest).to receive(:column_count).and_return(2)
+      allow(manifest).to receive(:all_plugin_names).and_return(%w[chat])
+
+      allow(command).to receive(:load_rails!)
+      allow(command).to receive(:options).and_return({ database: "intermediate_db", force: false })
+      allow(command).to receive(:puts)
+
+      allow(Migrations::Database::Schema).to receive(:ensure_ready!).with(
+        database: "intermediate_db",
+      )
+      allow(Migrations::Database::Schema).to receive(:plugin_manifest).with(
+        database: "intermediate_db",
+      ).and_return(manifest)
+
+      allow(I18n).to receive(:t).with("schema.detect_plugins.detecting").and_return("detecting")
+      allow(I18n).to receive(:t).with(
+        "schema.detect_plugins.updated_incomplete",
+        failed_plugins: "chat",
+      ).and_return("updated_incomplete")
+      allow(I18n).to receive(:t).with("schema.detect_plugins.tables", count: 1).and_return("tables")
+      allow(I18n).to receive(:t).with("schema.detect_plugins.columns", count: 2).and_return(
+        "columns",
+      )
+      allow(I18n).to receive(:t).with("schema.detect_plugins.plugins", names: "chat").and_return(
+        "plugins",
+      )
+
+      command.detect_plugins
+
+      expect(command).to have_received(:puts).with("updated_incomplete")
     end
   end
 end

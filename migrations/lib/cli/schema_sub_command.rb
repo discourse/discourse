@@ -185,7 +185,12 @@ module Migrations::CLI
       if options[:force] || !manifest.fresh?
         puts I18n.t("schema.detect_plugins.detecting")
         manifest.regenerate!
-        puts I18n.t("schema.detect_plugins.updated").green
+        if manifest.incomplete?
+          failed_plugins = manifest.failed_plugins.join(", ").presence || "(unknown)"
+          puts I18n.t("schema.detect_plugins.updated_incomplete", failed_plugins:)
+        else
+          puts I18n.t("schema.detect_plugins.updated").green
+        end
         puts "  #{I18n.t("schema.detect_plugins.tables", count: manifest.table_count)}"
         puts "  #{I18n.t("schema.detect_plugins.columns", count: manifest.column_count)}"
         puts "  #{I18n.t("schema.detect_plugins.plugins", names: manifest.all_plugin_names.join(", "))}"

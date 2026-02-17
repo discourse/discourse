@@ -88,6 +88,25 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
     end
   end
 
+  describe "#checksums_fresh?" do
+    it "returns true even when manifest is incomplete if checksums still match" do
+      introspector = Migrations::Database::Schema::DSL::PluginIntrospector.new(plugins_path:)
+      checksums = introspector.compute_all_checksums
+
+      write_manifest(
+        {
+          "plugins" => {
+          },
+          "migration_state" => checksums,
+          "failed_plugins" => ["chat"],
+          "incomplete" => true,
+        },
+      )
+
+      expect(build_manifest.checksums_fresh?).to be true
+    end
+  end
+
   describe "#plugin_for_table" do
     it "returns the plugin that owns a table" do
       write_manifest(

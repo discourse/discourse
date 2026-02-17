@@ -328,15 +328,20 @@ module Migrations::Database
       end
 
       manifest = plugin_manifest(database:)
-      unless manifest.fresh?
+      unless manifest.checksums_fresh?
         begin
           $stdout.write(I18n.t("schema.detect_plugins.auto_detecting"))
           manifest.regenerate!
-          puts I18n.t(
-                 "schema.detect_plugins.auto_done",
-                 tables: manifest.table_count,
-                 columns: manifest.column_count,
-               )
+          if manifest.incomplete?
+            failed_plugins = manifest.failed_plugins.join(", ").presence || "(unknown)"
+            puts I18n.t("schema.detect_plugins.auto_incomplete", failed_plugins:)
+          else
+            puts I18n.t(
+                   "schema.detect_plugins.auto_done",
+                   tables: manifest.table_count,
+                   columns: manifest.column_count,
+                 )
+          end
         rescue StandardError => e
           puts I18n.t("schema.detect_plugins.auto_failed", error: e.message)
         end
