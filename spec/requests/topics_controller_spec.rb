@@ -5037,6 +5037,27 @@ RSpec.describe TopicsController do
       expect(json[2]["action_code"]).to eq("autobumped")
       expect(json[2]["created_at"].present?).to eq(true)
     end
+
+    it "does not return whisper posts to non-staff users" do
+      SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
+      first_post = create_post(raw: "This is the first post")
+      whisper_post =
+        create_post(
+          raw: "This is a secret whisper",
+          topic: first_post.topic,
+          post_type: Post.types[:whisper],
+        )
+
+      sign_in(user)
+
+      get "/t/#{first_post.topic_id}/excerpts.json",
+          params: {
+            post_ids: [first_post.id, whisper_post.id],
+          }
+
+      json = response.parsed_body
+      expect(json.map { |p| p["post_id"] }).to contain_exactly(first_post.id)
+    end
   end
 
   describe "#convert_topic" do
