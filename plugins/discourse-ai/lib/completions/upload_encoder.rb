@@ -131,14 +131,7 @@ module DiscourseAi
 
         def fetch_path(upload)
           path = Discourse.store.path_for(upload)
-          if path.blank?
-            external_copy = Discourse.store.download_safe(upload)
-            path = external_copy&.path
-          end
-          if path.blank?
-            external_copy = Discourse.store.download(upload)
-            path = external_copy&.path
-          end
+          path = Discourse.store.download(upload) if path.blank?
 
           return if path.blank?
           return unless File.exist?(path)

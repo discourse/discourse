@@ -186,36 +186,34 @@ RSpec.describe FileStore::BaseStore do
     let(:store) { FileStore::BaseStore.new }
 
     it "should return consistent encodings for fresh and cached downloads" do
-      # Net::HTTP always returns binary ASCII-8BIT encoding. File.read auto-detects the encoding
-      # Make sure we File.read after downloading a file for consistency
-
-      first_encoding = store.download(upload_s3, print_deprecation: false).read.encoding
-
-      second_encoding = store.download(upload_s3, print_deprecation: false).read.encoding
+      first_encoding = File.read(store.download(upload_s3)).encoding
+      second_encoding = File.read(store.download(upload_s3)).encoding
 
       expect(first_encoding).to eq(Encoding::UTF_8)
       expect(second_encoding).to eq(Encoding::UTF_8)
     end
 
-    it "should return the file" do
-      file = store.download(upload_s3, print_deprecation: false)
+    it "should return a file path" do
+      path = store.download(upload_s3)
 
-      expect(file.class).to eq(File)
+      expect(path).to be_a(String)
+      expect(File.exist?(path)).to eq(true)
     end
 
-    it "should return the file when s3 cdn enabled" do
+    it "should return the path when s3 cdn enabled" do
       SiteSetting.s3_cdn_url = "https://cdn.s3.#{SiteSetting.s3_region}.amazonaws.com"
       stub_request(:get, Discourse.store.cdn_url(upload_s3.url)).to_return(
         status: 200,
         body: "Hello world",
       )
 
-      file = store.download(upload_s3, print_deprecation: true)
+      path = store.download(upload_s3)
 
-      expect(file.class).to eq(File)
+      expect(path).to be_a(String)
+      expect(File.exist?(path)).to eq(true)
     end
 
-    it "should return the file when secure uploads are enabled" do
+    it "should return the path when secure uploads are enabled" do
       SiteSetting.login_required = true
       SiteSetting.secure_uploads = true
 
@@ -223,9 +221,16 @@ RSpec.describe FileStore::BaseStore do
       signed_url = Discourse.store.signed_url_for_path(upload_s3.url)
       stub_request(:get, signed_url).to_return(status: 200, body: "Hello world")
 
-      file = store.download(upload_s3, print_deprecation: false)
+      path = store.download(upload_s3)
 
-      expect(file.class).to eq(File)
+      expect(path).to be_a(String)
+      expect(File.exist?(path)).to eq(true)
+    end
+
+    it "returns nil when download fails" do
+      FileHelper.stubs(:download).raises(OpenURI::HTTPError.new("400 error", anything))
+
+      expect(store.download(upload_s3)).to eq(nil)
     end
   end
 
@@ -238,10 +243,17 @@ RSpec.describe FileStore::BaseStore do
     let(:upload_s3) { Fabricate(:upload_s3) }
     let(:store) { FileStore::BaseStore.new }
 
-    it "does not raise an error when download fails" do
+    it "raises DownloadError when download fails" do
       FileHelper.stubs(:download).raises(OpenURI::HTTPError.new("400 error", anything))
 
       expect { store.download!(upload_s3) }.to raise_error(FileStore::DownloadError)
+    end
+
+    it "returns a file path" do
+      path = store.download!(upload_s3)
+
+      expect(path).to be_a(String)
+      expect(File.exist?(path)).to eq(true)
     end
   end
 
@@ -294,7 +306,7 @@ RSpec.describe FileStore::BaseStore do
     let(:upload_s3) { Fabricate(:upload_s3) }
     let(:store) { FileStore::BaseStore.new }
 
-    it "does not raise an error when download fails" do
+    it "delegates to #download and emits a deprecation warning" do
       FileHelper.stubs(:download).raises(OpenURI::HTTPError.new("400 error", anything))
 
       expect(store.download_safe(upload_s3)).to eq(nil)

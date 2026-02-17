@@ -150,7 +150,7 @@ class DiscourseAi::Utils::ImageToText
       if page.local?
         Discourse.store.path_for(page)
       else
-        Discourse.store.download_safe(page, max_file_size_kb: MAX_IMAGE_SIZE)&.path
+        Discourse.store.download(page, max_file_size_kb: MAX_IMAGE_SIZE)
       end
 
     return "" if !upload_path || !File.exist?(upload_path)
