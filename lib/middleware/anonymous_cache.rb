@@ -377,7 +377,7 @@ module Middleware
       return @app.call(env) if defined?(@@disabled) && @@disabled
 
       if PAYLOAD_INVALID_REQUEST_METHODS.include?(env[Rack::REQUEST_METHOD]) &&
-           env[Rack::RACK_INPUT].size > 0
+           env[Rack::RACK_INPUT].read(1).present?
         return 413, { "Cache-Control" => "private, max-age=0, must-revalidate" }, []
       end
 
