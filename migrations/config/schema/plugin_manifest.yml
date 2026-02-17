@@ -1,4 +1,4 @@
-generated_at: '2026-02-16T16:38:37Z'
+generated_at: '2026-02-17T21:32:58Z'
 plugins:
   automation:
     tables:
@@ -188,7 +188,7 @@ plugins:
       - polls
     columns: {}
 migration_state:
-  core: 5eae574a89210f49f51abecd4e651b80
+  core: d5feda38aa51d73cba5f2b8fab6390ca
   plugins:
     automation: 1a7a1a0ed72263e1670a93e1b4358a20
     chat: 652922de78d37bd2f140c157d2579132
@@ -221,3 +221,5 @@ migration_state:
     discourse-zendesk-plugin: b78b305590ffedda38455574a19fdd38
     poll: 4af8698c5fcc1dc9a786b31ec8234171
     styleguide: 0fd92e5ef0c99ee047f206961a587544
+failed_plugins: []
+incomplete: false
