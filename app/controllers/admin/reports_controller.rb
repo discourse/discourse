@@ -13,6 +13,7 @@ class Admin::ReportsController < Admin::StaffController
     hijack do
       params[:reports].each do |report_type, report_params|
         args = parse_params(report_params)
+        args[:current_user] = current_user
 
         report = nil
         report = Report.find_cached(report_type, args) if (report_params[:cache])
@@ -49,6 +50,7 @@ class Admin::ReportsController < Admin::StaffController
     raise Discourse::NotFound if Report.hidden?(report_type, admin: current_user.admin?)
 
     args = parse_params(params)
+    args[:current_user] = current_user
 
     report = nil
     report = Report.find_cached(report_type, args) if (params[:cache])
