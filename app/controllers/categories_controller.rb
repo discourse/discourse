@@ -98,6 +98,7 @@ class CategoriesController < ApplicationController
     params.require("position")
 
     if category = Category.find(params["category_id"])
+      guardian.ensure_can_see!(category)
       category.move_to(params["position"].to_i)
       render json: success_json
     else
