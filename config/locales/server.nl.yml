@@ -630,13 +630,13 @@ nl:
 
       Selecteer voordat je een bericht plaatst een categorie of tag om dit topic te groeperen met gerelateerde discussies, zodat anderen het gemakkelijk kunnen vinden.
 
-      [Zie onze communityrichtlijnen](%{base_path}/richtlijnen) voor meer tips en advies over deelname aan onze community.
+      [Zie onze communityrichtlijnen](%{base_path}/guidelines) voor meer tips en advies over deelname aan onze community.
     "new-reply": |
       Bedankt voor je bijdrage aan %{site_name}!
 
       Vergeet niet dat we allemaal echte mensen zijn. Wees vriendelijk voor de andere communityleden.
 
-      [Zie onze communityrichtlijnen](%{base_path}/richtlijnen) voor meer tips en advies over deelname aan onze community.
+      [Zie onze communityrichtlijnen](%{base_path}/guidelines) voor meer tips en advies over deelname aan onze community.
     dominating_topic: Je hebt veel in dit topic geplaatst! Geef anderen ook de kans om mee te doen.
     get_a_room:
       one: Je hebt één keer geantwoord op @%{reply_username}. Wist je dat je diegene in plaats daarvan een persoonlijk bericht kunt sturen?
@@ -4142,6 +4142,7 @@ nl:
     search_title: "In plaats daarvan zoeken?"
     search_button: "Zoeken"
     home: "Ga naar de startpagina"
+    placeholder: "Zoek topics op titel of trefwoorden…"
   offline:
     title: "Kan app niet laden"
     offline_page_message: "Het lijkt erop dat je offline bent! Controleer je netwerkverbinding en probeer het opnieuw."

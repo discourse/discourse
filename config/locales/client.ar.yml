@@ -1628,6 +1628,7 @@ ar:
         many: "الفئات (%{count} أكثر)…"
         other: "الفئات (%{count} أكثر)…"
     ip_lookup:
+      title: عنوان IP
       hostname: اسم المضيف
       location: الموقع الجغرافي
       location_not_found: (غير معروف)
@@ -1673,7 +1674,9 @@ ar:
       private_message: "رسالة"
       private_messages: "الرسائل"
       upcoming_changes:
+        title: "التغييرات القادمة"
         for_user:
+          upcoming_change: "التغيير القادم"
           enabled: "مفعَّلة؟"
       user_notifications:
         filters:

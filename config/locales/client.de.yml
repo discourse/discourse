@@ -3897,6 +3897,7 @@ de:
           message: "Dies ist ein übersetzter Thementitel.<br><br>Willst du die <b>ursprüngliche</b> Kategorie, die Schlagwörter und den Titel in %{language} oder diese spezielle <b>Übersetzung</b> bearbeiten?"
           action_original: "Original bearbeiten"
           action_translation: "Übersetzten Thementitel bearbeiten"
+        editing_translation: "Übersetzung nach %{language} bearbeiten"
     post_list:
       title: "Letzte Beiträge"
       empty: "Es gibt keine Beiträge"
@@ -3995,6 +3996,7 @@ de:
           edit: "Bearbeiten"
           delete: "Löschen"
         add: "Neue Übersetzung hinzufügen"
+        manage: "Übersetzungen verwalten (%{count} vorhanden)"
         view:
           one: "%{count} übersetzte Sprachvariante anzeigen"
           other: "%{count} übersetzte Sprachvarianten anzeigen"
@@ -6042,6 +6044,7 @@ de:
           daily: Täglich
           monthly: Monatlich
           weekly: Wöchentlich
+          value_so_far: "%{value} (bis jetzt)"
           dates: "Datumsangaben (UTC)"
           groups: "Alle Gruppen"
           disabled: "Dieser Bericht ist deaktiviert"
