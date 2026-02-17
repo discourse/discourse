@@ -80,16 +80,52 @@ module Migrations::Database::Schema::DSL
       if table_def.included_column_names
         table_def.included_column_names
       else
-        # nil means "all DB columns" minus globally ignored and per-table ignored
+        # nil means "all DB columns" minus globally ignored, per-table ignored, and plugin ignored
         all_names = db_columns.keys.map(&:to_sym)
         ignored = table_def.ignored_column_names.to_set
         globally_ignored =
           @conventions ? @conventions.ignored_columns.map(&:to_sym).to_set : Set.new
+        plugin_ignored = plugin_ignored_columns(table_def)
         forced = table_def.forced_column_names&.to_set || Set.new
         all_names.reject do |n|
-          ignored.include?(n) || (globally_ignored.include?(n) && forced.exclude?(n))
+          ignored.include?(n) ||
+            ((globally_ignored.include?(n) || plugin_ignored.include?(n)) && forced.exclude?(n))
         end
       end
+    end
+
+    def plugin_ignored_columns(table_def)
+      return Set.new unless table_def.source_table_name
+
+      ignored = @schema.ignored_tables
+      return Set.new unless ignored
+
+      manifest = @schema.plugin_manifest
+      return Set.new unless manifest.available?
+
+      table_name = table_def.source_table_name.to_s
+      names = Set.new
+
+      ignored.ignored_plugin_names.each do |plugin_name|
+        manifest
+          .columns_for_plugin(plugin_name.to_s, table: table_name)
+          .each { |column_name| names << column_name.to_sym }
+      end
+
+      if table_def.ignore_plugin_columns?
+        plugin_filter = table_def.ignore_plugin_names&.map(&:to_s)&.to_set
+
+        manifest.all_plugin_names.each do |plugin_name|
+          next if ignored.plugin_ignored?(plugin_name.to_sym)
+          next if plugin_filter && plugin_filter.exclude?(plugin_name.to_s)
+
+          manifest
+            .columns_for_plugin(plugin_name, table: table_name)
+            .each { |column_name| names << column_name.to_sym }
+        end
+      end
+
+      names
     end
 
     def resolve_column(

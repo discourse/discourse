@@ -36,7 +36,7 @@ module Migrations::Database::Schema
       output_stream.puts "    private_constant :SQL"
       output_stream.puts
 
-      unless custom_code.nil?
+      if table.model_mode == :extended
         output_stream.puts "    # -- custom code --"
         output_stream.puts custom_code if custom_code.present?
         output_stream.puts "    # -- end custom code --"

@@ -96,7 +96,7 @@ module Migrations::Database::Schema::DSL
         when :manual
           next
         when :extended
-          custom_code = extract_custom_code(path) || ""
+          custom_code = extract_custom_code(path)
           File.open(path, "w") { |f| writer.output_table(table, f, custom_code:) }
         else
           File.open(path, "w") { |f| writer.output_table(table, f) }
