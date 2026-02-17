@@ -408,7 +408,8 @@ class TopicView
   end
 
   def image_type
-    MiniMime.lookup_by_extension(image_upload&.extension)&.content_type
+    ext = image_upload&.extension
+    MiniMime.lookup_by_extension(ext)&.content_type if ext.present?
   end
 
   def filter_posts(opts = {})

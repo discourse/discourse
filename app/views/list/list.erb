@@ -146,7 +146,7 @@
       image: @category.uploaded_logo&.url.presence,
       image_width: @category.uploaded_logo&.width,
       image_height: @category.uploaded_logo&.height,
-      image_type: MiniMime.lookup_by_extension(@category.uploaded_logo&.extension)&.content_type,
+      image_type: @category.uploaded_logo&.extension&.then { |ext| MiniMime.lookup_by_extension(ext)&.content_type },
     ) %>
   <% end %>
 <% elsif @tag_name %>
