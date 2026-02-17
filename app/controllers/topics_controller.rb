@@ -303,6 +303,7 @@ class TopicsController < ApplicationController
 
     @posts =
       Post
+        .secured(guardian)
         .where(hidden: false, deleted_at: nil, topic_id: @topic.id)
         .where("posts.id in (?)", post_ids)
         .joins("LEFT JOIN users u on u.id = posts.user_id")
