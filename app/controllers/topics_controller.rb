@@ -958,6 +958,11 @@ class TopicsController < ApplicationController
       end
     end
 
+    if params[:destination_topic_id].present?
+      destination_topic = Topic.find_by(id: params[:destination_topic_id])
+      guardian.ensure_can_create_post_on_topic!(destination_topic)
+    end
+
     hijack do
       destination_topic = move_posts_to_destination(topic)
       render_topic_changes(destination_topic)
