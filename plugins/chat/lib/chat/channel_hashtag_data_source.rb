@@ -58,7 +58,6 @@ module Chat
           guardian,
           filter: term,
           limit: limit,
-          exclude_dm_channels: true,
           match_filter_on_starts_with:
             condition == HashtagAutocompleteService.search_conditions[:starts_with],
         )
