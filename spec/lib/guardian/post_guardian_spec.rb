@@ -1251,6 +1251,36 @@ RSpec.describe PostGuardian do
 
       expect(guardian.can_view_edit_history?(post)).to be_falsey
     end
+
+    context "when edit_history_visible_to_public is false" do
+      before { SiteSetting.edit_history_visible_to_public = false }
+
+      it "returns false for a regular user" do
+        expect(Guardian.new(user).can_view_edit_history?(post)).to be_falsey
+      end
+
+      it "returns true for a category group moderator" do
+        SiteSetting.enable_category_group_moderation = true
+        Fabricate(:category_moderation_group, category: category, group:)
+
+        expect(Guardian.new(user).can_view_edit_history?(post)).to be_truthy
+      end
+
+      it "returns false for a category group moderator in a different category" do
+        SiteSetting.enable_category_group_moderation = true
+        other_category = Fabricate(:category)
+        Fabricate(:category_moderation_group, category: other_category, group:)
+
+        expect(Guardian.new(user).can_view_edit_history?(post)).to be_falsey
+      end
+
+      it "returns false for a category group moderator when feature is disabled" do
+        SiteSetting.enable_category_group_moderation = false
+        Fabricate(:category_moderation_group, category: category, group:)
+
+        expect(Guardian.new(user).can_view_edit_history?(post)).to be_falsey
+      end
+    end
   end
 
   describe "#can_view_raw_email?" do
