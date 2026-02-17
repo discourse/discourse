@@ -88,7 +88,10 @@ RSpec.describe DiscourseAi::AiBot::BotController do
   describe "#stop_streaming_response" do
     let(:redis_stream_key) { "gpt_cancel:#{pm_post.id}" }
 
-    before { Discourse.redis.setex(redis_stream_key, 60, 1) }
+    before do
+      SiteSetting.ai_bot_enabled = true
+      Discourse.redis.setex(redis_stream_key, 60, 1)
+    end
 
     it "returns a 403 when the user cannot see the PM" do
       post "/discourse-ai/ai-bot/post/#{pm_post.id}/stop-streaming"
@@ -96,8 +99,36 @@ RSpec.describe DiscourseAi::AiBot::BotController do
       expect(response.status).to eq(403)
     end
 
+    it "returns a 403 when the user can see the PM but is not in ai_bot_allowed_groups" do
+      allowed_user = pm_topic.topic_allowed_users.first.user
+      sign_in(allowed_user)
+
+      SiteSetting.ai_bot_allowed_groups = Group::AUTO_GROUPS[:staff].to_s
+
+      post "/discourse-ai/ai-bot/post/#{pm_post.id}/stop-streaming"
+
+      expect(response.status).to eq(403)
+      expect(Discourse.redis.get(redis_stream_key)).to eq("1")
+    end
+
+    it "returns a 403 when ai_bot_enabled is false" do
+      allowed_user = pm_topic.topic_allowed_users.first.user
+      sign_in(allowed_user)
+
+      SiteSetting.ai_bot_enabled = false
+
+      post "/discourse-ai/ai-bot/post/#{pm_post.id}/stop-streaming"
+
+      expect(response.status).to eq(403)
+      expect(Discourse.redis.get(redis_stream_key)).to eq("1")
+    end
+
     it "deletes the key using to track the streaming" do
-      sign_in(pm_topic.topic_allowed_users.first.user)
+      allowed_user = pm_topic.topic_allowed_users.first.user
+      sign_in(allowed_user)
+
+      Group.refresh_automatic_groups!
+      SiteSetting.ai_bot_allowed_groups = allowed_user.groups.first.id.to_s
 
       post "/discourse-ai/ai-bot/post/#{pm_post.id}/stop-streaming"
 
