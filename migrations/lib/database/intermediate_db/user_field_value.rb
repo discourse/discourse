@@ -8,11 +8,11 @@ module Migrations::Database::IntermediateDB
   module UserFieldValue
     SQL = <<~SQL
       INSERT INTO user_field_values (
-        created_at,
-        field_id,
-        is_multiselect_field,
         user_id,
-        value
+        field_id,
+        value,
+        created_at,
+        is_multiselect_field
       )
       VALUES (
         ?, ?, ?, ?, ?
@@ -22,21 +22,21 @@ module Migrations::Database::IntermediateDB
 
     # Creates a new `user_field_values` record in the IntermediateDB.
     #
-    # @param created_at             [Time, nil]
-    # @param field_id               [Integer, String]
-    # @param is_multiselect_field   [Boolean, nil]
     # @param user_id                [Integer, String]
-    # @param value                  [String, nil]
+    # @param field_id               [Integer, String]
+    # @param value                  [String]
+    # @param created_at             [Time, nil]
+    # @param is_multiselect_field   [Boolean, nil]
     #
     # @return [void]
-    def self.create(created_at: nil, field_id:, is_multiselect_field: nil, user_id:, value: nil)
+    def self.create(user_id:, field_id:, value:, created_at: nil, is_multiselect_field: nil)
       ::Migrations::Database::IntermediateDB.insert(
         SQL,
-        ::Migrations::Database.format_datetime(created_at),
-        field_id,
-        ::Migrations::Database.format_boolean(is_multiselect_field),
         user_id,
+        field_id,
         value,
+        ::Migrations::Database.format_datetime(created_at),
+        ::Migrations::Database.format_boolean(is_multiselect_field),
       )
     end
   end

@@ -168,9 +168,10 @@ CREATE TABLE log_entries
 
 CREATE TABLE muted_users
 (
-    created_at    DATETIME,
+    user_id       NUMERIC  NOT NULL,
     muted_user_id NUMERIC  NOT NULL,
-    user_id       NUMERIC  NOT NULL
+    created_at    DATETIME,
+    PRIMARY KEY (user_id, muted_user_id)
 );
 
 
@@ -241,8 +242,7 @@ CREATE TABLE tags
     created_at  DATETIME,
     description TEXT,
     locale      TEXT,
-    name        TEXT     NOT NULL,
-    slug        TEXT     NOT NULL
+    name        TEXT     NOT NULL
 );
 
 
@@ -314,7 +314,6 @@ CREATE TABLE topics
     visible              BOOLEAN
 );
 
-CREATE INDEX index_topics_on_archetype ON topics (archetype);
 
 CREATE TABLE uploads
 (
@@ -373,15 +372,14 @@ CREATE TABLE user_field_options
 
 CREATE TABLE user_field_values
 (
-    created_at           DATETIME,
-    field_id             NUMERIC  NOT NULL,
-    is_multiselect_field BOOLEAN,
     user_id              NUMERIC  NOT NULL,
-    value                TEXT
+    field_id             NUMERIC  NOT NULL,
+    value                TEXT     NOT NULL,
+    created_at           DATETIME,
+    is_multiselect_field BOOLEAN,
+    PRIMARY KEY (user_id, field_id, value)
 );
 
-CREATE UNIQUE INDEX user_field_values_multiselect_index ON user_field_values (user_id, field_id, value) WHERE is_multiselect_field = TRUE;
-CREATE UNIQUE INDEX user_field_values_not_multiselect_index ON user_field_values (user_id, field_id) WHERE is_multiselect_field = FALSE;
 
 CREATE TABLE user_fields
 (
@@ -404,74 +402,54 @@ CREATE TABLE user_fields
 
 CREATE TABLE user_options
 (
-    user_id                              NUMERIC  NOT NULL PRIMARY KEY,
-    ai_search_discoveries                BOOLEAN,
-    allow_private_messages               BOOLEAN,
-    auto_image_caption                   BOOLEAN,
-    auto_track_topics_after_msecs        INTEGER,
-    automatically_unpin_topics           BOOLEAN,
-    bookmark_auto_delete_preference      INTEGER,
-    chat_email_frequency                 INTEGER,
-    chat_enabled                         BOOLEAN,
-    chat_header_indicator_preference     INTEGER,
-    chat_quick_reaction_type             INTEGER,
-    chat_quick_reactions_custom          TEXT,
-    chat_send_shortcut                   INTEGER,
-    chat_separate_sidebar_mode           INTEGER,
-    chat_sound                           TEXT,
-    color_scheme_id                      NUMERIC,
-    composition_mode                     INTEGER,
-    dark_scheme_id                       NUMERIC,
-    default_calendar                     INTEGER,
-    digest_after_minutes                 INTEGER,
-    discourse_rewind_dismissed_at        DATETIME,
-    discourse_rewind_enabled             BOOLEAN,
-    discourse_rewind_share_publicly      BOOLEAN,
-    dismissed_channel_retention_reminder BOOLEAN,
-    dismissed_dm_retention_reminder      BOOLEAN,
-    dynamic_favicon                      BOOLEAN,
-    email_digests                        BOOLEAN,
-    email_in_reply_to                    BOOLEAN,
-    email_level                          INTEGER,
-    email_messages_level                 INTEGER,
-    email_previous_replies               INTEGER,
-    enable_allowed_pm_users              BOOLEAN,
-    enable_defer                         BOOLEAN,
-    enable_markdown_monospace_font       BOOLEAN,
-    enable_quoting                       BOOLEAN,
-    enable_smart_lists                   BOOLEAN,
-    external_links_in_new_tab            BOOLEAN,
-    hide_presence                        BOOLEAN,
-    hide_profile                         BOOLEAN,
-    hide_profile_and_presence            BOOLEAN,
-    homepage_id                          NUMERIC,
-    ignore_channel_wide_mention          BOOLEAN,
-    include_tl0_in_digests               BOOLEAN,
-    interface_color_mode                 INTEGER,
-    last_redirected_to_top_at            DATETIME,
-    like_notification_frequency          INTEGER,
-    mailing_list_mode                    BOOLEAN,
-    mailing_list_mode_frequency          INTEGER,
-    new_topic_duration_minutes           INTEGER,
-    notification_level_when_assigned     INTEGER,
-    notification_level_when_replying     INTEGER,
-    notify_on_linked_posts               BOOLEAN,
-    oldest_search_log_date               DATETIME,
-    only_chat_push_notifications         BOOLEAN,
-    policy_email_frequency               INTEGER,
-    seen_popups                          INTEGER,
-    show_thread_title_prompts            BOOLEAN,
-    sidebar_link_to_filtered_list        BOOLEAN,
-    sidebar_show_count_of_new_items      BOOLEAN,
-    skip_new_user_tips                   BOOLEAN,
-    text_size_key                        INTEGER,
-    text_size_seq                        INTEGER,
-    theme_ids                            INTEGER,
-    theme_key_seq                        INTEGER,
-    timezone                             TEXT,
-    title_count_mode_key                 INTEGER,
-    topics_unread_when_closed            BOOLEAN,
-    watched_precedence_over_muted        BOOLEAN
+    user_id                          NUMERIC  NOT NULL PRIMARY KEY,
+    allow_private_messages           BOOLEAN,
+    auto_track_topics_after_msecs    INTEGER,
+    automatically_unpin_topics       BOOLEAN,
+    bookmark_auto_delete_preference  INTEGER,
+    color_scheme_id                  NUMERIC,
+    composition_mode                 INTEGER,
+    dark_scheme_id                   NUMERIC,
+    default_calendar                 INTEGER,
+    digest_after_minutes             INTEGER,
+    dynamic_favicon                  BOOLEAN,
+    email_digests                    BOOLEAN,
+    email_in_reply_to                BOOLEAN,
+    email_level                      INTEGER,
+    email_messages_level             INTEGER,
+    email_previous_replies           INTEGER,
+    enable_allowed_pm_users          BOOLEAN,
+    enable_defer                     BOOLEAN,
+    enable_markdown_monospace_font   BOOLEAN,
+    enable_quoting                   BOOLEAN,
+    enable_smart_lists               BOOLEAN,
+    external_links_in_new_tab        BOOLEAN,
+    hide_presence                    BOOLEAN,
+    hide_profile                     BOOLEAN,
+    hide_profile_and_presence        BOOLEAN,
+    homepage_id                      NUMERIC,
+    include_tl0_in_digests           BOOLEAN,
+    interface_color_mode             INTEGER,
+    last_redirected_to_top_at        DATETIME,
+    like_notification_frequency      INTEGER,
+    mailing_list_mode                BOOLEAN,
+    mailing_list_mode_frequency      INTEGER,
+    new_topic_duration_minutes       INTEGER,
+    notification_level_when_replying INTEGER,
+    notify_on_linked_posts           BOOLEAN,
+    oldest_search_log_date           DATETIME,
+    seen_popups                      INTEGER,
+    sidebar_link_to_filtered_list    BOOLEAN,
+    sidebar_show_count_of_new_items  BOOLEAN,
+    skip_new_user_tips               BOOLEAN,
+    text_size_key                    INTEGER,
+    text_size_seq                    INTEGER,
+    theme_ids                        INTEGER,
+    theme_key_seq                    INTEGER,
+    timezone                         TEXT,
+    title_count_mode_key             INTEGER,
+    topics_unread_when_closed        BOOLEAN,
+    watched_precedence_over_muted    BOOLEAN
 );
 
 

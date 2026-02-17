@@ -28,7 +28,10 @@ module Migrations::Database::Schema::DSL
       return unless ignored
 
       ignored_names = ignored.table_names.map(&:to_s).to_set
-      configured_names = @schema.tables.keys.map(&:to_s).to_set
+
+      # Synthetic tables don't use a DB source, so they can share a name with an ignored DB table
+      configured_names =
+        @schema.tables.each_value.filter_map { |t| t.name.to_s if t.source_table_name }.to_set
 
       overlap = configured_names & ignored_names
       overlap.sort.each { |name| @errors << "Table '#{name}' is both configured and ignored" }
