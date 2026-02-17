@@ -314,6 +314,7 @@ CREATE TABLE topics
     visible              BOOLEAN
 );
 
+CREATE INDEX index_topics_on_archetype ON topics (archetype);
 
 CREATE TABLE uploads
 (
@@ -380,6 +381,8 @@ CREATE TABLE user_field_values
     PRIMARY KEY (user_id, field_id, value)
 );
 
+CREATE UNIQUE INDEX user_field_values_multiselect_index ON user_field_values (user_id, field_id, value) WHERE is_multiselect_field = TRUE;
+CREATE UNIQUE INDEX user_field_values_not_multiselect_index ON user_field_values (user_id, field_id) WHERE is_multiselect_field = FALSE;
 
 CREATE TABLE user_fields
 (

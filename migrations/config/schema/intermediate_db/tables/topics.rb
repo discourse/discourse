@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 Migrations::Database::Schema.table :topics do
+  index :archetype, name: :index_topics_on_archetype
+
   ignore :bumped_at,
          :excerpt,
          :fancy_title,
