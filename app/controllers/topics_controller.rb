@@ -513,7 +513,7 @@ class TopicsController < ApplicationController
     params.require(:category_id)
     category_id = params[:category_id].to_i
 
-    visible_topics = Topic.listable_topics.visible
+    visible_topics = Topic.listable_topics.visible.secured(guardian)
 
     render json: {
              pinned_in_category_count:
@@ -524,7 +524,8 @@ class TopicsController < ApplicationController
                  .count,
              pinned_globally_count:
                visible_topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
-             banner_count: Topic.listable_topics.where(archetype: Archetype.banner).count,
+             banner_count:
+               Topic.listable_topics.secured(guardian).where(archetype: Archetype.banner).count,
            }
   end
 
