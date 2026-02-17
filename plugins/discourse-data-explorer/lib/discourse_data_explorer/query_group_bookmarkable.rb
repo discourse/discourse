@@ -39,6 +39,12 @@ module DiscourseDataExplorer
       bookmarkable_search.call(bookmarks, "data_explorer_queries.name ILIKE ?")
     end
 
+    def self.validate_before_create(guardian, bookmarkable)
+      if bookmarkable.blank? || !can_see_bookmarkable?(guardian, bookmarkable)
+        raise Discourse::InvalidAccess
+      end
+    end
+
     def self.reminder_handler(bookmark)
       send_reminder_notification(
         bookmark,
