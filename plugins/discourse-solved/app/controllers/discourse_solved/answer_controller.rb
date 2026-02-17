@@ -13,9 +13,15 @@ class DiscourseSolved::AnswerController < ::ApplicationController
 
     guardian.ensure_can_accept_answer!(topic, post)
 
-    accepted_answer = DiscourseSolved.accept_answer!(post, current_user, topic: topic)
-
-    render_json_dump(accepted_answer)
+    DiscourseSolved::AcceptAnswer.call(params: { post_id: post.id }, acting_user: current_user) do
+      on_success { |accepted_answer:| render_json_dump(accepted_answer) }
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failure { render json: failed_json, status: :unprocessable_entity }
+    end
   end
 
   def unaccept
@@ -28,9 +34,15 @@ class DiscourseSolved::AnswerController < ::ApplicationController
 
     guardian.ensure_can_accept_answer!(topic, post)
 
-    DiscourseSolved.unaccept_answer!(post, topic: topic)
-
-    render json: success_json
+    DiscourseSolved::UnacceptAnswer.call(params: { post_id: post.id }) do
+      on_success { render json: success_json }
+      on_model_not_found(:post) { raise Discourse::NotFound }
+      on_model_not_found(:topic) { raise Discourse::NotFound }
+      on_failed_contract do |contract|
+        render json: failed_json.merge(errors: contract.errors.full_messages), status: :bad_request
+      end
+      on_failure { render json: failed_json, status: :unprocessable_entity }
+    end
   end
 
   def limit_accepts
