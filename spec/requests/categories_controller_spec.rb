@@ -693,6 +693,45 @@ RSpec.describe CategoriesController do
     end
   end
 
+  describe "#move" do
+    it "requires login" do
+      post "/category/#{category.id}/move.json", params: { category_id: category.id, position: 0 }
+      expect(response.status).to eq(403)
+    end
+
+    it "raises an error for a non-staff user" do
+      sign_in(user)
+      post "/category/#{category.id}/move.json", params: { category_id: category.id, position: 0 }
+      expect(response.status).to eq(403)
+    end
+
+    it "blocks a moderator from moving a category they cannot see" do
+      SiteSetting.moderators_manage_categories = true
+      moderator = Fabricate(:moderator)
+      group = Fabricate(:group)
+      restricted_category = Fabricate(:category, read_restricted: true)
+      restricted_category.set_permissions(group => :full)
+      restricted_category.save!
+      original_position = restricted_category.position
+
+      sign_in(moderator)
+      post "/category/#{restricted_category.id}/move.json",
+           params: {
+             category_id: restricted_category.id,
+             position: 0,
+           }
+
+      expect(response.status).to eq(403)
+      expect(restricted_category.reload.position).to eq(original_position)
+    end
+
+    it "allows an admin to move any category" do
+      sign_in(admin)
+      post "/category/#{category.id}/move.json", params: { category_id: category.id, position: 0 }
+      expect(response.status).to eq(200)
+    end
+  end
+
   describe "#reorder" do
     it "reorders the categories" do
       sign_in(admin)
