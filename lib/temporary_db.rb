@@ -25,48 +25,27 @@ class TemporaryDb
   def pg_bin_path
     return @pg_bin_path if @pg_bin_path
 
-    # Try pg_config first (works on any platform if PG dev packages are installed)
-    pg_config_bin = `pg_config --bindir 2>/dev/null`.strip
-    if pg_config_bin.length > 0 && File.exist?("#{pg_config_bin}/pg_ctl")
-      @pg_bin_path = pg_config_bin
-      return @pg_bin_path
+    # RHEL/Fedora (PGDG): /usr/pgsql-{version}/bin
+    VERSIONS.reverse_each do |v|
+      bin_path = "/usr/pgsql-#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
     end
 
     # Debian/Ubuntu: /usr/lib/postgresql/{version}/bin
     VERSIONS.reverse_each do |v|
       bin_path = "/usr/lib/postgresql/#{v}/bin"
-      if File.exist?("#{bin_path}/pg_ctl")
-        @pg_bin_path = bin_path
-        return @pg_bin_path
-      end
-    end
-
-    # RHEL/Fedora (PGDG): /usr/pgsql-{version}/bin
-    VERSIONS.reverse_each do |v|
-      bin_path = "/usr/pgsql-#{v}/bin"
-      if File.exist?("#{bin_path}/pg_ctl")
-        @pg_bin_path = bin_path
-        return @pg_bin_path
-      end
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
     end
 
     # macOS Postgres.app
     bin_path = "/Applications/Postgres.app/Contents/Versions/latest/bin"
-    if File.exist?("#{bin_path}/pg_ctl")
-      @pg_bin_path = bin_path
-      return @pg_bin_path
-    end
+    return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
 
-    raise "Cannot find PostgreSQL bin path (pg_ctl). Install PostgreSQL or ensure pg_config is in PATH."
+    raise "Cannot find pg_ctl. Install the PostgreSQL server package."
   end
 
   def initdb_path
-    return @initdb_path if @initdb_path
-
-    @initdb_path = `which initdb 2> /dev/null`.strip
-    @initdb_path = "#{pg_bin_path}/initdb" if @initdb_path.length == 0
-
-    @initdb_path
+    @initdb_path ||= "#{pg_bin_path}/initdb"
   end
 
   def find_free_port(range)
@@ -78,12 +57,7 @@ class TemporaryDb
   end
 
   def pg_ctl_path
-    return @pg_ctl_path if @pg_ctl_path
-
-    @pg_ctl_path = `which pg_ctl 2> /dev/null`.strip
-    @pg_ctl_path = "#{pg_bin_path}/pg_ctl" if @pg_ctl_path.length == 0
-
-    @pg_ctl_path
+    @pg_ctl_path ||= "#{pg_bin_path}/pg_ctl"
   end
 
   def start
@@ -186,10 +160,13 @@ class TemporaryDb
   end
 
   def start_server
+    log_file = File.join(@pg_temp_path, "server.log")
     run_command!(
       pg_ctl_path,
       "-D",
       @pg_temp_path,
+      "-l",
+      log_file,
       "-w",
       "-t",
       STARTUP_TIMEOUT_SECONDS.to_s,
