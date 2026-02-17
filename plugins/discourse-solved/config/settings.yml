@@ -64,4 +64,5 @@ discourse_solved:
   enable_solved_tags:
     type: tag_list
     default: ""
+    client: true
 

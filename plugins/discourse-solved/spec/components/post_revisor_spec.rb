@@ -93,6 +93,52 @@ describe PostRevisor do
     end
   end
 
+  describe "Unaccepting answer with combined category and tag changes" do
+    fab!(:solved_tag, :tag)
+
+    before do
+      SiteSetting.solved_enabled = true
+      SiteSetting.tagging_enabled = true
+      SiteSetting.enable_solved_tags = solved_tag.name
+    end
+
+    it "keeps answer when category changes to unsolved but topic has a solved tag" do
+      topic = Fabricate(:topic, category: category_solved, tags: [solved_tag])
+      post = Fabricate(:post, topic: topic)
+      reply = Fabricate(:post, topic: topic, post_number: 2)
+      DiscourseSolved.accept_answer!(reply, admin)
+
+      described_class.new(post).revise!(admin, { category_id: category.id })
+      topic.reload
+
+      expect(topic.solved).to be_present
+      expect(topic.solved.answer_post_id).to eq(reply.id)
+    end
+
+    it "keeps answer when solved tag is removed but topic is in a solved category" do
+      topic = Fabricate(:topic, category: category_solved, tags: [solved_tag])
+      post = Fabricate(:post, topic: topic)
+      reply = Fabricate(:post, topic: topic, post_number: 2)
+      DiscourseSolved.accept_answer!(reply, admin)
+
+      described_class.new(post).revise!(admin, tags: [])
+      topic.reload
+
+      expect(topic.solved).to be_present
+      expect(topic.solved.answer_post_id).to eq(reply.id)
+    end
+
+    it "unaccepts answer when both category changes to unsolved and solved tag is removed" do
+      topic = Fabricate(:topic, category: category_solved, tags: [solved_tag])
+      post = Fabricate(:post, topic: topic)
+      reply = Fabricate(:post, topic: topic, post_number: 2)
+      DiscourseSolved.accept_answer!(reply, admin)
+
+      described_class.new(post).revise!(admin, { category_id: category.id, tags: [] })
+      expect(topic.reload.solved).to be_nil
+    end
+  end
+
   describe "Allowing solved via tags" do
     before do
       SiteSetting.solved_enabled = true
