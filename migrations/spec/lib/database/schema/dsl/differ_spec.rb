@@ -153,6 +153,36 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
       expect(names).to contain_exactly("created_at", "email")
     end
 
+    it "uses source table name when attributing unknown columns for copied tables" do
+      manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
+      allow(manifest).to receive(:available?).and_return(true)
+      allow(manifest).to receive(:plugin_for_column).with("users", "chat_enabled").and_return(
+        "chat",
+      )
+      allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
+
+      Migrations::Database::Schema.table :user_archive do
+        copy_structure_from :users
+        include :id, :username
+      end
+
+      stub_database(
+        connection,
+        db_tables: %i[users],
+        table_columns: {
+          users: %i[id username chat_enabled],
+        },
+      )
+
+      result = described_class.new(Migrations::Database::Schema).diff
+
+      expect(result.table_diffs.size).to eq(1)
+      diff = result.table_diffs.first
+      expect(diff.table_name).to eq("user_archive")
+      expect(diff.unknown_columns.map(&:name)).to eq(["chat_enabled"])
+      expect(diff.unknown_columns.first.plugin).to eq("chat")
+    end
+
     it "detects missing columns" do
       stub_plugin_manifest_unavailable
 

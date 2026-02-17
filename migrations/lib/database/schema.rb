@@ -316,10 +316,16 @@ module Migrations::Database
 
       return if @ready == db_key
 
-      reset! if @ready
-      DSL::Loader.new(path).load!
-      registry.freeze!
-      @ready = db_key
+      reset!
+      begin
+        DSL::Loader.new(path).load!
+        registry.freeze!
+        @ready = db_key
+      rescue StandardError
+        # Avoid keeping partially loaded DSL state after a loader failure.
+        reset!
+        raise
+      end
 
       manifest = plugin_manifest(database:)
       unless manifest.fresh?

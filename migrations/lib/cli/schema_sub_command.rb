@@ -112,7 +112,10 @@ module Migrations::CLI
     method_option :reason, type: :string, required: true, desc: "Reason for ignoring the table"
     def ignore(table_name)
       table_name = table_name.to_s
+      database = options[:database].to_s
       reason = options[:reason]
+
+      validate_database_option!(database)
 
       unless /\A[a-z0-9_]+\z/.match?(table_name)
         raise(
@@ -123,7 +126,7 @@ module Migrations::CLI
 
       raise Schema::ConfigError, "A non-empty reason is required." if reason.blank?
 
-      ignored_path = File.join(Schema.config_path(options[:database]), "ignored.rb")
+      ignored_path = File.join(Schema.config_path(database), "ignored.rb")
 
       unless File.exist?(ignored_path)
         raise Schema::ConfigError, "ignored.rb not found at #{ignored_path}"
@@ -193,6 +196,16 @@ module Migrations::CLI
 
     def load_rails!
       ::Migrations.load_rails_environment(quiet: true)
+    end
+
+    def validate_database_option!(database)
+      available = Schema.available_databases
+      return if available.include?(database)
+
+      raise(
+        Schema::ConfigError,
+        I18n.t("schema.unknown_database", name: database, available: available.join(", ")),
+      )
     end
 
     def display_table(table)

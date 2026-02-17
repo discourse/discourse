@@ -95,6 +95,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def add_column(name, type, required: false, enum: nil)
+      enum = enum.to_sym if enum
       @added_columns << AddedColumn.new(name: name.to_sym, type: type.to_sym, required:, enum:)
     end
 

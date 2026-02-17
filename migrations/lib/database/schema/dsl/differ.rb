@@ -97,7 +97,14 @@ module Migrations::Database::Schema::DSL
       configured_columns = effective_column_names(table_def, db_column_names)
 
       auto_ignored = find_auto_ignored_columns(table_def)
-      unknown = find_unknown_columns(table_def, db_column_names, configured_columns, auto_ignored)
+      unknown =
+        find_unknown_columns(
+          table_def,
+          source_table,
+          db_column_names,
+          configured_columns,
+          auto_ignored,
+        )
       missing = find_missing_columns(table_def, db_column_names)
       stale = find_stale_ignored_columns(table_def, db_column_names)
 
@@ -113,15 +120,22 @@ module Migrations::Database::Schema::DSL
       )
     end
 
-    def find_unknown_columns(table_def, db_column_names, configured_columns, auto_ignored)
+    def find_unknown_columns(
+      table_def,
+      source_table,
+      db_column_names,
+      configured_columns,
+      auto_ignored
+    )
       ignored = table_def.ignored_column_names.map(&:to_s).to_set
       globally_ignored = globally_ignored_columns
       auto_ignored_names = auto_ignored.map(&:name).to_set
 
       unknown =
         db_column_names - configured_columns - ignored - globally_ignored - auto_ignored_names
-      table_name = table_def.name.to_s
-      unknown.sort.map { |name| ColumnInfo.new(name:, plugin: plugin_for_column(table_name, name)) }
+      unknown.sort.map do |name|
+        ColumnInfo.new(name:, plugin: plugin_for_column(source_table, name))
+      end
     end
 
     def find_missing_columns(table_def, db_column_names)

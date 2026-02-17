@@ -259,6 +259,27 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       expect(result.errors).to include(match(/references unknown enum 'nonexistent_enum'/))
     end
 
+    it "accepts added columns with enum names provided as strings" do
+      schema =
+        build_schema(
+          tables: {
+            uploads:
+              proc do
+                synthetic!
+                add_column :type, :text, enum: "upload_type"
+              end,
+          },
+          enums: {
+            upload_type: proc { value :avatar, 0 },
+          },
+        )
+
+      stub_database(connection, db_tables: [], table_columns: {})
+
+      result = described_class.new(schema).validate
+      expect(result.errors).to be_empty
+    end
+
     it "detects column type overrides referencing unknown enums" do
       schema =
         build_schema(

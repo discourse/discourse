@@ -148,6 +148,16 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
       expect(table.added_columns[1].required).to eq(true)
     end
 
+    it "normalizes enum names on added columns" do
+      Migrations::Database::Schema.table :uploads do
+        synthetic!
+        add_column :type, :text, enum: "upload_type"
+      end
+
+      table = Migrations::Database::Schema.tables[:uploads]
+      expect(table.added_columns.first.enum).to eq(:upload_type)
+    end
+
     it "supports ignoring columns with reasons" do
       Migrations::Database::Schema.table :users do
         ignore :admin_notes, reason: "Not needed for migration"
