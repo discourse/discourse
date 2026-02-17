@@ -50,6 +50,31 @@ describe "Solved with tags", type: :system do
     expect(post_solved_button).to have_no_accept_button
   end
 
+  describe "confirmation modal when removing solved tag" do
+    fab!(:admin)
+    fab!(:other_tag, :tag)
+    fab!(:topic_with_solved_tag) { Fabricate(:topic_with_op, user: admin, tags: [tag, other_tag]) }
+    fab!(:answer) { Fabricate(:post, topic: topic_with_solved_tag) }
+    fab!(:solved_record) do
+      Fabricate(:solved_topic, topic: topic_with_solved_tag, answer_post: answer)
+    end
+
+    it "shows confirmation when removing the solved tag from a topic with an accepted answer" do
+      sign_in(admin)
+      topic_page.visit_topic(topic_with_solved_tag)
+
+      topic_page.click_topic_edit_title
+
+      tag_chooser = PageObjects::Components::SelectKit.new("#topic-title .mini-tag-chooser")
+      tag_chooser.expand
+      tag_chooser.unselect_by_name(tag.name)
+
+      topic_page.click_topic_title_submit_edit
+
+      expect(page).to have_css(".solved-removal-confirmation-modal")
+    end
+  end
+
   it "shows solved status filter on tag page and filters topics correctly" do
     SiteSetting.show_filter_by_solved_status = true
 
