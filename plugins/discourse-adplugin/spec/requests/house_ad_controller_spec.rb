@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
 describe AdPlugin::HouseAdsController do
-  let(:admin) { Fabricate(:admin) }
-  let(:category) { Fabricate(:category) }
-  let(:group) { Fabricate(:group) }
+  fab!(:admin)
+  fab!(:category)
+  fab!(:group)
 
   let!(:ad) do
     AdPlugin::HouseAd.create(
@@ -36,6 +36,24 @@ describe AdPlugin::HouseAdsController do
         created_ad = AdPlugin::HouseAd.find_by(name: "XSS Ad")
         expect(created_ad.html).not_to include("<script>")
         expect(created_ad.html).to include("<div>Ad</div>")
+      end
+
+      it "ignores a user-supplied id in the body" do
+        chosen_id = 99_999
+
+        post "/admin/plugins/pluginad/house_creatives.json",
+             params: {
+               id: chosen_id,
+               name: "ID Inject Ad",
+               html: "<p>injected</p>",
+               visible_to_anons: "true",
+               visible_to_logged_in_users: "true",
+             }
+        expect(response.status).to eq(200)
+
+        created_ad = AdPlugin::HouseAd.find_by(name: "ID Inject Ad")
+        expect(created_ad).to be_present
+        expect(created_ad.id).not_to eq(chosen_id)
       end
 
       it "strips event handler attributes from html on create" do
@@ -128,6 +146,37 @@ describe AdPlugin::HouseAdsController do
         expect(ad_copy.category_ids).to eq([category.id])
         expect(ad_copy.group_ids).to eq([group.id])
         expect(ad_copy.route_names).to contain_exactly("discovery.latest", "topic.show")
+      end
+
+      it "returns 404 when the ad does not exist" do
+        nonexistent_id = ad.id + 999
+
+        expect {
+          put "/admin/plugins/pluginad/house_creatives/#{nonexistent_id}.json",
+              params: {
+                name: "Phantom Ad",
+                html: "<p>Should not be created</p>",
+                visible_to_anons: "true",
+                visible_to_logged_in_users: "true",
+              }
+        }.not_to change { AdPlugin::HouseAd.count }
+
+        expect(response.status).to eq(404)
+      end
+
+      it "does not allow id injection via body params" do
+        put "/admin/plugins/pluginad/house_creatives/#{ad.id}.json",
+            params: {
+              id: ad.id + 999,
+              name: "Updated Name",
+              html: "<p>Updated</p>",
+              visible_to_anons: "true",
+              visible_to_logged_in_users: "true",
+            }
+
+        expect(response.status).to eq(200)
+        ad.reload
+        expect(ad.name).to eq("Updated Name")
       end
 
       it "replaces routes on update" do

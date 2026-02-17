@@ -32,8 +32,13 @@ en:
           new_name: "New House Ad"
           save: "Save"
           delete: "Delete"
-          description: "Define your own ads and where they should be displayed."
-          get_started: "Start by creating a new ad."
+          confirm_delete: "Are you sure you want to delete this ad?"
+          html: "HTML"
+          categories: "Categories"
+          routes: "Routes"
+          groups: "Groups"
+          description: "Create and manage your own ads to display across your site in various positions."
+          get_started: "No house ads have been created yet."
           filter_placeholder: "Select ads..."
           more_settings: "More Settings"
           show_to_anons: "Show to anonymous users"
@@ -43,6 +48,12 @@ en:
           route_chooser_description: "Choose the pages/routes where this ad should be displayed. Leave this and category selections empty to show the ad everywhere."
           group_chooser_description: "Choose the groups that can view this ad or leave empty to show the ad to all signed in users."
           preview: "Preview"
+          back: "House Ads"
+          name: "Name"
+          edit: "Edit"
+          tabs:
+            ads: "Ads"
+            settings: "Settings"
 
           topic_list_top:
             title: "Topic list top ads"
