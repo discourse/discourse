@@ -52,9 +52,7 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
         database: "intermediate_db",
         refresh_manifest: false,
       )
-      allow(Migrations::Database::Schema).to receive(:plugin_manifest).with(
-        database: "intermediate_db",
-      ).and_return(manifest)
+      allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
 
       allow(I18n).to receive(:t).with("schema.detect_plugins.detecting").and_return("detecting")
       allow(I18n).to receive(:t).with(

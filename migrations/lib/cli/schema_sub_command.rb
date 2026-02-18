@@ -146,7 +146,7 @@ module Migrations::CLI
       database = selected_database
       Schema.ensure_ready!(database:, refresh_manifest: false)
 
-      manifest = Schema.plugin_manifest(database:)
+      manifest = Schema.plugin_manifest
 
       if options[:force] || !manifest.fresh?
         puts I18n.t("schema.detect_plugins.detecting")

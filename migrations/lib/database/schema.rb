@@ -90,8 +90,7 @@ module Migrations::Database
       registry.ignored_tables
     end
 
-    def self.plugin_manifest(database: :intermediate_db)
-      database.to_sym # keep keyword API stable; manifest is shared for all schema outputs
+    def self.plugin_manifest
       @plugin_manifest ||=
         DSL::PluginManifest.new(manifest_path:, plugins_path: File.join(Rails.root, "plugins"))
     end
@@ -150,7 +149,7 @@ module Migrations::Database
         registry.freeze!
 
         if refresh_manifest
-          manifest = plugin_manifest(database:)
+          manifest = plugin_manifest
           unless manifest.checksums_fresh?
             begin
               $stdout.write(I18n.t("schema.detect_plugins.auto_detecting"))

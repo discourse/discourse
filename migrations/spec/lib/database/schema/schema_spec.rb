@@ -39,9 +39,7 @@ RSpec.describe Migrations::Database::Schema do
 
         manifest =
           instance_double(Migrations::Database::Schema::DSL::PluginManifest, checksums_fresh?: true)
-        allow(described_class).to receive(:plugin_manifest).with(database: :test_db).and_return(
-          manifest,
-        )
+        allow(described_class).to receive(:plugin_manifest).and_return(manifest)
         allow(Migrations).to receive(:root_path).and_return(tmpdir)
 
         expect { described_class.ensure_ready!(database: :test_db) }.to raise_error(
@@ -67,9 +65,7 @@ RSpec.describe Migrations::Database::Schema do
         manifest =
           instance_double(Migrations::Database::Schema::DSL::PluginManifest, checksums_fresh?: true)
         allow(manifest).to receive(:regenerate!)
-        allow(described_class).to receive(:plugin_manifest).with(database: :test_db).and_return(
-          manifest,
-        )
+        allow(described_class).to receive(:plugin_manifest).and_return(manifest)
         allow(Migrations).to receive(:root_path).and_return(tmpdir)
 
         expect { described_class.ensure_ready!(database: :test_db) }.not_to raise_error
@@ -87,9 +83,7 @@ RSpec.describe Migrations::Database::Schema do
             checksums_fresh?: false,
           )
         allow(manifest).to receive(:regenerate!).and_raise(StandardError, "boom")
-        allow(described_class).to receive(:plugin_manifest).with(database: :test_db).and_return(
-          manifest,
-        )
+        allow(described_class).to receive(:plugin_manifest).and_return(manifest)
         allow(Migrations).to receive(:root_path).and_return(tmpdir)
 
         expect { described_class.ensure_ready!(database: :test_db) }.to raise_error(
