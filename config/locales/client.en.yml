@@ -8537,6 +8537,7 @@ en:
         field_types:
           text: "Text"
           textarea: "Textarea"
+          date: "Date"
           confirm: "Confirmation"
           dropdown: "Dropdown"
           multiselect: "Multiselect"
