@@ -242,7 +242,8 @@ CREATE TABLE tags
     created_at  DATETIME,
     description TEXT,
     locale      TEXT,
-    name        TEXT     NOT NULL
+    name        TEXT     NOT NULL,
+    slug        TEXT     NOT NULL
 );
 
 
@@ -381,8 +382,8 @@ CREATE TABLE user_field_values
     PRIMARY KEY (user_id, field_id, value)
 );
 
-CREATE UNIQUE INDEX idx_unique_user_field_values_user_id_field_id_value ON user_field_values (user_id, field_id, value) WHERE is_multiselect_field = TRUE;
-CREATE UNIQUE INDEX idx_unique_user_field_values_user_id_field_id ON user_field_values (user_id, field_id) WHERE is_multiselect_field = FALSE;
+CREATE UNIQUE INDEX idx_unique_user_field_values_multiselect ON user_field_values (user_id, field_id, value) WHERE is_multiselect_field = TRUE;
+CREATE UNIQUE INDEX idx_unique_user_field_values_not_multiselect ON user_field_values (user_id, field_id) WHERE is_multiselect_field = FALSE;
 
 CREATE TABLE user_fields
 (
