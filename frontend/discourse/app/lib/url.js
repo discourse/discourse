@@ -4,6 +4,7 @@ import { setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";
 import { isEmpty } from "@ember/utils";
 import $ from "jquery";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 import getURL, { withoutPrefix } from "discourse/lib/get-url";
 import LockOn from "discourse/lib/lock-on";
@@ -208,6 +209,23 @@ class DiscourseURL extends EmberObject {
 
     if (isEmpty(path)) {
       return;
+    }
+
+    // In embed mode, open all navigation in new tabs except same-topic navigation
+    if (EmbedMode.enabled) {
+      const currentTopicMatch = TOPIC_URL_REGEXP.exec(window.location.pathname);
+      const currentTopicId = currentTopicMatch ? currentTopicMatch[2] : null;
+      const newTopicMatch = TOPIC_URL_REGEXP.exec(path);
+      const newTopicId = newTopicMatch ? newTopicMatch[2] : null;
+
+      // Allow same-topic navigation (scrolling to different posts)
+      if (currentTopicId && newTopicId && currentTopicId === newTopicId) {
+        // Continue with normal routing for same-topic navigation
+      } else {
+        // Open in new tab for all other navigation
+        window.open(getURL(path), "_blank");
+        return;
+      }
     }
 
     if (Session.currentProp("requiresRefresh") && !this.isComposerOpen) {
