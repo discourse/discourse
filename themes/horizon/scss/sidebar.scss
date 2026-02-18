@@ -39,6 +39,13 @@ body.has-full-page-chat .sidebar-wrapper,
   }
 }
 
+.sidebar-hamburger-dropdown {
+  .sidebar-new-topic-button__wrapper {
+    width: 100%;
+    margin: 0 0 var(--space-2);
+  }
+}
+
 .sidebar-section-wrapper {
   --d-sidebar-section-border-color: var(--d-sidebar-border-color);
 
