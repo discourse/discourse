@@ -53,6 +53,7 @@ class ApplicationController < ActionController::Base
   after_action :add_readonly_header
   after_action :perform_refresh_session
   after_action :conditionally_allow_site_embedding
+
   after_action :ensure_vary_header
   after_action :add_noindex_header,
                if: -> { is_feed_request? || !SiteSetting.allow_index_in_robots_txt }
