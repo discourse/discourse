@@ -4,6 +4,7 @@ import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action, computed } from "@ember/object";
+import { service } from "@ember/service";
 import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import DateInput from "discourse/components/date-input";
@@ -119,6 +120,8 @@ export function addAdvancedSearchOptions(options) {
 
 @tagName("")
 export default class SearchAdvancedOptions extends Component {
+  @service appEvents;
+
   @tracked isExpanded = false;
   @tracked submittedFilterCount = 0;
   category = null;
@@ -127,6 +130,12 @@ export default class SearchAdvancedOptions extends Component {
     super.init(...arguments);
 
     this.isExpanded = this.expandFilters || false;
+    this._lastExpandFilters = this.expandFilters;
+    this.appEvents.on(
+      "full-page-search:collapse-filters",
+      this,
+      this._collapseFilters
+    );
 
     this.setProperties({
       searchedTerms: {
@@ -156,8 +165,27 @@ export default class SearchAdvancedOptions extends Component {
     });
   }
 
+  willDestroy() {
+    super.willDestroy(...arguments);
+    this.appEvents.off(
+      "full-page-search:collapse-filters",
+      this,
+      this._collapseFilters
+    );
+  }
+
+  @action
+  _collapseFilters() {
+    this.isExpanded = false;
+  }
+
   didReceiveAttrs() {
     super.didReceiveAttrs(...arguments);
+
+    if (this.expandFilters !== this._lastExpandFilters) {
+      this._lastExpandFilters = this.expandFilters;
+      this.isExpanded = this.expandFilters || false;
+    }
 
     this.setSearchedTermValue("searchedTerms.username", REGEXP_USERNAME_PREFIX);
     this.setSearchedTermValueForCategory();

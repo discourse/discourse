@@ -155,6 +155,7 @@ acceptance("Search - Full Page", function (needs) {
     );
 
     await visit("/search");
+    await click(".advanced-filters__toggle");
 
     await fillIn(".search-query", "none");
 
@@ -162,7 +163,6 @@ acceptance("Search - Full Page", function (needs) {
     await categoryChooser.fillInFilter("faq");
     await categoryChooser.selectRowByValue(4);
 
-    await click(".advanced-filters__toggle");
     assert.strictEqual(
       selectKit("#search-in-category").header().label(),
       "faq"
@@ -179,6 +179,7 @@ acceptance("Search - Full Page", function (needs) {
     );
 
     await visit("/search");
+    await click(".advanced-filters__toggle");
 
     await fillIn(".search-query", "none");
 
@@ -186,7 +187,6 @@ acceptance("Search - Full Page", function (needs) {
     await categoryChooser.fillInFilter("快乐的");
     await categoryChooser.selectRowByValue(240);
 
-    await click(".advanced-filters__toggle");
     assert.strictEqual(
       selectKit("#search-in-category").header().label(),
       "快乐的"
