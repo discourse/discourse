@@ -119,7 +119,7 @@
       border-top: 1px solid var(--content-border-color);
 
       @include viewport.until(lg) {
-        padding: 0 1rem;
+        padding: 1rem 1rem 0 1rem;
         margin: 0;
       }
 
