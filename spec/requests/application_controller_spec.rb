@@ -665,6 +665,8 @@ RSpec.describe ApplicationController do
   describe "allow_embed_mode" do
     fab!(:topic)
 
+    before { SiteSetting.embed_full_app = true }
+
     it "keeps X-Frame-Options when embed_mode param is missing" do
       get("/t/#{topic.slug}/#{topic.id}")
       expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
@@ -693,6 +695,21 @@ RSpec.describe ApplicationController do
       SiteSetting.embed_any_origin = true
       get("/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" })
       expect(response.headers).not_to include("X-Frame-Options")
+    end
+
+    it "keeps X-Frame-Options when embed_full_app is disabled" do
+      SiteSetting.embed_full_app = false
+      Fabricate(:embeddable_host, host: "example.com")
+      get(
+        "/t/#{topic.slug}/#{topic.id}",
+        params: {
+          embed_mode: "true",
+        },
+        headers: {
+          "HTTP_REFERER" => "https://example.com/page",
+        },
+      )
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
     end
   end
 

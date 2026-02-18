@@ -92,7 +92,7 @@ class EmbedController < ApplicationController
 
     response.headers["X-Robots-Tag"] = "noindex, indexifembedded"
 
-    if params[:full_app].present? && topic_id
+    if SiteSetting.embed_full_app && params[:full_app].present? && topic_id
       topic = Topic.find_by(id: topic_id)
       raise Discourse::NotFound if topic.blank?
       redirect_to "#{topic.url}?embed_mode=true"

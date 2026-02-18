@@ -113,6 +113,7 @@ class ApplicationController < ActionController::Base
 
   def allow_embed_mode
     return if params[:embed_mode].blank?
+    return unless SiteSetting.embed_full_app
     return unless SiteSetting.embed_any_origin? || EmbeddableHost.record_for_url(request.referer)
 
     response.headers.delete("X-Frame-Options")

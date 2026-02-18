@@ -3171,6 +3171,9 @@ navigation:
     area: "navigation"
 
 embedding:
+  embed_full_app:
+    default: false
+    hidden: true
   embed_by_username:
     default: ""
     type: username

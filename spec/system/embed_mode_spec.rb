@@ -6,6 +6,8 @@ describe "Embed mode", type: :system do
 
   let(:topic_page) { PageObjects::Pages::Topic.new }
 
+  before { SiteSetting.embed_full_app = true }
+
   it "applies embed-mode class to body when embed_mode=true" do
     visit("/t/#{topic.slug}/#{topic.id}?embed_mode=true")
 
