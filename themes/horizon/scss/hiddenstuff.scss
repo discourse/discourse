@@ -10,7 +10,7 @@
 
 @include viewport.from(md) {
   .horizon-new-topic-button-enabled {
-    .list-controls #create-topic {
+    .list-controls .d-combo-button {
       display: none;
     }
   }
