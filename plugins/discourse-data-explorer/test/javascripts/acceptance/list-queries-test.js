@@ -8,11 +8,27 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
   needs.settings({ data_explorer_enabled: true });
 
   needs.pretender((server, helper) => {
-    server.get("/admin/plugins/explorer/groups.json", () => {
+    server.get("/admin/plugins/discourse-data-explorer.json", () => {
+      return helper.response({
+        id: "discourse-data-explorer",
+        name: "discourse-data-explorer",
+        enabled: true,
+        has_settings: true,
+        humanized_name: "Data Explorer",
+        is_discourse_owned: true,
+        admin_route: {
+          label: "explorer.title",
+          location: "discourse-data-explorer",
+          use_new_show_route: true,
+        },
+      });
+    });
+
+    server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
       return helper.response([]);
     });
 
-    server.get("/admin/plugins/explorer/queries", () => {
+    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
         queries: [
           {
@@ -41,7 +57,7 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
   });
 
   test("renders the page with the list of queries", async function (assert) {
-    await visit("/admin/plugins/explorer");
+    await visit("/admin/plugins/discourse-data-explorer");
 
     assert
       .dom("div.query-list input.ember-text-field")

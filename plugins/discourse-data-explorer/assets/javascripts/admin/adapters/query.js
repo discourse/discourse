@@ -5,5 +5,5 @@ const buildPluginAdapter = optionalRequire(
 );
 
 export default buildPluginAdapter
-  ? buildPluginAdapter("explorer").extend({})
+  ? buildPluginAdapter("discourse-data-explorer").extend({})
   : null; // Not logged in as admin, the adapter isn't needed

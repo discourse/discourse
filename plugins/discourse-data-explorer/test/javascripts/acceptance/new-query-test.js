@@ -7,21 +7,37 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
   needs.settings({ data_explorer_enabled: true });
 
   needs.pretender((server, helper) => {
-    server.get("/admin/plugins/explorer/groups.json", () => {
+    server.get("/admin/plugins/discourse-data-explorer.json", () => {
+      return helper.response({
+        id: "discourse-data-explorer",
+        name: "discourse-data-explorer",
+        enabled: true,
+        has_settings: true,
+        humanized_name: "Data Explorer",
+        is_discourse_owned: true,
+        admin_route: {
+          label: "explorer.title",
+          location: "discourse-data-explorer",
+          use_new_show_route: true,
+        },
+      });
+    });
+
+    server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
       return helper.response([]);
     });
 
-    server.get("/admin/plugins/explorer/schema.json", () => {
+    server.get("/admin/plugins/discourse-data-explorer/schema.json", () => {
       return helper.response({});
     });
 
-    server.get("/admin/plugins/explorer/queries", () => {
+    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
         queries: [],
       });
     });
 
-    server.post("/admin/plugins/explorer/queries", () => {
+    server.post("/admin/plugins/discourse-data-explorer/queries", () => {
       return helper.response({
         query: {
           id: -15,
@@ -47,7 +63,7 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
       });
     });
 
-    server.get("/admin/plugins/explorer/queries/-15", () => {
+    server.get("/admin/plugins/discourse-data-explorer/queries/-15", () => {
       return helper.response({
         query: {
           id: -15,
@@ -75,7 +91,7 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
   });
 
   test("creates a new query", async function (assert) {
-    await visit("/admin/plugins/explorer");
+    await visit("/admin/plugins/discourse-data-explorer");
 
     // select new query button
     await click(".query-list button");
@@ -83,6 +99,9 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
     // select create new query button
     await click(".query-create button");
 
-    assert.strictEqual(currentURL(), "/admin/plugins/explorer/queries/-15");
+    assert.strictEqual(
+      currentURL(),
+      "/admin/plugins/discourse-data-explorer/queries/-15"
+    );
   });
 });

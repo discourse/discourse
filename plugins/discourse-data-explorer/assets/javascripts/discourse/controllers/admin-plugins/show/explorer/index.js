@@ -52,7 +52,7 @@ export default class PluginsExplorerController extends Controller {
   addCreatedRecord(record) {
     this.model.content.push(record);
     this.router.transitionTo(
-      "adminPlugins.explorer.queries.details",
+      "adminPlugins.show.explorer.queries.details",
       record.id
     );
   }
