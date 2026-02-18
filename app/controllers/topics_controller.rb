@@ -34,6 +34,7 @@ class TopicsController < ApplicationController
                  ]
 
   before_action :consider_user_for_promotion, only: :show
+  after_action :allow_embed_mode, only: :show
 
   skip_before_action :check_xhr, only: %i[show feed]
 
@@ -1274,6 +1275,14 @@ class TopicsController < ApplicationController
   end
 
   private
+
+  def allow_embed_mode
+    return if params[:embed_mode].blank?
+    return unless SiteSetting.embed_full_app
+    return unless SiteSetting.embed_any_origin? || EmbeddableHost.record_for_url(request.referer)
+
+    response.headers.delete("X-Frame-Options")
+  end
 
   def topic_params
     params.permit(:topic_id, :topic_time, timings: {})
