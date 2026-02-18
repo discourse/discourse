@@ -44,7 +44,9 @@ module("Unit | Model | post-stream", function (hooks) {
 
     assert.false(postStream.hasPosts, "there are no posts by default");
     assert.false(postStream.firstPostPresent, "the first post is not loaded");
+    assert.true(postStream.firstPostNotLoaded, "firstPostNotLoaded is true");
     assert.false(postStream.loadedAllPosts, "the last post is not loaded");
+    assert.true(postStream.lastPostNotLoaded, "lastPostNotLoaded is true");
     assert.strictEqual(postStream.posts.length, 0, "it has no posts initially");
 
     postStream.appendPost(
@@ -64,7 +66,15 @@ module("Unit | Model | post-stream", function (hooks) {
       store.createRecord("post", { id: 4, post_number: 4 })
     );
     assert.false(postStream.firstPostPresent, "the first post is still loaded");
+    assert.true(
+      postStream.firstPostNotLoaded,
+      "firstPostNotLoaded remains true"
+    );
     assert.true(postStream.loadedAllPosts, "the last post is now loaded");
+    assert.false(
+      postStream.lastPostNotLoaded,
+      "lastPostNotLoaded is now false"
+    );
     assert.strictEqual(
       postStream.posts.length,
       2,
@@ -101,8 +111,16 @@ module("Unit | Model | post-stream", function (hooks) {
       "the first post no longer loaded since the stream changed."
     );
     assert.true(
+      postStream.firstPostNotLoaded,
+      "firstPostNotLoaded is true after stream change"
+    );
+    assert.true(
       postStream.loadedAllPosts,
       "the last post is still the last post in the new stream"
+    );
+    assert.false(
+      postStream.lastPostNotLoaded,
+      "lastPostNotLoaded is still false after stream change"
     );
   });
 

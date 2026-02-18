@@ -39,6 +39,7 @@ import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import bodyClass from "discourse/helpers/body-class";
 import icon from "discourse/helpers/d-icon";
 import hideApplicationFooter from "discourse/helpers/hide-application-footer";
+import hideScrollableContent from "discourse/helpers/hide-scrollable-content";
 import lazyHash from "discourse/helpers/lazy-hash";
 import routeAction from "discourse/helpers/route-action";
 import CategoryChooser from "discourse/select-kit/components/category-chooser";
@@ -71,28 +72,32 @@ export default <template>
       />
       <AddTopicStatusClasses @topic={{@controller.model}} />
       {{bodyClass (concat "archetype-" @controller.model.archetype)}}
-      <div class="container">
-        <DiscourseBanner
-          @overlay={{@controller.hasScrolled}}
-          @hide={{@controller.model.errorLoading}}
+      {{#unless @controller.shouldHideScrollableContentAbove}}
+        <div class="container">
+          <DiscourseBanner
+            @overlay={{@controller.hasScrolled}}
+            @hide={{@controller.model.errorLoading}}
+          />
+        </div>
+      {{/unless}}
+    {{/if}}
+
+    {{#unless @controller.shouldHideScrollableContentAbove}}
+      {{#if @controller.showSharedDraftControls}}
+        <SharedDraftControls @topic={{@controller.model}} />
+      {{/if}}
+
+      <span>
+        <PluginOutlet
+          @name="topic-above-post-stream"
+          @connectorTagName="div"
+          @outletArgs={{lazyHash
+            model=@controller.model
+            editFirstPost=@controller.editFirstPost
+          }}
         />
-      </div>
-    {{/if}}
-
-    {{#if @controller.showSharedDraftControls}}
-      <SharedDraftControls @topic={{@controller.model}} />
-    {{/if}}
-
-    <span>
-      <PluginOutlet
-        @name="topic-above-post-stream"
-        @connectorTagName="div"
-        @outletArgs={{lazyHash
-          model=@controller.model
-          editFirstPost=@controller.editFirstPost
-        }}
-      />
-    </span>
+      </span>
+    {{/unless}}
 
     {{#if @controller.model.postStream.loaded}}
       {{#if @controller.model.postStream.firstPostPresent}}
@@ -421,6 +426,10 @@ export default <template>
                 />
               </span>
 
+              {{#if @controller.model.postStream.firstPostNotLoaded}}
+                {{hideScrollableContent "above"}}
+              {{/if}}
+
               {{#unless @controller.model.postStream.loadingFilter}}
                 <PostStream
                   @postStream={{@controller.model.postStream}}
@@ -479,6 +488,10 @@ export default <template>
                   @topic={{@controller.model}}
                 />
               {{/unless}}
+
+              {{#if @controller.model.postStream.lastPostNotLoaded}}
+                {{hideScrollableContent "below"}}
+              {{/if}}
             </div>
             <div id="topic-bottom"></div>
 
