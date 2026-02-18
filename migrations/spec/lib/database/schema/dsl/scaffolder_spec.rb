@@ -125,10 +125,9 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
 
       expect(content).to include("# Source table: posts")
       expect(content).to include("#   Primary key: id")
-      expect(content).to include("#   Unique indexes: index_posts_on_slug (slug)")
-      expect(content).to include(
-        "#   Indexes: index_posts_on_user_id (user_id), index_posts_on_topic_id (topic_id)",
-      )
+      expect(content).to include("#   Unique indexes:\n#     index_posts_on_slug (slug)")
+      expect(content).not_to include("index_posts_on_user_id")
+      expect(content).not_to include("index_posts_on_topic_id")
     end
 
     it "does not emit active index or unique_index DSL calls" do
@@ -159,7 +158,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
 
       expect(content).not_to match(/^\s+unique_index\b/)
       expect(content).not_to match(/^\s+index\b/)
-      expect(content).to include("#   Unique indexes: idx_users_username (username)")
+      expect(content).to include("#   Unique indexes:\n#     idx_users_username (username)")
     end
 
     it "writes to the selected database config path" do
@@ -275,7 +274,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
       end
     end
 
-    it "shows multi-column indexes in metadata comments" do
+    it "omits non-unique indexes from metadata comments" do
       stub_database(
         connection,
         db_tables: %i[posts],
@@ -298,9 +297,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Scaffolder do
 
       _path, content = scaffold_table(:posts)
 
-      expect(content).to include(
-        "#   Indexes: index_posts_on_user_id_and_topic_id (user_id, topic_id)",
-      )
+      expect(content).not_to include("index_posts_on_user_id_and_topic_id")
     end
   end
 end

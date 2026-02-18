@@ -76,16 +76,10 @@ module Migrations::Database::Schema::DSL
       lines << "#   Primary key: #{pk_display}"
 
       unique_indexes = indexes.select(&:unique)
-      regular_indexes = indexes.reject(&:unique)
 
       if unique_indexes.any?
-        entries = unique_indexes.map { |idx| "#{idx.name} (#{idx.columns.join(", ")})" }
-        lines << "#   Unique indexes: #{entries.join(", ")}"
-      end
-
-      if regular_indexes.any?
-        entries = regular_indexes.map { |idx| "#{idx.name} (#{idx.columns.join(", ")})" }
-        lines << "#   Indexes: #{entries.join(", ")}"
+        lines << "#   Unique indexes:"
+        unique_indexes.each { |idx| lines << "#     #{idx.name} (#{idx.columns.join(", ")})" }
       end
 
       lines
