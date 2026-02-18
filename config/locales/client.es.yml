@@ -3300,6 +3300,9 @@ es:
         notify: "Notificar a los usuarios afectados por el cambio."
         performing: "Realizando operaciones en bloque, espera…"
         completed: "¡Operaciones en bloque completadas con éxito!"
+        error_topic_count:
+          one: "%{count} tema"
+          other: "%{count} temas"
       none:
         unread: "No tienes temas sin leer."
         unseen: "Has visto todos los temas."
@@ -5953,6 +5956,7 @@ es:
         save: "Guardar"
         cancel: "Cancelar"
         continue: "Continuar"
+        copy_key: "Copiar"
         back: "Volver a Claves API"
         revoke: "Revocar"
         undo_revoke: "Deshacer la revocación"

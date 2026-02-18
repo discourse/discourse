@@ -10,7 +10,7 @@ be:
       topic_status_filter:
         all: "усе"
       move_post_cancel: "Скасаваць"
-      confirm_category_change_solution_cancel: "Скасаваць"
+      confirm_solved_removal_cancel: "Скасаваць"
     discourse_automation:
       triggerables:
         first_accepted_solution:

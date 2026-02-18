@@ -13,4 +13,11 @@ sq:
           settings: "Rregullimet"
           save: "Ruani"
           delete: "Fshij"
+          html: "HTML"
+          categories: "Categories"
+          groups: "Grupet"
           preview: "Parashikimi"
+          name: "Emri"
+          edit: "Redaktoni"
+          tabs:
+            settings: "Rregullimet"

@@ -16,6 +16,11 @@ ro:
           actions:
             chat_auto_remove_membership: "Membrii sunt eliminați automat din canale"
     chat:
+      edit_category:
+        channel: "Canal"
+        description: "Descriere"
+        actions: "Acțiuni"
+        settings: "Setări"
       back_to_forum: "Forum"
       deleted_chat_username: șters
       dates:

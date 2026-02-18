@@ -12,6 +12,10 @@ lv:
           always: "Vienmēr"
           never: "Nekad"
     chat:
+      edit_category:
+        description: "Apraksts"
+        actions: "Darbības"
+        settings: "Iestatījumi"
       deleted_chat_username: dzēsts
       dates:
         yesterday: "Vakar"

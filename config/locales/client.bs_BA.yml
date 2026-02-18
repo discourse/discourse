@@ -1973,6 +1973,10 @@ bs_BA:
         choose_new_tags: "Odaberi nove tagove za ove teme:"
         choose_append_tags: "Odaberi nove oznake kako bi pripojili ovim temama:"
         changed_tags: "Tagovi ovih tema su izmijenjeni."
+        error_topic_count:
+          one: "%{count} tema"
+          few: "%{count} teme"
+          other: "%{count} tema"
       none:
         unread: "Nemate nepročitanih tema."
         new: "Nemate novih tema."
@@ -3441,6 +3445,7 @@ bs_BA:
         save: "Save"
         cancel: "Odustani"
         continue: "Nastavi"
+        copy_key: "Copy"
         revoke: "Revoke"
       api:
         generate_master: "Generate Master API Key"

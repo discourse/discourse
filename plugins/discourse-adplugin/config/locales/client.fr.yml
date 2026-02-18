@@ -26,8 +26,9 @@ fr:
           new_name: "Nouvelle annonce maison"
           save: "Enregistrer"
           delete: "Supprimer"
-          description: "Définissez vos propres annonces et à quel endroit les afficher."
-          get_started: "Commencez par créer une nouvelle annonce."
+          html: "HTML"
+          categories: "Catégories"
+          groups: "Groupes"
           filter_placeholder: "Sélectionnez les annonces…"
           more_settings: "Plus de paramètres"
           show_to_anons: "Afficher aux utilisateurs anonymes"
@@ -35,6 +36,11 @@ fr:
           category_chooser_description: "Choisissez les catégories dans lesquelles cette annonce doit être affichée ou laissez ce champ vide pour diffuser l'annonce partout. Le paramètre de site « no_ads_for_categories » a la priorité sur ce paramètre."
           group_chooser_description: "Choisissez les groupes qui peuvent voir cette annonce ou laissez ce champ vide pour diffuser l'annonce à tous les utilisateurs connectés."
           preview: "Aperçu"
+          back: "Annonces personnalisées"
+          name: "Nom"
+          edit: "Modifier"
+          tabs:
+            settings: "Paramètres"
           topic_list_top:
             title: "Annonces de la liste des sujets"
             description: "Annonces à afficher en haut des pages de la liste des sujets"

@@ -1500,6 +1500,9 @@ sw:
         choose_new_tags: "Chagua lebo mpya kwa ajili ya hizi mada:"
         choose_append_tags: "Chagua lebo mpya kuweka kwenye mada hizi:"
         changed_tags: "lebo za hizo mada zilibadilishwa."
+        error_topic_count:
+          one: "%{count} topiki"
+          other: "%{count} Topiki"
       none:
         unread: "Hauna mada ambazo hazijasomwa."
         new: "Hauna mada mpya."
@@ -2633,6 +2636,7 @@ sw:
         save: "Hifadhi"
         cancel: "Ghairi"
         continue: "Endelea"
+        copy_key: "Nakili"
         revoke: "Futa"
       api:
         none: "Hakuna funguo za API zilizo amilifu kwa sasa."

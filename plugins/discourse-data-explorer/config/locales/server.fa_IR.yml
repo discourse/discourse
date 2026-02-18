@@ -5,5 +5,3 @@
 # https://translate.discourse.org/
 
 fa_IR:
-  site_settings:
-    data_explorer_enabled: "Data Explorer را در /admin/plugins/explorer فعال کنید"

@@ -44,6 +44,12 @@ nl:
           one: "%{formatted_number} chatbericht"
           other: "%{formatted_number} chatberichten"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Kanaal"
+        description: "Beschrijving"
+        actions: "Acties"
+        settings: "Instellingen"
       text_copied: Tekst gekopieerd naar klembord
       link_copied: Link gekopieerd naar klembord
       back_to_forum: "Forum"

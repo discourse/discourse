@@ -2437,6 +2437,8 @@ ko:
           other: "<b>%{count}</b>개의 글에서 태그가 모두 제거됩니다. 계속할까요?"
         progress:
           other: "진행률: <strong>%{count}</strong>개의 글"
+        error_topic_count:
+          other: "%{count}개의 글"
       none:
         unread: "읽지 않은 글이 없습니다."
         unseen: "확인하지 않은 글이 없습니다."
@@ -4106,6 +4108,7 @@ ko:
         save: "저장"
         cancel: "취소"
         continue: "계속하기"
+        copy_key: "복사"
         revoke: "취소"
         revoked: "해지"
       api:

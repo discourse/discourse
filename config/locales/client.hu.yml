@@ -3401,6 +3401,9 @@ hu:
         notify: "Értesítse a felhasználókat erről a változásról."
         performing: "Tömeges művelet végrehajtása, kis türelmet…"
         completed: "A tömeges műveletek sikeresen befejeződtek!"
+        error_topic_count:
+          one: "%{count} téma"
+          other: "%{count} téma"
       none:
         unread: "Nincsenek olvasatlan témái."
         unseen: "Nincsenek nem látott témái."
@@ -5968,7 +5971,7 @@ hu:
         new_features:
           title: "Újdonságok?"
           subtitle: "Folyamatosan új funkciókat és fejlesztéseket adunk ki. Ez az oldal a legfontosabbakat tartalmazza, de a 'Tudjon meg többet' gombra kattintva részletes kiadási jegyzeteket is megtekinthet."
-          no_new_features_found: "Hiba történt a hírfolyam betöltésekor. A korábbi új funkciókkal kapcsolatos bejelentéseket a <a href='%{url}' target='_blank'>Discourse Meta közösség</a>oldalán tekintheti meg."
+          no_new_features_error: "Hiba történt a hírfolyam betöltésekor. A korábbi új funkciókkal kapcsolatos bejelentéseket a <a href='%{url}' target='_blank'>Discourse Meta közösség</a>oldalán tekintheti meg."
           learn_more: "Tudjon meg többet..."
           experimental: "Kísérleti"
           only_experiments: "Csak kísérleti funkciók megjelenítése"
@@ -6171,6 +6174,7 @@ hu:
         save: "Mentés"
         cancel: "Mégse"
         continue: "Folytatás"
+        copy_key: "Másolás"
         back: "Vissza az API-kulcsokhoz"
         revoke: "Visszavonás"
         undo_revoke: "Visszavonás visszavonása"

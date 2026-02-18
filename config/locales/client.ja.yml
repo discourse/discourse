@@ -3077,6 +3077,8 @@ ja:
           other: "進捗状況: <strong>%{count}</strong> 件のトピック"
         performing: "一括操作を実行中です。お待ちください…"
         completed: "一括操作が完了しました！"
+        error_topic_count:
+          other: "%{count}トピック"
       none:
         unread: "未読のトピックはありません。"
         unseen: "未読のトピックはありません。"
@@ -5530,6 +5532,7 @@ ja:
         save: "保存"
         cancel: "キャンセル"
         continue: "続行"
+        copy_key: "コピー"
         back: "API キーに戻る"
         revoke: "取り消す"
         undo_revoke: "取り消しを元に戻す"

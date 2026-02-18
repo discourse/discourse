@@ -26,8 +26,9 @@ nl:
           new_name: "Nieuwe House Ad"
           save: "Opslaan"
           delete: "Verwijderen"
-          description: "Definieer je eigen advertenties en waar ze moeten worden weergegeven."
-          get_started: "Begin met het maken van een nieuwe advertentie."
+          html: "HTML"
+          categories: "Categorieën"
+          groups: "Groepen"
           filter_placeholder: "Selecteer advertenties..."
           more_settings: "Meer instellingen"
           show_to_anons: "Weergeven voor anonieme gebruikers"
@@ -35,6 +36,11 @@ nl:
           category_chooser_description: "Kies de categorieën waarin deze advertentie moet worden weergegeven of laat dit leeg om de advertentie overal weer te geven. De site-instelling 'no_ads_for_categories' heeft voorrang op deze instelling."
           group_chooser_description: "Kies de groepen die deze advertentie kunnen bekijken of laat dit leeg om de advertentie aan alle aangemelde gebruikers te tonen."
           preview: "Voorbeeld"
+          back: "House Ads"
+          name: "Naam"
+          edit: "Bewerken"
+          tabs:
+            settings: "Instellingen"
           topic_list_top:
             title: "Advertenteis boven topicslijst"
             description: "Advertenties die worden weergegeven bovenaan pagina's met topicslijsten."

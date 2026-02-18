@@ -5,5 +5,3 @@
 # https://translate.discourse.org/
 
 hr:
-  site_settings:
-    data_explorer_enabled: "Uključi \"Data Explorer\" na /admin/plugins/explorer"

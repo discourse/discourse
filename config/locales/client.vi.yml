@@ -3218,6 +3218,8 @@ vi:
         notify: "Thông báo cho người dùng về thay đổi này."
         performing: "Đang thực hiện các thao tác hàng loạt, vui lòng chờ…"
         completed: "Các thao tác xử lý hàng loạt đã hoàn tất!"
+        error_topic_count:
+          other: "%{count} chủ đề"
       none:
         unread: "Bạn không có chủ đề nào chưa đọc."
         unseen: "Bạn không có chủ đề nào chưa nhìn thấy."
@@ -5684,7 +5686,7 @@ vi:
         new_features:
           title: "Có gì mới?"
           subtitle: "Chúng tôi liên tục phát hành các tính năng và cải tiến mới. Trang này nêu bật những điểm chính, nhưng bạn có thể nhấn vào 'Tìm hiểu thêm' để xem ghi chú phát hành chi tiết."
-          no_new_features_found: "Đã xảy ra lỗi khi tải nguồn cấp dữ liệu. Bạn có thể xem các thông báo tính năng mới trước đó trên <a href='%{url}' target='_blank'>cộng đồng Discourse Meta</a>."
+          no_new_features_error: "Đã xảy ra lỗi khi tải nguồn cấp dữ liệu. Bạn có thể xem các thông báo tính năng mới trước đó trên <a href='%{url}' target='_blank'>cộng đồng Discourse Meta</a>."
           learn_more: "Tìm hiểu thêm..."
           experimental: "Thí nghiệm"
           only_experiments: "Chỉ hiển thị các tính năng thử nghiệm"
@@ -5880,6 +5882,7 @@ vi:
         save: "Lưu lại"
         cancel: "Hủy"
         continue: "Tiếp tục"
+        copy_key: "Sao chép"
         back: "Quay lại khóa API"
         revoke: "Thu hồi"
         undo_revoke: "Thu hồi lệnh hủy bỏ"

@@ -12,6 +12,10 @@ te:
           always: "ఎల్లప్పుడూ"
           never: "ఎప్పటికీ వద్దు"
     chat:
+      edit_category:
+        description: "వివరణ"
+        actions: "చర్యలు"
+        settings: "అమరికలు"
       back_to_forum: "ఫోరం"
       deleted_chat_username: తొలగించారు
       dates:

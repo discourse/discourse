@@ -174,6 +174,7 @@ de:
               label: "PN-Absender"
               description: "Benutzer, der die PN sendet (Standard: System)"
             notify_author_pm_message:
+              label: "PN-Inhalt"
               description: "Optionale benutzerdefinierte Nachricht die an den Autor gesendet werden soll"
             include_personal_messages:
               label: "Persönliche Nachrichten einbeziehen"
@@ -368,7 +369,10 @@ de:
           enable_translations: "Automatische Übersetzungen aktivieren"
         stats:
           title: "Übersetzungsstatistiken"
+          complete_language_detection_description: "Alle %{total} geeigneten Beiträge wurden auf ihre Sprache hin überprüft."
+          incomplete_language_detection_description: "%{done} von %{total} geeigneten Beiträgen wurden auf ihre Sprache hin überprüft."
           backfill_disabled: "Rückwirkende Übersetzung ist deaktiviert; nur neue Beiträge werden übersetzt."
+          backfill_message: "<a href='%{settingsUrl}'>Die Einstellungen für die rückwirkende Übersetzung</a> sind so konfiguriert, dass alle Beiträge nach %{date} übersetzt werden – dies wird voraussichtlich %{eta} dauern."
           eta_minutes:
             one: "%{count} Minute"
             other: "%{count} Minuten"
@@ -381,6 +385,7 @@ de:
         progress_chart:
           title: "Übersetzungsfortschritt"
           data_label: "%{percentage}%"
+          tooltip_translated: "%{done} von %{total} nicht-%{language}en Beiträgen übersetzt"
           bar_done:
             one: "%{count} Beitrag"
             other: "%{count} Beiträge"
@@ -417,7 +422,10 @@ de:
           post_url_label: "Beitrags-URL oder -ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 oder Beitrags-ID"
           result: "Ergebnis"
+          reason: "Argumentation"
           llm: "LLM"
+          scan_history: "Verlauf scannen"
+          sent_message: "Gesendete Nachricht"
           system_prompt: "System-Eingabeaufforderung"
           scan_log: "Scan-Protokoll"
           run: "Test ausführen"
@@ -450,6 +458,8 @@ de:
         request_tokens: "Anfrage-Token"
         response_tokens: "Antwort-Token"
         net_request_tokens: "Token für Netzanfragen"
+        cache_read_tokens: "Zwischengespeicherte Lesetoken"
+        cache_write_tokens: "Zwischengespeicherte Schreibtoken"
         cached_tokens: "Zwischengespeicherte Token"
         cached_request_tokens: "Zwischengespeicherte Anfrage-Token"
         total_spending: "Geschätzte Kosten"
@@ -457,12 +467,18 @@ de:
         no_models: "Keine Modellnutzungsdaten gefunden"
         no_features: "Keine Funktionsnutzungsdaten gefunden"
         total: "Gesamt"
+        included_in_plan: "Im Plan inbegriffen"
+        included_models: "Enthaltene Nutzung"
+        billed_models: "Abgerechnete Nutzung"
+        cost: "Kosten"
         subheader_description: "Token sind die Basiseinheiten, die LLM zum Verstehen und Generieren von Text verwenden. Nutzungsdaten können sich auf die Kosten auswirken"
         stat_tooltips:
           total_requests: "Alle Anfragen an LLMs über Discourse"
           total_tokens: "Alle Token, die bei der Abfrage einer LLM verwendet werden"
           request_tokens: "Token, die verwendet werden, wenn das LLM versucht zu verstehen, was du sagst"
           response_tokens: "Token, die verwendet werden, wenn die LLM auf deine Aufforderung antwortet"
+          cache_read_tokens: "Zuvor verarbeitete Anfragetoken, die das LLM aus dem Zwischenspeicher wiederverwendet, um Leistung und Kosten zu optimieren"
+          cache_write_tokens: "Anforderungstoken, die zur potenziellen zukünftigen Wiederverwendung zwischengespeichert wurden"
           cached_tokens: "Zuvor verarbeitete Anfragetoken, die das LLM wiederverwendet, um Leistung und Kosten zu optimieren"
           total_spending: "Kumulierte Kosten aller von den LLM verwendeten Token auf Grundlage der spezifischen Kostenmetriken, die zu den LLM-Konfigurationseinstellungen hinzugefügt wurden"
         periods:
@@ -497,6 +513,8 @@ de:
           low: Niedrige Qualität – am günstigsten (256 x 256)
           medium: Mittlere Qualität (512 x 512)
           high: Hohe Qualität – am langsamsten (1024 x 1024)
+        show_thinking: Denken anzeigen
+        show_thinking_help: Zeigt den Endbenutzern die internen Denkprozesse und Werkzeugaufrufe des Sprachmodells.
         mentionable: Erwähnungen zulassen
         mentionable_help: Wenn diese Funktion aktiviert ist, können Nutzer in erlaubten Gruppen diesen Nutzer in Beiträgen erwähnen und die KI wird als diese Persona antworten.
         user: Benutzer
@@ -656,6 +674,7 @@ de:
         ai_bot_user: "KI-Bot-Benutzer"
         cost_input: "Eingabekosten"
         cost_cached_input: "Eingabekosten für Zwischengespeichertes"
+        cost_cache_write: "Schreibkosten für Zwischenspeicherung"
         cost_output: "Ausgabekosten"
         save: "Speichern"
         edit: "Bearbeiten"
@@ -742,6 +761,8 @@ de:
           vision_enabled: "Wenn diese Funktion aktiviert ist, versucht die KI, Bilder zu verstehen. Dafür wird ein Modell benötigt, das Sehen unterstützt. Verfügbar in den neuesten Modellen von Anthropic, Google und OpenAI."
           allowed_attachment_types: "Lege fest, welche Arten von Anhängen an das Modell weitergeleitet werden. Lass das Feld leer, um Anhänge nicht zuzulassen. Bilder werden über \"Sehen\" kontrolliert."
           cost_input: "Die Kosten für die Eingabe pro 1 Million Token für dieses Modell"
+          cost_cached_input: "Die Kosten für zwischengespeicherte Eingabetoken pro 1 Mio. Token für dieses Modell (beim Lesen aus dem Aufforderungs-Zwischenspeicher)."
+          cost_cache_write: "Die Kosten für zwischengespeicherte Schreibtoken pro 1 Mio. Token für dieses Modell (beim Schreiben in den Aufforderungs-Zwischenspeicher)."
           cost_output: "Die Kosten für die Ausgabe pro 1 Million Token für dieses Modell"
           cost_measure: "$/1M Token"
         providers:
@@ -778,6 +799,10 @@ de:
           reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"
           disable_top_p: "Top P deaktivieren (einige Denkmodelle unterstützen Top P nicht)"
+          prompt_caching: "Aufforderung-Zwischenspeichern-Modus"
+          prompt_caching_never: "Niemals - Verwende keine zwischengespeicherten Aufforderungen"
+          prompt_caching_tool_results: "Tool-Ergebnisse - Zwischenspeichern, wenn Tool-Ergebnisse vorhanden sind (empfohlen)"
+          prompt_caching_always: "Immer - Immer zwischengespeicherte Aufforderungen verwenden"
           effort: "Anstrengungsgrad (nur Claude Opus 4.5)"
       related_topics:
         title: "Verwandte Themen"
@@ -897,6 +922,7 @@ de:
           none: "Entschuldigung, unsere KI-Suche hat keine passenden Themen gefunden"
           new: "Drücke auf „Suchen“, um mit der KI nach neuen Ergebnissen zu suchen"
           unavailable: "KI-Ergebnisse nicht verfügbar"
+          zero_results_expanded: "Keine Ergebnisse gefunden, es werden %{count} KI-Ergebnisse angezeigt"
         semantic_search_tooltips:
           results_explanation: "Wenn diese Funktion aktiviert ist, werden zusätzliche KI-Suchergebnisse unten hinzugefügt."
           invalid_sort: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
@@ -929,6 +955,8 @@ de:
           copy_response: "Antwort kopieren"
           request_tokens: "Anfrage-Token:"
           response_tokens: "Antwort-Token:"
+          cache_read_tokens: "Zwischengespeicherte Lesetoken:"
+          cache_write_tokens: "Zwischengespeicherte Schreibtoken:"
           request: "Anfrage"
           response: "Antwort"
           next_log: "Weiter"

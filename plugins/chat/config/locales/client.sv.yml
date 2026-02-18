@@ -40,6 +40,12 @@ sv:
       chat_channels_count: "Chattkanaler"
       chat_users_count: "Chattanvändare"
     chat:
+      edit_category:
+        tab_title: "Chatt"
+        channel: "Kanal"
+        description: "Beskrivning"
+        actions: "Åtgärder"
+        settings: "Inställningar"
       text_copied: Texten har kopierats till urklipp
       link_copied: Länken har kopierats till urklipp
       back_to_forum: "Forum"

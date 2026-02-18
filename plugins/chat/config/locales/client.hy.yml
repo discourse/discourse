@@ -12,6 +12,11 @@ hy:
           always: "Միշտ"
           never: "Երբեք"
     chat:
+      edit_category:
+        channel: "Ալիք"
+        description: "Նկարագրություն"
+        actions: "Գործողություններ"
+        settings: "Կարգավորումներ"
       deleted_chat_username: ջնջված
       dates:
         yesterday: "Երեկվա"

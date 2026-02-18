@@ -24,4 +24,11 @@ hy:
           settings: "Կարգավորումներ"
           save: "Պահպանել"
           delete: "Ջնջել"
+          html: "HTML"
+          categories: "Կատեգորիաներ"
+          groups: "Խմբեր"
           preview: "Նախադիտում"
+          name: "Անուն"
+          edit: "Խմբագրել"
+          tabs:
+            settings: "Կարգավորումներ"

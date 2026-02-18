@@ -2702,6 +2702,9 @@ sv:
         progress:
           one: "Förlopp: <strong>%{count}</strong> ämne"
           other: "Förlopp: <strong>%{count}</strong> ämnen"
+        error_topic_count:
+          one: "%{count} ämne"
+          other: "%{count} ämnen"
       none:
         unread: "Du har inga olästa ämnen."
         unseen: "Du har inga osedda ämnen."
@@ -4694,6 +4697,7 @@ sv:
         save: "Spara"
         cancel: "Avbryt"
         continue: "Fortsätt"
+        copy_key: "Kopiera"
         revoke: "Upphäv"
         revoked: "Återkallad"
       api:

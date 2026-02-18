@@ -14,6 +14,7 @@ zh_CN:
               search: "允许 AI 搜索"
               stream_completion: "允许流式 AI 角色补全"
               update_personas: "允许更新 AI 角色"
+              manage_artifacts: "允许管理 AI 工件（列表、查看、创建、更新、删除）"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"

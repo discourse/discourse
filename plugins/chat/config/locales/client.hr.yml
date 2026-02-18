@@ -28,6 +28,12 @@ hr:
             chat:
               create_message: "Izradite chat poruku na određenom kanalu."
     chat:
+      edit_category:
+        tab_title: "Čavrljanje"
+        channel: "Kanal"
+        description: "Opis"
+        actions: "Akcije"
+        settings: "Postavke"
       deleted_chat_username: izbrisao
       dates:
         yesterday: "Jučer"

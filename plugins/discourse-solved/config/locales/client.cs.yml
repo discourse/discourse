@@ -55,10 +55,9 @@ cs:
         other: "Přesunout příspěvky"
       move_post_cancel: "Zrušit"
       dont_show_again: "Rozumím, už mi to nezobrazujte."
-      confirm_category_change_solution_title: "Řešení bude odstraněno"
-      confirm_category_change_solution: "Nová kategorie nemá povolená řešení. Změnou kategorie se z tohoto tématu odstraní přijaté řešení."
-      confirm_category_change_solution_confirm: "Změnit kategorii"
-      confirm_category_change_solution_cancel: "Zrušit"
+      confirm_solved_removal_title: "Řešení bude odstraněno"
+      confirm_solved_removal_confirm: "Potvrdit"
+      confirm_solved_removal_cancel: "Zrušit"
       no_answer:
         title: Byla vaše otázka zodpovězena?
         description: "Pomozte ostatním tím, že zvýrazníte odpověď použitím tlačítka Řešení pod správnou odpovědí."

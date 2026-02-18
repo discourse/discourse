@@ -1694,6 +1694,9 @@ et:
         progress:
           one: "Edenemine: <strong>%{count}</strong> teema"
           other: "Edenemine: <strong>%{count}</strong> teemat"
+        error_topic_count:
+          one: "%{count} teema"
+          other: "%{count} teemat"
       none:
         unread: "Sul ei ole lugemata teemasid."
         new: "Sul ei ole uusi teemasid."
@@ -2965,6 +2968,7 @@ et:
         save: "Salvesta"
         cancel: "Tühista"
         continue: "Jätka"
+        copy_key: "Kopeeri"
         revoke: "Tühista "
       api:
         generate_master: "Genereeri API peavõti"

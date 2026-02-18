@@ -16,4 +16,11 @@ gl:
           settings: "Configuración"
           save: "Gardar"
           delete: "Eliminar"
+          html: "HTML"
+          categories: "Categorías"
+          groups: "Grupos"
           preview: "Visualizar"
+          name: "Nome"
+          edit: "Editar"
+          tabs:
+            settings: "Configuración"

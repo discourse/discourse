@@ -2133,6 +2133,9 @@ gl:
         progress:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
+        error_topic_count:
+          one: "%{count} tema"
+          other: "%{count} temas"
       none:
         unread: "Non ten temas sen ler."
         new: "Non ten novos temas."
@@ -3711,6 +3714,7 @@ gl:
         save: "Gardar"
         cancel: "Cancelar"
         continue: "Continuar"
+        copy_key: "Copiar"
         revoke: "Revogar"
         revoked: "Revogada"
       api:

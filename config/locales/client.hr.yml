@@ -3440,6 +3440,10 @@ hr:
           other: "Napredak: <strong>%{count}</strong> teme"
         performing: "Izvođenje masovnih operacija, pričekajte…"
         completed: "Masovne operacije uspješno dovršene!"
+        error_topic_count:
+          one: "%{count} tema"
+          few: "%{count} teme"
+          other: "%{count} teme"
       none:
         unread: "Nemate nepročitanih tema."
         unseen: "Nemate nepročitanih tema."
@@ -5986,6 +5990,7 @@ hr:
         save: "Spremi"
         cancel: "Odustani"
         continue: "Nastavi"
+        copy_key: "Kopija"
         revoke: "Povuci"
         undo_revoke: "Poništi opoziv"
         revoked: "Opoziv"

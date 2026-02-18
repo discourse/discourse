@@ -2937,6 +2937,8 @@ zh_TW:
           other: "進度： <strong>%{count}</strong> 個主題"
         performing: "正在執行批量作業，請稍候…"
         completed: "批量作業順利完成！"
+        error_topic_count:
+          other: "%{count} 個話題"
       none:
         unread: "沒有未讀的話題。"
         unseen: "你沒有未讀的主題。"
@@ -5160,6 +5162,7 @@ zh_TW:
         save: "保存"
         cancel: "取消"
         continue: "繼續"
+        copy_key: "複製"
         back: "返回 API 金鑰"
         revoke: "撤回"
         undo_revoke: "撤銷撤銷"

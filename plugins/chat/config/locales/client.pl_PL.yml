@@ -46,6 +46,14 @@ pl_PL:
           many: "%{formatted_number} wiadomości czatu"
           other: "%{formatted_number} wiadomości czatu"
     chat:
+      edit_category:
+        tab_title: "Czat"
+        channel: "Kanał"
+        description: "Opis"
+        actions: "Akcje"
+        settings: "Ustawienia"
+        no_channels: "Brak kanałów czatu powiązanych z tą kategorią"
+        no_channels_body: "Możesz mieć wiele kanałów w każdej kategorii, dostępnych dla tych samych członków na podstawie ustawień bezpieczeństwa kategorii. <a href='%{chatBrowseUrl}'>Utwórz kanał czatu</a>."
       text_copied: Tekst skopiowany do schowka
       link_copied: Link skopiowany do schowka
       back_to_forum: "Forum"

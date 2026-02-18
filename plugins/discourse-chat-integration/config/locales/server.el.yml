@@ -24,3 +24,5 @@ el:
             added_and_removed: "Προστέθηκε %{added} και αφαιρέθηκε %{removed}"
             added: "Προστέθηκε %{added}"
             removed: "Αφαιρέθηκε %{removed}"
+      google:
+        author: "από @%{username}"

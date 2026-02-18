@@ -5,5 +5,3 @@
 # https://translate.discourse.org/
 
 hu:
-  site_settings:
-    data_explorer_enabled: "Adatfelfedező engedélyezése az /admin/plugins/explorer oldalon"

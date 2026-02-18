@@ -44,6 +44,12 @@ fr:
           one: "%{formatted_number} message de discussion"
           other: "%{formatted_number} messages de discussion"
     chat:
+      edit_category:
+        tab_title: "Discussion"
+        channel: "Canal"
+        description: "Description"
+        actions: "Actions"
+        settings: "Paramètres"
       text_copied: Texte copié dans le presse-papiers
       link_copied: Lien copié dans le presse-papiers
       back_to_forum: "Forum"

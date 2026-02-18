@@ -3316,9 +3316,9 @@ nl:
           other: "Voortgang: <strong>%{count}</strong> topics"
         performing: "Bulkbewerkingen worden uitgevoerd, even geduld…"
         completed: "Bulkbewerkingen voltooid!"
-        not_completed:
-          one: "De bulkoperatie kon niet worden voltooid voor <strong>%{count}</strong> topic"
-          other: "De bulkoperatie kon niet worden voltooid voor <strong>%{count}</strong> topics"
+        error_topic_count:
+          one: "%{count} topic"
+          other: "%{count} topics"
       none:
         unread: "Je hebt geen ongelezen topics."
         unseen: "Je hebt geen ongeziene topics."
@@ -5870,6 +5870,7 @@ nl:
         save: "Opslaan"
         cancel: "Annuleren"
         continue: "Doorgaan"
+        copy_key: "Kopiëren"
         back: "Terug naar API-sleutels"
         revoke: "Intrekken"
         undo_revoke: "Intrekken ongedaan maken"

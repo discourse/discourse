@@ -3255,6 +3255,9 @@ tr_TR:
           other: "İlerleme: <strong>%{count}</strong> konu"
         performing: "Toplu işlemler gerçekleştiriliyor, lütfen bekleyin…"
         completed: "Toplu işlemler başarıyla tamamlandı!"
+        error_topic_count:
+          one: "%{count} konu"
+          other: "%{count} konu"
       none:
         unread: "Okunmamış konunuz bulunmuyor."
         unseen: "Görülmemiş konunuz bulunmuyor."
@@ -5801,6 +5804,7 @@ tr_TR:
         save: "Kaydet"
         cancel: "İptal et"
         continue: "Devam et"
+        copy_key: "Kopyala"
         back: "API anahtarlarına geri dön"
         revoke: "Geri çek"
         undo_revoke: "İptal işlemini geri al"

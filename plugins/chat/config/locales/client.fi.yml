@@ -44,6 +44,12 @@ fi:
           one: "%{formatted_number} chat-viesti"
           other: "%{formatted_number} chat-viestuä"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Kanava"
+        description: "Kuvaus"
+        actions: "Toiminnot"
+        settings: "Asetukset"
       text_copied: Teksti kopioitiin leikepöydälle
       link_copied: Linkki kopioitiin leikepöydälle
       back_to_forum: "Foorumi"

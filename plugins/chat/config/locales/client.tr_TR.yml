@@ -44,6 +44,12 @@ tr_TR:
           one: "%{formatted_number} sohbet mesajı"
           other: "%{formatted_number} sohbet mesajları"
     chat:
+      edit_category:
+        tab_title: "Sohbet"
+        channel: "Kanal"
+        description: "Açıklama"
+        actions: "Eylemler"
+        settings: "Ayarlar"
       text_copied: Metin panoya kopyalandı
       link_copied: Bağlantı panoya kopyalandı
       back_to_forum: "Forum"

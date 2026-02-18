@@ -5,5 +5,3 @@
 # https://translate.discourse.org/
 
 sl:
-  site_settings:
-    data_explorer_enabled: "Omogočite vtičnik Raziskovalec podatkov na /admin/plugins/explorer"

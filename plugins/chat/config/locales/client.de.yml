@@ -44,6 +44,12 @@ de:
           one: "%{formatted_number} Chat-Nachricht"
           other: "%{formatted_number} Chat-Nachrichten"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Kanal"
+        description: "Beschreibung"
+        actions: "Aktionen"
+        settings: "Einstellungen"
       text_copied: Text in die Zwischenablage kopiert
       link_copied: Link in die Zwischenablage kopiert
       back_to_forum: "Forum"
@@ -600,6 +606,7 @@ de:
           one: "%{commaSeparatedUsernames} und %{count} andere Person schreiben"
           other: "%{commaSeparatedUsernames} und %{count} andere Personen schreiben"
       retention_reminders:
+        chat_settings: "Chat-Einstellungen"
         indefinitely_short: "unbestimmt"
         short:
           one: "%{count} Tag"

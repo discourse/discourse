@@ -48,6 +48,12 @@ ar:
           many: "رسالة دردشة"
           other: "رسالة دردشة"
     chat:
+      edit_category:
+        tab_title: "الدردشة"
+        channel: "القناة"
+        description: "الوصف"
+        actions: "الإجراءات"
+        settings: "الإعدادان"
       text_copied: تم نسخ النص إلى الحافظة
       link_copied: تم نسخ الرابط إلى الحافظة
       back_to_forum: "المنتدى"

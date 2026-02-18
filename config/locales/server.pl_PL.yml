@@ -2453,7 +2453,6 @@ pl_PL:
     notify_about_reviewable_item_after: "Jeśli po tylu godzinach są elementy do przejrzenia, które jeszcze nie zostały sprawdzone, wyślij wiadomość do moderatorów. Ustaw na 0, aby wyłączyć."
     delete_drafts_older_than_n_days: "Usuń szkice, które nie zostały zmienione w ciągu więcej niż (n) dni."
     delete_merged_stub_topics_after_days: "Liczba dni oczekiwania przed automatycznym usunięciem w pełni scalonych tematów-szkiców. Ustaw -1, aby nigdy nie usuwać. Ustaw 0, aby usunąć natychmiast."
-    bootstrap_mode_min_users: 'Minimalna liczba użytkowników wymagana do wyłączenia trybu bootstrap i usunięcia przycisku pierwsze kroki (ustaw na 0, aby wyłączyć, może to potrwać do 24 godzin). Zobacz <a target="_blank" href="https://meta.discourse.org/t/-/322876">temat trybu bootstrap na Meta</a>, aby uzyskać szczegółowe informacje.'
     prevent_anons_from_downloading_files: "Zablokuj możliwość pobierania załączników przez anonimowych użytkowników."
     secure_uploads: 'Ogranicza dostęp do WSZYSTKICH przesłanych plików (obrazów, wideo, audio, tekstu, plików PDF, ZIP i innych). Jeśli włączona jest opcja "login required”, tylko zalogowani użytkownicy będą mieli dostęp do przesłanych plików. W przeciwnym razie dostęp będzie ograniczony tylko do przesyłanych multimediów w wiadomościach osobistych i kategoriach prywatnych. OSTRZEŻENIE: To ustawienie jest złożone i wymaga dogłębnego zrozumienia administracyjnego. Zobacz temat <a target="_blank" href="https://meta.discourse.org/t/-/140017">bezpieczeństwo przesyłanych plików na Discourse Meta</a>, aby uzyskać szczegółowe informacje.'
     secure_uploads_allow_embed_images_in_emails: "Umożliwia osadzanie w wiadomościach e-mail bezpiecznych obrazów, które normalnie byłyby pominięte, jeśli ich rozmiar jest mniejszy niż ustawienie 'secure uploads max email embed image size kb'."
@@ -2646,6 +2645,8 @@ pl_PL:
       invalid_username: "Użytkownik o takiej nazwie nie istnieje."
       valid_username: "Istnieje użytkownik o tej nazwie."
       invalid_group: "Nie ma grupy o takiej nazwie."
+      invalid_svg: "Obraz SVG jest nieprawidłowy. Musi zawierać element SVG i nie zawierać skryptów ani procedur obsługi zdarzeń."
+      invalid_upload: "Przesłanie jest nieprawidłowe lub nie istnieje."
       invalid_topic: "Nie ma tematu o takim identyfikatorze."
       invalid_integer_min_max: "Wartość musi być między %{min} i %{max}."
       invalid_integer_min: "Wartość musi wynosić %{min} albo więcej."

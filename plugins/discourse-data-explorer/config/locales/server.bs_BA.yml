@@ -5,5 +5,3 @@
 # https://translate.discourse.org/
 
 bs_BA:
-  site_settings:
-    data_explorer_enabled: "Omogućite Data Explorer u / admin / plugins / explorer"
