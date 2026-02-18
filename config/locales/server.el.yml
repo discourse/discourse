@@ -84,6 +84,7 @@ el:
     settings_errors:
       invalid_yaml: "Το παρεχόμενο YAML δεν είναι έγκυρο."
       name_too_long: "Υπάρχει μια ρύθμιση με πολύ μεγάλο όνομα. Το μέγιστο μήκος είναι 255"
+      default_value_missing: "Η ρύθμιση `%{name}` δεν έχει προεπιλεγμένη τιμή."
       enum_value_not_valid: "Η επιλεγμένη τιμή δεν είναι μία από τις επιλογές enum."
       number_value_not_valid_min_max: "Η τιμή πρέπει να είναι μεταξύ %{min} και %{max}."
       objects:
@@ -199,6 +200,7 @@ el:
       share_quote_facebook_requirements: "Πρέπει να ορίσετε ένα αναγνωριστικό εφαρμογής Facebook για να ενεργοποιήσετε την κοινοποίηση παραθέσεων για το Facebook."
       second_factor_cannot_be_enforced_with_disabled_local_login: "Δε μπορείτε να επιβάλετε 2FA εάν οι τοπικές συνδέσεις είναι απενεργοποιημένες."
       local_login_cannot_be_disabled_if_second_factor_enforced: "Δε μπορείτε να απενεργοποιήσετε την τοπική σύνδεση εάν επιβάλλεται 2FA. Απενεργοποιήστε το επιβεβλημένο 2FA πριν από την απενεργοποίηση των τοπικών συνδέσεων."
+      slow_down_crawler_user_agent_cannot_be_popular_browsers: "Δεν μπορείτε να προσθέσετε καμία από τις ακόλουθες τιμές στη ρύθμιση: %{values}."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "Αυτή η ρύθμιση απαιτεί πρώτα να είναι ενεργοποιημένη η ρύθμιση 'allow anonymous mode'."
   word_connector:
     comma: ", "
@@ -314,6 +316,7 @@ el:
   prev_page: "← προηγούμενη σελίδα"
   show_post_in_topic: "εμφάνιση ανάρτησης στο θέμα"
   page_num: "Σελίδα %{num}"
+  crawler_content_hidden: "Το περιεχόμενο HTML παραλείφθηκε επειδή είστε συνδεδεμένοι ή χρησιμοποιείτε μια σύγχρονη κινητή συσκευή."
   home_title: "Αρχική Σελίδα"
   topics_in_category: "Θέματα στην κατηγορία '%{category}'"
   rss_posts_in_topic: "RSS feed του '%{topic}'"
@@ -841,9 +844,11 @@ el:
       yaxis: "Ημέρα"
     consolidated_page_views:
       xaxis:
+        page_view_crawler: "Ανιχνευτές"
         page_view_anon: "Ανώνυμοι χρήστες"
         page_view_logged_in: "Συνδεδεμένοι χρήστες"
       yaxis: "Ημέρα"
+      description_legacy: "Προβολές σελίδας για συνδεδεμένους χρήστες, ανώνυμους χρήστες, και ανιχνευτές."
       labels:
         post: Ανάρτηση
         editor: Συντάκτης
@@ -858,11 +863,14 @@ el:
       xaxis:
         page_view_anon_browser: "Ανώνυμος Περιηγητής"
         page_view_logged_in_browser: "Συνδεδεμένος Περιηγητής"
+        page_view_crawler: "Γνωστός Ανιχνευτής"
       yaxis: "Ημέρα"
     site_traffic:
       title: "Κίνηση ιστότοπου"
       xaxis:
         page_view_anon_browser: "Προβολές σελίδας (ανώνυμοι)"
+        page_view_logged_in_browser: "Προβολές σελίδας (συνδεδεμένοι)"
+        page_view_crawler: "Γνωστοί ανιχνευτές"
         page_view_other: "Άλλη κίνηση"
       yaxis: "Ημέρα"
       description: "Προβολές σελίδας για συνδεδεμένους χρήστες, ανώνυμους χρήστες, γνωστούς ανιχνευτές και άλλη επισκεψιμότητα."
@@ -918,6 +926,7 @@ el:
         term: Όρος
         searches: Αναζητήσεις
         click_through: CTR
+      description: "Οι πιο δημοφιλείς όροι αναζήτησης με τα ποσοστά κλικ τους."
     emails:
       title: "Απεσταλμένα Emails"
       xaxis: "Ημέρα"
@@ -977,9 +986,10 @@ el:
       xaxis: "Ημέρα"
       yaxis: "Συνδεδεμένοι στις αναγνώσεις"
     page_view_crawler_reqs:
-      title: "Θεάσεις σελίδας από Web Crawlers"
+      title: "Προβολές σελίδας από Ανιχνευτές Ιστού"
       xaxis: "Ημέρα"
-      yaxis: "Θεάσεις σελίδας από Web Crawlers"
+      yaxis: "Προβολές σελίδας από Ανιχνευτές Ιστού"
+      description: "Συνολικές προβολές σελίδας από ανιχνευτές ιστού με την πάροδο του χρόνου."
     page_view_total_reqs:
       title: "Προβολές σελίδας"
       xaxis: "Ημέρα"
@@ -1132,7 +1142,7 @@ el:
     fixed_category_positions: "Εάν επιλεχθεί, θα μπορείς να προβάλλεις τις κατηγορίες με μια προκαθορισμένη σειρά. Εάν δεν επιλεγχθεί, οι κατηγορίες θα προβάλλονται κατά σειρά δραστηριότητας."
     fixed_category_positions_on_create: "Αν επιλεχθεί, η σειρά των κατηγοριών θα διατηρηθεί στον διάλογο δημιουργίας θέματος (απαιτεί το fixed_category_positions)."
     add_rel_nofollow_to_user_content: 'Πρόσθεσε rel nofollow σε κάθε περιεχόμενο που υποβάλλουν οι χρήστες, εκτός από εσωτερικούς συνδέσμους (συμπεριλαμβανομένων των γονικών τομέων). Αν αλλάξεις αυτήν την ρύθμιση, θα πρέπει να κάνεις rebake όλα τα νήματα χρησιμοποιώντας το: "rake posts:rebake"'
-    exclude_rel_nofollow_domains: "Μια λίστα από τομείς στα οποία το nofollow δεν θα προστίθεται στους συνδέσμους. Το example.com θα επιτρέπει αυτόματα και το sub.example.com. Κατ' ελάχιστον θα πρέπει να προστεθεί ο τομέας της ιστοσελίδας σας για να βοηθήσει τα web crawlers να βρουν όλο το περιεχόμενο. Αν τμήματα του ιστοτόπου σας βρίσκονται σε άλλους τομείς, τότε προσθέστε και αυτά."
+    exclude_rel_nofollow_domains: "Μια λίστα από τομείς στα οποία το nofollow δεν θα προστίθεται στους συνδέσμους. Το example.com θα επιτρέπει αυτόματα και το sub.example.com. Κατ' ελάχιστον θα πρέπει να προστεθεί ο τομέας της ιστοσελίδας σας για να βοηθήσει τους ανιχνευτές ιστού να βρουν όλο το περιεχόμενο. Αν τμήματα του ιστοτόπου σας βρίσκονται σε άλλους τομείς, τότε προσθέστε και αυτά."
     post_excerpt_maxlength: "Ανώτατο όριο μήκους για την σύνοψη μιας ανάρτησης."
     show_pinned_excerpt_mobile: "Εμφάνιση περίληψης σε καρφιτσωμένα νήματα στην περιήγηση από κινητά τηλέφωνα."
     show_pinned_excerpt_desktop: "Εμφάνιση αποσπάσματος σε καρφιτσωμένα νήματα στην προβολή για υπολογιστές."
@@ -1160,6 +1170,7 @@ el:
     traditional_markdown_linebreaks: "Χρήση παραδοσιακών αλλαγών γραμμών στη Markdown, η οποία απαιτεί δύο κενά διαστήματα για μια αλλαγή γραμμής."
     post_undo_action_window_mins: "Αριθμός λεπτών όπου οι χρήστες επιτρέπεται να αναιρέσουν πρόσφατες ενέργειες σε μια ανάρτηση (μου αρέσει, αναφορά, κτλ)."
     maximum_session_age: "Ο χρήστης θα παραμείνει συνδεδεμένος για n ώρες από την τελευταία του επίσκεψη"
+    enable_escaped_fragments: "Επιστροφή στο Ajax-Crawling API της Google εάν δεν εντοπιστεί κανένας ανιχνευτής ιστού. Δείτε το <a href='https://developers.google.com/webmasters/ajax-crawling/docs/learn-more' target='_blank'>https://developers.google.com/webmasters/ajax-crawling/docs/learn-more</a>"
     moderators_manage_categories: "Να επιτρέπεται στους συντονιστές η δημιουργία και διαχείριση κατηγοριών"
     moderators_manage_groups: "Να επιτρέπεται στους συντονιστές η δημιουργία και διαχείριση ομάδων"
     moderators_change_post_ownership: "Να επιτρέπεται στους συντονιστές η αλλαγή της ιδιοκτησίας της ανάρτησης"
@@ -1167,6 +1178,8 @@ el:
     use_admin_ip_allowlist: "Οι διαχειριστές μπορούν να συνδέονται μόνο αν βρίσκονται σε μια διευθυνση IP καθορισμένη στη λίστα Screened IPs (Admin > Logs > Screened Ips)."
     blocked_ip_blocks: "Μια λίστα από private IP blocks η οποία ποτέ δεν θα ανιχνεύεται από το Discourse"
     allowed_internal_hosts: "Μια λίστα από internal hosts την οποία το discourse μπορεί να ανιχνεύει με ασφάλεια για oneboxing και άλλους λόγους"
+    slow_down_crawler_rate: "Εάν καθοριστεί το slow_down_crawler_user_agents αυτός ο ρυθμός θα εφαρμοστεί σε όλους τους ανιχνευτές (αριθμός δευτερολέπτων καθυστέρησης μεταξύ αιτημάτων)"
+    llms_txt: "Ανεβάστε ένα αρχείο κειμένου που θα εμφανίζεται στο /llms.txt για τους ανιχνευτές LLM. Δείτε στο <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> για περισσότερες πληροφορίες."
     share_links: "Καθόρισε ποια στοιχεία εμφανίζονται στον διάλογο διαμοιρασμού και με ποια σειρά."
     site_contact_username: "Ένα έγκυρο όνομα χρήστη των συνεργατών από το οποίο θα στέλνονται όλα τα αυτοματοποιημένα μηνύματα. Αν αφεθεί κενό, θα χρησιμοποιείται ο προκαθορισμένος λογαριασμός συστήματος. "
     site_contact_group_name: "Ένα έγκυρο όνομα για μια ομάδα που λαμβάνει πρόσκληση σε όλα τα αυτομάτως αποστέλλοντα προσωπικά μηνύματα."
@@ -2459,8 +2472,14 @@ el:
   page_not_found:
     page_title: "Η σελίδα δεν βρέθηκε"
     title: "Ουπς! Αυτή η σελίδα δεν υπάρχει ή είναι ιδιωτική."
+    subtitle: "Ψάξαμε παντού, αλλά δεν μπορέσαμε να βρούμε τη σελίδα που ψάχνατε."
+    popular_topics: "Δημοφιλή θέματα"
+    recent_topics: "Πρόσφατα θέματα"
     see_more: "Περισσότερα"
+    search_title: "Δοκιμάστε να ψάξετε αντ' αυτού;"
     search_button: "Αναζήτηση"
+    home: "Πήγαινέ με σπίτι"
+    placeholder: "Αναζήτηση θεμάτων με βάση τίτλο ή λέξεις-κλειδιά…"
   offline:
     title: "Cannot load app"
     offline_page_message: "Πιθανώς βρίσκεσαι εκτός σύνδεσης! Έλεγξε την σύνδεσή σου και δοκίμασε ξανά."

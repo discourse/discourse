@@ -4104,7 +4104,7 @@ zh_CN:
       position_disabled: "类别将按活动顺序显示。要控制列表中类别的顺序，请启用<a href='%{url}'>固定类别位置</a>设置。"
       minimum_required_tags: "话题中所需的最少标签数："
       default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
-      subcategory_of: "子类别……"
+      subcategory_of: "是……的子类别"
       none_subcategory_text: "无"
       subcategory_permissions_warning: "私有类别的子类别不能公开。"
       visibility:

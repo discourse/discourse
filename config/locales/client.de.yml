@@ -2908,6 +2908,7 @@ de:
       exit_fullscreen_prompt: "Drücke <kbd>ESC</kbd>, um den Vollbildmodus zu verlassen"
       show_toolbar: "Editor-Werkzeugleiste anzeigen"
       hide_toolbar: "Editor-Werkzeugleiste ausblenden"
+      peek_mode_toggle: "Editior-Position umschalten"
       modal_ok: "OK"
       cant_send_pm: "Entschuldige, aber du kannst keine Nachricht an %{username} senden."
       create_message_error: "Entschuldige, es gab einen Fehler beim Erstellen der Nachricht. Bitte versuche es noch einmal."
@@ -3897,6 +3898,7 @@ de:
           message: "Dies ist ein übersetzter Thementitel.<br><br>Willst du die <b>ursprüngliche</b> Kategorie, die Schlagwörter und den Titel in %{language} oder diese spezielle <b>Übersetzung</b> bearbeiten?"
           action_original: "Original bearbeiten"
           action_translation: "Übersetzten Thementitel bearbeiten"
+        editing_translation: "Übersetzung nach %{language} bearbeiten"
     post_list:
       title: "Letzte Beiträge"
       empty: "Es gibt keine Beiträge"
@@ -3995,6 +3997,7 @@ de:
           edit: "Bearbeiten"
           delete: "Löschen"
         add: "Neue Übersetzung hinzufügen"
+        manage: "Übersetzungen verwalten (%{count} vorhanden)"
         view:
           one: "%{count} übersetzte Sprachvariante anzeigen"
           other: "%{count} übersetzte Sprachvarianten anzeigen"
@@ -6042,6 +6045,7 @@ de:
           daily: Täglich
           monthly: Monatlich
           weekly: Wöchentlich
+          value_so_far: "%{value} (bis jetzt)"
           dates: "Datumsangaben (UTC)"
           groups: "Alle Gruppen"
           disabled: "Dieser Bericht ist deaktiviert"
@@ -6363,6 +6367,7 @@ de:
           user_destroyed: "Benutzer gelöscht"
           user_suspended: "Benutzer gesperrt"
           user_unsuspended: "Benutzer entsperrt"
+          user_anonymized: "Benutzer wird anonymisiert"
         reviewable_event:
           group_name: "Ereignisse betreffend Elemente zur Überprüfung"
           reviewable_created: "Element zur Überprüfung bereit"

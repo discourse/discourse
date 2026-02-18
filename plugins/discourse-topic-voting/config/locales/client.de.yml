@@ -21,6 +21,7 @@ de:
       voted_title: "Abgestimmt"
       voting_closed_title: "Geschlossen"
       voting_limit: "Limit"
+      see_votes: "Du hast noch %{count}/%{max} Stimmen übrig"
       locked: "Gesperrt"
       locked_description: "Erhöhe deine Vertrauensstufe, um abzustimmen"
       votes:
