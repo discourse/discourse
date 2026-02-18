@@ -92,7 +92,9 @@ export default class InterfaceController extends Controller {
 
   @computed("currentThemeId")
   get defaultDarkSchemeId() {
-    const theme = this.userSelectableThemes?.find((t) => t.id === this.currentThemeId);
+    const theme = this.userSelectableThemes?.find(
+      (t) => t.id === this.currentThemeId
+    );
     return theme?.dark_color_scheme_id || -1;
   }
 
@@ -145,7 +147,7 @@ export default class InterfaceController extends Controller {
     }
 
     if (this.currentThemeId === -1) {
-      this.set("currentThemeId", this.themeId);
+      this.set("currentThemeId", this.themeId); // eslint-disable-line ember/no-side-effects
       return false;
     } else {
       return this.currentThemeId !== this.themeId;
@@ -157,11 +159,7 @@ export default class InterfaceController extends Controller {
     return listColorSchemes(this.site);
   }
 
-  @computed(
-    "userSelectableThemes",
-    "userSelectableColorSchemes",
-    "themeId"
-  )
+  @computed("userSelectableThemes", "userSelectableColorSchemes", "themeId")
   get currentSchemeCanBeSelected() {
     if (!this.userSelectableThemes || !this.themeId) {
       return false;
@@ -183,7 +181,10 @@ export default class InterfaceController extends Controller {
       return false;
     }
 
-    return !this.model?.user_option?.theme_ids || this.model?.user_option?.theme_ids?.[0] !== this.themeId;
+    return (
+      !this.model?.user_option?.theme_ids ||
+      this.model?.user_option?.theme_ids?.[0] !== this.themeId
+    );
   }
 
   @computed("model.user_option.text_size", "textSize")
@@ -289,7 +290,9 @@ export default class InterfaceController extends Controller {
 
   @computed("selectedDarkColorSchemeId", "currentThemeId")
   get showInterfaceColorModeSelector() {
-    const theme = this.userSelectableThemes?.find((t) => t.id === this.currentThemeId);
+    const theme = this.userSelectableThemes?.find(
+      (t) => t.id === this.currentThemeId
+    );
     return (
       (this.defaultDarkSchemeId > 0 &&
         theme.color_scheme_id &&
@@ -305,10 +308,7 @@ export default class InterfaceController extends Controller {
     });
   }
 
-  @computed(
-    "userSelectableColorSchemes",
-    "userSelectableDarkColorSchemes"
-  )
+  @computed("userSelectableColorSchemes", "userSelectableDarkColorSchemes")
   get showColorSchemeSelector() {
     return (
       this.showLightColorSchemeSelector ||
@@ -319,12 +319,18 @@ export default class InterfaceController extends Controller {
 
   @computed("userSelectableColorSchemes")
   get showLightColorSchemeSelector() {
-    return this.userSelectableColorSchemes && this.userSelectableColorSchemes.length > 1;
+    return (
+      this.userSelectableColorSchemes &&
+      this.userSelectableColorSchemes.length > 1
+    );
   }
 
   @computed("userSelectableDarkColorSchemes")
   get showDarkColorSchemeSelector() {
-    return this.userSelectableDarkColorSchemes && this.userSelectableDarkColorSchemes.length > 1;
+    return (
+      this.userSelectableDarkColorSchemes &&
+      this.userSelectableDarkColorSchemes.length > 1
+    );
   }
 
   get interfaceColorModes() {

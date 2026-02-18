@@ -1,4 +1,4 @@
-/* eslint-disable ember/routes-segments-snake-case */
+/* eslint-disable ember/route-path-style, ember/routes-segments-snake-case */
 import { capitalize } from "@ember/string";
 import Site from "discourse/models/site";
 

@@ -77,13 +77,13 @@ export default class ComposerActionTitle extends Component {
     }
   }
 
-  @discourseComputed("action")
-  showPostLanguageSelector(action) {
+  @computed("action")
+  get showPostLanguageSelector() {
     const allowedActions = [CREATE_TOPIC, EDIT, REPLY];
     return (
       this.currentUser &&
       this.siteSettings.content_localization_enabled &&
-      allowedActions.includes(action)
+      allowedActions.includes(this.action)
     );
   }
 
