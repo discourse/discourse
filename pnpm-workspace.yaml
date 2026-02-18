@@ -52,6 +52,7 @@ packages:
 - "plugins/poll"
 - "plugins/spoiler-alert"
 - "plugins/styleguide"
+- "themes/horizon"
 allowedDeprecatedVersions:
   "@babel/plugin-proposal-class-properties": "*"
   "@babel/plugin-proposal-private-methods": "*"

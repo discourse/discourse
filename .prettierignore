@@ -23,4 +23,5 @@ tmp/
 **/*.rb
 **/*.html
 **/*.json
+!**/tsconfig.json
 **/*.md

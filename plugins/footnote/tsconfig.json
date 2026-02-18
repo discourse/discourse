@@ -1,12 +1,17 @@
 {
   "extends": "discourse/tsconfig-plugin",
   "include": [
-    "./assets/javascripts/**/*",
-    "./test/javascripts/**/*"
+    "admin/assets/javascripts/**/*",
+    "assets/javascripts/**/*",
+    "test/javascripts/**/*",
+    "node_modules/discourse/declarations/**/*"
   ],
   "compilerOptions": {
     "paths": {
-      "discourse/plugins/footnote/*": ["./assets/javascripts/*"]
+      "discourse/plugins/footnote/*": ["./assets/javascripts/*"],
+      "discourse/plugins/footnote/admin/*": [
+        "./admin/assets/javascripts/admin/*"
+      ]
     }
   }
 }
