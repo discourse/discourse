@@ -298,7 +298,7 @@ module Migrations::Database
       DSL::Differ.new(self).diff
     end
 
-    def self.scaffold(table_name, database: :intermediate_db)
+    def self.add_table(table_name, database: :intermediate_db)
       ensure_ready!(database:)
       DSL::Scaffolder.new(self, table_name, database:).scaffold!
     end

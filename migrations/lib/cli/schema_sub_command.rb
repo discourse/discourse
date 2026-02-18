@@ -162,19 +162,19 @@ module Migrations::CLI
       display_diff(result, verbose: options[:verbose])
     end
 
-    desc "scaffold TABLE", "Create a config file for a new table"
-    def scaffold(table_name)
+    desc "add TABLE", "Create a config file for a new table"
+    def add(table_name)
       load_rails!
 
       database = selected_database
       Schema.ensure_ready!(database:)
 
-      path = Schema.scaffold(table_name, database:)
-      puts I18n.t("schema.scaffold.success", path:).green
+      path = Schema.add_table(table_name, database:)
+      puts I18n.t("schema.add_table.success", path:).green
       puts
-      puts I18n.t("schema.scaffold.next_steps")
-      puts "  #{I18n.t("schema.scaffold.step_edit")}"
-      puts "  #{I18n.t("schema.scaffold.step_validate")}"
+      puts I18n.t("schema.add_table.next_steps")
+      puts "  #{I18n.t("schema.add_table.step_edit")}"
+      puts "  #{I18n.t("schema.add_table.step_validate")}"
     end
 
     desc "detect-plugins", "Regenerate the plugin manifest"
@@ -423,7 +423,7 @@ module Migrations::CLI
 
       if has_changes
         puts I18n.t("schema.diff.suggested_actions")
-        puts "  #{I18n.t("schema.diff.action_scaffold")}"
+        puts "  #{I18n.t("schema.diff.action_add")}"
         puts "  #{I18n.t("schema.diff.action_ignore")}"
       else
         puts I18n.t("schema.diff.no_differences").green

@@ -24,7 +24,7 @@ migrations/config/schema/intermediate_db/
 
 | Command | Description |
 |---------|-------------|
-| `schema scaffold TABLE` | Generate a starter config file for a table |
+| `schema add TABLE` | Create a config file for a new table |
 | `schema validate` | Validate config against the database |
 | `schema diff` | Show differences between config and database |
 | `schema resolve` | Show the resolved schema (for debugging) |
@@ -303,7 +303,7 @@ end
 
 ## Workflow
 
-1. **Scaffold** a new table: `schema scaffold users`
+1. **Add** a new table: `schema add users`
 2. **Edit** the generated file in `tables/users.rb`
 3. **Validate** your config: `schema validate`
 4. **Check differences**: `schema diff`
