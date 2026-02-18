@@ -93,7 +93,6 @@ class ReviewablePost < Reviewable
     end
   end
 
-  # TODO (reviewable-refresh): Remove combined actions below when fully migrated to new UI
   def perform_approve(performed_by, _args)
     create_result(:success, :approved, [created_by_id], false)
   end
@@ -124,7 +123,6 @@ class ReviewablePost < Reviewable
   def perform_reject_and_suspend(performed_by, _args)
     create_result(:success, :rejected, [created_by_id], false)
   end
-  # TODO (reviewable-refresh): Remove combined actions above when fully migrated to new UI
 
   private
 

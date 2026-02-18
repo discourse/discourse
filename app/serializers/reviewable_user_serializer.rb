@@ -41,6 +41,6 @@ class ReviewableUserSerializer < ReviewableSerializer
   end
 
   def include_target_user?
-    object.target.present?
+    object.target
   end
 end

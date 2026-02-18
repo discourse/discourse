@@ -7,12 +7,8 @@ import icon from "discourse/helpers/d-icon";
 import { i18n } from "discourse-i18n";
 
 export default class extends Component {
-  /**
-   * Checks if a refreshed reviewable component exists for the current reviewable type.
-   *
-   * @returns {boolean} True if the refreshed component exists, false otherwise
-   */
-  get refreshedReviewableComponentExists() {
+  // TODO plugins are still using `reviewable-refresh/` path. Once they are fixed, it can be remove.
+  get reviewableComponentExists() {
     const owner = getOwner(this);
     let dasherized = dasherize(this.args.controller.reviewable.type).replace(
       "reviewable-",
@@ -30,7 +26,7 @@ export default class extends Component {
   }
 
   <template>
-    {{#if this.refreshedReviewableComponentExists}}
+    {{#if this.reviewableComponentExists}}
       <div class="reviewable-top-nav">
         <LinkTo @route="review.index">
           {{icon "arrow-left"}}

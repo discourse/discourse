@@ -2,7 +2,7 @@ import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import DButton from "discourse/components/d-button";
 import NavItem from "discourse/components/nav-item";
-import ReviewIndex from "discourse/components/review-index";
+import ReviewIndex from "discourse/components/reviewable/index";
 import icon from "discourse/helpers/d-icon";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";

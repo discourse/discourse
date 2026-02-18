@@ -363,12 +363,9 @@ class Reviewable < ActiveRecord::Base
 
       raise ActiveRecord::Rollback unless result.success?
 
-      if result.transition_to
-        update_count = transition_to(result.transition_to, performed_by)
-        update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
-
-        recalculate_score if result.recalculate_score
-      end
+      update_count = transition_to(result.transition_to, performed_by) if result.transition_to
+      update_flag_stats(**result.update_flag_stats) if result.update_flag_stats
+      recalculate_score if result.recalculate_score
     end
 
     result.after_commit.call if result && result.after_commit
@@ -759,7 +756,6 @@ class Reviewable < ActiveRecord::Base
     self.score
   end
 
-  # TODO (reviewable-refresh) This can be deprecated/removed once all reviewable types have been migrated.
   def delete_user_actions(actions, bundle = nil, require_reject_reason: false)
     bundle ||=
       actions.add_bundle(

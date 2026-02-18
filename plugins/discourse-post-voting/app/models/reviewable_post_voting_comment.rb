@@ -32,8 +32,7 @@ class ReviewablePostVotingComment < Reviewable
     @comment_creator ||= User.find_by(id: comment.user_id)
   end
 
-  # TODO (reviewable-refresh): Remove this method when fully migrated to new UI
-  def build_legacy_combined_actions(actions, guardian, args)
+  def build_combined_actions(actions, guardian, args)
     return unless pending?
     return if comment.blank?
 
