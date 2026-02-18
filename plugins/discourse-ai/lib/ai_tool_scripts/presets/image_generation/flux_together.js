@@ -1,5 +1,5 @@
 /* eslint-disable no-undef, no-unused-vars */
-const apiKey = "YOUR_KEY";
+const apiKey = secrets.get("together_api_key");
 const model = "black-forest-labs/FLUX.1.1-pro";
 
 function invoke(params) {
