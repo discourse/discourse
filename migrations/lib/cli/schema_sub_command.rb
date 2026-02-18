@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "prism"
-
 module Migrations::CLI
   class SchemaSubCommand < Thor
     Schema = ::Migrations::Database::Schema
@@ -19,16 +17,9 @@ module Migrations::CLI
       database = selected_database
 
       errors = Schema.validate(database:)
+      print_validation_errors(errors)
 
-      errors.each { |e| puts I18n.t("schema.validate.error", message: e).red }
-
-      if errors.any?
-        puts
-        puts I18n.t("schema.validate.summary", count: errors.size)
-        exit 1
-      else
-        puts I18n.t("schema.validate.valid").green
-      end
+      puts I18n.t("schema.validate.valid").green
     end
 
     desc "generate", "Generate SQL schema, Ruby models, and enum files"
@@ -51,12 +42,7 @@ module Migrations::CLI
       database = selected_database
 
       errors = Schema.validate(database:)
-      if errors.any?
-        errors.each { |e| puts I18n.t("schema.validate.error", message: e).red }
-        puts
-        puts I18n.t("schema.validate.summary", count: errors.size)
-        exit 1
-      end
+      print_validation_errors(errors)
 
       resolved = Schema.resolve(database:)
 
@@ -120,34 +106,8 @@ module Migrations::CLI
     desc "ignore TABLE", "Add a table to ignored.rb"
     method_option :reason, type: :string, desc: "Optional reason for ignoring the table"
     def ignore(table_name)
-      table_name = table_name.to_s
       database = selected_database
-      reason = options[:reason]
-
-      unless /\A[a-z0-9_]+\z/.match?(table_name)
-        raise(
-          Schema::ConfigError,
-          "Invalid table name '#{table_name}'. Use lowercase letters, numbers, and underscores.",
-        )
-      end
-
-      ignored_path = File.join(Schema.config_path(database), "ignored.rb")
-
-      unless File.exist?(ignored_path)
-        raise Schema::ConfigError, "ignored.rb not found at #{ignored_path}"
-      end
-
-      content = File.read(ignored_path)
-      ignored_data = ignored_block_data(content, path: ignored_path)
-      if ignored_data[:ignored_table_names].include?(table_name)
-        raise Schema::ConfigError, I18n.t("schema.ignore.already_ignored", table: table_name)
-      end
-
-      new_entry = build_ignored_table_entry(table_name, reason)
-      insert_at = ignored_data[:end_offset]
-      content.insert(insert_at, new_entry)
-
-      File.write(ignored_path, content)
+      Schema.ignore_table(table_name, reason: options[:reason], database:)
       puts I18n.t("schema.ignore.success", table: table_name).green
     end
 
@@ -235,68 +195,13 @@ module Migrations::CLI
       database
     end
 
-    def build_ignored_table_entry(table_name, reason)
-      return "  table :#{table_name}, #{reason.inspect}\n" if reason.present?
+    def print_validation_errors(errors)
+      return if errors.empty?
 
-      "  table :#{table_name}\n"
-    end
-
-    def ignored_block_data(content, path:)
-      result = Prism.parse(content)
-      unless result.success?
-        details = result.errors.map(&:message).join(", ")
-        raise Schema::ConfigError, "Could not parse #{path}: #{details}"
-      end
-
-      ignored_call = find_ignored_call(result.value)
-      if ignored_call.nil?
-        raise Schema::ConfigError,
-              "Could not find `Migrations::Database::Schema.ignored do ... end` in #{path}"
-      end
-
-      {
-        end_offset: ignored_call.block.closing_loc.start_offset,
-        ignored_table_names: extract_ignored_table_names(ignored_call.block),
-      }
-    end
-
-    def find_ignored_call(node)
-      return node if node.is_a?(Prism::CallNode) && ignored_call_with_block?(node)
-
-      node.compact_child_nodes.each do |child|
-        ignored_call = find_ignored_call(child)
-        return ignored_call unless ignored_call.nil?
-      end
-
-      nil
-    end
-
-    def ignored_call_with_block?(node)
-      return false unless node.message.to_s == "ignored"
-      return false unless node.block
-
-      receiver = node.receiver
-      return false unless receiver.is_a?(Prism::ConstantPathNode)
-
-      receiver.full_name.to_s.sub(/\A::/, "") == "Migrations::Database::Schema"
-    end
-
-    def extract_ignored_table_names(block_node)
-      names = Set.new
-      body = block_node&.body
-      return names unless body.is_a?(Prism::StatementsNode)
-
-      body.body.each do |statement|
-        next unless statement.is_a?(Prism::CallNode)
-
-        message = statement.message.to_s
-        next unless message == "table" || message == "tables"
-
-        args = statement.arguments&.arguments || []
-        args.each { |arg| names << arg.unescaped if arg.is_a?(Prism::SymbolNode) }
-      end
-
-      names
+      errors.each { |e| puts I18n.t("schema.validate.error", message: e).red }
+      puts
+      puts I18n.t("schema.validate.summary", count: errors.size)
+      exit 1
     end
 
     def display_table(table)

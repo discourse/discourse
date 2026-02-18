@@ -303,6 +303,10 @@ module Migrations::Database
       DSL::Scaffolder.new(self, table_name, database:).scaffold!
     end
 
+    def self.ignore_table(table_name, reason: nil, database: :intermediate_db)
+      DSL::IgnoredFileEditor.new(config_path(database)).add_table(table_name, reason:)
+    end
+
     # --- Lifecycle Methods ---
 
     def self.ensure_ready!(database: :intermediate_db, refresh_manifest: true)
