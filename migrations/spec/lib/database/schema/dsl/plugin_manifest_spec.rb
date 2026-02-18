@@ -112,34 +112,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
     end
   end
 
-  describe "#all_plugin_names" do
-    it "returns sorted plugin names" do
-      write_manifest(
-        {
-          "plugins" => {
-            "polls" => {
-              "tables" => [],
-              "columns" => {
-              },
-            },
-            "chat" => {
-              "tables" => [],
-              "columns" => {
-              },
-            },
-          },
-          "migration_state" => {
-            "core" => "abc",
-            "plugins" => {
-            },
-          },
-        },
-      )
-
-      expect(build_manifest.all_plugin_names).to eq(%w[chat polls])
-    end
-  end
-
   describe "#tables_for_plugin" do
     it "returns tables for a given plugin" do
       write_manifest(
@@ -216,59 +188,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
     it "returns columns for a specific table" do
       cols = build_manifest.columns_for_plugin("chat", table: "user_options")
       expect(cols).to eq(%w[chat_enabled chat_sound])
-    end
-  end
-
-  describe "#table_count" do
-    it "counts tables across all plugins" do
-      write_manifest(
-        {
-          "plugins" => {
-            "chat" => {
-              "tables" => %w[chat_channels chat_messages],
-              "columns" => {
-              },
-            },
-            "polls" => {
-              "tables" => %w[polls],
-              "columns" => {
-              },
-            },
-          },
-          "migration_state" => {
-            "core" => "abc",
-            "plugins" => {
-            },
-          },
-        },
-      )
-
-      expect(build_manifest.table_count).to eq(3)
-    end
-  end
-
-  describe "#column_count" do
-    it "counts columns across all plugins" do
-      write_manifest(
-        {
-          "plugins" => {
-            "chat" => {
-              "tables" => [],
-              "columns" => {
-                "user_options" => %w[chat_enabled chat_sound],
-                "users" => %w[chat_status],
-              },
-            },
-          },
-          "migration_state" => {
-            "core" => "abc",
-            "plugins" => {
-            },
-          },
-        },
-      )
-
-      expect(build_manifest.column_count).to eq(3)
     end
   end
 

@@ -36,28 +36,18 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
       end.to raise_error(Migrations::Database::Schema::ConfigError, /Invalid model mode :invalid/)
     end
 
-    it "raises when synthetic table uses include" do
-      expect do
-        Migrations::Database::Schema.table :log_entries do
-          synthetic!
-          include :id
-        end
-      end.to raise_error(
-        Migrations::Database::Schema::ConfigError,
-        /synthetic and cannot use `include` or `include_all`/,
-      )
-    end
-
-    it "raises when synthetic table uses include_all" do
-      expect do
-        Migrations::Database::Schema.table :log_entries do
-          synthetic!
-          include_all
-        end
-      end.to raise_error(
-        Migrations::Database::Schema::ConfigError,
-        /synthetic and cannot use `include` or `include_all`/,
-      )
+    it "raises when synthetic table uses include or include_all" do
+      %i[include include_all].each do |method|
+        expect do
+          Migrations::Database::Schema.table :"log_#{method}" do
+            synthetic!
+            send(method, *(:id if method == :include))
+          end
+        end.to raise_error(
+          Migrations::Database::Schema::ConfigError,
+          /synthetic and cannot use `include` or `include_all`/,
+        )
+      end
     end
 
     it "raises when columns are both included and ignored" do

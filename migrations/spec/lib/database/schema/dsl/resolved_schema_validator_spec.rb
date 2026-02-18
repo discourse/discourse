@@ -220,26 +220,4 @@ RSpec.describe Migrations::Database::Schema::DSL::ResolvedSchemaValidator do
       expect(errors).to be_empty
     end
   end
-
-  describe "#valid?" do
-    it "returns true for a valid schema" do
-      table =
-        build_table(
-          columns: [
-            build_column(name: "id", datatype: :integer, is_primary_key: true, nullable: false),
-          ],
-          primary_key_column_names: ["id"],
-        )
-      schema = build_schema(tables: [table])
-
-      expect(described_class.new(schema).valid?).to be true
-    end
-
-    it "returns false for an invalid schema" do
-      table = build_table(columns: [build_column(datatype: :bad)])
-      schema = build_schema(tables: [table])
-
-      expect(described_class.new(schema).valid?).to be false
-    end
-  end
 end

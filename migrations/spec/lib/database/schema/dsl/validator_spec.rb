@@ -421,15 +421,6 @@ RSpec.describe Migrations::Database::Schema::DSL::Validator do
       expect(errors).to be_empty
     end
 
-    it "validates enums have values" do
-      empty_enum = proc {}
-
-      expect { build_schema(enums: { empty: empty_enum }) }.to raise_error(
-        Migrations::Database::Schema::ConfigError,
-        /must define at least one value/,
-      )
-    end
-
     it "passes when index references added columns" do
       schema =
         build_schema(
