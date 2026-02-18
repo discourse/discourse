@@ -31,7 +31,12 @@ describe ComposerMessagesFinder do
 
       it "does not show message if disable_solved_education_message is true" do
         SiteSetting.disable_solved_education_message = true
-        DiscourseSolved.accept_answer!(post, Discourse.system_user)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: post.id,
+          },
+          acting_user: Discourse.system_user,
+        )
         expect(
           described_class.new(
             user,
@@ -42,7 +47,12 @@ describe ComposerMessagesFinder do
       end
 
       it "shows message if the topic is solved" do
-        DiscourseSolved.accept_answer!(post, Discourse.system_user)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: post.id,
+          },
+          acting_user: Discourse.system_user,
+        )
         message =
           described_class.new(
             user,

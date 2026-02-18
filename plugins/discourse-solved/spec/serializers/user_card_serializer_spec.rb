@@ -17,7 +17,12 @@ describe UserCardSerializer do
       topic = Fabricate(:topic)
       Fabricate(:post, topic:)
       post = Fabricate(:post, topic:, user:)
-      DiscourseSolved.accept_answer!(post, Discourse.system_user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: post.id,
+        },
+        acting_user: Discourse.system_user,
+      )
 
       expect(serializer.as_json[:accepted_answers]).to eq(1)
     end

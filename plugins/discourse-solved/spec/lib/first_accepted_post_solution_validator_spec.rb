@@ -6,17 +6,32 @@ describe DiscourseSolved::FirstAcceptedPostSolutionValidator do
   context "when trust level is 'any'" do
     it "validates the post" do
       post = Fabricate(:post, user: user_tl1)
-      DiscourseSolved.accept_answer!(post, Discourse.system_user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: post.id,
+        },
+        acting_user: Discourse.system_user,
+      )
 
       expect(described_class.check(post, trust_level: "any")).to eq(true)
     end
 
     it "invalidates if post user already has an accepted post" do
       previously_accepted_post = Fabricate(:post, user: user_tl1)
-      DiscourseSolved.accept_answer!(previously_accepted_post, Discourse.system_user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: previously_accepted_post.id,
+        },
+        acting_user: Discourse.system_user,
+      )
 
       newly_accepted_post = Fabricate(:post, user: user_tl1)
-      DiscourseSolved.accept_answer!(newly_accepted_post, Discourse.system_user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: newly_accepted_post.id,
+        },
+        acting_user: Discourse.system_user,
+      )
 
       expect(described_class.check(newly_accepted_post, trust_level: "any")).to eq(false)
     end
@@ -27,7 +42,12 @@ describe DiscourseSolved::FirstAcceptedPostSolutionValidator do
 
     it "invalidates if the user is higher than or equal to the specified trust level" do
       post = Fabricate(:post, user: user_tl1)
-      DiscourseSolved.accept_answer!(post, Discourse.system_user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: post.id,
+        },
+        acting_user: Discourse.system_user,
+      )
 
       expect(described_class.check(post, trust_level: TrustLevel[0])).to eq(false)
       expect(described_class.check(post, trust_level: TrustLevel[1])).to eq(false)
@@ -35,7 +55,12 @@ describe DiscourseSolved::FirstAcceptedPostSolutionValidator do
 
     it "validates the post when user is under specified trust level" do
       post = Fabricate(:post, user: user_tl1)
-      DiscourseSolved.accept_answer!(post, Discourse.system_user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: post.id,
+        },
+        acting_user: Discourse.system_user,
+      )
 
       expect(described_class.check(post, trust_level: TrustLevel[2])).to eq(true)
     end

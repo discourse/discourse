@@ -26,28 +26,6 @@ require_relative "lib/discourse_solved/engine"
 after_initialize do
   SeedFu.fixture_paths << Rails.root.join("plugins", "discourse-solved", "db", "fixtures").to_s
 
-  module ::DiscourseSolved
-    def self.accept_answer!(post, acting_user, topic: nil)
-      result = DiscourseSolved::AcceptAnswer.call(params: { post_id: post.id }, acting_user:)
-      result[:accepted_answer]
-    end
-
-    def self.unaccept_answer!(post, topic: nil)
-      DiscourseSolved::UnacceptAnswer.call(params: { post_id: post.id })
-    end
-
-    def self.notify_solved?(recipient:, acting_user:)
-      !UserCommScreener.new(
-        acting_user_id: acting_user.id,
-        target_user_ids: recipient.id,
-      ).ignoring_or_muting_actor?(recipient.id)
-    end
-
-    def self.skip_db?
-      defined?(GlobalSetting.skip_db?) && GlobalSetting.skip_db?
-    end
-  end
-
   reloadable_patch do
     ::Guardian.prepend(DiscourseSolved::GuardianExtensions)
     ::WebHook.prepend(DiscourseSolved::WebHookExtension)
@@ -154,7 +132,7 @@ after_initialize do
   add_to_serializer(:post, :accepted_answer) { topic&.solved&.answer_post_id == object.id }
   add_to_serializer(:post, :topic_accepted_answer) { topic&.solved&.present? }
 
-  on(:post_destroyed) { |post| DiscourseSolved.unaccept_answer!(post) }
+  on(:post_destroyed) { |post| DiscourseSolved::UnacceptAnswer.call(params: { post_id: post.id }) }
 
   on(:filter_auto_bump_topics) do |_category, filters|
     filters.push(
@@ -173,20 +151,25 @@ after_initialize do
   end
 
   on(:before_post_publish_changes) do |post_changes, topic_changes, options|
-    category_id_changes = topic_changes.diff["category_id"].to_a
-    tag_changes = topic_changes.diff["tags"].to_a
+    topic = topic_changes.topic
+    current_tag_names = topic.tags.map(&:name)
 
-    old_allowed = Guardian.new.solved_enabled_for_category?(category_id_changes[0], tag_changes[0])
-    new_allowed = Guardian.new.solved_enabled_for_category?(category_id_changes[1], tag_changes[1])
+    category_id_diff = topic_changes.diff["category_id"]
+    tag_diff = topic_changes.diff["tags"]
+
+    old_category_id = category_id_diff ? category_id_diff[0] : topic.category_id
+    old_tags = tag_diff ? tag_diff[0] : current_tag_names
+
+    old_allowed = Guardian.new.solved_enabled_for_category?(old_category_id, old_tags)
+    new_allowed = Guardian.new.solved_enabled_for_category?(topic.category_id, current_tag_names)
 
     if old_allowed != new_allowed
       options[:refresh_stream] = true
 
       if !new_allowed
-        topic = topic_changes.topic
         if topic.solved.present?
           post = topic.solved.answer_post
-          DiscourseSolved.unaccept_answer!(post, topic: topic) if post
+          DiscourseSolved::UnacceptAnswer.call(params: { post_id: post.id }) if post
         end
       end
     end

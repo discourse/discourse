@@ -38,7 +38,7 @@ describe PostRevisor do
 
     before do
       SiteSetting.solved_enabled = true
-      DiscourseSolved.accept_answer!(reply, admin)
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, acting_user: admin)
       topic.reload
     end
 
@@ -86,7 +86,7 @@ describe PostRevisor do
 
     it "unaccepts the answer when the solved tag is removed" do
       SiteSetting.enable_solved_tags = solved_tag.name
-      DiscourseSolved.accept_answer!(reply, admin)
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, acting_user: admin)
 
       described_class.new(post).revise!(admin, tags: [])
       expect(topic.reload.solved).to be_nil
