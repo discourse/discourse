@@ -12,6 +12,10 @@ th:
           always: "เสมอ"
           never: "ไม่เคย"
     chat:
+      edit_category:
+        description: "รายละเอียด"
+        actions: "การกระทำ"
+        settings: "การตั้งค่า"
       deleted_chat_username: ลบ
       dates:
         yesterday: "เมื่อวาน"

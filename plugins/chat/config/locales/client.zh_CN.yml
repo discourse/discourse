@@ -43,6 +43,12 @@ zh_CN:
         chat_messages:
           other: "%{formatted_number} 条聊天消息"
     chat:
+      edit_category:
+        tab_title: "聊天"
+        channel: "频道"
+        description: "描述"
+        actions: "操作"
+        settings: "设置"
       text_copied: 文本已复制到剪贴板
       link_copied: 链接已复制到剪贴板
       back_to_forum: "论坛"

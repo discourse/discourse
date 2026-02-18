@@ -3770,6 +3770,11 @@ cs:
         notify: "Upozornit uživatele na tuto změnu."
         performing: "Provádíme hromadné operace, vyčkejte prosím…"
         completed: "Hromadné operace byly úspěšně dokončeny!"
+        error_topic_count:
+          one: "%{count} téma"
+          few: "%{count} témata"
+          many: "%{count} témat"
+          other: "%{count} témat"
       none:
         unread: "Nemáte žádná nepřečtená témata."
         unseen: "Nemáte žádná neshlédnutá témata."
@@ -6534,7 +6539,7 @@ cs:
         new_features:
           title: "Co je nového?"
           subtitle: "Neustále vydáváme nové funkce a vylepšení. Tato stránka obsahuje hlavní body, ale kliknutím na „Další informace“ zobrazíte rozsáhlé poznámky k verzi."
-          no_new_features_found: "Při načítání zdroje došlo k chybě. Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>komunitě Discourse Meta</a>."
+          no_new_features_error: "Při načítání zdroje došlo k chybě. Předchozí oznámení o nových funkcích můžete vidět na <a href='%{url}' target='_blank'>komunitě Discourse Meta</a>."
           learn_more: "Více informací..."
           experimental: "Experimentální"
           only_experiments: "Zobrazit pouze experimentální funkce"
@@ -6751,6 +6756,7 @@ cs:
         save: "Uložit"
         cancel: "Zrušit"
         continue: "Pokračovat"
+        copy_key: "Kopírovat"
         back: "Zpět na klíče API"
         revoke: "Odvolat"
         undo_revoke: "Zrušit odvolání"

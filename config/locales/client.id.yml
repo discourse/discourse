@@ -1774,6 +1774,8 @@ id:
         selected_count:
           other: "%{count} dipilih"
         choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
+        error_topic_count:
+          other: "%{count} topik"
       none:
         new: "Anda tidak memiliki topik baru"
         filter: "Tidak ada topik."
@@ -2440,6 +2442,7 @@ id:
         save: "Simpan"
         cancel: "Batal"
         continue: "Lanjutkan"
+        copy_key: "Salin"
         revoke: "Cabut"
       api:
         user: "Pengguna"
