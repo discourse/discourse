@@ -19,6 +19,7 @@ jobs:
   build:
     name: run
     runs-on: ubuntu-latest
+    if: github.repository == 'discourse/discourse'
     container: discourse/discourse_test:slim
     timeout-minutes: 10
 
@@ -38,7 +39,3 @@ jobs:
 
       - name: Maybe update release tags
         run: bin/rake release:update_release_tags[${{ github.sha }}]
-
-      - name: Create a PR for the next version bump
-        if: ${{ !contains(github.event.head_commit.modified, 'lib/version.rb') }}
-        run: bin/rake "release:prepare_next_version_branch[${{ inputs.branch || github.ref_name }}]"
