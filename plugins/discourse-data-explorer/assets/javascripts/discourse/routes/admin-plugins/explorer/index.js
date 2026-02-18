@@ -1,47 +1,25 @@
+import Route from "@ember/routing/route";
 import { service } from "@ember/service";
-import { ajax } from "discourse/lib/ajax";
-import DiscourseRoute from "discourse/routes/discourse";
 
-export default class AdminPluginsExplorerIndex extends DiscourseRoute {
+const PLUGIN_ID = "discourse-data-explorer";
+
+export default class AdminPluginsExplorerIndexRoute extends Route {
   @service router;
 
   beforeModel(transition) {
-    // Redirect old /explorer?id=123 route to /explorer/queries/123
-    if (transition.to.queryParams.id) {
+    const { id, ...queryParams } = transition.to.queryParams;
+    if (id) {
       this.router.transitionTo(
-        "adminPlugins.explorer.queries.details",
-        transition.to.queryParams.id
+        "adminPlugins.show.explorer.queries.details",
+        PLUGIN_ID,
+        id,
+        { queryParams }
       );
-    }
-  }
-
-  model() {
-    if (!this.currentUser.admin) {
-      // display "Only available to admins" message
-      return { model: null, schema: null, disallow: true, groups: null };
+      return;
     }
 
-    const groupPromise = ajax("/admin/plugins/explorer/groups.json");
-    const queryPromise = this.store.findAll("query");
-
-    return groupPromise.then((groups) => {
-      let groupNames = {};
-      groups.forEach((g) => {
-        groupNames[g.id] = g.name;
-      });
-      return queryPromise.then((model) => {
-        model.content.forEach((query) => {
-          query.set(
-            "group_names",
-            (query.group_ids || []).map((id) => groupNames[id])
-          );
-        });
-        return { model, groups };
-      });
+    this.router.transitionTo("adminPlugins.show.explorer", PLUGIN_ID, {
+      queryParams,
     });
-  }
-
-  setupController(controller, model) {
-    controller.setProperties(model);
   }
 }

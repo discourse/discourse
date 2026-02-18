@@ -29,7 +29,7 @@ RSpec.describe "Explorer", type: :system do
     end
 
     it "allows to edit custom name" do
-      visit("/admin/plugins/explorer/queries/#{query_1.id}")
+      visit("/admin/plugins/discourse-data-explorer/queries/#{query_1.id}")
       find(".query-run .btn-primary").click
       find(".edit-query-name").click
       find(".name-text-field input").fill_in(with: "My custom name edited")
@@ -53,14 +53,16 @@ RSpec.describe "Explorer", type: :system do
     it "redirects to the new url format" do
       visit("/admin/plugins/explorer/?id=#{query_1.id}")
 
-      expect(page).to have_current_path("/admin/plugins/explorer/queries/#{query_1.id}")
+      expect(page).to have_current_path(
+        "/admin/plugins/discourse-data-explorer/queries/#{query_1.id}",
+      )
     end
 
     it "redirects to the new url format with params" do
       visit("/admin/plugins/explorer/?id=#{query_1.id}&params=%7B%22limit%22%3A%2210%22%7D")
 
       expect(page).to have_current_path(
-        "/admin/plugins/explorer/queries/#{query_1.id}?params=%7B%22limit%22%3A%2210%22%7D",
+        "/admin/plugins/discourse-data-explorer/queries/#{query_1.id}?params=%7B%22limit%22%3A%2210%22%7D",
       )
     end
   end
@@ -79,7 +81,7 @@ RSpec.describe "Explorer", type: :system do
 
     it "supports setting a group_list param" do
       visit(
-        "/admin/plugins/explorer/queries/#{q2.id}?params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D",
+        "/admin/plugins/discourse-data-explorer/queries/#{q2.id}?params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D",
       )
       find(".query-run .btn-primary").click
 
@@ -104,7 +106,7 @@ RSpec.describe "Explorer", type: :system do
         SQL
 
     it "auto-injects the current user's id without showing an input field" do
-      visit("/admin/plugins/explorer/queries/#{query.id}")
+      visit("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
 
       expect(page).to have_no_css(".query-params")
       find(".query-run .btn-primary").click
