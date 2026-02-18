@@ -16,9 +16,7 @@ module DiscourseAi
         headers = { "Referer" => referer, "Content-Type" => "application/json" }
         url = "#{embedding_url}\?key\=#{api_key}"
         body = { content: { parts: [{ text: content }] } }
-        if !@dimensions.nil?
-          body.merge!(outputDimensionality: @dimensions)
-        end
+        body.merge!(outputDimensionality: @dimensions) unless @dimensions.nil?
 
         conn = Faraday.new { |f| f.adapter FinalDestination::FaradayAdapter }
         response = conn.post(url, body.to_json, headers)
