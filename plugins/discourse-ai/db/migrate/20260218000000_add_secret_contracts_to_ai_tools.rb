@@ -14,6 +14,6 @@ class AddSecretContractsToAiTools < ActiveRecord::Migration[7.0]
 
     add_index :ai_tool_secret_bindings, :ai_tool_id
     add_index :ai_tool_secret_bindings, :ai_secret_id
-    add_index :ai_tool_secret_bindings, [:ai_tool_id, :alias], unique: true
+    add_index :ai_tool_secret_bindings, %i[ai_tool_id alias], unique: true
   end
 end

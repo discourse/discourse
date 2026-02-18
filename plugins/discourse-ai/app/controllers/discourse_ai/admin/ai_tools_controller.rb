@@ -144,7 +144,7 @@ module DiscourseAi
       end
 
       def find_ai_tool
-        @ai_tool = AiTool.find(params[:id].to_i)
+        @ai_tool = AiTool.includes(:secret_bindings).find(params[:id].to_i)
       end
 
       def ai_tool_params
