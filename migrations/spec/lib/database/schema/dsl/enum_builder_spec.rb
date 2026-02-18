@@ -27,7 +27,7 @@ RSpec.describe Migrations::Database::Schema::DSL::EnumBuilder do
     it "raises on invalid source" do
       expect do
         Migrations::Database::Schema.enum :bad do
-          source "raise 'boom'"
+          source { raise "boom" }
         end
       end.to raise_error(Migrations::Database::Schema::ConfigError, /failed to evaluate/i)
     end

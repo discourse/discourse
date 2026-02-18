@@ -7,7 +7,7 @@ module Migrations::Database::Schema::DSL
     def initialize(name)
       @name = name.to_sym
       @values = {}
-      @source_code = nil
+      @source_block = nil
     end
 
     def value(name, val)
@@ -18,8 +18,8 @@ module Migrations::Database::Schema::DSL
       @values[name.to_s] = val.to_s
     end
 
-    def source(code)
-      @source_code = code
+    def source(&block)
+      @source_block = block
     end
 
     def build
@@ -36,7 +36,7 @@ module Migrations::Database::Schema::DSL
     private
 
     def resolve_values
-      if @source_code
+      if @source_block
         evaluate_source
       else
         @values
@@ -44,7 +44,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def evaluate_source
-      result = eval(@source_code, TOPLEVEL_BINDING) # rubocop:disable Security/Eval
+      result = @source_block.call
       case result
       when Hash
         result.transform_keys(&:to_s)
