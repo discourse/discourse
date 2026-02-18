@@ -13,12 +13,6 @@ export default {
 
     withPluginApi((api) => {
       api.setAdminPluginIcon(PLUGIN_ID, "chart-line");
-      api.addAdminPluginConfigurationNav(PLUGIN_ID, [
-        {
-          label: "explorer.title",
-          route: "adminPlugins.show.explorer",
-        },
-      ]);
     });
   },
 };
