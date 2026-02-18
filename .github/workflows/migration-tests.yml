@@ -133,7 +133,7 @@ jobs:
             echo "  1. Run: migrations/bin/cli schema diff"
             echo "     to see what changed between config and database"
             echo "  2. Update config files in migrations/config/schema/intermediate_db/"
-            echo "     - New tables: migrations/bin/cli schema scaffold <table>"
+            echo "     - New tables: migrations/bin/cli schema add <table>"
             echo "     - Ignore tables: migrations/bin/cli schema ignore <table> --reason '...'"
             echo "     - New columns: add to the table's include list or ignore with reason"
             echo "  3. Run: migrations/bin/cli schema generate"

@@ -7,6 +7,7 @@ module Migrations::CLI
     Schema = ::Migrations::Database::Schema
 
     class_option :database,
+                 aliases: %w[--db],
                  type: :string,
                  default: "intermediate_db",
                  desc: "Database configuration to use"

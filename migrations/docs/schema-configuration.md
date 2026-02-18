@@ -34,7 +34,7 @@ migrations/config/schema/intermediate_db/
 | `schema ignore TABLE [--reason "..."]` | Add a table to `ignored.rb` |
 | `schema detect-plugins` | Regenerate the plugin manifest |
 
-All commands accept `--database NAME` (default: `intermediate_db`).
+All commands accept `--db NAME` (default: `intermediate_db`).
 
 ## Table configuration
 
