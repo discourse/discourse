@@ -220,7 +220,7 @@ module Migrations::Database::Schema::DSL
         plugin_filter = table_def.ignore_plugin_names&.map(&:to_s)&.to_set
 
         manifest.all_plugin_names.each do |plugin_name|
-          next if ignored.plugin_ignored?(plugin_name.to_sym)
+          next if ignored.plugin_ignored?(plugin_name)
           next if plugin_filter && plugin_filter.exclude?(plugin_name.to_s)
           cols = manifest.columns_for_plugin(plugin_name, table: source_table)
           cols.each { |col| auto_ignored << ColumnInfo.new(name: col, plugin: plugin_name) }
