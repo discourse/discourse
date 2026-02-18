@@ -71,7 +71,9 @@
   }
 
   .btn.no-text.btn-icon {
-    width: var(--button-height);
+    &:not(.user-menu-tab, .user-menu-tab-active) {
+      width: var(--button-height);
+    }
   }
 
   .discourse-reactions-counter .reactions-counter {
