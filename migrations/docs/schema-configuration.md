@@ -159,12 +159,12 @@ Single-column primary keys detected from the source are used automatically.
 
 #### `copy_structure_from`
 
-Use a different source table's columns:
+Use a different database table as the column source. The resolver reads the actual database columns from the specified table — it does not copy another table's DSL configuration.
 
 ```ruby
 Migrations::Database::Schema.table :user_field_values do
   copy_structure_from :user_custom_fields
-  # columns come from user_custom_fields, not user_field_values
+  # columns are read from user_custom_fields in the database
 end
 ```
 
@@ -181,32 +181,56 @@ Migrations::Database::Schema.table :uploads do
 end
 ```
 
-### Indexes and constraints
+### Indexes
+
+Use `index` or `unique_index` to define indexes on one or more columns:
 
 ```ruby
-index :user_id, :topic_id, name: :idx_posts_user_topic
-unique_index :username, name: :idx_unique_users_username
-unique_index %i[user_id field_id], name: :my_index, where: "condition"
+index :user_id, :topic_id
+unique_index :username
+unique_index %i[user_id field_id], where: "value IS NOT NULL"
+index :status, name: :idx_custom_name
+```
 
+Options:
+- `name:` - Override the index name (default: auto-generated from table and column names)
+- `where:` - Add a partial index condition (SQL expression)
+
+Column names are required (one or more). They must reference columns that are included, added, or renamed in the table configuration.
+
+### Constraints
+
+Use `check` to define a check constraint. Both arguments are required.
+
+```ruby
 check :positive_score, "score >= 0"
 ```
 
+Arguments:
+- First: constraint name (symbol or string)
+- Second: SQL condition (string)
+
 ### Plugin support
+
+Columns from plugins listed in `ignored.rb` are always auto-ignored automatically. Use `ignore_plugin_columns!` for non-ignored plugins whose columns you don't want in the intermediate schema.
+
+Auto-ignore columns from all non-ignored plugins:
 
 ```ruby
 Migrations::Database::Schema.table :users do
   include_all
-  ignore_plugin_columns!                       # auto-ignore columns from ALL non-ignored plugins
-  # ignore_plugin_columns! :polls, :discourse_ai  # auto-ignore only from these specific plugins
-end
-
-Migrations::Database::Schema.table :chat_messages do
-  plugin :chat              # mark this table as belonging to a plugin
-  include_all
+  ignore_plugin_columns!
 end
 ```
 
-Note: Columns from plugins listed in `ignored.rb` are always auto-ignored automatically. `ignore_plugin_columns!` is for non-ignored plugins whose columns you don't want in the schema.
+Auto-ignore columns from specific plugins only:
+
+```ruby
+Migrations::Database::Schema.table :users do
+  include_all
+  ignore_plugin_columns! :polls, :discourse_ai
+end
+```
 
 ### Model mode
 

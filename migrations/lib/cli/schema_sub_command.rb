@@ -304,7 +304,6 @@ module Migrations::CLI
       if table.source_table_name != table.name
         puts "  #{I18n.t("schema.show.source", name: table.source_table_name)}"
       end
-      puts "  #{I18n.t("schema.show.plugin", name: table.plugin_name)}" if table.plugin_name
       puts
 
       if table.primary_key_columns

@@ -20,7 +20,6 @@ module Migrations::Database::Schema::DSL
       :ignored_columns_map,
       :ignore_plugin_columns,
       :ignore_plugin_names,
-      :plugin_name,
       :model_mode,
     ) do
       def column_options_for(col)
@@ -57,7 +56,6 @@ module Migrations::Database::Schema::DSL
       @forced_columns = []
       @ignore_plugin_columns = false
       @ignore_plugin_names = nil
-      @plugin_name = nil
       @model_mode = nil
     end
 
@@ -130,10 +128,6 @@ module Migrations::Database::Schema::DSL
       @constraints << ConstraintConfig.new(name: name.to_sym, type: :check, condition:)
     end
 
-    def plugin(name)
-      @plugin_name = name.to_s
-    end
-
     def ignore_plugin_columns!(*plugin_names)
       @ignore_plugin_columns = true
       @ignore_plugin_names =
@@ -186,7 +180,6 @@ module Migrations::Database::Schema::DSL
         ignored_columns_map: @ignored_columns.freeze,
         ignore_plugin_columns: @ignore_plugin_columns,
         ignore_plugin_names: @ignore_plugin_names&.freeze,
-        plugin_name: @plugin_name,
         model_mode: @model_mode,
       )
     end
