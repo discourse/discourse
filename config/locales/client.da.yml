@@ -2788,6 +2788,9 @@ da:
         progress:
           one: "Fremskridt: <strong>%{count}</strong> emne"
           other: "Fremskridt: <strong>%{count}</strong> emner"
+        error_topic_count:
+          one: "%{count} emne"
+          other: "%{count} emner"
       none:
         unread: "Du har ingen ulæste emner."
         unseen: "Du har ingen useete emner."
@@ -4734,6 +4737,7 @@ da:
         save: "Gem"
         cancel: "Annuller"
         continue: "Fortsæt"
+        copy_key: "Kopier"
         back: "Tilbage til API-nøgler"
         revoke: "Tilbagekald"
         revoked: "Tilbagekaldt"

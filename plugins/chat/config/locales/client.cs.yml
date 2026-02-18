@@ -46,6 +46,12 @@ cs:
           many: "%{formatted_number} zpráv chatu"
           other: "%{formatted_number} zpráv chatu"
     chat:
+      edit_category:
+        tab_title: "Konverzace"
+        channel: "Kanál"
+        description: "Popis"
+        actions: "Akce"
+        settings: "Nastavení"
       text_copied: Zkopírováno do schránky
       link_copied: Odkaz zkopírován do schránky
       back_to_forum: "Fórum"

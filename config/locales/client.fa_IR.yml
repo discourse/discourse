@@ -3045,6 +3045,9 @@ fa_IR:
           other: "پیشرفت: <strong>%{count}</strong> موضوع"
         performing: "در حال انجام عملیات انبوه، لطفاً صبر کنید..."
         completed: "عملیات انبوه با موفقیت انجام شد!"
+        error_topic_count:
+          one: "%{count} موضوع"
+          other: "%{count} موضوع"
       none:
         unread: "موضوع خوانده نشده‌ای ندارید."
         unseen: "شما هیچ موضوع دیده نشده‌ای ندارید."
@@ -5292,6 +5295,7 @@ fa_IR:
         save: "ذخیره"
         cancel: "انصراف"
         continue: "ادامه"
+        copy_key: "کپی"
         back: "بازگشت به کلیدهای API"
         revoke: "ابطال"
         undo_revoke: "لغو ابطال"

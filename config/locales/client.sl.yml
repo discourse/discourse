@@ -2342,6 +2342,11 @@ sl:
           two: "Napredek: <strong>%{count}</strong> temi"
           few: "Napredek: <strong>%{count}</strong> teme"
           other: "Napredek: <strong>%{count}</strong> tem"
+        error_topic_count:
+          one: "%{count} tema"
+          two: "%{count} temi"
+          few: "%{count} teme"
+          other: "%{count} tem"
       none:
         unread: "Nimate neprebranih tem."
         new: "Nimate novih tem."
@@ -3999,6 +4004,7 @@ sl:
         save: "Shrani"
         cancel: "Prekliči"
         continue: "Nadaljuj"
+        copy_key: "Kopiraj"
         revoke: "Odstrani"
         revoked: "Preklican"
       api:

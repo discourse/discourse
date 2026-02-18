@@ -43,6 +43,12 @@ ja:
         chat_messages:
           other: "%{formatted_number} チャットメッセージ"
     chat:
+      edit_category:
+        tab_title: "チャット"
+        channel: "チャンネル"
+        description: "説明"
+        actions: "アクション"
+        settings: "設定"
       text_copied: テキストをクリップボードにコピーしました
       link_copied: リンクをクリップボードにコピーしました
       back_to_forum: "フォーラム"

@@ -3255,6 +3255,9 @@ fi:
           other: "Edetty: <strong>%{count}</strong> ketjua"
         performing: "Suoritetaan joukkotoimintoja, odota…"
         completed: "Joukkotoiminnot suoritettiin onnistuneesti!"
+        error_topic_count:
+          one: "%{count} ketju"
+          other: "%{count} ketjua"
       none:
         unread: "Sinulla ei ole lukemattomia ketjuja."
         unseen: "Sinulla ei ole näkemättömiä ketjuja."
@@ -5809,6 +5812,7 @@ fi:
         save: "Tallenna"
         cancel: "Peruuta"
         continue: "Jatka"
+        copy_key: "Kopioi"
         back: "Takaisin API-avaimiin"
         revoke: "Peru"
         undo_revoke: "Kumoa peruminen"

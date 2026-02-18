@@ -13,4 +13,11 @@ hr:
           settings: "Postavke"
           save: "Spremi"
           delete: "Izbriši"
+          html: "HTML"
+          categories: "Kategorije"
+          groups: "Grupe"
           preview: "Pregled"
+          name: "Ime"
+          edit: "Uredi"
+          tabs:
+            settings: "Postavke"

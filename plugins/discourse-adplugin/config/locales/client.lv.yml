@@ -13,4 +13,11 @@ lv:
           settings: "Iestatījumi"
           save: "Saglabāt"
           delete: "Dzēst"
+          html: "HTML"
+          categories: "Sadaļas"
+          groups: "Grupas"
           preview: "Priekšskatījums"
+          name: "Vārds"
+          edit: "Labot"
+          tabs:
+            settings: "Iestatījumi"
