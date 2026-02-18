@@ -4,9 +4,6 @@ require "prism"
 
 module Migrations::Database::Schema::DSL
   class Generator
-    class GenerationError < StandardError
-    end
-
     def initialize(schema_module)
       @schema = schema_module
       @output_config = schema_module.config.output_config
@@ -31,7 +28,7 @@ module Migrations::Database::Schema::DSL
       if errors.any?
         message = "DSL validation failed with #{errors.size} error(s):\n"
         message += errors.map { |e| "  - #{e}" }.join("\n")
-        raise GenerationError, message
+        raise Migrations::Database::Schema::GenerationError, message
       end
     end
 
@@ -45,7 +42,7 @@ module Migrations::Database::Schema::DSL
       if errors.any?
         message = "Resolved schema validation failed with #{errors.size} error(s):\n"
         message += errors.map { |e| "  - #{e}" }.join("\n")
-        raise GenerationError, message
+        raise Migrations::Database::Schema::GenerationError, message
       end
     end
 
