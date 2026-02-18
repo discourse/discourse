@@ -1,6 +1,6 @@
 # Schema Configuration DSL
 
-The schema DSL defines the structure of the intermediate database used during migrations. It maps source Discourse tables to an intermediate schema, letting you control which columns to include, rename columns, override types, add synthetic columns, and define enums.
+The schema DSL defines the structure of a database used during migrations. It maps source Discourse tables to a schema, letting you control which columns to include, rename columns, override types, add synthetic columns, and define enums.
 
 Config files live in `migrations/config/schema/<database>/` (e.g. `intermediate_db`).
 
@@ -64,11 +64,12 @@ end
 
 #### `include`
 
-Include only specific columns. Columns not listed are excluded.
+Include only specific columns. Remaining columns must be explicitly passed to `ignore` — the validator requires every database column to be accounted for, so new columns are never silently excluded.
 
 ```ruby
 Migrations::Database::Schema.table :users do
   include :id, :username, :email, :created_at
+  ignore :admin, :moderator, reason: "Not needed"
 end
 ```
 
@@ -112,7 +113,7 @@ Available options:
 - `type:` - Override the column type (`:text`, `:numeric`, `:boolean`, `:datetime`, `:blob`)
 - `required:` - Mark the column as NOT NULL (`true` or `false`)
 - `max_length:` - Set a maximum length constraint
-- `rename_to:` - Rename the column in the intermediate schema
+- `rename_to:` - Rename the column in the schema
 
 Block syntax is also supported:
 
@@ -205,7 +206,7 @@ Migrations::Database::Schema.table :chat_messages do
 end
 ```
 
-Note: Columns from plugins listed in `ignored.rb` are always auto-ignored automatically. `ignore_plugin_columns!` is for non-ignored plugins whose columns you don't want in the intermediate schema.
+Note: Columns from plugins listed in `ignored.rb` are always auto-ignored automatically. `ignore_plugin_columns!` is for non-ignored plugins whose columns you don't want in the schema.
 
 ### Model mode
 
