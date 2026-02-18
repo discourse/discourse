@@ -77,6 +77,7 @@ export default class TopicController extends Controller {
   @service modal;
   @service router;
   @service screenTrack;
+  @service scrollState;
   @service site;
   @service siteSettings;
 
@@ -146,6 +147,10 @@ export default class TopicController extends Controller {
   @dependentKeyCompat
   get selectedPostsCount() {
     return this.selectedPostIds.length;
+  }
+
+  get shouldHideScrollableContentAbove() {
+    return this.scrollState.shouldHideContentAbove;
   }
 
   get titleIsVisibleOnHeader() {
@@ -625,7 +630,7 @@ export default class TopicController extends Controller {
   // Called when the topmost visible post on the page changes.
   @action
   async topVisibleChanged(event) {
-    const { post, refresh } = event;
+    const { post, captureAnchor, refresh } = event;
     if (!post) {
       return;
     }
@@ -638,7 +643,7 @@ export default class TopicController extends Controller {
     }
 
     if (firstLoadedPost && firstLoadedPost === post) {
-      await postStream.prependMore();
+      await postStream.prependMore({ beforePrepend: captureAnchor });
       refresh?.();
     }
   }

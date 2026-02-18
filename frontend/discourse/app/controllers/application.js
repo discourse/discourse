@@ -15,6 +15,7 @@ export default class ApplicationController extends Controller {
   @service footer;
   // eslint-disable-next-line discourse/no-unused-services
   @service router; // used in the route template
+  @service scrollState;
   @service sidebarState;
   @service siteSettings;
 
@@ -63,6 +64,14 @@ export default class ApplicationController extends Controller {
       { id: "discourse.application-show-footer" }
     );
     this.footer.showFooter = value;
+  }
+
+  get shouldHideScrollableContentAbove() {
+    return this.scrollState.shouldHideContentAbove;
+  }
+
+  get shouldHideScrollableContentBelow() {
+    return this.scrollState.shouldHideContentBelow;
   }
 
   get showPoweredBy() {
