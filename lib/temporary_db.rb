@@ -25,15 +25,15 @@ class TemporaryDb
   def pg_bin_path
     return @pg_bin_path if @pg_bin_path
 
-    # RHEL/Fedora (PGDG): /usr/pgsql-{version}/bin
-    VERSIONS.reverse_each do |v|
-      bin_path = "/usr/pgsql-#{v}/bin"
-      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
-    end
-
     # Debian/Ubuntu: /usr/lib/postgresql/{version}/bin
     VERSIONS.reverse_each do |v|
       bin_path = "/usr/lib/postgresql/#{v}/bin"
+      return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
+    end
+
+    # RHEL/Fedora (PGDG): /usr/pgsql-{version}/bin
+    VERSIONS.reverse_each do |v|
+      bin_path = "/usr/pgsql-#{v}/bin"
       return @pg_bin_path = bin_path if File.exist?("#{bin_path}/pg_ctl")
     end
 
