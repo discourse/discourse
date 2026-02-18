@@ -1,4 +1,5 @@
 import Component from "@glimmer/component";
+import { tracked } from "@glimmer/tracking";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -8,12 +9,18 @@ import { i18n } from "discourse-i18n";
 export default class SolvedSettings extends Component {
   @service siteSettings;
 
+  @tracked
+  enableAcceptedAnswers =
+    this.args.outletArgs.category.custom_fields.enable_accepted_answers ===
+    "true";
+
   get customFields() {
     return this.args.outletArgs.category.custom_fields;
   }
 
   @action
   onChangeSetting(value) {
+    this.enableAcceptedAnswers = value;
     this.customFields.enable_accepted_answers = value ? "true" : "false";
   }
 
@@ -35,7 +42,7 @@ export default class SolvedSettings extends Component {
                   "change"
                   (withEventValue this.onChangeSetting "target.checked")
                 }}
-                checked={{@outletArgs.category.enable_accepted_answers}}
+                checked={{this.enableAcceptedAnswers}}
                 type="checkbox"
               />
               {{i18n "solved.allow_accepted_answers"}}
