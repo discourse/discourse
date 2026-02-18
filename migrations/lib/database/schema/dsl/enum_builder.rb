@@ -24,8 +24,7 @@ module Migrations::Database::Schema::DSL
         raise Migrations::Database::Schema::ConfigError,
               "Enum :#{@name} must define at least one value or a source."
       end
-      validate_value_types!(values)
-      datatype = infer_datatype(values)
+      datatype = validate_and_infer_datatype(values)
       EnumDef.new(name: @name, values: values.freeze, datatype:)
     end
 
@@ -57,22 +56,23 @@ module Migrations::Database::Schema::DSL
             "Enum :#{@name} failed to evaluate source: #{e.message}"
     end
 
-    def infer_datatype(values)
-      values.values.first.is_a?(String) ? :text : :integer
-    end
+    def validate_and_infer_datatype(values)
+      types = values.values.map(&:class).uniq
 
-    def validate_value_types!(values)
-      value_types = values.values.map(&:class).uniq
-      if value_types.size > 1
+      if types.size > 1
         raise Migrations::Database::Schema::ConfigError,
               "Enum :#{@name} values must all be Strings or all Integers"
       end
 
-      type = value_types.first
-      return if type == String || type == Integer
-
-      raise Migrations::Database::Schema::ConfigError,
-            "Enum :#{@name} values must be Strings or Integers, got #{type}"
+      type = types.first
+      if type == String
+        :text
+      elsif type == Integer
+        :integer
+      else
+        raise Migrations::Database::Schema::ConfigError,
+              "Enum :#{@name} values must be Strings or Integers, got #{types.first}"
+      end
     end
   end
 end
