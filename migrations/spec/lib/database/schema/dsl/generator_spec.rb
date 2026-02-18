@@ -56,7 +56,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Generator do
     allow(resolver).to receive(:resolve).and_return(definition)
     allow(Migrations::Database::Schema::DSL::SchemaResolver).to receive(:new).and_return(resolver)
 
-    allow(Migrations::Database::Schema).to receive(:format_ruby_files)
+    allow(Migrations::Database::Schema::Helpers).to receive(:format_ruby_files)
   end
 
   def configure_output(tmpdir)

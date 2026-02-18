@@ -163,7 +163,7 @@ module Migrations::Database::Schema::DSL
     def format_directory(relative_path)
       return unless relative_path
       path = File.expand_path(relative_path, Migrations.root_path)
-      Migrations::Database::Schema.format_ruby_files(path)
+      Migrations::Database::Schema::Helpers.format_ruby_files(path)
     rescue StandardError
       # formatting is best-effort; generation still succeeds
     end

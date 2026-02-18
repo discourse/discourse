@@ -15,7 +15,7 @@ module Migrations::Database::Schema
     end
 
     def output_enum(enum, output_stream)
-      module_name = ::Migrations::Database::Schema.to_singular_classname(enum.name)
+      module_name = ::Migrations::Database::Schema::Helpers.to_singular_classname(enum.name)
 
       output_stream.puts "# frozen_string_literal: true"
       output_stream.puts
@@ -37,7 +37,7 @@ module Migrations::Database::Schema
         .sort_by { |_k, v| v }
         .map do |name, value|
           value = %Q|"#{value}"| if value.is_a?(String)
-          "        #{::Migrations::Database::Schema.to_const_name(name)} = #{value}"
+          "        #{::Migrations::Database::Schema::Helpers.to_const_name(name)} = #{value}"
         end
         .join("\n")
     end

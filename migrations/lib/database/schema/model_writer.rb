@@ -16,7 +16,7 @@ module Migrations::Database::Schema
     end
 
     def output_table(table, output_stream, custom_code: nil)
-      module_name = ::Migrations::Database::Schema.to_singular_classname(table.name)
+      module_name = ::Migrations::Database::Schema::Helpers.to_singular_classname(table.name)
       columns = table.sorted_columns
 
       output_stream.puts "# frozen_string_literal: true"
@@ -105,9 +105,11 @@ module Migrations::Database::Schema
 
       columns.each_with_index do |column, index|
         if (enum = column.enum)
-          enum_module_name = ::Migrations::Database::Schema.to_singular_classname(enum.name)
+          enum_module_name =
+            ::Migrations::Database::Schema::Helpers.to_singular_classname(enum.name)
           enum_value_names = enum.values.sort_by { |_k, v| v }.map(&:first)
-          first_const_name = ::Migrations::Database::Schema.to_const_name(enum_value_names.first)
+          first_const_name =
+            ::Migrations::Database::Schema::Helpers.to_const_name(enum_value_names.first)
 
           enum_documentation =
             "    #   Any constant from #{enum_module_name} (e.g. #{enum_module_name}::#{first_const_name})"
@@ -199,7 +201,7 @@ module Migrations::Database::Schema
     end
 
     def escape_identifier(identifier)
-      ::Migrations::Database::Schema.escape_identifier(identifier)
+      ::Migrations::Database::Schema::Helpers.escape_identifier(identifier)
     end
   end
 end
