@@ -189,6 +189,10 @@ module PageObjects
         within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--pending") }
       end
 
+      def has_reviewable_with_ignored_status?(reviewable)
+        within(reviewable_by_id(reviewable.id)) { page.has_css?(".review-item__status.--ignored") }
+      end
+
       def has_approved_item_in_timeline?(reviewable)
         within(reviewable_by_id(reviewable.id)) { page.has_text?("Approved by") }
       end
