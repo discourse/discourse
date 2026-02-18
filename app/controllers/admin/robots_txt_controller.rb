@@ -7,13 +7,30 @@ class Admin::RobotsTxtController < Admin::AdminController
 
   def update
     params.require(:robots_txt)
-    SiteSetting.overridden_robots_txt = params[:robots_txt]
+    previous_value = SiteSetting.overridden_robots_txt
+    new_value = params[:robots_txt]
+
+    SiteSetting.overridden_robots_txt = new_value
+
+    StaffActionLogger.new(current_user).log_site_setting_change(
+      "overridden_robots_txt",
+      previous_value,
+      new_value,
+    )
 
     render json: { robots_txt: current_robots_txt, overridden: @overridden }
   end
 
   def reset
+    previous_value = SiteSetting.overridden_robots_txt
     SiteSetting.overridden_robots_txt = ""
+
+    StaffActionLogger.new(current_user).log_site_setting_change(
+      "overridden_robots_txt",
+      previous_value,
+      "",
+    )
+
     render json: { robots_txt: original_robots_txt, overridden: false }
   end
 
