@@ -17,8 +17,6 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
         allow(Migrations::Database::Schema).to receive(:config_path).with(
           "intermediate_db",
         ).and_return(tmpdir)
-        allow(I18n).to receive(:t).and_call_original
-        allow(I18n).to receive(:t).with("schema.ignore.success", table: "users").and_return("ok")
         allow(command).to receive(:puts)
         allow(command).to receive(:options).and_return({ database: "intermediate_db" })
 
@@ -54,22 +52,11 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
       )
       allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
 
-      allow(I18n).to receive(:t).with("schema.detect_plugins.detecting").and_return("detecting")
-      allow(I18n).to receive(:t).with(
-        "schema.detect_plugins.updated_incomplete",
-        failed_plugins: "chat",
-      ).and_return("updated_incomplete")
-      allow(I18n).to receive(:t).with("schema.detect_plugins.tables", count: 1).and_return("tables")
-      allow(I18n).to receive(:t).with("schema.detect_plugins.columns", count: 2).and_return(
-        "columns",
-      )
-      allow(I18n).to receive(:t).with("schema.detect_plugins.plugins", names: "chat").and_return(
-        "plugins",
-      )
-
       command.detect_plugins
 
-      expect(command).to have_received(:puts).with("updated_incomplete")
+      expect(command).to have_received(:puts).with(
+        "Plugin manifest updated with warnings (failed plugins: chat)",
+      )
     end
   end
 
@@ -85,7 +72,6 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
         database: "intermediate_db",
       ).and_return(["bad config"])
       allow(Migrations::Database::Schema).to receive(:resolve)
-      allow(I18n).to receive(:t).and_call_original
 
       expect { command.resolve }.to raise_error(SystemExit)
       expect(Migrations::Database::Schema).not_to have_received(:resolve)

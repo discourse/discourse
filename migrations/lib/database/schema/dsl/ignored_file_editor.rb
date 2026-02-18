@@ -26,8 +26,7 @@ module Migrations::Database::Schema::DSL
       block_data = parse_ignored_block(content)
 
       if block_data[:table_names].include?(table_name)
-        raise Migrations::Database::Schema::ConfigError,
-              I18n.t("schema.ignore.already_ignored", table: table_name)
+        raise Migrations::Database::Schema::ConfigError, "Table #{table_name} is already ignored"
       end
 
       entry =

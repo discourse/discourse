@@ -133,12 +133,12 @@ module Migrations::Database
       path = config_path(database)
 
       unless File.directory?(schema_root_path)
-        raise ConfigError, I18n.t("schema.config_root_not_found", path: schema_root_path)
+        raise ConfigError, "Schema configuration directory not found: #{schema_root_path}"
       end
 
       unless File.directory?(path)
         available = available_databases.join(", ")
-        raise ConfigError, I18n.t("schema.unknown_database", name: database, available:)
+        raise ConfigError, "Unknown database '#{database}'. Available: #{available}"
       end
 
       return if @ready == db_key
@@ -171,20 +171,16 @@ module Migrations::Database
       manifest = plugin_manifest
       return if manifest.checksums_fresh?
 
-      $stdout.write(I18n.t("schema.detect_plugins.auto_detecting"))
+      $stdout.write("Plugin manifest outdated, regenerating... ")
       manifest.regenerate!
       if manifest.incomplete?
         failed_plugins = manifest.failed_plugins.join(", ").presence || "(unknown)"
-        puts I18n.t("schema.detect_plugins.auto_incomplete", failed_plugins:)
+        puts "Detected plugin changes, but some plugin migrations failed: #{failed_plugins}"
       else
-        puts I18n.t(
-               "schema.detect_plugins.auto_done",
-               tables: manifest.table_count,
-               columns: manifest.column_count,
-             )
+        puts "Detected #{manifest.table_count} plugin tables, #{manifest.column_count} plugin columns."
       end
     rescue StandardError => e
-      message = I18n.t("schema.detect_plugins.auto_failed", error: e.message)
+      message = "Skipped — #{e.message} (use 'schema detect-plugins --force' to retry)"
       puts message
       raise ConfigError, message
     end

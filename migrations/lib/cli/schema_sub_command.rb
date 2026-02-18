@@ -19,7 +19,7 @@ module Migrations::CLI
       errors = Schema.validate(database:)
       print_validation_errors(errors)
 
-      puts I18n.t("schema.validate.valid").green
+      puts "✓ Schema valid".green
     end
 
     desc "generate", "Generate SQL schema, Ruby models, and enum files"
@@ -30,9 +30,11 @@ module Migrations::CLI
       resolved = Schema.generate(database:)
 
       puts
-      tables_str = I18n.t("schema.generate.tables", count: resolved.tables.size)
-      enums_str = I18n.t("schema.generate.enums", count: resolved.enums.size)
-      puts I18n.t("schema.generate.success", tables: tables_str, enums: enums_str).green
+      table_count = resolved.tables.size
+      enum_count = resolved.enums.size
+      tables_str = "#{table_count} #{"table".pluralize(table_count)}"
+      enums_str = "#{enum_count} #{"enum".pluralize(enum_count)}"
+      puts "✓ Generated #{tables_str}, #{enums_str}".green
     end
 
     desc "resolve", "Show the resolved schema (for debugging)"
@@ -46,17 +48,17 @@ module Migrations::CLI
 
       resolved = Schema.resolve(database:)
 
-      puts I18n.t("schema.resolve.title")
-      puts I18n.t("schema.resolve.separator")
+      puts "Resolved Schema"
+      puts "==============="
       puts
-      puts I18n.t("schema.resolve.tables_header", count: resolved.tables.size)
+      puts "Tables (#{resolved.tables.size}):"
       resolved.tables.each do |table|
         pk_names = table.primary_key_column_names
         pk = pk_names&.any? ? pk_names.join(", ") : "none"
         puts "  #{table.name} (PK: #{pk}, #{table.columns.size} columns)"
       end
       puts
-      puts I18n.t("schema.resolve.enums_header", count: resolved.enums.size)
+      puts "Enums (#{resolved.enums.size}):"
       resolved.enums.each do |enum|
         puts "  #{enum.name}: #{enum.values.size} values (#{enum.datatype})"
       end
@@ -72,16 +74,16 @@ module Migrations::CLI
       ignored = Schema.ignored_tables
       enums = Schema.enums
 
-      puts I18n.t("schema.list.configured_tables", count: tables.size)
+      puts "Configured tables (#{tables.size}):"
       tables.keys.sort.each { |t| puts "  #{t}" }
       puts
 
-      puts I18n.t("schema.list.enums", count: enums.size)
+      puts "Enums (#{enums.size}):"
       enums.keys.sort.each { |e| puts "  #{e}" }
       puts
 
       ignored_count = ignored ? ignored.table_names.size : 0
-      puts I18n.t("schema.list.ignored_tables", count: ignored_count)
+      puts "Ignored tables: #{ignored_count}"
     end
 
     desc "show TABLE", "Show configuration details for a table"
@@ -93,9 +95,9 @@ module Migrations::CLI
       table = Schema.find_table(table_name)
 
       unless table
-        puts I18n.t("schema.show.table_not_found", name: table_name).red
+        puts "Table '#{table_name}' not found in configuration.".red
         puts
-        puts I18n.t("schema.show.available_tables")
+        puts "Available tables:"
         Schema.tables.keys.sort.each { |t| puts "  #{t}" }
         exit 1
       end
@@ -108,7 +110,7 @@ module Migrations::CLI
     def ignore(table_name)
       database = selected_database
       Schema.ignore_table(table_name, reason: options[:reason], database:)
-      puts I18n.t("schema.ignore.success", table: table_name).green
+      puts "✓ Added #{table_name} to ignored.rb".green
     end
 
     desc "diff", "Show differences between configuration and database"
@@ -131,11 +133,11 @@ module Migrations::CLI
       Schema.ensure_ready!(database:)
 
       path = Schema.add_table(table_name, database:)
-      puts I18n.t("schema.add_table.success", path:).green
+      puts "✓ Created #{path}".green
       puts
-      puts I18n.t("schema.add_table.next_steps")
-      puts "  #{I18n.t("schema.add_table.step_edit")}"
-      puts "  #{I18n.t("schema.add_table.step_validate")}"
+      puts "Next steps:"
+      puts "  1. Edit the file to configure columns"
+      puts "  2. Run 'bin/cli schema validate'"
     end
 
     desc "detect-plugins", "Regenerate the plugin manifest"
@@ -149,20 +151,20 @@ module Migrations::CLI
       manifest = Schema.plugin_manifest
 
       if options[:force] || !manifest.fresh?
-        puts I18n.t("schema.detect_plugins.detecting")
+        puts "Detecting plugin tables and columns..."
         manifest.regenerate!
         if manifest.incomplete?
           failed_plugins = manifest.failed_plugins.join(", ").presence || "(unknown)"
-          puts I18n.t("schema.detect_plugins.updated_incomplete", failed_plugins:)
+          puts "Plugin manifest updated with warnings (failed plugins: #{failed_plugins})"
         else
-          puts I18n.t("schema.detect_plugins.updated").green
+          puts "✓ Plugin manifest updated".green
         end
-        puts "  #{I18n.t("schema.detect_plugins.tables", count: manifest.table_count)}"
-        puts "  #{I18n.t("schema.detect_plugins.columns", count: manifest.column_count)}"
-        puts "  #{I18n.t("schema.detect_plugins.plugins", names: manifest.all_plugin_names.join(", "))}"
+        puts "  Tables: #{manifest.table_count}"
+        puts "  Columns: #{manifest.column_count}"
+        puts "  Plugins: #{manifest.all_plugin_names.join(", ")}"
       else
-        puts I18n.t("schema.detect_plugins.up_to_date")
-        puts "  #{I18n.t("schema.detect_plugins.use_force")}"
+        puts "Plugin manifest is up to date"
+        puts "  Use --force to regenerate"
       end
     end
 
@@ -176,7 +178,7 @@ module Migrations::CLI
       unless File.directory?(Schema.schema_root_path)
         raise(
           Schema::ConfigError,
-          I18n.t("schema.config_root_not_found", path: Schema.schema_root_path),
+          "Schema configuration directory not found: #{Schema.schema_root_path}",
         )
       end
 
@@ -185,7 +187,7 @@ module Migrations::CLI
 
       raise(
         Schema::ConfigError,
-        I18n.t("schema.unknown_database", name: database, available: available.join(", ")),
+        "Unknown database '#{database}'. Available: #{available.join(", ")}",
       )
     end
 
@@ -198,26 +200,25 @@ module Migrations::CLI
     def print_validation_errors(errors)
       return if errors.empty?
 
-      errors.each { |e| puts I18n.t("schema.validate.error", message: e).red }
+      errors.each { |e| puts "✗ #{e}".red }
       puts
-      puts I18n.t("schema.validate.summary", count: errors.size)
+      error_count = errors.size
+      puts "#{error_count} #{"error".pluralize(error_count)}"
       exit 1
     end
 
     def display_table(table)
-      puts I18n.t("schema.show.table_name", name: table.name)
-      if table.source_table_name != table.name
-        puts "  #{I18n.t("schema.show.source", name: table.source_table_name)}"
-      end
+      puts "Table: #{table.name}"
+      puts "  Source: #{table.source_table_name}" if table.source_table_name != table.name
       puts
 
       if table.primary_key_columns
-        puts "  #{I18n.t("schema.show.primary_key", columns: table.primary_key_columns.join(", "))}"
+        puts "  Primary Key: #{table.primary_key_columns.join(", ")}"
         puts
       end
 
       if table.included_column_names
-        puts "  #{I18n.t("schema.show.included_columns", count: table.included_column_names.size)}"
+        puts "  Included Columns (#{table.included_column_names.size}):"
         table.included_column_names.sort.each do |col|
           opts = table.column_options_for(col)
           extra = []
@@ -227,12 +228,12 @@ module Migrations::CLI
           puts "    #{col}#{extra_str}"
         end
       else
-        puts "  #{I18n.t("schema.show.all_columns")}"
+        puts "  Columns: all (no explicit include list)"
       end
       puts
 
       if table.added_columns.any?
-        puts "  #{I18n.t("schema.show.added_columns", count: table.added_columns.size)}"
+        puts "  Added Columns (#{table.added_columns.size}):"
         table.added_columns.each do |col|
           extra = []
           extra << "enum: #{col.enum}" if col.enum
@@ -244,7 +245,7 @@ module Migrations::CLI
       end
 
       if table.ignored_column_names.any?
-        puts "  #{I18n.t("schema.show.ignored_columns", count: table.ignored_column_names.size)}"
+        puts "  Ignored Columns (#{table.ignored_column_names.size}):"
         table.ignored_column_names.sort.each do |col|
           reason = table.ignore_reason_for(col)
           puts "    #{col}: #{reason}"
@@ -253,7 +254,7 @@ module Migrations::CLI
       end
 
       if table.indexes.any?
-        puts "  #{I18n.t("schema.show.indexes", count: table.indexes.size)}"
+        puts "  Indexes (#{table.indexes.size}):"
         table.indexes.each do |idx|
           unique_str = idx.unique ? "UNIQUE " : ""
           where_str = idx.condition ? " WHERE #{idx.condition}" : ""
@@ -263,12 +264,12 @@ module Migrations::CLI
       end
 
       if table.constraints.any?
-        puts "  #{I18n.t("schema.show.constraints", count: table.constraints.size)}"
+        puts "  Constraints (#{table.constraints.size}):"
         table.constraints.each { |c| puts "    #{c.name}: #{c.condition}" }
         puts
       end
 
-      puts "  #{I18n.t("schema.show.auto_ignore_plugins", value: table.ignore_plugin_columns?)}"
+      puts "  Auto-ignore plugin columns: #{table.ignore_plugin_columns?}"
     end
 
     def display_diff(result, verbose: false)
@@ -276,7 +277,7 @@ module Migrations::CLI
 
       if result.unconfigured_tables.any?
         has_changes = true
-        puts I18n.t("schema.diff.unconfigured_tables")
+        puts "Unconfigured tables (add to tables/ or ignored.rb):"
         result.unconfigured_tables.each do |t|
           plugin_info = t.plugin ? " [#{t.plugin}]" : ""
           puts "  + #{t.name}#{plugin_info}"
@@ -286,14 +287,14 @@ module Migrations::CLI
 
       if result.missing_tables.any?
         has_changes = true
-        puts I18n.t("schema.diff.missing_tables")
+        puts "Missing tables (configured but not in database):"
         result.missing_tables.each { |t| puts "  - #{t.name}" }
         puts
       end
 
       if result.stale_ignored_tables.any?
         has_changes = true
-        puts I18n.t("schema.diff.stale_ignored")
+        puts "Stale ignored tables (no longer in database):"
         result.stale_ignored_tables.each { |t| puts "  ~ #{t.name}" }
         puts
       end
@@ -302,7 +303,7 @@ module Migrations::CLI
 
       if table_diffs.any?
         has_changes = true
-        puts I18n.t("schema.diff.column_diffs")
+        puts "Column differences:"
         table_diffs.each do |table_diff|
           puts "  #{table_diff.table_name}:"
 
@@ -313,13 +314,11 @@ module Migrations::CLI
 
           table_diff.missing_columns.each { |c| puts "    - #{c.name}" }
 
-          table_diff.stale_ignored_columns.each do |c|
-            puts "    ~ #{I18n.t("schema.diff.stale_ignored_column", name: c.name)}"
-          end
+          table_diff.stale_ignored_columns.each { |c| puts "    ~ #{c.name} (ignored but gone)" }
 
           if verbose
             table_diff.auto_ignored_columns.each do |c|
-              puts "    #{I18n.t("schema.diff.auto_ignored_column", name: c.name, plugin: c.plugin)}"
+              puts "      #{c.name} [#{c.plugin}] (auto-ignored from plugin)"
             end
           end
         end
@@ -327,11 +326,11 @@ module Migrations::CLI
       end
 
       if has_changes
-        puts I18n.t("schema.diff.suggested_actions")
-        puts "  #{I18n.t("schema.diff.action_add")}"
-        puts "  #{I18n.t("schema.diff.action_ignore")}"
+        puts "Suggested actions:"
+        puts "  bin/cli schema add <table>         Create config for a new table"
+        puts "  bin/cli schema ignore <table> [--reason \"...\"]  Add table to ignored.rb"
       else
-        puts I18n.t("schema.diff.no_differences").green
+        puts "✓ No differences found".green
       end
     end
 
