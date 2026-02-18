@@ -14,10 +14,6 @@ module Migrations::Database::Schema::DSL
       @values[name.to_s] = val
     end
 
-    def string_value(name, val)
-      @values[name.to_s] = val.to_s
-    end
-
     def source(&block)
       @source_block = block
     end

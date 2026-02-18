@@ -234,11 +234,30 @@ end
 
 ### Model mode
 
-Controls how the generated Ruby model is structured:
+Controls how `schema generate` handles the Ruby model file for this table. There are three modes:
+
+**Default** (no `model` declaration) — the model file is fully regenerated on every run. Any manual edits will be overwritten.
+
+**`model :extended`** — the model file is regenerated, but custom code between the marker comments is preserved:
 
 ```ruby
-model :manual    # don't generate a model class (you'll write it yourself)
-model :extended  # generate a model with extensions
+model :extended
+```
+
+The generated file will contain a section like this:
+
+```ruby
+    # -- custom code --
+    # your custom methods and logic here
+    # -- end custom code --
+```
+
+Code between the markers survives regeneration. Code outside the markers is overwritten.
+
+**`model :manual`** — the model file is not generated at all. Use this when you need full control and will write the model yourself.
+
+```ruby
+model :manual
 ```
 
 ## Conventions
@@ -275,17 +294,29 @@ Conventions are applied during schema resolution. Per-table `column` options tak
 
 ## Enums
 
-Enums define named value sets. Defined in `enums/`:
+Enums define named value sets. Defined in `enums/`. All values in an enum must be the same type — either all integers or all strings.
+
+Integer enum:
 
 ```ruby
-Migrations::Database::Schema.enum :upload_type do
-  value "avatar", 0
-  value "profile_background", 1
-  string_value "custom", "custom"
+Migrations::Database::Schema.enum :visibility do
+  value :public, 0
+  value :private, 1
+  value :restricted, 2
 end
 ```
 
-Or from a Ruby constant:
+String enum:
+
+```ruby
+Migrations::Database::Schema.enum :color do
+  value :red, "red"
+  value :green, "green"
+  value :blue, "blue"
+end
+```
+
+From a Ruby constant (must return a Hash or Array):
 
 ```ruby
 Migrations::Database::Schema.enum :upload_type do
@@ -302,9 +333,10 @@ Migrations::Database::Schema.ignored do
   # Ignore all tables and columns from a plugin
   plugin :chat, "Not migrated yet"
 
-  # Ignore specific tables
+  # Ignore specific tables (reason is optional)
   table :user_actions, "Not needed"
-  tables :drafts, :notifications, reason: "Not needed"
+  table :drafts
+  tables :notifications, :bookmarks, reason: "Not needed"
 end
 ```
 

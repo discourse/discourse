@@ -44,7 +44,7 @@ RSpec.describe Migrations::Database::Schema::DSL::EnumBuilder do
       expect do
         Migrations::Database::Schema.enum :mixed do
           value :a, 0
-          string_value :b, "b"
+          value :b, "b"
         end
       end.to raise_error(
         Migrations::Database::Schema::ConfigError,
