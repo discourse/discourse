@@ -12,10 +12,10 @@ import icon from "discourse/helpers/d-icon";
 import draggable from "discourse/modifiers/draggable";
 import MultiSelect from "discourse/select-kit/components/multi-select";
 import { i18n } from "discourse-i18n";
-import CodeView from "../../../../../components/code-view";
-import ExplorerSchema from "../../../../../components/explorer-schema";
-import ParamInputForm from "../../../../../components/param-input-form";
-import QueryResultsWrapper from "../../../../../components/query-results-wrapper";
+import CodeView from "../../../../components/code-view";
+import ExplorerSchema from "../../../../components/explorer-schema";
+import ParamInputForm from "../../../../components/param-input-form";
+import QueryResultsWrapper from "../../../../components/query-results-wrapper";
 
 export default class QueriesDetails extends Component {
   get showDestroyQuery() {

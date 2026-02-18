@@ -20,7 +20,7 @@ register_svg_icon "info"
 register_svg_icon "pencil"
 register_svg_icon "upload"
 
-add_admin_route "explorer.title", "discourse-data-explorer", use_new_show_route: true
+add_admin_route "explorer.title", "explorer"
 
 module ::DiscourseDataExplorer
   PLUGIN_NAME = "discourse-data-explorer"

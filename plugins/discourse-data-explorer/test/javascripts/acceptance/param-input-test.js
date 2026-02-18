@@ -13,31 +13,15 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   needs.settings({ data_explorer_enabled: true });
 
   needs.pretender((server, helper) => {
-    server.get("/admin/plugins/discourse-data-explorer.json", () => {
-      return helper.response({
-        id: "discourse-data-explorer",
-        name: "discourse-data-explorer",
-        enabled: true,
-        has_settings: true,
-        humanized_name: "Data Explorer",
-        is_discourse_owned: true,
-        admin_route: {
-          label: "explorer.title",
-          location: "discourse-data-explorer",
-          use_new_show_route: true,
-        },
-      });
-    });
-
-    server.get("/admin/plugins/discourse-data-explorer/groups.json", () => {
+    server.get("/admin/plugins/explorer/groups.json", () => {
       return helper.response([]);
     });
 
-    server.get("/admin/plugins/discourse-data-explorer/schema.json", () => {
+    server.get("/admin/plugins/explorer/schema.json", () => {
       return helper.response({});
     });
 
-    server.get("/admin/plugins/discourse-data-explorer/queries", () => {
+    server.get("/admin/plugins/explorer/queries", () => {
       return helper.response({
         queries: [
           {
@@ -72,7 +56,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       });
     });
 
-    server.get("/admin/plugins/discourse-data-explorer/queries/-6", () => {
+    server.get("/admin/plugins/explorer/queries/-6", () => {
       return helper.response({
         query: {
           id: -6,
@@ -98,7 +82,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       });
     });
 
-    server.put("/admin/plugins/discourse-data-explorer/queries/-6", () => {
+    server.put("/admin/plugins/explorer/queries/-6", () => {
       return helper.response({
         success: true,
         errors: [],
@@ -133,7 +117,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       });
     });
 
-    server.post("/admin/plugins/discourse-data-explorer/queries/-6/run", () => {
+    server.post("/admin/plugins/explorer/queries/-6/run", () => {
       return helper.response({
         success: true,
         errors: [],
@@ -195,7 +179,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       });
     });
 
-    server.get("/admin/plugins/discourse-data-explorer/queries/-7", () => {
+    server.get("/admin/plugins/explorer/queries/-7", () => {
       return helper.response({
         query: {
           id: -7,
@@ -220,7 +204,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       });
     });
 
-    server.post("/admin/plugins/discourse-data-explorer/queries/-7/run", () => {
+    server.post("/admin/plugins/explorer/queries/-7/run", () => {
       return helper.response({
         success: true,
         errors: [],
@@ -282,7 +266,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       });
     });
 
-    server.get("/admin/plugins/discourse-data-explorer/queries/3", () => {
+    server.get("/admin/plugins/explorer/queries/3", () => {
       return helper.response({
         query: {
           id: 3,
@@ -300,7 +284,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       });
     });
 
-    server.put("/admin/plugins/discourse-data-explorer/queries/3", () => {
+    server.put("/admin/plugins/explorer/queries/3", () => {
       return helper.response({
         query: {
           id: 3,
@@ -325,7 +309,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       });
     });
 
-    server.get("/admin/plugins/discourse-data-explorer/queries/4", () => {
+    server.get("/admin/plugins/explorer/queries/4", () => {
       return helper.response({
         query: {
           id: 4,
@@ -350,7 +334,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
       });
     });
 
-    server.post("/admin/plugins/discourse-data-explorer/queries/4/run", () => {
+    server.post("/admin/plugins/explorer/queries/4/run", () => {
       return helper.response({});
     });
   });
@@ -361,7 +345,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   }
 
   test("puts params for the query into the url", async function (assert) {
-    await visit("/admin/plugins/discourse-data-explorer/queries/-6");
+    await visit("/admin/plugins/explorer/queries/-6");
     const monthsAgoValue = "2";
     await fillIn(".query-params input", monthsAgoValue);
     await runQuery();
@@ -379,9 +363,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   });
 
   test("loads the page if one of the parameter is null", async function (assert) {
-    await visit(
-      '/admin/plugins/discourse-data-explorer/queries/-7?params={"user":null}'
-    );
+    await visit('/admin/plugins/explorer/queries/-7?params={"user":null}');
     assert.dom(".query-params .user-chooser").exists();
     assert.dom(".query-run .btn.btn-primary").exists();
   });
@@ -401,7 +383,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   });
 
   test("creates input boxes if has parameters when save", async function (assert) {
-    await visit("/admin/plugins/discourse-data-explorer/queries/3");
+    await visit("/admin/plugins/explorer/queries/3");
     assert.dom(".query-params input").doesNotExist();
     await click(".query-edit .btn-edit-query");
     await fillIn(
@@ -414,7 +396,7 @@ acceptance("Data Explorer Plugin | Param Input", function (needs) {
   });
 
   test("nullable category_id param", async function (assert) {
-    await visit("/admin/plugins/discourse-data-explorer/queries/4");
+    await visit("/admin/plugins/explorer/queries/4");
     const catChooser = selectKit(".category-chooser");
 
     assert.strictEqual(catChooser.header().value(), null);
