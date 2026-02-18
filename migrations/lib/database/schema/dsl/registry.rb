@@ -79,10 +79,6 @@ module Migrations::Database::Schema::DSL
       self
     end
 
-    def frozen?
-      @frozen
-    end
-
     private
 
     def raise_if_frozen!

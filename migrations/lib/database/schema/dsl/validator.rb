@@ -227,7 +227,7 @@ module Migrations::Database::Schema::DSL
       plugin = manifest.plugin_for_table(table_def.source_table_name.to_s)
       return unless plugin
 
-      if ignored.plugin_ignored?(plugin.to_sym)
+      if ignored.plugin_ignored?(plugin)
         @errors << "Table '#{table_def.name}': source table '#{table_def.source_table_name}' belongs to ignored plugin '#{plugin}'"
       end
     end

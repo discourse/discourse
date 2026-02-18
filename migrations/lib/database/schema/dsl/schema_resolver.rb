@@ -138,8 +138,7 @@ module Migrations::Database::Schema::DSL
     )
       col_name = db_col.name
 
-      effective_name =
-        rename_to_override || @conventions&.effective_name(col_name) || col_name.to_sym
+      effective_name = rename_to_override || @conventions&.effective_name(col_name) || col_name
 
       raw_type =
         type_override || @conventions&.convention_for(col_name)&.type_override || db_col.type
@@ -209,7 +208,7 @@ module Migrations::Database::Schema::DSL
         if table_def.source_table_name
           options = table_def.column_options_for(pk_col)
           rename_to = options&.rename_to
-          resolved_name = (rename_to || @conventions&.effective_name(pk_col) || pk_col.to_sym).to_s
+          resolved_name = (rename_to || @conventions&.effective_name(pk_col) || pk_col).to_s
         else
           resolved_name = pk_col.to_s
         end
@@ -235,7 +234,7 @@ module Migrations::Database::Schema::DSL
       return col_name.to_s unless table_def.source_table_name
 
       options = table_def.column_options_for(col_name)
-      (options&.rename_to || @conventions&.effective_name(col_name) || col_name.to_sym).to_s
+      (options&.rename_to || @conventions&.effective_name(col_name) || col_name).to_s
     end
 
     def resolve_constraints(table_def)

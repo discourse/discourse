@@ -101,7 +101,7 @@ module Migrations::Database::Schema
         end
 
       max_line_length = param_documentation.map(&:length).max
-      see_documenation = []
+      see_documentation = []
 
       columns.each_with_index do |column, index|
         if (enum = column.enum)
@@ -117,7 +117,7 @@ module Migrations::Database::Schema
           line = param_documentation[index].ljust(max_line_length)
           param_documentation[index] = "#{line}\n#{enum_documentation}"
 
-          see_documenation << "#{@enum_namespace}::#{enum_module_name}"
+          see_documentation << "#{@enum_namespace}::#{enum_module_name}"
         end
       end
 
@@ -125,9 +125,9 @@ module Migrations::Database::Schema
       documentation << "\n    #\n"
       documentation << "    # @return [void]"
 
-      if see_documenation.any?
+      if see_documentation.any?
         documentation << "\n    #\n"
-        documentation << see_documenation.map { |see| "    # @see #{see}" }.join("\n")
+        documentation << see_documentation.map { |see| "    # @see #{see}" }.join("\n")
       end
 
       documentation
