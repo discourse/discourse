@@ -342,7 +342,7 @@ end
 
 ## Output configuration
 
-Defined in `config.rb`:
+Controls where `schema generate` writes the SQL schema file, Ruby models, and enum modules. Defined in `config.rb`:
 
 ```ruby
 Migrations::Database::Schema.configure do
