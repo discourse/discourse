@@ -166,7 +166,6 @@ export default class AdminReportChart extends Component {
               callback: (label) => number(label),
               sampleSize: 5,
               minRotation: 0,
-              stepSize: 1,
               precision: 0,
             },
           },
