@@ -245,7 +245,7 @@ export default class ComposerContainer extends Component {
                     <LinkToInput
                       @onClick={{this.composer.displayEditReason}}
                       @showInput={{this.composer.showEditReason}}
-                      @icon="circle-info"
+                      @icon="pen-to-square"
                       class="display-edit-reason
                         {{if this.composer.showEditReason '--active'}}"
                     >
