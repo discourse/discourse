@@ -80,7 +80,7 @@ export default class PostMenuAddTranslationButton extends Component {
         @identifier="post-action-menu-edit-translations"
         class="update-translations-menu"
         @title={{this.addTranslationsLabel}}
-        @icon="discourse-add-translation"
+        @icon="language"
         @onRegisterApi={{this.onRegisterApi}}
         @arrow={{false}}
       >

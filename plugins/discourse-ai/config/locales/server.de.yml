@@ -12,6 +12,9 @@ de:
         max_prompt_tokens: "Kontextfenster"
   dashboard:
     problem:
+      ai_llm_status:
+        one: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> benötigt Aufmerksamkeit. In der letzten Stunde hat es %{failed_calls} von %{total_calls} Mal nicht reagiert."
+        other: "<a href='%{base_path}/admin/plugins/discourse-ai/ai-llms/%{target}/edit'>%{model_name}</a> benötigt Aufmerksamkeit. In den letzten %{count} Stunden hat es %{failed_calls} von %{total_calls} Mal nicht reagiert."
       ai_credit_soft_limit: "Für %{model_name} sind nur noch %{percentage_remaining}% des Guthuabens übrig.Das Guthaben wird um %{reset_date} zurückgesetzt. <a href='%{url}'>KI-Modelle ansehen</a>"
       ai_credit_hard_limit: "Du hast keine KI-Guthaben mehr für %{model_name}. Die KI-Funktionen sind bis %{reset_date} nicht mehr verfügbar. <a href='%{url}'>KI-Modelle ansehen</a>"
   discourse_automation:
@@ -20,6 +23,7 @@ de:
         review: "Beitrag zur Warteschlange zur Überprüfung hinzufügen"
         review_hide: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag verstecken"
         review_delete: "Beitrag zur Warteschlange zur Überprüfung hinzufügen und Beitrag löschen"
+        review_delete_silence: "Beitrag zur Überprüfungswarteschlange hinzufügen, Beitrag löschen und Benutzer stummschalten"
         spam: "Als Spam markieren und Beitrag verbergen"
         spam_silence: "Als Spam melden, Beitrag ausblenden und Benutzer stummschalten"
     scriptables:
@@ -32,6 +36,10 @@ de:
       llm_triage:
         title: Beiträge mithilfe von KI sortieren
         description: "Beiträge mithilfe eines großen Sprachmodells sortieren"
+        flagged_post: |
+          <div>Antwort des Modells:</div>
+          <p>%{llm_response}</p>
+          <b>Ausgelöst durch die Regel <a href="%{base_path}/admin/plugins/automation/%{automation_id}">%{automation_name}</a>.</b>
         notify_author_pm:
           subject: "Dein Beitrag wurde vorübergehend zur Überprüfung entfernt"
           body: |
@@ -78,6 +86,7 @@ de:
     ai_nsfw_flag_threshold_sexy: "Schwellenwert, ab dem ein Bild, das als sexy eingestuft wird, als NSFW gilt."
     ai_nsfw_models: "Modelle, die für NSFW-Inferenz verwendet werden."
     ai_spam_detection_enabled: "Aktiviere das KI-Spamerkennungsmodul"
+    ai_spam_detection_max_post_count: "Maximale Anzahl an Beiträgen, die ein Benutzer veröffentlichen kann, bevor diese nicht mehr auf Spam überprüft werden."
     ai_spam_detection_max_trust_level: "Maximale Vertrauensstufe, für die eine Spam-Prüfung erfolgt"
     ai_openai_api_key: "API-Schlüssel für OpenAI-API. Wird NUR für Bilderstellung und -bearbeitung verwendet. Für GPT verwende die Registerkarte für die LLM-Konfiguration"
     ai_helper_enabled: "Aktiviere den KI-Helfer."
@@ -132,6 +141,8 @@ de:
     ai_translation_backfill_max_age_days: "Das maximale Alter eines Beitrags oder Themas, das übersetzt werden soll. Beiträge und Themen, die älter sind, werden nicht übersetzt. 0 deaktiviert die rückwirkende Übersetzung, aber nicht die Übersetzung von neuen Beiträgen."
     ai_translation_backfill_hourly_rate: "Die Anzahl der Beiträge und Themen, die bei der rückwirkenden Übersetzung pro Stunde übersetzt werden. Setze den Wert auf 0, um rückwirkende Übersetzungen zu deaktivieren."
     ai_translation_max_tokens_multiplier: "Multiplikator, um die maximale Anzahl der Token festzulegen, die für die Übersetzung verwendet werden sollen. Standardmäßig wird die maximale Anzahl der Token auf etwa das Zwei- bis Fünffache der Anzahl der Zeichen im Beitrag gesetzt. Dieser Multiplikator kann angepasst werden, um Denk- oder Argumentationsmodelle zu berücksichtigen, die mehr Token benötigen."
+    ai_usage_rollup_after_days: "Anzahl der Tage, für die KI-Nutzungsstatistiken pro Anfrage gespeichert werden, bevor sie in tägliche Aggregatwerte einfließen. Auf 0 setzen, um die Aggregation zu deaktivieren."
+    ai_audit_logs_purge_after_days: "Lösche die KI-API-Audit-Logs, die älter als diese Anzahl an Tagen sind. Standardmäßig sind es etwa 6 Monate. Setze den Wert auf 0, um die Protokolle unbegrenzt aufzubewahren."
   reviewables:
     reasons:
       flagged_by_toxicity: Das KI-Plug-in meldete dies nach der Klassifizierung als toxisch.
@@ -251,6 +262,8 @@ de:
           name: "Wechselkurs"
         stock_quote:
           name: "Aktienkurs (AlphaVantage)"
+        image_generation_category:
+          name: "Bilderzeugung..."
         image_generation_custom:
           name: "Benutzerdefiniert"
         image_generation_openai:
@@ -269,8 +282,10 @@ de:
       errors:
         completion_request_failed: "Beim Versuch, Vorschläge zu machen, ist etwas schiefgelaufen. Bitte versuche es noch einmal."
         no_illustrator_persona: "Die Beitragsillustrator-Persona ist nicht konfiguriert. Bitte überprüfe deine Website-Einstellungen."
+        no_image_generation_tool: "Für die Persona „Beitragsillustrator“ muss ein Bilderzeugungstool verknüpft sein. Bitte konfiguriere im Administrationsbereich ein Bilderzeugungstool für diese Persona."
         no_image_generated: "Das Bild konnte nicht erstellt werden. Bitte versuche es erneut oder überprüfe die Konfiguration deines Tools."
         llm_model_not_configured: "Es ist kein Sprachmodell für die Bilderzeugung konfiguriert. Bitte konfiguriere ein Standard-Sprachmodell in deinen Website-Einstellungen."
+        unknown_error: "Beim Erzeugen der Vorschaubilder ist ein unerwarteter Fehler aufgetreten. Bitte versuche es erneut."
       prompts:
         translate: Übersetzen in %{language}
         generate_titles: Thementitel vorschlagen
@@ -304,6 +319,7 @@ de:
     ai_bot:
       reply_error: "Entschuldigung, es sieht so aus, als ob unser System beim Versuch, zu antworten, auf ein unerwartetes Problem gestoßen ist.\n\n[details='Fehlerdetails']\n%{details}\n[/details]"
       default_pm_prefix: "[KI-Bot-PN ohne Titel]"
+      thinking: "Ich denke"
       personas:
         default_llm_required: "Standard-LLM-Modell ist erforderlich, bevor der Chat aktiviert werden kann"
         cannot_delete_system_persona: "System-Personas können nicht gelöscht werden, bitte deaktiviere sie stattdessen"
@@ -371,6 +387,7 @@ de:
           description: "Standard-Persona für die „Generiere Markdown-Tabelle“-Funktion des Helfers"
         post_illustrator:
           name: "Beitragsillustrator"
+          description: "Erzeugt Bilder zur Illustration von Beiträgen mithilfe verfügbarer Bilderzeugungstools"
         proofreader:
           name: "Korrekturleser"
           description: "Standard-Persona für die „Korrekturlesen“-Funktion des Helfers"
@@ -536,6 +553,7 @@ de:
         github_diff: "<a href='%{url}'>%{repo} %{ref}</a>"
         github_file_content: "Inhalt von %{file_paths} in %{repo_name}@%{branch} wurde abgerufen"
         random_picker: "Auswahl aus %{options}. Ausgewählt wurde: %{result}"
+        flag_post: "Melde Beitrag: %{post_id} (%{flag_post})"
         read: "Wird gelesen: <a href='%{url}'>%{title}</a>"
         time: "Die Uhrzeit in %{timezone} ist %{time}"
         summarize: "<a href='%{url}'>%{title}</a> zusammengefasst"
@@ -633,6 +651,7 @@ de:
     llm_models:
       missing_provider_param: "%{param} darf nicht leer sein"
       bedrock_invalid_url: "Bitte fülle alle Felder aus, um dieses Modell zu verwenden."
+      bedrock_missing_auth: "Für AWS Bedrock muss entweder die Zugangsschlüssel-ID oder die Rollen ARN konfiguriert werden"
     ai_staff_action_logger:
       updated: "aktualisiert"
       set: "gesetzt"

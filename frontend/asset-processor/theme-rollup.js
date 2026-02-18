@@ -30,7 +30,7 @@ globalThis.rollup = function (modules, opts) {
   const { vol } = memfs(modules, themeBase);
 
   const resultPromise = rollup({
-    input: "virtual:main",
+    input: "virtual:entrypoint:main",
     logLevel: "info",
     fs: vol.promises,
     onLog(level, message) {

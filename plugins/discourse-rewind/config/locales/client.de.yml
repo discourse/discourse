@@ -115,6 +115,8 @@ de:
         chat_usage:
           title: Chat-Aktivität
           total_messages: Nachrichten gesamt
+          dm_messages: Direktnachrichten
+          unique_dm_channels: Unterhaltungen in Direktnachrichten
           reactions_received: Erhaltene Reaktionen
           avg_message_length: Ø Nachrichtenlänge
           favorite_channels: Lieblingskanäle

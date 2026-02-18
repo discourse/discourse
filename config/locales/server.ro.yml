@@ -1156,7 +1156,6 @@ ro:
     max_age_unmatched_ips: "șterge adresele de IP verificate, care nu corespund, după (N) zile."
     num_flaggers_to_close_topic: "Numărul minim de marcaje de avertizare unice care este necesar pentru a suspenda un subiect în vederea intervenției."
     auto_respond_to_flag_actions: "Activează răspunsul automat la gestionarea unui marcaj de avertizare."
-    min_first_post_typing_time: "Durata de timp minimă în milisecunde cât este nevoie ca un utilizator să tasteze la prima postare, dacă acest prag nu este atins postarea va intra automat în coada mesajelor care necesită aprobare. Valoarea 0 dezactivează (nerecomandat)"
     reply_by_email_address: "șablon pentru răspuns prin email de intrare, de exemplu: %%{reply_key}@reply.example.com sau răspunsuri+%%{reply_key}@example.com"
     alternative_reply_by_email_addresses: "Listă de șabloane alternative pentru adresele de email primite cu răspunsuri prin email. Exemplu: %%{reply_key}@reply.example.com|replies+%%{reply_key}@example.com"
     strip_images_from_short_emails: "Scoate imaginile din emailurile care au mai puțin de 2800 de Bytes"
@@ -1232,7 +1231,6 @@ ro:
     allowed_href_schemes: "Alte tipuri de linkuri permise, în afară de http și https."
     embed_post_limit: "Numărul maxim de postări care să fie încorporate."
     embed_username_required: "Numele utilizator pentru acest subiect este obligatoriu."
-    bootstrap_mode_min_users: 'Numărul minim de utilizatori necesar pentru a dezactiva modul bootstrap și a elimina butonul Începe (setează 0 pentru dezactivare, poate dura până la 24 de ore). Pentru detalii, consultă <a target="_blank" href="https://meta.discourse.org/t/-/322876">subiectul despre modul bootstrap de pe Meta</a>.'
     slug_generation_method: "Alege o metodă de generare de identificator. 'encodat' va genera șir de caractere encodate cu procentaje. 'nimic' va dezactiva complet identificatorii."
     approve_post_count: "Numărul de postări de la un utilizator simplu trebuie să fie aprobat"
     auto_close_messages_post_count: "Numărul maxim de postări permise într-un mesaj privat înainte să fie închis automat (0 pentru dezactivare) "

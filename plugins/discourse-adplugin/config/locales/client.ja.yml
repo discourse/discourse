@@ -26,8 +26,9 @@ ja:
           new_name: "新しい自社広告"
           save: "保存"
           delete: "削除"
-          description: "自社広告と表示場所を定義します。"
-          get_started: "まず新しい広告の作成を開始します。"
+          html: "HTML"
+          categories: "カテゴリ"
+          groups: "グループ"
           filter_placeholder: "広告を選択..."
           more_settings: "その他の設定"
           show_to_anons: "匿名ユーザーに表示する"
@@ -35,6 +36,11 @@ ja:
           category_chooser_description: "この広告が表示されるカテゴリを選択するか、すべての場所に広告を表示する場合には空白のままにします。`no_ads_for_categories` サイト設定はこの設定より優先されます。"
           group_chooser_description: "この広告を表示できるグループを選択するか、サインイン中のすべてのユーザーに広告を表示するには空白のままにします。"
           preview: "プレビュー"
+          back: "自社広告"
+          name: "名前"
+          edit: "編集"
+          tabs:
+            settings: "設定"
           topic_list_top:
             title: "トピックリストのトップ広告"
             description: "トピックリストページのトップに表示される広告です。"

@@ -115,7 +115,7 @@ RSpec.describe ::Chat::LookupUserThreads do
   end
 
   it "doesn't return threads with no replies" do
-    Fabricate(:chat_thread, channel: channel_1).tap { _1.add(current_user) }
+    Fabricate(:chat_thread, channel: channel_1).tap { it.add(current_user) }
 
     expect(result.threads).to eq([thread_1])
   end

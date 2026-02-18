@@ -630,13 +630,13 @@ nl:
 
       Selecteer voordat je een bericht plaatst een categorie of tag om dit topic te groeperen met gerelateerde discussies, zodat anderen het gemakkelijk kunnen vinden.
 
-      [Zie onze communityrichtlijnen](%{base_path}/richtlijnen) voor meer tips en advies over deelname aan onze community.
+      [Zie onze communityrichtlijnen](%{base_path}/guidelines) voor meer tips en advies over deelname aan onze community.
     "new-reply": |
       Bedankt voor je bijdrage aan %{site_name}!
 
       Vergeet niet dat we allemaal echte mensen zijn. Wees vriendelijk voor de andere communityleden.
 
-      [Zie onze communityrichtlijnen](%{base_path}/richtlijnen) voor meer tips en advies over deelname aan onze community.
+      [Zie onze communityrichtlijnen](%{base_path}/guidelines) voor meer tips en advies over deelname aan onze community.
     dominating_topic: Je hebt veel in dit topic geplaatst! Geef anderen ook de kans om mee te doen.
     get_a_room:
       one: Je hebt één keer geantwoord op @%{reply_username}. Wist je dat je diegene in plaats daarvan een persoonlijk bericht kunt sturen?
@@ -2069,8 +2069,6 @@ nl:
     num_flaggers_to_close_topic: "Minimale aantal unieke melders dat nodig is om automatisch een topic te pauzeren voor interventie."
     num_hours_to_close_topic: "Aantal uren om een topic te pauzeren voor interventie."
     auto_respond_to_flag_actions: "Automatisch antwoord inschakelen bij weggooien van een markering."
-    min_first_post_typing_time: "Minimale tijd in milliseconden dat een gebruiker moet typen tijdens een eerste bericht. Als de drempelwaarde niet wordt bereikt, wordt het bericht automatisch in de wachtrij voor goedkeuring gezet. Stel dit in op 0 om uit te schakelen (niet aanbevolen)."
-    fast_typing_threshold: "De minimale tijd in milliseconden die een gebruiker moet typen voor het eerste bericht. Als de drempel niet wordt gehaald, komt het bericht automatisch in de beoordelingswachtrij terecht. Laag is 1 seconde, standaard is 3 seconden, hoog is 5 seconden."
     auto_silence_fast_typers_on_first_post: "Demp automatisch gebruikers die niet aan `fast typing threshold` voldoen"
     auto_silence_fast_typers_max_trust_level: "Maximale vertrouwensniveau om snelle typers automatisch te dempen"
     auto_silence_first_post_regex: "Hoofdletterongevoelige reguliere expressie die bij een overeenkomst het eerste bericht van een gebruiker dempt en in de goedkeuringswachtrij plaatst. Voorbeeld: bizar|a[bc]a zorgt ervoor dat alle eerste berichten die bizar, aba of aca bevatten worden gedempt. Alleen van toepassing op het eerste bericht."
@@ -2243,7 +2241,6 @@ nl:
     notify_about_reviewable_item_after: "Stuur een privébericht naar moderators als er na dit aantal uren beoordeelbare items zijn die nog niet zijn afgehandeld. Stel dit in op 0 om het uit te schakelen."
     delete_drafts_older_than_n_days: "Verwijder concepten die meer dan (n) dagen niet zijn gewijzigd."
     delete_merged_stub_topics_after_days: "Aantal dagen dat moet worden gewacht voordat volledig samengevoegde stubtopics automatisch worden verwijderd. Stel dit in op -1 om nooit te verwijderen of op 0 om direct te verwijderen."
-    bootstrap_mode_min_users: 'Minimale aantal vereiste gebruikers om bootstrapmodus uit te schakelen en de knop Aan de slag te verwijderen (stel dit in op 0 om het uit te schakelen, dit kan tot 24 uur duren). Zie <a target="_blank" href="https://meta.discourse.org/t/-/322876">het topic over de bootstrapmodus op Meta</a> voor meer informatie.'
     prevent_anons_from_downloading_files: "Voorkom dat anonieme gebruikers bijlagen downloaden."
     secure_uploads: 'Beperkt de toegang tot ALLE uploads (afbeeldingen, video, audio, tekst, pdf''s, zips en andere). Als ''aanmelding vereist'' is ingeschakeld, hebben alleen aangemelde gebruikers toegang tot uploads. Anders is de toegang alleen beperkt voor media-uploads in persoonlijke berichten en privécategorieën. WAARSCHUWING: deze instelling is complex en vereist diepgaande beheerkennis. Zie <a target="_blank" href="https://meta.discourse.org/t/-/140017">de topic Veilige uploads op Meta</a> voor meer informatie.'
     secure_uploads_allow_embed_images_in_emails: "Staat het insluiten van beveiligde afbeeldingen toe die normaal gesproken zouden worden geredigeerd in e-mails, als hun grootte kleiner is dan de instelling 'veilige uploads max. afbeeldingsgrootte insluiten in e-mail kb'."
@@ -4134,7 +4131,10 @@ nl:
     page_title: "Pagina niet gevonden"
     title: "Oeps! Die pagina bestaat niet of is privé."
     see_more: "Meer"
+    search_title: "In plaats daarvan zoeken?"
     search_button: "Zoeken"
+    home: "Ga naar de startpagina"
+    placeholder: "Zoek topics op titel of trefwoorden…"
   offline:
     title: "Kan app niet laden"
     offline_page_message: "Het lijkt erop dat je offline bent! Controleer je netwerkverbinding en probeer het opnieuw."

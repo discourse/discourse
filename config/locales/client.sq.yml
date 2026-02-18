@@ -295,6 +295,10 @@ sq:
       title: "Tema të reja dhe të palexuara"
       pill: "Sugjeruar"
       pm_title: "Mesazhet e sugjeruara"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Kopjoni lidhjen"
+        copied_to_clipboard: "Linku u kopjua në memo!"
     about:
       edit: "Modifiko këtë faqe"
       simple_title: "Rreth Faqes"
@@ -2956,6 +2960,9 @@ sq:
           other: "Progresi: <strong>%{count}</strong> tema"
         performing: "Duke kryer operacione me shumicë, ju lutemi prisni…"
         completed: "Operacionet me shumicë përfunduan me sukses!"
+        error_topic_count:
+          one: "%{count} temë"
+          other: "%{count} tema"
       none:
         unread: "Nuk keni tema të palexuara."
         unseen: "Ju nuk keni tema të palexuara."
@@ -4155,6 +4162,7 @@ sq:
         save: "Ruani"
         cancel: "Anulo"
         continue: "Vazhdoni"
+        copy_key: "Kopjo"
         revoke: "Revoko"
       api:
         generate_master: "Gjenero Master API Key"

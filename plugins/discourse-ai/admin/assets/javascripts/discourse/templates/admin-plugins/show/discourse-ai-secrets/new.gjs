@@ -1,4 +1,4 @@
-import AiSecretsListEditor from "../../../../../discourse/components/ai-secrets-list-editor";
+import AiSecretsListEditor from "../../../../components/ai-secrets-list-editor";
 
 export default <template>
   <AiSecretsListEditor

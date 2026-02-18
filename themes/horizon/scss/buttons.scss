@@ -17,12 +17,6 @@
   }
 }
 
-@include viewport.until(md) {
-  #create-topic.btn {
-    border-radius: var(--d-button-border-radius);
-  }
-}
-
 .discourse-no-touch .btn-default.sidebar-new-topic-button,
 .discourse-no-touch .btn-default,
 .discourse-no-touch .select-kit .select-kit-header.btn-default {
@@ -107,5 +101,15 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     bottom: var(--main-grid-gap);
+  }
+}
+
+.d-combo-button:hover {
+  border-radius: var(--d-button-border-radius);
+  box-shadow: 0 0 0 4px var(--button-box-shadow);
+
+  button:hover {
+    // remove duplicate shadow from child button
+    box-shadow: none;
   }
 }

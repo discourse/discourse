@@ -249,6 +249,9 @@ id:
       title: "Topik Baru & Belum Dibaca"
       pill: "Disarankan"
       pm_title: "Pesan Yang Disarankan"
+    admin_onboarding_banner:
+      spread_the_word:
+        copied_to_clipboard: "Tautan disalin ke papan klip!"
     about:
       simple_title: "Tentang"
       title: "Tentang %{title}"
@@ -1771,6 +1774,8 @@ id:
         selected_count:
           other: "%{count} dipilih"
         choose_new_tags: "Silahkan pilih tag baru untuk topik-topik ini:"
+        error_topic_count:
+          other: "%{count} topik"
       none:
         new: "Anda tidak memiliki topik baru"
         filter: "Tidak ada topik."
@@ -2437,6 +2442,7 @@ id:
         save: "Simpan"
         cancel: "Batal"
         continue: "Lanjutkan"
+        copy_key: "Salin"
         revoke: "Cabut"
       api:
         user: "Pengguna"

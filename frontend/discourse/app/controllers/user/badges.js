@@ -9,7 +9,7 @@ export default class UserBadgesController extends Controller {
   @sort("model", "badgeSortOrder") sortedBadges;
   @filterBy("model", "is_favorite", true) favoriteBadges;
 
-  badgeSortOrder = ["badge.badge_type.sort_order:desc", "badge.name"];
+  badgeSortOrder = ["grouping_position", "badge.badge_type_id", "badge.id"];
 
   @computed("favoriteBadges.length")
   get canFavoriteMoreBadges() {

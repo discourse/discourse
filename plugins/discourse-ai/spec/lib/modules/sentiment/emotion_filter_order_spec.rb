@@ -178,7 +178,7 @@ RSpec.describe DiscourseAi::Sentiment::EmotionFilterOrder do
     filter =
       DiscoursePluginRegistry
         .custom_filter_mappings
-        .find { _1.keys.include? "order:emotion_#{emotion}" }
+        .find { it.keys.include? "order:emotion_#{emotion}" }
         .values
         .first
     result = filter.call(scope, order_direction, guardian)

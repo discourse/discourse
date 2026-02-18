@@ -1004,6 +1004,14 @@ aside.quote {
 
 .post-stream--cloaked {
   min-height: 1px; // ensures that cloaked items have a minimum height to force the intersection observers to work
+  overflow-anchor: none; // cloaked posts are empty placeholders with approximate height and must not be used as scroll anchors
+}
+
+// these elements appear/disappear dynamically inside the post stream and must
+// not be used as scroll anchors by the browser's native scroll anchoring
+.post-stream .load-more-sentinel,
+.post-stream .post-stream-load-more-accessible {
+  overflow-anchor: none;
 }
 
 .quote-button {
@@ -2326,6 +2334,7 @@ span.post-count {
   }
 
   .topic-area > .loading-container {
+    overflow-anchor: none; // the loading spinner appears/disappears dynamically and must not be used as a scroll anchor
     // loader needs to be same width as posts
     // the extra 1px is to account for the left transparent border set to
     // .topic_post in `keyboard_shortcuts.scss`

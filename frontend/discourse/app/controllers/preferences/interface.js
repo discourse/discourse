@@ -51,12 +51,6 @@ export default class InterfaceController extends Controller {
   @propertyEqual("model.id", "currentUser.id") isViewingOwnProfile;
   subpageTitle = i18n("user.preferences_nav.interface");
 
-  init() {
-    super.init(...arguments);
-    this.set("selectedDarkColorSchemeId", this.session.userDarkSchemeId);
-    this.set("selectedColorSchemeId", this.getSelectedColorSchemeId());
-  }
-
   @computed("makeThemeDefault")
   get saveAttrNames() {
     let attrs = [
@@ -98,9 +92,7 @@ export default class InterfaceController extends Controller {
 
   @computed("currentThemeId")
   get defaultDarkSchemeId() {
-    const theme = this.userSelectableThemes?.find(
-      (t) => t.id === this.currentThemeId
-    );
+    const theme = this.userSelectableThemes?.find((t) => t.id === this.currentThemeId);
     return theme?.dark_color_scheme_id || -1;
   }
 
@@ -148,8 +140,12 @@ export default class InterfaceController extends Controller {
 
   @computed("themeId")
   get themeIdChanged() {
+    if (!this.isViewingOwnProfile) {
+      return false;
+    }
+
     if (this.currentThemeId === -1) {
-      this.set("currentThemeId", this.themeId); // eslint-disable-line ember/no-side-effects
+      this.set("currentThemeId", this.themeId);
       return false;
     } else {
       return this.currentThemeId !== this.themeId;
@@ -161,7 +157,11 @@ export default class InterfaceController extends Controller {
     return listColorSchemes(this.site);
   }
 
-  @computed("userSelectableThemes", "userSelectableColorSchemes", "themeId")
+  @computed(
+    "userSelectableThemes",
+    "userSelectableColorSchemes",
+    "themeId"
+  )
   get currentSchemeCanBeSelected() {
     if (!this.userSelectableThemes || !this.themeId) {
       return false;
@@ -179,14 +179,19 @@ export default class InterfaceController extends Controller {
 
   @computed("model.user_option.theme_ids", "themeId")
   get showThemeSetDefault() {
-    return (
-      !this.model?.user_option?.theme_ids ||
-      this.model?.user_option?.theme_ids?.[0] !== this.themeId
-    );
+    if (!this.isViewingOwnProfile) {
+      return false;
+    }
+
+    return !this.model?.user_option?.theme_ids || this.model?.user_option?.theme_ids?.[0] !== this.themeId;
   }
 
   @computed("model.user_option.text_size", "textSize")
   get showTextSetDefault() {
+    if (!this.isViewingOwnProfile) {
+      return false;
+    }
+
     return this.model?.user_option?.text_size !== this.textSize;
   }
 
@@ -284,9 +289,7 @@ export default class InterfaceController extends Controller {
 
   @computed("selectedDarkColorSchemeId", "currentThemeId")
   get showInterfaceColorModeSelector() {
-    const theme = this.userSelectableThemes?.find(
-      (t) => t.id === this.currentThemeId
-    );
+    const theme = this.userSelectableThemes?.find((t) => t.id === this.currentThemeId);
     return (
       (this.defaultDarkSchemeId > 0 &&
         theme.color_scheme_id &&
@@ -302,7 +305,10 @@ export default class InterfaceController extends Controller {
     });
   }
 
-  @computed("userSelectableColorSchemes", "userSelectableDarkColorSchemes")
+  @computed(
+    "userSelectableColorSchemes",
+    "userSelectableDarkColorSchemes"
+  )
   get showColorSchemeSelector() {
     return (
       this.showLightColorSchemeSelector ||
@@ -313,18 +319,12 @@ export default class InterfaceController extends Controller {
 
   @computed("userSelectableColorSchemes")
   get showLightColorSchemeSelector() {
-    return (
-      this.userSelectableColorSchemes &&
-      this.userSelectableColorSchemes.length > 1
-    );
+    return this.userSelectableColorSchemes && this.userSelectableColorSchemes.length > 1;
   }
 
   @computed("userSelectableDarkColorSchemes")
   get showDarkColorSchemeSelector() {
-    return (
-      this.userSelectableDarkColorSchemes &&
-      this.userSelectableDarkColorSchemes.length > 1
-    );
+    return this.userSelectableDarkColorSchemes && this.userSelectableDarkColorSchemes.length > 1;
   }
 
   get interfaceColorModes() {
@@ -418,40 +418,40 @@ export default class InterfaceController extends Controller {
       .then(() => {
         this.set("saved", true);
 
-        if (makeThemeDefault) {
-          setLocalTheme([]);
-        } else {
-          setLocalTheme(
-            [this.themeId],
-            this.get("model.user_option.theme_key_seq")
-          );
-        }
-        if (makeTextSizeDefault) {
-          this.model.updateTextSizeCookie(null);
-        } else {
-          this.model.updateTextSizeCookie(this.textSize);
-        }
+        if (this.isViewingOwnProfile) {
+          if (makeThemeDefault) {
+            setLocalTheme([]);
+          } else {
+            setLocalTheme(
+              [this.themeId],
+              this.get("model.user_option.theme_key_seq")
+            );
+          }
+          if (makeTextSizeDefault) {
+            this.model.updateTextSizeCookie(null);
+          } else {
+            this.model.updateTextSizeCookie(this.textSize);
+          }
 
-        if (this.makeColorSchemeDefault) {
-          updateColorSchemeCookie(null);
-          updateColorSchemeCookie(null, { dark: true });
-        } else {
-          updateColorSchemeCookie(this.selectedColorSchemeId);
-
-          if (
-            this.defaultDarkSchemeId > 0 &&
-            this.selectedDarkColorSchemeId === this.defaultDarkSchemeId
-          ) {
+          if (this.makeColorSchemeDefault) {
+            updateColorSchemeCookie(null);
             updateColorSchemeCookie(null, { dark: true });
           } else {
-            updateColorSchemeCookie(this.selectedDarkColorSchemeId, {
-              dark: true,
-            });
-          }
-        }
+            updateColorSchemeCookie(this.selectedColorSchemeId);
 
-        if (this.selectedInterfaceColorModeId) {
-          if (this.isViewingOwnProfile) {
+            if (
+              this.defaultDarkSchemeId > 0 &&
+              this.selectedDarkColorSchemeId === this.defaultDarkSchemeId
+            ) {
+              updateColorSchemeCookie(null, { dark: true });
+            } else {
+              updateColorSchemeCookie(this.selectedDarkColorSchemeId, {
+                dark: true,
+              });
+            }
+          }
+
+          if (this.selectedInterfaceColorModeId) {
             const modeId = this.selectedInterfaceColorModeId;
             if (modeId === INTERFACE_COLOR_MODES.AUTO) {
               this.interfaceColor.useAutoMode();
@@ -461,13 +461,16 @@ export default class InterfaceController extends Controller {
               this.interfaceColor.forceDarkMode();
             }
           }
-          this.selectedInterfaceColorModeId = null;
+
+          this.homeChanged();
+
+          if (this.themeId && this.themeId !== this.currentThemeId) {
+            reload();
+          }
         }
 
-        this.homeChanged();
-
-        if (this.themeId && this.themeId !== this.currentThemeId) {
-          reload();
+        if (this.selectedInterfaceColorModeId) {
+          this.selectedInterfaceColorModeId = null;
         }
       })
       .catch(popupAjaxError);
@@ -475,19 +478,22 @@ export default class InterfaceController extends Controller {
 
   @action
   selectTextSize(newSize) {
-    const classList = document.documentElement.classList;
+    if (this.isViewingOwnProfile) {
+      const classList = document.documentElement.classList;
 
-    TEXT_SIZES.forEach((name) => {
-      const className = `text-size-${name}`;
-      if (newSize === name) {
-        classList.add(className);
-      } else {
-        classList.remove(className);
-      }
-    });
+      TEXT_SIZES.forEach((name) => {
+        const className = `text-size-${name}`;
+        if (newSize === name) {
+          classList.add(className);
+        } else {
+          classList.remove(className);
+        }
+      });
 
-    // Force refresh when leaving this screen
-    this.session.requiresRefresh = true;
+      // Force refresh when leaving this screen
+      this.session.requiresRefresh = true;
+    }
+
     this.set("textSize", newSize);
   }
 

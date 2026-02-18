@@ -2133,6 +2133,9 @@ gl:
         progress:
           one: "Progreso: <strong>%{count}</strong> tema"
           other: "Progreso: <strong>%{count}</strong> temas"
+        error_topic_count:
+          one: "%{count} tema"
+          other: "%{count} temas"
       none:
         unread: "Non ten temas sen ler."
         new: "Non ten novos temas."
@@ -2783,10 +2786,8 @@ gl:
         reply: "Responder"
         create: "Crear"
         no_groups_selected: "Non se lle concedeu acceso a ningún grupo; esta categoría só será visíbel para o equipo."
-        everyone_full_access: 'Esta categoría é pública, todos poden ver, responder e crear publicacións. Para restrinxir os permisos, retire un ou máis dos permisos concedidos ao grupo «todos».'
         toggle_reply: "Trocar permiso de resposta"
         toggle_full: "Trocar permiso para crear"
-        inherited: 'Este permiso hérdase do de «todos»'
       uncategorized_security_warning: "Esta categoría é especial. Enténdese como unha área de espera para aqueles temas que non teñen categoría. Non pode ter axustes de seguranza."
       uncategorized_general_warning: 'Esta categoría é especial. Úsase como categoría predeterminada para os novos temas que non teñen unha categoría seleccionada. Se non quere isto e prefire forzar a selección de categorías, <a href="%{settingLink}">desactive aquí o axuste</a>. Se quere cambiar o nome ou a descrición, vai a <a href="%{customizeLink}">Personalizar / Contido de texto</a>.'
       pending_permission_change_alert: "Non engadiu %{group} nesta categoría; prema neste botón para engadilos."
@@ -3713,6 +3714,7 @@ gl:
         save: "Gardar"
         cancel: "Cancelar"
         continue: "Continuar"
+        copy_key: "Copiar"
         revoke: "Revogar"
         revoked: "Revogada"
       api:

@@ -55,10 +55,15 @@ acceptance("Sidebar - Logged on user - Tags section", function (needs) {
     });
 
     ["latest", "top", "new", "unread", "hot"].forEach((type) => {
-      server.get(`/tag/:tagId/l/${type}.json`, () => {
-        return helper.response(
-          cloneJSON(discoveryFixture["/tag/important/l/latest.json"])
+      server.get(`/tag/:tagId/l/${type}.json`, (request) => {
+        const json = cloneJSON(
+          discoveryFixture["/tag/important/l/latest.json"]
         );
+        if (json.topic_list.tags?.[0]) {
+          json.topic_list.tags[0].id = parseInt(request.params.tagId, 10);
+          json.topic_list.tags[0].name = `tag${request.params.tagId}`;
+        }
+        return helper.response(json);
       });
     });
   });

@@ -414,6 +414,10 @@ hu:
       title: "Új és olvasatlan témák"
       pill: "Ajánlott"
       pm_title: "Ajánlott üzenetek"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Hivatkozás másolása"
+        copied_to_clipboard: "Hivatkozás vágólapra másolva!"
     about:
       edit: "Lap szerkesztése"
       simple_title: "Névjegy"
@@ -3397,6 +3401,9 @@ hu:
         notify: "Értesítse a felhasználókat erről a változásról."
         performing: "Tömeges művelet végrehajtása, kis türelmet…"
         completed: "A tömeges műveletek sikeresen befejeződtek!"
+        error_topic_count:
+          one: "%{count} téma"
+          other: "%{count} téma"
       none:
         unread: "Nincsenek olvasatlan témái."
         unseen: "Nincsenek nem látott témái."
@@ -4309,11 +4316,9 @@ hu:
         reply: "Válasz"
         create: "Létrehozás"
         no_groups_selected: "Egyetlen csoport sem kapott hozzáférést; ez a kategória csak a stáb számára lesz látható."
-        everyone_full_access: 'Ez a kategória nyilvános, mindenki láthatja, válaszolhat és hozzászólásokat hozhat létre. A jogosultságok korlátozásához távolítson el egy vagy több, a "mindenki" csoportnak megadott jogosultságot.'
         specific_groups_have_access: "Ez a kategória privát, csak a kiválasztott csoportok tagjai láthatják, válaszolhatnak rá és hozhatnak létre bejegyzéseket."
         toggle_reply: "Válasz engedély bekapcsolása"
         toggle_full: "Készítés engedély bekapcsolása"
-        inherited: 'Ez a jogosultság a "mindenki"-től örökölhető'
       uncategorized_security_warning: "Ez a kategória különleges. Célja, hogy olyan témákat tartson meg, amelyeknek nincs kategóriája; nem rendelkezhet biztonsági beállításokkal."
       uncategorized_general_warning: 'Ez a kategória különleges. Alapértelmezett kategóriaként használatos az új témákhoz, amelyeknél nincs kategória kiválasztva. Ha meg akarja akadályozni ezt a viselkedést, és ki akarja kényszeríteni a kategória kiválasztását, <a href="%{settingLink}">kapcsolja ki a beállítást itt</a>. Ha meg szeretné változtatni a nevet vagy a leírást, menjen a <a href="%{customizeLink}">Testreszabás / Szövegtartalom</a> menüpontba.'
       pending_permission_change_alert: "Még nem adta hozzá a %{group} címet ehhez a kategóriához; katt ide a hozzáadáshoz."
@@ -5966,7 +5971,7 @@ hu:
         new_features:
           title: "Újdonságok?"
           subtitle: "Folyamatosan új funkciókat és fejlesztéseket adunk ki. Ez az oldal a legfontosabbakat tartalmazza, de a 'Tudjon meg többet' gombra kattintva részletes kiadási jegyzeteket is megtekinthet."
-          no_new_features_found: "Hiba történt a hírfolyam betöltésekor. A korábbi új funkciókkal kapcsolatos bejelentéseket a <a href='%{url}' target='_blank'>Discourse Meta közösség</a>oldalán tekintheti meg."
+          no_new_features_error: "Hiba történt a hírfolyam betöltésekor. A korábbi új funkciókkal kapcsolatos bejelentéseket a <a href='%{url}' target='_blank'>Discourse Meta közösség</a>oldalán tekintheti meg."
           learn_more: "Tudjon meg többet..."
           experimental: "Kísérleti"
           only_experiments: "Csak kísérleti funkciók megjelenítése"
@@ -6169,6 +6174,7 @@ hu:
         save: "Mentés"
         cancel: "Mégse"
         continue: "Folytatás"
+        copy_key: "Másolás"
         back: "Vissza az API-kulcsokhoz"
         revoke: "Visszavonás"
         undo_revoke: "Visszavonás visszavonása"

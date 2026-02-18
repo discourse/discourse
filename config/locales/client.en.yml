@@ -3682,9 +3682,18 @@ en:
         notify: "Notify users of this change."
         performing: "Performing bulk operations, please wait…"
         completed: "Bulk operations completed successfully!"
+        completed_count:
+          one: "<b>%{count}</b> topic was updated."
+          other: "<b>%{count}</b> topics were updated."
         not_completed:
-          one: "Bulk operation could not be completed for <strong>%{count}</strong> topic"
-          other: "Bulk operation could not be completed for <strong>%{count}</strong> topics"
+          one: "<b>%{count}</b> topic could not be updated:"
+          other: "<b>%{count}</b> topics could not be updated:"
+        skipped_count:
+          one: "<b>%{count}</b> topic was already up to date."
+          other: "<b>%{count}</b> topics were already up to date."
+        error_topic_count:
+          one: "%{count} topic"
+          other: "%{count} topics"
 
       none:
         unread: "You have no unread topics."
@@ -5829,6 +5838,8 @@ en:
       toggle_localized:
         translated: "Page is machine-translated. Click to view original."
         not_translated: "Page is not translated. Click to translate."
+        translations_enabled: "Translations enabled"
+        translations_disabled: "Translations disabled"
     language_switcher:
       title: "Change site language"
 
@@ -6404,7 +6415,8 @@ en:
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
-          no_new_features_found: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
+          no_new_features_found: "There are no items in the feed or your selected filter returned no results. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
+          no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
           learn_more: "Learn more..."
           experimental: "Experimental"
           only_experiments: "Only show experimental features"
@@ -6611,6 +6623,8 @@ en:
         save: "Save"
         cancel: "Cancel"
         continue: "Continue"
+        copy_key: "Copy"
+        key_copied_to_clipboard: "API key copied to clipboard"
         back: "Back to API keys"
         revoke: "Revoke"
         undo_revoke: "Undo revoke"

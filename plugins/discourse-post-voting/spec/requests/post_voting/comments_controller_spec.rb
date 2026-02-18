@@ -361,4 +361,23 @@ RSpec.describe PostVoting::CommentsController do
       ).to eq(true)
     end
   end
+
+  describe "#flag" do
+    fab!(:flagger) { Fabricate(:user, group_ids: [Group::AUTO_GROUPS[:trust_level_1]]) }
+
+    before { sign_in(flagger) }
+
+    it "should return 403 when trying to flag a comment on a post the user cannot see" do
+      category.set_permissions(group => :full)
+      category.save!
+
+      put "/post_voting/comments/flag.json",
+          params: {
+            comment_id: comment.id,
+            flag_type_id: ReviewableScore.types[:off_topic],
+          }
+
+      expect(response.status).to eq(403)
+    end
+  end
 end

@@ -22,9 +22,11 @@ describe "AdPlugin::AdImpression", type: :system do
     it "records the impression appropriately" do
       visit "/latest"
 
-      impression = AdPlugin::AdImpression.last
-
-      expect(impression.house_ad).to eq(house_ad)
+      try_until_success do
+        impression = AdPlugin::AdImpression.last
+        expect(impression).to_not be_nil
+        expect(impression.house_ad).to eq(house_ad)
+      end
     end
   end
 
@@ -50,11 +52,12 @@ describe "AdPlugin::AdImpression", type: :system do
     it "does not record impression before scrolling into view" do
       visit "/latest"
 
+      expect(page).to have_css("#site-logo")
       expect(AdPlugin::AdImpression.count).to eq(0)
 
       page.execute_script("window.scrollTo(0, document.body.scrollHeight);")
 
-      wait_for { AdPlugin::AdImpression.count == 1 }
+      try_until_success { expect(AdPlugin::AdImpression.count).to eq(1) }
 
       impression = AdPlugin::AdImpression.last
       expect(impression.house_ad).to eq(house_ad)

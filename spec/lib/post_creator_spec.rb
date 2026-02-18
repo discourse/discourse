@@ -268,19 +268,19 @@ RSpec.describe PostCreator do
         p = nil
         messages = MessageBus.track_publish { p = creator.create }
 
-        expect(messages.find { _1.channel == "/latest" }).not_to eq(nil)
-        expect(messages.find { _1.channel == "/new" }).not_to eq(nil)
-        expect(messages.find { _1.channel == "/unread/#{p.user_id}" }).not_to eq(nil)
-        expect(messages.find { _1.channel == "/user-drafts/#{p.user_id}" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/latest" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/new" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/unread/#{p.user_id}" }).not_to eq(nil)
+        expect(messages.find { it.channel == "/user-drafts/#{p.user_id}" }).not_to eq(nil)
 
-        user_action = messages.find { _1.channel == "/u/#{p.user.username}" }
+        user_action = messages.find { it.channel == "/u/#{p.user.username}" }
         expect(user_action).to eq(nil)
 
         topics_stats =
           messages.find { |m| m.channel == "/topic/#{p.topic.id}" && m.data[:type] == :stats }
         expect(topics_stats).to eq(nil)
 
-        expect(messages.filter { _1.channel != "/distributed_hash" }.size).to eq(6)
+        expect(messages.filter { it.channel != "/distributed_hash" }.size).to eq(6)
       end
 
       it "extracts links from the post" do
@@ -1007,7 +1007,7 @@ RSpec.describe PostCreator do
       end
 
       it "fails if the user recently posted in this topic" do
-        TopicUser.create!(user: user, topic: topic, last_posted_at: 10.minutes.ago)
+        Fabricate(:post, topic: topic, user: user, created_at: 10.minutes.ago)
 
         post = creator.create
 
@@ -1017,7 +1017,7 @@ RSpec.describe PostCreator do
       end
 
       it "creates the topic if the user last post is older than the slow mode interval" do
-        TopicUser.create!(user: user, topic: topic, last_posted_at: 5.days.ago)
+        Fabricate(:post, topic: topic, user: user, created_at: 5.days.ago)
 
         post = creator.create
 
@@ -1028,7 +1028,7 @@ RSpec.describe PostCreator do
       it "creates the topic if the user is a staff member" do
         post_creator =
           PostCreator.new(admin, raw: "test reply", topic_id: topic.id, reply_to_post_number: 4)
-        TopicUser.create!(user: admin, topic: topic, last_posted_at: 10.minutes.ago)
+        Fabricate(:post, topic: topic, user: admin, created_at: 10.minutes.ago)
 
         post = post_creator.create
 

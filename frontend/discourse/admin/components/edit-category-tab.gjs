@@ -23,9 +23,9 @@ export default class EditCategoryTab extends Component {
     return "edit-category-" + this.tab;
   }
 
-  @computed("tab")
+  @computed("tab", "tabTitle")
   get title() {
-    return i18n(`category.${underscore(this.tab)}`);
+    return this.tabTitle ?? i18n(`category.${underscore(this.tab)}`);
   }
 
   didInsertElement() {
@@ -39,10 +39,7 @@ export default class EditCategoryTab extends Component {
 
   @computed("params.slug", "params.parentSlug")
   get fullSlug() {
-    const slugPart =
-      this.params?.parentSlug && this.params?.slug
-        ? `${this.params?.parentSlug}/${this.params?.slug}`
-        : this.params?.slug;
+    const slugPart = this.params?.parentSlug && this.params?.slug ? `${this.params?.parentSlug}/${this.params?.slug}` : this.params?.slug;
     return getURL(`/c/${slugPart}/edit/${this.tab}`);
   }
 

@@ -77,17 +77,14 @@ export default class ComposerActionTitle extends Component {
     }
   }
 
-  get showPostLanguageSelector() {
+  @discourseComputed("action")
+  showPostLanguageSelector(action) {
     const allowedActions = [CREATE_TOPIC, EDIT, REPLY];
-    if (
+    return (
       this.currentUser &&
       this.siteSettings.content_localization_enabled &&
-      allowedActions.includes(this.model.action)
-    ) {
-      return true;
-    }
-
-    return false;
+      allowedActions.includes(action)
+    );
   }
 
   _formatEditUserPost(userAvatar, userLink, postLink, originalUser) {

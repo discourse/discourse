@@ -70,8 +70,6 @@ module Onebox
         }
       end
 
-      private
-
       def load_repo
         load_json("https://api.github.com/repos/#{match[:org]}/#{match[:repo]}")
       end
