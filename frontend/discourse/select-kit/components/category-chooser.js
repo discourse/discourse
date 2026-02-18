@@ -151,7 +151,7 @@ export default class CategoryChooser extends ComboBoxComponent {
     prioritizedCategoryId = null,
   } = {}) {
     const categories = this.fixedCategoryPositionsOnCreate
-      ? Category.list()
+      ? Category.sortCategories(Category.list())
       : Category.listByActivity();
 
     let { readOnlyCategoryId } = this.selectKit.options;
