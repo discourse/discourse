@@ -46,6 +46,14 @@ uk:
           many: "%{formatted_number} повідомлень чату"
           other: "%{formatted_number} повідомлень чату"
     chat:
+      edit_category:
+        tab_title: "Чат"
+        channel: "Канал"
+        description: "Опис"
+        actions: "Дії"
+        settings: "Налаштування"
+        no_channels: "З цією категорією не пов'язано жодного чат-каналу"
+        no_channels_body: "Ви можете мати кілька каналів у кожній категорії, доступних тим самим учасникам, залежно від налаштувань безпеки категорії. <a href='%{chatBrowseUrl}'>Створіть канал чату</a>."
       text_copied: Текст скопійовано в буфер обміну
       link_copied: Посилання скопійовано до буфера обміну
       back_to_forum: "Форум"

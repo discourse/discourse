@@ -44,6 +44,12 @@ es:
           one: "%{formatted_number} mensaje de chat"
           other: "%{formatted_number} mensajes de chat"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Canal"
+        description: "Descripción"
+        actions: "Acciones"
+        settings: "Ajustes"
       text_copied: Texto copiado en el portapapeles
       link_copied: Enlace copiado en el portapapeles
       back_to_forum: "Foro"

@@ -386,32 +386,35 @@ end
 
 desc "Validate indexes"
 task "db:validate_indexes", [:arg] => %w[db:ensure_post_migrations environment] do |_, args|
-  db = TemporaryDb.new
-  db.start
-  db.migrate
+  begin
+    db = TemporaryDb.new
+    db.start
+    db.migrate
 
-  ActiveRecord::Base.establish_connection(
-    adapter: "postgresql",
-    database: "discourse",
-    port: db.pg_port,
-    host: "localhost",
-  )
+    ActiveRecord::Base.establish_connection(
+      adapter: "postgresql",
+      database: "discourse",
+      port: db.pg_port,
+      host: "localhost",
+    )
 
-  expected = DB.query_single <<~SQL
-    SELECT indexdef FROM pg_indexes
-    WHERE schemaname = 'public'
-    ORDER BY indexdef
-  SQL
+    expected = DB.query_single <<~SQL
+      SELECT indexdef FROM pg_indexes
+      WHERE schemaname = 'public'
+      ORDER BY indexdef
+    SQL
 
-  expected_tables = DB.query_single <<~SQL
-    SELECT tablename
-    FROM pg_tables
-    WHERE schemaname = 'public'
-  SQL
+    expected_tables = DB.query_single <<~SQL
+      SELECT tablename
+      FROM pg_tables
+      WHERE schemaname = 'public'
+    SQL
 
-  ActiveRecord::Base.establish_connection
-
-  db.stop
+    ActiveRecord::Base.establish_connection
+  ensure
+    db&.stop
+    db&.remove
+  end
 
   puts
 

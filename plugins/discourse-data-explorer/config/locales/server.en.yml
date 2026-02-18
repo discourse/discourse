@@ -1,6 +1,6 @@
 en:
   site_settings:
-    data_explorer_enabled: "Enable the Data Explorer at /admin/plugins/explorer"
+    data_explorer_enabled: "Enable the Data Explorer at /admin/plugins/discourse-data-explorer"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:
@@ -23,7 +23,7 @@ en:
           Here are the results:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>View query in Data Explorer</a>
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>View query in Data Explorer</a>
 
           Report created at %{created_at} (%{timezone})
       post:
@@ -33,7 +33,7 @@ en:
           Here are the results:
           %{table}
 
-          <a href='%{base_url}/admin/plugins/explorer/queries/%{query_id}'>View query in Data Explorer</a>
+          <a href='%{base_url}/admin/plugins/discourse-data-explorer/queries/%{query_id}'>View query in Data Explorer</a>
 
           Report created at %{created_at} (%{timezone})
       upload_appendix: "Appendix: [%{filename}|attachment](%{short_url})"

@@ -131,6 +131,10 @@ de:
         title: Austausch von Geschenken
         description: Ermöglicht es, Benutzer einer Gruppe anonym zusammenzubringen, um sich gegenseitig ein Geschenk zu schicken.
         doc: Der Austausch von Geschenken erfordert eine bestehende Gruppe mit mindestens 3 Benutzern. Zum gewählten Datum wird jeder Benutzer der Gruppe mit einem Schenkenden und einem Beschenkten gepaart.
+      remove_upload_markup_from_deleted_posts:
+        title: Upload-Verweise in gelöschten Beiträgen entfernen
+        description: Agiert als Systembenutzer und fügt gelöschten Beiträgen eine Revision hinzu, in der die Upload-Verweise entfernt werden. In Verbindung mit dem Job „clean up uploads“ führt dies zur endgültigen Löschung der Uploads in gelöschten Beiträgen. Mit Vorsicht verwenden!
+        edit_reason: Automatisierung hat Upload-Verweise aus gelöschtem Beitrag entfernt
       send_pms:
         title: PN senden
         description: Ermöglicht das Senden von PN (möglicherweise verzögert).

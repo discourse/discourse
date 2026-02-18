@@ -29,6 +29,10 @@ body {
 body.has-sidebar-page.has-full-page-chat #main-outlet-wrapper {
   column-gap: var(--main-grid-gap);
   background-color: var(--background-color);
+
+  @include viewport.until(lg) {
+    background-color: var(--secondary);
+  }
 }
 
 body.has-full-page-chat:not(.has-sidebar-page) {

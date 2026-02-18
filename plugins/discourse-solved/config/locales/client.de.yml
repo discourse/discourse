@@ -49,9 +49,10 @@ de:
         other: "Beiträge verschieben"
       move_post_cancel: "Abbrechen"
       dont_show_again: "Verstanden, zeig mir das nicht nochmal"
-      confirm_category_change_solution: "In der neuen Kategorie sind Lösungen nicht aktiviert. Wenn du die Kategorie änderst, wird die Markierung der Lösung in diesem Thema entfernt."
-      confirm_category_change_solution_confirm: "Kategorie ändern"
-      confirm_category_change_solution_cancel: "Abbrechen"
+      confirm_solved_removal_title: "Die Lösung wird entfernt"
+      confirm_solved_removal: "Durch diese Änderung werden Lösungen für dieses Thema deaktiviert und die akzeptierte Lösung entfernt."
+      confirm_solved_removal_confirm: "Bestätigen"
+      confirm_solved_removal_cancel: "Abbrechen"
       no_answer:
         title: Wurde deine Frage beantwortet?
         description: "Hebe die Antwort hervor und hilf anderen, indem du die Lösungsschaltfläche unter der richtigen Antwort verwendest."

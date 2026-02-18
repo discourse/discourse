@@ -2782,6 +2782,11 @@ lt:
           few: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
           many: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
           other: "Visos žymės bus pašalintos iš <b>%{count}</b> temų. Ar esate tikras?"
+        error_topic_count:
+          one: "%{count} tema"
+          few: "%{count} temos"
+          many: "%{count}temų"
+          other: "%{count}temos"
       none:
         unread: "Jūs neturite neperskaitytų temų."
         unseen: "Jūs neturite nematytų temų."
@@ -4433,6 +4438,7 @@ lt:
         save: "Išsaugoti"
         cancel: "Atšaukti"
         continue: "Tęsti"
+        copy_key: "Kopijuoti"
         revoke: "Pašalinti"
         revoked: "Atšauktas"
       api:

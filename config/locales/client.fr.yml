@@ -3266,6 +3266,9 @@ fr:
           other: "Progression : <strong>%{count}</strong> sujets"
         performing: "Effectue des opérations groupées, merci de patienter…"
         completed: "Les opérations groupées sont terminées !"
+        error_topic_count:
+          one: "%{count} sujet"
+          other: "%{count} sujets"
       none:
         unread: "Vous n'avez aucun sujet non lu."
         unseen: "Vous n'avez aucun sujet non lu."
@@ -5823,6 +5826,7 @@ fr:
         save: "Enregistrer"
         cancel: "Annuler"
         continue: "Continuer"
+        copy_key: "Copie"
         back: "Retour aux clés d'API"
         revoke: "Révoquer"
         undo_revoke: "Annuler la révocation"

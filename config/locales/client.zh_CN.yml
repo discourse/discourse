@@ -3241,8 +3241,14 @@ zh_CN:
         notify: "将此更新通知用户"
         performing: "正在执行批量操作，请稍候…"
         completed: "批量操作成功完成！"
+        completed_count:
+          other: "<b>%{count}</b> 个话题已更新。"
         not_completed:
-          other: "对 <strong>%{count}</strong> 个主题的批量操作无法完成。"
+          other: "<b>%{count}</b> 个话题无法更新："
+        skipped_count:
+          other: "<b>%{count}</b> 个话题已更新完毕。"
+        error_topic_count:
+          other: "%{count} 个话题"
       none:
         unread: "您没有未读话题。"
         unseen: "您没有未读话题。"
@@ -3303,6 +3309,7 @@ zh_CN:
         other: "话题中的 %{count} 个帖子"
       create: "新建话题"
       create_long: "创建新话题"
+      create_group: "新话题和草稿"
       open_draft: "打开草稿"
       private_message: "开始消息"
       archive_message:
@@ -4150,7 +4157,7 @@ zh_CN:
       position_disabled: "类别将按活动顺序显示。要控制列表中类别的顺序，请启用<a href='%{url}'>固定类别位置</a>设置。"
       minimum_required_tags: "话题中所需的最少标签数："
       default_slow_mode: '为此类别中的新话题启用“慢速模式”。'
-      subcategory_of: "子类别……"
+      subcategory_of: "是……的子类别"
       none_subcategory_text: "无"
       subcategory_permissions_warning: "私有类别的子类别不能公开。"
       visibility:
@@ -5167,6 +5174,8 @@ zh_CN:
       toggle_localized:
         translated: "此页面为机器翻译。点击查看原文。"
         not_translated: "此页面未翻译。点击进行翻译。"
+        translations_enabled: "已启用翻译"
+        translations_disabled: "已禁用翻译"
     language_switcher:
       title: "改变站点语言"
   admin_js:
@@ -5720,7 +5729,7 @@ zh_CN:
         new_features:
           title: "最新变化"
           subtitle: "我们一直在发布新功能和改进。本页涵盖了重点内容，但您也可以点击“了解详情”查看详细的版本说明。"
-          no_new_features_found: "加载最新功能列表时出现错误。您可以在<a href='%{url}' target='_blank'>Discourse Meta 社区</a>查看以前的新功能公告。"
+          no_new_features_error: "加载最新功能列表时出现错误。您可以在<a href='%{url}' target='_blank'>Discourse Meta 社区</a>查看以前的新功能公告。"
           learn_more: "了解详情…"
           experimental: "实验性"
           only_experiments: "只显示实验性功能"
@@ -5916,6 +5925,7 @@ zh_CN:
         save: "保存"
         cancel: "取消"
         continue: "继续"
+        copy_key: "复制"
         back: "返回到 API 密钥"
         revoke: "撤销"
         undo_revoke: "取消撤销"

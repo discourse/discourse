@@ -2560,6 +2560,10 @@ ro:
         notify: "Notifică utilizatorii despre această modificare."
         performing: "Se efectuează operațiuni în masă, te rugăm să aștepți…"
         completed: "Operațiunile în masă s-au finalizat cu succes!"
+        error_topic_count:
+          one: "Un subiect"
+          few: "%{count} subiecte"
+          other: "%{count} de subiecte"
       none:
         unread: "Nu sunt subiecte necitite."
         new: "Nu sunt subiecte noi."
@@ -4357,6 +4361,7 @@ ro:
         save: "Salvează"
         cancel: "Anulează"
         continue: "Continuă"
+        copy_key: "Copiază"
         back: "Înapoi la chei API"
         revoke: "Revocă"
         undo_revoke: "Anulează revocare"

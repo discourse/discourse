@@ -1,5 +1,6 @@
 import { fn } from "@ember/helper";
 import { on } from "@ember/modifier";
+import { LinkTo } from "@ember/routing";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import DButton from "discourse/components/d-button";
 import PickFilesButton from "discourse/components/pick-files-button";
@@ -9,7 +10,7 @@ import ageWithTooltip from "discourse/helpers/age-with-tooltip";
 import icon from "discourse/helpers/d-icon";
 import { not } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
-import ShareReport from "../../../components/share-report";
+import ShareReport from "../../../../components/share-report";
 
 export default <template>
   {{#if @controller.disallow}}
@@ -120,13 +121,14 @@ export default <template>
             {{#each @controller.filteredContent as |query|}}
               <tr class="d-admin-row__content query-row">
                 <td class="d-admin-row__overview">
-                  <a
+                  <LinkTo
                     {{on "click" @controller.scrollTop}}
-                    href="/admin/plugins/explorer/queries/{{query.id}}"
+                    @route="adminPlugins.show.explorer.queries.details"
+                    @model={{query.id}}
                   >
                     <b class="query-name">{{query.name}}</b>
                     <span class="query-desc">{{query.description}}</span>
-                  </a>
+                  </LinkTo>
                 </td>
                 <td class="d-admin-row__detail query-created-by">
                   <div class="d-admin-row__mobile-label">

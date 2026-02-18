@@ -253,7 +253,7 @@ export default class QueryResult extends Component {
   _download_url() {
     return this.args.group
       ? `/g/${this.args.group.name}/reports/`
-      : "/admin/plugins/explorer/queries/";
+      : "/admin/plugins/discourse-data-explorer/queries/";
   }
 
   _downloadResult(format) {
