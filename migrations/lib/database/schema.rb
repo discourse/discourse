@@ -147,34 +147,9 @@ module Migrations::Database
       begin
         DSL::Loader.new(path).load!
         registry.freeze!
-
-        if refresh_manifest
-          manifest = plugin_manifest
-          unless manifest.checksums_fresh?
-            begin
-              $stdout.write(I18n.t("schema.detect_plugins.auto_detecting"))
-              manifest.regenerate!
-              if manifest.incomplete?
-                failed_plugins = manifest.failed_plugins.join(", ").presence || "(unknown)"
-                puts I18n.t("schema.detect_plugins.auto_incomplete", failed_plugins:)
-              else
-                puts I18n.t(
-                       "schema.detect_plugins.auto_done",
-                       tables: manifest.table_count,
-                       columns: manifest.column_count,
-                     )
-              end
-            rescue StandardError => e
-              message = I18n.t("schema.detect_plugins.auto_failed", error: e.message)
-              puts message
-              raise ConfigError, message
-            end
-          end
-        end
-
+        refresh_plugin_manifest! if refresh_manifest
         @ready = db_key
       rescue StandardError
-        # Avoid keeping partially loaded DSL state after loader/refresh failures.
         reset!
         raise
       end
@@ -190,6 +165,28 @@ module Migrations::Database
 
     def self.manifest_path
       File.join(Migrations.root_path, "config", "schema", "plugin_manifest.yml")
+    end
+
+    def self.refresh_plugin_manifest!
+      manifest = plugin_manifest
+      return if manifest.checksums_fresh?
+
+      $stdout.write(I18n.t("schema.detect_plugins.auto_detecting"))
+      manifest.regenerate!
+      if manifest.incomplete?
+        failed_plugins = manifest.failed_plugins.join(", ").presence || "(unknown)"
+        puts I18n.t("schema.detect_plugins.auto_incomplete", failed_plugins:)
+      else
+        puts I18n.t(
+               "schema.detect_plugins.auto_done",
+               tables: manifest.table_count,
+               columns: manifest.column_count,
+             )
+      end
+    rescue StandardError => e
+      message = I18n.t("schema.detect_plugins.auto_failed", error: e.message)
+      puts message
+      raise ConfigError, message
     end
 
     def self.available_databases
@@ -208,6 +205,6 @@ module Migrations::Database
     def self.registry
       @registry ||= DSL::Registry.new
     end
-    private_class_method :registry, :manifest_path
+    private_class_method :registry, :manifest_path, :refresh_plugin_manifest!
   end
 end

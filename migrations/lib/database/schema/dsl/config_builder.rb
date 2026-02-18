@@ -63,11 +63,11 @@ module Migrations::Database::Schema::DSL
 
     def build
       missing_fields = []
-      missing_fields << "schema_file" if missing?(@schema_file)
-      missing_fields << "models_directory" if missing?(@models_directory)
-      missing_fields << "models_namespace" if missing?(@models_namespace)
-      missing_fields << "enums_directory" if missing?(@enums_directory)
-      missing_fields << "enums_namespace" if missing?(@enums_namespace)
+      missing_fields << "schema_file" if @schema_file.blank?
+      missing_fields << "models_directory" if @models_directory.blank?
+      missing_fields << "models_namespace" if @models_namespace.blank?
+      missing_fields << "enums_directory" if @enums_directory.blank?
+      missing_fields << "enums_namespace" if @enums_namespace.blank?
 
       if missing_fields.any?
         raise(
@@ -83,12 +83,6 @@ module Migrations::Database::Schema::DSL
         enums_directory: @enums_directory,
         enums_namespace: @enums_namespace,
       )
-    end
-
-    private
-
-    def missing?(value)
-      value.nil? || value.to_s.strip.empty?
     end
   end
 end
