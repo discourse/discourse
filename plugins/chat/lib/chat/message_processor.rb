@@ -70,7 +70,7 @@ module Chat
 
           sha1 = Upload.sha1_from_base62_encoded(img["data-base62-sha1"])
           if upload = Upload.find_by(sha1: sha1)
-            img["data-large-src"] = upload.url
+            img["data-large-src"] = UrlHelper.cook_url(upload.url, secure: upload.secure?)
             img["data-download-href"] = upload.short_path
             img["data-target-width"] = upload.width
             img["data-target-height"] = upload.height
