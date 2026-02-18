@@ -24,8 +24,6 @@ module Migrations::Database::Schema::DSL
       introspector = build_introspector
       current = introspector.compute_all_checksums
 
-      return false unless stored_state["core"] == current["core"]
-
       stored_plugins = stored_state["plugins"] || {}
       current_plugins = current["plugins"] || {}
 

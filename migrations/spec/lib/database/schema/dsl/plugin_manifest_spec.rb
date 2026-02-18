@@ -32,12 +32,12 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
       expect(build_manifest.fresh?).to be true
     end
 
-    it "returns false when core checksum differs" do
+    it "ignores core checksum changes" do
       write_manifest(
         { "plugins" => {}, "migration_state" => { "core" => "stale_checksum", "plugins" => {} } },
       )
 
-      expect(build_manifest.fresh?).to be false
+      expect(build_manifest.checksums_fresh?).to be true
     end
 
     it "returns false when manifest is marked incomplete due failed plugins" do
