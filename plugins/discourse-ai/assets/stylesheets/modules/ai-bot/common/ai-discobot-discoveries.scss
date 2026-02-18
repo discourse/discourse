@@ -226,6 +226,7 @@
 
     .search-results .fps-result {
       margin-bottom: 2.5em;
+
       &:not(.bulk-select-enabled) {
         padding: 0;
       }
@@ -283,11 +284,6 @@ body.has-sidebar-page {
 
     .ai-search-discoveries__discoveries-title {
       padding-top: 1rem;
-    }
-
-    .search-container .search-advanced .search-info,
-    .semantic-search__container.search-results {
-      padding-inline: 10%;
     }
 
     .full-page-discoveries {

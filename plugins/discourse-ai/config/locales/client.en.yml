@@ -972,17 +972,15 @@ en:
           model_name: "Model name"
 
         semantic_search: "Topics (Semantic)"
-        semantic_search_loading: "Searching for more results using AI"
         semantic_search_results:
-          toggle: "Showing %{count} results found using AI"
-          toggle_hidden: "Hiding %{count} results found using AI"
-          none: "Sorry, our AI search found no matching topics"
-          new: "Press 'search' to begin looking for new results with AI"
+          toggle: "AI results"
           unavailable: "AI results unavailable"
           zero_results_expanded: "Zero results found, showing %{count} AI results"
         semantic_search_tooltips:
           results_explanation: "When enabled, additional AI search results will be added below."
           invalid_sort: "Search results must be sorted by Relevance to display AI results"
+          not_submitted: "Submit a search to enable AI results"
+          no_results: "No AI results found for this search"
         semantic_search_unavailable_tooltip: "Search results must be sorted by Relevance to display AI results"
         ai_generated_result: "Search result found using AI"
         quick_search:
