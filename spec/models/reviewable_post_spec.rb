@@ -4,7 +4,6 @@ RSpec.describe ReviewablePost do
   fab!(:admin)
 
   describe "#build_actions" do
-    # TODO (reviewable-refresh): Remove the tests below when the legacy combined actions are removed
     let(:post) { Fabricate.build(:post) }
     let(:reviewable) { ReviewablePost.new(target: post) }
     let(:guardian) { Guardian.new }
@@ -60,7 +59,6 @@ RSpec.describe ReviewablePost do
 
       actions
     end
-    # TODO (reviewable-refresh): Remove the tests above when the legacy combined actions are removed
   end
 
   describe "Performing actions" do
@@ -69,7 +67,6 @@ RSpec.describe ReviewablePost do
 
     before { reviewable.created_new! }
 
-    # TODO (reviewable-refresh): Remove the tests below when the legacy combined actions are removed
     describe "#perform_approve" do
       it "transitions to the approved state" do
         result = reviewable.perform admin, :approve
@@ -127,6 +124,5 @@ RSpec.describe ReviewablePost do
         expect(Post.where(id: post.id).exists?).to eq(false)
       end
     end
-    # TODO (reviewable-refresh): Remove the tests above when the legacy combined actions are removed
   end
 end

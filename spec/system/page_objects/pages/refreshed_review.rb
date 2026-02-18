@@ -101,10 +101,6 @@ module PageObjects
         find(".user-scrub").click
       end
 
-      def click_approve_user_button
-        find(".user-approve-user").click
-      end
-
       def fill_post_content(content)
         find(".d-editor-input").fill_in(with: content)
       end
