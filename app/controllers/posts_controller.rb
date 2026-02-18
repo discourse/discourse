@@ -1050,7 +1050,14 @@ class PostsController < ApplicationController
   end
 
   def display_post(post)
-    post.revert_to(params[:version].to_i) if params[:version].present?
+    if params[:version].present?
+      version = params[:version].to_i
+      post_revision = PostRevision.find_by(post_id: post.id, number: version + 1)
+      if post_revision
+        guardian.ensure_can_see!(post_revision)
+        post.revert_to(version)
+      end
+    end
     render_post_json(post)
   end
 
