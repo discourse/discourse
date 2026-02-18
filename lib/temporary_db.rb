@@ -49,10 +49,7 @@ class TemporaryDb
   end
 
   def find_free_port(range)
-    ports = range.to_a
-    start = SecureRandom.random_number(ports.length)
-
-    ports.rotate(start).each { |port| return port if port_available?(port) }
+    range.each { |port| return port if port_available?(port) }
   end
 
   def pg_port
