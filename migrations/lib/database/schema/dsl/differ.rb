@@ -99,26 +99,22 @@ module Migrations::Database::Schema::DSL
     end
 
     def diff_table(table_def, source_table)
-      db_column_names = @db.columns(source_table).map(&:name).to_set
-      configured_columns = effective_column_names(table_def, db_column_names)
+      @table_def = table_def
+      @db_column_names = @db.columns(source_table).map(&:name).to_set
+      @source_table = source_table
 
-      auto_ignored = find_auto_ignored_columns(table_def)
-      unconfigured =
-        find_unconfigured_columns(
-          table_def,
-          source_table,
-          db_column_names,
-          configured_columns,
-          auto_ignored,
-        )
-      missing = find_missing_columns(table_def, db_column_names)
-      stale = find_stale_ignored_columns(table_def, db_column_names)
+      configured_columns = effective_column_names
+
+      auto_ignored = find_auto_ignored_columns
+      unconfigured = find_unconfigured_columns(configured_columns, auto_ignored)
+      missing = find_missing_columns
+      stale = find_stale_ignored_columns
 
       has_changes = unconfigured.any? || missing.any? || stale.any? || auto_ignored.any?
       return nil unless has_changes
 
       TableDiff.new(
-        table_name: table_def.name.to_s,
+        table_name: @table_def.name.to_s,
         unconfigured_columns: unconfigured,
         missing_columns: missing,
         stale_ignored_columns: stale,
@@ -126,52 +122,46 @@ module Migrations::Database::Schema::DSL
       )
     end
 
-    def find_unconfigured_columns(
-      table_def,
-      source_table,
-      db_column_names,
-      configured_columns,
-      auto_ignored
-    )
-      ignored = table_def.ignored_column_names.map(&:to_s).to_set
+    def find_unconfigured_columns(configured_columns, auto_ignored)
+      ignored = @table_def.ignored_column_names.map(&:to_s).to_set
       globally_ignored = globally_ignored_columns
       auto_ignored_names = auto_ignored.map(&:name).to_set
 
       unconfigured =
-        db_column_names - configured_columns - ignored - globally_ignored - auto_ignored_names
+        @db_column_names - configured_columns - ignored - globally_ignored - auto_ignored_names
       unconfigured.sort.map do |name|
-        ColumnInfo.new(name:, plugin: plugin_for_column(source_table, name))
+        ColumnInfo.new(name:, plugin: plugin_for_column(@source_table, name))
       end
     end
 
-    def find_missing_columns(table_def, db_column_names)
-      return [] unless table_def.included_column_names
+    def find_missing_columns
+      return [] unless @table_def.included_column_names
 
-      missing = table_def.included_column_names.map(&:to_s).to_set - db_column_names
+      missing = @table_def.included_column_names.map(&:to_s).to_set - @db_column_names
       missing.sort.map { |name| ColumnInfo.new(name:, plugin: nil) }
     end
 
-    def find_stale_ignored_columns(table_def, db_column_names)
+    def find_stale_ignored_columns
       stale = []
-      table_def.ignored_columns_map.each_key do |col_name|
-        if db_column_names.exclude?(col_name.to_s)
+      @table_def.ignored_columns_map.each_key do |col_name|
+        if @db_column_names.exclude?(col_name.to_s)
           stale << ColumnInfo.new(name: col_name.to_s, plugin: nil)
         end
       end
       stale.sort_by(&:name)
     end
 
-    def effective_column_names(table_def, db_column_names)
-      forced = table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
+    def effective_column_names
+      forced = @table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
 
-      if table_def.included_column_names
-        names = table_def.included_column_names.map(&:to_s).to_set
+      if @table_def.included_column_names
+        names = @table_def.included_column_names.map(&:to_s).to_set
       else
-        ignored = table_def.ignored_column_names.map(&:to_s).to_set
-        names = db_column_names - ignored - (globally_ignored_columns - forced)
+        ignored = @table_def.ignored_column_names.map(&:to_s).to_set
+        names = @db_column_names - ignored - (globally_ignored_columns - forced)
       end
 
-      added = table_def.added_columns.map { |c| c.name.to_s }
+      added = @table_def.added_columns.map { |c| c.name.to_s }
       names + added.to_set
     end
 
@@ -200,8 +190,8 @@ module Migrations::Database::Schema::DSL
       names
     end
 
-    def find_auto_ignored_columns(table_def)
-      source_table = table_def.source_table_name.to_s
+    def find_auto_ignored_columns
+      source_table = @table_def.source_table_name.to_s
       ignored = @schema.ignored_tables
       return [] unless ignored
 
@@ -217,8 +207,8 @@ module Migrations::Database::Schema::DSL
       end
 
       # ignore_plugin_columns! additionally ignores columns from non-ignored plugins
-      if table_def.ignore_plugin_columns?
-        plugin_filter = table_def.ignore_plugin_names&.map(&:to_s)&.to_set
+      if @table_def.ignore_plugin_columns?
+        plugin_filter = @table_def.ignore_plugin_names&.map(&:to_s)&.to_set
 
         manifest.all_plugin_names.each do |plugin_name|
           next if ignored.plugin_ignored?(plugin_name)

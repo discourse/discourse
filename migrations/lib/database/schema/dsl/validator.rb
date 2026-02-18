@@ -57,166 +57,168 @@ module Migrations::Database::Schema::DSL
     end
 
     def validate_table(table_def)
-      validate_ignored_plugin_source(table_def)
+      @table_def = table_def
 
-      if table_def.source_table_name
-        source_table = table_def.source_table_name.to_s
+      validate_ignored_plugin_source
+
+      if @table_def.source_table_name
+        source_table = @table_def.source_table_name.to_s
 
         if @db_table_names.exclude?(source_table)
-          @errors << "Table '#{table_def.name}': source table '#{source_table}' does not exist in database"
+          @errors << "Table '#{@table_def.name}': source table '#{source_table}' does not exist in database"
           return
         end
 
-        db_column_names = @db.columns(source_table).map(&:name).to_set
-        db_primary_keys = @db.primary_keys(source_table).map(&:to_s)
+        @db_column_names = @db.columns(source_table).map(&:name).to_set
+        @db_primary_keys = @db.primary_keys(source_table).map(&:to_s)
       else
-        db_column_names = Set.new
-        db_primary_keys = []
+        @db_column_names = Set.new
+        @db_primary_keys = []
       end
 
-      validate_included_columns(table_def, db_column_names)
-      validate_include_overrides(table_def)
-      validate_column_options(table_def, db_column_names)
-      validate_added_columns(table_def, db_column_names)
-      validate_ignored_columns(table_def, db_column_names)
-      validate_unconfigured_columns(table_def, db_column_names)
-      validate_primary_key_columns(table_def, db_column_names, db_primary_keys)
-      validate_index_columns(table_def, db_column_names)
-      validate_enum_references(table_def)
+      validate_included_columns
+      validate_include_overrides
+      validate_column_options
+      validate_added_columns
+      validate_ignored_columns
+      validate_unconfigured_columns
+      validate_primary_key_columns
+      validate_index_columns
+      validate_enum_references
     end
 
-    def validate_included_columns(table_def, db_column_names)
-      return unless table_def.included_column_names
+    def validate_included_columns
+      return unless @table_def.included_column_names
 
-      missing = table_def.included_column_names.map(&:to_s).to_set - db_column_names
+      missing = @table_def.included_column_names.map(&:to_s).to_set - @db_column_names
       if missing.any?
-        @errors << "Table '#{table_def.name}': included columns do not exist in database: #{sort_and_join(missing)}"
+        @errors << "Table '#{@table_def.name}': included columns do not exist in database: #{sort_and_join(missing)}"
       end
     end
 
-    def validate_include_overrides(table_def)
-      return unless table_def.included_column_names
+    def validate_include_overrides
+      return unless @table_def.included_column_names
 
-      forced = table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
+      forced = @table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
       globally_ignored = globally_ignored_columns
-      auto_ignored = auto_ignored_column_names(table_def)
+      auto_ignored = auto_ignored_column_names
 
-      table_def.included_column_names.each do |col_name|
+      @table_def.included_column_names.each do |col_name|
         col_str = col_name.to_s
         next if forced.include?(col_str)
 
         if globally_ignored.include?(col_str)
-          @errors << "Table '#{table_def.name}': included column '#{col_name}' is globally ignored — use `include!` to override"
+          @errors << "Table '#{@table_def.name}': included column '#{col_name}' is globally ignored — use `include!` to override"
         elsif auto_ignored.include?(col_str)
-          @errors << "Table '#{table_def.name}': included column '#{col_name}' is auto-ignored by a plugin — use `include!` to override"
+          @errors << "Table '#{@table_def.name}': included column '#{col_name}' is auto-ignored by a plugin — use `include!` to override"
         end
       end
     end
 
-    def validate_column_options(table_def, db_column_names)
-      configured_columns = effective_column_names(table_def, db_column_names)
+    def validate_column_options
+      configured_columns = effective_column_names
 
-      table_def.column_options.each_key do |col_name|
-        if db_column_names.exclude?(col_name.to_s)
-          @errors << "Table '#{table_def.name}': column option for '#{col_name}' " \
+      @table_def.column_options.each_key do |col_name|
+        if @db_column_names.exclude?(col_name.to_s)
+          @errors << "Table '#{@table_def.name}': column option for '#{col_name}' " \
             "references a column that does not exist in database"
         elsif configured_columns.exclude?(col_name.to_s)
-          @errors << "Table '#{table_def.name}': column option for '#{col_name}' " \
+          @errors << "Table '#{@table_def.name}': column option for '#{col_name}' " \
             "references an excluded column"
         end
       end
     end
 
-    def validate_added_columns(table_def, db_column_names)
-      table_def.added_columns.each do |added_col|
-        if db_column_names.include?(added_col.name.to_s)
-          @errors << "Table '#{table_def.name}': added column '#{added_col.name}' already exists in database"
+    def validate_added_columns
+      @table_def.added_columns.each do |added_col|
+        if @db_column_names.include?(added_col.name.to_s)
+          @errors << "Table '#{@table_def.name}': added column '#{added_col.name}' already exists in database"
         end
 
         if added_col.enum && !@schema.enums.key?(added_col.enum)
-          @errors << "Table '#{table_def.name}': added column '#{added_col.name}' references unknown enum '#{added_col.enum}'"
+          @errors << "Table '#{@table_def.name}': added column '#{added_col.name}' references unknown enum '#{added_col.enum}'"
         end
       end
     end
 
-    def validate_ignored_columns(table_def, db_column_names)
-      table_def.ignored_columns_map.each_key do |col_name|
-        if db_column_names.exclude?(col_name.to_s)
-          @errors << "Table '#{table_def.name}': ignored column '#{col_name}' does not exist in database (stale ignore)"
+    def validate_ignored_columns
+      @table_def.ignored_columns_map.each_key do |col_name|
+        if @db_column_names.exclude?(col_name.to_s)
+          @errors << "Table '#{@table_def.name}': ignored column '#{col_name}' does not exist in database (stale ignore)"
         end
       end
     end
 
-    def validate_index_columns(table_def, db_column_names)
-      configured_columns = effective_column_names(table_def, db_column_names)
+    def validate_index_columns
+      configured_columns = effective_column_names
 
       seen_names = {}
-      table_def.indexes.each do |idx|
+      @table_def.indexes.each do |idx|
         missing = idx.column_names.map(&:to_s).to_set - configured_columns
         if missing.any?
           index_message =
-            "Table '#{table_def.name}': index '#{idx.name}' " \
+            "Table '#{@table_def.name}': index '#{idx.name}' " \
               "references columns not in configuration: #{sort_and_join(missing)}"
           @errors << index_message
         end
 
         name = idx.name.to_s
         if seen_names.key?(name)
-          @errors << "Table '#{table_def.name}': duplicate index name '#{name}'"
+          @errors << "Table '#{@table_def.name}': duplicate index name '#{name}'"
         else
           seen_names[name] = true
         end
       end
     end
 
-    def validate_unconfigured_columns(table_def, db_column_names)
-      return unless table_def.source_table_name
+    def validate_unconfigured_columns
+      return unless @table_def.source_table_name
 
-      configured_columns = effective_column_names(table_def, db_column_names)
-      ignored_columns = table_def.ignored_column_names.map(&:to_s).to_set
+      configured_columns = effective_column_names
+      ignored_columns = @table_def.ignored_column_names.map(&:to_s).to_set
       unconfigured =
-        db_column_names - configured_columns - ignored_columns - globally_ignored_columns -
-          auto_ignored_column_names(table_def)
+        @db_column_names - configured_columns - ignored_columns - globally_ignored_columns -
+          auto_ignored_column_names
 
       if unconfigured.any?
-        @errors << "Table '#{table_def.name}': database columns are not configured or ignored: #{sort_and_join(unconfigured)}"
+        @errors << "Table '#{@table_def.name}': database columns are not configured or ignored: #{sort_and_join(unconfigured)}"
       end
     end
 
-    def validate_primary_key_columns(table_def, db_column_names, db_primary_keys)
-      configured_primary_keys = table_def.primary_key_columns&.map(&:to_s) || db_primary_keys
+    def validate_primary_key_columns
+      configured_primary_keys = @table_def.primary_key_columns&.map(&:to_s) || @db_primary_keys
       return if configured_primary_keys.empty?
 
-      if table_def.source_table_name
-        added_names = table_def.added_columns.map { |c| c.name.to_s }.to_set
-        missing_in_db = configured_primary_keys.to_set - db_column_names - added_names
+      if @table_def.source_table_name
+        added_names = @table_def.added_columns.map { |c| c.name.to_s }.to_set
+        missing_in_db = configured_primary_keys.to_set - @db_column_names - added_names
         if missing_in_db.any?
           pk_message =
-            "Table '#{table_def.name}': primary key references columns " \
+            "Table '#{@table_def.name}': primary key references columns " \
               "that do not exist in database: #{sort_and_join(missing_in_db)}"
           @errors << pk_message
         end
       end
 
-      configured_columns = effective_column_names(table_def, db_column_names)
+      configured_columns = effective_column_names
       missing_in_config = configured_primary_keys.to_set - configured_columns
       if missing_in_config.any?
-        @errors << "Table '#{table_def.name}': primary key columns are not configured: #{sort_and_join(missing_in_config)}"
+        @errors << "Table '#{@table_def.name}': primary key columns are not configured: #{sort_and_join(missing_in_config)}"
       end
     end
 
-    def validate_enum_references(table_def)
-      table_def.column_options.each do |col_name, options|
+    def validate_enum_references
+      @table_def.column_options.each do |col_name, options|
         next unless options.type
         next if known_type_override?(options.type)
         next if @schema.enums.key?(options.type)
 
-        @errors << "Table '#{table_def.name}': column '#{col_name}' type '#{options.type}' references unknown enum"
+        @errors << "Table '#{@table_def.name}': column '#{col_name}' type '#{options.type}' references unknown enum"
       end
     end
 
-    def validate_ignored_plugin_source(table_def)
-      return unless table_def.source_table_name
+    def validate_ignored_plugin_source
+      return unless @table_def.source_table_name
 
       manifest = @schema.plugin_manifest
       return unless manifest.available?
@@ -224,11 +226,11 @@ module Migrations::Database::Schema::DSL
       ignored = @schema.ignored_tables
       return unless ignored
 
-      plugin = manifest.plugin_for_table(table_def.source_table_name.to_s)
+      plugin = manifest.plugin_for_table(@table_def.source_table_name.to_s)
       return unless plugin
 
       if ignored.plugin_ignored?(plugin)
-        @errors << "Table '#{table_def.name}': source table '#{table_def.source_table_name}' belongs to ignored plugin '#{plugin}'"
+        @errors << "Table '#{@table_def.name}': source table '#{@table_def.source_table_name}' belongs to ignored plugin '#{plugin}'"
       end
     end
 
@@ -249,18 +251,18 @@ module Migrations::Database::Schema::DSL
       end
     end
 
-    def effective_column_names(table_def, db_column_names)
-      forced = table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
+    def effective_column_names
+      forced = @table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
 
-      if table_def.included_column_names
-        names = table_def.included_column_names.map(&:to_s).to_set
+      if @table_def.included_column_names
+        names = @table_def.included_column_names.map(&:to_s).to_set
       else
-        ignored = table_def.ignored_column_names.map(&:to_s).to_set
+        ignored = @table_def.ignored_column_names.map(&:to_s).to_set
         globally_ignored = globally_ignored_columns
-        names = db_column_names - ignored - (globally_ignored - forced)
+        names = @db_column_names - ignored - (globally_ignored - forced)
       end
 
-      added = table_def.added_columns.map { |c| c.name.to_s }
+      added = @table_def.added_columns.map { |c| c.name.to_s }
       names + added.to_set
     end
 
@@ -286,8 +288,8 @@ module Migrations::Database::Schema::DSL
       names
     end
 
-    def auto_ignored_column_names(table_def)
-      return Set.new unless table_def.source_table_name
+    def auto_ignored_column_names
+      return Set.new unless @table_def.source_table_name
 
       ignored = @schema.ignored_tables
       return Set.new unless ignored
@@ -295,7 +297,7 @@ module Migrations::Database::Schema::DSL
       manifest = @schema.plugin_manifest
       return Set.new unless manifest.available?
 
-      table_name = table_def.source_table_name.to_s
+      table_name = @table_def.source_table_name.to_s
       names = Set.new
 
       ignored.ignored_plugin_names.each do |plugin_name|
@@ -304,8 +306,8 @@ module Migrations::Database::Schema::DSL
           .each { |column_name| names << column_name.to_s }
       end
 
-      if table_def.ignore_plugin_columns?
-        plugin_filter = table_def.ignore_plugin_names&.map(&:to_s)&.to_set
+      if @table_def.ignore_plugin_columns?
+        plugin_filter = @table_def.ignore_plugin_names&.map(&:to_s)&.to_set
 
         manifest.all_plugin_names.each do |plugin_name|
           next if ignored.plugin_ignored?(plugin_name.to_sym)
