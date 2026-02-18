@@ -56,7 +56,7 @@ end
 #
 # Indexes
 #
-#  index_ai_tool_secret_bindings_on_ai_secret_id            (ai_secret_id)
-#  index_ai_tool_secret_bindings_on_ai_tool_id              (ai_tool_id)
-#  index_ai_tool_secret_bindings_on_ai_tool_id_and_alias    (ai_tool_id,alias) UNIQUE
+#  index_ai_tool_secret_bindings_on_ai_secret_id          (ai_secret_id)
+#  index_ai_tool_secret_bindings_on_ai_tool_id            (ai_tool_id)
+#  index_ai_tool_secret_bindings_on_ai_tool_id_and_alias  (ai_tool_id,alias) UNIQUE
 #
