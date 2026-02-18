@@ -274,10 +274,10 @@ module Migrations::CLI
     def display_diff(result, verbose: false)
       has_changes = false
 
-      if result.unknown_tables.any?
+      if result.unconfigured_tables.any?
         has_changes = true
-        puts I18n.t("schema.diff.unknown_tables")
-        result.unknown_tables.each do |t|
+        puts I18n.t("schema.diff.unconfigured_tables")
+        result.unconfigured_tables.each do |t|
           plugin_info = t.plugin ? " [#{t.plugin}]" : ""
           puts "  + #{t.name}#{plugin_info}"
         end
@@ -306,7 +306,7 @@ module Migrations::CLI
         table_diffs.each do |table_diff|
           puts "  #{table_diff.table_name}:"
 
-          table_diff.unknown_columns.each do |c|
+          table_diff.unconfigured_columns.each do |c|
             plugin_info = c.plugin ? " [#{c.plugin}]" : ""
             puts "    + #{c.name}#{plugin_info}"
           end
@@ -339,7 +339,7 @@ module Migrations::CLI
       return table_diffs if verbose
 
       table_diffs.select do |td|
-        td.unknown_columns.any? || td.missing_columns.any? || td.stale_ignored_columns.any?
+        td.unconfigured_columns.any? || td.missing_columns.any? || td.stale_ignored_columns.any?
       end
     end
   end

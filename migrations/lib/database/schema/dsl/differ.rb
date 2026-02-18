@@ -6,12 +6,13 @@ module Migrations::Database::Schema::DSL
   TableDiff =
     Data.define(
       :table_name,
-      :unknown_columns,
+      :unconfigured_columns,
       :missing_columns,
       :stale_ignored_columns,
       :auto_ignored_columns,
     )
-  DiffResult = Data.define(:unknown_tables, :missing_tables, :stale_ignored_tables, :table_diffs)
+  DiffResult =
+    Data.define(:unconfigured_tables, :missing_tables, :stale_ignored_tables, :table_diffs)
 
   class Differ
     def initialize(schema_module)
@@ -23,13 +24,13 @@ module Migrations::Database::Schema::DSL
         @db = connection
         @db_table_names = @db.tables.to_set
 
-        unknown_tables = find_unknown_tables
+        unconfigured_tables = find_unconfigured_tables
         missing_tables = find_missing_tables
         stale_ignored = find_stale_ignored_tables
         table_diffs = find_table_diffs
 
         DiffResult.new(
-          unknown_tables:,
+          unconfigured_tables:,
           missing_tables:,
           stale_ignored_tables: stale_ignored,
           table_diffs:,
@@ -39,7 +40,7 @@ module Migrations::Database::Schema::DSL
 
     private
 
-    def find_unknown_tables
+    def find_unconfigured_tables
       configured =
         @schema
           .tables
@@ -48,8 +49,8 @@ module Migrations::Database::Schema::DSL
           .to_set
       ignored = ignored_table_name_set
 
-      unknown = @db_table_names - configured - ignored
-      unknown.sort.map { |name| TableInfo.new(name:, plugin: plugin_for_table(name)) }
+      unconfigured = @db_table_names - configured - ignored
+      unconfigured.sort.map { |name| TableInfo.new(name:, plugin: plugin_for_table(name)) }
     end
 
     def find_missing_tables
@@ -102,8 +103,8 @@ module Migrations::Database::Schema::DSL
       configured_columns = effective_column_names(table_def, db_column_names)
 
       auto_ignored = find_auto_ignored_columns(table_def)
-      unknown =
-        find_unknown_columns(
+      unconfigured =
+        find_unconfigured_columns(
           table_def,
           source_table,
           db_column_names,
@@ -113,19 +114,19 @@ module Migrations::Database::Schema::DSL
       missing = find_missing_columns(table_def, db_column_names)
       stale = find_stale_ignored_columns(table_def, db_column_names)
 
-      has_changes = unknown.any? || missing.any? || stale.any? || auto_ignored.any?
+      has_changes = unconfigured.any? || missing.any? || stale.any? || auto_ignored.any?
       return nil unless has_changes
 
       TableDiff.new(
         table_name: table_def.name.to_s,
-        unknown_columns: unknown,
+        unconfigured_columns: unconfigured,
         missing_columns: missing,
         stale_ignored_columns: stale,
         auto_ignored_columns: auto_ignored,
       )
     end
 
-    def find_unknown_columns(
+    def find_unconfigured_columns(
       table_def,
       source_table,
       db_column_names,
@@ -136,9 +137,9 @@ module Migrations::Database::Schema::DSL
       globally_ignored = globally_ignored_columns
       auto_ignored_names = auto_ignored.map(&:name).to_set
 
-      unknown =
+      unconfigured =
         db_column_names - configured_columns - ignored - globally_ignored - auto_ignored_names
-      unknown.sort.map do |name|
+      unconfigured.sort.map do |name|
         ColumnInfo.new(name:, plugin: plugin_for_column(source_table, name))
       end
     end

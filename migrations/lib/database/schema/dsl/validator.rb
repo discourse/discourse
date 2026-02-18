@@ -79,7 +79,7 @@ module Migrations::Database::Schema::DSL
       validate_column_options(table_def, db_column_names)
       validate_added_columns(table_def, db_column_names)
       validate_ignored_columns(table_def, db_column_names)
-      validate_unknown_columns(table_def, db_column_names)
+      validate_unconfigured_columns(table_def, db_column_names)
       validate_primary_key_columns(table_def, db_column_names, db_primary_keys)
       validate_index_columns(table_def, db_column_names)
       validate_enum_references(table_def)
@@ -169,17 +169,17 @@ module Migrations::Database::Schema::DSL
       end
     end
 
-    def validate_unknown_columns(table_def, db_column_names)
+    def validate_unconfigured_columns(table_def, db_column_names)
       return unless table_def.source_table_name
 
       configured_columns = effective_column_names(table_def, db_column_names)
       ignored_columns = table_def.ignored_column_names.map(&:to_s).to_set
-      unknown =
+      unconfigured =
         db_column_names - configured_columns - ignored_columns - globally_ignored_columns -
           auto_ignored_column_names(table_def)
 
-      if unknown.any?
-        @errors << "Table '#{table_def.name}': database columns are not configured or ignored: #{sort_and_join(unknown)}"
+      if unconfigured.any?
+        @errors << "Table '#{table_def.name}': database columns are not configured or ignored: #{sort_and_join(unconfigured)}"
       end
     end
 

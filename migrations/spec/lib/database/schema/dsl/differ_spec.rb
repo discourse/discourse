@@ -41,13 +41,13 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
 
       result = described_class.new(Migrations::Database::Schema).diff
 
-      expect(result.unknown_tables).to be_empty
+      expect(result.unconfigured_tables).to be_empty
       expect(result.missing_tables).to be_empty
       expect(result.stale_ignored_tables).to be_empty
       expect(result.table_diffs).to be_empty
     end
 
-    it "detects unknown tables" do
+    it "detects unconfigured tables" do
       stub_plugin_manifest_unavailable
 
       Migrations::Database::Schema.table(:users) { include :id }
@@ -62,7 +62,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
 
       result = described_class.new(Migrations::Database::Schema).diff
 
-      names = result.unknown_tables.map(&:name)
+      names = result.unconfigured_tables.map(&:name)
       expect(names).to contain_exactly("comments", "posts")
     end
 
@@ -78,7 +78,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
 
       result = described_class.new(Migrations::Database::Schema).diff
 
-      expect(result.unknown_tables).to be_empty
+      expect(result.unconfigured_tables).to be_empty
     end
 
     it "excludes ignored tables from unknown" do
@@ -97,7 +97,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
 
       result = described_class.new(Migrations::Database::Schema).diff
 
-      names = result.unknown_tables.map(&:name)
+      names = result.unconfigured_tables.map(&:name)
       expect(names).to contain_exactly("comments")
     end
 
@@ -146,7 +146,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
       expect(names).to contain_exactly("old_table")
     end
 
-    it "detects unknown columns" do
+    it "detects unconfigured columns" do
       stub_plugin_manifest_unavailable
 
       Migrations::Database::Schema.table(:users) { include :id, :username }
@@ -164,11 +164,11 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
       expect(result.table_diffs.size).to eq(1)
       diff = result.table_diffs.first
       expect(diff.table_name).to eq("users")
-      names = diff.unknown_columns.map(&:name)
+      names = diff.unconfigured_columns.map(&:name)
       expect(names).to contain_exactly("created_at", "email")
     end
 
-    it "uses source table name when attributing unknown columns for copied tables" do
+    it "uses source table name when attributing unconfigured columns for copied tables" do
       manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
       allow(manifest).to receive(:available?).and_return(true)
       allow(manifest).to receive(:plugin_for_table).and_return(nil)
@@ -195,8 +195,8 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
       expect(result.table_diffs.size).to eq(1)
       diff = result.table_diffs.first
       expect(diff.table_name).to eq("user_archive")
-      expect(diff.unknown_columns.map(&:name)).to eq(["chat_enabled"])
-      expect(diff.unknown_columns.first.plugin).to eq("chat")
+      expect(diff.unconfigured_columns.map(&:name)).to eq(["chat_enabled"])
+      expect(diff.unconfigured_columns.first.plugin).to eq("chat")
     end
 
     it "detects missing columns" do
@@ -286,7 +286,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
 
       result = described_class.new(Migrations::Database::Schema).diff
 
-      expect(result.unknown_tables).to be_empty
+      expect(result.unconfigured_tables).to be_empty
     end
 
     it "auto-ignores columns from ignored plugins without ignore_plugin_columns!" do
@@ -313,7 +313,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
 
       expect(result.table_diffs.size).to eq(1)
       diff = result.table_diffs.first
-      expect(diff.unknown_columns).to be_empty
+      expect(diff.unconfigured_columns).to be_empty
       expect(diff.auto_ignored_columns.map(&:name)).to contain_exactly("chat_enabled", "chat_sound")
     end
 
@@ -349,7 +349,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
 
       expect(result.table_diffs.size).to eq(1)
       diff = result.table_diffs.first
-      expect(diff.unknown_columns).to be_empty
+      expect(diff.unconfigured_columns).to be_empty
       expect(diff.auto_ignored_columns.map(&:name)).to contain_exactly(
         "chat_enabled",
         "polls_enabled",
@@ -390,7 +390,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
       expect(result.table_diffs.size).to eq(1)
       diff = result.table_diffs.first
       expect(diff.auto_ignored_columns.map(&:name)).to contain_exactly("polls_enabled")
-      expect(diff.unknown_columns.map(&:name)).to contain_exactly("ai_summary")
+      expect(diff.unconfigured_columns.map(&:name)).to contain_exactly("ai_summary")
     end
 
     it "normalizes underscored plugin filters for ignore_plugin_columns!" do
@@ -424,7 +424,7 @@ RSpec.describe Migrations::Database::Schema::DSL::Differ do
       expect(result.table_diffs.size).to eq(1)
       diff = result.table_diffs.first
       expect(diff.auto_ignored_columns.map(&:name)).to contain_exactly("ai_summary")
-      expect(diff.unknown_columns).to be_empty
+      expect(diff.unconfigured_columns).to be_empty
     end
   end
 end
