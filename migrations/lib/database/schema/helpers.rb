@@ -169,6 +169,10 @@ module Migrations::Database::Schema
       name.parameterize.underscore.upcase
     end
 
+    def self.db_label(namespace)
+      namespace.split("::").last
+    end
+
     def self.format_ruby_files(path)
       glob_pattern = File.join(path, "*.rb")
 

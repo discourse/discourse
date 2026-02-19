@@ -94,7 +94,7 @@ module Migrations::Database::Schema
       param_lines = columns.map { |c| param_line_for(c, max_name_length, see_references) }
 
       lines = [
-        "    # Creates a new `#{table_name}` record in the IntermediateDB.",
+        "    # Creates a new `#{table_name}` record in the #{Helpers.db_label(@model_namespace)}.",
         "    #",
         *param_lines,
         "    #",

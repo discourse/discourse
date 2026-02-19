@@ -166,7 +166,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def file_header
-      db_label = @output_config.models_namespace.split("::").last
+      db_label = Migrations::Database::Schema::Helpers.db_label(@output_config.models_namespace)
       @file_header ||= <<~HEADER
           This file is auto-generated from the #{db_label} schema. To make changes,
           update the configuration files in "config/schema/" and then run
