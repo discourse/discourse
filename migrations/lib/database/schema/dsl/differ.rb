@@ -153,33 +153,10 @@ module Migrations::Database::Schema::DSL
     end
 
     def find_auto_ignored_columns
-      source_table = @table_def.source_table_name.to_s
-      ignored = @schema.ignored_tables
-      return [] unless ignored
-
-      manifest = @schema.plugin_manifest
-      return [] unless manifest.available?
-
       auto_ignored = []
-
-      # Always auto-ignore columns from plugins listed in `plugin` declarations
-      ignored.ignored_plugin_names.each do |plugin_name|
-        cols = manifest.columns_for_plugin(plugin_name.to_s, table: source_table)
-        cols.each { |col| auto_ignored << ColumnInfo.new(name: col, plugin: plugin_name.to_s) }
+      @scope.each_plugin_ignored_column(@table_def) do |col, plugin|
+        auto_ignored << ColumnInfo.new(name: col, plugin:)
       end
-
-      # ignore_plugin_columns! additionally ignores columns from non-ignored plugins
-      if @table_def.ignore_plugin_columns?
-        plugin_filter = @table_def.ignore_plugin_names&.map(&:to_s)&.to_set
-
-        manifest.all_plugin_names.each do |plugin_name|
-          next if ignored.plugin_ignored?(plugin_name)
-          next if plugin_filter && plugin_filter.exclude?(plugin_name.to_s)
-          cols = manifest.columns_for_plugin(plugin_name, table: source_table)
-          cols.each { |col| auto_ignored << ColumnInfo.new(name: col, plugin: plugin_name) }
-        end
-      end
-
       auto_ignored.uniq(&:name).sort_by(&:name)
     end
 

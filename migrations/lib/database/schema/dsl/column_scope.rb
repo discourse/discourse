@@ -44,5 +44,35 @@ module Migrations::Database::Schema::DSL
       added = table_def.added_columns.map { |c| c.name.to_s }
       names + added.to_set
     end
+
+    def each_plugin_ignored_column(table_def)
+      return unless table_def.source_table_name
+
+      ignored = @schema.ignored_tables
+      return unless ignored
+
+      manifest = @schema.plugin_manifest
+      return unless manifest.available?
+
+      table_name = table_def.source_table_name.to_s
+
+      ignored.ignored_plugin_names.each do |plugin_name|
+        manifest
+          .columns_for_plugin(plugin_name.to_s, table: table_name)
+          .each { |col| yield col, plugin_name.to_s }
+      end
+
+      return unless table_def.ignore_plugin_columns?
+
+      plugin_filter = table_def.ignore_plugin_names&.map(&:to_s)&.to_set
+
+      manifest.all_plugin_names.each do |plugin_name|
+        next if ignored.plugin_ignored?(plugin_name)
+        next if plugin_filter && plugin_filter.exclude?(plugin_name.to_s)
+        manifest
+          .columns_for_plugin(plugin_name, table: table_name)
+          .each { |col| yield col, plugin_name.to_s }
+      end
+    end
   end
 end
