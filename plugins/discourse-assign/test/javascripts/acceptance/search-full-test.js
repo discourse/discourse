@@ -1,4 +1,4 @@
-import { fillIn, visit } from "@ember/test-helpers";
+import { click, fillIn, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 import selectKit from "discourse/tests/helpers/select-kit-helper";
@@ -26,6 +26,7 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
     );
 
     await visit("/search");
+    await click(".advanced-filters__toggle");
 
     await fillIn(".search-query", "none");
     await inSelector.expand();
@@ -44,6 +45,7 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
     );
 
     await visit("/search");
+    await click(".advanced-filters__toggle");
 
     await fillIn(".search-query", "none");
     await inSelector.expand();
@@ -60,6 +62,7 @@ acceptance("Discourse Assign | Search - Full Page", function (needs) {
     const assignedField = selectKit(".assigned-advanced-search .select-kit");
 
     await visit("/search");
+    await click(".advanced-filters__toggle");
 
     await fillIn(".search-query", "none");
     await assignedField.expand();
