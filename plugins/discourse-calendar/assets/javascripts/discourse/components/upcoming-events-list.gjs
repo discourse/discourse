@@ -181,7 +181,7 @@ export default class UpcomingEventsList extends Component {
       const endDate = item.ends_at ? moment(item.ends_at) : null;
 
       let displayDate;
-      if (!endDate || startDate.isSame(endDate, "day")) {
+      if (!this.isMultiDayEvent(item)) {
         // Single-day event
         displayDate = startDate.clone();
       } else {
