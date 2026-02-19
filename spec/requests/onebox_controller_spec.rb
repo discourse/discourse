@@ -208,5 +208,40 @@ RSpec.describe OneboxController do
         expect(response.body).not_to include("aside")
       end
     end
+
+    context "with local user profiles" do
+      fab!(:hidden_user, :user)
+
+      before do
+        hidden_user.user_profile.update!(
+          bio_raw: "secret bio content",
+          location: "secret location",
+          website: "https://secret.example.com",
+        )
+        SiteSetting.allow_users_to_hide_profile = true
+        hidden_user.user_option.update!(hide_profile: true)
+      end
+
+      it "does not onebox a hidden user profile" do
+        url = "#{Discourse.base_url}/u/#{hidden_user.username}"
+
+        get "/onebox.json", params: { url: url }
+
+        expect(response.body).not_to include("secret bio content")
+        expect(response.body).not_to include("secret location")
+        expect(response.body).not_to include("secret.example.com")
+      end
+
+      it "oneboxes a user profile when the viewer can see the profile" do
+        visible_user = Fabricate(:user)
+        visible_user.user_profile.update!(location: "visible location")
+        url = "#{Discourse.base_url}/u/#{visible_user.username}"
+
+        get "/onebox.json", params: { url: url }
+
+        expect(response.body).to include(visible_user.username)
+        expect(response.body).to include("visible location")
+      end
+    end
   end
 end
