@@ -32,7 +32,9 @@ export default class SolvedStatusFilter extends Component {
     ) {
       return true;
     } else {
-      return args.currentCategory?.enable_accepted_answers;
+      return (
+        args.currentCategory?.custom_fields?.enable_accepted_answers === "true"
+      );
     }
   }
 
