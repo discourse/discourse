@@ -33,6 +33,11 @@
     }
 
     @include viewport.from(md) {
+      .form-kit__errors-summary {
+        width: 100%;
+        max-width: var(--form-kit-max-input);
+      }
+
       .form-kit__container {
         flex-direction: row;
         align-items: baseline;
