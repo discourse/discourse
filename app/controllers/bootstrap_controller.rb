@@ -22,7 +22,6 @@ class BootstrapController < ApplicationController
   end
 
   def plugin_test_info
-    puts "Target is #{params[:target].inspect}"
     target = params[:target]
 
     required_plugins = []
@@ -59,8 +58,6 @@ class BootstrapController < ApplicationController
                        },
                        formats: [:html],
                        layout: false
-
-    puts plugin_js_string
 
     plugin_css_string =
       Discourse
