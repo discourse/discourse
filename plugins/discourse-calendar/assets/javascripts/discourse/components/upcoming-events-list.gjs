@@ -145,7 +145,6 @@ export default class UpcomingEventsList extends Component {
     return moment(`${month}-${day}`).format("D");
   }
 
-  @action
   isMultiDayEvent(event) {
     if (!event.ends_at) {
       return false;
@@ -155,7 +154,6 @@ export default class UpcomingEventsList extends Component {
     return !startDate.isSame(endDate, "day");
   }
 
-  @action
   formatDateRange(event) {
     const start = moment(event.starts_at);
     const end = moment(event.ends_at);
