@@ -20,7 +20,7 @@ RSpec.describe Migrations::Database::Schema::DSL::IgnoredBuilder do
       Migrations::Database::Schema.ignored { tables :temp_data, :old_logs, reason: "Legacy tables" }
 
       ignored = Migrations::Database::Schema.ignored_tables
-      expect(ignored.table_names).to eq(Set[:temp_data, :old_logs])
+      expect(ignored.table_names).to eq(Set["temp_data", "old_logs"])
       expect(ignored.reason_for(:temp_data)).to eq("Legacy tables")
       expect(ignored.reason_for(:old_logs)).to eq("Legacy tables")
     end
@@ -38,7 +38,7 @@ RSpec.describe Migrations::Database::Schema::DSL::IgnoredBuilder do
       Migrations::Database::Schema.ignored { plugin :discourse_ai, "Not migrating" }
 
       ignored = Migrations::Database::Schema.ignored_tables
-      expect(ignored.ignored_plugin_names).to eq([:"discourse-ai"])
+      expect(ignored.ignored_plugin_names).to eq(["discourse-ai"])
       expect(ignored.plugin_ignored?(:discourse_ai)).to be true
       expect(ignored.plugin_ignored?(:"discourse-ai")).to be true
     end

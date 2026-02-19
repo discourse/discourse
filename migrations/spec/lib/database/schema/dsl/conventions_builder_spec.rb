@@ -14,7 +14,7 @@ RSpec.describe Migrations::Database::Schema::DSL::ConventionsBuilder do
       end
 
       conventions = Migrations::Database::Schema.conventions_config
-      expect(conventions.effective_name("id")).to eq(:original_id)
+      expect(conventions.effective_name("id")).to eq("original_id")
     end
 
     it "tracks ignored columns" do

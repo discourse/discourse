@@ -23,7 +23,7 @@ module Migrations::Database::Schema::DSL
       :model_mode,
     ) do
       def column_options_for(col)
-        column_options[col.to_sym]
+        column_options[col.to_s]
       end
 
       def ignored_column_names
@@ -31,7 +31,7 @@ module Migrations::Database::Schema::DSL
       end
 
       def ignore_reason_for(col)
-        ignored_columns_map[col.to_sym]
+        ignored_columns_map[col.to_s]
       end
 
       def ignore_plugin_columns?
@@ -43,7 +43,7 @@ module Migrations::Database::Schema::DSL
 
   class TableBuilder
     def initialize(name)
-      @name = name.to_sym
+      @name = name.to_s
       @source_table_name = @name
       @primary_key_cols = nil
       @included_columns = nil
@@ -60,7 +60,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def copy_structure_from(table)
-      @source_table_name = table.to_sym
+      @source_table_name = table.to_s
     end
 
     def synthetic!
@@ -68,12 +68,12 @@ module Migrations::Database::Schema::DSL
     end
 
     def primary_key(*cols)
-      @primary_key_cols = cols.flatten.map(&:to_sym)
+      @primary_key_cols = cols.flatten.map(&:to_s)
     end
 
     def include(*cols)
       @included_columns ||= []
-      @included_columns.concat(cols.flatten.map(&:to_sym))
+      @included_columns.concat(cols.flatten.map(&:to_s))
     end
 
     def include_all
@@ -81,40 +81,40 @@ module Migrations::Database::Schema::DSL
     end
 
     def include!(*cols)
-      @forced_columns.concat(cols.flatten.map(&:to_sym))
+      @forced_columns.concat(cols.flatten.map(&:to_s))
     end
 
     def column(name, type = nil, **opts, &block)
-      name = name.to_sym
+      name = name.to_s
       if block
         builder = ColumnOptionsBuilder.new
         builder.instance_eval(&block)
         @column_options[name] = builder.build
       else
         @column_options[name] = ColumnOptions.new(
-          type: type&.to_sym || opts[:type]&.to_sym,
+          type: type&.to_s || opts[:type]&.to_s,
           required: opts[:required],
           max_length: opts[:max_length],
-          rename_to: opts[:rename_to]&.to_sym,
+          rename_to: opts[:rename_to]&.to_s,
         )
       end
     end
 
     def add_column(name, type, required: false, enum: nil)
-      enum = enum.to_sym if enum
-      @added_columns << AddedColumn.new(name: name.to_sym, type: type.to_sym, required:, enum:)
+      enum = enum.to_s if enum
+      @added_columns << AddedColumn.new(name: name.to_s, type: type.to_s, required:, enum:)
     end
 
     def ignore(*cols, reason: nil)
-      cols.flatten.each { |col| @ignored_columns[col.to_sym] = reason }
+      cols.flatten.each { |col| @ignored_columns[col.to_s] = reason }
     end
 
     def index(*cols, name: nil, unique: false, where: nil)
-      cols = cols.flatten.map(&:to_sym)
+      cols = cols.flatten.map(&:to_s)
       index_name = name || generate_index_name(cols, unique)
       @indexes << IndexConfig.new(
         column_names: cols,
-        name: index_name.to_sym,
+        name: index_name.to_s,
         unique:,
         condition: where,
       )
@@ -125,7 +125,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def check(name, condition)
-      @constraints << ConstraintConfig.new(name: name.to_sym, type: :check, condition:)
+      @constraints << ConstraintConfig.new(name: name.to_s, type: :check, condition:)
     end
 
     def ignore_plugin_columns!(*plugin_names)
@@ -188,11 +188,11 @@ module Migrations::Database::Schema::DSL
 
     def generate_index_name(cols, unique)
       prefix = unique ? "idx_unique" : "idx"
-      :"#{prefix}_#{@name}_#{cols.join("_")}"
+      "#{prefix}_#{@name}_#{cols.join("_")}"
     end
 
     def normalize_plugin_name(name)
-      name.to_s.tr("_", "-").to_sym
+      name.to_s.tr("_", "-")
     end
   end
 
@@ -205,7 +205,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def type(value)
-      @type = value.to_sym
+      @type = value.to_s
     end
 
     def required(value = true)
@@ -217,7 +217,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def rename_to(value)
-      @rename_to = value.to_sym
+      @rename_to = value.to_s
     end
 
     def build

@@ -10,12 +10,12 @@ module Migrations::Database::Schema::DSL
       ignored = @schema.ignored_tables
       return Set.new if ignored.nil?
 
-      names = ignored.table_names.map(&:to_s).to_set
+      names = ignored.table_names
 
       manifest = @schema.plugin_manifest
       if manifest.available?
         ignored.ignored_plugin_names.each do |plugin_name|
-          manifest.tables_for_plugin(plugin_name.to_s).each { |t| names << t.to_s }
+          manifest.tables_for_plugin(plugin_name).each { |t| names << t }
         end
       end
 
@@ -27,21 +27,21 @@ module Migrations::Database::Schema::DSL
         begin
           conventions = @schema.conventions_config
           return Set.new if conventions.nil?
-          conventions.ignored_columns.map(&:to_s).to_set
+          conventions.ignored_columns.to_set
         end
     end
 
     def effective_column_names(table_def, db_column_names)
-      forced = table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
+      forced = table_def.forced_column_names&.to_set || Set.new
 
       if table_def.included_column_names
-        names = table_def.included_column_names.map(&:to_s).to_set
+        names = table_def.included_column_names.to_set
       else
-        ignored = table_def.ignored_column_names.map(&:to_s).to_set
+        ignored = table_def.ignored_column_names.to_set
         names = db_column_names - ignored - (globally_ignored_columns - forced)
       end
 
-      added = table_def.added_columns.map { |c| c.name.to_s }
+      added = table_def.added_columns.map(&:name)
       names + added.to_set
     end
 
@@ -54,7 +54,7 @@ module Migrations::Database::Schema::DSL
       manifest = @schema.plugin_manifest
       return if !manifest.available?
 
-      table_name = table_def.source_table_name.to_s
+      table_name = table_def.source_table_name
 
       yield_columns_from_ignored_plugins(manifest, ignored, table_name, &block)
       yield_columns_from_table_plugins(manifest, ignored, table_def, table_name, &block)
@@ -64,21 +64,23 @@ module Migrations::Database::Schema::DSL
 
     def yield_columns_from_ignored_plugins(manifest, ignored, table_name)
       ignored.ignored_plugin_names.each do |plugin_name|
-        name = plugin_name.to_s
-        manifest.columns_for_plugin(name, table: table_name).each { |col| yield col, name }
+        manifest
+          .columns_for_plugin(plugin_name, table: table_name)
+          .each { |col| yield col, plugin_name }
       end
     end
 
     def yield_columns_from_table_plugins(manifest, ignored, table_def, table_name)
       return if !table_def.ignore_plugin_columns?
 
-      plugin_filter = table_def.ignore_plugin_names&.map(&:to_s)&.to_set
+      plugin_filter = table_def.ignore_plugin_names&.to_set
 
       manifest.all_plugin_names.each do |plugin_name|
         next if ignored.plugin_ignored?(plugin_name)
-        name = plugin_name.to_s
-        next if plugin_filter && plugin_filter.exclude?(name)
-        manifest.columns_for_plugin(name, table: table_name).each { |col| yield col, name }
+        next if plugin_filter && plugin_filter.exclude?(plugin_name)
+        manifest
+          .columns_for_plugin(plugin_name, table: table_name)
+          .each { |col| yield col, plugin_name }
       end
     end
   end

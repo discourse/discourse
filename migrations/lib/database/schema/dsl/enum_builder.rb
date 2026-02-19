@@ -5,7 +5,7 @@ module Migrations::Database::Schema::DSL
 
   class EnumBuilder
     def initialize(name)
-      @name = name.to_sym
+      @name = name.to_s
       @values = {}
       @source_block = nil
     end

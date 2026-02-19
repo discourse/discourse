@@ -8,7 +8,7 @@ module Migrations::Database::Schema::DSL
       def effective_name(column_name)
         convention = convention_for(column_name)
         return convention.rename_to if convention&.rename_to
-        column_name.to_sym
+        column_name.to_s
       end
 
       def convention_for(column_name)
@@ -68,11 +68,11 @@ module Migrations::Database::Schema::DSL
     end
 
     def rename_to(value)
-      @rename_to = value.to_sym
+      @rename_to = value.to_s
     end
 
     def type(value)
-      @type_override = value.to_sym
+      @type_override = value.to_s
     end
 
     def required(value = true)

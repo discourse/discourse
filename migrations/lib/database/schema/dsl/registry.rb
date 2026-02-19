@@ -33,7 +33,7 @@ module Migrations::Database::Schema::DSL
 
     def register_table(name, table_def)
       raise_if_frozen!
-      name = name.to_sym
+      name = name.to_s
       if @tables.key?(name)
         raise Migrations::Database::Schema::ConfigError, "Table :#{name} is already registered."
       end
@@ -42,7 +42,7 @@ module Migrations::Database::Schema::DSL
 
     def register_enum(name, enum_def)
       raise_if_frozen!
-      name = name.to_sym
+      name = name.to_s
       if @enums.key?(name)
         raise Migrations::Database::Schema::ConfigError, "Enum :#{name} is already registered."
       end
@@ -67,11 +67,11 @@ module Migrations::Database::Schema::DSL
     end
 
     def table(name)
-      @tables[name.to_sym]
+      @tables[name.to_s]
     end
 
     def enum(name)
-      @enums[name.to_sym]
+      @enums[name.to_s]
     end
 
     def freeze!

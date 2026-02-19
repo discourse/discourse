@@ -11,8 +11,8 @@ RSpec.describe Migrations::Database::Schema::DSL::EnumBuilder do
         value :restricted, 2
       end
 
-      enum = Migrations::Database::Schema.enums[:visibility]
-      expect(enum.name).to eq(:visibility)
+      enum = Migrations::Database::Schema.enums["visibility"]
+      expect(enum.name).to eq("visibility")
       expect(enum.values).to eq({ "public" => 0, "private" => 1, "restricted" => 2 })
       expect(enum.datatype).to eq(:integer)
     end

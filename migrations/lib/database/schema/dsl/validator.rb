@@ -28,23 +28,18 @@ module Migrations::Database::Schema::DSL
       ignored = @schema.ignored_tables
       return if ignored.nil?
 
-      ignored_names = ignored.table_names.map(&:to_s).to_set
+      ignored_names = ignored.table_names
 
       # Synthetic tables don't use a DB source, so they can share a name with an ignored DB table
       configured_names =
-        @schema.tables.each_value.filter_map { |t| t.name.to_s if t.source_table_name }.to_set
+        @schema.tables.each_value.filter_map { |t| t.name if t.source_table_name }.to_set
 
       overlap = configured_names & ignored_names
       overlap.sort.each { |name| @errors << "Table '#{name}' is both configured and ignored" }
     end
 
     def validate_tables
-      configured_table_names =
-        @schema
-          .tables
-          .each_value
-          .filter_map { |table_def| table_def.source_table_name&.to_s }
-          .to_set
+      configured_table_names = @schema.tables.each_value.filter_map(&:source_table_name).to_set
       ignored_table_names = @scope.ignored_table_name_set
 
       # Check for unconfigured tables in database
@@ -63,7 +58,7 @@ module Migrations::Database::Schema::DSL
       validate_ignored_plugin_source
 
       if @table_def.source_table_name
-        source_table = @table_def.source_table_name.to_s
+        source_table = @table_def.source_table_name
 
         if @db_table_names.exclude?(source_table)
           @errors << "Table '#{@table_def.name}': source table '#{source_table}' does not exist in database"
@@ -91,7 +86,7 @@ module Migrations::Database::Schema::DSL
     def validate_included_columns
       return if @table_def.included_column_names.nil?
 
-      missing = @table_def.included_column_names.map(&:to_s).to_set - @db_column_names
+      missing = @table_def.included_column_names.to_set - @db_column_names
       if missing.any?
         @errors << "Table '#{@table_def.name}': included columns do not exist in database: #{sort_and_join(missing)}"
       end
@@ -100,17 +95,16 @@ module Migrations::Database::Schema::DSL
     def validate_include_overrides
       return if @table_def.included_column_names.nil?
 
-      forced = @table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
+      forced = @table_def.forced_column_names&.to_set || Set.new
       globally_ignored = @scope.globally_ignored_columns
       auto_ignored = auto_ignored_column_names
 
       @table_def.included_column_names.each do |col_name|
-        col_str = col_name.to_s
-        next if forced.include?(col_str)
+        next if forced.include?(col_name)
 
-        if globally_ignored.include?(col_str)
+        if globally_ignored.include?(col_name)
           @errors << "Table '#{@table_def.name}': included column '#{col_name}' is globally ignored — use `include!` to override"
-        elsif auto_ignored.include?(col_str)
+        elsif auto_ignored.include?(col_name)
           @errors << "Table '#{@table_def.name}': included column '#{col_name}' is auto-ignored by a plugin — use `include!` to override"
         end
       end
@@ -120,10 +114,10 @@ module Migrations::Database::Schema::DSL
       configured_columns = @scope.effective_column_names(@table_def, @db_column_names)
 
       @table_def.column_options.each_key do |col_name|
-        if @db_column_names.exclude?(col_name.to_s)
+        if @db_column_names.exclude?(col_name)
           @errors << "Table '#{@table_def.name}': column option for '#{col_name}' " \
             "references a column that does not exist in database"
-        elsif configured_columns.exclude?(col_name.to_s)
+        elsif configured_columns.exclude?(col_name)
           @errors << "Table '#{@table_def.name}': column option for '#{col_name}' " \
             "references an excluded column"
         end
@@ -132,7 +126,7 @@ module Migrations::Database::Schema::DSL
 
     def validate_added_columns
       @table_def.added_columns.each do |added_col|
-        if @db_column_names.include?(added_col.name.to_s)
+        if @db_column_names.include?(added_col.name)
           @errors << "Table '#{@table_def.name}': added column '#{added_col.name}' already exists in database"
         end
 
@@ -144,7 +138,7 @@ module Migrations::Database::Schema::DSL
 
     def validate_ignored_columns
       @table_def.ignored_columns_map.each_key do |col_name|
-        if @db_column_names.exclude?(col_name.to_s)
+        if @db_column_names.exclude?(col_name)
           @errors << "Table '#{@table_def.name}': ignored column '#{col_name}' does not exist in database (stale ignore)"
         end
       end
@@ -155,7 +149,7 @@ module Migrations::Database::Schema::DSL
 
       seen_names = {}
       @table_def.indexes.each do |idx|
-        missing = idx.column_names.map(&:to_s).to_set - configured_columns
+        missing = idx.column_names.to_set - configured_columns
         if missing.any?
           index_message =
             "Table '#{@table_def.name}': index '#{idx.name}' " \
@@ -163,7 +157,7 @@ module Migrations::Database::Schema::DSL
           @errors << index_message
         end
 
-        name = idx.name.to_s
+        name = idx.name
         if seen_names.key?(name)
           @errors << "Table '#{@table_def.name}': duplicate index name '#{name}'"
         else
@@ -176,7 +170,7 @@ module Migrations::Database::Schema::DSL
       return if @table_def.source_table_name.nil?
 
       configured_columns = @scope.effective_column_names(@table_def, @db_column_names)
-      ignored_columns = @table_def.ignored_column_names.map(&:to_s).to_set
+      ignored_columns = @table_def.ignored_column_names.to_set
       unconfigured =
         @db_column_names - configured_columns - ignored_columns - @scope.globally_ignored_columns -
           auto_ignored_column_names
@@ -187,11 +181,11 @@ module Migrations::Database::Schema::DSL
     end
 
     def validate_primary_key_columns
-      configured_primary_keys = @table_def.primary_key_columns&.map(&:to_s) || @db_primary_keys
+      configured_primary_keys = @table_def.primary_key_columns || @db_primary_keys
       return if configured_primary_keys.empty?
 
       if @table_def.source_table_name
-        added_names = @table_def.added_columns.map { |c| c.name.to_s }.to_set
+        added_names = @table_def.added_columns.map(&:name).to_set
         missing_in_db = configured_primary_keys.to_set - @db_column_names - added_names
         if missing_in_db.any?
           pk_message =
@@ -228,7 +222,7 @@ module Migrations::Database::Schema::DSL
       ignored = @schema.ignored_tables
       return if ignored.nil?
 
-      plugin = manifest.plugin_for_table(@table_def.source_table_name.to_s)
+      plugin = manifest.plugin_for_table(@table_def.source_table_name)
       return if plugin.nil?
 
       if ignored.plugin_ignored?(plugin)
@@ -247,7 +241,7 @@ module Migrations::Database::Schema::DSL
       return if ignored.nil?
 
       ignored.entries.each do |entry|
-        if @db_table_names.exclude?(entry.name.to_s)
+        if @db_table_names.exclude?(entry.name)
           @errors << "Ignored table '#{entry.name}' does not exist in database (stale ignore)"
         end
       end
@@ -255,7 +249,7 @@ module Migrations::Database::Schema::DSL
 
     def auto_ignored_column_names
       names = Set.new
-      @scope.each_plugin_ignored_column(@table_def) { |col, _| names << col.to_s }
+      @scope.each_plugin_ignored_column(@table_def) { |col, _| names << col }
       names
     end
 
@@ -264,7 +258,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def known_type_override?(type)
-      %i[
+      %w[
         binary
         blob
         boolean
@@ -280,7 +274,7 @@ module Migrations::Database::Schema::DSL
         string
         text
         uuid
-      ].include?(type.to_sym)
+      ].include?(type)
     end
   end
 end

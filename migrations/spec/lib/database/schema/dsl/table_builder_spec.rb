@@ -10,11 +10,11 @@ RSpec.describe Migrations::Database::Schema::DSL::TableBuilder do
         include :id, :username, :email
       end
 
-      table = Migrations::Database::Schema.tables[:users]
-      expect(table.name).to eq(:users)
-      expect(table.source_table_name).to eq(:users)
-      expect(table.primary_key_columns).to eq(%i[id])
-      expect(table.included_column_names).to eq(%i[id username email])
+      table = Migrations::Database::Schema.tables["users"]
+      expect(table.name).to eq("users")
+      expect(table.source_table_name).to eq("users")
+      expect(table.primary_key_columns).to eq(%w[id])
+      expect(table.included_column_names).to eq(%w[id username email])
     end
 
     it "raises when block has no include, include_all, ignore, or synthetic!" do

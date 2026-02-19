@@ -15,18 +15,18 @@ RSpec.describe Migrations::Database::Schema::DSL::Loader do
 
       conventions = Migrations::Database::Schema.conventions_config
       expect(conventions).to be_a(Migrations::Database::Schema::DSL::ConventionsConfig)
-      expect(conventions.effective_name("id")).to eq(:original_id)
+      expect(conventions.effective_name("id")).to eq("original_id")
 
       ignored = Migrations::Database::Schema.ignored_tables
       expect(ignored.ignored?(:schema_migrations)).to be true
 
       enums = Migrations::Database::Schema.enums
-      expect(enums[:visibility]).to be_a(Migrations::Database::Schema::DSL::EnumDef)
-      expect(enums[:visibility].values["public"]).to eq(0)
+      expect(enums["visibility"]).to be_a(Migrations::Database::Schema::DSL::EnumDef)
+      expect(enums["visibility"].values["public"]).to eq(0)
 
       tables = Migrations::Database::Schema.tables
-      expect(tables[:users]).to be_a(Migrations::Database::Schema::DSL::TableDef)
-      expect(tables[:users].primary_key_columns).to eq(%i[id])
+      expect(tables["users"]).to be_a(Migrations::Database::Schema::DSL::TableDef)
+      expect(tables["users"].primary_key_columns).to eq(%w[id])
     end
 
     it "raises when config directory does not exist" do

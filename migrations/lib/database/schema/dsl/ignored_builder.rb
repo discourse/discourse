@@ -11,11 +11,11 @@ module Migrations::Database::Schema::DSL
       end
 
       def ignored?(name)
-        table_names.include?(name.to_sym)
+        table_names.include?(name.to_s)
       end
 
       def reason_for(name)
-        entries.find { |e| e.name == name.to_sym }&.reason
+        entries.find { |e| e.name == name.to_s }&.reason
       end
 
       def ignored_plugin_names
@@ -23,7 +23,7 @@ module Migrations::Database::Schema::DSL
       end
 
       def plugin_ignored?(name)
-        normalized = name.to_s.tr("_", "-").to_sym
+        normalized = name.to_s.tr("_", "-")
         plugin_entries.any? { |e| e.name == normalized }
       end
     end
@@ -67,7 +67,7 @@ module Migrations::Database::Schema::DSL
     private
 
     def add_table_entry(name, reason)
-      normalized_name = name.to_sym
+      normalized_name = name.to_s
       if @entry_names.key?(normalized_name)
         raise Migrations::Database::Schema::ConfigError,
               "Ignored table :#{normalized_name} is already declared."
@@ -78,7 +78,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def normalize_plugin_name(name)
-      name.to_s.tr("_", "-").to_sym
+      name.to_s.tr("_", "-")
     end
   end
 end

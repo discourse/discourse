@@ -27,7 +27,7 @@ module Migrations::Database::Schema::DSL
 
     def resolve_table(table_def)
       if table_def.source_table_name
-        source_table = table_def.source_table_name.to_s
+        source_table = table_def.source_table_name
         db_columns = @db.columns(source_table).index_by(&:name)
         db_primary_keys = @db.primary_keys(source_table)
       else
@@ -35,7 +35,7 @@ module Migrations::Database::Schema::DSL
         db_primary_keys = []
       end
 
-      primary_key_columns = table_def.primary_key_columns&.map(&:to_s) || db_primary_keys
+      primary_key_columns = table_def.primary_key_columns || db_primary_keys
 
       columns = resolve_included_columns(table_def, db_columns, primary_key_columns)
       columns += resolve_added_columns(table_def, primary_key_columns)
@@ -47,7 +47,7 @@ module Migrations::Database::Schema::DSL
       resolved_pk_names = resolve_primary_key_names(primary_key_columns, table_def, columns)
 
       Migrations::Database::Schema::TableDefinition.new(
-        name: table_def.name.to_s,
+        name: table_def.name,
         columns:,
         indexes:,
         primary_key_column_names: resolved_pk_names,
@@ -60,8 +60,7 @@ module Migrations::Database::Schema::DSL
       column_names = determine_included_columns(table_def, db_columns)
 
       column_names.filter_map do |col_name|
-        col_name_str = col_name.to_s
-        db_col = db_columns[col_name_str]
+        db_col = db_columns[col_name]
         next if db_col.nil?
 
         options = table_def.column_options_for(col_name)
@@ -82,10 +81,9 @@ module Migrations::Database::Schema::DSL
         table_def.included_column_names
       else
         # nil means "all DB columns" minus globally ignored, per-table ignored, and plugin ignored
-        all_names = db_columns.keys.map(&:to_sym)
+        all_names = db_columns.keys
         ignored = table_def.ignored_column_names.to_set
-        globally_ignored =
-          @conventions ? @conventions.ignored_columns.map(&:to_sym).to_set : Set.new
+        globally_ignored = @conventions ? @conventions.ignored_columns.to_set : Set.new
         plugin_ignored = plugin_ignored_columns(table_def)
         forced = table_def.forced_column_names&.to_set || Set.new
         all_names.reject do |n|
@@ -97,7 +95,7 @@ module Migrations::Database::Schema::DSL
 
     def plugin_ignored_columns(table_def)
       names = Set.new
-      @scope.each_plugin_ignored_column(table_def) { |col, _| names << col.to_sym }
+      @scope.each_plugin_ignored_column(table_def) { |col, _| names << col }
       names
     end
 
@@ -145,7 +143,7 @@ module Migrations::Database::Schema::DSL
       nullable = false if is_primary_key
 
       Migrations::Database::Schema::ColumnDefinition.new(
-        name: effective_name.to_s,
+        name: effective_name,
         datatype:,
         nullable:,
         max_length:,
@@ -156,7 +154,7 @@ module Migrations::Database::Schema::DSL
 
     def resolve_added_columns(table_def, primary_key_columns)
       table_def.added_columns.map do |added_col|
-        effective_name = added_col.name.to_s
+        effective_name = added_col.name
 
         enum = added_col.enum ? @enums_by_name[added_col.enum] : nil
         datatype = enum ? enum.datatype : added_col.type
@@ -181,9 +179,9 @@ module Migrations::Database::Schema::DSL
         if table_def.source_table_name
           options = table_def.column_options_for(pk_col)
           rename_to = options&.rename_to
-          resolved_name = (rename_to || @conventions&.effective_name(pk_col) || pk_col).to_s
+          resolved_name = rename_to || @conventions&.effective_name(pk_col) || pk_col
         else
-          resolved_name = pk_col.to_s
+          resolved_name = pk_col
         end
         resolved_name if resolved_column_names.include?(resolved_name)
       end
@@ -195,7 +193,7 @@ module Migrations::Database::Schema::DSL
           idx.column_names.map { |col_name| resolve_index_column_name(table_def, col_name) }
 
         Migrations::Database::Schema::IndexDefinition.new(
-          name: idx.name.to_s,
+          name: idx.name,
           column_names: resolved_columns,
           unique: idx.unique,
           condition: idx.condition,
@@ -204,16 +202,16 @@ module Migrations::Database::Schema::DSL
     end
 
     def resolve_index_column_name(table_def, col_name)
-      return col_name.to_s if table_def.source_table_name.nil?
+      return col_name if table_def.source_table_name.nil?
 
       options = table_def.column_options_for(col_name)
-      (options&.rename_to || @conventions&.effective_name(col_name) || col_name).to_s
+      options&.rename_to || @conventions&.effective_name(col_name) || col_name
     end
 
     def resolve_constraints(table_def)
       table_def.constraints.map do |constraint|
         Migrations::Database::Schema::ConstraintDefinition.new(
-          name: constraint.name.to_s,
+          name: constraint.name,
           type: constraint.type,
           condition: constraint.condition,
         )
@@ -222,7 +220,7 @@ module Migrations::Database::Schema::DSL
 
     def resolve_enum(enum_def)
       Migrations::Database::Schema::EnumDefinition.new(
-        name: enum_def.name.to_s,
+        name: enum_def.name,
         values: enum_def.values,
         datatype: enum_def.datatype,
       )

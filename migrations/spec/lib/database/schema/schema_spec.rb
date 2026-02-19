@@ -54,7 +54,7 @@ RSpec.describe Migrations::Database::Schema do
           RUBY
 
         expect { described_class.ensure_ready!(database: :test_db) }.not_to raise_error
-        expect(described_class.tables.keys).to contain_exactly(:posts, :users)
+        expect(described_class.tables.keys).to contain_exactly("posts", "users")
       end
     end
 
