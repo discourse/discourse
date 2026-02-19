@@ -407,6 +407,7 @@ export default class AiToolEditorForm extends Component {
             name="" type="string" description="" required=false isEnum=false
           )
         }}
+        class="btn-default"
       />
 
       {{! CREDENTIAL CONTRACTS }}
@@ -465,6 +466,7 @@ export default class AiToolEditorForm extends Component {
           "secret_contracts"
           (hash alias="" ai_secret_id=null)
         }}
+        class="btn-default"
       />
 
       {{! SCRIPT }}
@@ -505,16 +507,21 @@ export default class AiToolEditorForm extends Component {
       {{/if}}
 
       <form.Actions>
+        <form.Submit
+          @label="discourse_ai.tools.save"
+          class="ai-tool-editor__save"
+        />
+
         {{#unless @isNew}}
           <form.Button
             @label="discourse_ai.tools.test"
             @action={{fn this.openTestModal data}}
-            class="ai-tool-editor__test-button"
+            class="btn-default ai-tool-editor__test-button"
           />
           <form.Button
             @label="discourse_ai.tools.export"
             @action={{this.exportTool}}
-            class="ai-tool-editor__export"
+            class="btn-default ai-tool-editor__export"
           />
           <form.Button
             @label="discourse_ai.tools.delete"
@@ -523,11 +530,6 @@ export default class AiToolEditorForm extends Component {
             class="btn-danger ai-tool-editor__delete"
           />
         {{/unless}}
-
-        <form.Submit
-          @label="discourse_ai.tools.save"
-          class="ai-tool-editor__save"
-        />
       </form.Actions>
     </Form>
   </template>

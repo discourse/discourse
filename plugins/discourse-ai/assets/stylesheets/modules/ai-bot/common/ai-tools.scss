@@ -53,6 +53,12 @@
       display: none;
     }
   }
+
+  .form-kit__actions {
+    .btn-danger {
+      margin-left: auto;
+    }
+  }
 }
 
 .ai-tool-test-modal {
