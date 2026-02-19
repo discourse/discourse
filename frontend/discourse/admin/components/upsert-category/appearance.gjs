@@ -210,7 +210,7 @@ export default class UpsertCategoryAppearance extends Component {
       <@form.Field
         @name="text_color"
         @title={{i18n "category.foreground_color"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Color @colors={{CATEGORY_TEXT_COLORS}} />
@@ -219,7 +219,7 @@ export default class UpsertCategoryAppearance extends Component {
       <@form.Field
         @name="default_view"
         @title={{i18n "category.default_view"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Custom>
@@ -237,7 +237,7 @@ export default class UpsertCategoryAppearance extends Component {
       <@form.Field
         @name="default_top_period"
         @title={{i18n "category.default_top_period"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Custom>
@@ -255,7 +255,7 @@ export default class UpsertCategoryAppearance extends Component {
       <@form.Field
         @name="sort_order"
         @title={{i18n "category.sort_order"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Custom>
@@ -284,7 +284,7 @@ export default class UpsertCategoryAppearance extends Component {
       <@form.Field
         @name="default_list_filter"
         @title={{i18n "category.default_list_filter"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Custom>
@@ -303,17 +303,17 @@ export default class UpsertCategoryAppearance extends Component {
         <@form.Field
           @name="show_subcategory_list"
           @title={{i18n "category.show_subcategory_list"}}
-          @format="large"
+          @format="max"
           as |field|
         >
-          <field.Checkbox />
+          <field.Toggle />
         </@form.Field>
 
         {{#if @transientData.show_subcategory_list}}
           <@form.Field
             @name="subcategory_list_style"
             @title={{i18n "category.subcategory_list_style"}}
-            @format="large"
+            @format="max"
             as |field|
           >
             <field.Custom>
@@ -332,7 +332,7 @@ export default class UpsertCategoryAppearance extends Component {
       <@form.Field
         @name="read_only_banner"
         @title={{i18n "category.read_only_banner"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Input @maxlength="255" />

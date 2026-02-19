@@ -347,7 +347,7 @@ export default class UpsertCategoryGeneral extends Component {
         <@form.Field
           @name="name"
           @title={{i18n "category.name"}}
-          @format="large"
+          @format="max"
           @validation="required"
           as |field|
         >
@@ -363,7 +363,7 @@ export default class UpsertCategoryGeneral extends Component {
       <@form.Field
         @name="color"
         @title={{i18n "category.background_color"}}
-        @format="large"
+        @format="max"
         @validation="required"
         @onSet={{this.onBackgroundColorSet}}
         as |field|
@@ -380,7 +380,7 @@ export default class UpsertCategoryGeneral extends Component {
       <@form.Field
         @name="style_type"
         @title={{i18n "category.style"}}
-        @format="large"
+        @format="max"
         as |styleField|
       >
         <styleField.Custom>
@@ -407,7 +407,7 @@ export default class UpsertCategoryGeneral extends Component {
                   @name="icon"
                   @title={{i18n "category.icon"}}
                   @showTitle={{false}}
-                  @format="large"
+                  @format="max"
                   @validate={{this.validateIcon}}
                   as |field|
                 >
@@ -437,7 +437,7 @@ export default class UpsertCategoryGeneral extends Component {
                   @name="emoji"
                   @title={{i18n "category.emoji"}}
                   @showTitle={{false}}
-                  @format="large"
+                  @format="max"
                   @validate={{this.validateEmoji}}
                   as |field|
                 >
@@ -472,7 +472,7 @@ export default class UpsertCategoryGeneral extends Component {
         <@form.Field
           @name="parent_category_id"
           @title={{i18n "category.subcategory_of"}}
-          @format="large"
+          @format="max"
           @onSet={{this.onParentCategorySet}}
           as |field|
         >
@@ -499,7 +499,7 @@ export default class UpsertCategoryGeneral extends Component {
       <@form.Container
         @title={{i18n "category.visibility.title"}}
         class="--radio-cards"
-        @format="large"
+        @format="max"
       >
         <@form.ConditionalContent
           @activeName={{this.categoryVisibility}}
@@ -534,7 +534,7 @@ export default class UpsertCategoryGeneral extends Component {
             <Content @name="group_restricted">
               <@form.Container
                 @title={{i18n "category.visibility.which_groups_can_access"}}
-                @format="large"
+                @format="max"
               >
                 <GroupChooser
                   @content={{this.availableAccessGroups}}

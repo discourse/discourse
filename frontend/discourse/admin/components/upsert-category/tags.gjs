@@ -79,7 +79,7 @@ export default class UpsertCategoryTags extends Component {
       <@form.Field
         @name="minimum_required_tags"
         @title={{i18n "category.minimum_required_tags"}}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.Input type="number" min="0" id="category-minimum-tags" />
@@ -92,7 +92,7 @@ export default class UpsertCategoryTags extends Component {
           (i18n "category.tags_allowed_tags" categoryName=@category.name)
           (i18n "category.tags_allowed_tags_new_category")
         }}
-        @format="large"
+        @format="max"
         as |field|
       >
         <field.TagChooser
@@ -125,11 +125,11 @@ export default class UpsertCategoryTags extends Component {
       <@form.Field
         @name="allow_global_tags"
         @title={{i18n "category.allow_global_tags_label"}}
-        @format="large"
+        @format="max"
         @disabled={{this.disableAllowGlobalTags}}
         as |field|
       >
-        <field.Checkbox />
+        <field.Toggle />
       </@form.Field>
 
       <@form.Alert @type="info">

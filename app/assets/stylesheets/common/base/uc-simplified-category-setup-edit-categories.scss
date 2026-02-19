@@ -1,16 +1,155 @@
 @use "lib/viewport";
 
 .uc-enable-simplified-category-creation {
-  .select-kit.multi-select.group-chooser {
-    width: var(--form-kit-large-input);
+  .edit-category-tab-security {
+    .alert {
+      --permission-table-max-width: var(--form-kit-max-input);
+    }
 
-    @include viewport.until(sm) {
+    .form-kit__container-content {
       width: 100%;
     }
   }
 
+  .category-permissions-table {
+    --permission-table-max-width: var(--form-kit-max-input);
+    width: 100%;
+  }
+
   div.edit-category {
     display: block;
+    max-width: 75ch;
+    width: 100%;
+    margin: 0 auto;
+
+    .form-kit__field-toggle {
+      flex-direction: column;
+      width: 100%;
+      gap: 0.5em;
+
+      .form-kit__container-content {
+        align-items: flex-start;
+      }
+    }
+
+    @include viewport.from(md) {
+      .form-kit__container {
+        flex-direction: row;
+        align-items: baseline;
+      }
+
+      .form-kit__section {
+        gap: 2.5em;
+      }
+
+      .edit-category-footer {
+        margin-top: 2em;
+      }
+
+      .form-kit__control-input-wrapper,
+      .form-kit__container {
+        justify-content: space-between;
+
+        input {
+          margin-left: auto !important; // overrides another important
+        }
+      }
+
+      #control-emoji,
+      .form-kit__inline-radio {
+        justify-content: end;
+      }
+
+      .form-kit__container:not(.form-kit__field-toggle):has(.d-toggle-switch) {
+        gap: 1em;
+
+        .form-kit__container-title {
+          flex: 1;
+        }
+
+        .form-kit__container-content {
+          flex: 0 0 auto;
+        }
+      }
+
+      .form-kit__conditional-display-content,
+      .form-kit__control-color {
+        align-items: end;
+
+        .form-kit__container {
+          width: 100%;
+        }
+      }
+
+      #control-icon {
+        width: 100% !important; // overrides another important
+      }
+
+      .form-kit__container:has(.file-uploader) {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-areas:
+          "title image"
+          "description image";
+        align-items: start;
+        grid-template-rows: auto 1fr;
+
+        .form-kit__container-content {
+          grid-area: image;
+        }
+
+        p {
+          grid-area: description;
+          margin-right: 1em;
+        }
+
+        .file-uploader {
+          width: 100%;
+        }
+      }
+
+      .form-kit__field-toggle {
+        max-width: var(--form-kit-max-input);
+        justify-content: space-between;
+
+        .form-kit__container-title {
+          flex: 1;
+        }
+
+        .form-kit__container-content {
+          width: auto !important;
+          flex: 0 0 auto;
+        }
+      }
+    }
+
+    .--radio-cards {
+      .form-kit__container-title {
+        max-width: var(--form-kit-max-input);
+        width: 100%;
+      }
+
+      .form-kit__conditional-display-content {
+        .form-kit__container {
+          flex-direction: column;
+        }
+      }
+    }
+
+    .select-kit.multi-select.group-chooser {
+      max-width: var(--form-kit-max-input);
+      width: 100%;
+    }
+
+    .edit-category-tab-settings label,
+    .edit-category-tab-tags label,
+    .edit-category-tab-settings input[type="text"],
+    .edit-category-tab-settings .select-kit,
+    .edit-category-tab-tags input[type="text"],
+    .edit-category-tab-tags .select-kit {
+      width: 100%;
+      max-width: var(--form-kit-max-input);
+    }
 
     .add-required-tag-group {
       align-self: start;
@@ -69,12 +208,6 @@
     }
   }
 
-  .edit-category-tab-security {
-    .form-kit__container-content {
-      width: 100%;
-    }
-  }
-
   .edit-category-title-text {
     display: flex;
     flex-direction: column;
@@ -96,10 +229,6 @@
       font-size: var(--font-up-2);
       margin-top: var(--space-5);
     }
-  }
-
-  .category-permissions-table {
-    width: 100%;
   }
 
   .form-kit__errors-summary {
@@ -125,5 +254,9 @@
   .edit-category .edit-category-footer {
     padding: 0;
     margin-bottom: var(--space-4);
+  }
+
+  #main-outlet:has(.edit-category) + .powered-by-discourse {
+    display: none; // hide for now due to alignment
   }
 }

@@ -64,6 +64,11 @@
       width: var(--form-kit-large-input);
     }
 
+    &.--max {
+      max-width: var(--form-kit-max-input);
+      width: 100%;
+    }
+
     &.--full {
       width: 100% !important;
     }
