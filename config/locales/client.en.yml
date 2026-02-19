@@ -4353,7 +4353,9 @@ en:
           edit: "Edit"
           delete: "Delete"
         add: "Add new translation"
-        manage: "Manage translations (%{count} existing)"
+        manage:
+          one: "Manage translations (%{count} existing)"
+          other: "Manage translations (%{count} existing)"
         view:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
