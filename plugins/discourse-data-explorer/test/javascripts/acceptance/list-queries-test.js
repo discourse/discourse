@@ -60,7 +60,7 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
     await visit("/admin/plugins/discourse-data-explorer/queries");
 
     assert
-      .dom("div.discourse-data-explorer-query-list input.ember-text-field")
+      .dom(".admin-filter-controls__input")
       .hasAttribute(
         "placeholder",
         i18n("explorer.search_placeholder"),
@@ -68,15 +68,11 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
       );
 
     assert
-      .dom(
-        "div.discourse-data-explorer-query-list button.btn-icon svg.d-icon-plus"
-      )
+      .dom(".d-page-subheader .btn-primary")
       .exists("the add query button was rendered");
 
     assert
-      .dom(
-        "div.discourse-data-explorer-query-list button.btn-icon-text span.d-button-label"
-      )
+      .dom(".d-page-subheader .d-page-action-wrapped-button")
       .hasText(i18n("explorer.import.label"), "the import button was rendered");
 
     assert

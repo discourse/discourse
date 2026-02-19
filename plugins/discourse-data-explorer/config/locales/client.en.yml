@@ -5,38 +5,39 @@ en:
         no_semicolons: "Remove the semicolons from the query."
         dirty: "You must save the query before running."
     explorer:
+      queries: "Queries"
+      query_created: "Query created!"
       or: "or"
       admins_only: "The data explorer is only available to admins."
       allow_groups: "Allow groups to access this query"
       title: "Data Explorer"
-      create: "Create New"
+      create: "Create"
       create_placeholder: "Query name..."
       description_placeholder: "Enter a description here"
       import:
         label: "Import"
-        modal: "Import A Query"
         unparseable_json: "Unparseable JSON file."
         wrong_json: "Wrong JSON file. A JSON file should contain a 'query' object, which should at least have an 'sql' property."
       help:
         label: "Help"
         modal_title: "Data Explorer Help"
-        auto_resolution: "<h2>Automatic Entity Resolution</h2>
+        auto_resolution: "<h2>Automatic entity resolution</h2>
           <p>When your query returns an entity id, Data Explorer may automatically substitute it with
           the entity name and other useful information in query results. Automatic resolution is available for
           <i><b>user_id</b></i>, <i><b>group_id</b></i>, <i><b>topic_id</b></i>, <i><b>category_id</b></i>
           and <i><b>badge_id</b></i>. To try this out run this query:</p>
           <pre><code>SELECT user_id\nFROM posts</code></pre>"
-        custom_params: "<h2>Creating Custom Parameters</h2>
+        custom_params: "<h2>Creating custom parameters</h2>
           <p>To create custom parameters for your queries, put this at the top of your query and follow the format:</p>
           <pre><code>-- [params]\n-- int :num = 1\n\nSELECT :num</code></pre>
           <p><i>Note: the first line with [params] is required, along with two dashes preceding it and every
           custom parameter you want to declare.</i></p>"
-        default_values: "<h3>Default Values</h3>
+        default_values: "<h3>Default values</h3>
           <p>You can declare parameters with or without default values. Default values will show up in a text field
           below the query editor, which you can edit to your needs. Parameters declared without default values will
           still generate a text field, but will be empty and highlighted red.</p>
           <pre><code>-- [params]\n-- text :username = my_username\n-- int :age</code></pre>"
-        data_types: "<h3>Data Types</h3>
+        data_types: "<h3>Data types</h3>
           <p>Here are common data types you can use:</p>
           <ul>
           <li><b>integer</b> - signed four-byte Integer</li>
@@ -58,13 +59,13 @@ en:
           null_: "Null"
       export: "Export"
       view_json: "View JSON"
-      save: "Save Changes"
-      saverun: "Save Changes and Run"
+      save: "Save changes"
+      saverun: "Save changes and run"
       run: "Run"
-      undo: "Discard Changes"
+      undo: "Discard changes"
       edit: "Edit"
       delete: "Delete"
-      recover: "Undelete Query"
+      recover: "Undelete query"
       download_json: "JSON"
       download_csv: "CSV"
       show_table: "Table"
@@ -86,7 +87,7 @@ en:
       query_user: "Created by"
       column: "Column %{number}"
       explain_label: "Include query plan?"
-      save_params: "Set Defaults"
+      save_params: "Set defaults"
       reset_params: "Reset"
       search_placeholder: "Search..."
       no_search_results: "Sorry, we couldn't find any results matching your text."

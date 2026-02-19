@@ -381,9 +381,6 @@ table.group-reports {
 }
 
 .discourse-data-explorer-query-list {
-  display: flex;
-  align-items: flex-start;
-
   .btn-left {
     margin-right: 0.5em;
   }
@@ -458,10 +455,12 @@ table.group-reports {
     }
 
     .query-group-names {
-      color: var(--tertiary);
+      .share-report {
+        color: var(--tertiary);
 
-      a {
-        display: inline;
+        a {
+          display: inline;
+        }
       }
     }
 
