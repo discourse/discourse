@@ -79,20 +79,6 @@ function parsePluginName(pluginRbPath) {
   );
 }
 
-function getTestRequiredPlugins(aboutJsonPath) {
-  if (fs.existsSync(aboutJsonPath)) {
-    const aboutJson = JSON.parse(fs.readFileSync(aboutJsonPath, "utf8"));
-    const requiredPlugins = aboutJson.tests?.requiredPlugins || [];
-    return requiredPlugins.map((plugin) =>
-      plugin
-        .split("/")
-        .at(-1)
-        .replace(/\.git$/, "")
-    );
-  }
-  return [];
-}
-
 module.exports = {
   name: require("./package").name,
 
@@ -170,9 +156,6 @@ module.exports = {
       const hasAdminJs = fs.existsSync(adminJsDirectory);
       const hasTests = fs.existsSync(testDirectory);
       const hasConfig = fs.existsSync(configDirectory);
-      const testRequiredPlugins = getTestRequiredPlugins(
-        path.resolve(root, directoryName, "about.json")
-      );
 
       // Check if plugin is official
       const isOfficial = officialPlugins.includes(pluginName);
@@ -193,7 +176,6 @@ module.exports = {
         hasAdminJs,
         hasTests,
         hasConfig,
-        testRequiredPlugins,
         isOfficial,
         isPreinstalled,
       };
@@ -303,85 +285,6 @@ module.exports = {
       return false;
     } else {
       return true;
-    }
-  },
-
-  pluginScriptTags(config) {
-    const scripts = [];
-
-    const pluginInfos = this.pluginInfos();
-
-    for (const {
-      pluginName,
-      directoryName,
-      hasJs,
-      hasAdminJs,
-      isPreinstalled,
-      isOfficial,
-    } of pluginInfos) {
-      const pushScript = (suffix) => {
-        scripts.push({
-          src: `plugins/${directoryName}${suffix}.js`,
-          name: pluginName,
-          isPreinstalled,
-          isOfficial,
-        });
-      };
-
-      if (hasJs) {
-        pushScript("");
-      }
-
-      if (fs.existsSync(`../plugins/${directoryName}_extras.js.erb`)) {
-        pushScript("_extras");
-      }
-
-      if (hasAdminJs) {
-        pushScript("_admin");
-      }
-    }
-
-    const scriptTags = scripts
-      .map(
-        ({ src, name, isPreinstalled, isOfficial }) =>
-          `<script src="${config.rootURL}assets/${src}" data-discourse-plugin="${name}" data-preinstalled="${isPreinstalled}" data-official="${isOfficial}"></script>`
-      )
-      .join("\n");
-
-    const requiredPluginInfos = {};
-    for (const { pluginName, testRequiredPlugins } of pluginInfos) {
-      requiredPluginInfos[pluginName] = testRequiredPlugins;
-    }
-
-    const requiredPluginInfoTag = `<script type="application/json" id="discourse-required-plugin-info">${JSON.stringify(requiredPluginInfos)}</script>`;
-
-    return `${scriptTags}\n${requiredPluginInfoTag}`;
-  },
-
-  pluginTestScriptTags(config) {
-    return this.pluginInfos()
-      .filter(({ hasTests }) => hasTests)
-      .map(
-        ({ directoryName, pluginName, isPreinstalled, isOfficial }) =>
-          `<script src="${config.rootURL}assets/plugins/test/${directoryName}_tests.js" data-discourse-plugin="${pluginName}" data-preinstalled="${isPreinstalled}" data-official="${isOfficial}"></script>`
-      )
-      .join("\n");
-  },
-
-  contentFor(type, config) {
-    if (!this.shouldLoadPlugins()) {
-      return;
-    }
-
-    switch (type) {
-      case "test-plugin-js":
-        return this.pluginScriptTags(config);
-
-      case "test-plugin-tests-js":
-        return this.pluginTestScriptTags(config);
-
-      case "test-plugin-css":
-        return `<link rel="stylesheet" href="${config.rootURL}bootstrap/plugin-css-for-tests.css" data-discourse-plugin="_all" />`;
     }
   },
 };
