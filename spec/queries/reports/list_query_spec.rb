@@ -144,24 +144,25 @@ RSpec.describe Reports::ListQuery do
           Discourse.plugins_by_name.delete("test-plugin")
         end
 
-        it "excludes reports when the source plugin is disabled" do
+        it "is not visible when the source plugin is disabled" do
           plugin.stubs(:enabled?).returns(false)
 
           formatted = Reports::ListQuery::FormattedReport.new(:report_test_plugin_report)
           formatted.stubs(:resolve_plugin_name).returns("test-plugin")
 
-          expect(formatted.to_h(admin: true)).to be_nil
+          expect(formatted.visible?(admin: true)).to eq(false)
         end
 
-        it "includes reports when the source plugin is enabled" do
+        it "is visible when the source plugin is enabled" do
           plugin.stubs(:enabled?).returns(true)
           plugin.stubs(:humanized_name).returns("Test Plugin")
 
           formatted = Reports::ListQuery::FormattedReport.new(:report_test_plugin_report)
           formatted.stubs(:resolve_plugin_name).returns("test-plugin")
 
-          result = formatted.to_h(admin: true)
-          expect(result).to be_present
+          expect(formatted.visible?(admin: true)).to eq(true)
+
+          result = formatted.to_h
           expect(result[:plugin]).to eq("test-plugin")
           expect(result[:plugin_display_name]).to eq("Test Plugin")
         end

@@ -10,14 +10,18 @@ module Reports
         @type = name.to_s.gsub("report_", "")
       end
 
-      def to_h(admin:)
-        return if Report.hidden?(type, admin:)
+      def visible?(admin:)
+        return false if Report.hidden?(type, admin:)
 
         if SiteSetting.reporting_improvements
-          return if plugin_disabled?
-          return if Report::LEGACY_REPORTS.include?(type)
+          return false if plugin_report? && plugin_disabled?
+          return false if Report::LEGACY_REPORTS.include?(type)
         end
 
+        true
+      end
+
+      def to_h
         result = {
           type:,
           title:,
@@ -25,7 +29,7 @@ module Reports
           description_link: I18n.t("reports.#{type}.description_link", default: "").presence,
         }
 
-        if SiteSetting.reporting_improvements
+        if SiteSetting.reporting_improvements && plugin_report?
           result[:plugin] = plugin_name
           result[:plugin_display_name] = plugin_display_name
         end
@@ -82,8 +86,11 @@ module Reports
         plugin_instance&.humanized_name
       end
 
+      def plugin_report?
+        plugin_name.present?
+      end
+
       def plugin_disabled?
-        return false unless plugin_name
         return true unless plugin_instance
         !plugin_instance.enabled?
       end
@@ -108,7 +115,8 @@ module Reports
 
       reports_methods
         .filter_map do |report_name|
-          Reports::ListQuery::FormattedReport.new(report_name).to_h(admin:)
+          report = Reports::ListQuery::FormattedReport.new(report_name)
+          report.to_h if report.visible?(admin:)
         end
         .sort_by { |report| report[:title] }
     end
