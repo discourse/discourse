@@ -14,9 +14,6 @@ class ContentSecurityPolicy
           directives[:object_src] = [:none]
           directives[:script_src] = script_src
           directives[:worker_src] = []
-          directives[
-            :report_uri
-          ] = report_uri if SiteSetting.content_security_policy_collect_reports
           directives[:frame_ancestors] = frame_ancestors if restrict_embed?
           directives[:manifest_src] = ["'self'"]
         end
@@ -60,14 +57,7 @@ class ContentSecurityPolicy
     end
 
     def script_src
-      sources = ["'strict-dynamic'"]
-      sources << :report_sample if SiteSetting.content_security_policy_collect_reports
-
-      sources
-    end
-
-    def report_uri
-      "#{base_url}/csp_reports"
+      ["'strict-dynamic'"]
     end
 
     def frame_ancestors
