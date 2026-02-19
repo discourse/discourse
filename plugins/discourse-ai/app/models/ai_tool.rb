@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
 class AiTool < ActiveRecord::Base
+  SECRET_ALIAS_PATTERN = /\A[a-zA-Z0-9_]+\z/
+
   validates :name, presence: true, length: { maximum: 100 }, uniqueness: true
   validates :tool_name, presence: true, length: { maximum: 100 }
   validates :description, presence: true, length: { maximum: 1000 }
@@ -12,6 +14,10 @@ class AiTool < ActiveRecord::Base
   has_many :rag_document_fragments, dependent: :destroy, as: :target
   has_many :upload_references, as: :target, dependent: :destroy
   has_many :uploads, through: :upload_references
+  has_many :secret_bindings,
+           class_name: "AiToolSecretBinding",
+           dependent: :destroy,
+           inverse_of: :ai_tool
   before_save :set_image_generation_tool_flag
   before_update :regenerate_rag_fragments
 
@@ -24,6 +30,7 @@ class AiTool < ActiveRecord::Base
             }
 
   validate :validate_parameters_enum
+  validate :validate_secret_contracts
 
   def signature
     {
@@ -38,13 +45,14 @@ class AiTool < ActiveRecord::Base
     tool_name.presence || name
   end
 
-  def runner(parameters, llm:, bot_user:, context: nil)
+  def runner(parameters, llm:, bot_user:, context: nil, secret_bindings: nil)
     DiscourseAi::Personas::ToolRunner.new(
       parameters: parameters,
       llm: llm,
       bot_user: bot_user,
       context: context,
       tool: self,
+      secret_bindings: secret_bindings,
     )
   end
 
@@ -64,7 +72,119 @@ class AiTool < ActiveRecord::Base
     is_image_generation_tool
   end
 
+  def secret_contract_for(alias_name)
+    return nil if alias_name.blank?
+
+    normalized_alias = alias_name.to_s
+    Array(secret_contracts).find do |contract|
+      contract.is_a?(Hash) && contract.fetch("alias", contract[:alias]) == normalized_alias
+    end
+  end
+
+  def secret_aliases
+    Array(secret_contracts).filter_map do |contract|
+      next if !contract.is_a?(Hash)
+
+      contract.fetch("alias", contract[:alias]).to_s
+    end
+  end
+
+  def missing_secret_aliases(bindings: nil)
+    source_bindings = bindings || secret_bindings
+    bound_aliases =
+      source_bindings.each_with_object(Set.new) do |binding, aliases|
+        alias_name =
+          if binding.respond_to?(:[])
+            binding[:alias] || binding["alias"]
+          else
+            binding.alias
+          end
+        secret_id =
+          if binding.respond_to?(:[])
+            binding[:ai_secret_id] || binding["ai_secret_id"]
+          else
+            binding.ai_secret_id
+          end
+        next if alias_name.blank? || secret_id.blank?
+
+        aliases << alias_name.to_s
+      end
+
+    secret_aliases.reject { |alias_name| bound_aliases.include?(alias_name) }
+  end
+
+  def resolve_secret(alias_name, bindings: nil, secrets_cache: nil)
+    normalized_alias = alias_name.to_s
+    contract = secret_contract_for(normalized_alias)
+    return nil, :alias_not_declared if contract.nil?
+
+    source_bindings = bindings || secret_bindings
+    binding =
+      source_bindings.find do |item|
+        if item.respond_to?(:[])
+          (item[:alias] || item["alias"]).to_s == normalized_alias
+        else
+          item.alias.to_s == normalized_alias
+        end
+      end
+
+    return nil, :missing_binding if binding.nil?
+
+    secret_id =
+      if binding.respond_to?(:[])
+        (binding[:ai_secret_id] || binding["ai_secret_id"]).to_i
+      else
+        binding.ai_secret_id.to_i
+      end
+    secret = secrets_cache ? secrets_cache[secret_id] : AiSecret.find_by(id: secret_id)
+    return nil, :secret_not_found if secret.nil?
+
+    [secret.secret, nil]
+  end
+
+  def prune_orphan_bindings!
+    valid = secret_aliases
+    secret_bindings.where.not(alias: valid).destroy_all
+  end
+
+  def replace_secret_bindings!(bindings, created_by: nil)
+    return if bindings.nil?
+
+    normalized_bindings = normalize_secret_bindings(bindings)
+
+    transaction do
+      secret_bindings.destroy_all
+
+      normalized_bindings.each do |binding|
+        next if binding[:ai_secret_id].blank?
+
+        secret_bindings.create!(
+          alias: binding[:alias],
+          ai_secret_id: binding[:ai_secret_id],
+          created_by: created_by,
+        )
+      end
+    end
+  end
+
   private
+
+  def normalize_secret_bindings(bindings)
+    unless bindings.is_a?(Array)
+      raise ArgumentError, I18n.t("discourse_ai.tools.secret_bindings.invalid_payload")
+    end
+
+    bindings.map do |binding|
+      unless binding.respond_to?(:[])
+        raise ArgumentError, I18n.t("discourse_ai.tools.secret_bindings.invalid_payload")
+      end
+
+      alias_name = (binding[:alias] || binding["alias"]).to_s
+      secret_id = (binding[:ai_secret_id] || binding["ai_secret_id"]).presence
+
+      { alias: alias_name, ai_secret_id: secret_id&.to_i }
+    end
+  end
 
   def set_image_generation_tool_flag
     has_prompt_parameter = parameters.is_a?(Array) && parameters.any? { |p| p["name"] == "prompt" }
@@ -95,6 +215,60 @@ class AiTool < ActiveRecord::Base
           :parameters,
           "Parameter '#{param["name"]}' at index #{index}: enum values must be unique",
         )
+      end
+    end
+  end
+
+  def validate_secret_contracts
+    return if secret_contracts.blank?
+
+    unless secret_contracts.is_a?(Array)
+      errors.add(:secret_contracts, I18n.t("discourse_ai.tools.secret_contracts.invalid_payload"))
+      return
+    end
+
+    aliases = []
+
+    Array(secret_contracts).each_with_index do |contract, index|
+      unless contract.is_a?(Hash)
+        errors.add(
+          :secret_contracts,
+          I18n.t("discourse_ai.tools.secret_contracts.invalid_contract", index: index),
+        )
+        next
+      end
+
+      alias_name = contract.fetch("alias", contract[:alias]).to_s
+
+      if alias_name.blank?
+        errors.add(
+          :secret_contracts,
+          I18n.t("discourse_ai.tools.secret_contracts.alias_required", index: index),
+        )
+        next
+      end
+
+      if alias_name.length > 100
+        errors.add(
+          :secret_contracts,
+          I18n.t("discourse_ai.tools.secret_contracts.alias_too_long", alias: alias_name),
+        )
+      end
+
+      unless alias_name.match?(SECRET_ALIAS_PATTERN)
+        errors.add(
+          :secret_contracts,
+          I18n.t("discourse_ai.tools.secret_contracts.alias_invalid", alias: alias_name),
+        )
+      end
+
+      if aliases.include?(alias_name)
+        errors.add(
+          :secret_contracts,
+          I18n.t("discourse_ai.tools.secret_contracts.alias_not_unique", alias: alias_name),
+        )
+      else
+        aliases << alias_name
       end
     end
   end
@@ -158,6 +332,7 @@ class AiTool < ActiveRecord::Base
               description: "The stock symbol (e.g., AAPL, GOOGL)",
             },
           ],
+          secret_contracts: [{ alias: "alphavantage_api_key" }],
           script: "#{preamble}\n#{load_script("presets/stock_quote.js")}",
           summary: "Get real-time stock quotes using AlphaVantage API",
         },
@@ -215,6 +390,7 @@ class AiTool < ActiveRecord::Base
             description: "Image size (1024x1024, 1792x1024, or 1024x1792)",
           },
         ],
+        secret_contracts: [{ alias: "openai_api_key" }],
         script: "#{preamble}\n#{load_script("presets/image_generation/openai.js")}",
         summary: "Generate images with OpenAI GPT Image 1 model",
         category: "image_generation",
@@ -234,6 +410,7 @@ class AiTool < ActiveRecord::Base
             description: "The text prompt for image generation",
           },
         ],
+        secret_contracts: [{ alias: "google_api_key" }],
         script: "#{preamble}\n#{load_script("presets/image_generation/gemini.js")}",
         summary: "Generate images with Gemini 2.5 Flash Image",
         category: "image_generation",
@@ -260,6 +437,7 @@ class AiTool < ActiveRecord::Base
             description: "Optional seed for random number generation",
           },
         ],
+        secret_contracts: [{ alias: "together_api_key" }],
         script: "#{preamble}\n#{load_script("presets/image_generation/flux_together.js")}",
         summary: "Generate images with FLUX 1.1 Pro",
         category: "image_generation",
@@ -286,6 +464,7 @@ class AiTool < ActiveRecord::Base
             description: "Optional seed for reproducible results",
           },
         ],
+        secret_contracts: [{ alias: "bfl_api_key" }],
         script: "#{preamble}\n#{load_script("presets/image_generation/flux_2_bfl.js")}",
         summary: "Generate and edit images with FLUX 2 Pro",
         category: "image_generation",
@@ -307,6 +486,7 @@ end
 #  rag_chunk_overlap_tokens :integer          default(10), not null
 #  rag_chunk_tokens         :integer          default(374), not null
 #  script                   :text             not null
+#  secret_contracts         :jsonb            not null
 #  summary                  :string           not null
 #  tool_name                :string(100)      default(""), not null
 #  created_at               :datetime         not null

@@ -288,6 +288,23 @@ en:
           name: "Start from blank..."
       name:
         characters: "must only include numbers, letters, and underscores"
+      secret_contracts:
+        invalid_payload: "Secret contracts must be an array."
+        invalid_contract: "Secret contract at index %{index} is invalid."
+        alias_required: "Secret contract at index %{index} must include an alias."
+        alias_too_long: "Secret alias `%{alias}` is too long."
+        alias_invalid: "Secret alias `%{alias}` must only include numbers, letters, and underscores."
+        alias_not_unique: "Secret alias `%{alias}` is duplicated."
+      secret_bindings:
+        invalid_payload: "Secret bindings must be an array."
+        secret_not_found: "The selected credential does not exist."
+        alias_not_declared: "Alias `%{alias}` is not declared in this tool."
+      secret_runtime:
+        alias_not_declared: "Credential alias `%{alias}` is not declared for this tool."
+        missing_binding: "Credential alias `%{alias}` is required but not bound."
+        missing_required_aliases: "Missing required credential bindings for aliases: %{aliases}."
+        secret_not_found: "Credential alias `%{alias}` is bound to a missing credential."
+        unknown_error: "Unable to resolve the requested credential."
 
     ai_helper:
       errors:
@@ -674,7 +691,7 @@ en:
         model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     secrets:
-      delete_failed_in_use: "This credential is currently in use by one or more LLMs or embeddings and cannot be deleted."
+      delete_failed_in_use: "This credential is currently in use by one or more LLMs, embeddings, or tools and cannot be deleted."
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"

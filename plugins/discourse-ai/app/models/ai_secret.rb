@@ -8,9 +8,11 @@ class AiSecret < ActiveRecord::Base
 
   has_many :llm_models, dependent: :nullify
   has_many :embedding_definitions, dependent: :nullify
+  has_many :ai_tool_secret_bindings, dependent: :destroy
 
   def in_use?
-    llm_models.exists? || embedding_definitions.exists? || used_by_provider_params?
+    llm_models.exists? || embedding_definitions.exists? || used_by_provider_params? ||
+      ai_tool_secret_bindings.exists?
   end
 
   def used_by
@@ -22,6 +24,17 @@ class AiSecret < ActiveRecord::Base
     provider_param_llms.each do |llm|
       usage << { type: "llm_provider_param", name: llm.display_name, id: llm.id }
     end
+    ai_tool_secret_bindings
+      .includes(:ai_tool)
+      .each do |binding|
+        next if binding.ai_tool.blank?
+
+        usage << {
+          type: "tool",
+          name: "#{binding.ai_tool.name} (#{binding[:alias]})",
+          id: binding.ai_tool.id,
+        }
+      end
     usage
   end
 
