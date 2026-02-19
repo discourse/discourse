@@ -708,6 +708,26 @@ en:
       persona_disabled: The persona specified is disabled. Check the persona_name or persona_id params.
       no_default_llm: The persona must have a default_llm defined.
       user_not_allowed: The user is not allowed to participate in the topic.
+      invalid_stream_resume_token: The resume_token is invalid or has expired.
+      no_tool_results_specified: The tool_results parameter is required when resuming a stream.
+      invalid_custom_tools: "The custom_tools parameter is invalid: %{details}"
+      duplicate_custom_tools: "The custom_tools parameter contains duplicate tool names: %{names}"
+      too_many_custom_tools: "The custom_tools parameter can include at most %{max} tools."
+      custom_tool_definition_too_large: "Each custom tool definition must be at most %{max} bytes."
+      invalid_stream_param: "The %{key} parameter is invalid: %{details}"
+      expected_array: "expected an array"
+      expected_object: "expected an object"
+      ambiguous_tool_results: "Specify either tool_results or tool_result, not both."
+      invalid_tool_results: "The tool_results parameter is invalid: %{details}"
+      too_many_tool_results: "The tool_results parameter can include at most %{max} items."
+      no_pending_tool_calls: There are no pending tool calls for this resume token.
+      missing_tool_results: "Missing tool results for tool_call_id(s): %{ids}"
+      unexpected_tool_results: "Unexpected tool results for tool_call_id(s): %{ids}"
+      invalid_tool_result_content: "The tool result for %{id} must include content"
+      tool_result_content_too_large: "Each tool result content payload must be at most %{max} bytes."
+      stream_reply_max_resume_rounds_reached: Reached maximum custom tool resume rounds (%{max}).
+      stream_reply_state_too_large: "The stream state is too large to persist (max %{max} bytes)."
+      stream_reply_unexpected_error: An unexpected error occurred while streaming the reply.
       prompt_message_length: The message %{idx} is over the 1000 character limit.
       persona_already_exists: Persona with the name %{name} already exists.
       custom_tool_exists:
