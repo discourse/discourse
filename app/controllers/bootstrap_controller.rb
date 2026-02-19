@@ -22,6 +22,7 @@ class BootstrapController < ApplicationController
   end
 
   def plugin_test_info
+    puts "Target is #{params[:target].inspect}"
     target = params[:target]
 
     required_plugins = []
