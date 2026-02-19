@@ -1878,8 +1878,6 @@ Discourse::Application.routes.draw do
     post "/push_notifications/subscribe" => "push_notification#subscribe"
     post "/push_notifications/unsubscribe" => "push_notification#unsubscribe"
 
-    resources :csp_reports, only: [:create]
-
     get "/permalink-check", to: "permalinks#check"
 
     post "/do-not-disturb" => "do_not_disturb#create"
