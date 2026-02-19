@@ -3171,6 +3171,9 @@ navigation:
     area: "navigation"
 
 embedding:
+  embed_full_app:
+    default: false
+    hidden: true
   embed_by_username:
     default: ""
     type: username
@@ -3623,17 +3626,6 @@ uncategorized:
     default: -1
     hidden: true
     client: true
-
-  bootstrap_mode_min_users:
-    default: 50
-    client: true
-    max: 5000
-    area: "site_admin"
-
-  bootstrap_mode_enabled:
-    default: false
-    client: true
-    hidden: true
 
   automatically_unpin_topics:
     default: true
@@ -4228,6 +4220,10 @@ experimental:
       impact: "feature,all_members"
       status: "experimental"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
+  experimental_tag_settings_page:
+    default: false
+    client: true
+    area: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true

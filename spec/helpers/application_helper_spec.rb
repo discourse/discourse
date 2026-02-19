@@ -681,6 +681,18 @@ RSpec.describe ApplicationHelper do
       end
     end
 
+    context "with opengraph image type" do
+      it "includes og:image:type when provided" do
+        result = helper.crawlable_meta_data(image: "some-image.png", image_type: "image/png")
+        expect(result).to include('<meta property="og:image:type" content="image/png" />')
+      end
+
+      it "does not include og:image:type when not provided" do
+        result = helper.crawlable_meta_data(image: "some-image.png")
+        expect(result).not_to include("og:image:type")
+      end
+    end
+
     context "with breadcrumbs" do
       subject(:metadata) { helper.crawlable_meta_data(breadcrumbs: breadcrumbs) }
 

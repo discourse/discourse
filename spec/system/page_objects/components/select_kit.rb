@@ -133,6 +133,10 @@ module PageObjects
       def clear
         expanded_component.all(".selected-choice").each(&:click)
       end
+
+      def option_names
+        expanded_component.all(".select-kit-row").map { |row| row["data-name"] }
+      end
     end
   end
 end

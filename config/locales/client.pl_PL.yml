@@ -3805,11 +3805,26 @@ pl_PL:
         notify: "Powiadom użytkowników o tej zmianie."
         performing: "Wykonywanie operacji zbiorczych, proszę czekać…"
         completed: "Operacje masowe zakończone pomyślnie!"
+        completed_count:
+          one: "<b>%{count}</b> temat został zaktualizowany."
+          few: "<b>%{count}</b> tematy został zaktualizowane."
+          many: "<b>%{count}</b> tematów zostało zaktualizowanych."
+          other: "<b>%{count}</b> tematów zostało zaktualizowanych."
         not_completed:
-          one: "Nie udało się ukończyć operacji zbiorczej dla <strong>%{count}</strong> tematu"
-          few: "Nie udało się ukończyć operacji zbiorczej dla <strong>%{count}</strong> tematów"
-          many: "Nie udało się ukończyć operacji zbiorczej dla <strong>%{count}</strong> tematów"
-          other: "Nie udało się ukończyć operacji zbiorczej dla <strong>%{count}</strong> tematów"
+          one: "<b>%{count}</b> tematu nie można zaktualizować:"
+          few: "<b>%{count}</b> tematów nie można zaktualizować:"
+          many: "<b>%{count}</b> tematów nie można zaktualizować:"
+          other: "<b>%{count}</b> tematów nie można zaktualizować:"
+        skipped_count:
+          one: "<b>%{count}</b> temat jest już aktualny."
+          few: "<b>%{count}</b> tematy są już aktualne."
+          many: "<b>%{count}</b> tematów jest już aktualnych."
+          other: "<b>%{count}</b> tematów jest już aktualnych."
+        error_topic_count:
+          one: "%{count} temat"
+          few: "%{count} tematy"
+          many: "%{count} tematów"
+          other: "%{count} tematów"
       none:
         unread: "Nie masz nieprzeczytanych tematów."
         unseen: "Nie masz niewidzianych tematów."
@@ -6003,6 +6018,8 @@ pl_PL:
       toggle_localized:
         translated: "Strona jest tłumaczona maszynowo. Kliknij, aby wyświetlić oryginał."
         not_translated: "Strona nie jest przetłumaczona. Kliknij, aby przetłumaczyć."
+        translations_enabled: "Tłumaczenia włączone"
+        translations_disabled: "Tłumaczenia wyłączone"
     language_switcher:
       title: "Zmień język witryny"
   admin_js:
@@ -6580,7 +6597,8 @@ pl_PL:
         new_features:
           title: "Co nowego?"
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
-          no_new_features_found: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w społeczności Discourse Meta <a href='%{url}' target='_blank'></a>."
+          no_new_features_found: "Brak elementów w kanale lub wybrany filtr nie zwrócił żadnych wyników. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w <a href='%{url}' target='_blank'>społeczności Discourse Meta</a>."
+          no_new_features_error: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w społeczności Discourse Meta <a href='%{url}' target='_blank'></a>."
           learn_more: "Dowiedz się więcej..."
           experimental: "Eksperymentalne"
           only_experiments: "Pokaż tylko funkcje eksperymentalne"
@@ -6797,6 +6815,8 @@ pl_PL:
         save: "Zapisz"
         cancel: "Anuluj"
         continue: "Kontynuuj"
+        copy_key: "Kopiuj"
+        key_copied_to_clipboard: "Klucz API skopiowano do schowka"
         back: "Powrót do kluczy API"
         revoke: "Odbierz"
         undo_revoke: "Anuluj cofnięcie"

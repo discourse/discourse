@@ -34,6 +34,7 @@ class TopicsController < ApplicationController
                  ]
 
   before_action :consider_user_for_promotion, only: :show
+  after_action :allow_embed_mode, only: :show
 
   skip_before_action :check_xhr, only: %i[show feed]
 
@@ -668,6 +669,7 @@ class TopicsController < ApplicationController
 
   def toggle_archive_message(archive)
     topic = Topic.find(params[:id].to_i)
+    guardian.ensure_can_see!(topic)
 
     group_id = nil
 
@@ -1245,6 +1247,8 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:id])
     raise Discourse::NotFound.new unless topic
 
+    guardian.ensure_can_see!(topic)
+
     topic.reset_bumped_at(params[:post_id])
     render body: nil
   end
@@ -1273,6 +1277,14 @@ class TopicsController < ApplicationController
   end
 
   private
+
+  def allow_embed_mode
+    return if params[:embed_mode].blank?
+    return unless SiteSetting.embed_full_app
+    return unless SiteSetting.embed_any_origin? || EmbeddableHost.record_for_url(request.referer)
+
+    response.headers.delete("X-Frame-Options")
+  end
 
   def topic_params
     params.permit(:topic_id, :topic_time, timings: {})

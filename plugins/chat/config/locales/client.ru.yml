@@ -46,6 +46,12 @@ ru:
           many: "%{formatted_number} сообщений чата"
           other: "%{formatted_number} сообщения чата"
     chat:
+      edit_category:
+        tab_title: "Чат"
+        channel: "Канал"
+        description: "Описание"
+        actions: "Действия"
+        settings: "настроек"
       text_copied: Текст скопирован в буфер обмена
       link_copied: Ссылка скопирована в буфер обмена
       back_to_forum: "Форум"

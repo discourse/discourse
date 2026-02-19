@@ -6295,6 +6295,13 @@ RSpec.describe TopicsController do
         put "/t/#{max_id + 1}/reset-bump-date.json"
         expect(response.status).to eq(404)
       end
+
+      it "denies access for TL4 user on a topic in a restricted category" do
+        restricted_topic = Fabricate(:topic, category: staff_category)
+        sign_in(trust_level_4)
+        put "/t/#{restricted_topic.id}/reset-bump-date.json"
+        expect(response.status).to eq(403)
+      end
     end
 
     %i[admin moderator trust_level_4].each do |user|
@@ -6486,6 +6493,34 @@ RSpec.describe TopicsController do
 
       expect(body["group_name"]).to eq(group.name)
     end
+
+    it "rejects a user who is not a participant of the message" do
+      sign_in(user_2)
+
+      put "/t/#{group_message.id}/archive-message.json"
+      expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#move_to_inbox" do
+    fab!(:group) do
+      Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user) }
+    end
+
+    fab!(:group_message) do
+      create_post(
+        user: user,
+        target_group_names: [group.name],
+        archetype: Archetype.private_message,
+      ).topic
+    end
+
+    it "rejects a user who is not a participant of the message" do
+      sign_in(user_2)
+
+      put "/t/#{group_message.id}/move-to-inbox.json"
+      expect(response.status).to eq(403)
+    end
   end
 
   describe "#set_notifications" do
@@ -6639,6 +6674,57 @@ RSpec.describe TopicsController do
         TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
         Scheduler::Defer.do_all_work
       }.to change { TopicViewItem.count }
+    end
+  end
+
+  describe "allow_embed_mode" do
+    fab!(:topic)
+
+    before { SiteSetting.embed_full_app = true }
+
+    it "keeps X-Frame-Options when embed_mode param is missing" do
+      get("/t/#{topic.slug}/#{topic.id}")
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+
+    it "keeps X-Frame-Options when embed_mode is present but referer is invalid" do
+      get("/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" })
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+
+    it "strips X-Frame-Options when embed_mode is present and referer matches embeddable host" do
+      Fabricate(:embeddable_host, host: "example.com")
+      get(
+        "/t/#{topic.slug}/#{topic.id}",
+        params: {
+          embed_mode: "true",
+        },
+        headers: {
+          "HTTP_REFERER" => "https://example.com/page",
+        },
+      )
+      expect(response.headers).not_to include("X-Frame-Options")
+    end
+
+    it "strips X-Frame-Options when embed_mode is present and embed_any_origin is enabled" do
+      SiteSetting.embed_any_origin = true
+      get("/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" })
+      expect(response.headers).not_to include("X-Frame-Options")
+    end
+
+    it "keeps X-Frame-Options when embed_full_app is disabled" do
+      SiteSetting.embed_full_app = false
+      Fabricate(:embeddable_host, host: "example.com")
+      get(
+        "/t/#{topic.slug}/#{topic.id}",
+        params: {
+          embed_mode: "true",
+        },
+        headers: {
+          "HTTP_REFERER" => "https://example.com/page",
+        },
+      )
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
     end
   end
 end

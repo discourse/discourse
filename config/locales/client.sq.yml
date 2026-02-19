@@ -2960,6 +2960,9 @@ sq:
           other: "Progresi: <strong>%{count}</strong> tema"
         performing: "Duke kryer operacione me shumicë, ju lutemi prisni…"
         completed: "Operacionet me shumicë përfunduan me sukses!"
+        error_topic_count:
+          one: "%{count} temë"
+          other: "%{count} tema"
       none:
         unread: "Nuk keni tema të palexuara."
         unseen: "Ju nuk keni tema të palexuara."
@@ -4159,6 +4162,7 @@ sq:
         save: "Ruani"
         cancel: "Anulo"
         continue: "Vazhdoni"
+        copy_key: "Kopjo"
         revoke: "Revoko"
       api:
         generate_master: "Gjenero Master API Key"

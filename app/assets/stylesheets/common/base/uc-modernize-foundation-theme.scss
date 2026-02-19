@@ -49,7 +49,8 @@
   .btn-primary,
   .btn.no-text,
   .view-all-drafts,
-  .discourse-reactions-counter .reactions-counter {
+  .discourse-reactions-counter .reactions-counter,
+  #topic-progress-wrapper {
     &:not(
       .sidebar-footer-actions-button,
       #search-button,
@@ -71,7 +72,18 @@
   }
 
   .btn.no-text.btn-icon {
-    width: var(--button-height);
+    &:not(.user-menu-tab, .user-menu-tab-active) {
+      width: var(--button-height);
+    }
+  }
+
+  .container.posts .topic-navigation .btn-toggle-localized-content.--active {
+    --d-button-default-icon-color: var(--tertiary);
+    --d-button-default-icon-color--hover: var(--tertiary);
+  }
+
+  .select-kit.dropdown-select-box.composer-actions .select-kit-header .d-icon {
+    padding: 0;
   }
 
   .discourse-reactions-counter .reactions-counter {
