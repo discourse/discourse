@@ -60,6 +60,8 @@ class BootstrapController < ApplicationController
                        formats: [:html],
                        layout: false
 
+    puts plugin_js_string
+
     plugin_css_string =
       Discourse
         .find_plugin_css_assets(include_disabled: true, desktop_view: true, only: required_plugins)
