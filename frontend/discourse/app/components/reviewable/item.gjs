@@ -166,12 +166,10 @@ export default class ReviewableItem extends Component {
     claimOptional,
     claimRequired,
     claimedBy,
-    oldModeratorActions,
     isAiReviewable
   ) {
     return (
-      (oldModeratorActions &&
-        createdFromFlag &&
+      (createdFromFlag &&
         status === 0 &&
         (claimOptional || (claimRequired && claimedBy !== null))) ||
       isAiReviewable

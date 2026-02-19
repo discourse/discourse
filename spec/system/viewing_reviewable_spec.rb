@@ -294,6 +294,15 @@ describe "Viewing reviewable item", type: :system do
       expect(page).to have_text("Hello world from system spec!")
       expect(page).not_to have_text("hello world post contents.")
     end
+
+    it "shows context question for rejected queued post" do
+      review_page.visit_reviewable(reviewable_queued_post)
+
+      expect(review_page).to have_context_question(
+        reviewable_queued_post,
+        I18n.t("js.review.context_question.approve_post"),
+      )
+    end
   end
 
   describe "when the reviewable item is a user" do
