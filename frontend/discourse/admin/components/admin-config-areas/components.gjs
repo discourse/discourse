@@ -551,7 +551,8 @@ class ComponentRow extends Component {
             @identifier="component-menu"
             @title={{i18n "admin.config_areas.flags.more_options.title"}}
             @icon="ellipsis"
-            @class="btn-default admin-config-components__more-actions"
+            @class="admin-config-components__more-actions"
+            @triggerClass="btn-default"
           >
             <:content>
               <DropdownMenu as |dropdown|>
