@@ -10,6 +10,7 @@ import bodyClass from "discourse/helpers/body-class";
 import concatClass from "discourse/helpers/concat-class";
 import { prioritizeNameFallback } from "discourse/lib/settings";
 import { sanitize } from "discourse/lib/text";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { defaultHomepage, escapeExpression } from "discourse/lib/utilities";
 import I18n, { i18n } from "discourse-i18n";
 
@@ -76,6 +77,28 @@ export default class WelcomeBanner extends Component {
     const { currentRouteName } = this.router;
     const { top_menu, welcome_banner_page_visibility } = this.siteSettings;
 
+    const shouldDisplayForRoute = this.#shouldDisplayForRoute(
+      welcome_banner_page_visibility,
+      top_menu,
+      currentRouteName
+    );
+
+    return applyValueTransformer(
+      "welcome-banner-display-for-route",
+      shouldDisplayForRoute,
+      {
+        welcomeBannerPageVisibility: welcome_banner_page_visibility,
+        currentRouteName,
+        homepage: `discovery.${defaultHomepage()}`,
+      }
+    );
+  }
+
+  #shouldDisplayForRoute(
+    welcome_banner_page_visibility,
+    top_menu,
+    currentRouteName
+  ) {
     switch (welcome_banner_page_visibility) {
       case "top_menu_pages":
         return top_menu
