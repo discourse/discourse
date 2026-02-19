@@ -316,8 +316,11 @@ class TopicsBulkAction
   def remove_tags
     topics.each do |t|
       if guardian.can_edit?(t)
-        TopicTag.where(topic_id: t.id).in_batches.destroy_all
-        @changed_ids << t.id
+        if DiscourseTagging.tag_topic_by_names(t, guardian, [])
+          @changed_ids << t.id
+        else
+          t.errors.full_messages.each { |msg| @errors[msg] += 1 }
+        end
       end
     end
   end

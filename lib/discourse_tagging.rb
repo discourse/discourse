@@ -287,7 +287,7 @@ module DiscourseTagging
   end
 
   def self.validate_min_required_tags_for_category(guardian, model, category, tags = [])
-    if !guardian.is_staff? && category && category.minimum_required_tags > 0 &&
+    if !guardian.is_admin? && category && category.minimum_required_tags > 0 &&
          tags.length < category.minimum_required_tags
       model.errors.add(
         :base,
@@ -300,7 +300,7 @@ module DiscourseTagging
   end
 
   def self.validate_required_tags_from_group(guardian, model, category, tags = [])
-    return true if guardian.is_staff? || category.nil?
+    return true if guardian.is_admin? || category.nil?
 
     success = true
     category.category_required_tag_groups.each do |crtg|
@@ -330,10 +330,12 @@ module DiscourseTagging
     tags_restricted_to_categories = Hash.new { |h, k| h[k] = Set.new }
 
     query = Tag.where(name: tags)
+
     query
       .joins(tag_groups: :categories)
       .pluck(:name, "categories.id")
       .each { |(tag, cat_id)| tags_restricted_to_categories[tag] << cat_id }
+
     query
       .joins(:categories)
       .pluck(:name, "categories.id")
@@ -345,6 +347,8 @@ module DiscourseTagging
       end
 
     if unallowed_tags.present?
+      return true if guardian.is_admin?
+
       msg =
         I18n.t(
           "tags.forbidden.restricted_tags_cannot_be_used_in_category",
@@ -359,6 +363,8 @@ module DiscourseTagging
     if !category.allow_global_tags && category.has_restricted_tags?
       unrestricted_tags = tags - tags_restricted_to_categories.keys
       if unrestricted_tags.present?
+        return true if guardian.is_admin?
+
         msg =
           I18n.t(
             "tags.forbidden.category_does_not_allow_tags",
@@ -370,6 +376,7 @@ module DiscourseTagging
         return false
       end
     end
+
     true
   end
 
@@ -377,6 +384,7 @@ module DiscourseTagging
     tags_cant_be_used = filter_tags_violating_one_tag_from_group_per_topic(guardian, category, tags)
 
     return true if tags_cant_be_used.blank?
+    return true if guardian&.is_admin?
 
     tags_cant_be_used.each do |_, incompatible_tags|
       model.errors.add(
