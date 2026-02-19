@@ -26,7 +26,8 @@ class UserField < ActiveRecord::Base
   scope :user_editable_text_fields, -> { where(field_type: %w[text textarea]) }
 
   enum :requirement, { optional: 0, for_all_users: 1, on_signup: 2 }.freeze
-  enum :field_type_enum, { text: 0, confirm: 1, dropdown: 2, multiselect: 3, textarea: 4 }.freeze
+  enum :field_type_enum,
+       { text: 0, confirm: 1, dropdown: 2, multiselect: 3, textarea: 4, date: 5 }.freeze
   alias_attribute :field_type, :field_type_enum
 
   def self.max_length

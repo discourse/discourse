@@ -2,6 +2,7 @@ import Component from "@glimmer/component";
 import { get } from "@ember/helper";
 import { applyValueTransformer } from "../lib/transformer";
 import UserFieldConfirm from "./user-fields/confirm";
+import UserFieldDate from "./user-fields/date";
 import UserFieldDropdown from "./user-fields/dropdown";
 import UserFieldMultiselect from "./user-fields/multiselect";
 import UserFieldText from "./user-fields/text";
@@ -15,6 +16,7 @@ export default class UserField extends Component {
       multiselect: UserFieldMultiselect,
       text: UserFieldText,
       textarea: UserFieldTextArea,
+      date: UserFieldDate,
     });
   }
 

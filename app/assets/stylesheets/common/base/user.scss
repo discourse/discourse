@@ -1398,7 +1398,8 @@
 // Due to special login animations, the order here needs to be changed
 .control-group[data-setting-name="user-user-fields"] {
   .user-field.text,
-  .user-field.textarea {
+  .user-field.textarea,
+  .user-field.date {
     .controls {
       display: flex;
       flex-direction: column;
