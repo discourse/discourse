@@ -9,11 +9,9 @@ export default class AdminPluginsExplorerIndex extends DiscourseRoute {
     // Redirect old `?id=123` URLs to query details.
     const { id, ...queryParams } = transition.to.queryParams;
     if (id) {
-      this.router.transitionTo(
-        "adminPlugins.show.explorer.queries.details",
-        id,
-        { queryParams }
-      );
+      this.router.transitionTo("adminPlugins.show.explorer.details", id, {
+        queryParams,
+      });
     }
   }
 

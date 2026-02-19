@@ -8,7 +8,7 @@ export default class AdminPluginsExplorerQueriesDetailsRoute extends Route {
 
   beforeModel(transition) {
     this.router.transitionTo(
-      "adminPlugins.show.explorer.queries.details",
+      "adminPlugins.show.explorer.details",
       PLUGIN_ID,
       transition.to.params.query_id,
       { queryParams: transition.to.queryParams }

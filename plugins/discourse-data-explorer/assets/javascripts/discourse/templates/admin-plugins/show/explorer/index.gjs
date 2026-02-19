@@ -16,7 +16,7 @@ export default <template>
   {{#if @controller.disallow}}
     <h1>{{i18n "explorer.admins_only"}}</h1>
   {{else}}
-    <div class="query-list">
+    <div class="discourse-data-explorer-query-list">
       <TextField
         @value={{@controller.search}}
         @placeholderKey="explorer.search_placeholder"
@@ -123,7 +123,7 @@ export default <template>
                 <td class="d-admin-row__overview">
                   <LinkTo
                     {{on "click" @controller.scrollTop}}
-                    @route="adminPlugins.show.explorer.queries.details"
+                    @route="adminPlugins.show.explorer.details"
                     @model={{query.id}}
                   >
                     <b class="query-name">{{query.name}}</b>
