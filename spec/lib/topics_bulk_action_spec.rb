@@ -280,14 +280,13 @@ RSpec.describe TopicsBulkAction do
       fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
       fab!(:source_category) { Fabricate(:category, tags: [restricted_tag]) }
       fab!(:admin)
+      fab!(:moderator)
       fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [restricted_tag]) }
       fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
 
       before { destination_category.update!(tags: [other_tag]) }
 
-      it "does not change category" do
-        original_category = topic_with_tag.category
-
+      it "allows admins to change category" do
         topic_ids =
           TopicsBulkAction.new(
             admin,
@@ -296,33 +295,35 @@ RSpec.describe TopicsBulkAction do
             category_id: destination_category.id,
           ).perform!
 
-        expect(topic_ids).to eq([])
-        expect(topic_with_tag.reload.category).to eq(original_category)
+        expect(topic_ids).to eq([topic_with_tag.id])
+        expect(topic_with_tag.reload.category).to eq(destination_category)
+        expect(topic_with_tag.tags).to contain_exactly(restricted_tag)
       end
 
-      it "logs a warning with error details" do
-        Rails.logger.expects(:warn).with(includes("restricted-tag"))
-
-        TopicsBulkAction.new(
-          admin,
-          [topic_with_tag.id],
-          type: "change_category",
-          category_id: destination_category.id,
-        ).perform!
-      end
-
-      it "exposes errors via attr_reader" do
-        operator =
+      it "does not change category for moderators" do
+        topic_ids =
           TopicsBulkAction.new(
-            admin,
+            moderator,
             [topic_with_tag.id],
             type: "change_category",
             category_id: destination_category.id,
-          )
-        operator.perform!
+          ).perform!
 
-        expect(operator.errors).to be_present
-        expect(operator.errors.values.sum).to eq(1)
+        expect(topic_ids).to eq([])
+        expect(topic_with_tag.reload.category).to eq(source_category)
+      end
+
+      it "does not change category for regular users" do
+        topic_ids =
+          TopicsBulkAction.new(
+            topic_with_tag.user,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_tag.reload.category).to eq(source_category)
       end
     end
 
@@ -368,6 +369,88 @@ RSpec.describe TopicsBulkAction do
 
         expect(topic_ids).to eq([topic_with_tag.id])
         expect(topic_with_tag.reload.category).to eq(destination_category)
+      end
+    end
+
+    context "when destination category disallows global tags" do
+      fab!(:global_tag) { Fabricate(:tag, name: "global-tag") }
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [restricted_tag]) }
+      fab!(:source_category, :category)
+      fab!(:destination_category) do
+        Fabricate(:category, tag_groups: [tag_group], allow_global_tags: false)
+      end
+      fab!(:admin)
+      fab!(:moderator)
+      fab!(:topic_with_global_tag) do
+        Fabricate(:topic, category: source_category, tags: [global_tag])
+      end
+      fab!(:first_post) { Fabricate(:post, topic: topic_with_global_tag) }
+
+      it "allows admin to move topic with global tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_global_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([topic_with_global_tag.id])
+        expect(topic_with_global_tag.reload.category).to eq(destination_category)
+      end
+
+      it "prevents moderator from moving topic with global tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            moderator,
+            [topic_with_global_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_global_tag.reload.category).to eq(source_category)
+      end
+    end
+
+    context "when tags violate one-per-topic tag group rule" do
+      fab!(:tag1) { Fabricate(:tag, name: "priority-high") }
+      fab!(:tag2) { Fabricate(:tag, name: "priority-low") }
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [tag1, tag2], one_per_topic: true) }
+      fab!(:source_category, :category)
+      fab!(:destination_category) { Fabricate(:category, tag_groups: [tag_group]) }
+      fab!(:admin)
+      fab!(:moderator)
+      fab!(:topic_with_conflicting_tags) do
+        Fabricate(:topic, category: source_category, tags: [tag1, tag2])
+      end
+      fab!(:first_post) { Fabricate(:post, topic: topic_with_conflicting_tags) }
+
+      it "allows admin to move topic with conflicting tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_conflicting_tags.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([topic_with_conflicting_tags.id])
+        expect(topic_with_conflicting_tags.reload.category).to eq(destination_category)
+      end
+
+      it "prevents moderator from moving topic with conflicting tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            moderator,
+            [topic_with_conflicting_tags.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_conflicting_tags.reload.category).to eq(source_category)
       end
     end
   end
@@ -595,7 +678,7 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "change_tags" do
-    fab!(:first_post) { Fabricate(:post, topic:) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
 
@@ -692,7 +775,7 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "append_tags" do
-    fab!(:first_post) { Fabricate(:post, topic:) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
     fab!(:tag3, :tag)
@@ -786,7 +869,7 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "remove_tags" do
-    fab!(:first_post) { Fabricate(:post, topic:) }
+    fab!(:first_post) { Fabricate(:post, topic: topic) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
 

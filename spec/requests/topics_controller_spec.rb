@@ -4682,7 +4682,7 @@ RSpec.describe TopicsController do
       end
 
       it "includes errors in the response when operations partially fail" do
-        sign_in(Fabricate(:admin))
+        sign_in(Fabricate(:moderator))
 
         restricted_tag = Fabricate(:tag, name: "restricted-tag")
         source_category = Fabricate(:category, tags: [restricted_tag])
