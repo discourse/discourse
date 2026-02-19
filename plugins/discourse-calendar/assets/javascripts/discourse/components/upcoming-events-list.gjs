@@ -158,12 +158,12 @@ export default class UpcomingEventsList extends Component {
     const start = moment(event.starts_at);
     const end = moment(event.ends_at);
 
-    // Same month and year - use en-dash (number–number looks good)
+    // Same month and year - use hyphen with no spaces (number-number looks good)
     if (start.month() === end.month() && start.year() === end.year()) {
-      return `${start.format("MMMM D")}–${end.format("D, YYYY")}`;
+      return `${start.format("MMMM D")}-${end.format("D, YYYY")}`;
     }
 
-    // Different months, same year - use hyphen (month day - month day, year looks good)
+    // Different months, same year - use hyphen with spaces (month day - month day, year looks good)
     if (start.year() === end.year()) {
       return `${start.format("MMMM D")} - ${end.format("MMMM D, YYYY")}`;
     }
