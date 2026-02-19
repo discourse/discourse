@@ -37,6 +37,33 @@ RSpec.describe PostActionUsersController do
       expect(users.length).to eq(1)
       expect(users[0]["id"]).to eq(post.user.id)
     end
+
+    it "does not leak restricted action counts to non-privileged users" do
+      inappropriate = PostActionType.types[:inappropriate]
+      other_user = Fabricate(:user, refresh_auto_groups: true)
+
+      PostActionCreator.new(post.user, post, inappropriate).perform
+      PostActionCreator.new(other_user, post, inappropriate).perform
+
+      post.reload
+      action_type_sym = PostActionType.types.key(inappropriate)
+      expect(post["#{action_type_sym}_count"]).to eq(2)
+
+      get "/post_action_users.json",
+          params: {
+            id: post.id,
+            post_action_type_id: inappropriate,
+            limit: 1,
+          }
+      expect(response.status).to eq(200)
+
+      users = response.parsed_body["post_action_users"]
+      total = response.parsed_body["total_rows_post_action_users"]
+
+      expect(users.length).to eq(1)
+      expect(users[0]["id"]).to eq(post.user.id)
+      expect(total).to be_nil
+    end
   end
 
   it "raises an error without an id" do

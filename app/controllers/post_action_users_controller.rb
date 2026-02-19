@@ -27,13 +27,19 @@ class PostActionUsersController < ApplicationController
     post_actions =
       DiscoursePluginRegistry.apply_modifier(:post_action_users_list, post_actions, post)
 
-    if !guardian.can_see_post_actors?(post.topic, post_action_type_id)
+    can_see_actors = guardian.can_see_post_actors?(post.topic, post_action_type_id)
+
+    if !can_see_actors
       raise Discourse::InvalidAccess if current_user.blank?
       post_actions = post_actions.where(user_id: current_user.id)
     end
 
-    action_type = PostActionType.types.key(post_action_type_id)
-    total_count = post["#{action_type}_count"].to_i
+    if can_see_actors
+      action_type = PostActionType.types.key(post_action_type_id)
+      total_count = post["#{action_type}_count"].to_i
+    else
+      total_count = post_actions.count
+    end
     post_actions = post_actions.to_a
     data = {
       post_action_users:
