@@ -23,6 +23,7 @@ module Migrations::Database::Schema::DSL
       ActiveRecord::Base.with_connection do |connection|
         @db = connection
         @db_table_names = @db.tables.to_set
+        @scope = ColumnScope.new(@schema)
 
         unconfigured_tables = find_unconfigured_tables
         missing_tables = find_missing_tables
@@ -47,7 +48,7 @@ module Migrations::Database::Schema::DSL
           .each_value
           .filter_map { |table_def| table_def.source_table_name&.to_s }
           .to_set
-      ignored = ignored_table_name_set
+      ignored = @scope.ignored_table_name_set
 
       unconfigured = @db_table_names - configured - ignored
       unconfigured.sort.map { |name| TableInfo.new(name:, plugin: plugin_for_table(name)) }
@@ -103,7 +104,7 @@ module Migrations::Database::Schema::DSL
       @db_column_names = @db.columns(source_table).map(&:name).to_set
       @source_table = source_table
 
-      configured_columns = effective_column_names
+      configured_columns = @scope.effective_column_names(@table_def, @db_column_names)
 
       auto_ignored = find_auto_ignored_columns
       unconfigured = find_unconfigured_columns(configured_columns, auto_ignored)
@@ -124,7 +125,7 @@ module Migrations::Database::Schema::DSL
 
     def find_unconfigured_columns(configured_columns, auto_ignored)
       ignored = @table_def.ignored_column_names.map(&:to_s).to_set
-      globally_ignored = globally_ignored_columns
+      globally_ignored = @scope.globally_ignored_columns
       auto_ignored_names = auto_ignored.map(&:name).to_set
 
       unconfigured =
@@ -149,45 +150,6 @@ module Migrations::Database::Schema::DSL
         end
       end
       stale.sort_by(&:name)
-    end
-
-    def effective_column_names
-      forced = @table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
-
-      if @table_def.included_column_names
-        names = @table_def.included_column_names.map(&:to_s).to_set
-      else
-        ignored = @table_def.ignored_column_names.map(&:to_s).to_set
-        names = @db_column_names - ignored - (globally_ignored_columns - forced)
-      end
-
-      added = @table_def.added_columns.map { |c| c.name.to_s }
-      names + added.to_set
-    end
-
-    def globally_ignored_columns
-      @globally_ignored_columns ||=
-        begin
-          conventions = @schema.conventions_config
-          return Set.new unless conventions
-          conventions.ignored_columns.map(&:to_s).to_set
-        end
-    end
-
-    def ignored_table_name_set
-      ignored = @schema.ignored_tables
-      return Set.new unless ignored
-
-      names = ignored.table_names.map(&:to_s).to_set
-
-      manifest = @schema.plugin_manifest
-      if manifest.available?
-        ignored.ignored_plugin_names.each do |plugin_name|
-          manifest.tables_for_plugin(plugin_name.to_s).each { |t| names << t.to_s }
-        end
-      end
-
-      names
     end
 
     def find_auto_ignored_columns

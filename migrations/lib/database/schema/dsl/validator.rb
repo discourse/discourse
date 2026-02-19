@@ -11,6 +11,7 @@ module Migrations::Database::Schema::DSL
       ActiveRecord::Base.with_connection do |connection|
         @db = connection
         @db_table_names = @db.tables.to_set
+        @scope = ColumnScope.new(@schema)
 
         validate_configured_and_ignored_tables
         validate_tables
@@ -44,7 +45,7 @@ module Migrations::Database::Schema::DSL
           .each_value
           .filter_map { |table_def| table_def.source_table_name&.to_s }
           .to_set
-      ignored_table_names = ignored_table_name_set
+      ignored_table_names = @scope.ignored_table_name_set
 
       # Check for unconfigured tables in database
       unconfigured = @db_table_names - configured_table_names - ignored_table_names
@@ -100,7 +101,7 @@ module Migrations::Database::Schema::DSL
       return unless @table_def.included_column_names
 
       forced = @table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
-      globally_ignored = globally_ignored_columns
+      globally_ignored = @scope.globally_ignored_columns
       auto_ignored = auto_ignored_column_names
 
       @table_def.included_column_names.each do |col_name|
@@ -116,7 +117,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def validate_column_options
-      configured_columns = effective_column_names
+      configured_columns = @scope.effective_column_names(@table_def, @db_column_names)
 
       @table_def.column_options.each_key do |col_name|
         if @db_column_names.exclude?(col_name.to_s)
@@ -150,7 +151,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def validate_index_columns
-      configured_columns = effective_column_names
+      configured_columns = @scope.effective_column_names(@table_def, @db_column_names)
 
       seen_names = {}
       @table_def.indexes.each do |idx|
@@ -174,10 +175,10 @@ module Migrations::Database::Schema::DSL
     def validate_unconfigured_columns
       return unless @table_def.source_table_name
 
-      configured_columns = effective_column_names
+      configured_columns = @scope.effective_column_names(@table_def, @db_column_names)
       ignored_columns = @table_def.ignored_column_names.map(&:to_s).to_set
       unconfigured =
-        @db_column_names - configured_columns - ignored_columns - globally_ignored_columns -
+        @db_column_names - configured_columns - ignored_columns - @scope.globally_ignored_columns -
           auto_ignored_column_names
 
       if unconfigured.any?
@@ -200,7 +201,7 @@ module Migrations::Database::Schema::DSL
         end
       end
 
-      configured_columns = effective_column_names
+      configured_columns = @scope.effective_column_names(@table_def, @db_column_names)
       missing_in_config = configured_primary_keys.to_set - configured_columns
       if missing_in_config.any?
         @errors << "Table '#{@table_def.name}': primary key columns are not configured: #{sort_and_join(missing_in_config)}"
@@ -250,43 +251,6 @@ module Migrations::Database::Schema::DSL
           @errors << "Ignored table '#{entry.name}' does not exist in database (stale ignore)"
         end
       end
-    end
-
-    def effective_column_names
-      forced = @table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
-
-      if @table_def.included_column_names
-        names = @table_def.included_column_names.map(&:to_s).to_set
-      else
-        ignored = @table_def.ignored_column_names.map(&:to_s).to_set
-        globally_ignored = globally_ignored_columns
-        names = @db_column_names - ignored - (globally_ignored - forced)
-      end
-
-      added = @table_def.added_columns.map { |c| c.name.to_s }
-      names + added.to_set
-    end
-
-    def globally_ignored_columns
-      conventions = @schema.conventions_config
-      return Set.new unless conventions
-      conventions.ignored_columns.map(&:to_s).to_set
-    end
-
-    def ignored_table_name_set
-      ignored = @schema.ignored_tables
-      return Set.new unless ignored
-
-      names = ignored.table_names.map(&:to_s).to_set
-
-      manifest = @schema.plugin_manifest
-      if manifest.available?
-        ignored.ignored_plugin_names.each do |plugin_name|
-          manifest.tables_for_plugin(plugin_name.to_s).each { |t| names << t.to_s }
-        end
-      end
-
-      names
     end
 
     def auto_ignored_column_names
