@@ -9,73 +9,15 @@ module Migrations::Database::Schema::DSL
     end
 
     def introspect
-      original_config = ActiveRecord::Base.connection_db_config.configuration_hash.dup
-      db = TemporaryDb.new
-      real_stderr = $stderr
+      with_temporary_database do
+        run_core_migrations
+        load_plugin_rake_tasks
 
-      suppress_output do
-        begin
-          db.start
+        plugins = discover_plugins
+        plugin_data, failed_plugins = introspect_plugins(plugins)
+        checksums = compute_all_checksums
 
-          db.with_env do
-            ActiveRecord::Base.establish_connection(
-              adapter: "postgresql",
-              database: "discourse",
-              port: db.pg_port,
-              host: "localhost",
-            )
-
-            run_core_migrations
-            load_plugin_rake_tasks
-
-            plugins = discover_plugins
-            plugin_data = {}
-            failed_plugins = []
-
-            plugins.keys.sort.each do |plugin_name|
-              migration_paths = plugins[plugin_name]
-              snapshot_before = snapshot_schema
-
-              begin
-                run_plugin_migrations(migration_paths)
-              rescue StandardError => e
-                failed_plugins << plugin_name
-                real_stderr.puts "  Warning: '#{plugin_name}' migration error: #{e.message}"
-              end
-
-              snapshot_after = snapshot_schema
-
-              new_tables = (snapshot_after[:tables] - snapshot_before[:tables]).sort
-              new_table_set = new_tables.to_set
-
-              # Only track columns added to tables the plugin doesn't own
-              new_columns = {}
-              snapshot_after[:columns].each do |table, cols|
-                next if new_table_set.include?(table)
-                before_cols = snapshot_before[:columns].fetch(table, Set.new)
-                added = (cols - before_cols).sort
-                new_columns[table] = added if added.any?
-              end
-
-              if new_tables.any? || new_columns.any?
-                plugin_data[plugin_name] = { "tables" => new_tables, "columns" => new_columns }
-              end
-            end
-
-            checksums = compute_all_checksums
-
-            {
-              "plugins" => plugin_data,
-              "migration_state" => checksums,
-              "failed_plugins" => failed_plugins.sort,
-              "incomplete" => failed_plugins.any?,
-            }
-          end
-        ensure
-          ActiveRecord::Base.establish_connection(original_config)
-          db.stop
-          db.remove
-        end
+        build_result(plugin_data, checksums, failed_plugins)
       end
     end
 
@@ -116,6 +58,87 @@ module Migrations::Database::Schema::DSL
     end
 
     private
+
+    def with_temporary_database
+      original_config = ActiveRecord::Base.connection_db_config.configuration_hash.dup
+      db = TemporaryDb.new
+      @real_stderr = $stderr
+
+      suppress_output do
+        begin
+          db.start
+
+          db.with_env do
+            ActiveRecord::Base.establish_connection(
+              adapter: "postgresql",
+              database: "discourse",
+              port: db.pg_port,
+              host: "localhost",
+            )
+
+            yield
+          end
+        ensure
+          ActiveRecord::Base.establish_connection(original_config)
+          db.stop
+          db.remove
+        end
+      end
+    end
+
+    def introspect_plugins(plugins)
+      plugin_data = {}
+      failed_plugins = []
+
+      plugins.keys.sort.each do |plugin_name|
+        result, failed = introspect_plugin(plugin_name, plugins[plugin_name])
+        failed_plugins << plugin_name if failed
+        plugin_data[plugin_name] = result if result
+      end
+
+      [plugin_data, failed_plugins]
+    end
+
+    def introspect_plugin(plugin_name, migration_paths)
+      failed = false
+      snapshot_before = snapshot_schema
+
+      begin
+        run_plugin_migrations(migration_paths)
+      rescue StandardError => e
+        failed = true
+        @real_stderr.puts "  Warning: '#{plugin_name}' migration error: #{e.message}"
+      end
+
+      snapshot_after = snapshot_schema
+      [diff_schema(snapshot_before, snapshot_after), failed]
+    end
+
+    def diff_schema(snapshot_before, snapshot_after)
+      new_tables = (snapshot_after[:tables] - snapshot_before[:tables]).sort
+      new_table_set = new_tables.to_set
+
+      new_columns = {}
+      snapshot_after[:columns].each do |table, cols|
+        next if new_table_set.include?(table)
+        before_cols = snapshot_before[:columns].fetch(table, Set.new)
+        added = (cols - before_cols).sort
+        new_columns[table] = added if added.any?
+      end
+
+      return if new_tables.empty? && new_columns.empty?
+
+      { "tables" => new_tables, "columns" => new_columns }
+    end
+
+    def build_result(plugin_data, checksums, failed_plugins)
+      {
+        "plugins" => plugin_data,
+        "migration_state" => checksums,
+        "failed_plugins" => failed_plugins.sort,
+        "incomplete" => failed_plugins.any?,
+      }
+    end
 
     def core_migration_paths
       [File.join(Rails.root, "db", "migrate"), File.join(Rails.root, "db", "post_migrate")]
