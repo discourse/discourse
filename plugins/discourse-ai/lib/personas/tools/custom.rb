@@ -96,7 +96,7 @@ module DiscourseAi
         end
 
         def ai_tool
-          @ai_tool ||= AiTool.find(self.class.tool_id)
+          @ai_tool ||= AiTool.includes(:secret_bindings).find(self.class.tool_id)
         end
 
         def summary
