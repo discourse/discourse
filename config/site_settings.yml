@@ -4220,6 +4220,10 @@ experimental:
       impact: "feature,all_members"
       status: "experimental"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
+  experimental_tag_settings_page:
+    default: false
+    client: true
+    area: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true

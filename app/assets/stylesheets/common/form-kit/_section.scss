@@ -21,3 +21,7 @@
   font-size: var(--font-down-1-rem);
   color: var(--primary-very-high);
 }
+
+.form-kit__section-subtitle {
+  margin-top: calc(var(--space-4) * -1); // Offset the gap of the section
+}

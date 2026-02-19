@@ -228,13 +228,16 @@ export default function () {
 
     // canonical tag route with slug/id
     this.route("show", { path: "/:tag_slug/:tag_id" });
+    this.route("edit", { path: "/:tag_slug/:tag_id/edit" }, function () {
+      this.route("index", { path: "/" });
+      this.route("tab", { path: "/:tab" });
+    });
     Site.currentProp("filters").forEach((filter) => {
       this.route("show" + capitalize(filter), {
         path: "/:tag_slug/:tag_id/l/" + filter,
       });
     });
 
-    // legacy route: /tag/:tag_name -> redirects to /tag/:slug/:id
     this.route("legacyRedirect", { path: "/:tag_name" });
   });
 
