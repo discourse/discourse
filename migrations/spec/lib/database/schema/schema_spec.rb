@@ -85,6 +85,7 @@ RSpec.describe Migrations::Database::Schema do
         allow(manifest).to receive(:regenerate!).and_raise(StandardError, "boom")
         allow(described_class).to receive(:plugin_manifest).and_return(manifest)
         allow(Migrations).to receive(:root_path).and_return(tmpdir)
+        allow($stdout).to receive(:write)
 
         expect { described_class.ensure_ready!(database: :test_db) }.to raise_error(
           described_class::ConfigError,
