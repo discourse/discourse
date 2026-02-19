@@ -350,7 +350,7 @@ module DiscourseAi
       def resume_payload
         return if @resume_token.blank?
 
-        raw = Discourse.redis.get(self.class.redis_key(@resume_token))
+        raw = Discourse.redis.getdel(self.class.redis_key(@resume_token))
         return if raw.blank?
 
         JSON.parse(raw)

@@ -166,6 +166,10 @@ module DiscourseAi
 
           finish_chunks(io)
         rescue DiscourseAi::AiBot::StreamReplyCustomToolsSession::ProtocolError => e
+          Discourse.warn_exception(
+            e,
+            message: "Discourse AI: Stream reply custom tool protocol error",
+          )
           write_chunk(io, { event: "error", error: e.message })
           finish_chunks(io)
         rescue StandardError => e
