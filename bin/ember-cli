@@ -59,7 +59,7 @@ end
 node_modules_outdated =
   begin
     File.read("node_modules/.pnpm/lock.yaml") != File.read("pnpm-lock.yaml")
-  rescue ERRNO::ENOENT
+  rescue Errno::ENOENT
     true
   end
 
