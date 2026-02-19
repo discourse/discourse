@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
-RSpec.describe "Explorer", type: :system do
+RSpec.describe "Data explorer query runner", type: :system do
   fab!(:admin)
   fab!(:group) { Fabricate(:group, name: "group") }
   fab!(:group_user) { Fabricate(:group_user, user: admin, group: group) }
+
+  let(:query_runner) { PageObjects::Pages::DataExplorerQueryRunner.new }
 
   before do
     SiteSetting.data_explorer_enabled = true
@@ -42,19 +44,16 @@ RSpec.describe "Explorer", type: :system do
     fab!(:query_group_1) { Fabricate(:query_group, query: query_1, group: group) }
 
     it "pre-fills the field with the default param" do
-      visit("/g/group/reports/#{query_1.id}")
+      query_runner.visit_group_report("group", query_1.id)
 
-      expect(page).to have_field("limit", with: 42)
+      expect(query_runner).to have_param_field("limit", "42")
     end
 
     it "allows to edit custom name" do
-      visit("/admin/plugins/discourse-data-explorer/queries/#{query_1.id}")
-      find(".query-run .btn-primary").click
-      find(".edit-query-name").click
-      find(".name-text-field input").fill_in(with: "My custom name edited")
-      find(".btn-primary").click
-      find("button span", text: "Save Changes and Run").click
-      expect(page.find(".name h1")).to have_content("My custom name edited")
+      query_runner.visit_admin_query(query_1.id).run_query.click_edit_name
+      query_runner.fill_query_name("My custom name edited").click_save_and_run
+
+      expect(query_runner).to have_query_name("My custom name edited")
     end
   end
 
@@ -99,21 +98,14 @@ RSpec.describe "Explorer", type: :system do
     end
 
     it "supports setting a group_list param" do
-      visit(
-        "/admin/plugins/discourse-data-explorer/queries/#{q2.id}?params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D",
-      )
-      find(".query-run .btn-primary").click
+      query_runner.visit_admin_query(
+        q2.id,
+        query_string: "params=%7B\"groups\"%3A\"admins%2Ctrust_level_1\"%7D",
+      ).run_query
 
-      expect(page).to have_css(".query-results .result-header")
-
-      expect(page).to have_css(
-        ".query-results tbody tr:nth-child(1) td:nth-child(2)",
-        text: "admins",
-      )
-      expect(page).to have_css(
-        ".query-results tbody tr:nth-child(2) td:nth-child(2)",
-        text: "trust_level_1",
-      )
+      expect(query_runner).to have_result_header
+      expect(query_runner).to have_result_cell_at(1, 2, text: "admins")
+      expect(query_runner).to have_result_cell_at(2, 2, text: "trust_level_1")
     end
   end
 
@@ -125,14 +117,14 @@ RSpec.describe "Explorer", type: :system do
         SQL
 
     it "auto-injects the current user's id without showing an input field" do
-      visit("/admin/plugins/discourse-data-explorer/queries/#{query.id}")
+      query_runner.visit_admin_query(query.id)
 
-      expect(page).to have_no_css(".query-params")
-      find(".query-run .btn-primary").click
+      expect(query_runner).to have_no_params
+      query_runner.run_query
 
-      expect(page).to have_css(".query-results .result-header")
-      expect(page).to have_css(".query-results tbody tr", count: 1)
-      expect(page).to have_css(".query-results tbody td", text: admin.username)
+      expect(query_runner).to have_result_header
+      expect(query_runner).to have_result_row_count(1)
+      expect(query_runner).to have_result_cell(admin.username)
     end
   end
 end

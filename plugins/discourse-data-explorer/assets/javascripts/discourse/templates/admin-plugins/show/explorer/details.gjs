@@ -63,7 +63,7 @@ export default class QueriesDetails extends Component {
               class="previous"
             />
 
-            <h1>
+            <h1 class="query-name-display">
               <span>{{@controller.model.name}}</span>
               {{#unless @controller.editDisabled}}
                 <DButton
@@ -224,14 +224,14 @@ export default class QueriesDetails extends Component {
             <DButton
               @label="explorer.run"
               @disabled="true"
-              class="btn-primary"
+              class="btn-primary query-run__submit"
             />
           {{else}}
             <DButton
               @action={{@controller.saveAndRun}}
               @icon="play"
               @label="explorer.saverun"
-              class="btn-primary"
+              class="btn-primary query-run__save-and-run"
             />
           {{/if}}
         {{else}}
@@ -242,7 +242,7 @@ export default class QueriesDetails extends Component {
             @label="explorer.run"
             @disabled={{@controller.runDisabled}}
             @type="submit"
-            class="btn-primary"
+            class="btn-primary query-run__submit"
           />
         {{/if}}
 

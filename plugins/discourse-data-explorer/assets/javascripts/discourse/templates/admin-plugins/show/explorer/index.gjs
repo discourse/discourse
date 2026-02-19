@@ -86,7 +86,7 @@ export default <template>
           {{#if @controller.model.content.length}}
             <ConditionalLoadingSpinner @condition={{@controller.loading}} />
 
-            <div class="container">
+            <div class="container discourse-data-explorer-query-list">
               <table class="d-admin-table recent-queries">
                 <thead class="heading-container">
                   <th class="col heading name">

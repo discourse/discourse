@@ -80,11 +80,11 @@ acceptance("Data Explorer Plugin | List Queries", function (needs) {
       .exists({ count: 2 }, "the list of queries was rendered");
 
     assert
-      .dom("div.container table.recent-queries tbody tr:nth-child(1) td a")
+      .dom("div.container table.recent-queries tbody tr:nth-child(1) td")
       .hasText(/^\s*Top 100 Likers/, "The first query was rendered");
 
     assert
-      .dom("div.container table.recent-queries tbody tr:nth-child(2) td a")
+      .dom("div.container table.recent-queries tbody tr:nth-child(2) td")
       .hasText(/^\s*Top 100 Active Topics/, "The second query was rendered");
   });
 });
