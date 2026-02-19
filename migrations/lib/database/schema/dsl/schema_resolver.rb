@@ -62,7 +62,7 @@ module Migrations::Database::Schema::DSL
       column_names.filter_map do |col_name|
         col_name_str = col_name.to_s
         db_col = db_columns[col_name_str]
-        next unless db_col
+        next if db_col.nil?
 
         options = table_def.column_options_for(col_name)
 
@@ -204,7 +204,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def resolve_index_column_name(table_def, col_name)
-      return col_name.to_s unless table_def.source_table_name
+      return col_name.to_s if table_def.source_table_name.nil?
 
       options = table_def.column_options_for(col_name)
       (options&.rename_to || @conventions&.effective_name(col_name) || col_name).to_s

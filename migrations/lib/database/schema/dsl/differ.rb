@@ -58,7 +58,7 @@ module Migrations::Database::Schema::DSL
       missing = []
 
       @schema.tables.each_value do |table_def|
-        next unless table_def.source_table_name
+        next if table_def.source_table_name.nil?
 
         source = table_def.source_table_name.to_s
         if @db_table_names.exclude?(source)
@@ -71,7 +71,7 @@ module Migrations::Database::Schema::DSL
 
     def find_stale_ignored_tables
       ignored = @schema.ignored_tables
-      return [] unless ignored
+      return [] if ignored.nil?
 
       stale = []
       ignored.entries.each do |entry|
@@ -87,7 +87,7 @@ module Migrations::Database::Schema::DSL
       diffs = []
 
       @schema.tables.each_value do |table_def|
-        next unless table_def.source_table_name
+        next if table_def.source_table_name.nil?
 
         source = table_def.source_table_name.to_s
         next if @db_table_names.exclude?(source)
@@ -112,7 +112,7 @@ module Migrations::Database::Schema::DSL
       stale = find_stale_ignored_columns
 
       has_changes = unconfigured.any? || missing.any? || stale.any? || auto_ignored.any?
-      return nil unless has_changes
+      return nil if !has_changes
 
       TableDiff.new(
         table_name: @table_def.name.to_s,
@@ -136,7 +136,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def find_missing_columns
-      return [] unless @table_def.included_column_names
+      return [] if @table_def.included_column_names.nil?
 
       missing = @table_def.included_column_names.map(&:to_s).to_set - @db_column_names
       missing.sort.map { |name| ColumnInfo.new(name:, plugin: nil) }

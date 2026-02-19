@@ -8,7 +8,7 @@ module Migrations::Database::Schema::DSL
 
     def ignored_table_name_set
       ignored = @schema.ignored_tables
-      return Set.new unless ignored
+      return Set.new if ignored.nil?
 
       names = ignored.table_names.map(&:to_s).to_set
 
@@ -26,7 +26,7 @@ module Migrations::Database::Schema::DSL
       @globally_ignored_columns ||=
         begin
           conventions = @schema.conventions_config
-          return Set.new unless conventions
+          return Set.new if conventions.nil?
           conventions.ignored_columns.map(&:to_s).to_set
         end
     end
@@ -46,13 +46,13 @@ module Migrations::Database::Schema::DSL
     end
 
     def each_plugin_ignored_column(table_def, &block)
-      return unless table_def.source_table_name
+      return if table_def.source_table_name.nil?
 
       ignored = @schema.ignored_tables
-      return unless ignored
+      return if ignored.nil?
 
       manifest = @schema.plugin_manifest
-      return unless manifest.available?
+      return if !manifest.available?
 
       table_name = table_def.source_table_name.to_s
 
@@ -70,7 +70,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def yield_columns_from_table_plugins(manifest, ignored, table_def, table_name)
-      return unless table_def.ignore_plugin_columns?
+      return if !table_def.ignore_plugin_columns?
 
       plugin_filter = table_def.ignore_plugin_names&.map(&:to_s)&.to_set
 

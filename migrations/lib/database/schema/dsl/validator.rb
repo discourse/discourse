@@ -26,7 +26,7 @@ module Migrations::Database::Schema::DSL
 
     def validate_configured_and_ignored_tables
       ignored = @schema.ignored_tables
-      return unless ignored
+      return if ignored.nil?
 
       ignored_names = ignored.table_names.map(&:to_s).to_set
 
@@ -89,7 +89,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def validate_included_columns
-      return unless @table_def.included_column_names
+      return if @table_def.included_column_names.nil?
 
       missing = @table_def.included_column_names.map(&:to_s).to_set - @db_column_names
       if missing.any?
@@ -98,7 +98,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def validate_include_overrides
-      return unless @table_def.included_column_names
+      return if @table_def.included_column_names.nil?
 
       forced = @table_def.forced_column_names&.map(&:to_s)&.to_set || Set.new
       globally_ignored = @scope.globally_ignored_columns
@@ -173,7 +173,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def validate_unconfigured_columns
-      return unless @table_def.source_table_name
+      return if @table_def.source_table_name.nil?
 
       configured_columns = @scope.effective_column_names(@table_def, @db_column_names)
       ignored_columns = @table_def.ignored_column_names.map(&:to_s).to_set
@@ -211,7 +211,7 @@ module Migrations::Database::Schema::DSL
     def validate_enum_references
       @table_def.column_options.each do |col_name, options|
         type = options.type
-        next unless type
+        next if type.nil?
         next if known_type_override?(type)
         next if @schema.enums.key?(type)
 
@@ -220,16 +220,16 @@ module Migrations::Database::Schema::DSL
     end
 
     def validate_ignored_plugin_source
-      return unless @table_def.source_table_name
+      return if @table_def.source_table_name.nil?
 
       manifest = @schema.plugin_manifest
-      return unless manifest.available?
+      return if !manifest.available?
 
       ignored = @schema.ignored_tables
-      return unless ignored
+      return if ignored.nil?
 
       plugin = manifest.plugin_for_table(@table_def.source_table_name.to_s)
-      return unless plugin
+      return if plugin.nil?
 
       if ignored.plugin_ignored?(plugin)
         @errors << "Table '#{@table_def.name}': source table '#{@table_def.source_table_name}' belongs to ignored plugin '#{plugin}'"
@@ -244,7 +244,7 @@ module Migrations::Database::Schema::DSL
 
     def validate_stale_ignored_tables
       ignored = @schema.ignored_tables
-      return unless ignored
+      return if ignored.nil?
 
       ignored.entries.each do |entry|
         if @db_table_names.exclude?(entry.name.to_s)
