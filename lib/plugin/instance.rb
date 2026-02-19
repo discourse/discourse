@@ -963,8 +963,11 @@ class Plugin::Instance
   end
 
   def admin_js_asset_exists?
-    # If this directory exists, ember-cli will output a .js file
     File.exist?("#{File.dirname(@path)}/admin/assets/javascripts")
+  end
+
+  def test_js_asset_exists?
+    File.exist?("#{File.dirname(@path)}/test/javascripts")
   end
 
   # Receives an array with two elements:
@@ -1450,6 +1453,18 @@ class Plugin::Instance
   # @return [void]
   def register_topic_preloader_associations(fields, &condition)
     DiscoursePluginRegistry.register_topic_preloader_association({ fields:, condition: }, self)
+  end
+
+  def about_json_metadata
+    @about_json_metadata ||= JSON.parse(File.read("#{directory}/about.json"))
+  rescue Errno::ENOENT
+    nil
+  end
+
+  def test_required_plugins
+    if urls = about_json_metadata&.dig("tests", "requiredPlugins")
+      urls.map { |url| url.split("/").last.delete_suffix(".git") }
+    end
   end
 
   protected
