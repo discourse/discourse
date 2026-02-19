@@ -140,6 +140,16 @@ describe Chat do
           SiteSetting.direct_message_enabled_groups = 3
           expect(serializer.can_chat_user).to eq(false)
         end
+
+        it "returns false if target user has disabled private messages" do
+          target_user.user_option.update!(allow_private_messages: false)
+          expect(serializer.can_chat_user).to eq(false)
+        end
+
+        it "returns true even when user is not in personal_message_enabled_groups" do
+          SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:staff]
+          expect(serializer.can_chat_user).to eq(true)
+        end
       end
     end
 
