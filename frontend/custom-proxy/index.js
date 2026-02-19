@@ -308,10 +308,10 @@ to serve API requests. For example:
     }
 
     // All JS assets are served by Ember CLI, except for
-    // plugin assets
+    // plugin assets which end in _extra.js
     if (
       request.path.startsWith(`${baseURL}assets/`) &&
-      !request.path.startsWith(`${baseURL}assets/plugins/`)
+      !request.path.endsWith("_extra.js")
     ) {
       return false;
     }
