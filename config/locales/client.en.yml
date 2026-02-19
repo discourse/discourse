@@ -3544,8 +3544,6 @@ en:
         max_views:
           placeholder: maximum
           aria_label: filter by maximum views
-        additional_options:
-          label: "Filter by post count and topic views"
 
     hamburger_menu: "Navigation menu"
     new_item: "new"
