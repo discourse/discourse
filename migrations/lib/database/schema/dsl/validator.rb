@@ -209,11 +209,12 @@ module Migrations::Database::Schema::DSL
 
     def validate_enum_references
       @table_def.column_options.each do |col_name, options|
-        next unless options.type
-        next if known_type_override?(options.type)
-        next if @schema.enums.key?(options.type)
+        type = options.type
+        next unless type
+        next if known_type_override?(type)
+        next if @schema.enums.key?(type)
 
-        @errors << "Table '#{@table_def.name}': column '#{col_name}' type '#{options.type}' references unknown enum"
+        @errors << "Table '#{@table_def.name}': column '#{col_name}' type '#{type}' references unknown enum"
       end
     end
 
