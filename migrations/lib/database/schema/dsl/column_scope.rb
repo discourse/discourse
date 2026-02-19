@@ -57,9 +57,8 @@ module Migrations::Database::Schema::DSL
       table_name = table_def.source_table_name.to_s
 
       ignored.ignored_plugin_names.each do |plugin_name|
-        manifest
-          .columns_for_plugin(plugin_name.to_s, table: table_name)
-          .each { |col| yield col, plugin_name.to_s }
+        name = plugin_name.to_s
+        manifest.columns_for_plugin(name, table: table_name).each { |col| yield col, name }
       end
 
       return unless table_def.ignore_plugin_columns?
@@ -68,10 +67,9 @@ module Migrations::Database::Schema::DSL
 
       manifest.all_plugin_names.each do |plugin_name|
         next if ignored.plugin_ignored?(plugin_name)
-        next if plugin_filter && plugin_filter.exclude?(plugin_name.to_s)
-        manifest
-          .columns_for_plugin(plugin_name, table: table_name)
-          .each { |col| yield col, plugin_name.to_s }
+        name = plugin_name.to_s
+        next if plugin_filter && plugin_filter.exclude?(name)
+        manifest.columns_for_plugin(name, table: table_name).each { |col| yield col, name }
       end
     end
   end
