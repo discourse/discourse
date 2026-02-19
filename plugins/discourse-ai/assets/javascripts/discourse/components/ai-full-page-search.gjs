@@ -122,20 +122,6 @@ export default class AiFullPageSearch extends Component {
       );
     }
 
-    // Auto-enabled and showing results:
-    if (
-      this.autoEnabledForZeroResults &&
-      this.showingAiResults &&
-      this.AiResults.length > 0
-    ) {
-      return i18n(
-        "discourse_ai.embeddings.semantic_search_results.zero_results_expanded",
-        {
-          count: this.AiResults.length,
-        }
-      );
-    }
-
     return i18n("discourse_ai.embeddings.semantic_search_results.toggle");
   }
 
@@ -158,6 +144,9 @@ export default class AiFullPageSearch extends Component {
     if (this.noResults) {
       return "semantic-search-no-results";
     }
+    if (this.autoEnabledForZeroResults && this.showingAiResults) {
+      return "semantic-search-zero-results";
+    }
     return null;
   }
 
@@ -175,6 +164,12 @@ export default class AiFullPageSearch extends Component {
     if (this.noResults) {
       return i18n(
         "discourse_ai.embeddings.semantic_search_tooltips.no_results"
+      );
+    }
+    if (this.autoEnabledForZeroResults && this.showingAiResults) {
+      return i18n(
+        "discourse_ai.embeddings.semantic_search_results.zero_results_expanded",
+        { count: this.AiResults.length }
       );
     }
     return null;
