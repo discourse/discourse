@@ -394,7 +394,15 @@ class QunitRunner
       puts "[dry-run] skipping pnpm install"
       return
     end
-    system("pnpm", "install", exception: true)
+
+    node_modules_outdated =
+      begin
+        File.read("node_modules/.pnpm/lock.yaml") != File.read("pnpm-lock.yaml")
+      rescue Errno::ENOENT
+        true
+      end
+
+    system("pnpm", "install", exception: true) if node_modules_outdated
   end
 
   def detect_browser
