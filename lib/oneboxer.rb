@@ -417,6 +417,7 @@ module Oneboxer
     username = route[:username] || ""
 
     if user = User.find_by(username_lower: username.downcase)
+      return if SiteSetting.allow_users_to_hide_profile && user.user_option&.hide_profile?
       name = user.name if SiteSetting.enable_names
 
       args = {
