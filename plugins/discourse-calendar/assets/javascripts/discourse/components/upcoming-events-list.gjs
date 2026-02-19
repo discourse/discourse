@@ -155,21 +155,16 @@ export default class UpcomingEventsList extends Component {
   }
 
   formatDateRange(event) {
-    const start = moment(event.starts_at);
-    const end = moment(event.ends_at);
-
-    // Same month and year - use hyphen with no spaces (number-number looks good)
-    if (start.month() === end.month() && start.year() === end.year()) {
-      return `${start.format("MMMM D")}-${end.format("D, YYYY")}`;
-    }
-
-    // Different months, same year - use hyphen with spaces (month day - month day, year looks good)
-    if (start.year() === end.year()) {
-      return `${start.format("MMMM D")} - ${end.format("MMMM D, YYYY")}`;
-    }
-
-    // Different years - use hyphen with full format
-    return `${start.format("LL")} - ${end.format("LL")}`;
+    const start = new Date(event.starts_at);
+    const end = new Date(event.ends_at);
+    return new Intl.DateTimeFormat(moment.locale(), {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }).formatRange(start, end);
+    // en-US: "June 5–10, 2025" or "June 5 – July 10, 2025"
+    // fr-FR: "5–10 juin 2025" or "5 juin – 10 juillet 2025"
+    // de-DE: "5.–10. Juni 2025"
   }
 
   groupByMonthAndDay(data) {

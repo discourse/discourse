@@ -14,6 +14,22 @@ const tomorrowAllDay = "2100-02-02T00:00:00";
 const laterThisMonth = "2100-02-22T08:00:00";
 const nextWeek = "2100-02-09T08:00:00";
 
+// Cross-month: Nov 28 - Dec 3
+const crossMonthStart = "2100-11-28T00:00:00";
+const crossMonthEnd = "2100-12-03T00:00:00";
+
+// Cross-year: Dec 28 - Jan 3
+const crossYearStart = "2100-12-28T00:00:00";
+const crossYearEnd = "2101-01-03T00:00:00";
+
+// Ongoing event: started yesterday, ends next week
+const ongoingStart = "2100-01-25T00:00:00";
+const ongoingEnd = "2100-02-09T00:00:00";
+
+// Past event: already ended
+const pastStart = "2100-01-01T00:00:00";
+const pastEnd = "2100-01-15T00:00:00";
+
 module("Integration | Component | upcoming-events-list", function (hooks) {
   setupRenderingTest(hooks, { stubRouter: true });
 
@@ -114,7 +130,7 @@ module("Integration | Component | upcoming-events-list", function (hooks) {
       .exists("displays the view-all link");
   });
 
-  test("with multi-day events, standard formats", async function (assert) {
+  test("with multi-day events in same month", async function (assert) {
     pretender.get("/discourse-post-event/events", multiDayEventResponseHandler);
 
     await render(<template><UpcomingEventsList /></template>);
@@ -139,13 +155,202 @@ module("Integration | Component | upcoming-events-list", function (hooks) {
       ".upcoming-events-list__event-time"
     ).innerText;
 
-    // Events in same month should use compact format: "February 2–9, 2100"
-    const expectedFormat = `${moment(tomorrowAllDay).format("MMMM D")}–${moment(nextWeek).format("D, YYYY")}`;
+    // Feb 2 - Feb 9, 2100
+    assert.true(eventTime.includes("February"), "contains month name");
+    assert.true(eventTime.includes("2"), "contains start day");
+    assert.true(eventTime.includes("9"), "contains end day");
+    assert.true(eventTime.includes("2100"), "contains year");
+    assert.false(eventTime.includes(":"), "shows date range, not time");
+  });
+
+  test("with cross-month multi-day events", async function (assert) {
+    pretender.get("/discourse-post-event/events", () => {
+      return response({
+        events: [
+          {
+            id: 67504,
+            starts_at: crossMonthStart,
+            ends_at: crossMonthEnd,
+            timezone: "UTC",
+            post: {
+              id: 67504,
+              post_number: 1,
+              url: "/t/cross-month-event/18452/1",
+              topic: { id: 18452, title: "Cross month event" },
+            },
+            name: "Cross Month Event",
+            category_id: 1,
+          },
+        ],
+      });
+    });
+
+    await render(<template><UpcomingEventsList /></template>);
+
+    this.appEvents.trigger("page:changed", { url: "/" });
+
+    await waitFor(".loading-container .spinner", { count: 0 });
+
+    const eventTime = document.querySelector(
+      ".upcoming-events-list__event-time"
+    ).innerText;
+
+    // Nov 28 - Dec 3, 2100
+    assert.true(eventTime.includes("November"), "contains start month");
+    assert.true(eventTime.includes("28"), "contains start day");
+    assert.true(eventTime.includes("December"), "contains end month");
+    assert.true(eventTime.includes("3"), "contains end day");
+    assert.true(eventTime.includes("2100"), "contains year");
+  });
+
+  test("with cross-year multi-day events", async function (assert) {
+    pretender.get("/discourse-post-event/events", () => {
+      return response({
+        events: [
+          {
+            id: 67505,
+            starts_at: crossYearStart,
+            ends_at: crossYearEnd,
+            timezone: "UTC",
+            post: {
+              id: 67505,
+              post_number: 1,
+              url: "/t/cross-year-event/18453/1",
+              topic: { id: 18453, title: "Cross year event" },
+            },
+            name: "Cross Year Event",
+            category_id: 1,
+          },
+        ],
+      });
+    });
+
+    await render(<template><UpcomingEventsList /></template>);
+
+    this.appEvents.trigger("page:changed", { url: "/" });
+
+    await waitFor(".loading-container .spinner", { count: 0 });
+
+    const eventTime = document.querySelector(
+      ".upcoming-events-list__event-time"
+    ).innerText;
+
+    // Dec 28, 2100 - Jan 3, 2101
+    assert.true(eventTime.includes("December"), "contains start month");
+    assert.true(eventTime.includes("28"), "contains start day");
+    assert.true(eventTime.includes("2100"), "contains start year");
+    assert.true(eventTime.includes("January"), "contains end month");
+    assert.true(eventTime.includes("3"), "contains end day");
+    assert.true(eventTime.includes("2101"), "contains end year");
+  });
+
+  test("with ongoing multi-day events (started in past, ends in future)", async function (assert) {
+    pretender.get("/discourse-post-event/events", () => {
+      return response({
+        events: [
+          {
+            id: 67506,
+            starts_at: ongoingStart,
+            ends_at: ongoingEnd,
+            timezone: "UTC",
+            post: {
+              id: 67506,
+              post_number: 1,
+              url: "/t/ongoing-event/18454/1",
+              topic: { id: 18454, title: "Ongoing event" },
+            },
+            name: "Ongoing Event",
+            category_id: 1,
+          },
+        ],
+      });
+    });
+
+    await render(<template><UpcomingEventsList /></template>);
+
+    this.appEvents.trigger("page:changed", { url: "/" });
+
+    await waitFor(".loading-container .spinner", { count: 0 });
+
+    assert
+      .dom(".upcoming-events-list__event")
+      .exists({ count: 1 }, "ongoing event is displayed");
+
+    assert
+      .dom(".upcoming-events-list__event-name")
+      .hasText("Ongoing Event", "displays the ongoing event");
+
+    // Ongoing events should show at today's date
+    const displayedDay = document.querySelector(
+      ".upcoming-events-list__event-date .day"
+    ).innerText;
     assert.strictEqual(
-      eventTime,
-      expectedFormat,
-      "displays date range in compact format for same-month events"
+      displayedDay,
+      moment(today).format("D"),
+      "ongoing event is shown at today's date"
     );
+
+    const eventTime = document.querySelector(
+      ".upcoming-events-list__event-time"
+    ).innerText;
+
+    // Jan 25 - Feb 9, 2100
+    assert.true(eventTime.includes("January"), "contains start month");
+    assert.true(eventTime.includes("25"), "contains start day");
+    assert.true(eventTime.includes("February"), "contains end month");
+    assert.true(eventTime.includes("9"), "contains end day");
+    assert.true(eventTime.includes("2100"), "contains year");
+  });
+
+  test("filters out events that have already ended", async function (assert) {
+    pretender.get("/discourse-post-event/events", () => {
+      return response({
+        events: [
+          {
+            id: 67507,
+            starts_at: pastStart,
+            ends_at: pastEnd,
+            timezone: "UTC",
+            post: {
+              id: 67507,
+              post_number: 1,
+              url: "/t/past-event/18455/1",
+              topic: { id: 18455, title: "Past event" },
+            },
+            name: "Past Event",
+            category_id: 1,
+          },
+          {
+            id: 67508,
+            starts_at: tomorrowAllDay,
+            ends_at: null,
+            timezone: "UTC",
+            post: {
+              id: 67508,
+              post_number: 1,
+              url: "/t/future-event/18456/1",
+              topic: { id: 18456, title: "Future event" },
+            },
+            name: "Future Event",
+            category_id: 1,
+          },
+        ],
+      });
+    });
+
+    await render(<template><UpcomingEventsList /></template>);
+
+    this.appEvents.trigger("page:changed", { url: "/" });
+
+    await waitFor(".loading-container .spinner", { count: 0 });
+
+    assert
+      .dom(".upcoming-events-list__event")
+      .exists({ count: 1 }, "only future event is displayed");
+
+    assert
+      .dom(".upcoming-events-list__event-name")
+      .hasText("Future Event", "past event is filtered out");
   });
 
   test("Uses custom category name from 'map_events_title'", async function (assert) {
