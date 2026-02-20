@@ -458,8 +458,8 @@ table.group-reports {
     }
 
     .query-desc {
-      display: block;
       color: var(--primary-high);
+      max-width: 50vw;
     }
 
     .query-created-by {

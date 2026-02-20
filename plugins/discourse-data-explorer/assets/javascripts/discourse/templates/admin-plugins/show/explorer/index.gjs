@@ -156,7 +156,7 @@ export default <template>
                               "explorer.default_query"
                             }}</span>
                         {{/if}}
-                        <span class="query-desc">{{query.description}}</span>
+                        <div class="query-desc">{{query.description}}</div>
                       </td>
                       <td class="d-admin-row__detail query-created-by">
                         <div class="d-admin-row__mobile-label">
