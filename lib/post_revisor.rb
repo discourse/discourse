@@ -343,7 +343,9 @@ class PostRevisor
           f != "user_id" && f != "edit_reason" && @post.previous_changes.has_key?(f)
         end
 
-    unless only_user_id_changed
+    if only_user_id_changed
+      post_process_post
+    else
       Topic.reset_highest(@topic.id)
       post_process_post
       alert_users
