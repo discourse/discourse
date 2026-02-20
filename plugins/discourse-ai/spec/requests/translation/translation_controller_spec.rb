@@ -200,6 +200,76 @@ describe DiscourseAi::Translation::TranslationController do
         expect(response.parsed_body["scheduled_posts"]).to eq(1)
       end
 
+      context "with post-type visibility scoping" do
+        before do
+          post1.update!(locale: "en")
+          post2.update!(locale: "en")
+          SiteSetting.content_localization_supported_locales = "en|es"
+        end
+
+        it "only schedules posts the user can see" do
+          Fabricate(:post, topic: topic, user: admin, post_type: Post.types[:whisper], locale: "en")
+
+          expect_enqueued_with(
+            job: Jobs::DetectTranslatePost,
+            args: {
+              post_id: post1.id,
+              force: true,
+            },
+          ) do
+            expect_enqueued_with(
+              job: Jobs::DetectTranslatePost,
+              args: {
+                post_id: post2.id,
+                force: true,
+              },
+            ) { post "/discourse-ai/translate/topics/#{topic.id}" }
+          end
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["scheduled_posts"]).to eq(2)
+        end
+
+        it "schedules posts of all types visible to the user" do
+          whisper =
+            Fabricate(
+              :post,
+              topic: topic,
+              user: admin,
+              post_type: Post.types[:whisper],
+              locale: "en",
+            )
+          SiteSetting.whispers_allowed_groups = group.id.to_s
+
+          expect_enqueued_with(
+            job: Jobs::DetectTranslatePost,
+            args: {
+              post_id: post1.id,
+              force: true,
+            },
+          ) do
+            expect_enqueued_with(
+              job: Jobs::DetectTranslatePost,
+              args: {
+                post_id: post2.id,
+                force: true,
+              },
+            ) do
+              expect_enqueued_with(
+                job: Jobs::DetectTranslatePost,
+                args: {
+                  post_id: whisper.id,
+                  force: true,
+                },
+              ) { post "/discourse-ai/translate/topics/#{topic.id}" }
+            end
+          end
+
+          expect(response.status).to eq(200)
+          expect(response.parsed_body["scheduled_posts"]).to eq(3)
+        end
+      end
+
       it "ignores posts that already have translations" do
         post1.update!(locale: "en")
         post2.update!(locale: "en")
