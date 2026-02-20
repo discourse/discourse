@@ -4,6 +4,9 @@ require "prism"
 
 module Migrations::Database::Schema::DSL
   class Generator
+    CUSTOM_CODE_START = "# -- custom code --"
+    CUSTOM_CODE_END = "# -- end custom code --"
+
     def initialize(schema_module)
       @schema = schema_module
       @output_config = schema_module.config.output_config
@@ -24,12 +27,7 @@ module Migrations::Database::Schema::DSL
 
     def validate_dsl!
       errors = Validator.new(@schema).validate
-
-      if errors.any?
-        message = "DSL validation failed with #{errors.size} error(s):\n"
-        message += errors.map { |e| "  - #{e}" }.join("\n")
-        raise Migrations::Database::Schema::GenerationError, message
-      end
+      validate!(errors, "DSL validation")
     end
 
     def resolve_schema
@@ -38,12 +36,15 @@ module Migrations::Database::Schema::DSL
 
     def validate_resolved_schema!(resolved)
       errors = ResolvedSchemaValidator.new(resolved).validate
+      validate!(errors, "Resolved schema validation")
+    end
 
-      if errors.any?
-        message = "Resolved schema validation failed with #{errors.size} error(s):\n"
-        message += errors.map { |e| "  - #{e}" }.join("\n")
-        raise Migrations::Database::Schema::GenerationError, message
-      end
+    def validate!(errors, label)
+      return if errors.empty?
+
+      message = "#{label} failed with #{errors.size} #{"error".pluralize(errors.size)}:\n"
+      message += errors.map { |e| "  - #{e}" }.join("\n")
+      raise Migrations::Database::Schema::GenerationError, message
     end
 
     def generate_sql(resolved)
@@ -70,9 +71,6 @@ module Migrations::Database::Schema::DSL
         File.open(path, "w") { |f| writer.output_enum(enum, f) }
       end
     end
-
-    CUSTOM_CODE_START = "# -- custom code --"
-    CUSTOM_CODE_END = "# -- end custom code --"
 
     def generate_models(resolved)
       models_dir = File.expand_path(@output_config.models_directory, Migrations.root_path)
@@ -105,12 +103,13 @@ module Migrations::Database::Schema::DSL
       return nil unless File.exist?(path)
 
       content = File.read(path)
-      extract_custom_code_with_prism(content) || extract_custom_code_with_markers(content)
-    end
-
-    def extract_custom_code_with_prism(content)
       result = Prism.parse(content)
-      return nil unless result.success?
+
+      if !result.success?
+        errors = result.errors.map { |e| "  - #{e.message} (line #{e.location.start_line})" }
+        raise Migrations::Database::Schema::GenerationError,
+              "Failed to parse '#{path}':\n#{errors.join("\n")}"
+      end
 
       comments = result.comments
       start_comment = comments.find { |comment| comment.slice == CUSTOM_CODE_START }
@@ -123,33 +122,9 @@ module Migrations::Database::Schema::DSL
         end
       return nil unless end_comment
 
-      start_offset = line_end_offset(content, start_comment.location.start_offset)
-      custom = content[start_offset...end_comment.location.start_offset]
-      preserve_custom_code(custom)
-    end
-
-    def extract_custom_code_with_markers(content)
-      start_idx = content.index(CUSTOM_CODE_START)
-      end_idx = content.index(CUSTOM_CODE_END)
-      return nil unless start_idx && end_idx
-
-      after_start = content.index("\n", start_idx)
-      return nil unless after_start
-
-      custom = content[(after_start + 1)...end_idx]
-      preserve_custom_code(custom)
-    end
-
-    def line_end_offset(content, start_offset)
-      line_end = content.index("\n", start_offset)
-      line_end ? line_end + 1 : content.length
-    end
-
-    def preserve_custom_code(custom)
-      return nil if custom.nil?
-      return nil if custom.strip.empty?
-
-      custom
+      line_end = content.index("\n", start_comment.location.start_offset)
+      start_offset = line_end ? line_end + 1 : content.length
+      content[start_offset...end_comment.location.start_offset].presence
     end
 
     def format_ruby_files!
@@ -166,12 +141,15 @@ module Migrations::Database::Schema::DSL
     end
 
     def file_header
-      db_label = Migrations::Database::Schema::Helpers.db_label(@output_config.models_namespace)
-      @file_header ||= <<~HEADER
-          This file is auto-generated from the #{db_label} schema. To make changes,
-          update the configuration files in "config/schema/" and then run
-          `bin/cli schema generate` to regenerate this file.
-        HEADER
+      @file_header ||=
+        begin
+          db_label = Migrations::Database::Schema::Helpers.db_label(@output_config.models_namespace)
+          <<~HEADER
+            This file is auto-generated from the #{db_label} schema. To make changes,
+            update the configuration files in "config/schema/" and then run
+            `bin/cli schema generate` to regenerate this file.
+          HEADER
+        end
     end
   end
 end
