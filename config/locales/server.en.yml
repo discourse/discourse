@@ -373,7 +373,7 @@ en:
       slow_down_crawler_user_agent_must_be_at_least_3_characters: "User agents must be at least 3 characters long to avoid accidentally rate-limiting legitimate users."
       slow_down_crawler_user_agent_cannot_be_popular_browsers: "You cannot add any of the following values to the setting: %{values}."
       strip_image_metadata_cannot_be_disabled_if_composer_media_optimization_image_enabled: "You cannot disable strip image metadata if 'composer media optimization image enabled' is enabled. Disable 'composer media optimization image enabled' before disabling strip image metadata."
-      x_summary_large_image_no_svg: "Twitter summary images used for twitter:image metadata cannot be an .svg image."
+      x_summary_large_image_no_svg: "X summary images used for twitter:image metadata cannot be an .svg image."
       tl0_and_anonymous_flag: "Either 'site contact email' or 'email address to report illegal content' must be provided for anonymous users."
       allow_likes_in_anonymous_mode_without_anonymous_mode_enabled: "This setting requires the 'allow anonymous mode' setting to be enabled first."
 
@@ -1919,7 +1919,6 @@ en:
     llms_txt: "Upload a text file to be served at /llms.txt for LLM crawlers. See <a href='https://llmstxt.org/' target='_blank'>llmstxt.org</a> for more information."
     content_security_policy: "Enable Content-Security-Policy (CSP). CSP is an additional layer of security that helps to prevent certain types of attacks, including Cross Site Scripting (XSS) and data injection."
     content_security_policy_report_only: "Enable Content-Security-Policy-Report-Only (CSP)"
-    content_security_policy_collect_reports: "Enable CSP violation report collection at /csp_reports"
     content_security_policy_frame_ancestors: "Restrict who can embed this site in iframes via CSP. Control allowed hosts on <a href='%{base_path}/admin/customize/embedding'>Embedding</a>"
     content_security_policy_script_src: "Additional allowlisted script sources. The current host and CDN are included by default. See <a href='https://meta.discourse.org/t/mitigate-xss-attacks-with-content-security-policy/104243' target='_blank'>Mitigate XSS Attacks with Content Security Policy.</a> (CSP). Other host sources are ignored as strict-dynamic is enabled."
     invalidate_inactive_admin_email_after_days: "Admin accounts that have not visited the site in this number of days will need to re-validate their email address before logging in. Set to 0 to disable."
@@ -2017,7 +2016,7 @@ en:
     enable_local_logins_via_email: "Allow users to request a one-click login link to be sent to them via email."
     allow_new_registrations: "Allow new user registrations. Uncheck this to prevent anyone from creating a new account."
     enable_signup_cta: "Show a notice to returning anonymous users prompting them to sign up for an account."
-    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, Apple, and Github are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
+    enable_discourse_id: "Enable authentication via Discourse ID, a single sign-on service that allows users to log in to multiple Discourse sites using a single account. Common social login providers like Google, Facebook, Apple, and GitHub are supported without additional configuration. See <a href='https://id.discourse.com' target='_blank'>id.discourse.com</a> for more details."
 
     enable_google_oauth2_logins: "Enable Google Oauth2 authentication. This is the method of authentication that Google currently supports. Requires key and secret. See <a href='https://meta.discourse.org/t/15858' target='_blank'>Configuring Google login for Discourse</a>."
     google_oauth2_client_id: "The unique client ID provided by your Google application, used for the authentication process."
@@ -2320,7 +2319,7 @@ en:
     incoming_email_prefer_html: "Use HTML instead of text for incoming email."
     strip_incoming_email_lines: "Remove leading and trailing whitespaces from each line of incoming emails."
 
-    disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable emails for all users. Select 'non-staff' to disable emails for non-staff users only."
+    disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable outgoing emails for all users. Select 'non-staff' to disable emails for non-staff users only."
     allow_email_invites: "When disabled, users won't be able to send invite emails via Discourse"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Define the maximum length, in bytes, for an email to be classified as 'short' for image suppression. If an email's size does not exceed this setting, any images (such as avatars and emojis) within the email will be stripped out."
@@ -2540,8 +2539,6 @@ en:
     delete_drafts_older_than_n_days: "Delete drafts that have not been changed in more than (n) days."
     delete_merged_stub_topics_after_days: "Number of days to wait before automatically deleting fully merged stub topics. Set to -1 to never delete. Set to 0 to immediately delete."
 
-    bootstrap_mode_min_users: 'Minimum number of users required to disable bootstrap mode and remove Getting Started button (set to 0 to disable, can take up to 24 hours). See <a target="_blank" href="https://meta.discourse.org/t/-/322876">the bootstrap mode topic on Meta</a> for details.'
-
     prevent_anons_from_downloading_files: "Prevent anonymous users from downloading attachments."
     secure_uploads: 'Limits access to ALL uploads (images, video, audio, text, pdfs, zips, and others). If "login required” is enabled, only logged-in users can access uploads. Otherwise, access will be limited only for media uploads in personal messages and private categories. WARNING: This setting is complex and requires deep administrative understanding. See <a target="_blank" href="https://meta.discourse.org/t/-/140017">the secure uploads topic on Meta</a> for details.'
     secure_uploads_allow_embed_images_in_emails: "Allows embedding secure images that would normally be redacted in emails, if their size is smaller than the 'secure uploads max email embed image size kb' setting."
@@ -2756,6 +2753,7 @@ en:
     fake_upcoming_change: "This is a fake upcoming change for testing purposes. No need to translate this string."
     floating_dismiss_topics_on_mobile: "Shows a floating 'Dismiss...' button on mobile for the topic list for easier access and to free up space in the top of the topic list"
     rename_faq_to_guidelines: "This change renames the FAQ page to Guidelines. The FAQ page will still be available at /faq. The 'faq url' setting works as before."
+    experimental_tag_settings_page: "Enable a dedicated settings page for tags at /tag/:slug/:id/edit."
     enable_simplified_category_creation: "Enables a simplified category creation flow with fewer options and a cleaner interface."
     enable_custom_splash_screen: "Allows customizing the loading splash screen with your own SVG image. Upload an image via the 'splash screen image' setting. Warning: This may negatively impact LCP scores and Google indexing."
     modernize_foundation_theme: "This change introduces design modifcations to the Foundation theme in Discourse."
@@ -2767,6 +2765,8 @@ en:
       invalid_username: "There's no user with that username."
       valid_username: "There's a user with that username."
       invalid_group: "There's no group with that name."
+      invalid_svg: "The SVG image is invalid. It must contain an SVG element and no scripts or event handlers."
+      invalid_upload: "The upload is invalid or does not exist."
       invalid_topic: "There's no topic with that ID."
       invalid_integer_min_max: "Value must be between %{min} and %{max}."
       invalid_integer_min: "Value must be %{min} or greater."
@@ -3089,6 +3089,8 @@ en:
       csrf_detected: "Sorry, the authorization timed out, or you have switched browsers. Please try again."
       request_error: "Sorry, an error occurred when starting the authorization. Please try again."
       invalid_iat: "Sorry, we are unable to verify the authorization token due to server clock differences. Please try again."
+      unauthorized: "Sorry, the login provider did not authorize your request. Please try again or contact an administrator."
+
     omniauth_error_unknown: "Something went wrong processing your login, please try again."
     omniauth_confirm_title: "Log in using %{provider}"
     omniauth_confirm_button: "Continue"

@@ -7,28 +7,17 @@ export default {
     const site = owner.lookup("service:site");
     site.set("narrowDesktopView", NarrowDesktop.narrowDesktopView);
 
-    this._resizeObserver = new ResizeObserver((entries) => {
+    // Use matchMedia with the same rem-based breakpoint as CSS (48rem = md)
+    // so that JS sidebar visibility stays in sync with CSS grid layout,
+    // even when the user zooms the page.
+    const mediaQuery = window.matchMedia("(min-width: 48rem)");
+
+    mediaQuery.addEventListener("change", () => {
       if (owner.isDestroyed) {
         return;
       }
-      for (let entry of entries) {
-        const oldNarrowDesktopView = site.narrowDesktopView;
-        const newNarrowDesktopView = NarrowDesktop.isNarrowDesktopView(
-          entry.contentRect.width
-        );
-        if (oldNarrowDesktopView !== newNarrowDesktopView) {
-          const applicationController = owner.lookup("controller:application");
-          site.set("narrowDesktopView", newNarrowDesktopView);
-          applicationController.set(
-            "showSidebar",
-            applicationController.calculateShowSidebar()
-          );
-          applicationController.appEvents.trigger("site-header:force-refresh");
-          owner.lookup("service:header").hamburgerVisible = false;
-        }
-      }
-    });
 
-    this._resizeObserver.observe(document.body);
+      NarrowDesktop.update(owner, !mediaQuery.matches);
+    });
   },
 };

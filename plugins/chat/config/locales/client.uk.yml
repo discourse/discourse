@@ -46,6 +46,14 @@ uk:
           many: "%{formatted_number} повідомлень чату"
           other: "%{formatted_number} повідомлень чату"
     chat:
+      edit_category:
+        tab_title: "Чат"
+        channel: "Канал"
+        description: "Опис"
+        actions: "Дії"
+        settings: "Налаштування"
+        no_channels: "З цією категорією не пов'язано жодного чат-каналу"
+        no_channels_body: "Ви можете мати кілька каналів у кожній категорії, доступних тим самим учасникам, залежно від налаштувань безпеки категорії. <a href='%{chatBrowseUrl}'>Створіть канал чату</a>."
       text_copied: Текст скопійовано в буфер обміну
       link_copied: Посилання скопійовано до буфера обміну
       back_to_forum: "Форум"
@@ -674,12 +682,19 @@ uk:
           many: "%{commaSeparatedUsernames} та %{count} інших набирають текст"
           other: "%{commaSeparatedUsernames} та %{count} інших набирають текст"
       retention_reminders:
+        chat_settings: "Налаштування чату"
         indefinitely_short: "безстроково"
+        indefinitely_long: "%{chatSettingsLink} налаштовано зберігати повідомлення каналу необмежений час."
         short:
           one: "%{count} день"
           few: "%{count} дні"
           many: "%{count} днів"
           other: "%{count} днів"
+        long:
+          one: "%{chatSettingsLink} налаштовано зберігати повідомлення каналу протягом %{count} дня."
+          few: "%{chatSettingsLink} налаштовано зберігати повідомлення каналу протягом %{count} днів."
+          many: "%{chatSettingsLink} налаштовано зберігати повідомлення каналу протягом %{count} днів."
+          other: "%{chatSettingsLink} налаштовано зберігати повідомлення каналу протягом %{count} днів."
       flags:
         off_topic: "Це повідомлення не має відношення до поточної дискусії як визначено назвою каналів, і, ймовірно, має бути переміщене в інше місце."
         inappropriate: "Це повідомлення містить вміст, який розумна людина вважає образливим або порушенням <a href=\"%{basePath}/guidelines\">наших правил спільноти</a>."

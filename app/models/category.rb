@@ -327,7 +327,7 @@ class Category < ActiveRecord::Base
     sqls =
       slugs.map do |slug|
         category_slugs =
-          slug.split(":").first(SiteSetting.max_category_nesting).map { Slug.for(_1, "") }
+          slug.split(":").first(SiteSetting.max_category_nesting).map { Slug.for(it, "") }
 
         sql = ""
 
@@ -961,6 +961,10 @@ class Category < ActiveRecord::Base
     @@url_cache.defer_get_set(self.id.to_s) do
       "#{Discourse.base_path}/c/#{slug_path.join("/")}/#{self.id}"
     end
+  end
+
+  def slug_url_without_id
+    "#{Discourse.base_path}/c/#{slug_path.join("/")}"
   end
 
   alias_method :relative_url, :url

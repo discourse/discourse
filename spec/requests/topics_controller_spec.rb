@@ -3732,7 +3732,7 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body.has_key?("suggested_topics")).to eq(false)
-        expect(response.parsed_body["categories"].map { _1["id"] }).to contain_exactly(
+        expect(response.parsed_body["categories"].map { it["id"] }).to contain_exactly(
           topic.category_id,
         )
 
@@ -3740,7 +3740,7 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(response.parsed_body.has_key?("suggested_topics")).to eq(true)
-        expect(response.parsed_body["categories"].map { _1["id"] }).to contain_exactly(
+        expect(response.parsed_body["categories"].map { it["id"] }).to contain_exactly(
           topic.category_id,
           dest_topic.category_id,
         )
@@ -4218,6 +4218,31 @@ RSpec.describe TopicsController do
 
         expect(response.status).to eq(200)
         expect(topic.reload.tags).to include(tag1)
+      end
+
+      it "includes errors in the response when operations partially fail" do
+        sign_in(Fabricate(:admin))
+
+        restricted_tag = Fabricate(:tag, name: "restricted-tag")
+        source_category = Fabricate(:category, tags: [restricted_tag])
+        destination_category = Fabricate(:category, tags: [Fabricate(:tag, name: "other-tag")])
+        topic_with_tag = Fabricate(:topic, category: source_category, tags: [restricted_tag])
+        Fabricate(:post, topic: topic_with_tag)
+
+        put "/topics/bulk.json",
+            params: {
+              topic_ids: [topic_with_tag.id],
+              operation: {
+                type: "change_category",
+                category_id: destination_category.id,
+              },
+            }
+
+        expect(response.status).to eq(200)
+        json = response.parsed_body
+        expect(json["topic_ids"]).to eq([])
+        expect(json["errors"]).to be_present
+        expect(json["errors"].values.sum).to eq(1)
       end
 
       context "with private message" do
@@ -5103,6 +5128,25 @@ RSpec.describe TopicsController do
       get "/topics/feature_stats.json", params: { category_id: 1 }
       json = response.parsed_body
       expect(json["banner_count"]).to eq(1)
+    end
+
+    it "does not count topics in read-restricted categories for anonymous users" do
+      restricted_category = Fabricate(:category, read_restricted: true)
+      Fabricate(
+        :topic,
+        category: restricted_category,
+        pinned_at: 1.hour.ago,
+        pinned_globally: false,
+      )
+      Fabricate(:topic, category: restricted_category, pinned_at: 1.hour.ago, pinned_globally: true)
+      Fabricate(:topic, category: restricted_category, archetype: Archetype.banner)
+
+      get "/topics/feature_stats.json", params: { category_id: restricted_category.id }
+      expect(response.status).to eq(200)
+      json = response.parsed_body
+      expect(json["pinned_in_category_count"]).to eq(0)
+      expect(json["pinned_globally_count"]).to eq(0)
+      expect(json["banner_count"]).to eq(0)
     end
   end
 
@@ -6251,6 +6295,13 @@ RSpec.describe TopicsController do
         put "/t/#{max_id + 1}/reset-bump-date.json"
         expect(response.status).to eq(404)
       end
+
+      it "denies access for TL4 user on a topic in a restricted category" do
+        restricted_topic = Fabricate(:topic, category: staff_category)
+        sign_in(trust_level_4)
+        put "/t/#{restricted_topic.id}/reset-bump-date.json"
+        expect(response.status).to eq(403)
+      end
     end
 
     %i[admin moderator trust_level_4].each do |user|
@@ -6442,6 +6493,34 @@ RSpec.describe TopicsController do
 
       expect(body["group_name"]).to eq(group.name)
     end
+
+    it "rejects a user who is not a participant of the message" do
+      sign_in(user_2)
+
+      put "/t/#{group_message.id}/archive-message.json"
+      expect(response.status).to eq(403)
+    end
+  end
+
+  describe "#move_to_inbox" do
+    fab!(:group) do
+      Fabricate(:group, messageable_level: Group::ALIAS_LEVELS[:everyone]).tap { |g| g.add(user) }
+    end
+
+    fab!(:group_message) do
+      create_post(
+        user: user,
+        target_group_names: [group.name],
+        archetype: Archetype.private_message,
+      ).topic
+    end
+
+    it "rejects a user who is not a participant of the message" do
+      sign_in(user_2)
+
+      put "/t/#{group_message.id}/move-to-inbox.json"
+      expect(response.status).to eq(403)
+    end
   end
 
   describe "#set_notifications" do
@@ -6514,6 +6593,31 @@ RSpec.describe TopicsController do
         )
       end
     end
+
+    it "does not allow a regular user to set notifications on a private message they cannot see" do
+      sign_in(user)
+
+      post "/t/#{pm.id}/notifications.json",
+           params: {
+             notification_level: NotificationLevels.topic_levels[:watching],
+           }
+
+      expect(response.status).to eq(403)
+      expect(TopicUser.find_by(user: user, topic: pm)).to be_blank
+    end
+
+    it "does not allow a regular user to set notifications on a topic in a restricted category" do
+      restricted_topic = Fabricate(:topic, category: staff_category)
+      sign_in(user)
+
+      post "/t/#{restricted_topic.id}/notifications.json",
+           params: {
+             notification_level: NotificationLevels.topic_levels[:watching],
+           }
+
+      expect(response.status).to eq(403)
+      expect(TopicUser.find_by(user: user, topic: restricted_topic)).to be_blank
+    end
   end
 
   describe ".defer_topic_view" do
@@ -6570,6 +6674,57 @@ RSpec.describe TopicsController do
         TopicsController.defer_topic_view(topic.id, "1.2.3.4", user.id)
         Scheduler::Defer.do_all_work
       }.to change { TopicViewItem.count }
+    end
+  end
+
+  describe "allow_embed_mode" do
+    fab!(:topic)
+
+    before { SiteSetting.embed_full_app = true }
+
+    it "keeps X-Frame-Options when embed_mode param is missing" do
+      get("/t/#{topic.slug}/#{topic.id}")
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+
+    it "keeps X-Frame-Options when embed_mode is present but referer is invalid" do
+      get("/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" })
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
+    end
+
+    it "strips X-Frame-Options when embed_mode is present and referer matches embeddable host" do
+      Fabricate(:embeddable_host, host: "example.com")
+      get(
+        "/t/#{topic.slug}/#{topic.id}",
+        params: {
+          embed_mode: "true",
+        },
+        headers: {
+          "HTTP_REFERER" => "https://example.com/page",
+        },
+      )
+      expect(response.headers).not_to include("X-Frame-Options")
+    end
+
+    it "strips X-Frame-Options when embed_mode is present and embed_any_origin is enabled" do
+      SiteSetting.embed_any_origin = true
+      get("/t/#{topic.slug}/#{topic.id}", params: { embed_mode: "true" })
+      expect(response.headers).not_to include("X-Frame-Options")
+    end
+
+    it "keeps X-Frame-Options when embed_full_app is disabled" do
+      SiteSetting.embed_full_app = false
+      Fabricate(:embeddable_host, host: "example.com")
+      get(
+        "/t/#{topic.slug}/#{topic.id}",
+        params: {
+          embed_mode: "true",
+        },
+        headers: {
+          "HTTP_REFERER" => "https://example.com/page",
+        },
+      )
+      expect(response.headers["X-Frame-Options"]).to eq("SAMEORIGIN")
     end
   end
 end

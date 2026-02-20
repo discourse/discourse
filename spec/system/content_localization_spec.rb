@@ -82,9 +82,11 @@ describe "Content Localization" do
 
       expect(topic_page.has_topic_title?("孫子兵法からの人生戦略")).to eq(true)
 
-      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
-        I18n.t("js.content_localization.toggle_localized.translated"),
-      )
+      I18n.with_locale(:ja) do
+        expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+          I18n.t("js.content_localization.toggle_localized.translated"),
+        )
+      end
       page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
 
       expect(topic_page.has_topic_title?("Life strategies from The Art of War")).to eq(true)
@@ -533,6 +535,19 @@ describe "Content Localization" do
 
         topic_list.visit_topic_with_title("Life strategies from The Art of War")
         expect(page).to have_css(".title-wrapper .discourse-tag", text: "strategy")
+      end
+
+      it "displays localized tag names in the composer tag chooser" do
+        SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        SiteSetting.create_topic_allowed_groups = Group::AUTO_GROUPS[:everyone]
+        mini_tag_chooser = PageObjects::Components::SelectKit.new(".mini-tag-chooser")
+
+        sign_in(japanese_user)
+        visit("/new-topic")
+        expect(composer).to be_opened
+        mini_tag_chooser.expand
+        mini_tag_chooser.search("戦")
+        expect(mini_tag_chooser).to have_option_name("戦略")
       end
     end
   end

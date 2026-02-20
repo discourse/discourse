@@ -65,13 +65,8 @@ class BootstrapController < ApplicationController
         .map { |file| helpers.discourse_stylesheet_link_tag(file) }
         .join("\n")
 
-    site_settings_json = SiteSetting.client_settings_json_uncached(return_defaults: true)
-    theme_site_settings_json = SiteSetting.theme_site_settings_json_uncached(nil)
-
     render json: {
              all_plugins: Discourse.plugins.map(&:directory_name),
-             site_settings_json:,
-             theme_site_settings_json:,
              html: "#{plugin_js_string}\n#{plugin_css_string}",
            }
   end

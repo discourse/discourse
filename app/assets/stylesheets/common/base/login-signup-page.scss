@@ -307,6 +307,16 @@ body.signup-page {
       }
     }
 
+    .user-field.date {
+      .alt-placeholder {
+        display: none;
+      }
+
+      input:focus + .alt-placeholder {
+        display: block;
+      }
+    }
+
     #email-login-link {
       transition: opacity 0.5s;
 

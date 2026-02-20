@@ -1877,6 +1877,10 @@ sr:
           one: "Odabrali ste <b>%{count}</b> temu."
           few: "Odabrali ste <b>%{count}</b> tema."
           other: "Odabrali ste <b>%{count}</b> tema."
+        error_topic_count:
+          one: "%{count} tema"
+          few: "%{count} tema"
+          other: "%{count} tema"
       none:
         unread: "Nemate nepročitanih tema."
         new: "Nemate novih tema."
@@ -2782,6 +2786,7 @@ sr:
         save: "Sačuvaj"
         cancel: "Odustani"
         continue: "Nastavi"
+        copy_key: "Kopija"
         revoke: "Povuci"
       api:
         generate_master: "Generiši glavni API ključ"

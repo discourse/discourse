@@ -3176,6 +3176,9 @@ pt:
         progress:
           one: "Progresso: <strong>%{count}</strong> tópico"
           other: "Progresso: <strong>%{count}</strong> tópicos"
+        error_topic_count:
+          one: "%{count} tópico"
+          other: "%{count} tópicos"
       none:
         unread: "Tem tópicos não lidos."
         unseen: "Não tem tópicos por ler."
@@ -4888,6 +4891,7 @@ pt:
         save: "Guardar"
         cancel: "Cancelar"
         continue: "Continuar"
+        copy_key: "Copiar"
         revoke: "Revogar"
         revoked: "Revogado"
       api:

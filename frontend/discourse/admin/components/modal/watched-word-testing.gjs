@@ -106,7 +106,10 @@ export default class WatchedWordTesting extends Component {
           options.case_sensitive ? "gu" : "gui"
         );
 
-        matches.push(...(this.value.match(wordRegexp) || []));
+        let match;
+        while ((match = wordRegexp.exec(this.value)) !== null) {
+          matches.push(match[1] || match[0]);
+        }
       } catch {
         hasCompiledExpressionError = true;
       }

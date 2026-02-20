@@ -1329,6 +1329,8 @@ class BulkImport::Base
     end
 
     @users[user[:imported_id].to_i] = user[:id] = @last_user_id += 1
+    @emails[user[:email]] = user[:id] if user[:email].present?
+    @external_ids[user[:external_id]] = user[:id] if user[:external_id].present?
 
     imported_username = user[:original_username].presence || user[:username].dup
 
@@ -1384,7 +1386,8 @@ class BulkImport::Base
     # unique email
     user_email[:email] = random_email until EmailAddressValidator.valid_value?(
       user_email[:email],
-    ) && !@emails.has_key?(user_email[:email])
+    ) &&
+      (!@emails.has_key?(user_email[:email]) || @emails[user_email[:email]] == user_email[:user_id])
 
     user_email
   end
@@ -2246,8 +2249,7 @@ class BulkImport::Base
     name.gsub!(/[^A-Za-z0-9]+$/, "")
     name.gsub!(/([-_.]{2,})/) { $1.first }
     name.strip!
-    name.truncate(60)
-    name
+    name.truncate(60, omission: "")
   end
 
   def random_username
@@ -2362,7 +2364,14 @@ class BulkImport::Base
 
   def normalize_text(text)
     return nil if text.blank?
-    @html_entities.decode(normalize_charset(text.presence || "").scrub)
+    text = normalize_charset(text.presence || "").scrub
+    # Escape HTML-encoded UTF-16 surrogates (e.g. &#56256;) so they pass through
+    # as literal text instead of crashing the HTML entity decoder.
+    text.gsub!(/&#(x?)(\h+);/) do
+      cp = $1.empty? ? $2.to_i : $2.to_i(16)
+      (0xD800..0xDFFF).cover?(cp) ? "&amp;##{$1}#{$2};" : $&
+    end
+    @html_entities.decode(text)
   end
 
   def normalize_charset(text)

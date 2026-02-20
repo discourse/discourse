@@ -31,6 +31,11 @@ zh_TW:
       chat_channels_count: "聊天頻道"
       chat_users_count: "聊天使用者"
     chat:
+      edit_category:
+        tab_title: "聊天"
+        description: "描述"
+        actions: "動作"
+        settings: "設定"
       back_to_forum: "論壇"
       deleted_chat_username: 已刪除
       dates:

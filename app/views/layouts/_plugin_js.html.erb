@@ -13,6 +13,6 @@
       <link rel="modulepreload" href="<%= script_asset_path(asset[:name]) %>" nonce="<%= csp_nonce_placeholder %>" data-plugin-name="<%= asset[:plugin].directory_name %>">
     <% else %>
       <%= preload_script asset[:name] %>
-    <% end %>  
+    <% end %>
   <%- end %>
 <%- end %>

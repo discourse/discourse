@@ -427,7 +427,7 @@ module DiscourseAi
               .rerank(conversation_context.last[:content], guidance)
               .to_a
               .take(rag_conversation_chunks)
-              .map { _1[:index] }
+              .map { it[:index] }
 
           if ranks.empty?
             fragments = fragments.take(rag_conversation_chunks)

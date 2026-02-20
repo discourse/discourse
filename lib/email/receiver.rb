@@ -701,7 +701,7 @@ module Email
       elsif mail.bounced?
         # "Final-Recipient" has a specific format (<name> ; <address>)
         # cf. https://www.ietf.org/rfc/rfc2298.html#section-3.2.4
-        address_type, generic_address = mail.final_recipient.to_s.split(";").map { _1.to_s.strip }
+        address_type, generic_address = mail.final_recipient.to_s.split(";").map { it.to_s.strip }
         return generic_address, nil if generic_address.include?("@") && address_type == "rfc822"
       end
 
@@ -751,7 +751,7 @@ module Email
       return if list_address.blank?
 
       # the CC header often includes the name of the sender
-      address_to_name = mail[:cc]&.element&.addresses&.to_h { [_1.address, _1.name] } || {}
+      address_to_name = mail[:cc]&.element&.addresses.to_h { [it.address, it.name] }
 
       %i[from reply_to x_mailfrom x_original_from].each do |header|
         next if mail[header].blank?

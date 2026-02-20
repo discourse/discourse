@@ -63,6 +63,7 @@ import { registerRichEditorExtension } from "discourse/lib/composer/rich-editor-
 import deprecated from "discourse/lib/deprecated";
 import { registerDesktopNotificationHandler } from "discourse/lib/desktop-notifications";
 import { downloadCalendar } from "discourse/lib/download-calendar";
+import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 import { isDevelopment, isTesting } from "discourse/lib/environment";
 import { getOwnerWithFallback } from "discourse/lib/get-owner";
 import { registerHashtagType } from "discourse/lib/hashtag-type-registry";
@@ -3313,6 +3314,31 @@ class _PluginApi {
    */
   registerCategorySaveProperty(property) {
     _addCategoryPropertyForSave(property);
+  }
+
+  /**
+   * Registers a custom tab for the category edit page.
+   * Only available when the `enable_simplified_category_creation`
+   * site setting is enabled, this will not work for the legacy
+   * category edit page.
+   *
+   * ```
+   * api.registerEditCategoryTab({
+   *   id: "chat",
+   *   name: "Chat",
+   *   component: MyChatComponent,
+   *   condition: ({ category, siteSettings }) => siteSettings.chat_enabled,
+   * });
+   * ```
+   *
+   * @param {Object} tab
+   * @param {string} tab.id - unique identifier for the tab, used in URL routing
+   * @param {string} tab.name - display name shown on the tab
+   * @param {Class} tab.component - Glimmer component to render as tab content
+   * @param {Function} [tab.condition] - optional callback returning boolean to conditionally show the tab
+   */
+  registerEditCategoryTab(tab) {
+    registeredEditCategoryTabs.push(tab);
   }
 
   // eslint-disable-next-line no-unused-vars

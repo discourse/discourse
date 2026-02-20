@@ -135,6 +135,8 @@ uk:
         chat_usage:
           title: Активність в чаті
           total_messages: Всього повідомлень
+          dm_messages: Прямі повідомлення
+          unique_dm_channels: Розмови в прямих повідомленнях
           reactions_received: Отримані реакції
           avg_message_length: Середня довжина повідомлення
           favorite_channels: Улюблені канали

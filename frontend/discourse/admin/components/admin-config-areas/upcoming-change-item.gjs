@@ -26,6 +26,7 @@ import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpcomingChangeItem extends Component {
+  @service site;
   @service toasts;
 
   @tracked bufferedGroups = this.args.change.groups;
@@ -58,7 +59,7 @@ export default class UpcomingChangeItem extends Component {
   }
 
   get enabledForOptions() {
-    return [
+    const options = [
       {
         label: i18n("admin.upcoming_changes.enabled_for_options.no_one"),
         value: "no_one",
@@ -67,17 +68,24 @@ export default class UpcomingChangeItem extends Component {
         label: i18n("admin.upcoming_changes.enabled_for_options.everyone"),
         value: "everyone",
       },
-      {
-        label: i18n("admin.upcoming_changes.enabled_for_options.staff"),
-        value: "staff",
-      },
-      {
-        label: i18n(
-          "admin.upcoming_changes.enabled_for_options.specific_groups"
-        ),
-        value: "groups",
-      },
     ];
+
+    if (!this.args.change.upcoming_change.disallow_enabled_for_groups) {
+      options.push(
+        {
+          label: i18n("admin.upcoming_changes.enabled_for_options.staff"),
+          value: "staff",
+        },
+        {
+          label: i18n(
+            "admin.upcoming_changes.enabled_for_options.specific_groups"
+          ),
+          value: "groups",
+        }
+      );
+    }
+
+    return options;
   }
 
   get enabledForDisabled() {
@@ -239,7 +247,7 @@ export default class UpcomingChangeItem extends Component {
       await this.toggleChange(isEnabled, newValue);
 
       if (newValue === "staff") {
-        this.groupsChanged(AUTO_GROUPS.staff.name);
+        this.groupsChanged(this.site.groupsById[AUTO_GROUPS.staff.id].name);
       } else if (newValue === "everyone" || newValue === "no_one") {
         this.groupsChanged("");
       }

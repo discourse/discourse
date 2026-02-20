@@ -3,7 +3,7 @@
   <head>
     <title>Theme QUnit Test Runner</title>
     <%= discourse_color_scheme_stylesheets %>
-    <meta name="color-scheme" content="light dark">  
+    <meta name="color-scheme" content="light dark">
 
     <link rel="canonical" href="<%= Discourse.base_path %>/" />
 
@@ -16,14 +16,14 @@
       <%= preload_script "test-support" %>
       <%= preload_script "discourse" %>
       <%= preload_script "test" %>
-      <%= render "layouts/plugin_js", 
+      <%= render "layouts/plugin_js",
         opts: {
           include_disabled: true,
           include_admin_asset: true,
           only: @required_plugins
         }
       %>
-      <%= theme_translations_lookup %>
+      <%= preload_script_url "/bootstrap/site-settings-for-tests.js", type_module: true %>
       <%= theme_lookup("head_tag") %>
       <%= theme_tests %>
 

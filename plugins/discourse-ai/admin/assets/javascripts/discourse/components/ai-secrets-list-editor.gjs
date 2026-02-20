@@ -73,6 +73,14 @@ export default class AiSecretsListEditor extends Component {
                                 {{usage.name}}
                               </LinkTo>
                               ({{i18n "discourse_ai.secrets.embedding"}})
+                            {{else if (eq usage.type "tool")}}
+                              <LinkTo
+                                @route="adminPlugins.show.discourse-ai-tools.edit"
+                                @model={{usage.id}}
+                              >
+                                {{usage.name}}
+                              </LinkTo>
+                              ({{i18n "discourse_ai.secrets.tool"}})
                             {{else}}
                               <LinkTo
                                 @route="adminPlugins.show.discourse-ai-llms.edit"

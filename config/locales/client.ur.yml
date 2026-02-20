@@ -2897,7 +2897,15 @@ ur:
       toggle_direction: "سمت ٹوگل کریں"
       apply_wrap_title: "رَیپ اپلائی کریں"
       wrap_modal:
+        title: "ریپ میں ترمیم کریں"
+        name_label: "ریپ کا نام"
+        attributes_label: "خصوصیات"
+        add_attribute: "خصوصیت شامل کریں"
+        remove_attribute: "خصوصیت ہٹا دیں"
         apply: "لاگو کریں"
+        unwrap: "اَن ریپ کریں"
+        no_attributes: "ابھی تک کوئی خصوصیات شامل نہیں کی گئیں۔"
+      wrap_text: "ریپ کا مواد"
       help: "مارکڈائون ترمیم میں مدد"
       collapse: "کمپوزر پینل کو مختصر کریں"
       open: "کمپوزر پینل کھولیں"
@@ -2954,6 +2962,7 @@ ur:
           desc: "تازہ ترین جواب کی تاریخ تبدیل کیے بغیر جواب دیں"
         toggle_unlisted:
           label: غیر مندرج ٹوگل
+          desc: "غیر اندراج شدہ عنوانات صرف براہ راست لنک سے قابل رسائی ہیں"
       reload: "دوبارہ لوڈ"
       ignore: "نظر انداز کریں"
       image_alt_text:
@@ -2964,7 +2973,14 @@ ur:
         zoom_out: "تصویر کا سائز کم کریں"
         zoom_in: "تصویر کا سائز بڑھائیں"
         remove: "تصویر کو ہٹا دیں"
+        add_to_grid: "گرڈ میں شامل کریں"
+        move_outside_grid: "گرڈ سے باہر منتقل کریں"
       image: "تصویر"
+      grid_label: "یہ ایک گرڈ کے طور پر دکھایا جائے گا"
+      grid_mode_grid: "گرڈ"
+      grid_mode_carousel: "کیروسل"
+      grid_mode_title: "تصویری گیلری کے انداز کو %{mode}پر سیٹ کریں"
+      remove_grid: "گرڈ کو ہٹائیں"
       image_scale_button: "تصویر کو %{percent}% اسکیل کریں"
       delete_image_button: تصویر کو حذف کریں
       toggle_image_grid: تصویری گرڈ کو ٹوگل کریں
@@ -2974,6 +2990,7 @@ ur:
         remove: "لنک ہٹانا"
         visit: "بیرونی ٹیب میں لنک کھولیں"
         link_copied: "لنک کاپی ہو گیا!"
+      unsupported_token: "رِچ ٹیکسٹ ایڈیٹر اس پوسٹ میں استعمال ہونے والی تمام خصوصیات کو سپورٹ نہیں کرتا ہے؛مارک ڈاؤن ایڈیٹر پر منتقل کیا جا رہا ہے۔"
     notifications:
       tooltip:
         regular:
@@ -3043,6 +3060,13 @@ ur:
       votes_released: "%{description} - مکمل"
       new_features: "نئی خصوصیات دستیاب ہیں!"
       admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
+      upcoming_changes:
+        available:
+          title: "آنے والی تبدیلیاں"
+          description: "'%{changeName}' پیش نظارہ کے لیے دستیاب ہے"
+        automatically_promoted:
+          title: "آنے والی تبدیلیاں"
+          description: "'%{changeName}' خود بخود فعال ہو گیا ہے"
       dismiss_confirmation:
         body:
           default:
@@ -3099,7 +3123,10 @@ ur:
         membership_request_consolidated: "نئی رکنیت کی درخواستیں"
         reaction: "نیا ردعمل"
         votes_released: "ووٹ جاری کر دیا گیا"
+        new_features: "ڈسکورس کی نئی خصوصیات جاری کر دی گئی ہیں"
         admin_problems: "آپ کی سائٹ ڈَیش بورڈ پر نیا مشورہ"
+        upcoming_change_available: "نئی آنے والی تبدیلی '%{changeName}' دستیاب ہے"
+        upcoming_change_automatically_promoted: "آنے والی تبدیلی '%{changeName}' خود بخود فعال ہو گئی ہے"
     upload_selector:
       change: "تبدیل"
       delete: "مٹائیں"
@@ -3190,6 +3217,7 @@ ur:
           aria_label: ٹیگز کا استعمال کرتے ہوئے فلٹر
         filters:
           label: صرف موضوعات/دھاگے لوٹائیں۔۔۔
+          all: پیغامات شامل کریں
           title: صرف عنوان سے ملتے ہوئے
           likes: جو میں نے لائیک کیے
           posted: جن میں میں نے پوسٹ کیا
@@ -3366,8 +3394,12 @@ ur:
         progress:
           one: "پیش رفت: <strong>%{count}</strong> موضوع"
           other: "پیش رفت: <strong>%{count}</strong> موضوعات"
+        notify: "اس تبدیلی کے بارے میں صارفین کو مطلع کریں۔"
         performing: "حجم آپریشنز ہو رہے ہیں، براہ کرم انتظار کریں۔۔۔"
         completed: "حجمی اختیارات کامیابی سے مکمل ہو گئے!"
+        error_topic_count:
+          one: "%{count} موضوع"
+          other: "%{count} موضوعات"
       none:
         unread: "آپ کے پاس کوئی بغیر پڑھے موضوع موجود نہیں۔"
         unseen: "آپ کے لیے کوئی ان دیکھے موضوعات نہیں ہیں۔"
@@ -3385,6 +3417,7 @@ ur:
           unread: "کچھ بھی بغیر پڑھا نہیں بچا... متاثر کن!"
           new_new: "اس وقت کچھ نیا نہیں ہے... جلد ہی دوبارہ دیکھیں!"
           new: "اس وقت کچھ نیا نہیں ہے... جلد ہی دوبارہ دیکھیں!"
+          generic: "یہاں دیکھنے کے لیے کچھ نہیں ہے...جلد ہی دوبارہ چیک کریں!"
     topic_bulk_actions:
       dismiss:
         name: "بر خاست کریں"
@@ -3513,12 +3546,15 @@ ur:
       created_at: "پر بنا: %{date}"
       bumped_at: "تازہ ترین: %{date}"
       browse_latest_topics: "تازہ ترین موضوعات کو براؤز کریں"
+      browse_new_replies: "نئے جوابات کو براؤز کریں"
+      browse_new_topics: "نئے موضوعات کو براؤز کریں"
       suggest_create_topic: <a href>نئی گفتگو شروع</a> کرنے کے لیے تیار ہیں؟
       jump_reply: "دھاگہ کے اصل مقام پر جائیں"
       jump_reply_aria: "@%{username}کے دھاگہ کو اس کی اصل جگہ پر لے جائیں"
       jump_reply_button: "دھاگہ پر جائیں"
       deleted: "موضوع مٹادیا گیا ہے"
       slow_mode_update:
+        title: "سست موڈ"
         select: "اراکین اس موضوع میں پوسٹ کر سکتے ہیں اس عرصہ میں صرف ایک بار :"
         description: "تیزی سے چلنے والی یا متنازعہ بحثوں میں سوچ بچار کو فروغ دینے کے لیے، اراکین کو اس موضوع پر دوبارہ پوسٹ کرنے سے پہلے انتظار کرنا چاہیے۔"
         enable: "فعال کریں"
@@ -5930,6 +5966,7 @@ ur:
         save: "محفوظ کریں"
         cancel: "منسوخ"
         continue: "جاری رکھی"
+        copy_key: "کاپی"
         back: "اے پی آئی کلیدیں پر واپس جائیں"
         revoke: "منسوخ کریں"
         undo_revoke: "منسوخی واپس لیں"

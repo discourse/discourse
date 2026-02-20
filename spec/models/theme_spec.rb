@@ -1566,8 +1566,8 @@ HTML
     let!(:another_theme) { Fabricate(:theme) }
 
     before do
-      users.take(3).each { _1.user_option.update!(theme_ids: [theme.id]) }
-      users.slice(3..4).each { _1.user_option.update!(theme_ids: [another_theme.id]) }
+      users.take(3).each { it.user_option.update!(theme_ids: [theme.id]) }
+      users.slice(3..4).each { it.user_option.update!(theme_ids: [another_theme.id]) }
     end
 
     it "returns how many users are currently using the theme" do

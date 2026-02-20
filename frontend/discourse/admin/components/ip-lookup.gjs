@@ -160,7 +160,7 @@ export default class IpLookup extends Component {
       @modalForMobile={{true}}
       @onRegisterApi={{this.onRegisterApi}}
       @isLoading={{this.loading}}
-      @class="btn-default"
+      @triggerClass="btn-default"
     >
       <:content>
         <div class="location-box">

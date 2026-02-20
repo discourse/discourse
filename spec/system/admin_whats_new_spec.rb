@@ -17,7 +17,11 @@ describe "Admin What's New Page", type: :system do
   it "shows an error message when the backend returns an empty list" do
     set_new_features_payload(nil)
     whats_new_page.visit
-    expect(whats_new_page).to have_content("There was an error loading the feed.")
+    expect(whats_new_page).to have_content(
+      html_translation_to_text(
+        I18n.t("admin_js.admin.dashboard.new_features.no_new_features_found"),
+      ),
+    )
   end
 
   it "displays a new feature indicator on the sidebar and clears it when navigating to what's new" do

@@ -196,6 +196,13 @@ class Tag < ActiveRecord::Base
     end
   end
 
+  def self.with_localizations(tags)
+    return tags unless SiteSetting.content_localization_enabled && tags.present?
+    tag_ids = tags.map(&:id)
+    tags_by_id = where(id: tag_ids).includes(:localizations).index_by(&:id)
+    tag_ids.filter_map { |id| tags_by_id[id] }
+  end
+
   def self.pm_tags(limit: 1000, guardian: nil, allowed_user: nil)
     return [] if allowed_user.blank? || !(guardian || Guardian.new).can_tag_pms?
     user_id = allowed_user.id
@@ -293,7 +300,7 @@ class Tag < ActiveRecord::Base
     self.slug ||= ""
     return if name.blank?
 
-    if self.slug.blank? || will_save_change_to_name?
+    if self.slug.blank? || (will_save_change_to_name? && !will_save_change_to_slug?)
       self.slug = Slug.for(name, "")
       self.slug = "" if self.slug.blank? || duplicate_slug?
     end

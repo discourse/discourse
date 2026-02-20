@@ -849,7 +849,8 @@ export default class Category extends RestModel {
       permissions.forEach((p) => (rval[p.group_name] = p.permission_type));
     } else {
       // empty permissions => staff-only access
-      rval[AUTO_GROUPS.staff.name] = PermissionType.FULL;
+      rval[Site.currentProp("groupsById")[AUTO_GROUPS.staff.id].name] =
+        PermissionType.FULL;
     }
     return rval;
   }
