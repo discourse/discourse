@@ -8,7 +8,7 @@ export default class Plan extends EmberObject {
   }
 
   set amountDollars(value) {
-    const decimal = parseFloat(value) * 100;
+    const decimal = Math.round(parseFloat(value) * 100);
     this.set("unit_amount", decimal);
   }
 
