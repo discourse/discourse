@@ -397,7 +397,9 @@ This step wraps other steps. If any of the wrapped steps raises an exception, th
 
 This step wraps other steps. If the lock can't be acquired for any reason, the execution flow will be halted.
 
-The `keys` provided are matched against the `params` object of the service. The corresponding values are used to provide the underlying lock with a unique name. For example, if the provided key is `user_id` and its value is `1`, then the resulting lock name will be `user_id:1`, so if the same service is called with `2` as the `user_id` value, it will not wait on the first lock.
+The `keys` provided are first matched against the `params` object of the service and, if not found, against the service context. This allows locking on values derived from earlier steps, such as a model fetched from the database. When a resolved value responds to `id` (e.g. an `ActiveRecord` model), its `id` is used automatically to build the lock name.
+
+For example, if the provided key is `user_id` and its value is `1`, then the resulting lock name will be `user_id:1`, so if the same service is called with `2` as the `user_id` value, it will not wait on the first lock. Similarly, `lock(:topic)` after a `model :topic` step will use the topic's `id` in the lock name.
 
 ### `only_if(condition_name, &block)`
 

@@ -181,6 +181,22 @@ RSpec.describe Service::Runner do
     end
   end
 
+  class LockWithModelService
+    include Service::Base
+
+    model :topic
+    lock(:topic) { step :locked_step }
+
+    private
+
+    def fetch_topic
+      OpenStruct.new(id: 123)
+    end
+
+    def locked_step
+    end
+  end
+
   describe ".call" do
     subject(:runner) { described_class.call(service, dependencies, &actions_block) }
 
@@ -514,6 +530,40 @@ RSpec.describe Service::Runner do
       context "when the service does not fail" do
         it "does not run the provided block" do
           expect(runner).to eq :success
+        end
+      end
+
+      context "when the lock key resolves from context" do
+        let(:service) { LockWithModelService }
+        let(:dependencies) { { params: {} } }
+        let(:actions) { <<-BLOCK }
+            proc do
+              on_success { :success }
+              on_lock_not_acquired(:topic) { :lock_not_acquired }
+            end
+          BLOCK
+
+        context "when the lock is acquired" do
+          before { allow(DistributedMutex).to receive(:synchronize).and_call_original }
+
+          it "runs the success block" do
+            expect(runner).to eq :success
+          end
+
+          it "uses the model's id in the lock name" do
+            runner
+            expect(DistributedMutex).to have_received(:synchronize).with(
+              "lock_with_model_service:topic:123",
+            )
+          end
+        end
+
+        context "when the lock is not acquired" do
+          before { allow(DistributedMutex).to receive(:synchronize) }
+
+          it "runs the lock_not_acquired block" do
+            expect(runner).to eq :lock_not_acquired
+          end
         end
       end
     end
