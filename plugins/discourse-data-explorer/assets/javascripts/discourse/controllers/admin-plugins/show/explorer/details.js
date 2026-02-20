@@ -44,7 +44,7 @@ export default class PluginsExplorerController extends Controller {
   }
 
   get editDisabled() {
-    return parseInt(this.model.id, 10) < 0 ? true : false;
+    return this.model.is_default;
   }
 
   get groupOptions() {

@@ -145,6 +145,12 @@ export default class QueriesDetails extends Component {
 
         <div class="clear"></div>
 
+        {{#if @controller.model.is_default}}
+          <div class="default-query-notice alert alert-info">{{i18n
+              "explorer.default_query_notice"
+            }}</div>
+        {{/if}}
+
         <div class="pull-left left-buttons">
           {{#if @controller.editingQuery}}
             <DButton

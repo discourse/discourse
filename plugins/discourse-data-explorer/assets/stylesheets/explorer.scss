@@ -445,6 +445,18 @@ table.group-reports {
       color: var(--primary);
     }
 
+    .query-badge {
+      font-size: var(--font-down-2);
+      padding: 0.15rem 0.3rem;
+      border-radius: 4px;
+      color: var(--primary-high);
+      background: var(--primary-low);
+      letter-spacing: 0.25px;
+      align-items: center;
+      display: inline-flex;
+      gap: var(--space-1);
+    }
+
     .query-desc {
       display: block;
       color: var(--primary-high);

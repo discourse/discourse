@@ -150,7 +150,12 @@ export default <template>
                   {{#each filteredQueries as |query|}}
                     <tr class="d-admin-row__content query-row">
                       <td class="d-admin-row__overview">
-                        <b class="query-name">{{query.name}}</b>
+                        <strong class="query-name">{{query.name}}</strong>
+                        {{#if query.is_default}}
+                          <span class="query-badge">{{i18n
+                              "explorer.default_query"
+                            }}</span>
+                        {{/if}}
                         <span class="query-desc">{{query.description}}</span>
                       </td>
                       <td class="d-admin-row__detail query-created-by">
