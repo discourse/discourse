@@ -394,23 +394,16 @@ jobs:
             echo "exists=false" >> $GITHUB_OUTPUT
           fi
 
-      - name: Fetch Job ID
-        id: fetch-job-id
-        if: steps.check-flaky-spec-report.outputs.exists == 'true'
-        run: |
-          job_id=$(ruby script/get_github_workflow_run_job_id.rb ${{ github.run_id }} ${{ github.run_attempt }} '${{ matrix.target }} ${{ matrix.build_type }}${{ (matrix.target == 'core' && matrix.build_type == 'frontend' && format(' ({0})', matrix.browser)) || '' }}${{ matrix.plugin_compiler == 'rollup' && ' (rollup)' || '' }}')
-          echo "job_id=$job_id" >> $GITHUB_OUTPUT
-
       - name: Create flaky tests report artifact
         if: steps.check-flaky-spec-report.outputs.exists == 'true'
-        run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
+        run: cp tmp/turbo_rspec_flaky_tests.json tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ job.check_run_id }}.json
 
       - name: Upload flaky tests report
         uses: actions/upload-artifact@v6
         if: steps.check-flaky-spec-report.outputs.exists == 'true'
         with:
           name: flaky-test-reports-${{ matrix.build_type }}-${{ matrix.target }}
-          path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ steps.fetch-job-id.outputs.job_id }}.json
+          path: tmp/turbo_rspec_flaky_tests-${{ matrix.build_type }}-${{ matrix.target }}-${{ job.check_run_id }}.json
 
   merge:
     if: github.repository == 'discourse/discourse' && github.ref == 'refs/heads/main'
