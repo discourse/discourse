@@ -179,18 +179,33 @@ class Admin::WebHooksController < Admin::AdminController
   private
 
   def web_hook_params
-    params.require(:web_hook).permit(
-      :payload_url,
-      :content_type,
-      :secret,
-      :wildcard_web_hook,
-      :active,
-      :verify_certificate,
-      web_hook_event_type_ids: [],
-      group_ids: [],
-      tag_names: [],
-      category_ids: [],
-    )
+    permitted =
+      params.require(:web_hook).permit(
+        :payload_url,
+        :content_type,
+        :secret,
+        :wildcard_web_hook,
+        :active,
+        :verify_certificate,
+        web_hook_event_type_ids: [],
+        group_ids: [],
+        tag_names: [],
+        tag_ids: [],
+        category_ids: [],
+      )
+
+    if permitted[:tag_names].present?
+      Discourse.deprecate(
+        "The `tag_names` param for webhooks is deprecated, use `tag_ids` instead.",
+        since: "3.5.0.beta1",
+        drop_from: "3.6.0.beta1",
+      )
+      permitted.delete(:tag_ids)
+    else
+      permitted.delete(:tag_names)
+    end
+
+    permitted
   end
 
   def fetch_web_hook

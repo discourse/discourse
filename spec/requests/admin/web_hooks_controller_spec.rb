@@ -38,6 +38,82 @@ RSpec.describe Admin::WebHooksController do
         ).to eq(1)
       end
 
+      it "creates a webhook with tag_ids" do
+        tag1 = Fabricate(:tag)
+        tag2 = Fabricate(:tag)
+
+        post "/admin/api/web_hooks.json",
+             params: {
+               web_hook: {
+                 payload_url: "https://meta.discourse.org/",
+                 content_type: 1,
+                 secret: "a_secret_for_webhooks",
+                 wildcard_web_hook: false,
+                 active: true,
+                 verify_certificate: true,
+                 web_hook_event_type_ids: [WebHookEventType::TYPES[:topic_created]],
+                 tag_ids: [tag1.id, tag2.id],
+                 group_ids: [],
+                 category_ids: [],
+               },
+             }
+
+        expect(response.status).to eq(200)
+        webhook = WebHook.find(response.parsed_body["web_hook"]["id"])
+        expect(webhook.tags).to contain_exactly(tag1, tag2)
+      end
+
+      it "creates a webhook with deprecated tag_names param" do
+        tag1 = Fabricate(:tag, name: "alpha")
+        tag2 = Fabricate(:tag, name: "beta")
+
+        post "/admin/api/web_hooks.json",
+             params: {
+               web_hook: {
+                 payload_url: "https://meta.discourse.org/",
+                 content_type: 1,
+                 secret: "a_secret_for_webhooks",
+                 wildcard_web_hook: false,
+                 active: true,
+                 verify_certificate: true,
+                 web_hook_event_type_ids: [WebHookEventType::TYPES[:topic_created]],
+                 tag_names: %w[alpha beta],
+                 group_ids: [],
+                 category_ids: [],
+               },
+             }
+
+        expect(response.status).to eq(200)
+        webhook = WebHook.find(response.parsed_body["web_hook"]["id"])
+        expect(webhook.tags).to contain_exactly(tag1, tag2)
+      end
+
+      it "ignores tag_ids when tag_names is also provided" do
+        tag1 = Fabricate(:tag, name: "alpha")
+        tag2 = Fabricate(:tag)
+
+        post "/admin/api/web_hooks.json",
+             params: {
+               web_hook: {
+                 payload_url: "https://meta.discourse.org/",
+                 content_type: 1,
+                 secret: "a_secret_for_webhooks",
+                 wildcard_web_hook: false,
+                 active: true,
+                 verify_certificate: true,
+                 web_hook_event_type_ids: [WebHookEventType::TYPES[:topic_created]],
+                 tag_names: %w[alpha],
+                 tag_ids: [tag2.id],
+                 group_ids: [],
+                 category_ids: [],
+               },
+             }
+
+        expect(response.status).to eq(200)
+        webhook = WebHook.find(response.parsed_body["web_hook"]["id"])
+        expect(webhook.tags).to contain_exactly(tag1)
+      end
+
       it "returns error when field is not filled correctly" do
         post "/admin/api/web_hooks.json",
              params: {
