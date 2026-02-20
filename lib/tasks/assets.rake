@@ -24,7 +24,7 @@ task "assets:precompile:build" do
 end
 
 task "assets:precompile:build_plugins": "environment" do
-  Plugin::JsManager.new.compile!
+  Plugin::JsManager.new.compile! if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
 end
 
 task "assets:precompile:before": %w[
