@@ -28,11 +28,7 @@ module PostGuardian
     return false if !(can_see_post.nil? && can_see_post?(post)) && !can_see_post
 
     # no warnings except for staff
-    if action_key == :notify_user &&
-         (
-           post.user.blank? ||
-             (!is_staff? && opts[:is_warning].present? && opts[:is_warning] == "true")
-         )
+    if action_key == :notify_user && (post.user.blank? || (!is_staff? && opts[:is_warning]))
       return false
     end
 
