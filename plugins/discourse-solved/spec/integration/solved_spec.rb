@@ -129,7 +129,7 @@ RSpec.describe "Managing Posts solved status" do
         params: {
           post_id: solved_post.id,
         },
-        acting_user: Discourse.system_user,
+        guardian: Guardian.new(Discourse.system_user),
       )
 
       result = Search.execute("carrot")
@@ -182,7 +182,7 @@ RSpec.describe "Managing Posts solved status" do
           params: {
             post_id: post.id,
           },
-          acting_user: Discourse.system_user,
+          guardian: Guardian.new(Discourse.system_user),
         )
         post
       end
@@ -242,7 +242,7 @@ RSpec.describe "Managing Posts solved status" do
         params: {
           post_id: post.id,
         },
-        acting_user: Discourse.system_user,
+        guardian: Guardian.new(Discourse.system_user),
       )
 
       category.num_auto_bump_daily = 2
@@ -320,7 +320,7 @@ RSpec.describe "Managing Posts solved status" do
           params: {
             post_id: post.id,
           },
-          acting_user: Discourse.system_user,
+          guardian: Guardian.new(Discourse.system_user),
         )
       }.to change { user.notifications.count }.by(1) & change { op.notifications.count }.by(1)
 
@@ -353,7 +353,7 @@ RSpec.describe "Managing Posts solved status" do
             params: {
               post_id: post.id,
             },
-            acting_user: solution_accepter,
+            guardian: Guardian.new(solution_accepter),
           )
         }.not_to change { author.notifications.count }
       end
@@ -367,7 +367,7 @@ RSpec.describe "Managing Posts solved status" do
             params: {
               post_id: post.id,
             },
-            acting_user: solution_accepter,
+            guardian: Guardian.new(solution_accepter),
           )
         }.not_to change { author.notifications.count }
       end
@@ -464,7 +464,12 @@ RSpec.describe "Managing Posts solved status" do
     describe "when solved_topics_auto_close_hours is enabled" do
       before do
         SiteSetting.solved_topics_auto_close_hours = 2
-        DiscourseSolved::AcceptAnswer.call!(params: { post_id: p1.id }, acting_user: user)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: p1.id,
+          },
+          guardian: Guardian.new(user),
+        )
         topic.reload
       end
 
@@ -481,7 +486,7 @@ RSpec.describe "Managing Posts solved status" do
     end
 
     it "triggers a webhook" do
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: p1.id }, acting_user: user)
+      DiscourseSolved::AcceptAnswer.call!(params: { post_id: p1.id }, guardian: Guardian.new(user))
 
       Fabricate(:solved_web_hook)
       post "/solution/unaccept.json", params: { id: p1.id }
@@ -537,7 +542,12 @@ RSpec.describe "Managing Posts solved status" do
         expect(result[:success]).to eq(true)
 
         expect(p1.topic.assignment.status).to eq("New")
-        DiscourseSolved::AcceptAnswer.call!(params: { post_id: p1.id }, acting_user: user)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: p1.id,
+          },
+          guardian: Guardian.new(user),
+        )
         topic.reload
 
         expect(topic.solved.answer_post_id).to eq(p1.id)
@@ -549,7 +559,12 @@ RSpec.describe "Managing Posts solved status" do
         result = assigner.assign(user)
         expect(result[:success]).to eq(true)
 
-        DiscourseSolved::AcceptAnswer.call!(params: { post_id: p1.id }, acting_user: user)
+        DiscourseSolved::AcceptAnswer.call!(
+          params: {
+            post_id: p1.id,
+          },
+          guardian: Guardian.new(user),
+        )
 
         expect(p1.reload.topic.assignment.reload.status).to eq("Done")
 
@@ -581,7 +596,7 @@ RSpec.describe "Managing Posts solved status" do
           params: {
             post_id: post_response.id,
           },
-          acting_user: user,
+          guardian: Guardian.new(user),
         )
 
         expect(topic_question.assignment.assigned_to_id).to eq(user_2.id)
@@ -611,7 +626,7 @@ RSpec.describe "Managing Posts solved status" do
             params: {
               post_id: post2.id,
             },
-            acting_user: Discourse.system_user,
+            guardian: Guardian.new(Discourse.system_user),
           )
           topics = reminder.send(:assigned_topics, user, order: :asc)
           expect(topics.to_a.length).to eq(2)
@@ -645,7 +660,7 @@ RSpec.describe "Managing Posts solved status" do
             params: {
               post_id: post2.id,
             },
-            acting_user: Discourse.system_user,
+            guardian: Guardian.new(Discourse.system_user),
           )
           expect(reminder.send(:assigned_count_for, user)).to eq(1)
         end
@@ -659,7 +674,12 @@ RSpec.describe "Managing Posts solved status" do
       topic = Fabricate(:topic, user:)
       reply = Fabricate(:post, topic:, user:, post_number: 2)
 
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, acting_user: user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: reply.id,
+        },
+        guardian: Guardian.new(user),
+      )
 
       topic.trash!(Discourse.system_user)
       reply.reload
@@ -679,13 +699,23 @@ RSpec.describe "Managing Posts solved status" do
       reply1 = Fabricate(:post, topic:, user:, post_number: 2)
       reply2 = Fabricate(:post, topic:, user:, post_number: 3)
 
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply1.id }, acting_user: user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: reply1.id,
+        },
+        guardian: Guardian.new(user),
+      )
       topic.reload
 
       expect(topic.solved.answer_post_id).to eq(reply1.id)
       expect(topic.solved.topic_timer).to eq(topic.public_topic_timer)
 
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply2.id }, acting_user: user)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: reply2.id,
+        },
+        guardian: Guardian.new(user),
+      )
       topic.reload
 
       expect(topic.solved.answer_post_id).to eq(reply2.id)
@@ -706,19 +736,19 @@ RSpec.describe "Managing Posts solved status" do
         params: {
           post_id: p1.id,
         },
-        acting_user: Discourse.system_user,
+        guardian: Guardian.new(Discourse.system_user),
       )
       DiscourseSolved::AcceptAnswer.call!(
         params: {
           post_id: p2.id,
         },
-        acting_user: Discourse.system_user,
+        guardian: Guardian.new(Discourse.system_user),
       )
       DiscourseSolved::AcceptAnswer.call!(
         params: {
           post_id: p3.id,
         },
-        acting_user: Discourse.system_user,
+        guardian: Guardian.new(Discourse.system_user),
       )
 
       t1.trash!(Discourse.system_user)
@@ -750,7 +780,12 @@ RSpec.describe "Managing Posts solved status" do
 
       messages =
         MessageBus.track_publish("/topic/#{reply.topic.id}") do
-          DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, acting_user: admin)
+          DiscourseSolved::AcceptAnswer.call!(
+            params: {
+              post_id: reply.id,
+            },
+            guardian: Guardian.new(admin),
+          )
           DiscourseSolved::UnacceptAnswer.call!(params: { post_id: reply.id })
         end
       expect(messages.count).to eq(2)
@@ -777,7 +812,12 @@ RSpec.describe "Managing Posts solved status" do
 
       messages =
         MessageBus.track_publish("/topic/#{private_post.topic.id}") do
-          DiscourseSolved::AcceptAnswer.call!(params: { post_id: reply.id }, acting_user: admin)
+          DiscourseSolved::AcceptAnswer.call!(
+            params: {
+              post_id: reply.id,
+            },
+            guardian: Guardian.new(admin),
+          )
         end
 
       expect(messages.count).to eq(1)
@@ -803,7 +843,7 @@ RSpec.describe "Managing Posts solved status" do
             params: {
               post_id: private_reply.id,
             },
-            acting_user: admin,
+            guardian: Guardian.new(admin),
           )
         end
 

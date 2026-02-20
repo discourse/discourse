@@ -16,9 +16,9 @@ class DiscourseSolved::AcceptAnswer
 
   private
 
-  def notify_solved?(recipient:, acting_user:)
+  def notify_solved?(recipient:, user:)
     !UserCommScreener.new(
-      acting_user_id: acting_user.id,
+      acting_user_id: user.id,
       target_user_ids: recipient.id,
     ).ignoring_or_muting_actor?(recipient.id)
   end
@@ -31,7 +31,9 @@ class DiscourseSolved::AcceptAnswer
     post.topic || Topic.with_deleted.find_by(id: post.topic_id)
   end
 
-  def accept(post:, topic:, acting_user:)
+  def accept(post:, topic:, guardian:)
+    acting_user = guardian.user
+
     DistributedMutex.synchronize("discourse_solved_toggle_answer_#{topic.id}") do
       solved = topic.solved
 
@@ -54,7 +56,7 @@ class DiscourseSolved::AcceptAnswer
 
         solved = DiscourseSolved::SolvedTopic.new(topic:, answer_post: post, accepter: acting_user)
 
-        if acting_user.id != post.user_id && notify_solved?(recipient: post.user, acting_user:)
+        if acting_user.id != post.user_id && notify_solved?(recipient: post.user, user: acting_user)
           Notification.create!(
             notification_type: Notification.types[:custom],
             user_id: post.user_id,
@@ -70,7 +72,7 @@ class DiscourseSolved::AcceptAnswer
         end
 
         if SiteSetting.notify_on_staff_accept_solved && acting_user.id != topic.user_id &&
-             notify_solved?(recipient: topic.user, acting_user:)
+             notify_solved?(recipient: topic.user, user: acting_user)
           Notification.create!(
             notification_type: Notification.types[:custom],
             user_id: topic.user_id,

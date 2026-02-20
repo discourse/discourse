@@ -53,7 +53,7 @@ module DiscourseDev
             params: {
               post_id: post.id,
             },
-            acting_user: post.topic.user,
+            guardian: Guardian.new(post.topic.user),
           )
         end
       end

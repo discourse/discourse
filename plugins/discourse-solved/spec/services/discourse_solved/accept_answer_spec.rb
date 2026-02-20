@@ -11,7 +11,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
     fab!(:post) { Fabricate(:post, topic:) }
 
     let(:params) { { post_id: post.id } }
-    let(:dependencies) { { acting_user: } }
+    let(:dependencies) { { guardian: Guardian.new(acting_user) } }
 
     before do
       SiteSetting.solved_enabled = true
@@ -80,7 +80,7 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       end
 
       context "when the acting user is the post author" do
-        let(:dependencies) { { acting_user: post.user } }
+        let(:dependencies) { { guardian: Guardian.new(post.user) } }
 
         it "does not notify the post author" do
           expect { result }.not_to change {

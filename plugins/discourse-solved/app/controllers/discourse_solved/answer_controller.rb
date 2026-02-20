@@ -13,7 +13,7 @@ class DiscourseSolved::AnswerController < ::ApplicationController
 
     guardian.ensure_can_accept_answer!(topic, post)
 
-    DiscourseSolved::AcceptAnswer.call(params: { post_id: post.id }, acting_user: current_user) do
+    DiscourseSolved::AcceptAnswer.call(params: { post_id: post.id }, guardian:) do
       on_success { |accepted_answer:| render_json_dump(accepted_answer) }
       on_model_not_found(:post) { raise Discourse::NotFound }
       on_model_not_found(:topic) { raise Discourse::NotFound }

@@ -17,8 +17,18 @@ describe DirectoryItem, type: :model do
     before { SiteSetting.solved_enabled = true }
 
     it "excludes PM post solutions from solutions" do
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: topic_post1.id }, acting_user: admin)
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: pm_post.id }, acting_user: admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: Guardian.new(admin),
+      )
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: pm_post.id,
+        },
+        guardian: Guardian.new(admin),
+      )
 
       DirectoryItem.refresh!
 
@@ -31,8 +41,18 @@ describe DirectoryItem, type: :model do
     end
 
     it "excludes deleted posts from solutions" do
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: topic_post1.id }, acting_user: admin)
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: topic_post2.id }, acting_user: admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: Guardian.new(admin),
+      )
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post2.id,
+        },
+        guardian: Guardian.new(admin),
+      )
       topic_post2.update(deleted_at: Time.zone.now)
 
       DirectoryItem.refresh!
@@ -46,8 +66,18 @@ describe DirectoryItem, type: :model do
     end
 
     it "excludes deleted topics from solutions" do
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: topic_post1.id }, acting_user: admin)
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: topic_post2.id }, acting_user: admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: Guardian.new(admin),
+      )
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post2.id,
+        },
+        guardian: Guardian.new(admin),
+      )
       topic2.update(deleted_at: Time.zone.now)
 
       DirectoryItem.refresh!
@@ -63,7 +93,12 @@ describe DirectoryItem, type: :model do
     it "excludes solutions for silenced users" do
       user.update(silenced_till: 1.day.from_now)
 
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: topic_post1.id }, acting_user: admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: Guardian.new(admin),
+      )
 
       DirectoryItem.refresh!
 
@@ -76,7 +111,12 @@ describe DirectoryItem, type: :model do
     end
 
     it "excludes solutions for suspended users" do
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: topic_post1.id }, acting_user: admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: Guardian.new(admin),
+      )
       user.update(suspended_till: 1.day.from_now)
 
       DirectoryItem.refresh!
@@ -90,7 +130,12 @@ describe DirectoryItem, type: :model do
     end
 
     it "includes solutions for active users" do
-      DiscourseSolved::AcceptAnswer.call!(params: { post_id: topic_post1.id }, acting_user: admin)
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: topic_post1.id,
+        },
+        guardian: Guardian.new(admin),
+      )
 
       DirectoryItem.refresh!
 
@@ -109,7 +154,7 @@ describe DirectoryItem, type: :model do
           params: {
             post_id: topic_post1.id,
           },
-          acting_user: Discourse.system_user,
+          guardian: Guardian.new(Discourse.system_user),
         )
 
         DirectoryItem.refresh!
