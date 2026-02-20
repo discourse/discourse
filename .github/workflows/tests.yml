@@ -90,7 +90,7 @@ jobs:
             target: chat
             browser: Chrome
           - build_type: frontend
-            target: plugin
+            target: plugins
             plugin_compiler: "rollup"
           # - build_type: frontend
           #   target: core
