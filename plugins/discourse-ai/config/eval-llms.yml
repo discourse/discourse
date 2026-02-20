@@ -56,9 +56,9 @@ llms:
       enable_reasoning: true
       reasoning_tokens: 1024
 
-  claude-4.5-sonnet:
-    display_name: Claude 4.5 Sonnet
-    name: claude-sonnet-4-5
+  claude-4.6-sonnet:
+    display_name: Claude 4.6 Sonnet
+    name: claude-sonnet-4-6
     tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
     api_key_env: ANTHROPIC_API_KEY
     provider: anthropic
@@ -66,9 +66,9 @@ llms:
     max_prompt_tokens: 200000
     vision_enabled: true
 
-  claude-4.5-sonnet-thinking:
-    display_name: Claude 4.5 Sonnet
-    name: claude-sonnet-4-5
+  claude-4.6-sonnet-thinking:
+    display_name: Claude 4.6 Sonnet
+    name: claude-sonnet-4-6
     tokenizer: DiscourseAi::Tokenizer::AnthropicTokenizer
     api_key_env: ANTHROPIC_API_KEY
     provider: anthropic

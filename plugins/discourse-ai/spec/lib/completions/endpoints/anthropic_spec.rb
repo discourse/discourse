@@ -586,7 +586,6 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
         "Content-Type" => "application/json",
         "X-Api-Key" => "123",
         "Anthropic-Version" => "2023-06-01",
-        "Anthropic-Beta" => "prompt-caching-2024-07-31",
       },
     ).to_return(status: 200, body: body)
 
@@ -709,7 +708,6 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
         "Content-Type" => "application/json",
         "X-Api-Key" => "123",
         "Anthropic-Version" => "2023-06-01",
-        "Anthropic-Beta" => "prompt-caching-2024-07-31",
       },
     ).to_return(status: 200, body: body)
 
@@ -1297,7 +1295,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
   end
 
   describe "effort parameter" do
-    it "includes effort in output_config and beta header when set to low, medium, or high" do
+    it "includes effort in output_config when set to low, medium, or high" do
       model.update!(provider_params: { effort: "high" })
 
       parsed_body = nil
@@ -1311,7 +1309,6 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
           "Content-Type" => "application/json",
           "X-Api-Key" => "123",
           "Anthropic-Version" => "2023-06-01",
-          "Anthropic-Beta" => "effort-2025-11-24",
         },
       ).to_return(
         status: 200,
@@ -1332,7 +1329,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       expect(parsed_body.dig(:output_config, :effort)).to eq("high")
     end
 
-    it "combines effort and caching beta headers when both are configured" do
+    it "includes effort in output_config when both effort and caching are configured" do
       model.update!(provider_params: { effort: "medium", prompt_caching: "always" })
 
       parsed_body = nil
@@ -1346,7 +1343,6 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
           "Content-Type" => "application/json",
           "X-Api-Key" => "123",
           "Anthropic-Version" => "2023-06-01",
-          "Anthropic-Beta" => "prompt-caching-2024-07-31,effort-2025-11-24",
         },
       ).to_return(
         status: 200,
@@ -1367,7 +1363,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       expect(parsed_body.dig(:output_config, :effort)).to eq("medium")
     end
 
-    it "omits effort and beta header when set to default" do
+    it "omits effort when set to default" do
       model.update!(provider_params: { effort: "default" })
 
       parsed_body = nil
@@ -1401,7 +1397,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::Anthropic do
       expect(parsed_body).not_to have_key(:output_config)
     end
 
-    it "omits effort and beta header when not configured" do
+    it "omits effort when not configured" do
       parsed_body = nil
       stub_request(:post, url).with(
         body:

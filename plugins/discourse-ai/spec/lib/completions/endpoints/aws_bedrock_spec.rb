@@ -1129,7 +1129,7 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
   end
 
   describe "effort parameter" do
-    it "includes effort in output_config and anthropic_beta when set to low, medium, or high" do
+    it "includes effort in output_config when set to low, medium, or high" do
       model.update!(
         provider_params: {
           access_key_id: "123",
@@ -1163,10 +1163,10 @@ RSpec.describe DiscourseAi::Completions::Endpoints::AwsBedrock do
 
       request_body = JSON.parse(request.body)
       expect(request_body.dig("output_config", "effort")).to eq("medium")
-      expect(request_body["anthropic_beta"]).to eq(["effort-2025-11-24"])
+      expect(request_body).not_to have_key("anthropic_beta")
     end
 
-    it "omits effort and anthropic_beta when set to default" do
+    it "omits effort when set to default" do
       model.update!(
         provider_params: {
           access_key_id: "123",
