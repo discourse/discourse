@@ -314,7 +314,7 @@ module Service
           end
 
         if success != :success
-          context[result_key].fail(lock_not_aquired: true)
+          context[result_key].fail(lock_not_acquired: true)
           context.fail!
         end
       end
@@ -324,7 +324,10 @@ module Service
       def lock_name
         [
           context.__service_class__.to_s.underscore,
-          *keys.flat_map { |key| [key, context[:params].public_send(key)] },
+          *keys.flat_map do |key|
+            value = context[:params].public_send(key) || context[key]
+            [key, value.try(:id) || value]
+          end,
         ].join(":")
       end
     end
