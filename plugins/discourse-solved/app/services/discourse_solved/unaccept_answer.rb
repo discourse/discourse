@@ -12,7 +12,8 @@ class DiscourseSolved::UnacceptAnswer
   model :topic
 
   only_if(:is_accepted_answer) do
-    step :unaccept
+    transaction { step :unaccept }
+
     step :enqueue_web_hooks
     step :publish_unaccepted
   end
@@ -35,16 +36,14 @@ class DiscourseSolved::UnacceptAnswer
     DistributedMutex.synchronize("discourse_solved_toggle_answer_#{topic.id}") do
       solved = topic.solved
 
-      ActiveRecord::Base.transaction do
-        UserAction.where(action_type: UserAction::SOLVED, target_post_id: post.id).destroy_all
-        Notification.find_by(
-          notification_type: Notification.types[:custom],
-          user_id: post.user_id,
-          topic_id: post.topic_id,
-          post_number: post.post_number,
-        )&.destroy!
-        solved.destroy!
-      end
+      UserAction.where(action_type: UserAction::SOLVED, target_post_id: post.id).destroy_all
+      Notification.find_by(
+        notification_type: Notification.types[:custom],
+        user_id: post.user_id,
+        topic_id: post.topic_id,
+        post_number: post.post_number,
+      )&.destroy!
+      solved.destroy!
     end
   end
 
