@@ -42,6 +42,10 @@ module PageObjects
         body.all(".-tag-revisions .discourse-tag.diff-ins").map(&:text)
       end
 
+      def has_edit_reason?(reason)
+        body.has_css?(".edit-reason", text: reason)
+      end
+
       private
 
       def revision_numbers
