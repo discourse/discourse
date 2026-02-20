@@ -167,7 +167,7 @@ describe "Simplified Category Creation" do
     it "enables topic approval requirement" do
       category_page.visit_settings(category)
 
-      category_page.toggle_checkbox(I18n.t("js.category.require_topic_approval"))
+      category_page.toggle_form_container(I18n.t("js.category.require_topic_approval"))
       category_page.save_settings
 
       expect(category.reload.require_topic_approval?).to eq(true)

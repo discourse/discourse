@@ -106,6 +106,11 @@ module PageObjects
         self
       end
 
+      def toggle_form_container(title)
+        find(".form-kit__container", text: title).find("label.d-toggle-switch__label").click
+        self
+      end
+
       def select_form_template(template_name)
         find(".select-category-template").click
         find(".select-kit-collection .select-kit-row", text: template_name).click

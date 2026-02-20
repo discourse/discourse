@@ -84,14 +84,10 @@ export default class EditCategoryTabsController extends Controller {
       data.style_type = "icon";
     }
 
-    if (data.required_tag_groups) {
-      data.required_tag_groups = Array.from(
-        data.required_tag_groups,
-        (rtg) => ({
-          ...rtg,
-        })
-      );
-    }
+    data.required_tag_groups = Array.from(
+      data.required_tag_groups ?? [],
+      (rtg) => ({ ...rtg })
+    );
 
     return data;
   }
