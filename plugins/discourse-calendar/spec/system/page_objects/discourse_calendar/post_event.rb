@@ -7,13 +7,11 @@ module PageObjects
         TRIGGER_MENU_SELECTOR = ".discourse-post-event-more-menu-trigger"
 
         def open_more_menu
-          sleep 2.5 # FIXME
           find(TRIGGER_MENU_SELECTOR).click
           self
         end
 
         def going
-          sleep 2.5 # FIXME
           find(".going-button").click
           self
         end
