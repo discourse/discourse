@@ -5561,7 +5561,7 @@ en:
   dev_mode:
     title: "Developer Mode"
     enable_rack_mini_profiler: "Enable Rack Mini Profiler to persist across session changes for 1 hour"
-    enter: "Enter"
+    enter: "Enter Developer Mode"
   wizard:
     title: "Discourse Setup"
     step:
