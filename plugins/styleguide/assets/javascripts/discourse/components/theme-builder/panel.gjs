@@ -7,15 +7,16 @@ import DButton from "discourse/components/d-button";
 import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import draggableNode from "discourse/plugins/styleguide/discourse/modifiers/draggable-node";
-import ColorDefinitionsSection from "./color-definitions-section";
 import ColorSection from "./color-section";
-import CssSection from "./css-section";
+import DebugSection from "./debug-section";
 import SaveThemeModal from "./save-theme-modal";
+import StylesSection from "./styles-section";
 
 export default class ThemeBuilderPanel extends Component {
   @service themeBuilderState;
   @service modal;
   @service dialog;
+  @service siteSettings;
 
   @action
   onPanelMove(top, left) {
@@ -53,6 +54,32 @@ export default class ThemeBuilderPanel extends Component {
 
   get activeTab() {
     return this.themeBuilderState.activeTab;
+  }
+
+  get tabs() {
+    const tabs = [
+      {
+        id: "light-colors",
+        label: "styleguide.theme_builder.tabs.light_colors",
+      },
+      {
+        id: "dark-colors",
+        label: "styleguide.theme_builder.tabs.dark_colors",
+      },
+      {
+        id: "styles",
+        label: "styleguide.theme_builder.tabs.styles",
+      },
+    ];
+
+    if (this.siteSettings.styleguide_theme_builder_debug_tab) {
+      tabs.push({
+        id: "debug",
+        label: "styleguide.theme_builder.tabs.debug",
+      });
+    }
+
+    return tabs;
   }
 
   get isSaveDisabled() {
@@ -93,7 +120,7 @@ export default class ThemeBuilderPanel extends Component {
         {{/if}}
 
         <div class="theme-builder-panel__tabs">
-          {{#each this.themeBuilderState.tabs as |tab|}}
+          {{#each this.tabs as |tab|}}
             <button
               type="button"
               class="btn btn-flat theme-builder-panel__tab
@@ -110,10 +137,10 @@ export default class ThemeBuilderPanel extends Component {
             <ColorSection @mode="light" />
           {{else if (eq this.activeTab "dark-colors")}}
             <ColorSection @mode="dark" />
-          {{else if (eq this.activeTab "css")}}
-            <CssSection />
-          {{else if (eq this.activeTab "color-definitions")}}
-            <ColorDefinitionsSection />
+          {{else if (eq this.activeTab "styles")}}
+            <StylesSection />
+          {{else if (eq this.activeTab "debug")}}
+            <DebugSection />
           {{/if}}
         </div>
 

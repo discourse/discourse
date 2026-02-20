@@ -52,6 +52,12 @@
       .sidebar-section-link-suffix.icon.unread svg {
         color: var(--d-sidebar-highlight-suffix-color);
       }
+
+      .sidebar-section-link-prefix {
+        &.icon {
+          color: var(--d-sidebar-highlight-hover-icon);
+        }
+      }
     }
 
     &--active,

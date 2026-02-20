@@ -12,3 +12,6 @@ plugins:
     refresh: true
     validator: "AtLeastOneGroupValidator"
     area: "group_permissions"
+  styleguide_theme_builder_debug_tab:
+    default: false
+    client: true

@@ -1,10 +1,12 @@
 import { tracked } from "@glimmer/tracking";
 import { cancel, debounce } from "@ember/runloop";
 import Service, { service } from "@ember/service";
+import ThemeSiteSettings from "discourse/admin/models/theme-site-settings";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import { loadColorSchemeStylesheet } from "discourse/lib/color-scheme-picker";
 import KeyValueStore from "discourse/lib/key-value-store";
+import STYLE_SNIPPETS from "discourse/plugins/styleguide/discourse/lib/theme-builder-style-snippets";
 
 const STORE_NAMESPACE = "discourse_theme_builder_";
 const DEBOUNCE_MS = 800;
@@ -62,7 +64,6 @@ const DEFAULT_CUSTOM_SCSS = `:root {
   --d-button-border-radius: 4px;
   --d-nav-pill-border-radius: 4px;
   --d-tag-border-radius: 3px;
-  --d-sidebar-border-color: transparent;
 }`;
 
 const DEFAULT_COLOR_DEFINITIONS_SCSS = `// uncomment the line below to disable the header bottom border
@@ -89,6 +90,8 @@ export default class ThemeBuilderState extends Service {
   @tracked darkColors = { ...DEFAULT_DARK_COLORS };
   @tracked customScss = DEFAULT_CUSTOM_SCSS;
   @tracked colorDefinitionsScss = DEFAULT_COLOR_DEFINITIONS_SCSS;
+  @tracked activeSnippetIds = [];
+  @tracked themeSiteSettings = [];
 
   _store = new KeyValueStore(STORE_NAMESPACE);
   _debounceTimer = null;
@@ -109,21 +112,6 @@ export default class ThemeBuilderState extends Service {
       return null;
     }
     return `/admin/customize/themes/${this.themeId}`;
-  }
-
-  get tabs() {
-    return [
-      {
-        id: "light-colors",
-        label: "styleguide.theme_builder.tabs.light_colors",
-      },
-      { id: "dark-colors", label: "styleguide.theme_builder.tabs.dark_colors" },
-      { id: "css", label: "styleguide.theme_builder.tabs.css" },
-      {
-        id: "color-definitions",
-        label: "styleguide.theme_builder.tabs.color_definitions",
-      },
-    ];
   }
 
   toggle() {
@@ -187,6 +175,13 @@ export default class ThemeBuilderState extends Service {
         this.colorDefinitionsScss = colorDefsField.value;
       }
 
+      const rawSettings = theme.themeable_site_settings || [];
+      this.themeSiteSettings = rawSettings.map((s) => {
+        s.default = String(s.default ?? "");
+        s.value = String(s.value ?? "");
+        return ThemeSiteSettings.create(s);
+      });
+
       this._persistToStore();
     } catch {
       // theme may not exist or not be accessible
@@ -217,6 +212,93 @@ export default class ThemeBuilderState extends Service {
 
   setColorDefinitionsScss(value) {
     this.colorDefinitionsScss = value;
+  }
+
+  async loadThemeSiteSettings() {
+    if (!this.themeId) {
+      this.themeSiteSettings = [];
+      return;
+    }
+
+    try {
+      const themeData = await ajax(`/admin/themes/${this.themeId}.json`);
+      const raw = themeData.theme?.themeable_site_settings || [];
+      this.themeSiteSettings = raw.map((s) => {
+        s.default = String(s.default ?? "");
+        s.value = String(s.value ?? "");
+        return ThemeSiteSettings.create(s);
+      });
+    } catch {
+      this.themeSiteSettings = [];
+    }
+  }
+
+  toggleSnippet(snippetId) {
+    if (this.activeSnippetIds.includes(snippetId)) {
+      this.activeSnippetIds = this.activeSnippetIds.filter(
+        (id) => id !== snippetId
+      );
+    } else {
+      this.activeSnippetIds = [...this.activeSnippetIds, snippetId];
+    }
+
+    if (!this.themeName) {
+      this._scheduleCompile();
+    }
+  }
+
+  get composedCustomScss() {
+    const snippetCssLines = [];
+    const rawCssBlocks = [];
+
+    for (const snippet of STYLE_SNIPPETS) {
+      if (!this.activeSnippetIds.includes(snippet.id)) {
+        continue;
+      }
+
+      if (snippet.css) {
+        snippetCssLines.push(...snippet.css);
+      }
+
+      if (snippet.rawCss) {
+        rawCssBlocks.push(snippet.rawCss);
+      }
+    }
+
+    const parts = [];
+
+    if (snippetCssLines.length > 0) {
+      parts.push(`:root {\n  ${snippetCssLines.join("\n  ")}\n}`);
+    }
+
+    if (rawCssBlocks.length > 0) {
+      parts.push(...rawCssBlocks);
+    }
+
+    if (parts.length === 0) {
+      return this.customScss;
+    }
+
+    return parts.join("\n\n");
+  }
+
+  get composedColorDefinitionsScss() {
+    const snippetLines = [];
+
+    for (const snippet of STYLE_SNIPPETS) {
+      if (
+        this.activeSnippetIds.includes(snippet.id) &&
+        snippet.colorDefinitionsCss
+      ) {
+        snippetLines.push(...snippet.colorDefinitionsCss);
+      }
+    }
+
+    if (snippetLines.length === 0) {
+      return this.colorDefinitionsScss;
+    }
+
+    return `:root {\n  ${snippetLines.join("\n  ")}\n}`;
   }
 
   _scheduleCompile() {
@@ -318,6 +400,7 @@ export default class ThemeBuilderState extends Service {
     });
 
     this._persistToStore();
+    this.loadThemeSiteSettings();
   }
 
   async _updateDraftResources() {
@@ -367,21 +450,23 @@ export default class ThemeBuilderState extends Service {
 
   _buildThemeFields() {
     const fields = [];
+    const composedCss = this.composedCustomScss;
+    const composedColorDefs = this.composedColorDefinitionsScss;
 
-    if (this.customScss) {
+    if (composedCss) {
       fields.push({
         name: "scss",
         target: "common",
-        value: this.customScss,
+        value: composedCss,
         type_id: 1,
       });
     }
 
-    if (this.colorDefinitionsScss) {
+    if (composedColorDefs) {
       fields.push({
         name: "color_definitions",
         target: "common",
-        value: this.colorDefinitionsScss,
+        value: composedColorDefs,
         type_id: 1,
       });
     }
@@ -494,6 +579,8 @@ export default class ThemeBuilderState extends Service {
     this.darkColors = { ...DEFAULT_DARK_COLORS };
     this.customScss = DEFAULT_CUSTOM_SCSS;
     this.colorDefinitionsScss = DEFAULT_COLOR_DEFINITIONS_SCSS;
+    this.activeSnippetIds = [];
+    this.themeSiteSettings = [];
     this.isCompiling = false;
 
     this._clearStore();
@@ -539,6 +626,10 @@ export default class ThemeBuilderState extends Service {
       key: "colorDefinitionsScss",
       value: this.colorDefinitionsScss,
     });
+    this._store.setObject({
+      key: "activeSnippetIds",
+      value: this.activeSnippetIds,
+    });
   }
 
   _loadFromStore() {
@@ -551,6 +642,7 @@ export default class ThemeBuilderState extends Service {
 
       if (parsedUrlThemeId && parsedUrlThemeId === storedThemeId) {
         this._restoreFromStore();
+        this.loadThemeSiteSettings();
       } else if (parsedUrlThemeId) {
         this._loadFromExistingTheme(parsedUrlThemeId);
       }
@@ -562,6 +654,7 @@ export default class ThemeBuilderState extends Service {
     if (this.themeId) {
       url.searchParams.set("preview_theme_id", this.themeId);
       window.history.replaceState(null, "", url.toString());
+      this.loadThemeSiteSettings();
     }
   }
 
@@ -605,6 +698,11 @@ export default class ThemeBuilderState extends Service {
     if (colorDefinitionsScss && colorDefinitionsScss !== "null") {
       this.colorDefinitionsScss = colorDefinitionsScss;
     }
+
+    const activeSnippetIds = this._store.getObject("activeSnippetIds");
+    if (activeSnippetIds) {
+      this.activeSnippetIds = activeSnippetIds;
+    }
   }
 
   _clearStore() {
@@ -616,5 +714,6 @@ export default class ThemeBuilderState extends Service {
     this._store.remove("darkColors");
     this._store.remove("customScss");
     this._store.remove("colorDefinitionsScss");
+    this._store.remove("activeSnippetIds");
   }
 }
