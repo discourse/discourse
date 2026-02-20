@@ -46,7 +46,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
       secret: this.webhook.secret,
       categories: this.webhook.categories,
       group_names: this.webhook.group_names,
-      tag_names: this.webhook.tag_names,
+      tags: this.webhook.tags,
       wildcard: this.webhook.wildcard,
       web_hook_event_types: this.webhook.web_hook_event_types,
       verify_certificate: this.webhook.verify_certificate,
@@ -222,7 +222,7 @@ export default class AdminConfigAreasWebhookForm extends Component {
 
                 {{#if this.showTagsFilter}}
                   <form.Field
-                    @name="tag_names"
+                    @name="tags"
                     @title={{i18n "admin.web_hooks.tags_filter"}}
                     @description={{i18n
                       "admin.web_hooks.tags_filter_instructions"
