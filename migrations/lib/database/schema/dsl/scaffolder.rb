@@ -96,6 +96,7 @@ module Migrations::Database::Schema::DSL
       end
 
       File.write(path, content)
+      Migrations::Database::Schema::Helpers.format_ruby_file(path)
       path
     end
   end

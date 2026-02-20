@@ -173,21 +173,23 @@ module Migrations::Database::Schema
       namespace.split("::").last
     end
 
-    def self.format_ruby_files(path)
-      glob_pattern = File.join(path, "*.rb")
-
+    def self.format_ruby_file(path)
       system(
         "bundle",
         "exec",
         "stree",
         "write",
-        glob_pattern,
+        path,
         exception: true,
         out: File::NULL,
         err: File::NULL,
       )
     rescue StandardError
-      raise "Failed to run `bundle exec stree write '#{glob_pattern}'`"
+      raise "Failed to run `bundle exec stree write '#{path}'`"
+    end
+
+    def self.format_ruby_files(directory)
+      format_ruby_file(File.join(directory, "*.rb"))
     end
   end
 end

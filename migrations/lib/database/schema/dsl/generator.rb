@@ -122,9 +122,10 @@ module Migrations::Database::Schema::DSL
         end
       return nil unless end_comment
 
-      line_end = content.index("\n", start_comment.location.start_offset)
-      start_offset = line_end ? line_end + 1 : content.length
-      content[start_offset...end_comment.location.start_offset].presence
+      start_byte = start_comment.location.start_offset
+      line_end = content.b.index("\n", start_byte)
+      start_offset = line_end ? line_end + 1 : content.bytesize
+      content.byteslice(start_offset...end_comment.location.start_offset)&.presence
     end
 
     def format_ruby_files!

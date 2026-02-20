@@ -29,13 +29,39 @@ module Migrations::Database::Schema::DSL
         raise Migrations::Database::Schema::ConfigError, "Table #{table_name} is already ignored"
       end
 
-      entry =
-        reason.present? ? "  table :#{table_name}, #{reason.inspect}\n" : "  table :#{table_name}\n"
-      content.insert(block_data[:end_offset], entry)
+      content =
+        if reason.nil? && block_data[:last_tables_call]
+          append_to_tables_call(content, block_data[:last_tables_call], table_name)
+        else
+          insert_standalone_entry(content, block_data[:end_offset], table_name, reason)
+        end
+
       File.write(@ignored_path, content)
+      format_file!
     end
 
     private
+
+    def append_to_tables_call(content, tables_call, table_name)
+      all_names = (tables_call[:names] + [table_name]).sort
+      replacement = "tables " + all_names.map { |n| ":#{n}" }.join(", ")
+
+      content.byteslice(0, tables_call[:start_offset]) + replacement +
+        content.byteslice(tables_call[:end_offset]..)
+    end
+
+    def insert_standalone_entry(content, end_offset, table_name, reason)
+      entry =
+        (
+          if reason.present?
+            "\n  table :#{table_name}, #{reason.inspect}\n"
+          else
+            "\n  table :#{table_name}\n"
+          end
+        )
+
+      content.byteslice(0, end_offset) + entry + content.byteslice(end_offset..)
+    end
 
     def parse_ignored_block(content)
       result = Prism.parse(content)
@@ -51,9 +77,18 @@ module Migrations::Database::Schema::DSL
               "Could not find `Migrations::Database::Schema.ignored do ... end` in #{@ignored_path}"
       end
 
+      last_tables = find_last_tables_call(declaration.block)
+
       {
         end_offset: declaration.block.closing_loc.start_offset,
         table_names: extract_table_names(declaration.block),
+        last_tables_call:
+          last_tables &&
+            {
+              start_offset: last_tables.location.start_offset,
+              end_offset: last_tables.location.end_offset,
+              names: symbol_names_from(last_tables),
+            },
       }
     end
 
@@ -78,6 +113,18 @@ module Migrations::Database::Schema::DSL
       receiver.full_name.to_s.sub(/\A::/, "") == "Migrations::Database::Schema"
     end
 
+    def find_last_tables_call(block_node)
+      body = block_node&.body
+      return nil unless body.is_a?(Prism::StatementsNode)
+
+      body.body.select { |s| s.is_a?(Prism::CallNode) && s.message.to_s == "tables" }.last
+    end
+
+    def symbol_names_from(call_node)
+      args = call_node.arguments&.arguments || []
+      args.filter_map { |arg| arg.unescaped if arg.is_a?(Prism::SymbolNode) }
+    end
+
     def extract_table_names(block_node)
       names = Set.new
       body = block_node&.body
@@ -94,6 +141,10 @@ module Migrations::Database::Schema::DSL
       end
 
       names
+    end
+
+    def format_file!
+      Migrations::Database::Schema::Helpers.format_ruby_file(@ignored_path)
     end
   end
 end
