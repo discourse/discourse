@@ -49,7 +49,7 @@ module DiscourseAi
 
         untranslated_posts = find_untranslated_posts(topic, guardian)
 
-        if untranslated_posts.empty?
+        if !untranslated_posts.exists?
           return(
             render_json_error(
               I18n.t("discourse_ai.translation.errors.all_posts_translated"),
