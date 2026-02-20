@@ -120,6 +120,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
             group_ids: [],
             last_run_at: "2021-02-11T08:29:59.337Z",
             user_id: -1,
+            is_default: true,
           },
           {
             id: 2,
@@ -129,6 +130,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
             group_ids: [],
             last_run_at: "2023-05-04T22:16:23.858Z",
             user_id: 1,
+            is_default: false,
           },
         ],
       });
@@ -156,6 +158,7 @@ acceptance("Data Explorer Plugin | Run Query", function (needs) {
           last_run_at: "2021-02-11T08:29:59.337Z",
           hidden: false,
           user_id: -1,
+          is_default: true,
         },
       });
     });
