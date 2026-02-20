@@ -3544,8 +3544,6 @@ en:
         max_views:
           placeholder: maximum
           aria_label: filter by maximum views
-        additional_options:
-          label: "Filter by post count and topic views"
 
     hamburger_menu: "Navigation menu"
     new_item: "new"
@@ -4353,7 +4351,9 @@ en:
           edit: "Edit"
           delete: "Delete"
         add: "Add new translation"
-        manage: "Manage translations (%{count} existing)"
+        manage:
+          one: "Manage translations (%{count} existing)"
+          other: "Manage translations (%{count} existing)"
         view:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"

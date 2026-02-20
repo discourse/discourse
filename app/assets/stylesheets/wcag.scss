@@ -310,14 +310,6 @@ html {
     color: var(--primary-medium);
   }
 
-  // Search
-  .search-container
-    .search-filters
-    details.search-advanced-additional-options
-    > summary {
-    color: var(--highlight-high);
-  }
-
   .chat-notices__notice,
   .chat-notices .chat-retention-reminder {
     background-color: var(--tertiary-very-low);

@@ -7,6 +7,7 @@ import ConditionalLoadingSpinner from "discourse/components/conditional-loading-
 import DButton from "discourse/components/d-button";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import { ajax } from "discourse/lib/ajax";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 import { isNotFullDayEvent } from "../lib/guess-best-date-format";
@@ -88,6 +89,13 @@ export default class UpcomingEventsList extends Component {
     }
   }
 
+  get shouldShowCrossCategory() {
+    return applyValueTransformer(
+      "discourse-calendar-upcoming-events-show-cross-category",
+      false // default value
+    );
+  }
+
   @action
   async updateEventsList() {
     this.isLoading = true;
@@ -103,7 +111,7 @@ export default class UpcomingEventsList extends Component {
       data.include_subcategories = true;
     }
 
-    if (this.categoryId) {
+    if (this.categoryId && !this.shouldShowCrossCategory) {
       data.category_id = this.categoryId;
     }
 

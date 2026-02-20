@@ -1,10 +1,13 @@
+import { helperContext } from "discourse/lib/helpers";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
 import SolvedRemovalConfirmationModal from "../components/modal/solved-removal-confirmation";
 
 const STORAGE_KEY = "discourse-solved-hide-category-change-confirmation";
 
-function solvedEnabled(siteSettings, categoryId, tags) {
+function solvedEnabled(categoryId, tags) {
+  const siteSettings = helperContext().siteSettings;
+
   if (
     siteSettings.allow_solved_on_all_topics ||
     Category.findById(categoryId)?.custom_fields?.enable_accepted_answers ===
@@ -15,7 +18,7 @@ function solvedEnabled(siteSettings, categoryId, tags) {
 
   const solvedTags = siteSettings.enable_solved_tags.split("|").filter(Boolean);
 
-  return tags.some((t) => solvedTags.includes(t.name));
+  return (tags || []).some((t) => solvedTags.includes(t.name));
 }
 
 export default {
@@ -26,7 +29,6 @@ export default {
       api.registerBehaviorTransformer(
         "topic-controller:finished-editing",
         async ({ next, context }) => {
-          const siteSettings = api.container.lookup("service:site-settings");
           const modal = api.container.lookup("service:modal");
           const props = context.buffered;
           const model = context.model;
@@ -38,16 +40,8 @@ export default {
             const oldTags = model.tags;
             const newTags = props.tags ?? oldTags;
 
-            const oldAllowed = solvedEnabled(
-              siteSettings,
-              oldCategoryId,
-              oldTags
-            );
-            const newAllowed = solvedEnabled(
-              siteSettings,
-              newCategoryId,
-              newTags
-            );
+            const oldAllowed = solvedEnabled(oldCategoryId, oldTags);
+            const newAllowed = solvedEnabled(newCategoryId, newTags);
 
             solvedStateChanged = oldAllowed !== newAllowed;
 
