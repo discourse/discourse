@@ -1,6 +1,5 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { Input } from "@ember/component";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import DButton from "discourse/components/d-button";
@@ -38,9 +37,9 @@ export default class SolvedRemovalConfirmationModal extends Component {
         <p>{{i18n "solved.confirm_solved_removal"}}</p>
         <div class="control-group">
           <label class="checkbox-label solved-removal-dont-show-again">
-            <Input
-              @type="checkbox"
-              @checked={{this.dontShowAgain}}
+            <input
+              type="checkbox"
+              checked={{this.dontShowAgain}}
               {{on "change" this.toggleDontShowAgain}}
             />
             {{i18n "solved.dont_show_again"}}
