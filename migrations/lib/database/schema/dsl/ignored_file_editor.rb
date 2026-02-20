@@ -11,14 +11,14 @@ module Migrations::Database::Schema::DSL
     def add_table(table_name, reason: nil)
       table_name = table_name.to_s
 
-      unless /\A[a-z0-9_]+\z/.match?(table_name)
+      if !/\A[a-z0-9_]+\z/.match?(table_name)
         raise(
           Migrations::Database::Schema::ConfigError,
           "Invalid table name '#{table_name}'. Use lowercase letters, numbers, and underscores.",
         )
       end
 
-      unless File.exist?(@ignored_path)
+      if !File.exist?(@ignored_path)
         raise Migrations::Database::Schema::ConfigError, "ignored.rb not found at #{@ignored_path}"
       end
 
@@ -39,36 +39,36 @@ module Migrations::Database::Schema::DSL
 
     def parse_ignored_block(content)
       result = Prism.parse(content)
-      unless result.success?
+      if !result.success?
         details = result.errors.map(&:message).join(", ")
         raise Migrations::Database::Schema::ConfigError,
               "Could not parse #{@ignored_path}: #{details}"
       end
 
-      ignored_call = find_ignored_call(result.value)
-      if ignored_call.nil?
+      declaration = find_ignored_declaration(result.value)
+      if declaration.nil?
         raise Migrations::Database::Schema::ConfigError,
               "Could not find `Migrations::Database::Schema.ignored do ... end` in #{@ignored_path}"
       end
 
       {
-        end_offset: ignored_call.block.closing_loc.start_offset,
-        table_names: extract_table_names(ignored_call.block),
+        end_offset: declaration.block.closing_loc.start_offset,
+        table_names: extract_table_names(declaration.block),
       }
     end
 
-    def find_ignored_call(node)
-      return node if node.is_a?(Prism::CallNode) && ignored_call_with_block?(node)
+    def find_ignored_declaration(node)
+      return node if node.is_a?(Prism::CallNode) && ignored_declaration?(node)
 
       node.compact_child_nodes.each do |child|
-        found = find_ignored_call(child)
+        found = find_ignored_declaration(child)
         return found if found
       end
 
       nil
     end
 
-    def ignored_call_with_block?(node)
+    def ignored_declaration?(node)
       return false unless node.message.to_s == "ignored"
       return false unless node.block
 
