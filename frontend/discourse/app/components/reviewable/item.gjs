@@ -170,7 +170,7 @@ export default class ReviewableItem extends Component {
   ) {
     return (
       (createdFromFlag &&
-        status === 0 &&
+        status === PENDING &&
         (claimOptional || (claimRequired && claimedBy !== null))) ||
       isAiReviewable
     );
@@ -198,7 +198,9 @@ export default class ReviewableItem extends Component {
   )
   claimEnabled(claimMode, topicId, autoClaimed, status) {
     return (
-      (claimMode !== "disabled" || autoClaimed) && !!topicId && status === 0
+      (claimMode !== "disabled" || autoClaimed) &&
+      !!topicId &&
+      status === PENDING
     );
   }
 
@@ -376,7 +378,7 @@ export default class ReviewableItem extends Component {
 
   @bind
   _updateStatus(data) {
-    if (data.remove_reviewable_ids.includes(this.reviewable.id)) {
+    if (data.remove_reviewable_ids?.includes(this.reviewable.id)) {
       delete data.remove_reviewable_ids;
       this._performResult(data, {}, this.reviewable);
     }
@@ -465,7 +467,7 @@ export default class ReviewableItem extends Component {
       });
     }
 
-    if (this.remove && result.remove_reviewable_ids) {
+    if (this.remove && result.remove_reviewable_ids?.length > 0) {
       this.remove(result.remove_reviewable_ids);
     } else {
       return this.store.find("reviewable", reviewable.id);
