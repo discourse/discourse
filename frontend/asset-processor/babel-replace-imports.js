@@ -16,7 +16,10 @@ export default function (babel) {
           return;
         }
 
-        if (moduleName.startsWith("discourse/plugins/")) {
+        if (
+          globalThis.ROLLUP_PLUGIN_COMPILER === "1" &&
+          moduleName.startsWith("discourse/plugins/")
+        ) {
           const parts = moduleName.split("/");
           path.node.source = t.stringLiteral(`discourse/plugins/${parts[2]}`);
 

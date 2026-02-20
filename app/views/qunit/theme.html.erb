@@ -5,8 +5,6 @@
     <%= discourse_color_scheme_stylesheets %>
     <meta name="color-scheme" content="light dark">
 
-    <link rel="canonical" href="<%= Discourse.base_path %>/" />
-
     <%- if @has_test_bundle && !@suggested_themes %>
       <%= preload_script_url ExtraLocalesController.url("main"), type_module: true %>
       <%= preload_script_url ExtraLocalesController.url("mf"), type_module: true %>
@@ -70,15 +68,8 @@
         <%- end %>
       <%- end %>
     <% else %>
-      <template id="dynamic-test-js">
-        <%= preload_script "scripts/discourse-test-listen-boot" %>
-        <%= preload_script "scripts/discourse-boot" %>
-      </template>
-
-      <discourse-dynamic-test-js>
-      </discourse-dynamic-test-js>
-
-      <%= preload_script "scripts/discourse-test-load-dynamic-js" %>
+      <%= preload_script "scripts/discourse-test-listen-boot" %>
+      <%= preload_script "scripts/discourse-boot" %>
     <%- end %>
 
     <%= discourse_stylesheet_link_tag("qunit-custom", theme_id: nil) %>

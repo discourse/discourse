@@ -2,11 +2,7 @@
 
 <%- Discourse.find_plugin_js_assets(opts).tap do |plugin_assets| %>
   <script type="importmap" nonce="<%= csp_nonce_placeholder %>">
-    <%=
-      JSON.pretty_generate({
-        imports: plugin_assets.filter_map{ |a| [a[:importmap_name], script_asset_path(a[:name])] if a[:importmap_name] }.to_h
-      }).html_safe
-    %>
+    <%= generate_import_map(plugin_assets) %>
   </script>
   <%- plugin_assets.each do |asset| %>
     <%if asset[:type_module] %>

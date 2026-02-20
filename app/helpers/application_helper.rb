@@ -90,11 +90,23 @@ module ApplicationHelper
     request.env["HTTP_ACCEPT_ENCODING"] =~ /gzip/
   end
 
+  def generate_import_map(plugin_assets)
+    imports =
+      plugin_assets
+        .filter { it[:importmap_name] }
+        .map { [it[:importmap_name], script_asset_path(it[:name])] }
+        .to_h
+
+    JSON.pretty_generate({ imports: }).html_safe
+  end
+
   def script_asset_path(script)
     logical_path = "#{script}.js"
 
-    if digested_logical_path = Plugin::JsManager.digested_logical_path_for(script)
-      logical_path = digested_logical_path
+    if ENV["ROLLUP_PLUGIN_COMPILER"] == "1"
+      if digested_logical_path = Plugin::JsManager.digested_logical_path_for(script)
+        logical_path = digested_logical_path
+      end
     end
 
     path = ActionController::Base.helpers.asset_path(logical_path)

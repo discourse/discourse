@@ -47,14 +47,14 @@ class AssetProcessor
     ctx.attach(
       "rails.logger.warn",
       proc do |err|
-        Rails.logger.warn(p err.to_s)
+        Rails.logger.warn(err.to_s)
         nil
       end,
     )
     ctx.attach(
       "rails.logger.error",
       proc do |err|
-        Rails.logger.error(p err.to_s)
+        Rails.logger.error(err.to_s)
         nil
       end,
     )
@@ -66,6 +66,7 @@ class AssetProcessor
         @processor_mutex.synchronize { build_asset_processor }
       end
 
+    ctx.eval("globalThis.ROLLUP_PLUGIN_COMPILER = #{ENV["ROLLUP_PLUGIN_COMPILER"].to_json}")
     ctx.eval(source, filename: "asset-processor.js")
 
     ctx
