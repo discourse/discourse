@@ -117,6 +117,56 @@ RSpec.describe PostActionsController do
       )
     end
 
+    describe "as a non-staff user" do
+      fab!(:target_post) { Fabricate(:post, user: coding_horror) }
+
+      before { sign_in(Fabricate(:user, refresh_auto_groups: true)) }
+
+      [true, "true"].each do |value|
+        it "forbids sending warnings when the is_warning query param is #{value.inspect}" do
+          SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+          post "/post_actions.json",
+               params: {
+                 id: target_post.id,
+                 post_action_type_id: PostActionType.types[:notify_user],
+                 message: "action message goes here",
+                 is_warning: value,
+               },
+               as: :json
+
+          expect(response.status).to eq(403)
+        end
+      end
+
+      [false, "false"].each do |value|
+        it "allows notifying a user when the is_warning query param is #{value.inspect}" do
+          SiteSetting.personal_message_enabled_groups = Group::AUTO_GROUPS[:trust_level_0]
+
+          message = "action message goes here"
+
+          expect do
+            post "/post_actions.json",
+                 params: {
+                   id: target_post.id,
+                   post_action_type_id: PostActionType.types[:notify_user],
+                   message: message,
+                   is_warning: value,
+                 },
+                 as: :json
+          end.to change { PostAction.count }.by(1)
+
+          expect(response.status).to eq(200)
+
+          post_action = PostAction.last
+
+          expect(post_action.post_id).to eq(target_post.id)
+          expect(post_action.related_post.raw).to include(message)
+          expect(post_action.related_post.topic.is_official_warning?).to eq(false)
+        end
+      end
+    end
+
     describe "as a moderator" do
       fab!(:user) { Fabricate(:moderator, refresh_auto_groups: true) }
       fab!(:post_1) { Fabricate(:post, user: coding_horror) }
@@ -220,20 +270,6 @@ RSpec.describe PostActionsController do
 
         expect(post.raw).to include(message)
         expect(post.topic.is_official_warning?).to eq(true)
-      end
-
-      it "doesn't create message as a warning if the user isn't staff" do
-        sign_in(Fabricate(:user))
-
-        post "/post_actions.json",
-             params: {
-               id: post_1.id,
-               post_action_type_id: PostActionType.types[:notify_user],
-               message: "action message goes here",
-               is_warning: true,
-             }
-
-        expect(response.status).to eq(403)
       end
 
       it "passes take_action through" do

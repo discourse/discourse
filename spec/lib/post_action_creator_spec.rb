@@ -146,6 +146,21 @@ RSpec.describe PostActionCreator do
       expect(event[:params].first).to be_instance_of(PostAction)
       expect(event[:params].second).to be_instance_of(PostActionCreator)
     end
+
+    it "forbids non-staff from creating warning post actions" do
+      target_post = Fabricate(:post)
+
+      result =
+        PostActionCreator.new(
+          user,
+          target_post,
+          PostActionType.types[:notify_user],
+          is_warning: true,
+          message: "this is a test",
+        ).perform
+
+      expect(result.forbidden).to eq(true)
+    end
   end
 
   describe "flags" do
