@@ -17,4 +17,114 @@
       width: 18px;
     }
   }
+
+  // Informative block styling
+  .block__informative-wrapper {
+    margin: 0.5em 0;
+  }
+
+  .block__informative {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5em;
+    padding: 0.5em 0;
+    align-items: flex-start;
+  }
+
+  .block__informative-item {
+    display: flex;
+    align-items: stretch;
+
+    // When category has simple mode, make it inline
+    .block__category-simple-wrapper {
+      display: inline-flex;
+    }
+  }
+
+  // Category element styling (box style similar to CategoriesBoxes)
+  .block__category {
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    border-width: 0;
+    border-radius: var(--d-border-radius);
+    background-color: var(--d-category-box-background-color);
+    border-left-width: var(--d-category-border-accent-width);
+    border-style: solid;
+    border-color: var(--category-badge-color, var(--primary-low));
+    width: 100%;
+  }
+
+  .block__category-inner {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 1em;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5em;
+    border-width: var(--d-category-border-box-width);
+    border-left-width: 0;
+    border-style: solid;
+    border-color: var(--primary-low);
+    border-top-right-radius: var(--d-border-radius);
+    border-bottom-right-radius: var(--d-border-radius);
+  }
+
+  .block__category-heading {
+    margin-bottom: 0.5em;
+
+    .badge-category__wrapper {
+      font-size: var(--font-up-2);
+    }
+
+    .badge-category__name {
+      font-weight: bold;
+      color: var(--primary);
+    }
+
+    .block__category-link {
+      text-decoration: none;
+      color: inherit;
+
+      &:hover {
+        .badge-category__name {
+          color: var(--tertiary);
+        }
+      }
+    }
+  }
+
+  .block__category-description {
+    font-size: var(--font-0);
+    color: var(--primary-high);
+    line-height: var(--line-height-medium);
+  }
+
+  // Simple badge styling
+  .block__informative-item {
+    // Style for simple badges (badges without the box wrapper)
+    > .badge-category__wrapper,
+    > .block__category-simple-link .badge-category__wrapper {
+      font-size: var(--font-down-1);
+
+      .badge-category__name {
+        font-weight: bold;
+        color: var(--primary);
+      }
+    }
+  }
+
+  // Simple badge link styling
+  .block__category-simple-link {
+    text-decoration: none;
+    color: inherit;
+
+    &:hover {
+      .badge-category__name {
+        color: var(--tertiary);
+      }
+    }
+  }
 }
