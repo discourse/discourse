@@ -774,8 +774,8 @@ en:
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-5: "Anthropic's most intelligent model"
-          anthropic-claude-sonnet-4-5: "Optimal balance of speed and cost"
+          anthropic-claude-opus-4-6: "Anthropic's most intelligent model"
+          anthropic-claude-sonnet-4-6: "Optimal balance of speed and cost"
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
           google-gemini-3-pro: "Google's most intelligent model"
           google-gemini-3-flash: "Fast and cost-efficient with multimodal reasoning"
@@ -785,8 +785,8 @@ en:
           open_router-deepseek-deepseek-v3-2: "DeepSeek's latest high-performance model"
           open_router-moonshotai-kimi-k2-5: "Moonshot's multimodal model with vision capabilities"
           open_router-x-ai-grok-4-fast: "xAI's flagship model with vision"
-          open_router-minimax-minimax-m2-1: "MiniMax's multimodal model with large context"
-          open_router-z-ai-glm-4-7: "Z-AI's multimodal model with vision"
+          open_router-minimax-minimax-m2-5: "MiniMax's multimodal model with large context"
+          open_router-z-ai-glm-5: "Z-AI's multimodal model with vision"
           open_router-arcee-ai-trinity-large-preview-free: "Free open-source model from Arcee AI"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
@@ -861,7 +861,7 @@ en:
           prompt_caching_never: "Never - Do not use prompt caching"
           prompt_caching_tool_results: "Tool Results - Cache when tool results are present (recommended)"
           prompt_caching_always: "Always - Always use prompt caching"
-          effort: "Effort level (Claude Opus 4.5 only)"
+          effort: "Effort level"
 
       related_topics:
         title: "Related topics"
