@@ -21,12 +21,12 @@ RSpec.describe "Data explorer query runner", type: :system do
     end
 
     it "clears results from a previously run query" do
-      visit("/admin/plugins/explorer/queries/#{query_a.id}")
+      visit("/admin/plugins/discourse-data-explorer/queries/#{query_a.id}")
       find(".query-run .btn-primary").click
       expect(page).to have_css(".query-results .result-header")
 
       find(".query-edit .previous").click
-      find("a[href='/admin/plugins/explorer/queries/#{query_b.id}']").click
+      find("a[href='/admin/plugins/discourse-data-explorer/queries/#{query_b.id}']").click
       expect(page).to have_no_css(".query-results .result-header")
     end
   end
