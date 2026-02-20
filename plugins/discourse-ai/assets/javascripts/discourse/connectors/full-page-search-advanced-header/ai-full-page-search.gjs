@@ -9,7 +9,7 @@ export default class AiFullPageSearchConnector extends Component {
   <template>
     <AiFullPageSearch
       @sortOrder={{@outletArgs.sortOrder}}
-      @searchTerm={{@outletArgs.search}}
+      @searchTerm={{@outletArgs.searchTerm}}
       @searchType={{@outletArgs.type}}
       @addSearchResults={{@outletArgs.addSearchResults}}
       @model={{@outletArgs.model}}

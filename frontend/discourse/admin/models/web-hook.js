@@ -106,7 +106,7 @@ export default class WebHook extends RestModel {
   createProperties() {
     const types = this.web_hook_event_types;
     const categoryIds = this.categories.map((c) => c.id);
-    const tagNames = this.tag_names;
+    const tags = this.tags;
 
     // Hack as {{group-selector}} accepts a comma-separated string as data source, but
     // we use an array to populate the datasource above.
@@ -125,7 +125,9 @@ export default class WebHook extends RestModel {
         ? [null]
         : types.map((type) => type.id),
       category_ids: isEmpty(categoryIds) ? [null] : categoryIds,
-      tag_names: isEmpty(tagNames) ? [null] : tagNames,
+      tag_ids: isEmpty(tags)
+        ? [null]
+        : tags.map((t) => (typeof t === "object" ? t.id : t)),
       group_ids:
         isEmpty(groupNames) || isEmpty(groupNames[0])
           ? [null]

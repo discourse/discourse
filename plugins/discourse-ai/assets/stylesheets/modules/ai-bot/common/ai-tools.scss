@@ -13,6 +13,19 @@
   }
 }
 
+.ai-tool-secret-contract {
+  padding: 1.5em;
+  border: 1px solid var(--primary-low-mid);
+  border-radius: var(--d-input-border-radius);
+  width: 100%;
+  box-sizing: border-box;
+
+  .form-kit__container-content {
+    flex-direction: column;
+    width: 100%;
+  }
+}
+
 .ai-tool-parameter__enum-values {
   margin-block: 1rem;
 
@@ -40,12 +53,27 @@
       display: none;
     }
   }
+
+  .form-kit__actions {
+    .btn-danger {
+      margin-left: auto;
+    }
+  }
 }
 
 .ai-tool-test-modal {
   &__test-result div {
     ul {
       padding-left: 1em;
+    }
+  }
+
+  &__custom-raw {
+    margin-top: 1em;
+
+    img {
+      max-width: 100%;
+      height: auto;
     }
   }
 }
@@ -61,6 +89,38 @@
       margin: 0;
     }
   }
+}
+
+.ai-tool-list__credentials {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35em;
+  margin-top: 0.35em;
+}
+
+.ai-tool-list__credential-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25em;
+  padding: 0.15em 0.5em;
+  border-radius: var(--d-border-radius);
+  font-size: var(--font-down-2);
+  line-height: 1.4;
+
+  &--bound {
+    background-color: var(--success-low);
+    color: var(--success);
+  }
+
+  &--missing {
+    background-color: var(--danger-low);
+    color: var(--danger);
+  }
+}
+
+.ai-tool-list__credential-not-set {
+  font-style: italic;
+  margin-left: 0.15em;
 }
 
 .ai-tool-editor__templates {

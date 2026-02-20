@@ -2751,9 +2751,6 @@ security:
     default: true
   content_security_policy_report_only:
     default: false
-  content_security_policy_collect_reports:
-    default: false
-    hidden: true
   content_security_policy_frame_ancestors:
     default: true
   content_security_policy_script_src:
@@ -3171,6 +3168,9 @@ navigation:
     area: "navigation"
 
 embedding:
+  embed_full_app:
+    default: false
+    hidden: true
   embed_by_username:
     default: ""
     type: username
@@ -4217,6 +4217,10 @@ experimental:
       impact: "feature,all_members"
       status: "experimental"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
+  experimental_tag_settings_page:
+    default: false
+    client: true
+    area: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true

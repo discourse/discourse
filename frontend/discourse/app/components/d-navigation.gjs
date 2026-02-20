@@ -13,6 +13,7 @@ import CreateTopicButton from "discourse/components/create-topic-button";
 import DButton from "discourse/components/d-button";
 import NavigationBar from "discourse/components/navigation-bar";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import TagInfoButton from "discourse/components/tag-info-button";
 import TagNotificationsTracking from "discourse/components/tag-notifications-tracking";
 import TopicDismissButtons from "discourse/components/topic-dismiss-buttons";
 import lazyHash from "discourse/helpers/lazy-hash";
@@ -28,10 +29,16 @@ import { and, gt } from "discourse/truth-helpers";
 export default class DNavigation extends Component {
   @service router;
   @service site;
+  @service siteSettings;
+  @service currentUser;
 
   @tracked filterMode;
 
   @setting("fixed_category_positions") fixedCategoryPositions;
+
+  get canEditTags() {
+    return this.currentUser?.canEditTags;
+  }
 
   get createTopicLabel() {
     const defaultKey = "topic.create";
@@ -122,6 +129,9 @@ export default class DNavigation extends Component {
 
   @computed("additionalTags", "category", "tag.name")
   get showToggleInfo() {
+    if (this.siteSettings.experimental_tag_settings_page) {
+      return this.currentUser;
+    }
     return !this.additionalTags && !this.category && this.tag?.name !== "none";
   }
 
@@ -133,7 +143,9 @@ export default class DNavigation extends Component {
     "router.currentRoute.queryParams",
     "skipCategoriesNavItem"
   )
-  get navItems() {
+  get navItems(
+    
+  ) {
     return NavItem.buildList(this.category, {
       filterType: this.filterType,
       noSubcategories: this.noSubcategories,
@@ -188,6 +200,11 @@ export default class DNavigation extends Component {
   @action
   clickCreateTopicButton() {
     this.createTopic();
+  }
+
+  @action
+  clickTagInfo() {
+    this.toggleInfo();
   }
 
   <template>
@@ -266,22 +283,21 @@ export default class DNavigation extends Component {
 
       {{#if this.tag}}
         {{#if this.showToggleInfo}}
-          <DButton
-            @icon={{if this.currentUser.canEditTags "wrench" "circle-info"}}
-            @ariaLabel={{if
-              this.currentUser.canEditTags
-              "tagging.edit"
-              "tagging.info"
-            }}
-            @title={{if
-              this.currentUser.canEditTags
-              "tagging.edit"
-              "tagging.info"
-            }}
-            @action={{this.toggleInfo}}
-            id="show-tag-info"
-            class="btn-default"
-          />
+          {{#if this.siteSettings.experimental_tag_settings_page}}
+            <TagInfoButton
+              @tag={{this.tag}}
+              @currentUser={{this.currentUser}}
+            />
+          {{else}}
+            <DButton
+              @icon={{if this.canEditTags "wrench" "circle-info"}}
+              @ariaLabel={{if this.canEditTags "tagging.edit" "tagging.info"}}
+              @title={{if this.canEditTags "tagging.edit" "tagging.info"}}
+              @action={{this.clickTagInfo}}
+              id="show-tag-info"
+              class="btn-default"
+            />
+          {{/if}}
         {{/if}}
       {{/if}}
 

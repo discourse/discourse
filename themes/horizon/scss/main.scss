@@ -53,6 +53,11 @@ body.has-sidebar-page #main-outlet-wrapper {
   #main-outlet {
     max-width: unset;
   }
+
+  @include viewport.from(lg) {
+    gap: var(--main-grid-gap);
+    padding-right: var(--main-grid-gap);
+  }
 }
 
 body:not(.has-sidebar-page) #main-outlet-wrapper {

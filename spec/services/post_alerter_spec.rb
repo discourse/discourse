@@ -2220,6 +2220,22 @@ RSpec.describe PostAlerter do
         ).to eq(1)
       end
 
+      it "triggers a watching_first_post notification even when tag edit notifications are disabled" do
+        SiteSetting.disable_tags_edit_notifications = true
+
+        expect {
+          PostRevisor.new(post).revise!(
+            Fabricate(:user, refresh_auto_groups: true),
+            tags: [other_tag.name, watched_tag.name],
+          )
+        }.to change {
+          user
+            .notifications
+            .where(notification_type: Notification.types[:watching_first_post])
+            .count
+        }.by(1)
+      end
+
       it "doesn't trigger a notification if topic is unlisted" do
         post.topic.update_column(:visible, false)
 

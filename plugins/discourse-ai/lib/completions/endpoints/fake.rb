@@ -138,6 +138,14 @@ module DiscourseAi
           if block_given?
             if content.is_a?(DiscourseAi::Completions::ToolCall)
               yield(content, -> {})
+            elsif content.is_a?(Array) &&
+                  content.all? { |item| item.is_a?(DiscourseAi::Completions::ToolCall) }
+              cancel = false
+              cancel_proc = -> { cancel = true }
+              content.each do |tool_call|
+                break if cancel
+                yield(tool_call, cancel_proc)
+              end
             else
               split_indices = (1...content.length).to_a.sample(self.class.chunk_count - 1).sort
               indexes = [0, *split_indices, content.length]
