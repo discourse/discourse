@@ -10,6 +10,25 @@ RSpec.describe "Explorer", type: :system do
     sign_in admin
   end
 
+  context "when navigating between queries" do
+    fab!(:query_a) do
+      Fabricate(:query, name: "Query A", sql: "SELECT * FROM users LIMIT 1", user: admin)
+    end
+    fab!(:query_b) do
+      Fabricate(:query, name: "Query B", sql: "SELECT * FROM users LIMIT 1", user: admin)
+    end
+
+    it "clears results from a previously run query" do
+      visit("/admin/plugins/explorer/queries/#{query_a.id}")
+      find(".query-run .btn-primary").click
+      expect(page).to have_css(".query-results .result-header")
+
+      find(".query-edit .previous").click
+      find("a[href='/admin/plugins/explorer/queries/#{query_b.id}']").click
+      expect(page).to have_no_css(".query-results .result-header")
+    end
+  end
+
   context "with a query using a default param" do
     fab!(:query_1) do
       Fabricate(

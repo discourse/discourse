@@ -41,6 +41,9 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
   setupController(controller, model, transition) {
     controller.setProperties({
       ...model,
+      results: null,
+      showResults: false,
+      dirty: false,
       shouldAutoRun: !!transition.to.queryParams.run,
     });
   }
