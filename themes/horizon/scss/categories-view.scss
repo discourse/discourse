@@ -1,5 +1,11 @@
 @use "lib/viewport";
 
+.list-container.--categories {
+  .avatar-flair {
+    display: none;
+  }
+}
+
 .categories-and-latest {
   .category-list {
     border-collapse: separate;
