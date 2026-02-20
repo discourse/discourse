@@ -27,7 +27,7 @@ export default {
                 .split("|")
                 .filter(Boolean);
 
-              return tags.some((t) => solvedTags.includes(t.name));
+              return (tags || []).some((t) => solvedTags.includes(t.name));
             }
 
             @action
