@@ -336,13 +336,20 @@ class PostRevisor
     QuotedPost.extract_from(@post)
     TopicLink.extract_from(@post)
 
-    # Skip resetting highest post number if only changing post ownership
-    Topic.reset_highest(@topic.id) unless @fields.size == 1 && @fields.has_key?("user_id")
+    # Skip heavy post processing operations if the only change was the post ownership (user merges)
+    only_user_id_changed =
+      @fields.has_key?("user_id") &&
+        PostRevisor::POST_TRACKED_FIELDS.none? do |f|
+          f != "user_id" && f != "edit_reason" && @post.previous_changes.has_key?(f)
+        end
 
-    post_process_post
-    alert_users
-    publish_changes
-    grant_badge
+    unless only_user_id_changed
+      Topic.reset_highest(@topic.id)
+      post_process_post
+      alert_users
+      publish_changes
+      grant_badge
+    end
 
     ReviewablePost.queue_for_review_if_possible(@post, @editor) if should_create_new_version?
 
