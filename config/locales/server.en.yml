@@ -2320,7 +2320,7 @@ en:
     incoming_email_prefer_html: "Use HTML instead of text for incoming email."
     strip_incoming_email_lines: "Remove leading and trailing whitespaces from each line of incoming emails."
 
-    disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable emails for all users. Select 'non-staff' to disable emails for non-staff users only."
+    disable_emails: "Prevent Discourse from sending any kind of emails. Select 'yes' to disable outgoing emails for all users. Select 'non-staff' to disable emails for non-staff users only."
     allow_email_invites: "When disabled, users won't be able to send invite emails via Discourse"
     strip_images_from_short_emails: "Strip images from emails having size less than 2800 Bytes"
     short_email_length: "Define the maximum length, in bytes, for an email to be classified as 'short' for image suppression. If an email's size does not exceed this setting, any images (such as avatars and emojis) within the email will be stripped out."
