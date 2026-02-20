@@ -46,7 +46,8 @@ en:
         actions: "Actions"
         settings: "Settings"
         no_channels: "There are no chat channels associated with this category"
-        no_channels_body: "You can have multiple channels per category, accessible to the same members based on the category’s Security settings. <a href='%{chatBrowseUrl}'>Create a chat channel</a>."
+        no_channels_body: "You can have multiple channels per category, accessible to the same members based on the category’s Security settings. <a href=’%{chatBrowseUrl}’>Create a chat channel</a>."
+        include_subcategories: "Include subcategory channels"
       text_copied: Text copied to clipboard
       link_copied: Link copied to clipboard
       back_to_forum: "Forum"
