@@ -148,7 +148,7 @@ export default class EmojiUploader extends Component {
             disabled={{this.uppyUpload.uploading}}
             type="file"
             multiple="true"
-            accept=".png,.gif"
+            accept=".gif,.png,.svg"
           />
           <DButton
             @translatedLabel={{this.buttonLabel}}
