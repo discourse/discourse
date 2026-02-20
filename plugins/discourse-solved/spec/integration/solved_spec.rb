@@ -829,6 +829,32 @@ RSpec.describe "Managing Posts solved status" do
       expect(unauthorized_user_messages).to eq(nil)
     end
 
+    it "publishes unaccept MessageBus messages securely for PMs" do
+      private_topic = Fabricate(:private_message_topic, user: private_user, recipient: admin)
+      private_post = Fabricate(:post, topic: private_topic)
+      reply = Fabricate(:post, topic: private_topic, user:, post_number: 2)
+
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: reply.id,
+        },
+        guardian: Guardian.new(admin),
+      )
+
+      messages =
+        MessageBus.track_publish("/topic/#{private_post.topic.id}") do
+          DiscourseSolved::UnacceptAnswer.call!(params: { post_id: reply.id })
+        end
+
+      expect(messages.count).to eq(1)
+
+      authorized_user_messages = messages.find { |m| m.user_ids.include?(private_user.id) }
+      expect(authorized_user_messages.data[:type]).to eq(:unaccepted_solution)
+
+      unauthorized_user_messages = messages.find { |m| m.user_ids.include?(user.id) }
+      expect(unauthorized_user_messages).to eq(nil)
+    end
+
     it "publishes MessageBus messages securely for secure categories" do
       group = Fabricate(:group).tap { |g| g.add(private_user) }
       other_group = Fabricate(:group).tap { |g| g.add(user) }
@@ -851,6 +877,35 @@ RSpec.describe "Managing Posts solved status" do
 
       authorized_user_messages = messages.find { |m| m.group_ids.include?(group.id) }
       expect(authorized_user_messages.data[:type]).to eq(:accepted_solution)
+
+      unauthorized_user_messages = messages.find { |m| m.group_ids.include?(other_group.id) }
+      expect(unauthorized_user_messages).to eq(nil)
+    end
+
+    it "publishes unaccept MessageBus messages securely for secure categories" do
+      group = Fabricate(:group).tap { |g| g.add(private_user) }
+      other_group = Fabricate(:group).tap { |g| g.add(user) }
+      private_category = Fabricate(:private_category, group: group)
+      private_topic = Fabricate(:topic, category: private_category)
+      private_post = Fabricate(:post, topic: private_topic)
+      private_reply = Fabricate(:post, topic: private_topic, post_number: 2)
+
+      DiscourseSolved::AcceptAnswer.call!(
+        params: {
+          post_id: private_reply.id,
+        },
+        guardian: Guardian.new(admin),
+      )
+
+      messages =
+        MessageBus.track_publish("/topic/#{private_post.topic.id}") do
+          DiscourseSolved::UnacceptAnswer.call!(params: { post_id: private_reply.id })
+        end
+
+      expect(messages.count).to eq(1)
+
+      authorized_user_messages = messages.find { |m| m.group_ids.include?(group.id) }
+      expect(authorized_user_messages.data[:type]).to eq(:unaccepted_solution)
 
       unauthorized_user_messages = messages.find { |m| m.group_ids.include?(other_group.id) }
       expect(unauthorized_user_messages).to eq(nil)

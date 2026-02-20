@@ -57,6 +57,7 @@ class DiscourseSolved::UnacceptAnswer
 
   def publish_unaccepted(post:, topic:)
     DiscourseEvent.trigger(:unaccepted_solution, post)
-    MessageBus.publish("/topic/#{topic.id}", type: :unaccepted_solution)
+    secure_audience = topic.secure_audience_publish_messages
+    MessageBus.publish("/topic/#{topic.id}", { type: :unaccepted_solution }, secure_audience)
   end
 end

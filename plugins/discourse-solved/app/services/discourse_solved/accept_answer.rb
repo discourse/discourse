@@ -14,6 +14,8 @@ class DiscourseSolved::AcceptAnswer
   step :enqueue_web_hooks
   step :publish_solution
 
+  MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
+
   private
 
   def notify_solved?(recipient:, user:)
@@ -90,7 +92,7 @@ class DiscourseSolved::AcceptAnswer
         auto_close_hours = 0
         if topic&.category.present?
           auto_close_hours = topic.category.custom_fields["solved_topics_auto_close_hours"].to_i
-          auto_close_hours = 175_200 if auto_close_hours > 175_200
+          auto_close_hours = MAX_AUTO_CLOSE_HOURS if auto_close_hours > MAX_AUTO_CLOSE_HOURS
         end
 
         auto_close_hours = SiteSetting.solved_topics_auto_close_hours if auto_close_hours == 0
@@ -122,17 +124,14 @@ class DiscourseSolved::AcceptAnswer
     end
   end
 
-  def publish_solution(post:, topic:)
-    accepted_answer = context[:accepted_answer]
+  def publish_solution(post:, topic:, accepted_answer:)
     DiscourseEvent.trigger(:accepted_solution, post)
 
     secure_audience = topic.secure_audience_publish_messages
-    if secure_audience[:user_ids] != [] && secure_audience[:group_ids] != []
-      MessageBus.publish(
-        "/topic/#{topic.id}",
-        { type: :accepted_solution, accepted_answer: },
-        secure_audience,
-      )
-    end
+    MessageBus.publish(
+      "/topic/#{topic.id}",
+      { type: :accepted_solution, accepted_answer: },
+      secure_audience,
+    )
   end
 end
