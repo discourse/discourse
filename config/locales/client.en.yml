@@ -480,7 +480,6 @@ en:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
 
-
       spread_the_word:
         title: "Spread the Word!"
         description: "Share a link with everyone in your network"
@@ -4619,6 +4618,8 @@ en:
         delete: "Delete"
         add: "Add required tag group"
         placeholder: "Select tag group…"
+        min_count: "Tag count"
+        tag_group: "Tag group"
       topic_featured_link_allowed: "Allow featured links in this category"
       delete: "Delete category"
       create: "New category"

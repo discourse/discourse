@@ -5,10 +5,10 @@
     .alert {
       --permission-table-max-width: var(--form-kit-max-input);
     }
+  }
 
-    .form-kit__container-content {
-      width: 100%;
-    }
+  .form-kit__container-content {
+    width: 100%;
   }
 
   .category-permissions-table {
@@ -26,106 +26,19 @@
       flex-direction: column;
       width: 100%;
       gap: 0.5em;
+      align-items: start;
 
       .form-kit__container-content {
         align-items: flex-start;
       }
     }
 
-    @include viewport.from(md) {
-      .form-kit__errors-summary {
-        width: 100%;
-        max-width: var(--form-kit-max-input);
-      }
+    .form-kit__conditional-display-content {
+      // prevent content shift when changing style options
+      min-height: 2.8em;
 
-      .form-kit__container {
-        flex-direction: row;
-        align-items: baseline;
-        max-width: 100%;
-      }
-
-      .form-kit__section {
-        gap: 2.5em;
-      }
-
-      .edit-category-footer {
-        margin-top: 2em;
-      }
-
-      .form-kit__control-input-wrapper,
-      .form-kit__container {
-        justify-content: space-between;
-
-        input {
-          margin-left: auto !important; // overrides another important
-        }
-      }
-
-      #control-emoji,
-      .form-kit__inline-radio {
-        justify-content: end;
-      }
-
-      .form-kit__container:not(.form-kit__field-toggle):has(.d-toggle-switch) {
-        gap: 1em;
-
-        .form-kit__container-title {
-          flex: 1;
-        }
-
-        .form-kit__container-content {
-          flex: 0 0 auto;
-        }
-      }
-
-      .form-kit__conditional-display-content,
-      .form-kit__control-color {
-        align-items: end;
-
-        .form-kit__container {
-          width: 100%;
-        }
-      }
-
-      #control-icon {
-        width: 100% !important; // overrides another important
-      }
-
-      .form-kit__container:has(.file-uploader) {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        grid-template-areas:
-          "title image"
-          "description image";
-        align-items: start;
-        grid-template-rows: auto 1fr;
-
-        .form-kit__container-content {
-          grid-area: image;
-        }
-
-        p {
-          grid-area: description;
-          margin-right: 1em;
-        }
-
-        .file-uploader {
-          width: 100%;
-        }
-      }
-
-      .form-kit__field-toggle {
-        max-width: var(--form-kit-max-input);
-        justify-content: space-between;
-
-        .form-kit__container-title {
-          flex: 1;
-        }
-
-        .form-kit__container-content {
-          width: auto !important;
-          flex: 0 0 auto;
-        }
+      &:has(.badge-category__wrapper) {
+        justify-content: center;
       }
     }
 
@@ -246,11 +159,6 @@
   }
 
   .form-kit__conditional-display {
-    .badge-category__wrapper {
-      min-height: 2.6em;
-      top: var(--space-1);
-    }
-
     .form-kit__container-content:has(.is-disabled) {
       // select-kit has pointer-events disabled, so we need to style the parent
       cursor: not-allowed;
@@ -260,6 +168,12 @@
   .edit-category .edit-category-footer {
     padding: 0;
     margin-bottom: var(--space-4);
+  }
+
+  .edit-category-tab-localizations {
+    .btn-default {
+      align-self: start;
+    }
   }
 
   #main-outlet:has(.edit-category) + .powered-by-discourse {

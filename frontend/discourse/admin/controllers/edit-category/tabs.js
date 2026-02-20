@@ -48,6 +48,7 @@ const FIELD_LIST = [
   "mailinglist_mirror",
   "allowed_tag_groups",
   "allowed_tags",
+  "required_tag_groups",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
@@ -81,6 +82,15 @@ export default class EditCategoryTabsController extends Controller {
 
     if (!this.model.styleType) {
       data.style_type = "icon";
+    }
+
+    if (data.required_tag_groups) {
+      data.required_tag_groups = Array.from(
+        data.required_tag_groups,
+        (rtg) => ({
+          ...rtg,
+        })
+      );
     }
 
     return data;
