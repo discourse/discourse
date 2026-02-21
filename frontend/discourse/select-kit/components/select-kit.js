@@ -1199,17 +1199,11 @@ export default class SelectKit extends Component {
 
     if (placementStrategy) {
       return placementStrategy;
-    }
-
-    if (this.site.mobileView) {
-      placementStrategy =
-        this.selectKit.options.mobilePlacementStrategy || "absolute";
+    } else if (this.site.mobileView) {
+      return this.selectKit.options.mobilePlacementStrategy || "absolute";
     } else {
-      placementStrategy =
-        this.selectKit.options.desktopPlacementStrategy || "fixed";
+      return this.selectKit.options.desktopPlacementStrategy || "absolute";
     }
-
-    return placementStrategy;
   }
 
   _deprecated(text) {

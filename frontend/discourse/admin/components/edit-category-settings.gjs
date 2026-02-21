@@ -238,7 +238,6 @@ export default class EditCategorySettings extends buildCategoryPanel(
             @content={{this.searchPrioritiesOptions}}
             @value={{this.category.search_priority}}
             @onChange={{fn (mut this.category.search_priority)}}
-            @options={{hash placementStrategy="absolute"}}
           />
         </div>
       </section>
@@ -415,7 +414,6 @@ export default class EditCategorySettings extends buildCategoryPanel(
             @id="category-default-view"
             @content={{this.availableViews}}
             @value={{this.category.default_view}}
-            @options={{hash placementStrategy="absolute"}}
           />
         </div>
       </section>
@@ -430,7 +428,6 @@ export default class EditCategorySettings extends buildCategoryPanel(
             @id="category-default-period"
             @content={{this.availableTopPeriods}}
             @value={{this.category.default_top_period}}
-            @options={{hash placementStrategy="absolute"}}
           />
         </div>
       </section>
@@ -452,10 +449,7 @@ export default class EditCategorySettings extends buildCategoryPanel(
               @valueProperty="value"
               @content={{this.sortAscendingOptions}}
               @value={{this.sortAscendingOption}}
-              @options={{hash
-                none="category.sort_options.default"
-                placementStrategy="absolute"
-              }}
+              @options={{hash none="category.sort_options.default"}}
               @onChange={{fn (mut this.category.sort_ascending)}}
             />
           {{/unless}}
@@ -498,7 +492,6 @@ export default class EditCategorySettings extends buildCategoryPanel(
             @id="subcategory-list-style"
             @content={{this.availableSubcategoryListStyles}}
             @value={{this.category.subcategory_list_style}}
-            @options={{hash placementStrategy="absolute"}}
           />
         </section>
       {{/if}}
@@ -511,7 +504,6 @@ export default class EditCategorySettings extends buildCategoryPanel(
           @valueProperty="value"
           @id="read-only-message"
           @value={{this.category.read_only_banner}}
-          @options={{hash placementStrategy="absolute"}}
         />
       </section>
     </section>

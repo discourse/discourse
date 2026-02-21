@@ -221,10 +221,7 @@ export default class SidebarSection extends Component {
 
             {{#if this.isMultipleHeaderActions}}
               <DropdownSelectBox
-                @options={{hash
-                  icon=@headerActionsIcon
-                  placementStrategy="absolute"
-                }}
+                @options={{hash icon=@headerActionsIcon}}
                 @content={{@headerActions}}
                 @onChange={{this.handleMultipleHeaderActions}}
                 class="sidebar-section-header-dropdown"

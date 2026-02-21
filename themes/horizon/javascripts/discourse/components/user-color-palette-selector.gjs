@@ -181,7 +181,6 @@ export default class UserColorPaletteSelector extends Component {
     {{#unless (isEmpty this.userColorPalettes)}}
       <DMenu
         @identifier="user-color-palette-selector"
-        @placementStrategy="fixed"
         @onRegisterApi={{this.onRegisterMenu}}
         class={{concatClass
           "btn-flat user-color-palette-selector sidebar-footer-actions-button"

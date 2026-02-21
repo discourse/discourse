@@ -81,7 +81,6 @@ export default class Assignment extends Component {
         @onChange={{this.setAssignee}}
         @showUserStatus={{true}}
         @options={{hash
-          mobilePlacementStrategy="absolute"
           includeGroups=true
           customSearchOptions=(hash
             assignableGroups=true

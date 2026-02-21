@@ -190,7 +190,6 @@ export default class UpsertCategorySettings extends Component {
             @content={{this.searchPrioritiesOptions}}
             @value={{field.value}}
             @onChange={{field.set}}
-            @options={{hash placementStrategy="absolute"}}
           />
         </field.Custom>
       </@form.Field>
