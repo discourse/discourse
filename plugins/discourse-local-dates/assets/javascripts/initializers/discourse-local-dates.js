@@ -1,5 +1,6 @@
 import { setOwner } from "@ember/owner";
 import { service } from "@ember/service";
+import { dasherize } from "@ember/string";
 import { htmlSafe } from "@ember/template";
 import { bbcodeAttributeDecode } from "discourse/lib/bbcode-attributes";
 import { bind } from "discourse/lib/decorators";
@@ -247,6 +248,7 @@ function buildHtmlPreview(element, siteSettings) {
 
   const htmlPreviews = localDateBuilder.previews.map((preview) => {
     const previewNode = document.createElement("div");
+    previewNode.dataset.timezone = dasherize(preview.timezone);
     previewNode.classList.add("preview");
     if (preview.current) {
       previewNode.classList.add("current");
