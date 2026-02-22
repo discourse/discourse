@@ -23,17 +23,17 @@ module Migrations::Database::Schema::DSL
       end
 
       content = File.read(@ignored_path)
-      block_data = parse_ignored_block(content)
+      ignored_block = parse_ignored_block(content)
 
-      if block_data[:table_names].include?(table_name)
+      if ignored_block[:table_names].include?(table_name)
         raise Migrations::Database::Schema::ConfigError, "Table #{table_name} is already ignored"
       end
 
       content =
-        if reason.nil? && block_data[:last_tables_call]
-          append_to_tables_call(content, block_data[:last_tables_call], table_name)
+        if reason.nil? && ignored_block[:last_tables_group]
+          append_to_tables_group(content, ignored_block[:last_tables_group], table_name)
         else
-          insert_standalone_entry(content, block_data[:end_offset], table_name, reason)
+          insert_standalone_entry(content, ignored_block[:end_offset], table_name, reason)
         end
 
       File.write(@ignored_path, content)
@@ -42,12 +42,12 @@ module Migrations::Database::Schema::DSL
 
     private
 
-    def append_to_tables_call(content, tables_call, table_name)
-      all_names = (tables_call[:names] + [table_name]).sort
+    def append_to_tables_group(content, tables_group, table_name)
+      all_names = (tables_group[:names] + [table_name]).sort
       replacement = "tables " + all_names.map { |n| ":#{n}" }.join(", ")
 
-      content.byteslice(0, tables_call[:start_offset]) + replacement +
-        content.byteslice(tables_call[:end_offset]..)
+      content.byteslice(0, tables_group[:start_offset]) + replacement +
+        content.byteslice(tables_group[:end_offset]..)
     end
 
     def insert_standalone_entry(content, end_offset, table_name, reason)
@@ -77,17 +77,17 @@ module Migrations::Database::Schema::DSL
               "Could not find `Migrations::Database::Schema.ignored do ... end` in #{@ignored_path}"
       end
 
-      last_tables = find_last_tables_call(declaration.block)
+      last_tables = find_last_tables_group(declaration.block)
 
       {
         end_offset: declaration.block.closing_loc.start_offset,
-        table_names: extract_table_names(declaration.block),
-        last_tables_call:
+        table_names: extract_all_table_names(declaration.block),
+        last_tables_group:
           last_tables &&
             {
               start_offset: last_tables.location.start_offset,
               end_offset: last_tables.location.end_offset,
-              names: symbol_names_from(last_tables),
+              names: table_names_from(last_tables),
             },
       }
     end
@@ -113,19 +113,19 @@ module Migrations::Database::Schema::DSL
       receiver.full_name.to_s.sub(/\A::/, "") == "Migrations::Database::Schema"
     end
 
-    def find_last_tables_call(block_node)
+    def find_last_tables_group(block_node)
       body = block_node&.body
       return nil unless body.is_a?(Prism::StatementsNode)
 
       body.body.select { |s| s.is_a?(Prism::CallNode) && s.message.to_s == "tables" }.last
     end
 
-    def symbol_names_from(call_node)
+    def table_names_from(call_node)
       args = call_node.arguments&.arguments || []
       args.filter_map { |arg| arg.unescaped if arg.is_a?(Prism::SymbolNode) }
     end
 
-    def extract_table_names(block_node)
+    def extract_all_table_names(block_node)
       names = Set.new
       body = block_node&.body
       return names unless body.is_a?(Prism::StatementsNode)
