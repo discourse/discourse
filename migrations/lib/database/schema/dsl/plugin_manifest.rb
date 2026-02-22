@@ -14,7 +14,7 @@ module Migrations::Database::Schema::DSL
       return false if !File.exist?(@manifest_path)
 
       load_data
-      stored_state = @data["migration_state"]
+      stored_state = @data["plugin_checksums"]
       return false if !stored_state
 
       stored_state == PluginIntrospector.compute_checksums(@plugins_path)
@@ -119,7 +119,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def empty_data
-      { "plugins" => {}, "migration_state" => {}, "failed_plugins" => [], "incomplete" => false }
+      { "plugins" => {}, "plugin_checksums" => {}, "failed_plugins" => [], "incomplete" => false }
     end
 
     def comparable_data(data)

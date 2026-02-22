@@ -38,7 +38,7 @@ module Migrations::Database::Schema::DSL
         .select { |path| File.directory?(path) }
     end
 
-    private_class_method :checksum_for_paths, :discover_plugins, :plugin_migration_paths
+    private_class_method :checksum_for_paths, :plugin_migration_paths
 
     def initialize(plugins_path: nil)
       @plugins_path = plugins_path || File.join(Rails.root, "plugins")
@@ -141,7 +141,7 @@ module Migrations::Database::Schema::DSL
     def build_result(plugin_data, checksums, failed_plugins)
       {
         "plugins" => plugin_data,
-        "migration_state" => checksums,
+        "plugin_checksums" => checksums,
         "failed_plugins" => failed_plugins.sort,
         "incomplete" => failed_plugins.any?,
       }

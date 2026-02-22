@@ -27,7 +27,7 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
       checksums =
         Migrations::Database::Schema::DSL::PluginIntrospector.compute_checksums(plugins_path)
 
-      write_manifest({ "plugins" => {}, "migration_state" => checksums })
+      write_manifest({ "plugins" => {}, "plugin_checksums" => checksums })
 
       expect(build_manifest.fresh?).to be true
     end
@@ -44,7 +44,7 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
               },
             },
           },
-          "migration_state" => {
+          "plugin_checksums" => {
           },
         },
       )
@@ -68,7 +68,7 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
               },
             },
           },
-          "migration_state" => {
+          "plugin_checksums" => {
           },
         },
       )
@@ -92,7 +92,7 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
               },
             },
           },
-          "migration_state" => {
+          "plugin_checksums" => {
           },
         },
       )
@@ -110,7 +110,7 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
               },
             },
           },
-          "migration_state" => {
+          "plugin_checksums" => {
           },
         },
       )
@@ -132,7 +132,7 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
               },
             },
           },
-          "migration_state" => {
+          "plugin_checksums" => {
           },
         },
       )
@@ -162,7 +162,7 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
             },
           },
         },
-        "migration_state" => {
+        "plugin_checksums" => {
           "chat" => "def",
         },
         "failed_plugins" => [],
