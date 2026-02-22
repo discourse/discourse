@@ -14,10 +14,10 @@ module Migrations::Database::Schema::DSL
       return false if !File.exist?(@manifest_path)
 
       load_data
-      stored_state = @data["plugin_checksums"]
-      return false if !stored_state
+      stored_checksums = @data["plugin_checksums"]
+      return false if !stored_checksums
 
-      stored_state == PluginIntrospector.compute_checksums(@plugins_path)
+      stored_checksums == PluginIntrospector.compute_checksums(@plugins_path)
     end
 
     def available?
