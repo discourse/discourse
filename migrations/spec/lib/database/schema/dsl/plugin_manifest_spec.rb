@@ -31,23 +31,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
 
       expect(build_manifest.fresh?).to be true
     end
-
-    it "returns false when manifest is marked incomplete due failed plugins" do
-      checksums =
-        Migrations::Database::Schema::DSL::PluginIntrospector.compute_checksums(plugins_path)
-
-      write_manifest(
-        {
-          "plugins" => {
-          },
-          "migration_state" => checksums,
-          "failed_plugins" => ["chat"],
-          "incomplete" => true,
-        },
-      )
-
-      expect(build_manifest.fresh?).to be false
-    end
   end
 
   describe "#plugin_for_table" do

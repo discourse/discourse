@@ -169,7 +169,7 @@ module Migrations::Database
 
     def self.refresh_plugin_manifest!
       manifest = plugin_manifest
-      return if manifest.checksums_fresh?
+      return if manifest.fresh?
 
       $stdout.write("Plugin manifest outdated, regenerating... ")
       manifest.regenerate!

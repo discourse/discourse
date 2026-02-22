@@ -11,15 +11,11 @@ module Migrations::Database::Schema::DSL
     end
 
     def fresh?
-      checksums_fresh? && !incomplete?
-    end
-
-    def checksums_fresh?
-      return false unless File.exist?(@manifest_path)
+      return false if !File.exist?(@manifest_path)
 
       load_data
       stored_state = @data["migration_state"]
-      return false unless stored_state
+      return false if !stored_state
 
       stored_state == PluginIntrospector.compute_checksums(@plugins_path)
     end
@@ -34,25 +30,21 @@ module Migrations::Database::Schema::DSL
     end
 
     def regenerate!
-      introspector = build_introspector
-      result = introspector.introspect
-      existing_data =
-        File.exist?(@manifest_path) ? (YAML.safe_load_file(@manifest_path) || empty_data) : nil
+      result = build_introspector.introspect
+      load_data
+      existing_data = @data
 
       new_data = { "generated_at" => Time.now.utc.iso8601 }.merge(result)
-      if existing_data && comparable_data(existing_data) == comparable_data(new_data)
+      if comparable_data(existing_data) == comparable_data(new_data)
         @data = existing_data
-        @table_to_plugin = nil
-        @column_to_plugin = nil
-        return @data
+      else
+        @data = new_data
+        FileUtils.mkdir_p(File.dirname(@manifest_path))
+        File.write(@manifest_path, format_yaml(@data))
       end
 
-      @data = new_data
       @table_to_plugin = nil
       @column_to_plugin = nil
-
-      FileUtils.mkdir_p(File.dirname(@manifest_path))
-      File.write(@manifest_path, format_yaml(@data))
       @data
     end
 
@@ -118,11 +110,12 @@ module Migrations::Database::Schema::DSL
 
     def load_data
       return if @data
-      if File.exist?(@manifest_path)
-        @data = YAML.safe_load_file(@manifest_path) || empty_data
-      else
-        @data = empty_data
-      end
+      @data =
+        if File.exist?(@manifest_path)
+          YAML.safe_load_file(@manifest_path) || empty_data
+        else
+          empty_data
+        end
     end
 
     def empty_data

@@ -37,8 +37,7 @@ RSpec.describe Migrations::Database::Schema do
 
         File.write(File.join(tables_dir, "broken.rb"), "raise 'boom'\n")
 
-        manifest =
-          instance_double(Migrations::Database::Schema::DSL::PluginManifest, checksums_fresh?: true)
+        manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest, fresh?: true)
         allow(described_class).to receive(:plugin_manifest).and_return(manifest)
         allow(Migrations).to receive(:root_path).and_return(tmpdir)
 
@@ -62,8 +61,7 @@ RSpec.describe Migrations::Database::Schema do
       Dir.mktmpdir do |tmpdir|
         write_minimal_config(tmpdir)
 
-        manifest =
-          instance_double(Migrations::Database::Schema::DSL::PluginManifest, checksums_fresh?: true)
+        manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest, fresh?: true)
         allow(manifest).to receive(:regenerate!)
         allow(described_class).to receive(:plugin_manifest).and_return(manifest)
         allow(Migrations).to receive(:root_path).and_return(tmpdir)
@@ -77,11 +75,7 @@ RSpec.describe Migrations::Database::Schema do
       Dir.mktmpdir do |tmpdir|
         write_minimal_config(tmpdir)
 
-        manifest =
-          instance_double(
-            Migrations::Database::Schema::DSL::PluginManifest,
-            checksums_fresh?: false,
-          )
+        manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest, fresh?: false)
         allow(manifest).to receive(:regenerate!).and_raise(StandardError, "boom")
         allow(described_class).to receive(:plugin_manifest).and_return(manifest)
         allow(Migrations).to receive(:root_path).and_return(tmpdir)
