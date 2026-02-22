@@ -32,7 +32,7 @@ migrations/config/schema/intermediate_db/
 | `schema list` | List all configured and ignored tables |
 | `schema show TABLE` | Show configuration details for a table |
 | `schema ignore TABLE [--reason "..."]` | Add a table to `ignored.rb` |
-| `schema detect-plugins` | Regenerate the plugin manifest |
+| `schema refresh-plugins` | Regenerate the plugin manifest |
 
 All commands accept `--db NAME` (default: `intermediate_db`).
 

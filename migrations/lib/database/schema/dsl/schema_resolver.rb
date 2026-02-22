@@ -94,9 +94,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def plugin_ignored_columns(table_def)
-      names = Set.new
-      @scope.each_plugin_ignored_column(table_def) { |col, _| names << col }
-      names
+      @scope.plugin_ignored_column_names(table_def)
     end
 
     def resolve_column(
@@ -236,8 +234,6 @@ module Migrations::Database::Schema::DSL
         :text
       when :jsonb
         :json
-      when :boolean, :date, :datetime, :float, :inet, :integer, :numeric, :json, :text, :blob
-        type
       else
         type
       end

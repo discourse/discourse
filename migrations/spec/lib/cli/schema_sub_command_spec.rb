@@ -28,7 +28,7 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
     end
   end
 
-  describe "#detect_plugins" do
+  describe "#refresh_plugins" do
     it "reports incomplete manifest regeneration" do
       manifest = instance_double(Migrations::Database::Schema::DSL::PluginManifest)
       allow(manifest).to receive(:fresh?).and_return(false)
@@ -52,7 +52,7 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
       )
       allow(Migrations::Database::Schema).to receive(:plugin_manifest).and_return(manifest)
 
-      command.detect_plugins
+      command.refresh_plugins
 
       expect(command).to have_received(:puts).with(
         "Plugin manifest updated with warnings (failed plugins: chat)",

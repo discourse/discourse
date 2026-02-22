@@ -152,7 +152,7 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
   end
 
   describe "#regenerate!" do
-    it "does not rewrite generated_at when manifest content is unchanged" do
+    it "does not rewrite file when manifest content is unchanged" do
       stable_data = {
         "plugins" => {
           "chat" => {
@@ -169,8 +169,8 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
         "incomplete" => false,
       }
 
-      write_manifest({ "generated_at" => "2026-02-16T00:00:00Z" }.merge(stable_data))
-      before = File.read(manifest_path)
+      write_manifest(stable_data)
+      mtime_before = File.mtime(manifest_path)
 
       introspector = instance_double(Migrations::Database::Schema::DSL::PluginIntrospector)
       allow(introspector).to receive(:introspect).and_return(stable_data)
@@ -180,8 +180,7 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
 
       build_manifest.regenerate!
 
-      after = File.read(manifest_path)
-      expect(after).to eq(before)
+      expect(File.mtime(manifest_path)).to eq(mtime_before)
     end
   end
 end

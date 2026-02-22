@@ -33,8 +33,7 @@ module Migrations::Database::Schema::DSL
         end
 
         content = generate_table_file
-        path = write_file(content)
-        path
+        write_file(content)
       end
     end
 

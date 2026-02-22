@@ -45,6 +45,12 @@ module Migrations::Database::Schema::DSL
       names + added.to_set
     end
 
+    def plugin_ignored_column_names(table_def)
+      names = Set.new
+      each_plugin_ignored_column(table_def) { |col, _| names << col }
+      names
+    end
+
     def each_plugin_ignored_column(table_def, &block)
       return if table_def.source_table_name.nil?
 

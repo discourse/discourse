@@ -48,7 +48,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def generate_sql(resolved)
-      schema_file = File.expand_path(@output_config.schema_file, Migrations.root_path)
+      schema_file = expand_path(@output_config.schema_file)
       FileUtils.mkdir_p(File.dirname(schema_file))
 
       File.open(schema_file, "w") do |f|
@@ -59,7 +59,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def generate_enums(resolved)
-      enums_dir = File.expand_path(@output_config.enums_directory, Migrations.root_path)
+      enums_dir = expand_path(@output_config.enums_directory)
       FileUtils.mkdir_p(enums_dir)
 
       writer =
@@ -73,7 +73,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def generate_models(resolved)
-      models_dir = File.expand_path(@output_config.models_directory, Migrations.root_path)
+      models_dir = expand_path(@output_config.models_directory)
       FileUtils.mkdir_p(models_dir)
 
       writer =
@@ -135,10 +135,14 @@ module Migrations::Database::Schema::DSL
 
     def format_directory(relative_path)
       return unless relative_path
-      path = File.expand_path(relative_path, Migrations.root_path)
+      path = expand_path(relative_path)
       Migrations::Database::Schema::Helpers.format_ruby_files(path)
     rescue StandardError
       # formatting is best-effort; generation still succeeds
+    end
+
+    def expand_path(relative_path)
+      File.expand_path(relative_path, Migrations.root_path)
     end
 
     def file_header

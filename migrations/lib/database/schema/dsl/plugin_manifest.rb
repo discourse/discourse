@@ -34,11 +34,8 @@ module Migrations::Database::Schema::DSL
       introspector = PluginIntrospector.new(plugins_path: @plugins_path)
       result = introspector.introspect
 
-      existing_data = @data
-
-      new_data = { "generated_at" => Time.now.utc.iso8601 }.merge(result)
-      if comparable_data(existing_data) != comparable_data(new_data)
-        @data = new_data
+      if @data != result
+        @data = result
         FileUtils.mkdir_p(File.dirname(@manifest_path))
         File.write(@manifest_path, format_yaml(@data))
       end
@@ -99,19 +96,8 @@ module Migrations::Database::Schema::DSL
       { "plugins" => {}, "plugin_checksums" => {}, "failed_plugins" => [], "incomplete" => false }
     end
 
-    def comparable_data(data)
-      data.reject { |key, _| key == "generated_at" }
-    end
-
     def format_yaml(data)
-      yaml = YAML.dump(data).sub(/\A---\n/, "")
-
-      yaml.gsub(/^(( *)\S.*:\n)((\2- .*\n)+)/) do
-        key_line = $1
-        indent = $2
-        items = $3.gsub(/^#{Regexp.escape(indent)}-/, "#{indent}  -")
-        "#{key_line}#{items}"
-      end
+      YAML.dump(data, indentation: 2).sub(/\A---\n/, "").gsub(/^(\s*)-/, '\1  -')
     end
 
     def build_reverse_indexes

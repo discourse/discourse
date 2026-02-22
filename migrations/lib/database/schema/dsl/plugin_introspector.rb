@@ -167,7 +167,7 @@ module Migrations::Database::Schema::DSL
 
     def run_plugin_migrations(paths)
       valid_paths = paths.select { |p| File.directory?(p) }
-      ActiveRecord::MigrationContext.new(valid_paths).migrate if paths.any?
+      ActiveRecord::MigrationContext.new(valid_paths).migrate if valid_paths.any?
     end
 
     def suppress_output

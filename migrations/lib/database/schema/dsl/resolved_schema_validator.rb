@@ -39,15 +39,14 @@ module Migrations::Database::Schema::DSL
           @errors << "Table '#{table.name}': column '#{column.name}' has invalid datatype '#{column.datatype}'"
         end
 
-        @errors << "Table '#{table.name}': column has empty name" if column.name.to_s.strip.empty?
+        @errors << "Table '#{table.name}': column has empty name" if column.name.blank?
 
         if column.is_primary_key && column.nullable
           @errors << "Table '#{table.name}': primary key column '#{column.name}' should not be nullable"
         end
       end
 
-      names = table.columns.map(&:name)
-      duplicates = names.group_by(&:itself).select { |_, v| v.size > 1 }.keys
+      duplicates = table.columns.map(&:name).tally.filter_map { |n, c| n if c > 1 }
       if duplicates.any?
         @errors << "Table '#{table.name}': duplicate column names: #{duplicates.join(", ")}"
       end
@@ -71,11 +70,10 @@ module Migrations::Database::Schema::DSL
           @errors << "Table '#{table.name}': index '#{index.name}' references missing columns: #{missing.join(", ")}"
         end
 
-        @errors << "Table '#{table.name}': index has empty name" if index.name.to_s.strip.empty?
+        @errors << "Table '#{table.name}': index has empty name" if index.name.blank?
       end
 
-      index_names = table.indexes.map(&:name)
-      duplicates = index_names.group_by(&:itself).select { |_, v| v.size > 1 }.keys
+      duplicates = table.indexes.map(&:name).tally.filter_map { |n, c| n if c > 1 }
       if duplicates.any?
         @errors << "Table '#{table.name}': duplicate index names: #{duplicates.join(", ")}"
       end
@@ -85,18 +83,16 @@ module Migrations::Database::Schema::DSL
       return unless table.constraints
 
       table.constraints.each do |constraint|
-        if constraint.name.to_s.strip.empty?
-          @errors << "Table '#{table.name}': constraint has empty name"
-        end
+        @errors << "Table '#{table.name}': constraint has empty name" if constraint.name.blank?
 
-        if constraint.condition.to_s.strip.empty?
+        if constraint.condition.blank?
           @errors << "Table '#{table.name}': constraint '#{constraint.name}' has empty condition"
         end
       end
     end
 
     def validate_enum(enum)
-      @errors << "Enum has empty name" if enum.name.to_s.strip.empty?
+      @errors << "Enum has empty name" if enum.name.blank?
 
       @errors << "Enum '#{enum.name}' has no values" if enum.values.empty?
 

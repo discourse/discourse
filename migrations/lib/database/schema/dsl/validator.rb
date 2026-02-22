@@ -248,9 +248,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def auto_ignored_column_names
-      names = Set.new
-      @scope.each_plugin_ignored_column(@table_def) { |col, _| names << col }
-      names
+      @scope.plugin_ignored_column_names(@table_def)
     end
 
     def sort_and_join(values)

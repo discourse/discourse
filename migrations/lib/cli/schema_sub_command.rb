@@ -140,9 +140,9 @@ module Migrations::CLI
       puts "  2. Run 'bin/cli schema validate'"
     end
 
-    desc "detect-plugins", "Regenerate the plugin manifest"
+    desc "refresh-plugins", "Regenerate the plugin manifest"
     method_option :force, type: :boolean, default: false, desc: "Force regeneration"
-    def detect_plugins
+    def refresh_plugins
       load_rails!
 
       database = selected_database

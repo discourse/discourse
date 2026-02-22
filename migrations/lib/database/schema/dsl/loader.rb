@@ -18,7 +18,7 @@ module Migrations::Database::Schema::DSL
     private
 
     def validate_config_path!
-      unless File.directory?(@config_path)
+      if !File.directory?(@config_path)
         raise Migrations::Database::Schema::ConfigError,
               "Schema config directory not found: #{@config_path}"
       end
