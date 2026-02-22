@@ -24,25 +24,17 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
     end
 
     it "returns true when checksums match" do
-      introspector = Migrations::Database::Schema::DSL::PluginIntrospector.new(plugins_path:)
-      checksums = introspector.compute_all_checksums
+      checksums =
+        Migrations::Database::Schema::DSL::PluginIntrospector.compute_checksums(plugins_path)
 
       write_manifest({ "plugins" => {}, "migration_state" => checksums })
 
       expect(build_manifest.fresh?).to be true
     end
 
-    it "ignores core checksum changes" do
-      write_manifest(
-        { "plugins" => {}, "migration_state" => { "core" => "stale_checksum", "plugins" => {} } },
-      )
-
-      expect(build_manifest.checksums_fresh?).to be true
-    end
-
     it "returns false when manifest is marked incomplete due failed plugins" do
-      introspector = Migrations::Database::Schema::DSL::PluginIntrospector.new(plugins_path:)
-      checksums = introspector.compute_all_checksums
+      checksums =
+        Migrations::Database::Schema::DSL::PluginIntrospector.compute_checksums(plugins_path)
 
       write_manifest(
         {
@@ -70,9 +62,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
             },
           },
           "migration_state" => {
-            "core" => "abc",
-            "plugins" => {
-            },
           },
         },
       )
@@ -97,9 +86,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
             },
           },
           "migration_state" => {
-            "core" => "abc",
-            "plugins" => {
-            },
           },
         },
       )
@@ -124,9 +110,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
             },
           },
           "migration_state" => {
-            "core" => "abc",
-            "plugins" => {
-            },
           },
         },
       )
@@ -145,9 +128,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
             },
           },
           "migration_state" => {
-            "core" => "abc",
-            "plugins" => {
-            },
           },
         },
       )
@@ -170,9 +150,6 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
             },
           },
           "migration_state" => {
-            "core" => "abc",
-            "plugins" => {
-            },
           },
         },
       )
@@ -203,10 +180,7 @@ RSpec.describe Migrations::Database::Schema::DSL::PluginManifest do
           },
         },
         "migration_state" => {
-          "core" => "abc",
-          "plugins" => {
-            "chat" => "def",
-          },
+          "chat" => "def",
         },
         "failed_plugins" => [],
         "incomplete" => false,

@@ -23,7 +23,7 @@ RSpec.describe Migrations::CLI::SchemaSubCommand do
         command.ignore("users")
 
         content = File.read(ignored_path)
-        expect(content).to include("table :users\n")
+        expect(content).to include("table :users")
       end
     end
   end

@@ -4,7 +4,7 @@ module Migrations::Database::Schema::DSL
   class PluginManifest
     def initialize(manifest_path:, plugins_path: nil)
       @manifest_path = manifest_path
-      @plugins_path = plugins_path
+      @plugins_path = plugins_path || File.join(Rails.root, "plugins")
       @data = nil
       @table_to_plugin = nil
       @column_to_plugin = nil
@@ -21,13 +21,7 @@ module Migrations::Database::Schema::DSL
       stored_state = @data["migration_state"]
       return false unless stored_state
 
-      introspector = build_introspector
-      current = introspector.compute_all_checksums
-
-      stored_plugins = stored_state["plugins"] || {}
-      current_plugins = current["plugins"] || {}
-
-      stored_plugins == current_plugins
+      stored_state == PluginIntrospector.compute_checksums(@plugins_path)
     end
 
     def available?
@@ -132,17 +126,7 @@ module Migrations::Database::Schema::DSL
     end
 
     def empty_data
-      {
-        "plugins" => {
-        },
-        "migration_state" => {
-          "core" => nil,
-          "plugins" => {
-          },
-        },
-        "failed_plugins" => [],
-        "incomplete" => false,
-      }
+      { "plugins" => {}, "migration_state" => {}, "failed_plugins" => [], "incomplete" => false }
     end
 
     def comparable_data(data)

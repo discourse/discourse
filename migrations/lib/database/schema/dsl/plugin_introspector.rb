@@ -4,50 +4,11 @@ require "digest/md5"
 
 module Migrations::Database::Schema::DSL
   class PluginIntrospector
-    def initialize(plugins_path: nil)
-      @plugins_path = plugins_path || File.join(Rails.root, "plugins")
+    def self.compute_checksums(plugins_path)
+      discover_plugins(plugins_path).transform_values { |paths| checksum_for_paths(paths) }
     end
 
-    def introspect
-      with_temporary_database do
-        run_core_migrations
-        load_plugin_rake_tasks
-
-        plugins = discover_plugins
-        plugin_data, failed_plugins = introspect_plugins(plugins)
-        checksums = compute_all_checksums
-
-        build_result(plugin_data, checksums, failed_plugins)
-      end
-    end
-
-    def compute_all_checksums
-      core = compute_checksum_for_paths(core_migration_paths)
-      plugin_checksums = compute_plugin_checksums
-      { "core" => core, "plugins" => plugin_checksums }
-    end
-
-    def compute_plugin_checksums
-      checksums = {}
-      discover_plugins.each { |name, paths| checksums[name] = compute_checksum_for_paths(paths) }
-      checksums
-    end
-
-    def discover_plugins
-      plugins = {}
-
-      Dir[File.join(@plugins_path, "*")].sort.each do |plugin_dir|
-        next unless File.directory?(plugin_dir)
-
-        plugin_name = File.basename(plugin_dir)
-        paths = plugin_migration_paths(plugin_dir)
-        plugins[plugin_name] = paths if paths.any?
-      end
-
-      plugins
-    end
-
-    def compute_checksum_for_paths(paths)
+    def self.checksum_for_paths(paths)
       files =
         paths.select { |p| File.directory?(p) }.flat_map { |p| Dir[File.join(p, "*.rb")].sort }.uniq
 
@@ -57,49 +18,87 @@ module Migrations::Database::Schema::DSL
       Digest::MD5.hexdigest(digests.join("\n"))
     end
 
+    def self.discover_plugins(plugins_path)
+      plugins = {}
+
+      Dir[File.join(plugins_path, "*")].sort.each do |plugin_dir|
+        next if !File.directory?(plugin_dir)
+
+        plugin_name = File.basename(plugin_dir)
+        paths = plugin_migration_paths(plugin_dir)
+        plugins[plugin_name] = paths if paths.any?
+      end
+
+      plugins
+    end
+
+    def self.plugin_migration_paths(plugin_dir)
+      %w[db/migrate db/post_migrate]
+        .map { |sub| File.join(plugin_dir, sub) }
+        .select { |path| File.directory?(path) }
+    end
+
+    private_class_method :checksum_for_paths, :discover_plugins, :plugin_migration_paths
+
+    def initialize(plugins_path: nil)
+      @plugins_path = plugins_path || File.join(Rails.root, "plugins")
+    end
+
+    def introspect
+      with_temporary_database do |stderr|
+        run_core_migrations
+        load_plugin_rake_tasks
+
+        plugins = self.class.discover_plugins(@plugins_path)
+        plugin_data, failed_plugins = introspect_plugins(plugins, stderr)
+        checksums = self.class.compute_checksums(@plugins_path)
+
+        build_result(plugin_data, checksums, failed_plugins)
+      end
+    end
+
     private
 
     def with_temporary_database
       original_config = ActiveRecord::Base.connection_db_config.configuration_hash.dup
       db = TemporaryDb.new
-      @real_stderr = $stderr
 
-      suppress_output do
-        begin
-          db.start
+      suppress_output do |_stdout, stderr|
+        db.start
 
-          db.with_env do
-            ActiveRecord::Base.establish_connection(
-              adapter: "postgresql",
-              database: "discourse",
-              port: db.pg_port,
-              host: "localhost",
-            )
+        db.with_env do
+          ActiveRecord::Base.establish_connection(
+            adapter: "postgresql",
+            database: "discourse",
+            port: db.pg_port,
+            host: "localhost",
+          )
 
-            yield
-          end
-        ensure
-          ActiveRecord::Base.establish_connection(original_config)
-          db.stop
-          db.remove
+          yield stderr
         end
+      ensure
+        ActiveRecord::Base.establish_connection(original_config)
+        db.stop
+        db.remove
       end
     end
 
-    def introspect_plugins(plugins)
+    def introspect_plugins(plugins, stderr)
       plugin_data = {}
       failed_plugins = []
 
-      plugins.keys.sort.each do |plugin_name|
-        result, failed = introspect_plugin(plugin_name, plugins[plugin_name])
-        failed_plugins << plugin_name if failed
-        plugin_data[plugin_name] = result if result
-      end
+      plugins
+        .sort_by(&:first)
+        .each do |plugin_name, migration_paths|
+          result, failed = introspect_plugin(plugin_name, migration_paths, stderr)
+          failed_plugins << plugin_name if failed
+          plugin_data[plugin_name] = result if result
+        end
 
       [plugin_data, failed_plugins]
     end
 
-    def introspect_plugin(plugin_name, migration_paths)
+    def introspect_plugin(plugin_name, migration_paths, stderr)
       failed = false
       snapshot_before = snapshot_schema
 
@@ -107,28 +106,36 @@ module Migrations::Database::Schema::DSL
         run_plugin_migrations(migration_paths)
       rescue StandardError => e
         failed = true
-        @real_stderr.puts "  Warning: '#{plugin_name}' migration error: #{e.message}"
+        stderr.puts "  Warning: '#{plugin_name}' migration error: #{e.message}"
       end
 
       snapshot_after = snapshot_schema
       [diff_schema(snapshot_before, snapshot_after), failed]
     end
 
+    def snapshot_schema
+      connection = ActiveRecord::Base.connection
+      tables = connection.tables.to_set
+      columns = {}
+
+      tables.each { |table| columns[table] = connection.columns(table).map(&:name).to_set }
+
+      { tables:, columns: }
+    end
+
     def diff_schema(snapshot_before, snapshot_after)
-      new_tables = (snapshot_after[:tables] - snapshot_before[:tables]).sort
-      new_table_set = new_tables.to_set
+      new_tables = snapshot_after[:tables] - snapshot_before[:tables]
 
       new_columns = {}
       snapshot_after[:columns].each do |table, cols|
-        next if new_table_set.include?(table)
-        before_cols = snapshot_before[:columns].fetch(table, Set.new)
-        added = (cols - before_cols).sort
-        new_columns[table] = added if added.any?
+        next if new_tables.include?(table)
+        added = cols - snapshot_before[:columns].fetch(table, Set.new)
+        new_columns[table] = added.sort if added.any?
       end
 
       return if new_tables.empty? && new_columns.empty?
 
-      { "tables" => new_tables, "columns" => new_columns }
+      { "tables" => new_tables.sort, "columns" => new_columns }
     end
 
     def build_result(plugin_data, checksums, failed_plugins)
@@ -144,40 +151,23 @@ module Migrations::Database::Schema::DSL
       [File.join(Rails.root, "db", "migrate"), File.join(Rails.root, "db", "post_migrate")]
     end
 
-    def plugin_migration_paths(plugin_dir)
-      paths = []
-      %w[db/migrate db/post_migrate].each do |sub|
-        path = File.join(plugin_dir, sub)
-        paths << path if File.directory?(path)
-      end
-      paths
-    end
-
     def run_core_migrations
       paths = core_migration_paths.select { |p| File.directory?(p) }
-      return if paths.empty?
-      ActiveRecord::MigrationContext.new(paths).migrate
+      ActiveRecord::MigrationContext.new(paths).migrate if paths.any?
     end
 
+    # At least one plugin has a migration that invokes a rake task. Loading
+    # all plugin rake files ensures those tasks are defined before migrations
+    # run. The :environment task stub prevents errors from rake files that
+    # depend on it.
     def load_plugin_rake_tasks
-      Rake::Task.define_task(:environment) unless Rake::Task.task_defined?(:environment)
+      Rake::Task.define_task(:environment) if !Rake::Task.task_defined?(:environment)
       Dir[File.join(@plugins_path, "*/lib/tasks/**/*.rake")].sort.each { |f| load f }
     end
 
     def run_plugin_migrations(paths)
       valid_paths = paths.select { |p| File.directory?(p) }
-      return if valid_paths.empty?
-      ActiveRecord::MigrationContext.new(valid_paths).migrate
-    end
-
-    def snapshot_schema
-      connection = ActiveRecord::Base.connection
-      tables = connection.tables.to_set
-      columns = {}
-
-      tables.each { |table| columns[table] = connection.columns(table).map(&:name).to_set }
-
-      { tables:, columns: }
+      ActiveRecord::MigrationContext.new(valid_paths).migrate if paths.any?
     end
 
     def suppress_output
@@ -185,7 +175,7 @@ module Migrations::Database::Schema::DSL
       old_stderr = $stderr
       $stdout = StringIO.new
       $stderr = StringIO.new
-      yield
+      yield old_stdout, old_stderr
     ensure
       $stdout = old_stdout
       $stderr = old_stderr
