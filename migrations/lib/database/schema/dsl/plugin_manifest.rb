@@ -5,15 +5,17 @@ module Migrations::Database::Schema::DSL
     def initialize(manifest_path:, plugins_path: nil)
       @manifest_path = manifest_path
       @plugins_path = plugins_path || File.join(Rails.root, "plugins")
-      @data = nil
+
+      @data = YAML.safe_load_file(@manifest_path) if available?
+      @data ||= empty_data
+
       @table_to_plugin = nil
       @column_to_plugin = nil
     end
 
     def fresh?
-      return false if !File.exist?(@manifest_path)
+      return false if !available?
 
-      load_data
       stored_checksums = @data["plugin_checksums"]
       return false if !stored_checksums
 
@@ -25,19 +27,17 @@ module Migrations::Database::Schema::DSL
     end
 
     def incomplete?
-      load_data
       @data["incomplete"] || failed_plugins.any?
     end
 
     def regenerate!
-      result = build_introspector.introspect
-      load_data
+      introspector = PluginIntrospector.new(plugins_path: @plugins_path)
+      result = introspector.introspect
+
       existing_data = @data
 
       new_data = { "generated_at" => Time.now.utc.iso8601 }.merge(result)
-      if comparable_data(existing_data) == comparable_data(new_data)
-        @data = existing_data
-      else
+      if comparable_data(existing_data) != comparable_data(new_data)
         @data = new_data
         FileUtils.mkdir_p(File.dirname(@manifest_path))
         File.write(@manifest_path, format_yaml(@data))
@@ -45,7 +45,6 @@ module Migrations::Database::Schema::DSL
 
       @table_to_plugin = nil
       @column_to_plugin = nil
-      @data
     end
 
     def plugin_for_table(name)
@@ -59,18 +58,15 @@ module Migrations::Database::Schema::DSL
     end
 
     def all_plugin_names
-      load_data
       plugins = @data["plugins"] || {}
       plugins.keys.sort
     end
 
     def tables_for_plugin(name)
-      load_data
       @data.dig("plugins", normalize_plugin_name(name), "tables") || []
     end
 
     def columns_for_plugin(name, table: nil)
-      load_data
       plugin_data = @data.dig("plugins", normalize_plugin_name(name), "columns") || {}
       if table
         plugin_data[table.to_s] || []
@@ -80,19 +76,16 @@ module Migrations::Database::Schema::DSL
     end
 
     def table_count
-      load_data
       plugins = @data["plugins"] || {}
       plugins.sum { |_, data| (data["tables"] || []).size }
     end
 
     def column_count
-      load_data
       plugins = @data["plugins"] || {}
       plugins.sum { |_, data| (data["columns"] || {}).sum { |_, cols| cols.size } }
     end
 
     def failed_plugins
-      load_data
       Array(@data["failed_plugins"])
     end
 
@@ -102,20 +95,6 @@ module Migrations::Database::Schema::DSL
     # use underscores (discourse_ai). Normalize for manifest lookups.
     def normalize_plugin_name(name)
       name.to_s.tr("_", "-")
-    end
-
-    def build_introspector
-      PluginIntrospector.new(plugins_path: @plugins_path)
-    end
-
-    def load_data
-      return if @data
-      @data =
-        if File.exist?(@manifest_path)
-          YAML.safe_load_file(@manifest_path) || empty_data
-        else
-          empty_data
-        end
     end
 
     def empty_data
@@ -140,7 +119,6 @@ module Migrations::Database::Schema::DSL
     def build_reverse_indexes
       return if @table_to_plugin
 
-      load_data
       @table_to_plugin = {}
       @column_to_plugin = {}
 
