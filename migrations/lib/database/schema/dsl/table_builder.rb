@@ -131,7 +131,9 @@ module Migrations::Database::Schema::DSL
     def ignore_plugin_columns!(*plugin_names)
       @ignore_plugin_columns = true
       @ignore_plugin_names =
-        plugin_names.flatten.map { |name| normalize_plugin_name(name) } if plugin_names.any?
+        plugin_names.flatten.map do |name|
+          ::Migrations::Database::Schema::Helpers.normalize_plugin_name(name)
+        end if plugin_names.any?
     end
 
     def model(mode)
@@ -189,10 +191,6 @@ module Migrations::Database::Schema::DSL
     def generate_index_name(cols, unique)
       prefix = unique ? "idx_unique" : "idx"
       "#{prefix}_#{@name}_#{cols.join("_")}"
-    end
-
-    def normalize_plugin_name(name)
-      name.to_s.tr("_", "-")
     end
   end
 

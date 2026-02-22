@@ -91,10 +91,8 @@ module Migrations::Database::Schema::DSL
 
     private
 
-    # Plugin directory names use hyphens (discourse-ai), but Ruby symbols
-    # use underscores (discourse_ai). Normalize for manifest lookups.
     def normalize_plugin_name(name)
-      name.to_s.tr("_", "-")
+      ::Migrations::Database::Schema::Helpers.normalize_plugin_name(name)
     end
 
     def empty_data

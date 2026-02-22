@@ -191,5 +191,11 @@ module Migrations::Database::Schema
     def self.format_ruby_files(directory)
       format_ruby_file(File.join(directory, "*.rb"))
     end
+
+    # Plugin directory names use hyphens (discourse-ai), but Ruby symbols
+    # use underscores (discourse_ai). Normalize for manifest lookups.
+    def self.normalize_plugin_name(name)
+      name.to_s.tr("_", "-")
+    end
   end
 end
