@@ -613,10 +613,6 @@ class Guardian
       @user.in_any_groups?(SiteSetting.lazy_load_categories_groups_map)
   end
 
-  def can_see_reviewable_ui_refresh?
-    !SiteSetting.force_old_reviewable_ui
-  end
-
   def is_me?(other)
     other && authenticated? && other.is_a?(User) && @user == other
   end

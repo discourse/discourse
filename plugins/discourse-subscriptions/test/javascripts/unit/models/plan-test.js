@@ -31,10 +31,12 @@ module("Subscriptions | Unit | Model | plan", function () {
   test("amount", function (assert) {
     const plan = Plan.create({ amountDollars: "22.12" });
 
-    assert.strictEqual(
-      plan.get("unit_amount"),
-      2212,
-      "it returns the cents amount"
-    );
+    assert.strictEqual(plan.get("unit_amount"), 2212);
+  });
+
+  test("amount with floating point edge case", function (assert) {
+    const plan = Plan.create({ amountDollars: "19.99" });
+
+    assert.strictEqual(plan.get("unit_amount"), 1999);
   });
 });

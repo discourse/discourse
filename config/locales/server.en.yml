@@ -70,8 +70,8 @@ en:
   inline_oneboxer:
     topic_page_title_post_number: "#%{post_number}"
     topic_page_title_post_number_by_user: "#%{post_number} by %{username}"
-    too_many_urls: "Can't inline onebox more than 10 URLs in a single request."
-    concurrency_not_allowed: "Concurrent inline-oneboxing requests are not allowed. Please send one request at a time."
+    too_many_urls: "Can't convert more than 10 URLs to inline oneboxes in a single request."
+    concurrency_not_allowed: "Concurrent requests to convert URLs to inline oneboxes are not allowed. Please send one request at a time."
   components:
     enabled_filter: "Enabled"
     disabled_filter: "Disabled"
@@ -2694,7 +2694,7 @@ en:
     dashboard_visible_tabs: "Choose which dashboard tabs are visible."
     dashboard_general_tab_activity_metrics: "Choose reports to be displayed as activity metrics on the general tab."
 
-    gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. This will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
+    gravatar_enabled: "Use the <a href='https://gravatar.com/'>Gravatar</a> service for user avatars. Disabling this will prevent users from switching to Gravatar for their avatars, but will not impact users who already use it."
     gravatar_name: "Specify the name of the Gravatar service provider. This name is typically used to identify the source providing Gravatar avatars to the site."
     gravatar_base_url: "Specify the URL for accessing the Gravatar provider's API. This setting is critical for converting email addresses into Gravatar URLs where avatar images are stored."
     gravatar_login_url: "URL relative to `gravatar_base_url`, which provides the user with the login to the Gravatar service."
@@ -2805,10 +2805,10 @@ en:
       discourse_connect_url_is_empty: "You must set a 'discourse connect url' before enabling this setting."
       enable_local_logins_disabled: "You must first enable 'enable local logins' before enabling this setting."
       min_username_length_exists: "You cannot set the minimum username length above the shortest username (%{username})."
-      min_group_name_length_exists: "You cannot set the minimum username length above the shortest group name (%{group_name})."
+      min_group_name_length_exists: "You cannot set the minimum group name length above the shortest group name (%{group_name})."
       min_username_length_range: "You cannot set the minimum above the maximum."
       max_username_length_exists: "You cannot set the maximum username length below the longest username (%{username})."
-      max_group_name_length_exists: "You cannot set the maximum username length below the longest group name (%{group_name})."
+      max_group_name_length_exists: "You cannot set the maximum group name length below the longest group name (%{group_name})."
       max_username_length_range: "You cannot set the maximum below the minimum."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
       empty_selectable_avatars: "You must first upload at least two selectable avatars before enabling this setting."
@@ -5865,10 +5865,6 @@ en:
       # New separated post actions
       post_actions:
         bundle_title: "What do you want to do with the post?"
-      no_action_post:
-        title: "No action"
-        description: "Take no action on the post"
-        complete: "No action taken on post"
       delete_post:
         title: "Delete post"
         description: "Delete this post"
@@ -5889,17 +5885,8 @@ en:
         title: "Edit post"
         description: "Edit this post content"
         complete: "Post edited"
-      convert_to_pm:
-        title: "Convert to PM"
-        description: "Convert this post to a personal message"
-        complete: "Post converted to personal message"
-      # New separated user actions
       user_actions:
         bundle_title: "What do you want to do with the user?"
-      no_action_user:
-        title: "No action"
-        description: "Take no action against the user"
-        complete: "No action taken against user"
       silence_user:
         title: "Silence user"
         description: "Prevent the user from posting"

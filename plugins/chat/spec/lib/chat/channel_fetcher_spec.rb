@@ -374,6 +374,46 @@ describe Chat::ChannelFetcher do
           ).map(&:id),
         ).to contain_exactly(category_channel.id, other_channel.id)
       end
+
+      context "with include_subcategories" do
+        fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+        fab!(:subcategory_channel) { Fabricate(:category_channel, chatable: subcategory) }
+
+        it "returns channels from parent and subcategories when true" do
+          expect(
+            described_class.secured_public_channels(
+              guardian,
+              following: following,
+              chatable_id: category.id,
+              chatable_type: "Category",
+              include_subcategories: true,
+            ).map(&:id),
+          ).to contain_exactly(category_channel.id, subcategory_channel.id)
+        end
+
+        it "returns only the parent category channels when false" do
+          expect(
+            described_class.secured_public_channels(
+              guardian,
+              following: following,
+              chatable_id: category.id,
+              chatable_type: "Category",
+              include_subcategories: false,
+            ).map(&:id),
+          ).to eq([category_channel.id])
+        end
+
+        it "returns only the parent category channels when absent" do
+          expect(
+            described_class.secured_public_channels(
+              guardian,
+              following: following,
+              chatable_id: category.id,
+              chatable_type: "Category",
+            ).map(&:id),
+          ).to eq([category_channel.id])
+        end
+      end
     end
 
     context "when scoping to the user's channel memberships" do

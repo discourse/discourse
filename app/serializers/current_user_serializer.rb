@@ -81,7 +81,6 @@ class CurrentUserSerializer < BasicUserSerializer
              :can_see_emails,
              :can_localize_content?,
              :effective_locale,
-             :use_reviewable_ui_refresh,
              :can_see_ip,
              :is_impersonating
 
@@ -366,14 +365,6 @@ class CurrentUserSerializer < BasicUserSerializer
 
   def include_effective_locale?
     SiteSetting.content_localization_enabled
-  end
-
-  def use_reviewable_ui_refresh
-    scope.can_see_reviewable_ui_refresh?
-  end
-
-  def include_use_reviewable_ui_refresh?
-    scope.can_see_review_queue?
   end
 
   def can_see_ip
