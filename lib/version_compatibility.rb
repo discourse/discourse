@@ -94,7 +94,9 @@ module Discourse
     remote_branch_ref = "refs/remotes/#{remote_name}/#{compat_branch}"
 
     begin
-      return Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref).strip
+      return(
+        Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref).strip
+      )
     rescue Discourse::Utils::CommandError
     end
 
