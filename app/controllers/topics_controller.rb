@@ -449,21 +449,25 @@ class TopicsController < ApplicationController
     changes.delete(:title) if topic.title == changes[:title]
     changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
 
-    if Tag.include_tags? && changes[:tags].present?
-      incoming = changes[:tags]
+    if Tag.include_tags? && changes.has_key?(:tags)
+      if changes[:tags].present?
+        incoming = changes[:tags]
 
-      if incoming.first.is_a?(String)
-        Discourse.deprecate(
-          "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
-          since: "2026.01",
-          drop_from: "2026.07",
-        )
-        changes.delete(:tags) if incoming.sort == topic.tags.map(&:name).sort
-      else
-        has_new = incoming.any? { |t| t[:id].blank? }
-        if !has_new && incoming.filter_map { |t| t[:id]&.to_i }.sort == topic.tags.pluck(:id).sort
-          changes.delete(:tags)
+        if incoming.first.is_a?(String)
+          Discourse.deprecate(
+            "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+            since: "2026.01",
+            drop_from: "2026.07",
+          )
+          changes.delete(:tags) if incoming.sort == topic.tags.map(&:name).sort
+        else
+          has_new = incoming.any? { |t| t[:id].blank? }
+          if !has_new && incoming.filter_map { |t| t[:id]&.to_i }.sort == topic.tags.pluck(:id).sort
+            changes.delete(:tags)
+          end
         end
+      elsif topic.tags.empty?
+        changes.delete(:tags)
       end
     end
 
