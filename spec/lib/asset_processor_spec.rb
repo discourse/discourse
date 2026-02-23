@@ -392,40 +392,6 @@ RSpec.describe AssetProcessor do
     expect(AssetProcessor.new.ember_version).to match(/\A\d+\.\d+\.\d+\z/)
   end
 
-  it "handles imports of same-plugin modules from a different bundle" do
-    mod_1 = <<~JS.chomp
-      import SomeModule from "discourse/plugins/myplugin/some-module";
-      console.log(SomeModule);
-    JS
-
-    result =
-      AssetProcessor.new.rollup(
-        {
-          "discourse/components/my-component.js" => mod_1,
-          "discourse/components/my-component-test.js" => mod_1,
-        },
-        {
-          pluginName: "myplugin",
-          entrypoints: {
-            main: {
-              modules: ["discourse/components/my-component.js"],
-            },
-            tests: {
-              modules: %w[
-                discourse/components/my-component.js
-                discourse/components/my-component-test.js
-              ],
-            },
-          },
-        },
-      )
-
-    puts result.keys
-
-    # todo
-    # expect(result["main.js"]["code"]).to include('from "discourse/plugins/myplugin";')
-  end
-
   it "errors on missing relative imports" do
     mod_1 = <<~JS.chomp
       import SomeModule from "../some-module";
