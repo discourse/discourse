@@ -5,16 +5,10 @@ import { LinkTo } from "@ember/routing";
 import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
 import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
-import { optionalRequire } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
+import ChannelTitle from "discourse/plugins/chat/discourse/components/channel-title";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ModelAccuracies from "../model-accuracies";
-
-const ChannelTitle = optionalRequire(
-  "discourse/plugins/chat/discourse/components/channel-title"
-);
-const ChatChannel = optionalRequire(
-  "discourse/plugins/chat/discourse/models/chat-channel"
-);
 
 export default class ReviewableRefreshAiChatMessage extends Component {
   @cached

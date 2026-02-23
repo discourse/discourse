@@ -4,16 +4,10 @@ import { LinkTo } from "@ember/routing";
 import { htmlSafe } from "@ember/template";
 import ReviewableCreatedBy from "discourse/components/reviewable-created-by";
 import ReviewablePostHeader from "discourse/components/reviewable-post-header";
-import { optionalRequire } from "discourse/lib/utilities";
 import { or } from "discourse/truth-helpers";
+import ChatChannelTitle from "discourse/plugins/chat/discourse/components/chat-channel-title";
+import ChatChannel from "discourse/plugins/chat/discourse/models/chat-channel";
 import ModelAccuracies from "./model-accuracies";
-
-const ChatChannelTitle = optionalRequire(
-  "discourse/plugins/chat/discourse/components/chat-channel-title"
-);
-const ChatChannel = optionalRequire(
-  "discourse/plugins/chat/discourse/models/chat-channel"
-);
 
 export default class ReviewableAiChatMessage extends Component {
   get chatChannel() {
