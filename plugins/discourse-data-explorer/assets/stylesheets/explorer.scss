@@ -335,7 +335,7 @@ table.group-reports {
   }
 }
 
-.query-list,
+.disscourse-data-explorer-query-list,
 .query-create,
 .query-edit,
 .query-results,
@@ -380,10 +380,7 @@ table.group-reports {
   }
 }
 
-.query-list {
-  display: flex;
-  align-items: flex-start;
-
+.discourse-data-explorer-query-list {
   .btn-left {
     margin-right: 0.5em;
   }
@@ -448,9 +445,21 @@ table.group-reports {
       color: var(--primary);
     }
 
-    .query-desc {
-      display: block;
+    .query-badge {
+      font-size: var(--font-down-2);
+      padding: 0.15rem 0.3rem;
+      border-radius: 4px;
       color: var(--primary-high);
+      background: var(--primary-low);
+      letter-spacing: 0.25px;
+      align-items: center;
+      display: inline-flex;
+      gap: var(--space-1);
+    }
+
+    .query-desc {
+      color: var(--primary-high);
+      max-width: 20vw;
     }
 
     .query-created-by {
@@ -458,10 +467,12 @@ table.group-reports {
     }
 
     .query-group-names {
-      color: var(--tertiary);
+      .share-report {
+        color: var(--tertiary);
 
-      a {
-        display: inline;
+        a {
+          display: inline;
+        }
       }
     }
 

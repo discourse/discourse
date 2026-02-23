@@ -6,6 +6,7 @@ import { service } from "@ember/service";
 import { isBlank } from "@ember/utils";
 import { classNames } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
+import concatClass from "discourse/helpers/concat-class";
 import noop from "discourse/helpers/noop";
 import discourseComputed, { bind } from "discourse/lib/decorators";
 import {
@@ -131,6 +132,7 @@ export default class PickFilesButton extends Component {
         @action={{this.openSystemFilePicker}}
         @label={{this.label}}
         @icon={{this.icon}}
+        class={{concatClass this.class "btn-default"}}
       />
     {{/if}}
     {{#if this.acceptsAllFormats}}

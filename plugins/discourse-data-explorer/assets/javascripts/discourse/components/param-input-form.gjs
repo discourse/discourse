@@ -441,7 +441,7 @@ export default class ParamInputForm extends Component {
           as |form|
         >
           {{#each this.paramInfo as |info|}}
-            <div class="param">
+            <div class="param" data-test-param-name={{info.identifier}}>
               <form.Field
                 @name={{info.identifier}}
                 @title={{info.identifier}}

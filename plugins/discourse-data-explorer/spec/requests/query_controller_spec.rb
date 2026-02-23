@@ -83,6 +83,36 @@ describe DiscourseDataExplorer::QueryController do
           DiscourseDataExplorer::Queries.default.count + 1,
         )
       end
+
+      it "merges default query data with persisted last_run_at and groups" do
+        freeze_time
+
+        post "/admin/plugins/explorer/queries/-1/run.json"
+        expect(response.status).to eq(200)
+
+        # Run persists the default query in the local DB; update it to assert index merges it
+        group = Fabricate(:group)
+        persisted = DiscourseDataExplorer::Query.find_by(id: -1)
+        persisted.update!(last_run_at: 3.days.ago, groups: [group])
+
+        get "/admin/plugins/explorer/queries.json"
+        expect(response.status).to eq(200)
+
+        expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
+        default_in_response = response_json["queries"].find { |q| q["id"] == -1 }
+        expect(default_in_response).to be_present
+        expect(Time.parse(default_in_response["last_run_at"])).to eq_time(3.days.ago)
+        expect(default_in_response["group_ids"]).to eq([group.id])
+      end
+
+      it "doesn't show double-ups of default queries" do
+        post "/admin/plugins/explorer/queries/-1/run.json"
+        expect(response.status).to eq(200)
+
+        get "/admin/plugins/explorer/queries.json"
+        expect(response.status).to eq(200)
+        expect(response_json["queries"].count).to eq(DiscourseDataExplorer::Queries.default.count)
+      end
     end
 
     describe "#update" do

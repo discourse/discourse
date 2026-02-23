@@ -15,10 +15,15 @@ export default class AdminPluginsExplorerQueriesDetails extends DiscourseRoute {
       return { model: null, schema: null, disallow: true, groups: null };
     }
 
-    const groupPromise = ajax("/admin/plugins/explorer/groups.json");
-    const schemaPromise = ajax("/admin/plugins/explorer/schema.json", {
-      cache: true,
-    });
+    const groupPromise = ajax(
+      "/admin/plugins/discourse-data-explorer/groups.json"
+    );
+    const schemaPromise = ajax(
+      "/admin/plugins/discourse-data-explorer/schema.json",
+      {
+        cache: true,
+      }
+    );
     const queryPromise = this.store.find("query", params.query_id);
 
     return groupPromise.then((groups) => {
