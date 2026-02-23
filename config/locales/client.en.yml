@@ -6414,22 +6414,6 @@ en:
         result_count:
           one: '%{count} result for "%{filter}"'
           other: '%{count} results for "%{filter}"'
-        result_types:
-          page:
-            one: "Page"
-            other: "Pages"
-          report:
-            one: "Report"
-            other: "Reports"
-          setting:
-            one: "Setting"
-            other: "Settings"
-          theme:
-            one: "Theme"
-            other: "Themes"
-          component:
-            one: "Component"
-            other: "Components"
 
       new_features:
         title: "What's new?"
