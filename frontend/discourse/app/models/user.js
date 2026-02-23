@@ -512,7 +512,9 @@ export default class User extends RestModel.extend(Evented) {
         this.set("unconfirmed_emails", []);
       }
 
-      this.unconfirmed_emails.push(email);
+      if (!this.unconfirmed_emails.includes(email)) {
+        this.unconfirmed_emails.push(email);
+      }
     });
   }
 
@@ -790,7 +792,7 @@ export default class User extends RestModel.extend(Evented) {
     const groups = this.groups || [];
 
     return groups.filter((group) => {
-      return !group.automatic || group.name === AUTO_GROUPS.moderators.name;
+      return !group.automatic || group.id === AUTO_GROUPS.moderators.id;
     });
   }
 

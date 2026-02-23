@@ -9,7 +9,7 @@ module Jobs
 
     def execute(args)
       @user_id = args[:user_id]
-      @prev_email = args[:prev_email]
+      @prev_emails = args[:prev_emails]
       @prev_username = args[:prev_username]
       @anonymize_ip = args[:anonymize_ip]
 
@@ -20,11 +20,11 @@ module Jobs
       anonymize_ips(@anonymize_ip) if @anonymize_ip
       anonymize_username if @prev_username && !SiteSetting.log_anonymizer_details?
 
-      Invite.where(email: @prev_email).destroy_all
+      Invite.where(email: @prev_emails).destroy_all
       InvitedUser.where(user_id: @user_id).destroy_all
       EmailToken.where(user_id: @user_id).destroy_all
       EmailLog.where(user_id: @user_id).delete_all
-      IncomingEmail.where("user_id = ? OR from_address = ?", @user_id, @prev_email).delete_all
+      IncomingEmail.where("user_id = ? OR from_address IN (?)", @user_id, @prev_emails).delete_all
 
       Post
         .with_deleted
@@ -41,7 +41,7 @@ module Jobs
 
     def anonymize_ips(new_ip)
       IncomingLink.where(ip_where("current_user_id")).update_all(ip_address: new_ip)
-      ScreenedEmail.where(email: @prev_email).update_all(ip_address: new_ip)
+      ScreenedEmail.where(email: @prev_emails).update_all(ip_address: new_ip)
       SearchLog.where(ip_where).update_all(ip_address: new_ip)
       TopicLinkClick.where(ip_where).update_all(ip_address: new_ip)
       TopicViewItem.where(ip_where).update_all(ip_address: new_ip)

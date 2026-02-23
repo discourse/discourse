@@ -323,7 +323,9 @@ RSpec.describe HashtagAutocompleteService do
       expect(result[:category].map(&:slug)).to eq(["the-book-club"])
       expect(result[:category].map(&:relative_url)).to eq(["/c/the-book-club/#{category1.id}"])
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books great-books])
-      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/fiction-books /tag/great-books])
+      expect(result[:tag].map(&:relative_url)).to eq(
+        ["/tag/fiction-books/#{tag2.id}", "/tag/great-books/#{tag1.id}"],
+      )
     end
 
     it "does not include category the user cannot access" do
@@ -336,7 +338,7 @@ RSpec.describe HashtagAutocompleteService do
       Fabricate(:tag_group, permissions: { "staff" => 1 }, tag_names: ["great-books"])
       result = service.lookup(%w[the-book-club great-books fiction-books], %w[category tag])
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books])
-      expect(result[:tag].map(&:relative_url)).to eq(["/tag/fiction-books"])
+      expect(result[:tag].map(&:relative_url)).to eq(["/tag/fiction-books/#{tag2.id}"])
     end
 
     it "handles type suffixes for slugs" do
@@ -345,7 +347,9 @@ RSpec.describe HashtagAutocompleteService do
       expect(result[:category].map(&:slug)).to eq(["the-book-club"])
       expect(result[:category].map(&:relative_url)).to eq(["/c/the-book-club/#{category1.id}"])
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books great-books])
-      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/fiction-books /tag/great-books])
+      expect(result[:tag].map(&:relative_url)).to eq(
+        ["/tag/fiction-books/#{tag2.id}", "/tag/great-books/#{tag1.id}"],
+      )
     end
 
     it "handles parent:child category lookups" do
@@ -384,7 +388,9 @@ RSpec.describe HashtagAutocompleteService do
       expect(result[:category].map(&:slug)).to eq(["the-book-club"])
       expect(result[:category].map(&:relative_url)).to eq(["/c/the-book-club/#{category1.id}"])
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books great-books])
-      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/fiction-books /tag/great-books])
+      expect(result[:tag].map(&:relative_url)).to eq(
+        ["/tag/fiction-books/#{tag2.id}", "/tag/great-books/#{tag1.id}"],
+      )
 
       category2 = Fabricate(:category, name: "Great Books", slug: "great-books")
       result = service.lookup(%w[the-book-club great-books fiction-books], %w[category tag])
@@ -393,21 +399,27 @@ RSpec.describe HashtagAutocompleteService do
         ["/c/great-books/#{category2.id}", "/c/the-book-club/#{category1.id}"],
       )
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books])
-      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/fiction-books])
+      expect(result[:tag].map(&:relative_url)).to eq(["/tag/fiction-books/#{tag2.id}"])
 
       category1.destroy!
-      Fabricate(:tag, name: "the-book-club")
+      book_club_tag = Fabricate(:tag, name: "the-book-club")
       result = service.lookup(%w[the-book-club great-books fiction-books], %w[category tag])
       expect(result[:category].map(&:slug)).to eq(["great-books"])
       expect(result[:category].map(&:relative_url)).to eq(["/c/great-books/#{category2.id}"])
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books the-book-club])
-      expect(result[:tag].map(&:relative_url)).to eq(%w[/tag/fiction-books /tag/the-book-club])
+      expect(result[:tag].map(&:relative_url)).to eq(
+        ["/tag/fiction-books/#{tag2.id}", "/tag/the-book-club/#{book_club_tag.id}"],
+      )
 
       result = service.lookup(%w[the-book-club great-books fiction-books], %w[tag category])
       expect(result[:category]).to eq([])
       expect(result[:tag].map(&:slug)).to eq(%w[fiction-books great-books the-book-club])
       expect(result[:tag].map(&:relative_url)).to eq(
-        %w[/tag/fiction-books /tag/great-books /tag/the-book-club],
+        [
+          "/tag/fiction-books/#{tag2.id}",
+          "/tag/great-books/#{tag1.id}",
+          "/tag/the-book-club/#{book_club_tag.id}",
+        ],
       )
     end
 

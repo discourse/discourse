@@ -46,6 +46,13 @@ he:
           many: "%{formatted_number} הודעות צ׳אט"
           other: "%{formatted_number} הודעות צ׳אט"
     chat:
+      edit_category:
+        tab_title: "צ׳אט"
+        channel: "ערוץ"
+        description: "תיאור"
+        actions: "פעולות"
+        settings: "הגדרות"
+        no_channels: "אין ערוצי צ׳אט המשויכים לקטגוריה הזאת"
       text_copied: טקסט הועתק ללוח הגזירים
       link_copied: קישור הועתק ללוח הגזירים
       back_to_forum: "פורום"
@@ -87,6 +94,7 @@ he:
         join_channel: "הצטרפות לערוץ"
         leave_channel: "יציאה מהערוץ"
         leave_groupchat_info: "יציאה מהצ׳אט הקבוצתי הזה תשלול את הגישה שלך אליו ולא תאפשר לך לקבל התראות שקשורות אליו. כדי להצטרף מחדש צריכה להישלח אליך הזמנה מאחד מהחברים בצ׳אט הקבוצתי הזה."
+        notification_settings_context: "התראות"
         join: "הצטרפות"
         leave: "עזוב"
         save_label:
@@ -630,17 +638,11 @@ he:
           other: "%{commaSeparatedUsernames} ועוד %{count} נוספים מקלידים"
       retention_reminders:
         indefinitely_short: "ללא הגבלת זמן"
-        indefinitely_long: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ לעד."
         short:
           one: "יום"
           two: "יומיים"
           many: "%{count} יום"
           other: "%{count} ימים"
-        long:
-          one: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך יום."
-          two: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך יומיים."
-          many: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך %{count} יום."
-          other: "הגדרות הצ׳אט שלך כוונו לשמור על הודעות הערוץ למשך %{count} ימים."
       flags:
         off_topic: "הודעה זו לא תואמת לדיון הנוכחי כפי שהוגדר בכותרת הערוץ וכנראה שצריך להעביר אותה."
         inappropriate: "הודעה זו מכילה תוכן שאדם מן השורה עשוי להחשיב כפוגעני, נצלני או מפר את <a href=\"%{basePath}/guidelines\">הכללים המנחים את הקהילה שלנו</a>."

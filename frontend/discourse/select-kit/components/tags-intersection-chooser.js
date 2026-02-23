@@ -23,7 +23,8 @@ export default class TagsIntersectionChooser extends MiniTagChooser {
 
   @action
   onChange(tags) {
-    const mainTagName = this.mainTag?.name ?? this.mainTag;
+    const mainTag = this.mainTag;
+    const mainTagName = mainTag?.name;
     const tagNames = tags.map((t) => t.name ?? t);
 
     if (mainTagName && tagNames.includes(mainTagName)) {
@@ -33,6 +34,9 @@ export default class TagsIntersectionChooser extends MiniTagChooser {
         DiscourseURL.routeTo(
           `/tags/intersection/${mainTagName}/${remainingTags.join("/")}`
         );
+      } else if (mainTag.id) {
+        const slug = mainTag.slug || `${mainTag.id}-tag`;
+        DiscourseURL.routeTo(`/tag/${slug}/${mainTag.id}`);
       } else {
         DiscourseURL.routeTo(`/tag/${mainTagName}`);
       }

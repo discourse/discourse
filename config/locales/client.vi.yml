@@ -382,6 +382,9 @@ vi:
       title: "Chủ đề Mới & Chưa đọc"
       pill: "Đề xuất"
       pm_title: "Tin nhắn gợi ý"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Sao chép link"
     about:
       edit: "Sửa trang này"
       simple_title: "Giới thiệu"
@@ -3215,6 +3218,8 @@ vi:
         notify: "Thông báo cho người dùng về thay đổi này."
         performing: "Đang thực hiện các thao tác hàng loạt, vui lòng chờ…"
         completed: "Các thao tác xử lý hàng loạt đã hoàn tất!"
+        error_topic_count:
+          other: "%{count} chủ đề"
       none:
         unread: "Bạn không có chủ đề nào chưa đọc."
         unseen: "Bạn không có chủ đề nào chưa nhìn thấy."
@@ -3992,7 +3997,6 @@ vi:
       edit_dialog_title: "Chỉnh sửa: %{categoryName}"
       view: "Xem Chủ đề trong Chuyên mục"
       back: "Quay lại chuyên mục"
-      single_page: "Trang đơn"
       general: "Chung"
       settings: "Cấu hình"
       advanced: "Nâng cao"
@@ -4081,11 +4085,9 @@ vi:
         reply: "Trả lời"
         create: "Tạo"
         no_groups_selected: "Không có nhóm nào được cấp quyền truy cập; chuyên mục này sẽ chỉ hiển thị cho BQT."
-        everyone_full_access: 'Chuyên mục này là công khai, mọi người đều có thể xem, trả lời và tạo tút Để hạn chế quyền, hãy xóa một hoặc nhiều quyền được cấp cho nhóm "mọi người".'
         specific_groups_have_access: "Chuyên mục này là riêng tư, chỉ các nhóm được chọn mới có thể xem, trả lời và tạo tút."
         toggle_reply: "Chuyển đổi quyền Trả lời"
         toggle_full: "Chuyển đổi quyền Tạo"
-        inherited: 'Sự cho phép này được thừa hưởng từ “tất cả mọi người”'
       uncategorized_security_warning: "Chuyên mục này là đặc biệt. Nó được thiết kế như một khu vực tổ chức cho các chủ đề không có chuyên mục; nó không thể có cài đặt bảo mật."
       uncategorized_general_warning: 'Chuyên mục này là đặc biệt. Nó được sử dụng làm chuyên mục mặc định cho các chủ đề mới chưa chọn chuyên mục. Nếu bạn muốn ngăn hành vi này và buộc lựa chọn chuyên mục, <a href="%{settingLink}">vui lòng tắt cài đặt tại đây</a>. Nếu bạn muốn thay đổi tên hoặc mô tả, hãy chuyển đến <a href="%{customizeLink}">Tùy chỉnh / Nội dung Văn bản</a>.'
       pending_permission_change_alert: "Bạn chưa thêm %{group} vào chuyên mục này; nhấn vào nút này để thêm chúng."
@@ -5684,7 +5686,7 @@ vi:
         new_features:
           title: "Có gì mới?"
           subtitle: "Chúng tôi liên tục phát hành các tính năng và cải tiến mới. Trang này nêu bật những điểm chính, nhưng bạn có thể nhấn vào 'Tìm hiểu thêm' để xem ghi chú phát hành chi tiết."
-          no_new_features_found: "Đã xảy ra lỗi khi tải nguồn cấp dữ liệu. Bạn có thể xem các thông báo tính năng mới trước đó trên <a href='%{url}' target='_blank'>cộng đồng Discourse Meta</a>."
+          no_new_features_error: "Đã xảy ra lỗi khi tải nguồn cấp dữ liệu. Bạn có thể xem các thông báo tính năng mới trước đó trên <a href='%{url}' target='_blank'>cộng đồng Discourse Meta</a>."
           learn_more: "Tìm hiểu thêm..."
           experimental: "Thí nghiệm"
           only_experiments: "Chỉ hiển thị các tính năng thử nghiệm"
@@ -5880,6 +5882,7 @@ vi:
         save: "Lưu lại"
         cancel: "Hủy"
         continue: "Tiếp tục"
+        copy_key: "Sao chép"
         back: "Quay lại khóa API"
         revoke: "Thu hồi"
         undo_revoke: "Thu hồi lệnh hủy bỏ"

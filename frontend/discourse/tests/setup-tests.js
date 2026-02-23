@@ -35,7 +35,6 @@ import { setupDeprecationCounter } from "discourse/tests/helpers/deprecation-cou
 import { clearState as clearPresenceState } from "discourse/tests/helpers/presence-pretender";
 import {
   applyPretender,
-  exists,
   resetSite,
   testCleanup,
   testsInitialized,
@@ -44,7 +43,6 @@ import {
 import { configureRaiseOnDeprecation } from "discourse/tests/helpers/raise-on-deprecation";
 import { resetSettings } from "discourse/tests/helpers/site-settings";
 import { disableCloaking } from "discourse/modifiers/post-stream-viewport-tracker";
-import deprecated from "discourse/lib/deprecated";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { buildResolver } from "discourse/resolver";
@@ -116,13 +114,6 @@ function setupToolbar() {
       ].includes(c.id)
   );
 
-  const pluginNames = new Set();
-
-  document
-    .querySelector("#dynamic-test-js")
-    ?.content.querySelectorAll("script[data-discourse-plugin]")
-    .forEach((script) => pluginNames.add(script.dataset.discoursePlugin));
-
   QUnit.config.urlConfig.push({
     id: "loop",
     label: "Loop until failure",
@@ -138,7 +129,7 @@ function setupToolbar() {
       "all",
       "theme-qunit",
       "-----",
-      ...Array.from(pluginNames),
+      ...(window._discourseQunitPluginNames || []),
     ],
   });
 
@@ -250,20 +241,6 @@ export default function setupTests(config) {
   } else {
     window.Logster = { enabled: false };
   }
-
-  Object.defineProperty(window, "exists", {
-    get() {
-      deprecated(
-        "Accessing the global function `exists` is deprecated. Import it instead.",
-        {
-          since: "2.6.0.beta.4",
-          dropFrom: "2.6.0",
-          id: "discourse.qunit.global-exists",
-        }
-      );
-      return exists;
-    },
-  });
 
   let setupData;
   const setupDataElement = document.getElementById("data-discourse-setup");

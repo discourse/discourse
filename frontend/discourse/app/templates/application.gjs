@@ -1,6 +1,7 @@
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import A11yLiveRegions from "discourse/components/a11y/live-regions";
 import A11ySkipLinks from "discourse/components/a11y/skip-links";
+import AdminOnboardingBanner from "discourse/components/admin-onboarding/banner";
 import CardContainer from "discourse/components/card-container";
 import ComposerContainer from "discourse/components/composer-container";
 import CustomHtml from "discourse/components/custom-html";
@@ -96,40 +97,48 @@ export default <template>
       <PluginOutlet @name="before-main-outlet" />
 
       <div id="main-outlet">
-        <PluginOutlet @name="above-main-container" @connectorTagName="div" />
+        {{#unless @controller.shouldHideScrollableContentAbove}}
+          <PluginOutlet @name="above-main-container" @connectorTagName="div" />
 
-        {{#if
-          (eq
-            @controller.siteSettings.welcome_banner_location
-            "above_topic_content"
-          )
-        }}
-          <WelcomeBanner />
-        {{/if}}
-
-        <div class="container" id="main-container">
-          {{#if @controller.showTop}}
-            <CustomHtml @name="top" />
+          {{#if @controller.siteSettings.enable_site_owner_onboarding}}
+            <AdminOnboardingBanner />
           {{/if}}
-          <NotificationConsentBanner />
-          <PwaInstallBanner />
-          <GlobalNotice />
-          <PluginOutlet
-            @name="top-notices"
-            @connectorTagName="div"
-            @outletArgs={{lazyHash
-              currentPath=@controller.router._router.currentPath
-            }}
-          />
-        </div>
+
+          {{#if
+            (eq
+              @controller.siteSettings.welcome_banner_location
+              "above_topic_content"
+            )
+          }}
+            <WelcomeBanner />
+          {{/if}}
+
+          <div class="container" id="main-container">
+            {{#if @controller.showTop}}
+              <CustomHtml @name="top" />
+            {{/if}}
+            <NotificationConsentBanner />
+            <PwaInstallBanner />
+            <GlobalNotice />
+            <PluginOutlet
+              @name="top-notices"
+              @connectorTagName="div"
+              @outletArgs={{lazyHash
+                currentPath=@controller.router._router.currentPath
+              }}
+            />
+          </div>
+        {{/unless}}
 
         {{outlet}}
 
+        {{#unless @controller.shouldHideScrollableContentBelow}}
+          <PluginOutlet
+            @name="main-outlet-bottom"
+            @outletArgs={{lazyHash showFooter=@controller.showFooter}}
+          />
+        {{/unless}}
         <CardContainer />
-        <PluginOutlet
-          @name="main-outlet-bottom"
-          @outletArgs={{lazyHash showFooter=@controller.showFooter}}
-        />
       </div>
 
       <PluginOutlet @name="after-main-outlet" />

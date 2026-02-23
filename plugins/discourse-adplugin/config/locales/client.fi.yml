@@ -26,8 +26,9 @@ fi:
           new_name: "Uusi oma mainos"
           save: "Tallenna"
           delete: "Poista"
-          description: "Määritä omat mainoksesi ja missä ne tulisi näyttää."
-          get_started: "Aloita luomalla uusi mainos."
+          html: "HTML"
+          categories: "Kategoriat"
+          groups: "Ryhmät"
           filter_placeholder: "Valitse mainokset..."
           more_settings: "Lisää asetuksia"
           show_to_anons: "Näytä anonyymeille käyttäjille"
@@ -35,6 +36,11 @@ fi:
           category_chooser_description: "Valitse alueet, joissa tämä mainos näytetään, tai jätä tyhjäksi, jos haluat näyttää mainoksen kaikkialla. \"No_ads_for_categories\"-sivustoasetuksella on etusija tähän asetukseen nähden."
           group_chooser_description: "Valitse ryhmät, jotka voivat nähdä tämän mainoksen, tai jätä tyhjäksi, jos haluat näyttää mainoksen kaikille kirjautuneille käyttäjille."
           preview: "Esikatselu"
+          back: "Omat mainokset"
+          name: "Nimi"
+          edit: "Muokkaa"
+          tabs:
+            settings: "Asetukset"
           topic_list_top:
             title: "Ketjuluettelon ylämainokset"
             description: "Mainokset, jotka näytetään aiheluettelosivun yläreunassa."

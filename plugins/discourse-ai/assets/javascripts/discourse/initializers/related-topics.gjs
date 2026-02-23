@@ -15,7 +15,7 @@ const RelatedTopics = <template>
       {{icon "discourse-sparkles"}}{{i18n "discourse_ai.related_topics.title"}}
     </h3>
     <div class="topics">
-      <BasicTopicList @topics={{@topic.relatedTopics}} />
+      <BasicTopicList @topics={{@topic.relatedTopics}} @listContext="related" />
     </div>
   </div>
 </template>;

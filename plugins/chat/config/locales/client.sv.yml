@@ -40,6 +40,12 @@ sv:
       chat_channels_count: "Chattkanaler"
       chat_users_count: "Chattanvändare"
     chat:
+      edit_category:
+        tab_title: "Chatt"
+        channel: "Kanal"
+        description: "Beskrivning"
+        actions: "Åtgärder"
+        settings: "Inställningar"
       text_copied: Texten har kopierats till urklipp
       link_copied: Länken har kopierats till urklipp
       back_to_forum: "Forum"
@@ -73,6 +79,7 @@ sv:
         join_channel: "Gå med i kanal"
         leave_channel: "Lämna kanal"
         leave_groupchat_info: "Genom att lämna den här gruppchatten har du inte längre tillgång till den och kommer inte att få aviseringar relaterade till den. För att gå med igen måste du bjudas in igen av en medlem av gruppchatten."
+        notification_settings_context: "Aviseringar"
         join: "Gå med"
         leave: "Lämna"
         save_label:
@@ -548,13 +555,9 @@ sv:
           other: "%{commaSeparatedUsernames} och %{count} andra skriver"
       retention_reminders:
         indefinitely_short: "på obestämd tid"
-        indefinitely_long: "Chattinställningarna har ställts in för att behålla kanalmeddelanden på obestämd tid."
         short:
           one: "%{count} dag"
           other: "%{count} dagar"
-        long:
-          one: "Chattinställningarna har ställts in för att behålla kanalmeddelanden i %{count} dag."
-          other: "Chattinställningarna har ställts in för att behålla kanalmeddelanden i %{count} dagar."
       flags:
         off_topic: "Det här meddelandet är inte relevant för den aktuella diskussionen enligt kanaltiteln och bör förmodligen flyttas någon annanstans."
         inappropriate: "Detta meddelande innehåller saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href=\"%{basePath}/guidelines\">vårt forums riktlinjer</a>."

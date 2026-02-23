@@ -128,6 +128,52 @@ acceptance(`House Ads`, function (needs) {
   });
 });
 
+acceptance(`House Ads | Route Filtering | Display Ad`, function (needs) {
+  needs.user();
+  needs.settings({
+    no_ads_for_categories: "",
+    ad_plugin_routes_enabled: true,
+  });
+  needs.site({
+    house_creatives: {
+      settings: {
+        topic_list_top: "Route Scoped Ad",
+      },
+      creatives: {
+        "Route Scoped Ad": {
+          html: "<div class='h-route-ad'>ROUTE AD</div>",
+          category_ids: [],
+          routes: ["discovery.latest"],
+        },
+      },
+    },
+  });
+
+  test("displays ad when current route matches ad routes", async function (assert) {
+    updateCurrentUser({
+      staff: false,
+      trust_level: 1,
+      show_to_groups: true,
+    });
+    await visit("/latest");
+    assert
+      .dom(".h-route-ad")
+      .exists("ad is displayed because current route matches ad routes");
+  });
+
+  test("hides ad when current route does not match ad routes", async function (assert) {
+    updateCurrentUser({
+      staff: false,
+      trust_level: 1,
+      show_to_groups: true,
+    });
+    await visit("/top");
+    assert
+      .dom(".h-route-ad")
+      .doesNotExist("ad is hidden because current route does not match");
+  });
+});
+
 acceptance(
   `House Ads | Category and Group Permissions | Authenticated | Display Ad`,
   function (needs) {

@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 el:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Υποσημειώσεις Discourse"
+  js:
+    footnote:
+      title: "Υποσημειώσεις"
+      add: "Προσθήκη υποσημείωσης"

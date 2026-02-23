@@ -12,6 +12,11 @@ nb_NO:
           always: "Alltid"
           never: "Aldri"
     chat:
+      edit_category:
+        channel: "Kanal"
+        description: "Beskrivelse"
+        actions: "Handlinger"
+        settings: "Innstillinger"
       deleted_chat_username: slettet
       dates:
         yesterday: "I går"
@@ -20,6 +25,7 @@ nb_NO:
       channel_settings:
         edit: "Endre"
         add: "Legg til"
+        notification_settings_context: "Varsler"
         join: "Bli medlem"
         leave: "Forlat"
       close: "Lukk"

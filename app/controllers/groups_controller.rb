@@ -12,6 +12,11 @@ class GroupsController < ApplicationController
                    search
                    new
                    test_email_settings
+                   add_members
+                   add_owners
+                   remove_member
+                   handle_membership_request
+                   edit
                  ]
 
   skip_before_action :preload_json, :check_xhr, only: %i[posts_feed mentions_feed]
@@ -329,7 +334,7 @@ class GroupsController < ApplicationController
     elsif include_custom_fields && params[:order] == "custom_field" &&
           allowed_fields.include?(params[:order_field])
       order =
-        "(SELECT value FROM user_custom_fields ucf WHERE ucf.user_id = users.id AND ucf.name = '#{params[:order_field]}') #{dir} NULLS LAST"
+        "(SELECT value FROM user_custom_fields ucf WHERE ucf.user_id = users.id AND ucf.name = #{ActiveRecord::Base.connection.quote(params[:order_field])}) #{dir} NULLS LAST"
     end
 
     users = group.users.human_users

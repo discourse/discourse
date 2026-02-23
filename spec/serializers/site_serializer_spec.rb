@@ -188,11 +188,17 @@ RSpec.describe SiteSerializer do
 
       expect(serialized[:anonymous_default_navigation_menu_tags]).to eq(
         [
-          { id: tag.id, name: "dev", slug: "dev", description: "some description", pm_only: false },
+          {
+            id: tag.id,
+            name: "dev",
+            slug: tag.slug,
+            description: "some description",
+            pm_only: false,
+          },
           {
             id: tag2.id,
             name: "random",
-            slug: "random",
+            slug: tag2.slug,
             description: tag2.description,
             pm_only: false,
           },
@@ -353,22 +359,22 @@ RSpec.describe SiteSerializer do
           {
             id: tag3.id,
             name: tag3.name,
-            slug: tag3.slug,
-            description: tag2.description,
+            slug: tag3.slug_for_url,
+            description: tag3.description,
             pm_only: false,
           },
           {
             id: tag1.id,
             name: tag1.name,
-            slug: tag1.slug,
+            slug: tag1.slug_for_url,
             description: tag1.description,
             pm_only: false,
           },
           {
             id: tag2.id,
             name: tag2.name,
-            slug: tag2.slug,
-            description: tag3.description,
+            slug: tag2.slug_for_url,
+            description: tag2.description,
             pm_only: false,
           },
         ],
@@ -381,6 +387,19 @@ RSpec.describe SiteSerializer do
       serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
 
       expect(serialized[:navigation_menu_site_top_tags]).to eq(nil)
+    end
+
+    it "should use slug_for_url for tags with empty slugs" do
+      numeric_tag =
+        Fabricate(:tag, name: "1").tap { |tag| Fabricate.times(10, :topic, tags: [tag]) }
+
+      expect(numeric_tag.slug).to eq("")
+
+      serialized = described_class.new(Site.new(guardian), scope: guardian, root: false).as_json
+      numeric_entry =
+        serialized[:navigation_menu_site_top_tags].find { |t| t[:id] == numeric_tag.id }
+
+      expect(numeric_entry[:slug]).to eq("#{numeric_tag.id}-tag")
     end
 
     it "should return an empty array if site has no top tags" do

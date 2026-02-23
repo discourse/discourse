@@ -141,7 +141,7 @@ acceptance("Search - Full Page", function (needs) {
     await visit("/search");
     await fillIn(".search-query", "@<script>prompt(1337)</script>gmail.com");
 
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
 
     assert.strictEqual(
       selectKit("#search-posted-by").header().label(),
@@ -155,6 +155,7 @@ acceptance("Search - Full Page", function (needs) {
     );
 
     await visit("/search");
+    await click(".advanced-filters__toggle");
 
     await fillIn(".search-query", "none");
 
@@ -162,7 +163,6 @@ acceptance("Search - Full Page", function (needs) {
     await categoryChooser.fillInFilter("faq");
     await categoryChooser.selectRowByValue(4);
 
-    await click(".advanced-filters > summary");
     assert.strictEqual(
       selectKit("#search-in-category").header().label(),
       "faq"
@@ -179,6 +179,7 @@ acceptance("Search - Full Page", function (needs) {
     );
 
     await visit("/search");
+    await click(".advanced-filters__toggle");
 
     await fillIn(".search-query", "none");
 
@@ -186,7 +187,6 @@ acceptance("Search - Full Page", function (needs) {
     await categoryChooser.fillInFilter("快乐的");
     await categoryChooser.selectRowByValue(240);
 
-    await click(".advanced-filters > summary");
     assert.strictEqual(
       selectKit("#search-in-category").header().label(),
       "快乐的"
@@ -204,7 +204,7 @@ acceptance("Search - Full Page", function (needs) {
     const inSelector = selectKit(IN_OPTIONS_SELECTOR);
 
     await visit("/search");
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await fillIn(".search-query", "none");
     await inSelector.expand();
     await inSelector.selectRowByValue("title");
@@ -231,7 +231,7 @@ acceptance("Search - Full Page", function (needs) {
     const inSelector = selectKit(IN_OPTIONS_SELECTOR);
 
     await visit("/search");
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await fillIn(".search-query", "none");
     await inSelector.expand();
     await inSelector.selectRowByValue("likes");
@@ -250,7 +250,7 @@ acceptance("Search - Full Page", function (needs) {
     const inSelector = selectKit(IN_OPTIONS_SELECTOR);
 
     await visit("/search");
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await fillIn(".search-query", "none");
     await inSelector.expand();
     await inSelector.selectRowByValue("messages");
@@ -281,7 +281,7 @@ acceptance("Search - Full Page", function (needs) {
     const inSelector = selectKit(IN_OPTIONS_SELECTOR);
 
     await visit("/search");
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await fillIn(".search-query", "none");
     await inSelector.expand();
     await inSelector.selectRowByValue("seen");
@@ -310,7 +310,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await visit("/search");
 
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await fillIn(".search-query", "none");
     await inSelector.expand();
     await inSelector.selectRowByValue("bookmarks");
@@ -363,7 +363,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await visit("/search");
 
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await fillIn(".search-query", "none");
     await statusSelector.expand();
     await statusSelector.selectRowByValue("closed");
@@ -388,7 +388,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await visit("/search");
 
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await fillIn(".search-query", "status:none");
 
     assert.strictEqual(
@@ -403,7 +403,7 @@ acceptance("Search - Full Page", function (needs) {
 
     await visit("/search");
 
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await fillIn(".search-query", "in:none");
 
     assert.strictEqual(
@@ -424,7 +424,7 @@ acceptance("Search - Full Page", function (needs) {
       );
 
     await visit("/search");
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
 
     await fillIn(".search-query", "none");
     await selectDate(".date-picker#search-post-date", "2016-10-05");
@@ -451,13 +451,11 @@ acceptance("Search - Full Page", function (needs) {
 
   test("update min post count through advanced search UI", async function (assert) {
     await visit("/search");
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await fillIn(".search-query", "none");
     await fillIn("#search-min-post-count", "5");
 
-    assert
-      .dom(".search-advanced-additional-options #search-min-post-count")
-      .hasValue("5", 'has "5" populated');
+    assert.dom("#search-min-post-count").hasValue("5", 'has "5" populated');
     assert
       .dom(".search-query")
       .hasValue(
@@ -468,13 +466,11 @@ acceptance("Search - Full Page", function (needs) {
 
   test("update max post count through advanced search UI", async function (assert) {
     await visit("/search");
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await fillIn(".search-query", "none");
     await fillIn("#search-max-post-count", "5");
 
-    assert
-      .dom(".search-advanced-additional-options #search-max-post-count")
-      .hasValue("5", 'has "5" populated');
+    assert.dom("#search-max-post-count").hasValue("5", 'has "5" populated');
     assert
       .dom(".search-query")
       .hasValue(
@@ -531,7 +527,7 @@ acceptance("Search - Full Page", function (needs) {
     await fillIn(".search-query", "admin");
     assert.dom(".fps-user-item").doesNotExist("has no user results");
 
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await typeSelector.expand();
     await typeSelector.selectRowByValue(SEARCH_TYPE_USERS);
 
@@ -558,7 +554,7 @@ acceptance("Search - Full Page", function (needs) {
 
     assert.dom(".fps-tag-item").doesNotExist("has no category/tag results");
 
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     await typeSelector.expand();
     await typeSelector.selectRowByValue(SEARCH_TYPE_CATS_TAGS);
     await click(".search-cta");
@@ -588,16 +584,16 @@ acceptance("Search - Full Page", function (needs) {
     await click(".search-cta");
 
     assert
-      .dom(".advanced-filters[open]")
+      .dom(".advanced-filters.--is-expanded")
       .doesNotExist("launching a search collapses advanced filters");
 
     await visit("/search");
 
     assert
-      .dom(".advanced-filters[open]")
+      .dom(".advanced-filters.--is-expanded")
       .doesNotExist("filters are collapsed when query param is not present");
 
-    await click(".advanced-filters > summary");
+    await click(".advanced-filters__toggle");
     assert
       .dom(".search-advanced-options")
       .isVisible("clicking on element expands filters");

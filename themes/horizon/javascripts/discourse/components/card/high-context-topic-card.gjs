@@ -20,6 +20,7 @@ import topicFeaturedLink from "discourse/helpers/topic-featured-link";
 import { shortDateNoYear } from "discourse/lib/formatter";
 import { or } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
+import { getTopicStatusBadge } from "../../lib/topic-status-badge";
 
 export default class HighContextTopicCard extends Component {
   @service capabilities;
@@ -69,7 +70,7 @@ export default class HighContextTopicCard extends Component {
   }
 
   get hasReplies() {
-    return this.args.topic.posts_count > 1;
+    return this.args.topic.replyCount > 0;
   }
 
   get hasLikes() {
@@ -93,21 +94,7 @@ export default class HighContextTopicCard extends Component {
   }
 
   get statusBadge() {
-    if (this.args.topic.is_hot) {
-      return {
-        icon: "fire",
-        text: "topic_statuses.hot.title",
-        className: "--hot",
-      };
-    }
-    if (this.args.topic.pinned || this.args.topic.pinned_globally) {
-      return {
-        icon: "thumbtack",
-        text: "topic_statuses.pinned.title",
-        className: "--pinned",
-      };
-    }
-    return null;
+    return getTopicStatusBadge(this.args.topic);
   }
 
   get topicCreator() {
@@ -136,8 +123,16 @@ export default class HighContextTopicCard extends Component {
   }
 
   <template>
+    {{#if @bulkSelectEnabled}}
+      <BulkSelectCheckbox
+        @topic={{@topic}}
+        @isSelected={{@isSelected}}
+        @onToggle={{@onBulkSelectToggle}}
+        class="hc-topic-card__bulk-select"
+      />
+    {{/if}}
+
     <td class="hc-topic-card">
-      {{! ROW 1: Creator info + Category + Status }}
       <div class="hc-topic-card__header">
         <div class="hc-topic-card__op">
           <div class="hc-topic-card__avatar">
@@ -185,17 +180,8 @@ export default class HighContextTopicCard extends Component {
         </div>
       </div>
 
-      {{! ROW 2: Title + Excerpt }}
       <div class="hc-topic-card__content">
         <div class="hc-topic-card__title">
-          {{#if @bulkSelectEnabled}}
-            <BulkSelectCheckbox
-              @topic={{@topic}}
-              @isSelected={{@isSelected}}
-              @onToggle={{@onBulkSelectToggle}}
-              class="hc-topic-card__bulk-select"
-            />
-          {{/if}}
           <TopicStatus @topic={{@topic}} @context="topic-list" />
           <TopicLink
             {{on "focus" this.onTitleFocus}}
@@ -218,8 +204,6 @@ export default class HighContextTopicCard extends Component {
           <TopicExcerpt @topic={{@topic}} class="hc-topic-card__excerpt" />
         {{/if}}
       </div>
-
-      {{! ROW 3: Last Reply + Assigned }}
 
       {{#if (or this.hasReplies this.hasAssigned)}}
         <div class="hc-topic-card__context">
@@ -259,7 +243,6 @@ export default class HighContextTopicCard extends Component {
         </div>
       {{/if}}
 
-      {{! ROW 4: Stats + Last Reply }}
       <div class="hc-topic-card__footer">
         <div class="hc-topic-card__category-tags">
           {{#unless @hideCategory}}

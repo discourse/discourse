@@ -342,6 +342,10 @@ lt:
       title: "Naujos ir neskaitytos temos"
       pill: "Siūloma"
       pm_title: "Rekomenduojamos žinutės"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Nukopijuoti nuorodą"
+        copied_to_clipboard: "Nuoroda nukopijuota į iškarpinę!"
     about:
       edit: "Redaguoti šį puslapį"
       simple_title: "Apie"
@@ -2778,6 +2782,11 @@ lt:
           few: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
           many: "Visos žymės bus pašalintos iš %{count} temų. Ar esate tikras?"
           other: "Visos žymės bus pašalintos iš <b>%{count}</b> temų. Ar esate tikras?"
+        error_topic_count:
+          one: "%{count} tema"
+          few: "%{count} temos"
+          many: "%{count}temų"
+          other: "%{count}temos"
       none:
         unread: "Jūs neturite neperskaitytų temų."
         unseen: "Jūs neturite nematytų temų."
@@ -3434,7 +3443,6 @@ lt:
         reply: "Atsakyti"
         create: "Sukurti"
         no_groups_selected: "Prieiga nebuvo suteikta jokiai grupei; šią kategoriją matys tik darbuotojai."
-        everyone_full_access: 'Ši kategorija yra vieša, visi gali matyti, atsakyti ir kurti įrašus. Jei norite apriboti leidimus, pašalinkite vieną ar kelis grupei „visi“ suteiktus leidimus.'
         toggle_reply: "Perjungti atsakymo leidimą"
       uncategorized_security_warning: "Ši kategorija yra ypatinga. Jis skirta temoms, kurios neturi kategorijos, laikyti; ji negali turėti saugos nustatymų."
       pending_permission_change_alert: "Jūs nepridėjote %{group} į šią kategoriją; spustelėkite šį mygtuką, norėdami juos pridėti."
@@ -4430,6 +4438,7 @@ lt:
         save: "Išsaugoti"
         cancel: "Atšaukti"
         continue: "Tęsti"
+        copy_key: "Kopijuoti"
         revoke: "Pašalinti"
         revoked: "Atšauktas"
       api:

@@ -38,6 +38,8 @@ hu:
             canned_reply:
               label: "Válasz"
     discourse_ai:
+      llm_selector:
+        none: "Egyik sem"
       features:
         back: "Vissza"
         disabled: "(kikapcsolva)"
@@ -134,6 +136,15 @@ hu:
         delete: "Törlés"
         test_modal:
           run: "Teszt futtatása"
+      secrets:
+        short_title: "Hitelesítő adatok"
+        name: "Név"
+        secret: "Érték"
+        back: "Vissza"
+        save: "Mentés"
+        edit: "Szerkesztés"
+        delete: "Törlés"
+        embedding: "Beágyazás"
       llms:
         display_name: "Név"
         provider: "Szolgáltató"

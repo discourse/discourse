@@ -186,7 +186,11 @@ export default class SearchMenu extends Component {
 
   @action
   openAdvancedSearch() {
-    this.fullSearch();
+    this.loading = false;
+    const url = this.fullSearchUrl({ expanded: true });
+    if (url) {
+      DiscourseURL.routeTo(url);
+    }
     this.close();
   }
 

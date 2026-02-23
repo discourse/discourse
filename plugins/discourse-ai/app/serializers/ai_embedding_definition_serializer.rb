@@ -11,6 +11,7 @@ class AiEmbeddingDefinitionSerializer < ApplicationSerializer
              :provider,
              :url,
              :api_key,
+             :ai_secret_id,
              :seeded,
              :tokenizer_class,
              :embed_prompt,

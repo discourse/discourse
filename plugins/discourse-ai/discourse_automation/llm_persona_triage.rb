@@ -5,7 +5,7 @@ if defined?(DiscourseAutomation)
     version 1
     run_in_background
 
-    triggerables %i[post_created_edited]
+    triggerables %i[post_created_edited stalled_topic]
 
     field :persona,
           component: :choices,
@@ -18,7 +18,9 @@ if defined?(DiscourseAutomation)
 
     script do |context, fields|
       post = context["post"]
-      next if post&.user&.bot?
+      post ||= context["topic"]&.posts&.find_by(post_number: 1)
+      next if post.blank?
+      next if post.user&.bot?
 
       persona_id = fields.dig("persona", "value")
       whisper = !!fields.dig("whisper", "value")

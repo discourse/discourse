@@ -484,7 +484,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         expected_message =
           I18n.t(
             "discourse_ai.llm_credit_allocation.limit_exceeded_user",
-            reset_time: allocation.relative_reset_time,
+            reset_time: allocation.formatted_reset_time,
           ).gsub(%r{<a\s+href=['"]([^'"]+)['"][^>]*>([^<]+)</a>}i, '[\2](\1)')
         expect(last_message.message).to eq(expected_message)
         expect(last_message.user_id).to eq(persona.user_id)
@@ -538,7 +538,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
         expected_message =
           I18n.t(
             "discourse_ai.llm_credit_allocation.limit_exceeded_admin",
-            reset_time: allocation.relative_reset_time,
+            reset_time: allocation.formatted_reset_time,
           ).gsub(%r{<a\s+href=['"]([^'"]+)['"][^>]*>([^<]+)</a>}i, '[\2](\1)')
         expect(last_message.message).to eq(expected_message)
         expect(last_message.user_id).to eq(persona.user_id)
@@ -1172,7 +1172,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expected_message =
         I18n.t(
           "discourse_ai.llm_credit_allocation.limit_exceeded_user",
-          reset_time: allocation.relative_reset_time,
+          reset_time: allocation.formatted_reset_time,
         )
       expect(last_post.raw).to include(expected_message)
       expect(last_post.user_id).to eq(bot_user.id)
@@ -1204,7 +1204,7 @@ RSpec.describe DiscourseAi::AiBot::Playground do
       expected_message =
         I18n.t(
           "discourse_ai.llm_credit_allocation.limit_exceeded_admin",
-          reset_time: allocation.relative_reset_time,
+          reset_time: allocation.formatted_reset_time,
         )
       expect(last_post.raw).to include(expected_message)
       expect(last_post.user_id).to eq(bot_user.id)

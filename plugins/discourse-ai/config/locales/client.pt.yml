@@ -69,6 +69,8 @@ pt:
       title: "IA"
       default_llm:
         title: "Modelo de LLM Predefinido"
+      llm_selector:
+        none: "Nenhuma"
       features:
         short_title: "Funcionalidades"
         back: "Voltar"
@@ -205,6 +207,15 @@ pt:
         parameter_required: "Necessário"
         edit: "Editar"
         delete: "Eliminar"
+      secrets:
+        short_title: "Credenciais"
+        name: "Nome"
+        secret: "Valor"
+        back: "Anterior"
+        save: "Guardar"
+        edit: "Editar"
+        delete: "Eliminar"
+        embedding: "Incorporação"
       llms:
         display_name: "Nome"
         provider: "Provedor"

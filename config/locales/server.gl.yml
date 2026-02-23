@@ -1519,7 +1519,6 @@ gl:
     num_flaggers_to_close_topic: "Número mínimo de denunciantes únicos necesario para pausar automaticamente un tema co fin de intervilo"
     num_hours_to_close_topic: "Número de horas que se pausa un tema co fin de intervilo."
     auto_respond_to_flag_actions: "Activar a resposta automática ao desfacer unha denuncia."
-    min_first_post_typing_time: "Período mínimo en milisegundos durante o cal un usuario debe escribir na súa primeira publicación; se non chega a este limiar, a publicación pasará automaticamente á cola de moderación. Estabelecer en 0 para desactivar (non recomendado)."
     auto_silence_fast_typers_max_trust_level: "Nivel máximo de confianza para silenciar automaticamente a quen escribe moi rápido"
     reviewable_claiming: "É necesario reclamar o contido revisable antes de poder actuar sobre el?"
     reviewable_default_topics: "Mostrar por defecto o contido revisable agrupado por tema"

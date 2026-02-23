@@ -16,6 +16,8 @@ bg:
           title: Време за четене
         chat_usage:
           messages: съобщения
+          author: Вие
+          author_others: "%{username}"
         invites:
           title: Покани
           invitee_posts: Създадени публикации

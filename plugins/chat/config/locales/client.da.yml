@@ -28,6 +28,12 @@ da:
             chat:
               create_message: "Opret en chatbesked i en angivet kanal."
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Kanal"
+        description: "Beskrivelse"
+        actions: "Handlinger"
+        settings: "Indstillinger"
       back_to_forum: "Forum"
       deleted_chat_username: slettet
       dates:
@@ -53,6 +59,7 @@ da:
         archive_channel: "Arkivér kanal"
         delete_channel: "Slet kanal"
         leave_channel: "Forlad kanal"
+        notification_settings_context: "Notifikationer"
         join: "Tilslut"
         leave: "Forlad"
       channel_archive:

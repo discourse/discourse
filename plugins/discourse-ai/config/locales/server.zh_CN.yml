@@ -96,6 +96,7 @@ zh_CN:
     ai_helper_enabled_features: "选择要在 AI 助手中启用的功能。"
     post_ai_helper_allowed_groups: "能够在帖子中访问 AI 助手功能的用户群组"
     ai_helper_post_illustrator_persona: "用于 AI 助手“帖子插图”功能的角色。注意：要使此功能生效，您还必须创建一个图像生成工具（Admin > Plugins > Discourse AI > Tools）。"
+    ai_helper_chat_thread_title_persona: "用于生成聊天主题标题的角色。"
     ai_embeddings_selected_model: "使用所选模型生成嵌入向量。"
     ai_embeddings_generate_for_pms: "为个人消息生成嵌入向量。"
     ai_embeddings_semantic_related_topics_enabled: "将语义搜索用于相关话题。"
@@ -424,6 +425,9 @@ zh_CN:
         discover:
           name: "发现"
           description: "发现功能中使用的默认 Persona（免费搜索）"
+        chat_thread_titler:
+          name: "聊天主题标题"
+          description: "自动生成聊天主题标题的默认角色"
       topic_not_found: "总结不可用，找不到话题！"
       summarizing: "正在总结话题"
       searching: "搜索：'%{query}'"
@@ -615,6 +619,7 @@ zh_CN:
         invalid_seeded_model: "您无法在此模型中使用此功能"
         invalid_persona_response_format: "所选角色必须具有带有布尔字段名称“spam”的回答格式"
         must_select_model: "必须先选择一个 LLM"
+        invalid_llm_id: "所选的LLM模型无效"
       endpoints:
         not_configured: "%{display_name}（未配置）"
         configuration_hint:
@@ -627,12 +632,18 @@ zh_CN:
     embeddings:
       delete_failed: "此模型目前正在使用中。请先更新 `ai embeddings selected model`。"
       cannot_edit_builtin: "您无法编辑内置模型。"
+      secret_required: "必须选择一种凭证。"
+      secret_not_found: "所选凭证不存在"
       configuration:
         disable_embeddings: "您必须先禁用 'ai embeddings enabled'。"
         choose_model: "首先设置 'ai embeddings selected model'。"
         model_test_failed: "我们无法使用此模型生成测试嵌入向量。请检查设置是否正确。"
+    secrets:
+      delete_failed_in_use: "此凭证目前正被一个或多个LLM或嵌入使用，无法删除。"
     llm_models:
       missing_provider_param: "%{param}不能为空"
+      secret_required: "必须选择一种凭证。"
+      secret_not_found: "所选凭证不存在"
       bedrock_invalid_url: "请填写所有字段以使用此模型。"
       bedrock_missing_auth: "AWS Bedrock 需要配置访问密钥 ID 或角色 ARN。"
     ai_staff_action_logger:

@@ -7,7 +7,7 @@ if defined?(DiscourseAutomation)
 
     placeholder :post
 
-    triggerables %i[post_created_edited]
+    triggerables %i[post_created_edited stalled_topic]
 
     # TODO move to triggerables
     field :include_personal_messages, component: :boolean
@@ -58,7 +58,9 @@ if defined?(DiscourseAutomation)
 
     script do |context, fields|
       post = context["post"]
-      next if post&.user&.bot?
+      post ||= context["topic"]&.posts&.find_by(post_number: 1)
+      next if post.blank?
+      next if post.user&.bot?
 
       if post.topic.private_message?
         include_personal_messages = fields.dig("include_personal_messages", "value")

@@ -44,6 +44,12 @@ fa_IR:
           one: "%{formatted_number} پیام چت"
           other: "%{formatted_number} پیام چت"
     chat:
+      edit_category:
+        tab_title: "گفتگو"
+        channel: "کانال"
+        description: "توضیح"
+        actions: "عملیات"
+        settings: "تنظیم"
       text_copied: متن در کلیپ بورد کپی شد
       link_copied: پیوند در کلیپ بورد کپی شد
       back_to_forum: "انجمن"
@@ -81,6 +87,7 @@ fa_IR:
         join_channel: "پیوستن به کانال"
         leave_channel: "ترک کانال"
         leave_groupchat_info: "با ترک این چت گروهی، دیگر به آن دسترسی نخواهید داشت و اعلان های مربوط به آن را دریافت نخواهید کرد. برای پیوستن مجدد، باید دوباره توسط یکی از اعضای چت گروهی دعوت شوید."
+        notification_settings_context: "اعلان‌ها"
         join: "عضو شدن"
         leave: "ترک کردن"
         save_label:

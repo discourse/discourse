@@ -592,6 +592,7 @@ export default class ChatRouteChannelInfoSettings extends Component {
                     leaveClass="btn-danger"
                     joinIcon="right-to-bracket"
                     leaveIcon="right-from-bracket"
+                    leaveDestructive=true
                   }}
                 />
               </:action>

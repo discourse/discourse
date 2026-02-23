@@ -176,6 +176,8 @@ fi:
       default_llm:
         title: "Oletusarvoinen LLM-malli"
         description: "Oletusarvoinen LLM-malli, jota käytetään kaikissa tekoälyominaisuuksissa. Tätä käytetään, jos LLM:ää ei ole määritetty ominaisuuden määrityksissä tai persoonassa. Jos oletusarvoista LLM:ää ei ole määritetty, viimeksi luotua LLM:ää käytetääb."
+      llm_selector:
+        none: "Ei valittu"
       features:
         short_title: "Ominaisuudet"
         description: "Nämä ovat sivustosi kävijöiden käytettävissä olevat tekoälyominaisuudet. Ne voidaan määrittää käyttämään tiettyjä persoonia ja LLM:iä, ja niiden käyttöoikeuksia voi hallita ryhmäkohtaisesti."
@@ -528,6 +530,15 @@ fi:
           title: "Testaa tekoälytyökalua"
           run: "Suorita testi"
           result: "Testin tulos"
+      secrets:
+        short_title: "Tunnistetiedot"
+        name: "Nimi"
+        secret: "Arvo"
+        back: "Takaisin"
+        save: "Tallenna"
+        edit: "Muokkaa"
+        delete: "Poista"
+        embedding: "Upottaminen"
       llms:
         short_title: "LLM:t"
         no_llms: "LLM:iä ei ole vielä"

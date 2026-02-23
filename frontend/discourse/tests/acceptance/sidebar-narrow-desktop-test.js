@@ -1,6 +1,24 @@
-import { click, triggerEvent, visit, waitFor } from "@ember/test-helpers";
+import { click, settled, triggerEvent, visit } from "@ember/test-helpers";
 import { test } from "qunit";
+import NarrowDesktop, {
+  forceNarrowDesktop,
+  resetNarrowDesktop,
+} from "discourse/lib/narrow-desktop";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
+
+async function simulateNarrowDesktop(owner) {
+  forceNarrowDesktop();
+  NarrowDesktop.init();
+  NarrowDesktop.update(owner, true);
+  await settled();
+}
+
+async function simulateWideDesktop(owner) {
+  resetNarrowDesktop();
+  NarrowDesktop.init();
+  NarrowDesktop.update(owner, false);
+  await settled();
+}
 
 acceptance("Sidebar - Narrow Desktop", function (needs) {
   needs.user();
@@ -10,7 +28,7 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
   });
 
   needs.hooks.afterEach(function () {
-    document.body.style.width = null;
+    resetNarrowDesktop();
   });
 
   test("wide sidebar is changed to cloak when resize to narrow screen", async function (assert) {
@@ -25,11 +43,7 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
 
     assert.dom("#d-sidebar").exists("wide sidebar is displayed");
 
-    document.body.style.width = "767px";
-
-    await waitFor(".btn-sidebar-toggle.narrow-desktop", {
-      timeout: 5000,
-    });
+    await simulateNarrowDesktop(this.owner);
     await click(".btn-sidebar-toggle");
 
     assert
@@ -42,27 +56,17 @@ acceptance("Sidebar - Narrow Desktop", function (needs) {
       .dom(".sidebar-hamburger-dropdown")
       .doesNotExist("cloak sidebar is collapsed");
 
-    document.body.style.width = "1200px";
-    await waitFor("#d-sidebar", {
-      timeout: 5000,
-    });
+    await simulateWideDesktop(this.owner);
     assert.dom("#d-sidebar").exists("wide sidebar is displayed");
   });
 
   test("transition from narrow screen to wide screen", async function (assert) {
     await visit("/");
 
-    document.body.style.width = "767px";
-
-    await waitFor(".btn-sidebar-toggle.narrow-desktop", {
-      timeout: 5000,
-    });
+    await simulateNarrowDesktop(this.owner);
     await click(".btn-sidebar-toggle");
 
-    document.body.style.width = "1200px";
-    await waitFor("#d-sidebar", {
-      timeout: 5000,
-    });
+    await simulateWideDesktop(this.owner);
 
     await click(".header-dropdown-toggle.current-user button");
 

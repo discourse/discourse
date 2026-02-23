@@ -44,6 +44,12 @@ it:
           one: "%{formatted_number} messaggio di chat"
           other: "%{formatted_number} messaggi di chat"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Canale"
+        description: "Descrizione"
+        actions: "Azioni"
+        settings: "Impostazioni"
       text_copied: Testo copiato negli appunti
       link_copied: Link copiato negli appunti
       back_to_forum: "Forum"
@@ -81,6 +87,7 @@ it:
         join_channel: "Partecipa al canale"
         leave_channel: "Lascia il canale"
         leave_groupchat_info: "Uscendo da questa chat di gruppo, non avrai più accesso a essa e non riceverai notifiche a essa relative. Per partecipare nuovamente, dovrai ricevere nuovamente un invito da un membro della chat di gruppo."
+        notification_settings_context: "Notifiche"
         join: "Partecipa"
         leave: "Esci"
         save_label:
@@ -578,13 +585,9 @@ it:
           other: "%{commaSeparatedUsernames} e altri %{count} stanno scrivendo"
       retention_reminders:
         indefinitely_short: "indefinitamente"
-        indefinitely_long: "Le impostazioni della chat sono state configurate per conservare i messaggi del canale a tempo indeterminato."
         short:
           one: "%{count} giorno"
           other: "%{count} giorni"
-        long:
-          one: "Le impostazioni della chat sono state configurate per conservare i messaggi del canale per %{count} giorno."
-          other: "Le impostazioni della chat sono state configurate per conservare i messaggi del canale per %{count} giorni."
       flags:
         off_topic: "Questo messaggio non è rilevante per la discussione in corso in base alla definizione del titolo del canale e probabilmente dovrebbe essere spostato altrove."
         inappropriate: "Questo messaggio ha contenuti che chiunque considererebbe offensivi o ingiuriosi, oppure contiene violazioni delle <a href=\"%{basePath}/guidelines\">nostre linee guida della community</a>."

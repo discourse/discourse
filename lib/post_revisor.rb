@@ -47,13 +47,7 @@ class PostRevisor
       prev_tags = topic.tags.map(&:name)
       return if tag_value.blank? && prev_tags.blank?
 
-      by_ids = tag_value.first.is_a?(Integer)
-      success =
-        if by_ids
-          DiscourseTagging.tag_topic_by_ids(topic, guardian, tag_value)
-        else
-          DiscourseTagging.tag_topic_by_names(topic, guardian, tag_value)
-        end
+      success = DiscourseTagging.tag_topic(topic, guardian, tag_value)
 
       unless success
         check_result(false)
@@ -75,9 +69,7 @@ class PostRevisor
         diff_tags = added_tags | removed_tags
 
         if diff_tags.present?
-          if !SiteSetting.disable_tags_edit_notifications
-            Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids:, diff_tags:)
-          end
+          Jobs.enqueue(:notify_tag_change, post_id: post.id, notified_user_ids:, diff_tags:)
 
           PostRevisor.create_small_action_for_tag_changes(
             topic: t,
@@ -392,7 +384,15 @@ class PostRevisor
     return false if @skip_revision
     # topic-only changes (without post content changes) should always create a new version
     # since the grace period concept doesn't apply to metadata changes like tags
-    return true if topic_changed? && !post_changed?
+    if topic_changed? && !post_changed?
+      # Allow hidden tag-only changes to update a previous hidden revision
+      # so that reverting hidden tag changes collapses the revisions
+      if only_hidden_tags_changed? &&
+           PostRevision.where(post_id: @post.id, number: @post.version).pick(:hidden)
+        return false
+      end
+      return true
+    end
     edited_by_another_user? || flagged? || !grace_period_edit? || owner_changed? ||
       force_new_version? || edit_reason_specified?
   end
@@ -654,11 +654,12 @@ class PostRevisor
     end
     # should probably do this before saving the post!
     if revision.modifications.empty?
+      hidden = revision.hidden
       revision.destroy
       @post.last_editor_id =
         PostRevision.where(post_id: @post.id).order(number: :desc).pick(:user_id) || @post.user_id
       @post.version -= 1
-      @post.public_version -= 1
+      @post.public_version -= 1 unless hidden
       @post.save(validate: @validate_post)
     else
       revision.save

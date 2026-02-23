@@ -15,6 +15,7 @@ cs:
         transition_placeholder: "z %{from_level_name} na %{to_level_name}"
       topic:
         title: Témata
+        description: Přidružený skript bude použit pouze pro zadané téma, což je užitečné například pro skripty provádějící validaci.
     scriptables:
       pin_topic:
         title: Připnout téma

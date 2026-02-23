@@ -1,0 +1,7 @@
+<%# locals: (opts:) %>
+
+<%- Discourse.find_plugin_js_assets(opts).tap do |plugin_assets| %>
+  <%- plugin_assets.each do |asset| %>
+    <%= preload_script asset[:name] %>
+  <%- end %>
+<%- end %>

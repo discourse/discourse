@@ -34,6 +34,8 @@ sr:
             canned_reply:
               label: "Odgovori"
     discourse_ai:
+      llm_selector:
+        none: "Ništa"
       features:
         back: "Nazad"
         disabled: "(isključeno)"
@@ -110,6 +112,15 @@ sr:
         parameter_required: "Potrebno"
         edit: "Izmeni"
         delete: "Obriši"
+      secrets:
+        short_title: "Kredencijali"
+        name: "Ime foruma"
+        secret: "Vriednost"
+        back: "Nazad"
+        save: "Sačuvaj"
+        edit: "Izmeni"
+        delete: "Obriši"
+        embedding: "Ugrađivanje"
       llms:
         display_name: "Ime foruma"
         save: "Sačuvaj"

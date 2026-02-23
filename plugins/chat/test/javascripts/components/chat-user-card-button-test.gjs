@@ -42,25 +42,5 @@ module(
         .dom(".chat-direct-message-btn")
         .doesNotExist("it doesn’t show the chat button");
     });
-
-    test("when displayed user has disabled PMs / DMs", async function (assert) {
-      sinon
-        .stub(this.owner.lookup("service:chat"), "userCanDirectMessage")
-        .value(true);
-
-      this.user = new CoreFabricators(getOwner(this)).user({
-        can_send_private_message_to_user: false,
-      });
-
-      await render(
-        <template>
-          <DirectMessageButton @user={{this.user}} @modal={{true}} />
-        </template>
-      );
-
-      assert
-        .dom(".chat-direct-message-btn")
-        .doesNotExist("it doesn’t show the chat button");
-    });
   }
 );

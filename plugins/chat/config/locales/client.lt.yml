@@ -46,6 +46,11 @@ lt:
           many: "%{formatted_number} pokalbių žinutė"
           other: "%{formatted_number} pokalbių žinutės"
     chat:
+      edit_category:
+        tab_title: "Pokalbis"
+        description: "Aprašymas"
+        actions: "Veiksmai"
+        settings: "Nustatymai"
       text_copied: Tekstas nukopijuotas į iškarpinę
       link_copied: Nuoroda nukopijuota į iškarpinę
       back_to_forum: "Forumas"
@@ -62,6 +67,7 @@ lt:
       chat_channels: "Kanalai"
       browse_all_channels: "Naršyti visus kanalus"
       see_in: "Žiūrėti"
+      open_channel_menu: "Atidaryti kanalo meniu"
       move_to_channel:
         title: "Perkelti pranešimus į kanalą"
         instructions:
@@ -87,6 +93,8 @@ lt:
         join_channel: "Prisijungti prie kanalo"
         leave_channel: "Išeiti iš kanalo"
         leave_groupchat_info: "Išėję iš šio grupinio pokalbio, nebeturėsite jo prieigos ir negausite su juo susijusių pranešimų. Norėdami vėl prisijungti, turėsite gauti pakartotinį grupės pokalbio nario kvietimą."
+        notification_settings: "Pranešimų nustatymai"
+        notification_settings_context: "Pranešimai"
         join: "Prisijungti"
         leave: "Palikti"
         save_label:
@@ -185,6 +193,7 @@ lt:
       settings:
         follow: "Prisijungti"
         followed: "Prisijungė"
+        unmute: "Įjungti kanalo garsą"
         threading_enabled: "Galimas"
         threading_disabled: "Uždrausta"
         notifications: "Pranešimai"

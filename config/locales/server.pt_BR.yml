@@ -2070,8 +2070,6 @@ pt_BR:
     num_flaggers_to_close_topic: "Quantidade mínima de usuários(as) sinalizadores únicos(as) exigidos para que um tópico seja automaticamente pausado por intervenção"
     num_hours_to_close_topic: "Quantidade de horas para pausar um tópico para intervenção."
     auto_respond_to_flag_actions: "Ative resposta automática ao remover sinalizador."
-    min_first_post_typing_time: "Quantidade mínima de tempo, em milissegundos, que o(a) usuário(a) deve passar digitando durante a primeira postagem. Se o limite não for atingido, a postagem entrará automaticamente na fila de aprovação necessária. Defina como 0 para desativar (não recomendado)"
-    fast_typing_threshold: "Tempo mínimo, em milissegundos, que o(a) usuário(a) tem para escrever sua primeira postagem. Se o limite não for cumprido, a postagem entrará automaticamente na fila de revisão. Baixo é 1 segundo, o padrão são 3 segundos e alto são 5 segundos."
     auto_silence_fast_typers_on_first_post: "Silenciar automaticamente usuários(as) que não atenderem ao \"limite de digitação rápida\""
     auto_silence_fast_typers_max_trust_level: "Nível máximo de confiança para silenciar automaticamente usuários(as) que digitam rápido"
     auto_silence_first_post_regex: "Regex sem diferenciação de maiúsculas ou minúsculas que, caso em caso de aprovação, farão que a primeira postagem de um(a) usuário(a) seja silenciada e enviada para a fila de aprovação. Por exemplo: raging|a[bc]a silenciará todas as postagens contendo raging ou aba, ou aca, imediatamente. Isso se aplica apenas à primeira postagem. PRETERIDO: use Silenciar palavras acompanhadas."
@@ -2244,7 +2242,6 @@ pt_BR:
     notify_about_reviewable_item_after: "Se houver itens revisáveis que não foram tratados depois de muitas horas, envie uma mensagem pessoal para os(as) moderadores(as). Defina como 0 para desativar."
     delete_drafts_older_than_n_days: "Exclua rascunhos que não foram alterardos em mais de (n) dias."
     delete_merged_stub_topics_after_days: "Quantidade de dias para aguardar antes de excluir automaticamente tópicos de stub totalmente mesclados. Defina para 0 para excluir imediatamente."
-    bootstrap_mode_min_users: 'Quantidade mínima de usuários(as) necessários(as) para desativar o modo de inicialização e remover o botão Começar (defina como 0 para desativar, pode levar até 24 horas). Confira o <a target="_blank" href="https://meta.discourse.org/t/-/322876">tópico sobre o modo de inicialização no Meta</a> para obter detalhes.'
     prevent_anons_from_downloading_files: "Impeça que usuários(as) anônimos(as) baixem anexos."
     secure_uploads: 'Limita acesso a TODOS os envios (imagens, vídeo, áudio, texto, pdfs, zips e muito mais). Se “É necessário entrar com a conta” estiver ativado, apenas usuários(as) que entraram com a conta podem acessar os envios. Caso contrário, o acesso será limitado apenas a envios de mídias em mensagens e categorias pessoais. AVISO: esta configuração é complexa e requer conhecimento de administração. Para mais detalhes, consulte <a target="_blank" href="https://meta.discourse.org/t/-/140017">o tópico de envios seguros em Meta</a>.'
     secure_uploads_allow_embed_images_in_emails: "Permite incorporação de imagens seguras que geralmente seriam escritas em e-mails, caso o tamanho seja menor do que a configuração 'tamanho máx. de imagem de envio incorporada no e-mail, em KB\"."
@@ -2393,7 +2390,7 @@ pt_BR:
     experimental_new_new_view_groups: 'Ative uma nova lista de tópicos que combina tópicos novos e não lidos e faz o link "Tudo", localizado na barra lateral, apontar para ela.'
     show_preview_for_form_templates: "Ativar a pré-visualização para o recurso de modelos de formulário"
     lazy_load_categories_groups: "Carregue informações de forma ociosa apenas para os(as) usuários(as) destes grupos. Melhora o desempenho em sites com várias categorias."
-    experimental_auto_grid_images: "Envolve automaticamente as imagens em tags [grid] quando três ou mais imagens são carregadas no compositor."
+    enable_auto_grid_images: "Envolve automaticamente as imagens em tags [grid] quando três ou mais imagens são carregadas no compositor."
     page_loading_indicator: "Configure o indicador de carregamento mostrado durante as navegações da página no Discourse. O \"Controle giratório\" é um indicador de página completo. O \"Controle deslizante\" mostra uma barra estreita no topo da tela."
     show_user_menu_avatars: "Mostrar avatadores de usuário(a) no menu do(a) usuário(a)"
     about_page_hidden_groups: "Não mostre membros de grupos específicos na página /about."

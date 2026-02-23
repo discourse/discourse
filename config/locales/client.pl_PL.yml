@@ -357,6 +357,8 @@ pl_PL:
     software_update_prompt:
       message: "Zaktualizowaliśmy tę witrynę, <span>odśwież</span>, aby wszystko działało sprawnie."
       dismiss: "Odrzuć"
+    notifications_tracking:
+      tooltip: "Poziom powiadomienia: %{level}"
     back_button: "Poprzednia"
     welcome_banner:
       header:
@@ -478,6 +480,36 @@ pl_PL:
       title: "Nowe i nieprzeczytane tematy"
       pill: "Sugerowane"
       pm_title: "Sugerowane wiadomości"
+    admin_onboarding_banner:
+      launch_in_easy_steps: "Uruchom w %{step_count} prostych krokach"
+      skipped: "Lista kontrolna dotycząca wdrażania administratora została pominięta. Jeśli chcesz ją ponownie włączyć, poszukaj opcji „włącz wdrażanie właściciela witryny” w ustawieniach witryny."
+      congrats_onboarding_complete: "Gratulacje z okazji ukończenia procesu wdrażania!"
+      invite_collaborators:
+        title: "Zaproś współpracowników"
+        description: "Pierwsi członkowie pomagają ożywić Twoją społeczność"
+        action: "Utwórz zaproszenie"
+      start_posting:
+        title: "Rozpocznij publikowanie"
+        description: "Daj ludziom temat do wspólnej rozmowy"
+        action: "Pomysły na przełamanie lodów"
+        icebreakers:
+          fun_facts:
+            title: "Jakie są ciekawostki na Twój temat?"
+            body: "Cześć wszystkim! Cieszę się, że mogę założyć tę nową społeczność. Na początek podzielmy się ciekawostką o nas. Zacznę od siebie: uwielbiam wędrować i odkrywać nowe szlaki! Co w Tobie jest ciekawego?"
+          coolest_thing_you_have_seen_today:
+            title: "Co najfajniejszego dziś widziałeś?"
+            body: "Co najfajniejszego dziś widziałeś lub doświadczyłeś? Może to być cokolwiek, od pięknego zachodu słońca po przypadkowy akt dobroci. Zacznę: widziałem psa pomagającego starszej osobie przejść przez ulicę!"
+          introduce_yourself:
+            title: "Przedstaw się"
+            body: "Witamy w społeczności! Poznajmy się. Przedstaw się i opowiedz trochę o swoich zainteresowaniach. Zacznę od siebie: pasjonuję się technologią i uwielbiam uczyć innych!"
+          what_is_your_favorite_food:
+            title: "Jakie jest twoje ulubione jedzenie?"
+            body: "Podziel się swoim ulubionym jedzeniem ze społecznością! Zacznę: uwielbiam pizzę, szczególnie z dodatkowym serem i pepperoni."
+      spread_the_word:
+        title: "Rozpowszechnij tę wieść!"
+        description: "Udostępnij link wszystkim osobom w swojej sieci"
+        action: "Skopiuj link"
+        copied_to_clipboard: "Link skopiowany do schowka!"
     about:
       edit: "Edytuj tę stronę"
       simple_title: "O stronie"
@@ -3773,6 +3805,26 @@ pl_PL:
         notify: "Powiadom użytkowników o tej zmianie."
         performing: "Wykonywanie operacji zbiorczych, proszę czekać…"
         completed: "Operacje masowe zakończone pomyślnie!"
+        completed_count:
+          one: "<b>%{count}</b> temat został zaktualizowany."
+          few: "<b>%{count}</b> tematy został zaktualizowane."
+          many: "<b>%{count}</b> tematów zostało zaktualizowanych."
+          other: "<b>%{count}</b> tematów zostało zaktualizowanych."
+        not_completed:
+          one: "<b>%{count}</b> tematu nie można zaktualizować:"
+          few: "<b>%{count}</b> tematów nie można zaktualizować:"
+          many: "<b>%{count}</b> tematów nie można zaktualizować:"
+          other: "<b>%{count}</b> tematów nie można zaktualizować:"
+        skipped_count:
+          one: "<b>%{count}</b> temat jest już aktualny."
+          few: "<b>%{count}</b> tematy są już aktualne."
+          many: "<b>%{count}</b> tematów jest już aktualnych."
+          other: "<b>%{count}</b> tematów jest już aktualnych."
+        error_topic_count:
+          one: "%{count} temat"
+          few: "%{count} tematy"
+          many: "%{count} tematów"
+          other: "%{count} tematów"
       none:
         unread: "Nie masz nieprzeczytanych tematów."
         unseen: "Nie masz niewidzianych tematów."
@@ -3836,6 +3888,7 @@ pl_PL:
         other: "%{count} postów w temacie"
       create: "Nowy temat"
       create_long: "Utwórz nowy temat"
+      create_group: "Nowy temat i wersje robocze"
       open_draft: "Otwórz szkic"
       private_message: "Napisz wiadomość"
       archive_message:
@@ -4688,7 +4741,6 @@ pl_PL:
       edit_dialog_title: "Edytuj: %{categoryName}"
       view: "Pokaż Tematy w Kategorii"
       back: "Powrót do kategorii"
-      single_page: "Pojedyncza strona"
       general: "Ogólne"
       settings: "Ustawienia"
       advanced: "Zaawansowane"
@@ -4778,14 +4830,14 @@ pl_PL:
         reply: "Odpowiedz"
         create: "Utwórz"
         no_groups_selected: "Żadnej grupie nie przyznano dostępu; ta kategoria będzie widoczna tylko dla personelu."
-        everyone_full_access: 'Ta kategoria jest publiczna – każdy może widzieć, odpowiadać i tworzyć wpisy. Aby ograniczyć uprawnienia, usuń jedno lub więcej uprawnień przyznanych grupie „wszyscy”.'
-        everyone_reply_access: 'Ta kategoria jest publiczna, każdy może widzieć tematy i odpowiadać na nie. Aby ograniczyć uprawnienia, usuń grupę „wszyscy”.'
-        everyone_see_access: 'Ta kategoria jest publiczna i każdy może zobaczyć wpisy. Aby ograniczyć uprawnienia, usuń grupę „wszyscy”.'
+        everyone_full_access: 'Ta kategoria jest publiczna – każdy może widzieć, odpowiadać i tworzyć wpisy. Aby ograniczyć uprawnienia, usuń jedno lub więcej uprawnień przyznanych grupie „%{everyone_group}”.'
+        everyone_reply_access: 'Ta kategoria jest publiczna, każdy może widzieć tematy i odpowiadać na nie. Aby ograniczyć uprawnienia, usuń grupę „%{everyone_group}”.'
+        everyone_see_access: 'Ta kategoria jest publiczna i każdy może zobaczyć wpisy. Aby ograniczyć uprawnienia, usuń grupę „%{everyone_group}”.'
         specific_groups_have_access: "Ta kategoria jest prywatna, tylko wybrane grupy mogą widzieć, odpowiadać i tworzyć wpisy."
         all_parent_groups_used: "Dodano wszystkie grupy z kategorii nadrzędnej. Aby dodać więcej grup, najpierw dodaj je do kategorii nadrzędnej."
         toggle_reply: "Przełącz uprawnienie do odpowiedzi"
         toggle_full: "Przełącz uprawnienie do tworzenia"
-        inherited: 'To uprawnienie jest dziedziczone po "wszystkich"'
+        inherited: 'To uprawnienie jest dziedziczone po "%{everyone_group}"'
       special_warning: "Ta kategoria jest wstępnie zdefiniowana i ustawień zabezpieczeń nie można edytować. Jeśli nie chcesz używać tej kategorii, usuń ją zamiast używać jej ponownie."
       uncategorized_security_warning: "Ta kategoria ma specjalny charakter. Jest przeznaczona jako miejsce do przechowywania tematów nie przypisanych do żadnej kategorii i jako taka nie może mieć ustawień bezpieczeństwa."
       uncategorized_general_warning: 'Ta kategoria jest wyjątkowa. Jest używana jako domyślna kategoria dla nowych tematów, które nie mają wybranej kategorii. Jeśli chcesz zapobiec temu zachowaniu i wymusić wybór kategorii, <a href="%{settingLink}">wyłącz to ustawienie tutaj</a>. Jeśli chcesz zmienić nazwę lub opis, przejdź do <a href="%{customizeLink}">Dostosuj / Treść tekstowa</a>.'
@@ -5966,6 +6018,8 @@ pl_PL:
       toggle_localized:
         translated: "Strona jest tłumaczona maszynowo. Kliknij, aby wyświetlić oryginał."
         not_translated: "Strona nie jest przetłumaczona. Kliknij, aby przetłumaczyć."
+        translations_enabled: "Tłumaczenia włączone"
+        translations_disabled: "Tłumaczenia wyłączone"
     language_switcher:
       title: "Zmień język witryny"
   admin_js:
@@ -6019,6 +6073,7 @@ pl_PL:
         no_changes_to_save: "Brak zmian do zapisania"
         select_groups: "Wybierz grupy…"
         opt_in_groups: "Grupy opt-in"
+        show_related_settings: "Pokaż powiązane ustawienia..."
         opt_in_groups_instructions: "Grupy opt-in można wykorzystać, aby umożliwić określonej grupie użytkowników przetestowanie zmiany przed jej udostępnieniem wszystkim. Należy pamiętać, że grupy te staną się nieistotne, gdy zmiana osiągnie status stabilnej."
         enabled_for_throttle: "Zbyt szybko zmodyfikowano, dla kogo ta zmiana jest włączona. Odczekaj kilka sekund, zanim spróbujesz ponownie."
         change_enabled_for_success: "Włączono tę zmianę dla %{enabledFor}"
@@ -6542,7 +6597,8 @@ pl_PL:
         new_features:
           title: "Co nowego?"
           subtitle: "Cały czas udostępniamy nowe funkcje i ulepszenia. Ta strona obejmuje najważniejsze z nich, ale możesz kliknąć 'Dowiedz się więcej', aby zobaczyć obszerne informacje o wersji."
-          no_new_features_found: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w społeczności Discourse Meta <a href='%{url}' target='_blank'></a>."
+          no_new_features_found: "Brak elementów w kanale lub wybrany filtr nie zwrócił żadnych wyników. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w <a href='%{url}' target='_blank'>społeczności Discourse Meta</a>."
+          no_new_features_error: "Wystąpił błąd podczas ładowania kanału. Poprzednie ogłoszenia o nowych funkcjach można zobaczyć w społeczności Discourse Meta <a href='%{url}' target='_blank'></a>."
           learn_more: "Dowiedz się więcej..."
           experimental: "Eksperymentalne"
           only_experiments: "Pokaż tylko funkcje eksperymentalne"
@@ -6759,6 +6815,8 @@ pl_PL:
         save: "Zapisz"
         cancel: "Anuluj"
         continue: "Kontynuuj"
+        copy_key: "Kopiuj"
+        key_copied_to_clipboard: "Klucz API skopiowano do schowka"
         back: "Powrót do kluczy API"
         revoke: "Odbierz"
         undo_revoke: "Anuluj cofnięcie"

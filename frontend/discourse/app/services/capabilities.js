@@ -26,10 +26,15 @@ class Capabilities {
   isOpera = !!window.opera || ua.includes(" OPR/");
   isFirefox = ua.includes("Firefox");
   isChrome = !!window.chrome && !this.isOpera;
+  // In iframes, Safari-specific objects aren't accessible, so fall back to UA detection
   isSafari =
-    /Constructor/.test(window.HTMLElement) ||
-    window.safari?.pushNotification?.toString() ===
-      "[object SafariRemoteNotification]";
+    window.self !== window.top
+      ? ua.includes("Safari") &&
+        !ua.includes("Chrome") &&
+        !ua.includes("Chromium")
+      : /Constructor/.test(window.HTMLElement) ||
+        window.safari?.pushNotification?.toString() ===
+          "[object SafariRemoteNotification]";
 
   hasContactPicker = "contacts" in navigator && "ContactsManager" in window;
 
