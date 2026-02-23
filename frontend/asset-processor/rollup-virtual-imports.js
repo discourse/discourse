@@ -89,6 +89,7 @@ export default {
         });
       }
 
+      output += `export * as ${federatedExportNameFor(compatModuleName, "*")} from "./${importPath}";\n`;
       output += `export {\n${reexportPairs.join(",\n")}\n} from "./${importPath}";\n`;
 
       i += 1;

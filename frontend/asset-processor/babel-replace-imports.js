@@ -37,7 +37,11 @@ export default function (babel) {
                 t.identifier(federatedExportName)
               );
             } else if (specifier.type === "ImportNamespaceSpecifier") {
-              throw "Don't know how to do this yet";
+              const federatedExportName = getFederatedExportName("*");
+              return t.importSpecifier(
+                t.identifier(specifier.local.name),
+                t.identifier(federatedExportName)
+              );
             } else {
               const federatedExportName = getFederatedExportName(
                 specifier.imported.name
