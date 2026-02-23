@@ -26,5 +26,8 @@ Discourse::Application.routes.draw do
         format: /(json|csv)/,
       }
 
-  mount DiscourseDataExplorer::Engine, at: "/admin/plugins/explorer"
+  mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"
+  mount DiscourseDataExplorer::Engine,
+        at: "/admin/plugins/explorer",
+        as: :legacy_discourse_data_explorer
 end

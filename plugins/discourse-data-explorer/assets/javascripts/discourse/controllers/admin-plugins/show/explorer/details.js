@@ -44,7 +44,7 @@ export default class PluginsExplorerController extends Controller {
   }
 
   get editDisabled() {
-    return parseInt(this.model.id, 10) < 0 ? true : false;
+    return this.model.is_default;
   }
 
   get groupOptions() {
@@ -172,7 +172,7 @@ export default class PluginsExplorerController extends Controller {
 
   @action
   goHome() {
-    this.router.transitionTo("adminPlugins.explorer");
+    this.router.transitionTo("adminPlugins.show.explorer");
   }
 
   @action
@@ -266,13 +266,18 @@ export default class PluginsExplorerController extends Controller {
       params: JSON.stringify(params),
     });
 
-    ajax("/admin/plugins/explorer/queries/" + this.model.id + "/run", {
-      type: "POST",
-      data: {
-        params: JSON.stringify(params),
-        explain: this.explain,
-      },
-    })
+    ajax(
+      "/admin/plugins/discourse-data-explorer/queries/" +
+        this.model.id +
+        "/run",
+      {
+        type: "POST",
+        data: {
+          params: JSON.stringify(params),
+          explain: this.explain,
+        },
+      }
+    )
       .then((result) => {
         this.results = result;
         if (!result.success) {

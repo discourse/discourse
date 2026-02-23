@@ -12,12 +12,12 @@ export default class PluginsExplorerController extends Controller {
   @service dialog;
   @service appEvents;
   @service router;
+  @service toasts;
 
   @tracked sortByProperty = "last_run_at";
   @tracked sortDescending = true;
   @tracked params;
-  @tracked search;
-  @tracked newQueryName;
+  @tracked createFormData = { name: "" };
   @tracked showCreate;
   @tracked loading = false;
 
@@ -38,23 +38,9 @@ export default class PluginsExplorerController extends Controller {
     return this.params ? JSON.parse(this.params) : null;
   }
 
-  get filteredContent() {
-    const regexp = new RegExp(this.search, "i");
-    return this.sortedQueries.filter(
-      (result) => regexp.test(result.name) || regexp.test(result.description)
-    );
-  }
-
-  get createDisabled() {
-    return (this.newQueryName || "").trim().length === 0;
-  }
-
   addCreatedRecord(record) {
     this.model.content.push(record);
-    this.router.transitionTo(
-      "adminPlugins.explorer.queries.details",
-      record.id
-    );
+    this.router.transitionTo("adminPlugins.show.explorer.details", record.id);
   }
 
   async _importQuery(file) {
@@ -151,6 +137,12 @@ export default class PluginsExplorerController extends Controller {
   @action
   displayCreate() {
     this.showCreate = true;
+    this.createFormData = { name: "" };
+  }
+
+  @action
+  hideCreate() {
+    this.showCreate = false;
   }
 
   @action
@@ -164,27 +156,22 @@ export default class PluginsExplorerController extends Controller {
   }
 
   @action
-  async create() {
+  async create({ name }) {
     try {
-      const name = this.newQueryName.trim();
       this.loading = true;
+      const result = await this.store
+        .createRecord("query", { name: name.trim() })
+        .save();
+      this.toasts.success({
+        data: { message: i18n("explorer.query_created") },
+      });
       this.showCreate = false;
-      const result = await this.store.createRecord("query", { name }).save();
+      this.createFormData = { name: "" };
       this.addCreatedRecord(result.target);
     } catch (error) {
       popupAjaxError(error);
     } finally {
       this.loading = false;
     }
-  }
-
-  @action
-  updateSearch(value) {
-    this.search = value;
-  }
-
-  @action
-  updateNewQueryName(value) {
-    this.newQueryName = value;
   }
 }

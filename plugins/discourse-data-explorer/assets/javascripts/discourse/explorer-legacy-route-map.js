@@ -1,8 +1,8 @@
 export default {
-  resource: "admin.adminPlugins.show",
+  resource: "admin.adminPlugins",
   path: "/plugins",
   map() {
-    this.route("explorer", { path: "queries" }, function () {
+    this.route("explorer", function () {
       this.route("details", { path: "/:query_id" });
     });
   },
