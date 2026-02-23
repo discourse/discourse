@@ -34,11 +34,22 @@ div.poll-outer {
       button {
         background-color: transparent;
         border: none;
-        text-align: left;
-        padding-left: 23px;
-        text-indent: -23px;
         width: 100%;
         cursor: pointer;
+        display: flex;
+        align-items: flex-start;
+        gap: 0.5em;
+        text-align: left;
+      }
+
+      button svg {
+        flex: 0 0 auto;
+        margin-top: 0.15em;
+      }
+
+      .option-text {
+        flex: 1 1 auto;
+        min-width: 0;
       }
     }
 
