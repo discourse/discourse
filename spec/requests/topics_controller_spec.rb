@@ -2259,6 +2259,25 @@ RSpec.describe TopicsController do
             expect(response.status).to eq(200)
             expect(topic.reload.tags).to contain_exactly(tag)
           end
+
+          it "does not create a revision when tags param is empty and topic has no tags" do
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [] }, as: :json
+            end.not_to change { topic.reload.first_post.revisions.count }
+
+            expect(response.status).to eq(200)
+          end
+
+          it "creates a revision when all tags are removed from a topic" do
+            topic.tags << tag
+
+            expect do
+              put "/t/#{topic.slug}/#{topic.id}.json", params: { tags: [] }, as: :json
+            end.to change { topic.reload.first_post.revisions.count }.by(1)
+
+            expect(response.status).to eq(200)
+            expect(topic.reload.tags).to be_empty
+          end
         end
 
         context "when topic is private" do
