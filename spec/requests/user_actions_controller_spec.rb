@@ -157,4 +157,84 @@ RSpec.describe UserActionsController do
       end
     end
   end
+
+  describe "#show" do
+    fab!(:acting_user) { Fabricate(:user, refresh_auto_groups: true) }
+
+    let!(:target_post) do
+      UserActionManager.enable
+      post = create_post(user: acting_user)
+      acting_user.user_stat.update!(post_count: 1)
+      post
+    end
+    let(:user_action_id) do
+      UserAction.find_by(user_id: acting_user.id, action_type: UserAction.types[:new_topic]).id
+    end
+
+    it "returns 200 for a visible user with a public action" do
+      get "/user_actions/#{user_action_id}.json"
+      expect(response).to have_http_status :ok
+    end
+
+    it "returns 404 for a non-existent action" do
+      get "/user_actions/#{UserAction.maximum(:id).to_i + 1}.json"
+      expect(response).to have_http_status :not_found
+    end
+
+    context "when the acting user has a hidden profile" do
+      before do
+        SiteSetting.allow_users_to_hide_profile = true
+        acting_user.user_option.update_column(:hide_profile, true)
+      end
+
+      it "returns 404 for an anonymous viewer" do
+        get "/user_actions/#{user_action_id}.json"
+        expect(response).to have_http_status :not_found
+      end
+
+      it "returns 200 for a staff viewer" do
+        sign_in(Fabricate(:admin))
+        get "/user_actions/#{user_action_id}.json"
+        expect(response).to have_http_status :ok
+      end
+
+      it "returns 200 when the user views their own action" do
+        sign_in(acting_user)
+        get "/user_actions/#{user_action_id}.json"
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "when `hide_user_activity_tab` is enabled" do
+      before { SiteSetting.hide_user_activity_tab = true }
+
+      it "returns 404 for an anonymous viewer" do
+        get "/user_actions/#{user_action_id}.json"
+        expect(response).to have_http_status :not_found
+      end
+
+      it "returns 200 when the user views their own action" do
+        sign_in(acting_user)
+        get "/user_actions/#{user_action_id}.json"
+        expect(response).to have_http_status :ok
+      end
+    end
+
+    context "when the action type is private" do
+      fab!(:liker, :user)
+      fab!(:other_user, :user)
+
+      let(:was_liked_action_id) do
+        PostActionNotifier.enable
+        PostActionCreator.like(liker, target_post)
+        UserAction.find_by(user_id: acting_user.id, action_type: UserAction.types[:was_liked]).id
+      end
+
+      it "returns 404 for a non-admin non-owner viewer" do
+        sign_in(other_user)
+        get "/user_actions/#{was_liked_action_id}.json"
+        expect(response).to have_http_status :not_found
+      end
+    end
+  end
 end

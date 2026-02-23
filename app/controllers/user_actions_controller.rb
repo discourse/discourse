@@ -42,7 +42,16 @@ class UserActionsController < ApplicationController
 
   def show
     params.require(:id)
-    render_serialized(UserAction.stream_item(params[:id], guardian), UserActionSerializer)
+    stream_item = UserAction.stream_item(params[:id], guardian)
+    raise Discourse::NotFound if stream_item.blank?
+
+    user = User.find_by(id: stream_item.target_user_id)
+    raise Discourse::NotFound if user.blank?
+
+    raise Discourse::NotFound unless guardian.can_see_profile?(user)
+    raise Discourse::NotFound unless guardian.can_see_user_actions?(user, [stream_item.action_type])
+
+    render_serialized(stream_item, UserActionSerializer)
   end
 
   private
