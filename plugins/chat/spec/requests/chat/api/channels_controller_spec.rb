@@ -166,6 +166,37 @@ RSpec.describe Chat::Api::ChannelsController do
             channel_2.id,
           )
         end
+
+        context "with include_subcategories" do
+          fab!(:subcategory) { Fabricate(:category, parent_category: category_1) }
+          fab!(:subcategory_channel) { Fabricate(:category_channel, chatable: subcategory) }
+
+          it "returns channels from parent and subcategories" do
+            get "/chat/api/channels",
+                params: {
+                  chatable_id: category_1.id,
+                  chatable_type: "Category",
+                  include_subcategories: true,
+                }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["channels"].map { |c| c["id"] }).to contain_exactly(
+              channel_1.id,
+              subcategory_channel.id,
+            )
+          end
+
+          it "returns only parent category channels without the param" do
+            get "/chat/api/channels",
+                params: {
+                  chatable_id: category_1.id,
+                  chatable_type: "Category",
+                }
+
+            expect(response.status).to eq(200)
+            expect(response.parsed_body["channels"].map { |c| c["id"] }).to eq([channel_1.id])
+          end
+        end
       end
     end
   end
