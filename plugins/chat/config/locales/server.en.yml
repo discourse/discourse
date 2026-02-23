@@ -264,18 +264,18 @@ en:
           one: "[%{site_name}] New thread message in %{channel}"
           other: "[%{site_name}] New thread messages in %{channel}"
         watched_threads:
-          one: "[%{site_name}] New thread messages in %{channel} and %{count} other"
-          other: "[%{site_name}] New thread messages in %{channel} and %{count} others"
+          one: "[%{site_name}] New thread messages in %{channel} and %{count} other channel"
+          other: "[%{site_name}] New thread messages in %{channel} and %{count} other channels"
         chat_dm_1:
           one: "[%{site_name}] New message from %{name}"
           other: "[%{site_name}] New messages from %{name}"
         chat_dm_2: "[%{site_name}] New messages from %{name_1} and %{name_2}"
-        chat_dm_3_or_more: "[%{site_name}] New messages from %{name} and %{count} others"
+        chat_dm_3_or_more: "[%{site_name}] New messages from %{name} and %{count} other direct message channels"
         chat_channel_1:
           one: "[%{site_name}] New message in %{channel}"
           other: "[%{site_name}] New messages in %{channel}"
         chat_channel_2: "[%{site_name}] New messages in %{channel_1} and %{channel_2}"
-        chat_channel_3_or_more: "[%{site_name}] New messages in %{channel} and %{count} others"
+        chat_channel_3_or_more: "[%{site_name}] New messages in %{channel} and %{count} other channels"
         chat_channel_and_dm: "[%{site_name}] New messages in %{channel} and from %{name}"
       unsubscribe: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}, or %{unsubscribe_link} to unsubscribe."
       unsubscribe_no_link: "This chat summary is sent from %{site_link} when you are away. Change your %{email_preferences_link}."
