@@ -33,10 +33,10 @@ RSpec.describe "tasks/version_bump" do
     end
   end
 
-  before(:all) do # rubocop:disable RSpec/BeforeAfterAll
-    @template_base = Dir.mktmpdir
-    origin_template_path = "#{@template_base}/origin-repo"
-    local_template_path = "#{@template_base}/local-repo"
+  fab!(:template_repos) do
+    template_base = Dir.mktmpdir
+    origin_template_path = "#{template_base}/origin-repo"
+    local_template_path = "#{template_base}/local-repo"
 
     FileUtils.mkdir_p origin_template_path
 
@@ -67,6 +67,8 @@ RSpec.describe "tasks/version_bump" do
     end
 
     git "clone", "-b", "main", origin_template_path, local_template_path
+
+    template_base
   end
 
   before do
@@ -74,7 +76,7 @@ RSpec.describe "tasks/version_bump" do
 
     Rake::Task.tasks.each { |t| t.reenable }
 
-    FileUtils.cp_r("#{@template_base}/.", tmpdir)
+    FileUtils.cp_r("#{template_repos}/.", tmpdir)
     Dir.chdir(local_path) { git "remote", "set-url", "origin", origin_path }
   end
 
@@ -83,7 +85,7 @@ RSpec.describe "tasks/version_bump" do
     ENV.delete("RUNNING_RELEASE_IN_RSPEC_TESTS")
   end
 
-  after(:all) { FileUtils.remove_entry(@template_base) } # rubocop:disable RSpec/BeforeAfterAll
+  after(:all) { FileUtils.remove_entry(template_repos) } # rubocop:disable RSpec/BeforeAfterAll
 
   describe "release:maybe_tag_release" do
     subject(:run_task) do
