@@ -37,7 +37,7 @@ module(
         "[x] completed item",
       ],
       "handles multiple checkboxes in a single paragraph": [
-        "[] first task [x] second task",
+        "[ ] first task [x] second task",
         `<p>${unchecked} first task ${checked} second task</p>`,
         "[ ] first task [x] second task",
       ],

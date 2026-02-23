@@ -40,7 +40,7 @@ module Jobs
             post.update_column(:cooked, cp.html)
             post.topic.update_excerpt(post.excerpt_for_topic) if post.is_first_post?
             extract_links(post)
-            post.publish_change_to_clients! :revised
+            post.publish_change_to_clients!(:revised)
           end
         end
 
