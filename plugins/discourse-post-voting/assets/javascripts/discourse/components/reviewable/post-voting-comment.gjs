@@ -1,6 +1,6 @@
+import ReviewableCreatedBy from "discourse/components/reviewable/created-by";
+import ReviewableTopicLink from "discourse/components/reviewable/topic-link";
 import ReviewablePostEdits from "discourse/components/reviewable-post-edits";
-import ReviewableCreatedBy from "discourse/components/reviewable-refresh/created-by";
-import ReviewableTopicLink from "discourse/components/reviewable-refresh/topic-link";
 import highlightWatchedWords from "discourse/lib/highlight-watched-words";
 import { i18n } from "discourse-i18n";
 

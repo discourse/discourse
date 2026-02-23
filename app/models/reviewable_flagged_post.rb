@@ -50,8 +50,7 @@ class ReviewableFlaggedPost < Reviewable
     super
   end
 
-  # TODO (reviewable-refresh): Remove legacy method once new UI fully deployed
-  def build_legacy_combined_actions(actions, guardian, args)
+  def build_combined_actions(actions, guardian, args)
     # existing combined logic
     agree_bundle =
       actions.add_bundle("#{id}-agree", icon: "thumbs-up", label: "reviewables.actions.agree.title")
@@ -147,12 +146,6 @@ class ReviewableFlaggedPost < Reviewable
         )
       end
     end
-  end
-
-  # TODO (reviewable-refresh): Merge into build_actions post rollout.
-  def build_new_separated_actions
-    build_post_actions_bundle
-    build_user_actions_bundle
   end
 
   def perform_ignore(performed_by, args)

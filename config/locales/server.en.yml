@@ -5865,10 +5865,6 @@ en:
       # New separated post actions
       post_actions:
         bundle_title: "What do you want to do with the post?"
-      no_action_post:
-        title: "No action"
-        description: "Take no action on the post"
-        complete: "No action taken on post"
       delete_post:
         title: "Delete post"
         description: "Delete this post"
@@ -5889,17 +5885,8 @@ en:
         title: "Edit post"
         description: "Edit this post content"
         complete: "Post edited"
-      convert_to_pm:
-        title: "Convert to PM"
-        description: "Convert this post to a personal message"
-        complete: "Post converted to personal message"
-      # New separated user actions
       user_actions:
         bundle_title: "What do you want to do with the user?"
-      no_action_user:
-        title: "No action"
-        description: "Take no action against the user"
-        complete: "No action taken against user"
       silence_user:
         title: "Silence user"
         description: "Prevent the user from posting"
