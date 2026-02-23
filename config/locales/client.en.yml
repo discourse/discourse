@@ -467,7 +467,7 @@ en:
         description: "Give people something to talk about together"
         action: "Icebreaker ideas"
         choose_option: "How would you like to start?"
-        choose_option_description: "Choose whether you'd like to use one of our pre-written discussion starters or get AI-generated ideas"
+        choose_option_description: "Choose whether you'd like to use pre-written discussion starters or get ideas from a conversation with an AI assistant"
         predefined_topics: "Use Predefined Topics"
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Use Predefined Topics"
