@@ -2544,6 +2544,18 @@ RSpec.describe User do
       it "delegates the value from the main user record" do
         expect(anon.silenced_till).to be_within(1.second).of(main.silenced_till)
       end
+
+      it "returns nil when the master user has been destroyed" do
+        main.destroy!
+        anon.reload
+        expect(anon.silenced_till).to be_nil
+      end
+
+      it "returns nil when the master user has been deleted without hooks" do
+        User.where(id: main.id).delete_all
+        anon.reload
+        expect(anon.silenced_till).to be_nil
+      end
     end
   end
 

@@ -2197,7 +2197,7 @@ class User < ActiveRecord::Base
   private
 
   def main_user_record
-    anonymous? ? master_user : self
+    (anonymous? && master_user) ? master_user : self
   end
 
   def set_default_sidebar_section_links(update: false)
