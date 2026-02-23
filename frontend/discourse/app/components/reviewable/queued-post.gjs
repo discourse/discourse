@@ -18,6 +18,10 @@ import { i18n } from "discourse-i18n";
 export default class ReviewableQueuedPost extends Component {
   @service modal;
 
+  get replyToPostUrl() {
+    return `${this.args.reviewable.topic_url}/${this.args.reviewable.reply_to_post_number}`;
+  }
+
   @action
   showRawEmail(event) {
     event?.preventDefault();
@@ -56,6 +60,15 @@ export default class ReviewableQueuedPost extends Component {
 
     <div class="review-item__post">
       <div class="review-item__post-content">
+        {{#if @reviewable.reply_to_post_number}}
+          <div>
+            <a href={{this.replyToPostUrl}}>
+              {{icon "share"}}
+              {{i18n "review.in_reply_to"}}
+              #{{@reviewable.reply_to_post_number}}
+            </a>
+          </div>
+        {{/if}}
         <CookText
           class="post-body"
           @rawText={{highlightWatchedWords @reviewable.payload.raw @reviewable}}
