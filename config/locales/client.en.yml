@@ -471,7 +471,7 @@ en:
         predefined_topics: "Use Predefined Topics"
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Use Predefined Topics"
-        ai_generation: "AI-Generated Ideas"
+        ai_generation: "AI-assisted Topic Ideas"
         ai_generation_description: "Let AI help generate custom category ideas and topics for your community"
         use_ai: "Use AI"
         select_topic: "Select"
