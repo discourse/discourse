@@ -162,7 +162,7 @@ RSpec.describe Discourse do
     end
 
     let(:compat_branch_name) do
-      "d-compat/v#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
+      "d-compat/#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
     end
 
     context "when there is a matching d-compat branch" do
