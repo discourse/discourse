@@ -575,6 +575,17 @@ describe PostRevisor do
         expect(post.public_version).to eq(1)
         expect(post.revisions.size).to eq(0)
       end
+
+      it "does not create a new version for tag-only topic change within grace period when tags unchanged" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.editing_grace_period = 1.minute
+
+        post_revisor.revise!(post.user, { tags: [] }, revised_at: post.updated_at + 10.seconds)
+        post.reload
+
+        expect(post.version).to eq(1)
+        expect(post.revisions.size).to eq(0)
+      end
     end
 
     describe "edit reasons" do
