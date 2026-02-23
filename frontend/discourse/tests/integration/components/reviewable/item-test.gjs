@@ -1,9 +1,9 @@
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
-import ReviewableItemRefresh from "discourse/components/reviewable-refresh/item";
+import ReviewableItem from "discourse/components/reviewable/item";
 import { setupRenderingTest } from "discourse/tests/helpers/component-test";
 
-module("Integration | Component | reviewable-refresh | item", function (hooks) {
+module("Integration | Component | reviewable | item", function (hooks) {
   setupRenderingTest(hooks);
 
   const reviewable = {
@@ -31,7 +31,7 @@ module("Integration | Component | reviewable-refresh | item", function (hooks) {
   test("renders help resources ", async function (assert) {
     await render(
       <template>
-        <ReviewableItemRefresh @reviewable={{reviewable}} @showHelp={{true}} />
+        <ReviewableItem @reviewable={{reviewable}} @showHelp={{true}} />
       </template>
     );
     assert.dom(".review-item__resources").exists("renders the help content");
@@ -54,7 +54,7 @@ module("Integration | Component | reviewable-refresh | item", function (hooks) {
 
   test("does not render help resources when not required", async function (assert) {
     await render(
-      <template><ReviewableItemRefresh @reviewable={{reviewable}} /></template>
+      <template><ReviewableItem @reviewable={{reviewable}} /></template>
     );
     assert
       .dom(".review-item__resources")

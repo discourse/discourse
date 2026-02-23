@@ -1,34 +1,31 @@
 import Component from "@glimmer/component";
 import { getOwner } from "@ember/owner";
-import { service } from "@ember/service";
 import { dasherize } from "@ember/string";
 import ConditionalLoadingSpinner from "discourse/components/conditional-loading-spinner";
 import LoadMore from "discourse/components/load-more";
 import ReviewFilters from "discourse/components/review-filters";
-import ReviewableItem from "discourse/components/reviewable-item";
-import ReviewableItemRefresh from "discourse/components/reviewable-refresh/item";
+import ReviewableItem from "discourse/components/reviewable/item";
 import { bind } from "discourse/lib/decorators";
 import { i18n } from "discourse-i18n";
 
 export default class ReviewIndexRefresh extends Component {
-  @service currentUser;
-
   @bind
-  refreshedReviewableComponentExists(reviewable) {
+  reviewableComponentExists(reviewable) {
     const owner = getOwner(this);
-    const dasherized = dasherize(reviewable.type).replace(
+    // TODO plugins are still using `reviewable-refresh/` path. Once they are fixed, it can be remove.
+    let dasherized = dasherize(reviewable.type).replace(
       "reviewable-",
       "reviewable-refresh/"
     );
-    return owner.hasRegistration(`component:${dasherized}`);
-  }
+    if (owner.hasRegistration(`component:${dasherized}`)) {
+      return true;
+    }
 
-  @bind
-  shouldUseRefreshUI(reviewable) {
-    return (
-      this.currentUser.use_reviewable_ui_refresh &&
-      this.refreshedReviewableComponentExists(reviewable)
+    dasherized = dasherize(reviewable.type).replace(
+      "reviewable-",
+      "reviewable/"
     );
+    return owner.hasRegistration(`component:${dasherized}`);
   }
 
   <template>
@@ -39,16 +36,8 @@ export default class ReviewIndexRefresh extends Component {
           <LoadMore @action={{@controller.loadMore}}>
             <div class="reviewables">
               {{#each @controller.reviewables.content as |r|}}
-                {{#if (this.shouldUseRefreshUI r)}}
-                  <ReviewableItemRefresh
-                    @reviewable={{r}}
-                    @showHelp={{false}}
-                  />
-                {{else}}
-                  <ReviewableItem
-                    @reviewable={{r}}
-                    @remove={{@controller.remove}}
-                  />
+                {{#if (this.reviewableComponentExists r)}}
+                  <ReviewableItem @reviewable={{r}} @showHelp={{false}} />
                 {{/if}}
               {{/each}}
             </div>
