@@ -410,6 +410,7 @@ nav.post-controls {
   justify-content: space-between;
   color: var(--d-post-control-text-color);
   user-select: none;
+  overflow-x: auto;
 
   .fade-out {
     .discourse-no-touch & {
@@ -428,7 +429,6 @@ nav.post-controls {
     --control-space: 0.58em;
     --control-space-small: calc(var(--control-space) / 2);
     --control-space-large: calc(var(--control-space) * 1.3);
-    overflow-x: auto;
   }
 
   .actions {
