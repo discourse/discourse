@@ -106,7 +106,7 @@ export default class CardContentsBase extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    document.addEventListener("mousedown", this._clickOutsideHandler);
+    document.addEventListener("pointerdown", this._clickOutsideHandler);
     document.addEventListener("keyup", this._escListener);
 
     _cardClickListenerSelectors.forEach((selector) => {
@@ -273,7 +273,7 @@ export default class CardContentsBase extends Component {
   willDestroyElement() {
     super.willDestroyElement(...arguments);
 
-    document.removeEventListener("mousedown", this._clickOutsideHandler);
+    document.removeEventListener("pointerdown", this._clickOutsideHandler);
     document.removeEventListener("keyup", this._escListener);
 
     _cardClickListenerSelectors.forEach((selector) => {
