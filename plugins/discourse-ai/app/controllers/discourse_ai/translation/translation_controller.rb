@@ -47,9 +47,9 @@ module DiscourseAi
 
         guardian.ensure_can_see!(topic)
 
-        untranslated_posts = find_untranslated_posts(topic)
+        untranslated_posts = find_untranslated_posts(topic, guardian)
 
-        if untranslated_posts.empty?
+        if !untranslated_posts.exists?
           return(
             render_json_error(
               I18n.t("discourse_ai.translation.errors.all_posts_translated"),
@@ -81,7 +81,7 @@ module DiscourseAi
         end
       end
 
-      def find_untranslated_posts(topic)
+      def find_untranslated_posts(topic, guardian)
         supported_locales = DiscourseAi::Translation.locales
         base_locales = supported_locales.map { |locale| locale.split("_").first }
 
@@ -92,6 +92,7 @@ module DiscourseAi
         # 4. Are not deleted and have content
         topic
           .posts
+          .secured(guardian)
           .where("user_id > 0")
           .where.not(raw: "")
           .where(deleted_at: nil)
