@@ -54,4 +54,45 @@ RSpec.describe "Admin category channels list", type: :system do
       expect(page).to have_css(".c-channel-settings")
     end
   end
+
+  context "when a category has subcategories with chat channels" do
+    fab!(:subcategory) { Fabricate(:category, parent_category: category) }
+    fab!(:subcategory_channel) { Fabricate(:chat_channel, chatable: subcategory) }
+
+    it "shows subcategory channels by default with toggle visible" do
+      visit "#{category.slug_url_without_id}/edit/chat"
+
+      expect(page).to have_css(".edit-category-chat__subcategory-toggle")
+      expect(page).to have_css(".d-table__row[data-channel-id='#{channel_1.id}']")
+      expect(page).to have_css(".d-table__row[data-channel-id='#{channel_2.id}']")
+      expect(page).to have_css(".d-table__row[data-channel-id='#{subcategory_channel.id}']")
+      expect(page.find(".d-table__row[data-channel-id='#{subcategory_channel.id}']")).to have_css(
+        ".badge-category__wrapper .badge-category__name",
+        text: subcategory.name,
+      )
+    end
+
+    it "hides subcategory channels when toggle is clicked" do
+      visit "#{category.slug_url_without_id}/edit/chat"
+
+      expect(page).to have_css(".d-table__row[data-channel-id='#{subcategory_channel.id}']")
+
+      PageObjects::Components::DToggleSwitch.new(
+        ".edit-category-chat__subcategory-toggle .d-toggle-switch__checkbox",
+      ).toggle
+
+      expect(page).to have_no_css(".d-table__row[data-channel-id='#{subcategory_channel.id}']")
+      expect(page).to have_css(".d-table__row[data-channel-id='#{channel_1.id}']")
+      expect(page).to have_css(".d-table__row[data-channel-id='#{channel_2.id}']")
+    end
+  end
+
+  context "when a category has no subcategory channels" do
+    it "does not show the subcategory toggle" do
+      visit "#{category.slug_url_without_id}/edit/chat"
+
+      expect(page).to have_css(".d-table__row[data-channel-id='#{channel_1.id}']")
+      expect(page).to have_no_css(".edit-category-chat__subcategory-toggle")
+    end
+  end
 end
