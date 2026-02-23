@@ -2,6 +2,7 @@
 import Component from "@ember/component";
 import { alias, or } from "@ember/object/computed";
 import { service } from "@ember/service";
+import { modifier } from "ember-modifier";
 import { ajax } from "discourse/lib/ajax";
 import { throwAjaxError } from "discourse/lib/ajax-error";
 import discourseComputed from "discourse/lib/decorators";
@@ -40,6 +41,17 @@ export default class AdComponent extends Component {
   _handleAdClick = () => {
     this.trackClick();
   };
+
+  _setupTracking = modifier((element) => {
+    this._trackingElement = element;
+    if (this.get("showAd")) {
+      this.startVisibilityTracking();
+      this.startClickTracking();
+    }
+    return () => {
+      this._trackingElement = null;
+    };
+  });
 
   @discourseComputed(
     "router.currentRoute.attributes.__type",
@@ -119,7 +131,12 @@ export default class AdComponent extends Component {
       return;
     }
 
-    this.element.addEventListener("click", this._handleAdClick);
+    const el = this._trackingElement || this.element;
+    if (!el) {
+      return;
+    }
+
+    el.addEventListener("click", this._handleAdClick);
   }
 
   async trackImpression() {
@@ -170,6 +187,11 @@ export default class AdComponent extends Component {
       return;
     }
 
+    const el = this._trackingElement || this.element;
+    if (!el) {
+      return;
+    }
+
     if ("IntersectionObserver" in window) {
       this._observer = new IntersectionObserver((entries) => {
         if (entries[0].isIntersecting) {
@@ -177,7 +199,7 @@ export default class AdComponent extends Component {
           this._observer.disconnect();
         }
       });
-      this._observer.observe(this.element);
+      this._observer.observe(el);
     } else {
       this.trackImpression();
     }
@@ -188,8 +210,9 @@ export default class AdComponent extends Component {
     if (this._observer) {
       this._observer.disconnect();
     }
-    if (this.element) {
-      this.element.removeEventListener("click", this._handleAdClick);
+    const el = this._trackingElement || this.element;
+    if (el) {
+      el.removeEventListener("click", this._handleAdClick);
     }
   }
 }

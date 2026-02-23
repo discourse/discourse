@@ -199,7 +199,7 @@ export default class AmazonProductLinks extends AdComponent {
   }
 
   <template>
-    <div class="amazon-product-links" ...attributes>
+    <div class="amazon-product-links" ...attributes {{this._setupTracking}}>
       {{#if this.showAd}}
         {{#if this.site.mobileView}}
           <div

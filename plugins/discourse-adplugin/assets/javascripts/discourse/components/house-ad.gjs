@@ -188,7 +188,11 @@ export default class HouseAd extends AdComponent {
   }
 
   <template>
-    <div class={{concatClass "house-creative" this.adUnitClass}} ...attributes>
+    <div
+      class={{concatClass "house-creative" this.adUnitClass}}
+      ...attributes
+      {{this._setupTracking}}
+    >
       {{#if this.showAd}}
         {{htmlSafe this.adHtml}}
       {{/if}}
