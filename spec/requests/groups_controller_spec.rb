@@ -607,6 +607,21 @@ RSpec.describe GroupsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["posts"]).to be_empty
     end
+
+    it "excludes posts from unlisted topics" do
+      visible_post = Fabricate(:post)
+      GroupMention.create!(post: visible_post, group: group)
+
+      unlisted_post = Fabricate(:post)
+      unlisted_post.topic.update!(visible: false)
+      GroupMention.create!(post: unlisted_post, group: group)
+
+      sign_in(user)
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].map { |p| p["id"] }).to contain_exactly(visible_post.id)
+    end
   end
 
   describe "#posts" do

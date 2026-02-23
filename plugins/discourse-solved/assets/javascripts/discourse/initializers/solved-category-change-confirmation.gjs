@@ -17,7 +17,8 @@ export default {
             _solvedEnabled(categoryId, tags) {
               if (
                 this.siteSettings.allow_solved_on_all_topics ||
-                Category.findById(categoryId)?.enable_accepted_answers
+                Category.findById(categoryId)?.custom_fields
+                  ?.enable_accepted_answers === "true"
               ) {
                 return true;
               }
@@ -26,7 +27,7 @@ export default {
                 .split("|")
                 .filter(Boolean);
 
-              return tags.some((t) => solvedTags.includes(t.name));
+              return (tags || []).some((t) => solvedTags.includes(t.name));
             }
 
             @action

@@ -361,7 +361,7 @@ export default class QueryResult extends Component {
             @datasetName={{this.chartDatasetName}}
           />
         {{else}}
-          <table>
+          <table class="query-results-table">
             <thead>
               <tr class="headers">
                 {{#each this.columnNames as |col|}}

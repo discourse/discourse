@@ -10,7 +10,7 @@ export default class AdminPluginsExplorerIndexRoute extends Route {
     const { id, ...queryParams } = transition.to.queryParams;
     if (id) {
       this.router.transitionTo(
-        "adminPlugins.show.explorer.queries.details",
+        "adminPlugins.show.explorer.details",
         PLUGIN_ID,
         id,
         { queryParams }

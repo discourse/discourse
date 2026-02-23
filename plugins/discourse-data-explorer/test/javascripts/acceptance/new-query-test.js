@@ -91,12 +91,10 @@ acceptance("Data Explorer Plugin | New Query", function (needs) {
   });
 
   test("creates a new query", async function (assert) {
-    await visit("/admin/plugins/discourse-data-explorer");
+    await visit("/admin/plugins/discourse-data-explorer/queries");
 
-    // select new query button
-    await click(".query-list button");
+    await click(".d-page-subheader .btn-primary");
     await fillIn(".query-create input", "foo");
-    // select create new query button
     await click(".query-create button");
 
     assert.strictEqual(

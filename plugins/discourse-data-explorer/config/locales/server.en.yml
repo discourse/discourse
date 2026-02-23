@@ -1,6 +1,6 @@
 en:
   site_settings:
-    data_explorer_enabled: "Enable the Data Explorer at /admin/plugins/discourse-data-explorer"
+    data_explorer_enabled: "Enable data explorer"
   discourse_automation:
     scriptables:
       recurring_data_explorer_result_pm:

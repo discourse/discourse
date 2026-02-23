@@ -150,9 +150,11 @@ describe "Content localization language switcher", type: :system do
     select_language("ja")
 
     expect(topic_list).to have_content("孫子兵法からの人生戦略")
-    expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
-      I18n.t("js.content_localization.toggle_localized.translated"),
-    )
+    I18n.with_locale(:ja) do
+      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        I18n.t("js.content_localization.toggle_localized.translated"),
+      )
+    end
 
     page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
     expect(topic_list).to have_content("Life strategies from The Art of War")

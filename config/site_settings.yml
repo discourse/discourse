@@ -91,6 +91,7 @@ required:
   notification_email:
     default: "noreply@unconfigured.discourse.org"
     type: email
+    area: "email"
   site_contact_username:
     default: ""
     type: username
@@ -2751,9 +2752,6 @@ security:
     default: true
   content_security_policy_report_only:
     default: false
-  content_security_policy_collect_reports:
-    default: false
-    hidden: true
   content_security_policy_frame_ancestors:
     default: true
   content_security_policy_script_src:
@@ -3171,6 +3169,9 @@ navigation:
     area: "navigation"
 
 embedding:
+  embed_full_app:
+    default: false
+    hidden: true
   embed_by_username:
     default: ""
     type: username
@@ -4217,6 +4218,10 @@ experimental:
       impact: "feature,all_members"
       status: "experimental"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
+  experimental_tag_settings_page:
+    default: false
+    client: true
+    area: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -4260,16 +4265,6 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions|experimental"
-    hidden: true
-  reviewable_ui_refresh:
-    client: true
-    type: group_list
-    default: ""
-    area: "experimental"
-    hidden: true
-  force_old_reviewable_ui:
-    client: true
-    default: false
     hidden: true
   reviewable_old_moderator_actions:
     default: true

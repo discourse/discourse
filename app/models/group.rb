@@ -434,6 +434,7 @@ class Group < ActiveRecord::Base
         .includes(:user, :topic, topic: :category)
         .references(:posts, :topics, :category)
         .where.not(topics: { archetype: Archetype.private_message })
+        .where("topics.visible")
         .where(post_type: Post.types[:regular])
         .where("group_mentions.group_id = ?", self.id)
 

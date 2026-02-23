@@ -19,6 +19,7 @@ export default class DiscourseAiToolsNewRoute extends DiscourseRoute {
     controller.set("allTools", toolsModel);
     controller.set("presets", toolsModel.resultSetMeta.presets);
     controller.set("llms", toolsModel.resultSetMeta.llms);
+    controller.set("secrets", toolsModel.resultSetMeta.ai_secrets);
     controller.set("settings", toolsModel.resultSetMeta.settings);
     controller.set("selectedPreset", this.preset);
   }

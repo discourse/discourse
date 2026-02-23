@@ -16,6 +16,7 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
     )
   end
   fab!(:llm_model)
+  fab!(:ai_secret)
   fab!(:tag1) { Fabricate(:tag, name: "tag1") }
   fab!(:tag2) { Fabricate(:tag, name: "tag2") }
   fab!(:category) { Fabricate(:category, name: "Test Category", slug: "test-category") }
@@ -40,6 +41,59 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
       result = runner.invoke
       expect(result["baseUrl"]).to eq(Discourse.base_url)
+    end
+
+    it "allows scripts to resolve configured secret aliases" do
+      tool.update!(
+        secret_contracts: [{ alias: "external_api_key" }],
+        script: "function invoke() { return { key: secrets.get('external_api_key') }; }",
+      )
+      AiToolSecretBinding.create!(
+        ai_tool: tool,
+        alias: "external_api_key",
+        ai_secret_id: ai_secret.id,
+      )
+
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      result = runner.invoke
+
+      expect(result["key"]).to eq(ai_secret.secret)
+    end
+
+    it "raises when secret alias is not bound" do
+      tool.update!(
+        secret_contracts: [{ alias: "external_api_key" }],
+        script: "function invoke() { return secrets.get('external_api_key'); }",
+      )
+
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+
+      expect { runner.invoke }.to raise_error(
+        Discourse::InvalidParameters,
+        /Missing required credential bindings/,
+      )
+    end
+
+    it "resolves secrets from in-flight secret_bindings override" do
+      tool.update!(
+        secret_contracts: [{ alias: "external_api_key" }],
+        script: "function invoke() { return { key: secrets.get('external_api_key') }; }",
+      )
+
+      bindings = [{ "alias" => "external_api_key", "ai_secret_id" => ai_secret.id }]
+
+      runner =
+        described_class.new(
+          parameters: {
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+          secret_bindings: bindings,
+        )
+      result = runner.invoke
+
+      expect(result["key"]).to eq(ai_secret.secret)
     end
 
     it "can set tags on a topic" do

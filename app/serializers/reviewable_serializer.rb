@@ -193,8 +193,6 @@ class ReviewableSerializer < ApplicationSerializer
 
     return if user.blank?
 
-    serializer_class =
-      scope.can_see_reviewable_ui_refresh? ? FlaggedUserSerializer : UserWithCustomFieldsSerializer
-    serializer_class.new(user, scope:, root: false)
+    FlaggedUserSerializer.new(user, scope: scope, root: false)
   end
 end
