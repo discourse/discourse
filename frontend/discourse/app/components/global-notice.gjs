@@ -81,6 +81,13 @@ export default class GlobalNotice extends Component {
     return !this.router.currentRouteName.startsWith("wizard.");
   }
 
+  get #isAdminOrReviewRoute() {
+    return (
+      this.router.currentRouteName?.startsWith("admin") ||
+      this.router.currentRouteName?.startsWith("review")
+    );
+  }
+
   get notices() {
     let notices = [];
 
@@ -147,8 +154,7 @@ export default class GlobalNotice extends Component {
           text: i18n("emails_are_disabled"),
           id: "alert-emails-disabled",
           options: {
-            dismissable: true,
-            persistentDismiss: false,
+            visibility: () => this.#isAdminOrReviewRoute,
           },
         })
       );
@@ -158,8 +164,7 @@ export default class GlobalNotice extends Component {
           text: i18n("emails_are_disabled_non_staff"),
           id: "alert-emails-disabled",
           options: {
-            dismissable: true,
-            persistentDismiss: false,
+            visibility: () => this.#isAdminOrReviewRoute,
           },
         })
       );
