@@ -75,9 +75,52 @@ module Discourse
     checkout_version
   end
 
+  def self.find_compatible_git_branch(path)
+    upstream_ref =
+      Discourse::Utils.execute_command(
+        "git",
+        "-C",
+        path,
+        "rev-parse",
+        "--abbrev-ref",
+        "--symbolic-full-name",
+        "HEAD@{upstream}",
+      ).strip
+
+    remote_name = upstream_ref.split("/", 2)[0]
+    return if remote_name.blank?
+
+    compat_branch = "d-compat/v#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
+    remote_branch_ref = "refs/remotes/#{remote_name}/#{compat_branch}"
+
+    begin
+      return Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref).strip
+    rescue Discourse::Utils::CommandError
+    end
+
+    Discourse::Utils.execute_command(
+      "git",
+      "-C",
+      path,
+      "fetch",
+      "--quiet",
+      "--prune",
+      remote_name,
+      "+refs/heads/*:refs/remotes/#{remote_name}/*",
+    )
+
+    Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref).strip
+  rescue Discourse::Utils::CommandError
+    nil
+  end
+
   # Find a compatible resource from a git repo
   def self.find_compatible_git_resource(path)
     return unless File.directory?("#{path}/.git")
+
+    if compat_branch_sha = find_compatible_git_branch(path)
+      return compat_branch_sha
+    end
 
     tree_info =
       Discourse::Utils.execute_command(

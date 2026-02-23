@@ -154,36 +154,124 @@ RSpec.describe Discourse do
   end
 
   describe ".find_compatible_git_resource" do
-    let!(:git_directory) do
-      path = nil
-
+    def setup_remote_upstream(path)
       capture_stdout do
-        # Note the lack of colon between version and hash
-        path = setup_git_repo(".discourse-compatibility" => "1.0.0.beta1 12f82d5")
-
-        # Simulate a remote upstream
         `cd #{path} && git remote add origin #{path}/.git && git fetch -q`
         `cd #{path} && git branch -u origin/$(git rev-parse --abbrev-ref HEAD)`
       end
-
-      path
     end
 
-    after { FileUtils.remove_entry(git_directory) }
-
-    it "gracefully handles invalid input" do
-      output =
-        capture_stderr { expect(Discourse.find_compatible_git_resource(git_directory)).to be_nil }
-
-      expect(output).to include("Invalid version list")
+    let(:compat_branch_name) do
+      "d-compat/v#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
     end
 
-    it "gracefully handles large .discourse-compatibility files" do
-      stub_const(Discourse, "MAX_METADATA_FILE_SIZE", 1) do
+    context "when there is a matching d-compat branch" do
+      let!(:git_directory) do
+        path = setup_git_repo(".discourse-compatibility" => "<= 9999.0: fallback-ref")
+
+        capture_stdout do
+          `cd #{path} && git checkout -b #{compat_branch_name}`
+          add_to_git_repo(path, "compat.txt" => "from branch")
+          `cd #{path} && git checkout -`
+        end
+
+        setup_remote_upstream(path)
+        path
+      end
+
+      after { FileUtils.remove_entry(git_directory) }
+
+      it "returns the branch commit and ignores .discourse-compatibility" do
+        compat_branch_sha = `cd #{git_directory} && git rev-parse #{compat_branch_name}`.strip
+
+        expect(Discourse.find_compatible_git_resource(git_directory)).to eq(compat_branch_sha)
+      end
+    end
+
+    context "when the repo is single-branch but d-compat exists remotely" do
+      let!(:repo_setup) do
+        source = setup_git_repo(".discourse-compatibility" => "<= 9999.0: fallback-ref")
+
+        capture_stdout do
+          `cd #{source} && git checkout -b #{compat_branch_name}`
+          add_to_git_repo(source, "compat.txt" => "from branch")
+          `cd #{source} && git checkout -`
+        end
+
+        compat_branch_sha = `cd #{source} && git rev-parse #{compat_branch_name}`.strip
+
+        clone = Dir.mktmpdir
+        capture_stdout do
+          `git clone --quiet --single-branch -b main '#{source}' '#{clone}'`
+          `cd #{clone} && git branch -u origin/$(git rev-parse --abbrev-ref HEAD)`
+        end
+
+        { source: source, clone: clone, compat_branch_sha: compat_branch_sha }
+      end
+
+      let(:git_directory) { repo_setup[:clone] }
+      let(:source_directory) { repo_setup[:source] }
+      let(:compat_branch_sha) { repo_setup[:compat_branch_sha] }
+
+      after do
+        FileUtils.remove_entry(git_directory)
+        FileUtils.remove_entry(source_directory)
+      end
+
+      it "widens the clone fetch and resolves the branch commit" do
+        expect(Discourse.find_compatible_git_resource(git_directory)).to eq(compat_branch_sha)
+      end
+    end
+
+    context "when there is no matching d-compat branch" do
+      let!(:git_directory) do
+        path = setup_git_repo(".discourse-compatibility" => "<= 9999.0: fallback-ref")
+        setup_remote_upstream(path)
+        path
+      end
+
+      after { FileUtils.remove_entry(git_directory) }
+
+      it "falls back to .discourse-compatibility" do
+        expect(Discourse.find_compatible_git_resource(git_directory)).to eq("fallback-ref")
+      end
+    end
+
+    context "with an invalid .discourse-compatibility file" do
+      let!(:git_directory) do
+        path = setup_git_repo(".discourse-compatibility" => "1.0.0.beta1 12f82d5")
+        setup_remote_upstream(path)
+        path
+      end
+
+      after { FileUtils.remove_entry(git_directory) }
+
+      it "gracefully handles invalid input" do
         output =
           capture_stderr { expect(Discourse.find_compatible_git_resource(git_directory)).to be_nil }
 
-        expect(output).to include(Discourse::VERSION_COMPATIBILITY_FILENAME)
+        expect(output).to include("Invalid version list")
+      end
+    end
+
+    context "with a large .discourse-compatibility file" do
+      let!(:git_directory) do
+        path = setup_git_repo(".discourse-compatibility" => "<= 9999.0: fallback-ref")
+        setup_remote_upstream(path)
+        path
+      end
+
+      after { FileUtils.remove_entry(git_directory) }
+
+      it "gracefully handles large .discourse-compatibility files" do
+        stub_const(Discourse, "MAX_METADATA_FILE_SIZE", 1) do
+          output =
+            capture_stderr do
+              expect(Discourse.find_compatible_git_resource(git_directory)).to be_nil
+            end
+
+          expect(output).to include(Discourse::VERSION_COMPATIBILITY_FILENAME)
+        end
       end
     end
   end
