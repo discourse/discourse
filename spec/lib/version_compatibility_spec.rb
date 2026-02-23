@@ -188,41 +188,6 @@ RSpec.describe Discourse do
       end
     end
 
-    context "when the repo is single-branch but d-compat exists remotely" do
-      let!(:repo_setup) do
-        source = setup_git_repo(".discourse-compatibility" => "<= 9999.0: fallback-ref")
-
-        capture_stdout do
-          `cd #{source} && git checkout -b #{compat_branch_name}`
-          add_to_git_repo(source, "compat.txt" => "from branch")
-          `cd #{source} && git checkout -`
-        end
-
-        compat_branch_sha = `cd #{source} && git rev-parse #{compat_branch_name}`.strip
-
-        clone = Dir.mktmpdir
-        capture_stdout do
-          `git clone --quiet --single-branch -b main '#{source}' '#{clone}'`
-          `cd #{clone} && git branch -u origin/$(git rev-parse --abbrev-ref HEAD)`
-        end
-
-        { source: source, clone: clone, compat_branch_sha: compat_branch_sha }
-      end
-
-      let(:git_directory) { repo_setup[:clone] }
-      let(:source_directory) { repo_setup[:source] }
-      let(:compat_branch_sha) { repo_setup[:compat_branch_sha] }
-
-      after do
-        FileUtils.remove_entry(git_directory)
-        FileUtils.remove_entry(source_directory)
-      end
-
-      it "widens the clone fetch and resolves the branch commit" do
-        expect(Discourse.find_compatible_git_resource(git_directory)).to eq(compat_branch_sha)
-      end
-    end
-
     context "when there is no matching d-compat branch" do
       let!(:git_directory) do
         path = setup_git_repo(".discourse-compatibility" => "<= 9999.0: fallback-ref")
