@@ -179,4 +179,70 @@ RSpec.describe UserActionsController do
       end
     end
   end
+
+  describe "#show" do
+    fab!(:acting_user) { Fabricate(:user, refresh_auto_groups: true) }
+
+    fab!(:target_post) do
+      UserActionManager.enable
+      post = create_post(user: acting_user)
+      acting_user.user_stat.update!(post_count: 1)
+      post
+    end
+
+    fab!(:user_action) do
+      UserAction.find_by(user_id: acting_user.id, action_type: UserAction.types[:new_topic])
+    end
+
+    it "returns the action for a visible user with a public action" do
+      get "/user_actions/#{user_action.id}.json"
+
+      parsed = response.parsed_body["user_action"]
+
+      expect(response).to have_http_status :ok
+      expect(parsed["action_type"]).to eq(user_action.action_type)
+      expect(parsed["title"]).to eq(target_post.topic.title)
+      expect(parsed["excerpt"]).to eq(
+        PrettyText.excerpt(target_post.cooked, 300, keep_emoji_images: true),
+      )
+    end
+
+    it "returns 404 for a non-existent action" do
+      get "/user_actions/-1.json"
+
+      expect(response).to have_http_status :not_found
+    end
+
+    it "returns 404 when the acting user has a hidden profile" do
+      SiteSetting.allow_users_to_hide_profile = true
+      acting_user.user_option.update!(hide_profile: true)
+
+      get "/user_actions/#{user_action.id}.json"
+
+      expect(response).to have_http_status :not_found
+    end
+
+    it "returns 404 when hide_user_activity_tab is enabled" do
+      SiteSetting.hide_user_activity_tab = true
+
+      get "/user_actions/#{user_action.id}.json"
+
+      expect(response).to have_http_status :not_found
+    end
+
+    it "returns 404 for a private action type viewed by a non-admin non-owner" do
+      liker = Fabricate(:user)
+      other_user = Fabricate(:user)
+      UserActionManager.enable
+      PostActionNotifier.enable
+      PostActionCreator.like(liker, target_post)
+      was_liked_action =
+        UserAction.find_by(user_id: acting_user.id, action_type: UserAction.types[:was_liked])
+
+      sign_in(other_user)
+      get "/user_actions/#{was_liked_action.id}.json"
+
+      expect(response).to have_http_status :not_found
+    end
+  end
 end
