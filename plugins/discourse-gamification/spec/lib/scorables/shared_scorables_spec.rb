@@ -317,7 +317,7 @@ RSpec.describe DiscourseGamification::ChatReactionReceived do
       Chat::Message.all.each { |m| Fabricate(:chat_message_reaction, chat_message: m) }
     end
 
-    # ten reactions recieved
+    # ten reactions received
     let(:expected_score) { 10 }
   end
 

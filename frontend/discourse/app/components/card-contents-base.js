@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/require-tagless-components */
 import Component from "@ember/component";
 import { alias, match } from "@ember/object/computed";
 import { next, schedule, throttle } from "@ember/runloop";

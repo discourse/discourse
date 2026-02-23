@@ -51,8 +51,6 @@ ru:
     chat_integration_flowdock_excerpt_length: "Размер сообщения в Flowdock"
     chat_integration_groupme_enabled: "Включить провайдера для чат-интеграции с Groupme"
     chat_integration_groupme_excerpt_length: "Размер сообщения в Groupme"
-    chat_integration_groupme_bot_ids: "*требуются* идентификаторы ботов, разделенные запятыми, при наличии нескольких ботов"
-    chat_integration_groupme_instance_names: " *требуются* имена GroupMe, разделенные запятыми, при наличии нескольких элементов (в том же порядке, что и идентификаторы ботов)"
     chat_integration_teams_enabled: "Включить интеграцию с Microsoft Teams"
     chat_integration_teams_excerpt_length: "Размер сообщения в Microsoft Team"
     chat_integration_powerautomate_enabled: "Включить интеграцию с Microsoft Power Automate"
@@ -93,10 +91,8 @@ ru:
         create:
           created: "Правило успешно создано"
           updated: "Правило успешно обновлено"
-          error: "Извините, при создании этого правила произошла ошибка."
         delete:
           success: "Правило успешно удалено"
-          error: "При удалении этого правила произошла ошибка. Запустите `/discourse status` для получения списка правил."
         not_found:
           tag: "Тег *%{name}* не найден."
           category: "Раздел *%{name}* не найден. Доступные разделы: *%{list}*"
@@ -158,10 +154,8 @@ ru:
         create:
           created: "Правило успешно создано"
           updated: "Правило успешно обновлено"
-          error: "Извините, при создании этого правила произошла ошибка."
         delete:
           success: "Правило успешно удалено"
-          error: "При удалении этого правила произошла ошибка. Запустить <code>/status</code> для получения списка правил."
         not_found:
           tag: "Тег <b>%{name}</b> не найден."
           category: "Раздел <b>%{name}</b> не найден. Доступные разделы: <b>%{list}</b>"
@@ -192,10 +186,8 @@ ru:
         create:
           created: "Правило успешно создано"
           updated: "Правило успешно обновлено"
-          error: "Извините, при создании этого правила произошла ошибка."
         delete:
           success: "Правило успешно удалено"
-          error: "При удалении этого правила произошла ошибка. Запустите `/discourse status` для получения списка правил."
         not_found:
           tag: "Тег *%{name}* не найден."
           category: "Раздел *%{name}* не найден. Доступные разделы: *%{list}*"

@@ -316,11 +316,12 @@ class SiteSerializer < ApplicationSerializer
 
   def navigation_menu_site_top_tags
     if top_tags.present?
-      tag_names = top_tags[0...SIDEBAR_TOP_TAGS_TO_SHOW]
-      serialized = serialize_tags(Tag.where(name: tag_names))
+      top_tag_objects = top_tags[0...SIDEBAR_TOP_TAGS_TO_SHOW]
+      tag_ids = top_tag_objects.map { |t| t[:id] }
+      serialized = serialize_tags(Tag.where(id: tag_ids))
 
       # Ensures order of top tags is preserved
-      serialized.sort_by { |tag| tag_names.index(tag[:name]) }
+      serialized.sort_by { |tag| tag_ids.index(tag[:id]) }
     else
       []
     end

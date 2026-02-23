@@ -2,14 +2,14 @@
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
-import { classNames } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import DButton from "discourse/components/d-button";
 import FilterableList from "../../components/d-templates/filterable-list";
 
 const SELECTOR_EDITOR_PREVIEW =
   "#reply-control .d-editor-preview-wrapper > .d-editor-preview";
 
-@classNames("d-templates")
+@tagName("")
 export default class DTemplatesEditorPreview extends Component {
   static shouldRender(args, context) {
     return !context.site.mobileView;
@@ -56,18 +56,20 @@ export default class DTemplatesEditorPreview extends Component {
   }
 
   <template>
-    {{#if this.templatesVisible}}
-      <div class="d-templates-container">
-        <DButton
-          @action={{this.hide}}
-          @icon="xmark"
-          class="modal-close close btn-flat"
-        />
-        <FilterableList
-          @onInsertTemplate={{this.onInsertTemplate}}
-          @onAfterInsertTemplate={{this.hide}}
-        />
-      </div>
-    {{/if}}
+    <div class="d-templates" ...attributes>
+      {{#if this.templatesVisible}}
+        <div class="d-templates-container">
+          <DButton
+            @action={{this.hide}}
+            @icon="xmark"
+            class="modal-close close btn-flat"
+          />
+          <FilterableList
+            @onInsertTemplate={{this.onInsertTemplate}}
+            @onAfterInsertTemplate={{this.hide}}
+          />
+        </div>
+      {{/if}}
+    </div>
   </template>
 }

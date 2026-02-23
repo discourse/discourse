@@ -95,12 +95,9 @@ export default class SiteSettingUpload extends Component {
     },
   });
 
-  applyLightbox = modifier(() =>
-    lightbox(
-      document.querySelector(`#${this.settingId}.file-uploader`),
-      this.siteSettings
-    )
-  );
+  applyLightbox = modifier((element) => {
+    lightbox(element.closest(".file-uploader"), this.siteSettings);
+  });
 
   willDestroy() {
     super.willDestroy(...arguments);
@@ -244,12 +241,14 @@ export default class SiteSettingUpload extends Component {
   }
 
   @action
-  toggleLightbox() {
+  async toggleLightbox() {
     const link = document.querySelector(`#${this.settingId} a.lightbox`);
-    if (link) {
-      lightbox(link);
-      link.click();
+    if (!link) {
+      return;
     }
+
+    await lightbox(link.closest(".file-uploader"), this.siteSettings);
+    link.click();
   }
 
   @action

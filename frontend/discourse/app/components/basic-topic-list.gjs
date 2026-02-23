@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-jquery, ember/no-observers, ember/require-tagless-components */
 import Component from "@ember/component";
 import { alias, not } from "@ember/object/computed";
 import { service } from "@ember/service";
@@ -105,6 +105,7 @@ export default class BasicTopicList extends Component {
           @order={{this.order}}
           @ascending={{this.ascending}}
           @focusLastVisitedTopic={{this.focusLastVisitedTopic}}
+          @listContext={{this.listContext}}
         />
       {{else}}
         {{#unless this.loadingMore}}

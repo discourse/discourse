@@ -12,16 +12,24 @@ class UpcomingChanges::Toggle
     attribute :enabled, :boolean
     validates :setting_name, presence: true
     validates :enabled, inclusion: [true, false]
+
+    def upcoming_change_event
+      enabled ? :upcoming_change_enabled : :upcoming_change_disabled
+    end
   end
 
   policy :current_user_is_admin
   policy :setting_is_available
   transaction { step :toggle }
 
+  step :clear_groups_if_disallowed
+
   only_if(:should_log_change) do
     step :log_change
     step :log_event
   end
+
+  step :trigger_event
 
   private
 
@@ -34,16 +42,25 @@ class UpcomingChanges::Toggle
   end
 
   def toggle(params:, guardian:, options:)
+    context[:previous_value] = SiteSetting.public_send(params.setting_name)
+
     # TODO (martin) Remove this once we release upcoming changes,
     # otherwise it will be confusing for people to see log messages
     # about upcoming changes via "What's new?" experimental toggles
     # before we update that UI.
     if SiteSetting.enable_upcoming_changes
-      context[:previous_value] = SiteSetting.public_send(params.setting_name)
       SiteSetting.send("#{params.setting_name}=", params.enabled)
     else
       SiteSetting.public_send("#{params.setting_name}=", params.enabled)
     end
+  end
+
+  def clear_groups_if_disallowed(params:)
+    metadata = SiteSetting.upcoming_change_metadata[params.setting_name.to_sym]
+    return if !metadata || !metadata[:disallow_enabled_for_groups]
+
+    SiteSettingGroup.find_by(name: params.setting_name)&.destroy!
+    SiteSetting.refresh_site_setting_group_ids!
   end
 
   def should_log_change(options:)
@@ -71,5 +88,9 @@ class UpcomingChanges::Toggle
       upcoming_change_name: params.setting_name,
       acting_user: guardian.user,
     )
+  end
+
+  def trigger_event(params:)
+    DiscourseEvent.trigger(params.upcoming_change_event, params.setting_name)
   end
 end

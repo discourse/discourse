@@ -132,4 +132,34 @@ RSpec.describe DiscourseSubscriptions::User::SubscriptionsController do
       end
     end
   end
+
+  context "when authenticated as another user" do
+    fab!(:user_1, :user)
+    fab!(:user_2, :user)
+    fab!(:customer) { Fabricate(:customer, user_id: user_1.id, customer_id: "001") }
+    fab!(:subscription) { Fabricate(:subscription, customer_id: customer.id, external_id: "abc") }
+
+    before { sign_in(user_2) }
+
+    describe "destroy" do
+      it "does not allow user to cancel a subscription that is not theirs" do
+        ::Stripe::Subscription.expects(:update).never
+
+        delete "/s/user/subscriptions/abc.json"
+
+        expect(response.status).to eq(404)
+      end
+    end
+
+    describe "update" do
+      it "does not allow user to update a subscription that is not theirs" do
+        ::Stripe::PaymentMethod.expects(:attach).never
+        ::Stripe::Subscription.expects(:update).never
+
+        put "/s/user/subscriptions/abc.json", params: { payment_method: "x" }
+
+        expect(response.status).to eq(404)
+      end
+    end
+  end
 end

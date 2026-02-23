@@ -10,10 +10,6 @@ be:
       actions:
         no_action_comment:
           title: "Ніякіх дзеянняў"
-        agree_and_suspend:
-          description: "Пагадзіцеся са сцягамі і падвесіць карыстальнік."
-        agree_and_silence:
-          description: "Пагадзіцеся са сцягамі і маўчанне карыстальніка."
   post_action_types:
     vote:
       title: "Галасаваць"

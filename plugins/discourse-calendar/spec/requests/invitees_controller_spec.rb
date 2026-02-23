@@ -108,6 +108,14 @@ module DiscoursePostEvent
           filteredInvitees = response.parsed_body["invitees"]
           expect(filteredInvitees.count).to eq(2)
         end
+
+        it "returns 400 when filtering by an invalid type" do
+          get "/discourse-post-event/events/#{post_event_1.id}/invitees.json",
+              params: {
+                type: "nonexistent",
+              }
+          expect(response.status).to eq(400)
+        end
       end
     end
 
@@ -138,6 +146,17 @@ module DiscoursePostEvent
             expect(invitee.status).to eq(1)
             expect(invitee.post_id).to eq(post_1.id)
           end
+
+          it "returns 404 when invitee does not exist" do
+            put "/discourse-post-event/events/#{post_event_2.id}/invitees/999999.json",
+                params: {
+                  invitee: {
+                    status: "interested",
+                  },
+                }
+
+            expect(response.status).to eq(404)
+          end
         end
 
         describe "destroying invitee" do
@@ -161,17 +180,23 @@ module DiscoursePostEvent
             end
           end
 
-          context "when acting user can’t act on discourse event" do
+          context "when acting user can't act on invitee" do
             let(:lurker) { Fabricate(:user) }
 
             before { sign_in(lurker) }
 
-            it "doesn’t destroy the invitee" do
+            it "doesn't destroy the invitee" do
               invitee = post_event_2.invitees.first
               delete "/discourse-post-event/events/#{post_event_2.id}/invitees/#{invitee.id}.json"
               expect(Invitee.where(id: invitee.id).length).to eq(1)
               expect(response.status).to eq(403)
             end
+          end
+
+          it "returns 404 when invitee does not exist" do
+            delete "/discourse-post-event/events/#{post_event_2.id}/invitees/999999.json"
+
+            expect(response.status).to eq(404)
           end
         end
 
@@ -214,7 +239,7 @@ module DiscoursePostEvent
         end
       end
 
-      context "when an invitee doesn’t exist" do
+      context "when an invitee doesn't exist" do
         let(:post_event_2) { Fabricate(:event, post: post_1) }
 
         it "creates an invitee" do
@@ -396,6 +421,51 @@ module DiscoursePostEvent
           end
         end
       end
+    end
+  end
+
+  describe "anonymous access to InviteesController" do
+    before do
+      SiteSetting.calendar_enabled = true
+      SiteSetting.discourse_post_event_enabled = true
+    end
+
+    fab!(:admin_user) { Fabricate(:user, admin: true) }
+    fab!(:topic) { Fabricate(:topic, user: admin_user) }
+    fab!(:post_1) { Fabricate(:post, user: admin_user, topic: topic) }
+    fab!(:event) { Fabricate(:event, post: post_1) }
+    fab!(:invitee_user, :user)
+    fab!(:invitee) do
+      DiscoursePostEvent::Invitee.create!(
+        post_id: post_1.id,
+        user_id: invitee_user.id,
+        status: DiscoursePostEvent::Invitee.statuses[:going],
+      )
+    end
+
+    it "requires login for create" do
+      post "/discourse-post-event/events/#{event.id}/invitees.json",
+           params: {
+             invitee: {
+               status: "going",
+             },
+           }
+      expect(response.status).to eq(403)
+    end
+
+    it "requires login for update" do
+      put "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json",
+          params: {
+            invitee: {
+              status: "interested",
+            },
+          }
+      expect(response.status).to eq(403)
+    end
+
+    it "requires login for destroy" do
+      delete "/discourse-post-event/events/#{event.id}/invitees/#{invitee.id}.json"
+      expect(response.status).to eq(403)
     end
   end
 end

@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe DiscourseAi::Personas::ToolRunner do
-  fab!(:user)
-  fab!(:bot_user) { Fabricate(:user, admin: true) }
+  fab!(:user) { Fabricate(:user, refresh_auto_groups: true) }
+  fab!(:bot_user) { Fabricate(:user, admin: true, refresh_auto_groups: true) }
   fab!(:tool) do
     AiTool.create!(
       name: "test_tool",
@@ -16,6 +16,7 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
     )
   end
   fab!(:llm_model)
+  fab!(:ai_secret)
   fab!(:tag1) { Fabricate(:tag, name: "tag1") }
   fab!(:tag2) { Fabricate(:tag, name: "tag2") }
   fab!(:category) { Fabricate(:category, name: "Test Category", slug: "test-category") }
@@ -40,6 +41,59 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
       result = runner.invoke
       expect(result["baseUrl"]).to eq(Discourse.base_url)
+    end
+
+    it "allows scripts to resolve configured secret aliases" do
+      tool.update!(
+        secret_contracts: [{ alias: "external_api_key" }],
+        script: "function invoke() { return { key: secrets.get('external_api_key') }; }",
+      )
+      AiToolSecretBinding.create!(
+        ai_tool: tool,
+        alias: "external_api_key",
+        ai_secret_id: ai_secret.id,
+      )
+
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+      result = runner.invoke
+
+      expect(result["key"]).to eq(ai_secret.secret)
+    end
+
+    it "raises when secret alias is not bound" do
+      tool.update!(
+        secret_contracts: [{ alias: "external_api_key" }],
+        script: "function invoke() { return secrets.get('external_api_key'); }",
+      )
+
+      runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+
+      expect { runner.invoke }.to raise_error(
+        Discourse::InvalidParameters,
+        /Missing required credential bindings/,
+      )
+    end
+
+    it "resolves secrets from in-flight secret_bindings override" do
+      tool.update!(
+        secret_contracts: [{ alias: "external_api_key" }],
+        script: "function invoke() { return { key: secrets.get('external_api_key') }; }",
+      )
+
+      bindings = [{ "alias" => "external_api_key", "ai_secret_id" => ai_secret.id }]
+
+      runner =
+        described_class.new(
+          parameters: {
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+          secret_bindings: bindings,
+        )
+      result = runner.invoke
+
+      expect(result["key"]).to eq(ai_secret.secret)
     end
 
     it "can set tags on a topic" do
@@ -173,7 +227,7 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       expect(result["success"]).to eq(true)
       expect(post.reload.raw).to eq("new raw content")
       expect(post.edit_reason).to eq("AI edit")
-      expect(post.last_editor_id).to eq(Discourse.system_user.id)
+      expect(post.last_editor_id).to eq(bot_user.id)
     end
 
     it "can edit a post as a specific user" do
@@ -195,6 +249,28 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       result = runner.invoke
       expect(result["success"]).to eq(true)
       expect(post.reload.last_editor_id).to eq(other_user.id)
+    end
+
+    it "denies editing a post when the user lacks permission" do
+      post_author = Fabricate(:user)
+      unprivileged_user = Fabricate(:user)
+      post = Fabricate(:post, user: post_author)
+      original_raw = post.raw
+      tool.update!(
+        script:
+          "function invoke(params) { return discourse.editPost(params.post_id, 'hacked content', { username: '#{unprivileged_user.username}' }); }",
+      )
+      runner =
+        described_class.new(
+          parameters: {
+            post_id: post.id,
+          },
+          llm: llm,
+          bot_user: bot_user,
+          tool: tool,
+        )
+      expect { runner.invoke }.to raise_error(/Permission denied/)
+      expect(post.reload.raw).to eq(original_raw)
     end
 
     it "can generate JSON from LLM" do
@@ -493,6 +569,104 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
       expect(topic.reload.tags.pluck(:name)).to contain_exactly("tag1", "tag2")
     end
 
+    describe "guardian permission checks" do
+      fab!(:private_category) do
+        Fabricate(:category).tap do |c|
+          c.set_permissions(staff: :full)
+          c.save!
+        end
+      end
+      fab!(:private_topic) { Fabricate(:topic, category: private_category) }
+
+      def run_tool(script, parameters)
+        tool.update!(script: script)
+        described_class.new(parameters: parameters, llm: llm, bot_user: bot_user, tool: tool).invoke
+      end
+
+      it "denies regular user access to restricted topics and categories" do
+        params = { username: user.username }
+
+        expect {
+          run_tool(
+            "function invoke(params) { return discourse.editTopic(params.topic_id, { visible: false }, { username: params.username }); }",
+            params.merge(topic_id: private_topic.id),
+          )
+        }.to raise_error(MiniRacer::RuntimeError, /Permission denied/)
+
+        expect {
+          run_tool(
+            'function invoke(params) { return discourse.createTopic({ title: "Test title", raw: "Test body", category_id: params.category_id, username: params.username }); }',
+            params.merge(category_id: private_category.id),
+          )
+        }.to raise_error(MiniRacer::RuntimeError, /Permission denied/)
+
+        expect {
+          run_tool(
+            'function invoke(params) { return discourse.createPost({ topic_id: params.topic_id, raw: "Test reply", username: params.username }); }',
+            params.merge(topic_id: private_topic.id),
+          )
+        }.to raise_error(MiniRacer::RuntimeError, /Permission denied/)
+      end
+
+      it "defaults to bot_user when no username is provided" do
+        new_category = Fabricate(:category)
+        result =
+          run_tool(
+            'function invoke(params) { return discourse.createTopic({ title: "Bot topic title here", raw: "Bot topic body content", category_id: params.category_id }); }',
+            { category_id: new_category.id },
+          )
+        expect(result["success"]).to eq(true)
+        expect(Topic.find(result["topic_id"]).user_id).to eq(bot_user.id)
+
+        result =
+          run_tool(
+            'function invoke(params) { return discourse.createPost({ topic_id: params.topic_id, raw: "Bot reply content" }); }',
+            { topic_id: topic.id },
+          )
+        expect(result["success"]).to eq(true)
+        expect(Post.find(result["post_id"]).user_id).to eq(bot_user.id)
+
+        result =
+          run_tool(
+            "function invoke(params) { return discourse.editTopic(params.topic_id, { visible: false }); }",
+            { topic_id: topic.id },
+          )
+        expect(result["success"]).to eq(true)
+        expect(topic.reload.visible).to eq(false)
+      end
+
+      it "allows moderator to toggle visibility on a topic" do
+        mod = Fabricate(:moderator)
+        result =
+          run_tool(
+            "function invoke(params) { return discourse.editTopic(params.topic_id, { visible: false }, { username: params.username }); }",
+            { topic_id: topic.id, username: mod.username },
+          )
+        expect(result["success"]).to eq(true)
+        expect(topic.reload.visible).to eq(false)
+      end
+
+      it "allows user to createTopic in a permitted category" do
+        result =
+          run_tool(
+            'function invoke(params) { return discourse.createTopic({ title: "A valid topic title here", raw: "Some body content for the topic", category_id: params.category_id, username: params.username }); }',
+            { category_id: category.id, username: user.username },
+          )
+        expect(result["success"]).to eq(true)
+        expect(result["topic_id"]).to be_present
+      end
+
+      it "allows user to createPost in a permitted topic" do
+        result =
+          run_tool(
+            'function invoke(params) { return discourse.createPost({ topic_id: params.topic_id, raw: "A reply to the topic", username: params.username }); }',
+            { topic_id: topic.id, username: user.username },
+          )
+        expect(result["success"]).to eq(true)
+        expect(result["post_id"]).to be_present
+      end
+    end
+
     describe "custom fields" do
       it "can get a custom field from a post" do
         post = Fabricate(:post)
@@ -578,10 +752,19 @@ RSpec.describe DiscourseAi::Personas::ToolRunner do
         expect(result).to eq("true")
       end
 
-      it "throws error for invalid type" do
+      it "throws error for invalid type in setCustomField" do
         tool.update!(
           script:
             "function invoke(params) { return discourse.setCustomField('invalid', 1, 'key', 'val'); }",
+        )
+        runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
+        expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Invalid type/)
+      end
+
+      it "throws error for invalid type in getCustomField" do
+        tool.update!(
+          script:
+            "function invoke(params) { return discourse.getCustomField('invalid', 1, 'key'); }",
         )
         runner = described_class.new(parameters: {}, llm: llm, bot_user: bot_user, tool: tool)
         expect { runner.invoke }.to raise_error(MiniRacer::RuntimeError, /Invalid type/)

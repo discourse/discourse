@@ -75,7 +75,7 @@ es:
       ongoing_event_reminder: "%{title} está en curso."
     errors:
       bulk_invite:
-        max_invitees: "Las primeras %{max_invittes} invitaciones se han enviado. Intenta dividir el archivo en partes más pequeñas."
+        max_invitees: "Las primeras %{max_invitees} invitaciones se han enviado. Intenta dividir el archivo en partes más pequeñas."
         error: "Se produjo un error al subir este archivo. Inténtalo de nuevo más tarde."
       models:
         event:

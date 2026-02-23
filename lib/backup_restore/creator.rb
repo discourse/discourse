@@ -313,7 +313,7 @@ module BackupRestore
 
       @s3_store = FileStore::S3Store.new
       @upload_directory = Discourse.store.upload_path
-      @download_stats = { downloaded: 0, hardlinked: 0 }
+      @download_stats = { downloaded: 0, hardlinked: 0, copied: 0 }
 
       uploads_by_sha1 = group_remote_uploads_by_sha1
       total_uploads = uploads_by_sha1.values.sum(&:size)
@@ -321,7 +321,7 @@ module BackupRestore
 
       uploads_by_sha1.each_value { |upload_group| process_upload_group(upload_group) }
 
-      log "Finished processing uploads: #{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} deduplicated via hardlinks"
+      log "Finished processing uploads: #{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked, #{@download_stats[:copied]} copied"
 
       log "Appending uploads to archive..."
       Discourse::Utils.execute_command(
@@ -335,7 +335,8 @@ module BackupRestore
         chdir: @tmp_directory,
       )
 
-      if @download_stats[:downloaded] == 0 && @download_stats[:hardlinked] == 0
+      if @download_stats[:downloaded] == 0 && @download_stats[:hardlinked] == 0 &&
+           @download_stats[:copied] == 0
         log "No uploads found on S3. Skipping archiving of uploads stored on S3..."
       end
     end
@@ -369,7 +370,7 @@ module BackupRestore
         .drop(1)
         .each do |duplicate|
           duplicate_filename = upload_path_in_archive(duplicate)
-          hardlink_or_download(primary_filename, duplicate, duplicate_filename)
+          primary_filename = create_hardlink(primary_filename, duplicate, duplicate_filename)
         end
     end
 
@@ -388,28 +389,37 @@ module BackupRestore
       false
     end
 
-    def hardlink_or_download(source_filename, upload_data, target_filename)
+    def create_hardlink(source_filename, upload_data, target_filename)
       FileUtils.mkdir_p(File.dirname(target_filename))
       FileUtils.ln(source_filename, target_filename)
       increment_and_log_progress(:hardlinked)
+      source_filename
+    rescue Errno::EMLINK
+      # Filesystem hardlink limit reached - copy file and use as new primary
+      FileUtils.cp(source_filename, target_filename)
+      increment_and_log_progress(:copied)
+      target_filename
     rescue StandardError => ex
-      log "Failed to create hardlink for upload ID #{upload_data.id}, downloading instead", ex
-      download_upload_to_file(upload_data, target_filename)
+      log "Failed to create hardlink for upload ID #{upload_data.id}, copying instead", ex
+      FileUtils.cp(source_filename, target_filename)
+      increment_and_log_progress(:copied)
+      source_filename
     end
 
     def increment_and_log_progress(type)
       @download_stats[type] += 1
-      total = @download_stats[:downloaded] + @download_stats[:hardlinked]
+      total = @download_stats[:downloaded] + @download_stats[:hardlinked] + @download_stats[:copied]
       return if total % 1000 != 0
 
-      log "#{total} files processed (#{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked). Still processing..."
+      log "#{total} files processed (#{@download_stats[:downloaded]} downloaded, #{@download_stats[:hardlinked]} hardlinked, #{@download_stats[:copied]} copied). Still processing..."
     end
 
     def upload_archive
       return unless store.remote?
 
       log "Uploading archive..."
-      content_type = MiniMime.lookup_by_filename(@backup_filename).content_type
+      content_type =
+        MiniMime.lookup_by_filename(@backup_filename)&.content_type || "application/gzip"
       archive_path = File.join(@archive_directory, @backup_filename)
       store.upload_file(@backup_filename, archive_path, content_type)
     end

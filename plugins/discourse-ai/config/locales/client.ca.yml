@@ -34,6 +34,8 @@ ca:
             canned_reply:
               label: "Respon"
     discourse_ai:
+      llm_selector:
+        none: "Cap"
       features:
         back: "Enrere"
         disabled: "(desactivat)"
@@ -114,6 +116,15 @@ ca:
         parameter_required: "Necessari"
         edit: "Edita"
         delete: "Suprimeix"
+      secrets:
+        short_title: "Credencials"
+        name: "Nom"
+        secret: "Valor"
+        back: "Enrere"
+        save: "Desa"
+        edit: "Edita"
+        delete: "Suprimeix"
+        embedding: "Incrustant"
       llms:
         display_name: "Nom"
         provider: "Proveïdor"

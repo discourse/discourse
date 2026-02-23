@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 sv:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "Tillämpa"
-      insert_modal:
-        insert: "Infoga"

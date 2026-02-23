@@ -1,3 +1,4 @@
+/* eslint-disable qunit/no-conditional-assertions */
 import Service from "@ember/service";
 import { click, render } from "@ember/test-helpers";
 import { module, test } from "qunit";

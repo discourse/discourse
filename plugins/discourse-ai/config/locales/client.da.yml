@@ -42,6 +42,8 @@ da:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      llm_selector:
+        none: "Ingen"
       features:
         back: "Tilbage"
         disabled: "(deaktiveret)"
@@ -133,6 +135,15 @@ da:
         delete: "Slet"
         test_modal:
           run: "Kør test"
+      secrets:
+        short_title: "Legitimationsoplysninger"
+        name: "Navn"
+        secret: "værdi"
+        back: "Tilbage"
+        save: "Gem"
+        edit: "Rediger"
+        delete: "Slet"
+        embedding: "Indlejring"
       llms:
         display_name: "Navn"
         save: "Gem"

@@ -14,11 +14,12 @@ module DiscourseRssPolling
       if feed
         rss_feed = RssFeed.find_by_id(feed["id"]) || RssFeed.new
 
+        tags = feed["discourse_tags"]&.map { |t| t["name"] }&.join(",")
         rss_feed.assign_attributes(
           url: feed["feed_url"],
           author: feed["author_username"],
           category_id: feed["discourse_category_id"],
-          tags: feed["discourse_tags"]&.join(","),
+          tags:,
           category_filter: feed["feed_category_filter"],
         )
         if rss_feed.save

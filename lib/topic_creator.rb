@@ -27,7 +27,19 @@ class TopicCreator
 
     category = find_category
     if category.present? && guardian.can_tag?(topic)
-      tags = @opts[:tags].presence || []
+      tags =
+        if @opts[:tags].present?
+          input = @opts[:tags]
+          if input.first.is_a?(String)
+            input
+          else
+            ids = input.filter_map { |t| t[:id]&.to_i }
+            names = input.filter_map { |t| t[:id].blank? && t[:name].presence }
+            Tag.where(id: ids).pluck(:name) + names
+          end
+        else
+          []
+        end
 
       # adds topic.errors
       DiscourseTagging.validate_category_tags(guardian, topic, category, tags)
@@ -191,13 +203,14 @@ class TopicCreator
 
   def setup_tags(topic)
     if @opts[:tags].present?
-      # We can try the full tagging workflow which does validations and other
-      # things like replacing synonyms first, but if this fails then we can try
-      # the simple workflow if validations are skipped.
-      valid_tags = DiscourseTagging.tag_topic_by_names(topic, @guardian, @opts[:tags])
+      tags = @opts[:tags]
+
+      valid_tags = DiscourseTagging.tag_topic(topic, @guardian, tags)
+
       if !valid_tags
         if @opts[:skip_validations]
-          DiscourseTagging.add_or_create_tags_by_name(topic, @opts[:tags])
+          all_names = tags.filter_map { |t| t.is_a?(String) ? t : t[:name] }
+          DiscourseTagging.add_or_create_tags_by_name(topic, all_names)
         else
           topic.errors.add(:base, :unable_to_tag)
           rollback_from_errors!(topic)
@@ -228,8 +241,12 @@ class TopicCreator
     return unless @opts[:archetype] == Archetype.private_message
     topic.subtype = TopicSubtype.user_to_user unless topic.subtype
 
-    if @opts[:target_usernames].blank? && @opts[:target_emails].blank? &&
-         @opts[:target_group_names].blank?
+    if @opts[:target_usernames].present? && @opts[:target_user_ids].present?
+      raise ArgumentError, "Cannot specify both target_usernames and target_user_ids"
+    end
+
+    if @opts[:target_usernames].blank? && @opts[:target_user_ids].blank? &&
+         @opts[:target_emails].blank? && @opts[:target_group_names].blank?
       rollback_with!(topic, :no_user_selected)
     end
 
@@ -237,7 +254,11 @@ class TopicCreator
       rollback_with!(topic, :send_to_email_disabled)
     end
 
-    add_users(topic, @opts[:target_usernames])
+    if @opts[:target_user_ids].present?
+      add_users_by_id(topic, @opts[:target_user_ids])
+    else
+      add_users(topic, @opts[:target_usernames])
+    end
     add_emails(topic, @opts[:target_emails])
     add_groups(topic, @opts[:target_group_names])
 
@@ -254,11 +275,21 @@ class TopicCreator
     return unless usernames
 
     names = usernames.split(",").flatten.map(&:downcase)
+    add_users_from_scope(topic, User.where("username_lower in (?)", names), names.length)
+  end
+
+  def add_users_by_id(topic, user_ids)
+    return unless user_ids
+
+    ids = Array.wrap(user_ids)
+    add_users_from_scope(topic, User.where(id: ids), ids.length)
+  end
+
+  def add_users_from_scope(topic, scope, expected_count)
     len = 0
 
-    User
+    scope
       .includes(:user_option)
-      .where("username_lower in (?)", names)
       .find_each do |user|
         check_can_send_permission!(topic, user)
         @added_users << user
@@ -266,7 +297,7 @@ class TopicCreator
         len += 1
       end
 
-    rollback_with!(topic, :target_user_not_found) unless len == names.length
+    rollback_with!(topic, :target_user_not_found) unless len == expected_count
   end
 
   def add_emails(topic, emails)

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import $ from "jquery";
 
 //  Append our CSRF token to AJAX requests when necessary.

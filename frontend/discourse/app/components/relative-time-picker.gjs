@@ -124,7 +124,7 @@ export default class RelativeTimePicker extends Component {
     } else if (this.args.durationHours !== undefined) {
       this.interval = intervalFromMinutes(this.args.durationHours * HOUR);
     } else {
-      this.interval = "mins";
+      this.interval = "days";
     }
 
     this.duration = this.minutesFromInputValueAndInterval(

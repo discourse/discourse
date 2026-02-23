@@ -185,6 +185,10 @@ class AdminDetailedUserSerializer < AdminUserSerializer
     UserExportSerializer.new(export, scope:).as_json if export
   end
 
+  def include_latest_export?
+    scope.can_export_entity?("user_archive", object.id)
+  end
+
   def upcoming_changes_stats
     object.upcoming_change_stats(scope)
   end

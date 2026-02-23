@@ -10,6 +10,8 @@ uk:
       sort_options:
         votes: "Голоси"
     topic_voting:
+      notification_label:
+        vote_released: "Голос повернуто"
       title: "Голосування за тему"
       reached_limit: "У вас немає голосів, видаліть існуюче голосування!"
       list_votes: "Список своїх голосів"

@@ -77,8 +77,6 @@ fr:
           invalid: "Invalide"
           no_such_category: "Aucune catégorie de ce type"
           no_such_group: "Aucun groupe de ce type"
-          invalid_date: "%{date} est une date invalide"
-          invalid_time: "%{time} est une heure invalide"
     group:
       reports: "Rapports"
     admin:

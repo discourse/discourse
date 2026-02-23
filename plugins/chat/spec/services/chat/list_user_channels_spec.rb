@@ -68,7 +68,7 @@ RSpec.describe Chat::ListUserChannels do
     expect(result.structured[:direct_message_channels]).to eq([dm_channel])
   end
 
-  it "doesnt return channels with destroyed chatable" do
+  it "doesn't return channels with destroyed chatable" do
     dm_channel = Fabricate(:direct_message_channel, users: [current_user])
     dm_channel.chatable.destroy!
     channel_1.chatable.destroy!

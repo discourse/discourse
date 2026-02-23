@@ -85,6 +85,22 @@ RSpec.describe StaticController do
         File.delete(file_path)
       end
     end
+
+    it "does not serve files outside the assets directory via path traversal" do
+      begin
+        secret_dir = Rails.public_path.join("assets-secret")
+        FileUtils.mkdir_p(secret_dir)
+        secret_file = secret_dir.join("leak.txt")
+        File.write(secret_file, "secret content")
+
+        get "/cdn_asset/#{site}/../assets-secret/leak.txt"
+
+        expect(response.status).to eq(404)
+      ensure
+        File.delete(secret_file) if secret_file && File.exist?(secret_file)
+        FileUtils.rm_rf(secret_dir) if secret_dir && Dir.exist?(secret_dir)
+      end
+    end
   end
 
   describe "#show" do

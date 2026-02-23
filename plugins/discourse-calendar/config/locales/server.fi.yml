@@ -75,7 +75,7 @@ fi:
       ongoing_event_reminder: "%{title} on käynnissä."
     errors:
       bulk_invite:
-        max_invitees: "Ensimmäiset %{max_invittes} kutsuttua on luotu. Kokeile jakaa tiedosto pienempiin osiin."
+        max_invitees: "Ensimmäiset %{max_invitees} kutsuttua on luotu. Kokeile jakaa tiedosto pienempiin osiin."
         error: "Tiedoston lataus epäonnistui. Yritä myöhemmin uudelleen."
       models:
         event:

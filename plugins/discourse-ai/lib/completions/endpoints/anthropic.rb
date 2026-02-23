@@ -5,16 +5,10 @@ module DiscourseAi
     module Endpoints
       class Anthropic < Base
         include AnthropicPromptCache
+        include AnthropicShared
+
         def self.can_contact?(llm_model)
           llm_model.provider == "anthropic"
-        end
-
-        def normalize_model_params(model_params)
-          # max_tokens, temperature, stop_sequences are already supported
-          model_params = model_params.dup
-          model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
-          model_params.delete(:temperature) if llm_model.lookup_custom_param("disable_temperature")
-          model_params
         end
 
         def default_options(dialect)
@@ -62,88 +56,22 @@ module DiscourseAi
           options[:stop_sequences] = ["</function_calls>"] if !dialect.native_tool_support? &&
             dialect.prompt.has_tools?
 
-          # effort parameter for Claude Opus 4.5
+          # effort parameter
           effort = llm_model.lookup_custom_param("effort")
           options[:output_config] = { effort: effort } if %w[low medium high].include?(effort)
 
           options
         end
 
-        def provider_id
-          AiApiAuditLog::Provider::Anthropic
-        end
-
         private
-
-        def xml_tags_to_strip(dialect)
-          if dialect.prompt.has_tools?
-            %w[thinking search_quality_reflection search_quality_score]
-          else
-            []
-          end
-        end
-
-        # this is an approximation, we will update it later if request goes through
-        def prompt_size(prompt)
-          tokenizer.size(prompt.system_prompt.to_s + " " + prompt.messages.to_s)
-        end
 
         def model_uri
           URI(llm_model.url)
         end
 
-        def xml_tools_enabled?
-          !@native_tool_support
-        end
-
         def prepare_payload(prompt, model_params, dialect)
-          @native_tool_support = dialect.native_tool_support?
-
-          payload =
-            default_options(dialect).merge(model_params.except(:response_format)).merge(
-              messages: prompt.messages,
-            )
-
-          # Handle tools first
-          if prompt.has_tools?
-            payload[:tools] = prompt.tools
-            if dialect.tool_choice.present?
-              if dialect.tool_choice == :none
-                payload[:tool_choice] = { type: "none" }
-              else
-                payload[:tool_choice] = { type: "tool", name: prompt.tool_choice }
-              end
-            end
-          end
-
-          # Apply prompt caching if enabled
-          apply_anthropic_cache_control!(payload, prompt) if should_apply_prompt_caching?(prompt)
-
-          # Set system prompt if not already set by caching
-          payload[:system] = prompt.system_prompt if prompt.system_prompt.present? &&
-            !payload[:system]
+          payload = prepare_claude_payload(prompt, model_params, dialect)
           payload[:stream] = true if @streaming_mode
-
-          prefilled_message = +""
-
-          # Handle tool choice prefilling
-          if dialect.tool_choice == :none && prompt.has_tools?
-            # prefill prompt to nudge LLM to generate a response that is useful.
-            # without this LLM (even 3.7) can get confused and start text preambles for a tool calls.
-            prefilled_message << dialect.no_more_tool_calls_text
-          end
-
-          # Prefill prompt to force JSON output.
-          if model_params[:response_format].present?
-            prefilled_message << " " if !prefilled_message.empty?
-            prefilled_message << "{"
-            @forced_json_through_prefill = true
-          end
-
-          if !prefilled_message.empty?
-            payload[:messages] << { role: "assistant", content: prefilled_message }
-          end
-
           payload
         end
 
@@ -154,23 +82,7 @@ module DiscourseAi
             "content-type" => "application/json",
           }
 
-          headers.merge!(combined_anthropic_beta_headers)
-
           Net::HTTP::Post.new(model_uri, headers).tap { |r| r.body = payload }
-        end
-
-        def combined_anthropic_beta_headers
-          beta_features = []
-
-          caching_mode = llm_model.lookup_custom_param("prompt_caching") || "never"
-          beta_features << "prompt-caching-2024-07-31" if caching_mode != "never"
-
-          effort = llm_model.lookup_custom_param("effort")
-          beta_features << "effort-2025-11-24" if %w[low medium high].include?(effort)
-
-          return {} if beta_features.empty?
-
-          { "anthropic-beta" => beta_features.join(",") }
         end
 
         def decode_chunk(partial_data)
@@ -180,34 +92,12 @@ module DiscourseAi
             .compact
         end
 
-        def decode(response_data)
-          processor.process_message(response_data)
-        end
-
         def processor
-          @processor ||=
-            DiscourseAi::Completions::AnthropicMessageProcessor.new(
-              streaming_mode: @streaming_mode,
-              partial_tool_calls: partial_tool_calls,
-              output_thinking: output_thinking,
-            )
-        end
-
-        def has_tool?(_response_data)
-          processor.tool_calls.present?
-        end
-
-        def tool_calls
-          processor.to_tool_calls
+          claude_processor
         end
 
         def final_log_update(log)
-          log.request_tokens = processor.input_tokens if processor.input_tokens
-          log.response_tokens = processor.output_tokens if processor.output_tokens
-          log.cache_read_tokens =
-            processor.cache_read_input_tokens if processor.cache_read_input_tokens
-          log.cache_write_tokens =
-            processor.cache_creation_input_tokens if processor.cache_creation_input_tokens
+          update_log_from_claude_processor(log)
         end
       end
     end

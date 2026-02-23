@@ -77,7 +77,7 @@ pl_PL:
       ongoing_event_reminder: "%{title} trwa."
     errors:
       bulk_invite:
-        max_invitees: "Pierwsze %{max_invittes} osób zostało utworzonych. Spróbuj podzielić plik na mniejsze części."
+        max_invitees: "Pierwsze %{max_invitees} osób zostało utworzonych. Spróbuj podzielić plik na mniejsze części."
         error: "Wystąpił błąd podczas wgrywania tego pliku. Spróbuj ponownie później."
       models:
         event:

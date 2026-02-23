@@ -9,7 +9,7 @@ export default class ChatNavbarThreadSettingsButton extends Component {
   @service modal;
 
   get canChangeThreadSettings() {
-    if (!this.args.thread) {
+    if (!this.args.thread?.originalMessage) {
       return false;
     }
 

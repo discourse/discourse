@@ -15,7 +15,15 @@ describe "Content localization language switcher", type: :system do
       :post,
       topic:,
       locale: "en",
-      raw: "The masterpiece isn’t just about military strategy",
+      raw: "The masterpiece isn't just about military strategy",
+    )
+  end
+  fab!(:post_2) do
+    Fabricate(
+      :post,
+      topic:,
+      locale: "en",
+      raw: "The greatest victory is that which requires no battle",
     )
   end
 
@@ -142,9 +150,11 @@ describe "Content localization language switcher", type: :system do
     select_language("ja")
 
     expect(topic_list).to have_content("孫子兵法からの人生戦略")
-    expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
-      I18n.t("js.content_localization.toggle_localized.translated"),
-    )
+    I18n.with_locale(:ja) do
+      expect(page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR)["title"]).to eq(
+        I18n.t("js.content_localization.toggle_localized.translated"),
+      )
+    end
 
     page.find(TOGGLE_LOCALIZE_BUTTON_SELECTOR).click
     expect(topic_list).to have_content("Life strategies from The Art of War")

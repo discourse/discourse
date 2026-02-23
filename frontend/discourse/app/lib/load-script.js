@@ -7,7 +7,7 @@ const WAITER = buildWaiter("load-script");
 const _loaded = {};
 const _loading = {};
 
-function loadWithTag(path, cb) {
+function loadWithTag(path, cb, errorCb) {
   const head = document.getElementsByTagName("head")[0];
 
   let s = document.createElement("script");
@@ -15,9 +15,12 @@ function loadWithTag(path, cb) {
 
   const token = WAITER.beginAsync();
 
-  // Don't leave it hanging if something goes wrong
   s.onerror = function () {
+    s.onload = s.onreadystatechange = null;
     WAITER.endAsync(token);
+    if (errorCb) {
+      run(null, errorCb);
+    }
   };
 
   s.onload = s.onreadystatechange = function (_, abort) {
@@ -59,30 +62,36 @@ export default function loadScript(url, opts = {}) {
     }
   });
 
-  return new Promise(function (resolve) {
+  return new Promise(function (resolve, reject) {
     // If we already loaded this url
     if (_loaded[fullUrl]) {
       return resolve();
     }
 
     if (_loading[fullUrl]) {
-      return _loading[fullUrl].then(resolve);
+      return _loading[fullUrl].then(resolve, reject);
     }
 
     let done;
-    _loading[fullUrl] = new Promise(function (_done) {
+    let fail;
+    _loading[fullUrl] = new Promise(function (_done, _fail) {
       done = _done;
+      fail = _fail;
     });
 
-    _loading[fullUrl].then(function () {
-      delete _loading[fullUrl];
-    });
+    _loading[fullUrl].finally(() => delete _loading[fullUrl]).catch(() => {});
 
     const cb = function () {
       done();
       resolve();
       _loaded[url] = true;
       _loaded[fullUrl] = true;
+    };
+
+    const errorCb = function () {
+      const error = new Error(`Failed to load ${fullUrl}`);
+      fail(error);
+      reject(error);
     };
 
     if (opts.css) {
@@ -94,7 +103,9 @@ export default function loadScript(url, opts = {}) {
       const token = WAITER.beginAsync();
 
       link.onerror = function () {
+        link.onload = null;
         WAITER.endAsync(token);
+        run(null, errorCb);
       };
 
       link.onload = function () {
@@ -105,7 +116,7 @@ export default function loadScript(url, opts = {}) {
       document.querySelector("head").appendChild(link);
     } else {
       // Always load JavaScript with script tag to avoid Content Security Policy inline violations
-      loadWithTag(fullUrl, cb);
+      loadWithTag(fullUrl, cb, errorCb);
     }
   });
 }

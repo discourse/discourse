@@ -23,6 +23,7 @@ class SiteSettings::TypeSupervisor
     schema
     requires_confirmation
     depends_on
+    depends_behavior
     authorized_extensions
     max_file_size_kb
   ].freeze
@@ -158,6 +159,7 @@ class SiteSettings::TypeSupervisor
     end
 
     @dependencies[name] = opts[:depends_on] || []
+    @dependencies.change_behavior(name, opts[:depends_behavior]) if opts[:depends_behavior]
   end
 
   def to_rb_value(name, value, override_type = nil)

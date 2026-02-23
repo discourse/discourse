@@ -64,7 +64,7 @@ describe DiscourseAi::TopicSummarization do
         # a bit tricky, but fold_content now caches an instance of LLM
         # once it is cached with_prepared_responses will not work as expected
         # since it is glued to the old llm instance
-        # so we create the cached summary totally independantly
+        # so we create the cached summary totally independently
         DiscourseAi::Completions::Llm.with_prepared_responses([cached_text]) do
           strategy = DiscourseAi::Summarization.topic_summary(topic)
           described_class.new(strategy, user).summarize

@@ -114,6 +114,13 @@ export default class FKControlWrapper extends Component {
           @collapseSwatches={{@collapseSwatches}}
           @collapseSwatchesLabel={{@collapseSwatchesLabel}}
           @fallbackValue={{@fallbackValue}}
+          @showAllTags={{@showAllTags}}
+          @excludeSynonyms={{@excludeSynonyms}}
+          @excludeTagsWithSynonyms={{@excludeTagsWithSynonyms}}
+          @unlimited={{@unlimited}}
+          @categoryId={{@categoryId}}
+          @allowCreate={{@allowCreate}}
+          @placeholder={{@placeholder}}
           @onControlWidthChange={{fn (mut this.controlWidth)}}
           id={{@field.id}}
           name={{@field.name}}

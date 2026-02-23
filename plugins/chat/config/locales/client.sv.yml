@@ -40,6 +40,12 @@ sv:
       chat_channels_count: "Chattkanaler"
       chat_users_count: "Chattanvändare"
     chat:
+      edit_category:
+        tab_title: "Chatt"
+        channel: "Kanal"
+        description: "Beskrivning"
+        actions: "Åtgärder"
+        settings: "Inställningar"
       text_copied: Texten har kopierats till urklipp
       link_copied: Länken har kopierats till urklipp
       back_to_forum: "Forum"
@@ -549,13 +555,9 @@ sv:
           other: "%{commaSeparatedUsernames} och %{count} andra skriver"
       retention_reminders:
         indefinitely_short: "på obestämd tid"
-        indefinitely_long: "Chattinställningarna har ställts in för att behålla kanalmeddelanden på obestämd tid."
         short:
           one: "%{count} dag"
           other: "%{count} dagar"
-        long:
-          one: "Chattinställningarna har ställts in för att behålla kanalmeddelanden i %{count} dag."
-          other: "Chattinställningarna har ställts in för att behålla kanalmeddelanden i %{count} dagar."
       flags:
         off_topic: "Det här meddelandet är inte relevant för den aktuella diskussionen enligt kanaltiteln och bör förmodligen flyttas någon annanstans."
         inappropriate: "Detta meddelande innehåller saker som en förnuftig person skulle anse vara stötande, kränkande eller en överträdelse av <a href=\"%{basePath}/guidelines\">vårt forums riktlinjer</a>."

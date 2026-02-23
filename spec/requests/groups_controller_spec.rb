@@ -607,6 +607,21 @@ RSpec.describe GroupsController do
       expect(response.status).to eq(200)
       expect(response.parsed_body["posts"]).to be_empty
     end
+
+    it "excludes posts from unlisted topics" do
+      visible_post = Fabricate(:post)
+      GroupMention.create!(post: visible_post, group: group)
+
+      unlisted_post = Fabricate(:post)
+      unlisted_post.topic.update!(visible: false)
+      GroupMention.create!(post: unlisted_post, group: group)
+
+      sign_in(user)
+      get "/groups/#{group.name}/mentions.json"
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["posts"].map { |p| p["id"] }).to contain_exactly(visible_post.id)
+    end
   end
 
   describe "#posts" do
@@ -2876,6 +2891,34 @@ RSpec.describe GroupsController do
           expect(response.status).to eq(429)
         end
       end
+    end
+  end
+
+  describe "requires_login for state-changing actions" do
+    fab!(:group)
+
+    it "returns not_logged_in error for anonymous add_members request" do
+      put "/groups/#{group.id}/members.json", params: { usernames: "bob" }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+
+    it "returns not_logged_in error for anonymous add_owners request" do
+      put "/groups/#{group.id}/owners.json", params: { usernames: "bob" }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+
+    it "returns not_logged_in error for anonymous remove_member request" do
+      delete "/groups/#{group.id}/members.json", params: { username: "bob" }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
+    end
+
+    it "returns not_logged_in error for anonymous handle_membership_request" do
+      put "/groups/#{group.id}/handle_membership_request.json", params: { user_id: 1 }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["error_type"]).to eq("not_logged_in")
     end
   end
 end

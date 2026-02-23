@@ -129,8 +129,6 @@ it:
       web_hooks:
         assign_event:
           group_name: "Assegna eventi"
-          assigned: "Quando un utente assegna un argomento"
-          unassigned: "Quando un utente rimuove l'assegnazione di un argomento"
     search:
       advanced:
         in:

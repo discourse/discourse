@@ -73,9 +73,20 @@ export default class DPageHeader extends Component {
           </div>
         {{/if}}
 
-        {{#if (or @titleLabel (has-block "actions") @headerActionComponent)}}
+        {{#if
+          (or
+            (has-block "title")
+            @titleLabel
+            (has-block "actions")
+            @headerActionComponent
+          )
+        }}
           <div class="d-page-header__title-row">
-            {{#if @titleLabel}}
+            {{#if (has-block "title")}}
+              <h1 class="d-page-header__title">
+                {{yield to="title"}}
+              </h1>
+            {{else if @titleLabel}}
               <h1 class="d-page-header__title">{{@titleLabel}}</h1>
             {{/if}}
 

@@ -303,6 +303,22 @@ RSpec.describe EmailUpdater do
           expect(user.reload.user_emails.pluck(:email)).to contain_exactly(old_email, new_email)
         end
       end
+
+      context "when resending confirmation for the same email" do
+        it "does not create a duplicate email change request" do
+          expect(EmailChangeRequest.where(user_id: user.id, new_email: new_email).count).to eq(1)
+
+          expect_enqueued_with(
+            job: :critical_user_email,
+            args: {
+              type: :confirm_new_email,
+              to_address: new_email,
+            },
+          ) { updater.change_to(new_email, add: true) }
+
+          expect(EmailChangeRequest.where(user_id: user.id, new_email: new_email).count).to eq(1)
+        end
+      end
     end
 
     context "with max_allowed_secondary_emails" do
@@ -410,6 +426,16 @@ RSpec.describe EmailUpdater do
           expect(updater.change_req.change_state).to eq(EmailChangeRequest.states[:complete])
         end
       end
+    end
+  end
+
+  context "when a moderator tries to change another user's email" do
+    let(:moderator) { Fabricate(:moderator) }
+    let(:user) { Fabricate(:user, email: old_email) }
+    let(:updater) { EmailUpdater.new(guardian: moderator.guardian, user: user) }
+
+    it "raises an invalid access error" do
+      expect { updater.change_to(new_email) }.to raise_error(Discourse::InvalidAccess)
     end
   end
 

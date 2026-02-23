@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 import { getOwner } from "@ember/owner";
 import { setupTest } from "ember-qunit";
 import $ from "jquery";
@@ -183,5 +184,35 @@ module("Unit | Utility | category-badge", function (hooks) {
     assert.strictEqual((badge.match(/data-category-id/g) || []).length, 2);
     assert.true(badge.includes('data-category-id="1"'), "includes parent");
     assert.true(badge.includes('data-category-id="2"'), "includes child");
+  });
+
+  test("read-only badge appears only once with ancestors", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+
+    const parent = store.createRecord("category", {
+      name: "parent",
+      id: 1,
+    });
+    const child = store.createRecord("category", {
+      name: "child",
+      id: 2,
+      parent_category_id: parent.id,
+    });
+
+    const badge = categoryBadgeHTML(child, {
+      ancestors: [parent],
+      readOnly: true,
+    });
+
+    const readOnlyMatches = badge.match(/class="read-only"/g) || [];
+    assert.strictEqual(
+      readOnlyMatches.length,
+      1,
+      "read-only badge appears exactly once"
+    );
+    assert.true(
+      badge.includes("read-only"),
+      "read-only badge is present in the output"
+    );
   });
 });

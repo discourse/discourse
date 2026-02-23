@@ -80,10 +80,14 @@ RSpec.describe WordWatcher do
         SiteSetting.watched_words_regular_expressions = false
         regexps = described_class.compiled_regexps_for_action(:block)
 
+        s = WordWatcher::SPACELESS_SCRIPTS
+        leading = "(?:(?<![[:word:]&&[^#{s}]])|(?=[#{s}]))"
+        trailing = "(?:(?![[:word:]&&[^#{s}]])|(?<=[#{s}]))"
+
         expect(regexps).to be_an(Array)
         expect(regexps.map(&:inspect)).to contain_exactly(
-          "/(?:[^[:word:]]|^)(#{word1}|#{word2})(?=[^[:word:]]|$)/i",
-          "/(?:[^[:word:]]|^)(#{word3}|#{word4})(?=[^[:word:]]|$)/",
+          "/#{leading}(#{word1}|#{word2})#{trailing}/i",
+          "/#{leading}(#{word3}|#{word4})#{trailing}/",
         )
       end
 
@@ -126,7 +130,11 @@ RSpec.describe WordWatcher do
       it "works correctly when regular expressions are disabled" do
         regexps = described_class.compiled_regexps_for_action(:block)
         expect(regexps).to be_an(Array)
-        expect(regexps).to contain_exactly(/(?:[^[:word:]]|^)(\S*abc)(?=[^[:word:]]|$)/i)
+        expect(regexps.size).to eq(1)
+        expect(regexps.first).to match("xyzabc")
+        expect(regexps.first).to match(" abc")
+        expect(regexps.first).to match("testabc")
+        expect(regexps.first).not_to match("abcdef")
       end
 
       it "skips invalid watched words when regular expression are enabled" do
@@ -255,6 +263,56 @@ RSpec.describe WordWatcher do
             1
           ],
         ).to eq("love")
+      end
+
+      it "handles CJK characters as word boundaries" do
+        Fabricate(:watched_word, word: "测试", action: WatchedWord.actions[:require_approval])
+
+        expect(described_class.new("测试").word_matches_for_action?(:require_approval)[1]).to eq("测试")
+        expect(
+          described_class.new("这是一个测试文本").word_matches_for_action?(:require_approval)[1],
+        ).to eq("测试")
+        expect(
+          described_class.new("hello 测试 world").word_matches_for_action?(:require_approval)[1],
+        ).to eq("测试")
+        expect(described_class.new("API测试结果").word_matches_for_action?(:require_approval)[1]).to eq(
+          "测试",
+        )
+      end
+
+      it "handles Latin watched words adjacent to CJK text" do
+        Fabricate(:watched_word, word: "Test", action: WatchedWord.actions[:require_approval])
+
+        expect(
+          described_class.new("我的Test很好").word_matches_for_action?(:require_approval)[1],
+        ).to eq("Test")
+        expect(
+          described_class.new("Testing").word_matches_for_action?(:require_approval),
+        ).to be_falsey
+      end
+
+      it "handles CJK boundaries with the JS engine" do
+        Fabricate(:watched_word, word: "测试", action: WatchedWord.actions[:require_approval])
+
+        regexps = described_class.compiled_regexps_for_action(:require_approval, engine: :js)
+        expect(regexps.size).to eq(1)
+
+        re = regexps.first
+        expect(re).to match("测试")
+        expect(re).to match("这是一个测试文本")
+        expect(re).to match("hello 测试 world")
+        expect(re).to match("API测试结果")
+      end
+
+      it "handles Latin words adjacent to CJK text with the JS engine" do
+        Fabricate(:watched_word, word: "Test", action: WatchedWord.actions[:require_approval])
+
+        regexps = described_class.compiled_regexps_for_action(:require_approval, engine: :js)
+        expect(regexps.size).to eq(1)
+
+        re = regexps.first
+        expect(re).to match("我的Test很好")
+        expect(re).not_to match("Testing")
       end
 
       context "when there are multiple matches" do

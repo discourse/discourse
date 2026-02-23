@@ -58,7 +58,7 @@ RSpec.describe "Chat channel", type: :system do
     end
   end
 
-  context "when first batch of messages doesnt fill page" do
+  context "when first batch of messages doesn't fill page" do
     before { Fabricate.times(30, :chat_message, user: current_user, chat_channel: channel_1) }
 
     it "autofills for more messages" do

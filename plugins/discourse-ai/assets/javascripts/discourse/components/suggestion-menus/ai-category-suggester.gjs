@@ -1,6 +1,6 @@
 import Component from "@glimmer/component";
 import { tracked } from "@glimmer/tracking";
-import { fn } from "@ember/helper";
+import { array, fn } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
@@ -21,42 +21,32 @@ export default class AiCategorySuggester extends Component {
 
   @tracked loading = false;
   @tracked suggestions = null;
-  @tracked untriggers = [];
   @tracked triggerIcon = "discourse-sparkles";
-  @tracked content = null;
+  dMenu;
+
+  get content() {
+    return this.args.composer?.reply;
+  }
 
   get showSuggestionButton() {
-    const composerFields = document.querySelector(".composer-fields");
-    this.content = this.args.composer?.reply;
     const showTrigger =
       this.content?.length > MIN_CHARACTER_COUNT ||
       this.args.topicState === "edit";
 
-    if (composerFields) {
-      if (showTrigger) {
-        composerFields.classList.add("showing-ai-suggestions");
-      } else {
-        composerFields.classList.remove("showing-ai-suggestions");
-      }
-    }
+    document
+      .querySelector(".composer-fields")
+      ?.classList.toggle("showing-ai-suggestions", showTrigger);
 
     return this.siteSettings.ai_embeddings_enabled && showTrigger;
   }
 
   get showDropdown() {
-    if (this.suggestions?.length <= 0) {
-      this.dMenu.close();
-    }
     return !this.loading && this.suggestions?.length > 0;
   }
 
   @action
   async loadSuggestions() {
-    if (
-      this.suggestions &&
-      this.suggestions?.length > 0 &&
-      !this.dMenu.expanded
-    ) {
+    if (this.suggestions?.length > 0 && !this.dMenu.expanded) {
       return this.suggestions;
     }
 
@@ -74,15 +64,13 @@ export default class AiCategorySuggester extends Component {
     try {
       const { assistant } = await ajax(
         "/discourse-ai/ai-helper/suggest_category",
-        {
-          method: "POST",
-          data,
-        }
+        { method: "POST", data }
       );
 
       this.suggestions = assistant;
 
-      if (this.suggestions?.length <= 0) {
+      if (this.suggestions?.length === 0) {
+        this.dMenu.close();
         showSuggestionsError(this, this.loadSuggestions.bind(this));
         return;
       }
@@ -98,15 +86,11 @@ export default class AiCategorySuggester extends Component {
 
   @action
   applySuggestion(suggestion) {
-    const composer = this.args.composer;
-    const buffered = this.args.buffered;
-
-    if (composer) {
-      composer.set("categoryId", suggestion.id);
-      composer.get("categoryId");
+    if (this.args.composer) {
+      this.args.composer.set("categoryId", suggestion.id);
     }
 
-    if (buffered) {
+    if (this.args.buffered) {
       this.args.buffered.set("category_id", suggestion.id);
     }
 
@@ -143,7 +127,7 @@ export default class AiCategorySuggester extends Component {
         @contentClass="ai-suggestions-menu"
         @onRegisterApi={{this.onRegisterApi}}
         @modalForMobile={{true}}
-        @untriggers={{this.untriggers}}
+        @untriggers={{array}}
         {{on "click" this.loadSuggestions}}
       >
         <:content>

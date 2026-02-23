@@ -12,9 +12,9 @@ import { i18n } from "discourse-i18n";
 
 acceptance("Topic Discovery Tracked", function (needs) {
   needs.user({
-    tracked_tags: ["tag1"],
-    watched_tags: ["tag2"],
-    watching_first_post_tags: ["tag3"],
+    tracked_tags: [1],
+    watched_tags: [2],
+    watching_first_post_tags: [3],
   });
 
   needs.pretender((server, helper) => {
@@ -22,7 +22,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
       return helper.response(cloneJSON(topicFixtures["/latest.json"]));
     });
 
-    server.get("/tag/:tag_name/notifications", () => {
+    server.get("/tag/:tag_id/notifications.json", () => {
       return helper.response({
         tag_notification: {
           id: "test",
@@ -31,8 +31,18 @@ acceptance("Topic Discovery Tracked", function (needs) {
       });
     });
 
-    server.get("/tag/:tag_name/l/latest.json", () => {
-      return helper.response(cloneJSON(topicFixtures["/latest.json"]));
+    server.get("/tag/:tag_id/l/latest.json", (request) => {
+      const response = cloneJSON(topicFixtures["/latest.json"]);
+      // add tag with id to response so tracking state gets the tag id
+      const tagId = parseInt(request.params.tag_id, 10);
+      response.topic_list.tags = [
+        {
+          id: tagId,
+          name: `tag-${tagId}`,
+          slug: `tag-${tagId}`,
+        },
+      ];
+      return helper.response(response);
     });
   });
 
@@ -176,7 +186,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag3"],
+        tags: [{ id: 3 }],
       },
     ]);
 
@@ -258,11 +268,11 @@ acceptance("Topic Discovery Tracked", function (needs) {
         notification_level: null,
         created_in_new_period: true,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["some-other-tag"],
+        tags: [{ id: 99 }],
       },
     ]);
 
-    await visit("/tag/some-other-tag");
+    await visit("/tag/some-other-tag/99");
 
     assert
       .dom("#navigation-bar li.unread")
@@ -278,7 +288,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
         "displays the right content on new link"
       );
 
-    await visit("/tag/some-other-tag?f=tracked");
+    await visit("/tag/some-other-tag/99?f=tracked");
 
     assert
       .dom("#navigation-bar li.unread")
@@ -340,7 +350,7 @@ acceptance("Topic Discovery Tracked", function (needs) {
         notification_level: NotificationLevels.TRACKING,
         created_in_new_period: false,
         treat_as_new_topic_start_date: "2022-05-09T03:17:34.286Z",
-        tags: ["tag3"],
+        tags: [{ id: 3 }],
       },
     ]);
 

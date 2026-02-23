@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-observers, ember/no-side-effects */
 import { tracked } from "@glimmer/tracking";
 import EmberObject, { action, computed } from "@ember/object";
 import { alias, and, or, reads } from "@ember/object/computed";
@@ -160,6 +161,14 @@ export default class ComposerService extends Service {
     return this.showPreview && this.allowPreview;
   }
 
+  @computed("model.action", "model.post.can_localize_post")
+  get showTranslationSelector() {
+    return (
+      this.model?.get("action") === "add_translation" &&
+      this.model?.get("post.can_localize_post")
+    );
+  }
+
   @observes("showPreview", "allowPreview")
   previewVisibilityChanged() {
     this.appEvents.trigger("composer:preview-toggled", this.isPreviewVisible);
@@ -198,10 +207,7 @@ export default class ComposerService extends Service {
 
   @computed("model.category", "skipFormTemplate")
   get formTemplateIds() {
-    if (
-      !this.siteSettings.experimental_form_templates ||
-      this.skipFormTemplate
-    ) {
+    if (!this.siteSettings.enable_form_templates || this.skipFormTemplate) {
       return null;
     }
 
@@ -1428,9 +1434,7 @@ export default class ComposerService extends Service {
       this.set("hijackPreview", opts.hijackPreview);
     }
 
-    if (opts.selectedTranslationLocale) {
-      this.selectedTranslationLocale = opts.selectedTranslationLocale;
-    }
+    this.selectedTranslationLocale = opts.selectedTranslationLocale ?? null;
 
     // Scope the categories drop down to the category we opened the composer with.
     if (opts.categoryId && !opts.disableScopedCategory) {

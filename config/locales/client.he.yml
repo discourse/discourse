@@ -478,6 +478,10 @@ he:
       title: "נושאים חדשים ולא נקראו"
       pill: "מוצע"
       pm_title: "הודעות מוצעות"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "העתקת קישור"
+        copied_to_clipboard: "קישור הועתק ללוח הגזירים!"
     about:
       edit: "עריכת עמוד זה"
       simple_title: "על אודות"
@@ -1771,11 +1775,6 @@ he:
           two: '<span class="%{className}">%{count}</span> סימונים מועילים'
           many: '<span class="%{className}">%{count}</span> סימונים מועילים'
           other: '<span class="%{className}">%{count}</span> סימונים מועילים'
-        flagged_posts:
-          one: 'פוסט <span class="%{className}">%{count}</span> מסומן'
-          two: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
-          many: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
-          other: '<span class="%{className}">%{count}</span> פוסטים מסומנים'
         deleted_posts:
           one: 'פוסט <span class="%{className}">%{count}</span> נמחק'
           two: '<span class="%{className}">%{count}</span> פוסטים נמחקו'
@@ -2559,7 +2558,6 @@ he:
     form_kit:
       reset: איפוס
       optional: רשות
-      errors_summary_title: "הטופס הזה מכיל שגיאות:"
       dirty_form: "לא הגשת את השינויים שלך! לצאת?"
       errors:
         starts_with: "חייב להיפתח בקידומת %{prefix}"
@@ -3723,6 +3721,11 @@ he:
         notify: "להודיע למשתמשים על השינוי הזה."
         performing: "מתבצעות פעולות במרוכז, נא להמתין…"
         completed: "הפעולות במרוכזת הושלמו בהצלחה!"
+        error_topic_count:
+          one: "נושא"
+          two: "שני נושאים"
+          many: "שני נושאים"
+          other: "שני נושאים"
       none:
         unread: "אין לך נושאים שלא נקראו."
         unseen: "אין לך נושאים שלא ראית."
@@ -4285,7 +4288,7 @@ he:
       quote_edit: "עריכה"
       quote_edit_shortcut: "עריכה (או בלחיצה על e)"
       quote_copy: "העתקת ציטוט"
-      quote_copied_to_clibboard: "הציטוט הועתק ללוח הגזירים"
+      quote_copied_to_clipboard: "הציטוט הועתק ללוח הגזירים"
       quote_share: "שיתוף"
       edit_reason: "סיבה: "
       post_number: "פוסט %{number}"
@@ -4663,6 +4666,8 @@ he:
       slug_placeholder: "(רשות) מילים-מחוברות-במקפים-ככתובת"
       creation_error: ארעה שגיאה במהלך יצירת הקטגוריה הזו.
       save_error: ארעה שגיאה בשמירת הקטגוריה הזו
+      validations:
+        icon_required: "נא לבחור סמל."
       name: "שם קטגוריה"
       untitled: "קטגוריה ללא שם"
       description: "תיאור"
@@ -4707,11 +4712,8 @@ he:
         reply: "להגיב"
         create: "ליצור"
         no_groups_selected: "אף קבוצה לא קיבלה גישה; קטגוריה זו תהיה גלויה רק לסגל."
-        everyone_has_access: 'קטגוריה זו היא ציבורית, כולם יכולים לצפות, להגיב וליצור פוסטים. די להגביל את ההרשאות, יש להסיר הרשאה אחת או יותר מאלו שהוענקו לקבוצה „כולם”.'
         toggle_reply: "החלפת הרשאות תגובה"
         toggle_full: "החלפת הרשאות יצירה"
-        inherited: 'הרשאה זו התקבלה בירושה מתוך „כולם”'
-      special_warning: "אזהרה: קטגוריה זו הגיעה מראש והגדרות האבטחה שלה אינן ניתנות לשינוי. אם אתם מעוניינים להשתמש בקטגוריה זו, מחקו אותה במקום להשתמש בה מחדש."
       uncategorized_security_warning: "קטגוריה זו היא מיוחדת. היא מיועדת להחזקת מגוון של נושאים שאין להם קטגוריה, לא יכולות להיות לקבוצה זו הגדרות אבטחה."
       uncategorized_general_warning: 'קטגוריה זו היא מיוחדת. היא משמשת כקטגוריית בררת המחדל לנושאים חדשים שלא נבחרה עבורם קטגוריה. כדי למנוע את ההתנהגות הזאת ולאלץ בחירת קטגוריה, <a href="%{settingLink}">נא להשבית את ההגדרה הזאת כאן</a>. אם מעניין אותך לשנות את השם או את התיאור, עליך לגשת אל <a href="%{customizeLink}">התאמה אישית / תוכן טקסט</a>.'
       pending_permission_change_alert: "לא הוספת %{group} לקטגוריה הזאת, יש ללחוץ על הכפתור הזה כדי להוסיף אותן."
@@ -4746,7 +4748,7 @@ he:
       default_slow_mode: 'להפעיל „מצב איטי” לנושאים חדשים בקטגוריה הזאת.'
       none_subcategory_text: "ללא"
       visibility:
-        title: "גישה"
+        title: "חשיפה"
         public: "ציבורי"
         all_members: "כל החברים"
         group_restricted: "פרטי"
@@ -5966,7 +5968,6 @@ he:
           search_placeholder: "סינון לפי שם, תיאור או תוסף…"
           no_results: "אין שינויים עתידיים שתואמים את המסנן שלך"
           all: "הכול"
-          enabled_all: "מופעל או מושבת"
           enabled: "פעיל"
           disabled: "כבוי"
           impact_type_all: "כל סוגי ההשפעה"
@@ -6434,7 +6435,7 @@ he:
         new_features:
           title: "מה חדש?"
           subtitle: "אנו מוציאים לאור יכולות ושיפורים חדשים כל הזמן. העמוד הזה מסקר את הנקודות החשובות אבל ניתן ללחוץ על ‚מידע נוסף’ כדי לצפות בהערות ההוצאה לאור המפורטות."
-          no_new_features_found: "אירעה שגיאה בטעינת ערוץ העדכונים. ניתן לראות הכרזות קודמות על יכולות חדשות ב<a href='%{url}' target='_blank'>קהילת Discourse Meta</a>."
+          no_new_features_error: "אירעה שגיאה בטעינת ערוץ העדכונים. ניתן לראות הכרזות קודמות על יכולות חדשות ב<a href='%{url}' target='_blank'>קהילת Discourse Meta</a>."
           learn_more: "מידע נוסף…"
           experimental: "ניסיוני"
           only_experiments: "להציג יכולות ניסיוניות בלבד"
@@ -6648,6 +6649,7 @@ he:
         save: "שמירה"
         cancel: "ביטול"
         continue: "המשך"
+        copy_key: "העתקה"
         back: "חזרה למפתחות API"
         revoke: "שלול"
         undo_revoke: "ביטול שלילה"
@@ -7295,8 +7297,6 @@ he:
         delete: "מחיקה"
         delete_confirm: 'למחוק את „%{theme_name}”?'
         bulk_delete: "להמשיך?"
-        bulk_themes_delete_confirm: "פעולה זו תסיר את ערכות העיצוב הבאות, הן לא תהיינה זמינות לשימוש על ידי משתמשים באתר שלך:"
-        bulk_components_delete_confirm: "פעולה זו תסיר את הרכיבים הבאים, הם לא יהיו זמינים לשימוש על ידי משתמשים באתר שלך:"
         color: "צבע"
         opacity: "שקיפות"
         copy: "שכפול"
@@ -7926,6 +7926,7 @@ he:
             delete_associated_accounts: "מחיקת חשבונות משויכים"
             change_theme_site_setting: "שנוי הגדרות ערכת עיצוב של האתר"
             stop_impersonating: "הפסקת התחזות"
+            change_site_setting_groups: "שינוי קבוצות הגדרות אתר"
         screened_emails:
           title: "הודעות דוא״ל מסוננות"
           description: "כשמישהו מנסה ליצור חשבון חדש, כתובות הדואר האלקטרוני הבאות ייבדקו וההרשמה תחסם או שיבוצו פעולות אחרות."

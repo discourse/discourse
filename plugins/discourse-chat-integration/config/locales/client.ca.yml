@@ -16,7 +16,6 @@ ca:
       settings: "Configuració"
       no_providers: "Heu d'habilitar alguns proveïdors en la configuració del connector"
       channels_with_errors: "Alguns canals d'aquest proveïdor van fallar l'última vegada que es van enviar missatges. Feu clic en la icona o icones d'error per a obtenir més informació."
-      channel_exception: "Es va produir un error desconegut la darrera vegada que es va enviar un missatge a aquest canal."
       group_mention_template: "Mencions de: @ %{name}"
       group_message_template: "Missatges a: @ %{name}"
       choose_group: "(trieu un grup)"
@@ -33,7 +32,6 @@ ca:
         topic: "Tema"
         send: "Envia un missatge de prova"
         close: "Tanca"
-        error: "S'ha produït un error desconegut en enviar el missatge. Consulteu els registres del lloc web per a obtenir més informació."
         success: "Missatge enviat correctament"
       type:
         normal: Normal

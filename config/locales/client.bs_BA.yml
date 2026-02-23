@@ -1973,6 +1973,10 @@ bs_BA:
         choose_new_tags: "Odaberi nove tagove za ove teme:"
         choose_append_tags: "Odaberi nove oznake kako bi pripojili ovim temama:"
         changed_tags: "Tagovi ovih tema su izmijenjeni."
+        error_topic_count:
+          one: "%{count} tema"
+          few: "%{count} teme"
+          other: "%{count} tema"
       none:
         unread: "Nemate nepročitanih tema."
         new: "Nemate novih tema."
@@ -2519,6 +2523,8 @@ bs_BA:
       slug_placeholder: "(Opcionalno) isprekidane riječi za url"
       creation_error: There has been an error during the creation of the category.
       save_error: There was an error saving the category.
+      validations:
+        icon_required: "Odaberi ikonu."
       description: "Description"
       icon: "Icon"
       emoji: "Emoji"
@@ -2540,7 +2546,6 @@ bs_BA:
         see: "Vidi"
         reply: "Odgovori"
         create: "napravi"
-      special_warning: "Upozorenje: Ova kategorija je pre-seeded kategorija i sigurnosne postavke se ne mogu uređivati. Ako ne želite koristiti ovu kategoriju, izbrišite je umjesto da je prenamijenite."
       images: "Izgled"
       email_in: "Custom incoming email address:"
       email_in_allow_strangers: "Accept emails from anonymous users with no accounts"
@@ -2558,7 +2563,7 @@ bs_BA:
       minimum_required_tags: "Minimalni broj oznaka potrebnih za temu:"
       none_subcategory_text: "Ništa"
       visibility:
-        title: "Pristup"
+        title: "Vidljivost"
         public: "Javno"
         group_restricted: "Privatno"
       num_auto_bump_daily: "Broj otvorenih tema koje se svakodnevno automatski izbijaju:"
@@ -3440,6 +3445,7 @@ bs_BA:
         save: "Save"
         cancel: "Odustani"
         continue: "Nastavi"
+        copy_key: "Copy"
         revoke: "Revoke"
       api:
         generate_master: "Generate Master API Key"

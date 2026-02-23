@@ -22,7 +22,7 @@ export default class InstallThemeItem extends Component {
         {{/if}}
         {{i18n @label}}
       </label>
-      {{icon "caret-right"}}
+      {{icon "angle-right"}}
     </div>
   </template>
 }

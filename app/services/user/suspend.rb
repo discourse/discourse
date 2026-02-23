@@ -43,7 +43,7 @@ class User::Suspend
   end
 
   def can_suspend_all_users(guardian:, users:)
-    users.all? { guardian.can_suspend?(_1) }
+    users.all? { guardian.can_suspend?(it) }
   end
 
   def suspend(guardian:, users:, params:)

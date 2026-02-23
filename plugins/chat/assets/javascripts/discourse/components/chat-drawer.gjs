@@ -1,4 +1,4 @@
-/* eslint-disable ember/no-classic-components */
+/* eslint-disable ember/no-classic-components, ember/no-observers */
 import Component from "@ember/component";
 import { action } from "@ember/object";
 import { cancel, next, throttle } from "@ember/runloop";

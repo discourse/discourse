@@ -10,8 +10,9 @@ module Reports
         @type = name.to_s.gsub("report_", "")
       end
 
-      def to_h
-        return if skip_report?
+      def to_h(admin:)
+        return if Report.hidden?(type, admin:)
+
         {
           type:,
           title:,
@@ -21,11 +22,6 @@ module Reports
       end
 
       private
-
-      def skip_report?
-        (SiteSetting.use_legacy_pageviews && type.in?(Report::HIDDEN_PAGEVIEW_REPORTS)) ||
-          (!SiteSetting.use_legacy_pageviews && type.in?(Report::HIDDEN_LEGACY_PAGEVIEW_REPORTS))
-      end
 
       # HACK: We need to show a different label and description for some
       # old reports while people are still relying on them, that lets us
@@ -47,7 +43,7 @@ module Reports
       end
     end
 
-    def self.call
+    def self.call(admin:)
       page_view_req_report_methods =
         ["page_view_total_reqs"] +
           ApplicationRequest
@@ -65,7 +61,9 @@ module Reports
           Report.singleton_methods.grep(/\Areport_(?!about|storage_stats)/)
 
       reports_methods
-        .filter_map { |report_name| Reports::ListQuery::FormattedReport.new(report_name).to_h }
+        .filter_map do |report_name|
+          Reports::ListQuery::FormattedReport.new(report_name).to_h(admin:)
+        end
         .sort_by { |report| report[:title] }
     end
   end

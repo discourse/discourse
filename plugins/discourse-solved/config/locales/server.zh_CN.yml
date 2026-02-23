@@ -9,6 +9,7 @@ zh_CN:
   site_settings:
     solved_enabled: "启用“已解决”插件，允许用户为话题选择解决方案"
     allow_solved_on_all_topics: "允许用户选择所有话题的解决方案（未选中时，可以按类别或标签启用解决方案）"
+    allow_solved_in_groups: "允许在这些群组的群组消息中标记解决方案。"
     accept_all_solutions_trust_level: "在任何话题中接受解决方案所需的最小信任级别（即使不是 OP）"
     accept_all_solutions_allowed_groups: "能够接受任何话题解决方案的群组（即使不是 OP 时）。管理员和版主始终可以。"
     empty_box_on_unsolved: "在未解决的话题旁显示一个空框"

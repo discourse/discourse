@@ -5,5 +5,3 @@
 # https://translate.discourse.org/
 
 ca:
-  site_settings:
-    data_explorer_enabled: "Activa l'Explorador de dades en /admin/plugins/explorer"

@@ -1,3 +1,4 @@
+/* eslint-disable ember/no-jquery */
 // @ts-check
 import { getOwner, setOwner } from "@ember/owner";
 import { next, schedule } from "@ember/runloop";

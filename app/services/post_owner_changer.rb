@@ -14,8 +14,12 @@ class PostOwnerChanger
   end
 
   def change_owner!
+    guardian = Guardian.new(@acting_user)
+    raise Discourse::InvalidAccess unless guardian.can_see?(@topic)
+
     @post_ids.each do |post_id|
       next unless post = Post.with_deleted.find_by(id: post_id, topic_id: @topic.id)
+      raise Discourse::InvalidAccess unless guardian.can_see?(post)
 
       if post.is_first_post?
         @topic.user = @new_owner

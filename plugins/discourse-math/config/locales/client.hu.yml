@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 hu:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "Alkalmaz"
-      insert_modal:
-        insert: "Beszúrás"

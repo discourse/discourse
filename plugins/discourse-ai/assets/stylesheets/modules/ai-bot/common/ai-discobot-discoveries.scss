@@ -184,6 +184,30 @@
   }
 }
 
+.has-discoveries {
+  .search-container .search-advanced .search-info {
+    border: none;
+  }
+
+  .powered-by-discourse {
+    @include viewport.from(md) {
+      margin-left: var(--space-6);
+    }
+
+    @include viewport.until(md) {
+      margin-left: var(--space-2);
+    }
+  }
+}
+
+@include viewport.until(md) {
+  .has-discoveries {
+    .search-container .search-advanced .search-results {
+      padding-inline: 1em;
+    }
+  }
+}
+
 .search-page .ai-search-discoveries__discoveries-wrapper {
   padding-bottom: 0.5rem;
 }
@@ -208,10 +232,6 @@
       .semantic-search__searching {
         margin-left: 0;
       }
-
-      .semantic-search__searching-text {
-        margin-left: 1.25em;
-      }
     }
 
     .search-container .search-header {
@@ -224,8 +244,13 @@
       padding: 1em 2em;
     }
 
+    .search-container .search-advanced .search-info {
+      margin: 0;
+    }
+
     .search-results .fps-result {
       margin-bottom: 2.5em;
+
       &:not(.bulk-select-enabled) {
         padding: 0;
       }
@@ -255,8 +280,11 @@
     .ai-search-discoveries__discoveries-wrapper {
       grid-column: 2 / -1;
       grid-row: 1 / 5;
-      border-left: 1px solid var(--primary-low);
       align-self: stretch;
+
+      &.--has-content {
+        border-left: 1px solid var(--primary-low);
+      }
 
       .cooked {
         color: var(--primary-high);
@@ -283,11 +311,6 @@ body.has-sidebar-page {
 
     .ai-search-discoveries__discoveries-title {
       padding-top: 1rem;
-    }
-
-    .search-container .search-advanced .search-info,
-    .semantic-search__container.search-results {
-      padding-inline: 10%;
     }
 
     .full-page-discoveries {

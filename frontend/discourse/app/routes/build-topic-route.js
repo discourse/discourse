@@ -66,7 +66,8 @@ export async function findTopicList(
 
   if (tracking) {
     tracking.sync(list, list.filter, filterParams);
-    tracking.trackIncoming(list.filter);
+    const tagId = list.topic_list?.tags?.[0]?.id;
+    tracking.trackIncoming(list.filter, { tagId });
   }
 
   Session.currentProp("topicList", list);

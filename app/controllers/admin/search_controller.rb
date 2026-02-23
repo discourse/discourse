@@ -19,7 +19,7 @@ class Admin::SearchController < Admin::AdminController
             ),
           themes_and_components:
             serialize_data(Theme.include_relations.order(:name), BasicThemeSerializer),
-          reports: Reports::ListQuery.call,
+          reports: Reports::ListQuery.call(admin: current_user.admin?),
         )
       end
 

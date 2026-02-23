@@ -28,7 +28,7 @@ export default <template>
   {{#if @controller.showVersionChecks}}
     <div class="section-top">
       <div class="version-checks">
-        <VersionChecks @versionCheck={{@controller.versionCheck}} @tagName="" />
+        <VersionChecks @versionCheck={{@controller.versionCheck}} />
       </div>
     </div>
   {{/if}}

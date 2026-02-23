@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 th:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "นำไปใช้"
-      insert_modal:
-        insert: "แทรก"

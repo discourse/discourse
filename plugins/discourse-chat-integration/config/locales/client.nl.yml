@@ -16,7 +16,6 @@ nl:
       settings: "Instellingen"
       no_providers: "Je moet enkele providers inschakelen in de plug-ininstellingen"
       channels_with_errors: "De laatste keer dat berichten werden gestuurd, werkten sommige kanalen niet voor deze provider. Klik op de foutpictogrammen voor meer informatie."
-      channel_exception: "De laatste keer dat een bericht naar dit kanaal werd gestuurd, is een onbekende fout opgetreden."
       group_mention_template: "Vermeldingen van: @%{name}"
       group_message_template: "Berichten naar: @%{name}"
       choose_group: "(kies een groep)"
@@ -33,7 +32,6 @@ nl:
         topic: "Topic"
         send: "Testbericht sturen"
         close: "Sluiten"
-        error: "Tijdens het verzenden van het bericht is een onbekende fout opgetreden. Zie de sitelogs voor meer informatie."
         success: "Bericht verzonden"
       type:
         normal: Normaal

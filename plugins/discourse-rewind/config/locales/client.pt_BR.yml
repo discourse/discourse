@@ -56,7 +56,6 @@ pt_BR:
         assignments:
           total_assigned_others: "Atribuiu a %{username}"
         chat_usage:
-          unique_dm_channels: Conversas por DM
           avg_message_length: Tamanho Médio de Mensagem
           messages: mensagens
           author: Você

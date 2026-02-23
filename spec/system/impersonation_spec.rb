@@ -7,7 +7,7 @@ describe "Impersonation", type: :system do
   let(:dialog) { PageObjects::Components::Dialog.new }
 
   before do
-    SiteSetting.experimental_impersonation = true
+    SiteSetting.impersonate_without_logout = true
 
     sign_in(admin)
   end

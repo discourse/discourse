@@ -34,6 +34,8 @@ et:
             canned_reply:
               label: "Vasta"
     discourse_ai:
+      llm_selector:
+        none: "Pole"
       features:
         back: "Tagasi"
         disabled: "(välja lülitatud)"
@@ -108,6 +110,14 @@ et:
         parameter_required: "Nõutud"
         edit: "Muuda"
         delete: "Kustuta"
+      secrets:
+        name: "Nimi"
+        secret: "Väärtus"
+        back: "Tagasi"
+        save: "Salvesta"
+        edit: "Muuda"
+        delete: "Kustuta"
+        embedding: "Sängitamine"
       llms:
         display_name: "Nimi"
         provider: "Teenusepakkuja"

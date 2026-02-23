@@ -82,7 +82,10 @@
 
   .footnote-tooltip {
     cursor: auto;
-    position: absolute;
+
+    // Position is fixed to be relative to the .ProseMirror editor
+    // See https://developer.mozilla.org/en-US/docs/Web/CSS/Guides/Display/Containing_block#identifying_the_containing_block
+    position: fixed;
     max-height: 40%;
     overflow: auto;
     left: 0;

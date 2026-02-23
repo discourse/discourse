@@ -2,18 +2,11 @@
 import Component from "@ember/component";
 import { alias } from "@ember/object/computed";
 import { htmlSafe } from "@ember/template";
-import {
-  attributeBindings,
-  classNameBindings,
-  classNames,
-  tagName,
-} from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
+import concatClass from "discourse/helpers/concat-class";
 import discourseComputed from "discourse/lib/decorators";
 
-@tagName("td")
-@classNames("admin-report-table-cell")
-@classNameBindings("type", "property")
-@attributeBindings("value:title")
+@tagName("")
 export default class AdminReportTableCell extends Component {
   options = null;
 
@@ -27,5 +20,13 @@ export default class AdminReportTableCell extends Component {
     return label.compute(data, options || {});
   }
 
-  <template>{{htmlSafe this.formattedValue}}</template>
+  <template>
+    <td
+      title={{this.value}}
+      class={{concatClass "admin-report-table-cell" this.type this.property}}
+      ...attributes
+    >
+      {{htmlSafe this.formattedValue}}
+    </td>
+  </template>
 }

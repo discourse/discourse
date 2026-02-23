@@ -45,6 +45,7 @@ register_asset "stylesheets/modules/embeddings/common/semantic-search.scss"
 register_asset "stylesheets/modules/sentiment/common/dashboard.scss"
 
 register_asset "stylesheets/modules/llms/common/ai-llms-editor.scss"
+register_asset "stylesheets/modules/llms/common/ai-secret-selector.scss"
 register_asset "stylesheets/modules/embeddings/common/ai-embedding-editor.scss"
 
 register_asset "stylesheets/modules/llms/common/usage.scss"
@@ -114,10 +115,7 @@ after_initialize do
     end
   end
 
-  if Rails.env.test?
-    require_relative "spec/support/embeddings_generation_stubs"
-    require_relative "spec/support/stable_diffusion_stubs"
-  end
+  require_relative "spec/support/embeddings_generation_stubs" if Rails.env.test?
 
   reloadable_patch do |plugin|
     Guardian.prepend DiscourseAi::GuardianExtensions
@@ -138,6 +136,21 @@ after_initialize do
   add_api_key_scope(
     :discourse_ai,
     { update_personas: { actions: %w[discourse_ai/admin/ai_personas#update] } },
+  )
+
+  add_api_key_scope(
+    :discourse_ai,
+    {
+      manage_artifacts: {
+        actions: %w[
+          discourse_ai/admin/ai_artifacts#index
+          discourse_ai/admin/ai_artifacts#show
+          discourse_ai/admin/ai_artifacts#create
+          discourse_ai/admin/ai_artifacts#update
+          discourse_ai/admin/ai_artifacts#destroy
+        ],
+      },
+    },
   )
 
   plugin_icons = %w[

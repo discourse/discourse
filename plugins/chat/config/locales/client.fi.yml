@@ -44,6 +44,12 @@ fi:
           one: "%{formatted_number} chat-viesti"
           other: "%{formatted_number} chat-viestuä"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Kanava"
+        description: "Kuvaus"
+        actions: "Toiminnot"
+        settings: "Asetukset"
       text_copied: Teksti kopioitiin leikepöydälle
       link_copied: Linkki kopioitiin leikepöydälle
       back_to_forum: "Foorumi"
@@ -526,13 +532,9 @@ fi:
           other: "%{commaSeparatedUsernames} ja %{count} muuta kirjoittavat"
       retention_reminders:
         indefinitely_short: "toistaiseksi"
-        indefinitely_long: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit pysyvästi."
         short:
           one: "%{count} päivä"
           other: "%{count} päivää"
-        long:
-          one: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit %{count} päivän ajan."
-          other: "Keskusteluasetukset on määritetty säilyttämään kanavien viestit %{count} päivän ajan."
       flags:
         off_topic: "Tämä viesti ei liity nykyiseen keskusteluun kanavan otsikon mukaan, ja se pitäisi todennäköisesti siirtää muualle."
         inappropriate: "Tämä viesti sisältää sisältöä, jota kohtuullinen henkilö pitäisi loukkaavana, herjaavana tai <a href=\"%{basePath}/guidelines\">yhteisömme ohjeiden vastaisena</a>."

@@ -18,7 +18,8 @@ $mobile-breakpoint: 700px;
       font-size: var(--font-up-2);
     }
 
-    .d-page-header__actions {
+    .d-page-header__actions,
+    .d-page-subheader__actions {
       display: flex;
       align-items: center;
       justify-content: flex-end;

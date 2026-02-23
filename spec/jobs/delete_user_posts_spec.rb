@@ -48,4 +48,16 @@ RSpec.describe Jobs::DeleteUserPosts do
     user.reload
     expect(user.posts.count).to eq(0)
   end
+
+  it "does nothing if user does not exist" do
+    expect {
+      described_class.new.execute(user_id: -999, acting_user_id: admin.id)
+    }.not_to raise_error
+  end
+
+  it "does nothing if acting_user does not exist" do
+    expect {
+      described_class.new.execute(user_id: user.id, acting_user_id: -999)
+    }.not_to raise_error
+  end
 end

@@ -213,7 +213,7 @@ RSpec.describe Auth::GoogleOAuth2Authenticator do
       context "when disabled" do
         before { SiteSetting.google_oauth2_hd_groups = false }
 
-        it "doesnt add associated groups" do
+        it "doesn't add associated groups" do
           result = described_class.new.after_authenticate(@auth_hash)
           expect(result.associated_groups).to eq(nil)
         end

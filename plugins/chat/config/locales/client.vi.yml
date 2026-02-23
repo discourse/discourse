@@ -17,6 +17,11 @@ vi:
         chat_messages:
           other: "%{formatted_number} tin chat"
     chat:
+      edit_category:
+        tab_title: "Chat"
+        description: "Mô tả"
+        actions: "Hành động"
+        settings: "Cài đặt"
       back_to_forum: "Diễn đàn"
       deleted_chat_username: đã bị xóa
       dates:

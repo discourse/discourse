@@ -22,3 +22,9 @@ de:
     duplicated_votes:
       one: "Eine Stimme konnte nicht verschoben werden, weil der Benutzer bereits in einem anderen Thema abgestimmt hat."
       other: "%{count} Stimmen konnten nicht verschoben werden, weil die Benutzer bereits in einem anderen Thema abgestimmt haben."
+    filter:
+      description:
+        topic_votes_min: "Minimale Anzahl von Stimmen für ein Thema"
+        topic_votes_max: "Maximale Anzahl von Stimmen für ein Thema"
+        order_topic_votes: "Themen nach Anzahl der Stimmen sortieren (am meisten zuerst)"
+        order_topic_votes_asc: "Themen nach Anzahl der Stimmen sortieren (am wenigsten zuerst)"

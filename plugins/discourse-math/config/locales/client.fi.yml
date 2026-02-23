@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 fi:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "Käytä"
-      insert_modal:
-        insert: "Lisää"

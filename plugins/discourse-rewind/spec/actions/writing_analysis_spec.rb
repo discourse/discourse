@@ -140,6 +140,46 @@ RSpec.describe DiscourseRewind::Action::WritingAnalysis do
 
         expect(result[:data][:total_words]).to eq(total_words)
       end
+
+      it "does not include deleted posts in readability score calculation" do
+        result_with_deletion = call_report
+
+        post1.recover!
+        result_without_deletion = call_report
+
+        expect(result_with_deletion[:data][:readability_score]).not_to eq(
+          result_without_deletion[:data][:readability_score],
+        )
+      end
+    end
+
+    context "when a post's topic is deleted" do
+      before { post1.topic.trash!(Discourse.system_user) }
+
+      it "does not include deleted topic posts in total posts" do
+        result = call_report
+
+        expect(result[:data][:total_posts]).to eq(2)
+      end
+
+      it "does not include deleted topic posts in total words" do
+        result = call_report
+
+        total_words = [post2, post3].sum { |p| p.reload.word_count }
+
+        expect(result[:data][:total_words]).to eq(total_words)
+      end
+
+      it "does not include deleted topic posts in readability score calculation" do
+        result_with_deletion = call_report
+
+        post1.topic.recover!
+        result_without_deletion = call_report
+
+        expect(result_with_deletion[:data][:readability_score]).not_to eq(
+          result_without_deletion[:data][:readability_score],
+        )
+      end
     end
 
     context "when posts are from another user" do

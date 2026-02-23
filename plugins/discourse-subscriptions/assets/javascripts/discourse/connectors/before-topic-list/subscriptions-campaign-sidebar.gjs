@@ -1,10 +1,9 @@
 /* eslint-disable ember/no-classic-components */
 import Component from "@ember/component";
-import { classNames, tagName } from "@ember-decorators/component";
+import { tagName } from "@ember-decorators/component";
 import CampaignBanner from "../../components/campaign-banner";
 
-@tagName("div")
-@classNames("before-topic-list-outlet", "subscriptions-campaign-sidebar")
+@tagName("")
 export default class SubscriptionsCampaignSidebar extends Component {
   static shouldRender(args, context) {
     const { siteSettings } = context;
@@ -14,5 +13,12 @@ export default class SubscriptionsCampaignSidebar extends Component {
     return bannerLocation === "Sidebar" && !mobileView;
   }
 
-  <template><CampaignBanner @connectorName="before-topic-list" /></template>
+  <template>
+    <div
+      class="before-topic-list-outlet subscriptions-campaign-sidebar"
+      ...attributes
+    >
+      <CampaignBanner @connectorName="before-topic-list" />
+    </div>
+  </template>
 }

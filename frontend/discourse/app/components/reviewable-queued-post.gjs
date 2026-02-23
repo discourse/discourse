@@ -65,7 +65,7 @@ export default class ReviewableQueuedPost extends Component {
   }
 
   <template>
-    <ReviewableTopicLink @reviewable={{@reviewable}} @tagName="">
+    <ReviewableTopicLink @reviewable={{@reviewable}}>
       <div class="title-text">
         {{icon "square-plus" title="review.new_topic"}}
         {{highlightWatchedWords @reviewable.payload.title @reviewable}}
@@ -86,7 +86,6 @@ export default class ReviewableQueuedPost extends Component {
         <ReviewablePostHeader
           @reviewable={{@reviewable}}
           @createdBy={{@reviewable.target_created_by}}
-          @tagName=""
         />
 
         <CookText

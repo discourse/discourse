@@ -33,13 +33,13 @@ RSpec.describe AssociatedGroup do
       expect(described_class.exists?(associated_group.id)).to eq(false)
     end
 
-    it "doesnt delete associated groups associated with groups" do
+    it "doesn't delete associated groups associated with groups" do
       GroupAssociatedGroup.create(group_id: group.id, associated_group_id: associated_group.id)
       described_class.cleanup!
       expect(described_class.exists?(associated_group.id)).to eq(true)
     end
 
-    it "doesnt delete associated groups associated with users" do
+    it "doesn't delete associated groups associated with users" do
       UserAssociatedGroup.create(user_id: user.id, associated_group_id: associated_group.id)
       described_class.cleanup!
       expect(described_class.exists?(associated_group.id)).to eq(true)

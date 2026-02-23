@@ -30,6 +30,11 @@ class UserHistory < ActiveRecord::Base
 
   validates :action, presence: true
 
+  # moderators can only see these if the corresponding site setting is enabled
+  CATEGORY_ACTIONS = %i[create_category change_category_settings delete_category].freeze
+  TRUST_LEVEL_ACTIONS = %i[change_trust_level lock_trust_level unlock_trust_level].freeze
+  EMAIL_ACTIONS = %i[check_email add_email update_email destroy_email].freeze
+
   scope :only_staff_actions, -> { where("action IN (?)", UserHistory.staff_action_ids) }
 
   before_save :set_admin_only
@@ -295,8 +300,97 @@ class UserHistory < ActiveRecord::Base
     @staff_action_ids ||= staff_actions.map { |a| actions[a] }
   end
 
+  def self.moderator_visible_actions
+    @moderator_visible_actions ||= [
+      # user account
+      :approve_user,
+      :activate_user,
+      :deactivate_user,
+      :delete_user,
+      # user profile
+      :change_name,
+      :change_username,
+      :change_title,
+      :revoke_title,
+      # trust levels
+      :change_trust_level,
+      :lock_trust_level,
+      :unlock_trust_level,
+      # emails
+      :add_email,
+      :check_email,
+      :update_email,
+      :destroy_email,
+      # suspension
+      :suspend_user,
+      :unsuspend_user,
+      :removed_suspend_user,
+      :removed_unsuspend_user,
+      # silence
+      :silence_user,
+      :unsilence_user,
+      :removed_silence_user,
+      :removed_unsilence_user,
+      # badges
+      :grant_badge,
+      :revoke_badge,
+      # posts
+      :post_approved,
+      :post_rejected,
+      :post_edit,
+      :post_locked,
+      :post_unlocked,
+      :post_staff_note_create,
+      :post_staff_note_destroy,
+      :delete_post,
+      :delete_post_permanently,
+      :permanently_delete_post_revisions,
+      # topics
+      :topic_published,
+      :topic_closed,
+      :topic_opened,
+      :topic_archived,
+      :topic_unarchived,
+      :topic_timestamps_changed,
+      :topic_slow_mode_set,
+      :topic_slow_mode_removed,
+      :recover_topic,
+      :delete_topic,
+      :delete_topic_permanently,
+      # categories
+      :create_category,
+      :change_category_settings,
+      :delete_category,
+      # tags
+      :tag_group_create,
+      :tag_group_change,
+      :tag_group_destroy,
+      # watched words
+      :watched_word_create,
+      :watched_word_destroy,
+      :create_watched_word_group,
+      :update_watched_word_group,
+      :delete_watched_word_group,
+      # misc.
+      :check_personal_message,
+      :reset_bounce_score,
+    ]
+  end
+
+  def self.site_setting_excluded_actions
+    excluded = []
+    excluded.concat(CATEGORY_ACTIONS) unless SiteSetting.moderators_manage_categories
+    excluded.concat(TRUST_LEVEL_ACTIONS) unless SiteSetting.moderators_change_trust_levels
+    excluded.concat(EMAIL_ACTIONS) unless SiteSetting.moderators_view_emails
+    excluded
+  end
+
+  def self.moderator_visible_action_ids
+    (moderator_visible_actions - site_setting_excluded_actions).map { |a| actions[a] }
+  end
+
   def self.admin_only_action_ids
-    @admin_only_action_ids ||= [actions[:change_site_setting]]
+    @admin_only_action_ids ||= staff_action_ids - moderator_visible_action_ids
   end
 
   def self.with_filters(filters)
@@ -343,8 +437,9 @@ class UserHistory < ActiveRecord::Base
         .with_filters(opts.slice(*staff_filters))
         .only_staff_actions
         .order("id DESC")
-        .includes(:acting_user, :target_user)
-    query = query.where(admin_only: false) unless viewer && viewer.admin?
+        .includes(:acting_user, :target_user, :topic, :post, :category)
+
+    query = query.where(action: moderator_visible_action_ids) unless viewer&.admin?
 
     query = query.where("created_at >= ?", opts[:start_date].to_time) if opts[:start_date]
     query = query.where("created_at <= ?", opts[:end_date].to_time) if opts[:end_date]

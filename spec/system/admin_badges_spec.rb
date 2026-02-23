@@ -108,6 +108,30 @@ describe "Admin Badges Page", type: :system do
     end
   end
 
+  context "when filtering badges" do
+    it "filters badges by name" do
+      badges_page.visit_page
+
+      autobiographer = Badge.find(Badge::Autobiographer)
+      editor = Badge.find(Badge::Editor)
+
+      expect(badges_page).to have_badge_in_list(autobiographer.display_name)
+      expect(badges_page).to have_badge_in_list(editor.display_name)
+
+      badges_page.filter_badges(editor.display_name)
+
+      expect(badges_page).to have_badge_in_list(editor.display_name)
+      expect(badges_page).to have_no_badge_in_list(autobiographer.display_name)
+    end
+
+    it "shows no results message when no badges match" do
+      badges_page.visit_page
+      badges_page.filter_badges("nonexistent")
+
+      expect(badges_page).to have_no_badges_found_message
+    end
+  end
+
   context "when deleting a badge" do
     let(:dialog) { PageObjects::Components::Dialog.new }
 

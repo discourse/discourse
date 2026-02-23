@@ -43,6 +43,12 @@ zh_CN:
         chat_messages:
           other: "%{formatted_number} 条聊天消息"
     chat:
+      edit_category:
+        tab_title: "聊天"
+        channel: "频道"
+        description: "描述"
+        actions: "操作"
+        settings: "设置"
       text_copied: 文本已复制到剪贴板
       link_copied: 链接已复制到剪贴板
       back_to_forum: "论坛"
@@ -566,12 +572,13 @@ zh_CN:
         many_users:
           other: "%{commaSeparatedUsernames} 和其他 %{count} 人正在输入"
       retention_reminders:
+        chat_settings: "聊天设置"
         indefinitely_short: "无限期"
-        indefinitely_long: "聊天设置已被设置为无限期保留频道消息。"
+        indefinitely_long: "%{chatSettingsLink} 已设置为无限期保留频道消息。"
         short:
           other: "%{count} 天"
         long:
-          other: "聊天设置已被设置为将频道消息保留 %{count} 天。"
+          other: "%{chatSettingsLink} 已设置为保留频道消息 %{count} 天。"
       flags:
         off_topic: "此消息与频道标题定义的当前讨论无关，可能应当移至其他地方。"
         inappropriate: "此消息包含理性的人会认为具有攻击性、辱骂性或违反<a href=\"%{basePath}/guidelines\">我们的社区准则</a>的内容。"

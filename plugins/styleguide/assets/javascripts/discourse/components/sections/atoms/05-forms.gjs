@@ -164,6 +164,18 @@ export default class Forms extends Component {
 </template>`;
   }
 
+  get tagChooserCode() {
+    return `import Form from "discourse/components/form";
+
+<template>
+  <Form as |form|>
+    <form.Field @title="Tags" @name="tags" as |field|>
+      <field.TagChooser />
+    </form.Field>
+  </Form>
+</template>`;
+  }
+
   get menuCode() {
     return `import Form from "discourse/components/form";
 
@@ -191,7 +203,7 @@ export default class Forms extends Component {
         <radioGroup.Radio @value="false" as |radio|>
           <radio.Title>No</radio.Title>
           <radio.Description>
-            Choosing no, will make you inelligible for the contest.
+            Choosing no, will make you ineligible for the contest.
           </radio.Description>
         </radioGroup.Radio>
       </field.RadioGroup>
@@ -372,7 +384,7 @@ import Form from "discourse/components/form";
       </row.Col>
 
       <row.Col @size={{12}}>
-        <form.Field @title="Adress" @name="adress" as |field|>
+        <form.Field @title="Address" @name="address" as |field|>
           <field.Input />
         </form.Field>
       </row.Col>
@@ -532,6 +544,14 @@ import Form from "discourse/components/form";
       </Form>
     </StyleguideExample>
 
+    <StyleguideExample @title="TagChooser" @code={{this.tagChooserCode}}>
+      <Form as |form|>
+        <form.Field @title="Tags" @name="tags" as |field|>
+          <field.TagChooser />
+        </form.Field>
+      </Form>
+    </StyleguideExample>
+
     <StyleguideExample @title="Menu" @code={{this.menuCode}}>
       <Form as |form data|>
         <form.Field @title="Enabled" @name="enabled" as |field|>
@@ -552,7 +572,7 @@ import Form from "discourse/components/form";
             <radioGroup.Radio @value="false" as |radio|>
               <radio.Title>No</radio.Title>
               <radio.Description>
-                Choosing no, will make you inelligible for the contest.
+                Choosing no, will make you ineligible for the contest.
               </radio.Description>
             </radioGroup.Radio>
           </field.RadioGroup>
@@ -713,7 +733,7 @@ import Form from "discourse/components/form";
           </row.Col>
 
           <row.Col @size={{12}}>
-            <form.Field @title="Adress" @name="adress" as |field|>
+            <form.Field @title="Address" @name="address" as |field|>
               <field.Input />
             </form.Field>
           </row.Col>

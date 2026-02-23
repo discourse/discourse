@@ -11,7 +11,7 @@ class ReviewableUser < Reviewable
     { reject_reason: params[:reject_reason], send_email: params[:send_email] != "false" }
   end
 
-  def build_legacy_combined_actions(actions, guardian, args)
+  def build_combined_actions(actions, guardian, args)
     if status == "rejected" && !payload["scrubbed_by"]
       build_action(actions, :scrub, client_action: "scrub")
     end
@@ -48,30 +48,6 @@ class ReviewableUser < Reviewable
   def build_actions(actions, guardian, args)
     return if approved?
     super
-  end
-
-  # TODO (reviewable-refresh): Move to build_actions when fully migrated to new UI
-  def build_new_separated_actions
-    bundle_actions = {}
-    if status == "pending"
-      bundle_actions[:approve_user] = {} if target_user && !target_user.approved? &&
-        guardian.can_approve?(target_user)
-
-      if @guardian.can_delete_user?(target_user)
-        bundle_actions[:delete_user] = {}
-        bundle_actions[:delete_user_block] = {}
-      end
-    end
-    if status == "rejected" && !payload["scrubbed_by"]
-      bundle_actions[:scrub] = { client_action: "scrub" }
-    end
-
-    build_bundle(
-      "#{id}-user-actions",
-      "reviewables.actions.user_actions.bundle_title",
-      bundle_actions,
-      source: "core",
-    )
   end
 
   def perform_approve_user(performed_by, args)

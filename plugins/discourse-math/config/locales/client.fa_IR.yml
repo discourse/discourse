@@ -5,9 +5,3 @@
 # https://translate.discourse.org/
 
 fa_IR:
-  js:
-    discourse_math:
-      edit_modal:
-        apply: "اعمال کردن"
-      insert_modal:
-        insert: "درج کردن"

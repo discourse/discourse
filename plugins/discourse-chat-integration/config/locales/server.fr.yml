@@ -51,8 +51,6 @@ fr:
     chat_integration_flowdock_excerpt_length: "Longueur des extraits de messages Flowdock"
     chat_integration_groupme_enabled: "Activer le fournisseur d'intégration de chat GroupMe"
     chat_integration_groupme_excerpt_length: "Longueur des extraits de message GroupMe"
-    chat_integration_groupme_bot_ids: "*obligatoire* ID du ou des bots, séparés pour des virgules s'il y en a plusieurs"
-    chat_integration_groupme_instance_names: " *obligatoire* Nom du ou des chats GroupMe, séparés par des virgules s'il y en a plusieurs (même ordre que les ID des bots)"
     chat_integration_teams_enabled: "Activer le fournisseur d'intégration de chat Microsoft Teams"
     chat_integration_teams_excerpt_length: "Longueur des extraits de messages Microsoft Teams"
     chat_integration_powerautomate_enabled: "Activer le fournisseur d'intégration Microsoft Power Automate"
@@ -93,10 +91,8 @@ fr:
         create:
           created: "Règle créée avec succès"
           updated: "Règle mise à jour avec succès"
-          error: "Désolé, une erreur est survenue lors de la création de cette règle."
         delete:
           success: "Règle supprimée avec succès"
-          error: "Désolé, une erreur est survenue lors de la suppression de cette règle. Exécutez « /discourse help » pour obtenir des instructions."
         not_found:
           tag: "L'étiquette *%{name}* est introuvable."
           category: "La catégorie *%{name}* est introuvable. Catégories disponibles : *%{list}*"
@@ -158,10 +154,8 @@ fr:
         create:
           created: "Règle créée avec succès"
           updated: "Règle mise à jour avec succès"
-          error: "Désolé, une erreur est survenue lors de la création de cette règle."
         delete:
           success: "Règle supprimée avec succès"
-          error: "Désolé, une erreur est survenue lors de la suppression de cette règle. Exécutez <code>/status</code> pour obtenir une liste des règles."
         not_found:
           tag: "L'étiquette <b>%{name}</b> est introuvable."
           category: "La catégorie <b>%{name}</b> est introuvable. Catégories disponibles : <b>%{list}</b>"
@@ -192,10 +186,8 @@ fr:
         create:
           created: "Règle créée avec succès"
           updated: "Règle mise à jour avec succès"
-          error: "Désolé, une erreur est survenue lors de la création de cette règle."
         delete:
           success: "Règle supprimée avec succès"
-          error: "Désolé, une erreur est survenue lors de la suppression de cette règle. Exécutez « /discourse help » pour obtenir des instructions."
         not_found:
           tag: "L'étiquette *%{name}* est introuvable."
           category: "La catégorie *%{name}* est introuvable. Catégories disponibles : *%{list}*"

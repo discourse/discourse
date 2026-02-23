@@ -21,11 +21,6 @@ zh_TW:
       actions:
         no_action_comment:
           title: "沒有動作"
-        agree_and_suspend:
-          description: "同意檢舉並停權使用者"
-        agree_and_silence:
-          title: "使用者靜音"
-          description: "同意檢舉並禁止使用者發文"
   post_action_types:
     vote:
       title: "投票"

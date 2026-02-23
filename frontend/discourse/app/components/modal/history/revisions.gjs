@@ -5,6 +5,7 @@ import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import didUpdate from "@ember/render-modifiers/modifiers/did-update";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
+import { tagName } from "@ember-decorators/component";
 import LinksRedirect from "discourse/components/links-redirect";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import Avatar from "discourse/helpers/bound-avatar-template";
@@ -23,6 +24,7 @@ function tagClasses(tagChanges, state, className) {
   }, {});
 }
 
+@tagName("")
 export default class Revisions extends Component {
   @service languageNameLookup;
 
@@ -64,6 +66,7 @@ export default class Revisions extends Component {
       id="revisions"
       data-post-id={{@model.post_id}}
       class={{@hiddenClasses}}
+      ...attributes
     >
       {{#if @model.locale_changes}}
         <div class="row revision__locale">

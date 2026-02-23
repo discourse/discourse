@@ -55,7 +55,7 @@ RSpec.describe DiscourseRewind::Action::BestTopics do
       end
     end
 
-    context "when a topic" do
+    context "when a topic belongs to another user" do
       before { topic_1.update!(user: Fabricate(:user)) }
 
       it "is not included" do

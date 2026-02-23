@@ -1,3 +1,4 @@
+/* eslint-disable discourse/test-filename-suffix */
 import { render } from "@ember/test-helpers";
 import { module, test } from "qunit";
 import EmptyTopicFilter from "discourse/components/empty-topic-filter";

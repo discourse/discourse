@@ -1,0 +1,80 @@
+# frozen_string_literal: true
+
+# Notify admins of all upcoming changes' promotions,
+# which is called from the Jobs::Scheduled::CheckUpcomingChanges job.
+class UpcomingChanges::NotifyPromotions
+  include Service::Base
+
+  model :changes_already_notified_about_promotion, optional: true
+  model :admin_user_ids
+  model :change_notification_statuses
+
+  private
+
+  def fetch_changes_already_notified_about_promotion
+    UpcomingChangeEvent
+      .where(
+        upcoming_change_name: SiteSetting.upcoming_change_site_settings,
+        event_type: :admins_notified_automatic_promotion,
+      )
+      .pluck(:upcoming_change_name)
+      .map(&:to_sym)
+  end
+
+  def fetch_admin_user_ids
+    User.human_users.admins.pluck(:id)
+  end
+
+  def fetch_change_notification_statuses(changes_already_notified_about_promotion:, admin_user_ids:)
+    SiteSetting.upcoming_change_site_settings.index_with do |setting_name|
+      status_hash = {}
+
+      # NOTE: Make sure to handle additional error_key values in the
+      # CheckUpcomingChanges job's verbose_log.
+      UpcomingChanges::NotifyPromotion.call(
+        params: {
+          setting_name: setting_name.to_sym,
+          changes_already_notified_about_promotion:,
+          admin_user_ids:,
+        },
+        guardian: Discourse.system_user.guardian,
+      ) do |result|
+        status_hash[:success] = result.success?
+
+        on_failed_policy(:setting_is_available) do |policy|
+          status_hash[:error] = "Setting #{setting_name} is not available"
+          status_hash[:error_key] = :setting_not_available
+        end
+
+        on_failed_policy(:meets_or_exceeds_status) do |policy|
+          status_hash[
+            :error
+          ] = "Setting #{setting_name} does not meet or exceed the promotion status"
+          status_hash[:error_key] = :does_not_meet_or_exceed_promotion_status
+        end
+
+        on_failed_policy(:change_has_not_already_been_notified_about_promotion) do |policy|
+          status_hash[
+            :error
+          ] = "Setting #{setting_name} has already notified admins about promotion"
+          status_hash[:error_key] = :already_notified_about_promotion
+        end
+
+        on_failed_policy(:admin_has_not_manually_toggled) do |policy|
+          status_hash[
+            :error
+          ] = "Setting #{setting_name} has been manually opted in or out by an admin, we did not notify admins about promotion"
+          status_hash[:error_key] = :already_manually_toggled
+        end
+
+        on_exceptions do |exception|
+          status_hash[:error] = exception.message
+          status_hash[:error_key] = :unexpected_error
+          status_hash[:backtrace] = exception.backtrace
+        end
+      end
+
+      status_hash
+    end
+  end
+end

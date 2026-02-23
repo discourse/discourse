@@ -32,6 +32,15 @@ DiscourseAutomation::Scriptable.add(
         "LEFT JOIN post_custom_fields ON posts.id = post_custom_fields.post_id AND post_custom_fields.name = 'uploads_removed_at'",
       )
       .where("post_custom_fields.post_id IS NULL")
+      .where(
+        "NOT EXISTS (
+          SELECT 1 FROM reviewables
+          WHERE reviewables.target_id = posts.id
+          AND reviewables.target_type = 'Post'
+          AND reviewables.status = ?
+        )",
+        Reviewable.statuses[:pending],
+      )
       .distinct
       .limit(DiscourseAutomation::REMOVE_UPLOAD_MARKUP_FROM_DELETED_POSTS_BATCH_SIZE)
       .each do |post|

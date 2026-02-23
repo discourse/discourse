@@ -1067,13 +1067,13 @@ module(
         `${inputFields.fields.required_tags_with_validations.selector} .select-kit`
       );
 
-      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+      assert.strictEqual(tagSelector.header().name(), "gazelle,cat");
 
       await tagSelector.expand();
       await tagSelector.selectRowByIndex(2);
       await tagSelector.collapse();
 
-      assert.strictEqual(tagSelector.header().value(), "gazelle,cat,dog");
+      assert.strictEqual(tagSelector.header().name(), "gazelle,cat,dog");
 
       await tagSelector.expand();
       await tagSelector.deselectItemByName("gazelle");
@@ -1096,7 +1096,7 @@ module(
       await tagSelector.expand();
       await tagSelector.selectRowByIndex(1);
 
-      assert.strictEqual(tagSelector.header().value(), "gazelle");
+      assert.strictEqual(tagSelector.header().name(), "gazelle");
 
       inputFields.refresh();
 
@@ -2196,13 +2196,13 @@ module(
         `${inputFields.fields.required_tags_with_validations.selector} .select-kit`
       );
 
-      assert.strictEqual(tagSelector.header().value(), "gazelle,cat");
+      assert.strictEqual(tagSelector.header().name(), "gazelle,cat");
 
       await tagSelector.expand();
       await tagSelector.selectRowByIndex(2);
       await tagSelector.collapse();
 
-      assert.strictEqual(tagSelector.header().value(), "gazelle,cat,dog");
+      assert.strictEqual(tagSelector.header().name(), "gazelle,cat,dog");
 
       await tagSelector.expand();
       await tagSelector.deselectItemByName("gazelle");
@@ -2225,7 +2225,7 @@ module(
       await tagSelector.expand();
       await tagSelector.selectRowByIndex(1);
 
-      assert.strictEqual(tagSelector.header().value(), "gazelle");
+      assert.strictEqual(tagSelector.header().name(), "gazelle");
 
       inputFields.refresh();
 

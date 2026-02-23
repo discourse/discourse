@@ -26,6 +26,7 @@ RSpec.describe "Member upcoming changes", type: :system do
     )
 
     SiteSetting.enable_upload_debug_mode = true
+    SiteSetting.about_page_extra_groups_show_description = false
   end
 
   context "when user is logged in" do

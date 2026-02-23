@@ -5,11 +5,14 @@
 # https://translate.discourse.org/
 
 vi:
+  accepted_answer: "Câu trả lời được chấp nhận"
   reports:
     accepted_solutions:
       xaxis: "Ngày"
       yaxis: "Tổng số"
   solved:
+    no_solutions:
+      others: "Chưa có giải pháp nào được chấp nhận."
     filter:
       description:
         solved: "Lọc chủ đề đã được giải quyết"
@@ -31,3 +34,14 @@ vi:
       name: "Quân Sư"
       description: "Có 150 câu trả lời được đánh dấu là Giải pháp"
       long_description: "Huy hiệu này được trao khi bạn có 150 câu trả lời được đánh dấu là Giải pháp cho các chủ đề. :white_check_mark: Tuyệt vời! :slightly_smiling_face: Bạn chính thức là một Nhà cung cấp Giải pháp. :brain:"
+  education:
+    topic_is_solved: |
+      ### Chủ đề này đã được giải quyết
+
+      Chỉ trả lời tại đây nếu:
+
+      - Bạn có thông tin bổ sung
+
+      - Giải pháp không hiệu quả với bạn
+
+      Nếu bạn có vấn đề không liên quan, vui lòng [tạo chủ đề mới](%{base_url}/new-topic) thay trả lời tại đây.
