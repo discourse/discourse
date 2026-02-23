@@ -67,7 +67,7 @@ RSpec.describe "Admin category channels list", type: :system do
       expect(page).to have_css(".d-table__row[data-channel-id='#{channel_2.id}']")
       expect(page).to have_css(".d-table__row[data-channel-id='#{subcategory_channel.id}']")
       expect(page.find(".d-table__row[data-channel-id='#{subcategory_channel.id}']")).to have_css(
-        ".edit-category-chat__subcategory-badge",
+        ".badge-category__wrapper .badge-category__name",
         text: subcategory.name,
       )
     end
