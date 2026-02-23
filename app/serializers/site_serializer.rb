@@ -269,7 +269,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def censored_regexp
-    WordWatcher.serialized_regexps_for_action(:censor, engine: :js)
+    WordWatcher.serialized_regexps_for_action(:censor)
   end
 
   def custom_emoji_translation
@@ -285,11 +285,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def watched_words_replace
-    WordWatcher.regexps_for_action(:replace, engine: :js)
+    WordWatcher.regexps_for_action(:replace)
   end
 
   def watched_words_link
-    WordWatcher.regexps_for_action(:link, engine: :js)
+    WordWatcher.regexps_for_action(:link)
   end
 
   def categories
