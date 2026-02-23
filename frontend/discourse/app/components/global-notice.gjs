@@ -81,13 +81,19 @@ export default class GlobalNotice extends Component {
     return !this.router.currentRouteName.startsWith("wizard.");
   }
 
-  get #showEmailsDisabledNotice() {
+  get #isEmailRelatedRoute() {
     const routeName = this.router.currentRouteName;
     return (
       routeName?.startsWith("admin") ||
       routeName?.startsWith("review") ||
+      routeName?.startsWith("account-created") ||
+      routeName?.startsWith("invites") ||
+      routeName?.startsWith("userInvited") ||
+      routeName === "login" ||
+      routeName === "preferences.email" ||
       routeName === "preferences.emails" ||
-      routeName === "preferences.notifications"
+      routeName === "preferences.notifications" ||
+      routeName === "preferences.security"
     );
   }
 
@@ -156,9 +162,6 @@ export default class GlobalNotice extends Component {
         Notice.create({
           text: i18n("emails_are_disabled"),
           id: "alert-emails-disabled",
-          options: {
-            visibility: () => this.#showEmailsDisabledNotice,
-          },
         })
       );
     } else if (this.siteSettings.disable_emails === "non-staff") {
@@ -166,8 +169,15 @@ export default class GlobalNotice extends Component {
         Notice.create({
           text: i18n("emails_are_disabled_non_staff"),
           id: "alert-emails-disabled",
+        })
+      );
+    } else if (!this.site.email_configured) {
+      notices.push(
+        Notice.create({
+          text: i18n("emails_are_disabled_no_smtp"),
+          id: "alert-emails-disabled",
           options: {
-            visibility: () => this.#showEmailsDisabledNotice,
+            visibility: () => this.#isEmailRelatedRoute,
           },
         })
       );
