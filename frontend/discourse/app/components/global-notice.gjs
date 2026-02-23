@@ -81,6 +81,16 @@ export default class GlobalNotice extends Component {
     return !this.router.currentRouteName.startsWith("wizard.");
   }
 
+  get #showEmailsDisabledNotice() {
+    const routeName = this.router.currentRouteName;
+    return (
+      routeName?.startsWith("admin") ||
+      routeName?.startsWith("review") ||
+      routeName === "preferences.emails" ||
+      routeName === "preferences.notifications"
+    );
+  }
+
   get notices() {
     let notices = [];
 
@@ -147,8 +157,7 @@ export default class GlobalNotice extends Component {
           text: i18n("emails_are_disabled"),
           id: "alert-emails-disabled",
           options: {
-            dismissable: true,
-            persistentDismiss: false,
+            visibility: () => this.#showEmailsDisabledNotice,
           },
         })
       );
@@ -158,8 +167,7 @@ export default class GlobalNotice extends Component {
           text: i18n("emails_are_disabled_non_staff"),
           id: "alert-emails-disabled",
           options: {
-            dismissable: true,
-            persistentDismiss: false,
+            visibility: () => this.#showEmailsDisabledNotice,
           },
         })
       );
