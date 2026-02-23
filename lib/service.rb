@@ -8,24 +8,29 @@ module Service
   # Steps are executed in the order they’re defined. They will use their name
   # to execute the corresponding method defined in the service class.
   #
-  # Currently, there are 5 types of steps:
+  # Available step types:
   #
-  # * +params(name = :default)+: used to validate the input parameters,
-  #   typically provided by a user calling an endpoint. A block has to be
-  #   defined to hold the validations. If the validations fail, the step will
-  #   fail. Otherwise, the resulting contract will be available in
-  #   +context[:params]+.
-  # * +model(name = :model)+: used to instantiate a model (either by building
-  #   it or fetching it from the DB). If a falsy value is returned, then the
-  #   step will fail. Otherwise the resulting object will be assigned in
+  # * +params(name = :default)+: validates input parameters using
+  #   +ActiveModel+ validations. Fails if the contract is invalid.
+  #   The resulting contract is available in +context[:params]+.
+  # * +model(name = :model)+: fetches or instantiates a model. Fails if the
+  #   return value is falsy, empty, or invalid. The result is stored in
   #   +context[name]+ (+context[:model]+ by default).
-  # * +policy(name = :default)+: used to perform a check on the state of the
-  #   system. Typically used to run guardians. If a falsy value is returned,
-  #   the step will fail.
-  # * +step(name)+: used to run small snippets of arbitrary code. The step
-  #   doesn’t care about its return value, so to mark the service as failed,
-  #   {#fail!} has to be called explicitly.
-  # * +transaction+: used to wrap other steps inside a DB transaction.
+  # * +policy(name = :default)+: performs a check on the state of the system.
+  #   Typically used to run guardians. Fails if the return value is falsy.
+  # * +step(name)+: runs arbitrary code. Does not fail based on its return
+  #   value; call {#fail!} explicitly to mark the service as failed.
+  # * +transaction+: wraps other steps inside a DB transaction. Any failing
+  #   step inside the block causes a rollback.
+  # * +try(*exceptions)+: wraps other steps and catches specified exceptions
+  #   (defaults to +StandardError+). Fails if an exception is caught.
+  # * +lock(*keys)+: wraps other steps inside a +DistributedMutex+. Keys are
+  #   resolved from params then the service context. Fails if the lock
+  #   cannot be acquired.
+  # * +options+: defines options to parameterize service behavior, similar to
+  #   +params+ but without validations. Cannot fail.
+  # * +only_if(name)+: conditionally runs the steps in its block. If the
+  #   condition is not met, the steps are skipped without failing.
   #
   # The methods defined on the service are automatically provided with
   # the whole context passed as keyword arguments. This allows to define in a
