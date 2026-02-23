@@ -191,9 +191,9 @@ module DiscourseAi
               I18n.t(
                 "discourse_automation.scriptables.llm_triage.flagged_post",
                 base_path: Discourse.base_path,
-                llm_response: result,
+                llm_response: ERB::Util.html_escape(result),
                 automation_id: automation&.id.to_s,
-                automation_name: automation&.name.to_s,
+                automation_name: ERB::Util.html_escape(automation&.name.to_s),
               )
 
             if !flagged_by_tool

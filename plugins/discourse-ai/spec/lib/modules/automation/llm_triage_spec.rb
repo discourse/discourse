@@ -418,6 +418,27 @@ describe DiscourseAi::Automation::LlmTriage do
     )
   end
 
+  it "escapes llm response and automation name in the flagged post message" do
+    automation = Fabricate(:automation, script: "llm_triage", name: %(rule"><img src=x onerror=1>))
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["<img src=x onerror=alert(1)>"]) do
+      triage(
+        post: post,
+        triage_persona_id: ai_persona.id,
+        search_for_text: "img",
+        flag_post: true,
+        automation: automation,
+      )
+    end
+
+    score_reason = ReviewablePost.last.reviewable_scores.first.reason
+
+    expect(score_reason).to include("&lt;img src=x onerror=alert(1)&gt;")
+    expect(score_reason).to include("rule&quot;&gt;&lt;img src=x onerror=1&gt;")
+    expect(score_reason).not_to include("<img src=x onerror=alert(1)>")
+    expect(score_reason).not_to include(%(rule"><img src=x onerror=1>))
+  end
+
   it "only sends one PM when multiple rules flag the same post" do
     # First rule flags the post and sends PM
     DiscourseAi::Completions::Llm.with_prepared_responses(%w[bad bad]) do
