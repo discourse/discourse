@@ -480,7 +480,6 @@ en:
             title: "What is your favorite food?"
             body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
 
-
       spread_the_word:
         title: "Spread the Word!"
         description: "Share a link with everyone in your network"
@@ -5463,11 +5462,11 @@ en:
 
     trust_levels:
       names:
-        newuser: "new user"
-        basic: "basic user"
-        member: "member"
-        regular: "regular"
-        leader: "leader"
+        newuser: "New user"
+        basic: "Basic user"
+        member: "Member"
+        regular: "Regular"
+        leader: "Leader"
       detailed_name: "%{level}: %{name}"
 
     pick_files_button:

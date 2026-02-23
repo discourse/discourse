@@ -1,0 +1,10 @@
+@use "lib/viewport";
+
+.admin-reports .admin-report-donut-chart {
+  .chart-canvas-container {
+    @include viewport.from(sm) {
+      width: clamp(200px, 66%, 600px);
+      margin-inline: auto;
+    }
+  }
+}

@@ -1431,6 +1431,12 @@ en:
       xaxis: "Day"
       yaxis: "Number of new bookmarks"
       description: "Number of new topics and posts bookmarked."
+    user_stats:
+      title: "User Statistics"
+      description: "Number of users grouped by trust level or role."
+      types:
+        role: "Role"
+        status: "Status"
     users_by_trust_level:
       title: "Users per Trust Level"
       xaxis: "Trust Level"
@@ -1450,6 +1456,8 @@ en:
         moderator: Moderator
         suspended: Suspended
         silenced: Silenced
+        regular_user: Regular User
+        active: Active
       description: "Number of users grouped by admin, moderator, suspended, and silenced."
     trending_search:
       title: Trending Search Terms
