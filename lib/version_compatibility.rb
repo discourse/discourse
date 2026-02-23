@@ -76,40 +76,18 @@ module Discourse
   end
 
   def self.find_compatible_git_branch(path)
-    upstream_ref =
-      Discourse::Utils.execute_command(
-        "git",
-        "-C",
-        path,
-        "rev-parse",
-        "--abbrev-ref",
-        "--symbolic-full-name",
-        "HEAD@{upstream}",
-      ).strip
+    current_branch =
+      Discourse::Utils.execute_command("git", "-C", path, "branch", "--show-current").strip
+    default_branch =
+      Discourse::Utils
+        .execute_command("git", "-C", path, "symbolic-ref", "--short", "refs/remotes/origin/HEAD")
+        .strip
+        .sub(%r{\Aorigin/}, "")
 
-    remote_name = upstream_ref.split("/", 2)[0]
-    return if remote_name.blank?
+    return if current_branch != default_branch
 
-    compat_branch = "d-compat/v#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
-    remote_branch_ref = "refs/remotes/#{remote_name}/#{compat_branch}"
-
-    begin
-      return(
-        Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref).strip
-      )
-    rescue Discourse::Utils::CommandError
-    end
-
-    Discourse::Utils.execute_command(
-      "git",
-      "-C",
-      path,
-      "fetch",
-      "--quiet",
-      "--prune",
-      remote_name,
-      "+refs/heads/*:refs/remotes/#{remote_name}/*",
-    )
+    compat_branch = "d-compat/#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
+    remote_branch_ref = "refs/remotes/origin/#{compat_branch}"
 
     Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref).strip
   rescue Discourse::Utils::CommandError
