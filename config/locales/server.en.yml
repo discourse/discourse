@@ -2876,7 +2876,6 @@ en:
       exclude_tag: "Exclude topics with a specific tag"
       exclude_tags_any: "Exclude topics with any of the specified tags (comma-separated)"
       exclude_tags_all: "Exclude topics with all of the specified tags (plus-separated)"
-      tags_alias: "Alias for 'tag:' filter"
       tag_group: "Show topics with tags from a specific tag group"
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"
