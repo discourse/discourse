@@ -58,7 +58,7 @@ class ListController < ApplicationController
     define_method(filter) do |options = nil|
       list_opts = build_topic_list_options
       list_opts.merge!(options) if options
-      user = list_target_user
+      user = current_user
       if params[:category].blank? && filter == :latest &&
            !SiteSetting.show_category_definitions_in_topic_lists
         list_opts[:no_definitions] = true
@@ -136,7 +136,7 @@ class ListController < ApplicationController
       end
     end
 
-    user = list_target_user
+    user = current_user
     list = TopicQuery.new(user, topic_query_opts).list_filter
     list.more_topics_url = construct_url_with(:next, topic_query_opts)
     list.prev_topics_url = construct_url_with(:prev, topic_query_opts)
@@ -331,7 +331,7 @@ class ListController < ApplicationController
       top_options[:per_page] = top_options[:per_page].presence ||
         SiteSetting.topics_per_period_in_top_page
 
-      user = list_target_user
+      user = current_user
       list = TopicQuery.new(user, top_options).list_top_for(period)
       list.for_period = period
       list.more_topics_url = construct_url_with(:next, top_options)
@@ -444,14 +444,6 @@ class ListController < ApplicationController
 
     if use_crawler_layout?
       @subcategories = @category.subcategories.select { |c| guardian.can_see?(c) }
-    end
-  end
-
-  def list_target_user
-    if params[:user_id] && guardian.is_staff?
-      User.find(params[:user_id].to_i)
-    else
-      current_user
     end
   end
 
