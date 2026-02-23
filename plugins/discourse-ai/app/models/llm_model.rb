@@ -59,6 +59,7 @@ class LlmModel < ActiveRecord::Base
         role_arn: :text,
         region: :text,
         disable_native_tools: :checkbox,
+        disable_native_structured_output: :checkbox,
         disable_temperature: :checkbox,
         disable_top_p: :checkbox,
         enable_reasoning: :checkbox,
@@ -76,6 +77,7 @@ class LlmModel < ActiveRecord::Base
       },
       anthropic: {
         disable_native_tools: :checkbox,
+        disable_native_structured_output: :checkbox,
         disable_temperature: :checkbox,
         disable_top_p: :checkbox,
         enable_reasoning: :checkbox,

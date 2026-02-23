@@ -229,6 +229,28 @@ RSpec.describe "AI Composer helper", type: :system do
           expect(composer.composer_input.value).to eq(proofread_text)
         end
       end
+
+      it "applies confirmed changes directly in the rich text editor" do
+        visit("/latest")
+        page.find("#create-topic").click
+
+        composer.toggle_rich_editor
+        expect(composer).to have_rich_editor_active
+
+        composer.focus
+        composer.type_content(input)
+
+        composer.click_toolbar_button("ai-helper-trigger")
+        expect(ai_helper_menu).to have_context_menu
+
+        DiscourseAi::Completions::Llm.with_prepared_responses([proofread_text]) do
+          ai_helper_menu.select_helper_model(mode)
+          expect(diff_modal).to have_diff("spain", "Spain,")
+          diff_modal.confirm_changes
+          expect(composer.rich_editor).to have_css("p", text: proofread_text)
+          expect(composer.rich_editor).to have_no_text(input)
+        end
+      end
     end
   end
 

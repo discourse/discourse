@@ -847,6 +847,7 @@ en:
           disable_system_prompt: "Disable system message in prompts"
           enable_native_tool: "Enable native tool support"
           disable_native_tools: "Disable native tool support (use XML based tools)"
+          disable_native_structured_output: "Disable native structured output (use assistant message prefilling instead, required for Claude 3.x and older)"
           provider_order: "Provider order (comma delimited list)"
           provider_quantizations: "Order of provider quantizations (comma delimited list eg: fp16,fp8)"
           disable_streaming: "Disable streaming completions (convert streaming to non streaming requests)"
