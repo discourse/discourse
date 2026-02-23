@@ -76,13 +76,6 @@ async function loadPluginFromModulePreload(link) {
         const dialog = document.createElement("dialog");
         dialog.style = "background: black; color: red; border-radius: 30px;";
 
-        // TODO
-        // const tomster = document.createElement("img");
-        // tomster.src =
-        //   "https://emberjs.com/images/tomsters/fishy750w-728a43c8184a89cf79959533be6c8ccc.webp";
-        // tomster.style = "width: 250px; margin-bottom: 20px;";
-        // dialog.append(tomster);
-
         dialogContent = document.createElement("div");
         dialog.append(dialogContent);
 
@@ -92,8 +85,6 @@ async function loadPluginFromModulePreload(link) {
 
       dialogContent.innerText += `Failed to load plugin ${link.dataset.pluginName} from ${link.href}\n${error.message}\n\n`;
     }
-
-    //fireThemeErrorEvent({ themeId: link.dataset.themeId, error });
   }
 }
 
