@@ -30,36 +30,28 @@ div.poll-outer {
       color: var(--primary);
       padding: 0.5em 0;
       word-break: break-word;
-    
+
       button {
         background-color: transparent;
         border: none;
         width: 100%;
         cursor: pointer;
-    
-        // Use a proper layout container instead of text-indent hacks.
-        // This prevents inline-block elements (e.g. @mention pills)
-        // from overlapping the option marker/checkbox.
         display: flex;
         align-items: flex-start;
         gap: 0.5em;
         text-align: left;
       }
-    
-      // The icon acts as the visual marker and should keep a fixed slot
+
       button svg {
         flex: 0 0 auto;
         margin-top: 0.15em;
       }
-    
-      // Allow option text (including mention pills) to wrap correctly
-      // without affecting the marker alignment
+
       .option-text {
         flex: 1 1 auto;
         min-width: 0;
       }
     }
-
 
     .ranked-choice-poll-options {
       display: flex;
