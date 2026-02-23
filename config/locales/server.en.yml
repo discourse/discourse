@@ -2807,7 +2807,7 @@ en:
       min_username_length_exists: "You cannot set 'min username length' above the shortest username (%{username})."
       min_group_name_length_exists: "You cannot set 'min username length' above the shortest group name (%{group_name})."
       min_username_length_range: "You cannot set 'min username length' above 'max username length'."
-      max_username_length_exists: "You cannot set 'max username length` below the longest username (%{username})."
+      max_username_length_exists: "You cannot set 'max username length' below the longest username (%{username})."
       max_group_name_length_exists: "You cannot set 'max username length' below the longest group name (%{group_name})."
       max_username_length_range: "You cannot set the 'max username length' below 'min username length'."
       invalid_hex_value: "Color values have to be 6-digit hexadecimal codes."
