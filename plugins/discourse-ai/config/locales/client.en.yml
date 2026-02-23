@@ -523,7 +523,7 @@ en:
         overwrite: "Overwrite"
         description: "Description"
         no_llm_selected: "No language model selected"
-        use_parent_llm: "Use personas language model"
+        use_parent_llm: "Use persona's language model"
         max_context_posts: "Max context posts"
         max_context_posts_help: "The maximum number of posts to use as context for the AI when responding to a user. (empty for default)"
         vision_enabled: Vision enabled
