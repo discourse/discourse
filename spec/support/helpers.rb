@@ -195,6 +195,14 @@ module Helpers
     repo_dir
   end
 
+  def setup_remote_upstream(path)
+    system("git -C #{path} remote add origin #{path}/.git", exception: true)
+    system("git -C #{path} fetch -q", exception: true)
+    branch = `git -C #{path} rev-parse --abbrev-ref HEAD`
+    raise "no branch in setup_remote_upstream" if branch.blank?
+    system("git -C #{path} branch -q -u origin/#{branch}", exception: true)
+  end
+
   def add_to_git_repo(repo_dir, files)
     files.each do |name, data|
       FileUtils.mkdir_p(Pathname.new("#{repo_dir}/#{name}").dirname)

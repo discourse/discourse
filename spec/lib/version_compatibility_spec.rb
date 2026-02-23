@@ -154,13 +154,6 @@ RSpec.describe Discourse do
   end
 
   describe ".find_compatible_git_resource" do
-    def setup_remote_upstream(path)
-      system("git -C #{path} remote add origin #{path}/.git", exception: true)
-      system("git -C #{path} fetch -q", exception: true)
-      branch = `git -C #{path} rev-parse --abbrev-ref HEAD`
-      system("git -C #{path} branch -q -u origin/#{branch}", exception: true)
-    end
-
     let(:compat_branch_name) do
       "d-compat/#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
     end
