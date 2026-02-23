@@ -74,17 +74,44 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     assert.dom(".admin-onboarding-banner").doesNotExist();
   });
 
-  test("it can complete `start_posting` step", async function (assert) {
+  test("it can complete `start_posting` step with predefined data", async function (assert) {
+    this.siteSettings.discourse_ai_enabled = false;
+
     const step = withStep("start_posting", assert);
     await visit("/");
 
     step.isNotChecked();
 
     await step.clickAction();
+
+    assert.dom(".predefined-topic-options-modal__card").exists({ count: 4 });
+    await click(
+      ".predefined-topic-options-modal__card:last-child .predefined-topic-options-modal__select-btn"
+    );
+
     await click(".create");
     await visit("/");
 
     step.isChecked();
+  });
+
+  test("it can complete `start_posting` step with AI generated content", async function (assert) {
+    this.siteSettings.discourse_ai_enabled = true;
+
+    const step = withStep("start_posting", assert);
+    await visit("/");
+
+    step.isNotChecked();
+
+    await step.clickAction();
+    await click(".ai-option .btn");
+
+    const appEvents = this.owner.lookup("service:app-events");
+    appEvents.on("admin-onboarding:select-ai", () => {
+      assert.ok(true, "triggers admin-onboarding:select-ai event");
+      appEvents.trigger("topic:created");
+      step.isChecked();
+    });
   });
 
   test("it can complete `invite_collaborators` step", async function (assert) {

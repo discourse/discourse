@@ -104,6 +104,18 @@
   }
 }
 
-.predefined-topic-options-modal__body {
-  max-width: var(--modal-max-width);
+.start-posting-options-modal {
+  .option {
+    padding-bottom: var(--space-4);
+  }
+}
+
+.predefined-topic-options-modal {
+  &__card {
+    padding-bottom: var(--space-4);
+  }
+
+  &__body {
+    max-width: var(--modal-max-width);
+  }
 }

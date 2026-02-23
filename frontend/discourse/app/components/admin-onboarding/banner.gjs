@@ -54,14 +54,9 @@ const STEPS = [
       this.modal.show(StartPostingOptions, {
         model: {
           onSelectPredefined: () => this.showPredefinedOptions(),
-          onSelectAi: () => this.startCommunityKickstarter(),
+          onSelectAi: () =>
+            this.appEvents.trigger("admin-onboarding:select-ai"),
         },
-      });
-    }
-
-    async startCommunityKickstarter() {
-      this.appEvents.trigger("admin-onboarding:select-ai", {
-        close: () => this.modal.close(),
       });
     }
 
