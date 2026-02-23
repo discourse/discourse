@@ -238,7 +238,10 @@ class DiscourseURL extends EmberObject {
       return this.redirectTo(path);
     }
 
-    const serverSide = SERVER_SIDE_ONLY.some((r) => pathname.match(r));
+    const pathnameWithoutPrefix = withoutPrefix(pathname);
+    const serverSide = SERVER_SIDE_ONLY.some((r) =>
+      pathnameWithoutPrefix.match(r)
+    );
     if (serverSide) {
       this.redirectTo(path);
       return;
