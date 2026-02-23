@@ -169,11 +169,9 @@ RSpec.describe Discourse do
       let!(:git_directory) do
         path = setup_git_repo(".discourse-compatibility" => "<= 9999.0: fallback-ref")
 
-        capture_stdout do
-          `cd #{path} && git checkout -b #{compat_branch_name}`
-          add_to_git_repo(path, "compat.txt" => "from branch")
-          `cd #{path} && git checkout -`
-        end
+        `git -C #{path} checkout -q -b #{compat_branch_name}`
+        add_to_git_repo(path, "compat.txt" => "from branch")
+        `git -C #{path} checkout -q -`
 
         setup_remote_upstream(path)
         path
