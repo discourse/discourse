@@ -3335,9 +3335,17 @@ en:
         available:
           title: "Upcoming changes"
           description: "'%{changeName}' is available for preview"
+          description_two: "'%{changeName1}' and '%{changeName2}' are available for preview"
+          description_many:
+            one: "'%{changeName}' and %{count} more change are available for preview"
+            other: "'%{changeName}' and %{count} more changes are available for preview"
         automatically_promoted:
           title: "Upcoming changes"
           description: "'%{changeName}' has been automatically enabled"
+          description_two: "'%{changeName1}' and '%{changeName2}' were automatically enabled"
+          description_many:
+            one: "'%{changeName}' and %{count} more change was automatically enabled"
+            other: "'%{changeName}' and %{count} more changes were automatically enabled"
       dismiss_confirmation:
         body:
           default:
@@ -3399,8 +3407,8 @@ en:
         votes_released: "vote was released"
         new_features: "new discourse features have been released"
         admin_problems: "new advice on your site dashboard"
-        upcoming_change_available: "new upcoming change '%{changeName}' is available"
-        upcoming_change_automatically_promoted: "upcoming change '%{changeName}' has been automatically enabled"
+        upcoming_change_available: "new upcoming changes are available"
+        upcoming_change_automatically_promoted: "upcoming changes have been automatically enabled"
 
     upload_selector:
       change: "Change"

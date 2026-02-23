@@ -15,6 +15,7 @@
 # or out of the change, since that overrides the automatic promotion.
 class UpcomingChanges::NotifyPromotion
   include Service::Base
+  include UpcomingChanges::NotificationDataMerger
 
   params do
     attribute :setting_name, :symbol
@@ -32,6 +33,7 @@ class UpcomingChanges::NotifyPromotion
 
   try do
     step :log_promotion
+    model :existing_notifications, optional: true
     model :records
     step :notify_admins
     step :create_event
@@ -75,23 +77,32 @@ class UpcomingChanges::NotifyPromotion
     )
   end
 
-  def fetch_records(params:)
-    data = {
-      upcoming_change_name: params.setting_name,
-      upcoming_change_humanized_name: SiteSetting.humanized_name(params.setting_name),
-    }.to_json
+  def fetch_existing_notifications(params:)
+    Notification.where(
+      notification_type: Notification.types[:upcoming_change_automatically_promoted],
+      user_id: params.admin_user_ids,
+      read: false,
+    ).to_a
+  end
 
+  def fetch_records(params:, existing_notifications:)
+    existing_by_user = existing_notifications.index_by(&:user_id)
     params.admin_user_ids.map do |admin_id|
       {
         user_id: admin_id,
         notification_type: Notification.types[:upcoming_change_automatically_promoted],
-        data:,
+        data: merge_change_data(existing_by_user[admin_id], params.setting_name).to_json,
       }
     end
   end
 
-  def notify_admins(records:)
-    Notification::Action::BulkCreate.call(records:)
+  def notify_admins(params:, records:, existing_notifications:)
+    Notification.transaction do
+      if existing_notifications.any?
+        Notification.where(id: existing_notifications.map(&:id)).delete_all
+      end
+      Notification::Action::BulkCreate.call(records:)
+    end
   end
 
   def create_event(params:)

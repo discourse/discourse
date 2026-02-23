@@ -116,12 +116,10 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
             .count
         }.by(2)
 
-        expect(notification.data).to eq(
-          {
-            upcoming_change_name: :enable_upload_debug_mode,
-            upcoming_change_humanized_name: "Enable upload debug mode",
-          }.to_json,
-        )
+        data = JSON.parse(notification.data)
+        expect(data["upcoming_change_names"]).to eq(["enable_upload_debug_mode"])
+        expect(data["upcoming_change_humanized_names"]).to eq(["Enable upload debug mode"])
+        expect(data["count"]).to eq(1)
       end
 
       it "creates an admins_notified_automatic_promotion event" do
@@ -135,6 +133,131 @@ RSpec.describe UpcomingChanges::NotifyPromotion do
 
       it "triggers DiscourseEvent for the promoted setting" do
         expect(event[:params]).to eq([:enable_upload_debug_mode])
+      end
+
+      context "when there is an existing unread notification" do
+        before do
+          Fabricate(
+            :notification,
+            user: admin,
+            notification_type: Notification.types[:upcoming_change_automatically_promoted],
+            read: false,
+            data: {
+              upcoming_change_names: ["other_change"],
+              upcoming_change_humanized_names: ["Other change"],
+              count: 1,
+            }.to_json,
+          )
+        end
+
+        it "consolidates into a single notification per admin" do
+          result
+
+          notifications =
+            Notification.where(
+              notification_type: Notification.types[:upcoming_change_automatically_promoted],
+              user_id: admin.id,
+            )
+          expect(notifications.count).to eq(1)
+
+          data = JSON.parse(notifications.first.data)
+          expect(data["upcoming_change_names"]).to contain_exactly(
+            "other_change",
+            "enable_upload_debug_mode",
+          )
+          expect(data["count"]).to eq(2)
+        end
+      end
+
+      context "when there is an existing read notification" do
+        before do
+          Fabricate(
+            :notification,
+            user: admin,
+            notification_type: Notification.types[:upcoming_change_automatically_promoted],
+            read: true,
+            data: {
+              upcoming_change_names: ["other_change"],
+              upcoming_change_humanized_names: ["Other change"],
+              count: 1,
+            }.to_json,
+          )
+        end
+
+        it "does not consolidate with the read notification" do
+          result
+
+          notifications =
+            Notification.where(
+              notification_type: Notification.types[:upcoming_change_automatically_promoted],
+              user_id: admin.id,
+            )
+          expect(notifications.count).to eq(2)
+        end
+      end
+
+      context "when the same change is already in an unread notification" do
+        before do
+          Fabricate(
+            :notification,
+            user: admin,
+            notification_type: Notification.types[:upcoming_change_automatically_promoted],
+            read: false,
+            data: {
+              upcoming_change_names: ["enable_upload_debug_mode"],
+              upcoming_change_humanized_names: ["Enable upload debug mode"],
+              count: 1,
+            }.to_json,
+          )
+        end
+
+        it "deduplicates the change names" do
+          result
+
+          notifications =
+            Notification.where(
+              notification_type: Notification.types[:upcoming_change_automatically_promoted],
+              user_id: admin.id,
+            )
+          expect(notifications.count).to eq(1)
+
+          data = JSON.parse(notifications.first.data)
+          expect(data["upcoming_change_names"]).to eq(["enable_upload_debug_mode"])
+          expect(data["count"]).to eq(1)
+        end
+      end
+
+      context "when there is an existing notification with the old data format" do
+        before do
+          Fabricate(
+            :notification,
+            user: admin,
+            notification_type: Notification.types[:upcoming_change_automatically_promoted],
+            read: false,
+            data: {
+              upcoming_change_name: "other_change",
+              upcoming_change_humanized_name: "Other change",
+            }.to_json,
+          )
+        end
+
+        it "merges old format into the new array format" do
+          result
+
+          notifications =
+            Notification.where(
+              notification_type: Notification.types[:upcoming_change_automatically_promoted],
+              user_id: admin.id,
+            )
+          expect(notifications.count).to eq(1)
+
+          data = JSON.parse(notifications.first.data)
+          expect(data["upcoming_change_names"]).to contain_exactly(
+            "other_change",
+            "enable_upload_debug_mode",
+          )
+          expect(data["count"]).to eq(2)
+        end
       end
     end
   end

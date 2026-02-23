@@ -9,6 +9,8 @@
 # This will either happen when the change is added, or when the status of the
 # change is changed to the promotion status minus one.
 class UpcomingChanges::Action::NotifyAdminsOfAvailableChange < Service::ActionBase
+  include UpcomingChanges::NotificationDataMerger
+
   # The name of the upcoming change (site setting name)
   option :change_name
 
@@ -25,21 +27,29 @@ class UpcomingChanges::Action::NotifyAdminsOfAvailableChange < Service::ActionBa
   private
 
   def notify_admins
-    data = {
-      upcoming_change_name: change_name,
-      upcoming_change_humanized_name: SiteSetting.humanized_name(change_name),
-    }.to_json
+    existing_notifications =
+      Notification.where(
+        notification_type: Notification.types[:upcoming_change_available],
+        user_id: all_admins.map(&:id),
+        read: false,
+      ).to_a
+    existing_by_user = existing_notifications.index_by(&:user_id)
 
     records =
       all_admins.map do |admin|
         {
           user_id: admin.id,
           notification_type: Notification.types[:upcoming_change_available],
-          data:,
+          data: merge_change_data(existing_by_user[admin.id], change_name).to_json,
         }
       end
 
-    Notification::Action::BulkCreate.call(records:)
+    Notification.transaction do
+      if existing_notifications.any?
+        Notification.where(id: existing_notifications.map(&:id)).delete_all
+      end
+      Notification::Action::BulkCreate.call(records:)
+    end
   end
 
   def create_event
