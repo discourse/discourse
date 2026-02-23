@@ -9,7 +9,7 @@ en:
 
   datetime_formats: &datetime_formats
     formats:
-      # Format directives: https://ruby-doc.org/3.4.1/strftime_formatting_rdoc.html
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       short: "%m-%d-%Y"
       # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       short_no_year: "%B %-d"
