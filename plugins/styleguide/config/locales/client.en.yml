@@ -21,9 +21,12 @@ en:
           light_colors: "Light"
           dark_colors: "Dark"
           styles: "Styles"
+          site_settings: "Settings"
           css: "CSS"
-          color_definitions: "Color Definitions"
+          site_settings: "Settings"
           debug: "Debug"
+        site_settings:
+          empty: "Save as a theme first to configure site settings."
         colors:
           primary: "Primary"
           secondary: "Secondary"
@@ -39,9 +42,15 @@ en:
           love: "Love"
           advanced: "Advanced"
         styles:
+          groups:
+            layout: "Layout"
+            buttons: "Button Styles"
           sidebar-active-hover: "Alternative sidebar active + hover styles"
           borderless-header-sidebar: "Borderless header and sidebar"
           glass-effect-header: "Glass effect header"
+          lighter-default-buttons: "Lighter backgrounds on default buttons"
+          gradient-primary-buttons: "Gradient effect on primary buttons"
+          rounder-buttons: "Rounder buttons"
           site_settings: "Site Settings"
         save_dialog:
           title: "Save as Theme"

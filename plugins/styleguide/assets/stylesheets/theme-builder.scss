@@ -6,7 +6,7 @@
   position: fixed;
   top: 110px;
   right: 10px;
-  width: 400px;
+  width: 480px;
   max-height: calc(100vh - 120px);
   z-index: 1100;
   background: var(--secondary);
@@ -147,25 +147,37 @@
     cursor: pointer;
   }
 
-  &__site-settings {
-    margin-top: 1rem;
-    border-top: 1px solid var(--primary-low);
-    padding-top: 0.5rem;
-
-    .setting {
-      margin-bottom: 0.75rem;
-
-      .setting-label h3 {
-        font-size: var(--font-down-1);
-        margin: 0 0 0.25rem;
-      }
-    }
-  }
-
   &__heading {
     font-size: var(--font-down-1);
     margin: 0 0 0.5rem;
     color: var(--primary-medium);
+  }
+}
+
+.theme-builder-site-settings-section {
+  .theme-site-setting {
+    margin-bottom: 0.75rem;
+    clear: both;
+
+    h3::before {
+      display: none;
+    }
+  }
+}
+
+.theme-builder-css-section,
+.theme-builder-color-definitions-section {
+  .ace-wrapper {
+    position: relative;
+    height: 400px;
+
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
   }
 }
 
@@ -179,24 +191,18 @@
       margin-top: 1rem;
     }
   }
-}
-
-.theme-builder-css-section,
-.theme-builder-color-definitions-section {
-  height: 300px;
 
   .ace-wrapper {
     position: relative;
-    width: 100%;
-    height: 100%;
-  }
+    height: 250px;
 
-  .ace_editor {
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
+    .ace_editor {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+    }
   }
 }
 

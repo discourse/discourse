@@ -10,6 +10,7 @@ import draggableNode from "discourse/plugins/styleguide/discourse/modifiers/drag
 import ColorSection from "./color-section";
 import DebugSection from "./debug-section";
 import SaveThemeModal from "./save-theme-modal";
+import SiteSettingsSection from "./site-settings-section";
 import StylesSection from "./styles-section";
 
 export default class ThemeBuilderPanel extends Component {
@@ -69,6 +70,10 @@ export default class ThemeBuilderPanel extends Component {
       {
         id: "styles",
         label: "styleguide.theme_builder.tabs.styles",
+      },
+      {
+        id: "site-settings",
+        label: "styleguide.theme_builder.tabs.site_settings",
       },
     ];
 
@@ -139,6 +144,8 @@ export default class ThemeBuilderPanel extends Component {
             <ColorSection @mode="dark" />
           {{else if (eq this.activeTab "styles")}}
             <StylesSection />
+          {{else if (eq this.activeTab "site-settings")}}
+            <SiteSettingsSection />
           {{else if (eq this.activeTab "debug")}}
             <DebugSection />
           {{/if}}
