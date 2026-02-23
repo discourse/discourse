@@ -155,8 +155,10 @@ RSpec.describe Discourse do
 
   describe ".find_compatible_git_resource" do
     def setup_remote_upstream(path)
-      `cd #{path} && git remote add origin #{path}/.git && git fetch -q`
-      `cd #{path} && git branch -u origin/$(git rev-parse --abbrev-ref HEAD)`
+      system("git -C #{path} remote add origin #{path}/.git", exception: true)
+      system("git -C #{path} fetch -q", exception: true)
+      branch = `git -C #{path} rev-parse --abbrev-ref HEAD`
+      system("git -C #{path} branch -q -u origin/#{branch}", exception: true)
     end
 
     let(:compat_branch_name) do
@@ -167,9 +169,9 @@ RSpec.describe Discourse do
       let!(:git_directory) do
         path = setup_git_repo(".discourse-compatibility" => "<= 9999.0: fallback-ref")
 
-        `git -C #{path} checkout -q -b #{compat_branch_name}`
+        system("git -C #{path} checkout -q -b #{compat_branch_name}", exception: true)
         add_to_git_repo(path, "compat.txt" => "from branch")
-        `git -C #{path} checkout -q -`
+        system("git -C #{path} checkout -q -", exception: true)
 
         setup_remote_upstream(path)
         path

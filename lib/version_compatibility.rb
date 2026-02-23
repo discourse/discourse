@@ -78,11 +78,13 @@ module Discourse
   def self.find_compatible_git_branch(path)
     current_branch =
       Discourse::Utils.execute_command("git", "-C", path, "branch", "--show-current").strip
+    puts "current_branch: #{current_branch}"
     default_branch =
       Discourse::Utils
         .execute_command("git", "-C", path, "symbolic-ref", "--short", "refs/remotes/origin/HEAD")
         .strip
         .sub(%r{\Aorigin/}, "")
+    puts "default_branch: #{default_branch}"
 
     return if current_branch != default_branch
 
@@ -90,8 +92,8 @@ module Discourse
     remote_branch_ref = "refs/remotes/origin/#{compat_branch}"
 
     Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref).strip
-  rescue Discourse::Utils::CommandError
-    nil
+  rescue Discourse::Utils::CommandError => e
+    raise e if !e.message.include?("unknown revision")
   end
 
   # Find a compatible resource from a git repo
