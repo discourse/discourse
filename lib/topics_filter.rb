@@ -577,17 +577,21 @@ class TopicsFilter
               SELECT 1
               FROM posts pg#{idx}
               JOIN group_users gu#{idx} ON gu#{idx}.user_id = pg#{idx}.user_id
-              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid} #{whisper_condition("pg#{idx}")}
+              WHERE pg#{idx}.topic_id = topics.id
+              AND pg#{idx}.deleted_at IS NULL
+              AND gu#{idx}.group_id = #{gid}
+              #{whisper_condition("pg#{idx}")}
             )
           SQL
       else
-        @scope = @scope.where(<<~SQL, group_ids: group_ids)
+        @scope = @scope.where(<<~SQL, group_ids:)
               topics.id IN (
                 SELECT DISTINCT p.topic_id
                 FROM posts p
                 JOIN group_users gu ON gu.user_id = p.user_id
                 WHERE gu.group_id IN (:group_ids)
-                  #{whisper_condition("p")}
+                AND p.deleted_at IS NULL
+                #{whisper_condition("p")}
               )
             SQL
       end
