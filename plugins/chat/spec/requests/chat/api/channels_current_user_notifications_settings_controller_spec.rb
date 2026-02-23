@@ -6,6 +6,7 @@ RSpec.describe Chat::Api::ChannelsCurrentUserNotificationsSettingsController do
   before do
     SiteSetting.chat_enabled = true
     SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    SiteSetting.chat_pinned_messages = true
   end
 
   describe "#update" do

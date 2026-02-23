@@ -15,6 +15,7 @@
     "notification_level": { "type": "string" },
     "following": { "type": "boolean" },
     "starred": { "type": "boolean" },
+    "has_unseen_pins": { "type": "boolean" },
     "user": {
       "type": ["object", "null"],
       "required": ["id", "name", "avatar_template", "username"],
@@ -27,6 +28,7 @@
         "has_chat_enabled": { "type": "boolean" }
       }
     },
-    "last_viewed_at": { "type": "datetime" }
+    "last_viewed_at": { "type": "datetime" },
+    "last_viewed_pins_at": { "type": ["datetime", "null"] }
   }
 }

@@ -87,6 +87,17 @@ module("Discourse Chat | Component | chat-message", function (hooks) {
       .exists("has the correct css class");
   });
 
+  test("Non-interactive message", async function (assert) {
+    this.message = new ChatFabricators(getOwner(this)).message();
+    await render(
+      <template>
+        <ChatMessage @message={{this.message}} @interactive={{false}} />
+      </template>
+    );
+
+    assert.dom(".chat-message-container.-not-interactive").exists();
+  });
+
   test("Message with streaming", async function (assert) {
     // admin
     this.currentUser.admin = true;
