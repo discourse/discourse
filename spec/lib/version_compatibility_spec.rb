@@ -155,10 +155,8 @@ RSpec.describe Discourse do
 
   describe ".find_compatible_git_resource" do
     def setup_remote_upstream(path)
-      capture_stdout do
-        `cd #{path} && git remote add origin #{path}/.git && git fetch -q`
-        `cd #{path} && git branch -u origin/$(git rev-parse --abbrev-ref HEAD)`
-      end
+      `cd #{path} && git remote add origin #{path}/.git && git fetch -q`
+      `cd #{path} && git branch -u origin/$(git rev-parse --abbrev-ref HEAD)`
     end
 
     let(:compat_branch_name) do
