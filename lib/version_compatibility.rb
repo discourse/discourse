@@ -134,6 +134,6 @@ module Discourse
   rescue InvalidVersionListError => e
     $stderr.puts "Invalid version list in #{path}"
   rescue Discourse::Utils::CommandError => e
-    nil
+    raise e if !e.message.include?("unknown revision")
   end
 end
