@@ -1,3 +1,8 @@
+:root {
+  --notifications-tracking-label__hover: var(--primary);
+  --notifications-tracking-desc__hover: var(--primary-medium);
+}
+
 .pinned-options-btn,
 .notifications-tracking-btn {
   display: flex;
@@ -36,6 +41,19 @@
     color: var(--primary-medium);
     white-space: normal;
     text-align: left;
+  }
+
+  &.-selected,
+  &:hover {
+    .pinned-options-btn__label,
+    .notifications-tracking-btn__label {
+      color: var(--notifications-tracking-label__hover);
+    }
+
+    .pinned-options-btn__description,
+    .notifications-tracking-btn__description {
+      color: var(--notifications-tracking-desc__hover);
+    }
   }
 }
 

@@ -1,3 +1,7 @@
+:root {
+  --d-menu-button--hover: var(--primary);
+}
+
 .fk-d-menu {
   width: max-content;
   position: absolute;
@@ -125,7 +129,7 @@
       &:focus-visible {
         .discourse-no-touch & {
           background: var(--d-hover);
-          color: var(--primary);
+          color: var(--d-menu-button--hover);
 
           .d-icon {
             color: inherit;
