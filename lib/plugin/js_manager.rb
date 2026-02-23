@@ -52,11 +52,14 @@ module Plugin
         files.sort.each do |file|
           full_path = File.join(js_base, file)
           if File.file?(full_path)
-            tree[file] = File.read(full_path)
+            normalized_file_path = file.sub(/\.js\.es6$/, ".js")
+            tree[normalized_file_path] = File.read(full_path)
             if name == "test" && file.match(%r{/(acceptance|integration|unit)/})
-              entrypoints_config[name][:modules] << file if file.match?(/-test\.g?js$/)
+              if file.match?(/-test\.g?js$/)
+                entrypoints_config[name][:modules] << normalized_file_path
+              end
             else
-              entrypoints_config[name][:modules] << file
+              entrypoints_config[name][:modules] << normalized_file_path
             end
           end
         end
@@ -68,7 +71,7 @@ module Plugin
             *tree.keys,
             *tree.values,
             Theme::BASE_COMPILER_VERSION,
-            # AssetProcessor.new.ember_version, # TODO: This is annoyingly slow
+            AssetProcessor.new.ember_version,
             minify?.to_s,
           ].join,
         )

@@ -10,11 +10,11 @@ class Plugin::JsCompiler
 
   def compile!
     AssetProcessor.new.rollup(
-      @tree.transform_keys { |k| k.sub(/\.js\.es6$/, ".js") },
+      @tree,
       {
         pluginName: @plugin_name,
         minify: @minify && !@@terser_disabled,
-        entrypoints: @entrypoints, # TODO: remove es6 from keys?
+        entrypoints: @entrypoints,
       },
     )
   rescue AssetProcessor::TranspileError => e

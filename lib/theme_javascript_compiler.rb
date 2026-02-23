@@ -26,11 +26,12 @@ class ThemeJavascriptCompiler
   def compile!
     if !@compiled
       @compiled = true
+      @input_tree.transform_keys! { |k| k.sub(/\.js\.es6$/, ".js") }
       @input_tree.freeze
 
       output =
         AssetProcessor.new.rollup(
-          @input_tree.transform_keys { |k| k.sub(/\.js\.es6$/, ".js") },
+          @input_tree,
           {
             themeId: @theme_id,
             settings: @settings,
