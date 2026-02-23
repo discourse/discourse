@@ -13,8 +13,7 @@ class UserActionsController < ApplicationController
     action_types = (user_actions_params[:filter] || "").split(",").map(&:to_i)
     limit = user_actions_params.fetch(:limit, 30).to_i
 
-    raise Discourse::NotFound unless guardian.can_see_profile?(user)
-    raise Discourse::NotFound unless guardian.can_see_user_actions?(user, action_types)
+    ensure_user_actions_visible!(user, action_types)
 
     opts = {
       user_id: user.id,
@@ -42,10 +41,23 @@ class UserActionsController < ApplicationController
 
   def show
     params.require(:id)
-    render_serialized(UserAction.stream_item(params[:id], guardian), UserActionSerializer)
+    stream_item = UserAction.stream_item(params[:id], guardian)
+    raise Discourse::NotFound if stream_item.blank?
+
+    user = User.find_by(id: stream_item.target_user_id)
+    raise Discourse::NotFound if user.blank?
+
+    ensure_user_actions_visible!(user, [stream_item.action_type])
+
+    render_serialized(stream_item, UserActionSerializer)
   end
 
   private
+
+  def ensure_user_actions_visible!(user, action_types)
+    raise Discourse::NotFound unless guardian.can_see_profile?(user)
+    raise Discourse::NotFound unless guardian.can_see_user_actions?(user, action_types)
+  end
 
   def user_actions_params
     @user_actions_params ||= params.permit(:username, :filter, :offset, :acting_username, :limit)
