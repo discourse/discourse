@@ -112,7 +112,7 @@ module Plugin
       listener =
         Listen.to(
           *Discourse.plugins.map(&:directory),
-          { ignore: [%r{/node_modules/}], only: /\.g?js\z/ },
+          { ignore: [%r{/node_modules/}], only: /\.(gjs|js|hbs)\z/ },
         ) do |modified, added, removed|
           changed_files = modified + added + removed
           changed_plugins = Set.new
