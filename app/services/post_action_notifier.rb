@@ -105,6 +105,7 @@ class PostActionNotifier
     return if post_revision.user.blank?
     return if post.topic.blank?
     return if post.topic.private_message?
+    return if post_revision.silent
     return if notification_is_disabled?(post_revision)
 
     user_ids = []

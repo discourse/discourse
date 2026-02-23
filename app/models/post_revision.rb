@@ -4,6 +4,8 @@ class PostRevision < ActiveRecord::Base
   belongs_to :post
   belongs_to :user
 
+  attr_accessor :silent
+
   serialize :modifications, type: Hash, coder: YAML
 
   after_create :create_notification

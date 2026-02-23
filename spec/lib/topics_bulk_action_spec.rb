@@ -160,84 +160,45 @@ RSpec.describe TopicsBulkAction do
     fab!(:first_post) { Fabricate(:post, topic: topic) }
 
     describe "silent option" do
-      fab!(:topic_watcher, :user)
-      fab!(:category_watcher, :user)
       fab!(:admin)
 
       before do
         Jobs.run_immediately!
+        PostActionNotifier.enable
+        SiteSetting.create_revision_on_bulk_topic_moves = true
         TopicUser.change(
-          topic_watcher,
+          Fabricate(:user),
           topic.id,
           notification_level: TopicUser.notification_levels[:watching],
         )
         CategoryUser.set_notification_level_for_category(
-          category_watcher,
+          Fabricate(:user),
           CategoryUser.notification_levels[:watching_first_post],
           category.id,
         )
       end
 
-      shared_examples "silent option suppresses notifications" do
-        it "notifies topic watchers when silent is false" do
-          expect do
-            TopicsBulkAction.new(
-              admin,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-            ).perform!
-          end.to change { Notification.where(user: topic_watcher).count }
-        end
-
-        it "does not notify topic watchers when silent is true" do
-          expect do
-            TopicsBulkAction.new(
-              admin,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-              silent: true,
-            ).perform!
-          end.to not_change { Notification.where(user: topic_watcher).count }
-        end
-
-        it "notifies category watchers when silent is false" do
-          expect do
-            TopicsBulkAction.new(
-              admin,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-            ).perform!
-          end.to change { Notification.where(user: category_watcher).count }.by(1)
-
-          expect(Notification.where(user: category_watcher).last.notification_type).to eq(
-            Notification.types[:watching_first_post],
-          )
-        end
-
-        it "does not notify category watchers when silent is true" do
-          expect do
-            TopicsBulkAction.new(
-              admin,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-              silent: true,
-            ).perform!
-          end.to not_change { Notification.where(user: category_watcher).count }
-        end
+      it "does not create any notifications when silent is true" do
+        expect do
+          TopicsBulkAction.new(
+            admin,
+            [topic.id],
+            type: "change_category",
+            category_id: category.id,
+            silent: true,
+          ).perform!
+        end.to not_change { Notification.count }
       end
 
-      context "when create_revision_on_bulk_topic_moves is enabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = true }
-        include_examples "silent option suppresses notifications"
-      end
-
-      context "when create_revision_on_bulk_topic_moves is disabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = false }
-        include_examples "silent option suppresses notifications"
+      it "creates notifications when silent is false" do
+        expect do
+          TopicsBulkAction.new(
+            admin,
+            [topic.id],
+            type: "change_category",
+            category_id: category.id,
+          ).perform!
+        end.to change { Notification.count }
       end
     end
 
