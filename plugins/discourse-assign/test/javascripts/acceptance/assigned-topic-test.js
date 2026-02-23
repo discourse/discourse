@@ -262,3 +262,61 @@ acceptance(`Discourse Assign | Reassign topic conditionals`, function (needs) {
     assert.false(menu.rowByValue("reassign-self").exists());
   });
 });
+
+acceptance(
+  `Discourse Assign | Duplicate assignee prevention`,
+  function (needs) {
+    needs.user();
+    needs.settings({
+      assign_enabled: true,
+      tagging_enabled: true,
+      assigns_user_url_path: "/",
+      assigns_public: true,
+    });
+
+    needs.pretender((server, helper) => {
+      server.get("/t/46.json", () => {
+        let topic = cloneJSON(topicFixtures["/t/28830/1.json"]);
+        // Topic assigned to eviltrout
+        topic["assigned_to_user"] = {
+          username: "eviltrout",
+          name: "Robin Ward",
+          avatar_template:
+            "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
+        };
+        // Post within topic also assigned to eviltrout
+        topic["indirectly_assigned_to"] = {
+          2: {
+            assigned_to: {
+              username: "eviltrout",
+              name: "Robin Ward",
+              avatar_template:
+                "/letter_avatar/eviltrout/{size}/3_f9720745f5ce6dfc2b5641fca999d934.png",
+            },
+            post_number: 2,
+          },
+        };
+        return helper.response(topic);
+      });
+    });
+
+    test("Does not show duplicate assignees when user is assigned to both topic and post", async function (assert) {
+      updateCurrentUser({ can_assign: true });
+      await visit("/t/assignment-topic/46");
+
+      // Should only show one instance of eviltrout in the topic tags area
+      const assignedTags = [
+        ...document.querySelectorAll(".discourse-tags .assigned-to"),
+      ];
+      const eviltroutTags = assignedTags.filter((tag) =>
+        tag.textContent.includes("eviltrout")
+      );
+
+      assert.strictEqual(
+        eviltroutTags.length,
+        1,
+        "eviltrout should only appear once in assignments"
+      );
+    });
+  }
+);

@@ -380,7 +380,7 @@ function initialize(api) {
     } else {
       assignedToIndirectly = [];
     }
-    const assignedTo = []
+    const allAssignees = []
       .concat(
         topicAssignee,
         assignedToIndirectly.map((assigned) => ({
@@ -390,6 +390,18 @@ function initialize(api) {
       )
       .filter(({ assignee }) => assignee)
       .flat();
+
+    // Deduplicate assignees by username/name to prevent showing the same
+    // user twice if they're assigned to both the topic and a post
+    const seen = new Set();
+    const assignedTo = allAssignees.filter(({ assignee }) => {
+      const key = assignee?.username || assignee?.name;
+      if (seen.has(key)) {
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
 
     if (!assignedTo) {
       return "";
