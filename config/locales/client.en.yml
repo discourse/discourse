@@ -6066,7 +6066,7 @@ en:
               help_text: "Recommended size is 600 x 80 pixels."
             large_icon:
               title: "Square icon"
-              description: "A squared version of the logo image appears at the top of the administration and is also the mobile home screen app logo."
+              description: "A square version of the logo image appears at the top of the site and is also the mobile app logo."
               help_text: "Recommended size is 512 x 512 pixels."
             square_icon_dark:
               required: "Use a different square icon for dark mode?"
@@ -6414,22 +6414,6 @@ en:
         result_count:
           one: '%{count} result for "%{filter}"'
           other: '%{count} results for "%{filter}"'
-        result_types:
-          page:
-            one: "Page"
-            other: "Pages"
-          report:
-            one: "Report"
-            other: "Reports"
-          setting:
-            one: "Setting"
-            other: "Settings"
-          theme:
-            one: "Theme"
-            other: "Themes"
-          component:
-            one: "Component"
-            other: "Components"
 
       new_features:
         title: "What's new?"

@@ -9,4 +9,11 @@
   &__empty {
     color: var(--primary-medium);
   }
+
+  &__subcategory-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    margin-bottom: 1em;
+  }
 }
