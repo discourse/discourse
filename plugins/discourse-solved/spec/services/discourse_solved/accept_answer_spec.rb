@@ -18,8 +18,8 @@ RSpec.describe DiscourseSolved::AcceptAnswer do
       SiteSetting.allow_solved_on_all_topics = true
     end
 
-    context "when post_id is blank" do
-      let(:params) { { post_id: nil } }
+    context "when contract is invalid" do
+      let(:params) { {} }
 
       it { is_expected.to fail_a_contract }
     end

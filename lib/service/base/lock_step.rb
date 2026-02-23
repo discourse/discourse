@@ -38,7 +38,7 @@ module Service
         [
           context.__service_class__.to_s.underscore,
           *keys.flat_map do |key|
-            value = context[:params].public_send(key) || context[key]
+            value = context[:params].try(key) || context[key]
             [key, value.try(:id) || value]
           end,
         ].join(":")
