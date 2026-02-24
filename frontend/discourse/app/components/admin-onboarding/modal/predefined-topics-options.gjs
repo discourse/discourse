@@ -6,16 +6,33 @@ import DModal from "discourse/components/d-modal";
 import { i18n } from "discourse-i18n";
 
 export default class PredefinedTopicOptions extends Component {
+  icebreakerTopics = [
+    "fun_facts",
+    "coolest_thing_you_have_seen_today",
+    "introduce_yourself",
+    "what_is_your_favorite_food",
+  ];
+
+  openTopic(topicKey) {
+    this.composer.openNewTopic({
+      title: i18n(
+        `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.title`
+      ),
+      body: i18n(
+        `admin_onboarding_banner.start_posting.icebreakers.${topicKey}.body`
+      ),
+    });
+  }
+
   @action
-  handleBack() {
+  cancel() {
     this.args.closeModal();
-    this.args.model.onBack();
   }
 
   @action
   handleSelectTopic(topic) {
     this.args.closeModal();
-    this.args.model.onSelectTopic(topic);
+    this.openTopic(topic);
   }
 
   <template>
@@ -26,7 +43,7 @@ export default class PredefinedTopicOptions extends Component {
     >
       <:body>
         <div class="predefined-topic-options-modal__list">
-          {{#each @model.topics as |topic|}}
+          {{#each this.icebreakerTopics as |topic|}}
             <div class="predefined-topic-options-modal__card">
               <div class="predefined-topic-options-modal__content">
                 <h4 class="predefined-topic-options-modal__title">
@@ -59,9 +76,9 @@ export default class PredefinedTopicOptions extends Component {
       </:body>
       <:footer>
         <DButton
-          @label="admin_onboarding_banner.start_posting.back"
-          @action={{this.handleBack}}
-          class="predefined-topic-options-modal__back-button btn-transparent"
+          @label="cancel"
+          @action={{this.cancel}}
+          class="predefined-topic-options-modal__cancel-button btn-transparent"
         />
       </:footer>
     </DModal>

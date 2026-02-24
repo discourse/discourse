@@ -5,12 +5,14 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import SiteSetting from "discourse/admin/models/site-setting";
-import PredefinedTopicOptions from "discourse/components/admin-onboarding/modal/pre-defined-topic-options";
+import PredefinedTopicsOptionsModal from "discourse/components/admin-onboarding/modal/predefined-topics-options";
 import StartPostingOptions from "discourse/components/admin-onboarding/modal/start-posting-options";
+import PredefinedTopicOption from "discourse/components/admin-onboarding/predefined-topics-option";
 import OnboardingStep from "discourse/components/admin-onboarding/step";
 import DButton from "discourse/components/d-button";
 import CreateInvite from "discourse/components/modal/create-invite";
 import { getAbsoluteURL } from "discourse/lib/get-url";
+import { applyValueTransformer } from "discourse/lib/transformer";
 import { clipboardCopy, defaultHomepage } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 
@@ -24,51 +26,47 @@ const STEPS = [
     @service siteSettings;
 
     icon = "comments";
-    icebreakerTopics = [
-      "fun_facts",
-      "coolest_thing_you_have_seen_today",
-      "introduce_yourself",
-      "what_is_your_favorite_food",
-    ];
 
     constructor() {
       super(...arguments);
-      this.appEvents.on("topic:created", this, this.checkIfPosted);
+
+      this.appEvents.on("topic:created", this, this.completeStep);
+      this.appEvents.on(
+        "admin-onboarding:posting-complete",
+        this,
+        this.completeStep
+      );
     }
 
     willDestroy() {
       super.willDestroy(...arguments);
-      this.appEvents.off("topic:created", this, this.checkIfPosted);
+
+      this.appEvents.off("topic:created", this, this.completeStep);
+      this.appEvents.off(
+        "admin-onboarding:posting-complete",
+        this,
+        this.completeStep
+      );
     }
 
-    checkIfPosted() {
+    completeStep() {
       this.markAsCompleted();
     }
 
     showStartPostingOptions() {
-      // if Discourse AI is not enabled, we can skip the options and go straight to the showPredefinedOptions flow
-      if (!this.siteSettings.discourse_ai_enabled) {
-        return this.showPredefinedOptions();
+      const options = applyValueTransformer(
+        "admin-onboarding-start-posting-options",
+        [PredefinedTopicOption]
+      );
+
+      if (options.length === 1) {
+        // show predefined topics directly if it's the only option available
+        return this.modal.show(PredefinedTopicsOptionsModal);
       }
 
       this.modal.show(StartPostingOptions, {
         model: {
-          onSelectPredefined: () => this.showPredefinedOptions(),
-          onSelectAi: () =>
-            this.appEvents.trigger("admin-onboarding:select-ai"),
-        },
-      });
-    }
-
-    showPredefinedOptions() {
-      this.modal.show(PredefinedTopicOptions, {
-        model: {
-          topics: this.icebreakerTopics,
-          onSelectTopic: (topic) => this.openTopic(topic),
-          onBack: () =>
-            this.siteSettings.discourse_ai_enabled
-              ? this.showStartPostingOptions()
-              : this.modal.close(),
+          options,
         },
       });
     }
