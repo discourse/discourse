@@ -55,11 +55,11 @@ describe "Group Card", type: :system do
       topic_page.visit_topic(topic, post_number: post_with_mention.post_number)
       topic_page.click_mention(post_with_mention, mention)
 
-      expect(page).to have_css(".card-cloak.card-cloak--visible")
+      expect(page).to have_css(".card-cloak.--visible")
 
       find(".card-cloak").click
 
-      expect(page).to have_no_css(".card-cloak.card-cloak--visible")
+      expect(page).to have_no_css(".card-cloak.--visible")
     end
   end
 end
