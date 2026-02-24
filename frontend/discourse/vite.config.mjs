@@ -65,23 +65,13 @@ export default defineConfig(({ mode }) => {
       bundledDev: BUNDLED_DEV,
     },
     plugins: [
-      // Standard Ember stuff
-
       ember(),
-
-      // classicEmberSupport(),
-
       maybeBabel({
         babelHelpers: "runtime",
         extensions,
         parallel: 4,
         skipPreflightCheck: true,
       }),
-
-      // Discourse-specific
-      // mkcert(),
-      // visualizer({ emitFile: true }),
-
       {
         name: "resolve-externals",
         resolveId(source) {
@@ -137,11 +127,6 @@ export default defineConfig(({ mode }) => {
           assetFileNames: "assets/[name]-[hash].digested[extname]",
           chunkFileNames: "assets/[name]-[hash].digested.js",
           entryFileNames: "assets/[name]-[hash].digested.js",
-          // manualChunks(id, { getModuleInfo }) {
-          //   if (id.includes("node_modules")) {
-          //     return "vendor";
-          //   }
-          // },
         },
       },
     },
