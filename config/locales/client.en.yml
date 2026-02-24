@@ -470,13 +470,8 @@ en:
         predefined_topics: "Pre-defined Topics"
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Use pre-defined Topics"
-        ai_generation: "AI-assisted Topic Ideas"
-        ai_generation_description: "Let AI help generate custom category ideas and topics for your community"
-        use_ai: "Use AI"
-        select_topic: "Select"
+        start_with_this: "Start with this"
         back: "Back"
-        ai_chat: "AI Assistant"
-        ai_chat_mock_message: "Chat with AI to generate ideas for your community"
         icebreakers:
           fun_facts:
             title: "What are some fun facts about you?"

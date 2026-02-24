@@ -111,8 +111,22 @@
 }
 
 .predefined-topic-options-modal {
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
   &__card {
-    padding-bottom: var(--space-4);
+    margin-bottom: var(--space-4);
+  }
+
+  &__content {
+    border-bottom: 1px solid var(--content-border-color);
+  }
+
+  &__card:last-child > &__content {
+    border-bottom: none;
   }
 
   &__body {
