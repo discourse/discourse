@@ -130,7 +130,7 @@ module ApplicationHelper
     path
   end
 
-  def preload_script(script, plugin_name: nil, preinstalled: false, official: false)
+  def preload_script(script, attrs: {})
     scripts = []
 
     if chunks = EmberCli.script_chunks[script]
@@ -142,41 +142,24 @@ module ApplicationHelper
     scripts
       .map do |name|
         path = script_asset_path(name)
-        preload_script_url(
-          path,
-          entrypoint: script,
-          plugin_name: plugin_name,
-          preinstalled: preinstalled,
-          official: official,
-        )
+        preload_script_url(path, entrypoint: script, attrs: attrs)
       end
       .join("\n")
       .html_safe
   end
 
-  def preload_script_url(
-    url,
-    entrypoint: nil,
-    type_module: false,
-    plugin_name: nil,
-    preinstalled: false,
-    official: false
-  )
+  def preload_script_url(url, entrypoint: nil, type_module: false, attrs: {})
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
 
-    plugin_attributes = ""
-    if plugin_name
-      plugin_attributes =
-        " data-discourse-plugin=\"#{ERB::Util.html_escape(plugin_name)}\"" \
-          " data-preinstalled=\"#{preinstalled}\"" \
-          " data-official=\"#{official}\""
-    end
+    extra_attrs =
+      attrs.map { |k, v| "#{ERB::Util.html_escape(k)}=\"#{ERB::Util.html_escape(v)}\"" }.join(" ")
+    extra_attrs = " #{extra_attrs}" if extra_attrs.present?
 
     add_resource_preload_list(url, "script")
 
     <<~HTML.html_safe
-      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute}#{plugin_attributes} #{nonce_attribute}></script>
+      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute}#{extra_attrs} #{nonce_attribute}></script>
     HTML
   end
 

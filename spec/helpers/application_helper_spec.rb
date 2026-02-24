@@ -117,33 +117,35 @@ RSpec.describe ApplicationHelper do
       end
     end
 
-    it "includes plugin data attributes when plugin_name is provided" do
+    it "includes extra attrs when provided" do
       result =
         helper.preload_script(
           "plugins/my-plugin",
-          plugin_name: "my-plugin",
-          preinstalled: true,
-          official: true,
+          attrs: {
+            "data-discourse-plugin": "my-plugin",
+            "data-preinstalled": "true",
+            "data-official": "true",
+          },
         )
       expect(result).to include('data-discourse-plugin="my-plugin"')
       expect(result).to include('data-preinstalled="true"')
       expect(result).to include('data-official="true"')
     end
 
-    it "does not include plugin data attributes when plugin_name is not provided" do
+    it "does not include extra attrs when none are provided" do
       result = helper.preload_script("start-discourse")
       expect(result).not_to include("data-discourse-plugin")
       expect(result).not_to include("data-preinstalled")
       expect(result).not_to include("data-official")
     end
 
-    it "escapes plugin_name in data attributes" do
+    it "escapes attr values" do
       result =
         helper.preload_script(
           "plugins/test",
-          plugin_name: "<script>xss</script>",
-          preinstalled: false,
-          official: false,
+          attrs: {
+            "data-discourse-plugin": "<script>xss</script>",
+          },
         )
       expect(result).not_to include("<script>xss</script>")
       expect(result).to include("&lt;script&gt;xss&lt;/script&gt;")
@@ -153,9 +155,11 @@ RSpec.describe ApplicationHelper do
       result =
         helper.preload_script(
           "plugins/my-plugin",
-          plugin_name: "my-plugin",
-          preinstalled: false,
-          official: false,
+          attrs: {
+            "data-discourse-plugin": "my-plugin",
+            "data-preinstalled": "false",
+            "data-official": "false",
+          },
         )
       expect(result).to include('data-preinstalled="false"')
       expect(result).to include('data-official="false"')
