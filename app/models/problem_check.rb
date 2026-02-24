@@ -77,7 +77,7 @@ class ProblemCheck
     ProblemCheck::GroupEmailCredentials,
     ProblemCheck::HostNames,
     ProblemCheck::ImageMagick,
-    ProblemCheck::EmailBounceHandling,
+    ProblemCheck::MissingMailgunApiKey,
     ProblemCheck::OutOfDateThemes,
     ProblemCheck::PollPop3Timeout,
     ProblemCheck::PollPop3AuthError,
