@@ -15,7 +15,7 @@ export default class ReviewableClaimedTopic extends Component {
   }
 
   get isRefresh() {
-    return this.siteSettings.reviewable_ui_refresh;
+    return this.currentUser?.use_reviewable_ui_refresh;
   }
 
   @action
