@@ -311,8 +311,6 @@ function createChildBlock(entry, owner, debugContext = {}) {
  *
  * @example
  * ```js
- * // This is an internal function. Plugins should use api.renderBlocks() instead.
- * // import { _renderBlocks } from "discourse/blocks/block-outlet";
  *
  * api.renderBlocks("homepage-blocks", [
  *   { block: HeroBanner, args: { title: "Welcome" } },
