@@ -84,7 +84,7 @@ export default class CardContentsBase extends Component {
       post,
     });
 
-    document.querySelector(".card-cloak")?.classList.add("card-cloak--visible");
+    document.querySelector(".card-cloak")?.classList.add("--visible");
 
     this.appEvents.trigger("user-card:show", { username });
     // Using `next()` to optimise INP
@@ -245,9 +245,7 @@ export default class CardContentsBase extends Component {
   @bind
   _hide() {
     if (!this.visible && this.site.mobileView) {
-      document
-        .querySelector(".card-cloak")
-        ?.classList.remove("card-cloak--visible");
+      document.querySelector(".card-cloak")?.classList.remove("--visible");
     }
 
     this._menuInstance?.destroy();

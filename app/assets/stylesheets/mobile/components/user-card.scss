@@ -125,7 +125,7 @@
     opacity 0.3s,
     visibility 0s 0.3s;
 
-  &.card-cloak--visible {
+  &.--visible {
     pointer-events: all;
     opacity: 0.6;
     visibility: visible;
