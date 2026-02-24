@@ -90,8 +90,7 @@ module Discourse
     remote_branch_ref = "refs/remotes/origin/#{compat_branch}"
 
     Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref).strip
-  rescue Discourse::Utils::CommandError => e
-    raise e if !e.message.include?("unknown revision")
+  rescue Discourse::Utils::CommandError
   end
 
   # Find a compatible resource from a git repo
@@ -131,7 +130,6 @@ module Discourse
     Discourse.find_compatible_resource(compat_resource)
   rescue InvalidVersionListError => e
     $stderr.puts "Invalid version list in #{path}"
-  rescue Discourse::Utils::CommandError => e
-    raise e if !e.message.include?("unknown revision")
+  rescue Discourse::Utils::CommandError
   end
 end
