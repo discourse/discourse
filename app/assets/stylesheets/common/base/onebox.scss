@@ -950,12 +950,47 @@ aside.onebox.xkcd .onebox-body img {
 }
 
 .onebox.reddit {
-  div.aspect-image-full-size {
-    position: relative;
-  }
-
   div.description {
     color: var(--primary-med-or-secondary-med);
+  }
+
+  .onebox-body.reddit-preview-onebox {
+    display: flex;
+    gap: 0.75em;
+
+    .reddit-preview-thumbnail {
+      flex-shrink: 0;
+      max-width: 150px;
+
+      // neutralize the legacy float/absolute-position system
+      .aspect-image {
+        position: relative;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: none;
+        float: none;
+        margin: 0;
+      }
+
+      .aspect-image img,
+      > img {
+        position: static;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        max-height: 170px;
+        float: none;
+      }
+    }
+
+    .reddit-preview-details {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
   }
 }
 
