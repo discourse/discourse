@@ -4,7 +4,6 @@ import { cached } from "@glimmer/tracking";
 import { getOwner } from "@ember/owner";
 import { service } from "@ember/service";
 import cssIdentifier from "discourse/helpers/css-identifier";
-import { registerOutletContainerStyle } from "discourse/lib/blocks/-internals/css";
 import { withDebugGroup } from "discourse/lib/blocks/-internals/debug-hooks";
 import { getBlockMetadata } from "discourse/lib/blocks/-internals/decorator";
 import { processBlockEntries } from "discourse/lib/blocks/-internals/entry-processing";
@@ -33,6 +32,9 @@ import { tryResolveBlock } from "discourse/lib/blocks/-internals/registry/block"
  */
 export default class BlockOutletRootContainer extends Component {
   @service blocks;
+  @service cssStyles;
+
+  #cssCleanup;
 
   /**
    * Cache for curried components, keyed by their stable block key.
@@ -50,10 +52,8 @@ export default class BlockOutletRootContainer extends Component {
   #componentCache = new Map();
 
   /**
-   * Initializes the container component and registers its CSS.
-   *
-   * Registers a CSS rule for this outlet's container element in a shared
-   * `<style>` tag, enabling container queries in child blocks.
+   * Initializes the container component and registers its container query CSS
+   * via the css-styles service.
    *
    * @param {import("@ember/owner").default} owner - The Ember owner instance.
    * @param {Object} args - The component arguments.
@@ -61,7 +61,18 @@ export default class BlockOutletRootContainer extends Component {
    */
   constructor(owner, args) {
     super(owner, args);
-    registerOutletContainerStyle(this.containerClassName, args.outletName);
+    const rule = `.${this.containerClassName} { container: ${args.outletName} / inline-size; }`;
+    this.#cssCleanup = this.cssStyles.addRule(rule, {
+      stylesheet: "blocks",
+    });
+  }
+
+  /**
+   * Cleans up resources registered during the component's lifecycle.
+   */
+  willDestroy() {
+    super.willDestroy();
+    this.#cssCleanup?.();
   }
 
   /**

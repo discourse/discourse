@@ -1,9 +1,11 @@
 import Component from "@glimmer/component";
+import { concat } from "@ember/helper";
 import { service } from "@ember/service";
 import htmlClass from "discourse/helpers/html-class";
 import { getURLWithCDN } from "discourse/lib/get-url";
 
 export default class DStyles extends Component {
+  @service cssStyles;
   @service session;
   @service site;
   @service interfaceColor;
@@ -96,5 +98,13 @@ export default class DStyles extends Component {
         {{this.categoryBadges}}
       {{/if}}
     </style>
+    {{#each this.cssStyles.stylesheets key="name" as |sheet|}}
+      {{! template-lint-disable no-forbidden-elements }}
+      <style id={{concat "d-styles-" sheet.name}}>
+        {{#each sheet.rules key="id" as |rule|}}
+          {{rule.css}}
+        {{/each}}
+      </style>
+    {{/each}}
   </template>
 }
