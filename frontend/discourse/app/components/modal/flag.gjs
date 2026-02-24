@@ -27,11 +27,9 @@ export default class Flag extends Component {
   // eslint-disable-next-line discourse/no-unused-services
   @service site; // FIXME: used by flag-target objects
 
-  @tracked userDetails;
   @tracked selected;
   @tracked message;
   @tracked isConfirmed = false;
-  @tracked isWarning = false;
   @tracked spammerDetails;
 
   constructor() {
@@ -255,7 +253,6 @@ export default class Flag extends Component {
               @flag={{f}}
               @message={{this.message}}
               @isConfirmed={{this.isConfirmed}}
-              @isWarning={{this.isWarning}}
               @selectedFlag={{this.selected}}
               @username={{@model.flagModel.username}}
               @staffFlagsAvailable={{this.staffFlagsAvailable}}
@@ -275,7 +272,7 @@ export default class Flag extends Component {
           @action={{this.createFlag}}
           @disabled={{not this.submitEnabled}}
           @title="flagging.submit_tooltip"
-          @icon={{if this.selected.is_custom_flag "envelope" "flag"}}
+          @icon={{if this.selected.require_message "envelope" "flag"}}
           @label={{this.submitLabel}}
         />
 

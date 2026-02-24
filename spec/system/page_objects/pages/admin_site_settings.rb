@@ -168,6 +168,17 @@ module PageObjects
         has_css?("#{setting_row_selector(setting_name)} .shift-up-value-btn", visible: :hidden) &&
           has_css?("#{setting_row_selector(setting_name)} .shift-down-value-btn", visible: :hidden)
       end
+
+      def tag_list_setting(setting_name)
+        PageObjects::Components::SelectKit.new("#{setting_row_selector(setting_name)} .tag-chooser")
+      end
+
+      def has_tags_in_setting?(setting_name, tags)
+        tag_chooser = tag_list_setting(setting_name)
+        tag_names = tags.map(&:name).sort
+        selected_names = tag_chooser.value&.split(",")&.sort || []
+        tag_names == selected_names
+      end
     end
   end
 end

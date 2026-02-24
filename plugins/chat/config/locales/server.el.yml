@@ -55,9 +55,14 @@ el:
           title: "Διαγραφή Μηνύματος"
           description: "Διαγράψτε το μήνυμα έτσι ώστε οι χρήστες να μην μπορούν να το δουν."
         delete_and_agree:
+          title: "Αγνόηση αναφοράς και διαγραφή μηνύματος"
           description: "Αγνοήστε την αναφορά αφαιρώντας την από την ουρά και διαγραφή του μηνύματος."
         disagree_and_restore:
           title: "Διαφωνώ και Επαναφορά Μηνύματος"
+        disagree:
+          description: "Διαφωνώ με την αναφορά και διατήρηση του μηνύματος χωρίς αλλαγή."
+        ignore:
+          title: "Αγνόηση επισήμανσης"
     channel:
       users_invited_to_channel:
         one: "%{invited_users} έχει προσκληθεί από %{inviting_user}."

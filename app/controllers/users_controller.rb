@@ -40,6 +40,7 @@ class UsersController < ApplicationController
                    reset_recent_searches
                    user_menu_bookmarks
                    user_menu_messages
+                   toggle_anon
                  ]
 
   skip_before_action :check_xhr,

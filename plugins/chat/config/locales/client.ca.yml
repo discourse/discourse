@@ -12,6 +12,11 @@ ca:
           always: "Sempre"
           never: "Mai"
     chat:
+      edit_category:
+        channel: "Canal"
+        description: "Descripció"
+        actions: "Accions"
+        settings: "Configuració"
       deleted_chat_username: suprimit
       dates:
         yesterday: "Ahir"
@@ -20,6 +25,7 @@ ca:
       channel_settings:
         edit: "Edita"
         add: "Afegeix"
+        notification_settings_context: "Notificacions"
         join: "Registre"
         leave: "Abandona"
       close: "Tanca"

@@ -3,7 +3,6 @@
 RSpec.describe EmbedController do
   let(:embed_url) { "http://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
   let(:embed_url_secure) { "https://eviltrout.com/2013/02/10/why-discourse-uses-emberjs.html" }
-  let(:discourse_username) { "eviltrout" }
 
   fab!(:topic)
 
@@ -187,6 +186,56 @@ RSpec.describe EmbedController do
       end
     end
 
+    describe "full_app redirect" do
+      fab!(:embeddable_host)
+
+      before { SiteSetting.embed_full_app = true }
+
+      it "redirects to topic URL with embed_mode when full_app is present" do
+        topic_embed = Fabricate(:topic_embed, embed_url: embed_url)
+
+        get "/embed/comments",
+            params: {
+              embed_url: embed_url,
+              full_app: "true",
+            },
+            headers: {
+              "REFERER" => embed_url,
+            }
+
+        expect(response).to redirect_to("#{topic_embed.topic.url}?embed_mode=true")
+      end
+
+      it "redirects to topic URL with embed_mode when using topic_id" do
+        get "/embed/comments",
+            params: {
+              topic_id: topic.id,
+              full_app: "true",
+            },
+            headers: {
+              "REFERER" => "http://eviltrout.com/some-page",
+            }
+
+        expect(response).to redirect_to("#{topic.url}?embed_mode=true")
+      end
+
+      it "does not redirect when embed_full_app is disabled" do
+        SiteSetting.embed_full_app = false
+        topic_embed = Fabricate(:topic_embed, embed_url: embed_url)
+
+        get "/embed/comments",
+            params: {
+              embed_url: embed_url,
+              full_app: "true",
+            },
+            headers: {
+              "REFERER" => embed_url,
+            }
+
+        expect(response.status).to eq(200)
+      end
+    end
+
     context "with a host" do
       fab!(:embeddable_host)
 
@@ -312,20 +361,29 @@ RSpec.describe EmbedController do
           expect(response.body).to match("<span class='replies'>1 reply</span>")
         end
 
-        it "provides the topic retriever with the discourse username when provided" do
-          TopicRetriever.any_instance.expects(:retrieve).returns(nil)
+        it "does not forward user-supplied discourse_username to TopicRetriever" do
+          captured_opts = nil
+          original_new = TopicRetriever.method(:new)
+          TopicRetriever
+            .stubs(:new)
+            .with do |url, opts|
+              captured_opts = opts
+              true
+            end
+            .returns(stub(retrieve: nil))
 
           get "/embed/comments",
               params: {
                 embed_url: embed_url,
-                discourse_username: discourse_username,
+                discourse_username: "admin",
               },
               headers: {
                 "REFERER" => embed_url,
               }
 
           expect(response.status).to eq(200)
-          expect(response.headers["X-Frame-Options"]).to be_nil
+          expect(captured_opts).to be_present
+          expect(captured_opts[:author_username]).to be_nil
         end
       end
     end

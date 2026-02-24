@@ -193,6 +193,32 @@ RSpec.describe TopicsFilter do
         expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
       end
 
+      it "group:group1 should not return topics where the only post from a group member is deleted" do
+        topic = Fabricate(:topic)
+        post = Fabricate(:post, topic:, user: u1)
+        post.update_column(:deleted_at, Time.zone.now)
+
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("group:group1")
+            .pluck(:id)
+        expect(ids).not_to include(topic.id)
+      end
+
+      it "group:group1+group2 should not return topics where a group member's only post is deleted" do
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic:, user: u1).update_column(:deleted_at, Time.zone.now)
+        Fabricate(:post, topic:, user: u2)
+
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("group:group1+group2")
+            .pluck(:id)
+        expect(ids).not_to include(topic.id)
+      end
+
       context "with whispers" do
         fab!(:whisperer_group, :group)
         fab!(:whisperer_user) { Fabricate(:user).tap { |u| whisperer_group.add(u) } }
@@ -1203,6 +1229,40 @@ RSpec.describe TopicsFilter do
       fab!(:topic_with_tag_and_tag2) { Fabricate(:topic, tags: [tag, tag2]) }
       fab!(:topic_with_tag2) { Fabricate(:topic, tags: [tag2]) }
       fab!(:topic_with_group_only_tag) { Fabricate(:topic, tags: [group_only_tag]) }
+      fab!(:tag_synonym) { Fabricate(:tag, name: "synonym1", target_tag_id: tag.id) }
+
+      describe "when filtering by a tag synonym" do
+        it "should return topics tagged with the target tag when query string is `tag:synonym1`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tag:synonym1")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
+
+        it "should return topics tagged with the target tag or other tags when query string is `tags:synonym1,tag2`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:synonym1,#{tag2.name}")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
+        end
+
+        it "should exclude topics tagged with the target tag when query string is `-tag:synonym1`" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("-tag:synonym1")
+              .pluck(:id),
+          ).to contain_exactly(
+            topic_without_tag.id,
+            topic_with_tag2.id,
+            topic_with_group_only_tag.id,
+          )
+        end
+      end
 
       it "should not filter any topics by tags when tagging is disabled" do
         SiteSetting.tagging_enabled = false
@@ -1490,6 +1550,31 @@ RSpec.describe TopicsFilter do
               .filter_from_query_string("tags:#{tag.name}")
               .pluck(:id),
           ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id)
+        end
+      end
+
+      describe "when query string contains multiple tags with underscores" do
+        before do
+          tag.update!(name: "tag_one")
+          tag2.update!(name: "tag_two")
+        end
+
+        it "should return topics when filtering with comma-separated underscore tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:tag_one,tag_two")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag.id, topic_with_tag_and_tag2.id, topic_with_tag2.id)
+        end
+
+        it "should return topics when filtering with plus-separated underscore tags" do
+          expect(
+            TopicsFilter
+              .new(guardian: Guardian.new)
+              .filter_from_query_string("tags:tag_one+tag_two")
+              .pluck(:id),
+          ).to contain_exactly(topic_with_tag_and_tag2.id)
         end
       end
     end

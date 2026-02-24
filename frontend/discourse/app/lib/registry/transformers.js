@@ -107,4 +107,5 @@ export const VALUE_TRANSFORMERS = Object.freeze([
   "user-field-components",
   "user-menu-notification-item-acting-user-avatar",
   "user-notes-modal-subtitle",
+  "welcome-banner-display-for-route",
 ]);

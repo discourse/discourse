@@ -163,6 +163,11 @@ discourse_ai:
     type: enum
     enum: "DiscourseAi::Configuration::PersonaEnumerator"
     area: "ai-features/ai_helper"
+  ai_helper_chat_thread_title_persona:
+    default: "-35"
+    type: enum
+    enum: "DiscourseAi::Configuration::PersonaEnumerator"
+    area: "ai-features/ai_helper"
 
   ai_embeddings_enabled:
     default: false

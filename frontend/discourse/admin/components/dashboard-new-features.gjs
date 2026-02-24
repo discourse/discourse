@@ -19,6 +19,7 @@ export default class DashboardNewFeatures extends Component {
 
   @tracked newFeatures = null;
   @tracked isLoading = true;
+  @tracked feedError = false;
   @tracked onlyExperiments = false;
 
   constructor() {
@@ -30,6 +31,7 @@ export default class DashboardNewFeatures extends Component {
   async loadNewFeatures(opts = {}) {
     opts.forceRefresh ||= false;
     this.isLoading = true;
+    this.feedError = false;
 
     try {
       const json = await ajax(
@@ -50,6 +52,7 @@ export default class DashboardNewFeatures extends Component {
         return acc;
       }, {});
     } catch (err) {
+      this.feedError = true;
       popupAjaxError(err);
     } finally {
       this.isLoading = false;
@@ -73,6 +76,22 @@ export default class DashboardNewFeatures extends Component {
         };
       })
       .filter((item) => item != null);
+  }
+
+  get emptyLabel() {
+    if (this.feedError) {
+      return i18n("admin.dashboard.new_features.no_new_features_error", {
+        url: "https://meta.discourse.org/tags/c/announcements/67/release-notes",
+      });
+    }
+
+    if (this.groupedNewFeatures.length === 0) {
+      return i18n("admin.dashboard.new_features.no_new_features_found", {
+        url: "https://meta.discourse.org/tags/c/announcements/67/release-notes",
+      });
+    }
+
+    return "";
   }
 
   @bind
@@ -119,12 +138,7 @@ export default class DashboardNewFeatures extends Component {
             </:content>
           </AdminConfigAreaCard>
         {{else}}
-          <AdminConfigAreaEmptyList
-            @emptyLabelTranslated={{i18n
-              "admin.dashboard.new_features.no_new_features_found"
-              url="https://meta.discourse.org/tags/c/announcements/67/release-notes"
-            }}
-          />
+          <AdminConfigAreaEmptyList @emptyLabelTranslated={{this.emptyLabel}} />
         {{/each}}
       </ConditionalLoadingSpinner>
     </div>

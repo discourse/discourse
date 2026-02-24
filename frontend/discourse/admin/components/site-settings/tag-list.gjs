@@ -15,7 +15,7 @@ export default class TagList extends Component {
 
   @action
   changeSelectedTags(tags) {
-    this.set("value", tags.join("|"));
+    this.set("value", tags.map((t) => t.name).join("|"));
   }
 
   <template>

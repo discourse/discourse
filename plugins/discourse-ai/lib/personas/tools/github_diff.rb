@@ -113,6 +113,8 @@ module DiscourseAi
             source_repo = info.dig("head", "repo", "full_name")
             source_branch = info.dig("head", "ref")
             source_sha = info.dig("head", "sha")
+            target_repo = info.dig("base", "repo", "full_name")
+            target_branch = info.dig("base", "ref")
 
             {
               type: "pull_request",
@@ -127,10 +129,10 @@ module DiscourseAi
                   url: "https://github.com/#{source_repo}/tree/#{source_branch}",
                 },
                 target: {
-                  repo: info["base"]["repo"]["full_name"],
-                  branch: info["base"]["ref"],
+                  repo: target_repo,
+                  branch: target_branch,
                 },
-                author: info["user"]["login"],
+                author: info.dig("user", "login"),
                 created_at: info["created_at"],
                 updated_at: info["updated_at"],
               },

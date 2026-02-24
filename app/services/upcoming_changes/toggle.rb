@@ -22,6 +22,8 @@ class UpcomingChanges::Toggle
   policy :setting_is_available
   transaction { step :toggle }
 
+  step :clear_groups_if_disallowed
+
   only_if(:should_log_change) do
     step :log_change
     step :log_event
@@ -51,6 +53,14 @@ class UpcomingChanges::Toggle
     else
       SiteSetting.public_send("#{params.setting_name}=", params.enabled)
     end
+  end
+
+  def clear_groups_if_disallowed(params:)
+    metadata = SiteSetting.upcoming_change_metadata[params.setting_name.to_sym]
+    return if !metadata || !metadata[:disallow_enabled_for_groups]
+
+    SiteSettingGroup.find_by(name: params.setting_name)&.destroy!
+    SiteSetting.refresh_site_setting_group_ids!
   end
 
   def should_log_change(options:)

@@ -2379,6 +2379,9 @@ bg:
         choose_new_tags: "Избери нови етикети за тези теми:"
         choose_append_tags: "Избери нови етикети, които да се добавят към тези теми:"
         changed_tags: "Етикетите на тези теми бяха сменени."
+        error_topic_count:
+          one: "%{count} тема"
+          other: "%{count} теми"
       none:
         unread: "Нямате непрочетени теми."
         new: "Нямате нови теми."
@@ -2913,6 +2916,8 @@ bg:
       slug_placeholder: "(Опционално) пунктирани думи за url "
       creation_error: Възникна грешка при създаването на категория.
       save_error: Възникна грешка при запазването на категорията.
+      validations:
+        icon_required: "Изберете икона."
       description: "Описание"
       icon: "Икона"
       emoji: "Емотикони"
@@ -3628,6 +3633,7 @@ bg:
         save: "Запази "
         cancel: "Прекрати"
         continue: "Напред"
+        copy_key: "Копирай"
         revoke: "Анулирай"
       api:
         generate_master: "Генерирай главен API ключ"

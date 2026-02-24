@@ -1,5 +1,5 @@
 /* eslint-disable ember/no-classic-components */
-import { cached, tracked } from "@glimmer/tracking";
+import { cached } from "@glimmer/tracking";
 import Component, { Input } from "@ember/component";
 import { hash } from "@ember/helper";
 import { action } from "@ember/object";
@@ -22,8 +22,6 @@ import { i18n } from "discourse-i18n";
 export default class TagGroupsForm extends Component {
   @service dialog;
   @service site;
-
-  @tracked model;
 
   // All but the "everyone" group
   allGroups = this.site.groups.filter(
@@ -78,6 +76,14 @@ export default class TagGroupsForm extends Component {
       "permissions"
     );
 
+    if (attrs.tags) {
+      attrs.tags = attrs.tags.map(this.#serializeTag);
+    }
+
+    if (attrs.parent_tag) {
+      attrs.parent_tag = attrs.parent_tag.map(this.#serializeTag);
+    }
+
     if (isEmpty(attrs.name)) {
       this.dialog.alert("tagging.groups.cannot_save.empty_name");
       return false;
@@ -104,6 +110,12 @@ export default class TagGroupsForm extends Component {
     }
 
     this.model.save(attrs).then(() => this.onSave?.());
+  }
+
+  #serializeTag(t) {
+    return typeof t.id === "number"
+      ? { id: t.id, name: t.name }
+      : { name: t.name };
   }
 
   @action

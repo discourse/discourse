@@ -3,7 +3,7 @@ import { buildEngine } from "discourse/static/markdown-it";
 let engine;
 
 function getEngine() {
-  engine ??= buildEngine(null, ["onebox"]);
+  engine ??= buildEngine(null, ["onebox", "watched-words", "censored"]);
 
   return engine;
 }

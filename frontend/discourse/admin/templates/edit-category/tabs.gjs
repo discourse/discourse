@@ -15,6 +15,7 @@ import UpsertCategoryTags from "discourse/admin/components/upsert-category/tags"
 import EditCategoryTabsHorizontal from "discourse/admin/templates/edit-category/tabs-horizontal";
 import EditCategoryTabsVertical from "discourse/admin/templates/edit-category/tabs-vertical";
 import Form from "discourse/components/form";
+import { registeredEditCategoryTabs } from "discourse/lib/edit-category-tabs";
 
 const TAB_COMPONENTS = {
   general: EditCategoryGeneral,
@@ -41,10 +42,16 @@ function componentFor(name, useSimplified) {
   name = name.replace("edit-category-", "");
   const components = useSimplified ? TAB_COMPONENTS_V2 : TAB_COMPONENTS;
 
-  if (!components[name]) {
-    throw new Error(`No category-tab component found for tab name: ${name}`);
+  if (components[name]) {
+    return components[name];
   }
-  return components[name];
+
+  const pluginTab = registeredEditCategoryTabs.find((tab) => tab.id === name);
+  if (pluginTab) {
+    return pluginTab.component;
+  }
+
+  throw new Error(`No category-tab component found for tab name: ${name}`);
 }
 
 export default <template>
@@ -66,7 +73,6 @@ export default <template>
         class="edit-category-content edit-category-tab-{{@controller.selectedTab}}"
       >
         {{#if @controller.siteSettings.enable_simplified_category_creation}}
-
           {{#let
             (componentFor
               (concat "edit-category-" @controller.selectedTab)

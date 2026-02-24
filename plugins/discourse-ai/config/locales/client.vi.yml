@@ -34,6 +34,8 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      llm_selector:
+        none: "Không"
       features:
         back: "Quay lại"
         disabled: "(vô hiệu hóa)"
@@ -48,6 +50,9 @@ vi:
           reset: "Cài lại"
         search:
           name: "Tìm kiếm"
+        embeddings:
+          setting_groups:
+            related_topics: "Các chủ đề liên quan"
         ai_helper:
           proofread: Hiệu chỉnh văn bản
           explain: "Giải thích"
@@ -118,6 +123,15 @@ vi:
         parameter_required: "Bắt buộc"
         edit: "Sửa"
         delete: "Xóa"
+      secrets:
+        short_title: "Thông tin đăng nhập"
+        name: "Tên"
+        secret: "Giá trị"
+        back: "Quay lại"
+        save: "Lưu lại"
+        edit: "Sửa"
+        delete: "Xóa"
+        embedding: "Nhúng"
       llms:
         display_name: "Tên"
         save: "Lưu lại"
@@ -241,3 +255,9 @@ vi:
         tooltip:
           actions:
             disable: "Tắt"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Tút bị gắn nhãn AI"
+        reviewable_ai_chat_message:
+          title: "Tin nhắn trò chuyện bị gắn nhãn AI"

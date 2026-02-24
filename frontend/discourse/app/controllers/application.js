@@ -7,6 +7,7 @@ import runAfterFramePaint from "discourse/lib/after-frame-paint";
 import discourseDebounce from "discourse/lib/debounce";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated from "discourse/lib/deprecated";
+import EmbedMode from "discourse/lib/embed-mode";
 import { isTesting } from "discourse/lib/environment";
 
 const HIDE_SIDEBAR_KEY = "sidebar-hidden";
@@ -14,6 +15,7 @@ const HIDE_SIDEBAR_KEY = "sidebar-hidden";
 export default class ApplicationController extends Controller {
   @service footer;
   @service router;
+  @service scrollState;
   @service sidebarState;
   @service siteSettings;
 
@@ -22,8 +24,7 @@ export default class ApplicationController extends Controller {
 
   sidebarDisabledRouteOverride = false;
   navigationMenuQueryParamOverride = null;
-  showSiteHeader = true;
-
+  _showSiteHeader = true;
   @tracked _showSidebar;
 
   get isCurrentAdminRoute() {
@@ -46,6 +47,17 @@ export default class ApplicationController extends Controller {
     return classes.join(" ");
   }
 
+  get showSiteHeader() {
+    if (EmbedMode.enabled) {
+      return false;
+    }
+    return this._showSiteHeader;
+  }
+
+  set showSiteHeader(value) {
+    this._showSiteHeader = value;
+  }
+
   // Some themes may need to override the default value provided by `calculateShowSidebar` using viewport properties.
   // Accessing the value in a getter prevents static viewport initialization warnings.
   get showSidebar() {
@@ -66,6 +78,14 @@ export default class ApplicationController extends Controller {
       { id: "discourse.application-show-footer" }
     );
     this.footer.showFooter = value;
+  }
+
+  get shouldHideScrollableContentAbove() {
+    return this.scrollState.shouldHideContentAbove;
+  }
+
+  get shouldHideScrollableContentBelow() {
+    return this.scrollState.shouldHideContentBelow;
   }
 
   get showPoweredBy() {
@@ -101,6 +121,10 @@ export default class ApplicationController extends Controller {
   }
 
   get sidebarEnabled() {
+    if (EmbedMode.enabled) {
+      return false;
+    }
+
     if (!this.canDisplaySidebar) {
       return false;
     }

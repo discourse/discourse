@@ -4,10 +4,6 @@
 require "pathname"
 ENV["BUNDLE_GEMFILE"] ||= File.expand_path("../../Gemfile", Pathname.new(__FILE__).realpath)
 
-STDERR.puts <<~MESSAGE if defined?(Bundler)
-    WARNING: Using `bundle exec` to start the server is unnecessary, and will make startup slower. Use `bin/pitchfork`.
-  MESSAGE
-
 require "rubygems"
 require "bundler/setup"
 require "fileutils"

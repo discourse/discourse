@@ -959,14 +959,6 @@ export default class Topic extends RestModel {
   }
 
   updateTags(tags) {
-    // send tag_ids when values are objects
-    if (tags?.every((t) => typeof t === "object")) {
-      return ajax(`/t/${this.id}/tags`, {
-        type: "PUT",
-        data: { tag_ids: tags.map((t) => t.id) },
-      });
-    }
-
     return ajax(`/t/${this.id}/tags`, {
       type: "PUT",
       data: { tags: tags || [] },

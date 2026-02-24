@@ -10,11 +10,6 @@ import { i18n } from "discourse-i18n";
 export default class AdminConfigAreasAboutGeneralSettings extends Component {
   @service toasts;
 
-  name = this.args.generalSettings.title.value;
-  summary = this.args.generalSettings.siteDescription.value;
-  extendedDescription = this.args.generalSettings.extendedSiteDescription.value;
-  aboutBannerImage = this.args.generalSettings.aboutBannerImage.value;
-
   @cached
   get data() {
     return {

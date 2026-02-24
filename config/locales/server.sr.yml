@@ -411,7 +411,6 @@ sr:
     display_name_on_posts: "Prikaži puno ime korisnika na njihovim porukama kao dodatak na @korisnicko_ime"
     show_time_gap_days: "Ako su dve poruke poslate sa ovoliko dana razmaka, prikaži vremensku razliku u temi."
     embed_username_required: "Korisničko ime je obavezno za kreiranje teme."
-    bootstrap_mode_min_users: 'Minimalni broj korisnika potreban za onemogućavanje režima pokretanja i uklanjanje dugmeta Početak rada (podesite na 0 da biste onemogućili, može potrajati do 24 sata). Pogledajte <a target="_blank" href="https://meta.discourse.org/t/-/322876">temu o režimu pokretanja na Meta-u</a> za detalje.'
     auto_close_messages_post_count: "Maksimalan broj dozvoljenih poruka pre nego se tema automatski zatvori (0 da se isključi)"
     auto_close_topics_create_linked_topic: "Kreirajte novu povezanu temu kada je tema automatski zatvorena na temelju postavke 'automatsko zatvaranje tema za postove'"
     default_email_mailing_list_mode: "Podrazumevano šalji email za svaku novu poruku"

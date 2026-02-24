@@ -227,10 +227,13 @@ describe PostRevisor do
       expect { post_revisor.revise!(admin, tags: ["new-tag"]) }.not_to change { Post.count }
     end
 
-    it "accepts tags as integer IDs" do
+    it "edits a topic's tags" do
       tag = Fabricate(:tag)
-      post_revisor.revise!(admin, tags: [tag.id])
+      post_revisor.revise!(admin, tags: [{ id: tag.id, name: "outdated" }])
       expect(post.topic.reload.tags).to contain_exactly(tag)
+
+      post_revisor.revise!(admin, tags: ["a-whole-new-tag"])
+      expect(post.topic.reload.tags).to match_array([have_attributes(name: "a-whole-new-tag")])
     end
 
     describe "when `create_post_for_category_and_tag_changes` site setting is enabled" do
@@ -570,6 +573,17 @@ describe PostRevisor do
 
         expect(post.version).to eq(1)
         expect(post.public_version).to eq(1)
+        expect(post.revisions.size).to eq(0)
+      end
+
+      it "does not create a new version for tag-only topic change within grace period when tags unchanged" do
+        SiteSetting.tagging_enabled = true
+        SiteSetting.editing_grace_period = 1.minute
+
+        post_revisor.revise!(post.user, { tags: [] }, revised_at: post.updated_at + 10.seconds)
+        post.reload
+
+        expect(post.version).to eq(1)
         expect(post.revisions.size).to eq(0)
       end
     end
@@ -1052,15 +1066,15 @@ describe PostRevisor do
       expect(post_revisor.raw_changed?).to eq(false)
 
       post_revisor.revise!(admin, tags: %w[new-tag new-tag-2])
-      expect(post.post_revisions.last.modifications).to eq(
-        "tags" => [["new-tag"], %w[new-tag new-tag-2]],
-      )
+      before, after = post.post_revisions.last.modifications["tags"]
+      expect(before).to contain_exactly("new-tag")
+      expect(after).to contain_exactly("new-tag", "new-tag-2")
       expect(post_revisor.raw_changed?).to eq(false)
 
       post_revisor.revise!(admin, tags: ["new-tag-3"])
-      expect(post.post_revisions.last.modifications).to eq(
-        "tags" => [%w[new-tag new-tag-2], ["new-tag-3"]],
-      )
+      before, after = post.post_revisions.last.modifications["tags"]
+      expect(before).to contain_exactly("new-tag", "new-tag-2")
+      expect(after).to contain_exactly("new-tag-3")
       expect(post_revisor.raw_changed?).to eq(false)
     end
 
@@ -1070,16 +1084,16 @@ describe PostRevisor do
 
       post.topic.update!(tags: [tag1])
 
-      post_revisor.revise!(admin, tags: [tag2.id])
+      post_revisor.revise!(admin, tags: [{ id: tag2.id, name: tag2.name }])
 
       modifications = post.post_revisions.last.modifications
       expect(modifications["tags"]).to eq([["existing-tag"], ["another-tag"]])
     end
 
-    it "tracks tag changes from empty to tagged using IDs (integers)" do
+    it "tracks tag changes from empty to tagged using objects" do
       tag = Fabricate(:tag, name: "new-via-id")
 
-      post_revisor.revise!(admin, tags: [tag.id])
+      post_revisor.revise!(admin, tags: [{ id: tag.id, name: tag.name }])
 
       modifications = post.post_revisions.last.modifications
       expect(modifications["tags"]).to eq([[], ["new-via-id"]])
@@ -1454,6 +1468,21 @@ describe PostRevisor do
               post.reload
               expect(post.version).to eq(2)
               expect(post.public_version).to eq(1)
+            end
+
+            it "doesn't decrement public_version when hidden revision is destroyed" do
+              original_tags = topic.tags.map(&:name)
+              post_revisor.revise!(admin, raw: post.raw, tags: original_tags + ["secret"])
+              post.reload
+              expect(post.version).to eq(2)
+              expect(post.public_version).to eq(1)
+              expect(post.revisions.count).to eq(1)
+
+              post_revisor.revise!(admin, raw: post.raw, tags: original_tags)
+              post.reload
+              expect(post.version).to eq(1)
+              expect(post.public_version).to eq(1)
+              expect(post.revisions.count).to eq(0)
             end
 
             it "increments public_version when hidden tag added with other visible changes" do

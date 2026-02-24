@@ -291,6 +291,9 @@ hy:
       title: "Նոր և Չկարդացված Թեմաներ"
       pill: "Առաջարկվում է"
       pm_title: "Առաջարկվող Հաղորդագրություններ"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Պատճենել հղումը"
     about:
       edit: "Խմբագրել այս էջը"
       simple_title: "Մեր Մասին"
@@ -2564,6 +2567,9 @@ hy:
         choose_new_tags: "Ընտրել նոր պիտակներ այս թեմաների համար՝"
         choose_append_tags: "Ընտրել նոր պիտակներ այս թեմաներին ավելացնելու համար՝"
         changed_tags: "Այդ թեմաների պիտակները փոփոխվել են:"
+        error_topic_count:
+          one: "%{count} թեմա"
+          other: "%{count} թեմա"
       none:
         unread: "Դուք չունեք չկարդացած թեմաներ:"
         new: "Դուք չունեք նոր թեմաներ:"
@@ -3140,6 +3146,8 @@ hy:
       slug_placeholder: "(Ընտրովի) գծիկավոր-բառեր url-ի համար"
       creation_error: 'Կատեգորիայի ստեղծման ժամանակ տեղի է ունեցել սխալ:'
       save_error: 'Կատեգորիան պահելիս տեղի է ունեցել սխալ:'
+      validations:
+        icon_required: "Ընտրեք պատկերակ."
       description: "Նկարագրույթուն"
       icon: "Պատկերակ"
       emoji: "Էմոջի"
@@ -4083,6 +4091,7 @@ hy:
         save: "Պահպանել"
         cancel: "Չեղարկել"
         continue: "Շարունակել"
+        copy_key: "Կրկնօրինակել"
         revoke: "Հետ կանչել"
         revoked: "Հետկանչված"
       api:

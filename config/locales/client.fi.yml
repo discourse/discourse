@@ -400,6 +400,10 @@ fi:
       title: "Uudet ja lukemattomat ketjut"
       pill: "Ehdotukset"
       pm_title: "Viestiehdotukset"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Kopioi linkki"
+        copied_to_clipboard: "Linkki kopioitiin leikepöydälle!"
     about:
       edit: "Muokkaa tätä sivua"
       simple_title: "Tietoa"
@@ -3251,6 +3255,9 @@ fi:
           other: "Edetty: <strong>%{count}</strong> ketjua"
         performing: "Suoritetaan joukkotoimintoja, odota…"
         completed: "Joukkotoiminnot suoritettiin onnistuneesti!"
+        error_topic_count:
+          one: "%{count} ketju"
+          other: "%{count} ketjua"
       none:
         unread: "Sinulla ei ole lukemattomia ketjuja."
         unseen: "Sinulla ei ole näkemättömiä ketjuja."
@@ -4073,6 +4080,8 @@ fi:
       slug_placeholder: "(Valinnainen) väliviivoilla erotettuja sanoja URL-osoitetta varten"
       creation_error: Alueen luonnissa tapahtui virhe.
       save_error: Alueen tallennuksessa tapahtui virhe.
+      validations:
+        icon_required: "Valitse kuvake."
       description: "Kuvaus"
       logo_description: "Suositeltu kuvasuhde on 1:1 ja vähimmäiskoko 200 pikseliä. Jos tämä jätetään tyhjäksi, kuvaa ei näytetä."
       style: "Tyyli"
@@ -4109,10 +4118,8 @@ fi:
         reply: "Vastaus"
         create: "Aloitus"
         no_groups_selected: "Millekään ryhmällä ei ole myönnetty pääsyä; alue näkyy vain henkilökunnalle."
-        everyone_full_access: 'Tämä alue on julkinen: kaikki voivat lukea, vastata ja luoda viestejä. Voit rajoittaa oikeuksia poistamalla yhden tai useamman ryhmälle "kaikki" annetuista oikeuksista.'
         toggle_reply: "Muuta vastausoikeutta"
         toggle_full: "Muuta aloitusoikeutta"
-        inherited: 'Tämä oikeus periytyy ryhmältä "kaikki"'
       uncategorized_security_warning: "Tämä alue on erityinen. Se on tarkoitettu säilytyspaikaksi ketjuille, joilla ei ole aluetta; sille ei voi määritellä turvallisuusasetuksia."
       uncategorized_general_warning: 'Tämä alue on erityinen. Se on oletusalue uusille ketjuille, joille ei ole valittu aluetta. Jos et kaipaa tätä ja haluat mieluummin pakottaa valitsemaan alueen, <a href="%{settingLink}">poista asetus käytöstä täällä</a>. Jos haluat vaihtaa nimeä tai kuvasta, siirry kohtaan <a href="%{customizeLink}">Mukauta / Tekstisisältö</a>.'
       pending_permission_change_alert: "Et ole lisännyt ryhmää %{group} tälle alueelle; lisää klikkaamalla tätä painiketta."
@@ -5805,6 +5812,7 @@ fi:
         save: "Tallenna"
         cancel: "Peruuta"
         continue: "Jatka"
+        copy_key: "Kopioi"
         back: "Takaisin API-avaimiin"
         revoke: "Peru"
         undo_revoke: "Kumoa peruminen"

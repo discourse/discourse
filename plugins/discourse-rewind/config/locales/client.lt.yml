@@ -16,6 +16,8 @@ lt:
           title: Skaitymo laikas
         chat_usage:
           messages: žinutės
+          author: Jūs
+          author_others: "%{username}"
         invites:
           title: Pakvietimai
           invitee_posts: Sukurta įrašų

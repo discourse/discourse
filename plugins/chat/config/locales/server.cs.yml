@@ -73,6 +73,7 @@ cs:
         closed: "Kanál je uzavřen, žádné zprávy nelze upravovat ani mazat"
         read_only: "Kanál je pouze pro čtení, žádné zprávy nelze upravovat ani mazat"
       user_cannot_send_message: "Momentálně nelze odesílat zprávy."
+      user_not_in_channel: "Musíte být členem tohoto kanálu."
       rate_limit_exceeded: "Překročení limitu zpráv chatu, které lze odeslat během 30 sekund."
       auto_silence_from_flags: "Zpráva v chatu nahlášená dostatečně vysokým skóre, aby uživatele ztišila."
       channel_cannot_be_archived: "Kanál nelze v tuto chvíli archivovat, musí být buď uzavřen, nebo otevřen pro archivaci."
@@ -145,10 +146,17 @@ cs:
           title: "Smazat zprávu"
           description: "Odstranit zprávu, aby ji uživatelé nemohli vidět."
         delete_and_agree:
+          title: "Ignorovat nahlášení a smazat zprávu"
           description: "Ignorovat nahlášení odstraněním z fronty a smazáním zprávy."
         disagree_and_restore:
           title: "Nesouhlasit a obnovit zprávu"
           description: "Obnovit zprávu, aby ji mohli vidět všichni uživatelé."
+        disagree:
+          title: "Ponechat zprávu"
+          description: "Nesouhlasit s nahlášením a ponechat zprávu beze změny."
+        ignore:
+          title: "Ignorovat nahlášení"
+          description: "Odstranit z fronty a neprovádět žádnou akci."
       direct_messages:
         transcript_title: "Přepis předchozích zpráv v %{channel_name}"
         transcript_body: "Abychom vám poskytli více souvislostí, zahrnuli jsme do této konverzace přepis předchozích zpráv (až 10):\n\n%{transcript}"

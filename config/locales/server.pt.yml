@@ -1153,7 +1153,6 @@ pt:
     num_flaggers_to_close_topic: "Número mínimo de sinalizações únicas que são necessárias para automaticamente pausar um tópico para intervenção."
     num_hours_to_close_topic: "Número de horas para pausar um tópico para intervenção."
     auto_respond_to_flag_actions: "Ativar respostas automáticas ao eliminar uma bandeira."
-    min_first_post_typing_time: "O tempo mínimo em milissegundos que um utilizador deve digitar durante a sua primeira publicação, se o limite não for atingido a mensagem será inserida automaticamente na fila de aprovação. Configurar a 0 para desativar (não recomendado)"
     reply_by_email_address: "Modelo para endereços emails recebidos com função resposta por email, por exemplo: %%{reply_key}@resposta.exemplo.com ou resposta+%%{reply_key}@exemplo.com"
     alternative_reply_by_email_addresses: "Lista de modelos alternativos para respostas via email. Exemplo: %%{reply_key}@resposta.exemplo.com ou resposta+%%{reply_key}@exemplo.com"
     strip_images_from_short_emails: "Remover imagens de emails cujo tamanho seja inferior a 2800 Bytes"

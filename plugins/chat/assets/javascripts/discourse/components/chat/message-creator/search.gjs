@@ -23,14 +23,9 @@ export default class ChatMessageCreatorSearch extends Component {
   @tracked chatables = [];
   @tracked highlightedChatable;
   @tracked term;
-  @tracked loading = false;
 
   get items() {
     const items = [];
-
-    if (this.loading) {
-      return items;
-    }
 
     if (!this.term?.length && this.chatGuardian.canUseGroupChat()) {
       items.push({

@@ -7,6 +7,7 @@ import { htmlSafe } from "@ember/template";
 import { isEmpty } from "@ember/utils";
 import { TrackedArray } from "@ember-compat/tracked-built-ins";
 import { removeValueFromArray } from "discourse/lib/array-tools";
+import { AUTO_GROUPS } from "discourse/lib/constants";
 import discourseComputed from "discourse/lib/decorators";
 import deprecated, { withSilencedDeprecations } from "discourse/lib/deprecated";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
@@ -99,6 +100,13 @@ export default class Site extends RestModel {
     super.init(...arguments);
 
     this.topicCountDesc = ["topic_count:desc"];
+  }
+
+  get groupsById() {
+    const map = {};
+    Object.values(AUTO_GROUPS).forEach((g) => (map[g.id] = g));
+    this.groups?.forEach((g) => (map[g.id] = g));
+    return map;
   }
 
   @dependentKeyCompat
@@ -249,6 +257,21 @@ export default class Site extends RestModel {
 
   topicFlagTypeById(id) {
     return this.get("topicFlagByIdLookup.action" + id);
+  }
+
+  #transformTags(tags) {
+    if (!tags) {
+      return [];
+    }
+    return tags.map((tag) => this.store.createRecord("tag", tag));
+  }
+
+  get topTags() {
+    return this.#transformTags(this.top_tags);
+  }
+
+  get categoryTopTags() {
+    return this.#transformTags(this.category_top_tags);
   }
 
   removeCategory(id) {

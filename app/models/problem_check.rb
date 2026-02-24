@@ -155,7 +155,10 @@ class ProblemCheck
   end
 
   def self.cleanup_trackers
-    ProblemCheckTracker.where(identifier:).where.not(target: targets.call).destroy_all
+    current_targets = targets.call
+    return if current_targets.empty?
+
+    ProblemCheckTracker.where(identifier:).where.not(target: current_targets).destroy_all
   end
 
   def initialize(target = NO_TARGET)

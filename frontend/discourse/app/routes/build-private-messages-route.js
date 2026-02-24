@@ -66,6 +66,7 @@ export default (inboxType, path, filter) => {
         filter,
         group: null,
         inbox: inboxType,
+        listContext: "messages",
       });
 
       let ascending = userTopicsListController.ascending;

@@ -31,10 +31,12 @@ class BookmarksBulkAction
   private
 
   def delete
-    @bookmark_ids.each do |bookmark_id|
-      if guardian.can_delete?(bookmark_id)
-        BookmarkManager.new(@user).destroy(bookmark_id)
-        @changed_ids << bookmark_id
+    bookmarks.each do |bookmark|
+      if guardian.can_delete?(bookmark)
+        BookmarkManager.new(@user).destroy(bookmark.id)
+        @changed_ids << bookmark.id
+      else
+        raise Discourse::InvalidAccess.new
       end
     end
   end

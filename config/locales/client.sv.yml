@@ -294,6 +294,9 @@ sv:
       title: "Nya och olästa ämnen"
       pill: "Föreslagna"
       pm_title: "Föreslagna meddelanden"
+    admin_onboarding_banner:
+      spread_the_word:
+        copied_to_clipboard: "Länken har kopierats till urklipp!"
     about:
       edit: "Redigera denna sida"
       simple_title: "Om"
@@ -2699,6 +2702,9 @@ sv:
         progress:
           one: "Förlopp: <strong>%{count}</strong> ämne"
           other: "Förlopp: <strong>%{count}</strong> ämnen"
+        error_topic_count:
+          one: "%{count} ämne"
+          other: "%{count} ämnen"
       none:
         unread: "Du har inga olästa ämnen."
         unseen: "Du har inga osedda ämnen."
@@ -3446,6 +3452,8 @@ sv:
       slug_placeholder: "(Valfritt) streckade ord för url"
       creation_error: Det uppstod ett fel när kategorin skulle skapas.
       save_error: Ett fel inträffade då kategorin skulle sparas.
+      validations:
+        icon_required: "Välj en ikon."
       description: "Beskrivning"
       icon: "Ikon"
       emoji: "Emoji"
@@ -3471,10 +3479,8 @@ sv:
         reply: "Svara"
         create: "Skapa"
         no_groups_selected: "Inga grupper har beviljats åtkomst; denna kategori kommer endast att vara synlig för personalen."
-        everyone_full_access: 'Denna kategori är offentlig och alla kan se, besvara och skapa inlägg. Om du vill begränsa behörigheterna tar du bort en eller flera av de behörigheter som tilldelats till gruppen ”alla”.'
         toggle_reply: "Slå på/av behörighet att svara"
         toggle_full: "Slå på/av behörighet att skapa"
-        inherited: 'Denna behörighet ärvs från "alla"'
       uncategorized_security_warning: "Denna kategori är speciell. Den är avsedd för att innehålla ämnen som saknar kategori. Den kan inte ha säkerhetsinställningar."
       uncategorized_general_warning: 'Denna kategori är speciell. Den används som standardkategori för nya ämnen som inte har en vald kategori. Om du vill förhindra detta beteende och tvinga val av kategori <a href="%{settingLink}">inaktiverar du inställningen här</a>. Om du vill ändra namn eller beskrivning går du till <a href="%{customizeLink}">Anpassa / Textinnehåll</a>.'
       pending_permission_change_alert: "Du har inte lagt till %{group} för denna kategori. Klicka på följande knapp för att lägga till den."
@@ -4691,6 +4697,7 @@ sv:
         save: "Spara"
         cancel: "Avbryt"
         continue: "Fortsätt"
+        copy_key: "Kopiera"
         revoke: "Upphäv"
         revoked: "Återkallad"
       api:

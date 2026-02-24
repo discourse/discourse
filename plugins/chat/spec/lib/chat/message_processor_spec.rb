@@ -54,10 +54,39 @@ RSpec.describe Chat::MessageProcessor do
       img = doc.at_css("img")
 
       expect(img["class"]).to include("lightbox")
-      expect(img["data-large-src"]).to eq(upload.url)
+      expect(img["data-large-src"]).to eq(UrlHelper.cook_url(upload.url, secure: upload.secure?))
       expect(img["data-download-href"]).to eq(upload.short_path)
       expect(img["data-target-width"]).to eq(upload.width.to_s)
       expect(img["data-target-height"]).to eq(upload.height.to_s)
+    end
+
+    context "with secure uploads enabled" do
+      before do
+        setup_s3
+        SiteSetting.secure_uploads = true
+      end
+
+      it "uses the secure proxy URL for data-large-src" do
+        secure_upload = Fabricate(:secure_upload_s3, width: 800, height: 600)
+        secure_base62 = Upload.base62_sha1(secure_upload.sha1)
+        secure_url = Upload.secure_uploads_url_from_upload_url(secure_upload.url)
+        cooked_html = <<~HTML
+          <p>
+            <img src="#{secure_url}" width="500" height="300" data-base62-sha1="#{secure_base62}">
+          </p>
+        HTML
+
+        Chat::Message.stubs(:cook).returns(cooked_html)
+        processor = described_class.new(message)
+
+        processor.run!
+
+        doc = processor.instance_variable_get(:@doc)
+        img = doc.at_css("img")
+
+        expect(img["data-large-src"]).not_to include("s3-upload-bucket")
+        expect(img["data-large-src"]).to include("secure-uploads")
+      end
     end
   end
 end

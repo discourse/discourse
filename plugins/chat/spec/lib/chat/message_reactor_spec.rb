@@ -4,11 +4,15 @@ describe Chat::MessageReactor do
   subject(:message_reactor) { described_class.new(reacting_user, channel) }
 
   fab!(:reacting_user, :user)
+  fab!(:other_user, :user)
   fab!(:channel, :category_channel)
   fab!(:reactor) { described_class.new(reacting_user, channel) }
   fab!(:message_1) { Fabricate(:chat_message, chat_channel: channel, user: reacting_user) }
 
-  before { SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone] }
+  before do
+    SiteSetting.chat_allowed_groups = Group::AUTO_GROUPS[:everyone]
+    channel.add(reacting_user)
+  end
 
   it "calls guardian ensure_can_join_chat_channel!" do
     Guardian.any_instance.expects(:ensure_can_join_chat_channel!).once
@@ -91,19 +95,48 @@ describe Chat::MessageReactor do
     end
   end
 
-  it "creates a membership when not present" do
+  it "raises an error when user is not a member of the channel" do
+    channel.membership_for(reacting_user).destroy!
+
     expect {
       reactor.react!(message_id: message_1.id, react_action: :add, emoji: ":heart:")
-    }.to change(Chat::UserChatChannelMembership, :count).by(1)
+    }.to raise_error(Discourse::InvalidAccess)
   end
 
-  it "doesn’t create a membership when present" do
-    Chat::UserChatChannelMembership.create!(
-      user: reacting_user,
-      chat_channel: channel,
-      following: true,
-    )
+  it "raises an error when user is not following the channel" do
+    channel.membership_for(reacting_user).update!(following: false)
 
+    expect {
+      reactor.react!(message_id: message_1.id, react_action: :add, emoji: ":heart:")
+    }.to raise_error(Discourse::InvalidAccess)
+  end
+
+  it "allows removing a reaction when not following" do
+    Chat::MessageReaction.create!(chat_message: message_1, user: reacting_user, emoji: ":heart:")
+
+    channel.membership_for(reacting_user).update!(following: false)
+
+    expect {
+      reactor.react!(message_id: message_1.id, react_action: :remove, emoji: ":heart:")
+    }.to change(Chat::MessageReaction, :count).by(-1)
+  end
+
+  it "does not allow reacting to an existing emoji when not following" do
+    channel.add(other_user)
+    described_class.new(other_user, channel).react!(
+      message_id: message_1.id,
+      react_action: :add,
+      emoji: ":heart:",
+    )
+    channel.membership_for(reacting_user).update!(following: false)
+
+    expect {
+      reactor.react!(message_id: message_1.id, react_action: :add, emoji: ":heart:")
+    }.to raise_error(Discourse::InvalidAccess)
+    expect(message_1.reactions.where(emoji: ":heart:").count).to eq(1)
+  end
+
+  it "doesn't create a membership when present" do
     expect {
       reactor.react!(message_id: message_1.id, react_action: :add, emoji: ":heart:")
     }.not_to change(Chat::UserChatChannelMembership, :count)

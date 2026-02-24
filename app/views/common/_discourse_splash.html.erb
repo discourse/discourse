@@ -17,7 +17,13 @@
       #d-splash {
         --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
         <%- if custom_splash_screen_enabled? %>
-        --splash-bg: url("<%= splash_screen_image_data_uri %>");
+          <%- if splash_screen_image_animated? %>
+          --primary: #<%= light_color_hex_for_name("primary") %>;
+          --secondary: #<%= light_color_hex_for_name("secondary") %>;
+          --tertiary: #<%= light_color_hex_for_name("tertiary") %>;
+          <%- else %>
+          --splash-bg: url("<%= splash_screen_image_data_uri %>");
+          <%- end %>
         <%- end %>
       }
     <%- elsif forced_light_mode? %>
@@ -28,7 +34,13 @@
       #d-splash {
         --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
         <%- if custom_splash_screen_enabled? %>
-        --splash-bg: url("<%= splash_screen_image_data_uri %>");
+          <%- if splash_screen_image_animated? %>
+          --primary: #<%= light_color_hex_for_name("primary") %>;
+          --secondary: #<%= light_color_hex_for_name("secondary") %>;
+          --tertiary: #<%= light_color_hex_for_name("tertiary") %>;
+          <%- else %>
+          --splash-bg: url("<%= splash_screen_image_data_uri %>");
+          <%- end %>
         <%- end %>
       }
     <%- elsif forced_dark_mode? %>
@@ -39,7 +51,13 @@
       #d-splash {
         --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
         <%- if custom_splash_screen_enabled? %>
-        --splash-bg: url("<%= splash_screen_image_data_uri(dark: true) %>");
+          <%- if splash_screen_image_animated? %>
+          --primary: #<%= dark_color_hex_for_name("primary") %>;
+          --secondary: #<%= dark_color_hex_for_name("secondary") %>;
+          --tertiary: #<%= dark_color_hex_for_name("tertiary") %>;
+          <%- else %>
+          --splash-bg: url("<%= splash_screen_image_data_uri(dark: true) %>");
+          <%- end %>
         <%- end %>
       }
     <%- else %>
@@ -54,7 +72,13 @@
         #d-splash {
           --dot-color: #<%= light_color_hex_for_name("tertiary") %>;
           <%- if custom_splash_screen_enabled? %>
-          --splash-bg: url("<%= splash_screen_image_data_uri %>");
+            <%- if splash_screen_image_animated? %>
+            --primary: #<%= light_color_hex_for_name("primary") %>;
+            --secondary: #<%= light_color_hex_for_name("secondary") %>;
+            --tertiary: #<%= light_color_hex_for_name("tertiary") %>;
+            <%- else %>
+            --splash-bg: url("<%= splash_screen_image_data_uri %>");
+            <%- end %>
           <%- end %>
         }
       }
@@ -68,7 +92,13 @@
         #d-splash {
           --dot-color: #<%= dark_color_hex_for_name("tertiary") %>;
           <%- if custom_splash_screen_enabled? %>
-          --splash-bg: url("<%= splash_screen_image_data_uri(dark: true) %>");
+            <%- if splash_screen_image_animated? %>
+            --primary: #<%= dark_color_hex_for_name("primary") %>;
+            --secondary: #<%= dark_color_hex_for_name("secondary") %>;
+            --tertiary: #<%= dark_color_hex_for_name("tertiary") %>;
+            <%- else %>
+            --splash-bg: url("<%= splash_screen_image_data_uri(dark: true) %>");
+            <%- end %>
           <%- end %>
         }
       }
@@ -81,6 +111,7 @@
       left: 0;
       top: 0;
       width: 100vw;
+      height: 100dvh;
       z-index: 1001;
     }
 
@@ -92,11 +123,18 @@
       @media (width < 700px) {
         width: 320px;
       }
+      @media (width < 325px) {
+        width: 300px;
+      }
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 3rem;
+      gap: 1.5rem;
+      <%- unless splash_screen_image_animated? %>
+      margin-top: -10vh;
+      <%- end %>
       <%- else %>
       width: calc((var(--splash-dot-size) + var(--splash-dot-spacing)) * 5);
       <%- end %>
@@ -170,17 +208,28 @@
       --splash-dot-size: max(0.7vw, 14px);
     }
     #d-splash .splash-logo-container {
-      width: min(200px, 55vw);
-      height: min(130px, 20vh);
+      width: min(250px, 60vw);
+      height: min(150px, 25vh);
+      <%- if splash_screen_image_animated? %>
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      <%- else %>
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
       background-image: var(--splash-bg);
-      <%- unless splash_screen_image_animated? %>
       opacity: 0.4;
       animation: d-splash-logo-pulse 3s ease-in-out infinite;
       <%- end %>
     }
+
+    <%- if splash_screen_image_animated? %>
+    #d-splash .splash-logo-container svg {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    <%- end %>
 
     @keyframes d-splash-logo-pulse {
       0%, 100% {
@@ -195,8 +244,10 @@
 
   <div class="preloader-image" elementtiming="discourse-splash-visible">
     <%- if custom_splash_screen_enabled? %>
-      <div class="splash-logo-container"></div>
-      <%- unless splash_screen_image_animated? %>
+      <%- if splash_screen_image_animated? %>
+        <div class="splash-logo-container"><%= splash_screen_inline_svg %></div>
+      <%- else %>
+        <div class="splash-logo-container"></div>
         <div class="dots-container">
           <div class="dots" style="--n:-2;"></div>
           <div class="dots" style="--n:-1;"></div>

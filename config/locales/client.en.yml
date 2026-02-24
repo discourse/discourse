@@ -337,11 +337,15 @@ en:
     skip_user_nav: "Skip to profile content"
 
     emails_are_disabled: "All outgoing email has been globally disabled by an administrator. No email notifications of any kind will be sent."
+    emails_are_disabled_no_smtp: "All outgoing email is disabled because no SMTP server has been configured. No emails of any kind can be sent."
     emails_are_disabled_non_staff: "Outgoing email has been disabled for non-staff users."
 
     software_update_prompt:
       message: "We've updated this site, <span>please refresh</span> to keep things working smoothly."
       dismiss: "Dismiss"
+
+    notifications_tracking:
+      tooltip: "Notification level: %{level}"
 
     back_button: "Back"
 
@@ -485,6 +489,39 @@ en:
       title: "New & Unread Topics"
       pill: "Suggested"
       pm_title: "Suggested Messages"
+
+    admin_onboarding_banner:
+      launch_in_easy_steps: "Launch in %{step_count} easy steps"
+      skipped: "The admin onboarding checklist has now been skipped. If you would like to re-enable it, look for `enable site owner onboarding` in the site settings."
+      congrats_onboarding_complete: "Congratulations on completing the onboarding process!"
+      invite_collaborators:
+        title: "Invite Collaborators"
+        description: "Early members help bring your community to life"
+        action: "Create invite"
+      start_posting:
+        title: "Start Posting"
+        description: "Give people something to talk about together"
+        action: "Icebreaker ideas"
+        icebreakers:
+          fun_facts:
+            title: "What are some fun facts about you?"
+            body: "Hi everyone! I'm excited to start this new community. To kick things off, let's share a fun fact about ourselves. I'll go first: I love hiking and exploring new trails! What's something interesting about you?"
+          coolest_thing_you_have_seen_today:
+            title: "What's the coolest thing you've seen today?"
+            body: "What's the coolest thing you've seen or experienced today? It could be anything from a beautiful sunset to a random act of kindness. I'll start: I saw a dog helping an elderly person cross the street!"
+          introduce_yourself:
+            title: "Introduce yourself"
+            body: "Welcome to the community! Let's get to know each other. Please introduce yourself and share a little bit about your interests. I'll go first: I'm passionate about technology and love teaching others!"
+          what_is_your_favorite_food:
+            title: "What is your favorite food?"
+            body: "Share your favorite food with the community! I'll start: I love pizza, especially with extra cheese and pepperoni."
+
+
+      spread_the_word:
+        title: "Spread the Word!"
+        description: "Share a link with everyone in your network"
+        action: "Copy link"
+        copied_to_clipboard: "Link copied to clipboard!"
 
     about:
       edit: "Edit this page"
@@ -666,6 +703,11 @@ en:
           one: "+%{count} other draft"
           other: "+%{count} other drafts"
 
+    embed_mode:
+      storage_access_prompt: "Already have a %{site_name} account? Allow access to your session to comment as yourself."
+      allow_access: "Allow Access"
+      continue_as_guest: "Continue as Guest"
+
     topic_count_all:
       one: "See %{count} new topic"
       other: "See %{count} new topics"
@@ -750,18 +792,18 @@ en:
       filtered_flagged_by: "Flagged by"
       unknown:
         title:
-          one: "You have pending reviewables from disabled plugin:"
-          other: "You have pending reviewables from disabled plugins:"
+          one: "You have pending review queue items from disabled plugin:"
+          other: "You have pending review queue items from disabled plugins:"
         instruction: "They cannot be properly displayed until you enable the relevant plugin. Please enable the plugin and refresh the page. Alternatively, you can ignore them. <a href='%{url}' target='_blank'>Learn more...</a>"
         reviewable_unknown_source: "%{reviewableType} (unknown plugin)"
         reviewable_known_source: "%{reviewableType} (from the '%{pluginName}' plugin)"
         ignore_all: "Ignore all"
         enable_plugins: "Enable plugins"
-        delete_confirm: "Are you sure you want to delete all reviews created by disabled plugins?"
-        ignore_success: "All reviews created by disabled plugins have been deleted."
+        delete_confirm: "Are you sure you want to delete all review queue items created by disabled plugins?"
+        ignore_success: "All review queue items created by disabled plugins have been deleted."
       explain:
         why: "explain why this item ended up in the queue"
-        title: "Reviewable Scoring"
+        title: "Review Queue Item Scoring"
         formula: "Formula"
         subtotal: "Subtotal"
         total: "Total"
@@ -775,10 +817,10 @@ en:
           title: "Users whose flags have been historically agreed with are given a bonus."
         trust_level_bonus:
           name: "trust level"
-          title: "Reviewable items created by higher trust level users have a higher score."
+          title: "Flags created by higher trust level users have a higher score."
         type_bonus:
           name: "type bonus"
-          title: "Certain reviewable types can be assigned a bonus by staff to make them a higher priority."
+          title: "Certain flag types can be assigned a bonus by staff to make them a higher priority."
       revise_and_reject_post:
         title: "Revise"
         reason: "Reason"
@@ -787,7 +829,7 @@ en:
         custom_reason: "Give a clear description of the reason"
         other_reason: "Other..."
         optional: "optional"
-      stale_help: "This reviewable has been resolved by <b>%{username}</b>."
+      stale_help: "This item has been resolved by <b>%{username}</b>."
       claim_help:
         optional: "You can claim this item to prevent others from reviewing it."
         required: "You must claim items before you can review them."
@@ -3147,6 +3189,7 @@ en:
       upload_description: "enter upload description here"
       olist_title: "Numbered list"
       ulist_title: "Bulleted list"
+      list_title: "Lists"
       list_item: "List item"
       toggle_direction: "Toggle direction"
       apply_wrap_title: "Apply wrap"
@@ -3538,8 +3581,6 @@ en:
         max_views:
           placeholder: maximum
           aria_label: filter by maximum views
-        additional_options:
-          label: "Filter by post count and topic views"
 
     hamburger_menu: "Navigation menu"
     new_item: "new"
@@ -3681,6 +3722,18 @@ en:
         notify: "Notify users of this change."
         performing: "Performing bulk operations, please wait…"
         completed: "Bulk operations completed successfully!"
+        completed_count:
+          one: "<b>%{count}</b> topic was updated."
+          other: "<b>%{count}</b> topics were updated."
+        not_completed:
+          one: "<b>%{count}</b> topic could not be updated:"
+          other: "<b>%{count}</b> topics could not be updated:"
+        skipped_count:
+          one: "<b>%{count}</b> topic was already up to date."
+          other: "<b>%{count}</b> topics were already up to date."
+        error_topic_count:
+          one: "%{count} topic"
+          other: "%{count} topics"
 
       none:
         unread: "You have no unread topics."
@@ -3745,6 +3798,7 @@ en:
         other: "%{count} posts in topic"
       create: "New Topic"
       create_long: "Create a new topic"
+      create_group: "New topic and drafts"
       open_draft: "Open Draft"
       private_message: "Start a message"
       archive_message:
@@ -4334,7 +4388,9 @@ en:
           edit: "Edit"
           delete: "Delete"
         add: "Add new translation"
-        manage: "Manage translations (%{count} existing)"
+        manage:
+          one: "Manage translations (%{count} existing)"
+          other: "Manage translations (%{count} existing)"
         view:
           one: "View %{count} translated locale"
           other: "View %{count} translated locales"
@@ -4572,7 +4628,6 @@ en:
       edit_dialog_title: "Edit: %{categoryName}"
       view: "View Topics in Category"
       back: "Back to category"
-      single_page: "Single Page"
       general: "General"
       settings: "Settings"
       advanced: "Advanced"
@@ -4615,6 +4670,7 @@ en:
         self_lockout: "You are about to change category permissions in a way that will remove your own access. Are you sure you want to proceed?"
       validations:
         emoji_required: "Select an emoji."
+        icon_required: "Select an icon."
       name: "Category name"
       untitled: "Untitled category"
       description: "Description"
@@ -4661,14 +4717,14 @@ en:
         reply: "Reply"
         create: "Create"
         no_groups_selected: "No groups have been granted access; this category will only be visible to staff."
-        everyone_full_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "everyone" group.'
-        everyone_reply_access: 'This category is public, everyone can see and reply to topics. To restrict permissions, remove the "everyone" group.'
-        everyone_see_access: 'This category is public, everyone can see posts. To restrict permissions, remove the "everyone" group.'
+        everyone_full_access: 'This category is public, everyone can see, reply and create posts. To restrict permissions, remove one or more of the permissions granted to the "%{everyone_group}" group.'
+        everyone_reply_access: 'This category is public, everyone can see and reply to topics. To restrict permissions, remove the "%{everyone_group}" group.'
+        everyone_see_access: 'This category is public, everyone can see posts. To restrict permissions, remove the "%{everyone_group}" group.'
         specific_groups_have_access: "This category is private, only the selected groups can see, reply and create posts."
         all_parent_groups_used: "All groups from the parent category have been added. To add more groups, first add them to the parent category."
         toggle_reply: "Toggle Reply permission"
         toggle_full: "Toggle Create permission"
-        inherited: 'This permission is inherited from "everyone"'
+        inherited: 'This permission is inherited from "%{everyone_group}"'
       special_warning: "This is a pre-seeded category and the security settings cannot be edited. If you do not wish to use this category, delete it instead of repurposing it."
       uncategorized_security_warning: "This category is special. It is intended as holding area for topics that have no category; it cannot have security settings."
       uncategorized_general_warning: 'This category is special. It is used as the default category for new topics that do not have a category selected. If you want to prevent this behavior and force category selection, <a href="%{settingLink}">please disable the setting here</a>. If you want to change the name or description, go to <a href="%{customizeLink}">Customize / Text Content</a>.'
@@ -5255,13 +5311,19 @@ en:
       category_restricted: "This tag is restricted to categories you don't have permission to access."
       synonyms: "Synonyms"
       synonyms_description: "When the following tags are used, they will be replaced with <b>%{base_tag_name}</b>."
+      synonyms_inline: "These synonyms will be replaced with %{base_tag_name}:"
       save: "Save name and description of the tag"
       tag_groups_info:
         one: 'This tag belongs to the group "%{tag_groups}".'
         other: "This tag belongs to these groups: %{tag_groups}."
+      tag_groups_info_prefix:
+        one: "This tag belongs to the group "
+        other: "This tag belongs to these groups: "
       category_restrictions:
         one: "It can only be used in this category:"
         other: "It can only be used in these categories:"
+      restricted_to: "Restricted to"
+      no_synonyms: "This tag has no synonyms."
       edit_synonyms: "Edit Synonyms"
       add_synonyms_label: "Add synonyms:"
       add_synonyms: "Add"
@@ -5281,7 +5343,34 @@ en:
         other: "Its %{count} synonyms will also be deleted."
       edit_tag: "Edit tag name and description"
       edit: "Edit this tag"
-      description: "Description (max 1000 characters)"
+      description: "Description"
+      settings:
+        title: "Settings"
+        edit_title: "Edit tag: %{name}"
+        edit_tag_prefix: "Edit tag:"
+        select_tag: "Select a tag to edit"
+        general: "General"
+        localizations: "Localizations"
+        back: "Back"
+        name: "Name"
+        slug: "Slug"
+        name_placeholder: "Tag name"
+        slug_placeholder: "Tag slug (optional, auto-generated from name)"
+        saved: "Tag settings saved"
+        no_synonyms: "No synonyms defined for this tag."
+        add_synonym_placeholder: "Search for tags to add as synonyms..."
+        synonyms_subtitle: "When the following tags are used, they will be replaced with %{name}"
+        save: "Save tag"
+        delete: "Delete tag"
+        synonyms_hint: "When the above tags are used, they will be replaced with %{baseTagName}."
+        add_synonyms_confirm: "Any place that currently uses %{synonymNames} will be changed to use %{tagName} instead. Are you sure you want to make this change?"
+      localization:
+        hint: "Add localizations to show different tag names for users in different languages."
+        locale: "Locale"
+        name: "Name"
+        description: "Description"
+        add: "Add Localization"
+        remove: "Remove Localization"
       sort_by: "Sort by:"
       sort_by_count: "count"
       sort_by_name: "name"
@@ -5824,6 +5913,8 @@ en:
       toggle_localized:
         translated: "Page is machine-translated. Click to view original."
         not_translated: "Page is not translated. Click to translate."
+        translations_enabled: "Translations enabled"
+        translations_disabled: "Translations disabled"
     language_switcher:
       title: "Change site language"
 
@@ -5849,9 +5940,16 @@ en:
 
       reports:
         title: "List of available reports"
-        meta_doc: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
         sidebar_title: "Reports"
         back: "Back to all reports"
+        group_engagement: "Engagement"
+        group_traffic: "Traffic"
+        group_members: "Members"
+        group_content: "Content & Health"
+        group_moderation: "Moderation"
+        group_security: "Security"
+        group_other: "Other"
+        legacy_warning: "This is a legacy report. It will be retired soon. If you need help finding the replacement, contact support."
 
       config_sections:
         account:
@@ -5885,6 +5983,7 @@ en:
         no_changes_to_save: "No changes to save"
         select_groups: "Select groups…"
         opt_in_groups: "Opt-in groups"
+        show_related_settings: "Show related settings..."
         opt_in_groups_instructions: "Opt-in groups can be used to let a certain group of users to test a change before it is released to everyone. Note that these groups will be irrelevant once a change progresses to the Stable status."
         enabled_for_throttle: "You have modified who this change is enabled for too quickly. Please wait a few seconds before trying again."
         change_enabled_for_success: "You have enabled this change for %{enabledFor}"
@@ -6011,7 +6110,7 @@ en:
               help_text: "Recommended size is 600 x 80 pixels."
             large_icon:
               title: "Square icon"
-              description: "A squared version of the logo image appears at the top of the administration and is also the mobile home screen app logo."
+              description: "A square version of the logo image appears at the top of the site and is also the mobile app logo."
               help_text: "Recommended size is 512 x 512 pixels."
             square_icon_dark:
               required: "Use a different square icon for dark mode?"
@@ -6201,7 +6300,7 @@ en:
           header_description: "Reports are a powerful tool to help you understand what’s happening on your site. They can help you identify trends, spot problems, and make decisions based on data."
           sub_pages:
             settings:
-              title: "Dashboard settings"
+              title: "Settings"
         badges:
           title: "Badges"
           header_description: "Badges reward users for their activities, contributions, and achievements to recognize, validate, and encourage positive behavior and engagement within the community"
@@ -6359,22 +6458,6 @@ en:
         result_count:
           one: '%{count} result for "%{filter}"'
           other: '%{count} results for "%{filter}"'
-        result_types:
-          page:
-            one: "Page"
-            other: "Pages"
-          report:
-            one: "Report"
-            other: "Reports"
-          setting:
-            one: "Setting"
-            other: "Settings"
-          theme:
-            one: "Theme"
-            other: "Themes"
-          component:
-            one: "Component"
-            other: "Components"
 
       new_features:
         title: "What's new?"
@@ -6398,7 +6481,8 @@ en:
         new_features:
           title: "What's new?"
           subtitle: "We are releasing new features and improvements all the time. This page covers the highlights, but you can click 'Learn more' to see extensive release notes."
-          no_new_features_found: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
+          no_new_features_found: "There are no items in the feed or your selected filter returned no results. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
+          no_new_features_error: "There was an error loading the feed. You can see previous new feature announcements on <a href='%{url}' target='_blank'>the Discourse Meta community</a>."
           learn_more: "Learn more..."
           experimental: "Experimental"
           only_experiments: "Only show experimental features"
@@ -6605,6 +6689,8 @@ en:
         save: "Save"
         cancel: "Cancel"
         continue: "Continue"
+        copy_key: "Copy"
+        key_copied_to_clipboard: "API key copied to clipboard"
         back: "Back to API keys"
         revoke: "Revoke"
         undo_revoke: "Undo revoke"
@@ -8517,6 +8603,7 @@ en:
         field_types:
           text: "Text"
           textarea: "Textarea"
+          date: "Date"
           confirm: "Confirmation"
           dropdown: "Dropdown"
           multiselect: "Multiselect"

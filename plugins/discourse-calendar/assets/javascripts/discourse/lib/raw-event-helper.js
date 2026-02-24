@@ -134,3 +134,7 @@ export function camelCase(input) {
       return group1.toUpperCase();
     });
 }
+
+export function removeEvent(raw) {
+  return raw.replace(/\[event (.*?)\](.*?)\[\/event\]/s, "");
+}

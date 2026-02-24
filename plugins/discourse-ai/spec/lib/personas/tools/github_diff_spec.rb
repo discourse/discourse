@@ -170,6 +170,47 @@ RSpec.describe DiscourseAi::Personas::Tools::GithubDiff do
       expect(result[:diff]).to be_nil
       expect(result[:error]).to include("Failed to retrieve the PR information")
     end
+
+    it "handles PRs from deleted forks gracefully" do
+      pr_info_deleted_fork = {
+        "title" => "Test PR from deleted fork",
+        "state" => "closed",
+        "user" => nil,
+        "created_at" => "2023-01-01T00:00:00Z",
+        "updated_at" => "2023-01-02T00:00:00Z",
+        "head" => {
+          "repo" => nil,
+          "ref" => "feature-branch",
+          "sha" => "abc123",
+        },
+        "base" => {
+          "repo" => nil,
+          "ref" => "main",
+        },
+      }
+
+      stub_request(:get, "https://api.github.com/repos/#{repo}/pulls/#{pull_id}").with(
+        headers: {
+          "Accept" => "application/json",
+          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
+        },
+      ).to_return(status: 200, body: pr_info_deleted_fork.to_json)
+
+      stub_request(:get, "https://api.github.com/repos/#{repo}/pulls/#{pull_id}").with(
+        headers: {
+          "Accept" => "application/vnd.github.v3.diff",
+          "User-Agent" => DiscourseAi::AiBot::USER_AGENT,
+        },
+      ).to_return(status: 200, body: diff)
+
+      result = tool.invoke
+      expect(result[:type]).to eq("pull_request")
+      expect(result[:diff]).to eq(diff)
+      expect(result[:pr_info][:title]).to eq("Test PR from deleted fork")
+      expect(result[:pr_info][:author]).to be_nil
+      expect(result[:pr_info][:target][:repo]).to be_nil
+      expect(result[:error]).to be_nil
+    end
   end
 
   context "with a commit" do

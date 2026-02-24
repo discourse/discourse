@@ -7,7 +7,7 @@ module DiscourseGamification
       end
 
       def scorable_category_list
-        SiteSetting.scorable_categories.split("|").map { _1.to_i }.join(", ")
+        SiteSetting.scorable_categories.split("|").map { it.to_i }.join(", ")
       end
     end
   end

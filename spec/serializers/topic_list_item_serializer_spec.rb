@@ -97,6 +97,17 @@ RSpec.describe TopicListItemSerializer do
 
       expect(json[:posters].length).to eq(1)
     end
+
+    it "uses slug_for_url for tags with empty slugs" do
+      numeric_tag = Fabricate(:tag, name: "7")
+      expect(numeric_tag.slug).to eq("")
+
+      topic.tags << numeric_tag
+      json = TopicListItemSerializer.new(topic, scope: Guardian.new(admin), root: false).as_json
+      entry = json[:tags].find { |t| t[:id] == numeric_tag.id }
+
+      expect(entry[:slug]).to eq("#{numeric_tag.id}-tag")
+    end
   end
 
   describe "correctly serializes op_likes data" do
@@ -212,6 +223,78 @@ RSpec.describe TopicListItemSerializer do
     it "serializes op_like_count" do
       json = TopicListItemSerializer.new(topic, scope: Guardian.new(moderator), root: false).as_json
       expect(json[:op_like_count]).to eq(first_post.like_count)
+    end
+  end
+
+  describe "tag localization" do
+    fab!(:user)
+    fab!(:localized_tag, :tag) { Fabricate(:tag, name: "cats", locale: "en") }
+    fab!(:localization) do
+      Fabricate(
+        :tag_localization,
+        tag: localized_tag,
+        locale: "ja",
+        name: "猫",
+        description: "猫についてのタグです",
+      )
+    end
+
+    before do
+      SiteSetting.tagging_enabled = true
+      topic.tags << localized_tag
+    end
+
+    def serialize
+      TopicListItemSerializer.new(topic, scope: Guardian.new(user), root: false).as_json
+    end
+
+    it "returns localized tag name when conditions met" do
+      SiteSetting.content_localization_enabled = true
+      localized_tag.update!(locale: "en")
+      I18n.locale = "ja"
+
+      expect(serialize[:tags]).to include(
+        { id: localized_tag.id, name: "猫", slug: localized_tag.slug },
+      )
+    end
+
+    it "returns original tag name when localization disabled" do
+      SiteSetting.content_localization_enabled = false
+      I18n.locale = "ja"
+
+      expect(serialize[:tags]).to include(
+        { id: localized_tag.id, name: "cats", slug: localized_tag.slug },
+      )
+    end
+
+    it "returns original tag name when tag has no locale" do
+      SiteSetting.content_localization_enabled = true
+      localized_tag.update!(locale: nil)
+      I18n.locale = "ja"
+
+      expect(serialize[:tags]).to include(
+        { id: localized_tag.id, name: "cats", slug: localized_tag.slug },
+      )
+    end
+
+    it "uses localized tag name as key in tags_descriptions" do
+      SiteSetting.content_localization_enabled = true
+      localized_tag.update!(locale: "en", description: "A tag about cats")
+      I18n.locale = "ja"
+
+      expect(serialize[:tags_descriptions]).to have_key("猫")
+      expect(serialize[:tags_descriptions]).not_to have_key("cats")
+      expect(serialize[:tags_descriptions]["猫"]).to eq("猫についてのタグです")
+    end
+
+    it "uses original tag name as key when localization disabled" do
+      SiteSetting.content_localization_enabled = false
+      localized_tag.update!(description: "A tag about cats")
+      I18n.locale = "ja"
+
+      expect(serialize[:tags_descriptions]).to have_key("cats")
+      expect(serialize[:tags_descriptions]).not_to have_key("猫")
+      expect(serialize[:tags_descriptions]["cats"]).to eq("A tag about cats")
     end
   end
 

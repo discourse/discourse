@@ -181,7 +181,7 @@
       background: #ff9;
 
       @media (prefers-reduced-motion: no-preference) {
-        animation: blink 0.5s infinite;
+        animation: rewind-invites-blink 0.5s infinite;
       }
     }
 
@@ -191,7 +191,7 @@
     }
   }
 
-  @keyframes blink {
+  @keyframes rewind-invites-blink {
     0%,
     100% {
       background: #ff0;

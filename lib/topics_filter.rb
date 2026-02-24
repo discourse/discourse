@@ -107,7 +107,7 @@ class TopicsFilter
       when "views-max"
         filter_by_number_of_views(max: filter_values)
       else
-        if custom_filter = DiscoursePluginRegistry.custom_filter_mappings.find { _1.key?(filter) }
+        if custom_filter = DiscoursePluginRegistry.custom_filter_mappings.find { it.key?(filter) }
           @scope = custom_filter[filter].call(@scope, filter_values, @guardian) || @scope
         end
       end
@@ -577,17 +577,21 @@ class TopicsFilter
               SELECT 1
               FROM posts pg#{idx}
               JOIN group_users gu#{idx} ON gu#{idx}.user_id = pg#{idx}.user_id
-              WHERE pg#{idx}.topic_id = topics.id AND gu#{idx}.group_id = #{gid} #{whisper_condition("pg#{idx}")}
+              WHERE pg#{idx}.topic_id = topics.id
+              AND pg#{idx}.deleted_at IS NULL
+              AND gu#{idx}.group_id = #{gid}
+              #{whisper_condition("pg#{idx}")}
             )
           SQL
       else
-        @scope = @scope.where(<<~SQL, group_ids: group_ids)
+        @scope = @scope.where(<<~SQL, group_ids:)
               topics.id IN (
                 SELECT DISTINCT p.topic_id
                 FROM posts p
                 JOIN group_users gu ON gu.user_id = p.user_id
                 WHERE gu.group_id IN (:group_ids)
-                  #{whisper_condition("p")}
+                AND p.deleted_at IS NULL
+                #{whisper_condition("p")}
               )
             SQL
       end
@@ -847,25 +851,15 @@ class TopicsFilter
     category_ids
   end
 
-  # Accepts an array of tag names and returns an array of tag ids and the tag ids of aliases for the tag names which the user can see.
-  # If a block is given, it will be called with the tag ids and alias tag ids as arguments.
+  # Accepts an array of tag names and returns an array of resolved tag IDs.
+  # Synonym tags are resolved to their target tag ID.
   def tag_ids_from_tag_names(tag_names)
-    tag_ids, alias_tag_ids =
-      DiscourseTagging
-        .filter_visible(Tag, @guardian)
-        .where_name(tag_names)
-        .pluck(:id, :target_tag_id)
-        .transpose
-
-    tag_ids ||= []
-    alias_tag_ids ||= []
-
-    yield(tag_ids, alias_tag_ids) if block_given?
-
-    all_tag_ids = tag_ids.concat(alias_tag_ids)
-    all_tag_ids.compact!
-    all_tag_ids.uniq!
-    all_tag_ids
+    DiscourseTagging
+      .filter_visible(Tag, @guardian)
+      .where_name(tag_names)
+      .pluck(:id, :target_tag_id)
+      .map { |id, target_id| target_id || id }
+      .uniq
   end
 
   def filter_tag_groups(values:)
@@ -901,7 +895,7 @@ class TopicsFilter
       break if key_prefix && key_prefix != "-"
 
       value.scan(
-        /\A(?<tag_names>([\p{N}\p{L}\-_]+)(?<delimiter>[,+])?([\p{N}\p{L}\-]+)?(\k<delimiter>[\p{N}\p{L}\-]+)*)\z/,
+        /\A(?<tag_names>([\p{N}\p{L}\-_]+)(?<delimiter>[,+])?([\p{N}\p{L}\-_]+)?(\k<delimiter>[\p{N}\p{L}\-_]+)*)\z/,
       ) do |tag_names, delimiter|
         match_all =
           if delimiter == ","

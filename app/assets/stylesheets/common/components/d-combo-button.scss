@@ -1,0 +1,20 @@
+.d-combo-button.--has-menu {
+  display: inline-flex;
+
+  .d-combo-button-button {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right-color: transparent;
+  }
+
+  .d-combo-button-menu {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    border-left-color: transparent;
+    margin-left: 0.1em; // more flexible than border, and scales with UI zoom
+
+    &.fk-d-menu__trigger .d-icon {
+      font-size: var(--font-down-1);
+    }
+  }
+}

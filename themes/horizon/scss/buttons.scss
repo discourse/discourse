@@ -1,3 +1,5 @@
+@use "lib/viewport";
+
 :root {
   --d-button-border-radius: 6.25rem;
 }
@@ -99,5 +101,15 @@
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
     bottom: var(--main-grid-gap);
+  }
+}
+
+.d-combo-button:hover {
+  border-radius: var(--d-button-border-radius);
+  box-shadow: 0 0 0 4px var(--button-box-shadow);
+
+  button:hover {
+    // remove duplicate shadow from child button
+    box-shadow: none;
   }
 }

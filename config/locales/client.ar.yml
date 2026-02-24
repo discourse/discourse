@@ -6,6 +6,10 @@
 
 ar:
   js:
+    carousel:
+      go_to_slide: "الانتقال إلى الشريحة %{index}"
+      previous: "الشريحة السابقة"
+      next: "الشريحة التالية"
     number:
       format:
         separator: "."
@@ -399,6 +403,9 @@ ar:
     skip_to_main_content: "تخطي إلى المحتوى الرئيسي"
     skip_links_label: "تخطي روابط التنقل"
     skip_to_post: "تخطي للمنشور %{post_number}"
+    skip_to_where_you_left_off: "الانتقال إلى حيث توقفت (المنشور %{post_number})"
+    skip_to_where_you_left_off_last: "الانتقال إلى حيث توقفت (الرد الأخير، المنشور %{post_number})"
+    skip_to_last_reply: "الانتقال إلى الرد الأخير"
     skip_to_top: "تخطي إلى الأعلى"
     skip_user_nav: "التخطي إلى محتوى الملف الشخصي"
     emails_are_disabled: "أوقف أحد المسؤولين البريد الصادر بشكلٍٍ عام. ولن يتم إرسال إشعارات عبر البريد الإلكتروني أيًا كان نوعها."
@@ -535,6 +542,10 @@ ar:
       title: "موضوعات جديدة وغير مقروءة"
       pill: "مُقترح"
       pm_title: "الرسائل المقترحة"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "نسخ الرابط"
+        copied_to_clipboard: "تم نسخ الرابط إلى الحافظة!"
     about:
       edit: "تعديل هذه الصفحة"
       simple_title: "نبذة"
@@ -856,6 +867,8 @@ ar:
     review:
       show_more: "عرض المزيد"
       show_less: "عرض أقل"
+      back_to_queue: "الرجوع إلى قائمة الانتظار"
+      editing_post: "جارٍ تحرير المنشور..."
       order_by: "الترتيب حسب"
       date_filter: "تم نشره بين"
       in_reply_to: "ردًا على"
@@ -1034,10 +1047,13 @@ ar:
           created_at: "تاريخ الإنشاء"
           created_at_asc: "تاريخ الإنشاء (عكسي)"
         priority:
+          title: "أولوية منخفضة"
           any: "(أي)"
           low: "منخفضة"
           medium: "متوسطة"
           high: "عالية"
+        active_filters: "عوامل التصفية النشطة:"
+        clear_filter: "إزالة %{filter}"
       conversation:
         view_full: "عرض المحادثة الكاملة"
       scores:
@@ -1628,6 +1644,7 @@ ar:
         many: "الفئات (%{count} أكثر)…"
         other: "الفئات (%{count} أكثر)…"
     ip_lookup:
+      title: عنوان IP
       hostname: اسم المضيف
       location: الموقع الجغرافي
       location_not_found: (غير معروف)
@@ -1673,7 +1690,9 @@ ar:
       private_message: "رسالة"
       private_messages: "الرسائل"
       upcoming_changes:
+        title: "التغييرات القادمة"
         for_user:
+          upcoming_change: "التغيير القادم"
           enabled: "مفعَّلة؟"
       user_notifications:
         filters:
@@ -2399,6 +2418,7 @@ ar:
         redeemed_tab_with_count: "تم استردادها (%{count})"
         invited_via: "دعوة"
         invited_via_link: "رابط %{key} (تم استرداد %{count}/%{max})"
+        generating_link: "جارٍ إنشاء الرابط..."
         groups: "المجموعات"
         topic: "الموضوع"
         sent: "تاريخ الإنشاء/آخر إرسال"
@@ -3358,8 +3378,17 @@ ar:
       ulist_title: "قائمة منقَّطة"
       list_item: "إدراج عنصر"
       toggle_direction: "تبديل الاتجاه"
+      apply_wrap_title: "تطبيق عنصر الاحتواء"
       wrap_modal:
+        title: "تحرير عنصر الاحتواء"
+        name_label: "اسم عنصر الاحتواء"
+        attributes_label: "السمات"
+        add_attribute: "إضافة سمة"
+        remove_attribute: "إزالة السمة"
         apply: "تطبيق"
+        unwrap: "إزالة عنصر الاحتواء"
+        no_attributes: "لم تتم إضافة أي سمات بعد."
+      wrap_text: "إضافة عنصر احتواء للمحتوى"
       help: "مساعدة تحرير Markdown"
       collapse: "صغّر لوحة الإنشاء"
       open: "افتح لوحة الإنشاء"
@@ -3426,7 +3455,14 @@ ar:
         zoom_out: "تقليل حجم الصورة"
         zoom_in: "زيادة حجم الصورة"
         remove: "إزالة الصورة"
+        add_to_grid: "إضافة إلى الشبكة"
+        move_outside_grid: "نقل خارج الشبكة"
       image: "صورة"
+      grid_label: "سيتم عرض ذلك على شكل شبكة"
+      grid_mode_grid: "شبكة"
+      grid_mode_carousel: "دائرة دوَّارة"
+      grid_mode_title: "اختيار %{mode} ليكون نمط معرض الصور"
+      remove_grid: "إزالة الشبكة"
       image_scale_button: "تغيير حجم الصورة إلى %{percent}%"
       delete_image_button: حذف الصورة
       toggle_image_grid: تشغيل التخطيط الشبكي للصور
@@ -3436,6 +3472,7 @@ ar:
         remove: "إزالة الرابط"
         visit: "فتح الرابط في تبويب جديد"
         link_copied: "تم نسخ الرابط!"
+      unsupported_token: "لا يدعم محرر النص المنسق جميع الميزات المستخدمة في هذا المنشور؛ مما يحولك إلى محرر Markdown."
     notifications:
       tooltip:
         regular:
@@ -3545,6 +3582,12 @@ ar:
       votes_released: "%{description} - اكتمل"
       new_features: "تتوفَّر ميزات جديدة!"
       admin_problems: "نصيحة جديدة بشأن لوحة معلومات موقعك"
+      upcoming_changes:
+        available:
+          title: "التغييرات القادمة"
+          description: "\"%{changeName}\" متاح للمعاينة"
+        automatically_promoted:
+          title: "التغييرات القادمة"
       dismiss_confirmation:
         body:
           default:
@@ -3865,6 +3908,13 @@ ar:
           few: "حذف الموضوعات"
           many: "حذف الموضوعات"
           other: "حذف الموضوعات"
+        delete_posts_count:
+          zero: "حذف المنشور"
+          one: "حذف المنشور"
+          two: "حذف المنشورين"
+          few: "حذف المنشورات"
+          many: "حذف المنشورات"
+          other: "حذف المنشورات"
         dismiss: "تجاهل"
         dismiss_read: "تجاهل كل الموضوعات غير المقروءة"
         dismiss_read_with_selected:
@@ -3963,8 +4013,16 @@ ar:
           few: "التقدُّم: <strong>%{count}</strong> موضوعات"
           many: "التقدُّم: <strong>%{count}</strong> موضوعًا"
           other: "التقدُّم: <strong>%{count}</strong> موضوع"
+        notify: "إخطار المستخدمين بهذا التغيير."
         performing: "جارٍ تنفيذ عمليات جماعية، يُرجى الانتظار..."
         completed: "تم تنفيذ العمليات المجمعة بنجاح!"
+        error_topic_count:
+          zero: "%{count} موضوعات"
+          one: "موضوع واحد"
+          two: "موضوعان"
+          few: "%{count} موضوعات"
+          many: "%{count} موضوعًا"
+          other: "%{count} موضوع"
       none:
         unread: "ليس لديك أي موضوع غير مقروء."
         unseen: "ليس لديك موضوعات غير مقروءة."
@@ -3982,6 +4040,7 @@ ar:
           unread: "لا يوجد محتوى غير مقروء… إنجاز رائع!"
           new_new: "لا جديد في الوقت الحالي... تفقد الصفحة مجددًا قريبًا!"
           new: "لا جديد في الوقت الحالي... تفقد الصفحة مجددًا قريبًا!"
+          generic: "لا يوجد شيء لرؤيته هنا... تحقق مرة أخرى في وقت لاحق!"
     topic_bulk_actions:
       dismiss:
         name: "تجاهل"
@@ -4176,6 +4235,8 @@ ar:
           12_hours: "12 ساعة"
           24_hours: "24 ساعة"
           custom: "المدة المخصَّصة"
+      slow_mode_notice:
+        duration: "يُرجى الانتظار لمدة %{duration} بين المنشورات في هذا الموضوع"
       topic_status_update:
         title: "مؤقِّت الموضوع"
         save: "تعيين المؤقِّت"
@@ -4205,6 +4266,8 @@ ar:
         title: "إغلاق الموضوع تلقائيًا بعد المنشور الأخير"
       auto_delete:
         title: "حذف الموضوع تلقائيًا"
+      auto_delete_after_last_post:
+        title: "حذف الموضوع تلقائيًا بعد المنشور الأخير"
       auto_bump:
         title: "رفع الموضوع تلقائيًا"
       reminder:
@@ -4216,6 +4279,7 @@ ar:
         auto_close: "سيتم غلق هذا الموضوع تلقائيًا بعد %{timeLeft}."
         auto_publish_to_category: "سيتم نشر هذا الموضوع في <a href=%{categoryUrl}>#%{categoryName}</a>بعد %{timeLeft}."
         auto_close_after_last_post: "سيتم إغلاق هذا الموضوع بعد مرور %{duration} على آخر رد فيه."
+        auto_delete_after_last_post: "سيتم حذف هذا الموضوع بعد مرور %{duration} على آخر رد فيه."
         auto_delete: "سيتم حذف هذا الموضوع تلقائيًا بعد %{timeLeft}."
         auto_bump: "سيتم رفع هذا الموضوع تلقائيًا بعد %{timeLeft}."
         auto_reminder: "سيتم تذكيرك بهذا الموضوع بعد %{timeLeft}."
@@ -4319,6 +4383,8 @@ ar:
       reply:
         title: "الرد"
         help: "ابدأ في كتابة رد على هذه الموضوع"
+      footer_buttons:
+        region_label: "الإجراءات المتعلقة بالموضوع"
       share:
         title: "مشاركة الموضوع"
         extended_title: "مشاركة رابط"
@@ -4555,6 +4621,8 @@ ar:
         clear_all: "مسح الكل"
         actions: "الإجراءات الجماعية"
     post:
+      accessible_heading: "منشور بواسطة %{username} في %{date}"
+      heading_anchor: "رابط العنوان"
       confirm_delete: "هل تريد بالتأكيد حذف هذا المنشور؟"
       quote_reply: "اقتباس"
       quote_reply_shortcut: "اقتباس (أو اضغط على q)"
@@ -4578,8 +4646,12 @@ ar:
       deleted_by_author_simple: "(تم حذف المنشور بواسطة الكاتب)"
       collapse: "طي"
       load_more_replies: "تحميل المزيد من الردود"
+      load_more_posts_above: "تحميل المزيد من المنشورات بالأعلى"
+      load_more_posts_below: "تحميل المزيد من المنشورات بالأسفل"
       sr_collapse_replies: "طي الردود المضمَّنة"
       sr_load_more_replies: "تحميل المزيد من الردود المضمنة"
+      loading_more_posts_above: "جارٍ تحميل المزيد من المنشورات بالأعلى..."
+      loading_more_posts_below: "جارٍ تحميل المزيد من المنشورات بالأسفل..."
       loading_complete: "اكتمل التحميل"
       sr_date: "تاريخ المنشور"
       sr_expand_replies:
@@ -4675,6 +4747,7 @@ ar:
           edit: "تعديل"
           delete: "حذف"
         add: "أضف ترجمة جديدة"
+        manage: "إدارة الترجمات (الموجودة: %{count})"
         view:
           zero: "عرض %{count} من لغات الترجمة"
           one: "عرض لغة ترجمة واحدة %{count}"
@@ -4687,8 +4760,10 @@ ar:
           confirm_delete: "هل أنت متأكد أنك تريد حذف الترجمات للغة '%{languageCode}'؟"
         success: "تم تحديث الترجمات بنجاح"
         post_language_selector:
+          title: "لغة المنشور"
           none: "لا يوجد"
         edit_warning:
+          message: "هذا منشور مترجم.<br><br>هل تريد تعديل المنشور الأصلي باللغة %{language} أم تعديل هذه الترجمة المحددة؟"
           action_original: "تعديل المنشور الأصلي"
           action_translation: "تعديل هذه الترجمة"
       errors:
@@ -4941,6 +5016,7 @@ ar:
       general: "عام"
       settings: "الإعدادات"
       advanced: "متقدمة"
+      show_advanced: "الإعدادات المتقدمة"
       topic_template: "قالب"
       tags: "الوسوم"
       localizations: "التوطينات"
@@ -4970,9 +5046,15 @@ ar:
       create: "فئة جديدة"
       create_long: "إنشاء فئة جديدة"
       save: "احفظ الفئة"
+      slug: "مسار الفئة"
+      parent: "الفئة الرئيسية"
       slug_placeholder: "(اختياري) كلمات مفصولة بشرطة لعنوان URL"
       creation_error: حدث خطأ في أثناء إنشاء الفئة.
       save_error: حدث خطأ في أثناء حفظ الفئة.
+      errors:
+        self_lockout: "أنت على وشك تغيير أذونات الفئة بطريقة ستؤدي إلى إزالة صلاحية وصولك. هل أنت متأكد من رغبتك في المتابعة؟"
+      validations:
+        icon_required: "تحديد أيقونة."
       name: "اسم الفئة"
       untitled: "فئة بلا عنوان"
       description: "الوصف"
@@ -4984,6 +5066,7 @@ ar:
       style: "النمط"
       icon: "الأيقونة"
       emoji: "الرمز التعبيري"
+      select_emoji: "اختيار رمز تعبيري"
       background_color: "اللون"
       foreground_color: "لون النص"
       color_validations:
@@ -5001,6 +5084,7 @@ ar:
           emoji: "الرمز التعبيري"
       color_used: "اللون قيد الاستخدام"
       predefined_colors: "خيارات الألوان المحدَّدة مسبقًا"
+      name_placeholder: "من المستحسن استخدام كلمة أو كلمتين"
       color_placeholder: "لون الويب"
       delete_confirm: "هل تريد بالتأكيد حذف هذه الفئة؟"
       delete_error: "حدث خطأ في أثناء حذف هذه الفئة"
@@ -5017,10 +5101,9 @@ ar:
         reply: "الرد"
         create: "إنشاء"
         no_groups_selected: "لم يتم منح إذن الوصول لأي مجموعة؛ لذا فإن هذه الفئة ستكون مرئية لفريق العمل فقط."
-        everyone_full_access: 'هذه الفئة عامة، ويمكن للجميع رؤية المنشورات والرد عليها وإنشائها. لتقييد الأذونات، عليك إزالة واحد أو أكثر من الأذونات الممنوحة لمجموعة "الجميع".'
+        specific_groups_have_access: "هذه الفئة خاصة، ويمكن للمجموعات المختارة فقط رؤية المنشورات والرد عليها وإنشائها."
         toggle_reply: "إذن تفعيل الرد"
         toggle_full: "إذن تفعيل الإنشاء"
-        inherited: 'هذا الإذن مكتسب من "الجميع"'
       uncategorized_security_warning: "هذه الفئة خاصة. وتهدف إلى جمع الموضوعات التي لا تنتمي إلى أي فئة، ولا يمكنك تعيين إعدادات حماية لها."
       uncategorized_general_warning: 'هذه الفئة خاصة. ويتم استخدامها كفئة افتراضية للموضوعات الجديدة التي لا تنتمي إلى أي فئة. إذا أردت منع هذا السلوك وفرض تحديد الفئة، <a href="%{settingLink}">يُرجى إيقاف هذا الإعداد من هنا</a>. إذا أردت تغيير اسم الفئة أو وصفها، فانتقل إلى <a href="%{customizeLink}">التخصيص/المحتوى النصي</a>.'
       pending_permission_change_alert: "لم تُضف المجموعة %{group} إلى هذه الفئة، انقر على هذا الزر لإضافتها."
@@ -6975,6 +7058,7 @@ ar:
         save: "حفظ"
         cancel: "إلغاء"
         continue: "متابعة"
+        copy_key: "نسخ"
         back: "العودة إلى مفاتيح API"
         revoke: "إلغاء"
         undo_revoke: "التراجع عن الإلغاء"

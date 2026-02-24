@@ -1968,6 +1968,9 @@ ca:
         choose_new_tags: "Trieu noves etiquetes per a aquests temes:"
         choose_append_tags: "Trieu noves etiquetes a afegir per a aquests temes:"
         changed_tags: "Les etiquetes d'aquests temes han estat canviades."
+        error_topic_count:
+          one: "%{count} tema"
+          other: "%{count} temes"
       none:
         unread: "No teniu cap tema no llegit."
         new: "No teniu cap tema nou."
@@ -3349,6 +3352,7 @@ ca:
         save: "Desa"
         cancel: "Cancel·la"
         continue: "Continua"
+        copy_key: "Còpia"
         revoke: "Revoca"
         revoked: "Revocat"
       api:

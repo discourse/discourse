@@ -9,7 +9,7 @@ describe "Admin Customize Form Templates", type: :system do
   fab!(:category)
 
   before do
-    SiteSetting.experimental_form_templates = true
+    SiteSetting.enable_form_templates = true
     sign_in(admin)
   end
 

@@ -160,84 +160,45 @@ RSpec.describe TopicsBulkAction do
     fab!(:first_post) { Fabricate(:post, topic: topic) }
 
     describe "silent option" do
-      fab!(:topic_watcher, :user)
-      fab!(:category_watcher, :user)
       fab!(:admin)
 
       before do
         Jobs.run_immediately!
+        PostActionNotifier.enable
+        SiteSetting.create_revision_on_bulk_topic_moves = true
         TopicUser.change(
-          topic_watcher,
+          Fabricate(:user),
           topic.id,
           notification_level: TopicUser.notification_levels[:watching],
         )
         CategoryUser.set_notification_level_for_category(
-          category_watcher,
+          Fabricate(:user),
           CategoryUser.notification_levels[:watching_first_post],
           category.id,
         )
       end
 
-      shared_examples "silent option suppresses notifications" do
-        it "notifies topic watchers when silent is false" do
-          expect do
-            TopicsBulkAction.new(
-              admin,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-            ).perform!
-          end.to change { Notification.where(user: topic_watcher).count }
-        end
-
-        it "does not notify topic watchers when silent is true" do
-          expect do
-            TopicsBulkAction.new(
-              admin,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-              silent: true,
-            ).perform!
-          end.to not_change { Notification.where(user: topic_watcher).count }
-        end
-
-        it "notifies category watchers when silent is false" do
-          expect do
-            TopicsBulkAction.new(
-              admin,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-            ).perform!
-          end.to change { Notification.where(user: category_watcher).count }.by(1)
-
-          expect(Notification.where(user: category_watcher).last.notification_type).to eq(
-            Notification.types[:watching_first_post],
-          )
-        end
-
-        it "does not notify category watchers when silent is true" do
-          expect do
-            TopicsBulkAction.new(
-              admin,
-              [topic.id],
-              type: "change_category",
-              category_id: category.id,
-              silent: true,
-            ).perform!
-          end.to not_change { Notification.where(user: category_watcher).count }
-        end
+      it "does not create any notifications when silent is true" do
+        expect do
+          TopicsBulkAction.new(
+            admin,
+            [topic.id],
+            type: "change_category",
+            category_id: category.id,
+            silent: true,
+          ).perform!
+        end.to not_change { Notification.count }
       end
 
-      context "when create_revision_on_bulk_topic_moves is enabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = true }
-        include_examples "silent option suppresses notifications"
-      end
-
-      context "when create_revision_on_bulk_topic_moves is disabled" do
-        before { SiteSetting.create_revision_on_bulk_topic_moves = false }
-        include_examples "silent option suppresses notifications"
+      it "creates notifications when silent is false" do
+        expect do
+          TopicsBulkAction.new(
+            admin,
+            [topic.id],
+            type: "change_category",
+            category_id: category.id,
+          ).perform!
+        end.to change { Notification.count }
       end
     end
 
@@ -310,6 +271,103 @@ RSpec.describe TopicsBulkAction do
 
         expect(topic_ids).to eq([])
         expect(topic.reload.category).to eq(original_category)
+      end
+    end
+
+    context "when destination category does not allow the topic's tags" do
+      fab!(:destination_category, :category)
+      fab!(:other_tag) { Fabricate(:tag, name: "other-tag") }
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:source_category) { Fabricate(:category, tags: [restricted_tag]) }
+      fab!(:admin)
+      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [restricted_tag]) }
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+
+      before { destination_category.update!(tags: [other_tag]) }
+
+      it "does not change category" do
+        original_category = topic_with_tag.category
+
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([])
+        expect(topic_with_tag.reload.category).to eq(original_category)
+      end
+
+      it "logs a warning with error details" do
+        Rails.logger.expects(:warn).with(includes("restricted-tag"))
+
+        TopicsBulkAction.new(
+          admin,
+          [topic_with_tag.id],
+          type: "change_category",
+          category_id: destination_category.id,
+        ).perform!
+      end
+
+      it "exposes errors via attr_reader" do
+        operator =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          )
+        operator.perform!
+
+        expect(operator.errors).to be_present
+        expect(operator.errors.values.sum).to eq(1)
+      end
+    end
+
+    context "when destination category has the same tag group as source" do
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:tag_group) { Fabricate(:tag_group, tags: [restricted_tag]) }
+      fab!(:source_category) { Fabricate(:category, tag_groups: [tag_group]) }
+      fab!(:destination_category) { Fabricate(:category, tag_groups: [tag_group]) }
+      fab!(:admin)
+      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [restricted_tag]) }
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+
+      it "changes category successfully" do
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([topic_with_tag.id])
+        expect(topic_with_tag.reload.category).to eq(destination_category)
+      end
+    end
+
+    context "when destination category has allow_global_tags enabled" do
+      fab!(:global_tag) { Fabricate(:tag, name: "global-tag") }
+      fab!(:source_category, :category)
+      fab!(:destination_category) { Fabricate(:category, allow_global_tags: true) }
+      fab!(:admin)
+      fab!(:topic_with_tag) { Fabricate(:topic, category: source_category, tags: [global_tag]) }
+      fab!(:first_post_for_tagged_topic) { Fabricate(:post, topic: topic_with_tag) }
+
+      it "changes category successfully for unrestricted tags" do
+        topic_ids =
+          TopicsBulkAction.new(
+            admin,
+            [topic_with_tag.id],
+            type: "change_category",
+            category_id: destination_category.id,
+          ).perform!
+
+        expect(topic_ids).to eq([topic_with_tag.id])
+        expect(topic_with_tag.reload.category).to eq(destination_category)
       end
     end
   end
@@ -446,6 +504,7 @@ RSpec.describe TopicsBulkAction do
   end
 
   describe "change_tags" do
+    fab!(:first_post) { Fabricate(:post, topic:) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
 
@@ -480,6 +539,27 @@ RSpec.describe TopicsBulkAction do
       end
     end
 
+    context "when tagging fails due to tag restrictions" do
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:tag_group) do
+        Fabricate(:tag_group, tags: [restricted_tag], permissions: { staff: :full })
+      end
+
+      it "does not include the topic in changed_ids and logs a warning" do
+        Rails.logger.expects(:warn).with(includes("restricted-tag"))
+
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "change_tags",
+            tag_ids: [restricted_tag.id],
+          ).perform!
+
+        expect(topic_ids).to eq([])
+      end
+    end
+
     context "when the user can't edit the topic" do
       fab!(:tag3, :tag)
 
@@ -498,9 +578,30 @@ RSpec.describe TopicsBulkAction do
         expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
     end
+
+    it "does not send notifications" do
+      fab_tag3 = Fabricate(:tag)
+      topic_watcher = Fabricate(:user)
+      Jobs.run_immediately!
+      TopicUser.change(
+        topic_watcher,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+
+      expect do
+        TopicsBulkAction.new(
+          Fabricate(:admin),
+          [topic.id],
+          type: "change_tags",
+          tag_ids: [fab_tag3.id],
+        ).perform!
+      end.to not_change { Notification.where(user: topic_watcher).count }
+    end
   end
 
   describe "append_tags" do
+    fab!(:first_post) { Fabricate(:post, topic:) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
     fab!(:tag3, :tag)
@@ -525,11 +626,33 @@ RSpec.describe TopicsBulkAction do
         expect(topic.reload.tags).to contain_exactly(tag1, tag2, tag3)
       end
 
-      it "keeps existing tags when appending empty array" do
+      it "is a no-op when appending empty array" do
         topic_ids =
           TopicsBulkAction.new(topic.user, [topic.id], type: "append_tags", tag_ids: []).perform!
 
-        expect(topic_ids).to eq([topic.id])
+        expect(topic_ids).to eq([])
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
+      end
+    end
+
+    context "when tagging fails due to tag restrictions" do
+      fab!(:restricted_tag) { Fabricate(:tag, name: "restricted-tag") }
+      fab!(:tag_group) do
+        Fabricate(:tag_group, tags: [restricted_tag], permissions: { staff: :full })
+      end
+
+      it "does not include the topic in changed_ids and logs a warning" do
+        Rails.logger.expects(:warn).with(includes("restricted-tag"))
+
+        topic_ids =
+          TopicsBulkAction.new(
+            topic.user,
+            [topic.id],
+            type: "append_tags",
+            tag_ids: [restricted_tag.id],
+          ).perform!
+
+        expect(topic_ids).to eq([])
         expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
     end
@@ -550,17 +673,36 @@ RSpec.describe TopicsBulkAction do
         expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
     end
+
+    it "does not send notifications" do
+      topic_watcher = Fabricate(:user)
+      Jobs.run_immediately!
+      TopicUser.change(
+        topic_watcher,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+
+      expect do
+        TopicsBulkAction.new(
+          Fabricate(:admin),
+          [topic.id],
+          type: "append_tags",
+          tag_ids: [tag3.id],
+        ).perform!
+      end.to not_change { Notification.where(user: topic_watcher).count }
+    end
   end
 
   describe "remove_tags" do
+    fab!(:first_post) { Fabricate(:post, topic:) }
     fab!(:tag1, :tag)
     fab!(:tag2, :tag)
 
     before do
       SiteSetting.tagging_enabled = true
       SiteSetting.tag_topic_allowed_groups = Group::AUTO_GROUPS[:trust_level_0]
-      TopicTag.create!(topic: topic, tag: tag1)
-      TopicTag.create!(topic: topic, tag: tag2)
+      topic.tags = [tag1, tag2]
     end
 
     context "when the user can edit the topic" do
@@ -582,8 +724,22 @@ RSpec.describe TopicsBulkAction do
         topic_ids = TopicsBulkAction.new(topic.user, [topic.id], type: "remove_tags").perform!
 
         expect(topic_ids).to eq([])
-        expect(topic.reload.tags.map(&:name)).to contain_exactly(tag1.name, tag2.name)
+        expect(topic.reload.tags).to contain_exactly(tag1, tag2)
       end
+    end
+
+    it "does not send notifications" do
+      topic_watcher = Fabricate(:user)
+      Jobs.run_immediately!
+      TopicUser.change(
+        topic_watcher,
+        topic.id,
+        notification_level: TopicUser.notification_levels[:watching],
+      )
+
+      expect do
+        TopicsBulkAction.new(Fabricate(:admin), [topic.id], type: "remove_tags").perform!
+      end.to not_change { Notification.where(user: topic_watcher).count }
     end
   end
 end

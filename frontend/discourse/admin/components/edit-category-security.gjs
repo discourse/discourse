@@ -135,7 +135,10 @@ export default class EditCategorySecurity extends buildCategoryPanel(
 
           <@form.Alert @type="warning">
             {{#if this.everyoneGrantedFull}}
-              {{i18n "category.permissions.everyone_full_access"}}
+              {{i18n
+                "category.permissions.everyone_full_access"
+                everyone_group=this.everyonePermission.group_name
+              }}
             {{else}}
               {{i18n "category.permissions.specific_groups_have_access"}}
             {{/if}}

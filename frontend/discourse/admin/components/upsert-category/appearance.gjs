@@ -1,18 +1,19 @@
 import Component from "@glimmer/component";
-import { cached } from "@glimmer/tracking";
-import { hash } from "@ember/helper";
+import { fn, hash } from "@ember/helper";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import UppyImageUploader from "discourse/components/uppy-image-uploader";
+import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { CATEGORY_TEXT_COLORS } from "discourse/lib/constants";
 import { applyMutableValueTransformer } from "discourse/lib/transformer";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategoryAppearance extends Component {
-  @service siteSettings;
+  @service site;
 
   get isDefaultSortOrder() {
     return !this.args.transientData?.sort_order;
@@ -34,7 +35,7 @@ export default class UpsertCategoryAppearance extends Component {
     return this.args.transientData?.uploaded_logo?.url ?? "";
   }
 
-  get logoImageDarkUrl() {
+  get logoDarkImageUrl() {
     return this.args.transientData?.uploaded_logo_dark?.url ?? "";
   }
 
@@ -45,58 +46,14 @@ export default class UpsertCategoryAppearance extends Component {
     return this.args.category.isParent || !parentCategoryId;
   }
 
-  get panelClass() {
-    const isActive = this.args.selectedTab === "images" ? "active" : "";
-    return `edit-category-tab edit-category-tab-images ${isActive}`;
+  @action
+  onUploadDone(field, upload) {
+    this.args.form.set(field, { url: upload.url, id: upload.id });
   }
 
   @action
-  logoUploadDone(upload) {
-    this.args.form.set("uploaded_logo", { url: upload.url, id: upload.id });
-  }
-
-  @action
-  logoUploadDeleted() {
-    this.args.form.set("uploaded_logo", { id: null, url: null });
-  }
-
-  @action
-  logoDarkUploadDone(upload) {
-    this.args.form.set("uploaded_logo_dark", {
-      url: upload.url,
-      id: upload.id,
-    });
-  }
-
-  @action
-  logoDarkUploadDeleted() {
-    this.args.form.set("uploaded_logo_dark", { id: null, url: null });
-  }
-
-  @action
-  backgroundUploadDone(upload) {
-    this.args.form.set("uploaded_background", {
-      url: upload.url,
-      id: upload.id,
-    });
-  }
-
-  @action
-  backgroundUploadDeleted() {
-    this.args.form.set("uploaded_background", { id: null, url: null });
-  }
-
-  @action
-  backgroundDarkUploadDone(upload) {
-    this.args.form.set("uploaded_background_dark", {
-      url: upload.url,
-      id: upload.id,
-    });
-  }
-
-  @action
-  backgroundDarkUploadDeleted() {
-    this.args.form.set("uploaded_background_dark", { id: null, url: null });
+  onUploadDeleted(field) {
+    this.args.form.set(field, { id: null, url: null });
   }
 
   @action
@@ -104,8 +61,7 @@ export default class UpsertCategoryAppearance extends Component {
     this.args.form.set("sort_ascending", value);
   }
 
-  @cached
-  get availableSubcategoryListStyles() {
+  get subcategoryListStyles() {
     return [
       { name: i18n("category.subcategory_list_styles.rows"), value: "rows" },
       {
@@ -127,12 +83,11 @@ export default class UpsertCategoryAppearance extends Component {
     ];
   }
 
-  @cached
   get availableViews() {
-    const views = [
-      { name: i18n("filters.latest.title"), value: "latest" },
-      { name: i18n("filters.top.title"), value: "top" },
-    ];
+    const views = ["hot", "latest", "top"].map((value) => ({
+      name: i18n(`filters.${value}.title`),
+      value,
+    }));
 
     const context = {
       categoryId: this.args.category.id,
@@ -146,24 +101,21 @@ export default class UpsertCategoryAppearance extends Component {
     );
   }
 
-  @cached
-  get availableTopPeriods() {
-    return ["all", "yearly", "quarterly", "monthly", "weekly", "daily"].map(
-      (p) => {
-        return { name: i18n(`filters.top.${p}.title`), value: p };
-      }
-    );
+  get topPeriods() {
+    return this.site.periods.map((value) => ({
+      name: i18n(`filters.top.${value}.title`),
+      value,
+    }));
   }
 
-  @cached
-  get availableListFilters() {
-    return ["all", "none"].map((p) => {
-      return { name: i18n(`category.list_filters.${p}`), value: p };
-    });
+  get listFilters() {
+    return ["all", "none"].map((value) => ({
+      name: i18n(`category.list_filters.${value}`),
+      value,
+    }));
   }
 
-  @cached
-  get availableSorts() {
+  get sortOrders() {
     return applyMutableValueTransformer("category-sort-orders", [
       "likes",
       "op_likes",
@@ -189,7 +141,6 @@ export default class UpsertCategoryAppearance extends Component {
     return sortAscending;
   }
 
-  @cached
   get sortAscendingOptions() {
     return [
       { name: i18n("category.sort_ascending"), value: true },
@@ -198,15 +149,21 @@ export default class UpsertCategoryAppearance extends Component {
   }
 
   <template>
-    <div class={{this.panelClass}}>
+    <@form.Section
+      class={{concatClass
+        "edit-category-tab"
+        "edit-category-tab-images"
+        (if (eq @selectedTab "images") "active")
+      }}
+    >
       <@form.Container
         @title={{i18n "category.logo"}}
         @subtitle={{i18n "category.logo_description"}}
       >
         <UppyImageUploader
           @imageUrl={{this.logoImageUrl}}
-          @onUploadDone={{this.logoUploadDone}}
-          @onUploadDeleted={{this.logoUploadDeleted}}
+          @onUploadDone={{fn this.onUploadDone "uploaded_logo"}}
+          @onUploadDeleted={{fn this.onUploadDeleted "uploaded_logo"}}
           @type="category_logo"
           @id="category-logo-uploader"
           class="no-repeat contain-image"
@@ -218,9 +175,9 @@ export default class UpsertCategoryAppearance extends Component {
         @subtitle={{i18n "category.logo_description"}}
       >
         <UppyImageUploader
-          @imageUrl={{this.logoImageDarkUrl}}
-          @onUploadDone={{this.logoDarkUploadDone}}
-          @onUploadDeleted={{this.logoDarkUploadDeleted}}
+          @imageUrl={{this.logoDarkImageUrl}}
+          @onUploadDone={{fn this.onUploadDone "uploaded_logo_dark"}}
+          @onUploadDeleted={{fn this.onUploadDeleted "uploaded_logo_dark"}}
           @type="category_logo_dark"
           @id="category-dark-logo-uploader"
           class="no-repeat contain-image"
@@ -230,8 +187,8 @@ export default class UpsertCategoryAppearance extends Component {
       <@form.Container @title={{i18n "category.background_image"}}>
         <UppyImageUploader
           @imageUrl={{this.backgroundImageUrl}}
-          @onUploadDone={{this.backgroundUploadDone}}
-          @onUploadDeleted={{this.backgroundUploadDeleted}}
+          @onUploadDone={{fn this.onUploadDone "uploaded_background"}}
+          @onUploadDeleted={{fn this.onUploadDeleted "uploaded_background"}}
           @type="category_background"
           @id="category-background-uploader"
         />
@@ -240,24 +197,24 @@ export default class UpsertCategoryAppearance extends Component {
       <@form.Container @title={{i18n "category.background_image_dark"}}>
         <UppyImageUploader
           @imageUrl={{this.backgroundDarkImageUrl}}
-          @onUploadDone={{this.backgroundDarkUploadDone}}
-          @onUploadDeleted={{this.backgroundDarkUploadDeleted}}
+          @onUploadDone={{fn this.onUploadDone "uploaded_background_dark"}}
+          @onUploadDeleted={{fn
+            this.onUploadDeleted
+            "uploaded_background_dark"
+          }}
           @type="category_background_dark"
           @id="category-dark-background-uploader"
         />
       </@form.Container>
 
-      {{! This field is removed from edit-category-general when the UC is active }}
-      {{#if this.siteSettings.enable_simplified_category_creation}}
-        <@form.Field
-          @name="text_color"
-          @title={{i18n "category.foreground_color"}}
-          @format="large"
-          as |field|
-        >
-          <field.Color @colors={{CATEGORY_TEXT_COLORS}} />
-        </@form.Field>
-      {{/if}}
+      <@form.Field
+        @name="text_color"
+        @title={{i18n "category.foreground_color"}}
+        @format="large"
+        as |field|
+      >
+        <field.Color @colors={{CATEGORY_TEXT_COLORS}} />
+      </@form.Field>
 
       <@form.Field
         @name="default_view"
@@ -267,12 +224,12 @@ export default class UpsertCategoryAppearance extends Component {
       >
         <field.Custom>
           <ComboBox
-            @valueProperty="value"
             @id="category-default-view"
             @content={{this.availableViews}}
             @value={{field.value}}
+            @valueProperty="value"
             @onChange={{field.set}}
-            @options={{hash placementStrategy="absolute"}}
+            @options={{hash none="category.sort_options.default"}}
           />
         </field.Custom>
       </@form.Field>
@@ -285,12 +242,12 @@ export default class UpsertCategoryAppearance extends Component {
       >
         <field.Custom>
           <ComboBox
-            @valueProperty="value"
-            @id="category-default-period"
-            @content={{this.availableTopPeriods}}
+            @id="category-default-top-period"
+            @content={{this.topPeriods}}
             @value={{field.value}}
+            @valueProperty="value"
             @onChange={{field.set}}
-            @options={{hash placementStrategy="absolute"}}
+            @options={{hash none="category.sort_options.default"}}
           />
         </field.Custom>
       </@form.Field>
@@ -303,22 +260,22 @@ export default class UpsertCategoryAppearance extends Component {
       >
         <field.Custom>
           <ComboBox
-            @valueProperty="value"
-            @content={{this.availableSorts}}
+            @id="category-sort-order"
+            @content={{this.sortOrders}}
             @value={{field.value}}
-            @options={{hash none="category.sort_options.default"}}
+            @valueProperty="value"
             @onChange={{field.set}}
+            @options={{hash none="category.sort_options.default"}}
           />
+
           {{#unless this.isDefaultSortOrder}}
             <ComboBox
-              @valueProperty="value"
+              @id="category-sort-ascending"
               @content={{this.sortAscendingOptions}}
               @value={{this.sortAscendingOption}}
-              @options={{hash
-                none="category.sort_options.default"
-                placementStrategy="absolute"
-              }}
+              @valueProperty="value"
               @onChange={{this.onSortAscendingChange}}
+              @options={{hash none="category.sort_options.default"}}
             />
           {{/unless}}
         </field.Custom>
@@ -332,11 +289,12 @@ export default class UpsertCategoryAppearance extends Component {
       >
         <field.Custom>
           <ComboBox
-            @id="category-default-filter"
-            @valueProperty="value"
-            @content={{this.availableListFilters}}
+            @id="category-default-list-filter"
+            @content={{this.listFilters}}
             @value={{field.value}}
+            @valueProperty="value"
             @onChange={{field.set}}
+            @options={{hash none="category.sort_options.default"}}
           />
         </field.Custom>
       </@form.Field>
@@ -360,12 +318,11 @@ export default class UpsertCategoryAppearance extends Component {
           >
             <field.Custom>
               <ComboBox
-                @valueProperty="value"
                 @id="subcategory-list-style"
-                @content={{this.availableSubcategoryListStyles}}
+                @content={{this.subcategoryListStyles}}
                 @value={{field.value}}
+                @valueProperty="value"
                 @onChange={{field.set}}
-                @options={{hash placementStrategy="absolute"}}
               />
             </field.Custom>
           </@form.Field>
@@ -383,8 +340,8 @@ export default class UpsertCategoryAppearance extends Component {
 
       <PluginOutlet
         @name="category-custom-images"
-        @outletArgs={{lazyHash category=@category}}
+        @outletArgs={{lazyHash category=@category form=@form}}
       />
-    </div>
+    </@form.Section>
   </template>
 }

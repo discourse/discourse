@@ -46,6 +46,8 @@ const FIELD_LIST = [
   "email_in",
   "email_in_allow_strangers",
   "mailinglist_mirror",
+  "allowed_tag_groups",
+  "allowed_tags",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
@@ -128,19 +130,27 @@ export default class EditCategoryTabsController extends Controller {
     let hasGeneralTabErrors = false;
 
     if (!data.name) {
+      hasGeneralTabErrors = true;
       addError("name", {
         title: i18n("category.name"),
         message: i18n("form_kit.errors.required"),
       });
-      hasGeneralTabErrors = true;
     }
 
     if (data.style_type === "emoji" && !data.emoji) {
+      hasGeneralTabErrors = true;
       addError("emoji", {
         title: i18n("category.emoji"),
         message: i18n("category.validations.emoji_required"),
       });
+    }
+
+    if (data.style_type === "icon" && !data.icon) {
       hasGeneralTabErrors = true;
+      addError("icon", {
+        title: i18n("category.icon"),
+        message: i18n("category.validations.icon_required"),
+      });
     }
 
     if (hasGeneralTabErrors) {

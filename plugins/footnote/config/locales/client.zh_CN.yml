@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 zh_CN:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Discourse 脚注"
+  js:
+    footnote:
+      title: "脚注"
+      add: "添加脚注"

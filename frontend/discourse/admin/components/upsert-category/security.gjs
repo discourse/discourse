@@ -4,11 +4,13 @@ import { action } from "@ember/object";
 import { service } from "@ember/service";
 import UpsertCategoryPermissionRow from "discourse/admin/components/upsert-category/permission-row";
 import PluginOutlet from "discourse/components/plugin-outlet";
+import concatClass from "discourse/helpers/concat-class";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { AUTO_GROUPS } from "discourse/lib/constants";
 import Category from "discourse/models/category";
 import PermissionType from "discourse/models/permission-type";
 import ComboBox from "discourse/select-kit/components/combo-box";
+import { eq } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 export default class UpsertCategorySecurity extends Component {
@@ -47,7 +49,7 @@ export default class UpsertCategorySecurity extends Component {
       : parent.group_permissions;
   }
 
-  get parentIsRestricted() {
+  get isParentRestricted() {
     const parentPerms = this.parentPermissions;
     if (!parentPerms?.length) {
       return false;
@@ -62,7 +64,7 @@ export default class UpsertCategorySecurity extends Component {
 
     let groups = this.site.groups.filter((g) => !permissionGroupIds.has(g.id));
 
-    if (this.parentIsRestricted) {
+    if (this.isParentRestricted) {
       const parentGroupIds = new Set(
         this.parentPermissions.map((p) => p.group_id)
       );
@@ -77,7 +79,7 @@ export default class UpsertCategorySecurity extends Component {
   }
 
   get allParentGroupsUsed() {
-    return this.parentIsRestricted && !this.hasAvailableGroups;
+    return this.isParentRestricted && !this.hasAvailableGroups;
   }
 
   get everyonePermission() {
@@ -101,22 +103,16 @@ export default class UpsertCategorySecurity extends Component {
     return this.everyonePermission?.permission_type ?? PermissionType.READONLY;
   }
 
-  get panelClass() {
-    const isActive = this.args.selectedTab === "security" ? "active" : "";
-    return `edit-category-tab edit-category-tab-security ${isActive}`;
-  }
-
   #setFormPermissions(permissions) {
     this.args.form.set("permissions", permissions);
   }
 
   @action
   onSelectGroup(groupId) {
-    const group = this.site.groups.find((g) => g.id === groupId);
     const newPermissions = [
       ...(this.permissions || []),
       {
-        group_name: group?.name,
+        group_name: this.site.groupsById[groupId]?.name,
         group_id: groupId,
         permission_type: this.minimumPermission,
       },
@@ -157,7 +153,13 @@ export default class UpsertCategorySecurity extends Component {
   }
 
   <template>
-    <div class={{this.panelClass}}>
+    <@form.Section
+      class={{concatClass
+        "edit-category-tab"
+        "edit-category-tab-security"
+        (if (eq @selectedTab "security") "active")
+      }}
+    >
       {{#if @category.is_special}}
         {{#if @category.isUncategorizedCategory}}
           <@form.Alert @type="warning">
@@ -237,7 +239,10 @@ export default class UpsertCategorySecurity extends Component {
 
           <@form.Alert @type="warning">
             {{#if this.everyonePermission}}
-              {{i18n this.everyoneAccessMessageKey}}
+              {{i18n
+                this.everyoneAccessMessageKey
+                everyone_group=this.everyonePermission.group_name
+              }}
             {{else}}
               {{i18n "category.permissions.specific_groups_have_access"}}
             {{/if}}
@@ -247,8 +252,8 @@ export default class UpsertCategorySecurity extends Component {
 
       <PluginOutlet
         @name="category-custom-security"
-        @outletArgs={{lazyHash category=@category}}
+        @outletArgs={{lazyHash category=@category form=@form}}
       />
-    </div>
+    </@form.Section>
   </template>
 }

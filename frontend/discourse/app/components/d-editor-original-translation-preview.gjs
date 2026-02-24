@@ -39,9 +39,13 @@ export default class DEditorOriginalTranslationPreview extends Component {
         <span class="d-editor-translation-preview-header__title">
           {{#if this.showOriginal}}
             {{i18n "composer.translations.original_content"}}
-            <span class="d-editor-translation-preview-wrapper__original-locale">
-              {{this.originalLocale}}
-            </span>
+            {{#if this.originalLocale}}
+              <span
+                class="d-editor-translation-preview-wrapper__original-locale"
+              >
+                {{this.originalLocale}}
+              </span>
+            {{/if}}
             <div class="d-editor-translation-preview-header__raw-toggle">
               <DToggleSwitch
                 @state={{this.showRawMarkdown}}

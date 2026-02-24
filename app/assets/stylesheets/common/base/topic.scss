@@ -30,16 +30,8 @@
     overflow-anchor: none;
 
     .btn-toggle-localized-content.--active {
-      background-image: linear-gradient(
-        to bottom,
-        rgb(var(--primary-rgb), 0.6) 100%,
-        rgb(var(--primary-rgb), 0.6) 100%
-      );
-      color: var(--d-button-default-text-color--hover);
-
-      .d-icon {
-        color: var(--d-button-default-text-color--hover);
-      }
+      --d-button-default-icon-color: var(--tertiary);
+      --d-button-default-icon-color--hover: var(--primary-low);
     }
   }
 
@@ -184,6 +176,12 @@
 #topic-title {
   z-index: z("base");
   margin-bottom: 1em;
+
+  @include viewport.until(sm) {
+    z-index: z("base") + 1;
+    margin: 0;
+    padding: 0 0 1em;
+  }
 
   .title-wrapper {
     display: flex;
@@ -389,8 +387,13 @@
 }
 
 .post-links-container {
-  @include unselectable;
   clear: both;
+
+  @include unselectable;
+
+  @include viewport.from(sm) {
+    margin-left: var(--topic-body-width-padding);
+  }
 
   .post-links {
     margin-top: 1em;

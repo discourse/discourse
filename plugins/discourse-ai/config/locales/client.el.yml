@@ -74,9 +74,21 @@ el:
             flag_post:
               label: "Αναφορά ανάρτησης"
               description: "Αναφέρει την ανάρτηση (είτε ως ανεπιθύμητη είτε για έλεγχο)"
+            notify_author_pm:
+              label: "Ειδοποίηση συντάκτη μέσω ΠΜ"
+              description: "Αποστολή προσωπικού μηνύματος στον συντάκτη της ανάρτησης όταν η ανάρτησή του μπει στην ουρά και διαγραφεί"
+            notify_author_pm_user:
+              label: "Αποστολέας ΠΜ"
+              description: "Χρήστης που θα στείλει το ΠΜ (προεπιλογή είναι το σύστημα)"
+            notify_author_pm_message:
+              label: "Περιεχόμενο ΠΜ"
+              description: "Προαιρετικό προσαρμοσμένο μήνυμα για αποστολή στον συντάκτη"
     discourse_ai:
+      llm_selector:
+        none: "Κανένα"
       features:
         back: "Πίσω"
+        settings_save_error: "Δεν ήταν δυνατή η αποθήκευση ορισμένων ρυθμίσεων."
         disabled: "(απενεργοποιημένο)"
         groups: "Ομάδες:"
         no_persona: "Δεν έχει οριστεί"
@@ -88,10 +100,14 @@ el:
         collapse_list: "(δείξε λιγότερα)"
         filters:
           all: "Όλα"
+          no_results: "Καμία λειτουργία δεν αντιστοιχεί με τα φίλτρα σας."
           reset: "Επαναφορά"
         no_automations: "Δεν υπάρχουν αυτοματισμοί ακόμη"
         search:
           name: "Αναζήτηση"
+        ai_helper:
+          setting_groups:
+            automation: "Αυτοματισμός"
         spam:
           name: "Ανεπιθύμητα"
       modals:
@@ -115,6 +131,7 @@ el:
       spam:
         short_title: "Ανεπιθύμητα"
         last_seven_days: "Τελευταίες 7 ημέρες"
+        false_positives: "Λανθασμένη αναφορά"
         enable: "Ενεργοποίηση"
         save_button: "Αποθήκευση αλλαγών"
         test_modal:
@@ -150,6 +167,7 @@ el:
             key_title: "Κλειδί"
         filters:
           reset: "Επαναφορά"
+          no_results: "Καμία περσόνα δεν αντιστοιχεί με τα φίλτρα σας."
       rag:
         uploads:
           title: "Μεταφορτώσεις"
@@ -167,6 +185,15 @@ el:
         parameter_required: "Απαιτείται"
         edit: "Επεξεργασία"
         delete: "Σβήσιμο"
+      secrets:
+        short_title: "Διαπιστευτήρια"
+        name: "Όνομα"
+        secret: "Τιμή"
+        back: "Πίσω"
+        save: "Αποθήκευση"
+        edit: "Επεξεργασία"
+        delete: "Σβήσιμο"
+        embedding: "Ενσωμάτωση"
       llms:
         no_llms: "Κανένα LLM ακόμη"
         display_name: "Όνομα"
@@ -188,8 +215,6 @@ el:
         usage:
           ai_summarization: "Συνοψίστε"
           ai_spam: "Ανεπιθύμητα"
-        model_description:
-          open_router-x-ai-grok-4: "Τελευταίο μοντέλο της xAI"
         next:
           title: "Επόμενο"
         tests:
@@ -263,3 +288,9 @@ el:
         tooltip:
           actions:
             disable: "Απενεργοποίηση"
+    review:
+      types:
+        reviewable_ai_post:
+          title: "Αναφερόμενη από AI ανάρτηση"
+        reviewable_ai_chat_message:
+          title: "Αναφερόμενο από AI μήνυμα συνομιλίας"
