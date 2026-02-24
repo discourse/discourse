@@ -84,7 +84,7 @@ export default class CardContentsBase extends Component {
       post,
     });
 
-    document.querySelector(".card-cloak")?.classList.remove("hidden");
+    document.querySelector(".card-cloak")?.classList.add("card-cloak--visible");
 
     this.appEvents.trigger("user-card:show", { username });
     // Using `next()` to optimise INP
@@ -106,7 +106,6 @@ export default class CardContentsBase extends Component {
   didInsertElement() {
     super.didInsertElement(...arguments);
 
-    document.addEventListener("pointerdown", this._clickOutsideHandler);
     document.addEventListener("keyup", this._escListener);
 
     _cardClickListenerSelectors.forEach((selector) => {
@@ -213,6 +212,13 @@ export default class CardContentsBase extends Component {
             left: 10,
           },
           maxWidth: "unset",
+          onClose: () => {
+            if (this.site.mobileView) {
+              document
+                .querySelector(".card-cloak")
+                ?.classList.remove("card-cloak--visible");
+            }
+          },
         });
       } else {
         this._menuInstance = await this.menu.show(target, {
@@ -223,6 +229,13 @@ export default class CardContentsBase extends Component {
             content.style.left = "10px";
             content.style.right = "10px";
             content.style.top = 10 + AVATAR_OVERFLOW_SIZE + "px";
+          },
+          onClose: () => {
+            if (this.site.mobileView) {
+              document
+                .querySelector(".card-cloak")
+                ?.classList.remove("card-cloak--visible");
+            }
           },
         });
       }
@@ -242,15 +255,6 @@ export default class CardContentsBase extends Component {
     });
   }
 
-  @bind
-  _hide() {
-    if (!this.visible && this.site.mobileView) {
-      document.querySelector(".card-cloak")?.classList.add("hidden");
-    }
-
-    this._menuInstance?.destroy();
-  }
-
   _close() {
     this.setProperties({
       visible: false,
@@ -266,14 +270,12 @@ export default class CardContentsBase extends Component {
       this._unbindMobileScroll();
     }
 
-    this._hide();
     this.appEvents.trigger("card:hide");
   }
 
   willDestroyElement() {
     super.willDestroyElement(...arguments);
 
-    document.removeEventListener("pointerdown", this._clickOutsideHandler);
     document.removeEventListener("keyup", this._escListener);
 
     _cardClickListenerSelectors.forEach((selector) => {
@@ -295,23 +297,6 @@ export default class CardContentsBase extends Component {
     );
 
     this.appEvents.off("card:close", this, "_close");
-    this._hide();
-  }
-
-  @bind
-  _clickOutsideHandler(event) {
-    if (
-      !this.visible ||
-      event.target
-        .closest(`[data-${this.elementId}]`)
-        ?.getAttribute(`data-${this.elementId}`) ||
-      event.target.closest(`a.${this.triggeringLinkClass}`) ||
-      event.target.closest(`#${this.elementId}`)
-    ) {
-      return;
-    }
-
-    this._close();
   }
 
   @bind

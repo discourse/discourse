@@ -49,4 +49,17 @@ describe "Group Card", type: :system do
       )
     end
   end
+
+  context "when on mobile", mobile: true do
+    it "shows and hides the card cloak when opening and closing the group card" do
+      topic_page.visit_topic(topic, post_number: post_with_mention.post_number)
+      topic_page.click_mention(post_with_mention, mention)
+
+      expect(page).to have_css(".card-cloak.card-cloak--visible")
+
+      find(".card-cloak").click
+
+      expect(page).to have_no_css(".card-cloak.card-cloak--visible")
+    end
+  end
 end
