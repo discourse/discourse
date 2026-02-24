@@ -52,6 +52,7 @@ end
 
 after_mold_fork do |server, mold|
   if mold.generation.zero?
+    MiniRacerForkSafety.block_initialization!
     Discourse.preload_rails!
 
     supervisor = ENV["UNICORN_SUPERVISOR_PID"].to_i
@@ -74,6 +75,7 @@ after_mold_fork do |server, mold|
 end
 
 after_worker_fork do |server, worker|
+  MiniRacerForkSafety.allow_initialization!
   DiscourseEvent.trigger(:web_fork_started)
   Discourse.after_fork
   SignalTrapLogger.instance.after_fork
