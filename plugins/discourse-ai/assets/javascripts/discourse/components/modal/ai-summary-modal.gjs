@@ -38,7 +38,6 @@ export default class AiSummaryModal extends Component {
   @tracked canRegenerate = false;
   @tracked loading = false;
   @tracked currentIndex = 0;
-  @tracked
   smoothStreamer = new SmoothStreamer(
     () => this.text,
     (newValue) => (this.text = newValue)

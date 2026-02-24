@@ -48,7 +48,6 @@ export default class BookmarkModal extends Component {
   @tracked postDetectedLocalTimezone = null;
   @tracked prefilledDatetime = null;
   @tracked flash = null;
-  @tracked userTimezone = this.currentUser.user_option.timezone;
   @tracked showOptions = this.args.model.bookmark.id ? true : false;
 
   @notEmpty("userTimezone") userHasTimezoneSet;
@@ -71,6 +70,10 @@ export default class BookmarkModal extends Component {
     this._itsatrap?.destroy();
     this._itsatrap = null;
     this.keyboardShortcuts.unpause();
+  }
+
+  get userTimezone() {
+    return this.currentUser.user_option.timezone;
   }
 
   get bookmark() {
