@@ -200,6 +200,7 @@ const VITE_PATTERNS = [
   /^\/@embroider\//,
 ];
 const RAILS_ROOTS = [
+  "/assets/plugins/",
   "/theme-javascripts/",
   "/extra-locales/",
   "/svg-sprite/",

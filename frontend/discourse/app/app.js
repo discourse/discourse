@@ -6,12 +6,12 @@ import "./global-compat";
 import "./setup-deprecation-workflow";
 import "./array-shim";
 import "decorator-transforms/globals";
-import { defineModules } from "./lib/loader-shim";
 import "./loader-shims";
 import "./module-shims";
 import "./discourse-common-loader-shims";
 import embroiderCompatModules from "@embroider/virtual/compat-modules";
 import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-injections";
+import { defineModules } from "./lib/loader-shim";
 
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
@@ -103,8 +103,7 @@ let dialogContent;
 async function loadPluginFromModulePreload(link) {
   const pluginName = link.dataset.pluginName;
   try {
-    const compatModules = (await import(/* webpackIgnore: true */ link.href))
-      .default;
+    const compatModules = (await import(/* @vite-ignore */ link.href)).default;
     for (const [key, mod] of Object.entries(compatModules)) {
       define(`discourse/plugins/${pluginName}/${key}`, () => mod);
     }

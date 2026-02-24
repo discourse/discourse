@@ -1,3 +1,4 @@
+import { waitForPromise } from "@ember/test-waiters";
 import { isRailsTesting, isTesting } from "discourse/lib/environment";
 import { helperContext } from "discourse/lib/helpers";
 import { SELECTORS } from "discourse/lib/lightbox/constants";
@@ -7,7 +8,6 @@ import quoteImage, {
 import { isDocumentRTL } from "discourse/lib/text-direction";
 import { escapeExpression } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
-import { waitForPromise } from "@ember/test-waiters";
 
 const INIT_PROMISES = new WeakMap();
 

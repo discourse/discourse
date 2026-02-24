@@ -1,3 +1,4 @@
+import { waitForPromise } from "@ember/test-waiters";
 import AllowLister from "pretty-text/allow-lister";
 import { buildEmojiUrl, performEmojiUnescape } from "pretty-text/emoji";
 import { sanitize as textSanitize } from "pretty-text/sanitizer";
@@ -5,7 +6,6 @@ import deprecated from "discourse/lib/deprecated";
 import { getURLWithCDN } from "discourse/lib/get-url";
 import { helperContext } from "discourse/lib/helpers";
 import { i18n } from "discourse-i18n";
-import { waitForPromise } from "@ember/test-waiters";
 
 async function withEngine(name, ...args) {
   const engine = await waitForPromise(import("discourse/static/markdown-it"));

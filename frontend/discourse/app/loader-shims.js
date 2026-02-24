@@ -126,6 +126,14 @@ loaderShim("ember-this-fallback/deprecations-helper", () =>
   importSync("./lib/ember-this-fallback-deprecation-helper")
 );
 loaderShim("pretty-text/sanitizer", () => importSync("pretty-text/sanitizer"));
+loaderShim("pretty-text/guid", () => importSync("pretty-text/guid"));
+loaderShim("pretty-text/emoji", () => importSync("pretty-text/emoji"));
+loaderShim("pretty-text/emoji/data", () =>
+  importSync("pretty-text/emoji/data")
+);
 loaderShim("@ember-decorators/component", () =>
   importSync("@ember-decorators/component")
+);
+loaderShim("@ember-decorators/object", () =>
+  importSync("@ember-decorators/object")
 );

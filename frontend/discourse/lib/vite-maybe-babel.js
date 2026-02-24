@@ -43,7 +43,11 @@ export default function maybeBabel(config) {
         }
       );
 
-      return hasDecorators || hasBabelRequiredImport;
+      return (
+        hasDecorators ||
+        hasBabelRequiredImport ||
+        id.includes("decorators-test.js") // only file in core with legacy decorators
+      );
     },
   });
 }
