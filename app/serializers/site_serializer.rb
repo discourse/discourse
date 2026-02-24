@@ -52,6 +52,7 @@ class SiteSerializer < ApplicationSerializer
     :full_name_required_for_signup,
     :full_name_visible_in_signup,
     :admin_config_login_routes,
+    :email_configured,
   )
 
   has_many :archetypes, embed: :objects, serializer: ArchetypeSerializer
@@ -414,6 +415,10 @@ class SiteSerializer < ApplicationSerializer
 
   def include_admin_config_routes?
     scope.is_admin?
+  end
+
+  def email_configured
+    GlobalSetting.smtp_address.present?
   end
 
   def full_name_required_for_signup
