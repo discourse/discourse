@@ -5,6 +5,8 @@ describe DiscourseSolved::Queries do
   fab!(:admin)
 
   describe ".solved_count" do
+    before { SiteSetting.allow_solved_on_all_topics = true }
+
     it "returns the correct count of solved topics for a user" do
       expect(described_class.solved_count(user.id)).to eq(0)
 

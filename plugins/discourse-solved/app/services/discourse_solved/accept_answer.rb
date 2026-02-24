@@ -11,19 +11,21 @@ class DiscourseSolved::AcceptAnswer
 
   model :post
   model :topic
+  policy :can_accept_answer
 
   lock(:topic) do
     transaction do
-      step :accept
-      step :notify_post_author
-      step :notify_topic_owner
+      only_if(:previous_answer_exists) { step :remove_previous_accepted_answer }
+      step :log_user_action
+      model :solved, :create_solved
+      only_if(:should_notify_post_author) { step :notify_post_author }
+      only_if(:should_notify_topic_owner) { step :notify_topic_owner }
     end
   end
 
-  step :enqueue_web_hooks
+  only_if(:accepted_solution_webhooks_active) { step :enqueue_web_hooks }
+  only_if(:topic_will_auto_close) { step :publish_topic_reload }
   step :publish_solution
-
-  MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
 
   private
 
@@ -31,68 +33,48 @@ class DiscourseSolved::AcceptAnswer
     Post.find_by(id: params.post_id)
   end
 
-  def fetch_topic(post:)
-    post.topic || Topic.with_deleted.find_by(id: post.topic_id)
+  def fetch_topic(post:, guardian:)
+    return Topic.with_deleted.find_by(id: post.topic_id) if guardian.is_staff?
+    post.topic
   end
 
-  def accept(post:, topic:, guardian:)
-    acting_user = guardian.user
+  def can_accept_answer(guardian:, topic:, post:)
+    guardian.can_accept_answer?(topic, post)
+  end
 
-    solved = topic.solved
+  def previous_answer_exists(topic:)
+    topic.solved&.answer_post_id.present?
+  end
 
-    if previous_accepted_post_id = solved&.answer_post_id
-      UserAction.where(
-        action_type: UserAction::SOLVED,
-        target_post_id: previous_accepted_post_id,
-      ).destroy_all
-      solved.destroy!
-    else
-      UserAction.log_action!(
-        action_type: UserAction::SOLVED,
-        user_id: post.user_id,
-        acting_user_id: acting_user.id,
-        target_post_id: post.id,
-        target_topic_id: post.topic_id,
-      )
-    end
+  def remove_previous_accepted_answer(topic:)
+    UserAction.where(
+      action_type: UserAction::SOLVED,
+      target_post: topic.solved.answer_post,
+    ).destroy_all
+    topic.solved.destroy!
+  end
 
-    solved = DiscourseSolved::SolvedTopic.new(topic:, answer_post: post, accepter: acting_user)
+  def log_user_action(post:, guardian:)
+    UserAction.log_action!(
+      action_type: UserAction::SOLVED,
+      user_id: post.user_id,
+      acting_user_id: guardian.user.id,
+      target_post_id: post.id,
+      target_topic_id: post.topic_id,
+    )
+  end
 
-    auto_close_hours = 0
-    if topic&.category.present?
-      auto_close_hours = topic.category.custom_fields["solved_topics_auto_close_hours"].to_i
-      auto_close_hours = MAX_AUTO_CLOSE_HOURS if auto_close_hours > MAX_AUTO_CLOSE_HOURS
-    end
+  def create_solved(post:, topic:, guardian:)
+    DiscourseSolved::SolvedTopic.create(topic:, answer_post: post, accepter: guardian.user)
+  end
 
-    auto_close_hours = SiteSetting.solved_topics_auto_close_hours if auto_close_hours == 0
-
-    if (auto_close_hours > 0) && !topic.closed
-      topic_timer =
-        topic.set_or_create_timer(
-          TopicTimer.types[:silent_close],
-          nil,
-          based_on_last_post: true,
-          duration_minutes: auto_close_hours * 60,
-        )
-      solved.topic_timer = topic_timer
-
-      MessageBus.publish(
-        "/topic/#{topic.id}",
-        { reload_topic: true },
-        topic.secure_audience_publish_messages,
-      )
-    end
-
-    solved.save!
-
-    context[:accepted_answer] = topic.reload.accepted_answer_post_info
+  def should_notify_post_author(post:, guardian:)
+    return if guardian.user.id == post.user_id
+    screener = UserCommScreener.new(acting_user_id: guardian.user.id, target_user_ids: post.user_id)
+    !screener.ignoring_or_muting_actor?(post.user_id)
   end
 
   def notify_post_author(post:, topic:, guardian:)
-    acting_user = guardian.user
-    return if acting_user.id == post.user_id
-    return unless notify_allowed?(recipient: post.user, user: acting_user)
-
     Notification.create!(
       notification_type: Notification.types[:custom],
       user_id: post.user_id,
@@ -100,19 +82,22 @@ class DiscourseSolved::AcceptAnswer
       post_number: post.post_number,
       data: {
         message: "solved.accepted_notification",
-        display_username: acting_user.username,
+        display_username: guardian.user.username,
         topic_title: topic.title,
         title: "solved.notification.title",
       }.to_json,
     )
   end
 
-  def notify_topic_owner(post:, topic:, guardian:)
-    acting_user = guardian.user
+  def should_notify_topic_owner(topic:, guardian:)
     return unless SiteSetting.notify_on_staff_accept_solved
-    return if acting_user.id == topic.user_id
-    return unless notify_allowed?(recipient: topic.user, user: acting_user)
+    return if guardian.user.id == topic.user_id
+    screener =
+      UserCommScreener.new(acting_user_id: guardian.user.id, target_user_ids: topic.user_id)
+    !screener.ignoring_or_muting_actor?(topic.user_id)
+  end
 
+  def notify_topic_owner(post:, topic:, guardian:)
     Notification.create!(
       notification_type: Notification.types[:custom],
       user_id: topic.user_id,
@@ -120,35 +105,39 @@ class DiscourseSolved::AcceptAnswer
       post_number: post.post_number,
       data: {
         message: "solved.accepted_notification",
-        display_username: acting_user.username,
+        display_username: guardian.user.username,
         topic_title: topic.title,
         title: "solved.notification.title",
       }.to_json,
     )
   end
 
-  def notify_allowed?(recipient:, user:)
-    !UserCommScreener.new(
-      acting_user_id: user.id,
-      target_user_ids: recipient.id,
-    ).ignoring_or_muting_actor?(recipient.id)
+  def topic_will_auto_close(solved:)
+    solved.topic_timer.present?
+  end
+
+  def publish_topic_reload(topic:)
+    MessageBus.publish(
+      "/topic/#{topic.id}",
+      { reload_topic: true },
+      topic.secure_audience_publish_messages,
+    )
+  end
+
+  def accepted_solution_webhooks_active
+    WebHook.active_web_hooks(:accepted_solution).exists?
   end
 
   def enqueue_web_hooks(post:)
-    if WebHook.active_web_hooks(:accepted_solution).exists?
-      payload = WebHook.generate_payload(:post, post)
-      WebHook.enqueue_solved_hooks(:accepted_solution, post, payload)
-    end
+    WebHook.enqueue_solved_hooks(:accepted_solution, post, WebHook.generate_payload(:post, post))
   end
 
-  def publish_solution(post:, topic:, accepted_answer:)
+  def publish_solution(post:, topic:)
     DiscourseEvent.trigger(:accepted_solution, post)
-
-    secure_audience = topic.secure_audience_publish_messages
     MessageBus.publish(
       "/topic/#{topic.id}",
-      { type: :accepted_solution, accepted_answer: },
-      secure_audience,
+      { type: :accepted_solution, accepted_answer: topic.reload.accepted_answer_post_info },
+      topic.secure_audience_publish_messages,
     )
   end
 end

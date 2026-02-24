@@ -8,6 +8,8 @@ describe UserSummarySerializer do
   let(:serializer) { described_class.new(user_summary, scope: guardian, root: false) }
 
   describe "solved_count" do
+    before { SiteSetting.allow_solved_on_all_topics = true }
+
     it "uses DiscourseSolved::Queries.solved_count" do
       allow(DiscourseSolved::Queries).to receive(:solved_count).with(user.id).and_return(42)
       expect(serializer.as_json[:solved_count]).to eq(42)

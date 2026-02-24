@@ -5,16 +5,19 @@ describe DirectoryItem, type: :model do
     fab!(:user)
     fab!(:admin)
 
-    fab!(:topic1) { Fabricate(:topic, archetype: "regular", user:) }
+    fab!(:topic1) { Fabricate(:topic_with_op, archetype: "regular", user:) }
     fab!(:topic_post1) { Fabricate(:post, topic: topic1, user:, created_at: 10.years.ago) }
 
-    fab!(:topic2) { Fabricate(:topic, archetype: "regular", user:) }
+    fab!(:topic2) { Fabricate(:topic_with_op, archetype: "regular", user:) }
     fab!(:topic_post2) { Fabricate(:post, topic: topic2, user:, created_at: 10.years.ago) }
 
-    fab!(:pm) { Fabricate(:topic, archetype: "private_message", user:, category_id: nil) }
+    fab!(:pm) { Fabricate(:topic_with_op, archetype: "private_message", user:, category_id: nil) }
     fab!(:pm_post) { Fabricate(:post, topic: pm, user:) }
 
-    before { SiteSetting.solved_enabled = true }
+    before do
+      SiteSetting.solved_enabled = true
+      SiteSetting.allow_solved_on_all_topics = true
+    end
 
     it "excludes PM post solutions from solutions" do
       DiscourseSolved::AcceptAnswer.call!(

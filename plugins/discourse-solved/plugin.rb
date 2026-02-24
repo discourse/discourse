@@ -19,6 +19,7 @@ register_asset "stylesheets/mobile/solutions.scss", :mobile
 module ::DiscourseSolved
   PLUGIN_NAME = "discourse-solved"
   ENABLE_ACCEPTED_ANSWERS_CUSTOM_FIELD = "enable_accepted_answers"
+  MAX_AUTO_CLOSE_HOURS = 20.years.to_i / 1.hour.to_i
 end
 
 require_relative "lib/discourse_solved/engine"

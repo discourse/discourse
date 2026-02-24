@@ -111,19 +111,11 @@ RSpec.describe "Managing Posts solved status" do
     after { SearchIndexer.disable }
 
     it "can prioritize solved topics in search" do
-      normal_post =
-        Fabricate(
-          :post,
-          raw: "My reply carrot",
-          topic: Fabricate(:topic, title: "A topic that is not solved but open"),
-        )
+      normal_topic = Fabricate(:topic_with_op, title: "A topic that is not solved but open")
+      normal_post = Fabricate(:post, raw: "My reply carrot", topic: normal_topic)
 
-      solved_post =
-        Fabricate(
-          :post,
-          raw: "My solution carrot",
-          topic: Fabricate(:topic, title: "A topic that will be closed", closed: true),
-        )
+      solved_topic = Fabricate(:topic_with_op, title: "A topic that will be closed", closed: true)
+      solved_post = Fabricate(:post, raw: "My solution carrot", topic: solved_topic)
 
       DiscourseSolved::AcceptAnswer.call!(
         params: {
@@ -236,11 +228,12 @@ RSpec.describe "Managing Posts solved status" do
       category = Fabricate(:category_with_definition)
 
       post = create_post(category: category)
+      reply = create_post(topic_id: post.topic_id)
       post2 = create_post(category: category)
 
       DiscourseSolved::AcceptAnswer.call!(
         params: {
-          post_id: post.id,
+          post_id: reply.id,
         },
         guardian: Guardian.new(Discourse.system_user),
       )
@@ -256,7 +249,7 @@ RSpec.describe "Managing Posts solved status" do
 
       expect(category.auto_bump_topic!).to eq(false)
 
-      expect(post.topic.reload.posts_count).to eq(1)
+      expect(post.topic.reload.posts_count).to eq(2)
       expect(post2.topic.reload.posts_count).to eq(2)
     end
   end
@@ -391,7 +384,7 @@ RSpec.describe "Managing Posts solved status" do
       topic.trash!(Discourse.system_user)
 
       post "/solution/accept.json", params: { id: p1.id }
-      expect(response.status).to eq(403)
+      expect(response.status).to eq(404)
 
       sign_in(Fabricate(:admin))
       post "/solution/accept.json", params: { id: p1.id }
@@ -609,10 +602,10 @@ RSpec.describe "Managing Posts solved status" do
 
       describe "assigned topic reminder" do
         it "excludes solved topics when ignore_solved_topics_in_assigned_reminder is false" do
-          other_topic = Fabricate(:topic, title: "Topic that should be there")
+          other_topic = Fabricate(:topic_with_op, title: "Topic that should be there")
           post = Fabricate(:post, topic: other_topic, user: user)
 
-          other_topic2 = Fabricate(:topic, title: "Topic that should be there2")
+          other_topic2 = Fabricate(:topic_with_op, title: "Topic that should be there2")
           post2 = Fabricate(:post, topic: other_topic2, user: user)
 
           Assigner.new(post.topic, user).assign(user)
@@ -644,10 +637,10 @@ RSpec.describe "Managing Posts solved status" do
         it "does not count solved topics using assignment_status_on_solve status" do
           SiteSetting.ignore_solved_topics_in_assigned_reminder = true
 
-          other_topic = Fabricate(:topic, title: "Topic that should be there")
+          other_topic = Fabricate(:topic_with_op, title: "Topic that should be there")
           post = Fabricate(:post, topic: other_topic, user: user)
 
-          other_topic2 = Fabricate(:topic, title: "Topic that should be there2")
+          other_topic2 = Fabricate(:topic_with_op, title: "Topic that should be there2")
           post2 = Fabricate(:post, topic: other_topic2, user: user)
 
           Assigner.new(post.topic, user).assign(user)
@@ -724,9 +717,9 @@ RSpec.describe "Managing Posts solved status" do
 
   describe "user actions stream modifier" do
     it "correctly list solutions" do
-      t1 = Fabricate(:topic)
-      t2 = Fabricate(:topic)
-      t3 = Fabricate(:topic)
+      t1 = Fabricate(:topic_with_op)
+      t2 = Fabricate(:topic_with_op)
+      t3 = Fabricate(:topic_with_op)
 
       p1 = Fabricate(:post, topic: t1, user:)
       p2 = Fabricate(:post, topic: t2, user:)

@@ -2,12 +2,15 @@
 
 RSpec.describe DiscourseGamification::Solutions do
   fab!(:category)
-  fab!(:topic) { Fabricate(:topic, category: category) }
+  fab!(:topic) { Fabricate(:topic_with_op, category: category) }
   fab!(:question_user, :user)
   fab!(:answer_user, :user)
   fab!(:answer_post) { Fabricate(:post, topic: topic, user: answer_user) }
 
-  before { SiteSetting.solution_score_value = 5 }
+  before do
+    SiteSetting.allow_solved_on_all_topics = true
+    SiteSetting.solution_score_value = 5
+  end
 
   it "is enabled when score value is positive" do
     expect(described_class).to be_enabled
