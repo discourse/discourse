@@ -10,6 +10,22 @@ function initializePlugin(api) {
   if (siteSettings.checklist_enabled) {
     api.decorateCookedElement(checklistSyntax);
     api.registerRichEditorExtension(richEditorExtension);
+
+    api.addComposerToolbarPopupMenuOption({
+      menu: "list",
+      name: "list-checklist",
+      icon: "list-check",
+      label: "checklist.composer.checklist",
+      showActiveIcon: true,
+      active: ({ state }) => state?.inCheckList,
+      action: (toolbarEvent) => {
+        if (toolbarEvent.commands?.toggleChecklist) {
+          toolbarEvent.commands.toggleChecklist();
+        } else {
+          toolbarEvent.applyList("- [ ] ", "list_item");
+        }
+      },
+    });
   }
 }
 
