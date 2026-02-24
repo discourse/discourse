@@ -9,7 +9,7 @@
  * Key concepts:
  * - AUTH_TOKEN: A private symbol used to verify authorized block rendering contexts
  * - blockMetadataMap: WeakMap tracking which classes are blocks and their metadata
- * - rootBlockClass: Single variable holding the root block class (BlockOutlet)
+ * - rootBlockClass: Single variable holding the root block class (set via registerRootBlock)
  *
  * @module discourse/lib/blocks/-internals/decorator
  */
@@ -39,7 +39,7 @@ import { validateConstraintsSchema } from "discourse/lib/blocks/-internals/valid
  * The authorization model works as follows:
  * 1. AUTH_TOKEN is a secret symbol known only to this module
  * 2. blockMetadataMap tracks which classes are decorated with @block
- * 3. rootBlockClass holds the single block that can be rendered directly (BlockOutlet)
+ * 3. rootBlockClass holds the single block that can be rendered directly (set via registerRootBlock)
  * 4. Child blocks receive AUTH_TOKEN via the __block$ arg from their parent
  * 5. BlockComponentManager verifies authorization before instantiation
  *
@@ -92,10 +92,26 @@ const blockMetadataMap = new WeakMap();
 let rootBlockClass = null;
 
 /**
+ * Registers a block class as the root block that can be rendered directly
+ * without authorization. Only one root block can be registered.
+ *
+ * @param {Function} klass - The block class to register as root.
+ */
+export function registerRootBlock(klass) {
+  if (rootBlockClass !== null) {
+    raiseBlockError(
+      `Only one root block is allowed. ` +
+        `"${rootBlockClass.name}" is already registered as the root block.`
+    );
+  }
+  rootBlockClass = klass;
+}
+
+/**
  * Custom component manager proxy that enforces block authorization.
  *
  * Blocks can only be instantiated in two authorized scenarios:
- * 1. As a root block - The class is the rootBlockClass (marked with root: true in decorator)
+ * 1. As a root block - The class is the rootBlockClass (set via registerRootBlock)
  * 2. As a child of a container - The parent passes __block$ arg with AUTH_TOKEN
  *
  * This prevents blocks from being used directly in templates, ensuring they
@@ -174,9 +190,6 @@ const BlockComponentManager = new Proxy(
  *
  * @param {boolean} [options.container=false] - If true, this block can contain nested child blocks.
  *
- * @param {boolean} [options.root=false] - If true, this block can be rendered directly without
- *   authorization. Only BlockOutlet should use this option.
- *
  * @param {string} [options.description] - Human-readable description of the block.
  *
  * @param {Object.<string, ArgSchema>} [options.args] - Schema for block arguments.
@@ -206,10 +219,6 @@ const BlockComponentManager = new Proxy(
  * @block("my-section", { container: true })
  * class MySection extends Component { ... }
  *
- * @example
- * // Root block (only for BlockOutlet)
- * @block("block-outlet", { container: true, root: true })
- * class BlockOutlet extends Component { ... }
  */
 export function block(name, options = {}) {
   // === Decoration-time validation ===
@@ -219,7 +228,6 @@ export function block(name, options = {}) {
   // Extract all options with defaults
   const {
     container: isContainer = false,
-    root: isRoot = false,
     classNames: decoratorClassNames = null,
     description = "",
     args: argsSchema = null,
@@ -296,17 +304,6 @@ export function block(name, options = {}) {
     });
 
     blockMetadataMap.set(target, metadata);
-
-    // Mark as root block if specified - only one root block is allowed (BlockOutlet)
-    if (isRoot) {
-      if (rootBlockClass !== null) {
-        raiseBlockError(
-          `Block "${name}": Only one root block is allowed. ` +
-            `"${rootBlockClass.name}" is already registered as the root block.`
-        );
-      }
-      rootBlockClass = target;
-    }
 
     return target;
   };

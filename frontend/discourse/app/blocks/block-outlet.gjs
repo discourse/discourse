@@ -31,6 +31,7 @@ import {
   block,
   createBlockArgsWithReactiveGetters,
   getBlockMetadata,
+  registerRootBlock,
 } from "discourse/lib/blocks/-internals/decorator";
 import {
   captureCallSite,
@@ -430,7 +431,7 @@ function hasLayout(outletName) {
  * </BlockOutlet>
  * ```
  */
-@block("block-outlet", { container: true, root: true })
+@block("block-outlet", { container: true })
 export default class BlockOutlet extends Component {
   /**
    * The outlet name, locked at construction time.
@@ -633,3 +634,5 @@ export default class BlockOutlet extends Component {
     {{yield (hasLayout this.outletName) to="after"}}
   </template>
 }
+
+registerRootBlock(BlockOutlet);
