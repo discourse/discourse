@@ -317,6 +317,7 @@ export default class BulkSelectTopicsDropdown extends Component {
       @autofocus={{true}}
       @identifier="bulk-select-topics-dropdown"
       @onRegisterApi={{this.onRegisterApi}}
+      @class="btn-default"
     >
       <:trigger>
         <span class="d-button-label">

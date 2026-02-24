@@ -269,7 +269,7 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def censored_regexp
-    WordWatcher.serialized_regexps_for_action(:censor, engine: :js)
+    WordWatcher.serialized_regexps_for_action(:censor)
   end
 
   def custom_emoji_translation
@@ -285,11 +285,11 @@ class SiteSerializer < ApplicationSerializer
   end
 
   def watched_words_replace
-    WordWatcher.regexps_for_action(:replace, engine: :js)
+    WordWatcher.regexps_for_action(:replace)
   end
 
   def watched_words_link
-    WordWatcher.regexps_for_action(:link, engine: :js)
+    WordWatcher.regexps_for_action(:link)
   end
 
   def categories
@@ -317,11 +317,11 @@ class SiteSerializer < ApplicationSerializer
   def navigation_menu_site_top_tags
     if top_tags.present?
       top_tag_objects = top_tags[0...SIDEBAR_TOP_TAGS_TO_SHOW]
-      tag_names = top_tag_objects.map { |t| t[:name] }
-      serialized = serialize_tags(Tag.where(name: tag_names))
+      tag_ids = top_tag_objects.map { |t| t[:id] }
+      serialized = serialize_tags(Tag.where(id: tag_ids))
 
       # Ensures order of top tags is preserved
-      serialized.sort_by { |tag| tag_names.index(tag[:name]) }
+      serialized.sort_by { |tag| tag_ids.index(tag[:id]) }
     else
       []
     end

@@ -33,87 +33,43 @@ RSpec.describe Chat::ChatController do
   describe "#rebake" do
     fab!(:chat_message) { Fabricate(:chat_message, chat_channel: chat_channel, user: user) }
 
-    context "as staff" do
-      it "rebakes the post" do
-        sign_in(Fabricate(:admin))
+    it "works" do
+      sign_in(admin)
+      put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
+      expect(response.status).to eq(200)
+    end
 
-        expect_enqueued_with(
-          job: Jobs::Chat::ProcessMessage,
-          args: {
-            chat_message_id: chat_message.id,
-          },
-        ) do
-          put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
-
-          expect(response.status).to eq(200)
-        end
-      end
-
-      it "does not interfere with core's guardian can_rebake? for posts" do
-        sign_in(Fabricate(:admin))
-        put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
-        expect(response.status).to eq(200)
-        post = Fabricate(:post)
-        put "/posts/#{post.id}/rebake.json"
-        expect(response.status).to eq(200)
-      end
-
-      it "does not rebake the post when channel is read_only" do
-        chat_message.chat_channel.update!(status: :read_only)
-        sign_in(Fabricate(:admin))
-
-        put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
-        expect(response.status).to eq(403)
-      end
-
-      context "when cooked has changed" do
-        it "marks the message as dirty" do
-          sign_in(Fabricate(:admin))
-          chat_message.update!(message: "new content")
-
-          expect_enqueued_with(
-            job: Jobs::Chat::ProcessMessage,
-            args: {
-              chat_message_id: chat_message.id,
-            },
-          ) do
-            put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
-
-            expect(response.status).to eq(200)
-          end
-        end
+    context "when message does not exist" do
+      it "returns a 404" do
+        sign_in(admin)
+        put "/chat/#{chat_channel.id}/-999/rebake.json"
+        expect(response.status).to eq(404)
       end
     end
 
-    context "when not staff" do
-      it "forbids non staff to rebake" do
+    context "when channel does not exist" do
+      it "returns a 404" do
+        sign_in(admin)
+        put "/chat/-999/#{chat_message.id}/rebake.json"
+        expect(response.status).to eq(404)
+      end
+    end
+
+    context "when user cannot access the channel" do
+      fab!(:inaccessible_channel, :private_category_channel)
+
+      it "returns a 403" do
+        sign_in(Fabricate(:user))
+        put "/chat/#{inaccessible_channel.id}/-999/rebake.json"
+        expect(response.status).to eq(403)
+      end
+    end
+
+    context "when user cannot rebake" do
+      it "returns a 403" do
         sign_in(Fabricate(:user))
         put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
         expect(response.status).to eq(403)
-      end
-
-      context "as TL3 user" do
-        it "forbids less then TL4 user tries to rebake" do
-          sign_in(Fabricate(:user, trust_level: TrustLevel[3]))
-          put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
-          expect(response.status).to eq(403)
-        end
-      end
-
-      context "as TL4 user" do
-        it "allows TL4 users to rebake" do
-          sign_in(Fabricate(:user, trust_level: TrustLevel[4]))
-          put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
-          expect(response.status).to eq(200)
-        end
-
-        it "does not rebake the post when channel is read_only" do
-          chat_message.chat_channel.update!(status: :read_only)
-          sign_in(Fabricate(:user, trust_level: TrustLevel[4]))
-
-          put "/chat/#{chat_channel.id}/#{chat_message.id}/rebake.json"
-          expect(response.status).to eq(403)
-        end
       end
     end
   end
@@ -206,7 +162,7 @@ RSpec.describe Chat::ChatController do
       expect(response.status).to eq(400)
     end
 
-    it "creates a membership when reacting to channel without a membership record" do
+    it "errors when reacting to channel without a membership record" do
       sign_in(user)
 
       expect {
@@ -215,8 +171,9 @@ RSpec.describe Chat::ChatController do
               emoji: ":heart:",
               react_action: "add",
             }
-      }.to change { Chat::UserChatChannelMembership.count }.by(1)
-      expect(response.status).to eq(200)
+      }.not_to change { Chat::UserChatChannelMembership.count }
+      expect(response.status).to eq(403)
+      expect(response.parsed_body["errors"]).to include(I18n.t("chat.errors.user_not_in_channel"))
     end
 
     it "errors when user tries to react to private channel they can't access" do

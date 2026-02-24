@@ -414,6 +414,38 @@ module("Unit | Model | category", function (hooks) {
     );
   });
 
+  test("search with accented category name", function (assert) {
+    const store = getOwner(this).lookup("service:store");
+    const category1 = store.createRecord("category", {
+      id: 1,
+      name: "Éditions",
+      slug: "publications",
+    });
+    const category2 = store.createRecord("category", {
+      id: 2,
+      name: "Cinéma",
+      slug: "films",
+    });
+
+    sinon.stub(Category, "listByActivity").returns([category1, category2]);
+
+    assert.deepEqual(
+      Category.search("editions"),
+      [category1],
+      "finds accented category with unaccented search term"
+    );
+    assert.deepEqual(
+      Category.search("cinema"),
+      [category2],
+      "finds accented category by unaccented name"
+    );
+    assert.deepEqual(
+      Category.search("Édit"),
+      [category1],
+      "finds accented category with accented search term"
+    );
+  });
+
   test("search with category slug", function (assert) {
     const store = getOwner(this).lookup("service:store");
     const category1 = store.createRecord("category", {

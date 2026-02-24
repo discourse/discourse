@@ -16,6 +16,8 @@ ca:
           title: Temps de lectura.
         chat_usage:
           messages: missatges
+          author: Vós
+          author_others: "%{username}"
         invites:
           title: Invitacions
           invitee_posts: Publicacions creades

@@ -38,6 +38,12 @@ el:
           one: "%{formatted_number} μήνυμα συνομιλίας"
           other: "%{formatted_number} μηνύματα συνομιλίας"
     chat:
+      edit_category:
+        tab_title: "Συνομιλία"
+        channel: "Κανάλι"
+        description: "Περιγραφή"
+        actions: "Ενέργειες"
+        settings: "Ρυθμίσεις"
       text_copied: Το κείμενο αντιγράφηκε στο πρόχειρο
       link_copied: Ο σύνδεσμος αντιγράφηκε στο πρόχειρο
       back_to_forum: "Φόρουμ"
@@ -53,6 +59,7 @@ el:
       chat_channels: "Κανάλια"
       browse_all_channels: "Περιήγηση σε όλα τα κανάλια"
       see_in: "Δείτε σε"
+      open_channel_menu: "Άνοιγμα μενού καναλιού"
       move_to_channel:
         title: "Μετακίνηση μηνυμάτων στο κανάλι"
         confirm_move: "Μετακίνηση Μηνυμάτων"
@@ -71,6 +78,8 @@ el:
         join_channel: "Εγγραφή στο κανάλι"
         leave_channel: "Αποχώρηση από το κανάλι"
         leave_groupchat_info: "Αποχωρώντας από αυτήν την ομαδική συνομιλία, δεν θα έχετε πλέον πρόσβαση σε αυτήν και δεν θα λαμβάνετε ειδοποιήσεις σχετικά με αυτήν. Για να συμμετάσχετε ξανά, θα πρέπει να σας προσκαλέσει ξανά ένα μέλος της ομαδικής συνομιλίας."
+        notification_settings: "Ρυθμίσεις ειδοποιήσεων"
+        notification_settings_context: "Ειδοποιήσεις"
         join: "Γίνετε μέλος"
         leave: "Αποχώρηση"
         save_label:
@@ -383,6 +392,7 @@ el:
         follow: "Γίνετε μέλος"
         followed: "Έγινε μέλος"
         mute: "Σίγαση καναλιού"
+        unmute: "Άρση σίγασης καναλιού"
         threading_enabled: "Ενεργοποιημένα"
         threading_disabled: "Απενεργοποιημένο"
         muted_on: "Ενεργό"
@@ -561,7 +571,7 @@ el:
     review:
       types:
         chat_reviewable_message:
-          title: "Αναφερόμενο Μήνυμα Συνομιλίας"
+          title: "Αναφερόμενο μήνυμα συνομιλίας"
         reviewable_chat_message:
           title: "Αναφερόμενο μήνυμα συνομιλίας"
           noun: "μήνυμα συνομιλίας"

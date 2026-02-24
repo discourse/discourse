@@ -41,7 +41,7 @@ class SidebarSectionsController < ApplicationController
   end
 
   def update
-    sidebar_section = SidebarSection.find_by(id: section_params["id"])
+    sidebar_section = SidebarSection.find(section_params["id"])
     @guardian.ensure_can_edit!(sidebar_section)
 
     ActiveRecord::Base.transaction do
@@ -91,7 +91,7 @@ class SidebarSectionsController < ApplicationController
   end
 
   def destroy
-    sidebar_section = SidebarSection.find_by(id: section_params["id"])
+    sidebar_section = SidebarSection.find(section_params["id"])
     @guardian.ensure_can_delete!(sidebar_section)
     sidebar_section.destroy!
 

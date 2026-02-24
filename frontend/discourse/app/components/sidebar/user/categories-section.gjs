@@ -71,7 +71,7 @@ export default class SidebarUserCategoriesSection extends CommonCategoriesSectio
   get headerActions() {
     const actions = [];
 
-    if (this.currentUser.admin) {
+    if (this.currentUser.can_create_category) {
       actions.push({
         id: "new-category",
         action: () => this.router.transitionTo("newCategory"),

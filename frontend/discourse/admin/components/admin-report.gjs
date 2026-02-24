@@ -39,6 +39,7 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { outputExportResult } from "discourse/lib/export-result";
 import { makeArray } from "discourse/lib/helpers";
 import ReportLoader from "discourse/lib/reports-loader";
+import { and } from "discourse/truth-helpers";
 import { i18n } from "discourse-i18n";
 
 const TABLE_OPTIONS = {
@@ -533,6 +534,14 @@ export default class AdminReport extends Component {
     >
       {{#unless this.isHidden}}
         <ConditionalLoadingSection @isLoading={{this.isLoading}}>
+          {{#if
+            (and this.siteSettings.reporting_improvements this.model.legacy)
+          }}
+            <div class="alert alert-info">
+              {{icon "triangle-exclamation"}}
+              <span>{{i18n "admin.reports.legacy_warning"}}</span>
+            </div>
+          {{/if}}
           {{#if this.showHeader}}
             <div class="header">
               {{#unless this.showNotFoundError}}

@@ -10,6 +10,7 @@ RSpec.describe AiTool do
   def create_tool(
     parameters: nil,
     script: nil,
+    secret_contracts: nil,
     rag_chunk_tokens: nil,
     rag_chunk_overlap_tokens: nil
   )
@@ -20,6 +21,7 @@ RSpec.describe AiTool do
       parameters:
         parameters || [{ name: "query", type: "string", description: "perform a search" }],
       script: script || "function invoke(params) { return params; }",
+      secret_contracts: secret_contracts || [],
       created_by_id: 1,
       summary: "Test tool summary",
       rag_chunk_tokens: rag_chunk_tokens || 374,
@@ -43,6 +45,31 @@ RSpec.describe AiTool do
     runner = tool.runner({ "query" => "test" }, llm: nil, bot_user: nil)
 
     expect(runner.invoke).to eq("query" => "test")
+  end
+
+  it "validates secret contracts" do
+    tool =
+      create_tool(
+        parameters: [{ name: "query", type: "string", description: "perform a search" }],
+        script: "function invoke(params) { return params; }",
+      )
+
+    tool.secret_contracts = [{ alias: "invalid alias" }, { alias: "invalid alias" }]
+
+    expect(tool).not_to be_valid
+    expect(tool.errors[:secret_contracts]).to be_present
+  end
+
+  it "can replace and resolve secret bindings by alias" do
+    tool = create_tool(secret_contracts: [{ alias: "weather_api_key" }])
+    secret = Fabricate(:ai_secret)
+
+    tool.replace_secret_bindings!([{ alias: "weather_api_key", ai_secret_id: secret.id }])
+
+    value, error = tool.resolve_secret("weather_api_key")
+    expect(error).to be_nil
+    expect(value).to eq(secret.secret)
+    expect(tool.missing_secret_aliases).to eq([])
   end
 
   it "can base64 encode binary HTTP responses" do

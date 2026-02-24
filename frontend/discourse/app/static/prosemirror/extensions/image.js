@@ -8,7 +8,6 @@ import { authorizesOneOrMoreImageExtensions } from "discourse/lib/uploads";
 import { isNumeric } from "discourse/lib/utilities";
 import { i18n } from "discourse-i18n";
 import ImageNodeView from "../components/image-node-view";
-import GlimmerNodeView from "../lib/glimmer-node-view";
 import { getChangedRanges } from "../lib/plugin-utils";
 
 const PLACEHOLDER_IMG = "/images/transparent.png";
@@ -18,30 +17,17 @@ const ALT_TEXT_REGEX =
 
 const UPLOAD_TIMEOUT = 30_000;
 
-const createImageNodeView =
-  ({ getContext }) =>
-  (node, view, getPos) => {
-    if (
-      node.attrs.placeholder ||
-      node.attrs.extras === "audio" ||
-      node.attrs.extras === "video"
-    ) {
-      return null;
-    }
-
-    return new GlimmerNodeView({
-      node,
-      view,
-      getPos,
-      getContext,
-      component: ImageNodeView,
-      name: "image",
-    });
-  };
-
 /** @type {RichEditorExtension} */
 const extension = {
-  nodeViews: { image: createImageNodeView },
+  nodeViews: {
+    image: {
+      component: ImageNodeView,
+      shouldRender: ({ node }) =>
+        !node.attrs.placeholder &&
+        node.attrs.extras !== "audio" &&
+        node.attrs.extras !== "video",
+    },
+  },
 
   nodeSpec: {
     image: {
@@ -358,7 +344,10 @@ const extension = {
             const tr = view.state.tr;
             const dataURIMap = dataImageUploader.getState(view.state);
 
-            dataURIMap.get(dataURI)?.forEach((pos) => {
+            const positions = [...dataURIMap.get(dataURI)].sort(
+              (a, b) => b - a
+            );
+            positions.forEach((pos) => {
               const node = view.state.doc.nodeAt(pos);
               tr.replaceWith(
                 pos,
@@ -428,7 +417,10 @@ const extension = {
               const tr = view.state.tr;
               const dataURIMap = dataImageUploader.getState(view.state);
 
-              dataURIMap.get(dataURI)?.forEach((pos) => {
+              const positions = [...dataURIMap.get(dataURI)].sort(
+                (a, b) => b - a
+              );
+              positions.forEach((pos) => {
                 const node = view.state.doc.nodeAt(pos);
                 tr.replaceWith(
                   pos,

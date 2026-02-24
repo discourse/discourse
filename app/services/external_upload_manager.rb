@@ -172,7 +172,9 @@ class ExternalUploadManager
   end
 
   def move_to_final_destination
-    content_type = MiniMime.lookup_by_filename(external_upload_stub.original_filename).content_type
+    content_type =
+      MiniMime.lookup_by_filename(external_upload_stub.original_filename)&.content_type ||
+        "application/gzip"
     @store.move_existing_stored_upload(
       existing_external_upload_key: external_upload_stub.key,
       original_filename: external_upload_stub.original_filename,

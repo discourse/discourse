@@ -34,6 +34,8 @@ nb_NO:
             canned_reply:
               label: "Svar"
     discourse_ai:
+      llm_selector:
+        none: "Ingen"
       features:
         back: "Forrige"
         disabled: "(deaktivert)"
@@ -114,6 +116,15 @@ nb_NO:
         parameter_required: "Påkrevd"
         edit: "Rediger"
         delete: "Slett"
+      secrets:
+        short_title: "Legitimasjon"
+        name: "Navn"
+        secret: "Verdi"
+        back: "Forrige"
+        save: "Lagre"
+        edit: "Rediger"
+        delete: "Slett"
+        embedding: "Innbygging"
       llms:
         display_name: "Navn"
         provider: "Tilbyder"

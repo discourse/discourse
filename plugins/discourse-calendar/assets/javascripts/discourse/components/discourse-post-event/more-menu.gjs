@@ -13,7 +13,11 @@ import { exportEntity } from "discourse/lib/export-csv";
 import { cook } from "discourse/lib/text";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import { i18n } from "discourse-i18n";
-import { buildParams, replaceRaw } from "../../lib/raw-event-helper";
+import {
+  buildParams,
+  removeEvent,
+  replaceRaw,
+} from "../../lib/raw-event-helper";
 import PostEventBuilder from "../modal/post-event-builder";
 import PostEventBulkInvite from "../modal/post-event-bulk-invite";
 import PostEventInviteUserOrGroup from "../modal/post-event-invite-user-or-group";
@@ -193,12 +197,7 @@ export default class DiscoursePostEventMoreMenu extends Component {
         onDelete: async (event) => {
           const post = await this.store.find("post", event.id);
           const raw = post.raw;
-
-          const eventRegex = new RegExp(
-            `\\[event\\s(.*?)\\]\\n\\[\\/event\\]`,
-            "m"
-          );
-          const newRaw = raw.replace(eventRegex, "");
+          const newRaw = removeEvent(raw);
 
           const props = {
             raw: newRaw,

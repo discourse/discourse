@@ -16,6 +16,27 @@ module DiscourseTagging
     @term_types ||= Enum.new(contains: 0, starts_with: 1)
   end
 
+  # Sets tags for topic and allows new tags to be created if they do not exist.
+  #
+  # Accepts either an array of tag names (backward compatibility) or an array of hashes with :id and/or :name keys.
+  #
+  # @param topic [Topic] the topic to be tagged
+  # @param guardian [Guardian] the guardian of the user performing the action
+  # @param tags_param [Array<String>, Array<Hash>] an array of tag names or an array of
+  #  hashes with :id and/or :name keys (absence of id indicates new tag).
+  def self.tag_topic(topic, guardian, tags_param)
+    if tags_param.blank? || tags_param.first.is_a?(String)
+      return tag_topic_by_names(topic, guardian, tags_param)
+    end
+
+    tag_ids = tags_param.filter_map { |t| t[:id]&.to_i }
+    new_names = tags_param.filter_map { |t| t[:id].blank? && t[:name].presence }
+
+    tag_names = new_names
+    tag_names += Tag.where(id: tag_ids).pluck(:name) if tag_ids.present?
+    tag_topic_by_names(topic, guardian, tag_names)
+  end
+
   def self.tag_topic_by_names(topic, guardian, tag_names_arg, append: false)
     if guardian.can_tag?(topic)
       tag_names = DiscourseTagging.tags_for_saving(tag_names_arg, guardian) || []
@@ -493,7 +514,7 @@ module DiscourseTagging
       end
 
     sql << <<~SQL
-      SELECT #{distinct_clause} t.id, t.name, t.#{topic_count_column}, t.pm_topic_count, t.description,
+      SELECT #{distinct_clause} t.id, t.name, t.slug, t.#{topic_count_column}, t.pm_topic_count, t.description,
         tgr.tgm_id as tgm_id, tgr.tag_group_id as tag_group_id, tgr.parent_tag_id as parent_tag_id,
         tgr.one_per_topic as one_per_topic, t.target_tag_id
       FROM tags t
@@ -783,7 +804,7 @@ module DiscourseTagging
     Discourse.cache.delete(TAGS_STAFF_CACHE_KEY)
   end
 
-  def self.clean_tag(tag)
+  def self.clean_tag(tag, truncate: true)
     tag = tag.dup
     tag.downcase! if SiteSetting.force_lowercase_tags
     tag.strip!
@@ -791,7 +812,7 @@ module DiscourseTagging
     tag.gsub!(/[^[:word:][:punct:]]+/, "")
     tag.gsub!(TAGS_FILTER_REGEXP, "")
     tag.squeeze!("-")
-    tag[0...SiteSetting.max_tag_length]
+    truncate ? tag[0...SiteSetting.max_tag_length] : tag
   end
 
   def self.tags_for_saving(tags_arg, guardian, opts = {})
@@ -807,6 +828,16 @@ module DiscourseTagging
 
     saving_tags = opts[:unlimited] ? tag_names : tag_names[0...SiteSetting.max_tags_per_topic]
     DiscoursePluginRegistry.apply_modifier(:tags_for_saving, saving_tags, tag_names, guardian, opts)
+  end
+
+  def self.find_or_create_tags!(tag_names, guardian)
+    tag_names = tags_for_saving(tag_names, guardian) || []
+    return [] if tag_names.empty?
+
+    existing_tag_names = Tag.where_name(tag_names).pluck(:name)
+    new_tag_names = tag_names - existing_tag_names
+    new_tag_names.each { |name| Tag.create!(name: name) }
+    Tag.where_name(tag_names).all
   end
 
   def self.add_or_create_tags_by_name(taggable, tag_names_arg, opts = {})
@@ -881,7 +912,13 @@ module DiscourseTagging
       now = Time.current
       rows =
         names_to_create.map do |n|
-          { name: n, target_tag_id: target_tag.id, created_at: now, updated_at: now }
+          {
+            name: n,
+            slug: Slug.for(n, ""),
+            target_tag_id: target_tag.id,
+            created_at: now,
+            updated_at: now,
+          }
         end
       valid_ids += Tag.insert_all(rows, returning: :id).pluck("id")
     end

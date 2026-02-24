@@ -1,5 +1,181 @@
 # frozen_string_literal: true
 
+# @!parse
+#   module Service::Base
+#     # @!scope class
+#     # @!method model(name = :model, step_name = :"fetch_#{name}", optional: false)
+#     # @param name [Symbol] name of the model
+#     # @param step_name [Symbol] name of the method to call for this step
+#     # @param optional [Boolean] if +true+, then the step won't fail if its return value is falsy.
+#     # Evaluates arbitrary code to build or fetch a model (typically from the
+#     # DB). If the step returns a falsy value, then the step will fail.
+#     #
+#     # It stores the resulting model in +context[:model]+ by default (can be
+#     # customized by providing the +name+ argument).
+#     #
+#     # @example
+#     #   model :channel
+#     #
+#     #   private
+#     #
+#     #   def fetch_channel(channel_id:)
+#     #     Chat::Channel.find_by(id: channel_id)
+#     #   end
+#
+#     # @!scope class
+#     # @!method policy(name = :default, class_name: nil)
+#     # @param name [Symbol] name for this policy
+#     # @param class_name [Class] a policy object (should inherit from +PolicyBase+)
+#     # Performs checks related to the state of the system. If the
+#     # step doesn't return a truthy value, then the policy will fail.
+#     #
+#     # When using a policy object, there is no need to define a method on the
+#     # service for the policy step. The policy object `#call` method will be
+#     # called and if the result isn't truthy, a `#reason` method is expected to
+#     # be implemented to explain the failure.
+#     #
+#     # Policy objects are usually useful for more complex logic.
+#     #
+#     # @example Without a policy object
+#     #   policy :no_direct_message_channel
+#     #
+#     #   private
+#     #
+#     #   def no_direct_message_channel(channel:)
+#     #     !channel.direct_message_channel?
+#     #   end
+#     #
+#     # @example With a policy object
+#     #   # in the service object
+#     #   policy :no_direct_message_channel, class_name: NoDirectMessageChannelPolicy
+#     #
+#     #   # in the policy object File
+#     #   class NoDirectMessageChannelPolicy < PolicyBase
+#     #     def call
+#     #       !context.channel.direct_message_channel?
+#     #     end
+#     #
+#     #     def reason
+#     #       "Direct message channels aren't supported"
+#     #     end
+#     #   end
+#
+#     # @!scope class
+#     # @!method params(name = :default, default_values_from: nil, &block)
+#     # @param name [Symbol] name for this contract
+#     # @param default_values_from [Symbol] name of the model to get default values from
+#     # @param block [Proc] a block containing validations
+#     # Checks the validity of the input parameters.
+#     # Implements ActiveModel::Validations and ActiveModel::Attributes.
+#     #
+#     # It stores the resulting contract in +context[:params]+ by default
+#     # (can be customized by providing the +name+ argument).
+#     #
+#     # @example
+#     #   params do
+#     #     attribute :name
+#     #     validates :name, presence: true
+#     #   end
+#
+#     # @!scope class
+#     # @!method step(name)
+#     # @param name [Symbol] the name of this step
+#     # Runs arbitrary code. To mark a step as failed, a call to {#fail!} needs
+#     # to be made explicitly.
+#     #
+#     # @example
+#     #   step :update_channel
+#     #
+#     #   private
+#     #
+#     #   def update_channel(channel:, params_to_edit:)
+#     #     channel.update!(params_to_edit)
+#     #   end
+#     # @example using {#fail!} in a step
+#     #   step :save_channel
+#     #
+#     #   private
+#     #
+#     #   def save_channel(channel:)
+#     #     fail!("something went wrong") if !channel.save
+#     #   end
+#
+#     # @!scope class
+#     # @!method transaction(&block)
+#     # @param block [Proc] a block containing steps to be run inside a transaction
+#     # Runs steps inside a DB transaction.
+#     #
+#     # @example
+#     #   transaction do
+#     #     step :prevents_slug_collision
+#     #     step :soft_delete_channel
+#     #     step :log_channel_deletion
+#     #   end
+#
+#     # @!scope class
+#     # @!method options(&block)
+#     # @param block [Proc] a block containing options definition
+#     # This is used to define options allowing to parameterize the service
+#     # behavior. The resulting options are available in `context[:options]`.
+#     #
+#     # @example
+#     #   options do
+#     #     attribute :my_option, :boolean, default: false
+#     #   end
+#
+#     # @!scope class
+#     # @!method try(*exceptions, &block)
+#     # @param exceptions [Array<Class>] one or more exception classes to catch (defaults to +StandardError+)
+#     # @param block [Proc] a block containing steps to be wrapped
+#     # Wraps steps and catches specified exceptions. If any wrapped step
+#     # raises a matching exception, the step fails and the execution flow
+#     # is halted. The caught exception is available on the result object.
+#     #
+#     # @example
+#     #   try do
+#     #     step :risky_operation
+#     #   end
+#     #
+#     # @example catching specific exceptions
+#     #   try(ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid) do
+#     #     step :save_record
+#     #   end
+#
+#     # @!scope class
+#     # @!method lock(*keys, &block)
+#     # @param keys [Array<Symbol>] one or more keys to build a unique lock name
+#     # @param block [Proc] a block containing steps to be wrapped
+#     # Wraps steps inside a +DistributedMutex+. Keys are resolved from
+#     # +params+ first, then from the service context. When a resolved value
+#     # responds to +id+ (e.g. an ActiveRecord model), its +id+ is used
+#     # automatically. Fails if the lock cannot be acquired.
+#     #
+#     # @example locking on a param
+#     #   lock(:user_id) do
+#     #     step :update_user
+#     #   end
+#     #
+#     # @example locking on a model from context
+#     #   model :topic
+#     #   lock(:topic) do
+#     #     step :update_topic
+#     #   end
+#
+#     # @!scope class
+#     # @!method only_if(name, &block)
+#     # @param name [Symbol] the name of the condition to check
+#     # @param block [Proc] a block containing steps to conditionally run
+#     # Conditionally runs the steps in its block. If the condition method
+#     # returns a falsy value, the steps are skipped but the execution flow
+#     # is not halted.
+#     #
+#     # @example
+#     #   only_if(:has_post) do
+#     #     step :update_post
+#     #     step :log_post_update
+#     #   end
+#   end
+
 module Service
   module Base
     extend ActiveSupport::Concern
@@ -13,383 +189,6 @@ module Service
       def initialize(context = nil)
         @context = context
         super
-      end
-    end
-
-    # Simple structure to hold the context of the service during its whole lifecycle.
-    class Context
-      delegate :slice, :dig, to: :store
-
-      def initialize(context = {})
-        @store = context.symbolize_keys
-      end
-
-      def [](key)
-        store[key.to_sym]
-      end
-
-      def []=(key, value)
-        store[key.to_sym] = value
-      end
-
-      def to_h
-        store.dup
-      end
-
-      # @return [Boolean] returns +true+ if the context is set as successful (default)
-      def success?
-        !failure?
-      end
-
-      # @return [Boolean] returns +true+ if the context is set as failed
-      # @see #fail!
-      # @see #fail
-      def failure?
-        @failure || false
-      end
-
-      # Marks the context as failed.
-      # @param context [Hash, Context] the context to merge into the current one
-      # @example
-      #   context.fail!("failure": "something went wrong")
-      # @return [Context]
-      def fail!(context = {})
-        self.fail(context)
-        raise Failure, self
-      end
-
-      # Marks the context as failed without raising an exception.
-      # @param context [Hash, Context] the context to merge into the current one
-      # @example
-      #   context.fail("failure": "something went wrong")
-      # @return [Context]
-      def fail(context = {})
-        store.merge!(context.symbolize_keys)
-        @failure = true
-        self
-      end
-
-      def inspect_steps
-        Service::StepsInspector.new(self).inspect
-      end
-
-      private
-
-      attr_reader :store
-
-      def self.build(context = {})
-        self === context ? context : new(context)
-      end
-
-      def method_missing(method_name, *args, &block)
-        return super if args.present?
-        store[method_name]
-      end
-
-      def respond_to_missing?(name, include_all)
-        store.key?(name) || super
-      end
-    end
-
-    # Internal module to define available steps as DSL
-    # @!visibility private
-    module StepsHelpers
-      def model(name = :model, step_name = :"fetch_#{name}", optional: false)
-        steps << ModelStep.new(name, step_name, optional:)
-      end
-
-      def params(
-        name = :default,
-        default_values_from: nil,
-        base_class: Service::ContractBase,
-        &block
-      )
-        contract_class = Class.new(base_class).tap { _1.class_eval(&block) if block }
-        const_set("#{name.to_s.classify.sub("Default", "")}Contract", contract_class)
-        steps << ContractStep.new(name, class_name: contract_class, default_values_from:)
-      end
-
-      def policy(name = :default, class_name: nil)
-        steps << PolicyStep.new(name, class_name:)
-      end
-
-      def step(name)
-        steps << Step.new(name)
-      end
-
-      def transaction(&block)
-        steps << TransactionStep.new(&block)
-      end
-
-      def lock(*keys, &block)
-        steps << LockStep.new(*keys, &block)
-      end
-
-      def options(&block)
-        klass = Class.new(Service::OptionsBase).tap { _1.class_eval(&block) }
-        const_set("Options", klass)
-        steps << OptionsStep.new(:default, class_name: klass)
-      end
-
-      def try(*exceptions, &block)
-        steps << TryStep.new(exceptions, &block)
-      end
-
-      def only_if(name, &block)
-        steps << OnlyIfStep.new(name, &block)
-      end
-    end
-
-    # @!visibility private
-    class Step
-      class DefaultValuesNotAllowed < StandardError
-      end
-
-      attr_reader :name, :method_name, :class_name
-
-      def initialize(name, method_name = name, class_name: nil)
-        @name, @method_name, @class_name = name, method_name, class_name
-        @instance = Concurrent::ThreadLocalVar.new
-        @context = Concurrent::ThreadLocalVar.new
-      end
-
-      def call(instance, context)
-        @instance.value, @context.value = instance, context
-        context[result_key] = Context.build
-        with_runtime { run_step }
-      end
-
-      def result_key
-        "result.#{type}.#{name}"
-      end
-
-      def instance = @instance.value
-
-      def context = @context.value
-
-      private
-
-      def run_step
-        object = class_name&.new(context)
-        method = object&.method(:call) || instance.method(method_name)
-        if !object && method.parameters.any? { _1[0] != :keyreq }
-          raise DefaultValuesNotAllowed,
-                "In #{type} '#{name}': default values in step implementations are not allowed. Maybe they could be defined in a params or options block?"
-        end
-        args = context.slice(*method.parameters.select { _1[0] == :keyreq }.map(&:last))
-        context[result_key][:object] = object if object
-        instance.instance_exec(**args, &method)
-      end
-
-      def type
-        self.class.name.split("::").last.underscore.sub(/^(\w+)_step$/, "\\1")
-      end
-
-      def with_runtime
-        started_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-        yield.tap do
-          ended_at = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-          context[result_key][:__runtime__] = ended_at - started_at
-        end
-      end
-    end
-
-    # @!visibility private
-    class ModelStep < Step
-      class NotFound < StandardError
-      end
-
-      attr_reader :optional
-
-      def initialize(name, method_name = name, class_name: nil, optional: nil)
-        super(name, method_name, class_name: class_name)
-        @optional = optional.present?
-      end
-
-      def run_step
-        context[name] = super
-        raise NotFound if !optional && (!context[name] || context[name].try(:empty?))
-        if context[name].try(:has_changes_to_save?) && context[name].try(:invalid?)
-          context[result_key].fail(invalid: true)
-          context.fail!
-        end
-      rescue Failure, DefaultValuesNotAllowed
-        raise
-      rescue => exception
-        context[result_key].fail(
-          not_found: true,
-          exception: (exception unless exception.is_a?(NotFound)),
-        )
-        context.fail!
-      end
-    end
-
-    # @!visibility private
-    class PolicyStep < Step
-      def run_step
-        if !super
-          context[result_key].fail(reason: context[result_key].object&.reason)
-          context.fail!
-        end
-      end
-    end
-
-    # @!visibility private
-    class ContractStep < Step
-      attr_reader :default_values_from
-
-      def initialize(name, method_name = name, class_name: nil, default_values_from: nil)
-        super(name, method_name, class_name:)
-        @default_values_from = default_values_from
-      end
-
-      def run_step
-        contract =
-          class_name.new(**default_values.merge(context[:params]), options: context[:options])
-        context[contract_name] = contract
-        if contract.invalid?
-          context[result_key].fail(errors: contract.errors, parameters: contract.raw_attributes)
-          context.fail!
-        end
-        contract.freeze
-      end
-
-      private
-
-      def contract_name
-        return :params if default?
-        :"#{name}_contract"
-      end
-
-      def default?
-        name.to_sym == :default
-      end
-
-      def default_values
-        return {} unless default_values_from
-        model = context[default_values_from]
-        model.try(:attributes).try(:with_indifferent_access) || model
-      end
-    end
-
-    # @!visibility private
-    class TransactionStep < Step
-      include StepsHelpers
-
-      attr_reader :steps
-
-      def initialize(&block)
-        super("")
-        @steps = []
-        instance_exec(&block)
-      end
-
-      def run_step
-        ActiveRecord::Base.transaction { steps.each { |step| step.call(instance, context) } }
-      end
-    end
-
-    # @!visibility private
-    class LockStep < Step
-      include StepsHelpers
-
-      attr_reader :steps, :keys
-
-      def initialize(*keys, &block)
-        super(keys.join(":"))
-        @keys = keys
-        @steps = []
-        instance_exec(&block)
-      end
-
-      def run_step
-        success =
-          begin
-            DistributedMutex.synchronize(lock_name) do
-              steps.each { |step| step.call(instance, context) }
-              :success
-            end
-          rescue Discourse::ReadOnly
-            :read_only
-          end
-
-        if success != :success
-          context[result_key].fail(lock_not_aquired: true)
-          context.fail!
-        end
-      end
-
-      private
-
-      def lock_name
-        [
-          context.__service_class__.to_s.underscore,
-          *keys.flat_map { |key| [key, context[:params].public_send(key)] },
-        ].join(":")
-      end
-    end
-
-    # @!visibility private
-    class TryStep < Step
-      module FilteredBacktrace
-        def filtered_backtrace
-          Array
-            .wrap(backtrace)
-            .chunk { _1.match?(%r{/(gems|lib/service|ruby)/}) }
-            .flat_map do |excluded, lines|
-              next "(#{lines.size} framework line(s) excluded)" if excluded
-              lines
-            end
-        end
-      end
-
-      include StepsHelpers
-
-      attr_reader :steps, :exceptions
-
-      def initialize(exceptions, &block)
-        super("default")
-        @steps = []
-        @exceptions = exceptions.presence || [StandardError]
-        instance_exec(&block)
-      end
-
-      def run_step
-        steps.each do |step|
-          @current_step = step
-          step.call(instance, context)
-        end
-      rescue *exceptions => e
-        raise e if e.is_a?(Failure)
-        e.singleton_class.prepend(FilteredBacktrace)
-        context[@current_step.result_key].fail(raised_exception?: true, exception: e)
-        context[result_key][:exception] = e
-        context.fail!
-      end
-    end
-
-    # @!visibility private
-    class OnlyIfStep < Step
-      include StepsHelpers
-
-      attr_reader :steps
-
-      def initialize(name, &block)
-        super(name)
-        @steps = []
-        instance_exec(&block)
-      end
-
-      def run_step
-        return context[result_key][:skipped?] = true unless super
-        steps.each { |step| step.call(instance, context) }
-      end
-    end
-
-    # @!visibility private
-    class OptionsStep < Step
-      def run_step
-        context[:options] = class_name.new(context[:options])
       end
     end
 
@@ -414,127 +213,6 @@ module Service
         @steps ||= []
       end
     end
-
-    # @!scope class
-    # @!method model(name = :model, step_name = :"fetch_#{name}", optional: false)
-    # @param name [Symbol] name of the model
-    # @param step_name [Symbol] name of the method to call for this step
-    # @param optional [Boolean] if +true+, then the step won’t fail if its return value is falsy.
-    # Evaluates arbitrary code to build or fetch a model (typically from the
-    # DB). If the step returns a falsy value, then the step will fail.
-    #
-    # It stores the resulting model in +context[:model]+ by default (can be
-    # customized by providing the +name+ argument).
-    #
-    # @example
-    #   model :channel
-    #
-    #   private
-    #
-    #   def fetch_channel(channel_id:)
-    #     Chat::Channel.find_by(id: channel_id)
-    #   end
-
-    # @!scope class
-    # @!method policy(name = :default, class_name: nil)
-    # @param name [Symbol] name for this policy
-    # @param class_name [Class] a policy object (should inherit from +PolicyBase+)
-    # Performs checks related to the state of the system. If the
-    # step doesn’t return a truthy value, then the policy will fail.
-    #
-    # When using a policy object, there is no need to define a method on the
-    # service for the policy step. The policy object `#call` method will be
-    # called and if the result isn’t truthy, a `#reason` method is expected to
-    # be implemented to explain the failure.
-    #
-    # Policy objects are usually useful for more complex logic.
-    #
-    # @example Without a policy object
-    #   policy :no_direct_message_channel
-    #
-    #   private
-    #
-    #   def no_direct_message_channel(channel:)
-    #     !channel.direct_message_channel?
-    #   end
-    #
-    # @example With a policy object
-    #   # in the service object
-    #   policy :no_direct_message_channel, class_name: NoDirectMessageChannelPolicy
-    #
-    #   # in the policy object File
-    #   class NoDirectMessageChannelPolicy < PolicyBase
-    #     def call
-    #       !context.channel.direct_message_channel?
-    #     end
-    #
-    #     def reason
-    #       "Direct message channels aren’t supported"
-    #     end
-    #   end
-
-    # @!scope class
-    # @!method params(name = :default, default_values_from: nil, &block)
-    # @param name [Symbol] name for this contract
-    # @param default_values_from [Symbol] name of the model to get default values from
-    # @param block [Proc] a block containing validations
-    # Checks the validity of the input parameters.
-    # Implements ActiveModel::Validations and ActiveModel::Attributes.
-    #
-    # It stores the resulting contract in +context[:params]+ by default
-    # (can be customized by providing the +name+ argument).
-    #
-    # @example
-    #   params do
-    #     attribute :name
-    #     validates :name, presence: true
-    #   end
-
-    # @!scope class
-    # @!method step(name)
-    # @param name [Symbol] the name of this step
-    # Runs arbitrary code. To mark a step as failed, a call to {#fail!} needs
-    # to be made explicitly.
-    #
-    # @example
-    #   step :update_channel
-    #
-    #   private
-    #
-    #   def update_channel(channel:, params_to_edit:)
-    #     channel.update!(params_to_edit)
-    #   end
-    # @example using {#fail!} in a step
-    #   step :save_channel
-    #
-    #   private
-    #
-    #   def save_channel(channel:)
-    #     fail!("something went wrong") if !channel.save
-    #   end
-
-    # @!scope class
-    # @!method transaction(&block)
-    # @param block [Proc] a block containing steps to be run inside a transaction
-    # Runs steps inside a DB transaction.
-    #
-    # @example
-    #   transaction do
-    #     step :prevents_slug_collision
-    #     step :soft_delete_channel
-    #     step :log_channel_deletion
-    #   end
-
-    # @!scope class
-    # @!method options(&block)
-    # @param block [Proc] a block containing options definition
-    # This is used to define options allowing to parameterize the service
-    # behavior. The resulting options are available in `context[:options]`.
-    #
-    # @example
-    #   options do
-    #     attribute :my_option, :boolean, default: false
-    #   end
 
     # @!visibility private
     def initialize(initial_context = {})

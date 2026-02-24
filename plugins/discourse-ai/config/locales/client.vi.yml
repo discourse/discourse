@@ -34,6 +34,8 @@ vi:
             canned_reply:
               label: "Trả lời"
     discourse_ai:
+      llm_selector:
+        none: "Không"
       features:
         back: "Quay lại"
         disabled: "(vô hiệu hóa)"
@@ -121,6 +123,15 @@ vi:
         parameter_required: "Bắt buộc"
         edit: "Sửa"
         delete: "Xóa"
+      secrets:
+        short_title: "Thông tin đăng nhập"
+        name: "Tên"
+        secret: "Giá trị"
+        back: "Quay lại"
+        save: "Lưu lại"
+        edit: "Sửa"
+        delete: "Xóa"
+        embedding: "Nhúng"
       llms:
         display_name: "Tên"
         save: "Lưu lại"

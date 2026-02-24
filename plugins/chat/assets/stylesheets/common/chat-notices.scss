@@ -20,13 +20,17 @@
     justify-content: space-between;
     background: var(--tertiary-low);
     padding: var(--space-2);
-    border-radius: var(--d-border-radius);
     color: var(--primary);
     min-width: 280px;
     margin-left: auto;
     margin-right: auto;
     gap: 0.25rem;
     box-sizing: border-box;
+    border-radius: var(--d-border-radius);
+
+    .chat-drawer-outlet & {
+      border-radius: 0;
+    }
 
     &:has(.dismiss-btn) {
       padding-right: 0;
@@ -36,6 +40,10 @@
   .dismiss-btn {
     color: var(--primary-medium);
     align-self: flex-start;
+
+    .chat-drawer-outlet & {
+      padding-top: var(--space-half);
+    }
 
     &:hover,
     &:focus {

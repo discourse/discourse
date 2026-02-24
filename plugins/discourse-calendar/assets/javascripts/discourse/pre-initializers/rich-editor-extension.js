@@ -27,7 +27,6 @@ const extension = {
   nodeViews: {
     event: {
       component: EventNodeView,
-      name: "event",
     },
   },
 

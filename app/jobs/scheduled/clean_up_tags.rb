@@ -12,7 +12,7 @@ module Jobs
         tags = Tag.unused.where("tags.created_at < ?", GRACE_PERIOD_MINUTES.minutes.ago)
         StaffActionLogger.new(Discourse.system_user).log_custom(
           "deleted_unused_tags",
-          tags: tags.pluck(:name),
+          tags: tags.order(:name).pluck(:name),
         )
         tags.destroy_all
       end

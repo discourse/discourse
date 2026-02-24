@@ -262,11 +262,7 @@ class HashtagAutocompleteService
   #                        bother searching subsequent types if the first types in
   #                        the array already reach the limit.
   # @returns {Array} The results as HashtagItems
-  def search(
-    term,
-    types_in_priority_order,
-    limit: SiteSetting.experimental_hashtag_search_result_limit
-  )
+  def search(term, types_in_priority_order, limit: 20)
     raise Discourse::InvalidParameters.new(:order) if !types_in_priority_order.is_a?(Array)
     limit = [limit, SEARCH_MAX_LIMIT].min
     types_in_priority_order =

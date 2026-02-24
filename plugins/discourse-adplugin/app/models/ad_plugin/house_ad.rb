@@ -6,6 +6,12 @@ module AdPlugin
 
     NAME_REGEX = /\A[[:alnum:]\s\.,'!@#$%&\*\-\+\=:]*\z/i
 
+    URI_ATTRIBUTES =
+      Set.new(%w[action cite data formaction href longdesc poster src xlink:href]).freeze
+    DANGEROUS_TAGS = Set.new(%w[script noscript base]).freeze
+    JAVASCRIPT_PROTOCOL_RE = /\Ajavascript:/i
+    PROTOCOL_SEPARATOR_RE = /[\x00-\x20\x7f-\xa0]+/n
+
     has_many :impressions,
              class_name: "AdPlugin::AdImpression",
              foreign_key: "ad_plugin_house_ad_id",
@@ -28,6 +34,8 @@ module AdPlugin
 
     validates :name, presence: true, uniqueness: true, format: { with: NAME_REGEX }
     validates :html, presence: true
+
+    before_save :sanitize_html
 
     scope :for_anons, -> { where(visible_to_anons: true) }
     scope :for_logged_in, -> { where(visible_to_logged_in_users: true) }
@@ -71,6 +79,35 @@ module AdPlugin
     end
 
     private
+
+    # Hygiene: strip JS from house ads so admins use proper patterns for scripting.
+    # This is not a security boundary — admins can already inject JS via themes
+    # and components, and CSP blocks inline JS anyway.
+    def sanitize_html
+      return unless html_changed?
+
+      fragment = Loofah.html5_fragment(self.html)
+
+      scrubber =
+        Loofah::Scrubber.new do |node|
+          if DANGEROUS_TAGS.include?(node.name)
+            node.remove
+            next
+          end
+
+          node.attribute_nodes.each do |attr|
+            if attr.name.start_with?("on")
+              attr.remove
+            elsif URI_ATTRIBUTES.include?(attr.name)
+              cleaned = attr.value.gsub(PROTOCOL_SEPARATOR_RE, "")
+              attr.remove if cleaned.match?(JAVASCRIPT_PROTOCOL_RE)
+            end
+          end
+        end
+
+      fragment.scrub!(scrubber)
+      self.html = fragment.to_html
+    end
 
     def clear_cache
       Site.clear_anon_cache!

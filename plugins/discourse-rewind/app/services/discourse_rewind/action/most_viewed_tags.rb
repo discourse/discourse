@@ -6,10 +6,10 @@ module DiscourseRewind
     class MostViewedTags < BaseReport
       FakeData = {
         data: [
-          { tag_id: 1, name: "cats" },
-          { tag_id: 2, name: "dogs" },
-          { tag_id: 3, name: "countries" },
-          { tag_id: 4, name: "management" },
+          { tag_id: 1, slug: "cats", name: "cats" },
+          { tag_id: 2, slug: "dogs", name: "dogs" },
+          { tag_id: 3, slug: "countries", name: "countries" },
+          { tag_id: 4, slug: "management", name: "management" },
         ],
         identifier: "most-viewed-tags",
       }
@@ -23,11 +23,11 @@ module DiscourseRewind
             .joins("INNER JOIN topic_tags ON topic_tags.topic_id = topics.id")
             .joins("INNER JOIN tags ON tags.id = topic_tags.tag_id")
             .where(user: user, viewed_at: date, tags: { id: Tag.visible(Guardian.new).pluck(:id) })
-            .group("tags.id, tags.name")
+            .group("tags.id, tags.name, tags.slug")
             .order("COUNT(DISTINCT topic_views.topic_id) DESC")
             .limit(4)
-            .pluck("tags.id, tags.name")
-            .map { |tag_id, name| { tag_id: tag_id, name: name } }
+            .pluck("tags.id, tags.slug, tags.name")
+            .map { |tag_id, slug, name| { tag_id: tag_id, slug: slug, name: name } }
 
         { data: most_viewed_tags, identifier: "most-viewed-tags" }
       end

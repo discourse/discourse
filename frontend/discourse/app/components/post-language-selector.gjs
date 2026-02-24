@@ -43,11 +43,11 @@ export default class PostLanguageSelector extends Component {
     <DMenu
       @identifier="post-language-selector"
       @title={{i18n "post.localizations.post_language_selector.title"}}
-      @icon="globe"
+      @icon="language"
       @label={{this.selectedLanguage}}
       @modalForMobile={{true}}
       @onRegisterApi={{this.onRegisterApi}}
-      @class="btn-transparent btn-small post-language-selector"
+      @class="btn-transparent post-language-selector"
     >
       <:content>
         <DropdownMenu as |dropdown|>

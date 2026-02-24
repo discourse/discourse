@@ -14,6 +14,7 @@ pl_PL:
               search: "Umożliwia wyszukiwanie AI"
               stream_completion: "Umożliwia strumieniowe uzupełnianie osobowości AI"
               update_personas: "Umożliwia aktualizację osobowości AI"
+              manage_artifacts: "Umożliwia zarządzanie artefaktami AI (listowanie, przeglądanie, tworzenie, aktualizowanie, usuwanie)"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -44,6 +45,9 @@ pl_PL:
             create_ai_embedding: "Utwórz osadzanie AI"
             update_ai_embedding: "Zaktualizuj osadzanie AI"
             delete_ai_embedding: "Usuń osadzanie AI"
+            create_ai_secret: "Utwórz sekret AI"
+            update_ai_secret: "Zaktualizuj sekret AI"
+            delete_ai_secret: "Usuń sekret AI"
             update_ai_spam_settings: "Zaktualizuj ustawienia spamu AI"
   js:
     discourse_automation:
@@ -225,6 +229,9 @@ pl_PL:
       default_llm:
         title: "Domyślny model LLM"
         description: "Domyślny model LLM do użycia dla wszystkich funkcji AI. Będzie on używany, jeśli w konfiguracji funkcji lub osobowości nie określono modelu LLM. Jeśli nie określono domyślnego modelu LLM, użyty zostanie ostatnio utworzony model LLM."
+      llm_selector:
+        none: "Brak"
+        saved: "Domyślny model LLM został pomyślnie zaktualizowany"
       features:
         short_title: "Cechy"
         description: "Są to funkcje AI dostępne dla odwiedzających Twoją witrynę. Można je skonfigurować do korzystania z określonych person i LLM, a dostęp do nich może być kontrolowany przez grupy."
@@ -325,6 +332,7 @@ pl_PL:
           image_caption: "Obrazy z podpisami"
           translator: "Tłumacz"
           post_illustrator: "Ilustrator postów"
+          chat_thread_titles: "Tytuły wątków czatu"
           setting_groups:
             access_permissions: "Dostęp i uprawnienia"
             enabled_features: "Włączone funkcje"
@@ -664,6 +672,30 @@ pl_PL:
           title: "Przetestuj narzędzie AI"
           run: "Przeprowadź test"
           result: "Wynik testu"
+      secrets:
+        short_title: "Poświadczenia"
+        description: "Zarządzaj danymi uwierzytelniającymi współdzielonymi w ramach LLM i osadzeń."
+        name: "Nazwa"
+        secret: "Wartość"
+        select_secret: "Wybierz poświadczenie..."
+        create_new: "Nowe poświadczenie"
+        add_secret: "Dodaj poświadczenie"
+        saved: "Zapisano poświadczenie"
+        confirm_delete: "Czy na pewno chcesz usunąć to poświadczenie?"
+        delete_failed_in_use: "To poświadczenie jest obecnie używane i nie można go usunąć."
+        no_secrets: "Brak jeszcze poświadczeń"
+        new_title: "Nowe poświadczenie"
+        edit_title: "Edytuj poświadczenie"
+        back: "Poprzednia"
+        save: "Zapisz"
+        edit: "Edytuj"
+        delete: "Usuń"
+        used_by: "Używane przez"
+        not_used: "Nieużywane"
+        embedding: "Osadzanie"
+        cannot_delete_in_use: "Tego poświadczenia nie można usunąć, ponieważ jest ono używane przez:"
+        modal:
+          title: "Utwórz nowe poświadczenie"
       llms:
         short_title: "LLMs"
         no_llms: "Nie ma jeszcze LLM"

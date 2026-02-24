@@ -27,7 +27,7 @@ class User::BulkDestroy
   end
 
   def can_delete_users(guardian:, users:)
-    users.all? { guardian.can_delete_user?(_1) }
+    users.all? { guardian.can_delete_user?(it) }
   end
 
   def delete(users:, guardian:, params:)

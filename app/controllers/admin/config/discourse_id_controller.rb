@@ -36,7 +36,9 @@ class Admin::Config::DiscourseIdController < Admin::AdminController
   def update_settings
     params.permit(:enabled)
 
-    SiteSetting.enable_discourse_id = params[:enabled] if params.key?(:enabled)
+    if params.key?(:enabled)
+      SiteSetting.set_and_log(:enable_discourse_id, params[:enabled], current_user)
+    end
 
     render json: success_json
   end

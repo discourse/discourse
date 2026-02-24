@@ -322,7 +322,16 @@ module ApplicationHelper
 
     generate_twitter_card_metadata(result, opts)
 
-    result << tag(:meta, property: "og:image", content: opts[:image]) if opts[:image].present?
+    if opts[:image].present?
+      result << tag(:meta, property: "og:image", content: opts[:image])
+      if opts[:image_width].present? && opts[:image_height].present?
+        result << tag(:meta, property: "og:image:width", content: opts[:image_width])
+        result << tag(:meta, property: "og:image:height", content: opts[:image_height])
+      end
+      if opts[:image_type].present?
+        result << tag(:meta, property: "og:image:type", content: opts[:image_type])
+      end
+    end
 
     %i[url title description].each do |property|
       if opts[property].present?
@@ -503,8 +512,13 @@ module ApplicationHelper
   end
 
   def splash_screen_image_animated?
-    build_splash_screen_image unless defined?(@splash_screen_image_animated)
-    @splash_screen_image_animated
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    @splash_screen_image_svg.present? && @splash_screen_image_svg.match?(/@keyframes\s/)
+  end
+
+  def splash_screen_inline_svg
+    build_splash_screen_image unless defined?(@splash_screen_image_svg)
+    @splash_screen_image_svg&.html_safe
   end
 
   def splash_screen_image_data_uri(dark: false)
@@ -531,45 +545,21 @@ module ApplicationHelper
 
   def build_splash_screen_image
     @splash_screen_image_svg = nil
-    @splash_screen_image_animated = false
 
     upload = SiteSetting.splash_screen_image
     return unless upload.is_a?(Upload)
 
-    content =
+    @splash_screen_image_svg =
       Discourse
         .cache
-        .fetch("splash_screen_image_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
-          upload.content
-        rescue StandardError => e
-          Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
-          nil
+        .fetch("splash_screen_svg_#{upload.id}_#{upload.sha1}", expires_in: 1.day) do
+          begin
+            upload.content.presence
+          rescue StandardError => e
+            Discourse.warn_exception(e, message: "Failed to fetch splash screen logo SVG")
+            nil
+          end
         end
-
-    return if content.blank?
-
-    doc = Nokogiri.XML(content)
-    svg = doc.at_css("svg")
-    return unless svg
-
-    @splash_screen_image_animated =
-      svg.at_xpath(
-        ".//*[local-name()='animate' or local-name()='animateTransform' or local-name()='animateMotion' or local-name()='set']",
-      ).present? || svg.at_css("style")&.text&.include?("@keyframes")
-
-    has_scripts = svg.xpath("//script").present?
-    has_event_handlers = svg.xpath("//@*[starts-with(name(), 'on')]").present?
-    # Avoid animations targeting href attributes
-    has_href_animations =
-      svg
-        .xpath(".//*[local-name()='animate' or local-name()='set']/@attributeName")
-        .any? { |attr| attr.value.downcase.include?("href") }
-
-    return if has_scripts || has_event_handlers || has_href_animations
-
-    @splash_screen_image_svg = content.dup
-
-    @splash_screen_image_svg.sub!(/^<\?xml[^>]*\?>\s*/, "")
   end
 
   public

@@ -17,6 +17,7 @@ import * as ProsemirrorHistory from "prosemirror-history";
 import { history } from "prosemirror-history";
 import { keymap } from "prosemirror-keymap";
 import * as ProsemirrorModel from "prosemirror-model";
+import * as ProsemirrorSchemaList from "prosemirror-schema-list";
 import * as ProsemirrorState from "prosemirror-state";
 import { EditorState } from "prosemirror-state";
 import * as ProsemirrorTransform from "prosemirror-transform";
@@ -106,6 +107,7 @@ export default class ProsemirrorEditor extends Component {
       pmView: ProsemirrorView,
       pmHistory: ProsemirrorHistory,
       pmTransform: ProsemirrorTransform,
+      pmSchemaList: ProsemirrorSchemaList,
       pmCommands: ProsemirrorCommands,
       getContext: () => ({
         placeholder: this.args.placeholder,
@@ -369,6 +371,7 @@ export default class ProsemirrorEditor extends Component {
           @view={{nodeView.view}}
           @getPos={{nodeView.getPos}}
           @dom={{nodeView.dom}}
+          @pluginParams={{nodeView.pluginParams}}
           @onSetup={{nodeView.setComponentInstance}}
         />
       {{~/in-element~}}

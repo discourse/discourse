@@ -2877,6 +2877,9 @@ nb_NO:
           other: "Fremgang: <strong>%{count}</strong> emner"
         performing: "Utfører masseoperasjoner, vennligst vent…"
         completed: "Masseoperasjoner fullført med suksess!"
+        error_topic_count:
+          one: "%{count} emne"
+          other: "%{count} emner"
       none:
         unread: "Du har ingen uleste emner."
         unseen: "Du har ingen usette emner."
@@ -3638,6 +3641,8 @@ nb_NO:
       slug_placeholder: "(Valgfritt) sammensatte ord for bruk i URL"
       creation_error: Det oppstod en feil ved lagring av denne kategorien.
       save_error: Det oppstod en feil ved lagrinen av denne kategorien.
+      validations:
+        icon_required: "Velg et ikon."
       description: "Beskrivelse"
       icon: "Ikon"
       emoji: "Emoji"
@@ -3663,10 +3668,8 @@ nb_NO:
         reply: "Svar"
         create: "Opprett"
         no_groups_selected: "Ingen grupper har fått tilgang; denne kategorien vil kun være synlig for staben."
-        everyone_full_access: 'Denne kategorien er offentlig, alle kan se, svare og opprette innlegg. For å begrense tillatelsene, fjern én eller flere av tillatelsene som er gitte til gruppen «alle».'
         toggle_reply: "Slå på/av svartillatelse"
         toggle_full: "Opprett tillatelse"
-        inherited: 'Denne tillatelsen arves fra "alle"'
       uncategorized_security_warning: "Denne kategorien er spesielt. Den er beregnet til å holde områder for emner som ikke har noen kategori; den kan ikke ha sikkerhetsinnstillinger."
       uncategorized_general_warning: 'Denne kategorien er spesielt. Han blir brukt som standardkategori for nye emner som ikke har en valgt kategori. Hvis du vil forhindre denne oppførselen og tvinge valg av kategori, <a href="%{settingLink}">vennligst deaktiver innstillingen her</a>. Hvis du vil endre navn eller beskrivelse, gå til <a href="%{customizeLink}">Tilpass / tekstinnhold</a>.'
       pending_permission_change_alert: "Du har ikke lagt til %{group} i denne kategorien; klikk denne knappen for å legge dem til."
@@ -4625,6 +4628,7 @@ nb_NO:
         save: "Lagre"
         cancel: "Avbryt"
         continue: "Fortsett"
+        copy_key: "Kopier"
         revoke: "Trekk tilbake"
       api:
         generate_master: "Generer Master API-nøkkel"

@@ -1603,6 +1603,27 @@ RSpec.describe PostsController do
         expect(json["errors"]).to be_present
       end
 
+      describe "tagging by name" do
+        it "can create a post with a tag when tagging is enabled" do
+          SiteSetting.tagging_enabled = true
+          tag = Fabricate(:tag)
+
+          logger =
+            track_log_messages do
+              post "/posts.json",
+                   params: {
+                     raw: "this is the test content",
+                     title: "this is the test title for the topic",
+                     tags: [tag.name],
+                   }
+            end
+
+          expect(response.status).to eq(200)
+          expect(Post.last.topic.tags.count).to eq(1)
+          expect(logger.warnings.join("\n")).to include("tag names as strings")
+        end
+      end
+
       it "can create a post with a tag when tagging is enabled" do
         SiteSetting.tagging_enabled = true
         tag = Fabricate(:tag)
@@ -1611,11 +1632,11 @@ RSpec.describe PostsController do
              params: {
                raw: "this is the test content",
                title: "this is the test title for the topic",
-               tags: [tag.name],
+               tags: [{ id: tag.id, name: tag.name }],
              }
 
         expect(response.status).to eq(200)
-        expect(Post.last.topic.tags.count).to eq(1)
+        expect(Post.last.topic.tags).to contain_exactly(tag)
       end
 
       it "creates the topic and post with the right attributes" do
@@ -1918,6 +1939,43 @@ RSpec.describe PostsController do
               expect(response).not_to be_successful
             end
           end
+        end
+      end
+
+      context "when topic is in slow mode" do
+        fab!(:slow_topic) { Fabricate(:topic, slow_mode_seconds: 86_400) }
+
+        it "enforces slow mode even when auto_track is false" do
+          post "/posts.json",
+               params: {
+                 raw: "this is the first reply in slow mode",
+                 topic_id: slow_topic.id,
+                 auto_track: false,
+               }
+
+          expect(response.status).to eq(200)
+
+          post "/posts.json",
+               params: {
+                 raw: "this is the second reply in slow mode bypassing",
+                 topic_id: slow_topic.id,
+                 auto_track: false,
+               }
+
+          expect(response.status).to eq(422)
+          expect(response.parsed_body["errors"]).to include(I18n.t(:slow_mode_enabled))
+        end
+
+        it "does not create a TopicUser record when auto_track is false" do
+          post "/posts.json",
+               params: {
+                 raw: "this is a reply with auto_track false",
+                 topic_id: slow_topic.id,
+                 auto_track: false,
+               }
+
+          expect(response.status).to eq(200)
+          expect(TopicUser.find_by(user: user, topic: slow_topic)).to be_nil
         end
       end
 

@@ -39,6 +39,15 @@ en:
           other: "%{formatted_number} chat messages"
 
     chat:
+      edit_category:
+        tab_title: "Chat"
+        channel: "Channel"
+        description: "Description"
+        actions: "Actions"
+        settings: "Settings"
+        no_channels: "There are no chat channels associated with this category"
+        no_channels_body: "You can have multiple channels per category, accessible to the same members based on the category's Security settings. <a href='%{chatBrowseUrl}'>Create a chat channel</a>."
+        include_subcategories: "Include subcategory channels"
       text_copied: Text copied to clipboard
       link_copied: Link copied to clipboard
       back_to_forum: "Forum"
@@ -56,6 +65,15 @@ en:
       starred: "Starred"
       starred_channels: "Starred channels"
       starred_channels_empty: "You haven't starred any channels yet. Star channels to see them here for quick access."
+      pinned_messages:
+        title: "Pinned messages"
+        close: "Close pinned messages"
+        pinned_by_you: "Pinned by you"
+        pinned_by_user: "Pinned by %{username}"
+      no_pinned_messages: "No pinned messages in this channel."
+      pin_message: "Pin message"
+      unpin_message: "Unpin message"
+      pinned: "Pinned"
       browse_all_channels: "Browse all channels"
       see_in: "See in"
       open_channel_menu: "Open channel menu"
@@ -628,14 +646,15 @@ en:
           other: "%{commaSeparatedUsernames} and %{count} others are typing"
 
       retention_reminders:
+        chat_settings: "Chat settings"
         indefinitely_short: "indefinitely"
-        indefinitely_long: "Chat settings have been set to retain channel messages indefinitely."
+        indefinitely_long: "%{chatSettingsLink} have been set to retain channel messages indefinitely."
         short:
           one: "%{count} day"
           other: "%{count} days"
         long:
-          one: "Chat settings have been set to retain channel messages for %{count} day."
-          other: "Chat settings have been set to retain channel messages for %{count} days."
+          one: "%{chatSettingsLink} have been set to retain channel messages for %{count} day."
+          other: "%{chatSettingsLink} have been set to retain channel messages for %{count} days."
 
       flags:
         off_topic: "This message is not relevant to the current discussion as defined by the channel title, and should probably be moved elsewhere."

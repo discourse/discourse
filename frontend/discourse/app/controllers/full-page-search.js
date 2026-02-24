@@ -596,9 +596,7 @@ export default class FullPageSearchController extends Controller {
     }
 
     if (options.collapseFilters) {
-      document
-        .querySelector("details.advanced-filters")
-        ?.removeAttribute("open");
+      this.appEvents.trigger("full-page-search:collapse-filters");
     }
     this.set("page", 1);
 

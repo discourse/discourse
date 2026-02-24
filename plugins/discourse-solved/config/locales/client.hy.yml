@@ -27,6 +27,8 @@ hy:
         solved: "լուծված"
         unsolved: "չլուծված"
       move_post_cancel: "Չեղարկել"
+      confirm_solved_removal_confirm: "Հաստատել"
+      confirm_solved_removal_cancel: "Չեղարկել"
     topic_statuses:
       solved:
         help: "Այս թեման ունի լուծում:"

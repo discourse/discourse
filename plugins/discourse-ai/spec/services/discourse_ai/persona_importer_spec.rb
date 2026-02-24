@@ -5,7 +5,14 @@ RSpec.describe DiscourseAi::PersonaImporter do
 
   describe "#import!" do
     context "when importing a persona with a custom tool" do
-      fab!(:ai_tool) { Fabricate(:ai_tool, name: "Giphy Searcher", tool_name: "giphy_search") }
+      fab!(:ai_tool) do
+        Fabricate(
+          :ai_tool,
+          name: "Giphy Searcher",
+          tool_name: "giphy_search",
+          secret_contracts: [{ alias: "giphy_api_key" }],
+        )
+      end
       fab!(:ai_persona) { Fabricate(:ai_persona, tools: [["custom-#{ai_tool.id}", nil, false]]) }
 
       let!(:export_json) { DiscourseAi::PersonaExporter.new(persona: ai_persona).export }
@@ -25,6 +32,7 @@ RSpec.describe DiscourseAi::PersonaImporter do
 
         expect(imported_tool.tool_name).to eq("giphy_search")
         expect(imported_tool.name).to eq("Giphy Searcher")
+        expect(imported_tool.secret_contracts).to eq([{ "alias" => "giphy_api_key" }])
       end
     end
 
@@ -134,6 +142,36 @@ RSpec.describe DiscourseAi::PersonaImporter do
 
         existing_tool.reload
         expect(existing_tool.name).to eq("Old Browser") # Name from export_json
+      end
+
+      it "prunes orphan secret bindings when contracts change on overwrite" do
+        secret = Fabricate(:ai_secret, name: "old_cred")
+        existing_tool.update!(
+          secret_contracts: [{ "alias" => "old_key" }, { "alias" => "new_key" }],
+        )
+        existing_tool.replace_secret_bindings!(
+          [
+            { alias: "old_key", ai_secret_id: secret.id },
+            { alias: "new_key", ai_secret_id: secret.id },
+          ],
+          created_by: Discourse.system_user,
+        )
+        expect(existing_tool.secret_bindings.count).to eq(2)
+
+        # The export payload only declares "new_key" in contracts, so "old_key" binding should be pruned
+        export_data = JSON.parse(export_json)
+        export_data["custom_tools"].each do |tool_data|
+          if tool_data["tool_name"] == "browse_web"
+            tool_data["secret_contracts"] = [{ "alias" => "new_key" }]
+          end
+        end
+
+        importer = described_class.new(json: export_data)
+        importer.import!(overwrite: true)
+
+        existing_tool.reload
+        expect(existing_tool.secret_contracts).to eq([{ "alias" => "new_key" }])
+        expect(existing_tool.secret_bindings.pluck(:alias)).to eq(["new_key"])
       end
     end
 

@@ -27,12 +27,14 @@ class TopicsController < ApplicationController
                    move_to_inbox
                    convert_topic
                    bookmark
+                   remove_bookmarks
                    publish
                    reset_bump_date
                    set_slow_mode
                  ]
 
   before_action :consider_user_for_promotion, only: :show
+  after_action :allow_embed_mode, only: :show
 
   skip_before_action :check_xhr, only: %i[show feed]
 
@@ -447,9 +449,26 @@ class TopicsController < ApplicationController
     changes.delete(:title) if topic.title == changes[:title]
     changes.delete(:category_id) if topic.category_id.to_i == changes[:category_id].to_i
 
-    if Tag.include_tags?
-      topic_tags = topic.tags.map(&:name).sort
-      changes.delete(:tags) if changes[:tags]&.sort == topic_tags
+    if Tag.include_tags? && changes.has_key?(:tags)
+      if changes[:tags].present?
+        incoming = changes[:tags]
+
+        if incoming.first.is_a?(String)
+          Discourse.deprecate(
+            "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+            since: "2026.01",
+            drop_from: "2026.07",
+          )
+          changes.delete(:tags) if incoming.sort == topic.tags.map(&:name).sort
+        else
+          has_new = incoming.any? { |t| t[:id].blank? }
+          if !has_new && incoming.filter_map { |t| t[:id]&.to_i }.sort == topic.tags.pluck(:id).sort
+            changes.delete(:tags)
+          end
+        end
+      elsif topic.tags.empty?
+        changes.delete(:tags)
+      end
     end
 
     success = true
@@ -475,18 +494,15 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:topic_id])
     guardian.ensure_can_edit_tags!(topic)
 
-    tags =
-      if params[:tag_ids].present?
-        params[:tag_ids].map(&:to_i)
-      else
-        params.require(:tags)
-        Discourse.deprecate(
-          "the tags param is deprecated, use tag_ids instead",
-          since: "2026.01",
-          drop_from: "2026.07",
-        )
-        params[:tags]
-      end
+    tags = params[:tags] || []
+
+    if tags.present? && tags.first.is_a?(String)
+      Discourse.deprecate(
+        "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+    end
 
     success =
       PostRevisor.new(topic.first_post, topic).revise!(
@@ -502,7 +518,7 @@ class TopicsController < ApplicationController
     params.require(:category_id)
     category_id = params[:category_id].to_i
 
-    visible_topics = Topic.listable_topics.visible
+    visible_topics = Topic.listable_topics.visible.secured(guardian)
 
     render json: {
              pinned_in_category_count:
@@ -513,7 +529,8 @@ class TopicsController < ApplicationController
                  .count,
              pinned_globally_count:
                visible_topics.where(pinned_globally: true).where.not(pinned_at: nil).count,
-             banner_count: Topic.listable_topics.where(archetype: Archetype.banner).count,
+             banner_count:
+               Topic.listable_topics.secured(guardian).where(archetype: Archetype.banner).count,
            }
   end
 
@@ -656,6 +673,7 @@ class TopicsController < ApplicationController
 
   def toggle_archive_message(archive)
     topic = Topic.find(params[:id].to_i)
+    guardian.ensure_can_see!(topic)
 
     group_id = nil
 
@@ -869,6 +887,7 @@ class TopicsController < ApplicationController
       end
 
     topic = Topic.find(params[:topic_id].to_i)
+    guardian.ensure_can_see!(topic)
     TopicUser.change(user, topic.id, notification_level: params[:notification_level].to_i)
     render json: success_json
   end
@@ -1090,7 +1109,9 @@ class TopicsController < ApplicationController
     operator = TopicsBulkAction.new(current_user, topic_ids, operation, group: operation[:group])
     hijack(info: "topics bulk action #{operation[:type]}") do
       changed_topic_ids = operator.perform!
-      render_json_dump topic_ids: changed_topic_ids
+      result = { topic_ids: changed_topic_ids }
+      result[:errors] = operator.errors if operator.errors.present?
+      render_json_dump result
     end
   end
 
@@ -1230,6 +1251,8 @@ class TopicsController < ApplicationController
     topic = Topic.find_by(id: params[:id])
     raise Discourse::NotFound.new unless topic
 
+    guardian.ensure_can_see!(topic)
+
     topic.reset_bumped_at(params[:post_id])
     render body: nil
   end
@@ -1258,6 +1281,14 @@ class TopicsController < ApplicationController
   end
 
   private
+
+  def allow_embed_mode
+    return if params[:embed_mode].blank?
+    return unless SiteSetting.embed_full_app
+    return unless SiteSetting.embed_any_origin? || EmbeddableHost.record_for_url(request.referer)
+
+    response.headers.delete("X-Frame-Options")
+  end
 
   def topic_params
     params.permit(:topic_id, :topic_time, timings: {})

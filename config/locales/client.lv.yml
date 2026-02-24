@@ -1893,6 +1893,10 @@ lv:
         choose_new_tags: "Izvēlēties jaunus tagus šīm tēmām:"
         choose_append_tags: "Izvēlēties jaunas birkas, ko pievienot šīm tēmām:"
         changed_tags: "Šo tēmu tagi tika mainīti."
+        error_topic_count:
+          zero: "%{count} tēmas"
+          one: "%{count} tēma"
+          other: "%{count} tēmas"
       none:
         unread: "Jums nav nelasītu tēmu."
         new: "Jums nav jaunu tēmu."
@@ -2332,6 +2336,8 @@ lv:
       create_long: "Izveidot jaunu sadaļu"
       creation_error: Izveidojot šo sadaļu, notika kļūda.
       save_error: Saglabājot šo sadaļu, notika kļūda.
+      validations:
+        icon_required: "Izvēlieties ikonu."
       description: "Apraksts"
       icon: "Ikona"
       emoji: "Smaidiņi"
@@ -3059,6 +3065,7 @@ lv:
         save: "Saglabāt"
         cancel: "Atcelt"
         continue: "Turpināt"
+        copy_key: "Kopēt"
         revoke: "Atsaukt"
       api:
         generate_master: "Radīt jaunu Master API atslēgu"

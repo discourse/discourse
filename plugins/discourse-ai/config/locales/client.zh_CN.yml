@@ -14,6 +14,7 @@ zh_CN:
               search: "允许 AI 搜索"
               stream_completion: "允许流式 AI 角色补全"
               update_personas: "允许更新 AI 角色"
+              manage_artifacts: "允许管理 AI 工件（列表、查看、创建、更新、删除）"
       site_settings:
         categories:
           discourse_ai: "Discourse AI"
@@ -44,6 +45,9 @@ zh_CN:
             create_ai_embedding: "创建 AI 嵌入向量"
             update_ai_embedding: "更新 AI 嵌入向量"
             delete_ai_embedding: "删除 AI 嵌入向量"
+            create_ai_secret: "创建 AI 密钥"
+            update_ai_secret: "更新 AI 密钥"
+            delete_ai_secret: "删除 AI 密钥"
             update_ai_spam_settings: "更新 AI 垃圾信息设置"
   js:
     discourse_automation:
@@ -225,6 +229,9 @@ zh_CN:
       default_llm:
         title: "默认 LLM 模型"
         description: "所有 AI 功能使用的默认 LLM 模型。如果功能配置或角色中未指定 LLM，将使用此模型。如果未指定默认 LLM，将使用最后创建的 LLM。"
+      llm_selector:
+        none: "无"
+        saved: "默认LLM模型已成功更新"
       features:
         short_title: "功能"
         description: "这些是您网站的访客可以使用的 AI 功能。可以将这些功能配置为使用特定的角色和 LLM，并按群组控制访问权限。"
@@ -316,6 +323,7 @@ zh_CN:
           image_caption: "标题图片"
           translator: "翻译器"
           post_illustrator: "帖子插图创建器"
+          chat_thread_titles: "聊天主题标题"
           setting_groups:
             access_permissions: "访问 & 权限"
             enabled_features: "已启用功能"
@@ -634,6 +642,30 @@ zh_CN:
           title: "测试 AI 工具"
           run: "运行测试"
           result: "测试结果"
+      secrets:
+        short_title: "凭据"
+        description: "管理在 LLM 和嵌入式系统之间共享的身份验证凭据。"
+        name: "名称"
+        secret: "值"
+        select_secret: "选择凭证..."
+        create_new: "新凭证"
+        add_secret: "添加凭证"
+        saved: "凭证已保存"
+        confirm_delete: "您确定要删除此凭证吗？"
+        delete_failed_in_use: "此凭证当前正在使用中，无法删除。"
+        no_secrets: "暂无凭证"
+        new_title: "新凭证"
+        edit_title: "编辑凭证"
+        back: "返回"
+        save: "保存"
+        edit: "编辑"
+        delete: "删除"
+        used_by: "用于"
+        not_used: "未使用"
+        embedding: "嵌入"
+        cannot_delete_in_use: "此凭证无法删除，因为它正被以下用户使用："
+        modal:
+          title: "创建新凭证"
       llms:
         short_title: "LLM"
         no_llms: "暂无 LLM"
@@ -702,6 +734,16 @@ zh_CN:
           anthropic-claude-sonnet-4-5: "速度与成本的最佳平衡"
           anthropic-claude-haiku-4-5: "快速、经济高效"
           google-gemini-3-pro: "谷歌最智能的模型"
+          google-gemini-3-flash: "快速高效且经济实惠，并具备多模态推理能力"
+          open_ai-gpt-5-2: "OpenAI 的旗舰模型，非常适合跨领域问题解决"
+          open_ai-gpt-5-mini: "在智能、速度和成本之间取得平衡"
+          open_ai-gpt-5-nano: "最快、最具成本效益的 GPT-5 模型。"
+          open_router-deepseek-deepseek-v3-2: "DeepSeek 最新高性能模型"
+          open_router-moonshotai-kimi-k2-5: "具有视觉功能的 Moonshot 多模态模型"
+          open_router-x-ai-grok-4-fast: "xAI 的旗舰视觉模型"
+          open_router-minimax-minimax-m2-1: "MiniMax 带大上下文的多模态模型"
+          open_router-z-ai-glm-4-7: "Z-AI 的多模态视觉模型"
+          open_router-arcee-ai-trinity-large-preview-free: "来自 Arcee AI 的免费开源模型"
         preseeded_model_description: "利用 %{model} 的预配置开源模型"
         configured:
           title: "配置的 LLM"

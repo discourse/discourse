@@ -44,6 +44,12 @@ hu:
           one: "%{formatted_number} csevegőüzenet"
           other: "%{formatted_number} csevegőüzenet"
     chat:
+      edit_category:
+        tab_title: "Csevegés"
+        channel: "Csatorna"
+        description: "Leírás"
+        actions: "Műveletek"
+        settings: "Beállítások"
       text_copied: Szöveg vágólapra másolva
       link_copied: Hivatkozás vágólapra másolva
       back_to_forum: "Fórum"
@@ -63,6 +69,7 @@ hu:
       starred_channels_empty: "Még nem csillagozott meg egyetlen csatornát sem. Csillagozd meg a csatornákat, hogy itt lásd őket a gyors hozzáférés érdekében."
       browse_all_channels: "Összes csatorna tallózása"
       see_in: "Lásd itt"
+      open_channel_menu: "Csatornamenü megnyitása"
       move_to_channel:
         title: "Üzenetek áthelyezése a csatornába"
         instructions:
@@ -86,6 +93,8 @@ hu:
         join_channel: "Csatlakozás a csatornához"
         leave_channel: "Csatorna elhagyása"
         leave_groupchat_info: "Ha kilép ebből a csoportos csevegésből, többé nem lesz hozzáférése hozzá, és nem fog vele kapcsolatos értesítéseket kapni. Az újbóli csatlakozáshoz a csoportos csevegés egyik tagjának újbóli meghívására lesz szüksége."
+        notification_settings: "Értesítési beállítások"
+        notification_settings_context: "Értesítések"
         join: "Belépés"
         leave: "Elhagyás"
         save_label:
@@ -436,6 +445,7 @@ hu:
         follow: "Belépés"
         followed: "Csatlakozott"
         mute: "Csatorna némítása"
+        unmute: "Csatorna némításának feloldása"
         threading_enabled: "Bekapcsolva"
         threading_disabled: "Kikapcsolva"
         muted_on: "Be"
@@ -544,13 +554,9 @@ hu:
           other: "%{commaSeparatedUsernames} és még %{count} valaki gépel"
       retention_reminders:
         indefinitely_short: "határozatlan ideig"
-        indefinitely_long: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket határozatlan ideig megőrizzék."
         short:
           one: "%{count} nap"
           other: "%{count} nap"
-        long:
-          one: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket %{count} napig megőrizzék."
-          other: "A csevegési beállítások úgy lettek beállítva, hogy a csatornaüzeneteket %{count} napig megőrizzék."
       flags:
         off_topic: "Ez az üzenet nem tartozik a csatorna címében meghatározott jelenlegi vitához, és valószínűleg máshová kellene áthelyezni."
         inappropriate: "Ez az üzenet olyan elemeket tartalmaz, amelyet egy értelmes ember sértőnek, gorombának vagy <a href=\"%{basePath}/guidelines\">a közösségi irányelveket</a> megszegőnek tartana."
@@ -682,6 +688,7 @@ hu:
           composer_bold: "%{shortcut} Félkövér (csak a szerkesztőben)"
           composer_italic: "%{shortcut} Dőlt (csak a szerkesztőben)"
           composer_code: "%{shortcut} Kód (csak a szerkesztőben)"
+          drawer_toggle: "%{shortcut} Csevegőfiók be- és kikapcsolása"
           drawer_close: "%{shortcut} Csevegési fiók bezárása"
           mark_all_channels_read: "%{shortcut} Összes csatorna megjelölése olvasottként"
     topic_statuses:

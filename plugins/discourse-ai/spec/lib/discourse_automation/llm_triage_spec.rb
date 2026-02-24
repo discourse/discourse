@@ -82,6 +82,25 @@ describe DiscourseAi::Automation::LlmTriage do
     expect(count).to be > (50)
   end
 
+  it "can trigger via stalled_topic with topic context" do
+    post = Fabricate(:post)
+
+    DiscourseAi::Completions::Llm.with_prepared_responses(["bad"]) do
+      automation.running_in_background!
+      automation.trigger!(
+        "kind" => DiscourseAutomation::Triggers::STALLED_TOPIC,
+        "topic" => post.topic,
+        "placeholders" => {
+          "topic_url" => post.topic.url,
+        },
+      )
+    end
+
+    topic = post.topic.reload
+    expect(topic.category_id).to eq(category.id)
+    expect(topic.tags.pluck(:name)).to contain_exactly("aaa", "bbb")
+  end
+
   it "does not triage PMs by default" do
     post = Fabricate(:post, topic: personal_message)
     automation.running_in_background!

@@ -16,6 +16,11 @@ pt:
           actions:
             chat_auto_remove_membership: "Assinaturas removidas automaticamente dos canais"
     chat:
+      edit_category:
+        channel: "Canal"
+        description: "Descrição"
+        actions: "Ações"
+        settings: "Configurações"
       deleted_chat_username: eliminado
       dates:
         yesterday: "Ontem"
@@ -41,6 +46,7 @@ pt:
         delete_channel: "Apagar canal"
         join_channel: "Aderir ao canal"
         leave_channel: "Sair do canal"
+        notification_settings_context: "Notificações"
         join: "Entrar"
         leave: "Sair"
         save_label:

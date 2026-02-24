@@ -8,6 +8,7 @@ en:
               search: "Allows AI search"
               stream_completion: "Allows streaming AI persona completions"
               update_personas: "Allows updating AI personas"
+              manage_artifacts: "Allows managing AI artifacts (list, view, create, update, delete)"
 
       site_settings:
         categories:
@@ -39,6 +40,9 @@ en:
             create_ai_embedding: "Create AI embedding"
             update_ai_embedding: "Update AI embedding"
             delete_ai_embedding: "Delete AI embedding"
+            create_ai_secret: "Create AI secret"
+            update_ai_secret: "Update AI secret"
+            delete_ai_secret: "Delete AI secret"
             update_ai_spam_settings: "Update AI spam settings"
 
   js:
@@ -225,6 +229,10 @@ en:
       default_llm:
         title: "Default LLM model"
         description: "The default LLM model to use for all AI features. This will be used if no LLM is specified in the feature configuration or persona. If no default LLM is specified, the last created LLM will be used."
+
+      llm_selector:
+        none: "None"
+        saved: "Default LLM model updated successfully"
 
       features:
         short_title: "Features"
@@ -515,7 +523,7 @@ en:
         overwrite: "Overwrite"
         description: "Description"
         no_llm_selected: "No language model selected"
-        use_parent_llm: "Use personas language model"
+        use_parent_llm: "Use persona's language model"
         max_context_posts: "Max context posts"
         max_context_posts_help: "The maximum number of posts to use as context for the AI when responding to a user. (empty for default)"
         vision_enabled: Vision enabled
@@ -657,8 +665,14 @@ en:
         parameter_description: "Parameter description"
         enum_value: "Enum value"
         add_enum_value: "Add enum value"
+        secret_alias: "Credential alias"
+        secret_alias_help: "Alias referenced from scripts via secrets.get(\"alias_name\"). Use letters, numbers, and underscores."
+        secret_credential: "Credential"
+        add_secret_contract: "Add credential"
+        remove_secret_contract: "Remove credential"
+        credential_not_set: "(not set)"
         edit: "Edit"
-        test: "Run test"
+        test: "Test"
         delete: "Delete"
         saved: "Tool saved"
         confirm_delete: "Are you sure you want to delete this tool?"
@@ -666,6 +680,32 @@ en:
           title: "Test AI tool"
           run: "Run test"
           result: "Test result"
+
+      secrets:
+        short_title: "Credentials"
+        description: "Manage authentication credentials shared across LLMs, embeddings, and tools."
+        name: "Name"
+        secret: "Value"
+        select_secret: "Select a credential..."
+        create_new: "New credential"
+        add_secret: "Add credential"
+        saved: "Credential saved"
+        confirm_delete: "Are you sure you want to delete this credential?"
+        delete_failed_in_use: "This credential is currently in use and cannot be deleted."
+        no_secrets: "No credentials yet"
+        new_title: "New credential"
+        edit_title: "Edit credential"
+        back: "Back"
+        save: "Save"
+        edit: "Edit"
+        delete: "Delete"
+        used_by: "Used by"
+        not_used: "Not in use"
+        embedding: "Embedding"
+        cannot_delete_in_use: "This credential cannot be deleted because it is in use by:"
+        tool: "Tool"
+        modal:
+          title: "Create new credential"
 
       llms:
         short_title: "LLMs"
@@ -734,8 +774,8 @@ en:
 
         model_description:
           none: "General settings that work for most language models"
-          anthropic-claude-opus-4-5: "Anthropic's most intelligent model"
-          anthropic-claude-sonnet-4-5: "Optimal balance of speed and cost"
+          anthropic-claude-opus-4-6: "Anthropic's most intelligent model"
+          anthropic-claude-sonnet-4-6: "Optimal balance of speed and cost"
           anthropic-claude-haiku-4-5: "Fast and cost-effective"
           google-gemini-3-pro: "Google's most intelligent model"
           google-gemini-3-flash: "Fast and cost-efficient with multimodal reasoning"
@@ -745,8 +785,8 @@ en:
           open_router-deepseek-deepseek-v3-2: "DeepSeek's latest high-performance model"
           open_router-moonshotai-kimi-k2-5: "Moonshot's multimodal model with vision capabilities"
           open_router-x-ai-grok-4-fast: "xAI's flagship model with vision"
-          open_router-minimax-minimax-m2-1: "MiniMax's multimodal model with large context"
-          open_router-z-ai-glm-4-7: "Z-AI's multimodal model with vision"
+          open_router-minimax-minimax-m2-5: "MiniMax's multimodal model with large context"
+          open_router-z-ai-glm-5: "Z-AI's multimodal model with vision"
           open_router-arcee-ai-trinity-large-preview-free: "Free open-source model from Arcee AI"
 
         preseeded_model_description: "Pre-configured open-source model utilizing %{model}"
@@ -807,6 +847,7 @@ en:
           disable_system_prompt: "Disable system message in prompts"
           enable_native_tool: "Enable native tool support"
           disable_native_tools: "Disable native tool support (use XML based tools)"
+          disable_native_structured_output: "Disable native structured output (use assistant message prefilling instead, required for Claude 3.x and older)"
           provider_order: "Provider order (comma delimited list)"
           provider_quantizations: "Order of provider quantizations (comma delimited list eg: fp16,fp8)"
           disable_streaming: "Disable streaming completions (convert streaming to non streaming requests)"
@@ -821,7 +862,7 @@ en:
           prompt_caching_never: "Never - Do not use prompt caching"
           prompt_caching_tool_results: "Tool Results - Cache when tool results are present (recommended)"
           prompt_caching_always: "Always - Always use prompt caching"
-          effort: "Effort level (Claude Opus 4.5 only)"
+          effort: "Effort level"
 
       related_topics:
         title: "Related topics"
@@ -939,17 +980,15 @@ en:
           model_name: "Model name"
 
         semantic_search: "Topics (Semantic)"
-        semantic_search_loading: "Searching for more results using AI"
         semantic_search_results:
-          toggle: "Showing %{count} results found using AI"
-          toggle_hidden: "Hiding %{count} results found using AI"
-          none: "Sorry, our AI search found no matching topics"
-          new: "Press 'search' to begin looking for new results with AI"
+          toggle: "AI results"
           unavailable: "AI results unavailable"
           zero_results_expanded: "Zero results found, showing %{count} AI results"
         semantic_search_tooltips:
           results_explanation: "When enabled, additional AI search results will be added below."
           invalid_sort: "Search results must be sorted by Relevance to display AI results"
+          not_submitted: "Submit a search to enable AI results"
+          no_results: "No AI results found for this search"
         semantic_search_unavailable_tooltip: "Search results must be sorted by Relevance to display AI results"
         ai_generated_result: "Search result found using AI"
         quick_search:

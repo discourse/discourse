@@ -970,6 +970,14 @@ class PostsController < ApplicationController
       result[f] = params[f] if params.has_key?(f)
     end
 
+    if result[:tags].present? && result[:tags].first.is_a?(String)
+      Discourse.deprecate(
+        "Passing tag names as strings to the tags param is deprecated, use tag objects ({id, name}) instead",
+        since: "2026.01",
+        drop_from: "2026.07",
+      )
+    end
+
     # Stuff we can use in spam prevention plugins
     result[:ip_address] = request.remote_ip
     result[:user_agent] = request.user_agent

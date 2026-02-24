@@ -436,6 +436,9 @@ ro:
       title: "Subiecte noi și necitite"
       pill: "Sugerate"
       pm_title: "Mesaje sugerate"
+    admin_onboarding_banner:
+      spread_the_word:
+        action: "Copiază legătură"
     about:
       edit: "Editează această pagină"
       simple_title: "Despre"
@@ -2557,6 +2560,10 @@ ro:
         notify: "Notifică utilizatorii despre această modificare."
         performing: "Se efectuează operațiuni în masă, te rugăm să aștepți…"
         completed: "Operațiunile în masă s-au finalizat cu succes!"
+        error_topic_count:
+          one: "Un subiect"
+          few: "%{count} subiecte"
+          other: "%{count} de subiecte"
       none:
         unread: "Nu sunt subiecte necitite."
         new: "Nu sunt subiecte noi."
@@ -3155,6 +3162,8 @@ ro:
       slug_placeholder: "(Opțional) cuvinte-punctate pentru url"
       creation_error: A apărut o eroare în timpul creării categoriei.
       save_error: A apărut o eroare in timpul salvării categoriei.
+      validations:
+        icon_required: "Alege o pictogramă."
       description: "Descriere"
       style: "Stil"
       icon: "Icon"
@@ -4352,6 +4361,7 @@ ro:
         save: "Salvează"
         cancel: "Anulează"
         continue: "Continuă"
+        copy_key: "Copiază"
         back: "Înapoi la chei API"
         revoke: "Revocă"
         undo_revoke: "Anulează revocare"

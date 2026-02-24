@@ -21,17 +21,8 @@ export default class NewCategory extends DiscourseRoute {
   templateName = "edit-category.tabs";
 
   beforeModel() {
-    if (!this.currentUser) {
-      this.router.replaceWith("/404");
-      return;
-    }
-    if (!this.currentUser.admin) {
-      if (
-        !this.currentUser.moderator ||
-        this.siteSettings.moderators_manage_categories === false
-      ) {
-        this.router.replaceWith("/404");
-      }
+    if (!this.currentUser?.can_create_category) {
+      return this.router.replaceWith("/404");
     }
   }
 
@@ -87,7 +78,7 @@ export default class NewCategory extends DiscourseRoute {
     return [
       {
         group_id: AUTO_GROUPS.everyone.id,
-        group_name: AUTO_GROUPS.everyone.name,
+        group_name: this.site.groupsById[AUTO_GROUPS.everyone.id].name,
         permission_type: PermissionType.FULL,
       },
     ];

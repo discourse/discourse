@@ -230,7 +230,7 @@ hr:
 
       <p>U suprotnom molimo <a href="%{base_url}/password-reset">Ponovno postavite zaporku</a>.</p>
     disabled_errors:
-      invalid_access: "Nemate dopuštenje za pregled traženog izvora."
+      invalid_access: "Pristup pozivnicama vam nije dopušten."
   bulk_invite:
     error: "Dogodila se greška pri učitavanju te datoteke. Molimo kasnije pokušajte ponovno."
   invite_link:
@@ -246,7 +246,7 @@ hr:
   invalid_params: "Zahtjevu ste dostavili nevažeće parametre: %{message}"
   not_logged_in: "Morate biti prijavljeni da to napravite."
   not_found: "Zatraženi URL ili izvor nije moguće pronaći."
-  invalid_access: "Nemate dopuštenje za pregled traženog izvora."
+  invalid_access: "Odaberite ispravnu potkategoriju."
   authenticator_not_found: "Metoda provjere autentičnosti ne postoji ili je onemogućena."
   authenticator_no_connect: "Ovaj pružatelj provjere autentičnosti ne dopušta povezivanje s postojećim forumskim računom."
   invalid_api_credentials: "Nemate dopuštenje za pregled traženog izvora. API korisničko ime ili ključ je nevažeći."
@@ -1380,7 +1380,6 @@ hr:
     num_flaggers_to_close_topic: "Minimalan broj jedinstvenih označavača koji je potreban za automatsko pauziranje teme radi intervencije"
     num_hours_to_close_topic: "Broj sati za pauziranje teme za intervenciju."
     auto_respond_to_flag_actions: "Omogući automatski odgovor pri uklanjanju oznake."
-    min_first_post_typing_time: "Minimalno vrijeme u milisekundama koje korisnik mora upisati tijekom prve objave, ako prag nije dostignut, objava će automatski ući u red čekanja za odobrenje. Postavite na 0 za onemogućavanje (ne preporučuje se)"
     auto_silence_fast_typers_max_trust_level: "Maksimalna razina povjerenja za automatsko utišavanje brzih tipkača"
     auto_silence_first_post_regex: "Regularni izraz koji ne razlikuje velika i mala slova koji će, ako se proslijedi, utišati prvu objavu korisnika i poslati je u red čekanja za odobrenje. Primjer: raging|a[bc]a , uzrokovat će prvo utišavanje svih postova koji sadrže raging ili aba ili aca. Odnosi se samo na prvi post. ZASTARJELO: Umjesto toga koristite utišavanje promatranih riječi."
     reviewable_claiming: "Treba li potraživati sadržaj koji se može pregledati prije nego što se na njega može djelovati?"

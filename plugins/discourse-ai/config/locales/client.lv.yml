@@ -34,6 +34,8 @@ lv:
             canned_reply:
               label: "Atbilde"
     discourse_ai:
+      llm_selector:
+        none: "Nav"
       features:
         back: "Atpakaļ"
         disabled: "(atslēgt)"
@@ -111,6 +113,15 @@ lv:
         parameter_required: "Nepieciešams"
         edit: "Labot"
         delete: "Dzēst"
+      secrets:
+        short_title: "Atsauksme uz"
+        name: "Vārds"
+        secret: "Vērtība"
+        back: "Atpakaļ"
+        save: "Saglabāt"
+        edit: "Labot"
+        delete: "Dzēst"
+        embedding: "Ieguldīšana"
       llms:
         display_name: "Vārds"
         save: "Saglabāt"

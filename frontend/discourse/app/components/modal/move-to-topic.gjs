@@ -14,6 +14,7 @@ import PluginOutlet from "discourse/components/plugin-outlet";
 import RadioButton from "discourse/components/radio-button";
 import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
+import { extractError } from "discourse/lib/ajax-error";
 import { applyValueTransformer } from "discourse/lib/transformer";
 import DiscourseURL from "discourse/lib/url";
 import { mergeTopic, movePosts } from "discourse/models/topic";
@@ -180,8 +181,8 @@ export default class MoveToTopic extends Component {
       this.args.closeModal();
       this.args.model.toggleMultiSelect();
       DiscourseURL.routeTo(result.url);
-    } catch {
-      this.flash = i18n("topic.move_to.error");
+    } catch (e) {
+      this.flash = extractError(e, i18n("topic.move_to.error"));
     } finally {
       this.saving = false;
     }

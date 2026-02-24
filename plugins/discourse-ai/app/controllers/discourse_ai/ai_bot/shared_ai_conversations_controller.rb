@@ -4,7 +4,7 @@ module DiscourseAi
   module AiBot
     class SharedAiConversationsController < ::ApplicationController
       requires_plugin PLUGIN_NAME
-      requires_login only: %i[create update destroy]
+      requires_login only: %i[create destroy preview]
       before_action :require_site_settings!
 
       skip_before_action :preload_json, :check_xhr, only: %i[show asset]

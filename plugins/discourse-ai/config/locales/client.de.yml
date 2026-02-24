@@ -120,6 +120,7 @@ de:
               description: "Das KI-Tool, das ausgeführt wird, wenn die Automatisierung ausgelöst wird"
             llm_model:
               label: "LLM-Modell"
+              description: "Sprachmodell für Werkzeuge, die llm.generate() verwenden (optional)"
         llm_persona_triage:
           fields:
             persona:
@@ -173,6 +174,7 @@ de:
               label: "PN-Absender"
               description: "Benutzer, der die PN sendet (Standard: System)"
             notify_author_pm_message:
+              label: "PN-Inhalt"
               description: "Optionale benutzerdefinierte Nachricht die an den Autor gesendet werden soll"
             include_personal_messages:
               label: "Persönliche Nachrichten einbeziehen"
@@ -189,10 +191,11 @@ de:
         llm_tagger:
           tag_mode:
             manual: "Spezifische Schlagwort-Liste verwenden (unten konfiguriert)"
-            discover: "Lassen die KI beliebige Schlagworte auf der Website entdecken und verwenden"
+            discover: "Lassen die KI beliebige Schlagwörter auf der Website entdecken und verwenden"
           fields:
             tagger_persona:
               label: "KI-Persona"
+              description: "Die KI-Persona, die Themen analysiert und Schlagwörter hinzufügt"
             tag_mode:
               label: "Schlagwort-Auswahlmodus"
               description: "Wähle, wie die KI Schlagwörter auswählt"
@@ -214,11 +217,16 @@ de:
             max_posts_for_context:
               label: "Maximale Beiträge für Kontext"
               description: "Maximale Anzahl von Beiträgen aus dem Thema, die in den Analysekontext einbezogen werden sollen (Standard: 5)"
+            allow_system_posts:
+              label: "Systembeiträge zulassen"
+              description: "Erlaubte das Hinzufügen von Schlagwörter zu Beiträgen des Systembenutzers"
     discourse_ai:
       title: "KI"
       default_llm:
         title: "Standard-LLM-Modell"
         description: "Das Standard-LLM-Modell für alle KI-Funktionen. Dieses wird verwendet, wenn in der Funktionskonfiguration oder Persona kein LLM angegeben ist. Wenn kein Standard-LLM angegeben ist, wird das zuletzt erstellte LLM verwendet."
+      llm_selector:
+        none: "Keiner"
       features:
         short_title: "Funktionen"
         description: "Dies sind die KI-Funktionen, die den Besuchern deiner Website zur Verfügung stehen. Sie können so konfiguriert werden, dass sie bestimmte Personas und LLM verwenden, und der Zugriff kann mithilfe von Gruppen gesteuert werden."
@@ -313,6 +321,7 @@ de:
           image_caption: "Bildbeschriftungen"
           translator: "Übersetzer"
           post_illustrator: "Beitragsillustrator"
+          chat_thread_titles: "Titel von Chat-Threads"
           setting_groups:
             access_permissions: "Zugriff & Berechtigungen"
             enabled_features: "Aktivierte Funktionen"
@@ -325,6 +334,11 @@ de:
           post_raw_translator: "Übersetzer für die Roheingabe des Beitrags"
           topic_title_translator: "Thementitel-Übersetzer"
           short_text_translator: "Kurztext-Übersetzer"
+          schedule_untranslated: "Übersetzungen planen"
+          schedule_topic_success:
+            one: "Geplante Übersetzung für %{count} unübersetzten Beitrag."
+            other: "Geplante Übersetzung für %{count} unübersetzte Beiträge."
+          schedule_topic_error: "Übersetzungen konnten nicht geplant werden. Bitte versuche es erneut."
           setting_groups:
             settings: "Grundlegende Einstellungen"
             personas: "Personas"
@@ -348,12 +362,17 @@ de:
         title: "Übersetzungen"
         description: "Übersetze alle Inhalte in deinem Forum automatisch in die bevorzugte Sprache des Benutzers"
         supported_locales: "Unterstützte Sprachen"
+        supported_locales_description: "Diese Website-Einstellung ermöglicht es auch Besuchern, Übersetzungen von Beiträgen beizutragen."
         admin_actions:
           translation_settings: "Übersetzungseinstellungen"
           localization_settings: "Lokalisierungseinstellungen"
           enable_translations: "Automatische Übersetzungen aktivieren"
         stats:
           title: "Übersetzungsstatistiken"
+          complete_language_detection_description: "Alle %{total} geeigneten Beiträge wurden auf ihre Sprache hin überprüft."
+          incomplete_language_detection_description: "%{done} von %{total} geeigneten Beiträgen wurden auf ihre Sprache hin überprüft."
+          backfill_disabled: "Rückwirkende Übersetzung ist deaktiviert; nur neue Beiträge werden übersetzt."
+          backfill_message: "<a href='%{settingsUrl}'>Die Einstellungen für die rückwirkende Übersetzung</a> sind so konfiguriert, dass alle Beiträge nach %{date} übersetzt werden – dies wird voraussichtlich %{eta} dauern."
           eta_minutes:
             one: "%{count} Minute"
             other: "%{count} Minuten"
@@ -366,6 +385,7 @@ de:
         progress_chart:
           title: "Übersetzungsfortschritt"
           data_label: "%{percentage}%"
+          tooltip_translated: "%{done} von %{total} nicht-%{language}en Beiträgen übersetzt"
           bar_done:
             one: "%{count} Beitrag"
             other: "%{count} Beiträge"
@@ -402,7 +422,10 @@ de:
           post_url_label: "Beitrags-URL oder -ID"
           post_url_placeholder: "https://your-forum.com/t/topic/123/4 oder Beitrags-ID"
           result: "Ergebnis"
+          reason: "Argumentation"
           llm: "LLM"
+          scan_history: "Verlauf scannen"
+          sent_message: "Gesendete Nachricht"
           system_prompt: "System-Eingabeaufforderung"
           scan_log: "Scan-Protokoll"
           run: "Test ausführen"
@@ -435,6 +458,8 @@ de:
         request_tokens: "Anfrage-Token"
         response_tokens: "Antwort-Token"
         net_request_tokens: "Token für Netzanfragen"
+        cache_read_tokens: "Zwischengespeicherte Lesetoken"
+        cache_write_tokens: "Zwischengespeicherte Schreibtoken"
         cached_tokens: "Zwischengespeicherte Token"
         cached_request_tokens: "Zwischengespeicherte Anfrage-Token"
         total_spending: "Geschätzte Kosten"
@@ -442,12 +467,18 @@ de:
         no_models: "Keine Modellnutzungsdaten gefunden"
         no_features: "Keine Funktionsnutzungsdaten gefunden"
         total: "Gesamt"
+        included_in_plan: "Im Plan inbegriffen"
+        included_models: "Enthaltene Nutzung"
+        billed_models: "Abgerechnete Nutzung"
+        cost: "Kosten"
         subheader_description: "Token sind die Basiseinheiten, die LLM zum Verstehen und Generieren von Text verwenden. Nutzungsdaten können sich auf die Kosten auswirken"
         stat_tooltips:
           total_requests: "Alle Anfragen an LLMs über Discourse"
           total_tokens: "Alle Token, die bei der Abfrage einer LLM verwendet werden"
           request_tokens: "Token, die verwendet werden, wenn das LLM versucht zu verstehen, was du sagst"
           response_tokens: "Token, die verwendet werden, wenn die LLM auf deine Aufforderung antwortet"
+          cache_read_tokens: "Zuvor verarbeitete Anfragetoken, die das LLM aus dem Zwischenspeicher wiederverwendet, um Leistung und Kosten zu optimieren"
+          cache_write_tokens: "Anforderungstoken, die zur potenziellen zukünftigen Wiederverwendung zwischengespeichert wurden"
           cached_tokens: "Zuvor verarbeitete Anfragetoken, die das LLM wiederverwendet, um Leistung und Kosten zu optimieren"
           total_spending: "Kumulierte Kosten aller von den LLM verwendeten Token auf Grundlage der spezifischen Kostenmetriken, die zu den LLM-Konfigurationseinstellungen hinzugefügt wurden"
         periods:
@@ -482,6 +513,8 @@ de:
           low: Niedrige Qualität – am günstigsten (256 x 256)
           medium: Mittlere Qualität (512 x 512)
           high: Hohe Qualität – am langsamsten (1024 x 1024)
+        show_thinking: Denken anzeigen
+        show_thinking_help: Zeigt den Endbenutzern die internen Denkprozesse und Werkzeugaufrufe des Sprachmodells.
         mentionable: Erwähnungen zulassen
         mentionable_help: Wenn diese Funktion aktiviert ist, können Nutzer in erlaubten Gruppen diesen Nutzer in Beiträgen erwähnen und die KI wird als diese Persona antworten.
         user: Benutzer
@@ -614,6 +647,15 @@ de:
           title: "KI-Tool testen"
           run: "Test ausführen"
           result: "Testergebnis"
+      secrets:
+        short_title: "Anmeldedaten"
+        name: "Name"
+        secret: "Wert"
+        back: "Zurück"
+        save: "Speichern"
+        edit: "Bearbeiten"
+        delete: "Löschen"
+        embedding: "Einbettung"
       llms:
         short_title: "LLM"
         no_llms: "Noch keine LLM"
@@ -632,6 +674,7 @@ de:
         ai_bot_user: "KI-Bot-Benutzer"
         cost_input: "Eingabekosten"
         cost_cached_input: "Eingabekosten für Zwischengespeichertes"
+        cost_cache_write: "Schreibkosten für Zwischenspeicherung"
         cost_output: "Ausgabekosten"
         save: "Speichern"
         edit: "Bearbeiten"
@@ -681,7 +724,16 @@ de:
           anthropic-claude-opus-4-5: "Das intelligenteste Modell von Anthropic"
           anthropic-claude-sonnet-4-5: "Optimales Gleichgewicht zwischen Geschwindigkeit und Kosten"
           anthropic-claude-haiku-4-5: "Schnell und kosteneffizient"
+          google-gemini-3-pro: "Googles intelligentestes Modell"
+          google-gemini-3-flash: "Schnell und kosteneffizient mit multimodaler Argumentation"
+          open_ai-gpt-5-2: "Das Vorzeigemodell von OpenAI, gut geeignet für Problemlösungen in verschiedenen Bereichen"
+          open_ai-gpt-5-mini: "Bietet ein ausgewogenes Verhältnis zwischen Intelligenz, Geschwindigkeit und Kosten."
           open_ai-gpt-5-nano: "Das schnellste und kostengünstigste GPT-5-Modell"
+          open_router-deepseek-deepseek-v3-2: "DeepSeeks neuestes Hochleistungsmodell"
+          open_router-moonshotai-kimi-k2-5: "Moonshots multimodales Modell mit Bildverarbeitungsfunktionen"
+          open_router-x-ai-grok-4-fast: "Das Vorzeigemodell von xAI mit Bildverarbeitung"
+          open_router-minimax-minimax-m2-1: "Das multimodale Modell von MiniMax mit großem Kontext"
+          open_router-z-ai-glm-4-7: "Das multimodale Modell von Z-AI mit Bildverarbeitung"
           open_router-arcee-ai-trinity-large-preview-free: "Kostenloses Open-Source-Modell von Arcee AI"
         preseeded_model_description: "Vorkonfiguriertes Open-Source-Modell unter Verwendung von %{model}"
         configured:
@@ -707,7 +759,10 @@ de:
           display_name: "Der Name, der verwendet wird, um dieses Modell in der Benutzeroberfläche deiner Website zu referenzieren."
           name: "Wir fügen dies in den API-Aufruf ein, um anzugeben, welches Modell wir verwenden werden"
           vision_enabled: "Wenn diese Funktion aktiviert ist, versucht die KI, Bilder zu verstehen. Dafür wird ein Modell benötigt, das Sehen unterstützt. Verfügbar in den neuesten Modellen von Anthropic, Google und OpenAI."
+          allowed_attachment_types: "Lege fest, welche Arten von Anhängen an das Modell weitergeleitet werden. Lass das Feld leer, um Anhänge nicht zuzulassen. Bilder werden über \"Sehen\" kontrolliert."
           cost_input: "Die Kosten für die Eingabe pro 1 Million Token für dieses Modell"
+          cost_cached_input: "Die Kosten für zwischengespeicherte Eingabetoken pro 1 Mio. Token für dieses Modell (beim Lesen aus dem Aufforderungs-Zwischenspeicher)."
+          cost_cache_write: "Die Kosten für zwischengespeicherte Schreibtoken pro 1 Mio. Token für dieses Modell (beim Schreiben in den Aufforderungs-Zwischenspeicher)."
           cost_output: "Die Kosten für die Ausgabe pro 1 Million Token für dieses Modell"
           cost_measure: "$/1M Token"
         providers:
@@ -728,6 +783,7 @@ de:
           fake: "Benutzerdefiniert"
         provider_fields:
           access_key_id: "AWS-Bedrock-Zugangsschlüssel-ID"
+          role_arn: "AWS Bedrock-Rollen-ARN"
           region: "AWS-Bedrock-Region"
           organization: "Optionale OpenAI-Organisations-ID"
           disable_system_prompt: "Systemmeldung in Eingabeaufforderungen deaktivieren"
@@ -743,6 +799,11 @@ de:
           reasoning_tokens: "Anzahl der für die Argumentation verwendeten Token"
           disable_temperature: "Temperatur deaktivieren (einige Denkmodelle unterstützen keine Temperatur)"
           disable_top_p: "Top P deaktivieren (einige Denkmodelle unterstützen Top P nicht)"
+          prompt_caching: "Aufforderung-Zwischenspeichern-Modus"
+          prompt_caching_never: "Niemals - Verwende keine zwischengespeicherten Aufforderungen"
+          prompt_caching_tool_results: "Tool-Ergebnisse - Zwischenspeichern, wenn Tool-Ergebnisse vorhanden sind (empfohlen)"
+          prompt_caching_always: "Immer - Immer zwischengespeicherte Aufforderungen verwenden"
+          effort: "Anstrengungsgrad (nur Claude Opus 4.5)"
       related_topics:
         title: "Verwandte Themen"
         pill: "Verwandt"
@@ -861,6 +922,7 @@ de:
           none: "Entschuldigung, unsere KI-Suche hat keine passenden Themen gefunden"
           new: "Drücke auf „Suchen“, um mit der KI nach neuen Ergebnissen zu suchen"
           unavailable: "KI-Ergebnisse nicht verfügbar"
+          zero_results_expanded: "Keine Ergebnisse gefunden, es werden %{count} KI-Ergebnisse angezeigt"
         semantic_search_tooltips:
           results_explanation: "Wenn diese Funktion aktiviert ist, werden zusätzliche KI-Suchergebnisse unten hinzugefügt."
           invalid_sort: "Die Suchergebnisse müssen nach Relevanz sortiert werden, um KI-Ergebnisse anzuzeigen"
@@ -893,6 +955,8 @@ de:
           copy_response: "Antwort kopieren"
           request_tokens: "Anfrage-Token:"
           response_tokens: "Antwort-Token:"
+          cache_read_tokens: "Zwischengespeicherte Lesetoken:"
+          cache_write_tokens: "Zwischengespeicherte Schreibtoken:"
           request: "Anfrage"
           response: "Antwort"
           next_log: "Weiter"
@@ -976,6 +1040,10 @@ de:
         topic:
           title: "Zusammenfassung des Themas"
           close: "Zusammenfassungspanel schließen"
+          regenerate_ai_summaries: "KI-Zusammenfassungen neu generieren"
+          regen_modal_description: "Wähle aus, welche Art von KI-Zusammenfassung für dieses Thema neu erstellt werden soll."
+          bulk_regen_description: "Wähle aus, welche Art von KI-Zusammenfassung für die ausgewählten Themen neu erstellt werden soll."
+          regenerate_gists_option: "Kurzzusammenfassungen (Zentrale Punkte)"
           regenerate_summaries_option: "Themenzusammenfassungen"
           regenerate_gists_success:
             one: "Kurzzusammenfassung erfolgreich neu generiert"
@@ -983,6 +1051,12 @@ de:
           regenerate_gists_error:
             one: "Kurzzusammenfassung konnte nicht neu generiert werden"
             other: "%{count} Kurzzusammenfassungen konnten nicht neu generiert werden"
+          regenerate_topic_summary_success:
+            one: "Themenzusammenfassung erfolgreich neu generiert"
+            other: "%{count} Themenzusammenfassungen erfolgreich neu generiert"
+          regenerate_topic_summary_error:
+            one: "Themenzusammenfassung konnte nicht neu generiert werden"
+            other: "%{count} Themenzusammenfassungen konnten nicht neu generiert werden"
         topic_list_layout:
           button:
             compact: "Kompakt"
@@ -996,6 +1070,7 @@ de:
         loading_convo: "Unterhaltung wird geladen"
         collapse: "Zuklappen"
         timed_out: "Discobot konnte keine Entdeckungen finden. Irgendetwas ist schief gelaufen."
+        user_setting: "KI-Suchentdeckungen aktivieren"
         tooltip:
           header: "KI-gestützte Suche"
           content: "Natürliche Sprachsuche unterstützt von %{model}"

@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { hash } from "@ember/helper";
 import { action } from "@ember/object";
 import didInsert from "@ember/render-modifiers/modifiers/did-insert";
 import willDestroy from "@ember/render-modifiers/modifiers/will-destroy";
@@ -9,13 +8,11 @@ import TextField from "discourse/components/text-field";
 import lazyHash from "discourse/helpers/lazy-hash";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import PostLocalization from "discourse/models/post-localization";
-import DropdownSelectBox from "discourse/select-kit/components/dropdown-select-box";
 import { i18n } from "discourse-i18n";
 
 export default class PostTranslationEditor extends Component {
   @service composer;
   @service siteSettings;
-  @service languageNameLookup;
 
   constructor() {
     super(...arguments);
@@ -61,48 +58,9 @@ export default class PostTranslationEditor extends Component {
     }
   }
 
-  get availableContentLocalizationLocales() {
-    const originalPostLocale = this.composer.model?.post?.locale;
-
-    return this.siteSettings.available_content_localization_locales
-      .filter(({ value }) => value !== originalPostLocale)
-      .map(({ value }) => ({
-        name: this.languageNameLookup.getLanguageName(value),
-        value,
-      }));
-  }
-
   @action
   handleInput(event) {
     this.composer.model.set("reply", event.target.value);
-  }
-
-  @action
-  async updateSelectedLocale(locale) {
-    this.composer.selectedTranslationLocale = locale;
-
-    const currentLocalization = await this.findCurrentLocalization();
-
-    if (currentLocalization) {
-      this.composer.model.setProperties({
-        reply: currentLocalization.raw,
-        originalText: currentLocalization.raw,
-      });
-
-      if (currentLocalization?.topic_localization) {
-        this.composer.model.setProperties({
-          title: currentLocalization.topic_localization.title,
-          originalTitle: currentLocalization.topic_localization.title,
-        });
-      }
-    } else {
-      this.composer.model.setProperties({
-        reply: "",
-        title: "",
-        originalText: "",
-        originalTitle: "",
-      });
-    }
   }
 
   @action
@@ -122,25 +80,6 @@ export default class PostTranslationEditor extends Component {
   }
 
   <template>
-    <div>
-      <DropdownSelectBox
-        @nameProperty="name"
-        @valueProperty="value"
-        @value={{this.composer.selectedTranslationLocale}}
-        @content={{this.availableContentLocalizationLocales}}
-        @onChange={{this.updateSelectedLocale}}
-        @options={{hash
-          icon="globe"
-          showCaret=true
-          filterable=true
-          disabled=this.composer.loading
-          placement="bottom-start"
-          translatedNone=(i18n "composer.translations.select")
-        }}
-        class="translation-selector-dropdown btn-small"
-      />
-    </div>
-
     {{#if this.composer.model.post.firstPost}}
       <div class="topic-title-translator title-and-category with-preview">
         <div class="title-input-column">

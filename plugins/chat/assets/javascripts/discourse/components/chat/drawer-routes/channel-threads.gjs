@@ -16,7 +16,7 @@ export default class ChatDrawerRoutesChannelThreads extends Component {
     return htmlSafe(
       i18n("chat.threads.list") +
         " - " +
-        replaceEmoji(this.args.model.channel.title)
+        replaceEmoji(this.args.model.channel.escapedTitle)
     );
   }
 

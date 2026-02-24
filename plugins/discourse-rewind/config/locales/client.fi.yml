@@ -14,8 +14,12 @@ fi:
       reports:
         reading_time:
           title: Lukuaika
+        assignments:
+          total_assigned_others: "Osoitettu ryhmälle %{username}"
         chat_usage:
           messages: viestit
+          author: Sinä
+          author_others: "%{username}"
           status_online: "● online-tilassa"
         invites:
           title: Kutsut

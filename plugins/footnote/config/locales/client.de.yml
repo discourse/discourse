@@ -5,3 +5,12 @@
 # https://translate.discourse.org/
 
 de:
+  admin_js:
+    admin:
+      site_settings:
+        categories:
+          footnote: "Discourse Fußnoten"
+  js:
+    footnote:
+      title: "Fußnoten"
+      add: "Fußnote hinzufügen"

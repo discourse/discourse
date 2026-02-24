@@ -153,7 +153,7 @@ module JsLocaleHelper
               .mf_locales(l)
               .pluck(:translation_key, :value)
               .to_h
-              .transform_keys { _1.sub(/^[a-z_]*js\./, "") },
+              .transform_keys { it.sub(/^[a-z_]*js\./, "") },
           )
         end
         .compact_blank

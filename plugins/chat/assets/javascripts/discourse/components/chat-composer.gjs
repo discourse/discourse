@@ -377,7 +377,7 @@ export default class ChatComposer extends Component {
   @action
   onKeyDown(event) {
     if (
-      this.site.mobileView ||
+      this.capabilities.isMobileDevice ||
       event.altKey ||
       event.isComposing ||
       this.#isAutocompleteDisplayed()
