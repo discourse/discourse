@@ -27,7 +27,9 @@ Discourse::Application.routes.draw do
       }
 
   mount DiscourseDataExplorer::Engine, at: "/admin/plugins/discourse-data-explorer"
-  mount DiscourseDataExplorer::Engine,
-        at: "/admin/plugins/explorer",
-        as: :legacy_discourse_data_explorer
+  get "/admin/plugins/explorer" => redirect("/admin/plugins/discourse-data-explorer")
+  get "/admin/plugins/explorer/queries" =>
+        redirect("/admin/plugins/discourse-data-explorer/queries")
+  get "/admin/plugins/explorer/queries/:id" =>
+        redirect("/admin/plugins/discourse-data-explorer/queries/%{id}")
 end
