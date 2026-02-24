@@ -50,7 +50,7 @@ end
 
 ### Column inclusion strategy
 
-You must tell the DSL which source columns to include. There are three approaches:
+Every source-backed table must specify a column inclusion strategy. There are four approaches:
 
 #### `include_all`
 
@@ -75,7 +75,7 @@ end
 
 #### `include!`
 
-Include columns that are globally ignored (via conventions) or auto-ignored (via plugin). Regular `include` will produce a validation error for such columns; use `include!` to explicitly override.
+Include columns that are globally ignored (via conventions) or auto-ignored (via plugins). Regular `include` will produce a validation error for such columns; use `include!` to explicitly override.
 
 ```ruby
 Migrations::Database::Schema.table :users do
