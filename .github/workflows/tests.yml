@@ -62,7 +62,7 @@ jobs:
       LOAD_PLUGINS: ${{ (matrix.target == 'core-plugins' || matrix.target == 'official-plugins' || matrix.target == 'plugins' || matrix.target == 'chat') && '1' || '0' }}
       ACTIONS_STEP_DEBUG: ${{ secrets.ACTIONS_STEP_DEBUG }}
       QUNIT_REUSE_BUILD: 1
-      ROLLUP_PLUGIN_COMPILER: ${{ matrix.plugin_compiler == 'rollup' && '1' || '0' }}
+      ROLLUP_PLUGIN_COMPILER: 1
 
     strategy:
       fail-fast: false
@@ -71,7 +71,6 @@ jobs:
         build_type: [backend, frontend, system]
         target: [core, plugins, themes]
         browser: [Chrome]
-        plugin_compiler: ["legacy"]
         exclude:
           - build_type: backend
             target: themes
@@ -89,9 +88,6 @@ jobs:
           - build_type: system
             target: chat
             browser: Chrome
-          - build_type: frontend
-            target: plugins
-            plugin_compiler: "rollup"
           # - build_type: frontend
           #   target: core
           #   browser: Firefox Evergreen

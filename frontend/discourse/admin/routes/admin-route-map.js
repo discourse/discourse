@@ -1,4 +1,3 @@
- 
 export default function () {
   this.route("admin", function () {
     this.route("dashboard", { path: "/" }, function () {

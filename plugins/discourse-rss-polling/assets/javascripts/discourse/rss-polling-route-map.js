@@ -1,4 +1,3 @@
- 
 export default {
   resource: "admin.adminPlugins",
   path: "/plugins",
