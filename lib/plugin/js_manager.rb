@@ -102,7 +102,7 @@ module Plugin
       # Delete any old versions
       Dir
         .glob("#{output_dir}/#{plugin.directory_name}*")
-        .reject { |path| path == output_path }
+        .reject { |path| path == output_path || File.file?(path) }
         .each { |path| FileUtils.rm_rf(path) }
 
       puts "done (#{(Time.now - start).round(2)}s)"
