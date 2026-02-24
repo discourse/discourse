@@ -184,13 +184,14 @@ RSpec.describe Service::Runner do
   class LockWithModelService
     include Service::Base
 
+    params { attribute :topic_id, :integer }
     model :topic
     lock(:topic) { step :locked_step }
 
     private
 
-    def fetch_topic
-      OpenStruct.new(id: 123)
+    def fetch_topic(params:)
+      OpenStruct.new(id: params.topic_id)
     end
 
     def locked_step
@@ -533,9 +534,9 @@ RSpec.describe Service::Runner do
         end
       end
 
-      context "when the lock key resolves from context" do
+      context "when the lock key resolves from context (not params)" do
         let(:service) { LockWithModelService }
-        let(:dependencies) { { params: {} } }
+        let(:dependencies) { { params: { topic_id: 123 } } }
         let(:actions) { <<-BLOCK }
             proc do
               on_success { :success }
