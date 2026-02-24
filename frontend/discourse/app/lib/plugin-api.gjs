@@ -3379,12 +3379,7 @@ class _PluginApi {
    * in future releases without prior notice. Use with caution in production environments.
    *
    * @param {string} outletName - The block outlet identifier
-   * @param {Array<Object>} blocks - Array of layout entries
-   * @param {typeof Component} blocks[].block - Component class decorated with @block
-   * @param {Object} [blocks[].args] - Arguments to pass to the block component
-   * @param {string} [blocks[].classNames] - Additional CSS classes for the block wrapper
-   * @param {Array<Object>} [blocks[].children] - Nested blocks (only for container blocks)
-   * @param {Array<Object>|Object} [blocks[].conditions] - Conditions for rendering the block
+   * @param {Array<import("discourse/blocks/block-outlet").LayoutEntry>} blocks - Array of layout entries
    *
    * @example
    * ```javascript

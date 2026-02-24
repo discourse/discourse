@@ -48,7 +48,7 @@ import { BLOCK_OUTLETS } from "discourse/lib/registry/block-outlets";
  * A block entry in a layout configuration.
  *
  * @typedef {Object} LayoutEntry
- * @property {typeof Component} block - The block component class (must use @block decorator).
+ * @property {typeof Component | string} block - The block component class (must use @block decorator) or a registered block name string.
  * @property {Object} [args] - Args to pass to the block component.
  * @property {string|string[]} [classNames] - Additional CSS classes for the block wrapper.
  * @property {Array<LayoutEntry>} [children] - Nested block entries (only for container blocks).
