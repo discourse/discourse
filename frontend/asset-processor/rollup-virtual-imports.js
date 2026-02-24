@@ -1,17 +1,28 @@
+import { federatedExportNameFor } from "./federated-modules-helper";
+
 const SUPPORTED_FILE_EXTENSIONS = [".js", ".js.es6", ".hbs", ".gjs"];
 
 const IS_CONNECTOR_REGEX = /(^|\/)connectors\//;
 
 export default {
-  "virtual:entrypoint:main": (tree, { themeId }) => {
-    let output = cleanMultiline(`
-      import "virtual:init-settings";
+  "virtual:entrypoint": async (
+    moduleFilenames,
+    { themeId },
+    { basePath, context }
+  ) => {
+    let output = `const compatModules = {};`;
 
-      const compatModules = {};
-    `);
+    if (themeId) {
+      output += cleanMultiline(`
+        import "virtual:init-settings";
+      `);
+    }
+
+    const moduleFilenamesSet = new Set(moduleFilenames);
+    const exportedModules = new Set();
 
     let i = 1;
-    for (const moduleFilename of Object.keys(tree)) {
+    for (const moduleFilename of moduleFilenames) {
       if (
         !SUPPORTED_FILE_EXTENSIONS.some((ext) => moduleFilename.endsWith(ext))
       ) {
@@ -45,8 +56,41 @@ export default {
       const importPath = filenameWithoutExtension.match(IS_CONNECTOR_REGEX)
         ? moduleFilename
         : filenameWithoutExtension;
+
+      if (exportedModules.has(importPath)) {
+        continue;
+      }
+      exportedModules.add(importPath);
+
       output += `import * as Mod${i} from "./${importPath}";\n`;
       output += `compatModules["${compatModuleName}"] = Mod${i};\n\n`;
+
+      const resolvedId = await context.resolve(
+        `./${importPath}`,
+        `${basePath}virtual:main`
+      );
+      const loadedModule = await context.load(resolvedId);
+
+      const reexportPairs = loadedModule.exports.map((exportedName) => {
+        return `${exportedName} as ${federatedExportNameFor(compatModuleName, exportedName)}`;
+      });
+
+      const isIndexModule =
+        compatModuleName.endsWith("/index") &&
+        !moduleFilenamesSet.has(moduleFilename.replace("/index", ""));
+
+      if (isIndexModule) {
+        loadedModule.exports.forEach((exportedName) => {
+          const federatedExportName = federatedExportNameFor(
+            compatModuleName.replace(/\/index$/, ""),
+            exportedName
+          );
+          reexportPairs.push(`${exportedName} as ${federatedExportName}`);
+        });
+      }
+
+      output += `export * as ${federatedExportNameFor(compatModuleName, "*")} from "./${importPath}";\n`;
+      output += `export {\n${reexportPairs.join(",\n")}\n} from "./${importPath}";\n`;
 
       i += 1;
     }
@@ -55,13 +99,13 @@ export default {
 
     return output;
   },
-  "virtual:init-settings": (_, { themeId, settings }) => {
+  "virtual:init-settings": ({ themeId, settings }) => {
     return (
       `import { registerSettings } from "discourse/lib/theme-settings-store";\n\n` +
       `registerSettings(${themeId}, ${JSON.stringify(settings, null, 2)});\n`
     );
   },
-  "virtual:theme": (_, { themeId }) => {
+  "virtual:theme": ({ themeId }) => {
     return cleanMultiline(`
       import { getObjectForTheme } from "discourse/lib/theme-settings-store";
 

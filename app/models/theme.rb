@@ -6,7 +6,7 @@ require "json_schemer"
 class Theme < ActiveRecord::Base
   include GlobalPath
 
-  BASE_COMPILER_VERSION = 101
+  BASE_COMPILER_VERSION = 102
   CORE_THEMES = { "foundation" => -1, "horizon" => -2 }
   EDITABLE_SYSTEM_ATTRIBUTES = %w[
     child_theme_ids
@@ -250,6 +250,7 @@ class Theme < ActiveRecord::Base
         GlobalSetting.s3_endpoint,
         GlobalSetting.s3_bucket,
         Discourse.current_hostname,
+        ENV["ROLLUP_PLUGIN_COMPILER"],
       ]
       Digest::SHA1.hexdigest(dependencies.join)
     end
