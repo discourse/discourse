@@ -4235,11 +4235,6 @@ experimental:
     default: false
     client: true
     area: "experimental"
-  experimental_hashtag_search_result_limit:
-    default: 20
-    client: true
-    hidden: true
-    area: "experimental"
   enable_form_templates:
     client: true
     default: false
