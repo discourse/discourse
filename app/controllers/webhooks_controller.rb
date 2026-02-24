@@ -22,7 +22,9 @@ class WebhooksController < ActionController::Base
     if SiteSetting.sendgrid_verification_key.present?
       return signature_failure if !valid_sendgrid_signature?
     else
-      warn_unauthenticated_webhook("SendGrid", "sendgrid_verification_key")
+      Rails.logger.warn(
+        "Received a Sendgrid webhook, but no verification key has been configured. This is unsafe behaviour and will be disallowed in the future.",
+      )
     end
 
     events = params["_json"] || [params]
@@ -53,7 +55,9 @@ class WebhooksController < ActionController::Base
     if SiteSetting.mailjet_webhook_token.present?
       return signature_failure if !valid_mailjet_token?
     else
-      warn_unauthenticated_webhook("Mailjet", "mailjet_webhook_token")
+      Rails.logger.warn(
+        "Received a Mailjet webhook, but no token has been configured. This is unsafe behaviour and will be disallowed in the future.",
+      )
     end
 
     events = params["_json"] || [params]
@@ -73,11 +77,7 @@ class WebhooksController < ActionController::Base
   end
 
   def mailpace
-    if SiteSetting.mailpace_verification_key.present?
-      return signature_failure if !valid_mailpace_signature?
-    else
-      warn_unauthenticated_webhook("Mailpace", "mailpace_verification_key")
-    end
+    # see https://docs.mailpace.com/guide/webhooks#email-events
 
     message_id = Email::MessageIdService.message_id_clean(params["payload"]["message_id"])
     to_address = params["payload"]["to"]
@@ -97,7 +97,9 @@ class WebhooksController < ActionController::Base
     if SiteSetting.mandrill_authentication_key.present?
       return signature_failure if !valid_mandrill_signature?
     else
-      warn_unauthenticated_webhook("Mandrill", "mandrill_authentication_key")
+      Rails.logger.warn(
+        "Received a Mandrill webhook, but no authentication key has been configured. This is unsafe behaviour and will be disallowed in the future.",
+      )
     end
 
     JSON
@@ -128,13 +130,18 @@ class WebhooksController < ActionController::Base
     if SiteSetting.postmark_webhook_token.present?
       return signature_failure if !valid_postmark_token?
     else
-      warn_unauthenticated_webhook("Postmark", "postmark_webhook_token")
+      Rails.logger.warn(
+        "Received a Postmark webhook, but no token has been configured. This is unsafe behaviour and will be disallowed in the future.",
+      )
     end
+
+    # see https://postmarkapp.com/developer/webhooks/bounce-webhook#bounce-webhook-data
+    # and https://postmarkapp.com/developer/api/bounce-api#bounce-types
 
     message_id = params["MessageID"]
     to_address = params["Email"]
-
-    case params["Type"]
+    type = params["Type"]
+    case type
     when "HardBounce", "SpamNotification", "SpamComplaint"
       process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
     when "SoftBounce"
@@ -148,7 +155,9 @@ class WebhooksController < ActionController::Base
     if SiteSetting.sparkpost_webhook_token.present?
       return signature_failure if !valid_sparkpost_token?
     else
-      warn_unauthenticated_webhook("SparkPost", "sparkpost_webhook_token")
+      Rails.logger.warn(
+        "Received a Sparkpost webhook, but no token has been configured. This is unsafe behaviour and will be disallowed in the future.",
+      )
     end
 
     events = params["_json"] || [params]
@@ -163,6 +172,7 @@ class WebhooksController < ActionController::Base
 
       bounce_class = bounce_class.to_i
 
+      # bounce class definitions: https://support.sparkpost.com/customer/portal/articles/1929896
       if bounce_class < 80
         if bounce_class == 10 || bounce_class == 25 || bounce_class == 30
           process_bounce(message_id, to_address, SiteSetting.hard_bounce_score)
@@ -191,14 +201,6 @@ class WebhooksController < ActionController::Base
 
   private
 
-  def warn_unauthenticated_webhook(provider, setting)
-    Discourse.deprecate(
-      "Received a #{provider} webhook, but the `#{setting}` setting is not configured. Unauthenticated webhooks is unsafe behavior and will be rejected in a future version.",
-      since: "2026.2",
-      drop_from: "2026.5",
-    )
-  end
-
   def signature_failure
     render body: nil, status: :not_acceptable
   end
@@ -208,16 +210,22 @@ class WebhooksController < ActionController::Base
   end
 
   def valid_mailgun_signature?(token, timestamp, signature)
+    # token is a random 50 characters string
     return false if token.blank? || token.size != 50
 
+    # prevent replay attacks
     key = "mailgun_token_#{token}"
     return false unless Discourse.redis.setnx(key, 1)
     Discourse.redis.expire(key, 10.minutes)
 
+    # ensure timestamp isn't too far from current time
     return false if (Time.at(timestamp.to_i) - Time.now).abs > 12.hours.to_i
 
-    digest = OpenSSL::HMAC.hexdigest("SHA256", SiteSetting.mailgun_api_key, "#{timestamp}#{token}")
-    ActiveSupport::SecurityUtils.secure_compare(signature, digest)
+    # check the signature
+    ActiveSupport::SecurityUtils.secure_compare(
+      signature,
+      OpenSSL::HMAC.hexdigest("SHA256", SiteSetting.mailgun_api_key, "#{timestamp}#{token}"),
+    )
   end
 
   def handle_mailgun_legacy(params)
@@ -309,34 +317,17 @@ class WebhooksController < ActionController::Base
         payload += value
       end
 
-    digest = OpenSSL::HMAC.digest("sha1", SiteSetting.mandrill_authentication_key, payload)
-    ActiveSupport::SecurityUtils.secure_compare(signature, Base64.strict_encode64(digest))
+    payload_signature =
+      OpenSSL::HMAC.digest("sha1", SiteSetting.mandrill_authentication_key, payload)
+    ActiveSupport::SecurityUtils.secure_compare(
+      signature,
+      Base64.strict_encode64(payload_signature),
+    )
   end
 
   def valid_postmark_token?
     return false if params[:t].blank?
     ActiveSupport::SecurityUtils.secure_compare(params[:t], SiteSetting.postmark_webhook_token)
-  end
-
-  def valid_mailpace_signature?
-    signature = request.headers["X-MailPace-Signature"]
-    return false if signature.blank?
-
-    request.body.rewind
-    payload = request.body.read
-
-    begin
-      decoded_key = Base64.strict_decode64(SiteSetting.mailpace_verification_key)
-      public_key = OpenSSL::PKey.read(decoded_key)
-    rescue StandardError
-      Rails.logger.error("Invalid Mailpace webhook verification key")
-      return false
-    end
-
-    decoded_signature = Base64.strict_decode64(signature)
-    public_key.verify(nil, decoded_signature, payload)
-  rescue StandardError
-    false
   end
 
   def valid_sparkpost_token?

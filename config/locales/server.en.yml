@@ -1710,9 +1710,7 @@ en:
       email_polling_errored_recently:
         one: "Email polling has generated an error in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
         other: "Email polling has generated %{count} errors in the past 24 hours. Look at <a href='%{base_path}/logs' target='_blank'>the logs</a> for more details."
-      email_bounce_handling:
-        webhook_key_missing: "The server sends emails via %{provider} but the <code>%{setting}</code> setting is not configured. Without it, bounce webhooks will be rejected and bounced emails won't be tracked. Configure it in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
-        no_bounce_handling: "No bounce handling detected. Configure reply by email with VERP support, or set up bounce webhooks with a supported email provider. Without bounce handling, you won't be notified of email delivery failures."
+      missing_mailgun_api_key: "The server is configured to send emails via Mailgun but you haven't provided an API key used to verify the webhook messages."
       qq_mail_smtp: "Your SMTP server (%{smtp_address}) is known to cause duplicate emails with Discourse. QQ Mail does not return proper acknowledgments, causing Discourse to retry sends that already succeeded. <a href='https://github.com/discourse/discourse/blob/main/docs/INSTALL-email.md' target='_blank'>See recommended alternatives</a>."
       bad_favicon_url: "The favicon is failing to load. Check your favicon setting in <a href='%{base_path}/admin/site_settings'>Site Settings</a>."
       poll_pop3_timeout: "Connection to the POP3 server is timing out. Incoming email could not be retrieved. Please check your <a href='%{base_path}/admin/site_settings/category/email'>POP3 settings</a> and service provider."
@@ -2345,7 +2343,6 @@ en:
     mandrill_authentication_key: "Mandrill authentication key used to verify webhook messages."
     postmark_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/postmark?t=supersecret"
     sparkpost_webhook_token: "Token used to verify webhook payload. It must be passed as the 't' query parameter of the webhook, for example: https://example.com/webhook/sparkpost?t=supersecret"
-    mailpace_verification_key: "Verification key used to verify MailPace webhook messages."
 
     soft_bounce_score: "Bounce score added to the user when a temporary bounce happens."
     hard_bounce_score: "Bounce score added to the user when a permanent bounce happens."
