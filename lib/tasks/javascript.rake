@@ -66,6 +66,8 @@ task "javascript:update_constants" => :environment do
 
     export const CATEGORY_TEXT_COLORS = #{Category::DEFAULT_TEXT_COLORS};
 
+    // NOTE: Group names are changed based on the site's locale, see
+    // Group.refresh_automatic_group! for more details
     export const AUTO_GROUPS = #{auto_groups.to_json};
 
     export const GROUP_SMTP_SSL_MODES = #{Group.smtp_ssl_modes.to_json};

@@ -132,7 +132,12 @@ describe "Admin upcoming changes", type: :system do
 
     # Test 'staff' option - should enable the change and set staff group
     upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for("staff")
-    expect(upcoming_changes_page).to have_enabled_for_success_toast("staff")
+    expect(upcoming_changes_page).to have_enabled_for_success_toast(
+      "staff",
+      translation_args: {
+        staffGroupName: I18n.t("groups.default_names.staff").titleize,
+      },
+    )
     expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
 
     upcoming_changes_page.visit
@@ -254,5 +259,31 @@ describe "Admin upcoming changes", type: :system do
     expect(sidebar.find_section_link("admin_upcoming_changes")).to have_no_css(
       ".sidebar-section-link-suffix.admin-sidebar-nav-link__dot",
     )
+  end
+
+  context "when the staff group name has been localized" do
+    before do
+      SiteSetting.default_locale = "de"
+      Group.refresh_automatic_group!(:staff)
+    end
+
+    it "displays the localized name in the enabled for options and enabling staff works correctly" do
+      upcoming_changes_page.visit
+
+      upcoming_changes_page.change_item(:enable_upload_debug_mode).select_enabled_for(
+        Group.find(Group::AUTO_GROUPS[:staff]).name,
+      )
+      expect(upcoming_changes_page).to have_enabled_for_success_toast(
+        "staff",
+        translation_args: {
+          staffGroupName: I18n.t("groups.default_names.staff", locale: SiteSetting.default_locale),
+        },
+      )
+      expect(upcoming_changes_page.change_item(:enable_upload_debug_mode)).to be_enabled
+      expect(SiteSetting.enable_upload_debug_mode).to be_truthy
+      expect(SiteSettingGroup.find_by(name: "enable_upload_debug_mode").group_ids).to include(
+        Group::AUTO_GROUPS[:staff].to_s,
+      )
+    end
   end
 end
