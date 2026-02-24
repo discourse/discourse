@@ -68,20 +68,24 @@ RSpec.describe "Data explorer query runner", type: :system do
       )
     end
 
-    it "redirects to the new url format" do
-      visit("/admin/plugins/explorer/?id=#{query_1.id}")
+    it "redirects /explorer/queries/:id to the new url format" do
+      visit("/admin/plugins/explorer/queries/#{query_1.id}")
 
       expect(page).to have_current_path(
         "/admin/plugins/discourse-data-explorer/queries/#{query_1.id}",
       )
     end
 
-    it "redirects to the new url format with params" do
-      visit("/admin/plugins/explorer/?id=#{query_1.id}&params=%7B%22limit%22%3A%2210%22%7D")
+    it "redirects /explorer/queries to the new url format" do
+      visit("/admin/plugins/explorer/queries")
 
-      expect(page).to have_current_path(
-        "/admin/plugins/discourse-data-explorer/queries/#{query_1.id}?params=%7B%22limit%22%3A%2210%22%7D",
-      )
+      expect(page).to have_current_path("/admin/plugins/discourse-data-explorer/queries")
+    end
+
+    it "redirects /explorer to the new url format" do
+      visit("/admin/plugins/explorer")
+
+      expect(page).to have_current_path("/admin/plugins/discourse-data-explorer/queries")
     end
   end
 
