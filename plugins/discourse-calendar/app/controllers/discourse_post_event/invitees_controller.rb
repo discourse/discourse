@@ -57,71 +57,73 @@ module DiscoursePostEvent
     end
 
     def update
-      invitee = Invitee.find_by!(id: params[:invitee_id], post_id: params[:event_id])
-      guardian.ensure_can_act_on_invitee!(invitee)
-      begin
-        invitee.update_attendance!(invitee_params[:status])
-        render json: InviteeSerializer.new(invitee)
-      rescue Discourse::InvalidParameters => e
-        if e.message == "max_attendees"
+      DiscoursePostEvent::UpdateInvitee.call(
+        params: {
+          status: params[:invitee][:status],
+          event_id: params[:event_id],
+          invitee_id: params[:invitee_id],
+        },
+        guardian:,
+      ) do
+        on_success { |invitee:| render json: InviteeSerializer.new(invitee) }
+        on_failed_policy(:can_act_on_invitee) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_see_event) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_update_attendance) { raise Discourse::InvalidAccess }
+        on_failed_policy(:has_capacity) do
           render_json_error(
             I18n.t("discourse_post_event.errors.models.event.max_attendees_reached"),
             422,
           )
-        else
-          raise
         end
+        on_model_not_found(:invitee) { raise Discourse::NotFound }
+        on_model_not_found(:event) { raise Discourse::NotFound }
+        on_failed_contract { raise Discourse::InvalidParameters }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end
 
     def create
-      event = Event.find(params[:event_id])
-      guardian.ensure_can_see!(event.post)
-
-      invitee_params = invitee_params(event)
-
-      user = current_user
-      if user_id = invitee_params[:user_id]
-        user = User.find(user_id.to_i)
-      end
-
-      raise Discourse::InvalidAccess if !event.can_user_update_attendance(user)
-
-      if current_user.id != user.id
-        raise Discourse::InvalidAccess if !guardian.can_act_on_discourse_post_event?(event)
-      end
-
-      begin
-        invitee = Invitee.create_attendance!(user.id, params[:event_id], invitee_params[:status])
-        render json: InviteeSerializer.new(invitee)
-      rescue Discourse::InvalidParameters => e
-        if e.message == "max_attendees"
+      DiscoursePostEvent::CreateInvitee.call(
+        params: {
+          status: params[:invitee][:status],
+          user_id: params[:invitee][:user_id],
+          event_id: params[:event_id],
+        },
+        guardian:,
+      ) do
+        on_success { |invitee:| render json: InviteeSerializer.new(invitee) }
+        on_failed_policy(:can_see_event) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_update_attendance) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_invite_user) { raise Discourse::InvalidAccess }
+        on_failed_policy(:has_capacity) do
           render_json_error(
             I18n.t("discourse_post_event.errors.models.event.max_attendees_reached"),
             422,
           )
-        else
-          raise
         end
+        on_model_not_found(:event) { raise Discourse::NotFound }
+        on_model_not_found(:user) { raise Discourse::NotFound }
+        on_failed_contract { raise Discourse::InvalidParameters }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end
 
     def destroy
-      event = Event.find(params[:post_id])
-      invitee = event.invitees.find(params[:id])
-      guardian.ensure_can_act_on_invitee!(invitee)
-      invitee.destroy!
-      event.publish_update!
-      render json: success_json
-    end
-
-    private
-
-    def invitee_params(event = nil)
-      if event && guardian.can_act_on_discourse_post_event?(event)
-        params.require(:invitee).permit(:status, :user_id)
-      else
-        params.require(:invitee).permit(:status)
+      DiscoursePostEvent::DestroyInvitee.call(
+        params: {
+          post_id: params[:post_id],
+          id: params[:id],
+        },
+        guardian:,
+      ) do
+        on_success { render json: success_json }
+        on_failed_policy(:can_act_on_invitee) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_see_event) { raise Discourse::InvalidAccess }
+        on_failed_policy(:can_update_attendance) { raise Discourse::InvalidAccess }
+        on_model_not_found(:event) { raise Discourse::NotFound }
+        on_model_not_found(:invitee) { raise Discourse::NotFound }
+        on_failed_contract { raise Discourse::InvalidParameters }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
       end
     end
   end
