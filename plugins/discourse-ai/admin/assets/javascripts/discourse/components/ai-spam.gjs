@@ -16,6 +16,7 @@ import withEventValue from "discourse/helpers/with-event-value";
 import { ajax } from "discourse/lib/ajax";
 import { popupAjaxError } from "discourse/lib/ajax-error";
 import getURL from "discourse/lib/get-url";
+import { trackedArray } from "discourse/lib/tracked-tools";
 import ComboBox from "discourse/select-kit/components/combo-box";
 import { i18n } from "discourse-i18n";
 import SpamTestModal from "./modal/spam-test-modal";
@@ -36,7 +37,7 @@ export default class AiSpam extends Component {
   @tracked selectedLLM = null;
   @tracked selectedPersonaId = null;
   @tracked customInstructions = "";
-  @tracked errors = [];
+  @trackedArray errors;
 
   constructor() {
     super(...arguments);
