@@ -25,7 +25,7 @@ Hosting Rails applications is complicated. Even if you already have Postgres, Re
 
 ### Software Requirements
 
-- [Postgres 13](https://www.postgresql.org/download/)
+- [PostgreSQL](https://www.postgresql.org/download/) (with major version matching the [version deployed in our docker images](https://github.com/discourse/discourse_docker/blob/main/image/base/Dockerfile))
 - [Redis 7](https://redis.io/download)
 - [Ruby 3.2+](https://www.ruby-lang.org/en/downloads/)
 ## Security
