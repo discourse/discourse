@@ -75,9 +75,32 @@ module Discourse
     checkout_version
   end
 
+  def self.find_compatible_git_branch(path)
+    current_branch =
+      Discourse::Utils.execute_command("git", "-C", path, "branch", "--show-current").strip
+
+    default_branch =
+      Discourse::Utils
+        .execute_command("git", "-C", path, "symbolic-ref", "--short", "refs/remotes/origin/HEAD")
+        .strip
+        .sub(%r{\Aorigin/}, "")
+
+    return if current_branch != default_branch
+
+    compat_branch = "d-compat/#{Discourse::VERSION::MAJOR}.#{Discourse::VERSION::MINOR}"
+    remote_branch_ref = "refs/remotes/origin/#{compat_branch}"
+
+    Discourse::Utils.execute_command("git", "-C", path, "rev-parse", remote_branch_ref).strip
+  rescue Discourse::Utils::CommandError
+  end
+
   # Find a compatible resource from a git repo
   def self.find_compatible_git_resource(path)
     return unless File.directory?("#{path}/.git")
+
+    if compat_branch_sha = find_compatible_git_branch(path)
+      return compat_branch_sha
+    end
 
     tree_info =
       Discourse::Utils.execute_command(
@@ -108,7 +131,6 @@ module Discourse
     Discourse.find_compatible_resource(compat_resource)
   rescue InvalidVersionListError => e
     $stderr.puts "Invalid version list in #{path}"
-  rescue Discourse::Utils::CommandError => e
-    nil
+  rescue Discourse::Utils::CommandError
   end
 end
