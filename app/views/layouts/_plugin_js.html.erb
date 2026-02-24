@@ -2,6 +2,9 @@
 
 <%- Discourse.find_plugin_js_assets(opts).tap do |plugin_assets| %>
   <%- plugin_assets.each do |asset| %>
-    <%= preload_script asset[:name] %>
+    <%= preload_script asset[:name],
+          plugin_name: asset[:plugin]&.metadata&.name,
+          preinstalled: asset[:plugin] && !File.exist?(File.join(asset[:plugin].directory, ".git")),
+          official: asset[:plugin]&.metadata&.official? %>
   <%- end %>
 <%- end %>

@@ -130,7 +130,7 @@ module ApplicationHelper
     path
   end
 
-  def preload_script(script)
+  def preload_script(script, plugin_name: nil, preinstalled: false, official: false)
     scripts = []
 
     if chunks = EmberCli.script_chunks[script]
@@ -142,20 +142,41 @@ module ApplicationHelper
     scripts
       .map do |name|
         path = script_asset_path(name)
-        preload_script_url(path, entrypoint: script)
+        preload_script_url(
+          path,
+          entrypoint: script,
+          plugin_name: plugin_name,
+          preinstalled: preinstalled,
+          official: official,
+        )
       end
       .join("\n")
       .html_safe
   end
 
-  def preload_script_url(url, entrypoint: nil, type_module: false)
+  def preload_script_url(
+    url,
+    entrypoint: nil,
+    type_module: false,
+    plugin_name: nil,
+    preinstalled: false,
+    official: false
+  )
     entrypoint_attribute = entrypoint ? "data-discourse-entrypoint=\"#{entrypoint}\"" : ""
     nonce_attribute = "nonce=\"#{csp_nonce_placeholder}\""
+
+    plugin_attributes = ""
+    if plugin_name
+      plugin_attributes =
+        " data-discourse-plugin=\"#{ERB::Util.html_escape(plugin_name)}\"" \
+          " data-preinstalled=\"#{preinstalled}\"" \
+          " data-official=\"#{official}\""
+    end
 
     add_resource_preload_list(url, "script")
 
     <<~HTML.html_safe
-      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute} #{nonce_attribute}></script>
+      <script #{type_module ? 'type="module"' : "defer"} src="#{url}" #{entrypoint_attribute}#{plugin_attributes} #{nonce_attribute}></script>
     HTML
   end
 

@@ -116,6 +116,50 @@ RSpec.describe ApplicationHelper do
         )
       end
     end
+
+    it "includes plugin data attributes when plugin_name is provided" do
+      result =
+        helper.preload_script(
+          "plugins/my-plugin",
+          plugin_name: "my-plugin",
+          preinstalled: true,
+          official: true,
+        )
+      expect(result).to include('data-discourse-plugin="my-plugin"')
+      expect(result).to include('data-preinstalled="true"')
+      expect(result).to include('data-official="true"')
+    end
+
+    it "does not include plugin data attributes when plugin_name is not provided" do
+      result = helper.preload_script("start-discourse")
+      expect(result).not_to include("data-discourse-plugin")
+      expect(result).not_to include("data-preinstalled")
+      expect(result).not_to include("data-official")
+    end
+
+    it "escapes plugin_name in data attributes" do
+      result =
+        helper.preload_script(
+          "plugins/test",
+          plugin_name: "<script>xss</script>",
+          preinstalled: false,
+          official: false,
+        )
+      expect(result).not_to include("<script>xss</script>")
+      expect(result).to include("&lt;script&gt;xss&lt;/script&gt;")
+    end
+
+    it "renders preinstalled and official as false for non-preinstalled plugins" do
+      result =
+        helper.preload_script(
+          "plugins/my-plugin",
+          plugin_name: "my-plugin",
+          preinstalled: false,
+          official: false,
+        )
+      expect(result).to include('data-preinstalled="false"')
+      expect(result).to include('data-official="false"')
+    end
   end
 
   describe "add_resource_preload_list" do
