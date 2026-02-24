@@ -18,6 +18,7 @@ import { registerDiscourseImplicitInjections } from "discourse/lib/implicit-inje
 // Register Discourse's standard implicit injections on common framework classes.
 registerDiscourseImplicitInjections();
 
+import { DEBUG } from "@glimmer/env";
 import Application from "@ember/application";
 import { VERSION } from "@ember/version";
 import require from "require";
@@ -53,10 +54,50 @@ async function loadThemeFromModulePreload(link) {
   }
 }
 
+let dialogContent;
+
+async function loadPluginFromModulePreload(link) {
+  const pluginName = link.dataset.pluginName;
+  try {
+    const compatModules = (await import(/* webpackIgnore: true */ link.href))
+      .default;
+    for (const [key, mod] of Object.entries(compatModules)) {
+      define(`discourse/plugins/${pluginName}/${key}`, () => mod);
+    }
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error(
+      `Failed to load plugin ${link.dataset.pluginName} from ${link.href}`,
+      error
+    );
+
+    if (DEBUG) {
+      if (!dialogContent) {
+        const dialog = document.createElement("dialog");
+        dialog.style = "background: black; color: red; border-radius: 30px;";
+
+        dialogContent = document.createElement("div");
+        dialog.append(dialogContent);
+
+        document.body.append(dialog);
+        dialog.showModal();
+      }
+
+      dialogContent.innerText += `Failed to load plugin ${link.dataset.pluginName} from ${link.href}\n${error.message}\n\n`;
+    }
+  }
+}
+
 export async function loadThemes() {
   const promises = [
-    ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
-  ].map(loadThemeFromModulePreload);
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-theme-id]"),
+    ].map(loadThemeFromModulePreload),
+    ...[
+      ...document.querySelectorAll("link[rel=modulepreload][data-plugin-name]"),
+    ].map(loadPluginFromModulePreload),
+  ];
+
   await Promise.all(promises);
 }
 

@@ -277,6 +277,10 @@ module.exports = {
 
   // Matches logic from GlobalSetting.load_plugins? in the ruby app
   shouldLoadPlugins() {
+    if (process.env.ROLLUP_PLUGIN_COMPILER === "1") {
+      return false;
+    }
+
     if (process.env.LOAD_PLUGINS === "1") {
       return true;
     } else if (process.env.LOAD_PLUGINS === "0") {

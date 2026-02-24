@@ -66,6 +66,7 @@ class AssetProcessor
         @processor_mutex.synchronize { build_asset_processor }
       end
 
+    ctx.eval("globalThis.ROLLUP_PLUGIN_COMPILER = #{ENV["ROLLUP_PLUGIN_COMPILER"].to_json}")
     ctx.eval(source, filename: "asset-processor.js")
 
     ctx
