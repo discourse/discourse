@@ -152,7 +152,7 @@ task "assets:precompile:compress_js": "environment" do
 end
 
 task "assets:precompile:asset_processor": "environment" do
-  AssetProcessor.build_production_asset_processor
+  AssetProcessor.load_or_build_processor_snapshot
 end
 
 # Run these tasks **before** Rails' "assets:precompile" task

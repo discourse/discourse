@@ -1,11 +1,19 @@
 # frozen_string_literal: true
 
 class AssetProcessor
-  PROCESSOR_PATH = "tmp/asset-processor.js"
+  PROCESSOR_DIR = "tmp/asset-processor"
+  LOCK_FILE = "#{PROCESSOR_DIR}/build.lock"
+
+  CACHE_DEPENDENCY_GLOBS = %w[
+    node_modules/.pnpm/lock.yaml
+    frontend/asset-processor/**/*.js
+    frontend/discourse/lib/babel-transform-module-renames.js
+    frontend/discourse/config/targets.js
+    frontend/discourse-plugins/transform-action-syntax.js
+  ]
 
   @mutex = Mutex.new
   @ctx_init = Mutex.new
-  @processor_mutex = Mutex.new
 
   class TranspileError < StandardError
   end
@@ -27,16 +35,72 @@ class AssetProcessor
     Discourse::Utils.execute_command("pnpm", "-C=frontend/asset-processor", "node", "build.js")
   end
 
-  def self.build_production_asset_processor
-    File.write(PROCESSOR_PATH, build_asset_processor)
-    PROCESSOR_PATH
+  def self.inputs_digest
+    digest = Digest::MD5.new
+
+    CACHE_DEPENDENCY_GLOBS.each do |pattern|
+      files = Dir.glob(pattern).sort
+      raise "No files matched #{pattern}" if files.empty?
+
+      files.each do |file|
+        digest.update(file)
+        digest.update(File.read(file))
+      end
+    end
+
+    digest.hexdigest.to_i(16).to_s(36) # base36
+  end
+
+  def self.processor_file_path
+    "#{PROCESSOR_DIR}/asset-processor-#{inputs_digest}.v8.bin"
+  end
+
+  def self.with_file_lock(&block)
+    lock_path = "#{Rails.root}/#{LOCK_FILE}"
+    FileUtils.mkdir_p(File.dirname(lock_path))
+    File.open(lock_path, File::CREAT | File::RDWR) do |lock_file|
+      lock_file.flock(File::LOCK_EX)
+      yield
+    end
+  end
+
+  def self.cleanup_old_cache_files
+    Dir
+      .glob("#{PROCESSOR_DIR}/asset-processor-*")
+      .reject { it.end_with?(processor_file_path) }
+      .each { File.delete(it) }
+  end
+
+  def self.load_or_build_processor_snapshot
+    cache_path = processor_file_path
+
+    if File.exist?(cache_path)
+      File.binread(cache_path)
+    else
+      with_file_lock do
+        if File.exist?(cache_path)
+          File.binread(cache_path)
+        else
+          built_source = build_asset_processor
+          snapshot = MiniRacer::Snapshot.new(built_source).dump
+          FileUtils.mkdir_p(PROCESSOR_DIR)
+          File.binwrite(cache_path, snapshot)
+          cleanup_old_cache_files
+          snapshot
+        end
+      end
+    end
   end
 
   def self.create_new_context
     # timeout any eval that takes longer than 15 seconds
-    ctx = MiniRacer::Context.new(timeout: 15_000, ensure_gc_after_idle: 2000)
+    ctx =
+      MiniRacer::Context.new(
+        timeout: 15_000,
+        ensure_gc_after_idle: 2000,
+        snapshot: MiniRacer::Snapshot.load(load_or_build_processor_snapshot),
+      )
 
-    # General shims
     ctx.attach(
       "rails.logger.info",
       proc do |err|
@@ -58,15 +122,7 @@ class AssetProcessor
         nil
       end,
     )
-
-    source =
-      if Rails.env.production?
-        File.read(PROCESSOR_PATH)
-      else
-        @processor_mutex.synchronize { build_asset_processor }
-      end
-
-    ctx.eval(source, filename: "asset-processor.js")
+    ctx.eval("globalThis.patchWebAssembly();")
 
     ctx
   end
