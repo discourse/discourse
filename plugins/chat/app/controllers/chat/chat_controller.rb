@@ -2,12 +2,8 @@
 
 module Chat
   class ChatController < ::Chat::BaseController
-    # Other endpoints use set_channel_and_chatable_with_access_check, but
-    # these endpoints require a standalone find because they need to be
-    # able to get deleted channels and recover them.
-    before_action :find_chat_message, only: %i[rebake]
     before_action :set_channel_and_chatable_with_access_check,
-                  except: %i[respond set_user_chat_status dismiss_retention_reminder]
+                  except: %i[respond set_user_chat_status dismiss_retention_reminder rebake]
 
     def respond
       render
@@ -27,9 +23,20 @@ module Chat
     end
 
     def rebake
-      guardian.ensure_can_rebake_chat_message!(@message)
-      @message.rebake!(invalidate_oneboxes: true)
-      render json: success_json
+      Chat::RebakeMessage.call(service_params) do
+        on_success { render(json: success_json) }
+        on_failure { render(json: failed_json, status: :unprocessable_entity) }
+        on_model_not_found(:channel) { raise Discourse::NotFound }
+        on_failed_policy(:can_access_channel) { raise Discourse::InvalidAccess }
+        on_model_not_found(:message) { raise Discourse::NotFound }
+        on_failed_policy(:can_rebake) { raise Discourse::InvalidAccess }
+        on_failed_contract do |contract|
+          render(
+            json: failed_json.merge(errors: contract.errors.full_messages),
+            status: :bad_request,
+          )
+        end
+      end
     end
 
     def set_user_chat_status
@@ -69,36 +76,6 @@ module Chat
           messages_or_ids: message_ids,
         ).generate_markdown
       render json: success_json.merge(markdown: markdown)
-    end
-
-    private
-
-    def preloaded_chat_message_query
-      query =
-        Chat::Message
-          .includes(in_reply_to: [:user, chat_webhook_event: [:incoming_chat_webhook]])
-          .includes(:revisions)
-          .includes(user: :primary_group)
-          .includes(chat_webhook_event: :incoming_chat_webhook)
-          .includes(reactions: :user)
-          .includes(:bookmarks)
-          .includes(uploads: { optimized_videos: :optimized_upload })
-          .includes(chat_channel: :chatable)
-          .includes(:thread)
-          .includes(:chat_mentions)
-
-      query = query.includes(user: :user_status) if SiteSetting.enable_user_status
-
-      query
-    end
-
-    def find_chat_message
-      @message = preloaded_chat_message_query.with_deleted
-      @message = @message.where(chat_channel_id: params[:chat_channel_id]) if params[
-        :chat_channel_id
-      ]
-      @message = @message.find_by(id: params[:message_id])
-      raise Discourse::NotFound unless @message
     end
   end
 end
