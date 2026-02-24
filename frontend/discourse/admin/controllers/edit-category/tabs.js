@@ -48,6 +48,12 @@ const FIELD_LIST = [
   "mailinglist_mirror",
   "allowed_tag_groups",
   "allowed_tags",
+];
+
+// Additional fields managed through FormKit in the simplified creation flow.
+// The legacy edit-category components manage these directly on the model.
+const SIMPLIFIED_FIELD_LIST = [
+  ...FIELD_LIST,
   "required_tag_groups",
   "minimum_required_tags",
   "allow_global_tags",
@@ -83,18 +89,21 @@ export default class EditCategoryTabsController extends Controller {
   @and("showTooltip", "model.cannot_delete_reason") showDeleteReason;
 
   get formData() {
-    const data = getProperties(this.model, ...FIELD_LIST);
+    const simplified = this.siteSettings.enable_simplified_category_creation;
+    const data = getProperties(
+      this.model,
+      ...(simplified ? SIMPLIFIED_FIELD_LIST : FIELD_LIST)
+    );
 
-    if (!this.model.styleType) {
+    if (simplified && !this.model.styleType) {
       data.style_type = "icon";
     }
 
-    data.required_tag_groups = Array.from(
-      data.required_tag_groups ?? [],
-      (rtg) => ({ ...rtg })
-    );
-
-    if (this.siteSettings.enable_simplified_category_creation) {
+    if (simplified) {
+      data.required_tag_groups = Array.from(
+        data.required_tag_groups ?? [],
+        (rtg) => ({ ...rtg })
+      );
       data.category_setting = { ...(this.model.category_setting ?? {}) };
       data.custom_fields = { ...(this.model.custom_fields ?? {}) };
     }
@@ -148,6 +157,10 @@ export default class EditCategoryTabsController extends Controller {
 
   @action
   validateForm(data, { addError }) {
+    if (!this.siteSettings.enable_simplified_category_creation) {
+      return;
+    }
+
     if (this.selectedTab === "general") {
       return;
     }
