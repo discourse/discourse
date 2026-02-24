@@ -3153,6 +3153,23 @@ RSpec.describe PostsController do
         expect(post_ids).to eq([post_id])
       end
 
+      it "does not include whisper posts for non-whisperer users" do
+        sign_in(user)
+
+        pm = Fabricate(:private_message_topic, recipient: user)
+        regular_post = Fabricate(:post, topic: pm)
+        whisper_post = Fabricate(:post, topic: pm, post_type: Post.types[:whisper])
+
+        get "/private-posts.json"
+        expect(response.status).to eq(200)
+
+        json = response.parsed_body
+        post_ids = json["private_posts"].map { |p| p["id"] }
+
+        expect(post_ids).to include(regular_post.id)
+        expect(post_ids).to_not include(whisper_post.id)
+      end
+
       it "returns private posts for json" do
         sign_in(admin)
 
