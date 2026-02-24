@@ -6,12 +6,6 @@ import {
 import templateOnly from "@ember/component/template-only";
 import deprecated from "discourse/lib/deprecated";
 
-// Re-export shared outlet args utilities for backwards compatibility
-export {
-  buildArgsWithDeprecations,
-  deprecatedArgumentValue,
-} from "discourse/lib/outlet-args";
-
 let _connectorCache;
 let _extraConnectorClasses = {};
 let _extraConnectorComponents = {};
