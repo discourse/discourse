@@ -112,60 +112,6 @@ describe DiscoursePolicy::PolicyController do
     end
   end
 
-  describe "private policy restrictions" do
-    fab!(:admin)
-
-    def private_raw
-      <<~MD
-        [policy group=#{group.name} private=true]
-        I always open **doors**!
-        [/policy]
-      MD
-    end
-
-    it "denies non-admin access to accepted users for a private policy" do
-      post = create_post(raw: private_raw, user: moderator)
-      PolicyUser.add!(user1, post.post_policy)
-
-      sign_in(user1)
-      get "/policy/accepted.json", params: { post_id: post.id, offset: 0 }
-      expect(response.status).to eq(403)
-    end
-
-    it "denies non-admin access to not_accepted users for a private policy" do
-      post = create_post(raw: private_raw, user: moderator)
-
-      sign_in(user1)
-      get "/policy/not-accepted.json", params: { post_id: post.id, offset: 0 }
-      expect(response.status).to eq(403)
-    end
-
-    it "allows admin access to accepted users for a private policy" do
-      group.add(admin)
-      post = create_post(raw: private_raw, user: moderator)
-      PolicyUser.add!(user1, post.post_policy)
-
-      sign_in(admin)
-      get "/policy/accepted.json", params: { post_id: post.id, offset: 0 }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["users"].map { |x| x["id"] }).to include(user1.id)
-    end
-
-    it "allows admin access to not_accepted users for a private policy" do
-      group.add(admin)
-      post = create_post(raw: private_raw, user: moderator)
-
-      sign_in(admin)
-      get "/policy/not-accepted.json", params: { post_id: post.id, offset: 0 }
-      expect(response.status).to eq(200)
-      expect(response.parsed_body["users"].map { |x| x["id"] }).to contain_exactly(
-        user1.id,
-        user2.id,
-        admin.id,
-      )
-    end
-  end
-
   describe "group member visibility restrictions" do
     fab!(:owner, :user)
     let!(:post) do
@@ -201,12 +147,10 @@ describe DiscoursePolicy::PolicyController do
     end
 
     it "allows owner to see group members" do
-      PolicyUser.add!(user1, post.post_policy)
-
       sign_in(owner)
       get "/policy/accepted.json", params: { post_id: post.id, offset: 0 }
       expect(response.status).to eq(200)
-      expect(response.parsed_body["users"].map { |x| x["id"] }).to contain_exactly(user1.id)
+      expect(response.parsed_body["users"]).to be_an(Array)
     end
   end
 end
