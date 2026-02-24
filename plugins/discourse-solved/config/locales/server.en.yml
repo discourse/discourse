@@ -28,6 +28,7 @@ en:
   reports:
     accepted_solutions:
       title: "Accepted solutions"
+      description: "How many topics had a solution accepted per day in a date range, with optional category filter and a 30-day comparison total."
       xaxis: "Day"
       yaxis: "Total"
   solved:

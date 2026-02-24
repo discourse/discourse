@@ -4205,6 +4205,15 @@ dashboard:
     client: true
 
 experimental:
+  reporting_improvements:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/395768"
   enable_auto_grid_images:
     default: false
     client: true
@@ -4225,11 +4234,6 @@ experimental:
   experimental_tag_settings_page:
     default: false
     client: true
-    area: "experimental"
-  experimental_hashtag_search_result_limit:
-    default: 20
-    client: true
-    hidden: true
     area: "experimental"
   enable_form_templates:
     client: true
