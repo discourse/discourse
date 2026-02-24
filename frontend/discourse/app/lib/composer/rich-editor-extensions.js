@@ -34,6 +34,7 @@ import { waitForPromise } from "@ember/test-waiters";
  * @property {typeof import('prosemirror-history')} pmHistory
  * @property {typeof import('prosemirror-transform')} pmTransform
  * @property {typeof import('prosemirror-commands')} pmCommands
+ * @property {typeof import('prosemirror-schema-list')} pmSchemaList
  * @property {import('prosemirror-model').Schema} schema
  * @property {() => PluginContext} getContext
  */
