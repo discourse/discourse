@@ -78,6 +78,7 @@ module Discourse
   def self.find_compatible_git_branch(path)
     current_branch =
       Discourse::Utils.execute_command("git", "-C", path, "branch", "--show-current").strip
+
     default_branch =
       Discourse::Utils
         .execute_command("git", "-C", path, "symbolic-ref", "--short", "refs/remotes/origin/HEAD")
