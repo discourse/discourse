@@ -1066,15 +1066,15 @@ describe PostRevisor do
       expect(post_revisor.raw_changed?).to eq(false)
 
       post_revisor.revise!(admin, tags: %w[new-tag new-tag-2])
-      expect(post.post_revisions.last.modifications).to eq(
-        "tags" => [["new-tag"], %w[new-tag new-tag-2]],
-      )
+      before, after = post.post_revisions.last.modifications["tags"]
+      expect(before).to contain_exactly("new-tag")
+      expect(after).to contain_exactly("new-tag", "new-tag-2")
       expect(post_revisor.raw_changed?).to eq(false)
 
       post_revisor.revise!(admin, tags: ["new-tag-3"])
-      expect(post.post_revisions.last.modifications).to eq(
-        "tags" => [%w[new-tag new-tag-2], ["new-tag-3"]],
-      )
+      before, after = post.post_revisions.last.modifications["tags"]
+      expect(before).to contain_exactly("new-tag", "new-tag-2")
+      expect(after).to contain_exactly("new-tag-3")
       expect(post_revisor.raw_changed?).to eq(false)
     end
 

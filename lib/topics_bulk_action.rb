@@ -251,75 +251,72 @@ class TopicsBulkAction
   end
 
   def change_tags
-    tag_ids, tag_names = extract_tag_params
+    tags = resolve_tag_names || []
 
-    topics.each do |t|
-      if guardian.can_edit?(t)
-        success =
-          if tag_ids.present?
-            DiscourseTagging.tag_topic_by_ids(t, guardian, tag_ids)
-          elsif tag_names.present?
-            DiscourseTagging.tag_topic_by_names(t, guardian, tag_names)
-          else
-            t.tags = []
-            true
-          end
+    topics_with_tags.each do |t|
+      next unless guardian.can_edit?(t)
+      next unless t.first_post
 
-        if success
-          @changed_ids << t.id
-        else
-          t.errors.full_messages.each { |msg| @errors[msg] += 1 }
-        end
+      if t.first_post.revise(@user, { tags: tags }, bulk_tag_opts)
+        @changed_ids << t.id
+      else
+        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
       end
     end
   end
 
   def append_tags
-    tag_ids, tag_names = extract_tag_params
+    tags = resolve_tag_names || []
 
-    topics.each do |t|
-      if guardian.can_edit?(t)
-        success =
-          if tag_ids.present?
-            DiscourseTagging.tag_topic_by_ids(t, guardian, tag_ids, append: true)
-          elsif tag_names.present?
-            DiscourseTagging.tag_topic_by_names(t, guardian, tag_names, append: true)
-          else
-            true
-          end
+    return if tags.blank?
 
-        if success
-          @changed_ids << t.id
-        else
-          t.errors.full_messages.each { |msg| @errors[msg] += 1 }
-        end
+    topics_with_tags.each do |t|
+      next unless guardian.can_edit?(t)
+      next unless t.first_post
+
+      merged = t.tags.map(&:name) | tags
+      if t.first_post.revise(@user, { tags: merged }, bulk_tag_opts)
+        @changed_ids << t.id
+      else
+        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
       end
     end
   end
 
-  def extract_tag_params
+  def remove_tags
+    topics_with_tags.each do |t|
+      next unless guardian.can_edit?(t)
+      next unless t.first_post
+
+      if t.first_post.revise(@user, { tags: [] }, bulk_tag_opts)
+        @changed_ids << t.id
+      else
+        t.errors.full_messages.each { |msg| @errors[msg] += 1 }
+      end
+    end
+  end
+
+  def resolve_tag_names
     if @operation[:tag_ids].present?
-      [@operation[:tag_ids], nil]
+      Tag.where(id: @operation[:tag_ids]).pluck(:name)
     elsif @operation[:tags].present?
       Discourse.deprecate(
         "the tags param for bulk actions is deprecated, use tag_ids instead",
         since: "2026.01",
         drop_from: "2026.07",
       )
-      tag_names = @operation[:tags]
-      [nil, tag_names]
-    else
-      [nil, nil]
+      @operation[:tags]
     end
   end
 
-  def remove_tags
-    topics.each do |t|
-      if guardian.can_edit?(t)
-        TopicTag.where(topic_id: t.id).in_batches.destroy_all
-        @changed_ids << t.id
-      end
-    end
+  def bulk_tag_opts
+    {
+      bypass_bump: true,
+      validate_post: false,
+      bypass_rate_limiter: true,
+      skip_revision: true,
+      silent: true,
+    }
   end
 
   def guardian
@@ -328,6 +325,10 @@ class TopicsBulkAction
 
   def topics
     @topics ||= Topic.where(id: @topic_ids)
+  end
+
+  def topics_with_tags
+    @topics_with_tags ||= topics.includes(:first_post, :tags)
   end
 
   def dismiss_topics_since_date
