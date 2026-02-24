@@ -1,0 +1,43 @@
+[
+  {
+    "kind": "Listing",
+    "data": {
+      "children": [
+        {
+          "kind": "t3",
+          "data": {
+            "title": "My cat doing a backflip",
+            "author": "cat_person_42",
+            "subreddit_name_prefixed": "r/cats",
+            "score": 12500,
+            "num_comments": 432,
+            "selftext": "",
+            "is_self": false,
+            "post_hint": "hosted:video",
+            "is_video": true,
+            "over_18": false,
+            "url": "https://v.redd.it/abc123def456",
+            "permalink": "/r/cats/comments/abc123/my_cat_doing_a_backflip/",
+            "preview": {
+              "images": [
+                {
+                  "source": {
+                    "url": "https://preview.redd.it/abc123def456.png?auto=webp&amp;s=deadbeef",
+                    "width": 1920,
+                    "height": 1080
+                  }
+                }
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  {
+    "kind": "Listing",
+    "data": {
+      "children": []
+    }
+  }
+]
