@@ -10,15 +10,31 @@ module Reports
         @type = name.to_s.gsub("report_", "")
       end
 
-      def to_h(admin:)
-        return if Report.hidden?(type, admin:)
+      def visible?(admin:)
+        return false if Report.hidden?(type, admin:)
 
-        {
+        if SiteSetting.reporting_improvements
+          return false if plugin_report? && plugin_disabled?
+          return false if Report::LEGACY_REPORTS.include?(type)
+        end
+
+        true
+      end
+
+      def to_h
+        result = {
           type:,
           title:,
           description:,
           description_link: I18n.t("reports.#{type}.description_link", default: "").presence,
         }
+
+        if SiteSetting.reporting_improvements && plugin_report?
+          result[:plugin] = plugin_name
+          result[:plugin_display_name] = plugin_display_name
+        end
+
+        result
       end
 
       private
@@ -41,6 +57,43 @@ module Reports
         SiteSetting.use_legacy_pageviews &&
           type.in?(%w[consolidated_page_views consolidated_page_views_browser_detection])
       end
+
+      def plugin_name
+        return @plugin_name if defined?(@plugin_name)
+
+        @plugin_name = resolve_plugin_name
+      end
+
+      def resolve_plugin_name
+        return unless Report.singleton_class.method_defined?(@name)
+
+        source_path = Report.method(@name).source_location.first
+        return unless source_path&.include?("/plugins/")
+
+        # Extract plugin name from path like /plugins/discourse-ai/...
+        match = source_path.match(%r{/plugins/([^/]+)/})
+        match[1] if match
+      rescue NameError
+        nil
+      end
+
+      def plugin_instance
+        return @plugin_instance if defined?(@plugin_instance)
+        @plugin_instance = plugin_name && Discourse.plugins_by_name[plugin_name]
+      end
+
+      def plugin_display_name
+        plugin_instance&.humanized_name
+      end
+
+      def plugin_report?
+        plugin_name.present?
+      end
+
+      def plugin_disabled?
+        return true unless plugin_instance
+        !plugin_instance.enabled?
+      end
     end
 
     def self.call(admin:)
@@ -62,7 +115,8 @@ module Reports
 
       reports_methods
         .filter_map do |report_name|
-          Reports::ListQuery::FormattedReport.new(report_name).to_h(admin:)
+          report = Reports::ListQuery::FormattedReport.new(report_name)
+          report.to_h if report.visible?(admin:)
         end
         .sort_by { |report| report[:title] }
     end
