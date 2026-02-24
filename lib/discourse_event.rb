@@ -9,7 +9,11 @@ class DiscourseEvent
   end
 
   def self.trigger(event_name, *args, **kwargs)
-    events[event_name].each { |event| event.call(*args, **kwargs) }
+    events[event_name].each do |event|
+      event.call(*args, **kwargs)
+    rescue => e
+      Discourse.warn_exception(e, message: "Error in '#{event_name}' event handler")
+    end
   end
 
   def self.on(event_name, &block)
