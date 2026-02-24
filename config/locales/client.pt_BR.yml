@@ -3298,6 +3298,9 @@ pt_BR:
           other: "Progresso: <strong>%{count}</strong> tópicos"
         performing: "Realizando operações em massa, aguarde…"
         completed: "Operações em massa concluídas!"
+        error_topic_count:
+          one: "%{count} tópico"
+          other: "%{count} tópicos"
       none:
         unread: "Você não tem tópicos não lidos."
         unseen: "Você não tem tópicos não vistos."
@@ -5844,6 +5847,7 @@ pt_BR:
         save: "Salvar"
         cancel: "Cancelar"
         continue: "Continuar"
+        copy_key: "Copiar"
         back: "Voltar para chaves de API"
         revoke: "Revogar"
         undo_revoke: "Desfazer revogação"

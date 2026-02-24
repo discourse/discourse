@@ -7,6 +7,7 @@ export default <template>
       @model={{@controller.model}}
       @presets={{@controller.presets}}
       @llms={{@controller.llms}}
+      @secrets={{@controller.secrets}}
       @settings={{@controller.settings}}
       @selectedPreset={{@controller.selectedPreset}}
     />

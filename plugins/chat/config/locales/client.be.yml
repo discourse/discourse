@@ -12,6 +12,10 @@ be:
           always: "заўсёды"
           never: "ніколі"
     chat:
+      edit_category:
+        description: "Апісанне"
+        actions: "Дзеянні"
+        settings: "Налады"
       deleted_chat_username: аддалены
       dates:
         yesterday: "учора"

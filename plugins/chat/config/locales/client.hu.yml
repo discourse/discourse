@@ -44,6 +44,12 @@ hu:
           one: "%{formatted_number} csevegőüzenet"
           other: "%{formatted_number} csevegőüzenet"
     chat:
+      edit_category:
+        tab_title: "Csevegés"
+        channel: "Csatorna"
+        description: "Leírás"
+        actions: "Műveletek"
+        settings: "Beállítások"
       text_copied: Szöveg vágólapra másolva
       link_copied: Hivatkozás vágólapra másolva
       back_to_forum: "Fórum"

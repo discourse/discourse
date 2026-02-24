@@ -288,6 +288,23 @@ en:
           name: "Start from blank..."
       name:
         characters: "must only include numbers, letters, and underscores"
+      secret_contracts:
+        invalid_payload: "Secret contracts must be an array."
+        invalid_contract: "Secret contract at index %{index} is invalid."
+        alias_required: "Secret contract at index %{index} must include an alias."
+        alias_too_long: "Secret alias `%{alias}` is too long."
+        alias_invalid: "Secret alias `%{alias}` must only include numbers, letters, and underscores."
+        alias_not_unique: "Secret alias `%{alias}` is duplicated."
+      secret_bindings:
+        invalid_payload: "Secret bindings must be an array."
+        secret_not_found: "The selected credential does not exist."
+        alias_not_declared: "Alias `%{alias}` is not declared in this tool."
+      secret_runtime:
+        alias_not_declared: "Credential alias `%{alias}` is not declared for this tool."
+        missing_binding: "Credential alias `%{alias}` is required but not bound."
+        missing_required_aliases: "Missing required credential bindings for aliases: %{aliases}."
+        secret_not_found: "Credential alias `%{alias}` is bound to a missing credential."
+        unknown_error: "Unable to resolve the requested credential."
 
     ai_helper:
       errors:
@@ -674,7 +691,7 @@ en:
         model_test_failed: "We failed to generate a test embedding with this model. Check it's correctly configured."
 
     secrets:
-      delete_failed_in_use: "This credential is currently in use by one or more LLMs or embeddings and cannot be deleted."
+      delete_failed_in_use: "This credential is currently in use by one or more LLMs, embeddings, or tools and cannot be deleted."
 
     llm_models:
       missing_provider_param: "%{param} can't be blank"
@@ -708,6 +725,26 @@ en:
       persona_disabled: The persona specified is disabled. Check the persona_name or persona_id params.
       no_default_llm: The persona must have a default_llm defined.
       user_not_allowed: The user is not allowed to participate in the topic.
+      invalid_stream_resume_token: The resume_token is invalid or has expired.
+      no_tool_results_specified: The tool_results parameter is required when resuming a stream.
+      invalid_custom_tools: "The custom_tools parameter is invalid: %{details}"
+      duplicate_custom_tools: "The custom_tools parameter contains duplicate tool names: %{names}"
+      too_many_custom_tools: "The custom_tools parameter can include at most %{max} tools."
+      custom_tool_definition_too_large: "Each custom tool definition must be at most %{max} bytes."
+      invalid_stream_param: "The %{key} parameter is invalid: %{details}"
+      expected_array: "expected an array"
+      expected_object: "expected an object"
+      ambiguous_tool_results: "Specify either tool_results or tool_result, not both."
+      invalid_tool_results: "The tool_results parameter is invalid: %{details}"
+      too_many_tool_results: "The tool_results parameter can include at most %{max} items."
+      no_pending_tool_calls: There are no pending tool calls for this resume token.
+      missing_tool_results: "Missing tool results for tool_call_id(s): %{ids}"
+      unexpected_tool_results: "Unexpected tool results for tool_call_id(s): %{ids}"
+      invalid_tool_result_content: "The tool result for %{id} must include content"
+      tool_result_content_too_large: "Each tool result content payload must be at most %{max} bytes."
+      stream_reply_max_resume_rounds_reached: Reached maximum custom tool resume rounds (%{max}).
+      stream_reply_state_too_large: "The stream state is too large to persist (max %{max} bytes)."
+      stream_reply_unexpected_error: An unexpected error occurred while streaming the reply.
       prompt_message_length: The message %{idx} is over the 1000 character limit.
       persona_already_exists: Persona with the name %{name} already exists.
       custom_tool_exists:

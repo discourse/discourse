@@ -2877,6 +2877,9 @@ nb_NO:
           other: "Fremgang: <strong>%{count}</strong> emner"
         performing: "Utfører masseoperasjoner, vennligst vent…"
         completed: "Masseoperasjoner fullført med suksess!"
+        error_topic_count:
+          one: "%{count} emne"
+          other: "%{count} emner"
       none:
         unread: "Du har ingen uleste emner."
         unseen: "Du har ingen usette emner."
@@ -4625,6 +4628,7 @@ nb_NO:
         save: "Lagre"
         cancel: "Avbryt"
         continue: "Fortsett"
+        copy_key: "Kopier"
         revoke: "Trekk tilbake"
       api:
         generate_master: "Generer Master API-nøkkel"

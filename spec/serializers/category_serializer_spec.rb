@@ -138,7 +138,7 @@ RSpec.describe CategorySerializer do
         category: category_with_localization,
         locale: "ja",
         name: "日本語名",
-        description: "日本語の説明",
+        description: "<p>最初の段落</p><p>二番目の段落</p>",
       )
     end
 
@@ -153,7 +153,7 @@ RSpec.describe CategorySerializer do
       expect(json[:description]).to eq("Original Description")
     end
 
-    it "returns translated name and description for SiteCategorySerializer when enabled" do
+    it "returns translated attributes for SiteCategorySerializer when enabled" do
       SiteSetting.content_localization_enabled = true
       user.update!(locale: "ja")
       I18n.with_locale("ja") do
@@ -164,7 +164,26 @@ RSpec.describe CategorySerializer do
             root: false,
           ).as_json
         expect(json[:name]).to eq("日本語名")
-        expect(json[:description]).to eq("日本語の説明")
+        expect(json[:description]).to eq("<p>最初の段落</p><p>二番目の段落</p>")
+        expect(json[:description_text]).to eq("&lt;p&gt;最初の段落&lt;/p&gt;&lt;p&gt;二番目の段落&lt;/p&gt;")
+        expect(json[:description_excerpt]).to eq("最初の段落 二番目の段落")
+      end
+    end
+
+    it "returns untranslated attributes for SiteCategorySerializer when disabled" do
+      SiteSetting.content_localization_enabled = false
+      user.update!(locale: "ja")
+      I18n.with_locale("ja") do
+        json =
+          SiteCategorySerializer.new(
+            category_with_localization,
+            scope: Guardian.new(user),
+            root: false,
+          ).as_json
+        expect(json[:name]).to eq("Original Name")
+        expect(json[:description]).to eq("Original Description")
+        expect(json[:description_text]).to eq(category_with_localization.description_text)
+        expect(json[:description_excerpt]).to eq(category_with_localization.description_excerpt)
       end
     end
 

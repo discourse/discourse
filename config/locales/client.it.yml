@@ -3252,6 +3252,9 @@ it:
           other: "Avanzamento: <strong>%{count}</strong> argomenti"
         performing: "Esecuzione di operazioni in blocco. Attendere…"
         completed: "Operazioni in blocco completate correttamente."
+        error_topic_count:
+          one: "%{count} argomento"
+          other: "%{count} argomenti"
       none:
         unread: "Non ci sono argomenti non letti."
         unseen: "Non hai argomenti non visualizzati."
@@ -5798,6 +5801,7 @@ it:
         save: "Salva"
         cancel: "Annulla"
         continue: "Continua"
+        copy_key: "Copia"
         back: "Torna alle chiavi API"
         revoke: "Revoca"
         undo_revoke: "Annulla la revoca"

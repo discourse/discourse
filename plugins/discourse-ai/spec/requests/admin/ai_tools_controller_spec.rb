@@ -3,6 +3,7 @@
 RSpec.describe DiscourseAi::Admin::AiToolsController do
   fab!(:llm_model)
   fab!(:admin)
+  fab!(:ai_secret)
   fab!(:ai_tool) do
     AiTool.create!(
       name: "Test Tool",
@@ -36,6 +37,7 @@ RSpec.describe DiscourseAi::Admin::AiToolsController do
       expect(response.parsed_body["ai_tools"].length).to eq(AiTool.count)
       expect(response.parsed_body["meta"]["presets"].length).to be > 0
       expect(response.parsed_body["meta"]["llms"].length).to be > 0
+      expect(response.parsed_body["meta"]["ai_secrets"].length).to be > 0
     end
   end
 
@@ -65,6 +67,21 @@ RSpec.describe DiscourseAi::Admin::AiToolsController do
       get "/admin/plugins/discourse-ai/ai-tools/99999/export.json"
 
       expect(response).to have_http_status(:not_found)
+    end
+
+    it "does not include secret bindings in export payload" do
+      ai_tool.update!(secret_contracts: [{ alias: "external_api_key" }])
+      AiToolSecretBinding.create!(
+        ai_tool: ai_tool,
+        alias: "external_api_key",
+        ai_secret_id: ai_secret.id,
+      )
+
+      get "/admin/plugins/discourse-ai/ai-tools/#{ai_tool.id}/export.json"
+
+      expect(response).to be_successful
+      expect(response.parsed_body["ai_tool"]["secret_contracts"]).to be_present
+      expect(response.parsed_body["ai_tool"]["secret_bindings"]).to be_nil
     end
   end
 
@@ -146,6 +163,35 @@ RSpec.describe DiscourseAi::Admin::AiToolsController do
       expect(existing_tool.name).to eq("Imported Tool")
       expect(existing_tool.description).to eq("An imported test tool")
     end
+
+    it "prunes orphan bindings when force import changes contracts" do
+      existing_tool =
+        AiTool.create!(
+          name: "Existing Tool",
+          tool_name: "imported_tool",
+          description: "Existing tool",
+          script: "function invoke(params) { return 'existing'; }",
+          summary: "Existing summary",
+          created_by_id: admin.id,
+          secret_contracts: [{ alias: "old_key" }],
+        )
+      AiToolSecretBinding.create!(
+        ai_tool: existing_tool,
+        alias: "old_key",
+        ai_secret_id: ai_secret.id,
+      )
+
+      attrs = import_attributes.merge(secret_contracts: [{ alias: "new_key" }])
+
+      post "/admin/plugins/discourse-ai/ai-tools/import.json?force=true",
+           params: { ai_tool: attrs }.to_json,
+           headers: {
+             "CONTENT_TYPE" => "application/json",
+           }
+
+      expect(response).to have_http_status(:ok)
+      expect(AiToolSecretBinding.where(ai_tool: existing_tool).pluck(:alias)).to be_empty
+    end
   end
 
   describe "POST #create" do
@@ -172,6 +218,26 @@ RSpec.describe DiscourseAi::Admin::AiToolsController do
       expect(response).to have_http_status(:created)
       expect(response.parsed_body["ai_tool"]["name"]).to eq("Test Tool 1")
       expect(response.parsed_body["ai_tool"]["tool_name"]).to eq("test_tool_1")
+    end
+
+    it "creates a new AiTool with secret bindings" do
+      attrs =
+        valid_attributes.merge(
+          secret_contracts: [{ alias: "weather_api_key" }],
+          secret_bindings: [{ alias: "weather_api_key", ai_secret_id: ai_secret.id }],
+        )
+
+      post "/admin/plugins/discourse-ai/ai-tools.json",
+           params: { ai_tool: attrs }.to_json,
+           headers: {
+             "CONTENT_TYPE" => "application/json",
+           }
+
+      expect(response).to have_http_status(:created)
+      tool_id = response.parsed_body.dig("ai_tool", "id")
+      binding = AiToolSecretBinding.find_by(ai_tool_id: tool_id, alias: "weather_api_key")
+      expect(binding).to be_present
+      expect(binding.ai_secret_id).to eq(ai_secret.id)
     end
 
     it "logs the creation with StaffActionLogger" do
@@ -294,6 +360,21 @@ RSpec.describe DiscourseAi::Admin::AiToolsController do
       expect(history.subject).to eq("Updated Tool")
     end
 
+    it "prunes orphan bindings when contracts are removed" do
+      ai_tool.update!(secret_contracts: [{ alias: "old_key" }])
+      AiToolSecretBinding.create!(ai_tool: ai_tool, alias: "old_key", ai_secret_id: ai_secret.id)
+
+      put "/admin/plugins/discourse-ai/ai-tools/#{ai_tool.id}.json",
+          params: {
+            ai_tool: {
+              secret_contracts: [],
+            },
+          }
+
+      expect(response).to be_successful
+      expect(AiToolSecretBinding.where(ai_tool: ai_tool).count).to eq(0)
+    end
+
     context "when updating an enum parameters" do
       it "updates the enum fixed values" do
         put "/admin/plugins/discourse-ai/ai-tools/#{ai_tool.id}.json",
@@ -405,6 +486,63 @@ RSpec.describe DiscourseAi::Admin::AiToolsController do
 
       expect(response.status).to eq(400)
       expect(response.parsed_body["errors"].to_s).to include("Error executing the tool")
+    end
+
+    it "fails when a required secret alias is missing" do
+      ai_tool.update!(
+        secret_contracts: [{ alias: "external_api_key" }],
+        script: "function invoke() { return secrets.get('external_api_key'); }",
+      )
+
+      post "/admin/plugins/discourse-ai/ai-tools/#{ai_tool.id}/test.json", params: {}
+
+      expect(response.status).to eq(400)
+      expect(response.parsed_body["errors"].to_s).to include("Missing required credential bindings")
+    end
+
+    it "returns custom_raw when the tool sets it" do
+      ai_tool.update!(
+        script:
+          "function invoke(params) { chain.setCustomRaw('![image](upload://abc123)'); return { status: 'ok' }; }",
+      )
+
+      post "/admin/plugins/discourse-ai/ai-tools/#{ai_tool.id}/test.json", params: {}
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["output"]).to eq("status" => "ok")
+      expect(response.parsed_body["custom_raw"]).to eq("![image](upload://abc123)")
+    end
+
+    it "does not include custom_raw when not set" do
+      post "/admin/plugins/discourse-ai/ai-tools/#{ai_tool.id}/test.json",
+           params: {
+             parameters: {
+               input: "test",
+             },
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body).not_to have_key("custom_raw")
+    end
+
+    it "uses in-flight secret_bindings for testing" do
+      ai_tool.update!(
+        secret_contracts: [{ alias: "external_api_key" }],
+        script: "function invoke() { return { key: secrets.get('external_api_key') }; }",
+      )
+
+      post "/admin/plugins/discourse-ai/ai-tools/#{ai_tool.id}/test.json",
+           params: {
+             ai_tool: {
+               secret_bindings: [{ alias: "external_api_key", ai_secret_id: ai_secret.id }],
+             },
+           }.to_json,
+           headers: {
+             "CONTENT_TYPE" => "application/json",
+           }
+
+      expect(response.status).to eq(200)
+      expect(response.parsed_body["output"]["key"]).to eq(ai_secret.secret)
     end
   end
 end

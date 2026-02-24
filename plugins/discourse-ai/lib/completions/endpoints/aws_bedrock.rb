@@ -7,21 +7,11 @@ module DiscourseAi
     module Endpoints
       class AwsBedrock < Base
         include AnthropicPromptCache
+        include AnthropicShared
         attr_reader :dialect
 
         def self.can_contact?(llm_model)
           llm_model.provider == "aws_bedrock"
-        end
-
-        def normalize_model_params(model_params)
-          model_params = model_params.dup
-
-          # max_tokens, temperature, stop_sequences, top_p are already supported
-          #
-          model_params.delete(:top_p) if llm_model.lookup_custom_param("disable_top_p")
-          model_params.delete(:temperature) if llm_model.lookup_custom_param("disable_temperature")
-
-          model_params
         end
 
         def default_options(dialect)
@@ -43,18 +33,9 @@ module DiscourseAi
               end
               result[:max_tokens] = max_tokens
 
-              # effort parameter for Claude Opus 4.5
+              # effort parameter
               effort = llm_model.lookup_custom_param("effort")
-              if %w[low medium high].include?(effort)
-                result[:output_config] = { effort: effort }
-                result[:anthropic_beta] = ["effort-2025-11-24"]
-              end
-
-              caching_mode = llm_model.lookup_custom_param("prompt_caching") || "never"
-              if caching_mode != "never"
-                result[:anthropic_beta] ||= []
-                result[:anthropic_beta] << "prompt-caching-2024-07-31"
-              end
+              result[:output_config] = { effort: effort } if %w[low medium high].include?(effort)
 
               result
             else
@@ -64,18 +45,6 @@ module DiscourseAi
           options[:stop_sequences] = ["</function_calls>"] if !dialect.native_tool_support? &&
             dialect.prompt.has_tools?
           options
-        end
-
-        def provider_id
-          AiApiAuditLog::Provider::Anthropic
-        end
-
-        def xml_tags_to_strip(dialect)
-          if dialect.prompt.has_tools?
-            %w[thinking search_quality_reflection search_quality_score]
-          else
-            []
-          end
         end
 
         private
@@ -106,14 +75,17 @@ module DiscourseAi
             "anthropic.claude-opus-4-20250514-v1:0"
           when "claude-sonnet-4", "claude-sonnet-4-20250514"
             "anthropic.claude-sonnet-4-20250514-v1:0"
+          when "claude-opus-4-5"
+            "anthropic.claude-opus-4-5-20250918-v1:0"
+          when "claude-sonnet-4-5"
+            "anthropic.claude-sonnet-4-5-20250514-v1:0"
+          when "claude-opus-4-6"
+            "anthropic.claude-opus-4-6-v1"
+          when "claude-sonnet-4-6"
+            "anthropic.claude-sonnet-4-6-v1"
           else
             llm_model.name
           end
-        end
-
-        def prompt_size(prompt)
-          # approximation
-          tokenizer.size(prompt.system_prompt.to_s + " " + prompt.messages.to_s)
         end
 
         def model_uri
@@ -132,62 +104,28 @@ module DiscourseAi
         end
 
         def prepare_payload(prompt, model_params, dialect)
-          @native_tool_support = dialect.native_tool_support?
           @dialect = dialect
 
-          payload = nil
-
           if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
-            payload =
-              default_options(dialect).merge(model_params.except(:response_format)).merge(
-                messages: prompt.messages,
-              )
-
-            # Handle tools first
-            if prompt.has_tools?
-              payload[:tools] = prompt.tools
-              if dialect.tool_choice.present?
-                if dialect.tool_choice == :none
-                  # not supported on bedrock as of 2025-03-24
-                  # retest in 6 months
-                  # payload[:tool_choice] = { type: "none" }
-                else
-                  payload[:tool_choice] = { type: "tool", name: prompt.tool_choice }
-                end
-              end
-            end
-
-            # Apply prompt caching if enabled (only for Anthropic models)
-            apply_anthropic_cache_control!(payload, prompt) if should_apply_prompt_caching?(prompt)
-
-            # Set system prompt if not already set by caching
-            payload[:system] = prompt.system_prompt if prompt.system_prompt.present? &&
-              !payload[:system]
-
-            prefilled_message = +""
-
-            # Handle tool choice prefilling
-            if dialect.tool_choice == :none && prompt.has_tools?
-              # prefill prompt to nudge LLM to generate a response that is useful, instead of trying to call a tool
-              prefilled_message << dialect.no_more_tool_calls_text
-            end
-
-            # Prefill prompt to force JSON output.
-            if model_params[:response_format].present?
-              prefilled_message << " " if !prefilled_message.empty?
-              prefilled_message << "{"
-              @forced_json_through_prefill = true
-            end
-
-            if !prefilled_message.empty?
-              payload[:messages] << { role: "assistant", content: prefilled_message }
-            end
+            prepare_claude_payload(prompt, model_params, dialect)
           elsif dialect.is_a?(DiscourseAi::Completions::Dialects::Nova)
-            payload = prompt.to_payload(default_options(dialect).merge(model_params))
+            prompt.to_payload(default_options(dialect).merge(model_params))
           else
             raise "Unsupported dialect"
           end
-          payload
+        end
+
+        def apply_tool_choice(payload, dialect, prompt)
+          return if dialect.tool_choice.blank?
+          if dialect.tool_choice != :none
+            payload[:tool_choice] = { type: "tool", name: prompt.tool_choice }
+          end
+          # tool_choice: {type: "none"} not supported on Bedrock — handled by apply_tool_choice_none
+        end
+
+        def apply_tool_choice_none(payload, dialect)
+          no_tool_text = dialect.no_more_tool_calls_text_user
+          payload[:messages] << { role: "user", content: no_tool_text } if no_tool_text.present?
         end
 
         def prepare_request(payload)
@@ -240,10 +178,6 @@ module DiscourseAi
             .compact
         end
 
-        def decode(response_data)
-          processor.process_message(response_data)
-        end
-
         def bedrock_decode(chunk)
           @decoder ||= Aws::EventStream::Decoder.new
 
@@ -283,35 +217,23 @@ module DiscourseAi
         end
 
         def final_log_update(log)
-          log.request_tokens = processor.input_tokens if processor.input_tokens
-          log.response_tokens = processor.output_tokens if processor.output_tokens
           log.raw_response_payload = @raw_response if @raw_response
 
-          # Handle cache tokens for Anthropic models
           if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
-            log.cache_read_tokens =
-              processor.cache_read_input_tokens if processor.cache_read_input_tokens
-            log.cache_write_tokens =
-              processor.cache_creation_input_tokens if processor.cache_creation_input_tokens
+            update_log_from_claude_processor(log)
+          else
+            log.request_tokens = processor.input_tokens if processor.input_tokens
+            log.response_tokens = processor.output_tokens if processor.output_tokens
           end
         end
 
         def processor
           if dialect.is_a?(DiscourseAi::Completions::Dialects::Claude)
-            @processor ||=
-              DiscourseAi::Completions::AnthropicMessageProcessor.new(
-                streaming_mode: @streaming_mode,
-                partial_tool_calls: partial_tool_calls,
-                output_thinking: output_thinking,
-              )
+            claude_processor
           else
             @processor ||=
               DiscourseAi::Completions::NovaMessageProcessor.new(streaming_mode: @streaming_mode)
           end
-        end
-
-        def xml_tools_enabled?
-          !@native_tool_support
         end
       end
     end

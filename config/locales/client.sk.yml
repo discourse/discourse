@@ -3496,6 +3496,11 @@ sk:
           other: "Pokrok: <strong>%{count}</strong> témy"
         performing: "Vykonávajú sa hromadné operácie, čakajte…"
         completed: "Hromadné operácie boli úspešne dokončené!"
+        error_topic_count:
+          one: "%{count} téma"
+          few: "%{count} témy"
+          many: "%{count} tém"
+          other: "%{count} tém"
       none:
         unread: "Nemáte neprečítanú tému"
         unseen: "Nemáte žiadne neprečítané témy."
@@ -6233,6 +6238,7 @@ sk:
         save: "Uložiť"
         cancel: "Zrušiť"
         continue: "Pokračovať"
+        copy_key: "Kopírovať"
         back: "Späť na kľúče API"
         revoke: "Zrušiť"
         undo_revoke: "Zrušenie odvolania"

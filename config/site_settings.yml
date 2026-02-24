@@ -16,6 +16,9 @@
 #                         The key should be as the same as possible value of default_locale.
 # mandatory_values      - A list of mandatory values that must be included in the setting, these cannot be changed or removed
 #                         in the UI.
+# disallowed_groups     - A list of group IDs (pipe-separated) that should be hidden from the group selector.
+#                         These groups cannot be selected and will be stripped if set via API.
+#                         Only applies to group_list type settings.
 # requires_confirmation - A string that indicates if the setting requires confirmation before it can be changed.
 #                         Only valid value here is "simple" which will display a confirmation dialog when the setting
 #                         is changed.
@@ -91,6 +94,7 @@ required:
   notification_email:
     default: "noreply@unconfigured.discourse.org"
     type: email
+    area: "email"
   site_contact_username:
     default: ""
     type: username
@@ -448,6 +452,7 @@ basic:
     default: ""
     allow_any: false
     refresh: true
+    disallowed_groups: "0"
     area: "group_permissions"
   hidden_post_visible_groups:
     type: group_list
@@ -2751,9 +2756,6 @@ security:
     default: true
   content_security_policy_report_only:
     default: false
-  content_security_policy_collect_reports:
-    default: false
-    hidden: true
   content_security_policy_frame_ancestors:
     default: true
   content_security_policy_script_src:
@@ -3171,6 +3173,9 @@ navigation:
     area: "navigation"
 
 embedding:
+  embed_full_app:
+    default: false
+    hidden: true
   embed_by_username:
     default: ""
     type: username
@@ -3623,17 +3628,6 @@ uncategorized:
     default: -1
     hidden: true
     client: true
-
-  bootstrap_mode_min_users:
-    default: 50
-    client: true
-    max: 5000
-    area: "site_admin"
-
-  bootstrap_mode_enabled:
-    default: false
-    client: true
-    hidden: true
 
   automatically_unpin_topics:
     default: true
@@ -4211,6 +4205,15 @@ dashboard:
     client: true
 
 experimental:
+  reporting_improvements:
+    default: false
+    client: true
+    hidden: true
+    area: "experimental"
+    upcoming_change:
+      status: "experimental"
+      impact: "feature,staff"
+      learn_more_url: "https://meta.discourse.org/t/-/395768"
   enable_auto_grid_images:
     default: false
     client: true
@@ -4228,6 +4231,10 @@ experimental:
       impact: "feature,all_members"
       status: "experimental"
       learn_more_url: "https://meta.discourse.org/t/-/395099"
+  experimental_tag_settings_page:
+    default: false
+    client: true
+    area: "experimental"
   experimental_hashtag_search_result_limit:
     default: 20
     client: true
@@ -4271,16 +4278,6 @@ experimental:
     type: group_list
     list_type: compact
     area: "group_permissions|experimental"
-    hidden: true
-  reviewable_ui_refresh:
-    client: true
-    type: group_list
-    default: ""
-    area: "experimental"
-    hidden: true
-  force_old_reviewable_ui:
-    client: true
-    default: false
     hidden: true
   reviewable_old_moderator_actions:
     default: true

@@ -87,6 +87,23 @@ describe ListController do
       expect(ids).to be_empty
     end
 
+    it "returns the correct more_topics_url with a unicode group name" do
+      SiteSetting.unicode_usernames = true
+
+      unicode_group = Fabricate(:group, name: "管理员")
+      unicode_group.add(user)
+      SiteSetting.assign_allowed_on_groups += "|#{unicode_group.id}"
+
+      stub_const(TopicQuery, "DEFAULT_PER_PAGE_COUNT", 1) do
+        get "/topics/group-topics-assigned/#{UrlHelper.encode_component(unicode_group.name)}.json"
+
+        expect(response.status).to eq(200)
+        expect(response.parsed_body["topic_list"]["more_topics_url"]).to eq(
+          "/topics/group-topics-assigned/%E7%AE%A1%E7%90%86%E5%91%98?page=1",
+        )
+      end
+    end
+
     it "doesn't return deleted topics" do
       sign_in(admin)
 

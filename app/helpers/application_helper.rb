@@ -322,7 +322,16 @@ module ApplicationHelper
 
     generate_twitter_card_metadata(result, opts)
 
-    result << tag(:meta, property: "og:image", content: opts[:image]) if opts[:image].present?
+    if opts[:image].present?
+      result << tag(:meta, property: "og:image", content: opts[:image])
+      if opts[:image_width].present? && opts[:image_height].present?
+        result << tag(:meta, property: "og:image:width", content: opts[:image_width])
+        result << tag(:meta, property: "og:image:height", content: opts[:image_height])
+      end
+      if opts[:image_type].present?
+        result << tag(:meta, property: "og:image:type", content: opts[:image_type])
+      end
+    end
 
     %i[url title description].each do |property|
       if opts[property].present?

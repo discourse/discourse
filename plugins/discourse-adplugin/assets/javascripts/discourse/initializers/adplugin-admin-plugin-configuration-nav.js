@@ -13,6 +13,12 @@ export default {
 
     withPluginApi((api) => {
       api.setAdminPluginIcon(PLUGIN_ID, "rectangle-ad");
+      api.addAdminPluginConfigurationNav(PLUGIN_ID, [
+        {
+          label: "admin.adplugin.house_ads.title",
+          route: "adminPlugins.show.houseAds",
+        },
+      ]);
     });
   },
 };

@@ -1,7 +1,7 @@
 import { action } from "@ember/object";
 import { withPluginApi } from "discourse/lib/plugin-api";
 import Category from "discourse/models/category";
-import CategoryChangeSolvedConfirmationModal from "../components/modal/category-change-solved-confirmation";
+import SolvedRemovalConfirmationModal from "../components/modal/solved-removal-confirmation";
 
 const STORAGE_KEY = "discourse-solved-hide-category-change-confirmation";
 
@@ -14,34 +14,49 @@ export default {
         "controller:topic",
         (Superclass) =>
           class extends Superclass {
+            _solvedEnabled(categoryId, tags) {
+              if (
+                this.siteSettings.allow_solved_on_all_topics ||
+                Category.findById(categoryId)?.custom_fields
+                  ?.enable_accepted_answers === "true"
+              ) {
+                return true;
+              }
+
+              const solvedTags = this.siteSettings.enable_solved_tags
+                .split("|")
+                .filter(Boolean);
+
+              return (tags || []).some((t) => solvedTags.includes(t.name));
+            }
+
             @action
             async finishedEditingTopic() {
               if (!this.editingTopic) {
                 return;
               }
 
-              let isSolved = (id) =>
-                Category.findById(id)?.enable_accepted_answers;
-
               const props = this.get("buffered.buffer");
               let solvedStateChanged = false;
 
-              if (
-                props.category_id !== undefined &&
-                !this.siteSettings.allow_solved_on_all_topics
-              ) {
-                const oldSolved = isSolved(this.model.category_id);
-                const newSolved = isSolved(props.category_id);
+              if ("category_id" in props || "tags" in props) {
+                const oldCategoryId = this.model.category_id;
+                const newCategoryId = props.category_id ?? oldCategoryId;
+                const oldTags = this.model.tags;
+                const newTags = props.tags ?? oldTags;
 
-                solvedStateChanged = oldSolved !== newSolved;
+                const oldAllowed = this._solvedEnabled(oldCategoryId, oldTags);
+                const newAllowed = this._solvedEnabled(newCategoryId, newTags);
 
-                if (this.model.accepted_answer && oldSolved && !newSolved) {
+                solvedStateChanged = oldAllowed !== newAllowed;
+
+                if (this.model.accepted_answer && oldAllowed && !newAllowed) {
                   const showConfirmation =
                     localStorage.getItem(STORAGE_KEY) !== "true";
 
                   if (showConfirmation) {
                     const result = await this.modal.show(
-                      CategoryChangeSolvedConfirmationModal
+                      SolvedRemovalConfirmationModal
                     );
 
                     if (!result?.confirmed) {

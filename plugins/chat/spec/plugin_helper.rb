@@ -79,6 +79,7 @@ module ChatSpecHelpers
         message_id: message.id,
         upload_ids: upload_ids,
         message: text,
+        channel_id: message.chat_channel_id,
       },
       options: {
         process_inline: true,

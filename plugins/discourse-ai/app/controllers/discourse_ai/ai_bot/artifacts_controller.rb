@@ -15,7 +15,6 @@ module DiscourseAi
         if artifact.public?
           # no guardian needed
         else
-          raise Discourse::NotFound if !post&.topic&.private_message?
           raise Discourse::NotFound if !guardian.can_see?(post)
         end
 
