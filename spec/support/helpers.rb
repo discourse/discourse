@@ -200,7 +200,7 @@ module Helpers
     system("git -C #{path} fetch -q", exception: true)
     branch = `git -C #{path} rev-parse --abbrev-ref HEAD`
     raise "no branch in setup_remote_upstream" if branch.blank?
-    system("git -C #{path} branch -q -u origin/#{branch}", exception: true)
+    system("git -C #{path} branch -u origin/#{branch}", exception: true)
   end
 
   def add_to_git_repo(repo_dir, files)
