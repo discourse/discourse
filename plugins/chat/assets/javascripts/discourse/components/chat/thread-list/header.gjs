@@ -14,7 +14,7 @@ export default class ChatThreadListHeader extends Component {
     let title = replaceEmoji(this.threadListTitle);
 
     if (this.site.mobileView) {
-      title += " - " + replaceEmoji(this.args.channel.title);
+      title += " - " + replaceEmoji(this.args.channel.escapedTitle);
     }
 
     return htmlSafe(title);

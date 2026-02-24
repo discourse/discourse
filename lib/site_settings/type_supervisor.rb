@@ -26,6 +26,7 @@ class SiteSettings::TypeSupervisor
     depends_behavior
     authorized_extensions
     max_file_size_kb
+    disallowed_groups
   ].freeze
   VALIDATOR_OPTS = %i[min max regex hidden regex_error json_schema schema].freeze
 

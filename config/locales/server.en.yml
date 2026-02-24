@@ -9,17 +9,17 @@ en:
 
   datetime_formats: &datetime_formats
     formats:
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       short: "%m-%d-%Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       short_no_year: "%B %-d"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       date_only: "%B %-d, %Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       long: "%B %-d, %Y, %l:%M%P"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       no_day: "%B %Y"
-      # Format directives: https://ruby-doc.org/core/Time.html#method-i-strftime
+      # Format directives: https://ruby-doc.org/core/strftime_formatting_rdoc.html
       calendar_ics: "%Y%m%dT%H%M%SZ"
   date:
     # Do not remove the brackets and commas and do not translate the first month name. It should be "null".
@@ -2876,7 +2876,6 @@ en:
       exclude_tag: "Exclude topics with a specific tag"
       exclude_tags_any: "Exclude topics with any of the specified tags (comma-separated)"
       exclude_tags_all: "Exclude topics with all of the specified tags (plus-separated)"
-      tags_alias: "Alias for 'tag:' filter"
       tag_group: "Show topics with tags from a specific tag group"
       exclude_tag_group: "Exclude topics with tags from a specific tag group"
       activity_before: "Show topics with last activity before a date (YYYY-MM-DD or days ago)"

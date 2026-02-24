@@ -193,6 +193,32 @@ RSpec.describe TopicsFilter do
         expect(ids).to contain_exactly(topic_by_u1_and_u2.id)
       end
 
+      it "group:group1 should not return topics where the only post from a group member is deleted" do
+        topic = Fabricate(:topic)
+        post = Fabricate(:post, topic:, user: u1)
+        post.update_column(:deleted_at, Time.zone.now)
+
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("group:group1")
+            .pluck(:id)
+        expect(ids).not_to include(topic.id)
+      end
+
+      it "group:group1+group2 should not return topics where a group member's only post is deleted" do
+        topic = Fabricate(:topic)
+        Fabricate(:post, topic:, user: u1).update_column(:deleted_at, Time.zone.now)
+        Fabricate(:post, topic:, user: u2)
+
+        ids =
+          TopicsFilter
+            .new(guardian: Guardian.new)
+            .filter_from_query_string("group:group1+group2")
+            .pluck(:id)
+        expect(ids).not_to include(topic.id)
+      end
+
       context "with whispers" do
         fab!(:whisperer_group, :group)
         fab!(:whisperer_user) { Fabricate(:user).tap { |u| whisperer_group.add(u) } }
