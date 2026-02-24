@@ -6,7 +6,6 @@ import * as environment from "discourse/lib/environment";
 import { setDefaultOwner } from "discourse/lib/get-owner";
 import { setupS3CDN, setupURL } from "discourse/lib/get-url";
 import { setIconList } from "discourse/lib/icon-library";
-import PreloadStore from "discourse/lib/preload-store";
 import { setURLContainer } from "discourse/lib/url";
 import Session from "discourse/models/session";
 import I18n from "discourse-i18n";

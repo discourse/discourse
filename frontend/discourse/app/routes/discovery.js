@@ -1,7 +1,6 @@
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { resetCachedTopicList } from "discourse/lib/cached-topic-list";
-import { homepageDestination } from "discourse/lib/homepage-router-overrides";
 import DiscourseRoute from "discourse/routes/discourse";
 
 /**

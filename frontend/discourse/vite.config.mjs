@@ -1,8 +1,5 @@
-import { classicEmberSupport, ember } from "@embroider/vite";
-import basicSsl from "@vitejs/plugin-basic-ssl";
-import { visualizer } from "rollup-plugin-visualizer";
+import { ember } from "@embroider/vite";
 import { defineConfig } from "vite";
-import mkcert from "vite-plugin-mkcert";
 import customProxy from "../custom-proxy";
 import writeResolverConfig from "./lib/embroider-vite-resolver-options";
 import maybeBabel from "./lib/vite-maybe-babel";
@@ -24,7 +21,7 @@ writeResolverConfig(
 
 const BUNDLED_DEV = false;
 
-export default defineConfig(({ mode, command }) => {
+export default defineConfig(({ mode }) => {
   const aliases = [
     { find: "pretty-text", replacement: "/../pretty-text/addon" },
     {
@@ -58,7 +55,6 @@ export default defineConfig(({ mode, command }) => {
       replacement: "@ember/render-modifiers/addon",
     },
   ];
-  // }
   return {
     base: "",
     resolve: {

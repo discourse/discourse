@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 function dict() {
   let obj = Object.create(null);
   obj["__"] = undefined;
