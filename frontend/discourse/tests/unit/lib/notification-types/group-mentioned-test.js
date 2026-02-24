@@ -45,7 +45,7 @@ module("Unit | Notification Types | group-mentioned", function (hooks) {
     this.owner.register(
       "service:site-settings",
       class extends Service {
-        prioritize_full_name_in_ux = false;
+        prioritize_username_in_ux = true;
       }
     );
 
@@ -69,7 +69,7 @@ module("Unit | Notification Types | group-mentioned", function (hooks) {
   });
 
   test("label uses the user's name when prioritize_username_in_ux is false", function (assert) {
-    this.siteSettings.prioritize_full_name_in_ux = true;
+    this.siteSettings.prioritize_username_in_ux = false;
 
     const notification = getNotification();
 

@@ -406,7 +406,7 @@ function initialize(api) {
       }
 
       const icon = iconHTML(assignee.username ? "user-plus" : "group-plus");
-      const showNameInUx = siteSettings.prioritize_full_name_in_ux;
+      const showNameInUx = !siteSettings.prioritize_username_in_ux;
       const name =
         showNameInUx || !assignee.username
           ? assignee.name || assignee.username

@@ -10,7 +10,7 @@ describe "Assign | Assigning topics", type: :system do
 
   before do
     SiteSetting.assign_enabled = true
-    SiteSetting.prioritize_full_name_in_ux = false
+    SiteSetting.prioritize_username_in_ux = true
     SiteSetting.whispers_allowed_groups = "#{Group::AUTO_GROUPS[:staff]}"
     SiteSetting.assign_allowed_on_groups = "#{Group::AUTO_GROUPS[:staff]}"
 
@@ -64,8 +64,8 @@ describe "Assign | Assigning topics", type: :system do
       expect(find("#topic .assigned-to")).to have_content(admin2.username)
     end
 
-    context "when prioritize_full_name_in_ux setting is enabled" do
-      before { SiteSetting.prioritize_full_name_in_ux = true }
+    context "when prioritize_username_in_ux setting is disabled" do
+      before { SiteSetting.prioritize_username_in_ux = false }
 
       it "shows the user's name after assign" do
         visit "/t/#{topic.id}"

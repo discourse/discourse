@@ -83,7 +83,7 @@ module(
 
     test("label", function (assert) {
       const siteSettings = this.owner.lookup("service:site-settings");
-      siteSettings.prioritize_full_name_in_ux = true;
+      siteSettings.prioritize_username_in_ux = false;
 
       const notification = getNotification();
       const director = createRenderDirector(
