@@ -132,7 +132,7 @@ module(
         "upcoming_change_automatically_promoted",
         this.siteSettings
       );
-      assert.strictEqual(director.icon, "flask");
+      assert.strictEqual(director.icon, "discourse-flask-check");
     });
   }
 );

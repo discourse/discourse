@@ -89,6 +89,7 @@ module SvgSprite
         discourse-dnd
         discourse-emojis
         discourse-expand
+        discourse-flask-check
         discourse-other-tab
         discourse-sidebar
         discourse-sparkles

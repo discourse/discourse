@@ -43,6 +43,6 @@ export default class extends NotificationTypeBase {
   }
 
   get icon() {
-    return "flask";
+    return "discourse-flask-check";
   }
 }
