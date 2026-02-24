@@ -1,7 +1,11 @@
+import { action } from "@ember/object";
+import { service } from "@ember/service";
 import { click, settled, visit } from "@ember/test-helpers";
 import { test } from "qunit";
 import sinon from "sinon";
+import StartPostingOption from "discourse/components/admin-onboarding/start-posting-option";
 import { AUTO_GROUPS } from "discourse/lib/constants";
+import { withPluginApi } from "discourse/lib/plugin-api";
 import { acceptance } from "discourse/tests/helpers/qunit-helpers";
 
 acceptance("Admin - Onboarding Banner", function (needs) {
@@ -75,8 +79,6 @@ acceptance("Admin - Onboarding Banner", function (needs) {
   });
 
   test("it can complete `start_posting` step with predefined data", async function (assert) {
-    this.siteSettings.discourse_ai_enabled = false;
-
     const step = withStep("start_posting", assert);
     await visit("/");
 
@@ -95,8 +97,32 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     step.isChecked();
   });
 
-  test("it can complete `start_posting` step with AI generated content", async function (assert) {
-    this.siteSettings.discourse_ai_enabled = true;
+  test("it can complete `start_posting` step with registered posting-options", async function (assert) {
+    withPluginApi((api) => {
+      api.registerValueTransformer(
+        "admin-onboarding-start-posting-options",
+        ({ value }) => {
+          value.push(
+            class ExtraOption extends StartPostingOption {
+              @service appEvents;
+
+              name = "extra-option";
+              title = "admin_onboarding_banner.start_posting.extra_option";
+              body =
+                "admin_onboarding_banner.start_posting.extra_option_description";
+              actionLabel = "admin_onboarding_banner.start_posting.use_extra";
+
+              @action
+              onSelect() {
+                this.appEvents.trigger("admin-onboarding:posting-complete");
+                this.args.closeModal();
+              }
+            }
+          );
+          return value;
+        }
+      );
+    });
 
     const step = withStep("start_posting", assert);
     await visit("/");
@@ -104,14 +130,11 @@ acceptance("Admin - Onboarding Banner", function (needs) {
     step.isNotChecked();
 
     await step.clickAction();
-    await click(".ai-option .btn");
 
-    const appEvents = this.owner.lookup("service:app-events");
-    appEvents.on("admin-onboarding:select-ai", () => {
-      assert.ok(true, "triggers admin-onboarding:select-ai event");
-      appEvents.trigger("topic:created");
-      step.isChecked();
-    });
+    assert.dom(".option").exists({ count: 2 });
+    await click(".extra-option .btn");
+
+    step.isChecked();
   });
 
   test("it can complete `invite_collaborators` step", async function (assert) {
