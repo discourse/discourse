@@ -63,6 +63,7 @@ class PostsController < ApplicationController
       posts =
         Post
           .private_posts
+          .where(post_type: Topic.visible_post_types(current_user))
           .order(id: :desc)
           .includes(topic: :category)
           .includes(user: %i[primary_group flair_group])
