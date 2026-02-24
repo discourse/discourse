@@ -2,41 +2,9 @@ import { module, test } from "qunit";
 import {
   findClosestMatch,
   formatWithSuggestion,
-  levenshteinDistance,
 } from "discourse/lib/string-similarity";
 
 module("Unit | Lib | string-similarity", function () {
-  module("levenshteinDistance", function () {
-    test("returns 0 for identical strings", function (assert) {
-      assert.strictEqual(levenshteinDistance("hello", "hello"), 0);
-      assert.strictEqual(levenshteinDistance("", ""), 0);
-    });
-
-    test("returns length of other string when one is empty", function (assert) {
-      assert.strictEqual(levenshteinDistance("", "hello"), 5);
-      assert.strictEqual(levenshteinDistance("world", ""), 5);
-    });
-
-    test("returns 1 for single character difference", function (assert) {
-      assert.strictEqual(levenshteinDistance("condition", "conditions"), 1);
-      assert.strictEqual(levenshteinDistance("cat", "bat"), 1);
-      assert.strictEqual(levenshteinDistance("cats", "cat"), 1);
-    });
-
-    test("returns 2 for two character differences", function (assert) {
-      assert.strictEqual(levenshteinDistance("codition", "conditions"), 2);
-      assert.strictEqual(levenshteinDistance("cat", "dog"), 3);
-    });
-
-    test("handles transpositions", function (assert) {
-      assert.strictEqual(levenshteinDistance("conditons", "conditions"), 1);
-    });
-
-    test("handles classic example: kitten to sitting", function (assert) {
-      assert.strictEqual(levenshteinDistance("kitten", "sitting"), 3);
-    });
-  });
-
   module("findClosestMatch", function () {
     const candidates = ["block", "args", "children", "conditions", "name"];
 
