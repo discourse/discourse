@@ -94,7 +94,7 @@ export default class UpsertCategoryTags extends Component {
         @disabled={{this.disableAllowGlobalTags}}
         as |field|
       >
-        <field.Toggle />
+        <field.Checkbox />
       </@form.Field>
 
       <@form.Alert @type="info">

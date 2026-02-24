@@ -1,5 +1,4 @@
 import Component from "@glimmer/component";
-import { tracked } from "@glimmer/tracking";
 import { concat, hash } from "@ember/helper";
 import { on } from "@ember/modifier";
 import { action } from "@ember/object";
@@ -25,8 +24,6 @@ import { i18n } from "discourse-i18n";
 export default class UpsertCategoryGeneral extends Component {
   @service site;
   @service siteSettings;
-
-  @tracked categoryVisibilityState = null;
 
   uncategorizedSiteSettingLink = getURL(
     "/admin/site_settings/category/all_results?filter=allow_uncategorized_topics"
@@ -147,9 +144,9 @@ export default class UpsertCategoryGeneral extends Component {
   }
 
   get categoryVisibility() {
-    const state = this.categoryVisibilityState;
-    if (state && state.categoryId === this.args.category.id) {
-      return state.value;
+    const visibility = this.args.transientData?.visibility;
+    if (visibility) {
+      return visibility;
     }
 
     if (this.isParentRestricted) {
@@ -196,16 +193,14 @@ export default class UpsertCategoryGeneral extends Component {
       }));
     }
 
-    this.categoryVisibilityState = {
-      categoryId: this.args.category.id,
-      value,
-    };
+    this.args.form.set("visibility", value);
 
     if (value === "public") {
       this.#setFormPermissions([this.#everyoneFullPermission]);
     } else if (value === "group_restricted") {
       if (this.#previousPermissions?.length) {
         this.#setFormPermissions(this.#previousPermissions);
+        this.#previousPermissions = null;
       } else {
         this.#setFormPermissions([]);
       }
@@ -215,7 +210,7 @@ export default class UpsertCategoryGeneral extends Component {
   @action
   async onParentCategoryChange(parentCategoryId) {
     if (!parentCategoryId) {
-      this.categoryVisibilityState = null;
+      this.args.form.set("visibility", null);
       this.#setFormPermissions([this.#everyoneFullPermission]);
       return;
     }
@@ -231,7 +226,7 @@ export default class UpsertCategoryGeneral extends Component {
         );
 
         if (!hasEveryone) {
-          this.categoryVisibilityState = null;
+          this.args.form.set("visibility", null);
 
           const newPermissions = parentCategory.permissions.map((p) => ({
             group_name: p.group_name,

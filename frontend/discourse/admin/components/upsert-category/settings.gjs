@@ -4,7 +4,6 @@ import { on } from "@ember/modifier";
 import { action } from "@ember/object";
 import { service } from "@ember/service";
 import { htmlSafe } from "@ember/template";
-import DToggleSwitch from "discourse/components/d-toggle-switch";
 import PluginOutlet from "discourse/components/plugin-outlet";
 import RelativeTimePicker from "discourse/components/relative-time-picker";
 import concatClass from "discourse/helpers/concat-class";
@@ -65,18 +64,6 @@ export default class UpsertCategorySettings extends Component {
     return this.args.transientData?.category_setting;
   }
 
-  get requireTopicApproval() {
-    return this.categorySetting?.require_topic_approval;
-  }
-
-  get requireReplyApproval() {
-    return this.categorySetting?.require_reply_approval;
-  }
-
-  get autoCloseBasedOnLastPost() {
-    return this.args.transientData?.auto_close_based_on_last_post;
-  }
-
   get numAutoBumpDaily() {
     return this.categorySetting?.num_auto_bump_daily;
   }
@@ -107,30 +94,6 @@ export default class UpsertCategorySettings extends Component {
   @action
   onCategoryModeratingGroupsChange(groupIds) {
     this.args.form.set("moderating_group_ids", groupIds);
-  }
-
-  @action
-  onRequireTopicApprovalChange() {
-    this.#updateCategorySetting(
-      "require_topic_approval",
-      !this.requireTopicApproval
-    );
-  }
-
-  @action
-  onRequireReplyApprovalChange() {
-    this.#updateCategorySetting(
-      "require_reply_approval",
-      !this.requireReplyApproval
-    );
-  }
-
-  @action
-  onAutoCloseBasedOnLastPostChange() {
-    this.args.form.set(
-      "auto_close_based_on_last_post",
-      !this.autoCloseBasedOnLastPost
-    );
   }
 
   @action
@@ -212,7 +175,7 @@ export default class UpsertCategorySettings extends Component {
           @format="max"
           as |field|
         >
-          <field.Toggle />
+          <field.Checkbox />
         </@form.Field>
       {{/if}}
 
@@ -223,7 +186,7 @@ export default class UpsertCategorySettings extends Component {
           @format="max"
           as |field|
         >
-          <field.Toggle />
+          <field.Checkbox />
         </@form.Field>
       {{/if}}
 
@@ -233,7 +196,7 @@ export default class UpsertCategorySettings extends Component {
         @format="max"
         as |field|
       >
-        <field.Toggle />
+        <field.Checkbox />
       </@form.Field>
 
       <@form.Field
@@ -242,7 +205,7 @@ export default class UpsertCategorySettings extends Component {
         @format="max"
         as |field|
       >
-        <field.Toggle />
+        <field.Checkbox />
       </@form.Field>
 
       <@form.Field
@@ -251,7 +214,7 @@ export default class UpsertCategorySettings extends Component {
         @format="max"
         as |field|
       >
-        <field.Toggle />
+        <field.Checkbox />
       </@form.Field>
 
       <@form.Section @title={{i18n "category.settings_sections.moderation"}}>
@@ -265,19 +228,23 @@ export default class UpsertCategorySettings extends Component {
           </@form.Container>
         {{/if}}
 
-        <@form.Container @title={{i18n "category.require_topic_approval"}}>
-          <DToggleSwitch
-            @state={{this.requireTopicApproval}}
-            {{on "click" this.onRequireTopicApprovalChange}}
-          />
-        </@form.Container>
+        <@form.Object @name="category_setting" as |object|>
+          <object.Field
+            @name="require_topic_approval"
+            @title={{i18n "category.require_topic_approval"}}
+            as |field|
+          >
+            <field.Checkbox />
+          </object.Field>
 
-        <@form.Container @title={{i18n "category.require_reply_approval"}}>
-          <DToggleSwitch
-            @state={{this.requireReplyApproval}}
-            {{on "click" this.onRequireReplyApprovalChange}}
-          />
-        </@form.Container>
+          <object.Field
+            @name="require_reply_approval"
+            @title={{i18n "category.require_reply_approval"}}
+            as |field|
+          >
+            <field.Checkbox />
+          </object.Field>
+        </@form.Object>
 
         <@form.Container @title={{i18n "category.default_slow_mode"}}>
           <RelativeTimePicker
@@ -296,12 +263,13 @@ export default class UpsertCategorySettings extends Component {
           />
         </@form.Container>
 
-        <@form.Container @title={{i18n "topic.auto_close.based_on_last_post"}}>
-          <DToggleSwitch
-            @state={{this.autoCloseBasedOnLastPost}}
-            {{on "click" this.onAutoCloseBasedOnLastPostChange}}
-          />
-        </@form.Container>
+        <@form.Field
+          @name="auto_close_based_on_last_post"
+          @title={{i18n "topic.auto_close.based_on_last_post"}}
+          as |field|
+        >
+          <field.Checkbox />
+        </@form.Field>
 
         <@form.Container @title={{i18n "category.num_auto_bump_daily"}}>
           <input
@@ -341,7 +309,7 @@ export default class UpsertCategorySettings extends Component {
             @format="max"
             as |field|
           >
-            <field.Toggle />
+            <field.Checkbox />
           </@form.Field>
 
           <@form.Field
@@ -350,7 +318,7 @@ export default class UpsertCategorySettings extends Component {
             @format="max"
             as |field|
           >
-            <field.Toggle />
+            <field.Checkbox />
           </@form.Field>
 
           <PluginOutlet
@@ -374,7 +342,11 @@ export default class UpsertCategorySettings extends Component {
 
       <PluginOutlet
         @name="category-custom-settings"
-        @outletArgs={{lazyHash category=@category form=@form}}
+        @outletArgs={{lazyHash
+          category=@category
+          form=@form
+          transientData=@transientData
+        }}
       />
     </@form.Section>
   </template>

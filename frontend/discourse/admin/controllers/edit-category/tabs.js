@@ -49,6 +49,9 @@ const FIELD_LIST = [
   "allowed_tag_groups",
   "allowed_tags",
   "required_tag_groups",
+  "minimum_required_tags",
+  "allow_global_tags",
+  "default_slow_mode_seconds",
 ];
 
 const SHOW_ADVANCED_TABS_KEY = "category_edit_show_advanced_tabs";
@@ -57,6 +60,7 @@ export default class EditCategoryTabsController extends Controller {
   @service currentUser;
   @service dialog;
   @service site;
+  @service siteSettings;
   @service router;
   @service keyValueStore;
 
@@ -65,6 +69,7 @@ export default class EditCategoryTabsController extends Controller {
   showAdvancedTabs =
     this.keyValueStore.getItem(SHOW_ADVANCED_TABS_KEY) === "true";
   @tracked selectedTab = "general";
+  @tracked formApi = null;
   @trackedArray panels = [];
   saving = false;
   deleting = false;
@@ -89,6 +94,11 @@ export default class EditCategoryTabsController extends Controller {
       (rtg) => ({ ...rtg })
     );
 
+    if (this.siteSettings.enable_simplified_category_creation) {
+      data.category_setting = { ...(this.model.category_setting ?? {}) };
+      data.custom_fields = { ...(this.model.custom_fields ?? {}) };
+    }
+
     return data;
   }
 
@@ -108,7 +118,7 @@ export default class EditCategoryTabsController extends Controller {
     if (saving) {
       return "saving";
     }
-    return id ? "category.save" : "category.create";
+    return id ? "category.save" : "category.create_category";
   }
 
   get baseTitle() {
@@ -119,6 +129,15 @@ export default class EditCategoryTabsController extends Controller {
     }
 
     return i18n("category.create");
+  }
+
+  get isFormDirty() {
+    return this.formApi?.isDirty ?? false;
+  }
+
+  @action
+  onRegisterFormApi(api) {
+    this.formApi = api;
   }
 
   @action
@@ -198,7 +217,9 @@ export default class EditCategoryTabsController extends Controller {
       return;
     }
 
-    this.model.setProperties(data);
+    // eslint-disable-next-line no-unused-vars
+    const { visibility, ...categoryData } = data;
+    this.model.setProperties(categoryData);
 
     // If permissions is empty or not set, ensure it's an empty array (public category)
     if (!this.model.permissions || this.model.permissions.length === 0) {

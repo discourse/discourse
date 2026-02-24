@@ -306,7 +306,7 @@ export default class UpsertCategoryAppearance extends Component {
           @format="max"
           as |field|
         >
-          <field.Toggle />
+          <field.Checkbox />
         </@form.Field>
 
         {{#if @transientData.show_subcategory_list}}
