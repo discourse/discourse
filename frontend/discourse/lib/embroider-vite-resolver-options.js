@@ -3,11 +3,6 @@ import fs from "node:fs";
 import path from "node:path";
 
 export default function writeResolverConfig(config, extra) {
-  const embroiderResolverOptions = {
-    ...buildResolverOptions(config),
-    ...extra,
-  };
-
   const resolverPath = path.resolve("./node_modules/.embroider/resolver.json");
   const embroiderDir = path.resolve("./node_modules/.embroider");
 
@@ -17,6 +12,12 @@ export default function writeResolverConfig(config, extra) {
       force: true,
     });
   }
+
+  const embroiderResolverOptions = {
+    ...buildResolverOptions(config),
+    ...extra,
+  };
+
   fs.mkdirSync(path.dirname(resolverPath), { recursive: true });
   fs.writeFileSync(
     resolverPath,
