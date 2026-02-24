@@ -657,7 +657,6 @@ module("Unit | Controller | topic", function (hooks) {
 
     controller.blockWithTransformer = false;
     await controller.finishedEditingTopic();
-    await settled();
     assert.false(
       controller.editingTopic,
       "transformer allowed finishedEditingTopic"
