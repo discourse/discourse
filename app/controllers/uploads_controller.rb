@@ -112,21 +112,35 @@ class UploadsController < ApplicationController
 
     return render_404 if !RailsMultisite::ConnectionManagement.has_db?(params[:site])
 
-    RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
-      return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
+    begin
+      request_site_current_user =
+        request.env.delete(Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY)
 
-      if upload =
-           Upload.find_by(sha1: params[:sha]) ||
-             Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
-        unless Discourse.store.internal?
-          local_store = FileStore::LocalStore.new
-          return render_404 unless local_store.has_been_uploaded?(upload.url)
+      RailsMultisite::ConnectionManagement.with_connection(params[:site]) do |db|
+        begin
+          # current_user here refers to the user for the site that we are operating on
+          # using with_connection. If DB for the target site matches the current site
+          # for the request, then current_user will be the same as the request_site_current_user
+          return render_404 if SiteSetting.prevent_anons_from_downloading_files && current_user.nil?
+
+          upload =
+            Upload.find_by(sha1: params[:sha]) ||
+              Upload.find_by(id: params[:id], url: request.env["PATH_INFO"])
+
+          if upload.present?
+            if !Discourse.store.internal?
+              local_store = FileStore::LocalStore.new
+              return render_404 unless local_store.has_been_uploaded?(upload.url)
+            end
+
+            send_file_local_upload(upload)
+          else
+            render_404
+          end
         end
-
-        send_file_local_upload(upload)
-      else
-        render_404
       end
+    ensure
+      request.env[Auth::DefaultCurrentUserProvider::CURRENT_USER_KEY] = request_site_current_user
     end
   end
 

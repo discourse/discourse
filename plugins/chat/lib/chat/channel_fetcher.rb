@@ -225,6 +225,7 @@ module Chat
           options.merge(include_archives: true, filter_on_category_name: true),
         )
 
+      channels = channels.includes(:pinned_messages) if SiteSetting.chat_pinned_messages
       channels = channels.to_a
       preload_custom_fields_for(channels)
       channels
@@ -267,6 +268,7 @@ module Chat
           )
 
       query = query.includes(chatable: [{ users: :user_status }]) if SiteSetting.enable_user_status
+      query = query.includes(:pinned_messages) if SiteSetting.chat_pinned_messages
 
       if options[:filter]
         filter_term = options[:filter].downcase

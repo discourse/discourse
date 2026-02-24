@@ -274,5 +274,20 @@ module Chat
     def can_remove_members?(channel)
       is_admin? && (channel.category_channel? || channel.direct_message_group?)
     end
+
+    def can_manage_chat_channel_pins?(channel)
+      return false unless can_chat?
+      return false unless can_preview_chat_channel?(channel)
+
+      if channel.direct_message_channel?
+        true
+      else
+        @user.in_any_groups?(SiteSetting.chat_pinning_messages_allowed_groups_map)
+      end
+    end
+
+    def can_manage_chat_message_pin?(message)
+      can_manage_chat_channel_pins?(message.chat_channel)
+    end
   end
 end

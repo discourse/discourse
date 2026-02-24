@@ -7,7 +7,7 @@ export default class AdminPluginsExplorerQueriesDetailsRoute extends Route {
   @service router;
 
   beforeModel(transition) {
-    this.router.transitionTo(
+    this.router.replaceWith(
       "adminPlugins.show.explorer.details",
       PLUGIN_ID,
       transition.to.params.query_id,
