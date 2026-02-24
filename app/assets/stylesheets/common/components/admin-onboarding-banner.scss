@@ -111,6 +111,10 @@
 }
 
 .predefined-topic-options-modal {
+  .d-modal__subtitle-text {
+    padding: var(--space-2) 0;
+  }
+
   &__header {
     display: flex;
     align-items: center;

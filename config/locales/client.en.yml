@@ -468,6 +468,7 @@ en:
         action: "Icebreaker ideas"
         choose_option: "How would you like to start?"
         predefined_topics: "Pre-defined Topics"
+        predefined_topics_subtitle: "Break the ice with one of the following conversation starters. <br/> Pick one and customize it to your liking:"
         predefined_topics_description: "Pick from a collection of conversation starters to get discussions going"
         use_predefined: "Use pre-defined Topics"
         start_with_this: "Start with this"
