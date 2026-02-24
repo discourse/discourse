@@ -649,7 +649,7 @@ module("Unit | Controller | topic", function (hooks) {
 
     controller.blockWithTransformer = true;
     await controller.finishedEditingTopic();
-    await settled();
+
     assert.true(
       controller.editingTopic,
       "transformer blocked finishedEditingTopic"
